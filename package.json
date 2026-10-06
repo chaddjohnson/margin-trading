@@ -1,0 +1,40 @@
+{
+  "name": "margin-trading",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=24.21.0"
+  },
+  "type": "module",
+  "imports": {
+    "#lib/*": "./lib/*",
+    "#types": "./types",
+    "#types/*": "./types/*"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "csv-parse": "^6.1.0",
+    "fs-extra": "^11.3.3",
+    "lodash": "^4.17.21",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/node": "^24",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.6",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.0"
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*.ts'",
+    "preapp": "eslint && tsc --noEmit",
+    "app": "node --env-file-if-exists=.env --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts"
+  }
+}
