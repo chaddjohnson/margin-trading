@@ -1,4 +1,4 @@
-// All in at 15%, 20%, 25%, and 30%
+// All in at 15%
 
 import type { Tick, BacktestPosition } from '#types';
 import { PositionType } from '#types';
