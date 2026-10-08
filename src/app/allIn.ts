@@ -10,6 +10,23 @@ export default async () => {
   const positions: BacktestPosition[] = [];
   let marginBalance = 100000;
   const investmentPercentage = 1.0; // 100% of margin balance
+  const targetPercentChange = 0.15; // 15% change
+  const trailingStopPercentage = 0.08; // 8% drop from the post-entry high
+  const marginInterestRate = 0.11; // 11% annual interest charged by Vanguard on margin
+  let postEntryHigh = 0;
+
+  const formatDollars = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0
+  }).format;
+
+  // Simple interest on the borrowed amount, accrued for the time the position has been held.
+  const calculateInterest = (position: BacktestPosition, timestamp: number) => {
+    const yearsHeld = (timestamp - position.entryTimestamp) / (365 * 24 * 60 * 60);
+
+    return position.investment * marginInterestRate * yearsHeld;
+  };
 
   ticks.forEach((tick, index) => {
     const tickWindow: Tick[] = ticks.slice(Math.max(0, index - tickWindowSize), index);
@@ -22,14 +39,12 @@ export default async () => {
     }
 
     const openPositions = positions.filter((position) => position.isOpen);
-    const buy = positions.length === 0 && percentChange >= 0.15;
-    const sell = false;
+    const buy = openPositions.length === 0 && percentChange >= targetPercentChange;
+    let sell = false;
 
     if (buy) {
-      console.info(`15% change on ${new Date(tick.time * 1000).toISOString()} from ${recentHigh} to ${tick.close}`);
-
       // Vanguard allows partial shares.
-      const shares = marginBalance / tick.close;
+      const shares = (marginBalance * investmentPercentage) / tick.close;
       const investment = shares * tick.close;
 
       positions.push({
@@ -43,23 +58,49 @@ export default async () => {
       });
 
       marginBalance -= investment;
+      postEntryHigh = tick.close;
+
+      console.info(
+        `Entered at ${targetPercentChange * 100}% change on ${new Date(tick.time * 1000).toISOString()} from ${recentHigh} to ${tick.close}`
+      );
     }
 
-    // TODO: Implement a trailing stop of 8%.
+    // Trailing stop: exit once the price has risen above the entry price and then dropped
+    // by at least 8% from the post-entry high, but only if the exit is profitable.
+    const [position] = openPositions;
+
+    // Only apply the trailing stop when exactly one position is open. The `position` check also
+    // narrows its type, since destructuring an array yields `BacktestPosition | undefined`.
+    if (position && openPositions.length === 1) {
+      postEntryHigh = Math.max(postEntryHigh, tick.close);
+
+      const dropFromHigh = 1 - tick.close / postEntryHigh;
+      const proceeds = position.shares * tick.close;
+      const interest = calculateInterest(position, tick.time);
+
+      sell =
+        postEntryHigh > position.entryPrice &&
+        dropFromHigh >= trailingStopPercentage &&
+        proceeds - interest > position.investment;
+    }
 
     if (sell) {
       openPositions.forEach((position) => {
         const proceeds = position.shares * tick.close;
-        const commission = position.commission ?? 0;
+        const interest = calculateInterest(position, tick.time);
 
         position.isOpen = false;
         position.exitTimestamp = tick.time;
         position.exitPrice = tick.close;
-        position.profit = proceeds - position.investment;
-        position.netProfit = position.profit - commission;
+        position.interest = interest;
+        position.profit = proceeds - position.investment - interest;
 
-        marginBalance += proceeds - commission;
-      }
+        marginBalance += proceeds - interest;
+
+        console.info(
+          `Exited at ${new Date(tick.time * 1000).toISOString()} from ${position.entryPrice} to ${tick.close} for a profit of ${formatDollars(position.profit)} after ${formatDollars(interest)} in interest\n`
+        );
+      });
     }
   });
 };

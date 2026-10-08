@@ -18,5 +18,6 @@ export interface BacktestPosition extends Position {
   exitPrice?: number;
   profit?: number;
   commission?: number;
+  interest?: number;
   netProfit?: number;
 }
