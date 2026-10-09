@@ -8,11 +8,11 @@ export default async () => {
   const ticks = await loadCsvBacktestData('VGT', 'data/VGT/VGT-2016-2026.csv');
   const tickWindowSize = 90;
   const positions: BacktestPosition[] = [];
-  let marginBalance = 100000;
-  const investmentPercentage = 1.0; // 100% of margin balance
-  const targetPercentChange = 0.12; // 12% change
-  const trailingStopPercentage = 0.04; // 4% drop from the post-entry high
-  const marginInterestRate = 0.11; // 11% annual interest charged by Vanguard on margin
+  const investmentAmount = 100000; // Margin borrowed for every position, regardless of past results
+  const targetPercentChange = 0.09; // target change
+  const trailingStopPercentage = 0.08; //  drop from the post-entry high
+  const maximumHoldDays = 15; // days before a losing position is sold
+  const marginInterestRate = 0.11; // annual interest charged by Vanguard on margin
   let postEntryHigh = 0;
 
   const formatDollars = new Intl.NumberFormat('en-US', {
@@ -59,20 +59,18 @@ export default async () => {
 
     if (buy) {
       // Vanguard allows partial shares.
-      const shares = (marginBalance * investmentPercentage) / tick.close;
-      const investment = shares * tick.close;
+      const shares = investmentAmount / tick.close;
 
       positions.push({
         isOpen: true,
         symbol: 'VGT',
         type: PositionType.Long,
         shares,
-        investment,
+        investment: investmentAmount,
         entryTimestamp: tick.time,
         entryPrice: tick.close
       });
 
-      marginBalance -= investment;
       postEntryHigh = tick.close;
 
       console.info(
@@ -84,7 +82,7 @@ export default async () => {
     // low drops to the stop price below the post-entry high, but only if the exit is profitable.
     const [position] = openPositions;
 
-    // Only apply the trailing stop when exactly one position is open. The `position` check also
+    // Only apply the exits when exactly one position is open. The `position` check also
     // narrows its type, since destructuring an array yields `BacktestPosition | undefined`.
     if (position && openPositions.length === 1) {
       // Test against the previous post-entry high before raising it with today's high, since daily
@@ -99,6 +97,16 @@ export default async () => {
 
       sell = postEntryHigh > position.entryPrice && tick.low <= stopPrice && proceeds - interest > position.investment;
 
+      // Maximum hold: once the position has been held long enough, sell at the open if that sale
+      // would lose money. The open comes before the trailing stop could fill, so this takes priority.
+      const daysHeld = (tick.time - position.entryTimestamp) / (24 * 60 * 60);
+      const profitAtOpen = position.shares * tick.open - position.investment - interest;
+
+      if (daysHeld >= maximumHoldDays && profitAtOpen < 0) {
+        sell = true;
+        exitPrice = tick.open;
+      }
+
       postEntryHigh = Math.max(postEntryHigh, tick.high);
     }
 
@@ -112,8 +120,6 @@ export default async () => {
         position.exitPrice = exitPrice;
         position.interest = interest;
         position.profit = proceeds - position.investment - interest;
-
-        marginBalance += proceeds - interest;
 
         const monthsHeld = (tick.time - position.entryTimestamp) / ((365 / 12) * 24 * 60 * 60);
 
@@ -130,4 +136,5 @@ export default async () => {
   console.info(`Total profit: ${formatDollars(totalProfit)}`);
   console.info(`Target percent change: ${formatPercent(targetPercentChange)}`);
   console.info(`Trailing stop percentage: ${formatPercent(trailingStopPercentage)}`);
+  console.info(`Maximum hold: ${maximumHoldDays} days`);
 };
