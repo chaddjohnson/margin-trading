@@ -10,8 +10,8 @@ export default async () => {
   const positions: BacktestPosition[] = [];
   let marginBalance = 100000;
   const investmentPercentage = 1.0; // 100% of margin balance
-  const targetPercentChange = 0.15; // 15% change
-  const trailingStopPercentage = 0.08; // 8% drop from the post-entry high
+  const targetPercentChange = 0.12; // 12% change
+  const trailingStopPercentage = 0.04; // 4% drop from the post-entry high
   const marginInterestRate = 0.11; // 11% annual interest charged by Vanguard on margin
   let postEntryHigh = 0;
 
@@ -19,6 +19,15 @@ export default async () => {
     style: 'currency',
     currency: 'USD',
     maximumFractionDigits: 0
+  }).format;
+
+  const formatMonths = new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: 1
+  }).format;
+
+  const formatPercent = new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    maximumFractionDigits: 2
   }).format;
 
   // Simple interest on the borrowed amount, accrued for the time the position has been held.
@@ -97,10 +106,19 @@ export default async () => {
 
         marginBalance += proceeds - interest;
 
+        const monthsHeld = (tick.time - position.entryTimestamp) / ((365 / 12) * 24 * 60 * 60);
+
         console.info(
-          `Exited at ${new Date(tick.time * 1000).toISOString()} from ${position.entryPrice} to ${tick.close} for a profit of ${formatDollars(position.profit)} after ${formatDollars(interest)} in interest\n`
+          `Exited at ${new Date(tick.time * 1000).toISOString()} from ${position.entryPrice} to ${tick.close} for a profit of ${formatDollars(position.profit)} after ${formatDollars(interest)} in interest`
         );
+        console.info(`Held for ${formatMonths(monthsHeld)} months\n`);
       });
     }
   });
+
+  const totalProfit = positions.reduce((total, position) => total + (position.profit ?? 0), 0);
+
+  console.info(`Total profit: ${formatDollars(totalProfit)}`);
+  console.info(`Target percent change: ${formatPercent(targetPercentChange)}`);
+  console.info(`Trailing stop percentage: ${formatPercent(trailingStopPercentage)}`);
 };
