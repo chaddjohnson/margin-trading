@@ -14,6 +14,7 @@ export default async () => {
   const maximumHoldDays = 15; // days before a losing position is sold
   const marginInterestRate = 0.11; // annual interest charged by Vanguard on margin
   let postEntryHigh = 0;
+  let postEntryLow = 0;
 
   const formatDollars = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -72,6 +73,7 @@ export default async () => {
       });
 
       postEntryHigh = tick.close;
+      postEntryLow = tick.close;
 
       console.info(
         `Entered at ${targetPercentChange * 100}% change on ${new Date(tick.time * 1000).toISOString()} from ${formatPrice(recentHigh)} to ${formatPrice(tick.close)}`
@@ -108,6 +110,11 @@ export default async () => {
       }
 
       postEntryHigh = Math.max(postEntryHigh, tick.high);
+
+      // On the exit day, prices after the fill came after the position was closed, so skip that low.
+      if (!sell) {
+        postEntryLow = Math.min(postEntryLow, tick.low);
+      }
     }
 
     if (sell) {
@@ -126,7 +133,12 @@ export default async () => {
         console.info(
           `Exited at ${new Date(tick.time * 1000).toISOString()} from ${formatPrice(position.entryPrice)} to ${formatPrice(exitPrice)} for a profit of ${formatDollars(position.profit)} after ${formatDollars(interest)} in interest`
         );
-        console.info(`Held for ${formatMonths(monthsHeld)} months\n`);
+        // The lowest price seen while the position was open, including the exit fill itself.
+        const lowestLow = Math.min(postEntryLow, exitPrice);
+        const dropToLowestLow = 1 - lowestLow / position.entryPrice;
+
+        console.info(`Held for ${formatMonths(monthsHeld)} months`);
+        console.info(`Lowest low: ${formatPrice(lowestLow)} (${formatPercent(dropToLowestLow)} below entry)\n`);
       });
     }
   });
