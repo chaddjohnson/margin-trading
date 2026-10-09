@@ -5,7 +5,7 @@ import { PositionType } from '#types';
 import { loadCsvBacktestData } from '#lib';
 
 export default async () => {
-  const ticks = await loadCsvBacktestData('VOOG', 'data/VOOG/VOOG-2016-2026.csv');
+  const ticks = await loadCsvBacktestData('VGT', 'data/VGT/VGT-2016-2026.csv');
   const tickWindowSize = 90;
   const positions: BacktestPosition[] = [];
   let marginBalance = 100000;
@@ -25,6 +25,11 @@ export default async () => {
     maximumFractionDigits: 1
   }).format;
 
+  const formatPrice = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format;
+
   const formatPercent = new Intl.NumberFormat('en-US', {
     style: 'percent',
     maximumFractionDigits: 2
@@ -39,7 +44,7 @@ export default async () => {
 
   ticks.forEach((tick, index) => {
     const tickWindow: Tick[] = ticks.slice(Math.max(0, index - tickWindowSize), index);
-    const recentHigh = Math.max(...tickWindow.map((windowTick) => windowTick.close));
+    const recentHigh = Math.max(...tickWindow.map((windowTick) => windowTick.high));
     const percentChange = 1 - tick.close / recentHigh;
 
     // Skip the first tick.
@@ -50,6 +55,7 @@ export default async () => {
     const openPositions = positions.filter((position) => position.isOpen);
     const buy = openPositions.length === 0 && percentChange >= targetPercentChange;
     let sell = false;
+    let exitPrice = 0;
 
     if (buy) {
       // Vanguard allows partial shares.
@@ -58,7 +64,7 @@ export default async () => {
 
       positions.push({
         isOpen: true,
-        symbol: 'VOOG',
+        symbol: 'VGT',
         type: PositionType.Long,
         shares,
         investment,
@@ -70,37 +76,40 @@ export default async () => {
       postEntryHigh = tick.close;
 
       console.info(
-        `Entered at ${targetPercentChange * 100}% change on ${new Date(tick.time * 1000).toISOString()} from ${recentHigh} to ${tick.close}`
+        `Entered at ${targetPercentChange * 100}% change on ${new Date(tick.time * 1000).toISOString()} from ${formatPrice(recentHigh)} to ${formatPrice(tick.close)}`
       );
     }
 
-    // Trailing stop: exit once the price has risen above the entry price and then dropped
-    // by at least 8% from the post-entry high, but only if the exit is profitable.
+    // Trailing stop: exit once the price has risen above the entry price and then the intraday
+    // low drops to the stop price below the post-entry high, but only if the exit is profitable.
     const [position] = openPositions;
 
     // Only apply the trailing stop when exactly one position is open. The `position` check also
     // narrows its type, since destructuring an array yields `BacktestPosition | undefined`.
     if (position && openPositions.length === 1) {
-      postEntryHigh = Math.max(postEntryHigh, tick.close);
+      // Test against the previous post-entry high before raising it with today's high, since daily
+      // bars don't say whether the high or the low came first.
+      const stopPrice = postEntryHigh * (1 - trailingStopPercentage);
 
-      const dropFromHigh = 1 - tick.close / postEntryHigh;
-      const proceeds = position.shares * tick.close;
+      // A stop order fills at the stop price, or at the open if the price gapped down past it.
+      exitPrice = Math.min(stopPrice, tick.open);
+
+      const proceeds = position.shares * exitPrice;
       const interest = calculateInterest(position, tick.time);
 
-      sell =
-        postEntryHigh > position.entryPrice &&
-        dropFromHigh >= trailingStopPercentage &&
-        proceeds - interest > position.investment;
+      sell = postEntryHigh > position.entryPrice && tick.low <= stopPrice && proceeds - interest > position.investment;
+
+      postEntryHigh = Math.max(postEntryHigh, tick.high);
     }
 
     if (sell) {
       openPositions.forEach((position) => {
-        const proceeds = position.shares * tick.close;
+        const proceeds = position.shares * exitPrice;
         const interest = calculateInterest(position, tick.time);
 
         position.isOpen = false;
         position.exitTimestamp = tick.time;
-        position.exitPrice = tick.close;
+        position.exitPrice = exitPrice;
         position.interest = interest;
         position.profit = proceeds - position.investment - interest;
 
@@ -109,7 +118,7 @@ export default async () => {
         const monthsHeld = (tick.time - position.entryTimestamp) / ((365 / 12) * 24 * 60 * 60);
 
         console.info(
-          `Exited at ${new Date(tick.time * 1000).toISOString()} from ${position.entryPrice} to ${tick.close} for a profit of ${formatDollars(position.profit)} after ${formatDollars(interest)} in interest`
+          `Exited at ${new Date(tick.time * 1000).toISOString()} from ${formatPrice(position.entryPrice)} to ${formatPrice(exitPrice)} for a profit of ${formatDollars(position.profit)} after ${formatDollars(interest)} in interest`
         );
         console.info(`Held for ${formatMonths(monthsHeld)} months\n`);
       });
