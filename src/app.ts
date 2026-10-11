@@ -1,4 +1,4 @@
-const [, , script] = process.argv;
+const [, , script, ...args] = process.argv;
 
 if (!script) {
   console.error('❌ Please provide a script name');
@@ -11,7 +11,7 @@ const run = async () => {
     const fn = (mod?.default as any)?.default ?? mod?.default;
 
     if (typeof fn === 'function') {
-      await fn();
+      await fn(...args);
     } else {
       console.log(`✅ Loaded ${script}.js but no default export found.`);
     }

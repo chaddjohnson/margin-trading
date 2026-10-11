@@ -78,8 +78,19 @@ export const evaluateSessionExit = ({
   return undefined;
 };
 
-export default async () => {
-  const ticks = await loadCsvBacktestData('VGT', 'data/VGT/VGT-2016-2026.csv');
+// Run with `npm run app allIn [symbol] [start date] [end date]`, for example
+// `npm run app allIn QQQ 2016-10-07 2026-10-06`. The symbol defaults to VGT, and the inclusive YYYY-MM-DD
+// dates default to the whole data file.
+export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
+  const startTimestamp = startDate ? Date.parse(startDate) / 1000 : -Infinity;
+  const endTimestamp = endDate ? Date.parse(endDate) / 1000 : Infinity;
+
+  if (Number.isNaN(startTimestamp) || Number.isNaN(endTimestamp)) {
+    throw new Error('Start and end dates must be YYYY-MM-DD');
+  }
+
+  const allTicks = await loadCsvBacktestData(symbol, `data/${symbol}/${symbol}-1999-2015.csv`);
+  const ticks = allTicks.filter((tick) => tick.time >= startTimestamp && tick.time <= endTimestamp);
   const tickWindowSize = 90;
   const positions: BacktestPosition[] = [];
   const investmentAmount = 100000; // Margin borrowed for every position, regardless of past results
@@ -155,7 +166,7 @@ export default async () => {
 
       positions.push({
         isOpen: true,
-        symbol: 'VGT',
+        symbol,
         type: PositionType.Long,
         shares,
         investment: investmentAmount,
@@ -240,6 +251,12 @@ export default async () => {
     console.info(
       `Still open on ${new Date(lastTick.time * 1000).toISOString()}: entered at ${formatPrice(openPosition.entryPrice)} and marked at the close of ${formatPrice(lastTick.close)} for an unrealized profit of ${formatDollars(unrealizedProfit)} after ${formatDollars(accruedInterest)} in accrued interest\n`
     );
+  }
+
+  const firstTick = ticks[0];
+
+  if (firstTick && lastTick) {
+    console.info(`Symbol: ${symbol}, from ${formatDate(firstTick.time)} to ${formatDate(lastTick.time)}`);
   }
 
   console.info(`Closed trades: ${closedPositions.length}${openPosition ? ', plus 1 still open' : ''}`);
