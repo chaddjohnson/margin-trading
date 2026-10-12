@@ -14,10 +14,24 @@
 //   Without intraday times, a sale at the open, at a stop during the session or at the close all accrue
 //   interest through that day, which slightly overstates interest for sales early in the session.
 // - Prices are used as given in the CSV. Dividends aren't modeled beyond any adjustment in the data.
+//
+// Strategies (selected by the fourth argument; the state machine was validated trade for trade against
+// the research implementation in research/risk-management/lower-price-reentry):
+// - 'baseline': the original rules above, unchanged.
+// - 'lower3' (default): after a trade closes at a net loss (interest included), the strategy is
+//   RESTRICTED_AFTER_LOSS. It freezes the losing exit's actual execution price and the 90-session
+//   reference high used by the losing trade's entry signal. While restricted, a new entry needs the
+//   original 10% signal AND a close at or below 97% of the frozen loss-exit price. The restriction
+//   clears when a new position opens, or when a close reaches 95% of the frozen reference high
+//   (recovery reset, evaluated at every close while restricted and flat, including the exit session
+//   itself; a reset never buys by itself — on a session whose close qualifies as a reset, the reset
+//   takes priority and entries resume from the next session). Profitable exits leave the strategy
+//   unrestricted.
 
-import type { Tick, BacktestPosition } from '#types';
+import type { BacktestPosition, Tick } from '#types';
 import { PositionType } from '#types';
 import { loadCsvBacktestData } from '#lib';
+import fs from 'fs-extra';
 
 const secondsPerDay = 24 * 60 * 60;
 
@@ -78,18 +92,77 @@ export const evaluateSessionExit = ({
   return undefined;
 };
 
-// Run with `npm run app allIn [symbol] [start date] [end date]`, for example
-// `npm run app allIn QQQ 2016-10-07 2026-10-06`. The symbol defaults to VGT, and the inclusive YYYY-MM-DD
-// dates default to the whole data file.
-export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
-  const startTimestamp = startDate ? Date.parse(startDate) / 1000 : -Infinity;
-  const endTimestamp = endDate ? Date.parse(endDate) / 1000 : Infinity;
+export type StrategyName = 'baseline' | 'lower3';
+
+// The two mechanisms are independently selectable; the named strategies are fixed, verified bundles.
+interface StrategyOptions {
+  // Extra decline below the frozen loss-exit price required to re-enter after a losing trade (0.03 = 3%).
+  lowerPriceReentry?: number;
+  // Fraction of the frozen entry reference high whose recovery clears the restriction (0.95 = within 5%).
+  recoveryReset?: number;
+}
+
+const strategies: Record<StrategyName, StrategyOptions> = {
+  baseline: {},
+  lower3: { lowerPriceReentry: 0.03, recoveryReset: 0.95 }
+};
+
+// The reentry restriction, frozen when a losing trade exits and never updated while it lasts.
+interface Restriction {
+  lossExitPrice: number;
+  referenceHigh: number;
+  lowerLevel: number; // lossExitPrice * (1 - lowerPriceReentry)
+  resetLevel: number; // referenceHigh * recoveryReset
+}
+
+interface StateLogRow {
+  index: number;
+  date: string;
+  prevState: 'NORMAL' | 'RESTRICTED';
+  newState: 'NORMAL' | 'RESTRICTED';
+  reason: string;
+  exitReason: string;
+  tradeProfit: number | '';
+  lossExitPrice: number | '';
+  refHigh: number | '';
+  lowerLevel: number | '';
+  resetLevel: number | '';
+  close: number;
+  signal: boolean;
+  entryExecuted: boolean;
+}
+
+// Run with `npm run app allIn [symbol] [start date] [end date] [strategy] [data file] [output dir]`, for
+// example `npm run app allIn QQQ 2016-10-07 2026-10-06 baseline data/QQQ/QQQ-2016-2026.csv`. The symbol
+// defaults to VGT, the inclusive YYYY-MM-DD dates default to the whole data file, the strategy defaults
+// to 'lower3' (the original rules are 'baseline'), and the data file defaults to the symbol's 2016-2026
+// file. Pass '-' to leave an earlier argument at its default. When an output directory is given, the run
+// also writes trades.csv, daily.csv, states.csv and summary.json there at full precision.
+export default async (
+  symbol = 'VGT',
+  startDate?: string,
+  endDate?: string,
+  strategyName: string = 'lower3',
+  dataFile?: string,
+  outDir?: string
+) => {
+  const optional = (value?: string) => (value === '-' || value === '' ? undefined : value);
+  const startTimestamp = optional(startDate) ? Date.parse(startDate!) / 1000 : -Infinity;
+  const endTimestamp = optional(endDate) ? Date.parse(endDate!) / 1000 : Infinity;
 
   if (Number.isNaN(startTimestamp) || Number.isNaN(endTimestamp)) {
     throw new Error('Start and end dates must be YYYY-MM-DD');
   }
 
-  const allTicks = await loadCsvBacktestData(symbol, `data/${symbol}/${symbol}-2016-2026.csv`);
+  const strategyKey = (optional(strategyName) ?? 'lower3') as StrategyName;
+  const strategy = strategies[strategyKey];
+
+  if (!strategy) {
+    throw new Error(`Unknown strategy '${strategyName}' (expected ${Object.keys(strategies).join(' or ')})`);
+  }
+
+  const file = optional(dataFile) ?? `data/${symbol}/${symbol}-2016-2026.csv`;
+  const allTicks = await loadCsvBacktestData(symbol, file);
   const ticks = allTicks.filter((tick) => tick.time >= startTimestamp && tick.time <= endTimestamp);
   const tickWindowSize = 90;
   const positions: BacktestPosition[] = [];
@@ -107,6 +180,16 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
   let maximumDrawdown = 0;
   let drawdownPeakTimestamp = peakTimestamp;
   let drawdownTroughTimestamp = peakTimestamp;
+
+  // Reentry state machine ('lower3'). The reference high of the open position's entry signal is kept so
+  // that a losing exit can freeze it; it is exactly the `recentHigh` of the entry session.
+  let restriction: Restriction | undefined;
+  let entryReferenceHigh = 0;
+  const stateLog: StateLogRow[] = [];
+  const entryIndexes = new Map<BacktestPosition, number>();
+  const exitIndexes = new Map<BacktestPosition, number>();
+  const exitReasons = new Map<BacktestPosition, ExitReason>();
+  const dailyRows: { index: number; date: string; close: number; borrowed: number; mtmProfit: number }[] = [];
 
   const formatDollars = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -147,6 +230,35 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
   const calculateUnrealizedProfit = (position: BacktestPosition, tick: Tick) =>
     position.shares * tick.close - position.investment - calculateInterest(position, tick.time);
 
+  const logState = (
+    index: number,
+    tick: Tick,
+    prevState: 'NORMAL' | 'RESTRICTED',
+    newState: 'NORMAL' | 'RESTRICTED',
+    reason: string,
+    signal: boolean,
+    entryExecuted: boolean,
+    exitReason = '',
+    tradeProfit: number | '' = ''
+  ) => {
+    stateLog.push({
+      index,
+      date: formatDate(tick.time),
+      prevState,
+      newState,
+      reason,
+      exitReason,
+      tradeProfit,
+      lossExitPrice: restriction?.lossExitPrice ?? '',
+      refHigh: restriction?.referenceHigh ?? '',
+      lowerLevel: restriction?.lowerLevel ?? '',
+      resetLevel: restriction?.resetLevel ?? '',
+      close: tick.close,
+      signal,
+      entryExecuted
+    });
+  };
+
   ticks.forEach((tick, index) => {
     const tickWindow: Tick[] = ticks.slice(Math.max(0, index - tickWindowSize), index);
     const recentHigh = Math.max(...tickWindow.map((windowTick) => windowTick.high));
@@ -154,17 +266,29 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
 
     // Skip the first tick.
     if (index === 0) {
+      dailyRows.push({ index, date: formatDate(tick.time), close: tick.close, borrowed: 0, mtmProfit: 0 });
       return;
     }
 
     const openPositions = positions.filter((position) => position.isOpen);
-    const buy = openPositions.length === 0 && percentChange >= targetPercentChange;
+    const signal = percentChange >= targetPercentChange;
+    let buy = openPositions.length === 0 && signal;
+    let entryBlocked = false;
+
+    // While restricted, an entry additionally needs a close at or below the frozen lower level. A close
+    // at or above the frozen reset level takes the recovery-reset path instead (applied at the end of
+    // the session), so it never buys on the same session.
+    if (buy && restriction) {
+      if (tick.close >= restriction.resetLevel || tick.close > restriction.lowerLevel) {
+        buy = false;
+        entryBlocked = true;
+      }
+    }
 
     if (buy) {
       // Vanguard allows partial shares.
       const shares = investmentAmount / tick.close;
-
-      positions.push({
+      const position: BacktestPosition = {
         isOpen: true,
         symbol,
         type: PositionType.Long,
@@ -172,8 +296,11 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
         investment: investmentAmount,
         entryTimestamp: tick.time,
         entryPrice: tick.close
-      });
+      };
 
+      positions.push(position);
+      entryIndexes.set(position, index);
+      entryReferenceHigh = recentHigh;
       postEntryHigh = tick.close;
       postEntryLow = tick.close;
       stopPrice = postEntryHigh * (1 - trailingStopPercentage);
@@ -181,6 +308,12 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
       console.info(
         `Entered at ${targetPercentChange * 100}% change on ${new Date(tick.time * 1000).toISOString()} from ${formatPrice(recentHigh)} to ${formatPrice(tick.close)}`
       );
+
+      if (restriction) {
+        console.info(
+          `Lower-price reentry: close ${formatPrice(tick.close)} is at least ${formatPercent(strategy.lowerPriceReentry ?? 0)} below the loss exit at ${formatPrice(restriction.lossExitPrice)}`
+        );
+      }
     }
 
     const [position] = openPositions;
@@ -198,6 +331,8 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
         position.interest = interest;
         position.profit = position.shares * exit.price - position.investment - interest;
         realizedProfit += position.profit;
+        exitIndexes.set(position, index);
+        exitReasons.set(position, exit.reason);
 
         const monthsHeld = (tick.time - position.entryTimestamp) / ((365 / 12) * secondsPerDay);
         const alsoTriggered =
@@ -216,6 +351,25 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
 
         console.info(`Held for ${formatMonths(monthsHeld)} months`);
         console.info(`Lowest low: ${formatPrice(lowestLow)} (${formatPercent(dropToLowestLow)} below entry)\n`);
+
+        // A losing exit (net of interest) freezes the restriction; a profitable exit leaves the
+        // strategy unrestricted. The frozen reference high is the entry signal's, not today's.
+        if (strategy.lowerPriceReentry !== undefined) {
+          if (position.profit < 0) {
+            restriction = {
+              lossExitPrice: exit.price,
+              referenceHigh: entryReferenceHigh,
+              lowerLevel: exit.price * (1 - strategy.lowerPriceReentry),
+              resetLevel: entryReferenceHigh * (strategy.recoveryReset ?? Infinity)
+            };
+            logState(index, tick, 'NORMAL', 'RESTRICTED', 'losing_exit', signal, false, exit.reason, position.profit);
+            console.info(
+              `Restricted after loss: reentry needs a close at or below ${formatPrice(restriction.lowerLevel)}, reset at or above ${formatPrice(restriction.resetLevel)}\n`
+            );
+          } else {
+            logState(index, tick, 'NORMAL', 'NORMAL', 'profitable_exit', signal, false, exit.reason, position.profit);
+          }
+        }
       } else {
         // After the session, raise the high and the stop for the next session. The stop never moves down.
         postEntryHigh = Math.max(postEntryHigh, tick.high);
@@ -228,6 +382,14 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
     const openPosition = positions.find((position) => position.isOpen);
     const markedProfit = realizedProfit + (openPosition ? calculateUnrealizedProfit(openPosition, tick) : 0);
 
+    dailyRows.push({
+      index,
+      date: formatDate(tick.time),
+      close: tick.close,
+      borrowed: openPosition ? openPosition.investment : 0,
+      mtmProfit: markedProfit
+    });
+
     if (markedProfit > peakProfit) {
       peakProfit = markedProfit;
       peakTimestamp = tick.time;
@@ -237,6 +399,32 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
       maximumDrawdown = peakProfit - markedProfit;
       drawdownPeakTimestamp = peakTimestamp;
       drawdownTroughTimestamp = tick.time;
+    }
+
+    // End of the session: resolve the restriction. A position opened at this close clears it; otherwise
+    // a close at or above the frozen reset level clears it (recovery reset, never a purchase). The log
+    // mirrors the research implementation: one row per session while restricted.
+    if (restriction) {
+      if (openPosition && entryIndexes.get(openPosition) === index) {
+        logState(index, tick, 'RESTRICTED', 'NORMAL', 'lower_price_reentry', signal, true);
+        restriction = undefined;
+      } else if (!openPosition && tick.close >= restriction.resetLevel) {
+        logState(index, tick, 'RESTRICTED', 'NORMAL', 'recovery_reset', signal, false);
+        console.info(
+          `Recovery reset on ${formatDate(tick.time)}: close ${formatPrice(tick.close)} is within ${formatPercent(1 - (strategy.recoveryReset ?? 1))} of the frozen reference high ${formatPrice(restriction.referenceHigh)}\n`
+        );
+        restriction = undefined;
+      } else {
+        const reason = entryBlocked
+          ? tick.close >= restriction.resetLevel
+            ? 'entry_blocked (reset priority)'
+            : 'entry_blocked (price not low enough)'
+          : 'restricted';
+
+        logState(index, tick, 'RESTRICTED', 'RESTRICTED', reason, signal, false);
+      }
+    } else if (strategy.lowerPriceReentry !== undefined && openPosition && entryIndexes.get(openPosition) === index) {
+      logState(index, tick, 'NORMAL', 'NORMAL', 'normal_entry', signal, true);
     }
   });
 
@@ -259,6 +447,7 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
     console.info(`Symbol: ${symbol}, from ${formatDate(firstTick.time)} to ${formatDate(lastTick.time)}`);
   }
 
+  console.info(`Strategy: ${strategyKey}, data file: ${file}`);
   console.info(`Closed trades: ${closedPositions.length}${openPosition ? ', plus 1 still open' : ''}`);
   console.info(`Realized profit: ${formatDollars(realizedProfit)}`);
   console.info(`Unrealized profit on the open position: ${formatDollars(unrealizedProfit)}`);
@@ -275,4 +464,90 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
   console.info(`Target percent change: ${formatPercent(targetPercentChange)}`);
   console.info(`Trailing stop percentage: ${formatPercent(trailingStopPercentage)}`);
   console.info(`Maximum hold: ${maximumHoldDays} days`);
+
+  if (outDir && lastTick) {
+    await fs.ensureDir(outDir);
+
+    const tradeLines = [
+      'entry_index,exit_index,entry_date,exit_date,entry_price,exit_price,reason,investment,shares,interest,profit'
+    ];
+
+    for (const position of positions) {
+      const isOpen = position.isOpen;
+      const interest = isOpen ? accruedInterest : (position.interest ?? 0);
+      const profit = isOpen ? unrealizedProfit : (position.profit ?? 0);
+      const exitPrice = isOpen ? lastTick.close : (position.exitPrice ?? 0);
+
+      tradeLines.push(
+        [
+          entryIndexes.get(position),
+          isOpen ? '' : exitIndexes.get(position),
+          formatDate(position.entryTimestamp),
+          isOpen ? '' : formatDate(position.exitTimestamp ?? 0),
+          position.entryPrice,
+          exitPrice,
+          isOpen ? 'open' : (exitReasons.get(position) ?? ''),
+          position.investment,
+          position.shares,
+          interest,
+          profit
+        ].join(',')
+      );
+    }
+
+    const dailyLines = ['index,date,close,borrowed,mtm_pnl'];
+
+    for (const row of dailyRows) {
+      dailyLines.push([row.index, row.date, row.close, row.borrowed, row.mtmProfit].join(','));
+    }
+
+    const stateLines = [
+      'index,date,prev_state,new_state,reason,exit_reason,trade_profit,loss_exit_price,ref_high,lower_level,reset_level,close,signal,entry_executed'
+    ];
+
+    for (const row of stateLog) {
+      stateLines.push(
+        [
+          row.index,
+          row.date,
+          row.prevState,
+          row.newState,
+          `"${row.reason}"`,
+          row.exitReason,
+          row.tradeProfit,
+          row.lossExitPrice,
+          row.refHigh,
+          row.lowerLevel,
+          row.resetLevel,
+          row.close,
+          row.signal,
+          row.entryExecuted
+        ].join(',')
+      );
+    }
+
+    const summary = {
+      symbol,
+      dataFile: file,
+      strategy: strategyKey,
+      firstDate: firstTick ? formatDate(firstTick.time) : '',
+      lastDate: formatDate(lastTick.time),
+      sessions: ticks.length,
+      closedTrades: closedPositions.length,
+      openAtEnd: Boolean(openPosition),
+      realizedProfit,
+      unrealizedProfit,
+      netProfit: realizedProfit + unrealizedProfit,
+      marginInterest: closedInterest + accruedInterest,
+      maximumDrawdown,
+      drawdownPeakDate: formatDate(drawdownPeakTimestamp),
+      drawdownTroughDate: formatDate(drawdownTroughTimestamp)
+    };
+
+    await fs.writeFile(`${outDir}/trades.csv`, `${tradeLines.join('\n')}\n`);
+    await fs.writeFile(`${outDir}/daily.csv`, `${dailyLines.join('\n')}\n`);
+    await fs.writeFile(`${outDir}/states.csv`, `${stateLines.join('\n')}\n`);
+    await fs.writeFile(`${outDir}/summary.json`, `${JSON.stringify(summary, null, 1)}\n`);
+    console.info(`Wrote trades.csv, daily.csv, states.csv and summary.json to ${outDir}`);
+  }
 };
