@@ -89,7 +89,7 @@ export default async (symbol = 'VGT', startDate?: string, endDate?: string) => {
     throw new Error('Start and end dates must be YYYY-MM-DD');
   }
 
-  const allTicks = await loadCsvBacktestData(symbol, `data/${symbol}/${symbol}-1999-2015.csv`);
+  const allTicks = await loadCsvBacktestData(symbol, `data/${symbol}/${symbol}-2016-2026.csv`);
   const ticks = allTicks.filter((tick) => tick.time >= startTimestamp && tick.time <= endTimestamp);
   const tickWindowSize = 90;
   const positions: BacktestPosition[] = [];
