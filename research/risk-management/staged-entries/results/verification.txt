@@ -1,0 +1,356 @@
+## 1. A_baseline reproduces the frozen baseline
+VGT_2005_2015: metrics identical=True, matched control identical=True, trades CSV byte-identical=True, daily CSV byte-identical=True; net 11,602.49, max DD 73,403.62
+QQQ_1999_2015: metrics identical=True, matched control identical=True, trades CSV byte-identical=True, daily CSV byte-identical=True; net -2,885.66, max DD 149,561.06
+VGT_2016_2026: metrics identical=True, matched control identical=True, trades CSV byte-identical=True, daily CSV byte-identical=True; net 161,772.50, max DD 38,323.32
+QQQ_2016_2026: metrics identical=True, matched control identical=True, trades CSV byte-identical=True, daily CSV byte-identical=True; net 116,388.45, max DD 39,236.60
+RESULT: PASS
+
+## 2. Independent replica vs engine (every trade, every config, every dataset)
+VGT_2005_2015 A_baseline: trades replica 48 / engine 48, mismatches 0, net replica 11,602.4869 / engine 11,602.4869
+VGT_2005_2015 B_staged_two_positive_closes: trades replica 49 / engine 49, mismatches 0, net replica -13,232.7643 / engine -13,232.7643
+VGT_2005_2015 C_staged_3pct_recovery: trades replica 51 / engine 51, mismatches 0, net replica -4,060.3597 / engine -4,060.3597
+QQQ_1999_2015 A_baseline: trades replica 109 / engine 109, mismatches 0, net replica -2,885.6640 / engine -2,885.6640
+QQQ_1999_2015 B_staged_two_positive_closes: trades replica 115 / engine 115, mismatches 0, net replica -59,469.6001 / engine -59,469.6001
+QQQ_1999_2015 C_staged_3pct_recovery: trades replica 116 / engine 116, mismatches 0, net replica -16,509.3493 / engine -16,509.3493
+VGT_2016_2026 A_baseline: trades replica 45 / engine 45, mismatches 0, net replica 161,772.4960 / engine 161,772.4960
+VGT_2016_2026 B_staged_two_positive_closes: trades replica 47 / engine 47, mismatches 0, net replica 129,096.2027 / engine 129,096.2027
+VGT_2016_2026 C_staged_3pct_recovery: trades replica 47 / engine 47, mismatches 0, net replica 125,982.6207 / engine 125,982.6207
+QQQ_2016_2026 A_baseline: trades replica 36 / engine 36, mismatches 0, net replica 116,388.4479 / engine 116,388.4479
+QQQ_2016_2026 B_staged_two_positive_closes: trades replica 37 / engine 37, mismatches 0, net replica 83,413.8830 / engine 83,413.8830
+QQQ_2016_2026 C_staged_3pct_recovery: trades replica 38 / engine 38, mismatches 0, net replica 100,499.8027 / engine 100,499.8027
+RESULT: PASS
+
+## 3. Lot-level P&L reconciliation (sum of per-lot P&L == aggregate trade P&L)
+VGT_2005_2015 B_staged_two_positive_closes: max |sum(lot P&L) - trade P&L| = 1.46e-11; sum of all lot P&L -13,232.7643 vs net profit -13,232.7643
+VGT_2005_2015 C_staged_3pct_recovery: max |sum(lot P&L) - trade P&L| = 1.48e-11; sum of all lot P&L -4,060.3597 vs net profit -4,060.3597
+QQQ_1999_2015 B_staged_two_positive_closes: max |sum(lot P&L) - trade P&L| = 2.91e-11; sum of all lot P&L -59,469.6001 vs net profit -59,469.6001
+QQQ_1999_2015 C_staged_3pct_recovery: max |sum(lot P&L) - trade P&L| = 2.18e-11; sum of all lot P&L -16,509.3493 vs net profit -16,509.3493
+VGT_2016_2026 B_staged_two_positive_closes: max |sum(lot P&L) - trade P&L| = 1.82e-11; sum of all lot P&L 129,096.2027 vs net profit 129,096.2027
+VGT_2016_2026 C_staged_3pct_recovery: max |sum(lot P&L) - trade P&L| = 1.55e-11; sum of all lot P&L 125,982.6207 vs net profit 125,982.6207
+QQQ_2016_2026 B_staged_two_positive_closes: max |sum(lot P&L) - trade P&L| = 1.46e-11; sum of all lot P&L 83,413.8830 vs net profit 83,413.8830
+QQQ_2016_2026 C_staged_3pct_recovery: max |sum(lot P&L) - trade P&L| = 1.46e-11; sum of all lot P&L 100,499.8027 vs net profit 100,499.8027
+RESULT: PASS
+
+## 4. Hand-check traces of staged positions
+
+[largest winner with an add]
+
+### VGT_2016_2026 B_staged_two_positive_closes position entered 2020-04-03
+Signal: close 24.2742 on 2020-04-03; 90-session high before it 32.6823 -> dip 25.7268% (>= 10%)
+Lot 1: $50,000 at 24.2742 = 2059.800117 shares
+Add rule B: closes 2020-04-07 26.1398 < 2020-04-08 26.8896 < 2020-04-09 26.9545 (j-1 = entry+3 > entry)
+  no earlier session in entry+2..j-1 had two consecutive positive closes (checked)
+Lot 2: $50,000 at 26.9545 on 2020-04-09 (session entry+4, 6 calendar days) = 1854.977833 shares; add price / initial = 1.1104
+Average entry price = $100,000 / 3914.777950 shares = 25.544233 (engine 25.544233); shift vs initial +5.232%
+Exit session 2020-09-04 (session entry+107): O 38.0291 H 38.5504 L 36.0259 C 37.644
+Interest: lot 1 154 days x $50,000 x 11%/365 = 2,320.55; lot 2 148 days -> 2,230.14; total 4,550.68 (engine 4,550.68)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 40.9427 (2020-09-02) = 37.667284
+Breakeven incl. interest: aggregate 26.706671; initial lot alone 25.400789 -> stop active (aggregate) = True (P&L at stop 42,908.37); initial lot alone would be True
+Loss exit at open: days held 154 (>= 15: True); aggregate P&L at open 44,324.80; initial lot alone 26,011.80
+Hand fill: 37.667284 (trailing stop (low reached active stop)); engine: 37.667284 (trailing stop)
+Per-lot P&L: lot 1 2059.800117 x 37.667284 - 50,000 - 2,320.55 = 25,266.53; lot 2 = 17,641.84; sum 42,908.37; engine aggregate 42,908.37; difference -1.46e-11
+Baseline trade with the same entry: exit 2020-09-04 at 37.667284 (trailing stop), P&L 50,533.06; variant - baseline = -7,624.69
+CHECK: PASS
+
+[add below the initial price]
+
+### VGT_2016_2026 B_staged_two_positive_closes position entered 2022-09-15
+Signal: close 40.8981 on 2022-09-15; 90-session high before it 47.7709 -> dip 14.3870% (>= 10%)
+Lot 1: $50,000 at 40.8981 = 1222.550681 shares
+Add rule B: closes 2022-09-26 38.6996 < 2022-09-27 38.8389 < 2022-09-28 39.2892 (j-1 = entry+8 > entry)
+  no earlier session in entry+2..j-1 had two consecutive positive closes (checked)
+Lot 2: $50,000 at 39.2892 on 2022-09-28 (session entry+9, 13 calendar days) = 1272.614357 shares; add price / initial = 0.9607
+Average entry price = $100,000 / 2495.165038 shares = 40.077509 (engine 40.077509); shift vs initial -2.006%
+Exit session 2022-09-30 (session entry+11): O 38.1351 H 38.7475 L 37.5592 C 37.586
+Interest: lot 1 15 days x $50,000 x 11%/365 = 226.03; lot 2 2 days -> 30.14; total 256.16 (engine 256.16)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 41.4762 (2022-09-21) = 38.158104
+Breakeven incl. interest: aggregate 40.180174; initial lot alone 41.082982 -> stop active (aggregate) = False (P&L at stop -5,045.40); initial lot alone would be False
+Loss exit at open: days held 15 (>= 15: True); aggregate P&L at open -5,102.80; initial lot alone -3,603.93
+Hand fill: 38.1351 (maximum hold (loss exit at the open)); engine: 38.1351 (maximum hold)
+Per-lot P&L: lot 1 1222.550681 x 38.1351 - 50,000 - 226.03 = -3,603.93; lot 2 = -1,498.86; sum -5,102.80; engine aggregate -5,102.80; difference 0.00e+00
+Baseline trade with the same entry: exit 2022-09-30 at 38.1351 (maximum hold), P&L -7,207.87; variant - baseline = 2,105.07
+CHECK: PASS
+
+[loss exit caused by the add]
+
+### VGT_2016_2026 B_staged_two_positive_closes position entered 2022-10-03
+Signal: close 38.7269 on 2022-10-03; 90-session high before it 47.7709 -> dip 18.9320% (>= 10%)
+Lot 1: $50,000 at 38.7269 = 1291.092238 shares
+Add rule B: closes 2022-10-03 38.7269 < 2022-10-04 40.0831 < 2022-10-05 40.2102 (j-1 = entry+1 > entry)
+  no earlier session in entry+2..j-1 had two consecutive positive closes (checked)
+Lot 2: $50,000 at 40.2102 on 2022-10-05 (session entry+2, 2 calendar days) = 1243.465588 shares; add price / initial = 1.0383
+Average entry price = $100,000 / 2534.557827 shares = 39.454614 (engine 39.454614); shift vs initial +1.879%
+Exit session 2022-10-18 (session entry+11): O 38.9176 H 39.1059 L 37.862 C 38.3404
+Interest: lot 1 15 days x $50,000 x 11%/365 = 226.03; lot 2 13 days -> 195.89; total 421.92 (engine 421.92)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 40.5696 (2022-10-06) = 37.324032
+Breakeven incl. interest: aggregate 39.621080; initial lot alone 38.901967 -> stop active (aggregate) = False (P&L at stop -5,822.00); initial lot alone would be False
+Loss exit at open: days held 15 (>= 15: True); aggregate P&L at open -1,783.01; initial lot alone 20.18
+Hand fill: 38.9176 (maximum hold (loss exit at the open)); engine: 38.9176 (maximum hold)
+Per-lot P&L: lot 1 1291.092238 x 38.9176 - 50,000 - 226.03 = 20.18; lot 2 = -1,803.19; sum -1,783.01; engine aggregate -1,783.01; difference -7.28e-12
+Baseline trade with the same entry: exit 2022-10-19 at 37.9919 (maximum hold), P&L -2,380.10; variant - baseline = 597.09
+CHECK: PASS
+
+[largest winner with an add]
+
+### QQQ_2016_2026 C_staged_3pct_recovery position entered 2020-03-16
+Signal: close 163.79 on 2020-03-16; 90-session high before it 229.716 -> dip 28.6989% (>= 10%)
+Lot 1: $50,000 at 163.79 = 305.268942 shares
+Add rule C: close 176.182 on 2020-03-17 >= 1.03 x 163.79 = 168.703700
+  closes in entry+1..j-1 all below 168.703700 (checked)
+Lot 2: $50,000 at 176.182 on 2020-03-17 (session entry+1, 1 calendar days) = 283.797437 shares; add price / initial = 1.0757
+Average entry price = $100,000 / 589.066379 shares = 169.760155 (engine 169.760155); shift vs initial +3.645%
+Exit session 2020-09-04 (session entry+121): O 277.545 H 280.614 L 263.979 C 275.438
+Interest: lot 1 172 days x $50,000 x 11%/365 = 2,591.78; lot 2 171 days -> 2,576.71; total 5,168.49 (engine 5,168.49)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 294.782 (2020-09-02) = 271.199440
+Breakeven incl. interest: aggregate 178.534197; initial lot alone 172.280156 -> stop active (aggregate) = True (P&L at stop 54,585.98); initial lot alone would be True
+Loss exit at open: days held 172 (>= 15: True); aggregate P&L at open 58,323.93; initial lot alone 32,134.09
+Hand fill: 271.19944 (trailing stop (low reached active stop)); engine: 271.19944 (trailing stop)
+Per-lot P&L: lot 1 305.268942 x 271.19944 - 50,000 - 2,591.78 = 30,196.99; lot 2 = 24,388.99; sum 54,585.98; engine aggregate 54,585.98; difference 0.00e+00
+Baseline trade with the same entry: exit 2020-03-18 at 164.10868 (trailing stop), P&L 134.29; variant - baseline = 54,451.69
+CHECK: PASS
+
+[loss exit caused by the add]
+
+### QQQ_2016_2026 C_staged_3pct_recovery position entered 2022-10-18
+Signal: close 267.127 on 2022-10-18; 90-session high before it 328.467 -> dip 18.6746% (>= 10%)
+Lot 1: $50,000 at 267.127 = 187.176886 shares
+Add rule C: close 279.654 on 2022-10-25 >= 1.03 x 267.127 = 275.140810
+  closes in entry+1..j-1 all below 275.140810 (checked)
+Lot 2: $50,000 at 279.654 on 2022-10-25 (session entry+5, 7 calendar days) = 178.792365 shares; add price / initial = 1.0469
+Average entry price = $100,000 / 365.969251 shares = 273.247000 (engine 273.247000); shift vs initial +2.291%
+Exit session 2022-11-02 (session entry+11): O 270.671 H 273.748 L 261.35 C 261.42
+Interest: lot 1 15 days x $50,000 x 11%/365 = 226.03; lot 2 8 days -> 120.55; total 346.58 (engine 346.58)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 280.036 (2022-10-25) = 257.633120
+Breakeven incl. interest: aggregate 274.194007; initial lot alone 268.334560 -> stop active (aggregate) = False (P&L at stop -6,060.78); initial lot alone would be False
+Loss exit at open: days held 15 (>= 15: True); aggregate P&L at open -1,289.31; initial lot alone 437.33
+Hand fill: 270.671 (maximum hold (loss exit at the open)); engine: 270.671 (maximum hold)
+Per-lot P&L: lot 1 187.176886 x 270.671 - 50,000 - 226.03 = 437.33; lot 2 = -1,726.64; sum -1,289.31; engine aggregate -1,289.31; difference -7.28e-12
+Baseline trade with the same entry: exit 2022-11-03 at 258.79 (maximum hold), P&L -3,603.18; variant - baseline = 2,313.87
+CHECK: PASS
+
+[stop blocked by the add on the exit session]
+
+### QQQ_2016_2026 C_staged_3pct_recovery position entered 2020-09-24
+Signal: close 258.134 on 2020-09-24; 90-session high before it 294.782 -> dip 12.4322% (>= 10%)
+Lot 1: $50,000 at 258.134 = 193.697847 shares
+Add rule C: close 269.634 on 2020-09-28 >= 1.03 x 258.134 = 265.878020
+  closes in entry+1..j-1 all below 265.878020 (checked)
+Lot 2: $50,000 at 269.634 on 2020-09-28 (session entry+2, 4 calendar days) = 185.436555 shares; add price / initial = 1.0446
+Average entry price = $100,000 / 379.134402 shares = 263.758708 (engine 263.758708); shift vs initial +2.179%
+Exit session 2020-10-29 (session entry+25): O 265.575 H 271.851 L 265.064 C 268.839
+Interest: lot 1 35 days x $50,000 x 11%/365 = 527.40; lot 2 31 days -> 467.12; total 994.52 (engine 994.52)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 289.33 (2020-10-12) = 266.183600
+Breakeven incl. interest: aggregate 266.381843; initial lot alone 260.856783 -> stop active (aggregate) = False (P&L at stop -75.16); initial lot alone would be True
+Loss exit at open: days held 35 (>= 15: True); aggregate P&L at open -305.90; initial lot alone 913.91
+Hand fill: 265.575 (maximum hold (loss exit at the open)); engine: 265.575 (maximum hold)
+Per-lot P&L: lot 1 193.697847 x 265.575 - 50,000 - 527.40 = 913.91; lot 2 = -1,219.81; sum -305.90; engine aggregate -305.90; difference 7.16e-12
+No baseline trade with the same entry session (sequence diverged).
+CHECK: PASS
+
+[open position at the end]
+
+### QQQ_2016_2026 C_staged_3pct_recovery position entered 2026-07-29
+Signal: close 661.73 on 2026-07-29; 90-session high before it 748.65 -> dip 11.6102% (>= 10%)
+Lot 1: $50,000 at 661.73 = 75.559518 shares
+Add rule C: close 683.55 on 2026-07-30 >= 1.03 x 661.73 = 681.581900
+  closes in entry+1..j-1 all below 681.581900 (checked)
+Lot 2: $50,000 at 683.55 on 2026-07-30 (session entry+1, 1 calendar days) = 73.147539 shares; add price / initial = 1.0330
+Average entry price = $100,000 / 148.707057 shares = 672.463043 (engine 672.463043); shift vs initial +1.622%
+Exit session 2026-10-07 (open position marked at last close): O 753.79 H 758.3 L 751.75 C 757.73
+Interest: lot 1 70 days x $50,000 x 11%/365 = 1,054.79; lot 2 69 days -> 1,039.73; total 2,094.52 (engine 2,094.52)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 762.86 (2026-10-06) = 701.831200
+Breakeven incl. interest: aggregate 686.547920; initial lot alone 675.689784 -> stop active (aggregate) = True (P&L at stop 2,272.73); initial lot alone would be True
+Loss exit at open: days held 70 (>= 15: True); aggregate P&L at open 9,999.37; initial lot alone 5,901.21
+Hand fill: 757.73 (open position, marked at the last close); engine: 757.73 (open)
+Per-lot P&L: lot 1 75.559518 x 757.73 - 50,000 - 1,054.79 = 6,198.92; lot 2 = 4,386.36; sum 10,585.28; engine aggregate 10,585.28; difference 7.28e-12
+Baseline trade with the same entry: exit nan at 757.73 (open), P&L 12,397.84; variant - baseline = -1,812.56
+CHECK: PASS
+
+[largest winner with an add]
+
+### QQQ_1999_2015 B_staged_two_positive_closes position entered 2009-03-09
+Signal: close 22.3304 on 2009-03-09; 90-session high before it 29.4618 -> dip 24.2056% (>= 10%)
+Lot 1: $50,000 at 22.3304 = 2239.100061 shares
+Add rule B: closes 2009-03-09 22.3304 < 2009-03-10 23.7164 < 2009-03-11 24.0746 (j-1 = entry+1 > entry)
+  no earlier session in entry+2..j-1 had two consecutive positive closes (checked)
+Lot 2: $50,000 at 24.0746 on 2009-03-11 (session entry+2, 2 calendar days) = 2076.877705 shares; add price / initial = 1.0781
+Average entry price = $100,000 / 4315.977766 shares = 23.169721 (engine 23.169721); shift vs initial +3.759%
+Exit session 2010-01-29 (session entry+226): O 38.3151 H 38.409 L 37.1973 C 37.3361
+Interest: lot 1 326 days x $50,000 x 11%/365 = 4,912.33; lot 2 324 days -> 4,882.19; total 9,794.52 (engine 9,794.52)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 40.6938 (2010-01-19) = 37.438296
+Breakeven incl. interest: aggregate 25.439084; initial lot alone 24.524285 -> stop active (aggregate) = True (P&L at stop 51,788.33); initial lot alone would be True
+Loss exit at open: days held 326 (>= 15: True); aggregate P&L at open 55,572.60; initial lot alone 30,879.01
+Hand fill: 37.438296 (trailing stop (low reached active stop)); engine: 37.438296 (trailing stop)
+Per-lot P&L: lot 1 2239.100061 x 37.438296 - 50,000 - 4,912.33 = 28,915.76; lot 2 = 22,872.57; sum 51,788.33; engine aggregate 51,788.33; difference -2.91e-11
+Baseline trade with the same entry: exit 2010-01-29 at 37.438296 (trailing stop), P&L 57,831.52; variant - baseline = -6,043.19
+CHECK: PASS
+
+[add below the initial price]
+
+### QQQ_1999_2015 B_staged_two_positive_closes position entered 2001-02-14
+Signal: close 48.7075 on 2001-02-14; 90-session high before it 74.4942 -> dip 34.6157% (>= 10%)
+Lot 1: $50,000 at 48.7075 = 1026.535954 shares
+Add rule B: closes 2001-02-22 43.2402 < 2001-02-23 43.3918 < 2001-02-26 44.2122 (j-1 = entry+6 > entry)
+  no earlier session in entry+2..j-1 had two consecutive positive closes (checked)
+Lot 2: $50,000 at 44.2122 on 2001-02-26 (session entry+7, 12 calendar days) = 1130.909568 shares; add price / initial = 0.9077
+Average entry price = $100,000 / 2157.445522 shares = 46.351112 (engine 46.351112); shift vs initial -4.838%
+Exit session 2001-02-27 (session entry+8): O 43.6983 H 44.1535 L 41.4576 C 41.5417
+Interest: lot 1 13 days x $50,000 x 11%/365 = 195.89; lot 2 1 days -> 15.07; total 210.96 (engine 210.96)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 51.2829 (2001-02-15) = 47.180268
+Breakeven incl. interest: aggregate 46.448894; initial lot alone 48.898327 -> stop active (aggregate) = True (P&L at stop 1,577.90); initial lot alone would be False
+Loss exit at open: days held 13 (>= 15: False); aggregate P&L at open -5,934.26; initial lot alone -5,338.01
+Hand fill: 43.6983 (trailing stop gap (open at/below active stop)); engine: 43.6983 (trailing stop gap)
+Per-lot P&L: lot 1 1026.535954 x 43.6983 - 50,000 - 195.89 = -5,338.01; lot 2 = -596.24; sum -5,934.26; engine aggregate -5,934.26; difference 7.28e-12
+Baseline trade with the same entry: exit 2001-03-01 at 39.8218 (maximum hold), P&L -18,695.04; variant - baseline = 12,760.78
+CHECK: PASS
+
+[loss exit caused by the add]
+
+### QQQ_1999_2015 B_staged_two_positive_closes position entered 2011-08-23
+Signal: close 46.1795 on 2011-08-23; 90-session high before it 52.8484 -> dip 12.6189% (>= 10%)
+Lot 1: $50,000 at 46.1795 = 1082.731515 shares
+Add rule B: closes 2011-08-25 45.7777 < 2011-08-26 46.9263 < 2011-08-29 48.2351 (j-1 = entry+3 > entry)
+  no earlier session in entry+2..j-1 had two consecutive positive closes (checked)
+Lot 2: $50,000 at 48.2351 on 2011-08-29 (session entry+4, 6 calendar days) = 1036.589537 shares; add price / initial = 1.0445
+Average entry price = $100,000 / 2119.321053 shares = 47.184923 (engine 47.184923); shift vs initial +2.177%
+Exit session 2011-09-12 (session entry+13): O 46.4717 H 47.6117 L 46.4353 C 47.5745
+Interest: lot 1 20 days x $50,000 x 11%/365 = 301.37; lot 2 14 days -> 210.96; total 512.33 (engine 512.33)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 49.2311 (2011-08-31) = 45.292612
+Breakeven incl. interest: aggregate 47.426665; initial lot alone 46.457842 -> stop active (aggregate) = False (P&L at stop -4,522.74); initial lot alone would be False
+Loss exit at open: days held 20 (>= 15: True); aggregate P&L at open -2,023.88; initial lot alone 15.00
+Hand fill: 46.4717 (maximum hold (loss exit at the open)); engine: 46.4717 (maximum hold)
+Per-lot P&L: lot 1 1082.731515 x 46.4717 - 50,000 - 301.37 = 15.00; lot 2 = -2,038.88; sum -2,023.88; engine aggregate -2,023.88; difference 0.00e+00
+Baseline trade with the same entry: exit 2011-09-22 at 46.6923 (trailing stop), P&L 206.34; variant - baseline = -2,230.22
+CHECK: PASS
+
+[stop blocked by the add on the exit session]
+
+### QQQ_1999_2015 B_staged_two_positive_closes position entered 2001-04-23
+Signal: close 38.2836 on 2001-04-23; 90-session high before it 63.3999 -> dip 39.6157% (>= 10%)
+Lot 1: $50,000 at 38.2836 = 1306.042274 shares
+Add rule B: closes 2001-04-26 37.2657 < 2001-04-27 38.2836 < 2001-04-30 39.1345 (j-1 = entry+4 > entry)
+  no earlier session in entry+2..j-1 had two consecutive positive closes (checked)
+Lot 2: $50,000 at 39.1345 on 2001-04-30 (session entry+5, 7 calendar days) = 1277.645045 shares; add price / initial = 1.0222
+Average entry price = $100,000 / 2583.687319 shares = 38.704374 (engine 38.704374); shift vs initial +1.099%
+Exit session 2001-05-11 (session entry+14): O 38.8645 H 39.3626 L 38.2319 C 38.6254
+Interest: lot 1 18 days x $50,000 x 11%/365 = 271.23; lot 2 11 days -> 165.75; total 436.99 (engine 436.99)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 41.8814 (2001-05-02) = 38.530888
+Breakeven incl. interest: aggregate 38.873507; initial lot alone 38.491275 -> stop active (aggregate) = False (P&L at stop -885.22); initial lot alone would be True
+Loss exit at open: days held 18 (>= 15: True); aggregate P&L at open -23.27; initial lot alone 487.45
+Hand fill: 38.8645 (maximum hold (loss exit at the open)); engine: 38.8645 (maximum hold)
+Per-lot P&L: lot 1 1306.042274 x 38.8645 - 50,000 - 271.23 = 487.45; lot 2 = -510.72; sum -23.27; engine aggregate -23.27; difference 7.22e-12
+Baseline trade with the same entry: exit 2001-05-04 at 38.4051 (trailing stop gap), P&L -14.14; variant - baseline = -9.13
+CHECK: PASS
+
+[open position at the end]
+
+### QQQ_1999_2015 B_staged_two_positive_closes position entered 2015-09-28
+Signal: close 92.9521 on 2015-09-28; 90-session high before it 106.051 -> dip 12.3515% (>= 10%)
+Lot 1: $50,000 at 92.9521 = 537.911462 shares
+Add rule B: closes 2015-09-29 92.4669 < 2015-09-30 94.5923 < 2015-10-01 95.0353 (j-1 = entry+2 > entry)
+  no earlier session in entry+2..j-1 had two consecutive positive closes (checked)
+Lot 2: $50,000 at 95.0353 on 2015-10-01 (session entry+3, 3 calendar days) = 526.120294 shares; add price / initial = 1.0224
+Average entry price = $100,000 / 1064.031756 shares = 93.982157 (engine 93.982157); shift vs initial +1.108%
+Exit session 2015-12-31 (open position marked at last close): O 105.235 H 105.444 L 104.286 C 104.296
+Interest: lot 1 94 days x $50,000 x 11%/365 = 1,416.44; lot 2 91 days -> 1,371.23; total 2,787.67 (engine 2,787.67)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 107.598 (2015-12-02) = 98.990160
+Breakeven incl. interest: aggregate 96.602071; initial lot alone 95.585318 -> stop active (aggregate) = True (P&L at stop 2,541.00); initial lot alone would be True
+Loss exit at open: days held 94 (>= 15: True); aggregate P&L at open 9,185.71; initial lot alone 5,190.67
+Hand fill: 104.296 (open position, marked at the last close); engine: 104.296 (open)
+Per-lot P&L: lot 1 537.911462 x 104.296 - 50,000 - 1,416.44 = 4,685.58; lot 2 = 3,501.01; sum 8,186.58; engine aggregate 8,186.58; difference 7.28e-12
+Baseline trade with the same entry: exit nan at 104.296 (open), P&L 9,371.15; variant - baseline = -1,184.57
+CHECK: PASS
+
+[no second tranche]
+
+### QQQ_1999_2015 B_staged_two_positive_closes position entered 2000-11-16
+Signal: close 61.7847 on 2000-11-16; 90-session high before it 87.7715 -> dip 29.6073% (>= 10%)
+Lot 1: $50,000 at 61.7847 = 809.261840 shares
+No second tranche.
+Exit session 2000-12-01 (session entry+10): O 54.3137 H 56.6083 L 52.6782 C 54.2639
+Interest: lot 1 15 days x $50,000 x 11%/365 = 226.03; lot 2 0 days -> 0.00; total 226.03 (engine 226.03)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 63.7476 (2000-11-17) = 58.647792
+Breakeven incl. interest: aggregate 62.064001; initial lot alone 62.064001 -> stop active (aggregate) = False (P&L at stop -2,764.61); initial lot alone would be False
+Loss exit at open: days held 15 (>= 15: True); aggregate P&L at open -6,272.02; initial lot alone -6,272.02
+Hand fill: 54.3137 (maximum hold (loss exit at the open)); engine: 54.3137 (maximum hold)
+Per-lot P&L: lot 1 809.261840 x 54.3137 - 50,000 - 226.03 = -6,272.02; lot 2 = 0.00; sum -6,272.02; engine aggregate -6,272.02; difference 0.00e+00
+Baseline trade with the same entry: exit 2000-12-01 at 54.3137 (maximum hold), P&L -12,544.05; variant - baseline = 6,272.02
+CHECK: PASS
+
+[largest winner with an add]
+
+### VGT_2005_2015 C_staged_3pct_recovery position entered 2009-03-06
+Signal: close 3.27565 on 2009-03-06; 90-session high before it 4.2583 -> dip 23.0761% (>= 10%)
+Lot 1: $50,000 at 3.27565 = 15264.146047 shares
+Add rule C: close 3.39192 on 2009-03-10 >= 1.03 x 3.27565 = 3.373920
+  closes in entry+1..j-1 all below 3.373920 (checked)
+Lot 2: $50,000 at 3.39192 on 2009-03-10 (session entry+2, 4 calendar days) = 14740.913701 shares; add price / initial = 1.0355
+Average entry price = $100,000 / 30005.059748 shares = 3.332771 (engine 3.332771); shift vs initial +1.744%
+Exit session 2009-07-08 (session entry+85): O 4.42598 H 4.43766 L 4.35806 C 4.42245
+Interest: lot 1 124 days x $50,000 x 11%/365 = 1,868.49; lot 2 120 days -> 1,808.22; total 3,676.71 (engine 3,676.71)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 4.74894 (2009-06-10) = 4.369025
+Breakeven incl. interest: aggregate 3.455308; initial lot alone 3.398061 -> stop active (aggregate) = True (P&L at stop 27,416.14); initial lot alone would be True
+Loss exit at open: days held 124 (>= 15: True); aggregate P&L at open 29,125.08; initial lot alone 15,690.31
+Hand fill: 4.3690248 (trailing stop (low reached active stop)); engine: 4.3690248 (trailing stop)
+Per-lot P&L: lot 1 15264.146047 x 4.3690248 - 50,000 - 1,868.49 = 14,820.94; lot 2 = 12,595.20; sum 27,416.14; engine aggregate 27,416.14; difference 0.00e+00
+No baseline trade with the same entry session (sequence diverged).
+CHECK: PASS
+
+[loss exit caused by the add]
+
+### VGT_2005_2015 C_staged_3pct_recovery position entered 2008-11-19
+Signal: close 3.33544 on 2008-11-19; 90-session high before it 6.20294 -> dip 46.2281% (>= 10%)
+Lot 1: $50,000 at 3.33544 = 14990.525988 shares
+Add rule C: close 3.53781 on 2008-11-24 >= 1.03 x 3.33544 = 3.435503
+  closes in entry+1..j-1 all below 3.435503 (checked)
+Lot 2: $50,000 at 3.53781 on 2008-11-24 (session entry+3, 5 calendar days) = 14133.037105 shares; add price / initial = 1.0607
+Average entry price = $100,000 / 29123.563092 shares = 3.433646 (engine 3.433646); shift vs initial +2.944%
+Exit session 2008-12-05 (session entry+11): O 3.39609 H 3.59004 L 3.33741 C 3.59004
+Interest: lot 1 16 days x $50,000 x 11%/365 = 241.10; lot 2 11 days -> 165.75; total 406.85 (engine 406.85)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 3.66712 (2008-11-26) = 3.373750
+Breakeven incl. interest: aggregate 3.447616; initial lot alone 3.351523 -> stop active (aggregate) = False (P&L at stop -2,151.22); initial lot alone would be True
+Loss exit at open: days held 16 (>= 15: True); aggregate P&L at open -1,500.61; initial lot alone 668.08
+Hand fill: 3.39609 (maximum hold (loss exit at the open)); engine: 3.39609 (maximum hold)
+Per-lot P&L: lot 1 14990.525988 x 3.39609 - 50,000 - 241.10 = 668.08; lot 2 = -2,168.69; sum -1,500.61; engine aggregate -1,500.61; difference -7.28e-12
+Baseline trade with the same entry: exit 2008-12-05 at 3.3737504000000005 (trailing stop), P&L 666.39; variant - baseline = -2,167.00
+CHECK: PASS
+
+[stop blocked by the add on the exit session]
+
+### VGT_2005_2015 C_staged_3pct_recovery position entered 2008-04-16
+Signal: close 5.72389 on 2008-04-16; 90-session high before it 6.80041 -> dip 15.8302% (>= 10%)
+Lot 1: $50,000 at 5.72389 = 8735.318114 shares
+Add rule C: close 5.90376 on 2008-04-18 >= 1.03 x 5.72389 = 5.895607
+  closes in entry+1..j-1 all below 5.895607 (checked)
+Lot 2: $50,000 at 5.90376 on 2008-04-18 (session entry+2, 2 calendar days) = 8469.178964 shares; add price / initial = 1.0314
+Average entry price = $100,000 / 17204.497078 shares = 5.812434 (engine 5.812434); shift vs initial +1.547%
+Exit session 2008-06-24 (session entry+48): O 5.92529 H 6.00691 L 5.89266 C 5.93588
+Interest: lot 1 69 days x $50,000 x 11%/365 = 1,039.73; lot 2 67 days -> 1,009.59; total 2,049.32 (engine 2,049.32)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 6.37561 (2008-06-05) = 5.865561
+Breakeven incl. interest: aggregate 5.931549; initial lot alone 5.842916 -> stop active (aggregate) = False (P&L at stop -1,135.28); initial lot alone would be True
+Loss exit at open: days held 69 (>= 15: True); aggregate P&L at open -107.68; initial lot alone 719.57
+Hand fill: 5.92529 (maximum hold (loss exit at the open)); engine: 5.92529 (maximum hold)
+Per-lot P&L: lot 1 8735.318114 x 5.92529 - 50,000 - 1,039.73 = 719.57; lot 2 = -827.25; sum -107.68; engine aggregate -107.68; difference 7.38e-12
+No baseline trade with the same entry session (sequence diverged).
+CHECK: PASS
+
+[open position at the end]
+
+### VGT_2005_2015 C_staged_3pct_recovery position entered 2015-09-28
+Signal: close 11.1498 on 2015-09-28; 90-session high before it 12.5285 -> dip 11.0045% (>= 10%)
+Lot 1: $50,000 at 11.1498 = 4484.385370 shares
+Add rule C: close 11.501 on 2015-10-02 >= 1.03 x 11.1498 = 11.484294
+  closes in entry+1..j-1 all below 11.484294 (checked)
+Lot 2: $50,000 at 11.501 on 2015-10-02 (session entry+4, 4 calendar days) = 4347.448048 shares; add price / initial = 1.0315
+Average entry price = $100,000 / 8831.833418 shares = 11.322677 (engine 11.322677); shift vs initial +1.550%
+Exit session 2015-10-07 (open position marked at last close): O 11.8284 H 11.8547 L 11.668 C 11.819
+Interest: lot 1 9 days x $50,000 x 11%/365 = 135.62; lot 2 5 days -> 75.34; total 210.96 (engine 210.96)
+Stop level before exit session = 0.92 x max(entry close, highs entry+1..exit-1) = 0.92 x 11.7774 (2015-10-06) = 10.835208
+Breakeven incl. interest: aggregate 11.346564; initial lot alone 11.180042 -> stop active (aggregate) = False (P&L at stop -4,516.21); initial lot alone would be False
+Loss exit at open: days held 9 (>= 15: False); aggregate P&L at open 4,255.50; initial lot alone 2,907.49
+Hand fill: 11.819 (open position, marked at the last close); engine: 11.819 (open)
+Per-lot P&L: lot 1 4484.385370 x 11.819 - 50,000 - 135.62 = 2,865.33; lot 2 = 1,307.15; sum 4,172.48; engine aggregate 4,172.48; difference 6.37e-12
+Baseline trade with the same entry: exit nan at 11.819 (open), P&L 5,730.67; variant - baseline = -1,558.19
+CHECK: PASS
+
+OVERALL: PASS

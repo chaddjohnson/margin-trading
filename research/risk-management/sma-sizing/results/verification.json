@@ -1,0 +1,428 @@
+{
+ "A_reproduces_baseline": {
+  "VGT_2005_2015": {
+   "metrics_equal": true,
+   "matched_control_equal": true,
+   "trades_csv_identical": true,
+   "daily_csv_identical": true
+  },
+  "QQQ_1999_2015": {
+   "metrics_equal": true,
+   "matched_control_equal": true,
+   "trades_csv_identical": true,
+   "daily_csv_identical": true
+  },
+  "VGT_2016_2026": {
+   "metrics_equal": true,
+   "matched_control_equal": true,
+   "trades_csv_identical": true,
+   "daily_csv_identical": true
+  },
+  "QQQ_2016_2026": {
+   "metrics_equal": true,
+   "matched_control_equal": true,
+   "trades_csv_identical": true,
+   "daily_csv_identical": true
+  }
+ },
+ "sma_independent_check": {
+  "VGT_2005_2015": {
+   "max_abs_err_sma200": 1.7763568394002505e-15,
+   "max_abs_err_sma200_lag20": 3.552713678800501e-15,
+   "fallback_iff_index_below_219": true,
+   "fallback_iff_pandas_lag_nan": true,
+   "sizes_match_independent_rule": true,
+   "entry_close_matches_file": true
+  },
+  "QQQ_1999_2015": {
+   "max_abs_err_sma200": 1.4210854715202004e-14,
+   "max_abs_err_sma200_lag20": 1.4210854715202004e-14,
+   "fallback_iff_index_below_219": true,
+   "fallback_iff_pandas_lag_nan": true,
+   "sizes_match_independent_rule": true,
+   "entry_close_matches_file": true
+  },
+  "VGT_2016_2026": {
+   "max_abs_err_sma200": 1.4210854715202004e-14,
+   "max_abs_err_sma200_lag20": 2.842170943040401e-14,
+   "fallback_iff_index_below_219": true,
+   "fallback_iff_pandas_lag_nan": true,
+   "sizes_match_independent_rule": true,
+   "entry_close_matches_file": true
+  },
+  "QQQ_2016_2026": {
+   "max_abs_err_sma200": 1.1368683772161603e-13,
+   "max_abs_err_sma200_lag20": 1.1368683772161603e-13,
+   "fallback_iff_index_below_219": true,
+   "fallback_iff_pandas_lag_nan": true,
+   "sizes_match_independent_rule": true,
+   "entry_close_matches_file": true
+  }
+ },
+ "trade_invariance_and_scaling": {
+  "VGT_2005_2015": {
+   "identical_trade_sequence": true,
+   "max_abs_profit_scaling_error": 9.094947017729282e-13,
+   "max_abs_interest_scaling_error": 7.105427357601002e-15
+  },
+  "QQQ_1999_2015": {
+   "identical_trade_sequence": true,
+   "max_abs_profit_scaling_error": 9.094947017729282e-13,
+   "max_abs_interest_scaling_error": 9.094947017729282e-13
+  },
+  "VGT_2016_2026": {
+   "identical_trade_sequence": true,
+   "max_abs_profit_scaling_error": 2.2737367544323206e-13,
+   "max_abs_interest_scaling_error": 1.1368683772161603e-13
+  },
+  "QQQ_2016_2026": {
+   "identical_trade_sequence": true,
+   "max_abs_profit_scaling_error": 2.2737367544323206e-13,
+   "max_abs_interest_scaling_error": 1.1368683772161603e-13
+  }
+ },
+ "look_ahead_truncation_test": {
+  "VGT_2005_2015": {
+   "cuts": [
+    668,
+    1336,
+    2004
+   ],
+   "entries_and_sizes_unchanged": true
+  },
+  "QQQ_1999_2015": {
+   "cuts": [
+    1057,
+    2115,
+    3173
+   ],
+   "entries_and_sizes_unchanged": true
+  },
+  "VGT_2016_2026": {
+   "cuts": [
+    628,
+    1256,
+    1884
+   ],
+   "entries_and_sizes_unchanged": true
+  },
+  "QQQ_2016_2026": {
+   "cuts": [
+    628,
+    1256,
+    1884
+   ],
+   "entries_and_sizes_unchanged": true
+  }
+ },
+ "spot_checks": [
+  {
+   "dataset": "VGT_2005_2015",
+   "date": "2006-06-26",
+   "entry_i": 335,
+   "close": 4.97102,
+   "sma200": 5.30100905,
+   "sma200_lag20": 5.3092719,
+   "regime": "bearish",
+   "size": 50000.0,
+   "exit_date": "2006-07-11",
+   "reason": "maximum hold",
+   "profit": -1802.36384330153
+  },
+  {
+   "dataset": "VGT_2005_2015",
+   "date": "2006-05-23",
+   "entry_i": 312,
+   "close": 5.07001,
+   "sma200": 5.3085419,
+   "sma200_lag20": 5.2848282,
+   "regime": "normal",
+   "size": 100000.0,
+   "exit_date": "2006-06-07",
+   "reason": "maximum hold",
+   "profit": -543.1788751436551
+  },
+  {
+   "dataset": "VGT_2005_2015",
+   "date": "2005-04-15",
+   "entry_i": 34,
+   "close": 4.41916,
+   "sma200": null,
+   "sma200_lag20": null,
+   "regime": "fallback",
+   "size": 100000.0,
+   "exit_date": "2006-05-15",
+   "reason": "trailing stop",
+   "profit": 6013.802412334739
+  },
+  {
+   "dataset": "VGT_2005_2015",
+   "date": "2010-08-31",
+   "entry_i": 1388,
+   "close": 5.37052,
+   "sma200": 5.84613065,
+   "sma200_lag20": 5.840261000000001,
+   "regime": "normal",
+   "size": 100000.0,
+   "exit_date": "2011-03-15",
+   "reason": "trailing stop gap",
+   "profit": 18140.915147218228
+  },
+  {
+   "dataset": "QQQ_1999_2015",
+   "date": "2000-10-31",
+   "entry_i": 416,
+   "close": 69.2699,
+   "sma200": 79.849329,
+   "sma200_lag20": 80.565763,
+   "regime": "bearish",
+   "size": 50000.0,
+   "exit_date": "2000-11-15",
+   "reason": "maximum hold",
+   "profit": -3985.8855751990345
+  },
+  {
+   "dataset": "QQQ_1999_2015",
+   "date": "2000-01-28",
+   "entry_i": 224,
+   "close": 72.9132,
+   "sma200": 55.037976500000006,
+   "sma200_lag20": 51.85537200000001,
+   "regime": "normal",
+   "size": 100000.0,
+   "exit_date": "2000-03-14",
+   "reason": "trailing stop",
+   "profit": 23182.237660106864
+  },
+  {
+   "dataset": "QQQ_1999_2015",
+   "date": "1999-04-19",
+   "entry_i": 27,
+   "close": 41.9901,
+   "sma200": null,
+   "sma200_lag20": null,
+   "regime": "fallback",
+   "size": 100000.0,
+   "exit_date": "1999-04-29",
+   "reason": "trailing stop",
+   "profit": 6105.064034500241
+  },
+  {
+   "dataset": "QQQ_1999_2015",
+   "date": "2009-03-09",
+   "entry_i": 2513,
+   "close": 22.3304,
+   "sma200": 32.171927000000004,
+   "sma200_lag20": 33.9030215,
+   "regime": "bearish",
+   "size": 50000.0,
+   "exit_date": "2010-01-29",
+   "reason": "trailing stop",
+   "profit": 28915.762086600775
+  },
+  {
+   "dataset": "VGT_2016_2026",
+   "date": "2018-12-26",
+   "entry_i": 557,
+   "close": 19.3549,
+   "sma200": 21.6466835,
+   "sma200_lag20": 21.6632895,
+   "regime": "bearish",
+   "size": 50000.0,
+   "exit_date": "2019-05-13",
+   "reason": "trailing stop",
+   "profit": 8563.62024214321
+  },
+  {
+   "dataset": "VGT_2016_2026",
+   "date": "2018-02-08",
+   "entry_i": 336,
+   "close": 18.7276,
+   "sma200": 17.955603500000002,
+   "sma200_lag20": 17.48986,
+   "regime": "normal",
+   "size": 100000.0,
+   "exit_date": "2018-03-23",
+   "reason": "trailing stop",
+   "profit": 5395.04702896932
+  },
+  {
+   "dataset": "VGT_2016_2026",
+   "date": "2020-04-03",
+   "entry_i": 877,
+   "close": 24.2742,
+   "sma200": 27.128649,
+   "sma200_lag20": 27.053899499999996,
+   "regime": "normal",
+   "size": 100000.0,
+   "exit_date": "2020-09-04",
+   "reason": "trailing stop",
+   "profit": 50533.05608988086
+  },
+  {
+   "dataset": "QQQ_2016_2026",
+   "date": "2018-12-26",
+   "entry_i": 557,
+   "close": 146.293,
+   "sma200": 164.026465,
+   "sma200_lag20": 164.47743,
+   "regime": "bearish",
+   "size": 50000.0,
+   "exit_date": "2019-05-29",
+   "reason": "trailing stop",
+   "profit": 5500.728534188609
+  },
+  {
+   "dataset": "QQQ_2016_2026",
+   "date": "2018-02-08",
+   "entry_i": 336,
+   "close": 146.017,
+   "sma200": 140.49899000000002,
+   "sma200_lag20": 137.23847,
+   "regime": "normal",
+   "size": 100000.0,
+   "exit_date": "2018-03-23",
+   "reason": "trailing stop",
+   "profit": 3725.004416355734
+  },
+  {
+   "dataset": "QQQ_2016_2026",
+   "date": "2020-03-19",
+   "entry_i": 866,
+   "close": 171.87,
+   "sma200": 192.64876,
+   "sma200_lag20": 190.47515,
+   "regime": "normal",
+   "size": 100000.0,
+   "exit_date": "2020-09-04",
+   "reason": "trailing stop",
+   "profit": 52700.20475813591
+  }
+ ],
+ "hand_spot_checks": [
+  {
+   "dataset": "VGT_2005_2015",
+   "date": "2006-06-26",
+   "i": 335,
+   "close": 4.97102,
+   "sma200": 5.30100905,
+   "sma200_lag20": 5.3092719,
+   "hand_size": 50000.0,
+   "engine_size_B": 50000.0,
+   "shares_B": 10058.297894597084,
+   "shares_B_expected": 10058.297894597084,
+   "exit_date": "2006-07-11",
+   "reason": "maximum hold",
+   "exit_price_A": 4.8143,
+   "exit_price_B": 4.8143,
+   "profit_A": -3604.72768660306,
+   "profit_B": -1802.36384330153,
+   "interest_A": 452.05479452054794,
+   "interest_B": 226.02739726027397
+  },
+  {
+   "dataset": "QQQ_1999_2015",
+   "date": "2000-01-05",
+   "i": 208,
+   "close": 72.9132,
+   "sma200": 52.510085,
+   "sma200_lag20": null,
+   "hand_size": 100000.0,
+   "engine_size_B": 100000.0,
+   "shares_B": 1371.4937761612437,
+   "shares_B_expected": 1371.4937761612437,
+   "exit_date": "2000-01-12",
+   "reason": "trailing stop",
+   "exit_price_A": 73.27293999999999,
+   "exit_price_B": 73.27293999999999,
+   "profit_A": 282.42226692663155,
+   "profit_B": 282.42226692663155,
+   "interest_A": 210.95890410958904,
+   "interest_B": 210.95890410958904,
+   "trailing_stop_expected": 73.27293999999999
+  },
+  {
+   "dataset": "QQQ_1999_2015",
+   "date": "2009-03-09",
+   "i": 2513,
+   "close": 22.3304,
+   "sma200": 32.171927000000004,
+   "sma200_lag20": 33.9030215,
+   "hand_size": 50000.0,
+   "engine_size_B": 50000.0,
+   "shares_B": 2239.100060903522,
+   "shares_B_expected": 2239.1000609035214,
+   "exit_date": "2010-01-29",
+   "reason": "trailing stop",
+   "exit_price_A": 37.438296,
+   "exit_price_B": 37.438296,
+   "profit_A": 57831.52417320155,
+   "profit_B": 28915.762086600775,
+   "interest_A": 9824.657534246577,
+   "interest_B": 4912.328767123287,
+   "trailing_stop_expected": 37.438296
+  },
+  {
+   "dataset": "VGT_2016_2026",
+   "date": "2020-04-03",
+   "i": 877,
+   "close": 24.2742,
+   "sma200": 27.128649,
+   "sma200_lag20": 27.053899500000004,
+   "hand_size": 100000.0,
+   "engine_size_B": 100000.0,
+   "shares_B": 4119.600233993293,
+   "shares_B_expected": 4119.600233993293,
+   "exit_date": "2020-09-04",
+   "reason": "trailing stop",
+   "exit_price_A": 37.667284,
+   "exit_price_B": 37.667284,
+   "profit_A": 50533.05608988086,
+   "profit_B": 50533.05608988086,
+   "interest_A": 4641.095890410958,
+   "interest_B": 4641.095890410958,
+   "trailing_stop_expected": 37.667284
+  },
+  {
+   "dataset": "QQQ_2016_2026",
+   "date": "2018-12-26",
+   "i": 557,
+   "close": 146.293,
+   "sma200": 164.026465,
+   "sma200_lag20": 164.47743,
+   "hand_size": 50000.0,
+   "engine_size_B": 50000.0,
+   "shares_B": 341.7798527612394,
+   "shares_B_expected": 341.7798527612394,
+   "exit_date": "2019-05-29",
+   "reason": "trailing stop",
+   "exit_price_A": 169.17696,
+   "exit_price_B": 169.17696,
+   "profit_A": 11001.457068377218,
+   "profit_B": 5500.728534188609,
+   "interest_A": 4641.095890410958,
+   "interest_B": 2320.547945205479,
+   "trailing_stop_expected": 169.17696
+  },
+  {
+   "dataset": "QQQ_2016_2026",
+   "date": "2022-04-28",
+   "i": 1398,
+   "close": 321.554,
+   "sma200": 359.75575,
+   "sma200_lag20": 360.70160000000004,
+   "hand_size": 50000.0,
+   "engine_size_B": 50000.0,
+   "shares_B": 155.49487799871872,
+   "shares_B_expected": 155.49487799871872,
+   "exit_date": "2022-05-13",
+   "reason": "maximum hold",
+   "exit_price_A": 289.897,
+   "exit_price_B": 289.897,
+   "profit_A": -10297.057500131428,
+   "profit_B": -5148.528750065714,
+   "interest_A": 452.05479452054794,
+   "interest_B": 226.02739726027397
+  }
+ ]
+}

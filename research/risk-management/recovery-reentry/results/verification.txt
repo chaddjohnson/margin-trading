@@ -1,0 +1,402 @@
+VGT_2005_2015: metrics identical=True matched_control identical=True trades CSV identical=True daily CSV identical=True  net 11,602.49 vs 11,602.49, mdd 73,403.62 vs 73,403.62
+QQQ_1999_2015: metrics identical=True matched_control identical=True trades CSV identical=True daily CSV identical=True  net -2,885.66 vs -2,885.66, mdd 149,561.06 vs 149,561.06
+VGT_2016_2026: metrics identical=True matched_control identical=True trades CSV identical=True daily CSV identical=True  net 161,772.50 vs 161,772.50, mdd 38,323.32 vs 38,323.32
+QQQ_2016_2026: metrics identical=True matched_control identical=True trades CSV identical=True daily CSV identical=True  net 116,388.45 vs 116,388.45, mdd 39,236.60 vs 39,236.60
+A_baseline reproduces baseline/results/summary.json exactly: True
+
+Independent replay of the confirmation logic (from trades + prices only):
+  VGT_2005_2015 B_two_positive_closes: problems=[] blocked sessions=98 engine-recorded blocked list identical=True
+  VGT_2005_2015 C_close_above_sma10: problems=[] blocked sessions=87 engine-recorded blocked list identical=True
+  VGT_2005_2015 D_recovery_3pct_from_low: problems=[] blocked sessions=102 engine-recorded blocked list identical=True
+  QQQ_1999_2015 B_two_positive_closes: problems=[] blocked sessions=265 engine-recorded blocked list identical=True
+  QQQ_1999_2015 C_close_above_sma10: problems=[] blocked sessions=223 engine-recorded blocked list identical=True
+  QQQ_1999_2015 D_recovery_3pct_from_low: problems=[] blocked sessions=252 engine-recorded blocked list identical=True
+  VGT_2016_2026 B_two_positive_closes: problems=[] blocked sessions=80 engine-recorded blocked list identical=True
+  VGT_2016_2026 C_close_above_sma10: problems=[] blocked sessions=80 engine-recorded blocked list identical=True
+  VGT_2016_2026 D_recovery_3pct_from_low: problems=[] blocked sessions=108 engine-recorded blocked list identical=True
+  QQQ_2016_2026 B_two_positive_closes: problems=[] blocked sessions=66 engine-recorded blocked list identical=True
+  QQQ_2016_2026 C_close_above_sma10: problems=[] blocked sessions=89 engine-recorded blocked list identical=True
+  QQQ_2016_2026 D_recovery_3pct_from_low: problems=[] blocked sessions=84 engine-recorded blocked list identical=True
+
+Spot checks (first three losing exits whose first post-exit signal was blocked, per config and dataset):
+  [VGT_2005_2015 B_two_positive_closes] losing exit 2006-06-07 (loss -543); first signal 2006-06-08; blocked 5 signal session(s): 2006-06-08;2006-06-09;2006-06-12;2006-06-13;2006-06-14; confirmed 2006-06-15; entry 2006-06-15 at 4.9938 (+0.70% vs first-signal close)
+    2006-06-05  close    5.0614  ret  -1.92%  signal Y                                         latched - 
+    2006-06-06  close    5.0584  ret  -0.06%  signal Y                                         latched - 
+    2006-06-07  close    4.9992  ret  -1.17%  signal Y                                         latched - EXIT(loss)
+    2006-06-08  close    4.9592  ret  -0.80%  signal Y                                         latched - 
+    2006-06-09  close    4.9340  ret  -0.51%  signal Y                                         latched - 
+    2006-06-12  close    4.8407  ret  -1.89%  signal Y                                         latched - 
+    2006-06-13  close    4.8047  ret  -0.74%  signal Y                                         latched - 
+    2006-06-14  close    4.8612  ret  +1.18%  signal Y                                         latched - 
+    2006-06-15  close    4.9938  ret  +2.73%  signal Y                                         latched Y 
+  [VGT_2005_2015 B_two_positive_closes] losing exit 2006-07-03 (loss -258); first signal 2006-07-05; blocked 9 signal session(s): 2006-07-05;2006-07-06;2006-07-07;2006-07-10;2006-07-11;2006-07-12;2006-07-13;2006-07-14;2006-07-17; confirmed 2006-07-18; entry 2006-07-18 at 4.7074 (-5.30% vs first-signal close)
+    2006-06-29  close    5.0407  ret  +2.74%  signal Y                                         latched - 
+    2006-06-30  close    5.0308  ret  -0.20%  signal Y                                         latched - 
+    2006-07-03  close    5.0839  ret  +1.06%  signal Y                                         latched - EXIT(loss)
+    2006-07-05  close    4.9710  ret  -2.22%  signal Y                                         latched - 
+    2006-07-06  close    4.9821  ret  +0.22%  signal Y                                         latched - 
+    2006-07-07  close    4.9206  ret  -1.23%  signal Y                                         latched - 
+    2006-07-10  close    4.8456  ret  -1.52%  signal Y                                         latched - 
+    2006-07-11  close    4.8764  ret  +0.64%  signal Y                                         latched - 
+    2006-07-12  close    4.7781  ret  -2.02%  signal Y                                         latched - 
+    2006-07-13  close    4.7065  ret  -1.50%  signal Y                                         latched - 
+    2006-07-14  close    4.6848  ret  -0.46%  signal Y                                         latched - 
+    2006-07-17  close    4.6913  ret  +0.14%  signal Y                                         latched - 
+    2006-07-18  close    4.7074  ret  +0.34%  signal Y                                         latched Y 
+  [VGT_2005_2015 B_two_positive_closes] losing exit 2008-01-22 (loss -6,034); first signal 2008-01-23; blocked 4 signal session(s): 2008-01-23;2008-01-24;2008-01-25;2008-01-28; confirmed 2008-01-29; entry 2008-01-29 at 5.6630 (+2.17% vs first-signal close)
+    2008-01-17  close    5.6913  ret  -1.78%  signal Y                                         latched - 
+    2008-01-18  close    5.6860  ret  -0.09%  signal Y                                         latched - 
+    2008-01-22  close    5.5459  ret  -2.46%  signal Y                                         latched - EXIT(loss)
+    2008-01-23  close    5.5425  ret  -0.06%  signal Y                                         latched - 
+    2008-01-24  close    5.7324  ret  +3.43%  signal Y                                         latched - 
+    2008-01-25  close    5.6303  ret  -1.78%  signal Y                                         latched - 
+    2008-01-28  close    5.6512  ret  +0.37%  signal Y                                         latched - 
+    2008-01-29  close    5.6630  ret  +0.21%  signal Y                                         latched Y 
+  [VGT_2005_2015 C_close_above_sma10] losing exit 2006-06-07 (loss -543); first signal 2006-06-08; blocked 5 signal session(s): 2006-06-08;2006-06-09;2006-06-12;2006-06-13;2006-06-14; confirmed 2006-06-15; entry 2006-06-15 at 4.9938 (+0.70% vs first-signal close)
+    2006-06-05  close    5.0614  ret  -1.92%  signal Y  SMA10 5.1206                           latched - 
+    2006-06-06  close    5.0584  ret  -0.06%  signal Y  SMA10 5.1148                           latched - 
+    2006-06-07  close    4.9992  ret  -1.17%  signal Y  SMA10 5.1078                           latched - EXIT(loss)
+    2006-06-08  close    4.9592  ret  -0.80%  signal Y  SMA10 5.0937                           latched - 
+    2006-06-09  close    4.9340  ret  -0.51%  signal Y  SMA10 5.0706                           latched - 
+    2006-06-12  close    4.8407  ret  -1.89%  signal Y  SMA10 5.0365                           latched - 
+    2006-06-13  close    4.8047  ret  -0.74%  signal Y  SMA10 5.0092                           latched - 
+    2006-06-14  close    4.8612  ret  +1.18%  signal Y  SMA10 4.9866                           latched - 
+    2006-06-15  close    4.9938  ret  +2.73%  signal Y  SMA10 4.9673                           latched Y 
+  [VGT_2005_2015 C_close_above_sma10] losing exit 2006-07-03 (loss -258); first signal 2006-07-05; blocked 1 signal session(s): 2006-07-05; confirmed 2006-07-06; entry 2006-07-06 at 4.9821 (+0.22% vs first-signal close)
+    2006-06-29  close    5.0407  ret  +2.74%  signal Y  SMA10 4.9600                           latched - 
+    2006-06-30  close    5.0308  ret  -0.20%  signal Y  SMA10 4.9657                           latched - 
+    2006-07-03  close    5.0839  ret  +1.06%  signal Y  SMA10 4.9797                           latched - EXIT(loss)
+    2006-07-05  close    4.9710  ret  -2.22%  signal Y  SMA10 4.9832                           latched - 
+    2006-07-06  close    4.9821  ret  +0.22%  signal Y  SMA10 4.9795                           latched Y 
+  [VGT_2005_2015 C_close_above_sma10] losing exit 2006-07-21 (loss -7,036); first signal 2006-07-24; blocked 1 signal session(s): 2006-07-24; confirmed 2006-07-25; entry 2006-07-25 at 4.7467 (+0.60% vs first-signal close)
+    2006-07-19  close    4.7781  ret  +1.50%  signal Y  SMA10 4.7971                           latched - 
+    2006-07-20  close    4.7086  ret  -1.46%  signal Y  SMA10 4.7698                           latched - 
+    2006-07-21  close    4.6357  ret  -1.55%  signal Y  SMA10 4.7413                           latched - EXIT(loss)
+    2006-07-24  close    4.7185  ret  +1.79%  signal Y  SMA10 4.7286                           latched - 
+    2006-07-25  close    4.7467  ret  +0.60%  signal Y  SMA10 4.7156                           latched Y 
+  [VGT_2005_2015 D_recovery_3pct_from_low] losing exit 2006-06-07 (loss -543); first signal 2006-06-08; blocked 5 signal session(s): 2006-06-08;2006-06-09;2006-06-12;2006-06-13;2006-06-14; confirmed 2006-06-15; entry 2006-06-15 at 4.9938 (+0.70% vs first-signal close)
+    2006-06-05  close    5.0614  ret  -1.92%  signal Y                                         latched - 
+    2006-06-06  close    5.0584  ret  -0.06%  signal Y                                         latched - 
+    2006-06-07  close    4.9992  ret  -1.17%  signal Y  low(x..j) 4.9992 close/low 1.0000      latched - EXIT(loss)
+    2006-06-08  close    4.9592  ret  -0.80%  signal Y  low(x..j) 4.9592 close/low 1.0000      latched - 
+    2006-06-09  close    4.9340  ret  -0.51%  signal Y  low(x..j) 4.9340 close/low 1.0000      latched - 
+    2006-06-12  close    4.8407  ret  -1.89%  signal Y  low(x..j) 4.8407 close/low 1.0000      latched - 
+    2006-06-13  close    4.8047  ret  -0.74%  signal Y  low(x..j) 4.8047 close/low 1.0000      latched - 
+    2006-06-14  close    4.8612  ret  +1.18%  signal Y  low(x..j) 4.8047 close/low 1.0118      latched - 
+    2006-06-15  close    4.9938  ret  +2.73%  signal Y  low(x..j) 4.8047 close/low 1.0394      latched Y 
+  [VGT_2005_2015 D_recovery_3pct_from_low] losing exit 2006-07-03 (loss -258); first signal 2006-07-05; blocked 17 signal session(s): 2006-07-05;2006-07-06;2006-07-07;2006-07-10;2006-07-11;2006-07-12;2006-07-13;2006-07-14;2006-07-17;2006-07-18;2006-07-19;2006-07-20;2006-07-21;2006-07-24;2006-07-25;2006-07-26;2006-07-27; confirmed 2006-07-28; entry 2006-07-28 at 4.8209 (-3.02% vs first-signal close)
+    2006-06-29  close    5.0407  ret  +2.74%  signal Y                                         latched - 
+    2006-06-30  close    5.0308  ret  -0.20%  signal Y                                         latched - 
+    2006-07-03  close    5.0839  ret  +1.06%  signal Y  low(x..j) 5.0839 close/low 1.0000      latched - EXIT(loss)
+    2006-07-05  close    4.9710  ret  -2.22%  signal Y  low(x..j) 4.9710 close/low 1.0000      latched - 
+    2006-07-06  close    4.9821  ret  +0.22%  signal Y  low(x..j) 4.9710 close/low 1.0022      latched - 
+    2006-07-07  close    4.9206  ret  -1.23%  signal Y  low(x..j) 4.9206 close/low 1.0000      latched - 
+    2006-07-10  close    4.8456  ret  -1.52%  signal Y  low(x..j) 4.8456 close/low 1.0000      latched - 
+    2006-07-11  close    4.8764  ret  +0.64%  signal Y  low(x..j) 4.8456 close/low 1.0064      latched - 
+    2006-07-12  close    4.7781  ret  -2.02%  signal Y  low(x..j) 4.7781 close/low 1.0000      latched - 
+    2006-07-13  close    4.7065  ret  -1.50%  signal Y  low(x..j) 4.7065 close/low 1.0000      latched - 
+    2006-07-14  close    4.6848  ret  -0.46%  signal Y  low(x..j) 4.6848 close/low 1.0000      latched - 
+    2006-07-17  close    4.6913  ret  +0.14%  signal Y  low(x..j) 4.6848 close/low 1.0014      latched - 
+    2006-07-18  close    4.7074  ret  +0.34%  signal Y  low(x..j) 4.6848 close/low 1.0048      latched - 
+    2006-07-19  close    4.7781  ret  +1.50%  signal Y  low(x..j) 4.6848 close/low 1.0199      latched - 
+    2006-07-20  close    4.7086  ret  -1.46%  signal Y  low(x..j) 4.6848 close/low 1.0051      latched - 
+    2006-07-21  close    4.6357  ret  -1.55%  signal Y  low(x..j) 4.6357 close/low 1.0000      latched - 
+    2006-07-24  close    4.7185  ret  +1.79%  signal Y  low(x..j) 4.6357 close/low 1.0179      latched - 
+    2006-07-25  close    4.7467  ret  +0.60%  signal Y  low(x..j) 4.6357 close/low 1.0240      latched - 
+    2006-07-26  close    4.7512  ret  +0.09%  signal Y  low(x..j) 4.6357 close/low 1.0249      latched - 
+    2006-07-27  close    4.7294  ret  -0.46%  signal Y  low(x..j) 4.6357 close/low 1.0202      latched - 
+    2006-07-28  close    4.8209  ret  +1.93%  signal Y  low(x..j) 4.6357 close/low 1.0399      latched Y 
+  [VGT_2005_2015 D_recovery_3pct_from_low] losing exit 2006-08-14 (loss -423); first signal 2006-08-15; blocked 1 signal session(s): 2006-08-15; confirmed 2006-08-16; entry 2006-08-16 at 5.0700 (+2.13% vs first-signal close)
+    2006-08-10  close    4.8209  ret  +0.73%  signal Y                                         latched - 
+    2006-08-11  close    4.7750  ret  -0.95%  signal Y                                         latched - 
+    2006-08-14  close    4.8354  ret  +1.26%  signal Y  low(x..j) 4.8354 close/low 1.0000      latched - EXIT(loss)
+    2006-08-15  close    4.9645  ret  +2.67%  signal Y  low(x..j) 4.8354 close/low 1.0267      latched - 
+    2006-08-16  close    5.0700  ret  +2.13%  signal Y  low(x..j) 4.8354 close/low 1.0485      latched Y 
+  [QQQ_1999_2015 B_two_positive_closes] losing exit 2000-04-14 (loss -20,200); first signal 2000-04-17; blocked 1 signal session(s): 2000-04-17; confirmed 2000-04-18; entry 2000-04-18 at 78.0035 (+2.65% vs first-signal close)
+    2000-04-12  close   78.0035  ret  -5.88%  signal Y                                         latched - 
+    2000-04-13  close   74.6118  ret  -4.35%  signal Y                                         latched - 
+    2000-04-14  close   68.1420  ret  -8.67%  signal Y                                         latched - EXIT(loss)
+    2000-04-17  close   75.9890  ret +11.52%  signal Y                                         latched - 
+    2000-04-18  close   78.0035  ret  +2.65%  signal Y                                         latched Y 
+  [QQQ_1999_2015 B_two_positive_closes] losing exit 2000-05-03 (loss -3,175); first signal 2000-05-04; blocked 1 signal session(s): 2000-05-04; confirmed 2000-05-05; entry 2000-05-05 at 77.5230 (+2.39% vs first-signal close)
+    2000-05-01  close   81.0676  ret  +0.91%  signal Y                                         latched - 
+    2000-05-02  close   76.4041  ret  -5.75%  signal Y                                         latched - 
+    2000-05-03  close   75.5561  ret  -1.11%  signal Y                                         latched - EXIT(loss)
+    2000-05-04  close   75.7160  ret  +0.21%  signal Y                                         latched - 
+    2000-05-05  close   77.5230  ret  +2.39%  signal Y                                         latched Y 
+  [QQQ_1999_2015 B_two_positive_closes] losing exit 2000-05-22 (loss -11,253); first signal 2000-05-23; blocked 7 signal session(s): 2000-05-23;2000-05-24;2000-05-25;2000-05-26;2000-05-30;2000-05-31;2000-06-01; confirmed 2000-06-02; entry 2000-06-02 at 79.3722 (+25.13% vs first-signal close)
+    2000-05-18  close   72.6959  ret  -3.59%  signal Y                                         latched - 
+    2000-05-19  close   69.2601  ret  -4.73%  signal Y                                         latched - 
+    2000-05-22  close   69.1964  ret  -0.09%  signal Y                                         latched - EXIT(loss)
+    2000-05-23  close   63.4294  ret  -8.33%  signal Y                                         latched - 
+    2000-05-24  close   67.4019  ret  +6.26%  signal Y                                         latched - 
+    2000-05-25  close   65.9207  ret  -2.20%  signal Y                                         latched - 
+    2000-05-26  close   65.9207  ret  +0.00%  signal Y                                         latched - 
+    2000-05-30  close   72.5374  ret +10.04%  signal Y                                         latched - 
+    2000-05-31  close   70.4768  ret  -2.84%  signal Y                                         latched - 
+    2000-06-01  close   74.0714  ret  +5.10%  signal Y                                         latched - 
+    2000-06-02  close   79.3722  ret  +7.16%  signal Y                                         latched Y 
+  [QQQ_1999_2015 C_close_above_sma10] losing exit 2000-04-14 (loss -20,200); first signal 2000-04-17; blocked 5 signal session(s): 2000-04-17;2000-04-18;2000-04-19;2000-04-20;2000-04-24; confirmed 2000-04-25; entry 2000-04-25 at 76.6988 (+0.93% vs first-signal close)
+    2000-04-12  close   78.0035  ret  -5.88%  signal Y  SMA10 86.5406                          latched - 
+    2000-04-13  close   74.6118  ret  -4.35%  signal Y  SMA10 84.9093                          latched - 
+    2000-04-14  close   68.1420  ret  -8.67%  signal Y  SMA10 82.4385                          latched - EXIT(loss)
+    2000-04-17  close   75.9890  ret +11.52%  signal Y  SMA10 81.3101                          latched - 
+    2000-04-18  close   78.0035  ret  +2.65%  signal Y  SMA10 80.4680                          latched - 
+    2000-04-19  close   75.6169  ret  -3.06%  signal Y  SMA10 79.5414                          latched - 
+    2000-04-20  close   73.9772  ret  -2.17%  signal Y  SMA10 78.2494                          latched - 
+    2000-04-24  close   71.8481  ret  -2.88%  signal Y  SMA10 76.3949                          latched - 
+    2000-04-25  close   76.6988  ret  +6.75%  signal Y  SMA10 75.5765                          latched Y 
+  [QQQ_1999_2015 C_close_above_sma10] losing exit 2000-05-10 (loss -7,187); first signal 2000-05-11; blocked 2 signal session(s): 2000-05-11;2000-05-12; confirmed 2000-05-15; entry 2000-05-15 at 74.8681 (+4.36% vs first-signal close)
+    2000-05-08  close   74.5010  ret  -3.90%  signal Y  SMA10 76.9234                          latched - 
+    2000-05-09  close   72.9132  ret  -2.13%  signal Y  SMA10 76.5448                          latched - 
+    2000-05-10  close   67.6163  ret  -7.26%  signal Y  SMA10 75.8993                          latched - EXIT(loss)
+    2000-05-11  close   71.7405  ret  +6.10%  signal Y  SMA10 75.3375                          latched - 
+    2000-05-12  close   71.7405  ret  +0.00%  signal Y  SMA10 74.4778                          latched - 
+    2000-05-15  close   74.8681  ret  +4.36%  signal Y  SMA10 73.8579                          latched Y 
+  [QQQ_1999_2015 C_close_above_sma10] losing exit 2000-07-27 (loss -3,860); first signal 2000-07-28; blocked 6 signal session(s): 2000-07-28;2000-07-31;2000-08-01;2000-08-02;2000-08-03;2000-08-04; confirmed 2000-08-07; entry 2000-08-07 at 78.2112 (+6.18% vs first-signal close)
+    2000-07-25  close   81.1822  ret  +0.80%  signal Y  SMA10 83.3413                          latched - 
+    2000-07-26  close   81.0676  ret  -0.14%  signal Y  SMA10 83.2028                          latched - 
+    2000-07-27  close   77.8842  ret  -3.93%  signal Y  SMA10 82.6394                          latched - EXIT(loss)
+    2000-07-28  close   73.6562  ret  -5.43%  signal Y  SMA10 81.4740                          latched - 
+    2000-07-31  close   75.8334  ret  +2.96%  signal Y  SMA10 80.4306                          latched - 
+    2000-08-01  close   74.8204  ret  -1.34%  signal Y  SMA10 79.4771                          latched - 
+    2000-08-02  close   73.5007  ret  -1.76%  signal Y  SMA10 78.5819                          latched - 
+    2000-08-03  close   76.6811  ret  +4.33%  signal Y  SMA10 77.7402                          latched - 
+    2000-08-04  close   76.4041  ret  -0.36%  signal Y  SMA10 77.1568                          latched - 
+    2000-08-07  close   78.2112  ret  +2.37%  signal Y  SMA10 76.9241                          latched Y 
+  [QQQ_1999_2015 D_recovery_3pct_from_low] losing exit 2000-05-03 (loss -626); first signal 2000-05-04; blocked 5 signal session(s): 2000-05-04;2000-05-05;2000-05-08;2000-05-09;2000-05-10; confirmed 2000-05-11; entry 2000-05-11 at 71.7405 (-5.25% vs first-signal close)
+    2000-05-01  close   81.0676  ret  +0.91%  signal Y                                         latched - 
+    2000-05-02  close   76.4041  ret  -5.75%  signal Y                                         latched - 
+    2000-05-03  close   75.5561  ret  -1.11%  signal Y  low(x..j) 75.5561 close/low 1.0000     latched - EXIT(loss)
+    2000-05-04  close   75.7160  ret  +0.21%  signal Y  low(x..j) 75.5561 close/low 1.0021     latched - 
+    2000-05-05  close   77.5230  ret  +2.39%  signal Y  low(x..j) 75.5561 close/low 1.0260     latched - 
+    2000-05-08  close   74.5010  ret  -3.90%  signal Y  low(x..j) 74.5010 close/low 1.0000     latched - 
+    2000-05-09  close   72.9132  ret  -2.13%  signal Y  low(x..j) 72.9132 close/low 1.0000     latched - 
+    2000-05-10  close   67.6163  ret  -7.26%  signal Y  low(x..j) 67.6163 close/low 1.0000     latched - 
+    2000-05-11  close   71.7405  ret  +6.10%  signal Y  low(x..j) 67.6163 close/low 1.0610     latched Y 
+  [QQQ_1999_2015 D_recovery_3pct_from_low] losing exit 2000-07-11 (loss -387); first signal 2000-07-12; blocked 1 signal session(s): 2000-07-12; confirmed 2000-07-13; entry 2000-07-13 at 83.5181 (+1.29% vs first-signal close)
+    2000-07-07  close   81.3457  ret  +2.07%  signal Y                                         latched - 
+    2000-07-10  close   80.1006  ret  -1.53%  signal Y                                         latched - 
+    2000-07-11  close   80.5381  ret  +0.55%  signal Y  low(x..j) 80.5381 close/low 1.0000     latched - EXIT(loss)
+    2000-07-12  close   82.4527  ret  +2.38%  signal Y  low(x..j) 80.5381 close/low 1.0238     latched - 
+    2000-07-13  close   83.5181  ret  +1.29%  signal Y  low(x..j) 80.5381 close/low 1.0370     latched Y 
+  [QQQ_1999_2015 D_recovery_3pct_from_low] losing exit 2000-07-28 (loss -6,860); first signal 2000-07-31; blocked 3 signal session(s): 2000-07-31;2000-08-01;2000-08-02; confirmed 2000-08-03; entry 2000-08-03 at 76.6811 (+1.12% vs first-signal close)
+    2000-07-26  close   81.0676  ret  -0.14%  signal Y                                         latched - 
+    2000-07-27  close   77.8842  ret  -3.93%  signal Y                                         latched - 
+    2000-07-28  close   73.6562  ret  -5.43%  signal Y  low(x..j) 73.6562 close/low 1.0000     latched - EXIT(loss)
+    2000-07-31  close   75.8334  ret  +2.96%  signal Y  low(x..j) 73.6562 close/low 1.0296     latched - 
+    2000-08-01  close   74.8204  ret  -1.34%  signal Y  low(x..j) 73.6562 close/low 1.0158     latched - 
+    2000-08-02  close   73.5007  ret  -1.76%  signal Y  low(x..j) 73.5007 close/low 1.0000     latched - 
+    2000-08-03  close   76.6811  ret  +4.33%  signal Y  low(x..j) 73.5007 close/low 1.0433     latched Y 
+  [VGT_2016_2026 B_two_positive_closes] losing exit 2018-10-26 (loss -1,903); first signal 2018-10-29; blocked 2 signal session(s): 2018-10-29;2018-10-30; confirmed 2018-10-31; entry 2018-11-12 at 21.1983 (+0.99% vs first-signal close)
+    2018-10-24  close   21.1034  ret  -4.49%  signal Y                                         latched - 
+    2018-10-25  close   21.7818  ret  +3.21%  signal -                                         latched - 
+    2018-10-26  close   21.3432  ret  -2.01%  signal Y                                         latched - EXIT(loss)
+    2018-10-29  close   20.9912  ret  -1.65%  signal Y                                         latched - 
+    2018-10-30  close   21.2591  ret  +1.28%  signal Y                                         latched - 
+    2018-10-31  close   21.7818  ret  +2.46%  signal -                                         latched Y 
+    2018-11-01  close   22.0778  ret  +1.36%  signal -                                         latched Y 
+    2018-11-02  close   21.6770  ret  -1.82%  signal -                                         latched Y 
+    2018-11-05  close   21.6246  ret  -0.24%  signal -                                         latched Y 
+    2018-11-06  close   21.7585  ret  +0.62%  signal -                                         latched Y 
+    2018-11-07  close   22.3794  ret  +2.85%  signal -                                         latched Y 
+    2018-11-08  close   22.3380  ret  -0.18%  signal -                                         latched Y 
+    2018-11-09  close   21.9546  ret  -1.72%  signal -                                         latched Y 
+    2018-11-12  close   21.1983  ret  -3.44%  signal Y                                         latched Y 
+  [VGT_2016_2026 B_two_positive_closes] losing exit 2018-11-27 (loss -3,532); first signal 2018-11-28; blocked 3 signal session(s): 2018-11-28;2018-11-29;2018-11-30; confirmed 2018-12-03; entry 2018-12-04 at 21.0708 (-1.63% vs first-signal close)
+    2018-11-23  close   20.2426  ret  -0.66%  signal Y                                         latched - 
+    2018-11-26  close   20.6785  ret  +2.15%  signal Y                                         latched - 
+    2018-11-27  close   20.6956  ret  +0.08%  signal Y                                         latched - EXIT(loss)
+    2018-11-28  close   21.4190  ret  +3.50%  signal Y                                         latched - 
+    2018-11-29  close   21.2482  ret  -0.80%  signal Y                                         latched - 
+    2018-11-30  close   21.4616  ret  +1.00%  signal Y                                         latched - 
+    2018-12-03  close   21.9119  ret  +2.10%  signal -                                         latched Y 
+    2018-12-04  close   21.0708  ret  -3.84%  signal Y                                         latched Y 
+  [VGT_2016_2026 B_two_positive_closes] losing exit 2018-12-19 (loss -5,206); first signal 2018-12-20; blocked 4 signal session(s): 2018-12-20;2018-12-21;2018-12-24;2018-12-26; confirmed 2018-12-27; entry 2018-12-27 at 19.5144 (+0.94% vs first-signal close)
+    2018-12-17  close   19.9101  ret  -2.31%  signal Y                                         latched - 
+    2018-12-18  close   20.0768  ret  +0.84%  signal Y                                         latched - 
+    2018-12-19  close   19.6689  ret  -2.03%  signal Y                                         latched - EXIT(loss)
+    2018-12-20  close   19.3319  ret  -1.71%  signal Y                                         latched - 
+    2018-12-21  close   18.7338  ret  -3.09%  signal Y                                         latched - 
+    2018-12-24  close   18.2516  ret  -2.57%  signal Y                                         latched - 
+    2018-12-26  close   19.3549  ret  +6.04%  signal Y                                         latched - 
+    2018-12-27  close   19.5144  ret  +0.82%  signal Y                                         latched Y 
+  [VGT_2016_2026 C_close_above_sma10] losing exit 2018-10-26 (loss -1,903); first signal 2018-10-29; blocked 2 signal session(s): 2018-10-29;2018-10-30; confirmed 2018-10-31; entry 2018-11-12 at 21.1983 (+0.99% vs first-signal close)
+    2018-10-24  close   21.1034  ret  -4.49%  signal Y  SMA10 22.0269                          latched - 
+    2018-10-25  close   21.7818  ret  +3.21%  signal -  SMA10 22.0483                          latched - 
+    2018-10-26  close   21.3432  ret  -2.01%  signal Y  SMA10 21.9593                          latched - EXIT(loss)
+    2018-10-29  close   20.9912  ret  -1.65%  signal Y  SMA10 21.8669                          latched - 
+    2018-10-30  close   21.2591  ret  +1.28%  signal Y  SMA10 21.7331                          latched - 
+    2018-10-31  close   21.7818  ret  +2.46%  signal -  SMA10 21.6595                          latched Y 
+    2018-11-01  close   22.0778  ret  +1.36%  signal -  SMA10 21.6610                          latched Y 
+    2018-11-02  close   21.6770  ret  -1.82%  signal -  SMA10 21.6286                          latched Y 
+    2018-11-05  close   21.6246  ret  -0.24%  signal -  SMA10 21.5734                          latched Y 
+    2018-11-06  close   21.7585  ret  +0.62%  signal -  SMA10 21.5398                          latched Y 
+    2018-11-07  close   22.3794  ret  +2.85%  signal -  SMA10 21.6674                          latched Y 
+    2018-11-08  close   22.3380  ret  -0.18%  signal -  SMA10 21.7231                          latched Y 
+    2018-11-09  close   21.9546  ret  -1.72%  signal -  SMA10 21.7842                          latched Y 
+    2018-11-12  close   21.1983  ret  -3.44%  signal Y  SMA10 21.8049                          latched Y 
+  [VGT_2016_2026 C_close_above_sma10] losing exit 2018-12-13 (loss -2,461); first signal 2018-12-14; blocked 9 signal session(s): 2018-12-14;2018-12-17;2018-12-18;2018-12-19;2018-12-20;2018-12-21;2018-12-24;2018-12-26;2018-12-27; confirmed 2018-12-28; entry 2018-12-28 at 19.4742 (-4.45% vs first-signal close)
+    2018-12-11  close   20.6809  ret  +0.04%  signal Y  SMA10 21.0697                          latched - 
+    2018-12-12  close   20.8671  ret  +0.90%  signal Y  SMA10 21.0869                          latched - 
+    2018-12-13  close   20.8681  ret  +0.00%  signal Y  SMA10 21.0318                          latched - EXIT(loss)
+    2018-12-14  close   20.3812  ret  -2.33%  signal Y  SMA10 20.9451                          latched - 
+    2018-12-17  close   19.9101  ret  -2.31%  signal Y  SMA10 20.7899                          latched - 
+    2018-12-18  close   20.0768  ret  +0.84%  signal Y  SMA10 20.6064                          latched - 
+    2018-12-19  close   19.6689  ret  -2.03%  signal Y  SMA10 20.4662                          latched - 
+    2018-12-20  close   19.3319  ret  -1.71%  signal Y  SMA10 20.2860                          latched - 
+    2018-12-21  close   18.7338  ret  -3.09%  signal Y  SMA10 20.1192                          latched - 
+    2018-12-24  close   18.2516  ret  -2.57%  signal Y  SMA10 19.8770                          latched - 
+    2018-12-26  close   19.3549  ret  +6.04%  signal Y  SMA10 19.7444                          latched - 
+    2018-12-27  close   19.5144  ret  +0.82%  signal Y  SMA10 19.6092                          latched - 
+    2018-12-28  close   19.4742  ret  -0.21%  signal Y  SMA10 19.4698                          latched Y 
+  [VGT_2016_2026 C_close_above_sma10] losing exit 2020-03-11 (loss -8,847); first signal 2020-03-12; blocked 8 signal session(s): 2020-03-12;2020-03-13;2020-03-16;2020-03-17;2020-03-18;2020-03-19;2020-03-20;2020-03-23; confirmed 2020-03-24; entry 2020-03-24 at 24.5422 (+3.50% vs first-signal close)
+    2020-03-09  close   25.9864  ret  -7.71%  signal Y  SMA10 28.5537                          latched - 
+    2020-03-10  close   27.6302  ret  +6.33%  signal Y  SMA10 28.3821                          latched - 
+    2020-03-11  close   26.3016  ret  -4.81%  signal Y  SMA10 28.0708                          latched - EXIT(loss)
+    2020-03-12  close   23.7130  ret  -9.84%  signal Y  SMA10 27.6530                          latched - 
+    2020-03-13  close   26.3260  ret +11.02%  signal Y  SMA10 27.4721                          latched - 
+    2020-03-16  close   22.7754  ret -13.49%  signal Y  SMA10 26.7885                          latched - 
+    2020-03-17  close   24.1464  ret  +6.02%  signal Y  SMA10 26.3500                          latched - 
+    2020-03-18  close   23.3378  ret  -3.35%  signal Y  SMA10 25.7142                          latched - 
+    2020-03-19  close   23.3731  ret  +0.15%  signal Y  SMA10 25.1747                          latched - 
+    2020-03-20  close   22.4319  ret  -4.03%  signal Y  SMA10 24.6022                          latched - 
+    2020-03-23  close   22.2320  ret  -0.89%  signal Y  SMA10 24.2267                          latched - 
+    2020-03-24  close   24.5422  ret +10.39%  signal Y  SMA10 23.9179                          latched Y 
+  [VGT_2016_2026 D_recovery_3pct_from_low] losing exit 2018-10-26 (loss -1,903); first signal 2018-10-29; blocked 2 signal session(s): 2018-10-29;2018-10-30; confirmed 2018-10-31; entry 2018-11-12 at 21.1983 (+0.99% vs first-signal close)
+    2018-10-24  close   21.1034  ret  -4.49%  signal Y                                         latched - 
+    2018-10-25  close   21.7818  ret  +3.21%  signal -                                         latched - 
+    2018-10-26  close   21.3432  ret  -2.01%  signal Y  low(x..j) 21.3432 close/low 1.0000     latched - EXIT(loss)
+    2018-10-29  close   20.9912  ret  -1.65%  signal Y  low(x..j) 20.9912 close/low 1.0000     latched - 
+    2018-10-30  close   21.2591  ret  +1.28%  signal Y  low(x..j) 20.9912 close/low 1.0128     latched - 
+    2018-10-31  close   21.7818  ret  +2.46%  signal -  low(x..j) 20.9912 close/low 1.0377     latched Y 
+    2018-11-01  close   22.0778  ret  +1.36%  signal -  low(x..j) 20.9912 close/low 1.0518     latched Y 
+    2018-11-02  close   21.6770  ret  -1.82%  signal -  low(x..j) 20.9912 close/low 1.0327     latched Y 
+    2018-11-05  close   21.6246  ret  -0.24%  signal -  low(x..j) 20.9912 close/low 1.0302     latched Y 
+    2018-11-06  close   21.7585  ret  +0.62%  signal -  low(x..j) 20.9912 close/low 1.0366     latched Y 
+    2018-11-07  close   22.3794  ret  +2.85%  signal -  low(x..j) 20.9912 close/low 1.0661     latched Y 
+    2018-11-08  close   22.3380  ret  -0.18%  signal -  low(x..j) 20.9912 close/low 1.0642     latched Y 
+    2018-11-09  close   21.9546  ret  -1.72%  signal -  low(x..j) 20.9912 close/low 1.0459     latched Y 
+    2018-11-12  close   21.1983  ret  -3.44%  signal Y  low(x..j) 20.9912 close/low 1.0099     latched Y 
+  [VGT_2016_2026 D_recovery_3pct_from_low] losing exit 2018-12-13 (loss -2,461); first signal 2018-12-14; blocked 7 signal session(s): 2018-12-14;2018-12-17;2018-12-18;2018-12-19;2018-12-20;2018-12-21;2018-12-24; confirmed 2018-12-26; entry 2018-12-26 at 19.3549 (-5.04% vs first-signal close)
+    2018-12-11  close   20.6809  ret  +0.04%  signal Y                                         latched - 
+    2018-12-12  close   20.8671  ret  +0.90%  signal Y                                         latched - 
+    2018-12-13  close   20.8681  ret  +0.00%  signal Y  low(x..j) 20.8681 close/low 1.0000     latched - EXIT(loss)
+    2018-12-14  close   20.3812  ret  -2.33%  signal Y  low(x..j) 20.3812 close/low 1.0000     latched - 
+    2018-12-17  close   19.9101  ret  -2.31%  signal Y  low(x..j) 19.9101 close/low 1.0000     latched - 
+    2018-12-18  close   20.0768  ret  +0.84%  signal Y  low(x..j) 19.9101 close/low 1.0084     latched - 
+    2018-12-19  close   19.6689  ret  -2.03%  signal Y  low(x..j) 19.6689 close/low 1.0000     latched - 
+    2018-12-20  close   19.3319  ret  -1.71%  signal Y  low(x..j) 19.3319 close/low 1.0000     latched - 
+    2018-12-21  close   18.7338  ret  -3.09%  signal Y  low(x..j) 18.7338 close/low 1.0000     latched - 
+    2018-12-24  close   18.2516  ret  -2.57%  signal Y  low(x..j) 18.2516 close/low 1.0000     latched - 
+    2018-12-26  close   19.3549  ret  +6.04%  signal Y  low(x..j) 18.2516 close/low 1.0604     latched Y 
+  [VGT_2016_2026 D_recovery_3pct_from_low] losing exit 2020-03-11 (loss -8,847); first signal 2020-03-12; blocked 1 signal session(s): 2020-03-12; confirmed 2020-03-13; entry 2020-03-13 at 26.3260 (+11.02% vs first-signal close)
+    2020-03-09  close   25.9864  ret  -7.71%  signal Y                                         latched - 
+    2020-03-10  close   27.6302  ret  +6.33%  signal Y                                         latched - 
+    2020-03-11  close   26.3016  ret  -4.81%  signal Y  low(x..j) 26.3016 close/low 1.0000     latched - EXIT(loss)
+    2020-03-12  close   23.7130  ret  -9.84%  signal Y  low(x..j) 23.7130 close/low 1.0000     latched - 
+    2020-03-13  close   26.3260  ret +11.02%  signal Y  low(x..j) 23.7130 close/low 1.1102     latched Y 
+  [QQQ_2016_2026 B_two_positive_closes] losing exit 2018-11-15 (loss -961); first signal 2018-11-16; blocked 6 signal session(s): 2018-11-16;2018-11-19;2018-11-20;2018-11-21;2018-11-23;2018-11-26; confirmed 2018-11-27; entry 2018-11-27 at 156.3710 (-2.43% vs first-signal close)
+    2018-11-13  close  159.2610  ret  +0.08%  signal Y                                         latched - 
+    2018-11-14  close  158.0360  ret  -0.77%  signal Y                                         latched - 
+    2018-11-15  close  160.8280  ret  +1.77%  signal Y                                         latched - EXIT(loss)
+    2018-11-16  close  160.2610  ret  -0.35%  signal Y                                         latched - 
+    2018-11-19  close  155.0570  ret  -3.25%  signal Y                                         latched - 
+    2018-11-20  close  152.3000  ret  -1.78%  signal Y                                         latched - 
+    2018-11-21  close  153.4270  ret  +0.74%  signal Y                                         latched - 
+    2018-11-23  close  152.3500  ret  -0.70%  signal Y                                         latched - 
+    2018-11-26  close  155.8680  ret  +2.31%  signal Y                                         latched - 
+    2018-11-27  close  156.3710  ret  +0.32%  signal Y                                         latched Y 
+  [QQQ_2016_2026 B_two_positive_closes] losing exit 2018-12-14 (loss -657); first signal 2018-12-17; blocked 7 signal session(s): 2018-12-17;2018-12-18;2018-12-19;2018-12-20;2018-12-21;2018-12-24;2018-12-26; confirmed 2018-12-27; entry 2018-12-27 at 146.8700 (-2.49% vs first-signal close)
+    2018-12-12  close  157.8880  ret  +0.86%  signal Y                                         latched - 
+    2018-12-13  close  157.9370  ret  +0.03%  signal Y                                         latched - 
+    2018-12-14  close  154.1040  ret  -2.43%  signal Y                                         latched - EXIT(loss)
+    2018-12-17  close  150.6140  ret  -2.26%  signal Y                                         latched - 
+    2018-12-18  close  151.5850  ret  +0.64%  signal Y                                         latched - 
+    2018-12-19  close  147.8600  ret  -2.46%  signal Y                                         latched - 
+    2018-12-20  close  145.7150  ret  -1.45%  signal Y                                         latched - 
+    2018-12-21  close  141.1960  ret  -3.10%  signal Y                                         latched - 
+    2018-12-24  close  137.6860  ret  -2.49%  signal Y                                         latched - 
+    2018-12-26  close  146.2930  ret  +6.25%  signal Y                                         latched - 
+    2018-12-27  close  146.8700  ret  +0.39%  signal Y                                         latched Y 
+  [QQQ_2016_2026 B_two_positive_closes] losing exit 2020-03-13 (loss -9,486); first signal 2020-03-16; blocked 6 signal session(s): 2020-03-16;2020-03-17;2020-03-18;2020-03-19;2020-03-20;2020-03-23; confirmed 2020-03-24; entry 2020-03-24 at 178.0750 (+8.72% vs first-signal close)
+    2020-03-11  close  188.8460  ret  -4.36%  signal Y                                         latched - 
+    2020-03-12  close  171.5340  ret  -9.17%  signal Y                                         latched - 
+    2020-03-13  close  186.0730  ret  +8.48%  signal Y                                         latched - EXIT(loss)
+    2020-03-16  close  163.7900  ret -11.98%  signal Y                                         latched - 
+    2020-03-17  close  176.1820  ret  +7.57%  signal Y                                         latched - 
+    2020-03-18  close  170.8380  ret  -3.03%  signal Y                                         latched - 
+    2020-03-19  close  171.8700  ret  +0.60%  signal Y                                         latched - 
+    2020-03-20  close  165.1140  ret  -3.93%  signal Y                                         latched - 
+    2020-03-23  close  165.2520  ret  +0.08%  signal Y                                         latched - 
+    2020-03-24  close  178.0750  ret  +7.76%  signal Y                                         latched Y 
+  [QQQ_2016_2026 C_close_above_sma10] losing exit 2018-11-15 (loss -961); first signal 2018-11-16; blocked 7 signal session(s): 2018-11-16;2018-11-19;2018-11-20;2018-11-21;2018-11-23;2018-11-26;2018-11-27; confirmed 2018-11-28; entry 2018-11-28 at 161.4170 (+0.72% vs first-signal close)
+    2018-11-13  close  159.2610  ret  +0.08%  signal Y  SMA10 163.1124                         latched - 
+    2018-11-14  close  158.0360  ret  -0.77%  signal Y  SMA10 162.6672                         latched - 
+    2018-11-15  close  160.8280  ret  +1.77%  signal Y  SMA10 162.2875                         latched - EXIT(loss)
+    2018-11-16  close  160.2610  ret  -0.35%  signal Y  SMA10 162.1073                         latched - 
+    2018-11-19  close  155.0570  ret  -3.25%  signal Y  SMA10 161.4456                         latched - 
+    2018-11-20  close  152.3000  ret  -1.78%  signal Y  SMA10 160.3869                         latched - 
+    2018-11-21  close  153.4270  ret  +0.74%  signal Y  SMA10 158.9299                         latched - 
+    2018-11-23  close  152.3500  ret  -0.70%  signal Y  SMA10 157.4750                         latched - 
+    2018-11-26  close  155.8680  ret  +2.31%  signal Y  SMA10 156.6514                         latched - 
+    2018-11-27  close  156.3710  ret  +0.32%  signal Y  SMA10 156.3759                         latched - 
+    2018-11-28  close  161.4170  ret  +3.23%  signal Y  SMA10 156.5915                         latched Y 
+  [QQQ_2016_2026 C_close_above_sma10] losing exit 2018-12-13 (loss -2,031); first signal 2018-12-14; blocked 10 signal session(s): 2018-12-14;2018-12-17;2018-12-18;2018-12-19;2018-12-20;2018-12-21;2018-12-24;2018-12-26;2018-12-27;2018-12-28; confirmed 2018-12-31; entry 2018-12-31 at 148.0070 (-3.96% vs first-signal close)
+    2018-12-11  close  156.5370  ret  +0.32%  signal Y  SMA10 159.0778                         latched - 
+    2018-12-12  close  157.8880  ret  +0.86%  signal Y  SMA10 159.2295                         latched - 
+    2018-12-13  close  157.9370  ret  +0.03%  signal Y  SMA10 158.8815                         latched - EXIT(loss)
+    2018-12-14  close  154.1040  ret  -2.43%  signal Y  SMA10 158.2041                         latched - 
+    2018-12-17  close  150.6140  ret  -2.26%  signal Y  SMA10 157.0602                         latched - 
+    2018-12-18  close  151.5850  ret  +0.64%  signal Y  SMA10 155.7320                         latched - 
+    2018-12-19  close  147.8600  ret  -2.46%  signal Y  SMA10 154.6633                         latched - 
+    2018-12-20  close  145.7150  ret  -1.45%  signal Y  SMA10 153.2674                         latched - 
+    2018-12-21  close  141.1960  ret  -3.10%  signal Y  SMA10 151.9471                         latched - 
+    2018-12-24  close  137.6860  ret  -2.49%  signal Y  SMA10 150.1122                         latched - 
+    2018-12-26  close  146.2930  ret  +6.25%  signal Y  SMA10 149.0878                         latched - 
+    2018-12-27  close  146.8700  ret  +0.39%  signal Y  SMA10 147.9860                         latched - 
+    2018-12-28  close  146.7920  ret  -0.05%  signal Y  SMA10 146.8715                         latched - 
+    2018-12-31  close  148.0070  ret  +0.83%  signal Y  SMA10 146.2618                         latched Y 
+  [QQQ_2016_2026 C_close_above_sma10] losing exit 2020-03-13 (loss -9,486); first signal 2020-03-16; blocked 6 signal session(s): 2020-03-16;2020-03-17;2020-03-18;2020-03-19;2020-03-20;2020-03-23; confirmed 2020-03-24; entry 2020-03-24 at 178.0750 (+8.72% vs first-signal close)
+    2020-03-11  close  188.8460  ret  -4.36%  signal Y  SMA10 200.0605                         latched - 
+    2020-03-12  close  171.5340  ret  -9.17%  signal Y  SMA10 197.3203                         latched - 
+    2020-03-13  close  186.0730  ret  +8.48%  signal Y  SMA10 196.0186                         latched - EXIT(loss)
+    2020-03-16  close  163.7900  ret -11.98%  signal Y  SMA10 191.4630                         latched - 
+    2020-03-17  close  176.1820  ret  +7.57%  signal Y  SMA10 188.8153                         latched - 
+    2020-03-18  close  170.8380  ret  -3.03%  signal Y  SMA10 184.7882                         latched - 
+    2020-03-19  close  171.8700  ret  +0.60%  signal Y  SMA10 181.5074                         latched - 
+    2020-03-20  close  165.1140  ret  -3.93%  signal Y  SMA10 177.8951                         latched - 
+    2020-03-23  close  165.2520  ret  +0.08%  signal Y  SMA10 175.6944                         latched - 
+    2020-03-24  close  178.0750  ret  +7.76%  signal Y  SMA10 173.7574                         latched Y 
+  [QQQ_2016_2026 D_recovery_3pct_from_low] losing exit 2018-11-15 (loss -961); first signal 2018-11-16; blocked 7 signal session(s): 2018-11-16;2018-11-19;2018-11-20;2018-11-21;2018-11-23;2018-11-26;2018-11-27; confirmed 2018-11-28; entry 2018-11-28 at 161.4170 (+0.72% vs first-signal close)
+    2018-11-13  close  159.2610  ret  +0.08%  signal Y                                         latched - 
+    2018-11-14  close  158.0360  ret  -0.77%  signal Y                                         latched - 
+    2018-11-15  close  160.8280  ret  +1.77%  signal Y  low(x..j) 160.8280 close/low 1.0000    latched - EXIT(loss)
+    2018-11-16  close  160.2610  ret  -0.35%  signal Y  low(x..j) 160.2610 close/low 1.0000    latched - 
+    2018-11-19  close  155.0570  ret  -3.25%  signal Y  low(x..j) 155.0570 close/low 1.0000    latched - 
+    2018-11-20  close  152.3000  ret  -1.78%  signal Y  low(x..j) 152.3000 close/low 1.0000    latched - 
+    2018-11-21  close  153.4270  ret  +0.74%  signal Y  low(x..j) 152.3000 close/low 1.0074    latched - 
+    2018-11-23  close  152.3500  ret  -0.70%  signal Y  low(x..j) 152.3000 close/low 1.0003    latched - 
+    2018-11-26  close  155.8680  ret  +2.31%  signal Y  low(x..j) 152.3000 close/low 1.0234    latched - 
+    2018-11-27  close  156.3710  ret  +0.32%  signal Y  low(x..j) 152.3000 close/low 1.0267    latched - 
+    2018-11-28  close  161.4170  ret  +3.23%  signal Y  low(x..j) 152.3000 close/low 1.0599    latched Y 
+  [QQQ_2016_2026 D_recovery_3pct_from_low] losing exit 2018-12-13 (loss -2,031); first signal 2018-12-14; blocked 7 signal session(s): 2018-12-14;2018-12-17;2018-12-18;2018-12-19;2018-12-20;2018-12-21;2018-12-24; confirmed 2018-12-26; entry 2018-12-26 at 146.2930 (-5.07% vs first-signal close)
+    2018-12-11  close  156.5370  ret  +0.32%  signal Y                                         latched - 
+    2018-12-12  close  157.8880  ret  +0.86%  signal Y                                         latched - 
+    2018-12-13  close  157.9370  ret  +0.03%  signal Y  low(x..j) 157.9370 close/low 1.0000    latched - EXIT(loss)
+    2018-12-14  close  154.1040  ret  -2.43%  signal Y  low(x..j) 154.1040 close/low 1.0000    latched - 
+    2018-12-17  close  150.6140  ret  -2.26%  signal Y  low(x..j) 150.6140 close/low 1.0000    latched - 
+    2018-12-18  close  151.5850  ret  +0.64%  signal Y  low(x..j) 150.6140 close/low 1.0064    latched - 
+    2018-12-19  close  147.8600  ret  -2.46%  signal Y  low(x..j) 147.8600 close/low 1.0000    latched - 
+    2018-12-20  close  145.7150  ret  -1.45%  signal Y  low(x..j) 145.7150 close/low 1.0000    latched - 
+    2018-12-21  close  141.1960  ret  -3.10%  signal Y  low(x..j) 141.1960 close/low 1.0000    latched - 
+    2018-12-24  close  137.6860  ret  -2.49%  signal Y  low(x..j) 137.6860 close/low 1.0000    latched - 
+    2018-12-26  close  146.2930  ret  +6.25%  signal Y  low(x..j) 137.6860 close/low 1.0625    latched Y 
+  [QQQ_2016_2026 D_recovery_3pct_from_low] losing exit 2020-03-13 (loss -9,486); first signal 2020-03-16; blocked 1 signal session(s): 2020-03-16; confirmed 2020-03-17; entry 2020-03-17 at 176.1820 (+7.57% vs first-signal close)
+    2020-03-11  close  188.8460  ret  -4.36%  signal Y                                         latched - 
+    2020-03-12  close  171.5340  ret  -9.17%  signal Y                                         latched - 
+    2020-03-13  close  186.0730  ret  +8.48%  signal Y  low(x..j) 186.0730 close/low 1.0000    latched - EXIT(loss)
+    2020-03-16  close  163.7900  ret -11.98%  signal Y  low(x..j) 163.7900 close/low 1.0000    latched - 
+    2020-03-17  close  176.1820  ret  +7.57%  signal Y  low(x..j) 163.7900 close/low 1.0757    latched Y 
+
+ALL CHECKS PASSED
