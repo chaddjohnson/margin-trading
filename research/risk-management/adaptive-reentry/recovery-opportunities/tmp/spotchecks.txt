@@ -1,0 +1,49 @@
+########## SPOT CHECK 1: D7_tiny_loss_exit_anchor, VGT_2016_2026, rescued 2023-01-04 V-bottom ##########
+ exit_date  exit_reason         loss  loss_exit_price  losing_entry_price  price_return  ref_high          resolution resolution_date  sessions_restricted  blocked_sessions  entry_path reentry_date  reentry_close  reentry_vs_loss_exit  reentry_vs_losing_entry  required_level_at_entry  min_close_in_episode  max_close_in_episode  min_gap_to_required
+2022-10-06 maximum hold  -345.662517          40.0831             40.0405      0.001064   47.7709 lower_price_reentry      2022-10-07                    1                 0 lower_price   2022-10-07        38.2451             -0.045855                -0.044840                38.880607               38.2451               39.9056            -0.016345
+2022-11-03 maximum hold -1306.049284          38.0568             38.2451     -0.004924   47.7709           alt_entry      2022-11-04                    1                 0         alt   2022-11-04        37.9724             -0.002218                -0.007130                36.915096               37.4855               37.9724             0.015452
+2023-01-03 maximum hold  -142.898907          39.5194             39.3976      0.003092   47.7709           alt_entry      2023-01-04                    1                 0         alt   2023-01-04        38.9505             -0.014395                -0.011348                38.333818               38.7821               38.9505             0.011694
+entry_date  entry_price  exit_date  exit_price        reason       profit
+2022-10-07      38.2451 2022-11-03   38.056800  maximum hold -1306.049284
+2022-11-04      37.9724 2022-12-16   40.215132 trailing stop  4640.462669
+2022-12-19      39.3976 2023-01-03   39.519400  maximum hold  -142.898907
+2023-01-04      38.9505 2023-08-09   52.406144 trailing stop 28005.771463
+episode candidate exit 2022-11-03: close 37.4855
+episode candidate exit 2023-01-03: close 38.7821
+2023-01-04: close=38.9505, signal=True, 90d prev high=46.0645, 1-c/rh=15.4436%
+
+########## SPOT CHECK 2: D7_confirm_near QQQ_1999_2015 bear-rally alt 2001-02-15 @49.510 ##########
+ exit_date  exit_reason          loss  loss_exit_price  losing_entry_price  price_return  ref_high resolution resolution_date  sessions_restricted  blocked_sessions entry_path reentry_date  reentry_close  reentry_vs_loss_exit  reentry_vs_losing_entry  required_level_at_entry  min_close_in_episode  max_close_in_episode  min_gap_to_required
+2001-02-13 maximum hold -14415.826865          48.8746              56.807     -0.139638   80.7369  alt_entry      2001-02-15                    2                 1        alt   2001-02-15        49.5102              0.013005                -0.128449                47.408362               46.8397               49.5102            -0.011995
+2001-02-15 close=49.5102  prev closes: 46.8397, 48.7075  (two up closes: True)
+required level=47.4084, level*1.05=49.7788, close<=level*1.05: True, close<=level: False
+signal on 2001-02-15: True
+entry_date  entry_price  exit_date  exit_price       reason        profit
+2001-02-15      49.5102 2001-03-02     40.0223 maximum hold -19615.580694
+
+########## SPOT CHECK 3: D1_reset_only_rebound12 QQQ 2000-02 rebound reset + its consequence ##########
+ exit_date          loss  loss_exit_price  ref_high resolution_date  min_close_in_episode  sessions_restricted
+2000-04-14 -20199.559315          72.9691  102.1910      2000-04-18               68.1420                    2
+2000-05-24 -13244.114394          63.5861  102.1910      2000-06-01               65.9207                    5
+2001-05-04    -14.138577          38.4051   63.3999      2001-05-21               37.9940                   11
+2002-08-05  -8329.077468          18.7474   32.2166      2002-08-14               18.1787                    7
+2002-10-08  -3989.032286          17.1900   28.5103      2002-10-14               17.0068                    4
+reset 2000-06-01: close=74.0714, 1.12*min_close=73.8312 (rebound reset: True), 0.95*ref_high=97.0815 (frozen95: False)
+next trade after reset: [{'entry_date': '2000-06-02', 'entry_price': 79.3722, 'exit_date': '2000-06-19', 'exit_price': 79.7129, 'reason': 'maximum hold', 'profit': -83.08527884906403}]
+
+########## SPOT CHECK 4: D3_tolerance_deep VGT_2016_2026 identical 2023-01-04 entry — dd252 check ##########
+ exit_date  exit_reason         loss  loss_exit_price  losing_entry_price  price_return  ref_high          resolution resolution_date  sessions_restricted  blocked_sessions  entry_path reentry_date  reentry_close  reentry_vs_loss_exit  reentry_vs_losing_entry  required_level_at_entry  min_close_in_episode  max_close_in_episode  min_gap_to_required
+2022-09-14 maximum hold -3207.482681          41.8422             43.0278     -0.027554   48.5264 lower_price_reentry      2022-09-15                    1                 0 lower_price   2022-09-15        40.8981             -0.022563                -0.049496                41.398673               40.8981               41.8286            -0.012092
+2022-09-30 maximum hold -7207.869857          38.1351             40.8981     -0.067558   47.7709 lower_price_reentry      2022-10-10                    6                 5 lower_price   2022-10-10        37.5543             -0.015230                -0.081759                37.730868               37.5543               40.2102            -0.004680
+2023-01-03 maximum hold  -142.898907          39.5194             39.3976      0.003092   47.7709 lower_price_reentry      2023-01-04                    1                 0 lower_price   2023-01-04        38.9505             -0.014395                -0.011348                39.100494               38.7821               38.9505            -0.008143
+2023-01-04: close=38.9505, prev-252 high=56.2845, dd252=30.7971% (>=25%: True)
+
+########## SPOT CHECK 5: D7_higher_low_base VGT 2023-01-05 later entry — floor condition ##########
+ exit_date  exit_reason         loss  loss_exit_price  losing_entry_price  price_return  ref_high          resolution resolution_date  sessions_restricted  blocked_sessions  entry_path reentry_date  reentry_close  reentry_vs_loss_exit  reentry_vs_losing_entry  required_level_at_entry  min_close_in_episode  max_close_in_episode  min_gap_to_required
+2022-10-06 maximum hold  -345.662517          40.0831             40.0405      0.001064   47.7709 lower_price_reentry      2022-10-07                    1                 0 lower_price   2022-10-07        38.2451             -0.045855                -0.044840                38.880607               38.2451               39.9056            -0.016345
+2022-11-03 maximum hold -1306.049284          38.0568             38.2451     -0.004924   47.7709           alt_entry      2022-11-25                   15                14         alt   2022-11-25        41.8278              0.099089                 0.093677                36.915096               37.4855               42.1020             0.015452
+2022-12-12 maximum hold -2228.173253          41.1101             41.8278     -0.017158   47.7709 lower_price_reentry      2022-12-19                    5                 4 lower_price   2022-12-19        39.3976             -0.041656                -0.058100                39.876797               39.3976               42.4146            -0.012017
+2023-01-03 maximum hold  -142.898907          39.5194             39.3976      0.003092   47.7709 lower_price_reentry      2023-01-05                    2                 1 lower_price   2023-01-05        38.1436             -0.034813                -0.031829                38.333818               38.1436               38.9505            -0.004962
+episode exit 2022-11-03; min close since = 37.4855 on 2022-11-03 (index 1529); i-min_close_i = 42
+2023-01-05: close=38.1436; 0.90*ref_high=42.9938; floor>=15: True; capped: True
+2023-01-04: close=38.9505, i-min_close_i on 01-04 = 41

@@ -1,0 +1,54 @@
+== 1. Baseline reproduction ==
+  VGT_2005_2015: A_baseline identical to the frozen baseline (48 trades, net 11,602, mdd 73,404)
+  QQQ_1999_2015: A_baseline identical to the frozen baseline (109 trades, net -2,886, mdd 149,561)
+  VGT_2016_2026: A_baseline identical to the frozen baseline (45 trades, net 161,772, mdd 38,323)
+  QQQ_2016_2026: A_baseline identical to the frozen baseline (36 trades, net 116,388, mdd 39,237)
+
+== 2. Independent state-machine replay ==
+  VGT_2005_2015 B_lower_3pct: OK — 14 episodes (8 re-entries, 5 resets, 1 unresolved), 274 blocked signal sessions
+  VGT_2005_2015 C_lower_5pct: OK — 14 episodes (7 re-entries, 6 resets, 1 unresolved), 283 blocked signal sessions
+  VGT_2005_2015 D_lower_8pct: OK — 11 episodes (4 re-entries, 6 resets, 1 unresolved), 332 blocked signal sessions
+  QQQ_1999_2015 B_lower_3pct: OK — 41 episodes (31 re-entries, 10 resets, 0 unresolved), 425 blocked signal sessions
+  QQQ_1999_2015 C_lower_5pct: OK — 33 episodes (23 re-entries, 10 resets, 0 unresolved), 575 blocked signal sessions
+  QQQ_1999_2015 D_lower_8pct: OK — 28 episodes (16 re-entries, 12 resets, 0 unresolved), 736 blocked signal sessions
+  VGT_2016_2026 B_lower_3pct: OK — 19 episodes (15 re-entries, 4 resets, 0 unresolved), 138 blocked signal sessions
+  VGT_2016_2026 C_lower_5pct: OK — 17 episodes (9 re-entries, 8 resets, 0 unresolved), 202 blocked signal sessions
+  VGT_2016_2026 D_lower_8pct: OK — 15 episodes (6 re-entries, 9 resets, 0 unresolved), 237 blocked signal sessions
+  QQQ_2016_2026 B_lower_3pct: OK — 14 episodes (10 re-entries, 4 resets, 0 unresolved), 111 blocked signal sessions
+  QQQ_2016_2026 C_lower_5pct: OK — 12 episodes (8 re-entries, 4 resets, 0 unresolved), 159 blocked signal sessions
+  QQQ_2016_2026 D_lower_8pct: OK — 9 episodes (6 re-entries, 3 resets, 0 unresolved), 206 blocked signal sessions
+
+== 3. Spot checks (concrete episodes) ==
+
+QQQ_1999_2015 C_lower_5pct: first 3 episodes plus the 2 longest
+ exit_date        loss  loss_exit_price  ref_high  lower_level  reset_level          resolution resolution_date  sessions_restricted  blocked_sessions  reentry_close  reentry_vs_loss_exit
+1999-06-15  -1821.4448          43.1823   48.5654      41.0232      46.1371      recovery_reset      1999-06-17                    2                 0            NaN                   NaN
+2000-04-14 -20199.5593          72.9691  102.1910      69.3206      97.0814 lower_price_reentry      2000-05-10                   17                16        67.6163               -0.0734
+2000-07-11   -386.8037          79.7442  102.1910      75.7570      97.0814 lower_price_reentry      2000-07-28                   13                12        73.6562               -0.0763
+2001-09-21 -19596.9496          23.2418   44.0446      22.0797      41.8424 lower_price_reentry      2002-06-21                  188               152        21.8956               -0.0579
+2008-03-03   -494.9621          37.1131   47.5543      35.2574      45.1766 lower_price_reentry      2008-09-17                  138                71        34.8076               -0.0621
+
+VGT_2016_2026 C_lower_5pct: first 3 episodes plus the 2 longest
+ exit_date       loss  loss_exit_price  ref_high  lower_level  reset_level          resolution resolution_date  sessions_restricted  blocked_sessions  reentry_close  reentry_vs_loss_exit
+2018-10-26 -1903.3192          21.2544   24.0150      20.1917      22.8142 lower_price_reentry      2018-12-17                   34                24        19.9101               -0.0632
+2019-01-02 -3631.3472          19.2831   24.0150      18.3189      22.8142      recovery_reset      2019-02-25                   36                21            NaN                   NaN
+2020-03-11 -8846.7539          26.8824   32.6823      25.5383      31.0482 lower_price_reentry      2020-03-12                    1                 0        23.7130               -0.1179
+2020-03-16 -2431.9383          23.1649   32.6823      22.0067      31.0482      recovery_reset      2020-05-29                   52                37            NaN                   NaN
+2022-03-10  -853.9286          46.5185   56.7774      44.1926      53.9385 lower_price_reentry      2022-05-06                   40                36        44.1709               -0.0505
+
+VGT_2016_2026 D_lower_8pct: first 3 episodes plus the 2 longest
+ exit_date       loss  loss_exit_price  ref_high  lower_level  reset_level          resolution resolution_date  sessions_restricted  blocked_sessions  reentry_close  reentry_vs_loss_exit
+2018-10-26 -1903.3192          21.2544   24.0150      19.5540      22.8142 lower_price_reentry      2018-12-20                   37                27        19.3319               -0.0905
+2019-01-04 -1926.8193          19.0468   24.0150      17.5231      22.8142      recovery_reset      2019-02-25                   34                19            NaN                   NaN
+2020-03-11 -8846.7539          26.8824   32.6823      24.7318      31.0482 lower_price_reentry      2020-03-12                    1                 0        23.7130               -0.1179
+2022-10-14  -547.6648          38.2439   47.7709      35.1844      45.3824      recovery_reset      2023-02-15                   84                57            NaN                   NaN
+2020-03-16 -2431.9383          23.1649   32.6823      21.3117      31.0482      recovery_reset      2020-05-29                   52                37            NaN                   NaN
+
+QQQ_2016_2026 B_lower_3pct: first 3 episodes plus the 2 longest
+ exit_date       loss  loss_exit_price  ref_high  lower_level  reset_level          resolution resolution_date  sessions_restricted  blocked_sessions  reentry_close  reentry_vs_loss_exit
+2018-11-15  -961.4193          157.702   179.437     152.9709     170.4652 lower_price_reentry      2018-11-20                    3                 2         152.30               -0.0343
+2018-12-17   -47.4478          153.467   179.437     148.8630     170.4652 lower_price_reentry      2018-12-19                    2                 1         147.86               -0.0365
+2019-01-03 -1420.5385          146.428   179.437     142.0352     170.4652      recovery_reset      2019-03-15                   49                21            NaN                   NaN
+2022-11-03  -596.0667          258.790   328.467     251.0263     312.0436      recovery_reset      2023-03-31                  101                48            NaN                   NaN
+
+ALL 1664 CHECKS PASSED

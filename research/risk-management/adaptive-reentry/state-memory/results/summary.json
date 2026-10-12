@@ -1,0 +1,4719 @@
+[
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E1_exit_only",
+  "dataset": "VGT_2005_2015",
+  "metrics": {
+   "dataset": "VGT_2005_2015",
+   "first_date": "2005-02-25",
+   "last_date": "2015-10-07",
+   "sessions": 2672,
+   "net_profit": 26384.1442117817,
+   "realized_profit": 26384.1442117817,
+   "unrealized_profit": 0.0,
+   "open_position_at_end": false,
+   "margin_interest": 44753.42465753425,
+   "closed_trades": 22,
+   "winning_trades": 8,
+   "losing_trades": 14,
+   "win_rate": 0.36363636363636365,
+   "avg_winning_trade": 10135.232665784042,
+   "avg_losing_trade": -3906.9797938921884,
+   "largest_winning_trade": 29641.878962012983,
+   "largest_losing_trade": -20604.308250375383,
+   "max_drawdown": 54279.199041072105,
+   "max_drawdown_pct_of_100k": 0.542791990410721,
+   "mdd_peak_date": "2007-07-19",
+   "mdd_trough_date": "2008-11-20",
+   "max_consecutive_losses": 4,
+   "max_bear_episode_drawdown": 54279.199041072105,
+   "longest_underwater_days": 1699,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": -18486.923278113234,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8276.458011659593,
+   "worst_day_date": "2008-09-29",
+   "profit_to_drawdown": 0.48608204759648876,
+   "avg_borrowed_all_sessions": 38211.077844311374,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 148500000.0,
+   "pct_sessions_exposed": 0.38211077844311375,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 177.67100479314274,
+   "bear_windows": {
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": -6197.5005741501445,
+     "max_drawdown": 54279.199041072105,
+     "interest": 13742.465753424658,
+     "trades_closed": 10,
+     "losing_trades": 5,
+     "largest_loss": -20604.308250375383,
+     "avg_borrowed": 41137.56613756614,
+     "trades_entered": 9,
+     "pnl_of_trades_entered": -8005.732565295424
+    }
+   },
+   "recovery_windows": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 29641.878962012983,
+     "max_drawdown": 10886.972636822691,
+     "interest": 3736.986301369863,
+     "trades_closed": 1,
+     "losing_trades": 0,
+     "largest_loss": 29641.878962012983,
+     "avg_borrowed": 39906.103286384976,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 29641.878962012983
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 62526.31578947369,
+   "exposure_vs_baseline": 0.6252631578947369,
+   "experiment_profit": 26384.1442117817,
+   "control_profit": 7254.607625390188,
+   "experiment_max_drawdown": 54279.199041072105,
+   "control_max_drawdown": 45896.5810813779,
+   "profit_difference": 19129.53658639151,
+   "drawdown_difference": 8382.617959694202,
+   "experiment_profit_to_drawdown": 0.48608204759648876,
+   "control_profit_to_drawdown": 0.15806422732288605,
+   "profit_to_drawdown_difference": 0.3280178202736027,
+   "control_dollar_days": 148500000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 274,
+    "lower_price_reentries": 8,
+    "alt_entries": 0,
+    "recovery_resets": 5,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 14,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 8,
+     "recovery_reset": 5,
+     "unresolved_at_end": 1
+    },
+    "sessions_restricted_total": 479.0,
+    "sessions_restricted_median": 10.0,
+    "sessions_restricted_max": 152.0,
+    "reentry_discount_vs_loss_exit_median": -0.037342114930166925,
+    "false_resets": 4,
+    "false_reset_dates": [
+     "2007-12-10",
+     "2010-10-12",
+     "2012-08-10",
+     "2013-02-11"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 48,
+    "variant_trades": 22,
+    "baseline_entries_missed": 26,
+    "baseline_entries_delayed": 8,
+    "net_difference": 14781.657268817586,
+    "repeated_losers": {
+     "n": 23,
+     "baseline_pnl": -59750.94708124831,
+     "variant_window_pnl": -26766.796799701453,
+     "eliminated": 13,
+     "later": 6,
+     "identical": 4
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 80458.18022094174,
+     "variant_window_pnl": 43148.6147569888,
+     "eliminated": 10,
+     "later": 1,
+     "identical": 0
+    },
+    "major_winners_10k": {
+     "n": 4,
+     "baseline_pnl": 65881.1941637638,
+     "variant_window_pnl": 51011.20856444143,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 1
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 52158.754390292794,
+     "variant_window_pnl": 37288.76879097043,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2010-08-31",
+     "b_profit": 18140.915147218228,
+     "min_gap": 0.009794292251249503
+    },
+    {
+     "b_entry_date": "2012-06-04",
+     "b_profit": 3001.1496509221215,
+     "min_gap": 0.0191444936180607
+    },
+    {
+     "b_entry_date": "2015-09-28",
+     "b_profit": 5730.668502684606,
+     "min_gap": 0.008070434602341692
+    }
+   ],
+   "recovery_windows_ext": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 29641.878962012983,
+     "max_drawdown": 10886.972636822691,
+     "interest": 3736.986301369863,
+     "trades_closed": 1,
+     "losing_trades": 0,
+     "largest_loss": 29641.878962012983,
+     "avg_borrowed": 39906.103286384976,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 29641.878962012983
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 11602.486942964113,
+    "baseline_mdd": 73403.62294159768,
+    "lower3_net": 26384.1442117817,
+    "lower3_mdd": 54279.199041072105,
+    "net_vs_baseline": 14781.657268817586,
+    "net_vs_lower3": 0.0,
+    "mdd_vs_baseline": -19124.42390052558,
+    "mdd_vs_lower3": 0.0
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 100000.0,
+   "control_profit": 26384.1442117817,
+   "control_max_drawdown": 54279.199041072105,
+   "profit_difference": 0.0,
+   "drawdown_difference": 0.0,
+   "control_profit_to_drawdown": 0.48608204759648876,
+   "control_dollar_days": 148500000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E2_entry_only",
+  "dataset": "VGT_2005_2015",
+  "metrics": {
+   "dataset": "VGT_2005_2015",
+   "first_date": "2005-02-25",
+   "last_date": "2015-10-07",
+   "sessions": 2672,
+   "net_profit": 30839.153586644796,
+   "realized_profit": 30839.153586644796,
+   "unrealized_profit": 0.0,
+   "open_position_at_end": false,
+   "margin_interest": 59038.356164383564,
+   "closed_trades": 31,
+   "winning_trades": 11,
+   "losing_trades": 20,
+   "win_rate": 0.3548387096774194,
+   "avg_winning_trade": 9648.919548776072,
+   "avg_losing_trade": -3764.9480724945997,
+   "largest_winning_trade": 33092.69511432031,
+   "largest_losing_trade": -20604.308250375383,
+   "max_drawdown": 62117.99056401232,
+   "max_drawdown_pct_of_100k": 0.6211799056401232,
+   "mdd_peak_date": "2007-07-19",
+   "mdd_trough_date": "2009-03-05",
+   "max_consecutive_losses": 3,
+   "max_bear_episode_drawdown": 62117.99056401232,
+   "longest_underwater_days": 1296,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": -28033.891308389928,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8276.458011659593,
+   "worst_day_date": "2008-09-29",
+   "profit_to_drawdown": 0.4964609013690677,
+   "avg_borrowed_all_sessions": 50486.526946107784,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 195900000.0,
+   "pct_sessions_exposed": 0.5048652694610778,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 157.42293816561917,
+   "bear_windows": {
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": -15543.68199190808,
+     "max_drawdown": 62117.99056401232,
+     "interest": 20041.095890410958,
+     "trades_closed": 17,
+     "losing_trades": 11,
+     "largest_loss": -20604.308250375383,
+     "avg_borrowed": 60449.735449735446,
+     "trades_entered": 16,
+     "pnl_of_trades_entered": -17262.101661625613
+    }
+   },
+   "recovery_windows": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 29314.261074388465,
+     "max_drawdown": 11140.763087204738,
+     "interest": 3857.5342465753424,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -6759.756248859078,
+     "avg_borrowed": 41314.55399061033,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 33092.69511432031
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 82484.21052631579,
+   "exposure_vs_baseline": 0.8248421052631579,
+   "experiment_profit": 30839.153586644796,
+   "control_profit": 9570.219756322826,
+   "experiment_max_drawdown": 62117.99056401232,
+   "control_max_drawdown": 60546.39888109047,
+   "profit_difference": 21268.93383032197,
+   "drawdown_difference": 1571.5916829218477,
+   "experiment_profit_to_drawdown": 0.4964609013690677,
+   "control_profit_to_drawdown": 0.1580642273228862,
+   "profit_to_drawdown_difference": 0.33839667404618146,
+   "control_dollar_days": 195899999.99999997
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 112,
+    "lower_price_reentries": 15,
+    "alt_entries": 0,
+    "recovery_resets": 4,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 20,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 15,
+     "recovery_reset": 4,
+     "unresolved_at_end": 1
+    },
+    "sessions_restricted_total": 251.0,
+    "sessions_restricted_median": 3.0,
+    "sessions_restricted_max": 53.0,
+    "reentry_discount_vs_loss_exit_median": -0.026890721392518135,
+    "false_resets": 3,
+    "false_reset_dates": [
+     "2007-12-10",
+     "2012-08-10",
+     "2013-02-11"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 48,
+    "variant_trades": 31,
+    "baseline_entries_missed": 17,
+    "baseline_entries_delayed": 11,
+    "net_difference": 19236.666643680685,
+    "repeated_losers": {
+     "n": 23,
+     "baseline_pnl": -59750.94708124831,
+     "variant_window_pnl": -28385.159010954616,
+     "eliminated": 9,
+     "later": 10,
+     "identical": 4
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 80458.18022094174,
+     "variant_window_pnl": 66528.56670219611,
+     "eliminated": 8,
+     "later": 1,
+     "identical": 2
+    },
+    "major_winners_10k": {
+     "n": 4,
+     "baseline_pnl": 65881.1941637638,
+     "variant_window_pnl": 69187.19185505813,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 1
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 52158.754390292794,
+     "variant_window_pnl": 55464.75208158714,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2012-06-04",
+     "b_profit": 3001.1496509221215,
+     "min_gap": 0.003680417686946713
+    },
+    {
+     "b_entry_date": "2015-09-28",
+     "b_profit": 5730.668502684606,
+     "min_gap": 0.01496914317380682
+    }
+   ],
+   "recovery_windows_ext": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 29314.261074388465,
+     "max_drawdown": 11140.763087204738,
+     "interest": 3857.5342465753424,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -6759.756248859078,
+     "avg_borrowed": 41314.55399061033,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 33092.69511432031
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 11602.486942964113,
+    "baseline_mdd": 73403.62294159768,
+    "lower3_net": 26384.1442117817,
+    "lower3_mdd": 54279.199041072105,
+    "net_vs_baseline": 19236.666643680685,
+    "net_vs_lower3": 4455.009374863097,
+    "mdd_vs_baseline": -11285.632377585367,
+    "mdd_vs_lower3": 7838.791522940213
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 131919.19191919192,
+   "control_profit": 34805.749838976684,
+   "control_max_drawdown": 71604.6807551921,
+   "profit_difference": -3966.5962523318885,
+   "drawdown_difference": -9486.690191179776,
+   "control_profit_to_drawdown": 0.48608204759648904,
+   "control_dollar_days": 195900000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E3_entry_count",
+  "dataset": "VGT_2005_2015",
+  "metrics": {
+   "dataset": "VGT_2005_2015",
+   "first_date": "2005-02-25",
+   "last_date": "2015-10-07",
+   "sessions": 2672,
+   "net_profit": 2477.312001685324,
+   "realized_profit": 2477.312001685324,
+   "unrealized_profit": 0.0,
+   "open_position_at_end": false,
+   "margin_interest": 46380.821917808214,
+   "closed_trades": 33,
+   "winning_trades": 9,
+   "losing_trades": 24,
+   "win_rate": 0.2727272727272727,
+   "avg_winning_trade": 9059.603649193718,
+   "avg_losing_trade": -3294.1300350440883,
+   "largest_winning_trade": 33092.69511432031,
+   "largest_losing_trade": -20604.308250375383,
+   "max_drawdown": 74496.42096315027,
+   "max_drawdown_pct_of_100k": 0.7449642096315028,
+   "mdd_peak_date": "2006-01-11",
+   "mdd_trough_date": "2009-03-05",
+   "max_consecutive_losses": 11,
+   "max_bear_episode_drawdown": 62225.5646031495,
+   "longest_underwater_days": 3556,
+   "longest_underwater_recovered": false,
+   "min_cumulative_pnl": -54640.57155917872,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8276.458011659595,
+   "worst_day_date": "2008-09-29",
+   "profit_to_drawdown": 0.0332541076424427,
+   "avg_borrowed_all_sessions": 39558.383233532935,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 153900000.0,
+   "pct_sessions_exposed": 0.39558383233532934,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 16.0968940980203,
+   "bear_windows": {
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": -25160.32844523129,
+     "max_drawdown": 62225.5646031495,
+     "interest": 11241.09589041096,
+     "trades_closed": 17,
+     "losing_trades": 13,
+     "largest_loss": -20604.308250375383,
+     "avg_borrowed": 33862.43386243386,
+     "trades_entered": 17,
+     "pnl_of_trades_entered": -25160.328445231287
+    }
+   },
+   "recovery_windows": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 29314.261074388465,
+     "max_drawdown": 11140.763087204738,
+     "interest": 3857.5342465753424,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -6759.756248859078,
+     "avg_borrowed": 41314.55399061033,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 33092.69511432031
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 64800.0,
+   "exposure_vs_baseline": 0.648,
+   "experiment_profit": 2477.312001685324,
+   "control_profit": 7518.4115390408,
+   "experiment_max_drawdown": 74496.42096315027,
+   "control_max_drawdown": 47565.54766615526,
+   "profit_difference": -5041.099537355476,
+   "drawdown_difference": 26930.873296995014,
+   "experiment_profit_to_drawdown": 0.0332541076424427,
+   "control_profit_to_drawdown": 0.15806422732288736,
+   "profit_to_drawdown_difference": -0.12481011968044466,
+   "control_dollar_days": 153900000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 125,
+    "lower_price_reentries": 18,
+    "alt_entries": 0,
+    "recovery_resets": 5,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 24,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 18,
+     "recovery_reset": 5,
+     "unresolved_at_end": 1
+    },
+    "sessions_restricted_total": 473.0,
+    "sessions_restricted_median": 2.5,
+    "sessions_restricted_max": 159.0,
+    "reentry_discount_vs_loss_exit_median": -0.023939234260505537,
+    "false_resets": 4,
+    "false_reset_dates": [
+     "2006-10-09",
+     "2008-06-05",
+     "2012-09-13",
+     "2013-07-15"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 48,
+    "variant_trades": 33,
+    "baseline_entries_missed": 15,
+    "baseline_entries_delayed": 10,
+    "net_difference": -9125.174941278789,
+    "repeated_losers": {
+     "n": 23,
+     "baseline_pnl": -59750.94708124831,
+     "variant_window_pnl": -36354.34488728961,
+     "eliminated": 7,
+     "later": 9,
+     "identical": 7
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 80458.18022094174,
+     "variant_window_pnl": 51391.16704316667,
+     "eliminated": 8,
+     "later": 1,
+     "identical": 2
+    },
+    "major_winners_10k": {
+     "n": 4,
+     "baseline_pnl": 65881.1941637638,
+     "variant_window_pnl": 55512.63844565235,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 1
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 52158.754390292794,
+     "variant_window_pnl": 41790.19867218136,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2011-10-03",
+     "b_profit": 7073.403166197055,
+     "min_gap": 0.003092701673103715
+    },
+    {
+     "b_entry_date": "2012-06-04",
+     "b_profit": 3001.1496509221215,
+     "min_gap": 0.003680417686946713
+    },
+    {
+     "b_entry_date": "2015-09-28",
+     "b_profit": 5730.668502684606,
+     "min_gap": 0.01496914317380682
+    }
+   ],
+   "recovery_windows_ext": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 29314.261074388465,
+     "max_drawdown": 11140.763087204738,
+     "interest": 3857.5342465753424,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -6759.756248859078,
+     "avg_borrowed": 41314.55399061033,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 33092.69511432031
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 11602.486942964113,
+    "baseline_mdd": 73403.62294159768,
+    "lower3_net": 26384.1442117817,
+    "lower3_mdd": 54279.199041072105,
+    "net_vs_baseline": -9125.174941278789,
+    "net_vs_lower3": -23906.832210096374,
+    "mdd_vs_baseline": 1092.7980215525895,
+    "mdd_vs_lower3": 20217.22192207817
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 103636.36363636363,
+   "control_profit": 27343.56763766462,
+   "control_max_drawdown": 56252.988097111105,
+   "profit_difference": -24866.255635979294,
+   "drawdown_difference": 18243.43286603917,
+   "control_profit_to_drawdown": 0.48608204759648777,
+   "control_dollar_days": 153900000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E4_cum_loss",
+  "dataset": "VGT_2005_2015",
+  "metrics": {
+   "dataset": "VGT_2005_2015",
+   "first_date": "2005-02-25",
+   "last_date": "2015-10-07",
+   "sessions": 2672,
+   "net_profit": -13850.793559695052,
+   "realized_profit": -19581.462062379658,
+   "unrealized_profit": 5730.668502684606,
+   "open_position_at_end": true,
+   "margin_interest": 34295.89041095889,
+   "closed_trades": 22,
+   "winning_trades": 5,
+   "losing_trades": 17,
+   "win_rate": 0.22727272727272727,
+   "avg_winning_trade": 7200.149361670573,
+   "avg_losing_trade": -3269.5416982783836,
+   "largest_winning_trade": 13722.439773470995,
+   "largest_losing_trade": -20604.308250375383,
+   "max_drawdown": 54666.499994233156,
+   "max_drawdown_pct_of_100k": 0.5466649999423315,
+   "mdd_peak_date": "2006-01-11",
+   "mdd_trough_date": "2008-11-20",
+   "max_consecutive_losses": 5,
+   "max_bear_episode_drawdown": 46704.58280967515,
+   "longest_underwater_days": 3556,
+   "longest_underwater_recovered": false,
+   "min_cumulative_pnl": -34810.65059026161,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8276.458011659595,
+   "worst_day_date": "2008-09-29",
+   "profit_to_drawdown": -0.2533689473655016,
+   "avg_borrowed_all_sessions": 29378.74251497006,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 113800000.0,
+   "pct_sessions_exposed": 0.2937874251497006,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": -121.71171845074738,
+   "bear_windows": {
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": -31735.976502374768,
+     "max_drawdown": 46704.58280967515,
+     "interest": 7835.6164383561645,
+     "trades_closed": 9,
+     "losing_trades": 7,
+     "largest_loss": -20604.308250375383,
+     "avg_borrowed": 23544.973544973545,
+     "trades_entered": 9,
+     "pnl_of_trades_entered": -31735.976502374768
+    }
+   },
+   "recovery_windows": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 47915.78947368421,
+   "exposure_vs_baseline": 0.4791578947368421,
+   "experiment_profit": -13850.793559695052,
+   "control_profit": 5559.423217302398,
+   "experiment_max_drawdown": 54666.499994233156,
+   "control_max_drawdown": 35171.925434752906,
+   "profit_difference": -19410.21677699745,
+   "drawdown_difference": 19494.57455948025,
+   "experiment_profit_to_drawdown": -0.2533689473655016,
+   "control_profit_to_drawdown": 0.15806422732288655,
+   "profit_to_drawdown_difference": -0.41143317468838814,
+   "control_dollar_days": 113800000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 254,
+    "lower_price_reentries": 10,
+    "alt_entries": 0,
+    "recovery_resets": 7,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 17,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 10,
+     "recovery_reset": 7
+    },
+    "sessions_restricted_total": 607.0,
+    "sessions_restricted_median": 11.0,
+    "sessions_restricted_max": 270.0,
+    "reentry_discount_vs_loss_exit_median": -0.02983178590740837,
+    "false_resets": 5,
+    "false_reset_dates": [
+     "2006-09-20",
+     "2007-12-10",
+     "2010-10-12",
+     "2012-08-10",
+     "2013-02-11"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 48,
+    "variant_trades": 23,
+    "baseline_entries_missed": 25,
+    "baseline_entries_delayed": 7,
+    "net_difference": -25453.280502659167,
+    "repeated_losers": {
+     "n": 23,
+     "baseline_pnl": -59750.94708124831,
+     "variant_window_pnl": -33192.51177998632,
+     "eliminated": 13,
+     "later": 6,
+     "identical": 4
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 80458.18022094174,
+     "variant_window_pnl": 12895.118065078306,
+     "eliminated": 10,
+     "later": 0,
+     "identical": 1
+    },
+    "major_winners_10k": {
+     "n": 4,
+     "baseline_pnl": 65881.1941637638,
+     "variant_window_pnl": 13722.439773470996,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 1
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 52158.754390292794,
+     "variant_window_pnl": 0.0,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2012-06-04",
+     "b_profit": 3001.1496509221215,
+     "min_gap": 0.018823231626927228
+    }
+   ],
+   "recovery_windows_ext": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 11602.486942964113,
+    "baseline_mdd": 73403.62294159768,
+    "lower3_net": 26384.1442117817,
+    "lower3_mdd": 54279.199041072105,
+    "net_vs_baseline": -25453.280502659167,
+    "net_vs_lower3": -40234.93777147675,
+    "mdd_vs_baseline": -18737.12294736453,
+    "mdd_vs_lower3": 387.30095316105144
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 76632.99663299663,
+   "control_profit": 20218.960345459676,
+   "control_max_drawdown": 41595.776773562306,
+   "profit_difference": -34069.75390515473,
+   "drawdown_difference": 13070.72322067085,
+   "control_profit_to_drawdown": 0.48608204759648976,
+   "control_dollar_days": 113799999.99999997,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E5_no_small_rearm",
+  "dataset": "VGT_2005_2015",
+  "metrics": {
+   "dataset": "VGT_2005_2015",
+   "first_date": "2005-02-25",
+   "last_date": "2015-10-07",
+   "sessions": 2672,
+   "net_profit": 14451.269457632334,
+   "realized_profit": 8720.600954947728,
+   "unrealized_profit": 5730.668502684606,
+   "open_position_at_end": true,
+   "margin_interest": 42432.87671232876,
+   "closed_trades": 25,
+   "winning_trades": 8,
+   "losing_trades": 17,
+   "win_rate": 0.32,
+   "avg_winning_trade": 7976.20631762523,
+   "avg_losing_trade": -3240.532328591418,
+   "largest_winning_trade": 29641.878962012983,
+   "largest_losing_trade": -20604.308250375383,
+   "max_drawdown": 57994.30525564062,
+   "max_drawdown_pct_of_100k": 0.5799430525564062,
+   "mdd_peak_date": "2006-01-11",
+   "mdd_trough_date": "2008-11-20",
+   "max_consecutive_losses": 6,
+   "max_bear_episode_drawdown": 46375.1601761968,
+   "longest_underwater_days": 2266,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": -38138.455851669074,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8276.458011659595,
+   "worst_day_date": "2008-09-29",
+   "profit_to_drawdown": 0.24918428445570145,
+   "avg_borrowed_all_sessions": 36377.245508982036,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 140800000.0,
+   "pct_sessions_exposed": 0.36377245508982037,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 102.63685694341146,
+   "bear_windows": {
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": -8005.732565295432,
+     "max_drawdown": 46375.1601761968,
+     "interest": 6991.780821917808,
+     "trades_closed": 9,
+     "losing_trades": 5,
+     "largest_loss": -20604.308250375383,
+     "avg_borrowed": 21031.74603174603,
+     "trades_entered": 9,
+     "pnl_of_trades_entered": -8005.732565295424
+    }
+   },
+   "recovery_windows": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 29641.878962012983,
+     "max_drawdown": 10886.972636822691,
+     "interest": 3736.986301369863,
+     "trades_closed": 1,
+     "losing_trades": 0,
+     "largest_loss": 29641.878962012983,
+     "avg_borrowed": 39906.103286384976,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 29641.878962012983
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 59284.21052631579,
+   "exposure_vs_baseline": 0.592842105263158,
+   "experiment_profit": 14451.269457632334,
+   "control_profit": 6878.442785555131,
+   "experiment_max_drawdown": 57994.30525564062,
+   "control_max_drawdown": 43516.75835863977,
+   "profit_difference": 7572.826672077203,
+   "drawdown_difference": 14477.546897000851,
+   "experiment_profit_to_drawdown": 0.24918428445570145,
+   "control_profit_to_drawdown": 0.1580642273228859,
+   "profit_to_drawdown_difference": 0.09112005713281557,
+   "control_dollar_days": 140799999.99999997
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 242,
+    "lower_price_reentries": 6,
+    "alt_entries": 0,
+    "recovery_resets": 3,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 8,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 9,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 6,
+     "recovery_reset": 3
+    },
+    "sessions_restricted_total": 363.0,
+    "sessions_restricted_median": 34.0,
+    "sessions_restricted_max": 152.0,
+    "reentry_discount_vs_loss_exit_median": -0.03711602373890138,
+    "false_resets": 2,
+    "false_reset_dates": [
+     "2006-09-20",
+     "2010-10-12"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 48,
+    "variant_trades": 26,
+    "baseline_entries_missed": 22,
+    "baseline_entries_delayed": 6,
+    "net_difference": 2848.7825146682208,
+    "repeated_losers": {
+     "n": 23,
+     "baseline_pnl": -59750.94708124831,
+     "variant_window_pnl": -29372.835625048545,
+     "eliminated": 11,
+     "later": 4,
+     "identical": 8
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 80458.18022094174,
+     "variant_window_pnl": 37945.811210372965,
+     "eliminated": 8,
+     "later": 1,
+     "identical": 2
+    },
+    "major_winners_10k": {
+     "n": 4,
+     "baseline_pnl": 65881.1941637638,
+     "variant_window_pnl": 37076.58686421887,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 1
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 52158.754390292794,
+     "variant_window_pnl": 23354.147090747876,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2006-08-15",
+     "b_profit": 12293.308988552435,
+     "min_gap": 0.019490086817812058
+    },
+    {
+     "b_entry_date": "2010-08-31",
+     "b_profit": 18140.915147218228,
+     "min_gap": 0.016161803614355374
+    }
+   ],
+   "recovery_windows_ext": {
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 29641.878962012983,
+     "max_drawdown": 10886.972636822691,
+     "interest": 3736.986301369863,
+     "trades_closed": 1,
+     "losing_trades": 0,
+     "largest_loss": 29641.878962012983,
+     "avg_borrowed": 39906.103286384976,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 29641.878962012983
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 11602.486942964113,
+    "baseline_mdd": 73403.62294159768,
+    "lower3_net": 26384.1442117817,
+    "lower3_mdd": 54279.199041072105,
+    "net_vs_baseline": 2848.7825146682208,
+    "net_vs_lower3": -11932.874754149365,
+    "mdd_vs_baseline": -15409.317685957067,
+    "mdd_vs_lower3": 3715.1062145685137
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 94814.81481481482,
+   "control_profit": 25016.077474874462,
+   "control_max_drawdown": 51464.72205375729,
+   "profit_difference": -10564.808017242129,
+   "drawdown_difference": 6529.583201883332,
+   "control_profit_to_drawdown": 0.48608204759648777,
+   "control_dollar_days": 140800000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E1_exit_only",
+  "dataset": "QQQ_1999_2015",
+  "metrics": {
+   "dataset": "QQQ_1999_2015",
+   "first_date": "1999-03-10",
+   "last_date": "2015-12-31",
+   "sessions": 4231,
+   "net_profit": 40258.24467818686,
+   "realized_profit": 30887.093724653307,
+   "unrealized_profit": 9371.150953533552,
+   "open_position_at_end": true,
+   "margin_interest": 73986.30136986301,
+   "closed_trades": 69,
+   "winning_trades": 28,
+   "losing_trades": 41,
+   "win_rate": 0.4057971014492754,
+   "avg_winning_trade": 8512.600643542928,
+   "avg_losing_trade": -5060.139616940211,
+   "largest_winning_trade": 54187.93888393084,
+   "largest_losing_trade": -20199.559314759346,
+   "max_drawdown": 91468.9678199882,
+   "max_drawdown_pct_of_100k": 0.914689678199882,
+   "mdd_peak_date": "2001-01-23",
+   "mdd_trough_date": "2008-11-20",
+   "max_consecutive_losses": 10,
+   "max_bear_episode_drawdown": 61250.81118970367,
+   "longest_underwater_days": 5455,
+   "longest_underwater_recovered": false,
+   "min_cumulative_pnl": -32914.49863218795,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8730.275155045521,
+   "worst_day_date": "2001-04-20",
+   "profit_to_drawdown": 0.4401300860573333,
+   "avg_borrowed_all_sessions": 40037.81611912078,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 245500000.0,
+   "pct_sessions_exposed": 0.4003781611912077,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 163.9847033734699,
+   "bear_windows": {
+    "2000-2002": {
+     "window": "2000-01-01..2002-12-31",
+     "pnl": -11471.26438088623,
+     "max_drawdown": 61250.81118970367,
+     "interest": 21698.630136986303,
+     "trades_closed": 42,
+     "losing_trades": 23,
+     "largest_loss": -20199.559314759346,
+     "avg_borrowed": 66090.4255319149,
+     "trades_entered": 42,
+     "pnl_of_trades_entered": -11471.264380886234
+    },
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": 45281.00505321557,
+     "max_drawdown": 44705.52368808589,
+     "interest": 19438.35616438356,
+     "trades_closed": 10,
+     "losing_trades": 6,
+     "largest_loss": -13229.312133890873,
+     "avg_borrowed": 59259.25925925926,
+     "trades_entered": 11,
+     "pnl_of_trades_entered": 33531.18921455389
+    }
+   },
+   "recovery_windows": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 65937.75472259252,
+     "max_drawdown": 9936.53787251905,
+     "interest": 9041.09589041096,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 98122.06572769953,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 54187.93888393084
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 59256.5773594014,
+   "exposure_vs_baseline": 0.592565773594014,
+   "experiment_profit": 40258.24467818686,
+   "control_profit": -1709.945743347318,
+   "experiment_max_drawdown": 91468.9678199882,
+   "control_max_drawdown": 88624.76773372502,
+   "profit_difference": 41968.19042153418,
+   "drawdown_difference": 2844.200086263183,
+   "experiment_profit_to_drawdown": 0.4401300860573333,
+   "control_profit_to_drawdown": -0.019294219743231214,
+   "profit_to_drawdown_difference": 0.4594243058005645,
+   "control_dollar_days": 245500000.00000003
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 425,
+    "lower_price_reentries": 31,
+    "alt_entries": 0,
+    "recovery_resets": 10,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 41,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 31,
+     "recovery_reset": 10
+    },
+    "sessions_restricted_total": 730.0,
+    "sessions_restricted_median": 4.0,
+    "sessions_restricted_max": 187.0,
+    "reentry_discount_vs_loss_exit_median": -0.04319573884912864,
+    "false_resets": 7,
+    "false_reset_dates": [
+     "2003-07-08",
+     "2004-06-08",
+     "2004-10-01",
+     "2008-08-14",
+     "2010-09-17",
+     "2012-07-19",
+     "2013-01-02"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 109,
+    "variant_trades": 70,
+    "baseline_entries_missed": 40,
+    "baseline_entries_delayed": 28,
+    "net_difference": 43143.90871675646,
+    "repeated_losers": {
+     "n": 46,
+     "baseline_pnl": -256807.01956396733,
+     "variant_window_pnl": -134135.66797574869,
+     "eliminated": 18,
+     "later": 24,
+     "identical": 4
+    },
+    "rebound_winners": {
+     "n": 24,
+     "baseline_pnl": 249946.2599611152,
+     "variant_window_pnl": 163481.2418885203,
+     "eliminated": 16,
+     "later": 1,
+     "identical": 7
+    },
+    "major_winners_10k": {
+     "n": 12,
+     "baseline_pnl": 240593.87711692858,
+     "variant_window_pnl": 164316.01262050102,
+     "eliminated": 6,
+     "later": 0,
+     "identical": 6
+    },
+    "major_rebound_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 175453.5143607701,
+     "variant_window_pnl": 99175.64986434253,
+     "eliminated": 6,
+     "later": 0,
+     "identical": 2
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2002-12-30",
+     "b_profit": 2051.4202494958813,
+     "min_gap": 0.01994086708287579
+    },
+    {
+     "b_entry_date": "2003-03-06",
+     "b_profit": 18418.547270659958,
+     "min_gap": 0.01994086708287579
+    },
+    {
+     "b_entry_date": "2004-08-11",
+     "b_profit": 8793.01152376158,
+     "min_gap": 0.015508273652895754
+    },
+    {
+     "b_entry_date": "2010-08-26",
+     "b_profit": 19220.704464923132,
+     "min_gap": 0.018789501989457058
+    },
+    {
+     "b_entry_date": "2011-08-23",
+     "b_profit": 206.33985281082118,
+     "min_gap": 0.010791412899695318
+    },
+    {
+     "b_entry_date": "2011-09-30",
+     "b_profit": 2184.244726415751,
+     "min_gap": 0.010791412899695318
+    }
+   ],
+   "recovery_windows_ext": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 65937.75472259252,
+     "max_drawdown": 9936.53787251905,
+     "interest": 9041.09589041096,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 98122.06572769953,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 54187.93888393084
+    }
+   },
+   "vs_reference": {
+    "baseline_net": -2885.664038569601,
+    "baseline_mdd": 149561.06424473436,
+    "lower3_net": 40258.24467818686,
+    "lower3_mdd": 91468.9678199882,
+    "net_vs_baseline": 43143.90871675646,
+    "net_vs_lower3": 0.0,
+    "mdd_vs_baseline": -58092.09642474615,
+    "mdd_vs_lower3": 0.0
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 100000.0,
+   "control_profit": 40258.24467818686,
+   "control_max_drawdown": 91468.9678199882,
+   "profit_difference": 0.0,
+   "drawdown_difference": 0.0,
+   "control_profit_to_drawdown": 0.4401300860573333,
+   "control_dollar_days": 245500000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E2_entry_only",
+  "dataset": "QQQ_1999_2015",
+  "metrics": {
+   "dataset": "QQQ_1999_2015",
+   "first_date": "1999-03-10",
+   "last_date": "2015-12-31",
+   "sessions": 4231,
+   "net_profit": -118054.06196600557,
+   "realized_profit": -118054.06196600557,
+   "unrealized_profit": 0.0,
+   "open_position_at_end": false,
+   "margin_interest": 84413.69863013699,
+   "closed_trades": 76,
+   "winning_trades": 23,
+   "losing_trades": 53,
+   "win_rate": 0.3026315789473684,
+   "avg_winning_trade": 8280.215126164514,
+   "avg_losing_trade": -5820.736035241311,
+   "largest_winning_trade": 23182.237660106864,
+   "largest_losing_trade": -20199.559314759346,
+   "max_drawdown": 182189.4093693624,
+   "max_drawdown_pct_of_100k": 1.821894093693624,
+   "mdd_peak_date": "2000-03-27",
+   "mdd_trough_date": "2011-08-19",
+   "max_consecutive_losses": 7,
+   "max_bear_episode_drawdown": 164369.34109675142,
+   "longest_underwater_days": 5757,
+   "longest_underwater_recovered": false,
+   "min_cumulative_pnl": -135363.4412442689,
+   "fell_below_minus_100k": true,
+   "worst_day_mtm_change": -9287.748146068538,
+   "worst_day_date": "2001-04-20",
+   "profit_to_drawdown": -0.6479743382156106,
+   "avg_borrowed_all_sessions": 45639.328763885605,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 280100000.0,
+   "pct_sessions_exposed": 0.45639328763885606,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": -421.4711244769924,
+   "bear_windows": {
+    "2000-2002": {
+     "window": "2000-01-01..2002-12-31",
+     "pnl": -102702.95373622907,
+     "max_drawdown": 164369.34109675142,
+     "interest": 20945.205479452055,
+     "trades_closed": 38,
+     "losing_trades": 28,
+     "largest_loss": -20199.559314759346,
+     "avg_borrowed": 64095.744680851065,
+     "trades_entered": 39,
+     "pnl_of_trades_entered": -99487.60051750657
+    },
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": -49791.21698236493,
+     "max_drawdown": 73322.22427816674,
+     "interest": 20794.520547945205,
+     "trades_closed": 16,
+     "losing_trades": 11,
+     "largest_loss": -18320.846504336998,
+     "avg_borrowed": 62698.4126984127,
+     "trades_entered": 15,
+     "pnl_of_trades_entered": -52662.613052027686
+    }
+   },
+   "recovery_windows": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": -87.08975876499608,
+     "max_drawdown": 12731.39876950426,
+     "interest": 1778.0821917808219,
+     "trades_closed": 3,
+     "losing_trades": 2,
+     "largest_loss": -3237.9612743920015,
+     "avg_borrowed": 15873.015873015873,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": -3302.4429774875134
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": -4911.470027569536,
+     "max_drawdown": 6727.79877428984,
+     "interest": 331.5068493150685,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -6218.588378848538,
+     "avg_borrowed": 2816.9014084507044,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 67608.01351677529,
+   "exposure_vs_baseline": 0.6760801351677528,
+   "experiment_profit": -118054.06196600557,
+   "control_profit": -1950.9401332448342,
+   "experiment_max_drawdown": 182189.4093693624,
+   "control_max_drawdown": 101115.26453041298,
+   "profit_difference": -116103.12183276073,
+   "drawdown_difference": 81074.14483894942,
+   "experiment_profit_to_drawdown": -0.6479743382156106,
+   "control_profit_to_drawdown": -0.019294219743232133,
+   "profit_to_drawdown_difference": -0.6286801184723785,
+   "control_dollar_days": 280100000.00000006
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 274,
+    "lower_price_reentries": 44,
+    "alt_entries": 0,
+    "recovery_resets": 9,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 53,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 44,
+     "recovery_reset": 9
+    },
+    "sessions_restricted_total": 508.0,
+    "sessions_restricted_median": 1.0,
+    "sessions_restricted_max": 147.0,
+    "reentry_discount_vs_loss_exit_median": -0.01448928513716774,
+    "false_resets": 7,
+    "false_reset_dates": [
+     "2003-04-22",
+     "2004-06-08",
+     "2008-08-14",
+     "2009-04-30",
+     "2010-09-17",
+     "2012-07-19",
+     "2013-01-02"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 109,
+    "variant_trades": 76,
+    "baseline_entries_missed": 33,
+    "baseline_entries_delayed": 27,
+    "net_difference": -115168.39792743596,
+    "repeated_losers": {
+     "n": 46,
+     "baseline_pnl": -256807.01956396733,
+     "variant_window_pnl": -193818.38296570376,
+     "eliminated": 10,
+     "later": 20,
+     "identical": 16
+    },
+    "rebound_winners": {
+     "n": 24,
+     "baseline_pnl": 249946.2599611152,
+     "variant_window_pnl": 101813.74181490464,
+     "eliminated": 13,
+     "later": 5,
+     "identical": 6
+    },
+    "major_winners_10k": {
+     "n": 12,
+     "baseline_pnl": 240593.87711692858,
+     "variant_window_pnl": 107079.67926293878,
+     "eliminated": 6,
+     "later": 2,
+     "identical": 4
+    },
+    "major_rebound_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 175453.5143607701,
+     "variant_window_pnl": 60534.169413862466,
+     "eliminated": 4,
+     "later": 2,
+     "identical": 2
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2003-03-06",
+     "b_profit": 18418.547270659958,
+     "min_gap": 0.013325611456300734
+    },
+    {
+     "b_entry_date": "2010-08-26",
+     "b_profit": 19220.704464923132,
+     "min_gap": 0.0010274828705942873
+    },
+    {
+     "b_entry_date": "2012-06-04",
+     "b_profit": 2822.721561362302,
+     "min_gap": 0.010852806089468148
+    },
+    {
+     "b_entry_date": "2015-09-28",
+     "b_profit": 9371.150953533552,
+     "min_gap": 0.0038130106474183467
+    }
+   ],
+   "recovery_windows_ext": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": -87.08975876499608,
+     "max_drawdown": 12731.39876950426,
+     "interest": 1778.0821917808219,
+     "trades_closed": 3,
+     "losing_trades": 2,
+     "largest_loss": -3237.9612743920015,
+     "avg_borrowed": 15873.015873015873,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": -3302.4429774875134
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": -4911.470027569536,
+     "max_drawdown": 6727.79877428984,
+     "interest": 331.5068493150685,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -6218.588378848538,
+     "avg_borrowed": 2816.9014084507044,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    }
+   },
+   "vs_reference": {
+    "baseline_net": -2885.664038569601,
+    "baseline_mdd": 149561.06424473436,
+    "lower3_net": 40258.24467818686,
+    "lower3_mdd": 91468.9678199882,
+    "net_vs_baseline": -115168.39792743596,
+    "net_vs_lower3": -158312.30664419243,
+    "mdd_vs_baseline": 32628.345124628046,
+    "mdd_vs_lower3": 90720.4415493742
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 114093.68635437882,
+   "control_profit": 45932.11541490892,
+   "control_max_drawdown": 104360.31725612504,
+   "profit_difference": -163986.17738091448,
+   "drawdown_difference": 77829.09211323736,
+   "control_profit_to_drawdown": 0.4401300860573333,
+   "control_dollar_days": 280100000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E3_entry_count",
+  "dataset": "QQQ_1999_2015",
+  "metrics": {
+   "dataset": "QQQ_1999_2015",
+   "first_date": "1999-03-10",
+   "last_date": "2015-12-31",
+   "sessions": 4231,
+   "net_profit": -83575.51624216016,
+   "realized_profit": -83575.51624216016,
+   "unrealized_profit": 0.0,
+   "open_position_at_end": false,
+   "margin_interest": 90471.23287671233,
+   "closed_trades": 91,
+   "winning_trades": 31,
+   "losing_trades": 60,
+   "win_rate": 0.34065934065934067,
+   "avg_winning_trade": 7663.791292350573,
+   "avg_losing_trade": -5352.550771750466,
+   "largest_winning_trade": 23182.237660106864,
+   "largest_losing_trade": -20199.559314759346,
+   "max_drawdown": 159881.42644349043,
+   "max_drawdown_pct_of_100k": 1.5988142644349044,
+   "mdd_peak_date": "2000-03-27",
+   "mdd_trough_date": "2010-07-02",
+   "max_consecutive_losses": 8,
+   "max_bear_episode_drawdown": 146326.28664595215,
+   "longest_underwater_days": 5757,
+   "longest_underwater_recovered": false,
+   "min_cumulative_pnl": -113055.45831839697,
+   "fell_below_minus_100k": true,
+   "worst_day_mtm_change": -9287.748146068538,
+   "worst_day_date": "2001-04-20",
+   "profit_to_drawdown": -0.5227343669697596,
+   "avg_borrowed_all_sessions": 48924.60411250295,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 300200000.0,
+   "pct_sessions_exposed": 0.48924604112502956,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": -278.3994545041977,
+   "bear_windows": {
+    "2000-2002": {
+     "window": "2000-01-01..2002-12-31",
+     "pnl": -87270.71400767806,
+     "max_drawdown": 146326.28664595215,
+     "interest": 27002.739726027397,
+     "trades_closed": 52,
+     "losing_trades": 34,
+     "largest_loss": -20199.559314759346,
+     "avg_borrowed": 82712.76595744681,
+     "trades_entered": 53,
+     "pnl_of_trades_entered": -84055.36078895556
+    },
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": -44354.06939218899,
+     "max_drawdown": 67885.07668799082,
+     "interest": 17961.64383561644,
+     "trades_closed": 16,
+     "losing_trades": 12,
+     "largest_loss": -15324.887972350116,
+     "avg_borrowed": 54100.5291005291,
+     "trades_entered": 15,
+     "pnl_of_trades_entered": -47225.46546185174
+    }
+   },
+   "recovery_windows": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": -87.08975876499608,
+     "max_drawdown": 12731.39876950426,
+     "interest": 1778.0821917808219,
+     "trades_closed": 3,
+     "losing_trades": 2,
+     "largest_loss": -3237.9612743920015,
+     "avg_borrowed": 15873.015873015873,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": -3302.4429774875134
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": -4911.470027569536,
+     "max_drawdown": 6727.79877428984,
+     "interest": 331.5068493150685,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -6218.588378848538,
+     "avg_borrowed": 2816.9014084507044,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 72459.57035964278,
+   "exposure_vs_baseline": 0.7245957035964277,
+   "experiment_profit": -83575.51624216016,
+   "control_profit": -2090.939764370193,
+   "experiment_max_drawdown": 159881.42644349043,
+   "control_max_drawdown": 108371.30457704377,
+   "profit_difference": -81484.57647778996,
+   "drawdown_difference": 51510.12186644666,
+   "experiment_profit_to_drawdown": -0.5227343669697596,
+   "control_profit_to_drawdown": -0.019294219743231877,
+   "profit_to_drawdown_difference": -0.5034401472265277,
+   "control_dollar_days": 300200000.00000006
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 153,
+    "lower_price_reentries": 52,
+    "alt_entries": 0,
+    "recovery_resets": 8,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 60,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 52,
+     "recovery_reset": 8
+    },
+    "sessions_restricted_total": 609.0,
+    "sessions_restricted_median": 1.0,
+    "sessions_restricted_max": 132.0,
+    "reentry_discount_vs_loss_exit_median": -0.02230896869182558,
+    "false_resets": 6,
+    "false_reset_dates": [
+     "2003-04-22",
+     "2004-11-17",
+     "2008-05-01",
+     "2009-03-26",
+     "2012-09-06",
+     "2013-07-11"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 109,
+    "variant_trades": 91,
+    "baseline_entries_missed": 18,
+    "baseline_entries_delayed": 21,
+    "net_difference": -80689.85220359056,
+    "repeated_losers": {
+     "n": 46,
+     "baseline_pnl": -256807.01956396733,
+     "variant_window_pnl": -214954.79457910388,
+     "eliminated": 6,
+     "later": 16,
+     "identical": 24
+    },
+    "rebound_winners": {
+     "n": 24,
+     "baseline_pnl": 249946.2599611152,
+     "variant_window_pnl": 136738.56954353646,
+     "eliminated": 9,
+     "later": 4,
+     "identical": 11
+    },
+    "major_winners_10k": {
+     "n": 12,
+     "baseline_pnl": 240593.87711692858,
+     "variant_window_pnl": 166903.5453658413,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 9
+    },
+    "major_rebound_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 175453.5143607701,
+     "variant_window_pnl": 101763.18260968282,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 5
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2003-03-06",
+     "b_profit": 18418.547270659958,
+     "min_gap": 0.011518343294816047
+    },
+    {
+     "b_entry_date": "2012-06-04",
+     "b_profit": 2822.721561362302,
+     "min_gap": 0.010852806089468148
+    },
+    {
+     "b_entry_date": "2015-09-28",
+     "b_profit": 9371.150953533552,
+     "min_gap": 0.0038130106474183467
+    }
+   ],
+   "recovery_windows_ext": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": -87.08975876499608,
+     "max_drawdown": 12731.39876950426,
+     "interest": 1778.0821917808219,
+     "trades_closed": 3,
+     "losing_trades": 2,
+     "largest_loss": -3237.9612743920015,
+     "avg_borrowed": 15873.015873015873,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": -3302.4429774875134
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": -4911.470027569536,
+     "max_drawdown": 6727.79877428984,
+     "interest": 331.5068493150685,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -6218.588378848538,
+     "avg_borrowed": 2816.9014084507044,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    }
+   },
+   "vs_reference": {
+    "baseline_net": -2885.664038569601,
+    "baseline_mdd": 149561.06424473436,
+    "lower3_net": 40258.24467818686,
+    "lower3_mdd": 91468.9678199882,
+    "net_vs_baseline": -80689.85220359056,
+    "net_vs_lower3": -123833.760920347,
+    "mdd_vs_baseline": 10320.362198756076,
+    "mdd_vs_lower3": 68412.45862350223
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 122281.05906313646,
+   "control_profit": 49228.20795271571,
+   "control_max_drawdown": 111849.2225644011,
+   "profit_difference": -132803.72419487586,
+   "drawdown_difference": 48032.20387908933,
+   "control_profit_to_drawdown": 0.44013008605733356,
+   "control_dollar_days": 300200000.00000006,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E4_cum_loss",
+  "dataset": "QQQ_1999_2015",
+  "metrics": {
+   "dataset": "QQQ_1999_2015",
+   "first_date": "1999-03-10",
+   "last_date": "2015-12-31",
+   "sessions": 4231,
+   "net_profit": 16932.354759646652,
+   "realized_profit": 7561.2038061131025,
+   "unrealized_profit": 9371.150953533552,
+   "open_position_at_end": true,
+   "margin_interest": 63830.136986301375,
+   "closed_trades": 51,
+   "winning_trades": 20,
+   "losing_trades": 31,
+   "win_rate": 0.39215686274509803,
+   "avg_winning_trade": 7896.486564093286,
+   "avg_losing_trade": -4850.59766050815,
+   "largest_winning_trade": 28894.63274346123,
+   "largest_losing_trade": -20199.559314759346,
+   "max_drawdown": 57607.25448346688,
+   "max_drawdown_pct_of_100k": 0.5760725448346689,
+   "mdd_peak_date": "2000-06-21",
+   "mdd_trough_date": "2011-08-19",
+   "max_consecutive_losses": 7,
+   "max_bear_episode_drawdown": 52890.44012773235,
+   "longest_underwater_days": 5671,
+   "longest_underwater_recovered": false,
+   "min_cumulative_pnl": -6409.8503462961335,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -9993.583781345485,
+   "worst_day_date": "2001-04-20",
+   "profit_to_drawdown": 0.29392747339670894,
+   "avg_borrowed_all_sessions": 34507.2086977074,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 211800000.0,
+   "pct_sessions_exposed": 0.345072086977074,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 79.94501775092847,
+   "bear_windows": {
+    "2000-2002": {
+     "window": "2000-01-01..2002-12-31",
+     "pnl": -6073.715676701631,
+     "max_drawdown": 52890.44012773235,
+     "interest": 12928.767123287671,
+     "trades_closed": 26,
+     "losing_trades": 15,
+     "largest_loss": -20199.559314759346,
+     "avg_borrowed": 39494.68085106383,
+     "trades_entered": 26,
+     "pnl_of_trades_entered": -6073.715676701637
+    },
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": -10708.441328632593,
+     "max_drawdown": 37628.611417004264,
+     "interest": 13471.232876712329,
+     "trades_closed": 9,
+     "losing_trades": 4,
+     "largest_loss": -13229.312133890873,
+     "avg_borrowed": 40476.19047619047,
+     "trades_entered": 8,
+     "pnl_of_trades_entered": -13579.837398295333
+    }
+   },
+   "recovery_windows": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 51122.37509051412,
+   "exposure_vs_baseline": 0.5112237509051412,
+   "experiment_profit": 16932.354759646652,
+   "control_profit": -1475.2199936495463,
+   "experiment_max_drawdown": 57607.25448346688,
+   "control_max_drawdown": 76459.16825255784,
+   "profit_difference": 18407.574753296198,
+   "drawdown_difference": -18851.913769090956,
+   "experiment_profit_to_drawdown": 0.29392747339670894,
+   "control_profit_to_drawdown": -0.019294219743231315,
+   "profit_to_drawdown_difference": 0.31322169313994025,
+   "control_dollar_days": 211800000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 617,
+    "lower_price_reentries": 22,
+    "alt_entries": 0,
+    "recovery_resets": 9,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 31,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 22,
+     "recovery_reset": 9
+    },
+    "sessions_restricted_total": 1186.0,
+    "sessions_restricted_median": 10.0,
+    "sessions_restricted_max": 273.0,
+    "reentry_discount_vs_loss_exit_median": -0.07927473020174391,
+    "false_resets": 7,
+    "false_reset_dates": [
+     "2003-07-08",
+     "2004-06-08",
+     "2004-10-01",
+     "2009-12-24",
+     "2010-09-17",
+     "2012-07-19",
+     "2013-01-02"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 109,
+    "variant_trades": 52,
+    "baseline_entries_missed": 57,
+    "baseline_entries_delayed": 27,
+    "net_difference": 19818.018798216253,
+    "repeated_losers": {
+     "n": 46,
+     "baseline_pnl": -256807.01956396733,
+     "variant_window_pnl": -81358.8645255711,
+     "eliminated": 22,
+     "later": 22,
+     "identical": 2
+    },
+    "rebound_winners": {
+     "n": 24,
+     "baseline_pnl": 249946.2599611152,
+     "variant_window_pnl": 97842.53538200285,
+     "eliminated": 18,
+     "later": 3,
+     "identical": 3
+    },
+    "major_winners_10k": {
+     "n": 12,
+     "baseline_pnl": 240593.87711692858,
+     "variant_window_pnl": 94142.94358145914,
+     "eliminated": 9,
+     "later": 1,
+     "identical": 2
+    },
+    "major_rebound_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 175453.5143607701,
+     "variant_window_pnl": 57344.51972392488,
+     "eliminated": 7,
+     "later": 1,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2010-08-26",
+     "b_profit": 19220.704464923132,
+     "min_gap": 0.01969338710319546
+    },
+    {
+     "b_entry_date": "2012-06-04",
+     "b_profit": 2822.721561362302,
+     "min_gap": 0.016228728330131448
+    }
+   ],
+   "recovery_windows_ext": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    }
+   },
+   "vs_reference": {
+    "baseline_net": -2885.664038569601,
+    "baseline_mdd": 149561.06424473436,
+    "lower3_net": 40258.24467818686,
+    "lower3_mdd": 91468.9678199882,
+    "net_vs_baseline": 19818.018798216253,
+    "net_vs_lower3": -23325.889918540204,
+    "mdd_vs_baseline": -91953.80976126748,
+    "mdd_vs_lower3": -33861.71333652132
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 86272.91242362525,
+   "control_profit": 34731.96017450098,
+   "control_max_drawdown": 78912.94250213236,
+   "profit_difference": -17799.605414854326,
+   "drawdown_difference": -21305.688018665474,
+   "control_profit_to_drawdown": 0.44013008605733417,
+   "control_dollar_days": 211800000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E5_no_small_rearm",
+  "dataset": "QQQ_1999_2015",
+  "metrics": {
+   "dataset": "QQQ_1999_2015",
+   "first_date": "1999-03-10",
+   "last_date": "2015-12-31",
+   "sessions": 4231,
+   "net_profit": 34474.915076081095,
+   "realized_profit": 25103.764122547545,
+   "unrealized_profit": 9371.150953533552,
+   "open_position_at_end": true,
+   "margin_interest": 82394.52054794521,
+   "closed_trades": 78,
+   "winning_trades": 30,
+   "losing_trades": 48,
+   "win_rate": 0.38461538461538464,
+   "avg_winning_trade": 8108.064193049798,
+   "avg_losing_trade": -4544.545034769716,
+   "largest_winning_trade": 54187.93888393084,
+   "largest_losing_trade": -20199.559314759346,
+   "max_drawdown": 93573.99183585015,
+   "max_drawdown_pct_of_100k": 0.9357399183585015,
+   "mdd_peak_date": "2001-01-23",
+   "mdd_trough_date": "2008-11-20",
+   "max_consecutive_losses": 11,
+   "max_bear_episode_drawdown": 63478.495330961756,
+   "longest_underwater_days": 5455,
+   "longest_underwater_recovered": false,
+   "min_cumulative_pnl": -38879.83454027613,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8730.275155045521,
+   "worst_day_date": "2001-04-20",
+   "profit_to_drawdown": 0.36842411443297046,
+   "avg_borrowed_all_sessions": 44599.38548806429,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 273400000.0,
+   "pct_sessions_exposed": 0.44599385488064286,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 126.09698272158411,
+   "bear_windows": {
+    "2000-2002": {
+     "window": "2000-01-01..2002-12-31",
+     "pnl": -17559.26041437057,
+     "max_drawdown": 63478.495330961756,
+     "interest": 23054.794520547945,
+     "trades_closed": 45,
+     "losing_trades": 25,
+     "largest_loss": -20199.559314759346,
+     "avg_borrowed": 70212.76595744681,
+     "trades_entered": 45,
+     "pnl_of_trades_entered": -17559.260414370576
+    },
+    "2007-2009": {
+     "window": "2007-01-01..2009-12-31",
+     "pnl": 45281.00505321557,
+     "max_drawdown": 44705.52368808589,
+     "interest": 19438.35616438356,
+     "trades_closed": 10,
+     "losing_trades": 6,
+     "largest_loss": -13229.312133890873,
+     "avg_borrowed": 59259.25925925926,
+     "trades_entered": 11,
+     "pnl_of_trades_entered": 33531.18921455389
+    }
+   },
+   "recovery_windows": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 65937.75472259252,
+     "max_drawdown": 9936.53787251905,
+     "interest": 9041.09589041096,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 98122.06572769953,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 54187.93888393084
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 65990.82790248613,
+   "exposure_vs_baseline": 0.6599082790248613,
+   "experiment_profit": 34474.915076081095,
+   "control_profit": -1904.2735895364249,
+   "experiment_max_drawdown": 93573.99183585015,
+   "control_max_drawdown": 98696.5845148694,
+   "profit_difference": 36379.18866561752,
+   "drawdown_difference": -5122.592679019261,
+   "experiment_profit_to_drawdown": 0.36842411443297046,
+   "control_profit_to_drawdown": -0.019294219743232668,
+   "profit_to_drawdown_difference": 0.3877183341762031,
+   "control_dollar_days": 273400000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 342,
+    "lower_price_reentries": 25,
+    "alt_entries": 0,
+    "recovery_resets": 6,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 17,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 31,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 25,
+     "recovery_reset": 6
+    },
+    "sessions_restricted_total": 576.0,
+    "sessions_restricted_median": 4.0,
+    "sessions_restricted_max": 187.0,
+    "reentry_discount_vs_loss_exit_median": -0.04435285297186464,
+    "false_resets": 4,
+    "false_reset_dates": [
+     "2003-07-08",
+     "2004-10-01",
+     "2008-08-14",
+     "2010-09-17"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 109,
+    "variant_trades": 79,
+    "baseline_entries_missed": 31,
+    "baseline_entries_delayed": 25,
+    "net_difference": 37360.579114650696,
+    "repeated_losers": {
+     "n": 46,
+     "baseline_pnl": -256807.01956396733,
+     "variant_window_pnl": -139089.28587815183,
+     "eliminated": 12,
+     "later": 22,
+     "identical": 12
+    },
+    "rebound_winners": {
+     "n": 24,
+     "baseline_pnl": 249946.2599611152,
+     "variant_window_pnl": 166899.48228959832,
+     "eliminated": 14,
+     "later": 1,
+     "identical": 9
+    },
+    "major_winners_10k": {
+     "n": 12,
+     "baseline_pnl": 240593.87711692858,
+     "variant_window_pnl": 164316.01262050102,
+     "eliminated": 6,
+     "later": 0,
+     "identical": 6
+    },
+    "major_rebound_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 175453.5143607701,
+     "variant_window_pnl": 99175.64986434253,
+     "eliminated": 6,
+     "later": 0,
+     "identical": 2
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2002-12-30",
+     "b_profit": 2051.4202494958813,
+     "min_gap": 0.01994086708287579
+    },
+    {
+     "b_entry_date": "2003-03-06",
+     "b_profit": 18418.547270659958,
+     "min_gap": 0.01994086708287579
+    },
+    {
+     "b_entry_date": "2004-08-11",
+     "b_profit": 8793.01152376158,
+     "min_gap": 0.015508273652895754
+    },
+    {
+     "b_entry_date": "2011-08-23",
+     "b_profit": 206.33985281082118,
+     "min_gap": 0.010791412899695318
+    },
+    {
+     "b_entry_date": "2011-09-30",
+     "b_profit": 2184.244726415751,
+     "min_gap": 0.010791412899695318
+    }
+   ],
+   "recovery_windows_ext": {
+    "2003": {
+     "window": "2003-01-01..2003-12-31",
+     "pnl": 0.0,
+     "max_drawdown": 0.0,
+     "interest": 0.0,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 0.0,
+     "trades_entered": 0,
+     "pnl_of_trades_entered": 0.0
+    },
+    "2009": {
+     "window": "2009-03-01..2009-12-31",
+     "pnl": 65937.75472259252,
+     "max_drawdown": 9936.53787251905,
+     "interest": 9041.09589041096,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 98122.06572769953,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 54187.93888393084
+    }
+   },
+   "vs_reference": {
+    "baseline_net": -2885.664038569601,
+    "baseline_mdd": 149561.06424473436,
+    "lower3_net": 40258.24467818686,
+    "lower3_mdd": 91468.9678199882,
+    "net_vs_baseline": 37360.579114650696,
+    "net_vs_lower3": -5783.329602105761,
+    "mdd_vs_baseline": -55987.07240888421,
+    "mdd_vs_lower3": 2105.0240158619417
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 111364.56211812627,
+   "control_profit": 44833.41790230668,
+   "control_max_drawdown": 101864.01548669969,
+   "profit_difference": -10358.502826225587,
+   "drawdown_difference": -8290.023650849544,
+   "control_profit_to_drawdown": 0.44013008605733345,
+   "control_dollar_days": 273400000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E1_exit_only",
+  "dataset": "VGT_2016_2026",
+  "metrics": {
+   "dataset": "VGT_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-06",
+   "sessions": 2512,
+   "net_profit": 182094.05685316,
+   "realized_profit": 164210.47748466433,
+   "unrealized_profit": 17883.57936849568,
+   "open_position_at_end": true,
+   "margin_interest": 53463.01369863013,
+   "closed_trades": 32,
+   "winning_trades": 13,
+   "losing_trades": 19,
+   "win_rate": 0.40625,
+   "avg_winning_trade": 16109.041258280844,
+   "avg_losing_trade": -2379.318888051931,
+   "largest_winning_trade": 48013.958388756946,
+   "largest_losing_trade": -8846.753883660771,
+   "max_drawdown": 28687.231187720536,
+   "max_drawdown_pct_of_100k": 0.28687231187720535,
+   "mdd_peak_date": "2024-07-10",
+   "mdd_trough_date": "2025-04-08",
+   "max_consecutive_losses": 4,
+   "max_bear_episode_drawdown": 20569.83290003467,
+   "longest_underwater_days": 483,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": 0.0,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -13421.073464702618,
+   "worst_day_date": "2020-03-16",
+   "profit_to_drawdown": 6.347564728767017,
+   "avg_borrowed_all_sessions": 48566.87898089172,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 177400000.0,
+   "pct_sessions_exposed": 0.4856687898089172,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 1026.4602979321307,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": -3864.657235917359,
+     "max_drawdown": 20569.83290003467,
+     "interest": 6961.643835616438,
+     "trades_closed": 9,
+     "losing_trades": 7,
+     "largest_loss": -5739.0029792466385,
+     "avg_borrowed": 63745.01992031872,
+     "trades_entered": 9,
+     "pnl_of_trades_entered": -3864.6572359173524
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 55455.00964662224,
+     "max_drawdown": 15660.274214260811,
+     "interest": 7534.246575342466,
+     "trades_closed": 4,
+     "losing_trades": 2,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 85221.67487684729,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 66688.05300678714
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 18900.63221080457,
+     "max_drawdown": 1979.9168596854142,
+     "interest": 2380.821917808219,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 22400.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 17986.93173164685
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 42022.54444147299,
+     "max_drawdown": 15104.078137618722,
+     "interest": 8046.575342465753,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -1752.741340739046,
+     "avg_borrowed": 96842.1052631579,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 37242.93452433825
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 73004.11522633745,
+   "exposure_vs_baseline": 0.7300411522633745,
+   "experiment_profit": 182094.05685316,
+   "control_profit": 118100.57937438435,
+   "experiment_max_drawdown": 28687.231187720536,
+   "control_max_drawdown": 27977.597952855518,
+   "profit_difference": 63993.47747877565,
+   "drawdown_difference": 709.6332348650176,
+   "experiment_profit_to_drawdown": 6.347564728767017,
+   "control_profit_to_drawdown": 4.221255147543161,
+   "profit_to_drawdown_difference": 2.1263095812238557,
+   "control_dollar_days": 177400000.00000003
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 138,
+    "lower_price_reentries": 15,
+    "alt_entries": 0,
+    "recovery_resets": 4,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 19,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 15,
+     "recovery_reset": 4
+    },
+    "sessions_restricted_total": 268.0,
+    "sessions_restricted_median": 10.0,
+    "sessions_restricted_max": 70.0,
+    "reentry_discount_vs_loss_exit_median": -0.043059399362366135,
+    "false_resets": 2,
+    "false_reset_dates": [
+     "2023-02-15",
+     "2024-09-19"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 45,
+    "variant_trades": 33,
+    "baseline_entries_missed": 13,
+    "baseline_entries_delayed": 14,
+    "net_difference": 20321.560866827494,
+    "repeated_losers": {
+     "n": 16,
+     "baseline_pnl": -55242.57653957595,
+     "variant_window_pnl": -1732.4448937744091,
+     "eliminated": 4,
+     "later": 11,
+     "identical": 1
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 177777.9901915093,
+     "variant_window_pnl": 132044.5792259934,
+     "eliminated": 8,
+     "later": 2,
+     "identical": 1
+    },
+    "major_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 203911.83922185493,
+     "variant_window_pnl": 169834.43097834656,
+     "eliminated": 4,
+     "later": 3,
+     "identical": 1
+    },
+    "major_rebound_winners_10k": {
+     "n": 6,
+     "baseline_pnl": 154149.62836428487,
+     "variant_window_pnl": 113529.243202896,
+     "eliminated": 4,
+     "later": 2,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2022-11-07",
+     "b_profit": 3184.6731045073925,
+     "min_gap": 0.015451781569252976
+    },
+    {
+     "b_entry_date": "2023-01-04",
+     "b_profit": 28005.771463007262,
+     "min_gap": 0.015451781569252976
+    },
+    {
+     "b_entry_date": "2024-09-05",
+     "b_profit": 4284.996637184741,
+     "min_gap": 0.011893168381123642
+    }
+   ],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 55455.00964662224,
+     "max_drawdown": 15660.274214260811,
+     "interest": 7534.246575342466,
+     "trades_closed": 4,
+     "losing_trades": 2,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 85221.67487684729,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 66688.05300678714
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 18900.63221080457,
+     "max_drawdown": 1979.9168596854142,
+     "interest": 2380.821917808219,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 22400.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 17986.93173164685
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 42022.54444147299,
+     "max_drawdown": 15104.078137618722,
+     "interest": 8046.575342465753,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -1752.741340739046,
+     "avg_borrowed": 96842.1052631579,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 37242.93452433825
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 51711.67148783215,
+     "max_drawdown": 11900.160048104619,
+     "interest": 5032.876712328767,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -238.53029331213963,
+     "avg_borrowed": 83333.33333333333,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 51711.67148783215
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 161772.4959863325,
+    "baseline_mdd": 38323.31624883817,
+    "lower3_net": 182094.05685316,
+    "lower3_mdd": 28687.231187720536,
+    "net_vs_baseline": 20321.560866827494,
+    "net_vs_lower3": 0.0,
+    "mdd_vs_baseline": -9636.085061117636,
+    "mdd_vs_lower3": 0.0
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 100000.0,
+   "control_profit": 182094.05685316,
+   "control_max_drawdown": 28687.231187720536,
+   "profit_difference": 0.0,
+   "drawdown_difference": 0.0,
+   "control_profit_to_drawdown": 6.347564728767017,
+   "control_dollar_days": 177400000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E2_entry_only",
+  "dataset": "VGT_2016_2026",
+  "metrics": {
+   "dataset": "VGT_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-06",
+   "sessions": 2512,
+   "net_profit": 210881.83868604669,
+   "realized_profit": 192998.259317551,
+   "unrealized_profit": 17883.57936849568,
+   "open_position_at_end": true,
+   "margin_interest": 65819.17808219178,
+   "closed_trades": 38,
+   "winning_trades": 16,
+   "losing_trades": 22,
+   "win_rate": 0.42105263157894735,
+   "avg_winning_trade": 16334.650203638592,
+   "avg_losing_trade": -3107.097451848476,
+   "largest_winning_trade": 48013.958388756946,
+   "largest_losing_trade": -9360.875953421375,
+   "max_drawdown": 32978.852319866826,
+   "max_drawdown_pct_of_100k": 0.32978852319866825,
+   "mdd_peak_date": "2021-04-15",
+   "mdd_trough_date": "2022-10-14",
+   "max_consecutive_losses": 4,
+   "max_bear_episode_drawdown": 32842.751955973596,
+   "longest_underwater_days": 763,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": 0.0,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -13421.073464702618,
+   "worst_day_date": "2020-03-16",
+   "profit_to_drawdown": 6.394456563881367,
+   "avg_borrowed_all_sessions": 59832.8025477707,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 218400000.0,
+   "pct_sessions_exposed": 0.598328025477707,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 965.5761844599207,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": -14959.318187021621,
+     "max_drawdown": 32842.751955973596,
+     "interest": 8830.13698630137,
+     "trades_closed": 12,
+     "losing_trades": 9,
+     "largest_loss": -7207.869856833961,
+     "avg_borrowed": 81274.90039840637,
+     "trades_entered": 13,
+     "pnl_of_trades_entered": -14161.282259097768
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 55455.009646622246,
+     "max_drawdown": 15660.274214260804,
+     "interest": 7534.246575342466,
+     "trades_closed": 4,
+     "losing_trades": 2,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 85221.67487684729,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 66688.05300678714
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 50580.788322771215,
+     "max_drawdown": 12787.774650982508,
+     "interest": 9010.95890410959,
+     "trades_closed": 3,
+     "losing_trades": 2,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 81600.0,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 48869.05191568964
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 32425.030197519576,
+     "max_drawdown": 14729.152225736325,
+     "interest": 8016.438356164384,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -9360.875953421375,
+     "avg_borrowed": 97368.42105263157,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 32715.033766651686
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 89876.54320987655,
+   "exposure_vs_baseline": 0.8987654320987655,
+   "experiment_profit": 210881.83868604669,
+   "control_profit": 145395.52725685204,
+   "experiment_max_drawdown": 32978.852319866826,
+   "control_max_drawdown": 34443.67188784463,
+   "profit_difference": 65486.31142919464,
+   "drawdown_difference": -1464.8195679778073,
+   "experiment_profit_to_drawdown": 6.394456563881367,
+   "control_profit_to_drawdown": 4.221255147543167,
+   "profit_to_drawdown_difference": 2.1732014163382,
+   "control_dollar_days": 218399999.99999997
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 65,
+    "lower_price_reentries": 20,
+    "alt_entries": 0,
+    "recovery_resets": 2,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 22,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 20,
+     "recovery_reset": 2
+    },
+    "sessions_restricted_total": 158.0,
+    "sessions_restricted_median": 5.0,
+    "sessions_restricted_max": 35.0,
+    "reentry_discount_vs_loss_exit_median": -0.029694602356671318,
+    "false_resets": 1,
+    "false_reset_dates": [
+     "2024-09-19"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 45,
+    "variant_trades": 39,
+    "baseline_entries_missed": 8,
+    "baseline_entries_delayed": 17,
+    "net_difference": 49109.34269971418,
+    "repeated_losers": {
+     "n": 16,
+     "baseline_pnl": -55242.57653957595,
+     "variant_window_pnl": -17726.834709865572,
+     "eliminated": 2,
+     "later": 11,
+     "identical": 3
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 177777.9901915093,
+     "variant_window_pnl": 189147.20831055057,
+     "eliminated": 6,
+     "later": 5,
+     "identical": 0
+    },
+    "major_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 203911.83922185493,
+     "variant_window_pnl": 215353.04425576158,
+     "eliminated": 2,
+     "later": 5,
+     "identical": 1
+    },
+    "major_rebound_winners_10k": {
+     "n": 6,
+     "baseline_pnl": 154149.62836428487,
+     "variant_window_pnl": 166497.12184235937,
+     "eliminated": 2,
+     "later": 4,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2024-09-05",
+     "b_profit": 4284.996637184741,
+     "min_gap": 0.003982115296875088
+    }
+   ],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 55455.009646622246,
+     "max_drawdown": 15660.274214260804,
+     "interest": 7534.246575342466,
+     "trades_closed": 4,
+     "losing_trades": 2,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 85221.67487684729,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 66688.05300678714
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 50580.788322771215,
+     "max_drawdown": 12787.774650982508,
+     "interest": 9010.95890410959,
+     "trades_closed": 3,
+     "losing_trades": 2,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 81600.0,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 48869.05191568964
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 32425.030197519576,
+     "max_drawdown": 14729.152225736325,
+     "interest": 8016.438356164384,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -9360.875953421375,
+     "avg_borrowed": 97368.42105263157,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 32715.033766651686
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 51711.67148783215,
+     "max_drawdown": 11900.160048104619,
+     "interest": 5032.876712328767,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -238.53029331213963,
+     "avg_borrowed": 83333.33333333333,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 51711.67148783215
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 161772.4959863325,
+    "baseline_mdd": 38323.31624883817,
+    "lower3_net": 182094.05685316,
+    "lower3_mdd": 28687.231187720536,
+    "net_vs_baseline": 49109.34269971418,
+    "net_vs_lower3": 28787.781832886685,
+    "mdd_vs_baseline": -5344.463928971345,
+    "mdd_vs_lower3": 4291.621132146291
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 123111.61217587373,
+   "control_profit": 224178.92906837753,
+   "control_max_drawdown": 35317.31280382283,
+   "profit_difference": -13297.090382330847,
+   "drawdown_difference": -2338.460483956005,
+   "control_profit_to_drawdown": 6.347564728767016,
+   "control_dollar_days": 218400000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E3_entry_count",
+  "dataset": "VGT_2016_2026",
+  "metrics": {
+   "dataset": "VGT_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-06",
+   "sessions": 2512,
+   "net_profit": 179453.24156892372,
+   "realized_profit": 161569.66220042805,
+   "unrealized_profit": 17883.57936849568,
+   "open_position_at_end": true,
+   "margin_interest": 61358.90410958904,
+   "closed_trades": 38,
+   "winning_trades": 13,
+   "losing_trades": 25,
+   "win_rate": 0.34210526315789475,
+   "avg_winning_trade": 17978.212297412512,
+   "avg_losing_trade": -2885.8839066373866,
+   "largest_winning_trade": 50533.05608988086,
+   "largest_losing_trade": -9360.875953421375,
+   "max_drawdown": 44760.16437924948,
+   "max_drawdown_pct_of_100k": 0.4476016437924948,
+   "mdd_peak_date": "2020-09-02",
+   "mdd_trough_date": "2022-10-14",
+   "max_consecutive_losses": 9,
+   "max_bear_episode_drawdown": 41543.41763523945,
+   "longest_underwater_days": 1044,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": 0.0,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -13421.073464702618,
+   "worst_day_date": "2020-03-16",
+   "profit_to_drawdown": 4.009217661678585,
+   "avg_borrowed_all_sessions": 55891.71974522293,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 203600000.0,
+   "pct_sessions_exposed": 0.5589171974522293,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 881.4009900241833,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": -26882.28096370912,
+     "max_drawdown": 41543.41763523945,
+     "interest": 7835.6164383561645,
+     "trades_closed": 13,
+     "losing_trades": 11,
+     "largest_loss": -7879.0305957666,
+     "avg_borrowed": 72111.55378486056,
+     "trades_entered": 14,
+     "pnl_of_trades_entered": -26084.245035785265
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 33761.345201649034,
+     "max_drawdown": 21530.19939470312,
+     "interest": 5695.890410958904,
+     "trades_closed": 4,
+     "losing_trades": 3,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 64532.0197044335,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 47182.41866635166
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 50580.78832277122,
+     "max_drawdown": 12787.77465098248,
+     "interest": 9010.95890410959,
+     "trades_closed": 3,
+     "losing_trades": 2,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 81600.0,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 48869.05191568964
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 32425.030197519605,
+     "max_drawdown": 14729.15222573631,
+     "interest": 8016.438356164384,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -9360.875953421375,
+     "avg_borrowed": 97368.42105263157,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 32715.033766651686
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 83786.00823045267,
+   "exposure_vs_baseline": 0.8378600823045268,
+   "experiment_profit": 179453.24156892372,
+   "control_profit": 135542.71680171732,
+   "experiment_max_drawdown": 44760.16437924948,
+   "control_max_drawdown": 32109.576906433933,
+   "profit_difference": 43910.5247672064,
+   "drawdown_difference": 12650.587472815547,
+   "experiment_profit_to_drawdown": 4.009217661678585,
+   "control_profit_to_drawdown": 4.221255147543164,
+   "profit_to_drawdown_difference": -0.21203748586457838,
+   "control_dollar_days": 203600000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 76,
+    "lower_price_reentries": 22,
+    "alt_entries": 0,
+    "recovery_resets": 3,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 25,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 22,
+     "recovery_reset": 3
+    },
+    "sessions_restricted_total": 240.0,
+    "sessions_restricted_median": 2.0,
+    "sessions_restricted_max": 50.0,
+    "reentry_discount_vs_loss_exit_median": -0.02129758408171445,
+    "false_resets": 2,
+    "false_reset_dates": [
+     "2022-08-10",
+     "2024-11-06"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 45,
+    "variant_trades": 39,
+    "baseline_entries_missed": 8,
+    "baseline_entries_delayed": 18,
+    "net_difference": 17680.74558259122,
+    "repeated_losers": {
+     "n": 16,
+     "baseline_pnl": -55242.57653957595,
+     "variant_window_pnl": -31635.394636686422,
+     "eliminated": 3,
+     "later": 11,
+     "identical": 2
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 177777.9901915093,
+     "variant_window_pnl": 169507.37678307624,
+     "eliminated": 5,
+     "later": 5,
+     "identical": 1
+    },
+    "major_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 203911.83922185493,
+     "variant_window_pnl": 203817.7590159481,
+     "eliminated": 1,
+     "later": 5,
+     "identical": 2
+    },
+    "major_rebound_winners_10k": {
+     "n": 6,
+     "baseline_pnl": 154149.62836428487,
+     "variant_window_pnl": 154961.83660254587,
+     "eliminated": 1,
+     "later": 4,
+     "identical": 1
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2024-09-05",
+     "b_profit": 4284.996637184741,
+     "min_gap": 0.003982115296875088
+    }
+   ],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 33761.345201649034,
+     "max_drawdown": 21530.19939470312,
+     "interest": 5695.890410958904,
+     "trades_closed": 4,
+     "losing_trades": 3,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 64532.0197044335,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 47182.41866635166
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 50580.78832277122,
+     "max_drawdown": 12787.77465098248,
+     "interest": 9010.95890410959,
+     "trades_closed": 3,
+     "losing_trades": 2,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 81600.0,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 48869.05191568964
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 32425.030197519605,
+     "max_drawdown": 14729.15222573631,
+     "interest": 8016.438356164384,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -9360.875953421375,
+     "avg_borrowed": 97368.42105263157,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 32715.033766651686
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 51711.67148783215,
+     "max_drawdown": 11900.160048104619,
+     "interest": 5032.876712328767,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -238.53029331213963,
+     "avg_borrowed": 83333.33333333333,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 51711.67148783215
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 161772.4959863325,
+    "baseline_mdd": 38323.31624883817,
+    "lower3_net": 182094.05685316,
+    "lower3_mdd": 28687.231187720536,
+    "net_vs_baseline": 17680.74558259122,
+    "net_vs_lower3": -2640.815284236276,
+    "mdd_vs_baseline": 6436.848130411308,
+    "mdd_vs_lower3": 16072.933191528944
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 114768.88387824126,
+   "control_profit": 208987.3166589818,
+   "control_max_drawdown": 32924.01504971758,
+   "profit_difference": -29534.07509005809,
+   "drawdown_difference": 11836.149329531901,
+   "control_profit_to_drawdown": 6.347564728767019,
+   "control_dollar_days": 203600000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E4_cum_loss",
+  "dataset": "VGT_2016_2026",
+  "metrics": {
+   "dataset": "VGT_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-06",
+   "sessions": 2512,
+   "net_profit": 88939.66854397909,
+   "realized_profit": 73975.20689507769,
+   "unrealized_profit": 14964.461648901406,
+   "open_position_at_end": true,
+   "margin_interest": 41739.72602739725,
+   "closed_trades": 29,
+   "winning_trades": 10,
+   "losing_trades": 19,
+   "win_rate": 0.3448275862068966,
+   "avg_winning_trade": 11882.94954328205,
+   "avg_losing_trade": -2360.7520283022536,
+   "largest_winning_trade": 34066.62241264861,
+   "largest_losing_trade": -8846.753883660771,
+   "max_drawdown": 24346.78022090297,
+   "max_drawdown_pct_of_100k": 0.2434678022090297,
+   "mdd_peak_date": "2019-07-24",
+   "mdd_trough_date": "2020-10-30",
+   "max_consecutive_losses": 4,
+   "max_bear_episode_drawdown": 20753.27954327514,
+   "longest_underwater_days": 653,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": -948.7039896975624,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -13421.073464702618,
+   "worst_day_date": "2020-03-16",
+   "profit_to_drawdown": 3.6530361607166353,
+   "avg_borrowed_all_sessions": 37818.47133757962,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 138500000.0,
+   "pct_sessions_exposed": 0.3781847133757962,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 642.1636717976829,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": 2753.0194843294885,
+     "max_drawdown": 20753.27954327514,
+     "interest": 6690.41095890411,
+     "trades_closed": 9,
+     "losing_trades": 7,
+     "largest_loss": -5739.0029792466385,
+     "avg_borrowed": 60956.17529880478,
+     "trades_entered": 9,
+     "pnl_of_trades_entered": 2753.019484329484
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 21.294498792902232,
+     "max_drawdown": 16908.272276277872,
+     "interest": 2501.3698630136987,
+     "trades_closed": 2,
+     "losing_trades": 2,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 28078.81773399015,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 11254.337858957802
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 18900.632210804575,
+     "max_drawdown": 1979.9168596854288,
+     "interest": 2380.821917808219,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 22400.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 17986.93173164685
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 849.708333243485,
+     "max_drawdown": 8191.7818117001225,
+     "interest": 1778.0821917808219,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -3342.155374907386,
+     "avg_borrowed": 20526.315789473683,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": -5433.982120278626
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 56995.884773662554,
+   "exposure_vs_baseline": 0.5699588477366255,
+   "experiment_profit": 88939.66854397909,
+   "control_profit": 92203.66540784798,
+   "experiment_max_drawdown": 24346.78022090297,
+   "control_max_drawdown": 21842.71317063408,
+   "profit_difference": -3263.996863868888,
+   "drawdown_difference": 2504.067050268888,
+   "experiment_profit_to_drawdown": 3.6530361607166353,
+   "control_profit_to_drawdown": 4.221255147543164,
+   "profit_to_drawdown_difference": -0.5682189868265284,
+   "control_dollar_days": 138500000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 196,
+    "lower_price_reentries": 13,
+    "alt_entries": 0,
+    "recovery_resets": 6,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 19,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 13,
+     "recovery_reset": 6
+    },
+    "sessions_restricted_total": 342.0,
+    "sessions_restricted_median": 12.0,
+    "sessions_restricted_max": 70.0,
+    "reentry_discount_vs_loss_exit_median": -0.04585473678433061,
+    "false_resets": 4,
+    "false_reset_dates": [
+     "2020-05-29",
+     "2023-02-15",
+     "2024-09-19",
+     "2025-05-14"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 45,
+    "variant_trades": 30,
+    "baseline_entries_missed": 15,
+    "baseline_entries_delayed": 13,
+    "net_difference": -72832.82744235342,
+    "repeated_losers": {
+     "n": 16,
+     "baseline_pnl": -55242.57653957595,
+     "variant_window_pnl": -9807.346648465022,
+     "eliminated": 6,
+     "later": 9,
+     "identical": 1
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 177777.9901915093,
+     "variant_window_pnl": 87171.66714321348,
+     "eliminated": 7,
+     "later": 4,
+     "identical": 0
+    },
+    "major_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 203911.83922185493,
+     "variant_window_pnl": 73140.15298883739,
+     "eliminated": 5,
+     "later": 2,
+     "identical": 1
+    },
+    "major_rebound_winners_10k": {
+     "n": 6,
+     "baseline_pnl": 154149.62836428487,
+     "variant_window_pnl": 63881.168889941735,
+     "eliminated": 4,
+     "later": 2,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2024-09-05",
+     "b_profit": 4284.996637184741,
+     "min_gap": 0.009878249705148168
+    }
+   ],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 21.294498792902232,
+     "max_drawdown": 16908.272276277872,
+     "interest": 2501.3698630136987,
+     "trades_closed": 2,
+     "losing_trades": 2,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 28078.81773399015,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 11254.337858957802
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 18900.632210804575,
+     "max_drawdown": 1979.9168596854288,
+     "interest": 2380.821917808219,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 22400.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 17986.93173164685
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 849.708333243485,
+     "max_drawdown": 8191.7818117001225,
+     "interest": 1778.0821917808219,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -3342.155374907386,
+     "avg_borrowed": 20526.315789473683,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": -5433.982120278626
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 48792.55376823787,
+     "max_drawdown": 14338.522884500722,
+     "interest": 5063.013698630137,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -238.53029331213963,
+     "avg_borrowed": 84057.97101449275,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 48792.55376823788
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 161772.4959863325,
+    "baseline_mdd": 38323.31624883817,
+    "lower3_net": 182094.05685316,
+    "lower3_mdd": 28687.231187720536,
+    "net_vs_baseline": -72832.82744235342,
+    "net_vs_lower3": -93154.38830918091,
+    "mdd_vs_baseline": -13976.536027935203,
+    "mdd_vs_lower3": -4340.450966817567
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 78072.15332581736,
+   "control_profit": 142164.75126360013,
+   "control_max_drawdown": 22396.739117808887,
+   "profit_difference": -53225.082719621045,
+   "drawdown_difference": 1950.0411030940813,
+   "control_profit_to_drawdown": 6.347564728767013,
+   "control_dollar_days": 138500000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E5_no_small_rearm",
+  "dataset": "VGT_2016_2026",
+  "metrics": {
+   "dataset": "VGT_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-06",
+   "sessions": 2512,
+   "net_profit": 157447.95035118758,
+   "realized_profit": 157447.95035118758,
+   "unrealized_profit": 0.0,
+   "open_position_at_end": false,
+   "margin_interest": 58315.068493150684,
+   "closed_trades": 36,
+   "winning_trades": 14,
+   "losing_trades": 22,
+   "win_rate": 0.3888888888888889,
+   "avg_winning_trade": 14777.58781067134,
+   "avg_losing_trade": -2247.194499918694,
+   "largest_winning_trade": 48013.958388756946,
+   "largest_losing_trade": -8846.753883660771,
+   "max_drawdown": 28208.365196388608,
+   "max_drawdown_pct_of_100k": 0.2820836519638861,
+   "mdd_peak_date": "2024-12-16",
+   "mdd_trough_date": "2025-04-08",
+   "max_consecutive_losses": 4,
+   "max_bear_episode_drawdown": 20569.83290003467,
+   "longest_underwater_days": 1009,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": 0.0,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -13421.073464702618,
+   "worst_day_date": "2020-03-16",
+   "profit_to_drawdown": 5.58160493367921,
+   "avg_borrowed_all_sessions": 52985.668789808915,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 193500000.0,
+   "pct_sessions_exposed": 0.5298566878980892,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 813.6844979389539,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": -7055.977312432813,
+     "max_drawdown": 20569.83290003467,
+     "interest": 6931.506849315068,
+     "trades_closed": 9,
+     "losing_trades": 7,
+     "largest_loss": -5739.0029792466385,
+     "avg_borrowed": 64143.42629482072,
+     "trades_entered": 9,
+     "pnl_of_trades_entered": -7055.977312432813
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 55455.009646622246,
+     "max_drawdown": 15660.274214260811,
+     "interest": 7534.246575342466,
+     "trades_closed": 4,
+     "losing_trades": 2,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 85221.67487684729,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 66688.05300678714
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 15664.399267641355,
+     "max_drawdown": 4218.60056265648,
+     "interest": 2561.6438356164385,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 24000.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 14689.468304511105
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 42022.54444147299,
+     "max_drawdown": 15104.078137618722,
+     "interest": 8046.575342465753,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -1752.741340739046,
+     "avg_borrowed": 96842.1052631579,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 37242.93452433825
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 79629.62962962964,
+   "exposure_vs_baseline": 0.7962962962962963,
+   "experiment_profit": 157447.95035118758,
+   "control_profit": 128818.83939652413,
+   "experiment_max_drawdown": 28208.365196388608,
+   "control_max_drawdown": 30516.714790741462,
+   "profit_difference": 28629.110954663454,
+   "drawdown_difference": -2308.349594352854,
+   "experiment_profit_to_drawdown": 5.58160493367921,
+   "control_profit_to_drawdown": 4.221255147543168,
+   "profit_to_drawdown_difference": 1.3603497861360418,
+   "control_dollar_days": 193500000.00000003
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 114,
+    "lower_price_reentries": 11,
+    "alt_entries": 0,
+    "recovery_resets": 3,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 8,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 14,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 11,
+     "recovery_reset": 3
+    },
+    "sessions_restricted_total": 177.0,
+    "sessions_restricted_median": 7.5,
+    "sessions_restricted_max": 70.0,
+    "reentry_discount_vs_loss_exit_median": -0.04585473678433061,
+    "false_resets": 1,
+    "false_reset_dates": [
+     "2023-02-15"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 45,
+    "variant_trades": 36,
+    "baseline_entries_missed": 10,
+    "baseline_entries_delayed": 10,
+    "net_difference": -4324.545635144925,
+    "repeated_losers": {
+     "n": 16,
+     "baseline_pnl": -55242.57653957595,
+     "variant_window_pnl": -15292.84009424604,
+     "eliminated": 2,
+     "later": 9,
+     "identical": 5
+    },
+    "rebound_winners": {
+     "n": 11,
+     "baseline_pnl": 177777.9901915093,
+     "variant_window_pnl": 130035.49002205009,
+     "eliminated": 7,
+     "later": 0,
+     "identical": 4
+    },
+    "major_winners_10k": {
+     "n": 8,
+     "baseline_pnl": 203911.83922185493,
+     "variant_window_pnl": 163564.34131103853,
+     "eliminated": 4,
+     "later": 1,
+     "identical": 3
+    },
+    "major_rebound_winners_10k": {
+     "n": 6,
+     "baseline_pnl": 154149.62836428487,
+     "variant_window_pnl": 107259.15353558796,
+     "eliminated": 4,
+     "later": 0,
+     "identical": 2
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2022-11-07",
+     "b_profit": 3184.6731045073925,
+     "min_gap": 0.015451781569252976
+    },
+    {
+     "b_entry_date": "2023-01-04",
+     "b_profit": 28005.771463007262,
+     "min_gap": 0.015451781569252976
+    }
+   ],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 55455.009646622246,
+     "max_drawdown": 15660.274214260811,
+     "interest": 7534.246575342466,
+     "trades_closed": 4,
+     "losing_trades": 2,
+     "largest_loss": -2555.769633032981,
+     "avg_borrowed": 85221.67487684729,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 66688.05300678714
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 15664.399267641355,
+     "max_drawdown": 4218.60056265648,
+     "interest": 2561.6438356164385,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -503.0923287009799,
+     "avg_borrowed": 24000.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 14689.468304511105
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 42022.54444147299,
+     "max_drawdown": 15104.078137618722,
+     "interest": 8046.575342465753,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -1752.741340739046,
+     "avg_borrowed": 96842.1052631579,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 37242.93452433825
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 29821.474866240736,
+     "max_drawdown": 16344.222685314162,
+     "interest": 3495.890410958904,
+     "trades_closed": 3,
+     "losing_trades": 2,
+     "largest_loss": -1033.9910129234534,
+     "avg_borrowed": 56521.739130434784,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 29821.47486624071
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 161772.4959863325,
+    "baseline_mdd": 38323.31624883817,
+    "lower3_net": 182094.05685316,
+    "lower3_mdd": 28687.231187720536,
+    "net_vs_baseline": -4324.545635144925,
+    "net_vs_lower3": -24646.10650197242,
+    "mdd_vs_baseline": -10114.951052449564,
+    "mdd_vs_lower3": -478.86599133192794
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 109075.53551296506,
+   "control_profit": 198620.06764986733,
+   "control_max_drawdown": 31290.751041848518,
+   "profit_difference": -41172.11729867975,
+   "drawdown_difference": -3082.3858454599103,
+   "control_profit_to_drawdown": 6.347564728767013,
+   "control_dollar_days": 193500000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E1_exit_only",
+  "dataset": "QQQ_2016_2026",
+  "metrics": {
+   "dataset": "QQQ_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-07",
+   "sessions": 2513,
+   "net_profit": 132242.46346846988,
+   "realized_profit": 119844.62500892351,
+   "unrealized_profit": 12397.838459546363,
+   "open_position_at_end": true,
+   "margin_interest": 52197.2602739726,
+   "closed_trades": 27,
+   "winning_trades": 13,
+   "losing_trades": 14,
+   "win_rate": 0.48148148148148145,
+   "avg_winning_trade": 12475.170573765034,
+   "avg_losing_trade": -3023.756603572994,
+   "largest_winning_trade": 52700.20475813591,
+   "largest_losing_trade": -9485.613325907529,
+   "max_drawdown": 23564.063907193708,
+   "max_drawdown_pct_of_100k": 0.23564063907193708,
+   "mdd_peak_date": "2019-07-26",
+   "mdd_trough_date": "2020-03-12",
+   "max_consecutive_losses": 3,
+   "max_bear_episode_drawdown": 21397.325681216615,
+   "longest_underwater_days": 868,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": -4546.598024528532,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8732.433202169794,
+   "worst_day_date": "2020-03-12",
+   "profit_to_drawdown": 5.612039756355376,
+   "avg_borrowed_all_sessions": 47632.31197771588,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 173200000.0,
+   "pct_sessions_exposed": 0.4763231197771588,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 763.5246158687638,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": -9942.429584488942,
+     "max_drawdown": 21397.325681216615,
+     "interest": 6750.684931506849,
+     "trades_closed": 9,
+     "losing_trades": 7,
+     "largest_loss": -7179.50812029926,
+     "avg_borrowed": 62549.80079681275,
+     "trades_entered": 9,
+     "pnl_of_trades_entered": -9942.429584488951
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 63172.03427553673,
+     "max_drawdown": 17689.068687878447,
+     "interest": 7564.3835616438355,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 87192.11822660099,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 60586.2587371311
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 17473.363048665255,
+     "max_drawdown": 2138.2741678364546,
+     "interest": 1928.7671232876712,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 18000.0,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 15386.674744266767
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 26778.853753733943,
+     "max_drawdown": 11849.298795822324,
+     "interest": 6901.369863013699,
+     "trades_closed": 2,
+     "losing_trades": 0,
+     "largest_loss": 1317.3728913809853,
+     "avg_borrowed": 83157.8947368421,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 26778.85375373394
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 83389.50409244103,
+   "exposure_vs_baseline": 0.8338950409244102,
+   "experiment_profit": 132242.46346846988,
+   "control_profit": 97055.74954265548,
+   "experiment_max_drawdown": 23564.063907193708,
+   "control_max_drawdown": 32719.204336418763,
+   "profit_difference": 35186.7139258144,
+   "drawdown_difference": -9155.140429225055,
+   "experiment_profit_to_drawdown": 5.612039756355376,
+   "control_profit_to_drawdown": 2.9663236472601398,
+   "profit_to_drawdown_difference": 2.645716109095236,
+   "control_dollar_days": 173200000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 111,
+    "lower_price_reentries": 10,
+    "alt_entries": 0,
+    "recovery_resets": 4,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 14,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 10,
+     "recovery_reset": 4
+    },
+    "sessions_restricted_total": 221.0,
+    "sessions_restricted_median": 6.5,
+    "sessions_restricted_max": 101.0,
+    "reentry_discount_vs_loss_exit_median": -0.040328234506270155,
+    "false_resets": 1,
+    "false_reset_dates": [
+     "2024-09-19"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 36,
+    "variant_trades": 28,
+    "baseline_entries_missed": 8,
+    "baseline_entries_delayed": 10,
+    "net_difference": 15854.015546936644,
+    "repeated_losers": {
+     "n": 12,
+     "baseline_pnl": -52064.56301292193,
+     "variant_window_pnl": -7787.341431293298,
+     "eliminated": 2,
+     "later": 9,
+     "identical": 1
+    },
+    "rebound_winners": {
+     "n": 8,
+     "baseline_pnl": 71919.53675026709,
+     "variant_window_pnl": 48503.26493656516,
+     "eliminated": 5,
+     "later": 1,
+     "identical": 2
+    },
+    "major_winners_10k": {
+     "n": 7,
+     "baseline_pnl": 149320.40167340182,
+     "variant_window_pnl": 134716.11680978746,
+     "eliminated": 2,
+     "later": 1,
+     "identical": 4
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 48637.366077966755,
+     "variant_window_pnl": 34033.08121435237,
+     "eliminated": 2,
+     "later": 1,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 63172.03427553673,
+     "max_drawdown": 17689.068687878447,
+     "interest": 7564.3835616438355,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 87192.11822660099,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 60586.2587371311
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 17473.363048665255,
+     "max_drawdown": 2138.2741678364546,
+     "interest": 1928.7671232876712,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 18000.0,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 15386.674744266767
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 26778.853753733943,
+     "max_drawdown": 11849.298795822324,
+     "interest": 6901.369863013699,
+     "trades_closed": 2,
+     "losing_trades": 0,
+     "largest_loss": 1317.3728913809853,
+     "avg_borrowed": 83157.8947368421,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 26778.85375373394
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 32917.95281971125,
+     "max_drawdown": 10414.30776116102,
+     "interest": 4309.58904109589,
+     "trades_closed": 1,
+     "losing_trades": 0,
+     "largest_loss": 20198.317633486033,
+     "avg_borrowed": 71739.13043478261,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 32596.156093032398
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 116388.44792153324,
+    "baseline_mdd": 39236.59780989705,
+    "lower3_net": 132242.46346846988,
+    "lower3_mdd": 23564.063907193708,
+    "net_vs_baseline": 15854.015546936644,
+    "net_vs_lower3": 0.0,
+    "mdd_vs_baseline": -15672.533902703344,
+    "mdd_vs_lower3": 0.0
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 100000.0,
+   "control_profit": 132242.46346846988,
+   "control_max_drawdown": 23564.063907193708,
+   "profit_difference": 0.0,
+   "drawdown_difference": 0.0,
+   "control_profit_to_drawdown": 5.612039756355376,
+   "control_dollar_days": 173200000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E2_entry_only",
+  "dataset": "QQQ_2016_2026",
+  "metrics": {
+   "dataset": "QQQ_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-07",
+   "sessions": 2513,
+   "net_profit": 103397.99751023378,
+   "realized_profit": 91000.15905068742,
+   "unrealized_profit": 12397.838459546363,
+   "open_position_at_end": true,
+   "margin_interest": 49997.2602739726,
+   "closed_trades": 31,
+   "winning_trades": 13,
+   "losing_trades": 18,
+   "win_rate": 0.41935483870967744,
+   "avg_winning_trade": 11539.84059187665,
+   "avg_losing_trade": -3278.764924650502,
+   "largest_winning_trade": 52700.20475813591,
+   "largest_losing_trade": -10297.057500131428,
+   "max_drawdown": 35117.495679793035,
+   "max_drawdown_pct_of_100k": 0.35117495679793037,
+   "mdd_peak_date": "2021-09-07",
+   "mdd_trough_date": "2022-10-14",
+   "max_consecutive_losses": 3,
+   "max_bear_episode_drawdown": 33000.96866476926,
+   "longest_underwater_days": 868,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": -3363.9977262628236,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8732.433202169794,
+   "worst_day_date": "2020-03-12",
+   "profit_to_drawdown": 2.944344279359591,
+   "avg_borrowed_all_sessions": 45602.865101472344,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 165900000.0,
+   "pct_sessions_exposed": 0.45602865101472345,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 623.2549578675936,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": -19285.66495896087,
+     "max_drawdown": 33000.96866476926,
+     "interest": 9101.369863013699,
+     "trades_closed": 12,
+     "losing_trades": 9,
+     "largest_loss": -10297.057500131428,
+     "avg_borrowed": 85657.37051792828,
+     "trades_entered": 13,
+     "pnl_of_trades_entered": -18527.087894769975
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 63172.03427553673,
+     "max_drawdown": 17689.068687878447,
+     "interest": 7564.3835616438355,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 87192.11822660099,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 60586.2587371311
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 26869.028569901915,
+     "max_drawdown": 9688.455771477122,
+     "interest": 3736.986301369863,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -859.4816907093781,
+     "avg_borrowed": 33200.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 24023.76320131253
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": -3300.642649532587,
+     "max_drawdown": 7828.3132987903955,
+     "interest": 542.4657534246576,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -3300.6426495325936,
+     "avg_borrowed": 5789.473684210527,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": -3300.6426495325936
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 79874.81945113144,
+   "exposure_vs_baseline": 0.7987481945113144,
+   "experiment_profit": 103397.99751023378,
+   "control_profit": 92965.06263929876,
+   "experiment_max_drawdown": 35117.495679793035,
+   "control_max_drawdown": 31340.161659421887,
+   "profit_difference": 10432.934870935016,
+   "drawdown_difference": 3777.3340203711487,
+   "experiment_profit_to_drawdown": 2.944344279359591,
+   "control_profit_to_drawdown": 2.966323647260141,
+   "profit_to_drawdown_difference": -0.021979367900549995,
+   "control_dollar_days": 165900000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 52,
+    "lower_price_reentries": 14,
+    "alt_entries": 0,
+    "recovery_resets": 4,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 18,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 14,
+     "recovery_reset": 4
+    },
+    "sessions_restricted_total": 118.0,
+    "sessions_restricted_median": 2.0,
+    "sessions_restricted_max": 48.0,
+    "reentry_discount_vs_loss_exit_median": -0.030525525558902367,
+    "false_resets": 1,
+    "false_reset_dates": [
+     "2024-09-19"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 36,
+    "variant_trades": 32,
+    "baseline_entries_missed": 4,
+    "baseline_entries_delayed": 10,
+    "net_difference": -12990.450411299462,
+    "repeated_losers": {
+     "n": 12,
+     "baseline_pnl": -52064.56301292193,
+     "variant_window_pnl": -32294.609027821087,
+     "eliminated": 0,
+     "later": 8,
+     "identical": 4
+    },
+    "rebound_winners": {
+     "n": 8,
+     "baseline_pnl": 71919.53675026709,
+     "variant_window_pnl": 37454.1771018208,
+     "eliminated": 4,
+     "later": 2,
+     "identical": 2
+    },
+    "major_winners_10k": {
+     "n": 7,
+     "baseline_pnl": 149320.40167340182,
+     "variant_window_pnl": 110888.5618222285,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 4
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 48637.366077966755,
+     "variant_window_pnl": 10205.52622679342,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 63172.03427553673,
+     "max_drawdown": 17689.068687878447,
+     "interest": 7564.3835616438355,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 87192.11822660099,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 60586.2587371311
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 26869.028569901915,
+     "max_drawdown": 9688.455771477122,
+     "interest": 3736.986301369863,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -859.4816907093781,
+     "avg_borrowed": 33200.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 24023.76320131253
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": -3300.642649532587,
+     "max_drawdown": 7828.3132987903955,
+     "interest": 542.4657534246576,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -3300.6426495325936,
+     "avg_borrowed": 5789.473684210527,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": -3300.6426495325936
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 32917.95281971127,
+     "max_drawdown": 10414.30776116102,
+     "interest": 4309.58904109589,
+     "trades_closed": 1,
+     "losing_trades": 0,
+     "largest_loss": 20198.317633486033,
+     "avg_borrowed": 71739.13043478261,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 32596.156093032398
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 116388.44792153324,
+    "baseline_mdd": 39236.59780989705,
+    "lower3_net": 132242.46346846988,
+    "lower3_mdd": 23564.063907193708,
+    "net_vs_baseline": -12990.450411299462,
+    "net_vs_lower3": -28844.465958236106,
+    "mdd_vs_baseline": -4119.102130104016,
+    "mdd_vs_lower3": 11553.431772599328
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 95785.21939953811,
+   "control_profit": 126668.7337726278,
+   "control_max_drawdown": 22570.890312952874,
+   "profit_difference": -23270.736262394028,
+   "drawdown_difference": 12546.605366840162,
+   "control_profit_to_drawdown": 5.612039756355369,
+   "control_dollar_days": 165900000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E3_entry_count",
+  "dataset": "QQQ_2016_2026",
+  "metrics": {
+   "dataset": "QQQ_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-07",
+   "sessions": 2513,
+   "net_profit": 86133.9996804866,
+   "realized_profit": 73736.16122094024,
+   "unrealized_profit": 12397.838459546363,
+   "open_position_at_end": true,
+   "margin_interest": 46802.7397260274,
+   "closed_trades": 31,
+   "winning_trades": 12,
+   "losing_trades": 19,
+   "win_rate": 0.3870967741935484,
+   "avg_winning_trade": 11309.920678828319,
+   "avg_losing_trade": -3262.257206578927,
+   "largest_winning_trade": 52700.20475813591,
+   "largest_losing_trade": -10297.057500131428,
+   "max_drawdown": 37690.95241255483,
+   "max_drawdown_pct_of_100k": 0.3769095241255483,
+   "mdd_peak_date": "2021-09-07",
+   "mdd_trough_date": "2022-11-03",
+   "max_consecutive_losses": 4,
+   "max_bear_episode_drawdown": 33241.430704383456,
+   "longest_underwater_days": 906,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": -4546.598024528532,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8732.433202169794,
+   "worst_day_date": "2020-03-12",
+   "profit_to_drawdown": 2.2852699167080592,
+   "avg_borrowed_all_sessions": 42777.556705133306,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 155300000.0,
+   "pct_sessions_exposed": 0.42777556705133307,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 554.629746815754,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": -24171.931517605917,
+     "max_drawdown": 33241.430704383456,
+     "interest": 9463.013698630137,
+     "trades_closed": 13,
+     "losing_trades": 10,
+     "largest_loss": -10297.057500131428,
+     "avg_borrowed": 88844.62151394422,
+     "trades_entered": 14,
+     "pnl_of_trades_entered": -23413.35445341503
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 49391.12776429467,
+     "max_drawdown": 16801.810426084783,
+     "interest": 5635.6164383561645,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 65024.63054187192,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 49391.12776429467
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 26869.028569901915,
+     "max_drawdown": 9688.455771477122,
+     "interest": 3736.986301369863,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -859.4816907093781,
+     "avg_borrowed": 33200.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 24023.76320131253
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": -3300.642649532594,
+     "max_drawdown": 7828.313298790388,
+     "interest": 542.4657534246576,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -3300.6426495325936,
+     "avg_borrowed": 5789.473684210527,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": -3300.6426495325936
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 74771.30476649012,
+   "exposure_vs_baseline": 0.7477130476649013,
+   "experiment_profit": 86133.9996804866,
+   "control_profit": 87025.16110839718,
+   "experiment_max_drawdown": 37690.95241255483,
+   "control_max_drawdown": 29337.71612844016,
+   "profit_difference": -891.1614279105852,
+   "drawdown_difference": 8353.236284114668,
+   "experiment_profit_to_drawdown": 2.2852699167080592,
+   "control_profit_to_drawdown": 2.9663236472601375,
+   "profit_to_drawdown_difference": -0.6810537305520783,
+   "control_dollar_days": 155300000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 46,
+    "lower_price_reentries": 15,
+    "alt_entries": 0,
+    "recovery_resets": 4,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 19,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 15,
+     "recovery_reset": 4
+    },
+    "sessions_restricted_total": 185.0,
+    "sessions_restricted_median": 2.0,
+    "sessions_restricted_max": 61.0,
+    "reentry_discount_vs_loss_exit_median": -0.024376515413924493,
+    "false_resets": 1,
+    "false_reset_dates": [
+     "2024-12-04"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 36,
+    "variant_trades": 32,
+    "baseline_entries_missed": 4,
+    "baseline_entries_delayed": 9,
+    "net_difference": -30254.448241046644,
+    "repeated_losers": {
+     "n": 12,
+     "baseline_pnl": -52064.56301292193,
+     "variant_window_pnl": -39041.38181853881,
+     "eliminated": 1,
+     "later": 7,
+     "identical": 4
+    },
+    "rebound_winners": {
+     "n": 8,
+     "baseline_pnl": 71919.53675026709,
+     "variant_window_pnl": 24150.470134304596,
+     "eliminated": 3,
+     "later": 2,
+     "identical": 3
+    },
+    "major_winners_10k": {
+     "n": 7,
+     "baseline_pnl": 149320.40167340182,
+     "variant_window_pnl": 99110.16028218885,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 4
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 48637.366077966755,
+     "variant_window_pnl": -1572.8753132462389,
+     "eliminated": 3,
+     "later": 0,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2020-10-30",
+     "b_profit": 12212.293447254737,
+     "min_gap": 0.014968079899905451
+    }
+   ],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 49391.12776429467,
+     "max_drawdown": 16801.810426084783,
+     "interest": 5635.6164383561645,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 65024.63054187192,
+     "trades_entered": 3,
+     "pnl_of_trades_entered": 49391.12776429467
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 26869.028569901915,
+     "max_drawdown": 9688.455771477122,
+     "interest": 3736.986301369863,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -859.4816907093781,
+     "avg_borrowed": 33200.0,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 24023.76320131253
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": -3300.642649532594,
+     "max_drawdown": 7828.313298790388,
+     "interest": 542.4657534246576,
+     "trades_closed": 1,
+     "losing_trades": 1,
+     "largest_loss": -3300.6426495325936,
+     "avg_borrowed": 5789.473684210527,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": -3300.6426495325936
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 32917.952819711274,
+     "max_drawdown": 10414.307761161006,
+     "interest": 4309.58904109589,
+     "trades_closed": 1,
+     "losing_trades": 0,
+     "largest_loss": 20198.317633486033,
+     "avg_borrowed": 71739.13043478261,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 32596.156093032398
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 116388.44792153324,
+    "baseline_mdd": 39236.59780989705,
+    "lower3_net": 132242.46346846988,
+    "lower3_mdd": 23564.063907193708,
+    "net_vs_baseline": -30254.448241046644,
+    "net_vs_lower3": -46108.46378798329,
+    "mdd_vs_baseline": -1545.645397342225,
+    "mdd_vs_lower3": 14126.88850536112
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 89665.12702078522,
+   "control_profit": 118575.37284441896,
+   "control_max_drawdown": 21128.747833644244,
+   "profit_difference": -32441.373163932367,
+   "drawdown_difference": 16562.204578910583,
+   "control_profit_to_drawdown": 5.612039756355373,
+   "control_dollar_days": 155300000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E4_cum_loss",
+  "dataset": "QQQ_2016_2026",
+  "metrics": {
+   "dataset": "QQQ_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-07",
+   "sessions": 2513,
+   "net_profit": 135768.27852013535,
+   "realized_profit": 123370.440060589,
+   "unrealized_profit": 12397.838459546363,
+   "open_position_at_end": true,
+   "margin_interest": 48791.780821917804,
+   "closed_trades": 24,
+   "winning_trades": 12,
+   "losing_trades": 12,
+   "win_rate": 0.5,
+   "avg_winning_trade": 12909.03664001783,
+   "avg_losing_trade": -2628.166634968748,
+   "largest_winning_trade": 52700.20475813591,
+   "largest_losing_trade": -9485.613325907529,
+   "max_drawdown": 23564.063907193708,
+   "max_drawdown_pct_of_100k": 0.23564063907193708,
+   "mdd_peak_date": "2019-07-26",
+   "mdd_trough_date": "2020-03-12",
+   "max_consecutive_losses": 3,
+   "max_bear_episode_drawdown": 18513.825062264514,
+   "longest_underwater_days": 638,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": -4546.598024528532,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8732.433202169794,
+   "worst_day_date": "2020-03-12",
+   "profit_to_drawdown": 5.76166653828704,
+   "avg_borrowed_all_sessions": 44528.45204934342,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 161900000.0,
+   "pct_sessions_exposed": 0.44528452049343414,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 838.5934436080009,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": -6416.614532823456,
+     "max_drawdown": 18513.825062264514,
+     "interest": 3345.205479452055,
+     "trades_closed": 6,
+     "losing_trades": 5,
+     "largest_loss": -6995.071379698756,
+     "avg_borrowed": 31474.10358565737,
+     "trades_entered": 6,
+     "pnl_of_trades_entered": -6416.61453282346
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 63172.03427553673,
+     "max_drawdown": 17689.068687878447,
+     "interest": 7564.3835616438355,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 87192.11822660099,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 60586.2587371311
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 17473.363048665255,
+     "max_drawdown": 2138.2741678364546,
+     "interest": 1928.7671232876712,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 18000.0,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 15386.674744266767
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 26778.853753733943,
+     "max_drawdown": 11849.298795822324,
+     "interest": 6901.369863013699,
+     "trades_closed": 2,
+     "losing_trades": 0,
+     "largest_loss": 1317.3728913809853,
+     "avg_borrowed": 83157.8947368421,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 26778.85375373394
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 77948.9648531536,
+   "exposure_vs_baseline": 0.7794896485315359,
+   "experiment_profit": 135768.27852013535,
+   "control_profit": 90723.59036348687,
+   "experiment_max_drawdown": 23564.063907193708,
+   "control_max_drawdown": 30584.52183640988,
+   "profit_difference": 45044.68815664848,
+   "drawdown_difference": -7020.4579292161725,
+   "experiment_profit_to_drawdown": 5.76166653828704,
+   "control_profit_to_drawdown": 2.966323647260144,
+   "profit_to_drawdown_difference": 2.7953428910268956,
+   "control_dollar_days": 161900000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 181,
+    "lower_price_reentries": 8,
+    "alt_entries": 0,
+    "recovery_resets": 4,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 0,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 12,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 8,
+     "recovery_reset": 4
+    },
+    "sessions_restricted_total": 300.0,
+    "sessions_restricted_median": 9.0,
+    "sessions_restricted_max": 101.0,
+    "reentry_discount_vs_loss_exit_median": -0.07191256422362075,
+    "false_resets": 1,
+    "false_reset_dates": [
+     "2024-09-19"
+    ]
+   },
+   "matching": {
+    "baseline_trades": 36,
+    "variant_trades": 25,
+    "baseline_entries_missed": 11,
+    "baseline_entries_delayed": 9,
+    "net_difference": 19379.830598602115,
+    "repeated_losers": {
+     "n": 12,
+     "baseline_pnl": -52064.56301292193,
+     "variant_window_pnl": -469.480414852148,
+     "eliminated": 4,
+     "later": 7,
+     "identical": 1
+    },
+    "rebound_winners": {
+     "n": 8,
+     "baseline_pnl": 71919.53675026709,
+     "variant_window_pnl": 40971.833469606965,
+     "eliminated": 5,
+     "later": 2,
+     "identical": 1
+    },
+    "major_winners_10k": {
+     "n": 7,
+     "baseline_pnl": 149320.40167340182,
+     "variant_window_pnl": 134716.11680978746,
+     "eliminated": 2,
+     "later": 1,
+     "identical": 4
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 48637.366077966755,
+     "variant_window_pnl": 34033.08121435237,
+     "eliminated": 2,
+     "later": 1,
+     "identical": 0
+    }
+   },
+   "near_miss_blocked_winners": [],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 63172.03427553673,
+     "max_drawdown": 17689.068687878447,
+     "interest": 7564.3835616438355,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 87192.11822660099,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 60586.2587371311
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 17473.363048665255,
+     "max_drawdown": 2138.2741678364546,
+     "interest": 1928.7671232876712,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 18000.0,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 15386.674744266767
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 26778.853753733943,
+     "max_drawdown": 11849.298795822324,
+     "interest": 6901.369863013699,
+     "trades_closed": 2,
+     "losing_trades": 0,
+     "largest_loss": 1317.3728913809853,
+     "avg_borrowed": 83157.8947368421,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 26778.85375373394
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 32917.95281971127,
+     "max_drawdown": 10414.307761161006,
+     "interest": 4309.58904109589,
+     "trades_closed": 1,
+     "losing_trades": 0,
+     "largest_loss": 20198.317633486033,
+     "avg_borrowed": 71739.13043478261,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 32596.156093032398
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 116388.44792153324,
+    "baseline_mdd": 39236.59780989705,
+    "lower3_net": 132242.46346846988,
+    "lower3_mdd": 23564.063907193708,
+    "net_vs_baseline": 19379.830598602115,
+    "net_vs_lower3": 3525.8150516654714,
+    "mdd_vs_baseline": -15672.533902703344,
+    "mdd_vs_lower3": 0.0
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 93475.7505773672,
+   "control_profit": 123614.63530915274,
+   "control_max_drawdown": 22026.68560377982,
+   "profit_difference": 12153.643210982613,
+   "drawdown_difference": 1537.378303413887,
+   "control_profit_to_drawdown": 5.612039756355365,
+   "control_dollar_days": 161900000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ },
+ {
+  "experiment": "adaptive_state_memory",
+  "config": "E5_no_small_rearm",
+  "dataset": "QQQ_2016_2026",
+  "metrics": {
+   "dataset": "QQQ_2016_2026",
+   "first_date": "2016-10-07",
+   "last_date": "2026-10-07",
+   "sessions": 2513,
+   "net_profit": 113597.40444624407,
+   "realized_profit": 101199.56598669771,
+   "unrealized_profit": 12397.838459546363,
+   "open_position_at_end": true,
+   "margin_interest": 51956.164383561634,
+   "closed_trades": 27,
+   "winning_trades": 12,
+   "losing_trades": 15,
+   "win_rate": 0.4444444444444444,
+   "avg_winning_trade": 13401.831605628859,
+   "avg_losing_trade": -3974.827552056572,
+   "largest_winning_trade": 52700.20475813591,
+   "largest_losing_trade": -9700.212108336642,
+   "max_drawdown": 34502.76639716508,
+   "max_drawdown_pct_of_100k": 0.34502766397165086,
+   "mdd_peak_date": "2018-08-29",
+   "mdd_trough_date": "2020-03-12",
+   "max_consecutive_losses": 3,
+   "max_bear_episode_drawdown": 21418.648220740222,
+   "longest_underwater_days": 868,
+   "longest_underwater_recovered": true,
+   "min_cumulative_pnl": -16385.413523922347,
+   "fell_below_minus_100k": false,
+   "worst_day_mtm_change": -8732.433202169796,
+   "worst_day_date": "2020-03-12",
+   "profit_to_drawdown": 3.2924143860991326,
+   "avg_borrowed_all_sessions": 47393.55352168722,
+   "avg_borrowed_while_invested": 100000.0,
+   "margin_dollar_days": 172400000.0,
+   "pct_sessions_exposed": 0.47393553521687226,
+   "max_borrowed": 100000.0,
+   "net_profit_per_1m_dollar_days": 658.9176592009517,
+   "bear_windows": {
+    "2022": {
+     "window": "2022-01-01..2022-12-31",
+     "pnl": -9933.975848077782,
+     "max_drawdown": 21418.648220740222,
+     "interest": 6569.86301369863,
+     "trades_closed": 9,
+     "losing_trades": 7,
+     "largest_loss": -7097.741959192427,
+     "avg_borrowed": 60159.3625498008,
+     "trades_entered": 9,
+     "pnl_of_trades_entered": -9933.97584807778
+    }
+   },
+   "recovery_windows": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 63172.034275536724,
+     "max_drawdown": 17689.06868787844,
+     "interest": 7564.3835616438355,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 87192.11822660099,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 60586.2587371311
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 17473.363048665255,
+     "max_drawdown": 2138.27416783644,
+     "interest": 1928.7671232876712,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 18000.0,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 15386.674744266767
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 19964.156494490788,
+     "max_drawdown": 12892.901460858775,
+     "interest": 6991.780821917808,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -5459.459067844015,
+     "avg_borrowed": 84736.84210526316,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 19964.15649449079
+    }
+   }
+  },
+  "matched_control": {
+   "control_fixed_size": 83004.33317284545,
+   "exposure_vs_baseline": 0.8300433317284545,
+   "experiment_profit": 113597.40444624407,
+   "control_profit": 96607.45508749317,
+   "experiment_max_drawdown": 34502.76639716508,
+   "control_max_drawdown": 32568.076371816307,
+   "profit_difference": 16989.94935875089,
+   "drawdown_difference": 1934.6900253487765,
+   "experiment_profit_to_drawdown": 3.2924143860991326,
+   "control_profit_to_drawdown": 2.9663236472601473,
+   "profit_to_drawdown_difference": 0.3260907388389853,
+   "control_dollar_days": 172400000.0
+  },
+  "extra": {
+   "state_machine": {
+    "blocked_sessions": 117,
+    "lower_price_reentries": 6,
+    "alt_entries": 0,
+    "recovery_resets": 3,
+    "reset_priority_blocks": 0,
+    "triggers_declined": 6,
+    "indicator_fallbacks": 0,
+    "losing_exits_restricted": 9,
+    "episodes_by_resolution": {
+     "lower_price_reentry": 6,
+     "recovery_reset": 3
+    },
+    "sessions_restricted_total": 215.0,
+    "sessions_restricted_median": 8.0,
+    "sessions_restricted_max": 114.0,
+    "reentry_discount_vs_loss_exit_median": -0.047825774271452015,
+    "false_resets": 0,
+    "false_reset_dates": []
+   },
+   "matching": {
+    "baseline_trades": 36,
+    "variant_trades": 28,
+    "baseline_entries_missed": 8,
+    "baseline_entries_delayed": 4,
+    "net_difference": -2791.0434752891742,
+    "repeated_losers": {
+     "n": 12,
+     "baseline_pnl": -52064.56301292193,
+     "variant_window_pnl": -27225.732649709098,
+     "eliminated": 2,
+     "later": 4,
+     "identical": 6
+    },
+    "rebound_winners": {
+     "n": 8,
+     "baseline_pnl": 71919.53675026709,
+     "variant_window_pnl": 51976.18851917768,
+     "eliminated": 5,
+     "later": 0,
+     "identical": 3
+    },
+    "major_winners_10k": {
+     "n": 7,
+     "baseline_pnl": 149320.40167340182,
+     "variant_window_pnl": 138189.0403924,
+     "eliminated": 2,
+     "later": 0,
+     "identical": 5
+    },
+    "major_rebound_winners_10k": {
+     "n": 3,
+     "baseline_pnl": 48637.366077966755,
+     "variant_window_pnl": 37506.004796964895,
+     "eliminated": 2,
+     "later": 0,
+     "identical": 1
+    }
+   },
+   "near_miss_blocked_winners": [
+    {
+     "b_entry_date": "2018-12-26",
+     "b_profit": 11001.457068377218,
+     "min_gap": 0.012347855740246771
+    },
+    {
+     "b_entry_date": "2022-11-04",
+     "b_profit": 1924.9728958204541,
+     "min_gap": 0.006399322766480031
+    },
+    {
+     "b_entry_date": "2023-01-04",
+     "b_profit": 6879.082339948977,
+     "min_gap": 0.006399322766480031
+    }
+   ],
+   "recovery_windows_ext": {
+    "2020": {
+     "window": "2020-03-16..2020-12-31",
+     "pnl": 63172.034275536724,
+     "max_drawdown": 17689.06868787844,
+     "interest": 7564.3835616438355,
+     "trades_closed": 3,
+     "losing_trades": 1,
+     "largest_loss": -3443.3692340720036,
+     "avg_borrowed": 87192.11822660099,
+     "trades_entered": 4,
+     "pnl_of_trades_entered": 60586.2587371311
+    },
+    "2023": {
+     "window": "2023-01-01..2023-12-31",
+     "pnl": 17473.363048665255,
+     "max_drawdown": 2138.27416783644,
+     "interest": 1928.7671232876712,
+     "trades_closed": 0,
+     "losing_trades": 0,
+     "largest_loss": 0.0,
+     "avg_borrowed": 18000.0,
+     "trades_entered": 1,
+     "pnl_of_trades_entered": 15386.674744266767
+    },
+    "2025": {
+     "window": "2025-04-01..2025-12-31",
+     "pnl": 19964.156494490788,
+     "max_drawdown": 12892.901460858775,
+     "interest": 6991.780821917808,
+     "trades_closed": 2,
+     "losing_trades": 1,
+     "largest_loss": -5459.459067844015,
+     "avg_borrowed": 84736.84210526316,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 19964.15649449079
+    },
+    "2026": {
+     "window": "2026-03-20..2026-10-06",
+     "pnl": 32917.95281971127,
+     "max_drawdown": 10414.30776116102,
+     "interest": 4309.58904109589,
+     "trades_closed": 1,
+     "losing_trades": 0,
+     "largest_loss": 20198.317633486033,
+     "avg_borrowed": 71739.13043478261,
+     "trades_entered": 2,
+     "pnl_of_trades_entered": 32596.156093032398
+    }
+   },
+   "vs_reference": {
+    "baseline_net": 116388.44792153324,
+    "baseline_mdd": 39236.59780989705,
+    "lower3_net": 132242.46346846988,
+    "lower3_mdd": 23564.063907193708,
+    "net_vs_baseline": -2791.0434752891742,
+    "net_vs_lower3": -18645.059022225818,
+    "mdd_vs_baseline": -4733.831412731968,
+    "mdd_vs_lower3": 10938.702489971376
+   }
+  },
+  "matched_lower3_control": {
+   "control_fixed_size": 99538.10623556582,
+   "control_profit": 131631.6437757748,
+   "control_max_drawdown": 23455.222965359106,
+   "profit_difference": -18034.23932953074,
+   "drawdown_difference": 11047.543431805978,
+   "control_profit_to_drawdown": 5.612039756355371,
+   "control_dollar_days": 172400000.0,
+   "note": "ex-post exposure control, not deployable"
+  }
+ }
+]

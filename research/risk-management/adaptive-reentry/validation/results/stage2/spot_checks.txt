@@ -1,0 +1,34 @@
+SPOT CHECK 1 — G8_A2m1_retrace, QQQ_1999_2015: the 2002-10..2003-03 reset chain (raw closes)
+  OK   arming trade 2002-09-23->2002-10-08 price return -3.5370% <= -1% (material)
+  OK   ref_high from raw highs = 28.5103 (logged 28.5103)
+  OK   episode min close through 2002-11-01 = 17.0068 (logged 17.0068)
+  OK   first session whose close >= low+0.38*(ref-low) is 2002-11-01 (= logged reset 2002-11-01; close 21.4119 >= threshold 21.3781); no earlier session qualifies
+  OK   2002-12-27 loss -713 has price return -0.1702% > -1% -> declined, no episode
+  OK   unrestricted re-entry already on 2002-12-30 (next signal session)
+  OK   arming trade 2003-01-21->2003-02-05 price return -2.7859% <= -1%
+  OK   ref_high = 24.4097 (logged 24.4097)
+  OK   episode min close = 20.1776 (logged 20.1776)
+  OK   first qualifying session is 2003-03-14 (= logged reset 2003-03-14; close 21.8046 >= threshold 21.7858)
+  OK   2003-03-31 entry (post-reset, unrestricted) has the 10% signal (12.28% below the 90-session high); trade earned +15,467
+
+SPOT CHECK 2 — G4 stall decision 2002-09-19 (QQQ-old) at the frozen point vs neighbor (20,80)
+  OK   arming exit price 18.7474 = 18.7474
+  OK   episode low 18.1787 set on the arming day 2002-08-05 (= 18.1787 on 2002-08-05)
+  OK   age of the low on 2002-09-19 = 32 sessions
+  OK   2002-09-19 close 18.2941 = 18.2941
+  OK   (20,60): level 18.2975 (discount 2.400%) >= close -> ENTRY (the frozen G4 decision)
+  OK   (20,80): level 18.2693 (discount 2.550%) < close -> BLOCKED (one step slower decay erases the decision)
+  OK   grid (20,60) trades contain the 2002-09-19 entry
+  OK   grid (20,80) trades do NOT contain it
+  OK   the re-phased 2002-10-07 bottom catch exists only at (20,60)
+  OK   (20,80) trade dates identical to G_A2m1 (78 trades) — the predicted collapse to the A2m1 leg
+
+SPOT CHECK 3 — G8_A2m1_retrace on fresh IWM: the 2008-09-23 arming -> 2008-10-09 restricted re-entry, and the 2008-11-21 arming -> 2009-03-02 resolution (raw closes)
+  OK   2008-09-23->10-08 loss -24,658, price return -24.21% -> arms
+  OK   2008-10-09 close 42.4769 <= level 44.3500 (3% below exit 45.7217) -> restricted re-entry next session
+  OK   close below the retrace threshold 54.1198 (ref_high 73.1161) -> reset priority not violated
+  OK   2008-11-06->11-21 loss -21,221, price return -20.77% -> arms
+  OK   no session 2008-11-21..2009-03-02 reached the 38% retrace (ref_high 73.1161; the Dec-2008 rally topped out below it)
+  OK   first signal session with close <= level 32.3823 is 2009-03-02 (= the recorded 2009-03-02 re-entry @ 31.3883, +9,915 trade)
+
+ALL STAGE-2 SPOT CHECKS PASSED (27 assertions recomputed from raw prices).

@@ -1,0 +1,20 @@
+Validation stage 2 — independent replay verification of G8_A2m1_retrace and G4_A2m1_stall
+(rules re-implemented from the cited family sources; framework/combination decision code not used; inputs: raw prices + combinations/results trades CSVs)
+
+== VGT_2005_2015 ==
+  VGT_2005_2015  G8_A2m1_retrace    OK —  13 episodes {'lower_price_reentry': 7, 'recovery_reset': 6}, 11 declined losses (all > -1%),  185 blocked signal sessions
+  VGT_2005_2015  G4_A2m1_stall      OK —   9 episodes {'lower_price_reentry': 6, 'recovery_reset': 3},  7 declined losses (all > -1%),  269 blocked signal sessions
+
+== QQQ_1999_2015 ==
+  QQQ_1999_2015  G8_A2m1_retrace    OK —  34 episodes {'recovery_reset': 8, 'lower_price_reentry': 26}, 16 declined losses (all > -1%),  280 blocked signal sessions
+  QQQ_1999_2015  G4_A2m1_stall      OK —  34 episodes {'recovery_reset': 6, 'lower_price_reentry': 28}, 14 declined losses (all > -1%),  289 blocked signal sessions
+
+== VGT_2016_2026 ==
+  VGT_2016_2026  G8_A2m1_retrace    OK —  13 episodes {'recovery_reset': 3, 'lower_price_reentry': 10},  9 declined losses (all > -1%),   67 blocked signal sessions
+  VGT_2016_2026  G4_A2m1_stall      OK —  12 episodes {'lower_price_reentry': 10, 'recovery_reset': 2}, 10 declined losses (all > -1%),   76 blocked signal sessions
+
+== QQQ_2016_2026 ==
+  QQQ_2016_2026  G8_A2m1_retrace    OK —  12 episodes {'lower_price_reentry': 9, 'recovery_reset': 3},  5 declined losses (all > -1%),   63 blocked signal sessions
+  QQQ_2016_2026  G4_A2m1_stall      OK —  11 episodes {'lower_price_reentry': 8, 'recovery_reset': 3},  4 declined losses (all > -1%),  108 blocked signal sessions
+
+ALL 5995 CHECKS PASSED — no mismatches between the independent replay and the combinations results for either candidate on any dataset.

@@ -1,0 +1,168 @@
+"""Pre-run registration for Family G (combinations). Run BEFORE run.py; append-only.
+
+Every entry carries the per-component failure-mechanism rationale required by the G brief.
+Component semantics are exact copies from the standalone family code (citations in strategies.py).
+All 17 configurations were fixed by the coordinator's combination matrix before any G run;
+no additions, no post-hoc parameter refinement.
+"""
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / 'common'))
+
+import registry  # noqa: E402
+
+FAM = 'G'
+
+ENTRIES = [
+    # ---------------- standalone ablation legs (clean reruns for a single summary.json) ----------------
+    dict(name='REF_lower3', family=FAM,
+         description='Anchor: framework defaults (net-loss trigger, 3% off loss exit, frozen-high 95% reset). '
+                     'Equals the existing 3% strategy trade for trade (calibration gate).',
+         params=dict(trigger='net P&L < 0', discount=0.03, reset='close >= 0.95 * frozen ref high'),
+         hypothesis='Reference leg for every ablation table; identical to lower-price-reentry B_lower_3pct.'),
+    dict(name='G_A2m1', family=FAM,
+         description='A2_material_1 trigger alone (price return <= -1% arms; else no restriction); level/reset = REF. '
+                     'Exact copy of loss-classification material_trigger(0.01).',
+         params=dict(trigger='price_return <= -0.01', discount=0.03, reset='frozen95'),
+         hypothesis='Ablation leg. Targets the micro-arming failure (a trivial loss blocking a recovery winner) by '
+                    'never arming on immaterial losses. Family A: QQQ-old +26.9k net / -13.1k DD vs A0; expected to '
+                    'reproduce A2_material_1 exactly (cross-family integrity check).'),
+    dict(name='G_D7tiny', family=FAM,
+         description='D7_tiny_loss_exit_anchor alone: alt entry when |arming net loss| < $2,000 AND close <= frozen '
+                     'loss-exit price; level/reset = REF. Verbatim copy from recovery-opportunities/strategies.py.',
+         params=dict(tiny_bound=2000.0, anchor='loss exit price', discount_nontiny=0.03, reset='frozen95'),
+         hypothesis='Ablation leg. Same micro-arming failure as G_A2m1 but the opposite philosophy: arm gently (hold '
+                    'the exit-price line) instead of never arming — Family E found micro-armings are often net '
+                    'positive, so the gentle anchor should keep their benefits. Expected to reproduce Family D '
+                    'results exactly (integrity check).'),
+    dict(name='G_B7stall', family=FAM,
+         description='B7_stall level alone: discount 3% while the episode low is < 20 sessions old, then linear decay '
+                     'to 0 over 60 sessions; trigger/reset = REF. Verbatim copy from adaptive-discounts b7_stall.',
+         params=dict(base=0.03, fresh_age=20, decay=60),
+         hypothesis='Ablation leg. Targets the stale-grind failure (QQQ 2003 basing: the frozen 3% level is never '
+                    'printed once the low stops falling). Family B: trade-identical to 3% on three datasets, '
+                    'QQQ-old +21.2k/-21.2k. Expected identical here.'),
+    dict(name='G_B2inv', family=FAM,
+         description='B2_inverse level alone: discount = clip(3% - 0.5*|price return|, 0.5%, 3%) off the loss exit; '
+                     'trigger/reset = REF. Verbatim copy from adaptive-discounts b2_inverse.',
+         params=dict(base=0.03, k=-0.5, clip=[0.005, 0.03]),
+         hypothesis='Ablation leg. Targets the V-bottom-miss failure after severe losses (the market already '
+                    'delivered the decline; demanding 3% more prices us out at capitulation). Family B: better on 3 '
+                    'of 4, -38.6k QQQ-new from early re-entries after big 2022/2025 losses. Expected identical.'),
+    dict(name='G_C6r38', family=FAM,
+         description='C6_retrace_38 reset alone: reset when close >= low + 0.38*(frozen ref high - low); '
+                     'trigger/level = REF. Verbatim copy from recovery-resets retrace_reset(0.38).',
+         params=dict(f=0.38),
+         hypothesis='Ablation leg. Targets reset obsolescence (frozen-high 95% unreachable in deep bears) with a '
+                    'depth-adaptive reset. Family C: best aggregate (+56k over C1), rescued VGT 2023-01 and half of '
+                    'QQQ 2003; cost -3.4k VGT-old. Expected identical.'),
+    dict(name='G_C11grad', family=FAM,
+         description='C11_graduated alone: 3% discount until the close has reached 1.08x the episode low (sticky), '
+                     'then 1.5%; frozen95 reset. Verbatim copy from recovery-resets graduated_level.',
+         params=dict(stage2_rebound=0.08, discount1=0.03, discount2=0.015, reset_fraction=0.95),
+         hypothesis='Ablation leg. Targets sub-2% near-miss failures on W-shaped retests (rebound confirmation buys '
+                    'a smaller discount). Family C: never below C1, +16.2k/+15.2k old era, 2000-02 window positive. '
+                    'Expected identical.'),
+    # ---------------- combos ----------------
+    dict(name='G2_tiny_stall', family=FAM,
+         description='Level: |net loss| < $2,000 => frozen loss-exit price (D7_tiny anchor); else B7_stall decayed 3% '
+                     'level. Net-loss trigger, C1 frozen95 reset.',
+         params=dict(tiny_bound=2000.0, base=0.03, fresh_age=20, decay=60, reset='frozen95'),
+         hypothesis='Two DISTINCT failure mechanisms, one component each: D7_tiny fixes micro-armings (tiny losses '
+                    'demand only "no higher than the exit", preserving blocked recovery winners like QQQ 2010-08 and '
+                    'VGT-new micro episodes) while B7_stall fixes stale grinds (QQQ 2003 basing re-admission). They '
+                    'act on disjoint episode sets (tiny vs non-tiny), so gains should be ~additive: QQQ-old from '
+                    'both, VGT/QQQ-new mostly from the tiny branch. Risk: none new — each component keeps the full '
+                    '3% exactly where the other is inactive.'),
+    dict(name='G3_tiny_retrace', family=FAM,
+         description='Level: tiny => loss-exit anchor, else fixed 3%; reset = C6_retrace_38. Net-loss trigger.',
+         params=dict(tiny_bound=2000.0, discount_nontiny=0.03, retrace_f=0.38),
+         hypothesis='Micro-arming fix (D7_tiny, entry side) + obsolescence fix (C6 retrace reset, exit-of-restriction '
+                    'side). Distinct state variables (arming loss size vs episode depth), so overlaps only where a '
+                    'tiny episode would also reset early — the retrace level of a shallow episode is low, so C6 may '
+                    'fire before the tiny anchor is ever touched, making the combo sub-additive on tiny episodes but '
+                    'still additive on deep ones (2003, 2023-01). Risk: C6 false resets in 2000-02 bear rallies now '
+                    'clear episodes the tiny anchor would have held cheaply.'),
+    dict(name='G4_A2m1_stall', family=FAM,
+         description='Trigger: A2_material_1 (price return <= -1% arms, else none); level = B7_stall; reset = C1.',
+         params=dict(trigger='price_return <= -0.01', base=0.03, fresh_age=20, decay=60, reset='frozen95'),
+         hypothesis='The never-arm counterpart of G2: A2m1 removes micro-armings entirely (no restriction to relax) '
+                    'while B7_stall handles stale grinds on the material episodes that do arm. Head-to-head with G2 '
+                    'this is the cleanest never-arm vs arm-gently comparison inside an identical second component. '
+                    'Risk (from Family E): exempted micro-losses were often net POSITIVE restrictions (2026-02-05 '
+                    '+21.9k), so G4 may give back new-era gains that G2 keeps.'),
+    dict(name='G5_tiny_stall_retrace', family=FAM,
+         description='The full stack: level = tiny => exit anchor else B7_stall decay; reset = C6_retrace_38; '
+                     'net-loss trigger.',
+         params=dict(tiny_bound=2000.0, base=0.03, fresh_age=20, decay=60, retrace_f=0.38),
+         hypothesis='All three distinct fixes at once (micro-armings / stale grinds / reset obsolescence). The test '
+                    'is whether B7_stall and C6_retrace_38 overlap: both activate in long episodes where the low has '
+                    'stopped falling — the stall decay lowers the entry bar while the retrace reset clears the '
+                    'episode; whichever fires first makes the other redundant in that episode. Expect G5 ~ G3 where '
+                    'C6 fires early and ~ G2 where the decay wins; if G5 < max(G2, G3) per dataset the components '
+                    'interfere (a C6 reset surrendering a decayed-level pending entry).'),
+    dict(name='G6_stall_grad', family=FAM,
+         description='Double-relaxation test: discount = min(d_stall(age of low), d_graduated(8% rebound, sticky)) '
+                     'off the loss exit; C1 reset; net-loss trigger.',
+         params=dict(base=0.03, fresh_age=20, decay=60, stage2_rebound=0.08, discount2=0.015),
+         hypothesis='Hypothesis to TEST, stated in advance: redundant or harmful. Both components relax on '
+                    '"stabilization" via different observables (low age vs rebound off the low); min() takes the '
+                    'looser at every session, so in bear rallies that both (a) rebound 8% and (b) pause new lows '
+                    '20+ sessions, the requirement collapses faster than either alone — re-admitting 2001-02 rally '
+                    'entries. Expected: bear windows worse than both legs; any gain over the better leg would refute '
+                    'redundancy.'),
+    dict(name='G7_tiny_grad', family=FAM,
+         description='Level: tiny => loss-exit anchor; else C11_graduated staged discount (3% -> 1.5% after an 8% '
+                     'rebound, sticky); C1 reset; net-loss trigger.',
+         params=dict(tiny_bound=2000.0, stage2_rebound=0.08, discount1=0.03, discount2=0.015),
+         hypothesis='Micro-arming fix + W-retest fix: distinct mechanisms on distinct episodes (tiny episodes need '
+                    'no rebound confirmation; material episodes get C11\'s confirmed-rebound relaxation that was '
+                    'never below C1 anywhere in Family C). The most conservative combo: nothing relaxes below 1.5% '
+                    'and only after a confirmed 8% rebound. Expect C11\'s old-era gains plus D7\'s new-era gains '
+                    'with no new bear risk.'),
+    dict(name='G8_A2m1_retrace', family=FAM,
+         description='Trigger: A2_material_1; level = fixed 3%; reset = C6_retrace_38.',
+         params=dict(trigger='price_return <= -0.01', discount=0.03, retrace_f=0.38),
+         hypothesis='Never-arm micro fix + adaptive reset. A2m1 removes the micro episodes; C6 shortens the deep '
+                    'ones. Distinct episode sets again, but C6\'s rescue of VGT 2023-01 came indirectly via extra '
+                    'Nov-Dec 2022 trades whose losses were small — if A2m1 declines those armings the two components '
+                    'could CANCEL rather than add (the extra trades change which exits anchor later levels). This '
+                    'combo tests precisely that interaction.'),
+    dict(name='G9a_retrace_guard', family=FAM,
+         description='C6_retrace_38 reset gated by the reset guard: reset may fire ONLY if close > required level x '
+                     '1.02 (fixed 3% level => guard constant exit*0.9894); standard trigger, fixed 3% discount.',
+         params=dict(retrace_f=0.38, guard_tol=1.02, discount=0.03),
+         hypothesis='Family C\'s inversion fix: a permissive reset can fire while the close sits at/below the '
+                    'pending required level, surrendering a discount entry the restriction had already earned '
+                    '(reset priority). The guard forbids resets in that zone. Binds only when the 38% retrace point '
+                    'sits <= exit*0.9894 (episode low more than ~21% below ref high, deep episodes). Expect: '
+                    'identical to G_C6r38 in shallow episodes; in deep bears the guard converts early resets into '
+                    'held discounts — better 2000-02/2008 entries or no change; it cannot create new entries.'),
+    dict(name='G9b_exitreset_guard', family=FAM,
+         description='Diagnostic: C2-style reset (close >= frozen loss-exit price) WITH the same guard (close > '
+                     'exit*0.97*1.02). Standard trigger, fixed 3% discount.',
+         params=dict(reset='close >= exit price', guard_tol=1.02, discount=0.03),
+         hypothesis='Does the guard rescue an otherwise catastrophic permissive reset (Family C: QQQ 2000-02 '
+                    '-57,079, DD 114,608)? Analytic expectation stated BEFORE running: NO — exit >= exit*0.9894 '
+                    'always, so the guard never binds and G9b should be trade-identical to unguarded C2. C2\'s '
+                    'failure mechanism is not the inversion (its resets fire ABOVE the pending level by '
+                    'construction); it is re-admission at unimproved prices. The run is the empirical confirmation, '
+                    'and the pair (G9a, G9b) separates "guard fixes inversion" from "guard fixes permissiveness".'),
+    dict(name='G10_bimodal', family=FAM,
+         description='Loss-magnitude bimodal level: |net loss| < $2,000 => frozen loss-exit price; else B2_inverse '
+                     'discount clip(3% - 0.5*|price return|, 0.5%, 3%). C1 reset; net-loss trigger.',
+         params=dict(tiny_bound=2000.0, base=0.03, k=-0.5, clip=[0.005, 0.03]),
+         hypothesis='One idea at both ends of the loss distribution: tiny losses need no discount (micro-arming '
+                    'fix), severe losses already delivered their discount (V-bottom capitulation fix); mid-size '
+                    'losses keep ~the full 3%. Components share the exit anchor but partition by loss size, so no '
+                    'within-episode interaction. Risk carried in from B2_inverse: early re-entries after big '
+                    '2022/2025 QQQ losses (-38.6k QQQ-new) — the tiny branch does nothing to offset that.'),
+]
+
+if __name__ == '__main__':
+    path = registry.register(HERE, ENTRIES)
+    print(f'registered {len(ENTRIES)} configs -> {path}')

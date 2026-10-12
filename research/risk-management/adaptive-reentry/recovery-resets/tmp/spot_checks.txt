@@ -1,0 +1,50 @@
+=== A. C11_graduated QQQ_1999_2015 episode exit 2002-08-05 (stage-2 early re-entry) ===
+frozen: exit_price 18.7474 ref_high 32.2166; 3% level 18.1850, 1.5% level 18.4662
+episode low path min 18.1787; first stage-2 session 2002-08-08 close 19.9807 >= 1.08*low_so_far 19.6330
+2002-09-19 close 18.2941: <= 1.5% level? True; <= 3% level (C1 path)? False  -> C11 entered on stage 2 where C1 could not
+closes 09-10..09-19: 2002-09-10:20.0502, 2002-09-11:19.8870, 2002-09-12:19.3368, 2002-09-13:19.4922, 2002-09-16:19.2142, 2002-09-17:18.8012, 2002-09-18:18.5975, 2002-09-19:18.2941
+sessions before 09-19 whose close was at/below the then-active level: [] (signal requirement explains any)
+
+=== B. C6_retrace_38 QQQ_1999_2015 episode exit 2002-10-08 -> reset 2002-11-01 ===
+frozen ref_high 28.5103; episode low (close) 17.0068 on 2002-10-09; 38% retrace threshold 21.3781
+  2002-10-31 close 20.8120 < 21.3781
+  2002-11-01 close 21.4119 >= 21.3781
+C1 reset level 0.95*ref = 27.0848 (close never near it; C1 stayed restricted until 2003-07-08)
+
+=== C. C4_rebound_10 VGT_2016_2026 rescue chain 2022-11-03 .. 2023-01-05 ===
+episode exit 2022-11-03: exit_price 38.0568 ref_high 47.7709 -> recovery_reset 2022-11-11
+episode exit 2022-11-29: exit_price 40.9644 ref_high 47.7709 -> lower_price_reentry 2022-12-19
+episode exit 2023-01-03: exit_price 39.5194 ref_high 47.7709 -> lower_price_reentry 2023-01-05
+close / 1.10*low_so_far: 2022-11-03:37.4855/41.2341, 2022-11-04:37.9724/41.2341, 2022-11-07:38.5350/41.2341, 2022-11-08:38.8930/41.2341, 2022-11-09:37.8572/41.2341, 2022-11-10:41.0646/41.2341, 2022-11-11:41.9025/41.2341, 2022-11-14:41.5028/41.2341
+re-entry 2022-12-19: close 39.3976 <= 0.97*exit 39.7355? True
+re-entry 2023-01-05: close 38.1436 <= 0.97*exit 38.3338? True
+C1 in the same span: reset level 0.95*47.7709 = 45.3824; max close 2022-11-03..2023-01-05 = 42.6975 -> C1 stayed restricted (reset only 2023-02-15)
+
+=== D. C2_exit_price same-session reset, QQQ 2002-09-13 ===
+losing exit maximum hold at 19.1595 (open 19.1595); close 19.4922 >= exit price? True -> restriction cleared the same session (0s episode)
+
+=== E. C12_timeout120 VGT_2016_2026 episode 2022-11-03 ===
+exit index 1529, reset index 1649, difference 120 sessions (should be 120)
+
+=== F. counter/episode consistency (C6_retrace_38, C11_graduated, C4_rebound_10) ===
+C6_retrace_38: counters == events resolutions on all 4 datasets PASS
+C11_graduated: counters == events resolutions on all 4 datasets PASS
+C4_rebound_10: counters == events resolutions on all 4 datasets PASS
+C0_none: counters == events resolutions on all 4 datasets PASS
+
+=== G. C1 vs C11 trade-level divergence ===
+-- VGT_2005_2015: C1 22 trades, C11 23 trades --
+  C1 only:  2009-03-06:+29,642
+  C11 only: 2009-03-02:+27,654 | 2010-08-31:+18,141
+-- QQQ_1999_2015: C1 70 trades, C11 76 trades --
+  C1 only:  2001-06-14:+659 | 2001-07-09:-4,338 | 2002-09-23:-3,989 | 2009-03-06:+54,188
+  C11 only: 2000-04-24:-969 | 2001-05-30:+2,130 | 2001-06-12:-5,054 | 2001-07-06:-3,578 | 2002-09-19:-3,372 | 2002-10-07:+21,285 | 2002-12-09:-713 | 2002-12-31:+3,215 | 2003-01-21:-3,238 | 2009-03-02:+52,010
+
+=== H. C10_time_price QQQ 2008-11-24 episode: reset just before the March 2009 bottom ===
+exit 2008-11-24 at 23.5823 -> recovery_reset 2009-02-24
+next C10 trades: 2009-02-25@24.80->2009-03-12:-3,443 | 2010-05-07@39.66->2010-05-24:-1,791 | 2010-06-29@37.95->2010-08-24:-295
+C1 trades:      2009-03-06@22.81->2010-01-29:+54,188 | 2010-05-07@39.66->2010-05-24:-1,791
+
+=== I. C12_signal_gone15 VGT 2026-02-05 episode: reset 2026-02-27, then the March dip ===
+dd90 2026-02-06..27: 2026-02-06:0.083, 2026-02-09:0.068, 2026-02-10:0.072, 2026-02-11:0.071, 2026-02-12:0.095, 2026-02-13:0.093, 2026-02-17:0.093, 2026-02-18:0.085, 2026-02-19:0.089, 2026-02-20:0.085, 2026-02-23:0.098, 2026-02-24:0.085, 2026-02-25:0.068, 2026-02-26:0.082, 2026-02-27:0.099
+next trades: 2026-03-03@90.37->2026-03-18:-111 | 2026-03-26@87.00->2026-06-05:+31,094

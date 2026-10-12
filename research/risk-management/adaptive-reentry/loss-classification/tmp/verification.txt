@@ -1,0 +1,63 @@
+counter/episode consistency: 280 checks so far, 0 failures
+
+--- SPOT CHECK (a): A2_material_05 VGT_2016_2026 declined trigger 2022-11-03 ---
+entry_date       2022-10-07
+exit_date        2022-11-03
+entry_price         38.2451
+exit_price          38.0568
+reason         maximum hold
+interest          813.69863
+profit         -1306.049284
+price return = 38.0568/38.2451 - 1 = -0.492351% (threshold -0.5%)
+following trade: entry 2022-11-04 @ 37.9724, profit +4,640
+following trade: entry 2022-12-19 @ 39.3976, profit -143
+2023-01-04: close 38.9505, prev-90-high 46.0645, dip 15.44% >= 10%: VERIFIED
+A0 contrast: frozen loss exit 38.0568 -> level 36.9151; 2023-01-04 close 38.9505 is +5.51% above it -> blocked under A0: VERIFIED
+
+2001 A2_material_1 episodes:
+ exit_date          loss  price_return          resolution resolution_date
+2001-02-13 -14415.826865     -0.139638 lower_price_reentry      2001-02-16
+2001-03-05 -14357.514957     -0.138452 lower_price_reentry      2001-03-09
+2001-03-26  -4119.136512     -0.036068 lower_price_reentry      2001-03-28
+2001-06-27  -5054.338937     -0.046023 lower_price_reentry      2001-07-06
+2001-07-24  -3578.064221     -0.030356 lower_price_reentry      2001-08-15
+2001-08-30  -6338.010074     -0.058860 lower_price_reentry      2001-09-04
+2001-09-19 -14067.818210     -0.136158 lower_price_reentry      2001-09-20
+
+--- SPOT CHECK: (b) A2_material_1 2001 cascade episode (QQQ_1999_2015 / A2_material_1, episode arming 2001-02-13) ---
+exit_date                           2001-02-13
+exit_reason                       maximum hold
+loss                             -14415.826865
+losing_entry_price                      56.807
+loss_exit_price                        48.8746
+price_return                         -0.139638
+ref_high                               80.7369
+resolution                 lower_price_reentry
+resolution_date                     2001-02-16
+reentry_date                        2001-02-16
+reentry_close                          46.7426
+required_level_at_entry              47.408362
+required level = 48.8746 * (1-0.03) = 47.408362
+re-entry 2001-02-16 close 46.7426 <= level 47.4084; no prior session had close<=level with the 10% signal: VERIFIED
+
+--- SPOT CHECK: (c) A0 financing-only 2010-08-24 (QQQ_1999_2015 / A0_net_loss, episode arming 2010-08-24) ---
+exit_date                      2010-08-24
+exit_reason                  maximum hold
+loss                          -294.661837
+losing_entry_price                37.9538
+loss_exit_price                   38.4825
+price_return                      0.01393
+ref_high                          44.2347
+resolution                 recovery_reset
+resolution_date                2010-09-17
+reentry_date                          NaN
+reentry_close                         NaN
+required_level_at_entry               NaN
+required level = 38.4825 * (1-0.03) = 37.328025
+reset 2010-09-17 close 42.0977 >= 0.95*ref_high 42.0230; no earlier session qualified for reset or entry: VERIFIED
+2010-08-26 (baseline winner entry): close 38.1019 vs required 37.3280 (+2.07% above) -> blocked; winner +$19,221 foregone: VERIFIED
+
+--- SPOT CHECK (d): A4_proportional_10 episode 2001-02-13 ---
+price_return -13.9638% -> required decline clip(1.0*|r|,1%,8%) = 8.0000%; level 44.9646; required_level_at_entry 44.964632
+
+TOTAL: 300 checks, 0 failures

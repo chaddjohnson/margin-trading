@@ -1,0 +1,375 @@
+====================================================================================================
+1. FINANCING-ONLY LOSSES (net loss, exit_price >= entry_price) UNDER A0
+====================================================================================================
+
+VGT_2005_2015: 2 financing-only restriction(s) of 14 episodes
+ exit_date  exit_reason        loss  losing_entry_price  loss_exit_price  price_return        resolution resolution_date  sessions_restricted  blocked_sessions  min_gap_to_required
+2007-11-27 maximum hold  -58.345275             6.31176          6.33661      0.003937    recovery_reset      2007-12-10                    9                 0             0.028473
+2015-09-24 maximum hold -340.309662            11.26620         11.34330      0.006843 unresolved_at_end      2015-10-07                    9                 2             0.008070
+   blocked/delayed baseline trade: entry 2015-09-28 exit open P&L +5,731  class=no entry reason=blocked window_diff=-5,731
+
+QQQ_1999_2015: 6 financing-only restriction(s) of 41 episodes
+ exit_date       exit_reason         loss  losing_entry_price  loss_exit_price  price_return          resolution resolution_date  sessions_restricted  blocked_sessions  min_gap_to_required
+2000-07-11      maximum hold  -386.803741             79.6922          79.7442      0.000653 lower_price_reentry      2000-07-28                   13                12            -0.047777
+2001-05-04 trailing stop gap   -14.138577             38.2836          38.4051      0.003174 lower_price_reentry      2001-06-14                   28                27            -0.038578
+2004-05-03      maximum hold -1216.184877             29.5742          29.6869      0.003811      recovery_reset      2004-06-08                   25                 9             0.013585
+2010-08-24      maximum hold  -294.661837             37.9538          38.4825      0.013930      recovery_reset      2010-09-17                   17                 7             0.018790
+2012-12-31      maximum hold  -206.082876             56.4414          57.2266      0.013912      recovery_reset      2013-01-02                    1                 0             0.054380
+2015-09-24      maximum hold   -38.816495             94.9646          95.9008      0.009858 lower_price_reentry      2015-09-28                    2                 0            -0.000771
+   blocked/delayed baseline trade: entry 2000-07-12 exit 2000-07-27 P&L -3,860  class=no entry reason=blocked window_diff=+3,860
+   blocked/delayed baseline trade: entry 2001-05-07 exit 2001-05-29 P&L +596  class=no entry reason=blocked window_diff=-596
+   blocked/delayed baseline trade: entry 2001-05-30 exit 2001-06-11 P&L +2,130  class=no entry reason=blocked window_diff=-2,130
+   blocked/delayed baseline trade: entry 2001-06-12 exit 2001-06-27 P&L -5,054  class=later entry reason=blocked window_diff=+8,334
+   blocked/delayed baseline trade: entry 2004-05-07 exit 2004-05-25 P&L -24  class=no entry reason=blocked window_diff=+24
+   blocked/delayed baseline trade: entry 2010-08-26 exit 2011-03-16 P&L +19,221  class=no entry reason=blocked window_diff=-19,221
+
+VGT_2016_2026: 4 financing-only restriction(s) of 19 episodes
+ exit_date  exit_reason         loss  losing_entry_price  loss_exit_price  price_return          resolution resolution_date  sessions_restricted  blocked_sessions  min_gap_to_required
+2018-12-10 maximum hold   -87.087044             20.2074          20.3116      0.005157 lower_price_reentry      2018-12-19                    7                 6            -0.001693
+2022-10-06 maximum hold  -345.662517             40.0405          40.0831      0.001064 lower_price_reentry      2022-10-07                    1                 0            -0.016345
+2026-02-05 maximum hold -2091.826745             89.2790          89.4832      0.002287 lower_price_reentry      2026-03-27                   35                 5            -0.019283
+2026-07-08 maximum hold  -238.530293            112.3400         113.0200      0.006053 lower_price_reentry      2026-07-29                   15                 5            -0.013038
+   blocked/delayed baseline trade: entry 2026-03-03 exit 2026-03-18 P&L -111  class=no entry reason=blocked window_diff=+111
+   blocked/delayed baseline trade: entry 2026-03-26 exit 2026-06-05 P&L +31,094  class=later entry reason=blocked window_diff=+2,973
+   blocked/delayed baseline trade: entry 2026-07-17 exit 2026-08-03 P&L -1,034  class=later entry reason=blocked window_diff=+7,297
+
+QQQ_2016_2026: 3 financing-only restriction(s) of 14 episodes
+ exit_date  exit_reason        loss  losing_entry_price  loss_exit_price  price_return          resolution resolution_date  sessions_restricted  blocked_sessions  min_gap_to_required
+2018-12-17 maximum hold  -47.447809             152.300          153.467      0.007663 lower_price_reentry      2018-12-19                    2                 1            -0.006738
+2022-11-03 maximum hold -596.066686             258.539          258.790      0.000971      recovery_reset      2023-03-31                  101                48             0.021060
+2024-09-09 maximum hold -184.676483             446.733          451.024      0.009605      recovery_reset      2024-09-19                    8                 0             0.034114
+   blocked/delayed baseline trade: entry 2022-11-04 exit 2022-12-16 P&L +1,925  class=no entry reason=blocked window_diff=-1,925
+   blocked/delayed baseline trade: entry 2022-12-19 exit 2023-01-03 P&L -859  class=no entry reason=blocked window_diff=+859
+   blocked/delayed baseline trade: entry 2023-01-04 exit 2023-03-02 P&L +6,879  class=no entry reason=blocked window_diff=-6,879
+
+====================================================================================================
+2. VGT 2023-01 EPISODE (the -$143 loss) ACROSS CONFIGS
+====================================================================================================
+
+A0 trade exiting 2023-01-03:
+Empty DataFrame
+Columns: [entry_date, exit_date, entry_price, exit_price, reason, interest, profit]
+Index: []
+
+A0_net_loss: episodes arming 2022-10-01..2023-01-31:
+ exit_date         loss  price_return          resolution resolution_date  blocked_sessions  min_gap_to_required
+2022-10-06  -345.662517      0.001064 lower_price_reentry      2022-10-07                 0            -0.016345
+2022-11-03 -1306.049284     -0.004924      recovery_reset      2023-02-15                43             0.015452
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> no entry (blocked), wdiff -28,006
+
+A1_price_loss_only: episodes arming 2022-10-01..2023-01-31:
+ exit_date         loss  price_return     resolution resolution_date  blocked_sessions  min_gap_to_required
+2022-11-03 -1306.049284     -0.004924 recovery_reset      2023-02-15                43             0.015452
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> no entry (blocked), wdiff -28,006
+
+A2_material_05: episodes arming 2022-10-01..2023-01-31:
+   (none)
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> identical (same), wdiff -0
+
+A2_material_1: episodes arming 2022-10-01..2023-01-31:
+   (none)
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> identical (same), wdiff -0
+
+A2_material_2: episodes arming 2022-10-01..2023-01-31:
+   (none)
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> identical (same), wdiff -0
+
+A2_material_3: episodes arming 2022-10-01..2023-01-31:
+   (none)
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> identical (same), wdiff -0
+
+A3_bands_a: episodes arming 2022-10-01..2023-01-31:
+ exit_date         loss  price_return     resolution resolution_date  blocked_sessions  min_gap_to_required
+2022-11-03 -1306.049284     -0.004924 recovery_reset      2023-02-15                43             0.015452
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> no entry (blocked), wdiff -28,006
+
+A3_bands_b: episodes arming 2022-10-01..2023-01-31:
+ exit_date         loss  price_return     resolution resolution_date  blocked_sessions  min_gap_to_required
+2022-11-03 -1306.049284     -0.004924 recovery_reset      2023-02-15                43             0.015452
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> no entry (blocked), wdiff -28,006
+
+A4_proportional_05: episodes arming 2022-10-01..2023-01-31:
+ exit_date         loss  price_return     resolution resolution_date  blocked_sessions  min_gap_to_required
+2022-11-03 -1221.881508     -0.007397 recovery_reset      2023-02-15                43            -0.005062
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> no entry (blocked), wdiff -28,006
+
+A4_proportional_10: episodes arming 2022-10-01..2023-01-31:
+ exit_date         loss  price_return     resolution resolution_date  blocked_sessions  min_gap_to_required
+2022-10-03 -7100.605217     -0.065883 recovery_reset      2023-02-15                66             0.038626
+   baseline Jan-Feb 2023 trades: 2023-01-04 +28,006 -> no entry (blocked), wdiff -28,006
+
+====================================================================================================
+3. STANDARD METRICS PER CONFIG/DATASET
+====================================================================================================
+
+VGT_2005_2015  (baseline net/mdd: 11,602/73,404)
+config                       net      mdd   p/dd  tr     W-L  blk reent rst fRst   vsBase     vsL3    mCtlP   mCtlDD     mL3P    mL3DD
+A0_net_loss               26,384   54,279   0.49  22   8-14   274     8   5    4  +14,782       +0  +19,130   +8,383       +0       +0
+A1_price_loss_only        32,115   54,279   0.59  22   8-14   272     8   4    3  +20,512   +5,731  +24,816   +8,104   +5,571     -329
+A2_material_05            28,363   54,279   0.52  24   8-16   269     6   3    2  +16,761   +1,979  +20,512   +4,612     -189   -4,459
+A2_material_1             28,363   54,279   0.52  24   8-16   269     6   3    2  +16,761   +1,979  +20,512   +4,612     -189   -4,459
+A2_material_2             52,098   54,279   0.96  32  11-21   171     5   0    0  +40,496  +25,714  +41,849  -10,563  +14,823  -22,406
+A2_material_3             54,192   52,185   1.04  38  11-27    82     4   0    0  +42,590  +27,808  +43,098  -18,005  +13,843  -30,824
+A3_bands_a                35,321   54,524   0.65  21   7-14   271     8   4    3  +23,718   +8,937  +28,008   +8,256   +8,724     -194
+A3_bands_b                28,363   54,279   0.52  24   8-16   269     7   4    3  +16,761   +1,979  +20,512   +4,612     -189   -4,459
+A4_proportional_05        16,594   50,051   0.33  28   7-21   170    10   4    2   +4,992   -9,790   +7,937   -4,716  -14,889  -14,719
+A4_proportional_10        18,327   52,279   0.35  25   7-18   229     9   4    2   +6,725   -8,057  +10,276   +1,345  -10,953   -7,958
+
+QQQ_1999_2015  (baseline net/mdd: -2,886/149,561)
+config                       net      mdd   p/dd  tr     W-L  blk reent rst fRst   vsBase     vsL3    mCtlP   mCtlDD     mL3P    mL3DD
+A0_net_loss               40,258   91,469   0.44  69  28-41   425    31  10    7  +43,144       +0  +41,968   +2,844       +0       +0
+A1_price_loss_only        51,812   93,720   0.55  74  30-44   375    30   7    4  +54,697  +11,553  +53,707   -4,507   +7,191   -7,659
+A2_material_05            51,812   93,720   0.55  74  30-44   375    29   7    4  +54,697  +11,553  +53,707   -4,507   +7,191   -7,659
+A2_material_1             67,162   78,370   0.86  77  31-46   337    27   6    4  +70,048  +26,904  +69,346  -34,803  +15,753  -38,435
+A2_material_2             70,082   77,187   0.91  81  33-48   314    24   4    3  +72,968  +29,824  +72,394  -42,627  +15,656  -46,473
+A2_material_3             46,133   95,369   0.48  82  33-49   309    21   3    2  +49,019   +5,875  +48,472  -25,854   -8,933  -29,745
+A3_bands_a                49,440   93,968   0.53  51  20-31   653    20   7    4  +52,326   +9,182  +51,012  +12,491  +12,429   +9,876
+A3_bands_b                50,609   94,923   0.53  74  30-44   372    29   8    5  +53,494  +10,350  +52,503   -3,268   +6,005   -6,419
+A4_proportional_05        36,559   61,673   0.59  76  30-46   351    31   6    4  +39,445   -3,699  +38,494  -38,576   -8,979  -41,794
+A4_proportional_10        41,083   62,303   0.66  62  23-39   516    24   6    4  +43,969     +825  +42,835  -28,488     -159  -31,402
+
+VGT_2016_2026  (baseline net/mdd: 161,772/38,323)
+config                       net      mdd   p/dd  tr     W-L  blk reent rst fRst   vsBase     vsL3    mCtlP   mCtlDD     mL3P    mL3DD
+A0_net_loss              182,094   28,687   6.35  32  13-19   138    15   4    2  +20,322       +0  +63,993     +710       +0       +0
+A1_price_loss_only       151,457   29,336   5.16  34  13-21   127    11   5    2  -10,315  -30,637  +35,753   +1,926  -26,942   +1,231
+A2_material_05           180,663   29,336   6.16  37  15-22    80    10   4    1  +18,890   -1,431  +46,319   -2,489  -26,477   -3,297
+A2_material_1            184,948   29,336   6.30  38  16-22    76    10   2    0  +23,175   +2,854  +38,953   -5,249  -40,155   -6,127
+A2_material_2            179,669   28,208   6.37  39  16-23    69     8   2    0  +17,897   -2,425  +32,476   -6,661  -47,281   -7,546
+A2_material_3            163,306   33,521   4.87  42  17-25    50     7   1    0   +1,533  -18,788  +12,451   -2,215  -69,290   -3,122
+A3_bands_a               154,541   29,336   5.27  33  13-20   132    12   5    2   -7,232  -27,554  +39,902   +2,179  -22,216   +1,490
+A3_bands_b               151,243   29,336   5.16  33  13-20   128    11   5    2  -10,529  -30,851  +36,205   +2,084  -26,129   +1,393
+A4_proportional_05       155,399   36,506   4.26  36  13-23   150    14   3    1   -6,374  -26,695  +24,849   +5,579  -45,890   +4,795
+A4_proportional_10       143,273   28,436   5.04  34  13-21   140    13   4    1  -18,499  -38,821  +17,317   -1,403  -50,933   -2,160
+
+QQQ_2016_2026  (baseline net/mdd: 116,388/39,237)
+config                       net      mdd   p/dd  tr     W-L  blk reent rst fRst   vsBase     vsL3    mCtlP   mCtlDD     mL3P    mL3DD
+A0_net_loss              132,242   23,564   5.61  27  13-14   111    10   4    1  +15,854       +0  +35,187   -9,155       +0       +0
+A1_price_loss_only       129,839   26,133   4.97  29  14-15    71     9   3    0  +13,451   -2,403  +29,589   -7,663   -6,755   +1,793
+A2_material_05           133,745   29,106   4.60  30  15-15    67     9   2    0  +17,357   +1,503  +30,637   -5,654   -6,743   +4,072
+A2_material_1            122,206   29,106   4.20  28  13-15   108     8   3    0   +5,817  -10,037  +24,926   -3,689  -10,342   +5,487
+A2_material_2            113,677   32,752   3.47  25  11-14   179     7   3    0   -2,711  -18,565  +22,841   +2,130  -10,090  +10,698
+A2_material_3            115,230   29,106   3.96  29  12-17   104     7   2    0   -1,158  -17,012  +16,157   -4,294  -19,761   +5,052
+A3_bands_a               129,370   26,133   4.95  26  13-13   129     8   3    0  +12,981   -2,873  +33,603   -6,152   -1,116   +2,881
+A3_bands_b               133,745   29,106   4.60  30  15-15    67     9   2    0  +17,357   +1,503  +30,637   -5,654   -6,743   +4,072
+A4_proportional_05        88,367   31,157   2.84  26  11-15   123     9   4    0  -28,022  -43,876   +3,359   +2,499  -27,460  +10,518
+A4_proportional_10        92,926   31,157   2.98  25  11-14   142     8   4    0  -23,463  -39,317   +9,263   +2,953  -21,069  +10,845
+
+====================================================================================================
+4. BEAR WINDOWS (pnl / in-window max DD / closed trades (losing) / largest loss)
+====================================================================================================
+
+VGT_2005_2015 2007-2009:
+   A0_net_loss            pnl    -6,198  dd   54,279  tr 10 ( 5)  worst  -20,604
+   A1_price_loss_only     pnl    -6,198  dd   54,279  tr 10 ( 5)  worst  -20,604
+   A2_material_05         pnl    -6,198  dd   54,279  tr 10 ( 5)  worst  -20,604
+   A2_material_1          pnl    -6,198  dd   54,279  tr 10 ( 5)  worst  -20,604
+   A2_material_2          pnl    -6,198  dd   54,279  tr 10 ( 5)  worst  -20,604
+   A2_material_3          pnl    -4,103  dd   52,185  tr 16 (11)  worst  -13,607
+   A3_bands_a             pnl    -2,991  dd   54,524  tr  9 ( 5)  worst  -20,604
+   A3_bands_b             pnl    -6,198  dd   54,279  tr 10 ( 5)  worst  -20,604
+   A4_proportional_05     pnl   -32,280  dd   50,051  tr 11 ( 8)  worst  -20,604
+   A4_proportional_10     pnl   -33,840  dd   52,279  tr  8 ( 5)  worst  -20,604
+
+QQQ_1999_2015 2000-2002:
+   A0_net_loss            pnl   -11,471  dd   61,251  tr 42 (23)  worst  -20,200
+   A1_price_loss_only     pnl   -17,559  dd   63,478  tr 45 (25)  worst  -20,200
+   A2_material_05         pnl   -17,559  dd   63,478  tr 45 (25)  worst  -20,200
+   A2_material_1          pnl   -17,559  dd   63,478  tr 45 (25)  worst  -20,200
+   A2_material_2          pnl   -16,377  dd   62,296  tr 46 (25)  worst  -20,200
+   A2_material_3          pnl   -28,773  dd   68,924  tr 45 (24)  worst  -20,200
+   A3_bands_a             pnl   -26,264  dd   86,848  tr 23 (14)  worst  -20,200
+   A3_bands_b             pnl   -17,559  dd   63,478  tr 45 (25)  worst  -20,200
+   A4_proportional_05     pnl    +5,865  dd   61,673  tr 43 (24)  worst  -20,200
+   A4_proportional_10     pnl    +9,243  dd   62,303  tr 31 (18)  worst  -20,200
+
+QQQ_1999_2015 2007-2009:
+   A0_net_loss            pnl   +45,281  dd   44,706  tr 10 ( 6)  worst  -13,229
+   A1_price_loss_only     pnl   +45,281  dd   44,706  tr 10 ( 6)  worst  -13,229
+   A2_material_05         pnl   +45,281  dd   44,706  tr 10 ( 6)  worst  -13,229
+   A2_material_1          pnl   +47,886  dd   44,706  tr 11 ( 6)  worst  -13,229
+   A2_material_2          pnl   +47,886  dd   44,706  tr 11 ( 6)  worst  -13,229
+   A2_material_3          pnl   +36,333  dd   56,259  tr 13 ( 8)  worst  -21,715
+   A3_bands_a             pnl   +51,849  dd   42,017  tr  8 ( 4)  worst  -13,229
+   A3_bands_b             pnl   +45,281  dd   44,706  tr 10 ( 6)  worst  -13,229
+   A4_proportional_05     pnl   -15,363  dd   42,017  tr  9 ( 4)  worst  -13,229
+   A4_proportional_10     pnl   -15,404  dd   42,058  tr  8 ( 4)  worst  -13,229
+
+VGT_2016_2026 2022:
+   A0_net_loss            pnl    -3,865  dd   20,570  tr  9 ( 7)  worst   -5,739
+   A1_price_loss_only     pnl    -3,865  dd   20,570  tr  9 ( 7)  worst   -5,739
+   A2_material_05         pnl      -165  dd   20,570  tr 10 ( 7)  worst   -5,739
+   A2_material_1          pnl      -165  dd   20,570  tr 10 ( 7)  worst   -5,739
+   A2_material_2          pnl    -3,356  dd   20,570  tr 10 ( 7)  worst   -5,739
+   A2_material_3          pnl   -10,887  dd   23,665  tr 11 ( 7)  worst   -7,208
+   A3_bands_a             pnl    -3,865  dd   20,570  tr  9 ( 7)  worst   -5,739
+   A3_bands_b             pnl    -3,865  dd   20,570  tr  9 ( 7)  worst   -5,739
+   A4_proportional_05     pnl   -24,187  dd   27,176  tr  8 ( 8)  worst  -10,794
+   A4_proportional_10     pnl   -13,317  dd   21,995  tr  8 ( 7)  worst   -7,101
+
+QQQ_2016_2026 2022:
+   A0_net_loss            pnl    -9,942  dd   21,397  tr  9 ( 7)  worst   -7,180
+   A1_price_loss_only     pnl    -9,636  dd   21,397  tr 10 ( 7)  worst   -7,180
+   A2_material_05         pnl    -9,636  dd   21,397  tr 10 ( 7)  worst   -7,180
+   A2_material_1          pnl   -13,537  dd   22,830  tr 10 ( 8)  worst   -7,098
+   A2_material_2          pnl   -22,066  dd   22,194  tr  7 ( 7)  worst   -6,349
+   A2_material_3          pnl   -17,705  dd   22,830  tr 10 ( 8)  worst   -7,098
+   A3_bands_a             pnl    -9,346  dd   21,397  tr  8 ( 6)  worst   -7,180
+   A3_bands_b             pnl    -9,636  dd   21,397  tr 10 ( 7)  worst   -7,180
+   A4_proportional_05     pnl   -15,245  dd   21,066  tr  9 ( 7)  worst   -7,098
+   A4_proportional_10     pnl   -10,687  dd   18,508  tr  8 ( 6)  worst   -7,098
+
+====================================================================================================
+5. RECOVERY WINDOWS pnl (ext. incl 2026)
+====================================================================================================
+
+VGT_2005_2015: config                      2009
+                A0_net_loss              +29,642
+                A1_price_loss_only       +29,642
+                A2_material_05           +29,642
+                A2_material_1            +29,642
+                A2_material_2            +29,642
+                A2_material_3            +29,642
+                A3_bands_a               +33,093
+                A3_bands_b               +29,642
+                A4_proportional_05            +0
+                A4_proportional_10            +0
+
+QQQ_1999_2015: config                      2003      2009
+                A0_net_loss                   +0   +65,938
+                A1_price_loss_only            +0   +65,938
+                A2_material_05                +0   +65,938
+                A2_material_1                 +0   +65,938
+                A2_material_2                 +0   +65,938
+                A2_material_3                 +0   +65,938
+                A3_bands_a                   -23   +69,817
+                A3_bands_b                    +0   +65,938
+                A4_proportional_05        -1,251        +0
+                A4_proportional_10           -63        +0
+
+VGT_2016_2026: config                      2020      2023      2025      2026
+                A0_net_loss              +55,455   +18,901   +42,023   +51,712
+                A1_price_loss_only       +55,455   +18,901   +42,023   +29,821
+                A2_material_05           +55,455   +44,468   +42,023   +29,821
+                A2_material_1            +55,455   +44,468   +42,023   +29,821
+                A2_material_2            +55,455   +44,468   +36,993   +29,821
+                A2_material_3            +48,081   +44,468   +39,671   +29,821
+                A3_bands_a               +55,455   +18,901   +42,023   +32,794
+                A3_bands_b               +55,455   +15,664   +42,023   +32,794
+                A4_proportional_05       +55,455   +16,723   +36,993   +29,821
+                A4_proportional_10       +55,455   +16,723   +36,993   +29,821
+
+QQQ_2016_2026: config                      2020      2023      2025      2026
+                A0_net_loss              +63,172   +17,473   +26,779   +32,918
+                A1_price_loss_only       +63,172   +18,232   +26,779   +32,918
+                A2_material_05           +63,172   +25,111   +26,779   +32,918
+                A2_material_1            +63,172   +17,473   +26,779   +32,918
+                A2_material_2            +63,172   +17,473   +26,779   +32,918
+                A2_material_3            +63,718   +17,473   +23,433   +32,918
+                A3_bands_a               +63,172   +17,473   +26,779   +32,918
+                A3_bands_b               +63,172   +25,111   +26,779   +32,918
+                A4_proportional_05       +63,172   +17,473    -3,301   +32,918
+                A4_proportional_10       +63,172   +17,473    -3,301   +32,918
+
+====================================================================================================
+6. MATCHING AGGREGATES (repeated losers; rebound winners; major winners >= $10k)
+====================================================================================================
+
+VGT_2005_2015:
+   A0_net_loss            repLosers n=23 bP&L   -59,751 vWin   -26,767 elim 13 | rebWin n=11 bP&L   +80,458 vWin   +43,149 elim 10 | maj n= 4 elim  3 later  0
+   A1_price_loss_only     repLosers n=23 bP&L   -59,751 vWin   -26,767 elim 13 | rebWin n=11 bP&L   +80,458 vWin   +48,879 elim  9 | maj n= 4 elim  3 later  0
+   A2_material_05         repLosers n=23 bP&L   -59,751 vWin   -30,249 elim 11 | rebWin n=11 bP&L   +80,458 vWin   +48,879 elim  9 | maj n= 4 elim  3 later  0
+   A2_material_1          repLosers n=23 bP&L   -59,751 vWin   -30,249 elim 11 | rebWin n=11 bP&L   +80,458 vWin   +48,879 elim  9 | maj n= 4 elim  3 later  0
+   A2_material_2          repLosers n=23 bP&L   -59,751 vWin   -36,291 elim  6 | rebWin n=11 bP&L   +80,458 vWin   +77,095 elim  6 | maj n= 4 elim  2 later  0
+   A2_material_3          repLosers n=23 bP&L   -59,751 vWin   -44,714 elim  2 | rebWin n=11 bP&L   +80,458 vWin   +87,096 elim  5 | maj n= 4 elim  2 later  0
+   A3_bands_a             repLosers n=23 bP&L   -59,751 vWin   -23,298 elim 13 | rebWin n=11 bP&L   +80,458 vWin   +49,558 elim 10 | maj n= 4 elim  3 later  0
+   A3_bands_b             repLosers n=23 bP&L   -59,751 vWin   -30,249 elim 11 | rebWin n=11 bP&L   +80,458 vWin   +48,879 elim  9 | maj n= 4 elim  3 later  0
+   A4_proportional_05     repLosers n=23 bP&L   -59,751 vWin   -41,037 elim  8 | rebWin n=11 bP&L   +80,458 vWin   +44,108 elim  9 | maj n= 4 elim  2 later  0
+   A4_proportional_10     repLosers n=23 bP&L   -59,751 vWin   -38,090 elim 10 | rebWin n=11 bP&L   +80,458 vWin   +43,586 elim  9 | maj n= 4 elim  2 later  0
+
+QQQ_1999_2015:
+   A0_net_loss            repLosers n=46 bP&L  -256,807 vWin  -134,136 elim 18 | rebWin n=24 bP&L  +249,946 vWin  +163,481 elim 16 | maj n=12 elim  6 later  0
+   A1_price_loss_only     repLosers n=46 bP&L  -256,807 vWin  -133,324 elim 15 | rebWin n=24 bP&L  +249,946 vWin  +182,989 elim 15 | maj n=12 elim  6 later  0
+   A2_material_05         repLosers n=46 bP&L  -256,807 vWin  -133,324 elim 15 | rebWin n=24 bP&L  +249,946 vWin  +182,989 elim 15 | maj n=12 elim  6 later  0
+   A2_material_1          repLosers n=46 bP&L  -256,807 vWin  -134,887 elim 13 | rebWin n=24 bP&L  +249,946 vWin  +198,194 elim 14 | maj n=12 elim  5 later  0
+   A2_material_2          repLosers n=46 bP&L  -256,807 vWin  -137,688 elim 11 | rebWin n=24 bP&L  +249,946 vWin  +200,403 elim 12 | maj n=12 elim  4 later  0
+   A2_material_3          repLosers n=46 bP&L  -256,807 vWin  -145,735 elim  9 | rebWin n=24 bP&L  +249,946 vWin  +188,208 elim 12 | maj n=12 elim  4 later  0
+   A3_bands_a             repLosers n=46 bP&L  -256,807 vWin  -113,640 elim 25 | rebWin n=24 bP&L  +249,946 vWin  +152,014 elim 16 | maj n=12 elim  8 later  0
+   A3_bands_b             repLosers n=46 bP&L  -256,807 vWin  -133,456 elim 15 | rebWin n=24 bP&L  +249,946 vWin  +182,397 elim 15 | maj n=12 elim  6 later  0
+   A4_proportional_05     repLosers n=46 bP&L  -256,807 vWin  -120,155 elim 17 | rebWin n=24 bP&L  +249,946 vWin  +163,252 elim 12 | maj n=12 elim  5 later  1
+   A4_proportional_10     repLosers n=46 bP&L  -256,807 vWin  -102,713 elim 23 | rebWin n=24 bP&L  +249,946 vWin  +151,917 elim 13 | maj n=12 elim  5 later  1
+
+VGT_2016_2026:
+   A0_net_loss            repLosers n=16 bP&L   -55,243 vWin    -1,732 elim  4 | rebWin n=11 bP&L  +177,778 vWin  +132,045 elim  8 | maj n= 8 elim  4 later  3
+   A1_price_loss_only     repLosers n=16 bP&L   -55,243 vWin   -13,922 elim  3 | rebWin n=11 bP&L  +177,778 vWin  +130,168 elim  8 | maj n= 8 elim  4 later  2
+   A2_material_05         repLosers n=16 bP&L   -55,243 vWin   -13,922 elim  2 | rebWin n=11 bP&L  +177,778 vWin  +158,125 elim  7 | maj n= 8 elim  3 later  1
+   A2_material_1          repLosers n=16 bP&L   -55,243 vWin   -13,922 elim  2 | rebWin n=11 bP&L  +177,778 vWin  +162,410 elim  6 | maj n= 8 elim  3 later  1
+   A2_material_2          repLosers n=16 bP&L   -55,243 vWin   -24,653 elim  1 | rebWin n=11 bP&L  +177,778 vWin  +161,815 elim  6 | maj n= 8 elim  3 later  1
+   A2_material_3          repLosers n=16 bP&L   -55,243 vWin   -38,336 elim  0 | rebWin n=11 bP&L  +177,778 vWin  +162,164 elim  3 | maj n= 8 elim  1 later  0
+   A3_bands_a             repLosers n=16 bP&L   -55,243 vWin   -13,812 elim  4 | rebWin n=11 bP&L  +177,778 vWin  +133,140 elim  8 | maj n= 8 elim  4 later  3
+   A3_bands_b             repLosers n=16 bP&L   -55,243 vWin   -13,812 elim  4 | rebWin n=11 bP&L  +177,778 vWin  +129,843 elim  8 | maj n= 8 elim  4 later  2
+   A4_proportional_05     repLosers n=16 bP&L   -55,243 vWin   -37,276 elim  1 | rebWin n=11 bP&L  +177,778 vWin  +145,082 elim  7 | maj n= 8 elim  3 later  3
+   A4_proportional_10     repLosers n=16 bP&L   -55,243 vWin   -22,794 elim  4 | rebWin n=11 bP&L  +177,778 vWin  +134,751 elim  7 | maj n= 8 elim  4 later  2
+
+QQQ_2016_2026:
+   A0_net_loss            repLosers n=12 bP&L   -52,065 vWin    -7,787 elim  2 | rebWin n= 8 bP&L   +71,920 vWin   +48,503 elim  5 | maj n= 7 elim  2 later  1
+   A1_price_loss_only     repLosers n=12 bP&L   -52,065 vWin   -10,106 elim  2 | rebWin n= 8 bP&L   +71,920 vWin   +49,421 elim  4 | maj n= 7 elim  2 later  1
+   A2_material_05         repLosers n=12 bP&L   -52,065 vWin   -16,603 elim  2 | rebWin n= 8 bP&L   +71,920 vWin   +56,294 elim  3 | maj n= 7 elim  2 later  1
+   A2_material_1          repLosers n=12 bP&L   -52,065 vWin   -19,736 elim  1 | rebWin n= 8 bP&L   +71,920 vWin   +47,490 elim  5 | maj n= 7 elim  2 later  1
+   A2_material_2          repLosers n=12 bP&L   -52,065 vWin   -25,859 elim  2 | rebWin n= 8 bP&L   +71,920 vWin   +35,279 elim  6 | maj n= 7 elim  2 later  1
+   A2_material_3          repLosers n=12 bP&L   -52,065 vWin   -38,817 elim  1 | rebWin n= 8 bP&L   +71,920 vWin   +54,412 elim  4 | maj n= 7 elim  1 later  1
+   A3_bands_a             repLosers n=12 bP&L   -52,065 vWin    -8,729 elim  3 | rebWin n= 8 bP&L   +71,920 vWin   +47,496 elim  5 | maj n= 7 elim  2 later  1
+   A3_bands_b             repLosers n=12 bP&L   -52,065 vWin   -16,603 elim  2 | rebWin n= 8 bP&L   +71,920 vWin   +56,294 elim  3 | maj n= 7 elim  2 later  1
+   A4_proportional_05     repLosers n=12 bP&L   -52,065 vWin   -26,204 elim  2 | rebWin n= 8 bP&L   +71,920 vWin   +24,924 elim  6 | maj n= 7 elim  3 later  0
+   A4_proportional_10     repLosers n=12 bP&L   -52,065 vWin   -20,854 elim  3 | rebWin n= 8 bP&L   +71,920 vWin   +24,924 elim  6 | maj n= 7 elim  3 later  0
+
+====================================================================================================
+7. TRIGGERS DECLINED (losses that did NOT arm) AND EPISODE COUNTS
+====================================================================================================
+
+VGT_2005_2015:
+   A0_net_loss            armed  14  declined   0  byRes {'lower_price_reentry': 8, 'recovery_reset': 5, 'unresolved_at_end': 1}  near-miss majors: [{'b_entry_date': '2010-08-31', 'b_profit': 18140.915147218228, 'min_gap': 0.009794292251249503}, {'b_entry_date': '2012-06-04', 'b_profit': 3001.1496509221215, 'min_gap': 0.0191444936180607}, {'b_entry_date': '2015-09-28', 'b_profit': 5730.668502684606, 'min_gap': 0.008070434602341692}]
+   A1_price_loss_only     armed  12  declined   2  byRes {'lower_price_reentry': 8, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2010-08-31', 'b_profit': 18140.915147218228, 'min_gap': 0.009794292251249503}, {'b_entry_date': '2012-06-04', 'b_profit': 3001.1496509221215, 'min_gap': 0.0191444936180607}]
+   A2_material_05         armed   9  declined   7  byRes {'lower_price_reentry': 6, 'recovery_reset': 3}  near-miss majors: [{'b_entry_date': '2010-08-31', 'b_profit': 18140.915147218228, 'min_gap': 0.009794292251249503}, {'b_entry_date': '2012-06-04', 'b_profit': 3001.1496509221215, 'min_gap': 0.0191444936180607}]
+   A2_material_1          armed   9  declined   7  byRes {'lower_price_reentry': 6, 'recovery_reset': 3}  near-miss majors: [{'b_entry_date': '2010-08-31', 'b_profit': 18140.915147218228, 'min_gap': 0.009794292251249503}, {'b_entry_date': '2012-06-04', 'b_profit': 3001.1496509221215, 'min_gap': 0.0191444936180607}]
+   A2_material_2          armed   5  declined  16  byRes {'lower_price_reentry': 5}  near-miss majors: []
+   A2_material_3          armed   4  declined  23  byRes {'lower_price_reentry': 4}  near-miss majors: []
+   A3_bands_a             armed  12  declined   2  byRes {'lower_price_reentry': 8, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2010-08-31', 'b_profit': 18140.915147218228, 'min_gap': 0.009794292251249503}, {'b_entry_date': '2012-06-04', 'b_profit': 3001.1496509221215, 'min_gap': 0.0191444936180607}]
+   A3_bands_b             armed  11  declined   5  byRes {'lower_price_reentry': 7, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2010-08-31', 'b_profit': 18140.915147218228, 'min_gap': 0.009794292251249503}, {'b_entry_date': '2012-06-04', 'b_profit': 3001.1496509221215, 'min_gap': 0.0191444936180607}]
+   A4_proportional_05     armed  14  declined   7  byRes {'lower_price_reentry': 10, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2008-12-24', 'b_profit': 2074.656012717553, 'min_gap': 0.008232132178427332}, {'b_entry_date': '2009-03-11', 'b_profit': 21724.53025452213, 'min_gap': 0.008232132178427332}, {'b_entry_date': '2011-10-03', 'b_profit': 7073.403166197055, 'min_gap': 0.01962202079625608}]
+   A4_proportional_10     armed  13  declined   5  byRes {'lower_price_reentry': 9, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2012-06-04', 'b_profit': 3001.1496509221215, 'min_gap': 0.0038014253856810676}]
+
+QQQ_1999_2015:
+   A0_net_loss            armed  41  declined   0  byRes {'lower_price_reentry': 31, 'recovery_reset': 10}  near-miss majors: [{'b_entry_date': '2002-12-30', 'b_profit': 2051.4202494958813, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2003-03-06', 'b_profit': 18418.547270659958, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.015508273652895754}, {'b_entry_date': '2010-08-26', 'b_profit': 19220.704464923132, 'min_gap': 0.018789501989457058}, {'b_entry_date': '2011-08-23', 'b_profit': 206.33985281082118, 'min_gap': 0.010791412899695318}, {'b_entry_date': '2011-09-30', 'b_profit': 2184.244726415751, 'min_gap': 0.010791412899695318}]
+   A1_price_loss_only     armed  37  declined   7  byRes {'lower_price_reentry': 30, 'recovery_reset': 7}  near-miss majors: [{'b_entry_date': '2002-12-30', 'b_profit': 2051.4202494958813, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2003-03-06', 'b_profit': 18418.547270659958, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.015508273652895754}, {'b_entry_date': '2011-08-23', 'b_profit': 206.33985281082118, 'min_gap': 0.010791412899695318}, {'b_entry_date': '2011-09-30', 'b_profit': 2184.244726415751, 'min_gap': 0.010791412899695318}]
+   A2_material_05         armed  36  declined   8  byRes {'lower_price_reentry': 29, 'recovery_reset': 7}  near-miss majors: [{'b_entry_date': '2002-12-30', 'b_profit': 2051.4202494958813, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2003-03-06', 'b_profit': 18418.547270659958, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.015508273652895754}, {'b_entry_date': '2011-08-23', 'b_profit': 206.33985281082118, 'min_gap': 0.010791412899695318}, {'b_entry_date': '2011-09-30', 'b_profit': 2184.244726415751, 'min_gap': 0.010791412899695318}]
+   A2_material_1          armed  33  declined  13  byRes {'lower_price_reentry': 27, 'recovery_reset': 6}  near-miss majors: [{'b_entry_date': '2002-12-30', 'b_profit': 2051.4202494958813, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2003-03-06', 'b_profit': 18418.547270659958, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.015508273652895754}, {'b_entry_date': '2011-08-23', 'b_profit': 206.33985281082118, 'min_gap': 0.010791412899695318}, {'b_entry_date': '2011-09-30', 'b_profit': 2184.244726415751, 'min_gap': 0.010791412899695318}]
+   A2_material_2          armed  28  declined  20  byRes {'lower_price_reentry': 24, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2002-12-30', 'b_profit': 2051.4202494958813, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2003-03-06', 'b_profit': 18418.547270659958, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.015508273652895754}, {'b_entry_date': '2011-08-23', 'b_profit': 206.33985281082118, 'min_gap': 0.010791412899695318}, {'b_entry_date': '2011-09-30', 'b_profit': 2184.244726415751, 'min_gap': 0.010791412899695318}]
+   A2_material_3          armed  24  declined  25  byRes {'lower_price_reentry': 21, 'recovery_reset': 3}  near-miss majors: [{'b_entry_date': '2002-12-30', 'b_profit': 2051.4202494958813, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2003-03-06', 'b_profit': 18418.547270659958, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.015508273652895754}, {'b_entry_date': '2011-08-23', 'b_profit': 206.33985281082118, 'min_gap': 0.010791412899695318}, {'b_entry_date': '2011-09-30', 'b_profit': 2184.244726415751, 'min_gap': 0.010791412899695318}]
+   A3_bands_a             armed  27  declined   4  byRes {'lower_price_reentry': 20, 'recovery_reset': 7}  near-miss majors: [{'b_entry_date': '2003-03-06', 'b_profit': 18418.547270659958, 'min_gap': 0.008325269852790695}, {'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.015508273652895754}]
+   A3_bands_b             armed  37  declined   7  byRes {'lower_price_reentry': 29, 'recovery_reset': 8}  near-miss majors: [{'b_entry_date': '2002-12-30', 'b_profit': 2051.4202494958813, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2003-03-06', 'b_profit': 18418.547270659958, 'min_gap': 0.01994086708287579}, {'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.015508273652895754}, {'b_entry_date': '2011-08-23', 'b_profit': 206.33985281082118, 'min_gap': 0.010791412899695318}, {'b_entry_date': '2011-09-30', 'b_profit': 2184.244726415751, 'min_gap': 0.010791412899695318}]
+   A4_proportional_05     armed  37  declined   9  byRes {'lower_price_reentry': 31, 'recovery_reset': 6}  near-miss majors: [{'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.0010530959553403108}, {'b_entry_date': '2008-12-02', 'b_profit': 3412.4493167048367, 'min_gap': 0.011211365594527178}, {'b_entry_date': '2009-03-09', 'b_profit': 57831.52417320155, 'min_gap': 0.011211365594527178}, {'b_entry_date': '2011-08-23', 'b_profit': 206.33985281082118, 'min_gap': 0.004933763109335576}, {'b_entry_date': '2011-09-30', 'b_profit': 2184.244726415751, 'min_gap': 0.004933763109335576}, {'b_entry_date': '2012-06-04', 'b_profit': 2822.721561362302, 'min_gap': 0.0008763093041803671}]
+   A4_proportional_10     armed  30  declined   9  byRes {'lower_price_reentry': 24, 'recovery_reset': 6}  near-miss majors: [{'b_entry_date': '2003-03-06', 'b_profit': 18418.547270659958, 'min_gap': 0.006104646292558913}, {'b_entry_date': '2004-08-11', 'b_profit': 8793.01152376158, 'min_gap': 0.017592193589712313}, {'b_entry_date': '2012-06-04', 'b_profit': 2822.721561362302, 'min_gap': 0.0013169162455151096}]
+
+VGT_2016_2026:
+   A0_net_loss            armed  19  declined   0  byRes {'lower_price_reentry': 15, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2022-11-07', 'b_profit': 3184.6731045073925, 'min_gap': 0.015451781569252976}, {'b_entry_date': '2023-01-04', 'b_profit': 28005.771463007262, 'min_gap': 0.015451781569252976}, {'b_entry_date': '2024-09-05', 'b_profit': 4284.996637184741, 'min_gap': 0.011893168381123642}]
+   A1_price_loss_only     armed  16  declined   5  byRes {'lower_price_reentry': 11, 'recovery_reset': 5}  near-miss majors: [{'b_entry_date': '2022-11-07', 'b_profit': 3184.6731045073925, 'min_gap': 0.015451781569252976}, {'b_entry_date': '2023-01-04', 'b_profit': 28005.771463007262, 'min_gap': 0.015451781569252976}, {'b_entry_date': '2024-09-05', 'b_profit': 4284.996637184741, 'min_gap': 0.011893168381123642}]
+   A2_material_05         armed  14  declined   8  byRes {'lower_price_reentry': 10, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2024-09-05', 'b_profit': 4284.996637184741, 'min_gap': 0.011893168381123642}]
+   A2_material_1          armed  12  declined  10  byRes {'lower_price_reentry': 10, 'recovery_reset': 2}  near-miss majors: []
+   A2_material_2          armed  10  declined  13  byRes {'lower_price_reentry': 8, 'recovery_reset': 2}  near-miss majors: []
+   A2_material_3          armed   8  declined  17  byRes {'lower_price_reentry': 7, 'recovery_reset': 1}  near-miss majors: []
+   A3_bands_a             armed  17  declined   3  byRes {'lower_price_reentry': 12, 'recovery_reset': 5}  near-miss majors: [{'b_entry_date': '2022-11-07', 'b_profit': 3184.6731045073925, 'min_gap': 0.015451781569252976}, {'b_entry_date': '2023-01-04', 'b_profit': 28005.771463007262, 'min_gap': 0.015451781569252976}, {'b_entry_date': '2024-09-05', 'b_profit': 4284.996637184741, 'min_gap': 0.011893168381123642}]
+   A3_bands_b             armed  16  declined   4  byRes {'lower_price_reentry': 11, 'recovery_reset': 5}  near-miss majors: [{'b_entry_date': '2022-11-07', 'b_profit': 3184.6731045073925, 'min_gap': 0.015451781569252976}, {'b_entry_date': '2023-01-04', 'b_profit': 28005.771463007262, 'min_gap': 0.015451781569252976}, {'b_entry_date': '2024-09-05', 'b_profit': 4284.996637184741, 'min_gap': 0.011893168381123642}]
+   A4_proportional_05     armed  17  declined   6  byRes {'lower_price_reentry': 14, 'recovery_reset': 3}  near-miss majors: []
+   A4_proportional_10     armed  17  declined   4  byRes {'lower_price_reentry': 13, 'recovery_reset': 4}  near-miss majors: []
+
+QQQ_2016_2026:
+   A0_net_loss            armed  14  declined   0  byRes {'lower_price_reentry': 10, 'recovery_reset': 4}  near-miss majors: []
+   A1_price_loss_only     armed  12  declined   3  byRes {'lower_price_reentry': 9, 'recovery_reset': 3}  near-miss majors: [{'b_entry_date': '2023-01-04', 'b_profit': 6879.082339948977, 'min_gap': 0.0037866880143822}]
+   A2_material_05         armed  11  declined   4  byRes {'lower_price_reentry': 9, 'recovery_reset': 2}  near-miss majors: []
+   A2_material_1          armed  11  declined   4  byRes {'lower_price_reentry': 8, 'recovery_reset': 3}  near-miss majors: []
+   A2_material_2          armed  10  declined   4  byRes {'lower_price_reentry': 7, 'recovery_reset': 3}  near-miss majors: []
+   A2_material_3          armed   9  declined   8  byRes {'lower_price_reentry': 7, 'recovery_reset': 2}  near-miss majors: []
+   A3_bands_a             armed  11  declined   2  byRes {'lower_price_reentry': 8, 'recovery_reset': 3}  near-miss majors: [{'b_entry_date': '2022-11-04', 'b_profit': 1924.9728958204541, 'min_gap': 0.011699875487889644}, {'b_entry_date': '2023-01-04', 'b_profit': 6879.082339948977, 'min_gap': 0.011699875487889644}]
+   A3_bands_b             armed  11  declined   4  byRes {'lower_price_reentry': 9, 'recovery_reset': 2}  near-miss majors: []
+   A4_proportional_05     armed  13  declined   2  byRes {'lower_price_reentry': 9, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2022-11-04', 'b_profit': 1924.9728958204541, 'min_gap': 0.00043286140121390204}, {'b_entry_date': '2023-01-04', 'b_profit': 6879.082339948977, 'min_gap': 0.00043286140121390204}]
+   A4_proportional_10     armed  12  declined   2  byRes {'lower_price_reentry': 8, 'recovery_reset': 4}  near-miss majors: [{'b_entry_date': '2022-11-04', 'b_profit': 1924.9728958204541, 'min_gap': 0.011503059172601304}, {'b_entry_date': '2023-01-04', 'b_profit': 6879.082339948977, 'min_gap': 0.011503059172601304}]
