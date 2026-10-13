@@ -1,4 +1,9 @@
-"""Phase 1 regression test: the production TypeScript allIn.ts vs the frozen Python research results.
+"""SUPERSEDED (2026-10-12): this test targeted the earlier allIn.ts CLI with selectable `baseline`/`lower3`
+strategies. allIn.ts now contains one strategy (0.5% material-loss trigger + 3% + 38% retracement reset); its
+regression test is research/risk-management/material-retrace-implementation/regression_test.py. Kept as the
+historical record of the Phase 1 verification (PHASE1_VERIFICATION.md); it no longer runs against current code.
+
+Phase 1 regression test: the production TypeScript allIn.ts vs the frozen Python research results.
 
 For every dataset x strategy it runs the TS implementation with machine-readable outputs and compares,
 at full stored precision:
