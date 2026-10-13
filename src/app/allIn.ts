@@ -15,18 +15,19 @@
 //   interest through that day, which slightly overstates interest for sales early in the session.
 // - Prices are used as given in the CSV. Dividends aren't modeled beyond any adjustment in the data.
 //
-// Strategies (selected by the fourth argument; the state machine was validated trade for trade against
-// the research implementation in research/risk-management/lower-price-reentry):
-// - 'baseline': the original rules above, unchanged.
-// - 'lower3' (default): after a trade closes at a net loss (interest included), the strategy is
-//   RESTRICTED_AFTER_LOSS. It freezes the losing exit's actual execution price and the 90-session
-//   reference high used by the losing trade's entry signal. While restricted, a new entry needs the
-//   original 10% signal AND a close at or below 97% of the frozen loss-exit price. The restriction
-//   clears when a new position opens, or when a close reaches 95% of the frozen reference high
-//   (recovery reset, evaluated at every close while restricted and flat, including the exit session
-//   itself; a reset never buys by itself — on a session whose close qualifies as a reset, the reset
-//   takes priority and entries resume from the next session). Profitable exits leave the strategy
-//   unrestricted.
+// Re-entry after a losing trade (validated trade for trade against the research implementation in
+// research/risk-management/adaptive-reentry, configuration A2_material_05 + 3% + C6_retrace_38):
+// - A trade whose ETF price return (exit price / entry price - 1, interest excluded) is at most -0.5%
+//   makes the strategy RESTRICTED_AFTER_LOSS. A smaller price loss, or a loss caused only by interest,
+//   leaves normal entry eligibility in place.
+// - The restriction freezes the losing exit's actual execution price and the 90-session reference high
+//   used by the losing trade's entry signal, and tracks the lowest close since the exit session.
+// - While restricted, a new entry needs the original 10% signal AND a close at or below 97% of the
+//   frozen loss-exit price. The restriction clears when a new position opens, or when a close recovers
+//   38% of the decline from the frozen reference high to the episode low (recovery reset, evaluated at
+//   every close while restricted and flat, including the exit session itself). A reset never buys by
+//   itself: on a session whose close qualifies as a reset, the reset takes priority and entries resume
+//   from the next session.
 
 import type { BacktestPosition, Tick } from '#types';
 import { PositionType } from '#types';
@@ -92,60 +93,56 @@ export const evaluateSessionExit = ({
   return undefined;
 };
 
-export type StrategyName = 'baseline' | 'lower3';
-
-// The two mechanisms are independently selectable; the named strategies are fixed, verified bundles.
-interface StrategyOptions {
-  // Extra decline below the frozen loss-exit price required to re-enter after a losing trade (0.03 = 3%).
-  lowerPriceReentry?: number;
-  // Fraction of the frozen entry reference high whose recovery clears the restriction (0.95 = within 5%).
-  recoveryReset?: number;
-}
-
-const strategies: Record<StrategyName, StrategyOptions> = {
-  baseline: {},
-  lower3: { lowerPriceReentry: 0.03, recoveryReset: 0.95 }
-};
-
-// The reentry restriction, frozen when a losing trade exits and never updated while it lasts.
+// The re-entry restriction, frozen when a materially losing trade exits. Only the episode low moves.
 interface Restriction {
   lossExitPrice: number;
   referenceHigh: number;
   lowerLevel: number; // lossExitPrice * (1 - lowerPriceReentry)
-  resetLevel: number; // referenceHigh * recoveryReset
+  episodeLow: number; // lowest close since the exit session, inclusive
 }
+
+type State = 'NORMAL' | 'RESTRICTED';
 
 interface StateLogRow {
   index: number;
   date: string;
-  prevState: 'NORMAL' | 'RESTRICTED';
-  newState: 'NORMAL' | 'RESTRICTED';
+  prevState: State;
+  newState: State;
   reason: string;
   exitReason: string;
   tradeProfit: number | '';
+  priceReturn: number | '';
   lossExitPrice: number | '';
   refHigh: number | '';
   lowerLevel: number | '';
+  episodeLow: number | '';
   resetLevel: number | '';
   close: number;
   signal: boolean;
   entryExecuted: boolean;
 }
 
-// Run with `npm run app allIn [symbol] [start date] [end date] [strategy] [data file] [output dir]`, for
-// example `npm run app allIn QQQ 2016-10-07 2026-10-06 baseline data/QQQ/QQQ-2016-2026.csv`. The symbol
-// defaults to VGT, the inclusive YYYY-MM-DD dates default to the whole data file, the strategy defaults
-// to 'lower3' (the original rules are 'baseline'), and the data file defaults to the symbol's 2016-2026
-// file. Pass '-' to leave an earlier argument at its default. When an output directory is given, the run
-// also writes trades.csv, daily.csv, states.csv and summary.json there at full precision.
-export default async (
-  symbol = 'VGT',
-  startDate?: string,
-  endDate?: string,
-  strategyName: string = 'lower3',
-  dataFile?: string,
-  outDir?: string
-) => {
+interface Episode {
+  exitIndex: number;
+  exitDate: string;
+  exitReason: ExitReason;
+  loss: number;
+  priceReturn: number;
+  lossExitPrice: number;
+  losingEntryPrice: number;
+  referenceHigh: number;
+  episodeLow: number;
+  resolution: 'lower_price_reentry' | 'recovery_reset' | 'unresolved_at_end' | '';
+  resolutionDate: string;
+}
+
+// Run with `npm run app allIn [symbol] [start date] [end date] [data file] [output dir]`, for example
+// `npm run app allIn VGT 2016-10-07 2025-12-31 data/VGT/VGT-2016-2026.csv`. The symbol defaults to VGT,
+// the inclusive YYYY-MM-DD dates default to the whole data file, and the data file defaults to the
+// symbol's 2016-2026 file. Pass '-' to leave an earlier argument at its default. When an output directory
+// is given, the run also writes trades.csv, daily.csv, states.csv, episodes.csv and summary.json there at
+// full precision.
+export default async (symbol = 'VGT', startDate?: string, endDate?: string, dataFile?: string, outDir?: string) => {
   const optional = (value?: string) => (value === '-' || value === '' ? undefined : value);
   const startTimestamp = optional(startDate) ? Date.parse(startDate!) / 1000 : -Infinity;
   const endTimestamp = optional(endDate) ? Date.parse(endDate!) / 1000 : Infinity;
@@ -154,13 +151,7 @@ export default async (
     throw new Error('Start and end dates must be YYYY-MM-DD');
   }
 
-  const strategyKey = (optional(strategyName) ?? 'lower3') as StrategyName;
-  const strategy = strategies[strategyKey];
-
-  if (!strategy) {
-    throw new Error(`Unknown strategy '${strategyName}' (expected ${Object.keys(strategies).join(' or ')})`);
-  }
-
+  const strategyName = 'lower3';
   const file = optional(dataFile) ?? `data/${symbol}/${symbol}-2016-2026.csv`;
   const allTicks = await loadCsvBacktestData(symbol, file);
   const ticks = allTicks.filter((tick) => tick.time >= startTimestamp && tick.time <= endTimestamp);
@@ -171,6 +162,9 @@ export default async (
   const trailingStopPercentage = 0.08; //  drop from the post-entry high
   const maximumHoldDays = 15; // days before a losing position is sold
   const marginInterestRate = 0.11; // annual interest charged by Vanguard on margin
+  const materialLossThreshold = 0.005; // price loss that makes the next entry wait for a lower price
+  const lowerPriceReentry = 0.03; // extra decline below the frozen loss-exit price required to re-enter
+  const retraceFraction = 0.38; // recovery of the reference-high-to-episode-low decline that clears it
   let postEntryHigh = 0;
   let postEntryLow = 0;
   let stopPrice = 0;
@@ -181,10 +175,12 @@ export default async (
   let drawdownPeakTimestamp = peakTimestamp;
   let drawdownTroughTimestamp = peakTimestamp;
 
-  // Reentry state machine ('lower3'). The reference high of the open position's entry signal is kept so
-  // that a losing exit can freeze it; it is exactly the `recentHigh` of the entry session.
+  // Re-entry state. The reference high of the open position's entry signal is kept so that a losing
+  // exit can freeze it; it is exactly the `recentHigh` of the entry session.
   let restriction: Restriction | undefined;
+  let episode: Episode | undefined;
   let entryReferenceHigh = 0;
+  const episodes: Episode[] = [];
   const stateLog: StateLogRow[] = [];
   const entryIndexes = new Map<BacktestPosition, number>();
   const exitIndexes = new Map<BacktestPosition, number>();
@@ -230,16 +226,22 @@ export default async (
   const calculateUnrealizedProfit = (position: BacktestPosition, tick: Tick) =>
     position.shares * tick.close - position.investment - calculateInterest(position, tick.time);
 
+  // The close that clears the restriction: 38% of the way back from the episode low to the frozen
+  // reference high. It falls as the episode low falls and is never computed from future prices.
+  const resetLevelOf = (current: Restriction) =>
+    current.episodeLow + retraceFraction * (current.referenceHigh - current.episodeLow);
+
   const logState = (
     index: number,
     tick: Tick,
-    prevState: 'NORMAL' | 'RESTRICTED',
-    newState: 'NORMAL' | 'RESTRICTED',
+    prevState: State,
+    newState: State,
     reason: string,
     signal: boolean,
     entryExecuted: boolean,
     exitReason = '',
-    tradeProfit: number | '' = ''
+    tradeProfit: number | '' = '',
+    priceReturn: number | '' = ''
   ) => {
     stateLog.push({
       index,
@@ -249,10 +251,12 @@ export default async (
       reason,
       exitReason,
       tradeProfit,
+      priceReturn,
       lossExitPrice: restriction?.lossExitPrice ?? '',
       refHigh: restriction?.referenceHigh ?? '',
       lowerLevel: restriction?.lowerLevel ?? '',
-      resetLevel: restriction?.resetLevel ?? '',
+      episodeLow: restriction?.episodeLow ?? '',
+      resetLevel: restriction ? resetLevelOf(restriction) : '',
       close: tick.close,
       signal,
       entryExecuted
@@ -275,11 +279,13 @@ export default async (
     let buy = openPositions.length === 0 && signal;
     let entryBlocked = false;
 
-    // While restricted, an entry additionally needs a close at or below the frozen lower level. A close
-    // at or above the frozen reset level takes the recovery-reset path instead (applied at the end of
-    // the session), so it never buys on the same session.
+    // While restricted, today's close first extends the episode low, then: a close at or above the reset
+    // level takes the recovery-reset path (applied at the end of the session, never a purchase);
+    // otherwise an entry additionally needs a close at or below the frozen lower level.
     if (buy && restriction) {
-      if (tick.close >= restriction.resetLevel || tick.close > restriction.lowerLevel) {
+      restriction.episodeLow = Math.min(restriction.episodeLow, tick.close);
+
+      if (tick.close >= resetLevelOf(restriction) || tick.close > restriction.lowerLevel) {
         buy = false;
         entryBlocked = true;
       }
@@ -311,7 +317,7 @@ export default async (
 
       if (restriction) {
         console.info(
-          `Lower-price reentry: close ${formatPrice(tick.close)} is at least ${formatPercent(strategy.lowerPriceReentry ?? 0)} below the loss exit at ${formatPrice(restriction.lossExitPrice)}`
+          `Lower-price reentry: close ${formatPrice(tick.close)} is at least ${formatPercent(lowerPriceReentry)} below the loss exit at ${formatPrice(restriction.lossExitPrice)}`
         );
       }
     }
@@ -352,23 +358,76 @@ export default async (
         console.info(`Held for ${formatMonths(monthsHeld)} months`);
         console.info(`Lowest low: ${formatPrice(lowestLow)} (${formatPercent(dropToLowestLow)} below entry)\n`);
 
-        // A losing exit (net of interest) freezes the restriction; a profitable exit leaves the
-        // strategy unrestricted. The frozen reference high is the entry signal's, not today's.
-        if (strategy.lowerPriceReentry !== undefined) {
-          if (position.profit < 0) {
-            restriction = {
-              lossExitPrice: exit.price,
-              referenceHigh: entryReferenceHigh,
-              lowerLevel: exit.price * (1 - strategy.lowerPriceReentry),
-              resetLevel: entryReferenceHigh * (strategy.recoveryReset ?? Infinity)
-            };
-            logState(index, tick, 'NORMAL', 'RESTRICTED', 'losing_exit', signal, false, exit.reason, position.profit);
-            console.info(
-              `Restricted after loss: reentry needs a close at or below ${formatPrice(restriction.lowerLevel)}, reset at or above ${formatPrice(restriction.resetLevel)}\n`
-            );
-          } else {
-            logState(index, tick, 'NORMAL', 'NORMAL', 'profitable_exit', signal, false, exit.reason, position.profit);
-          }
+        // A material price loss (interest excluded) freezes the restriction. A smaller loss, including
+        // one caused only by interest, and any profit leave the strategy unrestricted. The frozen
+        // reference high is the entry signal's, not today's; the episode low starts at today's close.
+        const priceReturn = exit.price / position.entryPrice - 1;
+
+        if (priceReturn <= -materialLossThreshold) {
+          restriction = {
+            lossExitPrice: exit.price,
+            referenceHigh: entryReferenceHigh,
+            lowerLevel: exit.price * (1 - lowerPriceReentry),
+            episodeLow: tick.close
+          };
+          episode = {
+            exitIndex: index,
+            exitDate: formatDate(tick.time),
+            exitReason: exit.reason,
+            loss: position.profit,
+            priceReturn,
+            lossExitPrice: exit.price,
+            losingEntryPrice: position.entryPrice,
+            referenceHigh: entryReferenceHigh,
+            episodeLow: tick.close,
+            resolution: '',
+            resolutionDate: ''
+          };
+          episodes.push(episode);
+          logState(
+            index,
+            tick,
+            'NORMAL',
+            'RESTRICTED',
+            'losing_exit',
+            signal,
+            false,
+            exit.reason,
+            position.profit,
+            priceReturn
+          );
+          console.info(
+            `Restricted after a ${formatPercent(-priceReturn)} price loss: reentry needs a close at or below ${formatPrice(restriction.lowerLevel)}; a close at or above ${formatPrice(resetLevelOf(restriction))} (38% of the way back from the episode low to ${formatPrice(entryReferenceHigh)}) resets\n`
+          );
+        } else if (position.profit < 0) {
+          logState(
+            index,
+            tick,
+            'NORMAL',
+            'NORMAL',
+            'loss_not_restricted',
+            signal,
+            false,
+            exit.reason,
+            position.profit,
+            priceReturn
+          );
+          console.info(
+            `Not restricted: the ${formatPercent(priceReturn)} price change is above the ${formatPercent(-materialLossThreshold)} material-loss threshold\n`
+          );
+        } else {
+          logState(
+            index,
+            tick,
+            'NORMAL',
+            'NORMAL',
+            'profitable_exit',
+            signal,
+            false,
+            exit.reason,
+            position.profit,
+            priceReturn
+          );
         }
       } else {
         // After the session, raise the high and the stop for the next session. The stop never moves down.
@@ -402,28 +461,37 @@ export default async (
     }
 
     // End of the session: resolve the restriction. A position opened at this close clears it; otherwise
-    // a close at or above the frozen reset level clears it (recovery reset, never a purchase). The log
-    // mirrors the research implementation: one row per session while restricted.
-    if (restriction) {
+    // today's close extends the episode low and a close at or above the reset level clears it (recovery
+    // reset, never a purchase). The log mirrors the research implementation: one row per restricted
+    // session.
+    if (restriction && episode) {
+      restriction.episodeLow = Math.min(restriction.episodeLow, tick.close);
+      episode.episodeLow = restriction.episodeLow;
+
       if (openPosition && entryIndexes.get(openPosition) === index) {
         logState(index, tick, 'RESTRICTED', 'NORMAL', 'lower_price_reentry', signal, true);
+        episode.resolution = 'lower_price_reentry';
+        episode.resolutionDate = formatDate(tick.time);
         restriction = undefined;
-      } else if (!openPosition && tick.close >= restriction.resetLevel) {
+        episode = undefined;
+      } else if (!openPosition && tick.close >= resetLevelOf(restriction)) {
         logState(index, tick, 'RESTRICTED', 'NORMAL', 'recovery_reset', signal, false);
         console.info(
-          `Recovery reset on ${formatDate(tick.time)}: close ${formatPrice(tick.close)} is within ${formatPercent(1 - (strategy.recoveryReset ?? 1))} of the frozen reference high ${formatPrice(restriction.referenceHigh)}\n`
+          `Recovery reset on ${formatDate(tick.time)}: close ${formatPrice(tick.close)} recovered ${formatPercent(retraceFraction)} of the decline from ${formatPrice(restriction.referenceHigh)} to the episode low ${formatPrice(restriction.episodeLow)}\n`
         );
+        episode.resolution = 'recovery_reset';
+        episode.resolutionDate = formatDate(tick.time);
         restriction = undefined;
+        episode = undefined;
       } else {
-        const reason = entryBlocked
-          ? tick.close >= restriction.resetLevel
-            ? 'entry_blocked (reset priority)'
-            : 'entry_blocked (price not low enough)'
-          : 'restricted';
+        logState(index, tick, 'RESTRICTED', 'RESTRICTED', entryBlocked ? 'entry_blocked' : 'restricted', signal, false);
 
-        logState(index, tick, 'RESTRICTED', 'RESTRICTED', reason, signal, false);
+        if (index === ticks.length - 1) {
+          episode.resolution = 'unresolved_at_end';
+          episode.resolutionDate = formatDate(tick.time);
+        }
       }
-    } else if (strategy.lowerPriceReentry !== undefined && openPosition && entryIndexes.get(openPosition) === index) {
+    } else if (openPosition && entryIndexes.get(openPosition) === index) {
       logState(index, tick, 'NORMAL', 'NORMAL', 'normal_entry', signal, true);
     }
   });
@@ -447,7 +515,7 @@ export default async (
     console.info(`Symbol: ${symbol}, from ${formatDate(firstTick.time)} to ${formatDate(lastTick.time)}`);
   }
 
-  console.info(`Strategy: ${strategyKey}, data file: ${file}`);
+  console.info(`Strategy: ${strategyName}, data file: ${file}`);
   console.info(`Closed trades: ${closedPositions.length}${openPosition ? ', plus 1 still open' : ''}`);
   console.info(`Realized profit: ${formatDollars(realizedProfit)}`);
   console.info(`Unrealized profit on the open position: ${formatDollars(unrealizedProfit)}`);
@@ -464,6 +532,9 @@ export default async (
   console.info(`Target percent change: ${formatPercent(targetPercentChange)}`);
   console.info(`Trailing stop percentage: ${formatPercent(trailingStopPercentage)}`);
   console.info(`Maximum hold: ${maximumHoldDays} days`);
+  console.info(
+    `Reentry after a material loss (price loss of at least ${formatPercent(materialLossThreshold)}): ${formatPercent(lowerPriceReentry)} below the loss exit, reset after a ${formatPercent(retraceFraction)} retracement`
+  );
 
   if (outDir && lastTick) {
     await fs.ensureDir(outDir);
@@ -502,7 +573,7 @@ export default async (
     }
 
     const stateLines = [
-      'index,date,prev_state,new_state,reason,exit_reason,trade_profit,loss_exit_price,ref_high,lower_level,reset_level,close,signal,entry_executed'
+      'index,date,prev_state,new_state,reason,exit_reason,trade_profit,price_return,loss_exit_price,ref_high,lower_level,episode_low,reset_level,close,signal,entry_executed'
     ];
 
     for (const row of stateLog) {
@@ -512,12 +583,14 @@ export default async (
           row.date,
           row.prevState,
           row.newState,
-          `"${row.reason}"`,
+          row.reason,
           row.exitReason,
           row.tradeProfit,
+          row.priceReturn,
           row.lossExitPrice,
           row.refHigh,
           row.lowerLevel,
+          row.episodeLow,
           row.resetLevel,
           row.close,
           row.signal,
@@ -526,10 +599,35 @@ export default async (
       );
     }
 
+    const episodeLines = [
+      'exit_index,exit_date,exit_reason,loss,price_return,loss_exit_price,losing_entry_price,ref_high,episode_low,resolution,resolution_date'
+    ];
+
+    for (const row of episodes) {
+      episodeLines.push(
+        [
+          row.exitIndex,
+          row.exitDate,
+          row.exitReason,
+          row.loss,
+          row.priceReturn,
+          row.lossExitPrice,
+          row.losingEntryPrice,
+          row.referenceHigh,
+          row.episodeLow,
+          row.resolution,
+          row.resolutionDate
+        ].join(',')
+      );
+    }
+
     const summary = {
       symbol,
       dataFile: file,
-      strategy: strategyKey,
+      strategy: strategyName,
+      materialLossThreshold,
+      lowerPriceReentry,
+      retraceFraction,
       firstDate: firstTick ? formatDate(firstTick.time) : '',
       lastDate: formatDate(lastTick.time),
       sessions: ticks.length,
@@ -541,13 +639,18 @@ export default async (
       marginInterest: closedInterest + accruedInterest,
       maximumDrawdown,
       drawdownPeakDate: formatDate(drawdownPeakTimestamp),
-      drawdownTroughDate: formatDate(drawdownTroughTimestamp)
+      drawdownTroughDate: formatDate(drawdownTroughTimestamp),
+      restrictions: episodes.length,
+      lowerPriceReentries: episodes.filter((row) => row.resolution === 'lower_price_reentry').length,
+      recoveryResets: episodes.filter((row) => row.resolution === 'recovery_reset').length,
+      lossesNotRestricted: stateLog.filter((row) => row.reason === 'loss_not_restricted').length
     };
 
     await fs.writeFile(`${outDir}/trades.csv`, `${tradeLines.join('\n')}\n`);
     await fs.writeFile(`${outDir}/daily.csv`, `${dailyLines.join('\n')}\n`);
     await fs.writeFile(`${outDir}/states.csv`, `${stateLines.join('\n')}\n`);
+    await fs.writeFile(`${outDir}/episodes.csv`, `${episodeLines.join('\n')}\n`);
     await fs.writeFile(`${outDir}/summary.json`, `${JSON.stringify(summary, null, 1)}\n`);
-    console.info(`Wrote trades.csv, daily.csv, states.csv and summary.json to ${outDir}`);
+    console.info(`Wrote trades.csv, daily.csv, states.csv, episodes.csv and summary.json to ${outDir}`);
   }
 };
