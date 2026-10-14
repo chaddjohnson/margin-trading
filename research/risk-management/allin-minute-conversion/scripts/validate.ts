@@ -9,13 +9,17 @@
 //    the 90-session reference high, stop levels and activation, stop triggers, maximum-hold exits,
 //    interest, material-loss classification, recovery resets and the open position at the end.
 //
-// Usage: node --experimental-transform-types scripts/validate.ts <minute csv> <run output dir> <report json> [stop fill]
+// Usage: node --experimental-transform-types scripts/validate.ts <minute csv> <run output dir> <report json>
+//   [stop fill] [material loss] [lower re-entry] [retrace]
+// The re-entry parameters default to the current allIn.ts values (0.01, 0.02, 0.38). The study's original
+// runs used 0.005, 0.03 and 0.38.
 import type { BacktestPosition, MarketSession, Tick } from '#types';
 import { PositionType } from '#types';
 import { evaluateSessionExit, firstTradeFrom } from '../../../../src/app/allIn.ts';
 import fs from 'fs-extra';
 
-const [, , minuteFile = '', runDir = '', reportFile = '', stopFill = 'stop'] = process.argv;
+const [, , minuteFile = '', runDir = '', reportFile = '', stopFill = 'stop', ...parameterArguments] = process.argv;
+const [materialLoss = 0.01, lowerReentry = 0.02, retrace = 0.38] = parameterArguments.map(Number);
 const failures: string[] = [];
 const checks: Record<string, number> = {};
 const check = (name: string, condition: boolean, detail: string) => {
@@ -147,6 +151,14 @@ interface Session {
 }
 
 const summary = JSON.parse(await fs.readFile(`${runDir}/summary.json`, 'utf8'));
+
+check(
+  'run parameters',
+  summary.materialLossThreshold === materialLoss,
+  `material loss ${summary.materialLossThreshold}`
+);
+check('run parameters', summary.lowerPriceReentry === lowerReentry, `lower re-entry ${summary.lowerPriceReentry}`);
+check('run parameters', summary.retraceFraction === retrace, `retrace ${summary.retraceFraction}`);
 const sessionsByDate = new Map<string, Session>();
 
 for (const line of (await fs.readFile(minuteFile, 'utf8')).trim().split('\n')) {
@@ -270,7 +282,7 @@ sessions.forEach((session, i) => {
     if (restriction) {
       const low = Math.min(restriction.low, decisionPrice);
 
-      allowed = !(decisionPrice >= low + 0.38 * (restriction.ref - low) || decisionPrice > restriction.lower);
+      allowed = !(decisionPrice >= low + retrace * (restriction.ref - low) || decisionPrice > restriction.lower);
     }
 
     const fill = allowed ? firstFrom(session, decisionTime) : undefined;
@@ -337,8 +349,13 @@ sessions.forEach((session, i) => {
       position = undefined;
       exitIndex = exit.index;
 
-      if (exit.price / held.entryPrice - 1 <= -0.005) {
-        restriction = { lossExit: exit.price, ref: held.refHigh, lower: exit.price * 0.97, low: session.closePrice };
+      if (exit.price / held.entryPrice - 1 <= -materialLoss) {
+        restriction = {
+          lossExit: exit.price,
+          ref: held.refHigh,
+          lower: exit.price * (1 - lowerReentry),
+          low: session.closePrice
+        };
         restrictionEvents.push(`${session.date} restricted`);
       }
     } else {
@@ -372,7 +389,7 @@ sessions.forEach((session, i) => {
     if (entered) {
       restrictionEvents.push(`${session.date} lower_price_reentry`);
       restriction = undefined;
-    } else if (!position && session.closePrice >= restriction.low + 0.38 * (restriction.ref - restriction.low)) {
+    } else if (!position && session.closePrice >= restriction.low + retrace * (restriction.ref - restriction.low)) {
       restrictionEvents.push(`${session.date} recovery_reset`);
       restriction = undefined;
     }
@@ -508,7 +525,7 @@ for (const row of runTrades) {
   const priceReturn = Number(row.exit_price) / Number(row.entry_price) - 1;
   const restricted = runStates.some((state) => state.date === row.exit_date && state.reason === 'losing_exit');
 
-  check('material-loss classification', restricted === priceReturn <= -0.005, row.exit_date!);
+  check('material-loss classification', restricted === priceReturn <= -materialLoss, row.exit_date!);
 }
 
 for (const state of runStates.filter((row) => row.reason === 'recovery_reset')) {
@@ -534,7 +551,17 @@ libSessions.forEach((libSession, index) => {
   check('session close', libSession.close === own.closePrice, libSession.date);
 });
 
-const report = { minuteFile, runDir, stopFill, checks, failures, entryMinutesEt: entryMinutes };
+const report = {
+  minuteFile,
+  runDir,
+  stopFill,
+  materialLoss,
+  lowerReentry,
+  retrace,
+  checks,
+  failures,
+  entryMinutesEt: entryMinutes
+};
 
 await fs.writeFile(reportFile, `${JSON.stringify(report, null, 1)}\n`);
 console.info(`${Object.values(checks).reduce((a, b) => a + b, 0)} checks, ${failures.length} failures`);

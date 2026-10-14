@@ -3,6 +3,11 @@
 #   bash research/risk-management/allin-minute-conversion/run.sh
 set -euo pipefail
 
+# The minute runs (M, M2) use whatever parameters src/app/allIn.ts has now. The results and report in this
+# directory were produced with the original 0.5% material loss, 3% lower re-entry and 38% reset; rerunning
+# this script with other parameters overwrites them. Runs with the current parameters (1%, 2%, 38%) are in
+# results/current-params, made by run-current-params.sh.
+
 R=research/risk-management/allin-minute-conversion
 RESULTS=$R/results
 MINUTE=data/VGT/VGT-2016-2025-1-minute.csv
@@ -28,6 +33,6 @@ mkdir -p "$RESULTS"
 "${NODE[@]}" src/app.ts allIn VGT $START $END "$MINUTE" "$RESULTS/minute-common-next-open" next-open > "$RESULTS/minute-common-next-open.txt"
 "${NODE[@]}" src/app.ts allIn VGT - - "$MINUTE" "$RESULTS/minute-fullfile" > "$RESULTS/minute-fullfile.txt"
 
-"${NODE[@]}" $R/scripts/validate.ts "$MINUTE" "$RESULTS/minute-common" "$RESULTS/validation-minute-common.json"
-"${NODE[@]}" $R/scripts/validate.ts "$MINUTE" "$RESULTS/minute-common-next-open" "$RESULTS/validation-minute-common-next-open.json" next-open
+"${NODE[@]}" $R/scripts/validate.ts "$MINUTE" "$RESULTS/minute-common" "$RESULTS/validation-minute-common.json" stop 0.005 0.03 0.38
+"${NODE[@]}" $R/scripts/validate.ts "$MINUTE" "$RESULTS/minute-common-next-open" "$RESULTS/validation-minute-common-next-open.json" next-open 0.005 0.03 0.38
 "${NODE[@]}" $R/scripts/compare.ts "$RESULTS" > "$RESULTS/comparison.md"

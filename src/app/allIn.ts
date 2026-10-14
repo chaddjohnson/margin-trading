@@ -1,4 +1,8 @@
-// All in at 15%
+// All in on a 10% dip, with re-entry restricted after a material loss (1% loss, 2% lower re-entry, 38% reset)
+//
+// Entry: the whole margin allocation is bought when the price is at least 10% below the highest high of
+// the previous 90 trading sessions and no position is open. Exit: an 8% trailing stop, or the 15-day loss
+// exit.
 //
 // Execution model on one-minute bars (Alpaca, raw prices, each bar timestamped at the start of its minute):
 // - Sessions are America/New_York trading dates. Only regular-session minutes, from 9:30 a.m. to the
@@ -27,16 +31,17 @@
 //   with daily bars. Exact intraday times are deliberately not used for interest.
 // - Prices are raw. Dividends aren't modeled, and ex-dividend drops are price moves.
 //
-// Re-entry after a losing trade (validated trade for trade against the research implementation in
-// research/risk-management/adaptive-reentry, configuration A2_material_05 + 3% + C6_retrace_38, on daily
-// bars):
-// - A trade whose ETF price return (exit price / entry price - 1, interest excluded) is at most -0.5%
+// Re-entry after a losing trade. The mechanism was validated trade for trade against the research
+// implementation in research/risk-management/adaptive-reentry on daily bars with an earlier configuration
+// (0.5% material loss, 3% lower re-entry); the current parameters are checked by
+// research/risk-management/allin-minute-conversion/scripts/validate.ts.
+// - A trade whose ETF price return (exit price / entry price - 1, interest excluded) is at most -1%
 //   makes the strategy RESTRICTED_AFTER_LOSS. A smaller price loss, or a loss caused only by interest,
 //   leaves normal entry eligibility in place.
 // - The restriction freezes the losing exit's actual execution price and the 90-session reference high
 //   used by the losing trade's entry signal, and tracks the lowest close since the exit session.
-// - While restricted, a new entry needs the original 10% signal AND a decision price at or below 97% of the
-//   frozen loss-exit price. The restriction clears when a new position opens, or when a close recovers 38%
+// - While restricted, a new entry needs the original 10% signal AND a decision price at or below 98% of the
+//   frozen loss-exit price (2% below it). The restriction clears when a new position opens, or when a close recovers 38%
 //   of the decline from the frozen reference high to the episode low (recovery reset, evaluated at every
 //   close while restricted and flat, including the exit session itself). A reset never buys by itself: when
 //   the decision price would qualify as a reset (counting it towards the episode low, but without storing
@@ -290,7 +295,7 @@ export default async (
     throw new Error("The stop fill must be 'stop' or 'next-open'");
   }
 
-  const strategyName = 'lower3';
+  const strategyName = 'material1-lower2-retrace38';
   const file = optional(dataFile) ?? `data/${symbol}/${symbol}-2016-2025-1-minute.csv`;
   const allSessions = groupMarketSessions(await loadCsvMinuteBacktestData(symbol, file));
   const sessions = allSessions.filter((session) => session.time >= startTimestamp && session.time <= endTimestamp);
@@ -606,7 +611,7 @@ export default async (
             priceReturn
           );
           console.info(
-            `Restricted after a ${formatPercent(-priceReturn)} price loss: reentry needs a decision price at or below ${formatPrice(restriction.lowerLevel)}; a close at or above ${formatPrice(resetLevelOf(restriction))} (38% of the way back from the episode low to ${formatPrice(entryReferenceHigh)}) resets\n`
+            `Restricted after a ${formatPercent(-priceReturn)} price loss: reentry needs a decision price at or below ${formatPrice(restriction.lowerLevel)}; a close at or above ${formatPrice(resetLevelOf(restriction))} (${formatPercent(retraceFraction)} of the way back from the episode low to ${formatPrice(entryReferenceHigh)}) resets\n`
           );
         } else if (position.profit < 0) {
           logState(
