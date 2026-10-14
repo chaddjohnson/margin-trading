@@ -301,8 +301,8 @@ export default async (
   const trailingStopPercentage = 0.08; //  drop from the post-entry high
   const maximumHoldDays = 15; // days before a losing position is sold
   const marginInterestRate = 0.11; // annual interest charged by Vanguard on margin
-  const materialLossThreshold = 0.005; // price loss that makes the next entry wait for a lower price
-  const lowerPriceReentry = 0.03; // extra decline below the frozen loss-exit price required to re-enter
+  const materialLossThreshold = 0.01; // price loss that makes the next entry wait for a lower price
+  const lowerPriceReentry = 0.02; // extra decline below the frozen loss-exit price required to re-enter
   const retraceFraction = 0.38; // recovery of the reference-high-to-episode-low decline that clears it
   let postEntryHigh = 0;
   let postEntryLow = 0;
