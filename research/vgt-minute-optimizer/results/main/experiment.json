@@ -1,0 +1,199 @@
+{
+ "id": "main",
+ "seed": 20261016,
+ "space": {
+  "name": "allin-minute-v1",
+  "specs": [
+   {
+    "key": "dipTenths",
+    "label": "Entry dip: decision price below the reference high",
+    "unit": "tenths of a percentage point",
+    "min": 5,
+    "max": 250,
+    "step": 1,
+    "neighborhoodRadius": 5,
+    "rationale": "0.5%-25.0%: from buying almost any small pullback to waiting for a deep correction."
+   },
+   {
+    "key": "trailingStopTenths",
+    "label": "Trailing stop below the post-entry high",
+    "unit": "tenths of a percentage point",
+    "min": 5,
+    "max": 200,
+    "step": 1,
+    "neighborhoodRadius": 5,
+    "rationale": "0.5%-20.0%: from inside a typical day of VGT noise to wider than most corrections."
+   },
+   {
+    "key": "maximumHoldDays",
+    "label": "Maximum hold before a losing position is sold after the opening trade",
+    "unit": "calendar days",
+    "min": 1,
+    "max": 60,
+    "step": 1,
+    "neighborhoodRadius": 2,
+    "rationale": "1-60 calendar days (not sessions). 1 is checked from the first session after the entry; the entry session is never checked for exits."
+   },
+   {
+    "key": "lookbackSessions",
+    "label": "Reference-high window",
+    "unit": "sessions",
+    "min": 10,
+    "max": 250,
+    "step": 1,
+    "neighborhoodRadius": 10,
+    "rationale": "10-250 trading sessions (not minutes or calendar days), excluding the signal session."
+   },
+   {
+    "key": "materialLossTenths",
+    "label": "Material ETF price loss (interest excluded) that restricts re-entry",
+    "unit": "tenths of a percentage point",
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "neighborhoodRadius": 3,
+    "rationale": "0.0%-10.0%: 0% restricts after any non-positive price return; near 10% few exits restrict, which approaches no restriction."
+   },
+   {
+    "key": "lowerReentryTenths",
+    "label": "Extra decline below the frozen loss-exit price required to re-enter",
+    "unit": "tenths of a percentage point",
+    "min": 0,
+    "max": 150,
+    "step": 1,
+    "neighborhoodRadius": 5,
+    "rationale": "0.0%-15.0%: 0% allows re-entry at or below the loss-exit price."
+   },
+   {
+    "key": "retraceTenths",
+    "label": "Recovery of the reference-high-to-episode-low decline that clears the restriction",
+    "unit": "tenths of a percentage point",
+    "min": 0,
+    "max": 1000,
+    "step": 1,
+    "neighborhoodRadius": 50,
+    "rationale": "0.0%-100.0%. 0% clears on the exit session itself (no restriction in effect); 100% waits for a full recovery to the frozen reference high."
+   }
+  ]
+ },
+ "search": {
+  "sampler": "sobol",
+  "samples": 4096,
+  "scramble": true,
+  "populationSize": 128,
+  "generations": 60,
+  "maxEvaluationsPerGaRun": 6000,
+  "gaRuns": 2,
+  "crossoverProbability": 0.9,
+  "crossoverEta": 15,
+  "mutationEta": 20,
+  "earlyStopPatience": 15,
+  "earlyStopTolerance": 0.0001,
+  "seedDiversity": 0.02
+ },
+ "fitness": {
+  "allocation": 100000,
+  "drawdownLimit": 0.3,
+  "minTradesPerYear": 2,
+  "selectionCostBps": 5,
+  "stressCostBps": 20,
+  "minExposure": 0.05
+ },
+ "selection": {
+  "topN": 10,
+  "minPositiveYearShare": 0.5,
+  "poolByNet": 64,
+  "maxPool": 1024,
+  "poolFronts": 2,
+  "poolFrontCap": 64,
+  "diversitySteps": 4,
+  "perturbations": 16
+ },
+ "settings": {
+  "stopFill": "stop",
+  "costBps": [
+   5,
+   10,
+   20
+  ]
+ },
+ "protocol": {
+  "name": "vgt-minute-expanding-2016-v1",
+  "researchEnd": "2023-12-31",
+  "folds": [
+   {
+    "id": "fold-2020",
+    "train": {
+     "start": "2016-10-07",
+     "end": "2019-12-31"
+    },
+    "validation": {
+     "start": "2020-01-01",
+     "end": "2020-12-31"
+    }
+   },
+   {
+    "id": "fold-2021",
+    "train": {
+     "start": "2016-10-07",
+     "end": "2020-12-31"
+    },
+    "validation": {
+     "start": "2021-01-01",
+     "end": "2021-12-31"
+    }
+   },
+   {
+    "id": "fold-2022",
+    "train": {
+     "start": "2016-10-07",
+     "end": "2021-12-31"
+    },
+    "validation": {
+     "start": "2022-01-01",
+     "end": "2022-12-31"
+    }
+   },
+   {
+    "id": "fold-2023",
+    "train": {
+     "start": "2016-10-07",
+     "end": "2022-12-31"
+    },
+    "validation": {
+     "start": "2023-01-01",
+     "end": "2023-12-31"
+    }
+   }
+  ],
+  "final": {
+   "id": "final-2016-2023",
+   "train": {
+    "start": "2016-10-07",
+    "end": "2023-12-31"
+   }
+  },
+  "holdout": {
+   "start": "2024-01-01",
+   "end": "latest"
+  }
+ },
+ "folds": [
+  "fold-2020",
+  "fold-2021",
+  "fold-2022",
+  "fold-2023"
+ ],
+ "final": true,
+ "controlSeeds": 3,
+ "replicateSeeds": 2,
+ "codeHash": "555e06430e7eaf2b6c72111539fa2f1d86b15b15d29216a843064094dc22316d",
+ "dataset": {
+  "id": "VGT:600322afbe3d837a:2023-12-29",
+  "dataHash": "600322afbe3d837a4c66ec62acb39e16d707079f49ec18d77f947bcb24c7962f",
+  "firstDate": "2016-01-04",
+  "lastDate": "2023-12-29",
+  "sessions": 2012,
+  "minutes": 655270
+ }
+}

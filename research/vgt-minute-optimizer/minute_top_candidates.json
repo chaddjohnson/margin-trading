@@ -1,0 +1,5756 @@
+{
+ "experiment": "main",
+ "seed": 20261016,
+ "space": "allin-minute-v1",
+ "window": {
+  "historyStart": 0,
+  "startIndex": 193,
+  "endIndex": 2011,
+  "start": "2016-10-07",
+  "end": "2023-12-31",
+  "firstDate": "2016-10-07",
+  "lastDate": "2023-12-29",
+  "sessions": 1819,
+  "years": 7.227926078028747
+ },
+ "selectionCostBps": 5,
+ "generatedFrom": "research/vgt-minute-optimizer/results/main/final-2016-2023/run.json",
+ "candidates": [
+  {
+   "kind": "shortlist",
+   "rank": 1,
+   "primary": true,
+   "id": "c134ab0f37d75",
+   "params": {
+    "dipTenths": 17,
+    "trailingStopTenths": 27,
+    "maximumHoldDays": 9,
+    "lookbackSessions": 10,
+    "materialLossTenths": 8,
+    "lowerReentryTenths": 63,
+    "retraceTenths": 91
+   },
+   "description": "dipTenths=1.7% trailingStopTenths=2.7% maximumHoldDays=9 lookbackSessions=10 materialLossTenths=0.8% lowerReentryTenths=6.3% retraceTenths=9.1%",
+   "origin": {
+    "stage": "ga",
+    "run": 0,
+    "generation": 47
+   },
+   "selection": {
+    "id": "c134ab0f37d75",
+    "meritRank": 1,
+    "merit": 103189.04119397822,
+    "paretoRank": 12,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 13,
+     "perturbations": 16,
+     "netP25": 103189.04119397822,
+     "netMedian": 122139.46321724742,
+     "netMin": 72020.84585871117,
+     "neighbourNetMin": 97784.53720374923,
+     "drawdownMedian": 24079.027507536055,
+     "drawdownMax": 45327.140495548665,
+     "feasibleShare": 0.43333333333333335,
+     "sameTradesShare": 0.034482758620689655
+    },
+    "positiveYearShare": 0.875,
+    "rank": 1,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 1,
+    "reason": "Highest merit (lower-quartile net P&L over its neighbourhood and perturbations, $103,189 at 5 bp/side); primary candidate."
+   },
+   "boundFlags": [
+    "lookbackSessions at/near lower bound (10 vs 10)"
+   ],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 132,
+    "closedTrades": 131,
+    "openAtEnd": true,
+    "entriesWithoutTrade": 0,
+    "netProfit": 170275.4855050064,
+    "grossProfit": 234286.44440911594,
+    "interest": 64010.95890410956,
+    "realizedProfit": 153414.48543382023,
+    "unrealizedProfit": 16861.00007118615,
+    "dailyDrawdown": 20616.669226756465,
+    "minuteDrawdown": 22287.685048690517,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 170275.4855050064,
+      "dailyDrawdown": 20616.669226756465,
+      "minuteDrawdown": 22287.685048690517,
+      "bestTrade": 16861.00007118615
+     },
+     {
+      "bps": 5,
+      "costs": 13317.143222204555,
+      "netProfit": 156958.34228280184,
+      "dailyDrawdown": 22367.73782948607,
+      "minuteDrawdown": 24079.027507536055,
+      "bestTrade": 16751.680530054666
+     },
+     {
+      "bps": 10,
+      "costs": 26634.28644440911,
+      "netProfit": 143641.19906059728,
+      "dailyDrawdown": 24251.149738744905,
+      "minuteDrawdown": 25870.369966381564,
+      "bestTrade": 16642.360988923185
+     },
+     {
+      "bps": 20,
+      "costs": 53268.57288881822,
+      "netProfit": 117006.91261618816,
+      "dailyDrawdown": 28036.017703546313,
+      "minuteDrawdown": 29453.054884072597,
+      "bestTrade": 16423.721906660216
+     }
+    ],
+    "turnover": 26634286.444409113,
+    "exits": {
+     "maximumHold": 48,
+     "trailingStop": 59,
+     "trailingStopGap": 24
+    },
+    "wins": 82,
+    "winRate": 0.6212121212121212,
+    "profitFactor": 2.362471776232173,
+    "medianTrade": 823.7193716631682,
+    "worstTrade": -9363.765777302591,
+    "bestTrade": 16861.00007118615,
+    "medianHoldDays": 11,
+    "exposure": 0.8009895547003848,
+    "restrictions": 32,
+    "lowerPriceReentries": 4,
+    "recoveryResets": 28,
+    "lossesNotRestricted": 18,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 3,
+      "net": [
+       2017.0094075079364,
+       1715.0967932151414,
+       1413.1841789223463,
+       809.3589503367562
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 9,
+      "net": [
+       20304.863666272715,
+       19390.145481014923,
+       18475.427295757127,
+       16645.990925241542
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 18,
+      "net": [
+       13994.125106932926,
+       12182.562290954804,
+       10370.999474976677,
+       6747.8738430204285
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 13,
+      "net": [
+       30364.071831974463,
+       29044.0829467434,
+       27724.09406151235,
+       25084.116291050246
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 25,
+      "net": [
+       57819.81938327993,
+       55286.6300215335,
+       52753.44065978706,
+       47687.06193629419
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 17,
+      "net": [
+       13304.949382235063,
+       11593.73115411929,
+       9882.512926003503,
+       6460.076469771957
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 30,
+      "net": [
+       1107.013552625809,
+       -1897.7742007258494,
+       -4902.561954077493,
+       -10912.137460780825
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 17,
+      "net": [
+       31363.63317417755,
+       29643.86779594663,
+       27924.10241771571,
+       24484.571661253867
+      ]
+     }
+    ],
+    "signature": "2218f3e98befc4c7"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.008,
+      "lowerPriceReentry": 0.063,
+      "retraceFraction": 0.091,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 131,
+      "openAtEnd": true,
+      "realizedProfit": 153414.48543382023,
+      "unrealizedProfit": 16861.00007118615,
+      "netProfit": 170275.4855050064,
+      "marginInterest": 64010.95890410956,
+      "maximumDrawdown": 20616.669226756465,
+      "drawdownPeakDate": "2021-11-19",
+      "drawdownTroughDate": "2022-06-13",
+      "minuteMaximumDrawdown": 22287.685048690517,
+      "minuteDrawdownPeakTime": "2021-11-22T15:23:00.000Z",
+      "minuteDrawdownTroughTime": "2022-06-17T14:36:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 32,
+      "lowerPriceReentries": 4,
+      "recoveryResets": 28,
+      "lossesNotRestricted": 18
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13317.143222204555,
+       "netProfit": 156958.34228280184,
+       "maximumDrawdown": 22367.73782948607,
+       "minuteMaximumDrawdown": 24079.027507536055
+      },
+      {
+       "bps": 10,
+       "costs": 26634.28644440911,
+       "netProfit": 143641.19906059728,
+       "maximumDrawdown": 24251.149738744905,
+       "minuteMaximumDrawdown": 25870.369966381564
+      },
+      {
+       "bps": 20,
+       "costs": 53268.57288881822,
+       "netProfit": 117006.91261618816,
+       "maximumDrawdown": 28036.017703546313,
+       "minuteMaximumDrawdown": 29453.054884072597
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2017.0094075079364,
+       "costMarks": [
+        1715.0967932151414,
+        1413.1841789223463,
+        809.3589503367562
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 22321.87307378065,
+       "costMarks": [
+        21105.242274230062,
+        19888.611474679474,
+        17455.349875578297
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 36315.99818071358,
+       "costMarks": [
+        33287.804565184866,
+        30259.61094965615,
+        24203.223718598725
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 66680.07001268804,
+       "costMarks": [
+        62331.88751192827,
+        57983.7050111685,
+        49287.34000964897
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 124499.88939596797,
+       "costMarks": [
+        117618.51753346177,
+        110737.14567095556,
+        96974.40194594316
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 137804.83877820303,
+       "costMarks": [
+        129212.24868758106,
+        120619.65859695907,
+        103434.47841571512
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 138911.85233082884,
+       "costMarks": [
+        127314.47448685521,
+        115717.09664288157,
+        92522.34095493429
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 170275.4855050064,
+       "costMarks": [
+        156958.34228280184,
+        143641.19906059728,
+        117006.91261618816
+       ]
+      }
+     ],
+     "exposureSessions": 1457
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.008,
+      "lowerPriceReentry": 0.063,
+      "retraceFraction": 0.091,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 131,
+      "openAtEnd": true,
+      "realizedProfit": 152101.32475112609,
+      "unrealizedProfit": 16861.00007118615,
+      "netProfit": 168962.32482231222,
+      "marginInterest": 64010.95890410956,
+      "maximumDrawdown": 21018.487693751464,
+      "drawdownPeakDate": "2021-11-19",
+      "drawdownTroughDate": "2022-06-13",
+      "minuteMaximumDrawdown": 22689.503515685516,
+      "minuteDrawdownPeakTime": "2021-11-22T15:23:00.000Z",
+      "minuteDrawdownTroughTime": "2022-06-17T14:36:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 32,
+      "lowerPriceReentries": 4,
+      "recoveryResets": 28,
+      "lossesNotRestricted": 18
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13316.48664186321,
+       "netProfit": 155645.838180449,
+       "maximumDrawdown": 22769.35538724756,
+       "minuteMaximumDrawdown": 24480.645065297547
+      },
+      {
+       "bps": 10,
+       "costs": 26632.97328372642,
+       "netProfit": 142329.35153858582,
+       "maximumDrawdown": 24649.35374844572,
+       "minuteMaximumDrawdown": 26271.78661490958
+      },
+      {
+       "bps": 20,
+       "costs": 53265.94656745284,
+       "netProfit": 115696.37825485937,
+       "maximumDrawdown": 28433.823110634825,
+       "minuteMaximumDrawdown": 29854.069714133628
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2017.0094075079364,
+       "costMarks": [
+        1715.0967932151414,
+        1413.1841789223463,
+        809.3589503367562
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 22319.80475584009,
+       "costMarks": [
+        21103.17499044847,
+        19886.545225056852,
+        17453.285694273618
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 35991.02537072192,
+       "costMarks": [
+        32962.99424159821,
+        29934.96311247449,
+        23878.900854227053
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 66674.32669674135,
+       "costMarks": [
+        62326.147067639555,
+        57977.96743853776,
+        49281.60818033417
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 124213.73949225759,
+       "costMarks": [
+        117332.51070470325,
+        110451.28191714891,
+        96688.8243420402
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 137384.52861794594,
+       "costMarks": [
+        128792.14868240409,
+        120199.76874686223,
+        103015.00887577854
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 137870.9623682861,
+       "costMarks": [
+        126274.10496929374,
+        114677.24757030138,
+        91483.53277231664
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 168962.32482231222,
+       "costMarks": [
+        155645.838180449,
+        142329.35153858582,
+        115696.37825485937
+       ]
+      }
+     ],
+     "exposureSessions": 1457
+    }
+   ]
+  },
+  {
+   "kind": "shortlist",
+   "rank": 2,
+   "primary": false,
+   "id": "cbb271678f869",
+   "params": {
+    "dipTenths": 19,
+    "trailingStopTenths": 27,
+    "maximumHoldDays": 9,
+    "lookbackSessions": 11,
+    "materialLossTenths": 18,
+    "lowerReentryTenths": 63,
+    "retraceTenths": 125
+   },
+   "description": "dipTenths=1.9% trailingStopTenths=2.7% maximumHoldDays=9 lookbackSessions=11 materialLossTenths=1.8% lowerReentryTenths=6.3% retraceTenths=12.5%",
+   "origin": {
+    "stage": "ga",
+    "run": 0,
+    "generation": 40
+   },
+   "selection": {
+    "id": "cbb271678f869",
+    "meritRank": 2,
+    "merit": 98975.25004601313,
+    "paretoRank": 14,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 13,
+     "perturbations": 16,
+     "netP25": 98975.25004601313,
+     "netMedian": 111621.23023063359,
+     "netMin": 64643.47012081326,
+     "neighbourNetMin": 101125.80310061925,
+     "drawdownMedian": 19283.82613214521,
+     "drawdownMax": 38463.50650774372,
+     "feasibleShare": 0.4666666666666667,
+     "sameTradesShare": 0.06896551724137931
+    },
+    "positiveYearShare": 0.875,
+    "rank": 2,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 1,
+    "reason": "Merit rank 2; trades and parameters distinct from higher-ranked entries."
+   },
+   "boundFlags": [
+    "lookbackSessions at/near lower bound (11 vs 10)"
+   ],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 131,
+    "closedTrades": 130,
+    "openAtEnd": true,
+    "entriesWithoutTrade": 0,
+    "netProfit": 167318.09625733522,
+    "grossProfit": 230967.41132582835,
+    "interest": 63649.31506849312,
+    "realizedProfit": 150457.09618614905,
+    "unrealizedProfit": 16861.00007118615,
+    "dailyDrawdown": 16323.033622652685,
+    "minuteDrawdown": 17840.05650121979,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 167318.09625733522,
+      "dailyDrawdown": 16323.033622652685,
+      "minuteDrawdown": 17840.05650121979,
+      "bestTrade": 16861.00007118615
+     },
+     {
+      "bps": 5,
+      "costs": 13215.48370566291,
+      "netProfit": 154102.6125516723,
+      "dailyDrawdown": 17074.696988389813,
+      "minuteDrawdown": 18231.60359625687,
+      "bestTrade": 16751.680530054666
+     },
+     {
+      "bps": 10,
+      "costs": 26430.96741132582,
+      "netProfit": 140887.1288460094,
+      "dailyDrawdown": 19196.377601270477,
+      "minuteDrawdown": 20419.253749626892,
+      "bestTrade": 16642.360988923185
+     },
+     {
+      "bps": 20,
+      "costs": 52861.93482265164,
+      "netProfit": 114456.16143468357,
+      "dailyDrawdown": 23789.67040688578,
+      "minuteDrawdown": 25011.352622147024,
+      "bestTrade": 16423.721906660216
+     }
+    ],
+    "turnover": 26430967.411325824,
+    "exits": {
+     "maximumHold": 46,
+     "trailingStop": 62,
+     "trailingStopGap": 22
+    },
+    "wins": 81,
+    "winRate": 0.6183206106870229,
+    "profitFactor": 2.3135195912479216,
+    "medianTrade": 897.6623113250852,
+    "worstTrade": -9363.765777302591,
+    "bestTrade": 16861.00007118615,
+    "medianHoldDays": 11,
+    "exposure": 0.7910940076965366,
+    "restrictions": 26,
+    "lowerPriceReentries": 4,
+    "recoveryResets": 22,
+    "lossesNotRestricted": 24,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 3,
+      "net": [
+       2017.0094075079364,
+       1715.0967932151414,
+       1413.1841789223463,
+       809.3589503367562
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 9,
+      "net": [
+       21392.349806456794,
+       20477.11801511521,
+       19561.886223773625,
+       17731.42264109046
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 18,
+      "net": [
+       10204.232002081968,
+       8394.488790190517,
+       6584.745578299062,
+       2965.259154516156
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 13,
+      "net": [
+       26509.430797642417,
+       25191.429506901124,
+       23873.428216159842,
+       21237.425634677275
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 25,
+      "net": [
+       59425.11030521404,
+       56891.07309252719,
+       54357.03587984034,
+       49288.96145446662
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 17,
+      "net": [
+       15305.442556468348,
+       13593.163807792851,
+       11880.885059117354,
+       8456.327561766375
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 29,
+      "net": [
+       2168.925352338614,
+       -736.2577404745389,
+       -3641.440833287692,
+       -9451.807018914013
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 17,
+      "net": [
+       30295.5960296251,
+       28576.5002864048,
+       26857.40454318453,
+       23419.213056743945
+      ]
+     }
+    ],
+    "signature": "f5ab31abb81bc6c5"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.018,
+      "lowerPriceReentry": 0.063,
+      "retraceFraction": 0.125,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 130,
+      "openAtEnd": true,
+      "realizedProfit": 150457.09618614905,
+      "unrealizedProfit": 16861.00007118615,
+      "netProfit": 167318.09625733522,
+      "marginInterest": 63649.31506849312,
+      "maximumDrawdown": 16323.033622652685,
+      "drawdownPeakDate": "2022-03-29",
+      "drawdownTroughDate": "2022-06-13",
+      "minuteMaximumDrawdown": 17840.05650121979,
+      "minuteDrawdownPeakTime": "2022-08-08T14:02:00.000Z",
+      "minuteDrawdownTroughTime": "2022-10-13T13:32:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 26,
+      "lowerPriceReentries": 4,
+      "recoveryResets": 22,
+      "lossesNotRestricted": 24
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13215.48370566291,
+       "netProfit": 154102.6125516723,
+       "maximumDrawdown": 17074.696988389813,
+       "minuteMaximumDrawdown": 18231.60359625687
+      },
+      {
+       "bps": 10,
+       "costs": 26430.96741132582,
+       "netProfit": 140887.1288460094,
+       "maximumDrawdown": 19196.377601270477,
+       "minuteMaximumDrawdown": 20419.253749626892
+      },
+      {
+       "bps": 20,
+       "costs": 52861.93482265164,
+       "netProfit": 114456.16143468357,
+       "maximumDrawdown": 23789.67040688578,
+       "minuteMaximumDrawdown": 25011.352622147024
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2017.0094075079364,
+       "costMarks": [
+        1715.0967932151414,
+        1413.1841789223463,
+        809.3589503367562
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 23409.35921396473,
+       "costMarks": [
+        22192.21480833035,
+        20975.070402695972,
+        18540.781591427214
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 33613.5912160467,
+       "costMarks": [
+        30586.703598520868,
+        27559.815980995034,
+        21506.04074594337
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 60123.022013689115,
+       "costMarks": [
+        55778.13310542199,
+        51433.244197154876,
+        42743.466380620644
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 119548.13231890315,
+       "costMarks": [
+        112669.20619794918,
+        105790.28007699522,
+        92032.42783508726
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 134853.5748753715,
+       "costMarks": [
+        126262.37000574204,
+        117671.16513611257,
+        100488.75539685364
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 137022.50022771012,
+       "costMarks": [
+        125526.1122652675,
+        114029.72430282488,
+        91036.94837793963
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 167318.09625733522,
+       "costMarks": [
+        154102.6125516723,
+        140887.1288460094,
+        114456.16143468357
+       ]
+      }
+     ],
+     "exposureSessions": 1439
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.018,
+      "lowerPriceReentry": 0.063,
+      "retraceFraction": 0.125,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 130,
+      "openAtEnd": true,
+      "realizedProfit": 149501.84384572002,
+      "unrealizedProfit": 16861.00007118615,
+      "netProfit": 166362.84391690616,
+      "marginInterest": 63649.31506849312,
+      "maximumDrawdown": 16623.54394601687,
+      "drawdownPeakDate": "2022-03-29",
+      "drawdownTroughDate": "2022-06-13",
+      "minuteMaximumDrawdown": 17840.05650121979,
+      "minuteDrawdownPeakTime": "2022-08-08T14:02:00.000Z",
+      "minuteDrawdownTroughTime": "2022-10-13T13:32:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 26,
+      "lowerPriceReentries": 4,
+      "recoveryResets": 22,
+      "lossesNotRestricted": 24
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13215.006079492696,
+       "netProfit": 153147.83783741345,
+       "maximumDrawdown": 17375.05705659234,
+       "minuteMaximumDrawdown": 18521.62921447998
+      },
+      {
+       "bps": 10,
+       "costs": 26430.01215898539,
+       "netProfit": 139932.83175792077,
+       "maximumDrawdown": 19594.603190277034,
+       "minuteMaximumDrawdown": 20817.479338633435
+      },
+      {
+       "bps": 20,
+       "costs": 52860.02431797078,
+       "netProfit": 113502.81959893537,
+       "maximumDrawdown": 24187.497371679143,
+       "minuteMaximumDrawdown": 25409.179586940372
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2017.0094075079364,
+       "costMarks": [
+        1715.0967932151414,
+        1413.1841789223463,
+        809.3589503367562
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 23407.29089602417,
+       "costMarks": [
+        22190.14752454876,
+        20973.00415307335,
+        18538.717410122532
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 33289.73849502513,
+       "costMarks": [
+        30263.01280385981,
+        27236.28711269449,
+        21182.835730363848
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 60117.74251330097,
+       "costMarks": [
+        55772.85624478404,
+        51427.969976267115,
+        42738.19743923327
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 119650.20295182355,
+       "costMarks": [
+        112771.22579555311,
+        105892.2486392827,
+        92134.29432674183
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 134821.64138520075,
+       "costMarks": [
+        126230.45248231638,
+        117639.263579432,
+        100456.88577366323
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 136369.98693525366,
+       "costMarks": [
+        124873.92522945727,
+        113377.86352366087,
+        90385.74011206807
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 166362.84391690616,
+       "costMarks": [
+        153147.83783741345,
+        139932.83175792077,
+        113502.81959893537
+       ]
+      }
+     ],
+     "exposureSessions": 1439
+    }
+   ]
+  },
+  {
+   "kind": "shortlist",
+   "rank": 3,
+   "primary": false,
+   "id": "c338d1ab3468d",
+   "params": {
+    "dipTenths": 24,
+    "trailingStopTenths": 21,
+    "maximumHoldDays": 8,
+    "lookbackSessions": 69,
+    "materialLossTenths": 7,
+    "lowerReentryTenths": 45,
+    "retraceTenths": 595
+   },
+   "description": "dipTenths=2.4% trailingStopTenths=2.1% maximumHoldDays=8 lookbackSessions=69 materialLossTenths=0.7% lowerReentryTenths=4.5% retraceTenths=59.5%",
+   "origin": {
+    "stage": "ga",
+    "run": 1,
+    "generation": 39
+   },
+   "selection": {
+    "id": "c338d1ab3468d",
+    "meritRank": 4,
+    "merit": 93182.90729310855,
+    "paretoRank": 15,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 14,
+     "perturbations": 16,
+     "netP25": 93182.90729310855,
+     "netMedian": 122907.82388720672,
+     "netMin": 25996.297712295163,
+     "neighbourNetMin": 26484.936998723402,
+     "drawdownMedian": 17542.19589234649,
+     "drawdownMax": 33178.32344593587,
+     "feasibleShare": 0.8709677419354839,
+     "sameTradesShare": 0
+    },
+    "positiveYearShare": 1,
+    "rank": 3,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 0,
+    "reason": "Merit rank 4; trades and parameters distinct from higher-ranked entries."
+   },
+   "boundFlags": [],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 125,
+    "closedTrades": 125,
+    "openAtEnd": false,
+    "entriesWithoutTrade": 0,
+    "netProfit": 166467.7555241747,
+    "grossProfit": 212486.93360636645,
+    "interest": 46019.178082191764,
+    "realizedProfit": 166467.7555241747,
+    "unrealizedProfit": 0,
+    "dailyDrawdown": 16378.273058162005,
+    "minuteDrawdown": 17450.81582080484,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 166467.7555241747,
+      "dailyDrawdown": 16378.273058162005,
+      "minuteDrawdown": 17450.81582080484,
+      "bestTrade": 13052.66078607573
+     },
+     {
+      "bps": 5,
+      "costs": 12606.243466803184,
+      "netProfit": 153861.5120573715,
+      "dailyDrawdown": 16470.144195605528,
+      "minuteDrawdown": 17542.19589234649,
+      "bestTrade": 12945.546784449816
+     },
+     {
+      "bps": 10,
+      "costs": 25212.486933606368,
+      "netProfit": 141255.26859056833,
+      "dailyDrawdown": 16562.015333049043,
+      "minuteDrawdown": 17633.575963888143,
+      "bestTrade": 12838.432782823902
+     },
+     {
+      "bps": 20,
+      "costs": 50424.973867212735,
+      "netProfit": 116042.78165696195,
+      "dailyDrawdown": 16745.757607936088,
+      "minuteDrawdown": 17839.19940736238,
+      "bestTrade": 12624.204779572072
+     }
+    ],
+    "turnover": 25212486.933606375,
+    "exits": {
+     "maximumHold": 37,
+     "trailingStop": 69,
+     "trailingStopGap": 19
+    },
+    "wins": 87,
+    "winRate": 0.696,
+    "profitFactor": 2.82821555885544,
+    "medianTrade": 1131.9632613095773,
+    "worstTrade": -9679.559241203087,
+    "bestTrade": 13052.66078607573,
+    "medianHoldDays": 9,
+    "exposure": 0.5783397471137988,
+    "restrictions": 27,
+    "lowerPriceReentries": 17,
+    "recoveryResets": 10,
+    "lossesNotRestricted": 11,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 3,
+      "net": [
+       4058.93532269203,
+       3756.0921564005466,
+       3453.248990109064,
+       2847.5626575260976
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 7,
+      "net": [
+       4460.668267403575,
+       3756.524234639737,
+       3052.380201875898,
+       1644.0921363482203
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 19,
+      "net": [
+       20691.4658099915,
+       18777.820077086504,
+       16864.17434418151,
+       13036.882878371514
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 14,
+      "net": [
+       37061.91053984602,
+       35639.1604064939,
+       34216.410273141795,
+       31370.910006437567
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 19,
+      "net": [
+       35191.40174990185,
+       33270.59645998581,
+       31349.79117006976,
+       27508.180590237665
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 17,
+      "net": [
+       13445.229392031513,
+       11735.553352677962,
+       10025.87731332441,
+       6606.525234617322
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 29,
+      "net": [
+       26877.21215141582,
+       23960.12696999764,
+       21043.041788579474,
+       15208.871425743113
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 17,
+      "net": [
+       24680.93229089238,
+       22965.63840008939,
+       21250.344509286428,
+       17819.756727680448
+      ]
+     }
+    ],
+    "signature": "efb08be2ace431c4"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.007,
+      "lowerPriceReentry": 0.045,
+      "retraceFraction": 0.595,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 125,
+      "openAtEnd": false,
+      "realizedProfit": 166467.7555241747,
+      "unrealizedProfit": 0,
+      "netProfit": 166467.7555241747,
+      "marginInterest": 46019.178082191764,
+      "maximumDrawdown": 16378.273058162005,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-05-01",
+      "minuteMaximumDrawdown": 17450.81582080484,
+      "minuteDrawdownPeakTime": "2020-03-13T19:59:00.000Z",
+      "minuteDrawdownTroughTime": "2020-05-04T13:36:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 27,
+      "lowerPriceReentries": 17,
+      "recoveryResets": 10,
+      "lossesNotRestricted": 11
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 12606.243466803184,
+       "netProfit": 153861.5120573715,
+       "maximumDrawdown": 16470.144195605528,
+       "minuteMaximumDrawdown": 17542.19589234649
+      },
+      {
+       "bps": 10,
+       "costs": 25212.486933606368,
+       "netProfit": 141255.26859056833,
+       "maximumDrawdown": 16562.015333049043,
+       "minuteMaximumDrawdown": 17633.575963888143
+      },
+      {
+       "bps": 20,
+       "costs": 50424.973867212735,
+       "netProfit": 116042.78165696195,
+       "maximumDrawdown": 16745.757607936088,
+       "minuteMaximumDrawdown": 17839.19940736238
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4058.93532269203,
+       "costMarks": [
+        3756.0921564005466,
+        3453.248990109064,
+        2847.5626575260976
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8519.603590095605,
+       "costMarks": [
+        7512.616391040284,
+        6505.629191984962,
+        4491.654793874318
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 29211.069400087104,
+       "costMarks": [
+        26290.436468126787,
+        23369.80353616647,
+        17528.53767224583
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 66272.97993993312,
+       "costMarks": [
+        61929.59687462069,
+        57586.21380930826,
+        48899.4476786834
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 101464.38168983498,
+       "costMarks": [
+        95200.1933346065,
+        88936.00497937802,
+        76407.62826892106
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 114909.61108186649,
+       "costMarks": [
+        106935.74668728447,
+        98961.88229270243,
+        83014.15350353839
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 141786.8232332823,
+       "costMarks": [
+        130895.8736572821,
+        120004.9240812819,
+        98223.0249292815
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 166467.7555241747,
+       "costMarks": [
+        153861.5120573715,
+        141255.26859056833,
+        116042.78165696195
+       ]
+      }
+     ],
+     "exposureSessions": 1052
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.007,
+      "lowerPriceReentry": 0.045,
+      "retraceFraction": 0.595,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 125,
+      "openAtEnd": false,
+      "realizedProfit": 165578.70859930583,
+      "unrealizedProfit": 0,
+      "netProfit": 165578.70859930583,
+      "marginInterest": 46019.178082191764,
+      "maximumDrawdown": 16378.273058162005,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-05-01",
+      "minuteMaximumDrawdown": 17533.40045475379,
+      "minuteDrawdownPeakTime": "2020-02-19T17:49:00.000Z",
+      "minuteDrawdownTroughTime": "2020-02-28T15:04:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 27,
+      "lowerPriceReentries": 17,
+      "recoveryResets": 10,
+      "lossesNotRestricted": 11
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 12605.79894334075,
+       "netProfit": 152972.90965596508,
+       "maximumDrawdown": 16470.14419560552,
+       "minuteMaximumDrawdown": 17624.75430247162
+      },
+      {
+       "bps": 10,
+       "costs": 25211.5978866815,
+       "netProfit": 140367.11071262433,
+       "maximumDrawdown": 16562.01533304905,
+       "minuteMaximumDrawdown": 17716.108150189444
+      },
+      {
+       "bps": 20,
+       "costs": 50423.195773363,
+       "netProfit": 115155.51282594283,
+       "maximumDrawdown": 16745.757607936095,
+       "minuteMaximumDrawdown": 17952.339433792746
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4079.7191706730314,
+       "costMarks": [
+        3776.8656124575577,
+        3474.0120542420846,
+        2868.3049378111373
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8566.409962132835,
+       "costMarks": [
+        7559.399359891495,
+        6552.388757650155,
+        4538.3675531674735
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 29254.09414119565,
+       "costMarks": [
+        26333.439696864774,
+        23412.785252533904,
+        17571.476363872156
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 65857.7678524298,
+       "costMarks": [
+        61514.59239316112,
+        57171.41693389243,
+        48485.06601535507
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 100430.47306626644,
+       "costMarks": [
+        94166.80166534975,
+        87903.13026443304,
+        75375.78746259966
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 113860.97641761624,
+       "costMarks": [
+        105887.63634036634,
+        97914.29626311643,
+        81967.61610861662
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 141025.9863471486,
+       "costMarks": [
+        130135.41718959146,
+        119244.84803203432,
+        97463.70971692006
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 165578.70859930583,
+       "costMarks": [
+        152972.90965596508,
+        140367.11071262433,
+        115155.51282594283
+       ]
+      }
+     ],
+     "exposureSessions": 1052
+    }
+   ]
+  },
+  {
+   "kind": "shortlist",
+   "rank": 4,
+   "primary": false,
+   "id": "cad41cac6a161",
+   "params": {
+    "dipTenths": 23,
+    "trailingStopTenths": 21,
+    "maximumHoldDays": 8,
+    "lookbackSessions": 69,
+    "materialLossTenths": 8,
+    "lowerReentryTenths": 25,
+    "retraceTenths": 567
+   },
+   "description": "dipTenths=2.3% trailingStopTenths=2.1% maximumHoldDays=8 lookbackSessions=69 materialLossTenths=0.8% lowerReentryTenths=2.5% retraceTenths=56.7%",
+   "origin": {
+    "stage": "ga",
+    "run": 1,
+    "generation": 40
+   },
+   "selection": {
+    "id": "cad41cac6a161",
+    "meritRank": 5,
+    "merit": 93070.31256191205,
+    "paretoRank": 5,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 14,
+     "perturbations": 16,
+     "netP25": 93070.31256191205,
+     "netMedian": 126198.59796582322,
+     "netMin": 40114.4316016408,
+     "neighbourNetMin": 56226.53622923809,
+     "drawdownMedian": 18012.253531716888,
+     "drawdownMax": 40235.069144904715,
+     "feasibleShare": 0.7741935483870968,
+     "sameTradesShare": 0.03333333333333333
+    },
+    "positiveYearShare": 1,
+    "rank": 4,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 0,
+    "reason": "Merit rank 5; trades and parameters distinct from higher-ranked entries."
+   },
+   "boundFlags": [],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 152,
+    "closedTrades": 152,
+    "openAtEnd": false,
+    "entriesWithoutTrade": 0,
+    "netProfit": 193473.5751044569,
+    "grossProfit": 245821.5203099363,
+    "interest": 52347.945205479424,
+    "realizedProfit": 193473.5751044569,
+    "unrealizedProfit": 0,
+    "dailyDrawdown": 16606.04259459534,
+    "minuteDrawdown": 17626.155599095124,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 193473.5751044569,
+      "dailyDrawdown": 16606.04259459534,
+      "minuteDrawdown": 17626.155599095124,
+      "bestTrade": 13052.66078607573
+     },
+     {
+      "bps": 5,
+      "costs": 15322.910760154966,
+      "netProfit": 178150.6643443019,
+      "dailyDrawdown": 17664.251758362763,
+      "minuteDrawdown": 18012.253531716888,
+      "bestTrade": 12945.546784449816
+     },
+     {
+      "bps": 10,
+      "costs": 30645.82152030993,
+      "netProfit": 162827.75358414697,
+      "dailyDrawdown": 18857.71910588337,
+      "minuteDrawdown": 19205.546791306853,
+      "bestTrade": 12838.432782823902
+     },
+     {
+      "bps": 20,
+      "costs": 61291.64304061986,
+      "netProfit": 132181.932063837,
+      "dailyDrawdown": 21244.653800924585,
+      "minuteDrawdown": 21592.13331048678,
+      "bestTrade": 12624.204779572072
+     }
+    ],
+    "turnover": 30645821.520309936,
+    "exits": {
+     "maximumHold": 42,
+     "trailingStop": 83,
+     "trailingStopGap": 27
+    },
+    "wins": 105,
+    "winRate": 0.6907894736842105,
+    "profitFactor": 2.713874040118295,
+    "medianTrade": 921.5873515714761,
+    "worstTrade": -9679.559241203087,
+    "bestTrade": 13052.66078607573,
+    "medianHoldDays": 8,
+    "exposure": 0.657504123144585,
+    "restrictions": 32,
+    "lowerPriceReentries": 25,
+    "recoveryResets": 7,
+    "lossesNotRestricted": 15,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 4,
+      "net": [
+       2924.3550353790883,
+       2521.7627208750973,
+       2119.1704063711068,
+       1313.9857773631247
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 8,
+      "net": [
+       5555.284170907395,
+       4750.185980876737,
+       3945.087790846077,
+       2334.8914107847586
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 19,
+      "net": [
+       11679.752917606296,
+       9770.688383613247,
+       7861.623849620194,
+       4043.4947816340946
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 19,
+      "net": [
+       40416.836478400095,
+       38492.01710125679,
+       36567.197724113474,
+       32717.55896982686
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 27,
+      "net": [
+       67522.5197685013,
+       64784.81056341157,
+       62047.10135832185,
+       56571.68294814239
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 17,
+      "net": [
+       20252.66963225219,
+       18539.25836592923,
+       16825.847099606224,
+       13399.024566960288
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 36,
+      "net": [
+       19052.36777685987,
+       15438.8183053002,
+       11825.268833740542,
+       4598.169890621226
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 22,
+      "net": [
+       26069.789324550657,
+       23853.122923039045,
+       21636.456521527492,
+       17203.12371850427
+      ]
+     }
+    ],
+    "signature": "56f4c1e2bc538ba8"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.008,
+      "lowerPriceReentry": 0.025,
+      "retraceFraction": 0.567,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 152,
+      "openAtEnd": false,
+      "realizedProfit": 193473.5751044569,
+      "unrealizedProfit": 0,
+      "netProfit": 193473.5751044569,
+      "marginInterest": 52347.945205479424,
+      "maximumDrawdown": 16606.04259459534,
+      "drawdownPeakDate": "2018-06-06",
+      "drawdownTroughDate": "2018-12-24",
+      "minuteMaximumDrawdown": 17626.155599095124,
+      "minuteDrawdownPeakTime": "2020-03-13T19:59:00.000Z",
+      "minuteDrawdownTroughTime": "2020-03-23T15:44:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 32,
+      "lowerPriceReentries": 25,
+      "recoveryResets": 7,
+      "lossesNotRestricted": 15
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 15322.910760154966,
+       "netProfit": 178150.6643443019,
+       "maximumDrawdown": 17664.251758362763,
+       "minuteMaximumDrawdown": 18012.253531716888
+      },
+      {
+       "bps": 10,
+       "costs": 30645.82152030993,
+       "netProfit": 162827.75358414697,
+       "maximumDrawdown": 18857.71910588337,
+       "minuteMaximumDrawdown": 19205.546791306853
+      },
+      {
+       "bps": 20,
+       "costs": 61291.64304061986,
+       "netProfit": 132181.932063837,
+       "maximumDrawdown": 21244.653800924585,
+       "minuteMaximumDrawdown": 21592.13331048678
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2924.3550353790883,
+       "costMarks": [
+        2521.7627208750973,
+        2119.1704063711068,
+        1313.9857773631247
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8479.639206286483,
+       "costMarks": [
+        7271.948701751834,
+        6064.258197217184,
+        3648.8771881478833
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 20159.39212389278,
+       "costMarks": [
+        17042.63708536508,
+        13925.882046837378,
+        7692.371969781978
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 60576.228602292875,
+       "costMarks": [
+        55534.65418662187,
+        50493.079770950855,
+        40409.930939608836
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 128098.74837079417,
+       "costMarks": [
+        120319.46475003344,
+        112540.1811292727,
+        96981.61388775123
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 148351.41800304636,
+       "costMarks": [
+        138858.72311596267,
+        129366.02822887893,
+        110380.63845471152
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 167403.78577990623,
+       "costMarks": [
+        154297.54142126287,
+        141191.29706261947,
+        114978.80834533274
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 193473.5751044569,
+       "costMarks": [
+        178150.6643443019,
+        162827.75358414697,
+        132181.932063837
+       ]
+      }
+     ],
+     "exposureSessions": 1196
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.008,
+      "lowerPriceReentry": 0.025,
+      "retraceFraction": 0.567,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 152,
+      "openAtEnd": false,
+      "realizedProfit": 192320.2197215366,
+      "unrealizedProfit": 0,
+      "netProfit": 192320.2197215366,
+      "marginInterest": 52347.945205479424,
+      "maximumDrawdown": 16593.171180959624,
+      "drawdownPeakDate": "2018-06-06",
+      "drawdownTroughDate": "2018-12-24",
+      "minuteMaximumDrawdown": 17626.155599095124,
+      "minuteDrawdownPeakTime": "2020-03-13T19:59:00.000Z",
+      "minuteDrawdownTroughTime": "2020-03-23T15:44:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 32,
+      "lowerPriceReentries": 25,
+      "recoveryResets": 7,
+      "lossesNotRestricted": 16
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 15322.334082463503,
+       "netProfit": 176997.8856390731,
+       "maximumDrawdown": 17600.4524291058,
+       "minuteMaximumDrawdown": 17948.45420245992
+      },
+      {
+       "bps": 10,
+       "costs": 30644.668164927007,
+       "netProfit": 161675.55155660957,
+       "maximumDrawdown": 18793.951692248847,
+       "minuteMaximumDrawdown": 19141.77937767233
+      },
+      {
+       "bps": 20,
+       "costs": 61289.33632985401,
+       "netProfit": 131030.88339168258,
+       "maximumDrawdown": 21180.950218534945,
+       "minuteMaximumDrawdown": 21528.429728097137
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2945.13888336009,
+       "costMarks": [
+        2542.5361769321084,
+        2139.9334705041274,
+        1334.7280576481644
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8493.964759909395,
+       "costMarks": [
+        7286.267092597934,
+        6078.569425286472,
+        3663.1740906635487
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 20211.3474561096,
+       "costMarks": [
+        17094.566439915794,
+        13977.785423721984,
+        7744.223391334364
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 60026.34954179361,
+       "costMarks": [
+        54985.05006565285,
+        49943.750589512085,
+        39861.15163723056
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 126834.49686451907,
+       "costMarks": [
+        119055.84536951147,
+        111277.19387450386,
+        95719.89088448868
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 147120.94021992973,
+       "costMarks": [
+        137628.86057173758,
+        128136.78092354542,
+        109152.62162716112
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 166354.95326850892,
+       "costMarks": [
+        153249.23332612123,
+        140143.51338373357,
+        113932.07349895823
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 192320.2197215366,
+       "costMarks": [
+        176997.8856390731,
+        161675.55155660957,
+        131030.88339168258
+       ]
+      }
+     ],
+     "exposureSessions": 1196
+    }
+   ]
+  },
+  {
+   "kind": "shortlist",
+   "rank": 5,
+   "primary": false,
+   "id": "c7be76b01d2d3",
+   "params": {
+    "dipTenths": 19,
+    "trailingStopTenths": 27,
+    "maximumHoldDays": 9,
+    "lookbackSessions": 11,
+    "materialLossTenths": 18,
+    "lowerReentryTenths": 80,
+    "retraceTenths": 50
+   },
+   "description": "dipTenths=1.9% trailingStopTenths=2.7% maximumHoldDays=9 lookbackSessions=11 materialLossTenths=1.8% lowerReentryTenths=8.0% retraceTenths=5.0%",
+   "origin": {
+    "stage": "ga",
+    "run": 0,
+    "generation": 47
+   },
+   "selection": {
+    "id": "c7be76b01d2d3",
+    "meritRank": 8,
+    "merit": 90462.63415773863,
+    "paretoRank": 11,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 13,
+     "perturbations": 16,
+     "netP25": 90462.63415773863,
+     "netMedian": 106189.90141738219,
+     "netMin": 41183.89404175567,
+     "neighbourNetMin": 83600.0407921728,
+     "drawdownMedian": 25262.539577962714,
+     "drawdownMax": 39207.600498492844,
+     "feasibleShare": 0.3333333333333333,
+     "sameTradesShare": 0
+    },
+    "positiveYearShare": 1,
+    "rank": 5,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 0,
+    "reason": "Merit rank 8; trades and parameters distinct from higher-ranked entries."
+   },
+   "boundFlags": [
+    "lookbackSessions at/near lower bound (11 vs 10)"
+   ],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 132,
+    "closedTrades": 131,
+    "openAtEnd": true,
+    "entriesWithoutTrade": 0,
+    "netProfit": 172076.09129920084,
+    "grossProfit": 236900.74883344737,
+    "interest": 64824.65753424654,
+    "realizedProfit": 155215.09122801467,
+    "unrealizedProfit": 16861.00007118615,
+    "dailyDrawdown": 17774.82319856476,
+    "minuteDrawdown": 18699.096486504466,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 172076.09129920084,
+      "dailyDrawdown": 17774.82319856476,
+      "minuteDrawdown": 18699.096486504466,
+      "bestTrade": 16861.00007118615
+     },
+     {
+      "bps": 5,
+      "costs": 13318.450374416712,
+      "netProfit": 158757.64092478412,
+      "dailyDrawdown": 18667.30701984219,
+      "minuteDrawdown": 19190.28940401465,
+      "bestTrade": 16751.680530054666
+     },
+     {
+      "bps": 10,
+      "costs": 26636.900748833425,
+      "netProfit": 145439.1905503674,
+      "dailyDrawdown": 19559.790841119615,
+      "minuteDrawdown": 19731.665649880502,
+      "bestTrade": 16642.360988923185
+     },
+     {
+      "bps": 20,
+      "costs": 53273.80149766685,
+      "netProfit": 118802.28980153399,
+      "dailyDrawdown": 21344.758483674486,
+      "minuteDrawdown": 21585.562639223193,
+      "bestTrade": 16423.721906660216
+     }
+    ],
+    "turnover": 26636900.748833437,
+    "exits": {
+     "maximumHold": 48,
+     "trailingStop": 59,
+     "trailingStopGap": 24
+    },
+    "wins": 80,
+    "winRate": 0.6060606060606061,
+    "profitFactor": 2.3211239157232084,
+    "medianTrade": 1021.5604685036233,
+    "worstTrade": -9363.765777302591,
+    "bestTrade": 16861.00007118615,
+    "medianHoldDays": 11,
+    "exposure": 0.8081363386476086,
+    "restrictions": 27,
+    "lowerPriceReentries": 2,
+    "recoveryResets": 25,
+    "lossesNotRestricted": 25,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 3,
+      "net": [
+       2017.0094075079364,
+       1715.0967932151414,
+       1413.1841789223463,
+       809.3589503367562
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 9,
+      "net": [
+       21392.349806456794,
+       20477.11801511521,
+       19561.886223773625,
+       17731.42264109046
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 18,
+      "net": [
+       9015.134965372195,
+       7205.971233505945,
+       5396.807501639698,
+       1778.4800379072003
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 13,
+      "net": [
+       31605.70280983185,
+       30284.94242418036,
+       28964.182038528867,
+       26322.66126722589
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 26,
+      "net": [
+       56072.466961862476,
+       53439.89511194319,
+       50807.323262023914,
+       45542.17956218533
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 17,
+      "net": [
+       15305.442556468362,
+       13593.16380779288,
+       11880.885059117369,
+       8456.32756176639
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 29,
+      "net": [
+       4341.6786625963,
+       1435.3489191554108,
+       -1470.9808242854633,
+       -7283.640311167241
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 17,
+      "net": [
+       32326.306129104923,
+       30606.104619875987,
+       28885.90311064705,
+       25445.500092189206
+      ]
+     }
+    ],
+    "signature": "3da048086640a1b6"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.018,
+      "lowerPriceReentry": 0.08,
+      "retraceFraction": 0.05,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 131,
+      "openAtEnd": true,
+      "realizedProfit": 155215.09122801467,
+      "unrealizedProfit": 16861.00007118615,
+      "netProfit": 172076.09129920084,
+      "marginInterest": 64824.65753424654,
+      "maximumDrawdown": 17774.82319856476,
+      "drawdownPeakDate": "2018-09-04",
+      "drawdownTroughDate": "2018-12-24",
+      "minuteMaximumDrawdown": 18699.096486504466,
+      "minuteDrawdownPeakTime": "2022-08-08T14:02:00.000Z",
+      "minuteDrawdownTroughTime": "2022-10-13T13:32:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 27,
+      "lowerPriceReentries": 2,
+      "recoveryResets": 25,
+      "lossesNotRestricted": 25
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13318.450374416712,
+       "netProfit": 158757.64092478412,
+       "maximumDrawdown": 18667.30701984219,
+       "minuteMaximumDrawdown": 19190.28940401465
+      },
+      {
+       "bps": 10,
+       "costs": 26636.900748833425,
+       "netProfit": 145439.1905503674,
+       "maximumDrawdown": 19559.790841119615,
+       "minuteMaximumDrawdown": 19731.665649880502
+      },
+      {
+       "bps": 20,
+       "costs": 53273.80149766685,
+       "netProfit": 118802.28980153399,
+       "maximumDrawdown": 21344.758483674486,
+       "minuteMaximumDrawdown": 21585.562639223193
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2017.0094075079364,
+       "costMarks": [
+        1715.0967932151414,
+        1413.1841789223463,
+        809.3589503367562
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 23409.35921396473,
+       "costMarks": [
+        22192.21480833035,
+        20975.070402695972,
+        18540.781591427214
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 32424.494179336925,
+       "costMarks": [
+        29398.186041836296,
+        26371.87790433567,
+        20319.261629334414
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 64030.19698916878,
+       "costMarks": [
+        59683.12846601666,
+        55336.05994286454,
+        46641.9228965603
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 120102.66395103125,
+       "costMarks": [
+        113123.02357795984,
+        106143.38320488845,
+        92184.10245874563
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 135408.10650749961,
+       "costMarks": [
+        126716.18738575272,
+        118024.26826400582,
+        100640.43002051202
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 139749.7851700959,
+       "costMarks": [
+        128151.53630490814,
+        116553.28743972036,
+        93356.78970934478
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 172076.09129920084,
+       "costMarks": [
+        158757.64092478412,
+        145439.1905503674,
+        118802.28980153399
+       ]
+      }
+     ],
+     "exposureSessions": 1470
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.018,
+      "lowerPriceReentry": 0.08,
+      "retraceFraction": 0.05,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 131,
+      "openAtEnd": true,
+      "realizedProfit": 153848.91563649703,
+      "unrealizedProfit": 16861.00007118615,
+      "netProfit": 170709.9157076832,
+      "marginInterest": 64824.65753424654,
+      "maximumDrawdown": 18021.15073702716,
+      "drawdownPeakDate": "2018-09-04",
+      "drawdownTroughDate": "2018-12-24",
+      "minuteMaximumDrawdown": 18699.096486504466,
+      "minuteDrawdownPeakTime": "2022-08-08T14:02:00.000Z",
+      "minuteDrawdownTroughTime": "2022-10-13T13:32:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 27,
+      "lowerPriceReentries": 2,
+      "recoveryResets": 25,
+      "lossesNotRestricted": 25
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13317.767286620958,
+       "netProfit": 157392.14842106221,
+       "maximumDrawdown": 18913.51139453536,
+       "minuteMaximumDrawdown": 19190.289404014664
+      },
+      {
+       "bps": 10,
+       "costs": 26635.534573241915,
+       "netProfit": 144074.38113444127,
+       "maximumDrawdown": 19805.872052043553,
+       "minuteMaximumDrawdown": 19977.746860804436
+      },
+      {
+       "bps": 20,
+       "costs": 53271.06914648383,
+       "netProfit": 117438.84656119936,
+       "maximumDrawdown": 21590.593367059955,
+       "minuteMaximumDrawdown": 21987.17434081543
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2017.0094075079364,
+       "costMarks": [
+        1715.0967932151414,
+        1413.1841789223463,
+        809.3589503367562
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 23407.29089602417,
+       "costMarks": [
+        22190.14752454876,
+        20973.00415307335,
+        18538.717410122532
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 32100.43119799055,
+       "costMarks": [
+        29074.285091980597,
+        26048.13898597064,
+        19995.846773950736
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 64026.02441796192,
+       "costMarks": [
+        59678.9579810954,
+        55331.891544228885,
+        46637.75867049586
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 119800.46062037854,
+       "costMarks": [
+        112820.97134897245,
+        105841.48207756638,
+        91882.50353475423
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 134971.89905375574,
+       "costMarks": [
+        126280.19803573572,
+        117588.4970177157,
+        100205.09498167563
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 138689.20559262455,
+       "costMarks": [
+        127091.4870172255,
+        115493.76844182645,
+        92298.33129102834
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 170709.9157076832,
+       "costMarks": [
+        157392.14842106221,
+        144074.38113444127,
+        117438.84656119936
+       ]
+      }
+     ],
+     "exposureSessions": 1470
+    }
+   ]
+  },
+  {
+   "kind": "shortlist",
+   "rank": 6,
+   "primary": false,
+   "id": "c100a6791197e",
+   "params": {
+    "dipTenths": 26,
+    "trailingStopTenths": 22,
+    "maximumHoldDays": 8,
+    "lookbackSessions": 206,
+    "materialLossTenths": 18,
+    "lowerReentryTenths": 31,
+    "retraceTenths": 567
+   },
+   "description": "dipTenths=2.6% trailingStopTenths=2.2% maximumHoldDays=8 lookbackSessions=206 materialLossTenths=1.8% lowerReentryTenths=3.1% retraceTenths=56.7%",
+   "origin": {
+    "stage": "ga",
+    "run": 1,
+    "generation": 46
+   },
+   "selection": {
+    "id": "c100a6791197e",
+    "meritRank": 11,
+    "merit": 87599.00583240746,
+    "paretoRank": 1,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 14,
+     "perturbations": 16,
+     "netP25": 87599.00583240746,
+     "netMedian": 121055.93972982762,
+     "netMin": 6421.009228865201,
+     "neighbourNetMin": 78219.65399368836,
+     "drawdownMedian": 17486.52779613054,
+     "drawdownMax": 30118.720147982403,
+     "feasibleShare": 0.9032258064516129,
+     "sameTradesShare": 0.06666666666666667
+    },
+    "positiveYearShare": 1,
+    "rank": 6,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 0,
+    "reason": "Merit rank 11; trades and parameters distinct from higher-ranked entries."
+   },
+   "boundFlags": [],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 136,
+    "closedTrades": 136,
+    "openAtEnd": false,
+    "entriesWithoutTrade": 0,
+    "netProfit": 171184.82040377718,
+    "grossProfit": 218288.92999281824,
+    "interest": 47104.10958904106,
+    "realizedProfit": 171184.82040377718,
+    "unrealizedProfit": 0,
+    "dailyDrawdown": 14217.397855884548,
+    "minuteDrawdown": 17395.10480058563,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 171184.82040377718,
+      "dailyDrawdown": 14217.397855884548,
+      "minuteDrawdown": 17395.10480058563,
+      "bestTrade": 11381.215284554184
+     },
+     {
+      "bps": 5,
+      "costs": 13709.14446499641,
+      "netProfit": 157475.67593878077,
+      "dailyDrawdown": 14310.334362436064,
+      "minuteDrawdown": 17486.52779613054,
+      "bestTrade": 11275.178101569441
+     },
+     {
+      "bps": 10,
+      "costs": 27418.28892999282,
+      "netProfit": 143766.53147378436,
+      "dailyDrawdown": 14649.481119515627,
+      "minuteDrawdown": 17578.54006833079,
+      "bestTrade": 11169.140918584699
+     },
+     {
+      "bps": 20,
+      "costs": 54836.57785998564,
+      "netProfit": 116348.24254379154,
+      "dailyDrawdown": 15837.164527283332,
+      "minuteDrawdown": 17961.796839828476,
+      "bestTrade": 10957.066552615213
+     }
+    ],
+    "turnover": 27418288.92999283,
+    "exits": {
+     "maximumHold": 44,
+     "trailingStop": 70,
+     "trailingStopGap": 22
+    },
+    "wins": 89,
+    "winRate": 0.6544117647058824,
+    "profitFactor": 2.565097513827699,
+    "medianTrade": 910.8155752782463,
+    "worstTrade": -9679.559241203087,
+    "bestTrade": 11381.215284554184,
+    "medianHoldDays": 8,
+    "exposure": 0.5948323254535459,
+    "restrictions": 21,
+    "lowerPriceReentries": 16,
+    "recoveryResets": 5,
+    "lossesNotRestricted": 26,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 3,
+      "net": [
+       3790.5461955431615,
+       3487.837223815253,
+       3185.128252087344,
+       2579.7103086315274
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 7,
+      "net": [
+       4782.178854180227,
+       4078.4014633832744,
+       3374.6240725863213,
+       1967.0692909924146
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 17,
+      "net": [
+       5282.604432295233,
+       3577.0850478873035,
+       1871.5656634793759,
+       -1539.4731053364808
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 16,
+      "net": [
+       41463.1236651561,
+       39838.02224030982,
+       38212.92081546354,
+       34962.71796577099
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 26,
+      "net": [
+       65768.62819477894,
+       63132.12744232538,
+       60495.62668987184,
+       55222.62518496472
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 15,
+      "net": [
+       29993.20959333956,
+       28474.74723511825,
+       26956.284876896898,
+       23919.360160454264
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 29,
+      "net": [
+       13910.734936015884,
+       11000.148061698565,
+       8089.561187381245,
+       2268.3874387465767
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 23,
+      "net": [
+       6193.794532468077,
+       3887.307224242919,
+       1580.81991601779,
+       -3032.154700432482
+      ]
+     }
+    ],
+    "signature": "9e47f9797476c680"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.018,
+      "lowerPriceReentry": 0.031,
+      "retraceFraction": 0.567,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 136,
+      "openAtEnd": false,
+      "realizedProfit": 171184.82040377718,
+      "unrealizedProfit": 0,
+      "netProfit": 171184.82040377718,
+      "marginInterest": 47104.10958904106,
+      "maximumDrawdown": 14217.397855884548,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-03-23",
+      "minuteMaximumDrawdown": 17395.10480058563,
+      "minuteDrawdownPeakTime": "2020-01-30T20:58:00.000Z",
+      "minuteDrawdownTroughTime": "2020-02-28T15:04:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 21,
+      "lowerPriceReentries": 16,
+      "recoveryResets": 5,
+      "lossesNotRestricted": 26
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13709.14446499641,
+       "netProfit": 157475.67593878077,
+       "maximumDrawdown": 14310.334362436064,
+       "minuteMaximumDrawdown": 17486.52779613054
+      },
+      {
+       "bps": 10,
+       "costs": 27418.28892999282,
+       "netProfit": 143766.53147378436,
+       "maximumDrawdown": 14649.481119515627,
+       "minuteMaximumDrawdown": 17578.54006833079
+      },
+      {
+       "bps": 20,
+       "costs": 54836.57785998564,
+       "netProfit": 116348.24254379154,
+       "maximumDrawdown": 15837.164527283332,
+       "minuteMaximumDrawdown": 17961.796839828476
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 3790.5461955431615,
+       "costMarks": [
+        3487.837223815253,
+        3185.128252087344,
+        2579.7103086315274
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8572.725049723389,
+       "costMarks": [
+        7566.238687198527,
+        6559.7523246736655,
+        4546.779599623942
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 13855.329482018622,
+       "costMarks": [
+        11143.32373508583,
+        8431.317988153041,
+        3007.306494287461
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 55318.45314717472,
+       "costMarks": [
+        50981.345975395656,
+        46644.23880361659,
+        37970.024460058456
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 121087.08134195366,
+       "costMarks": [
+        114113.47341772103,
+        107139.86549348843,
+        93192.64964502318
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 151080.29093529322,
+       "costMarks": [
+        142588.22065283929,
+        134096.15037038532,
+        117112.00980547744
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 164991.0258713091,
+       "costMarks": [
+        153588.36871453785,
+        142185.71155776657,
+        119380.39724422402
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 171184.82040377718,
+       "costMarks": [
+        157475.67593878077,
+        143766.53147378436,
+        116348.24254379154
+       ]
+      }
+     ],
+     "exposureSessions": 1082
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.018,
+      "lowerPriceReentry": 0.031,
+      "retraceFraction": 0.567,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 136,
+      "openAtEnd": false,
+      "realizedProfit": 170634.98238254173,
+      "unrealizedProfit": 0,
+      "netProfit": 170634.98238254173,
+      "marginInterest": 47104.10958904106,
+      "maximumDrawdown": 14217.397855884548,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-03-23",
+      "minuteMaximumDrawdown": 17508.500511779814,
+      "minuteDrawdownPeakTime": "2020-01-30T20:58:00.000Z",
+      "minuteDrawdownTroughTime": "2020-02-28T15:04:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 21,
+      "lowerPriceReentries": 16,
+      "recoveryResets": 5,
+      "lossesNotRestricted": 26
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13708.869545985792,
+       "netProfit": 156926.11283655593,
+       "maximumDrawdown": 14310.334362436064,
+       "minuteMaximumDrawdown": 17599.86680946913
+      },
+      {
+       "bps": 10,
+       "costs": 27417.739091971584,
+       "netProfit": 143217.24329057016,
+       "maximumDrawdown": 14630.21380563186,
+       "minuteMaximumDrawdown": 17691.23310715845
+      },
+      {
+       "bps": 20,
+       "costs": 54835.47818394317,
+       "netProfit": 115799.50419859856,
+       "maximumDrawdown": 15817.91650000005,
+       "minuteMaximumDrawdown": 17947.09039263774
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 3790.5461955431615,
+       "costMarks": [
+        3487.837223815253,
+        3185.128252087344,
+        2579.7103086315274
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8477.45453470871,
+       "costMarks": [
+        7471.015807441356,
+        6464.577080174001,
+        4451.699625639292
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 13780.221305406778,
+       "costMarks": [
+        11068.253112562294,
+        8356.284919717807,
+        2932.3485340288394
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 54897.43173342508,
+       "costMarks": [
+        50560.53507235289,
+        46223.6384112807,
+        37549.84508913632
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 120398.7910770232,
+       "costMarks": [
+        113425.52729792305,
+        106452.26351882289,
+        92505.73596062258
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 150496.57685441792,
+       "costMarks": [
+        142004.7984290044,
+        133513.0200035909,
+        116529.46315276388
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 164899.64893040896,
+       "costMarks": [
+        153497.03746210816,
+        142094.42599380732,
+        119289.20305720568
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 170634.98238254173,
+       "costMarks": [
+        156926.11283655593,
+        143217.24329057016,
+        115799.50419859856
+       ]
+      }
+     ],
+     "exposureSessions": 1082
+    }
+   ]
+  },
+  {
+   "kind": "shortlist",
+   "rank": 7,
+   "primary": false,
+   "id": "c7701a2caa45c",
+   "params": {
+    "dipTenths": 24,
+    "trailingStopTenths": 21,
+    "maximumHoldDays": 8,
+    "lookbackSessions": 243,
+    "materialLossTenths": 7,
+    "lowerReentryTenths": 20,
+    "retraceTenths": 484
+   },
+   "description": "dipTenths=2.4% trailingStopTenths=2.1% maximumHoldDays=8 lookbackSessions=243 materialLossTenths=0.7% lowerReentryTenths=2.0% retraceTenths=48.4%",
+   "origin": {
+    "stage": "ga",
+    "run": 1,
+    "generation": 39
+   },
+   "selection": {
+    "id": "c7701a2caa45c",
+    "meritRank": 13,
+    "merit": 86655.97276123869,
+    "paretoRank": 10,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 13,
+     "perturbations": 16,
+     "netP25": 86655.97276123869,
+     "netMedian": 115545.65787687968,
+     "netMin": 25582.391465573986,
+     "neighbourNetMin": 45624.03793654416,
+     "drawdownMedian": 17717.432932254495,
+     "drawdownMax": 34107.47579097426,
+     "feasibleShare": 0.7666666666666667,
+     "sameTradesShare": 0.034482758620689655
+    },
+    "positiveYearShare": 1,
+    "rank": 7,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 0,
+    "reason": "Merit rank 13; trades and parameters distinct from higher-ranked entries."
+   },
+   "boundFlags": [],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 148,
+    "closedTrades": 148,
+    "openAtEnd": false,
+    "entriesWithoutTrade": 1,
+    "netProfit": 182103.01248356682,
+    "grossProfit": 232070.13577123804,
+    "interest": 49967.12328767122,
+    "realizedProfit": 182103.01248356682,
+    "unrealizedProfit": 0,
+    "dailyDrawdown": 14511.655039124998,
+    "minuteDrawdown": 17626.15559909514,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 182103.01248356682,
+      "dailyDrawdown": 14511.655039124998,
+      "minuteDrawdown": 17626.15559909514,
+      "bestTrade": 13052.66078607573
+     },
+     {
+      "bps": 5,
+      "costs": 14916.035067885618,
+      "netProfit": 167186.9774156812,
+      "dailyDrawdown": 14604.489622564339,
+      "minuteDrawdown": 17717.432932254495,
+      "bestTrade": 12945.546784449816
+     },
+     {
+      "bps": 10,
+      "costs": 29832.070135771235,
+      "netProfit": 152270.9423477956,
+      "dailyDrawdown": 14909.289087011755,
+      "minuteDrawdown": 17808.710265413843,
+      "bestTrade": 12838.432782823902
+     },
+     {
+      "bps": 20,
+      "costs": 59664.14027154247,
+      "netProfit": 122438.87221202435,
+      "dailyDrawdown": 16486.615804779358,
+      "minuteDrawdown": 18014.128232123476,
+      "bestTrade": 12624.204779572072
+     }
+    ],
+    "turnover": 29832070.135771252,
+    "exits": {
+     "maximumHold": 41,
+     "trailingStop": 80,
+     "trailingStopGap": 27
+    },
+    "wins": 100,
+    "winRate": 0.6756756756756757,
+    "profitFactor": 2.592756126594777,
+    "medianTrade": 1008.8931748808668,
+    "worstTrade": -9679.559241203087,
+    "bestTrade": 13052.66078607573,
+    "medianHoldDays": 8,
+    "exposure": 0.6256184716877405,
+    "restrictions": 33,
+    "lowerPriceReentries": 26,
+    "recoveryResets": 7,
+    "lossesNotRestricted": 15,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 3,
+      "net": [
+       4058.93532269203,
+       3756.0921564005466,
+       3453.248990109064,
+       2847.5626575260976
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 7,
+      "net": [
+       4460.668267403575,
+       3756.524234639737,
+       3052.380201875898,
+       1644.0921363482203
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 18,
+      "net": [
+       20331.876998826265,
+       18518.38092334055,
+       16704.884847854835,
+       13077.892696883406
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 19,
+      "net": [
+       43879.67433365654,
+       41953.123537585605,
+       40026.57274151467,
+       36173.47114937279
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 27,
+      "net": [
+       53038.983151206994,
+       50308.621193877974,
+       47578.25923654894,
+       42117.535321890886
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 17,
+      "net": [
+       12447.855872875924,
+       10738.618246309343,
+       9029.380619742777,
+       5610.905366609644
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 36,
+      "net": [
+       18105.127600254782,
+       14491.855858372466,
+       10878.58411649015,
+       3652.0406327254896
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 21,
+      "net": [
+       25779.890936650714,
+       23663.761265154986,
+       21547.63159365926,
+       17315.372250667817
+      ]
+     }
+    ],
+    "signature": "5db91ed389488a5e"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.007,
+      "lowerPriceReentry": 0.02,
+      "retraceFraction": 0.484,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 148,
+      "openAtEnd": false,
+      "realizedProfit": 182103.01248356682,
+      "unrealizedProfit": 0,
+      "netProfit": 182103.01248356682,
+      "marginInterest": 49967.12328767122,
+      "maximumDrawdown": 14511.655039124998,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-03-23",
+      "minuteMaximumDrawdown": 17626.15559909514,
+      "minuteDrawdownPeakTime": "2020-03-13T19:59:00.000Z",
+      "minuteDrawdownTroughTime": "2020-03-23T15:44:00.000Z",
+      "entriesWithoutTrade": 1,
+      "restrictions": 33,
+      "lowerPriceReentries": 26,
+      "recoveryResets": 7,
+      "lossesNotRestricted": 15
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 14916.035067885618,
+       "netProfit": 167186.9774156812,
+       "maximumDrawdown": 14604.489622564339,
+       "minuteMaximumDrawdown": 17717.432932254495
+      },
+      {
+       "bps": 10,
+       "costs": 29832.070135771235,
+       "netProfit": 152270.9423477956,
+       "maximumDrawdown": 14909.289087011755,
+       "minuteMaximumDrawdown": 17808.710265413843
+      },
+      {
+       "bps": 20,
+       "costs": 59664.14027154247,
+       "netProfit": 122438.87221202435,
+       "maximumDrawdown": 16486.615804779358,
+       "minuteMaximumDrawdown": 18014.128232123476
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4058.93532269203,
+       "costMarks": [
+        3756.0921564005466,
+        3453.248990109064,
+        2847.5626575260976
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8519.603590095605,
+       "costMarks": [
+        7512.616391040284,
+        6505.629191984962,
+        4491.654793874318
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 28851.48058892187,
+       "costMarks": [
+        26030.997314380835,
+        23210.514039839796,
+        17569.547490757723
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 72731.15492257841,
+       "costMarks": [
+        67984.12085196644,
+        63237.08678135446,
+        53743.01864013051
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 125770.1380737854,
+       "costMarks": [
+        118292.74204584441,
+        110815.3460179034,
+        95860.5539620214
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 138217.99394666133,
+       "costMarks": [
+        129031.36029215375,
+        119844.72663764618,
+        101471.45932863104
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 156323.1215469161,
+       "costMarks": [
+        143523.21615052622,
+        130723.31075413633,
+        105123.49996135653
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 182103.01248356682,
+       "costMarks": [
+        167186.9774156812,
+        152270.9423477956,
+        122438.87221202435
+       ]
+      }
+     ],
+     "exposureSessions": 1138
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.007,
+      "lowerPriceReentry": 0.02,
+      "retraceFraction": 0.484,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 148,
+      "openAtEnd": false,
+      "realizedProfit": 180730.5080725765,
+      "unrealizedProfit": 0,
+      "netProfit": 180730.5080725765,
+      "marginInterest": 49967.12328767122,
+      "maximumDrawdown": 14511.655039124998,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-03-23",
+      "minuteMaximumDrawdown": 17626.15559909514,
+      "minuteDrawdownPeakTime": "2020-03-13T19:59:00.000Z",
+      "minuteDrawdownTroughTime": "2020-03-23T15:44:00.000Z",
+      "entriesWithoutTrade": 1,
+      "restrictions": 33,
+      "lowerPriceReentries": 26,
+      "recoveryResets": 7,
+      "lossesNotRestricted": 15
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 14915.34881568012,
+       "netProfit": 165815.15925689635,
+       "maximumDrawdown": 14604.489622564339,
+       "minuteMaximumDrawdown": 17717.432932254495
+      },
+      {
+       "bps": 10,
+       "costs": 29830.69763136024,
+       "netProfit": 150899.81044121625,
+       "maximumDrawdown": 14909.289087011755,
+       "minuteMaximumDrawdown": 17808.710265413858
+      },
+      {
+       "bps": 20,
+       "costs": 59661.39526272048,
+       "netProfit": 121069.11280985601,
+       "maximumDrawdown": 16364.334176135322,
+       "minuteMaximumDrawdown": 18127.268258553842
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4079.7191706730314,
+       "costMarks": [
+        3776.8656124575577,
+        3474.0120542420846,
+        2868.3049378111373
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8566.409962132835,
+       "costMarks": [
+        7559.399359891495,
+        6552.388757650155,
+        4538.3675531674735
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 28935.91673955301,
+       "costMarks": [
+        26115.39124693666,
+        23294.865754320304,
+        17653.8147690876
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 72198.56920433382,
+       "costMarks": [
+        67451.80142658098,
+        62705.03364882812,
+        53211.498093322414
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 124523.10230087445,
+       "costMarks": [
+        117046.3297908199,
+        109569.55728076537,
+        94616.01226065628
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 136956.23213306867,
+       "costMarks": [
+        127770.22935946789,
+        118584.2265858671,
+        100212.22103866556
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 155378.42454921408,
+       "costMarks": [
+        142578.99150132303,
+        129779.55845343201,
+        104180.69235764991
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 180730.5080725765,
+       "costMarks": [
+        165815.15925689635,
+        150899.81044121625,
+        121069.11280985601
+       ]
+      }
+     ],
+     "exposureSessions": 1138
+    }
+   ]
+  },
+  {
+   "kind": "shortlist",
+   "rank": 8,
+   "primary": false,
+   "id": "cf0fbb4858ae4",
+   "params": {
+    "dipTenths": 24,
+    "trailingStopTenths": 21,
+    "maximumHoldDays": 8,
+    "lookbackSessions": 165,
+    "materialLossTenths": 13,
+    "lowerReentryTenths": 48,
+    "retraceTenths": 463
+   },
+   "description": "dipTenths=2.4% trailingStopTenths=2.1% maximumHoldDays=8 lookbackSessions=165 materialLossTenths=1.3% lowerReentryTenths=4.8% retraceTenths=46.3%",
+   "origin": {
+    "stage": "ga",
+    "run": 1,
+    "generation": 33
+   },
+   "selection": {
+    "id": "cf0fbb4858ae4",
+    "meritRank": 15,
+    "merit": 86106.35837732139,
+    "paretoRank": 12,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 14,
+     "perturbations": 16,
+     "netP25": 86106.35837732139,
+     "netMedian": 112868.26273077731,
+     "netMin": 45437.60158126326,
+     "neighbourNetMin": 45437.60158126326,
+     "drawdownMedian": 17511.44422590133,
+     "drawdownMax": 28160.202430329766,
+     "feasibleShare": 0.9032258064516129,
+     "sameTradesShare": 0.03333333333333333
+    },
+    "positiveYearShare": 1,
+    "rank": 8,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 0,
+    "reason": "Merit rank 15; trades and parameters distinct from higher-ranked entries."
+   },
+   "boundFlags": [],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 134,
+    "closedTrades": 134,
+    "openAtEnd": false,
+    "entriesWithoutTrade": 0,
+    "netProfit": 169500.4388224573,
+    "grossProfit": 217599.06895944357,
+    "interest": 48098.630136986256,
+    "realizedProfit": 169500.4388224573,
+    "unrealizedProfit": 0,
+    "dailyDrawdown": 14539.230143416316,
+    "minuteDrawdown": 17420.033694803526,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 169500.4388224573,
+      "dailyDrawdown": 14539.230143416316,
+      "minuteDrawdown": 17420.033694803526,
+      "bestTrade": 13052.66078607573
+     },
+     {
+      "bps": 5,
+      "costs": 13508.79953447972,
+      "netProfit": 155991.6392879776,
+      "dailyDrawdown": 14732.111213276119,
+      "minuteDrawdown": 17511.44422590133,
+      "bestTrade": 12945.546784449816
+     },
+     {
+      "bps": 10,
+      "costs": 27017.59906895944,
+      "netProfit": 142482.83975349786,
+      "dailyDrawdown": 14924.992283135907,
+      "minuteDrawdown": 17602.854756999135,
+      "bestTrade": 12838.432782823902
+     },
+     {
+      "bps": 20,
+      "costs": 54035.19813791888,
+      "netProfit": 115465.24068453842,
+      "dailyDrawdown": 15310.754422855505,
+      "minuteDrawdown": 17785.67581919475,
+      "bestTrade": 12624.204779572072
+     }
+    ],
+    "turnover": 27017599.068959456,
+    "exits": {
+     "maximumHold": 42,
+     "trailingStop": 71,
+     "trailingStopGap": 21
+    },
+    "wins": 89,
+    "winRate": 0.664179104477612,
+    "profitFactor": 2.7447417602443918,
+    "medianTrade": 1008.8931748808668,
+    "worstTrade": -9679.559241203087,
+    "bestTrade": 13052.66078607573,
+    "medianHoldDays": 8.5,
+    "exposure": 0.6041781198460693,
+    "restrictions": 23,
+    "lowerPriceReentries": 15,
+    "recoveryResets": 8,
+    "lossesNotRestricted": 22,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 3,
+      "net": [
+       4058.93532269203,
+       3756.0921564005466,
+       3453.248990109064,
+       2847.5626575260976
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 9,
+      "net": [
+       5639.822121589777,
+       4734.711799570078,
+       3829.60147755038,
+       2019.3808335109825
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 17,
+      "net": [
+       24599.218954489617,
+       22883.453591587713,
+       21167.68822868581,
+       17736.157502882004
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 16,
+      "net": [
+       27276.31979125688,
+       25658.673412183172,
+       24041.027033109465,
+       20805.734274962044
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 22,
+      "net": [
+       40376.07969109328,
+       38152.44096631622,
+       35928.80224153917,
+       31481.52479198508
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 17,
+      "net": [
+       17370.124685648698,
+       15658.471130155202,
+       13946.817574661676,
+       10523.510463674655
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 30,
+      "net": [
+       23906.83597347852,
+       20891.115432204097,
+       17875.394890929703,
+       11843.953808380873
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 20,
+      "net": [
+       26273.102282208507,
+       24256.680799560563,
+       22240.25931691259,
+       18207.41635161669
+      ]
+     }
+    ],
+    "signature": "fd544fa3c6a0fa68"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.013,
+      "lowerPriceReentry": 0.048,
+      "retraceFraction": 0.463,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 134,
+      "openAtEnd": false,
+      "realizedProfit": 169500.4388224573,
+      "unrealizedProfit": 0,
+      "netProfit": 169500.4388224573,
+      "marginInterest": 48098.630136986256,
+      "maximumDrawdown": 14539.230143416316,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-04-23",
+      "minuteMaximumDrawdown": 17420.033694803526,
+      "minuteDrawdownPeakTime": "2020-02-19T17:49:00.000Z",
+      "minuteDrawdownTroughTime": "2020-02-28T15:04:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 23,
+      "lowerPriceReentries": 15,
+      "recoveryResets": 8,
+      "lossesNotRestricted": 22
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13508.79953447972,
+       "netProfit": 155991.6392879776,
+       "maximumDrawdown": 14732.111213276119,
+       "minuteMaximumDrawdown": 17511.44422590133
+      },
+      {
+       "bps": 10,
+       "costs": 27017.59906895944,
+       "netProfit": 142482.83975349786,
+       "maximumDrawdown": 14924.992283135907,
+       "minuteMaximumDrawdown": 17602.854756999135
+      },
+      {
+       "bps": 20,
+       "costs": 54035.19813791888,
+       "netProfit": 115465.24068453842,
+       "maximumDrawdown": 15310.754422855505,
+       "minuteMaximumDrawdown": 17785.67581919475
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4058.93532269203,
+       "costMarks": [
+        3756.0921564005466,
+        3453.248990109064,
+        2847.5626575260976
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 9698.757444281808,
+       "costMarks": [
+        8490.803955970625,
+        7282.850467659444,
+        4866.94349103708
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 34297.976398771425,
+       "costMarks": [
+        31374.25754755834,
+        28450.538696345255,
+        22603.100993919084
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 61574.296190028304,
+       "costMarks": [
+        57032.93095974151,
+        52491.56572945472,
+        43408.83526888113
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 101950.37588112158,
+       "costMarks": [
+        95185.37192605773,
+        88420.36797099389,
+        74890.36006086621
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 119320.50056677028,
+       "costMarks": [
+        110843.84305621294,
+        102367.18554565556,
+        85413.87052454086
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 143227.3365402488,
+       "costMarks": [
+        131734.95848841703,
+        120242.58043658527,
+        97257.82433292174
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 169500.4388224573,
+       "costMarks": [
+        155991.6392879776,
+        142482.83975349786,
+        115465.24068453842
+       ]
+      }
+     ],
+     "exposureSessions": 1099
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.013,
+      "lowerPriceReentry": 0.048,
+      "retraceFraction": 0.463,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 134,
+      "openAtEnd": false,
+      "realizedProfit": 169017.6934337593,
+      "unrealizedProfit": 0,
+      "netProfit": 169017.6934337593,
+      "marginInterest": 48098.630136986256,
+      "maximumDrawdown": 14539.230143416316,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-04-23",
+      "minuteMaximumDrawdown": 17533.40045475379,
+      "minuteDrawdownPeakTime": "2020-02-19T17:49:00.000Z",
+      "minuteDrawdownTroughTime": "2020-02-28T15:04:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 23,
+      "lowerPriceReentries": 15,
+      "recoveryResets": 8,
+      "lossesNotRestricted": 22
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13508.55816178537,
+       "netProfit": 155509.13527197394,
+       "maximumDrawdown": 14732.111213276119,
+       "minuteMaximumDrawdown": 17624.75430247162
+      },
+      {
+       "bps": 10,
+       "costs": 27017.11632357074,
+       "netProfit": 142000.57711018855,
+       "maximumDrawdown": 14924.992283135907,
+       "minuteMaximumDrawdown": 17716.10815018945
+      },
+      {
+       "bps": 20,
+       "costs": 54034.23264714148,
+       "netProfit": 114983.46078661783,
+       "maximumDrawdown": 15310.754422855505,
+       "minuteMaximumDrawdown": 17898.815845625115
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4079.7191706730314,
+       "costMarks": [
+        3776.8656124575577,
+        3474.0120542420846,
+        2868.3049378111373
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 9965.139535705726,
+       "costMarks": [
+        8757.052856348831,
+        7548.9661769919385,
+        5132.792818278151
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 34776.92314832787,
+       "costMarks": [
+        31852.964823740007,
+        28929.006499152143,
+        23081.08984997642
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 61856.570960552366,
+       "costMarks": [
+        57315.06459288031,
+        52773.55822520825,
+        43690.54548986413
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 101620.87370312697,
+       "costMarks": [
+        94856.03449915213,
+        88091.19529517727,
+        74561.51688722757
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 118976.27234809396,
+       "costMarks": [
+        110499.78695164595,
+        102023.30155519792,
+        85070.33076230189
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 143170.90609968905,
+       "costMarks": [
+        131678.55626307757,
+        120186.20642646607,
+        97201.5067532431
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 169017.6934337593,
+       "costMarks": [
+        155509.13527197394,
+        142000.57711018855,
+        114983.46078661783
+       ]
+      }
+     ],
+     "exposureSessions": 1099
+    }
+   ]
+  },
+  {
+   "kind": "shortlist",
+   "rank": 9,
+   "primary": false,
+   "id": "cc3b9d50785f5",
+   "params": {
+    "dipTenths": 23,
+    "trailingStopTenths": 21,
+    "maximumHoldDays": 8,
+    "lookbackSessions": 166,
+    "materialLossTenths": 17,
+    "lowerReentryTenths": 31,
+    "retraceTenths": 768
+   },
+   "description": "dipTenths=2.3% trailingStopTenths=2.1% maximumHoldDays=8 lookbackSessions=166 materialLossTenths=1.7% lowerReentryTenths=3.1% retraceTenths=76.8%",
+   "origin": {
+    "stage": "ga",
+    "run": 1,
+    "generation": 45
+   },
+   "selection": {
+    "id": "cc3b9d50785f5",
+    "meritRank": 17,
+    "merit": 85058.88460821853,
+    "paretoRank": 5,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 14,
+     "perturbations": 16,
+     "netP25": 85058.88460821853,
+     "netMedian": 99344.52313487088,
+     "netMin": 28425.671861439838,
+     "neighbourNetMin": 69725.56122484687,
+     "drawdownMedian": 17866.03824812264,
+     "drawdownMax": 31426.18434191082,
+     "feasibleShare": 0.9032258064516129,
+     "sameTradesShare": 0.03333333333333333
+    },
+    "positiveYearShare": 1,
+    "rank": 9,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 0,
+    "reason": "Merit rank 17; trades and parameters distinct from higher-ranked entries."
+   },
+   "boundFlags": [],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 138,
+    "closedTrades": 138,
+    "openAtEnd": false,
+    "entriesWithoutTrade": 0,
+    "netProfit": 191064.51637161584,
+    "grossProfit": 239253.55746750618,
+    "interest": 48189.041095890345,
+    "realizedProfit": 191064.51637161584,
+    "unrealizedProfit": 0,
+    "dailyDrawdown": 16503.44219541998,
+    "minuteDrawdown": 17420.033694803533,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 191064.51637161584,
+      "dailyDrawdown": 16503.44219541998,
+      "minuteDrawdown": 17420.033694803533,
+      "bestTrade": 11381.215284554184
+     },
+     {
+      "bps": 5,
+      "costs": 13919.626778733753,
+      "netProfit": 177144.8895928821,
+      "dailyDrawdown": 17496.561707198984,
+      "minuteDrawdown": 17866.03824812264,
+      "bestTrade": 11275.178101569441
+     },
+     {
+      "bps": 10,
+      "costs": 27839.253557467506,
+      "netProfit": 163225.26281414833,
+      "dailyDrawdown": 18489.68121897798,
+      "minuteDrawdown": 18858.91262509118,
+      "bestTrade": 11169.140918584699
+     },
+     {
+      "bps": 20,
+      "costs": 55678.50711493501,
+      "netProfit": 135386.00925668085,
+      "dailyDrawdown": 20475.92024253599,
+      "minuteDrawdown": 20844.661379028246,
+      "bestTrade": 10957.066552615213
+     }
+    ],
+    "turnover": 27839253.557467513,
+    "exits": {
+     "maximumHold": 37,
+     "trailingStop": 73,
+     "trailingStopGap": 28
+    },
+    "wins": 97,
+    "winRate": 0.7028985507246377,
+    "profitFactor": 2.8382824350335656,
+    "medianTrade": 995.2494027154686,
+    "worstTrade": -9679.559241203087,
+    "bestTrade": 11381.215284554184,
+    "medianHoldDays": 8,
+    "exposure": 0.6052776250687191,
+    "restrictions": 23,
+    "lowerPriceReentries": 19,
+    "recoveryResets": 4,
+    "lossesNotRestricted": 18,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 4,
+      "net": [
+       2924.3550353790883,
+       2521.7627208750973,
+       2119.1704063711068,
+       1313.9857773631247
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 8,
+      "net": [
+       5555.284170907395,
+       4750.185980876737,
+       3945.087790846077,
+       2334.8914107847586
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 19,
+      "net": [
+       14226.045931427732,
+       12315.753456407227,
+       10405.460981386714,
+       6584.876031345696
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 13,
+      "net": [
+       36664.63738737379,
+       35342.990000186954,
+       34021.34261300012,
+       31378.047838626444
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 27,
+      "net": [
+       67840.70132666116,
+       65102.8782362718,
+       62365.055145882456,
+       56889.408965103736
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 17,
+      "net": [
+       21720.61610154016,
+       20006.53113595514,
+       18292.446170370138,
+       14864.276239200102
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 30,
+      "net": [
+       14692.416961535608,
+       11681.378972232924,
+       8670.34098293021,
+       2648.2650043248577
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 20,
+      "net": [
+       27440.459456790908,
+       25423.409090076224,
+       23406.35872336151,
+       19372.257989932128
+      ]
+     }
+    ],
+    "signature": "aae50f346688496e"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.017,
+      "lowerPriceReentry": 0.031,
+      "retraceFraction": 0.768,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 138,
+      "openAtEnd": false,
+      "realizedProfit": 191064.51637161584,
+      "unrealizedProfit": 0,
+      "netProfit": 191064.51637161584,
+      "marginInterest": 48189.041095890345,
+      "maximumDrawdown": 16503.44219541998,
+      "drawdownPeakDate": "2018-05-10",
+      "drawdownTroughDate": "2018-12-24",
+      "minuteMaximumDrawdown": 17420.033694803533,
+      "minuteDrawdownPeakTime": "2020-02-19T17:49:00.000Z",
+      "minuteDrawdownTroughTime": "2020-02-28T15:04:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 23,
+      "lowerPriceReentries": 19,
+      "recoveryResets": 4,
+      "lossesNotRestricted": 18
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13919.626778733753,
+       "netProfit": 177144.8895928821,
+       "maximumDrawdown": 17496.561707198984,
+       "minuteMaximumDrawdown": 17866.03824812264
+      },
+      {
+       "bps": 10,
+       "costs": 27839.253557467506,
+       "netProfit": 163225.26281414833,
+       "maximumDrawdown": 18489.68121897798,
+       "minuteMaximumDrawdown": 18858.91262509118
+      },
+      {
+       "bps": 20,
+       "costs": 55678.50711493501,
+       "netProfit": 135386.00925668085,
+       "maximumDrawdown": 20475.92024253599,
+       "minuteMaximumDrawdown": 20844.661379028246
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2924.3550353790883,
+       "costMarks": [
+        2521.7627208750973,
+        2119.1704063711068,
+        1313.9857773631247
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8479.639206286483,
+       "costMarks": [
+        7271.948701751834,
+        6064.258197217184,
+        3648.8771881478833
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 22705.685137714216,
+       "costMarks": [
+        19587.70215815906,
+        16469.719178603897,
+        10233.75321949358
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 59370.322525088006,
+       "costMarks": [
+        54930.69215834601,
+        50491.061791604014,
+        41611.80105812002
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 127211.02385174917,
+       "costMarks": [
+        120033.57039461781,
+        112856.11693748647,
+        98501.21002322376
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 148931.63995328933,
+       "costMarks": [
+        140040.10153057295,
+        131148.5631078566,
+        113365.48626242386
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 163624.05691482493,
+       "costMarks": [
+        151721.48050280588,
+        139818.90409078682,
+        116013.75126674872
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 191064.51637161584,
+       "costMarks": [
+        177144.8895928821,
+        163225.26281414833,
+        135386.00925668085
+       ]
+      }
+     ],
+     "exposureSessions": 1101
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.017,
+      "lowerPriceReentry": 0.031,
+      "retraceFraction": 0.768,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 138,
+      "openAtEnd": false,
+      "realizedProfit": 189634.49104031845,
+      "unrealizedProfit": 0,
+      "netProfit": 189634.49104031845,
+      "marginInterest": 48189.041095890345,
+      "maximumDrawdown": 16356.938217044924,
+      "drawdownPeakDate": "2018-05-10",
+      "drawdownTroughDate": "2018-12-24",
+      "minuteMaximumDrawdown": 17533.4004547538,
+      "minuteDrawdownPeakTime": "2020-02-19T17:49:00.000Z",
+      "minuteDrawdownTroughTime": "2020-02-28T15:04:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 23,
+      "lowerPriceReentries": 19,
+      "recoveryResets": 4,
+      "lossesNotRestricted": 18
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13918.911766068102,
+       "netProfit": 175715.57927425034,
+       "maximumDrawdown": 17350.130980813115,
+       "minuteMaximumDrawdown": 17719.607521736776
+      },
+      {
+       "bps": 10,
+       "costs": 27837.823532136204,
+       "netProfit": 161796.66750818223,
+       "maximumDrawdown": 18343.323744581303,
+       "minuteMaximumDrawdown": 18712.5551506945
+      },
+      {
+       "bps": 20,
+       "costs": 55675.64706427241,
+       "netProfit": 133958.84397604605,
+       "maximumDrawdown": 20329.70927211769,
+       "minuteMaximumDrawdown": 20698.45040860994
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 2945.13888336009,
+       "costMarks": [
+        2542.5361769321084,
+        2139.9334705041274,
+        1334.7280576481644
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 8493.964759909395,
+       "costMarks": [
+        7286.267092597934,
+        6078.569425286472,
+        3663.1740906635487
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 22891.273034670376,
+       "costMarks": [
+        19773.19726116674,
+        16655.121487663102,
+        10418.969940655827
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 59134.57525794783,
+       "costMarks": [
+        54695.06276483941,
+        50255.55027173098,
+        41376.52528551412
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 126260.90413883315,
+       "costMarks": [
+        119083.92574155825,
+        111906.94734428337,
+        97552.99054973357
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 148015.94396666475,
+       "costMarks": [
+        139124.8633919417,
+        130233.78281721864,
+        112451.62166777253
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 162802.36502824532,
+       "costMarks": [
+        150900.19946216958,
+        138998.03389609378,
+        115193.70276394226
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 189634.49104031845,
+       "costMarks": [
+        175715.57927425034,
+        161796.66750818223,
+        133958.84397604605
+       ]
+      }
+     ],
+     "exposureSessions": 1101
+    }
+   ]
+  },
+  {
+   "kind": "shortlist",
+   "rank": 10,
+   "primary": false,
+   "id": "c0cdd6f12a664",
+   "params": {
+    "dipTenths": 24,
+    "trailingStopTenths": 21,
+    "maximumHoldDays": 8,
+    "lookbackSessions": 71,
+    "materialLossTenths": 19,
+    "lowerReentryTenths": 30,
+    "retraceTenths": 778
+   },
+   "description": "dipTenths=2.4% trailingStopTenths=2.1% maximumHoldDays=8 lookbackSessions=71 materialLossTenths=1.9% lowerReentryTenths=3.0% retraceTenths=77.8%",
+   "origin": {
+    "stage": "ga",
+    "run": 1,
+    "generation": 39
+   },
+   "selection": {
+    "id": "c0cdd6f12a664",
+    "meritRank": 18,
+    "merit": 84296.7005835894,
+    "paretoRank": 4,
+    "gates": {
+     "drawdown": true,
+     "trades": true,
+     "profitable": true,
+     "yearConsistency": true,
+     "costRobust": true,
+     "exposure": true,
+     "notSingleTrade": true,
+     "neighbourhoodDrawdown": true
+    },
+    "neighbourhood": {
+     "neighbours": 14,
+     "perturbations": 16,
+     "netP25": 84296.7005835894,
+     "netMedian": 124970.76767927915,
+     "netMin": 29581.012340241206,
+     "neighbourNetMin": 63723.837068830326,
+     "drawdownMedian": 17511.44422590133,
+     "drawdownMax": 26947.626218768455,
+     "feasibleShare": 0.9354838709677419,
+     "sameTradesShare": 0.03333333333333333
+    },
+    "positiveYearShare": 1,
+    "rank": 10,
+    "inclusion": "merit",
+    "behaviouralDuplicates": 0,
+    "reason": "Merit rank 18; trades and parameters distinct from higher-ranked entries."
+   },
+   "boundFlags": [],
+   "metrics": {
+    "sessions": 1819,
+    "entries": 137,
+    "closedTrades": 137,
+    "openAtEnd": false,
+    "entriesWithoutTrade": 0,
+    "netProfit": 188306.24478470112,
+    "grossProfit": 236013.09409976954,
+    "interest": 47706.84931506844,
+    "realizedProfit": 188306.24478470112,
+    "unrealizedProfit": 0,
+    "dailyDrawdown": 14217.397855884556,
+    "minuteDrawdown": 17420.033694803526,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 188306.24478470112,
+      "dailyDrawdown": 14217.397855884556,
+      "minuteDrawdown": 17420.033694803526,
+      "bestTrade": 11381.215284554184
+     },
+     {
+      "bps": 5,
+      "costs": 13818.006547049883,
+      "netProfit": 174488.23823765124,
+      "dailyDrawdown": 14310.334362436064,
+      "minuteDrawdown": 17511.44422590133,
+      "bestTrade": 11275.178101569441
+     },
+     {
+      "bps": 10,
+      "costs": 27636.013094099766,
+      "netProfit": 160670.23169060136,
+      "dailyDrawdown": 14403.270868987573,
+      "minuteDrawdown": 17602.854756999135,
+      "bestTrade": 11169.140918584699
+     },
+     {
+      "bps": 20,
+      "costs": 55272.02618819953,
+      "netProfit": 133034.2185965016,
+      "dailyDrawdown": 16746.818754019478,
+      "minuteDrawdown": 18027.848018120625,
+      "bestTrade": 10957.066552615213
+     }
+    ],
+    "turnover": 27636013.094099775,
+    "exits": {
+     "maximumHold": 39,
+     "trailingStop": 72,
+     "trailingStopGap": 26
+    },
+    "wins": 93,
+    "winRate": 0.6788321167883211,
+    "profitFactor": 2.765813499473942,
+    "medianTrade": 1131.9632613095773,
+    "worstTrade": -9679.559241203087,
+    "bestTrade": 11381.215284554184,
+    "medianHoldDays": 8,
+    "exposure": 0.6036283672347443,
+    "restrictions": 21,
+    "lowerPriceReentries": 17,
+    "recoveryResets": 4,
+    "lossesNotRestricted": 23,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 3,
+      "net": [
+       4058.93532269203,
+       3756.0921564005466,
+       3453.248990109064,
+       2847.5626575260976
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 9,
+      "net": [
+       5639.822121589777,
+       4734.711799570078,
+       3829.60147755038,
+       2019.3808335109825
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 18,
+      "net": [
+       24993.968072770607,
+       23177.88478736436,
+       21361.801501958107,
+       17729.63493114561
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 13,
+      "net": [
+       42430.85215081186,
+       41105.76412199672,
+       39780.676093181595,
+       37130.50003555133
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 27,
+      "net": [
+       67840.70132666116,
+       65102.878236271805,
+       62365.05514588245,
+       56889.408965103736
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 16,
+      "net": [
+       14341.845536104054,
+       12731.721188678464,
+       11121.596841252904,
+       7901.348146401724
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 31,
+      "net": [
+       15273.649972630054,
+       12162.321366821852,
+       9050.992761013564,
+       2828.3355493971176
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 20,
+      "net": [
+       13726.47028144158,
+       11716.864580547408,
+       9707.258879653295,
+       5688.047477864995
+      ]
+     }
+    ],
+    "signature": "2b5889d5b03cedae"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.019,
+      "lowerPriceReentry": 0.03,
+      "retraceFraction": 0.778,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 137,
+      "openAtEnd": false,
+      "realizedProfit": 188306.24478470112,
+      "unrealizedProfit": 0,
+      "netProfit": 188306.24478470112,
+      "marginInterest": 47706.84931506844,
+      "maximumDrawdown": 14217.397855884556,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-03-23",
+      "minuteMaximumDrawdown": 17420.033694803526,
+      "minuteDrawdownPeakTime": "2020-02-19T17:49:00.000Z",
+      "minuteDrawdownTroughTime": "2020-02-28T15:04:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 21,
+      "lowerPriceReentries": 17,
+      "recoveryResets": 4,
+      "lossesNotRestricted": 23
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13818.006547049883,
+       "netProfit": 174488.23823765124,
+       "maximumDrawdown": 14310.334362436064,
+       "minuteMaximumDrawdown": 17511.44422590133
+      },
+      {
+       "bps": 10,
+       "costs": 27636.013094099766,
+       "netProfit": 160670.23169060136,
+       "maximumDrawdown": 14403.270868987573,
+       "minuteMaximumDrawdown": 17602.854756999135
+      },
+      {
+       "bps": 20,
+       "costs": 55272.02618819953,
+       "netProfit": 133034.2185965016,
+       "maximumDrawdown": 16746.818754019478,
+       "minuteMaximumDrawdown": 18027.848018120625
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4058.93532269203,
+       "costMarks": [
+        3756.0921564005466,
+        3453.248990109064,
+        2847.5626575260976
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 9698.757444281808,
+       "costMarks": [
+        8490.803955970625,
+        7282.850467659444,
+        4866.94349103708
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 34692.725517052415,
+       "costMarks": [
+        31668.688743334988,
+        28644.651969617553,
+        22596.57842218269
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 77123.57766786427,
+       "costMarks": [
+        72774.45286533171,
+        68425.32806279915,
+        59727.078457734024
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 144964.27899452543,
+       "costMarks": [
+        137877.33110160351,
+        130790.3832086816,
+        116616.48742283776
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 159306.1245306295,
+       "costMarks": [
+        150609.05229028198,
+        141911.9800499345,
+        124517.83556923948
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 174579.77450325954,
+       "costMarks": [
+        162771.37365710383,
+        150962.97281094806,
+        127346.1711186366
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 188306.24478470112,
+       "costMarks": [
+        174488.23823765124,
+        160670.23169060136,
+        133034.2185965016
+       ]
+      }
+     ],
+     "exposureSessions": 1098
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.019,
+      "lowerPriceReentry": 0.03,
+      "retraceFraction": 0.778,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 137,
+      "openAtEnd": false,
+      "realizedProfit": 187272.81458207426,
+      "unrealizedProfit": 0,
+      "netProfit": 187272.81458207426,
+      "marginInterest": 47706.84931506844,
+      "maximumDrawdown": 14217.397855884556,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-03-23",
+      "minuteMaximumDrawdown": 17533.40045475379,
+      "minuteDrawdownPeakTime": "2020-02-19T17:49:00.000Z",
+      "minuteDrawdownTroughTime": "2020-02-28T15:04:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 21,
+      "lowerPriceReentries": 17,
+      "recoveryResets": 4,
+      "lossesNotRestricted": 23
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13817.489831948567,
+       "netProfit": 173455.3247501257,
+       "maximumDrawdown": 14310.334362436071,
+       "minuteMaximumDrawdown": 17624.754302471614
+      },
+      {
+       "bps": 10,
+       "costs": 27634.979663897135,
+       "netProfit": 159637.83491817713,
+       "maximumDrawdown": 14403.27086898758,
+       "minuteMaximumDrawdown": 17716.10815018945
+      },
+      {
+       "bps": 20,
+       "costs": 55269.95932779427,
+       "netProfit": 132002.85525428,
+       "maximumDrawdown": 16810.449012554527,
+       "minuteMaximumDrawdown": 18091.47827665566
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4079.7191706730314,
+       "costMarks": [
+        3776.8656124575577,
+        3474.0120542420846,
+        2868.3049378111373
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 9965.139535705726,
+       "costMarks": [
+        8757.052856348831,
+        7548.9661769919385,
+        5132.792818278151
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 35157.748935159456,
+       "costMarks": [
+        32133.479649732973,
+        29109.210364306487,
+        23060.67179345352
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 77130.39222065125,
+       "costMarks": [
+        72781.2640108423,
+        68432.13580103335,
+        59733.87938141543
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 144256.72110153656,
+       "costMarks": [
+        137170.12698756115,
+        130083.53287358572,
+        115910.34464563486
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 158583.8405969589,
+       "costMarks": [
+        149887.12949857823,
+        141190.41840019758,
+        123796.99620343624
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 173951.7967742017,
+       "costMarks": [
+        162143.7099169105,
+        150335.62305961928,
+        126719.44934503689
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 187272.81458207426,
+       "costMarks": [
+        173455.3247501257,
+        159637.83491817713,
+        132002.85525428
+       ]
+      }
+     ],
+     "exposureSessions": 1098
+    }
+   ]
+  },
+  {
+   "kind": "control",
+   "rank": null,
+   "primary": false,
+   "id": "incumbent",
+   "params": {
+    "dipTenths": 25,
+    "trailingStopTenths": 21,
+    "maximumHoldDays": 8,
+    "lookbackSessions": 78,
+    "materialLossTenths": 22,
+    "lowerReentryTenths": 40,
+    "retraceTenths": 367
+   },
+   "description": "dipTenths=2.5% trailingStopTenths=2.1% maximumHoldDays=8 lookbackSessions=78 materialLossTenths=2.2% lowerReentryTenths=4.0% retraceTenths=36.7%",
+   "metrics": {
+    "sessions": 1819,
+    "entries": 138,
+    "closedTrades": 138,
+    "openAtEnd": false,
+    "entriesWithoutTrade": 1,
+    "netProfit": 153020.2675726008,
+    "grossProfit": 202866.8429150665,
+    "interest": 49846.575342465694,
+    "realizedProfit": 153020.2675726008,
+    "unrealizedProfit": 0,
+    "dailyDrawdown": 17542.677371353966,
+    "minuteDrawdown": 19369.943468156765,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 153020.2675726008,
+      "dailyDrawdown": 17542.677371353966,
+      "minuteDrawdown": 19369.943468156765,
+      "bestTrade": 11381.215284554184
+     },
+     {
+      "bps": 5,
+      "costs": 13901.43342145753,
+      "netProfit": 139118.83415114327,
+      "dailyDrawdown": 17834.237539517606,
+      "minuteDrawdown": 19660.605071765152,
+      "bestTrade": 11275.178101569441
+     },
+     {
+      "bps": 10,
+      "costs": 27802.86684291506,
+      "netProfit": 125217.40072968575,
+      "dailyDrawdown": 18125.797707681246,
+      "minuteDrawdown": 19951.266675373532,
+      "bestTrade": 11169.140918584699
+     },
+     {
+      "bps": 20,
+      "costs": 55605.73368583012,
+      "netProfit": 97414.53388677069,
+      "dailyDrawdown": 19819.876600771386,
+      "minuteDrawdown": 20555.453182981226,
+      "bestTrade": 10957.066552615213
+     }
+    ],
+    "turnover": 27802866.84291508,
+    "exits": {
+     "maximumHold": 45,
+     "trailingStop": 73,
+     "trailingStopGap": 20
+    },
+    "wins": 91,
+    "winRate": 0.6594202898550725,
+    "profitFactor": 2.336954996344574,
+    "medianTrade": 969.7121810282431,
+    "worstTrade": -9679.559241203087,
+    "bestTrade": 11381.215284554184,
+    "medianHoldDays": 8,
+    "exposure": 0.6300164925783397,
+    "restrictions": 21,
+    "lowerPriceReentries": 12,
+    "recoveryResets": 9,
+    "lossesNotRestricted": 26,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 3,
+      "net": [
+       4058.93532269203,
+       3756.0921564005466,
+       3453.248990109064,
+       2847.5626575260976
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 9,
+      "net": [
+       12646.441325679107,
+       11737.646872139554,
+       10828.852418600003,
+       9011.263511520901
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 20,
+      "net": [
+       16798.221251948307,
+       14786.250908445621,
+       12774.280564942934,
+       8750.33987793756
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 18,
+      "net": [
+       38785.3707083511,
+       36961.261584640764,
+       35137.152460930425,
+       31488.934213509747
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 21,
+      "net": [
+       35346.41757455119,
+       33225.27861233926,
+       31104.139650127327,
+       26861.861725703464
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 18,
+      "net": [
+       19137.712507037635,
+       17324.85871927727,
+       15512.004931516902,
+       11886.297355996168
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 28,
+      "net": [
+       16310.258180929304,
+       13498.607161427892,
+       10686.956141926465,
+       5063.654102923625
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 21,
+      "net": [
+       9936.910701412125,
+       7828.838136472361,
+       5720.7655715326255,
+       1504.6204416531255
+      ]
+     }
+    ],
+    "signature": "1d546f850ed60ebc"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.022,
+      "lowerPriceReentry": 0.04,
+      "retraceFraction": 0.367,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 138,
+      "openAtEnd": false,
+      "realizedProfit": 153020.2675726008,
+      "unrealizedProfit": 0,
+      "netProfit": 153020.2675726008,
+      "marginInterest": 49846.575342465694,
+      "maximumDrawdown": 17542.677371353966,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-05-13",
+      "minuteMaximumDrawdown": 19369.943468156765,
+      "minuteDrawdownPeakTime": "2020-03-13T19:59:00.000Z",
+      "minuteDrawdownTroughTime": "2020-05-14T13:54:00.000Z",
+      "entriesWithoutTrade": 1,
+      "restrictions": 21,
+      "lowerPriceReentries": 12,
+      "recoveryResets": 9,
+      "lossesNotRestricted": 26
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13901.43342145753,
+       "netProfit": 139118.83415114327,
+       "maximumDrawdown": 17834.237539517606,
+       "minuteMaximumDrawdown": 19660.605071765152
+      },
+      {
+       "bps": 10,
+       "costs": 27802.86684291506,
+       "netProfit": 125217.40072968575,
+       "maximumDrawdown": 18125.797707681246,
+       "minuteMaximumDrawdown": 19951.266675373532
+      },
+      {
+       "bps": 20,
+       "costs": 55605.73368583012,
+       "netProfit": 97414.53388677069,
+       "maximumDrawdown": 19819.876600771386,
+       "minuteMaximumDrawdown": 20555.453182981226
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4058.93532269203,
+       "costMarks": [
+        3756.0921564005466,
+        3453.248990109064,
+        2847.5626575260976
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 16705.376648371137,
+       "costMarks": [
+        15493.739028540102,
+        14282.101408709068,
+        11858.826169046999
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 33503.597900319444,
+       "costMarks": [
+        30279.989936985723,
+        27056.381973652,
+        20609.16604698456
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 72288.96860867055,
+       "costMarks": [
+        67241.25152162649,
+        62193.53443458243,
+        52098.100260494306
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 107635.38618322174,
+       "costMarks": [
+        100466.53013396575,
+        93297.67408470975,
+        78959.96198619777
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 126773.09869025937,
+       "costMarks": [
+        117791.38885324301,
+        108809.67901622666,
+        90846.25934219394
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 143083.35687118868,
+       "costMarks": [
+        131289.9960146709,
+        119496.63515815312,
+        95909.91344511756
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 153020.2675726008,
+       "costMarks": [
+        139118.83415114327,
+        125217.40072968575,
+        97414.53388677069
+       ]
+      }
+     ],
+     "exposureSessions": 1146
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.022,
+      "lowerPriceReentry": 0.04,
+      "retraceFraction": 0.367,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 138,
+      "openAtEnd": false,
+      "realizedProfit": 152248.90755256693,
+      "unrealizedProfit": 0,
+      "netProfit": 152248.90755256693,
+      "marginInterest": 49846.575342465694,
+      "maximumDrawdown": 17428.351734557196,
+      "drawdownPeakDate": "2020-03-13",
+      "drawdownTroughDate": "2020-05-13",
+      "minuteMaximumDrawdown": 19255.617831359996,
+      "minuteDrawdownPeakTime": "2020-03-13T19:59:00.000Z",
+      "minuteDrawdownTroughTime": "2020-05-14T13:54:00.000Z",
+      "entriesWithoutTrade": 1,
+      "restrictions": 21,
+      "lowerPriceReentries": 12,
+      "recoveryResets": 9,
+      "lossesNotRestricted": 26
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 13901.047741447514,
+       "netProfit": 138347.85981111942,
+       "maximumDrawdown": 17719.969065539233,
+       "minuteMaximumDrawdown": 19546.33659778678
+      },
+      {
+       "bps": 10,
+       "costs": 27802.095482895027,
+       "netProfit": 124446.8120696719,
+       "maximumDrawdown": 18091.150659769675,
+       "minuteMaximumDrawdown": 19837.055364213556
+      },
+      {
+       "bps": 20,
+       "costs": 55604.190965790054,
+       "netProfit": 96644.71658677688,
+       "maximumDrawdown": 19876.623063705614,
+       "minuteMaximumDrawdown": 20554.496223888418
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 4079.7191706730314,
+       "costMarks": [
+        3776.8656124575577,
+        3474.0120542420846,
+        2868.3049378111373
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 16967.51315725944,
+       "costMarks": [
+        15755.74446917396,
+        14543.975781088482,
+        12120.438404917524
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": 33880.274882522994,
+       "costMarks": [
+        30656.47858069817,
+        27432.682278873348,
+        20985.089675223702
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 72191.93525804563,
+       "costMarks": [
+        67144.26668767689,
+        62096.59811730813,
+        52001.26097657063
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 107052.62024714604,
+       "costMarks": [
+        99884.05558085808,
+        92715.49091457012,
+        78378.36158199422
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 126175.60671350197,
+       "costMarks": [
+        117194.19562247398,
+        108212.784531446,
+        90249.96234939004
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 142604.51553192642,
+       "costMarks": [
+        130811.39409607826,
+        119018.27266023011,
+        95432.02978853381
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 152248.90755256693,
+       "costMarks": [
+        138347.85981111942,
+        124446.8120696719,
+        96644.71658677688
+       ]
+      }
+     ],
+     "exposureSessions": 1146
+    }
+   ]
+  },
+  {
+   "kind": "control",
+   "rank": null,
+   "primary": false,
+   "id": "deep-dip",
+   "params": {
+    "dipTenths": 100,
+    "trailingStopTenths": 80,
+    "maximumHoldDays": 15,
+    "lookbackSessions": 90,
+    "materialLossTenths": 10,
+    "lowerReentryTenths": 20,
+    "retraceTenths": 380
+   },
+   "description": "dipTenths=10.0% trailingStopTenths=8.0% maximumHoldDays=15 lookbackSessions=90 materialLossTenths=1.0% lowerReentryTenths=2.0% retraceTenths=38.0%",
+   "metrics": {
+    "sessions": 1819,
+    "entries": 27,
+    "closedTrades": 26,
+    "openAtEnd": true,
+    "entriesWithoutTrade": 0,
+    "netProfit": 119192.62157304386,
+    "grossProfit": 161625.49828537263,
+    "interest": 42432.87671232876,
+    "realizedProfit": 103270.70302988379,
+    "unrealizedProfit": 15921.918543160069,
+    "dailyDrawdown": 23826.0269497752,
+    "minuteDrawdown": 26286.890531223566,
+    "levels": [
+     {
+      "bps": 0,
+      "costs": 0,
+      "netProfit": 119192.62157304386,
+      "dailyDrawdown": 23826.0269497752,
+      "minuteDrawdown": 26286.890531223566,
+      "bestTrade": 47696.22119152917
+     },
+     {
+      "bps": 5,
+      "costs": 2780.812749142687,
+      "netProfit": 116411.80882390117,
+      "dailyDrawdown": 24115.213936300315,
+      "minuteDrawdown": 26574.22927773877,
+      "bestTrade": 47570.03746449505
+     },
+     {
+      "bps": 10,
+      "costs": 5561.625498285374,
+      "netProfit": 113630.99607475848,
+      "dailyDrawdown": 24404.40092282543,
+      "minuteDrawdown": 26861.56802425398,
+      "bestTrade": 47443.85373746093
+     },
+     {
+      "bps": 20,
+      "costs": 11123.250996570749,
+      "netProfit": 108069.3705764731,
+      "dailyDrawdown": 24982.774895875657,
+      "minuteDrawdown": 27436.245517284402,
+      "bestTrade": 47191.48628339269
+     }
+    ],
+    "turnover": 5561625.498285372,
+    "exits": {
+     "maximumHold": 13,
+     "trailingStop": 9,
+     "trailingStopGap": 4
+    },
+    "wins": 13,
+    "winRate": 0.48148148148148145,
+    "profitFactor": 3.5855631981016245,
+    "medianTrade": -293.4874966938522,
+    "worstTrade": -9463.114402555031,
+    "bestTrade": 47696.22119152917,
+    "medianHoldDays": 16,
+    "exposure": 0.5349092908191314,
+    "restrictions": 12,
+    "lowerPriceReentries": 10,
+    "recoveryResets": 2,
+    "lossesNotRestricted": 2,
+    "years": [
+     {
+      "year": 2016,
+      "entries": 0,
+      "net": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "year": 2017,
+      "entries": 0,
+      "net": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "year": 2018,
+      "entries": 4,
+      "net": [
+       -531.5959867991612,
+       -934.9466271619261,
+       -1338.2972675246908,
+       -2144.9985482502207
+      ]
+     },
+     {
+      "year": 2019,
+      "entries": 2,
+      "net": [
+       24952.964745644123,
+       24737.549907106917,
+       24522.13506856971,
+       24091.305391495298
+      ]
+     },
+     {
+      "year": 2020,
+      "entries": 6,
+      "net": [
+       55943.479381144345,
+       55311.499422275694,
+       54679.51946340702,
+       53415.55954566972
+      ]
+     },
+     {
+      "year": 2021,
+      "entries": 1,
+      "net": [
+       -550.1779592746461,
+       -651.7412264594022,
+       -753.3044936441293,
+       -956.4310280136269
+      ]
+     },
+     {
+      "year": 2022,
+      "entries": 11,
+      "net": [
+       -4315.37031099257,
+       -5417.416735426115,
+       -6519.463159859661,
+       -8723.556008726751
+      ]
+     },
+     {
+      "year": 2023,
+      "entries": 3,
+      "net": [
+       43693.321703321766,
+       43366.864083566004,
+       43040.40646381023,
+       42387.491224298676
+      ]
+     }
+    ],
+    "signature": "2261146cad08de63"
+   },
+   "replays": [
+    {
+     "stopFill": "stop",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "stop",
+      "materialLossThreshold": 0.01,
+      "lowerPriceReentry": 0.02,
+      "retraceFraction": 0.38,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 26,
+      "openAtEnd": true,
+      "realizedProfit": 103270.70302988379,
+      "unrealizedProfit": 15921.918543160069,
+      "netProfit": 119192.62157304386,
+      "marginInterest": 42432.87671232876,
+      "maximumDrawdown": 23826.0269497752,
+      "drawdownPeakDate": "2018-09-04",
+      "drawdownTroughDate": "2018-12-24",
+      "minuteMaximumDrawdown": 26286.890531223566,
+      "minuteDrawdownPeakTime": "2019-07-26T14:07:00.000Z",
+      "minuteDrawdownTroughTime": "2020-03-23T15:44:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 12,
+      "lowerPriceReentries": 10,
+      "recoveryResets": 2,
+      "lossesNotRestricted": 2
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 2780.812749142687,
+       "netProfit": 116411.80882390117,
+       "maximumDrawdown": 24115.213936300315,
+       "minuteMaximumDrawdown": 26574.22927773877
+      },
+      {
+       "bps": 10,
+       "costs": 5561.625498285374,
+       "netProfit": 113630.99607475848,
+       "maximumDrawdown": 24404.40092282543,
+       "minuteMaximumDrawdown": 26861.56802425398
+      },
+      {
+       "bps": 20,
+       "costs": 11123.250996570749,
+       "netProfit": 108069.3705764731,
+       "maximumDrawdown": 24982.774895875657,
+       "minuteMaximumDrawdown": 27436.245517284402
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 0,
+       "costMarks": [
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 0,
+       "costMarks": [
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": -531.5959867991612,
+       "costMarks": [
+        -934.9466271619261,
+        -1338.2972675246908,
+        -2144.9985482502207
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 24421.36875884496,
+       "costMarks": [
+        23802.60327994499,
+        23183.83780104502,
+        21946.30684324508
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 80364.8481399893,
+       "costMarks": [
+        79114.10270222068,
+        77863.35726445205,
+        75361.8663889148
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 79814.67018071466,
+       "costMarks": [
+        78462.36147576128,
+        77110.05277080792,
+        74405.43536090117
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 75499.29986972209,
+       "costMarks": [
+        73044.94474033517,
+        70590.58961094826,
+        65681.87935217442
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 119192.62157304386,
+       "costMarks": [
+        116411.80882390117,
+        113630.99607475848,
+        108069.3705764731
+       ]
+      }
+     ],
+     "exposureSessions": 973
+    },
+    {
+     "stopFill": "next-open",
+     "engineMatchesReference": true,
+     "summary": {
+      "symbol": "VGT",
+      "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+      "strategy": "material1-lower2-retrace38",
+      "stopFill": "next-open",
+      "materialLossThreshold": 0.01,
+      "lowerPriceReentry": 0.02,
+      "retraceFraction": 0.38,
+      "firstDate": "2016-10-07",
+      "lastDate": "2023-12-29",
+      "sessions": 1819,
+      "closedTrades": 26,
+      "openAtEnd": true,
+      "realizedProfit": 103081.86897725181,
+      "unrealizedProfit": 15921.918543160069,
+      "netProfit": 119003.78752041188,
+      "marginInterest": 42432.87671232876,
+      "maximumDrawdown": 23834.85960673391,
+      "drawdownPeakDate": "2018-09-04",
+      "drawdownTroughDate": "2018-12-24",
+      "minuteMaximumDrawdown": 26279.774955437453,
+      "minuteDrawdownPeakTime": "2019-07-26T14:07:00.000Z",
+      "minuteDrawdownTroughTime": "2020-03-23T15:44:00.000Z",
+      "entriesWithoutTrade": 0,
+      "restrictions": 12,
+      "lowerPriceReentries": 10,
+      "recoveryResets": 2,
+      "lossesNotRestricted": 2
+     },
+     "costResults": [
+      {
+       "bps": 5,
+       "costs": 2780.7183321163707,
+       "netProfit": 116223.0691882955,
+       "maximumDrawdown": 24124.042176930543,
+       "minuteMaximumDrawdown": 26567.11725974055
+      },
+      {
+       "bps": 10,
+       "costs": 5561.436664232741,
+       "netProfit": 113442.35085617914,
+       "maximumDrawdown": 24413.224747127177,
+       "minuteMaximumDrawdown": 26854.459564043653
+      },
+      {
+       "bps": 20,
+       "costs": 11122.873328465483,
+       "netProfit": 107880.91419194639,
+       "maximumDrawdown": 24991.589887520444,
+       "minuteMaximumDrawdown": 27429.144172649863
+      }
+     ],
+     "yearMarks": [
+      {
+       "year": 2016,
+       "lastDate": "2016-12-30",
+       "mark": 0,
+       "costMarks": [
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "year": 2017,
+       "lastDate": "2017-12-29",
+       "mark": 0,
+       "costMarks": [
+        0,
+        0,
+        0
+       ]
+      },
+      {
+       "year": 2018,
+       "lastDate": "2018-12-31",
+       "mark": -540.4286437578692,
+       "costMarks": [
+        -943.7748677921546,
+        -1347.1210918264403,
+        -2153.813539895011
+       ]
+      },
+      {
+       "year": 2019,
+       "lastDate": "2019-12-31",
+       "mark": 24414.365334060007,
+       "costMarks": [
+        23795.60335687243,
+        23176.84137968485,
+        21939.317425309695
+       ]
+      },
+      {
+       "year": 2020,
+       "lastDate": "2020-12-31",
+       "mark": 80405.453315057,
+       "costMarks": [
+        79154.68757470086,
+        77903.92183434468,
+        75402.39035363236
+       ]
+      },
+      {
+       "year": 2021,
+       "lastDate": "2021-12-31",
+       "mark": 79615.14224430149,
+       "costMarks": [
+        78262.93330331633,
+        76910.72436233117,
+        74206.30648036083
+       ]
+      },
+      {
+       "year": 2022,
+       "lastDate": "2022-12-30",
+       "mark": 75310.46581709011,
+       "costMarks": [
+        72856.20510472951,
+        70401.9443923689,
+        65493.42296764771
+       ]
+      },
+      {
+       "year": 2023,
+       "lastDate": "2023-12-29",
+       "mark": 119003.78752041188,
+       "costMarks": [
+        116223.0691882955,
+        113442.35085617914,
+        107880.91419194639
+       ]
+      }
+     ],
+     "exposureSessions": 973
+    }
+   ]
+  }
+ ]
+}

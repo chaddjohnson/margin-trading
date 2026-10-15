@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint';
 
 export default [
   {
-    ignores: ['dist/**', 'src/startTradingServer.js', 'research/**/tmp/**']
+    ignores: ['dist/**', 'src/startTradingServer.js', 'research/**/tmp/**', 'research/**/freeze/source/**']
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
