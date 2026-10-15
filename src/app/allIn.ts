@@ -203,7 +203,7 @@ interface Restriction {
 
 type State = 'NORMAL' | 'RESTRICTED';
 
-interface StateLogRow {
+export interface StateLogRow {
   index: number;
   date: string;
   prevState: State;
@@ -223,7 +223,7 @@ interface StateLogRow {
   entryExecuted: boolean;
 }
 
-interface Episode {
+export interface Episode {
   exitIndex: number;
   exitDate: string;
   exitReason: ExitReason;
@@ -237,7 +237,7 @@ interface Episode {
   resolutionDate: string;
 }
 
-interface EntryFill extends Fill {
+export interface EntryFill extends Fill {
   decisionTime: number;
   decisionPrice: number; // the close of the last minute completed by the decision
   sessionClose: number;
@@ -268,20 +268,46 @@ const createDrawdownTracker = (startTimestamp: number) => {
   return tracker;
 };
 
-// Run with `npm run app allIn [symbol] [start date] [end date] [data file] [output dir] [stop fill]`, for
-// example `npm run app allIn VGT 2016-10-07 2025-10-13 data/VGT/VGT-2016-2025-1-minute.csv`. The symbol
-// defaults to VGT, the inclusive YYYY-MM-DD New York session dates default to the whole data file, and the
-// data file defaults to the symbol's 2016-2025 one-minute file. Pass '-' to leave an earlier argument at its
-// default. When an output directory is given, the run also writes trades.csv, daily.csv, states.csv,
-// episodes.csv and summary.json there at full precision. The stop fill is `stop` (default) or `next-open`.
-export default async (
+// What a position-size callback sees at an entry decision: only what is known one minute before the close.
+// It never sees the fill or the session's later prices.
+export interface PositionSizingContext {
+  date: string; // the session's New York date
+  decisionTime: number;
+  decisionPrice: number; // the close of the last minute completed by the decision
+  positions: readonly BacktestPosition[]; // every earlier position, closed ones with their exits
+}
+
+export interface AllInOptions {
+  symbol?: string;
+  startDate?: string;
+  endDate?: string;
+  dataFile?: string;
+  outDir?: string;
+  stopFill?: string;
+  // The dollars to buy at each entry. Without it every entry buys a fixed $100,000. The signals and exits
+  // don't depend on the size: interest scales with the investment, so every profit test keeps its sign.
+  sizePosition?: (context: PositionSizingContext) => number;
+}
+
+export interface AllInResult {
+  sessions: MarketSession[];
+  positions: BacktestPosition[];
+  entryFills: Map<BacktestPosition, EntryFill>;
+  exitFills: Map<BacktestPosition, SessionExit & { stopPrice: number }>;
+  stateLog: StateLogRow[];
+  episodes: Episode[];
+}
+
+// The strategy itself, for the command line above and for callers that size positions themselves.
+export const runAllIn = async ({
   symbol = 'VGT',
-  startDate?: string,
-  endDate?: string,
-  dataFile?: string,
-  outDir?: string,
-  stopFillArgument?: string
-) => {
+  startDate,
+  endDate,
+  dataFile,
+  outDir,
+  stopFill: stopFillArgument,
+  sizePosition
+}: AllInOptions = {}): Promise<AllInResult> => {
   const optional = (value?: string) => (value === '-' || value === '' ? undefined : value);
   const startTimestamp = optional(startDate) ? Date.parse(startDate!) / 1000 : -Infinity;
   const endTimestamp = optional(endDate) ? Date.parse(endDate!) / 1000 : Infinity;
@@ -485,14 +511,22 @@ export default async (
     let enteredPosition: BacktestPosition | undefined;
 
     if (fill && decisionBar) {
-      // Vanguard allows partial shares.
-      const shares = investmentAmount / fill.price;
+      // The size is decided at the decision, before the fill is known. Vanguard allows partial shares.
+      const investment = sizePosition
+        ? sizePosition({ date: session.date, decisionTime, decisionPrice, positions })
+        : investmentAmount;
+
+      if (!(investment > 0) || !Number.isFinite(investment)) {
+        throw new Error(`Position size ${investment} on ${session.date} must be a positive number of dollars`);
+      }
+
+      const shares = investment / fill.price;
       const position: BacktestPosition = {
         isOpen: true,
         symbol,
         type: PositionType.Long,
         shares,
-        investment: investmentAmount,
+        investment,
         // The session's date, not the fill's minute, so that interest and the maximum hold keep counting
         // calendar days.
         entryTimestamp: session.time,
@@ -926,4 +960,23 @@ export default async (
     await fs.writeFile(`${outDir}/summary.json`, `${JSON.stringify(summary, null, 1)}\n`);
     console.info(`Wrote trades.csv, daily.csv, states.csv, episodes.csv and summary.json to ${outDir}`);
   }
+
+  return { sessions, positions, entryFills, exitFills, stateLog, episodes };
+};
+
+// Run with `npm run app allIn [symbol] [start date] [end date] [data file] [output dir] [stop fill]`, for
+// example `npm run app allIn VGT 2016-10-07 2025-10-13 data/VGT/VGT-2016-2025-1-minute.csv`. The symbol
+// defaults to VGT, the inclusive YYYY-MM-DD New York session dates default to the whole data file, and the
+// data file defaults to the symbol's 2016-2025 one-minute file. Pass '-' to leave an earlier argument at its
+// default. When an output directory is given, the run also writes trades.csv, daily.csv, states.csv,
+// episodes.csv and summary.json there at full precision. The stop fill is `stop` (default) or `next-open`.
+export default async (
+  symbol = 'VGT',
+  startDate?: string,
+  endDate?: string,
+  dataFile?: string,
+  outDir?: string,
+  stopFillArgument?: string
+) => {
+  await runAllIn({ symbol, startDate, endDate, dataFile, outDir, stopFill: stopFillArgument });
 };
