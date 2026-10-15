@@ -35,6 +35,8 @@
   "scripts": {
     "format": "prettier --write 'src/**/*.ts'",
     "preapp": "eslint && tsc --noEmit",
-    "app": "node --env-file-if-exists=.env --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts"
+    "app": "node --env-file-if-exists=.env --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts",
+    "optimizer": "node --env-file-if-exists=.env --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts optimizer",
+    "test": "node --experimental-transform-types --disable-warning=ExperimentalWarning --test --test-concurrency=4 'src/**/*.test.ts'"
   }
 }
