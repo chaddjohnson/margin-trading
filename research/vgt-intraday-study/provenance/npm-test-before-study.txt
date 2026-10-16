@@ -1,0 +1,257 @@
+
+> test
+> node --experimental-transform-types --disable-warning=ExperimentalWarning --test --test-concurrency=4 'src/**/*.test.ts'
+
+▶ no look-ahead
+  ✔ changing every session after a window leaves the window unchanged (39.309542ms)
+  ✔ the decision price is the 15:58 minute close (12:58 on early closes); later minutes never enter it (0.597708ms)
+  ✔ a session never enters its own reference high (0.581833ms)
+  ✔ reference highs never reach back before the history start (0.128917ms)
+✔ no look-ahead (4471.262583ms)
+▶ cutoffs and boundaries
+  ✔ an open position at the cutoff is marked at the last close with interest through that session (0.852375ms)
+  ✔ a window starts flat: earlier sessions only provide reference-high history (0.798625ms)
+  ✔ the research view ends at 2023-12-31 and full data needs the final-evaluation capability (59.400292ms)
+  ✔ every fold trains strictly before it validates (0.532291ms)
+  ✔ results go to their own directory, never to the daily study (0.244709ms)
+✔ cutoffs and boundaries (62.049ms)
+▶ extra execution costs
+  ✔ the zero-cost level is the cost-free result, and costs never change a decision (21.193292ms)
+✔ extra execution costs (21.306667ms)
+▶ quantization and identity
+  ✔ percentage genes are whole tenths of a percentage point and convert to the literal double (3.542833ms)
+  ✔ candidate IDs are canonical and the Sobol stream is reproducible (1.411375ms)
+✔ quantization and identity (5.032ms)
+▶ determinism
+  ✔ evaluations are identical in-process and with 1 or 3 workers (239.887ms)
+  ✔ a small training run is identical whatever the evaluator (181.943125ms)
+✔ determinism (423.369166ms)
+▶ golden master
+  ✖ src/app/allIn.ts and src/app/allin-original.ts are byte-for-byte unchanged (1.008625ms)
+    Error: Protected files changed: src/app/allin-original.ts (38bd247be9ef6472eac30b866e88662783907c7fa63a5821a91e172f32fc7538)
+        at verifyProtectedFiles (/Users/chad/development/personal/margin-trading/src/minute-optimizer/goldenMaster.ts:64:11)
+        at async TestContext.<anonymous> (/Users/chad/development/personal/margin-trading/src/minute-optimizer/tests/goldenMaster.test.ts:37:21)
+        at async Test.run (node:internal/test_runner/test:932:9)
+        at async Promise.all (index 0)
+        at async Suite.run (node:internal/test_runner/test:1310:7)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3)
+
+  ✔ the working copy reproduces allIn.ts on the full range: 171 trades, $203,405 net (3863.85525ms)
+  ✔ variants of the original match the working copy away from the defaults (15057.451583ms)
+  ✔ the fast engine matches the working copy trade for trade on random vectors and windows (223.879416ms)
+✖ golden master (23563.536208ms)
+▶ minute execution scenarios
+  ✔ entry one minute before the close, filled at the 15:59 open; the stop is inactive below breakeven (31.228ms)
+  ✔ a gap through an active stop fills at the opening trade (6.211209ms)
+  ✔ the stop is set once a day: a same-session high does not raise it; a minute trading through it fills at the stop (6.180542ms)
+  ✔ next-open stop fill uses the next observed trade after the triggering minute (4.400625ms)
+  ✔ a minute that opens through the stop fills at its open (4.682709ms)
+  ✔ next-open with no later trade at all fills at the triggering minute close (7.418208ms)
+  ✔ the maximum hold counts calendar days and sells at the next observed trade after the opening trade (4.828917ms)
+  ✔ a maximum-hold exit falls back to the closing print, and waits a session without any later trade (9.671375ms)
+  ✔ no trade after the entry decision means no entry, and it is counted (2.593333ms)
+  ✔ early close: the decision is at 12:59 on the 12:58 minute, and minutes after 13:00 are ignored (3.101ms)
+  ✔ daylight-saving change: the first session after the switch decides at 15:59 New York time (2.929958ms)
+  ✔ a material loss restricts re-entry until a lower price; a smaller loss does not restrict (17.518958ms)
+✔ minute execution scenarios (103.799375ms)
+▶ interest and exits
+  ✔ accrues simple interest per calendar day and sells a losing position at the open after the maximum hold (2.560667ms)
+  ✔ fills a gap through an active stop at the open (0.481209ms)
+  ✔ counts calendar days across market closures for the maximum hold (0.501417ms)
+✔ interest and exits (4.057292ms)
+▶ degenerate inputs
+  ✔ reports zero-trade configurations as infeasible, not as safe (3.773167ms)
+  ✔ handles one- and two-session histories (0.30925ms)
+  ✔ handles an empty window (0.163083ms)
+✔ degenerate inputs (4.36ms)
+▶ determinism across evaluators
+  ✔ produces identical run records in-process and with 1 or 3 worker threads (1346.024291ms)
+✔ determinism across evaluators (1346.55075ms)
+▶ worker failure propagation
+  ✔ rejects evaluations for an unregistered dataset and after close (4.489791ms)
+✔ worker failure propagation (4.609833ms)
+▶ original file preservation
+  ✖ matches the committed bytes (sha256 and git blob) (2.76625ms)
+    Error: src/app/allin-original.ts has changed: sha256 38bd247be9ef6472eac30b866e88662783907c7fa63a5821a91e172f32fc7538, expected 42f2b7e7be4ef99e1af6c4fe113dd8da9ed4d329d2fe0564463db80b87f449e2
+        at verifyOriginalUnchanged (/Users/chad/development/personal/margin-trading/src/optimizer/goldenMaster.ts:35:11)
+        at async TestContext.<anonymous> (/Users/chad/development/personal/margin-trading/src/optimizer/tests/goldenMaster.test.ts:24:5)
+        at async Test.run (node:internal/test_runner/test:932:9)
+        at async Promise.all (index 0)
+        at async Suite.run (node:internal/test_runner/test:1310:7)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3)
+
+  ✖ has no uncommitted changes (23.281292ms)
+    AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'M src/app/allin-original.ts'
+    - ''
+    
+        at TestContext.<anonymous> (/Users/chad/development/personal/margin-trading/src/optimizer/tests/goldenMaster.test.ts:29:12)
+        at Test.runInAsyncScope (node:async_hooks:211:14)
+        at Test.run (node:internal/test_runner/test:931:25)
+        at Suite.processPendingSubtests (node:internal/test_runner/test:629:18)
+        at Test.postRun (node:internal/test_runner/test:1042:19)
+        at Test.run (node:internal/test_runner/test:970:12)
+        at async Promise.all (index 0)
+        at async Suite.run (node:internal/test_runner/test:1310:7)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+      generatedMessage: true,
+      code: 'ERR_ASSERTION',
+      actual: 'M src/app/allin-original.ts',
+      expected: '',
+      operator: 'strictEqual'
+    }
+
+✖ original file preservation (27.383417ms)
+▶ golden master: original versus working copy
+  ✔ is identical on the repository VGT file through 2023 at the defaults (61.469375ms)
+  ✔ is identical on every synthetic edge case (160.412666ms)
+  ✔ is identical for random parameter vectors (variants of the original) (92.510916ms)
+✔ golden master: original versus working copy (314.6665ms)
+▶ fast mode equals detail mode
+  ✔ produces the same totals and trades with and without detail (14.943834ms)
+✔ fast mode equals detail mode (15.343041ms)
+▶ holdout lock
+  ✔ refuses the holdout before a freeze (96.58025ms)
+  ✔ runs rank 1 once after the freeze, then refuses a second run without a reason (198.602791ms)
+  ✔ detects re-ranking, report edits, data changes and a tampered freeze record (167.255208ms)
+✔ holdout lock (463.068083ms)
+▶ constrained domination
+  ✔ prefers feasible, then lower violation, then Pareto dominance (0.40525ms)
+✔ constrained domination (0.855542ms)
+▶ non-dominated sorting and crowding
+  ✔ builds the expected fronts with infeasible points last (0.637959ms)
+  ✔ gives boundary points infinite crowding and interior points the normalized gap (0.136125ms)
+  ✔ keeps whole better fronts (elitism) and breaks crowding ties by ID (0.249958ms)
+  ✔ is independent of input order (0.178708ms)
+  ✔ agrees with the general sort in the fast two-objective ranking (5.763708ms)
+  ✔ computes the two-objective hypervolume exactly (0.24875ms)
+✔ non-dominated sorting and crowding (7.590458ms)
+▶ NSGA-II on a controlled problem
+  ✔ improves the hypervolume of the seeded population and finds the optimum region (25.482791ms)
+  ✔ is reproducible for a seed (17.782916ms)
+✔ NSGA-II on a controlled problem (43.555417ms)
+▶ parameter grid
+  ✔ has the original defaults on the grid, converted exactly (0.793958ms)
+  ✔ accepts 10.5% and rejects 10.59% (0.251084ms)
+  ✔ round-trips every boundary value and rejects off-grid genomes (0.271916ms)
+  ✔ gives identical vectors identical IDs and different vectors different IDs (0.320333ms)
+  ✔ repairs out-of-range genes by clamping and counts the repairs (0.148459ms)
+  ✔ keeps neighbours on the grid (0.259875ms)
+✔ parameter grid (2.596417ms)
+▶ quantization through sampling and variation
+  ✔ maps every Sobol and random sample onto the grid, uniquely (8.551708ms)
+  ✔ keeps crossover and mutation children on the grid (15.676375ms)
+  ✔ exhausts a small space instead of claiming more unique samples than exist (0.70475ms)
+✔ quantization through sampling and variation (25.247042ms)
+▶ evaluation cache
+  ✔ passes exactly the quantized vector to the simulator and simulates each candidate once (0.389958ms)
+✔ evaluation cache (0.431709ms)
+▶ selection policy
+  ✔ excludes zero-trade and over-limit candidates and ranks by neighbourhood merit (3.084167ms)
+  ✔ drops behavioural duplicates and uses the relaxed pass only when needed (1.273792ms)
+  ✔ returns fewer than N, with a note, when few candidates qualify (0.882708ms)
+  ✔ returns an empty shortlist when nothing qualifies (0.121583ms)
+  ✔ is deterministic regardless of insertion order (4.139209ms)
+✔ selection policy (10.092792ms)
+▶ Sobol sequence
+  ✔ reproduces the known first points of the unscrambled sequence (0.950792ms)
+  ✔ uses odd initial direction numbers below 2^k (0.219833ms)
+  ✔ stratifies every dimension: each 1/4096 interval holds exactly one of the first 4096 points (11.169959ms)
+  ✔ keeps the (0, m, 2)-net property of dimensions 1 and 2 with and without scrambling (1.968208ms)
+  ✔ is deterministic for a seed and differs between seeds (1.563583ms)
+  ✔ covers the cube more evenly than pseudo-random points (lower centered discrepancy proxy) (0.361083ms)
+✔ Sobol sequence (16.867667ms)
+▶ Stooq URLs
+  ✔ maps symbols and reproduces the reference page URL exactly (0.621416ms)
+  ✔ follows the "Download data in csv file" link from the page (0.65725ms)
+✔ Stooq URLs (1.774ms)
+▶ Stooq downloads
+  ✔ downloads through the page link (0.623166ms)
+  ✔ reports a browser-verification challenge as blocked, without retrying (0.244292ms)
+  ✔ reports a 403 as blocked (0.243125ms)
+  ✔ retries transient failures with backoff, then succeeds (0.461833ms)
+  ✔ gives up after bounded retries on network errors (0.383917ms)
+  ✔ never accepts HTML, "No data" or the daily-limit page as CSV (0.447917ms)
+  ✔ reports a page without a CSV link (0.338833ms)
+✔ Stooq downloads (3.11375ms)
+▶ transformation
+  ✔ removes exactly the header row and keeps the first observation (comma source) (2.098ms)
+  ✔ replaces every ";" with "|" (CRLF, no final newline) (0.114625ms)
+  ✔ accepts LF with a final newline and the Polish header (0.052667ms)
+  ✔ rejects duplicate headers, blank rows, missing volume, decimal commas, quotes and HTML (0.923084ms)
+  ✔ converts the bulk archive layout with an explicit field mapping (0.227875ms)
+  ✔ produces files the optimizer loader reads back exactly (11.250792ms)
+✔ transformation (14.817584ms)
+▶ preparation pipeline
+  ✔ falls back to a browser download in the inbox, records provenance and checks parity (7.347709ms)
+  ✔ reuses a valid cache, refreshes on request, works offline, regenerates and detects tampering (14.866208ms)
+  ✔ records a failure with every attempt instead of dropping the symbol (1.034167ms)
+✔ preparation pipeline (23.396625ms)
+▶ research views
+  ✔ physically exclude sessions after the research end (20.2005ms)
+  ✔ are the only series the optimizer accepts (13.386375ms)
+  ✔ keep the holdout capability out of reach (27.623459ms)
+✔ research views (61.87925ms)
+▶ window evaluation
+  ✔ does not depend on sessions after the window (no look-ahead) (9.17675ms)
+  ✔ uses only the lookback before the window as history (warmup) (5.751375ms)
+  ✔ starts every window flat and marks an open position at the window end, with interest (2.758084ms)
+  ✔ computes the protocol windows from dates (0.242416ms)
+✔ window evaluation (18.256042ms)
+ℹ tests 102
+ℹ suites 29
+ℹ pass 99
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23891.96925
+
+✖ failing tests:
+
+test at src/minute-optimizer/tests/goldenMaster.test.ts:36:3
+✖ src/app/allIn.ts and src/app/allin-original.ts are byte-for-byte unchanged (1.008625ms)
+  Error: Protected files changed: src/app/allin-original.ts (38bd247be9ef6472eac30b866e88662783907c7fa63a5821a91e172f32fc7538)
+      at verifyProtectedFiles (/Users/chad/development/personal/margin-trading/src/minute-optimizer/goldenMaster.ts:64:11)
+      at async TestContext.<anonymous> (/Users/chad/development/personal/margin-trading/src/minute-optimizer/tests/goldenMaster.test.ts:37:21)
+      at async Test.run (node:internal/test_runner/test:932:9)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1310:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3)
+
+test at src/optimizer/tests/goldenMaster.test.ts:23:3
+✖ matches the committed bytes (sha256 and git blob) (2.76625ms)
+  Error: src/app/allin-original.ts has changed: sha256 38bd247be9ef6472eac30b866e88662783907c7fa63a5821a91e172f32fc7538, expected 42f2b7e7be4ef99e1af6c4fe113dd8da9ed4d329d2fe0564463db80b87f449e2
+      at verifyOriginalUnchanged (/Users/chad/development/personal/margin-trading/src/optimizer/goldenMaster.ts:35:11)
+      at async TestContext.<anonymous> (/Users/chad/development/personal/margin-trading/src/optimizer/tests/goldenMaster.test.ts:24:5)
+      at async Test.run (node:internal/test_runner/test:932:9)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1310:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3)
+
+test at src/optimizer/tests/goldenMaster.test.ts:28:3
+✖ has no uncommitted changes (23.281292ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'M src/app/allin-original.ts'
+  - ''
+  
+      at TestContext.<anonymous> (/Users/chad/development/personal/margin-trading/src/optimizer/tests/goldenMaster.test.ts:29:12)
+      at Test.runInAsyncScope (node:async_hooks:211:14)
+      at Test.run (node:internal/test_runner/test:931:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:629:18)
+      at Test.postRun (node:internal/test_runner/test:1042:19)
+      at Test.run (node:internal/test_runner/test:970:12)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1310:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:297:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'M src/app/allin-original.ts',
+    expected: '',
+    operator: 'strictEqual'
+  }
+exit=1
