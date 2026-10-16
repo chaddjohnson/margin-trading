@@ -1,0 +1,34 @@
+{
+ "startedAt": "2026-10-16T12:50:52.981Z",
+ "finishedAt": "2026-10-16T12:51:08.243Z",
+ "frozen": {
+  "frozenAt": "2026-10-16T12:24:25.471Z",
+  "protocolSha256": "884d5a31dabb38726efc780c2d3b05ddf3a6d8a1652e8b158e1bd3ceb7c37a43",
+  "objective": "net − max MTM drawdown on 2014-01-02 → 2022-12-30, same-close execution",
+  "picks": {
+   "B": {
+    "id": "B_skipSlow_60",
+    "description": "Reject a candidate whose first 10% signal came >60 sessions after its reference-high bar; otherwise as A."
+   },
+   "C": {
+    "id": "C_gate_accel_3",
+    "description": "Defer while accel5 ≤ −3% at the close; enter on the first later 10% signal session without the flag."
+   },
+   "D": {
+    "id": "D_upClose_rebound",
+    "description": "After a candidate's first 10% signal, enter on the first session where close above the previous close while the close is still ≥5% below the reference high."
+   },
+   "E": {
+    "id": "E_ret5_15_stab",
+    "description": "ret5 ≤ −6% at the first signal → require 15% and no new closing low for ≥2 sessions; otherwise 10%."
+   },
+   "F": {
+    "id": "F_accel_3+upClose",
+    "description": "On a 10% signal: if accel5 ≤ −3%, enter only once close above the previous close (10% signal still required); otherwise enter as A."
+   }
+  },
+  "gridSize": 58
+ },
+ "protocolSha256": "77eb36dccdee9713c0fa543b5ec69d8e6103a5755d6f3bced90feb1c6cc10e4a",
+ "dataEnd": "2026-10-13"
+}
