@@ -86,3 +86,18 @@ a decision, a pick or an evaluated figure:
 
 Before evaluating, the holdout verified that the decision files were unchanged: the engine, accounting, data,
 evaluation, families, context, copy generator, comparator, holdout and the repository's CSV and session code.
+
+## Reproduction check (2026-10-19)
+
+A clean worktree of commit `699c59f` was run with its `results/fits`, `results/traces` and `results/parity`
+deleted, using 4 worker threads instead of 8: `copies`, `parity`, `search`, `validate`, `control`, `freeze`,
+`development`. Compared with the committed results:
+
+- **Byte-identical:** all 16 `candidates.csv.gz`, all 16 `selection.json`, all 3 `validation.json`, all 4
+  `control.json`, `development.json`, and all 145 development trace files.
+- All 16 `stage.json` match apart from runtime and worker count.
+- The 40 frozen picks, the data hash, the strategy-file hashes and the protocol hash match.
+- Parity passed 156/156.
+
+The only differences are the freeze's code hashes of the three files changed after the freeze (listed above),
+and its timestamp. The holdout was **not** re-run for this check.
