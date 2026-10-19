@@ -1,0 +1,1389 @@
+// All in on a trailing buy after a 10% dip, with re-entry restricted after a material loss (1% loss, 2% lower
+// re-entry, 38% reset)
+//
+// A copy of allIn.ts that changes only the entry. Exits, interest, the re-entry restriction, accounting and
+// reports are the same.
+//
+// Entry: when no position is open, a completed minute closing at least 10% (X) below the highest high of the
+// previous 90 trading sessions ARMS a trailing buy; it doesn't buy. The setup then follows the lowest minute
+// low and buys once a completed minute closes at least 3% (Y) above that low. Exit: an 8% trailing stop, or
+// the 15-day loss exit.
+//
+// Entry states (independent of the re-entry restriction, which is orthogonal):
+// - FLAT: no position, no setup, no order.
+// - ARMED: a setup with its activation time and price, the reference high frozen at activation, and its
+//   trailing low.
+// - PENDING_FILL: the rebound was confirmed at a completed minute's close and the buy waits for the next
+//   observed trade.
+// - LONG: a position is open and managed by the exits.
+//
+// Execution model on one-minute bars (Alpaca, raw prices, each bar timestamped at the start of its minute):
+// - Sessions are America/New_York trading dates. Only regular-session minutes, from 9:30 a.m. to the
+//   scheduled close (4:00 p.m., or 1:00 p.m. on early-close days), are used, plus the closing-auction print
+//   in the minute that starts at the close. Session-level values (the 90-session reference high, closes for
+//   the re-entry restriction, the daily mark to market) come from sessions aggregated from those minutes,
+//   so a 90-session window is still 90 trading sessions, and it never includes the current session.
+// - Warmup: no setup arms before session index 90, the first session with 90 complete previous sessions for
+//   the reference high. Earlier sessions are still processed, marked and reported.
+// - Entry decisions are made when a minute completes (the minute starting at 10:14 completes at 10:15), so
+//   its open, high, low and close are all known then. Arming: a minute's close at or below the 10% level,
+//   with no position, no setup and the restriction (if any) allowing it. The activating minute never buys,
+//   and its trailing low starts at that minute's close, not its low, which may have come before the close.
+//   Each later completed minute lowers the trailing low to its own low, and then triggers the buy if its
+//   close is at or above the trailing low times 1.03. The setup persists across sessions, never re-arms,
+//   and doesn't need the 10% condition to still hold at the rebound.
+// - The trigger level is a decision threshold, not a fill price. The marketable buy fills at the first
+//   trade at or after the decision: the open of the next regular-session minute with trades, or the
+//   closing print if no later minute in the session has trades and the decision came before the close.
+//   A decision known only at the close (after the session's last minute completes) can't take the
+//   simultaneous closing print and waits for the next session's opening trade, as does any order without
+//   a later trade in its session. A minute's open is an observed trade price used as a proxy, not proof
+//   that an order would have filled there.
+// - The trailing stop is updated once a day, after each session. Its level comes from the highest price
+//   since the entry through the previous session, counting only the entry's minute onwards on the entry
+//   session, so a session's own prices never move that session's stop.
+// - An active stop fills at the opening trade when the session opens at or below it. Otherwise the first
+//   minute whose low reaches it triggers it, and it fills at the stop price when that minute opened above
+//   the stop, or at the minute's open when it opened at or below the stop. Filling at the stop price is an
+//   assumption: the bars show that trading crossed it, not the price a stop-market order got, which can be
+//   lower in fast markets. The `next-open` stop fill instead uses the next minute's opening trade as a
+//   bound on that uncertainty. The bid-ask spread isn't modeled.
+// - The maximum-hold loss exit is decided on the opening trade, so it sells at the next observed trade:
+//   the open of the next minute with trades.
+// - Exits are only checked on sessions that start with the position open, so there's no exit on the entry
+//   session. Entries are only considered on sessions that start without a position, so there's no re-entry
+//   on an exit session.
+// - Interest accrues per calendar day from the entry date to the exit date, and none on the entry day, as
+//   with daily bars. Exact intraday times are deliberately not used for interest or the maximum hold: the
+//   position's entry timestamp is its fill session's date, and the fill's minute is in the entry fill.
+// - Prices are raw. Dividends aren't modeled, and ex-dividend drops are price moves.
+//
+// Re-entry after a losing trade, as in allIn.ts, adapted to intraday arming:
+// - A trade whose ETF price return (exit price / entry price - 1, interest excluded) is at most -1%
+//   makes the strategy RESTRICTED_AFTER_LOSS. A smaller price loss, or a loss caused only by interest,
+//   leaves normal entry eligibility in place.
+// - The restriction freezes the losing exit's actual execution price and the reference high frozen at the
+//   losing trade's setup activation, and tracks the lowest session close since the exit session.
+// - While restricted, a setup arms only on a completed minute whose close meets the 10% condition AND is at
+//   or below 98% of the frozen loss-exit price (2% below it). Once armed, the rebound may buy above that
+//   level. The restriction clears when a buy fills, or when a session close recovers 38% of the decline
+//   from the frozen reference high to the episode low (recovery reset, evaluated at every close while
+//   restricted and flat, including the exit session itself). A reset cancels any armed setup or unfilled
+//   order and never buys by itself.
+// - At every arming or rebound decision while restricted, the decision minute's close counts towards the
+//   episode low for that decision only (the episode low itself only takes session closes), and a close at
+//   or above the reset level takes the recovery-reset path: no arming or buy from that minute. The reset
+//   itself still waits for the session close; if the close doesn't qualify, the restriction and any setup
+//   stay as they are, and the setup keeps following later lows.
+
+import type { BacktestPosition, MarketSession } from '#types';
+import { PositionType } from '#types';
+import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData } from '#lib';
+import fs from 'fs-extra';
+
+const secondsPerMinute = 60;
+const secondsPerDay = 24 * 60 * 60;
+
+export type ExitReason = 'maximum hold' | 'trailing stop' | 'trailing stop gap';
+
+// Where an execution price comes from in the minute bars.
+export type ExecutionPrice =
+  | 'first trade after decision' // the open of the first minute with trades at or after the decision
+  | 'closing print' // when no regular-session minute after the decision has trades
+  | 'opening trade' // the session's first regular-session trade
+  | 'stop level' // the stop price, when a minute that opened above it traded through it
+  | 'minute open through stop' // the open of a minute that opened at or below the stop
+  | 'trigger minute close'; // `next-open` stop fills only, when no trade follows the triggering minute
+
+// How an intraday stop trigger fills: at the stop price, or at the next observed trade after the minute.
+export type StopFill = 'stop' | 'next-open';
+
+export interface Fill {
+  price: number;
+  // Start of the minute holding the price, or the close for the closing print.
+  time: number;
+  // That minute's index in the session's bars, or the number of bars for the closing print.
+  barIndex: number;
+  execution: ExecutionPrice;
+}
+
+export interface SessionExit extends Fill {
+  reason: ExitReason;
+  isStopTriggered: boolean;
+  // Whether the maximum hold was also due at the open, which only matters when the stop gaps.
+  isMaximumHoldDue: boolean;
+}
+
+export interface SessionExitOptions {
+  position: BacktestPosition;
+  session: MarketSession;
+  // Set before the session from the post-entry high through the previous session.
+  stopPrice: number;
+  // Accrued through this session's date, which is known before the session opens.
+  interest: number;
+  maximumHoldDays: number;
+  stopFill: StopFill;
+}
+
+// The first observed trade at or after a time: the open of the first regular-session minute with trades,
+// or else the closing print.
+export const firstTradeFrom = (session: MarketSession, time: number): Fill | undefined => {
+  const barIndex = session.bars.findIndex((bar) => bar.time >= time);
+  const bar = session.bars[barIndex];
+
+  if (bar) {
+    return { price: bar.open, time: bar.time, barIndex, execution: 'first trade after decision' };
+  }
+
+  if (session.closingPrint !== undefined) {
+    return {
+      price: session.closingPrint,
+      time: session.closeTime,
+      barIndex: session.bars.length,
+      execution: 'closing print'
+    };
+  }
+
+  return undefined;
+};
+
+// The first trade an entry decided at `decisionTime` can fill at in this session. Like `firstTradeFrom`,
+// except that the closing print is only eligible for a decision made before the close: a decision known
+// only once the session's last minute completes, at the close itself, can't take the simultaneous
+// closing-auction print. Without an eligible trade the order waits for a later session.
+export const firstTradeAfterDecision = (session: MarketSession, decisionTime: number): Fill | undefined => {
+  const fill = firstTradeFrom(session, decisionTime);
+
+  return fill?.execution === 'closing print' && decisionTime >= session.closeTime ? undefined : fill;
+};
+
+// Decides whether an open position exits during one session, walking its minutes in chronological order.
+export const evaluateSessionExit = ({
+  position,
+  session,
+  stopPrice,
+  interest,
+  maximumHoldDays,
+  stopFill
+}: SessionExitOptions): SessionExit | undefined => {
+  const profitAt = (price: number) => position.shares * price - position.investment - interest;
+
+  // Before the open: the stop is active for this session only if filling at the stop price would be
+  // profitable after interest through the session. Nothing from the session's own prices is used, and
+  // the decision is made afresh each session, so growing interest can leave the stop inactive.
+  const isStopActive = profitAt(stopPrice) > 0;
+  const daysHeld = (session.time - position.entryTimestamp) / secondsPerDay;
+  const isMaximumHoldDue = daysHeld >= maximumHoldDays && profitAt(session.open) < 0;
+
+  // At the open: a resting stop-market order fills at the opening trade when the session gaps through it,
+  // even if that loses money, before any order placed in reaction to the open. A due maximum hold with an
+  // active stop always means such a gap, since the open is then below breakeven and the stop above it.
+  if (isStopActive && session.open <= stopPrice) {
+    return {
+      reason: 'trailing stop gap',
+      price: session.open,
+      time: session.bars[0]!.time,
+      barIndex: 0,
+      execution: 'opening trade',
+      isStopTriggered: true,
+      isMaximumHoldDue
+    };
+  }
+
+  // Just after the open: the maximum hold sells if a sale at the opening trade would lose money. The order
+  // can only go in once that trade is known, so it fills at the next observed trade.
+  if (isMaximumHoldDue) {
+    const fill = firstTradeFrom(session, session.bars[0]!.time + secondsPerMinute);
+
+    return fill && { ...fill, reason: 'maximum hold', isStopTriggered: false, isMaximumHoldDue };
+  }
+
+  if (!isStopActive) {
+    return undefined;
+  }
+
+  // During the session: the first minute that reaches an active stop triggers it.
+  for (const [barIndex, bar] of session.bars.entries()) {
+    const trigger = {
+      reason: 'trailing stop' as const,
+      time: bar.time,
+      barIndex,
+      isStopTriggered: true,
+      isMaximumHoldDue
+    };
+
+    // The minute opened through the stop, so its opening trade is the first one at or below it.
+    if (bar.open <= stopPrice) {
+      return { ...trigger, price: bar.open, execution: 'minute open through stop' };
+    }
+
+    if (bar.low <= stopPrice) {
+      if (stopFill === 'stop') {
+        return { ...trigger, price: stopPrice, execution: 'stop level' };
+      }
+
+      const fill = firstTradeFrom(session, bar.time + secondsPerMinute);
+
+      return fill ? { ...trigger, ...fill } : { ...trigger, price: bar.close, execution: 'trigger minute close' };
+    }
+  }
+
+  return undefined;
+};
+
+// The re-entry restriction, frozen when a materially losing trade exits. Only the episode low moves.
+interface Restriction {
+  lossExitPrice: number;
+  referenceHigh: number;
+  lowerLevel: number; // lossExitPrice * (1 - lowerPriceReentry)
+  episodeLow: number; // lowest close since the exit session, inclusive
+}
+
+type State = 'NORMAL' | 'RESTRICTED';
+
+// The entry state at a session's close. The restriction is tracked separately.
+export type EntryState = 'FLAT' | 'ARMED' | 'PENDING_FILL' | 'LONG';
+
+export interface StateLogRow {
+  index: number;
+  date: string;
+  prevState: State;
+  newState: State;
+  reason: string;
+  exitReason: string;
+  tradeProfit: number | '';
+  priceReturn: number | '';
+  lossExitPrice: number | '';
+  refHigh: number | '';
+  lowerLevel: number | '';
+  episodeLow: number | '';
+  resetLevel: number | '';
+  close: number;
+  decisionPrice: number;
+  signal: boolean;
+  entryExecuted: boolean;
+}
+
+export interface Episode {
+  exitIndex: number;
+  exitDate: string;
+  exitReason: ExitReason;
+  loss: number;
+  priceReturn: number;
+  lossExitPrice: number;
+  losingEntryPrice: number;
+  referenceHigh: number;
+  episodeLow: number;
+  resolution: 'lower_price_reentry' | 'recovery_reset' | 'unresolved_at_end' | '';
+  resolutionDate: string;
+}
+
+// The completed minute whose close confirmed the rebound, and the order it sent.
+export interface ReboundSignal {
+  index: number; // session index
+  date: string;
+  barTime: number; // start of the confirming minute
+  time: number; // its end, when the decision is known
+  price: number; // its close
+  trigger: number; // the trailing low times 1 + Y at that minute
+  trailingLow: number;
+  investment: number; // decided at the signal, before the fill is known
+  carriedOvernight: boolean; // no eligible trade after the signal in its own session
+}
+
+export type SetupStatus = 'armed' | 'pending' | 'filled' | 'cancelled';
+
+// One trailing-buy setup, from its activation to its fill, cancellation, or the end of the data.
+export interface TrailingBuySetup {
+  id: number;
+  status: SetupStatus;
+  // 'filled', 'recovery_reset' (cancelled by the restriction's reset), 'armed_at_end' or 'pending_at_end'.
+  statusReason: string;
+  activationIndex: number;
+  activationDate: string;
+  activationBarTime: number; // start of the activating minute
+  activationTime: number; // its end, when the activation is known
+  activationPrice: number; // its close
+  referenceHigh: number; // the 90-session reference high, frozen at activation
+  xLevel: number; // referenceHigh * (1 - X)
+  restrictedAtActivation: boolean;
+  lowerLevelAtActivation: number | '';
+  trailingLow: number; // the activation close, then the lowest later minute low
+  trailingLowTime: number; // start of the minute that set the trailing low
+  reboundTrigger: number; // trailingLow * (1 + Y)
+  suppressedSignals: number; // rebounds that the recovery-reset guard kept from buying
+  signal?: ReboundSignal;
+  fill?: Fill & { index: number; date: string };
+  endIndex?: number;
+  endDate?: string;
+}
+
+export interface EntryFill extends Fill {
+  decisionTime: number; // the end of the minute that confirmed the rebound
+  decisionPrice: number; // that minute's close
+  sessionClose: number;
+  setupId: number;
+  activationTime: number;
+  activationPrice: number;
+  referenceHigh: number; // frozen at activation
+  trailingLow: number;
+  trailingLowTime: number;
+  reboundTrigger: number;
+  signalIndex: number; // session index of the rebound signal
+  waitMinutes: number; // wall-clock minutes from the decision to the fill, including any overnight wait
+  waitSessions: number; // sessions from the signal's session to the fill's
+}
+
+// Tracks the largest fall in marked profit from an earlier peak.
+const createDrawdownTracker = (startTimestamp: number) => {
+  const tracker = {
+    peakProfit: 0,
+    peakTimestamp: startTimestamp,
+    maximumDrawdown: 0,
+    drawdownPeakTimestamp: startTimestamp,
+    drawdownTroughTimestamp: startTimestamp,
+    update: (markedProfit: number, timestamp: number) => {
+      if (markedProfit > tracker.peakProfit) {
+        tracker.peakProfit = markedProfit;
+        tracker.peakTimestamp = timestamp;
+      }
+
+      if (tracker.peakProfit - markedProfit > tracker.maximumDrawdown) {
+        tracker.maximumDrawdown = tracker.peakProfit - markedProfit;
+        tracker.drawdownPeakTimestamp = tracker.peakTimestamp;
+        tracker.drawdownTroughTimestamp = timestamp;
+      }
+    }
+  };
+
+  return tracker;
+};
+
+// What a position-size callback sees at an entry decision: only what is known when the rebound minute
+// completes. It never sees the fill or later prices. An order cancelled by a recovery reset before it
+// fills, or still pending at the end of the data, has been sized but opens no position.
+export interface PositionSizingContext {
+  date: string; // the signal session's New York date
+  decisionTime: number;
+  decisionPrice: number; // the close of the minute that confirmed the rebound
+  positions: readonly BacktestPosition[]; // every earlier position, closed ones with their exits
+  referenceHigh?: number; // frozen at the setup's activation
+  trailingLow?: number;
+  reboundTrigger?: number;
+}
+
+export interface AllInOptions {
+  symbol?: string;
+  startDate?: string;
+  endDate?: string;
+  dataFile?: string;
+  outDir?: string;
+  stopFill?: string;
+  // The dollars to buy at each entry. Without it every entry buys a fixed $100,000. The signals and exits
+  // don't depend on the size: interest scales with the investment, so every profit test keeps its sign.
+  sizePosition?: (context: PositionSizingContext) => number;
+  // X and Y, defaulting to the settings in `runAllIn`.
+  targetPercentChange?: number;
+  trailingBuyPercentage?: number;
+}
+
+export interface AllInResult {
+  sessions: MarketSession[];
+  positions: BacktestPosition[];
+  entryFills: Map<BacktestPosition, EntryFill>;
+  exitFills: Map<BacktestPosition, SessionExit & { stopPrice: number }>;
+  stateLog: StateLogRow[];
+  episodes: Episode[];
+  setups: TrailingBuySetup[];
+}
+
+// The strategy itself, for the command line below and for callers that size positions themselves.
+export const runAllIn = async ({
+  symbol = 'VGT',
+  startDate,
+  endDate,
+  dataFile,
+  outDir,
+  stopFill: stopFillArgument,
+  sizePosition,
+  targetPercentChange: targetPercentChangeOption,
+  trailingBuyPercentage: trailingBuyPercentageOption
+}: AllInOptions = {}): Promise<AllInResult> => {
+  const optional = (value?: string) => (value === '-' || value === '' ? undefined : value);
+  const startTimestamp = optional(startDate) ? Date.parse(startDate!) / 1000 : -Infinity;
+  const endTimestamp = optional(endDate) ? Date.parse(endDate!) / 1000 : Infinity;
+  const stopFill = (optional(stopFillArgument) ?? 'stop') as StopFill;
+  // Unlike allIn.ts, '-' also leaves the output directory unset, so later arguments can follow it.
+  const outputDir = optional(outDir);
+
+  if (Number.isNaN(startTimestamp) || Number.isNaN(endTimestamp)) {
+    throw new Error('Start and end dates must be YYYY-MM-DD');
+  }
+
+  if (stopFill !== 'stop' && stopFill !== 'next-open') {
+    throw new Error("The stop fill must be 'stop' or 'next-open'");
+  }
+
+  const targetPercentChange = targetPercentChangeOption ?? 0.1; // X: arm after a >=10% decline
+  const trailingBuyPercentage = trailingBuyPercentageOption ?? 0.04; // Y: buy after a >=3% recovery from the armed low
+
+  if (!(targetPercentChange > 0 && targetPercentChange < 1)) {
+    throw new Error(`The target percent change ${targetPercentChange} must be between 0 and 1`);
+  }
+
+  if (!(trailingBuyPercentage > 0) || !Number.isFinite(trailingBuyPercentage)) {
+    throw new Error(`The trailing buy percentage ${trailingBuyPercentage} must be a positive number`);
+  }
+
+  const percentName = (fraction: number) => Number((fraction * 100).toFixed(4));
+  const strategyName = `trailing-buy${percentName(targetPercentChange)}-rebound${percentName(trailingBuyPercentage)}-material1-lower2-retrace38`;
+  const file = optional(dataFile) ?? `data/${symbol}/${symbol}-2016-2025-1-minute.csv`;
+  const allSessions = groupMarketSessions(await loadCsvMinuteBacktestData(symbol, file));
+  const sessions = allSessions.filter((session) => session.time >= startTimestamp && session.time <= endTimestamp);
+  const tickWindowSize = 90;
+  const positions: BacktestPosition[] = [];
+  const investmentAmount = 100000; // Margin borrowed for every position, regardless of past results
+  const trailingStopPercentage = 0.08; //  drop from the post-entry high
+  const maximumHoldDays = 15; // days before a losing position is sold
+  const marginInterestRate = 0.11; // annual interest charged by Vanguard on margin
+  const materialLossThreshold = 0.01; // price loss that makes the next entry wait for a lower price
+  const lowerPriceReentry = 0.02; // extra decline below the frozen loss-exit price required to re-arm
+  const retraceFraction = 0.38; // recovery of the reference-high-to-episode-low decline that clears it
+  let postEntryHigh = 0;
+  let postEntryLow = 0;
+  let stopPrice = 0;
+  let realizedProfit = 0;
+  let entriesWithoutTrade = 0;
+  const dailyDrawdown = createDrawdownTracker(sessions[0]?.time ?? 0);
+  const minuteDrawdown = createDrawdownTracker(sessions[0]?.bars[0]?.time ?? 0);
+
+  // Re-entry state. The reference high of the open position's setup is kept so that a losing exit can
+  // freeze it; it is the `recentHigh` of the session where that setup armed.
+  let restriction: Restriction | undefined;
+  let episode: Episode | undefined;
+  let entryReferenceHigh = 0;
+  // The current trailing-buy setup, armed or pending; there's at most one, and only while flat.
+  let setup: TrailingBuySetup | undefined;
+  const setups: TrailingBuySetup[] = [];
+  const episodes: Episode[] = [];
+  const stateLog: StateLogRow[] = [];
+  const entryIndexes = new Map<BacktestPosition, number>();
+  const exitIndexes = new Map<BacktestPosition, number>();
+  const exitReasons = new Map<BacktestPosition, ExitReason>();
+  const entryFills = new Map<BacktestPosition, EntryFill>();
+  const exitFills = new Map<BacktestPosition, SessionExit & { stopPrice: number }>();
+  const dailyRows: {
+    index: number;
+    date: string;
+    close: number;
+    borrowed: number;
+    mtmProfit: number;
+    recentHigh: number;
+    decisionPrice: number;
+    signal: boolean;
+    xLevel: number;
+    entryState: EntryState;
+    restricted: boolean;
+    setupId: number | '';
+    trailingLow: number | '';
+    reboundTrigger: number | '';
+  }[] = [];
+
+  const formatDollars = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0
+  }).format;
+
+  const formatMonths = new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: 1
+  }).format;
+
+  const formatPrice = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format;
+
+  const formatPercent = new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    maximumFractionDigits: 2
+  }).format;
+
+  const formatDate = (timestamp: number) => new Date(timestamp * 1000).toISOString().slice(0, 10);
+  const formatTime = (timestamp: number) => new Date(timestamp * 1000).toISOString();
+
+  const exitReasonDescriptions: Record<ExitReason, string> = {
+    'maximum hold': `${maximumHoldDays}-day loss exit, sold after the opening trade`,
+    'trailing stop': 'trailing stop',
+    'trailing stop gap': 'trailing stop, filled at the opening trade after a gap down'
+  };
+
+  const executionDescriptions: Record<ExecutionPrice, string> = {
+    'first trade after decision': 'the opening trade of the first minute after the decision (observed proxy)',
+    'closing print': 'the closing print, the first trade after the decision (observed proxy)',
+    'opening trade': "the session's opening trade (observed proxy)",
+    'stop level': 'the stop price, crossed within the minute (assumed; the actual fill may be lower)',
+    'minute open through stop': 'the opening trade of a minute that opened through the stop (observed proxy)',
+    'trigger minute close': "the triggering minute's last trade (observed proxy)"
+  };
+
+  // Simple interest on the borrowed amount, accrued for the time the position has been held.
+  const calculateInterest = (position: BacktestPosition, timestamp: number) => {
+    const yearsHeld = (timestamp - position.entryTimestamp) / (365 * secondsPerDay);
+
+    return position.investment * marginInterestRate * yearsHeld;
+  };
+
+  // An open position marked to a price, net of the interest accrued through the session's date.
+  const calculateUnrealizedProfit = (position: BacktestPosition, session: MarketSession, price = session.close) =>
+    position.shares * price - position.investment - calculateInterest(position, session.time);
+
+  // The close that clears the restriction: 38% of the way back from the episode low to the frozen
+  // reference high. It falls as the episode low falls and is never computed from future prices.
+  const resetLevelOf = (current: Restriction) =>
+    current.episodeLow + retraceFraction * (current.referenceHigh - current.episodeLow);
+
+  // The reset level if a decision price counted towards the episode low, for that decision only.
+  const provisionalResetLevelOf = (current: Restriction, decisionPrice: number) =>
+    resetLevelOf({ ...current, episodeLow: Math.min(current.episodeLow, decisionPrice) });
+
+  const logState = (
+    index: number,
+    session: MarketSession,
+    decisionPrice: number,
+    prevState: State,
+    newState: State,
+    reason: string,
+    signal: boolean,
+    entryExecuted: boolean,
+    exitReason = '',
+    tradeProfit: number | '' = '',
+    priceReturn: number | '' = ''
+  ) => {
+    stateLog.push({
+      index,
+      date: session.date,
+      prevState,
+      newState,
+      reason,
+      exitReason,
+      tradeProfit,
+      priceReturn,
+      lossExitPrice: restriction?.lossExitPrice ?? '',
+      refHigh: restriction?.referenceHigh ?? '',
+      lowerLevel: restriction?.lowerLevel ?? '',
+      episodeLow: restriction?.episodeLow ?? '',
+      resetLevel: restriction ? resetLevelOf(restriction) : '',
+      close: session.close,
+      decisionPrice,
+      signal,
+      entryExecuted
+    });
+  };
+
+  const entryStateOf = (openPosition: BacktestPosition | undefined): EntryState => {
+    if (openPosition) {
+      return 'LONG';
+    }
+
+    if (!setup) {
+      return 'FLAT';
+    }
+
+    return setup.status === 'pending' ? 'PENDING_FILL' : 'ARMED';
+  };
+
+  sessions.forEach((session, index) => {
+    const sessionWindow: MarketSession[] = sessions.slice(Math.max(0, index - tickWindowSize), index);
+    const recentHigh = Math.max(...sessionWindow.map((windowSession) => windowSession.high));
+    const xLevel = recentHigh * (1 - targetPercentChange);
+
+    // Skip the first session.
+    if (index === 0) {
+      dailyRows.push({
+        index,
+        date: session.date,
+        close: session.close,
+        borrowed: 0,
+        mtmProfit: 0,
+        recentHigh,
+        decisionPrice: NaN,
+        signal: false,
+        xLevel,
+        entryState: 'FLAT',
+        restricted: false,
+        setupId: '',
+        trailingLow: '',
+        reboundTrigger: ''
+      });
+      return;
+    }
+
+    // The 10% condition at a completed minute's close, written as allIn.ts writes its signal.
+    const isDip = (price: number) => 1 - price / recentHigh >= targetPercentChange;
+    // Whether any completed minute this session closed at or below the 10% level, position or not.
+    const signal = session.bars.some((bar) => isDip(bar.close));
+    const openPositions = positions.filter((position) => position.isOpen);
+    const realizedAtStart = realizedProfit;
+    // The close of this session's last entry decision minute: an activation or a rebound signal.
+    let decisionPrice = NaN;
+    let entryBlocked = false;
+    let enteredPosition: BacktestPosition | undefined;
+    let fill: Fill | undefined;
+
+    // Entries: only on sessions that start flat, so an exit session never re-arms or re-enters.
+    if (openPositions.length === 0) {
+      if (setup?.status === 'pending') {
+        // An order left pending by an earlier session fills at this session's opening trade.
+        const opening = firstTradeAfterDecision(session, setup.signal!.time);
+
+        fill = opening && { ...opening, execution: opening.barIndex === 0 ? 'opening trade' : opening.execution };
+      } else {
+        for (const [barIndex, bar] of session.bars.entries()) {
+          const decisionTime = bar.time + secondsPerMinute;
+
+          if (!setup) {
+            // Warmup: nothing arms until the previous 90 sessions are all available.
+            if (index < tickWindowSize || !isDip(bar.close)) {
+              continue;
+            }
+
+            // While restricted, arming also needs the 2% lower level, and a close that would qualify as
+            // a recovery reset takes the reset path instead, as allIn.ts does for its entries.
+            if (
+              restriction &&
+              (bar.close >= provisionalResetLevelOf(restriction, bar.close) || bar.close > restriction.lowerLevel)
+            ) {
+              entryBlocked = true;
+              continue;
+            }
+
+            // Arm on the minute's close; its low may have come earlier and isn't used. No buy this minute.
+            setup = {
+              id: setups.length + 1,
+              status: 'armed',
+              statusReason: '',
+              activationIndex: index,
+              activationDate: session.date,
+              activationBarTime: bar.time,
+              activationTime: decisionTime,
+              activationPrice: bar.close,
+              referenceHigh: recentHigh,
+              xLevel,
+              restrictedAtActivation: Boolean(restriction),
+              lowerLevelAtActivation: restriction?.lowerLevel ?? '',
+              trailingLow: bar.close,
+              trailingLowTime: bar.time,
+              reboundTrigger: bar.close * (1 + trailingBuyPercentage),
+              suppressedSignals: 0
+            };
+            setups.push(setup);
+            decisionPrice = bar.close;
+            console.info(
+              `Trailing buy ${setup.id} armed at ${formatNewYorkTime(decisionTime)} on the ${formatNewYorkTime(bar.time)} minute's close of ${formatPrice(bar.close)}, ${formatPercent(1 - bar.close / recentHigh)} below the reference high of ${formatPrice(recentHigh)}; it buys on a close at or above ${formatPrice(setup.reboundTrigger)}${restriction ? `, armed at or below the lower level of ${formatPrice(restriction.lowerLevel)}` : ''}`
+            );
+            continue;
+          }
+
+          // Armed: the completed minute lowers the trailing low, then its close is tested against the
+          // rebound trigger from that low.
+          if (bar.low < setup.trailingLow) {
+            setup.trailingLow = bar.low;
+            setup.trailingLowTime = bar.time;
+          }
+
+          setup.reboundTrigger = setup.trailingLow * (1 + trailingBuyPercentage);
+
+          if (bar.close < setup.reboundTrigger) {
+            continue;
+          }
+
+          // While restricted, a rebound close that would qualify as a recovery reset doesn't buy. The
+          // restriction itself only resets at the session close.
+          if (restriction && bar.close >= provisionalResetLevelOf(restriction, bar.close)) {
+            if (setup.suppressedSignals === 0) {
+              console.info(
+                `Trailing buy ${setup.id}: the rebound at ${formatNewYorkTime(decisionTime)} to ${formatPrice(bar.close)} would qualify as a recovery reset, so it doesn't buy`
+              );
+            }
+
+            setup.suppressedSignals++;
+            entryBlocked = true;
+            continue;
+          }
+
+          // The size is decided at the decision, before the fill is known. Vanguard allows partial shares.
+          const investment = sizePosition
+            ? sizePosition({
+                date: session.date,
+                decisionTime,
+                decisionPrice: bar.close,
+                positions,
+                referenceHigh: setup.referenceHigh,
+                trailingLow: setup.trailingLow,
+                reboundTrigger: setup.reboundTrigger
+              })
+            : investmentAmount;
+
+          if (!(investment > 0) || !Number.isFinite(investment)) {
+            throw new Error(`Position size ${investment} on ${session.date} must be a positive number of dollars`);
+          }
+
+          setup.status = 'pending';
+          setup.signal = {
+            index,
+            date: session.date,
+            barTime: bar.time,
+            time: decisionTime,
+            price: bar.close,
+            trigger: setup.reboundTrigger,
+            trailingLow: setup.trailingLow,
+            investment,
+            carriedOvernight: false
+          };
+          decisionPrice = bar.close;
+          fill = firstTradeAfterDecision(session, decisionTime);
+          console.info(
+            `Trailing buy ${setup.id} triggered at ${formatNewYorkTime(decisionTime)}: the ${formatNewYorkTime(bar.time)} minute closed at ${formatPrice(bar.close)}, at or above ${formatPrice(setup.reboundTrigger)} (${formatPercent(trailingBuyPercentage)} above the trailing low of ${formatPrice(setup.trailingLow)} from ${formatNewYorkTime(setup.trailingLowTime)})`
+          );
+
+          if (barIndex < session.bars.length - 1 && !fill) {
+            throw new Error(`No fill for a decision at ${formatNewYorkTime(decisionTime)} despite later minutes`);
+          }
+
+          break;
+        }
+      }
+
+      if (fill && setup?.signal) {
+        const { signal: rebound } = setup;
+        const shares = rebound.investment / fill.price;
+        const position: BacktestPosition = {
+          isOpen: true,
+          symbol,
+          type: PositionType.Long,
+          shares,
+          investment: rebound.investment,
+          // The session's date, not the fill's minute, so that interest and the maximum hold keep counting
+          // calendar days.
+          entryTimestamp: session.time,
+          entryPrice: fill.price
+        };
+
+        positions.push(position);
+        enteredPosition = position;
+        entryIndexes.set(position, index);
+        entryFills.set(position, {
+          ...fill,
+          decisionTime: rebound.time,
+          decisionPrice: rebound.price,
+          sessionClose: session.close,
+          setupId: setup.id,
+          activationTime: setup.activationTime,
+          activationPrice: setup.activationPrice,
+          referenceHigh: setup.referenceHigh,
+          trailingLow: rebound.trailingLow,
+          trailingLowTime: setup.trailingLowTime,
+          reboundTrigger: rebound.trigger,
+          signalIndex: rebound.index,
+          waitMinutes: (fill.time - rebound.time) / secondsPerMinute,
+          waitSessions: index - rebound.index
+        });
+        entryReferenceHigh = setup.referenceHigh;
+        setup.status = 'filled';
+        setup.statusReason = 'filled';
+        setup.fill = { ...fill, index, date: session.date };
+        setup.endIndex = index;
+        setup.endDate = session.date;
+
+        // After the entry session, the high and the stop for the next session, from the fill onwards only.
+        const laterBars = session.bars.slice(fill.barIndex);
+
+        postEntryHigh = Math.max(fill.price, session.close, ...laterBars.map((bar) => bar.high));
+        postEntryLow = Math.min(fill.price, session.close, ...laterBars.map((bar) => bar.low));
+        stopPrice = postEntryHigh * (1 - trailingStopPercentage);
+
+        console.info(
+          `Entered on trailing buy ${setup.id} at ${formatTime(fill.time)} (${formatNewYorkTime(fill.time)}) at ${formatPrice(fill.price)}, armed at ${formatNewYorkTime(setup.activationTime)} at ${formatPrice(setup.activationPrice)} from the reference high of ${formatPrice(setup.referenceHigh)}`
+        );
+        console.info(
+          `Entry decision at ${formatNewYorkTime(rebound.time)} on the ${formatNewYorkTime(rebound.barTime)} minute's close of ${formatPrice(rebound.price)}; filled at ${executionDescriptions[fill.execution]}; the session closed at ${formatPrice(session.close)}`
+        );
+
+        if (restriction) {
+          console.info(
+            `Lower-price reentry: armed at ${formatPrice(setup.activationPrice)}, at least ${formatPercent(lowerPriceReentry)} below the loss exit at ${formatPrice(restriction.lossExitPrice)}`
+          );
+        }
+
+        setup = undefined;
+      } else if (setup?.status === 'pending' && setup.signal && !setup.signal.carriedOvernight) {
+        // No eligible trade after the signal in its session, including a decision known only at the close.
+        setup.signal.carriedOvernight = true;
+        console.info(
+          `Trailing buy ${setup.id}: no eligible trade after the decision at ${formatNewYorkTime(setup.signal.time)} on ${session.date}, so the order waits for the next session's opening trade\n`
+        );
+      }
+    }
+
+    const [position] = openPositions;
+    let exit: SessionExit | undefined;
+
+    // Only apply the exits when exactly one position is open. The `position` check also
+    // narrows its type, since destructuring an array yields `BacktestPosition | undefined`.
+    if (position && openPositions.length === 1) {
+      const interest = calculateInterest(position, session.time);
+
+      exit = evaluateSessionExit({ position, session, stopPrice, interest, maximumHoldDays, stopFill });
+
+      if (exit) {
+        position.isOpen = false;
+        position.exitTimestamp = session.time;
+        position.exitPrice = exit.price;
+        position.interest = interest;
+        position.profit = position.shares * exit.price - position.investment - interest;
+        realizedProfit += position.profit;
+        exitIndexes.set(position, index);
+        exitReasons.set(position, exit.reason);
+        exitFills.set(position, { ...exit, stopPrice });
+
+        const monthsHeld = (session.time - position.entryTimestamp) / ((365 / 12) * secondsPerDay);
+        const alsoDue =
+          exit.reason === 'trailing stop gap' && exit.isMaximumHoldDue
+            ? ' (the maximum hold was also due at the open)'
+            : '';
+
+        console.info(
+          `Exited at ${formatTime(exit.time)} (${formatNewYorkTime(exit.time)}) from ${formatPrice(position.entryPrice)} to ${formatPrice(exit.price)} for a profit of ${formatDollars(position.profit)} after ${formatDollars(interest)} in interest`
+        );
+        console.info(`Exit reason: ${exitReasonDescriptions[exit.reason]}${alsoDue}`);
+        console.info(`Exit price: ${executionDescriptions[exit.execution]}, stop at ${formatPrice(stopPrice)}`);
+        // The lowest price seen while the position was open, including the exit itself and the exit
+        // session's minutes before the exit's minute. That minute's own low may have come after the
+        // fill, so it's left out.
+        const lowestLow = Math.min(
+          postEntryLow,
+          exit.price,
+          ...session.bars.slice(0, exit.barIndex).map((bar) => bar.low)
+        );
+        const dropToLowestLow = 1 - lowestLow / position.entryPrice;
+
+        console.info(`Held for ${formatMonths(monthsHeld)} months`);
+        console.info(`Lowest low: ${formatPrice(lowestLow)} (${formatPercent(dropToLowestLow)} below entry)\n`);
+
+        // A material price loss (interest excluded) freezes the restriction. A smaller loss, including
+        // one caused only by interest, and any profit leave the strategy unrestricted. The frozen
+        // reference high is the entry setup's, not today's; the episode low starts at today's close.
+        const priceReturn = exit.price / position.entryPrice - 1;
+
+        if (priceReturn <= -materialLossThreshold) {
+          restriction = {
+            lossExitPrice: exit.price,
+            referenceHigh: entryReferenceHigh,
+            lowerLevel: exit.price * (1 - lowerPriceReentry),
+            episodeLow: session.close
+          };
+          episode = {
+            exitIndex: index,
+            exitDate: session.date,
+            exitReason: exit.reason,
+            loss: position.profit,
+            priceReturn,
+            lossExitPrice: exit.price,
+            losingEntryPrice: position.entryPrice,
+            referenceHigh: entryReferenceHigh,
+            episodeLow: session.close,
+            resolution: '',
+            resolutionDate: ''
+          };
+          episodes.push(episode);
+          logState(
+            index,
+            session,
+            decisionPrice,
+            'NORMAL',
+            'RESTRICTED',
+            'losing_exit',
+            signal,
+            false,
+            exit.reason,
+            position.profit,
+            priceReturn
+          );
+          console.info(
+            `Restricted after a ${formatPercent(-priceReturn)} price loss: a trailing buy needs to arm at a minute close at or below ${formatPrice(restriction.lowerLevel)}; a close at or above ${formatPrice(resetLevelOf(restriction))} (${formatPercent(retraceFraction)} of the way back from the episode low to ${formatPrice(entryReferenceHigh)}) resets\n`
+          );
+        } else if (position.profit < 0) {
+          logState(
+            index,
+            session,
+            decisionPrice,
+            'NORMAL',
+            'NORMAL',
+            'loss_not_restricted',
+            signal,
+            false,
+            exit.reason,
+            position.profit,
+            priceReturn
+          );
+          console.info(
+            `Not restricted: the ${formatPercent(priceReturn)} price change is above the ${formatPercent(-materialLossThreshold)} material-loss threshold\n`
+          );
+        } else {
+          logState(
+            index,
+            session,
+            decisionPrice,
+            'NORMAL',
+            'NORMAL',
+            'profitable_exit',
+            signal,
+            false,
+            exit.reason,
+            position.profit,
+            priceReturn
+          );
+        }
+      } else {
+        // After the session, raise the high and the stop for the next session. The stop never moves down.
+        postEntryHigh = Math.max(postEntryHigh, session.high);
+        stopPrice = Math.max(stopPrice, postEntryHigh * (1 - trailingStopPercentage));
+        postEntryLow = Math.min(postEntryLow, session.low);
+      }
+    }
+
+    // Minute-sampled mark-to-market profit: at each regular-session minute's close, then at the official
+    // close. The position held during the session counts from its fill's minute until its exit's minute.
+    const sessionPosition = position ?? enteredPosition;
+    const heldFrom = position ? 0 : enteredPosition ? fill!.barIndex : Infinity;
+    const heldUntil = exit?.barIndex ?? Infinity;
+    const marks = [
+      ...session.bars.map((bar) => ({ time: bar.time, price: bar.close })),
+      { time: session.closeTime, price: session.close }
+    ];
+
+    marks.forEach(({ time, price }, barIndex) => {
+      const isHeld = sessionPosition && barIndex >= heldFrom && barIndex < heldUntil;
+      const realized = barIndex >= heldUntil ? realizedProfit : realizedAtStart;
+
+      minuteDrawdown.update(realized + (isHeld ? calculateUnrealizedProfit(sessionPosition, session, price) : 0), time);
+    });
+
+    // Daily mark-to-market profit: realized profit plus any open position at the close, net of interest.
+    const openPosition = positions.find((position) => position.isOpen);
+    const markedProfit = realizedProfit + (openPosition ? calculateUnrealizedProfit(openPosition, session) : 0);
+
+    dailyDrawdown.update(markedProfit, session.time);
+
+    // End of the session: resolve the restriction. A position opened this session clears it; otherwise
+    // today's close extends the episode low and a close at or above the reset level clears it (recovery
+    // reset, never a purchase), cancelling any armed setup or unfilled order. The log mirrors the research
+    // implementation: one row per restricted session.
+    if (restriction && episode) {
+      restriction.episodeLow = Math.min(restriction.episodeLow, session.close);
+      episode.episodeLow = restriction.episodeLow;
+
+      if (openPosition && entryIndexes.get(openPosition) === index) {
+        logState(index, session, decisionPrice, 'RESTRICTED', 'NORMAL', 'lower_price_reentry', signal, true);
+        episode.resolution = 'lower_price_reentry';
+        episode.resolutionDate = session.date;
+        restriction = undefined;
+        episode = undefined;
+      } else if (!openPosition && session.close >= resetLevelOf(restriction)) {
+        logState(index, session, decisionPrice, 'RESTRICTED', 'NORMAL', 'recovery_reset', signal, false);
+        console.info(
+          `Recovery reset on ${session.date}: close ${formatPrice(session.close)} recovered ${formatPercent(retraceFraction)} of the decline from ${formatPrice(restriction.referenceHigh)} to the episode low ${formatPrice(restriction.episodeLow)}\n`
+        );
+
+        if (setup) {
+          console.info(
+            `Trailing buy ${setup.id} cancelled by the recovery reset${setup.status === 'pending' ? ', with its order unfilled' : ''}\n`
+          );
+
+          if (setup.status === 'pending') {
+            entriesWithoutTrade++;
+          }
+
+          setup.status = 'cancelled';
+          setup.statusReason = 'recovery_reset';
+          setup.endIndex = index;
+          setup.endDate = session.date;
+          setup = undefined;
+        }
+
+        episode.resolution = 'recovery_reset';
+        episode.resolutionDate = session.date;
+        restriction = undefined;
+        episode = undefined;
+      } else {
+        logState(
+          index,
+          session,
+          decisionPrice,
+          'RESTRICTED',
+          'RESTRICTED',
+          entryBlocked ? 'entry_blocked' : 'restricted',
+          signal,
+          false
+        );
+
+        if (index === sessions.length - 1) {
+          episode.resolution = 'unresolved_at_end';
+          episode.resolutionDate = session.date;
+        }
+      }
+    } else if (openPosition && entryIndexes.get(openPosition) === index) {
+      logState(index, session, decisionPrice, 'NORMAL', 'NORMAL', 'normal_entry', signal, true);
+    }
+
+    dailyRows.push({
+      index,
+      date: session.date,
+      close: session.close,
+      borrowed: openPosition ? openPosition.investment : 0,
+      mtmProfit: markedProfit,
+      recentHigh,
+      decisionPrice,
+      signal,
+      xLevel,
+      entryState: entryStateOf(openPosition),
+      restricted: Boolean(restriction),
+      setupId: setup?.id ?? '',
+      trailingLow: setup?.trailingLow ?? '',
+      reboundTrigger: setup?.reboundTrigger ?? ''
+    });
+  });
+
+  const closedPositions = positions.filter((position) => !position.isOpen);
+  const openPosition = positions.find((position) => position.isOpen);
+  const lastSession = sessions.at(-1);
+  const closedInterest = closedPositions.reduce((total, position) => total + (position.interest ?? 0), 0);
+  const accruedInterest = openPosition && lastSession ? calculateInterest(openPosition, lastSession.time) : 0;
+  const unrealizedProfit = openPosition && lastSession ? calculateUnrealizedProfit(openPosition, lastSession) : 0;
+
+  // A setup still armed or pending at the end of the data is left unfilled, with no invented fill.
+  if (setup) {
+    setup.statusReason = setup.status === 'pending' ? 'pending_at_end' : 'armed_at_end';
+
+    if (setup.status === 'pending') {
+      entriesWithoutTrade++;
+    }
+
+    console.info(
+      `Trailing buy ${setup.id} still ${setup.status === 'pending' ? `pending since the decision at ${formatNewYorkTime(setup.signal!.time)}` : 'armed'} at the end of the data: armed at ${formatNewYorkTime(setup.activationTime)} at ${formatPrice(setup.activationPrice)}, trailing low ${formatPrice(setup.trailingLow)}, rebound trigger ${formatPrice(setup.reboundTrigger)}\n`
+    );
+  }
+
+  if (openPosition && lastSession) {
+    console.info(
+      `Still open on ${lastSession.date}: entered at ${formatPrice(openPosition.entryPrice)} and marked at the close of ${formatPrice(lastSession.close)} for an unrealized profit of ${formatDollars(unrealizedProfit)} after ${formatDollars(accruedInterest)} in accrued interest\n`
+    );
+  }
+
+  const setupCounts = {
+    setupActivations: setups.length,
+    setupFills: setups.filter((row) => row.status === 'filled').length,
+    setupCancellations: setups.filter((row) => row.status === 'cancelled').length,
+    armedAtEnd: setup?.status === 'armed' ? 1 : 0,
+    pendingAtEnd: setup?.status === 'pending' ? 1 : 0,
+    reboundSignals: setups.filter((row) => row.signal).length,
+    overnightOrders: setups.filter((row) => row.signal?.carriedOvernight).length,
+    suppressedReboundSignals: setups.reduce((total, row) => total + row.suppressedSignals, 0)
+  };
+
+  const firstSession = sessions[0];
+
+  if (firstSession && lastSession) {
+    console.info(`Symbol: ${symbol}, from ${firstSession.date} to ${lastSession.date}`);
+  }
+
+  console.info(`Strategy: ${strategyName}, data file: ${file}`);
+  console.info(
+    `Execution: one-minute bars; trailing buys armed and triggered on completed minutes' closes and filled at the next eligible trade; intraday stops filled at ${stopFill === 'stop' ? 'the stop price' : 'the next minute’s opening trade'}`
+  );
+  console.info(`Closed trades: ${closedPositions.length}${openPosition ? ', plus 1 still open' : ''}`);
+  console.info(`Realized profit: ${formatDollars(realizedProfit)}`);
+  console.info(`Unrealized profit on the open position: ${formatDollars(unrealizedProfit)}`);
+  console.info(`Total net profit: ${formatDollars(realizedProfit + unrealizedProfit)}`);
+  console.info(
+    `Margin interest: ${formatDollars(closedInterest + accruedInterest)} (${formatDollars(closedInterest)} on closed trades, ${formatDollars(accruedInterest)} accrued on the open position)`
+  );
+  console.info(
+    `Maximum drawdown (daily mark-to-market): ${formatDollars(dailyDrawdown.maximumDrawdown)}, from ${formatDate(dailyDrawdown.drawdownPeakTimestamp)} to ${formatDate(dailyDrawdown.drawdownTroughTimestamp)}`
+  );
+  console.info(
+    `Maximum drawdown (minute-sampled mark-to-market): ${formatDollars(minuteDrawdown.maximumDrawdown)}, from ${formatNewYorkTime(minuteDrawdown.drawdownPeakTimestamp)} to ${formatNewYorkTime(minuteDrawdown.drawdownTroughTimestamp)}`
+  );
+  console.info(
+    `Maximum drawdown as a capital-allocation reference: ${formatPercent(dailyDrawdown.maximumDrawdown / investmentAmount)} of the ${formatDollars(investmentAmount)} trading allocation (not a drawdown of invested equity or of the overall portfolio)`
+  );
+  console.info(`Target percent change: ${formatPercent(targetPercentChange)}`);
+  console.info(`Trailing buy percentage: ${formatPercent(trailingBuyPercentage)}`);
+  console.info(`Trailing stop percentage: ${formatPercent(trailingStopPercentage)}`);
+  console.info(`Maximum hold: ${maximumHoldDays} days`);
+  console.info(
+    `Reentry after a material loss (price loss of at least ${formatPercent(materialLossThreshold)}): ${formatPercent(lowerPriceReentry)} below the loss exit, reset after a ${formatPercent(retraceFraction)} retracement`
+  );
+  console.info(
+    `Trailing buys: ${setupCounts.setupActivations} armed, ${setupCounts.setupFills} filled, ${setupCounts.setupCancellations} cancelled by a recovery reset, ${setupCounts.armedAtEnd} still armed and ${setupCounts.pendingAtEnd} pending at the end; ${setupCounts.overnightOrders} orders waited for a later session; ${setupCounts.suppressedReboundSignals} rebound minutes held back by the recovery-reset guard`
+  );
+
+  if (entriesWithoutTrade > 0) {
+    console.info(`Buy signals that never filled: ${entriesWithoutTrade}`);
+  }
+
+  if (outputDir && lastSession) {
+    await fs.ensureDir(outputDir);
+
+    const tradeLines = [
+      'entry_index,exit_index,entry_date,exit_date,entry_price,exit_price,reason,investment,shares,interest,profit,entry_time,entry_execution,decision_time,decision_price,entry_session_close,exit_time,exit_execution,exit_stop_price,maximum_hold_due,setup_id,activation_time,activation_price,setup_ref_high,trailing_low,trailing_low_time,rebound_trigger,signal_index,wait_minutes,wait_sessions'
+    ];
+
+    for (const position of positions) {
+      const isOpen = position.isOpen;
+      const interest = isOpen ? accruedInterest : (position.interest ?? 0);
+      const profit = isOpen ? unrealizedProfit : (position.profit ?? 0);
+      const exitPrice = isOpen ? lastSession.close : (position.exitPrice ?? 0);
+      const entryFill = entryFills.get(position);
+      const exitFill = exitFills.get(position);
+
+      tradeLines.push(
+        [
+          entryIndexes.get(position),
+          isOpen ? '' : exitIndexes.get(position),
+          formatDate(position.entryTimestamp),
+          isOpen ? '' : formatDate(position.exitTimestamp ?? 0),
+          position.entryPrice,
+          exitPrice,
+          isOpen ? 'open' : (exitReasons.get(position) ?? ''),
+          position.investment,
+          position.shares,
+          interest,
+          profit,
+          entryFill ? formatTime(entryFill.time) : '',
+          entryFill?.execution ?? '',
+          entryFill ? formatTime(entryFill.decisionTime) : '',
+          entryFill?.decisionPrice ?? '',
+          entryFill?.sessionClose ?? '',
+          exitFill ? formatTime(exitFill.time) : '',
+          exitFill?.execution ?? '',
+          exitFill?.stopPrice ?? '',
+          exitFill?.isMaximumHoldDue ?? '',
+          entryFill?.setupId ?? '',
+          entryFill ? formatTime(entryFill.activationTime) : '',
+          entryFill?.activationPrice ?? '',
+          entryFill?.referenceHigh ?? '',
+          entryFill?.trailingLow ?? '',
+          entryFill ? formatTime(entryFill.trailingLowTime) : '',
+          entryFill?.reboundTrigger ?? '',
+          entryFill?.signalIndex ?? '',
+          entryFill?.waitMinutes ?? '',
+          entryFill?.waitSessions ?? ''
+        ].join(',')
+      );
+    }
+
+    const dailyLines = [
+      'index,date,close,borrowed,mtm_pnl,recent_high,decision_price,signal,x_level,entry_state,restricted,setup_id,trailing_low,rebound_trigger'
+    ];
+
+    for (const row of dailyRows) {
+      dailyLines.push(
+        [
+          row.index,
+          row.date,
+          row.close,
+          row.borrowed,
+          row.mtmProfit,
+          row.recentHigh,
+          row.decisionPrice,
+          row.signal,
+          row.xLevel,
+          row.entryState,
+          row.restricted,
+          row.setupId,
+          row.trailingLow,
+          row.reboundTrigger
+        ].join(',')
+      );
+    }
+
+    const stateLines = [
+      'index,date,prev_state,new_state,reason,exit_reason,trade_profit,price_return,loss_exit_price,ref_high,lower_level,episode_low,reset_level,close,signal,entry_executed,decision_price'
+    ];
+
+    for (const row of stateLog) {
+      stateLines.push(
+        [
+          row.index,
+          row.date,
+          row.prevState,
+          row.newState,
+          row.reason,
+          row.exitReason,
+          row.tradeProfit,
+          row.priceReturn,
+          row.lossExitPrice,
+          row.refHigh,
+          row.lowerLevel,
+          row.episodeLow,
+          row.resetLevel,
+          row.close,
+          row.signal,
+          row.entryExecuted,
+          row.decisionPrice
+        ].join(',')
+      );
+    }
+
+    const episodeLines = [
+      'exit_index,exit_date,exit_reason,loss,price_return,loss_exit_price,losing_entry_price,ref_high,episode_low,resolution,resolution_date'
+    ];
+
+    for (const row of episodes) {
+      episodeLines.push(
+        [
+          row.exitIndex,
+          row.exitDate,
+          row.exitReason,
+          row.loss,
+          row.priceReturn,
+          row.lossExitPrice,
+          row.losingEntryPrice,
+          row.referenceHigh,
+          row.episodeLow,
+          row.resolution,
+          row.resolutionDate
+        ].join(',')
+      );
+    }
+
+    // Times are ISO UTC like the other files; the `_ny` columns repeat them in New York time. A minute
+    // column is the start of the decision minute and a time column the decision itself, at its end.
+    const setupLines = [
+      'setup_id,status,status_reason,activation_index,activation_date,activation_minute_ny,activation_time,activation_price,ref_high,x_level,restricted_at_activation,lower_level_at_activation,trailing_low,trailing_low_time,trailing_buy_percentage,rebound_trigger,suppressed_signals,signal_index,signal_date,signal_minute_ny,signal_time,signal_price,signal_trigger,signal_trailing_low,carried_overnight,fill_index,fill_date,fill_time,fill_time_ny,fill_price,fill_execution,wait_minutes,wait_sessions,end_index,end_date'
+    ];
+
+    for (const row of setups) {
+      const rebound = row.signal;
+      const rowFill = row.fill;
+
+      setupLines.push(
+        [
+          row.id,
+          row.status,
+          row.statusReason,
+          row.activationIndex,
+          row.activationDate,
+          formatNewYorkTime(row.activationBarTime),
+          formatTime(row.activationTime),
+          row.activationPrice,
+          row.referenceHigh,
+          row.xLevel,
+          row.restrictedAtActivation,
+          row.lowerLevelAtActivation,
+          row.trailingLow,
+          formatTime(row.trailingLowTime),
+          trailingBuyPercentage,
+          row.reboundTrigger,
+          row.suppressedSignals,
+          rebound?.index ?? '',
+          rebound?.date ?? '',
+          rebound ? formatNewYorkTime(rebound.barTime) : '',
+          rebound ? formatTime(rebound.time) : '',
+          rebound?.price ?? '',
+          rebound?.trigger ?? '',
+          rebound?.trailingLow ?? '',
+          rebound?.carriedOvernight ?? '',
+          rowFill?.index ?? '',
+          rowFill?.date ?? '',
+          rowFill ? formatTime(rowFill.time) : '',
+          rowFill ? formatNewYorkTime(rowFill.time) : '',
+          rowFill?.price ?? '',
+          rowFill?.execution ?? '',
+          rowFill && rebound ? (rowFill.time - rebound.time) / secondsPerMinute : '',
+          rowFill && rebound ? rowFill.index - rebound.index : '',
+          row.endIndex ?? '',
+          row.endDate ?? ''
+        ].join(',')
+      );
+    }
+
+    const summary = {
+      symbol,
+      dataFile: file,
+      strategy: strategyName,
+      stopFill,
+      targetPercentChange,
+      trailingBuyPercentage,
+      materialLossThreshold,
+      lowerPriceReentry,
+      retraceFraction,
+      firstDate: firstSession?.date ?? '',
+      lastDate: lastSession.date,
+      sessions: sessions.length,
+      closedTrades: closedPositions.length,
+      openAtEnd: Boolean(openPosition),
+      realizedProfit,
+      unrealizedProfit,
+      netProfit: realizedProfit + unrealizedProfit,
+      marginInterest: closedInterest + accruedInterest,
+      maximumDrawdown: dailyDrawdown.maximumDrawdown,
+      drawdownPeakDate: formatDate(dailyDrawdown.drawdownPeakTimestamp),
+      drawdownTroughDate: formatDate(dailyDrawdown.drawdownTroughTimestamp),
+      minuteMaximumDrawdown: minuteDrawdown.maximumDrawdown,
+      minuteDrawdownPeakTime: formatTime(minuteDrawdown.drawdownPeakTimestamp),
+      minuteDrawdownTroughTime: formatTime(minuteDrawdown.drawdownTroughTimestamp),
+      entriesWithoutTrade,
+      restrictions: episodes.length,
+      lowerPriceReentries: episodes.filter((row) => row.resolution === 'lower_price_reentry').length,
+      recoveryResets: episodes.filter((row) => row.resolution === 'recovery_reset').length,
+      lossesNotRestricted: stateLog.filter((row) => row.reason === 'loss_not_restricted').length,
+      ...setupCounts,
+      setupAtEnd: setup ? { id: setup.id, status: setup.status, statusReason: setup.statusReason } : null
+    };
+
+    await fs.writeFile(`${outputDir}/trades.csv`, `${tradeLines.join('\n')}\n`);
+    await fs.writeFile(`${outputDir}/daily.csv`, `${dailyLines.join('\n')}\n`);
+    await fs.writeFile(`${outputDir}/states.csv`, `${stateLines.join('\n')}\n`);
+    await fs.writeFile(`${outputDir}/episodes.csv`, `${episodeLines.join('\n')}\n`);
+    await fs.writeFile(`${outputDir}/setups.csv`, `${setupLines.join('\n')}\n`);
+    await fs.writeFile(`${outputDir}/summary.json`, `${JSON.stringify(summary, null, 1)}\n`);
+    console.info(`Wrote trades.csv, daily.csv, states.csv, episodes.csv, setups.csv and summary.json to ${outputDir}`);
+  }
+
+  return { sessions, positions, entryFills, exitFills, stateLog, episodes, setups };
+};
+
+export const runAllInTrailingBuy = runAllIn;
+
+// Run with `npm run app allIn-trailingBuy [symbol] [start date] [end date] [data file] [output dir] [stop fill]
+// [trailing buy percentage]`, for example `npm run app allIn-trailingBuy VGT 2016-10-07 2025-10-13 - - stop
+// 0.03`. The arguments are those of allIn.ts, plus Y as a fraction (default 0.03). Pass '-' to leave an
+// earlier argument at its default. When an output directory is given, the run also writes trades.csv,
+// daily.csv, states.csv, episodes.csv, setups.csv and summary.json there at full precision.
+export default async (
+  symbol = 'VGT',
+  startDate?: string,
+  endDate?: string,
+  dataFile?: string,
+  outDir?: string,
+  stopFillArgument?: string,
+  trailingBuyPercentageArgument?: string
+) => {
+  const trailingBuy =
+    trailingBuyPercentageArgument === undefined || trailingBuyPercentageArgument === '-'
+      ? undefined
+      : Number(trailingBuyPercentageArgument);
+
+  await runAllIn({
+    symbol,
+    startDate,
+    endDate,
+    dataFile,
+    outDir,
+    stopFill: stopFillArgument,
+    trailingBuyPercentage: trailingBuy
+  });
+};
