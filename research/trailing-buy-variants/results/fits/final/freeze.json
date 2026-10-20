@@ -1,0 +1,3703 @@
+{
+ "frozenAt": "2026-10-20T11:58:03.767Z",
+ "rerunReason": null,
+ "protocol": {
+  "version": "trailing-buy-variants-protocol-v1",
+  "dataFile": "data/VGT/VGT-2016-2025-1-minute.csv",
+  "dataHash": "600322afbe3d837a4c66ec62acb39e16d707079f49ec18d77f947bcb24c7962f",
+  "researchEnd": "2023-12-29",
+  "eligibilityIndex": 180,
+  "stopFill": "stop",
+  "marginInterestRate": 0.11,
+  "sensitivityRates": [
+   0.08,
+   0.14
+  ],
+  "investment": 100000,
+  "fits": [
+   {
+    "key": "fold1",
+    "trainEnd": "2019-12-31",
+    "validation": {
+     "start": "2020-01-01",
+     "end": "2021-12-31"
+    }
+   },
+   {
+    "key": "fold2",
+    "trainEnd": "2021-12-31",
+    "validation": {
+     "start": "2022-01-01",
+     "end": "2022-12-31"
+    }
+   },
+   {
+    "key": "fold3",
+    "trainEnd": "2022-12-31",
+    "validation": {
+     "start": "2023-01-01",
+     "end": "2023-12-31"
+    }
+   },
+   {
+    "key": "final",
+    "trainEnd": "2023-12-31"
+   }
+  ],
+  "reusedWindow": {
+   "start": "2024-01-01",
+   "end": "2025-12-31",
+   "label": "previously inspected / reused"
+  },
+  "drawdownCeiling": 35000,
+  "minEntriesPerYear": 1
+ },
+ "protocolHash": "46a703a3dac1f15a050123cca5fc1334a8af16695cf34d51c29dde7f532637fb",
+ "dataHash": "600322afbe3d837a4c66ec62acb39e16d707079f49ec18d77f947bcb24c7962f",
+ "codeHashes": {
+  "src/four-family/context.ts": "3e560f8759c821eb09246eacb0f6d8f8aa95ac8f63641d5d34a2ae877f1fc8cf",
+  "src/four-family/data.ts": "864cd94cc673a95e5c517840475c8b2dbaddc92d7b63e924bfae74ab9dddfa68",
+  "src/lib/csv.ts": "530f1211d92e6db10a23e76597cc4d4575987989507cd53f330856c0ec278e0a",
+  "src/lib/session.ts": "4cfefd0dfd34ea00d8301c796c2516f17d346139166a49a00b189f9edc6900d6",
+  "src/optimizer/nsga2.ts": "ce00e3c0aaa09283dc334f07faed2cf646ddca906d68302a4b19f364877ce5d5",
+  "src/optimizer/rng.ts": "9c5402674fcb106fc54cd938fbc216d00bba80dc4458f5b38ce21256ddc8b849",
+  "src/optimizer/sobol.ts": "7f420687def739a7c1e1213a0f3bbf7c2224da8cd528f098543a4a89ae136976",
+  "src/trailing-buy-variants/accounting.ts": "3ca0cf6e2b64fa30c17511f7e87b637c9a9ea888a6ba8eac25742c6b535a61ed",
+  "src/trailing-buy-variants/attribution.ts": "be8b0cb77a6bfc946a2db0839007de8beddad6356a087ab6fc8cdec99bca15ce",
+  "src/trailing-buy-variants/cli.ts": "4ab3b06fcf209f0253216f50a8e6f4ff0adb10e111e4fbcd2ad56663443fcfd3",
+  "src/trailing-buy-variants/comparators.ts": "c8af0e408b9f16d48b338a96f33e603cedba9d30b71125b4572da9e88b057ea7",
+  "src/trailing-buy-variants/context.ts": "029d97b47ab683637a9d8199ec68389d07d71fbd015744d2ad0daa628ca22c01",
+  "src/trailing-buy-variants/copies.ts": "cd05e6e1d64430fb174846b7465ac5fa4a6c46610967c301919474ae56d48d3d",
+  "src/trailing-buy-variants/engine.ts": "57b5dddd47b98af1855bc5300b1e1effe9bb2eb8921fbec759a402976fef8d96",
+  "src/trailing-buy-variants/evaluate.ts": "0ad5e53a20d71e028bbf72a56f55609d9084bd97d8e1b4be8880c77e727059ea",
+  "src/trailing-buy-variants/families.ts": "ab044ba5e6967c63cc02ade67d60d72e64427daed11dc3a064c10eae4b56bf5f",
+  "src/trailing-buy-variants/parity.ts": "9c176da66211c4e4a6b9da327f9836e181b441f73b0985abcd1336a80865de33",
+  "src/trailing-buy-variants/pool.ts": "6022928dea681247395f7539cc468d589f263cae65d433d03011395c905248cf",
+  "src/trailing-buy-variants/report.ts": "060cbe4b8f38ac672f19c40942c0e447e5c3ee44dea295cd4a7da77192c4b8d7",
+  "src/trailing-buy-variants/search.ts": "bd65798fb6c2a5da08a8469dfe53c2ee95dabc530431f9a028fb732ca4f9406c",
+  "src/trailing-buy-variants/selection.ts": "fe5fb5347d0d20083c15f8955f36790509cc1aa2120efe3cfd1821ecd99f0a0b",
+  "src/trailing-buy-variants/study.ts": "f8980d78e0bfb2cb09cb211d65a32be1c27c2abd8ca0008327ef08b25551f51b",
+  "src/trailing-buy-variants/worker.ts": "7dbaa699c1e0683f6a368af42fdfdf90ceae2a37dd71197fd7449dcf1194f6b0"
+ },
+ "engineVersion": "trailing-buy-variants-engine-v1",
+ "search": {
+  "sobolSamples": 4096,
+  "populationSize": 128,
+  "generations": 60,
+  "seeds": [
+   1,
+   2
+  ],
+  "crossoverProbability": 0.9,
+  "crossoverEta": 15,
+  "mutationEta": 20
+ },
+ "selectionConfig": {
+  "drawdownCeiling": 35000,
+  "poolLeaders": 100,
+  "poolScanLimit": 6000,
+  "picks": [
+   {
+    "category": "profit",
+    "count": 3
+   },
+   {
+    "category": "balanced",
+    "count": 3
+   },
+   {
+    "category": "low-DD",
+    "count": 2
+   },
+   {
+    "category": "Pareto-diverse",
+    "count": 2
+   }
+  ],
+  "meaningfulShare": 0.25,
+  "cloneJaccard": 0.8,
+  "fragileCentreShare": 0.5,
+  "fragileStepShare": 0.5,
+  "stableNetShare": 0.8,
+  "stableDrawdownFactor": 1.25,
+  "stableDrawdownSlack": 1000
+ },
+ "families": {
+  "trailingBuy": {
+   "base": "trailingBuy",
+   "mechanisms": [],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "materialLossThreshold",
+    "lowerPriceReentry",
+    "retraceFraction"
+   ]
+  },
+  "bufferedLoss": {
+   "base": "bufferedLoss",
+   "mechanisms": [],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "materialLossThreshold",
+    "lowerPriceReentry",
+    "retraceFraction",
+    "intradayLossBuffer"
+   ]
+  },
+  "noReentry": {
+   "base": "noReentry",
+   "mechanisms": [],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize"
+   ]
+  },
+  "bufferedLossNoReentry": {
+   "base": "bufferedLossNoReentry",
+   "mechanisms": [],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "intradayLossBuffer"
+   ]
+  },
+  "invalidation": {
+   "base": "bufferedLossNoReentry",
+   "mechanisms": [
+    "invalidation"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "intradayLossBuffer",
+    "invalidationBuffer"
+   ]
+  },
+  "invalidationUnbuffered": {
+   "base": "noReentry",
+   "mechanisms": [
+    "invalidation"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "invalidationBuffer"
+   ]
+  },
+  "episodeBudget": {
+   "base": "bufferedLossNoReentry",
+   "mechanisms": [
+    "episodeBudget"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "intradayLossBuffer",
+    "episodeLossBudget",
+    "episodeResetRetrace"
+   ]
+  },
+  "episodeBudgetUnbuffered": {
+   "base": "noReentry",
+   "mechanisms": [
+    "episodeBudget"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "episodeLossBudget",
+    "episodeResetRetrace"
+   ]
+  },
+  "depthRebound": {
+   "base": "bufferedLossNoReentry",
+   "mechanisms": [
+    "depthRebound"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "intradayLossBuffer",
+    "reboundDepthSlope"
+   ]
+  },
+  "depthReboundUnbuffered": {
+   "base": "noReentry",
+   "mechanisms": [
+    "depthRebound"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "reboundDepthSlope"
+   ]
+  },
+  "staged": {
+   "base": "bufferedLossNoReentry",
+   "mechanisms": [
+    "staged"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "intradayLossBuffer",
+    "initialFraction",
+    "addTrigger"
+   ]
+  },
+  "stagedUnbuffered": {
+   "base": "noReentry",
+   "mechanisms": [
+    "staged"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "initialFraction",
+    "addTrigger"
+   ]
+  },
+  "progressHold": {
+   "base": "bufferedLossNoReentry",
+   "mechanisms": [
+    "progressHold"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "intradayLossBuffer",
+    "progressThreshold",
+    "holdExtensionDays"
+   ]
+  },
+  "progressHoldUnbuffered": {
+   "base": "noReentry",
+   "mechanisms": [
+    "progressHold"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "progressThreshold",
+    "holdExtensionDays"
+   ]
+  },
+  "persistence": {
+   "base": "bufferedLossNoReentry",
+   "mechanisms": [
+    "persistence"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "intradayLossBuffer",
+    "confirmMinutes"
+   ]
+  },
+  "persistenceUnbuffered": {
+   "base": "noReentry",
+   "mechanisms": [
+    "persistence"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "confirmMinutes"
+   ]
+  },
+  "invalidationDepth": {
+   "base": "bufferedLossNoReentry",
+   "mechanisms": [
+    "invalidation",
+    "depthRebound"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "intradayLossBuffer",
+    "invalidationBuffer",
+    "reboundDepthSlope"
+   ]
+  },
+  "invalidationStaged": {
+   "base": "bufferedLossNoReentry",
+   "mechanisms": [
+    "invalidation",
+    "staged"
+   ],
+   "paramKeys": [
+    "targetPercentChange",
+    "trailingBuyPercentage",
+    "trailingStopPercentage",
+    "maximumHoldDays",
+    "tickWindowSize",
+    "intradayLossBuffer",
+    "invalidationBuffer",
+    "initialFraction",
+    "addTrigger"
+   ]
+  }
+ },
+ "picks": {
+  "trailingBuy": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "1-600cc74ac5",
+    "params": {
+     "targetPercentChange": 241,
+     "trailingBuyPercentage": 9,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 73,
+     "materialLossThreshold": 30,
+     "lowerPriceReentry": 58,
+     "retraceFraction": 525
+    },
+    "description": "X=24.1% Y=0.9% stop=14.1% hold=5 L=73 mat=3.0% lower=5.8% reset=52.5%",
+    "signature": "ce4a4dec09450746",
+    "trainingNet": 137926.66937452956,
+    "trainingMinuteDrawdown": 31241.225829094365
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "1-a844adbd0e",
+    "params": {
+     "targetPercentChange": 114,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 99,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 64,
+     "materialLossThreshold": 25,
+     "lowerPriceReentry": 45,
+     "retraceFraction": 515
+    },
+    "description": "X=11.4% Y=0.1% stop=9.9% hold=8 L=64 mat=2.5% lower=4.5% reset=51.5%",
+    "signature": "cda8da8eed469696",
+    "trainingNet": 146745.22774346525,
+    "trainingMinuteDrawdown": 29834.625631204075
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "1-a6490f75ec",
+    "params": {
+     "targetPercentChange": 57,
+     "trailingBuyPercentage": 13,
+     "trailingStopPercentage": 68,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 150,
+     "materialLossThreshold": 24,
+     "lowerPriceReentry": 60,
+     "retraceFraction": 450
+    },
+    "description": "X=5.7% Y=1.3% stop=6.8% hold=12 L=150 mat=2.4% lower=6.0% reset=45.0%",
+    "signature": "82941e4df435675f",
+    "trainingNet": 147527.93256355537,
+    "trainingMinuteDrawdown": 28505.807337057202
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "1-4739cced14",
+    "params": {
+     "targetPercentChange": 241,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 72,
+     "materialLossThreshold": 25,
+     "lowerPriceReentry": 58,
+     "retraceFraction": 529
+    },
+    "description": "X=24.1% Y=0.8% stop=7.3% hold=5 L=72 mat=2.5% lower=5.8% reset=52.9%",
+    "signature": "7a3794a31e54f008",
+    "trainingNet": 95563.31662470593,
+    "trainingMinuteDrawdown": 15494.87891274238
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "1-7e39b4db21",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 10,
+     "trailingStopPercentage": 74,
+     "maximumHoldDays": 33,
+     "tickWindowSize": 78,
+     "materialLossThreshold": 6,
+     "lowerPriceReentry": 53,
+     "retraceFraction": 317
+    },
+    "description": "X=21.6% Y=1.0% stop=7.4% hold=33 L=78 mat=0.6% lower=5.3% reset=31.7%",
+    "signature": "c5f0cb4d519777cf",
+    "trainingNet": 91749.60750993482,
+    "trainingMinuteDrawdown": 15324.235596499188
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "1-a72232b995",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 9,
+     "trailingStopPercentage": 74,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 73,
+     "materialLossThreshold": 12,
+     "lowerPriceReentry": 59,
+     "retraceFraction": 490
+    },
+    "description": "X=21.6% Y=0.9% stop=7.4% hold=11 L=73 mat=1.2% lower=5.9% reset=49.0%",
+    "signature": "7652cb1a98538010",
+    "trainingNet": 81505.51647240155,
+    "trainingMinuteDrawdown": 14296.48587958196
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "1-d0ce84aa1d",
+    "params": {
+     "targetPercentChange": 263,
+     "trailingBuyPercentage": 30,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 30,
+     "tickWindowSize": 159,
+     "materialLossThreshold": 10,
+     "lowerPriceReentry": 44,
+     "retraceFraction": 508
+    },
+    "description": "X=26.3% Y=3.0% stop=3.1% hold=30 L=159 mat=1.0% lower=4.4% reset=50.8%",
+    "signature": "b089a9c1d00ee2a8",
+    "trainingNet": 44513.420542519874,
+    "trainingMinuteDrawdown": 8408.749562848396
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "1-755923ea93",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 39,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 132,
+     "materialLossThreshold": 18,
+     "lowerPriceReentry": 2,
+     "retraceFraction": 572
+    },
+    "description": "X=29.9% Y=0.2% stop=3.9% hold=8 L=132 mat=1.8% lower=0.2% reset=57.2%",
+    "signature": "fb9f8599f9e5ded5",
+    "trainingNet": 37820.49405627421,
+    "trainingMinuteDrawdown": 9196.459047427685
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "1-437d8cb0a3",
+    "params": {
+     "targetPercentChange": 114,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 51,
+     "materialLossThreshold": 23,
+     "lowerPriceReentry": 44,
+     "retraceFraction": 515
+    },
+    "description": "X=11.4% Y=0.1% stop=7.3% hold=8 L=51 mat=2.3% lower=4.4% reset=51.5%",
+    "signature": "9a65aa01911b0f1a",
+    "trainingNet": 135375.03253882995,
+    "trainingMinuteDrawdown": 23903.880048551626
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "1-7fab230d10",
+    "params": {
+     "targetPercentChange": 113,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 96,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 164,
+     "materialLossThreshold": 26,
+     "lowerPriceReentry": 51,
+     "retraceFraction": 516
+    },
+    "description": "X=11.3% Y=0.6% stop=9.6% hold=8 L=164 mat=2.6% lower=5.1% reset=51.6%",
+    "signature": "9e86943f9a0a7b80",
+    "trainingNet": 123427.07321444691,
+    "trainingMinuteDrawdown": 31102.76716883799
+   }
+  ],
+  "bufferedLoss": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "2-723e75d7e0",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 4,
+     "tickWindowSize": 76,
+     "materialLossThreshold": 18,
+     "lowerPriceReentry": 58,
+     "retraceFraction": 394,
+     "intradayLossBuffer": 19
+    },
+    "description": "X=23.7% Y=0.1% stop=14.1% hold=4 L=76 mat=1.8% lower=5.8% reset=39.4% buffer=1.9%",
+    "signature": "8285840215187658",
+    "trainingNet": 142003.59862060027,
+    "trainingMinuteDrawdown": 32053.279402941138
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "2-da601b44d8",
+    "params": {
+     "targetPercentChange": 114,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 79,
+     "maximumHoldDays": 6,
+     "tickWindowSize": 53,
+     "materialLossThreshold": 12,
+     "lowerPriceReentry": 59,
+     "retraceFraction": 591,
+     "intradayLossBuffer": 26
+    },
+    "description": "X=11.4% Y=0.6% stop=7.9% hold=6 L=53 mat=1.2% lower=5.9% reset=59.1% buffer=2.6%",
+    "signature": "1908e14d0ba9d0e7",
+    "trainingNet": 136085.65756093,
+    "trainingMinuteDrawdown": 25279.236056362766
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "2-5a28fd24e1",
+    "params": {
+     "targetPercentChange": 114,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 10,
+     "tickWindowSize": 166,
+     "materialLossThreshold": 9,
+     "lowerPriceReentry": 59,
+     "retraceFraction": 473,
+     "intradayLossBuffer": 26
+    },
+    "description": "X=11.4% Y=0.1% stop=7.3% hold=10 L=166 mat=0.9% lower=5.9% reset=47.3% buffer=2.6%",
+    "signature": "96e01d93c4b5d463",
+    "trainingNet": 144479.60658471924,
+    "trainingMinuteDrawdown": 22741.9642503382
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "2-3615fa7ab5",
+    "params": {
+     "targetPercentChange": 238,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 70,
+     "materialLossThreshold": 12,
+     "lowerPriceReentry": 59,
+     "retraceFraction": 255,
+     "intradayLossBuffer": 6
+    },
+    "description": "X=23.8% Y=0.8% stop=7.3% hold=8 L=70 mat=1.2% lower=5.9% reset=25.5% buffer=0.6%",
+    "signature": "d5964097987ac9a1",
+    "trainingNet": 89000.39827581168,
+    "trainingMinuteDrawdown": 15450.906495833613
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "2-4d327855ac",
+    "params": {
+     "targetPercentChange": 218,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 78,
+     "materialLossThreshold": 23,
+     "lowerPriceReentry": 59,
+     "retraceFraction": 663,
+     "intradayLossBuffer": 9
+    },
+    "description": "X=21.8% Y=0.8% stop=7.3% hold=3 L=78 mat=2.3% lower=5.9% reset=66.3% buffer=0.9%",
+    "signature": "4efbb91cd625d5e2",
+    "trainingNet": 85162.81957899682,
+    "trainingMinuteDrawdown": 15340.642595590023
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "2-079468726e",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 49,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 68,
+     "materialLossThreshold": 15,
+     "lowerPriceReentry": 50,
+     "retraceFraction": 271,
+     "intradayLossBuffer": 23
+    },
+    "description": "X=21.5% Y=0.1% stop=4.9% hold=8 L=68 mat=1.5% lower=5.0% reset=27.1% buffer=2.3%",
+    "signature": "49f2dcd7f0135480",
+    "trainingNet": 82692.73779889668,
+    "trainingMinuteDrawdown": 12948.740183684153
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "2-11783d9df4",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 6,
+     "tickWindowSize": 178,
+     "materialLossThreshold": 10,
+     "lowerPriceReentry": 8,
+     "retraceFraction": 353,
+     "intradayLossBuffer": 25
+    },
+    "description": "X=29.9% Y=0.1% stop=3.7% hold=6 L=178 mat=1.0% lower=0.8% reset=35.3% buffer=2.5%",
+    "signature": "3be898b99f7877ae",
+    "trainingNet": 39473.63149770923,
+    "trainingMinuteDrawdown": 8920.012781589005
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "2-2d3f282c61",
+    "params": {
+     "targetPercentChange": 238,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 41,
+     "maximumHoldDays": 29,
+     "tickWindowSize": 63,
+     "materialLossThreshold": 28,
+     "lowerPriceReentry": 58,
+     "retraceFraction": 670,
+     "intradayLossBuffer": 4
+    },
+    "description": "X=23.8% Y=0.6% stop=4.1% hold=29 L=63 mat=2.8% lower=5.8% reset=67.0% buffer=0.4%",
+    "signature": "5520540b56969e9e",
+    "trainingNet": 43039.71772841207,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "2-de95dcdacf",
+    "params": {
+     "targetPercentChange": 117,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 178,
+     "materialLossThreshold": 7,
+     "lowerPriceReentry": 57,
+     "retraceFraction": 453,
+     "intradayLossBuffer": 26
+    },
+    "description": "X=11.7% Y=0.1% stop=7.3% hold=8 L=178 mat=0.7% lower=5.7% reset=45.3% buffer=2.6%",
+    "signature": "b7b05667bd1e19e4",
+    "trainingNet": 138158.02134833403,
+    "trainingMinuteDrawdown": 23962.955674863268
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "2-4d1f6062ac",
+    "params": {
+     "targetPercentChange": 122,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 80,
+     "maximumHoldDays": 14,
+     "tickWindowSize": 76,
+     "materialLossThreshold": 18,
+     "lowerPriceReentry": 57,
+     "retraceFraction": 393,
+     "intradayLossBuffer": 19
+    },
+    "description": "X=12.2% Y=0.1% stop=8.0% hold=14 L=76 mat=1.8% lower=5.7% reset=39.3% buffer=1.9%",
+    "signature": "b160f4f8093f4bda",
+    "trainingNet": 118182.28328790657,
+    "trainingMinuteDrawdown": 32966.433677224406
+   }
+  ],
+  "noReentry": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "3-766db35025",
+    "params": {
+     "targetPercentChange": 242,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 76
+    },
+    "description": "X=24.2% Y=0.8% stop=14.1% hold=8 L=76",
+    "signature": "282c130a8a227aa5",
+    "trainingNet": 137350.95260341247,
+    "trainingMinuteDrawdown": 34749.60382554593
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "3-f6e88fba03",
+    "params": {
+     "targetPercentChange": 204,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 104
+    },
+    "description": "X=20.4% Y=0.3% stop=7.8% hold=11 L=104",
+    "signature": "c33d79ea330dd878",
+    "trainingNet": 112339.51937238788,
+    "trainingMinuteDrawdown": 26820.235616432572
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "3-1c65f25d09",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 75
+    },
+    "description": "X=21.6% Y=0.3% stop=7.3% hold=8 L=75",
+    "signature": "cb339dc8a3cbe0b5",
+    "trainingNet": 104809.52658190316,
+    "trainingMinuteDrawdown": 21182.998825774288
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "3-7f9eb0fd3b",
+    "params": {
+     "targetPercentChange": 182,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 71
+    },
+    "description": "X=18.2% Y=1.8% stop=3.0% hold=8 L=71",
+    "signature": "13f2581c83b97cc9",
+    "trainingNet": 78477.47044559236,
+    "trainingMinuteDrawdown": 11678.531043044237
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "3-5db1aeca40",
+    "params": {
+     "targetPercentChange": 201,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 35,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 63
+    },
+    "description": "X=20.1% Y=1.8% stop=3.5% hold=12 L=63",
+    "signature": "48369fb9534c2256",
+    "trainingNet": 67021.93083117131,
+    "trainingMinuteDrawdown": 11678.531043044233
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "3-63b7eee00b",
+    "params": {
+     "targetPercentChange": 213,
+     "trailingBuyPercentage": 17,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 78
+    },
+    "description": "X=21.3% Y=1.7% stop=3.1% hold=12 L=78",
+    "signature": "54d10ac770f1d696",
+    "trainingNet": 74839.79722191591,
+    "trainingMinuteDrawdown": 11831.309124533498
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "3-417ed02b41",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 34,
+     "maximumHoldDays": 34,
+     "tickWindowSize": 179
+    },
+    "description": "X=29.9% Y=0.4% stop=3.4% hold=34 L=179",
+    "signature": "d7ab244bfd6619e7",
+    "trainingNet": 32749.86288737638,
+    "trainingMinuteDrawdown": 8882.626436845256
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "3-8c7609f0d6",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 34,
+     "tickWindowSize": 133
+    },
+    "description": "X=29.9% Y=0.5% stop=3.7% hold=34 L=133",
+    "signature": "879139c313cef15d",
+    "trainingNet": 39819.66491492003,
+    "trainingMinuteDrawdown": 9049.86180051549
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "3-1b8939588b",
+    "params": {
+     "targetPercentChange": 242,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 121,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 82
+    },
+    "description": "X=24.2% Y=0.1% stop=12.1% hold=8 L=82",
+    "signature": "3db1c41c4df3cf29",
+    "trainingNet": 103146.65060171337,
+    "trainingMinuteDrawdown": 33899.131107610025
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "3-11268f056e",
+    "params": {
+     "targetPercentChange": 244,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 6,
+     "tickWindowSize": 90
+    },
+    "description": "X=24.4% Y=0.3% stop=14.1% hold=6 L=90",
+    "signature": "a6633f2491aea1a9",
+    "trainingNet": 93907.84406871142,
+    "trainingMinuteDrawdown": 31501.212402344987
+   }
+  ],
+  "bufferedLossNoReentry": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "4-e680397b48",
+    "params": {
+     "targetPercentChange": 240,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 75,
+     "intradayLossBuffer": 27
+    },
+    "description": "X=24.0% Y=0.8% stop=14.1% hold=8 L=75 buffer=2.7%",
+    "signature": "282c130a8a227aa5",
+    "trainingNet": 137350.95260341247,
+    "trainingMinuteDrawdown": 34749.60382554593
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "4-4c344726dd",
+    "params": {
+     "targetPercentChange": 205,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 102,
+     "intradayLossBuffer": 0
+    },
+    "description": "X=20.5% Y=0.1% stop=7.8% hold=11 L=102 buffer=0.0%",
+    "signature": "cc2b8b9dc9fcf5ad",
+    "trainingNet": 113664.14959917137,
+    "trainingMinuteDrawdown": 26915.376736448932
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "4-10e50f05e1",
+    "params": {
+     "targetPercentChange": 240,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 121,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 26
+    },
+    "description": "X=24.0% Y=0.8% stop=12.1% hold=8 L=74 buffer=2.6%",
+    "signature": "461eb2fc5ec46023",
+    "trainingNet": 99873.98145178227,
+    "trainingMinuteDrawdown": 32780.02889575271
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "4-63845f4e43",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 17,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 13,
+     "tickWindowSize": 73,
+     "intradayLossBuffer": 5
+    },
+    "description": "X=20.0% Y=1.7% stop=3.1% hold=13 L=73 buffer=0.5%",
+    "signature": "38d9248212a1b78f",
+    "trainingNet": 78037.1736384077,
+    "trainingMinuteDrawdown": 11831.309124533498
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "4-798cb70c6d",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 29
+    },
+    "description": "X=21.6% Y=0.3% stop=7.3% hold=8 L=74 buffer=2.9%",
+    "signature": "cb339dc8a3cbe0b5",
+    "trainingNet": 104809.52658190316,
+    "trainingMinuteDrawdown": 21182.998825774288
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "4-3edca9999f",
+    "params": {
+     "targetPercentChange": 231,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 74,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 72,
+     "intradayLossBuffer": 1
+    },
+    "description": "X=23.1% Y=0.8% stop=7.4% hold=3 L=72 buffer=0.1%",
+    "signature": "c63762c12dc0d438",
+    "trainingNet": 86719.62105383544,
+    "trainingMinuteDrawdown": 19679.912421318797
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "4-d00bea4fdc",
+    "params": {
+     "targetPercentChange": 238,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 41,
+     "maximumHoldDays": 17,
+     "tickWindowSize": 72,
+     "intradayLossBuffer": 25
+    },
+    "description": "X=23.8% Y=0.6% stop=4.1% hold=17 L=72 buffer=2.5%",
+    "signature": "740beb2ffca961da",
+    "trainingNet": 48340.76137366495,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "4-ae41382f0c",
+    "params": {
+     "targetPercentChange": 231,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 40,
+     "maximumHoldDays": 16,
+     "tickWindowSize": 59,
+     "intradayLossBuffer": 24
+    },
+    "description": "X=23.1% Y=0.6% stop=4.0% hold=16 L=59 buffer=2.4%",
+    "signature": "89d44196775c305b",
+    "trainingNet": 37750.34709587942,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "4-6c52311280",
+    "params": {
+     "targetPercentChange": 201,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 105,
+     "intradayLossBuffer": 2
+    },
+    "description": "X=20.1% Y=0.5% stop=7.3% hold=11 L=105 buffer=0.2%",
+    "signature": "c264555590c7ea69",
+    "trainingNet": 96461.70361499485,
+    "trainingMinuteDrawdown": 26735.397638858438
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "4-847834f174",
+    "params": {
+     "targetPercentChange": 288,
+     "trailingBuyPercentage": 39,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 19,
+     "tickWindowSize": 160,
+     "intradayLossBuffer": 8
+    },
+    "description": "X=28.8% Y=3.9% stop=3.0% hold=19 L=160 buffer=0.8%",
+    "signature": "65300fdbd6423e23",
+    "trainingNet": 29202.01459500873,
+    "trainingMinuteDrawdown": 9107.372681951854
+   }
+  ],
+  "invalidation": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "5-3735ad8455",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 65,
+     "intradayLossBuffer": 22,
+     "invalidationBuffer": 13
+    },
+    "description": "X=23.7% Y=0.1% stop=14.1% hold=8 L=65 buffer=2.2% inv=1.3%",
+    "signature": "e319e453e4909ecf",
+    "trainingNet": 137348.50495598046,
+    "trainingMinuteDrawdown": 34280.93252732289
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "5-b17b2a8375",
+    "params": {
+     "targetPercentChange": 245,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 82,
+     "intradayLossBuffer": 3,
+     "invalidationBuffer": 13
+    },
+    "description": "X=24.5% Y=0.1% stop=14.1% hold=3 L=82 buffer=0.3% inv=1.3%",
+    "signature": "2d095b8abf15e441",
+    "trainingNet": 100348.4420484885,
+    "trainingMinuteDrawdown": 28113.534482006362
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "5-ef0792bb92",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 121,
+     "maximumHoldDays": 7,
+     "tickWindowSize": 75,
+     "intradayLossBuffer": 23,
+     "invalidationBuffer": 13
+    },
+    "description": "X=23.7% Y=0.1% stop=12.1% hold=7 L=75 buffer=2.3% inv=1.3%",
+    "signature": "bf9355dbb94ebe1f",
+    "trainingNet": 99639.39312890646,
+    "trainingMinuteDrawdown": 32300.360035185025
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "5-40c1090ac3",
+    "params": {
+     "targetPercentChange": 205,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 68,
+     "intradayLossBuffer": 28,
+     "invalidationBuffer": 51
+    },
+    "description": "X=20.5% Y=1.8% stop=3.0% hold=8 L=68 buffer=2.8% inv=5.1%",
+    "signature": "31dbb8e6cc1de318",
+    "trainingNet": 77690.85990728323,
+    "trainingMinuteDrawdown": 11678.531043044237
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "5-800ba646ce",
+    "params": {
+     "targetPercentChange": 239,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 18,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 0,
+     "invalidationBuffer": 14
+    },
+    "description": "X=23.9% Y=0.2% stop=7.3% hold=18 L=74 buffer=0.0% inv=1.4%",
+    "signature": "0654d737a59a7740",
+    "trainingNet": 92959.24087541507,
+    "trainingMinuteDrawdown": 19518.284385489158
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "5-b7279b7443",
+    "params": {
+     "targetPercentChange": 211,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 6,
+     "tickWindowSize": 75,
+     "intradayLossBuffer": 3,
+     "invalidationBuffer": 13
+    },
+    "description": "X=21.1% Y=0.1% stop=7.3% hold=6 L=75 buffer=0.3% inv=1.3%",
+    "signature": "ff529d1785435252",
+    "trainingNet": 100500.1712233083,
+    "trainingMinuteDrawdown": 19656.935979534264
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "5-0fa6d110c4",
+    "params": {
+     "targetPercentChange": 243,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 36,
+     "maximumHoldDays": 16,
+     "tickWindowSize": 77,
+     "intradayLossBuffer": 29,
+     "invalidationBuffer": 53
+    },
+    "description": "X=24.3% Y=0.6% stop=3.6% hold=16 L=77 buffer=2.9% inv=5.3%",
+    "signature": "9da158be41467bc0",
+    "trainingNet": 44990.43974639643,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "5-c2cef3045f",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 38,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 61,
+     "intradayLossBuffer": 6,
+     "invalidationBuffer": 52
+    },
+    "description": "X=23.7% Y=0.6% stop=3.8% hold=11 L=61 buffer=0.6% inv=5.2%",
+    "signature": "7534736484b8025d",
+    "trainingNet": 43484.66866462615,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "5-b1db02c788",
+    "params": {
+     "targetPercentChange": 300,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 36,
+     "maximumHoldDays": 16,
+     "tickWindowSize": 133,
+     "intradayLossBuffer": 7,
+     "invalidationBuffer": 3
+    },
+    "description": "X=30.0% Y=0.6% stop=3.6% hold=16 L=133 buffer=0.7% inv=0.3%",
+    "signature": "77c59760c1f76d43",
+    "trainingNet": 31772.936146114567,
+    "trainingMinuteDrawdown": 8462.16771696613
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "5-3952a909eb",
+    "params": {
+     "targetPercentChange": 300,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 35,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 132,
+     "intradayLossBuffer": 7,
+     "invalidationBuffer": 17
+    },
+    "description": "X=30.0% Y=0.6% stop=3.5% hold=3 L=132 buffer=0.7% inv=1.7%",
+    "signature": "5a1fdec585b49ced",
+    "trainingNet": 15195.422420025448,
+    "trainingMinuteDrawdown": 9774.748806004634
+   }
+  ],
+  "invalidationUnbuffered": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "6-866fc7cb8e",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 68,
+     "invalidationBuffer": 13
+    },
+    "description": "X=23.7% Y=0.1% stop=14.1% hold=3 L=68 inv=1.3%",
+    "signature": "e319e453e4909ecf",
+    "trainingNet": 137348.50495598046,
+    "trainingMinuteDrawdown": 34280.93252732289
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "6-8f79cfcf75",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 127,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 71,
+     "invalidationBuffer": 14
+    },
+    "description": "X=23.7% Y=0.1% stop=12.7% hold=3 L=71 inv=1.4%",
+    "signature": "4558934511a70bed",
+    "trainingNet": 96779.02709424219,
+    "trainingMinuteDrawdown": 32085.95598099927
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "6-bc77bb6269",
+    "params": {
+     "targetPercentChange": 212,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 72,
+     "invalidationBuffer": 13
+    },
+    "description": "X=21.2% Y=0.1% stop=7.3% hold=3 L=72 inv=1.3%",
+    "signature": "71f1e64d2fcc518b",
+    "trainingNet": 98494.18200706529,
+    "trainingMinuteDrawdown": 19656.935979534264
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "6-8835892a82",
+    "params": {
+     "targetPercentChange": 204,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 33,
+     "maximumHoldDays": 9,
+     "tickWindowSize": 73,
+     "invalidationBuffer": 50
+    },
+    "description": "X=20.4% Y=1.8% stop=3.3% hold=9 L=73 inv=5.0%",
+    "signature": "8bb2fbd250ba988f",
+    "trainingNet": 71411.04673130343,
+    "trainingMinuteDrawdown": 11678.531043044233
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "6-360eec343d",
+    "params": {
+     "targetPercentChange": 245,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 64,
+     "invalidationBuffer": 14
+    },
+    "description": "X=24.5% Y=0.1% stop=7.3% hold=3 L=64 inv=1.4%",
+    "signature": "4edea001712b045c",
+    "trainingNet": 71624.8423962332,
+    "trainingMinuteDrawdown": 14343.807278835846
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "6-3e189ee947",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 9,
+     "trailingStopPercentage": 48,
+     "maximumHoldDays": 31,
+     "tickWindowSize": 77,
+     "invalidationBuffer": 57
+    },
+    "description": "X=21.5% Y=0.9% stop=4.8% hold=31 L=77 inv=5.7%",
+    "signature": "e4963a3d7942e27c",
+    "trainingNet": 75068.97138230411,
+    "trainingMinuteDrawdown": 13871.041687868346
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "6-83252515ec",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 29,
+     "tickWindowSize": 179,
+     "invalidationBuffer": 56
+    },
+    "description": "X=29.9% Y=0.5% stop=3.7% hold=29 L=179 inv=5.6%",
+    "signature": "09a20813488eb88a",
+    "trainingNet": 37468.27230971964,
+    "trainingMinuteDrawdown": 9049.86180051549
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "6-3666e51d6d",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 47,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 148,
+     "invalidationBuffer": 43
+    },
+    "description": "X=29.9% Y=0.4% stop=4.7% hold=3 L=148 inv=4.3%",
+    "signature": "ebb51a3fac13c3d0",
+    "trainingNet": 36671.576487619306,
+    "trainingMinuteDrawdown": 9786.150948524668
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "6-2e7d80e702",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 102,
+     "invalidationBuffer": 19
+    },
+    "description": "X=20.0% Y=0.4% stop=7.8% hold=11 L=102 inv=1.9%",
+    "signature": "99eefd1e5c80c0a2",
+    "trainingNet": 85931.18460511378,
+    "trainingMinuteDrawdown": 32194.92981897991
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "6-2c1b0c3959",
+    "params": {
+     "targetPercentChange": 239,
+     "trailingBuyPercentage": 14,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 76,
+     "invalidationBuffer": 57
+    },
+    "description": "X=23.9% Y=1.4% stop=7.3% hold=3 L=76 inv=5.7%",
+    "signature": "aa980abbc255e03f",
+    "trainingNet": 81069.90353330667,
+    "trainingMinuteDrawdown": 19357.089900466264
+   }
+  ],
+  "episodeBudget": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "7-039e854ad0",
+    "params": {
+     "targetPercentChange": 241,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 5,
+     "episodeLossBudget": 100,
+     "episodeResetRetrace": 518
+    },
+    "description": "X=24.1% Y=0.8% stop=14.1% hold=8 L=74 buffer=0.5% budget=10.0% epReset=51.8%",
+    "signature": "282c130a8a227aa5",
+    "trainingNet": 137350.95260341247,
+    "trainingMinuteDrawdown": 34749.60382554593
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "7-edab13c98e",
+    "params": {
+     "targetPercentChange": 240,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 122,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 78,
+     "intradayLossBuffer": 5,
+     "episodeLossBudget": 97,
+     "episodeResetRetrace": 242
+    },
+    "description": "X=24.0% Y=0.8% stop=12.2% hold=8 L=78 buffer=0.5% budget=9.7% epReset=24.2%",
+    "signature": "80b9565f3c5695ee",
+    "trainingNet": 99412.56516924218,
+    "trainingMinuteDrawdown": 32780.02889575271
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "7-232fafd906",
+    "params": {
+     "targetPercentChange": 213,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 75,
+     "intradayLossBuffer": 23,
+     "episodeLossBudget": 184,
+     "episodeResetRetrace": 613
+    },
+    "description": "X=21.3% Y=0.3% stop=7.3% hold=8 L=75 buffer=2.3% budget=18.4% epReset=61.3%",
+    "signature": "d04d02c57c95d0a6",
+    "trainingNet": 103602.87150503758,
+    "trainingMinuteDrawdown": 21182.998825774288
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "7-cc2e2adbbb",
+    "params": {
+     "targetPercentChange": 204,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 77,
+     "intradayLossBuffer": 4,
+     "episodeLossBudget": 135,
+     "episodeResetRetrace": 795
+    },
+    "description": "X=20.4% Y=1.8% stop=3.0% hold=8 L=77 buffer=0.4% budget=13.5% epReset=79.5%",
+    "signature": "1477388a28ab2a1a",
+    "trainingNet": 78752.08718591249,
+    "trainingMinuteDrawdown": 11678.531043044237
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "7-4e67ae82b9",
+    "params": {
+     "targetPercentChange": 239,
+     "trailingBuyPercentage": 14,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 1,
+     "episodeLossBudget": 110,
+     "episodeResetRetrace": 577
+    },
+    "description": "X=23.9% Y=1.4% stop=7.3% hold=3 L=74 buffer=0.1% budget=11.0% epReset=57.7%",
+    "signature": "dc3ebb420c2873a1",
+    "trainingNet": 91385.2685029843,
+    "trainingMinuteDrawdown": 19342.055050429823
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "7-dcb18e001f",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 81,
+     "intradayLossBuffer": 0,
+     "episodeLossBudget": 155,
+     "episodeResetRetrace": 789
+    },
+    "description": "X=21.6% Y=0.1% stop=7.3% hold=8 L=81 buffer=0.0% budget=15.5% epReset=78.9%",
+    "signature": "d5154c72c688d5e0",
+    "trainingNet": 83246.08106092982,
+    "trainingMinuteDrawdown": 17994.218700145368
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "7-4672d01094",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 7,
+     "tickWindowSize": 178,
+     "intradayLossBuffer": 23,
+     "episodeLossBudget": 169,
+     "episodeResetRetrace": 495
+    },
+    "description": "X=29.9% Y=0.4% stop=3.7% hold=7 L=178 buffer=2.3% budget=16.9% epReset=49.5%",
+    "signature": "2082168bb32f256a",
+    "trainingNet": 37191.44367965259,
+    "trainingMinuteDrawdown": 8899.204674966462
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "7-f6c37a48c4",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 47,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 179,
+     "intradayLossBuffer": 3,
+     "episodeLossBudget": 168,
+     "episodeResetRetrace": 625
+    },
+    "description": "X=29.9% Y=0.5% stop=4.7% hold=8 L=179 buffer=0.3% budget=16.8% epReset=62.5%",
+    "signature": "6a9f519b179e8dec",
+    "trainingNet": 36264.77052579276,
+    "trainingMinuteDrawdown": 10233.183716242733
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "7-3a8b6c9751",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 173,
+     "intradayLossBuffer": 0,
+     "episodeLossBudget": 155,
+     "episodeResetRetrace": 772
+    },
+    "description": "X=29.9% Y=0.5% stop=3.0% hold=5 L=173 buffer=0.0% budget=15.5% epReset=77.2%",
+    "signature": "d46d1618ddddc901",
+    "trainingNet": 25006.29487444739,
+    "trainingMinuteDrawdown": 7869.132777349259
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "7-50ad50965d",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 34,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 173,
+     "intradayLossBuffer": 3,
+     "episodeLossBudget": 164,
+     "episodeResetRetrace": 594
+    },
+    "description": "X=29.9% Y=0.5% stop=3.4% hold=8 L=173 buffer=0.3% budget=16.4% epReset=59.4%",
+    "signature": "37ae6f35f40a0d68",
+    "trainingNet": 32062.413945797005,
+    "trainingMinuteDrawdown": 8286.207578345791
+   }
+  ],
+  "episodeBudgetUnbuffered": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "8-0aa6d2ff51",
+    "params": {
+     "targetPercentChange": 240,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 76,
+     "episodeLossBudget": 180,
+     "episodeResetRetrace": 522
+    },
+    "description": "X=24.0% Y=0.8% stop=14.1% hold=8 L=76 budget=18.0% epReset=52.2%",
+    "signature": "282c130a8a227aa5",
+    "trainingNet": 137350.95260341247,
+    "trainingMinuteDrawdown": 34749.60382554593
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "8-050d8bcdc1",
+    "params": {
+     "targetPercentChange": 243,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 122,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 76,
+     "episodeLossBudget": 180,
+     "episodeResetRetrace": 677
+    },
+    "description": "X=24.3% Y=0.8% stop=12.2% hold=8 L=76 budget=18.0% epReset=67.7%",
+    "signature": "80b9565f3c5695ee",
+    "trainingNet": 99412.56516924218,
+    "trainingMinuteDrawdown": 32780.02889575271
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "8-34f7da79d5",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 68,
+     "episodeLossBudget": 163,
+     "episodeResetRetrace": 635
+    },
+    "description": "X=21.6% Y=0.3% stop=7.3% hold=8 L=68 budget=16.3% epReset=63.5%",
+    "signature": "cb339dc8a3cbe0b5",
+    "trainingNet": 104809.52658190316,
+    "trainingMinuteDrawdown": 21182.998825774288
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "8-1bfc42e862",
+    "params": {
+     "targetPercentChange": 206,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 9,
+     "tickWindowSize": 78,
+     "episodeLossBudget": 175,
+     "episodeResetRetrace": 362
+    },
+    "description": "X=20.6% Y=1.8% stop=3.0% hold=9 L=78 budget=17.5% epReset=36.2%",
+    "signature": "0e6683f3947e6961",
+    "trainingNet": 78333.89329492077,
+    "trainingMinuteDrawdown": 11678.531043044237
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "8-22f1bbc6fd",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 75,
+     "episodeLossBudget": 168,
+     "episodeResetRetrace": 623
+    },
+    "description": "X=21.6% Y=0.6% stop=7.3% hold=8 L=75 budget=16.8% epReset=62.3%",
+    "signature": "66bbaa0dd919cf8c",
+    "trainingNet": 81079.84071749261,
+    "trainingMinuteDrawdown": 17994.218700145368
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "8-54c4f8f56f",
+    "params": {
+     "targetPercentChange": 239,
+     "trailingBuyPercentage": 14,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 6,
+     "tickWindowSize": 74,
+     "episodeLossBudget": 105,
+     "episodeResetRetrace": 328
+    },
+    "description": "X=23.9% Y=1.4% stop=7.3% hold=6 L=74 budget=10.5% epReset=32.8%",
+    "signature": "cab181b784c5094e",
+    "trainingNet": 78820.38949546669,
+    "trainingMinuteDrawdown": 19357.089900466264
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "8-6add4a5755",
+    "params": {
+     "targetPercentChange": 235,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 41,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 61,
+     "episodeLossBudget": 183,
+     "episodeResetRetrace": 244
+    },
+    "description": "X=23.5% Y=0.6% stop=4.1% hold=11 L=61 budget=18.3% epReset=24.4%",
+    "signature": "5520540b56969e9e",
+    "trainingNet": 43039.71772841207,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "8-b1b92a3ec8",
+    "params": {
+     "targetPercentChange": 244,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 40,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 78,
+     "episodeLossBudget": 150,
+     "episodeResetRetrace": 689
+    },
+    "description": "X=24.4% Y=0.6% stop=4.0% hold=11 L=78 budget=15.0% epReset=68.9%",
+    "signature": "387fa234b848ef5c",
+    "trainingNet": 37366.668345091806,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "8-6e5b0b2a98",
+    "params": {
+     "targetPercentChange": 206,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 79,
+     "maximumHoldDays": 9,
+     "tickWindowSize": 95,
+     "episodeLossBudget": 189,
+     "episodeResetRetrace": 537
+    },
+    "description": "X=20.6% Y=0.2% stop=7.9% hold=9 L=95 budget=18.9% epReset=53.7%",
+    "signature": "36d55839639ef7ad",
+    "trainingNet": 102119.85780151875,
+    "trainingMinuteDrawdown": 29713.99704990742
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "8-815f2b3508",
+    "params": {
+     "targetPercentChange": 248,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 41,
+     "maximumHoldDays": 38,
+     "tickWindowSize": 69,
+     "episodeLossBudget": 175,
+     "episodeResetRetrace": 286
+    },
+    "description": "X=24.8% Y=0.6% stop=4.1% hold=38 L=69 budget=17.5% epReset=28.6%",
+    "signature": "852419ba870b031a",
+    "trainingNet": 34653.512888445795,
+    "trainingMinuteDrawdown": 10709.823410785875
+   }
+  ],
+  "depthRebound": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "9-086530980f",
+    "params": {
+     "targetPercentChange": 240,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 77,
+     "intradayLossBuffer": 0,
+     "reboundDepthSlope": 170
+    },
+    "description": "X=24.0% Y=0.5% stop=14.1% hold=8 L=77 buffer=0.0% slope=17.0%",
+    "signature": "7478f9ed5fd599b5",
+    "trainingNet": 138951.6179299863,
+    "trainingMinuteDrawdown": 34749.60382554593
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "9-0ffecbb27f",
+    "params": {
+     "targetPercentChange": 204,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 104,
+     "intradayLossBuffer": 1,
+     "reboundDepthSlope": 118
+    },
+    "description": "X=20.4% Y=0.3% stop=7.8% hold=11 L=104 buffer=0.1% slope=11.8%",
+    "signature": "06dff619ff87fc2c",
+    "trainingNet": 115183.75801533286,
+    "trainingMinuteDrawdown": 26874.09714425509
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "9-08dfb38c44",
+    "params": {
+     "targetPercentChange": 244,
+     "trailingBuyPercentage": 13,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 82,
+     "intradayLossBuffer": 2,
+     "reboundDepthSlope": 20
+    },
+    "description": "X=24.4% Y=1.3% stop=14.1% hold=8 L=82 buffer=0.2% slope=2.0%",
+    "signature": "fdadefee6f2c192e",
+    "trainingNet": 98781.34797640241,
+    "trainingMinuteDrawdown": 30557.72452520702
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "9-d6b7d672ae",
+    "params": {
+     "targetPercentChange": 206,
+     "trailingBuyPercentage": 12,
+     "trailingStopPercentage": 35,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 67,
+     "intradayLossBuffer": 0,
+     "reboundDepthSlope": 16
+    },
+    "description": "X=20.6% Y=1.2% stop=3.5% hold=11 L=67 buffer=0.0% slope=1.6%",
+    "signature": "391055a435bf8f52",
+    "trainingNet": 77963.86729351214,
+    "trainingMinuteDrawdown": 11985.720274038122
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "9-7b4e76bd71",
+    "params": {
+     "targetPercentChange": 211,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 76,
+     "intradayLossBuffer": 4,
+     "reboundDepthSlope": 161
+    },
+    "description": "X=21.1% Y=0.3% stop=7.3% hold=3 L=76 buffer=0.4% slope=16.1%",
+    "signature": "8a29480239ebaf5e",
+    "trainingNet": 95616.62813140398,
+    "trainingMinuteDrawdown": 19256.773471246444
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "9-b806d0e880",
+    "params": {
+     "targetPercentChange": 212,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 51,
+     "maximumHoldDays": 30,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 30,
+     "reboundDepthSlope": 45
+    },
+    "description": "X=21.2% Y=0.6% stop=5.1% hold=30 L=74 buffer=3.0% slope=4.5%",
+    "signature": "13f05f71532dbfec",
+    "trainingNet": 74314.53381243994,
+    "trainingMinuteDrawdown": 14155.351040583457
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "9-6c13c2e853",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 6,
+     "tickWindowSize": 132,
+     "intradayLossBuffer": 29,
+     "reboundDepthSlope": 17
+    },
+    "description": "X=29.9% Y=0.5% stop=3.7% hold=6 L=132 buffer=2.9% slope=1.7%",
+    "signature": "389b4a802cc57ae3",
+    "trainingNet": 39994.68710046218,
+    "trainingMinuteDrawdown": 9049.86180051549
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "9-21f4fa01d8",
+    "params": {
+     "targetPercentChange": 221,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 35,
+     "maximumHoldDays": 30,
+     "tickWindowSize": 78,
+     "intradayLossBuffer": 1,
+     "reboundDepthSlope": 454
+    },
+    "description": "X=22.1% Y=0.2% stop=3.5% hold=30 L=78 buffer=0.1% slope=45.4%",
+    "signature": "6fdc7de3dfc99b83",
+    "trainingNet": 37018.035096242216,
+    "trainingMinuteDrawdown": 9426.928770704119
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "9-3e03873b58",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 7,
+     "tickWindowSize": 132,
+     "intradayLossBuffer": 6,
+     "reboundDepthSlope": 2
+    },
+    "description": "X=29.9% Y=0.5% stop=3.0% hold=7 L=132 buffer=0.6% slope=0.2%",
+    "signature": "eb6df8b14a5d898e",
+    "trainingNet": 28739.705590733836,
+    "trainingMinuteDrawdown": 7869.132777349259
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "9-5a25a2159d",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 33,
+     "maximumHoldDays": 15,
+     "tickWindowSize": 148,
+     "intradayLossBuffer": 28,
+     "reboundDepthSlope": 0
+    },
+    "description": "X=29.9% Y=0.5% stop=3.3% hold=15 L=148 buffer=2.8% slope=0.0%",
+    "signature": "5a162b7ff09189fb",
+    "trainingNet": 28224.405640162695,
+    "trainingMinuteDrawdown": 8193.553996283452
+   }
+  ],
+  "depthReboundUnbuffered": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "10-060a79997e",
+    "params": {
+     "targetPercentChange": 241,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 73,
+     "reboundDepthSlope": 117
+    },
+    "description": "X=24.1% Y=0.6% stop=14.1% hold=8 L=73 slope=11.7%",
+    "signature": "a553a52c70fc6afd",
+    "trainingNet": 139280.057595875,
+    "trainingMinuteDrawdown": 34749.60382554593
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "10-c4d76baf39",
+    "params": {
+     "targetPercentChange": 239,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 122,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 73,
+     "reboundDepthSlope": 92
+    },
+    "description": "X=23.9% Y=0.8% stop=12.2% hold=8 L=73 slope=9.2%",
+    "signature": "70a878219e112ae1",
+    "trainingNet": 100181.87916947136,
+    "trainingMinuteDrawdown": 32775.69182492662
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "10-84a7ab1417",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 103,
+     "reboundDepthSlope": 107
+    },
+    "description": "X=20.0% Y=0.2% stop=7.8% hold=11 L=103 slope=10.7%",
+    "signature": "ff4a3b2441a47864",
+    "trainingNet": 106694.9672128653,
+    "trainingMinuteDrawdown": 26820.235616432572
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "10-4f68e39c15",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 49,
+     "maximumHoldDays": 31,
+     "tickWindowSize": 68,
+     "reboundDepthSlope": 38
+    },
+    "description": "X=21.5% Y=0.8% stop=4.9% hold=31 L=68 slope=3.8%",
+    "signature": "119cded2c9bd1e50",
+    "trainingNet": 78241.93734302702,
+    "trainingMinuteDrawdown": 13871.041687868346
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "10-98833bfd91",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 64,
+     "reboundDepthSlope": 16
+    },
+    "description": "X=21.6% Y=0.3% stop=7.3% hold=8 L=64 slope=1.6%",
+    "signature": "87de7beaabea3856",
+    "trainingNet": 104932.8894554247,
+    "trainingMinuteDrawdown": 21182.998825774288
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "10-8675c48628",
+    "params": {
+     "targetPercentChange": 203,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 49,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 111,
+     "reboundDepthSlope": 99
+    },
+    "description": "X=20.3% Y=0.5% stop=4.9% hold=11 L=111 slope=9.9%",
+    "signature": "c9477dd4b0e0f9d1",
+    "trainingNet": 80718.93705725935,
+    "trainingMinuteDrawdown": 15194.011998706002
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "10-b83f1f35b3",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 12,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 15,
+     "tickWindowSize": 55,
+     "reboundDepthSlope": 346
+    },
+    "description": "X=21.5% Y=1.2% stop=3.0% hold=15 L=55 slope=34.6%",
+    "signature": "7ee9508597241c4c",
+    "trainingNet": 37104.794277192734,
+    "trainingMinuteDrawdown": 9676.26127330468
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "10-08483939bd",
+    "params": {
+     "targetPercentChange": 264,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 27,
+     "tickWindowSize": 90,
+     "reboundDepthSlope": 14
+    },
+    "description": "X=26.4% Y=0.6% stop=3.7% hold=27 L=90 slope=1.4%",
+    "signature": "1367828cf0f34421",
+    "trainingNet": 39378.383038656575,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "10-3f6fe5aad9",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 96,
+     "reboundDepthSlope": 101
+    },
+    "description": "X=20.0% Y=0.3% stop=7.3% hold=11 L=96 slope=10.1%",
+    "signature": "53619696631932a6",
+    "trainingNet": 95058.08761420663,
+    "trainingMinuteDrawdown": 26208.42798895182
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "10-20791c7195",
+    "params": {
+     "targetPercentChange": 239,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 73,
+     "reboundDepthSlope": 334
+    },
+    "description": "X=23.9% Y=0.6% stop=7.3% hold=8 L=73 slope=33.4%",
+    "signature": "1ef8c5caf5d65003",
+    "trainingNet": 92228.71898871589,
+    "trainingMinuteDrawdown": 20770.211943394657
+   }
+  ],
+  "staged": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "11-82fd3d779e",
+    "params": {
+     "targetPercentChange": 242,
+     "trailingBuyPercentage": 9,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 73,
+     "intradayLossBuffer": 12,
+     "initialFraction": 75,
+     "addTrigger": 6
+    },
+    "description": "X=24.2% Y=0.9% stop=14.1% hold=8 L=73 buffer=1.2% first=75% add=0.6%",
+    "signature": "5ae2db889d3cd577",
+    "trainingNet": 135202.38470261064,
+    "trainingMinuteDrawdown": 34934.06654752683
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "11-67ddc11415",
+    "params": {
+     "targetPercentChange": 204,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 80,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 102,
+     "intradayLossBuffer": 1,
+     "initialFraction": 85,
+     "addTrigger": 10
+    },
+    "description": "X=20.4% Y=0.4% stop=8.0% hold=11 L=102 buffer=0.1% first=85% add=1.0%",
+    "signature": "a644197bb00dc90c",
+    "trainingNet": 109876.43700148145,
+    "trainingMinuteDrawdown": 27265.300516977284
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "11-6e5ea29fbf",
+    "params": {
+     "targetPercentChange": 242,
+     "trailingBuyPercentage": 7,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 73,
+     "intradayLossBuffer": 19,
+     "initialFraction": 55,
+     "addTrigger": 66
+    },
+    "description": "X=24.2% Y=0.7% stop=14.1% hold=8 L=73 buffer=1.9% first=55% add=6.6%",
+    "signature": "eadb2510eaebdf1b",
+    "trainingNet": 90902.1012718307,
+    "trainingMinuteDrawdown": 26983.811495902744
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "11-3c23eca675",
+    "params": {
+     "targetPercentChange": 205,
+     "trailingBuyPercentage": 17,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 78,
+     "intradayLossBuffer": 19,
+     "initialFraction": 90,
+     "addTrigger": 6
+    },
+    "description": "X=20.5% Y=1.7% stop=3.1% hold=12 L=78 buffer=1.9% first=90% add=0.6%",
+    "signature": "33100d65426f5d66",
+    "trainingNet": 77102.65820928758,
+    "trainingMinuteDrawdown": 11918.821132944899
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "11-57b8e4b98f",
+    "params": {
+     "targetPercentChange": 240,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 81,
+     "intradayLossBuffer": 15,
+     "initialFraction": 50,
+     "addTrigger": 75
+    },
+    "description": "X=24.0% Y=0.1% stop=7.3% hold=8 L=81 buffer=1.5% first=50% add=7.5%",
+    "signature": "dade2efea10bf8bf",
+    "trainingNet": 77591.12672351721,
+    "trainingMinuteDrawdown": 15563.73637169091
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "11-e45a98ac77",
+    "params": {
+     "targetPercentChange": 188,
+     "trailingBuyPercentage": 17,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 77,
+     "intradayLossBuffer": 8,
+     "initialFraction": 80,
+     "addTrigger": 66
+    },
+    "description": "X=18.8% Y=1.7% stop=3.0% hold=8 L=77 buffer=0.8% first=80% add=6.6%",
+    "signature": "5c5df167dee9c764",
+    "trainingNet": 59591.277937383886,
+    "trainingMinuteDrawdown": 10547.671510466636
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "11-97f78e124f",
+    "params": {
+     "targetPercentChange": 211,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 38,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 78,
+     "intradayLossBuffer": 27,
+     "initialFraction": 55,
+     "addTrigger": 66
+    },
+    "description": "X=21.1% Y=1.8% stop=3.8% hold=11 L=78 buffer=2.7% first=55% add=6.6%",
+    "signature": "cb028e8028edefb3",
+    "trainingNet": 40228.09782552706,
+    "trainingMinuteDrawdown": 7812.951808722519
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "11-db49c1b382",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 98,
+     "intradayLossBuffer": 18,
+     "initialFraction": 75,
+     "addTrigger": 60
+    },
+    "description": "X=20.0% Y=1.8% stop=3.0% hold=11 L=98 buffer=1.8% first=75% add=6.0%",
+    "signature": "53d739be8120cbe3",
+    "trainingNet": 61055.69828363998,
+    "trainingMinuteDrawdown": 12641.271068879134
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "11-15ae25c14d",
+    "params": {
+     "targetPercentChange": 228,
+     "trailingBuyPercentage": 29,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 26,
+     "tickWindowSize": 81,
+     "intradayLossBuffer": 17,
+     "initialFraction": 10,
+     "addTrigger": 100
+    },
+    "description": "X=22.8% Y=2.9% stop=3.1% hold=26 L=81 buffer=1.7% first=10% add=10.0%",
+    "signature": "55f4ff253181ee38",
+    "trainingNet": 2216.2005197730623,
+    "trainingMinuteDrawdown": 1451.0871447017391
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "11-86241f0dbf",
+    "params": {
+     "targetPercentChange": 76,
+     "trailingBuyPercentage": 22,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 10,
+     "tickWindowSize": 149,
+     "intradayLossBuffer": 29,
+     "initialFraction": 40,
+     "addTrigger": 12
+    },
+    "description": "X=7.6% Y=2.2% stop=7.3% hold=10 L=149 buffer=2.9% first=40% add=1.2%",
+    "signature": "485737cf73fc3d3c",
+    "trainingNet": 93135.63495698183,
+    "trainingMinuteDrawdown": 26287.281654429542
+   }
+  ],
+  "stagedUnbuffered": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "12-8855c5329d",
+    "params": {
+     "targetPercentChange": 235,
+     "trailingBuyPercentage": 10,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 76,
+     "initialFraction": 90,
+     "addTrigger": 5
+    },
+    "description": "X=23.5% Y=1.0% stop=14.1% hold=8 L=76 first=90% add=0.5%",
+    "signature": "0a54282651cb45ba",
+    "trainingNet": 134023.17528830955,
+    "trainingMinuteDrawdown": 34789.52956657699
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "12-2a79eb80ef",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 103,
+     "initialFraction": 90,
+     "addTrigger": 6
+    },
+    "description": "X=20.0% Y=0.3% stop=7.8% hold=11 L=103 first=90% add=0.6%",
+    "signature": "33f96e3b95fb5ca1",
+    "trainingNet": 110466.2569470063,
+    "trainingMinuteDrawdown": 26883.174318767356
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "12-574906f156",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 69,
+     "initialFraction": 90,
+     "addTrigger": 6
+    },
+    "description": "X=21.6% Y=0.3% stop=7.3% hold=8 L=69 first=90% add=0.6%",
+    "signature": "4f8ec31f38710175",
+    "trainingNet": 103946.4645014026,
+    "trainingMinuteDrawdown": 21227.457776044874
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "12-40a4dd0056",
+    "params": {
+     "targetPercentChange": 204,
+     "trailingBuyPercentage": 17,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 77,
+     "initialFraction": 90,
+     "addTrigger": 6
+    },
+    "description": "X=20.4% Y=1.7% stop=3.1% hold=8 L=77 first=90% add=0.6%",
+    "signature": "a844a137ceae7155",
+    "trainingNet": 76082.79007187605,
+    "trainingMinuteDrawdown": 11918.821132944899
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "12-830914e8e1",
+    "params": {
+     "targetPercentChange": 242,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 75,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 81,
+     "initialFraction": 65,
+     "addTrigger": 79
+    },
+    "description": "X=24.2% Y=0.3% stop=7.5% hold=8 L=81 first=65% add=7.9%",
+    "signature": "5a0015a42e914124",
+    "trainingNet": 80840.19779545936,
+    "trainingMinuteDrawdown": 17571.427601380583
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "12-577aad8a37",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 77,
+     "initialFraction": 90,
+     "addTrigger": 6
+    },
+    "description": "X=21.6% Y=0.5% stop=7.3% hold=8 L=77 first=90% add=0.6%",
+    "signature": "77bf52d632330f05",
+    "trainingNet": 81311.43864921862,
+    "trainingMinuteDrawdown": 17984.189385690668
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "12-255176f62d",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 35,
+     "maximumHoldDays": 7,
+     "tickWindowSize": 73,
+     "initialFraction": 75,
+     "addTrigger": 78
+    },
+    "description": "X=20.0% Y=1.8% stop=3.5% hold=7 L=73 first=75% add=7.8%",
+    "signature": "6217d32151a35b40",
+    "trainingNet": 48772.429879147494,
+    "trainingMinuteDrawdown": 8758.89828228317
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "12-42df0727ea",
+    "params": {
+     "targetPercentChange": 202,
+     "trailingBuyPercentage": 14,
+     "trailingStopPercentage": 34,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 104,
+     "initialFraction": 75,
+     "addTrigger": 6
+    },
+    "description": "X=20.2% Y=1.4% stop=3.4% hold=11 L=104 first=75% add=0.6%",
+    "signature": "0e5caccaa604f2f6",
+    "trainingNet": 65938.29300602384,
+    "trainingMinuteDrawdown": 14392.146981959144
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "12-a38ac6857f",
+    "params": {
+     "targetPercentChange": 197,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 15,
+     "tickWindowSize": 45,
+     "initialFraction": 15,
+     "addTrigger": 96
+    },
+    "description": "X=19.7% Y=0.6% stop=3.1% hold=15 L=45 first=15% add=9.6%",
+    "signature": "3ffed394d0c045bb",
+    "trainingNet": 3536.011712203775,
+    "trainingMinuteDrawdown": 4141.751681421079
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "12-2ac7b93950",
+    "params": {
+     "targetPercentChange": 197,
+     "trailingBuyPercentage": 16,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 23,
+     "tickWindowSize": 48,
+     "initialFraction": 10,
+     "addTrigger": 99
+    },
+    "description": "X=19.7% Y=1.6% stop=3.0% hold=23 L=48 first=10% add=9.9%",
+    "signature": "7c459630adfa3921",
+    "trainingNet": 3894.9146217085927,
+    "trainingMinuteDrawdown": 3447.416915850114
+   }
+  ],
+  "progressHold": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "13-85f96e81d6",
+    "params": {
+     "targetPercentChange": 239,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 86,
+     "intradayLossBuffer": 0,
+     "progressThreshold": 100,
+     "holdExtensionDays": 40
+    },
+    "description": "X=23.9% Y=0.8% stop=14.1% hold=8 L=86 buffer=0.0% progress=10.0% extend=40",
+    "signature": "968c5ca7b09c6130",
+    "trainingNet": 137364.55869266877,
+    "trainingMinuteDrawdown": 34744.88970636367
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "13-08fab9fee5",
+    "params": {
+     "targetPercentChange": 202,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 99,
+     "intradayLossBuffer": 0,
+     "progressThreshold": 79,
+     "holdExtensionDays": 11
+    },
+    "description": "X=20.2% Y=0.3% stop=7.8% hold=11 L=99 buffer=0.0% progress=7.9% extend=11",
+    "signature": "6eab29d833312925",
+    "trainingNet": 112538.06139116525,
+    "trainingMinuteDrawdown": 26820.235616432572
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "13-ed4c569ae3",
+    "params": {
+     "targetPercentChange": 244,
+     "trailingBuyPercentage": 9,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 88,
+     "intradayLossBuffer": 0,
+     "progressThreshold": 100,
+     "holdExtensionDays": 40
+    },
+    "description": "X=24.4% Y=0.9% stop=14.1% hold=8 L=88 buffer=0.0% progress=10.0% extend=40",
+    "signature": "b5d76befa6ac2117",
+    "trainingNet": 99675.02678202174,
+    "trainingMinuteDrawdown": 31875.030247413022
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "13-99b70555b5",
+    "params": {
+     "targetPercentChange": 203,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 13,
+     "tickWindowSize": 72,
+     "intradayLossBuffer": 6,
+     "progressThreshold": 90,
+     "holdExtensionDays": 23
+    },
+    "description": "X=20.3% Y=1.8% stop=3.0% hold=13 L=72 buffer=0.6% progress=9.0% extend=23",
+    "signature": "31dbb8e6cc1de318",
+    "trainingNet": 77690.85990728323,
+    "trainingMinuteDrawdown": 11678.531043044237
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "13-666e610ee8",
+    "params": {
+     "targetPercentChange": 211,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 50,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 76,
+     "intradayLossBuffer": 0,
+     "progressThreshold": 96,
+     "holdExtensionDays": 18
+    },
+    "description": "X=21.1% Y=0.8% stop=5.0% hold=11 L=76 buffer=0.0% progress=9.6% extend=18",
+    "signature": "3884e443129a01fb",
+    "trainingNet": 71260.4695483396,
+    "trainingMinuteDrawdown": 13912.233937621611
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "13-80fc448dba",
+    "params": {
+     "targetPercentChange": 211,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 72,
+     "intradayLossBuffer": 21,
+     "progressThreshold": 79,
+     "holdExtensionDays": 9
+    },
+    "description": "X=21.1% Y=0.3% stop=7.3% hold=8 L=72 buffer=2.1% progress=7.9% extend=9",
+    "signature": "d04d02c57c95d0a6",
+    "trainingNet": 103602.87150503758,
+    "trainingMinuteDrawdown": 21182.998825774288
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "13-9b026992a4",
+    "params": {
+     "targetPercentChange": 239,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 36,
+     "tickWindowSize": 78,
+     "intradayLossBuffer": 2,
+     "progressThreshold": 96,
+     "holdExtensionDays": 23
+    },
+    "description": "X=23.9% Y=0.6% stop=3.7% hold=36 L=78 buffer=0.2% progress=9.6% extend=23",
+    "signature": "71c61cb85c05f882",
+    "trainingNet": 42896.85107637993,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "13-bdfbb071eb",
+    "params": {
+     "targetPercentChange": 293,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 47,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 154,
+     "intradayLossBuffer": 19,
+     "progressThreshold": 53,
+     "holdExtensionDays": 17
+    },
+    "description": "X=29.3% Y=0.6% stop=4.7% hold=12 L=154 buffer=1.9% progress=5.3% extend=17",
+    "signature": "e1ecf04b00e31c57",
+    "trainingNet": 46422.92506080143,
+    "trainingMinuteDrawdown": 10709.823410785875
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "13-308211542e",
+    "params": {
+     "targetPercentChange": 291,
+     "trailingBuyPercentage": 47,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 26,
+     "tickWindowSize": 157,
+     "intradayLossBuffer": 0,
+     "progressThreshold": 85,
+     "holdExtensionDays": 41
+    },
+    "description": "X=29.1% Y=4.7% stop=3.0% hold=26 L=157 buffer=0.0% progress=8.5% extend=41",
+    "signature": "491161c8efd876e8",
+    "trainingNet": 24981.293235091085,
+    "trainingMinuteDrawdown": 8579.37006618342
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "13-5f14c98e42",
+    "params": {
+     "targetPercentChange": 236,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 125,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 75,
+     "intradayLossBuffer": 13,
+     "progressThreshold": 96,
+     "holdExtensionDays": 9
+    },
+    "description": "X=23.6% Y=0.2% stop=12.5% hold=8 L=75 buffer=1.3% progress=9.6% extend=9",
+    "signature": "deb2ea7689dbcf2c",
+    "trainingNet": 99585.78247323689,
+    "trainingMinuteDrawdown": 33920.31986428275
+   }
+  ],
+  "progressHoldUnbuffered": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "14-eec176d8b2",
+    "params": {
+     "targetPercentChange": 242,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 77,
+     "progressThreshold": 94,
+     "holdExtensionDays": 25
+    },
+    "description": "X=24.2% Y=0.8% stop=14.1% hold=8 L=77 progress=9.4% extend=25",
+    "signature": "282c130a8a227aa5",
+    "trainingNet": 137350.95260341247,
+    "trainingMinuteDrawdown": 34749.60382554593
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "14-de36bf2f0f",
+    "params": {
+     "targetPercentChange": 207,
+     "trailingBuyPercentage": 9,
+     "trailingStopPercentage": 82,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 111,
+     "progressThreshold": 86,
+     "holdExtensionDays": 33
+    },
+    "description": "X=20.7% Y=0.9% stop=8.2% hold=11 L=111 progress=8.6% extend=33",
+    "signature": "5fedc359439791bd",
+    "trainingNet": 103829.95281288362,
+    "trainingMinuteDrawdown": 27884.805206292698
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "14-7363155db2",
+    "params": {
+     "targetPercentChange": 244,
+     "trailingBuyPercentage": 14,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 82,
+     "progressThreshold": 91,
+     "holdExtensionDays": 19
+    },
+    "description": "X=24.4% Y=1.4% stop=14.1% hold=8 L=82 progress=9.1% extend=19",
+    "signature": "6be1f24f7f82c77f",
+    "trainingNet": 98638.4929276868,
+    "trainingMinuteDrawdown": 30403.825844797953
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "14-1147ae6344",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 68,
+     "progressThreshold": 79,
+     "holdExtensionDays": 24
+    },
+    "description": "X=21.6% Y=0.3% stop=7.3% hold=8 L=68 progress=7.9% extend=24",
+    "signature": "cb339dc8a3cbe0b5",
+    "trainingNet": 104809.52658190316,
+    "trainingMinuteDrawdown": 21182.998825774288
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "14-003c7f66c6",
+    "params": {
+     "targetPercentChange": 243,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 86,
+     "progressThreshold": 92,
+     "holdExtensionDays": 36
+    },
+    "description": "X=24.3% Y=0.8% stop=7.8% hold=8 L=86 progress=9.2% extend=36",
+    "signature": "4fe29ccaf446e493",
+    "trainingNet": 91173.0065318127,
+    "trainingMinuteDrawdown": 20986.84183968172
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "14-dade6277da",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 49,
+     "maximumHoldDays": 17,
+     "tickWindowSize": 74,
+     "progressThreshold": 73,
+     "holdExtensionDays": 14
+    },
+    "description": "X=21.5% Y=0.8% stop=4.9% hold=17 L=74 progress=7.3% extend=14",
+    "signature": "7c87e940fc716aef",
+    "trainingNet": 78562.76849511843,
+    "trainingMinuteDrawdown": 13912.233937621611
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "14-ec93d0420e",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 132,
+     "progressThreshold": 42,
+     "holdExtensionDays": 25
+    },
+    "description": "X=29.9% Y=0.4% stop=3.7% hold=3 L=132 progress=4.2% extend=25",
+    "signature": "67f15972df291dab",
+    "trainingNet": 40118.99625169484,
+    "trainingMinuteDrawdown": 8882.626436845256
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "14-800a88a7e0",
+    "params": {
+     "targetPercentChange": 298,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 47,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 150,
+     "progressThreshold": 76,
+     "holdExtensionDays": 43
+    },
+    "description": "X=29.8% Y=0.4% stop=4.7% hold=8 L=150 progress=7.6% extend=43",
+    "signature": "e32af4f1cd0af727",
+    "trainingNet": 37720.59165557435,
+    "trainingMinuteDrawdown": 10679.478745406728
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "14-04aa868ddb",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 6,
+     "tickWindowSize": 167,
+     "progressThreshold": 97,
+     "holdExtensionDays": 12
+    },
+    "description": "X=29.9% Y=0.5% stop=3.0% hold=6 L=167 progress=9.7% extend=12",
+    "signature": "3cc2f091fcde2358",
+    "trainingNet": 28136.8084312391,
+    "trainingMinuteDrawdown": 7869.132777349259
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "14-4fbb3d51fb",
+    "params": {
+     "targetPercentChange": 241,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 126,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 74,
+     "progressThreshold": 91,
+     "holdExtensionDays": 29
+    },
+    "description": "X=24.1% Y=0.8% stop=12.6% hold=8 L=74 progress=9.1% extend=29",
+    "signature": "39f8e44ffec85c7f",
+    "trainingNet": 97538.03714956933,
+    "trainingMinuteDrawdown": 32780.02889575271
+   }
+  ],
+  "persistence": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "15-fc36d49ee7",
+    "params": {
+     "targetPercentChange": 238,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 89,
+     "intradayLossBuffer": 13,
+     "confirmMinutes": 7
+    },
+    "description": "X=23.8% Y=0.1% stop=14.1% hold=8 L=89 buffer=1.3% confirm=7",
+    "signature": "caac84c2f3f0091f",
+    "trainingNet": 143334.8158147012,
+    "trainingMinuteDrawdown": 34380.29692903129
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "15-a7ad5dfc13",
+    "params": {
+     "targetPercentChange": 204,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 100,
+     "intradayLossBuffer": 0,
+     "confirmMinutes": 4
+    },
+    "description": "X=20.4% Y=0.6% stop=7.8% hold=11 L=100 buffer=0.0% confirm=4",
+    "signature": "4c78ef257be085eb",
+    "trainingNet": 114798.09567718167,
+    "trainingMinuteDrawdown": 27429.645092571733
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "15-2a1cc6709a",
+    "params": {
+     "targetPercentChange": 244,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 82,
+     "intradayLossBuffer": 2,
+     "confirmMinutes": 7
+    },
+    "description": "X=24.4% Y=0.1% stop=14.1% hold=8 L=82 buffer=0.2% confirm=7",
+    "signature": "bd780384199f9f71",
+    "trainingNet": 106314.26170225328,
+    "trainingMinuteDrawdown": 30030.22356675796
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "15-7b758f836d",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 49,
+     "maximumHoldDays": 19,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 11,
+     "confirmMinutes": 7
+    },
+    "description": "X=21.5% Y=0.1% stop=4.9% hold=19 L=74 buffer=1.1% confirm=7",
+    "signature": "d8e545074a7ac4f6",
+    "trainingNet": 84462.64325433722,
+    "trainingMinuteDrawdown": 10640.132624462552
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "15-80599bd5e8",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 77,
+     "intradayLossBuffer": 26,
+     "confirmMinutes": 5
+    },
+    "description": "X=21.6% Y=0.1% stop=7.3% hold=5 L=77 buffer=2.6% confirm=5",
+    "signature": "ef0e559808012753",
+    "trainingNet": 89931.91729114769,
+    "trainingMinuteDrawdown": 17964.040272441394
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "15-8ac3a4fe04",
+    "params": {
+     "targetPercentChange": 202,
+     "trailingBuyPercentage": 7,
+     "trailingStopPercentage": 44,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 2,
+     "confirmMinutes": 3
+    },
+    "description": "X=20.2% Y=0.7% stop=4.4% hold=11 L=74 buffer=0.2% confirm=3",
+    "signature": "ab058aeaf16b3d5f",
+    "trainingNet": 74192.50449176012,
+    "trainingMinuteDrawdown": 12941.89859032313
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "15-d25d5e7e8f",
+    "params": {
+     "targetPercentChange": 236,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 40,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 75,
+     "intradayLossBuffer": 13,
+     "confirmMinutes": 7
+    },
+    "description": "X=23.6% Y=0.1% stop=4.0% hold=5 L=75 buffer=1.3% confirm=7",
+    "signature": "8f34980f52eeb4d6",
+    "trainingNet": 47111.70453347398,
+    "trainingMinuteDrawdown": 10382.477973127987
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "15-1fec51801b",
+    "params": {
+     "targetPercentChange": 224,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 38,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 68,
+     "intradayLossBuffer": 10,
+     "confirmMinutes": 7
+    },
+    "description": "X=22.4% Y=0.1% stop=3.8% hold=8 L=68 buffer=1.0% confirm=7",
+    "signature": "3dd9ca2185c74360",
+    "trainingNet": 46553.2794497981,
+    "trainingMinuteDrawdown": 10382.477973127985
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "15-1ca68bf561",
+    "params": {
+     "targetPercentChange": 238,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 42,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 81,
+     "intradayLossBuffer": 1,
+     "confirmMinutes": 7
+    },
+    "description": "X=23.8% Y=0.1% stop=4.2% hold=12 L=81 buffer=0.1% confirm=7",
+    "signature": "85e10e066937ca28",
+    "trainingNet": 52513.85855582343,
+    "trainingMinuteDrawdown": 10382.477973127987
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "15-053f876b84",
+    "params": {
+     "targetPercentChange": 243,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 50,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 82,
+     "intradayLossBuffer": 10,
+     "confirmMinutes": 7
+    },
+    "description": "X=24.3% Y=0.1% stop=5.0% hold=8 L=82 buffer=1.0% confirm=7",
+    "signature": "2e832019e5e69d97",
+    "trainingNet": 47595.79939255495,
+    "trainingMinuteDrawdown": 10382.477973127987
+   }
+  ],
+  "persistenceUnbuffered": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "16-223625fe92",
+    "params": {
+     "targetPercentChange": 239,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 83,
+     "confirmMinutes": 7
+    },
+    "description": "X=23.9% Y=0.1% stop=14.1% hold=8 L=83 confirm=7",
+    "signature": "7004eb50f326c105",
+    "trainingNet": 144264.33665113163,
+    "trainingMinuteDrawdown": 34347.24213096505
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "16-1d12635209",
+    "params": {
+     "targetPercentChange": 240,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 123,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 83,
+     "confirmMinutes": 7
+    },
+    "description": "X=24.0% Y=0.1% stop=12.3% hold=8 L=83 confirm=7",
+    "signature": "dd5f37db2a001b78",
+    "trainingNet": 104693.86334642577,
+    "trainingMinuteDrawdown": 32207.38248355582
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "16-257aac001b",
+    "params": {
+     "targetPercentChange": 202,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 103,
+     "confirmMinutes": 4
+    },
+    "description": "X=20.2% Y=0.1% stop=7.8% hold=11 L=103 confirm=4",
+    "signature": "c4bf4d60de7565e5",
+    "trainingNet": 106310.95837543538,
+    "trainingMinuteDrawdown": 27065.16431936713
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "16-9356f2ef6a",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 49,
+     "maximumHoldDays": 38,
+     "tickWindowSize": 73,
+     "confirmMinutes": 7
+    },
+    "description": "X=21.5% Y=0.1% stop=4.9% hold=38 L=73 confirm=7",
+    "signature": "d8e545074a7ac4f6",
+    "trainingNet": 84462.64325433722,
+    "trainingMinuteDrawdown": 10640.132624462552
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "16-a6622b5c61",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 78,
+     "confirmMinutes": 5
+    },
+    "description": "X=21.6% Y=0.1% stop=7.3% hold=5 L=78 confirm=5",
+    "signature": "ef0e559808012753",
+    "trainingNet": 89931.91729114769,
+    "trainingMinuteDrawdown": 17964.040272441394
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "16-69096f72a4",
+    "params": {
+     "targetPercentChange": 206,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 45,
+     "maximumHoldDays": 35,
+     "tickWindowSize": 76,
+     "confirmMinutes": 7
+    },
+    "description": "X=20.6% Y=0.1% stop=4.5% hold=35 L=76 confirm=7",
+    "signature": "b7f5804206dcb432",
+    "trainingNet": 72072.76078940496,
+    "trainingMinuteDrawdown": 12666.385793050664
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "16-c292c84202",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 153,
+     "confirmMinutes": 8
+    },
+    "description": "X=29.9% Y=0.1% stop=3.7% hold=3 L=153 confirm=8",
+    "signature": "c208f5ad0119734b",
+    "trainingNet": 41711.901278194884,
+    "trainingMinuteDrawdown": 7971.63454434676
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "16-5aaedb77d1",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 47,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 152,
+     "confirmMinutes": 8
+    },
+    "description": "X=29.9% Y=0.1% stop=4.7% hold=8 L=152 confirm=8",
+    "signature": "37959589e2538d90",
+    "trainingNet": 40972.3570204965,
+    "trainingMinuteDrawdown": 9659.074646502711
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "16-0468b7cfad",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 144,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 72,
+     "confirmMinutes": 9
+    },
+    "description": "X=21.5% Y=0.1% stop=14.4% hold=8 L=72 confirm=9",
+    "signature": "2660228daed5f29e",
+    "trainingNet": 97606.2750170285,
+    "trainingMinuteDrawdown": 31748.145937923728
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "16-2575efddb1",
+    "params": {
+     "targetPercentChange": 205,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 103,
+     "confirmMinutes": 4
+    },
+    "description": "X=20.5% Y=0.5% stop=7.3% hold=11 L=103 confirm=4",
+    "signature": "da20242f4cc02434",
+    "trainingNet": 98669.49729393031,
+    "trainingMinuteDrawdown": 26767.125427507588
+   }
+  ],
+  "invalidationDepth": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "17-dec43fcd20",
+    "params": {
+     "targetPercentChange": 238,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 13,
+     "tickWindowSize": 79,
+     "intradayLossBuffer": 6,
+     "invalidationBuffer": 13,
+     "reboundDepthSlope": 5
+    },
+    "description": "X=23.8% Y=0.1% stop=14.1% hold=13 L=79 buffer=0.6% inv=1.3% slope=0.5%",
+    "signature": "e319e453e4909ecf",
+    "trainingNet": 137348.50495598046,
+    "trainingMinuteDrawdown": 34280.93252732289
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "17-ebe2c04f69",
+    "params": {
+     "targetPercentChange": 205,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 78,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 101,
+     "intradayLossBuffer": 2,
+     "invalidationBuffer": 53,
+     "reboundDepthSlope": 82
+    },
+    "description": "X=20.5% Y=0.5% stop=7.8% hold=11 L=101 buffer=0.2% inv=5.3% slope=8.2%",
+    "signature": "b20958f5afaf4414",
+    "trainingNet": 103219.01566362352,
+    "trainingMinuteDrawdown": 31540.30066925186
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "17-f2c7cf0644",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 18,
+     "tickWindowSize": 54,
+     "intradayLossBuffer": 3,
+     "invalidationBuffer": 13,
+     "reboundDepthSlope": 1
+    },
+    "description": "X=23.7% Y=0.1% stop=14.1% hold=18 L=54 buffer=0.3% inv=1.3% slope=0.1%",
+    "signature": "6af213ecad5b6fe7",
+    "trainingNet": 99396.63953858145,
+    "trainingMinuteDrawdown": 29065.336991913406
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "17-5946244c9e",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 16,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 69,
+     "intradayLossBuffer": 6,
+     "invalidationBuffer": 55,
+     "reboundDepthSlope": 25
+    },
+    "description": "X=20.0% Y=1.6% stop=3.2% hold=12 L=69 buffer=0.6% inv=5.5% slope=2.5%",
+    "signature": "e5defd7426c392af",
+    "trainingNet": 78206.63401219746,
+    "trainingMinuteDrawdown": 11678.531043044237
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "17-e3ca64bc9f",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 17,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 16,
+     "invalidationBuffer": 14,
+     "reboundDepthSlope": 6
+    },
+    "description": "X=23.7% Y=0.1% stop=7.3% hold=17 L=74 buffer=1.6% inv=1.4% slope=0.6%",
+    "signature": "84ea5887cff4978d",
+    "trainingNet": 97302.12338661621,
+    "trainingMinuteDrawdown": 19533.832082292287
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "17-da351e418a",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 68,
+     "intradayLossBuffer": 1,
+     "invalidationBuffer": 51,
+     "reboundDepthSlope": 160
+    },
+    "description": "X=21.5% Y=0.4% stop=7.3% hold=3 L=68 buffer=0.1% inv=5.1% slope=16.0%",
+    "signature": "cbe65a4667dd5969",
+    "trainingNet": 100684.08538252227,
+    "trainingMinuteDrawdown": 19517.356372384398
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "17-f9810bf92f",
+    "params": {
+     "targetPercentChange": 299,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 37,
+     "maximumHoldDays": 7,
+     "tickWindowSize": 162,
+     "intradayLossBuffer": 4,
+     "invalidationBuffer": 47,
+     "reboundDepthSlope": 0
+    },
+    "description": "X=29.9% Y=0.5% stop=3.7% hold=7 L=162 buffer=0.4% inv=4.7% slope=0.0%",
+    "signature": "9d1a8ebadd37ca85",
+    "trainingNet": 36492.96834257671,
+    "trainingMinuteDrawdown": 9049.86180051549
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "17-118e357b14",
+    "params": {
+     "targetPercentChange": 215,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 14,
+     "tickWindowSize": 65,
+     "intradayLossBuffer": 11,
+     "invalidationBuffer": 54,
+     "reboundDepthSlope": 382
+    },
+    "description": "X=21.5% Y=0.4% stop=3.1% hold=14 L=65 buffer=1.1% inv=5.4% slope=38.2%",
+    "signature": "5ccfdf13de70039b",
+    "trainingNet": 40759.70640763459,
+    "trainingMinuteDrawdown": 9521.419461738686
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "17-82dcc595f6",
+    "params": {
+     "targetPercentChange": 209,
+     "trailingBuyPercentage": 79,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 7,
+     "tickWindowSize": 117,
+     "intradayLossBuffer": 2,
+     "invalidationBuffer": 16,
+     "reboundDepthSlope": 339
+    },
+    "description": "X=20.9% Y=7.9% stop=3.2% hold=7 L=117 buffer=0.2% inv=1.6% slope=33.9%",
+    "signature": "192c1d701dc75cdb",
+    "trainingNet": 18541.713974613882,
+    "trainingMinuteDrawdown": 8550.784912307952
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "17-bff2757412",
+    "params": {
+     "targetPercentChange": 235,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 121,
+     "maximumHoldDays": 18,
+     "tickWindowSize": 79,
+     "intradayLossBuffer": 14,
+     "invalidationBuffer": 14,
+     "reboundDepthSlope": 11
+    },
+    "description": "X=23.5% Y=0.1% stop=12.1% hold=18 L=79 buffer=1.4% inv=1.4% slope=1.1%",
+    "signature": "79e7f8b928aceb1a",
+    "trainingNet": 99028.32823589093,
+    "trainingMinuteDrawdown": 32037.806681800335
+   }
+  ],
+  "invalidationStaged": [
+   {
+    "rank": 1,
+    "category": "profit",
+    "id": "18-f9ab2f0367",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 142,
+     "maximumHoldDays": 14,
+     "tickWindowSize": 65,
+     "intradayLossBuffer": 27,
+     "invalidationBuffer": 14,
+     "initialFraction": 85,
+     "addTrigger": 5
+    },
+    "description": "X=23.7% Y=0.1% stop=14.2% hold=14 L=65 buffer=2.7% inv=1.4% first=85% add=0.5%",
+    "signature": "75473ae932b21435",
+    "trainingNet": 135823.301305614,
+    "trainingMinuteDrawdown": 34768.83270428479
+   },
+   {
+    "rank": 2,
+    "category": "profit",
+    "id": "18-34448e33cb",
+    "params": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 4,
+     "tickWindowSize": 70,
+     "intradayLossBuffer": 25,
+     "invalidationBuffer": 14,
+     "initialFraction": 85,
+     "addTrigger": 5
+    },
+    "description": "X=23.7% Y=0.1% stop=7.3% hold=4 L=70 buffer=2.5% inv=1.4% first=85% add=0.5%",
+    "signature": "52aaccf90bb3406b",
+    "trainingNet": 96470.83084589826,
+    "trainingMinuteDrawdown": 20074.357398188964
+   },
+   {
+    "rank": 3,
+    "category": "profit",
+    "id": "18-173f8b0135",
+    "params": {
+     "targetPercentChange": 248,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 141,
+     "maximumHoldDays": 9,
+     "tickWindowSize": 82,
+     "intradayLossBuffer": 15,
+     "invalidationBuffer": 14,
+     "initialFraction": 80,
+     "addTrigger": 98
+    },
+    "description": "X=24.8% Y=0.1% stop=14.1% hold=9 L=82 buffer=1.5% inv=1.4% first=80% add=9.8%",
+    "signature": "08f4dea4123b2d25",
+    "trainingNet": 93139.30711593328,
+    "trainingMinuteDrawdown": 28815.86792641779
+   },
+   {
+    "rank": 4,
+    "category": "balanced",
+    "id": "18-9b11185f4e",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 17,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 21,
+     "tickWindowSize": 68,
+     "intradayLossBuffer": 18,
+     "invalidationBuffer": 48,
+     "initialFraction": 85,
+     "addTrigger": 9
+    },
+    "description": "X=20.0% Y=1.7% stop=3.0% hold=21 L=68 buffer=1.8% inv=4.8% first=85% add=0.9%",
+    "signature": "21e1359f41a21673",
+    "trainingNet": 74972.17982587976,
+    "trainingMinuteDrawdown": 11952.580063780719
+   },
+   {
+    "rank": 5,
+    "category": "balanced",
+    "id": "18-bcfb053ec0",
+    "params": {
+     "targetPercentChange": 244,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 79,
+     "intradayLossBuffer": 25,
+     "invalidationBuffer": 14,
+     "initialFraction": 85,
+     "addTrigger": 5
+    },
+    "description": "X=24.4% Y=0.1% stop=7.3% hold=3 L=79 buffer=2.5% inv=1.4% first=85% add=0.5%",
+    "signature": "affce05fa3e40bca",
+    "trainingNet": 70701.47589554322,
+    "trainingMinuteDrawdown": 14712.55107635366
+   },
+   {
+    "rank": 6,
+    "category": "balanced",
+    "id": "18-edcb2b57a7",
+    "params": {
+     "targetPercentChange": 213,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 13,
+     "tickWindowSize": 80,
+     "intradayLossBuffer": 14,
+     "invalidationBuffer": 14,
+     "initialFraction": 70,
+     "addTrigger": 91
+    },
+    "description": "X=21.3% Y=0.2% stop=7.3% hold=13 L=80 buffer=1.4% inv=1.4% first=70% add=9.1%",
+    "signature": "a94fbb020884b905",
+    "trainingNet": 76482.30938012537,
+    "trainingMinuteDrawdown": 16544.662457669227
+   },
+   {
+    "rank": 7,
+    "category": "low-DD",
+    "id": "18-4b904b4646",
+    "params": {
+     "targetPercentChange": 200,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 15,
+     "tickWindowSize": 68,
+     "intradayLossBuffer": 15,
+     "invalidationBuffer": 49,
+     "initialFraction": 60,
+     "addTrigger": 65
+    },
+    "description": "X=20.0% Y=1.8% stop=3.1% hold=15 L=68 buffer=1.5% inv=4.9% first=60% add=6.5%",
+    "signature": "c97482d1293aecf8",
+    "trainingNet": 37760.447330982795,
+    "trainingMinuteDrawdown": 7007.118625826538
+   },
+   {
+    "rank": 8,
+    "category": "low-DD",
+    "id": "18-88e972457f",
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 40,
+     "maximumHoldDays": 19,
+     "tickWindowSize": 65,
+     "intradayLossBuffer": 20,
+     "invalidationBuffer": 55,
+     "initialFraction": 55,
+     "addTrigger": 77
+    },
+    "description": "X=21.6% Y=0.5% stop=4.0% hold=19 L=65 buffer=2.0% inv=5.5% first=55% add=7.7%",
+    "signature": "959758e9897a29ff",
+    "trainingNet": 35741.859428673495,
+    "trainingMinuteDrawdown": 7454.472384585497
+   },
+   {
+    "rank": 9,
+    "category": "Pareto-diverse",
+    "id": "18-2193f0b980",
+    "params": {
+     "targetPercentChange": 269,
+     "trailingBuyPercentage": 18,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 16,
+     "tickWindowSize": 140,
+     "intradayLossBuffer": 10,
+     "invalidationBuffer": 1,
+     "initialFraction": 10,
+     "addTrigger": 95
+    },
+    "description": "X=26.9% Y=1.8% stop=3.2% hold=16 L=140 buffer=1.0% inv=0.1% first=10% add=9.5%",
+    "signature": "0e9508c6bf6d3c77",
+    "trainingNet": 913.974504716783,
+    "trainingMinuteDrawdown": 1708.2342895746178
+   },
+   {
+    "rank": 10,
+    "category": "Pareto-diverse",
+    "id": "18-5b8636879d",
+    "params": {
+     "targetPercentChange": 242,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 125,
+     "maximumHoldDays": 15,
+     "tickWindowSize": 78,
+     "intradayLossBuffer": 14,
+     "invalidationBuffer": 14,
+     "initialFraction": 80,
+     "addTrigger": 97
+    },
+    "description": "X=24.2% Y=0.2% stop=12.5% hold=15 L=78 buffer=1.4% inv=1.4% first=80% add=9.7%",
+    "signature": "c92966ce136a2dae",
+    "trainingNet": 88856.17334632011,
+    "trainingMinuteDrawdown": 29747.342208998216
+   }
+  ]
+ },
+ "freezeHash": "695568752f248561becd83ebc6c147b96d148991039704353b79b7cde83b41af"
+}
