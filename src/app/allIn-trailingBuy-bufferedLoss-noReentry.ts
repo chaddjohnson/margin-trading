@@ -516,9 +516,9 @@ export const runAllIn = async ({
     throw new Error("The stop fill must be 'stop' or 'next-open'");
   }
 
-  const targetPercentChange = targetPercentChangeOption ?? 0.2; // X: arm after a >=10% decline
-  const trailingBuyPercentage = trailingBuyPercentageOption ?? 0.005; // Y: buy after a >=3% recovery from the armed low
-  const intradayLossBuffer = intradayLossBufferOption ?? 0.002; // 0.5% of the investment: $500 on $100,000
+  const targetPercentChange = targetPercentChangeOption ?? 0.216; // X: arm after a >=21.6% decline
+  const trailingBuyPercentage = trailingBuyPercentageOption ?? 0.003; // Y: buy after a >=0.3% recovery from the armed low
+  const intradayLossBuffer = intradayLossBufferOption ?? 0.029; // 2.9% of the investment: $2,900 on $100,000
 
   if (!(targetPercentChange > 0 && targetPercentChange < 1)) {
     throw new Error(`The target percent change ${targetPercentChange} must be between 0 and 1`);
@@ -537,11 +537,11 @@ export const runAllIn = async ({
   const file = optional(dataFile) ?? `data/${symbol}/${symbol}-2016-2025-1-minute.csv`;
   const allSessions = groupMarketSessions(await loadCsvMinuteBacktestData(symbol, file));
   const sessions = allSessions.filter((session) => session.time >= startTimestamp && session.time <= endTimestamp);
-  const tickWindowSize = 104;
+  const tickWindowSize = 74;
   const positions: BacktestPosition[] = [];
   const investmentAmount = 100000; // Margin borrowed for every position, regardless of past results
-  const trailingStopPercentage = 0.078; //  drop from the post-entry high
-  const maximumHoldDays = 11; // days before a losing position is sold
+  const trailingStopPercentage = 0.073; //  drop from the post-entry high
+  const maximumHoldDays = 8; // days before a losing position is sold
   const marginInterestRate = 0.11; // annual interest charged by Vanguard on margin
   let postEntryHigh = 0;
   let postEntryLow = 0;

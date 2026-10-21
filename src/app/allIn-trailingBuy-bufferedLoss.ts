@@ -533,9 +533,9 @@ export const runAllIn = async ({
     throw new Error("The stop fill must be 'stop' or 'next-open'");
   }
 
-  const targetPercentChange = targetPercentChangeOption ?? 0.1; // X: arm after a >=10% decline
-  const trailingBuyPercentage = trailingBuyPercentageOption ?? 0.03; // Y: buy after a >=3% recovery from the armed low
-  const intradayLossBuffer = intradayLossBufferOption ?? 0.005; // 0.5% of the investment: $500 on $100,000
+  const targetPercentChange = targetPercentChangeOption ?? 0.114; // X: arm after a >=11.4% decline
+  const trailingBuyPercentage = trailingBuyPercentageOption ?? 0.001; // Y: buy after a >=0.1% recovery from the armed low
+  const intradayLossBuffer = intradayLossBufferOption ?? 0.026; // 2.6% of the investment: $2,600 on $100,000
 
   if (!(targetPercentChange > 0 && targetPercentChange < 1)) {
     throw new Error(`The target percent change ${targetPercentChange} must be between 0 and 1`);
@@ -550,19 +550,19 @@ export const runAllIn = async ({
   }
 
   const percentName = (fraction: number) => Number((fraction * 100).toFixed(4));
-  const strategyName = `trailing-buy${percentName(targetPercentChange)}-rebound${percentName(trailingBuyPercentage)}-buffered-loss${percentName(intradayLossBuffer)}-material1-lower2-retrace38`;
   const file = optional(dataFile) ?? `data/${symbol}/${symbol}-2016-2025-1-minute.csv`;
   const allSessions = groupMarketSessions(await loadCsvMinuteBacktestData(symbol, file));
   const sessions = allSessions.filter((session) => session.time >= startTimestamp && session.time <= endTimestamp);
-  const tickWindowSize = 90;
+  const tickWindowSize = 166;
   const positions: BacktestPosition[] = [];
   const investmentAmount = 100000; // Margin borrowed for every position, regardless of past results
-  const trailingStopPercentage = 0.08; //  drop from the post-entry high
-  const maximumHoldDays = 15; // days before a losing position is sold
+  const trailingStopPercentage = 0.073; //  drop from the post-entry high
+  const maximumHoldDays = 10; // days before a losing position is sold
   const marginInterestRate = 0.11; // annual interest charged by Vanguard on margin
-  const materialLossThreshold = 0.01; // price loss that makes the next entry wait for a lower price
-  const lowerPriceReentry = 0.02; // extra decline below the frozen loss-exit price required to re-arm
-  const retraceFraction = 0.38; // recovery of the reference-high-to-episode-low decline that clears it
+  const materialLossThreshold = 0.009; // price loss that makes the next entry wait for a lower price
+  const lowerPriceReentry = 0.059; // extra decline below the frozen loss-exit price required to re-arm
+  const retraceFraction = 0.473; // recovery of the reference-high-to-episode-low decline that clears it
+  const strategyName = `trailing-buy${percentName(targetPercentChange)}-rebound${percentName(trailingBuyPercentage)}-buffered-loss${percentName(intradayLossBuffer)}-material${percentName(materialLossThreshold)}-lower${percentName(lowerPriceReentry)}-retrace${percentName(retraceFraction)}`;
   let postEntryHigh = 0;
   let postEntryLow = 0;
   let stopPrice = 0;
