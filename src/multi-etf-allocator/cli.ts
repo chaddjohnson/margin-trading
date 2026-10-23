@@ -9,6 +9,8 @@
 //   stress [--only static,paths,sensitivities]   the margin and execution stress program → results/stress/
 //   illustration                            amendment A1: beyond-grid call mechanics on the real ledger (post hoc)
 //   audit-ledger                            independent recomputation of the principal runs' ledgers
+//   final-validation                        post hoc All-lowDd shadow cost / gap / March 2020 / streak checks
+//                                           → results/final-validation/ (not part of `all`)
 //   compare                                 the comparison tables from the catalogue's summaries
 //   report                                  every generated table → results/tables/
 //   forward-freeze                          FORWARD_TEST_FREEZE.json: what a genuine forward test must hold fixed
@@ -34,6 +36,7 @@ import { checkProtocolFrozen, freezeProtocol, writeForwardFreeze } from './freez
 import { runFixedParity, runPortfolioParity } from './parity.ts';
 import { renderReports } from './report.ts';
 import { allocatorConfig, catalogue, runCatalogue, writeSummaries } from './scenarios.ts';
+import { runFinalValidation } from './finalValidation.ts';
 import { runIllustration } from './illustration.ts';
 import { runStress } from './stress.ts';
 import { runAllocator } from './engine.ts';
@@ -143,6 +146,10 @@ export const run = async (args: string[]) => {
     case 'stress':
       await requireFrozen();
       await runStress(await universeAll(), option(args, 'only')?.split(','));
+      break;
+    case 'final-validation':
+      await requireFrozen();
+      await runFinalValidation(await universeAll());
       break;
     case 'compare':
     case 'report':
