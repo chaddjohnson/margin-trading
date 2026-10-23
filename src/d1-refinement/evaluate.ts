@@ -30,6 +30,7 @@ export interface EvalSpec {
   armStart: number;
   endIndex: number;
   segments: Segment[]; // segments[0] is the main window (its trades define the phenotype)
+  costPerSide?: number; // optional transaction cost per side (engine RunSettings); undefined: none
 }
 
 export interface SegmentSummary {
@@ -286,7 +287,8 @@ export const evaluateCandidate = (
       investment: investmentAmount,
       firstIndex: 0,
       armStart: spec.armStart,
-      endIndex: spec.endIndex
+      endIndex: spec.endIndex,
+      costPerSide: spec.costPerSide
     },
     detail
   );

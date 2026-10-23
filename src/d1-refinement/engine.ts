@@ -99,6 +99,12 @@ export interface RunSettings {
   firstIndex: number;
   armStart: number;
   endIndex: number;
+  // Optional transaction cost per side as a fraction of the fill (0.0005 = 5 bps), for the cost sensitivities of
+  // the multi-ETF program: a buy fills at the observed price x (1 + cost), a sale at the observed price x (1 - cost),
+  // and every net-profit test (stop eligibility, maximum hold, buffered loss) counts the sale's cost. Levels (the
+  // trailing high, the stop, the continuation high) stay on observed prices. Undefined or 0: the files' behaviour,
+  // bit for bit (every factor is exactly 1).
+  costPerSide?: number;
 }
 
 export interface Trade {
@@ -107,7 +113,8 @@ export interface Trade {
   entryIndex: number;
   entryBar: number;
   entryTime: number;
-  entryPrice: number;
+  entryPrice: number; // the effective fill: the observed price x (1 + costPerSide)
+  entryPriceObserved: number; // the observed trade price
   entryExecution: ExecutionPrice;
   entryTimestamp: number; // the fill session's midnight UTC
   decisionTime: number;
@@ -125,7 +132,8 @@ export interface Trade {
   exitIndex: number; // -1 while open
   exitBar: number;
   exitTime: number;
-  exitPrice: number;
+  exitPrice: number; // the effective fill: the observed price x (1 - costPerSide)
+  exitPriceObserved: number;
   exitExecution: ExecutionPrice | '';
   reason: ExitReason | 'open';
   exitStopPrice: number; // the trailing stop level at the exit (or the end)
@@ -289,12 +297,13 @@ export class ReferenceLowCache {
 export const createExitEvaluator = (
   ds: Dataset,
   params: Params,
-  settings: Pick<RunSettings, 'stopFill' | 'marginInterestRate'>,
+  settings: Pick<RunSettings, 'stopFill' | 'marginInterestRate' | 'costPerSide'>,
   policy: StopPolicy,
   stopTrace?: StopTraceRow[]
 ) => {
   const { trailingStopPercentage, maximumHoldDays, intradayLossBuffer, activationGain, earlyStop } = params;
   const { stopFill, marginInterestRate } = settings;
+  const sellFactor = 1 - (settings.costPerSide ?? 0);
   const { sTime, sCloseTime, sOpen, sClosingPrint, sBarStart, sBarCount, bTime, bOpen, bLow, bClose, sHigh, sLow } = ds;
 
   if (policy === 'gross' && !(activationGain >= 0)) {
@@ -357,7 +366,7 @@ export const createExitEvaluator = (
   const onEntry = (trade: Trade, s: number, tradeIndex: number) => {
     const start = sBarStart[s]!;
     const count = sBarCount[s]!;
-    let high = Math.max(trade.entryPrice, ds.sClose[s]!);
+    let high = Math.max(trade.entryPriceObserved, ds.sClose[s]!);
 
     for (let k = trade.entryBar; k < count; k++) {
       high = Math.max(high, ds.bHigh[start + k]!);
@@ -399,7 +408,7 @@ export const createExitEvaluator = (
     const interest = trade.investment * marginInterestRate * ((sTime[s]! - trade.entryTimestamp) / secondsPerYear);
     const start = sBarStart[s]!;
     const count = sBarCount[s]!;
-    const profitAt = (price: number) => trade.shares * price - trade.investment - interest;
+    const profitAt = (price: number) => trade.shares * price * sellFactor - trade.investment - interest;
     const profitAtStop = profitAt(stopPrice);
     let active: boolean;
     let effectiveStop = stopPrice;
@@ -480,7 +489,7 @@ export const createExitEvaluator = (
           stopPrice,
           effectiveStop,
           interest,
-          breakeven: (trade.investment + interest) / trade.shares,
+          breakeven: (trade.investment + interest) / (trade.shares * sellFactor),
           profitAtStop,
           active,
           latched,
@@ -609,6 +618,7 @@ export const createExitEvaluator = (
     evaluate,
     afterSession,
     close,
+    sellFactor,
     get stopPrice() {
       return stopPrice;
     },
@@ -627,6 +637,7 @@ export const newTrade = (
 ): Trade => ({
   setupId: 0,
   kind: 'deep',
+  entryPriceObserved: fields.entryPrice,
   entryTime: NaN,
   entryExecution: 'first trade after decision',
   entryTimestamp: NaN,
@@ -645,6 +656,7 @@ export const newTrade = (
   exitBar: -1,
   exitTime: NaN,
   exitPrice: NaN,
+  exitPriceObserved: NaN,
   exitExecution: '',
   reason: 'open',
   exitStopPrice: NaN,
@@ -658,11 +670,12 @@ export const newTrade = (
   ...fields
 });
 
-const closeTrade = (trade: Trade, s: number, exit: ExitDecision, stopPrice: number) => {
+const closeTrade = (trade: Trade, s: number, exit: ExitDecision, stopPrice: number, sellFactor = 1) => {
   trade.exitIndex = s;
   trade.exitBar = exit.barIndex;
   trade.exitTime = exit.time;
-  trade.exitPrice = exit.price;
+  trade.exitPrice = exit.price * sellFactor;
+  trade.exitPriceObserved = exit.price;
   trade.exitExecution = exit.execution;
   trade.reason = exit.reason;
   trade.exitStopPrice = stopPrice;
@@ -677,15 +690,17 @@ export const replayPosition = (
   ds: Dataset,
   entry: { entryIndex: number; entryBar: number; entryPrice: number },
   params: Params,
-  settings: Pick<RunSettings, 'stopFill' | 'marginInterestRate' | 'investment'> & { endIndex: number },
+  settings: Pick<RunSettings, 'stopFill' | 'marginInterestRate' | 'investment' | 'costPerSide'> & { endIndex: number },
   policy: StopPolicy
 ) => {
   const stopTrace: StopTraceRow[] = [];
   const exits = createExitEvaluator(ds, params, settings, policy, stopTrace);
+  const buyFactor = 1 + (settings.costPerSide ?? 0);
   const trade = newTrade({
     entryIndex: entry.entryIndex,
     entryBar: entry.entryBar,
-    entryPrice: entry.entryPrice,
+    entryPrice: entry.entryPrice * buyFactor,
+    entryPriceObserved: entry.entryPrice,
     entryTime: ds.bTime[ds.sBarStart[entry.entryIndex]! + entry.entryBar] ?? ds.sCloseTime[entry.entryIndex]!,
     entryTimestamp: ds.sTime[entry.entryIndex]!,
     investment: settings.investment
@@ -697,7 +712,7 @@ export const replayPosition = (
     const exit = exits.evaluate(s);
 
     if (exit) {
-      closeTrade(trade, s, exit, exits.stopPrice);
+      closeTrade(trade, s, exit, exits.stopPrice, exits.sellFactor);
       break;
     }
 
@@ -774,6 +789,8 @@ export const simulate = (
     stopSwitchOffSessions: 0
   };
   const exits = createExitEvaluator(ds, params, settings, stopPolicy, stopTrace);
+  const buyFactor = 1 + (settings.costPerSide ?? 0);
+  const { sellFactor } = exits;
 
   // The open position.
   let position: Trade | undefined;
@@ -1045,7 +1062,8 @@ export const simulate = (
       }
 
       if (fillBar >= 0 && setupStatus === 2) {
-        const price = exits.priceAt(s, fillBar);
+        const observed = exits.priceAt(s, fillBar);
+        const price = observed * buyFactor;
         const trade = newTrade({
           setupId,
           kind: setupKind,
@@ -1053,6 +1071,7 @@ export const simulate = (
           entryBar: fillBar,
           entryTime: exits.timeAt(s, fillBar),
           entryPrice: price,
+          entryPriceObserved: observed,
           entryExecution: fillExecution,
           entryTimestamp: sTime[s]!,
           decisionTime: signalTime,
@@ -1077,7 +1096,7 @@ export const simulate = (
         if (setupRecord) {
           setupRecord.fillIndex = s;
           setupRecord.fillTime = trade.entryTime;
-          setupRecord.fillPrice = price;
+          setupRecord.fillPrice = observed;
           setupRecord.carriedOvernight = signalCarried;
         }
 
@@ -1102,9 +1121,9 @@ export const simulate = (
           openAtStart.investment *
           settings.marginInterestRate *
           ((sTime[s]! - openAtStart.entryTimestamp) / secondsPerYear);
-        const profit = openAtStart.shares * exit.price - openAtStart.investment - interest;
+        const profit = openAtStart.shares * exit.price * sellFactor - openAtStart.investment - interest;
 
-        closeTrade(openAtStart, s, exit, exits.stopPrice);
+        closeTrade(openAtStart, s, exit, exits.stopPrice, sellFactor);
         exits.close();
         position = undefined;
 
