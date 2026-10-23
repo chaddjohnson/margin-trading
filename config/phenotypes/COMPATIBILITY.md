@@ -57,5 +57,6 @@ guard) and data file.
 | `d1Refinement` | research | no | research program command line |
 | `sharedMargin` | research | no | research program command line |
 | `multiEtfD1` | research | no | research program command line |
+| `multiEtfAllocator` | research | no | research program command line |
 | `intradayStudy` | research | no | research program command line |
 | `phenotypes` | utility | no | the phenotype registry utility itself (list, validate, matrix) |
