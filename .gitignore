@@ -22,3 +22,13 @@ src/recovery-eligibility/generated/
 src/d1-refinement/generated/
 # D1-refinement program: per-fold training CSVs of the local studies (29 MB, regenerate with a2-local / stop-variants / no-dip)
 research/vgt-d1-refinement/results/**/*_training.csv
+
+# Shared-margin portfolio program: per-minute refused-signal logs (hold semantics logs every re-tested minute; ~60 MB)
+research/vgt-shared-margin-portfolio/results/scenarios/*/signals_minutes.csv
+research/vgt-shared-margin-portfolio/results/stress/*/signals_minutes.csv
+# Shared-margin portfolio program: per-session ledgers of the sensitivity and shock re-runs (regenerate with
+# `npm run shared-margin -- run` / `stress`; the principal scenarios' daily.csv and ledger.csv are kept)
+research/vgt-shared-margin-portfolio/results/stress/*/daily.csv
+research/vgt-shared-margin-portfolio/results/stress/*/ledger.csv
+research/vgt-shared-margin-portfolio/results/scenarios/B-*/daily.csv
+research/vgt-shared-margin-portfolio/results/scenarios/B2-*/daily.csv
