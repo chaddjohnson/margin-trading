@@ -5,12 +5,14 @@
 import { createHash } from 'node:crypto';
 import fs from 'fs-extra';
 import type { MarketSession, Tick } from '#types';
-import { groupMarketSessions, loadCsvMinuteBacktestData } from '#lib';
+import { groupMarketSessions, loadCsvMinuteBacktestData, optimizationDatasetFile } from '#lib';
 import { type Dataset, fixtureDataset } from '../four-family/data.ts';
 
+// The minute files are the training partitions (src/lib/dataset.ts). The research ran on the legacy
+// data/<SYMBOL>/<SYMBOL>-2016-2025-1-minute.csv files, whose hashes below are still required.
 export const files = {
-  vgtMinute: 'data/VGT/VGT-2016-2025-1-minute.csv',
-  voogMinute: 'data/VOOG/VOOG-2016-2025-1-minute.csv',
+  vgtMinute: optimizationDatasetFile('VGT'),
+  voogMinute: optimizationDatasetFile('VOOG'),
   distributions: 'research/risk-management/vgt-portfolio-margin/data/distributions.csv',
   vgtDaily: 'data/VGT/VGT-2016-2026.csv',
   voogDaily: 'data/VOOG/VOOG-2016-2026.csv'

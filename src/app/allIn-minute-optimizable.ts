@@ -75,7 +75,7 @@
 
 import type { BacktestPosition, MarketSession } from '#types';
 import { PositionType } from '#types';
-import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData } from '#lib';
+import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData, resolveDataset, selectDataset } from '#lib';
 import fs from 'fs-extra';
 
 const secondsPerMinute = 60;
@@ -413,7 +413,7 @@ export const runAllInMinute = async ({
   }
 
   const strategyName = 'material1-lower2-retrace38';
-  const file = optional(dataFile) ?? `data/${symbol}/${symbol}-2016-2025-1-minute.csv`;
+  const file = resolveDataset(symbol, dataFile).file;
   const allSessions = preloadedSessions ?? groupMarketSessions(await loadCsvMinuteBacktestData(symbol, file));
   // With warmup, earlier sessions are kept as reference-high history; trading starts at startIndex.
   const sessions = allSessions.filter(
@@ -1144,12 +1144,14 @@ export const runAllInMinute = async ({
   };
 };
 
-// Run with `npm run app allIn [symbol] [start date] [end date] [data file] [output dir] [stop fill]`, for
-// example `npm run app allIn VGT 2016-10-07 2025-10-13 data/VGT/VGT-2016-2025-1-minute.csv`. The symbol
-// defaults to VGT, the inclusive YYYY-MM-DD New York session dates default to the whole data file, and the
-// data file defaults to the symbol's 2016-2025 one-minute file. Pass '-' to leave an earlier argument at its
-// default. When an output directory is given, the run also writes trades.csv, daily.csv, states.csv,
-// episodes.csv and summary.json there at full precision. The stop fill is `stop` (default) or `next-open`.
+// Run with `npm run app -- allIn-minute-optimizable [symbol] [partition] [start date] [end date] [data file] [output dir] [stop
+// fill]`, for example `npm run app -- allIn-minute-optimizable VGT holdout` or `npm run app -- allIn-minute-optimizable VGT 2016-10-07 2023-12-29`.
+// The symbol defaults to VGT and the inclusive YYYY-MM-DD New York session dates to the whole data file. The
+// dataset is the partition (training, holdout, final or all; src/lib/dataset.ts), which src/app.ts moves into
+// the data-file slot, or an explicit data file; without either it is data/<symbol>/training/data.csv. Pass '-'
+// to leave an earlier argument at its default. When an output directory is given, the run also writes
+// trades.csv, daily.csv, states.csv, episodes.csv and summary.json there at full precision. The stop fill is
+// `stop` (default) or `next-open`.
 export default async (
   symbol = 'VGT',
   startDate?: string,
@@ -1158,5 +1160,12 @@ export default async (
   outDir?: string,
   stopFillArgument?: string
 ) => {
-  await runAllInMinute({ symbol, startDate, endDate, dataFile, outDir, stopFill: stopFillArgument });
+  await runAllInMinute({
+    symbol,
+    startDate,
+    endDate,
+    dataFile: selectDataset(symbol, dataFile),
+    outDir,
+    stopFill: stopFillArgument
+  });
 };

@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
 import path from 'node:path';
-import { policyById, windows } from './constants.ts';
+import { dataFile, policyById, windows } from './constants.ts';
 import { computeRecentHighs, loadStudyData, sha256File } from './data.ts';
 import { simulate } from './engine.ts';
 import { goldenCases, runGoldenCase } from './goldenMaster.ts';
@@ -16,11 +16,10 @@ import { runStudy, windowIndexes } from './study.ts';
 
 export const studyDir = 'research/vgt-intraday-study';
 const resultsDir = path.join(studyDir, 'results');
-const dataFile = 'data/VGT/VGT-2016-2025-1-minute.csv';
 export const protectedFiles = [
   'src/app/allIn.ts',
   'src/app/allin-original.ts',
-  'data/VGT/VGT-2016-2025-1-minute.csv',
+  dataFile,
   'src/app/allIn-minute-optimizable.ts',
   'src/lib/session.ts',
   'src/lib/csv.ts'

@@ -85,8 +85,8 @@ describe('phenotype command line', () => {
 
     assert.match(app, /import \{ usesPhenotype \} from '\.\/phenotype\/detect\.ts';/);
     assert.match(app, /if \(usesPhenotype\(args\)\) \{[\s\S]*?runPhenotypeCli\(script, args\);\s*return;\s*\}/);
-    // The original dispatch follows unchanged.
+    // The original dispatch follows, with only the dataset shorthand of the strategy entry points expanded.
     assert.match(app, /const mod = await import\(`\.\/app\/\$\{script\}\.ts`\);/);
-    assert.match(app, /await fn\(\.\.\.args\);/);
+    assert.match(app, /await fn\(\.\.\.\(takesDataset\(script\) \? expandDatasetArguments\(args\) : args\)\);/);
   });
 });

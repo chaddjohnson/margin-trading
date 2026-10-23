@@ -279,6 +279,11 @@ export const incompatibleEntryPoints: IncompatibleEntryPoint[] = [
     script: 'phenotypes',
     category: 'utility',
     reason: 'the phenotype registry utility itself (list, validate, matrix)'
+  },
+  {
+    script: 'partitionData',
+    category: 'utility',
+    reason: 'the dataset partitioning script (npm run partition-data), not a strategy'
   }
 ];
 

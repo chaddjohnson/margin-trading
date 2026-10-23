@@ -1,10 +1,12 @@
 // The --phenotype command line, shared by every compatible strategy:
-//   npm run app -- <strategy> <symbol> [start date] [end date] [data file] [output dir] [stop fill]
+//   npm run app -- <strategy> <symbol> [partition] [start date] [end date] [data file] [output dir] [stop fill]
 //     --phenotype <name> [--phenotype-file <path>] [--execution <profile>]
+// The partition (training by default, holdout, final or all) or an explicit data file selects the dataset.
 // src/app.ts hands a command to `runPhenotypeCli` only when it has a --phenotype or --phenotype-file flag, so
 // every other command, and every strategy run without the flag, behaves exactly as before. The positional
 // arguments keep their meaning in the strategy file; the two that set phenotype parameters (the trailing buy
 // percentage and the intraday loss buffer) are refused alongside a phenotype.
+import { expandDatasetArguments } from '#lib';
 import { PhenotypeError } from './architectures.ts';
 import { executePhenotypeRun, planPhenotypeRun } from './run.ts';
 import { phenotypePositionals, positionalArguments } from './strategies.ts';
@@ -25,14 +27,14 @@ type FlagName = keyof typeof flags;
 const isFlag = (arg: string): arg is FlagName => arg in flags;
 
 export const parsePhenotypeArguments = (args: readonly string[]): PhenotypeArguments => {
-  const positional: string[] = [];
+  const positionalArgs: string[] = [];
   const values: Partial<Record<(typeof flags)[FlagName], string>> = {};
 
   for (let index = 0; index < args.length; index++) {
     const arg = args[index]!;
 
     if (!arg.startsWith('--')) {
-      positional.push(arg);
+      positionalArgs.push(arg);
       continue;
     }
 
@@ -63,6 +65,15 @@ export const parsePhenotypeArguments = (args: readonly string[]): PhenotypeArgum
     }
 
     values[key] = value;
+  }
+
+  // A dataset partition after the symbol moves into the data-file slot (src/lib/dataset.ts).
+  let positional: string[];
+
+  try {
+    positional = expandDatasetArguments(positionalArgs);
+  } catch (error) {
+    throw new PhenotypeError((error as Error).message);
   }
 
   if (values.phenotype === undefined) {

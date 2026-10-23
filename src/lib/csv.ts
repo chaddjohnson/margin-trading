@@ -2,6 +2,55 @@ import type { Tick } from '#types';
 import fs from 'fs-extra';
 import { parse } from 'csv-parse';
 
+// The canonical market-data format, that of every data/<SYMBOL>/<partition>/data.csv (src/lib/dataset.ts):
+// one-minute bars exported from Alpaca, comma-delimited, no header row, in this column order. The timestamp
+// is ISO 8601 UTC for the start of the minute and may be quoted, for example
+// "2016-01-04T14:30:00Z",106.31,106.31,105.77,105.77,21114
+export const minuteCsvDelimiter = ',';
+export const ohlcvCsvColumns = ['time', 'open', 'high', 'low', 'close', 'volume'] as const;
+
+// The legacy daily format, `YYYY-MM-DD|open|high|low|close|volume`, kept only for the inputs still written in
+// it: the Stooq daily cache (data/stooq/processed/, src/optimizer/data/) and the trailing-buy research's daily
+// files (data/trailing-buy-entry/, src/trailing-buy/). Minute data is never pipe-delimited.
+export const legacyDailyCsvDelimiter = '|';
+
+const numberPattern = /^-?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/;
+
+// One minute bar from its comma-separated fields; `where` locates the row in error messages. Numeric text is
+// read with parseFloat, so a value is exactly the number its text denotes.
+export const parseMinuteBar = (fields: readonly string[], where: string): Tick => {
+  if (fields.length !== ohlcvCsvColumns.length) {
+    const hint = fields.some((field) => field.includes(legacyDailyCsvDelimiter))
+      ? ': the row looks pipe-delimited, but minute data is comma-delimited'
+      : '';
+
+    throw new Error(
+      `${where}: expected ${ohlcvCsvColumns.length} fields (${ohlcvCsvColumns.join(', ')}), found ${fields.length}${hint}`
+    );
+  }
+
+  const [timeText, ...numbers] = fields as [string, ...string[]];
+  // An ISO timestamp without an offset would be parsed in the local time zone, so insist on UTC.
+  const time = timeText.endsWith('Z') ? Date.parse(timeText) / 1000 : NaN;
+
+  if (Number.isNaN(time)) {
+    throw new Error(
+      `${where}: timestamp ${JSON.stringify(timeText)} is not an ISO 8601 UTC time (the files have no header row)`
+    );
+  }
+
+  numbers.forEach((text, index) => {
+    if (!numberPattern.test(text)) {
+      throw new Error(`${where}: ${ohlcvCsvColumns[index + 1]} ${JSON.stringify(text)} is not a number`);
+    }
+  });
+
+  const [open, high, low, close, volume] = numbers.map(parseFloat) as [number, number, number, number, number];
+
+  return { time, open, high, low, close, volume, trades: NaN };
+};
+
+// Reads the legacy pipe-delimited daily format (see legacyDailyCsvDelimiter).
 export const loadCsvBacktestData = async (symbol: string, filename: string): Promise<Tick[]> => {
   return new Promise((resolve, reject) => {
     try {
@@ -25,8 +74,8 @@ export const loadCsvBacktestData = async (symbol: string, filename: string): Pro
 
       const parser = parse(
         {
-          delimiter: '|',
-          columns: ['time', 'open', 'high', 'low', 'close', 'volume']
+          delimiter: legacyDailyCsvDelimiter,
+          columns: [...ohlcvCsvColumns]
         },
         processor
       );
@@ -38,35 +87,25 @@ export const loadCsvBacktestData = async (symbol: string, filename: string): Pro
   });
 };
 
-// Loads one-minute bars exported from Alpaca: comma-separated, no header, an ISO 8601 UTC timestamp for
-// the start of each minute, then open, high, low, close and volume. The file has no trade counts. Rows
-// are streamed rather than collected first, and must be in strictly ascending time order.
+// Loads a file in the canonical minute format (see ohlcvCsvColumns). The file has no trade counts. Every row
+// is data, the first included; rows are streamed rather than collected first, and must be in strictly
+// ascending time order. Quoted fields are parsed as CSV, so a comma inside quotes never splits a field.
 export const loadCsvMinuteBacktestData = async (symbol: string, filename: string): Promise<Tick[]> => {
-  const parser = fs.createReadStream(filename).pipe(
-    parse({
-      columns: ['time', 'open', 'high', 'low', 'close', 'volume']
-    })
-  );
+  const parser = fs
+    .createReadStream(filename)
+    .pipe(parse({ delimiter: minuteCsvDelimiter, relax_column_count: true, info: true }));
   const ticks: Tick[] = [];
 
-  for await (const record of parser) {
-    // An ISO timestamp without an offset would be parsed in the local time zone, so insist on UTC.
-    const time = record.time.endsWith('Z') ? Date.parse(record.time) / 1000 : NaN;
+  for await (const { record, info } of parser as AsyncIterable<{ record: string[]; info: { lines: number } }>) {
+    const where = `${filename}:${info.lines}`;
+    const tick = parseMinuteBar(record, where);
     const previous = ticks.at(-1);
 
-    if (Number.isNaN(time) || (previous && time <= previous.time)) {
-      throw new Error(`${filename}: timestamp ${record.time} is not UTC or not after the previous row`);
+    if (previous && tick.time <= previous.time) {
+      throw new Error(`${where}: timestamp ${record[0]} is not after the previous row`);
     }
 
-    ticks.push({
-      time,
-      open: parseFloat(record.open),
-      high: parseFloat(record.high),
-      low: parseFloat(record.low),
-      close: parseFloat(record.close),
-      volume: parseFloat(record.volume),
-      trades: NaN
-    });
+    ticks.push(tick);
   }
 
   return ticks;

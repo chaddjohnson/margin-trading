@@ -5,6 +5,7 @@
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import fs from 'fs-extra';
+import { optimizationDatasetFile } from '#lib';
 
 export const symbols = ['VGT', 'XBI', 'XRT', 'KRE'] as const;
 export type Sym = (typeof symbols)[number];
@@ -24,7 +25,9 @@ export const d1Source = 'src/app/allIn-trailingBuy-postExitContinuation.ts';
 export const stageDir = (...parts: string[]) => path.join(resultsRoot, ...parts);
 
 export const files = {
-  minute: (symbol: string) => `data/${symbol}/${symbol}-2016-2025-1-minute.csv`,
+  // The training partitions (src/lib/dataset.ts); the research ran on the legacy
+  // data/<SYMBOL>/<SYMBOL>-2016-2025-1-minute.csv files, whose hashes the freeze still requires.
+  minute: (symbol: string) => optimizationDatasetFile(symbol),
   distributions: 'research/risk-management/vgt-portfolio-margin/data/distributions.csv',
   // Audited for existence and coverage only (PROTOCOL.md §1): no strategy is evaluated on them.
   laterDaily: ['data/VGT/VGT-2026.csv', 'data/VGT/VGT-2016-2026.csv', 'data/VOOG/VOOG-2016-2026.csv']

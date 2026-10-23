@@ -1,3 +1,4 @@
+import { nyseCalendarCoverage as earlyCloseCoverage, nyseEarlyCloses as earlyCloses } from './calendar.ts';
 import type { MarketSession, Tick } from '#types';
 
 const secondsPerMinute = 60;
@@ -7,33 +8,9 @@ const openMinute = 9 * 60 + 30;
 const closeMinute = 16 * 60;
 const earlyCloseMinute = 13 * 60;
 
-// NYSE sessions that closed at 1:00 p.m. New York time. Full-day closures need no list, since they have
-// no bars. The list covers 2016 through 2025, and sessions outside that span are refused rather than
-// assumed to close at 4:00 p.m.
-const earlyCloseCoverage = { first: '2016-01-01', last: '2025-12-31' };
-const earlyCloses = new Set([
-  '2016-11-25',
-  '2017-07-03',
-  '2017-11-24',
-  '2018-07-03',
-  '2018-11-23',
-  '2018-12-24',
-  '2019-07-03',
-  '2019-11-29',
-  '2019-12-24',
-  '2020-11-27',
-  '2020-12-24',
-  '2021-11-26',
-  '2022-11-25',
-  '2023-07-03',
-  '2023-11-24',
-  '2024-07-03',
-  '2024-11-29',
-  '2024-12-24',
-  '2025-07-03',
-  '2025-11-28',
-  '2025-12-24'
-]);
+// NYSE sessions that closed at 1:00 p.m. New York time come from the calendar (src/lib/calendar.ts).
+// Full-day closures need no list, since they have no bars. Sessions outside the calendar's span are
+// refused rather than assumed to close at 4:00 p.m.
 
 const newYorkFormat = new Intl.DateTimeFormat('en-US', {
   timeZone: 'America/New_York',
@@ -96,7 +73,7 @@ export const groupMarketSessions = (minuteTicks: Tick[]): MarketSession[] => {
     }
 
     if (date < earlyCloseCoverage.first || date > earlyCloseCoverage.last) {
-      throw new Error(`No early-close calendar for ${date}; extend the calendar in src/lib/session.ts`);
+      throw new Error(`No early-close calendar for ${date}; extend the calendar in src/lib/calendar.ts`);
     }
 
     if (session?.date !== date) {

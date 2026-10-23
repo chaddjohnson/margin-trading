@@ -21,8 +21,6 @@ export interface ExecutionProfile {
   path: string;
   description?: string;
   source?: string;
-  // `{symbol}` is replaced by the symbol.
-  dataFile: string;
   // Sessions before this date never arm (the research's common eligibility); absent: the strategy's own
   // warm-up only.
   firstEligibleDate?: string;
@@ -30,7 +28,8 @@ export interface ExecutionProfile {
   marginInterestRate?: { value: number; display: string };
   stopFill?: 'stop' | 'next-open';
   periods: Period[];
-  // Expected sha256 of each symbol's data file, when known.
+  // The sha256 of each symbol's data file in the research the profile describes, when known. Runs read the dataset
+  // partitions of src/lib/dataset.ts, so a run on a different file says that it will not reproduce the research.
   dataHashes: Record<string, string>;
 }
 
@@ -39,7 +38,6 @@ const profileKeys = [
   'name',
   'description',
   'source',
-  'dataFile',
   'firstEligibleDate',
   'investmentPerEntry',
   'marginInterestRate',
@@ -73,6 +71,12 @@ export const parseExecutionProfile = (json: unknown, file: string, expectedName?
 
   const object = json as Record<string, unknown>;
 
+  if ('dataFile' in object) {
+    throw new PhenotypeError(
+      `${file}: dataFile is no longer a profile setting; runs read data/<SYMBOL>/<partition>/data.csv (src/lib/dataset.ts)`
+    );
+  }
+
   for (const key of Object.keys(object)) {
     if (!profileKeys.includes(key)) {
       const hint = closestName(key, profileKeys);
@@ -87,10 +91,6 @@ export const parseExecutionProfile = (json: unknown, file: string, expectedName?
 
   if (typeof object.name !== 'string' || (expectedName !== undefined && object.name !== expectedName)) {
     throw new PhenotypeError(`${file}: name must be "${expectedName ?? path.basename(file, '.json')}"`);
-  }
-
-  if (typeof object.dataFile !== 'string' || object.dataFile.length === 0) {
-    throw new PhenotypeError(`${file}: dataFile must be a path pattern such as "data/{symbol}/{symbol}.csv"`);
   }
 
   for (const key of ['description', 'source'] as const) {
@@ -181,7 +181,6 @@ export const parseExecutionProfile = (json: unknown, file: string, expectedName?
     path: file,
     description: object.description as string | undefined,
     source: object.source as string | undefined,
-    dataFile: object.dataFile,
     firstEligibleDate: object.firstEligibleDate as string | undefined,
     investmentPerEntry: object.investmentPerEntry as number | undefined,
     marginInterestRate,
@@ -215,6 +214,3 @@ export const readExecutionProfile = async (name: string, root = executionRoot): 
 
   return parseExecutionProfile(json, file, name);
 };
-
-export const dataFileOf = (profile: ExecutionProfile, symbol: string) =>
-  profile.dataFile.replaceAll('{symbol}', symbol);

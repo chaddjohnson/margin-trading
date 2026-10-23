@@ -31,7 +31,7 @@
 import fs from 'fs-extra';
 import path from 'node:path';
 import { formatNewYorkTime } from '#lib';
-import { loadProgramData } from '../shared-margin-portfolio/data.ts';
+import { files, loadProgramData } from '../shared-margin-portfolio/data.ts';
 import { type ScenarioResult, defaultConfig, formatTime, runScenario } from '../shared-margin-portfolio/engine.ts';
 import { adverseExcursion, toCsv } from '../shared-margin-portfolio/metrics.ts';
 import { shadowTradesOf } from '../shared-margin-portfolio/scenarios.ts';
@@ -148,7 +148,7 @@ export const runP2s = async ({
     `\nSymbol: ${symbol}, from ${ds.dates[0]} to ${lastSession}; strategies eligible from ${ds.dates[eligibilityIndex]}`
   );
   console.info(
-    `Strategy: ${config.label}; data file: data/VGT/VGT-2016-2025-1-minute.csv (sha256 ${data.hashes.vgtMinute.slice(0, 16)}…)`
+    `Strategy: ${config.label}; data file: ${files.vgtMinute} (sha256 ${data.hashes.vgtMinute.slice(0, 16)}…)`
   );
   console.info(
     solo
@@ -235,7 +235,7 @@ export const runP2s = async ({
     }));
     const summary = {
       symbol,
-      dataFile: 'data/VGT/VGT-2016-2025-1-minute.csv',
+      dataFile: files.vgtMinute,
       dataHash: data.hashes.vgtMinute,
       strategy: config.label,
       policy: config.policy,

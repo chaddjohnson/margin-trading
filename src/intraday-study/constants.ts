@@ -2,6 +2,8 @@
 // (research/vgt-intraday-study/PROTOCOL.md). The seven strategy values are the incumbent's, read from
 // src/app/allIn.ts, and are never varied. Nothing here is tuned.
 
+import { optimizationDatasetFile } from '#lib';
+
 export const secondsPerMinute = 60;
 export const secondsPerDay = 24 * 60 * 60;
 
@@ -19,7 +21,8 @@ export const incumbent = {
   retraceFraction: 0.367
 } as const;
 
-export const dataFile = 'data/VGT/VGT-2016-2025-1-minute.csv';
+// The training partition (src/lib/dataset.ts); the study ran on the legacy data/VGT/VGT-2016-2025-1-minute.csv.
+export const dataFile = optimizationDatasetFile('VGT');
 export const symbol = 'VGT';
 
 export const costLevelsBps = [0, 5, 10, 20] as const;

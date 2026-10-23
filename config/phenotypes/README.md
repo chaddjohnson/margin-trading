@@ -4,38 +4,51 @@ A phenotype is a named, symbol-specific parameter vector for a strategy architec
 version-controlled JSON; the strategy files under `src/app/` are never edited to run one.
 
 ```bash
-npm run app -- <strategy> <symbol> --phenotype <name>
+npm run app -- <strategy> <symbol> [partition] --phenotype <name>
 npm run app -- allIn-trailingBuy-postExitContinuation KRE --phenotype lowDd
+npm run app -- allIn-trailingBuy-postExitContinuation KRE all --phenotype lowDd
 ```
 
 ## Running one
 
 ```text
-npm run app -- <strategy> <symbol> [start date] [end date] [data file] [output dir] [stop fill]
+npm run app -- <strategy> <symbol> [partition] [start date] [end date] [data file] [output dir] [stop fill]
   --phenotype <name>            the phenotype in config/phenotypes/<architecture>/<symbol>.json
   [--phenotype-file <path>]     read it from another file (same format, same symbol)
   [--execution <profile>]       another config/execution/<profile>.json than the file names
 ```
 
-The positional arguments mean what they mean to the strategy (`-` leaves one unset). The trailing-buy and buffer
+The positional arguments mean what they mean to the strategy (`-` leaves one unset). The dataset is the partition
+(`training` by default, `holdout`, `final` or `all`; see the [README](../../README.md#market-data)) or an explicit
+data file. The trailing-buy and buffer
 positionals (7th and 8th) set phenotype parameters, so they are refused together with `--phenotype`. Without
 `--phenotype` every command behaves exactly as before.
 
 Before the backtest the run prints the strategy and its source file, the symbol, the phenotype and its file, every
 applied value next to the file's default, any **IGNORED** parameter, the strategy's own constants that stay at
-their file values, the dataset (with its sha256 checked against the profile), the simulated and first eligible
+their file values, the dataset and its partition (with its sha256 compared with the research file the profile
+records; a different file is flagged, since the run will not reproduce that research), the simulated and first eligible
 dates, the investment and the interest rate. The strategy then prints its usual trades and summary, and writes its
 usual `trades.csv`, `daily.csv`, `states.csv`, `episodes.csv`, `setups.csv` and `summary.json` when given an output
 directory, plus `phenotype-run.json` (the resolved run and its periods). Output into `research/` is refused.
 
 After the backtest it prints the **periods** of the one continuous run: each period of the execution profile
-(`development` through 2023-12-29, `holdout` from 2024-01-02) and `full` (from the first eligible session). Nothing
+(`development` through 2023-12-29, `holdout` from 2024-01-02 through 2025-10-16, the research's own periods) and
+`full` (from the first eligible session). A period outside the run's dataset is noted and not reported, so a
+`training` run reports development only; an `all` run's `full` includes the final partition. Nothing
 is reset at a boundary; a period's net is the change of marked equity (realized plus the open position at the
 close, net of interest) from the close before it to its last close, with the research programs' own accounting
 (`src/trailing-buy-variants/accounting.ts`). A run fails, and says so, if the strategy did not read every injected
 value.
 
 ## The verified D1 commands
+
+These figures were verified on the research's own files (`data/<SYMBOL>/<SYMBOL>-2016-2025-1-minute.csv`, each run
+to the file's end, 2025-10-13 for VGT and 2025-10-16 for the others), which are no longer in `data/`. The commands
+below now read the `training` partition, so they report development only. The comparable run on the partitions is
+`all` cut at the research's end, for example `npm run app -- allIn-trailingBuy-postExitContinuation KRE all -
+2025-10-16 --phenotype primary`; it reproduces these figures only if its bytes equal the research file's, which the
+run checks against the profile's hashes and flags when they differ.
 
 | Command | Full net | Minute DD | Development | Holdout |
 |---|---:|---:|---:|---:|
@@ -47,7 +60,7 @@ value.
 
 `src/phenotype/tests/reproduction.test.ts` checks each against its research trade by trade
 (`research/vgt-d1-refinement/results/baseline/baseline.json` for VGT, `research/multi-etf-d1/results/holdout/`
-for the others). VGT's 2024–2025 window was inspected by earlier VGT programs, so it is not a sealed holdout.
+for the others) on the research files themselves, and is skipped while they are absent. VGT's 2024–2025 window was inspected by earlier VGT programs, so it is not a sealed holdout.
 
 ## Adding a phenotype or a symbol
 
@@ -92,9 +105,10 @@ The D1 parameters and ranges are in `src/phenotype/architectures.ts`. The frozen
 
 ## Execution profiles
 
-`config/execution/<name>.json` holds what is not a phenotype: the data file pattern, `firstEligibleDate` (no
+`config/execution/<name>.json` holds what is not a phenotype: `firstEligibleDate` (no
 session before it arms; the multi-ETF research's common eligibility is 2017-06-15), `investmentPerEntry`,
-`marginInterestRate`, `stopFill`, the reporting `periods` and the expected data hashes. The investment and the rate
+`marginInterestRate`, `stopFill`, the reporting `periods` and the sha256 of the research's data files. The dataset
+itself comes from the command line (`src/lib/dataset.ts`); a profile with a `dataFile` is refused. The investment and the rate
 are injected into the strategy's own constants. Command-line positionals (dates, data file, output, stop fill)
 override the profile.
 

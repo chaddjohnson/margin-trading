@@ -194,7 +194,10 @@ describe('run planning', () => {
     assert.equal(lowDd.values.tickWindowSize, 230);
     assert.equal(kre.values.trailingBuyPercentage, 0.028);
     assert.equal(lowDd.values.trailingBuyPercentage, 0.027);
-    assert.equal(kre.dataFile.value, 'data/KRE/KRE-2016-2025-1-minute.csv');
+    assert.deepEqual(kre.dataFile, {
+      value: 'data/KRE/training/data.csv',
+      source: 'KRE training partition (the default)'
+    });
     assert.equal(kre.firstEligibleDate, '2017-06-15');
     assert.equal(kre.values.investmentAmount, 100000);
     assert.equal(kre.values.marginInterestRate, 0.11);
@@ -241,5 +244,12 @@ describe('run planning', () => {
     assert.deepEqual(plan.stopFill, { value: 'next-open', source: 'command line' });
     assert.deepEqual(plan.dataFile, { value: 'x.csv', source: 'command line' });
     assert.equal(plan.outDir, undefined);
+
+    for (const partition of ['training', 'holdout', 'final', 'all']) {
+      assert.deepEqual((await planPhenotypeRun({ ...request, dataFile: partition })).dataFile, {
+        value: `data/KRE/${partition}/data.csv`,
+        source: `KRE ${partition} partition from the command line`
+      });
+    }
   });
 });

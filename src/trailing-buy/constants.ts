@@ -1,6 +1,8 @@
 // Fixed settings of the trailing-buy entry study (research/trailing-buy-entry). Everything here is
 // pre-registered in PROTOCOL.md; a change needs a protocol amendment.
 
+import { optimizationDatasetFile } from '#lib';
+
 export const studyDir = 'research/trailing-buy-entry';
 export const resultsDir = `${studyDir}/results`;
 export const chartsDir = `${studyDir}/charts`;
@@ -20,7 +22,8 @@ export const repoDefaultFile = 'data/VGT/VGT-2016-2026.csv';
 export const derivedDir = 'data/trailing-buy-entry';
 export const vgtCombinedFile = `${derivedDir}/VGT-daily-2005-02-25_2026-10-14.csv`;
 export const stooqDir = 'data/stooq/processed';
-export const minuteFile = 'data/VGT/VGT-2016-2025-1-minute.csv';
+// The training partition (src/lib/dataset.ts); the research ran on the legacy data/VGT/VGT-2016-2025-1-minute.csv.
+export const minuteFile = optimizationDatasetFile('VGT');
 export const crossAssetSymbols = ['QQQ', 'VOOG', 'SOXX', 'IGV', 'XLY', 'IWN'];
 
 // Research universe. Signals from the first session of 2014; earlier bars are history only (reference

@@ -6,10 +6,10 @@
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import fs from 'fs-extra';
-import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData } from '#lib';
+import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData, resolveDataset } from '#lib';
 import type { MarketSession } from '#types';
 import { PhenotypeError, type ResolvedParameter, formatValue } from './architectures.ts';
-import { type ExecutionProfile, dataFileOf, executionRoot, readExecutionProfile } from './execution.ts';
+import { type ExecutionProfile, executionRoot, readExecutionProfile } from './execution.ts';
 import {
   type DeclaredConstant,
   type PreparedStrategy,
@@ -131,9 +131,14 @@ export const planPhenotypeRun = async (request: PhenotypeRunRequest): Promise<Ru
     throw new PhenotypeError(`The stop fill must be 'stop' or 'next-open', not '${stopFill.value}'`);
   }
 
-  const dataFile: Setting<string> = unset(request.dataFile)
-    ? { value: request.dataFile!, source: 'command line' }
-    : { value: dataFileOf(profile, request.symbol), source: `execution profile ${profile.name}` };
+  // A partition name or an explicit file from the command line; the training partition by default.
+  const dataset = resolveDataset(request.symbol, request.dataFile);
+  const dataFile: Setting<string> = {
+    value: dataset.file,
+    source: dataset.partition
+      ? `${request.symbol} ${dataset.partition} partition${unset(request.dataFile) ? ' from the command line' : ' (the default)'}`
+      : 'command line'
+  };
   const outDir = unset(request.outDir);
 
   // The research directories hold frozen candidates and results; a run never writes there.

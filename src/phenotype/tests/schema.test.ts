@@ -222,7 +222,6 @@ describe('execution profiles', () => {
   const profile = () => ({
     schemaVersion: 1,
     name: 'test',
-    dataFile: 'data/{symbol}/{symbol}.csv',
     firstEligibleDate: '2017-06-15',
     investmentPerEntry: 100000,
     marginInterestRate: '11%',
@@ -258,6 +257,10 @@ describe('execution profiles', () => {
     );
     refuses(() => parseExecutionProfile({ ...profile(), investment: 1 }, 't', 'test'), /unknown key 'investment'/);
     refuses(() => parseExecutionProfile(profile(), 't', 'other'), /name must be "other"/);
+    refuses(
+      () => parseExecutionProfile({ ...profile(), dataFile: 'data/{symbol}/{symbol}.csv' }, 't', 'test'),
+      /dataFile is no longer a profile setting; runs read data\/<SYMBOL>\/<partition>\/data.csv/
+    );
   });
 
   test('the shipped profile is the multi-ETF D1 protocol', async () => {
@@ -269,7 +272,7 @@ describe('execution profiles', () => {
     assert.equal(shipped.stopFill, 'stop');
     assert.deepEqual(shipped.periods, [
       { label: 'development', start: '2017-06-15', end: '2023-12-29' },
-      { label: 'holdout', start: '2024-01-02', end: undefined }
+      { label: 'holdout', start: '2024-01-02', end: '2025-10-16' }
     ]);
     await refusesAsync(() => readExecutionProfile('nope'), /No execution profile.*available: multi-etf-d1/);
   });

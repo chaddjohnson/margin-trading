@@ -1,16 +1,15 @@
 {
   "schemaVersion": 1,
   "name": "multi-etf-d1",
-  "description": "The execution contract of the multi-ETF D1 program: Alpaca SIP raw one-minute files, arming from the common eligibility session 2017-06-15, $100,000 borrowed per entry without compounding, simple 11% margin interest, stop fills at the stop level; development through 2023-12-29, holdout from 2024-01-02 to the end of the file, in one continuous run",
+  "description": "The execution contract of the multi-ETF D1 program: Alpaca SIP raw one-minute files, arming from the common eligibility session 2017-06-15, $100,000 borrowed per entry without compounding, simple 11% margin interest, stop fills at the stop level; development through 2023-12-29, holdout from 2024-01-02 through 2025-10-16 (the research files' last session), in one continuous run; dataHashes are the research's data/<SYMBOL>/<SYMBOL>-2016-2025-1-minute.csv files",
   "source": "research/multi-etf-d1/PROTOCOL.md (sections 3-4) and the settings of research/multi-etf-d1/FROZEN_CANDIDATES.json",
-  "dataFile": "data/{symbol}/{symbol}-2016-2025-1-minute.csv",
   "firstEligibleDate": "2017-06-15",
   "investmentPerEntry": 100000,
   "marginInterestRate": "11%",
   "stopFill": "stop",
   "periods": [
     { "label": "development", "start": "2017-06-15", "end": "2023-12-29" },
-    { "label": "holdout", "start": "2024-01-02" }
+    { "label": "holdout", "start": "2024-01-02", "end": "2025-10-16" }
   ],
   "dataHashes": {
     "VGT": "600322afbe3d837a4c66ec62acb39e16d707079f49ec18d77f947bcb24c7962f",

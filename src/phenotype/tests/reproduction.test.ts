@@ -117,6 +117,9 @@ const configurations = [
   { symbol: 'KRE', phenotype: 'lowDd', reference: () => multiEtfReference('KRE', 'alternate-lowDd') }
 ];
 
+// The research's own files (the execution profile's dataHashes), not the dataset partitions: a reproduction is
+// only meaningful on the bytes the research read. The legacy files are no longer in data/, so this is skipped
+// unless one is restored there.
 const dataFileOf = (symbol: string) => `data/${symbol}/${symbol}-2016-2025-1-minute.csv`;
 const missing = (symbol: string) =>
   fs.existsSync(dataFileOf(symbol)) ? false : `${dataFileOf(symbol)} is not present`;

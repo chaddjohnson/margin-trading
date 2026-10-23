@@ -104,7 +104,7 @@
 
 import type { BacktestPosition, MarketSession } from '#types';
 import { PositionType } from '#types';
-import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData } from '#lib';
+import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData, resolveDataset, selectDataset } from '#lib';
 import fs from 'fs-extra';
 
 const secondsPerMinute = 60;
@@ -605,7 +605,7 @@ export const runAllIn = async ({
   }
   const percentName = (fraction: number) => Number((fraction * 100).toFixed(4));
   const strategyName = `trailing-buy${percentName(targetPercentChange)}-rebound${percentName(trailingBuyPercentage)}-buffered-loss${percentName(intradayLossBuffer)}-no-reentry-restriction-trough${percentName(troughRecovery)}-retrace${percentName(troughRetrace)}-reset${percentName(episodeReset)}-expiry${episodeExpiry}-pullback${percentName(pullback)}-window${continuationWindow}`;
-  const file = optional(dataFile) ?? `data/${symbol}/${symbol}-2016-2025-1-minute.csv`;
+  const file = resolveDataset(symbol, dataFile).file;
   const allSessions = groupMarketSessions(await loadCsvMinuteBacktestData(symbol, file));
   const sessions = allSessions.filter((session) => session.time >= startTimestamp && session.time <= endTimestamp);
   const tickWindowSize = 74;
@@ -1628,7 +1628,7 @@ export default async (
     symbol,
     startDate,
     endDate,
-    dataFile,
+    dataFile: selectDataset(symbol, dataFile),
     outDir,
     stopFill: stopFillArgument,
     trailingBuyPercentage: trailingBuy,

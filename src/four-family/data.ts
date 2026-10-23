@@ -8,10 +8,13 @@
 // with the capability that holdout.ts takes once.
 import { createHash } from 'node:crypto';
 import fs from 'fs-extra';
-import { groupMarketSessions, loadCsvMinuteBacktestData } from '#lib';
+import { groupMarketSessions, loadCsvMinuteBacktestData, optimizationDatasetFile } from '#lib';
 import type { MarketSession } from '#types';
 
-export const defaultDataFile = 'data/VGT/VGT-2016-2025-1-minute.csv';
+// The research ran on the legacy data/VGT/VGT-2016-2025-1-minute.csv (its sha256 is kept below as provenance). The
+// program now reads the training partition, the only one an optimizer may read (src/lib/dataset.ts), so the
+// hash checks refuse its frozen stages rather than mix datasets.
+export const defaultDataFile = optimizationDatasetFile('VGT');
 export const expectedDataHash = '600322afbe3d837a4c66ec62acb39e16d707079f49ec18d77f947bcb24c7962f';
 
 export interface Dataset {
