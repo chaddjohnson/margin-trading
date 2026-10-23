@@ -1,4 +1,4 @@
-// The five shipped D1 phenotypes reproduce their research, trade by trade, through the phenotype runner and the
+// The seven shipped D1 phenotypes reproduce their research, trade by trade, through the phenotype runner and the
 // unmodified D1 file: VGT primary against research/vgt-d1-refinement (D1's baseline), the multi-ETF phenotypes
 // against the frozen holdout run of research/multi-etf-d1 (one continuous run from 2017-06-15 to the end of the
 // file, with development and holdout as segments). The development/holdout boundary carries every state: the
@@ -110,7 +110,9 @@ const multiEtfReference = async (symbol: string, role: string): Promise<Referenc
 const configurations = [
   { symbol: 'VGT', phenotype: 'primary', reference: vgtReference },
   { symbol: 'XBI', phenotype: 'primary', reference: () => multiEtfReference('XBI', 'primary') },
+  { symbol: 'XBI', phenotype: 'lowDd', reference: () => multiEtfReference('XBI', 'alternate-lowDd') },
   { symbol: 'XRT', phenotype: 'primary', reference: () => multiEtfReference('XRT', 'primary') },
+  { symbol: 'XRT', phenotype: 'lowDd', reference: () => multiEtfReference('XRT', 'alternate-lowDd') },
   { symbol: 'KRE', phenotype: 'primary', reference: () => multiEtfReference('KRE', 'primary') },
   { symbol: 'KRE', phenotype: 'lowDd', reference: () => multiEtfReference('KRE', 'alternate-lowDd') }
 ];
@@ -185,7 +187,7 @@ const segmentOf = (run: PhenotypeRun, label: string) => {
   return segment;
 };
 
-describe('the five shipped phenotypes reproduce their research', () => {
+describe('the shipped phenotypes reproduce their research', () => {
   for (const configuration of configurations) {
     const label = `${configuration.symbol} ${configuration.phenotype}`;
 

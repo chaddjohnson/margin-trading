@@ -117,12 +117,14 @@ describe('shipped phenotypes', () => {
   const expected = {
     'VGT/primary': [216, 3, 73, 8, 74, 29, 90, 60],
     'XBI/primary': [291, 12, 104, 3, 64, 1, 107, 29],
+    'XBI/lowDd': [300, 12, 31, 5, 49, 1, 82, 54],
     'XRT/primary': [244, 20, 77, 9, 49, 28, 65, 103],
+    'XRT/lowDd': [244, 47, 80, 17, 48, 36, 62, 120],
     'KRE/primary': [299, 28, 31, 5, 233, 28, 94, 100],
     'KRE/lowDd': [299, 27, 31, 4, 230, 23, 94, 60]
   };
 
-  test('are the five configurations of the brief, each with its own symbol', async () => {
+  test('are the seven frozen D1 configurations, each with its own symbol', async () => {
     const files = await listPhenotypeFiles();
     const found = Object.fromEntries(
       files.flatMap((file) =>
