@@ -45,10 +45,28 @@ const owners: Record<string, string> = { d1: 'D1', swing: 'swing-low' };
 export interface P2sOptions {
   symbol?: string;
   outDir?: string;
-  d1Only?: boolean;
+  d1Only?: boolean; // regression: D1 alone on the same path (same as only: 'd1')
+  // Run one strategy alone on the same fixed-allocation ledger, with no arbitration: 'd1' or 'swing'.
+  only?: StrategyKey;
 }
 
-export const runP2s = async ({ symbol = 'VGT', outDir, d1Only = false }: P2sOptions = {}): Promise<ScenarioResult> => {
+const soloLabels: Partial<Record<StrategyKey, string>> = {
+  d1: 'D1 alone, fixed $100,000',
+  swing: 'Swing-low C2 alone, fixed $100,000'
+};
+
+export const runP2s = async ({
+  symbol = 'VGT',
+  outDir,
+  d1Only = false,
+  only
+}: P2sOptions = {}): Promise<ScenarioResult> => {
+  const solo = only ?? (d1Only ? 'd1' : undefined);
+
+  if (solo !== undefined && !soloLabels[solo]) {
+    throw new Error(`A single-strategy run must be d1 or swing, got ${solo}`);
+  }
+
   if (symbol !== 'VGT') {
     throw new Error('Only VGT is supported: the shared-margin engine loads the VGT research dataset');
   }
@@ -56,15 +74,13 @@ export const runP2s = async ({ symbol = 'VGT', outDir, d1Only = false }: P2sOpti
   const loaded = await loadProgramData();
   // No dividends: the ledger is the strategies alone.
   const data = { ...loaded, distributions: [] };
-  const keys: StrategyKey[] = d1Only ? ['d1'] : ['d1', 'swing'];
+  const keys: StrategyKey[] = solo ? [solo] : ['d1', 'swing'];
   const config = defaultConfig({
-    key: d1Only ? 'D1-fixed100k' : 'P2s-fixed100k',
-    label: d1Only
-      ? 'D1 alone, fixed $100,000'
-      : 'D1 + swing-low, first signal wins, paper-book semantics, fixed $100,000',
+    key: solo ? `${solo === 'd1' ? 'D1' : 'swing'}-fixed100k` : 'P2s-fixed100k',
+    label: solo ? soloLabels[solo]! : 'D1 + swing-low, first signal wins, paper-book semantics, fixed $100,000',
     strategies: keys,
-    policy: d1Only ? 'single' : 'firstWins',
-    semantics: d1Only ? 'hold' : 'shadow',
+    policy: solo ? 'single' : 'firstWins',
+    semantics: solo ? 'hold' : 'shadow',
     fixedPrincipal: investmentAmount,
     corePolicy: 'none',
     rate: marginInterestRate,
@@ -113,7 +129,7 @@ export const runP2s = async ({ symbol = 'VGT', outDir, d1Only = false }: P2sOpti
       );
     } else {
       console.info(
-        `Exited at ${formatTime(lot.exitTime)} (${formatNewYorkTime(lot.exitTime)}) from ${formatPrice(lot.entryPrice)} to ${formatPrice(exitPrice)} for a profit of ${formatDollars(lot.netProfit)} after ${formatDollars(lot.interest)} in interest`
+        `Exited at ${formatTime(lot.exitTime)} (${formatNewYorkTime(lot.exitTime)}) from ${formatPrice(lot.entryPrice)} to ${formatPrice(exitPrice)} for a profit of ${formatDollars(lot.netProfit)} after ${formatDollars(lot.interest)} in interest (gross ${formatDollars(lot.netProfit + lot.interest)})`
       );
       console.info(
         `Exit reason: ${lot.exitReason}; exit price: ${lot.exitExecution}, stop at ${formatPrice(lot.exitStopPrice)}`
@@ -135,7 +151,9 @@ export const runP2s = async ({ symbol = 'VGT', outDir, d1Only = false }: P2sOpti
     `Strategy: ${config.label}; data file: data/VGT/VGT-2016-2025-1-minute.csv (sha256 ${data.hashes.vgtMinute.slice(0, 16)}…)`
   );
   console.info(
-    'Execution: one-minute bars; each strategy runs its own paper book; a standalone fill executes only when the shared $100,000 allocation is free (first signal wins, D1 on a tie) and exits at its own standalone exit; intraday stops filled at the stop price'
+    solo
+      ? 'Execution: one-minute bars; one strategy, no arbitration; every rebound fills at the next trade with $100,000 borrowed; intraday stops filled at the stop price'
+      : 'Execution: one-minute bars; each strategy runs its own paper book; a standalone fill executes only when the shared $100,000 allocation is free (first signal wins, D1 on a tie) and exits at its own standalone exit; intraday stops filled at the stop price'
   );
   console.info(
     `Closed trades: ${closed.length}${open ? ', plus 1 still open' : ''} (D1 ${byOwner('d1').length}, swing-low ${byOwner('swing').length})`
