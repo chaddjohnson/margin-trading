@@ -6,16 +6,20 @@ import os from 'node:os';
 import path from 'node:path';
 import { after, before, describe, test } from 'node:test';
 import fs from 'fs-extra';
-import { defaultPartitionConfigText, newYorkOffset, nyseHolidays } from '#lib';
+import { type SplitEvent, defaultPartitionConfigText, newYorkOffset, nyseHolidays, parsePartitionConfig } from '#lib';
 import { run } from '../cli.ts';
 import {
+  type DistributionLedger,
   assertOutsideResearch,
+  coverageRefusal,
   datasetOutDir,
   datasetRunConfig,
   loadDatasetUniverse,
   parseDatasetOption,
+  parseEndOption,
   warmupSessionsOf
 } from '../dataset.ts';
+import { segmentRows } from '../segments.ts';
 import { runAllocator } from '../engine.ts';
 import { dipSession, flat, testConfig, universeOf } from './fixtures.ts';
 
@@ -135,11 +139,16 @@ describe('the accounting start', () => {
 
 describe('the canonical loader', () => {
   let root = '';
+  let splitRoot = '';
   const members = ['VOOG', 'VGT', 'XBI', 'XRT', 'KRE'] as const;
+  // A split on the raw data: from `split.date` on, prices ÷ ratio and volumes × ratio, as an exchange prints them.
+  const ratios: Record<string, number> = { VGT: 8, VOOG: 6 };
+  const splitDate = '2024-01-17';
 
-  const rows = (skip?: string) => {
+  const rows = (symbol: string, { skip, split = false }: { skip?: string; split?: boolean } = {}) => {
     const lines: string[] = [];
     let price = 100;
+    let step = 0;
 
     for (let time = Date.parse('2023-06-01T00:00:00Z'); time <= Date.parse('2024-02-28T00:00:00Z'); time += 86400000) {
       const date = new Date(time).toISOString().slice(0, 10);
@@ -156,7 +165,10 @@ describe('the canonical loader', () => {
         return `"${new Date((local - newYorkOffset(Date.parse(`${date}T16:00:00Z`) / 1000)) * 1000).toISOString().replace('.000', '')}"`;
       };
 
-      price += 0.1;
+      // A rise, a 12% dip on 2024-01-23 that arms the test phenotype, and a rebound.
+      price = date === '2024-01-23' ? price * 0.88 : price + (step++ % 7 === 3 ? -0.3 : 0.1);
+
+      const ratio = split && date >= splitDate ? (ratios[symbol] ?? 1) : 1;
 
       for (const [hour, minute] of [
         [9, 30],
@@ -164,39 +176,101 @@ describe('the canonical loader', () => {
         [15, 59],
         [16, 0]
       ] as const) {
-        lines.push(`${at(hour, minute)},${price},${price + 0.1},${price - 0.1},${price},1000`);
+        lines.push(
+          `${at(hour, minute)},${price / ratio},${(price + 0.1) / ratio},${(price - 0.1) / ratio},${price / ratio},${1000 * ratio}`
+        );
       }
     }
 
     return `${lines.join('\n')}\n`;
   };
 
+  // Published per-share amounts: per post-split share once the split has happened.
+  const ledgerOf = (split: boolean, coverage = '2024-03-31'): DistributionLedger => ({
+    file: 'fixture',
+    sha256: 'fixture',
+    coverage: { VGT: coverage, VOOG: coverage },
+    distributions: [
+      {
+        etf: 'VGT',
+        exDate: '2023-09-20',
+        payDate: '2023-09-22',
+        amount: 0.4,
+        amountMethod: 'issuer',
+        exDateMethod: 'issuer',
+        payDateMethod: 'issuer',
+        closeBefore: 100
+      },
+      {
+        etf: 'VOOG',
+        exDate: '2023-09-20',
+        payDate: '2023-09-22',
+        amount: 0.3,
+        amountMethod: 'issuer',
+        exDateMethod: 'issuer',
+        payDateMethod: 'issuer',
+        closeBefore: 100
+      },
+      {
+        etf: 'VGT',
+        exDate: '2024-02-01',
+        payDate: '2024-02-05',
+        amount: split ? 0.48 / 8 : 0.48,
+        amountMethod: 'issuer',
+        exDateMethod: 'issuer',
+        payDateMethod: 'issuer',
+        closeBefore: 100
+      },
+      {
+        etf: 'VOOG',
+        exDate: '2024-02-01',
+        payDate: '2024-02-05',
+        amount: split ? 0.36 / 6 : 0.36,
+        amountMethod: 'issuer',
+        exDateMethod: 'issuer',
+        payDateMethod: 'issuer',
+        closeBefore: 100
+      }
+    ]
+  });
+  const splits: SplitEvent[] = [
+    { symbol: 'VGT', effectiveDate: splitDate, ratio: 8, source: 'synthetic test split' },
+    { symbol: 'VOOG', effectiveDate: splitDate, ratio: 6, source: 'synthetic test split' }
+  ];
+  const load = (overrides: Partial<Parameters<typeof loadDatasetUniverse>[0]> = {}) =>
+    loadDatasetUniverse({
+      members,
+      partition: 'holdout',
+      warmupSessions: 50,
+      mode: 'portfolio',
+      root,
+      ledger: ledgerOf(false),
+      splits: [],
+      ...overrides
+    });
+  const near = (a: number, b: number, label: string) =>
+    assert.ok(Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b)), `${label}: ${a} vs ${b}`);
+
   before(async () => {
     root = await fs.mkdtemp(path.join(os.tmpdir(), 'allocator-dataset-'));
-    await fs.writeFile(path.join(root, 'partitions.json'), defaultPartitionConfigText);
+    splitRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'allocator-split-'));
 
-    for (const symbol of members) {
-      await fs.outputFile(path.join(root, symbol, 'data.csv'), rows());
+    for (const dir of [root, splitRoot]) {
+      await fs.writeFile(path.join(dir, 'partitions.json'), defaultPartitionConfigText);
+
+      for (const symbol of members) {
+        await fs.outputFile(path.join(dir, symbol, 'data.csv'), rows(symbol, { split: dir === splitRoot }));
+      }
     }
-
-    await fs.writeFile(
-      path.join(root, 'distributions.csv'),
-      'etf,ex_date,pay_date,amount,amount_method,ex_date_method,pay_date_method,close_before\nVGT,2024-02-01,2024-02-05,0.5,derived,derived,estimated,120\n'
-    );
   });
 
   after(async () => {
     await fs.remove(root);
+    await fs.remove(splitRoot);
   });
 
   test('every member gets the same window and warm-up; arming and accounting start at the window', async () => {
-    const loaded = await loadDatasetUniverse({
-      members,
-      partition: 'holdout',
-      warmupSessions: 50,
-      root,
-      distributionsFile: path.join(root, 'distributions.csv')
-    });
+    const loaded = await load();
 
     assert.equal(loaded.warmup, 50);
     assert.equal(loaded.universe.dates[50], '2024-01-02');
@@ -207,7 +281,7 @@ describe('the canonical loader', () => {
     // Three regular bars a session: every window session is sparse, and is counted as such.
     assert.deepEqual(loaded.sparseSessions, { VOOG: 40, VGT: 40, XBI: 40, XRT: 40, KRE: 40 });
     assert.equal(loaded.distributions.covered, true);
-    assert.equal(loaded.universe.distributions.length, 1);
+    assert.equal(loaded.universe.distributions.length, 4);
 
     const config = datasetRunConfig(testConfig({ mode: 'portfolio' }), loaded);
 
@@ -219,35 +293,143 @@ describe('the canonical loader', () => {
 
     assert.equal(result.events.find((event) => event.kind === 'start')!.date, '2024-01-02');
     assert.ok(result.daily.every((row) => row.date > '2024-01-02'));
+    assert.deepEqual(
+      result.dividends.map((row) => row.exDate),
+      ['2024-02-01', '2024-02-01'],
+      'the warm-up distribution is not booked; the window one is, for VOOG and VGT'
+    );
   });
 
-  test('training starts at the file with no warm-up and arms from the protocol eligibility date', async () => {
-    const loaded = await loadDatasetUniverse({
-      members: ['VGT'],
-      partition: 'training',
-      warmupSessions: 74,
-      root,
-      distributionsFile: path.join(root, 'distributions.csv')
-    });
+  test('all is one continuous run from the first session; training arms from the protocol eligibility date', async () => {
+    const all = await load({ partition: 'all' });
 
-    assert.equal(loaded.warmup, 0);
-    assert.equal(loaded.universe.dates[0], '2023-06-01');
-    assert.equal(loaded.universe.dates[loaded.universe.eligibilityIndex], '2023-06-01');
+    assert.equal(all.warmup, 0);
+    assert.equal(all.universe.dates[0], '2023-06-01');
+    assert.ok(Object.values(all.windows).every((window) => window!.mode === 'continuous all'));
+
+    const result = runAllocator(all.universe, datasetRunConfig(testConfig({ mode: 'portfolio' }), all));
+    const days = result.daily.map((row) => row.date);
+
+    assert.ok(days.includes('2023-12-29') && days.includes('2024-01-02'), 'no break at the 2024-01-01 boundary');
+    assert.deepEqual(
+      result.dividends.map((row) => row.exDate),
+      ['2023-09-20', '2023-09-20', '2024-02-01', '2024-02-01']
+    );
+
+    const training = await load({ members: ['VGT'], partition: 'training', warmupSessions: 74, mode: 'fixed' });
+
+    assert.equal(training.warmup, 0);
+    assert.equal(training.universe.dates[training.universe.eligibilityIndex], '2023-06-01');
+  });
+
+  test('a recorded split is forward-adjusted: the run equals the same economy without the split', async () => {
+    const plain = await load({ partition: 'all' });
+    const split = await load({ partition: 'all', root: splitRoot, ledger: ledgerOf(true), splits });
+
+    assert.deepEqual(
+      split.splits.map(({ symbol, ratio }) => `${symbol} ${ratio}`),
+      ['VOOG 6', 'VGT 8']
+    );
+    assert.deepEqual(
+      split.distributions.adjusted.map(({ etf, factor }) => `${etf} ${factor}`),
+      ['VGT 8', 'VOOG 6']
+    );
+
+    for (const symbol of members) {
+      const a = plain.universe.instruments[symbol]!.ds;
+      const b = split.universe.instruments[symbol]!.ds;
+
+      a.bClose.forEach((value, index) => near(b.bClose[index]!, value, `${symbol} bar ${index}`));
+      a.sHigh.forEach((value, index) => near(b.sHigh[index]!, value, `${symbol} session ${index} high`));
+    }
+
+    for (const mode of ['fixed', 'portfolio'] as const) {
+      const expected = runAllocator(plain.universe, datasetRunConfig(testConfig({ mode }), plain));
+      const actual = runAllocator(split.universe, datasetRunConfig(testConfig({ mode }), split));
+
+      assert.ok(expected.lots.length > 0, 'the fixture trades');
+      assert.deepEqual(
+        actual.lots.map((lot) => [lot.symbol, lot.entryIndex, lot.exitIndex]),
+        expected.lots.map((lot) => [lot.symbol, lot.entryIndex, lot.exitIndex]),
+        `${mode}: the same lots, no split-made signal`
+      );
+      actual.lots.forEach((lot, index) => {
+        near(
+          lot.entryPrice * lot.shares,
+          expected.lots[index]!.entryPrice * expected.lots[index]!.shares,
+          'cost basis'
+        );
+        near(lot.net, expected.lots[index]!.net, 'lot net');
+      });
+      actual.daily.forEach((row, index) => {
+        near(row.equity, expected.daily[index]!.equity, `${mode} ${row.date} equity`);
+        near(row.cumulativeDividends, expected.daily[index]!.cumulativeDividends, `${mode} ${row.date} dividends`);
+      });
+    }
+
+    // Without the adjustment the split reads as a crash of the core.
+    const raw = await load({ partition: 'all', root: splitRoot, ledger: ledgerOf(true), splits: [] });
+    const rawRun = runAllocator(raw.universe, datasetRunConfig(testConfig({ mode: 'portfolio' }), raw));
+    const day = rawRun.daily.find((row) => row.date === splitDate)!;
+    const before = rawRun.daily[rawRun.daily.indexOf(day) - 1]!;
+
+    assert.ok(day.equity < 0.5 * before.equity, 'raw prices would book the split as a loss');
+  });
+
+  test('coverage is required where distributions are booked; --end narrows the window inside the partition', async () => {
+    const short = await load({ ledger: ledgerOf(false, '2024-02-15') });
+
+    assert.equal(short.distributions.covered, false);
+    assert.match(coverageRefusal(short, false)!, /after the distribution ledger's coverage \(VGT 2024-02-15/);
+    assert.equal(coverageRefusal(short, true), undefined);
+
+    const fixed = await load({ ledger: ledgerOf(false, '2024-02-15'), mode: 'fixed' });
+
+    assert.equal(fixed.distributions.used, false);
+    assert.equal(coverageRefusal(fixed, false), undefined, 'fixed mode books no distributions');
+
+    const ended = await load({ ledger: ledgerOf(false, '2024-02-15'), endDate: '2024-02-15' });
+
+    assert.equal(ended.universe.end, '2024-02-15');
+    assert.equal(ended.distributions.covered, true);
+    assert.match(datasetRunConfig(testConfig({ mode: 'portfolio' }), ended).key, /@holdout-to-2024-02-15$/);
+    assert.equal(parseEndOption('2025-10-13'), '2025-10-13');
+    assert.throws(() => parseEndOption('2025-13-01'), /--end must be a YYYY-MM-DD/);
+    await assert.rejects(load({ endDate: '2023-12-01' }), /end date 2023-12-01 is outside the holdout partition/);
+  });
+
+  test('period attribution of one continuous run adds up across the boundaries', async () => {
+    const all = await load({ partition: 'all' });
+    const config = datasetRunConfig(testConfig({ mode: 'portfolio' }), all);
+    const result = runAllocator(all.universe, config);
+    const segments = segmentRows(result, parsePartitionConfig(defaultPartitionConfigText), 100000);
+    const [development, holdout, full] = segments;
+
+    assert.deepEqual(
+      segments.map((row) => row.segment),
+      ['development', 'holdout', 'full']
+    );
+    assert.equal(development!.lastDate, '2023-12-29');
+    assert.equal(holdout!.firstDate, '2024-01-02');
+    assert.equal(holdout!.startEquity, development!.endEquity, 'nothing resets at 2024-01-01');
+    near(development!.equityChange + holdout!.equityChange, full!.equityChange, 'equity');
+    near(development!.interest + holdout!.interest, full!.interest, 'interest');
+    near(development!.dividends + holdout!.dividends, full!.dividends, 'dividends');
+    assert.equal(development!.lotsEntered + holdout!.lotsEntered, full!.lotsEntered);
+    assert.ok(full!.maxDrawdownPercent >= 0 && full!.maxDrawdownPercent < 1);
+
+    for (const row of segments) {
+      assert.ok(
+        row.maxPercentDrawdown >= row.maxDrawdownPercent,
+        `${row.segment}: the deepest fall is at least the largest-dollar episode's depth`
+      );
+      assert.ok(full!.maxPercentDrawdown >= row.maxPercentDrawdown, 'no period is deeper than the full run');
+    }
   });
 
   test('members whose sessions differ are refused', async () => {
-    await fs.outputFile(path.join(root, 'XBI', 'data.csv'), rows('2024-01-10'));
-
-    await assert.rejects(
-      loadDatasetUniverse({
-        members,
-        partition: 'holdout',
-        warmupSessions: 50,
-        root,
-        distributionsFile: path.join(root, 'distributions.csv')
-      }),
-      /XBI has \d+ sessions through 2024-02-28, VOOG \d+|Session \d+: XBI/
-    );
-    await fs.outputFile(path.join(root, 'XBI', 'data.csv'), rows());
+    await fs.outputFile(path.join(root, 'XBI', 'data.csv'), rows('XBI', { skip: '2024-01-10' }));
+    await assert.rejects(load(), /XBI has \d+ sessions through 2024-02-28, VOOG \d+|Session \d+: XBI|calendars differ/);
+    await fs.outputFile(path.join(root, 'XBI', 'data.csv'), rows('XBI'));
   });
 });

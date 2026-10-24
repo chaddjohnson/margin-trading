@@ -62,12 +62,19 @@ has no symbol-specific content, and its sha256 is recorded by every partition ru
 ### Adding, refreshing and verifying symbols
 
 ```bash
-(cd data && ./download.sh KRE)                       # writes data/KRE.csv; needs ALPACA_API_KEY and ALPACA_SECRET_KEY
+scripts/download.sh KRE                              # all bars 2016-01-04 → today into data/KRE.csv (Alpaca SIP, raw)
 npm run datasets -- import KRE                       # data/KRE.csv → data/KRE/data.csv
-npm run datasets -- import KRE --replace             # a refreshed download replacing the existing file
+npm run datasets -- import KRE --replace             # a refreshed full download replacing the existing file
+scripts/download.sh KRE 2026-10-14                   # only the sessions after the canonical file's last date …
+npm run datasets -- append KRE                       # … appended to data/KRE/data.csv
 npm run datasets -- verify                           # re-scan every canonical file against partitions.json
 npm run datasets -- config                           # validate and print partitions.json
 ```
+
+`scripts/download.sh <SYMBOL> [start] [end]` needs `ALPACA_API_KEY` and `ALPACA_SECRET_KEY` in the environment (for
+example `set -a; . ./.env; set +a`); the dates are inclusive and the end defaults to today (UTC). Until 2026-10-24 the
+end date was fixed at 2026-10-13, which is why every canonical file ends on that date. `data/download.sh` runs the
+same script from `data/`.
 
 `import` parses every row (`src/data-partition/scan.ts`), writes the data rows exactly to a temporary file beside the
 target (a header row, if any, is left out), checks its sha256 and renames it into place; the download is then removed
@@ -85,6 +92,41 @@ exactly the rows partitions.json assigns to it, copied `all` to `data/<SYMBOL>/d
 file, and only then removed the four files. It is rerunnable (an interrupted migration resumes; a migrated symbol is
 re-verified), writes `data/partitions.json` if it is missing, and keeps every original file of a symbol that fails.
 Its record is `data/<SYMBOL>/migration-report.json` and `data/datasets-migration-2026-10-24.log`.
+
+`append` takes a download of only the newest sessions: rows up to the canonical file's last bar must be byte-identical
+to it (a revised history needs `import --replace`), the rest are appended, the combined file is scanned in full, and
+the training and holdout rows must be unchanged before it replaces the canonical file.
+
+### Corporate actions: splits and distributions
+
+The minute files hold **raw** prices, so a share split appears as a price jump. `config/market-events/splits.json`
+records each split with its issuer source (so far VGT 8:1 and VOOG 6:1, effective 2026-04-21, from Vanguard's
+2026-03-24 press release). A partition run, and the allocator's `--dataset` path, **forward-adjust** across a
+recorded split: prices from the effective date on × ratio, volumes ÷ ratio, and per-share distributions from that date
+on × ratio, so the run stays in the share units of its first session. Shares are fractional, so position values, cost
+bases and P&L are exactly those of holding the multiplied shares: the split moves nothing and makes no signal, and a
+run that doesn't span a split is unchanged. Prices reported after a split are in pre-split units (VGT about 8× its
+quote). `npm run market-events -- verify` checks each recorded split against the data's overnight move and lists the
+split-sized moves no split explains: XLE, XLU and XLY (2025-12-05, about 2:1) and XOP (2020-03-30, about 1:4) are not
+recorded, so partition runs of those symbols across those dates still read raw prices.
+
+The allocator's portfolio mode books VGT and VOOG distributions (the core and, by the frozen convention, open VGT
+lots) on the ex-date for the shares then held, pays them on the pay date and reinvests them in the same ETF; XBI, XRT
+and KRE distributions are not modelled, as in the frozen protocol. `config/market-events/distributions.csv` is the
+frozen protocol's ledger verbatim (ex-dates through 2025-10-13, amounts derived from adjusted prices) followed by the
+issuer's own history (Vanguard, `investor.vanguard.com/vmf/api/<TICKER>/distribution`; under T+1 settlement the ex-date
+is the listed record date), with the raw responses kept under `config/market-events/raw/`. Its manifest records each
+source's URL, retrieval time and hash, and the coverage date (the retrieval date). Refresh and check it with
+
+```bash
+npm run market-events -- update                      # fetch the issuer histories (no credentials), rebuild, validate
+npm run market-events -- update --offline config/market-events/raw/<snapshot>   # rebuild from a stored snapshot
+npm run market-events -- verify                      # same bytes from the sources, rules, splits against the data
+```
+
+Validation refuses duplicates, non-positive amounts, pay dates before ex-dates, ex-dates off the NYSE calendar, a gap
+of more than a quarter between distributions or before the coverage date, and yields outside one quarter's plausible
+range (which catches split-unit mistakes). The frozen ledger file and its pinned hash are never changed.
 
 ### Running a strategy
 
@@ -145,21 +187,33 @@ truncated at `protocol.commonEnd` (2025-10-13), arming from 2017-06-15, as froze
 canonical files adds `--dataset`:
 
 ```bash
+npm run multi-etf-allocator -- portfolio --policy shadow --config all-lowDd --dataset all
+npm run multi-etf-allocator -- portfolio --policy shadow --config all-lowDd --dataset all --end 2025-10-13   # parity
 npm run multi-etf-allocator -- portfolio --policy shadow --config all-lowDd --dataset training
-npm run multi-etf-allocator -- portfolio --policy shadow --config all-lowDd --dataset all --allow-uncovered-distributions
 npm run multi-etf-allocator -- fixed --policy shadow --config all-lowDd --dataset holdout --dry-run
 ```
 
-`fixed` is the fixed $100,000 pool; `portfolio` the 20%-of-equity shared-margin account with its VOOG/VGT core.
+`fixed` is one fixed $100,000 pool per lot; `portfolio` the $300,000 VOOG/VGT margin account (initially $180,000 VOOG
+and $120,000 VGT) that borrows 20% of its equity at each funded decision, reinvests profits 60/40 in VOOG/VGT and funds
+losses by proportional core sales.
 With `--dataset`, every member (VOOG and the books' symbols) is read over the same New York window with the same
 warm-up (the books' longest lookback) and the calendars must agree session by session; `all` has no `commonEnd`
 truncation; books arm from the window's first session or 2017-06-15, whichever is later; accounting (the portfolio's
 funding, P&L, interest, drawdown) starts at the close of the window's first session, as the protocol starts at the
-close of 2016-01-04. The distribution ledger covers ex-dates through 2025-10-13 (it was derived from the legacy files),
-so a window ending later needs `--allow-uncovered-distributions` and its record says later distributions are not
-modelled. Results go to `evaluations/multi-etf-allocator/<dataset>/<run key>/` (git-ignored; `--out DIR` to choose, never
+close of 2016-01-04 (so `--dataset all` is one continuous run from that close, with no reset at 2024-01-01 or
+2025-10-17); recorded splits are forward-adjusted. The portfolio mode reads the verified distribution ledger (above)
+and refuses a window that ends after its coverage; `--allow-uncovered-distributions` runs anyway and is recorded as
+such, and is never needed while the ledger is up to date (`npm run market-events -- update`). Fixed mode books no
+distributions. `--end YYYY-MM-DD` ends the window earlier inside the partition: a diagnostic for comparing with an
+earlier endpoint. `--dataset all --end 2025-10-13` reproduces the frozen `C-all-lowDd-shadow` run file for file (every
+CSV byte-identical; `src/multi-etf-allocator/tests/datasetParity.test.ts`). Results go to `evaluations/multi-etf-allocator/<dataset>/<run key>/` (git-ignored; `--out DIR` to choose, never
 under `research/`) with `evaluation.json`: windows, sparse-session counts, data/partitions/distribution/config/phenotype
-hashes, the D1 definition check, the git revision and the access mode. `--dry-run` prints all of that without running.
+hashes, ledger coverage, splits and split-adjusted distributions, the D1 definition check, the command line, the git
+revision and the access mode, plus `segments.csv`: the development, holdout, final and full periods of the one
+continuous run (opening and closing equity, strategy P&L, interest, dividends, lots, and both the largest-dollar and the
+largest-percentage daily drawdown). The summary's `dailyDrawdownPercent` and `minuteDrawdownPercent` are the depth of
+the largest-**dollar** episode (the frozen engine's convention), not the largest percentage fall; the minute-sampled
+percentage fall is not measured. `--dry-run` prints the record without running.
 The frozen studies (`run`, `all`, `stress`, `parity`, `audit`, `audit-ledger`, `illustration`, `final-validation`)
 refuse `--dataset`. `--dataset training` reproduces the frozen engine on the archived files truncated at 2023-12-29
 exactly (every summary field and daily row).

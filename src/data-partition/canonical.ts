@@ -42,8 +42,8 @@ export interface FileFacts {
 
 export interface DatasetReport {
   symbol: string;
-  command: 'migrate' | 'verify' | 'import';
-  status: 'migrated' | 'verified' | 'imported' | 'unchanged' | 'failed' | 'dry run';
+  command: 'migrate' | 'verify' | 'import' | 'append';
+  status: 'migrated' | 'verified' | 'imported' | 'appended' | 'unchanged' | 'failed' | 'dry run';
   file: string;
   partitionsFile: string;
   partitionsSha256: string;
@@ -508,6 +508,130 @@ export const importSymbol = async (symbol: string, options: DatasetOptions = {})
     }
 
     report.status = 'imported';
+  } catch (error) {
+    report.errors.push((error as Error).message);
+    report.status = 'failed';
+    await fs.remove(temporary);
+  }
+
+  return report;
+};
+
+// Appends the rows of data/<SYMBOL>.csv after the canonical file's last bar (a download of only the newest sessions,
+// scripts/download.sh with a start date). Rows the canonical file already has must be byte-identical; the combined
+// file is scanned in full, and the training and holdout rows must be unchanged, before it replaces the canonical
+// file. A full re-download goes through importSymbol with `replace` instead.
+export const appendSymbol = async (symbol: string, options: DatasetOptions = {}): Promise<DatasetReport> => {
+  const dataDir = options.dataDir ?? 'data';
+  const config = options.config ?? readPartitionConfig(dataDir);
+  const report = emptyReport(symbol, 'append', dataDir, config);
+  const source = path.join(dataDir, `${symbol}.csv`);
+  const temporary = path.join(dataDir, symbol, `.data.csv.tmp-${process.pid}`);
+
+  try {
+    if (!(await fs.pathExists(report.file))) {
+      throw new Error(`${report.file} does not exist; import the symbol first`);
+    }
+
+    if (!(await fs.pathExists(source))) {
+      throw new Error(`${source} does not exist`);
+    }
+
+    const before = await scanMinuteFile(report.file, config);
+
+    if (fatalProblems(before).length > 0) {
+      throw new Error(`${report.file} fails its own checks; run verify`);
+    }
+
+    const sourceLines: string[] = [];
+    const sourceScan = await scanMinuteFile(source, config, (_partition, line) => {
+      sourceLines.push(line);
+    });
+
+    for (const error of scanErrors(sourceScan)) {
+      report.errors.push(`${source}: ${error}`);
+    }
+
+    if (report.errors.length > 0) {
+      throw new Error('validation failed');
+    }
+
+    const timeOf = (line: string) => Date.parse(line.slice(0, line.indexOf(',')).replaceAll('"', ''));
+    const firstSourceTime = sourceLines.length > 0 ? timeOf(sourceLines[0]!) : Infinity;
+    const existing = new Map<number, string>();
+    // The canonical rows a download overlaps, by time.
+    const canonicalText = await fs.readFile(report.file, 'utf8');
+    const lastTime = timeOf(canonicalText.trimEnd().slice(canonicalText.trimEnd().lastIndexOf('\n') + 1));
+
+    for (const line of canonicalText.split('\n')) {
+      if (line && timeOf(line) >= firstSourceTime) {
+        existing.set(timeOf(line), `${line}\n`);
+      }
+    }
+
+    const added: string[] = [];
+
+    for (const line of sourceLines) {
+      const time = timeOf(line);
+
+      if (time <= lastTime) {
+        if (existing.get(time) !== line) {
+          throw new Error(
+            `${source} row ${line.trim()} differs from (or is missing in) ${report.file}: a revised history needs \`import --replace\``
+          );
+        }
+
+        continue;
+      }
+
+      added.push(line);
+    }
+
+    report.proof.push(
+      `${sourceLines.length - added.length} overlapping rows identical to ${report.file}; ${added.length} new rows`
+    );
+
+    if (added.length === 0) {
+      report.status = 'unchanged';
+      return report;
+    }
+
+    await fs.copyFile(report.file, temporary, fs.constants.COPYFILE_EXCL);
+    await fs.appendFile(temporary, added.join(''));
+
+    const after = await scanMinuteFile(temporary, config);
+
+    checkScan(report, after, temporary);
+
+    for (const partition of ['training', 'holdout'] as const) {
+      if (after.partitions[partition].sha256 !== before.partitions[partition].sha256) {
+        report.errors.push(`the append changed the ${partition} rows`);
+      }
+    }
+
+    if (report.errors.length > 0) {
+      throw new Error('validation failed');
+    }
+
+    report.proof.push(
+      `final ${before.partitions.final.rows} → ${after.partitions.final.rows} rows, last date ${before.partitions.final.lastDate} → ${after.partitions.final.lastDate}; training and holdout unchanged`
+    );
+
+    if (options.dryRun) {
+      await fs.remove(temporary);
+      report.status = 'dry run';
+      return report;
+    }
+
+    await fs.rename(temporary, report.file);
+    report.after = await factsOf(report.file);
+
+    if (!options.keepSource) {
+      await fs.remove(source);
+      report.removed.push(source);
+    }
+
+    report.status = 'appended';
   } catch (error) {
     report.errors.push((error as Error).message);
     report.status = 'failed';

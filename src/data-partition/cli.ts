@@ -5,6 +5,8 @@
 //   Re-scans canonical files against data/partitions.json; writes only the reports.
 // npm run datasets -- import SYMBOL ... [--replace] [--keep-source] [--dry-run]
 //   Makes a downloaded data/<SYMBOL>.csv the symbol's canonical file.
+// npm run datasets -- append SYMBOL ... [--keep-source] [--dry-run]
+//   Appends the rows of a download of only the newest sessions (data/<SYMBOL>.csv) after the canonical file's last bar.
 // npm run datasets -- config
 //   Validates data/partitions.json and prints the partitions.
 // Every symbol's report is printed and saved in data/<SYMBOL>/dataset-report.json (a completed migration's in
@@ -17,13 +19,14 @@ import {
   type DatasetReport,
   discoverSymbols,
   ensurePartitionConfig,
+  appendSymbol,
   importSymbol,
   migrateSymbol,
   reportLines,
   verifySymbol
 } from './canonical.ts';
 
-const commands = ['migrate', 'verify', 'import', 'config'] as const;
+const commands = ['migrate', 'verify', 'import', 'append', 'config'] as const;
 
 // A migration's record (the former files' hashes) is kept apart from later verifications, which never replace it.
 const reportFile = (command: string, report: DatasetReport) =>
@@ -65,8 +68,8 @@ export const runDatasetsCli = async (args: string[], dataDir = 'data') => {
     return true;
   }
 
-  if (command === 'import' && named.length === 0) {
-    throw new Error('Name the symbols to import, for example `npm run datasets -- import KRE`');
+  if ((command === 'import' || command === 'append') && named.length === 0) {
+    throw new Error(`Name the symbols to ${command}, for example \`npm run datasets -- ${command} KRE\``);
   }
 
   const symbols = named.length > 0 ? named : await discoverSymbols(dataDir);
@@ -78,7 +81,9 @@ export const runDatasetsCli = async (args: string[], dataDir = 'data') => {
         ? await migrateSymbol(symbol, options)
         : command === 'import'
           ? await importSymbol(symbol, options)
-          : await verifySymbol(symbol, options);
+          : command === 'append'
+            ? await appendSymbol(symbol, options)
+            : await verifySymbol(symbol, options);
 
     reports.push(report);
     console.info(`\n${reportLines(report).join('\n')}`);

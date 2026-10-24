@@ -286,6 +286,11 @@ export const incompatibleEntryPoints: IncompatibleEntryPoint[] = [
     reason: 'the canonical dataset migration and verification script (npm run datasets), not a strategy'
   },
   {
+    script: 'marketEvents',
+    category: 'utility',
+    reason: 'the split and distribution ledger tool (npm run market-events), not a strategy'
+  },
+  {
     script: 'legacyArchive',
     category: 'utility',
     reason: 'the legacy research-input archive builder (npm run legacy-archive), not a strategy'

@@ -18,6 +18,7 @@
 // Warm-up never widens the evaluation window: every result, metric and decision comes from the window's sessions,
 // and nothing after the window's last date is loaded or read.
 import type { MarketSession, Tick } from '#types';
+import { type SplitAdjustment, type SplitEvent, adjustSessionsForSplits, readSplits } from './corporateActions.ts';
 import { loadCsvMinuteBacktestData } from './csv.ts';
 import { type DatasetSelection, assertOptimizationPartition, sha256FileSync } from './dataset.ts';
 import {
@@ -37,6 +38,8 @@ export interface WindowRequest {
   // 'optimization' (an optimizer, a parameter search or a selection) accepts the training partition only, here at
   // the loader as well as in each command line; 'manual evaluation' (the default) any partition or file.
   access?: AccessMode;
+  // The recorded splits (config/market-events/splits.json by default) a partition run is forward-adjusted for.
+  splits?: readonly SplitEvent[];
 }
 
 export type AccessMode = 'manual evaluation' | 'optimization';
@@ -64,6 +67,9 @@ export interface WindowReport {
   warmup: WarmupReport;
   mode: 'continuous all' | 'isolated partition';
   access: AccessMode;
+  // Splits inside the run, forward-adjusted: prices from each effective date on × ratio, volumes ÷ ratio, so the run
+  // is in the share units of its first session (src/lib/corporateActions.ts).
+  splitAdjustments: SplitAdjustment[];
 }
 
 export interface RunWindow {
@@ -162,7 +168,12 @@ export const selectRunSessions = (allSessions: MarketSession[], request: WindowR
 
   const required = Math.max(0, Math.floor(request.warmupSessions ?? 0));
   const warmupStart = Math.max(0, first - required);
-  const history = allSessions.slice(warmupStart, last + 1);
+  const adjusted = adjustSessionsForSplits(
+    allSessions.slice(warmupStart, last + 1),
+    dataset.symbol,
+    request.splits ?? readSplits()
+  );
+  const history = adjusted.sessions;
   const warmup = first - warmupStart;
   const sessions = history.slice(warmup);
   const firstDate = sessions[0]!.date;
@@ -190,13 +201,22 @@ export const selectRunSessions = (allSessions: MarketSession[], request: WindowR
         note: warmupNote(required, warmup, firstDate)
       },
       mode: dataset.partition === 'all' && startDate === undefined ? 'continuous all' : 'isolated partition',
-      access
+      access,
+      splitAdjustments: adjusted.applied
     }
   };
 };
 
-export const describeWindow = ({ symbol, partition, evaluation, warmup, mode, access }: WindowReport) =>
-  `Evaluation: ${symbol} ${partition} (${mode}${access === 'optimization' ? ', optimization input' : ''}), ${evaluation.firstDate} → ${evaluation.lastDate}, ${evaluation.sessions} sessions; warm-up ${warmup.sessions} of ${warmup.requiredSessions} sessions${warmup.firstDate ? ` (${warmup.firstDate} → ${warmup.lastDate})` : ''}: ${warmup.note}`;
+export const describeWindow = ({
+  symbol,
+  partition,
+  evaluation,
+  warmup,
+  mode,
+  access,
+  splitAdjustments
+}: WindowReport) =>
+  `Evaluation: ${symbol} ${partition} (${mode}${access === 'optimization' ? ', optimization input' : ''}), ${evaluation.firstDate} → ${evaluation.lastDate}, ${evaluation.sessions} sessions; warm-up ${warmup.sessions} of ${warmup.requiredSessions} sessions${warmup.firstDate ? ` (${warmup.firstDate} → ${warmup.lastDate})` : ''}: ${warmup.note}${splitAdjustments.map((split) => `; split ${split.ratio}:1 on ${split.effectiveDate} forward-adjusted (later prices × ${split.ratio}, volumes ÷ ${split.ratio})`).join('')}`;
 
 // selectRunSessions for a strategy file: logs the window of a partition run and returns it.
 export const strategyRunSessions = (allSessions: MarketSession[], request: WindowRequest): RunWindow => {

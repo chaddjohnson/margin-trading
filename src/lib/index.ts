@@ -1,5 +1,6 @@
 export * from './archive.ts';
 export * from './calendar.ts';
+export * from './corporateActions.ts';
 export * from './csv.ts';
 export * from './dataset.ts';
 export * from './evaluation.ts';

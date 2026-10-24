@@ -214,3 +214,11 @@ Local, git-ignored: `data/<SYMBOL>/data.csv` (×16) with `migration-report.json`
 
 Recorded after the last change: `tsc --noEmit` clean; `eslint` 0 errors (16 warnings, all pre-existing, in files this
 work did not touch); `npm test`: 418 tests, 418 pass, 0 fail, 0 cancelled, 0 skipped (113 suites).
+
+## Addendum (2026-10-24, later)
+
+Risk 3 is resolved for VGT/VOOG: the allocator now reads a verified, extended distribution ledger
+(`config/market-events/`), the 2026-04-21 VGT 8:1 and VOOG 6:1 splits are forward-adjusted in partition runs, and the
+fixed `end=2026-10-13` of the downloader explains why every canonical file ends on that date. See
+[all-lowdd-full-history-evaluation.md](all-lowdd-full-history-evaluation.md). The record above is unchanged.
+

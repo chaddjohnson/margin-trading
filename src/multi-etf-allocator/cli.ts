@@ -8,8 +8,11 @@
 //     --dataset training|holdout|final|all  instead: an explicit evaluation on the canonical data/<SYMBOL>/data.csv
 //                                           over that partition (src/multi-etf-allocator/dataset.ts), outside the
 //                                           frozen protocol → evaluations/multi-etf-allocator/<dataset>/<key>/;
-//                                           with --out DIR, --dry-run (windows and hashes only, no run) and
-//                                           --allow-uncovered-distributions (a window past the distribution ledger)
+//                                           with --out DIR, --dry-run (windows and hashes only, no run),
+//                                           --end YYYY-MM-DD (a diagnostic endpoint inside the partition, e.g. the
+//                                           frozen 2025-10-13 for a parity run) and, exceptionally,
+//                                           --allow-uncovered-distributions (a portfolio window past the verified
+//                                           distribution ledger; the record says later distributions are missing)
 //   run [--keys K1,K2]                      the whole catalogue (controls, 8 combinations × policies, both modes)
 //   stress [--only static,paths,sensitivities]   the margin and execution stress program → results/stress/
 //   illustration                            amendment A1: beyond-grid call mechanics on the real ledger (post hoc)
@@ -42,14 +45,20 @@ import { checkProtocolFrozen, freezeProtocol, writeForwardFreeze } from './freez
 import { runFixedParity, runPortfolioParity } from './parity.ts';
 import { renderReports } from './report.ts';
 import { allocatorConfig, catalogue, runCatalogue, writeSummaries } from './scenarios.ts';
+import fs from 'fs-extra';
+import { readPartitionConfig } from '#lib';
+import { toCsv } from './metrics.ts';
+import { segmentRows } from './segments.ts';
 import {
   assertOutsideResearch,
+  coverageRefusal,
   datasetOutDir,
   datasetRunConfig,
   describeDatasetUniverse,
   evaluationRecord,
   loadDatasetUniverse,
   parseDatasetOption,
+  parseEndOption,
   warmupSessionsOf,
   writeEvaluationRecord
 } from './dataset.ts';
@@ -109,7 +118,14 @@ const runDatasetEvaluation = async (
   args: string[]
 ) => {
   const members = base.mode === 'portfolio' ? (['VOOG', ...base.symbols] as const) : base.symbols;
-  const loaded = await loadDatasetUniverse({ members, partition: dataset, warmupSessions: warmupSessionsOf(base) });
+  const endDate = parseEndOption(option(args, 'end'));
+  const loaded = await loadDatasetUniverse({
+    members,
+    partition: dataset,
+    warmupSessions: warmupSessionsOf(base),
+    mode: base.mode,
+    endDate
+  });
   const config = datasetRunConfig(base, loaded);
   const outDir = datasetOutDir(dataset, config.key.replace('@', '-'), option(args, 'out'));
 
@@ -120,14 +136,15 @@ const runDatasetEvaluation = async (
   }
 
   const allowUncovered = hasFlag(args, 'allow-uncovered-distributions');
+  const refusal = coverageRefusal(loaded, allowUncovered);
   const record = {
-    ...(await evaluationRecord(loaded, config, outDir)),
-    uncoveredDistributionsAllowed: !loaded.distributions.covered && allowUncovered
+    ...(await evaluationRecord(loaded, config, outDir, args)),
+    uncoveredDistributionsAllowed: loaded.distributions.used && !loaded.distributions.covered && allowUncovered
   };
-  const refusal =
-    loaded.distributions.covered || allowUncovered
-      ? undefined
-      : `The ${dataset} window ends ${loaded.universe.end}, after the distribution ledger's coverage (${loaded.distributions.coverageEnd}): later VGT/VOOG distributions are not modelled. Pass --allow-uncovered-distributions to run anyway; the record says so`;
+
+  if (record.uncoveredDistributionsAllowed) {
+    log('WARNING: --allow-uncovered-distributions: distributions after the ledger coverage are NOT modelled');
+  }
 
   if (hasFlag(args, 'dry-run')) {
     log(
@@ -143,9 +160,21 @@ const runDatasetEvaluation = async (
 
   const result = runAllocator(loaded.universe, config);
   const summary = await writeRun(outDir, result);
+  const segments = segmentRows(
+    result,
+    readPartitionConfig(),
+    config.mode === 'portfolio' ? config.initial.voog + config.initial.vgt : 0
+  );
 
-  await writeEvaluationRecord(outDir, { ...record, summary });
+  await fs.outputFile(path.join(outDir, 'segments.csv'), toCsv(segments as unknown as Record<string, unknown>[]));
+  await writeEvaluationRecord(outDir, { ...record, summary, segments });
   log(JSON.stringify(summary, null, 1));
+
+  for (const row of segments) {
+    log(
+      `${row.segment}: ${row.firstDate} → ${row.lastDate}, equity ${Math.round(row.startEquity)} → ${Math.round(row.endEquity)} (${(row.equityReturn * 100).toFixed(1)}%), strategy ${Math.round(row.strategyPnl)}, interest ${Math.round(row.interest)}, dividends ${Math.round(row.dividends)}, lots ${row.lotsEntered}, largest $ drawdown ${Math.round(row.maxDrawdown)} (${(row.maxDrawdownPercent * 100).toFixed(1)}%, ${row.drawdownPeak} → ${row.drawdownTrough}), largest % drawdown ${(row.maxPercentDrawdown * 100).toFixed(1)}% (${row.percentDrawdownPeak} → ${row.percentDrawdownTrough})`
+    );
+  }
 };
 
 const runSingle = async (mode: 'fixed' | 'portfolio', args: string[]) => {

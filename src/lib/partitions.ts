@@ -51,6 +51,7 @@ const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 export const isNewYorkDate = (value: unknown): value is string =>
   typeof value === 'string' &&
   datePattern.test(value) &&
+  !Number.isNaN(Date.parse(`${value}T00:00:00Z`)) &&
   new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) === value;
 
 // The calendar day after a YYYY-MM-DD date.

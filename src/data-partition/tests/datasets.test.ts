@@ -7,7 +7,14 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, test } from 'node:test';
 import fs from 'fs-extra';
 import { defaultPartitionConfigText, parsePartitionConfig, segmentOf } from '#lib';
-import { discoverSymbols, ensurePartitionConfig, importSymbol, migrateSymbol, verifySymbol } from '../canonical.ts';
+import {
+  appendSymbol,
+  discoverSymbols,
+  ensurePartitionConfig,
+  importSymbol,
+  migrateSymbol,
+  verifySymbol
+} from '../canonical.ts';
 import { newYorkDateAndMinute } from '../scan.ts';
 
 let dataDir = '';
@@ -396,5 +403,54 @@ describe('verify and import', () => {
     assert.match(report.errors.join(), /pipe-delimited/);
     assert.equal(await fs.pathExists(path.join(dataDir, 'BAD.csv')), true);
     assert.deepEqual(await fs.readdir(path.join(dataDir, 'BAD')).catch(() => []), []);
+  });
+});
+
+describe('appending new sessions', () => {
+  const later = [row('2025-11-04T15:00:00Z', 120), row('2025-11-04T15:01:00Z', 121)];
+
+  const prepare = async () => {
+    await fs.outputFile(path.join(dataDir, 'APP', 'data.csv'), `${sourceRows().join('\n')}\n`);
+    return fs.readFile(path.join(dataDir, 'APP', 'data.csv'), 'utf8');
+  };
+
+  test('rows after the last bar are appended; overlapping identical rows are skipped; history is untouched', async () => {
+    const before = await prepare();
+    const overlap = sourceRows().slice(-3);
+
+    await fs.writeFile(path.join(dataDir, 'APP.csv'), `${[...overlap, ...later].join('\n')}\n`);
+
+    const report = await appendSymbol('APP', { dataDir });
+
+    assert.equal(report.status, 'appended', report.errors.join('; '));
+    assert.equal(await canonical('APP'), `${before}${later.join('\n')}\n`);
+    assert.ok(
+      report.proof.some((line) => line.includes('3 overlapping rows identical') && line.includes('2 new rows'))
+    );
+    assert.ok(report.proof.some((line) => line.includes('training and holdout unchanged')));
+    assert.equal(await fs.pathExists(path.join(dataDir, 'APP.csv')), false);
+
+    await fs.writeFile(path.join(dataDir, 'APP.csv'), `${later.join('\n')}\n`);
+    assert.equal((await appendSymbol('APP', { dataDir })).status, 'unchanged');
+  });
+
+  test('a download that revises existing rows, or holds rows the file lacks, is refused and nothing changes', async () => {
+    const before = await prepare();
+    const revised = sourceRows().at(-1)!.replace(',1200', ',1300');
+
+    await fs.writeFile(path.join(dataDir, 'APP.csv'), `${[revised, ...later].join('\n')}\n`);
+    assert.match(
+      (await appendSymbol('APP', { dataDir })).errors.join(),
+      /differs from \(or is missing in\).*import --replace/
+    );
+    assert.equal(await canonical('APP'), before);
+
+    await fs.writeFile(path.join(dataDir, 'APP.csv'), `${[row('2025-10-20T15:00:30Z'), ...later].join('\n')}\n`);
+    assert.match((await appendSymbol('APP', { dataDir })).errors.join(), /missing in/);
+    assert.equal(await canonical('APP'), before);
+    assert.deepEqual(
+      (await fs.readdir(path.join(dataDir, 'APP'))).filter((name) => name.startsWith('.')),
+      []
+    );
   });
 });
