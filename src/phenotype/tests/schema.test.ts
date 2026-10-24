@@ -259,7 +259,7 @@ describe('execution profiles', () => {
     refuses(() => parseExecutionProfile(profile(), 't', 'other'), /name must be "other"/);
     refuses(
       () => parseExecutionProfile({ ...profile(), dataFile: 'data/{symbol}/{symbol}.csv' }, 't', 'test'),
-      /dataFile is no longer a profile setting; runs read data\/<SYMBOL>\/<partition>\/data.csv/
+      /dataFile is no longer a profile setting; runs read a partition of data\/<SYMBOL>\/data.csv/
     );
   });
 

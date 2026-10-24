@@ -4,7 +4,8 @@ import os from 'node:os';
 import path from 'node:path';
 import fs from 'fs-extra';
 import type { BacktestPosition, MarketSession } from '#types';
-import { type SourceKey, generatedDir, sourceFiles } from './copies.ts';
+import { materializeFrozenSource } from '#lib';
+import { type SourceKey, frozenSources, generatedDir, sourceFiles } from './copies.ts';
 
 export interface SourceTrade {
   entryDate: string;
@@ -67,13 +68,16 @@ export interface SourceRunOptions {
   };
 }
 
-const modulePath = (key: SourceKey, copy: boolean) =>
-  copy ? path.resolve(generatedDir, path.basename(sourceFiles[key])) : path.resolve(sourceFiles[key]);
+// A copy, or the unmodified original as the program froze it (copies.ts).
+const modulePath = async (key: SourceKey, copy: boolean) =>
+  copy
+    ? path.resolve(generatedDir, path.basename(sourceFiles[key]))
+    : await materializeFrozenSource(frozenSources[key]);
 
 const formatDate = (timestamp: number) => new Date(timestamp * 1000).toISOString().slice(0, 10);
 
 export const runSource = async (options: SourceRunOptions): Promise<SourceRunResult> => {
-  const module = await import(modulePath(options.key, options.copy));
+  const module = await import(await modulePath(options.key, options.copy));
   const outDir = await fs.mkdtemp(path.join(os.tmpdir(), 'four-family-source-'));
   const info = console.info;
 

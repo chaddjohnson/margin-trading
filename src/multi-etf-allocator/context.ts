@@ -5,7 +5,7 @@
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import fs from 'fs-extra';
-import { optimizationDatasetFile } from '#lib';
+import { legacyMinuteFile } from '#lib';
 
 export const symbols = ['VGT', 'XBI', 'XRT', 'KRE'] as const;
 export type Sym = (typeof symbols)[number];
@@ -25,9 +25,10 @@ export const d1Source = 'src/app/allIn-trailingBuy-postExitContinuation.ts';
 export const stageDir = (...parts: string[]) => path.join(resultsRoot, ...parts);
 
 export const files = {
-  // The training partitions (src/lib/dataset.ts); the research ran on the legacy
-  // data/<SYMBOL>/<SYMBOL>-2016-2025-1-minute.csv files, whose hashes the freeze still requires.
-  minute: (symbol: string) => optimizationDatasetFile(symbol),
+  // The frozen protocol's inputs, data/<SYMBOL>/<SYMBOL>-2016-2025-1-minute.csv, from the verified legacy archive
+  // (src/lib/archive.ts), whose hashes the freeze still requires. `--dataset` evaluations read the canonical files
+  // instead (src/multi-etf-allocator/dataset.ts).
+  minute: (symbol: string) => legacyMinuteFile(symbol),
   distributions: 'research/risk-management/vgt-portfolio-margin/data/distributions.csv',
   // Audited for existence and coverage only (PROTOCOL.md §1): no strategy is evaluated on them.
   laterDaily: ['data/VGT/VGT-2026.csv', 'data/VGT/VGT-2016-2026.csv', 'data/VOOG/VOOG-2016-2026.csv']
@@ -42,6 +43,9 @@ export const expectedHashes: Record<Security | 'distributions' | 'd1Source', str
   distributions: '30adf087e7f54927928c12a9d23e198d19336a7e6257df2e9be7e3fc70dba923',
   d1Source: 'a520cfcfd52782498da861c33d01d17b36865a83be945278629b83d9302a63ef'
 };
+
+// The git revision holding each pinned source file's bytes (src/lib/frozenSource.ts).
+export const pinnedRevisions = { d1Source: 'c636e40e' } as const;
 
 export const manifestBodyHash = 'd3645e1e8b8dafbdbf5ca6b7ef3b78745a3389b7730b19f68df0647377f4ca7e';
 

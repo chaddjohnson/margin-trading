@@ -1,12 +1,14 @@
-// Golden master: the unmodified src/app/allIn.ts against the study engine's CLOSE_1M + STOP_DAILY at 0 bp,
+// Golden master: the unmodified src/app/allIn.ts, as the study froze it (constants.ts, incumbentSource), against the study engine's CLOSE_1M + STOP_DAILY at 0 bp,
 // compared file by file on allIn.ts's own outputs. Legacy-start cases filter the session array to the
 // window exactly as allIn.ts does; the whole-file case is also compared with the warm-start code path.
 import { createHash } from 'node:crypto';
 import fs from 'fs-extra';
 import path from 'node:path';
 import type { MarketSession } from '#types';
-import { type StopFill, runAllIn } from '../app/allIn.ts';
-import { policyById } from './constants.ts';
+import { pathToFileURL } from 'node:url';
+import { materializeFrozenSource } from '#lib';
+import type { StopFill } from '../app/allIn.ts';
+import { incumbentSource, policyById } from './constants.ts';
 import { computeRecentHighs } from './data.ts';
 import { simulate } from './engine.ts';
 import { type LegacyFiles, legacyFiles, writeLegacyFiles } from './legacy.ts';
@@ -80,6 +82,10 @@ export const runGoldenCase = async (
   const tmp = outDir ?? (await fs.mkdtemp(path.join((await import('node:os')).tmpdir(), 'intraday-golden-')));
   const allInDir = path.join(tmp, goldenCase.label, 'allIn');
   const engineDir = path.join(tmp, goldenCase.label, 'engine');
+  // The incumbent as the study froze it, not the live file.
+  const { runAllIn } = (await import(pathToFileURL(await materializeFrozenSource(incumbentSource)).href)) as {
+    runAllIn: (options: Record<string, unknown>) => Promise<unknown>;
+  };
   const { output } = await captureConsole(() =>
     runAllIn({
       symbol: 'VGT',

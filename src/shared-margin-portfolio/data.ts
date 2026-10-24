@@ -5,16 +5,17 @@
 import { createHash } from 'node:crypto';
 import fs from 'fs-extra';
 import type { MarketSession, Tick } from '#types';
-import { groupMarketSessions, loadCsvMinuteBacktestData, optimizationDatasetFile } from '#lib';
+import { groupMarketSessions, loadCsvMinuteBacktestData, legacyMinuteFile, legacyResearchFile } from '#lib';
 import { type Dataset, fixtureDataset } from '../four-family/data.ts';
 
-// The minute files are the training partitions (src/lib/dataset.ts). The research ran on the legacy
-// data/<SYMBOL>/<SYMBOL>-2016-2025-1-minute.csv files, whose hashes below are still required.
+// The minute files are the research inputs, data/<SYMBOL>/<SYMBOL>-2016-2025-1-minute.csv, from the verified legacy
+// archive (src/lib/archive.ts), whose hashes below are still required; so is the legacy daily VGT file. The daily VOOG
+// file is not in the archive (no pinned copy or derivation exists), so the audit that reads it cannot run.
 export const files = {
-  vgtMinute: optimizationDatasetFile('VGT'),
-  voogMinute: optimizationDatasetFile('VOOG'),
+  vgtMinute: legacyMinuteFile('VGT'),
+  voogMinute: legacyMinuteFile('VOOG'),
   distributions: 'research/risk-management/vgt-portfolio-margin/data/distributions.csv',
-  vgtDaily: 'data/VGT/VGT-2016-2026.csv',
+  vgtDaily: legacyResearchFile('data/VGT/VGT-2016-2026.csv'),
   voogDaily: 'data/VOOG/VOOG-2016-2026.csv'
 } as const;
 

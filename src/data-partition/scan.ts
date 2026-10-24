@@ -1,30 +1,21 @@
 // One pass over a minute file in the canonical format (src/lib/csv.ts): every row is parsed as CSV, validated,
-// given its New York trading date and partition, and handed to `onRow` with its exact text, while the audit
-// (ordering, duplicates, out-of-range rows, missing sessions, intraday gaps) is accumulated. Nothing is sorted,
-// dropped or repaired: problems are counted with examples, and the caller decides what fails.
+// given its New York trading date and partition (data/partitions.json, src/lib/partitions.ts), and handed to `onRow`
+// with its exact text, while the audit (ordering, duplicates, out-of-range rows, missing sessions, intraday gaps) is
+// accumulated. Nothing is sorted, dropped or repaired: problems are counted with examples, and the caller decides
+// what fails.
 import { createHash } from 'node:crypto';
 import fs from 'fs-extra';
 import { parse } from 'csv-parse';
-import { type DatasetPartition, newYorkOffset, nyseEarlyCloses, nyseHolidays, ohlcvCsvColumns } from '#lib';
-
-// The partitions' inclusive New York trading dates. These are the only copy of the boundaries in the repository;
-// the application selects partitions by name (src/lib/dataset.ts).
-export const partitionBoundaries: readonly {
-  partition: Exclude<DatasetPartition, 'all'>;
-  first: string;
-  last?: string;
-}[] = [
-  { partition: 'training', first: '2016-01-01', last: '2023-12-31' },
-  { partition: 'holdout', first: '2024-01-01', last: '2025-10-16' },
-  { partition: 'final', first: '2025-10-17' }
-];
-
-export type DataPartition = (typeof partitionBoundaries)[number]['partition'];
-
-export const dataPartitions: readonly DataPartition[] = partitionBoundaries.map(({ partition }) => partition);
-
-export const partitionOf = (date: string): DataPartition | undefined =>
-  partitionBoundaries.find(({ first, last }) => date >= first && (last === undefined || date <= last))?.partition;
+import {
+  type PartitionConfig,
+  type SegmentPartition,
+  newYorkOffset,
+  nyseEarlyCloses,
+  nyseHolidays,
+  ohlcvCsvColumns,
+  segmentOf,
+  segmentPartitions
+} from '#lib';
 
 const timestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
 const numberPattern = /^-?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/;
@@ -61,6 +52,7 @@ const note = (bucket: Examples, example: string) => {
 
 export interface PartitionStats {
   rows: number;
+  sha256?: string; // of the partition's rows' exact text, so a refreshed file shows which partitions changed
   firstTimestamp?: string;
   lastTimestamp?: string;
   firstDate?: string;
@@ -104,7 +96,7 @@ export interface ScanResult {
   dataRows: number;
   rowsSha256: string; // of the data rows' exact text, each ending in '\n'
   endsWithNewline: boolean;
-  partitions: Record<DataPartition, PartitionStats>;
+  partitions: Record<SegmentPartition, PartitionStats>;
   // Problems that fail validation.
   malformed: Examples;
   outOfOrder: Examples;
@@ -167,11 +159,15 @@ async function* recordsOf(file: string, parser: AsyncIterable<unknown>): AsyncGe
 
 export const scanMinuteFile = async (
   file: string,
-  onRow?: (partition: DataPartition, line: string) => void | Promise<void>
+  config: PartitionConfig,
+  onRow?: (partition: SegmentPartition, line: string) => void | Promise<void>
 ): Promise<ScanResult> => {
   const hash = createHash('sha256');
-  const partitions = Object.fromEntries(dataPartitions.map((partition) => [partition, { rows: 0 }])) as Record<
-    DataPartition,
+  const partitionHashes = Object.fromEntries(
+    segmentPartitions.map((partition) => [partition, createHash('sha256')])
+  ) as Record<SegmentPartition, ReturnType<typeof createHash>>;
+  const partitions = Object.fromEntries(segmentPartitions.map((partition) => [partition, { rows: 0 }])) as Record<
+    SegmentPartition,
     PartitionStats
   >;
   const result: Omit<ScanResult, 'rowsSha256' | 'audit'> = {
@@ -261,10 +257,10 @@ export const scanMinuteFile = async (
     previous = { time, text: line, line: info.lines };
 
     const { date, minute } = newYorkDateAndMinute(time);
-    const partition = partitionOf(date);
+    const partition = segmentOf(config, date);
 
     if (!partition) {
-      note(result.outOfRange, `${where}: ${timeText} trades on ${date}, outside every partition`);
+      note(result.outOfRange, `${where}: ${timeText} trades on ${date}, outside every partition of ${config.file}`);
       continue;
     }
 
@@ -287,6 +283,7 @@ export const scanMinuteFile = async (
     stats.lastDate = date;
     result.dataRows++;
     hash.update(line);
+    partitionHashes[partition].update(line);
 
     let day = days.get(date);
 
@@ -368,6 +365,10 @@ export const scanMinuteFile = async (
     },
     largestGaps: gaps.slice(0, 5)
   };
+
+  for (const partition of segmentPartitions) {
+    partitions[partition].sha256 = partitionHashes[partition].digest('hex');
+  }
 
   return { ...result, rowsSha256: hash.digest('hex'), audit };
 };

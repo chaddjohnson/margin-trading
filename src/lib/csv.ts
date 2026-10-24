@@ -2,7 +2,7 @@ import type { Tick } from '#types';
 import fs from 'fs-extra';
 import { parse } from 'csv-parse';
 
-// The canonical market-data format, that of every data/<SYMBOL>/<partition>/data.csv (src/lib/dataset.ts):
+// The canonical market-data format, that of every data/<SYMBOL>/data.csv (src/lib/dataset.ts):
 // one-minute bars exported from Alpaca, comma-delimited, no header row, in this column order. The timestamp
 // is ISO 8601 UTC for the start of the minute and may be quoted, for example
 // "2016-01-04T14:30:00Z",106.31,106.31,105.77,105.77,21114
@@ -87,25 +87,46 @@ export const loadCsvBacktestData = async (symbol: string, filename: string): Pro
   });
 };
 
+export interface MinuteLoadBounds {
+  // Only bars with fromTime <= time < toTime are kept (Unix seconds). Every row is still parsed and checked.
+  fromTime?: number;
+  toTime?: number;
+  // Filled with the number of rows left out on each side.
+  stats?: { before: number; after: number };
+}
+
 // Loads a file in the canonical minute format (see ohlcvCsvColumns). The file has no trade counts. Every row
 // is data, the first included; rows are streamed rather than collected first, and must be in strictly
 // ascending time order. Quoted fields are parsed as CSV, so a comma inside quotes never splits a field.
-export const loadCsvMinuteBacktestData = async (symbol: string, filename: string): Promise<Tick[]> => {
+// `bounds` keeps only a time range (src/lib/evaluation.ts), so a run of one period doesn't hold the whole file.
+export const loadCsvMinuteBacktestData = async (
+  symbol: string,
+  filename: string,
+  { fromTime = -Infinity, toTime = Infinity, stats }: MinuteLoadBounds = {}
+): Promise<Tick[]> => {
   const parser = fs
     .createReadStream(filename)
     .pipe(parse({ delimiter: minuteCsvDelimiter, relax_column_count: true, info: true }));
   const ticks: Tick[] = [];
+  let previousTime = -Infinity;
 
   for await (const { record, info } of parser as AsyncIterable<{ record: string[]; info: { lines: number } }>) {
     const where = `${filename}:${info.lines}`;
     const tick = parseMinuteBar(record, where);
-    const previous = ticks.at(-1);
 
-    if (previous && tick.time <= previous.time) {
+    if (tick.time <= previousTime) {
       throw new Error(`${where}: timestamp ${record[0]} is not after the previous row`);
     }
 
-    ticks.push(tick);
+    previousTime = tick.time;
+
+    if (tick.time < fromTime) {
+      if (stats) stats.before++;
+    } else if (tick.time >= toTime) {
+      if (stats) stats.after++;
+    } else {
+      ticks.push(tick);
+    }
   }
 
   return ticks;

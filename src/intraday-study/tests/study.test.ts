@@ -3,7 +3,9 @@ import fs from 'fs-extra';
 import os from 'node:os';
 import path from 'node:path';
 import { describe, it } from 'node:test';
-import { verifyProtected } from '../cli.ts';
+import { createHash } from 'node:crypto';
+import { gitFileAt } from '#lib';
+import { postStudyChanges, verifyProtected } from '../cli.ts';
 import { dataFile } from '../constants.ts';
 import { loadStudyData } from '../data.ts';
 import { runGoldenCase } from '../goldenMaster.ts';
@@ -11,9 +13,25 @@ import { runGoldenCase } from '../goldenMaster.ts';
 const hasData = fs.existsSync(dataFile);
 
 describe('protected files', () => {
-  it('are byte-identical to the hashes recorded when the study started', async () => {
+  // The incumbent (read from its frozen revision) and the minute data (from the legacy archive) must still be the
+  // bytes the study started with; every other change since is recorded in postStudyChanges, with the revision that
+  // still holds the starting bytes, and nothing else may change.
+  it('match the hashes recorded when the study started, except the recorded post-study changes', async () => {
     for (const row of await verifyProtected()) {
-      assert.ok(row.unchanged, `${row.file} changed: ${row.start} -> ${row.now}`);
+      const change = postStudyChanges[row.file];
+
+      if (!change) {
+        assert.ok(row.unchanged, `${row.file} changed: ${row.start} -> ${row.now} (read from ${row.readFrom})`);
+        continue;
+      }
+
+      assert.ok(!row.unchanged, `${row.file} is unchanged again: remove it from postStudyChanges`);
+
+      if (change.revision) {
+        const atStart = createHash('sha256').update(gitFileAt(change.revision, row.file)).digest('hex');
+
+        assert.equal(atStart, row.start, `${row.file} at ${change.revision} is not the study's starting bytes`);
+      }
     }
   });
 });

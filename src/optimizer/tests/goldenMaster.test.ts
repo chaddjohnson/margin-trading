@@ -5,7 +5,7 @@ import path from 'node:path';
 import { after, describe, it } from 'node:test';
 import fs from 'fs-extra';
 import { originalParams, simulateAllIn, ticksToBars } from '../../app/allIn-optimizable.ts';
-import { loadCsvBacktestData } from '#lib';
+import { loadCsvBacktestData, legacyResearchFile } from '#lib';
 import { scenarios, writeFixture } from '../fixtures.ts';
 import { originalFile, originalGitBlob, runGoldenCase, verifyOriginalUnchanged } from '../goldenMaster.ts';
 import { defaultParameterSpace, genomeToParams, gridSize } from '../params.ts';
@@ -35,7 +35,12 @@ describe('golden master: original versus working copy', () => {
 
   it('is identical on the repository VGT file through 2023 at the defaults', async () => {
     const result = await runGoldenCase(
-      { name: 'test-vgt', symbol: 'VGT', dataFile: 'data/VGT/VGT-2016-2026.csv', endDate: '2023-12-31' },
+      {
+        name: 'test-vgt',
+        symbol: 'VGT',
+        dataFile: legacyResearchFile('data/VGT/VGT-2016-2026.csv'),
+        endDate: '2023-12-31'
+      },
       scratch
     );
 

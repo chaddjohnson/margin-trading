@@ -2,11 +2,12 @@
 //   node --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts intradayStudy <command>
 // Commands: verify-protected | golden-master | run | tables | reports | determinism | manifest | all
 import { createHash } from 'node:crypto';
+import { frozenSourceText } from '#lib';
 import { execFileSync } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
 import path from 'node:path';
-import { dataFile, policyById, windows } from './constants.ts';
+import { dataFile, incumbentSource, policyById, windows } from './constants.ts';
 import { computeRecentHighs, loadStudyData, sha256File } from './data.ts';
 import { simulate } from './engine.ts';
 import { goldenCases, runGoldenCase } from './goldenMaster.ts';
@@ -19,7 +20,7 @@ const resultsDir = path.join(studyDir, 'results');
 export const protectedFiles = [
   'src/app/allIn.ts',
   'src/app/allin-original.ts',
-  dataFile,
+  'data/VGT/VGT-2016-2025-1-minute.csv',
   'src/app/allIn-minute-optimizable.ts',
   'src/lib/session.ts',
   'src/lib/csv.ts'
@@ -39,14 +40,46 @@ export const readStartHashes = async () => {
   );
 };
 
+// Where the study now reads a protected file, when not from its own path: the incumbent from its frozen revision
+// (constants.ts) and the minute data from the verified legacy archive (src/lib/archive.ts).
+const readFrom: Record<string, () => Promise<string>> = {
+  'src/app/allIn.ts': async () => createHash('sha256').update(frozenSourceText(incumbentSource)).digest('hex'),
+  'data/VGT/VGT-2016-2025-1-minute.csv': () => sha256File(dataFile)
+};
+
+// Files changed after the study (2026-10-15), with the revision holding the bytes it started with (null: never
+// committed). The study's own commands still refuse to run while any of them differs, so it is not rerunnable
+// exactly; the record below is checked so that no other change goes unnoticed.
+export const postStudyChanges: Record<string, { revision: string | null; reason: string }> = {
+  'src/app/allin-original.ts': {
+    revision: null,
+    reason: 'held an uncommitted edit during the study, reverted afterwards to the committed fb499e51 version'
+  },
+  'src/app/allIn-minute-optimizable.ts': {
+    revision: '0bebfd06',
+    reason: 'dataset plumbing (53ca8f55 and the canonical data layout)'
+  },
+  'src/lib/session.ts': { revision: 'ded57e83', reason: 'the NYSE calendar moved to src/lib/calendar.ts (53ca8f55)' },
+  'src/lib/csv.ts': {
+    revision: 'ded57e83',
+    reason: 'stricter minute parsing (53ca8f55) and bounded loading (canonical data layout)'
+  }
+};
+
 export const verifyProtected = async () => {
   const start = await readStartHashes();
   const rows = [];
 
   for (const file of protectedFiles) {
-    const now = await sha256File(file);
+    const now = await (readFrom[file]?.() ?? sha256File(file));
 
-    rows.push({ file, start: start.get(file) ?? '', now, unchanged: start.get(file) === now });
+    rows.push({
+      file,
+      start: start.get(file) ?? '',
+      now,
+      unchanged: start.get(file) === now,
+      readFrom: readFrom[file] ? (file === 'src/app/allIn.ts' ? `git ${incumbentSource.revision}` : dataFile) : file
+    });
   }
 
   return rows;

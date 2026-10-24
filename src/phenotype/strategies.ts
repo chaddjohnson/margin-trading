@@ -48,8 +48,8 @@ export const phenotypePositionals: Record<number, string> = { 6: 'trailingBuyPer
 // The execution constants a profile can set in every compatible file.
 export const executionConstants = ['investmentAmount', 'marginInterestRate'] as const;
 
-const d1Guard = 'if (index < tickWindowSize) {';
-const file4Guard = 'if (index < tickWindowSize || !isDip(bar.close)) {';
+const d1Guard = 'if (warmup + index < tickWindowSize) {';
+const file4Guard = 'if (warmup + index < tickWindowSize || !isDip(bar.close)) {';
 const noContinuation = 'the file has no post-exit continuation mechanism';
 const noContinuationIgnorable = { pullback: noContinuation, continuationWindow: noContinuation };
 
@@ -281,9 +281,14 @@ export const incompatibleEntryPoints: IncompatibleEntryPoint[] = [
     reason: 'the phenotype registry utility itself (list, validate, matrix)'
   },
   {
-    script: 'partitionData',
+    script: 'datasets',
     category: 'utility',
-    reason: 'the dataset partitioning script (npm run partition-data), not a strategy'
+    reason: 'the canonical dataset migration and verification script (npm run datasets), not a strategy'
+  },
+  {
+    script: 'legacyArchive',
+    category: 'utility',
+    reason: 'the legacy research-input archive builder (npm run legacy-archive), not a strategy'
   }
 ];
 

@@ -5,7 +5,7 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import type { StopFill } from '../d1-refinement/engine.ts';
 import type { ParamKey } from '../d1-refinement/families.ts';
-import { optimizationDatasetFile } from '#lib';
+import { legacyMinuteFile } from '#lib';
 
 export const tickers = ['XBI', 'IWM', 'XRT', 'KRE', 'XLY', 'IWN', 'XLF', 'XLE'] as const;
 export type Ticker = (typeof tickers)[number];
@@ -34,13 +34,13 @@ export interface BoxSpec {
 
 export const protocol = {
   version: 'multi-etf-d1-protocol-v1',
-  // The training partitions (src/lib/dataset.ts). The research ran on the legacy
-  // data/<TICKER>/<TICKER>-2016-2025-1-minute.csv files, whose audited hashes the data checks still require.
-  dataFile: (ticker: string) => optimizationDatasetFile(ticker),
+  // The research inputs, data/<TICKER>/<TICKER>-2016-2025-1-minute.csv, from the verified legacy archive
+  // (src/lib/archive.ts); the audited hashes are still required. New work reads the partitions (src/lib/dataset.ts).
+  dataFile: (ticker: string) => legacyMinuteFile(ticker),
   // The regression control: the original VGT dataset and the prior verified figures of the unchanged D1 file.
   reference: {
     symbol: 'VGT',
-    dataFile: optimizationDatasetFile('VGT'),
+    dataFile: legacyMinuteFile('VGT'),
     dataHash: '600322afbe3d837a4c66ec62acb39e16d707079f49ec18d77f947bcb24c7962f',
     net: 183043.82,
     minuteDrawdown: 19330.69,

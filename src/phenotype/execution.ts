@@ -73,7 +73,7 @@ export const parseExecutionProfile = (json: unknown, file: string, expectedName?
 
   if ('dataFile' in object) {
     throw new PhenotypeError(
-      `${file}: dataFile is no longer a profile setting; runs read data/<SYMBOL>/<partition>/data.csv (src/lib/dataset.ts)`
+      `${file}: dataFile is no longer a profile setting; runs read a partition of data/<SYMBOL>/data.csv (src/lib/dataset.ts) or an explicit file`
     );
   }
 

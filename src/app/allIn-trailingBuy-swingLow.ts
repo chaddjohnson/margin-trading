@@ -38,8 +38,11 @@
 //   in the minute that starts at the close. Session-level values (the 90-session reference high, the daily
 //   mark to market) come from sessions aggregated from those minutes,
 //   so a 90-session window is still 90 trading sessions, and it never includes the current session.
-// - Warmup: no setup arms before session index 90, the first session with 90 complete previous sessions for
-//   the reference high. Earlier sessions are still processed, marked and reported.
+// - Warmup: no setup arms before the first session with tickWindowSize complete previous sessions for the
+//   reference high (swingLookback sessions for the rolling low that arms here). A partition run (src/lib/evaluation.ts) counts the warm-up sessions read
+//   before its window, so after a full warm-up the window's first session can arm. Warm-up sessions are only read
+//   for the rolling window: never traded, marked or reported, and the run starts flat, with no setup, stop,
+//   restriction, episode or continuation window from them. Window sessions before arming are processed and reported.
 // - Entry decisions are made when a minute completes (the minute starting at 10:14 completes at 10:15), so
 //   its open, high, low and close are all known then. Arming: a minute's close at or below the 10% level,
 //   with no position and no setup. The activating minute never buys,
@@ -91,7 +94,14 @@
 
 import type { BacktestPosition, MarketSession } from '#types';
 import { PositionType } from '#types';
-import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData, resolveDataset, selectDataset } from '#lib';
+import {
+  formatNewYorkTime,
+  groupMarketSessions,
+  loadCsvMinuteBacktestData,
+  resolveDataset,
+  selectDataset,
+  strategyRunSessions
+} from '#lib';
 import fs from 'fs-extra';
 
 const secondsPerMinute = 60;
@@ -548,10 +558,23 @@ export const runAllIn = async ({
 
   const percentName = (fraction: number) => Number((fraction * 100).toFixed(4));
   const strategyName = `trailing-buy${percentName(targetPercentChange)}-rebound${percentName(trailingBuyPercentage)}-buffered-loss${percentName(intradayLossBuffer)}-no-reentry-restriction-swing${swingLookback}-proximity${percentName(swingProximity)}`;
-  const file = resolveDataset(symbol, dataFile).file;
+  const dataset = resolveDataset(symbol, dataFile);
+  const file = dataset.file;
   const allSessions = groupMarketSessions(await loadCsvMinuteBacktestData(symbol, file));
-  const sessions = allSessions.filter((session) => session.time >= startTimestamp && session.time <= endTimestamp);
   const tickWindowSize = 74; // reports only: the reference high is no longer an entry condition
+  // The evaluation window and, for a partition, the warm-up sessions before it (src/lib/evaluation.ts): `sessions`
+  // is the window, `history` the warm-up followed by the window, so history[warmup + index] is sessions[index].
+  const {
+    sessions,
+    history,
+    warmup,
+    report: datasetReport
+  } = strategyRunSessions(allSessions, {
+    dataset,
+    startDate,
+    endDate,
+    warmupSessions: Math.max(tickWindowSize, swingLookback)
+  });
   const positions: BacktestPosition[] = [];
   const investmentAmount = 100000; // Margin borrowed for every position, regardless of past results
   const trailingStopPercentage = 0.04; // drop from the post-entry high
@@ -692,16 +715,18 @@ export const runAllIn = async ({
   };
 
   sessions.forEach((session, index) => {
-    const sessionWindow: MarketSession[] = sessions.slice(Math.max(0, index - tickWindowSize), index);
+    const sessionWindow: MarketSession[] = history.slice(Math.max(0, warmup + index - tickWindowSize), warmup + index);
     const recentHigh = Math.max(...sessionWindow.map((windowSession) => windowSession.high));
     // The swing path's rolling low: the lowest session low of the previous swingLookback sessions, never this one.
     const rollingLow = Math.min(
-      ...sessions.slice(Math.max(0, index - swingLookback), index).map((windowSession) => windowSession.low)
+      ...history
+        .slice(Math.max(0, warmup + index - swingLookback), warmup + index)
+        .map((windowSession) => windowSession.low)
     );
     const xLevel = recentHigh * (1 - targetPercentChange);
 
     // Skip the first session.
-    if (index === 0) {
+    if (warmup + index === 0) {
       dailyRows.push({
         index,
         date: session.date,
@@ -746,7 +771,7 @@ export const runAllIn = async ({
           if (!setup) {
             // Warmup: nothing arms until the previous swingLookback sessions are all available. Swing path: a close at
             // or below the rolling low x (1 + swingProximity) arms; no decline from a reference high is tested.
-            if (index < swingLookback || bar.close > rollingLow * (1 + swingProximity)) {
+            if (warmup + index < swingLookback || bar.close > rollingLow * (1 + swingProximity)) {
               continue;
             }
 
@@ -1320,6 +1345,7 @@ export const runAllIn = async ({
     const summary = {
       symbol,
       dataFile: file,
+      dataset: datasetReport,
       strategy: strategyName,
       stopFill,
       targetPercentChange,

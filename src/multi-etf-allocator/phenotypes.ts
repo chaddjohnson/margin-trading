@@ -5,6 +5,7 @@
 // constants for VGT. Nothing here writes a phenotype, a manifest or a strategy file, and the injection mechanism is
 // not used: the books never run the strategy file, only its verified port.
 import fs from 'fs-extra';
+import { checkStrategyDefinition } from '#lib';
 import { type Manifest, verifyManifestHash } from '../multi-etf-d1/freeze.ts';
 import { selectPhenotype } from '../phenotype/phenotypes.ts';
 import { type StrategyParams, strategies } from '../shared-margin-portfolio/strategy.ts';
@@ -16,6 +17,7 @@ import {
   expectedHashes,
   manifestBodyHash,
   manifestFile,
+  pinnedRevisions,
   sha256File,
   symbols
 } from './context.ts';
@@ -117,9 +119,9 @@ export const resolvePhenotype = async (symbol: Sym, name: PhenotypeName): Promis
   }
 
   if (symbol === 'VGT') {
-    if ((await sha256File(d1Source)) !== expectedHashes.d1Source) {
-      throw new Error(`${d1Source} differs from the protocol's hash: the D1 definition changed`);
-    }
+    // The pinned bytes, or exactly those bytes with the dataset plumbing of the canonical data layout
+    // (src/lib/frozenSource.ts); any other change to the file is a changed D1 definition and refused.
+    await checkStrategyDefinition(d1Source, expectedHashes.d1Source, pinnedRevisions.d1Source);
 
     for (const parameterKey of d1Keys) {
       if (params[parameterKey] !== strategies.d1[parameterKey]) {

@@ -189,8 +189,9 @@ export const transformSource = (
     'session load'
   );
 
-  if (!entry.armingGuard.startsWith('if (index < tickWindowSize')) {
-    throw new PhenotypeError(`${entry.script}: the arming guard must start with 'if (index < tickWindowSize'`);
+  // The guard counts the warm-up sessions before the window too (src/lib/evaluation.ts).
+  if (!entry.armingGuard.startsWith('if (warmup + index < tickWindowSize')) {
+    throw new PhenotypeError(`${entry.script}: the arming guard must start with 'if (warmup + index < tickWindowSize'`);
   }
 
   once(

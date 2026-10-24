@@ -60,4 +60,5 @@ guard) and data file.
 | `multiEtfAllocator` | research | no | research program command line |
 | `intradayStudy` | research | no | research program command line |
 | `phenotypes` | utility | no | the phenotype registry utility itself (list, validate, matrix) |
-| `partitionData` | utility | no | the dataset partitioning script (npm run partition-data), not a strategy |
+| `datasets` | utility | no | the canonical dataset migration and verification script (npm run datasets), not a strategy |
+| `legacyArchive` | utility | no | the legacy research-input archive builder (npm run legacy-archive), not a strategy |

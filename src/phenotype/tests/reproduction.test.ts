@@ -12,7 +12,7 @@ import { describe, test } from 'node:test';
 import { promisify } from 'node:util';
 import fs from 'fs-extra';
 import { parse } from 'csv-parse/sync';
-import { formatNewYorkTime } from '#lib';
+import { formatNewYorkTime, legacyMinuteFile } from '#lib';
 import { type PhenotypeRun, type PhenotypeRunRequest, executePhenotypeRun, planPhenotypeRun } from '../run.ts';
 
 const script = 'allIn-trailingBuy-postExitContinuation';
@@ -118,9 +118,9 @@ const configurations = [
 ];
 
 // The research's own files (the execution profile's dataHashes), not the dataset partitions: a reproduction is
-// only meaningful on the bytes the research read. The legacy files are no longer in data/, so this is skipped
-// unless one is restored there.
-const dataFileOf = (symbol: string) => `data/${symbol}/${symbol}-2016-2025-1-minute.csv`;
+// only meaningful on the bytes the research read. They come from the verified legacy archive (src/lib/archive.ts,
+// `npm run legacy-archive -- build`); without it this is skipped.
+const dataFileOf = (symbol: string) => legacyMinuteFile(symbol);
 const missing = (symbol: string) =>
   fs.existsSync(dataFileOf(symbol)) ? false : `${dataFileOf(symbol)} is not present`;
 
@@ -132,7 +132,7 @@ const runOf = (request: Partial<PhenotypeRunRequest> & { symbol: string; phenoty
   if (!runs.has(key)) {
     runs.set(
       key,
-      planPhenotypeRun({ script, ...request }).then((plan) =>
+      planPhenotypeRun({ script, dataFile: dataFileOf(request.symbol), ...request }).then((plan) =>
         executePhenotypeRun(plan, { log: () => {}, quietStrategy: true })
       )
     );
@@ -323,7 +323,7 @@ describe('the command line', () => {
   });
 
   test('without --phenotype the strategy keeps its defaults', { skip: missing('VGT') }, async () => {
-    const { stdout } = await app([script, 'VGT']);
+    const { stdout } = await app([script, 'VGT', '-', '-', dataFileOf('VGT')]);
 
     assert.doesNotMatch(stdout, /Phenotype run/);
     assert.match(
@@ -341,7 +341,7 @@ describe('the command line', () => {
       const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'phenotype-cli-'));
 
       try {
-        const { stdout } = await app([script, 'XRT', '-', '-', '-', directory, '--phenotype', 'primary']);
+        const { stdout } = await app([script, 'XRT', '-', '-', dataFileOf('XRT'), directory, '--phenotype', 'primary']);
         const record = await fs.readJson(path.join(directory, 'phenotype-run.json'));
         const summary = await fs.readJson(path.join(directory, 'summary.json'));
         const reference = await multiEtfReference('XRT', 'primary');

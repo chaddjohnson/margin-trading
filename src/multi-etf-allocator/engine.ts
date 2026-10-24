@@ -92,6 +92,11 @@ export interface RunConfig {
   lotDividends: boolean; // VGT lots entitled to VGT distributions (the earlier study's convention)
   initial: { voog: number; vgt: number };
   eligibilityIndex?: number;
+  // The session at whose close the run starts (default 0, the protocol's 2016-01-04): the portfolio is funded and
+  // every tracker starts there, and sessions are processed from the next one. Earlier sessions are history only:
+  // the books' reference levels read them, nothing is traded, marked, accrued or recorded in them
+  // (src/multi-etf-allocator/dataset.ts sets it for a warmed-up --dataset evaluation).
+  accountingStartIndex?: number;
   endIndex?: number;
   shocks?: Shock[];
   baseSchedule: ScheduleKey; // the requirement in force from the start (entry check and calls)
@@ -401,6 +406,14 @@ export const runAllocator = (baseUniverse: Universe, config: RunConfig): RunResu
   const universe = shockedUniverse(baseUniverse, config.shocks ?? []);
   const endIndex = Math.min(config.endIndex ?? universe.sessionCount - 1, universe.sessionCount - 1);
   const armStart = config.eligibilityIndex ?? universe.eligibilityIndex;
+  const startIndex = config.accountingStartIndex ?? 0;
+
+  if (!(startIndex >= 0 && startIndex < endIndex && armStart >= startIndex)) {
+    throw new Error(
+      `${config.key}: accounting start ${startIndex} must precede the end ${endIndex} and arming ${armStart}`
+    );
+  }
+
   const isPortfolio = config.mode === 'portfolio';
   const semantics = policySemantics[config.policy];
   const tieOrder = tieOrderOf(config.policy).filter((symbol) => config.symbols.includes(symbol));
@@ -525,27 +538,28 @@ export const runAllocator = (baseUniverse: Universe, config: RunConfig): RunResu
     };
   };
 
-  // ----- start: the 2016-01-04 close -----
+  // ----- start: the close of session startIndex (2016-01-04 in the protocol) -----
 
   if (portfolio) {
-    const prices = closePrices(0);
+    const prices = closePrices(startIndex);
 
     portfolio.voog = portfolio.sharesFor(config.initial.voog, prices.VOOG);
     portfolio.vgtCore = portfolio.sharesFor(config.initial.vgt, prices.VGT);
     portfolio.cash =
       config.initial.voog + config.initial.vgt - portfolio.voog * prices.VOOG - portfolio.vgtCore * prices.VGT;
-    portfolio.log('start', 0, dates[0]!, closeTimes[0]!, prices, sTime[0]!, {
+    portfolio.log('start', startIndex, dates[startIndex]!, closeTimes[startIndex]!, prices, sTime[startIndex]!, {
       note: `VOOG ${portfolio.voog} @ ${prices.VOOG}, VGT ${portfolio.vgtCore} @ ${prices.VGT}`
     });
-    portfolio.accrueTo(sTime[0]!, 0);
+    portfolio.accrueTo(sTime[startIndex]!, 0);
   }
 
-  const startValue = portfolio ? portfolio.equity(closePrices(0), sTime[0]!) : 0;
-  const firstBarTime = datasets[marketSecurities[0]!].bTime[0]!;
-  const equityTracker = new Tracker(startValue, portfolio ? closeTimes[0]! : sTime[0]!);
-  const minuteTracker = new Tracker(startValue, portfolio ? closeTimes[0]! : firstBarTime);
-  const strategyTracker = new Tracker(0, sTime[0]!);
-  const strategyMinuteTracker = new Tracker(0, portfolio ? closeTimes[0]! : firstBarTime);
+  const startValue = portfolio ? portfolio.equity(closePrices(startIndex), sTime[startIndex]!) : 0;
+  const firstDs = datasets[marketSecurities[0]!];
+  const firstBarTime = firstDs.bTime[firstDs.sBarStart[startIndex]!]!;
+  const equityTracker = new Tracker(startValue, portfolio ? closeTimes[startIndex]! : sTime[startIndex]!);
+  const minuteTracker = new Tracker(startValue, portfolio ? closeTimes[startIndex]! : firstBarTime);
+  const strategyTracker = new Tracker(0, sTime[startIndex]!);
+  const strategyMinuteTracker = new Tracker(0, portfolio ? closeTimes[startIndex]! : firstBarTime);
 
   // ----- the allocator's gate -----
 
@@ -1407,7 +1421,7 @@ export const runAllocator = (baseUniverse: Universe, config: RunConfig): RunResu
   const cursor = new Int32Array(instruments.length);
   const atBar = Object.fromEntries(securities.map((security) => [security, -1])) as Record<Security, number>;
 
-  for (let s = 1; s <= endIndex; s++) {
+  for (let s = startIndex + 1; s <= endIndex; s++) {
     const date = dates[s]!;
     const sessionTime = sTime[s]!;
 

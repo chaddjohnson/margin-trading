@@ -1,7 +1,7 @@
 // The derived modules are transparent: for every compatible strategy file, the derived module with nothing
 // injected, and with the file's own values injected explicitly (and the sessions loaded by the runner), gives
 // exactly the original file's trades, fills and setups. An injected first eligible date stops every arming before
-// it, and injected parameters do change the result. Runs on a 2019-01 → 2020-07 slice of VGT's training partition (every
+// it, and injected parameters do change the result. Runs on a 2019-01 → 2020-07 slice of VGT's canonical file, training dates (every
 // file trades in it), so it is skipped when the data is absent.
 import assert from 'node:assert/strict';
 import os from 'node:os';
@@ -9,12 +9,12 @@ import path from 'node:path';
 import { after, before, describe, test } from 'node:test';
 import { pathToFileURL } from 'node:url';
 import fs from 'fs-extra';
-import { datasetFile, groupMarketSessions, loadCsvMinuteBacktestData } from '#lib';
+import { canonicalDataFile, groupMarketSessions, loadCsvMinuteBacktestData } from '#lib';
 import type { BacktestPosition, MarketSession } from '#types';
 import { type PreparedStrategy, type StrategyResult, prepareStrategy } from '../injection.ts';
 import { compatibleStrategies, strategyFileOf } from '../strategies.ts';
 
-const sourceFile = datasetFile('VGT', 'training');
+const sourceFile = canonicalDataFile('VGT');
 const hasData = fs.existsSync(sourceFile);
 let directory = '';
 let dataFile = '';

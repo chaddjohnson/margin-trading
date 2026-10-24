@@ -36,19 +36,26 @@ After the backtest it prints the **periods** of the one continuous run: each per
 (`development` through 2023-12-29, `holdout` from 2024-01-02 through 2025-10-16, the research's own periods) and
 `full` (from the first eligible session). A period outside the run's dataset is noted and not reported, so a
 `training` run reports development only; an `all` run's `full` includes the final partition. Nothing
-is reset at a boundary; a period's net is the change of marked equity (realized plus the open position at the
+is reset at a boundary of the run; a period's net is the change of marked equity (realized plus the open position at the
 close, net of interest) from the close before it to its last close, with the research programs' own accounting
 (`src/trailing-buy-variants/accounting.ts`). A run fails, and says so, if the strategy did not read every injected
 value.
 
+These periods are **attribution within one continuous run** (state carried across their boundaries). A `holdout` or
+`final` run is a different thing: an **isolated evaluation** that starts flat, after an observational warm-up of the
+strategy's lookback read from the sessions before the window (see the
+[README](../../README.md#warm-up-isolated-partitions-and-continuous-runs)); the run prints that window and warm-up, and
+`phenotype-run.json` records them under `execution.dataset`.
+
 ## The verified D1 commands
 
 These figures were verified on the research's own files (`data/<SYMBOL>/<SYMBOL>-2016-2025-1-minute.csv`, each run
-to the file's end, 2025-10-13 for VGT and 2025-10-16 for the others), which are no longer in `data/`. The commands
-below now read the `training` partition, so they report development only. The comparable run on the partitions is
-`all` cut at the research's end, for example `npm run app -- allIn-trailingBuy-postExitContinuation KRE all -
-2025-10-16 --phenotype primary`; it reproduces these figures only if its bytes equal the research file's, which the
-run checks against the profile's hashes and flags when they differ.
+to the file's end, 2025-10-13 for VGT and 2025-10-16 for the others). Those bytes are now in the verified legacy
+archive (README, "Legacy research inputs and reproducibility"), and naming the archived file reproduces them
+exactly, trade by trade (`src/phenotype/tests/reproduction.test.ts` checks every row below):
+`npm run app -- allIn-trailingBuy-postExitContinuation KRE - - data/archive/legacy-research-inputs/KRE/KRE-2016-2025-1-minute.csv --phenotype primary`.
+The short commands below read the default `training` partition of the canonical file, so they report development
+only.
 
 | Command | Full net | Minute DD | Development | Holdout |
 |---|---:|---:|---:|---:|

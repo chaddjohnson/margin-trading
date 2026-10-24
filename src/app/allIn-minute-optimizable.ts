@@ -13,7 +13,9 @@
 // - Warmup (`warmup: true`): sessions before the start date stay in the array as history for the reference
 //   high only. Nothing is traded, marked or logged before the start date, and the first traded session
 //   has a reference high, so it isn't skipped. Without warmup the behaviour is the original's: the start
-//   date cuts the history, and the first session only seeds the window.
+//   date cuts the history, and the first session only seeds the window. A dataset partition run from the
+//   command line (src/lib/evaluation.ts) always uses this warmup, with up to lookbackSessions sessions before its
+//   window from the same file.
 // - Extra execution costs (`costBps`, per side, on the notional of each fill) are a separate accounting
 //   layer: every decision still uses the cost-free prices and profits exactly as the original does, and
 //   the cost-adjusted profit and drawdowns are reported next to the original's figures.
@@ -75,7 +77,14 @@
 
 import type { BacktestPosition, MarketSession } from '#types';
 import { PositionType } from '#types';
-import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData, resolveDataset, selectDataset } from '#lib';
+import {
+  formatNewYorkTime,
+  groupMarketSessions,
+  loadCsvMinuteBacktestData,
+  resolveDataset,
+  selectDataset,
+  strategyRunSessions
+} from '#lib';
 import fs from 'fs-extra';
 
 const secondsPerMinute = 60;
@@ -413,15 +422,25 @@ export const runAllInMinute = async ({
   }
 
   const strategyName = 'material1-lower2-retrace38';
-  const file = resolveDataset(symbol, dataFile).file;
+  const dataset = resolveDataset(symbol, dataFile);
+  const file = dataset.file;
   const allSessions = preloadedSessions ?? groupMarketSessions(await loadCsvMinuteBacktestData(symbol, file));
-  // With warmup, earlier sessions are kept as reference-high history; trading starts at startIndex.
-  const sessions = allSessions.filter(
-    (session) => (warmup || session.time >= startTimestamp) && session.time <= endTimestamp
-  );
-  const firstTraded = sessions.findIndex((session) => session.time >= startTimestamp);
-  const startIndex = firstTraded < 0 ? sessions.length : firstTraded;
   const tickWindowSize = params.lookbackSessions;
+  // A partition run loaded here takes its window and up to tickWindowSize warm-up sessions from
+  // src/lib/evaluation.ts, as warmup history before startIndex; preloaded sessions and explicit files keep the
+  // working copy's own selection.
+  const partitionRun =
+    dataset.partition && !preloadedSessions
+      ? strategyRunSessions(allSessions, { dataset, startDate, endDate, warmupSessions: tickWindowSize })
+      : undefined;
+  // With warmup, earlier sessions are kept as reference-high history; trading starts at startIndex.
+  const sessions =
+    partitionRun?.history ??
+    allSessions.filter((session) => (warmup || session.time >= startTimestamp) && session.time <= endTimestamp);
+  const firstTraded = partitionRun
+    ? partitionRun.warmup
+    : sessions.findIndex((session) => session.time >= startTimestamp);
+  const startIndex = firstTraded < 0 ? sessions.length : firstTraded;
   const positions: BacktestPosition[] = [];
   const targetPercentChange = tenthsToFraction(params.dipTenths); // target change
   const trailingStopPercentage = tenthsToFraction(params.trailingStopTenths); //  drop from the post-entry high
@@ -972,6 +991,7 @@ export const runAllInMinute = async ({
   const summary = {
     symbol,
     dataFile: file,
+    dataset: partitionRun?.report,
     strategy: strategyName,
     stopFill,
     materialLossThreshold,
@@ -1148,9 +1168,10 @@ export const runAllInMinute = async ({
 // fill]`, for example `npm run app -- allIn-minute-optimizable VGT holdout` or `npm run app -- allIn-minute-optimizable VGT 2016-10-07 2023-12-29`.
 // The symbol defaults to VGT and the inclusive YYYY-MM-DD New York session dates to the whole data file. The
 // dataset is the partition (training, holdout, final or all; src/lib/dataset.ts), which src/app.ts moves into
-// the data-file slot, or an explicit data file; without either it is data/<symbol>/training/data.csv. Pass '-'
-// to leave an earlier argument at its default. When an output directory is given, the run also writes
-// trades.csv, daily.csv, states.csv, episodes.csv and summary.json there at full precision. The stop fill is
+// the data-file slot, or an explicit data file; without either it is the training partition of
+// data/<symbol>/data.csv, with the warm-up of src/lib/evaluation.ts. Pass '-' to leave an earlier argument at
+// its default. When an output directory is given, the run also writes trades.csv, daily.csv, states.csv,
+// episodes.csv and summary.json there at full precision. The stop fill is
 // `stop` (default) or `next-open`.
 export default async (
   symbol = 'VGT',

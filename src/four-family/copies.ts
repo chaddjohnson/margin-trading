@@ -7,9 +7,14 @@
 // - the arming guard also honours a common first eligible session (`injected.armStart`).
 // With nothing injected, a copy behaves exactly as its source; parity.ts checks that before using the copies.
 // The originals are never modified. Copies are written to src/four-family/generated/ (git-ignored).
+//
+// The sources are the files as the program froze them (research/trailing-buy-four-family-optimization/PARITY_AUDIT.md),
+// read from git and verified by sha256 (src/lib/frozenSource.ts): the live files were changed deliberately after the
+// program (new parameters, the dataset plumbing), and the program reproduces what it ran, not those.
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import fs from 'fs-extra';
+import { type FrozenSource, frozenSourceText } from '#lib';
 
 export const sourceFiles = {
   trailingBuy: 'src/app/allIn-trailingBuy.ts',
@@ -20,6 +25,34 @@ export const sourceFiles = {
 } as const;
 
 export type SourceKey = keyof typeof sourceFiles;
+
+export const frozenSources: Record<SourceKey, FrozenSource> = {
+  trailingBuy: {
+    file: sourceFiles.trailingBuy,
+    revision: '5b032994',
+    sha256: 'b912cb9e7b761e5425003139daf707b9694f85533594cb3a331d9bc1c647ceb6'
+  },
+  bufferedLoss: {
+    file: sourceFiles.bufferedLoss,
+    revision: '5b032994',
+    sha256: '2e5819ebafcb0ab5cbf9dffe8a81809b2c9ce78e486bba286dfae1c4dc809653'
+  },
+  noReentry: {
+    file: sourceFiles.noReentry,
+    revision: '5b032994',
+    sha256: 'bbe253273b4ff870a0591be3f5745b13cb42ccf60bc1398687bc6b4af113da6f'
+  },
+  bufferedLossNoReentry: {
+    file: sourceFiles.bufferedLossNoReentry,
+    revision: '5b032994',
+    sha256: '128eaec4d113d19b79ffb008f4cd55e522b6ffa1d7f9476b8ef416c7164af2de'
+  },
+  allIn: {
+    file: sourceFiles.allIn,
+    revision: '101756b4',
+    sha256: 'd59e10767fa2aa080e3b91a97722d8ed96df0ba830bd0e6d09c0b24b38a7c617'
+  }
+};
 
 export const generatedDir = 'src/four-family/generated';
 
@@ -89,7 +122,7 @@ export const sha256 = (text: string | Buffer) => createHash('sha256').update(tex
 const countOccurrences = (text: string, needle: string) => text.split(needle).length - 1;
 
 export const generateCopy = async (key: SourceKey) => {
-  const source = await fs.readFile(sourceFiles[key], 'utf8');
+  const source = frozenSourceText(frozenSources[key]);
   let copy = source;
 
   for (const { from, to } of substitutions[key]) {
@@ -121,7 +154,5 @@ export const generateCopies = async () => Promise.all((Object.keys(sourceFiles) 
 
 export const sourceHashes = async () =>
   Object.fromEntries(
-    await Promise.all(
-      (Object.keys(sourceFiles) as SourceKey[]).map(async (key) => [key, sha256(await fs.readFile(sourceFiles[key]))])
-    )
+    (Object.keys(sourceFiles) as SourceKey[]).map((key) => [key, sha256(frozenSourceText(frozenSources[key]))])
   ) as Record<SourceKey, string>;

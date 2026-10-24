@@ -19,6 +19,7 @@ import { createHash } from 'node:crypto';
 import fs from 'fs-extra';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { type FrozenSource, frozenSourceText, materializeFrozenSource } from '#lib';
 import type { MarketSession } from '#types';
 import { type MinuteParams, incumbentParams, tenthsToFraction } from '../app/allIn-minute-optimizable.ts';
 import { genomeToParams, gridSize } from '../optimizer/params.ts';
@@ -37,14 +38,26 @@ import { writeMinuteFixture } from './fixtures.ts';
 import { minuteParameterSpace } from './params.ts';
 import { comparableFromEngine, comparableFromReference, compareComparables, runReference } from './reference.ts';
 
-export const protectedFiles = [
-  { file: 'src/app/allIn.ts', sha256: '71c5c327e8ef018066ad598ccc8532f68d28fa387b16577815f6782cf9ba70de' },
+// The protected originals. allIn.ts was changed deliberately after the study (101756b4 "Using sane, safer parameters",
+// then the dataset plumbing), so the golden master, the variants and the tests read its frozen bytes from git
+// (src/lib/frozenSource.ts), refused unless they hash to the pin; allin-original.ts is still the live file.
+export const originalSource: FrozenSource = {
+  file: 'src/app/allIn.ts',
+  revision: 'a1600985',
+  sha256: '71c5c327e8ef018066ad598ccc8532f68d28fa387b16577815f6782cf9ba70de'
+};
+
+export const protectedFiles: { file: string; sha256: string; frozen?: FrozenSource }[] = [
+  { file: originalSource.file, sha256: originalSource.sha256, frozen: originalSource },
   // The study ran while this file held an uncommitted edit (sha256 e8473085…, unchanged throughout the
   // study). That edit was later reverted to the committed version, which is what's protected now.
   { file: 'src/app/allin-original.ts', sha256: '42f2b7e7be4ef99e1af6c4fe113dd8da9ed4d329d2fe0564463db80b87f449e2' }
 ];
 
-export const originalFile = 'src/app/allIn.ts';
+export const originalFile = originalSource.file;
+
+// The frozen original as an importable module.
+export const originalModuleFile = () => materializeFrozenSource(originalSource);
 export const outputFiles = ['trades.csv', 'daily.csv', 'states.csv', 'episodes.csv', 'summary.json'];
 export const goldenResearchEnd = '2023-12-31';
 export const costLevels = [5, 10, 20];
@@ -52,10 +65,24 @@ export const costLevels = [5, 10, 20];
 export const verifyProtectedFiles = async () => {
   const results = [];
 
-  for (const { file, sha256 } of protectedFiles) {
+  for (const { file, sha256, frozen } of protectedFiles) {
     const actual = await sha256File(file);
 
-    results.push({ file, expected: sha256, actual, unchanged: actual === sha256 });
+    if (actual === sha256 || !frozen) {
+      results.push({ file, expected: sha256, actual, unchanged: actual === sha256, source: 'the live file' });
+      continue;
+    }
+
+    // The live file changed after the study: what the program runs is the frozen revision, which must be the pin.
+    const frozenSha256 = createHash('sha256').update(frozenSourceText(frozen)).digest('hex');
+
+    results.push({
+      file,
+      expected: sha256,
+      actual: frozenSha256,
+      unchanged: frozenSha256 === sha256,
+      source: `git ${frozen.revision} (the live file, now ${actual.slice(0, 16)}, changed after the study)`
+    });
   }
 
   const changed = results.filter((result) => !result.unchanged);
@@ -88,7 +115,7 @@ const captureConsole = async (run: (log: (line: string) => void) => Promise<unkn
 
 // A scratch copy of the original with different constants. Only the seven constant declarations change.
 export const writeOriginalVariant = async (params: MinuteParams, dir: string) => {
-  let source = await fs.readFile(originalFile, 'utf8');
+  let source = frozenSourceText(originalSource);
   const replace = (pattern: RegExp, replacement: string) => {
     if (!pattern.test(source)) {
       throw new Error(`Variant pattern not found: ${pattern}`);
@@ -176,7 +203,7 @@ export const runFileCase = async (
   const usedVariant = testCase.params !== undefined;
   const moduleFile = usedVariant
     ? await writeOriginalVariant(params, path.join(scratchDir, 'variants'))
-    : path.resolve(originalFile);
+    : await originalModuleFile();
   const original = (await import(pathToFileURL(moduleFile).href)) as { runAllIn: OriginalRunner };
   const caseDir = path.join(scratchDir, testCase.name.replace(/[^a-z0-9-]+/gi, '_'));
   const originalDir = path.join(caseDir, 'original');

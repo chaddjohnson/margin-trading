@@ -15,6 +15,7 @@ import type { Manifest } from './data/prepare.ts';
 import { scenarios, writeFixture } from './fixtures.ts';
 import { defaultParameterSpace, genomeToParams, gridSize } from './params.ts';
 import { Rng } from './rng.ts';
+import { legacyResearchFile } from '#lib';
 
 // The original as committed in b7abde6. Any change to these bytes fails the golden master.
 export const originalFile = 'src/app/allin-original.ts';
@@ -214,7 +215,7 @@ export const runGoldenSuite = async (options: GoldenSuiteOptions) => {
   cases.push({
     name: 'repo-VGT-2016-2026-default-start',
     symbol: 'VGT',
-    dataFile: 'data/VGT/VGT-2016-2026.csv',
+    dataFile: legacyResearchFile('data/VGT/VGT-2016-2026.csv'),
     endDate: end
   });
   cases.push({ name: 'repo-VGT-2005-2026', symbol: 'VGT', dataFile: 'data/VGT/VGT-2005-2026.csv', endDate: end });

@@ -4,7 +4,7 @@
 // Holdout discipline: for sessions after the research end only counts, dates and structural validity
 // (positive prices, low <= open/close <= high) are examined. Price-movement checks (jumps), liquidity and
 // comparisons are restricted to sessions on or before the research end.
-import { groupMarketSessions, loadCsvBacktestData, loadCsvMinuteBacktestData, optimizationDatasetFile } from '#lib';
+import { groupMarketSessions, loadCsvBacktestData, loadCsvMinuteBacktestData, legacyMinuteFile } from '#lib';
 import fs from 'fs-extra';
 import path from 'node:path';
 import type { Protocol } from '../protocol.ts';
@@ -330,8 +330,8 @@ export const adjustmentEvidence = async (manifest: Manifest, researchEnd: string
   const results: AdjustmentEvidence[] = [];
 
   for (const [symbol, minuteFile] of [
-    ['VGT', optimizationDatasetFile('VGT')],
-    ['VOOG', optimizationDatasetFile('VOOG')]
+    ['VGT', legacyMinuteFile('VGT')],
+    ['VOOG', legacyMinuteFile('VOOG')]
   ] as const) {
     const entry = manifest.entries[symbol];
 

@@ -1,7 +1,7 @@
 // Fixed settings of the trailing-buy entry study (research/trailing-buy-entry). Everything here is
 // pre-registered in PROTOCOL.md; a change needs a protocol amendment.
 
-import { optimizationDatasetFile } from '#lib';
+import { legacyMinuteFile, legacyResearchFile } from '#lib';
 
 export const studyDir = 'research/trailing-buy-entry';
 export const resultsDir = `${studyDir}/results`;
@@ -18,12 +18,14 @@ export const vgtHistoryFile = 'data/VGT/VGT-2005-2026.csv';
 export const vgtHistorySha256 = '3aaf182bf188ba6f3967185102dc5dfc34e8dbd46794192428b2e88bc19dbb9d';
 export const vgt2026File = 'data/VGT/VGT-2026.csv';
 export const vgt2026Sha256 = '734409cff831388d6c338e11109cf9eb92e3fccbc4ebb36bd950dd3af17800c9';
-export const repoDefaultFile = 'data/VGT/VGT-2016-2026.csv';
+// The legacy daily file, from the verified archive (src/lib/archive.ts).
+export const repoDefaultFile = legacyResearchFile('data/VGT/VGT-2016-2026.csv');
 export const derivedDir = 'data/trailing-buy-entry';
 export const vgtCombinedFile = `${derivedDir}/VGT-daily-2005-02-25_2026-10-14.csv`;
 export const stooqDir = 'data/stooq/processed';
-// The training partition (src/lib/dataset.ts); the research ran on the legacy data/VGT/VGT-2016-2025-1-minute.csv.
-export const minuteFile = optimizationDatasetFile('VGT');
+// The research input, data/VGT/VGT-2016-2025-1-minute.csv, from the verified legacy archive (src/lib/archive.ts);
+// the program's own hash check still applies. New work reads the dataset partitions instead (src/lib/dataset.ts).
+export const minuteFile = legacyMinuteFile('VGT');
 export const crossAssetSymbols = ['QQQ', 'VOOG', 'SOXX', 'IGV', 'XLY', 'IWN'];
 
 // Research universe. Signals from the first session of 2014; earlier bars are history only (reference

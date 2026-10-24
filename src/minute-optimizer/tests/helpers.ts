@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { newYorkOffset } from '#lib';
 import type { MarketSession } from '#types';
 import type { AllInResult, MinuteParams } from '../../app/allIn-minute-optimizable.ts';
-import { writeOriginalVariant } from '../goldenMaster.ts';
+import { originalModuleFile, writeOriginalVariant } from '../goldenMaster.ts';
 import { buildDataset, loadSessions } from '../data.ts';
 import { type StopFill, computeReferenceHighs, simulate } from '../engine.ts';
 import { runReference } from '../reference.ts';
@@ -83,12 +83,12 @@ type OriginalModule = {
   runAllIn: (options: Record<string, unknown>) => Promise<AllInResult>;
 };
 
-// The original allIn.ts, or a scratch variant of it with other constants (written inside the repository so
+// The original allIn.ts as the study froze it (git a1600985, goldenMaster.ts), or a scratch variant of it with other constants (written inside the repository so
 // that its '#lib' and '#types' imports resolve), run on a CSV file with its console output silenced.
 export const runOriginalQuietly = async (file: string, params?: MinuteParams, stopFill: StopFill = 'stop') => {
   const moduleFile = params
     ? await writeOriginalVariant(params, 'research/vgt-minute-optimizer/tmp/test-variants')
-    : path.resolve('src/app/allIn.ts');
+    : await originalModuleFile();
   const original = (await import(pathToFileURL(moduleFile).href)) as OriginalModule;
   const info = console.info;
 

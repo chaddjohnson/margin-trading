@@ -7,7 +7,9 @@ dist
 *.bak
 .eslintcache
 .env
-/data/
+# Market data is local (data/<SYMBOL>/data.csv, archives, caches); only the partition boundaries are versioned.
+/data/*
+!/data/partitions.json
 logs/
 state.json
 tsconfig.tsbuildinfo
@@ -59,3 +61,6 @@ research/multi-etf-allocator/results/runs/principal/*/margin_requirements.csv
 !research/multi-etf-allocator/results/runs/principal/C-all-primary-shadow/margin_requirements.csv
 !research/multi-etf-allocator/results/runs/principal/C-all-lowDd-shadow/margin_requirements.csv
 research/multi-etf-allocator/results/runs/single/
+
+# Explicit --dataset evaluations of the multi-ETF allocator (src/multi-etf-allocator/dataset.ts): local results
+/evaluations/

@@ -2,7 +2,7 @@
 // (research/vgt-intraday-study/PROTOCOL.md). The seven strategy values are the incumbent's, read from
 // src/app/allIn.ts, and are never varied. Nothing here is tuned.
 
-import { optimizationDatasetFile } from '#lib';
+import { type FrozenSource, legacyMinuteFile } from '#lib';
 
 export const secondsPerMinute = 60;
 export const secondsPerDay = 24 * 60 * 60;
@@ -21,8 +21,9 @@ export const incumbent = {
   retraceFraction: 0.367
 } as const;
 
-// The training partition (src/lib/dataset.ts); the study ran on the legacy data/VGT/VGT-2016-2025-1-minute.csv.
-export const dataFile = optimizationDatasetFile('VGT');
+// The study input, data/VGT/VGT-2016-2025-1-minute.csv, from the verified legacy archive (src/lib/archive.ts);
+// the study's own hash check still applies. New work reads the dataset partitions instead (src/lib/dataset.ts).
+export const dataFile = legacyMinuteFile('VGT');
 export const symbol = 'VGT';
 
 export const costLevelsBps = [0, 5, 10, 20] as const;
@@ -214,3 +215,12 @@ export const regimes = [
   { id: 'Y2022', start: '2022-01-01', end: '2022-12-31' },
   { id: 'SPRING_2025', start: '2025-02-01', end: '2025-04-30' }
 ] as const;
+
+// The incumbent as the study ran it: src/app/allIn.ts at git a1600985, which the golden master runs (verified by
+// sha256, src/lib/frozenSource.ts). The live file was changed deliberately after the study (new constants, the dataset
+// plumbing); the helpers the engine imports from it are unchanged.
+export const incumbentSource: FrozenSource = {
+  file: 'src/app/allIn.ts',
+  revision: 'a1600985',
+  sha256: '71c5c327e8ef018066ad598ccc8532f68d28fa387b16577815f6782cf9ba70de'
+};

@@ -6,7 +6,16 @@
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import fs from 'fs-extra';
-import { formatNewYorkTime, groupMarketSessions, loadCsvMinuteBacktestData, resolveDataset } from '#lib';
+import {
+  type DatasetSelection,
+  type WindowReport,
+  describeWindow,
+  formatNewYorkTime,
+  groupMarketSessions,
+  loadCsvMinuteBacktestData,
+  resolveDataset,
+  selectRunSessions
+} from '#lib';
 import type { MarketSession } from '#types';
 import { PhenotypeError, type ResolvedParameter, formatValue } from './architectures.ts';
 import { type ExecutionProfile, executionRoot, readExecutionProfile } from './execution.ts';
@@ -65,6 +74,7 @@ export interface RunPlan {
   marginInterestRate: Setting<number>;
   stopFill: Setting<string>;
   dataFile: Setting<string>;
+  dataset: DatasetSelection; // the partition (or explicit file) the strategy itself resolves again
   firstEligibleDate?: string;
   startDate?: string;
   endDate?: string;
@@ -175,6 +185,7 @@ export const planPhenotypeRun = async (request: PhenotypeRunRequest): Promise<Ru
     marginInterestRate,
     stopFill,
     dataFile,
+    dataset,
     firstEligibleDate: profile.firstEligibleDate,
     startDate: unset(request.startDate),
     endDate: unset(request.endDate),
@@ -187,8 +198,10 @@ export interface DatasetInfo {
   file: string;
   sha256: string;
   hashStatus: 'matches the profile' | 'DIFFERS from the profile' | 'no reference hash in the profile';
-  allSessions: MarketSession[];
-  simulated: MarketSession[];
+  allSessions: MarketSession[]; // the sessions handed to the strategy: the file's, through the window's last
+  simulated: MarketSession[]; // the evaluation window
+  warmup: number; // warm-up sessions before the window (a partition run; src/lib/evaluation.ts)
+  window?: WindowReport;
   firstEligibleIndex: number; // into `simulated`; -1 when no session can arm
 }
 
@@ -214,12 +227,19 @@ export const loadDataset = async (plan: RunPlan): Promise<DatasetInfo> => {
 
   const sha256 = await sha256File(file);
   const expected = plan.profile.dataHashes[plan.request.symbol];
-  const allSessions = groupMarketSessions(await loadCsvMinuteBacktestData(plan.request.symbol, file));
-  // The strategy's own session filter.
-  const start = timestampOf(plan.startDate, -Infinity);
-  const end = timestampOf(plan.endDate, Infinity);
-  const simulated = allSessions.filter((session) => session.time >= start && session.time <= end);
+  const fileSessions = groupMarketSessions(await loadCsvMinuteBacktestData(plan.request.symbol, file));
   const warmUp = plan.values.tickWindowSize ?? plan.strategy.injectable.tickWindowSize?.literal ?? 0;
+  // The strategy's own window and warm-up: the date filter for an explicit file, the partition's sessions and the
+  // warm-up history before them otherwise. Sessions after the window are not handed to the strategy.
+  const run = selectRunSessions(fileSessions, {
+    dataset: plan.dataset,
+    startDate: plan.startDate,
+    endDate: plan.endDate,
+    warmupSessions: warmUp
+  });
+  const simulated = run.sessions;
+  const last = simulated.at(-1);
+  const allSessions = run.report && last ? fileSessions.slice(0, fileSessions.indexOf(last) + 1) : fileSessions;
   const eligibleTime = timestampOf(plan.firstEligibleDate, -Infinity);
 
   return {
@@ -233,7 +253,11 @@ export const loadDataset = async (plan: RunPlan): Promise<DatasetInfo> => {
           : 'DIFFERS from the profile',
     allSessions,
     simulated,
-    firstEligibleIndex: simulated.findIndex((session, index) => index >= warmUp && session.time >= eligibleTime)
+    warmup: run.warmup,
+    window: run.report && { ...run.report, dataSha256: sha256 },
+    firstEligibleIndex: simulated.findIndex(
+      (session, index) => run.warmup + index >= warmUp && session.time >= eligibleTime
+    )
   };
 };
 
@@ -296,6 +320,7 @@ export const headerLines = (plan: RunPlan, dataset: DatasetInfo): string[] => {
     `Dataset:         ${dataset.file} (${plan.dataFile.source}; sha256 ${dataset.sha256.slice(0, 16)}, ${dataset.hashStatus})`,
     `Sessions:        ${dataset.allSessions[0]?.date} → ${dataset.allSessions.at(-1)?.date} in the file (${dataset.allSessions.length})`,
     `Simulation:      ${first?.date ?? 'none'} → ${last?.date ?? 'none'} (${dataset.simulated.length} sessions; start ${plan.startDate ?? 'none'}, end ${plan.endDate ?? 'none'})`,
+    ...(dataset.window ? [`Window:          ${describeWindow(dataset.window)}`] : []),
     `First eligible:  ${eligible ? eligible.date : 'no session can arm'} (the ${plan.values.tickWindowSize ?? '?'}-session warm-up${plan.firstEligibleDate ? ` and the profile's first eligible date ${plan.firstEligibleDate}` : ''})`,
     `Investment:      ${formatDollars(plan.investment.value)} per entry, fixed, no compounding (${plan.investment.source})`,
     `Interest:        ${formatRate(plan.marginInterestRate.value)} annual margin interest (${plan.marginInterestRate.source})`,
@@ -386,6 +411,7 @@ export const runRecord = ({
     dataFile: dataset.file,
     dataSha256: dataset.sha256,
     dataHashStatus: dataset.hashStatus,
+    dataset: dataset.window ?? null,
     firstSession: dataset.simulated[0]?.date ?? null,
     lastSession: dataset.simulated.at(-1)?.date ?? null,
     sessions: dataset.simulated.length,
@@ -460,7 +486,7 @@ export const executePhenotypeRun = async (
       symbol: plan.request.symbol,
       startDate: plan.startDate,
       endDate: plan.endDate,
-      dataFile: plan.dataFile.value,
+      dataFile: plan.dataset.partition ?? plan.dataset.file,
       outDir: plan.outDir,
       stopFill: plan.stopFill.value
     });

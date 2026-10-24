@@ -4,20 +4,18 @@ This project backtests different strategies for margin trading.
 
 ## Market data
 
-Strategies read one-minute OHLCV bars from one file per symbol and partition:
+Each symbol has **one canonical file** of one-minute OHLCV bars, and one shared metadata file holds the date
+boundaries of the logical partitions:
 
 ```text
-data/<SYMBOL>/<partition>/data.csv
+data/
+  partitions.json        # partition boundaries (versioned in git; the rest of data/ is local)
+  VGT/data.csv           # every bar of VGT, oldest first
+  XBI/data.csv
+  ...
 ```
 
-| Partition  | New York trading dates (inclusive)    | Use                                                         |
-| ---------- | ------------------------------------- | ----------------------------------------------------------- |
-| `training` | 2016-01-01 through 2023-12-31         | the default; the only partition optimizers may read         |
-| `holdout`  | 2024-01-01 through 2025-10-16         | explicit manual evaluation                                  |
-| `final`    | 2025-10-17 onward                     | explicit manual evaluation                                  |
-| `all`      | the three above, in order             | one continuous series for a single backtest across them all |
-
-Every file is **headerless and comma-delimited**, one bar per row, in ascending time order:
+Every `data.csv` is **headerless and comma-delimited**, six fields, one bar per row, in strictly ascending time order:
 
 ```text
 "2016-01-04T14:30:00Z",106.31,106.31,105.77,105.77,21114
@@ -26,34 +24,67 @@ Every file is **headerless and comma-delimited**, one bar per row, in ascending 
 The columns are the bar's start time (ISO 8601 UTC, quoted as exported), open, high, low, close and volume, as
 downloaded from Alpaca (SIP feed, raw prices, extended hours included; strategies keep the regular session, see
 `src/lib/session.ts`). `src/lib/csv.ts` defines the format and refuses a header row, pipe-delimited rows, wrong field
-counts, non-numeric values, non-UTC times and rows out of order. `all` is a physical file written by the partitioning
-script: the training, holdout and final rows concatenated byte for byte, not something assembled at run time. The
-boundaries above exist only in the partitioning script (`src/data-partition/scan.ts`); code selects a dataset by
-name through `src/lib/dataset.ts`.
+counts, non-numeric values, non-UTC times and rows out of order. Bytes are never rewritten: no resampling,
+interpolation, adjustment or delimiter change.
 
-### Adding or refreshing a symbol
+### Partitions
 
-1. Download the bars to `data/<SYMBOL>.csv`, for example with `cd data && ./download.sh <SYMBOL>` (it writes
-   `<SYMBOL>.csv` in the current directory and needs `ALPACA_API_KEY` and `ALPACA_SECRET_KEY`).
-2. Run `npm run partition-data` to partition every `data/<SYMBOL>.csv` there, or `npm run partition-data -- KRE XBI`
-   for some of them.
+A partition is a **date interval of the canonical file**, never a separate file. `data/partitions.json`:
 
-For each symbol the script parses every row as CSV, assigns it the New York trading date of its timestamp (daylight
-saving included), and writes the four files to a temporary directory. It then checks them from disk: each file
-parses with the application's loader and stays inside its dates, the row counts add up, and the bytes of training,
-holdout and final concatenated are the bytes of `all` and of the source's data rows (without a header, `all` is the
-source file exactly). Only then are the files moved into place, checked once more, and the source deleted.
+```json
+{
+  "schemaVersion": 1,
+  "timezone": "America/New_York",
+  "partitions": {
+    "training": { "start": "2016-01-01", "end": "2023-12-31" },
+    "holdout": { "start": "2024-01-01", "end": "2025-10-16" },
+    "final": { "start": "2025-10-17", "end": null },
+    "all": { "start": null, "end": null }
+  }
+}
+```
 
-Duplicate timestamps, rows out of order, malformed rows and rows outside the partitions (before 2016) fail the
-symbol: nothing is sorted, dropped or repaired, the source is kept and existing files are untouched. A header row is
-left out. Missing NYSE sessions, bars on closed days, intraday gaps, thin coverage and inconsistent OHLC values are
-reported but do not fail. The report is printed, saved per symbol in `data/<SYMBOL>/partition-report.json`, and for
-the run in `data/partition-run.json`.
+| Partition  | New York trading dates (inclusive) | Use                                                         |
+| ---------- | ---------------------------------- | ----------------------------------------------------------- |
+| `training` | 2016-01-01 through 2023-12-31      | the default; the only partition optimizers may read         |
+| `holdout`  | 2024-01-01 through 2025-10-16      | explicit manual evaluation                                  |
+| `final`    | 2025-10-17 through the last row    | explicit manual evaluation                                  |
+| `all`      | every row of the file              | one continuous backtest over the whole history              |
 
-The script is safe to rerun. Existing files with identical content are left alone; different ones are refused
-unless `--replace` is given, so a refreshed download shows which partitions changed (normally only `final` and
-`all`). `--keep-source` keeps `data/<SYMBOL>.csv`. `npm run partition-data -- verify [SYMBOL ...]` re-checks files
-already in place, from `all`.
+Dates are **New York trading dates**: a bar belongs to the date of its timestamp in New York, daylight saving
+included, so an evening bar at 00:30 UTC belongs to the previous date. `null` leaves a side unbounded; it never admits
+invalid rows. `src/lib/partitions.ts` validates the file strictly: the schema version, the time zone, real
+`YYYY-MM-DD` dates, `training`, `holdout` and `final` consecutive without gaps or overlaps (only training may start
+and final may end unbounded), `all` unbounded, and no unknown keys. Every row of a canonical file must fall into one
+of the three segments; a row outside them (before 2016) fails the file's checks rather than being dropped. The file
+has no symbol-specific content, and its sha256 is recorded by every partition run.
+
+### Adding, refreshing and verifying symbols
+
+```bash
+(cd data && ./download.sh KRE)                       # writes data/KRE.csv; needs ALPACA_API_KEY and ALPACA_SECRET_KEY
+npm run datasets -- import KRE                       # data/KRE.csv → data/KRE/data.csv
+npm run datasets -- import KRE --replace             # a refreshed download replacing the existing file
+npm run datasets -- verify                           # re-scan every canonical file against partitions.json
+npm run datasets -- config                           # validate and print partitions.json
+```
+
+`import` parses every row (`src/data-partition/scan.ts`), writes the data rows exactly to a temporary file beside the
+target (a header row, if any, is left out), checks its sha256 and renames it into place; the download is then removed
+unless `--keep-source`. Duplicate timestamps, rows out of order, malformed rows and rows outside the partitions fail
+the symbol and leave everything as it was. Missing NYSE sessions, sparse sessions, bars on closed days, intraday
+gaps and inconsistent OHLC values are reported but do not fail. A replacement needs `--replace` and reports, per
+partition, whether its rows changed (normally only `final`). `--dry-run` checks without writing. Reports go to
+`data/<SYMBOL>/dataset-report.json` and `data/datasets-<command>-run.json`. A new symbol needs nothing else:
+partitions are dates, not files.
+
+`npm run datasets -- migrate [SYMBOL ...] [--dry-run]` converted the former layout
+(`data/<SYMBOL>/{training,holdout,final,all}/data.csv`, 2026-10-23) to the canonical one on 2026-10-24: for each
+symbol it proved `all` = training ‖ holdout ‖ final byte for byte, scanned `all`, checked that each physical file held
+exactly the rows partitions.json assigns to it, copied `all` to `data/<SYMBOL>/data.csv` through a verified temporary
+file, and only then removed the four files. It is rerunnable (an interrupted migration resumes; a migrated symbol is
+re-verified), writes `data/partitions.json` if it is missing, and keeps every original file of a symbol that fails.
+Its record is `data/<SYMBOL>/migration-report.json` and `data/datasets-migration-2026-10-24.log`.
 
 ### Running a strategy
 
@@ -67,44 +98,107 @@ npm run app -- allIn-trailingBuy VGT final
 npm run app -- allIn-trailingBuy VGT all
 ```
 
-Unknown partitions are refused. The remaining arguments keep their positions (`[start date] [end date] [data file]
-[output dir] ...`; see each file's usage comment), so the older forms work unchanged: `npm run app --
-allIn-trailingBuy VGT 2016-10-07 2023-12-29` (training), a partition name in the data-file slot (`VGT - - holdout`),
-or an explicit file path. Giving both a partition and a data file is refused. Every run prints the selected dataset,
-for example `Dataset: VGT holdout (data/VGT/holdout/data.csv)`, and `summary.json` records the file.
+Only those four names are accepted. The remaining arguments keep their positions (`[start date] [end date] [data
+file] [output dir] ...`; see each file's usage comment), so the older forms work unchanged: dates after the symbol
+(`VGT 2019-01-02 2023-12-29`, within training), a partition name in the data-file slot (`VGT - - holdout`), or an
+explicit file path. Dates narrow the partition and must lie inside it (`VGT holdout 2023-12-01` is refused). Giving
+both a partition and a data file is refused, and so is a former partition path such as `data/VGT/holdout/data.csv`.
+Every run prints the dataset and its window, for example
 
-`all` runs as **one continuous backtest**: positions, trailing stops, reference highs, margin interest and drawdown
-carry across the former partition boundaries. It is not three runs added together.
+```text
+Dataset: VGT holdout (data/VGT/data.csv; data/partitions.json holdout = 2024-01-01 → 2025-10-16, sha256 43893f3d…); data sha256 d8e6991d…
+Evaluation: VGT holdout (isolated partition), 2024-01-02 → 2025-10-16, 450 sessions; warm-up 90 of 90 sessions (…)
+```
 
-A partition run is isolated: it starts flat, and its warm-up (the strategy's `tickWindowSize` sessions before the
-first entry can arm, 90 sessions in `allIn-trailingBuy.ts`) is taken from the partition's own first sessions, so
-about the first four months of `holdout` or `final` cannot trade. Nothing earlier is loaded. The same holds for a
-start date, which filters sessions before the warm-up. A `holdout` run therefore differs from the 2024–2025 part of
-an `all` run; for figures with state carried across a boundary, use the period report of a `--phenotype` run on
-`all` (`config/phenotypes/README.md`). Loading prior sessions for indicator warm-up only would change backtest
-semantics and is not implemented.
+and `summary.json` records the same in `dataset` (partition, effective dates, warm-up, hashes, mode).
+
+### Warm-up, isolated partitions and continuous runs
+
+- **`all` is one continuous backtest**: positions, trailing stops, setups, restrictions, reference highs, interest
+  and drawdowns carry across the former partition boundaries. It is not three runs added together.
+- **`training`, `holdout` and `final` are isolated evaluations** that start flat. Before the window the strategy reads
+  up to its lookback of strictly earlier sessions from the same canonical file (`src/lib/evaluation.ts`): the
+  `tickWindowSize` sessions of the reference high (and `swingLookback` for the swing-low file). Those sessions are
+  **observational only**: no orders, fills, positions, interest, P&L, trade counts, marks or drawdown, and they are not
+  reported. The arming guard counts them, so after a full warm-up the window's first session can arm; with less
+  history (training starts at the file's first row) entries wait inside the window, as a cold start always did, and
+  the run reports the shortfall. Nothing after the window's last date is read.
+- **Not warmed up**, because it exists only through trades: open positions and their stops, armed or pending setups
+  (arming requires being flat, which an isolated run can't know before its window), loss restrictions, correction
+  episodes (episodeLatch, episodeBudget, troughRecovery: an episode starts at a deep arming), post-exit continuation
+  windows (they need a profitable exit) and buffered-loss carry. A dip that began before the window arms on the first
+  window minute that meets the condition, and its trailing low starts there.
+- So a `holdout` or `final` run is **not** the matching segment of an `all` run, and is not expected to equal it. For
+  figures of one continuous run attributed to periods, use the period report of a `--phenotype` run
+  (`config/phenotypes/README.md`).
+- An **explicit data file** keeps the original semantics: its sessions filtered by the dates, no partition and no
+  warm-up. The frozen research programs use this path.
+- Changed behaviour, audited: a partition run with a start date (for example `VGT 2019-01-02 2023-12-29`) now warms
+  up from the sessions before that date instead of starting cold. A whole `training` or `all` run has no earlier
+  sessions and is unchanged: all 22 minute strategy files reproduce their previous training outputs file for file.
+
+### The multi-ETF allocator's datasets
+
+`npm run multi-etf-allocator` keeps its frozen protocol (`research/multi-etf-allocator/PROTOCOL.md`) as the default:
+without `--dataset`, `fixed` and `portfolio` run on the archived legacy files (below) with their pinned hashes,
+truncated at `protocol.commonEnd` (2025-10-13), arming from 2017-06-15, as frozen. An explicit evaluation on the
+canonical files adds `--dataset`:
+
+```bash
+npm run multi-etf-allocator -- portfolio --policy shadow --config all-lowDd --dataset training
+npm run multi-etf-allocator -- portfolio --policy shadow --config all-lowDd --dataset all --allow-uncovered-distributions
+npm run multi-etf-allocator -- fixed --policy shadow --config all-lowDd --dataset holdout --dry-run
+```
+
+`fixed` is the fixed $100,000 pool; `portfolio` the 20%-of-equity shared-margin account with its VOOG/VGT core.
+With `--dataset`, every member (VOOG and the books' symbols) is read over the same New York window with the same
+warm-up (the books' longest lookback) and the calendars must agree session by session; `all` has no `commonEnd`
+truncation; books arm from the window's first session or 2017-06-15, whichever is later; accounting (the portfolio's
+funding, P&L, interest, drawdown) starts at the close of the window's first session, as the protocol starts at the
+close of 2016-01-04. The distribution ledger covers ex-dates through 2025-10-13 (it was derived from the legacy files),
+so a window ending later needs `--allow-uncovered-distributions` and its record says later distributions are not
+modelled. Results go to `evaluations/multi-etf-allocator/<dataset>/<run key>/` (git-ignored; `--out DIR` to choose, never
+under `research/`) with `evaluation.json`: windows, sparse-session counts, data/partitions/distribution/config/phenotype
+hashes, the D1 definition check, the git revision and the access mode. `--dry-run` prints all of that without running.
+The frozen studies (`run`, `all`, `stress`, `parity`, `audit`, `audit-ledger`, `illustration`, `final-validation`)
+refuse `--dataset`. `--dataset training` reproduces the frozen engine on the archived files truncated at 2023-12-29
+exactly (every summary field and daily row).
 
 ### Holdout safeguards
 
-- Optimizers and research programs read market data through `optimizationDatasetFile` (`src/lib/dataset.ts`), which
-  accepts only `training` and refuses `holdout`, `final` and `all`.
+- Optimizers and parameter searches read only `training`, although all four partitions share one file:
+  `optimizationDataset` / `assertOptimizationPartition` (`src/lib/dataset.ts`) refuse `holdout`, `final` and `all`,
+  and so does the loader itself for a request with `access: 'optimization'` (`src/lib/evaluation.ts`), before any
+  data is read; every window report records its access mode. No optimizer command line takes a data file or a
+  partition: the completed programs read their fixed, archived research inputs (below) with their own frozen
+  development/holdout splits. Warm-up history never widens a window: every result, metric and decision comes from
+  the window's sessions.
 - Manual backtests may read any partition. Using `holdout`, `final` or `all` results to choose or tune parameters
   makes them part of the tuning data, so they no longer measure out-of-sample performance; keep final-period results
   out of optimization reports and strategy selection.
 - VGT's 2024–2025 period was inspected by earlier VGT programs, so it is not a sealed holdout for VGT.
 
-### Legacy data and research archives
+### Legacy research inputs and reproducibility
 
-- The completed programs under `research/` (and their code in `src/<program>/`) ran on earlier files such as
-  `data/VGT/VGT-2016-2025-1-minute.csv`, which are no longer in `data/`. Their documents keep those names and
-  hashes as provenance. Their code now reads the training partitions; wherever a program checks its data (or its
-  frozen code, including `src/lib/`) against recorded hashes, it refuses rather than mixing datasets, so their
-  frozen stages (holdouts, final evaluations) cannot be rerun on the new files.
+- The completed programs under `research/` ran on earlier files such as `data/VGT/VGT-2016-2025-1-minute.csv`, whose
+  sha256 their documents and code pin. Those bytes are kept, verified, in a read-only archive outside the live data:
+  `data/archive/legacy-research-inputs/<SYMBOL>/<legacy name>`, listed with hashes, the research files pinning them
+  and their derivation in `config/archive/legacy-research-inputs.json`. Each legacy minute file is a byte prefix of
+  today's canonical file (the old downloads ended 2025-10-13 or 2025-10-16, before `final`); the daily
+  `VGT-2016-2026.csv` is a line range of the trailing-buy research's pinned daily file.
+  `npm run legacy-archive -- build [SYMBOL ...]` rebuilds them from those sources and refuses any mismatch (or a row in
+  `final`); `verify` and `list` check and list them.
+- The frozen programs read their inputs from the archive (`legacyResearchFile`, `src/lib/archive.ts`) and still check
+  their pinned hashes; nothing falls back to the canonical files. The archive is never a default for new work.
+- Strategy files edited only in their dataset plumbing still pass a research pin of their bytes:
+  `checkStrategyDefinition` (`src/lib/frozenSource.ts`) reads the pinned revision from git, applies exactly the
+  documented plumbing edits and requires the result to equal the current file byte for byte; any other change fails.
 - Pipe-delimited daily bars (`YYYY-MM-DD|open|high|low|close|volume`) remain only for the Stooq cache in
   `data/stooq/` (the multi-asset optimizer, `src/optimizer/`) and the trailing-buy research's files in
   `data/trailing-buy-entry/` (`src/trailing-buy/`), read by `loadCsvBacktestData`. `allIn-original`,
-  `allIn-optimizable`, `ladderUp` and `ladderDown` read daily files (`data/<SYMBOL>/<SYMBOL>-2016-2026.csv`) that are
-  no longer present; the minute partitions don't apply to them.
+  `allIn-optimizable`, `ladderUp` and `ladderDown` read daily files that are not present
+  (`data/VOOG/VOOG-2016-2026.csv`, `data/VGT/VGT-2005-2026.csv`, `data/VGT/VGT-2026.csv`, `data/QQQ/QQQ-1999-2015.csv`;
+  only `VGT-2016-2026.csv` is in the archive); the minute partitions don't apply to them.
 
 ## Phenotypes
 

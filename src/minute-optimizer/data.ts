@@ -20,7 +20,7 @@
 // minute, or a session aggregate (high, close) that the original also only uses after the session.
 import { createHash } from 'node:crypto';
 import fs from 'fs-extra';
-import { groupMarketSessions, loadCsvMinuteBacktestData, optimizationDatasetFile } from '#lib';
+import { groupMarketSessions, loadCsvMinuteBacktestData, legacyMinuteFile } from '#lib';
 import type { MarketSession } from '#types';
 
 const secondsPerMinute = 60;
@@ -102,8 +102,9 @@ export const sha256File = async (file: string) =>
     .update(await fs.readFile(file))
     .digest('hex');
 
-// The training partition (src/lib/dataset.ts); the research ran on the legacy data/VGT/VGT-2016-2025-1-minute.csv.
-export const defaultDataFile = optimizationDatasetFile('VGT');
+// The research input, data/VGT/VGT-2016-2025-1-minute.csv, from the verified legacy archive (src/lib/archive.ts);
+// the program's own hash check still applies. New work reads the dataset partitions instead (src/lib/dataset.ts).
+export const defaultDataFile = legacyMinuteFile('VGT');
 
 // Loads and groups the whole file, exactly as allIn.ts does.
 export const loadSessions = async (file = defaultDataFile, symbol = 'VGT') =>
