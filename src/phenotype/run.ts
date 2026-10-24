@@ -239,7 +239,9 @@ export const loadDataset = async (plan: RunPlan): Promise<DatasetInfo> => {
   });
   const simulated = run.sessions;
   const last = simulated.at(-1);
-  const allSessions = run.report && last ? fileSessions.slice(0, fileSessions.indexOf(last) + 1) : fileSessions;
+  // Cut by date: across a split the window's sessions are adjusted copies (src/lib/corporateActions.ts), not the file's
+  // objects. The strategy gets the raw sessions and applies the same adjustment itself.
+  const allSessions = run.report && last ? fileSessions.filter((session) => session.date <= last.date) : fileSessions;
   const eligibleTime = timestampOf(plan.firstEligibleDate, -Infinity);
 
   return {
