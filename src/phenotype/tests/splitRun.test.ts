@@ -2,6 +2,9 @@
 // --phenotype primary` across VGT's 8:1 split of 2026-04-21), on synthetic bars in a temporary data root: the runner
 // injects the raw sessions through the window's end, the strategy forward-adjusts them once, and the split makes no
 // setup. Regression: the runner once cut the injected sessions by object identity, which the adjusted copies broke.
+// A second economy holds a position across the split, which the real VGT history never does (D1 primary is flat from
+// 2026-02-05): the split run must equal, trade for trade and mark for mark, the same economy printed without a split
+// (docs/vgt-d1-primary-discrepancy.md).
 import assert from 'node:assert/strict';
 import os from 'node:os';
 import path from 'node:path';
@@ -11,24 +14,60 @@ import { defaultPartitionConfigText, newYorkOffset, nyseHolidays, resolveDataset
 import { executePhenotypeRun, planPhenotypeRun } from '../run.ts';
 
 const script = 'allIn-trailingBuy-postExitContinuation';
+const splitDate = '2026-04-21';
 let root = '';
 
-// A steady rise from 2025-06-02 to 2026-06-30, printed raw: from 2026-04-21 on, prices ÷ 8 and volumes × 8.
-const rows = () => {
-  const lines: string[] = [];
-  let price = 700;
+const tradingDates = () => {
+  const dates: string[] = [];
 
   for (let time = Date.parse('2025-06-02T00:00:00Z'); time <= Date.parse('2026-06-30T00:00:00Z'); time += 86400000) {
     const date = new Date(time).toISOString().slice(0, 10);
     const day = new Date(time).getUTCDay();
 
-    if (day === 0 || day === 6 || nyseHolidays.has(date)) {
-      continue;
+    if (day !== 0 && day !== 6 && !nyseHolidays.has(date)) {
+      dates.push(date);
+    }
+  }
+
+  return dates;
+};
+
+// A steady rise from 2025-06-02 to 2026-06-30.
+const steadyRise = (dates: string[]) => dates.map((_, index) => 700 + 0.5 * (index + 1));
+
+// A rise, a 30% fall in April 2026 that arms and fills a deep trailing buy before the split, a rally carried across
+// it, and a June fall that stops the position out after it.
+const dipAcrossSplit = (dates: string[]) => {
+  const prices: number[] = [];
+  let price = 700;
+  let peak = price;
+
+  for (const date of dates) {
+    if (date < '2026-04-01') {
+      price += 0.5;
+      peak = price;
+    } else if (date < '2026-04-10') {
+      price -= 0.05 * peak;
+    } else if (date < '2026-06-01') {
+      price *= 1.01;
+    } else {
+      price *= 0.985;
     }
 
-    price += 0.5;
+    prices.push(price);
+  }
 
-    const ratio = date >= '2026-04-21' ? 8 : 1;
+  return prices;
+};
+
+// The economy as minute rows, printed raw: with `split`, from 2026-04-21 on, prices ÷ 8 and volumes × 8.
+const rows = (prices: (dates: string[]) => number[], split: boolean) => {
+  const dates = tradingDates();
+  const lines: string[] = [];
+
+  for (const [index, price] of prices(dates).entries()) {
+    const date = dates[index]!;
+    const ratio = split && date >= splitDate ? 8 : 1;
     const offset = newYorkOffset(Date.parse(`${date}T16:00:00Z`) / 1000);
 
     for (const minute of [9 * 60 + 30, 12 * 60, 15 * 60 + 59, 16 * 60]) {
@@ -46,23 +85,32 @@ const rows = () => {
 before(async () => {
   root = await fs.mkdtemp(path.join(os.tmpdir(), 'phenotype-split-'));
   await fs.writeFile(path.join(root, 'partitions.json'), defaultPartitionConfigText);
-  await fs.outputFile(path.join(root, 'VGT', 'data.csv'), rows());
+  await fs.outputFile(path.join(root, 'VGT', 'data.csv'), rows(steadyRise, true));
+  await fs.outputFile(path.join(root, 'held', 'VGT', 'data.csv'), rows(dipAcrossSplit, true));
+  await fs.outputFile(path.join(root, 'held', 'NOSPLIT', 'data.csv'), rows(dipAcrossSplit, false));
+  await fs.writeFile(path.join(root, 'held', 'partitions.json'), defaultPartitionConfigText);
 });
 
 after(async () => {
   await fs.remove(root);
 });
 
+// VGT's primary phenotype run on a synthetic `all` partition. `symbol` is the series' name, so the control series,
+// which no recorded split names, is run with VGT's parameters and nothing adjusted.
+const runOn = async (dataRoot: string, symbol = 'VGT') => {
+  const plan = await planPhenotypeRun({ script, symbol: 'VGT', phenotype: 'primary', dataFile: 'all' });
+  const dataset = resolveDataset(symbol, 'all', dataRoot);
+
+  plan.request.symbol = symbol;
+  plan.dataset = dataset;
+  plan.dataFile = { value: dataset.file, source: `synthetic ${symbol} all partition` };
+
+  return executePhenotypeRun(plan, { log: () => {}, quietStrategy: true });
+};
+
 describe('a phenotype run across a split', () => {
   test('injects the raw sessions, adjusts them once, and the split makes no setup', async () => {
-    const plan = await planPhenotypeRun({ script, symbol: 'VGT', phenotype: 'primary', dataFile: 'all' });
-    const dataset = resolveDataset('VGT', 'all', root);
-
-    // The same partition, read from the synthetic root.
-    plan.dataset = dataset;
-    plan.dataFile = { value: dataset.file, source: 'synthetic VGT all partition' };
-
-    const run = await executePhenotypeRun(plan, { log: () => {}, quietStrategy: true });
+    const run = await runOn(root);
 
     assert.equal(run.dataset.allSessions.length, run.dataset.simulated.length, 'every session through the window end');
     assert.ok(run.dataset.allSessions.length > 200);
@@ -76,5 +124,51 @@ describe('a phenotype run across a split', () => {
     assert.equal(run.result.sessions.length, run.dataset.simulated.length);
     assert.equal(run.result.positions.length, 0, 'a steady rise: no trade, and the split is no dip');
     assert.equal((run.result as unknown as { setups: unknown[] }).setups.length, 0);
+  });
+
+  test('a position held across the split equals the same economy without one', async () => {
+    const split = await runOn(path.join(root, 'held'));
+    const control = await runOn(path.join(root, 'held'), 'NOSPLIT');
+    const splitTime = Date.parse(`${splitDate}T13:30:00Z`) / 1000;
+
+    assert.deepEqual(split.dataset.window!.splitAdjustments, [{ symbol: 'VGT', effectiveDate: splitDate, ratio: 8 }]);
+    assert.deepEqual(control.dataset.window!.splitAdjustments, []);
+
+    const held = control.result.positions.filter(
+      (position) => position.entryTimestamp < splitTime && (position.exitTimestamp ?? Infinity) > splitTime
+    );
+
+    assert.equal(held.length, 1, 'the control holds one position across the split date');
+    assert.ok(held[0]!.exitTimestamp !== undefined && held[0]!.profit! > 0, 'and closes it after, at a profit');
+
+    // Entry and exit prices, shares (in the run's first-session units), stops and net profit: identical.
+    const trades = (run: typeof split) =>
+      run.result.positions.map((position) => ({
+        ...position,
+        symbol: undefined, // the series name
+        entry: run.result.entryFills.get(position),
+        exit: run.result.exitFills.get(position)
+      }));
+
+    assert.deepEqual(trades(split), trades(control));
+    assert.ok(split.result.positions[0]!.exitPrice! > 400, 'the exit is priced in pre-split share units');
+    // Every state transition, episode and setup (reference highs, trigger levels, trailing lows), the replayed marks,
+    // and the periods' net, interest and minute and daily drawdowns.
+    const states = (run: typeof split) => {
+      const { stateLog, episodes, setups } = run.result as unknown as Record<string, unknown[]>;
+
+      return { stateLog, episodes, setups };
+    };
+
+    assert.ok(states(control).setups!.length >= 1);
+    assert.deepEqual(states(split), states(control));
+    assert.deepEqual(split.report.accounting, control.report.accounting);
+    assert.deepEqual(split.report.periods, control.report.periods);
+
+    // The volumes are the only other field the adjustment touches: ÷ 8, so dollar volume is unchanged.
+    const index = split.result.sessions.findIndex((session) => session.date === splitDate);
+
+    assert.equal(split.result.sessions[index]!.volume, control.result.sessions[index]!.volume);
+    assert.equal(split.dataset.allSessions[index]!.volume, control.result.sessions[index]!.volume * 8);
   });
 });
