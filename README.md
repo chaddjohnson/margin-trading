@@ -212,8 +212,21 @@ hashes, ledger coverage, splits and split-adjusted distributions, the D1 definit
 revision and the access mode, plus `segments.csv`: the development, holdout, final and full periods of the one
 continuous run (opening and closing equity, strategy P&L, interest, dividends, lots, and both the largest-dollar and the
 largest-percentage daily drawdown). The summary's `dailyDrawdownPercent` and `minuteDrawdownPercent` are the depth of
-the largest-**dollar** episode (the frozen engine's convention), not the largest percentage fall; the minute-sampled
-percentage fall is not measured. `--dry-run` prints the record without running.
+the largest-**dollar** episode (the frozen engine's convention), not the largest percentage fall; `evaluation.json`'s
+`drawdowns` holds both maxima independently, daily and minute-sampled, each with its peak, trough and recovery (see
+below). `--dry-run` prints the record without running.
+
+`fixed` and `portfolio` (frozen or `--dataset`) print a readable report rather than JSON, and write it to `report.txt`
+beside the run's files (`--json` prints the summary JSON instead; the JSON, CSV and ledger files are unchanged):
+strategy, mode, dataset and period; for the portfolio the starting and ending equity, total return and CAGR; funded,
+closed, winning and losing trades; realized, unrealized and net profit and margin interest; the maximum daily and
+minute drawdowns; per-symbol funded lots and profit; and, with `--dataset`, the period table
+(`src/multi-etf-allocator/runReport.ts`). In the portfolio the largest dollar and the largest peak-to-trough percent
+drawdown are two independent measures of marked equity (the engine's `Tracker` and `PercentTracker`, the latter at
+every close and every minute mark), generally different episodes: for All-lowDd on `all`, $594,129 (25.20% below its
+peak, 2025) and 34.55% ($252,851, March 2020) daily, $689,419 and 36.92% minute-sampled. In the fixed mode the
+allocation is constant, so its percentage is a capital-allocation reference and the same episode as the dollar
+maximum.
 The frozen studies (`run`, `all`, `stress`, `parity`, `audit`, `audit-ledger`, `illustration`, `final-validation`)
 refuse `--dataset`. `--dataset training` reproduces the frozen engine on the archived files truncated at 2023-12-29
 exactly (every summary field and daily row).

@@ -276,6 +276,71 @@ export class Tracker {
   }
 }
 
+export interface PercentDrawdownStats {
+  maximumPercent: number;
+  dollars: number; // the fall of that episode
+  peakTime: number;
+  troughTime: number;
+  peakValue: number;
+  troughValue: number;
+  recoveryTime: number;
+}
+
+// The largest fall in percent of the running peak, tracked independently of Tracker, which keeps the largest fall in
+// dollars and reports that episode's depth. In a compounding account the two are generally different episodes (a
+// small early account falls further in percent for fewer dollars). A new peak on ≥, as Tracker.update.
+export class PercentTracker {
+  private peak: number;
+  private peakTime: number;
+  private recovering = false;
+  private worst: PercentDrawdownStats;
+
+  constructor(start: number, time: number) {
+    this.peak = start;
+    this.peakTime = time;
+    this.worst = {
+      maximumPercent: 0,
+      dollars: 0,
+      peakTime: time,
+      troughTime: time,
+      peakValue: start,
+      troughValue: start,
+      recoveryTime: NaN
+    };
+  }
+
+  update(value: number, time: number) {
+    if (value >= this.peak) {
+      if (this.recovering && value >= this.worst.peakValue) {
+        this.worst.recoveryTime = time;
+        this.recovering = false;
+      }
+
+      this.peak = value;
+      this.peakTime = time;
+    }
+
+    const percent = this.peak > 0 ? (this.peak - value) / this.peak : 0;
+
+    if (percent > this.worst.maximumPercent) {
+      this.worst = {
+        maximumPercent: percent,
+        dollars: this.peak - value,
+        peakTime: this.peakTime,
+        troughTime: time,
+        peakValue: this.peak,
+        troughValue: value,
+        recoveryTime: NaN
+      };
+      this.recovering = true;
+    }
+  }
+
+  stats(): PercentDrawdownStats {
+    return { ...this.worst };
+  }
+}
+
 // A closest-approach candidate: the lowest equity/required of one session under one schedule.
 export interface Approach {
   schedule: ScheduleKey;
@@ -338,6 +403,10 @@ export interface RunResult {
   minuteDrawdown: DrawdownStats;
   strategyDailyDrawdown: DrawdownStats;
   strategyMinuteDrawdown: DrawdownStats;
+  // Portfolio only: the largest percentage falls of marked equity at the closes and at every minute mark, independent
+  // of the largest-dollar episodes above (whose maximumPercent is that episode's depth, not the largest percentage).
+  dailyPercentDrawdown?: PercentDrawdownStats;
+  minutePercentDrawdown?: PercentDrawdownStats;
   approaches: Approach[]; // per session per schedule
   minimum: Partial<
     Record<ScheduleKey, { ratio: number; time: number; excess: number; excessTime: number; dailyRatio: number }>
@@ -560,6 +629,8 @@ export const runAllocator = (baseUniverse: Universe, config: RunConfig): RunResu
   const minuteTracker = new Tracker(startValue, portfolio ? closeTimes[startIndex]! : firstBarTime);
   const strategyTracker = new Tracker(0, sTime[startIndex]!);
   const strategyMinuteTracker = new Tracker(0, portfolio ? closeTimes[startIndex]! : firstBarTime);
+  const dailyPercentTracker = new PercentTracker(startValue, closeTimes[startIndex]!);
+  const minutePercentTracker = new PercentTracker(startValue, closeTimes[startIndex]!);
 
   // ----- the allocator's gate -----
 
@@ -1281,6 +1352,7 @@ export const runAllocator = (baseUniverse: Universe, config: RunConfig): RunResu
     const strategyMark = ledger.realized + ledger.unrealized(lastClose, sessionTime);
 
     minuteTracker.update(equity, time);
+    minutePercentTracker.update(equity, time);
     strategyMinuteTracker.update(strategyMark, time);
     marginMarks++;
 
@@ -1733,6 +1805,7 @@ export const runAllocator = (baseUniverse: Universe, config: RunConfig): RunResu
 
       daily.push(row);
       equityTracker.update(row.equity, closeTime);
+      dailyPercentTracker.update(row.equity, closeTime);
       strategyTracker.update(row.strategyMark, sessionTime);
       markPortfolio(s, closeTime, true);
 
@@ -1805,6 +1878,9 @@ export const runAllocator = (baseUniverse: Universe, config: RunConfig): RunResu
     minuteDrawdown: minuteTracker.stats(),
     strategyDailyDrawdown: (portfolio ? strategyTracker : equityTracker).stats(),
     strategyMinuteDrawdown: (portfolio ? strategyMinuteTracker : minuteTracker).stats(),
+    ...(portfolio
+      ? { dailyPercentDrawdown: dailyPercentTracker.stats(), minutePercentDrawdown: minutePercentTracker.stats() }
+      : {}),
     approaches,
     minimum,
     marginMarks,

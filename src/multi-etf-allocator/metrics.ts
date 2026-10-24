@@ -205,7 +205,9 @@ export const summarize = (result: RunResult): Summary => {
   const first = daily[0]!;
   const last = daily.at(-1)!;
   const startEquity = isPortfolio ? config.initial.voog + config.initial.vgt : 0;
-  const spanYears = days(anySessionTime(result, 0), anySessionTime(result, result.endIndex)) / 365.25;
+  // The run starts at the close of its accounting start (0 in the protocol); earlier sessions are warm-up only.
+  const startIndex = config.accountingStartIndex ?? 0;
+  const spanYears = days(anySessionTime(result, startIndex), anySessionTime(result, result.endIndex)) / 365.25;
   const byDate = (pick: (row: DailyRow) => number, better: (a: number, b: number) => boolean) => {
     let best = daily[0]!;
 
@@ -269,9 +271,9 @@ export const summarize = (result: RunResult): Summary => {
       config.symbols.length === 4 ? combinationKey(config.combination) : config.symbols.join('+') || 'none',
     books: config.symbols.join('+'),
     phenotypes: config.symbols.map((symbol) => `${symbol} ${config.phenotypes[symbol].name}`).join('; '),
-    start: result.universe.dates[0]!,
+    start: result.universe.dates[startIndex]!,
     end: result.universe.dates[result.endIndex]!,
-    sessions: result.endIndex + 1,
+    sessions: result.endIndex - startIndex + 1,
     virtualTrades: result.trades.length,
     fundedLots: lots.length,
     closed: closed.length,

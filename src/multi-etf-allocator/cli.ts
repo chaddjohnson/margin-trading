@@ -13,6 +13,8 @@
 //                                           frozen 2025-10-13 for a parity run) and, exceptionally,
 //                                           --allow-uncovered-distributions (a portfolio window past the verified
 //                                           distribution ledger; the record says later distributions are missing)
+//     --json                                print the summary as JSON instead of the readable report; either way the
+//                                           report is also written to report.txt beside the run's other files
 //   run [--keys K1,K2]                      the whole catalogue (controls, 8 combinations × policies, both modes)
 //   stress [--only static,paths,sensitivities]   the margin and execution stress program → results/stress/
 //   illustration                            amendment A1: beyond-grid call mechanics on the real ledger (post hoc)
@@ -66,6 +68,7 @@ import { runFinalValidation } from './finalValidation.ts';
 import { runIllustration } from './illustration.ts';
 import { runStress } from './stress.ts';
 import { runAllocator } from './engine.ts';
+import { formatRunReport, runDrawdowns } from './runReport.ts';
 
 const universeAll = () => loadUniverse({ members: ['VOOG', 'VGT', 'XBI', 'XRT', 'KRE'], end: protocol.commonEnd });
 
@@ -108,6 +111,17 @@ const runParity = async () => {
 
   if (failures.length > 0) {
     throw new Error(`Parity failed for ${failures.length} control(s)`);
+  }
+};
+
+// The readable report on the console (or the summary JSON with --json), and report.txt beside the run's files.
+const printReport = async (outDir: string, report: string, summary: unknown, args: string[]) => {
+  await fs.outputFile(path.join(outDir, 'report.txt'), report);
+
+  if (hasFlag(args, 'json')) {
+    log(JSON.stringify(summary, null, 1));
+  } else {
+    console.info(`\n${report}`);
   }
 };
 
@@ -167,14 +181,8 @@ const runDatasetEvaluation = async (
   );
 
   await fs.outputFile(path.join(outDir, 'segments.csv'), toCsv(segments as unknown as Record<string, unknown>[]));
-  await writeEvaluationRecord(outDir, { ...record, summary, segments });
-  log(JSON.stringify(summary, null, 1));
-
-  for (const row of segments) {
-    log(
-      `${row.segment}: ${row.firstDate} → ${row.lastDate}, equity ${Math.round(row.startEquity)} → ${Math.round(row.endEquity)} (${(row.equityReturn * 100).toFixed(1)}%), strategy ${Math.round(row.strategyPnl)}, interest ${Math.round(row.interest)}, dividends ${Math.round(row.dividends)}, lots ${row.lotsEntered}, largest $ drawdown ${Math.round(row.maxDrawdown)} (${(row.maxDrawdownPercent * 100).toFixed(1)}%, ${row.drawdownPeak} → ${row.drawdownTrough}), largest % drawdown ${(row.maxPercentDrawdown * 100).toFixed(1)}% (${row.percentDrawdownPeak} → ${row.percentDrawdownTrough})`
-    );
-  }
+  await writeEvaluationRecord(outDir, { ...record, summary, segments, drawdowns: runDrawdowns(result) });
+  await printReport(outDir, formatRunReport({ result, summary, dataset, segments, outDir }), summary, args);
 };
 
 const runSingle = async (mode: 'fixed' | 'portfolio', args: string[]) => {
@@ -195,9 +203,10 @@ const runSingle = async (mode: 'fixed' | 'portfolio', args: string[]) => {
   }
 
   const result = runAllocator(await universeAll(), config);
-  const summary = await writeRun(stageDir('runs', 'single', config.key), result);
+  const outDir = stageDir('runs', 'single', config.key);
+  const summary = await writeRun(outDir, result);
 
-  log(JSON.stringify(summary, null, 1));
+  await printReport(outDir, formatRunReport({ result, summary, outDir }), summary, args);
 };
 
 // The frozen studies run only on the protocol's inputs.

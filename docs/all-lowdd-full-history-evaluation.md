@@ -99,8 +99,10 @@ One continuous run: funded at the close of 2016-01-04, books arming from 2017-06
 - By ETF: VGT 14 lots +$309,716; XBI 17 +$93,398; XRT 6 +$31,531; KRE 39 +$194,665.
 - Drawdowns: largest-dollar daily episode $594,129 (25.2%, 2025-01-23 → 2025-04-08); minute-sampled largest-dollar
   episode $689,419 (29.1%, 2025-01-24 → 2025-04-07); **largest percentage fall of daily equity 34.6%
-  (2020-02-19 → 2020-03-23)**. The summary's percent fields follow the frozen engine's convention (depth of the
-  largest-dollar episode); a minute-sampled largest-percentage fall is not measured.
+  (2020-02-19 → 2020-03-23)**; **largest percentage fall of minute-sampled equity 36.9%** ($270,836,
+  2020-02-19 14:44 ET → 2020-03-23 11:46 ET, recovered 2020-06-05). The summary's percent fields follow the frozen
+  engine's convention (depth of the largest-dollar episode); the independent percentages are in `evaluation.json`'s
+  `drawdowns` and the console report (added 2026-10-24 after this evaluation; the run's other files are unchanged).
 - After the old endpoint: the VGT lot open on 2025-10-13 (marked +$174,607.17) closed 2025-11-07 by its trailing stop
   for +$166,219.23; one more lot, XRT 2025-11-12 → 2026-03-03 (maximum hold), −$3,897.66. So
   641,595.87 − (174,607.17 − 166,219.23) − 3,897.66 = 629,310.27, the full net, exactly.
@@ -151,4 +153,3 @@ segments, record), `src/data-partition/{canonical,cli}.ts` (`append`), `package.
 - Prices reported after 2026-04-21 are in pre-split units (VGT about 8×, VOOG 6× their quotes).
 - XLE/XLU/XLY/XOP splits are unrecorded; partition runs of those symbols across them read raw prices (listed by
   `npm run market-events -- verify`).
-- A minute-sampled largest-percentage drawdown is not measured.
