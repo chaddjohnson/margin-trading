@@ -145,7 +145,22 @@ describe('the canonical loader', () => {
   const ratios: Record<string, number> = { VGT: 8, VOOG: 6 };
   const splitDate = '2024-01-17';
 
-  const rows = (symbol: string, { skip, split = false }: { skip?: string; split?: boolean } = {}) => {
+  const rows = (
+    symbol: string,
+    {
+      skip,
+      split = false,
+      splitRatios = ratios,
+      dipDate = '2024-01-23',
+      fallFrom
+    }: {
+      skip?: string;
+      split?: boolean;
+      splitRatios?: Record<string, number>;
+      dipDate?: string;
+      fallFrom?: string;
+    } = {}
+  ) => {
     const lines: string[] = [];
     let price = 100;
     let step = 0;
@@ -165,10 +180,16 @@ describe('the canonical loader', () => {
         return `"${new Date((local - newYorkOffset(Date.parse(`${date}T16:00:00Z`) / 1000)) * 1000).toISOString().replace('.000', '')}"`;
       };
 
-      // A rise, a 12% dip on 2024-01-23 that arms the test phenotype, and a rebound.
-      price = date === '2024-01-23' ? price * 0.88 : price + (step++ % 7 === 3 ? -0.3 : 0.1);
+      // A rise, a 12% dip (2024-01-23 by default) that arms the test phenotype, a rebound, and optionally a fall of
+      // 3% a session from `fallFrom` that stops a lot out.
+      price =
+        date === dipDate
+          ? price * 0.88
+          : fallFrom !== undefined && date >= fallFrom
+            ? price * 0.97
+            : price + (step++ % 7 === 3 ? -0.3 : 0.1);
 
-      const ratio = split && date >= splitDate ? (ratios[symbol] ?? 1) : 1;
+      const ratio = split && date >= splitDate ? (splitRatios[symbol] ?? 1) : 1;
 
       for (const [hour, minute] of [
         [9, 30],
@@ -374,6 +395,92 @@ describe('the canonical loader', () => {
     const before = rawRun.daily[rawRun.daily.indexOf(day) - 1]!;
 
     assert.ok(day.equity < 0.5 * before.equity, 'raw prices would book the split as a loss');
+  });
+
+  test('a lot held across a 1:4 reverse split equals the same economy without it, in both modes', async () => {
+    // KRE dips on 2023-12-01, is bought on the rebound, held across a 1:4 reverse split on 2024-01-17 (raw prices × 4,
+    // volumes ÷ 4) and stopped out by a fall from 2024-02-12.
+    const economy = { splitRatios: { KRE: 0.25 }, dipDate: '2023-12-01', fallFrom: '2024-02-12' };
+    const reverseMembers = ['VOOG', 'VGT', 'KRE'] as const;
+    const plainRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'allocator-reverse-plain-'));
+    const reverseRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'allocator-reverse-split-'));
+    const reverseSplits: SplitEvent[] = [
+      { symbol: 'KRE', effectiveDate: splitDate, ratio: 0.25, source: 'synthetic reverse split' }
+    ];
+
+    try {
+      for (const dir of [plainRoot, reverseRoot]) {
+        await fs.writeFile(path.join(dir, 'partitions.json'), defaultPartitionConfigText);
+
+        for (const symbol of reverseMembers) {
+          await fs.outputFile(
+            path.join(dir, symbol, 'data.csv'),
+            rows(symbol, { ...economy, split: dir === reverseRoot })
+          );
+        }
+      }
+
+      const loadOn = (dataRoot: string, splitList: SplitEvent[]) =>
+        load({ members: reverseMembers, partition: 'all', root: dataRoot, splits: splitList });
+      const plain = await loadOn(plainRoot, []);
+      const split = await loadOn(reverseRoot, reverseSplits);
+      const splitIndex = split.universe.dates.indexOf(splitDate);
+
+      assert.deepEqual(split.splits, [{ symbol: 'KRE', effectiveDate: splitDate, ratio: 0.25 }]);
+      assert.deepEqual(split.distributions.adjusted, [], 'no KRE distribution to adjust');
+
+      for (const mode of ['fixed', 'portfolio'] as const) {
+        const config = (loaded: typeof plain) => datasetRunConfig(testConfig({ mode, symbols: ['KRE'] }), loaded);
+        const expected = runAllocator(plain.universe, config(plain));
+        const actual = runAllocator(split.universe, config(split));
+        const held = expected.lots.filter((lot) => lot.entryIndex < splitIndex && lot.exitIndex > splitIndex);
+
+        assert.equal(held.length, 1, `${mode}: one KRE lot held across the reverse split`);
+        assert.deepEqual(
+          actual.lots.map((lot) => [
+            lot.symbol,
+            lot.entryIndex,
+            lot.entryBar,
+            lot.exitIndex,
+            lot.exitBar,
+            lot.exitReason
+          ]),
+          expected.lots.map((lot) => [
+            lot.symbol,
+            lot.entryIndex,
+            lot.entryBar,
+            lot.exitIndex,
+            lot.exitBar,
+            lot.exitReason
+          ]),
+          `${mode}: the same lots and exits`
+        );
+        actual.lots.forEach((lot, index) => {
+          const other = expected.lots[index]!;
+
+          near(lot.entryPrice * lot.shares, other.entryPrice * other.shares, 'cost basis');
+          near(lot.exitPrice * lot.shares, other.exitPrice * other.shares, 'proceeds');
+          near(lot.interest, other.interest, 'interest');
+          near(lot.net, other.net, 'lot net');
+        });
+        actual.daily.forEach((row, index) => near(row.equity, expected.daily[index]!.equity, `${mode} ${row.date}`));
+        assert.deepEqual(
+          actual.trades.map((trade) => [trade.activationIndex, trade.entryIndex, trade.exitIndex]),
+          expected.trades.map((trade) => [trade.activationIndex, trade.entryIndex, trade.exitIndex]),
+          `${mode}: the same virtual trades (no split-made signal)`
+        );
+      }
+
+      // Without the adjustment the reverse split reads as a jump of about +300% on the held lot.
+      const raw = await loadOn(reverseRoot, []);
+      const rawRun = runAllocator(raw.universe, datasetRunConfig(testConfig({ mode: 'fixed', symbols: ['KRE'] }), raw));
+      const rawHeld = rawRun.lots.find((lot) => lot.entryIndex < splitIndex && lot.exitIndex > splitIndex)!;
+
+      assert.ok(rawHeld.net > 2 * 100000, `raw prices book ${rawHeld.net} on a $100,000 lot`);
+    } finally {
+      await fs.remove(plainRoot);
+      await fs.remove(reverseRoot);
+    }
   });
 
   test('coverage is required where distributions are booked; --end narrows the window inside the partition', async () => {

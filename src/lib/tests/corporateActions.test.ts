@@ -58,12 +58,73 @@ describe('share splits', () => {
     );
   });
 
-  test('the shipped registry holds the issuer-documented VGT 8:1 and VOOG 6:1 splits of 2026-04-21', () => {
+  test('the shipped registry holds the documented splits: VGT, VOOG, XOP (1:4 reverse), XLE, XLU, XLY', () => {
     assert.deepEqual(
       readSplits().map(({ symbol, effectiveDate, ratio }) => `${symbol} ${effectiveDate} ${ratio}`),
-      ['VGT 2026-04-21 8', 'VOOG 2026-04-21 6']
+      [
+        'VGT 2026-04-21 8',
+        'VOOG 2026-04-21 6',
+        'XOP 2020-03-30 0.25',
+        'XLE 2025-12-05 2',
+        'XLU 2025-12-05 2',
+        'XLY 2025-12-05 2'
+      ]
     );
-    assert.ok(readSplits().every((split) => split.source.includes('Vanguard')));
+
+    const documents: Record<string, string> = {
+      VGT: 'Vanguard',
+      VOOG: 'Vanguard',
+      XOP: 'Form 8937',
+      XLE: 'OCC Information Memo #57734',
+      XLU: 'OCC Information Memo #57736',
+      XLY: 'OCC Information Memo #57733'
+    };
+
+    for (const split of readSplits()) {
+      assert.ok(split.source.includes(documents[split.symbol]!), `${split.symbol}: ${documents[split.symbol]}`);
+    }
+  });
+
+  test('a reverse split and successive splits: the factors compose, volumes move the other way', () => {
+    const composed = parseSplits(
+      JSON.stringify({
+        schemaVersion: 1,
+        splits: [
+          { symbol: 'REV', effectiveDate: '2020-03-30', ratio: 0.25, source: 'synthetic reverse split' },
+          { symbol: 'REV', effectiveDate: '2025-12-05', ratio: 2, source: 'synthetic forward split' }
+        ]
+      })
+    );
+    // One flat economy at 8 (in the units of 2020-03-27), printed raw: 32 after the 1:4 reverse split, 16 after the 2:1.
+    const raw = [
+      session('2020-03-27', 8, 4000),
+      session('2020-03-30', 32, 1000),
+      session('2025-12-04', 32, 1000),
+      session('2025-12-05', 16, 2000)
+    ];
+    const { sessions, applied } = adjustSessionsForSplits(raw, 'REV', composed);
+
+    assert.equal(applied.length, 2);
+    assert.equal(sessions[0], raw[0]);
+    assert.equal(sessions[1]!.close, 8, '1:4: a later price × 0.25');
+    assert.equal(sessions[1]!.volume, 4000, '1:4: a later volume × 4');
+    assert.equal(sessions[2]!.close, 8);
+    assert.equal(sessions[3]!.close, 8, 'then 2:1: × 0.25 × 2');
+    assert.equal(sessions[3]!.bars[0]!.low, 7.5, 'every bar field in the same units');
+    assert.equal(sessions[3]!.volume, 4000);
+    assert.equal(sessions[3]!.close * sessions[3]!.volume, raw[3]!.close * raw[3]!.volume, 'dollar volume kept');
+    assert.equal(splitFactor(composed, 'REV', '2020-03-27', '2025-12-05'), 0.5);
+    assert.equal(splitFactor(composed, 'REV', '2020-03-30', '2025-12-05'), 2, 'a run starting on the first split');
+    assert.deepEqual(unexplainedSplitGaps(sessions, 'REV', []), [], 'the adjusted series has no split-sized gap');
+    assert.deepEqual(
+      unexplainedSplitGaps(raw, 'REV', composed).map((gap) => gap.date),
+      [],
+      'the raw gaps are explained by the registry'
+    );
+    assert.deepEqual(
+      unexplainedSplitGaps(raw, 'REV', []).map((gap) => gap.date),
+      ['2020-03-30', '2025-12-05']
+    );
   });
 
   test('forward adjustment: later prices × ratio, volumes ÷ ratio; earlier sessions are the same objects', () => {

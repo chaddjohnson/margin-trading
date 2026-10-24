@@ -100,15 +100,28 @@ the training and holdout rows must be unchanged before it replaces the canonical
 ### Corporate actions: splits and distributions
 
 The minute files hold **raw** prices, so a share split appears as a price jump. `config/market-events/splits.json`
-records each split with its issuer source (so far VGT 8:1 and VOOG 6:1, effective 2026-04-21, from Vanguard's
-2026-03-24 press release). A partition run, and the allocator's `--dataset` path, **forward-adjust** across a
-recorded split: prices from the effective date on × ratio, volumes ÷ ratio, and per-share distributions from that date
-on × ratio, so the run stays in the share units of its first session. Shares are fractional, so position values, cost
-bases and P&L are exactly those of holding the multiplied shares: the split moves nothing and makes no signal, and a
-run that doesn't span a split is unchanged. Prices reported after a split are in pre-split units (VGT about 8× its
-quote). `npm run market-events -- verify` checks each recorded split against the data's overnight move and lists the
-split-sized moves no split explains: XLE, XLU and XLY (2025-12-05, about 2:1) and XOP (2020-03-30, about 1:4) are not
-recorded, so partition runs of those symbols across those dates still read raw prices.
+records each split with its issuer or OCC source, copies of which are kept under
+`config/market-events/raw/split-sources-2026-10-24/`:
+
+| Symbol | Effective | Ratio (new per old) | Source |
+|---|---|---:|---|
+| VGT | 2026-04-21 | 8 | Vanguard press release, 2026-03-24 |
+| VOOG | 2026-04-21 | 6 | Vanguard press release, 2026-03-24 |
+| XOP | 2020-03-30 | 0.25 (1:4 reverse) | SSGA Form 8937, 2020-03-30 |
+| XLE | 2025-12-05 | 2 | OCC Information Memo #57734 |
+| XLU | 2025-12-05 | 2 | OCC Information Memo #57736 |
+| XLY | 2025-12-05 | 2 | OCC Information Memo #57733 |
+
+A partition run, and the allocator's `--dataset` path, **forward-adjust** across a recorded split: prices from the
+effective date on × ratio, volumes ÷ ratio, and per-share distributions from that date on × ratio, so the run stays in
+the share units of its first session (a reverse split multiplies later prices by 0.25 and volumes by 4). Shares are
+fractional, so position values, cost bases and P&L are exactly those of holding the multiplied shares: the split moves
+nothing and makes no signal, and a run that doesn't span a split is unchanged. Prices reported after a split are in
+the run's first-session units (VGT about 8× its quote, XOP about ¼ of its post-2020 quote); they are not broker quote
+or share units. `npm run market-events -- verify` checks each recorded split against the data's overnight move and
+lists any split-sized move no split explains (none since the 2026-10-24 additions). The audit of all 16 files, and
+tests of forward and reverse splits held across on both the standalone and the allocator path, are in
+`research/complementary-etf-d1/DATA_AND_CORPORATE_ACTION_AUDIT.md`.
 
 The allocator's portfolio mode books VGT and VOOG distributions (the core and, by the frozen convention, open VGT
 lots) on the ex-date for the shares then held, pays them on the pay date and reinvests them in the same ETF; XBI, XRT

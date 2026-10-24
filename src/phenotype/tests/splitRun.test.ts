@@ -17,10 +17,35 @@ const script = 'allIn-trailingBuy-postExitContinuation';
 const splitDate = '2026-04-21';
 let root = '';
 
-const tradingDates = () => {
+// An economy's calendar and its recorded split: VGT 8:1 on 2026-04-21 by default; XOP's 1:4 reverse split of
+// 2020-03-30 (ratio 0.25 new shares per old share) for the reverse case.
+interface Economy {
+  from: string;
+  to: string;
+  splitDate: string;
+  ratio: number;
+  dip: { start: string; end: string; rallyEnd: string }; // the fall, the rally carried across the split, its end
+}
+
+const vgtEconomy: Economy = {
+  from: '2025-06-02',
+  to: '2026-06-30',
+  splitDate,
+  ratio: 8,
+  dip: { start: '2026-04-01', end: '2026-04-10', rallyEnd: '2026-06-01' }
+};
+const xopEconomy: Economy = {
+  from: '2019-04-01',
+  to: '2020-06-30',
+  splitDate: '2020-03-30',
+  ratio: 0.25,
+  dip: { start: '2020-03-02', end: '2020-03-11', rallyEnd: '2020-05-01' }
+};
+
+const tradingDates = ({ from, to }: Economy = vgtEconomy) => {
   const dates: string[] = [];
 
-  for (let time = Date.parse('2025-06-02T00:00:00Z'); time <= Date.parse('2026-06-30T00:00:00Z'); time += 86400000) {
+  for (let time = Date.parse(`${from}T00:00:00Z`); time <= Date.parse(`${to}T00:00:00Z`); time += 86400000) {
     const date = new Date(time).toISOString().slice(0, 10);
     const day = new Date(time).getUTCDay();
 
@@ -35,20 +60,20 @@ const tradingDates = () => {
 // A steady rise from 2025-06-02 to 2026-06-30.
 const steadyRise = (dates: string[]) => dates.map((_, index) => 700 + 0.5 * (index + 1));
 
-// A rise, a 30% fall in April 2026 that arms and fills a deep trailing buy before the split, a rally carried across
-// it, and a June fall that stops the position out after it.
-const dipAcrossSplit = (dates: string[]) => {
+// A rise, a 30% fall (April 2026 for VGT) that arms and fills a deep trailing buy before the split, a rally carried
+// across it, and a fall (June) that stops the position out after it.
+const dipAcrossSplit = (dates: string[], { dip }: Economy = vgtEconomy) => {
   const prices: number[] = [];
   let price = 700;
   let peak = price;
 
   for (const date of dates) {
-    if (date < '2026-04-01') {
+    if (date < dip.start) {
       price += 0.5;
       peak = price;
-    } else if (date < '2026-04-10') {
+    } else if (date < dip.end) {
       price -= 0.05 * peak;
-    } else if (date < '2026-06-01') {
+    } else if (date < dip.rallyEnd) {
       price *= 1.01;
     } else {
       price *= 0.985;
@@ -60,14 +85,15 @@ const dipAcrossSplit = (dates: string[]) => {
   return prices;
 };
 
-// The economy as minute rows, printed raw: with `split`, from 2026-04-21 on, prices ÷ 8 and volumes × 8.
-const rows = (prices: (dates: string[]) => number[], split: boolean) => {
-  const dates = tradingDates();
+// The economy as minute rows, printed raw: with `split`, from the split date on, prices ÷ ratio and volumes × ratio
+// (VGT from 2026-04-21: ÷ 8 and × 8; XOP from 2020-03-30: × 4 and ÷ 4).
+const rows = (prices: (dates: string[], economy: Economy) => number[], split: boolean, economy = vgtEconomy) => {
+  const dates = tradingDates(economy);
   const lines: string[] = [];
 
-  for (const [index, price] of prices(dates).entries()) {
+  for (const [index, price] of prices(dates, economy).entries()) {
     const date = dates[index]!;
-    const ratio = split && date >= splitDate ? 8 : 1;
+    const ratio = split && date >= economy.splitDate ? economy.ratio : 1;
     const offset = newYorkOffset(Date.parse(`${date}T16:00:00Z`) / 1000);
 
     for (const minute of [9 * 60 + 30, 12 * 60, 15 * 60 + 59, 16 * 60]) {
@@ -89,6 +115,11 @@ before(async () => {
   await fs.outputFile(path.join(root, 'held', 'VGT', 'data.csv'), rows(dipAcrossSplit, true));
   await fs.outputFile(path.join(root, 'held', 'NOSPLIT', 'data.csv'), rows(dipAcrossSplit, false));
   await fs.writeFile(path.join(root, 'held', 'partitions.json'), defaultPartitionConfigText);
+  await fs.outputFile(path.join(root, 'reverse', 'XOP', 'data.csv'), rows(dipAcrossSplit, true, xopEconomy));
+  await fs.outputFile(path.join(root, 'reverse', 'NOSPLIT', 'data.csv'), rows(dipAcrossSplit, false, xopEconomy));
+  // XOP's raw bytes under a name no recorded split covers: the reverse split read as a price jump.
+  await fs.outputFile(path.join(root, 'reverse', 'UNREGISTERED', 'data.csv'), rows(dipAcrossSplit, true, xopEconomy));
+  await fs.writeFile(path.join(root, 'reverse', 'partitions.json'), defaultPartitionConfigText);
 });
 
 after(async () => {
@@ -170,5 +201,58 @@ describe('a phenotype run across a split', () => {
 
     assert.equal(split.result.sessions[index]!.volume, control.result.sessions[index]!.volume);
     assert.equal(split.dataset.allSessions[index]!.volume, control.result.sessions[index]!.volume * 8);
+  });
+
+  test('a position held across a 1:4 reverse split (XOP, 2020-03-30) equals the same economy without one', async () => {
+    const dir = path.join(root, 'reverse');
+    const split = await runOn(dir, 'XOP');
+    const control = await runOn(dir, 'NOSPLIT');
+    const raw = await runOn(dir, 'UNREGISTERED');
+    const splitTime = Date.parse(`${xopEconomy.splitDate}T13:30:00Z`) / 1000;
+    const spanning = (run: typeof split) =>
+      run.result.positions.filter(
+        (position) => position.entryTimestamp < splitTime && (position.exitTimestamp ?? Infinity) > splitTime
+      );
+
+    assert.deepEqual(split.dataset.window!.splitAdjustments, [
+      { symbol: 'XOP', effectiveDate: '2020-03-30', ratio: 0.25 }
+    ]);
+    assert.deepEqual(control.dataset.window!.splitAdjustments, []);
+    assert.equal(spanning(control).length, 1, 'the control holds one position across the split date');
+    assert.ok(spanning(control)[0]!.exitTimestamp !== undefined, 'and closes it after');
+
+    const trades = (run: typeof split) =>
+      run.result.positions.map((position) => ({
+        ...position,
+        symbol: undefined,
+        entry: run.result.entryFills.get(position),
+        exit: run.result.exitFills.get(position)
+      }));
+    const states = (run: typeof split) => {
+      const { stateLog, episodes, setups } = run.result as unknown as Record<string, unknown[]>;
+
+      return { stateLog, episodes, setups };
+    };
+
+    // Same fills, shares (in the units of the run's first session), stops, setups, marks, interest and drawdowns.
+    assert.deepEqual(trades(split), trades(control));
+    assert.deepEqual(states(split), states(control));
+    assert.deepEqual(split.report.accounting, control.report.accounting);
+    assert.deepEqual(split.report.periods, control.report.periods);
+
+    // Volumes × 4 after a 1:4 reverse split, so dollar volume is unchanged; the raw file printed them ÷ 4.
+    const index = split.result.sessions.findIndex((session) => session.date === xopEconomy.splitDate);
+
+    assert.equal(split.result.sessions[index]!.volume, control.result.sessions[index]!.volume);
+    assert.equal(split.dataset.allSessions[index]!.volume * 4, control.result.sessions[index]!.volume);
+
+    // Without the registry entry the same bytes book the reverse split as a gain of about 300% on the held position.
+    const artifact = spanning(raw)[0]!;
+    const genuine = spanning(control)[0]!;
+
+    assert.equal(raw.dataset.window!.splitAdjustments.length, 0);
+    assert.equal(artifact.entryTimestamp, genuine.entryTimestamp, 'the entry precedes the split either way');
+    assert.ok(artifact.profit! > 2 * 100000, `raw prices book ${artifact.profit} on a $100,000 position`);
+    assert.ok(genuine.profit! < 100000, `the economy itself earns ${genuine.profit}`);
   });
 });

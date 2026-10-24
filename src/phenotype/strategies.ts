@@ -274,6 +274,7 @@ export const incompatibleEntryPoints: IncompatibleEntryPoint[] = [
   { script: 'sharedMargin', category: 'research', reason: 'research program command line' },
   { script: 'multiEtfD1', category: 'research', reason: 'research program command line' },
   { script: 'multiEtfAllocator', category: 'research', reason: 'research program command line' },
+  { script: 'complementaryEtfD1', category: 'research', reason: 'research program command line' },
   { script: 'intradayStudy', category: 'research', reason: 'research program command line' },
   {
     script: 'phenotypes',

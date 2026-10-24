@@ -18,7 +18,7 @@ import {
 import { loadUniverse } from '../data.ts';
 import { runAllocator } from '../engine.ts';
 import { summarize, virtualSignature } from '../metrics.ts';
-import { runFixedParity, runPortfolioParity } from '../parity.ts';
+import { runFixedParity, runPortfolioParity, scenarioBConfig } from '../parity.ts';
 import { loadManifest, resolveCombination } from '../phenotypes.ts';
 import { allocatorConfig, catalogue } from '../scenarios.ts';
 
@@ -87,6 +87,39 @@ describe('baseline reproduction', { skip: missing }, () => {
 
     assert.equal(Math.round(outcomes[0]!.endEquity), 1784588);
     assert.equal(Math.round(outcomes[1]!.endEquity), 2346272);
+  });
+});
+
+// The largest percentage fall of compounded equity is March 2020, a different episode from the largest dollar fall
+// (2025), whose depth (25.3% / 25.2%) an earlier report mislabelled as the maximum percentage drawdown.
+describe('maximum percentage drawdown versus the largest dollar drawdown', { skip: missing }, () => {
+  const day = (time: number) => new Date(time * 1000).toISOString().slice(0, 10);
+
+  test('B 32.7% and All-lowDd shadow 34.6% of daily equity, 2020-02-19 → 2020-03-23', async () => {
+    const universe = await loadUniverse({ members: ['VOOG', 'VGT', 'XBI', 'XRT', 'KRE'] });
+    const cases = [
+      { result: runAllocator(universe, await scenarioBConfig()), percent: '0.327', dollarDepth: '0.253' },
+      {
+        result: runAllocator(universe, await allocatorConfig('portfolio', combinations.at(-1)!, 'shadow')),
+        percent: '0.346',
+        dollarDepth: '0.252'
+      }
+    ];
+
+    assert.equal(combinationKey(combinations.at(-1)!), 'xbiL-xrtL-kreL');
+
+    for (const { result, percent, dollarDepth } of cases) {
+      const daily = result.dailyPercentDrawdown!;
+
+      assert.equal(daily.maximumPercent.toFixed(3), percent, result.config.key);
+      assert.equal(day(daily.peakTime), '2020-02-19');
+      assert.equal(day(daily.troughTime), '2020-03-23');
+      // The largest dollar episode is the 2025 one, and its depth is the old mislabelled figure.
+      assert.equal(result.dailyDrawdown.maximumPercent.toFixed(3), dollarDepth);
+      assert.ok(day(result.dailyDrawdown.troughTime) >= '2025-01-01');
+      assert.ok(daily.maximumPercent > result.dailyDrawdown.maximumPercent + 0.07);
+      assert.ok(result.minutePercentDrawdown!.maximumPercent >= daily.maximumPercent, 'minute marks fall further');
+    }
   });
 });
 
