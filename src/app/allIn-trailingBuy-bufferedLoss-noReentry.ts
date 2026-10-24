@@ -1104,13 +1104,13 @@ export const runAllIn = async ({
     `Margin interest: ${formatDollars(closedInterest + accruedInterest)} (${formatDollars(closedInterest)} on closed trades, ${formatDollars(accruedInterest)} accrued on the open position)`
   );
   console.info(
-    `Maximum drawdown (daily mark-to-market): ${formatDollars(dailyDrawdown.maximumDrawdown)}, from ${formatDate(dailyDrawdown.drawdownPeakTimestamp)} to ${formatDate(dailyDrawdown.drawdownTroughTimestamp)}`
+    `Maximum drawdown (daily): ${formatDollars(dailyDrawdown.maximumDrawdown)} (${formatPercent(dailyDrawdown.maximumDrawdown / investmentAmount)} of ${formatDollars(investmentAmount)} allocation), from ${formatDate(dailyDrawdown.drawdownPeakTimestamp)} to ${formatDate(dailyDrawdown.drawdownTroughTimestamp)}`
   );
   console.info(
-    `Maximum drawdown (minute-sampled mark-to-market): ${formatDollars(minuteDrawdown.maximumDrawdown)}, from ${formatNewYorkTime(minuteDrawdown.drawdownPeakTimestamp)} to ${formatNewYorkTime(minuteDrawdown.drawdownTroughTimestamp)}`
+    `Maximum drawdown (minute): ${formatDollars(minuteDrawdown.maximumDrawdown)} (${formatPercent(minuteDrawdown.maximumDrawdown / investmentAmount)} of ${formatDollars(investmentAmount)} allocation), from ${formatNewYorkTime(minuteDrawdown.drawdownPeakTimestamp)} to ${formatNewYorkTime(minuteDrawdown.drawdownTroughTimestamp)}`
   );
   console.info(
-    `Maximum drawdown as a capital-allocation reference: ${formatPercent(dailyDrawdown.maximumDrawdown / investmentAmount)} of the ${formatDollars(investmentAmount)} trading allocation (not a drawdown of invested equity or of the overall portfolio)`
+    `Drawdowns: the largest falls of the daily and minute-sampled mark-to-market P&L; the percentages are of the fixed ${formatDollars(investmentAmount)} trading allocation, a capital-allocation reference, not a peak-to-trough drawdown of invested equity or of the overall portfolio`
   );
   console.info(`Target percent change: ${formatPercent(targetPercentChange)}`);
   console.info(`Trailing buy percentage: ${formatPercent(trailingBuyPercentage)}`);

@@ -1,9 +1,10 @@
 // Frozen strategy sources: research programs pin a strategy file's sha256 so that a change to its definition stops
 // their frozen stages. The dataset migrations (data/<SYMBOL>/data.csv, src/lib/dataset.ts and src/lib/evaluation.ts)
-// edited every strategy file's data plumbing, never its rules. checkStrategyDefinition tells the two apart exactly:
-// it reads the pinned revision from git (refusing one whose sha256 isn't the pin), applies the documented plumbing
-// edits below, each of which must match exactly once, and requires the result to equal the current file byte for
-// byte. Any other difference, in code or comments, is a changed definition.
+// edited every strategy file's data plumbing, never its rules, and the 2026-10-24 drawdown report rewrote three
+// console lines. checkStrategyDefinition tells these apart from a definition change exactly: it reads the pinned
+// revision from git (refusing one whose sha256 isn't the pin), applies the documented plumbing and report edits below,
+// each of which must match exactly once, and requires the result to equal the current file byte for byte. Any other
+// difference, in code or comments, is a changed definition.
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
@@ -148,12 +149,41 @@ export const withDatasetPlumbing = (source: string) => {
   return text;
 };
 
+// The trailing-buy strategy files' drawdown report lines as they were before 2026-10-24 (the dollar drawdowns, and
+// the daily one as a percentage of the allocation), rewritten as today: each of the daily and minute-sampled
+// drawdowns in dollars and as a percentage of the fixed trading allocation, and what that percentage is. Report text
+// only, exact text in, exact text out; no figure, trade or rule changes.
+const legacyDrawdownReport = `  console.info(
+    \`Maximum drawdown (daily mark-to-market): \${formatDollars(dailyDrawdown.maximumDrawdown)}, from \${formatDate(dailyDrawdown.drawdownPeakTimestamp)} to \${formatDate(dailyDrawdown.drawdownTroughTimestamp)}\`
+  );
+  console.info(
+    \`Maximum drawdown (minute-sampled mark-to-market): \${formatDollars(minuteDrawdown.maximumDrawdown)}, from \${formatNewYorkTime(minuteDrawdown.drawdownPeakTimestamp)} to \${formatNewYorkTime(minuteDrawdown.drawdownTroughTimestamp)}\`
+  );
+  console.info(
+    \`Maximum drawdown as a capital-allocation reference: \${formatPercent(dailyDrawdown.maximumDrawdown / investmentAmount)} of the \${formatDollars(investmentAmount)} trading allocation (not a drawdown of invested equity or of the overall portfolio)\`
+  );
+`;
+
+const drawdownReport = `  console.info(
+    \`Maximum drawdown (daily): \${formatDollars(dailyDrawdown.maximumDrawdown)} (\${formatPercent(dailyDrawdown.maximumDrawdown / investmentAmount)} of \${formatDollars(investmentAmount)} allocation), from \${formatDate(dailyDrawdown.drawdownPeakTimestamp)} to \${formatDate(dailyDrawdown.drawdownTroughTimestamp)}\`
+  );
+  console.info(
+    \`Maximum drawdown (minute): \${formatDollars(minuteDrawdown.maximumDrawdown)} (\${formatPercent(minuteDrawdown.maximumDrawdown / investmentAmount)} of \${formatDollars(investmentAmount)} allocation), from \${formatNewYorkTime(minuteDrawdown.drawdownPeakTimestamp)} to \${formatNewYorkTime(minuteDrawdown.drawdownTroughTimestamp)}\`
+  );
+  console.info(
+    \`Drawdowns: the largest falls of the daily and minute-sampled mark-to-market P&L; the percentages are of the fixed \${formatDollars(investmentAmount)} trading allocation, a capital-allocation reference, not a peak-to-trough drawdown of invested equity or of the overall portfolio\`
+  );
+`;
+
+export const withDrawdownReporting = (source: string) =>
+  replaceOnce(source, legacyDrawdownReport, drawdownReport, 'drawdown report');
+
 export interface DefinitionCheck {
   file: string;
   pinnedSha256: string;
   currentSha256: string;
   revision: string;
-  status: 'identical' | 'dataset plumbing only';
+  status: 'identical' | 'dataset plumbing only' | 'dataset plumbing and drawdown reporting only';
 }
 
 // Whether `file` is still the definition pinned by `pinnedSha256`, whose text is `file` at git `revision`. Throws
@@ -189,15 +219,22 @@ export const checkStrategyDefinition = async (file: string, pinnedSha256: string
     );
   }
 
-  if (expected !== current) {
-    const line = expected.split('\n').findIndex((text, index) => text !== current.split('\n')[index]) + 1;
+  if (expected === current) {
+    return result('dataset plumbing only');
+  }
+
+  // The drawdown report lines (withDrawdownReporting), applied after the plumbing, are report text too.
+  const reported = current.includes(drawdownReport) ? withDrawdownReporting(expected) : expected;
+
+  if (reported !== current) {
+    const line = reported.split('\n').findIndex((text, index) => text !== current.split('\n')[index]) + 1;
 
     throw new Error(
-      `${file} differs from its pinned definition (${pinnedSha256.slice(0, 16)} at ${revision}) beyond the dataset plumbing, first at line ${line}: the definition changed`
+      `${file} differs from its pinned definition (${pinnedSha256.slice(0, 16)} at ${revision}) beyond the dataset plumbing and drawdown reporting, first at line ${line}: the definition changed`
     );
   }
 
-  return result('dataset plumbing only');
+  return result('dataset plumbing and drawdown reporting only');
 };
 
 // A source file as a completed research program froze it: its path, the git revision holding those bytes, and their

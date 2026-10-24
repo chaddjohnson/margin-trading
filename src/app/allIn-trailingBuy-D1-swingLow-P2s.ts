@@ -169,13 +169,13 @@ export const runP2s = async ({
     `Exposure: ${formatPercent(exposure)} of the ${eligibleSessions} eligible sessions held a position at the close`
   );
   console.info(
-    `Maximum drawdown (daily mark-to-market): ${formatDollars(result.strategyDailyDrawdown.maximum)}, from ${formatTime(result.strategyDailyDrawdown.peakTime).slice(0, 10)} to ${formatTime(result.strategyDailyDrawdown.troughTime).slice(0, 10)}`
+    `Maximum drawdown (daily): ${formatDollars(result.strategyDailyDrawdown.maximum)} (${formatPercent(result.strategyDailyDrawdown.maximum / investmentAmount)} of ${formatDollars(investmentAmount)} allocation), from ${formatTime(result.strategyDailyDrawdown.peakTime).slice(0, 10)} to ${formatTime(result.strategyDailyDrawdown.troughTime).slice(0, 10)}`
   );
   console.info(
-    `Maximum drawdown (minute-sampled mark-to-market): ${formatDollars(result.strategyMinuteDrawdown.maximum)}, from ${formatNewYorkTime(result.strategyMinuteDrawdown.peakTime)} to ${formatNewYorkTime(result.strategyMinuteDrawdown.troughTime)}`
+    `Maximum drawdown (minute): ${formatDollars(result.strategyMinuteDrawdown.maximum)} (${formatPercent(result.strategyMinuteDrawdown.maximum / investmentAmount)} of ${formatDollars(investmentAmount)} allocation), from ${formatNewYorkTime(result.strategyMinuteDrawdown.peakTime)} to ${formatNewYorkTime(result.strategyMinuteDrawdown.troughTime)}`
   );
   console.info(
-    `Maximum drawdown as a capital-allocation reference: ${formatPercent(result.strategyDailyDrawdown.maximum / investmentAmount)} of the ${formatDollars(investmentAmount)} shared allocation`
+    `Drawdowns: the largest falls of the daily and minute-sampled mark-to-market P&L; the percentages are of the fixed ${formatDollars(investmentAmount)} ${solo ? 'trading' : 'shared'} allocation, a capital-allocation reference, not a peak-to-trough drawdown of invested equity or of the overall portfolio`
   );
   console.info(
     `Standalone fills offered: ${signalCounts.granted} executed, ${signalCounts.declined} declined while the allocation was occupied (paper trades)`

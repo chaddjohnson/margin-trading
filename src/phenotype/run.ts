@@ -355,16 +355,25 @@ export interface PhenotypeRun {
   lines: string[];
 }
 
+// A drawdown with its share of the fixed per-entry allocation: a capital-allocation reference, not a peak-to-trough
+// percentage of an account (the strategy's equity is its P&L, which starts at 0).
+const ofAllocation = (drawdown: number, allocation: number) =>
+  `${formatDollars(drawdown)} (${((drawdown / allocation) * 100).toFixed(2)}%)`;
+
+const sessionDate = (timestamp: number) => new Date(timestamp * 1000).toISOString().slice(0, 10);
+
 export const periodLines = (plan: RunPlan, report: PeriodReport, dataset: DatasetInfo) => {
+  const allocation = plan.investment.value;
   const lines = [
     '',
     '=== Periods (one continuous run: nothing is reset at a boundary; a period net is the change of marked equity from the close before it to its last close) ===',
-    `${'period'.padEnd(12)} ${'from'.padEnd(10)}   ${'to'.padEnd(10)} ${'net'.padStart(14)} ${'minute DD'.padStart(13)} ${'daily DD'.padStart(13)} ${'interest'.padStart(12)} entries exits  W/L   open at end`
+    `Drawdowns in dollars and as a percentage of the ${formatDollars(allocation)} trading allocation (not a peak-to-trough percentage of account equity)`,
+    `${'period'.padEnd(12)} ${'from'.padEnd(10)}   ${'to'.padEnd(10)} ${'net'.padStart(14)} ${'minute DD'.padStart(22)} ${'daily DD'.padStart(22)} ${'interest'.padStart(12)} entries exits  W/L   open at end`
   ];
 
   for (const period of report.periods) {
     lines.push(
-      `${period.label.padEnd(12)} ${period.startDate} → ${period.endDate} ${formatDollars(period.net).padStart(14)} ${formatDollars(period.minuteDrawdown.maximum).padStart(13)} ${formatDollars(period.dailyDrawdown.maximum).padStart(13)} ${formatDollars(period.interest).padStart(12)} ${String(period.entries).padStart(7)} ${String(period.exits).padStart(5)} ${`${period.wins}/${period.losses}`.padStart(6)}   ${period.openAtEnd ? 'yes' : 'no'}`
+      `${period.label.padEnd(12)} ${period.startDate} → ${period.endDate} ${formatDollars(period.net).padStart(14)} ${ofAllocation(period.minuteDrawdown.maximum, allocation).padStart(22)} ${ofAllocation(period.dailyDrawdown.maximum, allocation).padStart(22)} ${formatDollars(period.interest).padStart(12)} ${String(period.entries).padStart(7)} ${String(period.exits).padStart(5)} ${`${period.wins}/${period.losses}`.padStart(6)}   ${period.openAtEnd ? 'yes' : 'no'}`
     );
   }
 
@@ -376,7 +385,7 @@ export const periodLines = (plan: RunPlan, report: PeriodReport, dataset: Datase
   const lastSession = dataset.simulated.at(-1);
 
   lines.push(
-    `Full run: net ${formatDollars(accounting.netProfit)} (realized ${formatDollars(accounting.realizedProfit)}, unrealized ${formatDollars(accounting.unrealizedProfit)}), interest ${formatDollars(accounting.closedInterest + accounting.accruedInterest)}, maximum drawdown ${formatDollars(accounting.minuteDrawdown.maximum)} minute-sampled (${formatNewYorkTime(accounting.minuteDrawdown.peakTime)} → ${formatNewYorkTime(accounting.minuteDrawdown.troughTime)}), ${formatDollars(accounting.dailyDrawdown.maximum)} daily; marked at the ${lastSession?.date} close`,
+    `Full run: net ${formatDollars(accounting.netProfit)} (realized ${formatDollars(accounting.realizedProfit)}, unrealized ${formatDollars(accounting.unrealizedProfit)}), interest ${formatDollars(accounting.closedInterest + accounting.accruedInterest)}, maximum drawdown ${ofAllocation(accounting.minuteDrawdown.maximum, allocation)} minute-sampled (${formatNewYorkTime(accounting.minuteDrawdown.peakTime)} → ${formatNewYorkTime(accounting.minuteDrawdown.troughTime)}), ${ofAllocation(accounting.dailyDrawdown.maximum, allocation)} daily (${sessionDate(accounting.dailyDrawdown.peakTime)} → ${sessionDate(accounting.dailyDrawdown.troughTime)}); marked at the ${lastSession?.date} close`,
     `Accounting check: the period replay reproduces every closed trade's profit to ${report.closedTradeMismatch.toExponential(1)} dollars`
   );
 

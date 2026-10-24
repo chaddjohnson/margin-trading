@@ -177,7 +177,7 @@ describe('warm-up in a strategy file', () => {
     assert.doesNotMatch(holdout.stdout, /armed at 2023/);
     assert.equal(holdout.summary.netProfit, 0);
     assert.ok(holdout.daily.every((row) => row[1]! >= '2024-01-02' && Number(row[3]) === 0 && Number(row[4]) === 0));
-    assert.match(holdout.stdout, /Maximum drawdown \(daily mark-to-market\): \$0/);
+    assert.match(holdout.stdout, /Maximum drawdown \(daily\): \$0 \(0% of \$100,000 allocation\)/);
   });
 
   test('invalid partitions and dates outside the partition are refused', () => {

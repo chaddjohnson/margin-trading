@@ -331,7 +331,10 @@ describe('the command line', () => {
       /Strategy: trailing-buy21.6-rebound0.3-buffered-loss2.9-no-reentry-restriction-pullback9-window60/
     );
     assert.match(stdout, /Total net profit: \$183,044/);
-    assert.match(stdout, /Maximum drawdown \(minute-sampled mark-to-market\): \$19,331/);
+    assert.match(
+      stdout,
+      /Maximum drawdown \(minute\): \$19,331 \(19\.33% of \$100,000 allocation\), from 2020-02-19 12:49 ET to 2020-03-18 14:27 ET/
+    );
   });
 
   test(

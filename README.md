@@ -220,13 +220,8 @@ below). `--dry-run` prints the record without running.
 beside the run's files (`--json` prints the summary JSON instead; the JSON, CSV and ledger files are unchanged):
 strategy, mode, dataset and period; for the portfolio the starting and ending equity, total return and CAGR; funded,
 closed, winning and losing trades; realized, unrealized and net profit and margin interest; the maximum daily and
-minute drawdowns; per-symbol funded lots and profit; and, with `--dataset`, the period table
-(`src/multi-etf-allocator/runReport.ts`). In the portfolio the largest dollar and the largest peak-to-trough percent
-drawdown are two independent measures of marked equity (the engine's `Tracker` and `PercentTracker`, the latter at
-every close and every minute mark), generally different episodes: for All-lowDd on `all`, $594,129 (25.20% below its
-peak, 2025) and 34.55% ($252,851, March 2020) daily, $689,419 and 36.92% minute-sampled. In the fixed mode the
-allocation is constant, so its percentage is a capital-allocation reference and the same episode as the dollar
-maximum.
+minute drawdowns; per-symbol funded lots and profit; and, with `--dataset`, the period table. Drawdowns follow the
+conventions of [Drawdown reporting](#drawdown-reporting) below (`src/multi-etf-allocator/runReport.ts`).
 The frozen studies (`run`, `all`, `stress`, `parity`, `audit`, `audit-ledger`, `illustration`, `final-validation`)
 refuse `--dataset`. `--dataset training` reproduces the frozen engine on the archived files truncated at 2023-12-29
 exactly (every summary field and daily row).
@@ -266,6 +261,45 @@ exactly (every summary field and daily row).
   `allIn-optimizable`, `ladderUp` and `ladderDown` read daily files that are not present
   (`data/VOOG/VOOG-2016-2026.csv`, `data/VGT/VGT-2005-2026.csv`, `data/VGT/VGT-2026.csv`, `data/QQQ/QQQ-1999-2015.csv`;
   only `VGT-2016-2026.csv` is in the archive); the minute partitions don't apply to them.
+
+## Drawdown reporting
+
+Every drawdown on the console states what its percentage is a share of, because two different measures are in use:
+
+- **Percent of a fixed trading allocation** (standalone strategies, `--phenotype` runs, the allocator's `fixed`
+  mode): the strategy's equity is its P&L on a fixed $100,000 per entry, so the daily and minute-sampled maximum
+  drawdowns are printed in dollars and as a share of that allocation, with their peak and trough:
+
+  ```text
+  Maximum drawdown (daily): $15,611 (15.61% of $100,000 allocation), from 2020-02-19 to 2020-03-16
+  Maximum drawdown (minute): $19,331 (19.33% of $100,000 allocation), from 2020-02-19 12:49 ET to 2020-03-18 14:27 ET
+  ```
+
+  This is a capital-allocation reference, not a peak-to-trough drawdown of an account. With a constant allocation the
+  largest dollar and the largest percent drawdowns are the same episode. A `--phenotype` run's period table shows each
+  period's drawdowns the same way.
+- **Peak-to-trough percent of marked portfolio equity** (the allocator's `portfolio` mode): the account compounds, so
+  the largest fall in dollars and the largest fall in percent are measured independently, at the daily closes and at
+  every minute mark, and are generally different episodes. Each dollar maximum is printed with its own depth (below
+  its peak), and the true maximum percentage drawdown separately; one is never substituted for the other:
+
+  ```text
+  Maximum portfolio daily drawdown ($): $594,129 (25.20% below its $2,357,365 peak), 2025-01-23 → 2025-04-08, …
+  Maximum portfolio daily drawdown (peak-to-trough %): 34.55% ($252,851 from a $731,799 peak), 2020-02-19 → 2020-03-23, …
+  Maximum portfolio minute drawdown ($): $689,419 (29.15% below its $2,365,344 peak), …
+  Maximum portfolio minute drawdown (peak-to-trough %): 36.92% ($270,836 from a $733,492 peak), …
+  ```
+
+  (All-lowDd shadow on `--dataset all`.) The summary's `dailyDrawdownPercent`/`minuteDrawdownPercent` remain the depth
+  of the largest-dollar episode; `evaluation.json`'s `drawdowns` holds both maxima with `percentBasis`.
+
+Only the report text changed (2026-10-24); no drawdown, trade or file output did. 21 trailing-buy strategy files and
+`allIn.ts` received one identical three-line edit (`withDrawdownReporting` in `src/lib/frozenSource.ts`), and the
+P2s / swing-low standalone runner the same wording by hand. The D1 definition check pinned by the multi-ETF allocator
+recognises that edit as report text (status `dataset plumbing and drawdown reporting only`). Three files keep their old lines because golden masters pin their bytes or console output:
+`allIn-original.ts` and `allIn-optimizable.ts` (daily bars: a daily drawdown in dollars and as a percentage of the
+allocation; no minute series exists) and `allIn-minute-optimizable.ts` (dollars daily and minute, daily percentage of
+the allocation).
 
 ## Phenotypes
 
