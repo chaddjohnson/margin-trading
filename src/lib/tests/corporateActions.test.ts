@@ -58,7 +58,7 @@ describe('share splits', () => {
     );
   });
 
-  test('the shipped registry holds the documented splits: VGT, VOOG, XOP (1:4 reverse), XLE, XLU, XLY', () => {
+  test('the shipped registry holds the documented splits: VGT, VOOG, XOP (1:4 reverse), XLE, XLU, XLY and the robust-d1 universe’s thirteen', () => {
     assert.deepEqual(
       readSplits().map(({ symbol, effectiveDate, ratio }) => `${symbol} ${effectiveDate} ${ratio}`),
       [
@@ -67,7 +67,21 @@ describe('share splits', () => {
         'XOP 2020-03-30 0.25',
         'XLE 2025-12-05 2',
         'XLU 2025-12-05 2',
-        'XLY 2025-12-05 2'
+        'XLY 2025-12-05 2',
+        // research/d1-robust-pool-discovery (2026-10-25): splits of the ingested Tier 1/2 symbols
+        'IJR 2017-01-19 2',
+        'EWJ 2016-11-07 0.25',
+        'KIE 2017-11-30 3',
+        'IBB 2017-12-01 3',
+        'OIH 2020-04-15 0.05',
+        'SMH 2023-05-05 2',
+        'IGV 2024-03-07 5',
+        'IYT 2024-03-07 4',
+        'XLB 2025-12-05 2',
+        'XLK 2025-12-05 2',
+        'IWF 2026-04-29 4',
+        'IJH 2024-02-22 5',
+        'IAU 2021-05-24 0.5'
       ]
     );
 
@@ -77,7 +91,20 @@ describe('share splits', () => {
       XOP: 'Form 8937',
       XLE: 'OCC Information Memo #57734',
       XLU: 'OCC Information Memo #57736',
-      XLY: 'OCC Information Memo #57733'
+      XLY: 'OCC Information Memo #57733',
+      IJR: 'OCC Information Memo #40437',
+      EWJ: 'OCC Information Memo #39966',
+      KIE: 'OCC Information Memo #42157',
+      IBB: 'OCC Information Memo #42137',
+      OIH: 'VanEck press release',
+      SMH: 'VanEck press release',
+      IGV: 'OCC #53935',
+      IYT: 'OCC #53941',
+      XLB: 'OCC Information Memo #57732',
+      XLK: 'OCC Information Memo #57735',
+      IWF: 'OCC #58763',
+      IJH: 'OCC #53923',
+      IAU: 'OCC Information Memo #48664'
     };
 
     for (const split of readSplits()) {
