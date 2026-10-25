@@ -59,6 +59,7 @@ guard) and data file.
 | `multiEtfD1` | research | no | research program command line |
 | `multiEtfAllocator` | research | no | research program command line |
 | `complementaryEtfD1` | research | no | research program command line |
+| `portfolioAwareD1` | research | no | research program command line |
 | `intradayStudy` | research | no | research program command line |
 | `phenotypes` | utility | no | the phenotype registry utility itself (list, validate, matrix) |
 | `datasets` | utility | no | the canonical dataset migration and verification script (npm run datasets), not a strategy |

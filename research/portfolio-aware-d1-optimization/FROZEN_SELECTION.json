@@ -1,0 +1,1306 @@
+{
+ "version": "portfolio-aware-d1-v1",
+ "frozenAt": "2026-10-24T15:37:44.418Z",
+ "git": {
+  "branch": "research/trailing-buy-four-family-optimization",
+  "head": "cef1534697f03bf567d570fae8fb4743faf5f536",
+  "modifiedTracked": [
+   "config/phenotypes/COMPATIBILITY.md",
+   "package.json",
+   "src/phenotype/strategies.ts"
+  ],
+  "untracked": [
+   "research/portfolio-aware-d1-optimization/",
+   "src/app/portfolioAwareD1.ts",
+   "src/portfolio-aware-d1/"
+  ]
+ },
+ "protocol": {
+  "file": "research/portfolio-aware-d1-optimization/PROTOCOL.md",
+  "sha256": "ba67af02e8c114280985179dbd27a8f99230a0f4a71e53f514d32051d028f58f",
+  "frozenSha256": "ba67af02e8c114280985179dbd27a8f99230a0f4a71e53f514d32051d028f58f",
+  "frozenAt": "2026-10-24T14:54:55.270Z"
+ },
+ "lastCommonSession": "2026-10-13",
+ "s0Phenotypes": {
+  "config/phenotypes/D1/VGT.json": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70",
+  "config/phenotypes/D1/XBI.json": "453c4fd00d9de91269da718011c78b3d20d4611a0791005285345cbdac12aff8",
+  "config/phenotypes/D1/XRT.json": "d7b7f222bb8921ec5a3781d3b98c32f3045eb775cb5e01ee5e6af05af4e7cee9",
+  "config/phenotypes/D1/KRE.json": "6b8889e20ab3c07e85f12e5c344166588495e95bc1f5573b36699e8a587a8c8d"
+ },
+ "configurations": [
+  {
+   "key": "S0",
+   "kind": "baseline",
+   "description": "All-lowDd shadow, unchanged (VGT primary, XBI/XRT/KRE lowDd)",
+   "books": [
+    {
+     "symbol": "VGT",
+     "phenotype": "primary"
+    },
+    {
+     "symbol": "XBI",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "XRT",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "KRE",
+     "phenotype": "lowDd"
+    }
+   ],
+   "newSymbols": [],
+   "status": "control",
+   "trainingDelta5": 0
+  },
+  {
+   "key": "P-add-GDX",
+   "kind": "addition",
+   "description": "All-lowDd + GDX (P-vector d1-51ea8d4bd6)",
+   "books": [
+    {
+     "symbol": "VGT",
+     "phenotype": "primary"
+    },
+    {
+     "symbol": "XBI",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "XRT",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "KRE",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "GDX",
+     "phenotype": "d1-51ea8d4bd6",
+     "grid": {
+      "targetPercentChange": 274,
+      "trailingBuyPercentage": 4,
+      "trailingStopPercentage": 71,
+      "maximumHoldDays": 18,
+      "tickWindowSize": 100,
+      "intradayLossBuffer": 36,
+      "pullback": 191,
+      "continuationWindow": 81
+     },
+     "track": "P"
+    }
+   ],
+   "newSymbols": [
+    "GDX"
+   ],
+   "status": "nominated",
+   "trainingDelta5": 146293.24669512614
+  },
+  {
+   "key": "S-add-GDX",
+   "kind": "addition",
+   "description": "All-lowDd + GDX (S-vector d1-68ebf55a55)",
+   "books": [
+    {
+     "symbol": "VGT",
+     "phenotype": "primary"
+    },
+    {
+     "symbol": "XBI",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "XRT",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "KRE",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "GDX",
+     "phenotype": "d1-68ebf55a55",
+     "grid": {
+      "targetPercentChange": 258,
+      "trailingBuyPercentage": 10,
+      "trailingStopPercentage": 54,
+      "maximumHoldDays": 8,
+      "tickWindowSize": 172,
+      "intradayLossBuffer": 14,
+      "pullback": 176,
+      "continuationWindow": 199
+     },
+     "track": "S"
+    }
+   ],
+   "newSymbols": [
+    "GDX"
+   ],
+   "status": "comparator",
+   "trainingDelta5": 38081.65056483864
+  },
+  {
+   "key": "P-add-XOP",
+   "kind": "addition",
+   "description": "All-lowDd + XOP (P-vector d1-890902e16e)",
+   "books": [
+    {
+     "symbol": "VGT",
+     "phenotype": "primary"
+    },
+    {
+     "symbol": "XBI",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "XRT",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "KRE",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "XOP",
+     "phenotype": "d1-890902e16e",
+     "grid": {
+      "targetPercentChange": 216,
+      "trailingBuyPercentage": 48,
+      "trailingStopPercentage": 89,
+      "maximumHoldDays": 9,
+      "tickWindowSize": 43,
+      "intradayLossBuffer": 7,
+      "pullback": 112,
+      "continuationWindow": 126
+     },
+     "track": "P"
+    }
+   ],
+   "newSymbols": [
+    "XOP"
+   ],
+   "status": "nominated",
+   "trainingDelta5": 81267.92637384814
+  },
+  {
+   "key": "S-add-XOP",
+   "kind": "addition",
+   "description": "All-lowDd + XOP (S-vector d1-ede1165b0d)",
+   "books": [
+    {
+     "symbol": "VGT",
+     "phenotype": "primary"
+    },
+    {
+     "symbol": "XBI",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "XRT",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "KRE",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "XOP",
+     "phenotype": "d1-ede1165b0d",
+     "grid": {
+      "targetPercentChange": 285,
+      "trailingBuyPercentage": 49,
+      "trailingStopPercentage": 52,
+      "maximumHoldDays": 6,
+      "tickWindowSize": 38,
+      "intradayLossBuffer": 4,
+      "pullback": 151,
+      "continuationWindow": 39
+     },
+     "track": "S"
+    }
+   ],
+   "newSymbols": [
+    "XOP"
+   ],
+   "status": "comparator",
+   "trainingDelta5": 27301.661764170305
+  },
+  {
+   "key": "P-comb-GDX-XOP",
+   "kind": "combination",
+   "description": "All-lowDd + GDX (P d1-51ea8d4bd6) + XOP (P d1-890902e16e)",
+   "books": [
+    {
+     "symbol": "VGT",
+     "phenotype": "primary"
+    },
+    {
+     "symbol": "XBI",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "XRT",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "KRE",
+     "phenotype": "lowDd"
+    },
+    {
+     "symbol": "GDX",
+     "phenotype": "d1-51ea8d4bd6",
+     "grid": {
+      "targetPercentChange": 274,
+      "trailingBuyPercentage": 4,
+      "trailingStopPercentage": 71,
+      "maximumHoldDays": 18,
+      "tickWindowSize": 100,
+      "intradayLossBuffer": 36,
+      "pullback": 191,
+      "continuationWindow": 81
+     },
+     "track": "P"
+    },
+    {
+     "symbol": "XOP",
+     "phenotype": "d1-890902e16e",
+     "grid": {
+      "targetPercentChange": 216,
+      "trailingBuyPercentage": 48,
+      "trailingStopPercentage": 89,
+      "maximumHoldDays": 9,
+      "tickWindowSize": 43,
+      "intradayLossBuffer": 7,
+      "pullback": 112,
+      "continuationWindow": 126
+     },
+     "track": "P"
+    }
+   ],
+   "newSymbols": [
+    "GDX",
+    "XOP"
+   ],
+   "status": "comparator",
+   "trainingDelta5": 194695.13883078235
+  }
+ ],
+ "ranking": [
+  "P-add-GDX",
+  "P-add-XOP"
+ ],
+ "combination": {
+  "considered": true,
+  "pair": [
+   "GDX",
+   "XOP"
+  ],
+  "singleDelta5": [
+   146293.24669512614,
+   81267.92637384814
+  ],
+  "overlapShare": 0.1797752808988764,
+  "delta5": 194695.13883078235,
+  "qualifies": true,
+  "coRefinementTriggered": false
+ },
+ "substitutionCandidates": [
+  {
+   "symbol": "GDX",
+   "track": "P",
+   "removed": "XBI",
+   "conflicts": {
+    "refusedBy": 2,
+    "displaced": 1
+   },
+   "triggered": true,
+   "additionDelta5": 146293.24669512614,
+   "delta5": 78593.41907615043,
+   "qualifies": false
+  },
+  {
+   "symbol": "GDX",
+   "track": "P",
+   "removed": "XRT",
+   "conflicts": {
+    "refusedBy": 0,
+    "displaced": 1
+   },
+   "triggered": false,
+   "additionDelta5": 146293.24669512614
+  },
+  {
+   "symbol": "GDX",
+   "track": "P",
+   "removed": "KRE",
+   "conflicts": {
+    "refusedBy": 3,
+    "displaced": 12
+   },
+   "triggered": true,
+   "additionDelta5": 146293.24669512614,
+   "delta5": 49094.10539332297,
+   "qualifies": false
+  },
+  {
+   "symbol": "XOP",
+   "track": "P",
+   "removed": "XBI",
+   "conflicts": {
+    "refusedBy": 2,
+    "displaced": 5
+   },
+   "triggered": true,
+   "additionDelta5": 81267.92637384814,
+   "delta5": 49373.96046198424,
+   "qualifies": false
+  },
+  {
+   "symbol": "XOP",
+   "track": "P",
+   "removed": "XRT",
+   "conflicts": {
+    "refusedBy": 2,
+    "displaced": 2
+   },
+   "triggered": true,
+   "additionDelta5": 81267.92637384814,
+   "delta5": 22515.51138030688,
+   "qualifies": false
+  },
+  {
+   "symbol": "XOP",
+   "track": "P",
+   "removed": "KRE",
+   "conflicts": {
+    "refusedBy": 5,
+    "displaced": 3
+   },
+   "triggered": true,
+   "additionDelta5": 81267.92637384814,
+   "delta5": 41953.97214789051,
+   "qualifies": false
+  },
+  {
+   "symbol": "XLE",
+   "track": "P",
+   "removed": "XBI",
+   "conflicts": {
+    "refusedBy": 1,
+    "displaced": 0
+   },
+   "triggered": false,
+   "additionDelta5": 67122.42014813694
+  },
+  {
+   "symbol": "XLE",
+   "track": "P",
+   "removed": "XRT",
+   "conflicts": {
+    "refusedBy": 6,
+    "displaced": 1
+   },
+   "triggered": true,
+   "additionDelta5": 67122.42014813694,
+   "delta5": 12060.989997912693,
+   "qualifies": false
+  },
+  {
+   "symbol": "XLE",
+   "track": "P",
+   "removed": "KRE",
+   "conflicts": {
+    "refusedBy": 13,
+    "displaced": 6
+   },
+   "triggered": true,
+   "additionDelta5": 67122.42014813694,
+   "delta5": 9039.317216454918,
+   "qualifies": false
+  }
+ ],
+ "designNotes": [],
+ "acceptance": {
+  "persistThreshold": 2500,
+  "reverseThreshold": -2500,
+  "rules": [
+   "nominated configurations only",
+   "post-training (holdout + final, continuous all) fixed Δ@5 > 0 and Δ@10 > 0",
+   "holdout fixed Δ@5 ≥ +$2,500 (persists)",
+   "final fixed Δ@5 > −$2,500 (does not reverse)",
+   "portfolio post-training ending-equity Δ@5 > 0 (the equity gap to S0 widens over holdout + final)",
+   "full all: portfolio maximum daily % drawdown ≤ 35% and ≤ S0 + 1.0 point; fixed minute drawdown ≤ $35,000",
+   "recommendation: the highest-ranked accepted configuration in `ranking`; none accepted → All-lowDd unchanged"
+  ],
+  "gates": {
+   "fixedMateriality": 15000,
+   "netPerDrawdownShare": 0.95,
+   "minLots": 5,
+   "minYears": 3,
+   "minFoldsPositive": 2,
+   "portfolioMateriality": 0.02,
+   "percentDrawdownCeiling": 0.35,
+   "dailyPercentTolerance": 0.01,
+   "minutePercentTolerance": 0.02
+  }
+ },
+ "seeds": {
+  "pool": [
+   3958730257,
+   953049871,
+   361004370,
+   3789834329
+  ],
+  "nsga2": "deriveSeed(\"portfolio-aware-d1\", ETF, track, \"nsga2\")"
+ },
+ "budgets": {
+  "pool": {
+   "sobolSamples": 512,
+   "seedLabels": [
+    "portfolio-aware-d1",
+    "common-pool",
+    "sobol-scramble"
+   ]
+  },
+  "search": {
+   "populationSize": 48,
+   "crossoverProbability": 0.9,
+   "crossoverEta": 15,
+   "mutationEta": 20,
+   "maxNewVectors": 1000,
+   "maxGenerations": 40,
+   "earlyStopPatience": 8,
+   "earlyStopTolerance": 0.0001,
+   "seedDiversity": 0.02
+  },
+  "selection": {
+   "shortlist": 20,
+   "extendedShortlist": 40,
+   "minFoldsPositive": 2,
+   "plateauFeasibleShare": 0.75,
+   "plateauMedianShare": 0.5,
+   "riskEfficiencyShare": 0.95
+  },
+  "stageC": {
+   "maxConfigurations": 8,
+   "maxAdditions": 4,
+   "maxSubstitutions": 2,
+   "substitutionMinConflicts": 3,
+   "substitutionMargin": 5000,
+   "combinationMaxOverlap": 0.25,
+   "combinationMargin": 5000,
+   "coRefinementMaxVectors": 300,
+   "ladderFractions": [
+    0.1,
+    0.15,
+    0.2,
+    0.25
+   ],
+   "fraction": 0.2
+  }
+ },
+ "records": {
+  "audit/audit.json": "e5a3075557b7e6c7ec66bfa9997d5f1d25a30fad233394e1e4b9436ff8e5faf8",
+  "controls/controls.json": "7a94a1d8723749681c94533759de175bfdff5ca91f291cc85029dc2ae02286ae",
+  "parity/parity.json": "81a655d740e540d03de150e192d68cb116a1f6f75ee7602c337f521da60af2cf",
+  "stageA/pool.json": "bd6c3d30ff0ca140535a6f07101f983063e4131945dd761f353b1982bac522fc",
+  "stageA/run.json": "1cb4bc1190ee4a0b8ba013bedfa8037f12631ddfab0d40ce271049832e95b1cb",
+  "stageA/finalists.json": "0966bf84b4325613a46dc076545cfae8d41b634cc25565b5e6e40e3f2cff71bf",
+  "stageB/champions.json": "91f6b16ec16b04bfe20527ebfe03ac38c656a7e3d9833bd6f08b4c06e1ef3ae1",
+  "stageC/stageC.json": "46976cb7936339b9b50273f5259e39c500a6166fb47b53adf388a29c4844d483"
+ },
+ "inputs": {
+  "data/partitions.json": "43893f3d3277d6804775a82e8975644fae6ffcdff30574b9ffc000212c0fefa6",
+  "config/market-events/splits.json": "aaa861d58fae8afb1d34b654dbcd5c3f31108465785e1b2241938690d4495639",
+  "config/market-events/distributions.csv": "3b4342eb7cdbb270d78a355576c2098d7692caae3ae0550bcbeb64d7a7528259",
+  "config/market-events/distributions.manifest.json": "d2c02b017d8167a0f3f40bccefe95ad79ef690f59b8c133c5ce15d0dc034c11e",
+  "config/allocator/multi-etf-allocator.json": "4df4940bb6dc8c8854d0732df8f6cd745c4bbdd2b35db46f7f6f443e473e555f",
+  "config/phenotypes/D1/VGT.json": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70",
+  "config/phenotypes/D1/XBI.json": "453c4fd00d9de91269da718011c78b3d20d4611a0791005285345cbdac12aff8",
+  "config/phenotypes/D1/XRT.json": "d7b7f222bb8921ec5a3781d3b98c32f3045eb775cb5e01ee5e6af05af4e7cee9",
+  "config/phenotypes/D1/KRE.json": "6b8889e20ab3c07e85f12e5c344166588495e95bc1f5573b36699e8a587a8c8d",
+  "research/multi-etf-d1/FROZEN_CANDIDATES.json": "94b0b646d7aa7520e6ed59a82707389f202d770cfae6464e1c354450d8be8124"
+ },
+ "dataHashes": {
+  "VOOG": "a7aa42aeebd9e83f94368f0ee7761410ffacf734524f3cc7655af32354de51ab",
+  "VGT": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+  "XBI": "9afecc0606330d68ca12f7b0c331f75a150f64d0dad2e6ff910538a667b0c031",
+  "XRT": "ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752",
+  "KRE": "40e7bd6c72c1dffb343b265bed16d69c964ba5bee81ad297a15e6d8a5607e01a",
+  "GDX": "86ce101fede1a412dd452fcc29dc87b69ade4ad67629230172fde878b7c2c320",
+  "XOP": "cb8f4d8852b2f7141d5a6fdc0ea5f7598d6d0ca9620899f0016aa2de6f049855",
+  "EWZ": "b1cf63a676c2696cc5f68a432f0d601510a1900d014b600b3a52dfb7c1c7439a",
+  "TLT": "f4df3690714ee876ac643067f8567f973d80b701629f5142db15d791df16818b",
+  "XLE": "57d013b051ccb20570e64a3058cd91959bac56dc2bd5533137d13f962d37f214",
+  "XLU": "ab2787a4198289317fb5324248ea8abb356925f5e6857c67ac2594aaae0fc1c3",
+  "GLD": "d3dd1beb35bc9beeb8085bd803609d56e2403662bf29c052450ee2e89400a9cc"
+ },
+ "code": {
+  "src/portfolio-aware-d1/audit.ts": "88b2dc446eb895c1f3fb23c2bf5db7a21f11930d101b555adf3296ccb5b6dc7d",
+  "src/portfolio-aware-d1/cli.ts": "541f004a9cf1449d14f9ca01607ed8209280e7b04687c3c133b337cf148fc4ff",
+  "src/portfolio-aware-d1/compare.ts": "efd6cc8a4150be5ecae48943c4d511c02feb60db594eb3910ba25ecd7363703c",
+  "src/portfolio-aware-d1/context.ts": "3165b9e794412829246400ad4fcfdce3cb513f44717eb510f08e1e999593b042",
+  "src/portfolio-aware-d1/controls.ts": "76f2bbca3afb654d020a8f7acd14a9f4cab8737e6fc5701069a2488af33d95fa",
+  "src/portfolio-aware-d1/data.ts": "e94fef380f0878a7ad54d010e037dc003fffa395271c79656ea61a2f387baf8a",
+  "src/portfolio-aware-d1/evaluate.ts": "26a352cb0ee055fe944bce5967fd6937a84e840c7234c263ec0c441ceb6f49b1",
+  "src/portfolio-aware-d1/evaluation.ts": "ad10643abbce48c4fe0bac63aad6ff2e652f6eae7a93164c693ff38bfc13c369",
+  "src/portfolio-aware-d1/freeze.ts": "7ed93871dbee256b6405dc49be6c621cdebec0166c3832795127a9b7d05f4346",
+  "src/portfolio-aware-d1/nbook/engine.ts": "9b346011e333a062c314b2e3a85f9455ee22620a31e7b922a9cbe81d6f001827",
+  "src/portfolio-aware-d1/nbook/ledger.ts": "5a1ae62eac585d97ba560c7bb03fb6eadd97671fdb95c4762de340812a31b7bd",
+  "src/portfolio-aware-d1/nbook/margin.ts": "ee84b70dae14c6fbbf53c077b973a2f7ae0eed82b87cfc726c10faf1933fc346",
+  "src/portfolio-aware-d1/nbook/universe.ts": "a72ff27a49caee26cae3c0139475befce22951f12e847ae8502e0a150b3d0459",
+  "src/portfolio-aware-d1/opportunity.ts": "53874f422d5bbe5f1e0f27b1ff69bdb438a931432ccbbbc2eeb540d0d3fec9ca",
+  "src/portfolio-aware-d1/parity.ts": "6215fd2f3c75b2f5e9ee8852f68bb1c667494c05d5176b164fff90532b90272c",
+  "src/portfolio-aware-d1/phenotypes.ts": "f51f0d04115f1f018d61985149ccdcbaa2b90b663aaa180c00c9e7197edcb788",
+  "src/portfolio-aware-d1/replay.ts": "9da17057517864ffe014340182277e9f5b44f133fe6dfd79d5b45338a35c893d",
+  "src/portfolio-aware-d1/report.ts": "37820d0e6ddd439a574e8027225f570c534ddd5ce0ae4cc4742bcd00b7d147a5",
+  "src/portfolio-aware-d1/selection.ts": "88d9b402869506eaf173321c5cd1edcb3db6f4bd75e1df869471a080b94f43f0",
+  "src/portfolio-aware-d1/space.ts": "2ec2818f1407cb8f2c4a7ef273b8ff3b122a21d81d498d469fd7d2d0538b6d9a",
+  "src/portfolio-aware-d1/stageA.ts": "5c531ddcb5a2ac1bc9ad1aa4bcb4a78af9defcf15bcb8d321f2fa5184728f93b",
+  "src/portfolio-aware-d1/stageB.ts": "f0864af2e74503db3265093e9ca9ddec8a790ff81607f6a83203dec67a6d34d5",
+  "src/portfolio-aware-d1/stageC.ts": "cb16da88819230baaeb6734766eb07db03692195851aef10d13aec7888a58079",
+  "src/portfolio-aware-d1/tests/engine.test.ts": "184e99fb3d731a6466bd145fbd9f18473168e3d1c4688f2b20bad55536987ff9",
+  "src/portfolio-aware-d1/trace.ts": "508465ed7775dc91a7c3ebcbc67988df295674b418a5be8548f9208e526257a1",
+  "src/portfolio-aware-d1/tracks.ts": "097fd71720168921e888db6c3a7d4f4169a66026c9cb3603731942b54bc263a8",
+  "src/multi-etf-allocator/engine.ts": "fa13c2be38ac95b551309e487bfff7ac4d98922413636ccdf43bd4cfaacf66db",
+  "src/multi-etf-allocator/ledger.ts": "7a41e2748e94a1dd0b3fb5399e73c84cf8f63bb4c1e542329740781ef68c9115",
+  "src/multi-etf-allocator/shadow.ts": "d37332e9a7d47dc8b57b061fb228380cf8c3fa660ed802b4d6413a6c7835bb24",
+  "src/multi-etf-allocator/phenotypes.ts": "3e97c8d636a6e7661002d6391707c61e2815e1f34f363a85e0b3f8b746cf751b",
+  "src/multi-etf-allocator/data.ts": "9931a4173a139a592589d3052487f24de032e2f7c4c1c4a3b3d7e320c8a59400",
+  "src/multi-etf-allocator/dataset.ts": "8f5925f8563c0323ac25cc3eac27da1a70311b7b734a9ae785ed4939bb41a705",
+  "src/shared-margin-portfolio/strategy.ts": "0407559247569b2f471f8887faa9232502574fb28a34e3f435026fc3f0df7093",
+  "src/four-family/data.ts": "d73c2a9764c5401983b3cb2c83c8686c6254fb4fd003e9d2cac03cc31d7caa9a",
+  "src/multi-etf-d1/space.ts": "e5a49833cd48b765911bb1c0fa623471a2f5d72016877542eec0bd2804c51b11",
+  "src/multi-etf-d1/context.ts": "c407023075dc3957e009ac399ca1c8861e736f3dd8b5d6d0e5298e83c9ee3195",
+  "src/optimizer/nsga2.ts": "ce00e3c0aaa09283dc334f07faed2cf646ddca906d68302a4b19f364877ce5d5",
+  "src/optimizer/sobol.ts": "7f420687def739a7c1e1213a0f3bbf7c2224da8cd528f098543a4a89ae136976",
+  "src/lib/evaluation.ts": "770ca4ac5eb4dd8d022fd40af0f1bf71759cf11216be0d3d2545c6da279adf51",
+  "src/lib/dataset.ts": "fa92fd8a2665af8c3f8d9ea093e952aeb1d288d69d6d8eda695061a672aff0ed",
+  "src/lib/corporateActions.ts": "ebdae50b5599518dca329f41a771e0afe5f8bf498a6e99255f853b6b911bd36f",
+  "src/app/allIn-trailingBuy-postExitContinuation.ts": "de0935c3f402a42b41227c5fb362e9b37fb68fdfe01c14d020ea073dce795dc0"
+ },
+ "training": {
+  "S0": {
+   "fixed-0": {
+    "net": 249173.89836931392,
+    "lots": 71,
+    "newLots": 0,
+    "minuteDrawdown": 27968.026478682383,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 123000000
+   },
+   "fixed-2": {
+    "net": 246624.89903313894,
+    "lots": 71,
+    "newLots": 0,
+    "minuteDrawdown": 28244.633109925664,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 123000000
+   },
+   "fixed-5": {
+    "net": 242196.01122128402,
+    "lots": 71,
+    "newLots": 0,
+    "minuteDrawdown": 28659.335705492747,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 123000000
+   },
+   "fixed-10": {
+    "net": 233867.18518820778,
+    "lots": 71,
+    "newLots": 0,
+    "minuteDrawdown": 29349.954313695,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 122700000
+   },
+   "portfolio-0": {
+    "net": 471678.62509150605,
+    "lots": 71,
+    "newLots": 0,
+    "minuteDrawdown": 408803.45199281943,
+    "endEquity": 1700902.8816302426,
+    "dailyPercent": 0.34551962147114507,
+    "minutePercent": 0.3692413809432805,
+    "borrowingDollarDays": 210860655.59820384
+   },
+   "portfolio-2": {
+    "net": 465065.51914973685,
+    "lots": 71,
+    "newLots": 0,
+    "minuteDrawdown": 408820.3977620561,
+    "endEquity": 1692442.733605761,
+    "dailyPercent": 0.3458965465835615,
+    "minutePercent": 0.36960481575996057,
+    "borrowingDollarDays": 210471143.7844038
+   },
+   "portfolio-5": {
+    "net": 453385.55927836086,
+    "lots": 71,
+    "newLots": 0,
+    "minuteDrawdown": 410071.45190528827,
+    "endEquity": 1677751.3328378373,
+    "dailyPercent": 0.3464613481592348,
+    "minutePercent": 0.37014940266383856,
+    "borrowingDollarDays": 209768005.20706284
+   },
+   "portfolio-10": {
+    "net": 431393.87668762024,
+    "lots": 71,
+    "newLots": 0,
+    "minuteDrawdown": 412121.1811812953,
+    "endEquity": 1650551.0434943587,
+    "dailyPercent": 0.34740112478291324,
+    "minutePercent": 0.3710555434325085,
+    "borrowingDollarDays": 207757284.5455476
+   }
+  },
+  "P-add-GDX": {
+   "fixed-0": {
+    "net": 396714.78541898355,
+    "lots": 82,
+    "newLots": 9,
+    "minuteDrawdown": 26309.782346360997,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 125400000
+   },
+   "fixed-2": {
+    "net": 393666.58025408594,
+    "lots": 82,
+    "newLots": 9,
+    "minuteDrawdown": 26389.882645812046,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 125400000
+   },
+   "fixed-5": {
+    "net": 388489.25791641016,
+    "lots": 82,
+    "newLots": 9,
+    "minuteDrawdown": 26509.97304978661,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 125400000
+   },
+   "fixed-10": {
+    "net": 379867.28355386585,
+    "lots": 82,
+    "newLots": 9,
+    "minuteDrawdown": 26709.96376249958,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 125400000
+   },
+   "portfolio-0": {
+    "net": 869819.7150550911,
+    "lots": 82,
+    "newLots": 9,
+    "minuteDrawdown": 485573.5427059666,
+    "endEquity": 2307551.167194168,
+    "dailyPercent": 0.296386756462397,
+    "minutePercent": 0.31027878482212456,
+    "borrowingDollarDays": 273624162.2811594
+   },
+   "portfolio-2": {
+    "net": 859394.8375501334,
+    "lots": 82,
+    "newLots": 9,
+    "minuteDrawdown": 484982.54870528355,
+    "endEquity": 2293698.8799708267,
+    "dailyPercent": 0.29650339008879,
+    "minutePercent": 0.31050799745123325,
+    "borrowingDollarDays": 272737158.6634825
+   },
+   "portfolio-5": {
+    "net": 841432.0361125139,
+    "lots": 82,
+    "newLots": 9,
+    "minuteDrawdown": 485599.9992602782,
+    "endEquity": 2270264.325530123,
+    "dailyPercent": 0.2966781505859238,
+    "minutePercent": 0.3108515423395935,
+    "borrowingDollarDays": 271236042.7210373
+   },
+   "portfolio-10": {
+    "net": 811949.1777147793,
+    "lots": 82,
+    "newLots": 9,
+    "minuteDrawdown": 486570.62437960017,
+    "endEquity": 2231766.838450107,
+    "dailyPercent": 0.29696891243926715,
+    "minutePercent": 0.31142338787080925,
+    "borrowingDollarDays": 268759959.7235016
+   }
+  },
+  "S-add-GDX": {
+   "fixed-0": {
+    "net": 288668.38297971437,
+    "lots": 81,
+    "newLots": 21,
+    "minuteDrawdown": 26309.782346361004,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 132400000
+   },
+   "fixed-2": {
+    "net": 285331.2857976773,
+    "lots": 81,
+    "newLots": 21,
+    "minuteDrawdown": 26389.882645812053,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 132400000
+   },
+   "fixed-5": {
+    "net": 280277.66178612266,
+    "lots": 81,
+    "newLots": 21,
+    "minuteDrawdown": 26509.97304978662,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 132400000
+   },
+   "fixed-10": {
+    "net": 263570.21845239203,
+    "lots": 83,
+    "newLots": 23,
+    "minuteDrawdown": 26709.96376249958,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 129800000
+   },
+   "portfolio-0": {
+    "net": 531511.1640438034,
+    "lots": 81,
+    "newLots": 21,
+    "minuteDrawdown": 495254.95541925915,
+    "endEquity": 1831509.4979529083,
+    "dailyPercent": 0.30098651062351606,
+    "minutePercent": 0.3215954927901442,
+    "borrowingDollarDays": 241147659.94334403
+   },
+   "portfolio-2": {
+    "net": 522056.6184851882,
+    "lots": 81,
+    "newLots": 21,
+    "minuteDrawdown": 496061.3935014531,
+    "endEquity": 1819411.377042553,
+    "dailyPercent": 0.30221433373936285,
+    "minutePercent": 0.32278801052222855,
+    "borrowingDollarDays": 240511939.09551063
+   },
+   "portfolio-5": {
+    "net": 507871.75932164845,
+    "lots": 81,
+    "newLots": 21,
+    "minuteDrawdown": 497356.1829373193,
+    "endEquity": 1801245.868508182,
+    "dailyPercent": 0.3041196378841782,
+    "minutePercent": 0.3246384800154102,
+    "borrowingDollarDays": 239554212.15530875
+   },
+   "portfolio-10": {
+    "net": 466708.1640574869,
+    "lots": 83,
+    "newLots": 23,
+    "minuteDrawdown": 491824.21457379847,
+    "endEquity": 1741149.4197632223,
+    "dailyPercent": 0.3072907383705196,
+    "minutePercent": 0.32771888773683044,
+    "borrowingDollarDays": 231191265.53261325
+   }
+  },
+  "P-add-XOP": {
+   "fixed-0": {
+    "net": 330981.4075339303,
+    "lots": 76,
+    "newLots": 13,
+    "minuteDrawdown": 34208.95960348539,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 146600000
+   },
+   "fixed-2": {
+    "net": 328196.8873667487,
+    "lots": 76,
+    "newLots": 13,
+    "minuteDrawdown": 34452.013598995865,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 146600000
+   },
+   "fixed-5": {
+    "net": 323463.93759513216,
+    "lots": 76,
+    "newLots": 13,
+    "minuteDrawdown": 34816.4123928647,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 146600000
+   },
+   "fixed-10": {
+    "net": 314583.77034323826,
+    "lots": 76,
+    "newLots": 13,
+    "minuteDrawdown": 35423.25833630067,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 146300000
+   },
+   "portfolio-0": {
+    "net": 672729.3693850391,
+    "lots": 76,
+    "newLots": 13,
+    "minuteDrawdown": 391448.42009553825,
+    "endEquity": 1936215.775249541,
+    "dailyPercent": 0.3455145083008428,
+    "minutePercent": 0.36923162917677144,
+    "borrowingDollarDays": 260854084.8678549
+   },
+   "portfolio-2": {
+    "net": 664522.4271339409,
+    "lots": 76,
+    "newLots": 13,
+    "minuteDrawdown": 390571.2251467651,
+    "endEquity": 1925625.982315885,
+    "dailyPercent": 0.3458914548286219,
+    "minutePercent": 0.3695950968191283,
+    "borrowingDollarDays": 260259942.0251917
+   },
+   "portfolio-5": {
+    "net": 650352.977336725,
+    "lots": 76,
+    "newLots": 13,
+    "minuteDrawdown": 390696.39769919193,
+    "endEquity": 1907670.6658919519,
+    "dailyPercent": 0.34645628874205003,
+    "minutePercent": 0.3701397334653657,
+    "borrowingDollarDays": 259260880.64101377
+   },
+   "portfolio-10": {
+    "net": 623804.9829597396,
+    "lots": 76,
+    "newLots": 13,
+    "minuteDrawdown": 390849.52487993985,
+    "endEquity": 1874535.8828330776,
+    "dailyPercent": 0.34739611998380493,
+    "minutePercent": 0.37104595877333174,
+    "borrowingDollarDays": 256622809.11693645
+   }
+  },
+  "S-add-XOP": {
+   "fixed-0": {
+    "net": 276704.0609771771,
+    "lots": 73,
+    "newLots": 3,
+    "minuteDrawdown": 31041.962044415624,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 126600000
+   },
+   "fixed-2": {
+    "net": 274063.6338889066,
+    "lots": 73,
+    "newLots": 3,
+    "minuteDrawdown": 31317.32729491425,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 126600000
+   },
+   "fixed-5": {
+    "net": 269497.6729854543,
+    "lots": 73,
+    "newLots": 3,
+    "minuteDrawdown": 31730.168749934608,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 126600000
+   },
+   "fixed-10": {
+    "net": 260940.57438125636,
+    "lots": 73,
+    "newLots": 3,
+    "minuteDrawdown": 32417.687936267328,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 126300000
+   },
+   "portfolio-0": {
+    "net": 548282.983421808,
+    "lots": 73,
+    "newLots": 3,
+    "minuteDrawdown": 387970.12355811964,
+    "endEquity": 1797030.8590843063,
+    "dailyPercent": 0.3494320183287869,
+    "minutePercent": 0.3730130742220383,
+    "borrowingDollarDays": 222632204.2808702
+   },
+   "portfolio-2": {
+    "net": 541020.4318822981,
+    "lots": 73,
+    "newLots": 3,
+    "minuteDrawdown": 388120.2506510506,
+    "endEquity": 1787753.9957045272,
+    "dailyPercent": 0.3498055156152481,
+    "minutePercent": 0.37337318523232166,
+    "borrowingDollarDays": 222198326.40618455
+   },
+   "portfolio-5": {
+    "net": 528286.6467957394,
+    "lots": 73,
+    "newLots": 3,
+    "minuteDrawdown": 389620.32157237316,
+    "endEquity": 1771732.1105657236,
+    "dailyPercent": 0.350365259324995,
+    "minutePercent": 0.373912867308005,
+    "borrowingDollarDays": 221422608.28835627
+   },
+   "portfolio-10": {
+    "net": 504413.9932860188,
+    "lots": 73,
+    "newLots": 3,
+    "minuteDrawdown": 392078.2489782048,
+    "endEquity": 1742183.9147850638,
+    "dailyPercent": 0.3512968290775906,
+    "minutePercent": 0.3748110483178055,
+    "borrowingDollarDays": 219244948.7542354
+   }
+  },
+  "P-comb-GDX-XOP": {
+   "fixed-0": {
+    "net": 445523.65951760486,
+    "lots": 86,
+    "newLots": 21,
+    "minuteDrawdown": 38096.85854464909,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 150100000
+   },
+   "fixed-2": {
+    "net": 442292.9897617395,
+    "lots": 86,
+    "newLots": 21,
+    "minuteDrawdown": 38809.32185664933,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 150100000
+   },
+   "fixed-5": {
+    "net": 436891.15005206637,
+    "lots": 86,
+    "newLots": 21,
+    "minuteDrawdown": 39877.48274420551,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 150100000
+   },
+   "fixed-10": {
+    "net": 427850.3028301475,
+    "lots": 86,
+    "newLots": 21,
+    "minuteDrawdown": 41656.32809840812,
+    "endEquity": null,
+    "dailyPercent": null,
+    "minutePercent": null,
+    "borrowingDollarDays": 150100000
+   },
+   "portfolio-0": {
+    "net": 1020806.7160167557,
+    "lots": 86,
+    "newLots": 21,
+    "minuteDrawdown": 545151.4723567227,
+    "endEquity": 2468822.250580958,
+    "dailyPercent": 0.2963649877236976,
+    "minutePercent": 0.3102682786483265,
+    "borrowingDollarDays": 330456107.31927747
+   },
+   "portfolio-2": {
+    "net": 1008926.2691548786,
+    "lots": 86,
+    "newLots": 21,
+    "minuteDrawdown": 543498.40909476,
+    "endEquity": 2453052.417504573,
+    "dailyPercent": 0.29648167703277023,
+    "minutePercent": 0.31049752316192797,
+    "borrowingDollarDays": 329268887.1499574
+   },
+   "portfolio-5": {
+    "net": 988779.8630716552,
+    "lots": 86,
+    "newLots": 21,
+    "minuteDrawdown": 542694.2125192462,
+    "endEquity": 2426816.761570519,
+    "dailyPercent": 0.29665652237460616,
+    "minutePercent": 0.310841116459713,
+    "borrowingDollarDays": 327334326.3514974
+   },
+   "portfolio-10": {
+    "net": 955600.5270349075,
+    "lots": 86,
+    "newLots": 21,
+    "minuteDrawdown": 541271.4215694275,
+    "endEquity": 2383523.9669478084,
+    "dailyPercent": 0.29694742982496564,
+    "minutePercent": 0.31141304454459223,
+    "borrowingDollarDays": 324115373.2352318
+   }
+  }
+ },
+ "gates": {
+  "P-add-GDX": {
+   "deltas": {
+    "0": 147540.88704966963,
+    "2": 147041.681220947,
+    "5": 146293.24669512614,
+    "10": 146000.09836565808
+   },
+   "foldDeltas": [
+    0,
+    88122.19557436254,
+    58171.0511207636
+   ],
+   "regimeDeltas": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    86261.22773230371,
+    1860.967842058868,
+    -2.9103830456733704e-11,
+    9582.946718578067,
+    20954.1156882589,
+    21164.95648596069,
+    6469.032227965945
+   ],
+   "withoutBestRegime": 60032.01896282243,
+   "netPerDrawdown": 14.654456916527769,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 592512.9926922857,
+   "portfolioDeltaShare": 0.3531590058045598,
+   "matchedS0EndEquity": 1843191.3291804276,
+   "matchedExtrapolated": false,
+   "matchedDelta": 427072.9963496954,
+   "T": {
+    "T1": true,
+    "T2": true,
+    "T3": true,
+    "T4": true,
+    "T5": true
+   },
+   "nominated": true
+  },
+  "S-add-GDX": {
+   "deltas": {
+    "0": 39494.484610400454,
+    "2": 38706.38676453836,
+    "5": 38081.65056483864,
+    "10": 29703.033264184254
+   },
+   "foldDeltas": [
+    4652.330206081344,
+    45432.6081496353,
+    -12003.287790878021
+   ],
+   "regimeDeltas": [
+    0,
+    0,
+    625.1708523356556,
+    4027.159353745683,
+    3.637978807091713e-12,
+    -7.275957614183426e-12,
+    40636.46321663972,
+    2.1827872842550278e-11,
+    4796.144932995579,
+    -25260.81190351215,
+    14921.303287862713,
+    -1663.7791752285848,
+    0
+   ],
+   "withoutBestRegime": -2554.812651801083,
+   "netPerDrawdown": 10.572536654780894,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 123494.53567034472,
+   "portfolioDeltaShare": 0.07360717482575892,
+   "matchedS0EndEquity": 1757920.3144399768,
+   "matchedExtrapolated": false,
+   "matchedDelta": 43325.55406820518,
+   "T": {
+    "T1": true,
+    "T2": true,
+    "T3": false,
+    "T4": true,
+    "T5": true
+   },
+   "nominated": false
+  },
+  "P-add-XOP": {
+   "deltas": {
+    "0": 81807.50916461641,
+    "2": 81571.98833360977,
+    "5": 81267.92637384814,
+    "10": 80716.58515503048
+   },
+   "foldDeltas": [
+    10530.723011912065,
+    45972.237978461475,
+    24764.965383474613
+   ],
+   "regimeDeltas": [
+    0,
+    18734.99320447755,
+    2697.718664185206,
+    -10014.637680184616,
+    -887.3511765660733,
+    -7.275957614183426e-12,
+    -1.4551915228366852e-11,
+    -25221.67109858487,
+    71193.90907704635,
+    29453.866545252284,
+    -4688.901161777554,
+    -5.820766091346741e-11,
+    -5.820766091346741e-11
+   ],
+   "withoutBestRegime": 10074.017296801787,
+   "netPerDrawdown": 9.290559117498937,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 229919.3330541146,
+   "portfolioDeltaShare": 0.13704017309002334,
+   "matchedS0EndEquity": 1810960.4194125566,
+   "matchedExtrapolated": false,
+   "matchedDelta": 96710.24647939531,
+   "T": {
+    "T1": true,
+    "T2": true,
+    "T3": true,
+    "T4": true,
+    "T5": true
+   },
+   "nominated": true
+  },
+  "S-add-XOP": {
+   "deltas": {
+    "0": 27530.162607863196,
+    "2": 27438.73485576769,
+    "5": 27301.661764170305,
+    "10": 27073.389193048584
+   },
+   "foldDeltas": [
+    0,
+    7111.721399658229,
+    20189.940364512076
+   ],
+   "regimeDeltas": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    -3070.8330444418607,
+    7.275957614183426e-12,
+    10182.554444100082,
+    17652.859224194617,
+    2537.0811403174303,
+    0,
+    2.9103830456733704e-11
+   ],
+   "withoutBestRegime": 9648.802539975688,
+   "netPerDrawdown": 8.493420728687733,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 93980.77772788634,
+   "portfolioDeltaShare": 0.05601591599925734,
+   "matchedS0EndEquity": 1709119.4644575457,
+   "matchedExtrapolated": false,
+   "matchedDelta": 62612.646108177956,
+   "T": {
+    "T1": true,
+    "T2": true,
+    "T3": false,
+    "T4": false,
+    "T5": true
+   },
+   "nominated": false
+  },
+  "P-comb-GDX-XOP": {
+   "deltas": {
+    "0": 196349.76114829094,
+    "2": 195668.09072860057,
+    "5": 194695.13883078235,
+    "10": 193983.11764193972
+   },
+   "foldDeltas": [
+    10530.723011912065,
+    134094.43355282402,
+    50069.98226604627
+   ],
+   "regimeDeltas": [
+    0,
+    18734.99320447755,
+    2697.718664185206,
+    -10014.637680184616,
+    -887.3511765660733,
+    -7.275957614183426e-12,
+    86261.2277323037,
+    -23360.703256526052,
+    71193.90907704638,
+    1481.8778638606746,
+    20954.115688258957,
+    21164.95648596069,
+    6469.032227965945
+   ],
+   "withoutBestRegime": 108433.91109847865,
+   "netPerDrawdown": 10.955835724499181,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 749065.4287326816,
+   "portfolioDeltaShare": 0.44646987552420697,
+   "matchedS0EndEquity": 1994178.7401017365,
+   "matchedExtrapolated": true,
+   "matchedDelta": 432638.02146878233,
+   "T": {
+    "T1": true,
+    "T2": false,
+    "T3": true,
+    "T4": true,
+    "T5": true
+   },
+   "nominated": false
+  }
+ },
+ "authorizedCommands": [
+  "npm run portfolio-aware-d1 -- evaluate",
+  "npm run portfolio-aware-d1 -- evaluate --confirm"
+ ],
+ "statement": "Frozen from training-only stages before any holdout, final or all figure of a candidate configuration was computed. No configuration, vector, rule or ranking may change after this point; the evaluation runs once (plus one deterministic confirmation).",
+ "manifestHash": "2eb9defcf61e02f1ffc566f7ae73c49046619a2f15ea465a40c2f4e03fbf518e"
+}

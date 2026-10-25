@@ -3,6 +3,7 @@
 // committed matrix is current; the shipped phenotypes are exactly the frozen research vectors; and planning
 // refuses incompatible or conflicting runs before any market data is read.
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { describe, test } from 'node:test';
 import fs from 'fs-extra';
 import { PhenotypeError, architectureOf } from '../architectures.ts';
@@ -121,10 +122,11 @@ describe('shipped phenotypes', () => {
     'XRT/primary': [244, 20, 77, 9, 49, 28, 65, 103],
     'XRT/lowDd': [244, 47, 80, 17, 48, 36, 62, 120],
     'KRE/primary': [299, 28, 31, 5, 233, 28, 94, 100],
-    'KRE/lowDd': [299, 27, 31, 4, 230, 23, 94, 60]
+    'KRE/lowDd': [299, 27, 31, 4, 230, 23, 94, 60],
+    'GDX/portfolioAware': [274, 4, 71, 18, 100, 36, 191, 81]
   };
 
-  test('are the seven frozen D1 configurations, each with its own symbol', async () => {
+  test('are the eight frozen D1 configurations, each with its own symbol', async () => {
     const files = await listPhenotypeFiles();
     const found = Object.fromEntries(
       files.flatMap((file) =>
@@ -144,6 +146,41 @@ describe('shipped phenotypes', () => {
 
     for (const parameter of vgt!.phenotypes.primary!.parameters) {
       assert.equal(parameter.value, d1.injectable[parameter.name]!.literal, parameter.name);
+    }
+  });
+
+  test('the portfolio-aware phenotypes are the accepted frozen configurations, by candidate ID', async () => {
+    const manifest = await fs.readJson('research/portfolio-aware-d1-optimization/FROZEN_SELECTION.json');
+    const evaluation = await fs.readJson('research/portfolio-aware-d1-optimization/results/evaluation/evaluation.json');
+    const { manifestHash, ...body } = manifest;
+
+    assert.equal(createHash('sha256').update(JSON.stringify(body)).digest('hex'), manifestHash);
+    assert.equal(evaluation.manifestHash, manifestHash);
+
+    for (const file of await listPhenotypeFiles()) {
+      for (const phenotype of Object.values(file.phenotypes)) {
+        const provenance = phenotype.provenance as Record<string, string>;
+
+        if (provenance.program !== 'portfolio-aware-d1') {
+          continue;
+        }
+
+        assert.equal(provenance.manifestHash, manifestHash);
+
+        const configuration = manifest.configurations.find(
+          (candidate: { status: string; books: { symbol: string; phenotype: string }[] }) =>
+            candidate.status === 'nominated' &&
+            candidate.books.some((book) => book.symbol === file.symbol && book.phenotype === provenance.candidateId)
+        );
+
+        assert.ok(configuration, `${file.symbol}/${phenotype.name}: not a nominated frozen configuration's book`);
+        assert.ok(evaluation.accepted.includes(configuration.key), `${configuration.key} was not accepted`);
+        assert.deepEqual(
+          Object.fromEntries(phenotype.parameters.map((parameter) => [parameter.name, parameter.grid])),
+          configuration.books.find((book: { symbol: string }) => book.symbol === file.symbol).grid,
+          `${file.symbol}/${phenotype.name}`
+        );
+      }
     }
   });
 
