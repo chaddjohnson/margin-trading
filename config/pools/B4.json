@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "B4",
+  "name": "All-lowDd shadow (VGT primary, XBI/XRT/KRE lowDd)",
+  "role": "default",
+  "status": "inspected historical benchmark; not forward validated",
+  "description": "The default D1 shared pool: four virtual books (VGT primary, XBI/XRT/KRE lowDd) monitored concurrently under the frozen shadow policy; one funded $100,000 position or reservation at a time, never compounded. Historical figures are inspected benchmarks, not expected returns.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "primary",
+      "phenotypeFile": "config/phenotypes/D1/VGT.json",
+      "candidateId": "d1-ebc9f639b3",
+      "parameters": {
+        "targetPercentChange": "21.6%",
+        "trailingBuyPercentage": "0.3%",
+        "trailingStopPercentage": "7.3%",
+        "maximumHoldDays": 8,
+        "tickWindowSize": 74,
+        "intradayLossBuffer": "2.9%",
+        "pullback": "9.0%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "62978dffae8291e66931c7bb2df824fb70aee8c6e8e8e08460765ec9911981b5"
+    },
+    {
+      "symbol": "XBI",
+      "phenotype": "lowDd",
+      "phenotypeFile": "config/phenotypes/D1/XBI.json",
+      "candidateId": "d1-0aabdaab89",
+      "parameters": {
+        "targetPercentChange": "30.0%",
+        "trailingBuyPercentage": "1.2%",
+        "trailingStopPercentage": "3.1%",
+        "maximumHoldDays": 5,
+        "tickWindowSize": 49,
+        "intradayLossBuffer": "0.1%",
+        "pullback": "8.2%",
+        "continuationWindow": 54
+      },
+      "parametersSha256": "4755dc6423da4ec1d98c9ef823e58862989eba2651fefdb7f949e9ebbe5da4c3"
+    },
+    {
+      "symbol": "XRT",
+      "phenotype": "lowDd",
+      "phenotypeFile": "config/phenotypes/D1/XRT.json",
+      "candidateId": "d1-15c387627c",
+      "parameters": {
+        "targetPercentChange": "24.4%",
+        "trailingBuyPercentage": "4.7%",
+        "trailingStopPercentage": "8.0%",
+        "maximumHoldDays": 17,
+        "tickWindowSize": 48,
+        "intradayLossBuffer": "3.6%",
+        "pullback": "6.2%",
+        "continuationWindow": 120
+      },
+      "parametersSha256": "92448568b2a8631462e2b3ab7cab6483a6779d2e7548e3afe6a576091db2f49d"
+    },
+    {
+      "symbol": "KRE",
+      "phenotype": "lowDd",
+      "phenotypeFile": "config/phenotypes/D1/KRE.json",
+      "candidateId": "d1-a389037400",
+      "parameters": {
+        "targetPercentChange": "29.9%",
+        "trailingBuyPercentage": "2.7%",
+        "trailingStopPercentage": "3.1%",
+        "maximumHoldDays": 4,
+        "tickWindowSize": 230,
+        "intradayLossBuffer": "2.3%",
+        "pullback": "9.4%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "597ed6645d81b6bdf17635ca373cd06dcd5a5c4a5d1068f74f2212ccab0006b7"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [0, 2, 5, 10],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "frozenReference": {
+    "benchmark": "B4",
+    "configuration": "S0",
+    "manifest": "research/portfolio-aware-d1-optimization/FROZEN_SELECTION.json",
+    "manifestSha256": "16c91895f485b4ce0de965fbdc81a78035204a69d868edea38b5b844a20ba24c",
+    "controls": "research/joint-16-etf-d1/results/controls/controls.json",
+    "lotLedgers": "research/portfolio-aware-d1-optimization/results/evaluation/runs/S0/",
+    "newSymbols": []
+  },
+  "regressionAnchors": {
+    "dataset": "all",
+    "first": "2016-01-04",
+    "end": "2026-10-13",
+    "sessions": 2710,
+    "costBpsPerSide": 5,
+    "fixed": {
+      "net": 284244.74,
+      "minuteDrawdown": 28659.34,
+      "lots": 76,
+      "virtualTrades": 147
+    },
+    "portfolioFrozen": {
+      "endEquity": 3608484.05,
+      "dailyPercent": 0.3465
+    },
+    "dataSha256": {
+      "VOOG": "a7aa42aeebd9e83f94368f0ee7761410ffacf734524f3cc7655af32354de51ab",
+      "VGT": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+      "XBI": "9afecc0606330d68ca12f7b0c331f75a150f64d0dad2e6ff910538a667b0c031",
+      "XRT": "ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752",
+      "KRE": "40e7bd6c72c1dffb343b265bed16d69c964ba5bee81ad297a15e6d8a5607e01a"
+    },
+    "note": "regression anchors of the frozen controls, reproduced to the cent; not expected future returns. Portfolio anchors use the frozen dividend convention (open VGT lots receive VGT distributions)."
+  },
+  "provenance": {
+    "createdAt": "2026-10-26",
+    "createdBy": "docs/pools/README.md task (operationalization; no parameter changed)"
+  }
+}

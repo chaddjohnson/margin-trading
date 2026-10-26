@@ -65,6 +65,7 @@ guard) and data file.
 | `diverseD1` | research | no | research program command line |
 | `intradayStudy` | research | no | research program command line |
 | `phenotypes` | utility | no | the phenotype registry utility itself (list, validate, matrix) |
+| `pools` | utility | no | named shared-pool configurations (config/pools/) and their prospective comparison; pools, not single phenotypes |
 | `datasets` | utility | no | the canonical dataset migration and verification script (npm run datasets), not a strategy |
 | `marketEvents` | utility | no | the split and distribution ledger tool (npm run market-events), not a strategy |
 | `legacyArchive` | utility | no | the legacy research-input archive builder (npm run legacy-archive), not a strategy |

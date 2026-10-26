@@ -319,3 +319,7 @@ the allocation).
 Strategies can run named, symbol-specific parameter sets kept as JSON under `config/phenotypes/`, for example
 `npm run app -- allIn-trailingBuy-postExitContinuation KRE --phenotype primary`. See
 [config/phenotypes/README.md](config/phenotypes/README.md).
+
+Named multi-book **pools** bundle D1 phenotypes with one shared $100,000 funded slot: B4 (default) and B5 (leading
+incumbent) in `config/pools/`, run with `npm run pools -- fixed B4` (or `portfolio`, `compare B4 B5`, `verify`), and
+their prospective comparison after 2026-10-13. See [docs/pools/README.md](docs/pools/README.md).

@@ -286,6 +286,12 @@ export const incompatibleEntryPoints: IncompatibleEntryPoint[] = [
     reason: 'the phenotype registry utility itself (list, validate, matrix)'
   },
   {
+    script: 'pools',
+    category: 'utility',
+    reason:
+      'named shared-pool configurations (config/pools/) and their prospective comparison; pools, not single phenotypes'
+  },
+  {
     script: 'datasets',
     category: 'utility',
     reason: 'the canonical dataset migration and verification script (npm run datasets), not a strategy'
