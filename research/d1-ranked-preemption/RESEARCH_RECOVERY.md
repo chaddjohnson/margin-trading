@@ -5,11 +5,14 @@
 All times UTC (`date -u`); `ls`/`stat` show local time (CET = UTC+1). Run every command from the repository root with
 Node v24.21.0: `export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/installation/bin:$PATH`.
 
-- **Updated:** 2026-10-26T20:17Z. **Status: COMPLETE.** All outcome stages sealed; reports written; final independent audit
+- **Updated:** 2026-10-26T21:31Z. **Status: COMPLETE.** All outcome stages sealed; reports written; final independent audit
   done (`reviews/final-audit.md`, verbatim; dispositions `reviews/FINAL_AUDIT_DISPOSITIONS.md`: 14 minor + 1 note,
   none MATERIAL; report text corrected, no sealed record changed). **Decision: NO ADVANCEMENT** (B4 default, B5
   leading incumbent). Historical check refused (no nominee); no prospective registration; **forward observations
-  0**. Nothing committed (awaiting the user's decision).
+  0**. **Committed** at the user's request as `9400593d` (761 files: this study, its src/ and research pools,
+  the package.json script); not pushed. Re-checked at 21:31Z after the commit: `ranked-preemption verify` exit 0,
+  `pools verify` all checks passed, `pools forward status` freeze `407a669b…` verifies, observations 0. CLI logs
+  under `results/logs/` are on disk only (the repository's `logs/` ignore rule); run outputs under `evaluations/`.
 - **Recovery performed:** context compaction before 19:29Z; reread `CLAUDE.md`, `docs/claude/context-recovery.md`
   and this file; no process was running; sealed hashes in §4 recomputed at 19:47Z (match).
 - **Brief:** `brief/BRIEF.md` sha256 `e784c557…` (46,444 characters, all §0–§10).
@@ -23,7 +26,7 @@ Node v24.21.0: `export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/instal
   eslint 0 errors (15 pre-existing warnings), `ranked-preemption verify` ok, `pools verify` 66 PASS, `pools forward
   status` verifies (observations 0), baseline data 64/64.
 - **Running:** nothing.
-- **Next action:** none in this study. Committing needs the user's explicit request. Do not rerun anything.
+- **Next action:** none in this study. Pushing or merging needs the user's explicit request. Do not rerun anything.
 - **Never:** rerun any stage command; run `historical-check`; edit any file in the prospective freeze's code closure
   (134 files: import closure of `src/app/pools.ts`, `src/pools/cli.ts`, `src/pools/forward/cli.ts`), the `pools` npm
   script, the package.json `imports` map or `package-lock.json`; edit files bound by `PROTOCOL_FREEZE.json` (incl.
@@ -35,7 +38,7 @@ Node v24.21.0: `export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/instal
 ## 1. Environment (task start 2026-10-26T16:10Z)
 
 - Branch `research/trailing-buy-four-family-optimization`, `HEAD` `9b0ab947`, working tree clean at start (only this
-  study's new files since).
+  study's new files since). Study commit `9400593d` (2026-10-26, on this branch, parent `9b0ab947`).
 - Node v24.21.0 (fnm path above; `/opt/homebrew/bin/node` is v23.6.1 and must not be used).
 - Machine: Apple M1 Pro, 10 cores, 16 GB.
 

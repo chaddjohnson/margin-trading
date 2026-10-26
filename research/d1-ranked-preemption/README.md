@@ -2,7 +2,7 @@
 
 **Status: COMPLETE (2026-10-26). Decision: no advancement.** B4 stays the default and B5 the leading incumbent.
 Nothing from this study was evaluated on any bar after 2023-12-29, nothing was nominated or registered, and **the
-forward observation count is 0**. Nothing is committed; see `RESEARCH_RECOVERY.md` for the exact state.
+forward observation count is 0**. Committed as `9400593d` (not pushed); see `RESEARCH_RECOVERY.md` for the exact state.
 
 The question: if each ETF's D1 strategy is first optimized alone, ETFs are ranked by a frozen standalone score, and a
 higher-ranked signal may sell a lower-ranked open lot once that lot is at or above net breakeven (policy **P1**), does

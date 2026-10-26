@@ -153,7 +153,9 @@ The three pre-freeze reviews and their dispositions are bound by the protocol fr
 study): `package.json` modified (one added script `ranked-preemption`; the `pools` script, `imports` map and
 `package-lock.json` unchanged); new untracked `src/d1-ranked-preemption/`, `research/d1-ranked-preemption/`,
 `config/research-pools/d1-ranked-preemption/`. CLI outputs go to the git-ignored `evaluations/ranked-preemption/`.
-The tracked index (`git ls-files -s`) hashes to `eede9f2d…`, identical to the start-of-task baseline.
+The tracked index (`git ls-files -s`) hashes to `eede9f2d…`, identical to the start-of-task baseline. This describes
+the state when the reports were written; the study was then committed at the user's request as `9400593d`
+(2026-10-26, parent `9b0ab947`), and `verify`, `pools verify` and `pools forward status` passed again afterwards.
 
 **Unchanged frozen artifacts** (rechecked at the end against `results/baseline/`): all 64 canonical `data/*/data.csv`;
 splits, distributions, partitions; `config/pools/B4.json`, `B5.json`; the five D1 phenotypes; the prospective
