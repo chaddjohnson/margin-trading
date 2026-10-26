@@ -6,10 +6,12 @@ All times UTC (the machine clock is CET = UTC+1; `ls`/`stat` show local time). P
 directory `research/d1-diverse-pool-discovery/` unless they start with `src/`, `data/` or `npm`; run commands from the
 repository root.
 
-- **Updated:** 2026-10-26T11:23Z (from `date -u`). **Status: TASK COMPLETE.** All study stages are sealed (M0–M4). **Outcome: no
+- **Updated:** 2026-10-26T11:47Z (from `date -u`). **Status: TASK COMPLETE.** All study stages are sealed (M0–M4). **Outcome: no
   advancement**: the walk-forward procedure gate GP failed for both procedures (J: clause iii; T: clauses i and ii),
   so nothing was nominated and no configuration of this study was evaluated after 2023-12-29. B5 remains the leading
-  candidate, B4 the default. The final audit found no material defect. Nothing is committed (the user's decision).
+  candidate, B4 the default. The final audit found no material defect. **Committed at the user's request** on
+  `research/trailing-buy-four-family-optimization`: `57b53756` (`CLAUDE.md` + guide) and `c123faa2` (the study); not
+  pushed.
 - **Frozen protocol:** `results/protocol_freeze.json`, frozen 2026-10-26T04:20:08Z.
   - file sha256 `fc22c70be5dd5c22725127b2b08985c260a850236e3b5925615a3234d50f5747`
   - bodyHash `918c221bc777e6d3d9b1c55469272583591863e716fee982597cb8e5ff84d015`
@@ -32,17 +34,15 @@ repository root.
 - **Running process:** none (check: `ps -ax -o pid,etime,command | grep "[d]iverseD1"`).
 - **Decision rule for any later session:** do not run any study command again. Every outcome stage is write-once and
   refuses, and the protocol forbids "one more look" (§22). A new question needs a new study and protocol. If a sealed
-  record fails to verify: stop and report (guide §2.7). The only remaining action is the user's: whether to commit
-  the untracked files (`git status` in §1).
+  record fails to verify: stop and report (guide §2.7). Nothing remains; pushing or merging needs the user's request.
 - **Never:** commit or push without the user's explicit request; broker/order actions, downloads, edits to earlier studies, reruns of sealed stages, opening
   2024–2026 data for any configuration of this study.
 
 ## 1. Environment
 
-- Main checkout, branch `research/trailing-buy-four-family-optimization`, HEAD `348f100b` (unchanged). Working tree:
-  modified `.gitignore`, `package.json`, `src/phenotype/strategies.ts` (+1 line), `config/phenotypes/COMPATIBILITY.md`
-  (+1 generated row); untracked `CLAUDE.md`, `docs/claude/`, `research/d1-diverse-pool-discovery/`,
-  `src/app/diverseD1.ts`, `src/d1-diverse/`. Nothing committed.
+- Main checkout, branch `research/trailing-buy-four-family-optimization`. The task started at `HEAD` `348f100b`; the
+  work was committed at the user's request as `57b53756` (instructions) and `c123faa2` (study), plus this checkpoint
+  update. The working tree was clean after the commits.
 - Node v24.21.0: `export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/installation/bin:$PATH`; commands
   `npm run diverse-d1 -- <cmd>` (12 GB heap, `--expose-gc`). In zsh, split a multi-word step variable with `${=step}`.
 - Apple M1 Pro, 10 cores, 16 GB; 8 workers; trace cache 150,000 (tier record).
