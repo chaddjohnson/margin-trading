@@ -1,0 +1,165 @@
+{
+ "generatedAt": "2026-10-26T06:16:09.504Z",
+ "slot": "compact",
+ "familyIndex": 2,
+ "family": "Q-u-f3",
+ "arm": "Q-u",
+ "start": "GDX:293.6.78.21.151.43.75.136|XHB:241.10.85.5.70.44.52.177",
+ "refined": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.42.177",
+ "result": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.42.177",
+ "resultState": {
+  "key": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.42.177",
+  "books": [
+   {
+    "symbol": "GDX",
+    "vector": {
+     "id": "d1-d612722278",
+     "grid": {
+      "targetPercentChange": 293,
+      "trailingBuyPercentage": 6,
+      "trailingStopPercentage": 83,
+      "maximumHoldDays": 21,
+      "tickWindowSize": 151,
+      "intradayLossBuffer": 43,
+      "pullback": 75,
+      "continuationWindow": 136
+     },
+     "origin": "refine probe"
+    }
+   },
+   {
+    "symbol": "XHB",
+    "vector": {
+     "id": "d1-659822a7b2",
+     "grid": {
+      "targetPercentChange": 241,
+      "trailingBuyPercentage": 10,
+      "trailingStopPercentage": 85,
+      "maximumHoldDays": 5,
+      "tickWindowSize": 70,
+      "intradayLossBuffer": 44,
+      "pullback": 42,
+      "continuationWindow": 177
+     },
+     "origin": "refine probe"
+    }
+   }
+  ],
+  "value": 189211.9892882795
+ },
+ "startState": {
+  "key": "GDX:293.6.78.21.151.43.75.136|XHB:241.10.85.5.70.44.52.177",
+  "value": 163825.21008594005
+ },
+ "refinedState": {
+  "key": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.42.177",
+  "value": 189211.9892882795
+ },
+ "unique": 300,
+ "cycles": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "evaluated": 179,
+   "accepted": 2
+  },
+  {
+   "phase": "refine",
+   "cycle": 2,
+   "evaluated": 120,
+   "accepted": 0
+  }
+ ],
+ "moves": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "coordinate",
+   "move": "GDX trailingStopPercentage +5",
+   "from": "GDX:293.6.78.21.151.43.75.136|XHB:241.10.85.5.70.44.52.177",
+   "to": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.52.177",
+   "before": 163825.21008594005,
+   "after": 178354.36900078962,
+   "lotsAdded": [
+    "GDX@1584624720",
+    "GDX@1585663080"
+   ],
+   "lotsRemoved": [
+    "XHB@1584539520",
+    "GDX@1585594980"
+   ]
+  },
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "coordinate",
+   "move": "XHB pullback -10",
+   "from": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.52.177",
+   "to": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.42.177",
+   "before": 178354.36900078962,
+   "after": 189211.9892882795,
+   "lotsAdded": [
+    "XHB@1616681400",
+    "XHB@1621432680"
+   ],
+   "lotsRemoved": [
+    "XHB@1620746400"
+   ]
+  }
+ ],
+ "pruneSteps": [
+  {
+   "phase": "prune",
+   "from": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.42.177",
+   "members": [
+    "GDX",
+    "XHB"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 86539.0596205345,
+     "feasibleWithout": false
+    },
+    {
+     "symbol": "XHB",
+     "marginal": 78641.16478340497,
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "final-prune",
+   "from": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.42.177",
+   "members": [
+    "GDX",
+    "XHB"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 86539.0596205345,
+     "feasibleWithout": false
+    },
+    {
+     "symbol": "XHB",
+     "marginal": 78641.16478340497,
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  }
+ ],
+ "pruneBlocked": false,
+ "portfolioChecks": [
+  {
+   "key": "GDX:293.6.83.21.151.43.75.136|XHB:241.10.85.5.70.44.42.177",
+   "dailyPercent": 0.2724163215960929
+  }
+ ],
+ "walkedBack": false,
+ "stoppedBy": ""
+}

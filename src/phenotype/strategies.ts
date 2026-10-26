@@ -278,6 +278,7 @@ export const incompatibleEntryPoints: IncompatibleEntryPoint[] = [
   { script: 'portfolioAwareD1', category: 'research', reason: 'research program command line' },
   { script: 'joint16EtfD1', category: 'research', reason: 'research program command line' },
   { script: 'robustD1', category: 'research', reason: 'research program command line' },
+  { script: 'diverseD1', category: 'research', reason: 'research program command line' },
   { script: 'intradayStudy', category: 'research', reason: 'research program command line' },
   {
     script: 'phenotypes',

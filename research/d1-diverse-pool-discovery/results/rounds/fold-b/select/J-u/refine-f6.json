@@ -1,0 +1,254 @@
+{
+ "generatedAt": "2026-10-26T06:10:33.214Z",
+ "slot": "Q3",
+ "familyIndex": 3,
+ "family": "J-u-f6",
+ "arm": "J-u",
+ "start": "GDX:293.6.73.21.189.6.75.129|SLV:245.15.68.27.127.51.167.31|SMH:242.17.112.25.246.38.88.100",
+ "refined": "GDX:293.6.63.21.189.6.75.129|SLV:245.15.68.27.127.51.167.31|SMH:242.17.112.25.246.38.88.100",
+ "result": "GDX:293.6.63.21.189.6.75.129|SMH:242.17.112.25.246.38.88.100",
+ "resultState": {
+  "key": "GDX:293.6.63.21.189.6.75.129|SMH:242.17.112.25.246.38.88.100",
+  "books": [
+   {
+    "symbol": "GDX",
+    "vector": {
+     "id": "d1-7eae2a4e1c",
+     "grid": {
+      "targetPercentChange": 293,
+      "trailingBuyPercentage": 6,
+      "trailingStopPercentage": 63,
+      "maximumHoldDays": 21,
+      "tickWindowSize": 189,
+      "intradayLossBuffer": 6,
+      "pullback": 75,
+      "continuationWindow": 129
+     },
+     "origin": "refine probe"
+    }
+   },
+   {
+    "symbol": "SMH",
+    "vector": {
+     "id": "d1-b9d41d3a90",
+     "grid": {
+      "targetPercentChange": 242,
+      "trailingBuyPercentage": 17,
+      "trailingStopPercentage": 112,
+      "maximumHoldDays": 25,
+      "tickWindowSize": 246,
+      "intradayLossBuffer": 38,
+      "pullback": 88,
+      "continuationWindow": 100
+     },
+     "origin": "paramOne"
+    }
+   }
+  ],
+  "value": 183806.2706718659
+ },
+ "startState": {
+  "key": "GDX:293.6.73.21.189.6.75.129|SLV:245.15.68.27.127.51.167.31|SMH:242.17.112.25.246.38.88.100",
+  "value": 167985.64807916613
+ },
+ "refinedState": {
+  "key": "GDX:293.6.63.21.189.6.75.129|SLV:245.15.68.27.127.51.167.31|SMH:242.17.112.25.246.38.88.100",
+  "value": 178806.2706718659
+ },
+ "unique": 461,
+ "cycles": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "evaluated": 212,
+   "accepted": 1
+  },
+  {
+   "phase": "refine",
+   "cycle": 2,
+   "evaluated": 142,
+   "accepted": 0
+  },
+  {
+   "phase": "re-refine",
+   "cycle": 1,
+   "evaluated": 106,
+   "accepted": 0
+  }
+ ],
+ "moves": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "coordinate",
+   "move": "GDX trailingStopPercentage -10",
+   "from": "GDX:293.6.73.21.189.6.75.129|SLV:245.15.68.27.127.51.167.31|SMH:242.17.112.25.246.38.88.100",
+   "to": "GDX:293.6.63.21.189.6.75.129|SLV:245.15.68.27.127.51.167.31|SMH:242.17.112.25.246.38.88.100",
+   "before": 167985.64807916613,
+   "after": 178806.2706718659,
+   "lotsAdded": [
+    "GDX@1585589220",
+    "GDX@1590586500",
+    "GDX@1592229360",
+    "GDX@1596122460",
+    "GDX@1597152720",
+    "GDX@1599231000",
+    "GDX@1600954380",
+    "GDX@1603978380",
+    "GDX@1605728820",
+    "GDX@1614276240",
+    "SMH@1620158220"
+   ],
+   "lotsRemoved": [
+    "GDX@1585594980",
+    "GDX@1591193940",
+    "GDX@1596821460",
+    "SLV@1600955520",
+    "SMH@1603981380",
+    "GDX@1624282260",
+    "SLV@1633008660"
+   ]
+  }
+ ],
+ "pruneSteps": [
+  {
+   "phase": "prune",
+   "from": "GDX:293.6.63.21.189.6.75.129|SLV:245.15.68.27.127.51.167.31|SMH:242.17.112.25.246.38.88.100",
+   "members": [
+    "GDX",
+    "SLV",
+    "SMH"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 56701.98136323644,
+     "interval": {
+      "estimate": 56701.98136323644,
+      "lower": 49619.43024188865,
+      "upper": 60554.231787580415,
+      "se": 3384.434934831503,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "SLV",
+     "marginal": -8053.431059812778,
+     "interval": {
+      "estimate": -8053.431059812778,
+      "lower": -14345.316818300313,
+      "upper": -4787.777784432972,
+      "se": 2993.4505164159514,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "SMH",
+     "marginal": 55229.24116265864,
+     "interval": {
+      "estimate": 55229.24116265864,
+      "lower": 34375.44868184677,
+      "upper": 57091.06614822899,
+      "se": 8341.117330679617,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "removed": "SLV",
+   "to": "GDX:293.6.63.21.189.6.75.129|SMH:242.17.112.25.246.38.88.100",
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "prune",
+   "from": "GDX:293.6.63.21.189.6.75.129|SMH:242.17.112.25.246.38.88.100",
+   "members": [
+    "GDX",
+    "SMH"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 63781.896571848585,
+     "interval": {
+      "estimate": 63781.896571848585,
+      "lower": 60268.48234121935,
+      "upper": 68610.99909546973,
+      "se": 2533.3892655447603,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "SMH",
+     "marginal": 38397.73195209523,
+     "interval": {
+      "estimate": 38397.73195209523,
+      "lower": 35510.72598892491,
+      "upper": 42860.26464154044,
+      "se": 2409.2267128190665,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "final-prune",
+   "from": "GDX:293.6.63.21.189.6.75.129|SMH:242.17.112.25.246.38.88.100",
+   "members": [
+    "GDX",
+    "SMH"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 63781.896571848585,
+     "interval": {
+      "estimate": 63781.896571848585,
+      "lower": 60268.48234121935,
+      "upper": 68610.99909546973,
+      "se": 2533.3892655447603,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "SMH",
+     "marginal": 38397.73195209523,
+     "interval": {
+      "estimate": 38397.73195209523,
+      "lower": 35510.72598892491,
+      "upper": 42860.26464154044,
+      "se": 2409.2267128190665,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  }
+ ],
+ "pruneBlocked": false,
+ "portfolioChecks": [
+  {
+   "key": "GDX:293.6.63.21.189.6.75.129|SMH:242.17.112.25.246.38.88.100",
+   "dailyPercent": 0.26416979088555964
+  }
+ ],
+ "walkedBack": false,
+ "stoppedBy": ""
+}
