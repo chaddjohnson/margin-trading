@@ -146,12 +146,12 @@ const formatForward = (
   const rows = (
     label: string,
     value: (figures: Record<string, Exclude<ForwardFigures, { observations: 0 }>>) => string
-  ) => `  ${label.padEnd(44)} ${value(b4).padStart(16)} ${value(b5).padStart(16)}`;
+  ) => `  ${label.padEnd(44)} ${value(b4).padStart(30)} ${value(b5).padStart(30)}`;
 
   return [
     `Prospective shadow comparison ${body.version} — snapshot ${body.snapshot.id}: ${body.observationCount} forward sessions ${body.snapshot.first} → ${body.snapshot.last}`,
     `  freeze ${body.freezeBodyHash.slice(0, 16)}… verified; cutoff ${body.cutoff}; both runs reproduced the frozen cutoff state (state carried, nothing reset)`,
-    `  ${'(forward figures only; history excluded)'.padEnd(44)} ${'B4 (default)'.padStart(16)} ${'B5 (incumbent)'.padStart(16)}`,
+    `  ${'(forward figures only; history excluded)'.padEnd(44)} ${'B4 (default)'.padStart(30)} ${'B5 (incumbent)'.padStart(30)}`,
     'Fixed pool ($100,000 per funded trade, one slot, 5 bps per side, 11% simple):',
     rows('forward net (M_end − M_cutoff)', (f) => money(f.fixed!.forwardNet)),
     rows(

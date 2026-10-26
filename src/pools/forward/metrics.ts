@@ -54,7 +54,6 @@ export const stateAt = (result: NRunResult, index: number) => {
 
 export type CutoffState = ReturnType<typeof stateAt>;
 
-// The maximum fall from a running peak that starts at the baseline, over the given values.
 // Drawdowns from a running peak that starts at the baseline: the largest fall in dollars and, separately, the largest
 // fall in percent of its running peak (the engine's PercentTracker definition; the two need not be the same episode).
 export const drawdownFrom = (baseline: number, values: { value: number; date: string }[]) => {

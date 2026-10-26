@@ -35,7 +35,8 @@ export const completenessProblems = (
   sessionsBySymbol: Record<string, SessionSummary[]>,
   expected: readonly string[],
   today: string,
-  window = 15
+  window = 15,
+  confirmedComplete: readonly string[] = [] // SYMBOL:DATE sessions confirmed complete despite an early last bar
 ) => {
   const problems: string[] = [];
   const last = expected.at(-1);
@@ -53,6 +54,7 @@ export const completenessProblems = (
         ([, sessions]) =>
           (sessions.find((session) => session.date === date)?.lastRegularMinute ?? -1) < closeMinutes - window
       )
+      .filter(([symbol]) => !confirmedComplete.includes(`${symbol}:${date}`))
       .map(([symbol]) => symbol);
 
     if (short.length) {
@@ -230,6 +232,7 @@ export interface SnapshotRecord {
   splits: SplitEvent[];
   distributions: { file: string; sha256: string; through: Record<'VGT' | 'VOOG', string>; rows: number } | null;
   confirmedMoves: string[];
+  confirmedComplete: string[];
   freezeBodyHash: string;
 }
 
@@ -301,6 +304,7 @@ export const importSnapshot = async (options: {
   distributionsFile?: string;
   distributionsThrough?: string;
   confirmMoves?: string[];
+  confirmComplete?: string[]; // SYMBOL:DATE: a genuine vendor gap before the close, confirmed and recorded
   dir?: string;
   snapshotsRoot?: string;
   today?: string; // the New York date of the import (tests)
@@ -375,7 +379,9 @@ export const importSnapshot = async (options: {
     ...completenessProblems(
       Object.fromEntries(prospective.members.map((symbol) => [symbol, parsed[symbol]!.sessions])),
       expected,
-      today
+      today,
+      15,
+      options.confirmComplete ?? []
     )
   );
 
@@ -417,6 +423,16 @@ export const importSnapshot = async (options: {
   }
 
   let distributions: SnapshotRecord['distributions'] = null;
+
+  if (options.distributionsThrough && !options.distributionsFile) {
+    throw new Error('--distributions-through needs --distributions <file>');
+  }
+
+  if (options.distributionsThrough && options.distributionsThrough > last) {
+    throw new Error(
+      `--distributions-through ${options.distributionsThrough} is after the snapshot's last session ${last}`
+    );
+  }
 
   if (options.distributionsFile) {
     const text = await fs.readFile(options.distributionsFile, 'utf8');
@@ -465,6 +481,7 @@ export const importSnapshot = async (options: {
     splits: declared,
     distributions,
     confirmedMoves: confirmed,
+    confirmedComplete: options.confirmComplete ?? [],
     freezeBodyHash: freeze.bodyHash
   });
 

@@ -49,6 +49,8 @@ npm run pools -- forward status           # freeze, snapshots, observation count
 npm run pools -- forward report           # after the freeze, with no snapshot: "prospective observation count = 0; not yet evaluated"
 npm run pools -- forward import --from <folder> --snapshot <id> --source "<where the bars came from>"   # needs data
 npm run pools -- forward report --snapshot <id>                                                        # needs data
+#   import options: --splits FILE, --distributions FILE --distributions-through DATE, --confirm-move SYMBOL:DATE,
+#   --confirm-complete SYMBOL:DATE (both recorded in the snapshot); see research/prospective-b4-b5-shadow/PROTOCOL.md §4
 ```
 
 Other options:

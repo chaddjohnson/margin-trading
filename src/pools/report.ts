@@ -346,7 +346,8 @@ export const runRecordOf = async (
         fills: "the engine's raw execution prices; cost-adjusted prices include the per-side friction",
         grossBeforeCosts: 'shares × (exit fill − entry fill); for an open lot, shares × (last close − entry fill)',
         friction: 'shares × the per-side cost on each fill (no exit friction on an open lot)',
-        interest: 'principal × annual rate × days held ÷ 365 (accrued to the last close for an open lot)',
+        interest:
+          'principal × annual rate × interestDays ÷ 365; interestDays = whole days from the entry session date to the exit (or last) session date',
         net: "the engine's net: gross before costs − friction − interest",
         maximumAdverseExcursion:
           "the engine's worst minute mark while held: shares × last price − principal − accrued interest",

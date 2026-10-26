@@ -4,18 +4,21 @@
 
 All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run commands from the repository root.
 
-- **Updated:** 2026-10-26T14:25Z. **Status:** in progress. Committed `158f3aca`; S10–S12 **committed at the user's request at this point** (the commit after `158f3aca`). **Current stage:** focused third check RUNNING (brief `docs/pools/reviews/third-check.PROMPT.md`), then the REAL freeze (later changes need a further user-requested commit).
+- **Updated:** 2026-10-26T16:05Z. **Status: TASK COMPLETE.** Committed `158f3aca`, `b9a928bb` and (at the user's request, this point) the final commit with S13, the freeze record and the third check. Prospective observation count = 0; not yet evaluated.
 - **Task:** operationalization, not research. No optimization, re-ranking or new evaluation of the diverse-d1
   finalists on 2024–2026. Brief: the user's message of 2026-10-26 ~12:19Z ("Implement runnable B4/B5 pool phenotypes
   and freeze prospective shadow comparisons"). Its content is summarized in §2 below. The full text is only in the
   conversation, and §2 is the on-disk record.
-- **Authority:** no frozen protocol of its own yet. The prospective protocol will be frozen write-once at
-  `research/prospective-b4-b5-shadow/PROTOCOL_FREEZE.json` (stage S6) **before** any post-2026-10-13 bar is read;
-  none exists on disk now.
+- **Authority:** `research/prospective-b4-b5-shadow/PROTOCOL_FREEZE.json` — FROZEN 2026-10-26T14:49:38Z, file sha256
+  `0dabd97e2b3d50fe9946b773bd9b845b07da1934eb4a797ecc9a59af129c3be2`, body
+  `407a669b2bfd524502be2afe465c9de0383052ea85dd7ba50df5637c40b0e6f0`; binds PROTOCOL.md `f2bca114…`, B4 `5bfc4fd5…`,
+  B5 `92d73fc3…`, 134 code files (digest `c5134fb0…`; calendar append-only), data pins, market events, environment,
+  cutoff states. Written before any post-2026-10-13 bar existed. **Never re-run `forward freeze`; never edit the bound
+  files** (any change makes forward commands refuse; a change needs a new protocol version).
 - **Complete:** S0–S5: configs + loader; CLI (`npm run pools -- list|show|validate|fixed|portfolio|compare|costs|verify|research …`); regression (`verify` 64/64); tests `src/pools/tests/pools.test.ts` (all pass; B4/B5 anchor tests ~25 s each); research archive exported + verified.
 - **Incomplete:** real freeze (S6, deliberately last: it binds the code closure), S8 docs, S9 review/final. Protocol text written: `research/prospective-b4-b5-shadow/PROTOCOL.md` (not yet frozen; editable until the freeze).
-- **Running process:** the focused third-check agent (background; read-only).
-- **Next action:** when the third check reports: save it verbatim (`docs/pools/reviews/third-check.md`); if no material finding → `npm run pools -- forward freeze`, `forward report` (no data), `forward status`, final report. Shell note: in zsh pass multi-word args with `${=args}`.
+- **Running process:** none.
+- **Next action:** none in this task. Future (user-authorized): obtain post-2026-10-13 bars, `npm run pools -- forward import --from <folder> --snapshot <id> --source "…"`, then `forward report --snapshot <id>`. To extend the NYSE calendar past 2026-12-31: append dates only (frozen rule).
 - **Never:** commit/push/merge without the user's explicit request; broker access, orders, credential reads (`.env`)
   or downloads; edit sealed records of any earlier study (`research/d1-robust-pool-discovery/`,
   `research/d1-diverse-pool-discovery/`, …), frozen phenotype JSONs, `data/`, splits, partitions or distributions;
@@ -71,11 +74,11 @@ All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run comm
 | S3 regression to the cent + trade identity | complete | `npm run pools -- verify` (`src/pools/verify.ts`) → `evaluations/pools/verify/verify.json` `40b0b400…`: 64/64 PASS (summaries = frozen controls at 0/2/5/10 bps both modes; lots + daily CSV byte-identical to `research/portfolio-aware-d1-optimization/results/evaluation/runs/{S0,P-add-GDX}/`; anchors to the cent). B5 summaries use the frozen `newSymbols: [GDX]` argument (bookkeeping field only) |
 | S4 semantic tests (single slot, notional, ties) | complete | `src/pools/tests/pools.test.ts`: schema refusals (dup symbol, missing/out-of-box/off-grid/bare-number params, hash mismatch, policy/slots/compounding/notional/cost/interest/dividends), phenotype-drift and frozen-reference refusals, synthetic single-slot/constant-notional/refusal and same-minute alphabetical tie through `runPoolOn`, B4/B5 anchors on frozen all (skipped if data absent/changed) |
 | S5 15 research-only finalists | complete | `npm run pools -- research export` (write-once) → `config/research-pools/diverse-d1-2026-10-26/` (15 JSON + `manifest.json` + `CATALOG.md`); `research verify`: all equal to the sealed `assessment.json` (hash-checked against FROZEN_SELECTION records); not loadable as pools |
-| S6 prospective protocol + write-once freeze | protocol written; freeze pending (last step) | `research/prospective-b4-b5-shadow/PROTOCOL.md`; `npm run pools -- forward freeze` → `PROTOCOL_FREEZE.json` (binds protocol, pools, books, code import-closure of `src/app/pools.ts` + `src/pools/cli.ts` + `src/pools/forward/cli.ts`, canonical pins, market events, B4/B5 cutoff state × fixed/portfolio-frozen/portfolio-symmetric) | must precede any snapshot import (import refuses without it); challengers deferred (option b) |
+| S6 prospective protocol + write-once freeze | complete: frozen 2026-10-26T14:49:38Z (body `407a669b…`) | `research/prospective-b4-b5-shadow/PROTOCOL.md`; `npm run pools -- forward freeze` → `PROTOCOL_FREEZE.json` (binds protocol, pools, books, code import-closure of `src/app/pools.ts` + `src/pools/cli.ts` + `src/pools/forward/cli.ts`, canonical pins, market events, B4/B5 cutoff state × fixed/portfolio-frozen/portfolio-symmetric) | must precede any snapshot import (import refuses without it); challengers deferred (option b) |
 | S7 forward data pathway + forward report + no-data smoke | implemented + unit tests pass (`src/pools/tests/forward.test.ts` 8/8) | `src/pools/forward/{protocol,freeze,data,metrics,report,cli}.ts`; `npm run pools -- forward status|freeze|import|report` | no-data smoke after the real freeze |
 | S8 docs runbook | complete | `docs/pools/README.md` (every command run; figures checked against `evaluations/pools/all/*/summary.json`), README.md link; acceptance log `evaluations/pools/acceptance/` (commands.txt: 11 commands, exit 0) |
 | S10 funded-trade ledger (user request after 158f3aca) | complete (uncommitted) | `src/pools/trades.ts` (+ report.ts/cli.ts): table on stdout by default for `fixed`; `trades.csv` (36 cols) + `trades.json` replace `lots.csv`; 12 reconciliation checks pass on B4/B5 `all` (exact vs summary and frozen controls); open position shown with `--end 2025-12-31`; tests 16/16; README section | logs `evaluations/pools/acceptance/fixed-B{4,5}-ledger.log`, `fixed-B4-to-2025-12-31.log` |
-| S9 tests/typecheck/lint, independent review, final report | tests done (npm test 562/562, tsc 0, eslint 0 errors; new code warning-free); review running | `evaluations/pools/acceptance/{npm-test,tsc,eslint}.log` |
+| S9 tests/typecheck/lint, independent reviews, final report | complete: npm test 571/571, tsc 0, eslint 0; reviews 1–3 in docs/pools/reviews/; no-data forward report + status verified (`evaluations/pools/acceptance/forward-*.log`) | `evaluations/pools/acceptance/{npm-test,tsc,eslint}.log` |
 
 ## 4. Decisions so far
 
@@ -144,3 +147,13 @@ Verdict: not safe to freeze yet. Planned fixes (all before the freeze; the code 
   digest also in the observation body); limitations in report.txt and the no-snapshot report; --source in the import
   command; forward friction recorded in dollars and bps per side.
 - README: commands that need data are marked as such; compare --out layout.
+
+## 8. Third check (docs/pools/reviews/third-check.md) — dispositions (S13, before the freeze)
+
+- Completeness guard override: `--confirm-complete SYMBOL:DATE` (recorded in the snapshot, like --confirm-move).
+- `--distributions-through` must be ≤ the snapshot's last session and is refused without `--distributions`.
+- PROTOCOL §8 states the bound code is the whole import closure (134 files incl. shared `src/lib`, `src/phenotype`)
+  and that editing any of them, or package-lock.json, makes forward commands refuse until a new protocol version.
+- Cosmetic: trades.json interest definition (interestDays), stale comment in metrics.ts, forward report row widths.
+- Matched-borrowing ties at intensity 0 pick the lowest rung: harmless (all zero-borrowing rungs share one return);
+  documented, not changed.

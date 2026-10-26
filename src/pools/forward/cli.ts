@@ -5,6 +5,7 @@
 //   freeze                                   write PROTOCOL_FREEZE.json once, before any post-cutoff bar exists
 //   import --from DIR --snapshot ID --source "…" [--splits FILE] [--distributions FILE --distributions-through DATE]
 //                                            [--confirm-move SYMBOL:DATE[,…]] (a genuine overnight move beyond ±15%)
+//                                            [--confirm-complete SYMBOL:DATE[,…]] (a vendor gap before a session's close)
 //                                            verify and store a snapshot of post-cutoff minute bars (write-once)
 //   report [--snapshot ID]                   the forward report; without a snapshot, the zero-observation statement
 import { importSnapshot, listSnapshots } from './data.ts';
@@ -74,7 +75,8 @@ export const runForward = async (positionals: string[], args: string[]) => {
         splitsFile: option(args, 'splits'),
         distributionsFile: option(args, 'distributions'),
         distributionsThrough: option(args, 'distributions-through'),
-        confirmMoves: option(args, 'confirm-move')?.split(',').filter(Boolean)
+        confirmMoves: option(args, 'confirm-move')?.split(',').filter(Boolean),
+        confirmComplete: option(args, 'confirm-complete')?.split(',').filter(Boolean)
       });
 
       console.info(

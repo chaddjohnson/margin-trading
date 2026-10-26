@@ -313,6 +313,17 @@ describe('second-review fixes', () => {
       /KRE without a bar/
     );
     assert.match(completenessProblems(ok, ['2026-10-14'], '2026-10-14')[0]!, /not before today/);
+    // A genuine vendor gap, confirmed and recorded, is accepted.
+    assert.deepEqual(
+      completenessProblems(
+        { VGT: [full], KRE: [{ ...full, lastRegularMinute: 720 }] },
+        ['2026-10-14'],
+        '2026-10-15',
+        15,
+        ['KRE:2026-10-14']
+      ),
+      []
+    );
     // An early close (2026-11-27, 1 p.m.) ends at 12:59.
     const early = { ...full, date: '2026-11-27', lastRegularMinute: 12 * 60 + 59 };
 

@@ -78,7 +78,9 @@ re-estimated. As a result:
     - every session is before the import day (New York time);
     - every session has regular-hours bars;
     - **every** member has a bar in the last 15 regular minutes of every session (12:45–12:59 on early closes). In the
-      canonical 2024–2026 data every member's last regular bar is within 2 minutes of the close;
+      canonical 2024–2026 data every member's last regular bar is within 2 minutes of the close. A genuine vendor
+      gap can be confirmed with `--confirm-complete SYMBOL:DATE`, which is recorded in the snapshot (the canonical
+      history has 2 such sessions in 2,710);
   - any overnight move beyond ±15% is refused, which catches splits as small as 5:4, unless it is either:
     - declared as a split with `--splits <file>` (the format of `config/market-events/splits.json`, stored with the
       snapshot; the frozen splits file is not edited); or
@@ -87,8 +89,8 @@ re-estimated. As a result:
     in the format of `config/market-events/distributions.csv`, plus `--distributions-through <date>`. They are
     validated before storage:
     - VGT/VOOG only;
-    - ex-dates after the frozen coverage and no later than the "through" date, which itself must be after the frozen
-      coverage;
+    - ex-dates after the frozen coverage and no later than the "through" date. That date must be after the frozen
+      coverage and no later than the snapshot's last session, and it needs a `--distributions` file;
     - ex-dates and pay dates on NYSE sessions, because the engine books only on session dates;
     - pay date ≥ ex-date;
     - positive amounts, at most 3% of `close_before`;
@@ -154,7 +156,8 @@ re-estimated. As a result:
   - B4 is re-run at borrowed fractions 5/10/15/20/25/30/35/40/50% on the same observations.
   - Each run's forward return is placed at its own borrowing intensity.
   - B4's return is interpolated linearly at B5's borrowing intensity and compared with B5's forward return.
-  - An exact match, including no borrowing on both sides, needs no interpolation.
+  - An exact match, including no borrowing on both sides, needs no interpolation. Rungs with equal intensity have
+    equal returns; the lowest such rung is reported.
   - Outside the ladder it is labelled "outside the ladder" and not extrapolated.
 
 ## 7. Comparison, scenarios and challengers
@@ -190,8 +193,10 @@ re-estimated. As a result:
 - this file's sha256;
 - the B4/B5 pool files (file sha256) and their algorithmic hashes;
 - the five phenotype grid hashes;
-- the code: every file in the transitive import closure of `src/app/pools.ts`, `src/pools/cli.ts` and
-  `src/pools/forward/cli.ts`;
+- the code: every file in the transitive import closure of `src/app.ts`, `src/app/pools.ts`, `src/pools/cli.ts` and
+  `src/pools/forward/cli.ts`. This is about 134 files, including shared modules in `src/lib/`, `src/phenotype/`, the
+  engines and the frozen studies' code they import. Editing any of them, other than appending to the calendar, makes
+  every forward command refuse until a new protocol version is frozen;
 - the NYSE calendar, bound **append-only**:
   - its code, without comments and date literals, must not change;
   - every frozen holiday, early close and the coverage start must remain;
