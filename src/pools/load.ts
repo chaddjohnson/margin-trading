@@ -9,7 +9,7 @@ import { benchmarkSymbols, frozenBenchmarkPhenotypes, type BenchmarkKey } from '
 import { d1Keys, paramsOf, shortLabel } from '../multi-etf-allocator/phenotypes.ts';
 import type { BookPhenotype } from '../portfolio-aware-d1/nbook/engine.ts';
 import { selectPhenotype } from '../phenotype/phenotypes.ts';
-import { type PoolConfig, PoolConfigError, parsePoolConfig } from './schema.ts';
+import { type PoolConfig, PoolConfigError, parsePoolConfig, poolIdPattern } from './schema.ts';
 
 export const poolsRoot = 'config/pools';
 
@@ -35,6 +35,10 @@ export const listPoolIds = async (root = poolsRoot) =>
     .sort();
 
 export const readPoolConfig = async (id: string, root = poolsRoot): Promise<PoolConfig> => {
+  if (!poolIdPattern.test(id)) {
+    throw new PoolConfigError(`"${id}" is not a pool id (letters, digits, '.', '_' or '-')`);
+  }
+
   const file = poolFileOf(id, root);
 
   if (!(await fs.pathExists(file))) {
@@ -99,6 +103,18 @@ export const loadPool = async (id: string, root = poolsRoot): Promise<LoadedPool
       phenotype: book.phenotype,
       candidateId
     };
+  }
+
+  const manifest = config.frozenReference as { manifest?: string; manifestSha256?: string } | undefined;
+
+  if (
+    manifest?.manifest &&
+    manifest.manifestSha256 &&
+    (await sha256File(manifest.manifest)) !== manifest.manifestSha256
+  ) {
+    throw new PoolConfigError(
+      `${config.file}: ${manifest.manifest} no longer hashes to the pinned frozenReference.manifestSha256`
+    );
   }
 
   let frozenCheck = 'none (no frozenReference.benchmark)';

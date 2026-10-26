@@ -11,7 +11,7 @@ frozen research controls to the cent. Those figures are regression anchors, not 
 Commands run from the repository root with Node 24 (`.node-version`). `npm run pools` does **not** load `.env`: no
 credential is read, no broker is contacted, nothing is downloaded and no order exists anywhere in this code.
 
-## Commands (each one run and checked; exit status 0)
+## Commands (each one run and checked, exit status 0, except the two that need post-cutoff data, marked below)
 
 ```bash
 # what exists
@@ -19,9 +19,11 @@ npm run pools -- list                     # B4, B5 (runnable) and the research-o
 npm run pools -- show B5                  # books, phenotype references, hashes, funding, anchors
 npm run pools -- validate                 # schema + phenotype pins + equality with the frozen benchmark books
 
-# fixed $100,000 pool on the full canonical history (`all` = 2016-01-04 → 2026-10-13), 5 bps per side
-npm run pools -- fixed B4                 # → evaluations/pools/all/B4-fixed-5bps/
+# fixed $100,000 pool on the full canonical history (`all` = 2016-01-04 → 2026-10-13), 5 bps per side;
+# prints the full funded-trade ledger, per-ETF summaries, totals, drawdowns and any open position
+npm run pools -- fixed B4                 # → evaluations/pools/all/B4-fixed-5bps/ (trades.csv, trades.json, …)
 npm run pools -- fixed B5                 # → evaluations/pools/all/B5-fixed-5bps/
+npm run pools -- fixed B4 --end 2025-12-31   # a diagnostic endpoint: shows an open (unrealized) position
 npm run pools -- fixed B4 --cost-bps 10   # friction override (0/2/5/10 …); the config is not changed
 npm run pools -- costs B5                 # 0/2/5/10 bps in one go → evaluations/pools/all/B5-fixed-<n>bps/
 npm run pools -- fixed B5 --json          # the summary as JSON on stdout (files are written either way)
@@ -44,25 +46,85 @@ npm run pools -- research verify          # every field equal to the sealed dive
 
 # prospective comparison (research/prospective-b4-b5-shadow/PROTOCOL.md)
 npm run pools -- forward status           # freeze, snapshots, observation count
-npm run pools -- forward report           # with no snapshot: "prospective observation count = 0; not yet evaluated"
-npm run pools -- forward import --from <folder> --snapshot <id> --source "<where the bars came from>"
-npm run pools -- forward report --snapshot <id>
+npm run pools -- forward report           # after the freeze, with no snapshot: "prospective observation count = 0; not yet evaluated"
+npm run pools -- forward import --from <folder> --snapshot <id> --source "<where the bars came from>"   # needs data
+npm run pools -- forward report --snapshot <id>                                                        # needs data
 ```
 
 Other options:
 - `--dataset training|holdout|final`: a holdout or final window starts flat after a warm-up.
 - `--end YYYY-MM-DD`: a diagnostic endpoint.
-- `--out DIR`: anywhere except `research/` and `config/`.
+- `--out DIR`: anywhere except `research/`, `config/`, `data/` and `src/`.
+  - `costs` writes `DIR/<ID>-<mode>-<n>bps/`.
+  - `compare` writes `DIR/<ID>-<mode>/` per run and `DIR/compare-<A>-<B>-<mode>-<n>bps/` per mode.
 
 Every run writes these files to its output folder (`evaluations/` is git-ignored):
 - `report.txt`: the readable report, also printed;
 - `summary.json`: schema `pool-run` v1;
-- `lots.csv`: every funded lot, with UTC and New York timestamps, raw and friction-adjusted entry and exit prices,
-  shares, principal, interest, friction dollars, gross and net, worst mark, open/realized status, same-minute
-  candidates, and the refusals while the lot was held;
+- `trades.csv`: the funded-trade ledger (below), one row per funded trade;
+- `trades.json`: schema `pool-trades` v1, with the same rows plus per-ETF summaries, totals, open positions,
+  drawdowns, definitions and the reconciliation checks;
 - `signals.csv`: every virtual decision, funded or refused, with the reason and the holder;
 - `daily.csv`;
 - `yearly.csv` and `monthly.csv`.
+
+### The funded-trade ledger (printed by default by `fixed B4` / `fixed B5`)
+
+After the run header, `npm run pools -- fixed <ID>` prints the following. Nothing extra needs to be run.
+
+1. **Every funded trade in chronological order.** Only lots the shared allocator actually funded appear. Shadow-book
+   signals that got no capital are in `signals.csv`. Each row shows:
+   - the ETF;
+   - entry and exit time (New York; UTC in the CSV);
+   - the engine's raw entry and exit fill prices;
+   - position size ($100,000, never compounded) and shares;
+   - holding period (calendar days; sessions in the CSV) and exit reason;
+   - gross P&L, margin interest, execution friction, net P&L and cumulative net P&L;
+   - MAE.
+2. **Per-ETF summaries:** funded trades, profitable/losing (closed trades only), open, gross P&L, interest,
+   friction, net P&L.
+3. **Totals:** gross P&L before costs, interest, execution friction, net realized P&L, unrealized (open-position)
+   P&L, total net P&L.
+4. **Drawdowns:** the maximum minute-sampled and daily drawdowns in dollars and % of the $100,000 notional, with
+   their definitions.
+5. **Any open position at the endpoint**, with its mark price, accrued interest and marked-to-market net.
+6. **The reconciliation checks.**
+
+Definitions — all are the engine's own figures, not estimates:
+- **Gross P&L** = shares × (raw exit fill − raw entry fill), before any cost.
+- **Friction** = the 5 bps per-side amounts the engine applied to the two fills.
+- **Interest** = $100,000 × 11% × `interestDays` ÷ 365. `interestDays` counts whole days from the entry session's
+  date to the exit session's date, which is the engine's accrual basis. The table's `days` column is the elapsed
+  holding time.
+- **Net** = gross − friction − interest, the engine's lot net. This is checked for every trade.
+- **MAE** is the engine's existing per-lot worst minute mark while held: shares × last price − $100,000 − accrued
+  interest. It is not a drawdown of the pool.
+- **An open position at the endpoint** is marked by the engine at the last close. It has no exit fill and no exit
+  friction, and its interest is accrued to that close. It is shown as unrealized.
+- **Split-adjusted units:** for a run that crosses VGT's 2026-04-21 split, prices and shares are in the run's
+  split-adjusted units (stated above the table). Dollar amounts are unaffected.
+
+Reconciliation (printed and in `trades.json`):
+- The ledger's total net and interest equal the run summary **exactly** (the same sums), and its trade count equals
+  the funded lots.
+- Realized + unrealized, gross − friction − interest, and the per-ETF nets all equal the total net (to $0.000001).
+- On the frozen `all`, the net, interest, lots and both drawdowns equal the frozen control
+  (`research/joint-16-etf-d1/results/controls/controls.json`) **exactly**.
+
+Results on `all` at 5 bps:
+
+| | B4 | B5 |
+|---|---:|---:|
+| funded trades | 76 | 94 |
+| profitable / losing | 47 / 29 | 61 / 33 |
+| gross P&L before costs | $339,024.16 | $548,707.56 |
+| interest / friction | $47,013.70 / $7,765.71 | $52,830.14 / $9,669.66 |
+| net realized | $284,244.74 | $486,207.77 |
+| open at 2026-10-13 | none | none |
+| reconciliation | all 12 checks pass | all 12 checks pass |
+
+With `--end 2025-12-31`, B4 shows XRT open since 2025-11-12, marked at 85.29 with $1,476.71 accrued interest:
+unrealized $2,451.82, realized $285,004.38, total $287,456.20.
 
 ## Reference figures (inspected history, 5 bps per side, 11% simple interest)
 
@@ -94,7 +156,7 @@ the fixed pool's profit.
   - Stops fill at the stop, and time is New York exchange time (regular NYSE minutes).
   - Lots are **price-only**: no distribution is credited.
 - **Friction vs commission:** 5 bps **per side** is applied to every fill price (entry and exit). Commission is $0.
-  The friction dollars appear in the report and in `lots.csv`.
+  The friction dollars appear in the report and in `trades.csv`.
 - **Margin interest:** 11% **simple** annual, 365-day year, accrued daily on the funded principal.
   - Borrowing dollar-days = interest × 365 ÷ 11%.
   - Each report shows strategy net per $1M borrowing dollar-days (borrowing efficiency).

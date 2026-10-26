@@ -23,6 +23,8 @@ import { type LoadedPool, loadPool } from '../load.ts';
 import { anchorChecks, dataRecordOf } from '../report.ts';
 import { type PoolRunOptions, figuresOf, loadPoolUniverse, runPoolOn } from '../run.ts';
 import { PoolConfigError, gridHash, parsePoolConfig } from '../schema.ts';
+import { reconcileLedger, tradeLedgerOf } from '../trades.ts';
+import { summaryOf } from '../../joint-16-etf-d1/figures.ts';
 
 const pinnedHashes = {
   B4: '5bfc4fd5c12800e2ee03bfed6958b2a0b3dfa87e210ae4c513f32a2be5fc86d6',
@@ -238,6 +240,56 @@ describe('fixed-pool funding semantics through the pools layer', () => {
   });
 });
 
+describe('the funded-trade ledger', () => {
+  test('lists only funded lots in order; an open lot is unrealized at the last close; totals reconcile exactly', async () => {
+    const loaded = anyUniverse({
+      VGT: flats(12),
+      XBI: [...flats(3), dipSession(), ...flats(2, 100), ...flats(6, 94)],
+      XRT: [...flats(4), dipSession(), ...flats(7, 90)],
+      KRE: flats(12),
+      GDX: [...flats(8), dipSession(), ...flats(3, 99)]
+    });
+    const pool = await syntheticPool(['VGT', 'XBI', 'XRT', 'KRE', 'GDX']);
+    const result = runPoolOn(pool, loaded, fixed);
+    const ledger = tradeLedgerOf(result);
+    const summary = summaryOf(result);
+    const [xbi, gdx] = ledger.rows;
+
+    assert.deepEqual(
+      ledger.rows.map((row) => row.symbol),
+      ['XBI', 'GDX'],
+      'the refused XRT signal is not a trade'
+    );
+    assert.equal(xbi!.status, 'realized');
+    assert.equal(gdx!.status.startsWith('OPEN'), true);
+    assert.equal(gdx!.markPrice, 99);
+    assert.equal(gdx!.exitFriction, 0);
+    assert.ok(gdx!.interest > 0);
+    assert.equal(gdx!.net, result.lots.find((lot) => lot.symbol === 'GDX')!.net);
+    assert.ok(ledger.rows.every((row) => row.principal === 100000));
+    assert.equal(ledger.totals.totalNet, summary.net);
+    assert.equal(ledger.totals.unrealizedOpen, gdx!.net);
+    assert.equal(ledger.totals.netRealized, xbi!.net);
+    assert.ok(Math.abs(gdx!.cumulativeNet - summary.net) < 1e-9);
+    assert.deepEqual(
+      ledger.openPositions.map((position) => position.symbol),
+      ['GDX']
+    );
+    // Win/loss counts are of closed trades only; the open lot is counted as open.
+    assert.equal(ledger.totals.openTrades, 1);
+    assert.equal(ledger.totals.profitable + ledger.totals.losing <= ledger.totals.realizedTrades, true);
+    assert.equal(gdx!.exitNewYork, '');
+    assert.match(gdx!.markedAt, /close$/);
+    assert.ok(gdx!.interestDays >= 0 && Number.isInteger(Math.round(gdx!.interestDays)));
+    assert.equal(ledger.identity.pass, true);
+
+    const reconciliation = await reconcileLedger(ledger, summary, { applicable: false, controlKey: 'fixed-5' });
+
+    assert.equal(reconciliation.pass, true);
+    assert.equal(reconciliation.checks.length, 7);
+  });
+});
+
 // B4 and B5 on the frozen canonical `all`, when its files are present and unchanged (data/ is local).
 const frozenDataPresent = async () => {
   const pins = readRaw('B5').regressionAnchors as { dataSha256: Record<string, string> };
@@ -286,6 +338,19 @@ describe('B4 and B5 on the frozen canonical all (fixed, 5 bps)', async () => {
         assert.equal(computed.figures.notionalViolations, 0);
         assert.equal(computed.figures.overlappingLots, 0);
         assert.equal(computed.figures.maxSimultaneousFundedLots, 1);
+
+        // The funded-trade ledger reconciles exactly with the run's summary and the frozen controls.
+        const ledger = tradeLedgerOf(result);
+        const reconciliation = await reconcileLedger(ledger, computed.summary, {
+          applicable: true,
+          controlsFile: 'research/joint-16-etf-d1/results/controls/controls.json',
+          benchmark: id,
+          controlKey: 'fixed-5'
+        });
+
+        assert.equal(ledger.rows.length, lots);
+        assert.equal(reconciliation.checks.length, 12);
+        assert.equal(reconciliation.pass, true);
 
         // Every same-minute group funds its alphabetically first member.
         const groups = new Map<number, typeof result.signals>();

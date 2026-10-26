@@ -8,6 +8,9 @@ import { anchorChecks, dataRecordOf } from '../report.ts';
 import { type PoolRunOptions, figuresOf, loadPoolUniverse, runPoolOn } from '../run.ts';
 import { stateAt } from './metrics.ts';
 import {
+  calendarAppendOnlyFailures,
+  type CalendarState,
+  calendarState,
   codeManifest,
   freezeFileOf,
   prospective,
@@ -18,6 +21,7 @@ import {
 } from './protocol.ts';
 
 export const marketEventFiles = [
+  'config/market-events/distributions.manifest.json',
   'config/market-events/splits.json',
   'config/market-events/distributions.csv',
   'data/partitions.json'
@@ -28,6 +32,14 @@ export const cutoffModes = [
   { key: 'portfolio-frozen', mode: 'portfolio', dividends: 'frozen' },
   { key: 'portfolio-symmetric', mode: 'portfolio', dividends: 'symmetric' }
 ] as const;
+
+// The npm script the commands run under (its flags, e.g. the absence of --env-file, are part of the setup).
+export const poolsScript = async () =>
+  String(((await fs.readJson('package.json')) as { scripts: Record<string, string> }).scripts.pools ?? '');
+
+// The module aliases (#lib, #types) resolve the bound code; a changed map would run different code.
+export const importsMap = async () =>
+  JSON.stringify(((await fs.readJson('package.json')) as { imports?: Record<string, string> }).imports ?? {});
 
 export interface ProspectiveFreeze {
   bodyHash: string;
@@ -48,6 +60,8 @@ export interface ProspectiveFreeze {
   challengerNote: string;
   conventions: Record<string, unknown>;
   code: { entries: string[]; files: Record<string, string>; digest: string };
+  calendar: CalendarState;
+  environment: { node: string; poolsScript: string; importsMap: string; packageLockSha256: string };
   data: { canonicalPins: Record<string, string>; end: string; marketEvents: Record<string, string> };
   cutoffState: Record<string, Record<string, ReturnType<typeof stateAt>>>;
   historicalBaseline: Record<string, Record<string, Record<string, number | string>>>;
@@ -163,6 +177,13 @@ export const writeProspectiveFreeze = async (dir = prospective.dir) => {
       splitMoveLimit: prospective.splitMoveLimit
     },
     code: await codeManifest(),
+    calendar: calendarState(),
+    environment: {
+      node: process.version,
+      poolsScript: await poolsScript(),
+      importsMap: await importsMap(),
+      packageLockSha256: await sha256File('package-lock.json')
+    },
     data: {
       canonicalPins,
       end: prospective.cutoff,
@@ -194,6 +215,10 @@ export const verifyProspectiveFreeze = async (dir = prospective.dir) => {
     try {
       const pool = await loadPool(id);
 
+      if ((await sha256File(pool.config.file)) !== bound.fileSha256) {
+        failures.push(`${id}: ${pool.config.file} changed after the freeze`);
+      }
+
       if (pool.config.configHash !== bound.configHash) {
         failures.push(
           `${id}: the pool's algorithmic hash changed (${bound.configHash.slice(0, 12)} → ${pool.config.configHash.slice(0, 12)})`
@@ -222,6 +247,26 @@ export const verifyProspectiveFreeze = async (dir = prospective.dir) => {
     );
 
     failures.push(`the code changed after the freeze: ${changed.join(', ')}`);
+  }
+
+  if (freeze.environment) {
+    if ((await poolsScript()) !== freeze.environment.poolsScript) {
+      failures.push('the `pools` npm script in package.json changed after the freeze');
+    }
+
+    if ((await importsMap()) !== freeze.environment.importsMap) {
+      failures.push('the package.json "imports" map changed after the freeze');
+    }
+
+    if ((await sha256File('package-lock.json')) !== freeze.environment.packageLockSha256) {
+      failures.push('package-lock.json (the dependency versions) changed after the freeze');
+    }
+  }
+
+  if (freeze.calendar) {
+    failures.push(...calendarAppendOnlyFailures(freeze.calendar, calendarState()));
+  } else {
+    failures.push('the freeze records no calendar state');
   }
 
   for (const [item, hash] of Object.entries(freeze.data.marketEvents)) {

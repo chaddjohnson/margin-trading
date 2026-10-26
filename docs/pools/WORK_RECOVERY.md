@@ -4,7 +4,7 @@
 
 All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run commands from the repository root.
 
-- **Updated:** 2026-10-26T13:25Z. **Status:** in progress. **Current stage:** S9 independent review RUNNING (agent; brief `docs/pools/reviews/independent-review.PROMPT.md`). The implementation was **committed at the user's request at this point** (before the review finished and before the real freeze); later changes need a further user-requested commit. Then fixes, then the REAL `forward freeze` (last), the no-data `forward report`, final checks.
+- **Updated:** 2026-10-26T14:25Z. **Status:** in progress. Committed `158f3aca`; S10–S12 **committed at the user's request at this point** (the commit after `158f3aca`). **Current stage:** focused third check RUNNING (brief `docs/pools/reviews/third-check.PROMPT.md`), then the REAL freeze (later changes need a further user-requested commit).
 - **Task:** operationalization, not research. No optimization, re-ranking or new evaluation of the diverse-d1
   finalists on 2024–2026. Brief: the user's message of 2026-10-26 ~12:19Z ("Implement runnable B4/B5 pool phenotypes
   and freeze prospective shadow comparisons"). Its content is summarized in §2 below. The full text is only in the
@@ -14,8 +14,8 @@ All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run comm
   none exists on disk now.
 - **Complete:** S0–S5: configs + loader; CLI (`npm run pools -- list|show|validate|fixed|portfolio|compare|costs|verify|research …`); regression (`verify` 64/64); tests `src/pools/tests/pools.test.ts` (all pass; B4/B5 anchor tests ~25 s each); research archive exported + verified.
 - **Incomplete:** real freeze (S6, deliberately last: it binds the code closure), S8 docs, S9 review/final. Protocol text written: `research/prospective-b4-b5-shadow/PROTOCOL.md` (not yet frozen; editable until the freeze).
-- **Running process:** the independent review agent (background; read-only).
-- **Next action:** when the review reports: save it verbatim to `docs/pools/reviews/independent-review.md`, fix correctness defects (code is NOT frozen yet), re-run tests, then `npm run pools -- forward freeze` → `npm run pools -- forward report` (no-data) → `forward status` → final git status + report to the user. If the review agent is gone without a report, relaunch it with the same brief.
+- **Running process:** the focused third-check agent (background; read-only).
+- **Next action:** when the third check reports: save it verbatim (`docs/pools/reviews/third-check.md`); if no material finding → `npm run pools -- forward freeze`, `forward report` (no data), `forward status`, final report. Shell note: in zsh pass multi-word args with `${=args}`.
 - **Never:** commit/push/merge without the user's explicit request; broker access, orders, credential reads (`.env`)
   or downloads; edit sealed records of any earlier study (`research/d1-robust-pool-discovery/`,
   `research/d1-diverse-pool-discovery/`, …), frozen phenotype JSONs, `data/`, splits, partitions or distributions;
@@ -74,6 +74,7 @@ All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run comm
 | S6 prospective protocol + write-once freeze | protocol written; freeze pending (last step) | `research/prospective-b4-b5-shadow/PROTOCOL.md`; `npm run pools -- forward freeze` → `PROTOCOL_FREEZE.json` (binds protocol, pools, books, code import-closure of `src/app/pools.ts` + `src/pools/cli.ts` + `src/pools/forward/cli.ts`, canonical pins, market events, B4/B5 cutoff state × fixed/portfolio-frozen/portfolio-symmetric) | must precede any snapshot import (import refuses without it); challengers deferred (option b) |
 | S7 forward data pathway + forward report + no-data smoke | implemented + unit tests pass (`src/pools/tests/forward.test.ts` 8/8) | `src/pools/forward/{protocol,freeze,data,metrics,report,cli}.ts`; `npm run pools -- forward status|freeze|import|report` | no-data smoke after the real freeze |
 | S8 docs runbook | complete | `docs/pools/README.md` (every command run; figures checked against `evaluations/pools/all/*/summary.json`), README.md link; acceptance log `evaluations/pools/acceptance/` (commands.txt: 11 commands, exit 0) |
+| S10 funded-trade ledger (user request after 158f3aca) | complete (uncommitted) | `src/pools/trades.ts` (+ report.ts/cli.ts): table on stdout by default for `fixed`; `trades.csv` (36 cols) + `trades.json` replace `lots.csv`; 12 reconciliation checks pass on B4/B5 `all` (exact vs summary and frozen controls); open position shown with `--end 2025-12-31`; tests 16/16; README section | logs `evaluations/pools/acceptance/fixed-B{4,5}-ledger.log`, `fixed-B4-to-2025-12-31.log` |
 | S9 tests/typecheck/lint, independent review, final report | tests done (npm test 562/562, tsc 0, eslint 0 errors; new code warning-free); review running | `evaluations/pools/acceptance/{npm-test,tsc,eslint}.log` |
 
 ## 4. Decisions so far
@@ -94,3 +95,52 @@ All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run comm
 3. A sandboxed end-to-end forward test ran in the session scratchpad. It used a temporary freeze and a SYNTHETIC
    snapshot (2026-10-13 bars replayed onto 2026-10-14..16). It was deleted afterwards. Nothing from it is in the repo,
    and its figures are not observations.
+
+## 6. Independent review (docs/pools/reviews/independent-review.md, 13:30Z, code of 158f3aca) — dispositions
+
+Verdict: not safe to freeze yet. Planned fixes (all before the freeze; the code is not frozen):
+- M1 forward re-run check fails (firstWrittenAt inside the hashed body) → verify the seal on the stored object, then
+  compare content without firstWrittenAt; test.
+- M2 the calendar ends 2026-12-31 inside the bound code → bind src/lib/calendar.ts by an append-only rule (frozen
+  holidays/early closes/coverage kept; only later dates may be added; the rest of the file unchanged) instead of its
+  raw hash; protocol text.
+- M3 portfolio dollar comparison distorted by different cutoff equity → compare forward returns and strategy P&L ÷
+  cutoff equity; matched borrowing on borrowing dollar-days ÷ cutoff equity; drop raw-dollar equity deltas.
+- M4 incomplete sessions accepted → refuse sessions on or after the import day (New York) and sessions without a
+  bar in the last 5 regular minutes across the members.
+- Minors: honour --out in costs/compare runs and protect data/; bind the pool file sha, distributions manifest,
+  the `pools` npm script and record Node; check frozenReference.manifestSha256; record controls/ledger hashes in
+  verify; hash-check the snapshot distributions file and validate its rows; check the snapshot's freezeBodyHash and
+  run the full freeze verification on import; lower the split screen to ±15% with an explicit --confirm-move;
+  fix PROTOCOL.md statements (6 pinned files, yearly tables, whole-run minute %, evidence threshold in sessions);
+  README "after the freeze"; cosmetic refusal text, schema comment, id validation, research leak check.
+- Applied (S11, all tested): M1 (`checkOrWriteObservation`), M2 (calendar bound append-only: `normalizedCalendarHash`,
+  `calendarAppendOnlyFailures`), M3 (forward return, strategy P&L ÷ cutoff equity, borrowing intensity; matched
+  borrowing on intensity; no cross-pool dollar deltas), M4 (sessions before the import day; a bar in the last five
+  regular minutes across members), minors (`--out` subfolders for costs/compare; protected `data/`/`src/`; freeze
+  binds pool file sha, distributions manifest, `pools` npm script, records Node; manifestSha256 check; verify records
+  source hashes; distribution rows validated and re-hashed; snapshot freezeBodyHash check; import runs full freeze
+  verification; ±15% split screen + `--confirm-move`; evidence threshold 252 sessions; yearly forward tables;
+  whole-run minute % shown; PROTOCOL.md aligned incl. boundary edge cases; README; cosmetic fixes).
+
+## 7. Second review (docs/pools/reviews/second-review.md, 14:09Z) — dispositions (S12)
+
+- MATERIAL forward daily % DD = percent of the largest-dollar fall → track the largest percent fall separately (the
+  historical PercentTracker's definition); dollars and percent each with their own peak/trough.
+- Ledger labels: interest-days column (session-date days, the interest basis); profitable/losing/largest win-loss
+  over closed trades only (open separately); drawdown peak/trough in New York time; rate from the run (no hard-coded
+  11%); open lot: `exitNewYork` empty + `markedAt`; "the XRT lot" wording.
+- M2 rest: calendar normalization tolerates trailing comments on date lines; unit test of normalizedCalendarHash.
+- M4 rest: EVERY member must have a bar in the last 15 regular minutes (canonical 2024–2026: all members, all 698
+  sessions, last bar within 2 minutes of the close); pure functions + unit tests for the today and close guards.
+- M3 ladder: fractions 5…50% (0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50); exact-match (incl. 0 vs 0)
+  handled as matched.
+- Guards: distribution ex/pay dates must be NYSE sessions; yield plausibility (0 < amount/close_before ≤ 3%);
+  through ≥ max ex-date and after the frozen coverage; declared split ratio checked against the observed move.
+- Leftovers: compare --out per-mode folder; freeze binds src/app.ts, package.json "imports" map and
+  package-lock.json; verify checks a pinned controls.json sha256 (`frozenReference.controlsSha256`); costs --mode
+  validated.
+- PROTOCOL.md: import vs report refusals; reports record the code digest/Node/calendar coverage (forward.json; code
+  digest also in the observation body); limitations in report.txt and the no-snapshot report; --source in the import
+  command; forward friction recorded in dollars and bps per side.
+- README: commands that need data are marked as such; compare --out layout.

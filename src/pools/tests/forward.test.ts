@@ -19,11 +19,26 @@ import {
 } from '../../multi-etf-allocator/tests/fixtures.ts';
 import type { BookPhenotype, NUniverse } from '../../portfolio-aware-d1/nbook/engine.ts';
 import type { LoadedUniverse } from '../../portfolio-aware-d1/nbook/universe.ts';
-import { nyseSessions, parseSnapshotFile, undeclaredSplitMoves } from '../forward/data.ts';
+import {
+  completenessProblems,
+  distributionProblems,
+  nyseSessions,
+  parseSnapshotFile,
+  undeclaredSplitMoves
+} from '../forward/data.ts';
 import { verifyProspectiveFreeze } from '../forward/freeze.ts';
-import { type ForwardObserved, forwardFiguresOf } from '../forward/metrics.ts';
-import { codeManifest, freezeFileOf, prospective, sha256File, writeOnce } from '../forward/protocol.ts';
-import { matchedBorrowing } from '../forward/report.ts';
+import { drawdownFrom, forwardFiguresOf, type ForwardObserved } from '../forward/metrics.ts';
+import {
+  calendarAppendOnlyFailures,
+  calendarState,
+  codeManifest,
+  freezeFileOf,
+  normalizedCalendarHash,
+  prospective,
+  sha256File,
+  writeOnce
+} from '../forward/protocol.ts';
+import { checkOrWriteObservation, matchedBorrowing } from '../forward/report.ts';
 import { type LoadedPool, loadPool } from '../load.ts';
 import { type PoolRunOptions, runPoolOn } from '../run.ts';
 
@@ -136,14 +151,17 @@ describe('forward accounting across the cutoff', () => {
     assert.equal('forwardNet' in figures, false);
   });
 
-  test('matched borrowing interpolates inside the ladder and refuses to extrapolate', () => {
+  test('matched borrowing interpolates the return at equal borrowing intensity and refuses to extrapolate', () => {
     const ladder = [
-      { fraction: 0.1, borrowingDollarDays: 100, equityChange: 10 },
-      { fraction: 0.2, borrowingDollarDays: 200, equityChange: 30 }
+      { fraction: 0.1, borrowingIntensity: 1, forwardReturn: 0.01 },
+      { fraction: 0.2, borrowingIntensity: 2, forwardReturn: 0.03 }
     ];
+    const matched = matchedBorrowing(ladder, 1.5);
 
-    assert.deepEqual(matchedBorrowing(ladder, 150), { status: 'interpolated', equityChange: 20, between: [0.1, 0.2] });
-    assert.equal(matchedBorrowing(ladder, 250).status, 'outside the ladder');
+    assert.equal(matched.status, 'interpolated');
+    assert.ok(Math.abs(matched.forwardReturn - 0.02) < 1e-12);
+    assert.deepEqual(matched.between, [0.1, 0.2]);
+    assert.equal(matchedBorrowing(ladder, 2.5).status, 'outside the ladder');
   });
 });
 
@@ -167,7 +185,7 @@ describe('snapshot checks', () => {
 
     assert.equal(parsed.rows, 4);
     assert.deepEqual(parsed.sessions, [
-      { date: '2026-10-14', regularBars: 2, firstRegularOpen: 10, lastRegularClose: 11 }
+      { date: '2026-10-14', regularBars: 2, firstRegularOpen: 10, lastRegularClose: 11, lastRegularMinute: 959 }
     ]);
     assert.throws(() => parseSnapshotFile('VGT', row('2026-10-13T15:00:00Z', 10)), /not after the cutoff/);
     assert.throws(
@@ -179,12 +197,196 @@ describe('snapshot checks', () => {
   });
 
   test('a split-sized overnight move across the boundary is refused unless declared', () => {
-    const sessions = [{ date: '2026-10-14', regularBars: 390, firstRegularOpen: 12.6, lastRegularClose: 12.7 }];
+    const sessions = [
+      { date: '2026-10-14', regularBars: 390, firstRegularOpen: 12.6, lastRegularClose: 12.7, lastRegularMinute: 959 }
+    ];
     const split = { symbol: 'VGT', effectiveDate: '2026-10-14', ratio: 8, source: 'test' };
 
     assert.deepEqual(undeclaredSplitMoves('VGT', sessions, 100, []), ['VGT 2026-10-14: -87.4% overnight']);
     assert.deepEqual(undeclaredSplitMoves('VGT', sessions, 100, [split]), []);
     assert.deepEqual(undeclaredSplitMoves('VGT', [{ ...sessions[0]!, firstRegularOpen: 101 }], 100, []), []);
+    // A 5:4 split (−20%) is caught at ±15%; a genuine move can be confirmed explicitly.
+    const gap = [{ ...sessions[0]!, firstRegularOpen: 80 }];
+
+    assert.equal(undeclaredSplitMoves('VGT', gap, 100, []).length, 1);
+    assert.deepEqual(undeclaredSplitMoves('VGT', gap, 100, [], 0.15, ['VGT:2026-10-14']), []);
+  });
+});
+
+describe('snapshot distributions, the calendar rule and observation records', () => {
+  const header = 'etf,ex_date,pay_date,amount,amount_method,ex_date_method,pay_date_method,close_before,source';
+  const coverage = { VGT: '2026-10-24', VOOG: '2026-10-24' };
+
+  test('distribution rows are validated against the frozen ledger coverage', () => {
+    const good = `${header}\nVGT,2026-12-17,2026-12-21,0.15,published,published,published,130,issuer\n`;
+
+    assert.deepEqual(distributionProblems(good, '2026-12-31', coverage), { problems: [], rows: 1 });
+
+    const bad = [
+      `${header}`,
+      'XBI,2026-12-17,2026-12-19,0.15,p,p,p,130,x',
+      'VGT,2026-09-23,2026-09-25,0.15,p,p,p,130,x',
+      'VOOG,2026-12-17,2026-12-10,0.15,p,p,p,130,x',
+      'VGT,2026-12-18,2026-12-19,-1,p,p,p,130,x',
+      'VGT,2026-12-18,2026-12-19,0.2,p,p,p,130,x'
+    ].join('\n');
+    const { problems } = distributionProblems(bad, '2026-12-31', coverage);
+
+    assert.ok(problems.some((problem) => /only VGT and VOOG/.test(problem)));
+    assert.ok(problems.some((problem) => /inside the frozen ledger/.test(problem)));
+    assert.ok(problems.some((problem) => /pay ≥ ex/.test(problem)));
+    assert.ok(problems.some((problem) => /positive numbers/.test(problem)));
+    assert.ok(problems.some((problem) => /duplicate VGT 2026-12-18/.test(problem)));
+    assert.ok(distributionProblems(good, undefined, coverage).problems.some((problem) => /required/.test(problem)));
+  });
+
+  test('the calendar may only grow after its frozen coverage', () => {
+    const frozen = calendarState();
+    const extended = {
+      coverage: { ...frozen.coverage, last: '2027-12-31' },
+      holidays: [...frozen.holidays, '2027-01-01'],
+      earlyCloses: frozen.earlyCloses
+    };
+
+    assert.deepEqual(calendarAppendOnlyFailures(frozen, frozen), []);
+    assert.deepEqual(calendarAppendOnlyFailures(frozen, extended), []);
+    assert.equal(calendarAppendOnlyFailures(frozen, { ...frozen, holidays: frozen.holidays.slice(1) }).length, 1);
+    assert.equal(
+      calendarAppendOnlyFailures(frozen, { ...frozen, earlyCloses: [...frozen.earlyCloses, '2026-12-31'] }).length,
+      1
+    );
+    assert.equal(
+      calendarAppendOnlyFailures(frozen, { ...frozen, coverage: { ...frozen.coverage, last: '2026-06-30' } }).length,
+      1
+    );
+  });
+
+  test('an observation record is written once and a later report must reproduce it', async () => {
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'observation-'));
+
+    try {
+      const file = path.join(dir, 'observations', 'x.json');
+      const body = { schemaVersion: 1, observationCount: 3, pools: { B4: { forwardNet: 12.5 } } };
+
+      assert.equal(await checkOrWriteObservation(file, body), 'written');
+      assert.equal(await checkOrWriteObservation(file, body), 'reproduced');
+      await assert.rejects(checkOrWriteObservation(file, { ...body, observationCount: 4 }), /does not reproduce/);
+    } finally {
+      await fs.remove(dir);
+    }
+  });
+});
+
+describe('second-review fixes', () => {
+  test('the daily % drawdown is the largest percent fall, not the percent of the largest dollar fall', () => {
+    // From 100: a 50% fall to 50, then a rise to 200 and a $60 (30%) fall to 140.
+    const dd = drawdownFrom(100, [
+      { value: 50, date: 'a' },
+      { value: 200, date: 'b' },
+      { value: 140, date: 'c' }
+    ]);
+
+    assert.equal(dd.dollars, 60);
+    assert.equal(dd.peakDate, 'b');
+    assert.equal(dd.percent, 0.5);
+    assert.equal(dd.percentPeakDate, 'cutoff');
+    assert.equal(dd.percentTroughDate, 'a');
+  });
+
+  test('every member must trade in the last 15 regular minutes, and no session may be on or after today', () => {
+    const full = {
+      date: '2026-10-14',
+      regularBars: 390,
+      firstRegularOpen: 10,
+      lastRegularClose: 10,
+      lastRegularMinute: 959
+    };
+    const ok = { VGT: [full], KRE: [full] };
+
+    assert.deepEqual(completenessProblems(ok, ['2026-10-14'], '2026-10-15'), []);
+    assert.match(
+      completenessProblems(
+        { VGT: [full], KRE: [{ ...full, lastRegularMinute: 720 }] },
+        ['2026-10-14'],
+        '2026-10-15'
+      )[0]!,
+      /KRE without a bar/
+    );
+    assert.match(completenessProblems(ok, ['2026-10-14'], '2026-10-14')[0]!, /not before today/);
+    // An early close (2026-11-27, 1 p.m.) ends at 12:59.
+    const early = { ...full, date: '2026-11-27', lastRegularMinute: 12 * 60 + 59 };
+
+    assert.deepEqual(completenessProblems({ VGT: [early] }, ['2026-11-27'], '2026-12-01'), []);
+  });
+
+  test('the calendar hash ignores comments and date lines, and changes with the code', async () => {
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'calendar-'));
+
+    try {
+      const original = await fs.readFile('src/lib/calendar.ts', 'utf8');
+      const extended = original
+        .replace("  '2026-12-25'\n]);", "  '2026-12-25',\n  '2027-01-01', // New Year's Day\n  '2027-01-18'\n]);")
+        .replace('2016 through 2026', '2016 through 2027')
+        .replace("last: '2026-12-31'", "last: '2027-12-31'");
+      const changed = original.replace('export const nyseHolidays', 'export const nyseHolidaysChanged');
+
+      assert.notEqual(extended, original);
+      await fs.writeFile(path.join(dir, 'extended.ts'), extended);
+      await fs.writeFile(path.join(dir, 'changed.ts'), changed);
+      assert.equal(await normalizedCalendarHash(path.join(dir, 'extended.ts')), await normalizedCalendarHash());
+      assert.notEqual(await normalizedCalendarHash(path.join(dir, 'changed.ts')), await normalizedCalendarHash());
+    } finally {
+      await fs.remove(dir);
+    }
+  });
+
+  test('matched borrowing: an exact or zero-borrowing match needs no interpolation', () => {
+    const ladder = [
+      { fraction: 0.05, borrowingIntensity: 0, forwardReturn: 0.004 },
+      { fraction: 0.1, borrowingIntensity: 0, forwardReturn: 0.004 },
+      { fraction: 0.2, borrowingIntensity: 2, forwardReturn: 0.03 }
+    ];
+
+    assert.deepEqual(matchedBorrowing(ladder, 0), { status: 'matched', forwardReturn: 0.004, between: [0.05] });
+    assert.equal(matchedBorrowing(ladder, 2).status, 'matched');
+  });
+
+  test('distributions must be on NYSE sessions, plausible and after the frozen coverage; a declared split must explain the move', () => {
+    const header = 'etf,ex_date,pay_date,amount,amount_method,ex_date_method,pay_date_method,close_before,source';
+    const coverage = { VGT: '2026-10-24', VOOG: '2026-10-24' };
+    const problems = (row: string, through: string) =>
+      distributionProblems(`${header}\n${row}`, through, coverage).problems;
+
+    assert.ok(
+      problems('VGT,2026-12-19,2026-12-21,0.15,p,p,p,130,x', '2026-12-31').some((problem) =>
+        /NYSE sessions/.test(problem)
+      )
+    );
+    assert.ok(
+      problems('VGT,2026-12-17,2026-12-21,9,p,p,p,130,x', '2026-12-31').some((problem) => /implausible/.test(problem))
+    );
+    assert.ok(
+      problems('VGT,2026-12-17,2026-12-21,0.15,p,p,p,130,x', '2026-10-20').some((problem) =>
+        /after the frozen coverage/.test(problem)
+      )
+    );
+
+    const session = [
+      { date: '2026-10-14', regularBars: 390, firstRegularOpen: 12.6, lastRegularClose: 12.7, lastRegularMinute: 959 }
+    ];
+
+    assert.deepEqual(
+      undeclaredSplitMoves('VGT', session, 100, [
+        { symbol: 'VGT', effectiveDate: '2026-10-14', ratio: 8, source: 'x' }
+      ]),
+      []
+    );
+    assert.match(
+      undeclaredSplitMoves('VGT', session, 100, [
+        { symbol: 'VGT', effectiveDate: '2026-10-14', ratio: 2, source: 'x' }
+      ])[0]!,
+      /does not explain/
+    );
   });
 });
 

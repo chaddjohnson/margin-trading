@@ -9,6 +9,7 @@ import type { NRunResult } from '../portfolio-aware-d1/nbook/engine.ts';
 import type { LoadedUniverse } from '../portfolio-aware-d1/nbook/universe.ts';
 import type { LoadedPool } from './load.ts';
 import { type PoolRunOptions, dailyRows, figuresOf, periodRows, signalRows } from './run.ts';
+import { formatTradeLedger, reconcileLedger, tradeLedgerOf } from './trades.ts';
 
 export const evaluationsRoot = 'evaluations/pools';
 
@@ -39,8 +40,12 @@ export const defaultOutDir = (pool: LoadedPool, options: PoolRunOptions) =>
 export const assertOutsideResearch = (dir: string) => {
   const relative = path.relative(process.cwd(), path.resolve(dir));
 
-  if (relative === 'research' || relative.startsWith(`research${path.sep}`) || relative.startsWith('config')) {
-    throw new Error(`refused: ${dir} is inside research/ or config/; pool runs write under ${evaluationsRoot}/`);
+  const protectedRoots = ['research', 'config', 'data', 'src'];
+
+  if (protectedRoots.some((root) => relative === root || relative.startsWith(`${root}${path.sep}`))) {
+    throw new Error(
+      `refused: ${dir} is inside ${protectedRoots.join('/, ')}/; pool runs write under ${evaluationsRoot}/ (or another folder)`
+    );
   }
 };
 
@@ -193,14 +198,10 @@ export const formatReport = (record: PoolRunRecord) => {
         ]
       : []),
     `  time in market ${pct(f.timeInMarket, 1)} of the ${f.sessions.toLocaleString('en-US')} sessions from the first eligible one; borrowing dollar-days ${Math.round(f.borrowingDollarDays).toLocaleString('en-US')} → strategy net per $1M borrowing-dollar-days ${money(f.netPerMillionBorrowingDollarDays)}`,
-    `P&L (strategy): realized ${money(f.realized)} + unrealized ${money(f.unrealized)} = net ${money(f.net)}, after margin interest ${money(f.interest)} and friction ${money(f.frictionDollars)}; worst lot ${money(f.worstLot)}`,
     ...(fixed
-      ? [
-          `Risk (fixed pool, % of the ${money(f.notionalPerTrade)} notional):`,
-          `  max MINUTE-sampled drawdown ${money(f.minuteDrawdown)} = ${pct(f.minuteDrawdownPercentOfNotional!)} (peak ${f.minuteDrawdownPeakUtc}, trough ${f.minuteDrawdownTroughUtc})`,
-          `  max DAILY (close) drawdown  ${money(f.dailyDrawdown)} = ${pct(f.dailyDrawdownPercentOfNotional!)}`
-        ]
+      ? ['', record.tradeLedgerText]
       : [
+          `P&L (strategy): realized ${money(f.realized)} + unrealized ${money(f.unrealized)} = net ${money(f.net)}, after margin interest ${money(f.interest)} and friction ${money(f.frictionDollars)}; worst lot ${money(f.worstLot)}`,
           `Portfolio: equity ${money(f.initialEquity!)} → ${money(f.endEquity!)} (× ${(f.endEquity! / f.initialEquity!).toFixed(2)}); dividends credited ${money(f.cumulativeDividends!)}`,
           `  max DAILY % drawdown of marked equity ${pct(f.dailyPercentDrawdown!)} (peak ${f.dailyPercentPeakUtc}, trough ${f.dailyPercentTroughUtc}); max MINUTE % drawdown ${pct(f.minutePercentDrawdown!)}`,
           `  dollar drawdowns: minute ${money(f.minuteDrawdown)}, daily ${money(f.dailyDrawdown)}`
@@ -215,23 +216,27 @@ export const formatReport = (record: PoolRunRecord) => {
           : [row.period, money(row.equityChange), money(row.strategyChange), money(row.interest), row.lotsEntered]
       )
     ),
-    'By book:',
-    table(
-      ['symbol', 'lots', 'wins', 'net', 'lot-days', 'refused'],
-      Object.entries(f.bySymbol).map(([symbol, item]) => [
-        symbol,
-        item.lots,
-        item.wins,
-        money(item.net),
-        Math.round(item.lotDays),
-        item.refusals
-      ])
-    ),
+    ...(fixed
+      ? []
+      : [
+          'By book:',
+          table(
+            ['symbol', 'lots', 'wins', 'net', 'lot-days', 'refused'],
+            Object.entries(f.bySymbol).map(([symbol, item]) => [
+              symbol,
+              item.lots,
+              item.wins,
+              money(item.net),
+              Math.round(item.lotDays),
+              item.refusals
+            ])
+          )
+        ]),
     '',
     anchors.applicable
       ? `Regression anchors (frozen controls): ${anchors.checks.map((check) => `${check.name} ${check.pass ? 'PASS' : `FAIL (expected ${check.expected}, got ${check.actual})`}`).join('; ')}`
       : `Regression anchors: not checked (${anchors.reason})`,
-    `Outputs: ${record.outDir}/ (report.txt, summary.json, lots.csv, signals.csv, daily.csv, yearly.csv, monthly.csv)`,
+    `Outputs: ${record.outDir}/ (report.txt, summary.json, trades.csv, trades.json, signals.csv, daily.csv, yearly.csv, monthly.csv)`,
     'These are inspected historical figures, not expected future returns.'
   ];
 
@@ -251,6 +256,35 @@ export const runRecordOf = async (
   const data = dataRecordOf(pool, loaded);
   const initialEquity = pool.config.portfolio.initialCore.VOOG + pool.config.portfolio.initialCore.VGT;
   const base = options.mode === 'portfolio' ? initialEquity : 0;
+  const ledger = tradeLedgerOf(result);
+  const reference = pool.config.frozenReference as { benchmark?: string; controls?: string } | undefined;
+  const reconciliation = await reconcileLedger(ledger, computed.summary, {
+    applicable: data.frozenAll && (options.mode === 'fixed' || options.dividends === 'frozen'),
+    controlsFile: reference?.controls,
+    benchmark: reference?.benchmark,
+    controlKey: `${options.mode}-${options.costBps}`
+  });
+  const conflicts = new Map(computed.lots.map((lot) => [lot.lot, lot]));
+  const trades = ledger.rows.map((row) => ({
+    ...row,
+    refusedWhileHeld: conflicts.get(row.lot)?.refusedWhileHeld ?? 0,
+    refusedSymbols: conflicts.get(row.lot)?.refusedSymbols ?? ''
+  }));
+  const tradeLedgerText = formatTradeLedger(ledger, {
+    notional: pool.config.funding.notionalPerTrade,
+    costBps: options.costBps,
+    minuteDrawdown: computed.summary.minuteDrawdown,
+    minuteDrawdownPeakUtc: computed.figures.minuteDrawdownPeakUtc,
+    minuteDrawdownTroughUtc: computed.figures.minuteDrawdownTroughUtc,
+    annualRate: options.rate ?? pool.config.interest.annualRate,
+    dailyDrawdown: computed.summary.dailyDrawdown,
+    reconciliation,
+    splits: Object.entries(data.members).flatMap(([symbol, member]) =>
+      pool.config.books.some((book) => book.symbol === symbol)
+        ? member.splitAdjustments.map((split) => `${symbol} ${split.effectiveDate} ×${split.ratio}`)
+        : []
+    )
+  });
 
   return {
     schemaVersion: 1,
@@ -306,7 +340,29 @@ export const runRecordOf = async (
     anchors: anchorChecks(pool, options, computed, data.frozenAll),
     years: periodRows(result, (date) => date.slice(0, 4), base),
     months: periodRows(result, (date) => date.slice(0, 7), base),
-    lots: computed.lots,
+    tradeLedger: {
+      definitions: {
+        trades: 'every lot the shared allocator funded (refused shadow signals are in signals.csv), in entry order',
+        fills: "the engine's raw execution prices; cost-adjusted prices include the per-side friction",
+        grossBeforeCosts: 'shares × (exit fill − entry fill); for an open lot, shares × (last close − entry fill)',
+        friction: 'shares × the per-side cost on each fill (no exit friction on an open lot)',
+        interest: 'principal × annual rate × days held ÷ 365 (accrued to the last close for an open lot)',
+        net: "the engine's net: gross before costs − friction − interest",
+        maximumAdverseExcursion:
+          "the engine's worst minute mark while held: shares × last price − principal − accrued interest",
+        minuteDrawdown:
+          "the engine's largest fall of the marked P&L from its running peak, sampled each regular minute",
+        dailyDrawdown: 'the same, sampled at session closes',
+        drawdownPercent: options.mode === 'fixed' ? 'of the notional per trade' : 'of the running peak of marked equity'
+      },
+      bySymbol: ledger.bySymbol,
+      totals: ledger.totals,
+      openPositions: ledger.openPositions,
+      identity: ledger.identity,
+      reconciliation
+    },
+    trades,
+    tradeLedgerText,
     outDir
   };
 };
@@ -317,11 +373,46 @@ export const writeRunRecord = async (record: PoolRunRecord, result: NRunResult) 
   assertOutsideResearch(dir);
   await fs.ensureDir(dir);
 
-  const { lots, years, months, ...summary } = record;
+  const { trades, tradeLedgerText, years, months, ...summary } = record;
 
+  void tradeLedgerText;
   await fs.outputFile(path.join(dir, 'report.txt'), formatReport(record));
   await fs.writeJson(path.join(dir, 'summary.json'), { ...summary, years, months }, { spaces: 2 });
-  await fs.outputFile(path.join(dir, 'lots.csv'), toCsv(lots));
+  await fs.outputFile(path.join(dir, 'trades.csv'), toCsv(trades));
+  await fs.writeJson(
+    path.join(dir, 'trades.json'),
+    {
+      schemaVersion: 1,
+      kind: 'pool-trades',
+      pool: record.pool,
+      run: record.run,
+      data: {
+        partition: record.data.partition,
+        first: record.data.first,
+        last: record.data.last,
+        frozenAll: record.data.frozenAll,
+        members: record.data.members
+      },
+      ...record.tradeLedger,
+      drawdowns: {
+        minuteDrawdown: record.summary.minuteDrawdown,
+        minuteDrawdownPeakUtc: record.figures.minuteDrawdownPeakUtc,
+        minuteDrawdownTroughUtc: record.figures.minuteDrawdownTroughUtc,
+        dailyDrawdown: record.summary.dailyDrawdown,
+        ...(record.run.mode === 'fixed'
+          ? {
+              minuteDrawdownPercentOfNotional: record.figures.minuteDrawdownPercentOfNotional,
+              dailyDrawdownPercentOfNotional: record.figures.dailyDrawdownPercentOfNotional
+            }
+          : {
+              dailyPercentDrawdown: record.figures.dailyPercentDrawdown,
+              minutePercentDrawdown: record.figures.minutePercentDrawdown
+            })
+      },
+      trades
+    },
+    { spaces: 2 }
+  );
   await fs.outputFile(path.join(dir, 'signals.csv'), toCsv(signalRows(result)));
   await fs.outputFile(path.join(dir, 'daily.csv'), toCsv(dailyRows(result)));
   await fs.outputFile(path.join(dir, 'yearly.csv'), toCsv(years));

@@ -265,7 +265,7 @@ export const figuresOf = (pool: LoadedPool, loaded: LoadedUniverse, result: NRun
   for (const signal of refused) {
     const holder = signal.reason.match(/^(.*?) \((\S+) (lot|pending order)/);
     const reason = holder
-      ? `${holder[1]} by a ${holder[2]} ${holder[3] === 'lot' ? 'lot' : 'pending order'}`
+      ? `${holder[1]!.replace(/ by a pending order$/, '')} by the ${holder[2]} ${holder[3] === 'lot' ? 'lot' : 'pending order'}`
       : signal.reason;
 
     refusalReasons[reason] = (refusalReasons[reason] ?? 0) + 1;

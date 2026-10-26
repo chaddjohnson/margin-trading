@@ -6,6 +6,7 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import { type SplitEvent, nyseCalendarCoverage, nyseEarlyCloses, nyseHolidays, parseSplits, readSplits } from '#lib';
 import { type DistributionLedger, readDistributionLedger } from '../../multi-etf-allocator/dataset.ts';
+import { verifyProspectiveFreeze } from './freeze.ts';
 import { freezeFileOf, prospective, readSealed, sha256, sha256File, writeOnce } from './protocol.ts';
 
 export const snapshotIdPattern = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
@@ -20,6 +21,48 @@ const newYorkParts = (seconds: number) => {
   const text = new Date(seconds * 1000).toLocaleString('sv-SE', { timeZone: 'America/New_York', hour12: false });
 
   return { date: text.slice(0, 10), minutes: Number(text.slice(11, 13)) * 60 + Number(text.slice(14, 16)) };
+};
+
+export const isNyseSession = (date: string) =>
+  date >= nyseCalendarCoverage.first &&
+  date <= nyseCalendarCoverage.last &&
+  ![0, 6].includes(new Date(`${date}T12:00:00Z`).getUTCDay()) &&
+  !nyseHolidays.has(date);
+
+// Only completed sessions: every session before the import day (New York), and every member trading in the last
+// minutes of every session (canonical 2024–2026: every member's last regular bar is within 2 minutes of the close).
+export const completenessProblems = (
+  sessionsBySymbol: Record<string, SessionSummary[]>,
+  expected: readonly string[],
+  today: string,
+  window = 15
+) => {
+  const problems: string[] = [];
+  const last = expected.at(-1);
+
+  if (last !== undefined && last >= today) {
+    problems.push(
+      `the snapshot holds ${last}, not before today (${today}, New York): only completed sessions are imported`
+    );
+  }
+
+  for (const date of expected) {
+    const closeMinutes = nyseEarlyCloses.has(date) ? 13 * 60 : 16 * 60;
+    const short = Object.entries(sessionsBySymbol)
+      .filter(
+        ([, sessions]) =>
+          (sessions.find((session) => session.date === date)?.lastRegularMinute ?? -1) < closeMinutes - window
+      )
+      .map(([symbol]) => symbol);
+
+    if (short.length) {
+      problems.push(
+        `${date}: ${short.join(' ')} without a bar in the last ${window} regular minutes (an incomplete session?)`
+      );
+    }
+  }
+
+  return problems;
 };
 
 // The NYSE trading days from `first` through `last` (weekdays that are not exchange holidays).
@@ -54,6 +97,7 @@ interface SessionSummary {
   regularBars: number;
   firstRegularOpen: number;
   lastRegularClose: number;
+  lastRegularMinute: number; // minutes after New York midnight of the session's last regular-hours bar
 }
 
 // Validates one symbol's post-cutoff file and summarizes its sessions.
@@ -93,7 +137,13 @@ export const parseSnapshotFile = (symbol: string, text: string, cutoff = prospec
       throw new Error(`${where}: ${date} is not after the cutoff ${cutoff}; a snapshot holds only new sessions`);
     }
 
-    const session = sessions.get(date) ?? { date, regularBars: 0, firstRegularOpen: NaN, lastRegularClose: NaN };
+    const session = sessions.get(date) ?? {
+      date,
+      regularBars: 0,
+      firstRegularOpen: NaN,
+      lastRegularClose: NaN,
+      lastRegularMinute: -1
+    };
     const closeMinutes = nyseEarlyCloses.has(date) ? 13 * 60 : 16 * 60;
 
     if (minutes >= 9 * 60 + 30 && minutes < closeMinutes) {
@@ -103,6 +153,7 @@ export const parseSnapshotFile = (symbol: string, text: string, cutoff = prospec
 
       session.regularBars++;
       session.lastRegularClose = close;
+      session.lastRegularMinute = minutes;
     }
 
     sessions.set(date, session);
@@ -131,13 +182,15 @@ const cutoffClose = async (symbol: string, cutoff = prospective.cutoff) => {
   return close;
 };
 
-// Overnight moves beyond the limit must be declared splits of the snapshot.
+// Overnight moves beyond the limit must be declared splits of the snapshot, or explicitly confirmed as genuine price
+// moves (`--confirm-move SYMBOL:DATE`, recorded in the snapshot).
 export const undeclaredSplitMoves = (
   symbol: string,
   sessions: SessionSummary[],
   referenceClose: number,
   declared: readonly SplitEvent[],
-  limit = prospective.splitMoveLimit
+  limit = prospective.splitMoveLimit,
+  confirmed: readonly string[] = []
 ) => {
   const moves: string[] = [];
   let previousClose = referenceClose;
@@ -146,8 +199,15 @@ export const undeclaredSplitMoves = (
     const move = session.firstRegularOpen / previousClose - 1;
     const split = declared.find((event) => event.symbol === symbol && event.effectiveDate === session.date);
 
-    if (Math.abs(move) > limit && !split) {
+    if (Math.abs(move) > limit && !split && !confirmed.includes(`${symbol}:${session.date}`)) {
       moves.push(`${symbol} ${session.date}: ${(move * 100).toFixed(1)}% overnight`);
+    }
+
+    // A declared split must explain the move: the adjusted move (open × ratio ÷ previous close) is within the limit.
+    if (split && Math.abs((session.firstRegularOpen * split.ratio) / previousClose - 1) > limit) {
+      moves.push(
+        `${symbol} ${session.date}: the declared ${split.ratio}-for-1 split does not explain a ${(move * 100).toFixed(1)}% overnight move`
+      );
     }
 
     previousClose = session.lastRegularClose;
@@ -169,8 +229,69 @@ export interface SnapshotRecord {
   files: Record<string, { file: string; sha256: string; rows: number; sessions: number }>;
   splits: SplitEvent[];
   distributions: { file: string; sha256: string; through: Record<'VGT' | 'VOOG', string>; rows: number } | null;
+  confirmedMoves: string[];
   freezeBodyHash: string;
 }
+
+// Distribution rows for VOOG/VGT after the frozen ledger's coverage: checked before they are stored.
+export const distributionProblems = (
+  text: string,
+  through: string | undefined,
+  coverage: Record<'VGT' | 'VOOG', string>
+) => {
+  const [header, ...rows] = text.trim().split('\n');
+  const problems: string[] = [];
+  const seen = new Set<string>();
+  const date = /^\d{4}-\d{2}-\d{2}$/;
+
+  if (header !== distributionHeader) {
+    problems.push(`the header must be "${distributionHeader}"`);
+  }
+
+  if (!through || !date.test(through)) {
+    problems.push('--distributions-through YYYY-MM-DD is required');
+  } else if (through <= coverage.VGT || through <= coverage.VOOG) {
+    problems.push(`--distributions-through ${through} must be after the frozen coverage (${coverage.VGT})`);
+  }
+
+  rows.forEach((line, index) => {
+    const [etf, exDate, payDate, amount, , , , closeBefore] = line.split(',');
+    const where = `distributions row ${index + 2}`;
+
+    if (etf !== 'VGT' && etf !== 'VOOG') {
+      problems.push(`${where}: only VGT and VOOG distributions are credited`);
+      return;
+    }
+
+    if (!date.test(exDate ?? '') || !date.test(payDate ?? '') || payDate! < exDate!) {
+      problems.push(`${where}: ex/pay dates must be YYYY-MM-DD with pay ≥ ex`);
+    } else if (!isNyseSession(exDate!) || !isNyseSession(payDate!)) {
+      problems.push(
+        `${where}: ex-date ${exDate} and pay date ${payDate} must be NYSE sessions (the engine books on session dates)`
+      );
+    } else if (exDate! <= coverage[etf]) {
+      problems.push(`${where}: ${etf} ${exDate} is inside the frozen ledger's coverage (through ${coverage[etf]})`);
+    } else if (through && exDate! > through) {
+      problems.push(`${where}: ${exDate} is after --distributions-through ${through}`);
+    }
+
+    if (!(Number(amount) > 0) || !(Number(closeBefore) > 0)) {
+      problems.push(`${where}: amount and close_before must be positive numbers`);
+    } else if (Number(amount) / Number(closeBefore) > 0.03) {
+      problems.push(
+        `${where}: a ${((Number(amount) / Number(closeBefore)) * 100).toFixed(2)}% distribution is implausible (> 3% of close_before; split units?)`
+      );
+    }
+
+    if (seen.has(`${etf}:${exDate}`)) {
+      problems.push(`${where}: duplicate ${etf} ${exDate}`);
+    }
+
+    seen.add(`${etf}:${exDate}`);
+  });
+
+  return { problems, rows: rows.length };
+};
 
 export const importSnapshot = async (options: {
   from: string;
@@ -179,8 +300,10 @@ export const importSnapshot = async (options: {
   splitsFile?: string;
   distributionsFile?: string;
   distributionsThrough?: string;
+  confirmMoves?: string[];
   dir?: string;
   snapshotsRoot?: string;
+  today?: string; // the New York date of the import (tests)
 }) => {
   const dir = options.dir ?? prospective.dir;
   const freezeFile = freezeFileOf(dir);
@@ -189,7 +312,16 @@ export const importSnapshot = async (options: {
     throw new Error(`${freezeFile} does not exist: the protocol must be frozen before any post-cutoff bar is imported`);
   }
 
-  const freeze = await readSealed(freezeFile);
+  const verified = await verifyProspectiveFreeze(dir);
+
+  if (!verified.frozen || verified.failures.length > 0) {
+    throw new Error(
+      `the prospective freeze does not verify; nothing is imported:\n  ${verified.failures.join('\n  ')}`
+    );
+  }
+
+  const freeze = verified.freeze;
+  const confirmed = options.confirmMoves ?? [];
 
   if (!snapshotIdPattern.test(options.id)) {
     throw new Error(`snapshot id must match ${snapshotIdPattern}`);
@@ -236,7 +368,16 @@ export const importSnapshot = async (options: {
     throw new Error('the snapshot holds no session');
   }
 
+  const today = options.today ?? newYorkParts(Date.now() / 1000).date;
   const expected = nyseSessions(prospective.firstForwardSession, last);
+
+  problems.push(
+    ...completenessProblems(
+      Object.fromEntries(prospective.members.map((symbol) => [symbol, parsed[symbol]!.sessions])),
+      expected,
+      today
+    )
+  );
 
   for (const symbol of prospective.members) {
     const dates = parsed[symbol]!.sessions.map((session) => session.date);
@@ -258,7 +399,16 @@ export const importSnapshot = async (options: {
     }
 
     if (empty.length === 0) {
-      problems.push(...undeclaredSplitMoves(symbol, parsed[symbol]!.sessions, await cutoffClose(symbol), declared));
+      problems.push(
+        ...undeclaredSplitMoves(
+          symbol,
+          parsed[symbol]!.sessions,
+          await cutoffClose(symbol),
+          declared,
+          prospective.splitMoveLimit,
+          confirmed
+        )
+      );
     }
   }
 
@@ -270,23 +420,17 @@ export const importSnapshot = async (options: {
 
   if (options.distributionsFile) {
     const text = await fs.readFile(options.distributionsFile, 'utf8');
-    const [header, ...rows] = text.trim().split('\n');
+    const checked = distributionProblems(text, options.distributionsThrough, (await readDistributionLedger()).coverage);
 
-    if (
-      header !== distributionHeader ||
-      !options.distributionsThrough ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(options.distributionsThrough)
-    ) {
-      throw new Error(
-        `--distributions needs the header "${distributionHeader}" and --distributions-through YYYY-MM-DD`
-      );
+    if (checked.problems.length) {
+      throw new Error(`distributions refused:\n  ${checked.problems.join('\n  ')}`);
     }
 
     distributions = {
       file: 'distributions.csv',
       sha256: sha256(text),
-      through: { VGT: options.distributionsThrough, VOOG: options.distributionsThrough },
-      rows: rows.length
+      through: { VGT: options.distributionsThrough!, VOOG: options.distributionsThrough! },
+      rows: checked.rows
     };
   }
 
@@ -320,6 +464,7 @@ export const importSnapshot = async (options: {
     files,
     splits: declared,
     distributions,
+    confirmedMoves: confirmed,
     freezeBodyHash: freeze.bodyHash
   });
 
@@ -387,6 +532,10 @@ export const composeSnapshot = async (
 
   if (record.distributions) {
     const text = await fs.readFile(path.join(snapshotDirOf(id, options.snapshotsRoot), 'distributions.csv'), 'utf8');
+
+    if (sha256(text) !== record.distributions.sha256) {
+      throw new Error(`snapshot ${id}: distributions.csv no longer hashes to its record`);
+    }
     const [, ...rows] = text.trim().split('\n');
     const added = rows.map((line) => {
       const [etf, exDate, payDate, amount, amountMethod, exDateMethod, payDateMethod, closeBefore] = line.split(',');

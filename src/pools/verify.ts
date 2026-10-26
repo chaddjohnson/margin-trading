@@ -4,6 +4,7 @@
 // anchors to the cent, and the frozen per-lot and per-day ledgers of research/portfolio-aware-d1-optimization
 // byte for byte. Any difference fails; nothing is written outside evaluations/pools/verify/.
 import path from 'node:path';
+import crypto from 'node:crypto';
 import fs from 'fs-extra';
 import { summaryOf } from '../joint-16-etf-d1/figures.ts';
 import { toCsv } from '../multi-etf-allocator/metrics.ts';
@@ -13,6 +14,12 @@ import { anchorChecks, dataRecordOf, evaluationsRoot } from './report.ts';
 import { type PoolMode, type PoolRunOptions, figuresOf, loadPoolUniverse, runPoolOn } from './run.ts';
 
 const controlsFile = 'research/joint-16-etf-d1/results/controls/controls.json';
+
+const sha256File = async (file: string) =>
+  crypto
+    .createHash('sha256')
+    .update(await fs.readFile(file))
+    .digest('hex');
 
 // The frozen evaluation's own CSV mappings (src/portfolio-aware-d1/evaluation.ts runEvaluation).
 export const frozenLotsCsv = (result: NRunResult) =>
@@ -76,6 +83,14 @@ export const verifyPool = async (pool: LoadedPool) => {
     all: Record<string, Record<string, { summary: Record<string, unknown> }>>;
   };
   const checks: { name: string; pass: boolean; detail: string }[] = [];
+  const sources: Record<string, string> = { [controlsFile]: await sha256File(controlsFile) };
+  const pinned = (pool.config.frozenReference as { controlsSha256?: string }).controlsSha256;
+
+  checks.push({
+    name: `${controlsFile} hashes to the pool's pinned frozenReference.controlsSha256`,
+    pass: pinned !== undefined && pinned === sources[controlsFile],
+    detail: pinned === undefined ? 'no pinned hash' : `${sources[controlsFile]!.slice(0, 16)}…`
+  });
 
   for (const mode of ['fixed', 'portfolio'] as PoolMode[]) {
     const base: PoolRunOptions = { mode, dataset: 'all', costBps: 5, dividends: 'frozen' };
@@ -106,6 +121,10 @@ export const verifyPool = async (pool: LoadedPool) => {
         ] as const) {
           const file = path.join(reference.lotLedgers, `${mode}-${costBps}-${kind}.csv`);
           const frozenText = (await fs.pathExists(file)) ? await fs.readFile(file, 'utf8') : undefined;
+
+          if (frozenText !== undefined) {
+            sources[file] = await sha256File(file);
+          }
 
           checks.push({
             name: `${mode} ${costBps} bps: ${kind} ledger byte-identical to ${file}`,
@@ -138,7 +157,7 @@ export const verifyPool = async (pool: LoadedPool) => {
     }
   }
 
-  return { pool: pool.config.id, checks };
+  return { pool: pool.config.id, checks, sources };
 };
 
 export const runVerify = async (ids?: string[]) => {

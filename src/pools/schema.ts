@@ -2,8 +2,10 @@
 // interest, cost and portfolio settings of the N-book shared-pool engine (src/portfolio-aware-d1/nbook/engine.ts).
 // A pool does not define a phenotype: each book references a phenotype in config/phenotypes/D1/<SYMBOL>.json by name
 // and pins its eight parameters (and their hash), so an edit of the phenotype file is refused instead of silently
-// changing the pool. Only `description`, `status`, `provenance`, `frozenReference` and `regressionAnchors` are
-// metadata; everything else enters the algorithmic hash.
+// changing the pool. The algorithmic hash covers the id, each book's symbol, phenotype name and grid, the funding,
+// interest, default cost and commission, execution and portfolio settings. Everything else (name, role, status,
+// description, candidateId, phenotypeFile, sensitivityBps, frozenReference, regressionAnchors, provenance) is
+// metadata; the pool file's own sha256 covers it.
 import crypto from 'node:crypto';
 import { architectureOf, parseParameter } from '../phenotype/architectures.ts';
 import { d1Keys, type D1Key } from '../multi-etf-allocator/phenotypes.ts';

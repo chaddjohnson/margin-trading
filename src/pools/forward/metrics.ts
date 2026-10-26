@@ -55,10 +55,13 @@ export const stateAt = (result: NRunResult, index: number) => {
 export type CutoffState = ReturnType<typeof stateAt>;
 
 // The maximum fall from a running peak that starts at the baseline, over the given values.
-const drawdownFrom = (baseline: number, values: { value: number; date: string }[]) => {
+// Drawdowns from a running peak that starts at the baseline: the largest fall in dollars and, separately, the largest
+// fall in percent of its running peak (the engine's PercentTracker definition; the two need not be the same episode).
+export const drawdownFrom = (baseline: number, values: { value: number; date: string }[]) => {
   let peak = baseline;
-  let peakDate = '';
-  let worst = { dollars: 0, percent: 0, peakDate: '', troughDate: '' };
+  let peakDate = 'cutoff';
+  let dollars = { dollars: 0, peakDate: '', troughDate: '' };
+  let percent = { percent: 0, peakDate: '', troughDate: '' };
 
   for (const item of values) {
     if (item.value > peak) {
@@ -68,17 +71,21 @@ const drawdownFrom = (baseline: number, values: { value: number; date: string }[
 
     const fall = peak - item.value;
 
-    if (fall > worst.dollars) {
-      worst = {
-        dollars: fall,
-        percent: peak > 0 ? fall / peak : NaN,
-        peakDate: peakDate || 'cutoff',
-        troughDate: item.date
-      };
+    if (fall > dollars.dollars) {
+      dollars = { dollars: fall, peakDate, troughDate: item.date };
+    }
+
+    if (peak > 0 && fall / peak > percent.percent) {
+      percent = { percent: fall / peak, peakDate, troughDate: item.date };
     }
   }
 
-  return worst;
+  return {
+    ...dollars,
+    percent: percent.percent,
+    percentPeakDate: percent.peakDate,
+    percentTroughDate: percent.troughDate
+  };
 };
 
 const lotFriction = (lot: RealLot | NRunResult['lots'][number]) => ({
@@ -170,6 +177,22 @@ export const forwardFiguresOf = (
     months.get(result.universe.dates[lot.entryIndex]!.slice(0, 7))!.lotsEntered++;
   }
 
+  const years = new Map<
+    string,
+    { year: string; strategyChange: number; equityChange: number; interest: number; lotsEntered: number }
+  >();
+
+  for (const item of months.values()) {
+    const year = item.month.slice(0, 4);
+    const total = years.get(year) ?? { year, strategyChange: 0, equityChange: 0, interest: 0, lotsEntered: 0 };
+
+    total.strategyChange += item.strategyChange;
+    total.equityChange += item.equityChange;
+    total.interest += item.interest;
+    total.lotsEntered += item.lotsEntered;
+    years.set(year, total);
+  }
+
   // The windowed minute drawdown marks lots at the frozen 11% (src/d1-robust/walkforward.ts); a rate scenario reports
   // its daily drawdown only.
   const fixedRisk = portfolio
@@ -254,11 +277,17 @@ export const forwardFiguresOf = (
           equityChange: last.equity - base.equity,
           forwardReturn: last.equity / base.equity - 1,
           dailyPercentDrawdown: daily.percent,
+          dailyPercentDrawdownPeak: daily.percentPeakDate,
+          dailyPercentDrawdownTrough: daily.percentTroughDate,
           dailyDrawdownDollars: daily.dollars,
           dailyDrawdownPeak: daily.peakDate,
           dailyDrawdownTrough: daily.troughDate,
+          // Normalized by each pool's own cutoff equity, so pools with different equity are comparable.
+          strategyReturnOnCutoffEquity: forwardNet / base.equity,
+          borrowingIntensity: borrowingDollarDays / base.equity,
           forwardDividends: last.cumulativeDividends - base.cumulativeDividends,
-          minutePercentDrawdown: 'not available for the forward window (the engine tracks it for the whole run only)'
+          minutePercentDrawdown: 'not available for the forward window (the engine tracks it for the whole run only)',
+          wholeRunMinutePercentDrawdown: result.minutePercentDrawdown?.maximumPercent ?? NaN
         };
       })()
     : undefined;
@@ -274,6 +303,7 @@ export const forwardFiguresOf = (
     unrealizedAtEnd: lots.filter((lot) => lot.open).reduce((total, lot) => total + lot.forwardPnl, 0),
     forwardInterest,
     forwardFriction: lots.reduce((total, lot) => total + lot.forwardFriction, 0),
+    forwardFrictionBpsPerSide: options.costBps,
     borrowingDollarDays,
     netPerMillionBorrowingDollarDays: borrowingDollarDays > 0 ? (forwardNet / borrowingDollarDays) * 1e6 : NaN,
     decisions: decisions.length,
@@ -294,6 +324,7 @@ export const forwardFiguresOf = (
       : null,
     bySymbol,
     months: [...months.values()],
+    years: [...years.values()],
     lots,
     ...(fixedRisk ? { fixed: fixedRisk } : {}),
     ...(portfolioRisk ? { portfolio: portfolioRisk } : {})

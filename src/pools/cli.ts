@@ -107,7 +107,8 @@ const printRecord = (record: PoolRunRecord, args: string[]) => {
   if (args.includes('--json')) {
     const rest: Partial<PoolRunRecord> = { ...record };
 
-    delete rest.lots;
+    delete rest.trades;
+    delete rest.tradeLedgerText;
     delete rest.months;
     console.log(JSON.stringify(rest, null, 2));
   } else {
@@ -224,8 +225,11 @@ const compare = async (args: string[]) => {
     }
 
     const forwarded = args.filter((_, index) => !(args[index] === '--out' || args[index - 1] === '--out'));
-    const a = await runOne(first, mode, forwarded);
-    const b = await runOne(second, mode, forwarded);
+    const outBase = option(args, 'out');
+    const runArgs = (id: string) =>
+      outBase ? [...forwarded, '--out', path.join(outBase, `${id}-${mode}`)] : forwarded;
+    const a = await runOne(first, mode, runArgs(first));
+    const b = await runOne(second, mode, runArgs(second));
 
     if (
       a.run.costBpsPerSide !== b.run.costBpsPerSide ||
@@ -237,9 +241,8 @@ const compare = async (args: string[]) => {
     }
 
     const comparison = comparisonOf(a, b);
-    const outDir =
-      option(args, 'out') ??
-      path.join(evaluationsRoot, a.run.dataset, `compare-${first}-${second}-${mode}-${a.run.costBpsPerSide}bps`);
+    const compareName = `compare-${first}-${second}-${mode}-${a.run.costBpsPerSide}bps`;
+    const outDir = outBase ? path.join(outBase, compareName) : path.join(evaluationsRoot, a.run.dataset, compareName);
 
     assertOutsideResearch(outDir);
 
@@ -275,16 +278,22 @@ const costs = async (args: string[]) => {
 
   const pool = await loadPool(id);
   const mode = (option(args, 'mode') ?? 'fixed') as PoolMode;
+
+  if (mode !== 'fixed' && mode !== 'portfolio') {
+    throw new Error('--mode must be fixed or portfolio');
+  }
   const rows: string[] = [];
 
   for (const costBps of pool.config.costs.sensitivityBps) {
+    const outBase = option(args, 'out');
     const record = await runOne(id, mode, [
       ...args.filter(
         (item, index) =>
           !['--cost-bps', '--out'].includes(item) && !['--cost-bps', '--out'].includes(args[index - 1] ?? '')
       ),
       '--cost-bps',
-      String(costBps)
+      String(costBps),
+      ...(outBase ? ['--out', path.join(outBase, `${id}-${mode}-${costBps}bps`)] : [])
     ]);
 
     rows.push(

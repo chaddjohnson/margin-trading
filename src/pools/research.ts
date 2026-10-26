@@ -10,7 +10,7 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import { formatTenths } from '../phenotype/architectures.ts';
 import { d1Keys, type D1Key } from '../multi-etf-allocator/phenotypes.ts';
-import { gridHash } from './schema.ts';
+import { gridHash, parsePoolConfig } from './schema.ts';
 
 export const researchArchiveDir = 'config/research-pools/diverse-d1-2026-10-26';
 const study = 'research/d1-diverse-pool-discovery';
@@ -236,9 +236,28 @@ export const verifyArchive = async () => {
   }
 
   const poolIds = (await fs.readdir('config/pools')).map((name) => name.replace(/\.json$/, ''));
-  const leaked = poolIds.filter((id) =>
-    finalists.some((finalist) => finalist.label === id || id.startsWith('diverse-d1'))
+  // A runnable pool must not be (or reproduce) a research-only finalist: compare ids and book sets with grids.
+  const finalistKeys = new Set(
+    finalists.map((finalist) =>
+      finalist.books
+        .map((book) => `${book.symbol}:${gridHash(book.grid)}`)
+        .sort()
+        .join('|')
+    )
   );
+  const leaked: string[] = [];
+
+  for (const id of poolIds) {
+    const config = parsePoolConfig(await fs.readJson(path.join('config/pools', `${id}.json`)), id);
+    const key = config.books
+      .map((book) => `${book.symbol}:${book.parametersSha256}`)
+      .sort()
+      .join('|');
+
+    if (id.startsWith('diverse-d1') || finalists.some((finalist) => finalist.label === id) || finalistKeys.has(key)) {
+      leaked.push(id);
+    }
+  }
 
   if (leaked.length > 0) {
     failures.push(`research finalists appear among runnable pools: ${leaked.join(', ')}`);

@@ -10,13 +10,21 @@ import { type PoolRunOptions, loadPoolUniverse, runPoolOn } from '../run.ts';
 import { composeSnapshot, listSnapshots } from './data.ts';
 import { type ProspectiveFreeze, cutoffModes, verifyProspectiveFreeze } from './freeze.ts';
 import { type ForwardFigures, forwardFiguresOf, stateAt } from './metrics.ts';
-import { hashBody, prospective, writeOnce } from './protocol.ts';
+import { calendarState, codeManifest, prospective, readSealed, writeOnce } from './protocol.ts';
 
 const money = (value: number) =>
   Number.isFinite(value)
     ? `${value < 0 ? '−' : ''}$${Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
     : 'n/a';
 const pct = (value: number) => (Number.isFinite(value) ? `${(value * 100).toFixed(2)}%` : 'n/a');
+
+// PROTOCOL.md §9: stated in every report.
+export const limitations = [
+  'price-only lots except open VGT lots under the frozen dividend convention; non-Vanguard distributions omitted',
+  "Vanguard's 30-day no-loan-value rule for newly bought Vanguard ETFs is not modelled; no live margin, house requirement or call beyond the frozen engine",
+  'simulated fills from minute bars at the frozen per-side friction; no broker, order or account access',
+  'a short window cannot distinguish two pools; nothing here is annualized or a validation'
+];
 
 export const zeroObservationStatement = 'prospective observation count = 0; not yet evaluated';
 
@@ -58,33 +66,43 @@ const strip = (figures: ForwardFigures) => {
   return { ...rest, lotCount: lots.length, monthCount: months.length };
 };
 
-// Linear interpolation of the ladder's forward equity change at a target number of borrowing dollar-days.
-export const matchedBorrowing = (
-  ladder: { fraction: number; borrowingDollarDays: number; equityChange: number }[],
-  target: number
-) => {
-  const points = [...ladder].sort((a, b) => a.borrowingDollarDays - b.borrowingDollarDays);
+// Matched borrowing (PROTOCOL.md §6): the B4 ladder's forward return, interpolated linearly at B5's borrowing
+// intensity (forward borrowing dollar-days ÷ the run's own cutoff equity); never extrapolated.
+export interface LadderPoint {
+  fraction: number;
+  borrowingIntensity: number;
+  forwardReturn: number;
+}
+
+export const matchedBorrowing = (ladder: LadderPoint[], target: number) => {
+  const points = [...ladder].sort((a, b) => a.borrowingIntensity - b.borrowingIntensity);
+  const exact = points.find((point) => point.borrowingIntensity === target);
+
+  // An exact match (including no borrowing at all on both sides) needs no interpolation.
+  if (exact) {
+    return { status: 'matched' as const, forwardReturn: exact.forwardReturn, between: [exact.fraction] };
+  }
 
   for (let index = 1; index < points.length; index++) {
     const low = points[index - 1]!;
     const high = points[index]!;
 
     if (
-      low.borrowingDollarDays <= target &&
-      target <= high.borrowingDollarDays &&
-      high.borrowingDollarDays > low.borrowingDollarDays
+      low.borrowingIntensity <= target &&
+      target <= high.borrowingIntensity &&
+      high.borrowingIntensity > low.borrowingIntensity
     ) {
-      const weight = (target - low.borrowingDollarDays) / (high.borrowingDollarDays - low.borrowingDollarDays);
+      const weight = (target - low.borrowingIntensity) / (high.borrowingIntensity - low.borrowingIntensity);
 
       return {
         status: 'interpolated' as const,
-        equityChange: low.equityChange + weight * (high.equityChange - low.equityChange),
+        forwardReturn: low.forwardReturn + weight * (high.forwardReturn - low.forwardReturn),
         between: [low.fraction, high.fraction]
       };
     }
   }
 
-  return { status: 'outside the ladder' as const, equityChange: NaN, between: [] as number[] };
+  return { status: 'outside the ladder' as const, forwardReturn: NaN, between: [] as number[] };
 };
 
 const runOn = async (
@@ -118,10 +136,10 @@ const formatForward = (
   comparison: {
     fixed: Record<string, number>;
     portfolio: {
-      equityChange: number;
       forwardReturn: number;
+      strategyReturnOnCutoffEquity: number;
       dailyPercentDrawdown: number;
-      matchedBorrowing: { status: string; b5MinusMatchedB4: number };
+      matchedBorrowing: { status: string; b5MinusMatchedB4Return: number };
     };
   }
 ) => {
@@ -180,13 +198,46 @@ const formatForward = (
     rows('borrowing $-days (portfolio)', (f) =>
       Math.round(f['portfolio-frozen']!.borrowingDollarDays).toLocaleString('en-US')
     ),
+    rows('strategy P&L ÷ cutoff equity', (f) => pct(f['portfolio-frozen']!.portfolio!.strategyReturnOnCutoffEquity)),
+    rows('borrowing intensity ($-days ÷ cutoff equity)', (f) =>
+      f['portfolio-frozen']!.portfolio!.borrowingIntensity.toFixed(2)
+    ),
+    rows('whole-run minute % DD (includes history)', (f) =>
+      pct(f['portfolio-frozen']!.portfolio!.wholeRunMinutePercentDrawdown)
+    ),
     '',
-    `B5 − B4 on the same observations: fixed net ${money(comparison.fixed.forwardNet!)}; minute DD ${money(comparison.fixed.minuteDrawdown!)}; portfolio equity ${money(comparison.portfolio.equityChange)}; daily % DD ${pct(comparison.portfolio.dailyPercentDrawdown)}; at matched borrowing (${comparison.portfolio.matchedBorrowing.status}) ${money(comparison.portfolio.matchedBorrowing.b5MinusMatchedB4)}`,
+    `B5 − B4 on the same observations: fixed net ${money(comparison.fixed.forwardNet!)}; fixed minute DD ${money(comparison.fixed.minuteDrawdown!)}; portfolio forward return ${pct(comparison.portfolio.forwardReturn)}; strategy P&L ÷ cutoff equity ${pct(comparison.portfolio.strategyReturnOnCutoffEquity)}; daily % DD ${pct(comparison.portfolio.dailyPercentDrawdown)}; return at matched borrowing intensity (${comparison.portfolio.matchedBorrowing.status}) ${pct(comparison.portfolio.matchedBorrowing.b5MinusMatchedB4Return)}`,
+    '  (portfolio dollar changes are not compared: B4 and B5 enter the window with different equity)',
     `Reporting-only scenarios (fixed net): ${[...prospective.frictionScenariosBps.map((bps) => `fixed-${bps}bps`), ...prospective.rateScenarios.map((rate) => `fixed-rate-${Math.round(rate * 100)}%`)].map((key) => `${key} B4 ${money(b4[key]!.forwardNet)} / B5 ${money(b5[key]!.forwardNet)}`).join('; ')}`,
     `Evidence: ${body.evidence.statement}.`,
     `Dividends: ${body.dividends}. Inspected 2016–2026 history is never included in forward figures.`,
+    'Limitations:',
+    ...limitations.map((line) => `  - ${line}`),
     ''
   ].join('\n');
+};
+
+// The observation summary of a snapshot is written once; a later report of the same snapshot must reproduce it. The
+// seal covers the stored object (including when it was first written); the content is compared without that time.
+export const checkOrWriteObservation = async (file: string, body: Record<string, unknown>) => {
+  if (await fs.pathExists(file)) {
+    const { bodyHash, firstWrittenAt, ...content } = await readSealed<{ bodyHash: string; firstWrittenAt?: string }>(
+      file
+    );
+
+    void bodyHash;
+    void firstWrittenAt;
+
+    if (JSON.stringify(content) !== JSON.stringify(JSON.parse(JSON.stringify(body)))) {
+      throw new Error(`${file} exists and this report does not reproduce it`);
+    }
+
+    return 'reproduced' as const;
+  }
+
+  await writeOnce(file, { ...body, firstWrittenAt: new Date().toISOString() });
+
+  return 'written' as const;
 };
 
 export const runForwardReport = async (
@@ -240,7 +291,9 @@ export const runForwardReport = async (
       observationCount: 0,
       status: zeroObservationStatement,
       checks,
-      next: nextStepText
+      next: nextStepText,
+      limitations,
+      environment: { node: process.version, codeDigest: freeze.code.digest, calendarCoverage: calendarState().coverage }
     };
     const out = path.join(outputRoot, 'no-snapshot');
     const text = [
@@ -253,6 +306,9 @@ export const runForwardReport = async (
       '  drawdown or borrowing figure exists. Historical 2016–2026 figures are inspected baselines, not forward evidence.',
       '',
       nextStepText,
+      '',
+      'Limitations:',
+      ...limitations.map((line) => `  - ${line}`),
       ''
     ].join('\n');
 
@@ -268,11 +324,17 @@ export const runForwardReport = async (
     snapshotsRoot: options.snapshotsRoot,
     outputRoot
   });
+  if (composed.record.freezeBodyHash !== freeze.bodyHash) {
+    throw new Error(
+      `snapshot ${options.snapshot} was imported under freeze ${composed.record.freezeBodyHash.slice(0, 16)}…, not the current ${freeze.bodyHash.slice(0, 16)}…`
+    );
+  }
+
   const base = { dataset: 'all' as const, root: composed.root, splits: composed.splits, ledger: composed.ledger };
   const cache = new Map<string, Awaited<ReturnType<typeof loadPoolUniverse>>>();
   const pools: Record<string, Record<string, ForwardFigures>> = {};
   const lotsCsv: Record<string, string> = {};
-  const ladder: { fraction: number; borrowingDollarDays: number; equityChange: number }[] = [];
+  const ladder: LadderPoint[] = [];
   let dividendsCovered = true;
 
   for (const id of prospective.pools) {
@@ -354,8 +416,8 @@ export const runForwardReport = async (
         if (figures.observations > 0) {
           ladder.push({
             fraction,
-            borrowingDollarDays: figures.borrowingDollarDays,
-            equityChange: figures.portfolio!.equityChange
+            borrowingIntensity: figures.portfolio!.borrowingIntensity,
+            forwardReturn: figures.portfolio!.forwardReturn
           });
         }
       }
@@ -365,12 +427,11 @@ export const runForwardReport = async (
   const observations = pools.B4!.fixed!.observations;
   const b4 = pools.B4! as Record<string, Exclude<ForwardFigures, { observations: 0 }>>;
   const b5 = pools.B5! as Record<string, Exclude<ForwardFigures, { observations: 0 }>>;
-  const months = observations > 0 ? b4.fixed!.months.length : 0;
   const thin =
-    months < prospective.evidenceThreshold.months ||
+    observations < prospective.evidenceThreshold.sessions ||
     b4.fixed!.lotsNew < prospective.evidenceThreshold.lotsPerPool ||
     b5.fixed!.lotsNew < prospective.evidenceThreshold.lotsPerPool;
-  const matched = matchedBorrowing(ladder, b5['portfolio-frozen']!.borrowingDollarDays);
+  const matched = matchedBorrowing(ladder, b5['portfolio-frozen']!.portfolio!.borrowingIntensity);
   const comparison = {
     fixed: {
       forwardNet: b5.fixed!.forwardNet - b4.fixed!.forwardNet,
@@ -386,7 +447,9 @@ export const runForwardReport = async (
         b5.fixed!.netPerMillionBorrowingDollarDays - b4.fixed!.netPerMillionBorrowingDollarDays
     },
     portfolio: {
-      equityChange: b5['portfolio-frozen']!.portfolio!.equityChange - b4['portfolio-frozen']!.portfolio!.equityChange,
+      strategyReturnOnCutoffEquity:
+        b5['portfolio-frozen']!.portfolio!.strategyReturnOnCutoffEquity -
+        b4['portfolio-frozen']!.portfolio!.strategyReturnOnCutoffEquity,
       forwardReturn:
         b5['portfolio-frozen']!.portfolio!.forwardReturn - b4['portfolio-frozen']!.portfolio!.forwardReturn,
       dailyPercentDrawdown:
@@ -395,8 +458,8 @@ export const runForwardReport = async (
       matchedBorrowing: {
         ...matched,
         ladder,
-        b5BorrowingDollarDays: b5['portfolio-frozen']!.borrowingDollarDays,
-        b5MinusMatchedB4: b5['portfolio-frozen']!.portfolio!.equityChange - matched.equityChange
+        b5BorrowingIntensity: b5['portfolio-frozen']!.portfolio!.borrowingIntensity,
+        b5MinusMatchedB4Return: b5['portfolio-frozen']!.portfolio!.forwardReturn - matched.forwardReturn
       }
     }
   };
@@ -420,10 +483,11 @@ export const runForwardReport = async (
     observationCount: observations,
     status: observations > 0 ? `evaluated: ${observations} forward sessions` : zeroObservationStatement,
     evidence: {
-      months,
+      sessions: observations,
+      months: observations > 0 ? b4.fixed!.months.length : 0,
       newLots: { B4: b4.fixed!.lotsNew, B5: b5.fixed!.lotsNew },
       statement: thin
-        ? `too thin to distinguish B5 from B4 (fewer than ${prospective.evidenceThreshold.months} forward months or ${prospective.evidenceThreshold.lotsPerPool} new funded lots per pool); cumulative figures only, not annualized`
+        ? `too thin to distinguish B5 from B4 (fewer than ${prospective.evidenceThreshold.sessions} forward sessions, about 12 months, or ${prospective.evidenceThreshold.lotsPerPool} new funded lots per pool); cumulative figures only, not annualized`
         : 'past the descriptive evidence threshold; still not a validation and no promotion rule'
     },
     dividends: dividendsCovered
@@ -436,34 +500,24 @@ export const runForwardReport = async (
       ])
     ),
     comparison,
-    limitations: [
-      'price-only lots except open VGT lots under the frozen dividend convention; non-Vanguard distributions omitted',
-      "Vanguard's 30-day no-loan-value rule for newly bought Vanguard ETFs is not modelled; no live margin, house requirement or call beyond the frozen engine",
-      'simulated fills from minute bars at the frozen per-side friction; no broker, order or account access',
-      'a short window cannot distinguish two pools; nothing here is annualized or a validation'
-    ]
+    code: { digest: (await codeManifest(freeze.code.entries)).digest },
+    limitations
   };
   const out = path.join(outputRoot, options.snapshot);
   const observationFile = path.join(dir, 'observations', `${options.snapshot}.json`);
 
-  if (await fs.pathExists(observationFile)) {
-    const { bodyHash, firstWrittenAt, ...stored } = (await fs.readJson(observationFile)) as Record<string, unknown>;
-
-    void firstWrittenAt;
-
-    if (hashBody(stored) !== bodyHash || JSON.stringify(stored) !== JSON.stringify(JSON.parse(JSON.stringify(body)))) {
-      throw new Error(`${observationFile} exists and this report does not reproduce it`);
-    }
-  } else {
-    await writeOnce(observationFile, { ...body, firstWrittenAt: new Date().toISOString() });
-  }
+  const observation = await checkOrWriteObservation(observationFile, body);
 
   const text = formatForward(body, b4, b5, comparison);
 
   await fs.outputFile(path.join(out, 'report.txt'), text);
   await fs.outputJson(
     path.join(out, 'forward.json'),
-    { ...body, generatedAt: new Date().toISOString() },
+    {
+      ...body,
+      generatedAt: new Date().toISOString(),
+      environment: { node: process.version, codeDigest: body.code.digest, calendarCoverage: calendarState().coverage }
+    },
     { spaces: 2 }
   );
   await fs.outputFile(
@@ -485,5 +539,5 @@ export const runForwardReport = async (
     await fs.outputFile(path.join(out, `lots-${id}.csv`), csv);
   }
 
-  return { text, record: body, out };
+  return { text: `${text}Observation record: ${observationFile} (${observation}).\n`, record: body, out };
 };
