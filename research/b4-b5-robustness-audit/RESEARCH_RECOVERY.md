@@ -2,9 +2,9 @@
 
 ## Top screen
 
-- **Updated:** 2026-10-27T10:37:19Z (UTC)
-- **Status:** **COMPLETE.** Every stage is done, reports are rendered, and tests pass. It is **uncommitted**:
-  committing needs the user's explicit request. No process is running.
+- **Updated:** 2026-10-27T11:42:05Z (UTC)
+- **Status:** **COMPLETE.** Every stage is done, reports are rendered, and tests pass. **Committed** at the user's
+  request as `3c0ee0f3` on branch `research/b4-b5-robustness-audit` (not pushed). No process is running.
 - **Authoritative protocol:** `PROTOCOL.md` sha256 `739134130ef2f058303422dda0cb90abff16372c8bdb19bb8757dbfabd2d95bf`.
   - Frozen 2026-10-27T09:56:01Z by `PROTOCOL_FREEZE.json` (sha256 `13fbc2ec…`).
   - Amendments: none.
@@ -13,16 +13,17 @@
   them.
 - **Verdicts (FINAL_ASSESSMENT.md):** B4 Conditional (material fragility); B5 Conditional (material fragility),
   preferred.
-- **Next step:** none required. If the user asks: commit (branch `research/b4-b5-robustness-audit`). Never rerun
-  `run` to "refresh"; stored records are final.
+- **Next step:** none required. Pushing needs the user's explicit request. Never rerun `run` to "refresh"; stored
+  records are final.
 
 ## Environment
 
-- Repo root is the working directory for every command. Branch `research/b4-b5-robustness-audit` at HEAD `40da6ddf`,
-  no commits made.
+- Repo root is the working directory for every command. Branch `research/b4-b5-robustness-audit`; the study was
+  built on `40da6ddf` and committed as `3c0ee0f3` (this checkpoint update follows in a separate commit).
 - **Working tree:**
-  - `M package.json`: the added npm script `robustness-audit`, the only tracked-file change;
-  - `?? src/b4-b5-robustness/` (code + tests) and `?? research/b4-b5-robustness-audit/`;
+  - committed in `3c0ee0f3`: `package.json` (the npm script `robustness-audit`, the only change to a previously
+    tracked file), `src/b4-b5-robustness/` (code + tests) and `research/b4-b5-robustness-audit/`;
+  - `results/logs/` stays local under the repository's `logs/` ignore rule;
   - `?? research/btcusdt-d1/`: pre-existing, not ours, leave it.
 - **Node v24.21.0:** `export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/installation/bin:$PATH`. Do not use
   the Homebrew v23.
