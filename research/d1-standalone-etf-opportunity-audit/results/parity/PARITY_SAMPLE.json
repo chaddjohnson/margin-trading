@@ -1,0 +1,37 @@
+{
+  "schema": "d1-standalone-opportunity-parity-sample",
+  "schemaVersion": 1,
+  "writtenAt": "2026-10-27T15:29:21Z",
+  "purpose": "Preregistered before any run of this study: the stored source-study vectors re-executed through the frozen N-book engine (fixed $100,000, 5 bps, 11%) at their original training cutoffs, chosen by symbol type and window, never by outcome.",
+  "tolerances": {
+    "money": 0.01,
+    "occupiedDays": 1e-6,
+    "counts": 0,
+    "rule": "every stored field within tolerance; data and loaded-bars hashes equal; grid identical; any failure stops the study (fail closed)"
+  },
+  "vectors": [
+    { "window": "final", "symbol": "VGT", "role": "representative", "why": "the control instrument" },
+    { "window": "final", "symbol": "GDX", "role": "representative", "why": "B5 member, precious-metals miners" },
+    { "window": "final", "symbol": "XBI", "role": "representative", "why": "B4/B5 member, biotech" },
+    { "window": "final", "symbol": "KRE", "role": "representative", "why": "B4/B5 member, regional banks" },
+    { "window": "final", "symbol": "XRT", "role": "representative", "why": "B4/B5 member, retail" },
+    { "window": "final", "symbol": "SPLV", "role": "representative", "why": "weak / low-volatility, screened-down" },
+    { "window": "final", "symbol": "TLT", "role": "representative", "why": "rates; lot open at the search end (liquidation reconciliation)" },
+    { "window": "final", "symbol": "EWZ", "role": "representative", "why": "emerging-market country fund, many trades" },
+    { "window": "final", "symbol": "GLD", "role": "representative", "why": "commodity trust" },
+    { "window": "final", "symbol": "DBC", "role": "representative", "why": "broad commodities, sparse, screened-down" },
+    { "window": "final", "symbol": "GDX", "role": "alternative-1", "why": "a library alternative" },
+    { "window": "final", "symbol": "XRT", "role": "alternative-1", "why": "a library alternative" },
+    { "window": "fold-a", "symbol": "XBI", "role": "representative", "why": "fold-a cutoff 2020-06-30" },
+    { "window": "fold-a", "symbol": "GDX", "role": "representative", "why": "fold-a cutoff; lot open at the search end" },
+    { "window": "fold-b", "symbol": "VGT", "role": "representative", "why": "fold-b cutoff 2021-12-31" },
+    { "window": "fold-b", "symbol": "SMH", "role": "representative", "why": "fold-b cutoff; semiconductor; lot open at the search end" }
+  ],
+  "controls": {
+    "source": "research/d1-ranked-preemption/results/controls/final/CONTROLS.json (sealed)",
+    "fixed": ["B1 at 0, 2, 5, 10 bps", "A (= B5) at 0, 2, 5, 10 bps", "B4 at 0, 2, 5, 10 bps"],
+    "portfolio": ["B1", "A (= B5)", "B4 at 5 bps"]
+  },
+  "fullHistoryAnchors": "the brief's S, B4, B5 (fixed and portfolio) and C0 (portfolio) at 5 bps and 11% on 2016-01-04 → 2026-10-13: cents and 0.01 pp",
+  "causality": "VGT primary and GDX final representative re-run through 2022-06-30: every lot closed by then identical to the 2023-12-29 run (entry, exit, reason, net)"
+}

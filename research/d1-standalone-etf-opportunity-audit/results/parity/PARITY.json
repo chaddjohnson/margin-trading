@@ -1,0 +1,3538 @@
+{
+ "schema": "d1-standalone-opportunity-parity",
+ "schemaVersion": 1,
+ "startedAt": "2026-10-27T15:32:03.894Z",
+ "finishedAt": "2026-10-27T15:34:26.693Z",
+ "node": "v24.21.0",
+ "sample": "research/d1-standalone-etf-opportunity-audit/results/parity/PARITY_SAMPLE.json",
+ "doors": {
+  "final": {
+   "door": "candidate",
+   "window": "final",
+   "endDate": "2023-12-29",
+   "firstDate": "2016-01-04",
+   "lastDate": "2023-12-29",
+   "sessions": 2012,
+   "eligibilityDate": "2017-06-15",
+   "symbols": [
+    "GDX",
+    "KRE",
+    "VGT",
+    "VOOG",
+    "XBI",
+    "XRT"
+   ],
+   "dataSha256": {
+    "GDX": "86ce101fede1a412dd452fcc29dc87b69ade4ad67629230172fde878b7c2c320",
+    "KRE": "40e7bd6c72c1dffb343b265bed16d69c964ba5bee81ad297a15e6d8a5607e01a",
+    "VGT": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+    "VOOG": "a7aa42aeebd9e83f94368f0ee7761410ffacf734524f3cc7655af32354de51ab",
+    "XBI": "9afecc0606330d68ca12f7b0c331f75a150f64d0dad2e6ff910538a667b0c031",
+    "XRT": "ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752"
+   },
+   "loadedBarsSha256": {
+    "GDX": "04e3ac53a0312a9d07e2fa734ad09440bd14a62a6fc0637eac78b7a03ac0fa7e",
+    "KRE": "3952d47dc43d56c6dbe1983d593e9e1bfc5a8ed8540bd5baedc4e2e911024868",
+    "VGT": "2878a5c2e50e503c317dd44dedd52d5c953305df2380cc43fd41b4ad59ff7164",
+    "VOOG": "d11faa592b395de599daf0c86d2ce195cdc3b2d44012aa7982fd3a8e7f6b9a48",
+    "XBI": "70739d60210b11cee9fc9d24a511f03e226d7acbf5836c37d51daa029f4fe939",
+    "XRT": "508cd5c8276274eadb462826415d01d866b0357b7e4f76ac38bef5dd245f0b19"
+   }
+  },
+  "early": {
+   "door": "candidate",
+   "window": "final",
+   "endDate": "2022-06-30",
+   "firstDate": "2016-01-04",
+   "lastDate": "2022-06-30",
+   "sessions": 1635,
+   "eligibilityDate": "2017-06-15",
+   "symbols": [
+    "GDX",
+    "VGT"
+   ],
+   "dataSha256": {
+    "GDX": "86ce101fede1a412dd452fcc29dc87b69ade4ad67629230172fde878b7c2c320",
+    "VGT": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09"
+   },
+   "loadedBarsSha256": {
+    "GDX": "a2fda6d5357d2d3844bf34c3327d3ae1e8effcd57723a76b6c07ed910e0f2133",
+    "VGT": "5bb9ccd5115294849bf376044a2ebb4812d16977a518bab82d6e6f8b7570e3b1"
+   }
+  },
+  "full": {
+   "door": "full-history",
+   "window": "all",
+   "endDate": "2026-10-13",
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "sessions": 2710,
+   "eligibilityDate": "2017-06-15",
+   "symbols": [
+    "GDX",
+    "KRE",
+    "VGT",
+    "VOOG",
+    "XBI",
+    "XRT"
+   ],
+   "dataSha256": {
+    "GDX": "86ce101fede1a412dd452fcc29dc87b69ade4ad67629230172fde878b7c2c320",
+    "KRE": "40e7bd6c72c1dffb343b265bed16d69c964ba5bee81ad297a15e6d8a5607e01a",
+    "VGT": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+    "VOOG": "a7aa42aeebd9e83f94368f0ee7761410ffacf734524f3cc7655af32354de51ab",
+    "XBI": "9afecc0606330d68ca12f7b0c331f75a150f64d0dad2e6ff910538a667b0c031",
+    "XRT": "ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752"
+   },
+   "loadedBarsSha256": {}
+  }
+ },
+ "costScenarioBase": {
+  "id": "base",
+  "label": "base: 11%, 5 bps",
+  "group": "base",
+  "rate": 0.11,
+  "costBps": 5,
+  "feeBps": 5,
+  "slippageBps": 0,
+  "stopSlippageBps": 0,
+  "stopFill": "stop"
+ },
+ "checks": [
+  {
+   "group": "data",
+   "name": "final VGT representative d1-681c3ac3cc canonical file hash",
+   "pass": true,
+   "detail": "d8e6991de7d4 vs d8e6991de7d4"
+  },
+  {
+   "group": "data",
+   "name": "final VGT representative d1-681c3ac3cc loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "2878a5c2e50e vs 2878a5c2e50e"
+  },
+  {
+   "group": "data",
+   "name": "final VGT representative d1-681c3ac3cc grid identity",
+   "pass": true,
+   "detail": "229.35.78.8.194.34.95.60"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc trades",
+   "pass": true,
+   "detail": "17 vs 17"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc closed",
+   "pass": true,
+   "detail": "16 vs 16"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc open at the cutoff",
+   "pass": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc wins",
+   "pass": true,
+   "detail": "10 vs 10"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc losses",
+   "pass": true,
+   "detail": "7 vs 7"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "125218.3736 vs 125218.3736"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc interest",
+   "pass": true,
+   "detail": "30076.7123 vs 30076.7123"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc friction",
+   "pass": true,
+   "detail": "1777.6868 vs 1777.6868"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc best trade",
+   "pass": true,
+   "detail": "46991.0786 vs 46991.0786"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc second trade",
+   "pass": true,
+   "detail": "25792.8964 vs 25792.8964"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc third trade",
+   "pass": true,
+   "detail": "19868.2423 vs 19868.2423"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc worst trade",
+   "pass": true,
+   "detail": "-4617.3148 vs -4617.3148"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc mean net",
+   "pass": true,
+   "detail": "7365.7867 vs 7365.7867"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc median net",
+   "pass": true,
+   "detail": "2717.3713 vs 2717.3713"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc loss sum",
+   "pass": true,
+   "detail": "-14669.5347 vs -14669.5347"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc occupied days",
+   "pass": true,
+   "detail": "998.0000 vs 998.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc minute drawdown",
+   "pass": true,
+   "detail": "22888.5406 vs 22888.5406"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc daily drawdown",
+   "pass": true,
+   "detail": "18318.5596 vs 18318.5596"
+  },
+  {
+   "group": "stored",
+   "name": "final VGT representative d1-681c3ac3cc nets by exit year",
+   "pass": true,
+   "detail": "5 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final GDX representative d1-4f034dc898 canonical file hash",
+   "pass": true,
+   "detail": "86ce101fede1 vs 86ce101fede1"
+  },
+  {
+   "group": "data",
+   "name": "final GDX representative d1-4f034dc898 loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "04e3ac53a031 vs 04e3ac53a031"
+  },
+  {
+   "group": "data",
+   "name": "final GDX representative d1-4f034dc898 grid identity",
+   "pass": true,
+   "detail": "278.11.76.3.231.22.70.127"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 trades",
+   "pass": true,
+   "detail": "54 vs 54"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 closed",
+   "pass": true,
+   "detail": "54 vs 54"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 wins",
+   "pass": true,
+   "detail": "22 vs 22"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 losses",
+   "pass": true,
+   "detail": "32 vs 32"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "185534.2581 vs 185534.2581"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 interest",
+   "pass": true,
+   "detail": "26460.2740 vs 26460.2740"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 friction",
+   "pass": true,
+   "detail": "5506.0516 vs 5506.0516"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 best trade",
+   "pass": true,
+   "detail": "36675.8187 vs 36675.8187"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 second trade",
+   "pass": true,
+   "detail": "25830.1742 vs 25830.1742"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 third trade",
+   "pass": true,
+   "detail": "24593.3164 vs 24593.3164"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 worst trade",
+   "pass": true,
+   "detail": "-6574.4232 vs -6574.4232"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 mean net",
+   "pass": true,
+   "detail": "3435.8196 vs 3435.8196"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 median net",
+   "pass": true,
+   "detail": "-533.5394 vs -533.5394"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 loss sum",
+   "pass": true,
+   "detail": "-60148.8352 vs -60148.8352"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 occupied days",
+   "pass": true,
+   "detail": "878.0000 vs 878.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 minute drawdown",
+   "pass": true,
+   "detail": "26433.1693 vs 26433.1693"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 daily drawdown",
+   "pass": true,
+   "detail": "25981.0336 vs 25981.0336"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX representative d1-4f034dc898 nets by exit year",
+   "pass": true,
+   "detail": "7 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final XBI representative d1-7518b58e36 canonical file hash",
+   "pass": true,
+   "detail": "9afecc060633 vs 9afecc060633"
+  },
+  {
+   "group": "data",
+   "name": "final XBI representative d1-7518b58e36 loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "70739d60210b vs 70739d60210b"
+  },
+  {
+   "group": "data",
+   "name": "final XBI representative d1-7518b58e36 grid identity",
+   "pass": true,
+   "detail": "247.23.36.17.31.7.64.192"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 trades",
+   "pass": true,
+   "detail": "30 vs 30"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 closed",
+   "pass": true,
+   "detail": "30 vs 30"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 wins",
+   "pass": true,
+   "detail": "21 vs 21"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 losses",
+   "pass": true,
+   "detail": "9 vs 9"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "85550.4012 vs 85550.4012"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 interest",
+   "pass": true,
+   "detail": "8257.5342 vs 8257.5342"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 friction",
+   "pass": true,
+   "detail": "3046.9282 vs 3046.9282"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 best trade",
+   "pass": true,
+   "detail": "12297.7984 vs 12297.7984"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 second trade",
+   "pass": true,
+   "detail": "11771.3043 vs 11771.3043"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 third trade",
+   "pass": true,
+   "detail": "9828.8419 vs 9828.8419"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 worst trade",
+   "pass": true,
+   "detail": "-2586.9827 vs -2586.9827"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 mean net",
+   "pass": true,
+   "detail": "2851.6800 vs 2851.6800"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 median net",
+   "pass": true,
+   "detail": "1031.5311 vs 1031.5311"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 loss sum",
+   "pass": true,
+   "detail": "-13357.3241 vs -13357.3241"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 occupied days",
+   "pass": true,
+   "detail": "274.0000 vs 274.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 minute drawdown",
+   "pass": true,
+   "detail": "23477.2604 vs 23477.2604"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 daily drawdown",
+   "pass": true,
+   "detail": "20489.0976 vs 20489.0976"
+  },
+  {
+   "group": "stored",
+   "name": "final XBI representative d1-7518b58e36 nets by exit year",
+   "pass": true,
+   "detail": "5 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final KRE representative d1-02baeb8699 canonical file hash",
+   "pass": true,
+   "detail": "40e7bd6c72c1 vs 40e7bd6c72c1"
+  },
+  {
+   "group": "data",
+   "name": "final KRE representative d1-02baeb8699 loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "3952d47dc43d vs 3952d47dc43d"
+  },
+  {
+   "group": "data",
+   "name": "final KRE representative d1-02baeb8699 grid identity",
+   "pass": true,
+   "detail": "297.16.30.5.208.8.174.19"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 trades",
+   "pass": true,
+   "detail": "71 vs 71"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 closed",
+   "pass": true,
+   "detail": "71 vs 71"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 wins",
+   "pass": true,
+   "detail": "37 vs 37"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 losses",
+   "pass": true,
+   "detail": "34 vs 34"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "109513.8216 vs 109513.8216"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 interest",
+   "pass": true,
+   "detail": "12265.7534 vs 12265.7534"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 friction",
+   "pass": true,
+   "detail": "7160.9220 vs 7160.9220"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 best trade",
+   "pass": true,
+   "detail": "15765.0493 vs 15765.0493"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 second trade",
+   "pass": true,
+   "detail": "14872.0998 vs 14872.0998"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 third trade",
+   "pass": true,
+   "detail": "14739.5776 vs 14739.5776"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 worst trade",
+   "pass": true,
+   "detail": "-19701.9504 vs -19701.9504"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 mean net",
+   "pass": true,
+   "detail": "1542.4482 vs 1542.4482"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 median net",
+   "pass": true,
+   "detail": "153.1909 vs 153.1909"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 loss sum",
+   "pass": true,
+   "detail": "-97161.6692 vs -97161.6692"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 occupied days",
+   "pass": true,
+   "detail": "407.0000 vs 407.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 minute drawdown",
+   "pass": true,
+   "detail": "23452.6928 vs 23452.6928"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 daily drawdown",
+   "pass": true,
+   "detail": "22677.3133 vs 22677.3133"
+  },
+  {
+   "group": "stored",
+   "name": "final KRE representative d1-02baeb8699 nets by exit year",
+   "pass": true,
+   "detail": "4 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final XRT representative d1-9785d8d566 canonical file hash",
+   "pass": true,
+   "detail": "ca0fdc6a4c77 vs ca0fdc6a4c77"
+  },
+  {
+   "group": "data",
+   "name": "final XRT representative d1-9785d8d566 loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "508cd5c82762 vs 508cd5c82762"
+  },
+  {
+   "group": "data",
+   "name": "final XRT representative d1-9785d8d566 grid identity",
+   "pass": true,
+   "detail": "240.16.30.19.84.58.66.93"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 trades",
+   "pass": true,
+   "detail": "41 vs 41"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 closed",
+   "pass": true,
+   "detail": "41 vs 41"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 wins",
+   "pass": true,
+   "detail": "31 vs 31"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 losses",
+   "pass": true,
+   "detail": "10 vs 10"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "93378.4596 vs 93378.4596"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 interest",
+   "pass": true,
+   "detail": "14616.4384 vs 14616.4384"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 friction",
+   "pass": true,
+   "detail": "4154.0255 vs 4154.0255"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 best trade",
+   "pass": true,
+   "detail": "12346.7542 vs 12346.7542"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 second trade",
+   "pass": true,
+   "detail": "11206.6563 vs 11206.6563"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 third trade",
+   "pass": true,
+   "detail": "10839.9485 vs 10839.9485"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 worst trade",
+   "pass": true,
+   "detail": "-10764.9644 vs -10764.9644"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 mean net",
+   "pass": true,
+   "detail": "2277.5234 vs 2277.5234"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 median net",
+   "pass": true,
+   "detail": "1432.6873 vs 1432.6873"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 loss sum",
+   "pass": true,
+   "detail": "-45771.3937 vs -45771.3937"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 occupied days",
+   "pass": true,
+   "detail": "485.0000 vs 485.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 minute drawdown",
+   "pass": true,
+   "detail": "25278.5323 vs 25278.5323"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 daily drawdown",
+   "pass": true,
+   "detail": "22438.7450 vs 22438.7450"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT representative d1-9785d8d566 nets by exit year",
+   "pass": true,
+   "detail": "5 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final SPLV representative d1-304e0a9a8b canonical file hash",
+   "pass": true,
+   "detail": "d3260697224e vs d3260697224e"
+  },
+  {
+   "group": "data",
+   "name": "final SPLV representative d1-304e0a9a8b loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "24ef510995da vs 24ef510995da"
+  },
+  {
+   "group": "data",
+   "name": "final SPLV representative d1-304e0a9a8b grid identity",
+   "pass": true,
+   "detail": "126.14.32.20.176.9.89.69"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b trades",
+   "pass": true,
+   "detail": "20 vs 20"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b closed",
+   "pass": true,
+   "detail": "20 vs 20"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b wins",
+   "pass": true,
+   "detail": "15 vs 15"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b losses",
+   "pass": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "45386.0615 vs 45386.0615"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b interest",
+   "pass": true,
+   "detail": "19167.1233 vs 19167.1233"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b friction",
+   "pass": true,
+   "detail": "2032.2932 vs 2032.2932"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b best trade",
+   "pass": true,
+   "detail": "15430.5253 vs 15430.5253"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b second trade",
+   "pass": true,
+   "detail": "8209.6431 vs 8209.6431"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b third trade",
+   "pass": true,
+   "detail": "5778.2874 vs 5778.2874"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b worst trade",
+   "pass": true,
+   "detail": "-4298.9590 vs -4298.9590"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b mean net",
+   "pass": true,
+   "detail": "2269.3031 vs 2269.3031"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b median net",
+   "pass": true,
+   "detail": "1681.4426 vs 1681.4426"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b loss sum",
+   "pass": true,
+   "detail": "-10753.1598 vs -10753.1598"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b occupied days",
+   "pass": true,
+   "detail": "636.0000 vs 636.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b minute drawdown",
+   "pass": true,
+   "detail": "21986.5285 vs 21986.5285"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b daily drawdown",
+   "pass": true,
+   "detail": "13863.9409 vs 13863.9409"
+  },
+  {
+   "group": "stored",
+   "name": "final SPLV representative d1-304e0a9a8b nets by exit year",
+   "pass": true,
+   "detail": "4 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final TLT representative d1-ea2dfab02c canonical file hash",
+   "pass": true,
+   "detail": "f4df3690714e vs f4df3690714e"
+  },
+  {
+   "group": "data",
+   "name": "final TLT representative d1-ea2dfab02c loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "84aaefec3af6 vs 84aaefec3af6"
+  },
+  {
+   "group": "data",
+   "name": "final TLT representative d1-ea2dfab02c grid identity",
+   "pass": true,
+   "detail": "190.17.35.17.68.19.69.124"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c trades",
+   "pass": true,
+   "detail": "10 vs 10"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c closed",
+   "pass": true,
+   "detail": "9 vs 9"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c open at the cutoff",
+   "pass": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c wins",
+   "pass": true,
+   "detail": "7 vs 7"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c losses",
+   "pass": true,
+   "detail": "3 vs 3"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "44990.4599 vs 44990.4599"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c interest",
+   "pass": true,
+   "detail": "9071.2329 vs 9071.2329"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c friction",
+   "pass": true,
+   "detail": "1027.0446 vs 1027.0446"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c best trade",
+   "pass": true,
+   "detail": "15815.9280 vs 15815.9280"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c second trade",
+   "pass": true,
+   "detail": "13408.7647 vs 13408.7647"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c third trade",
+   "pass": true,
+   "detail": "10193.7922 vs 10193.7922"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c worst trade",
+   "pass": true,
+   "detail": "-931.3667 vs -931.3667"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c mean net",
+   "pass": true,
+   "detail": "4499.0460 vs 4499.0460"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c median net",
+   "pass": true,
+   "detail": "1256.8632 vs 1256.8632"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c loss sum",
+   "pass": true,
+   "detail": "-1528.0237 vs -1528.0237"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c occupied days",
+   "pass": true,
+   "detail": "301.0000 vs 301.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c minute drawdown",
+   "pass": true,
+   "detail": "7784.3721 vs 7784.3721"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c daily drawdown",
+   "pass": true,
+   "detail": "6950.0944 vs 6950.0944"
+  },
+  {
+   "group": "stored",
+   "name": "final TLT representative d1-ea2dfab02c nets by exit year",
+   "pass": true,
+   "detail": "3 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final EWZ representative d1-2c5ad02356 canonical file hash",
+   "pass": true,
+   "detail": "b1cf63a676c2 vs b1cf63a676c2"
+  },
+  {
+   "group": "data",
+   "name": "final EWZ representative d1-2c5ad02356 loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "b1a9cb501603 vs b1a9cb501603"
+  },
+  {
+   "group": "data",
+   "name": "final EWZ representative d1-2c5ad02356 grid identity",
+   "pass": true,
+   "detail": "300.2.45.11.223.54.197.47"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 trades",
+   "pass": true,
+   "detail": "48 vs 48"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 closed",
+   "pass": true,
+   "detail": "48 vs 48"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 wins",
+   "pass": true,
+   "detail": "27 vs 27"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 losses",
+   "pass": true,
+   "detail": "21 vs 21"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "111646.7288 vs 111646.7288"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 interest",
+   "pass": true,
+   "detail": "19287.6712 vs 19287.6712"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 friction",
+   "pass": true,
+   "detail": "4865.5012 vs 4865.5012"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 best trade",
+   "pass": true,
+   "detail": "17680.1831 vs 17680.1831"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 second trade",
+   "pass": true,
+   "detail": "16839.0828 vs 16839.0828"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 third trade",
+   "pass": true,
+   "detail": "16647.7105 vs 16647.7105"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 worst trade",
+   "pass": true,
+   "detail": "-7501.6991 vs -7501.6991"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 mean net",
+   "pass": true,
+   "detail": "2325.9735 vs 2325.9735"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 median net",
+   "pass": true,
+   "detail": "433.1814 vs 433.1814"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 loss sum",
+   "pass": true,
+   "detail": "-55386.9645 vs -55386.9645"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 occupied days",
+   "pass": true,
+   "detail": "640.0000 vs 640.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 minute drawdown",
+   "pass": true,
+   "detail": "27988.4463 vs 27988.4463"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 daily drawdown",
+   "pass": true,
+   "detail": "20854.1348 vs 20854.1348"
+  },
+  {
+   "group": "stored",
+   "name": "final EWZ representative d1-2c5ad02356 nets by exit year",
+   "pass": true,
+   "detail": "5 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final GLD representative d1-dc2b567bea canonical file hash",
+   "pass": true,
+   "detail": "d3dd1beb35bc vs d3dd1beb35bc"
+  },
+  {
+   "group": "data",
+   "name": "final GLD representative d1-dc2b567bea loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "ebf4979cd15b vs ebf4979cd15b"
+  },
+  {
+   "group": "data",
+   "name": "final GLD representative d1-dc2b567bea grid identity",
+   "pass": true,
+   "detail": "135.6.30.14.123.52.39.78"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea trades",
+   "pass": true,
+   "detail": "20 vs 20"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea closed",
+   "pass": true,
+   "detail": "20 vs 20"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea wins",
+   "pass": true,
+   "detail": "9 vs 9"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea losses",
+   "pass": true,
+   "detail": "11 vs 11"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "36900.7739 vs 36900.7739"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea interest",
+   "pass": true,
+   "detail": "17630.1370 vs 17630.1370"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea friction",
+   "pass": true,
+   "detail": "2027.2796 vs 2027.2796"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea best trade",
+   "pass": true,
+   "detail": "14051.9139 vs 14051.9139"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea second trade",
+   "pass": true,
+   "detail": "10689.6124 vs 10689.6124"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea third trade",
+   "pass": true,
+   "detail": "7560.6270 vs 7560.6270"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea worst trade",
+   "pass": true,
+   "detail": "-5819.5077 vs -5819.5077"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea mean net",
+   "pass": true,
+   "detail": "1845.0387 vs 1845.0387"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea median net",
+   "pass": true,
+   "detail": "-184.6867 vs -184.6867"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea loss sum",
+   "pass": true,
+   "detail": "-19843.3030 vs -19843.3030"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea occupied days",
+   "pass": true,
+   "detail": "585.0000 vs 585.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea minute drawdown",
+   "pass": true,
+   "detail": "16126.8026 vs 16126.8026"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea daily drawdown",
+   "pass": true,
+   "detail": "15224.3669 vs 15224.3669"
+  },
+  {
+   "group": "stored",
+   "name": "final GLD representative d1-dc2b567bea nets by exit year",
+   "pass": true,
+   "detail": "5 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final DBC representative d1-66b1b89efe canonical file hash",
+   "pass": true,
+   "detail": "34f6c5b24060 vs 34f6c5b24060"
+  },
+  {
+   "group": "data",
+   "name": "final DBC representative d1-66b1b89efe loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "cd0ff9265f9b vs cd0ff9265f9b"
+  },
+  {
+   "group": "data",
+   "name": "final DBC representative d1-66b1b89efe grid identity",
+   "pass": true,
+   "detail": "267.2.89.12.141.23.62.34"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe trades",
+   "pass": true,
+   "detail": "7 vs 7"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe closed",
+   "pass": true,
+   "detail": "7 vs 7"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe wins",
+   "pass": true,
+   "detail": "3 vs 3"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe losses",
+   "pass": true,
+   "detail": "4 vs 4"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "101029.5417 vs 101029.5417"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe interest",
+   "pass": true,
+   "detail": "24893.1507 vs 24893.1507"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe friction",
+   "pass": true,
+   "detail": "762.9930 vs 762.9930"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe best trade",
+   "pass": true,
+   "detail": "62293.5297 vs 62293.5297"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe second trade",
+   "pass": true,
+   "detail": "31298.3685 vs 31298.3685"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe third trade",
+   "pass": true,
+   "detail": "10103.1316 vs 10103.1316"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe worst trade",
+   "pass": true,
+   "detail": "-1048.7943 vs -1048.7943"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe mean net",
+   "pass": true,
+   "detail": "14432.7917 vs 14432.7917"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe median net",
+   "pass": true,
+   "detail": "-168.2393 vs -168.2393"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe loss sum",
+   "pass": true,
+   "detail": "-2665.4882 vs -2665.4882"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe occupied days",
+   "pass": true,
+   "detail": "826.0000 vs 826.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe minute drawdown",
+   "pass": true,
+   "detail": "18836.5761 vs 18836.5761"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe daily drawdown",
+   "pass": true,
+   "detail": "18656.8633 vs 18656.8633"
+  },
+  {
+   "group": "stored",
+   "name": "final DBC representative d1-66b1b89efe nets by exit year",
+   "pass": true,
+   "detail": "3 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final GDX alternative-1 d1-01537c2fa7 canonical file hash",
+   "pass": true,
+   "detail": "86ce101fede1 vs 86ce101fede1"
+  },
+  {
+   "group": "data",
+   "name": "final GDX alternative-1 d1-01537c2fa7 loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "04e3ac53a031 vs 04e3ac53a031"
+  },
+  {
+   "group": "data",
+   "name": "final GDX alternative-1 d1-01537c2fa7 grid identity",
+   "pass": true,
+   "detail": "278.11.76.3.206.7.60.127"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 trades",
+   "pass": true,
+   "detail": "45 vs 45"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 closed",
+   "pass": true,
+   "detail": "45 vs 45"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 wins",
+   "pass": true,
+   "detail": "20 vs 20"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 losses",
+   "pass": true,
+   "detail": "25 vs 25"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "172183.9979 vs 172183.9979"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 interest",
+   "pass": true,
+   "detail": "20884.9315 vs 20884.9315"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 friction",
+   "pass": true,
+   "detail": "4596.5839 vs 4596.5839"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 best trade",
+   "pass": true,
+   "detail": "36675.8187 vs 36675.8187"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 second trade",
+   "pass": true,
+   "detail": "25830.1742 vs 25830.1742"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 third trade",
+   "pass": true,
+   "detail": "24593.3164 vs 24593.3164"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 worst trade",
+   "pass": true,
+   "detail": "-6959.8511 vs -6959.8511"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 mean net",
+   "pass": true,
+   "detail": "3826.3111 vs 3826.3111"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 median net",
+   "pass": true,
+   "detail": "-671.8579 vs -671.8579"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 loss sum",
+   "pass": true,
+   "detail": "-39901.9472 vs -39901.9472"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 occupied days",
+   "pass": true,
+   "detail": "693.0000 vs 693.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 minute drawdown",
+   "pass": true,
+   "detail": "27095.3081 vs 27095.3081"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 daily drawdown",
+   "pass": true,
+   "detail": "24223.8024 vs 24223.8024"
+  },
+  {
+   "group": "stored",
+   "name": "final GDX alternative-1 d1-01537c2fa7 nets by exit year",
+   "pass": true,
+   "detail": "6 years equal"
+  },
+  {
+   "group": "data",
+   "name": "final XRT alternative-1 d1-623fefcadd canonical file hash",
+   "pass": true,
+   "detail": "ca0fdc6a4c77 vs ca0fdc6a4c77"
+  },
+  {
+   "group": "data",
+   "name": "final XRT alternative-1 d1-623fefcadd loaded-bars hash (through 2023-12-29)",
+   "pass": true,
+   "detail": "508cd5c82762 vs 508cd5c82762"
+  },
+  {
+   "group": "data",
+   "name": "final XRT alternative-1 d1-623fefcadd grid identity",
+   "pass": true,
+   "detail": "248.15.53.19.59.50.32.118"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd trades",
+   "pass": true,
+   "detail": "32 vs 32"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd closed",
+   "pass": true,
+   "detail": "32 vs 32"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd wins",
+   "pass": true,
+   "detail": "25 vs 25"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd losses",
+   "pass": true,
+   "detail": "7 vs 7"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "108443.3987 vs 108443.3987"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd interest",
+   "pass": true,
+   "detail": "18473.9726 vs 18473.9726"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd friction",
+   "pass": true,
+   "detail": "3263.4912 vs 3263.4912"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd best trade",
+   "pass": true,
+   "detail": "26793.9885 vs 26793.9885"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd second trade",
+   "pass": true,
+   "detail": "17464.8266 vs 17464.8266"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd third trade",
+   "pass": true,
+   "detail": "15010.7026 vs 15010.7026"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd worst trade",
+   "pass": true,
+   "detail": "-10764.9644 vs -10764.9644"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd mean net",
+   "pass": true,
+   "detail": "3388.8562 vs 3388.8562"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd median net",
+   "pass": true,
+   "detail": "2113.2163 vs 2113.2163"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd loss sum",
+   "pass": true,
+   "detail": "-35405.8425 vs -35405.8425"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd occupied days",
+   "pass": true,
+   "detail": "613.0000 vs 613.0000"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd minute drawdown",
+   "pass": true,
+   "detail": "26546.7626 vs 26546.7626"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd daily drawdown",
+   "pass": true,
+   "detail": "22566.9619 vs 22566.9619"
+  },
+  {
+   "group": "stored",
+   "name": "final XRT alternative-1 d1-623fefcadd nets by exit year",
+   "pass": true,
+   "detail": "4 years equal"
+  },
+  {
+   "group": "data",
+   "name": "fold-a XBI representative d1-a73f1d01d6 canonical file hash",
+   "pass": true,
+   "detail": "9afecc060633 vs 9afecc060633"
+  },
+  {
+   "group": "data",
+   "name": "fold-a XBI representative d1-a73f1d01d6 loaded-bars hash (through 2020-06-30)",
+   "pass": true,
+   "detail": "8626a560e063 vs 8626a560e063"
+  },
+  {
+   "group": "data",
+   "name": "fold-a XBI representative d1-a73f1d01d6 grid identity",
+   "pass": true,
+   "detail": "263.5.30.23.172.30.96.140"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 trades",
+   "pass": true,
+   "detail": "15 vs 15"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 closed",
+   "pass": true,
+   "detail": "15 vs 15"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 wins",
+   "pass": true,
+   "detail": "15 vs 15"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 losses",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "71747.4259 vs 71747.4259"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 interest",
+   "pass": true,
+   "detail": "5665.7534 vs 5665.7534"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 friction",
+   "pass": true,
+   "detail": "1538.7263 vs 1538.7263"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 best trade",
+   "pass": true,
+   "detail": "14065.7931 vs 14065.7931"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 second trade",
+   "pass": true,
+   "detail": "13496.2535 vs 13496.2535"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 third trade",
+   "pass": true,
+   "detail": "9735.2665 vs 9735.2665"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 worst trade",
+   "pass": true,
+   "detail": "2.3413 vs 2.3413"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 mean net",
+   "pass": true,
+   "detail": "4783.1617 vs 4783.1617"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 median net",
+   "pass": true,
+   "detail": "3488.3404 vs 3488.3404"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 loss sum",
+   "pass": true,
+   "detail": "0.0000 vs 0.0000"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 occupied days",
+   "pass": true,
+   "detail": "188.0000 vs 188.0000"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 minute drawdown",
+   "pass": true,
+   "detail": "18519.4236 vs 18519.4236"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 daily drawdown",
+   "pass": true,
+   "detail": "15194.8521 vs 15194.8521"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a XBI representative d1-a73f1d01d6 nets by exit year",
+   "pass": true,
+   "detail": "3 years equal"
+  },
+  {
+   "group": "data",
+   "name": "fold-a GDX representative d1-04f8d2a5ed canonical file hash",
+   "pass": true,
+   "detail": "86ce101fede1 vs 86ce101fede1"
+  },
+  {
+   "group": "data",
+   "name": "fold-a GDX representative d1-04f8d2a5ed loaded-bars hash (through 2020-06-30)",
+   "pass": true,
+   "detail": "92e49b7fbf47 vs 92e49b7fbf47"
+  },
+  {
+   "group": "data",
+   "name": "fold-a GDX representative d1-04f8d2a5ed grid identity",
+   "pass": true,
+   "detail": "257.8.65.30.227.18.116.68"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed trades",
+   "pass": true,
+   "detail": "15 vs 15"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed closed",
+   "pass": true,
+   "detail": "14 vs 14"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed open at the cutoff",
+   "pass": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed wins",
+   "pass": true,
+   "detail": "12 vs 12"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed losses",
+   "pass": true,
+   "detail": "3 vs 3"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "152011.6092 vs 152011.6092"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed interest",
+   "pass": true,
+   "detail": "14134.2466 vs 14134.2466"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed friction",
+   "pass": true,
+   "detail": "1583.1149 vs 1583.1149"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed best trade",
+   "pass": true,
+   "detail": "38303.6294 vs 38303.6294"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed second trade",
+   "pass": true,
+   "detail": "26224.4784 vs 26224.4784"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed third trade",
+   "pass": true,
+   "detail": "16559.7630 vs 16559.7630"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed worst trade",
+   "pass": true,
+   "detail": "-2287.0326 vs -2287.0326"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed mean net",
+   "pass": true,
+   "detail": "10134.1073 vs 10134.1073"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed median net",
+   "pass": true,
+   "detail": "6748.9433 vs 6748.9433"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed loss sum",
+   "pass": true,
+   "detail": "-4389.2386 vs -4389.2386"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed occupied days",
+   "pass": true,
+   "detail": "469.0000 vs 469.0000"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed minute drawdown",
+   "pass": true,
+   "detail": "17507.3385 vs 17507.3385"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed daily drawdown",
+   "pass": true,
+   "detail": "11933.9547 vs 11933.9547"
+  },
+  {
+   "group": "stored",
+   "name": "fold-a GDX representative d1-04f8d2a5ed nets by exit year",
+   "pass": true,
+   "detail": "4 years equal"
+  },
+  {
+   "group": "data",
+   "name": "fold-b VGT representative d1-a13304d396 canonical file hash",
+   "pass": true,
+   "detail": "d8e6991de7d4 vs d8e6991de7d4"
+  },
+  {
+   "group": "data",
+   "name": "fold-b VGT representative d1-a13304d396 loaded-bars hash (through 2021-12-31)",
+   "pass": true,
+   "detail": "6470e5f8cb3d vs 6470e5f8cb3d"
+  },
+  {
+   "group": "data",
+   "name": "fold-b VGT representative d1-a13304d396 grid identity",
+   "pass": true,
+   "detail": "235.10.77.17.170.46.93.103"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 trades",
+   "pass": true,
+   "detail": "7 vs 7"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 closed",
+   "pass": true,
+   "detail": "7 vs 7"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 open at the cutoff",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 wins",
+   "pass": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 losses",
+   "pass": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "106278.0663 vs 106278.0663"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 interest",
+   "pass": true,
+   "detail": "23717.8082 vs 23717.8082"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 friction",
+   "pass": true,
+   "detail": "765.0306 vs 765.0306"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 best trade",
+   "pass": true,
+   "detail": "47155.5386 vs 47155.5386"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 second trade",
+   "pass": true,
+   "detail": "22577.4912 vs 22577.4912"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 third trade",
+   "pass": true,
+   "detail": "16990.0622 vs 16990.0622"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 worst trade",
+   "pass": true,
+   "detail": "-1016.1478 vs -1016.1478"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 mean net",
+   "pass": true,
+   "detail": "15182.5809 vs 15182.5809"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 median net",
+   "pass": true,
+   "detail": "12501.0267 vs 12501.0267"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 loss sum",
+   "pass": true,
+   "detail": "-1016.1478 vs -1016.1478"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 occupied days",
+   "pass": true,
+   "detail": "787.0000 vs 787.0000"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 minute drawdown",
+   "pass": true,
+   "detail": "21277.5410 vs 21277.5410"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 daily drawdown",
+   "pass": true,
+   "detail": "18150.1592 vs 18150.1592"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b VGT representative d1-a13304d396 nets by exit year",
+   "pass": true,
+   "detail": "3 years equal"
+  },
+  {
+   "group": "data",
+   "name": "fold-b SMH representative d1-a7ee4a7929 canonical file hash",
+   "pass": true,
+   "detail": "03d7e788bb3b vs 03d7e788bb3b"
+  },
+  {
+   "group": "data",
+   "name": "fold-b SMH representative d1-a7ee4a7929 loaded-bars hash (through 2021-12-31)",
+   "pass": true,
+   "detail": "b19e9ec0a243 vs b19e9ec0a243"
+  },
+  {
+   "group": "data",
+   "name": "fold-b SMH representative d1-a7ee4a7929 grid identity",
+   "pass": true,
+   "detail": "88.8.33.23.199.56.158.156"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 trades",
+   "pass": true,
+   "detail": "49 vs 49"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 closed",
+   "pass": true,
+   "detail": "48 vs 48"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 open at the cutoff",
+   "pass": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 wins",
+   "pass": true,
+   "detail": "40 vs 40"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 losses",
+   "pass": true,
+   "detail": "9 vs 9"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "119487.3185 vs 119487.3185"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 interest",
+   "pass": true,
+   "detail": "25495.8904 vs 25495.8904"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 friction",
+   "pass": true,
+   "detail": "4972.5291 vs 4972.5291"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 best trade",
+   "pass": true,
+   "detail": "16550.0712 vs 16550.0712"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 second trade",
+   "pass": true,
+   "detail": "12855.8560 vs 12855.8560"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 third trade",
+   "pass": true,
+   "detail": "10354.1682 vs 10354.1682"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 worst trade",
+   "pass": true,
+   "detail": "-27487.7396 vs -27487.7396"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 mean net",
+   "pass": true,
+   "detail": "2438.5167 vs 2438.5167"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 median net",
+   "pass": true,
+   "detail": "2954.7147 vs 2954.7147"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 loss sum",
+   "pass": true,
+   "detail": "-63127.5166 vs -63127.5166"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 occupied days",
+   "pass": true,
+   "detail": "846.0000 vs 846.0000"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 minute drawdown",
+   "pass": true,
+   "detail": "32065.3866 vs 32065.3866"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 daily drawdown",
+   "pass": true,
+   "detail": "30398.5814 vs 30398.5814"
+  },
+  {
+   "group": "stored",
+   "name": "fold-b SMH representative d1-a7ee4a7929 nets by exit year",
+   "pass": true,
+   "detail": "5 years equal"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 0 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "17 vs 17"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 0 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "137222.9678 vs 137222.9678"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 0 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "137222.9678 vs 137222.9678"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 0 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "19330.6900 vs 19330.6900"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 0 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "15611.4616 vs 15611.4616"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 0 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "27635.6164 vs 27635.6164"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 0 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "0.0000 vs 0.0000"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 0 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "917 vs 917"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 2 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "17 vs 17"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 2 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "136477.1735 vs 136477.1735"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 2 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "136477.1735 vs 136477.1735"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 2 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "19412.2039 vs 19412.2039"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 2 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "15693.7071 vs 15693.7071"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 2 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "27635.6164 vs 27635.6164"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 2 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "712.8292 vs 712.8292"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 2 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "917 vs 917"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 5 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "17 vs 17"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 5 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "135359.0412 vs 135359.0412"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 5 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "135359.0412 vs 135359.0412"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 5 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "19534.4136 vs 19534.4136"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 5 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "15817.0138 vs 15817.0138"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 5 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "27635.6164 vs 27635.6164"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 5 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "1781.5385 vs 1781.5385"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 5 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "917 vs 917"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 10 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "17 vs 17"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 10 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "133496.9766 vs 133496.9766"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 10 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "133496.9766 vs 133496.9766"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 10 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "19737.9338 vs 19737.9338"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 10 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "16022.3607 vs 16022.3607"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 10 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "27635.6164 vs 27635.6164"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 10 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "3561.2973 vs 3561.2973"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 fixed 10 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "917 vs 917"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 portfolio 5 bps (2016-01-04 → 2023-12-29) end equity",
+   "pass": true,
+   "detail": "1375791.0282 vs 1375791.0282"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 portfolio 5 bps (2016-01-04 → 2023-12-29) max daily % drawdown",
+   "pass": true,
+   "detail": "0.3277634163361198 vs 0.3277634163361198"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 portfolio 5 bps (2016-01-04 → 2023-12-29) strategy net",
+   "pass": true,
+   "detail": "172641.0552 vs 172641.0552"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 portfolio 5 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "17 vs 17"
+  },
+  {
+   "group": "controls",
+   "name": "control B1 portfolio 5 bps (2016-01-04 → 2023-12-29) borrowing dollar-days",
+   "pass": true,
+   "detail": "127746765.90 vs 127746765.90"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 0 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "82 vs 82"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 0 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "396714.7854 vs 396714.7854"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 0 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "396714.7854 vs 396714.7854"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 0 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "26309.7823 vs 26309.7823"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 0 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "23587.0576 vs 23587.0576"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 0 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "37791.7808 vs 37791.7808"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 0 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "0.0000 vs 0.0000"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 0 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "1254 vs 1254"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 2 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "82 vs 82"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 2 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "393666.5803 vs 393666.5803"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 2 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "393666.5803 vs 393666.5803"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 2 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "26389.8826 vs 26389.8826"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 2 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "23667.7023 vs 23667.7023"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 2 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "37791.7808 vs 37791.7808"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 2 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "3366.3091 vs 3366.3091"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 2 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "1254 vs 1254"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 5 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "82 vs 82"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 5 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "388489.2579 vs 388489.2579"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 5 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "388489.2579 vs 388489.2579"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 5 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "26509.9730 vs 26509.9730"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 5 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "23788.6090 vs 23788.6090"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 5 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "37791.7808 vs 37791.7808"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 5 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "8413.2492 vs 8413.2492"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 5 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "1254 vs 1254"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 10 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "82 vs 82"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 10 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "379867.2836 vs 379867.2836"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 10 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "379867.2836 vs 379867.2836"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 10 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "26709.9638 vs 26709.9638"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 10 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "23989.9590 vs 23989.9590"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 10 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "37791.7808 vs 37791.7808"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 10 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "16818.0935 vs 16818.0935"
+  },
+  {
+   "group": "controls",
+   "name": "control A fixed 10 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "1254 vs 1254"
+  },
+  {
+   "group": "controls",
+   "name": "control A portfolio 5 bps (2016-01-04 → 2023-12-29) end equity",
+   "pass": true,
+   "detail": "2270264.3255 vs 2270264.3255"
+  },
+  {
+   "group": "controls",
+   "name": "control A portfolio 5 bps (2016-01-04 → 2023-12-29) max daily % drawdown",
+   "pass": true,
+   "detail": "0.2966781505859238 vs 0.2966781505859238"
+  },
+  {
+   "group": "controls",
+   "name": "control A portfolio 5 bps (2016-01-04 → 2023-12-29) strategy net",
+   "pass": true,
+   "detail": "841432.0361 vs 841432.0361"
+  },
+  {
+   "group": "controls",
+   "name": "control A portfolio 5 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "82 vs 82"
+  },
+  {
+   "group": "controls",
+   "name": "control A portfolio 5 bps (2016-01-04 → 2023-12-29) borrowing dollar-days",
+   "pass": true,
+   "detail": "271236042.72 vs 271236042.72"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 0 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "71 vs 71"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 0 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "249173.8984 vs 249173.8984"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 0 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "249173.8984 vs 249173.8984"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 0 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "27968.0265 vs 27968.0265"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 0 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "24574.9451 vs 24574.9451"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 0 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "37068.4932 vs 37068.4932"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 0 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "0.0000 vs 0.0000"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 0 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "1230 vs 1230"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 2 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "71 vs 71"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 2 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "246624.8990 vs 246624.8990"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 2 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "246624.8990 vs 246624.8990"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 2 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "28244.6331 vs 28244.6331"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 2 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "24852.2302 vs 24852.2302"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 2 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "37068.4932 vs 37068.4932"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 2 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "2896.7501 vs 2896.7501"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 2 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "1230 vs 1230"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 5 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "71 vs 71"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 5 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "242196.0112 vs 242196.0112"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 5 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "242196.0112 vs 242196.0112"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 5 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "28659.3357 vs 28659.3357"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 5 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "25267.9500 vs 25267.9500"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 5 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "37068.4932 vs 37068.4932"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 5 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "7239.7039 vs 7239.7039"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 5 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "1230 vs 1230"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 10 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "71 vs 71"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 10 bps (2016-01-04 → 2023-12-29) net (liquidation-equivalent)",
+   "pass": true,
+   "detail": "233867.1852 vs 233867.1852"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 10 bps (2016-01-04 → 2023-12-29) engine net",
+   "pass": true,
+   "detail": "233867.1852 vs 233867.1852"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 10 bps (2016-01-04 → 2023-12-29) minute drawdown",
+   "pass": true,
+   "detail": "29349.9543 vs 29349.9543"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 10 bps (2016-01-04 → 2023-12-29) daily drawdown",
+   "pass": true,
+   "detail": "25960.2626 vs 25960.2626"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 10 bps (2016-01-04 → 2023-12-29) interest",
+   "pass": true,
+   "detail": "36978.0822 vs 36978.0822"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 10 bps (2016-01-04 → 2023-12-29) friction",
+   "pass": true,
+   "detail": "14471.1306 vs 14471.1306"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 fixed 10 bps (2016-01-04 → 2023-12-29) held calendar days",
+   "pass": true,
+   "detail": "1227 vs 1227"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 portfolio 5 bps (2016-01-04 → 2023-12-29) end equity",
+   "pass": true,
+   "detail": "1677751.3328 vs 1677751.3328"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 portfolio 5 bps (2016-01-04 → 2023-12-29) max daily % drawdown",
+   "pass": true,
+   "detail": "0.3464613481592348 vs 0.3464613481592348"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 portfolio 5 bps (2016-01-04 → 2023-12-29) strategy net",
+   "pass": true,
+   "detail": "453385.5593 vs 453385.5593"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 portfolio 5 bps (2016-01-04 → 2023-12-29) lots",
+   "pass": true,
+   "detail": "71 vs 71"
+  },
+  {
+   "group": "controls",
+   "name": "control B4 portfolio 5 bps (2016-01-04 → 2023-12-29) borrowing dollar-days",
+   "pass": true,
+   "detail": "209768005.21 vs 209768005.21"
+  },
+  {
+   "group": "anchors",
+   "name": "S full history 2016-01-04 → 2026-10-13 fixed net",
+   "pass": true,
+   "detail": "176260.47 vs 176260.47"
+  },
+  {
+   "group": "anchors",
+   "name": "S full history 2016-01-04 → 2026-10-13 fixed minute DD",
+   "pass": true,
+   "detail": "19534.41 vs 19534.41"
+  },
+  {
+   "group": "anchors",
+   "name": "S full history 2016-01-04 → 2026-10-13 funded lots",
+   "pass": true,
+   "detail": "21 vs 21"
+  },
+  {
+   "group": "anchors",
+   "name": "S full history 2016-01-04 → 2026-10-13 portfolio end equity",
+   "pass": true,
+   "detail": "2958025.76 vs 2958025.76"
+  },
+  {
+   "group": "anchors",
+   "name": "S full history 2016-01-04 → 2026-10-13 portfolio max daily %",
+   "pass": true,
+   "detail": "0.3278 vs 0.3278"
+  },
+  {
+   "group": "anchors",
+   "name": "S full history 2016-01-04 → 2026-10-13 portfolio max minute %",
+   "pass": true,
+   "detail": "0.3521 vs 0.3521"
+  },
+  {
+   "group": "anchors",
+   "name": "B4 full history 2016-01-04 → 2026-10-13 fixed net",
+   "pass": true,
+   "detail": "284244.74 vs 284244.74"
+  },
+  {
+   "group": "anchors",
+   "name": "B4 full history 2016-01-04 → 2026-10-13 fixed minute DD",
+   "pass": true,
+   "detail": "28659.34 vs 28659.34"
+  },
+  {
+   "group": "anchors",
+   "name": "B4 full history 2016-01-04 → 2026-10-13 funded lots",
+   "pass": true,
+   "detail": "76 vs 76"
+  },
+  {
+   "group": "anchors",
+   "name": "B4 full history 2016-01-04 → 2026-10-13 portfolio end equity",
+   "pass": true,
+   "detail": "3608484.05 vs 3608484.05"
+  },
+  {
+   "group": "anchors",
+   "name": "B4 full history 2016-01-04 → 2026-10-13 portfolio max daily %",
+   "pass": true,
+   "detail": "0.3465 vs 0.3465"
+  },
+  {
+   "group": "anchors",
+   "name": "B4 full history 2016-01-04 → 2026-10-13 portfolio max minute %",
+   "pass": true,
+   "detail": "0.3701 vs 0.3701"
+  },
+  {
+   "group": "anchors",
+   "name": "B5 full history 2016-01-04 → 2026-10-13 fixed net",
+   "pass": true,
+   "detail": "486207.77 vs 486207.77"
+  },
+  {
+   "group": "anchors",
+   "name": "B5 full history 2016-01-04 → 2026-10-13 fixed minute DD",
+   "pass": true,
+   "detail": "26509.97 vs 26509.97"
+  },
+  {
+   "group": "anchors",
+   "name": "B5 full history 2016-01-04 → 2026-10-13 funded lots",
+   "pass": true,
+   "detail": "94 vs 94"
+  },
+  {
+   "group": "anchors",
+   "name": "B5 full history 2016-01-04 → 2026-10-13 portfolio end equity",
+   "pass": true,
+   "detail": "5410976.72 vs 5410976.72"
+  },
+  {
+   "group": "anchors",
+   "name": "B5 full history 2016-01-04 → 2026-10-13 portfolio max daily %",
+   "pass": true,
+   "detail": "0.2967 vs 0.2967"
+  },
+  {
+   "group": "anchors",
+   "name": "B5 full history 2016-01-04 → 2026-10-13 portfolio max minute %",
+   "pass": true,
+   "detail": "0.3109 vs 0.3109"
+  },
+  {
+   "group": "anchors",
+   "name": "C0 full history end equity",
+   "pass": true,
+   "detail": "2279768.98 vs 2279768.98"
+  },
+  {
+   "group": "anchors",
+   "name": "C0 full history max daily %",
+   "pass": true,
+   "detail": "0.3389"
+  },
+  {
+   "group": "anchors",
+   "name": "C0 full history max minute %",
+   "pass": true,
+   "detail": "0.3576"
+  },
+  {
+   "group": "causality",
+   "name": "VGT primary: the run through 2022-06-30 closes exactly the lots the run through 2023-12-29 closes by then",
+   "pass": true,
+   "detail": "12 closed, 1 open at the cut"
+  },
+  {
+   "group": "causality",
+   "name": "GDX final representative: the run through 2022-06-30 closes exactly the lots the run through 2023-12-29 closes by then",
+   "pass": true,
+   "detail": "32 closed, 1 open at the cut"
+  }
+ ],
+ "passed": 486,
+ "failed": 0,
+ "records": {
+  "final VGT representative d1-681c3ac3cc": {
+   "view": {
+    "trades": 17,
+    "closed": 16,
+    "open": 1,
+    "net": 125218.37359037038,
+    "gross": 157072.7727302901,
+    "interest": 30076.71232876712,
+    "friction": 1777.6868111525803,
+    "bestTrade": 46991.07858182727,
+    "secondTrade": 25792.896439752774,
+    "thirdTrade": 19868.242345890147,
+    "worstTrade": -4617.314763204458,
+    "meanNet": 7365.786681786492,
+    "medianNet": 2717.3713478910477,
+    "wins": 10,
+    "losses": 7,
+    "lossSum": -14669.534683636179,
+    "occupiedDays": 998,
+    "minuteDrawdown": 22888.54055911059,
+    "dailyDrawdown": 18318.55956532089,
+    "yearly": {
+     "2019": 19868.242345890147,
+     "2020": 49353.340534711584,
+     "2021": 16825.689424386073,
+     "2022": -2326.237025690245,
+     "2023": 41497.33831107282
+    }
+   },
+   "lots": 17,
+   "endDate": "2023-12-29"
+  },
+  "final GDX representative d1-4f034dc898": {
+   "view": {
+    "trades": 54,
+    "closed": 54,
+    "open": 0,
+    "net": 185534.25807207427,
+    "gross": 217500.58368584458,
+    "interest": 26460.27397260275,
+    "friction": 5506.051641167686,
+    "bestTrade": 36675.81872871017,
+    "secondTrade": 25830.174246071718,
+    "thirdTrade": 24593.31635552091,
+    "worstTrade": -6574.423166283558,
+    "meanNet": 3435.8195939273014,
+    "medianNet": -533.5393786793985,
+    "wins": 22,
+    "losses": 32,
+    "lossSum": -60148.83522020707,
+    "occupiedDays": 878,
+    "minuteDrawdown": 26433.169258153095,
+    "dailyDrawdown": 25981.033611513907,
+    "yearly": {
+     "2017": 1598.7896210223503,
+     "2018": 5860.10263918556,
+     "2019": 13223.374089885994,
+     "2020": 102405.5229158143,
+     "2021": 11109.716491196768,
+     "2022": 36187.280526957096,
+     "2023": 15149.47178801204
+    }
+   },
+   "lots": 54,
+   "endDate": "2023-12-29"
+  },
+  "final XBI representative d1-7518b58e36": {
+   "view": {
+    "trades": 30,
+    "closed": 30,
+    "open": 0,
+    "net": 85550.40122779732,
+    "gross": 96854.8636558254,
+    "interest": 8257.534246575342,
+    "friction": 3046.9281814527285,
+    "bestTrade": 12297.798395217558,
+    "secondTrade": 11771.304334533543,
+    "thirdTrade": 9828.841925653926,
+    "worstTrade": -2586.9827227662217,
+    "meanNet": 2851.6800409265775,
+    "medianNet": 1031.5310777282896,
+    "wins": 21,
+    "losses": 9,
+    "lossSum": -13357.324142917165,
+    "occupiedDays": 274,
+    "minuteDrawdown": 23477.260447859066,
+    "dailyDrawdown": 20489.09759307353,
+    "yearly": {
+     "2018": 2727.938731713942,
+     "2019": 1363.6033307434664,
+     "2020": 35140.21582242581,
+     "2021": 10836.722705560254,
+     "2022": 35481.920637353855
+    }
+   },
+   "lots": 30,
+   "endDate": "2023-12-29"
+  },
+  "final KRE representative d1-02baeb8699": {
+   "view": {
+    "trades": 71,
+    "closed": 71,
+    "open": 0,
+    "net": 109513.82156492195,
+    "gross": 128940.49701219778,
+    "interest": 12265.753424657525,
+    "friction": 7160.922022618285,
+    "bestTrade": 15765.049282476371,
+    "secondTrade": 14872.099781419256,
+    "thirdTrade": 14739.57755226808,
+    "worstTrade": -19701.95035567334,
+    "meanNet": 1542.4481910552388,
+    "medianNet": 153.19089531778974,
+    "wins": 37,
+    "losses": 34,
+    "lossSum": -97161.66924511082,
+    "occupiedDays": 407,
+    "minuteDrawdown": 23452.692830823322,
+    "dailyDrawdown": 22677.313294055075,
+    "yearly": {
+     "2018": -4098.19613225541,
+     "2019": 14872.099781419256,
+     "2020": 80101.7329970294,
+     "2023": 18638.184918728763
+    }
+   },
+   "lots": 71,
+   "endDate": "2023-12-29"
+  },
+  "final XRT representative d1-9785d8d566": {
+   "view": {
+    "trades": 41,
+    "closed": 41,
+    "open": 0,
+    "net": 93378.4595931894,
+    "gross": 112148.9234355589,
+    "interest": 14616.438356164386,
+    "friction": 4154.025486205097,
+    "bestTrade": 12346.754169247866,
+    "secondTrade": 11206.656339002979,
+    "thirdTrade": 10839.94853595542,
+    "worstTrade": -10764.964435707456,
+    "meanNet": 2277.5234047119366,
+    "medianNet": 1432.6873042118498,
+    "wins": 31,
+    "losses": 10,
+    "lossSum": -45771.39366322771,
+    "occupiedDays": 485,
+    "minuteDrawdown": 25278.532287716156,
+    "dailyDrawdown": 22438.745017515164,
+    "yearly": {
+     "2019": 4114.621128529798,
+     "2020": 43476.45138877585,
+     "2021": 16242.307704710562,
+     "2022": 31134.214989452496,
+     "2023": -1589.1356182792956
+    }
+   },
+   "lots": 41,
+   "endDate": "2023-12-29"
+  },
+  "final SPLV representative d1-304e0a9a8b": {
+   "view": {
+    "trades": 20,
+    "closed": 20,
+    "open": 0,
+    "net": 45386.06149981076,
+    "gross": 66585.47802624502,
+    "interest": 19167.123287671235,
+    "friction": 2032.2932387630226,
+    "bestTrade": 15430.525327684918,
+    "secondTrade": 8209.643071037057,
+    "thirdTrade": 5778.287372947552,
+    "worstTrade": -4298.9589687616935,
+    "meanNet": 2269.3030749905383,
+    "medianNet": 1681.4425894292704,
+    "wins": 15,
+    "losses": 5,
+    "lossSum": -10753.159756323954,
+    "occupiedDays": 636,
+    "minuteDrawdown": 21986.528450484882,
+    "dailyDrawdown": 13863.940887561386,
+    "yearly": {
+     "2019": 15430.525327684918,
+     "2020": 20184.733025044094,
+     "2022": 7552.862336072724,
+     "2023": 2217.940811009026
+    }
+   },
+   "lots": 20,
+   "endDate": "2023-12-29"
+  },
+  "final TLT representative d1-ea2dfab02c": {
+   "view": {
+    "trades": 10,
+    "closed": 9,
+    "open": 1,
+    "net": 44990.45987968994,
+    "gross": 55088.73737496468,
+    "interest": 9071.232876712329,
+    "friction": 1027.0446185624253,
+    "bestTrade": 15815.927984004547,
+    "secondTrade": 13408.764656955145,
+    "thirdTrade": 10193.79217099853,
+    "worstTrade": -931.366663274104,
+    "meanNet": 4499.045987968993,
+    "medianNet": 1256.8631741671088,
+    "wins": 7,
+    "losses": 3,
+    "lossSum": -1528.023665357783,
+    "occupiedDays": 301,
+    "minuteDrawdown": 7784.372087952692,
+    "dailyDrawdown": 6950.094412791903,
+    "yearly": {
+     "2020": 17040.448293447193,
+     "2022": 10348.01397365971,
+     "2023": 17601.997612583033
+    }
+   },
+   "lots": 10,
+   "endDate": "2023-12-29"
+  },
+  "final EWZ representative d1-2c5ad02356": {
+   "view": {
+    "trades": 48,
+    "closed": 48,
+    "open": 0,
+    "net": 111646.72881842201,
+    "gross": 135799.90120129913,
+    "interest": 19287.67123287671,
+    "friction": 4865.5011500003575,
+    "bestTrade": 17680.183084260014,
+    "secondTrade": 16839.08281681433,
+    "thirdTrade": 16647.710494331353,
+    "worstTrade": -7501.699108529061,
+    "meanNet": 2325.9735170504587,
+    "medianNet": 433.1814244055812,
+    "wins": 27,
+    "losses": 21,
+    "lossSum": -55386.96448861083,
+    "occupiedDays": 640,
+    "minuteDrawdown": 27988.44628153168,
+    "dailyDrawdown": 20854.13478317579,
+    "yearly": {
+     "2018": 11868.53590175042,
+     "2020": 60104.35621226074,
+     "2021": 2260.778810469943,
+     "2022": 22400.57838304121,
+     "2023": 15012.47951089972
+    }
+   },
+   "lots": 48,
+   "endDate": "2023-12-29"
+  },
+  "final GLD representative d1-dc2b567bea": {
+   "view": {
+    "trades": 20,
+    "closed": 20,
+    "open": 0,
+    "net": 36900.77388480133,
+    "gross": 56558.19046608564,
+    "interest": 17630.136986301364,
+    "friction": 2027.2795949829203,
+    "bestTrade": 14051.913875864147,
+    "secondTrade": 10689.612351721024,
+    "thirdTrade": 7560.626972355316,
+    "worstTrade": -5819.507669400932,
+    "meanNet": 1845.0386942400667,
+    "medianNet": -184.6867446270387,
+    "wins": 9,
+    "losses": 11,
+    "lossSum": -19843.302965954666,
+    "occupiedDays": 585,
+    "minuteDrawdown": 16126.802630432834,
+    "dailyDrawdown": 15224.366943265264,
+    "yearly": {
+     "2018": -369.3734892540774,
+     "2020": 22903.236515034725,
+     "2021": 7097.082112797428,
+     "2022": -9350.251243679686,
+     "2023": 16620.07998990297
+    }
+   },
+   "lots": 20,
+   "endDate": "2023-12-29"
+  },
+  "final DBC representative d1-66b1b89efe": {
+   "view": {
+    "trades": 7,
+    "closed": 7,
+    "open": 0,
+    "net": 101029.54165240514,
+    "gross": 126685.68535492652,
+    "interest": 24893.150684931505,
+    "friction": 762.9930175898667,
+    "bestTrade": 62293.52970082886,
+    "secondTrade": 31298.36849185904,
+    "thirdTrade": 10103.131625794405,
+    "worstTrade": -1048.794322602404,
+    "meanNet": 14432.791664629305,
+    "medianNet": -168.23933771990295,
+    "wins": 3,
+    "losses": 4,
+    "lossSum": -2665.488166077153,
+    "occupiedDays": 826,
+    "minuteDrawdown": 18836.576098089114,
+    "dailyDrawdown": 18656.86325461469,
+    "yearly": {
+     "2020": -2096.225266416709,
+     "2021": 62293.52970082886,
+     "2022": 40832.237217992995
+    }
+   },
+   "lots": 7,
+   "endDate": "2023-12-29"
+  },
+  "final GDX alternative-1 d1-01537c2fa7": {
+   "view": {
+    "trades": 45,
+    "closed": 45,
+    "open": 0,
+    "net": 172183.9978728396,
+    "gross": 197665.51326075653,
+    "interest": 20884.931506849316,
+    "friction": 4596.583881067717,
+    "bestTrade": 36675.81872871017,
+    "secondTrade": 25830.174246071718,
+    "thirdTrade": 24593.31635552091,
+    "worstTrade": -6959.851138573685,
+    "meanNet": 3826.31106384088,
+    "medianNet": -671.8579360095127,
+    "wins": 20,
+    "losses": 25,
+    "lossSum": -39901.947197569505,
+    "occupiedDays": 693,
+    "minuteDrawdown": 27095.30809901096,
+    "dailyDrawdown": 24223.802361019945,
+    "yearly": {
+     "2018": 5860.10263918556,
+     "2019": 14149.156997733655,
+     "2020": 102802.96585094018,
+     "2021": 4734.785253965219,
+     "2022": 35062.6816216255,
+     "2023": 9574.305509389385
+    }
+   },
+   "lots": 45,
+   "endDate": "2023-12-29"
+  },
+  "final XRT alternative-1 d1-623fefcadd": {
+   "view": {
+    "trades": 32,
+    "closed": 32,
+    "open": 0,
+    "net": 108443.39866190143,
+    "gross": 130180.86249548876,
+    "interest": 18473.97260273972,
+    "friction": 3263.4912308476005,
+    "bestTrade": 26793.98847026221,
+    "secondTrade": 17464.826633924273,
+    "thirdTrade": 15010.702646106689,
+    "worstTrade": -10764.964435707456,
+    "meanNet": 3388.8562081844198,
+    "medianNet": 2113.2162720375773,
+    "wins": 25,
+    "losses": 7,
+    "lossSum": -35405.84253001315,
+    "occupiedDays": 613,
+    "minuteDrawdown": 26546.76255487831,
+    "dailyDrawdown": 22566.961928608245,
+    "yearly": {
+     "2019": 11375.683196549759,
+     "2020": 55470.16894539927,
+     "2021": 36236.773878902015,
+     "2022": 5360.772641050418
+    }
+   },
+   "lots": 32,
+   "endDate": "2023-12-29"
+  },
+  "fold-a XBI representative d1-a73f1d01d6": {
+   "view": {
+    "trades": 15,
+    "closed": 15,
+    "open": 0,
+    "net": 71747.42588163893,
+    "gross": 78951.90563392584,
+    "interest": 5665.753424657533,
+    "friction": 1538.7263276293595,
+    "bestTrade": 14065.793149685274,
+    "secondTrade": 13496.253539078773,
+    "thirdTrade": 9735.266533645687,
+    "worstTrade": 2.3413350523801455,
+    "meanNet": 4783.1617254425955,
+    "medianNet": 3488.340407204538,
+    "wins": 15,
+    "losses": 0,
+    "lossSum": 0,
+    "occupiedDays": 188,
+    "minuteDrawdown": 18519.423606072953,
+    "dailyDrawdown": 15194.852127320339,
+    "yearly": {
+     "2018": 8490.435974590277,
+     "2019": 13065.976172374081,
+     "2020": 50191.01373467458
+    }
+   },
+   "lots": 15,
+   "endDate": "2020-06-30"
+  },
+  "fold-a GDX representative d1-04f8d2a5ed": {
+   "view": {
+    "trades": 15,
+    "closed": 14,
+    "open": 1,
+    "net": 152011.60923638754,
+    "gross": 167728.97067187843,
+    "interest": 14134.246575342466,
+    "friction": 1583.1148601483737,
+    "bestTrade": 38303.629356106736,
+    "secondTrade": 26224.478403435973,
+    "thirdTrade": 16559.76302903254,
+    "worstTrade": -2287.0325596676303,
+    "meanNet": 10134.107282425835,
+    "medianNet": 6748.943301443769,
+    "wins": 12,
+    "losses": 3,
+    "lossSum": -4389.238626956337,
+    "occupiedDays": 469,
+    "minuteDrawdown": 17507.338532896887,
+    "dailyDrawdown": 11933.954741772312,
+    "yearly": {
+     "2017": 3817.7786941366685,
+     "2018": 10045.154417961214,
+     "2019": 32316.36571165199,
+     "2020": 105832.31041263769
+    }
+   },
+   "lots": 15,
+   "endDate": "2020-06-30"
+  },
+  "fold-b VGT representative d1-a13304d396": {
+   "view": {
+    "trades": 7,
+    "closed": 7,
+    "open": 0,
+    "net": 106278.06631921009,
+    "gross": 130760.90516588355,
+    "interest": 23717.808219178085,
+    "friction": 765.0306274953839,
+    "bestTrade": 47155.538640907835,
+    "secondTrade": 22577.491230210882,
+    "thirdTrade": 16990.062200576886,
+    "worstTrade": -1016.1477952264377,
+    "meanNet": 15182.5809027443,
+    "medianNet": 12501.026734441604,
+    "wins": 6,
+    "losses": 1,
+    "lossSum": -1016.1477952264377,
+    "occupiedDays": 787,
+    "minuteDrawdown": 21277.541028481814,
+    "dailyDrawdown": 18150.15918179033,
+    "yearly": {
+     "2019": 22577.491230210882,
+     "2020": 64320.06978200119,
+     "2021": 19380.505306998024
+    }
+   },
+   "lots": 7,
+   "endDate": "2021-12-31"
+  },
+  "fold-b SMH representative d1-a7ee4a7929": {
+   "view": {
+    "trades": 49,
+    "closed": 48,
+    "open": 1,
+    "net": 119487.31852314164,
+    "gross": 149955.73802750153,
+    "interest": 25495.89041095891,
+    "friction": 4972.529093401023,
+    "bestTrade": 16550.071160971012,
+    "secondTrade": 12855.85596299088,
+    "thirdTrade": 10354.168243268057,
+    "worstTrade": -27487.73957654226,
+    "meanNet": 2438.516704553911,
+    "medianNet": 2954.714743796442,
+    "wins": 40,
+    "losses": 9,
+    "lossSum": -63127.516622671545,
+    "occupiedDays": 846,
+    "minuteDrawdown": 32065.386644851264,
+    "dailyDrawdown": 30398.58139427793,
+    "yearly": {
+     "2017": 3275.7924790457087,
+     "2018": 5429.251871867908,
+     "2019": 27113.982012172055,
+     "2020": 31819.39251985659,
+     "2021": 51848.89964019938
+    }
+   },
+   "lots": 49,
+   "endDate": "2021-12-31"
+  },
+  "S full history 2016-01-04 → 2026-10-13": {
+   "fixed": 176260.47475538065,
+   "portfolio": 2958025.758243596
+  },
+  "B4 full history 2016-01-04 → 2026-10-13": {
+   "fixed": 284244.743583358,
+   "portfolio": 3608484.046542133
+  },
+  "B5 full history 2016-01-04 → 2026-10-13": {
+   "fixed": 486207.7706952991,
+   "portfolio": 5410976.722586979
+  }
+ }
+}
