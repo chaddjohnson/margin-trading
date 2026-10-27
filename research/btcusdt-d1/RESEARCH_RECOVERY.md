@@ -6,11 +6,12 @@ All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run comm
 Node v24.21.0: `export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/installation/bin:$PATH`
 (`/opt/homebrew/bin/node` is v23.6.1 and must not be used).
 
-- **Updated:** 2026-10-27T02:13:28Z
+- **Updated:** 2026-10-27T09:41:01Z (commit recorded; nothing re-run)
 - **Status: TASK COMPLETE (negative verdict).** Every stage is sealed: both folds failed, the procedure gate failed
   (`results/PROCEDURE_GATE.json` body `7764f57b…`), and the holdout was never evaluated. Reports, phenotypes, the CLI
   demonstrations, the final independent audit (`reviews/FINAL_AUDIT.md`) and its dispositions
-  (IMPLEMENTATION_AUDIT.md §2) are done. Nothing is committed (no request to commit).
+  (IMPLEMENTATION_AUDIT.md §2) are done. Committed as `4bbb8db7` on `research/btcusdt-d1-spot` at the user's request
+  (2026-10-27) and pushed with its upstream set to `origin/research/btcusdt-d1-spot` (§1).
 - **Brief:** `research/btcusdt-d1/coordinator/brief_original.md`.
 - **Protocol:** `PROTOCOL.md` (sha256 `c6a8e1c8…`), frozen 2026-10-27T01:21:32Z by `PROTOCOL_FREEZE.json` (body
   `a7fd1b50b4e506ee54dde287aecb47bb7b8167e56437997318db047f0e436e92`). Procedure hash `90ff5f56…`;
@@ -32,8 +33,9 @@ Node v24.21.0: `export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/instal
 | Pushed content review | 761 files, ~38 MB, no secret patterns; the largest blobs are the ranked-preemption study's gzipped search archives (≤ 6.4 MB each), which its sealed records hash (intentional) |
 | New branch | `research/btcusdt-d1-spot`, created 2026-10-26T23:40:35Z from `40da6ddf…cfc99` (no prior `*btc*` branch locally or on origin) |
 | Files changed before switching | none |
-| New branch upstream | none; not pushed, nothing committed |
-| Working tree now | ` M package.json` (one `btc-d1` script line); `??` `src/btcusdt-d1/`, `research/btcusdt-d1/`, `config/research-phenotypes/` |
+| Study commit | `4bbb8db7` (2026-10-27T09:41:01Z, at the user's request): 94 files, 3.1 MB — `src/btcusdt-d1/`, `research/btcusdt-d1/`, `config/research-phenotypes/btcusdt-d1/`, the `btc-d1` script in `package.json` and one `.gitignore` rule; `btc-d1 verify` 19/19 just before it |
+| Not committed (on disk only) | the three search archives `results/{final,folds/fold-a,folds/fold-b}/archive.jsonl.gz` (90 MB; sha256 `ea17b4f3…`, `d4a8317c…`, `738922eb…`, recorded in each `SELECTION.json`), git-ignored by the new `.gitignore` rule; the snapshot cache; `results/logs/`, `results/baseline/`; `evaluations/btcusdt-d1/` |
+| Upstream | this checkpoint update is the commit after `4bbb8db7`; both are pushed with `git push -u origin research/btcusdt-d1-spot` (check with `git ls-remote origin refs/heads/research/btcusdt-d1-spot`) |
 
 ## 2. Stage table
 
@@ -88,8 +90,8 @@ A crash between a fold's archive/SELECTION and PICKS would need the partial file
   - the audit, the parity records (both), the benchmark;
   - the freeze, folds A and B, the gate, the final selection, the phenotypes;
   - never `holdout`.
-- **Do not** commit or push the branch without a new explicit request. Do not touch `data/` except to read. No
-  network, no credentials, no `.env`.
+- **Do not** commit or push further changes to the branch without a new explicit request. Do not touch `data/` except
+  to read. No network, no credentials, no `.env`. The archives exist only on this machine; do not delete them.
 - **Do not edit** files bound by `research/prospective-b4-b5-shadow/PROTOCOL_FREEZE.json`, or this study's
   outcome-critical files (the freeze guard refuses).
 - No BTC buy-and-hold benchmark anywhere.
