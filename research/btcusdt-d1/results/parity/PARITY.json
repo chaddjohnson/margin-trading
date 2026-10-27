@@ -1,0 +1,1758 @@
+{
+  "stage": "parity",
+  "writtenAt": "2026-10-27T00:24:28.626Z",
+  "seriesSha256": "cb7c9cdc097bd2b92a06cdfb771b916f6c2e1c1e8c975c84a979c490d15283f8",
+  "dataWindow": "history start → 2024-06-30 (development only; the holdout is not read)",
+  "code": {
+    "files": 28,
+    "digest": "1fcd7f636fe73cf914e7f2cc079d0c4c73ca824a763f0a2cf29abd6c443e6f91",
+    "hashes": {
+      "src/btcusdt-d1/audit.ts": "8a259e55ef197708a31cf773952544c7caaa8d5572062d930d3e4eaaa726608b",
+      "src/btcusdt-d1/calendar.ts": "35e5b26ee1cf7402be2767571f94a057d84e66a096ab2684af9ef92e77899b20",
+      "src/btcusdt-d1/cli.ts": "74ce9b35483e4de858f50cbdd54e4e27f2cb1abb3ad438ea201c0f31bc01a697",
+      "src/btcusdt-d1/context.ts": "76334904876577d98ed90e0be4fbb9e7c83ec82d13adbbb87272f9ffdd881a53",
+      "src/btcusdt-d1/costs.ts": "bd746e23a2e713bc3bb8158ecc11c52297a9a0e6ad5ee2f830cb1705ff566084",
+      "src/btcusdt-d1/engine.ts": "ff8e61a502dba3db96c6155700f10f40e753cf014a1f476b4158ffcbf171bde5",
+      "src/btcusdt-d1/evaluate.ts": "329dc6ae4f511edbd1c75ea06cc50ef75bb041d41973ff7c70ceb858a4104c57",
+      "src/btcusdt-d1/fast.ts": "209f3abf5fe13c643172b0ce62fd6bd7a7a2d1e9e7e9a0c47d703bee2db368b1",
+      "src/btcusdt-d1/main.ts": "5495e8f0c407ccb613daa94e3ae2749a7d20693b66595516f7cf9aeb897eee45",
+      "src/btcusdt-d1/mutation.ts": "f6397275631e4b9fa2acbe67fc5ef2ebfc953565ceccb572410720c7a11a9eee",
+      "src/btcusdt-d1/params.ts": "2d9adf54434415773159792a6da7a0e50a372ad8f9f6062234d3cdb72fcd6176",
+      "src/btcusdt-d1/parity.ts": "3097a8593bd80aa4562c3a22922aaa7c5aa45da5615ed01e6831db8673c988f2",
+      "src/btcusdt-d1/phenotypes.ts": "6bc2f6b9c11f32a94cfe323063480a9ee94a89cd79cf9c72742d3dff24500a7a",
+      "src/btcusdt-d1/pool.ts": "933c5749a965528ebe7f3c7396435fa7c8baa36bc3023b0aebbe1276a53013eb",
+      "src/btcusdt-d1/protocol.ts": "a874328544bec0e0bbf3807957a755c9ce4b71dd06d86218cfafc170ca415162",
+      "src/btcusdt-d1/raw.ts": "7c38c466a4baf6c597a34423fac0c7b0b407f034152ae3467d918b732cc12fef",
+      "src/btcusdt-d1/records.ts": "6f69cbd84898735ac015479ab3d5b314e7e2be5b5a8af72023808d90f0785037",
+      "src/btcusdt-d1/report.ts": "aa22d1bafebca467b04d9e56019810fca1750d988f6b71150c8dfac279780898",
+      "src/btcusdt-d1/select.ts": "075c6001b20226a7aceeca034930c1e2dfc67a8c2c70cb7c835b8d194de262cd",
+      "src/btcusdt-d1/snapshot.ts": "19c332edc0f339981942ae99b4db7deed24b04853717cac8fc78a72e96bd2416",
+      "src/btcusdt-d1/space.ts": "c14ff3476f6ef56e87827ed28e996e844d67a5b055a24ebfaa0bd9965294d749",
+      "src/btcusdt-d1/stages.ts": "d0355e35c9791e9ccd00fa193a82cea5fa76820700110c385de0e2bc7d73b484",
+      "src/btcusdt-d1/tests/engine.test.ts": "983549c8c11f6ca421da5c0af148668294b3b44ad5ed69fd8b57611b96e22c9c",
+      "src/btcusdt-d1/tests/fixtures.ts": "e34f9f08a12b2422bc7fe3eeff1cdb6727a370c22667fe6fb5ea98c527a89e84",
+      "src/btcusdt-d1/tests/mutation.test.ts": "5bb6ccfe1de7cb037f29d3b9f8d42475e4e80452234d5c5125c4b110b0f79e6e",
+      "src/btcusdt-d1/worker.ts": "0a1b026ef6b7790bec2c774c7b0387f250918404c56a2ab488bd7d0df28eba8d",
+      "src/optimizer/rng.ts": "9c5402674fcb106fc54cd938fbc216d00bba80dc4458f5b38ce21256ddc8b849",
+      "src/optimizer/sobol.ts": "7f420687def739a7c1e1213a0f3bbf7c2224da8cd528f098543a4a89ae136976"
+    }
+  },
+  "candidates": 41,
+  "settings": [
+    "fee0-impact0-stop-adverse",
+    "fee10-impact5-stop-adverse",
+    "fee30-impact20-stop-adverse",
+    "fee10-impact5-stop-stop",
+    "fee10-impact5-stop-low"
+  ],
+  "runs": 205,
+  "runsWithDifferences": 0,
+  "runsWithLedgerProblems": 0,
+  "maxMoneyDifference": 0,
+  "totalTrades": 7462,
+  "firstDifferences": [],
+  "coverage": {
+    "carriedEntries": 1,
+    "gapFills": 0,
+    "crossMidnightHolds": 1491,
+    "carriedSales": 0,
+    "trades": 1492
+  },
+  "mutation": [
+    {
+      "key": "216-3-73-8-74-29-90-60",
+      "runner": "fast",
+      "cutoffs": 24,
+      "violations": 0
+    },
+    {
+      "key": "216-3-73-8-74-29-90-60",
+      "runner": "reference",
+      "cutoffs": 24,
+      "violations": 0
+    },
+    {
+      "key": "403-100-199-38-216-62-89-236",
+      "runner": "fast",
+      "cutoffs": 24,
+      "violations": 0
+    },
+    {
+      "key": "403-100-199-38-216-62-89-236",
+      "runner": "reference",
+      "cutoffs": 24,
+      "violations": 0
+    },
+    {
+      "key": "503-28-347-6-120-96-339-300",
+      "runner": "fast",
+      "cutoffs": 24,
+      "violations": 0
+    },
+    {
+      "key": "503-28-347-6-120-96-339-300",
+      "runner": "reference",
+      "cutoffs": 24,
+      "violations": 0
+    },
+    {
+      "key": "464-5-69-20-201-59-430-107",
+      "runner": "fast",
+      "cutoffs": 24,
+      "violations": 0
+    },
+    {
+      "key": "464-5-69-20-201-59-430-107",
+      "runner": "reference",
+      "cutoffs": 24,
+      "violations": 0
+    }
+  ],
+  "cheat": {
+    "cutoffs": 24,
+    "caught": 1
+  },
+  "detail": [
+    {
+      "key": "216-3-73-8-74-29-90-60",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 104,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "216-3-73-8-74-29-90-60",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 105,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "216-3-73-8-74-29-90-60",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 104,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "216-3-73-8-74-29-90-60",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 105,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "216-3-73-8-74-29-90-60",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 105,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "403-100-199-38-216-62-89-236",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "403-100-199-38-216-62-89-236",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "403-100-199-38-216-62-89-236",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "403-100-199-38-216-62-89-236",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "403-100-199-38-216-62-89-236",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "503-28-347-6-120-96-339-300",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "503-28-347-6-120-96-339-300",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "503-28-347-6-120-96-339-300",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "503-28-347-6-120-96-339-300",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "503-28-347-6-120-96-339-300",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "464-5-69-20-201-59-430-107",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 32,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "464-5-69-20-201-59-430-107",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 32,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "464-5-69-20-201-59-430-107",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 33,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "464-5-69-20-201-59-430-107",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 32,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "464-5-69-20-201-59-430-107",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 32,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "298-62-339-29-56-58-37-21",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "298-62-339-29-56-58-37-21",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "298-62-339-29-56-58-37-21",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "298-62-339-29-56-58-37-21",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "298-62-339-29-56-58-37-21",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "542-72-346-41-138-84-475-37",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 5,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "542-72-346-41-138-84-475-37",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 5,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "542-72-346-41-138-84-475-37",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 5,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "542-72-346-41-138-84-475-37",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 5,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "542-72-346-41-138-84-475-37",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 5,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "547-78-294-6-221-79-160-17",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 21,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "547-78-294-6-221-79-160-17",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "547-78-294-6-221-79-160-17",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "547-78-294-6-221-79-160-17",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "547-78-294-6-221-79-160-17",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "88-110-193-35-110-81-42-112",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 30,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "88-110-193-35-110-81-42-112",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 30,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "88-110-193-35-110-81-42-112",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 30,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "88-110-193-35-110-81-42-112",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 30,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "88-110-193-35-110-81-42-112",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 30,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "360-80-92-12-255-2-498-129",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 42,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "360-80-92-12-255-2-498-129",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 42,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "360-80-92-12-255-2-498-129",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 43,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "360-80-92-12-255-2-498-129",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 42,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "360-80-92-12-255-2-498-129",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 42,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "183-24-175-60-151-69-438-177",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 27,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "183-24-175-60-151-69-438-177",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 27,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "183-24-175-60-151-69-438-177",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 27,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "183-24-175-60-151-69-438-177",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 27,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "183-24-175-60-151-69-438-177",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 27,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "132-5-332-49-343-75-119-110",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "132-5-332-49-343-75-119-110",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "132-5-332-49-343-75-119-110",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "132-5-332-49-343-75-119-110",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "132-5-332-49-343-75-119-110",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "262-61-345-34-31-28-365-37",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "262-61-345-34-31-28-365-37",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "262-61-345-34-31-28-365-37",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "262-61-345-34-31-28-365-37",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "262-61-345-34-31-28-365-37",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "254-84-237-45-365-142-239-86",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 18,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "254-84-237-45-365-142-239-86",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 18,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "254-84-237-45-365-142-239-86",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 18,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "254-84-237-45-365-142-239-86",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 18,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "254-84-237-45-365-142-239-86",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 18,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "122-14-161-9-252-95-151-83",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 86,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "122-14-161-9-252-95-151-83",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 87,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "122-14-161-9-252-95-151-83",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 94,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "122-14-161-9-252-95-151-83",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 87,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "122-14-161-9-252-95-151-83",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 87,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "380-42-164-2-51-87-331-19",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 27,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "380-42-164-2-51-87-331-19",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 30,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "380-42-164-2-51-87-331-19",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 29,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "380-42-164-2-51-87-331-19",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 30,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "380-42-164-2-51-87-331-19",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 30,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "219-12-141-9-137-117-493-267",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 64,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "219-12-141-9-137-117-493-267",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 67,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "219-12-141-9-137-117-493-267",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 66,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "219-12-141-9-137-117-493-267",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 67,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "219-12-141-9-137-117-493-267",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 67,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "486-65-197-21-89-17-340-300",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 10,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "486-65-197-21-89-17-340-300",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 9,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "486-65-197-21-89-17-340-300",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 7,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "486-65-197-21-89-17-340-300",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 9,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "486-65-197-21-89-17-340-300",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 9,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "258-7-190-48-112-95-407-275",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 23,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "258-7-190-48-112-95-407-275",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "258-7-190-48-112-95-407-275",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "258-7-190-48-112-95-407-275",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "258-7-190-48-112-95-407-275",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "482-48-344-4-88-84-475-288",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "482-48-344-4-88-84-475-288",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "482-48-344-4-88-84-475-288",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 14,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "482-48-344-4-88-84-475-288",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "482-48-344-4-88-84-475-288",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "595-65-180-22-309-62-425-266",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "595-65-180-22-309-62-425-266",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "595-65-180-22-309-62-425-266",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "595-65-180-22-309-62-425-266",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "595-65-180-22-309-62-425-266",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "296-81-265-55-152-79-206-216",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "296-81-265-55-152-79-206-216",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "296-81-265-55-152-79-206-216",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "296-81-265-55-152-79-206-216",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "296-81-265-55-152-79-206-216",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-113-211-19-207-17-68-58",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 31,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-113-211-19-207-17-68-58",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 32,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-113-211-19-207-17-68-58",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 34,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-113-211-19-207-17-68-58",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 32,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-113-211-19-207-17-68-58",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 32,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "489-88-262-56-306-139-87-184",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "489-88-262-56-306-139-87-184",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "489-88-262-56-306-139-87-184",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "489-88-262-56-306-139-87-184",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "489-88-262-56-306-139-87-184",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 15,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "164-86-307-43-86-7-452-299",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "164-86-307-43-86-7-452-299",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "164-86-307-43-86-7-452-299",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "164-86-307-43-86-7-452-299",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "164-86-307-43-86-7-452-299",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "171-107-176-5-336-59-374-277",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 70,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "171-107-176-5-336-59-374-277",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 71,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "171-107-176-5-336-59-374-277",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 72,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "171-107-176-5-336-59-374-277",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 71,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "171-107-176-5-336-59-374-277",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 71,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "516-20-310-32-290-31-291-63",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "516-20-310-32-290-31-291-63",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "516-20-310-32-290-31-291-63",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "516-20-310-32-290-31-291-63",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "516-20-310-32-290-31-291-63",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 13,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "532-52-196-39-192-81-313-245",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "532-52-196-39-192-81-313-245",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "532-52-196-39-192-81-313-245",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "532-52-196-39-192-81-313-245",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "532-52-196-39-192-81-313-245",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 11,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "413-39-292-29-111-78-221-265",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "413-39-292-29-111-78-221-265",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "413-39-292-29-111-78-221-265",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "413-39-292-29-111-78-221-265",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "413-39-292-29-111-78-221-265",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 16,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "99-53-286-32-115-15-32-122",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "99-53-286-32-115-15-32-122",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "99-53-286-32-115-15-32-122",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "99-53-286-32-115-15-32-122",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "99-53-286-32-115-15-32-122",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "220-41-66-57-260-54-458-243",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 45,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "220-41-66-57-260-54-458-243",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 43,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "220-41-66-57-260-54-458-243",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 41,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "220-41-66-57-260-54-458-243",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 43,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "220-41-66-57-260-54-458-243",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 43,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "253-99-115-47-328-115-392-214",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 28,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "253-99-115-47-328-115-392-214",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 28,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "253-99-115-47-328-115-392-214",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 28,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "253-99-115-47-328-115-392-214",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 28,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "253-99-115-47-328-115-392-214",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 28,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "114-45-76-21-231-112-185-272",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 81,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "114-45-76-21-231-112-185-272",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 81,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "114-45-76-21-231-112-185-272",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 78,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "114-45-76-21-231-112-185-272",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 81,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "114-45-76-21-231-112-185-272",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 81,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "600-94-318-23-164-79-244-165",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 4,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "600-94-318-23-164-79-244-165",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 4,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "600-94-318-23-164-79-244-165",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 4,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "600-94-318-23-164-79-244-165",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 4,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "600-94-318-23-164-79-244-165",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 4,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "162-59-62-6-245-75-171-93",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 133,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "162-59-62-6-245-75-171-93",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 132,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "162-59-62-6-245-75-171-93",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 132,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "162-59-62-6-245-75-171-93",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 132,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "162-59-62-6-245-75-171-93",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 132,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-13-268-9-52-68-291-176",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 35,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-13-268-9-52-68-291-176",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 35,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-13-268-9-52-68-291-176",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 37,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-13-268-9-52-68-291-176",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 35,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "252-13-268-9-52-68-291-176",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 35,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "135-82-32-24-334-136-65-114",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 125,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "135-82-32-24-334-136-65-114",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 118,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "135-82-32-24-334-136-65-114",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 103,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "135-82-32-24-334-136-65-114",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 118,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "135-82-32-24-334-136-65-114",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 118,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "129-4-83-25-187-77-307-198",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 81,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "129-4-83-25-187-77-307-198",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 78,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "129-4-83-25-187-77-307-198",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 76,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "129-4-83-25-187-77-307-198",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 78,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "129-4-83-25-187-77-307-198",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 78,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "356-73-252-21-244-121-443-152",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 21,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "356-73-252-21-244-121-443-152",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 21,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "356-73-252-21-244-121-443-152",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 22,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "356-73-252-21-244-121-443-152",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 21,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "356-73-252-21-244-121-443-152",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 21,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "478-77-336-50-211-22-359-107",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 12,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "478-77-336-50-211-22-359-107",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 12,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "478-77-336-50-211-22-359-107",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 12,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "478-77-336-50-211-22-359-107",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 12,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "478-77-336-50-211-22-359-107",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 12,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "93-8-150-7-149-59-152-202",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 100,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "93-8-150-7-149-59-152-202",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 99,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "93-8-150-7-149-59-152-202",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 108,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "93-8-150-7-149-59-152-202",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 99,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "93-8-150-7-149-59-152-202",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 99,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "355-46-222-13-357-78-68-172",
+      "settings": "fee0-impact0-stop-adverse",
+      "trades": 35,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "355-46-222-13-357-78-68-172",
+      "settings": "fee10-impact5-stop-adverse",
+      "trades": 36,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "355-46-222-13-357-78-68-172",
+      "settings": "fee30-impact20-stop-adverse",
+      "trades": 36,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "355-46-222-13-357-78-68-172",
+      "settings": "fee10-impact5-stop-stop",
+      "trades": 36,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    },
+    {
+      "key": "355-46-222-13-357-78-68-172",
+      "settings": "fee10-impact5-stop-low",
+      "trades": 36,
+      "differences": 0,
+      "maxMoney": 0,
+      "ledger": 0
+    }
+  ],
+  "bodyHash": "0aa399b409bf0ac08aaa63c80b000112744aed8d03b738fcb68cc4c5a4598818"
+}

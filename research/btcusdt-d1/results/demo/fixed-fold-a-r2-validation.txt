@@ -1,0 +1,36 @@
+
+> btc-d1
+> node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/btcusdt-d1/main.ts fixed fold-a-r2 --dataset fold-a-validation
+
+BTCUSDT spot D1 — fold-a-r2 (research only; no live-trading status)
+Parameters: X 52.5%, Y 0.6%, stop 10.2%, hold 25 UTC days, L 123 UTC days, buffer 4.5%, P 4.7%, W 26 UTC days
+Window: 2021-12-01 → 2023-02-28 (UTC days) of one continuous account arming from 2019-02-11; equity 388,324.34 USDT at the window's start; bars of data/BTCUSDT/BTCUSDT-2017-2026.csv snapshot 2018-02-11 → 2023-02-28 (warm-up before 2019-02-11), nothing later
+Data door: research-only; permitted through 2024-06-30 (the holdout 2024-07-01 → 2026-08-24 is sealed for this phenotype)
+Account: cash-funded (live-executable accounting); start 100,000.00 USDT; at most 100,000 USDT gross notional per entry; spot, long only, no borrowing
+Costs: fee 10 bps + impact 5 bps per side (assumptions, not an account tier); stops fill at min(stop, the next traded minute’s open), recorded at that minute (the next day’s first trade if the trigger is the day’s last minute)
+
+Funded trades:
+#25 continuation  entry 2021-11-17T03:20:00Z @ 58933.52 (fill 58962.99) 1.695979 BTC, notional 100,000.00 USDT of 391,982.21 USDT available
+    exit 2021-12-12T00:01:00Z @ 49401.29 (fill 49376.59) — maximum hold, next minute open; 25 UTC days; gross -16,166.46 USDT, fees 183.74 USDT, impact 91.87 USDT, interest/funding 0 (N/A); net -16,442.07 USDT; cumulative realized 275,540.13 USDT; MFE 3.47% MAE -28.73%
+#26 deep  entry 2022-06-13T14:52:00Z @ 22738.13 (fill 22749.50) 4.395701 BTC, notional 100,000.00 USDT of 375,540.13 USDT available
+    exit 2022-07-08T00:01:00Z @ 21659.32 (fill 21648.49) — maximum hold, next minute open; 25 UTC days; gross -4,742.13 USDT, fees 195.16 USDT, impact 97.58 USDT, interest/funding 0 (N/A); net -5,034.87 USDT; cumulative realized 270,505.27 USDT; MFE 6.45% MAE -22.50%
+#27 deep  entry 2022-07-09T00:21:00Z @ 21578.33 (fill 21589.12) 4.631963 BTC, notional 100,000.00 USDT of 370,505.27 USDT available
+    exit 2022-07-25T03:53:00Z @ 21798.10 (fill 21787.20) — trailing stop, adverse: next minute open below stop; 16 UTC days; gross 1,017.97 USDT, fees 200.92 USDT, impact 100.46 USDT, interest/funding 0 (N/A); net 716.59 USDT; cumulative realized 271,221.86 USDT; MFE 12.51% MAE -12.36%
+#28 deep  entry 2022-07-26T00:41:00Z @ 21109.55 (fill 21120.10) 4.734825 BTC, notional 100,000.00 USDT of 371,221.86 USDT available
+    exit 2022-08-19T06:32:00Z @ 22613.00 (fill 22601.69) — trailing stop, adverse: next minute open below stop; 24 UTC days; gross 7,118.57 USDT, fees 207.02 USDT, impact 103.51 USDT, interest/funding 0 (N/A); net 6,808.05 USDT; cumulative realized 278,029.91 USDT; MFE 19.43% MAE -1.91%
+#29 continuation  entry 2022-08-20T00:06:00Z @ 20918.17 (fill 20928.63) 4.778144 BTC, notional 100,000.00 USDT of 378,029.91 USDT available
+    exit 2022-09-14T00:01:00Z @ 20164.32 (fill 20154.24) — maximum hold, next minute open; 25 UTC days; gross -3,602.00 USDT, fees 196.30 USDT, impact 98.15 USDT, interest/funding 0 (N/A); net -3,896.45 USDT; cumulative realized 274,133.45 USDT; MFE 8.99% MAE -11.51%
+
+Net profit in the window -14,190.89 USDT (-14.19% of 100,000 USDT; the change of marked equity). Account since 2019-02-11: realized 274,133.45 USDT, unrealized 0.00 USDT
+Gross price P&L -16,374.05 USDT; fees 983.13 USDT; impact 491.56 USDT; interest/funding 0.00 USDT (not applicable: spot, no borrowing)
+Window of a longer run: the trades above are those held in the window, over their whole lives; a trade carried in contributes only its change after 2021-12-01 to the window net, so the gross, fee and impact totals need not add up to it. trades.csv/trades.json hold the whole account's ledger since 2019-02-11, labelled by window_role.
+Trades 5 (5 closed: 2 won, 3 lost)
+Cash 374,133.45 USDT + BTC 0.00000000 → equity 374,133.45 USDT
+Maximum drawdown (minute marks): 39,039.50 USDT (2021-12-01T16:16:00Z → 2022-06-18T20:52:00Z); peak-to-trough 9.96% of account equity (2021-12-01T16:16:00Z → 2022-06-18T20:52:00Z)
+Maximum drawdown (daily closes): 30,014.76 USDT; peak-to-trough 7.72%
+Exposure: 25.19% of the window in BTC, 74.81% in USDT cash (earning nothing)
+Capacity: largest fill 16.21% of its minute's quote volume; 1 fill(s) above 10% (warnings; order-book depth is not modelled)
+Reconciliation: ledger, cash and equity reconcile
+Not modelled: USDT counterparty or depeg risk, venue risk, order-book depth, lot-size and minimum-notional filters (no local metadata), taxes.
+
+Wrote /Users/chad/development/personal/margin-trading/evaluations/btcusdt-d1/fold-a-r2_2021-12-01_2023-02-28_armed-2019-02-11_fee10-impact5-stop-adverse_cash/report.txt, trades.csv, trades.json, summary.json

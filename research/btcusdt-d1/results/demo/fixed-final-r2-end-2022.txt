@@ -1,0 +1,95 @@
+
+> btc-d1
+> node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/btcusdt-d1/main.ts fixed final-r2 --end 2022-12-31
+
+BTCUSDT spot D1 — final-r2 (research only; no live-trading status)
+Parameters: X 54.8%, Y 1.9%, stop 4.3%, hold 13 UTC days, L 93 UTC days, buffer 4.1%, P 9.6%, W 224 UTC days
+Window: 2019-02-11 → 2022-12-31 (UTC days) of one continuous account arming from 2019-02-11; equity 100,000.00 USDT at the window's start; bars of data/BTCUSDT/BTCUSDT-2017-2026.csv snapshot 2018-02-11 → 2022-12-31 (warm-up before 2019-02-11), nothing later
+Data door: research-only; permitted through 2024-06-30 (the holdout 2024-07-01 → 2026-08-24 is sealed for this phenotype)
+Account: cash-funded (live-executable accounting); start 100,000.00 USDT; at most 100,000 USDT gross notional per entry; spot, long only, no borrowing
+Costs: fee 10 bps + impact 5 bps per side (assumptions, not an account tier); stops fill at min(stop, the next traded minute’s open), recorded at that minute (the next day’s first trade if the trigger is the day’s last minute)
+
+Funded trades:
+#1 deep  entry 2020-03-12T23:49:00Z @ 4579.97 (fill 4582.26) 21.801491 BTC, notional 99,900.10 USDT of 100,000.00 USDT available
+    exit 2020-03-13T00:07:00Z @ 4722.01 (fill 4719.65) — trailing stop, adverse: next minute open below stop; 1 UTC days; gross 3,096.68 USDT, fees 202.80 USDT, impact 101.40 USDT, interest/funding 0 (N/A); net 2,792.49 USDT; cumulative realized 2,792.49 USDT; MFE 10.24% MAE -0.49%
+#2 continuation  entry 2020-03-16T00:28:00Z @ 5286.77 (fill 5289.41) 18.905688 BTC, notional 100,000.00 USDT of 102,792.49 USDT available
+    exit 2020-03-20T01:30:00Z @ 6121.30 (fill 6118.24) — trailing stop, adverse: next minute open below stop; 4 UTC days; gross 15,777.36 USDT, fees 215.67 USDT, impact 107.84 USDT, interest/funding 0 (N/A); net 15,453.86 USDT; cumulative realized 18,246.35 USDT; MFE 21.06% MAE -15.98%
+#3 continuation  entry 2020-03-22T20:22:00Z @ 5887.21 (fill 5890.15) 16.977486 BTC, notional 100,000.00 USDT of 118,246.35 USDT available
+    exit 2020-03-25T02:47:00Z @ 6539.18 (fill 6535.91) — trailing stop, adverse: stop level; 3 UTC days; gross 11,068.83 USDT, fees 210.96 USDT, impact 105.48 USDT, interest/funding 0 (N/A); net 10,752.38 USDT; cumulative realized 28,998.73 USDT; MFE 16.07% MAE -3.38%
+#4 continuation  entry 2020-03-28T04:41:00Z @ 6189.41 (fill 6192.50) 16.148555 BTC, notional 100,000.00 USDT of 128,998.73 USDT available
+    exit 2020-04-01T00:19:00Z @ 6302.93 (fill 6299.78) — trailing stop, adverse: next minute open below stop; 4 UTC days; gross 1,833.18 USDT, fees 201.73 USDT, impact 100.87 USDT, interest/funding 0 (N/A); net 1,530.58 USDT; cumulative realized 30,529.31 USDT; MFE 6.62% MAE -5.36%
+#5 continuation  entry 2020-04-13T00:50:00Z @ 6715.01 (fill 6718.37) 14.884568 BTC, notional 100,000.00 USDT of 130,529.31 USDT available
+    exit 2020-04-20T11:48:00Z @ 6979.48 (fill 6975.99) — trailing stop, adverse: stop level; 7 UTC days; gross 3,936.49 USDT, fees 203.83 USDT, impact 101.92 USDT, interest/funding 0 (N/A); net 3,630.73 USDT; cumulative realized 34,160.04 USDT; MFE 8.61% MAE -3.67%
+#6 continuation  entry 2020-05-04T08:06:00Z @ 8690.33 (fill 8694.68) 11.501292 BTC, notional 100,000.00 USDT of 134,160.04 USDT available
+    exit 2020-05-09T06:56:00Z @ 9634.12 (fill 9629.30) — trailing stop, adverse: stop level; 5 UTC days; gross 10,854.79 USDT, fees 210.75 USDT, impact 105.38 USDT, interest/funding 0 (N/A); net 10,538.67 USDT; cumulative realized 44,698.71 USDT; MFE 15.84% MAE -1.11%
+#7 continuation  entry 2020-05-10T00:22:00Z @ 8298.01 (fill 8302.16) 12.045060 BTC, notional 100,000.00 USDT of 144,698.71 USDT available
+    exit 2020-05-11T09:46:00Z @ 8517.30 (fill 8513.04) — trailing stop, adverse: stop level; 1 UTC days; gross 2,641.36 USDT, fees 202.54 USDT, impact 101.27 USDT, interest/funding 0 (N/A); net 2,337.55 USDT; cumulative realized 47,036.26 USDT; MFE 7.25% MAE -1.18%
+#8 continuation  entry 2020-05-21T15:10:00Z @ 9139.99 (fill 9144.56) 10.935463 BTC, notional 100,000.00 USDT of 147,036.26 USDT available
+    exit 2020-06-02T14:47:00Z @ 9777.47 (fill 9772.58) — trailing stop, adverse: next minute open below stop; 12 UTC days; gross 6,971.14 USDT, fees 206.87 USDT, impact 103.44 USDT, interest/funding 0 (N/A); net 6,660.84 USDT; cumulative realized 53,697.10 USDT; MFE 13.57% MAE -5.44%
+#9 continuation  entry 2020-06-15T07:34:00Z @ 9086.08 (fill 9090.62) 11.000346 BTC, notional 100,000.00 USDT of 153,697.10 USDT available
+    exit 2020-06-20T11:17:00Z @ 9176.67 (fill 9172.08) — trailing stop, adverse: stop level; 5 UTC days; gross 996.55 USDT, fees 200.90 USDT, impact 100.45 USDT, interest/funding 0 (N/A); net 695.21 USDT; cumulative realized 54,392.31 USDT; MFE 5.54% MAE -0.47%
+#10 continuation  entry 2020-08-02T04:44:00Z @ 10938.77 (fill 10944.24) 9.137227 BTC, notional 100,000.00 USDT of 154,392.31 USDT available
+    exit 2020-08-07T18:28:00Z @ 11388.30 (fill 11382.61) — trailing stop, adverse: stop level; 5 UTC days; gross 4,107.46 USDT, fees 204.01 USDT, impact 102.00 USDT, interest/funding 0 (N/A); net 3,801.45 USDT; cumulative realized 58,193.75 USDT; MFE 8.88% MAE -0.14%
+#11 continuation  entry 2020-08-25T22:03:00Z @ 11343.84 (fill 11349.51) 8.810952 BTC, notional 100,000.00 USDT of 158,193.75 USDT available
+    exit 2020-09-02T10:57:00Z @ 11532.44 (fill 11526.67) — trailing stop, adverse: next minute open below stop; 8 UTC days; gross 1,661.75 USDT, fees 201.56 USDT, impact 100.78 USDT, interest/funding 0 (N/A); net 1,359.40 USDT; cumulative realized 59,553.16 USDT; MFE 6.23% MAE -1.93%
+#12 continuation  entry 2020-09-03T23:40:00Z @ 10166.00 (fill 10171.08) 9.831795 BTC, notional 100,000.00 USDT of 159,553.16 USDT available
+    exit 2020-09-21T09:52:00Z @ 10695.13 (fill 10689.78) — trailing stop, adverse: next minute open below stop; 18 UTC days; gross 5,202.30 USDT, fees 205.10 USDT, impact 102.55 USDT, interest/funding 0 (N/A); net 4,894.65 USDT; cumulative realized 64,447.80 USDT; MFE 9.97% MAE -3.35%
+#13 continuation  entry 2020-11-07T20:21:00Z @ 14643.97 (fill 14651.29) 6.825337 BTC, notional 100,000.00 USDT of 164,447.80 USDT available
+    exit 2020-11-09T15:00:00Z @ 14977.05 (fill 14969.56) — trailing stop, adverse: stop level; 2 UTC days; gross 2,273.38 USDT, fees 202.17 USDT, impact 101.09 USDT, interest/funding 0 (N/A); net 1,970.12 USDT; cumulative realized 66,417.93 USDT; MFE 8.17% MAE 0.00%
+#14 continuation  entry 2020-11-26T03:34:00Z @ 17613.65 (fill 17622.46) 5.674578 BTC, notional 100,000.00 USDT of 166,417.93 USDT available
+    exit 2020-12-01T11:26:00Z @ 18984.32 (fill 18974.83) — trailing stop, adverse: next minute open below stop; 5 UTC days; gross 7,777.97 USDT, fees 207.67 USDT, impact 103.84 USDT, interest/funding 0 (N/A); net 7,466.46 USDT; cumulative realized 73,884.39 USDT; MFE 12.91% MAE -8.09%
+#15 continuation  entry 2020-12-09T09:07:00Z @ 17987.45 (fill 17996.44) 5.556653 BTC, notional 100,000.00 USDT of 173,884.39 USDT available
+    exit 2020-12-18T00:02:00Z @ 22760.29 (fill 22748.91) — trailing stop, adverse: next minute open below stop; 9 UTC days; gross 26,521.02 USDT, fees 226.41 USDT, impact 113.21 USDT, interest/funding 0 (N/A); net 26,181.40 USDT; cumulative realized 100,065.79 USDT; MFE 32.31% MAE -2.31%
+#16 continuation  entry 2021-01-04T09:44:00Z @ 31029.94 (fill 31045.45) 3.221083 BTC, notional 100,000.00 USDT of 200,065.79 USDT available
+    exit 2021-01-08T01:09:00Z @ 38629.31 (fill 38609.99) — trailing stop, adverse: stop level; 4 UTC days; gross 24,478.19 USDT, fees 224.37 USDT, impact 112.19 USDT, interest/funding 0 (N/A); net 24,141.63 USDT; cumulative realized 124,207.42 USDT; MFE 30.08% MAE -9.35%
+#17 continuation  entry 2021-01-10T17:47:00Z @ 38126.13 (fill 38145.19) 2.621562 BTC, notional 100,000.00 USDT of 224,207.42 USDT available
+    exit 2021-01-15T04:20:00Z @ 38375.70 (fill 38356.51) — trailing stop, adverse: stop level; 5 UTC days; gross 654.26 USDT, fees 200.55 USDT, impact 100.28 USDT, interest/funding 0 (N/A); net 353.43 USDT; cumulative realized 124,560.85 USDT; MFE 5.18% MAE -20.21%
+#18 continuation  entry 2021-01-17T09:06:00Z @ 35100.87 (fill 35118.42) 2.847508 BTC, notional 100,000.00 USDT of 224,560.85 USDT available
+    exit 2021-01-18T03:25:00Z @ 35239.71 (fill 35222.09) — trailing stop, adverse: next minute open below stop; 1 UTC days; gross 395.35 USDT, fees 200.30 USDT, impact 100.15 USDT, interest/funding 0 (N/A); net 94.91 USDT; cumulative realized 124,655.76 USDT; MFE 4.99% MAE -3.56%
+#19 continuation  entry 2021-01-20T12:17:00Z @ 34653.01 (fill 34670.34) 2.884310 BTC, notional 100,000.00 USDT of 224,655.76 USDT available
+    exit 2021-01-30T00:00:00Z @ 34246.28 (fill 34229.16) — trailing stop gap, day opening trade; 10 UTC days; gross -1,173.14 USDT, fees 198.73 USDT, impact 99.36 USDT, interest/funding 0 (N/A); net -1,471.23 USDT; cumulative realized 123,184.53 USDT; MFE 11.19% MAE -16.75%
+#20 deep  entry 2021-06-22T13:58:00Z @ 29455.30 (fill 29470.03) 3.393278 BTC, notional 100,000.00 USDT of 223,184.53 USDT available
+    exit 2021-06-23T00:16:00Z @ 31866.93 (fill 31851.00) — trailing stop, adverse: stop level; 1 UTC days; gross 8,183.34 USDT, fees 208.08 USDT, impact 104.04 USDT, interest/funding 0 (N/A); net 7,871.22 USDT; cumulative realized 131,055.75 USDT; MFE 13.05% MAE -1.52%
+#21 continuation  entry 2021-06-25T18:19:00Z @ 32100.01 (fill 32116.06) 3.113707 BTC, notional 100,000.00 USDT of 231,055.75 USDT available
+    exit 2021-06-30T03:59:00Z @ 35026.20 (fill 35008.69) — trailing stop, adverse: stop level; 5 UTC days; gross 9,111.30 USDT, fees 209.01 USDT, impact 104.51 USDT, interest/funding 0 (N/A); net 8,797.79 USDT; cumulative realized 139,853.54 USDT; MFE 14.02% MAE -6.07%
+#22 continuation  entry 2021-07-08T11:59:00Z @ 32700.00 (fill 32716.35) 3.056576 BTC, notional 100,000.00 USDT of 239,853.54 USDT available
+    exit 2021-07-12T16:11:00Z @ 33175.36 (fill 33158.77) — trailing stop, adverse: stop level; 4 UTC days; gross 1,452.98 USDT, fees 201.35 USDT, impact 100.68 USDT, interest/funding 0 (N/A); net 1,150.95 USDT; cumulative realized 141,004.49 USDT; MFE 6.05% MAE -1.34%
+#23 continuation  entry 2021-07-20T15:28:00Z @ 29856.58 (fill 29871.51) 3.347672 BTC, notional 100,000.00 USDT of 241,004.49 USDT available
+    exit 2021-07-27T00:00:00Z @ 37241.33 (fill 37222.71) — trailing stop gap, day opening trade; 7 UTC days; gross 24,721.72 USDT, fees 224.61 USDT, impact 112.31 USDT, interest/funding 0 (N/A); net 24,384.80 USDT; cumulative realized 165,389.29 USDT; MFE 35.82% MAE -1.25%
+#24 continuation  entry 2021-08-03T10:44:00Z @ 38790.11 (fill 38809.51) 2.576688 BTC, notional 100,000.00 USDT of 265,389.29 USDT available
+    exit 2021-08-09T00:14:00Z @ 43349.59 (fill 43327.92) — trailing stop, adverse: next minute open below stop; 6 UTC days; gross 11,748.36 USDT, fees 211.64 USDT, impact 105.82 USDT, interest/funding 0 (N/A); net 11,430.89 USDT; cumulative realized 176,820.18 USDT; MFE 16.81% MAE -3.76%
+#25 continuation  entry 2021-09-07T15:11:00Z @ 44217.84 (fill 44239.95) 2.260400 BTC, notional 100,000.00 USDT of 276,820.18 USDT available
+    exit 2021-09-08T00:02:00Z @ 46762.63 (fill 46739.25) — trailing stop, adverse: next minute open below stop; 1 UTC days; gross 5,752.24 USDT, fees 205.65 USDT, impact 102.83 USDT, interest/funding 0 (N/A); net 5,443.77 USDT; cumulative realized 182,263.95 USDT; MFE 10.62% MAE -0.33%
+#26 continuation  entry 2021-09-20T12:47:00Z @ 43361.19 (fill 43382.87) 2.305057 BTC, notional 100,000.00 USDT of 282,263.95 USDT available
+    exit 2021-10-04T15:03:00Z @ 46970.54 (fill 46947.05) — trailing stop, adverse: next minute open below stop; 14 UTC days; gross 8,319.76 USDT, fees 208.22 USDT, impact 104.11 USDT, interest/funding 0 (N/A); net 8,007.43 USDT; cumulative realized 190,271.38 USDT; MFE 13.53% MAE -8.67%
+#27 continuation  entry 2021-10-22T16:25:00Z @ 61167.00 (fill 61197.58) 1.634051 BTC, notional 100,000.00 USDT of 290,271.38 USDT available
+    exit 2021-11-03T18:01:00Z @ 61074.35 (fill 61043.81) — trailing stop, adverse: next minute open below stop; 12 UTC days; gross -151.39 USDT, fees 199.75 USDT, impact 99.87 USDT, interest/funding 0 (N/A); net -451.02 USDT; cumulative realized 189,820.36 USDT; MFE 5.07% MAE -5.47%
+#28 deep  entry 2022-06-14T02:08:00Z @ 21427.79 (fill 21438.50) 4.664505 BTC, notional 100,000.00 USDT of 289,820.36 USDT available
+    exit 2022-06-15T00:00:00Z @ 22136.42 (fill 22125.35) — trailing stop gap, day opening trade; 1 UTC days; gross 3,305.41 USDT, fees 203.20 USDT, impact 101.60 USDT, interest/funding 0 (N/A); net 3,000.60 USDT; cumulative realized 192,820.96 USDT; MFE 9.03% MAE -2.27%
+#29 deep  entry 2022-06-16T10:59:00Z @ 21276.70 (fill 21287.34) 4.697628 BTC, notional 100,000.00 USDT of 292,820.96 USDT available
+    exit 2022-06-29T00:01:00Z @ 20281.28 (fill 20271.14) — maximum hold, next minute open; 13 UTC days; gross -4,676.11 USDT, fees 195.23 USDT, impact 97.61 USDT, interest/funding 0 (N/A); net -4,968.95 USDT; cumulative realized 187,852.01 USDT; MFE 2.87% MAE -17.18%
+#30 deep  entry 2022-06-30T12:46:00Z @ 19297.67 (fill 19307.32) 5.179383 BTC, notional 100,000.00 USDT of 287,852.01 USDT available
+    exit 2022-07-02T00:00:00Z @ 19279.80 (fill 19270.16) — trailing stop gap, day opening trade; 2 UTC days; gross -92.56 USDT, fees 199.81 USDT, impact 99.90 USDT, interest/funding 0 (N/A); net -392.27 USDT; cumulative realized 187,459.75 USDT; MFE 8.40% MAE -3.48%
+#31 deep  entry 2022-07-03T04:59:00Z @ 19170.43 (fill 19180.02) 5.213760 BTC, notional 100,000.00 USDT of 287,459.75 USDT available
+    exit 2022-07-05T11:56:00Z @ 19478.79 (fill 19469.05) — trailing stop, adverse: stop level; 2 UTC days; gross 1,607.70 USDT, fees 201.51 USDT, impact 100.75 USDT, interest/funding 0 (N/A); net 1,305.44 USDT; cumulative realized 188,765.19 USDT; MFE 6.82% MAE -1.25%
+#32 deep  entry 2022-07-06T04:13:00Z @ 20201.43 (fill 20211.53) 4.947671 BTC, notional 100,000.00 USDT of 288,765.19 USDT available
+    exit 2022-07-09T00:06:00Z @ 21500.36 (fill 21489.61) — trailing stop, adverse: next minute open below stop; 3 UTC days; gross 6,426.68 USDT, fees 206.32 USDT, impact 103.16 USDT, interest/funding 0 (N/A); net 6,117.19 USDT; cumulative realized 194,882.38 USDT; MFE 11.51% MAE -1.67%
+#33 deep  entry 2022-07-12T12:25:00Z @ 19935.01 (fill 19944.98) 5.013794 BTC, notional 100,000.00 USDT of 294,882.38 USDT available
+    exit 2022-07-19T04:04:00Z @ 21795.18 (fill 21784.28) — trailing stop, adverse: next minute open below stop; 7 UTC days; gross 9,326.51 USDT, fees 209.22 USDT, impact 104.61 USDT, interest/funding 0 (N/A); net 9,012.67 USDT; cumulative realized 203,895.05 USDT; MFE 15.18% MAE -5.14%
+#34 continuation  entry 2022-07-25T20:03:00Z @ 22049.61 (fill 22060.63) 4.532961 BTC, notional 100,000.00 USDT of 303,895.05 USDT available
+    exit 2022-07-31T00:03:00Z @ 23607.28 (fill 23595.47) — trailing stop, adverse: stop level; 6 UTC days; gross 7,060.84 USDT, fees 206.96 USDT, impact 103.48 USDT, interest/funding 0 (N/A); net 6,750.40 USDT; cumulative realized 210,645.45 USDT; MFE 11.87% MAE -6.09%
+#35 continuation  entry 2022-08-19T06:40:00Z @ 21872.61 (fill 21883.55) 4.569643 BTC, notional 100,000.00 USDT of 310,645.45 USDT available
+    exit 2022-09-01T00:01:00Z @ 20025.06 (fill 20015.05) — maximum hold, next minute open; 13 UTC days; gross -8,442.64 USDT, fees 191.46 USDT, impact 95.73 USDT, interest/funding 0 (N/A); net -8,729.83 USDT; cumulative realized 201,915.62 USDT; MFE 1.25% MAE -10.76%
+
+Net profit in the window 201,915.62 USDT (201.92% of 100,000 USDT; the change of marked equity). Account since 2019-02-11: realized 201,915.62 USDT, unrealized 0.00 USDT
+Gross price P&L 212,729.06 USDT; fees 7,208.92 USDT; impact 3,604.52 USDT; interest/funding 0.00 USDT (not applicable: spot, no borrowing)
+Trades 35 (35 closed: 30 won, 5 lost)
+Cash 301,915.62 USDT + BTC 0.00000000 → equity 301,915.62 USDT
+Maximum drawdown (minute marks): 25,700.27 USDT (2021-01-07T18:16:00Z → 2021-01-11T16:38:00Z); peak-to-trough 19.72% of account equity (2020-03-13T00:01:00Z → 2020-03-16T10:59:00Z)
+Maximum drawdown (daily closes): 14,780.18 USDT; peak-to-trough 6.60%
+Exposure: 13.92% of the window in BTC, 86.08% in USDT cash (earning nothing)
+Capacity: largest fill 21.33% of its minute's quote volume; 8 fill(s) above 10% (warnings; order-book depth is not modelled)
+Reconciliation: ledger, cash and equity reconcile
+Not modelled: USDT counterparty or depeg risk, venue risk, order-book depth, lot-size and minimum-notional filters (no local metadata), taxes.
+
+Wrote /Users/chad/development/personal/margin-trading/evaluations/btcusdt-d1/final-r2_2019-02-11_2022-12-31_fee10-impact5-stop-adverse_cash/report.txt, trades.csv, trades.json, summary.json

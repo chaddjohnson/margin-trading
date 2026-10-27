@@ -1,0 +1,175 @@
+// The eight D1 parameters under the BTC clock (BTC_CLOCK_AND_EXECUTION.md §3) and the study's search box
+// (PROTOCOL.md §5). Percentages sit on a grid of tenths of a percentage point ("29.9%" is 299 tenths, 0.299); day
+// counts are whole UTC calendar days. The box was fixed before any outcome was seen: the ETF D1 box
+// (src/multi-etf-d1/context.ts) widened for an asset whose daily price moves are a few times an equity ETF's, and
+// the ETF's session counts restated as calendar days (BTCUSDT has no sessions).
+export interface ParamSpec {
+  key: keyof D1Params;
+  short: string;
+  unit: 'percent' | 'utcDays';
+  min: number; // on the grid: tenths of a percentage point, or days
+  max: number;
+  step: number; // the neighbourhood step on the grid (PROTOCOL.md §7.3)
+  meaning: string;
+}
+
+// The parameters as the engines use them: fractions and day counts.
+export interface D1Params {
+  targetPercentChange: number; // X
+  trailingBuyPercentage: number; // Y
+  trailingStopPercentage: number; // stop
+  maximumHoldDays: number; // hold, UTC calendar days
+  tickWindowSize: number; // L, UTC calendar days
+  intradayLossBuffer: number; // buffer
+  pullback: number; // P
+  continuationWindow: number; // W, UTC calendar days
+}
+
+// The same on the integer grid.
+export type D1Grid = Record<keyof D1Params, number>;
+
+export const paramSpecs: ParamSpec[] = [
+  {
+    key: 'targetPercentChange',
+    short: 'X',
+    unit: 'percent',
+    min: 80,
+    max: 600,
+    step: 26,
+    meaning: 'decline of a completed minute close from the L-day reference high that arms a trailing buy'
+  },
+  {
+    key: 'trailingBuyPercentage',
+    short: 'Y',
+    unit: 'percent',
+    min: 2,
+    max: 120,
+    step: 6,
+    meaning: 'rebound of a completed minute close above the trailing low that sends the buy'
+  },
+  {
+    key: 'trailingStopPercentage',
+    short: 'stop',
+    unit: 'percent',
+    min: 30,
+    max: 350,
+    step: 16,
+    meaning: 'trailing stop below the post-entry high, set once per UTC day from completed days'
+  },
+  {
+    key: 'maximumHoldDays',
+    short: 'hold',
+    unit: 'utcDays',
+    min: 2,
+    max: 60,
+    step: 3,
+    meaning: 'UTC calendar days from the entry day after which the losing-position exits apply'
+  },
+  {
+    key: 'tickWindowSize',
+    short: 'L',
+    unit: 'utcDays',
+    min: 14,
+    max: 365,
+    step: 18,
+    meaning: 'completed UTC days in the rolling reference high (the current day never included)'
+  },
+  {
+    key: 'intradayLossBuffer',
+    short: 'buffer',
+    unit: 'percent',
+    min: 0,
+    max: 150,
+    step: 8,
+    meaning: 'net loss, as a share of the entry notional, that sells from the hold day'
+  },
+  {
+    key: 'pullback',
+    short: 'P',
+    unit: 'percent',
+    min: 30,
+    max: 500,
+    step: 24,
+    meaning: 'decline from the post-exit high that arms within the continuation window'
+  },
+  {
+    key: 'continuationWindow',
+    short: 'W',
+    unit: 'utcDays',
+    min: 10,
+    max: 300,
+    step: 15,
+    meaning: 'UTC calendar days after a profitable exit during which the pullback can arm'
+  }
+];
+
+export const paramKeys = paramSpecs.map((spec) => spec.key);
+
+export const maxLookbackDays = paramSpecs.find((spec) => spec.key === 'tickWindowSize')!.max;
+
+export const paramsOfGrid = (grid: D1Grid): D1Params =>
+  Object.fromEntries(
+    paramSpecs.map((spec) => [spec.key, spec.unit === 'percent' ? grid[spec.key] / 1000 : grid[spec.key]])
+  ) as unknown as D1Params;
+
+export const gridKey = (grid: D1Grid) => paramKeys.map((key) => grid[key]).join('-');
+
+export const inBox = (grid: D1Grid) =>
+  paramSpecs.every((spec) => {
+    const value = grid[spec.key];
+
+    return Number.isInteger(value) && value >= spec.min && value <= spec.max;
+  });
+
+export const formatGridValue = (spec: ParamSpec, value: number) =>
+  spec.unit === 'percent' ? `${(value / 10).toFixed(1)}%` : `${value} UTC days`;
+
+export const describeGrid = (grid: D1Grid) =>
+  paramSpecs.map((spec) => `${spec.short} ${formatGridValue(spec, grid[spec.key])}`).join(', ');
+
+// "29.9%" → 299 and 74 → 74, refusing anything off the grid (the phenotype JSON format, as in config/phenotypes).
+export const gridOfJson = (parameters: Record<string, unknown>, where: string, checkBox = false): D1Grid => {
+  const keys = Object.keys(parameters);
+  const unknown = keys.filter((key) => !paramKeys.includes(key as keyof D1Params));
+
+  if (unknown.length > 0) {
+    throw new Error(`${where}: unknown parameter(s) ${unknown.join(', ')}`);
+  }
+
+  const grid = {} as D1Grid;
+
+  for (const spec of paramSpecs) {
+    const raw = parameters[spec.key];
+
+    if (raw === undefined) {
+      throw new Error(`${where}: ${spec.key} is missing (every D1 parameter is required)`);
+    }
+
+    if (spec.unit === 'percent') {
+      const match = typeof raw === 'string' ? raw.match(/^(0|[1-9]\d{0,3})(?:\.(\d))?%$/) : null;
+
+      if (!match) {
+        throw new Error(`${where}: ${spec.key} must be a percentage string with at most one decimal, e.g. "21.6%"`);
+      }
+
+      grid[spec.key] = Number(match[1]) * 10 + Number(match[2] ?? 0);
+    } else {
+      if (typeof raw !== 'number' || !Number.isInteger(raw) || raw < 1) {
+        throw new Error(`${where}: ${spec.key} must be a positive whole number of UTC days`);
+      }
+
+      grid[spec.key] = raw;
+    }
+  }
+
+  if (checkBox && !inBox(grid)) {
+    throw new Error(`${where}: outside the study's search box`);
+  }
+
+  return grid;
+};
+
+export const jsonOfGrid = (grid: D1Grid) =>
+  Object.fromEntries(
+    paramSpecs.map((spec) => [spec.key, spec.unit === 'percent' ? `${(grid[spec.key] / 10).toFixed(1)}%` : grid[spec.key]])
+  );

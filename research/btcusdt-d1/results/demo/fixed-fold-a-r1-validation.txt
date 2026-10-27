@@ -1,0 +1,44 @@
+
+> btc-d1
+> node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/btcusdt-d1/main.ts fixed fold-a-r1 --dataset fold-a-validation
+
+BTCUSDT spot D1 — fold-a-r1 (research only; no live-trading status)
+Parameters: X 50.6%, Y 9.5%, stop 6.5%, hold 29 UTC days, L 127 UTC days, buffer 2.7%, P 6.8%, W 234 UTC days
+Window: 2021-12-01 → 2023-02-28 (UTC days) of one continuous account arming from 2019-02-11; equity 411,116.75 USDT at the window's start; bars of data/BTCUSDT/BTCUSDT-2017-2026.csv snapshot 2018-02-11 → 2023-02-28 (warm-up before 2019-02-11), nothing later
+Data door: research-only; permitted through 2024-06-30 (the holdout 2024-07-01 → 2026-08-24 is sealed for this phenotype)
+Account: cash-funded (live-executable accounting); start 100,000.00 USDT; at most 100,000 USDT gross notional per entry; spot, long only, no borrowing
+Costs: fee 10 bps + impact 5 bps per side (assumptions, not an account tier); stops fill at min(stop, the next traded minute’s open), recorded at that minute (the next day’s first trade if the trigger is the day’s last minute)
+
+Funded trades:
+#41 deep  entry 2022-01-24T18:17:00Z @ 36075.84 (fill 36093.88) 2.770553 BTC, notional 100,000.00 USDT of 411,116.75 USDT available
+    exit 2022-01-27T01:32:00Z @ 36360.92 (fill 36342.74) — trailing stop, adverse: next minute open below stop; 3 UTC days; gross 789.83 USDT, fees 200.69 USDT, impact 100.34 USDT, interest/funding 0 (N/A); net 488.79 USDT; cumulative realized 311,605.54 USDT; MFE 7.88% MAE -1.17%
+#42 continuation  entry 2022-02-04T15:21:00Z @ 39707.24 (fill 39727.09) 2.517174 BTC, notional 100,000.00 USDT of 411,605.54 USDT available
+    exit 2022-02-11T00:28:00Z @ 42842.64 (fill 42821.21) — trailing stop, adverse: stop level; 7 UTC days; gross 7,892.33 USDT, fees 207.79 USDT, impact 103.90 USDT, interest/funding 0 (N/A); net 7,580.65 USDT; cumulative realized 319,186.19 USDT; MFE 15.40% MAE -1.41%
+#43 continuation  entry 2022-02-24T20:03:00Z @ 37644.54 (fill 37663.36) 2.655100 BTC, notional 100,000.00 USDT of 419,186.19 USDT available
+    exit 2022-03-03T15:45:00Z @ 42449.00 (fill 42427.78) — trailing stop, adverse: stop level; 7 UTC days; gross 12,756.32 USDT, fees 212.65 USDT, impact 106.33 USDT, interest/funding 0 (N/A); net 12,437.34 USDT; cumulative realized 331,623.54 USDT; MFE 20.60% MAE -1.71%
+#44 continuation  entry 2022-03-09T03:33:00Z @ 40787.42 (fill 40807.81) 2.450511 BTC, notional 100,000.00 USDT of 431,623.54 USDT available
+    exit 2022-04-01T01:39:00Z @ 45057.50 (fill 45034.97) — trailing stop, adverse: stop level; 23 UTC days; gross 10,463.88 USDT, fees 210.36 USDT, impact 105.18 USDT, interest/funding 0 (N/A); net 10,148.34 USDT; cumulative realized 341,771.88 USDT; MFE 18.15% MAE -7.93%
+#45 continuation  entry 2022-04-21T10:20:00Z @ 42366.90 (fill 42388.08) 2.359154 BTC, notional 100,000.00 USDT of 441,771.88 USDT available
+    exit 2022-05-20T00:01:00Z @ 30315.62 (fill 30300.46) — maximum hold, next minute open; 29 UTC days; gross -28,430.82 USDT, fees 171.48 USDT, impact 85.73 USDT, interest/funding 0 (N/A); net -28,688.04 USDT; cumulative realized 313,083.84 USDT; MFE 1.44% MAE -36.98%
+#46 deep  entry 2022-06-14T05:22:00Z @ 22964.51 (fill 22975.99) 4.352369 BTC, notional 100,000.00 USDT of 413,083.84 USDT available
+    exit 2022-07-13T00:01:00Z @ 19325.68 (fill 19316.02) — maximum hold, next minute open; 29 UTC days; gross -15,837.53 USDT, fees 184.07 USDT, impact 92.03 USDT, interest/funding 0 (N/A); net -16,113.63 USDT; cumulative realized 296,970.20 USDT; MFE 1.73% MAE -23.26%
+#47 deep  entry 2022-07-16T17:04:00Z @ 21486.32 (fill 21497.06) 4.651798 BTC, notional 100,000.00 USDT of 396,970.20 USDT available
+    exit 2022-07-21T02:59:00Z @ 22698.75 (fill 22687.40) — trailing stop, adverse: stop level; 5 UTC days; gross 5,639.99 USDT, fees 205.54 USDT, impact 102.77 USDT, interest/funding 0 (N/A); net 5,331.68 USDT; cumulative realized 302,301.89 USDT; MFE 12.99% MAE -3.43%
+#48 deep  entry 2022-07-27T19:05:00Z @ 22707.35 (fill 22718.70) 4.401660 BTC, notional 100,000.00 USDT of 402,301.89 USDT available
+    exit 2022-08-01T10:44:00Z @ 23060.10 (fill 23048.57) — trailing stop, adverse: next minute open below stop; 5 UTC days; gross 1,552.69 USDT, fees 201.45 USDT, impact 100.73 USDT, interest/funding 0 (N/A); net 1,250.51 USDT; cumulative realized 303,552.39 USDT; MFE 8.63% MAE -0.58%
+#49 deep  entry 2022-08-11T05:07:00Z @ 24550.97 (fill 24563.25) 4.071123 BTC, notional 100,000.00 USDT of 403,552.39 USDT available
+    exit 2022-09-09T00:01:00Z @ 19315.88 (fill 19306.22) — maximum hold, next minute open; 29 UTC days; gross -21,312.70 USDT, fees 178.60 USDT, impact 89.29 USDT, interest/funding 0 (N/A); net -21,580.59 USDT; cumulative realized 281,971.80 USDT; MFE 2.69% MAE -24.60%
+
+Net profit in the window -29,144.94 USDT (-29.14% of 100,000 USDT; the change of marked equity). Account since 2019-02-11: realized 281,971.80 USDT, unrealized 0.00 USDT
+Gross price P&L -26,486.01 USDT; fees 1,772.63 USDT; impact 886.31 USDT; interest/funding 0.00 USDT (not applicable: spot, no borrowing)
+Window of a longer run: the trades above are those held in the window, over their whole lives; a trade carried in contributes only its change after 2021-12-01 to the window net, so the gross, fee and impact totals need not add up to it. trades.csv/trades.json hold the whole account's ledger since 2019-02-11, labelled by window_role.
+Trades 9 (9 closed: 6 won, 3 lost)
+Cash 381,971.80 USDT + BTC 0.00000000 → equity 381,971.80 USDT
+Maximum drawdown (minute marks): 70,456.73 USDT (2022-03-28T19:33:00Z → 2022-09-07T02:24:00Z); peak-to-trough 15.68% of account equity (2022-03-28T19:33:00Z → 2022-09-07T02:24:00Z)
+Maximum drawdown (daily closes): 67,752.17 USDT; peak-to-trough 15.14%
+Exposure: 29.37% of the window in BTC, 70.63% in USDT cash (earning nothing)
+Capacity: largest fill 11.49% of its minute's quote volume; 1 fill(s) above 10% (warnings; order-book depth is not modelled)
+Reconciliation: ledger, cash and equity reconcile
+Not modelled: USDT counterparty or depeg risk, venue risk, order-book depth, lot-size and minimum-notional filters (no local metadata), taxes.
+
+Wrote /Users/chad/development/personal/margin-trading/evaluations/btcusdt-d1/fold-a-r1_2021-12-01_2023-02-28_armed-2019-02-11_fee10-impact5-stop-adverse_cash/report.txt, trades.csv, trades.json, summary.json

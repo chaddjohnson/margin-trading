@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "study": "btcusdt-d1",
+  "architecture": "D1 (src/app/allIn-trailingBuy-postExitContinuation.ts rules) adapted to the BTC clock",
+  "engine": "btcusdt-d1-v1: reference src/btcusdt-d1/engine.ts, fast replay src/btcusdt-d1/fast.ts",
+  "units": {
+    "targetPercentChange": "percent string, 0.1-point grid: decline of a completed minute close from the L-day reference high that arms a trailing buy",
+    "trailingBuyPercentage": "percent string, 0.1-point grid: rebound of a completed minute close above the trailing low that sends the buy",
+    "trailingStopPercentage": "percent string, 0.1-point grid: trailing stop below the post-entry high, set once per UTC day from completed days",
+    "maximumHoldDays": "whole UTC calendar days: UTC calendar days from the entry day after which the losing-position exits apply",
+    "tickWindowSize": "whole UTC calendar days: completed UTC days in the rolling reference high (the current day never included)",
+    "intradayLossBuffer": "percent string, 0.1-point grid: net loss, as a share of the entry notional, that sells from the hold day",
+    "pullback": "percent string, 0.1-point grid: decline from the post-exit high that arms within the continuation window",
+    "continuationWindow": "whole UTC calendar days: UTC calendar days after a profitable exit during which the pullback can arm"
+  },
+  "calendar": "UTC calendar days (00:00:00 UTC boundaries), 24/7 trading, decisions at completed minutes",
+  "venue": "BTCUSDT spot minute bars of unverified venue provenance (consistent with Binance spot; no local metadata)",
+  "account": "cash-funded spot: 100,000 USDT start, at most 100,000 USDT gross notional per entry, no borrowing, no leverage, cash earns 0",
+  "costScenario": "principal: fee 10 bps + impact 5 bps per side; stops at min(stop, the next traded minute’s open), recorded at that minute (the next day’s first trade if the trigger is the day’s last minute)",
+  "dataSnapshot": {
+    "file": "data/BTCUSDT/BTCUSDT-2017-2026.csv",
+    "snapshotPrefixSha256": "ed0d359a7bdb86c18f7aa6a73fef8a0bdb689d6ddcd0b3441ec47b79a08e7b76",
+    "seriesSha256": "cb7c9cdc097bd2b92a06cdfb771b916f6c2e1c1e8c975c84a979c490d15283f8",
+    "historyStart": "2018-02-11",
+    "lastDay": "2026-08-24"
+  },
+  "boundaries": {
+    "armingFrom": "2019-02-11",
+    "folds": [
+      {
+        "label": "fold-a",
+        "selection": [
+          "2019-02-11",
+          "2021-11-30"
+        ],
+        "validation": [
+          "2021-12-01",
+          "2023-02-28"
+        ]
+      },
+      {
+        "label": "fold-b",
+        "selection": [
+          "2019-02-11",
+          "2023-02-28"
+        ],
+        "validation": [
+          "2023-03-01",
+          "2024-06-30"
+        ]
+      }
+    ],
+    "finalSelection": [
+      "2019-02-11",
+      "2024-06-30"
+    ],
+    "holdout": [
+      "2024-07-01",
+      "2026-08-24"
+    ]
+  },
+  "seeds": {
+    "seedRoot": "btcusdt-d1-v1",
+    "sobol": "deriveSeed(seedRoot, \"sobol\")",
+    "procedure": "btcusdt-d1-procedure-v1"
+  },
+  "liveTrading": "not authorised: historical research only",
+  "id": "final-r3",
+  "status": "research-only",
+  "description": "Rank-3 family of the final selection (bars before 2024-07-01 only): X 50.5%, Y 7.1%, stop 3.9%, hold 4 UTC days, L 119 UTC days, buffer 12.9%, P 25.0%, W 187 UTC days",
+  "parameters": {
+    "targetPercentChange": "50.5%",
+    "trailingBuyPercentage": "7.1%",
+    "trailingStopPercentage": "3.9%",
+    "maximumHoldDays": 4,
+    "tickWindowSize": 119,
+    "intradayLossBuffer": "12.9%",
+    "pullback": "25.0%",
+    "continuationWindow": 187
+  },
+  "dataDoor": {
+    "latestPermittedDay": "2024-06-30",
+    "holdoutEvaluated": false,
+    "reason": "the holdout 2024-07-01 → 2026-08-24 is sealed for this phenotype"
+  },
+  "origin": {
+    "selection": "results/final/PICKS.json",
+    "picksBodyHash": "b106a42c61142de160126b6a1f81cbb1a4c97e260eba49ec1b8139b81a392689",
+    "key": "505-71-39-4-119-129-250-187",
+    "score": 84134.13297891995
+  },
+  "evidence": {
+    "selection": {
+      "net": 115531.70053967912,
+      "minutePercent": 0.25964591165176043,
+      "note": "in-sample (development)"
+    },
+    "holdout": "not evaluated (sealed)"
+  },
+  "gateFailures": [
+    "procedure gate failed (results/PROCEDURE_GATE.json): no phenotype is validated",
+    "not validated: retrospective research artifact only"
+  ]
+}
