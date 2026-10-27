@@ -2,10 +2,14 @@
 
 ## Top screen
 
-- **Updated:** 2026-10-27T13:43Z (UTC).
-- **Status:** **COMPLETE** — every stage done, reports rendered, review addressed, tests pass. Commit and push to
-  `origin` on branch `research/vgt-standalone-vs-pooled-robustness` follow this update. The commit SHA and the push
-  result are recorded below in a follow-up commit.
+- **Updated:** 2026-10-27T13:44Z (UTC).
+- **Status:** **COMPLETE, committed and pushed.** The study is commit `91c3b2e7eac6d075d5ab8856b83cc28d1cec5857` on
+  branch `research/vgt-standalone-vs-pooled-robustness`.
+  - Pushed to `origin` at 2026-10-27T13:44:08Z as a new branch with upstream set. `git ls-remote` showed the remote
+    head = `91c3b2e7`.
+  - This checkpoint update is a follow-up commit, pushed the same way.
+  - No PR was created and no other branch was pushed or merged. `origin` has no `research/b4-b5-robustness-audit`
+    branch; its commits are carried only as history.
 - **Authoritative protocol:** `PROTOCOL.md`.
   - Frozen 2026-10-27T13:02:32Z at `1545f48d890f69f89668c58fee18731da128af0c98c487108639433daaa7a31a`.
   - Amendment head **A1** (13:11:51Z; a rationale correction, no rule change):
@@ -19,7 +23,8 @@
   - overall (§11 rule): **both worth parallel observation**. The B5 rule failed only its drawdown condition, by
     0.06 pp on seed 1; seed 2 points the same way.
 - **Running:** no process.
-- **Next step:** none required beyond the commit and push. Never rerun `run`; the stored records are final.
+- **Next step:** none. Any prospective observation of S (via the VGT book's virtual trades) is the user's decision
+  and would need its own frozen protocol before any post-cutoff bar. Never rerun `run`; the stored records are final.
 
 ## Environment
 
@@ -28,7 +33,7 @@
   B4/B5 robustness-audit head, which holds the completed audit `3c0ee0f3`).
   - The parent branch was never pushed. Pushing this branch carries those commits as history but moves no other
     remote branch.
-- **Working tree before the commit:**
+- **Working tree before the study commit** (clean after it, apart from ignored files):
   - `M package.json` (+ the `vgt-robustness` script only);
   - `?? research/vgt-standalone-vs-pooled-robustness/`;
   - `?? src/vgt-standalone-robustness/`.
