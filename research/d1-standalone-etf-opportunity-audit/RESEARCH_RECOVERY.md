@@ -3,8 +3,9 @@
 ## Top screen
 
 - **Updated:** 2026-10-27T17:21Z (UTC). File listings (`ls`, `stat`) show local time (CET = UTC+1).
-- **Status:** **COMPLETE** (all stages run, analysed, reported, reviewed and verified). Commit and push: see "Git
-  delivery" below (filled by a follow-up commit).
+- **Status:** **COMPLETE, committed and pushed.** Study commit `4da90d92af59033fe7fcc4fd2972788751dc669e` on branch
+  `research/d1-standalone-etf-opportunity-robustness`, pushed to `origin` at 2026-10-27T17:22:06Z with upstream set;
+  `git ls-remote` showed the remote head = `4da90d92`. This checkpoint update is a follow-up commit, pushed the same way.
 - **Authoritative protocol:** `PROTOCOL.md` (`f9b0810b…` after amendment A1), frozen 2026-10-27T16:28:45Z;
   `PROTOCOL_FREEZE.json` (`16461ab0…` with A1) binds 34 files; **amendment head A1** (17:17:41Z, reporting only:
   fold-vector count 119/238 and the 16:16 shortlist regeneration disclosed; no rule, run or classification changed).
@@ -58,7 +59,7 @@
 | 5b | Final checks | 17:03→17:09; re-verified 17:19 | `verify` (all pass), `npm test` 690/690, `tsc`, `eslint`, `pools verify`, `vgt-robustness verify`, `pools forward status` | `results/verify.json`; logs local |
 | 5c | CLI demonstrations (incl. 3 refusals) | 17:09→17:12 | `list`, `compare`, `show`, `fixed …` | `evaluations/` (local) |
 | 5d | Final independent audit → dispositions; amendment A1 | 17:02→17:19 | subagent; `amend` | `reviews/final-audit.md`, `reviews/FINAL_AUDIT_DISPOSITIONS.md` |
-| 5e | Commit and push | see Git delivery | `git` | — |
+| 5e | Commit and push | 17:21–17:22 | `git commit`, `git push -u origin …` | `4da90d92` (+ this follow-up) |
 
 ## Constants
 
@@ -90,4 +91,9 @@ reversal, bands 10/15/20/30%, major 20%, families 126 sessions, independence 252
 
 ## Git delivery
 
-(Filled by the follow-up commit.)
+- Study commit `4da90d92` (2026-10-27T17:21Z): 106 files — this study's folder (logs excluded by the `logs/` rule),
+  `src/d1-standalone-opportunity-audit/` and the one `package.json` script. Working tree clean afterwards apart from
+  ignored files.
+- Pushed with `git push -u origin research/d1-standalone-etf-opportunity-robustness` at 17:22:06Z (new branch; upstream
+  set; remote head verified `4da90d92…`). No PR, merge or force-push; no other branch pushed.
+- This checkpoint update is a follow-up commit on the same branch, pushed the same way.
