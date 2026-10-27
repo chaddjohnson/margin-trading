@@ -1,0 +1,3863 @@
+{
+ "schema": "vgt-standalone-robustness-manifest-v1",
+ "generatedAt": "2026-10-27T13:40:43.457Z",
+ "study": "vgt-standalone-vs-pooled-robustness-v1",
+ "git": {
+  "head": "7a962151ecf67b204e16d85767f8898526ab1eae",
+  "branch": "research/vgt-standalone-vs-pooled-robustness"
+ },
+ "node": "v24.21.0",
+ "protocol": {
+  "file": "research/vgt-standalone-vs-pooled-robustness/PROTOCOL.md",
+  "originalSha256": "1545f48d890f69f89668c58fee18731da128af0c98c487108639433daaa7a31a",
+  "headSha256": "11fccfe77172493697116f4e91dca0bf75d921a4b290903026ae22e4e6d8f444",
+  "freeze": "research/vgt-standalone-vs-pooled-robustness/PROTOCOL_FREEZE.json",
+  "freezeSha256": "2f42ba1de6ec80b6e86790cfe7c5c1d636f9f657c178981f6266c83e1ecaed3a"
+ },
+ "readOnlyInputs": {
+  "config/pools/B4.json": "4ca5aa1a900bc9596007c914a333ff13b0a0e14df32e3d8ba5b7ce16638edf40",
+  "config/pools/B5.json": "deef53ca531118064925a64e25288c927f3a71d8a05311075b439087960020fe",
+  "config/phenotypes/D1/VGT.json": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70",
+  "config/phenotypes/D1/XBI.json": "453c4fd00d9de91269da718011c78b3d20d4611a0791005285345cbdac12aff8",
+  "config/phenotypes/D1/XRT.json": "d7b7f222bb8921ec5a3781d3b98c32f3045eb775cb5e01ee5e6af05af4e7cee9",
+  "config/phenotypes/D1/KRE.json": "6b8889e20ab3c07e85f12e5c344166588495e95bc1f5573b36699e8a587a8c8d",
+  "config/phenotypes/D1/GDX.json": "ed98c23c7c1e741401862bdf481175a106367d30ddea7ba1b5906859cb0ce71b",
+  "research/prospective-b4-b5-shadow/PROTOCOL_FREEZE.json": "0dabd97e2b3d50fe9946b773bd9b845b07da1934eb4a797ecc9a59af129c3be2",
+  "research/joint-16-etf-d1/results/controls/controls.json": "2bd521dcd95a1a2ed39234f62eab131da20e2e0afe587ca339149a6e69af5e5e",
+  "research/b4-b5-robustness-audit/PROTOCOL.md": "739134130ef2f058303422dda0cb90abff16372c8bdb19bb8757dbfabd2d95bf",
+  "research/b4-b5-robustness-audit/PROTOCOL_FREEZE.json": "13fbc2ec69e03807d79ded68c83a0b7023d6e1d1bef7ae98236b4d8da89d1b87",
+  "research/b4-b5-robustness-audit/MANIFEST.json": "794a6ffdfc43c274990a669f35a7d161322e89ac62e3e65a321b1c92679bd4d2",
+  "research/b4-b5-robustness-audit/PROSPECTIVE_CRITERIA_FREEZE.json": "f938dda3beb19f42d1e6612f4e3790427fa69336ec230719428b007fcaadb0e3",
+  "research/b4-b5-robustness-audit/results/analysis.json": "331bc9a6d1a62c3b9de73a38a792026243952a58b1d53ef6a9549ab8f24bbb90",
+  "research/b4-b5-robustness-audit/results/baseline/baseline.json": "1fc93b66c71af3ba7fa95b29ee88eaf671cd24f81be66b887f8afc3e9a4e5e7d",
+  "research/b4-b5-robustness-audit/results/runs/ablation.jsonl": "bb1fed3a3cb2ee6ccdc91215de635e24b802f245da65ce9ff7084021900197de",
+  "research/b4-b5-robustness-audit/results/runs/base.jsonl": "6b0997aa30729aa0e2ef1ebd6b9be7f858b357f74fb1056c6e0363a142cfa5dd",
+  "research/b4-b5-robustness-audit/results/runs/book.jsonl": "07ef28b11b2381423133e9e883d88bd1e6480c2b75a2214202d139622ca4065b",
+  "research/b4-b5-robustness-audit/results/runs/boundary.jsonl": "192328a0b7593a9cb0acb97eae6ca53241618408ebaabf0109fae1855da92f3f",
+  "research/b4-b5-robustness-audit/results/runs/control.jsonl": "a0147a528b8ec0a5d693186be50444beecda3f50ad0fd84f4dd824768f1a51b8",
+  "research/b4-b5-robustness-audit/results/runs/cost.jsonl": "6a9c6e186254e755463199acf6480e6910a3cb91c397c36dcb99129211ac0ba9",
+  "research/b4-b5-robustness-audit/results/runs/dividends.jsonl": "d4f01048a49b978e29c289c74b687da32a0c6e41a63a6b0bb15adb1a5c4bde84",
+  "research/b4-b5-robustness-audit/results/runs/joint.jsonl": "ee158a7f7cdefea543590ab696c23c83c5e9a776fcde7de9e6c103dc29f53e49",
+  "research/b4-b5-robustness-audit/results/runs/oat.jsonl": "8be209e6e1dd2a0b1af2084158c8271433679af3a5674914f39368a354bf67e4",
+  "data/partitions.json": "43893f3d3277d6804775a82e8975644fae6ffcdff30574b9ffc000212c0fefa6",
+  "config/market-events/splits.json": "e5bde427182fea627e38aba69c14ae16cf8b7e428e75bf4153e55db1d1cb5ba2",
+  "config/market-events/distributions.csv": "3b4342eb7cdbb270d78a355576c2098d7692caae3ae0550bcbeb64d7a7528259",
+  "package-lock.json": "ee4c73e35bde161ce16218902ddc9aa079a78330bdd5e512689ebe593129cc46",
+  "data/VOOG/data.csv": "a7aa42aeebd9e83f94368f0ee7761410ffacf734524f3cc7655af32354de51ab",
+  "data/VGT/data.csv": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+  "data/XBI/data.csv": "9afecc0606330d68ca12f7b0c331f75a150f64d0dad2e6ff910538a667b0c031",
+  "data/XRT/data.csv": "ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752",
+  "data/KRE/data.csv": "40e7bd6c72c1dffb343b265bed16d69c964ba5bee81ad297a15e6d8a5607e01a",
+  "data/GDX/data.csv": "86ce101fede1a412dd452fcc29dc87b69ade4ad67629230172fde878b7c2c320"
+ },
+ "window": {
+  "dataset": "all",
+  "first": "2016-01-04",
+  "end": "2026-10-13",
+  "sessions": 2710,
+  "firstEligibleDate": "2017-06-15",
+  "postCutoffBarsRead": false
+ },
+ "conventions": {
+  "engine": "src/portfolio-aware-d1/nbook/engine.ts via src/b4-b5-robustness/run.ts (runPoolOn configuration)",
+  "fixed": {
+   "notional": 100000,
+   "compounding": false
+  },
+  "interest": {
+   "annualRate": 0.11,
+   "method": "simple",
+   "dayCount": 365
+  },
+  "costBpsPerSide": 5,
+  "stopFill": "stop",
+  "portfolio": {
+   "initialEquity": 300000,
+   "core": "60% VOOG / 40% VGT",
+   "borrowedFraction": 0.2,
+   "dividends": "frozen"
+  }
+ },
+ "standalones": [
+  {
+   "id": "VGT-primary",
+   "file": "config/phenotypes/D1/VGT.json",
+   "phenotype": "primary",
+   "grid": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 8,
+    "tickWindowSize": 74,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60
+   }
+  }
+ ],
+ "designs": {
+  "oat": [
+   {
+    "key": "targetPercentChange",
+    "offset": "-m",
+    "frozen": 216,
+    "value": 206,
+    "feasible": true
+   },
+   {
+    "key": "targetPercentChange",
+    "offset": "-s",
+    "frozen": 216,
+    "value": 211,
+    "feasible": true
+   },
+   {
+    "key": "targetPercentChange",
+    "offset": "+s",
+    "frozen": 216,
+    "value": 221,
+    "feasible": true
+   },
+   {
+    "key": "targetPercentChange",
+    "offset": "+m",
+    "frozen": 216,
+    "value": 226,
+    "feasible": true
+   },
+   {
+    "key": "trailingBuyPercentage",
+    "offset": "-m",
+    "frozen": 3,
+    "value": 1,
+    "feasible": true
+   },
+   {
+    "key": "trailingBuyPercentage",
+    "offset": "-s",
+    "frozen": 3,
+    "value": 2,
+    "feasible": true
+   },
+   {
+    "key": "trailingBuyPercentage",
+    "offset": "+s",
+    "frozen": 3,
+    "value": 4,
+    "feasible": true
+   },
+   {
+    "key": "trailingBuyPercentage",
+    "offset": "+m",
+    "frozen": 3,
+    "value": 5,
+    "feasible": true
+   },
+   {
+    "key": "trailingStopPercentage",
+    "offset": "-m",
+    "frozen": 73,
+    "value": 63,
+    "feasible": true
+   },
+   {
+    "key": "trailingStopPercentage",
+    "offset": "-s",
+    "frozen": 73,
+    "value": 68,
+    "feasible": true
+   },
+   {
+    "key": "trailingStopPercentage",
+    "offset": "+s",
+    "frozen": 73,
+    "value": 78,
+    "feasible": true
+   },
+   {
+    "key": "trailingStopPercentage",
+    "offset": "+m",
+    "frozen": 73,
+    "value": 83,
+    "feasible": true
+   },
+   {
+    "key": "maximumHoldDays",
+    "offset": "-m",
+    "frozen": 8,
+    "value": 6,
+    "feasible": true
+   },
+   {
+    "key": "maximumHoldDays",
+    "offset": "-s",
+    "frozen": 8,
+    "value": 7,
+    "feasible": true
+   },
+   {
+    "key": "maximumHoldDays",
+    "offset": "+s",
+    "frozen": 8,
+    "value": 9,
+    "feasible": true
+   },
+   {
+    "key": "maximumHoldDays",
+    "offset": "+m",
+    "frozen": 8,
+    "value": 10,
+    "feasible": true
+   },
+   {
+    "key": "tickWindowSize",
+    "offset": "-m",
+    "frozen": 74,
+    "value": 59,
+    "feasible": true
+   },
+   {
+    "key": "tickWindowSize",
+    "offset": "-s",
+    "frozen": 74,
+    "value": 67,
+    "feasible": true
+   },
+   {
+    "key": "tickWindowSize",
+    "offset": "+s",
+    "frozen": 74,
+    "value": 81,
+    "feasible": true
+   },
+   {
+    "key": "tickWindowSize",
+    "offset": "+m",
+    "frozen": 74,
+    "value": 89,
+    "feasible": true
+   },
+   {
+    "key": "intradayLossBuffer",
+    "offset": "-m",
+    "frozen": 29,
+    "value": 19,
+    "feasible": true
+   },
+   {
+    "key": "intradayLossBuffer",
+    "offset": "-s",
+    "frozen": 29,
+    "value": 24,
+    "feasible": true
+   },
+   {
+    "key": "intradayLossBuffer",
+    "offset": "+s",
+    "frozen": 29,
+    "value": 34,
+    "feasible": true
+   },
+   {
+    "key": "intradayLossBuffer",
+    "offset": "+m",
+    "frozen": 29,
+    "value": 39,
+    "feasible": true
+   },
+   {
+    "key": "pullback",
+    "offset": "-m",
+    "frozen": 90,
+    "value": 80,
+    "feasible": true
+   },
+   {
+    "key": "pullback",
+    "offset": "-s",
+    "frozen": 90,
+    "value": 85,
+    "feasible": true
+   },
+   {
+    "key": "pullback",
+    "offset": "+s",
+    "frozen": 90,
+    "value": 95,
+    "feasible": true
+   },
+   {
+    "key": "pullback",
+    "offset": "+m",
+    "frozen": 90,
+    "value": 100,
+    "feasible": true
+   },
+   {
+    "key": "continuationWindow",
+    "offset": "-m",
+    "frozen": 60,
+    "value": 48,
+    "feasible": true
+   },
+   {
+    "key": "continuationWindow",
+    "offset": "-s",
+    "frozen": 60,
+    "value": 54,
+    "feasible": true
+   },
+   {
+    "key": "continuationWindow",
+    "offset": "+s",
+    "frozen": 60,
+    "value": 66,
+    "feasible": true
+   },
+   {
+    "key": "continuationWindow",
+    "offset": "+m",
+    "frozen": 60,
+    "value": 72,
+    "feasible": true
+   }
+  ],
+  "paired": [
+   {
+    "pool": "B4",
+    "labels": [
+     "book",
+     "B4",
+     "VGT",
+     1
+    ],
+    "seedLabelPrefix": "b4-b5-robustness-audit-v1",
+    "samples": [
+     {
+      "index": 0,
+      "values": {
+       "X": 206,
+       "Y": 5,
+       "stop": 70,
+       "hold": 10,
+       "L": 72,
+       "buffer": 35,
+       "P": 98,
+       "W": 60
+      }
+     },
+     {
+      "index": 1,
+      "values": {
+       "X": 208,
+       "Y": 1,
+       "stop": 81,
+       "hold": 9,
+       "L": 88,
+       "buffer": 26,
+       "P": 86,
+       "W": 58
+      }
+     },
+     {
+      "index": 2,
+      "values": {
+       "X": 225,
+       "Y": 4,
+       "stop": 78,
+       "hold": 9,
+       "L": 77,
+       "buffer": 31,
+       "P": 96,
+       "W": 63
+      }
+     },
+     {
+      "index": 3,
+      "values": {
+       "X": 219,
+       "Y": 2,
+       "stop": 79,
+       "hold": 7,
+       "L": 84,
+       "buffer": 21,
+       "P": 94,
+       "W": 68
+      }
+     },
+     {
+      "index": 4,
+      "values": {
+       "X": 226,
+       "Y": 2,
+       "stop": 72,
+       "hold": 8,
+       "L": 73,
+       "buffer": 20,
+       "P": 89,
+       "W": 66
+      }
+     },
+     {
+      "index": 5,
+      "values": {
+       "X": 223,
+       "Y": 3,
+       "stop": 67,
+       "hold": 10,
+       "L": 81,
+       "buffer": 19,
+       "P": 97,
+       "W": 58
+      }
+     },
+     {
+      "index": 6,
+      "values": {
+       "X": 207,
+       "Y": 3,
+       "stop": 78,
+       "hold": 8,
+       "L": 67,
+       "buffer": 28,
+       "P": 93,
+       "W": 48
+      }
+     },
+     {
+      "index": 7,
+      "values": {
+       "X": 219,
+       "Y": 1,
+       "stop": 83,
+       "hold": 10,
+       "L": 66,
+       "buffer": 29,
+       "P": 91,
+       "W": 55
+      }
+     },
+     {
+      "index": 8,
+      "values": {
+       "X": 211,
+       "Y": 5,
+       "stop": 74,
+       "hold": 6,
+       "L": 74,
+       "buffer": 30,
+       "P": 87,
+       "W": 61
+      }
+     },
+     {
+      "index": 9,
+      "values": {
+       "X": 213,
+       "Y": 5,
+       "stop": 76,
+       "hold": 7,
+       "L": 85,
+       "buffer": 35,
+       "P": 92,
+       "W": 53
+      }
+     },
+     {
+      "index": 10,
+      "values": {
+       "X": 208,
+       "Y": 2,
+       "stop": 69,
+       "hold": 6,
+       "L": 78,
+       "buffer": 38,
+       "P": 91,
+       "W": 52
+      }
+     },
+     {
+      "index": 11,
+      "values": {
+       "X": 214,
+       "Y": 1,
+       "stop": 74,
+       "hold": 8,
+       "L": 60,
+       "buffer": 33,
+       "P": 82,
+       "W": 63
+      }
+     },
+     {
+      "index": 12,
+      "values": {
+       "X": 220,
+       "Y": 3,
+       "stop": 71,
+       "hold": 7,
+       "L": 84,
+       "buffer": 31,
+       "P": 85,
+       "W": 51
+      }
+     },
+     {
+      "index": 13,
+      "values": {
+       "X": 222,
+       "Y": 4,
+       "stop": 66,
+       "hold": 10,
+       "L": 78,
+       "buffer": 32,
+       "P": 100,
+       "W": 48
+      }
+     },
+     {
+      "index": 14,
+      "values": {
+       "X": 217,
+       "Y": 5,
+       "stop": 68,
+       "hold": 9,
+       "L": 79,
+       "buffer": 29,
+       "P": 97,
+       "W": 67
+      }
+     },
+     {
+      "index": 15,
+      "values": {
+       "X": 212,
+       "Y": 1,
+       "stop": 79,
+       "hold": 8,
+       "L": 87,
+       "buffer": 24,
+       "P": 99,
+       "W": 69
+      }
+     },
+     {
+      "index": 16,
+      "values": {
+       "X": 221,
+       "Y": 1,
+       "stop": 74,
+       "hold": 7,
+       "L": 65,
+       "buffer": 24,
+       "P": 80,
+       "W": 68
+      }
+     },
+     {
+      "index": 17,
+      "values": {
+       "X": 210,
+       "Y": 3,
+       "stop": 80,
+       "hold": 7,
+       "L": 82,
+       "buffer": 22,
+       "P": 90,
+       "W": 56
+      }
+     },
+     {
+      "index": 18,
+      "values": {
+       "X": 218,
+       "Y": 3,
+       "stop": 70,
+       "hold": 7,
+       "L": 87,
+       "buffer": 37,
+       "P": 99,
+       "W": 71
+      }
+     },
+     {
+      "index": 19,
+      "values": {
+       "X": 206,
+       "Y": 3,
+       "stop": 73,
+       "hold": 6,
+       "L": 75,
+       "buffer": 25,
+       "P": 84,
+       "W": 65
+      }
+     },
+     {
+      "index": 20,
+      "values": {
+       "X": 222,
+       "Y": 5,
+       "stop": 75,
+       "hold": 7,
+       "L": 63,
+       "buffer": 21,
+       "P": 95,
+       "W": 53
+      }
+     },
+     {
+      "index": 21,
+      "values": {
+       "X": 209,
+       "Y": 4,
+       "stop": 63,
+       "hold": 9,
+       "L": 74,
+       "buffer": 23,
+       "P": 90,
+       "W": 50
+      }
+     },
+     {
+      "index": 22,
+      "values": {
+       "X": 210,
+       "Y": 4,
+       "stop": 83,
+       "hold": 9,
+       "L": 68,
+       "buffer": 27,
+       "P": 89,
+       "W": 61
+      }
+     },
+     {
+      "index": 23,
+      "values": {
+       "X": 215,
+       "Y": 4,
+       "stop": 66,
+       "hold": 6,
+       "L": 70,
+       "buffer": 25,
+       "P": 85,
+       "W": 57
+      }
+     },
+     {
+      "index": 24,
+      "values": {
+       "X": 217,
+       "Y": 3,
+       "stop": 64,
+       "hold": 8,
+       "L": 60,
+       "buffer": 27,
+       "P": 83,
+       "W": 72
+      }
+     },
+     {
+      "index": 25,
+      "values": {
+       "X": 220,
+       "Y": 1,
+       "stop": 65,
+       "hold": 9,
+       "L": 68,
+       "buffer": 34,
+       "P": 80,
+       "W": 54
+      }
+     },
+     {
+      "index": 26,
+      "values": {
+       "X": 212,
+       "Y": 5,
+       "stop": 63,
+       "hold": 8,
+       "L": 62,
+       "buffer": 36,
+       "P": 81,
+       "W": 64
+      }
+     },
+     {
+      "index": 27,
+      "values": {
+       "X": 216,
+       "Y": 2,
+       "stop": 82,
+       "hold": 6,
+       "L": 71,
+       "buffer": 20,
+       "P": 96,
+       "W": 72
+      }
+     },
+     {
+      "index": 28,
+      "values": {
+       "X": 226,
+       "Y": 1,
+       "stop": 67,
+       "hold": 10,
+       "L": 59,
+       "buffer": 34,
+       "P": 94,
+       "W": 49
+      }
+     },
+     {
+      "index": 29,
+      "values": {
+       "X": 223,
+       "Y": 4,
+       "stop": 77,
+       "hold": 10,
+       "L": 89,
+       "buffer": 39,
+       "P": 86,
+       "W": 62
+      }
+     },
+     {
+      "index": 30,
+      "values": {
+       "X": 214,
+       "Y": 2,
+       "stop": 81,
+       "hold": 9,
+       "L": 83,
+       "buffer": 39,
+       "P": 87,
+       "W": 69
+      }
+     },
+     {
+      "index": 31,
+      "values": {
+       "X": 224,
+       "Y": 2,
+       "stop": 71,
+       "hold": 6,
+       "L": 63,
+       "buffer": 37,
+       "P": 82,
+       "W": 56
+      }
+     }
+    ],
+    "count": 32
+   },
+   {
+    "pool": "B5",
+    "labels": [
+     "book",
+     "B5",
+     "VGT",
+     1
+    ],
+    "seedLabelPrefix": "b4-b5-robustness-audit-v1",
+    "samples": [
+     {
+      "index": 0,
+      "values": {
+       "X": 217,
+       "Y": 4,
+       "stop": 66,
+       "hold": 9,
+       "L": 75,
+       "buffer": 36,
+       "P": 98,
+       "W": 51
+      }
+     },
+     {
+      "index": 1,
+      "values": {
+       "X": 214,
+       "Y": 2,
+       "stop": 83,
+       "hold": 9,
+       "L": 73,
+       "buffer": 31,
+       "P": 84,
+       "W": 66
+      }
+     },
+     {
+      "index": 2,
+      "values": {
+       "X": 207,
+       "Y": 3,
+       "stop": 80,
+       "hold": 6,
+       "L": 82,
+       "buffer": 25,
+       "P": 89,
+       "W": 54
+      }
+     },
+     {
+      "index": 3,
+      "values": {
+       "X": 210,
+       "Y": 4,
+       "stop": 65,
+       "hold": 7,
+       "L": 60,
+       "buffer": 19,
+       "P": 83,
+       "W": 68
+      }
+     },
+     {
+      "index": 4,
+      "values": {
+       "X": 226,
+       "Y": 1,
+       "stop": 78,
+       "hold": 9,
+       "L": 75,
+       "buffer": 28,
+       "P": 94,
+       "W": 64
+      }
+     },
+     {
+      "index": 5,
+      "values": {
+       "X": 213,
+       "Y": 4,
+       "stop": 76,
+       "hold": 6,
+       "L": 68,
+       "buffer": 34,
+       "P": 91,
+       "W": 70
+      }
+     },
+     {
+      "index": 6,
+      "values": {
+       "X": 224,
+       "Y": 2,
+       "stop": 77,
+       "hold": 8,
+       "L": 89,
+       "buffer": 23,
+       "P": 86,
+       "W": 69
+      }
+     },
+     {
+      "index": 7,
+      "values": {
+       "X": 225,
+       "Y": 4,
+       "stop": 71,
+       "hold": 9,
+       "L": 86,
+       "buffer": 25,
+       "P": 80,
+       "W": 61
+      }
+     },
+     {
+      "index": 8,
+      "values": {
+       "X": 208,
+       "Y": 2,
+       "stop": 66,
+       "hold": 10,
+       "L": 84,
+       "buffer": 20,
+       "P": 98,
+       "W": 48
+      }
+     },
+     {
+      "index": 9,
+      "values": {
+       "X": 215,
+       "Y": 1,
+       "stop": 63,
+       "hold": 6,
+       "L": 87,
+       "buffer": 34,
+       "P": 82,
+       "W": 71
+      }
+     },
+     {
+      "index": 10,
+      "values": {
+       "X": 221,
+       "Y": 3,
+       "stop": 73,
+       "hold": 10,
+       "L": 88,
+       "buffer": 22,
+       "P": 84,
+       "W": 67
+      }
+     },
+     {
+      "index": 11,
+      "values": {
+       "X": 222,
+       "Y": 2,
+       "stop": 64,
+       "hold": 7,
+       "L": 63,
+       "buffer": 31,
+       "P": 100,
+       "W": 53
+      }
+     },
+     {
+      "index": 12,
+      "values": {
+       "X": 217,
+       "Y": 2,
+       "stop": 79,
+       "hold": 7,
+       "L": 78,
+       "buffer": 27,
+       "P": 85,
+       "W": 70
+      }
+     },
+     {
+      "index": 13,
+      "values": {
+       "X": 223,
+       "Y": 3,
+       "stop": 82,
+       "hold": 6,
+       "L": 67,
+       "buffer": 20,
+       "P": 94,
+       "W": 51
+      }
+     },
+     {
+      "index": 14,
+      "values": {
+       "X": 219,
+       "Y": 5,
+       "stop": 73,
+       "hold": 8,
+       "L": 70,
+       "buffer": 23,
+       "P": 88,
+       "W": 61
+      }
+     },
+     {
+      "index": 15,
+      "values": {
+       "X": 211,
+       "Y": 3,
+       "stop": 69,
+       "hold": 8,
+       "L": 62,
+       "buffer": 38,
+       "P": 83,
+       "W": 50
+      }
+     },
+     {
+      "index": 16,
+      "values": {
+       "X": 207,
+       "Y": 5,
+       "stop": 81,
+       "hold": 6,
+       "L": 71,
+       "buffer": 30,
+       "P": 86,
+       "W": 56
+      }
+     },
+     {
+      "index": 17,
+      "values": {
+       "X": 206,
+       "Y": 5,
+       "stop": 67,
+       "hold": 8,
+       "L": 66,
+       "buffer": 35,
+       "P": 97,
+       "W": 53
+      }
+     },
+     {
+      "index": 18,
+      "values": {
+       "X": 222,
+       "Y": 5,
+       "stop": 75,
+       "hold": 10,
+       "L": 78,
+       "buffer": 37,
+       "P": 90,
+       "W": 62
+      }
+     },
+     {
+      "index": 19,
+      "values": {
+       "X": 211,
+       "Y": 1,
+       "stop": 76,
+       "hold": 6,
+       "L": 77,
+       "buffer": 29,
+       "P": 87,
+       "W": 65
+      }
+     },
+     {
+      "index": 20,
+      "values": {
+       "X": 216,
+       "Y": 2,
+       "stop": 63,
+       "hold": 10,
+       "L": 84,
+       "buffer": 33,
+       "P": 80,
+       "W": 57
+      }
+     },
+     {
+      "index": 21,
+      "values": {
+       "X": 209,
+       "Y": 5,
+       "stop": 82,
+       "hold": 7,
+       "L": 71,
+       "buffer": 21,
+       "P": 92,
+       "W": 55
+      }
+     },
+     {
+      "index": 22,
+      "values": {
+       "X": 224,
+       "Y": 2,
+       "stop": 81,
+       "hold": 8,
+       "L": 79,
+       "buffer": 24,
+       "P": 81,
+       "W": 63
+      }
+     },
+     {
+      "index": 23,
+      "values": {
+       "X": 225,
+       "Y": 3,
+       "stop": 72,
+       "hold": 8,
+       "L": 81,
+       "buffer": 39,
+       "P": 100,
+       "W": 48
+      }
+     },
+     {
+      "index": 24,
+      "values": {
+       "X": 212,
+       "Y": 1,
+       "stop": 70,
+       "hold": 9,
+       "L": 67,
+       "buffer": 32,
+       "P": 95,
+       "W": 49
+      }
+     },
+     {
+      "index": 25,
+      "values": {
+       "X": 212,
+       "Y": 3,
+       "stop": 76,
+       "hold": 10,
+       "L": 59,
+       "buffer": 39,
+       "P": 88,
+       "W": 72
+      }
+     },
+     {
+      "index": 26,
+      "values": {
+       "X": 220,
+       "Y": 1,
+       "stop": 68,
+       "hold": 10,
+       "L": 65,
+       "buffer": 37,
+       "P": 91,
+       "W": 59
+      }
+     },
+     {
+      "index": 27,
+      "values": {
+       "X": 215,
+       "Y": 4,
+       "stop": 79,
+       "hold": 7,
+       "L": 80,
+       "buffer": 21,
+       "P": 95,
+       "W": 58
+      }
+     },
+     {
+      "index": 28,
+      "values": {
+       "X": 218,
+       "Y": 1,
+       "stop": 71,
+       "hold": 10,
+       "L": 61,
+       "buffer": 26,
+       "P": 93,
+       "W": 64
+      }
+     },
+     {
+      "index": 29,
+      "values": {
+       "X": 220,
+       "Y": 5,
+       "stop": 68,
+       "hold": 9,
+       "L": 74,
+       "buffer": 35,
+       "P": 99,
+       "W": 56
+      }
+     },
+     {
+      "index": 30,
+      "values": {
+       "X": 208,
+       "Y": 4,
+       "stop": 74,
+       "hold": 6,
+       "L": 64,
+       "buffer": 28,
+       "P": 96,
+       "W": 68
+      }
+     },
+     {
+      "index": 31,
+      "values": {
+       "X": 214,
+       "Y": 4,
+       "stop": 70,
+       "hold": 7,
+       "L": 85,
+       "buffer": 29,
+       "P": 92,
+       "W": 59
+      }
+     }
+    ],
+    "count": 32
+   }
+  ],
+  "joint": [
+   {
+    "standalone": "VGT-primary",
+    "seed": 1,
+    "labels": [
+     "vgt-standalone-joint",
+     "VGT-primary",
+     1
+    ],
+    "seedLabelPrefix": "b4-b5-robustness-audit-v1",
+    "samples": [
+     {
+      "index": 0,
+      "values": {
+       "X": 207,
+       "Y": 3,
+       "stop": 75,
+       "hold": 7,
+       "L": 66,
+       "buffer": 39,
+       "P": 87,
+       "W": 59
+      }
+     },
+     {
+      "index": 1,
+      "values": {
+       "X": 212,
+       "Y": 5,
+       "stop": 77,
+       "hold": 6,
+       "L": 73,
+       "buffer": 37,
+       "P": 91,
+       "W": 66
+      }
+     },
+     {
+      "index": 2,
+      "values": {
+       "X": 214,
+       "Y": 5,
+       "stop": 63,
+       "hold": 10,
+       "L": 73,
+       "buffer": 19,
+       "P": 83,
+       "W": 72
+      }
+     },
+     {
+      "index": 3,
+      "values": {
+       "X": 207,
+       "Y": 3,
+       "stop": 78,
+       "hold": 7,
+       "L": 77,
+       "buffer": 31,
+       "P": 96,
+       "W": 66
+      }
+     },
+     {
+      "index": 4,
+      "values": {
+       "X": 218,
+       "Y": 2,
+       "stop": 81,
+       "hold": 6,
+       "L": 86,
+       "buffer": 36,
+       "P": 94,
+       "W": 64
+      }
+     },
+     {
+      "index": 5,
+      "values": {
+       "X": 226,
+       "Y": 5,
+       "stop": 76,
+       "hold": 9,
+       "L": 79,
+       "buffer": 23,
+       "P": 92,
+       "W": 59
+      }
+     },
+     {
+      "index": 6,
+      "values": {
+       "X": 209,
+       "Y": 4,
+       "stop": 72,
+       "hold": 6,
+       "L": 67,
+       "buffer": 33,
+       "P": 90,
+       "W": 72
+      }
+     },
+     {
+      "index": 7,
+      "values": {
+       "X": 210,
+       "Y": 1,
+       "stop": 66,
+       "hold": 6,
+       "L": 80,
+       "buffer": 30,
+       "P": 99,
+       "W": 53
+      }
+     },
+     {
+      "index": 8,
+      "values": {
+       "X": 219,
+       "Y": 1,
+       "stop": 69,
+       "hold": 7,
+       "L": 72,
+       "buffer": 24,
+       "P": 86,
+       "W": 51
+      }
+     },
+     {
+      "index": 9,
+      "values": {
+       "X": 225,
+       "Y": 4,
+       "stop": 79,
+       "hold": 10,
+       "L": 62,
+       "buffer": 32,
+       "P": 98,
+       "W": 59
+      }
+     },
+     {
+      "index": 10,
+      "values": {
+       "X": 226,
+       "Y": 2,
+       "stop": 76,
+       "hold": 9,
+       "L": 89,
+       "buffer": 39,
+       "P": 89,
+       "W": 65
+      }
+     },
+     {
+      "index": 11,
+      "values": {
+       "X": 215,
+       "Y": 2,
+       "stop": 66,
+       "hold": 7,
+       "L": 62,
+       "buffer": 34,
+       "P": 93,
+       "W": 48
+      }
+     },
+     {
+      "index": 12,
+      "values": {
+       "X": 206,
+       "Y": 5,
+       "stop": 70,
+       "hold": 8,
+       "L": 65,
+       "buffer": 27,
+       "P": 93,
+       "W": 63
+      }
+     },
+     {
+      "index": 13,
+      "values": {
+       "X": 213,
+       "Y": 1,
+       "stop": 67,
+       "hold": 7,
+       "L": 60,
+       "buffer": 20,
+       "P": 99,
+       "W": 52
+      }
+     },
+     {
+      "index": 14,
+      "values": {
+       "X": 220,
+       "Y": 3,
+       "stop": 68,
+       "hold": 6,
+       "L": 83,
+       "buffer": 26,
+       "P": 95,
+       "W": 53
+      }
+     },
+     {
+      "index": 15,
+      "values": {
+       "X": 222,
+       "Y": 4,
+       "stop": 63,
+       "hold": 8,
+       "L": 87,
+       "buffer": 33,
+       "P": 86,
+       "W": 65
+      }
+     },
+     {
+      "index": 16,
+      "values": {
+       "X": 218,
+       "Y": 1,
+       "stop": 65,
+       "hold": 7,
+       "L": 83,
+       "buffer": 29,
+       "P": 80,
+       "W": 70
+      }
+     },
+     {
+      "index": 17,
+      "values": {
+       "X": 221,
+       "Y": 3,
+       "stop": 82,
+       "hold": 9,
+       "L": 80,
+       "buffer": 27,
+       "P": 92,
+       "W": 63
+      }
+     },
+     {
+      "index": 18,
+      "values": {
+       "X": 210,
+       "Y": 2,
+       "stop": 75,
+       "hold": 9,
+       "L": 72,
+       "buffer": 28,
+       "P": 81,
+       "W": 62
+      }
+     },
+     {
+      "index": 19,
+      "values": {
+       "X": 223,
+       "Y": 2,
+       "stop": 76,
+       "hold": 10,
+       "L": 60,
+       "buffer": 19,
+       "P": 96,
+       "W": 68
+      }
+     },
+     {
+      "index": 20,
+      "values": {
+       "X": 208,
+       "Y": 3,
+       "stop": 64,
+       "hold": 10,
+       "L": 69,
+       "buffer": 29,
+       "P": 100,
+       "W": 49
+      }
+     },
+     {
+      "index": 21,
+      "values": {
+       "X": 224,
+       "Y": 1,
+       "stop": 70,
+       "hold": 9,
+       "L": 89,
+       "buffer": 28,
+       "P": 98,
+       "W": 56
+      }
+     },
+     {
+      "index": 22,
+      "values": {
+       "X": 217,
+       "Y": 5,
+       "stop": 72,
+       "hold": 8,
+       "L": 78,
+       "buffer": 26,
+       "P": 91,
+       "W": 58
+      }
+     },
+     {
+      "index": 23,
+      "values": {
+       "X": 217,
+       "Y": 4,
+       "stop": 65,
+       "hold": 7,
+       "L": 79,
+       "buffer": 26,
+       "P": 82,
+       "W": 50
+      }
+     },
+     {
+      "index": 24,
+      "values": {
+       "X": 212,
+       "Y": 1,
+       "stop": 67,
+       "hold": 10,
+       "L": 88,
+       "buffer": 34,
+       "P": 87,
+       "W": 58
+      }
+     },
+     {
+      "index": 25,
+      "values": {
+       "X": 214,
+       "Y": 1,
+       "stop": 80,
+       "hold": 10,
+       "L": 65,
+       "buffer": 23,
+       "P": 89,
+       "W": 52
+      }
+     },
+     {
+      "index": 26,
+      "values": {
+       "X": 220,
+       "Y": 4,
+       "stop": 71,
+       "hold": 6,
+       "L": 60,
+       "buffer": 22,
+       "P": 98,
+       "W": 54
+      }
+     },
+     {
+      "index": 27,
+      "values": {
+       "X": 223,
+       "Y": 5,
+       "stop": 79,
+       "hold": 6,
+       "L": 64,
+       "buffer": 21,
+       "P": 81,
+       "W": 67
+      }
+     },
+     {
+      "index": 28,
+      "values": {
+       "X": 208,
+       "Y": 2,
+       "stop": 74,
+       "hold": 8,
+       "L": 76,
+       "buffer": 36,
+       "P": 85,
+       "W": 68
+      }
+     },
+     {
+      "index": 29,
+      "values": {
+       "X": 209,
+       "Y": 3,
+       "stop": 72,
+       "hold": 8,
+       "L": 75,
+       "buffer": 26,
+       "P": 85,
+       "W": 67
+      }
+     },
+     {
+      "index": 30,
+      "values": {
+       "X": 216,
+       "Y": 3,
+       "stop": 75,
+       "hold": 9,
+       "L": 71,
+       "buffer": 20,
+       "P": 88,
+       "W": 68
+      }
+     },
+     {
+      "index": 31,
+      "values": {
+       "X": 224,
+       "Y": 4,
+       "stop": 64,
+       "hold": 8,
+       "L": 63,
+       "buffer": 29,
+       "P": 91,
+       "W": 50
+      }
+     },
+     {
+      "index": 32,
+      "values": {
+       "X": 213,
+       "Y": 4,
+       "stop": 63,
+       "hold": 9,
+       "L": 78,
+       "buffer": 29,
+       "P": 83,
+       "W": 60
+      }
+     },
+     {
+      "index": 33,
+      "values": {
+       "X": 226,
+       "Y": 3,
+       "stop": 65,
+       "hold": 7,
+       "L": 81,
+       "buffer": 37,
+       "P": 97,
+       "W": 53
+      }
+     },
+     {
+      "index": 34,
+      "values": {
+       "X": 206,
+       "Y": 5,
+       "stop": 70,
+       "hold": 9,
+       "L": 82,
+       "buffer": 19,
+       "P": 100,
+       "W": 64
+      }
+     },
+     {
+      "index": 35,
+      "values": {
+       "X": 206,
+       "Y": 3,
+       "stop": 74,
+       "hold": 9,
+       "L": 68,
+       "buffer": 20,
+       "P": 98,
+       "W": 57
+      }
+     },
+     {
+      "index": 36,
+      "values": {
+       "X": 208,
+       "Y": 1,
+       "stop": 72,
+       "hold": 7,
+       "L": 62,
+       "buffer": 35,
+       "P": 92,
+       "W": 56
+      }
+     },
+     {
+      "index": 37,
+      "values": {
+       "X": 211,
+       "Y": 2,
+       "stop": 67,
+       "hold": 9,
+       "L": 59,
+       "buffer": 30,
+       "P": 89,
+       "W": 54
+      }
+     },
+     {
+      "index": 38,
+      "values": {
+       "X": 211,
+       "Y": 5,
+       "stop": 69,
+       "hold": 10,
+       "L": 68,
+       "buffer": 36,
+       "P": 86,
+       "W": 52
+      }
+     },
+     {
+      "index": 39,
+      "values": {
+       "X": 224,
+       "Y": 5,
+       "stop": 83,
+       "hold": 8,
+       "L": 70,
+       "buffer": 21,
+       "P": 92,
+       "W": 70
+      }
+     },
+     {
+      "index": 40,
+      "values": {
+       "X": 219,
+       "Y": 1,
+       "stop": 79,
+       "hold": 8,
+       "L": 61,
+       "buffer": 24,
+       "P": 84,
+       "W": 61
+      }
+     },
+     {
+      "index": 41,
+      "values": {
+       "X": 216,
+       "Y": 2,
+       "stop": 80,
+       "hold": 7,
+       "L": 87,
+       "buffer": 35,
+       "P": 93,
+       "W": 66
+      }
+     },
+     {
+      "index": 42,
+      "values": {
+       "X": 211,
+       "Y": 3,
+       "stop": 71,
+       "hold": 9,
+       "L": 68,
+       "buffer": 25,
+       "P": 89,
+       "W": 69
+      }
+     },
+     {
+      "index": 43,
+      "values": {
+       "X": 207,
+       "Y": 3,
+       "stop": 78,
+       "hold": 8,
+       "L": 64,
+       "buffer": 24,
+       "P": 97,
+       "W": 62
+      }
+     },
+     {
+      "index": 44,
+      "values": {
+       "X": 218,
+       "Y": 1,
+       "stop": 73,
+       "hold": 9,
+       "L": 69,
+       "buffer": 23,
+       "P": 99,
+       "W": 49
+      }
+     },
+     {
+      "index": 45,
+      "values": {
+       "X": 211,
+       "Y": 5,
+       "stop": 77,
+       "hold": 10,
+       "L": 86,
+       "buffer": 34,
+       "P": 86,
+       "W": 55
+      }
+     },
+     {
+      "index": 46,
+      "values": {
+       "X": 217,
+       "Y": 4,
+       "stop": 82,
+       "hold": 7,
+       "L": 85,
+       "buffer": 38,
+       "P": 80,
+       "W": 71
+      }
+     },
+     {
+      "index": 47,
+      "values": {
+       "X": 214,
+       "Y": 3,
+       "stop": 70,
+       "hold": 10,
+       "L": 85,
+       "buffer": 21,
+       "P": 84,
+       "W": 57
+      }
+     },
+     {
+      "index": 48,
+      "values": {
+       "X": 218,
+       "Y": 2,
+       "stop": 68,
+       "hold": 9,
+       "L": 75,
+       "buffer": 37,
+       "P": 85,
+       "W": 48
+      }
+     },
+     {
+      "index": 49,
+      "values": {
+       "X": 210,
+       "Y": 4,
+       "stop": 82,
+       "hold": 8,
+       "L": 83,
+       "buffer": 25,
+       "P": 83,
+       "W": 57
+      }
+     },
+     {
+      "index": 50,
+      "values": {
+       "X": 216,
+       "Y": 3,
+       "stop": 81,
+       "hold": 7,
+       "L": 71,
+       "buffer": 34,
+       "P": 81,
+       "W": 64
+      }
+     },
+     {
+      "index": 51,
+      "values": {
+       "X": 221,
+       "Y": 2,
+       "stop": 83,
+       "hold": 9,
+       "L": 71,
+       "buffer": 38,
+       "P": 82,
+       "W": 50
+      }
+     },
+     {
+      "index": 52,
+      "values": {
+       "X": 214,
+       "Y": 4,
+       "stop": 73,
+       "hold": 10,
+       "L": 59,
+       "buffer": 32,
+       "P": 96,
+       "W": 71
+      }
+     },
+     {
+      "index": 53,
+      "values": {
+       "X": 222,
+       "Y": 2,
+       "stop": 78,
+       "hold": 8,
+       "L": 84,
+       "buffer": 38,
+       "P": 96,
+       "W": 48
+      }
+     },
+     {
+      "index": 54,
+      "values": {
+       "X": 225,
+       "Y": 3,
+       "stop": 83,
+       "hold": 6,
+       "L": 78,
+       "buffer": 25,
+       "P": 94,
+       "W": 63
+      }
+     },
+     {
+      "index": 55,
+      "values": {
+       "X": 220,
+       "Y": 4,
+       "stop": 68,
+       "hold": 10,
+       "L": 66,
+       "buffer": 39,
+       "P": 84,
+       "W": 56
+      }
+     },
+     {
+      "index": 56,
+      "values": {
+       "X": 224,
+       "Y": 2,
+       "stop": 73,
+       "hold": 10,
+       "L": 84,
+       "buffer": 27,
+       "P": 100,
+       "W": 55
+      }
+     },
+     {
+      "index": 57,
+      "values": {
+       "X": 213,
+       "Y": 1,
+       "stop": 69,
+       "hold": 6,
+       "L": 88,
+       "buffer": 30,
+       "P": 95,
+       "W": 60
+      }
+     },
+     {
+      "index": 58,
+      "values": {
+       "X": 209,
+       "Y": 5,
+       "stop": 66,
+       "hold": 8,
+       "L": 66,
+       "buffer": 32,
+       "P": 80,
+       "W": 71
+      }
+     },
+     {
+      "index": 59,
+      "values": {
+       "X": 215,
+       "Y": 5,
+       "stop": 81,
+       "hold": 6,
+       "L": 74,
+       "buffer": 22,
+       "P": 87,
+       "W": 69
+      }
+     },
+     {
+      "index": 60,
+      "values": {
+       "X": 220,
+       "Y": 4,
+       "stop": 80,
+       "hold": 6,
+       "L": 74,
+       "buffer": 35,
+       "P": 94,
+       "W": 61
+      }
+     },
+     {
+      "index": 61,
+      "values": {
+       "X": 221,
+       "Y": 2,
+       "stop": 77,
+       "hold": 6,
+       "L": 81,
+       "buffer": 22,
+       "P": 90,
+       "W": 69
+      }
+     },
+     {
+      "index": 62,
+      "values": {
+       "X": 225,
+       "Y": 1,
+       "stop": 75,
+       "hold": 8,
+       "L": 76,
+       "buffer": 32,
+       "P": 82,
+       "W": 61
+      }
+     },
+     {
+      "index": 63,
+      "values": {
+       "X": 222,
+       "Y": 5,
+       "stop": 64,
+       "hold": 6,
+       "L": 76,
+       "buffer": 31,
+       "P": 88,
+       "W": 51
+      }
+     }
+    ],
+    "count": 64
+   },
+   {
+    "standalone": "VGT-primary",
+    "seed": 2,
+    "labels": [
+     "vgt-standalone-joint",
+     "VGT-primary",
+     2
+    ],
+    "seedLabelPrefix": "b4-b5-robustness-audit-v1",
+    "samples": [
+     {
+      "index": 0,
+      "values": {
+       "X": 225,
+       "Y": 2,
+       "stop": 70,
+       "hold": 6,
+       "L": 68,
+       "buffer": 26,
+       "P": 100,
+       "W": 65
+      }
+     },
+     {
+      "index": 1,
+      "values": {
+       "X": 213,
+       "Y": 2,
+       "stop": 68,
+       "hold": 9,
+       "L": 82,
+       "buffer": 27,
+       "P": 80,
+       "W": 55
+      }
+     },
+     {
+      "index": 2,
+      "values": {
+       "X": 222,
+       "Y": 4,
+       "stop": 74,
+       "hold": 8,
+       "L": 85,
+       "buffer": 19,
+       "P": 87,
+       "W": 59
+      }
+     },
+     {
+      "index": 3,
+      "values": {
+       "X": 216,
+       "Y": 5,
+       "stop": 67,
+       "hold": 9,
+       "L": 72,
+       "buffer": 29,
+       "P": 86,
+       "W": 53
+      }
+     },
+     {
+      "index": 4,
+      "values": {
+       "X": 206,
+       "Y": 3,
+       "stop": 80,
+       "hold": 7,
+       "L": 59,
+       "buffer": 28,
+       "P": 88,
+       "W": 65
+      }
+     },
+     {
+      "index": 5,
+      "values": {
+       "X": 212,
+       "Y": 1,
+       "stop": 65,
+       "hold": 10,
+       "L": 88,
+       "buffer": 20,
+       "P": 81,
+       "W": 54
+      }
+     },
+     {
+      "index": 6,
+      "values": {
+       "X": 222,
+       "Y": 3,
+       "stop": 81,
+       "hold": 9,
+       "L": 68,
+       "buffer": 31,
+       "P": 89,
+       "W": 48
+      }
+     },
+     {
+      "index": 7,
+      "values": {
+       "X": 224,
+       "Y": 2,
+       "stop": 67,
+       "hold": 8,
+       "L": 85,
+       "buffer": 36,
+       "P": 97,
+       "W": 71
+      }
+     },
+     {
+      "index": 8,
+      "values": {
+       "X": 225,
+       "Y": 5,
+       "stop": 71,
+       "hold": 10,
+       "L": 84,
+       "buffer": 36,
+       "P": 97,
+       "W": 56
+      }
+     },
+     {
+      "index": 9,
+      "values": {
+       "X": 215,
+       "Y": 3,
+       "stop": 72,
+       "hold": 6,
+       "L": 84,
+       "buffer": 39,
+       "P": 95,
+       "W": 61
+      }
+     },
+     {
+      "index": 10,
+      "values": {
+       "X": 210,
+       "Y": 1,
+       "stop": 77,
+       "hold": 7,
+       "L": 89,
+       "buffer": 33,
+       "P": 88,
+       "W": 56
+      }
+     },
+     {
+      "index": 11,
+      "values": {
+       "X": 222,
+       "Y": 3,
+       "stop": 75,
+       "hold": 9,
+       "L": 87,
+       "buffer": 35,
+       "P": 97,
+       "W": 61
+      }
+     },
+     {
+      "index": 12,
+      "values": {
+       "X": 212,
+       "Y": 2,
+       "stop": 68,
+       "hold": 10,
+       "L": 81,
+       "buffer": 24,
+       "P": 87,
+       "W": 72
+      }
+     },
+     {
+      "index": 13,
+      "values": {
+       "X": 209,
+       "Y": 4,
+       "stop": 65,
+       "hold": 8,
+       "L": 64,
+       "buffer": 37,
+       "P": 86,
+       "W": 57
+      }
+     },
+     {
+      "index": 14,
+      "values": {
+       "X": 207,
+       "Y": 1,
+       "stop": 63,
+       "hold": 9,
+       "L": 59,
+       "buffer": 24,
+       "P": 85,
+       "W": 66
+      }
+     },
+     {
+      "index": 15,
+      "values": {
+       "X": 220,
+       "Y": 4,
+       "stop": 63,
+       "hold": 8,
+       "L": 74,
+       "buffer": 32,
+       "P": 81,
+       "W": 69
+      }
+     },
+     {
+      "index": 16,
+      "values": {
+       "X": 222,
+       "Y": 2,
+       "stop": 81,
+       "hold": 8,
+       "L": 80,
+       "buffer": 26,
+       "P": 99,
+       "W": 64
+      }
+     },
+     {
+      "index": 17,
+      "values": {
+       "X": 217,
+       "Y": 2,
+       "stop": 77,
+       "hold": 6,
+       "L": 87,
+       "buffer": 24,
+       "P": 94,
+       "W": 49
+      }
+     },
+     {
+      "index": 18,
+      "values": {
+       "X": 224,
+       "Y": 5,
+       "stop": 76,
+       "hold": 6,
+       "L": 64,
+       "buffer": 30,
+       "P": 91,
+       "W": 63
+      }
+     },
+     {
+      "index": 19,
+      "values": {
+       "X": 223,
+       "Y": 5,
+       "stop": 73,
+       "hold": 7,
+       "L": 62,
+       "buffer": 19,
+       "P": 80,
+       "W": 67
+      }
+     },
+     {
+      "index": 20,
+      "values": {
+       "X": 208,
+       "Y": 5,
+       "stop": 82,
+       "hold": 9,
+       "L": 72,
+       "buffer": 23,
+       "P": 83,
+       "W": 59
+      }
+     },
+     {
+      "index": 21,
+      "values": {
+       "X": 219,
+       "Y": 4,
+       "stop": 73,
+       "hold": 8,
+       "L": 81,
+       "buffer": 34,
+       "P": 84,
+       "W": 49
+      }
+     },
+     {
+      "index": 22,
+      "values": {
+       "X": 226,
+       "Y": 4,
+       "stop": 69,
+       "hold": 8,
+       "L": 89,
+       "buffer": 22,
+       "P": 82,
+       "W": 63
+      }
+     },
+     {
+      "index": 23,
+      "values": {
+       "X": 226,
+       "Y": 5,
+       "stop": 80,
+       "hold": 9,
+       "L": 80,
+       "buffer": 34,
+       "P": 90,
+       "W": 70
+      }
+     },
+     {
+      "index": 24,
+      "values": {
+       "X": 214,
+       "Y": 3,
+       "stop": 80,
+       "hold": 7,
+       "L": 59,
+       "buffer": 21,
+       "P": 89,
+       "W": 67
+      }
+     },
+     {
+      "index": 25,
+      "values": {
+       "X": 208,
+       "Y": 5,
+       "stop": 75,
+       "hold": 8,
+       "L": 65,
+       "buffer": 32,
+       "P": 97,
+       "W": 52
+      }
+     },
+     {
+      "index": 26,
+      "values": {
+       "X": 219,
+       "Y": 3,
+       "stop": 64,
+       "hold": 10,
+       "L": 80,
+       "buffer": 22,
+       "P": 92,
+       "W": 60
+      }
+     },
+     {
+      "index": 27,
+      "values": {
+       "X": 216,
+       "Y": 2,
+       "stop": 71,
+       "hold": 10,
+       "L": 73,
+       "buffer": 36,
+       "P": 91,
+       "W": 58
+      }
+     },
+     {
+      "index": 28,
+      "values": {
+       "X": 219,
+       "Y": 5,
+       "stop": 78,
+       "hold": 10,
+       "L": 76,
+       "buffer": 27,
+       "P": 81,
+       "W": 57
+      }
+     },
+     {
+      "index": 29,
+      "values": {
+       "X": 220,
+       "Y": 2,
+       "stop": 79,
+       "hold": 8,
+       "L": 78,
+       "buffer": 33,
+       "P": 96,
+       "W": 68
+      }
+     },
+     {
+      "index": 30,
+      "values": {
+       "X": 217,
+       "Y": 3,
+       "stop": 64,
+       "hold": 6,
+       "L": 89,
+       "buffer": 21,
+       "P": 90,
+       "W": 52
+      }
+     },
+     {
+      "index": 31,
+      "values": {
+       "X": 217,
+       "Y": 4,
+       "stop": 71,
+       "hold": 9,
+       "L": 67,
+       "buffer": 21,
+       "P": 88,
+       "W": 54
+      }
+     },
+     {
+      "index": 32,
+      "values": {
+       "X": 206,
+       "Y": 1,
+       "stop": 76,
+       "hold": 10,
+       "L": 78,
+       "buffer": 28,
+       "P": 98,
+       "W": 53
+      }
+     },
+     {
+      "index": 33,
+      "values": {
+       "X": 218,
+       "Y": 3,
+       "stop": 78,
+       "hold": 7,
+       "L": 83,
+       "buffer": 25,
+       "P": 83,
+       "W": 58
+      }
+     },
+     {
+      "index": 34,
+      "values": {
+       "X": 210,
+       "Y": 4,
+       "stop": 79,
+       "hold": 7,
+       "L": 70,
+       "buffer": 19,
+       "P": 90,
+       "W": 72
+      }
+     },
+     {
+      "index": 35,
+      "values": {
+       "X": 210,
+       "Y": 1,
+       "stop": 72,
+       "hold": 9,
+       "L": 77,
+       "buffer": 32,
+       "P": 100,
+       "W": 72
+      }
+     },
+     {
+      "index": 36,
+      "values": {
+       "X": 220,
+       "Y": 5,
+       "stop": 82,
+       "hold": 6,
+       "L": 62,
+       "buffer": 38,
+       "P": 86,
+       "W": 68
+      }
+     },
+     {
+      "index": 37,
+      "values": {
+       "X": 209,
+       "Y": 2,
+       "stop": 79,
+       "hold": 6,
+       "L": 79,
+       "buffer": 34,
+       "P": 96,
+       "W": 60
+      }
+     },
+     {
+      "index": 38,
+      "values": {
+       "X": 215,
+       "Y": 5,
+       "stop": 82,
+       "hold": 8,
+       "L": 71,
+       "buffer": 35,
+       "P": 87,
+       "W": 61
+      }
+     },
+     {
+      "index": 39,
+      "values": {
+       "X": 212,
+       "Y": 4,
+       "stop": 69,
+       "hold": 10,
+       "L": 74,
+       "buffer": 33,
+       "P": 89,
+       "W": 70
+      }
+     },
+     {
+      "index": 40,
+      "values": {
+       "X": 219,
+       "Y": 3,
+       "stop": 64,
+       "hold": 7,
+       "L": 63,
+       "buffer": 25,
+       "P": 82,
+       "W": 63
+      }
+     },
+     {
+      "index": 41,
+      "values": {
+       "X": 213,
+       "Y": 2,
+       "stop": 83,
+       "hold": 8,
+       "L": 82,
+       "buffer": 38,
+       "P": 84,
+       "W": 49
+      }
+     },
+     {
+      "index": 42,
+      "values": {
+       "X": 207,
+       "Y": 2,
+       "stop": 63,
+       "hold": 6,
+       "L": 70,
+       "buffer": 20,
+       "P": 99,
+       "W": 62
+      }
+     },
+     {
+      "index": 43,
+      "values": {
+       "X": 209,
+       "Y": 2,
+       "stop": 67,
+       "hold": 9,
+       "L": 79,
+       "buffer": 24,
+       "P": 94,
+       "W": 58
+      }
+     },
+     {
+      "index": 44,
+      "values": {
+       "X": 221,
+       "Y": 4,
+       "stop": 68,
+       "hold": 9,
+       "L": 75,
+       "buffer": 32,
+       "P": 94,
+       "W": 51
+      }
+     },
+     {
+      "index": 45,
+      "values": {
+       "X": 206,
+       "Y": 3,
+       "stop": 71,
+       "hold": 6,
+       "L": 68,
+       "buffer": 26,
+       "P": 93,
+       "W": 67
+      }
+     },
+     {
+      "index": 46,
+      "values": {
+       "X": 216,
+       "Y": 3,
+       "stop": 74,
+       "hold": 8,
+       "L": 63,
+       "buffer": 39,
+       "P": 85,
+       "W": 64
+      }
+     },
+     {
+      "index": 47,
+      "values": {
+       "X": 214,
+       "Y": 1,
+       "stop": 70,
+       "hold": 8,
+       "L": 63,
+       "buffer": 30,
+       "P": 90,
+       "W": 71
+      }
+     },
+     {
+      "index": 48,
+      "values": {
+       "X": 217,
+       "Y": 1,
+       "stop": 69,
+       "hold": 7,
+       "L": 65,
+       "buffer": 27,
+       "P": 95,
+       "W": 70
+      }
+     },
+     {
+      "index": 49,
+      "values": {
+       "X": 207,
+       "Y": 5,
+       "stop": 83,
+       "hold": 6,
+       "L": 67,
+       "buffer": 35,
+       "P": 85,
+       "W": 51
+      }
+     },
+     {
+      "index": 50,
+      "values": {
+       "X": 224,
+       "Y": 1,
+       "stop": 76,
+       "hold": 10,
+       "L": 69,
+       "buffer": 31,
+       "P": 94,
+       "W": 56
+      }
+     },
+     {
+      "index": 51,
+      "values": {
+       "X": 214,
+       "Y": 1,
+       "stop": 73,
+       "hold": 10,
+       "L": 75,
+       "buffer": 29,
+       "P": 82,
+       "W": 69
+      }
+     },
+     {
+      "index": 52,
+      "values": {
+       "X": 213,
+       "Y": 5,
+       "stop": 76,
+       "hold": 7,
+       "L": 75,
+       "buffer": 22,
+       "P": 100,
+       "W": 66
+      }
+     },
+     {
+      "index": 53,
+      "values": {
+       "X": 211,
+       "Y": 3,
+       "stop": 66,
+       "hold": 8,
+       "L": 86,
+       "buffer": 37,
+       "P": 93,
+       "W": 64
+      }
+     },
+     {
+      "index": 54,
+      "values": {
+       "X": 225,
+       "Y": 2,
+       "stop": 66,
+       "hold": 10,
+       "L": 77,
+       "buffer": 37,
+       "P": 92,
+       "W": 53
+      }
+     },
+     {
+      "index": 55,
+      "values": {
+       "X": 211,
+       "Y": 4,
+       "stop": 78,
+       "hold": 7,
+       "L": 66,
+       "buffer": 39,
+       "P": 98,
+       "W": 62
+      }
+     },
+     {
+      "index": 56,
+      "values": {
+       "X": 218,
+       "Y": 2,
+       "stop": 65,
+       "hold": 7,
+       "L": 73,
+       "buffer": 38,
+       "P": 83,
+       "W": 59
+      }
+     },
+     {
+      "index": 57,
+      "values": {
+       "X": 221,
+       "Y": 4,
+       "stop": 83,
+       "hold": 6,
+       "L": 71,
+       "buffer": 26,
+       "P": 92,
+       "W": 48
+      }
+     },
+     {
+      "index": 58,
+      "values": {
+       "X": 226,
+       "Y": 1,
+       "stop": 74,
+       "hold": 9,
+       "L": 86,
+       "buffer": 20,
+       "P": 93,
+       "W": 51
+      }
+     },
+     {
+      "index": 59,
+      "values": {
+       "X": 211,
+       "Y": 4,
+       "stop": 69,
+       "hold": 6,
+       "L": 61,
+       "buffer": 22,
+       "P": 99,
+       "W": 52
+      }
+     },
+     {
+      "index": 60,
+      "values": {
+       "X": 223,
+       "Y": 1,
+       "stop": 75,
+       "hold": 6,
+       "L": 69,
+       "buffer": 29,
+       "P": 84,
+       "W": 48
+      }
+     },
+     {
+      "index": 61,
+      "values": {
+       "X": 215,
+       "Y": 3,
+       "stop": 82,
+       "hold": 9,
+       "L": 61,
+       "buffer": 31,
+       "P": 80,
+       "W": 50
+      }
+     },
+     {
+      "index": 62,
+      "values": {
+       "X": 208,
+       "Y": 5,
+       "stop": 77,
+       "hold": 7,
+       "L": 60,
+       "buffer": 28,
+       "P": 98,
+       "W": 55
+      }
+     },
+     {
+      "index": 63,
+      "values": {
+       "X": 223,
+       "Y": 1,
+       "stop": 66,
+       "hold": 10,
+       "L": 83,
+       "buffer": 23,
+       "P": 95,
+       "W": 67
+      }
+     }
+    ],
+    "count": 64
+   }
+  ],
+  "bootstrapSeed": [
+   "vgt-standalone-vs-pooled-robustness-v1",
+   "bootstrap"
+  ]
+ },
+ "costScenarios": [
+  {
+   "id": "base",
+   "label": "base: 11%, 5 bps",
+   "group": "base",
+   "rate": 0.11,
+   "costBps": 5,
+   "feeBps": 5,
+   "slippageBps": 0,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "r08",
+   "label": "financing 8%",
+   "group": "rate",
+   "rate": 0.08,
+   "costBps": 5,
+   "feeBps": 5,
+   "slippageBps": 0,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "r14",
+   "label": "financing 14%",
+   "group": "rate",
+   "rate": 0.14,
+   "costBps": 5,
+   "feeBps": 5,
+   "slippageBps": 0,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "r18",
+   "label": "financing 18%",
+   "group": "rate",
+   "rate": 0.18,
+   "costBps": 5,
+   "feeBps": 5,
+   "slippageBps": 0,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "f00",
+   "label": "friction 0 bps/side",
+   "group": "friction",
+   "rate": 0.11,
+   "costBps": 0,
+   "feeBps": 0,
+   "slippageBps": 0,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "f02",
+   "label": "friction 2 bps/side",
+   "group": "friction",
+   "rate": 0.11,
+   "costBps": 2,
+   "feeBps": 2,
+   "slippageBps": 0,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "f10",
+   "label": "friction 10 bps/side (10 fee, or 5 fee + 5 slippage)",
+   "group": "friction",
+   "rate": 0.11,
+   "costBps": 10,
+   "feeBps": 10,
+   "slippageBps": 0,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "f15",
+   "label": "friction 15 bps/side (5 fee + 10 slippage)",
+   "group": "friction",
+   "rate": 0.11,
+   "costBps": 15,
+   "feeBps": 5,
+   "slippageBps": 10,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "f20",
+   "label": "friction 20 bps/side (20 fee, or 10 fee + 10 slippage)",
+   "group": "friction",
+   "rate": 0.11,
+   "costBps": 20,
+   "feeBps": 20,
+   "slippageBps": 0,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "f30",
+   "label": "friction 30 bps/side (5 fee + 25 slippage)",
+   "group": "friction",
+   "rate": 0.11,
+   "costBps": 30,
+   "feeBps": 5,
+   "slippageBps": 25,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "f45",
+   "label": "friction 45 bps/side (20 fee + 25 slippage)",
+   "group": "friction",
+   "rate": 0.11,
+   "costBps": 45,
+   "feeBps": 20,
+   "slippageBps": 25,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "s10",
+   "label": "stop overshoot 10 bps",
+   "group": "stop",
+   "rate": 0.11,
+   "costBps": 5,
+   "feeBps": 5,
+   "slippageBps": 0,
+   "stopSlippageBps": 10,
+   "stopFill": "stop"
+  },
+  {
+   "id": "s25",
+   "label": "stop overshoot 25 bps",
+   "group": "stop",
+   "rate": 0.11,
+   "costBps": 5,
+   "feeBps": 5,
+   "slippageBps": 0,
+   "stopSlippageBps": 25,
+   "stopFill": "stop"
+  },
+  {
+   "id": "s50",
+   "label": "stop overshoot 50 bps",
+   "group": "stop",
+   "rate": 0.11,
+   "costBps": 5,
+   "feeBps": 5,
+   "slippageBps": 0,
+   "stopSlippageBps": 50,
+   "stopFill": "stop"
+  },
+  {
+   "id": "s100",
+   "label": "stop overshoot 100 bps",
+   "group": "stop",
+   "rate": 0.11,
+   "costBps": 5,
+   "feeBps": 5,
+   "slippageBps": 0,
+   "stopSlippageBps": 100,
+   "stopFill": "stop"
+  },
+  {
+   "id": "nxo",
+   "label": "stops fill at the next trade after the trigger minute",
+   "group": "stop",
+   "rate": 0.11,
+   "costBps": 5,
+   "feeBps": 5,
+   "slippageBps": 0,
+   "stopSlippageBps": 0,
+   "stopFill": "next-open"
+  },
+  {
+   "id": "C1",
+   "label": "combined: 14% + 10 fee + 10 slippage",
+   "group": "combined",
+   "rate": 0.14,
+   "costBps": 20,
+   "feeBps": 10,
+   "slippageBps": 10,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "C2",
+   "label": "combined: 18% + 20 fee + 25 slippage",
+   "group": "combined",
+   "rate": 0.18,
+   "costBps": 45,
+   "feeBps": 20,
+   "slippageBps": 25,
+   "stopSlippageBps": 0,
+   "stopFill": "stop"
+  },
+  {
+   "id": "C3",
+   "label": "combined: 18% + 20 fee + 25 slippage + 50 bps stop overshoot",
+   "group": "combined",
+   "rate": 0.18,
+   "costBps": 45,
+   "feeBps": 20,
+   "slippageBps": 25,
+   "stopSlippageBps": 50,
+   "stopFill": "stop"
+  }
+ ],
+ "regimeWindows": [
+  {
+   "id": "R1s",
+   "regime": "R1",
+   "label": "2018 Q4 selloff — stress",
+   "from": "2018-10-01",
+   "to": "2018-12-24",
+   "kind": "stress"
+  },
+  {
+   "id": "R1r",
+   "regime": "R1",
+   "label": "2018 Q4 selloff — rebound",
+   "from": "2018-12-24",
+   "to": "2019-04-23",
+   "kind": "rebound"
+  },
+  {
+   "id": "R2s",
+   "regime": "R2",
+   "label": "2020 crash — stress",
+   "from": "2020-02-19",
+   "to": "2020-03-23",
+   "kind": "stress"
+  },
+  {
+   "id": "R2r",
+   "regime": "R2",
+   "label": "2020 crash — rebound",
+   "from": "2020-03-23",
+   "to": "2020-07-02",
+   "kind": "rebound"
+  },
+  {
+   "id": "R3s",
+   "regime": "R3",
+   "label": "2022 bear market — stress",
+   "from": "2021-12-27",
+   "to": "2022-10-14",
+   "kind": "stress"
+  },
+  {
+   "id": "R3r",
+   "regime": "R3",
+   "label": "2022 bear market — rebound",
+   "from": "2022-10-14",
+   "to": "2024-03-20",
+   "kind": "rebound"
+  },
+  {
+   "id": "R4s",
+   "regime": "R4",
+   "label": "2025 selloff — stress",
+   "from": "2025-02-19",
+   "to": "2025-04-08",
+   "kind": "stress"
+  },
+  {
+   "id": "R4r",
+   "regime": "R4",
+   "label": "2025 selloff — rebound",
+   "from": "2025-04-08",
+   "to": "2025-06-24",
+   "kind": "rebound"
+  },
+  {
+   "id": "Y2023",
+   "label": "2023 recovery (calendar 2023)",
+   "from": "2022-12-30",
+   "to": "2023-12-29",
+   "kind": "calendar"
+  },
+  {
+   "id": "Y2026",
+   "label": "2026 partial (to 2026-10-13)",
+   "from": "2025-12-31",
+   "to": "2026-10-13",
+   "kind": "calendar"
+  },
+  {
+   "id": "K1",
+   "label": "≥10% correction 2020-09",
+   "from": "2020-09-02",
+   "to": "2020-09-23",
+   "kind": "correction"
+  },
+  {
+   "id": "K2",
+   "label": "≥10% correction 2024-07/08",
+   "from": "2024-07-10",
+   "to": "2024-08-05",
+   "kind": "correction"
+  },
+  {
+   "id": "K3",
+   "label": "≥10% correction 2025-10 → 2026-03",
+   "from": "2025-10-29",
+   "to": "2026-03-30",
+   "kind": "correction"
+  }
+ ],
+ "runs": {
+  "total": 623,
+  "byFamily": {
+   "s-base": 2,
+   "s-cost": 36,
+   "s-control": 7,
+   "s-oat": 64,
+   "s-paired": 128,
+   "s-joint": 256,
+   "p-path": 130
+  },
+  "keys": [
+   "s:VGT-primary:cost:base:fixed",
+   "s:VGT-primary:cost:base:portfolio",
+   "s:VGT-primary:cost:r08:fixed",
+   "s:VGT-primary:cost:r08:portfolio",
+   "s:VGT-primary:cost:r14:fixed",
+   "s:VGT-primary:cost:r14:portfolio",
+   "s:VGT-primary:cost:r18:fixed",
+   "s:VGT-primary:cost:r18:portfolio",
+   "s:VGT-primary:cost:f00:fixed",
+   "s:VGT-primary:cost:f00:portfolio",
+   "s:VGT-primary:cost:f02:fixed",
+   "s:VGT-primary:cost:f02:portfolio",
+   "s:VGT-primary:cost:f10:fixed",
+   "s:VGT-primary:cost:f10:portfolio",
+   "s:VGT-primary:cost:f15:fixed",
+   "s:VGT-primary:cost:f15:portfolio",
+   "s:VGT-primary:cost:f20:fixed",
+   "s:VGT-primary:cost:f20:portfolio",
+   "s:VGT-primary:cost:f30:fixed",
+   "s:VGT-primary:cost:f30:portfolio",
+   "s:VGT-primary:cost:f45:fixed",
+   "s:VGT-primary:cost:f45:portfolio",
+   "s:VGT-primary:cost:s10:fixed",
+   "s:VGT-primary:cost:s10:portfolio",
+   "s:VGT-primary:cost:s25:fixed",
+   "s:VGT-primary:cost:s25:portfolio",
+   "s:VGT-primary:cost:s50:fixed",
+   "s:VGT-primary:cost:s50:portfolio",
+   "s:VGT-primary:cost:s100:fixed",
+   "s:VGT-primary:cost:s100:portfolio",
+   "s:VGT-primary:cost:nxo:fixed",
+   "s:VGT-primary:cost:nxo:portfolio",
+   "s:VGT-primary:cost:C1:fixed",
+   "s:VGT-primary:cost:C1:portfolio",
+   "s:VGT-primary:cost:C2:fixed",
+   "s:VGT-primary:cost:C2:portfolio",
+   "s:VGT-primary:cost:C3:fixed",
+   "s:VGT-primary:cost:C3:portfolio",
+   "s:VGT-primary:control:0bps:fixed",
+   "s:VGT-primary:control:0bps:portfolio",
+   "s:VGT-primary:control:2bps:fixed",
+   "s:VGT-primary:control:2bps:portfolio",
+   "s:VGT-primary:control:10bps:fixed",
+   "s:VGT-primary:control:10bps:portfolio",
+   "s:VGT-primary:dividends:symmetric:portfolio",
+   "s:VGT-primary:oat:targetPercentChange:-m:fixed",
+   "s:VGT-primary:oat:targetPercentChange:-m:portfolio",
+   "s:VGT-primary:oat:targetPercentChange:-s:fixed",
+   "s:VGT-primary:oat:targetPercentChange:-s:portfolio",
+   "s:VGT-primary:oat:targetPercentChange:+s:fixed",
+   "s:VGT-primary:oat:targetPercentChange:+s:portfolio",
+   "s:VGT-primary:oat:targetPercentChange:+m:fixed",
+   "s:VGT-primary:oat:targetPercentChange:+m:portfolio",
+   "s:VGT-primary:oat:trailingBuyPercentage:-m:fixed",
+   "s:VGT-primary:oat:trailingBuyPercentage:-m:portfolio",
+   "s:VGT-primary:oat:trailingBuyPercentage:-s:fixed",
+   "s:VGT-primary:oat:trailingBuyPercentage:-s:portfolio",
+   "s:VGT-primary:oat:trailingBuyPercentage:+s:fixed",
+   "s:VGT-primary:oat:trailingBuyPercentage:+s:portfolio",
+   "s:VGT-primary:oat:trailingBuyPercentage:+m:fixed",
+   "s:VGT-primary:oat:trailingBuyPercentage:+m:portfolio",
+   "s:VGT-primary:oat:trailingStopPercentage:-m:fixed",
+   "s:VGT-primary:oat:trailingStopPercentage:-m:portfolio",
+   "s:VGT-primary:oat:trailingStopPercentage:-s:fixed",
+   "s:VGT-primary:oat:trailingStopPercentage:-s:portfolio",
+   "s:VGT-primary:oat:trailingStopPercentage:+s:fixed",
+   "s:VGT-primary:oat:trailingStopPercentage:+s:portfolio",
+   "s:VGT-primary:oat:trailingStopPercentage:+m:fixed",
+   "s:VGT-primary:oat:trailingStopPercentage:+m:portfolio",
+   "s:VGT-primary:oat:maximumHoldDays:-m:fixed",
+   "s:VGT-primary:oat:maximumHoldDays:-m:portfolio",
+   "s:VGT-primary:oat:maximumHoldDays:-s:fixed",
+   "s:VGT-primary:oat:maximumHoldDays:-s:portfolio",
+   "s:VGT-primary:oat:maximumHoldDays:+s:fixed",
+   "s:VGT-primary:oat:maximumHoldDays:+s:portfolio",
+   "s:VGT-primary:oat:maximumHoldDays:+m:fixed",
+   "s:VGT-primary:oat:maximumHoldDays:+m:portfolio",
+   "s:VGT-primary:oat:tickWindowSize:-m:fixed",
+   "s:VGT-primary:oat:tickWindowSize:-m:portfolio",
+   "s:VGT-primary:oat:tickWindowSize:-s:fixed",
+   "s:VGT-primary:oat:tickWindowSize:-s:portfolio",
+   "s:VGT-primary:oat:tickWindowSize:+s:fixed",
+   "s:VGT-primary:oat:tickWindowSize:+s:portfolio",
+   "s:VGT-primary:oat:tickWindowSize:+m:fixed",
+   "s:VGT-primary:oat:tickWindowSize:+m:portfolio",
+   "s:VGT-primary:oat:intradayLossBuffer:-m:fixed",
+   "s:VGT-primary:oat:intradayLossBuffer:-m:portfolio",
+   "s:VGT-primary:oat:intradayLossBuffer:-s:fixed",
+   "s:VGT-primary:oat:intradayLossBuffer:-s:portfolio",
+   "s:VGT-primary:oat:intradayLossBuffer:+s:fixed",
+   "s:VGT-primary:oat:intradayLossBuffer:+s:portfolio",
+   "s:VGT-primary:oat:intradayLossBuffer:+m:fixed",
+   "s:VGT-primary:oat:intradayLossBuffer:+m:portfolio",
+   "s:VGT-primary:oat:pullback:-m:fixed",
+   "s:VGT-primary:oat:pullback:-m:portfolio",
+   "s:VGT-primary:oat:pullback:-s:fixed",
+   "s:VGT-primary:oat:pullback:-s:portfolio",
+   "s:VGT-primary:oat:pullback:+s:fixed",
+   "s:VGT-primary:oat:pullback:+s:portfolio",
+   "s:VGT-primary:oat:pullback:+m:fixed",
+   "s:VGT-primary:oat:pullback:+m:portfolio",
+   "s:VGT-primary:oat:continuationWindow:-m:fixed",
+   "s:VGT-primary:oat:continuationWindow:-m:portfolio",
+   "s:VGT-primary:oat:continuationWindow:-s:fixed",
+   "s:VGT-primary:oat:continuationWindow:-s:portfolio",
+   "s:VGT-primary:oat:continuationWindow:+s:fixed",
+   "s:VGT-primary:oat:continuationWindow:+s:portfolio",
+   "s:VGT-primary:oat:continuationWindow:+m:fixed",
+   "s:VGT-primary:oat:continuationWindow:+m:portfolio",
+   "s:VGT-primary:paired:B4:00:fixed",
+   "s:VGT-primary:paired:B4:00:portfolio",
+   "s:VGT-primary:paired:B4:01:fixed",
+   "s:VGT-primary:paired:B4:01:portfolio",
+   "s:VGT-primary:paired:B4:02:fixed",
+   "s:VGT-primary:paired:B4:02:portfolio",
+   "s:VGT-primary:paired:B4:03:fixed",
+   "s:VGT-primary:paired:B4:03:portfolio",
+   "s:VGT-primary:paired:B4:04:fixed",
+   "s:VGT-primary:paired:B4:04:portfolio",
+   "s:VGT-primary:paired:B4:05:fixed",
+   "s:VGT-primary:paired:B4:05:portfolio",
+   "s:VGT-primary:paired:B4:06:fixed",
+   "s:VGT-primary:paired:B4:06:portfolio",
+   "s:VGT-primary:paired:B4:07:fixed",
+   "s:VGT-primary:paired:B4:07:portfolio",
+   "s:VGT-primary:paired:B4:08:fixed",
+   "s:VGT-primary:paired:B4:08:portfolio",
+   "s:VGT-primary:paired:B4:09:fixed",
+   "s:VGT-primary:paired:B4:09:portfolio",
+   "s:VGT-primary:paired:B4:10:fixed",
+   "s:VGT-primary:paired:B4:10:portfolio",
+   "s:VGT-primary:paired:B4:11:fixed",
+   "s:VGT-primary:paired:B4:11:portfolio",
+   "s:VGT-primary:paired:B4:12:fixed",
+   "s:VGT-primary:paired:B4:12:portfolio",
+   "s:VGT-primary:paired:B4:13:fixed",
+   "s:VGT-primary:paired:B4:13:portfolio",
+   "s:VGT-primary:paired:B4:14:fixed",
+   "s:VGT-primary:paired:B4:14:portfolio",
+   "s:VGT-primary:paired:B4:15:fixed",
+   "s:VGT-primary:paired:B4:15:portfolio",
+   "s:VGT-primary:paired:B4:16:fixed",
+   "s:VGT-primary:paired:B4:16:portfolio",
+   "s:VGT-primary:paired:B4:17:fixed",
+   "s:VGT-primary:paired:B4:17:portfolio",
+   "s:VGT-primary:paired:B4:18:fixed",
+   "s:VGT-primary:paired:B4:18:portfolio",
+   "s:VGT-primary:paired:B4:19:fixed",
+   "s:VGT-primary:paired:B4:19:portfolio",
+   "s:VGT-primary:paired:B4:20:fixed",
+   "s:VGT-primary:paired:B4:20:portfolio",
+   "s:VGT-primary:paired:B4:21:fixed",
+   "s:VGT-primary:paired:B4:21:portfolio",
+   "s:VGT-primary:paired:B4:22:fixed",
+   "s:VGT-primary:paired:B4:22:portfolio",
+   "s:VGT-primary:paired:B4:23:fixed",
+   "s:VGT-primary:paired:B4:23:portfolio",
+   "s:VGT-primary:paired:B4:24:fixed",
+   "s:VGT-primary:paired:B4:24:portfolio",
+   "s:VGT-primary:paired:B4:25:fixed",
+   "s:VGT-primary:paired:B4:25:portfolio",
+   "s:VGT-primary:paired:B4:26:fixed",
+   "s:VGT-primary:paired:B4:26:portfolio",
+   "s:VGT-primary:paired:B4:27:fixed",
+   "s:VGT-primary:paired:B4:27:portfolio",
+   "s:VGT-primary:paired:B4:28:fixed",
+   "s:VGT-primary:paired:B4:28:portfolio",
+   "s:VGT-primary:paired:B4:29:fixed",
+   "s:VGT-primary:paired:B4:29:portfolio",
+   "s:VGT-primary:paired:B4:30:fixed",
+   "s:VGT-primary:paired:B4:30:portfolio",
+   "s:VGT-primary:paired:B4:31:fixed",
+   "s:VGT-primary:paired:B4:31:portfolio",
+   "s:VGT-primary:paired:B5:00:fixed",
+   "s:VGT-primary:paired:B5:00:portfolio",
+   "s:VGT-primary:paired:B5:01:fixed",
+   "s:VGT-primary:paired:B5:01:portfolio",
+   "s:VGT-primary:paired:B5:02:fixed",
+   "s:VGT-primary:paired:B5:02:portfolio",
+   "s:VGT-primary:paired:B5:03:fixed",
+   "s:VGT-primary:paired:B5:03:portfolio",
+   "s:VGT-primary:paired:B5:04:fixed",
+   "s:VGT-primary:paired:B5:04:portfolio",
+   "s:VGT-primary:paired:B5:05:fixed",
+   "s:VGT-primary:paired:B5:05:portfolio",
+   "s:VGT-primary:paired:B5:06:fixed",
+   "s:VGT-primary:paired:B5:06:portfolio",
+   "s:VGT-primary:paired:B5:07:fixed",
+   "s:VGT-primary:paired:B5:07:portfolio",
+   "s:VGT-primary:paired:B5:08:fixed",
+   "s:VGT-primary:paired:B5:08:portfolio",
+   "s:VGT-primary:paired:B5:09:fixed",
+   "s:VGT-primary:paired:B5:09:portfolio",
+   "s:VGT-primary:paired:B5:10:fixed",
+   "s:VGT-primary:paired:B5:10:portfolio",
+   "s:VGT-primary:paired:B5:11:fixed",
+   "s:VGT-primary:paired:B5:11:portfolio",
+   "s:VGT-primary:paired:B5:12:fixed",
+   "s:VGT-primary:paired:B5:12:portfolio",
+   "s:VGT-primary:paired:B5:13:fixed",
+   "s:VGT-primary:paired:B5:13:portfolio",
+   "s:VGT-primary:paired:B5:14:fixed",
+   "s:VGT-primary:paired:B5:14:portfolio",
+   "s:VGT-primary:paired:B5:15:fixed",
+   "s:VGT-primary:paired:B5:15:portfolio",
+   "s:VGT-primary:paired:B5:16:fixed",
+   "s:VGT-primary:paired:B5:16:portfolio",
+   "s:VGT-primary:paired:B5:17:fixed",
+   "s:VGT-primary:paired:B5:17:portfolio",
+   "s:VGT-primary:paired:B5:18:fixed",
+   "s:VGT-primary:paired:B5:18:portfolio",
+   "s:VGT-primary:paired:B5:19:fixed",
+   "s:VGT-primary:paired:B5:19:portfolio",
+   "s:VGT-primary:paired:B5:20:fixed",
+   "s:VGT-primary:paired:B5:20:portfolio",
+   "s:VGT-primary:paired:B5:21:fixed",
+   "s:VGT-primary:paired:B5:21:portfolio",
+   "s:VGT-primary:paired:B5:22:fixed",
+   "s:VGT-primary:paired:B5:22:portfolio",
+   "s:VGT-primary:paired:B5:23:fixed",
+   "s:VGT-primary:paired:B5:23:portfolio",
+   "s:VGT-primary:paired:B5:24:fixed",
+   "s:VGT-primary:paired:B5:24:portfolio",
+   "s:VGT-primary:paired:B5:25:fixed",
+   "s:VGT-primary:paired:B5:25:portfolio",
+   "s:VGT-primary:paired:B5:26:fixed",
+   "s:VGT-primary:paired:B5:26:portfolio",
+   "s:VGT-primary:paired:B5:27:fixed",
+   "s:VGT-primary:paired:B5:27:portfolio",
+   "s:VGT-primary:paired:B5:28:fixed",
+   "s:VGT-primary:paired:B5:28:portfolio",
+   "s:VGT-primary:paired:B5:29:fixed",
+   "s:VGT-primary:paired:B5:29:portfolio",
+   "s:VGT-primary:paired:B5:30:fixed",
+   "s:VGT-primary:paired:B5:30:portfolio",
+   "s:VGT-primary:paired:B5:31:fixed",
+   "s:VGT-primary:paired:B5:31:portfolio",
+   "s:VGT-primary:joint:s1:00:fixed",
+   "s:VGT-primary:joint:s1:00:portfolio",
+   "s:VGT-primary:joint:s1:01:fixed",
+   "s:VGT-primary:joint:s1:01:portfolio",
+   "s:VGT-primary:joint:s1:02:fixed",
+   "s:VGT-primary:joint:s1:02:portfolio",
+   "s:VGT-primary:joint:s1:03:fixed",
+   "s:VGT-primary:joint:s1:03:portfolio",
+   "s:VGT-primary:joint:s1:04:fixed",
+   "s:VGT-primary:joint:s1:04:portfolio",
+   "s:VGT-primary:joint:s1:05:fixed",
+   "s:VGT-primary:joint:s1:05:portfolio",
+   "s:VGT-primary:joint:s1:06:fixed",
+   "s:VGT-primary:joint:s1:06:portfolio",
+   "s:VGT-primary:joint:s1:07:fixed",
+   "s:VGT-primary:joint:s1:07:portfolio",
+   "s:VGT-primary:joint:s1:08:fixed",
+   "s:VGT-primary:joint:s1:08:portfolio",
+   "s:VGT-primary:joint:s1:09:fixed",
+   "s:VGT-primary:joint:s1:09:portfolio",
+   "s:VGT-primary:joint:s1:10:fixed",
+   "s:VGT-primary:joint:s1:10:portfolio",
+   "s:VGT-primary:joint:s1:11:fixed",
+   "s:VGT-primary:joint:s1:11:portfolio",
+   "s:VGT-primary:joint:s1:12:fixed",
+   "s:VGT-primary:joint:s1:12:portfolio",
+   "s:VGT-primary:joint:s1:13:fixed",
+   "s:VGT-primary:joint:s1:13:portfolio",
+   "s:VGT-primary:joint:s1:14:fixed",
+   "s:VGT-primary:joint:s1:14:portfolio",
+   "s:VGT-primary:joint:s1:15:fixed",
+   "s:VGT-primary:joint:s1:15:portfolio",
+   "s:VGT-primary:joint:s1:16:fixed",
+   "s:VGT-primary:joint:s1:16:portfolio",
+   "s:VGT-primary:joint:s1:17:fixed",
+   "s:VGT-primary:joint:s1:17:portfolio",
+   "s:VGT-primary:joint:s1:18:fixed",
+   "s:VGT-primary:joint:s1:18:portfolio",
+   "s:VGT-primary:joint:s1:19:fixed",
+   "s:VGT-primary:joint:s1:19:portfolio",
+   "s:VGT-primary:joint:s1:20:fixed",
+   "s:VGT-primary:joint:s1:20:portfolio",
+   "s:VGT-primary:joint:s1:21:fixed",
+   "s:VGT-primary:joint:s1:21:portfolio",
+   "s:VGT-primary:joint:s1:22:fixed",
+   "s:VGT-primary:joint:s1:22:portfolio",
+   "s:VGT-primary:joint:s1:23:fixed",
+   "s:VGT-primary:joint:s1:23:portfolio",
+   "s:VGT-primary:joint:s1:24:fixed",
+   "s:VGT-primary:joint:s1:24:portfolio",
+   "s:VGT-primary:joint:s1:25:fixed",
+   "s:VGT-primary:joint:s1:25:portfolio",
+   "s:VGT-primary:joint:s1:26:fixed",
+   "s:VGT-primary:joint:s1:26:portfolio",
+   "s:VGT-primary:joint:s1:27:fixed",
+   "s:VGT-primary:joint:s1:27:portfolio",
+   "s:VGT-primary:joint:s1:28:fixed",
+   "s:VGT-primary:joint:s1:28:portfolio",
+   "s:VGT-primary:joint:s1:29:fixed",
+   "s:VGT-primary:joint:s1:29:portfolio",
+   "s:VGT-primary:joint:s1:30:fixed",
+   "s:VGT-primary:joint:s1:30:portfolio",
+   "s:VGT-primary:joint:s1:31:fixed",
+   "s:VGT-primary:joint:s1:31:portfolio",
+   "s:VGT-primary:joint:s1:32:fixed",
+   "s:VGT-primary:joint:s1:32:portfolio",
+   "s:VGT-primary:joint:s1:33:fixed",
+   "s:VGT-primary:joint:s1:33:portfolio",
+   "s:VGT-primary:joint:s1:34:fixed",
+   "s:VGT-primary:joint:s1:34:portfolio",
+   "s:VGT-primary:joint:s1:35:fixed",
+   "s:VGT-primary:joint:s1:35:portfolio",
+   "s:VGT-primary:joint:s1:36:fixed",
+   "s:VGT-primary:joint:s1:36:portfolio",
+   "s:VGT-primary:joint:s1:37:fixed",
+   "s:VGT-primary:joint:s1:37:portfolio",
+   "s:VGT-primary:joint:s1:38:fixed",
+   "s:VGT-primary:joint:s1:38:portfolio",
+   "s:VGT-primary:joint:s1:39:fixed",
+   "s:VGT-primary:joint:s1:39:portfolio",
+   "s:VGT-primary:joint:s1:40:fixed",
+   "s:VGT-primary:joint:s1:40:portfolio",
+   "s:VGT-primary:joint:s1:41:fixed",
+   "s:VGT-primary:joint:s1:41:portfolio",
+   "s:VGT-primary:joint:s1:42:fixed",
+   "s:VGT-primary:joint:s1:42:portfolio",
+   "s:VGT-primary:joint:s1:43:fixed",
+   "s:VGT-primary:joint:s1:43:portfolio",
+   "s:VGT-primary:joint:s1:44:fixed",
+   "s:VGT-primary:joint:s1:44:portfolio",
+   "s:VGT-primary:joint:s1:45:fixed",
+   "s:VGT-primary:joint:s1:45:portfolio",
+   "s:VGT-primary:joint:s1:46:fixed",
+   "s:VGT-primary:joint:s1:46:portfolio",
+   "s:VGT-primary:joint:s1:47:fixed",
+   "s:VGT-primary:joint:s1:47:portfolio",
+   "s:VGT-primary:joint:s1:48:fixed",
+   "s:VGT-primary:joint:s1:48:portfolio",
+   "s:VGT-primary:joint:s1:49:fixed",
+   "s:VGT-primary:joint:s1:49:portfolio",
+   "s:VGT-primary:joint:s1:50:fixed",
+   "s:VGT-primary:joint:s1:50:portfolio",
+   "s:VGT-primary:joint:s1:51:fixed",
+   "s:VGT-primary:joint:s1:51:portfolio",
+   "s:VGT-primary:joint:s1:52:fixed",
+   "s:VGT-primary:joint:s1:52:portfolio",
+   "s:VGT-primary:joint:s1:53:fixed",
+   "s:VGT-primary:joint:s1:53:portfolio",
+   "s:VGT-primary:joint:s1:54:fixed",
+   "s:VGT-primary:joint:s1:54:portfolio",
+   "s:VGT-primary:joint:s1:55:fixed",
+   "s:VGT-primary:joint:s1:55:portfolio",
+   "s:VGT-primary:joint:s1:56:fixed",
+   "s:VGT-primary:joint:s1:56:portfolio",
+   "s:VGT-primary:joint:s1:57:fixed",
+   "s:VGT-primary:joint:s1:57:portfolio",
+   "s:VGT-primary:joint:s1:58:fixed",
+   "s:VGT-primary:joint:s1:58:portfolio",
+   "s:VGT-primary:joint:s1:59:fixed",
+   "s:VGT-primary:joint:s1:59:portfolio",
+   "s:VGT-primary:joint:s1:60:fixed",
+   "s:VGT-primary:joint:s1:60:portfolio",
+   "s:VGT-primary:joint:s1:61:fixed",
+   "s:VGT-primary:joint:s1:61:portfolio",
+   "s:VGT-primary:joint:s1:62:fixed",
+   "s:VGT-primary:joint:s1:62:portfolio",
+   "s:VGT-primary:joint:s1:63:fixed",
+   "s:VGT-primary:joint:s1:63:portfolio",
+   "s:VGT-primary:joint:s2:00:fixed",
+   "s:VGT-primary:joint:s2:00:portfolio",
+   "s:VGT-primary:joint:s2:01:fixed",
+   "s:VGT-primary:joint:s2:01:portfolio",
+   "s:VGT-primary:joint:s2:02:fixed",
+   "s:VGT-primary:joint:s2:02:portfolio",
+   "s:VGT-primary:joint:s2:03:fixed",
+   "s:VGT-primary:joint:s2:03:portfolio",
+   "s:VGT-primary:joint:s2:04:fixed",
+   "s:VGT-primary:joint:s2:04:portfolio",
+   "s:VGT-primary:joint:s2:05:fixed",
+   "s:VGT-primary:joint:s2:05:portfolio",
+   "s:VGT-primary:joint:s2:06:fixed",
+   "s:VGT-primary:joint:s2:06:portfolio",
+   "s:VGT-primary:joint:s2:07:fixed",
+   "s:VGT-primary:joint:s2:07:portfolio",
+   "s:VGT-primary:joint:s2:08:fixed",
+   "s:VGT-primary:joint:s2:08:portfolio",
+   "s:VGT-primary:joint:s2:09:fixed",
+   "s:VGT-primary:joint:s2:09:portfolio",
+   "s:VGT-primary:joint:s2:10:fixed",
+   "s:VGT-primary:joint:s2:10:portfolio",
+   "s:VGT-primary:joint:s2:11:fixed",
+   "s:VGT-primary:joint:s2:11:portfolio",
+   "s:VGT-primary:joint:s2:12:fixed",
+   "s:VGT-primary:joint:s2:12:portfolio",
+   "s:VGT-primary:joint:s2:13:fixed",
+   "s:VGT-primary:joint:s2:13:portfolio",
+   "s:VGT-primary:joint:s2:14:fixed",
+   "s:VGT-primary:joint:s2:14:portfolio",
+   "s:VGT-primary:joint:s2:15:fixed",
+   "s:VGT-primary:joint:s2:15:portfolio",
+   "s:VGT-primary:joint:s2:16:fixed",
+   "s:VGT-primary:joint:s2:16:portfolio",
+   "s:VGT-primary:joint:s2:17:fixed",
+   "s:VGT-primary:joint:s2:17:portfolio",
+   "s:VGT-primary:joint:s2:18:fixed",
+   "s:VGT-primary:joint:s2:18:portfolio",
+   "s:VGT-primary:joint:s2:19:fixed",
+   "s:VGT-primary:joint:s2:19:portfolio",
+   "s:VGT-primary:joint:s2:20:fixed",
+   "s:VGT-primary:joint:s2:20:portfolio",
+   "s:VGT-primary:joint:s2:21:fixed",
+   "s:VGT-primary:joint:s2:21:portfolio",
+   "s:VGT-primary:joint:s2:22:fixed",
+   "s:VGT-primary:joint:s2:22:portfolio",
+   "s:VGT-primary:joint:s2:23:fixed",
+   "s:VGT-primary:joint:s2:23:portfolio",
+   "s:VGT-primary:joint:s2:24:fixed",
+   "s:VGT-primary:joint:s2:24:portfolio",
+   "s:VGT-primary:joint:s2:25:fixed",
+   "s:VGT-primary:joint:s2:25:portfolio",
+   "s:VGT-primary:joint:s2:26:fixed",
+   "s:VGT-primary:joint:s2:26:portfolio",
+   "s:VGT-primary:joint:s2:27:fixed",
+   "s:VGT-primary:joint:s2:27:portfolio",
+   "s:VGT-primary:joint:s2:28:fixed",
+   "s:VGT-primary:joint:s2:28:portfolio",
+   "s:VGT-primary:joint:s2:29:fixed",
+   "s:VGT-primary:joint:s2:29:portfolio",
+   "s:VGT-primary:joint:s2:30:fixed",
+   "s:VGT-primary:joint:s2:30:portfolio",
+   "s:VGT-primary:joint:s2:31:fixed",
+   "s:VGT-primary:joint:s2:31:portfolio",
+   "s:VGT-primary:joint:s2:32:fixed",
+   "s:VGT-primary:joint:s2:32:portfolio",
+   "s:VGT-primary:joint:s2:33:fixed",
+   "s:VGT-primary:joint:s2:33:portfolio",
+   "s:VGT-primary:joint:s2:34:fixed",
+   "s:VGT-primary:joint:s2:34:portfolio",
+   "s:VGT-primary:joint:s2:35:fixed",
+   "s:VGT-primary:joint:s2:35:portfolio",
+   "s:VGT-primary:joint:s2:36:fixed",
+   "s:VGT-primary:joint:s2:36:portfolio",
+   "s:VGT-primary:joint:s2:37:fixed",
+   "s:VGT-primary:joint:s2:37:portfolio",
+   "s:VGT-primary:joint:s2:38:fixed",
+   "s:VGT-primary:joint:s2:38:portfolio",
+   "s:VGT-primary:joint:s2:39:fixed",
+   "s:VGT-primary:joint:s2:39:portfolio",
+   "s:VGT-primary:joint:s2:40:fixed",
+   "s:VGT-primary:joint:s2:40:portfolio",
+   "s:VGT-primary:joint:s2:41:fixed",
+   "s:VGT-primary:joint:s2:41:portfolio",
+   "s:VGT-primary:joint:s2:42:fixed",
+   "s:VGT-primary:joint:s2:42:portfolio",
+   "s:VGT-primary:joint:s2:43:fixed",
+   "s:VGT-primary:joint:s2:43:portfolio",
+   "s:VGT-primary:joint:s2:44:fixed",
+   "s:VGT-primary:joint:s2:44:portfolio",
+   "s:VGT-primary:joint:s2:45:fixed",
+   "s:VGT-primary:joint:s2:45:portfolio",
+   "s:VGT-primary:joint:s2:46:fixed",
+   "s:VGT-primary:joint:s2:46:portfolio",
+   "s:VGT-primary:joint:s2:47:fixed",
+   "s:VGT-primary:joint:s2:47:portfolio",
+   "s:VGT-primary:joint:s2:48:fixed",
+   "s:VGT-primary:joint:s2:48:portfolio",
+   "s:VGT-primary:joint:s2:49:fixed",
+   "s:VGT-primary:joint:s2:49:portfolio",
+   "s:VGT-primary:joint:s2:50:fixed",
+   "s:VGT-primary:joint:s2:50:portfolio",
+   "s:VGT-primary:joint:s2:51:fixed",
+   "s:VGT-primary:joint:s2:51:portfolio",
+   "s:VGT-primary:joint:s2:52:fixed",
+   "s:VGT-primary:joint:s2:52:portfolio",
+   "s:VGT-primary:joint:s2:53:fixed",
+   "s:VGT-primary:joint:s2:53:portfolio",
+   "s:VGT-primary:joint:s2:54:fixed",
+   "s:VGT-primary:joint:s2:54:portfolio",
+   "s:VGT-primary:joint:s2:55:fixed",
+   "s:VGT-primary:joint:s2:55:portfolio",
+   "s:VGT-primary:joint:s2:56:fixed",
+   "s:VGT-primary:joint:s2:56:portfolio",
+   "s:VGT-primary:joint:s2:57:fixed",
+   "s:VGT-primary:joint:s2:57:portfolio",
+   "s:VGT-primary:joint:s2:58:fixed",
+   "s:VGT-primary:joint:s2:58:portfolio",
+   "s:VGT-primary:joint:s2:59:fixed",
+   "s:VGT-primary:joint:s2:59:portfolio",
+   "s:VGT-primary:joint:s2:60:fixed",
+   "s:VGT-primary:joint:s2:60:portfolio",
+   "s:VGT-primary:joint:s2:61:fixed",
+   "s:VGT-primary:joint:s2:61:portfolio",
+   "s:VGT-primary:joint:s2:62:fixed",
+   "s:VGT-primary:joint:s2:62:portfolio",
+   "s:VGT-primary:joint:s2:63:fixed",
+   "s:VGT-primary:joint:s2:63:portfolio",
+   "p:B4:base:fixed",
+   "p:B4:oat:targetPercentChange:-m:fixed",
+   "p:B4:oat:targetPercentChange:-s:fixed",
+   "p:B4:oat:targetPercentChange:+s:fixed",
+   "p:B4:oat:targetPercentChange:+m:fixed",
+   "p:B4:oat:trailingBuyPercentage:-m:fixed",
+   "p:B4:oat:trailingBuyPercentage:-s:fixed",
+   "p:B4:oat:trailingBuyPercentage:+s:fixed",
+   "p:B4:oat:trailingBuyPercentage:+m:fixed",
+   "p:B4:oat:trailingStopPercentage:-m:fixed",
+   "p:B4:oat:trailingStopPercentage:-s:fixed",
+   "p:B4:oat:trailingStopPercentage:+s:fixed",
+   "p:B4:oat:trailingStopPercentage:+m:fixed",
+   "p:B4:oat:maximumHoldDays:-m:fixed",
+   "p:B4:oat:maximumHoldDays:-s:fixed",
+   "p:B4:oat:maximumHoldDays:+s:fixed",
+   "p:B4:oat:maximumHoldDays:+m:fixed",
+   "p:B4:oat:tickWindowSize:-m:fixed",
+   "p:B4:oat:tickWindowSize:-s:fixed",
+   "p:B4:oat:tickWindowSize:+s:fixed",
+   "p:B4:oat:tickWindowSize:+m:fixed",
+   "p:B4:oat:intradayLossBuffer:-m:fixed",
+   "p:B4:oat:intradayLossBuffer:-s:fixed",
+   "p:B4:oat:intradayLossBuffer:+s:fixed",
+   "p:B4:oat:intradayLossBuffer:+m:fixed",
+   "p:B4:oat:pullback:-m:fixed",
+   "p:B4:oat:pullback:-s:fixed",
+   "p:B4:oat:pullback:+s:fixed",
+   "p:B4:oat:pullback:+m:fixed",
+   "p:B4:oat:continuationWindow:-m:fixed",
+   "p:B4:oat:continuationWindow:-s:fixed",
+   "p:B4:oat:continuationWindow:+s:fixed",
+   "p:B4:oat:continuationWindow:+m:fixed",
+   "p:B4:book:VGT:00:fixed",
+   "p:B4:book:VGT:01:fixed",
+   "p:B4:book:VGT:02:fixed",
+   "p:B4:book:VGT:03:fixed",
+   "p:B4:book:VGT:04:fixed",
+   "p:B4:book:VGT:05:fixed",
+   "p:B4:book:VGT:06:fixed",
+   "p:B4:book:VGT:07:fixed",
+   "p:B4:book:VGT:08:fixed",
+   "p:B4:book:VGT:09:fixed",
+   "p:B4:book:VGT:10:fixed",
+   "p:B4:book:VGT:11:fixed",
+   "p:B4:book:VGT:12:fixed",
+   "p:B4:book:VGT:13:fixed",
+   "p:B4:book:VGT:14:fixed",
+   "p:B4:book:VGT:15:fixed",
+   "p:B4:book:VGT:16:fixed",
+   "p:B4:book:VGT:17:fixed",
+   "p:B4:book:VGT:18:fixed",
+   "p:B4:book:VGT:19:fixed",
+   "p:B4:book:VGT:20:fixed",
+   "p:B4:book:VGT:21:fixed",
+   "p:B4:book:VGT:22:fixed",
+   "p:B4:book:VGT:23:fixed",
+   "p:B4:book:VGT:24:fixed",
+   "p:B4:book:VGT:25:fixed",
+   "p:B4:book:VGT:26:fixed",
+   "p:B4:book:VGT:27:fixed",
+   "p:B4:book:VGT:28:fixed",
+   "p:B4:book:VGT:29:fixed",
+   "p:B4:book:VGT:30:fixed",
+   "p:B4:book:VGT:31:fixed",
+   "p:B5:base:fixed",
+   "p:B5:oat:targetPercentChange:-m:fixed",
+   "p:B5:oat:targetPercentChange:-s:fixed",
+   "p:B5:oat:targetPercentChange:+s:fixed",
+   "p:B5:oat:targetPercentChange:+m:fixed",
+   "p:B5:oat:trailingBuyPercentage:-m:fixed",
+   "p:B5:oat:trailingBuyPercentage:-s:fixed",
+   "p:B5:oat:trailingBuyPercentage:+s:fixed",
+   "p:B5:oat:trailingBuyPercentage:+m:fixed",
+   "p:B5:oat:trailingStopPercentage:-m:fixed",
+   "p:B5:oat:trailingStopPercentage:-s:fixed",
+   "p:B5:oat:trailingStopPercentage:+s:fixed",
+   "p:B5:oat:trailingStopPercentage:+m:fixed",
+   "p:B5:oat:maximumHoldDays:-m:fixed",
+   "p:B5:oat:maximumHoldDays:-s:fixed",
+   "p:B5:oat:maximumHoldDays:+s:fixed",
+   "p:B5:oat:maximumHoldDays:+m:fixed",
+   "p:B5:oat:tickWindowSize:-m:fixed",
+   "p:B5:oat:tickWindowSize:-s:fixed",
+   "p:B5:oat:tickWindowSize:+s:fixed",
+   "p:B5:oat:tickWindowSize:+m:fixed",
+   "p:B5:oat:intradayLossBuffer:-m:fixed",
+   "p:B5:oat:intradayLossBuffer:-s:fixed",
+   "p:B5:oat:intradayLossBuffer:+s:fixed",
+   "p:B5:oat:intradayLossBuffer:+m:fixed",
+   "p:B5:oat:pullback:-m:fixed",
+   "p:B5:oat:pullback:-s:fixed",
+   "p:B5:oat:pullback:+s:fixed",
+   "p:B5:oat:pullback:+m:fixed",
+   "p:B5:oat:continuationWindow:-m:fixed",
+   "p:B5:oat:continuationWindow:-s:fixed",
+   "p:B5:oat:continuationWindow:+s:fixed",
+   "p:B5:oat:continuationWindow:+m:fixed",
+   "p:B5:book:VGT:00:fixed",
+   "p:B5:book:VGT:01:fixed",
+   "p:B5:book:VGT:02:fixed",
+   "p:B5:book:VGT:03:fixed",
+   "p:B5:book:VGT:04:fixed",
+   "p:B5:book:VGT:05:fixed",
+   "p:B5:book:VGT:06:fixed",
+   "p:B5:book:VGT:07:fixed",
+   "p:B5:book:VGT:08:fixed",
+   "p:B5:book:VGT:09:fixed",
+   "p:B5:book:VGT:10:fixed",
+   "p:B5:book:VGT:11:fixed",
+   "p:B5:book:VGT:12:fixed",
+   "p:B5:book:VGT:13:fixed",
+   "p:B5:book:VGT:14:fixed",
+   "p:B5:book:VGT:15:fixed",
+   "p:B5:book:VGT:16:fixed",
+   "p:B5:book:VGT:17:fixed",
+   "p:B5:book:VGT:18:fixed",
+   "p:B5:book:VGT:19:fixed",
+   "p:B5:book:VGT:20:fixed",
+   "p:B5:book:VGT:21:fixed",
+   "p:B5:book:VGT:22:fixed",
+   "p:B5:book:VGT:23:fixed",
+   "p:B5:book:VGT:24:fixed",
+   "p:B5:book:VGT:25:fixed",
+   "p:B5:book:VGT:26:fixed",
+   "p:B5:book:VGT:27:fixed",
+   "p:B5:book:VGT:28:fixed",
+   "p:B5:book:VGT:29:fixed",
+   "p:B5:book:VGT:30:fixed",
+   "p:B5:book:VGT:31:fixed"
+  ]
+ },
+ "diagnosticOnly": "every non-frozen configuration is diagnostic-only; none was written to config/ or promoted",
+ "records": {
+  "research/vgt-standalone-vs-pooled-robustness/results/runs/p-path.jsonl": "c21fc8b43822c84e01184960336c54bf0c62f18fdc1fe4a7ff7c169655160471",
+  "research/vgt-standalone-vs-pooled-robustness/results/runs/s-base.jsonl": "ec799a1e90f7381583562d51edff34f2da58c2eea494455e4b717b06f1fcdd9e",
+  "research/vgt-standalone-vs-pooled-robustness/results/runs/s-control.jsonl": "2621013d3564c570979939217cf9d2ce0261918745ce6bc38478f0b6387d554e",
+  "research/vgt-standalone-vs-pooled-robustness/results/runs/s-cost.jsonl": "d92cc4a5c6c97d8aaa8a77fd864bcd3e4af61ee6622865445dc1893dc7b309f1",
+  "research/vgt-standalone-vs-pooled-robustness/results/runs/s-joint.jsonl": "c1f3ebeb4fa7d7574014bcaf728fbea0265aa856ca0064b677e2e6639c960986",
+  "research/vgt-standalone-vs-pooled-robustness/results/runs/s-oat.jsonl": "f8afe6bf99c1c58f02bf3f833f3163bad0a32410fcc115917fe0357218288009",
+  "research/vgt-standalone-vs-pooled-robustness/results/runs/s-paired.jsonl": "acf3b0412ccc577e1bba87774db985153ab45688d50f7f04c56abeb855547825",
+  "research/vgt-standalone-vs-pooled-robustness/results/detail/s_VGT-primary_cost_base_fixed/daily.csv": "3806c5e4b662225a3327fd8f96dd83b0d7098bb48cdc7bbd7d3aae64d8479d3e",
+  "research/vgt-standalone-vs-pooled-robustness/results/detail/s_VGT-primary_cost_base_fixed/lots.json": "1832ddb93a848579459f717eeb67aa7579a9bc5ab963bb1845754bb7f7d24ae3",
+  "research/vgt-standalone-vs-pooled-robustness/results/detail/s_VGT-primary_cost_base_fixed/refusals.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "research/vgt-standalone-vs-pooled-robustness/results/detail/s_VGT-primary_cost_base_portfolio/daily.csv": "60a2c600d0338227343ecd93158c4746242153eb7c1ebfd0d2420e9937203df1",
+  "research/vgt-standalone-vs-pooled-robustness/results/detail/s_VGT-primary_cost_base_portfolio/lots.json": "9643d135fb0de90e6663391daccb305b96a4910dd053f4603e488415683ad1ac",
+  "research/vgt-standalone-vs-pooled-robustness/results/detail/s_VGT-primary_cost_base_portfolio/refusals.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "research/vgt-standalone-vs-pooled-robustness/results/parity/cli-vgt-primary-all-summary.json": "18a06692bbd342d151a15e7b52a9a2eb27e32f67f0cf53cdd4f4424582d86e3c",
+  "research/vgt-standalone-vs-pooled-robustness/results/parity/cli-vgt-primary-all-trades.csv": "8c96eafe20e700ba5f6dbc55e23ad67ad824ab50255b7fe0036e77daec4e5338",
+  "research/vgt-standalone-vs-pooled-robustness/results/baseline/baseline.json": "f53dfcd0ecb5aa4b3ff2de78919129240144067131c0dd9c7050eb6b2f3d3b42",
+  "research/vgt-standalone-vs-pooled-robustness/results/C_costs.csv": "fe3b863ac305b9f27d281770b0117c8cbeeb33ed8dd4dbd7836b9660f370c0fd",
+  "research/vgt-standalone-vs-pooled-robustness/results/E_frozen_paths.csv": "2fdf990396fd8953d76e929dfdffc0ecdcd981177b96a3d41e64606e8f8ebc27",
+  "research/vgt-standalone-vs-pooled-robustness/results/E_traced.csv": "2d9c441f529da838b295af1600f3f6fac1ad5afba4f4979774cb30b9c58c0a2b",
+  "research/vgt-standalone-vs-pooled-robustness/results/P_designs.csv": "517ac6252d1d24fc0a294a4baf3bd69a759c57d611599980ba716e39fa791a33",
+  "research/vgt-standalone-vs-pooled-robustness/results/P_joint_samples.csv": "156587080f22638444ba39ff400b749b2ce9935abc58fb407c6be7389d36821a",
+  "research/vgt-standalone-vs-pooled-robustness/results/P_oat.csv": "a74e3a7b367e7b6e9198f9f7c777f200db6e6f0ccbea525d90599f0cced73260",
+  "research/vgt-standalone-vs-pooled-robustness/results/P_paired.csv": "d283d87b5c62989346a4e4adc6d53b101c56b87075ce7942d44d758a84cff431",
+  "research/vgt-standalone-vs-pooled-robustness/results/R_episodes.csv": "65cc88b6e352c32bcdd8a825e9178448d5983abf26b17c72523cbea1876818c5",
+  "research/vgt-standalone-vs-pooled-robustness/results/R_portfolio.csv": "5768d7d8d2cc4943b96f4550cdab152a20773c8660a12bfa7506f25815887c16",
+  "research/vgt-standalone-vs-pooled-robustness/results/T_regimes.csv": "a7e419187a25f733d2af49fd6dbe621e5828aa57b0d29fc33fe6c3b64f3ffe10",
+  "research/vgt-standalone-vs-pooled-robustness/results/T_trades_VGT-primary_fixed.csv": "35738dd780b2802614cce2cfb9734e020a294e471dad7b01a5163081792a5de3",
+  "research/vgt-standalone-vs-pooled-robustness/results/T_trades_VGT-primary_portfolio.csv": "b9ccb4755c14a3fff0fe09efb99582c0c1ca30c697bda251e1a67deecda89651",
+  "research/vgt-standalone-vs-pooled-robustness/results/T_years.csv": "c81e7667f8f24f0341e690e4e2462829796a5224b0c4ecc98da3c1a9d3def927"
+ }
+}
