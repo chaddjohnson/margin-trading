@@ -1,0 +1,52 @@
+{
+ "schema": "d1-wide-library-dry-run-digests",
+ "note": "Pre-freeze training-only dry run of S18 (loads capped at 2018-12-31), scratch root, DRY-RUN guards; outputs discarded. The official post-freeze S18 records must reproduce these digests (determinism check).",
+ "commands": [
+  "D1_LIBRARY_STUDY_ROOT=<scratch>/dryrun D1_LIBRARY_STUDY_DRYRUN=training-only npm run d1-library-study -- search --fold S18 --workers 14",
+  "... sample-parity --fold S18",
+  "... libraries --fold S18 --workers 14",
+  "... search --fold S19 (refused by the 2018-12-31 cap)"
+ ],
+ "times": {
+  "search": [
+   "2026-10-27T23:26:15.256Z",
+   "2026-10-27T23:28:45.842Z"
+  ],
+  "sample": [
+   "2026-10-27T23:28:46.177Z",
+   "2026-10-27T23:31:00.536Z"
+  ],
+  "libraries": [
+   "2026-10-27T23:31:00.834Z",
+   "2026-10-27T23:33:34.636Z"
+  ]
+ },
+ "search": {
+  "bodyHash": "32913b3a0fedd773829508c609b84e5af38c3eee8f51e68fdeee8779ffa9bf16",
+  "candidatesSha256": "797c5c13bbbf6009bc756e0b21ea57701ac185abcc05a27bc1a4f6ba1bd17d33",
+  "rows": 67008,
+  "evaluations": 67008
+ },
+ "sample": {
+  "bodyHash": "925d7a4011045bcc695f1b158127ab7466e1bb95917821ad92ad01e3114be485",
+  "checks": 1100,
+  "failed": 0
+ },
+ "libraries": {
+  "bodyHash": "ddb1d88674d59c6a9569507c4f91724e4c43ce4783f8233c1d81d51d6ec0a497",
+  "nomineeDigest": "3f0ff3ea61764ba60ca6347f1d0f6eee6b08a0e6c529bec7da5def43697c58c0",
+  "librariesDigest": "f346367de3c285b17ebcd9217247da8d78358a2fbbb3a9abe8843b548e910ed5",
+  "drawEvaluations": 71200,
+  "membersSha256": "65e30aa22b4ec52d21626d64d84cdd68ca0253a1a6d22d219ef0d082abcb10aa",
+  "csvSha256": "d9dfe275559c7ce52865426d9129ef11849142a955e5ce373671d9003f337f45"
+ },
+ "files": {
+  "search/S18/SEARCH.json": "6cd09ec1e79ad1906a9d6df9a29a39d19b59ab571feaf7e525f6e0cbcfefd9f1",
+  "search/S18/candidates.jsonl.gz": "797c5c13bbbf6009bc756e0b21ea57701ac185abcc05a27bc1a4f6ba1bd17d33",
+  "parity/SAMPLE_PARITY_S18.json": "13986789ddb9fdd4ab6eb73849ac4f866366da8e3f9e54d309308733cfb69c18",
+  "libraries/S18/SELECTION.json": "66cbad2e1608e6144ccbd93b2e71d1f142ee74d8a597d2033b40de038c99de6f",
+  "libraries/S18/members-NEW.json.gz": "65e30aa22b4ec52d21626d64d84cdd68ca0253a1a6d22d219ef0d082abcb10aa",
+  "libraries/S18/libraries.csv.gz": "d9dfe275559c7ce52865426d9129ef11849142a955e5ce373671d9003f337f45"
+ },
+ "seen": "structural counts only: search evaluations 67,008, workers 14, cores 16, collisions 0, later-local 0; sample 1,100 checks, 0 failed, 110 vectors; libraries 71,200 draws, pools [NEW], flags 0, power NEW/A2/K16 {identical 25, differing 36, onlyArm 8, onlyBase 20, both 8}; no nominee identity, grid or training P&L was inspected"
+}
