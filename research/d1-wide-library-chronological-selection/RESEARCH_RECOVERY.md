@@ -4,10 +4,12 @@
 
 All times UTC (`date -u`). File listings on this host show local time (CET, UTC+1).
 
-- **Updated:** 2026-10-28T02:59Z. **Status: COMPLETE — every stage, the analysis (outcome: no demonstrated
+- **Updated:** 2026-10-28T03:00Z. **Status: COMPLETE — every stage, the analysis (outcome: no demonstrated
   improvement; nested: validation selection is worse), tables, reports, verifiers, the final independent audit and
-  its dispositions are done. Remaining: the commit and push of this study (authorized by the brief), then a follow-up
-  checkpoint commit recording them.** Study 2 and Study 3 are **not started**.
+  its dispositions are done; the study is committed (`1891d32d9e7c0e5952c5f0034f64a57305485fe9`) and pushed to
+  `origin/research/d1-wide-library-chronological-selection` (remote head verified with `git ls-remote` at
+  03:00:05Z); this checkpoint update is a follow-up commit on the same branch.** Study 2 and Study 3 are **not
+  started**.
 - **Brief:** `brief/BRIEF.md` sha256 `f6743100d09682858f7bf316efb2a33e7830a3d9eb54d1f0e4bf32ce83868b74`.
 - **Authority:** `PROTOCOL_FREEZE.json` (file `c8e276419f1d1944…`, body `d45fc4118639b29b…`, 2026-10-27T23:48:53.178Z,
   50 files; PROTOCOL.md `8fc3ba56b25dbce9…`). `results/CODE_FREEZE.json` (file `b5b2a35cc74e4035…`, body
@@ -17,8 +19,8 @@ All times UTC (`date -u`). File listings on this host show local time (CET, UTC+
 - **Sealed outcome:** `results/analysis/ANALYSIS.json` file `ef5b076d0652…`, body `3f6ddbd53bc8…`
   (02:10:34→02:10:36Z).
 - **Running processes:** none. The final auditor (subagent `a66ba08cd87706157`) finished at 02:38Z; no stage runs.
-- **Next command** (repository root): stage only this study's two folders and package.json, commit, push and verify
-  the remote head — see "Guards / next authorised step".
+- **Next command:** none for Study 1. Studies 2 and 3 need their own briefs and protocols (new namespaces); nothing
+  here authorizes starting them.
 
 ## Environment
 
@@ -26,14 +28,13 @@ All times UTC (`date -u`). File listings on this host show local time (CET, UTC+
   `research/d1-wide-library-chronological-selection`, created before this session at
   `6489a63d86c0e745377da60ba57cd590ec8ca74a` (= the pushed head of `research/d1-standalone-etf-opportunity-robustness`,
   the completed standalone audit). No upstream before this study's push.
-- Working tree: `M package.json` (one added script, `d1-library-study`); untracked `research/d1-wide-library-chronological-selection/`
-  and `src/d1-wide-library-selection/` (this study); two untracked macOS metadata files `._.DS_Store`, `._data` (not
-  this study's; never staged, never deleted).
+- Working tree after the commit: clean except two untracked macOS metadata files `._.DS_Store`, `._data` (not this
+  study's; never staged, never deleted). The study's commit holds its two folders and the one package.json script.
 - Node v24.21.0 (system `node`; `.node-version`), Linux, 16 logical cores, 59 GB RAM; stage heap
   `--max-old-space-size=24576` (the npm script); 14 worker threads.
 - Disposable detached worktrees in the session scratchpad (for verifying earlier studies at their own commits only):
-  `wt-40da6ddf` (ranked-preemption), `wt-6489a63d` (standalone audit); `git worktree list` shows them. Remove with
-  `git worktree remove --force <path>` after the push.
+  `wt-40da6ddf` (ranked-preemption), `wt-6489a63d` (standalone audit); both clean, removed with
+  `git worktree remove --force` at 03:00:21Z (`git worktree list` shows only the main checkout).
 - Credentials: none used (no `.env`, network, download or broker call by any stage).
 
 ## Baseline (results/baseline/, 2026-10-27T22:15Z)
@@ -109,7 +110,7 @@ command; `scripts/run-stages.sh <n+1>` resumes after step n.
 | 36 | reports, CLI demonstrations, `verify`, earlier verifiers, npm test, tsc, eslint | ≈02:20Z | `results/logs/final-*.log`, `cli-*.log` |
 | 37 | final independent audit (subagent `a66ba08cd87706157`, read-only) | 02:38Z, "conforms" | `reviews/final-audit.md` `8048b7e628f0ba41` |
 | 38 | dispositions: tracked member/window records, report corrections, `scripts/reconcile_ledgers.py` (`ledger-reconciliation.csv` `54db79792ef3af9d`), `scripts/event_families.py` (`event-families.csv` `b76e5a71f2998fc8`), amendment 2, `verify` 364/364, study tests 32/32, tsc clean, eslint 0 errors | 02:44→02:59Z | `reviews/FINAL_AUDIT_DISPOSITIONS.md`; `results/logs/verify-after-amendment-2.log`, `post-audit-*.log` |
-| 39 | commit and push | **not started** | see "Guards / next authorised step" |
+| 39 | commit and push | complete 03:00Z: commit `1891d32d…` (159 files), `git push -u origin research/d1-wide-library-chronological-selection`, `git ls-remote` = `1891d32d…`; `verify` on the committed tree 364/364; scratch worktrees removed 03:00:21Z | branch `research/d1-wide-library-chronological-selection` |
 
 Determinism: the official S18 search candidates (`797c5c13…`), nominee digest (`3f0ff3ea…`), library digest
 (`f346367d…`), members and CSV are byte-identical to the pre-freeze dry run. Every phase's boundary, cross-phase,
@@ -138,11 +139,12 @@ records), `results/tables/metrics.json` and `results/logs/`.
   the package.json `imports` map or package-lock.json. Only the one package.json script was added.
 - Never evaluate a source fold-a vector after 2021-12-31, a fold-b vector after 2023-12-29, or any final-window vector
   on any window other than its own training span; never read any bar after 2023-12-29 for any research candidate.
-- **Next authorised step (brief §13):**
-  `git add research/d1-wide-library-chronological-selection src/d1-wide-library-selection package.json`, check the
-  staged list (no `._*`, `.env`, candidate archives or logs), commit with the session attribution lines, then
-  `git push -u origin research/d1-wide-library-chronological-selection` and verify with
+- **Commit and push (brief §13): done** (stage 39). Commands run from the repository root:
+  `git add research/d1-wide-library-chronological-selection src/d1-wide-library-selection package.json`, `git commit`,
+  `git push -u origin research/d1-wide-library-chronological-selection`,
   `git ls-remote origin refs/heads/research/d1-wide-library-chronological-selection`. No merge, force push, PR or tag.
+- **Next authorised step:** none within Study 1. Do not reopen any window, rerun a stage or start Study 2 / Study 3
+  without the user's request and a new protocol.
 
 ## Disclosures
 
