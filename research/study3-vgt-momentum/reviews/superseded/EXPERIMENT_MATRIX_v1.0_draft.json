@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "study": "study3-vgt-independent-momentum-v1",
+  "matrixVersion": "1.0",
+  "baseline": { "costBps": 5, "rate": 0.11, "principal": 100000, "stopSlippageBps": 0, "ddReference": 35000 },
+  "histories": {
+    "A": { "developmentEnd": "2019-12-31", "window": ["2019-12-31", "2020-12-31"] },
+    "B": { "developmentEnd": "2020-12-31", "window": ["2020-12-31", "2021-12-31"] },
+    "C": { "developmentEnd": "2021-12-31", "window": ["2021-12-31", "2022-12-30"] },
+    "D": { "developmentEnd": "2022-12-30", "window": ["2022-12-30", "2023-12-29"] },
+    "H": { "developmentEnd": "2023-12-29", "window": null }
+  },
+  "S2_parity": {
+    "d1Anchor": "VGT primary through 2023-12-29 via Study 2 standaloneRun = research/d1-all61-signal-capital-complementarity/results/signals/signals-2023-12-29.json.gz views.U[VGT] (17 trades, every field; net, minute and daily DD)",
+    "engineVsReference": "fast engine = slow reference, every trade field, daily marks, minute DD: E01..E12 and X-CS at defaults x {OX, CX1, CX2, TPL}; controls C-SMA, C-DON, C-TSM, C-AL; Z1 and Z2 on E02/CX1; 64 seeded random TPL vectors per family; all on H and on fold A",
+    "synthetic": "spike/reversal, gap below stop, prolonged range, bull continuation after early stop, falling-knife bounce, early-close session, missing minutes, session with only a closing-print fill",
+    "doors": "end 2024-01-02 refused; evaluation before seal refused; post-cutoff mutation leaves development features unchanged"
+  },
+  "S4_develop": {
+    "perHistory": ["A", "B", "C", "D", "H"],
+    "M1panel": { "entries": ["E01","E02","E03","E04","E05","E06","E07","E08","E09","E10","E11","E12"], "exits": ["OX","CX1","CX2","TPL"], "exploratory": ["X-CS x OX, CX1, CX2, TPL"], "controls": ["C-SMA","C-DON","C-TSM","C-AL","C-ALR","C-IDLE"] },
+    "M1gates": "PROTOCOL.md section 7",
+    "M3": { "global": 1024, "localSeeds": 4, "localPerSeed": 32, "shortlist": 16, "neighbourhood": "2d OAT at +-10% of range", "tenBps": "each shortlisted point", "capPerFamilyHistory": 1344, "capPerHistory": 15000, "capTotal": 75000 }
+  },
+  "S5_evaluate": {
+    "perFold": ["A", "B", "C", "D"],
+    "runs": ["P*", "every family champion", "every family TPL default", "C-SMA", "C-DON", "C-TSM", "C-AL", "C-ALR", "C-IDLE", "D1 (context)"]
+  },
+  "S6_diagnostics": {
+    "history": "H, with per-calendar-year breakdown",
+    "M2E": "E01..E12, X-CS at defaults x {CX1, CX2}",
+    "M2X": "E02 and E07 at defaults x {X1, X2, X3, X4, X5a, X5b, X6a, X6b, X6c, X8P, X8T, X8OR, X8AND, OX, HS}",
+    "M2R": "E01, E02, E07, E11 at defaults x X1 x {R0, R1, R2, R3, R4, R5}",
+    "M2Z": "E02 at defaults x X1 x {Z0, Z1, Z2}",
+    "M2A": "E02 at defaults x TPL x {none, A1, A2, A3}; E01 at defaults x TPL x {none, A3}"
+  },
+  "S7_robustness": {
+    "finalists": "H P*, D P* if different, H champions of the next families by neighbourhood median, up to 5",
+    "costs": [0, 2, 5, 10], "rates": [0.08, 0.11, 0.14], "stopSlippageBps": [10, 25, 50], "entrySlippageBps": [10, 25],
+    "delayMinutes": [1, 5], "missingBars": [0.01, 0.05],
+    "oat": "+-1 and +-2 steps of 5% of each range", "joint": 64, "placebo": { "randomEntry": 200, "invertedState": "level families" }
+  },
+  "S8_analysis": ["verdict rubric (PROTOCOL section 11)", "family labels", "missed-opportunity ledger (zigzag 10% legs >= 15%, hindsight)", "campaign ledgers", "first-entry vs re-entry split", "D1-idle overlap (descriptive, sealed D1 ledger)", "distribution diagnostic"]
+}
