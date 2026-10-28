@@ -1,4 +1,4 @@
-// Golden-master equivalence between the read-only original daily strategy (src/app/allin-original.ts)
+// Golden-master equivalence between the read-only original daily strategy (src/app/allIn-original.ts)
 // and the parameterized working copy (src/app/allIn-optimizable.ts).
 //
 // Both are run through their own command entry points on the same data file and date range, and every
@@ -18,7 +18,7 @@ import { Rng } from './rng.ts';
 import { legacyResearchFile } from '#lib';
 
 // The original as committed in b7abde6. Any change to these bytes fails the golden master.
-export const originalFile = 'src/app/allin-original.ts';
+export const originalFile = 'src/app/allIn-original.ts';
 export const originalSha256 = '42f2b7e7be4ef99e1af6c4fe113dd8da9ed4d329d2fe0564463db80b87f449e2';
 export const originalGitBlob = '6cdebca1c3590094894df1a9267d8d57cc47e210';
 
