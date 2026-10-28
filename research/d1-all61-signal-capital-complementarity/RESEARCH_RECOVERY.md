@@ -2,10 +2,12 @@
 
 ## Top screen (read first)
 
-- **Updated:** 2026-10-28T15:17Z (UTC, from `date -u`).
+- **Updated:** 2026-10-28T15:17Z (UTC, from `date -u`; after the push).
 - **Task:** Study 2 of 3 — all-61-ETF D1 signal timing, opportunity overlap and shared-capital complementarity.
   Brief (verbatim): `brief/STUDY_2_BRIEF.md` (sha256 `d0db822a85aa6382a08d49acb881c96d13634b182f80ebfa89a5e3cdcd23d043`).
-- **Status: research COMPLETE; delivery = commit + push of this branch (in progress).** Verdict (frozen rubric,
+- **Status: COMPLETE.** Study commit **`1accc9a2fcd2afc05e4df8c5bc799c837eb04689`** pushed 2026-10-28T15:17Z to
+  `origin/research/d1-all61-signal-capital-complementarity` (new branch; `git ls-remote` shows the same hash);
+  `verify` passes after the commit. Verdict (frozen rubric,
   `results/analysis/ANALYSIS-2.json`): **no demonstrated economically useful complementarity** (0 of 18 fold replays meet
   C; 16 meet R; 2 formal reshuffle gains, both the XOP timing-only control).
 - **Protocol:** `PROTOCOL.md` v2.1 FROZEN 2026-10-28T13:59:38Z (`PROTOCOL_FREEZE.json` bodyHash `a8180f13dbc4…`, protocol
@@ -14,9 +16,8 @@
 - **Stages complete (all sealed, all verify):** audit, protocol freeze, parity (512/512), code freeze, screen A, screen B,
   signals ×3, Level D, replays (25), risk, analysis (v1 superseded), analysis v2. Reports and reviews complete.
 - **Running:** nothing.
-- **Next command:** `git add research/d1-all61-signal-capital-complementarity src/d1-signal-capital-complementarity
-  package.json && git commit` then `git push -u origin research/d1-all61-signal-capital-complementarity`; then record
-  the commit hash and push confirmation here (second commit). **Do not rerun any stage.**
+- **Next command:** none for Study 2. **Do not rerun any stage.** (This checkpoint update is the branch's second
+  commit.)
 - Study 1 completed; Study 2 completed (research); Study 3 not started — not to be started here.
 
 ## Environment
@@ -48,7 +49,7 @@ File sha256s in `IMPLEMENTATION_AUDIT.md` §2. `npm run d1-signal-complementarit
 | 5 replays, risk | complete 14:28Z / 14:33Z | `… stage replays`, `… stage risk` | `results/replays/`, `results/risk/` | write-once |
 | 6a analysis | complete 14:34Z; C1 rerun 14:39Z | `… stage analysis` (+ `freeze-code-correction --amendment C1`) | `results/analysis/ANALYSIS{,-2}.json` | write-once per code-freeze version |
 | 6b reports, reviews | complete 15:16Z | `python3 -I research/d1-all61-signal-capital-complementarity/scripts/report_tables.py` | `results/tables/`, reports, `reviews/` | rerunnable, read-only |
-| 6c commit/push | in progress | see Next command | — | — |
+| 6c commit/push | complete 15:17Z | `git commit`; `git push -u origin research/d1-all61-signal-capital-complementarity` | commit `1accc9a` | — |
 
 ## Constants
 
@@ -63,7 +64,7 @@ Everything is on disk. Command logs in `results/logs/` are local (git-ignored).
 ## Guards
 
 - Do-not-rerun: every stage above (write-once, sealed). Do not edit `PROTOCOL.md` or any sealed record.
-- Next authorised step: the commit and push of this branch only (brief §11); no merge, PR, force push or tag.
+- No merge, PR, force push or tag (brief §11). Nothing further is authorised for Study 2.
 - Study 3 not started; Study 1 closed.
 
 ## Disclosures

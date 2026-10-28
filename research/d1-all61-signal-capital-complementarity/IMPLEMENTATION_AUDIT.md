@@ -117,4 +117,7 @@ identities on every reported run; screen-vs-signal ledger determinism at both cu
   **744 tests, 738 pass, 6 fail** — exactly the 6 pre-existing failures (`src/trailing-buy/tests/goldenMaster.test.ts`
   4, `src/minute-optimizer/tests/goldenMaster.test.ts` 1, `src/intraday-study/tests/study.test.ts` 1; all the
   lowercase `allin-original.ts` reference). Before: 722 / 716 / 6. Difference: +22 study tests, all passing.
-- Commit and push: recorded in `RESEARCH_RECOVERY.md` after they happen.
+- Commit `1accc9a2fcd2afc05e4df8c5bc799c837eb04689` (184 files: 150 under this study folder, 33 under
+  `src/d1-signal-capital-complementarity/`, `package.json` one script line), pushed 2026-10-28T15:17Z to
+  `origin/research/d1-all61-signal-capital-complementarity` (new branch; remote head = the same hash); a second commit
+  records this in the checkpoint. No merge, PR, force push or tag.
