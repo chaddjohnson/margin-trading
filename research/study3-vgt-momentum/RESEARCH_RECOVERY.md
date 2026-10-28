@@ -2,27 +2,27 @@
 
 ## Top screen (read first)
 
-- **Updated:** 2026-10-28T18:20Z (UTC, `date -u`).
+- **Updated:** 2026-10-28T18:20Z (UTC, `date -u`), after the push.
 - **Task:** Study 3 of 3, **Stage 1 only** — standalone VGT long momentum research (no D1/B4/B5 or shared-pool run).
   Brief `brief/BRIEF.md` (sha256 `aa09a2e9cfa8a1780a835fd3675b483d8067c107af926448cec73417820cc103`; 331 lines; §13 verified).
-- **Status: Stage 1 COMPLETE (research, reviews, reports, tests); commit and push in progress.** All stages S0–S8
-  sealed and verify; final code/evidence review done (`reviews/FINAL_CODE_AND_EVIDENCE_REVIEW.md`, dispositions
-  beside it; no defect changing a result). Verdict (frozen rubric, `results/records/analysis.json`):
-  **no demonstrated standalone edge** (fold picks 2020 +$18,608, 2021 +$14,577, 2022 −$57,578, 2023 +$24,646; Σ +$253).
-- **Protocol:** `PROTOCOL.md` v1.2, frozen 2026-10-28T17:31:30Z (`PROTOCOL_FREEZE.json` bodyHash `a707eb105b506b0e…`,
-  file sha256 `53fb4f55e837…`). Code frozen 17:32:02Z (`results/code_freeze.json` manifest `1822bc10bf9145d4…`, 120
-  files). **Amendment head: A2** (A1, A2 descriptive only; `AMENDMENTS.md`, `results/amendments.jsonl`).
-- **Running:** nothing. After-study `npm test` finished (764 tests, 757 pass, the same 7 baseline failures;
-  `audit/tests/full-suite-after.txt`).
-- **Next step:** commit 1 (policy file only), commit 2 (study: `research/study3-vgt-momentum/`, `src/study3-vgt-momentum/`,
-  `package.json`); `git push -u origin research/study3-vgt-momentum-first-principles`; confirm with `git ls-remote`;
-  record the hashes here; then **STOP for the user's review** (Stages 2–4 need new approval).
-- **Authorisation:** Stage 1 only. **Stages 2–4 NOT authorised, NOT started.**
+- **Status: COMPLETE.** Verdict (frozen rubric, `results/records/analysis.json`): **no demonstrated standalone edge**
+  (fold picks 2020 +$18,608, 2021 +$14,577, 2022 −$57,578, 2023 +$24,646; Σ +$253; 2022 and Π breach $35,000; E, R, K
+  fail). Commits on `research/study3-vgt-momentum-first-principles`: `3237f69e73a612d924f28fac5c3a8f9fa1908a09` (the
+  recovery-policy edit alone) and `537abaff6516c874a12a7e1047338731f990f21d` (the study), pushed to `origin` (new
+  branch; `git ls-remote` shows `537abaff…`); this checkpoint update is a third commit. No merge, PR, tag or force push.
+- **Protocol:** `PROTOCOL.md` v1.2 frozen 2026-10-28T17:31:30Z (bodyHash `a707eb105b506b0e…`); code frozen 17:32:02Z
+  (manifest `1822bc10bf9145d4…`); amendment head A2 (descriptive only). `npm run study3-momentum -- verify`: no problems.
+- **Audited deliverables:** the reports listed in `README.md`; sealed records (hashes in `IMPLEMENTATION_AUDIT.md` §4);
+  reviews (methodology 1 `bf65039e…`, re-review 2 `c0fdc86a…`, final `b190239d…`, each with dispositions).
+- **Running:** nothing. **Next command:** none. **Do not rerun any stage.**
+- **Follow-up gate (needs the user's explicit approval and a new protocol):** Stages 2–4 (frozen VGT D1 + frozen
+  momentum book; frozen B4 + momentum; frozen B5 + momentum) — **NOT authorised, NOT started**. Optional: integrate the
+  recovery policy (`57b5375` + `3237f69`) into long-lived branches.
 
 ## Environment
 
 - Main checkout; branch `research/study3-vgt-momentum-first-principles` from `70312f298742fa6f9ae493ef3828aa5621f19e54`
-  (Study 2 head = its remote). Nothing committed yet. Working tree: `research/study3-vgt-momentum/`,
+  (Study 2 head = its remote); commits `3237f69`, `537abaf` (+ this checkpoint update). Working tree: `research/study3-vgt-momentum/`,
   `src/study3-vgt-momentum/` (new), `docs/claude/context-recovery.md` (edited), `package.json` (+1 script line).
 - Node v24.21.0; 16 cores; script `--max-old-space-size=16384`. No `.env`, network or broker use.
 
@@ -43,7 +43,7 @@ C `92c1e7b8…` 17:35:43 · D `1c8c6ceb…` 17:37:02 · H `d029e15c…` 17:38:41
 | Reports + `scripts/report_tables.py` | written; tables regenerated read-only | `python3 -I research/study3-vgt-momentum/scripts/report_tables.py` | rerunnable, read-only |
 | Final code/evidence review | complete 18:12Z; dispositions written; amendment A2 (incl. fold-pick parity 0 differences) | — | — |
 | After-study tests | complete 17:54Z: 764 / 757 / the same 7 | `npm test` | rerunnable |
-| Commit / push | not started | `git add <authorised paths>`; `git commit`; `git push -u origin research/study3-vgt-momentum-first-principles` | — |
+| Commit / push | complete: `3237f69`, `537abaf` pushed; remote verified | `git add <authorised paths>`; `git commit`; `git push -u origin research/study3-vgt-momentum-first-principles` | — |
 
 ## Constants
 
