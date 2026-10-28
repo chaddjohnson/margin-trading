@@ -56,8 +56,12 @@ next command. Everything else follows below it, in this order (omit sections tha
 
 ### 2.1 At the start of a substantial task
 
-1. Read the repository instructions (`CLAUDE.md` and this guide) and any task brief.
-2. Locate the task's checkpoint; if none exists, create it before the first expensive or irreversible step.
+1. Read the repository instructions (`CLAUDE.md` and this guide) and any task brief. Verify the active branch and
+   worktree, and what the task actually authorises (which stages, data windows, commits or pushes).
+2. Look for unfinished checkpoints that the task may continue or collide with
+   (`grep -l "INCOMPLETE" research/*/RESEARCH_RECOVERY.md; find . -name WORK_RECOVERY.md -not -path ./node_modules/\*`)
+   and read the relevant one with its primary protocol before doing any work. If none exists, create the task's
+   checkpoint before the first expensive or irreversible step.
 3. Inspect existing frozen protocols, amendment logs, decision logs and sealed records that the task depends on, and
    identify safe restart boundaries (stages that are write-once, resumable, or must run in one piece).
 4. Record the branch, `HEAD`, working-tree state, baseline hashes of anything that must not change, artifact
@@ -75,7 +79,8 @@ next command. Everything else follows below it, in this order (omit sections tha
   for the records written in that milestone. A checkpoint quoting a hash that was never recomputed is not verified.
 - Include the items in §1: stage status, exact commands with working directory and runtime, immutable record hashes,
   protocol/amendment head, seeds, budgets, data cutoffs, Git state, active PIDs or task IDs, logs, outputs, which
-  artifacts are on disk versus only in memory, and the do-not-rerun and next-step guards.
+  artifacts are on disk versus only in memory, and the do-not-rerun and next-step guards. For research, also the
+  hypotheses under test, rejected paths with their reasons, candidate IDs, parameter/seed budgets and test status.
 - Take every timestamp from the clock (`date -u`), never estimate one; say which time zone file listings use.
 - Anything a later stage depends on — review reports, prepared patches, the exact text of commands and their
   arguments — goes into the task directory, not only into the conversation or a session scratch directory that a new
@@ -101,8 +106,9 @@ next command. Everything else follows below it, in this order (omit sections tha
 
 ### 2.5 Compaction control depends on the host
 
-- Claude may be unable to start `/compact` itself (desktop, IDE and remote hosts differ). Where a manual command is
-  available to the user, suggest it at a safe checkpoint; otherwise rely on automatic compaction.
+- Claude may be unable to start `/compact` itself (desktop, IDE and remote hosts differ). Rely on automatic
+  compaction: do not pause work or ask the user to compact manually merely because the context seems full; keep the
+  checkpoint current instead (the user may still compact at any time).
 - Never claim that compaction happened, promise to prevent it, or assume a 90% signal will be seen.
 - Do not disable automatic compaction or block it with a hook to preserve context.
 
@@ -126,9 +132,17 @@ Before writing anything:
 
 If the current state cannot be reconstructed from files on disk, or a freeze or integrity check fails: **stop and
 report the blocker.** Do not regenerate records, reopen validation or holdout windows, change criteria, rewrite a
-sealed outcome, or reconstruct decisions from conversational memory.
+sealed outcome, or reconstruct decisions from conversational memory. The same applies (fail closed) to an unresolved
+ambiguity about a data door, the methodology, a possibly live process or the task's authorisation that could
+invalidate the work. Ask the user only for such genuine decisions, never as routine checkpointing.
 
-### 2.8 Exercising the procedure
+### 2.8 Closing a task
+
+Leave a final checkpoint whose top screen says **COMPLETE** or **INCOMPLETE**, lists the audited deliverables (with
+hashes) and names the follow-up gate (what needs the user's approval next). Keep research notes and narrative clearly
+separate from immutable, sealed results.
+
+### 2.9 Exercising the procedure
 
 The procedure can be tested without touching research results: snapshot the checkpoint, have a fresh context (a new
 headless session or a fresh subagent) read only the instruction files and the snapshot, and check that it names one
@@ -148,7 +162,11 @@ it), and no hook can turn unwritten reasoning into a checkpoint.
 
 The root `CLAUDE.md` imports this guide with Claude Code's `@path` syntax (resolved relative to `CLAUDE.md`, ignored
 inside code spans and fenced blocks). The project-root `CLAUDE.md` is loaded at session start and re-injected from disk
-after compaction; keep the import line outside backticks.
+after compaction; keep the import line outside backticks. To confirm it loads, start a new session in the checkout and
+run `/memory` (lists `CLAUDE.md` and the imported guide) or `/context` (memory files and their token counts). The
+policy applies only in branches and worktrees that contain these two files; a long-lived branch that lacks them
+inherits it by merging or cherry-picking the commit that added them (or `git checkout <commit> -- CLAUDE.md
+docs/claude/context-recovery.md` and committing).
 
 ## 4. Notes for this repository
 
