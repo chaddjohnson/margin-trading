@@ -4,9 +4,9 @@
 
 All times UTC (`date -u`); machine file listings show local time (CET = UTC+1). Run commands from the repository root.
 
-- **Updated:** 2026-10-29T01:15Z. **Status: COMPLETE once the commit below is pushed and verified on the remote**
-  (if the remote branch `research/study3-vgt-momentum-stage1b` does not exist yet, the only remaining step is the commit
-  and push of §Guards; nothing is to be rerun).
+- **Updated:** 2026-10-29T01:15Z. **Status: COMPLETE.** Committed `70257acc10eeec68fa89f6fe0df0bb7a96fe3389` on
+  `research/study3-vgt-momentum-stage1b` and pushed to `origin` (new branch; `git ls-remote` shows `70257acc…`); this
+  checkpoint update is a second commit. No merge, PR, tag or force push. **Do not rerun any stage.**
 - **Verdict (frozen rubric, `results/records/analysis.json`): risk-incompatible; nomination: none.** Π1 (S1 executable
   selector) 2020 +$14,432 / 2021 +$18,059 / 2022 −$30,966 / 2023 +$11,049, Σ +$12,573, chained minute DD $42,882 >
   $35,000; (b), (e), (f), (g) also fail; (a), (d) pass. Independent final audit (`reviews/FINAL_AUDIT.md`) recomputed
@@ -50,7 +50,7 @@ All times UTC (`date -u`); machine file listings show local time (CET = UTC+1). 
 | reports + `scripts/report_tables.py` | written | 00:40–01:14Z | — | tables regenerate read-only |
 | final audit + dispositions + A2 | complete | ≈01:10–01:14Z | `FINAL_AUDIT.md` `cc188ceb…` | |
 | after-study `npm test` | complete | ≈01:00Z | — | 791 / 784 / the same 7 |
-| commit + push | **see §Guards** | | | |
+| commit + push | complete | 2026-10-29T01:15Z | — | `70257acc…` pushed and verified on origin |
 
 ## Constants
 
