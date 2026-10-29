@@ -4,9 +4,15 @@
 
 All times UTC (`date -u`); machine file listings show local time (CET = UTC+1). Run commands from the repository root.
 
-- **Updated:** 2026-10-29T17:39:20Z (clock). **Status: INCOMPLETE — every stage SEALED; verdict (frozen rubric) "no demonstrated
-  edge" (failed g, f, e2), nomination none; final audit received and dispositioned; reports fixed. Remaining: the
-  Stage 1c commit, push, remote verification, and recording them here.**
+- **Updated:** 2026-10-29T17:40:45Z (clock). **Status: COMPLETE — Stage 1c finished. Verdict (frozen rubric) "no demonstrated
+  edge" (failed g, f, e2); nomination none. Committed and pushed: `6dbbd7edb3cc3ba7ddb71ea5cac9807f3dcfbd77` on
+  `research/study3-vgt-momentum-stage1c` (new branch; `git ls-remote origin
+  refs/heads/research/study3-vgt-momentum-stage1c` = `6dbbd7ed…` at 2026-10-29T17:40:31Z; upstream set). This
+  checkpoint update is a follow-up commit on the same branch.**
+- **Follow-up gate (needs the user's decision; nothing is authorised):** whether to run any 2024–2025 validation
+  (not recommended: nothing is nominated), whether to start Stages 2–4 (VGT D1+momentum, B4+momentum, B5+momentum —
+  not recommended on this evidence), a newly frozen study of A×B as a drawdown limiter against C-SMA, or the Study 4
+  two-tier D1 allocator. No merge, PR or force-push was made.
 - **Brief:** `brief/BRIEF.md` sha256 `c68bb4fb836b8a79945e1adae5c1fc164e008708cbbcf68dbdf3a7f2fdfedcef`.
 - **Protocol freeze:** 2026-10-29T15:22:58Z, `PROTOCOL_FREEZE.json` sha256
   `540697db80f0ec5e1875671d0f211c4bc6474d126ccba28cce7a702d7334c2f0`, body `9c82742aa2777c312c5908aed4a7e404bdc197b725083331794cbcca86b8ac47`;
@@ -37,14 +43,11 @@ All times UTC (`date -u`); machine file listings show local time (CET = UTC+1). 
   IMPLEMENTATION_AUDIT §1/§4/§7, A3, `report_tables.py` (fail closed; Pareto H, DD dates, grids, ledger fills) and
   `results/tables/` (regenerated) updated; stray `research/…/research/` and `scripts/__pycache__/` deleted.
 - **Running processes:** none (no worktree besides the main checkout; no agent running).
-- **Next (single next command first):** from the repository root, `git status --short` must show only
-  `research/study3-vgt-momentum-stage1c/` and `src/study3-vgt-momentum-stage1c/`; then `git add
-  research/study3-vgt-momentum-stage1c src/study3-vgt-momentum-stage1c` and commit (message ends with the
-  `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` and `Claude-Session:
-  https://claude.ai/code/session_01DuunkM8v62io5bCQbuU5Eu` lines), `git push -u origin
-  research/study3-vgt-momentum-stage1c`, verify `git ls-remote origin refs/heads/research/study3-vgt-momentum-stage1c`
-  equals the local HEAD, record the SHA here (mark COMPLETE; follow-up gate = the user's decision on any 2024–2025
-  validation, Stages 2–4 or Study 4), commit and push that checkpoint update, stop. No merge, PR or force-push.
+- **Next:** none — stop for the user's review. **Do not rerun any stage; do not reopen 2024–2026 data.** Deliverables:
+  README.md, FINAL_COMPARISON_AND_RECOMMENDATION.md, PROTECTION_RULE_ABLATIONS.md, ENTRY_EXIT_MATRIX_AND_OPTIMIZATION.md,
+  CHRONOLOGICAL_SELECTION_AND_2022.md, NEIGHBORHOODS_AND_GENERALIZATION.md, ENTRY_EXIT_REENTRY_INTERACTIONS.md,
+  TRADE_LEDGER_AND_RISK.md, IMPLEMENTATION_AUDIT.md, AMENDMENTS.md (A1–A3), reviews/ (incl. FINAL_AUDIT.md and
+  FINAL_AUDIT_DISPOSITIONS.md), sealed records (hashes above), regenerable `results/tables/`.
 
 ## Results so far (from sealed records; for the reports)
 
@@ -77,7 +80,8 @@ All times UTC (`date -u`); machine file listings show local time (CET = UTC+1). 
 
 - Branch `research/study3-vgt-momentum-stage1c`, created 2026-10-29T13:53Z in the main checkout (clean) from
   `2a7996ddd5585849964a795151ac7a80d56f419f` = verified `origin/research/study3-vgt-momentum-stage1b` head after
-  `git fetch` (contains Stage 1b completion `70257acc…` and Stage 1 head `db6a3ec8…`). No upstream set yet.
+  `git fetch` (contains Stage 1b completion `70257acc…` and Stage 1 head `db6a3ec8…`). Pushed 2026-10-29T17:40Z with
+  upstream `origin/research/study3-vgt-momentum-stage1c`; study commit `6dbbd7edb3cc3ba7ddb71ea5cac9807f3dcfbd77`.
 - Recovery policy: `3ef43015…` is in `origin/main`, not an ancestor of the Stage 1b head, but `CLAUDE.md`
   (blob `f45cab65…`) and `docs/claude/context-recovery.md` (blob `c0c4d05e…`) are byte-identical on Stage 1b, `main` and
   the policy commit; both loaded in this session. Not repeated / not cherry-picked.
