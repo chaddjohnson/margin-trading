@@ -1,0 +1,18 @@
+# Dispositions — independent final code-and-evidence audit
+
+Audit: `FINAL_AUDIT.md` (sha256 `cc188cebe515800babb15bdf69b908e431ec08931976e17e0679dd2ac24b7ffa`), a read-only agent in
+a separate context that recomputed the verdict from sealed payloads (all rubric quantities match `analysis.json`; no
+BLOCKER; "risk-incompatible, no nomination" supported). Dispositions by the study author (not independent). No sealed
+record was changed and no stage was rerun; the descriptive corrections are amendment A2.
+
+| # | Sev. | Finding | Disposition |
+|---|---|---|---|
+| F1 | MAJOR | fixtures F4, F9, F12, F18 not built; F20 partial; F13/F15 sub-cases missing; a report claimed crash and holiday-boundary switch fixtures | **Disclosed** (`IMPLEMENTATION_AUDIT.md` §8, A2.2); the false fixture claim removed from `EXECUTABLE_ANNUAL_SELECTION.md` §2. Not built now: a new test changes the code manifest the parity and code freezes pinned; the behaviours are covered by fast-vs-reference parity only. |
+| F2 | MAJOR | protocol diagnostics absent; a false pointer to a drawdown-matched table | **Partly fixed, rest disclosed.** Computed read-only from sealed payloads and added to `results/tables/diagnostics.md`: drawdown-matched (Π1 −$17,917) and principal-day (Π1 −$32,376) benchmarks, per-window splice − executable differences, Π1's entries by rule, turnover, net and drawdown per $1M notional dollar-days. Not produced (would need unplanned runs): the line-by-line splice decomposition, per-rule attribution inside L-C variants, per-leg neighbour capture, lost post-stop gain, XV traces for B and D, delayed/closing-print coverage counters — listed in `IMPLEMENTATION_AUDIT.md` §8. The false pointer is corrected. |
+| F3 | MINOR | identities (iv), (vi), "L never increases" not checked in code | **Disclosed**; the final report's validity line now names the checked identities and the audit's recomputation of (iv). |
+| F4 | MINOR | exit-type event rows hold pre-fill S/G and a double-counted mark | **Disclosed as amendment A2.1** (descriptive field; correct values stated in `TRADE_LEDGER_AND_RISK.md` §5); not rerun. |
+| F5 | MINOR | 13 report errors | **Fixed** in the reports: (1) C-STOP earned less than Π1 — wording now "every rubric control and always-long reference"; (2) in-sample DDs $15–19.5k; (3) Stage 1's executable S1 peak $133,673 beside the splice lot's $241,045; (4) account interest $20,193; (5) under-water basis stated (505 from the daily-close peak 2021-12-27, 528 from the minute peak); (6) the two 2020 E06 trades separated; (7) fixture claims (F1); (8) Z3 exit 3 sessions earlier, the upside cost restated from the payload, Z0 = Z3($40k) noted; (9) pointer fixed (F2); (10) leg capture "of the legs it entered" plus the 0% leg, 2023 = 5 fresh + 3 re-entries; (11) RN's in-sample wins (E12, C-SMA) stated; (12) the drawdown claim restricted to the five picks; (13) README status aligned with the closing (commit and push recorded in the checkpoint). |
+| F6 | MINOR | descriptive paths' up-leg clause set to 0 | **Disclosed** (`IMPLEMENTATION_AUDIT.md` §8). |
+| F7 | MINOR | stale checkpoint | **Fixed** (`RESEARCH_RECOVERY.md` rewritten at closing). |
+| F8 | MINOR | `C-ALZ1|reset` = `C-AL|reset` | **Disclosed** (§8). |
+| F9 | NOTE | margins; weak missing-bars stress; recommendation hindsight-informed; dev-parity timing; ranked-preemption manifest | **Fixed/disclosed:** margins in `FINAL_COMPARISON_AND_RECOMMENDATION.md` §4; the recommendation labelled hindsight-informed; the pre-freeze development parity runs (Stage 1 configurations, fold-A data, difference counts only, 22:49–23:02Z) recorded; the ranked-preemption verifier run at its own commit `40da6dd` in a detached worktree — passes (`historical-verifiers/`). |

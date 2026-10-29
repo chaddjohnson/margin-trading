@@ -1,0 +1,997 @@
+{
+ "schemaVersion": 1,
+ "study": "study3b-vgt-momentum-exits-exposure-chronology-v1",
+ "protocol": "PROTOCOL.md v1.2",
+ "symbol": "VGT",
+ "dataCap": "2023-12-29",
+ "forbiddenFrom": "2024-01-01",
+ "firstSession": "2016-01-04",
+ "firstDecisionClose": "2017-01-03",
+ "principal": 100000,
+ "rate": 0.11,
+ "costBps": 5,
+ "ddReference": 35000,
+ "rodFloor": 10000,
+ "histories": {
+  "A": {
+   "developmentEnd": "2019-12-31",
+   "window": [
+    "2019-12-31",
+    "2020-12-31"
+   ]
+  },
+  "B": {
+   "developmentEnd": "2020-12-31",
+   "window": [
+    "2020-12-31",
+    "2021-12-31"
+   ]
+  },
+  "C": {
+   "developmentEnd": "2021-12-31",
+   "window": [
+    "2021-12-31",
+    "2022-12-30"
+   ]
+  },
+  "D": {
+   "developmentEnd": "2022-12-30",
+   "window": [
+    "2022-12-30",
+    "2023-12-29"
+   ]
+  },
+  "H": {
+   "developmentEnd": "2023-12-29",
+   "window": null
+  }
+ },
+ "pathStart": "2019-12-31",
+ "panelEntries": [
+  "E01",
+  "E02",
+  "E03",
+  "E04",
+  "E05",
+  "E06",
+  "E07",
+  "E08",
+  "E09",
+  "E10",
+  "E11",
+  "E12",
+  "C-SMA"
+ ],
+ "exitControls": [
+  "E06",
+  "E05",
+  "E03",
+  "C-SMA"
+ ],
+ "optimisedExits": [
+  "XF",
+  "XV",
+  "XS",
+  "XT",
+  "XRP",
+  "XRD",
+  "XD",
+  "XP",
+  "XO",
+  "XE",
+  "XU"
+ ],
+ "fixedExits": {
+  "XM20": {
+   "hard": 0.08,
+   "maxHold": 20
+  },
+  "XM60": {
+   "hard": 0.08,
+   "maxHold": 60
+  },
+  "XM120": {
+   "hard": 0.08,
+   "maxHold": 120
+  },
+  "XM250": {
+   "hard": 0.08,
+   "maxHold": 250
+  },
+  "XD-P": {
+   "catastrophic": 0.15,
+   "priceDamage": 0.1
+  },
+  "XD-T": {
+   "catastrophic": 0.15,
+   "trendDamageN": 20
+  },
+  "B-D1T": {
+   "hard": 0.073,
+   "trail": 0.073,
+   "ref": 1,
+   "own": 0
+  },
+  "B-D1N": {
+   "trailFromHh": 0.073,
+   "activeIfNetProfit": true,
+   "own": 1
+  }
+ },
+ "exitBoxes": {
+  "XF": {
+   "h": [
+    0.02,
+    0.2,
+    0.001,
+    0.08
+   ],
+   "t": [
+    0.03,
+    0.35,
+    0.001,
+    0.1
+   ],
+   "ref": [
+    0,
+    1,
+    1,
+    0
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    1
+   ]
+  },
+  "XF-T": {
+   "h": [
+    0.02,
+    0.2,
+    0.001,
+    0.08
+   ],
+   "t": [
+    0.03,
+    0.12,
+    0.001,
+    0.08
+   ],
+   "ref": [
+    0,
+    1,
+    1,
+    0
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    1
+   ]
+  },
+  "XV": {
+   "k": [
+    1,
+    8,
+    0.1,
+    3
+   ],
+   "n": [
+    5,
+    60,
+    1,
+    20
+   ],
+   "dmin": [
+    0.02,
+    0.1,
+    0.001,
+    0.04
+   ],
+   "dgap": [
+    0.02,
+    0.3,
+    0.001,
+    0.11
+   ],
+   "h": [
+    0.03,
+    0.2,
+    0.001,
+    0.08
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  "XS": {
+   "theta": [
+    0.02,
+    0.15,
+    0.001,
+    0.05
+   ],
+   "b": [
+    0,
+    0.03,
+    0.001,
+    0.005
+   ],
+   "h": [
+    0.03,
+    0.2,
+    0.001,
+    0.1
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  "XT": {
+   "h": [
+    0.05,
+    0.25,
+    0.001,
+    0.15
+   ],
+   "N": [
+    5,
+    120,
+    1,
+    50
+   ],
+   "g": [
+    0.03,
+    0.6,
+    0.001,
+    0.2
+   ],
+   "t2": [
+    0.03,
+    0.25,
+    0.001,
+    0.1
+   ],
+   "rat": [
+    0,
+    1,
+    1,
+    1
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  "XRP": {
+   "h": [
+    0.03,
+    0.2,
+    0.001,
+    0.08
+   ],
+   "a": [
+    0.03,
+    0.6,
+    0.001,
+    0.15
+   ],
+   "rho": [
+    0.2,
+    0.9,
+    0.01,
+    0.5
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  "XRD": {
+   "h": [
+    0.03,
+    0.2,
+    0.001,
+    0.08
+   ],
+   "A": [
+    2000,
+    80000,
+    500,
+    20000
+   ],
+   "G": [
+    5000,
+    60000,
+    500,
+    15000
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  "XD": {
+   "p": [
+    0.03,
+    0.25,
+    0.001,
+    0.1
+   ],
+   "N": [
+    5,
+    120,
+    1,
+    20
+   ],
+   "mode": [
+    0,
+    2,
+    1,
+    1
+   ],
+   "cat": [
+    0.08,
+    0.3,
+    0.001,
+    0.15
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  "XP": {
+   "T": [
+    5,
+    120,
+    1,
+    20
+   ],
+   "m": [
+    -0.05,
+    0.05,
+    0.001,
+    0.01
+   ],
+   "d": [
+    0,
+    0.1,
+    0.001,
+    0
+   ],
+   "h": [
+    0.03,
+    0.2,
+    0.001,
+    0.08
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  "XO": {
+   "cat": [
+    0.08,
+    0.35,
+    0.001,
+    0.15
+   ],
+   "c": [
+    1,
+    5,
+    1,
+    1
+   ]
+  },
+  "XE": {
+   "t0": [
+    0.06,
+    0.35,
+    0.001,
+    0.2
+   ],
+   "gamma": [
+    0,
+    2,
+    0.01,
+    1
+   ],
+   "tmin": [
+    0.02,
+    0.1,
+    0.001,
+    0.05
+   ],
+   "h": [
+    0.03,
+    0.2,
+    0.001,
+    0.08
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  "XU": {
+   "U": [
+    5,
+    120,
+    1,
+    30
+   ],
+   "d": [
+    0,
+    0.15,
+    0.001,
+    0.05
+   ],
+   "h": [
+    0.03,
+    0.2,
+    0.001,
+    0.08
+   ],
+   "own": [
+    0,
+    1,
+    1,
+    0
+   ]
+  }
+ },
+ "boxFormat": "[lo, hi, quantum, default]; quantum 1 on [0,1] or [0,2] = binary/categorical",
+ "reentryRules": [
+  "R3F",
+  "RN",
+  "RF",
+  "R0",
+  "RC10",
+  "RP50",
+  "RS",
+  "RFL",
+  "REF",
+  "RPM"
+ ],
+ "sizing": {
+  "Z0": {},
+  "Z1": {
+   "band": 0.05,
+   "target": 100000,
+   "decide": "first close of each calendar month",
+   "quantity": "S - B0/C_s"
+  },
+  "Z2": {
+   "grid": [
+    [
+     0.25,
+     0
+    ],
+    [
+     0.5,
+     0
+    ],
+    [
+     0.5,
+     0.25
+    ],
+    [
+     1.0,
+     0
+    ],
+    [
+     1.0,
+     0.5
+    ]
+   ],
+   "quantity": "S - B0(1+v)/C_s"
+  },
+  "Z3": {
+   "grid": [
+    15000,
+    25000,
+    40000
+   ],
+   "A": "g",
+   "G": "g"
+  },
+  "ZR": "C-ALR only"
+ },
+ "pairings": {
+  "P01": [
+   "E06",
+   "XS"
+  ],
+  "P02": [
+   "E06",
+   "XV"
+  ],
+  "P03": [
+   "E06",
+   "XF-T"
+  ],
+  "P04": [
+   "E04",
+   "XF"
+  ],
+  "P05": [
+   "E05",
+   "XF"
+  ],
+  "P06": [
+   "E03",
+   "XT"
+  ],
+  "P07": [
+   "E11",
+   "XF-T"
+  ],
+  "P08": [
+   "E09",
+   "XF"
+  ],
+  "P09": [
+   "C-SMA",
+   "XF"
+  ],
+  "P10": [
+   "E02",
+   "XE"
+  ],
+  "P11": [
+   "E07",
+   "XD"
+  ],
+  "P12": "adaptive: best L-B RoD champion cell whose (entry, exit) with XF-T counted as XF is not in P01-P11"
+ },
+ "search": {
+  "feasibility": {
+   "maxMinuteDd": 35000,
+   "minClosedTrades": 6,
+   "minCampaigns": 3,
+   "minYearsHeld": 3,
+   "netPositive": true
+  },
+  "exitCell": {
+   "global": 1024,
+   "localPerSeed": 32,
+   "localRadius": 0.1,
+   "shortlist": 16,
+   "joint": 32,
+   "jointRadius": 0.1,
+   "tenBps": true,
+   "perCell": 1680
+  },
+  "pairing": {
+   "global": 2048,
+   "localPerSeed": 32,
+   "localRadius": 0.1,
+   "shortlist": 16,
+   "joint": 32,
+   "jointRadius": 0.1,
+   "tenBps": true,
+   "perPairing": 2704
+  },
+  "championFeasibility": 0.75,
+  "scores": {
+   "primary": "RoD = median over 33 (center + 32 draws) of net / max(minuteDD, 10000)",
+   "secondary": "NET = median over 33 of net",
+   "phi": "share of 33 with net>0 and minuteDD<=35000"
+  },
+  "caps": {
+   "perHistory": 222293,
+   "total": 1111465,
+   "perHistoryBreakdown": {
+    "LA": 377,
+    "LB": 73920,
+    "LBwide": 73920,
+    "LC": 36120,
+    "LCwide": 32448,
+    "LD": 1836,
+    "netReentry": 3672
+   },
+   "otherStages": "planned counts from enumerated runs; used <= planned"
+  },
+  "seedLabels": {
+   "global": "study3b|<history>|<cell>|global",
+   "local": "study3b|<history>|<cell>|local|<k>",
+   "joint": "study3b|<history>|<cell>|joint|<centerIndex>",
+   "J128": "study3b|<policyId>|J128",
+   "missing": "study3b|missing|<rate>",
+   "cell": "LB|<entry>|<exit> or P01..P12; suffix |wide"
+  },
+  "localSeeds": {
+   "byNet": 2,
+   "byCenterRod": 2
+  },
+  "shortlist": {
+   "byNet": 8,
+   "byCenterRod": 8,
+   "order": "alternating, path-distinct"
+  },
+  "reentryStep": {
+   "minOpportunities": 5,
+   "perPairing": 306,
+   "tieBreak": [
+    "R3F",
+    "listed order"
+   ]
+  },
+  "sizingStep": {
+   "pairings": 3,
+   "variants": 9,
+   "perPairing": 306,
+   "guard": "price gain per notional dollar-day >= Z0",
+   "guardMeasuredAt": "center"
+  },
+  "widening": {
+   "edgeFraction": 0.05,
+   "extendFraction": 0.5,
+   "once": true,
+   "appliesTo": [
+    "L-B",
+    "L-C step 1"
+   ],
+   "replaceIf": "widened RoD champion scores higher",
+   "scope": "continuous exit parameters only",
+   "naturalLimits": {
+    "fractions": [
+     0.001,
+     0.95
+    ],
+    "rho": [
+     0.01,
+     1
+    ],
+    "gamma": [
+     0,
+     5
+    ],
+    "k": [
+     0.1,
+     20
+    ],
+    "A": [
+     500,
+     500000
+    ],
+    "G": [
+     500,
+     500000
+    ],
+    "m": [
+     -0.5,
+     0.5
+    ]
+   },
+   "oneDecisionBothPipelines": true,
+   "allQualifyingEdges": true,
+   "radiiOn": "declared range",
+   "exempt": [
+    "XF-T.t upper"
+   ]
+  }
+ },
+ "neighbourhoods": {
+  "oatStepFraction": 0.05,
+  "oatSteps": [
+   -2,
+   -1,
+   1,
+   2
+  ],
+  "discrete": "flip to each other value",
+  "jointDraws": 128,
+  "jointRadius": 0.1,
+  "fixed": [
+   "reentry",
+   "sizing",
+   "discrete dimensions"
+  ],
+  "perturbedPaths": 128
+ },
+ "transitions": {
+  "S1": "flat-then-adopt (primary)",
+  "S2": "continue-old (required by verdict)",
+  "S3": "netted re-entry (sensitivity)",
+  "undefinedPick": "C-IDLE window"
+ },
+ "primaryTransition": "S1",
+ "controls": [
+  "C-AL",
+  "C-ALR",
+  "C-ALZ1",
+  "C-SMA",
+  "C-DON",
+  "C-TSM",
+  "C-STOP",
+  "C-IDLE"
+ ],
+ "stresses": {
+  "costs": [
+   0,
+   2,
+   10
+  ],
+  "rates": [
+   0.08,
+   0.14
+  ],
+  "stopSlippageBps": [
+   10,
+   25,
+   50
+  ],
+  "entrySlippageBps": [
+   10,
+   25
+  ],
+  "openSlippageBps": [
+   50
+  ],
+  "delayMinutes": [
+   1,
+   5
+  ],
+  "missingBars": [
+   0.01,
+   0.05
+  ]
+ },
+ "rubric": {
+  "positiveWindow": 2000,
+  "sumMin": 20000,
+  "positiveWindowsMin": 3,
+  "minWindow": -15000,
+  "windowDd": 35000,
+  "chainDd": 35000,
+  "excessSumMin": 10000,
+  "excessWindow": 2000,
+  "excessWindowsMin": 2,
+  "controlMargin": 5000,
+  "controls": [
+   "C-SMA",
+   "C-DON",
+   "C-TSM"
+  ],
+  "perturbedShareMin": 0.75,
+  "perturbedMedianRetention": 0.5,
+  "stressChecks": [
+   "costBps=10",
+   "rate=0.14",
+   "stopSlippageBps=25",
+   "delayMinutes=1"
+  ],
+  "campaignMargin": 5000,
+  "upLegMargin": 5000,
+  "evidence": {
+   "ownRuleExitsMin": 6,
+   "firstEntriesMin": 4,
+   "firstEntryWindowsMin": 3,
+   "positionWindowsMin": 3,
+   "undefinedPicksMax": 1,
+   "excludeRule": "adoption",
+   "positionWindow": "long at >= 1 session close in (b,e]"
+  },
+  "requiredS2": [
+   "b",
+   "c",
+   "e"
+  ],
+  "order": [
+   "invalid",
+   "insufficient evidence",
+   "risk-incompatible",
+   "no demonstrated edge",
+   "historically promising but unvalidated"
+  ],
+  "nomination": "P*_H only if Pi1 is historically promising and P*_H exists; else none",
+  "givebackShareMax": 0.5,
+  "givebackCampaignPeakMin": 5000,
+  "stressSumMin": 10000,
+  "stressChainDdMax": 35000,
+  "s2Rule": "only when every Pi1 item passes and S2 fails b, c or e",
+  "qualifier": "Pi-NET on items b-g with its own perturbed paths, stresses, reset controls"
+ },
+ "stage1Picks": {
+  "A": "E06-9ee2ce7bd5",
+  "B": "E04-86b6d59a31",
+  "C": "E04-b4a27ac53b",
+  "D": "E06-47640253c0",
+  "H": "E06-4978efef20"
+ },
+ "stages": [
+  "audit",
+  "freeze-protocol",
+  "parity",
+  "freeze-code",
+  "develop-A",
+  "develop-B",
+  "develop-C",
+  "develop-D",
+  "develop-H",
+  "repair",
+  "evaluate",
+  "robustness",
+  "analysis"
+ ],
+ "matrixVersion": "1.2",
+ "financing": {
+  "primary": "net-debit",
+  "parity": "fixed-slot",
+  "cashRate": 0,
+  "tradeInterest": "own principal L in both modes",
+  "accountInterest": {
+   "slot": "sum of trade interest",
+   "net": "simple on max(-M,0) segments at fills"
+  },
+  "carriedBalanceInterest": "A - sum of trade interest"
+ },
+ "searchedBoxes": [
+  "XF-T"
+ ],
+ "exitRules": {
+  "XS": "armed after a held close with C > F(1-b)",
+  "XP": "hurdle L*rate*days/365/(S*C_{s-T})",
+  "XE": "t_eff=min(t0,max(tmin,t0*(S*Hc/B0)^-gamma))",
+  "priority": [
+   "own out",
+   "trend",
+   "damage",
+   "structural",
+   "stale",
+   "max hold",
+   "stall"
+  ],
+  "XVundefinedAtr": "dmin+dgap"
+ },
+ "reentryConstants": {
+  "RC10": {
+   "sessions": 10
+  },
+  "RP50": {
+   "fraction": 0.5
+  },
+  "RFL": {
+   "theta": 0.05,
+   "b": 0.005
+  },
+  "REF": {
+   "N": 30,
+   "er": 0.3,
+   "a": 0.11
+  },
+  "RPM": {
+   "smaN": 200,
+   "drawdown": 0.15,
+   "triggerPriorMaxN": 10
+  },
+  "RS": "cross from below of the stop in force in the exit fill session"
+ },
+ "paths": [
+  "Pi1",
+  "Pi1-S2",
+  "Pi1-S3",
+  "Pi-NET",
+  "Pi-P0",
+  "Pi-noE06",
+  "static-A",
+  "splice"
+ ],
+ "controlModes": [
+  "flat-start continuous",
+  "annual-reset with Pi1 window sizing",
+  "annual-reset with Pi-NET window sizing (C-SMA, C-DON, C-TSM)"
+ ],
+ "benchmark": {
+  "primary": "B_F = f_MV,F * (priceGain - friction)_F(C-ALR) - interest_F(Pi1)",
+  "diagnostics": [
+   "f_MV * W_F(C-ALR)",
+   "principal-day (Stage 1)",
+   "C-ALR scaled to Pi1 window minute DD"
+  ]
+ },
+ "parity": {
+  "tolerance": {
+   "money": 1e-06,
+   "priceRelative": 1e-12,
+   "comparedAlso": [
+    "stopComponent",
+    "daily marks"
+   ]
+  },
+  "foldAData": "2016-01-04..2019-12-31",
+  "boundaries": [
+   "2017-12-29",
+   "2018-12-31"
+  ],
+  "randomVectorsPerFamily": 64,
+  "pairingVectors": 64,
+  "codeManifestPinned": true
+ },
+ "fixtures": [
+  "F1",
+  "F2",
+  "F3",
+  "F4",
+  "F5",
+  "F6",
+  "F7",
+  "F8",
+  "F9",
+  "F10",
+  "F11",
+  "F12",
+  "F13",
+  "F14",
+  "F15",
+  "F16",
+  "F17",
+  "F18",
+  "F19",
+  "F20",
+  "F21",
+  "F22",
+  "F23",
+  "F24",
+  "F25"
+ ],
+ "policyIdVector": {
+  "key": {
+   "entry": "E06",
+   "entryParams": {
+    "v_in": 0.24,
+    "v_gap": 0.296,
+    "N": 95
+   },
+   "exit": {
+    "family": "XS",
+    "params": {
+     "theta": 0.05,
+     "b": 0.005,
+     "h": 0.1,
+     "own": 0
+    }
+   },
+   "reentry": "R3F",
+   "sizing": {
+    "kind": "Z2",
+    "u": 0.5,
+    "v": 0
+   }
+  },
+  "string": "E06{N=95,v_gap=0.296,v_in=0.24}|XS{b=0.005,h=0.1,own=0,theta=0.05}|R3F|Z2(0.5,0)",
+  "id": "E06/XS/R3F/Z2(0.5,0)-0509c388d5"
+ },
+ "robustnessExtras": {
+  "piNetPerturbedPaths": 128,
+  "piNetStresses": [
+   "costBps=10",
+   "rate=0.14",
+   "stopSlippageBps=25",
+   "delayMinutes=1"
+  ]
+ }
+}

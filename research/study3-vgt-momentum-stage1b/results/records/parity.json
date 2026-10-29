@@ -1,0 +1,170 @@
+{
+ "stage": "parity",
+ "study": "study3b-vgt-momentum-exits-exposure-chronology-v1",
+ "createdAt": "2026-10-29T00:23:11.476Z",
+ "git": {
+  "head": "db6a3ec83bfade06441efe9ae2219e2bc07a25fc",
+  "outside": []
+ },
+ "protocolFreeze": "5438e10528a7cb5aee2bea3c990ced667c2816782f4f32ccc4410d7480bf917a",
+ "codeFreeze": null,
+ "door": {
+  "symbol": "VGT",
+  "endDate": "2019-12-31",
+  "firstDate": "2016-01-04",
+  "lastDate": "2019-12-31",
+  "sessions": 1006,
+  "bars": 317256,
+  "lastBarTime": "2019-12-31T20:59:00.000Z",
+  "dataFile": "data/VGT/data.csv",
+  "dataSha256": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+  "loadedBarsSha256": "b99dd76f163ca40cdc064cdc0aa4886e7fb53266f481d477b035aa50f2157345",
+  "access": "optimization",
+  "partition": "training",
+  "splitAdjustments": 0
+ },
+ "payloads": {},
+ "summary": {
+  "pass": true,
+  "stage1": {
+   "runs": 1626,
+   "differences": 0,
+   "fields": {},
+   "maxAbs": 2.8478552849264815e-11,
+   "failedRuns": [],
+   "failedRunCount": 0
+  },
+  "reference": {
+   "runs": 3728,
+   "differences": 0,
+   "fields": {},
+   "maxAbs": 3.637978807091713e-11,
+   "failedRuns": [],
+   "failedRunCount": 0
+  },
+  "coverage": {
+   "kind:first": 23210,
+   "rule:adoption": 1712,
+   "exit:own out": 12326,
+   "rule:fresh": 13164,
+   "exit:stop": 7282,
+   "stop:hard": 1394,
+   "stop:trail": 3818,
+   "exit:open": 3452,
+   "kind:reentry": 5316,
+   "rule:RPM": 658,
+   "stop:vol": 2190,
+   "rule:R3F": 388,
+   "exit:stop gap": 1292,
+   "gap:gap": 1288,
+   "rule:R0": 1220,
+   "rule:RC10": 504,
+   "rule:RP50": 626,
+   "rule:RS": 322,
+   "rule:RFL": 392,
+   "rule:REF": 174,
+   "exit:structural": 254,
+   "stop:ratchet": 146,
+   "exit:trend": 1276,
+   "stop:retain": 226,
+   "stop:giveback": 208,
+   "exit:damage": 794,
+   "exit:stall": 1238,
+   "stop:exp": 412,
+   "exit:stale": 312,
+   "exit:max hold": 214,
+   "stop:d1net": 10,
+   "rule:minute": 9296,
+   "trim: partial repayment": 4828,
+   "gap:level above prior close": 4,
+   "stop:catastrophic": 170,
+   "exit:resize": 70,
+   "rule:resize": 70,
+   "exit:transition": 16,
+   "transition:transition": 16,
+   "transition:adopt-flat": 30,
+   "transition:continue-old": 12,
+   "exit:conversion": 8,
+   "kind:conversion": 8,
+   "rule:conversion": 8,
+   "S3: buy branch": 8,
+   "transition:conversion": 8
+  },
+  "missingCoverage": [
+   "fill-bar stop",
+   "trim: loan to zero",
+   "S3: sell branch",
+   "S2 across two boundaries"
+  ],
+  "guards": [
+   {
+    "kind": "prefix",
+    "boundary": "2017-12-29",
+    "policies": 1842,
+    "arrays": 3888,
+    "differences": 0,
+    "fields": []
+   },
+   {
+    "kind": "poisoned",
+    "boundary": "2017-12-29",
+    "runs": 156,
+    "differences": 0
+   },
+   {
+    "kind": "truncated",
+    "boundary": "2017-12-29",
+    "runs": 156,
+    "differences": 0
+   },
+   {
+    "kind": "prefix",
+    "boundary": "2018-12-31",
+    "policies": 1842,
+    "arrays": 3888,
+    "differences": 0,
+    "fields": []
+   },
+   {
+    "kind": "poisoned",
+    "boundary": "2018-12-31",
+    "runs": 156,
+    "differences": 0
+   },
+   {
+    "kind": "truncated",
+    "boundary": "2018-12-31",
+    "runs": 156,
+    "differences": 0
+   }
+  ],
+  "refusals": [
+   {
+    "request": "2024-01-02",
+    "refused": true,
+    "message": "refused: 2024-01-02 is after the Stage 1b data cap 2023-12-29"
+   },
+   {
+    "request": "2025-12-31",
+    "refused": true,
+    "message": "refused: 2025-12-31 is after the Stage 1b data cap 2023-12-29"
+   },
+   {
+    "request": "2026-01-02",
+    "refused": true,
+    "message": "refused: 2026-01-02 is after the Stage 1b data cap 2023-12-29"
+   }
+  ],
+  "tolerance": {
+   "money": 0.000001
+  },
+  "codeManifestHash": "dc37a6027a21c5c42ed6249a0e6e8b94e24175ccc45b9d1fe34e44c08387e68e",
+  "runtime": {
+   "seconds": 44.671,
+   "workers": 0,
+   "peakRssMb": 636,
+   "node": "v24.21.0"
+  }
+ },
+ "bodyHash": "ccef907516f8cf42f7760b2940cf7c1688d0945fc7b78ffc529164d46776de1c"
+}
