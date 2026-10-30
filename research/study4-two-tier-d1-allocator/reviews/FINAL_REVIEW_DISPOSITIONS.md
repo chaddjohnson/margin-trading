@@ -1,0 +1,19 @@
+# Dispositions of the final independent review (`reviews/FINAL_REVIEW.md`)
+
+Study lead, 2026-10-30 ≈05:20–05:40Z. No sealed record was changed; `results/FINAL.json` stays as sealed. Every finding
+was checked against the records and code before it was accepted.
+
+| # | Severity | Disposition | What was done |
+|---|---|---|---|
+| 1 | MAJOR | **Accepted** (re-verified: 18,432 of 1,428,480 planned 4A vectors, 1.29%, missing in F21–F23 and H; F20 exact) | Append-only disclosure **D1** (AMENDMENTS.md, `results/amendments.jsonl`); generated coverage table `4A_coverage` / `results/tables/4A_floor_coverage.csv` in PHASE_4A; the wrong wordings corrected (PHASE_4A, FINAL_COMPARISON, README, PHASE_4E, IMPLEMENTATION_AUDIT). Both readings of V2 are presented: as coded (labels of FINAL.json) and literal (every label "invalid/incomplete"); the choice is left to the user. 4A is reported **incomplete (98.71% of its floor)** in the stop statuses. No rerun: a top-up now would follow the evaluation (PROTOCOL §11). |
+| 2 | MAJOR | **Accepted** | A5 addendum (append-only) lists all three changed files. `scripts/a5_diff_proof.py` proves the diff: it undoes exactly the three edits in memory and each result hashes to the sha256 the superseded first evaluation freeze recorded (all three match; no other file differs between the freezes); **`floorsMet` did not change**. IMPLEMENTATION_AUDIT §5 updated. |
+| 3 | MINOR | Accepted | `verify.ts` is frozen evaluation code, so its header comment was left; README and IMPLEMENTATION_AUDIT §5 state that `verify` does not recompute labels and point to `reviews/final_review_recompute.py` (the reviewer's script, saved; it reproduces every criterion and label from `results/evaluation/RECORD.json`). |
+| 4 | MINOR | Accepted | README evidence boundary and IMPLEMENTATION_AUDIT §3 reworded precisely: no post-bound bar parsed, used or hashed; up to ~1 MiB past the bound in an unparsed memory buffer; the stop line's 32-byte timestamp decoded; market-event configs parsed whole and filtered. Bounded reads recommended for future studies. |
+| 5 | MINOR | Accepted; result recorded | Re-checked independently: all 29 symbols of `research/d1-ranked-preemption/results/controls/final/CONTROLS.json` (`door.barsSha256`) equal both evaluation doors' `loadedBarsSha256`. Omission and result disclosed in IMPLEMENTATION_AUDIT §3. |
+| 6 | MINOR | Accepted | Disclosed in PHASE_4E and IMPLEMENTATION_AUDIT §5 (top-100, ordinal ranks; tie-averaged and pooled values quoted; E11 fails for every procedure either way). |
+| 7 | MINOR | Accepted | Disclosed in IMPLEMENTATION_AUDIT §2.2; no fold pick uses P2L. |
+| 8 | MINOR | Accepted and fixed | New `tests/doors.refusals.test.ts` runs the evaluation-door and H-door refusals against an empty results tree (`STUDY4_ROOT` under the OS temp directory), so they are exercised in any state; `doors.test.ts` header corrected (it copies `data/partitions.json`, calendar metadata, not bars). Study 4 tests 29/29; data-less repository suite rerun: 813 tests, 762 pass, failure set identical to the base commit's. |
+| 9 | NOTE | Accepted | Latency wording corrected (300 s absolute, +4 min) in PHASE_4E, FINAL and the audit; chained-rank and reset-label notes, reference-engine provenance (no hand-back hash recorded) and the missing door-log hash of the evaluation record disclosed in IMPLEMENTATION_AUDIT; the A5 dry-run script saved as `scripts/a5_dryrun_synthetic.ts`; FINAL's positive fold-years now include the two +$524 years; 4E already says "medians ≤ $0"; the 89/90 `verify` result was already disclosed. |
+
+**Effect on the verdict.** None on the economics. Under the rubric as coded the labels are unchanged; under the literal
+V2 every label is "invalid/incomplete". No procedure beat B5 and there is no nominee under either reading.

@@ -1,0 +1,497 @@
+{
+ "schemaVersion": 1,
+ "study": "study4-two-tier-d1-shallow-deep-joint-allocator-v1",
+ "dataCap": "2023-12-29",
+ "accountingStart": "2016-01-04",
+ "armingStart": "2017-06-15",
+ "control": {
+  "pool": "B5",
+  "config": "config/pools/B5.json",
+  "configSha256": "deef53ca531118064925a64e25288c927f3a71d8a05311075b439087960020fe"
+ },
+ "contextControls": [
+  "B4",
+  "B1 (VGT D1 primary alone)"
+ ],
+ "execution": {
+  "fundedSlots": 1,
+  "notional": 100000,
+  "compounding": false,
+  "interestRate": 0.11,
+  "interestMethod": "simple, whole calendar days between session dates, 365-day year",
+  "costBpsPerSide": 5,
+  "stopFill": "stop",
+  "stopSlippageBps": 0,
+  "distributions": "none in the fixed slot",
+  "tieOrder": "deep tier by symbol then id, then shallow tier in the configuration shallow priority order (default symbol then id)",
+  "replacement": "mirror lot decided at the sale fill bar start + 60 s, filled under firstTradeAfterDecision on the deep symbol (ENGINE_CONTRACT §5.4)"
+ },
+ "universe": {
+  "source": "research/d1-ranked-preemption/results/audit/universe.json",
+  "sourceSha256": "26e71c4c8a147357dd0b15c2565944d878150179744147c84ba9a57b62b0575d",
+  "symbols": [
+   "AGG",
+   "DBC",
+   "EDV",
+   "EEM",
+   "EFA",
+   "EMB",
+   "EWJ",
+   "EWW",
+   "EWY",
+   "EWZ",
+   "FXI",
+   "GDX",
+   "GLD",
+   "HYG",
+   "IAU",
+   "IBB",
+   "IEF",
+   "IEMG",
+   "IGV",
+   "IJH",
+   "IJR",
+   "ILF",
+   "INDA",
+   "IWD",
+   "IWF",
+   "IWM",
+   "IWN",
+   "IYT",
+   "KBE",
+   "KIE",
+   "KRE",
+   "LQD",
+   "MTUM",
+   "QUAL",
+   "RSP",
+   "SHY",
+   "SLV",
+   "SMH",
+   "SPLV",
+   "TIP",
+   "TLT",
+   "USMV",
+   "VGK",
+   "VGT",
+   "VIG",
+   "VOOG",
+   "VPU",
+   "XBI",
+   "XHB",
+   "XLB",
+   "XLE",
+   "XLF",
+   "XLI",
+   "XLK",
+   "XLP",
+   "XLU",
+   "XLV",
+   "XLY",
+   "XME",
+   "XOP",
+   "XRT"
+  ],
+  "excluded": {
+   "GDXJ": "late (first bar 2016-05-02)",
+   "OIH": "late (first bar 2016-05-02)",
+   "XLRE": "2 missing sessions in 2016"
+  }
+ },
+ "windows": {
+  "F20": {
+   "developmentEnd": "2019-12-31",
+   "evaluation": [
+    "2020-01-02",
+    "2020-12-31"
+   ]
+  },
+  "F21": {
+   "developmentEnd": "2020-12-31",
+   "evaluation": [
+    "2021-01-04",
+    "2021-12-31"
+   ]
+  },
+  "F22": {
+   "developmentEnd": "2021-12-31",
+   "evaluation": [
+    "2022-01-03",
+    "2022-12-30"
+   ]
+  },
+  "F23": {
+   "developmentEnd": "2022-12-30",
+   "evaluation": [
+    "2023-01-03",
+    "2023-12-29"
+   ]
+  },
+  "H": {
+   "developmentEnd": "2023-12-29",
+   "evaluation": null,
+   "use": "in-sample description only"
+  }
+ },
+ "parameterBox": {
+  "units": "tenths of a percentage point for percentages; calendar days for maximumHoldDays; sessions for tickWindowSize and continuationWindow",
+  "trailingBuyPercentage": [
+   1,
+   50
+  ],
+  "trailingStopPercentage": [
+   30,
+   150
+  ],
+  "maximumHoldDays": [
+   3,
+   30
+  ],
+  "tickWindowSize": [
+   20,
+   250
+  ],
+  "intradayLossBuffer": [
+   0,
+   60
+  ],
+  "pullback": [
+   30,
+   200
+  ],
+  "continuationWindow": [
+   10,
+   200
+  ],
+  "targetPercentChange": "by role band"
+ },
+ "roleBands": {
+  "sigma": "sqrt(252) x sample stdev of daily log close-to-close returns over the window development sessions",
+  "decisions": "development virtual trades (deep path + continuation); per year = decisions / years from the arming date to the window end",
+  "shallow": {
+   "lower": "max(3.0%, 0.15 sigma)",
+   "upper": "min(0.45 sigma, 15.0%); on a B5 symbol also <= 0.6 x the B5 book X",
+   "minimumWidthPp": 1.0,
+   "frequencyCheck": "decisions >= max(2 per year, 1.5 x decisions of the same vector with X = 0.85 sigma (rounded, capped at 30.0%))"
+  },
+  "deepFloor": "rho(w) = min over the five B5 books of X0/sigma(s,w); a new deep vector needs X >= ceil(rho sigma) and >= 8.0%",
+  "deepNeighbourhood4DB": {
+   "X": "[max(ceil(rho sigma), X0 - 3.0pp), min(30.0%, X0 + 3.0pp)] union {X0}",
+   "otherUnits": {
+    "trailingBuyPercentage": 5,
+    "trailingStopPercentage": 15,
+    "maximumHoldDays": 3,
+    "tickWindowSize": 25,
+    "intradayLossBuffer": 10,
+    "pullback": 20,
+    "continuationWindow": 20
+   },
+   "frequencyCheck": "decisions <= 1.5 x incumbent + 2"
+  },
+  "deepBroad4DC": {
+   "X": "[max(8.0%, ceil(rho sigma)), 30.0%]",
+   "frequencyCheck": "B5 symbols: <= 1.5 x incumbent + 2; other symbols: decisions per year <= the busiest B5 book in the window"
+  }
+ },
+ "policies": {
+  "P0": "no preemption",
+  "P0M": "no forced sale; a deep decision met by a held shallow lot is bought as a mirror when that lot exits on its own",
+  "P1": "unconditional deep-tier preemption",
+  "P2": "net-breakeven (>= $0 at decision and at sale fill; fill test = IOC limit)",
+  "P2L": "legacy execution mechanics under tier priority (ranked-preemption P1 mechanics, no reservation cancel); control only",
+  "P3": {
+   "budgets4C": [
+    500,
+    1000,
+    2000,
+    3500
+   ],
+   "budgetsInSearch": "0..5000 step 250",
+   "filters": [
+    "any",
+    "deep-path"
+   ]
+  },
+  "P4": {
+   "deadlineSessions": [
+    0,
+    1
+   ]
+  }
+ },
+ "gates": {
+  "G0": "none",
+  "G1": "refuse shallow while any deep book armed or pending",
+  "G1d": "as G1, deep-path setups only",
+  "G2": {
+   "lambda": [
+    0.5,
+    0.75,
+    0.9
+   ]
+  }
+ },
+ "phases": {
+  "4A": {
+   "perSymbolPerWindow": {
+    "sobol": 4096,
+    "refinement": 1024
+   },
+   "tracesPerVector": 2,
+   "library": "per symbol and X tertile: L1 standalone net, L2 idle-clean net, L3 idle-clean net per held day, L4 net minus minute DD; distance >= 0.15; up to 12 per symbol"
+  },
+  "4B": [
+   "B5",
+   "B5 + each library member",
+   "greedy subsets k<=3 (unconstrained; distinct-symbol overlap<=25%)",
+   "dual-phenotype sets",
+   "gates G1, G1d, G2(0.5/0.75/0.9) on 10 best",
+   "SA comparator"
+  ],
+  "4C": {
+   "policies": [
+    "P0",
+    "P0M",
+    "P1",
+    "P2",
+    "P2L",
+    "P3(500,any)",
+    "P3(500,deep)",
+    "P3(1000,any)",
+    "P3(1000,deep)",
+    "P3(2000,any)",
+    "P3(2000,deep)",
+    "P3(3500,any)",
+    "P3(3500,deep)",
+    "P4(0)",
+    "P4(1)"
+   ],
+   "sets": [
+    "4B pick (with its gate; omitted if no-fill)",
+    "SA",
+    "10 best singles",
+    "5 best greedy subsets"
+   ]
+  },
+  "4D-A": {
+   "floor": 240000,
+   "islands": 4,
+   "deep": "B5 frozen",
+   "shallowCardinality": [
+    0,
+    4
+   ]
+  },
+  "4D-A0P": {
+   "floor": 240000,
+   "islands": 4,
+   "deep": "B5 frozen",
+   "shallowCardinality": [
+    0,
+    4
+   ],
+   "policy": "P0 only (gates allowed)",
+   "role": "same-budget preemption-off control"
+  },
+  "4D-B": {
+   "floor": 240000,
+   "islands": 4,
+   "deep": "B5 books incumbent or neighbourhood-reoptimized",
+   "shallowCardinality": [
+    0,
+    4
+   ]
+  },
+  "4D-B0": {
+   "floor": 240000,
+   "islands": 4,
+   "deep": "as 4D-B",
+   "shallowCardinality": [
+    0,
+    0
+   ],
+   "role": "same-budget deep-only control"
+  },
+  "4D-C": {
+   "floor": 400000,
+   "islands": 4,
+   "deep": "1-6 books: B5 incumbents, broad deep vectors on any U61 symbol",
+   "shallowCardinality": [
+    0,
+    4
+   ]
+  },
+  "4D-C0": {
+   "floor": 400000,
+   "islands": 4,
+   "deep": "as 4D-C",
+   "shallowCardinality": [
+    0,
+    0
+   ],
+   "role": "same-budget deep-only control"
+  }
+ },
+ "selection": {
+  "feasible": {
+   "minuteDrawdownMax": 35000,
+   "minuteDrawdownOverB5Max": 5000,
+   "dailyDrawdownMax": 30000,
+   "deltaNetMin": 10000,
+   "maxYearShare": 0.7,
+   "leaveOneYearOut": true,
+   "preservation": {
+    "frozenB5": {
+     "pnlWeightedMin": 0.9,
+     "countWeightedMin": 0.85,
+     "topWinnersNotMissed": 5,
+     "experiments": [
+      "4B",
+      "4C",
+      "4D-A",
+      "4D-A0P"
+     ]
+    },
+    "reoptimized": {
+     "pnlWeightedRetentionMin": 0.75,
+     "topWinnersNotMissed": 5,
+     "experiments": [
+      "4D-B",
+      "4D-B0",
+      "4D-C",
+      "4D-C0"
+     ]
+    }
+   }
+  },
+  "robust": {
+   "top": 50,
+   "structurallyDistinct": true,
+   "perturbations": 24,
+   "relative": 0.1,
+   "medianDeltaMin": 5000,
+   "positiveShareMin": 0.6
+  },
+  "fallback": "no-fill = B5 unchanged",
+  "secondary": [
+   "S-raw",
+   "S-risk (delta net - 2 x max(0, minute DD - B5 minute DD))"
+  ]
+ },
+ "evaluation": {
+  "chained": {
+   "primary": "carry from 2016-01-04 with F20 pick until 2020-12-31, measured from the 2019-12-31 liquidation mark",
+   "secondary": "reset at each year-end close from 2019-12-31, compared with B5 under the same resets"
+  },
+  "perturbations": {
+   "count": 64,
+   "relative": 0.1
+  },
+  "oneAtATime": {
+   "steps": [
+    -0.1,
+    -0.05,
+    0,
+    0.05,
+    0.1
+   ]
+  },
+  "financing": {
+   "rates": [
+    0.08,
+    0.11,
+    0.14
+   ],
+   "costBps": [
+    0,
+    5,
+    10
+   ]
+  },
+  "stresses": [
+   "stop slippage 25 bps",
+   "stop fill next-open",
+   "replacement latency +5 min",
+   "legacy replacement for P2 picks",
+   "missing bars 0.5% x 3 seeds"
+  ],
+  "selectionSkill": {
+   "topDevelopment": 100,
+   "randomInitial": 100
+  },
+  "randomChampionNull": {
+   "replicates": 100,
+   "subsample": 0.1,
+   "robustTop": 5,
+   "perturbations": 24
+  },
+  "overlay": "only with exact frozen B5 portfolio parity on 2016-2023; otherwise E4 not evaluated and no candidate can be historically promising"
+ },
+ "rubric": {
+  "E1": {
+   "sumDeltaMin": 20000,
+   "yearDeltaMin": -10000,
+   "positiveYearsMin": 3
+  },
+  "E2": {
+   "frozenB5": {
+    "pnlWeightedMin": 0.9,
+    "countWeightedMin": 0.85
+   },
+   "reoptimized": {
+    "pnlWeightedRetentionMin": 0.75
+   },
+   "topWinnersNotMissed": 10
+  },
+  "E3": {
+   "minuteDrawdownMax": 35000,
+   "overB5Max": 5000,
+   "dailyDrawdownMax": 30000
+  },
+  "E4": {
+   "dailyPercentMax": 0.3,
+   "conditionalMax": 0.35,
+   "overB5PpMax": 2
+  },
+  "E5": {
+   "positiveShareMin": 0.6,
+   "medianPositive": true
+  },
+  "E6": {
+   "shallowPositiveYearsMin": 3,
+   "versusControlMin": 10000,
+   "controlPositiveYearsMin": 3,
+   "versusShallowOffMin": 10000
+  },
+  "E7": {
+   "rate": 0.14,
+   "costBps": 10,
+   "sumDeltaPositive": true
+  },
+  "E7b": [
+   "replacement latency +5 min",
+   "stop slippage 25 bps",
+   "stop fill next-open"
+  ],
+  "E8": {
+   "excludeLargestPaired": true,
+   "excludeLargest20SessionCluster": true,
+   "maxYearShare": 0.7,
+   "maxSymbolShare": 0.7
+  },
+  "E9": {
+   "shallowLotsMin": 8,
+   "yearsMin": 3
+  },
+  "E10": {
+   "idleCleanShareOfDeltaMin": 0.5,
+   "idleCleanPositive": true
+  },
+  "E11": {
+   "nullPercentileMin": 0.75,
+   "spearmanPositive": true
+  },
+  "nominee": "the experiment sealed H pick; parsimony order 4B, 4C, 4D-A, 4D-B, 4D-C; never 4D-A0P, 4D-B0, 4D-C0, SA, S-raw, S-risk, ablations"
+ },
+ "revision": 2
+}
