@@ -4,8 +4,10 @@
 
 All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run commands from the repository root.
 
-- **Updated:** 2026-10-30T21:11Z. **Status: COMPLETE** (every stage ran and is sealed; reports generated; commit and
-  push of the study branch are the last step — their hashes are recorded below by a follow-up commit).
+- **Updated:** 2026-10-30T21:12Z. **Status: COMPLETE.** Study committed as
+  `fda5901a87770b757dc1c4e84417507a3a51b3ef` (121 files) and pushed to `origin/research/study5-gdx-d1-b5-three-etf`
+  (new remote branch; `git ls-remote` = local HEAD, verified 2026-10-30T21:12:06Z). This follow-up commit records it.
+  Not merged, no PR, no force-push.
 - **Outcome:** Study A — **no nominee** (all 32 shortlisted vectors fail G2; near-misses failing only G2:
   `d1-ac0aaa704c`, `d1-a8e252df46`, `d1-143e245fb1`). Study B — **no nominee** (all candidates and C3 fail PG2; Track 1
   T1-P/T1-S fail only PG2 and are "Track 1 nominated" under the original T1–T3). Frozen B5 remains the reference.
