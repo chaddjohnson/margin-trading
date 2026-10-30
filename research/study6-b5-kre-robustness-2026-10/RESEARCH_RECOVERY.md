@@ -4,8 +4,10 @@
 
 All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run commands from the repository root.
 
-- **Updated:** 2026-10-30T23:23Z. **Status: COMPLETE** (all stages run and sealed; final commit and push pending at
-  this update — see §6).
+- **Updated:** 2026-10-30T23:24Z. **Status: COMPLETE.** Committed as `1d9f6a4` (Part A lock) and
+  `8f00b00108de1d8f967398daa9d76915fabda206` (Part B, reports, configurations, logs), pushed to
+  `origin/research/study6-b5-kre-robustness` (new remote branch; `git ls-remote` = local HEAD, verified
+  2026-10-30T23:23:42Z). This follow-up commit records it. Not merged, no PR, no force-push.
 - **Outcome:**
   - **B1 passes.** 100% of N1 neighbours below $35k.
   - **Frozen five-ETF B5 fails** the joint N1 gate: 21.9% of neighbours below $35k, p90 $55,573. The centre passes at
@@ -89,4 +91,11 @@ the Part B modules after they ran (formatting only).
 
 ## 6. Commit and push
 
-Pending at this update. The follow-up commit records the hash and the push verification.
+- `1d9f6a4` 2026-10-30T22:59Z: the Part A diagnostic checkpoint (before any Part B search).
+- `8f00b00` 2026-10-30T23:23Z: Part B, every report, the research configurations, and the force-added
+  `results/logs/` (`logs/` is git-ignored repository-wide).
+- Pushed with `git push -u origin research/study6-b5-kre-robustness`; `git ls-remote` returned `8f00b00…` = HEAD
+  (23:23:42Z).
+- Not committed (the user's): `config/market-events/distributions.{csv,manifest.json}`,
+  `config/market-events/raw/vanguard-20261030T184421Z/`, six `._.DS_Store`.
+- `evaluations/study6*` (command outputs) stay local and git-ignored.
