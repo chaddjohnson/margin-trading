@@ -1,0 +1,68 @@
+▶ forward accounting across the cutoff
+  ✔ a lot open at the cutoff is carried: its forward P&L starts from its cutoff mark; nothing is counted twice (14.773369ms)
+  ✔ the drawdown peak resets at the cutoff: history before it is excluded (3.046672ms)
+  ✔ a cutoff on the last session has zero observations and no forward figure (1.738822ms)
+  ✔ matched borrowing interpolates the return at equal borrowing intensity and refuses to extrapolate (0.480613ms)
+✔ forward accounting across the cutoff (20.630352ms)
+▶ snapshot checks
+  ✔ NYSE sessions skip weekends and holidays; dates past the calendar are refused (0.296262ms)
+  ✔ rows must be new, ordered and well-formed; regular-hours bars are counted in New York time (0.872266ms)
+  ✔ a split-sized overnight move across the boundary is refused unless declared (0.172722ms)
+✔ snapshot checks (1.471811ms)
+▶ snapshot distributions, the calendar rule and observation records
+  ✔ distribution rows are validated against the frozen ledger coverage (0.285033ms)
+  ✔ the calendar may only grow after its frozen coverage (0.283712ms)
+  ✔ an observation record is written once and a later report must reproduce it (1.788943ms)
+✔ snapshot distributions, the calendar rule and observation records (2.524879ms)
+▶ second-review fixes
+  ✔ the daily % drawdown is the largest percent fall, not the percent of the largest dollar fall (0.099211ms)
+  ✔ every member must trade in the last 15 regular minutes, and no session may be on or after today (0.200791ms)
+  ✔ the calendar hash ignores comments and date lines, and changes with the code (0.987787ms)
+  ✔ matched borrowing: an exact or zero-borrowing match needs no interpolation (0.114541ms)
+  ✔ distributions must be on NYSE sessions, plausible and after the frozen coverage; a declared split must explain the move (0.156151ms)
+✔ second-review fixes (1.673292ms)
+▶ the prospective freeze
+  ✔ is written once, and refuses a changed protocol, member vector or pool hash (50.320311ms)
+✔ the prospective freeze (50.421262ms)
+▶ pool configurations
+  ✔ B4 and B5 load by name, pin stable hashes and equal the frozen benchmark books parameter for parameter (14.636909ms)
+  ✔ refuses malformed books, grids, funding and costs (1.870724ms)
+  ✔ refuses a pool whose pinned grid no longer equals its phenotype, a wrong frozen reference and a misnamed file (2.783111ms)
+✔ pool configurations (19.982068ms)
+▶ fixed-pool funding semantics through the pools layer
+  ✔ one funded slot and a constant $100,000 on every lot after a win and a loss; a signal while held is refused (6.967292ms)
+  ✔ two books signalling in the same minute: the frozen shadow order funds the alphabetically first (1.728173ms)
+✔ fixed-pool funding semantics through the pools layer (8.866746ms)
+▶ the funded-trade ledger
+  ✔ lists only funded lots in order; an open lot is unrealized at the last close; totals reconcile exactly (3.539446ms)
+✔ the funded-trade ledger (3.670997ms)
+▶ B4 and B5 on the frozen canonical all (fixed, 5 bps)
+  ﹣ B4 reproduces its anchors to the cent with one slot and a constant notional (0.073401ms) # the frozen canonical data files are absent or changed
+  ﹣ B5 reproduces its anchors to the cent with one slot and a constant notional (0.042741ms) # the frozen canonical data files are absent or changed
+✔ B4 and B5 on the frozen canonical all (fixed, 5 bps) (0.241472ms)
+▶ Study 5 universe guard
+  ✔ accepts VGT/KRE/GDX subsets and refuses XBI, XRT, unknown and duplicate symbols (1.491581ms)
+  ✔ refuses a restricted door that names XBI or XRT without the five-ETF control (0.209122ms)
+✔ Study 5 universe guard (2.189426ms)
+▶ Study 5 sealed records
+  ✔ verifies an untouched body and rejects an edited one (0.321612ms)
+  ✔ keeps the final door closed without a verified FROZEN_SELECTION.json (2.823011ms)
+✔ Study 5 sealed records (3.312755ms)
+▶ Study 5 grid and designs
+  ✔ maps the frozen B5 vectors into the box and back (0.511694ms)
+  ✔ draws unique in-box Sobol screens reproducibly (1.429061ms)
+  ✔ builds deterministic, box-clipped LHS neighbourhoods within the radius (2.259617ms)
+  ✔ clips a box corner and keeps probes inside the box (0.200651ms)
+  ✔ round-trips joint genomes and perturbs every book in a joint neighbourhood (0.557724ms)
+  ✔ computes linear-interpolation quantiles and neighbourhood summaries (0.197691ms)
+  ✔ builds a shortlist of distinct regions only (0.214751ms)
+✔ Study 5 grid and designs (5.608301ms)
+ℹ tests 35
+ℹ suites 12
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 317.104641
+exit 0

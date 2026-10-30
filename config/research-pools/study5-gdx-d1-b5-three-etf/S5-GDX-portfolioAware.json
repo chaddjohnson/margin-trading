@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S5-GDX-portfolioAware",
+  "name": "GDX portfolioAware alone (standalone baseline at 5 bps)",
+  "role": "Study 5 standalone GDX baseline (frozen B5 GDX book alone)",
+  "status": "research control; frozen phenotype; not a nominee",
+  "description": "The frozen B5 GDX book alone in the fixed $100,000 slot at 5 bps per side: the standalone D1 GDX baseline with friction and the funded-trade ledger.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "GDX",
+      "phenotype": "portfolioAware",
+      "phenotypeFile": "config/phenotypes/D1/GDX.json",
+      "candidateId": "d1-51ea8d4bd6",
+      "parameters": {
+        "targetPercentChange": "27.4%",
+        "trailingBuyPercentage": "0.4%",
+        "trailingStopPercentage": "7.1%",
+        "maximumHoldDays": 18,
+        "tickWindowSize": 100,
+        "intradayLossBuffer": "3.6%",
+        "pullback": "19.1%",
+        "continuationWindow": 81
+      },
+      "parametersSha256": "26ca27ca430a716474bd656ac865a646f22ffdb0160c4b78243c232bb3b7ee98"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-10-30",
+    "createdBy": "research/study5-gdx-d1-b5-three-etf-2026-10 (no frozen file changed)"
+  }
+}

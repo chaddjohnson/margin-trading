@@ -1,0 +1,104 @@
+
+> study5
+> node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=16384 src/study5-gdx-b5-three-etf/main.ts pool fixed S5-GDX-portfolioAware
+
+Pool S5-GDX-portfolioAware — GDX portfolioAware alone (standalone baseline at 5 bps)  [Study 5 standalone GDX baseline (frozen B5 GDX book alone)]
+  status: research control; frozen phenotype; not a nominee
+  config: config/research-pools/study5-gdx-d1-b5-three-etf/S5-GDX-portfolioAware.json (sha256 25a00446dc83…; algorithmic hash c056ca3ce48c…)
+  books (none (Study 5 research pool; not a frozen benchmark)):
+    GDX  portfolioAware  X 27.4% Y 0.4% L 100 stop 7.1% hold 18 buffer 3.6% P 19.1% W 81  [config/phenotypes/D1/GDX.json sha256 ed98c23c7c1e…; d1-51ea8d4bd6; grid 26ca27ca430a…]
+
+Run: FIXED pool — one shared funded slot, $100,000.00 on every funded trade (constant, never compounded; at most one funded lot or reservation at a time); the books monitor signals concurrently under the frozen shadow policy (same-minute decisions in alphabetical symbol order)
+  friction 5 bps per side on every fill (commission $0); margin interest 11.00% simple, 365-day year; stops fill at the stop
+Data: all — 2016-01-04 → 2026-10-29, 2,722 sessions (America/New_York (NYSE sessions; regular minutes)); first eligible session 2017-06-15
+    GDX  data/GDX/data.csv sha256 134b74506f19… 
+  NOT the frozen canonical all (a different file hash, end date or partition); the regression anchors do not apply
+
+Activity: 26 virtual trades → 26 pool decisions: 26 funded, 0 refused (none); 0 same-minute decisions
+  funded lots 26 (closed 25, open 1: GDX since 2026-10-22T14:41:00.000Z, marked −$1,570.80)
+  notional: $100,000.00 on every lot (0 exceptions); overlapping lots 0; max simultaneous funded lots 1
+  time in market 16.3% of the 2,357 sessions from the first eligible one; borrowing dollar-days 54,900,000 → strategy net per $1M borrowing-dollar-days $3,588.87
+
+FUNDED TRADES (26; only lots the shared allocator funded — refused shadow signals are in signals.csv; $100,000.00 per trade, never compounded)
+  fills: the engine's raw execution prices; friction = 5 bps per side on each fill (commission $0); interest = 11% simple on $100,000.00 for the session-date days held (interestDays in the CSV);
+  gross P&L = shares × (exit fill − entry fill) before costs; net = gross − friction − interest (the engine's net);
+  MAE = the engine's worst minute mark while held (shares × last price − principal − accrued interest).
+   #  ETF  entry (New York)  exit (New York)         entry fill     exit fill      size   shares  days  exit reason              gross P&L   interest  friction     net P&L  cumulative net          MAE
+  --  ---  ----------------  ----------------------  ----------  ------------  --------  -------  ----  ----------------------  ----------  ---------  --------  ----------  --------------  -----------
+   1  GDX  2020-03-12 09:50  2020-03-13 09:32           22.1200       23.1228  $100,000  4518.54   1.0  trailing stop            $4,531.23     $30.14   $102.22   $4,398.88       $4,398.88     −$501.83
+   2  GDX  2020-03-16 09:46  2020-03-18 09:36           17.1200       23.5594  $100,000  5838.20   2.0  trailing stop           $37,594.75     $60.27   $118.75  $37,415.73      $41,814.61   −$4,895.68
+   3  GDX  2020-03-19 09:32  2020-03-20 09:30           20.4750       22.7400  $100,000  4881.56   1.0  trailing stop gap       $11,056.74     $30.14   $105.48  $10,921.13      $52,735.74   −$5,590.55
+   4  GDX  2020-03-23 09:32  2020-03-27 09:30           21.6200       25.1500  $100,000  4623.04   4.0  trailing stop gap       $16,319.31    $120.55   $108.11  $16,090.66      $68,826.40   −$2,084.11
+   5  GDX  2020-04-01 09:31  2020-04-15 09:30           23.1500       29.6600  $100,000  4317.50  14.0  trailing stop gap       $28,106.90    $421.92   $114.00  $27,570.98      $96,397.37        $0.00
+   6  GDX  2021-09-28 09:40  2021-11-01 09:32           29.1000       31.5396  $100,000  3434.71  34.0  trailing stop            $8,379.14  $1,024.66   $104.14   $7,250.35     $103,647.72     −$990.31
+   7  GDX  2022-05-12 13:12  2022-06-09 15:46           30.1700       31.1401  $100,000  3312.89  28.1  trailing stop            $3,213.77    $843.84   $101.56   $2,268.38     $105,916.10   −$1,703.11
+   8  GDX  2022-06-14 10:15  2022-07-05 09:31           30.0550       27.9000  $100,000  3325.57  21.0  maximum hold            −$7,166.60    $632.88    $96.37  −$7,895.85      $98,020.25  −$11,220.76
+   9  GDX  2022-07-06 09:36  2022-07-25 09:31           27.0000       25.3500  $100,000  3701.85  19.0  maximum hold            −$6,108.06    $572.60    $96.90  −$6,777.56      $91,242.70   −$7,972.42
+  10  GDX  2022-07-26 09:32  2022-08-18 10:33           24.9100       25.6217  $100,000  4012.45  23.0  trailing stop            $2,855.77    $693.15   $101.38   $2,061.24      $93,303.93     −$481.36
+  11  GDX  2022-08-19 09:36  2022-09-06 09:31           25.6300       23.9500  $100,000  3899.73  18.0  maximum hold            −$6,551.54    $542.47    $96.67  −$7,190.68      $86,113.25  −$10,737.04
+  12  GDX  2022-09-07 09:33  2022-09-15 10:52           23.3900       23.8846  $100,000  4273.19   8.1  trailing stop            $2,113.48    $241.10   $101.01   $1,771.38      $87,884.63     −$156.80
+  13  GDX  2022-09-16 09:32  2022-10-10 09:30           23.3100       23.9800  $100,000  4287.86  24.0  trailing stop gap        $2,872.87    $723.29   $101.39   $2,048.19      $89,932.82   −$8,005.18
+  14  GDX  2022-10-11 09:34  2022-11-02 15:51           24.0000       23.2701  $100,000  4164.58  22.3  buffered intraday loss  −$3,039.73    $663.01    $98.43  −$3,801.17      $86,131.65   −$6,315.48
+  15  GDX  2022-11-03 09:36  2022-12-15 15:59           22.8600       28.2927  $100,000  4372.27  42.3  trailing stop           $23,753.19  $1,265.75   $111.83  $22,375.61     $108,507.26   −$1,273.77
+  16  GDX  2023-02-24 09:32  2023-04-21 09:50           26.7500       33.5369  $100,000  3736.45  56.0  trailing stop           $25,358.91  $1,687.67   $112.63  $23,558.61     $132,065.87   −$1,001.85
+  17  GDX  2023-06-28 09:49  2023-07-27 10:10           29.4000       30.5873  $100,000  3399.66  29.0  trailing stop            $4,036.50    $873.97   $101.97   $3,060.56     $135,126.43   −$1,854.91
+  18  GDX  2023-10-04 10:38  2023-10-31 13:57           25.7700       28.0186  $100,000  3878.54  27.1  trailing stop            $8,721.44    $813.70   $104.31   $7,803.44     $142,929.86     −$573.58
+  19  GDX  2024-02-13 09:59  2024-04-15 10:08           26.2350       33.2071  $100,000  3809.80  62.0  trailing stop           $26,562.30  $1,868.49   $113.23  $24,580.58     $167,510.45   −$2,616.47
+  20  GDX  2026-03-19 09:32  2026-04-02 09:30           82.0450       90.1600  $100,000  1218.23  14.0  trailing stop gap        $9,885.97    $421.92   $104.89   $9,359.16     $176,869.61   −$4,021.10
+  21  GDX  2026-05-19 09:33  2026-06-08 09:31           84.8000       79.7000  $100,000  1178.66  20.0  maximum hold            −$6,011.15    $602.74    $96.94  −$6,710.83     $170,158.78   −$7,622.45
+  22  GDX  2026-06-09 09:32  2026-06-18 10:43           79.5000       83.6007  $100,000  1257.23   9.0  trailing stop            $5,155.55    $271.23   $102.53   $4,781.79     $174,940.56   −$7,353.21
+  23  GDX  2026-06-22 09:32  2026-07-10 09:31           81.4400       75.4300  $100,000  1227.28  18.0  maximum hold            −$7,375.98    $542.47    $96.26  −$8,014.71     $166,925.86  −$12,179.09
+  24  GDX  2026-07-13 09:32  2026-07-31 09:31           74.5800       75.0800  $100,000  1340.17  18.0  maximum hold               $670.09    $542.47   $100.29      $27.34     $166,953.19   −$6,616.75
+  25  GDX  2026-08-03 09:37  2026-08-31 09:40           74.0200       98.1674  $100,000  1350.31  28.0  trailing stop           $32,606.54    $843.84   $116.25  $31,646.45     $198,599.65     −$347.04
+  26  GDX  2026-10-22 10:41  OPEN, 2026-10-29 close     82.4100  81.3300 mark  $100,000  1212.84   7.2  open                    −$1,309.87    $210.96    $49.98  −$1,570.80     $197,028.85   −$4,288.66
+
+BY ETF:
+  ETF  trades  profitable  losing  open    gross P&L    interest   friction      net P&L
+  ---  ------  ----------  ------  ----  -----------  ----------  ---------  -----------
+  GDX      26          19       6     1  $216,231.55  $16,545.21  $2,657.50  $197,028.85
+  all      26          19       6     1  $216,231.55  $16,545.21  $2,657.50  $197,028.85
+
+TOTALS:
+  gross P&L before costs        $216,231.55
+  margin interest               −$16,545.21
+  execution friction             −$2,657.50
+  net realized P&L              $198,599.65   (25 closed trades)
+  unrealized (open) P&L          −$1,570.80   (1 open)
+  total net P&L                 $197,028.85
+  largest closed win / loss $37,415.73 / −$8,014.71; worst MAE −$12,179.09 (profitable/losing count closed trades only)
+
+DRAWDOWNS (the engine's existing definitions; % of the $100,000.00 notional):
+  max MINUTE-sampled drawdown $34,133.92 = 34.13%: the largest fall of the pool's marked P&L (realized + open position at each regular minute's price − accrued interest) from its running peak (peak 2022-06-02 15:03, trough 2022-09-26 13:39 New York)
+  max DAILY drawdown          $32,183.99 = 32.18%: the same mark sampled at session closes only
+
+OPEN POSITION AT THE ENDPOINT (unrealized; marked at the last close, no exit friction):
+  GDX: entered 2026-10-22 10:41 at 82.4100, 1212.84 shares; 2026-10-29 close mark 81.3300; accrued interest $210.96; marked net −$1,570.80
+
+RECONCILIATION: all checks pass
+  PASS ledger total net = run summary net (exact)
+  PASS ledger interest = run summary interest (exact)
+  PASS funded trades = run summary lots
+  PASS realized + unrealized = total net (±$0.000001)
+  PASS gross − friction − interest = total net (±$0.000001)
+  PASS per-ETF nets sum to the total net (±$0.000001)
+  PASS every trade: gross − friction − interest = engine net (±$0.000001)
+
+
+By calendar year (one continuous run; state carried across years):
+    year    strategy   interest  lots
+    2016       $0.00      $0.00     0
+    2017       $0.00      $0.00     0
+    2018       $0.00      $0.00     0
+    2019       $0.00      $0.00     0
+    2020  $96,397.37    $663.01     5
+    2021   $7,250.35  $1,024.66     1
+    2022   $4,859.54  $6,178.08     9
+    2023  $34,422.60  $3,375.34     3
+    2024  $24,580.58  $1,868.49     1
+    2025       $0.00      $0.00     0
+    2026  $29,518.40  $3,435.62     7
+
+Regression anchors: not checked (anchors apply only to the frozen all at 5 bps)
+Outputs: evaluations/study5-pools/all/S5-GDX-portfolioAware-fixed-5bps/ (report.txt, summary.json, trades.csv, trades.json, signals.csv, daily.csv, yearly.csv, monthly.csv)
+These are inspected historical figures, not expected future returns.
+[study5 pool] → evaluations/study5-pools/all/S5-GDX-portfolioAware-fixed-5bps

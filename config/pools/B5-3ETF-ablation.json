@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "B5-3ETF-ablation",
+  "name": "B5 frozen books restricted to VGT, KRE, GDX (XBI and XRT excluded; no retuning)",
+  "role": "Study 5 control C3: the exclusion effect without retuning",
+  "status": "research control; not a nominee; not forward validated",
+  "description": "Frozen B5 (config/pools/B5.json) with the XBI and XRT books removed: VGT primary, KRE lowDd, GDX portfolioAware, the same shared $100,000 slot, shadow policy, 5 bps per side, 11% simple interest, arming 2017-06-15. Every book is the registered frozen phenotype. Historical figures are inspected, not expected returns.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "primary",
+      "phenotypeFile": "config/phenotypes/D1/VGT.json",
+      "candidateId": "d1-ebc9f639b3",
+      "parameters": {
+        "targetPercentChange": "21.6%",
+        "trailingBuyPercentage": "0.3%",
+        "trailingStopPercentage": "7.3%",
+        "maximumHoldDays": 8,
+        "tickWindowSize": 74,
+        "intradayLossBuffer": "2.9%",
+        "pullback": "9.0%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "62978dffae8291e66931c7bb2df824fb70aee8c6e8e8e08460765ec9911981b5"
+    },
+    {
+      "symbol": "KRE",
+      "phenotype": "lowDd",
+      "phenotypeFile": "config/phenotypes/D1/KRE.json",
+      "candidateId": "d1-a389037400",
+      "parameters": {
+        "targetPercentChange": "29.9%",
+        "trailingBuyPercentage": "2.7%",
+        "trailingStopPercentage": "3.1%",
+        "maximumHoldDays": 4,
+        "tickWindowSize": 230,
+        "intradayLossBuffer": "2.3%",
+        "pullback": "9.4%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "597ed6645d81b6bdf17635ca373cd06dcd5a5c4a5d1068f74f2212ccab0006b7"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "portfolioAware",
+      "phenotypeFile": "config/phenotypes/D1/GDX.json",
+      "candidateId": "d1-51ea8d4bd6",
+      "parameters": {
+        "targetPercentChange": "27.4%",
+        "trailingBuyPercentage": "0.4%",
+        "trailingStopPercentage": "7.1%",
+        "maximumHoldDays": 18,
+        "tickWindowSize": 100,
+        "intradayLossBuffer": "3.6%",
+        "pullback": "19.1%",
+        "continuationWindow": 81
+      },
+      "parametersSha256": "26ca27ca430a716474bd656ac865a646f22ffdb0160c4b78243c232bb3b7ee98"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-10-30",
+    "createdBy": "research/study5-gdx-d1-b5-three-etf-2026-10 (no frozen file changed)"
+  }
+}
