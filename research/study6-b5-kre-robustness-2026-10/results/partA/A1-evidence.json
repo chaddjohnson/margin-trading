@@ -1,0 +1,300 @@
+{
+ "stage": "A1-evidence",
+ "at": "2026-10-30T22:43:46.892Z",
+ "sources": [
+  {
+   "study": "b4-b5-robustness-audit",
+   "date": "2026-10-27",
+   "files": [
+    {
+     "file": "research/b4-b5-robustness-audit/results/runs/joint.jsonl",
+     "sha256": "ee158a7f7cdefea543590ab696c23c83c5e9a776fcde7de9e6c103dc29f53e49"
+    },
+    {
+     "file": "research/b4-b5-robustness-audit/results/runs/book.jsonl",
+     "sha256": "07ef28b11b2381423133e9e883d88bd1e6480c2b75a2214202d139622ca4065b"
+    },
+    {
+     "file": "research/b4-b5-robustness-audit/MANIFEST.json",
+     "sha256": "794a6ffdfc43c274990a669f35a7d161322e89ac62e3e65a321b1c92679bd4d2"
+    },
+    {
+     "file": "research/b4-b5-robustness-audit/PROTOCOL.md",
+     "sha256": "739134130ef2f058303422dda0cb90abff16372c8bdb19bb8757dbfabd2d95bf"
+    }
+   ],
+   "protocol": "fixed $100k, 5 bps, 11%, continuous all 2016-01-04 → 2026-10-13 (W13); joint = 40-D Latin hypercube, each coordinate uniform over the legal engine-grid values in [v − m, v + m] (m = the \"moderate\" distance: ±1.0 pp for percentages ≥ 2.0%, ±max(0.2 pp, 50%·v) below 2.0%, ±max(s+1, 20%·v) for integers; legal grid, not the eight-ETF box), n = 64 per seed, 2 seeds; per-book n = 32",
+   "stats": {
+    "joint-s1": {
+     "n": 64,
+     "shareBelow35k": 0.25,
+     "shareAtMost35k": 0.25,
+     "ddMedian": 40797.343992599985,
+     "ddP90": 65570.60445391659,
+     "ddWorst": 79595.69582991814,
+     "netMedian": 229954.63556918537,
+     "netP10": 131691.90949543944
+    },
+    "joint-s2": {
+     "n": 64,
+     "shareBelow35k": 0.203125,
+     "shareAtMost35k": 0.203125,
+     "ddMedian": 41364.24711922276,
+     "ddP90": 56341.42500221438,
+     "ddWorst": 87758.25752635265,
+     "netMedian": 221131.92538787948,
+     "netP10": 156071.97313916666
+    },
+    "joint-both": {
+     "n": 128,
+     "shareBelow35k": 0.2265625,
+     "shareAtMost35k": 0.2265625,
+     "ddMedian": 41040.60592371707,
+     "ddP90": 61767.55090283456,
+     "ddWorst": 87758.25752635265,
+     "netMedian": 225647.00164273247,
+     "netP10": 140461.98357594048
+    },
+    "book-VGT": {
+     "n": 32,
+     "shareBelow35k": 0.96875,
+     "shareAtMost35k": 0.96875,
+     "ddMedian": 26801.453533306965,
+     "ddP90": 28970.50035576845,
+     "ddWorst": 38162.06070454609,
+     "netMedian": 461409.81829894683,
+     "netP10": 404184.76804176014
+    },
+    "book-XBI": {
+     "n": 32,
+     "shareBelow35k": 1,
+     "shareAtMost35k": 1,
+     "ddMedian": 26721.494958337775,
+     "ddP90": 29421.478096865754,
+     "ddWorst": 34495.65145231725,
+     "netMedian": 433791.95202901546,
+     "netP10": 415528.3315150121
+    },
+    "book-XRT": {
+     "n": 32,
+     "shareBelow35k": 0.9375,
+     "shareAtMost35k": 0.9375,
+     "ddMedian": 26509.97304978661,
+     "ddP90": 26509.97304978662,
+     "ddWorst": 38306.80761589133,
+     "netMedian": 471514.11291294487,
+     "netP10": 458461.13597279193
+    },
+    "book-KRE": {
+     "n": 32,
+     "shareBelow35k": 0.78125,
+     "shareAtMost35k": 0.78125,
+     "ddMedian": 33064.740073900495,
+     "ddP90": 35272.54657863792,
+     "ddWorst": 40480.04992360178,
+     "netMedian": 388852.4497677603,
+     "netP10": 339387.40843563323
+    },
+    "book-GDX": {
+     "n": 32,
+     "shareBelow35k": 0.9375,
+     "shareAtMost35k": 0.9375,
+     "ddMedian": 26558.826031114615,
+     "ddP90": 34666.4975616506,
+     "ddWorst": 44204.22463363025,
+     "netMedian": 375903.34820134804,
+     "netP10": 339911.6278528415
+    }
+   }
+  },
+  {
+   "study": "d1-robust-pool-discovery",
+   "date": "2026-10-25",
+   "files": [
+    {
+     "file": "research/d1-robust-pool-discovery/results/final/benchmarks.json",
+     "sha256": "c2597c782ae0bd49751297a6a6f527dd040b4a83d60083f96a958ee7f7f60f06"
+    },
+    {
+     "file": "research/d1-robust-pool-discovery/results/confirmB/confirmB.json",
+     "sha256": "d2cd3b971245ff3d8761965ef1425c778766e02bf29dede9f1af34d2927637ed"
+    },
+    {
+     "file": "research/d1-robust-pool-discovery/PROTOCOL.md",
+     "sha256": "5a216c531310068767adf45f7cce97f1673a3c001f791b0e43fcba64e6d6438b"
+    }
+   ],
+   "protocol": "fixed $100k, 5 bps, training window 2016-01-04 → 2023-12-29; N1 = every coordinate −1/0/+1 step unit u (X 0.5 pt, Y 0.1, stop 0.5, hold 1, L 5, buffer 0.5, P 0.5, W 10), reflected at the eight-ETF box; A2 = ±2u; N2 = 3 coordinates; N3 = one book; feasShare = DD ≤ $35,000",
+   "B5": {
+    "confirmA": {
+     "n": 256,
+     "feasShareAtMost35k": 0.3671875,
+     "dd90": 53869.72563577368,
+     "ddMedian": 36660.05439782988,
+     "p50": 210556.4881431017,
+     "centre": 388489.25791641016
+    },
+    "confirmA10bps": {
+     "n": 256,
+     "feasShareAtMost35k": 0.33203125,
+     "dd90": 54715.33387457169,
+     "ddMedian": 36732.36461329879,
+     "p50": 203917.42899497005,
+     "centre": 379867.28355386585
+    },
+    "a2": {
+     "n": 128,
+     "feasShareAtMost35k": 0.25,
+     "dd90": 65846.31833368882,
+     "ddMedian": 44030.057119780635,
+     "p50": 152800.6741585707,
+     "centre": 388489.25791641016
+    },
+    "n2": {
+     "n": 64,
+     "feasShareAtMost35k": 0.90625,
+     "dd90": 33064.74007390049,
+     "ddMedian": 26509.97304978661,
+     "p50": 362419.8043132806,
+     "centre": 388489.25791641016
+    },
+    "confirmB": {
+     "n": 256,
+     "feasShareAtMost35k": 0.3359375,
+     "dd90": 54973.52266755369,
+     "ddMedian": 37098.3035184598,
+     "p50": 204393.4026248542,
+     "centre": 388489.25791641016
+    }
+   },
+   "B1": {
+    "confirmA": {
+     "n": 256,
+     "feasShareAtMost35k": 1,
+     "dd90": 27152.97734723093,
+     "ddMedian": 21312.132567279514,
+     "p50": 96351.85827215962,
+     "centre": 135359.0411970347
+    },
+    "a2": {
+     "n": 128,
+     "feasShareAtMost35k": 1,
+     "dd90": 30595.807009935023,
+     "ddMedian": 23063.734091710918,
+     "p50": 71890.46680801667,
+     "centre": 135359.0411970347
+    },
+    "n2": {
+     "n": 64,
+     "feasShareAtMost35k": 1,
+     "dd90": 25375.2584200555,
+     "ddMedian": 20742.43194329025,
+     "p50": 114157.93576339644,
+     "centre": 135359.0411970347
+    }
+   }
+  },
+  {
+   "study": "d1-diverse-pool-discovery",
+   "date": "2026-10-26",
+   "files": [
+    {
+     "file": "research/d1-diverse-pool-discovery/results/rounds/final/select/benchmarks.json",
+     "sha256": "56b3a5e0eb094aef3ce66baac6263d595ecf7abb01f6a0e5acfb1b0fc40b0bab"
+    }
+   ],
+   "protocol": "as d1-robust-pool-discovery (same N1 definitions, training window, 5 bps)",
+   "B5": {
+    "confirmA": {
+     "n": 256,
+     "feasShareAtMost35k": 0.32421875,
+     "dd90": 53333.70972523897,
+     "ddMedian": 38487.358091357266,
+     "p50": 208538.6497782719,
+     "centre": 388489.25791641016
+    },
+    "a2": {
+     "n": 128,
+     "feasShareAtMost35k": 0.1640625,
+     "dd90": 68934.75626105207,
+     "ddMedian": 46465.26883314374,
+     "p50": 148392.30703127157,
+     "centre": 388489.25791641016
+    },
+    "n2": {
+     "n": 64,
+     "feasShareAtMost35k": 0.96875,
+     "dd90": 26509.97304978661,
+     "ddMedian": 26509.97304978661,
+     "p50": 364769.67417459306,
+     "centre": 388489.25791641016
+    },
+    "n3PerBook": {
+     "GDX": {
+      "n": 8,
+      "feasShareAtMost35k": 1,
+      "dd90": 26509.97304978661,
+      "ddMedian": 26509.97304978661,
+      "p50": 342439.64189844613,
+      "centre": 388489.25791641016
+     },
+     "KRE": {
+      "n": 8,
+      "feasShareAtMost35k": 0.5,
+      "dd90": 35251.469047898194,
+      "ddMedian": 34158.104560899345,
+      "p50": 307160.99484973855,
+      "centre": 388489.25791641016
+     },
+     "VGT": {
+      "n": 8,
+      "feasShareAtMost35k": 1,
+      "dd90": 28453.499852301415,
+      "ddMedian": 26786.4193875149,
+      "p50": 367492.24974528264,
+      "centre": 388489.25791641016
+     },
+     "XBI": {
+      "n": 8,
+      "feasShareAtMost35k": 1,
+      "dd90": 27220.797489908804,
+      "ddMedian": 26509.97304978661,
+      "p50": 352754.39817001426,
+      "centre": 388489.25791641016
+     },
+     "XRT": {
+      "n": 8,
+      "feasShareAtMost35k": 1,
+      "dd90": 26509.97304978661,
+      "ddMedian": 26509.97304978661,
+      "p50": 375361.6319940892,
+      "centre": 388489.25791641016
+     }
+    }
+   }
+  },
+  {
+   "study": "joint-16-etf-d1",
+   "files": [
+    {
+     "file": "research/joint-16-etf-d1/results/robust/robust.json",
+     "sha256": "b6cd917f25368103305d211d535c8c9827c34c420c39bd53ee8eb6b82fda31dd"
+    }
+   ],
+   "protocol": "48 joint ±1-step perturbations, clamped at the box, training window, 5 bps (nets only stored)",
+   "extracted": "see BASELINE_AND_B1_B5_AUDIT.md"
+  },
+  {
+   "study": "d1-ranked-preemption",
+   "files": [
+    {
+     "file": "research/d1-ranked-preemption/results/controls/final/CONTROLS.json",
+     "sha256": "e83b8e0b2dd8bdb0d6c8dcba91c0ba9ddfdb0ed459230cc31ef4125541cb0177"
+    }
+   ],
+   "protocol": "B5 books under the ranked-preemption policy P1 (NOT the frozen shadow policy); 64 N1 draws, training window, 5 bps",
+   "extracted": "see BASELINE_AND_B1_B5_AUDIT.md"
+  }
+ ],
+ "bodyHash": "ff00d14eaa93a36ef5811649ad15c63b4c980a4bbaa988c4845f3f70a73e4d0a"
+}

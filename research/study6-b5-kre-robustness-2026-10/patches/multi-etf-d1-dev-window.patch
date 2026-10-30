@@ -1,0 +1,22 @@
+--- a/src/multi-etf-d1/context.ts	2026-10-30 23:52:53.547588289 +0100
++++ b/src/multi-etf-d1/context.ts	2026-10-30 23:52:53.552736466 +0100
+@@ -53,7 +53,7 @@
+   eligibilityDate: '2017-06-15',
+   // Development: everything on or before the last session of 2023. Holdout: the first session of 2024 through the
+   // last session common to the eight files (2025-10-16), fixed by the data audit before any strategy run.
+-  developmentEnd: '2023-12-31',
++  developmentEnd: '2021-12-31', // Study 6 Track O-ME adapter: the search door's end (PROTOCOL.md §10.5)
+   holdout: { start: '2024-01-01', end: '2025-12-31' },
+   stopFill: 'stop' as StopFill,
+   marginInterestRate: 0.11,
+@@ -65,9 +65,7 @@
+   folds: [
+     { key: 'fold1', trainEnd: '2019-12-31', validation: { start: '2020-01-01', end: '2020-12-31' } },
+     { key: 'fold2', trainEnd: '2020-12-31', validation: { start: '2021-01-01', end: '2021-12-31' } },
+-    { key: 'fold3', trainEnd: '2021-12-31', validation: { start: '2022-01-01', end: '2022-12-31' } },
+-    { key: 'fold4', trainEnd: '2022-12-31', validation: { start: '2023-01-01', end: '2023-12-31' } },
+-    { key: 'final', trainEnd: '2023-12-31' }
++    { key: 'final', trainEnd: '2021-12-31' }
+   ] as Fold[],
+   // The common search box (every ticker, the same bounds). Percentages in tenths of a point; see PROTOCOL.md.
+   box: [
