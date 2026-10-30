@@ -59,8 +59,8 @@ B1 is a literal, distinct benchmark: "VGT D1 alone (primary)". It appears in `sr
   - centre DD $26,510 passes;
   - fewer than 30% of neighbours stay below $35,000, against the required 90%;
   - p90 is about $55k, against the required $35k.
-- The joint figures are identical on W23, W13 and W29. Every neighbour's maximum drawdown occurs by 2023, and
-  2024–2026 adds no deeper episode.
+- The joint share and p90 are identical on W23, W13 and W29: every breach has its trough in 2020, 2022 or 2023.
+  28 of the 640 pooled neighbours have their worst episode in 2026, below $35,000.¹
 - **Profit dispersion (W29):**
   - joint N1 median net $240,006 (49.5% of the centre's $484,637), p10 $156,384;
   - the centre sits at the 100th percentile of its neighbourhood (an isolated peak);
@@ -234,3 +234,8 @@ lands $33k–$34k, close to the ceiling. The centre is not far from an exposed f
 - **Labelling note:** `periods['WF20-SEARCH' | 'WF20-TEST']` inside the Part A point records are the Study 5
   evaluator's windows (2017-06-15 → 2019-12-31 and 2020–2021). They are not this study's walk-forward folds and no
   Part A statistic uses them. Part B computes its own periods (`periods.ts`).
+
+¹ Erratum (2026-10-31, after the checkpoint commit `1d9f6a4`): the committed text read "Every neighbour's maximum
+drawdown occurs by 2023, and 2024–2026 adds no deeper episode". The sealed table `results/partA/A3/W29/joint-clip.csv`
+shows 28 of 640 neighbours with a 2026 trough, all below $35,000. Only this sentence changed; no record or figure.
+

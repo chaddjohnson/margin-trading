@@ -503,3 +503,36 @@ records under `results/`. New configurations only under new names: research phen
 ## 13. Amendments and disclosures
 
 (none at the time of writing)
+
+**No amendment was made.** No gate, threshold, score, seed, window, budget or role rule changed after the freeze. The
+post-diagnostic window of §9.3 was not used. The disclosures below were appended after the final stage
+(2026-10-30T23:21Z). None changes a rule or a result.
+
+- **D1.** The first background launch of A3–A7 (22:44Z) failed before starting any process: relative log paths did
+  not resolve in the background shell. Nothing ran or was written; it was relaunched at 22:45:30Z.
+- **D2.** P4 and R-OM (§8.1) were run before the diagnostic checkpoint, as Track O engineering gates.
+  - P4 opened the `diag` door on W23, the original window of the reproduced GDX search.
+  - R-OM re-ran the original 2017–2023 KRE search unchanged in a detached worktree.
+  - Neither evaluated a new KRE candidate on any study window; both outputs were compared only with the sealed
+    records. Both passed.
+- **D3.** Track K's WF19 replication produced no candidate. Frozen B5 funds only two lots in 2017–2019, so the §10.2
+  "largest lot ≤ 25% of net" filter is unattainable on that window. It is reported as uninformative, and the rule was
+  not changed.
+- **D4.** The Part A point records' `periods['WF20-SEARCH' | 'WF20-TEST']` are the Study 5 evaluator's windows
+  (2017-06-15 → 2019-12-31; 2020–2021). They are not §4's walk-forward folds, and no Part A statistic uses them. Part B
+  computes its own periods (`src/study6-b5-kre-robustness/periods.ts`).
+- **D5.** Code after the freeze:
+  - Part A ran on code identical to the freeze digest: every Part A module hash is equal in `protocol_freeze.json` and
+    `diagnostic_manifest.json`.
+  - The Part B modules (`search`, `trackK`, `trackJ`, `trackO`, `periods`, `validate`, `final`, `poolrun`) were
+    written or completed after the protocol freeze; `validate`, `final` and `poolrun` were placeholders at the
+    diagnostic commit and were completed after it. They implement §10–§12 as written.
+  - `inspect.ts` (`nbhd`, `trace`, `verify-records`) is post-study tooling that writes no record.
+  - `research-configs` was run twice; the second run only made the status text name the failed gates.
+- **D6.** An erratum to one sentence of `DIAGNOSTIC_CHECKPOINT.md` (after its commit) is recorded in that file. No
+  record or figure changed.
+- **D7.** Track J's books came from the §10.4 WDEV rule: KRE + VGT. GDX, the second most important book on the full
+  history, was excluded because its 2022 fragility is invisible on development data. This is the expected cost of the
+  chronology rule.
+- **D8.** The §11.4 decision is "partial improvement only", by the mechanical rule: O-PA-S and O-ME-primary improve the
+  V1 p90 by ≥ $5,000. In substance, no candidate approaches the gate (`RECOMMENDATION.md`).

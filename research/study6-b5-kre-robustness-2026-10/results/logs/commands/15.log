@@ -1,0 +1,57 @@
+▶ forward accounting across the cutoff
+  ✔ a lot open at the cutoff is carried: its forward P&L starts from its cutoff mark; nothing is counted twice (14.430804ms)
+  ✔ the drawdown peak resets at the cutoff: history before it is excluded (2.993871ms)
+  ✔ a cutoff on the last session has zero observations and no forward figure (1.768663ms)
+  ✔ matched borrowing interpolates the return at equal borrowing intensity and refuses to extrapolate (0.486513ms)
+✔ forward accounting across the cutoff (20.267067ms)
+▶ snapshot checks
+  ✔ NYSE sessions skip weekends and holidays; dates past the calendar are refused (0.268772ms)
+  ✔ rows must be new, ordered and well-formed; regular-hours bars are counted in New York time (0.872107ms)
+  ✔ a split-sized overnight move across the boundary is refused unless declared (0.163081ms)
+✔ snapshot checks (1.43141ms)
+▶ snapshot distributions, the calendar rule and observation records
+  ✔ distribution rows are validated against the frozen ledger coverage (0.283602ms)
+  ✔ the calendar may only grow after its frozen coverage (0.264542ms)
+  ✔ an observation record is written once and a later report must reproduce it (1.653262ms)
+✔ snapshot distributions, the calendar rule and observation records (2.373407ms)
+▶ second-review fixes
+  ✔ the daily % drawdown is the largest percent fall, not the percent of the largest dollar fall (0.088361ms)
+  ✔ every member must trade in the last 15 regular minutes, and no session may be on or after today (0.199781ms)
+  ✔ the calendar hash ignores comments and date lines, and changes with the code (0.909816ms)
+  ✔ matched borrowing: an exact or zero-borrowing match needs no interpolation (0.106321ms)
+  ✔ distributions must be on NYSE sessions, plausible and after the frozen coverage; a declared split must explain the move (0.149661ms)
+✔ second-review fixes (1.566731ms)
+▶ the prospective freeze
+  ✔ is written once, and refuses a changed protocol, member vector or pool hash (51.838085ms)
+✔ the prospective freeze (51.937186ms)
+▶ pool configurations
+  ✔ B4 and B5 load by name, pin stable hashes and equal the frozen benchmark books parameter for parameter (14.784947ms)
+  ✔ refuses malformed books, grids, funding and costs (1.749873ms)
+  ✔ refuses a pool whose pinned grid no longer equals its phenotype, a wrong frozen reference and a misnamed file (2.80651ms)
+✔ pool configurations (20.044425ms)
+▶ fixed-pool funding semantics through the pools layer
+  ✔ one funded slot and a constant $100,000 on every lot after a win and a loss; a signal while held is refused (6.721289ms)
+  ✔ two books signalling in the same minute: the frozen shadow order funds the alphabetically first (1.683783ms)
+✔ fixed-pool funding semantics through the pools layer (8.570812ms)
+▶ the funded-trade ledger
+  ✔ lists only funded lots in order; an open lot is unrealized at the last close; totals reconcile exactly (3.483906ms)
+✔ the funded-trade ledger (3.651757ms)
+▶ B4 and B5 on the frozen canonical all (fixed, 5 bps)
+  ﹣ B4 reproduces its anchors to the cent with one slot and a constant notional (0.069921ms) # the frozen canonical data files are absent or changed
+  ﹣ B5 reproduces its anchors to the cent with one slot and a constant notional (0.03042ms) # the frozen canonical data files are absent or changed
+✔ B4 and B5 on the frozen canonical all (fixed, 5 bps) (0.225762ms)
+✔ designs are deterministic and stay in the box (3.156093ms)
+✔ clip puts mass on the bound; inbox does not exceed the in-box interval (0.179701ms)
+✔ paired variants change only what they name (0.296562ms)
+✔ the KRE freeze designs pair with the KRE N1 clip points (10.506086ms)
+✔ duplicates: the centre and repeated vectors are not unique (5.42504ms)
+✔ probes, lines, bounds and distances (0.421293ms)
+✔ summary: unique share, linear p90 and the gate conjunction (0.360193ms)
+ℹ tests 31
+ℹ suites 9
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 325.00317

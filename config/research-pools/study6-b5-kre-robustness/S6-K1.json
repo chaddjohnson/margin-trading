@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S6-K1",
+  "name": "B5 with Study 6 K1 (K)",
+  "role": "Study 6 Part B candidate K1",
+  "status": "RESEARCH ONLY — NOT NOMINATED: FAILS Q2 AT VALIDATION",
+  "description": "Track K main shortlist #1 (KRE:d1-26bddd7f88, refine:KRE:d1-2d61a1f22a:pass2:KRE.continuationWindow+20). All five B5 books; only the searched book(s) (KRE) differ from frozen B5. Research configuration for inspection only; frozen B5 remains the benchmark.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "primary",
+      "phenotypeFile": "config/phenotypes/D1/VGT.json",
+      "candidateId": "d1-ebc9f639b3",
+      "parameters": {
+        "targetPercentChange": "21.6%",
+        "trailingBuyPercentage": "0.3%",
+        "trailingStopPercentage": "7.3%",
+        "maximumHoldDays": 8,
+        "tickWindowSize": 74,
+        "intradayLossBuffer": "2.9%",
+        "pullback": "9.0%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "62978dffae8291e66931c7bb2df824fb70aee8c6e8e8e08460765ec9911981b5"
+    },
+    {
+      "symbol": "XBI",
+      "phenotype": "lowDd",
+      "phenotypeFile": "config/phenotypes/D1/XBI.json",
+      "candidateId": "d1-0aabdaab89",
+      "parameters": {
+        "targetPercentChange": "30.0%",
+        "trailingBuyPercentage": "1.2%",
+        "trailingStopPercentage": "3.1%",
+        "maximumHoldDays": 5,
+        "tickWindowSize": 49,
+        "intradayLossBuffer": "0.1%",
+        "pullback": "8.2%",
+        "continuationWindow": 54
+      },
+      "parametersSha256": "4755dc6423da4ec1d98c9ef823e58862989eba2651fefdb7f949e9ebbe5da4c3"
+    },
+    {
+      "symbol": "XRT",
+      "phenotype": "lowDd",
+      "phenotypeFile": "config/phenotypes/D1/XRT.json",
+      "candidateId": "d1-15c387627c",
+      "parameters": {
+        "targetPercentChange": "24.4%",
+        "trailingBuyPercentage": "4.7%",
+        "trailingStopPercentage": "8.0%",
+        "maximumHoldDays": 17,
+        "tickWindowSize": 48,
+        "intradayLossBuffer": "3.6%",
+        "pullback": "6.2%",
+        "continuationWindow": 120
+      },
+      "parametersSha256": "92448568b2a8631462e2b3ab7cab6483a6779d2e7548e3afe6a576091db2f49d"
+    },
+    {
+      "symbol": "KRE",
+      "phenotype": "s6K1",
+      "phenotypeFile": "config/research-phenotypes/study6-b5-kre-robustness/D1/KRE.json",
+      "candidateId": "d1-26bddd7f88",
+      "parameters": {
+        "targetPercentChange": "29.5%",
+        "trailingBuyPercentage": "2.7%",
+        "trailingStopPercentage": "3.5%",
+        "maximumHoldDays": 5,
+        "tickWindowSize": 228,
+        "intradayLossBuffer": "3.6%",
+        "pullback": "8.2%",
+        "continuationWindow": 90
+      },
+      "parametersSha256": "3223d243b3ccc34031ee21347acbd416352c7a08e288ce9b7069b52c9b239e59"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "portfolioAware",
+      "phenotypeFile": "config/phenotypes/D1/GDX.json",
+      "candidateId": "d1-51ea8d4bd6",
+      "parameters": {
+        "targetPercentChange": "27.4%",
+        "trailingBuyPercentage": "0.4%",
+        "trailingStopPercentage": "7.1%",
+        "maximumHoldDays": 18,
+        "tickWindowSize": 100,
+        "intradayLossBuffer": "3.6%",
+        "pullback": "19.1%",
+        "continuationWindow": 81
+      },
+      "parametersSha256": "26ca27ca430a716474bd656ac865a646f22ffdb0160c4b78243c232bb3b7ee98"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-10-30",
+    "createdBy": "research/study6-b5-kre-robustness-2026-10 (research-configs)",
+    "selectionBodyHash": "443378267b13098bab9c6f2c8df322b1cdba0c19fc5e0fab217e8509d02111d0",
+    "finalBodyHash": "3df6b3afeeebcb34c16dfc589018579cc675887471fa5949275299861c4656a7"
+  }
+}

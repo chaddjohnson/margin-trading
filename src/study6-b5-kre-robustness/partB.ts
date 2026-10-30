@@ -8,6 +8,9 @@
 //   b-validate                   validation evidence and gates (validation door)
 //   freeze-selection             once: FROZEN_SELECTION.json
 //   final [--confirm]            once (after the freeze): the final evaluation (final door)
+//   verify-records               re-verify every sealed record and the diagnostic manifest's hashes (read-only)
+//   nbhd | trace <B5|POOL_ID>    post-study inspection: joint N1 confirmation set / worst-drawdown trace (final door)
+//   research-configs             research phenotype/pool files from the sealed final record (labelled research only)
 //   pool fixed <ID> [options]    a research pool of this study through the pools engine and report
 import { requireDiagnosticCommitted } from './records.ts';
 
@@ -22,6 +25,23 @@ const kFold = (value: string | undefined) => {
 export const run = async (command: string | undefined, args: string[]) => {
   if (command === 'pool') {
     await (await import('./poolrun.ts')).runResearchPool(args);
+    return;
+  }
+
+  if (command === 'verify-records') {
+    await (await import('./inspect.ts')).runVerifyRecords();
+    return;
+  }
+
+  if (command === 'nbhd' || command === 'trace') {
+    const inspect = await import('./inspect.ts');
+
+    await (command === 'nbhd' ? inspect.runNbhd(args) : inspect.runTrace(args));
+    return;
+  }
+
+  if (command === 'research-configs') {
+    await (await import('./poolrun.ts')).writeResearchConfigs();
     return;
   }
 
