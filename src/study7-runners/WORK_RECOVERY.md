@@ -3,17 +3,20 @@
 ## Top screen
 
 - **Updated:** 2026-11-01T14:06Z (UTC, from the clock). **Status: COMPLETE (implementation and verification).**
-  **Not committed and not pushed:** `CLAUDE.md` requires the user's explicit request; awaiting it.
+  **Committed and pushed at the user's request** (2026-11-01): `1ecc8e3d04759cc32358db933f162a09101d5934` on
+  `origin/tools/study7-local-runners` (new remote branch; `git ls-remote` equals local, verified 2026-11-01T14:23:02Z).
+  The follow-up commit records this checkpoint. No PR, no merge.
 - **Task:** the user's message of 2026-11-01 ("Claude Code assignment — Study 7 local strategy runners and reproducible
   commands"). It is execution tooling: no optimization, no rule or phenotype change, no Study 7 stage run.
 - **Branch:** `tools/study7-local-runners`, from `research/study7-stability-first-d1` at `544c268`. The working
-  tree holds the new files, uncommitted.
+  tree is clean apart from the user's own untouched changes (`config/market-events/distributions.*`, raw folder,
+  `._.DS_Store` files).
 - **Read-only authority:**
   - `research/study7-stability-first-d1/FROZEN_SELECTION.json` (file `f49a8cf9…`);
   - `results/final/final.json` (file `7b65c430…`, body `cc609b0d62a0…`) and `final-lots.jsonl.gz`.
   Both are unchanged and hash-verified at every run.
 - **Running process:** none.
-- **Next action:** if the user asks, commit the files below on this branch (and push it); otherwise nothing.
+- **Next action:** none in this task.
 
 ## Files added or changed
 
