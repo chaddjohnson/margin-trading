@@ -1,0 +1,533 @@
+
+> study7
+> node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=12288 src/study7-stability-first-d1/main.ts pool fixed S7-VG-L-19 --json
+
+{
+  "schemaVersion": 1,
+  "kind": "pool-run",
+  "generatedAt": "2026-11-01T01:45:39.490Z",
+  "node": "v24.21.0",
+  "pool": {
+    "id": "S7-VG-L-19",
+    "name": "Study 7 VG L #19",
+    "role": "Study 7 Phase B candidate (VGT:d1-84a8337f77+GDX:d1-00f8469eae)",
+    "status": "RESEARCH ONLY — RESEARCH NOMINATION (RANK 1, TIER STRONG, ROLE PROFIT) — NOT FORWARD VALIDATED",
+    "file": "config/research-pools/study7-stability-first-d1/S7-VG-L-19.json",
+    "fileSha256": "dde5d78b4ac104de3ff8db662fc3fad68875b7350ce0c556764241f2a6b07803",
+    "configHash": "2b1080644c0bb59c2e863cf15df0c4d7f9ae7dc5d300ae4e789e7ce670181659"
+  },
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "s7d184a8337f77",
+      "phenotypeFile": "config/research-phenotypes/study7-stability-first-d1/D1/VGT.json",
+      "phenotypeFileSha256": "daac1faf7f85e18aabda493e48fbc294e6f4b26ff9377288d149f3346746fd0a",
+      "candidateId": "d1-84a8337f77",
+      "parametersSha256": "0cb8e2ea2782317feeb52f2d224f0a7a8de06364c6b98c7c679511889687c186",
+      "grid": {
+        "targetPercentChange": 233,
+        "trailingBuyPercentage": 32,
+        "trailingStopPercentage": 58,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 70,
+        "intradayLossBuffer": 17,
+        "pullback": 51,
+        "continuationWindow": 115
+      },
+      "short": "X 23.3% Y 3.2% L 70 stop 5.8% hold 12 buffer 1.7% P 5.1% W 115"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "s7d100f8469eae",
+      "phenotypeFile": "config/research-phenotypes/study7-stability-first-d1/D1/GDX.json",
+      "phenotypeFileSha256": "8e9e2aa46444292c9b9f117798c50a621205aad39c574c29cac1c6bc2931d590",
+      "candidateId": "d1-00f8469eae",
+      "parametersSha256": "5e9aef737c6c9fa59d3bb2029ad9342f8ffdb80c45b9b4b4787ec95ab195eb54",
+      "grid": {
+        "targetPercentChange": 298,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 65,
+        "maximumHoldDays": 3,
+        "tickWindowSize": 247,
+        "intradayLossBuffer": 6,
+        "pullback": 84,
+        "continuationWindow": 33
+      },
+      "short": "X 29.8% Y 0.1% L 247 stop 6.5% hold 3 buffer 0.6% P 8.4% W 33"
+    }
+  ],
+  "frozenCheck": "none (Study 7 research pool; not a frozen benchmark)",
+  "run": {
+    "mode": "fixed",
+    "dataset": "all",
+    "end": null,
+    "costBpsPerSide": 5,
+    "commission": 0,
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false,
+    "annualRate": 0.11,
+    "interestMethod": "simple, 365-day year",
+    "stopFill": "stop",
+    "stopSlippageBps": 0
+  },
+  "data": {
+    "partition": "all",
+    "partitionsFile": "data/partitions.json",
+    "partitionsSha256": "43893f3d3277d6804775a82e8975644fae6ffcdff30574b9ffc000212c0fefa6",
+    "first": "2016-01-04",
+    "last": "2026-10-29",
+    "sessions": 2722,
+    "warmupSessions": 0,
+    "firstEligible": "2017-06-15",
+    "timeZone": "America/New_York (NYSE sessions; regular minutes)",
+    "members": {
+      "VGT": {
+        "file": "data/VGT/data.csv",
+        "sha256": "624e4094a988bd0136ce3aeaafbbe6b47afa3e6be400d656d6096890b3e7e41a",
+        "first": "2016-01-04",
+        "last": "2026-10-29",
+        "sessions": 2722,
+        "frozenPin": null,
+        "matchesFrozen": false,
+        "splitAdjustments": [
+          {
+            "symbol": "VGT",
+            "effectiveDate": "2026-04-21",
+            "ratio": 8
+          }
+        ]
+      },
+      "GDX": {
+        "file": "data/GDX/data.csv",
+        "sha256": "134b74506f190f43a9118366bc626e697e92e9ea6302a8da6aa4bf85b76e50b6",
+        "first": "2016-01-04",
+        "last": "2026-10-29",
+        "sessions": 2722,
+        "frozenPin": null,
+        "matchesFrozen": false,
+        "splitAdjustments": []
+      }
+    },
+    "distributions": {
+      "file": "config/market-events/distributions.csv",
+      "sha256": "30feaa99e47404696e162e25df72833de49cedb28481ff059750e024c50e41a6",
+      "coverage": {
+        "VGT": "2026-10-30",
+        "VOOG": "2026-10-30"
+      }
+    },
+    "frozenAll": false,
+    "frozenAllNote": "NOT the frozen canonical all (a different file hash, end date or partition); the regression anchors do not apply"
+  },
+  "figures": {
+    "virtualTrades": 81,
+    "decisions": 81,
+    "granted": 63,
+    "refused": 18,
+    "refusalReasons": {
+      "pool occupied by the GDX lot": 7,
+      "pool occupied by the VGT lot": 11
+    },
+    "sameMinuteDecisions": 0,
+    "fundedLots": 63,
+    "closedLots": 62,
+    "openLots": 1,
+    "openPosition": [
+      {
+        "symbol": "GDX",
+        "entryUtc": "2026-10-27T13:32:00.000Z",
+        "entryPrice": 81.490725,
+        "shares": 1227.1335173420043,
+        "markNet": -257.5050071775371
+      }
+    ],
+    "realized": 284528.64570012473,
+    "unrealized": -257.5050071775371,
+    "net": 284271.1406929472,
+    "interest": 34416.43835616439,
+    "frictionDollars": 6409.498728618413,
+    "costBpsPerSide": 5,
+    "notionalPerTrade": 100000,
+    "notionalViolations": 0,
+    "overlappingLots": 0,
+    "maxSimultaneousFundedLots": 1,
+    "sessions": 2357,
+    "heldSessions": 801,
+    "timeInMarket": 0.3398387781077641,
+    "borrowingDollarDays": 114200000,
+    "netPerMillionBorrowingDollarDays": 2489.2394106212537,
+    "minuteDrawdown": 28297.088493939227,
+    "minuteDrawdownPeakUtc": "2026-04-01T15:44:00.000Z",
+    "minuteDrawdownTroughUtc": "2026-07-20T14:21:00.000Z",
+    "dailyDrawdown": 26021.180452564673,
+    "initialEquity": null,
+    "endEquity": null,
+    "dailyPercentDrawdown": null,
+    "dailyPercentPeakUtc": "",
+    "dailyPercentTroughUtc": "",
+    "minutePercentDrawdown": null,
+    "cumulativeDividends": 0,
+    "dividends": "none (fixed pool: price-only lots)",
+    "minuteDrawdownPercentOfNotional": 0.28297088493939226,
+    "dailyDrawdownPercentOfNotional": 0.26021180452564674,
+    "worstLot": -8383.613443025888,
+    "bySymbol": {
+      "VGT": {
+        "lots": 11,
+        "net": 87120.30532717174,
+        "wins": 7,
+        "lotDays": 548,
+        "refusals": 7
+      },
+      "GDX": {
+        "lots": 52,
+        "net": 197150.83536577542,
+        "wins": 21,
+        "lotDays": 594,
+        "refusals": 11
+      }
+    }
+  },
+  "summary": {
+    "lots": 63,
+    "virtualTrades": 81,
+    "net": 284271.1406929472,
+    "interest": 34416.43835616439,
+    "openAtEnd": 1,
+    "newLots": 0,
+    "newLotDays": 0,
+    "worstLot": -8383.613443025888,
+    "borrowingDollarDays": 114200000,
+    "minuteDrawdown": 28297.088493939227,
+    "minuteDrawdownPeak": 1775058240,
+    "minuteDrawdownTrough": 1784557260,
+    "dailyDrawdown": 26021.180452564673,
+    "endEquity": null,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "segments": [
+      {
+        "segment": "development",
+        "firstDate": "2016-01-05",
+        "lastDate": "2023-12-29",
+        "sessions": 2011,
+        "startEquity": 0,
+        "endEquity": 224196.91021958648,
+        "equityChange": 224196.91021958648,
+        "equityReturn": null,
+        "strategyPnl": 224196.91021958648,
+        "interest": 24953.42465753425,
+        "dividends": 0,
+        "lotsEntered": 44,
+        "lotsExited": 44,
+        "maxDrawdown": 21199.21608574281,
+        "maxDrawdownPercent": 0.09447367926621497,
+        "drawdownPeak": "2023-01-25",
+        "drawdownTrough": "2023-03-09",
+        "maxPercentDrawdown": 6.597517201466687,
+        "maxPercentDrawdownDollars": 1765.5927012822,
+        "percentDrawdownPeak": "2017-06-15",
+        "percentDrawdownTrough": "2017-06-20"
+      },
+      {
+        "segment": "holdout",
+        "firstDate": "2024-01-02",
+        "lastDate": "2025-10-16",
+        "sessions": 450,
+        "startEquity": 224196.91021958648,
+        "endEquity": 271277.92123452865,
+        "equityChange": 47081.01101494217,
+        "equityReturn": 0.2099984828909076,
+        "strategyPnl": 47081.01101494217,
+        "interest": 5515.068493150684,
+        "dividends": 0,
+        "lotsEntered": 2,
+        "lotsExited": 1,
+        "maxDrawdown": 6386.187018915545,
+        "maxDrawdownPercent": 0.023218590977921442,
+        "drawdownPeak": "2025-10-08",
+        "drawdownTrough": "2025-10-10",
+        "maxPercentDrawdown": 0.02401211341378053,
+        "maxPercentDrawdownDollars": 5580.631063307199,
+        "percentDrawdownPeak": "2025-04-09",
+        "percentDrawdownTrough": "2025-04-10"
+      },
+      {
+        "segment": "final",
+        "firstDate": "2025-10-17",
+        "lastDate": "2026-10-29",
+        "sessions": 260,
+        "startEquity": 271277.92123452865,
+        "endEquity": 284271.1406929472,
+        "equityChange": 12993.219458418549,
+        "equityReturn": 0.04789633966262041,
+        "strategyPnl": 12993.219458418549,
+        "interest": 3947.9452054794565,
+        "dividends": 0,
+        "lotsEntered": 17,
+        "lotsExited": 17,
+        "maxDrawdown": 26021.180452564673,
+        "maxDrawdownPercent": 0.09093625628784878,
+        "drawdownPeak": "2026-04-01",
+        "drawdownTrough": "2026-07-20",
+        "maxPercentDrawdown": 0.09093625628784878,
+        "maxPercentDrawdownDollars": 26021.180452564673,
+        "percentDrawdownPeak": "2026-04-01",
+        "percentDrawdownTrough": "2026-07-20"
+      },
+      {
+        "segment": "full",
+        "firstDate": "2016-01-05",
+        "lastDate": "2026-10-29",
+        "sessions": 2721,
+        "startEquity": 0,
+        "endEquity": 284271.1406929472,
+        "equityChange": 284271.1406929472,
+        "equityReturn": null,
+        "strategyPnl": 284271.1406929472,
+        "interest": 34416.43835616439,
+        "dividends": 0,
+        "lotsEntered": 63,
+        "lotsExited": 62,
+        "maxDrawdown": 26021.180452564673,
+        "maxDrawdownPercent": 0.09093625628784878,
+        "drawdownPeak": "2026-04-01",
+        "drawdownTrough": "2026-07-20",
+        "maxPercentDrawdown": 6.597517201466687,
+        "maxPercentDrawdownDollars": 1765.5927012822,
+        "percentDrawdownPeak": "2017-06-15",
+        "percentDrawdownTrough": "2017-06-20"
+      }
+    ]
+  },
+  "anchors": {
+    "applicable": false,
+    "reason": "anchors apply only to the frozen all at 5 bps",
+    "checks": []
+  },
+  "years": [
+    {
+      "period": "2016",
+      "first": "2016-01-05",
+      "last": "2016-12-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017",
+      "first": "2017-01-03",
+      "last": "2017-12-29",
+      "strategyChange": 5090.085053553568,
+      "equityChange": 5090.085053553568,
+      "lotsEntered": 5,
+      "interest": 2682.1917808219177
+    },
+    {
+      "period": "2018",
+      "first": "2018-01-02",
+      "last": "2018-12-31",
+      "strategyChange": 13377.511421194798,
+      "equityChange": 13377.511421194798,
+      "lotsEntered": 2,
+      "interest": 1476.712328767123
+    },
+    {
+      "period": "2019",
+      "first": "2019-01-02",
+      "last": "2019-12-31",
+      "strategyChange": 22625.919507279898,
+      "equityChange": 22625.919507279898,
+      "lotsEntered": 2,
+      "interest": 6328.767123287671
+    },
+    {
+      "period": "2020",
+      "first": "2020-01-02",
+      "last": "2020-12-31",
+      "strategyChange": 121513.76148799775,
+      "equityChange": 121513.76148799775,
+      "lotsEntered": 10,
+      "interest": 2832.876712328767
+    },
+    {
+      "period": "2021",
+      "first": "2021-01-04",
+      "last": "2021-12-31",
+      "strategyChange": 13321.998950463661,
+      "equityChange": 13321.998950463661,
+      "lotsEntered": 6,
+      "interest": 2652.054794520547
+    },
+    {
+      "period": "2022",
+      "first": "2022-01-03",
+      "last": "2022-12-30",
+      "strategyChange": 32907.42642717788,
+      "equityChange": 32907.42642717788,
+      "lotsEntered": 14,
+      "interest": 6087.6712328767135
+    },
+    {
+      "period": "2023",
+      "first": "2023-01-03",
+      "last": "2023-12-29",
+      "strategyChange": 15360.207371918921,
+      "equityChange": 15360.207371918921,
+      "lotsEntered": 5,
+      "interest": 2893.150684931512
+    },
+    {
+      "period": "2024",
+      "first": "2024-01-02",
+      "last": "2024-12-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2025",
+      "first": "2025-01-02",
+      "last": "2025-12-31",
+      "strategyChange": 46072.78248897029,
+      "equityChange": 46072.78248897029,
+      "lotsEntered": 3,
+      "interest": 6509.589041095889
+    },
+    {
+      "period": "2026",
+      "first": "2026-01-02",
+      "last": "2026-10-29",
+      "strategyChange": 14001.447984390426,
+      "equityChange": 14001.447984390426,
+      "lotsEntered": 16,
+      "interest": 2953.4246575342513
+    }
+  ],
+  "tradeLedger": {
+    "definitions": {
+      "trades": "every lot the shared allocator funded (refused shadow signals are in signals.csv), in entry order",
+      "fills": "the engine's raw execution prices; cost-adjusted prices include the per-side friction",
+      "grossBeforeCosts": "shares × (exit fill − entry fill); for an open lot, shares × (last close − entry fill)",
+      "friction": "shares × the per-side cost on each fill (no exit friction on an open lot)",
+      "interest": "principal × annual rate × interestDays ÷ 365; interestDays = whole days from the entry session date to the exit (or last) session date",
+      "net": "the engine's net: gross before costs − friction − interest",
+      "maximumAdverseExcursion": "the engine's worst minute mark while held: shares × last price − principal − accrued interest",
+      "minuteDrawdown": "the engine's largest fall of the marked P&L from its running peak, sampled each regular minute",
+      "dailyDrawdown": "the same, sampled at session closes",
+      "drawdownPercent": "of the notional per trade"
+    },
+    "bySymbol": {
+      "GDX": {
+        "trades": 52,
+        "profitable": 21,
+        "losing": 30,
+        "flat": 0,
+        "grossBeforeCosts": 220309.86007369313,
+        "interest": 17901.369863013686,
+        "friction": 5257.654844903953,
+        "net": 197150.83536577542,
+        "open": 1
+      },
+      "VGT": {
+        "trades": 11,
+        "profitable": 7,
+        "losing": 4,
+        "flat": 0,
+        "grossBeforeCosts": 104787.21770403691,
+        "interest": 16515.068493150688,
+        "friction": 1151.8438837144588,
+        "net": 87120.30532717174,
+        "open": 0
+      }
+    },
+    "totals": {
+      "fundedTrades": 63,
+      "realizedTrades": 62,
+      "openTrades": 1,
+      "profitable": 28,
+      "losing": 34,
+      "grossBeforeCosts": 325097.07777772995,
+      "interest": 34416.43835616439,
+      "friction": 6409.498728618413,
+      "netRealized": 284528.64570012473,
+      "unrealizedOpen": -257.5050071775371,
+      "totalNet": 284271.1406929472,
+      "largestWin": 45703.97552746722,
+      "largestLoss": -8383.613443025888,
+      "worstAdverseExcursion": -8399.874864478223
+    },
+    "openPositions": [
+      {
+        "symbol": "GDX",
+        "entryNewYork": "2026-10-27 09:32",
+        "entryFillPrice": 81.45,
+        "shares": 1227.1335173420043,
+        "markPrice": 81.33,
+        "accruedInterest": 60.273972602739725,
+        "unrealizedNet": -257.5050071775371,
+        "markedAt": "2026-10-29 close"
+      }
+    ],
+    "identity": {
+      "maximumResidual": 1.5234036254696548e-11,
+      "pass": true
+    },
+    "reconciliation": {
+      "checks": [
+        {
+          "name": "ledger total net = run summary net (exact)",
+          "expected": 284271.1406929472,
+          "actual": 284271.1406929472,
+          "pass": true
+        },
+        {
+          "name": "ledger interest = run summary interest (exact)",
+          "expected": 34416.43835616439,
+          "actual": 34416.43835616439,
+          "pass": true
+        },
+        {
+          "name": "funded trades = run summary lots",
+          "expected": 63,
+          "actual": 63,
+          "pass": true
+        },
+        {
+          "name": "realized + unrealized = total net (±$0.000001)",
+          "expected": 284271.1406929472,
+          "actual": 284271.1406929472,
+          "pass": true
+        },
+        {
+          "name": "gross − friction − interest = total net (±$0.000001)",
+          "expected": 284271.1406929472,
+          "actual": 284271.14069294714,
+          "pass": true
+        },
+        {
+          "name": "per-ETF nets sum to the total net (±$0.000001)",
+          "expected": 284271.1406929472,
+          "actual": 284271.14069294714,
+          "pass": true
+        },
+        {
+          "name": "every trade: gross − friction − interest = engine net (±$0.000001)",
+          "expected": 0,
+          "actual": 1.5234036254696548e-11,
+          "pass": true
+        }
+      ],
+      "pass": true
+    }
+  },
+  "outDir": "evaluations/study7-pools/all/S7-VG-L-19-fixed-5bps"
+}
+[study7 pool] → evaluations/study7-pools/all/S7-VG-L-19-fixed-5bps
+exit 0

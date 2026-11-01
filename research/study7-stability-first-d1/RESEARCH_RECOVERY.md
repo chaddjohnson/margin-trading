@@ -4,70 +4,63 @@
 
 All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run commands from the repository root.
 
-- **Updated:** 2026-10-31T23:51Z. **Status: INCOMPLETE — Phase A running (45 jobs, orchestrator, 12 parallel).**
-- **Brief:** `brief/ASSIGNMENT.md`, sha256 `53291b3a995c1b6d78fbece693a88a9d5f9b442514e758c70d4434cc3ed0580d`
-  (read in full). Authorizes implementation, execution, verification, commit and push of this branch only.
-- **Authority:** `PROTOCOL.md` FROZEN 2026-10-31T23:42:49Z, sha256 `6590ecfeca3be67fe7ce3051debdcc72953593fdba68504c52330e75b2a93581`
-  (`results/protocol_freeze.json` body `aa43c4f45ff9…`, file `62cfdf39…`). Amendments only in `AMENDMENTS.md`.
-- **Complete:** pilot; review; freeze; **parity PASSED** (`results/parity/parity.json` body `795fc0c209a7…`, file
-  `e2a0e289…`; P1–P5, N1, C1, D1, G1 all true; first attempt crashed before sealing, see `AMENDMENTS.md` E1).
-- **Running process:** `scripts/run_jobs.sh scripts/jobs-phaseA.txt 12` (started 23:50:19Z; log
-  `results/runlogs/orchestrator-phaseA.txt`; per-job logs `results/runlogs/phaseA-<key>-<window>.txt`, last line
-  `exit 0` = done; outputs `results/phaseA/<key>-<window>.json` sealed + `-points.jsonl.gz`). Re-running the same
-  command skips finished jobs; an interrupted Phase A job must be re-run (its sealed file is written only at the end).
-- **Next action:** when all 45 end with `exit 0`: `npm run study7 -- phase-a-freeze`, commit (local), then launch
-  `scripts/run_jobs.sh scripts/jobs-phaseB.txt 14`.
-- **Phase A reading embargo:** do not read Phase A figures until `FROZEN_SELECTION.json` is sealed.
+- **Updated:** 2026-11-01T01:55Z.
+- **Status: COMPLETE.** Every stage is sealed. Reports are written. Commit and push are in the commit section below,
+  updated by the follow-up commit.
+- **Brief:** `brief/ASSIGNMENT.md`, sha256 `53291b3a995c1b6d78fbece693a88a9d5f9b442514e758c70d4434cc3ed0580d`, read in
+  full. It authorizes implementation, execution, verification, and a commit and push of this branch only: no PR, no
+  merge, no broker, no live trading, no deployment.
+- **Authority:**
+  - `PROTOCOL.md`, frozen 2026-10-31T23:42:49Z, sha256 `6590ecfeca3be67fe7ce3051debdcc72953593fdba68504c52330e75b2a93581`
+    (`results/protocol_freeze.json` body `aa43c4f45ff9…`). No amendment.
+  - Disclosures E1–E2 in `AMENDMENTS.md` (a hash chain).
+- **Outcome:**
+  - **Class M** (DEV search, 2022–2023 validation): **no nomination**. No fold-M candidate qualified.
+  - **Class L** (2017–2023 search, in-sample qualification, block-only check on 2024–2026): **12 research
+    nominations**, none blocked.
+  - Analyst assessment: no candidate is chronologically validated. VG #2 and #5 offer the best trade-off. Deploy
+    nothing. Keep B1 and B5 frozen. See `RECOMMENDATION.md`.
+- **Running process:** none. Worktrees: none besides the main checkout. The two data-less test worktrees were removed.
+- **Follow-up gate (the user's decision):** any prospective observation of Class L nominees needs a separately
+  approved research-only addendum. Nothing may be merged, deployed or added to the prospective B4/B5 system without
+  the user's review.
 
 ## 1. Environment
 
-- Checkout `/home/chad/projects/margin-trading`, branch `research/study7-stability-first-d1`, created
-  2026-10-31T22:58:48Z from `research/study6-b5-kre-robustness` at `418208eae1fbfc1541b269d0bed1fd3a82d8f7ee`
-  (contains Study 5 and Study 6 code and sealed records; pushed as `origin/research/study6-b5-kre-robustness`).
-- Node v24.21.0 (`.node-version` 24.21.0), 16 CPUs, 59 GB RAM.
-- User changes present at start, never touched or committed: `config/market-events/distributions.csv`,
-  `config/market-events/distributions.manifest.json` (modified), `config/market-events/raw/vanguard-20261030T184421Z/`
-  and nine `._.DS_Store` files (untracked).
+- **Checkout:** `/home/chad/projects/margin-trading`, branch `research/study7-stability-first-d1`, created
+  2026-10-31T22:58:48Z from `research/study6-b5-kre-robustness` at `418208eae1fbfc1541b269d0bed1fd3a82d8f7ee`.
+- **Runtime:** Node v24.21.0, 16 logical CPUs (8 cores), 59 GB.
+- **User changes never touched or committed:**
+  - `config/market-events/distributions.csv` and `distributions.manifest.json` (modified);
+  - `config/market-events/raw/vanguard-20261030T184421Z/` (untracked);
+  - nine `._.DS_Store` files.
+- **Local, git-ignored, regenerable:** `research/study7-stability-first-d1/results/cache/` (4.4 GB of persistent
+  point caches). They are needed only to resume a job, and every job is complete.
 
-## 2. Baseline hashes (task start, 2026-10-31T22:59Z)
+## 2. Stage table (all complete; write-once stages refuse to re-run)
 
-| File | sha256 (first 16) |
-|---|---|
-| `data/VGT/data.csv` | `624e4094a988bd01` |
-| `data/XBI/data.csv` | `83b71f75a58a01c8` |
-| `data/XRT/data.csv` | `c625ca57b1bf6219` |
-| `data/KRE/data.csv` | `fd7ab8aa365cbb86` |
-| `data/GDX/data.csv` | `134b74506f190f43` |
-| `config/phenotypes/D1/{VGT,XBI,XRT,KRE,GDX}.json` | `3e77a419…`, `453c4fd0…`, `d7b7f222…`, `6b8889e2…`, `ed98c23c…` |
-| `config/pools/B4.json` / `B5.json` | `4ca5aa1a900bc959` / `deef53ca53111806` |
-| `research/prospective-b4-b5-shadow/PROTOCOL_FREEZE.json` | `0dabd97e2b3d50fe` |
-| `research/portfolio-aware-d1-optimization/FROZEN_SELECTION.json` | `16c91895f485b4ce` |
-| `research/study5-gdx-d1-b5-three-etf-2026-10/FROZEN_SELECTION.json` | `3837d814b29cd645` |
-| `research/study6-b5-kre-robustness-2026-10/FROZEN_SELECTION.json` | `8761419813287e56` |
-| `research/multi-etf-d1/FROZEN_CANDIDATES.json` | `94b0b646d7aa7520` |
-| `data/partitions.json` | `43893f3d3277d680` |
-| `config/market-events/splits.json` | see below |
-| `config/market-events/distributions.csv` (user-modified, untouched) | `30feaa99e4740469` |
+| Stage | Command | Record (body hash, first 12) |
+|---|---|---|
+| Pilot (pre-freeze) | `npm run study7 -- pilot` | `results/pilot/pilot.json` `07b56738d8df` |
+| Protocol freeze | `npm run study7 -- freeze-protocol` | `results/protocol_freeze.json` `aa43c4f45ff9` |
+| Parity | `npm run study7 -- parity` | `results/parity/parity.json` `795fc0c209a7` (passed) |
+| Phase A (45 jobs) | `scripts/run_jobs.sh scripts/jobs-phaseA.txt 12` | `results/phaseA/*.json`; manifest `926465a66f13`; commit `e6aebab` |
+| Phase B (18 jobs) | `scripts/run_jobs.sh scripts/jobs-phaseB.txt 14` | `results/phaseB/<track>/<fold>/search.json` |
+| V trigger | `npm run study7 -- v-trigger` | not fired (in `FROZEN_SELECTION.json` `v`) |
+| Phase D (16 jobs) | `scripts/run_jobs.sh scripts/jobs-phaseD.txt 14` | `results/phaseD/<track>/<fold>/validation.json` |
+| Selection freeze | `npm run study7 -- freeze-selection` | `FROZEN_SELECTION.json` `8d841f8a8a64` (file `f49a8cf9…`) |
+| Final / confirm | `npm run study7 -- final`, `final --confirm` | `results/final/final.json` `cc609b0d62a0` / `confirmation.json` `827f635f472e` (identical) |
+| Research configurations | `npm run study7 -- research-configs` | 44 pools + 4 phenotype files (research only) |
+| Tables | `python3 research/study7-stability-first-d1/scripts/build_tables.py phaseB phaseD selection final phaseA` | `results/tables/*.md` |
 
-## 3. Stage table
+## 3. Guards
 
-| Stage | Status |
-|---|---|
-| Phase 0 inventory | complete |
-| Pilot (pre-freeze, training ≤ 2021) | complete — `npm run study7 -- pilot`, 271 s |
-| Protocol written / reviewed / frozen | complete — `npm run study7 -- freeze-protocol` 2026-10-31T23:42:49Z |
-| Parity (P1–P5, N1, C1, D1, G1) | complete 23:50:00Z (passed) — `npm run study7 -- parity` |
-| Phase A (15 configurations × WDEV/W23/W29) | running since 23:50:19Z — `npm run study7 -- phase-a <key> <window>`; then `phase-a-freeze` + commit |
-| Phase B searches (16 base + 2 V diagnostic [+ 4 VC if triggered]) | not started — `npm run study7 -- search <track> <fold>` |
-| Phase D validation (per track × fold) | not started — `npm run study7 -- validate <track> <fold>` |
-| Selection freeze | not started — `npm run study7 -- freeze-selection` |
-| Final (once) / confirm | not started — `npm run study7 -- final` / `final --confirm` |
+- **Do not rerun** any sealed stage. `final --confirm` has already run, and a second one refuses because the file
+  exists. Never reopen the final door for tuning.
+- Never edit `PROTOCOL.md`, the sealed records, the frozen phenotypes/pools, `data/` or the prospective system.
+- Any further search on 2016–2026 is search on observed data. A new question needs a new study namespace.
 
-## 4. Guards
+## 4. Commits and push
 
-- Never edit frozen phenotype/pool configs, other studies' records, `data/`, market events, partitions.
-- Committing/pushing only this branch, only at the end (brief authorizes it); no PR, no merge.
-
-## 5. Disclosures
-
-(none yet)
+- `e6aebab`: the Phase A lock (before any Phase B search).
+- Final study commit and push: recorded by the follow-up commit (see `git log`).
