@@ -4,9 +4,10 @@
 
 All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run commands from the repository root.
 
-- **Updated:** 2026-11-01T01:55Z.
-- **Status: COMPLETE.** Every stage is sealed. Reports are written. Commit and push are in the commit section below,
-  updated by the follow-up commit.
+- **Updated:** 2026-11-01T01:53Z.
+- **Status: COMPLETE.** Every stage is sealed. Reports are written. Committed as `261cbf163233193cf6c833e397e8f77b9f81de19`
+  and pushed to `origin/research/study7-stability-first-d1` (new remote branch; `git ls-remote` equals local HEAD,
+  verified 2026-11-01T01:53:32Z). This follow-up commit records it. No PR, no merge, no force-push.
 - **Brief:** `brief/ASSIGNMENT.md`, sha256 `53291b3a995c1b6d78fbece693a88a9d5f9b442514e758c70d4434cc3ed0580d`, read in
   full. It authorizes implementation, execution, verification, and a commit and push of this branch only: no PR, no
   merge, no broker, no live trading, no deployment.
@@ -63,4 +64,6 @@ All times UTC (machine clock CET = UTC+1; `ls`/`stat` show local time). Run comm
 ## 4. Commits and push
 
 - `e6aebab`: the Phase A lock (before any Phase B search).
-- Final study commit and push: recorded by the follow-up commit (see `git log`).
+- `261cbf1`: the study (searches, validation, selection, final, reports, configurations). Pushed 2026-11-01T01:53Z as the
+  new remote branch `origin/research/study7-stability-first-d1`.
+- The follow-up commit records this checkpoint.
