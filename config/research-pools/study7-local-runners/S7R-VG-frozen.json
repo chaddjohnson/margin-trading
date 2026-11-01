@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S7R-VG-frozen",
+  "name": "VG frozen \u2014 B5's VGT primary + GDX portfolioAware (no retuning)",
+  "role": "frozen subset control (Study 7 Phase A \"VG\")",
+  "status": "FROZEN SUBSET \u2014 B5's unchanged VGT and GDX books; runner configuration only",
+  "description": "The two-book subset of frozen B5 holding its VGT primary (d1-ebc9f639b3) and GDX portfolioAware (d1-51ea8d4bd6) books, unchanged, under the same shadow single-slot allocator: Study 7's frozen VG control.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "primary",
+      "phenotypeFile": "config/phenotypes/D1/VGT.json",
+      "candidateId": "d1-ebc9f639b3",
+      "parameters": {
+        "targetPercentChange": "21.6%",
+        "trailingBuyPercentage": "0.3%",
+        "trailingStopPercentage": "7.3%",
+        "maximumHoldDays": 8,
+        "tickWindowSize": 74,
+        "intradayLossBuffer": "2.9%",
+        "pullback": "9.0%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "62978dffae8291e66931c7bb2df824fb70aee8c6e8e8e08460765ec9911981b5"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "portfolioAware",
+      "phenotypeFile": "config/phenotypes/D1/GDX.json",
+      "candidateId": "d1-51ea8d4bd6",
+      "parameters": {
+        "targetPercentChange": "27.4%",
+        "trailingBuyPercentage": "0.4%",
+        "trailingStopPercentage": "7.1%",
+        "maximumHoldDays": 18,
+        "tickWindowSize": 100,
+        "intradayLossBuffer": "3.6%",
+        "pullback": "19.1%",
+        "continuationWindow": 81
+      },
+      "parametersSha256": "26ca27ca430a716474bd656ac865a646f22ffdb0160c4b78243c232bb3b7ee98"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "frozenReference": {
+    "note": "books identical to config/pools/B5.json; verified by src/study7-runners/resolve.ts"
+  },
+  "provenance": {
+    "createdAt": "2026-11-01",
+    "createdBy": "src/study7-runners (execution tooling; no optimization)",
+    "source": "books copied verbatim from config/pools/B5.json (sha256 deef53ca531118064925a64e25288c927f3a71d8a05311075b439087960020fe); phenotypes resolved from the frozen registry config/phenotypes/D1/"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S7R-B1",
+  "name": "B1 \u2014 VGT primary alone (frozen)",
+  "role": "frozen standalone control (Study 6/7 B1)",
+  "status": "FROZEN CONTROL \u2014 registered VGT primary, unchanged; runner configuration only",
+  "description": "VGT D1 primary (d1-ebc9f639b3) alone in the fixed $100,000 single slot: the B1 benchmark of Studies 6 and 7. The book is the frozen registry phenotype; this file only lets the unchanged pools engine run it standalone.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "primary",
+      "phenotypeFile": "config/phenotypes/D1/VGT.json",
+      "candidateId": "d1-ebc9f639b3",
+      "parameters": {
+        "targetPercentChange": "21.6%",
+        "trailingBuyPercentage": "0.3%",
+        "trailingStopPercentage": "7.3%",
+        "maximumHoldDays": 8,
+        "tickWindowSize": 74,
+        "intradayLossBuffer": "2.9%",
+        "pullback": "9.0%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "62978dffae8291e66931c7bb2df824fb70aee8c6e8e8e08460765ec9911981b5"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "frozenReference": {
+    "benchmark": "B1",
+    "note": "checked parameter for parameter against the frozen B1 books (src/joint-16-etf-d1/benchmarks.ts) by src/pools/load.ts"
+  },
+  "provenance": {
+    "createdAt": "2026-11-01",
+    "createdBy": "src/study7-runners (execution tooling; no optimization)",
+    "source": "books copied verbatim from config/pools/B5.json (sha256 deef53ca531118064925a64e25288c927f3a71d8a05311075b439087960020fe); phenotypes resolved from the frozen registry config/phenotypes/D1/"
+  }
+}
