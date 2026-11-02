@@ -2,7 +2,7 @@
 
 ## Top screen (read this first)
 
-- **Updated:** 2026-11-02T20:17Z (UTC, from the clock). **Status: COMPLETE (Phase A).**
+- **Updated:** 2026-11-02T21:04Z (UTC, from the clock). **Status: COMPLETE (Phase A).**
 - **Stopped at the review checkpoint.** No Phase B: no NSGA-II and no joint optimization.
 - **Authority:**
   - `PROTOCOL.md` sha256 `a3d84a2b26fa683f…`, FROZEN 2026-11-02T19:14:16Z;
@@ -10,9 +10,16 @@
 - **Chain** (`results/chain.jsonl`; `npm run study9 -- verify-chain` passes): head **`a1e912a2b5fd2556`**.
   `protocol` → `code-E1` → `parity` → `s1` → `s2` → `s3-screen` → `s3-high` → `s3-nominate` → `report-phase-a`.
 - **Running process:** none.
-- **Follow-up gate (needs the user):**
-  1. approval for Phase B: option C, about 49 CPU-hours, or the choice in `PHASE_B_OPTIMIZATION_PROPOSAL.md` §8;
-  2. whether to commit and push the study (not yet authorized; nothing is committed).
+- **Committed and pushed at the user's explicit request** (2026-11-02, answering the commit/push question):
+  - `6c03fbeef45de428fe8679ec92d5b05162b5f9fb` on `origin/research/study9-etf-pool-discovery`, a new remote branch
+    on top of the already-pushed Study 8 tip `5359920`;
+  - `git ls-remote` equals local, verified 2026-11-02T21:03:57Z;
+  - a follow-up commit records this checkpoint;
+  - no PR, no merge;
+  - only the study's files and the `package.json` script were committed: never `config/market-events/*` or the
+    `._.DS_Store` files.
+- **Follow-up gate (needs the user):** approval for Phase B (option C, about 49 CPU-hours, or the choice in
+  `PHASE_B_OPTIMIZATION_PROPOSAL.md` §8), or a decision to stop.
 - **Next action:** none until the user decides.
 
 ## Audited deliverables (sha256 prefixes; the reports are sealed in `report-phase-a`)
@@ -62,11 +69,10 @@ Not sealed, and therefore still editable: `README.md`, `RUN_COMMANDS.md`, this f
 ## Environment
 
 - **Checkout:** the main checkout `/home/chad/projects/margin-trading`; no other worktree.
-- **Branch:** `research/study9-etf-pool-discovery`, HEAD `535992064764365724fad43ce67988f52fca2c2b`. That is the
-  branch point from `research/study8-expanded-regime-d1`; **nothing has been committed**.
+- **Branch:** `research/study9-etf-pool-discovery`, branched from `research/study8-expanded-regime-d1` at `5359920`.
+  The study commit is `6c03fbe`, pushed; the checkpoint follow-up commit sits on top of it.
 - **Working tree:**
-  - untracked `research/study9-etf-pool-discovery/` and `src/study9-etf-pool-discovery/`;
-  - `package.json` modified (the `study9` npm script);
+  - the study is committed;
   - the user's own untouched changes: `config/market-events/distributions.csv` and `distributions.manifest.json`
     modified, the raw folder `config/market-events/raw/vanguard-20261030T184421Z/` and five `._.DS_Store` files
     untracked.
@@ -121,7 +127,7 @@ Not sealed, and therefore still editable: `README.md`, `RUN_COMMANDS.md`, this f
   - edit `PROTOCOL.md`, the reviews or any sealed file (the chain would fail);
   - edit Study 8 or earlier records;
   - touch `config/market-events/*`.
-- **Commit and push:** only on the user's explicit request.
+- **Commit and push:** done once, at the user's request. Any further commit needs a new request.
 - **Phase B:** only after the user's approval, as a new run with its own protocol (`study9-phase-b` seeds).
 
 ## Disclosures (carried into the reports)
