@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S8-VG-F24-6",
+  "name": "Study 8 VG F24 #6",
+  "role": "Study 8 primary-fold candidate (VGT:d1-ed1b24997b+GDX:d1-8c0a637cf4)",
+  "status": "RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 5 (TIER STRONG, ROLE EXTRA); 2025–2026 ONE-TIME T GATES: PASS",
+  "description": "Study 8 Track VG, primary fold F24 (search on 2016-01-04 → 2024-12-31) shortlist member VGT:d1-ed1b24997b+GDX:d1-8c0a637cf4. Research configuration for inspection only; frozen B1 and B5 remain the benchmarks.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "s8d1ed1b24997b",
+      "phenotypeFile": "config/research-phenotypes/study8-expanded-regime-d1/D1/VGT.json",
+      "candidateId": "d1-ed1b24997b",
+      "parameters": {
+        "targetPercentChange": "23.7%",
+        "trailingBuyPercentage": "0.9%",
+        "trailingStopPercentage": "6.4%",
+        "maximumHoldDays": 16,
+        "tickWindowSize": 84,
+        "intradayLossBuffer": "1.8%",
+        "pullback": "12.5%",
+        "continuationWindow": 44
+      },
+      "parametersSha256": "203b11dd9ff6812bc687d7d8b740e47fcaea6ab8bda2abedfd9732353e8bcff0"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "s8d18c0a637cf4",
+      "phenotypeFile": "config/research-phenotypes/study8-expanded-regime-d1/D1/GDX.json",
+      "candidateId": "d1-8c0a637cf4",
+      "parameters": {
+        "targetPercentChange": "28.0%",
+        "trailingBuyPercentage": "0.2%",
+        "trailingStopPercentage": "5.7%",
+        "maximumHoldDays": 12,
+        "tickWindowSize": 249,
+        "intradayLossBuffer": "2.7%",
+        "pullback": "14.8%",
+        "continuationWindow": 100
+      },
+      "parametersSha256": "19a990171ced539e67d034f761ada543335985a01a6a0d7e97d05bcc222c1efd"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-11-01",
+    "createdBy": "research/study8-expanded-regime-d1 (research-configs)",
+    "selectionBodyHash": "5d266eeaccb30578f074a2255d17c6a7715c24b2894666c5802b9364c08bd240",
+    "testBodyHash": "f85b4d7a6c1738388a38ffcf954d529a1f6171a65e8d0b7c2cbd4926d89648af"
+  }
+}
