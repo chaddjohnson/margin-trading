@@ -52,6 +52,21 @@ npm run study8-run -- compare s8-g-best gdx-portfolio-aware vgt-primary b5-froze
 
 The executed commands and their verified outputs are recorded in §3 after the study.
 
+**Seven named strategies on all local history** (runner addition of 2026-11-02, execution tooling only; see
+`src/study8-runners/README.md`). Without `--end`, a run uses every session that the files it reads hold completely; it
+is not capped at 2026-10-29.
+
+```
+npm run study8-run -- run s8-vg-profit       # #1 VG profit
+npm run study8-run -- run s8-vg-balanced     # #2 VG balanced
+npm run study8-run -- run s8-vxrg-profit     # #3 VXRG profit
+npm run study8-run -- run s8-vxrkg-profit    # #8 VXRKG profit
+npm run study8-run -- run s8-vxr-profit      # #15 VXR profit
+npm run study8-run -- run vgt-primary        # frozen B1
+npm run study8-run -- run b5-frozen          # frozen B5
+npm run study8-run -- compare s8-vg-profit s8-vg-balanced s8-vxrg-profit s8-vxrkg-profit s8-vxr-profit vgt-primary b5-frozen
+```
+
 ## 3. Executed and verified runner commands
 
 Run on 2026-11-01, 23:04:50–23:14:19Z, from the Study 8 worktree root, after the F24 test was sealed (while F24

@@ -1,9 +1,12 @@
 // Unit tests of the Study 8 local runner (no market data, no engine run): alias parsing, the default comparison, the
-// refusal before the sealed F24 test exists, and the reconciliation's "not applicable" rule.
+// reconciliation's "not applicable" rule and the never-overwrite output directory.
 import assert from 'node:assert/strict';
+import os from 'node:os';
+import path from 'node:path';
 import { test } from 'node:test';
+import fs from 'fs-extra';
 import { UsageError, compareAll, parseAlias } from '../aliases.ts';
-import { reconcileStudy8 } from '../run.ts';
+import { outputDir, reconcileStudy8, releaseIfEmpty } from '../run.ts';
 
 test('aliases parse to Study 8 kinds and delegate Study 7 names', () => {
   assert.deepEqual(parseAlias('s8-vg-profit'), { kind: 'role', alias: 's8-vg-profit', track: 'VG', role: 'profit' });
@@ -63,4 +66,18 @@ test('reconciliation is "not applicable" off the sealed convention, never a fals
     String(reconcileStudy8(resolved, record, { lastSession: '2026-10-29', costBps: 10 }).reason),
     /not|this run ends/
   );
+});
+
+test('an explicit --out is created atomically: of two concurrent runs one wins, the other is refused', async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'study8-runner-out-'));
+  const target = path.join(tmp, 'run');
+  const results = await Promise.allSettled([outputDir(target, 'x'), outputDir(target, 'x')]);
+
+  assert.equal(results.filter((r) => r.status === 'fulfilled').length, 1);
+  assert.ok(results.some((r) => r.status === 'rejected' && r.reason instanceof UsageError));
+  await assert.rejects(outputDir(target, 'x'), /already exists; runs never overwrite/);
+  await releaseIfEmpty(target);
+  assert.equal(await fs.pathExists(target), false, 'an empty reserved directory is released');
+  await assert.rejects(outputDir('research/x', 'x'), UsageError);
+  await fs.remove(tmp);
 });
