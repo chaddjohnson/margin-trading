@@ -1,8 +1,9 @@
 # Study 8 — expanded-regime stability-first D1 reoptimization (2016–2024 train, 2025–2026 one-time evaluation)
 
 **Status:** COMPLETE (see `RESEARCH_RECOVERY.md`). It is research only: nothing is deployed, and B1, B5 and the
-prospective system are unchanged. The study is uncommitted on the local branch `research/study8-expanded-regime-d1`
-(worktree `/home/chad/projects/margin-trading-study8`); commit and push await the user's separate decision.
+prospective system are unchanged. The study is committed on the local branch `research/study8-expanded-regime-d1`
+(`984f353`, not pushed), checked out in `/home/chad/projects/margin-trading`. It ran in a temporary worktree, since
+removed (AMENDMENTS E4).
 
 ## Purpose
 

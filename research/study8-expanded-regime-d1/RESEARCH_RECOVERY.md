@@ -2,18 +2,16 @@
 
 ## Top screen (read this first)
 
-All times UTC. **Run every command from the Study 8 worktree `/home/chad/projects/margin-trading-study8`.** Do not run
-commands from the main checkout `/home/chad/projects/margin-trading`, which stays on `tools/study7-local-runners` and
-must not be touched.
+All times UTC. **Run every command from `/home/chad/projects/margin-trading`** (the main checkout), on branch
+`research/study8-expanded-regime-d1`.
 
-- **Updated:** 2026-11-01T23:49Z. **Status: COMPLETE.**
-  - Every stage is sealed in the local hash chain (13 entries, verified); the final independent audit is done (PASS
-    WITH CORRECTIONS, corrections applied).
-  - **Nothing is committed.**
-  - **Follow-up gate:** the user's separate decision whether to commit and push Study 8. No merge, PR or deployment
-    either way.
-  - Recovery after a compaction at about 14:45Z: reread the brief, the checkpoint and the protocol, and checked the
-    files on disk; no process was running.
+- **Updated:** 2026-11-02T08:25Z. **Status: COMPLETE, committed and relocated.**
+  - All Study 8 work is committed as `984f353` on `research/study8-expanded-regime-d1` (local, **not pushed**).
+  - The temporary worktree `/home/chad/projects/margin-trading-study8`, where the study ran, was removed. The branch is
+    checked out in the main checkout, with the user's uncommitted market-event files preserved (AMENDMENTS E4).
+  - **Follow-up gate:** the user's decision whether to push the branch, and whether or where to merge it.
+  - Recovery after a compaction at about 14:45Z on 2026-11-01: reread the brief, the checkpoint and the protocol, and
+    checked the files on disk; no process was running.
 - **Brief:** `brief/ASSIGNMENT.md`, sha256 `196ada5320ed71f4fdb8c9664bd38ab7d2214043581a289e78c3be7e90eb278a` (205 lines,
   31,858 bytes, read in full including its final section; reread at 14:46Z).
   - **Git:** the brief forbids commit, push, merge and PR without a separate explicit user request. The study freeze is
@@ -34,8 +32,8 @@ must not be touched.
     `code-E1`); engine plus import-closure digest `2b5c5dc4a113…` (140 files, unchanged); rulebook `ff6e9d57b6e8…`;
   - code tarball `results/freeze/code-protocol.tar.gz` `8c4042aa…`;
   - `FROZEN_SELECTION.json` `88d079d1…` (body `5d266eeaccb3…`);
-  - amendments head **E3** (AMENDMENTS.md `8fcd3577…`): R0 pre-freeze, E1 code fix, E2 and E3 disclosures, chain-head
-    log.
+  - amendments head **E4** (AMENDMENTS.md `261c0530…`): R0 pre-freeze, E1 code fix, E2 and E3 disclosures, E4
+    relocation, chain-head log.
 - **Chain head:** entry 13 `test-F24-confirm` `cd3dbb5f4d41967d4eb26d1989fed0e6d133da22d8f27911ff6aac2cf8e166ec`. Every
   entry is listed in `EXECUTION_AND_INTEGRITY.md` §1 and the AMENDMENTS chain-head log. `npm run study8 --
   verify-chain` reports "chain OK: 13 entries; integrity OK".
@@ -43,7 +41,7 @@ must not be touched.
 
   | File | sha256 |
   |---|---|
-  | README.md | `7817542c…` |
+  | README.md | `17e81e37…` (updated 2026-11-02 for the relocation) |
   | RECOMMENDATION.md | `dd669e2a…` |
   | CHRONOLOGICAL_VALIDATION.md | `cd49f0b7…` |
   | NEIGHBORHOOD_ROBUSTNESS.md | `8f918e09…` |
@@ -51,7 +49,7 @@ must not be touched.
   | SEARCH_AND_COMPUTE.md | `f122fa45…` |
   | BASELINES_AND_PARITY.md | `aa8ac45a…` |
   | EXECUTION_AND_INTEGRITY.md | `750e5958…` |
-  | RUN_COMMANDS.md | `22b5e8a5…` |
+  | RUN_COMMANDS.md | `44ac7562…` (updated 2026-11-02 for the relocation) |
   | reviews/METHODOLOGY_REVIEW.md | `1a9f212a…` |
   | reviews/METHODOLOGY_REVIEW_VERIFICATION.md | `7168464e…` |
   | reviews/PRE_TEST_AUDIT.md | `2070d957…` |
@@ -60,18 +58,17 @@ must not be touched.
   Also: 36 research configurations plus 5 phenotype files (NOT DEPLOYED), the `study8-run` adapter, and
   `results/tables/*.md`.
 - **Running process:** none.
-- **Next action:** none inside the study. Ask the user whether to commit/push. **Do not commit without an explicit
-  request.** If they ask:
-  - commit the Study 8 set on `research/study8-expanded-regime-d1` (338 files plus `package.json`; `results/cache/`
-    and `evaluations/` are git-ignored);
-  - push only that branch.
+- **Next action:** none inside the study. The user decides on push and merge; **do not push or merge without an
+  explicit request**.
+- **Pin check here:** `verify-chain`'s integrity step flags only `config/market-events/distributions.*`, the user's
+  modified copies. Every other pin matches (AMENDMENTS E4).
 - **Data:** the main checkout's data may now be refreshed. The pins only stop the study's own stages, which are all
   done; the runner reconciles only at 2026-10-29 / 5 bps and reports "not applicable" otherwise.
 
 ## 1. Environment
 
-- **Worktree:** `/home/chad/projects/margin-trading-study8`, branch `research/study8-expanded-regime-d1` (new, local
-  only). It was created 2026-11-01T14:30Z with `git worktree add -b research/study8-expanded-regime-d1
+- **Worktree (historical; removed 2026-11-02):** `/home/chad/projects/margin-trading-study8`, branch
+  `research/study8-expanded-regime-d1`. It was created 2026-11-01T14:30Z with `git worktree add -b research/study8-expanded-regime-d1
   /home/chad/projects/margin-trading-study8 bce526f`.
 - **Base commit:** `bce526fb25250b9828f7a77f49c5701299c80577`. It is the Study 7 runner head (`tools/study7-local-runners`,
   pushed). It descends from the Study 7 head `544c268`. The brief describes the runner as uncommitted; in fact it was
@@ -98,7 +95,8 @@ must not be touched.
 
 ## 2. Stage table
 
-All commands run from `/home/chad/projects/margin-trading-study8` with Node v24.21.0 on `PATH`.
+The commands below ran from the worktree `/home/chad/projects/margin-trading-study8`. They now run from
+`/home/chad/projects/margin-trading` on the Study 8 branch, with Node v24.21.0 on `PATH`.
 
 | Stage | Status | Command | Outputs / notes |
 |---|---|---|---|

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Study 8 job orchestrator (PROTOCOL.md §7, RUN_COMMANDS.md). Usage, from anywhere:
 #   research/study8-expanded-regime-d1/scripts/run_jobs.sh <jobs-file> <max-parallel>
-# Each non-empty line of <jobs-file> is: <log-name> <npm run study8 arguments…>. Every job runs from the Study 8 worktree
+# Each non-empty line of <jobs-file> is: <log-name> <npm run study8 arguments…>. Every job runs from the repository
 # root with its own log results/runlogs/<log-name>.txt, whose last line is "exit <code>". A job whose log already ends in
 # "exit 0" is skipped; an interrupted job resumes from its persistent point cache (identical output), its earlier log
 # kept as <log-name>.attempt-<UTC>.txt (a resumed job opens its door twice, so `seal` then needs --acknowledge <ID>).
 set -u
-R=/home/chad/projects/margin-trading-study8
+R=/home/chad/projects/margin-trading  # the study ran in the worktree /home/chad/projects/margin-trading-study8 (removed; E4)
 L=$R/research/study8-expanded-regime-d1/results/runlogs
 export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/installation/bin:$PATH
 mkdir -p "$L"

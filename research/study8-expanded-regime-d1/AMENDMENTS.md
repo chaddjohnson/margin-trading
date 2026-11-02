@@ -162,3 +162,29 @@ entry was appended. A hash of the file after the entry cannot sit inside it. The
   The chain's last phase is entry 13.
 - **No separate `inspect` command.** The brief asks for list / inspect / run. `study8-run list` shows each alias's
   rank, books, status and configuration, and the configuration JSON holds the full parameters and provenance.
+
+## E4 — 2026-11-02 — relocation into the main checkout (no rule change; no record changed)
+
+- **Chain:** sha256 of this file before this entry `8fcd3577b588ba86e96be0d7d27001656ccf6a388154370e04e19769175fb49e`.
+  Chain head unchanged: entry 13 `cd3dbb5f4d41967d4eb26d1989fed0e6d133da22d8f27911ff6aac2cf8e166ec`.
+- **At the user's request:**
+  - All Study 8 work was committed on `research/study8-expanded-regime-d1` as `984f353`, with the user's explicit
+    request to commit. Nothing was pushed.
+  - The temporary worktree `/home/chad/projects/margin-trading-study8` was removed with `git worktree remove`.
+  - The branch is now checked out in the main checkout `/home/chad/projects/margin-trading`. The user's uncommitted
+    `config/market-events/distributions.csv`, its manifest and `config/market-events/raw/vanguard-20261030T184421Z/`
+    were preserved byte for byte (sha256 `30feaa99…` and `acb68cca…` before and after).
+- **Copied, not regenerated:** the git-ignored runner and parity outputs (`evaluations/study8-runs/`,
+  `evaluations/study8/`) were copied into the main checkout and verified identical.
+- **Deleted:** the git-ignored point caches (`results/cache/`, 14 GB). They are regenerable, every stage that used
+  them is sealed, and no sealed record depends on them.
+- **Unaffected:** the data and `node_modules` symbolic links were removed as links only; the canonical files are
+  unchanged (VGT `624e4094…`).
+- **Pin check in the main checkout:** `npm run study8 -- verify-chain` verifies the chain. Its integrity step then
+  reports `config/market-events/distributions.csv` (and its manifest) as changed, because the user's modified copy
+  differs from the committed copy the study pinned (`3b4342eb…`). Every other pin matches: the five data files,
+  `partitions.json` and `splits.json`. The fixed pool books no distributions, and the `study8-run` runner (which
+  checks the chain, not the pins) works and reconciles as before.
+- **Instructions updated for the new location:** `RUN_COMMANDS.md`, `README.md`, `RESEARCH_RECOVERY.md` and
+  `scripts/run_jobs.sh` (`R=`). Historical records (PROTOCOL, reviews, EXECUTION_AND_INTEGRITY, smoke test) keep the
+  worktree path where the study actually ran.

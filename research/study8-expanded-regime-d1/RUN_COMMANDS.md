@@ -1,14 +1,15 @@
 # Study 8 — run commands
 
 **Where:**
-- Run every command from the **Study 8 worktree root**, `/home/chad/projects/margin-trading-study8` (branch
-  `research/study8-expanded-regime-d1`), with Node v24.21.0.
-- The main checkout (`/home/chad/projects/margin-trading`, branch `tools/study7-local-runners`) and `main` do **not**
-  contain Study 8. Its code, records and runner exist only on this branch, uncommitted until the user decides.
+- Run every command from the **repository root**, `/home/chad/projects/margin-trading`, on branch
+  `research/study8-expanded-regime-d1`, with Node v24.21.0.
+- The study ran in a temporary worktree, `/home/chad/projects/margin-trading-study8`. It was committed (`984f353`) and
+  moved back into the main checkout on 2026-11-02 (AMENDMENTS E4).
+- `main` and `tools/study7-local-runners` do **not** contain Study 8; only this branch does.
 
 ```
 export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/installation/bin:$PATH
-cd /home/chad/projects/margin-trading-study8
+cd /home/chad/projects/margin-trading
 ```
 
 ## 1. The study (as executed; every stage is write-once and gated by the local hash chain)
@@ -29,7 +30,7 @@ cd /home/chad/projects/margin-trading-study8
 | Test doors, in this order | `npm run study8 -- test F19`, then `test F20`, `test F21`, `test F23`, `test F24` |
 | Confirmation | `npm run study8 -- test F24 --confirm` |
 | Research configurations | `npm run study8 -- research-configs` |
-| Verify | `npm run study8 -- verify-chain` (chain, files, door log and integrity pins) |
+| Verify | `npm run study8 -- verify-chain` (chain, files, door log and integrity pins). In the main checkout its pin step reports `config/market-events/distributions.csv` as changed, because your modified copy differs from the committed copy the study pinned (AMENDMENTS E4). Every other pin matches. |
 | Tables | `python3 research/study8-expanded-regime-d1/scripts/build_tables.py search qualify selection test folds study7` |
 | Unit tests | `node --experimental-transform-types --disable-warning=ExperimentalWarning --test src/study8-expanded-regime-d1/tests/study8.test.ts src/study8-runners/tests/runners.test.ts` |
 
@@ -83,6 +84,7 @@ the terminal and has no log file; its resolution is shown in the rows below. The
 | `vgt-primary` (B1) | frozen | — | VGT | $176,260 | $176,260 | $0 | $36,405 | $2,206 | $19,534 | $15,817 | 21 (0) | 0 | PASS |
 | `b5-frozen` (B5) | frozen | — | five books | $484,637 | $486,208 | −$1,571 | $53,041 | $9,720 | $26,510 | $23,789 | 95 (1) | 78 | PASS |
 
-**Where to run.** These commands run only on the Study 8 branch (this worktree). They need its sealed records, its
-research configurations and `src/study8-runners/`. The Study 7 aliases inside `study8-run` (`vgt-primary`,
+**Where to run.** These commands run only on the Study 8 branch (`research/study8-expanded-regime-d1`, checked out in
+`/home/chad/projects/margin-trading`). They need its sealed records, its research configurations and
+`src/study8-runners/`. The Study 7 aliases inside `study8-run` (`vgt-primary`,
 `b5-frozen`, `vg-frozen`, …) also work with `npm run study7-run` on the Study 7 runner branch.
