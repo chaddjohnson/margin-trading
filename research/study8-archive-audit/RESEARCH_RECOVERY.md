@@ -3,7 +3,11 @@
 ## Top screen
 
 - **Updated:** 2026-11-02T16:11Z (UTC, from the clock). **Status: COMPLETE (audit, reports and verification).**
-  **Not committed or pushed:** the brief requires explicit authorisation, which is the follow-up gate.
+  **Committed and pushed at the user's explicit request** (2026-11-02, answering the commit/push question):
+  - `b31ce7c3f7a7275f7a41f28be736d5a9d10185b1` on `origin/research/study8-expanded-regime-d1`;
+  - `git ls-remote` equals local, verified 2026-11-02T16:12:39Z;
+  - the follow-up commit records this checkpoint;
+  - no PR, no merge.
 - **Task:** the user's brief of 2026-11-02, "Study 8 archive audit: profitable, genuinely robust D1 candidates
   overlooked by selection?" (reissued). A read-mostly audit of the existing Study 8 records.
   - No optimization, search, T1 extension or refreshed candidate generation.
@@ -14,7 +18,8 @@
   `results/chain.jsonl`. All read-only and unchanged: `outputs/baseline-manifest.sha256` (609 files, sha256
   `6491f8d504f25659…`, written 15:29Z) re-verified at 16:11Z, all OK.
 - **Running process:** none.
-- **Next action:** none in this task. Commit and push only if the user authorises them.
+- **Next action:** none in this task. Any optimization, ETF-selection test or rule change needs the user's approval in
+  a new assignment.
 - **Reproduce everything:** `python3 -B research/study8-archive-audit/scripts/run_all.py` (then `--check`), and
   `python3 -B research/study8-archive-audit/scripts/fill_report_tables.py --check`.
 
