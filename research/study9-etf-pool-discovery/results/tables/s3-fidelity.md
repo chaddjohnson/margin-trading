@@ -1,0 +1,4 @@
+- high-precision proposals: 103
+- robust/yr change 16 (best of ≤ 9, selected) → 64 (independent): median $156, mean $119
+- robust/yr change 16 → 384 (decisive, independent): median $-20, mean $-9
+- share of pools whose 384-point robust/yr is below their 16-point value: 50.5%
