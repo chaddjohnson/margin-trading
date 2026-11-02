@@ -2,23 +2,28 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-02T15:07Z (UTC, from the clock). **Status: COMPLETE (implementation and verification).**
-- **Not committed, not pushed.** The brief allows no commit, push, PR or merge without the user's explicit
-  authorisation; that is the follow-up gate.
+- **Updated:** 2026-11-02T15:13Z (UTC, from the clock). **Status: COMPLETE (implementation and verification).**
+- **Committed and pushed at the user's explicit request** (2026-11-02, answering the commit/push question):
+  - `b441e3edb0202f5e8ac86877a7e73b154e63582d` on `origin/research/study8-expanded-regime-d1`, a new remote branch;
+  - the push also published the earlier local Study 8 commits `984f353` and `961bcaf`;
+  - `git ls-remote` equals local, verified 2026-11-02T15:13:05Z;
+  - the follow-up commit records this checkpoint;
+  - no PR, no merge.
 - **Task:** the user's brief of 2026-11-02, "Study 8: seven named full-history runners and auditable trade-level
   reporting". It is execution and reporting tooling only:
   - no optimization or reranking;
   - no new study;
   - no Study 8 stage run (only the read-only `verify-chain`).
-- **Branch:** `research/study8-expanded-regime-d1`, `HEAD` `961bcaf893c623e7542770d22b3362a28d77c291`.
+- **Branch:** `research/study8-expanded-regime-d1`; the task started at `HEAD`
+  `961bcaf893c623e7542770d22b3362a28d77c291`.
   - Main checkout `/home/chad/projects/margin-trading`; no other worktree.
-  - The branch has no upstream; it was never pushed.
+  - It now tracks `origin/research/study8-expanded-regime-d1`.
 - **Working tree:**
   - this task's changes (listed below);
   - the user's own untouched changes: `config/market-events/distributions.csv` and `distributions.manifest.json`
     (modified), `config/market-events/raw/vanguard-20261030T184421Z/` and four `._.DS_Store` files (untracked).
 - **Running process:** none.
-- **Next action:** none in this task, unless the user authorises a commit and/or push.
+- **Next action:** none in this task. A PR or merge needs the user's request.
 
 ## Files added or changed (sha256 prefixes recomputed 2026-11-02T15:06Z)
 
