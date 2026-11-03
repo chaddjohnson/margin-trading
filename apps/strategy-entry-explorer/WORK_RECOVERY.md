@@ -2,14 +2,18 @@
 
 ## Top screen (read this first)
 
-- **Updated:** 2026-11-03T16:17Z (UTC, from the clock). **Status: COMPLETE** (implementation, docs, verification,
-  commits). The feature-branch push follows this commit and is recorded in the next one.
+- **Updated:** 2026-11-03T16:18Z (UTC, from the clock). **Status: COMPLETE** (implementation, docs, verification,
+  commits, push).
+- **Push:** `git push -u origin feature/strategy-entry-explorer-ui` (new branch, no force) at 16:17Z. `git ls-remote`
+  showed `origin/feature/strategy-entry-explorer-ui` at `2d44ad459e3661f3bb2c74d36717cf04a82aa917` (equal to local)
+  and `origin/main` at `d8a47d6…` at 2026-11-03T16:17:37Z. This record follows as a separate commit, pushed the same
+  way. No pull request; the branch is not merged into `main`.
 - **Task brief:** "Claude Code task: Merge current work safely, create a new branch, and build the Strategy Entry
   Explorer UI" (2026-11-03), verbatim in
   `docs/research/growth-entry-discovery/brief/2026-11-03-strategy-entry-explorer-ui-brief.md` (sha256 `be72768b…94d0af`).
   The user's chat message authorised the whole assignment, "including … the requested Git commit and push".
 - **Stages:** P0 Git integration — complete. P1 research-direction docs — complete. P2 UI — complete. P3 verification
-  — complete. P4 commits — complete; push in progress.
+  — complete. P4 commits and push — complete.
 - **Running processes:** none (the manual dev servers on ports 5180 and 5182 were stopped).
 - **Follow-up gate:** the **user's review of the UI**. Do not implement entry mechanisms, connect real data, optimise,
   or merge `feature/strategy-entry-explorer-ui` into `main` without a new instruction.
@@ -54,7 +58,8 @@
 | --- | --- |
 | `2a5877a` | `docs/research/growth-entry-discovery/PLAN.md` (research direction), the brief and the mockup |
 | `33a8808` | `apps/strategy-entry-explorer/` (app, fixture, tests), `docs/research/growth-entry-discovery/ENTRY_EXPLORER.md` (schema v1 and behaviour), root `eslint.config.js` (ignores `apps/**`), root `README.md` (pointer) |
-| next | this checkpoint |
+| `2d44ad4` | this checkpoint (first version) |
+| next | this push record |
 
 Hashes (sha256):
 
