@@ -323,3 +323,17 @@ Strategies can run named, symbol-specific parameter sets kept as JSON under `con
 Named multi-book **pools** bundle D1 phenotypes with one shared $100,000 funded slot: B4 (default) and B5 (leading
 incumbent) in `config/pools/`, run with `npm run pools -- fixed B4` (or `portfolio`, `compare B4 B5`, `verify`), and
 their prospective comparison after 2026-10-13. See [docs/pools/README.md](docs/pools/README.md).
+
+## Strategy Entry Explorer (research UI, demo data)
+
+A local browser app that charts a price series with the entry events of strategy variations — two at a time, keeping
+the zoomed window while switching — for visual and statistical review of entries. It currently shows **synthetic demo
+data only** (no market data, no real strategy). It is self-contained in `apps/strategy-entry-explorer/` with its own
+dependencies, and it does not touch `src/` or any backtest.
+
+```sh
+npm --prefix apps/strategy-entry-explorer start   # first run installs its dependencies; opens http://127.0.0.1:5173
+```
+
+App guide: `apps/strategy-entry-explorer/README.md`. Data contract: `docs/research/growth-entry-discovery/ENTRY_EXPLORER.md`.
+Research direction (not an authorisation to run it): `docs/research/growth-entry-discovery/PLAN.md`.
