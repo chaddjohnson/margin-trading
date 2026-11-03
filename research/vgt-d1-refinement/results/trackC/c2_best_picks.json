@@ -1,0 +1,486 @@
+{
+ "family": "swing",
+ "anchor": {
+  "trailingStopPercentage": 73,
+  "maximumHoldDays": 8,
+  "intradayLossBuffer": 29,
+  "swingLookback": 5,
+  "swingRebound": 5,
+  "swingProximity": 10
+ },
+ "box": {
+  "swingLookback": [
+   3,
+   150
+  ],
+  "swingRebound": [
+   3,
+   100
+  ],
+  "swingProximity": [
+   0,
+   30
+  ],
+  "trailingStopPercentage": [
+   40,
+   120
+  ],
+  "maximumHoldDays": [
+   4,
+   40
+  ],
+  "intradayLossBuffer": [
+   0,
+   50
+  ]
+ },
+ "samples": 2048,
+ "seedLabel": "trackC-c2_best",
+ "picks": [
+  {
+   "policy": "maxNet",
+   "pick": {
+    "params": {
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "intradayLossBuffer": 29,
+     "swingLookback": 5,
+     "swingRebound": 5,
+     "swingProximity": 10
+    },
+    "net": 149173.002713447,
+    "minuteDrawdown": 33629.18439447935,
+    "entries": 67
+   },
+   "refined": {
+    "params": {
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "intradayLossBuffer": 29,
+     "swingLookback": 5,
+     "swingRebound": 7,
+     "swingProximity": 6
+    },
+    "net": 167202.80580309086,
+    "minuteDrawdown": 32054.079705786382,
+    "entries": 67,
+    "signature": "76ab5f0fb6304dcb"
+   },
+   "rounds": 2,
+   "evaluations": 1026,
+   "stability": 0.2647058823529412,
+   "probeNetRange": [
+    31128.64715183522,
+    167202.80580309086
+   ],
+   "probeMaxDrawdown": 47125.721252721116,
+   "probeSignatures": 31
+  },
+  {
+   "policy": "balanced",
+   "pick": {
+    "params": {
+     "trailingStopPercentage": 40,
+     "maximumHoldDays": 17,
+     "intradayLossBuffer": 22,
+     "swingLookback": 144,
+     "swingRebound": 10,
+     "swingProximity": 1
+    },
+    "net": 36314.015787574084,
+    "minuteDrawdown": 15587.540850133264,
+    "entries": 18
+   },
+   "refined": {
+    "params": {
+     "trailingStopPercentage": 40,
+     "maximumHoldDays": 26,
+     "intradayLossBuffer": 4,
+     "swingLookback": 55,
+     "swingRebound": 6,
+     "swingProximity": 0
+    },
+    "net": 114478.30450578358,
+    "minuteDrawdown": 16705.884844184635,
+    "entries": 32,
+    "signature": "641c8a68091a9cc1"
+   },
+   "rounds": 1,
+   "evaluations": 830,
+   "stability": 0.875,
+   "probeNetRange": [
+    80520.64852468278,
+    117158.2126996226
+   ],
+   "probeMaxDrawdown": 26724.48965368315,
+   "probeSignatures": 31
+  },
+  {
+   "policy": "lowDd",
+   "pick": {
+    "params": {
+     "trailingStopPercentage": 47,
+     "maximumHoldDays": 13,
+     "intradayLossBuffer": 12,
+     "swingLookback": 6,
+     "swingRebound": 3,
+     "swingProximity": 15
+    },
+    "net": 140988.63940300688,
+    "minuteDrawdown": 33247.74160021893,
+    "entries": 94
+   },
+   "refined": {
+    "params": {
+     "trailingStopPercentage": 47,
+     "maximumHoldDays": 13,
+     "intradayLossBuffer": 2,
+     "swingLookback": 6,
+     "swingRebound": 8,
+     "swingProximity": 12
+    },
+    "net": 174504.75372955902,
+    "minuteDrawdown": 32636.25938305304,
+    "entries": 90,
+    "signature": "80d1ef106e1ba029"
+   },
+   "rounds": 3,
+   "evaluations": 1562,
+   "stability": 0.46875,
+   "probeNetRange": [
+    79790.8830543983,
+    175054.97713213644
+   ],
+   "probeMaxDrawdown": 52850.36562084444,
+   "probeSignatures": 32
+  }
+ ],
+ "walkForward": [
+  {
+   "study": "c2_best",
+   "fold": "fold1",
+   "policy": "maxNet",
+   "pick": {
+    "trailingStopPercentage": 75,
+    "maximumHoldDays": 4,
+    "intradayLossBuffer": 29,
+    "swingLookback": 29,
+    "swingRebound": 16,
+    "swingProximity": 14
+   },
+   "trainingNet": 51629.61218377117,
+   "trainingDrawdown": 17733.458295504053,
+   "validationNet": 22418.510559641174,
+   "validationDrawdown": 24702.440191865266,
+   "validationEntries": 13,
+   "anchorValidationNet": 65156.29605590357,
+   "anchorValidationDrawdown": 30738.5509025032,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold1",
+   "policy": "balanced",
+   "pick": {
+    "trailingStopPercentage": 75,
+    "maximumHoldDays": 4,
+    "intradayLossBuffer": 29,
+    "swingLookback": 29,
+    "swingRebound": 16,
+    "swingProximity": 14
+   },
+   "trainingNet": 51629.61218377117,
+   "trainingDrawdown": 17733.458295504053,
+   "validationNet": 22418.510559641174,
+   "validationDrawdown": 24702.440191865266,
+   "validationEntries": 13,
+   "anchorValidationNet": 65156.29605590357,
+   "anchorValidationDrawdown": 30738.5509025032,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold1",
+   "policy": "lowDd",
+   "pick": {
+    "trailingStopPercentage": 72,
+    "maximumHoldDays": 26,
+    "intradayLossBuffer": 6,
+    "swingLookback": 23,
+    "swingRebound": 26,
+    "swingProximity": 4
+   },
+   "trainingNet": 47953.512845102305,
+   "trainingDrawdown": 16675.6592737617,
+   "validationNet": 7551.445810520898,
+   "validationDrawdown": 42099.69528710277,
+   "validationEntries": 6,
+   "anchorValidationNet": 65156.29605590357,
+   "anchorValidationDrawdown": 30738.5509025032,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold1",
+   "policy": "frequent",
+   "pick": {
+    "trailingStopPercentage": 56,
+    "maximumHoldDays": 5,
+    "intradayLossBuffer": 38,
+    "swingLookback": 7,
+    "swingRebound": 10,
+    "swingProximity": 13
+   },
+   "trainingNet": 17950.33087407161,
+   "trainingDrawdown": 27897.98922129969,
+   "validationNet": 22906.91034072738,
+   "validationDrawdown": 33342.59509512492,
+   "validationEntries": 25,
+   "anchorValidationNet": 65156.29605590357,
+   "anchorValidationDrawdown": 30738.5509025032,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold2",
+   "policy": "maxNet",
+   "pick": {
+    "trailingStopPercentage": 117,
+    "maximumHoldDays": 14,
+    "intradayLossBuffer": 1,
+    "swingLookback": 27,
+    "swingRebound": 4,
+    "swingProximity": 25
+   },
+   "trainingNet": 99663.08921458603,
+   "trainingDrawdown": 33166.62418199099,
+   "validationNet": -37313.35635698174,
+   "validationDrawdown": 43782.2764464201,
+   "validationEntries": 12,
+   "anchorValidationNet": -22045.525222724755,
+   "anchorValidationDrawdown": 31858.38116796098,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold2",
+   "policy": "balanced",
+   "pick": {
+    "trailingStopPercentage": 105,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "swingLookback": 110,
+    "swingRebound": 42,
+    "swingProximity": 7
+   },
+   "trainingNet": 48792.50977342483,
+   "trainingDrawdown": 19545.07117776769,
+   "validationNet": -16123.278124624052,
+   "validationDrawdown": 28210.693447346323,
+   "validationEntries": 8,
+   "anchorValidationNet": -22045.525222724755,
+   "anchorValidationDrawdown": 31858.38116796098,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold2",
+   "policy": "lowDd",
+   "pick": {
+    "trailingStopPercentage": 75,
+    "maximumHoldDays": 39,
+    "intradayLossBuffer": 19,
+    "swingLookback": 66,
+    "swingRebound": 22,
+    "swingProximity": 29
+   },
+   "trainingNet": 82145.34496238528,
+   "trainingDrawdown": 28556.018495165226,
+   "validationNet": -10610.224827294252,
+   "validationDrawdown": 25029.0068052763,
+   "validationEntries": 5,
+   "anchorValidationNet": -22045.525222724755,
+   "anchorValidationDrawdown": 31858.38116796098,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold2",
+   "policy": "frequent",
+   "pick": {
+    "trailingStopPercentage": 47,
+    "maximumHoldDays": 13,
+    "intradayLossBuffer": 12,
+    "swingLookback": 6,
+    "swingRebound": 3,
+    "swingProximity": 15
+   },
+   "trainingNet": 70084.49514797059,
+   "trainingDrawdown": 32964.847888112265,
+   "validationNet": -17193.90318637769,
+   "validationDrawdown": 29588.34192274804,
+   "validationEntries": 22,
+   "anchorValidationNet": -22045.525222724755,
+   "anchorValidationDrawdown": 31858.38116796098,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold3",
+   "policy": "maxNet",
+   "pick": {
+    "trailingStopPercentage": 74,
+    "maximumHoldDays": 30,
+    "intradayLossBuffer": 1,
+    "swingLookback": 139,
+    "swingRebound": 22,
+    "swingProximity": 0
+   },
+   "trainingNet": 74578.42478486072,
+   "trainingDrawdown": 22996.023828227357,
+   "validationNet": 0,
+   "validationDrawdown": 0,
+   "validationEntries": 0,
+   "anchorValidationNet": 31744.13082662683,
+   "anchorValidationDrawdown": 16134.191148571044,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold3",
+   "policy": "balanced",
+   "pick": {
+    "trailingStopPercentage": 42,
+    "maximumHoldDays": 12,
+    "intradayLossBuffer": 2,
+    "swingLookback": 130,
+    "swingRebound": 4,
+    "swingProximity": 4
+   },
+   "trainingNet": 35603.02452329434,
+   "trainingDrawdown": 16358.642035043184,
+   "validationNet": 0,
+   "validationDrawdown": 0,
+   "validationEntries": 0,
+   "anchorValidationNet": 31744.13082662683,
+   "anchorValidationDrawdown": 16134.191148571044,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold3",
+   "policy": "lowDd",
+   "pick": {
+    "trailingStopPercentage": 74,
+    "maximumHoldDays": 30,
+    "intradayLossBuffer": 1,
+    "swingLookback": 139,
+    "swingRebound": 22,
+    "swingProximity": 0
+   },
+   "trainingNet": 74578.42478486072,
+   "trainingDrawdown": 22996.023828227357,
+   "validationNet": 0,
+   "validationDrawdown": 0,
+   "validationEntries": 0,
+   "anchorValidationNet": 31744.13082662683,
+   "anchorValidationDrawdown": 16134.191148571044,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold3",
+   "policy": "frequent",
+   "anchorValidationNet": 31744.13082662683,
+   "anchorValidationDrawdown": 16134.191148571044,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold4",
+   "policy": "maxNet",
+   "pick": {
+    "trailingStopPercentage": 47,
+    "maximumHoldDays": 13,
+    "intradayLossBuffer": 12,
+    "swingLookback": 6,
+    "swingRebound": 3,
+    "swingProximity": 15
+   },
+   "trainingNet": 94738.86895574036,
+   "trainingDrawdown": 32964.847888112265,
+   "validationNet": 46249.77044726652,
+   "validationDrawdown": 33247.74160021893,
+   "validationEntries": 20,
+   "anchorValidationNet": 56776.60865983428,
+   "anchorValidationDrawdown": 31624.701423180682,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold4",
+   "policy": "balanced",
+   "pick": {
+    "trailingStopPercentage": 43,
+    "maximumHoldDays": 23,
+    "intradayLossBuffer": 35,
+    "swingLookback": 75,
+    "swingRebound": 7,
+    "swingProximity": 21
+   },
+   "trainingNet": 45018.63932972379,
+   "trainingDrawdown": 18493.28287822471,
+   "validationNet": -7346.350338376105,
+   "validationDrawdown": 20042.619941735276,
+   "validationEntries": 3,
+   "anchorValidationNet": 56776.60865983428,
+   "anchorValidationDrawdown": 31624.701423180682,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold4",
+   "policy": "lowDd",
+   "pick": {
+    "trailingStopPercentage": 88,
+    "maximumHoldDays": 6,
+    "intradayLossBuffer": 11,
+    "swingLookback": 109,
+    "swingRebound": 8,
+    "swingProximity": 29
+   },
+   "trainingNet": 80392.04614247412,
+   "trainingDrawdown": 24978.28760320053,
+   "validationNet": -21002.81768033118,
+   "validationDrawdown": 35855.28948168108,
+   "validationEntries": 5,
+   "anchorValidationNet": 56776.60865983428,
+   "anchorValidationDrawdown": 31624.701423180682,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  },
+  {
+   "study": "c2_best",
+   "fold": "fold4",
+   "policy": "frequent",
+   "anchorValidationNet": 56776.60865983428,
+   "anchorValidationDrawdown": 31624.701423180682,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  }
+ ]
+}

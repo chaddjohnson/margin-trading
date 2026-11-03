@@ -1,0 +1,7 @@
+- eligible ETFs: 61
+- ≥ 1 plausible vector (DD < $35k, net > 0, ≥ 2 lots): 55
+- ≥ 1 Study 8-feasible vector at 16 points: 0
+- ≥ 1 Study 8-feasible vector at the final precision (80 points for the top 8): 0
+- vectors measured: 3904 (64 per ETF); neighbourhood points: 99584
+- 16 → 64-point robust/yr change on the top 8 per ETF: median $-14, mean $-39 (n = 519)
+- Spearman(16-point, 64-point robust/yr) among each ETF's top 8: median 0.95 over 60 ETFs

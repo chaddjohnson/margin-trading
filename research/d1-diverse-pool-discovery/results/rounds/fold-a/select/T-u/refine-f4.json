@@ -1,0 +1,229 @@
+{
+ "generatedAt": "2026-10-26T05:12:46.796Z",
+ "slot": "incumbent-free",
+ "familyIndex": 87,
+ "family": "T-u-f4",
+ "arm": "T-u",
+ "start": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.79.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+ "refined": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.69.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+ "result": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.69.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+ "resultState": {
+  "key": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.69.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+  "books": [
+   {
+    "symbol": "IBB",
+    "vector": {
+     "id": "d1-730a8cfe3a",
+     "grid": {
+      "targetPercentChange": 236,
+      "trailingBuyPercentage": 26,
+      "trailingStopPercentage": 56,
+      "maximumHoldDays": 29,
+      "tickWindowSize": 171,
+      "intradayLossBuffer": 48,
+      "pullback": 151,
+      "continuationWindow": 193
+     },
+     "origin": "paramOne"
+    }
+   },
+   {
+    "symbol": "IGV",
+    "vector": {
+     "id": "d1-7f87a60994",
+     "grid": {
+      "targetPercentChange": 188,
+      "trailingBuyPercentage": 2,
+      "trailingStopPercentage": 69,
+      "maximumHoldDays": 22,
+      "tickWindowSize": 125,
+      "intradayLossBuffer": 12,
+      "pullback": 182,
+      "continuationWindow": 46
+     },
+     "origin": "refine probe"
+    }
+   },
+   {
+    "symbol": "ILF",
+    "vector": {
+     "id": "d1-64379fc9c0",
+     "grid": {
+      "targetPercentChange": 201,
+      "trailingBuyPercentage": 42,
+      "trailingStopPercentage": 32,
+      "maximumHoldDays": 30,
+      "tickWindowSize": 155,
+      "intradayLossBuffer": 20,
+      "pullback": 145,
+      "continuationWindow": 23
+     },
+     "origin": "sbx"
+    }
+   }
+  ],
+  "value": 63981.75219199425
+ },
+ "startState": {
+  "key": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.79.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+  "value": 58616.345855802414
+ },
+ "refinedState": {
+  "key": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.69.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+  "value": 63981.75219199425
+ },
+ "unique": 429,
+ "cycles": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "evaluated": 208,
+   "accepted": 1
+  },
+  {
+   "phase": "refine",
+   "cycle": 2,
+   "evaluated": 175,
+   "accepted": 0
+  },
+  {
+   "phase": "re-refine",
+   "cycle": 1,
+   "evaluated": 45,
+   "accepted": 0
+  }
+ ],
+ "moves": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "coordinate",
+   "move": "IGV trailingStopPercentage -10",
+   "from": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.79.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+   "to": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.69.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+   "before": 58616.345855802414,
+   "after": 63981.75219199425,
+   "lotsAdded": [
+    "ILF@1589808660",
+    "ILF@1591104660",
+    "ILF@1591968660"
+   ],
+   "lotsRemoved": []
+  }
+ ],
+ "pruneSteps": [
+  {
+   "phase": "prune",
+   "from": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.69.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+   "members": [
+    "IBB",
+    "IGV",
+    "ILF"
+   ],
+   "marginals": [
+    {
+     "symbol": "IBB",
+     "marginal": 12806.455752834896,
+     "interval": {
+      "estimate": 12806.455752834896,
+      "lower": 8495.12484268147,
+      "upper": 16836.044660892883,
+      "se": 2834.1947868562493,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "IGV",
+     "marginal": 77323.64782963789,
+     "interval": {
+      "estimate": 77323.64782963789,
+      "lower": 72089.04519110145,
+      "upper": 81097.25342079917,
+      "se": 3098.8353298657576,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": false
+    },
+    {
+     "symbol": "ILF",
+     "marginal": 20113.540249636193,
+     "interval": {
+      "estimate": 20113.540249636193,
+      "lower": 14261.919915069317,
+      "upper": 22554.156375092847,
+      "se": 2888.3592779134933,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "final-prune",
+   "from": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.69.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+   "members": [
+    "IBB",
+    "IGV",
+    "ILF"
+   ],
+   "marginals": [
+    {
+     "symbol": "IBB",
+     "marginal": 12806.455752834896,
+     "interval": {
+      "estimate": 12806.455752834896,
+      "lower": 8495.12484268147,
+      "upper": 16836.044660892883,
+      "se": 2834.1947868562493,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "IGV",
+     "marginal": 77323.64782963789,
+     "interval": {
+      "estimate": 77323.64782963789,
+      "lower": 72089.04519110145,
+      "upper": 81097.25342079917,
+      "se": 3098.8353298657576,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": false
+    },
+    {
+     "symbol": "ILF",
+     "marginal": 20113.540249636193,
+     "interval": {
+      "estimate": 20113.540249636193,
+      "lower": 14261.919915069317,
+      "upper": 22554.156375092847,
+      "se": 2888.3592779134933,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  }
+ ],
+ "pruneBlocked": false,
+ "portfolioChecks": [
+  {
+   "key": "IBB:236.26.56.29.171.48.151.193|IGV:188.2.69.22.125.12.182.46|ILF:201.42.32.30.155.20.145.23",
+   "dailyPercent": 0.33134308093522563
+  }
+ ],
+ "walkedBack": false,
+ "stoppedBy": ""
+}

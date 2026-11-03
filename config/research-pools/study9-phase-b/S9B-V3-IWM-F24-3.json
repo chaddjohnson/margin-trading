@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S9B-V3-IWM-F24-3",
+  "name": "Study 9 Phase B V3-IWM F24 #3",
+  "role": "Study 9 Phase B primary-fold candidate (VGT:d1-a06b6e5ac2+IWM:d1-11ec1fd917+XLF:d1-2707c3bf71)",
+  "status": "RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 26 (TIER STRONG, ROLE BALANCED); 2025–2026 ONE-TIME T GATES: FAIL (FAILED T3, T6)",
+  "description": "Study 9 Phase B track V3-IWM, primary fold F24 (search on 2016-01-04 → 2024-12-31) shortlist member VGT:d1-a06b6e5ac2+IWM:d1-11ec1fd917+XLF:d1-2707c3bf71. Research configuration for inspection only; Study 8 VG #2 balanced, B1 and B5 remain the comparators.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "s9bd1a06b6e5ac2",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/VGT.json",
+      "candidateId": "d1-a06b6e5ac2",
+      "parameters": {
+        "targetPercentChange": "17.8%",
+        "trailingBuyPercentage": "3.7%",
+        "trailingStopPercentage": "3.1%",
+        "maximumHoldDays": 11,
+        "tickWindowSize": 61,
+        "intradayLossBuffer": "5.0%",
+        "pullback": "16.6%",
+        "continuationWindow": 146
+      },
+      "parametersSha256": "ab4039324b2817dcaf76296c941ea11189440d50aa417b73ca396db03ef921fd"
+    },
+    {
+      "symbol": "IWM",
+      "phenotype": "s9bd111ec1fd917",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/IWM.json",
+      "candidateId": "d1-11ec1fd917",
+      "parameters": {
+        "targetPercentChange": "28.3%",
+        "trailingBuyPercentage": "1.1%",
+        "trailingStopPercentage": "3.9%",
+        "maximumHoldDays": 16,
+        "tickWindowSize": 160,
+        "intradayLossBuffer": "4.6%",
+        "pullback": "14.1%",
+        "continuationWindow": 55
+      },
+      "parametersSha256": "a13e4e64e66d0e76be8e7a032915ecc701b53dd4500a33ac21f05593370083da"
+    },
+    {
+      "symbol": "XLF",
+      "phenotype": "s9bd12707c3bf71",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/XLF.json",
+      "candidateId": "d1-2707c3bf71",
+      "parameters": {
+        "targetPercentChange": "23.7%",
+        "trailingBuyPercentage": "1.1%",
+        "trailingStopPercentage": "3.1%",
+        "maximumHoldDays": 13,
+        "tickWindowSize": 186,
+        "intradayLossBuffer": "0.3%",
+        "pullback": "6.1%",
+        "continuationWindow": 84
+      },
+      "parametersSha256": "cbf09854496e0dba7604a5fb3840af4ce958b40463073cf1d3a3856e9a0b76e9"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-11-03",
+    "createdBy": "src/study9b-runners (research-configs)",
+    "selectionBodyHash": "87cea1e6a134f314769462ddfa8678db20b12aa03c0646ae42abf804463913b4",
+    "testBodyHash": "921344fbb83d08140c53898041973c39541692d77e5528ba1169ba755e47c872"
+  }
+}

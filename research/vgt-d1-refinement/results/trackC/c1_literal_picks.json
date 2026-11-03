@@ -1,0 +1,436 @@
+{
+ "family": "always",
+ "anchor": {
+  "trailingStopPercentage": 73,
+  "maximumHoldDays": 8,
+  "intradayLossBuffer": 29,
+  "alwaysRebound": 3
+ },
+ "box": {
+  "alwaysRebound": [
+   5,
+   150
+  ],
+  "trailingStopPercentage": [
+   40,
+   120
+  ],
+  "maximumHoldDays": [
+   4,
+   40
+  ],
+  "intradayLossBuffer": [
+   0,
+   50
+  ]
+ },
+ "samples": 2048,
+ "seedLabel": "trackC-c1_literal",
+ "picks": [
+  {
+   "policy": "maxNet",
+   "pick": {
+    "params": {
+     "trailingStopPercentage": 65,
+     "maximumHoldDays": 29,
+     "intradayLossBuffer": 18,
+     "alwaysRebound": 49
+    },
+    "net": 112709.09412800221,
+    "minuteDrawdown": 34405.041464630034,
+    "entries": 38
+   },
+   "refined": {
+    "params": {
+     "trailingStopPercentage": 79,
+     "maximumHoldDays": 29,
+     "intradayLossBuffer": 0,
+     "alwaysRebound": 49
+    },
+    "net": 125851.79270627108,
+    "minuteDrawdown": 34439.24668680134,
+    "entries": 31,
+    "signature": "3c8f93667f194720"
+   },
+   "rounds": 1,
+   "evaluations": 572,
+   "stability": 0.6666666666666666,
+   "probeNetRange": [
+    73553.71062119762,
+    125491.22256407829
+   ],
+   "probeMaxDrawdown": 59662.96994148618,
+   "probeSignatures": 21
+  },
+  {
+   "policy": "balanced",
+   "pick": {
+    "params": {
+     "trailingStopPercentage": 40,
+     "maximumHoldDays": 4,
+     "intradayLossBuffer": 25,
+     "alwaysRebound": 121
+    },
+    "net": -6166.81353867315,
+    "minuteDrawdown": 16028.05296351746,
+    "entries": 42
+   },
+   "refined": {
+    "params": {
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 9,
+     "intradayLossBuffer": 16,
+     "alwaysRebound": 103
+    },
+    "net": 102180.41355406298,
+    "minuteDrawdown": 26733.219894557737,
+    "entries": 32,
+    "signature": "bce28fe014d34632"
+   },
+   "rounds": 3,
+   "evaluations": 1192,
+   "stability": 0.5,
+   "probeNetRange": [
+    48394.056004958984,
+    101991.65570341959
+   ],
+   "probeMaxDrawdown": 43932.9930264647,
+   "probeSignatures": 24
+  },
+  {
+   "policy": "lowDd",
+   "pick": {
+    "params": {
+     "trailingStopPercentage": 48,
+     "maximumHoldDays": 38,
+     "intradayLossBuffer": 17,
+     "alwaysRebound": 37
+    },
+    "net": 99499.55726994782,
+    "minuteDrawdown": 32173.657753885695,
+    "entries": 53
+   },
+   "refined": {
+    "params": {
+     "trailingStopPercentage": 65,
+     "maximumHoldDays": 38,
+     "intradayLossBuffer": 3,
+     "alwaysRebound": 37
+    },
+    "net": 127972.2925550853,
+    "minuteDrawdown": 34615.56254650108,
+    "entries": 40,
+    "signature": "7af346844924817c"
+   },
+   "rounds": 2,
+   "evaluations": 846,
+   "stability": 0.391304347826087,
+   "probeNetRange": [
+    79017.65140972019,
+    127610.31872624025
+   ],
+   "probeMaxDrawdown": 45283.40425583598,
+   "probeSignatures": 23
+  }
+ ],
+ "walkForward": [
+  {
+   "study": "c1_literal",
+   "fold": "fold1",
+   "policy": "maxNet",
+   "pick": {
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 4,
+    "intradayLossBuffer": 5,
+    "alwaysRebound": 5
+   },
+   "trainingNet": 50613.1089481668,
+   "trainingDrawdown": 18983.22998203401,
+   "validationNet": 33073.891993941,
+   "validationDrawdown": 52214.61553632659,
+   "validationEntries": 19,
+   "anchorValidationNet": 61448.72465294425,
+   "anchorValidationDrawdown": 35745.442174350464,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold1",
+   "policy": "balanced",
+   "pick": {
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 4,
+    "intradayLossBuffer": 5,
+    "alwaysRebound": 5
+   },
+   "trainingNet": 50613.1089481668,
+   "trainingDrawdown": 18983.22998203401,
+   "validationNet": 33073.891993941,
+   "validationDrawdown": 52214.61553632659,
+   "validationEntries": 19,
+   "anchorValidationNet": 61448.72465294425,
+   "anchorValidationDrawdown": 35745.442174350464,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold1",
+   "policy": "lowDd",
+   "pick": {
+    "trailingStopPercentage": 51,
+    "maximumHoldDays": 4,
+    "intradayLossBuffer": 11,
+    "alwaysRebound": 15
+   },
+   "trainingNet": 49548.23054750335,
+   "trainingDrawdown": 15212.689531144315,
+   "validationNet": 19508.810110775055,
+   "validationDrawdown": 46829.320968493856,
+   "validationEntries": 36,
+   "anchorValidationNet": 61448.72465294425,
+   "anchorValidationDrawdown": 35745.442174350464,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold1",
+   "policy": "frequent",
+   "pick": {
+    "trailingStopPercentage": 40,
+    "maximumHoldDays": 6,
+    "intradayLossBuffer": 7,
+    "alwaysRebound": 10
+   },
+   "trainingNet": 45885.455265464836,
+   "trainingDrawdown": 15808.608817953307,
+   "validationNet": 24620.466060299463,
+   "validationDrawdown": 39406.12489252786,
+   "validationEntries": 49,
+   "anchorValidationNet": 61448.72465294425,
+   "anchorValidationDrawdown": 35745.442174350464,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold2",
+   "policy": "maxNet",
+   "pick": {
+    "trailingStopPercentage": 83,
+    "maximumHoldDays": 15,
+    "intradayLossBuffer": 12,
+    "alwaysRebound": 9
+   },
+   "trainingNet": 94815.53391192551,
+   "trainingDrawdown": 33556.280727738194,
+   "validationNet": -50750.08328952864,
+   "validationDrawdown": 59709.78742345727,
+   "validationEntries": 17,
+   "anchorValidationNet": -42282.885026473734,
+   "anchorValidationDrawdown": 52600.16321126624,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold2",
+   "policy": "balanced",
+   "pick": {
+    "trailingStopPercentage": 65,
+    "maximumHoldDays": 27,
+    "intradayLossBuffer": 6,
+    "alwaysRebound": 150
+   },
+   "trainingNet": 20753.4689056776,
+   "trainingDrawdown": 19760.961636585434,
+   "validationNet": -14634.40609777654,
+   "validationDrawdown": 16142.080642214543,
+   "validationEntries": 3,
+   "anchorValidationNet": -42282.885026473734,
+   "anchorValidationDrawdown": 52600.16321126624,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold2",
+   "policy": "lowDd",
+   "pick": {
+    "trailingStopPercentage": 90,
+    "maximumHoldDays": 4,
+    "intradayLossBuffer": 10,
+    "alwaysRebound": 46
+   },
+   "trainingNet": 88425.38469219944,
+   "trainingDrawdown": 28478.982979880097,
+   "validationNet": -38632.49015176031,
+   "validationDrawdown": 40571.32010789308,
+   "validationEntries": 17,
+   "anchorValidationNet": -42282.885026473734,
+   "anchorValidationDrawdown": 52600.16321126624,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold2",
+   "policy": "frequent",
+   "pick": {
+    "trailingStopPercentage": 40,
+    "maximumHoldDays": 14,
+    "intradayLossBuffer": 12,
+    "alwaysRebound": 20
+   },
+   "trainingNet": 64446.06580152136,
+   "trainingDrawdown": 27766.5042447329,
+   "validationNet": -16051.251665978423,
+   "validationDrawdown": 32734.194156694764,
+   "validationEntries": 21,
+   "anchorValidationNet": -42282.885026473734,
+   "anchorValidationDrawdown": 52600.16321126624,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold3",
+   "policy": "maxNet",
+   "pick": {
+    "trailingStopPercentage": 67,
+    "maximumHoldDays": 7,
+    "intradayLossBuffer": 48,
+    "alwaysRebound": 24
+   },
+   "trainingNet": 52971.263047273926,
+   "trainingDrawdown": 34918.75563375076,
+   "validationNet": 30003.122390409626,
+   "validationDrawdown": 13776.921336077648,
+   "validationEntries": 7,
+   "anchorValidationNet": 34684.3011350855,
+   "anchorValidationDrawdown": 15720.861681187642,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold3",
+   "policy": "balanced",
+   "pick": {
+    "trailingStopPercentage": 40,
+    "maximumHoldDays": 4,
+    "intradayLossBuffer": 25,
+    "alwaysRebound": 121
+   },
+   "trainingNet": -6293.321908272485,
+   "trainingDrawdown": 12735.057577552225,
+   "validationNet": 9355.857881185086,
+   "validationDrawdown": 4400.963796418607,
+   "validationEntries": 4,
+   "anchorValidationNet": 34684.3011350855,
+   "anchorValidationDrawdown": 15720.861681187642,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold3",
+   "policy": "lowDd",
+   "pick": {
+    "trailingStopPercentage": 100,
+    "maximumHoldDays": 9,
+    "intradayLossBuffer": 48,
+    "alwaysRebound": 105
+   },
+   "trainingNet": 47446.33552579432,
+   "trainingDrawdown": 29580.67448455835,
+   "validationNet": 12357.737786540689,
+   "validationDrawdown": 14072.370166593697,
+   "validationEntries": 3,
+   "anchorValidationNet": 34684.3011350855,
+   "anchorValidationDrawdown": 15720.861681187642,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold3",
+   "policy": "frequent",
+   "anchorValidationNet": 34684.3011350855,
+   "anchorValidationDrawdown": 15720.861681187642,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold4",
+   "policy": "maxNet",
+   "pick": {
+    "trailingStopPercentage": 40,
+    "maximumHoldDays": 14,
+    "intradayLossBuffer": 12,
+    "alwaysRebound": 20
+   },
+   "trainingNet": 86346.9523572044,
+   "trainingDrawdown": 33785.22669544611,
+   "validationNet": -2687.547772299353,
+   "validationDrawdown": 46758.28683786992,
+   "validationEntries": 24,
+   "anchorValidationNet": 40732.982768929665,
+   "anchorValidationDrawdown": 44118.91503659246,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold4",
+   "policy": "balanced",
+   "pick": {
+    "trailingStopPercentage": 40,
+    "maximumHoldDays": 4,
+    "intradayLossBuffer": 25,
+    "alwaysRebound": 121
+   },
+   "trainingNet": 3062.535972912601,
+   "trainingDrawdown": 16028.05296351746,
+   "validationNet": -9229.349511585751,
+   "validationDrawdown": 10381.293256025192,
+   "validationEntries": 10,
+   "anchorValidationNet": 40732.982768929665,
+   "anchorValidationDrawdown": 44118.91503659246,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold4",
+   "policy": "lowDd",
+   "pick": {
+    "trailingStopPercentage": 48,
+    "maximumHoldDays": 38,
+    "intradayLossBuffer": 17,
+    "alwaysRebound": 37
+   },
+   "trainingNet": 72842.05739913214,
+   "trainingDrawdown": 30871.45787387008,
+   "validationNet": 26657.499870815678,
+   "validationDrawdown": 32173.657753885695,
+   "validationEntries": 11,
+   "anchorValidationNet": 40732.982768929665,
+   "anchorValidationDrawdown": 44118.91503659246,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  },
+  {
+   "study": "c1_literal",
+   "fold": "fold4",
+   "policy": "frequent",
+   "anchorValidationNet": 40732.982768929665,
+   "anchorValidationDrawdown": 44118.91503659246,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  }
+ ]
+}

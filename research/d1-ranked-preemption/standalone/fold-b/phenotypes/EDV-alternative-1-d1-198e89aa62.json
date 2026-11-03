@@ -1,0 +1,98 @@
+{
+ "schema": "ranked-preemption-standalone-phenotype",
+ "schemaVersion": 1,
+ "id": "d1-ranked-preemption-v1:fold-b:EDV:alternative-1:d1-198e89aa62",
+ "study": "d1-ranked-preemption-v1",
+ "window": "fold-b",
+ "symbol": "EDV",
+ "role": "alternative-1",
+ "candidateId": "d1-198e89aa62",
+ "architecture": "D1",
+ "grid": {
+  "targetPercentChange": 200,
+  "trailingBuyPercentage": 4,
+  "trailingStopPercentage": 52,
+  "maximumHoldDays": 17,
+  "tickWindowSize": 52,
+  "intradayLossBuffer": 12,
+  "pullback": 93,
+  "continuationWindow": 118
+ },
+ "parameters": {
+  "targetPercentChange": "20.0%",
+  "trailingBuyPercentage": "0.4%",
+  "trailingStopPercentage": "5.2%",
+  "maximumHoldDays": 17,
+  "tickWindowSize": 52,
+  "intradayLossBuffer": "1.2%",
+  "pullback": "9.3%",
+  "continuationWindow": 118
+ },
+ "description": "X 20.0% Y 0.4% L 52 stop 5.2% hold 17 buffer 1.2% P 9.3% W 118",
+ "training": {
+  "partition": "training",
+  "first": "2016-01-04",
+  "arming": "2017-06-15",
+  "searchEnd": "2021-12-31",
+  "lastLoaded": "2021-12-31",
+  "dataSha256": "ee86ef9cf10e94b914985de4ce1e00db55f9bfbe657b3c392576b91b8aba1ec6",
+  "loadedBarsSha256": "e55ee7e30ebb655780d7f1da38cfd2a57b46cd5a055b68802f37a19508aac169",
+  "universeRecord": {
+   "file": "research/d1-ranked-preemption/results/audit/universe.json",
+   "sha256": "26e71c4c8a147357dd0b15c2565944d878150179744147c84ba9a57b62b0575d"
+  }
+ },
+ "grid_version": "src/multi-etf-d1/space.ts box (tenths of a percentage point, calendar days, sessions)",
+ "budget": {
+  "tier": "T1",
+  "sobol": 2048,
+  "localRounds": 10,
+  "draws": 16
+ },
+ "seeds": {
+  "sobol": "d1-ranked-preemption|standalone|EDV",
+  "origin": "local:fold-b:3:7:7"
+ },
+ "costs": {
+  "bpsPerSide": 5,
+  "interest": 0.11,
+  "notional": 100000
+ },
+ "metrics": {
+  "symbol": "EDV",
+  "gridKey": "200.4.52.17.52.12.93.118",
+  "signature": "876c82c3d47c68b8a2ce863805d5af7f96f54a9ad8705d4de80f4125386817fc",
+  "trades": 6,
+  "closed": 6,
+  "open": 0,
+  "net": 30355.721185127997,
+  "bestTrade": 9731.053877010934,
+  "secondTrade": 8364.665384841817,
+  "thirdTrade": 8045.089257525993,
+  "worstTrade": -2291.448254038805,
+  "meanNet": 5059.2868641879995,
+  "medianNet": 7459.630426066713,
+  "wins": 4,
+  "losses": 2,
+  "lossSum": -2659.2589288581785,
+  "occupiedDays": 309,
+  "netPerDay": 98.23857988714562,
+  "interest": 9312.328767123287,
+  "friction": 619.8440969495588,
+  "minuteDrawdown": 12774.58921921939,
+  "dailyDrawdown": 8775.814022144878,
+  "yearly": {
+   "2020": 24602.08018164081,
+   "2021": 5753.641003487188
+  },
+  "bestYearShare": 0.8104594198768028,
+  "score": 20624.667308117063,
+  "credible": true
+ },
+ "neighbourhood": null,
+ "provenance": {
+  "stage": "Stage A fold-b",
+  "record": "research/d1-ranked-preemption/results/standalone/fold-b/STAGE_A.json",
+  "status": "survivor"
+ }
+}

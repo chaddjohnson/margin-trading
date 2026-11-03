@@ -1,0 +1,3263 @@
+{
+ "frozenAtUtc": "2026-10-15T10:02:11.469Z",
+ "experiment": "main",
+ "experimentConfigHash": "1f7456dd735778c999f23b9b795e17865312792bbe0aa68d784ffe854bfb4f85",
+ "environment": {
+  "gitHead": "b7abde6828f3a763270fa81e370547eb4266ca89",
+  "gitBranch": "research/multi-asset-strategy-optimization",
+  "gitDirty": true,
+  "codeHash": "33def0c2a969536dd6710e82b20537d41141331fab19c5bd4a731dc1cd8d8bf1",
+  "node": "v24.21.0",
+  "platform": "darwin arm64",
+  "cpu": "Apple M1 Pro",
+  "availableParallelism": 10
+ },
+ "protocol": {
+  "name": "expanding-2014-annual-v1",
+  "researchEnd": "2023-12-31",
+  "folds": [
+   {
+    "id": "fold-2019",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2018-12-31"
+    },
+    "validation": {
+     "start": "2019-01-01",
+     "end": "2019-12-31"
+    }
+   },
+   {
+    "id": "fold-2020",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2019-12-31"
+    },
+    "validation": {
+     "start": "2020-01-01",
+     "end": "2020-12-31"
+    }
+   },
+   {
+    "id": "fold-2021",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2020-12-31"
+    },
+    "validation": {
+     "start": "2021-01-01",
+     "end": "2021-12-31"
+    }
+   },
+   {
+    "id": "fold-2022",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2021-12-31"
+    },
+    "validation": {
+     "start": "2022-01-01",
+     "end": "2022-12-31"
+    }
+   },
+   {
+    "id": "fold-2023",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2022-12-31"
+    },
+    "validation": {
+     "start": "2023-01-01",
+     "end": "2023-12-31"
+    }
+   }
+  ],
+  "final": {
+   "id": "final-2014-2023",
+   "train": {
+    "start": "2014-01-01",
+    "end": "2023-12-31"
+   }
+  },
+  "holdout": {
+   "start": "2024-01-01",
+   "end": "latest"
+  },
+  "stress": {
+   "start": "2005-01-01",
+   "end": "2013-12-31"
+  },
+  "warmupSessions": 250,
+  "coverageToleranceDays": 7
+ },
+ "selectionPolicy": {
+  "topN": 10,
+  "minPositiveYearShare": 0.5,
+  "poolByNet": 64,
+  "maxPool": 1024,
+  "poolFronts": 2,
+  "poolFrontCap": 64,
+  "diversitySteps": 4
+ },
+ "fitness": {
+  "allocation": 100000,
+  "drawdownLimit": 0.3,
+  "minTradesPerYear": 1
+ },
+ "search": {
+  "sampler": "sobol",
+  "samples": 4096,
+  "scramble": true,
+  "populationSize": 128,
+  "generations": 60,
+  "maxEvaluationsPerGaRun": 6000,
+  "gaRuns": 2,
+  "crossoverProbability": 0.9,
+  "crossoverEta": 15,
+  "mutationEta": 20,
+  "earlyStopPatience": 15,
+  "earlyStopTolerance": 0.0001,
+  "seedDiversity": 0.02
+ },
+ "seed": "20261015",
+ "data": {
+  "VGT": "22710f54023a64de1e30bc078c4cf3fd91afe2b4c2ccee7bdd017fc640e0d70a",
+  "XLK": "b389819721b6b5d67ae9228e0aa15f20a33ee95fc1688fcea14e381a0a43aefa",
+  "QQQ": "b0f57cc41cc4d9678a7c9f3b1bf696f446cbf89d1a868bc081419a4ba4f52a95",
+  "IGV": "f18ddadd675e3527b9df5b3f79a00c53a0259e9cc6944580a817800c772d4c5d",
+  "VOOG": "6e533dda7d25bef2274d0e582363c101b5f4003c63784aa357165630186486ab",
+  "VOO": "9a3b172ed16e93f0f3002e397a899ede0878c2b5da9327f3f7f25c21d674d9c4",
+  "SPY": "8e678c8dffcf63ba3ce59b0018eedce2fb885fb6594e64d3a507f9c7324934bc",
+  "SMH": "cffb952ddad295026b7ded9f248d80b1c82bb30a688d2ab72b3ff51f8e7f620c",
+  "SOXX": "d8244b3e3105f0989ae6cb163787b40d0a97cf40338ed3624854cbac79276bf7",
+  "VUG": "c2b0f5aa186c4fda610ce8974219839534843ba372e5320bb6763c8c255a3010",
+  "SCHG": "723735db0cf340224bab9359cfbd18a6651aa16561a27b6ad7b935bae408b630",
+  "IWF": "9aa074a6ff2258cea3b3ca3238def33c774d9b98ea2fa733a23829fc5cd484a8",
+  "XLY": "8f9944e38fad7d96d1ede3ee9871f45ec8eb5012414b38630e07dea38cab9783",
+  "IWN": "5089cb8ce789b40d3dcdad7662b9c2bd804f1485e0f0fc56964de85967977818",
+  "NVDA": "889e4620e2d450453efeb487a74f38c14226b5a8f34273e7d2035a894994b314",
+  "AAPL": "4968864df5b021c4e3369bd9b61ab46ba938434bfaf19456cac7881c4f3f1f29",
+  "MSFT": "677f36d46c2544a5e296c71c9cbc28af879ddc48400f68cd4c598a337f494b6d",
+  "AMD": "920424f3426a7749a9c948d7141368031f8fe22f64585cdd301a8e2068214b57",
+  "META": "d7133cc11fa9b49acb331eee974d00a8d14c818ee9c54702fba37c76207be234",
+  "GOOGL": "08b6e1a32c21dc71e2b326cfd67b7600a14b24c5677a390102cceee8ce2add89",
+  "AMZN": "585c98f3a886d4351b020e1afe188695a799cf0091caf63d98a247fed4755d10"
+ },
+ "symbols": {
+  "VGT": {
+   "finalRunConfigHash": "b848dcc0e8d802d1f5f8ef66f2ff5e51a37da446f58a04a5b7c2d16e7a11d0cc",
+   "rank1": {
+    "id": "c8a13b9e75b27",
+    "params": {
+     "dipTenths": 25,
+     "trailingStopTenths": 21,
+     "maximumHoldDays": 8,
+     "lookbackSessions": 78,
+     "materialLossTenths": 22,
+     "lowerReentryTenths": 40,
+     "retraceTenths": 367
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c8a13b9e75b27",
+     "params": {
+      "dipTenths": 25,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 78,
+      "materialLossTenths": 22,
+      "lowerReentryTenths": 40,
+      "retraceTenths": 367
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c53d8d7a38462",
+     "params": {
+      "dipTenths": 32,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 70,
+      "materialLossTenths": 12,
+      "lowerReentryTenths": 24,
+      "retraceTenths": 511
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c106e3f5216a3",
+     "params": {
+      "dipTenths": 25,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 118,
+      "materialLossTenths": 23,
+      "lowerReentryTenths": 40,
+      "retraceTenths": 365
+     }
+    },
+    {
+     "rank": 4,
+     "id": "ce67f42acf603",
+     "params": {
+      "dipTenths": 103,
+      "trailingStopTenths": 98,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 44,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 32,
+      "retraceTenths": 898
+     }
+    },
+    {
+     "rank": 5,
+     "id": "cfdce6bf00308",
+     "params": {
+      "dipTenths": 101,
+      "trailingStopTenths": 98,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 49,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 40,
+      "retraceTenths": 660
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c4455ac147476",
+     "params": {
+      "dipTenths": 24,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 115,
+      "materialLossTenths": 1,
+      "lowerReentryTenths": 40,
+      "retraceTenths": 391
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c0b2b24ac8cfa",
+     "params": {
+      "dipTenths": 31,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 215,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 24,
+      "retraceTenths": 516
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c473b2dbe096d",
+     "params": {
+      "dipTenths": 101,
+      "trailingStopTenths": 98,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 45,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 35,
+      "retraceTenths": 383
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c10680551296d",
+     "params": {
+      "dipTenths": 103,
+      "trailingStopTenths": 98,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 39,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 40,
+      "retraceTenths": 749
+     }
+    },
+    {
+     "rank": 10,
+     "id": "cca15068024e3",
+     "params": {
+      "dipTenths": 36,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 77,
+      "materialLossTenths": 17,
+      "lowerReentryTenths": 39,
+      "retraceTenths": 743
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "XLK": {
+   "finalRunConfigHash": "baf33555253bf087157319db459e2124d69fc4a91115ee4d7eaf356ccded820f",
+   "rank1": {
+    "id": "c56e3a3361ed3",
+    "params": {
+     "dipTenths": 101,
+     "trailingStopTenths": 74,
+     "maximumHoldDays": 10,
+     "lookbackSessions": 161,
+     "materialLossTenths": 1,
+     "lowerReentryTenths": 1,
+     "retraceTenths": 536
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c56e3a3361ed3",
+     "params": {
+      "dipTenths": 101,
+      "trailingStopTenths": 74,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 161,
+      "materialLossTenths": 1,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 536
+     }
+    },
+    {
+     "rank": 2,
+     "id": "cda816120155d",
+     "params": {
+      "dipTenths": 79,
+      "trailingStopTenths": 74,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 88,
+      "materialLossTenths": 17,
+      "lowerReentryTenths": 9,
+      "retraceTenths": 673
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c32fb7622777f",
+     "params": {
+      "dipTenths": 80,
+      "trailingStopTenths": 74,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 181,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 10,
+      "retraceTenths": 711
+     }
+    },
+    {
+     "rank": 4,
+     "id": "cb5d83e9ed19d",
+     "params": {
+      "dipTenths": 100,
+      "trailingStopTenths": 74,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 183,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 580
+     }
+    },
+    {
+     "rank": 5,
+     "id": "cb135780ff963",
+     "params": {
+      "dipTenths": 51,
+      "trailingStopTenths": 74,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 185,
+      "materialLossTenths": 3,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 580
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c609929e51bb3",
+     "params": {
+      "dipTenths": 80,
+      "trailingStopTenths": 75,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 159,
+      "materialLossTenths": 14,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 671
+     }
+    },
+    {
+     "rank": 7,
+     "id": "ce761933ff860",
+     "params": {
+      "dipTenths": 78,
+      "trailingStopTenths": 75,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 209,
+      "materialLossTenths": 17,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 527
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c204406b7eeb5",
+     "params": {
+      "dipTenths": 101,
+      "trailingStopTenths": 93,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 160,
+      "materialLossTenths": 2,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 545
+     }
+    },
+    {
+     "rank": 9,
+     "id": "cbafb9bfbb7c0",
+     "params": {
+      "dipTenths": 102,
+      "trailingStopTenths": 93,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 98,
+      "materialLossTenths": 2,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 585
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c9cec8d5fe3ab",
+     "params": {
+      "dipTenths": 78,
+      "trailingStopTenths": 78,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 51,
+      "materialLossTenths": 1,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 359
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "QQQ": {
+   "finalRunConfigHash": "952ec2489b15ee96857a031440b6933b69f65f11e5f078e0b9cb112922977028",
+   "rank1": {
+    "id": "c5aeb2312d3e1",
+    "params": {
+     "dipTenths": 73,
+     "trailingStopTenths": 69,
+     "maximumHoldDays": 14,
+     "lookbackSessions": 35,
+     "materialLossTenths": 7,
+     "lowerReentryTenths": 125,
+     "retraceTenths": 545
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c5aeb2312d3e1",
+     "params": {
+      "dipTenths": 73,
+      "trailingStopTenths": 69,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 35,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 125,
+      "retraceTenths": 545
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c6f2c15e95724",
+     "params": {
+      "dipTenths": 73,
+      "trailingStopTenths": 86,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 24,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 122,
+      "retraceTenths": 674
+     }
+    },
+    {
+     "rank": 3,
+     "id": "ca07d76ea5d14",
+     "params": {
+      "dipTenths": 72,
+      "trailingStopTenths": 69,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 35,
+      "materialLossTenths": 3,
+      "lowerReentryTenths": 122,
+      "retraceTenths": 767
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c5f69f15e7c1f",
+     "params": {
+      "dipTenths": 72,
+      "trailingStopTenths": 69,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 24,
+      "materialLossTenths": 3,
+      "lowerReentryTenths": 122,
+      "retraceTenths": 587
+     }
+    },
+    {
+     "rank": 5,
+     "id": "cb927ed348fc9",
+     "params": {
+      "dipTenths": 70,
+      "trailingStopTenths": 69,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 24,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 136,
+      "retraceTenths": 575
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c5361a66109e4",
+     "params": {
+      "dipTenths": 106,
+      "trailingStopTenths": 89,
+      "maximumHoldDays": 1,
+      "lookbackSessions": 208,
+      "materialLossTenths": 0,
+      "lowerReentryTenths": 114,
+      "retraceTenths": 675
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c41ff763279bd",
+     "params": {
+      "dipTenths": 105,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 1,
+      "lookbackSessions": 170,
+      "materialLossTenths": 1,
+      "lowerReentryTenths": 114,
+      "retraceTenths": 675
+     }
+    },
+    {
+     "rank": 8,
+     "id": "ccd47a6f1ab50",
+     "params": {
+      "dipTenths": 70,
+      "trailingStopTenths": 62,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 24,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 122,
+      "retraceTenths": 511
+     }
+    },
+    {
+     "rank": 9,
+     "id": "ccb89c4311df4",
+     "params": {
+      "dipTenths": 70,
+      "trailingStopTenths": 42,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 24,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 122,
+      "retraceTenths": 511
+     }
+    },
+    {
+     "rank": 10,
+     "id": "cc6fb8698ef66",
+     "params": {
+      "dipTenths": 73,
+      "trailingStopTenths": 43,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 24,
+      "materialLossTenths": 12,
+      "lowerReentryTenths": 122,
+      "retraceTenths": 635
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "IGV": {
+   "finalRunConfigHash": "7701888db3911d7a25cf0763afa5541e7fce7fcabcc5278688739fc29e273daf",
+   "rank1": {
+    "id": "cb4ee7170a324",
+    "params": {
+     "dipTenths": 78,
+     "trailingStopTenths": 45,
+     "maximumHoldDays": 13,
+     "lookbackSessions": 200,
+     "materialLossTenths": 42,
+     "lowerReentryTenths": 51,
+     "retraceTenths": 900
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "cb4ee7170a324",
+     "params": {
+      "dipTenths": 78,
+      "trailingStopTenths": 45,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 200,
+      "materialLossTenths": 42,
+      "lowerReentryTenths": 51,
+      "retraceTenths": 900
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c52e5cffa178f",
+     "params": {
+      "dipTenths": 94,
+      "trailingStopTenths": 45,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 200,
+      "materialLossTenths": 46,
+      "lowerReentryTenths": 78,
+      "retraceTenths": 888
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c3e3487ec0c3c",
+     "params": {
+      "dipTenths": 91,
+      "trailingStopTenths": 45,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 204,
+      "materialLossTenths": 48,
+      "lowerReentryTenths": 51,
+      "retraceTenths": 888
+     }
+    },
+    {
+     "rank": 4,
+     "id": "cc165ef2ecddf",
+     "params": {
+      "dipTenths": 93,
+      "trailingStopTenths": 45,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 206,
+      "materialLossTenths": 71,
+      "lowerReentryTenths": 41,
+      "retraceTenths": 444
+     }
+    },
+    {
+     "rank": 5,
+     "id": "cb133427644b7",
+     "params": {
+      "dipTenths": 94,
+      "trailingStopTenths": 45,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 197,
+      "materialLossTenths": 57,
+      "lowerReentryTenths": 68,
+      "retraceTenths": 440
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c14728cf271b0",
+     "params": {
+      "dipTenths": 93,
+      "trailingStopTenths": 45,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 61,
+      "materialLossTenths": 25,
+      "lowerReentryTenths": 78,
+      "retraceTenths": 949
+     }
+    },
+    {
+     "rank": 7,
+     "id": "ce62d432a1a5a",
+     "params": {
+      "dipTenths": 94,
+      "trailingStopTenths": 45,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 214,
+      "materialLossTenths": 59,
+      "lowerReentryTenths": 48,
+      "retraceTenths": 462
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c2b66f1b44779",
+     "params": {
+      "dipTenths": 94,
+      "trailingStopTenths": 51,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 202,
+      "materialLossTenths": 45,
+      "lowerReentryTenths": 51,
+      "retraceTenths": 649
+     }
+    },
+    {
+     "rank": 9,
+     "id": "cc4712e0ee61b",
+     "params": {
+      "dipTenths": 93,
+      "trailingStopTenths": 51,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 200,
+      "materialLossTenths": 72,
+      "lowerReentryTenths": 44,
+      "retraceTenths": 676
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c7530240c725b",
+     "params": {
+      "dipTenths": 94,
+      "trailingStopTenths": 45,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 122,
+      "materialLossTenths": 46,
+      "lowerReentryTenths": 51,
+      "retraceTenths": 637
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "VOOG": {
+   "finalRunConfigHash": "12d4b32526de31ce31dcdaf0ab5663cd6d09bd67ae6be14260325349c8303921",
+   "rank1": {
+    "id": "c132e2f4cacf9",
+    "params": {
+     "dipTenths": 196,
+     "trailingStopTenths": 74,
+     "maximumHoldDays": 9,
+     "lookbackSessions": 101,
+     "materialLossTenths": 9,
+     "lowerReentryTenths": 47,
+     "retraceTenths": 712
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c132e2f4cacf9",
+     "params": {
+      "dipTenths": 196,
+      "trailingStopTenths": 74,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 101,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 47,
+      "retraceTenths": 712
+     }
+    },
+    {
+     "rank": 2,
+     "id": "cf9dedba59f59",
+     "params": {
+      "dipTenths": 196,
+      "trailingStopTenths": 77,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 145,
+      "materialLossTenths": 6,
+      "lowerReentryTenths": 43,
+      "retraceTenths": 329
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c6492ff85a495",
+     "params": {
+      "dipTenths": 195,
+      "trailingStopTenths": 71,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 101,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 49,
+      "retraceTenths": 847
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c19a425bd3f6d",
+     "params": {
+      "dipTenths": 196,
+      "trailingStopTenths": 74,
+      "maximumHoldDays": 5,
+      "lookbackSessions": 249,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 43,
+      "retraceTenths": 326
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c6731016db781",
+     "params": {
+      "dipTenths": 195,
+      "trailingStopTenths": 79,
+      "maximumHoldDays": 6,
+      "lookbackSessions": 151,
+      "materialLossTenths": 5,
+      "lowerReentryTenths": 43,
+      "retraceTenths": 897
+     }
+    },
+    {
+     "rank": 6,
+     "id": "ca0f924504a62",
+     "params": {
+      "dipTenths": 196,
+      "trailingStopTenths": 80,
+      "maximumHoldDays": 6,
+      "lookbackSessions": 149,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 43,
+      "retraceTenths": 527
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c79d8b629bb59",
+     "params": {
+      "dipTenths": 196,
+      "trailingStopTenths": 71,
+      "maximumHoldDays": 3,
+      "lookbackSessions": 101,
+      "materialLossTenths": 8,
+      "lowerReentryTenths": 47,
+      "retraceTenths": 764
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c202ebb96688b",
+     "params": {
+      "dipTenths": 195,
+      "trailingStopTenths": 76,
+      "maximumHoldDays": 2,
+      "lookbackSessions": 207,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 43,
+      "retraceTenths": 258
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c9dd069c4f149",
+     "params": {
+      "dipTenths": 196,
+      "trailingStopTenths": 78,
+      "maximumHoldDays": 6,
+      "lookbackSessions": 135,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 43,
+      "retraceTenths": 260
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c09e0443341ba",
+     "params": {
+      "dipTenths": 196,
+      "trailingStopTenths": 76,
+      "maximumHoldDays": 6,
+      "lookbackSessions": 139,
+      "materialLossTenths": 6,
+      "lowerReentryTenths": 27,
+      "retraceTenths": 243
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "VOO": {
+   "finalRunConfigHash": "b4c481a462993cc5f5e4d872c2c9960494d12fafd1fef9bcffe8df56b1c6437f",
+   "rank1": {
+    "id": "c1b5d48fca05d",
+    "params": {
+     "dipTenths": 86,
+     "trailingStopTenths": 63,
+     "maximumHoldDays": 10,
+     "lookbackSessions": 202,
+     "materialLossTenths": 4,
+     "lowerReentryTenths": 73,
+     "retraceTenths": 364
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c1b5d48fca05d",
+     "params": {
+      "dipTenths": 86,
+      "trailingStopTenths": 63,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 202,
+      "materialLossTenths": 4,
+      "lowerReentryTenths": 73,
+      "retraceTenths": 364
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c9a49d88cab26",
+     "params": {
+      "dipTenths": 86,
+      "trailingStopTenths": 63,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 175,
+      "materialLossTenths": 8,
+      "lowerReentryTenths": 82,
+      "retraceTenths": 373
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c07fb69477ca2",
+     "params": {
+      "dipTenths": 85,
+      "trailingStopTenths": 63,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 226,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 70,
+      "retraceTenths": 338
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c3b8f21f114ce",
+     "params": {
+      "dipTenths": 86,
+      "trailingStopTenths": 61,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 154,
+      "materialLossTenths": 13,
+      "lowerReentryTenths": 82,
+      "retraceTenths": 338
+     }
+    },
+    {
+     "rank": 5,
+     "id": "ce9c3a4eca89c",
+     "params": {
+      "dipTenths": 86,
+      "trailingStopTenths": 63,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 190,
+      "materialLossTenths": 14,
+      "lowerReentryTenths": 83,
+      "retraceTenths": 337
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c9dfa71ba27de",
+     "params": {
+      "dipTenths": 86,
+      "trailingStopTenths": 63,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 216,
+      "materialLossTenths": 2,
+      "lowerReentryTenths": 82,
+      "retraceTenths": 371
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c34aedbaced99",
+     "params": {
+      "dipTenths": 86,
+      "trailingStopTenths": 61,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 159,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 75,
+      "retraceTenths": 328
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c1eb6ce55873d",
+     "params": {
+      "dipTenths": 82,
+      "trailingStopTenths": 63,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 218,
+      "materialLossTenths": 8,
+      "lowerReentryTenths": 83,
+      "retraceTenths": 383
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c44ea29a91917",
+     "params": {
+      "dipTenths": 77,
+      "trailingStopTenths": 35,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 187,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 76,
+      "retraceTenths": 351
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c0d06149643fe",
+     "params": {
+      "dipTenths": 75,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 158,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 83,
+      "retraceTenths": 350
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "SPY": {
+   "finalRunConfigHash": "5d2f9ecd5327ea7302b20e2124d68e291483dfb67c9c3d58e7ff3dfd37d25bf5",
+   "rank1": {
+    "id": "c7ef266f40592",
+    "params": {
+     "dipTenths": 29,
+     "trailingStopTenths": 36,
+     "maximumHoldDays": 10,
+     "lookbackSessions": 228,
+     "materialLossTenths": 21,
+     "lowerReentryTenths": 65,
+     "retraceTenths": 973
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c7ef266f40592",
+     "params": {
+      "dipTenths": 29,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 228,
+      "materialLossTenths": 21,
+      "lowerReentryTenths": 65,
+      "retraceTenths": 973
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c1ec25a5e811c",
+     "params": {
+      "dipTenths": 30,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 196,
+      "materialLossTenths": 22,
+      "lowerReentryTenths": 65,
+      "retraceTenths": 995
+     }
+    },
+    {
+     "rank": 3,
+     "id": "ceeeafdff45e4",
+     "params": {
+      "dipTenths": 29,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 143,
+      "materialLossTenths": 21,
+      "lowerReentryTenths": 65,
+      "retraceTenths": 995
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c1963f58359ba",
+     "params": {
+      "dipTenths": 39,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 36,
+      "materialLossTenths": 14,
+      "lowerReentryTenths": 64,
+      "retraceTenths": 972
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c99f1ef75d18f",
+     "params": {
+      "dipTenths": 39,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 39,
+      "materialLossTenths": 14,
+      "lowerReentryTenths": 64,
+      "retraceTenths": 975
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c2235a59e68ec",
+     "params": {
+      "dipTenths": 30,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 173,
+      "materialLossTenths": 21,
+      "lowerReentryTenths": 64,
+      "retraceTenths": 974
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c3793ed32cbf4",
+     "params": {
+      "dipTenths": 34,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 173,
+      "materialLossTenths": 21,
+      "lowerReentryTenths": 64,
+      "retraceTenths": 974
+     }
+    },
+    {
+     "rank": 8,
+     "id": "cc745940113b1",
+     "params": {
+      "dipTenths": 42,
+      "trailingStopTenths": 34,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 197,
+      "materialLossTenths": 21,
+      "lowerReentryTenths": 35,
+      "retraceTenths": 989
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c0447e7919ba6",
+     "params": {
+      "dipTenths": 42,
+      "trailingStopTenths": 33,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 219,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 47,
+      "retraceTenths": 992
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c0283e8a9d706",
+     "params": {
+      "dipTenths": 29,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 35,
+      "materialLossTenths": 20,
+      "lowerReentryTenths": 66,
+      "retraceTenths": 973
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "SMH": {
+   "finalRunConfigHash": "901ccdae700d11d4fb6d9ce205550b048f3ef0063178e83d4e0914da38e62888",
+   "rank1": {
+    "id": "cb967eac6e1c9",
+    "params": {
+     "dipTenths": 23,
+     "trailingStopTenths": 21,
+     "maximumHoldDays": 14,
+     "lookbackSessions": 178,
+     "materialLossTenths": 90,
+     "lowerReentryTenths": 126,
+     "retraceTenths": 498
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "cb967eac6e1c9",
+     "params": {
+      "dipTenths": 23,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 178,
+      "materialLossTenths": 90,
+      "lowerReentryTenths": 126,
+      "retraceTenths": 498
+     }
+    },
+    {
+     "rank": 2,
+     "id": "cad26a440b409",
+     "params": {
+      "dipTenths": 26,
+      "trailingStopTenths": 20,
+      "maximumHoldDays": 15,
+      "lookbackSessions": 144,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 123,
+      "retraceTenths": 635
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c0348091d88fa",
+     "params": {
+      "dipTenths": 23,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 178,
+      "materialLossTenths": 100,
+      "lowerReentryTenths": 119,
+      "retraceTenths": 498
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c0b5c326dd925",
+     "params": {
+      "dipTenths": 37,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 137,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 61,
+      "retraceTenths": 571
+     }
+    },
+    {
+     "rank": 5,
+     "id": "cc4efa30b3c66",
+     "params": {
+      "dipTenths": 37,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 153,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 101,
+      "retraceTenths": 571
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c604c7038947b",
+     "params": {
+      "dipTenths": 37,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 176,
+      "materialLossTenths": 8,
+      "lowerReentryTenths": 56,
+      "retraceTenths": 580
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c16fd4945951e",
+     "params": {
+      "dipTenths": 28,
+      "trailingStopTenths": 20,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 114,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 121,
+      "retraceTenths": 570
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c8d5b003fce8b",
+     "params": {
+      "dipTenths": 32,
+      "trailingStopTenths": 29,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 79,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 56,
+      "retraceTenths": 620
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c548c2c750c95",
+     "params": {
+      "dipTenths": 37,
+      "trailingStopTenths": 30,
+      "maximumHoldDays": 12,
+      "lookbackSessions": 143,
+      "materialLossTenths": 7,
+      "lowerReentryTenths": 120,
+      "retraceTenths": 571
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c2c87017e425d",
+     "params": {
+      "dipTenths": 32,
+      "trailingStopTenths": 29,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 154,
+      "materialLossTenths": 8,
+      "lowerReentryTenths": 66,
+      "retraceTenths": 571
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "SOXX": {
+   "finalRunConfigHash": "62b08b464c76f68732197682851dbf209fada8c881ae22bb4fd94d5d09c4a737",
+   "rank1": {
+    "id": "ceea67e5d2d0f",
+    "params": {
+     "dipTenths": 35,
+     "trailingStopTenths": 31,
+     "maximumHoldDays": 14,
+     "lookbackSessions": 160,
+     "materialLossTenths": 26,
+     "lowerReentryTenths": 84,
+     "retraceTenths": 785
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "ceea67e5d2d0f",
+     "params": {
+      "dipTenths": 35,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 160,
+      "materialLossTenths": 26,
+      "lowerReentryTenths": 84,
+      "retraceTenths": 785
+     }
+    },
+    {
+     "rank": 2,
+     "id": "cc1e6b57c6cf8",
+     "params": {
+      "dipTenths": 33,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 90,
+      "materialLossTenths": 29,
+      "lowerReentryTenths": 85,
+      "retraceTenths": 982
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c392c0543152e",
+     "params": {
+      "dipTenths": 33,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 90,
+      "materialLossTenths": 29,
+      "lowerReentryTenths": 51,
+      "retraceTenths": 984
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c2c48e3958f2c",
+     "params": {
+      "dipTenths": 32,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 141,
+      "materialLossTenths": 23,
+      "lowerReentryTenths": 84,
+      "retraceTenths": 912
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c7b379f1fcb07",
+     "params": {
+      "dipTenths": 52,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 16,
+      "lookbackSessions": 151,
+      "materialLossTenths": 33,
+      "lowerReentryTenths": 83,
+      "retraceTenths": 471
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c126190f05c4b",
+     "params": {
+      "dipTenths": 32,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 146,
+      "materialLossTenths": 29,
+      "lowerReentryTenths": 85,
+      "retraceTenths": 984
+     }
+    },
+    {
+     "rank": 7,
+     "id": "cbb45bf9f6363",
+     "params": {
+      "dipTenths": 30,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 21,
+      "lookbackSessions": 27,
+      "materialLossTenths": 2,
+      "lowerReentryTenths": 54,
+      "retraceTenths": 346
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c63bf3c6208ec",
+     "params": {
+      "dipTenths": 34,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 16,
+      "lookbackSessions": 40,
+      "materialLossTenths": 26,
+      "lowerReentryTenths": 83,
+      "retraceTenths": 978
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c223ad8e3daea",
+     "params": {
+      "dipTenths": 33,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 18,
+      "lookbackSessions": 170,
+      "materialLossTenths": 31,
+      "lowerReentryTenths": 85,
+      "retraceTenths": 984
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c30a281d05af5",
+     "params": {
+      "dipTenths": 34,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 20,
+      "lookbackSessions": 141,
+      "materialLossTenths": 26,
+      "lowerReentryTenths": 83,
+      "retraceTenths": 981
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "VUG": {
+   "finalRunConfigHash": "a4ce6de4fb666e07000dcf2b3784874cedfee136ea36bacd7a1b66ec2d874949",
+   "rank1": {
+    "id": "c500e0b8f43c7",
+    "params": {
+     "dipTenths": 41,
+     "trailingStopTenths": 57,
+     "maximumHoldDays": 14,
+     "lookbackSessions": 101,
+     "materialLossTenths": 8,
+     "lowerReentryTenths": 38,
+     "retraceTenths": 337
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c500e0b8f43c7",
+     "params": {
+      "dipTenths": 41,
+      "trailingStopTenths": 57,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 101,
+      "materialLossTenths": 8,
+      "lowerReentryTenths": 38,
+      "retraceTenths": 337
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c4c6bad52edc2",
+     "params": {
+      "dipTenths": 221,
+      "trailingStopTenths": 76,
+      "maximumHoldDays": 5,
+      "lookbackSessions": 247,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 40,
+      "retraceTenths": 344
+     }
+    },
+    {
+     "rank": 3,
+     "id": "cf20a01120bdd",
+     "params": {
+      "dipTenths": 41,
+      "trailingStopTenths": 59,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 110,
+      "materialLossTenths": 3,
+      "lowerReentryTenths": 37,
+      "retraceTenths": 380
+     }
+    },
+    {
+     "rank": 4,
+     "id": "cce6b2d39d0d3",
+     "params": {
+      "dipTenths": 94,
+      "trailingStopTenths": 59,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 157,
+      "materialLossTenths": 33,
+      "lowerReentryTenths": 94,
+      "retraceTenths": 545
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c6b819cc64cf7",
+     "params": {
+      "dipTenths": 50,
+      "trailingStopTenths": 37,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 90,
+      "materialLossTenths": 45,
+      "lowerReentryTenths": 89,
+      "retraceTenths": 461
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c66016720f71c",
+     "params": {
+      "dipTenths": 216,
+      "trailingStopTenths": 77,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 101,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 46,
+      "retraceTenths": 952
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c8d4e7bfd1ec1",
+     "params": {
+      "dipTenths": 216,
+      "trailingStopTenths": 75,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 99,
+      "materialLossTenths": 1,
+      "lowerReentryTenths": 34,
+      "retraceTenths": 937
+     }
+    },
+    {
+     "rank": 8,
+     "id": "cb0fa96f5e752",
+     "params": {
+      "dipTenths": 41,
+      "trailingStopTenths": 59,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 216,
+      "materialLossTenths": 5,
+      "lowerReentryTenths": 37,
+      "retraceTenths": 781
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c481903b2b42e",
+     "params": {
+      "dipTenths": 41,
+      "trailingStopTenths": 56,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 110,
+      "materialLossTenths": 16,
+      "lowerReentryTenths": 37,
+      "retraceTenths": 261
+     }
+    },
+    {
+     "rank": 10,
+     "id": "cbb7aab5e0ed2",
+     "params": {
+      "dipTenths": 52,
+      "trailingStopTenths": 38,
+      "maximumHoldDays": 12,
+      "lookbackSessions": 203,
+      "materialLossTenths": 45,
+      "lowerReentryTenths": 89,
+      "retraceTenths": 893
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "SCHG": {
+   "finalRunConfigHash": "6011cb18bc58b2df0b39f7495597858180b86718f9f1a0ec6195b107284ac809",
+   "rank1": {
+    "id": "cdb82c9a686c1",
+    "params": {
+     "dipTenths": 47,
+     "trailingStopTenths": 35,
+     "maximumHoldDays": 11,
+     "lookbackSessions": 98,
+     "materialLossTenths": 11,
+     "lowerReentryTenths": 18,
+     "retraceTenths": 611
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "cdb82c9a686c1",
+     "params": {
+      "dipTenths": 47,
+      "trailingStopTenths": 35,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 98,
+      "materialLossTenths": 11,
+      "lowerReentryTenths": 18,
+      "retraceTenths": 611
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c423656b5e875",
+     "params": {
+      "dipTenths": 64,
+      "trailingStopTenths": 22,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 112,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 52,
+      "retraceTenths": 432
+     }
+    },
+    {
+     "rank": 3,
+     "id": "cd5fc1a0cd513",
+     "params": {
+      "dipTenths": 64,
+      "trailingStopTenths": 22,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 87,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 53,
+      "retraceTenths": 578
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c8ccdf3709b8d",
+     "params": {
+      "dipTenths": 54,
+      "trailingStopTenths": 36,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 57,
+      "materialLossTenths": 15,
+      "lowerReentryTenths": 45,
+      "retraceTenths": 566
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c3763d854102c",
+     "params": {
+      "dipTenths": 64,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 85,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 52,
+      "retraceTenths": 821
+     }
+    },
+    {
+     "rank": 6,
+     "id": "ccefd011d045e",
+     "params": {
+      "dipTenths": 74,
+      "trailingStopTenths": 45,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 63,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 46,
+      "retraceTenths": 614
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c5a7b950b9440",
+     "params": {
+      "dipTenths": 64,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 14,
+      "lookbackSessions": 72,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 53,
+      "retraceTenths": 451
+     }
+    },
+    {
+     "rank": 8,
+     "id": "cfb855174bdfb",
+     "params": {
+      "dipTenths": 47,
+      "trailingStopTenths": 35,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 52,
+      "materialLossTenths": 14,
+      "lowerReentryTenths": 18,
+      "retraceTenths": 615
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c690376797631",
+     "params": {
+      "dipTenths": 64,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 216,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 52,
+      "retraceTenths": 461
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c94581e7b626c",
+     "params": {
+      "dipTenths": 68,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 101,
+      "materialLossTenths": 17,
+      "lowerReentryTenths": 65,
+      "retraceTenths": 531
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "IWF": {
+   "finalRunConfigHash": "dd30741277d4484ca73f5eb64b40b70d5f737001e9066757588adb95d456689a",
+   "rank1": {
+    "id": "c3da8d0b09417",
+    "params": {
+     "dipTenths": 49,
+     "trailingStopTenths": 31,
+     "maximumHoldDays": 10,
+     "lookbackSessions": 152,
+     "materialLossTenths": 29,
+     "lowerReentryTenths": 36,
+     "retraceTenths": 742
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c3da8d0b09417",
+     "params": {
+      "dipTenths": 49,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 152,
+      "materialLossTenths": 29,
+      "lowerReentryTenths": 36,
+      "retraceTenths": 742
+     }
+    },
+    {
+     "rank": 2,
+     "id": "ca11a28b2b794",
+     "params": {
+      "dipTenths": 48,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 170,
+      "materialLossTenths": 29,
+      "lowerReentryTenths": 34,
+      "retraceTenths": 832
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c9ce70d57e0a7",
+     "params": {
+      "dipTenths": 48,
+      "trailingStopTenths": 30,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 150,
+      "materialLossTenths": 29,
+      "lowerReentryTenths": 34,
+      "retraceTenths": 939
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c841a6266ef57",
+     "params": {
+      "dipTenths": 48,
+      "trailingStopTenths": 31,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 138,
+      "materialLossTenths": 28,
+      "lowerReentryTenths": 35,
+      "retraceTenths": 643
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c79fdd3f101d8",
+     "params": {
+      "dipTenths": 44,
+      "trailingStopTenths": 30,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 46,
+      "materialLossTenths": 29,
+      "lowerReentryTenths": 36,
+      "retraceTenths": 878
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c32c10a109eda",
+     "params": {
+      "dipTenths": 48,
+      "trailingStopTenths": 30,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 47,
+      "materialLossTenths": 29,
+      "lowerReentryTenths": 36,
+      "retraceTenths": 674
+     }
+    },
+    {
+     "rank": 7,
+     "id": "cf64b8b923bd2",
+     "params": {
+      "dipTenths": 48,
+      "trailingStopTenths": 30,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 172,
+      "materialLossTenths": 29,
+      "lowerReentryTenths": 37,
+      "retraceTenths": 651
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c64309bb53859",
+     "params": {
+      "dipTenths": 44,
+      "trailingStopTenths": 20,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 197,
+      "materialLossTenths": 22,
+      "lowerReentryTenths": 39,
+      "retraceTenths": 828
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c0b5e6c265edb",
+     "params": {
+      "dipTenths": 44,
+      "trailingStopTenths": 29,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 83,
+      "materialLossTenths": 17,
+      "lowerReentryTenths": 40,
+      "retraceTenths": 828
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c565aa93cb163",
+     "params": {
+      "dipTenths": 44,
+      "trailingStopTenths": 20,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 169,
+      "materialLossTenths": 17,
+      "lowerReentryTenths": 35,
+      "retraceTenths": 828
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "XLY": {
+   "finalRunConfigHash": "508577801cfdd076bd76e3bb6e780393825a2215aeb04254d884b1a38e458a47",
+   "rank1": {
+    "id": "c7e8ba5c8e4b6",
+    "params": {
+     "dipTenths": 57,
+     "trailingStopTenths": 21,
+     "maximumHoldDays": 4,
+     "lookbackSessions": 209,
+     "materialLossTenths": 16,
+     "lowerReentryTenths": 23,
+     "retraceTenths": 501
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c7e8ba5c8e4b6",
+     "params": {
+      "dipTenths": 57,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 4,
+      "lookbackSessions": 209,
+      "materialLossTenths": 16,
+      "lowerReentryTenths": 23,
+      "retraceTenths": 501
+     }
+    },
+    {
+     "rank": 2,
+     "id": "ca45ff4aa202d",
+     "params": {
+      "dipTenths": 54,
+      "trailingStopTenths": 25,
+      "maximumHoldDays": 4,
+      "lookbackSessions": 122,
+      "materialLossTenths": 16,
+      "lowerReentryTenths": 17,
+      "retraceTenths": 507
+     }
+    },
+    {
+     "rank": 3,
+     "id": "cb9be298421ad",
+     "params": {
+      "dipTenths": 54,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 4,
+      "lookbackSessions": 204,
+      "materialLossTenths": 27,
+      "lowerReentryTenths": 30,
+      "retraceTenths": 500
+     }
+    },
+    {
+     "rank": 4,
+     "id": "cbd1cb3830abb",
+     "params": {
+      "dipTenths": 54,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 4,
+      "lookbackSessions": 204,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 28,
+      "retraceTenths": 585
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c2169eea45a8c",
+     "params": {
+      "dipTenths": 57,
+      "trailingStopTenths": 26,
+      "maximumHoldDays": 4,
+      "lookbackSessions": 172,
+      "materialLossTenths": 16,
+      "lowerReentryTenths": 17,
+      "retraceTenths": 503
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c826d222e7c6e",
+     "params": {
+      "dipTenths": 70,
+      "trailingStopTenths": 27,
+      "maximumHoldDays": 13,
+      "lookbackSessions": 207,
+      "materialLossTenths": 90,
+      "lowerReentryTenths": 2,
+      "retraceTenths": 614
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c9e6c2149624c",
+     "params": {
+      "dipTenths": 57,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 5,
+      "lookbackSessions": 204,
+      "materialLossTenths": 16,
+      "lowerReentryTenths": 17,
+      "retraceTenths": 600
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c36355ef35197",
+     "params": {
+      "dipTenths": 57,
+      "trailingStopTenths": 26,
+      "maximumHoldDays": 4,
+      "lookbackSessions": 123,
+      "materialLossTenths": 17,
+      "lowerReentryTenths": 17,
+      "retraceTenths": 657
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c8d5657c8f2b6",
+     "params": {
+      "dipTenths": 58,
+      "trailingStopTenths": 26,
+      "maximumHoldDays": 4,
+      "lookbackSessions": 195,
+      "materialLossTenths": 25,
+      "lowerReentryTenths": 17,
+      "retraceTenths": 487
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c88cb59b2fce8",
+     "params": {
+      "dipTenths": 56,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 4,
+      "lookbackSessions": 230,
+      "materialLossTenths": 13,
+      "lowerReentryTenths": 30,
+      "retraceTenths": 501
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "IWN": {
+   "finalRunConfigHash": "a5a61485768d675b9eea1e1c543887fb96fbf70a24db6bd07635953053b573c8",
+   "rank1": {
+    "id": "cb4e9083adf83",
+    "params": {
+     "dipTenths": 225,
+     "trailingStopTenths": 28,
+     "maximumHoldDays": 26,
+     "lookbackSessions": 239,
+     "materialLossTenths": 2,
+     "lowerReentryTenths": 1,
+     "retraceTenths": 599
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "cb4e9083adf83",
+     "params": {
+      "dipTenths": 225,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 26,
+      "lookbackSessions": 239,
+      "materialLossTenths": 2,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 599
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c373188e626d4",
+     "params": {
+      "dipTenths": 215,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 89,
+      "lookbackSessions": 199,
+      "materialLossTenths": 2,
+      "lowerReentryTenths": 0,
+      "retraceTenths": 908
+     }
+    },
+    {
+     "rank": 3,
+     "id": "ce41a6d4ac2cd",
+     "params": {
+      "dipTenths": 224,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 23,
+      "lookbackSessions": 239,
+      "materialLossTenths": 0,
+      "lowerReentryTenths": 0,
+      "retraceTenths": 466
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c453f21846a50",
+     "params": {
+      "dipTenths": 226,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 62,
+      "lookbackSessions": 240,
+      "materialLossTenths": 0,
+      "lowerReentryTenths": 2,
+      "retraceTenths": 393
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c105b76b750e3",
+     "params": {
+      "dipTenths": 225,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 106,
+      "lookbackSessions": 239,
+      "materialLossTenths": 0,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 451
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c1add75bb5d0e",
+     "params": {
+      "dipTenths": 219,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 90,
+      "lookbackSessions": 223,
+      "materialLossTenths": 0,
+      "lowerReentryTenths": 0,
+      "retraceTenths": 477
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c16c9c98db1c9",
+     "params": {
+      "dipTenths": 225,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 113,
+      "lookbackSessions": 202,
+      "materialLossTenths": 1,
+      "lowerReentryTenths": 0,
+      "retraceTenths": 568
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c04989db1c379",
+     "params": {
+      "dipTenths": 226,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 47,
+      "lookbackSessions": 240,
+      "materialLossTenths": 1,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 592
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c1df6e540fb5a",
+     "params": {
+      "dipTenths": 226,
+      "trailingStopTenths": 29,
+      "maximumHoldDays": 101,
+      "lookbackSessions": 240,
+      "materialLossTenths": 1,
+      "lowerReentryTenths": 0,
+      "retraceTenths": 522
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c046eb5612a37",
+     "params": {
+      "dipTenths": 217,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 97,
+      "lookbackSessions": 208,
+      "materialLossTenths": 0,
+      "lowerReentryTenths": 1,
+      "retraceTenths": 573
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "NVDA": {
+   "finalRunConfigHash": "32bb288e168ce1ce48cd2f761b96f2586928c7a3be6f35f6a771efdd047b0ee5",
+   "rank1": {
+    "id": "cd26484c6e749",
+    "params": {
+     "dipTenths": 38,
+     "trailingStopTenths": 21,
+     "maximumHoldDays": 11,
+     "lookbackSessions": 80,
+     "materialLossTenths": 27,
+     "lowerReentryTenths": 128,
+     "retraceTenths": 745
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "cd26484c6e749",
+     "params": {
+      "dipTenths": 38,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 80,
+      "materialLossTenths": 27,
+      "lowerReentryTenths": 128,
+      "retraceTenths": 745
+     }
+    },
+    {
+     "rank": 2,
+     "id": "cfc549abce9a0",
+     "params": {
+      "dipTenths": 41,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 64,
+      "materialLossTenths": 22,
+      "lowerReentryTenths": 131,
+      "retraceTenths": 723
+     }
+    },
+    {
+     "rank": 3,
+     "id": "cdb6b623eed39",
+     "params": {
+      "dipTenths": 34,
+      "trailingStopTenths": 29,
+      "maximumHoldDays": 2,
+      "lookbackSessions": 66,
+      "materialLossTenths": 25,
+      "lowerReentryTenths": 111,
+      "retraceTenths": 716
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c0c47c4afbe2d",
+     "params": {
+      "dipTenths": 60,
+      "trailingStopTenths": 20,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 92,
+      "materialLossTenths": 25,
+      "lowerReentryTenths": 136,
+      "retraceTenths": 619
+     }
+    },
+    {
+     "rank": 5,
+     "id": "cf44729d19f9b",
+     "params": {
+      "dipTenths": 56,
+      "trailingStopTenths": 22,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 80,
+      "materialLossTenths": 26,
+      "lowerReentryTenths": 128,
+      "retraceTenths": 711
+     }
+    },
+    {
+     "rank": 6,
+     "id": "cb4bc75694cd1",
+     "params": {
+      "dipTenths": 56,
+      "trailingStopTenths": 22,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 64,
+      "materialLossTenths": 30,
+      "lowerReentryTenths": 128,
+      "retraceTenths": 830
+     }
+    },
+    {
+     "rank": 7,
+     "id": "cca0856b40fe3",
+     "params": {
+      "dipTenths": 65,
+      "trailingStopTenths": 22,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 103,
+      "materialLossTenths": 22,
+      "lowerReentryTenths": 135,
+      "retraceTenths": 729
+     }
+    },
+    {
+     "rank": 8,
+     "id": "cb8f59a25d480",
+     "params": {
+      "dipTenths": 72,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 2,
+      "lookbackSessions": 74,
+      "materialLossTenths": 46,
+      "lowerReentryTenths": 106,
+      "retraceTenths": 666
+     }
+    },
+    {
+     "rank": 9,
+     "id": "cea3b6f19f9bd",
+     "params": {
+      "dipTenths": 82,
+      "trailingStopTenths": 20,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 46,
+      "materialLossTenths": 34,
+      "lowerReentryTenths": 135,
+      "retraceTenths": 594
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c7583af2718bc",
+     "params": {
+      "dipTenths": 76,
+      "trailingStopTenths": 20,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 46,
+      "materialLossTenths": 25,
+      "lowerReentryTenths": 143,
+      "retraceTenths": 629
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "AAPL": {
+   "finalRunConfigHash": "6272e60b4c228b42c00ce27cae2ab76b23213ce3f79ec6c00c6461c3d5fd493d",
+   "rank1": {
+    "id": "c1a2c8e412c2e",
+    "params": {
+     "dipTenths": 257,
+     "trailingStopTenths": 119,
+     "maximumHoldDays": 1,
+     "lookbackSessions": 247,
+     "materialLossTenths": 16,
+     "lowerReentryTenths": 9,
+     "retraceTenths": 302
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c1a2c8e412c2e",
+     "params": {
+      "dipTenths": 257,
+      "trailingStopTenths": 119,
+      "maximumHoldDays": 1,
+      "lookbackSessions": 247,
+      "materialLossTenths": 16,
+      "lowerReentryTenths": 9,
+      "retraceTenths": 302
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c5d3e88fa8787",
+     "params": {
+      "dipTenths": 257,
+      "trailingStopTenths": 119,
+      "maximumHoldDays": 1,
+      "lookbackSessions": 248,
+      "materialLossTenths": 16,
+      "lowerReentryTenths": 24,
+      "retraceTenths": 108
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c7045c342f64b",
+     "params": {
+      "dipTenths": 257,
+      "trailingStopTenths": 122,
+      "maximumHoldDays": 1,
+      "lookbackSessions": 247,
+      "materialLossTenths": 14,
+      "lowerReentryTenths": 9,
+      "retraceTenths": 745
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c49d690c4a6b9",
+     "params": {
+      "dipTenths": 262,
+      "trailingStopTenths": 119,
+      "maximumHoldDays": 1,
+      "lookbackSessions": 233,
+      "materialLossTenths": 15,
+      "lowerReentryTenths": 30,
+      "retraceTenths": 101
+     }
+    },
+    {
+     "rank": 5,
+     "id": "cbd45754f225b",
+     "params": {
+      "dipTenths": 240,
+      "trailingStopTenths": 109,
+      "maximumHoldDays": 12,
+      "lookbackSessions": 170,
+      "materialLossTenths": 9,
+      "lowerReentryTenths": 10,
+      "retraceTenths": 510
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c128c3ebbbc23",
+     "params": {
+      "dipTenths": 275,
+      "trailingStopTenths": 109,
+      "maximumHoldDays": 12,
+      "lookbackSessions": 242,
+      "materialLossTenths": 36,
+      "lowerReentryTenths": 29,
+      "retraceTenths": 240
+     }
+    },
+    {
+     "rank": 7,
+     "id": "cd1063f494550",
+     "params": {
+      "dipTenths": 239,
+      "trailingStopTenths": 109,
+      "maximumHoldDays": 12,
+      "lookbackSessions": 171,
+      "materialLossTenths": 4,
+      "lowerReentryTenths": 16,
+      "retraceTenths": 463
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c0197fa5d6a15",
+     "params": {
+      "dipTenths": 275,
+      "trailingStopTenths": 109,
+      "maximumHoldDays": 12,
+      "lookbackSessions": 212,
+      "materialLossTenths": 1,
+      "lowerReentryTenths": 28,
+      "retraceTenths": 234
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c153017b1c575",
+     "params": {
+      "dipTenths": 275,
+      "trailingStopTenths": 109,
+      "maximumHoldDays": 12,
+      "lookbackSessions": 211,
+      "materialLossTenths": 54,
+      "lowerReentryTenths": 28,
+      "retraceTenths": 234
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c1d38c485aa17",
+     "params": {
+      "dipTenths": 264,
+      "trailingStopTenths": 109,
+      "maximumHoldDays": 12,
+      "lookbackSessions": 247,
+      "materialLossTenths": 14,
+      "lowerReentryTenths": 97,
+      "retraceTenths": 1
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "MSFT": {
+   "finalRunConfigHash": "a65f1ae29ea5c1184d811d92169119ce4b00ea3ca7a3f479af7dc15cf401737a",
+   "rank1": {
+    "id": "c4713e72e0acc",
+    "params": {
+     "dipTenths": 23,
+     "trailingStopTenths": 32,
+     "maximumHoldDays": 22,
+     "lookbackSessions": 89,
+     "materialLossTenths": 57,
+     "lowerReentryTenths": 31,
+     "retraceTenths": 480
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c4713e72e0acc",
+     "params": {
+      "dipTenths": 23,
+      "trailingStopTenths": 32,
+      "maximumHoldDays": 22,
+      "lookbackSessions": 89,
+      "materialLossTenths": 57,
+      "lowerReentryTenths": 31,
+      "retraceTenths": 480
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c6684fbfcc52b",
+     "params": {
+      "dipTenths": 23,
+      "trailingStopTenths": 32,
+      "maximumHoldDays": 22,
+      "lookbackSessions": 86,
+      "materialLossTenths": 45,
+      "lowerReentryTenths": 32,
+      "retraceTenths": 477
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c4aaaa9295221",
+     "params": {
+      "dipTenths": 23,
+      "trailingStopTenths": 27,
+      "maximumHoldDays": 22,
+      "lookbackSessions": 98,
+      "materialLossTenths": 51,
+      "lowerReentryTenths": 32,
+      "retraceTenths": 480
+     }
+    },
+    {
+     "rank": 4,
+     "id": "cac9896dc6ed0",
+     "params": {
+      "dipTenths": 26,
+      "trailingStopTenths": 33,
+      "maximumHoldDays": 22,
+      "lookbackSessions": 147,
+      "materialLossTenths": 60,
+      "lowerReentryTenths": 32,
+      "retraceTenths": 482
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c52ef7465d3ee",
+     "params": {
+      "dipTenths": 49,
+      "trailingStopTenths": 63,
+      "maximumHoldDays": 16,
+      "lookbackSessions": 213,
+      "materialLossTenths": 15,
+      "lowerReentryTenths": 34,
+      "retraceTenths": 853
+     }
+    },
+    {
+     "rank": 6,
+     "id": "cccab30d709f7",
+     "params": {
+      "dipTenths": 45,
+      "trailingStopTenths": 63,
+      "maximumHoldDays": 16,
+      "lookbackSessions": 157,
+      "materialLossTenths": 15,
+      "lowerReentryTenths": 33,
+      "retraceTenths": 859
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c1f1af2924bd8",
+     "params": {
+      "dipTenths": 24,
+      "trailingStopTenths": 32,
+      "maximumHoldDays": 22,
+      "lookbackSessions": 86,
+      "materialLossTenths": 44,
+      "lowerReentryTenths": 55,
+      "retraceTenths": 482
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c3d935ceef424",
+     "params": {
+      "dipTenths": 26,
+      "trailingStopTenths": 33,
+      "maximumHoldDays": 22,
+      "lookbackSessions": 57,
+      "materialLossTenths": 60,
+      "lowerReentryTenths": 32,
+      "retraceTenths": 482
+     }
+    },
+    {
+     "rank": 9,
+     "id": "cdc8dd52ae170",
+     "params": {
+      "dipTenths": 23,
+      "trailingStopTenths": 32,
+      "maximumHoldDays": 22,
+      "lookbackSessions": 68,
+      "materialLossTenths": 36,
+      "lowerReentryTenths": 32,
+      "retraceTenths": 488
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c82d8c63bd604",
+     "params": {
+      "dipTenths": 30,
+      "trailingStopTenths": 33,
+      "maximumHoldDays": 22,
+      "lookbackSessions": 165,
+      "materialLossTenths": 57,
+      "lowerReentryTenths": 30,
+      "retraceTenths": 481
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "AMD": {
+   "finalRunConfigHash": "75ccbdf46fb5ae013391dd01c060e6cd5136c081f947ff18462bc90f6745c0e2",
+   "rank1": {
+    "id": "c429edbf3d6e7",
+    "params": {
+     "dipTenths": 398,
+     "trailingStopTenths": 28,
+     "maximumHoldDays": 72,
+     "lookbackSessions": 110,
+     "materialLossTenths": 18,
+     "lowerReentryTenths": 94,
+     "retraceTenths": 378
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c429edbf3d6e7",
+     "params": {
+      "dipTenths": 398,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 72,
+      "lookbackSessions": 110,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 94,
+      "retraceTenths": 378
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c04d565bc21b0",
+     "params": {
+      "dipTenths": 397,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 50,
+      "lookbackSessions": 110,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 94,
+      "retraceTenths": 119
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c38597cc8d99e",
+     "params": {
+      "dipTenths": 392,
+      "trailingStopTenths": 27,
+      "maximumHoldDays": 85,
+      "lookbackSessions": 110,
+      "materialLossTenths": 15,
+      "lowerReentryTenths": 110,
+      "retraceTenths": 123
+     }
+    },
+    {
+     "rank": 4,
+     "id": "ce9b2043d063c",
+     "params": {
+      "dipTenths": 397,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 50,
+      "lookbackSessions": 110,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 88,
+      "retraceTenths": 119
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c83b7c6821cb0",
+     "params": {
+      "dipTenths": 396,
+      "trailingStopTenths": 28,
+      "maximumHoldDays": 87,
+      "lookbackSessions": 109,
+      "materialLossTenths": 10,
+      "lowerReentryTenths": 88,
+      "retraceTenths": 119
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c31beb92f592e",
+     "params": {
+      "dipTenths": 392,
+      "trailingStopTenths": 27,
+      "maximumHoldDays": 99,
+      "lookbackSessions": 110,
+      "materialLossTenths": 18,
+      "lowerReentryTenths": 95,
+      "retraceTenths": 124
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c859906bef17b",
+     "params": {
+      "dipTenths": 391,
+      "trailingStopTenths": 27,
+      "maximumHoldDays": 53,
+      "lookbackSessions": 109,
+      "materialLossTenths": 16,
+      "lowerReentryTenths": 110,
+      "retraceTenths": 124
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c41a82a7e4fa4",
+     "params": {
+      "dipTenths": 393,
+      "trailingStopTenths": 26,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 105,
+      "materialLossTenths": 26,
+      "lowerReentryTenths": 86,
+      "retraceTenths": 797
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c0863b06f7a00",
+     "params": {
+      "dipTenths": 393,
+      "trailingStopTenths": 26,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 105,
+      "materialLossTenths": 13,
+      "lowerReentryTenths": 107,
+      "retraceTenths": 801
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c001076a6a1a6",
+     "params": {
+      "dipTenths": 393,
+      "trailingStopTenths": 26,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 105,
+      "materialLossTenths": 28,
+      "lowerReentryTenths": 113,
+      "retraceTenths": 802
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "META": {
+   "finalRunConfigHash": "24b153dde615217b4469dc5778537a2a0c046ee8b951c01d18e2221e09e5e581",
+   "rank1": {
+    "id": "c6732eabb3c6f",
+    "params": {
+     "dipTenths": 171,
+     "trailingStopTenths": 23,
+     "maximumHoldDays": 8,
+     "lookbackSessions": 219,
+     "materialLossTenths": 34,
+     "lowerReentryTenths": 136,
+     "retraceTenths": 174
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c6732eabb3c6f",
+     "params": {
+      "dipTenths": 171,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 219,
+      "materialLossTenths": 34,
+      "lowerReentryTenths": 136,
+      "retraceTenths": 174
+     }
+    },
+    {
+     "rank": 2,
+     "id": "cd503a8b8e804",
+     "params": {
+      "dipTenths": 172,
+      "trailingStopTenths": 25,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 224,
+      "materialLossTenths": 30,
+      "lowerReentryTenths": 136,
+      "retraceTenths": 878
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c833288d50e4b",
+     "params": {
+      "dipTenths": 256,
+      "trailingStopTenths": 98,
+      "maximumHoldDays": 3,
+      "lookbackSessions": 34,
+      "materialLossTenths": 70,
+      "lowerReentryTenths": 52,
+      "retraceTenths": 110
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c05e17e960d29",
+     "params": {
+      "dipTenths": 294,
+      "trailingStopTenths": 98,
+      "maximumHoldDays": 3,
+      "lookbackSessions": 45,
+      "materialLossTenths": 60,
+      "lowerReentryTenths": 42,
+      "retraceTenths": 182
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c5ed90fea6876",
+     "params": {
+      "dipTenths": 171,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 219,
+      "materialLossTenths": 24,
+      "lowerReentryTenths": 136,
+      "retraceTenths": 918
+     }
+    },
+    {
+     "rank": 6,
+     "id": "ca2e7c8d74762",
+     "params": {
+      "dipTenths": 172,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 219,
+      "materialLossTenths": 32,
+      "lowerReentryTenths": 134,
+      "retraceTenths": 542
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c754c65ca6477",
+     "params": {
+      "dipTenths": 312,
+      "trailingStopTenths": 51,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 80,
+      "materialLossTenths": 57,
+      "lowerReentryTenths": 144,
+      "retraceTenths": 208
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c2d0d34c200d3",
+     "params": {
+      "dipTenths": 171,
+      "trailingStopTenths": 23,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 214,
+      "materialLossTenths": 34,
+      "lowerReentryTenths": 132,
+      "retraceTenths": 904
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c492406d408af",
+     "params": {
+      "dipTenths": 302,
+      "trailingStopTenths": 44,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 80,
+      "materialLossTenths": 55,
+      "lowerReentryTenths": 141,
+      "retraceTenths": 93
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c982a7435e677",
+     "params": {
+      "dipTenths": 300,
+      "trailingStopTenths": 98,
+      "maximumHoldDays": 3,
+      "lookbackSessions": 47,
+      "materialLossTenths": 56,
+      "lowerReentryTenths": 52,
+      "retraceTenths": 164
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "GOOGL": {
+   "finalRunConfigHash": "114e6a662e8861728a658a8ab6556cc761b947e5ac8095a4195861b1034ec79c",
+   "rank1": {
+    "id": "c667c4c306fbe",
+    "params": {
+     "dipTenths": 88,
+     "trailingStopTenths": 25,
+     "maximumHoldDays": 8,
+     "lookbackSessions": 199,
+     "materialLossTenths": 62,
+     "lowerReentryTenths": 20,
+     "retraceTenths": 621
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c667c4c306fbe",
+     "params": {
+      "dipTenths": 88,
+      "trailingStopTenths": 25,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 199,
+      "materialLossTenths": 62,
+      "lowerReentryTenths": 20,
+      "retraceTenths": 621
+     }
+    },
+    {
+     "rank": 2,
+     "id": "c30087e18eb9a",
+     "params": {
+      "dipTenths": 105,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 53,
+      "lookbackSessions": 233,
+      "materialLossTenths": 91,
+      "lowerReentryTenths": 134,
+      "retraceTenths": 610
+     }
+    },
+    {
+     "rank": 3,
+     "id": "c4796215bf9ba",
+     "params": {
+      "dipTenths": 86,
+      "trailingStopTenths": 25,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 199,
+      "materialLossTenths": 84,
+      "lowerReentryTenths": 101,
+      "retraceTenths": 452
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c4a2bd442ca8d",
+     "params": {
+      "dipTenths": 88,
+      "trailingStopTenths": 25,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 194,
+      "materialLossTenths": 84,
+      "lowerReentryTenths": 69,
+      "retraceTenths": 783
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c0de890a7ba31",
+     "params": {
+      "dipTenths": 88,
+      "trailingStopTenths": 25,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 207,
+      "materialLossTenths": 83,
+      "lowerReentryTenths": 51,
+      "retraceTenths": 618
+     }
+    },
+    {
+     "rank": 6,
+     "id": "c433856af15b7",
+     "params": {
+      "dipTenths": 105,
+      "trailingStopTenths": 21,
+      "maximumHoldDays": 53,
+      "lookbackSessions": 231,
+      "materialLossTenths": 85,
+      "lowerReentryTenths": 150,
+      "retraceTenths": 610
+     }
+    },
+    {
+     "rank": 7,
+     "id": "c1dd9ce5034d7",
+     "params": {
+      "dipTenths": 88,
+      "trailingStopTenths": 25,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 208,
+      "materialLossTenths": 80,
+      "lowerReentryTenths": 101,
+      "retraceTenths": 724
+     }
+    },
+    {
+     "rank": 8,
+     "id": "ccbac507ff7e2",
+     "params": {
+      "dipTenths": 105,
+      "trailingStopTenths": 25,
+      "maximumHoldDays": 53,
+      "lookbackSessions": 233,
+      "materialLossTenths": 75,
+      "lowerReentryTenths": 148,
+      "retraceTenths": 575
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c7b344d465e39",
+     "params": {
+      "dipTenths": 105,
+      "trailingStopTenths": 24,
+      "maximumHoldDays": 53,
+      "lookbackSessions": 249,
+      "materialLossTenths": 80,
+      "lowerReentryTenths": 148,
+      "retraceTenths": 640
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c5952cd034574",
+     "params": {
+      "dipTenths": 88,
+      "trailingStopTenths": 27,
+      "maximumHoldDays": 8,
+      "lookbackSessions": 196,
+      "materialLossTenths": 62,
+      "lowerReentryTenths": 22,
+      "retraceTenths": 445
+     }
+    }
+   ],
+   "status": "ranked"
+  },
+  "AMZN": {
+   "finalRunConfigHash": "c7dcd73be0b650f14434f1900d49da4072f19a0a889a2e2a7782573c7d49e5b4",
+   "rank1": {
+    "id": "c110df10cabc8",
+    "params": {
+     "dipTenths": 251,
+     "trailingStopTenths": 88,
+     "maximumHoldDays": 10,
+     "lookbackSessions": 96,
+     "materialLossTenths": 60,
+     "lowerReentryTenths": 79,
+     "retraceTenths": 794
+    }
+   },
+   "shortlist": [
+    {
+     "rank": 1,
+     "id": "c110df10cabc8",
+     "params": {
+      "dipTenths": 251,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 10,
+      "lookbackSessions": 96,
+      "materialLossTenths": 60,
+      "lowerReentryTenths": 79,
+      "retraceTenths": 794
+     }
+    },
+    {
+     "rank": 2,
+     "id": "ca9dff756d27f",
+     "params": {
+      "dipTenths": 247,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 5,
+      "lookbackSessions": 94,
+      "materialLossTenths": 97,
+      "lowerReentryTenths": 102,
+      "retraceTenths": 627
+     }
+    },
+    {
+     "rank": 3,
+     "id": "cd1e5296c6b50",
+     "params": {
+      "dipTenths": 251,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 5,
+      "lookbackSessions": 95,
+      "materialLossTenths": 66,
+      "lowerReentryTenths": 80,
+      "retraceTenths": 455
+     }
+    },
+    {
+     "rank": 4,
+     "id": "c3cfb45db5148",
+     "params": {
+      "dipTenths": 252,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 9,
+      "lookbackSessions": 95,
+      "materialLossTenths": 94,
+      "lowerReentryTenths": 6,
+      "retraceTenths": 977
+     }
+    },
+    {
+     "rank": 5,
+     "id": "c53ce033b2170",
+     "params": {
+      "dipTenths": 250,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 96,
+      "materialLossTenths": 88,
+      "lowerReentryTenths": 79,
+      "retraceTenths": 963
+     }
+    },
+    {
+     "rank": 6,
+     "id": "cd2186c85ced8",
+     "params": {
+      "dipTenths": 231,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 16,
+      "lookbackSessions": 96,
+      "materialLossTenths": 65,
+      "lowerReentryTenths": 72,
+      "retraceTenths": 479
+     }
+    },
+    {
+     "rank": 7,
+     "id": "ca7c8924a8761",
+     "params": {
+      "dipTenths": 250,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 96,
+      "materialLossTenths": 48,
+      "lowerReentryTenths": 62,
+      "retraceTenths": 965
+     }
+    },
+    {
+     "rank": 8,
+     "id": "c5d788d50be5d",
+     "params": {
+      "dipTenths": 242,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 5,
+      "lookbackSessions": 97,
+      "materialLossTenths": 66,
+      "lowerReentryTenths": 121,
+      "retraceTenths": 979
+     }
+    },
+    {
+     "rank": 9,
+     "id": "c37421f18ed61",
+     "params": {
+      "dipTenths": 244,
+      "trailingStopTenths": 89,
+      "maximumHoldDays": 11,
+      "lookbackSessions": 96,
+      "materialLossTenths": 62,
+      "lowerReentryTenths": 80,
+      "retraceTenths": 463
+     }
+    },
+    {
+     "rank": 10,
+     "id": "c52838716f287",
+     "params": {
+      "dipTenths": 251,
+      "trailingStopTenths": 88,
+      "maximumHoldDays": 3,
+      "lookbackSessions": 95,
+      "materialLossTenths": 52,
+      "lowerReentryTenths": 78,
+      "retraceTenths": 927
+     }
+    }
+   ],
+   "status": "ranked"
+  }
+ },
+ "reportHashes": {
+  "TOP_CANDIDATES.md": "d776f5de3ff31207881480768477a4c84e3647f553354fc971ff89de50e9c35f",
+  "top_candidates.json": "4e1ca51e98942514504d28e4be4c7f7579512c7fe4bac28810141a0761d6df1d",
+  "top_candidates.csv": "28c3264eb3fa955075680e082d19920374827e1bd25909fda0eaa671d99b7080",
+  "WALK_FORWARD_RESULTS.md": "4b69617625f6bcf40eaa8167d703852811723a5f3970a41420f58b081f383602",
+  "walk_forward.json": "9437e40b180b16a839b3c4ef73b7dabe2543639c50075891e478b5ebdba06f4c"
+ }
+}

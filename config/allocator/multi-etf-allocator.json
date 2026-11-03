@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "name": "multi-etf-allocator",
+  "version": "multi-etf-allocator-v1",
+  "description": "Execution and allocation settings of the multi-ETF D1 allocator (research/multi-etf-allocator/PROTOCOL.md). Kept apart from the frozen D1 phenotypes in config/phenotypes/D1/.",
+  "symbols": ["VGT", "XBI", "XRT", "KRE"],
+  "core": { "VOOG": 0.6, "VGT": 0.4 },
+  "phenotypeArchitecture": "D1",
+  "fixedPhenotypes": { "VGT": "primary" },
+  "variablePhenotypes": { "XBI": ["primary", "lowDd"], "XRT": ["primary", "lowDd"], "KRE": ["primary", "lowDd"] },
+  "horizon": { "start": "2016-01-04", "firstEligibleDate": "2017-06-15", "commonEnd": "2025-10-13", "sectorReferenceEnd": "2025-10-16" },
+  "fixed": { "fullPoolPrincipal": 100000, "splitSlotPrincipal": 50000, "marginInterestRate": "11%", "dayCount": 365 },
+  "portfolio": {
+    "initial": { "VOOG": 180000, "VGT": 120000 },
+    "borrowedFraction": 0.2,
+    "riskOnlyFractions": [0.1, 0.15, 0.2, 0.25],
+    "marginInterestRate": "11%",
+    "dayCount": 365,
+    "profitReinvestment": "60/40 VOOG/VGT at the earliest executable trades after the exit",
+    "lossFunding": "proportional core sales at the earliest executable trades",
+    "regTInitial": 0.5,
+    "minimumEquity": 2000
+  },
+  "policies": ["shadow", "priority", "split", "cancel", "hold"],
+  "primaryPolicy": "shadow",
+  "tieOrders": { "alphabetical": ["KRE", "VGT", "XBI", "XRT"], "priority": ["VGT", "XBI", "XRT", "KRE"] },
+  "maintenance": {
+    "ceiling": 0.6,
+    "base": 0.35,
+    "schedules": ["U35", "U50", "U60", "L50", "L60", "G50", "G60"],
+    "sectorGroup": ["VGT", "XBI", "XRT", "KRE"],
+    "liquidationBuffer": 0.05,
+    "warningRatio": 1.25,
+    "criticalRatio": 1.1,
+    "concentrationFlags": [0.2, 0.3, 0.5],
+    "status": "UNVERIFIED UNTIL USER CONFIRMS: Vanguard's account-specific house requirements, concentration treatment and liquidation practice"
+  },
+  "vanguardInterest": {
+    "source": "https://investor.vanguard.com/client-benefits/margin (accessed 2026-10-23; schedule dated 2026-09-29)",
+    "baseRate": "9.75%",
+    "standardTiers": [
+      { "upTo": 19999.99, "rate": "12.25%" },
+      { "upTo": 49999.99, "rate": "11.75%" },
+      { "upTo": 99999.99, "rate": "11.25%" },
+      { "upTo": 249999.99, "rate": "10.75%" },
+      { "upTo": 499999.99, "rate": "10.25%" },
+      { "upTo": null, "rate": "10.25%", "note": "balances of $500,000+ are not listed; the last listed rate is assumed" }
+    ],
+    "preferredRate": "7.00%",
+    "preferredQualifyingAssets": 1000000,
+    "premierRate": "6.00%",
+    "premierQualifyingAssets": 5000000,
+    "dayCount": 360,
+    "capitalization": "monthly: accrued interest is added to the debit on the first calendar day of each month"
+  },
+  "stress": {
+    "entryGaps": [0.05, 0.1, 0.2, 0.3, 0.4],
+    "correlations": [0, 0.5, 1],
+    "fullPathDates": ["2018-12-24", "2020-03-16", "2020-03-23", "2022-06-16", "2023-03-13", "2025-04-07"],
+    "fullPathGaps": [0.2, 0.4],
+    "fullPathCorrelations": [0.5, 1],
+    "fullPathRequirements": ["L60", "G60", "U60"],
+    "costsBps": [0, 2, 5, 10, 25],
+    "stopSlippageBps": 50,
+    "forcedSaleSlippageBps": 50,
+    "rates": ["8%", "11%", "14%"]
+  }
+}

@@ -1,0 +1,207 @@
+{
+ "generatedAt": "2026-10-26T05:14:21.755Z",
+ "slot": "Q1",
+ "familyIndex": 0,
+ "family": "Q-u-f1",
+ "arm": "Q-u",
+ "start": "GDX:177.39.52.13.148.6.50.53|KRE:188.47.36.13.99.1.169.189",
+ "refined": "EDV:140.34.82.26.215.37.46.23|GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+ "result": "EDV:140.34.82.26.215.37.46.23|GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+ "resultState": {
+  "key": "EDV:140.34.82.26.215.37.46.23|GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+  "books": [
+   {
+    "symbol": "GDX",
+    "vector": {
+     "id": "d1-3491cff9f4",
+     "grid": {
+      "targetPercentChange": 177,
+      "trailingBuyPercentage": 39,
+      "trailingStopPercentage": 52,
+      "maximumHoldDays": 13,
+      "tickWindowSize": 148,
+      "intradayLossBuffer": 6,
+      "pullback": 50,
+      "continuationWindow": 53
+     },
+     "origin": "paramOne"
+    }
+   },
+   {
+    "symbol": "KRE",
+    "vector": {
+     "id": "d1-86a2ee60ba",
+     "grid": {
+      "targetPercentChange": 193,
+      "trailingBuyPercentage": 48,
+      "trailingStopPercentage": 31,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 104,
+      "intradayLossBuffer": 6,
+      "pullback": 164,
+      "continuationWindow": 179
+     },
+     "origin": "refine joint"
+    }
+   },
+   {
+    "symbol": "EDV",
+    "vector": {
+     "id": "d1-e78a93c990",
+     "grid": {
+      "targetPercentChange": 140,
+      "trailingBuyPercentage": 34,
+      "trailingStopPercentage": 82,
+      "maximumHoldDays": 26,
+      "tickWindowSize": 215,
+      "intradayLossBuffer": 37,
+      "pullback": 46,
+      "continuationWindow": 23
+     },
+     "origin": "sobol:42"
+    }
+   }
+  ],
+  "value": 146599.3423172895
+ },
+ "startState": {
+  "key": "GDX:177.39.52.13.148.6.50.53|KRE:188.47.36.13.99.1.169.189",
+  "value": 130717.13482768601
+ },
+ "refinedState": {
+  "key": "EDV:140.34.82.26.215.37.46.23|GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+  "value": 146599.3423172895
+ },
+ "unique": 300,
+ "cycles": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "evaluated": 172,
+   "accepted": 1
+  },
+  {
+   "phase": "refine",
+   "cycle": 2,
+   "evaluated": 127,
+   "accepted": 1
+  }
+ ],
+ "moves": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "joint",
+   "move": "joint KRE",
+   "from": "GDX:177.39.52.13.148.6.50.53|KRE:188.47.36.13.99.1.169.189",
+   "to": "GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+   "before": 130717.13482768601,
+   "after": 140324.7429278679,
+   "lotsAdded": [
+    "KRE@1540822500",
+    "KRE@1545856260",
+    "KRE@1567171860",
+    "KRE@1587130260",
+    "KRE@1587562320",
+    "KRE@1589984040",
+    "KRE@1592919780"
+   ],
+   "lotsRemoved": [
+    "KRE@1540822380",
+    "KRE@1545856080",
+    "KRE@1587755940",
+    "KRE@1589982480",
+    "KRE@1592919600"
+   ]
+  },
+  {
+   "phase": "refine",
+   "cycle": 2,
+   "pass": "membership",
+   "move": "add EDV:d1-e78a93c990",
+   "from": "GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+   "to": "EDV:140.34.82.26.215.37.46.23|GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+   "before": 140324.7429278679,
+   "after": 146599.3423172895,
+   "lotsAdded": [
+    "EDV@1542389580",
+    "EDV@1572528660",
+    "EDV@1591709460"
+   ],
+   "lotsRemoved": [
+    "GDX@1542639600",
+    "KRE@1545856260",
+    "KRE@1567171860",
+    "KRE@1591968660",
+    "KRE@1592919780"
+   ]
+  }
+ ],
+ "pruneSteps": [
+  {
+   "phase": "prune",
+   "from": "EDV:140.34.82.26.215.37.46.23|GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+   "members": [
+    "EDV",
+    "GDX",
+    "KRE"
+   ],
+   "marginals": [
+    {
+     "symbol": "EDV",
+     "marginal": 6274.599389421608,
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "GDX",
+     "marginal": 120019.41875787542,
+     "feasibleWithout": false
+    },
+    {
+     "symbol": "KRE",
+     "marginal": 47959.250448594015,
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "final-prune",
+   "from": "EDV:140.34.82.26.215.37.46.23|GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+   "members": [
+    "EDV",
+    "GDX",
+    "KRE"
+   ],
+   "marginals": [
+    {
+     "symbol": "EDV",
+     "marginal": 6274.599389421608,
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "GDX",
+     "marginal": 120019.41875787542,
+     "feasibleWithout": false
+    },
+    {
+     "symbol": "KRE",
+     "marginal": 47959.250448594015,
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  }
+ ],
+ "pruneBlocked": false,
+ "portfolioChecks": [
+  {
+   "key": "EDV:140.34.82.26.215.37.46.23|GDX:177.39.52.13.148.6.50.53|KRE:193.48.31.12.104.6.164.179",
+   "dailyPercent": 0.2584558571166388
+  }
+ ],
+ "walkedBack": false,
+ "stoppedBy": ""
+}

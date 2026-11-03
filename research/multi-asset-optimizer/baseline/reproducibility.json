@@ -1,0 +1,26 @@
+{
+ "checkedAtUtc": "2026-10-15",
+ "checks": [
+  {
+   "what": "Full 21-symbol study run twice (dry run, then the final run after a code-hash scoping change that does not affect results)",
+   "compared": "results/main-dryrun vs results/main (dry run deleted after the check)",
+   "outcome": "252 of 252 run.json files identical except the configHash field; every evaluations.csv.gz, trade log, equity curve, pareto-front.json and symbol.json byte-identical",
+   "elapsed": "3 min 42 s each, 8 worker threads"
+  },
+  {
+   "what": "VGT walk-forward (5 folds, final, 2 control runs) with 1 worker thread versus 8",
+   "compared": "results/det-w1 vs results/det-w8 (deleted after the check)",
+   "outcome": "byte-identical apart from timing.json, experiment.json and run-manifest.json"
+  },
+  {
+   "what": "Benchmark: 4,096 evaluations in-process and with 1, 2, 4 and 8 workers",
+   "compared": "baseline/benchmark.json",
+   "outcome": "identical metrics from every evaluator"
+  },
+  {
+   "what": "Unit test: experiment with in-process, 1-worker and 3-worker evaluators",
+   "compared": "src/optimizer/tests/determinism.test.ts",
+   "outcome": "identical run.json and archives"
+  }
+ ]
+}

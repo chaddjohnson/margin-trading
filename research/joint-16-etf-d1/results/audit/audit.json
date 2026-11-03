@@ -1,0 +1,1211 @@
+{
+ "generatedAt": "2026-10-25T06:57:34.458Z",
+ "nature": "integrity only: no strategy result on any window",
+ "git": {
+  "branch": "research/trailing-buy-four-family-optimization",
+  "head": "96d7535cbaaf672a6ae40e9252fc493d94d8b604",
+  "modifiedTracked": [
+   ".gitignore",
+   "config/phenotypes/COMPATIBILITY.md",
+   "package.json",
+   "src/phenotype/strategies.ts"
+  ],
+  "untracked": [
+   "research/joint-16-etf-d1/",
+   "src/app/joint16EtfD1.ts",
+   "src/joint-16-etf-d1/"
+  ]
+ },
+ "partitions": {
+  "file": "data/partitions.json",
+  "sha256": "43893f3d3277d6804775a82e8975644fae6ffcdff30574b9ffc000212c0fefa6",
+  "partitions": {
+   "training": {
+    "start": "2016-01-01",
+    "end": "2023-12-31"
+   },
+   "holdout": {
+    "start": "2024-01-01",
+    "end": "2025-10-16"
+   },
+   "final": {
+    "start": "2025-10-17",
+    "end": null
+   },
+   "all": {
+    "start": null,
+    "end": null
+   }
+  }
+ },
+ "verifiers": [
+  {
+   "command": "npm run datasets -- verify",
+   "exitCode": 0,
+   "seconds": 88.117,
+   "tail": [
+    "  holdout  dates 2024-01-02 → 2025-10-16     182466 rows  sha256 caf5013be03d5bb4",
+    "  final    dates 2025-10-17 → 2026-10-13     106441 rows  sha256 e9d6e03462dd5f7d",
+    "  note: bars after 1:00 p.m. on 21 early-close days",
+    "",
+    "XRT: VERIFIED (verify) → data/XRT/data.csv",
+    "  canonical          1068251 rows  ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752  2016-01-04T14:30:00Z → 2026-10-13T20:50:00Z",
+    "  training dates 2016-01-04 → 2023-12-29     792337 rows  sha256 67bd21c47aa7929f",
+    "  holdout  dates 2024-01-02 → 2025-10-16     178080 rows  sha256 ce32cff7683b682f",
+    "  final    dates 2025-10-17 → 2026-10-13      97834 rows  sha256 2f90c5b92b13b893",
+    "  note: bars after 1:00 p.m. on 14 early-close days",
+    "",
+    "16 of 16 symbol(s) verified"
+   ]
+  },
+  {
+   "command": "npm run market-events -- verify",
+   "exitCode": 0,
+   "seconds": 85.932,
+   "tail": [
+    "> market-events",
+    "> node --env-file-if-exists=.env --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts marketEvents verify",
+    "",
+    "config/market-events/distributions.csv: 86 rows, sha256 3b4342eb7cdbb270; rebuilt from config/market-events/raw/vanguard-2026-10-24T084147Z: identical",
+    "  VGT: covered through 2026-10-24, last ex-date 2026-09-23",
+    "  VOOG: covered through 2026-10-24, last ex-date 2026-09-23",
+    "SPLIT VGT 8:1 on 2026-04-21: raw 809.13 → 101.57, adjusted overnight move 0.42%",
+    "SPLIT VOOG 6:1 on 2026-04-21: raw 460.46 → 77.25, adjusted overnight move 0.66%",
+    "SPLIT XOP 0.25:1 on 2020-03-30: raw 8.03 → 31.1, adjusted overnight move -3.18%",
+    "SPLIT XLE 2:1 on 2025-12-05: raw 92.22 → 46.03, adjusted overnight move -0.17%",
+    "SPLIT XLU 2:1 on 2025-12-05: raw 87.42 → 43.72, adjusted overnight move 0.02%",
+    "SPLIT XLY 2:1 on 2025-12-05: raw 238.14 → 119.18, adjusted overnight move 0.09%"
+   ]
+  },
+  {
+   "command": "npm run legacy-archive -- verify",
+   "exitCode": 0,
+   "seconds": 0.678,
+   "tail": [
+    "VERIFIED data/IWM/IWM-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/IWM/IWM-2016-2025-1-minute.csv: sha256 e94869c669a5b0ad51a3114ca372207a174e8d0f935c101c16841b6021c1f090",
+    "VERIFIED data/IWN/IWN-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/IWN/IWN-2016-2025-1-minute.csv: sha256 aea1d2bb792bdc562940f88edde146bed674ed6adc0c79f03cfbdeaaf652d947",
+    "VERIFIED data/KRE/KRE-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/KRE/KRE-2016-2025-1-minute.csv: sha256 5f8b2a284a862fdc15c1ba82649fbb749ce3dbbd66046c0f4c4c0f3f4c9e7e0b",
+    "VERIFIED data/VGT/VGT-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/VGT/VGT-2016-2025-1-minute.csv: sha256 600322afbe3d837a4c66ec62acb39e16d707079f49ec18d77f947bcb24c7962f",
+    "VERIFIED data/VGT/VGT-2016-2026.csv → data/archive/legacy-research-inputs/VGT/VGT-2016-2026.csv: sha256 653b0030da69518fa61f5a8aa43c523446676334fa309632915f5d3c5ed9d3b8",
+    "VERIFIED data/VOOG/VOOG-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/VOOG/VOOG-2016-2025-1-minute.csv: sha256 f4ad4d72f39b157fce64e023f644c4648db840be39ce6979ff42a5818d278cc2",
+    "VERIFIED data/XBI/XBI-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XBI/XBI-2016-2025-1-minute.csv: sha256 ad5521e33b53fa1590c07de5a4f5f6ca6738b06aae8bcb6224606901a5a56f7b",
+    "VERIFIED data/XLE/XLE-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XLE/XLE-2016-2025-1-minute.csv: sha256 e8adb598f40cdd95297b6dbda255ee0888a2a41e636734139ce04ff395c1922a",
+    "VERIFIED data/XLF/XLF-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XLF/XLF-2016-2025-1-minute.csv: sha256 d6cc7fe9f0d4ebdffb47e576f28e54373b40da909f411bdc7aca682d7fe445ed",
+    "VERIFIED data/XLY/XLY-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XLY/XLY-2016-2025-1-minute.csv: sha256 b58e2fbcd15d3b6a0c6b115fb6017490c3f2ed04d41fc61da4e74ca85b42155e",
+    "VERIFIED data/XRT/XRT-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XRT/XRT-2016-2025-1-minute.csv: sha256 c7c591557cc58576eb16da29ef5278643da0b0c23c183fe24cfb1c8f4bf79dc8",
+    "11 of 11 verified (data/archive/legacy-research-inputs)"
+   ]
+  }
+ ],
+ "members": [
+  {
+   "symbol": "EWZ",
+   "file": "data/EWZ/data.csv",
+   "sha256": "b1cf63a676c2696cc5f68a432f0d601510a1900d014b600b3a52dfb7c1c7439a",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "GDX",
+   "file": "data/GDX/data.csv",
+   "sha256": "86ce101fede1a412dd452fcc29dc87b69ade4ad67629230172fde878b7c2c320",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "GLD",
+   "file": "data/GLD/data.csv",
+   "sha256": "d3dd1beb35bc9beeb8085bd803609d56e2403662bf29c052450ee2e89400a9cc",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "IWM",
+   "file": "data/IWM/data.csv",
+   "sha256": "44a919f997c1eeaf8a80c9424209c71131f276a97bf5cdd7f7cf970a7691471d",
+   "sameAsPreviousAudit": "not in the previous audit",
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "IWN",
+   "file": "data/IWN/data.csv",
+   "sha256": "34cc798c020a152aec9565e680927f6b08828fcfd1a0296f016e7fe8e6da5808",
+   "sameAsPreviousAudit": "not in the previous audit",
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "KRE",
+   "file": "data/KRE/data.csv",
+   "sha256": "40e7bd6c72c1dffb343b265bed16d69c964ba5bee81ad297a15e6d8a5607e01a",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "TLT",
+   "file": "data/TLT/data.csv",
+   "sha256": "f4df3690714ee876ac643067f8567f973d80b701629f5142db15d791df16818b",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "VGT",
+   "file": "data/VGT/data.csv",
+   "sha256": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2026-04-21",
+     "ratio": 8,
+     "rawOvernight": -0.8744701098710961,
+     "adjustedOvernight": 0.004239121031230919,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "VOOG",
+   "file": "data/VOOG/data.csv",
+   "sha256": "a7aa42aeebd9e83f94368f0ee7761410ffacf734524f3cc7655af32354de51ab",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2026-04-21",
+     "ratio": 6,
+     "rawOvernight": -0.8322329844068974,
+     "adjustedOvernight": 0.006602093558615296,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XBI",
+   "file": "data/XBI/data.csv",
+   "sha256": "9afecc0606330d68ca12f7b0c331f75a150f64d0dad2e6ff910538a667b0c031",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XLE",
+   "file": "data/XLE/data.csv",
+   "sha256": "57d013b051ccb20570e64a3058cd91959bac56dc2bd5533137d13f962d37f214",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2025-12-05",
+     "ratio": 2,
+     "rawOvernight": -0.5008674907829105,
+     "adjustedOvernight": -0.001734981565820859,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XLF",
+   "file": "data/XLF/data.csv",
+   "sha256": "845e7b603edf0f4e9d923c58f9dfc838ce568d6fcb7fcd6b42a7290ab28af31e",
+   "sameAsPreviousAudit": "not in the previous audit",
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XLU",
+   "file": "data/XLU/data.csv",
+   "sha256": "ab2787a4198289317fb5324248ea8abb356925f5e6857c67ac2594aaae0fc1c3",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2025-12-05",
+     "ratio": 2,
+     "rawOvernight": -0.4998856097002974,
+     "adjustedOvernight": 0.00022878059940523165,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XLY",
+   "file": "data/XLY/data.csv",
+   "sha256": "7a80d7f22b5b9f79c4136c653f0ed14f7e45b2908614e312226ab9e9bcf02955",
+   "sameAsPreviousAudit": "not in the previous audit",
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2025-12-05",
+     "ratio": 2,
+     "rawOvernight": -0.49953808683967404,
+     "adjustedOvernight": 0.0009238263206519104,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XOP",
+   "file": "data/XOP/data.csv",
+   "sha256": "cb8f4d8852b2f7141d5a6fdc0ea5f7598d6d0ca9620899f0016aa2de6f049855",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2020-03-30",
+     "ratio": 0.25,
+     "rawOvernight": 2.8729763387297638,
+     "adjustedOvernight": -0.03175591531755906,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XRT",
+   "file": "data/XRT/data.csv",
+   "sha256": "ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752",
+   "sameAsPreviousAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  }
+ ],
+ "calendar": {
+  "identical": true,
+  "differences": [],
+  "lastCommon": "2026-10-13"
+ },
+ "coverage": [
+  {
+   "symbol": "EWZ",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 206,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2011,
+     "medianDailyDollarVolume": 728828135.2186002
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 208,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 571456156.1370994
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 844571125.4111995
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9995447453899077,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 33231
+   }
+  },
+  {
+   "symbol": "GDX",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2011,
+     "medianDailyDollarVolume": 701170953.4776996
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 672718902.2118003
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 1558046577.8766997
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9997557482288549,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 46127
+   }
+  },
+  {
+   "symbol": "GLD",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 208,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2011,
+     "medianDailyDollarVolume": 997605656.7389995
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 1726435889.6487994
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 3506433289.5038
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.999340136576383,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 10117
+   }
+  },
+  {
+   "symbol": "IWM",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2011,
+     "medianDailyDollarVolume": 3689250161.909301
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 5680294168.721996
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 7208374887.276299
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9998631678559554,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 38679
+   }
+  },
+  {
+   "symbol": "IWN",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 372,
+     "minimumBars": 162,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2010,
+     "medianDailyDollarVolume": 146995354.78169996
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 356,
+     "minimumBars": 191,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 448,
+     "medianDailyDollarVolume": 144562480.04859993
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 326,
+     "minimumBars": 168,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 117789596.01449998
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9281017417325251,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 3,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 1522
+   }
+  },
+  {
+   "symbol": "KRE",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 209,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2010,
+     "medianDailyDollarVolume": 386868571.0271
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 651223745.7759994
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 966045464.2830998
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9989334765595028,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 21
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 11228
+   }
+  },
+  {
+   "symbol": "TLT",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2012,
+     "medianDailyDollarVolume": 1256502885.5996003
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 2575293940.0478005
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 2142803911.3350015
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9984705491189033,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 47
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 0,
+    "medianBarVolume": 15531
+   }
+  },
+  {
+   "symbol": "VGT",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 327,
+     "minimumBars": 134,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2009,
+     "medianDailyDollarVolume": 125150573.27719997
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 315,
+     "minimumBars": 175,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 448,
+     "medianDailyDollarVolume": 256397944.25399995
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 199,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 412020154.50010026
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.8379626077393284,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 2,
+     "p99": 4,
+     "max": 19
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 803
+   }
+  },
+  {
+   "symbol": "VOOG",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 134,
+     "minimumBars": 29,
+     "emptySessions": 0,
+     "sparseSessions": 1629,
+     "zeroVolumeBars": 0,
+     "closingPrints": 1610,
+     "medianDailyDollarVolume": 15821229.776099999
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 208,
+     "minimumBars": 114,
+     "emptySessions": 0,
+     "sparseSessions": 165,
+     "zeroVolumeBars": 0,
+     "closingPrints": 449,
+     "medianDailyDollarVolume": 61426021.40749998
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 373,
+     "minimumBars": 164,
+     "emptySessions": 0,
+     "sparseSessions": 4,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 100873275.49339993
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.36723061970894394,
+    "gapMinutes": {
+     "median": 2,
+     "p90": 6,
+     "p99": 16,
+     "max": 91
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 15,
+    "medianBarVolume": 311
+   }
+  },
+  {
+   "symbol": "XBI",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 205,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2011,
+     "medianDailyDollarVolume": 476183700.72479975
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 791923989.0276994
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 1110142082.8203998
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9970152689327093,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 9108
+   }
+  },
+  {
+   "symbol": "XLE",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2011,
+     "medianDailyDollarVolume": 1107160732.0179005
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 1195430834.409399
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 1795631562.8767004
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9998503798051102,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 32058
+   }
+  },
+  {
+   "symbol": "XLF",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2011,
+     "medianDailyDollarVolume": 1331219313.1123006
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 1616896920.3695
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 1895706103.4513
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9998657254661244,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 73786
+   }
+  },
+  {
+   "symbol": "XLU",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 207,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2010,
+     "medianDailyDollarVolume": 772952642.5455997
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 800785392.7048998
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 888192322.1281998
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9997033172203893,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 21152
+   }
+  },
+  {
+   "symbol": "XLY",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 209,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2010,
+     "medianDailyDollarVolume": 532711866.11520004
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 207,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 703597270.5335002
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 922120292.6869998
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9992953783984245,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 7162
+   }
+  },
+  {
+   "symbol": "XOP",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2011,
+     "medianDailyDollarVolume": 562219283.6909004
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 207,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 380633696.97639984
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 206,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 473115023.3315001
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9997787667203765,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 15
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 33388
+   }
+  },
+  {
+   "symbol": "XRT",
+   "byPartition": {
+    "training": {
+     "sessions": 2012,
+     "medianBars": 390,
+     "minimumBars": 207,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 2010,
+     "medianDailyDollarVolume": 223416218.92040008
+    },
+    "holdout": {
+     "sessions": 450,
+     "medianBars": 390,
+     "minimumBars": 208,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 450,
+     "medianDailyDollarVolume": 366929413.0342002
+    },
+    "final": {
+     "sessions": 248,
+     "medianBars": 390,
+     "minimumBars": 210,
+     "emptySessions": 0,
+     "sparseSessions": 0,
+     "zeroVolumeBars": 0,
+     "closingPrints": 248,
+     "medianDailyDollarVolume": 363662298.35989994
+    }
+   },
+   "trainingIntraday": {
+    "minuteShareWithBar": 0.9962799560091051,
+    "gapMinutes": {
+     "median": 1,
+     "p90": 1,
+     "p99": 1,
+     "max": 16
+    },
+    "sessionsFirstBarAfter0935": 0,
+    "sessionsLastBarBefore1554": 1,
+    "medianBarVolume": 5750
+   }
+  }
+ ],
+ "distributionCoverage": {
+  "file": "config/market-events/distributions.csv",
+  "sha256": "3b4342eb7cdbb270d78a355576c2098d7692caae3ae0550bcbeb64d7a7528259",
+  "coverage": {
+   "VGT": "2026-10-24",
+   "VOOG": "2026-10-24"
+  },
+  "coversLastCommonSession": true
+ },
+ "splitsRegistry": [
+  {
+   "symbol": "VGT",
+   "effectiveDate": "2026-04-21",
+   "ratio": 8,
+   "source": "Vanguard press release 'Vanguard Announces Share Splits for Five Equity Index ETFs', 2026-03-24 (https://www.prnewswire.com/news-releases/vanguard-announces-share-splits-for-five-equity-index-etfs-302723368.html): VGT 8:1, record date 2026-04-17, payable 2026-04-20 after the close, split-adjusted trading from 2026-04-21; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "VOOG",
+   "effectiveDate": "2026-04-21",
+   "ratio": 6,
+   "source": "Vanguard press release 'Vanguard Announces Share Splits for Five Equity Index ETFs', 2026-03-24 (https://www.prnewswire.com/news-releases/vanguard-announces-share-splits-for-five-equity-index-etfs-302723368.html): VOOG 6:1, record date 2026-04-17, payable 2026-04-20 after the close, split-adjusted trading from 2026-04-21; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "XOP",
+   "effectiveDate": "2020-03-30",
+   "ratio": 0.25,
+   "source": "SSGA Funds Management Form 8937 for the SPDR S&P Oil & Gas Exploration and Production ETF, signed 2020-03-30 (https://www.ssga.com/library-content/products/fund-docs/etfs/us/tax-documents/J942-SPDR-SP-Oil-Gas-Exploration-and-Production-ETF-2020-Form-8937.pdf, copy config/market-events/raw/split-sources-2026-10-24/XOP-2020-Form-8937-ssga.pdf, sha256 ce6365b7…): '1:4 Reverse Share Split', 'Effective, March 30, 2020 … every four shares of the Fund's outstanding shares converted automatically into one (1) issued and outstanding share', CUSIP 78464A730 → 78468R556; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "XLE",
+   "effectiveDate": "2025-12-05",
+   "ratio": 2,
+   "source": "OCC Information Memo #57734, 2025-11-25, 'The Energy Select Sector SPDR Fund - 2 For 1 Stock Split' (https://www.miaxglobal.com/sites/default/files/alert-files/XLE_Split_57734.pdf, copy config/market-events/raw/split-sources-2026-10-24/XLE-OCC-57734.pdf, sha256 7c597f5f…): record date 2025-12-02, payable 2025-12-04, ex-distribution date 2025-12-05, CUSIP 81369Y506; State Street announced the Select Sector SPDR splits on 2025-11-20; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "XLU",
+   "effectiveDate": "2025-12-05",
+   "ratio": 2,
+   "source": "OCC Information Memo #57736, 2025-11-25, 'The Utilities Select Sector SPDR Fund - 2 For 1 Stock Split' (https://www.miaxglobal.com/sites/default/files/alert-files/XLU_Split_57736.pdf, copy config/market-events/raw/split-sources-2026-10-24/XLU-OCC-57736.pdf, sha256 01982dd5…): record date 2025-12-02, payable 2025-12-04, ex-distribution date 2025-12-05, CUSIP 81369Y886; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "XLY",
+   "effectiveDate": "2025-12-05",
+   "ratio": 2,
+   "source": "OCC Information Memo #57733, 2025-11-25, 'The Consumer Discretionary Select Sector SPDR Fund - 2 For 1 Stock Split' (https://www.miaxglobal.com/sites/default/files/alert-files/XLY_Split_57733.pdf, copy config/market-events/raw/split-sources-2026-10-24/XLY-OCC-57733.pdf, sha256 28d7fb3b…): record date 2025-12-02, payable 2025-12-04, ex-distribution date 2025-12-05, CUSIP 81369Y407; retrieved 2026-10-24"
+  }
+ ],
+ "inputs": {
+  "data/partitions.json": "43893f3d3277d6804775a82e8975644fae6ffcdff30574b9ffc000212c0fefa6",
+  "config/market-events/splits.json": "aaa861d58fae8afb1d34b654dbcd5c3f31108465785e1b2241938690d4495639",
+  "config/market-events/distributions.csv": "3b4342eb7cdbb270d78a355576c2098d7692caae3ae0550bcbeb64d7a7528259",
+  "config/market-events/distributions.manifest.json": "d2c02b017d8167a0f3f40bccefe95ad79ef690f59b8c133c5ce15d0dc034c11e",
+  "config/allocator/multi-etf-allocator.json": "4df4940bb6dc8c8854d0732df8f6cd745c4bbdd2b35db46f7f6f443e473e555f",
+  "config/phenotypes/D1/VGT.json": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70",
+  "config/phenotypes/D1/XBI.json": "453c4fd00d9de91269da718011c78b3d20d4611a0791005285345cbdac12aff8",
+  "config/phenotypes/D1/XRT.json": "d7b7f222bb8921ec5a3781d3b98c32f3045eb775cb5e01ee5e6af05af4e7cee9",
+  "config/phenotypes/D1/KRE.json": "6b8889e20ab3c07e85f12e5c344166588495e95bc1f5573b36699e8a587a8c8d",
+  "config/phenotypes/D1/GDX.json": "ed98c23c7c1e741401862bdf481175a106367d30ddea7ba1b5906859cb0ce71b",
+  "research/multi-etf-d1/FROZEN_CANDIDATES.json": "94b0b646d7aa7520e6ed59a82707389f202d770cfae6464e1c354450d8be8124",
+  "research/portfolio-aware-d1-optimization/FROZEN_SELECTION.json": "16c91895f485b4ce0de965fbdc81a78035204a69d868edea38b5b844a20ba24c"
+ },
+ "code": {
+  "src/joint-16-etf-d1/archive.ts": "20942141bf7b1fe98b91093c04d2e252c7d95b8697ee2f361a808f411578443c",
+  "src/joint-16-etf-d1/audit.ts": "28821046bc9499381b8300da7b71de1842a703227a8da666d13eed11e69f2158",
+  "src/joint-16-etf-d1/benchmarks.ts": "061df53fffb26c50409a673ac72b7a6d8e684c648e1de37cfc1c9fc2018661aa",
+  "src/joint-16-etf-d1/cli.ts": "701e7d1a2776d96f020010d6ccc7efcae51036752d24d6b0a3fafa80680511b7",
+  "src/joint-16-etf-d1/context.ts": "8097ed95077f68b49f06329eb860e3a7c246f73aa0ce1a6db63f061ad47ea401",
+  "src/joint-16-etf-d1/controls.ts": "bcc43835eda3156f47de54a518001bc1b88a94295366bd0c1f5db511fa7b7b80",
+  "src/joint-16-etf-d1/coverage.ts": "23ab4553e556386f66a82e30a9b222e6eb1c8e35d5b6990e38f04f490f8af6b3",
+  "src/joint-16-etf-d1/data.ts": "18f9f8d5901009786a1c775080e7f073bf22fd12e98c7488c8e0a9907ade019d",
+  "src/joint-16-etf-d1/discovery.ts": "ace90702a1b1b1932518fb9f9128263a2aba9e0b5a2c849add8d1f263cefb2a2",
+  "src/joint-16-etf-d1/evaluation.ts": "275932aaf9fb4c3d0c2537894b949abefe15f46d860c314b3cd263eeb0fcfd0c",
+  "src/joint-16-etf-d1/evaluator.ts": "13ffa823e4a9392b40590cc085d49cd874edb4d44183fc3738a895f2b8fe429b",
+  "src/joint-16-etf-d1/figures.ts": "bbb60dbee335a61a43a858efd7dfe16f1c9df88f0522323da93fc5fc3286bdd5",
+  "src/joint-16-etf-d1/freeze.ts": "1cefcec459fce7ee5b1f30aeb2763ab9914f6b0d07233e49b9580833fca3285d",
+  "src/joint-16-etf-d1/genome.ts": "700a1bd3b045745ef1bed10a151c7353f2aa9494a91454f0b38fd76016b20ac5",
+  "src/joint-16-etf-d1/library.ts": "4d78938a013362523e27e13b40761f48177be66333851fd2189b83e400c1113f",
+  "src/joint-16-etf-d1/parity.ts": "7ae2cfbbe7a316ae098d6247e9901aa086150d3885c16f637dd406c1e232fc71",
+  "src/joint-16-etf-d1/refine.ts": "55962753d2eeef4b3d27fafdf3bc0658604171ee2db90d039df7396a3850c2a1",
+  "src/joint-16-etf-d1/report.ts": "c9cb7a2852942678884c9f8658abe0d754ebed0ac4a84b2dc4f57cd4f974038c",
+  "src/joint-16-etf-d1/robust.ts": "419147a53e2efe15fc2e14e1f0d7276f1d75e25572d39272d154f1a873c0309d",
+  "src/joint-16-etf-d1/search.ts": "cf6b67988841fe3830bd6239fb2bcba3dc6f2179f82ac37d4c5ea275c26142eb",
+  "src/joint-16-etf-d1/selection.ts": "08a8feef35106779c1c7d0661dfb896f3a7f99587a23081a0f990784ddd9b12e",
+  "src/joint-16-etf-d1/space.ts": "d8320fbe6d504075a9f3e13b564f3b8dba00bfaaf083e5219a3e39c26b85ef4a",
+  "src/joint-16-etf-d1/stages.ts": "91bed463cfb2ce6c06fcc98a476cd5451fd07304740c00afbd2547e545ee2f89",
+  "src/joint-16-etf-d1/tests/joint.test.ts": "0d87783ae3b5d1d4bb8a3855229e9428351aea6c8b0d782801a1bef3a5f7936d",
+  "src/joint-16-etf-d1/tests/pipeline.test.ts": "3c56e742f1c3fbe37e238e15b5110ebcfc07980d93dcaee32e3f483e2b780ebe",
+  "src/portfolio-aware-d1/nbook/engine.ts": "9b346011e333a062c314b2e3a85f9455ee22620a31e7b922a9cbe81d6f001827",
+  "src/portfolio-aware-d1/nbook/ledger.ts": "5a1ae62eac585d97ba560c7bb03fb6eadd97671fdb95c4762de340812a31b7bd",
+  "src/portfolio-aware-d1/nbook/margin.ts": "ee84b70dae14c6fbbf53c077b973a2f7ae0eed82b87cfc726c10faf1933fc346",
+  "src/portfolio-aware-d1/nbook/universe.ts": "a72ff27a49caee26cae3c0139475befce22951f12e847ae8502e0a150b3d0459",
+  "src/portfolio-aware-d1/trace.ts": "508465ed7775dc91a7c3ebcbc67988df295674b418a5be8548f9208e526257a1",
+  "src/portfolio-aware-d1/replay.ts": "9da17057517864ffe014340182277e9f5b44f133fe6dfd79d5b45338a35c893d",
+  "src/portfolio-aware-d1/compare.ts": "efd6cc8a4150be5ecae48943c4d511c02feb60db594eb3910ba25ecd7363703c",
+  "src/portfolio-aware-d1/parity.ts": "6215fd2f3c75b2f5e9ee8852f68bb1c667494c05d5176b164fff90532b90272c",
+  "src/portfolio-aware-d1/phenotypes.ts": "f51f0d04115f1f018d61985149ccdcbaa2b90b663aaa180c00c9e7197edcb788",
+  "src/portfolio-aware-d1/stageC.ts": "cb16da88819230baaeb6734766eb07db03692195851aef10d13aec7888a58079",
+  "src/portfolio-aware-d1/freeze.ts": "7ed93871dbee256b6405dc49be6c621cdebec0166c3832795127a9b7d05f4346",
+  "src/multi-etf-allocator/engine.ts": "fa13c2be38ac95b551309e487bfff7ac4d98922413636ccdf43bd4cfaacf66db",
+  "src/multi-etf-allocator/ledger.ts": "7a41e2748e94a1dd0b3fb5399e73c84cf8f63bb4c1e542329740781ef68c9115",
+  "src/multi-etf-allocator/shadow.ts": "d37332e9a7d47dc8b57b061fb228380cf8c3fa660ed802b4d6413a6c7835bb24",
+  "src/multi-etf-allocator/phenotypes.ts": "3e97c8d636a6e7661002d6391707c61e2815e1f34f363a85e0b3f8b746cf751b",
+  "src/multi-etf-allocator/data.ts": "9931a4173a139a592589d3052487f24de032e2f7c4c1c4a3b3d7e320c8a59400",
+  "src/multi-etf-allocator/dataset.ts": "8f5925f8563c0323ac25cc3eac27da1a70311b7b734a9ae785ed4939bb41a705",
+  "src/multi-etf-allocator/segments.ts": "809eb599cb37cfaf75f84b0d3e3664e4228c78f528b592c6549bd522fb824642",
+  "src/shared-margin-portfolio/strategy.ts": "0407559247569b2f471f8887faa9232502574fb28a34e3f435026fc3f0df7093",
+  "src/four-family/data.ts": "d73c2a9764c5401983b3cb2c83c8686c6254fb4fd003e9d2cac03cc31d7caa9a",
+  "src/multi-etf-d1/space.ts": "e5a49833cd48b765911bb1c0fa623471a2f5d72016877542eec0bd2804c51b11",
+  "src/multi-etf-d1/context.ts": "c407023075dc3957e009ac399ca1c8861e736f3dd8b5d6d0e5298e83c9ee3195",
+  "src/optimizer/nsga2.ts": "ce00e3c0aaa09283dc334f07faed2cf646ddca906d68302a4b19f364877ce5d5",
+  "src/optimizer/sobol.ts": "7f420687def739a7c1e1213a0f3bbf7c2224da8cd528f098543a4a89ae136976",
+  "src/optimizer/rng.ts": "9c5402674fcb106fc54cd938fbc216d00bba80dc4458f5b38ce21256ddc8b849",
+  "src/lib/evaluation.ts": "770ca4ac5eb4dd8d022fd40af0f1bf71759cf11216be0d3d2545c6da279adf51",
+  "src/lib/dataset.ts": "fa92fd8a2665af8c3f8d9ea093e952aeb1d288d69d6d8eda695061a672aff0ed",
+  "src/lib/corporateActions.ts": "ebdae50b5599518dca329f41a771e0afe5f8bf498a6e99255f853b6b911bd36f",
+  "src/app/allIn-trailingBuy-postExitContinuation.ts": "de0935c3f402a42b41227c5fb362e9b37fb68fdfe01c14d020ea073dce795dc0"
+ },
+ "warnings": [],
+ "failures": [],
+ "passed": true
+}

@@ -1,0 +1,379 @@
+{
+ "version": "joint-16-etf-d1-v1",
+ "frozenAt": "2026-10-25T07:34:26.887Z",
+ "git": {
+  "branch": "research/trailing-buy-four-family-optimization",
+  "head": "96d7535cbaaf672a6ae40e9252fc493d94d8b604",
+  "modifiedTracked": [
+   ".gitignore",
+   "config/phenotypes/COMPATIBILITY.md",
+   "package.json",
+   "src/phenotype/strategies.ts"
+  ],
+  "untracked": [
+   "research/joint-16-etf-d1/",
+   "src/app/joint16EtfD1.ts",
+   "src/joint-16-etf-d1/"
+  ]
+ },
+ "protocol": {
+  "file": "research/joint-16-etf-d1/PROTOCOL.md",
+  "sha256": "2314dfbfd7ec27f8c0fddceeba0535196649dbf12ce29fd678f7f7969353a3c9",
+  "freeze": {
+   "protocolSha256": "2314dfbfd7ec27f8c0fddceeba0535196649dbf12ce29fd678f7f7969353a3c9",
+   "contextSha256": "8097ed95077f68b49f06329eb860e3a7c246f73aa0ce1a6db63f061ad47ea401",
+   "frozenAt": "2026-10-25T06:52:12.770Z",
+   "git": {
+    "branch": "research/trailing-buy-four-family-optimization",
+    "head": "96d7535cbaaf672a6ae40e9252fc493d94d8b604",
+    "modifiedTracked": [
+     ".gitignore",
+     "config/phenotypes/COMPATIBILITY.md",
+     "package.json",
+     "src/phenotype/strategies.ts"
+    ],
+    "untracked": [
+     "research/joint-16-etf-d1/",
+     "src/app/joint16EtfD1.ts",
+     "src/joint-16-etf-d1/"
+    ]
+   }
+  }
+ },
+ "lastCommonSession": "2026-10-13",
+ "outcome": "no advancement",
+ "nominees": [],
+ "benchmarks": {
+  "B1": {
+   "label": "VGT D1 alone (primary)",
+   "symbols": [
+    "VGT"
+   ],
+   "phenotypes": {
+    "VGT": "primary"
+   }
+  },
+  "B4": {
+   "label": "All-lowDd shadow (VGT primary, XBI/XRT/KRE lowDd)",
+   "symbols": [
+    "VGT",
+    "XBI",
+    "XRT",
+    "KRE"
+   ],
+   "phenotypes": {
+    "VGT": "primary",
+    "XBI": "lowDd",
+    "XRT": "lowDd",
+    "KRE": "lowDd"
+   }
+  },
+  "B5": {
+   "label": "All-lowDd + GDX portfolioAware (previous P-add-GDX)",
+   "symbols": [
+    "VGT",
+    "XBI",
+    "XRT",
+    "KRE",
+    "GDX"
+   ],
+   "phenotypes": {
+    "VGT": "primary",
+    "XBI": "lowDd",
+    "XRT": "lowDd",
+    "KRE": "lowDd",
+    "GDX": "d1-51ea8d4bd6"
+   },
+   "gdxGrid": {
+    "targetPercentChange": 274,
+    "trailingBuyPercentage": 4,
+    "trailingStopPercentage": 71,
+    "maximumHoldDays": 18,
+    "tickWindowSize": 100,
+    "intradayLossBuffer": 36,
+    "pullback": 191,
+    "continuationWindow": 81
+   }
+  },
+  "C0": {
+   "label": "empty trading pool (60/40 VOOG/VGT core only)",
+   "symbols": []
+  }
+ },
+ "ranking": [],
+ "gatesDefinition": {
+  "costRetention": 0.85,
+  "minFoldsPositive": 2,
+  "plateauFeasibleShare": 0.75,
+  "probeMedianShare": 0.85,
+  "jointMedianShare": 0.75,
+  "benchmarkMargin": 25000,
+  "conditionalBenchmarkMargin": 50000,
+  "netPerDrawdownShare": 0.9,
+  "percentDrawdownIdeal": 0.3,
+  "percentDrawdownCeiling": 0.35
+ },
+ "score": {
+  "complexityPenalty": 5000,
+  "regimeBonus": 1500
+ },
+ "acceptance": {
+  "postTrainingMargin": 15000,
+  "conditionalPostTrainingMargin": 25000,
+  "reverseThreshold": -2500,
+  "persistThreshold": 2500,
+  "rules": [
+   "A1 post-training fixed Δ@5 vs B5 (holdout + final) ≥ +$15,000 (≥ +$25,000 if the full-all portfolio daily % DD is in (30%, 35%])",
+   "A2 post-training fixed Δ vs B5 > 0 at 0, 2 and 10 bps",
+   "A3 neither the holdout Δ@5 nor the final Δ@5 vs B5 ≤ −$2,500",
+   "A4 full-all fixed minute drawdown@5 ≤ $35,000",
+   "A5 full-all portfolio maximum daily % drawdown@5 ≤ 35%",
+   "A6 portfolio post-training compounded return@5 ≥ B5's"
+  ],
+  "recommendation": "the accepted nominee ranked highest by the frozen training score; otherwise the benchmarks are retained as previously recommended (B5 optional forward-test candidate, B4 defensible)"
+ },
+ "seeds": {
+  "library": [
+   "joint-16-etf-d1",
+   "library",
+   "sobol-scramble"
+  ],
+  "greedy": [
+   "joint-16-etf-d1",
+   "greedy",
+   "<ETF>"
+  ],
+  "islands": [
+   "joint-16-etf-d1",
+   "island",
+   "<I1…I8>"
+  ],
+  "migration": [
+   "joint-16-etf-d1",
+   "migration",
+   "<generation>"
+  ],
+  "refine": [
+   "joint-16-etf-d1",
+   "refine",
+   "<slot>"
+  ],
+  "jointPerturbation": [
+   "joint-16-etf-d1",
+   "joint-perturbation",
+   "<key>"
+  ],
+  "ties": [
+   "joint-16-etf-d1",
+   "ties",
+   "<key>",
+   "<n>"
+  ],
+  "parity": [
+   "joint-16-etf-d1",
+   "parity",
+   "<size>",
+   "<n>"
+  ]
+ },
+ "budgets": {
+  "library": {
+   "sobolSamples": 1024
+  },
+  "greedy": {
+   "startVectors": 8,
+   "stepVectors": 3,
+   "minGain": 5000
+  },
+  "islands": {
+   "count": 8,
+   "populationSize": 64,
+   "evaluationsPerIsland": 3072,
+   "migrationInterval": 8,
+   "migrants": 4,
+   "attemptFactor": 20,
+   "stallGenerations": 3,
+   "crossoverProbability": 0.9,
+   "crossoverEta": 15,
+   "mutationEta": 20,
+   "sbxOnSharedProbability": 0.5,
+   "addLatentProbability": 0.5,
+   "operators": {
+    "add": 0.15,
+    "remove": 0.15,
+    "swap": 0.1,
+    "paramOne": 0.25,
+    "paramMulti": 0.15,
+    "reset": 0.1,
+    "crossoverOnly": 0.1
+   },
+   "kinds": [
+    "I1",
+    "I2",
+    "I3",
+    "I4",
+    "I5",
+    "I6",
+    "I7",
+    "I8"
+   ]
+  },
+  "refinement": {
+   "contenders": 6,
+   "evaluationsPerContender": 2500,
+   "jaccardDistance": 0.5,
+   "compactBooks": 4,
+   "broadBooks": 9,
+   "addVectors": 3,
+   "swapVectors": 1,
+   "jointMoves": 32,
+   "improvement": 100
+  },
+  "robustness": {
+   "shortlist": 20,
+   "extraArchive": 8,
+   "jointPerturbations": 48,
+   "jointMagnitudes": {
+    "targetPercentChange": 5,
+    "trailingBuyPercentage": 1,
+    "trailingStopPercentage": 5,
+    "maximumHoldDays": 1,
+    "tickWindowSize": 5,
+    "intradayLossBuffer": 5,
+    "pullback": 5,
+    "continuationWindow": 10
+   },
+   "tiePermutations": 2,
+   "ladderFractions": [
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3
+   ]
+  },
+  "actual": {
+   "evaluations": 36513,
+   "discovery": 26597,
+   "refinement": 9916,
+   "archiveHits": 1712,
+   "cache": {
+    "pinned": 16720,
+    "dynamic": 29291,
+    "traceBuilds": 46011,
+    "traceHits": 140143,
+    "replays": 57806
+   },
+   "seconds": 868.468
+  }
+ },
+ "records": {
+  "audit/audit.json": "158f5c87bbd7bfc2cbbd82daaa899c5b3b0a0a41eb47b02b30eb8f48132aa630",
+  "controls/controls.json": "2bd521dcd95a1a2ed39234f62eab131da20e2e0afe587ca339149a6e69af5e5e",
+  "parity/parity.json": "806a45c24e74d0b7038396f3444400ec97f704d06e6a3a2aa36d64dd7ad65d49",
+  "library/library.json": "e7423f693a69231ffa57b187c8a06c6f03847ed758040ac59628222c1baa7588",
+  "library/library.jsonl": "f8bc61a9af2a9dddd50ca2f2466cbc114dba8c2a30d8ae08dfdbc6f670605967",
+  "discovery/discovery.json": "5f6c91995352a12b5e8182bcfd07c44f33f2c7e8f3113b5e88d7bb4681deb309",
+  "discovery/evaluations.jsonl": "dedd736e9566679d3d1568e210b0917e16f634bf0a053eec4141ae3ea84ed337",
+  "refine/refine.json": "5336ed54efa3e12794e20da36611ff4120b392ce8dee48a9a370e27745f66de8",
+  "refine/evaluations.jsonl": "cf302e2b248ba4d60e7d1a629840edf0f957683e0ad376ad35d34de1276d8892",
+  "robust/robust.json": "b6cd917f25368103305d211d535c8c9827c34c420c39bd53ee8eb6b82fda31dd",
+  "determinism/determinism.json": "91756449b10cb968197ced5ffab256ddf8c9a0be74e11c28290c95d6222ad784"
+ },
+ "inputs": {
+  "data/partitions.json": "43893f3d3277d6804775a82e8975644fae6ffcdff30574b9ffc000212c0fefa6",
+  "config/market-events/splits.json": "aaa861d58fae8afb1d34b654dbcd5c3f31108465785e1b2241938690d4495639",
+  "config/market-events/distributions.csv": "3b4342eb7cdbb270d78a355576c2098d7692caae3ae0550bcbeb64d7a7528259",
+  "config/market-events/distributions.manifest.json": "d2c02b017d8167a0f3f40bccefe95ad79ef690f59b8c133c5ce15d0dc034c11e",
+  "config/allocator/multi-etf-allocator.json": "4df4940bb6dc8c8854d0732df8f6cd745c4bbdd2b35db46f7f6f443e473e555f",
+  "config/phenotypes/D1/VGT.json": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70",
+  "config/phenotypes/D1/XBI.json": "453c4fd00d9de91269da718011c78b3d20d4611a0791005285345cbdac12aff8",
+  "config/phenotypes/D1/XRT.json": "d7b7f222bb8921ec5a3781d3b98c32f3045eb775cb5e01ee5e6af05af4e7cee9",
+  "config/phenotypes/D1/KRE.json": "6b8889e20ab3c07e85f12e5c344166588495e95bc1f5573b36699e8a587a8c8d",
+  "config/phenotypes/D1/GDX.json": "ed98c23c7c1e741401862bdf481175a106367d30ddea7ba1b5906859cb0ce71b",
+  "research/multi-etf-d1/FROZEN_CANDIDATES.json": "94b0b646d7aa7520e6ed59a82707389f202d770cfae6464e1c354450d8be8124",
+  "research/portfolio-aware-d1-optimization/FROZEN_SELECTION.json": "16c91895f485b4ce0de965fbdc81a78035204a69d868edea38b5b844a20ba24c"
+ },
+ "data": {
+  "EWZ": "b1cf63a676c2696cc5f68a432f0d601510a1900d014b600b3a52dfb7c1c7439a",
+  "GDX": "86ce101fede1a412dd452fcc29dc87b69ade4ad67629230172fde878b7c2c320",
+  "GLD": "d3dd1beb35bc9beeb8085bd803609d56e2403662bf29c052450ee2e89400a9cc",
+  "IWM": "44a919f997c1eeaf8a80c9424209c71131f276a97bf5cdd7f7cf970a7691471d",
+  "IWN": "34cc798c020a152aec9565e680927f6b08828fcfd1a0296f016e7fe8e6da5808",
+  "KRE": "40e7bd6c72c1dffb343b265bed16d69c964ba5bee81ad297a15e6d8a5607e01a",
+  "TLT": "f4df3690714ee876ac643067f8567f973d80b701629f5142db15d791df16818b",
+  "VGT": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+  "VOOG": "a7aa42aeebd9e83f94368f0ee7761410ffacf734524f3cc7655af32354de51ab",
+  "XBI": "9afecc0606330d68ca12f7b0c331f75a150f64d0dad2e6ff910538a667b0c031",
+  "XLE": "57d013b051ccb20570e64a3058cd91959bac56dc2bd5533137d13f962d37f214",
+  "XLF": "845e7b603edf0f4e9d923c58f9dfc838ce568d6fcb7fcd6b42a7290ab28af31e",
+  "XLU": "ab2787a4198289317fb5324248ea8abb356925f5e6857c67ac2594aaae0fc1c3",
+  "XLY": "7a80d7f22b5b9f79c4136c653f0ed14f7e45b2908614e312226ab9e9bcf02955",
+  "XOP": "cb8f4d8852b2f7141d5a6fdc0ea5f7598d6d0ca9620899f0016aa2de6f049855",
+  "XRT": "ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752"
+ },
+ "code": {
+  "src/joint-16-etf-d1/archive.ts": "20942141bf7b1fe98b91093c04d2e252c7d95b8697ee2f361a808f411578443c",
+  "src/joint-16-etf-d1/audit.ts": "28821046bc9499381b8300da7b71de1842a703227a8da666d13eed11e69f2158",
+  "src/joint-16-etf-d1/benchmarks.ts": "061df53fffb26c50409a673ac72b7a6d8e684c648e1de37cfc1c9fc2018661aa",
+  "src/joint-16-etf-d1/cli.ts": "bea8ac2a1580b13fde602eb745b7232f076d05d71b7f5ce5443bd981e443a400",
+  "src/joint-16-etf-d1/context.ts": "8097ed95077f68b49f06329eb860e3a7c246f73aa0ce1a6db63f061ad47ea401",
+  "src/joint-16-etf-d1/controls.ts": "bcc43835eda3156f47de54a518001bc1b88a94295366bd0c1f5db511fa7b7b80",
+  "src/joint-16-etf-d1/coverage.ts": "23ab4553e556386f66a82e30a9b222e6eb1c8e35d5b6990e38f04f490f8af6b3",
+  "src/joint-16-etf-d1/data.ts": "18f9f8d5901009786a1c775080e7f073bf22fd12e98c7488c8e0a9907ade019d",
+  "src/joint-16-etf-d1/diagnostics.ts": "fe4ed33bd38b5fc75f3ae1da947e9de248fa33b5a78009542955b7528e8851b6",
+  "src/joint-16-etf-d1/discovery.ts": "ace90702a1b1b1932518fb9f9128263a2aba9e0b5a2c849add8d1f263cefb2a2",
+  "src/joint-16-etf-d1/evaluation.ts": "275932aaf9fb4c3d0c2537894b949abefe15f46d860c314b3cd263eeb0fcfd0c",
+  "src/joint-16-etf-d1/evaluator.ts": "13ffa823e4a9392b40590cc085d49cd874edb4d44183fc3738a895f2b8fe429b",
+  "src/joint-16-etf-d1/figures.ts": "bbb60dbee335a61a43a858efd7dfe16f1c9df88f0522323da93fc5fc3286bdd5",
+  "src/joint-16-etf-d1/freeze.ts": "1cefcec459fce7ee5b1f30aeb2763ab9914f6b0d07233e49b9580833fca3285d",
+  "src/joint-16-etf-d1/genome.ts": "700a1bd3b045745ef1bed10a151c7353f2aa9494a91454f0b38fd76016b20ac5",
+  "src/joint-16-etf-d1/library.ts": "4d78938a013362523e27e13b40761f48177be66333851fd2189b83e400c1113f",
+  "src/joint-16-etf-d1/parity.ts": "7ae2cfbbe7a316ae098d6247e9901aa086150d3885c16f637dd406c1e232fc71",
+  "src/joint-16-etf-d1/refine.ts": "55962753d2eeef4b3d27fafdf3bc0658604171ee2db90d039df7396a3850c2a1",
+  "src/joint-16-etf-d1/report.ts": "63965f6f7fa57adcf4c9463cee07e7792466ac14c1d8374b49541373fd601e62",
+  "src/joint-16-etf-d1/robust.ts": "419147a53e2efe15fc2e14e1f0d7276f1d75e25572d39272d154f1a873c0309d",
+  "src/joint-16-etf-d1/search.ts": "cf6b67988841fe3830bd6239fb2bcba3dc6f2179f82ac37d4c5ea275c26142eb",
+  "src/joint-16-etf-d1/selection.ts": "08a8feef35106779c1c7d0661dfb896f3a7f99587a23081a0f990784ddd9b12e",
+  "src/joint-16-etf-d1/space.ts": "d8320fbe6d504075a9f3e13b564f3b8dba00bfaaf083e5219a3e39c26b85ef4a",
+  "src/joint-16-etf-d1/stages.ts": "91bed463cfb2ce6c06fcc98a476cd5451fd07304740c00afbd2547e545ee2f89",
+  "src/joint-16-etf-d1/tests/joint.test.ts": "0d87783ae3b5d1d4bb8a3855229e9428351aea6c8b0d782801a1bef3a5f7936d",
+  "src/joint-16-etf-d1/tests/pipeline.test.ts": "3c56e742f1c3fbe37e238e15b5110ebcfc07980d93dcaee32e3f483e2b780ebe",
+  "src/portfolio-aware-d1/nbook/engine.ts": "9b346011e333a062c314b2e3a85f9455ee22620a31e7b922a9cbe81d6f001827",
+  "src/portfolio-aware-d1/nbook/ledger.ts": "5a1ae62eac585d97ba560c7bb03fb6eadd97671fdb95c4762de340812a31b7bd",
+  "src/portfolio-aware-d1/nbook/margin.ts": "ee84b70dae14c6fbbf53c077b973a2f7ae0eed82b87cfc726c10faf1933fc346",
+  "src/portfolio-aware-d1/nbook/universe.ts": "a72ff27a49caee26cae3c0139475befce22951f12e847ae8502e0a150b3d0459",
+  "src/portfolio-aware-d1/trace.ts": "508465ed7775dc91a7c3ebcbc67988df295674b418a5be8548f9208e526257a1",
+  "src/portfolio-aware-d1/replay.ts": "9da17057517864ffe014340182277e9f5b44f133fe6dfd79d5b45338a35c893d",
+  "src/portfolio-aware-d1/compare.ts": "efd6cc8a4150be5ecae48943c4d511c02feb60db594eb3910ba25ecd7363703c",
+  "src/portfolio-aware-d1/parity.ts": "6215fd2f3c75b2f5e9ee8852f68bb1c667494c05d5176b164fff90532b90272c",
+  "src/portfolio-aware-d1/phenotypes.ts": "f51f0d04115f1f018d61985149ccdcbaa2b90b663aaa180c00c9e7197edcb788",
+  "src/portfolio-aware-d1/stageC.ts": "cb16da88819230baaeb6734766eb07db03692195851aef10d13aec7888a58079",
+  "src/portfolio-aware-d1/freeze.ts": "7ed93871dbee256b6405dc49be6c621cdebec0166c3832795127a9b7d05f4346",
+  "src/multi-etf-allocator/engine.ts": "fa13c2be38ac95b551309e487bfff7ac4d98922413636ccdf43bd4cfaacf66db",
+  "src/multi-etf-allocator/ledger.ts": "7a41e2748e94a1dd0b3fb5399e73c84cf8f63bb4c1e542329740781ef68c9115",
+  "src/multi-etf-allocator/shadow.ts": "d37332e9a7d47dc8b57b061fb228380cf8c3fa660ed802b4d6413a6c7835bb24",
+  "src/multi-etf-allocator/phenotypes.ts": "3e97c8d636a6e7661002d6391707c61e2815e1f34f363a85e0b3f8b746cf751b",
+  "src/multi-etf-allocator/data.ts": "9931a4173a139a592589d3052487f24de032e2f7c4c1c4a3b3d7e320c8a59400",
+  "src/multi-etf-allocator/dataset.ts": "8f5925f8563c0323ac25cc3eac27da1a70311b7b734a9ae785ed4939bb41a705",
+  "src/multi-etf-allocator/segments.ts": "809eb599cb37cfaf75f84b0d3e3664e4228c78f528b592c6549bd522fb824642",
+  "src/shared-margin-portfolio/strategy.ts": "0407559247569b2f471f8887faa9232502574fb28a34e3f435026fc3f0df7093",
+  "src/four-family/data.ts": "d73c2a9764c5401983b3cb2c83c8686c6254fb4fd003e9d2cac03cc31d7caa9a",
+  "src/multi-etf-d1/space.ts": "e5a49833cd48b765911bb1c0fa623471a2f5d72016877542eec0bd2804c51b11",
+  "src/multi-etf-d1/context.ts": "c407023075dc3957e009ac399ca1c8861e736f3dd8b5d6d0e5298e83c9ee3195",
+  "src/optimizer/nsga2.ts": "ce00e3c0aaa09283dc334f07faed2cf646ddca906d68302a4b19f364877ce5d5",
+  "src/optimizer/sobol.ts": "7f420687def739a7c1e1213a0f3bbf7c2224da8cd528f098543a4a89ae136976",
+  "src/optimizer/rng.ts": "9c5402674fcb106fc54cd938fbc216d00bba80dc4458f5b38ce21256ddc8b849",
+  "src/lib/evaluation.ts": "770ca4ac5eb4dd8d022fd40af0f1bf71759cf11216be0d3d2545c6da279adf51",
+  "src/lib/dataset.ts": "fa92fd8a2665af8c3f8d9ea093e952aeb1d288d69d6d8eda695061a672aff0ed",
+  "src/lib/corporateActions.ts": "ebdae50b5599518dca329f41a771e0afe5f8bf498a6e99255f853b6b911bd36f",
+  "src/app/allIn-trailingBuy-postExitContinuation.ts": "de0935c3f402a42b41227c5fb362e9b37fb68fdfe01c14d020ea073dce795dc0"
+ },
+ "authorizedCommands": [
+  "npm run joint-16-etf-d1 -- evaluate",
+  "npm run joint-16-etf-d1 -- evaluate --confirm",
+  "npm run joint-16-etf-d1 -- run --config <key> --mode fixed|portfolio --dataset <partition> (writes to evaluations/joint-16-etf-d1/)"
+ ],
+ "statement": "Every nominee, gate and rank above was computed from the training partition only (2016-01-04 → 2023-12-29). No holdout, final or all figure of any nominee had been computed when this manifest was written.",
+ "manifestHash": "699e2186091fa5e85ac57b831a94299466567885fb9d56c24a1414b70da30245"
+}

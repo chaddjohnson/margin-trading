@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S5-T1P",
+  "name": "VGT primary + KRE lowDd + GDX s5Track1P",
+  "role": "Study 5 Track 1 (faithful B5 method) P configuration",
+  "status": "RESEARCH ONLY — NOT NOMINATED (fails PG2; full-history minute DD $39,623)",
+  "description": "The frozen B5 optimization method re-run on VGT/KRE/GDX: GDX searched for its incremental effect on VGT primary + KRE lowDd (development 2017-06-15 → 2021-12-31). Research configuration for inspection only.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "primary",
+      "phenotypeFile": "config/phenotypes/D1/VGT.json",
+      "candidateId": "d1-ebc9f639b3",
+      "parameters": {
+        "targetPercentChange": "21.6%",
+        "trailingBuyPercentage": "0.3%",
+        "trailingStopPercentage": "7.3%",
+        "maximumHoldDays": 8,
+        "tickWindowSize": 74,
+        "intradayLossBuffer": "2.9%",
+        "pullback": "9.0%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "62978dffae8291e66931c7bb2df824fb70aee8c6e8e8e08460765ec9911981b5"
+    },
+    {
+      "symbol": "KRE",
+      "phenotype": "lowDd",
+      "phenotypeFile": "config/phenotypes/D1/KRE.json",
+      "candidateId": "d1-a389037400",
+      "parameters": {
+        "targetPercentChange": "29.9%",
+        "trailingBuyPercentage": "2.7%",
+        "trailingStopPercentage": "3.1%",
+        "maximumHoldDays": 4,
+        "tickWindowSize": 230,
+        "intradayLossBuffer": "2.3%",
+        "pullback": "9.4%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "597ed6645d81b6bdf17635ca373cd06dcd5a5c4a5d1068f74f2212ccab0006b7"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "s5Track1P",
+      "phenotypeFile": "config/research-phenotypes/study5-gdx-d1-b5-three-etf/D1/GDX.json",
+      "candidateId": "d1-18da4e7426",
+      "parameters": {
+        "targetPercentChange": "25.8%",
+        "trailingBuyPercentage": "0.9%",
+        "trailingStopPercentage": "7.2%",
+        "maximumHoldDays": 11,
+        "tickWindowSize": 210,
+        "intradayLossBuffer": "3.4%",
+        "pullback": "14.7%",
+        "continuationWindow": 170
+      },
+      "parametersSha256": "78c9118ab702b25d151c522f0fa64ffb477c36ecbb5ce2c60d0f68670cd66a73"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-10-30",
+    "createdBy": "research/study5-gdx-d1-b5-three-etf-2026-10 (no frozen file changed)"
+  }
+}

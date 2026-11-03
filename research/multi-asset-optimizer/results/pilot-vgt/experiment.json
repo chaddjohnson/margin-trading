@@ -1,0 +1,192 @@
+{
+ "id": "pilot-vgt",
+ "seed": "20261015",
+ "symbols": [
+  "VGT"
+ ],
+ "protocol": {
+  "name": "expanding-2014-annual-v1",
+  "researchEnd": "2023-12-31",
+  "folds": [
+   {
+    "id": "fold-2019",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2018-12-31"
+    },
+    "validation": {
+     "start": "2019-01-01",
+     "end": "2019-12-31"
+    }
+   },
+   {
+    "id": "fold-2020",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2019-12-31"
+    },
+    "validation": {
+     "start": "2020-01-01",
+     "end": "2020-12-31"
+    }
+   },
+   {
+    "id": "fold-2021",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2020-12-31"
+    },
+    "validation": {
+     "start": "2021-01-01",
+     "end": "2021-12-31"
+    }
+   },
+   {
+    "id": "fold-2022",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2021-12-31"
+    },
+    "validation": {
+     "start": "2022-01-01",
+     "end": "2022-12-31"
+    }
+   },
+   {
+    "id": "fold-2023",
+    "train": {
+     "start": "2014-01-01",
+     "end": "2022-12-31"
+    },
+    "validation": {
+     "start": "2023-01-01",
+     "end": "2023-12-31"
+    }
+   }
+  ],
+  "final": {
+   "id": "final-2014-2023",
+   "train": {
+    "start": "2014-01-01",
+    "end": "2023-12-31"
+   }
+  },
+  "holdout": {
+   "start": "2024-01-01",
+   "end": "latest"
+  },
+  "stress": {
+   "start": "2005-01-01",
+   "end": "2013-12-31"
+  },
+  "warmupSessions": 250,
+  "coverageToleranceDays": 7
+ },
+ "space": {
+  "name": "allin-daily-v1",
+  "specs": [
+   {
+    "key": "dipTenths",
+    "label": "Entry dip below the reference high",
+    "unit": "tenths of a percentage point",
+    "min": 20,
+    "max": 400,
+    "step": 1,
+    "neighborhoodRadius": 5,
+    "rationale": "2.0%-40.0%: from shallow pullbacks in low-volatility index funds to deep drawdowns in single stocks; 0% would buy at every close at the high."
+   },
+   {
+    "key": "trailingStopTenths",
+    "label": "Trailing stop below the post-entry high",
+    "unit": "tenths of a percentage point",
+    "min": 20,
+    "max": 400,
+    "step": 1,
+    "neighborhoodRadius": 5,
+    "rationale": "2.0%-40.0%: tighter than one day of index-fund noise up to wider than a typical single-stock correction."
+   },
+   {
+    "key": "maximumHoldDays",
+    "label": "Maximum hold before a losing position is sold at the open",
+    "unit": "calendar days",
+    "min": 1,
+    "max": 120,
+    "step": 1,
+    "neighborhoodRadius": 2,
+    "rationale": "1-120 calendar days. 0 would behave like 1, since the entry session is never checked for exits; 120 days is roughly two quarters."
+   },
+   {
+    "key": "lookbackSessions",
+    "label": "Reference-high window",
+    "unit": "sessions",
+    "min": 10,
+    "max": 250,
+    "step": 1,
+    "neighborhoodRadius": 10,
+    "rationale": "10-250 sessions: two weeks to about one year of trading sessions."
+   },
+   {
+    "key": "materialLossTenths",
+    "label": "Material price loss that restricts re-entry",
+    "unit": "tenths of a percentage point",
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "neighborhoodRadius": 3,
+    "rationale": "0.0%-10.0%: 0% restricts after any non-positive price return; at the top end few exits restrict, which approaches the unrestricted strategy."
+   },
+   {
+    "key": "lowerReentryTenths",
+    "label": "Extra decline below the loss exit required to re-enter",
+    "unit": "tenths of a percentage point",
+    "min": 0,
+    "max": 150,
+    "step": 1,
+    "neighborhoodRadius": 5,
+    "rationale": "0.0%-15.0%: 0% allows re-entry at or below the loss-exit price."
+   },
+   {
+    "key": "retraceTenths",
+    "label": "Recovery of the decline that resets the restriction",
+    "unit": "tenths of a percentage point",
+    "min": 0,
+    "max": 1000,
+    "step": 1,
+    "neighborhoodRadius": 50,
+    "rationale": "0.0%-100.0% of the decline from the frozen reference high to the episode low. 0% resets on the exit session itself (no restriction in effect); 100% waits for a full recovery."
+   }
+  ]
+ },
+ "search": {
+  "sampler": "sobol",
+  "samples": 4096,
+  "scramble": true,
+  "populationSize": 128,
+  "generations": 60,
+  "maxEvaluationsPerGaRun": 6000,
+  "gaRuns": 2,
+  "crossoverProbability": 0.9,
+  "crossoverEta": 15,
+  "mutationEta": 20,
+  "earlyStopPatience": 15,
+  "earlyStopTolerance": 0.0001,
+  "seedDiversity": 0.02
+ },
+ "fitness": {
+  "allocation": 100000,
+  "drawdownLimit": 0.3,
+  "minTradesPerYear": 1
+ },
+ "selection": {
+  "topN": 10,
+  "minPositiveYearShare": 0.5,
+  "poolByNet": 64,
+  "maxPool": 1024,
+  "poolFronts": 2,
+  "poolFrontCap": 64,
+  "diversitySteps": 4
+ },
+ "controlSeeds": 3,
+ "runFolds": true,
+ "tickerConcurrency": 3
+}

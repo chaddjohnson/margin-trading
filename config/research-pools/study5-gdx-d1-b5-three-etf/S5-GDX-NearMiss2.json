@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S5-GDX-NearMiss2",
+  "name": "GDX s5StandaloneNearMiss2 alone (standalone at 5 bps)",
+  "role": "Study 5 standalone research vector d1-a8e252df46",
+  "status": "RESEARCH ONLY — NOT NOMINATED (fails G2)",
+  "description": "Study A shortlist vector d1-a8e252df46 alone in the fixed $100,000 slot at 5 bps per side. Research configuration for inspection only.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "GDX",
+      "phenotype": "s5StandaloneNearMiss2",
+      "phenotypeFile": "config/research-phenotypes/study5-gdx-d1-b5-three-etf/D1/GDX.json",
+      "candidateId": "d1-a8e252df46",
+      "parameters": {
+        "targetPercentChange": "25.8%",
+        "trailingBuyPercentage": "0.6%",
+        "trailingStopPercentage": "6.2%",
+        "maximumHoldDays": 5,
+        "tickWindowSize": 228,
+        "intradayLossBuffer": "0.5%",
+        "pullback": "7.6%",
+        "continuationWindow": 14
+      },
+      "parametersSha256": "7dbcaa302b0fa2a292df21deafa66b0bcc0baa449fe64e29c156eaf088532ace"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-10-30",
+    "createdBy": "research/study5-gdx-d1-b5-three-etf-2026-10 (no frozen file changed)"
+  }
+}

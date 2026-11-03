@@ -1,0 +1,266 @@
+{
+ "generatedAt": "2026-10-26T06:06:19.110Z",
+ "slot": "Q2",
+ "familyIndex": 1,
+ "family": "J-u-f2",
+ "arm": "J-u",
+ "start": "GDX:291.6.73.21.178.6.75.131|SLV:245.16.73.28.128.53.172.36|SMH:236.17.113.25.246.38.88.100",
+ "refined": "GDX:291.6.63.20.178.6.75.131|SLV:245.16.73.28.128.53.172.36|SMH:231.17.113.25.246.38.88.100",
+ "result": "GDX:291.6.63.20.178.6.75.131|SMH:231.17.113.25.246.38.88.100",
+ "resultState": {
+  "key": "GDX:291.6.63.20.178.6.75.131|SMH:231.17.113.25.246.38.88.100",
+  "books": [
+   {
+    "symbol": "GDX",
+    "vector": {
+     "id": "d1-26d8214de7",
+     "grid": {
+      "targetPercentChange": 291,
+      "trailingBuyPercentage": 6,
+      "trailingStopPercentage": 63,
+      "maximumHoldDays": 20,
+      "tickWindowSize": 178,
+      "intradayLossBuffer": 6,
+      "pullback": 75,
+      "continuationWindow": 131
+     },
+     "origin": "refine pair"
+    }
+   },
+   {
+    "symbol": "SMH",
+    "vector": {
+     "id": "d1-1d06fc4d15",
+     "grid": {
+      "targetPercentChange": 231,
+      "trailingBuyPercentage": 17,
+      "trailingStopPercentage": 113,
+      "maximumHoldDays": 25,
+      "tickWindowSize": 246,
+      "intradayLossBuffer": 38,
+      "pullback": 88,
+      "continuationWindow": 100
+     },
+     "origin": "refine pair"
+    }
+   }
+  ],
+  "value": 185218.6064938206
+ },
+ "startState": {
+  "key": "GDX:291.6.73.21.178.6.75.131|SLV:245.16.73.28.128.53.172.36|SMH:236.17.113.25.246.38.88.100",
+  "value": 170051.50452617696
+ },
+ "refinedState": {
+  "key": "GDX:291.6.63.20.178.6.75.131|SLV:245.16.73.28.128.53.172.36|SMH:231.17.113.25.246.38.88.100",
+  "value": 183830.81367913415
+ },
+ "unique": 500,
+ "cycles": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "evaluated": 211,
+   "accepted": 2
+  },
+  {
+   "phase": "refine",
+   "cycle": 2,
+   "evaluated": 208,
+   "accepted": 0
+  },
+  {
+   "phase": "re-refine",
+   "cycle": 1,
+   "evaluated": 80,
+   "accepted": 0
+  }
+ ],
+ "moves": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "coordinate",
+   "move": "GDX trailingStopPercentage -10",
+   "from": "GDX:291.6.73.21.178.6.75.131|SLV:245.16.73.28.128.53.172.36|SMH:236.17.113.25.246.38.88.100",
+   "to": "GDX:291.6.63.21.178.6.75.131|SLV:245.16.73.28.128.53.172.36|SMH:236.17.113.25.246.38.88.100",
+   "before": 170051.50452617696,
+   "after": 178482.83462892845,
+   "lotsAdded": [
+    "GDX@1585589220",
+    "GDX@1590586500",
+    "GDX@1592229360",
+    "GDX@1596122460",
+    "GDX@1597152720",
+    "GDX@1599231000",
+    "GDX@1600954380",
+    "GDX@1603978380",
+    "GDX@1605728820",
+    "GDX@1614276240",
+    "SMH@1620158220"
+   ],
+   "lotsRemoved": [
+    "GDX@1585594980",
+    "GDX@1591193940",
+    "GDX@1596821460",
+    "SLV@1600955640",
+    "SMH@1603981380",
+    "GDX@1624282260",
+    "SLV@1633008660"
+   ]
+  },
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "pair",
+   "move": "pair SMH X −u, GDX hold −u",
+   "from": "GDX:291.6.63.21.178.6.75.131|SLV:245.16.73.28.128.53.172.36|SMH:236.17.113.25.246.38.88.100",
+   "to": "GDX:291.6.63.20.178.6.75.131|SLV:245.16.73.28.128.53.172.36|SMH:231.17.113.25.246.38.88.100",
+   "before": 178482.83462892845,
+   "after": 183830.81367913415,
+   "lotsAdded": [],
+   "lotsRemoved": []
+  }
+ ],
+ "pruneSteps": [
+  {
+   "phase": "prune",
+   "from": "GDX:291.6.63.20.178.6.75.131|SLV:245.16.73.28.128.53.172.36|SMH:231.17.113.25.246.38.88.100",
+   "members": [
+    "GDX",
+    "SLV",
+    "SMH"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 65685.22790469383,
+     "interval": {
+      "estimate": 65685.22790469383,
+      "lower": 58609.25184423575,
+      "upper": 72135.11125618964,
+      "se": 4070.409708813097,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "SLV",
+     "marginal": -6754.920233957673,
+     "interval": {
+      "estimate": -6754.920233957673,
+      "lower": -11793.969535170356,
+      "upper": -1789.8851677114726,
+      "se": 2913.4638971914933,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "SMH",
+     "marginal": 40197.06747653472,
+     "interval": {
+      "estimate": 40197.06747653472,
+      "lower": 38042.19564601175,
+      "upper": 56338.863807226066,
+      "se": 4951.258197370892,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "removed": "SLV",
+   "to": "GDX:291.6.63.20.178.6.75.131|SMH:231.17.113.25.246.38.88.100",
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "prune",
+   "from": "GDX:291.6.63.20.178.6.75.131|SMH:231.17.113.25.246.38.88.100",
+   "members": [
+    "GDX",
+    "SMH"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 70790.49767687869,
+     "interval": {
+      "estimate": 70790.49767687869,
+      "lower": 65433.421644296,
+      "upper": 72852.0530306571,
+      "se": 2324.736271569845,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "SMH",
+     "marginal": 45030.911478929425,
+     "interval": {
+      "estimate": 45030.911478929425,
+      "lower": 41802.46799371476,
+      "upper": 48145.79077873638,
+      "se": 1974.0339748411732,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "final-prune",
+   "from": "GDX:291.6.63.20.178.6.75.131|SMH:231.17.113.25.246.38.88.100",
+   "members": [
+    "GDX",
+    "SMH"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 70790.49767687869,
+     "interval": {
+      "estimate": 70790.49767687869,
+      "lower": 65433.421644296,
+      "upper": 72852.0530306571,
+      "se": 2324.736271569845,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "SMH",
+     "marginal": 45030.911478929425,
+     "interval": {
+      "estimate": 45030.911478929425,
+      "lower": 41802.46799371476,
+      "upper": 48145.79077873638,
+      "se": 1974.0339748411732,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  }
+ ],
+ "pruneBlocked": false,
+ "portfolioChecks": [
+  {
+   "key": "GDX:291.6.63.20.178.6.75.131|SMH:231.17.113.25.246.38.88.100",
+   "dailyPercent": 0.26416712701871553
+  }
+ ],
+ "walkedBack": false,
+ "stoppedBy": ""
+}

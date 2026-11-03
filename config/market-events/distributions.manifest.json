@@ -1,0 +1,73 @@
+{
+ "schemaVersion": 1,
+ "ledger": "config/market-events/distributions.csv",
+ "ledgerSha256": "3b4342eb7cdbb270d78a355576c2098d7692caae3ae0550bcbeb64d7a7528259",
+ "rows": 86,
+ "frozenLedger": {
+  "file": "research/risk-management/vgt-portfolio-margin/data/distributions.csv",
+  "sha256": "30adf087e7f54927928c12a9d23e198d19336a7e6257df2e9be7e3fc70dba923",
+  "rows": 78,
+  "coverageEnd": "2025-10-13"
+ },
+ "sources": [
+  {
+   "symbol": "VGT",
+   "url": "https://investor.vanguard.com/vmf/api/VGT/distribution",
+   "retrievedAt": "2026-10-24T08:41:47Z",
+   "file": "config/market-events/raw/vanguard-2026-10-24T084147Z/VGT.json",
+   "sha256": "b8e923d83a0a804c6d697504e5eb6b8e8387955e54f39cd7611f0d1c666d5125",
+   "events": 6
+  },
+  {
+   "symbol": "VOOG",
+   "url": "https://investor.vanguard.com/vmf/api/VOOG/distribution",
+   "retrievedAt": "2026-10-24T08:41:47Z",
+   "file": "config/market-events/raw/vanguard-2026-10-24T084147Z/VOOG.json",
+   "sha256": "3eb36e6e9354fd91b6b1d68c890ab13102c77eefe4809b717ac95cf89d7a871a",
+   "events": 6
+  }
+ ],
+ "coverage": {
+  "VGT": {
+   "through": "2026-10-24",
+   "lastExDate": "2026-09-23",
+   "basis": "the issuer's distribution history as retrieved 2026-10-24T08:41:47Z, joined to the frozen ledger at 2025-10-13"
+  },
+  "VOOG": {
+   "through": "2026-10-24",
+   "lastExDate": "2026-09-23",
+   "basis": "the issuer's distribution history as retrieved 2026-10-24T08:41:47Z, joined to the frozen ledger at 2025-10-13"
+  }
+ },
+ "crossChecks": [
+  {
+   "etf": "VGT",
+   "exDate": "2025-06-26",
+   "frozenAmount": "0.7027103831887506",
+   "issuerAmount": "0.702800",
+   "relativeDifference": -0.00012751396022969708
+  },
+  {
+   "etf": "VGT",
+   "exDate": "2025-09-24",
+   "frozenAmount": "0.8591724272273903",
+   "issuerAmount": "0.858600",
+   "relativeDifference": 0.0006666983780458935
+  },
+  {
+   "etf": "VOOG",
+   "exDate": "2025-06-26",
+   "frozenAmount": "0.49193856639564787",
+   "issuerAmount": "0.492000",
+   "relativeDifference": -0.00012486504949615895
+  },
+  {
+   "etf": "VOOG",
+   "exDate": "2025-09-24",
+   "frozenAmount": "0.5539544604259753",
+   "issuerAmount": "0.553700",
+   "relativeDifference": 0.0004595637095454741
+  }
+ ],
+ "builtAt": "2026-10-24T09:07:20.894Z"
+}

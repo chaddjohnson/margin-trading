@@ -1,0 +1,678 @@
+{
+ "stage": "trackO-ME",
+ "at": "2026-10-30T22:59:29.702Z",
+ "run": true,
+ "patch": {
+  "file": "research/study6-b5-kre-robustness-2026-10/patches/multi-etf-d1-dev-window.patch",
+  "sha256": "797922a24f88c38e8425e9138ba92d164d7f677d3a059c840702fe12fb154dca"
+ },
+ "worktree": {
+  "path": "/tmp/claude-1000/-home-chad-projects-margin-trading/6044c48e-663c-4d83-a324-9850987782be/scratchpad/worktrees/multi-etf-d1-dev",
+  "head": "1d9f6a42244f5a48734fea2e81ba9bd244d8f661"
+ },
+ "command": "git -C <worktree> apply <patch>; node … src/app.ts multiEtfD1 search --symbols KRE --workers 8",
+ "nominations": [
+  {
+   "role": "primary",
+   "policy": "primary",
+   "id": "d1-5b0d6e35ed",
+   "params": {
+    "targetPercentChange": 243,
+    "trailingBuyPercentage": 32,
+    "trailingStopPercentage": 104,
+    "maximumHoldDays": 4,
+    "tickWindowSize": 21,
+    "intradayLossBuffer": 14,
+    "pullback": 165,
+    "continuationWindow": 36
+   },
+   "fractions": {
+    "targetPercentChange": 0.243,
+    "trailingBuyPercentage": 0.032,
+    "trailingStopPercentage": 0.104,
+    "maximumHoldDays": 4,
+    "tickWindowSize": 21,
+    "intradayLossBuffer": 0.014,
+    "pullback": 0.165,
+    "continuationWindow": 36
+   },
+   "description": "X 24.3% Y 3.2% L 21 stop 10.4% hold 4 buffer 1.4% P 16.5% W 36",
+   "origin": "ga:final",
+   "development": {
+    "net": 126366.43522735646,
+    "minuteDrawdown": 24313.918203614223,
+    "dailyDrawdown": 22312.63318112633,
+    "entries": 8,
+    "exits": 8,
+    "wins": 6,
+    "losses": 2,
+    "startDate": "2017-06-15",
+    "endDate": "2021-12-31"
+   },
+   "metrics": {
+    "net": 126366.43522735646,
+    "minuteDrawdown": 24313.918203614223,
+    "dailyDrawdown": 22312.63318112633,
+    "interest": 8589.04109589041,
+    "entries": 8,
+    "closedTrades": 8,
+    "wins": 6,
+    "losses": 2,
+    "openAtEnd": false,
+    "exposure": 0.1736474694589878,
+    "averageHoldDays": 35.625,
+    "bestTrade": 83575.34246575345,
+    "worstTrade": -8327.083240790416,
+    "worstAdverseExcursion": -18174.721260725004,
+    "netWithoutBestTrade": 42791.09276160301,
+    "maximumLosingStreak": 2,
+    "exitReasons": {
+     "maximum hold": 2,
+     "buffered intraday loss": 1,
+     "trailing stop gap": 2,
+     "trailing stop": 3
+    },
+    "signature": "2bd69eccf87691f9"
+   },
+   "years": {
+    "2017": {
+     "net": 0,
+     "minuteDrawdown": 0,
+     "dailyDrawdown": 0,
+     "entries": 0,
+     "exits": 0,
+     "wins": 0,
+     "losses": 0,
+     "startDate": "2017-06-15",
+     "endDate": "2017-12-29"
+    },
+    "2018": {
+     "net": 0,
+     "minuteDrawdown": 0,
+     "dailyDrawdown": 0,
+     "entries": 0,
+     "exits": 0,
+     "wins": 0,
+     "losses": 0,
+     "startDate": "2018-01-02",
+     "endDate": "2018-12-31"
+    },
+    "2019": {
+     "net": 0,
+     "minuteDrawdown": 0,
+     "dailyDrawdown": 0,
+     "entries": 0,
+     "exits": 0,
+     "wins": 0,
+     "losses": 0,
+     "startDate": "2019-01-02",
+     "endDate": "2019-12-31"
+    },
+    "2020": {
+     "net": 90155.95514110578,
+     "minuteDrawdown": 24313.918203614223,
+     "dailyDrawdown": 22312.63318112633,
+     "entries": 8,
+     "exits": 7,
+     "wins": 5,
+     "losses": 2,
+     "startDate": "2020-01-02",
+     "endDate": "2020-12-31"
+    },
+    "2021": {
+     "net": 36210.48008625068,
+     "minuteDrawdown": 22044.782153729044,
+     "dailyDrawdown": 17089.608701166857,
+     "entries": 0,
+     "exits": 1,
+     "wins": 1,
+     "losses": 0,
+     "startDate": "2021-01-04",
+     "endDate": "2021-12-31"
+    }
+   },
+   "plateau": {
+    "probes": 32,
+    "inBox": 29,
+    "feasibleShare": 0.896551724137931,
+    "medianNetShare": 0.9736533583578699,
+    "minNetShare": 0.3119757309872984,
+    "pass": true
+   },
+   "sparse": true,
+   "walkForward": [
+    {
+     "fold": "fold1",
+     "policy": "primary",
+     "pickId": "d1-0b99532b41",
+     "validation": {
+      "net": 21267.75223348385,
+      "minuteDrawdown": 40091.48278208753,
+      "dailyDrawdown": 40091.48278208753,
+      "entries": 19,
+      "exits": 20,
+      "wins": 14,
+      "losses": 6,
+      "startDate": "2020-01-02",
+      "endDate": "2020-12-31"
+     },
+     "d1Validation": {
+      "net": 25065.576907788643,
+      "minuteDrawdown": 48495.97024916927,
+      "dailyDrawdown": 44816.68886101301,
+      "entries": 14,
+      "exits": 14,
+      "wins": 8,
+      "losses": 6,
+      "startDate": "2020-01-02",
+      "endDate": "2020-12-31"
+     }
+    },
+    {
+     "fold": "fold2",
+     "policy": "primary",
+     "pickId": "d1-1d671dd647",
+     "validation": {
+      "net": 0,
+      "minuteDrawdown": 0,
+      "dailyDrawdown": 0,
+      "entries": 0,
+      "exits": 0,
+      "wins": 0,
+      "losses": 0,
+      "startDate": "2021-01-04",
+      "endDate": "2021-12-31"
+     },
+     "d1Validation": {
+      "net": 0,
+      "minuteDrawdown": 0,
+      "dailyDrawdown": 0,
+      "entries": 0,
+      "exits": 0,
+      "wins": 0,
+      "losses": 0,
+      "startDate": "2021-01-04",
+      "endDate": "2021-12-31"
+     }
+    }
+   ]
+  },
+  {
+   "role": "alternate-lowDd",
+   "policy": "lowDd",
+   "id": "d1-a5d661f44b",
+   "params": {
+    "targetPercentChange": 290,
+    "trailingBuyPercentage": 26,
+    "trailingStopPercentage": 31,
+    "maximumHoldDays": 4,
+    "tickWindowSize": 225,
+    "intradayLossBuffer": 27,
+    "pullback": 90,
+    "continuationWindow": 96
+   },
+   "fractions": {
+    "targetPercentChange": 0.29,
+    "trailingBuyPercentage": 0.026,
+    "trailingStopPercentage": 0.031,
+    "maximumHoldDays": 4,
+    "tickWindowSize": 225,
+    "intradayLossBuffer": 0.027,
+    "pullback": 0.09,
+    "continuationWindow": 96
+   },
+   "description": "X 29.0% Y 2.6% L 225 stop 3.1% hold 4 buffer 2.7% P 9.0% W 96",
+   "origin": "ga:final",
+   "development": {
+    "net": 100789.81081886604,
+    "minuteDrawdown": 22200.977974900547,
+    "dailyDrawdown": 20495.14687150893,
+    "entries": 43,
+    "exits": 43,
+    "wins": 24,
+    "losses": 19,
+    "startDate": "2017-06-15",
+    "endDate": "2021-12-31"
+   },
+   "metrics": {
+    "net": 100789.81081886604,
+    "minuteDrawdown": 22200.977974900547,
+    "dailyDrawdown": 20495.14687150893,
+    "interest": 9221.91780821918,
+    "entries": 43,
+    "closedTrades": 43,
+    "wins": 24,
+    "losses": 19,
+    "openAtEnd": false,
+    "exposure": 0.18150087260034903,
+    "averageHoldDays": 7.116279069767442,
+    "bestTrade": 16625.112240124097,
+    "worstTrade": -10003.934407397837,
+    "worstAdverseExcursion": -18031.440444161482,
+    "netWithoutBestTrade": 84164.69857874194,
+    "maximumLosingStreak": 4,
+    "exitReasons": {
+     "trailing stop": 18,
+     "maximum hold": 17,
+     "trailing stop gap": 6,
+     "buffered intraday loss": 2
+    },
+    "signature": "78e6abeabc7c8f55"
+   },
+   "years": {
+    "2017": {
+     "net": 0,
+     "minuteDrawdown": 0,
+     "dailyDrawdown": 0,
+     "entries": 0,
+     "exits": 0,
+     "wins": 0,
+     "losses": 0,
+     "startDate": "2017-06-15",
+     "endDate": "2017-12-29"
+    },
+    "2018": {
+     "net": 3504.609707394343,
+     "minuteDrawdown": 3951.271235304479,
+     "dailyDrawdown": 694.7360115561187,
+     "entries": 1,
+     "exits": 0,
+     "wins": 0,
+     "losses": 0,
+     "startDate": "2018-01-02",
+     "endDate": "2018-12-31"
+    },
+    "2019": {
+     "net": 19405.966059397644,
+     "minuteDrawdown": 4848.443406673805,
+     "dailyDrawdown": 3728.465148461586,
+     "entries": 2,
+     "exits": 3,
+     "wins": 2,
+     "losses": 1,
+     "startDate": "2019-01-02",
+     "endDate": "2019-12-31"
+    },
+    "2020": {
+     "net": 61078.36584663106,
+     "minuteDrawdown": 21881.49969433783,
+     "dailyDrawdown": 20428.603796247677,
+     "entries": 34,
+     "exits": 34,
+     "wins": 17,
+     "losses": 17,
+     "startDate": "2020-01-02",
+     "endDate": "2020-12-31"
+    },
+    "2021": {
+     "net": 16800.869205443,
+     "minuteDrawdown": 7446.272962051749,
+     "dailyDrawdown": 4564.752812361257,
+     "entries": 6,
+     "exits": 6,
+     "wins": 5,
+     "losses": 1,
+     "startDate": "2021-01-04",
+     "endDate": "2021-12-31"
+    }
+   },
+   "plateau": {
+    "probes": 32,
+    "inBox": 29,
+    "feasibleShare": 1,
+    "medianNetShare": 1,
+    "minNetShare": 0.7613011403299657,
+    "pass": true
+   },
+   "sparse": false,
+   "walkForward": [
+    {
+     "fold": "fold1",
+     "policy": "lowDd",
+     "pickId": "d1-0ed23506bc",
+     "validation": {
+      "net": 40171.5307681854,
+      "minuteDrawdown": 28522.89839664163,
+      "dailyDrawdown": 26455.79738870134,
+      "entries": 22,
+      "exits": 22,
+      "wins": 13,
+      "losses": 9,
+      "startDate": "2020-01-02",
+      "endDate": "2020-12-31"
+     },
+     "d1Validation": {
+      "net": 25065.576907788643,
+      "minuteDrawdown": 48495.97024916927,
+      "dailyDrawdown": 44816.68886101301,
+      "entries": 14,
+      "exits": 14,
+      "wins": 8,
+      "losses": 6,
+      "startDate": "2020-01-02",
+      "endDate": "2020-12-31"
+     }
+    },
+    {
+     "fold": "fold2",
+     "policy": "lowDd",
+     "pickId": "d1-00b72f7f38",
+     "validation": {
+      "net": 0,
+      "minuteDrawdown": 0,
+      "dailyDrawdown": 0,
+      "entries": 0,
+      "exits": 0,
+      "wins": 0,
+      "losses": 0,
+      "startDate": "2021-01-04",
+      "endDate": "2021-12-31"
+     },
+     "d1Validation": {
+      "net": 0,
+      "minuteDrawdown": 0,
+      "dailyDrawdown": 0,
+      "entries": 0,
+      "exits": 0,
+      "wins": 0,
+      "losses": 0,
+      "startDate": "2021-01-04",
+      "endDate": "2021-12-31"
+     }
+    }
+   ]
+  }
+ ],
+ "configurations": [
+  {
+   "key": "O-ME-primary",
+   "role": "primary",
+   "id": "d1-5b0d6e35ed",
+   "books": {
+    "VGT": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 29,
+     "pullback": 90,
+     "continuationWindow": 60
+    },
+    "XBI": {
+     "targetPercentChange": 300,
+     "trailingBuyPercentage": 12,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 49,
+     "intradayLossBuffer": 1,
+     "pullback": 82,
+     "continuationWindow": 54
+    },
+    "XRT": {
+     "targetPercentChange": 244,
+     "trailingBuyPercentage": 47,
+     "trailingStopPercentage": 80,
+     "maximumHoldDays": 17,
+     "tickWindowSize": 48,
+     "intradayLossBuffer": 36,
+     "pullback": 62,
+     "continuationWindow": 120
+    },
+    "KRE": {
+     "targetPercentChange": 243,
+     "trailingBuyPercentage": 32,
+     "trailingStopPercentage": 104,
+     "maximumHoldDays": 4,
+     "tickWindowSize": 21,
+     "intradayLossBuffer": 14,
+     "pullback": 165,
+     "continuationWindow": 36
+    },
+    "GDX": {
+     "targetPercentChange": 274,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 71,
+     "maximumHoldDays": 18,
+     "tickWindowSize": 100,
+     "intradayLossBuffer": 36,
+     "pullback": 191,
+     "continuationWindow": 81
+    }
+   },
+   "development": {
+    "net": 126366.43522735646,
+    "minuteDrawdown": 24313.918203614223,
+    "dailyDrawdown": 22312.63318112633,
+    "entries": 8,
+    "exits": 8,
+    "wins": 6,
+    "losses": 2,
+    "startDate": "2017-06-15",
+    "endDate": "2021-12-31"
+   }
+  },
+  {
+   "key": "O-ME-lowDd",
+   "role": "alternate-lowDd",
+   "id": "d1-a5d661f44b",
+   "books": {
+    "VGT": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 74,
+     "intradayLossBuffer": 29,
+     "pullback": 90,
+     "continuationWindow": 60
+    },
+    "XBI": {
+     "targetPercentChange": 300,
+     "trailingBuyPercentage": 12,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 49,
+     "intradayLossBuffer": 1,
+     "pullback": 82,
+     "continuationWindow": 54
+    },
+    "XRT": {
+     "targetPercentChange": 244,
+     "trailingBuyPercentage": 47,
+     "trailingStopPercentage": 80,
+     "maximumHoldDays": 17,
+     "tickWindowSize": 48,
+     "intradayLossBuffer": 36,
+     "pullback": 62,
+     "continuationWindow": 120
+    },
+    "KRE": {
+     "targetPercentChange": 290,
+     "trailingBuyPercentage": 26,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 4,
+     "tickWindowSize": 225,
+     "intradayLossBuffer": 27,
+     "pullback": 90,
+     "continuationWindow": 96
+    },
+    "GDX": {
+     "targetPercentChange": 274,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 71,
+     "maximumHoldDays": 18,
+     "tickWindowSize": 100,
+     "intradayLossBuffer": 36,
+     "pullback": 191,
+     "continuationWindow": 81
+    }
+   },
+   "development": {
+    "net": 100789.81081886604,
+    "minuteDrawdown": 22200.977974900547,
+    "dailyDrawdown": 20495.14687150893,
+    "entries": 43,
+    "exits": 43,
+    "wins": 24,
+    "losses": 19,
+    "startDate": "2017-06-15",
+    "endDate": "2021-12-31"
+   }
+  }
+ ],
+ "search": {
+  "ga": [
+   {
+    "fold": "fold1",
+    "seed": [
+     2284718674,
+     3450101113,
+     2148718784,
+     1848413960
+    ],
+    "seeded": 96,
+    "generations": 32,
+    "newEvaluations": 3072,
+    "hypervolume": [
+     957280311.77142,
+     989415382.932148,
+     989593815.8476765,
+     1043532419.1633699,
+     1051547167.9060538,
+     1066163467.2448821,
+     1066733971.7292295,
+     1066792346.8642187,
+     1066792346.8642187,
+     1067094989.2250445,
+     1067132067.5061746,
+     1067270975.7147084,
+     1067270975.7147084,
+     1067270975.7147084,
+     1067270975.7147084,
+     1084619515.580272,
+     1096692601.7987926,
+     1096926786.8813102,
+     1096951469.3336473,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411,
+     1126919093.6616411
+    ],
+    "stopReason": "budget",
+    "repairs": 0,
+    "minEntries": 2
+   },
+   {
+    "fold": "fold2",
+    "seed": [
+     3004589816,
+     1457616613,
+     3048422790,
+     1504725903
+    ],
+    "seeded": 96,
+    "generations": 32,
+    "newEvaluations": 3072,
+    "hypervolume": [
+     1415029945.670532,
+     1567379630.389806,
+     1570997718.3288648,
+     1575042219.607394,
+     1587051498.9892309,
+     1598361367.6598237,
+     1600735414.223063,
+     1601748207.937558,
+     1611327964.4056592,
+     1640557697.3621287,
+     1640557697.3621287,
+     1640703454.0582738,
+     1640760707.27843,
+     1651171881.795734,
+     1651199515.6863594,
+     1665958830.2062368,
+     1724220724.360209,
+     1724220724.360209,
+     1724601326.8422546,
+     1729898556.0634453,
+     1729948590.4925435,
+     1739108197.6325939,
+     1741739760.735437,
+     1743257214.9934866,
+     1745617203.0514505,
+     1745687635.375555,
+     1745744360.7518034,
+     1747543907.809653,
+     1747543907.809653,
+     1748417367.1492612,
+     1754914257.7927263,
+     1755838152.9414792
+    ],
+    "stopReason": "budget",
+    "repairs": 0,
+    "minEntries": 3
+   },
+   {
+    "fold": "final",
+    "seed": [
+     3914796117,
+     3741797018,
+     4194760636,
+     3584517885
+    ],
+    "seeded": 96,
+    "generations": 32,
+    "newEvaluations": 3072,
+    "hypervolume": [
+     1825951585.4823313,
+     1826130653.0516992,
+     1849801387.7426815,
+     1851160544.367859,
+     1863191681.738655,
+     1863203007.8262959,
+     1863357146.288072,
+     1883126080.54778,
+     1883129200.4257703,
+     1883129200.4257703,
+     1883129200.4257703,
+     1883405961.574863,
+     1923203384.2391953,
+     1923203384.2391953,
+     1925210339.2206693,
+     1932545055.1919923,
+     1935518553.3020892,
+     1940071017.1711104,
+     1940099013.4063556,
+     1940099013.4063556,
+     1940099013.4063556,
+     1940383299.5120416,
+     1963135878.0228252,
+     1963216875.730499,
+     1963216875.730499,
+     1966688939.3425412,
+     1967022828.311345,
+     1967022828.311345,
+     1967022828.311345,
+     1991827995.2209785,
+     1994741813.8387077,
+     1994741813.8387077
+    ],
+    "stopReason": "budget",
+    "repairs": 0,
+    "minEntries": 4
+   }
+  ],
+  "candidates": 15059
+ },
+ "seconds": 29.627,
+ "bodyHash": "ffca937a7081376eaa12f456013048c802700b6c21d2f01969480daca10b8b00"
+}

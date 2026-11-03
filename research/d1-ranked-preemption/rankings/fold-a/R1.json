@@ -1,0 +1,1769 @@
+{
+ "schema": "ranked-preemption-ranking",
+ "schemaVersion": 1,
+ "study": "d1-ranked-preemption-v1",
+ "window": "fold-a",
+ "metric": "R1",
+ "definition": "mean net P&L per trade of the representative standalone phenotype: Σ trade nets ÷ trades (every entered trade; a trade open at the search end at its liquidation value at the last close, exit friction and interest to that session included); after 11% simple interest and 5 bps per side",
+ "ties": "exact score ties: more trades first, then the symbol alphabetically",
+ "unrankable": "symbols without any trade follow every rankable symbol, alphabetically",
+ "priority": "position 1 is the highest priority; a pool inherits the relative order of its members",
+ "frozenAt": "2026-10-26T18:27:07.206Z",
+ "guard": {
+  "protocolBody": "e7f6f5fab9086a746f6bd192cfbb6e9211ff4b8e1573a941d178f8a303596ab2",
+  "codeBody": "ca324dfe1fa783bf2020e15486b8c705aeb844f8ff266913f4feb3eddfb6150e",
+  "codeDigest": "71c0a9e36e7b69e3389849596fea61b63a2b398c15a741cb3dad99f0f99c37b4",
+  "node": "v24.21.0",
+  "testMode": false
+ },
+ "stageA": {
+  "file": "research/d1-ranked-preemption/results/standalone/fold-a/STAGE_A.json",
+  "bodyHash": "46b91ce15569967d6b88e97fcac17f89a6b46500c2809748afd299933979c657"
+ },
+ "order": [
+  "VGT",
+  "GDX",
+  "VPU",
+  "XLU",
+  "GLD",
+  "IYT",
+  "XLI",
+  "XLK",
+  "AGG",
+  "IWM",
+  "XHB",
+  "XLY",
+  "XLB",
+  "RSP",
+  "VOOG",
+  "IWF",
+  "XRT",
+  "TIP",
+  "SLV",
+  "IJR",
+  "TLT",
+  "XBI",
+  "EWJ",
+  "IWD",
+  "KBE",
+  "IEMG",
+  "IJH",
+  "EDV",
+  "XLE",
+  "IBB",
+  "USMV",
+  "VGK",
+  "EFA",
+  "EMB",
+  "XOP",
+  "LQD",
+  "QUAL",
+  "XLF",
+  "XLP",
+  "IGV",
+  "XLV",
+  "EWY",
+  "KRE",
+  "MTUM",
+  "SMH",
+  "IWN",
+  "KIE",
+  "ILF",
+  "SPLV",
+  "VIG",
+  "IAU",
+  "EWZ",
+  "EWW",
+  "XME",
+  "INDA",
+  "DBC",
+  "HYG",
+  "FXI",
+  "EEM",
+  "IEF",
+  "SHY"
+ ],
+ "entries": [
+  {
+   "symbol": "VGT",
+   "score": 11268.65424566402,
+   "meanNet": 11268.65424566402,
+   "netPerDay": 172.22833999923176,
+   "trades": 7,
+   "occupiedDays": 458,
+   "net": 78880.57971964814,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-5f38a1fd7d",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/VGT-representative-d1-5f38a1fd7d.json",
+    "sha256": "b4c3befc823d470a4dedca0733bfaa3d36a7dc9981209a4e6040a46ed287a802",
+    "grid": {
+     "targetPercentChange": 240,
+     "trailingBuyPercentage": 14,
+     "trailingStopPercentage": 82,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 162,
+     "intradayLossBuffer": 54,
+     "pullback": 57,
+     "continuationWindow": 111
+    }
+   },
+   "position": 1
+  },
+  {
+   "symbol": "GDX",
+   "score": 10134.107282425835,
+   "meanNet": 10134.107282425835,
+   "netPerDay": 324.1185698003999,
+   "trades": 15,
+   "occupiedDays": 469,
+   "net": 152011.60923638754,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-04f8d2a5ed",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/GDX-representative-d1-04f8d2a5ed.json",
+    "sha256": "29fa6a170e43d32946a192c7a8e00309ce52e67412168e529ef637edc0661bf8",
+    "grid": {
+     "targetPercentChange": 257,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 65,
+     "maximumHoldDays": 30,
+     "tickWindowSize": 227,
+     "intradayLossBuffer": 18,
+     "pullback": 116,
+     "continuationWindow": 68
+    }
+   },
+   "position": 2
+  },
+  {
+   "symbol": "VPU",
+   "score": 9293.322043303302,
+   "meanNet": 9293.322043303302,
+   "netPerDay": 826.073070515849,
+   "trades": 4,
+   "occupiedDays": 45,
+   "net": 37173.28817321321,
+   "sample": "very sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-69d270c189",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/VPU-representative-d1-69d270c189.json",
+    "sha256": "b5c15423824caa0cd0a6749f980302f49fbe9322ef23cc13e67461c13a7e7515",
+    "grid": {
+     "targetPercentChange": 295,
+     "trailingBuyPercentage": 22,
+     "trailingStopPercentage": 47,
+     "maximumHoldDays": 21,
+     "tickWindowSize": 175,
+     "intradayLossBuffer": 43,
+     "pullback": 98,
+     "continuationWindow": 79
+    }
+   },
+   "position": 3
+  },
+  {
+   "symbol": "XLU",
+   "score": 9290.647944873366,
+   "meanNet": 9290.647944873366,
+   "netPerDay": 844.6043586248514,
+   "trades": 4,
+   "occupiedDays": 44,
+   "net": 37162.591779493465,
+   "sample": "very sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-555e37bd01",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XLU-representative-d1-555e37bd01.json",
+    "sha256": "767a76b6bec9327da63e4a2f287a75676baeef729560dbdabdd5882f23994600",
+    "grid": {
+     "targetPercentChange": 269,
+     "trailingBuyPercentage": 37,
+     "trailingStopPercentage": 45,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 125,
+     "intradayLossBuffer": 56,
+     "pullback": 97,
+     "continuationWindow": 48
+    }
+   },
+   "position": 4
+  },
+  {
+   "symbol": "GLD",
+   "score": 8309.569799927878,
+   "meanNet": 8309.569799927878,
+   "netPerDay": 49.98237473640829,
+   "trades": 4,
+   "occupiedDays": 665,
+   "net": 33238.27919971151,
+   "sample": "very sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-e8989dbe76",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/GLD-representative-d1-e8989dbe76.json",
+    "sha256": "b118327d9032da670b1ed222a32cfd62902939fa2c51ea33cf59b89dee122f26",
+    "grid": {
+     "targetPercentChange": 129,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 77,
+     "maximumHoldDays": 10,
+     "tickWindowSize": 131,
+     "intradayLossBuffer": 32,
+     "pullback": 180,
+     "continuationWindow": 188
+    }
+   },
+   "position": 5
+  },
+  {
+   "symbol": "IYT",
+   "score": 7689.43072662173,
+   "meanNet": 7689.43072662173,
+   "netPerDay": 932.0522092874825,
+   "trades": 8,
+   "occupiedDays": 66,
+   "net": 61515.44581297384,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-4626c4ed01",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IYT-representative-d1-4626c4ed01.json",
+    "sha256": "a2aa669866df9b488ceb8fbd61624d252ef83fcd5062a410a9265167b77b060f",
+    "grid": {
+     "targetPercentChange": 298,
+     "trailingBuyPercentage": 9,
+     "trailingStopPercentage": 42,
+     "maximumHoldDays": 19,
+     "tickWindowSize": 44,
+     "intradayLossBuffer": 12,
+     "pullback": 91,
+     "continuationWindow": 129
+    }
+   },
+   "position": 6
+  },
+  {
+   "symbol": "XLI",
+   "score": 7658.6774563956415,
+   "meanNet": 7658.6774563956415,
+   "netPerDay": 387.7811370326907,
+   "trades": 8,
+   "occupiedDays": 158,
+   "net": 61269.41965116513,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-8abd354636",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XLI-representative-d1-8abd354636.json",
+    "sha256": "8b5801ab7e75c4d08b579112f39ddb7d58952f32af669b0945176e4e8b9a9bcd",
+    "grid": {
+     "targetPercentChange": 257,
+     "trailingBuyPercentage": 7,
+     "trailingStopPercentage": 44,
+     "maximumHoldDays": 28,
+     "tickWindowSize": 243,
+     "intradayLossBuffer": 59,
+     "pullback": 100,
+     "continuationWindow": 158
+    }
+   },
+   "position": 7
+  },
+  {
+   "symbol": "XLK",
+   "score": 7146.401701006453,
+   "meanNet": 7146.401701006453,
+   "netPerDay": 186.2806130594099,
+   "trades": 11,
+   "occupiedDays": 422,
+   "net": 78610.41871107098,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-1a0426c473",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XLK-representative-d1-1a0426c473.json",
+    "sha256": "722004881a25cc89504be4b4bd036d5088a1372f0561b539c2e4ced2e6c475ee",
+    "grid": {
+     "targetPercentChange": 206,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 43,
+     "maximumHoldDays": 16,
+     "tickWindowSize": 59,
+     "intradayLossBuffer": 10,
+     "pullback": 54,
+     "continuationWindow": 60
+    }
+   },
+   "position": 8
+  },
+  {
+   "symbol": "AGG",
+   "score": 7117.888801347448,
+   "meanNet": 7117.888801347448,
+   "netPerDay": 69.10571651793639,
+   "trades": 1,
+   "occupiedDays": 103,
+   "net": 7117.888801347448,
+   "sample": "very sparse",
+   "credible": false,
+   "status": "rejected",
+   "phenotype": {
+    "candidateId": "d1-3488883dfb",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/AGG-ranking-representative-d1-3488883dfb.json",
+    "sha256": "d7109dfebd915acdf5bcffa13ea95fbf80bcd29f21205704bee2256ab965f12d",
+    "grid": {
+     "targetPercentChange": 100,
+     "trailingBuyPercentage": 15,
+     "trailingStopPercentage": 56,
+     "maximumHoldDays": 30,
+     "tickWindowSize": 50,
+     "intradayLossBuffer": 14,
+     "pullback": 104,
+     "continuationWindow": 132
+    }
+   },
+   "position": 9
+  },
+  {
+   "symbol": "IWM",
+   "score": 6677.510223065103,
+   "meanNet": 6677.510223065103,
+   "netPerDay": 392.7947190038296,
+   "trades": 8,
+   "occupiedDays": 136,
+   "net": 53420.08178452082,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-c7a75cdb2d",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IWM-representative-d1-c7a75cdb2d.json",
+    "sha256": "7358c870daef08a1514c70cfd664728af74940a897bfc5b56780ac94e2275f5d",
+    "grid": {
+     "targetPercentChange": 272,
+     "trailingBuyPercentage": 16,
+     "trailingStopPercentage": 45,
+     "maximumHoldDays": 30,
+     "tickWindowSize": 121,
+     "intradayLossBuffer": 45,
+     "pullback": 170,
+     "continuationWindow": 36
+    }
+   },
+   "position": 10
+  },
+  {
+   "symbol": "XHB",
+   "score": 6199.138372138496,
+   "meanNet": 6199.138372138496,
+   "netPerDay": 302.96540916466336,
+   "trades": 13,
+   "occupiedDays": 266,
+   "net": 80588.79883780045,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-581d77c801",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XHB-representative-d1-581d77c801.json",
+    "sha256": "e8f258a6a342be7d48aa7de2aa1a67bb1791aec49e58c73c26501d6135c3ee16",
+    "grid": {
+     "targetPercentChange": 233,
+     "trailingBuyPercentage": 44,
+     "trailingStopPercentage": 43,
+     "maximumHoldDays": 21,
+     "tickWindowSize": 177,
+     "intradayLossBuffer": 41,
+     "pullback": 33,
+     "continuationWindow": 125
+    }
+   },
+   "position": 11
+  },
+  {
+   "symbol": "XLY",
+   "score": 6061.866405400888,
+   "meanNet": 6061.866405400888,
+   "netPerDay": 246.41733355288162,
+   "trades": 10,
+   "occupiedDays": 246,
+   "net": 60618.66405400888,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-20d6a1ff16",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XLY-representative-d1-20d6a1ff16.json",
+    "sha256": "193c60a9d408f9daf92379e2c6b6701bf4309c8fa15feec22ee25500e7f87c9e",
+    "grid": {
+     "targetPercentChange": 162,
+     "trailingBuyPercentage": 28,
+     "trailingStopPercentage": 38,
+     "maximumHoldDays": 27,
+     "tickWindowSize": 141,
+     "intradayLossBuffer": 45,
+     "pullback": 88,
+     "continuationWindow": 68
+    }
+   },
+   "position": 12
+  },
+  {
+   "symbol": "XLB",
+   "score": 5751.145513532115,
+   "meanNet": 5751.145513532115,
+   "netPerDay": 522.8314103211013,
+   "trades": 11,
+   "occupiedDays": 121,
+   "net": 63262.600648853266,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-0018930c77",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XLB-representative-d1-0018930c77.json",
+    "sha256": "75c179790fec5c33507540f447322305744df971172437f925ef46e415bdf6a2",
+    "grid": {
+     "targetPercentChange": 223,
+     "trailingBuyPercentage": 1,
+     "trailingStopPercentage": 35,
+     "maximumHoldDays": 9,
+     "tickWindowSize": 132,
+     "intradayLossBuffer": 17,
+     "pullback": 57,
+     "continuationWindow": 159
+    }
+   },
+   "position": 13
+  },
+  {
+   "symbol": "RSP",
+   "score": 5503.319820160638,
+   "meanNet": 5503.319820160638,
+   "netPerDay": 325.8544630358272,
+   "trades": 9,
+   "occupiedDays": 152,
+   "net": 49529.87838144574,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-54a1d2b4b8",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/RSP-representative-d1-54a1d2b4b8.json",
+    "sha256": "b60c896ba8c9a00e06a082b2795f667f78214ce9c9141b40d69f2160650ad437",
+    "grid": {
+     "targetPercentChange": 209,
+     "trailingBuyPercentage": 11,
+     "trailingStopPercentage": 36,
+     "maximumHoldDays": 14,
+     "tickWindowSize": 236,
+     "intradayLossBuffer": 13,
+     "pullback": 128,
+     "continuationWindow": 41
+    }
+   },
+   "position": 14
+  },
+  {
+   "symbol": "VOOG",
+   "score": 5444.902693309953,
+   "meanNet": 5444.902693309953,
+   "netPerDay": 668.6722605819241,
+   "trades": 7,
+   "occupiedDays": 57,
+   "net": 38114.31885316967,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-4e8e91a333",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/VOOG-representative-d1-4e8e91a333.json",
+    "sha256": "acea8c80681be3b4bc74ffa691cb7d920a66b294be3d6dce5e29eee1a408cec7",
+    "grid": {
+     "targetPercentChange": 249,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 35,
+     "maximumHoldDays": 14,
+     "tickWindowSize": 38,
+     "intradayLossBuffer": 55,
+     "pullback": 50,
+     "continuationWindow": 38
+    }
+   },
+   "position": 15
+  },
+  {
+   "symbol": "IWF",
+   "score": 5371.643094419393,
+   "meanNet": 5371.643094419393,
+   "netPerDay": 201.18513462244917,
+   "trades": 10,
+   "occupiedDays": 267,
+   "net": 53716.430944193926,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-1a917d1dbc",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IWF-representative-d1-1a917d1dbc.json",
+    "sha256": "1a685b958309a8da06724dcb15a4d47ff42a977ed9e5cc7f64bd515bc476b136",
+    "grid": {
+     "targetPercentChange": 168,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 39,
+     "maximumHoldDays": 29,
+     "tickWindowSize": 68,
+     "intradayLossBuffer": 2,
+     "pullback": 46,
+     "continuationWindow": 31
+    }
+   },
+   "position": 16
+  },
+  {
+   "symbol": "XRT",
+   "score": 5364.736602134872,
+   "meanNet": 5364.736602134872,
+   "netPerDay": 371.40484168626034,
+   "trades": 9,
+   "occupiedDays": 130,
+   "net": 48282.629419213845,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-7d9fc80b29",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XRT-representative-d1-7d9fc80b29.json",
+    "sha256": "f62d2a3ea82d9d6767a01910aad572f1f740be100ceade45459e9e31dff61cbd",
+    "grid": {
+     "targetPercentChange": 266,
+     "trailingBuyPercentage": 39,
+     "trailingStopPercentage": 45,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 198,
+     "intradayLossBuffer": 54,
+     "pullback": 89,
+     "continuationWindow": 175
+    }
+   },
+   "position": 17
+  },
+  {
+   "symbol": "TIP",
+   "score": 5330.053233497101,
+   "meanNet": 5330.053233497101,
+   "netPerDay": 820.0081897687849,
+   "trades": 2,
+   "occupiedDays": 13,
+   "net": 10660.106466994202,
+   "sample": "very sparse",
+   "credible": false,
+   "status": "rejected",
+   "phenotype": {
+    "candidateId": "d1-faada69507",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/TIP-ranking-representative-d1-faada69507.json",
+    "sha256": "b95ab8cec0ca971dde7252d1f8f65b10715656ee8ce37050214f22222416911a",
+    "grid": {
+     "targetPercentChange": 91,
+     "trailingBuyPercentage": 16,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 16,
+     "tickWindowSize": 55,
+     "intradayLossBuffer": 53,
+     "pullback": 40,
+     "continuationWindow": 167
+    }
+   },
+   "position": 18
+  },
+  {
+   "symbol": "SLV",
+   "score": 5221.431197006532,
+   "meanNet": 5221.431197006532,
+   "netPerDay": 270.0740274313723,
+   "trades": 9,
+   "occupiedDays": 174,
+   "net": 46992.88077305879,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-e9f5494111",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/SLV-representative-d1-e9f5494111.json",
+    "sha256": "55a4f1a10bed54ad1a2d9ef92d5303b95a43ed66fc06df23308e280e0b9c5846",
+    "grid": {
+     "targetPercentChange": 241,
+     "trailingBuyPercentage": 15,
+     "trailingStopPercentage": 38,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 243,
+     "intradayLossBuffer": 15,
+     "pullback": 75,
+     "continuationWindow": 38
+    }
+   },
+   "position": 19
+  },
+  {
+   "symbol": "IJR",
+   "score": 4910.784753790048,
+   "meanNet": 4910.784753790048,
+   "netPerDay": 275.88678392078924,
+   "trades": 10,
+   "occupiedDays": 178,
+   "net": 49107.84753790048,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-dca677e98e",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IJR-representative-d1-dca677e98e.json",
+    "sha256": "fe017349fcb4ee5ddbef074f26269eec0ee099719550f75324bfa63fa97b9045",
+    "grid": {
+     "targetPercentChange": 180,
+     "trailingBuyPercentage": 49,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 25,
+     "tickWindowSize": 209,
+     "intradayLossBuffer": 50,
+     "pullback": 151,
+     "continuationWindow": 36
+    }
+   },
+   "position": 20
+  },
+  {
+   "symbol": "TLT",
+   "score": 4784.378522089916,
+   "meanNet": 4784.378522089916,
+   "netPerDay": 70.10078420644565,
+   "trades": 8,
+   "occupiedDays": 546,
+   "net": 38275.02817671933,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-465fed046c",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/TLT-representative-d1-465fed046c.json",
+    "sha256": "61df91f8be2bc1927d4ef5812c6782dc92eac6586ed01142af195f44780ce9fd",
+    "grid": {
+     "targetPercentChange": 88,
+     "trailingBuyPercentage": 10,
+     "trailingStopPercentage": 58,
+     "maximumHoldDays": 23,
+     "tickWindowSize": 86,
+     "intradayLossBuffer": 0,
+     "pullback": 160,
+     "continuationWindow": 106
+    }
+   },
+   "position": 21
+  },
+  {
+   "symbol": "XBI",
+   "score": 4783.1617254425955,
+   "meanNet": 4783.1617254425955,
+   "netPerDay": 381.63524405127094,
+   "trades": 15,
+   "occupiedDays": 188,
+   "net": 71747.42588163893,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-a73f1d01d6",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XBI-representative-d1-a73f1d01d6.json",
+    "sha256": "d9e0064d224554c61e368520d3da6fc1f6278ad5ef886946c33a3a19f2bc8bbe",
+    "grid": {
+     "targetPercentChange": 263,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 23,
+     "tickWindowSize": 172,
+     "intradayLossBuffer": 30,
+     "pullback": 96,
+     "continuationWindow": 140
+    }
+   },
+   "position": 22
+  },
+  {
+   "symbol": "EWJ",
+   "score": 4698.018588673269,
+   "meanNet": 4698.018588673269,
+   "netPerDay": 402.6873076005659,
+   "trades": 6,
+   "occupiedDays": 70,
+   "net": 28188.111532039613,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-d590e02c80",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/EWJ-representative-d1-d590e02c80.json",
+    "sha256": "b1be71e2d033343b9124782a87f6bdaff19155098b34aa3e25e30ecb15c36c1f",
+    "grid": {
+     "targetPercentChange": 273,
+     "trailingBuyPercentage": 15,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 27,
+     "tickWindowSize": 34,
+     "intradayLossBuffer": 0,
+     "pullback": 36,
+     "continuationWindow": 137
+    }
+   },
+   "position": 23
+  },
+  {
+   "symbol": "IWD",
+   "score": 4526.046909496613,
+   "meanNet": 4526.046909496613,
+   "netPerDay": 401.0421312212189,
+   "trades": 7,
+   "occupiedDays": 79,
+   "net": 31682.32836647629,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-3608bfe932",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IWD-representative-d1-3608bfe932.json",
+    "sha256": "21a2149f691d4f031c661a3897dc0c28ec186260738f110d2cbb8c75ce8b9b60",
+    "grid": {
+     "targetPercentChange": 297,
+     "trailingBuyPercentage": 10,
+     "trailingStopPercentage": 42,
+     "maximumHoldDays": 21,
+     "tickWindowSize": 211,
+     "intradayLossBuffer": 0,
+     "pullback": 46,
+     "continuationWindow": 153
+    }
+   },
+   "position": 24
+  },
+  {
+   "symbol": "KBE",
+   "score": 4517.61805474545,
+   "meanNet": 4517.61805474545,
+   "netPerDay": 517.0767653021901,
+   "trades": 19,
+   "occupiedDays": 166,
+   "net": 85834.74304016355,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-df6fac1961",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/KBE-representative-d1-df6fac1961.json",
+    "sha256": "65346e4d5c6c14b73c5aba9fcd347b07bf4ef60bf4f06708858c2d9f53428023",
+    "grid": {
+     "targetPercentChange": 257,
+     "trailingBuyPercentage": 19,
+     "trailingStopPercentage": 36,
+     "maximumHoldDays": 5,
+     "tickWindowSize": 73,
+     "intradayLossBuffer": 1,
+     "pullback": 106,
+     "continuationWindow": 110
+    }
+   },
+   "position": 25
+  },
+  {
+   "symbol": "IEMG",
+   "score": 4500.045836256529,
+   "meanNet": 4500.045836256529,
+   "netPerDay": 216.8696788557363,
+   "trades": 4,
+   "occupiedDays": 83,
+   "net": 18000.183345026115,
+   "sample": "very sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-5c9b2c308e",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IEMG-representative-d1-5c9b2c308e.json",
+    "sha256": "c3b140faab442e54f6ab3de7b0002e0a7b400d99ae092876169f1a2883ab9c19",
+    "grid": {
+     "targetPercentChange": 298,
+     "trailingBuyPercentage": 16,
+     "trailingStopPercentage": 54,
+     "maximumHoldDays": 15,
+     "tickWindowSize": 48,
+     "intradayLossBuffer": 18,
+     "pullback": 33,
+     "continuationWindow": 135
+    }
+   },
+   "position": 26
+  },
+  {
+   "symbol": "IJH",
+   "score": 4492.070200106403,
+   "meanNet": 4492.070200106403,
+   "netPerDay": 249.55945556146682,
+   "trades": 11,
+   "occupiedDays": 198,
+   "net": 49412.77220117043,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-39a42bc57d",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IJH-representative-d1-39a42bc57d.json",
+    "sha256": "24822179f962fddb8cf015574b1527582d97cb1905462ed286824760a043fbfd",
+    "grid": {
+     "targetPercentChange": 174,
+     "trailingBuyPercentage": 20,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 28,
+     "tickWindowSize": 49,
+     "intradayLossBuffer": 58,
+     "pullback": 73,
+     "continuationWindow": 113
+    }
+   },
+   "position": 27
+  },
+  {
+   "symbol": "EDV",
+   "score": 4430.9649667303065,
+   "meanNet": 4430.9649667303065,
+   "netPerDay": 125.40466886972567,
+   "trades": 12,
+   "occupiedDays": 424,
+   "net": 53171.57960076368,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-dba5acd434",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/EDV-representative-d1-dba5acd434.json",
+    "sha256": "12541770ada7ade2526ad4bcccb85ee632c999140505dbc801a0e37a5a06faa0",
+    "grid": {
+     "targetPercentChange": 117,
+     "trailingBuyPercentage": 48,
+     "trailingStopPercentage": 63,
+     "maximumHoldDays": 3,
+     "tickWindowSize": 246,
+     "intradayLossBuffer": 17,
+     "pullback": 151,
+     "continuationWindow": 74
+    }
+   },
+   "position": 28
+  },
+  {
+   "symbol": "XLE",
+   "score": 4372.008150733602,
+   "meanNet": 4372.008150733602,
+   "netPerDay": 315.2890493317501,
+   "trades": 15,
+   "occupiedDays": 208,
+   "net": 65580.12226100403,
+   "sample": "adequate",
+   "credible": true,
+   "status": "screened-down",
+   "phenotype": {
+    "candidateId": "d1-c8d07bc0dd",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XLE-representative-d1-c8d07bc0dd.json",
+    "sha256": "308a284feaf3a145ed8b7821cfb210c0df4edea52754cd88fdbe11c3c945cebd",
+    "grid": {
+     "targetPercentChange": 287,
+     "trailingBuyPercentage": 27,
+     "trailingStopPercentage": 64,
+     "maximumHoldDays": 4,
+     "tickWindowSize": 64,
+     "intradayLossBuffer": 1,
+     "pullback": 148,
+     "continuationWindow": 179
+    }
+   },
+   "position": 29
+  },
+  {
+   "symbol": "IBB",
+   "score": 4202.900490685952,
+   "meanNet": 4202.900490685952,
+   "netPerDay": 191.04093139481597,
+   "trades": 17,
+   "occupiedDays": 374,
+   "net": 71449.30834166118,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-f2430eae5b",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IBB-representative-d1-f2430eae5b.json",
+    "sha256": "6f28d5a8501ad5d051e5aa9d7645241491f895e4747dd7e74f612ea332619054",
+    "grid": {
+     "targetPercentChange": 167,
+     "trailingBuyPercentage": 8,
+     "trailingStopPercentage": 42,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 177,
+     "intradayLossBuffer": 16,
+     "pullback": 70,
+     "continuationWindow": 101
+    }
+   },
+   "position": 30
+  },
+  {
+   "symbol": "USMV",
+   "score": 4166.608515192555,
+   "meanNet": 4166.608515192555,
+   "netPerDay": 139.35145535761055,
+   "trades": 10,
+   "occupiedDays": 299,
+   "net": 41666.08515192555,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-ffa37654ee",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/USMV-representative-d1-ffa37654ee.json",
+    "sha256": "a52a11909c794d841d1a1e3aee66bbacc78596b6630cf942afacd00483df1e7a",
+    "grid": {
+     "targetPercentChange": 126,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 21,
+     "intradayLossBuffer": 4,
+     "pullback": 50,
+     "continuationWindow": 121
+    }
+   },
+   "position": 31
+  },
+  {
+   "symbol": "VGK",
+   "score": 4105.456599537287,
+   "meanNet": 4105.456599537287,
+   "netPerDay": 204.13872594384299,
+   "trades": 9,
+   "occupiedDays": 181,
+   "net": 36949.10939583558,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-77676aca5b",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/VGK-representative-d1-77676aca5b.json",
+    "sha256": "aecdc0f1672aa6fe4fd817f6a304d716e533b9d2602cbe256694406036d99d94",
+    "grid": {
+     "targetPercentChange": 237,
+     "trailingBuyPercentage": 20,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 22,
+     "tickWindowSize": 238,
+     "intradayLossBuffer": 24,
+     "pullback": 41,
+     "continuationWindow": 188
+    }
+   },
+   "position": 32
+  },
+  {
+   "symbol": "EFA",
+   "score": 4104.543487228703,
+   "meanNet": 4104.543487228703,
+   "netPerDay": 475.8890999685453,
+   "trades": 8,
+   "occupiedDays": 69,
+   "net": 32836.347897829626,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-44195402ca",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/EFA-representative-d1-44195402ca.json",
+    "sha256": "992f4d603d94e5aa3e0f4c3cfe24005e8bbb82456d4f0b92912e15a34e122d17",
+    "grid": {
+     "targetPercentChange": 286,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 22,
+     "tickWindowSize": 156,
+     "intradayLossBuffer": 19,
+     "pullback": 41,
+     "continuationWindow": 146
+    }
+   },
+   "position": 33
+  },
+  {
+   "symbol": "EMB",
+   "score": 3695.2028649552785,
+   "meanNet": 3695.2028649552785,
+   "netPerDay": 192.45848254975408,
+   "trades": 5,
+   "occupiedDays": 96,
+   "net": 18476.01432477639,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-8f8494b301",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/EMB-representative-d1-8f8494b301.json",
+    "sha256": "370091a05ecfc6d6c3e672b93bdff966876dd36618313024379dd3a31d0478bb",
+    "grid": {
+     "targetPercentChange": 145,
+     "trailingBuyPercentage": 12,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 28,
+     "tickWindowSize": 232,
+     "intradayLossBuffer": 5,
+     "pullback": 85,
+     "continuationWindow": 54
+    }
+   },
+   "position": 34
+  },
+  {
+   "symbol": "XOP",
+   "score": 3579.340368612597,
+   "meanNet": 3579.340368612597,
+   "netPerDay": 481.25584788068534,
+   "trades": 16,
+   "occupiedDays": 119,
+   "net": 57269.445897801554,
+   "sample": "adequate",
+   "credible": true,
+   "status": "screened-down",
+   "phenotype": {
+    "candidateId": "d1-8ea442626e",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XOP-representative-d1-8ea442626e.json",
+    "sha256": "9200beddbcc2ec88d5d41037df8cc416941dd209dabc42e34f3e4befa13a3f27",
+    "grid": {
+     "targetPercentChange": 267,
+     "trailingBuyPercentage": 49,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 17,
+     "tickWindowSize": 42,
+     "intradayLossBuffer": 29,
+     "pullback": 120,
+     "continuationWindow": 12
+    }
+   },
+   "position": 35
+  },
+  {
+   "symbol": "LQD",
+   "score": 3572.2027271685183,
+   "meanNet": 3572.2027271685183,
+   "netPerDay": 332.29792810869935,
+   "trades": 4,
+   "occupiedDays": 43,
+   "net": 14288.810908674073,
+   "sample": "very sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-f8ab8adc01",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/LQD-representative-d1-f8ab8adc01.json",
+    "sha256": "1499cfdab22afc2bbf582c08994e289d5371640c90d7626063e2c4ade8201386",
+    "grid": {
+     "targetPercentChange": 82,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 15,
+     "tickWindowSize": 58,
+     "intradayLossBuffer": 10,
+     "pullback": 70,
+     "continuationWindow": 129
+    }
+   },
+   "position": 36
+  },
+  {
+   "symbol": "QUAL",
+   "score": 3532.7460436504866,
+   "meanNet": 3532.7460436504866,
+   "netPerDay": 152.07184956111365,
+   "trades": 13,
+   "occupiedDays": 302,
+   "net": 45925.698567456326,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-602a895daf",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/QUAL-representative-d1-602a895daf.json",
+    "sha256": "4c43b22977cddd77e99a821a3af9d83d3860ecb22814b816884e79050e27272d",
+    "grid": {
+     "targetPercentChange": 169,
+     "trailingBuyPercentage": 14,
+     "trailingStopPercentage": 40,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 186,
+     "intradayLossBuffer": 30,
+     "pullback": 34,
+     "continuationWindow": 128
+    }
+   },
+   "position": 37
+  },
+  {
+   "symbol": "XLF",
+   "score": 3366.636315959851,
+   "meanNet": 3366.636315959851,
+   "netPerDay": 205.5961108983115,
+   "trades": 16,
+   "occupiedDays": 262,
+   "net": 53866.181055357614,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-19906b90ff",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XLF-representative-d1-19906b90ff.json",
+    "sha256": "2b3571febc327feedee8d004fad8577b44c9f6353ca2e0c21bd5b289f485503b",
+    "grid": {
+     "targetPercentChange": 253,
+     "trailingBuyPercentage": 22,
+     "trailingStopPercentage": 41,
+     "maximumHoldDays": 10,
+     "tickWindowSize": 224,
+     "intradayLossBuffer": 24,
+     "pullback": 54,
+     "continuationWindow": 130
+    }
+   },
+   "position": 38
+  },
+  {
+   "symbol": "XLP",
+   "score": 3296.532965586384,
+   "meanNet": 3296.532965586384,
+   "netPerDay": 89.09548555638875,
+   "trades": 10,
+   "occupiedDays": 370,
+   "net": 32965.32965586384,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-3e918c05b4",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XLP-representative-d1-3e918c05b4.json",
+    "sha256": "15492521d02b612ef5e4e8b6618ca94a04f647961c388398a153e37272d4d48d",
+    "grid": {
+     "targetPercentChange": 126,
+     "trailingBuyPercentage": 7,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 23,
+     "tickWindowSize": 138,
+     "intradayLossBuffer": 50,
+     "pullback": 185,
+     "continuationWindow": 68
+    }
+   },
+   "position": 39
+  },
+  {
+   "symbol": "IGV",
+   "score": 3269.7182171394948,
+   "meanNet": 3269.7182171394948,
+   "netPerDay": 127.3916188495907,
+   "trades": 21,
+   "occupiedDays": 539,
+   "net": 68664.08255992939,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-38fa4a4748",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IGV-representative-d1-38fa4a4748.json",
+    "sha256": "c6695c2b42c6b03b6dce268ce40d82c24b798924732a485d5c18e74fe88a21f2",
+    "grid": {
+     "targetPercentChange": 95,
+     "trailingBuyPercentage": 7,
+     "trailingStopPercentage": 45,
+     "maximumHoldDays": 14,
+     "tickWindowSize": 125,
+     "intradayLossBuffer": 19,
+     "pullback": 181,
+     "continuationWindow": 17
+    }
+   },
+   "position": 40
+  },
+  {
+   "symbol": "XLV",
+   "score": 3267.2089971475675,
+   "meanNet": 3267.2089971475675,
+   "netPerDay": 96.66298808128897,
+   "trades": 10,
+   "occupiedDays": 338,
+   "net": 32672.089971475674,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-c4cc2a7486",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XLV-representative-d1-c4cc2a7486.json",
+    "sha256": "8f8d6427db28831a9f9db6fb8e7e57990c198cc937d0ea990ae9939a2dab9acf",
+    "grid": {
+     "targetPercentChange": 115,
+     "trailingBuyPercentage": 15,
+     "trailingStopPercentage": 39,
+     "maximumHoldDays": 22,
+     "tickWindowSize": 84,
+     "intradayLossBuffer": 18,
+     "pullback": 158,
+     "continuationWindow": 161
+    }
+   },
+   "position": 41
+  },
+  {
+   "symbol": "EWY",
+   "score": 3155.5756435663275,
+   "meanNet": 3155.5756435663275,
+   "netPerDay": 157.7787821783164,
+   "trades": 10,
+   "occupiedDays": 200,
+   "net": 31555.756435663276,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-3633856ad3",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/EWY-representative-d1-3633856ad3.json",
+    "sha256": "3d1e86103e5b2d2ae1d947bbfb4f187a35d9464063a3a8bb6d520926eb5c7d64",
+    "grid": {
+     "targetPercentChange": 249,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 42,
+     "maximumHoldDays": 30,
+     "tickWindowSize": 169,
+     "intradayLossBuffer": 45,
+     "pullback": 39,
+     "continuationWindow": 125
+    }
+   },
+   "position": 42
+  },
+  {
+   "symbol": "KRE",
+   "score": 3114.006816077551,
+   "meanNet": 3114.006816077551,
+   "netPerDay": 381.7169645514417,
+   "trades": 19,
+   "occupiedDays": 155,
+   "net": 59166.129505473466,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-b7c313215f",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/KRE-representative-d1-b7c313215f.json",
+    "sha256": "c64301657e87fb5ed16a5db50928078c6c0224a259d54b9cc5e24779845bebc8",
+    "grid": {
+     "targetPercentChange": 282,
+     "trailingBuyPercentage": 36,
+     "trailingStopPercentage": 38,
+     "maximumHoldDays": 4,
+     "tickWindowSize": 199,
+     "intradayLossBuffer": 2,
+     "pullback": 137,
+     "continuationWindow": 63
+    }
+   },
+   "position": 43
+  },
+  {
+   "symbol": "MTUM",
+   "score": 3107.6248502730373,
+   "meanNet": 3107.6248502730373,
+   "netPerDay": 244.843170021512,
+   "trades": 13,
+   "occupiedDays": 165,
+   "net": 40399.12305354948,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-e3b5221d74",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/MTUM-representative-d1-e3b5221d74.json",
+    "sha256": "1cbb89adc115c9f34efdf49879c0e3ea5e48d5e7908bb01be28c0543a73e7716",
+    "grid": {
+     "targetPercentChange": 151,
+     "trailingBuyPercentage": 6,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 222,
+     "intradayLossBuffer": 53,
+     "pullback": 102,
+     "continuationWindow": 13
+    }
+   },
+   "position": 44
+  },
+  {
+   "symbol": "SMH",
+   "score": 3009.320218371582,
+   "meanNet": 3009.320218371582,
+   "netPerDay": 310.2391977702662,
+   "trades": 20,
+   "occupiedDays": 194,
+   "net": 60186.40436743164,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-0aca84c31f",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/SMH-representative-d1-0aca84c31f.json",
+    "sha256": "69f3dbfbbb496ab30fe7d6f6cbcce84149c5d1b969b4409fa52cc0cf4c5185f9",
+    "grid": {
+     "targetPercentChange": 219,
+     "trailingBuyPercentage": 14,
+     "trailingStopPercentage": 36,
+     "maximumHoldDays": 12,
+     "tickWindowSize": 177,
+     "intradayLossBuffer": 13,
+     "pullback": 39,
+     "continuationWindow": 191
+    }
+   },
+   "position": 45
+  },
+  {
+   "symbol": "IWN",
+   "score": 2938.783236305232,
+   "meanNet": 2938.783236305232,
+   "netPerDay": 506.6867648802125,
+   "trades": 15,
+   "occupiedDays": 87,
+   "net": 44081.748544578484,
+   "sample": "adequate",
+   "credible": true,
+   "status": "screened-down",
+   "phenotype": {
+    "candidateId": "d1-8086cc81a4",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IWN-representative-d1-8086cc81a4.json",
+    "sha256": "b3bc4a2f3662a1750425b65cd259ebb01c626b7e9d5cc5e6f3a79e140b5ade0e",
+    "grid": {
+     "targetPercentChange": 270,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 34,
+     "maximumHoldDays": 15,
+     "tickWindowSize": 110,
+     "intradayLossBuffer": 48,
+     "pullback": 140,
+     "continuationWindow": 121
+    }
+   },
+   "position": 46
+  },
+  {
+   "symbol": "KIE",
+   "score": 2695.8883507346336,
+   "meanNet": 2695.8883507346336,
+   "netPerDay": 299.543150081626,
+   "trades": 15,
+   "occupiedDays": 135,
+   "net": 40438.325261019505,
+   "sample": "adequate",
+   "credible": true,
+   "status": "screened-down",
+   "phenotype": {
+    "candidateId": "d1-69617ba6a9",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/KIE-representative-d1-69617ba6a9.json",
+    "sha256": "3319ad9a22985537b292da0a11735988d9c59ce29b4ef605445b2848733eade7",
+    "grid": {
+     "targetPercentChange": 183,
+     "trailingBuyPercentage": 37,
+     "trailingStopPercentage": 30,
+     "maximumHoldDays": 4,
+     "tickWindowSize": 89,
+     "intradayLossBuffer": 4,
+     "pullback": 90,
+     "continuationWindow": 162
+    }
+   },
+   "position": 47
+  },
+  {
+   "symbol": "ILF",
+   "score": 2613.028602071334,
+   "meanNet": 2613.028602071334,
+   "netPerDay": 216.84884664492398,
+   "trades": 20,
+   "occupiedDays": 241,
+   "net": 52260.572041426676,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-eb4dfe72e1",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/ILF-representative-d1-eb4dfe72e1.json",
+    "sha256": "f2a8db862d4fdf86cca4e453d6da6a06aaafc38791980bb5909bc6462904959c",
+    "grid": {
+     "targetPercentChange": 262,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 36,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 185,
+     "intradayLossBuffer": 14,
+     "pullback": 147,
+     "continuationWindow": 143
+    }
+   },
+   "position": 48
+  },
+  {
+   "symbol": "SPLV",
+   "score": 2600.6582305825664,
+   "meanNet": 2600.6582305825664,
+   "netPerDay": 88.02227857356378,
+   "trades": 11,
+   "occupiedDays": 325,
+   "net": 28607.24053640823,
+   "sample": "adequate",
+   "credible": true,
+   "status": "screened-down",
+   "phenotype": {
+    "candidateId": "d1-d82a03d89f",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/SPLV-representative-d1-d82a03d89f.json",
+    "sha256": "4fc30ffb20faa07d85e0b418a08d7a51731c18ab4477f8e28ec558ea523f20d8",
+    "grid": {
+     "targetPercentChange": 116,
+     "trailingBuyPercentage": 13,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 20,
+     "tickWindowSize": 156,
+     "intradayLossBuffer": 14,
+     "pullback": 84,
+     "continuationWindow": 49
+    }
+   },
+   "position": 49
+  },
+  {
+   "symbol": "VIG",
+   "score": 2487.7744302820943,
+   "meanNet": 2487.7744302820943,
+   "netPerDay": 173.56565792665774,
+   "trades": 12,
+   "occupiedDays": 172,
+   "net": 29853.29316338513,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-c4df25821f",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/VIG-representative-d1-c4df25821f.json",
+    "sha256": "798b7f7ab5466e00357d0c4922cbee18fe75e16f68f4ac33bcca16a1e4677402",
+    "grid": {
+     "targetPercentChange": 133,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 29,
+     "tickWindowSize": 192,
+     "intradayLossBuffer": 55,
+     "pullback": 124,
+     "continuationWindow": 81
+    }
+   },
+   "position": 50
+  },
+  {
+   "symbol": "IAU",
+   "score": 2448.3485729907748,
+   "meanNet": 2448.3485729907748,
+   "netPerDay": 60.774609967856115,
+   "trades": 7,
+   "occupiedDays": 282,
+   "net": 17138.440010935425,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-eeac6291d3",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/IAU-representative-d1-eeac6291d3.json",
+    "sha256": "f27af3de4a5c40ad6786265e2cd470a3a28934c42262120f83f3e5a06b375b36",
+    "grid": {
+     "targetPercentChange": 84,
+     "trailingBuyPercentage": 22,
+     "trailingStopPercentage": 31,
+     "maximumHoldDays": 26,
+     "tickWindowSize": 222,
+     "intradayLossBuffer": 8,
+     "pullback": 113,
+     "continuationWindow": 126
+    }
+   },
+   "position": 51
+  },
+  {
+   "symbol": "EWZ",
+   "score": 2277.29540353194,
+   "meanNet": 2277.29540353194,
+   "netPerDay": 233.56875933660922,
+   "trades": 20,
+   "occupiedDays": 195,
+   "net": 45545.9080706388,
+   "sample": "adequate",
+   "credible": true,
+   "status": "screened-down",
+   "phenotype": {
+    "candidateId": "d1-22165bbf8d",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/EWZ-representative-d1-22165bbf8d.json",
+    "sha256": "b39465aa33881ecb490816fac5d14d4fb60f2ad457a46d34135d3cc8973f9731",
+    "grid": {
+     "targetPercentChange": 290,
+     "trailingBuyPercentage": 10,
+     "trailingStopPercentage": 40,
+     "maximumHoldDays": 14,
+     "tickWindowSize": 243,
+     "intradayLossBuffer": 34,
+     "pullback": 182,
+     "continuationWindow": 57
+    }
+   },
+   "position": 52
+  },
+  {
+   "symbol": "EWW",
+   "score": 2127.99743103533,
+   "meanNet": 2127.99743103533,
+   "netPerDay": 159.3153156924846,
+   "trades": 28,
+   "occupiedDays": 374,
+   "net": 59583.92806898924,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-70952db382",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/EWW-representative-d1-70952db382.json",
+    "sha256": "9fb73833e41ad21048f03d37e96b6cb39c42073f76805dde6a19aaf5aca1cb07",
+    "grid": {
+     "targetPercentChange": 184,
+     "trailingBuyPercentage": 13,
+     "trailingStopPercentage": 39,
+     "maximumHoldDays": 11,
+     "tickWindowSize": 153,
+     "intradayLossBuffer": 5,
+     "pullback": 137,
+     "continuationWindow": 41
+    }
+   },
+   "position": 53
+  },
+  {
+   "symbol": "XME",
+   "score": 2020.7908188318422,
+   "meanNet": 2020.7908188318422,
+   "netPerDay": 190.32378903125385,
+   "trades": 34,
+   "occupiedDays": 361,
+   "net": 68706.88784028264,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-31a9bc4b3c",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/XME-representative-d1-31a9bc4b3c.json",
+    "sha256": "5fe2288e667f862d119164b24903b81d66f907501fd631304c3af631ffeb38e0",
+    "grid": {
+     "targetPercentChange": 224,
+     "trailingBuyPercentage": 9,
+     "trailingStopPercentage": 35,
+     "maximumHoldDays": 13,
+     "tickWindowSize": 180,
+     "intradayLossBuffer": 2,
+     "pullback": 157,
+     "continuationWindow": 169
+    }
+   },
+   "position": 54
+  },
+  {
+   "symbol": "INDA",
+   "score": 1874.9052188002386,
+   "meanNet": 1874.9052188002386,
+   "netPerDay": 134.52234753723684,
+   "trades": 16,
+   "occupiedDays": 223,
+   "net": 29998.483500803817,
+   "sample": "adequate",
+   "credible": true,
+   "status": "screened-down",
+   "phenotype": {
+    "candidateId": "d1-44a6dbe4bd",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/INDA-representative-d1-44a6dbe4bd.json",
+    "sha256": "48b9eaba2ccf57db7a2b57a7e9b5a54f4185051608396f8b5ad82cc94d39a4f9",
+    "grid": {
+     "targetPercentChange": 187,
+     "trailingBuyPercentage": 2,
+     "trailingStopPercentage": 33,
+     "maximumHoldDays": 25,
+     "tickWindowSize": 57,
+     "intradayLossBuffer": 29,
+     "pullback": 61,
+     "continuationWindow": 151
+    }
+   },
+   "position": 55
+  },
+  {
+   "symbol": "DBC",
+   "score": 1839.988218742824,
+   "meanNet": 1839.988218742824,
+   "netPerDay": 145.26222779548613,
+   "trades": 6,
+   "occupiedDays": 76,
+   "net": 11039.929312456945,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-6ba15a8c3f",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/DBC-representative-d1-6ba15a8c3f.json",
+    "sha256": "4e4fe6118891da6a212f1741cb3aa54d2ad584bf8dd2f6db50a6ba0d2d33f75c",
+    "grid": {
+     "targetPercentChange": 275,
+     "trailingBuyPercentage": 20,
+     "trailingStopPercentage": 32,
+     "maximumHoldDays": 10,
+     "tickWindowSize": 185,
+     "intradayLossBuffer": 55,
+     "pullback": 88,
+     "continuationWindow": 43
+    }
+   },
+   "position": 56
+  },
+  {
+   "symbol": "HYG",
+   "score": 1795.3996699677546,
+   "meanNet": 1795.3996699677546,
+   "netPerDay": 147.56709616173325,
+   "trades": 6,
+   "occupiedDays": 73,
+   "net": 10772.398019806527,
+   "sample": "sparse",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-cb6be7025d",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/HYG-representative-d1-cb6be7025d.json",
+    "sha256": "af80cf6e40ceed59c0ab68eb31a7bfef74e32964510c852a297da325e7d7d1d8",
+    "grid": {
+     "targetPercentChange": 113,
+     "trailingBuyPercentage": 5,
+     "trailingStopPercentage": 41,
+     "maximumHoldDays": 6,
+     "tickWindowSize": 232,
+     "intradayLossBuffer": 0,
+     "pullback": 126,
+     "continuationWindow": 40
+    }
+   },
+   "position": 57
+  },
+  {
+   "symbol": "FXI",
+   "score": 1583.0700247279506,
+   "meanNet": 1583.0700247279506,
+   "netPerDay": 80.04286641882896,
+   "trades": 18,
+   "occupiedDays": 356,
+   "net": 28495.26044510311,
+   "sample": "adequate",
+   "credible": true,
+   "status": "survivor",
+   "phenotype": {
+    "candidateId": "d1-b5912e5c69",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/FXI-representative-d1-b5912e5c69.json",
+    "sha256": "f19aec6c8e602942dca8c72f08a698023923168a20f0996496a9af4e0a5c58fc",
+    "grid": {
+     "targetPercentChange": 169,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 33,
+     "maximumHoldDays": 16,
+     "tickWindowSize": 100,
+     "intradayLossBuffer": 40,
+     "pullback": 66,
+     "continuationWindow": 51
+    }
+   },
+   "position": 58
+  },
+  {
+   "symbol": "EEM",
+   "score": 1401.727800333338,
+   "meanNet": 1401.727800333338,
+   "netPerDay": 80.5590689846746,
+   "trades": 20,
+   "occupiedDays": 348,
+   "net": 28034.55600666676,
+   "sample": "adequate",
+   "credible": true,
+   "status": "screened-down",
+   "phenotype": {
+    "candidateId": "d1-7b90809bdd",
+    "file": "research/d1-ranked-preemption/standalone/fold-a/phenotypes/EEM-representative-d1-7b90809bdd.json",
+    "sha256": "8047d7fe2f83b7d018375026a06c5e409e62b18a29ca972370a58bcdcfe6cb85",
+    "grid": {
+     "targetPercentChange": 134,
+     "trailingBuyPercentage": 3,
+     "trailingStopPercentage": 35,
+     "maximumHoldDays": 22,
+     "tickWindowSize": 96,
+     "intradayLossBuffer": 11,
+     "pullback": 161,
+     "continuationWindow": 14
+    }
+   },
+   "position": 59
+  },
+  {
+   "symbol": "IEF",
+   "score": null,
+   "meanNet": null,
+   "netPerDay": null,
+   "trades": 0,
+   "occupiedDays": 0,
+   "net": null,
+   "sample": "very sparse",
+   "credible": false,
+   "status": "rejected",
+   "phenotype": null,
+   "position": 60
+  },
+  {
+   "symbol": "SHY",
+   "score": null,
+   "meanNet": null,
+   "netPerDay": null,
+   "trades": 0,
+   "occupiedDays": 0,
+   "net": null,
+   "sample": "very sparse",
+   "credible": false,
+   "status": "rejected",
+   "phenotype": null,
+   "position": 61
+  }
+ ],
+ "bodyHash": "e41be4a283f214be7a5bd7b939ac82cb9907ab344cd041a7a5315e478b871204"
+}

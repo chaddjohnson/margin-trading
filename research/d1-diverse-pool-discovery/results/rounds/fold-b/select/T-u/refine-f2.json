@@ -1,0 +1,285 @@
+{
+ "generatedAt": "2026-10-26T06:12:09.070Z",
+ "slot": "Q2",
+ "familyIndex": 1,
+ "family": "T-u-f2",
+ "arm": "T-u",
+ "start": "IGV:176.22.43.22.132.46.81.191|VOOG:296.39.143.16.129.10.72.53",
+ "refined": "IGV:176.22.33.22.132.46.81.191|KBE:262.23.127.21.92.36.100.21|VOOG:296.39.143.16.129.10.72.53",
+ "result": "VOOG:296.39.143.16.129.10.72.53",
+ "resultState": {
+  "key": "VOOG:296.39.143.16.129.10.72.53",
+  "books": [
+   {
+    "symbol": "VOOG",
+    "vector": {
+     "id": "d1-ce6286998d",
+     "grid": {
+      "targetPercentChange": 296,
+      "trailingBuyPercentage": 39,
+      "trailingStopPercentage": 143,
+      "maximumHoldDays": 16,
+      "tickWindowSize": 129,
+      "intradayLossBuffer": 10,
+      "pullback": 72,
+      "continuationWindow": 53
+     },
+     "origin": "paramMulti"
+    }
+   }
+  ],
+  "value": 65403.906637963926
+ },
+ "startState": {
+  "key": "IGV:176.22.43.22.132.46.81.191|VOOG:296.39.143.16.129.10.72.53",
+  "value": 11963.782272901219
+ },
+ "refinedState": {
+  "key": "IGV:176.22.33.22.132.46.81.191|KBE:262.23.127.21.92.36.100.21|VOOG:296.39.143.16.129.10.72.53",
+  "value": 94390.04574269359
+ },
+ "unique": 393,
+ "cycles": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "evaluated": 205,
+   "accepted": 2
+  },
+  {
+   "phase": "refine",
+   "cycle": 2,
+   "evaluated": 144,
+   "accepted": 0
+  },
+  {
+   "phase": "re-refine",
+   "cycle": 1,
+   "evaluated": 43,
+   "accepted": 0
+  }
+ ],
+ "moves": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "membership",
+   "move": "add KBE:d1-83547f9102",
+   "from": "IGV:176.22.43.22.132.46.81.191|VOOG:296.39.143.16.129.10.72.53",
+   "to": "IGV:176.22.43.22.132.46.81.191|KBE:262.23.127.21.92.36.100.21|VOOG:296.39.143.16.129.10.72.53",
+   "before": 11963.782272901219,
+   "after": 80505.73698957035,
+   "lotsAdded": [
+    "KBE@1587649080",
+    "KBE@1588862160",
+    "KBE@1591977420",
+    "KBE@1594216920",
+    "KBE@1600957020"
+   ],
+   "lotsRemoved": [
+    "IGV@1599234060",
+    "IGV@1604413920",
+    "IGV@1614092700"
+   ]
+  },
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "coordinate",
+   "move": "IGV trailingStopPercentage -10",
+   "from": "IGV:176.22.43.22.132.46.81.191|KBE:262.23.127.21.92.36.100.21|VOOG:296.39.143.16.129.10.72.53",
+   "to": "IGV:176.22.33.22.132.46.81.191|KBE:262.23.127.21.92.36.100.21|VOOG:296.39.143.16.129.10.72.53",
+   "before": 80505.73698957035,
+   "after": 94390.04574269359,
+   "lotsAdded": [
+    "IGV@1583956440",
+    "IGV@1586179860",
+    "IGV@1586871060"
+   ],
+   "lotsRemoved": [
+    "IGV@1584021060",
+    "IGV@1584367080",
+    "IGV@1584538980",
+    "IGV@1584971580",
+    "IGV@1585579080"
+   ]
+  }
+ ],
+ "pruneSteps": [
+  {
+   "phase": "prune",
+   "from": "IGV:176.22.33.22.132.46.81.191|KBE:262.23.127.21.92.36.100.21|VOOG:296.39.143.16.129.10.72.53",
+   "members": [
+    "IGV",
+    "KBE",
+    "VOOG"
+   ],
+   "marginals": [
+    {
+     "symbol": "IGV",
+     "marginal": 79005.24266274885,
+     "interval": {
+      "estimate": 79005.24266274885,
+      "lower": 73003.71354041794,
+      "upper": 81801.9804041285,
+      "se": 2973.7396948858927,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": false
+    },
+    {
+     "symbol": "KBE",
+     "marginal": 29392.320999621865,
+     "interval": {
+      "estimate": 29392.320999621865,
+      "lower": -5000,
+      "upper": 65302.20905978476,
+      "se": 33270.9525604818,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "VOOG",
+     "marginal": 8300.068907865483,
+     "interval": {
+      "estimate": 8300.068907865483,
+      "lower": 2416.5359055322187,
+      "upper": 11155.983182216267,
+      "se": 2854.4811814732625,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "removed": "KBE",
+   "to": "IGV:176.22.33.22.132.46.81.191|VOOG:296.39.143.16.129.10.72.53",
+   "lotsAdded": [
+    "IGV@1599234060",
+    "IGV@1604328720",
+    "IGV@1614092700"
+   ],
+   "lotsRemoved": [
+    "KBE@1587649080",
+    "KBE@1588862160",
+    "KBE@1591977420",
+    "KBE@1594216920",
+    "KBE@1600957020"
+   ]
+  },
+  {
+   "phase": "prune",
+   "from": "IGV:176.22.33.22.132.46.81.191|VOOG:296.39.143.16.129.10.72.53",
+   "members": [
+    "IGV",
+    "VOOG"
+   ],
+   "marginals": [
+    {
+     "symbol": "IGV",
+     "marginal": -3803.4616315694875,
+     "interval": {
+      "estimate": -3803.4616315694875,
+      "lower": -42433.56514606818,
+      "upper": 33444.77364240316,
+      "se": 35910.38130990045,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "VOOG",
+     "marginal": 43697.52637073987,
+     "interval": {
+      "estimate": 43697.52637073987,
+      "lower": 4692.391756550562,
+      "upper": 80651.24919673195,
+      "se": 35644.41498853115,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "removed": "IGV",
+   "to": "VOOG:296.39.143.16.129.10.72.53",
+   "lotsAdded": [
+    "VOOG@1584561240"
+   ],
+   "lotsRemoved": [
+    "IGV@1542724920",
+    "IGV@1545335100",
+    "IGV@1559658540",
+    "IGV@1565098260",
+    "IGV@1583761800",
+    "IGV@1583956440",
+    "IGV@1586179860",
+    "IGV@1586871060",
+    "IGV@1599234060",
+    "IGV@1604328720",
+    "IGV@1614092700"
+   ]
+  },
+  {
+   "phase": "prune",
+   "from": "VOOG:296.39.143.16.129.10.72.53",
+   "members": [
+    "VOOG"
+   ],
+   "marginals": [
+    {
+     "symbol": "VOOG",
+     "marginal": 65674.58936912718,
+     "interval": {
+      "estimate": 65674.58936912718,
+      "lower": 65403.906637963926,
+      "upper": 65674.58936912718,
+      "se": 91.99082413876026,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "final-prune",
+   "from": "VOOG:296.39.143.16.129.10.72.53",
+   "members": [
+    "VOOG"
+   ],
+   "marginals": [
+    {
+     "symbol": "VOOG",
+     "marginal": 65674.58936912718,
+     "interval": {
+      "estimate": 65674.58936912718,
+      "lower": 65403.906637963926,
+      "upper": 65674.58936912718,
+      "se": 91.99082413876026,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  }
+ ],
+ "pruneBlocked": false,
+ "portfolioChecks": [
+  {
+   "key": "VOOG:296.39.143.16.129.10.72.53",
+   "dailyPercent": 0.3227325817013233
+  }
+ ],
+ "walkedBack": false,
+ "stoppedBy": ""
+}

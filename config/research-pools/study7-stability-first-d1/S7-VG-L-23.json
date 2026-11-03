@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S7-VG-L-23",
+  "name": "Study 7 VG L #23",
+  "role": "Study 7 Phase B candidate (VGT:d1-0590466556+GDX:d1-4ae9649541)",
+  "status": "RESEARCH ONLY — SHORTLIST MEMBER, NO ROLE: NOT NOMINATED",
+  "description": "Study 7 Track VG fold L shortlist member VGT:d1-0590466556+GDX:d1-4ae9649541. Research configuration for inspection only; frozen B1 and B5 remain the benchmarks.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "s7d10590466556",
+      "phenotypeFile": "config/research-phenotypes/study7-stability-first-d1/D1/VGT.json",
+      "candidateId": "d1-0590466556",
+      "parameters": {
+        "targetPercentChange": "22.4%",
+        "trailingBuyPercentage": "1.4%",
+        "trailingStopPercentage": "7.2%",
+        "maximumHoldDays": 13,
+        "tickWindowSize": 69,
+        "intradayLossBuffer": "1.8%",
+        "pullback": "5.1%",
+        "continuationWindow": 26
+      },
+      "parametersSha256": "2c018245a7d9f336d9429f8235a1f0c766417c545e6ccf6e64112e130c990e81"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "s7d14ae9649541",
+      "phenotypeFile": "config/research-phenotypes/study7-stability-first-d1/D1/GDX.json",
+      "candidateId": "d1-4ae9649541",
+      "parameters": {
+        "targetPercentChange": "29.9%",
+        "trailingBuyPercentage": "0.3%",
+        "trailingStopPercentage": "5.4%",
+        "maximumHoldDays": 27,
+        "tickWindowSize": 59,
+        "intradayLossBuffer": "3.4%",
+        "pullback": "17.5%",
+        "continuationWindow": 138
+      },
+      "parametersSha256": "7f50fadf1100d51ffedc8e8edbce4295b4caa0da9285f9ba43cd478776055933"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-11-01",
+    "createdBy": "research/study7-stability-first-d1 (research-configs)",
+    "selectionBodyHash": "8d841f8a8a64a3bfa2d2cfae1df84a703c711bc73e0df637fa68c527b6b11a83",
+    "finalBodyHash": "cc609b0d62a07f043a56730e09747be0eb67a68050dec2a4a7d396f674be9162"
+  }
+}

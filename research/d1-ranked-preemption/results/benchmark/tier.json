@@ -1,0 +1,117 @@
+{
+ "generatedAt": "2026-10-26T16:55:44.985Z",
+ "git": {
+  "branch": "research/trailing-buy-four-family-optimization",
+  "head": "9b0ab947bcd90ea9105884f48a16d6a76568d787",
+  "modifiedTracked": [
+   "package.json"
+  ],
+  "untracked": [
+   "research/d1-ranked-preemption/",
+   "src/d1-ranked-preemption/"
+  ]
+ },
+ "rule": "the first of T1, T2, T3 whose conservative projection is ≤ 8 h wall-clock and ≤ 12 GB resident; none → stop",
+ "machine": {
+  "cpus": 10,
+  "model": "Apple M1 Pro",
+  "memoryGb": 16,
+  "node": "v24.21.0"
+ },
+ "workers": 8,
+ "universe": {
+  "symbols": 61,
+  "sessions": 2012,
+  "rssBeforeGb": 0.1219635009765625,
+  "rssLoadedGb": 0.8455352783203125
+ },
+ "unit": {
+  "loadSeconds": 199.588437958,
+  "standaloneMsSingle": 14.258832458333321,
+  "poolMsSingle": 56.14010762499978,
+  "replayMsSingleCached": 4.364070312500189,
+  "standaloneMsPool": 2.520927978515658,
+  "poolMsPool": 7.6607344843750225
+ },
+ "windowRatio": {
+  "fold-a": 0.4650880388585307,
+  "fold-b": 0.6958105646630237,
+  "final": 1
+ },
+ "rssPoolGb": 2.398468017578125,
+ "projections": {
+  "T1": {
+   "wallHours": 1.4973447212921196,
+   "residentGb": 3.898468017578125,
+   "fits": true,
+   "work": {
+    "fold-a": {
+     "standalone": 162016,
+     "pools": 48288
+    },
+    "fold-b": {
+     "standalone": 162016,
+     "pools": 48288
+    },
+    "final": {
+     "standalone": 162016,
+     "pools": 107792
+    }
+   }
+  },
+  "T2": {
+   "wallHours": 1.0950333958807235,
+   "residentGb": 3.898468017578125,
+   "fits": true,
+   "work": {
+    "fold-a": {
+     "standalone": 93696,
+     "pools": 31136
+    },
+    "fold-b": {
+     "standalone": 93696,
+     "pools": 31136
+    },
+    "final": {
+     "standalone": 93696,
+     "pools": 70064
+    }
+   }
+  },
+  "T3": {
+   "wallHours": 0.8110425015014844,
+   "residentGb": 3.898468017578125,
+   "fits": true,
+   "work": {
+    "fold-a": {
+     "standalone": 54656,
+     "pools": 17600
+    },
+    "fold-b": {
+     "standalone": 54656,
+     "pools": 17600
+    },
+    "final": {
+     "standalone": 54656,
+     "pools": 37760
+    }
+   }
+  }
+ },
+ "chosen": "T1",
+ "tier": {
+  "key": "T1",
+  "label": "full",
+  "sobol": 2048,
+  "localRounds": 10,
+  "standaloneDraws": 16,
+  "jointBudget": {
+   "fold-a": 10000,
+   "fold-b": 10000,
+   "final": 16000
+  },
+  "promotionDraws": 32,
+  "assessmentDraws": 64,
+  "assessmentA2Draws": 32
+ }
+}

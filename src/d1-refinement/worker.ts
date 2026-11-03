@@ -1,0 +1,44 @@
+// Worker thread: holds each dataset once (shared memory) with its reference caches, evaluates batches of
+// candidates and posts their metrics back in request order. No randomness and no clock dependence.
+import { parentPort } from 'node:worker_threads';
+import type { Dataset } from '../four-family/data.ts';
+import { type Caches, type EvalSpec, type Metrics, evaluateCandidate } from './evaluate.ts';
+import type { IntParams } from './families.ts';
+import { makeCaches } from './pool.ts';
+
+export type WorkerRequest =
+  | { type: 'dataset'; dataset: Dataset }
+  | { type: 'evaluate'; taskId: number; datasetId: string; familyKey: string; spec: EvalSpec; params: IntParams[] };
+
+export type WorkerResponse =
+  { type: 'result'; taskId: number; results: Metrics[] } | { type: 'error'; taskId: number; message: string };
+
+const datasets = new Map<string, { dataset: Dataset; caches: Caches }>();
+
+parentPort!.on('message', (request: WorkerRequest) => {
+  if (request.type === 'dataset') {
+    datasets.set(request.dataset.id, { dataset: request.dataset, caches: makeCaches(request.dataset) });
+
+    return;
+  }
+
+  try {
+    const entry = datasets.get(request.datasetId);
+
+    if (!entry) {
+      throw new Error(`Dataset ${request.datasetId} was not sent to this worker`);
+    }
+
+    const results = request.params.map(
+      (params) => evaluateCandidate(entry.dataset, entry.caches, request.familyKey, params, request.spec).metrics
+    );
+
+    parentPort!.postMessage({ type: 'result', taskId: request.taskId, results } satisfies WorkerResponse);
+  } catch (error) {
+    parentPort!.postMessage({
+      type: 'error',
+      taskId: request.taskId,
+      message: (error as Error)?.stack ?? String(error)
+    } satisfies WorkerResponse);
+  }
+});

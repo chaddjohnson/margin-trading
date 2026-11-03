@@ -1,0 +1,108 @@
+{
+ "ticker": "XLY",
+ "label": "D1 unchanged (file convention, arming from session 74)",
+ "role": "control-file-native",
+ "candidateId": "d1-ebc9f639b3",
+ "params": {
+  "targetPercentChange": 216,
+  "trailingBuyPercentage": 3,
+  "trailingStopPercentage": 73,
+  "maximumHoldDays": 8,
+  "tickWindowSize": 74,
+  "intradayLossBuffer": 29,
+  "pullback": 90,
+  "continuationWindow": 60
+ },
+ "fractions": {
+  "targetPercentChange": 0.216,
+  "trailingBuyPercentage": 0.003,
+  "trailingStopPercentage": 0.073,
+  "maximumHoldDays": 8,
+  "tickWindowSize": 74,
+  "intradayLossBuffer": 0.029,
+  "pullback": 0.09,
+  "continuationWindow": 60
+ },
+ "description": "X 21.6% Y 0.3% L 74 stop 7.3% hold 8 buffer 2.9% P 9.0% W 60",
+ "engineVersion": "d1-refinement-engine-v1",
+ "protocolVersion": "multi-etf-d1-protocol-v1",
+ "dataFile": "data/XLY/XLY-2016-2025-1-minute.csv",
+ "dataHash": "b58e2fbcd15d3b6a0c6b115fb6017490c3f2ed04d41fc61da4e74ca85b42155e",
+ "datasetId": "XLY:b58e2fbcd15d3b6a:dev:2023-12-29",
+ "run": {
+  "label": "file-native-arm74",
+  "stopFill": "stop",
+  "marginInterestRate": 0.11,
+  "costPerSide": 0,
+  "investmentPerEntry": 100000,
+  "armStart": 74,
+  "armStartDate": "2016-04-20",
+  "firstSession": "2016-01-04",
+  "lastSession": "2023-12-29"
+ },
+ "fillAssumptions": {
+  "bars": "Alpaca SIP one-minute bars, raw prices, regular session plus the closing print",
+  "entry": "rebound confirmed at a completed minute close; buy at the first observed trade at or after the decision (next minute open, the closing print only for a decision before the close, else the next session open)",
+  "stop": "trailing stop level from the post-entry high (updated once a day, never lowered), active only while a fill at the level nets a profit after interest; a session opening at or below it fills at the opening trade; intraday, 'stop' fills at the level when the minute opened above it, at the minute's open when it opened through it; 'next-open' fills at the next observed trade",
+  "maximumHold": "from the hold day, a position whose sale at the opening trade would lose money sells at the next observed trade",
+  "bufferedLoss": "from the hold day, the first completed minute closing at or below the buffer sells at the next observed trade",
+  "interest": "simple interest at the annual rate per calendar day from the entry session date, none on the entry date",
+  "costs": "none unless the run labels a per-side cost; a per-side cost worsens every fill and is counted in every net-profit test",
+  "drawdown": "minute-sampled: the largest fall of the cumulative strategy P&L marked at every regular-session minute close and the official close; daily: marked at the official close only"
+ },
+ "metrics": {
+  "net": 72920.69723257763,
+  "gross": 88863.1629860023,
+  "interest": 15942.46575342466,
+  "realized": 72920.69723257763,
+  "unrealized": 0,
+  "closedInterest": 15942.46575342466,
+  "accruedInterest": 0,
+  "minuteDrawdown": 29065.272453095426,
+  "minuteDrawdownPeak": "2019-04-24T15:05:00.000Z",
+  "minuteDrawdownTrough": "2020-03-18T18:21:00.000Z",
+  "dailyDrawdown": 23161.54355988968,
+  "entries": 17,
+  "closedTrades": 17,
+  "wins": 9,
+  "losses": 8,
+  "openAtEnd": false,
+  "exposure": 0.22161505768063144,
+  "averageHoldDays": 31.11764705882353,
+  "bestTrade": 29526.869603929346,
+  "worstTrade": -7775.63313871468,
+  "worstAdverseExcursion": -18561.77762725099,
+  "maximumLosingStreak": 2,
+  "worstEpisodeLoss": -7775.63313871468,
+  "netWithoutBestTrade": 43393.82762864829,
+  "exitReasons": {
+   "trailing stop gap": 2,
+   "maximum hold": 8,
+   "trailing stop": 7
+  },
+  "entriesByKind": {
+   "deep": 15,
+   "continuation": 2,
+   "always": 0,
+   "swing": 0
+  },
+  "signature": "574c8bb825886c9e"
+ },
+ "segments": [
+  {
+   "label": "development",
+   "startDate": "2017-06-15",
+   "endDate": "2023-12-29",
+   "net": 72920.69723257763,
+   "minuteDrawdown": 29065.272453095426,
+   "dailyDrawdown": 23161.54355988968,
+   "interest": 15942.46575342466,
+   "entries": 17,
+   "exits": 17,
+   "wins": 9,
+   "losses": 8,
+   "heldAtCloseSessions": 365,
+   "sessions": 1647
+  }
+ ]
+}

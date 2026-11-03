@@ -1,0 +1,240 @@
+{
+ "generatedAt": "2026-10-26T05:13:30.926Z",
+ "slot": "far",
+ "familyIndex": 16,
+ "family": "T-u-f5",
+ "arm": "T-u",
+ "start": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55|IJR:273.25.50.30.171.48.140.185|VGT:235.23.79.27.233.7.79.16",
+ "refined": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55|VGT:235.23.79.27.233.7.79.16",
+ "result": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55",
+ "resultState": {
+  "key": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55",
+  "books": [
+   {
+    "symbol": "GDX",
+    "vector": {
+     "id": "d1-44d18b3930",
+     "grid": {
+      "targetPercentChange": 132,
+      "trailingBuyPercentage": 44,
+      "trailingStopPercentage": 50,
+      "maximumHoldDays": 30,
+      "tickWindowSize": 55,
+      "intradayLossBuffer": 5,
+      "pullback": 145,
+      "continuationWindow": 112
+     },
+     "origin": "paramOne"
+    }
+   },
+   {
+    "symbol": "IGV",
+    "vector": {
+     "id": "d1-6416b1d94a",
+     "grid": {
+      "targetPercentChange": 221,
+      "trailingBuyPercentage": 11,
+      "trailingStopPercentage": 63,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 200,
+      "intradayLossBuffer": 24,
+      "pullback": 172,
+      "continuationWindow": 55
+     },
+     "origin": "paramOne"
+    }
+   }
+  ],
+  "value": 82143.05649812028
+ },
+ "startState": {
+  "key": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55|IJR:273.25.50.30.171.48.140.185|VGT:235.23.79.27.233.7.79.16",
+  "value": 70682.61773600845
+ },
+ "refinedState": {
+  "key": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55|VGT:235.23.79.27.233.7.79.16",
+  "value": 77143.05649812028
+ },
+ "unique": 438,
+ "cycles": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "evaluated": 213,
+   "accepted": 1
+  },
+  {
+   "phase": "refine",
+   "cycle": 2,
+   "evaluated": 120,
+   "accepted": 0
+  },
+  {
+   "phase": "re-refine",
+   "cycle": 1,
+   "evaluated": 104,
+   "accepted": 0
+  }
+ ],
+ "moves": [
+  {
+   "phase": "refine",
+   "cycle": 1,
+   "pass": "membership",
+   "move": "remove IJR",
+   "from": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55|IJR:273.25.50.30.171.48.140.185|VGT:235.23.79.27.233.7.79.16",
+   "to": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55|VGT:235.23.79.27.233.7.79.16",
+   "before": 70682.61773600845,
+   "after": 77143.05649812028,
+   "lotsAdded": [
+    "GDX@1592234520"
+   ],
+   "lotsRemoved": [
+    "IJR@1587130260",
+    "IJR@1588601760",
+    "IJR@1591968660"
+   ]
+  }
+ ],
+ "pruneSteps": [
+  {
+   "phase": "prune",
+   "from": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55|VGT:235.23.79.27.233.7.79.16",
+   "members": [
+    "GDX",
+    "IGV",
+    "VGT"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 77398.73996420938,
+     "interval": {
+      "estimate": 77398.73996420938,
+      "lower": 73220.53470797828,
+      "upper": 86481.07425034758,
+      "se": 4205.676658620135,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "IGV",
+     "marginal": 11232.830990637915,
+     "interval": {
+      "estimate": 11232.830990637915,
+      "lower": 9402.842649617,
+      "upper": 12115.732846676488,
+      "se": 818.7329531116458,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "VGT",
+     "marginal": -5000,
+     "interval": {
+      "estimate": -5000,
+      "lower": -5000,
+      "upper": -5000,
+      "se": 0,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "removed": "VGT",
+   "to": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55",
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "prune",
+   "from": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55",
+   "members": [
+    "GDX",
+    "IGV"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 72805.02292918897,
+     "interval": {
+      "estimate": 72805.02292918897,
+      "lower": 70531.16832742016,
+      "upper": 86276.07326568748,
+      "se": 5757.850348889978,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "IGV",
+     "marginal": 43386.73597035098,
+     "interval": {
+      "estimate": 43386.73597035098,
+      "lower": 42807.94607350741,
+      "upper": 44101.48114458089,
+      "se": 394.00978118932187,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  },
+  {
+   "phase": "final-prune",
+   "from": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55",
+   "members": [
+    "GDX",
+    "IGV"
+   ],
+   "marginals": [
+    {
+     "symbol": "GDX",
+     "marginal": 72805.02292918897,
+     "interval": {
+      "estimate": 72805.02292918897,
+      "lower": 70531.16832742016,
+      "upper": 86276.07326568748,
+      "se": 5757.850348889978,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    },
+    {
+     "symbol": "IGV",
+     "marginal": 43386.73597035098,
+     "interval": {
+      "estimate": 43386.73597035098,
+      "lower": 42807.94607350741,
+      "upper": 44101.48114458089,
+      "se": 394.00978118932187,
+      "n": 128,
+      "resamples": 10000
+     },
+     "feasibleWithout": true
+    }
+   ],
+   "lotsAdded": [],
+   "lotsRemoved": []
+  }
+ ],
+ "pruneBlocked": false,
+ "portfolioChecks": [
+  {
+   "key": "GDX:132.44.50.30.55.5.145.112|IGV:221.11.63.3.200.24.172.55",
+   "dailyPercent": 0.2699025029863491
+  }
+ ],
+ "walkedBack": false,
+ "stoppedBy": ""
+}

@@ -1,0 +1,469 @@
+{
+ "schemaVersion": 1,
+ "study": "study3-vgt-independent-momentum-v1",
+ "catalogVersion": "1.1 (with the text corrections of re-review 2, applied before the freeze)",
+ "written": "v1.0 drafted 2026-10-28 between 16:35Z and 16:58Z; v1.1 revised between 17:00Z and 17:10Z (methodology review 1); re-review 2 corrections between 17:25Z and 17:32Z; all before any momentum mechanism was run on market data (clock times of the surrounding steps)",
+ "conventions": {
+  "session": "a regular NYSE session of data/VGT/data.csv (America/New_York date); O = the first regular minute's open, C = the closing print (else the last regular minute's close), H/L include the close",
+  "observability": "a daily feature at session s uses sessions <= s only and is known at the close of s; minute rules use completed minutes only (decision time = bar start + 60 s)",
+  "dailyExecution": "a decision at the close of s executes at the first regular-session trade of s+1 (its opening trade)",
+  "minuteExecution": "a decision at a completed minute executes at the first trade at or after the decision time (the next minute's open, or the closing print for a decision before the close; otherwise the next session's opening trade) — the frozen D1 rule (src/shared-margin-portfolio/strategy.ts firstTradeAfterDecision)",
+  "r": "r_s = ln(C_s / C_{s-1})",
+  "sigma_N": "sample standard deviation of r over sessions s-N+1..s, annualised by sqrt(252)",
+  "maxLookback": 250,
+  "firstDecisionClose": "2017-01-03 (first close allowed to decide an entry; first order fills 2017-01-04)",
+  "quantization": "percentage parameters to 0.1 percentage point; ratio parameters (ER, CUSUM, CLV) to 0.01 (CUSUM thresholds 0.1); session counts integers",
+  "campaignState": "after an exit other than own OUT the campaign is alive while the family's own condition holds: level: state IN at each close; event and intraday: own OUT not yet true at a close; E11: permission ON. An own-OUT condition seen at a close while long ends the campaign at the exit even when the configuration does not exit on own OUT. While alive, the re-entry rule applies; an event family's fresh trigger re-enters the same campaign with the new signal's references (R-rule re-entries keep the campaign's); under R5 nothing enters while alive; R2's cool-down yields to a fresh trigger; R1 admits fresh signals only. First entry = an entry while no campaign is alive. A level family's own OUT is the state being OUT at a close.",
+  "sessionRule": "at most one entry fills per session and none in a session that had an exit (a close-decided entry at the close of an exit session fills next open); if one close yields an exit and an entry signal, only the exit executes; Z1/Z2 tranche changes are not entries",
+  "stateStart": "state machines (hysteresis, E04 CUSUM, E05 zigzag, E11 permission, E07 pending breakout) start at the first session where their inputs are defined, counting from 2016-01-04; level states start OUT; a level state IN at the first decision close (2017-01-03) is a fresh signal; event and intraday detectors run every session, and triggers while long are ignored",
+  "minuteReference": "E09/E10 references accumulate from the exit minute onwards, including the rest of the exit session (at the start from the minutes of 2017-01-03), and can trigger only from the next session; E10's reference starts at the exited trade's Hc",
+  "integerMapping": "Sobol integer parameters: min(hi, floor(lo + u (hi - lo + 1)))",
+  "levelFresh": "a level family's fresh signal is any flat close whose state is IN while no campaign is alive (the first decision close included); a state that lapsed and re-qualified during a trade therefore lets the next flat close enter after a stop (a first entry), while a state that stayed IN waits for the re-entry rule (disclosed asymmetry)"
+ },
+ "entries": [
+  {
+   "id": "E01",
+   "short": "PP",
+   "mechanism": "M01 peak proximity",
+   "group": "G1",
+   "type": "level",
+   "definition": "dd_s = 1 - C_s / max(C_{s-249..s}); OUT->IN when dd_s <= d_in; IN->OUT when dd_s >= d_out",
+   "ownOut": "state IN->OUT",
+   "fixed": {
+    "N": 250
+   },
+   "params": [
+    {
+     "name": "d_in",
+     "unit": "fraction",
+     "default": 0.02,
+     "lo": 0.0,
+     "hi": 0.08,
+     "q": 0.001
+    },
+    {
+     "name": "d_gap",
+     "unit": "fraction",
+     "default": 0.08,
+     "lo": 0.01,
+     "hi": 0.2,
+     "q": 0.001,
+     "note": "d_out = d_in + d_gap"
+    }
+   ]
+  },
+  {
+   "id": "E02",
+   "short": "HD",
+   "mechanism": "M02 financing-hurdle drift",
+   "group": "G2",
+   "type": "level",
+   "definition": "A_N = (252/N) ln(C_s / C_{s-N}); OUT->IN when A_N >= a_in; IN->OUT when A_N < a_out",
+   "ownOut": "state IN->OUT",
+   "params": [
+    {
+     "name": "N",
+     "unit": "sessions",
+     "default": 126,
+     "lo": 20,
+     "hi": 250,
+     "q": 1
+    },
+    {
+     "name": "a_in",
+     "unit": "fraction/yr",
+     "default": 0.2,
+     "lo": 0.0,
+     "hi": 0.6,
+     "q": 0.001
+    },
+    {
+     "name": "a_gap",
+     "unit": "fraction/yr",
+     "default": 0.2,
+     "lo": 0.0,
+     "hi": 0.5,
+     "q": 0.001,
+     "note": "a_out = a_in - a_gap; a_gap = 0 is the single-threshold rule"
+    }
+   ]
+  },
+  {
+   "id": "E03",
+   "short": "ER",
+   "mechanism": "M07 directional efficiency (variant of E02)",
+   "group": "G2",
+   "type": "level",
+   "definition": "ER_N = (C_s - C_{s-N}) / sum_{i=s-N+1..s} |C_i - C_{i-1}|; OUT->IN when ER_N >= e_in and A_N >= 0.11; IN->OUT when ER_N <= e_out; ER = 0 when the path length is 0",
+   "ownOut": "state IN->OUT",
+   "params": [
+    {
+     "name": "N",
+     "unit": "sessions",
+     "default": 30,
+     "lo": 10,
+     "hi": 120,
+     "q": 1
+    },
+    {
+     "name": "e_in",
+     "unit": "ratio",
+     "default": 0.3,
+     "lo": 0.05,
+     "hi": 0.6,
+     "q": 0.01
+    },
+    {
+     "name": "e_gap",
+     "unit": "ratio",
+     "default": 0.3,
+     "lo": 0.0,
+     "hi": 0.6,
+     "q": 0.01,
+     "note": "e_out = e_in - e_gap"
+    }
+   ]
+  },
+  {
+   "id": "E04",
+   "short": "CU",
+   "mechanism": "M03 two-sided CUSUM",
+   "group": "G3",
+   "type": "level",
+   "definition": "z_s = r_s / (daily sd of r over s-60..s-1); U_s = max(0, U_{s-1} + z_s - kappa); D_s = max(0, D_{s-1} - z_s - kappa); OUT->IN when U_s >= h_in (then D := 0); IN->OUT when D_s >= h_out (then U := 0); U, D start at 0 when the first z is defined",
+   "ownOut": "state IN->OUT",
+   "fixed": {
+    "sigmaWindow": 60
+   },
+   "params": [
+    {
+     "name": "kappa",
+     "unit": "sd",
+     "default": 0.25,
+     "lo": 0.0,
+     "hi": 0.5,
+     "q": 0.01
+    },
+    {
+     "name": "h_in",
+     "unit": "sd",
+     "default": 4.0,
+     "lo": 1.0,
+     "hi": 8.0,
+     "q": 0.1
+    },
+    {
+     "name": "h_out",
+     "unit": "sd",
+     "default": 4.0,
+     "lo": 1.0,
+     "hi": 8.0,
+     "q": 0.1
+    }
+   ]
+  },
+  {
+   "id": "E05",
+   "short": "RF",
+   "mechanism": "M04 rising floor",
+   "group": "G4",
+   "type": "event",
+   "definition": "causal zigzag on closes, reversal theta (mode undetermined until the first theta move from the running extreme); trigger at the close that confirms a swing low higher than the previous confirmed swing low; floor F = latest confirmed swing low",
+   "ownOut": "C_s < F_s (1 - b)",
+   "params": [
+    {
+     "name": "theta",
+     "unit": "fraction",
+     "default": 0.05,
+     "lo": 0.02,
+     "hi": 0.15,
+     "q": 0.001
+    },
+    {
+     "name": "b",
+     "unit": "fraction",
+     "default": 0.005,
+     "lo": 0.0,
+     "hi": 0.03,
+     "q": 0.001
+    }
+   ]
+  },
+  {
+   "id": "E06",
+   "short": "CV",
+   "mechanism": "M05 calm advance",
+   "group": "G5",
+   "type": "level",
+   "definition": "OUT->IN when sigma_20 <= v_in and C_s > C_{s-N}; IN->OUT when sigma_10 >= v_out or C_s < C_{s-N}",
+   "ownOut": "state IN->OUT",
+   "params": [
+    {
+     "name": "v_in",
+     "unit": "fraction/yr",
+     "default": 0.2,
+     "lo": 0.08,
+     "hi": 0.4,
+     "q": 0.001
+    },
+    {
+     "name": "v_gap",
+     "unit": "fraction/yr",
+     "default": 0.15,
+     "lo": 0.02,
+     "hi": 0.4,
+     "q": 0.001,
+     "note": "v_out = v_in + v_gap"
+    },
+    {
+     "name": "N",
+     "unit": "sessions",
+     "default": 50,
+     "lo": 20,
+     "hi": 250,
+     "q": 1
+    }
+   ]
+  },
+  {
+   "id": "E07",
+   "short": "BA",
+   "mechanism": "M06 breakout acceptance",
+   "group": "G4",
+   "type": "event",
+   "definition": "breakout at b: C_b > R = max(C_{b-N..b-1}); trigger at the close of b+A if C_i >= R for every i in b..b+A; a close below R first voids it; while a breakout is pending, a later breakout does not replace it; A = 0 is the raw breakout",
+   "ownOut": "C_s < min(C_{s-20..s-1})",
+   "params": [
+    {
+     "name": "N",
+     "unit": "sessions",
+     "default": 50,
+     "lo": 10,
+     "hi": 250,
+     "q": 1
+    },
+    {
+     "name": "A",
+     "unit": "sessions",
+     "default": 3,
+     "lo": 0,
+     "hi": 10,
+     "q": 1
+    }
+   ]
+  },
+  {
+   "id": "E08",
+   "short": "CE",
+   "mechanism": "M08 compression then expansion",
+   "group": "G4",
+   "type": "event",
+   "definition": "box = sessions s-N..s-1; W = (max H - min L) / min L; trigger at the close of s when W <= c and C_s > max H of the box; the entry box's min L is recorded",
+   "ownOut": "C_s < entry box min L",
+   "params": [
+    {
+     "name": "N",
+     "unit": "sessions",
+     "default": 20,
+     "lo": 10,
+     "hi": 60,
+     "q": 1
+    },
+    {
+     "name": "c",
+     "unit": "fraction",
+     "default": 0.08,
+     "lo": 0.03,
+     "hi": 0.15,
+     "q": 0.001
+    }
+   ]
+  },
+  {
+   "id": "E09",
+   "short": "TB",
+   "mechanism": "M09 upward trailing buy (minute clock)",
+   "group": "G7",
+   "type": "intraday",
+   "definition": "while flat: low* = the lowest minute low since the exit minute (since the first minute of 2017-01-03 at the start), updated with each completed minute before the test; the decision is the first completed minute, in a session after the exit session, whose close >= low* (1 + Y)",
+   "ownOut": "C_s < min(C_{s-20..s-1})",
+   "params": [
+    {
+     "name": "Y",
+     "unit": "fraction",
+     "default": 0.03,
+     "lo": 0.005,
+     "hi": 0.08,
+     "q": 0.001
+    }
+   ]
+  },
+  {
+   "id": "E10",
+   "short": "TH",
+   "mechanism": "M09-B upward breakout trailing buy (minute clock; variant of E09)",
+   "group": "G7",
+   "type": "intraday",
+   "definition": "while flat: high* = max(the exited trade's Hc, the highest minute high since the exit minute) (at the start: the highest minute high since 2017-01-03's first minute), from earlier completed minutes; the decision is the first completed minute, in a session after the exit session, whose close > high* (1 + Yb)",
+   "ownOut": "C_s < min(C_{s-20..s-1})",
+   "params": [
+    {
+     "name": "Yb",
+     "unit": "fraction",
+     "default": 0.0,
+     "lo": 0.0,
+     "hi": 0.03,
+     "q": 0.001
+    }
+   ]
+  },
+  {
+   "id": "E11",
+   "short": "DP",
+   "mechanism": "M11 durable permission + fast trigger",
+   "group": "G8",
+   "type": "campaign",
+   "definition": "permission ON at a close C_s >= max(C_{s-249..s}) (a new 250-session closing high, ties included); OFF at a close with 1 - C_s / (highest close since ON) >= D; while ON and flat: trigger at a close C_s > max(C_{s-n..s-1})",
+   "ownOut": "permission OFF",
+   "fixed": {
+    "Np": 250
+   },
+   "params": [
+    {
+     "name": "D",
+     "unit": "fraction",
+     "default": 0.15,
+     "lo": 0.05,
+     "hi": 0.3,
+     "q": 0.001
+    },
+    {
+     "name": "n",
+     "unit": "sessions",
+     "default": 5,
+     "lo": 2,
+     "hi": 30,
+     "q": 1
+    }
+   ]
+  },
+  {
+   "id": "E12",
+   "short": "PC",
+   "mechanism": "M10 shallow-pullback continuation",
+   "group": "G4",
+   "type": "event",
+   "definition": "uptrend_s: C_s >= (1 + u) min(C_{s-125..s}) and the 250-session closing high max(C_{s-249..s}) was set at a session >= s-62 (the latest session attaining that maximum); pullback_s: some close in s-9..s is <= (1 - p) max(C over the 20 sessions ending at that close); trigger at the close of s with uptrend_s, pullback_s and C_s > H_{s-1}; the pullback low (lowest close of s-9..s) is recorded",
+   "ownOut": "C_s < recorded pullback low",
+   "fixed": {
+    "lowWindow": 126,
+    "highWindow": 250,
+    "highRecency": 63,
+    "pullbackWindow": 10,
+    "pullbackHighWindow": 20
+   },
+   "params": [
+    {
+     "name": "u",
+     "unit": "fraction",
+     "default": 0.2,
+     "lo": 0.05,
+     "hi": 0.5,
+     "q": 0.001
+    },
+    {
+     "name": "p",
+     "unit": "fraction",
+     "default": 0.05,
+     "lo": 0.02,
+     "hi": 0.12,
+     "q": 0.001
+    }
+   ]
+  }
+ ],
+ "exploratoryPrototype": {
+  "id": "X-CS",
+  "mechanism": "M15 closing strength (descriptive only: never searched or selected)",
+  "type": "level",
+  "definition": "CLV_s = (C_s - L_s)/(H_s - L_s), 0.5 if H = L; m_N = mean CLV over N; OUT->IN when m_N >= c_in and C_s > C_{s-N}; IN->OUT when m_N <= c_out",
+  "defaults": {
+   "N": 20,
+   "c_in": 0.6,
+   "c_out": 0.45
+  }
+ },
+ "template": {
+  "id": "TPL",
+  "description": "the single M3 search template: the family's own OUT (decided at the close, executed next open) + a resting hard stop h below the entry fill + a resting trailing stop t below the highest close since entry (updated at each close; first update at the entry session's close) + re-entry by R3 reclaim or a fresh signal, whichever comes first",
+  "params": [
+   {
+    "name": "h",
+    "unit": "fraction",
+    "default": 0.08,
+    "lo": 0.03,
+    "hi": 0.15,
+    "q": 0.001
+   },
+   {
+    "name": "t",
+    "unit": "fraction",
+    "default": 0.1,
+    "lo": 0.04,
+    "hi": 0.3,
+    "q": 0.001
+   }
+  ],
+  "stopLevel": "the maximum of hard = raw first fill x (1 - h) and trailing = Hc x (1 - t), Hc = max(raw first fill, closes held); recomputed at each close, never lowered; both parts active from the fill bar",
+  "reentry": "R3 or fresh"
+ },
+ "exits": {
+  "OX": "family own OUT + catastrophic resting stop 15% below the highest close since entry",
+  "CX1": "hard 8% below fill + trailing 10% below highest close (resting); own OUT disabled; re-entry R3 or fresh",
+  "CX2": "trend damage: C_s < min(C_{s-20..s-1}) (next open) + catastrophic resting stop 15% below the highest close; own OUT disabled",
+  "X1": "= CX1",
+  "X2": "volatility-scaled trailing: level = Hc x (1 - clamp(k ATR_20 / Hc, 4%, 15%)), k = 3, ATR from the last completed session (at the fill: the previous close), never lowered; + hard 8%",
+  "X3": "structural rising floor (theta 5%, b 0.5%: close below floor -> next open) + emergency hard stop 10% below fill",
+  "X4": "two-layer: catastrophic resting stop 15% below the highest close + normal exit C_s < min(C_{s-50..s-1}) (next open)",
+  "X5a": "profit stages: hard 6%; after a close >= entry +4%: stop >= entry x 1.002; after a close >= entry +10%: trail 8% below the highest close; after a close >= entry +25%: trail 5%",
+  "X5b": "probation (M12): stop at raw first fill x (1 - 3%) until promotion at a close >= first fill x 1.05, then a 12% trailing stop below Hc (a deliberate widening, the one exception to never lowering a stop); not promoted at the close of its 10th session held -> exit next open",
+  "X6a": "X1 + maximum hold 60 sessions (exit at the open of the 61st session held)",
+  "X6b": "X1 + stall exit (M14): at a close with s - entry session >= 20, exit next open if C_s < C_{s-20} (1 + 20 x 0.11/252 + 0.01); the 0.11 is fixed (it does not follow a stressed interest rate)",
+  "X6c": "X1 indefinite (no time exit)",
+  "X8P": "price damage only: trailing 10% below the highest close + hard 8%",
+  "X8T": "trend damage only: C_s < min(C_{s-20..s-1}) + catastrophic 15%",
+  "X8OR": "either price damage (trailing 10%) or trend damage (20-session low close) + hard 8%",
+  "X8AND": "exit next open only when both hold at a close: C_s <= highest close x 0.90 and C_s < min(C_{s-20..s-1}); + catastrophic 15%",
+  "HS": "hard stop 8% only"
+ },
+ "reentry": {
+  "R0": "immediate: at the first later close while the campaign is alive (level: state IN; event: own OUT not yet true)",
+  "R1": "fresh signal only",
+  "R2": "fixed cool-down: no R-rule re-entry until 10 sessions after the exit (then R0); a fresh trigger enters earlier",
+  "R3": "reclaim: a close above Hc of the stopped trade while the campaign is alive (a fresh trigger also enters)",
+  "R4": "pullback recovery: a close >= trough + 0.5 (Hc - trough), trough = the lowest close from the exit session's close on, while the campaign is alive (a fresh trigger also enters)",
+  "R5": "none while the campaign is alive (not even a fresh trigger); after its own OUT, a fresh signal",
+  "R3F": "R3 or a fresh signal, whichever comes first (the template's rule and the default for every panel and M2 configuration except the R ablations)"
+ },
+ "sizing": {
+  "Z0": "full $100,000 at the entry fill",
+  "Z1": "progressive (M13): 1/3 of $100,000 at the entry fill; +1/3 at the opening trade after a close >= first raw fill x 1.03; +1/3 after a close >= x 1.06; each tranche its own lot (fill, friction, interest); one stop for the position, its hard part from the first tranche's raw fill",
+  "Z2": "volatility target (M18) in $25,000 tranches: target count = clamp(floor(4 x 0.20 / sigma_20), 1, 4) from the decision close; entry at the target, re-sized at the next opening trade whenever the count changes; partial sales FIFO"
+ },
+ "modifiers": {
+  "A1": "exhaustion filter (M19): entry only if C_s / mean(C_{s-49..s}) - 1 <= 10%",
+  "A2": "weekly clock (M20): close decisions (entries and close-decided exits) only at Friday closes - no decision in a week whose Friday is a holiday; resting stops unchanged; not applied to the minute rules",
+  "A3": "single threshold (J ablation): exit threshold = entry threshold (E02: a_gap = 0; E01: d_gap = 0.001)"
+ },
+ "controls": {
+  "C-SMA": "IN when C_s > mean(C_{s-199..s}); OUT when C_s < it; next-open execution; no stops",
+  "C-DON": "enter at the open after C_s > max(C_{s-55..s-1}); exit at the open after C_s < min(C_{s-20..s-1}); no stops",
+  "C-TSM": "at the close of the first session of each month: IN if C_s > C_{s-250}, else OUT; executed at the next opening trade; no stops",
+  "C-AL": "one $100,000 lot bought at the opening trade of 2017-01-04 and held to the horizon (its exposure drifts with the price: not a fixed-slot comparator)",
+  "C-ALR": "$100,000 notional re-sized at the opening trade of the first session of each month (friction on the traded difference; interest on $100,000): the always-long fixed-slot reference",
+  "C-IDLE": "no trades",
+  "D1": "registered VGT primary (config/phenotypes/D1/VGT.json), frozen engine via Study 2's standaloneRun; context only",
+  "C-SMA/TPL, C-DON/TPL, C-TSM/TPL": "each conventional control signal with the TPL default exits (hard 8%, trailing 10%, own OUT, R3F)"
+ },
+ "duplicates": "exits: X1 = CX1 = X6c = X8P; X8T = CX2. Entries: E01 at d_in = 0, E07 at A = 0, E11 and C-DON are all N-session-high rules; E02 at a_in = a_gap = 0 is close to C-TSM."
+}

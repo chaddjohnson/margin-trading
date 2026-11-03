@@ -1,0 +1,4851 @@
+{
+ "generatedAt": "2026-10-24T15:36:20.536Z",
+ "design": {
+  "ordered": [
+   "GDX",
+   "XOP",
+   "XLE"
+  ],
+  "vectors": [
+   {
+    "symbol": "GDX",
+    "track": "P",
+    "id": "d1-51ea8d4bd6",
+    "grid": {
+     "targetPercentChange": 274,
+     "trailingBuyPercentage": 4,
+     "trailingStopPercentage": 71,
+     "maximumHoldDays": 18,
+     "tickWindowSize": 100,
+     "intradayLossBuffer": 36,
+     "pullback": 191,
+     "continuationWindow": 81
+    },
+    "delta5": 146293.24669512614
+   },
+   {
+    "symbol": "GDX",
+    "track": "S",
+    "id": "d1-68ebf55a55",
+    "grid": {
+     "targetPercentChange": 258,
+     "trailingBuyPercentage": 10,
+     "trailingStopPercentage": 54,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 172,
+     "intradayLossBuffer": 14,
+     "pullback": 176,
+     "continuationWindow": 199
+    },
+    "delta5": 38081.65056483864
+   },
+   {
+    "symbol": "XOP",
+    "track": "P",
+    "id": "d1-890902e16e",
+    "grid": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 48,
+     "trailingStopPercentage": 89,
+     "maximumHoldDays": 9,
+     "tickWindowSize": 43,
+     "intradayLossBuffer": 7,
+     "pullback": 112,
+     "continuationWindow": 126
+    },
+    "delta5": 81267.92637384814
+   },
+   {
+    "symbol": "XOP",
+    "track": "S",
+    "id": "d1-ede1165b0d",
+    "grid": {
+     "targetPercentChange": 285,
+     "trailingBuyPercentage": 49,
+     "trailingStopPercentage": 52,
+     "maximumHoldDays": 6,
+     "tickWindowSize": 38,
+     "intradayLossBuffer": 4,
+     "pullback": 151,
+     "continuationWindow": 39
+    },
+    "delta5": 27301.661764170305
+   },
+   {
+    "symbol": "XLE",
+    "track": "P",
+    "id": "d1-3c14f76172",
+    "grid": {
+     "targetPercentChange": 128,
+     "trailingBuyPercentage": 49,
+     "trailingStopPercentage": 39,
+     "maximumHoldDays": 8,
+     "tickWindowSize": 150,
+     "intradayLossBuffer": 0,
+     "pullback": 146,
+     "continuationWindow": 115
+    },
+    "delta5": 67122.42014813694
+   },
+   {
+    "symbol": "XLE",
+    "track": "S",
+    "id": "d1-008ac96b01",
+    "grid": {
+     "targetPercentChange": 280,
+     "trailingBuyPercentage": 27,
+     "trailingStopPercentage": 65,
+     "maximumHoldDays": 4,
+     "tickWindowSize": 52,
+     "intradayLossBuffer": 0,
+     "pullback": 131,
+     "continuationWindow": 47
+    },
+    "delta5": 21603.66052363391
+   }
+  ],
+  "configurations": [
+   {
+    "key": "S0",
+    "kind": "baseline",
+    "description": "All-lowDd shadow, unchanged (VGT primary, XBI/XRT/KRE lowDd)",
+    "books": [
+     {
+      "symbol": "VGT",
+      "phenotype": "primary"
+     },
+     {
+      "symbol": "XBI",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "XRT",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "KRE",
+      "phenotype": "lowDd"
+     }
+    ],
+    "newSymbols": []
+   },
+   {
+    "key": "P-add-GDX",
+    "kind": "addition",
+    "description": "All-lowDd + GDX (P-vector d1-51ea8d4bd6)",
+    "books": [
+     {
+      "symbol": "VGT",
+      "phenotype": "primary"
+     },
+     {
+      "symbol": "XBI",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "XRT",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "KRE",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "GDX",
+      "phenotype": "d1-51ea8d4bd6",
+      "grid": {
+       "targetPercentChange": 274,
+       "trailingBuyPercentage": 4,
+       "trailingStopPercentage": 71,
+       "maximumHoldDays": 18,
+       "tickWindowSize": 100,
+       "intradayLossBuffer": 36,
+       "pullback": 191,
+       "continuationWindow": 81
+      },
+      "track": "P"
+     }
+    ],
+    "newSymbols": [
+     "GDX"
+    ]
+   },
+   {
+    "key": "S-add-GDX",
+    "kind": "addition",
+    "description": "All-lowDd + GDX (S-vector d1-68ebf55a55)",
+    "books": [
+     {
+      "symbol": "VGT",
+      "phenotype": "primary"
+     },
+     {
+      "symbol": "XBI",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "XRT",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "KRE",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "GDX",
+      "phenotype": "d1-68ebf55a55",
+      "grid": {
+       "targetPercentChange": 258,
+       "trailingBuyPercentage": 10,
+       "trailingStopPercentage": 54,
+       "maximumHoldDays": 8,
+       "tickWindowSize": 172,
+       "intradayLossBuffer": 14,
+       "pullback": 176,
+       "continuationWindow": 199
+      },
+      "track": "S"
+     }
+    ],
+    "newSymbols": [
+     "GDX"
+    ]
+   },
+   {
+    "key": "P-add-XOP",
+    "kind": "addition",
+    "description": "All-lowDd + XOP (P-vector d1-890902e16e)",
+    "books": [
+     {
+      "symbol": "VGT",
+      "phenotype": "primary"
+     },
+     {
+      "symbol": "XBI",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "XRT",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "KRE",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "XOP",
+      "phenotype": "d1-890902e16e",
+      "grid": {
+       "targetPercentChange": 216,
+       "trailingBuyPercentage": 48,
+       "trailingStopPercentage": 89,
+       "maximumHoldDays": 9,
+       "tickWindowSize": 43,
+       "intradayLossBuffer": 7,
+       "pullback": 112,
+       "continuationWindow": 126
+      },
+      "track": "P"
+     }
+    ],
+    "newSymbols": [
+     "XOP"
+    ]
+   },
+   {
+    "key": "S-add-XOP",
+    "kind": "addition",
+    "description": "All-lowDd + XOP (S-vector d1-ede1165b0d)",
+    "books": [
+     {
+      "symbol": "VGT",
+      "phenotype": "primary"
+     },
+     {
+      "symbol": "XBI",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "XRT",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "KRE",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "XOP",
+      "phenotype": "d1-ede1165b0d",
+      "grid": {
+       "targetPercentChange": 285,
+       "trailingBuyPercentage": 49,
+       "trailingStopPercentage": 52,
+       "maximumHoldDays": 6,
+       "tickWindowSize": 38,
+       "intradayLossBuffer": 4,
+       "pullback": 151,
+       "continuationWindow": 39
+      },
+      "track": "S"
+     }
+    ],
+    "newSymbols": [
+     "XOP"
+    ]
+   },
+   {
+    "key": "P-comb-GDX-XOP",
+    "kind": "combination",
+    "description": "All-lowDd + GDX (P d1-51ea8d4bd6) + XOP (P d1-890902e16e)",
+    "books": [
+     {
+      "symbol": "VGT",
+      "phenotype": "primary"
+     },
+     {
+      "symbol": "XBI",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "XRT",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "KRE",
+      "phenotype": "lowDd"
+     },
+     {
+      "symbol": "GDX",
+      "phenotype": "d1-51ea8d4bd6",
+      "grid": {
+       "targetPercentChange": 274,
+       "trailingBuyPercentage": 4,
+       "trailingStopPercentage": 71,
+       "maximumHoldDays": 18,
+       "tickWindowSize": 100,
+       "intradayLossBuffer": 36,
+       "pullback": 191,
+       "continuationWindow": 81
+      },
+      "track": "P"
+     },
+     {
+      "symbol": "XOP",
+      "phenotype": "d1-890902e16e",
+      "grid": {
+       "targetPercentChange": 216,
+       "trailingBuyPercentage": 48,
+       "trailingStopPercentage": 89,
+       "maximumHoldDays": 9,
+       "tickWindowSize": 43,
+       "intradayLossBuffer": 7,
+       "pullback": 112,
+       "continuationWindow": 126
+      },
+      "track": "P"
+     }
+    ],
+    "newSymbols": [
+     "GDX",
+     "XOP"
+    ]
+   }
+  ],
+  "substitutionCandidates": [
+   {
+    "symbol": "GDX",
+    "track": "P",
+    "removed": "XBI",
+    "conflicts": {
+     "refusedBy": 2,
+     "displaced": 1
+    },
+    "triggered": true,
+    "additionDelta5": 146293.24669512614,
+    "delta5": 78593.41907615043,
+    "qualifies": false
+   },
+   {
+    "symbol": "GDX",
+    "track": "P",
+    "removed": "XRT",
+    "conflicts": {
+     "refusedBy": 0,
+     "displaced": 1
+    },
+    "triggered": false,
+    "additionDelta5": 146293.24669512614
+   },
+   {
+    "symbol": "GDX",
+    "track": "P",
+    "removed": "KRE",
+    "conflicts": {
+     "refusedBy": 3,
+     "displaced": 12
+    },
+    "triggered": true,
+    "additionDelta5": 146293.24669512614,
+    "delta5": 49094.10539332297,
+    "qualifies": false
+   },
+   {
+    "symbol": "XOP",
+    "track": "P",
+    "removed": "XBI",
+    "conflicts": {
+     "refusedBy": 2,
+     "displaced": 5
+    },
+    "triggered": true,
+    "additionDelta5": 81267.92637384814,
+    "delta5": 49373.96046198424,
+    "qualifies": false
+   },
+   {
+    "symbol": "XOP",
+    "track": "P",
+    "removed": "XRT",
+    "conflicts": {
+     "refusedBy": 2,
+     "displaced": 2
+    },
+    "triggered": true,
+    "additionDelta5": 81267.92637384814,
+    "delta5": 22515.51138030688,
+    "qualifies": false
+   },
+   {
+    "symbol": "XOP",
+    "track": "P",
+    "removed": "KRE",
+    "conflicts": {
+     "refusedBy": 5,
+     "displaced": 3
+    },
+    "triggered": true,
+    "additionDelta5": 81267.92637384814,
+    "delta5": 41953.97214789051,
+    "qualifies": false
+   },
+   {
+    "symbol": "XLE",
+    "track": "P",
+    "removed": "XBI",
+    "conflicts": {
+     "refusedBy": 1,
+     "displaced": 0
+    },
+    "triggered": false,
+    "additionDelta5": 67122.42014813694
+   },
+   {
+    "symbol": "XLE",
+    "track": "P",
+    "removed": "XRT",
+    "conflicts": {
+     "refusedBy": 6,
+     "displaced": 1
+    },
+    "triggered": true,
+    "additionDelta5": 67122.42014813694,
+    "delta5": 12060.989997912693,
+    "qualifies": false
+   },
+   {
+    "symbol": "XLE",
+    "track": "P",
+    "removed": "KRE",
+    "conflicts": {
+     "refusedBy": 13,
+     "displaced": 6
+    },
+    "triggered": true,
+    "additionDelta5": 67122.42014813694,
+    "delta5": 9039.317216454918,
+    "qualifies": false
+   }
+  ],
+  "combination": {
+   "considered": true,
+   "pair": [
+    "GDX",
+    "XOP"
+   ],
+   "singleDelta5": [
+    146293.24669512614,
+    81267.92637384814
+   ],
+   "overlapShare": 0.1797752808988764,
+   "delta5": 194695.13883078235,
+   "qualifies": true,
+   "coRefinementTriggered": false
+  },
+  "notes": []
+ },
+ "ladder": [
+  {
+   "fraction": 0.1,
+   "borrowingDollarDays": 95256481.48227844,
+   "endEquity": 1370571.0465008824
+  },
+  {
+   "fraction": 0.15,
+   "borrowingDollarDays": 149898907.3073151,
+   "endEquity": 1516974.0102005876
+  },
+  {
+   "fraction": 0.2,
+   "borrowingDollarDays": 209768005.20706284,
+   "endEquity": 1677751.3328378373
+  },
+  {
+   "fraction": 0.25,
+   "borrowingDollarDays": 275316882.96047705,
+   "endEquity": 1854174.8292496158
+  }
+ ],
+ "runs": {
+  "S0": {
+   "fixed-0": {
+    "mode": "fixed",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 71,
+    "virtualTrades": 137,
+    "refused": 66,
+    "net": 249173.89836931392,
+    "interest": 37068.49315068493,
+    "costs": 0,
+    "worstLot": -10003.934407397837,
+    "openAtEnd": 0,
+    "newLots": 0,
+    "newLotsNet": 0,
+    "newLotYears": 0,
+    "bySymbol": {
+     "VGT": {
+      "lots": 11,
+      "net": 124536.37330976341
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 66650.89329019883
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 41679.21042269676
+     },
+     "XRT": {
+      "lots": 5,
+      "net": 16307.421346654985
+     }
+    },
+    "borrowingDollarDays": 123000000,
+    "minuteDrawdown": 27968.026478682383,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584978240,
+    "dailyDrawdown": 24574.94508207035,
+    "endEquity": null,
+    "strategyMark": 249173.89836931392,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     36145.72640834523,
+     95578.8995783397,
+     117449.27238262899
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3694.391264027823,
+     32451.33514431741,
+     10966.241100017833,
+     4876.281997879931,
+     63413.601466725144,
+     16322.77501371679,
+     61092.97586499617,
+     10890.9041030347,
+     5406.777329541481,
+     40058.615085056634
+    ],
+    "yearly": [
+     0,
+     3694.391264027823,
+     32451.33514431741,
+     79256.1245646229,
+     16322.77501371679,
+     58729.13714042684,
+     58720.135242202145
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-2": {
+    "mode": "fixed",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 71,
+    "virtualTrades": 137,
+    "refused": 66,
+    "net": 246624.89903313894,
+    "interest": 37068.49315068493,
+    "costs": 2896.7501420421477,
+    "worstLot": -10039.985897309505,
+    "openAtEnd": 0,
+    "newLots": 0,
+    "newLotsNet": 0,
+    "newLotYears": 0,
+    "bySymbol": {
+     "VGT": {
+      "lots": 11,
+      "net": 124037.21968705462
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 65101.625526161646
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 41386.62069347737
+     },
+     "XRT": {
+      "lots": 5,
+      "net": 16099.433126445307
+     }
+    },
+    "borrowingDollarDays": 123000000,
+    "minuteDrawdown": 28244.633109925664,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584978240,
+    "dailyDrawdown": 24852.230193896845,
+    "endEquity": null,
+    "strategyMark": 246624.89903313894,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     36071.82118209085,
+     94731.53463830023,
+     115821.54321274786
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3673.5962708010866,
+     32398.224911289763,
+     10963.753006950697,
+     4551.007984189644,
+     63144.89839556502,
+     16071.875251594873,
+     60671.27027081202,
+     10824.634897812939,
+     4924.132517435151,
+     39401.505526687746
+    ],
+    "yearly": [
+     0,
+     3673.5962708010866,
+     32398.224911289763,
+     78659.65938670536,
+     16071.875251594873,
+     58286.90111779388,
+     57534.642094953975
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-5": {
+    "mode": "fixed",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 71,
+    "virtualTrades": 137,
+    "refused": 66,
+    "net": 242196.01122128402,
+    "interest": 37068.49315068493,
+    "costs": 7239.703878237275,
+    "worstLot": -10094.036107072092,
+    "openAtEnd": 0,
+    "newLots": 0,
+    "newLotsNet": 0,
+    "newLotYears": 0,
+    "bySymbol": {
+     "VGT": {
+      "lots": 11,
+      "net": 123288.86343111908
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 62778.885250244115
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 40340.65583058142
+     },
+     "XRT": {
+      "lots": 5,
+      "net": 15787.606709339365
+     }
+    },
+    "borrowingDollarDays": 123000000,
+    "minuteDrawdown": 28659.335705492747,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584978240,
+    "dailyDrawdown": 25267.95000173262,
+    "endEquity": null,
+    "strategyMark": 242196.01122128402,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     35961.01874392823,
+     93461.12243434293,
+     112773.87004301285
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3642.41936941162,
+     32318.599374516612,
+     10960.022732487218,
+     4063.340797247787,
+     62742.04521541477,
+     15695.713689193159,
+     59431.72839897337,
+     10725.280767045624,
+     4200.527101983433,
+     38416.333775010426
+    ],
+    "yearly": [
+     0,
+     3642.41936941162,
+     32318.599374516612,
+     77765.40874514978,
+     15695.713689193159,
+     57016.57899340823,
+     55757.291049604624
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-10": {
+    "mode": "fixed",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 71,
+    "virtualTrades": 136,
+    "refused": 65,
+    "net": 233867.18518820778,
+    "interest": 36978.08219178082,
+    "costs": 14471.130583777216,
+    "worstLot": -10184.047795058383,
+    "openAtEnd": 0,
+    "newLots": 0,
+    "newLotsNet": 0,
+    "newLotYears": 0,
+    "bySymbol": {
+     "VGT": {
+      "lots": 11,
+      "net": 122042.59981608976
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 57957.49971907397
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 38598.774285678424
+     },
+     "XRT": {
+      "lots": 5,
+      "net": 15268.311367365677
+     }
+    },
+    "borrowingDollarDays": 122700000,
+    "minuteDrawdown": 29349.954313695,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584978240,
+    "dailyDrawdown": 25960.262608787867,
+    "endEquity": null,
+    "strategyMark": 233867.18518820778,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     35776.49560265249,
+     91345.46095182846,
+     106745.22863372683
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3590.499394770066,
+     32185.996207882425,
+     10953.810577111966,
+     3251.2117256871643,
+     62071.15984947029,
+     15069.278799559033,
+     57367.4763506664,
+     10559.822888934606,
+     2995.481919607555,
+     35822.44747451827
+    ],
+    "yearly": [
+     0,
+     3590.499394770066,
+     32185.996207882425,
+     76276.18215226942,
+     15069.278799559033,
+     54901.06752352696,
+     51844.16111019987
+    ],
+    "minimumRatio": {}
+   },
+   "portfolio-0": {
+    "mode": "portfolio",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 71,
+    "virtualTrades": 137,
+    "refused": 66,
+    "net": 471678.62509150605,
+    "interest": 63547.04689260937,
+    "costs": 0,
+    "worstLot": -11406.283167199465,
+    "openAtEnd": 0,
+    "newLots": 0,
+    "newLotsNet": 0,
+    "newLotYears": 0,
+    "bySymbol": {
+     "VGT": {
+      "lots": 11,
+      "net": 147064.17460010134
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 195787.73260571988
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 93397.69567294623
+     },
+     "XRT": {
+      "lots": 5,
+      "net": 35429.02221273852
+     }
+    },
+    "borrowingDollarDays": 210860655.59820384,
+    "minuteDrawdown": 408803.45199281943,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 375501.8009375284,
+    "endEquity": 1700902.8816302426,
+    "strategyMark": 471678.62509150605,
+    "dailyPercent": 0.34551962147114507,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.3692413809432805,
+    "folds": [
+     34641.37553106117,
+     143508.604241292,
+     293528.64531915286
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3161.8758682681346,
+     31479.49966279303,
+     11962.336339547379,
+     3864.746798359287,
+     88391.09392324134,
+     39290.427180144005,
+     137939.92670900995,
+     23657.339263364323,
+     11674.897978267807,
+     120256.48136851081
+    ],
+    "yearly": [
+     0,
+     3161.8758682681346,
+     31479.49966279303,
+     104218.17706114799,
+     39290.427180144005,
+     132696.34562768662,
+     160832.29969146627
+    ],
+    "minimumRatio": {
+     "U35": 2.3333541513655303,
+     "U50": 1.6333479059558713,
+     "U60": 1.361123254963226,
+     "L50": 1.9079396011254544,
+     "L60": 1.6909662505034382,
+     "G50": 1.8866082335321313,
+     "G60": 1.673058165732034
+    }
+   },
+   "portfolio-2": {
+    "mode": "portfolio",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 71,
+    "virtualTrades": 137,
+    "refused": 66,
+    "net": 465065.51914973685,
+    "interest": 63429.65977064226,
+    "costs": 6465.825983186609,
+    "worstLot": -11467.460637916403,
+    "openAtEnd": 0,
+    "newLots": 0,
+    "newLotsNet": 0,
+    "newLotYears": 0,
+    "bySymbol": {
+     "VGT": {
+      "lots": 11,
+      "net": 146161.77601638867
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 191242.49852336085
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 92779.17836255164
+     },
+     "XRT": {
+      "lots": 5,
+      "net": 34882.066247435665
+     }
+    },
+    "borrowingDollarDays": 210471143.7844038,
+    "minuteDrawdown": 408820.3977620561,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 375601.91068291746,
+    "endEquity": 1692442.733605761,
+    "strategyMark": 465065.51914973685,
+    "dailyPercent": 0.3458965465835615,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.36960481575996057,
+    "folds": [
+     34570.99567634794,
+     142003.37642119167,
+     288491.14705219725
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3144.0782982314395,
+     31426.9173781165,
+     11958.592959799382,
+     3504.0990340261196,
+     87866.39284322583,
+     38674.29158414033,
+     136816.83927996526,
+     23449.48619066819,
+     10422.034496954759,
+     117802.78708460904
+    ],
+    "yearly": [
+     0,
+     3144.0782982314395,
+     31426.9173781165,
+     103329.08483705133,
+     38674.29158414033,
+     131541.27481929923,
+     156949.87223289802
+    ],
+    "minimumRatio": {
+     "U35": 2.3333376148870517,
+     "U50": 1.6333363304209358,
+     "U60": 1.3611136086841134,
+     "L50": 1.9078610883131983,
+     "L60": 1.6909319329702523,
+     "G50": 1.8865954570769874,
+     "G60": 1.673047087249183
+    }
+   },
+   "portfolio-5": {
+    "mode": "portfolio",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 71,
+    "virtualTrades": 137,
+    "refused": 66,
+    "net": 453385.55927836086,
+    "interest": 63217.75499390935,
+    "costs": 16080.802178265374,
+    "worstLot": -11544.258306831995,
+    "openAtEnd": 0,
+    "newLots": 0,
+    "newLotsNet": 0,
+    "newLotYears": 0,
+    "bySymbol": {
+     "VGT": {
+      "lots": 11,
+      "net": 144796.61573171246
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 184329.21736775705
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 90234.9242808544
+     },
+     "XRT": {
+      "lots": 5,
+      "net": 34024.80189803711
+     }
+    },
+    "borrowingDollarDays": 209768005.20706284,
+    "minuteDrawdown": 410071.45190528827,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 377014.91336950473,
+    "endEquity": 1677751.3328378373,
+    "strategyMark": 453385.55927836086,
+    "dailyPercent": 0.3464613481592348,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.37014940266383856,
+    "folds": [
+     34465.48813026103,
+     139752.32574805163,
+     279167.7454000482
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3117.3952846831653,
+     31348.092845577863,
+     11952.98228338013,
+     2963.9474456676544,
+     87081.5336180585,
+     37753.86240094536,
+     133491.5490100391,
+     23110.855530280503,
+     8547.696116484352,
+     114017.64474324422
+    ],
+    "yearly": [
+     0,
+     3117.3952846831653,
+     31348.092845577863,
+     101998.46334710628,
+     37753.86240094536,
+     128175.01730606638,
+     150992.7280939818
+    ],
+    "minimumRatio": {
+     "U35": 2.333312820608868,
+     "U50": 1.6333189744262073,
+     "U60": 1.3610991453551726,
+     "L50": 1.9077424557138645,
+     "L60": 1.6908804532378359,
+     "G50": 1.8865763015591173,
+     "G60": 1.6730304779597363
+    }
+   },
+   "portfolio-10": {
+    "mode": "portfolio",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 71,
+    "virtualTrades": 136,
+    "refused": 65,
+    "net": 431393.87668762024,
+    "interest": 62611.7843835897,
+    "costs": 31876.6107780822,
+    "worstLot": -11670.206725343625,
+    "openAtEnd": 0,
+    "newLots": 0,
+    "newLotsNet": 0,
+    "newLotYears": 0,
+    "bySymbol": {
+     "VGT": {
+      "lots": 11,
+      "net": 142538.00345065698
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 170211.74419931544
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 86033.02600769865
+     },
+     "XRT": {
+      "lots": 5,
+      "net": 32611.103029949416
+     }
+    },
+    "borrowingDollarDays": 207757284.5455476,
+    "minuteDrawdown": 412121.1811812953,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 379332.64804729796,
+    "endEquity": 1650551.0434943587,
+    "strategyMark": 431393.87668762024,
+    "dailyPercent": 0.34740112478291324,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.3710555434325085,
+    "folds": [
+     34289.807970933754,
+     136018.60357115048,
+     261085.465145536
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3072.9591372456325,
+     31216.84883368812,
+     11943.642853143021,
+     2065.8760028883116,
+     85779.25896270905,
+     36229.825752410106,
+     128005.8227767304,
+     22553.29143686942,
+     5475.155250991986,
+     105051.19568094419
+    ],
+    "yearly": [
+     0,
+     3072.9591372456325,
+     31216.84883368812,
+     99788.77781874037,
+     36229.825752410106,
+     122622.28653239342,
+     138463.17861314258
+    ],
+    "minimumRatio": {
+     "U35": 2.333271524627301,
+     "U50": 1.633290067239111,
+     "U60": 1.3610750560325926,
+     "L50": 1.9075535262338537,
+     "L60": 1.6907946446772288,
+     "G50": 1.886544400128899,
+     "G60": 1.6730028183027819
+    }
+   }
+  },
+  "P-add-GDX": {
+   "fixed-0": {
+    "mode": "fixed",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 82,
+    "virtualTrades": 155,
+    "refused": 73,
+    "net": 396714.78541898355,
+    "interest": 37791.7808219178,
+    "costs": 0,
+    "worstLot": -8166.524956699745,
+    "openAtEnd": 0,
+    "newLots": 9,
+    "newLotsNet": 150611.16676405782,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 9,
+      "net": 67854.61234460848
+     },
+     "KRE": {
+      "lots": 45,
+      "net": 110016.55892999178
+     },
+     "XBI": {
+      "lots": 16,
+      "net": 54315.33321613126
+     },
+     "GDX": {
+      "lots": 9,
+      "net": 150611.16676405782
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 13917.11416419427
+     }
+    },
+    "borrowingDollarDays": 125400000,
+    "minuteDrawdown": 26309.782346360997,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584022980,
+    "dailyDrawdown": 23587.057596280007,
+    "endEquity": null,
+    "strategyMark": 396714.78541898355,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     36145.72640834523,
+     185588.89549502282,
+     174980.16351561548
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3694.391264027823,
+     32451.33514431741,
+     10966.241100017833,
+     91483.58773776403,
+     66816.29164352422,
+     16322.775013716746,
+     70684.57279379081,
+     32016.299335284508,
+     25944.789422183065,
+     46334.5019643571
+    ],
+    "yearly": [
+     0,
+     3694.391264027823,
+     32451.33514431741,
+     169266.1204813061,
+     16322.775013716746,
+     86725.55575134969,
+     88254.60776426579
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-2": {
+    "mode": "fixed",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 82,
+    "virtualTrades": 155,
+    "refused": 73,
+    "net": 393666.58025408594,
+    "interest": 37791.7808219178,
+    "costs": 3366.309065201694,
+    "worstLot": -8203.29921104428,
+    "openAtEnd": 0,
+    "newLots": 9,
+    "newLotsNet": 150188.86100507935,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 9,
+      "net": 67459.91875345749
+     },
+     "KRE": {
+      "lots": 45,
+      "net": 108169.31737117
+     },
+     "XBI": {
+      "lots": 16,
+      "net": 54057.59768339356
+     },
+     "GDX": {
+      "lots": 9,
+      "net": 150188.86100507935
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 13790.885440985574
+     }
+    },
+    "borrowingDollarDays": 125400000,
+    "minuteDrawdown": 26389.882645812046,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584022980,
+    "dailyDrawdown": 23667.702331793873,
+    "endEquity": null,
+    "strategyMark": 393666.58025408594,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     36071.82118209085,
+     183986.18392731203,
+     173608.57514468307
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3673.5962708010866,
+     32398.224911289763,
+     10963.753006950697,
+     91019.84099998491,
+     65930.71466878161,
+     16071.875251594814,
+     70259.40607770241,
+     31881.497763031046,
+     25712.997585687903,
+     45754.67371826171
+    ],
+    "yearly": [
+     0,
+     3673.5962708010866,
+     32398.224911289763,
+     167914.3086757172,
+     16071.875251594814,
+     86231.89035125752,
+     87376.68479342555
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-5": {
+    "mode": "fixed",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 82,
+    "virtualTrades": 155,
+    "refused": 73,
+    "net": 388489.25791641016,
+    "interest": 37791.7808219178,
+    "costs": 8413.249192940204,
+    "worstLot": -8258.433025653772,
+    "openAtEnd": 0,
+    "newLots": 9,
+    "newLotsNet": 149555.71893764538,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 9,
+      "net": 66868.17423898801
+     },
+     "KRE": {
+      "lots": 45,
+      "net": 105399.8397717374
+     },
+     "XBI": {
+      "lots": 16,
+      "net": 53063.887987636495
+     },
+     "GDX": {
+      "lots": 9,
+      "net": 149555.71893764538
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 13601.636980402825
+     }
+    },
+    "borrowingDollarDays": 125400000,
+    "minuteDrawdown": 26509.97304978661,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584022980,
+    "dailyDrawdown": 23788.608981739657,
+    "endEquity": null,
+    "strategyMark": 388489.25791641016,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     35961.01874392823,
+     181583.31800870548,
+     170944.92116377645
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3642.41936941162,
+     32318.599374516612,
+     10960.022732487218,
+     90324.5685295515,
+     64603.01305747364,
+     15695.71368919313,
+     69014.67511755144,
+     31679.396455304523,
+     25365.483587944123,
+     44885.36600297637
+    ],
+    "yearly": [
+     0,
+     3642.41936941162,
+     32318.599374516612,
+     165887.60431951235,
+     15695.71368919313,
+     84884.46271343963,
+     86060.45845033682
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-10": {
+    "mode": "fixed",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 82,
+    "virtualTrades": 154,
+    "refused": 72,
+    "net": 379867.28355386585,
+    "interest": 37791.7808219178,
+    "costs": 16818.09354153287,
+    "worstLot": -8350.249278355092,
+    "openAtEnd": 0,
+    "newLots": 9,
+    "newLotsNet": 148501.32550466587,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 9,
+      "net": 65882.72158602046
+     },
+     "KRE": {
+      "lots": 45,
+      "net": 100787.73272053349
+     },
+     "XBI": {
+      "lots": 16,
+      "net": 51409.0287840129
+     },
+     "GDX": {
+      "lots": 9,
+      "net": 148501.32550466587
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 13286.474958633105
+     }
+    },
+    "borrowingDollarDays": 125400000,
+    "minuteDrawdown": 26709.96376249958,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584022980,
+    "dailyDrawdown": 23989.959017163914,
+    "endEquity": null,
+    "strategyMark": 379867.28355386585,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     35776.49560265249,
+     177581.74209829787,
+     166509.0458529155
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3590.499394770066,
+     32185.996207882425,
+     10953.810577111966,
+     89166.70718268573,
+     62391.94553894119,
+     15069.27879955899,
+     66941.78150059655,
+     31342.83014163829,
+     24786.756480812153,
+     43437.677729868505
+    ],
+    "yearly": [
+     0,
+     3590.499394770066,
+     32185.996207882425,
+     162512.46329873888,
+     15069.27879955899,
+     82640.54475915135,
+     83868.50109376415
+    ],
+    "minimumRatio": {}
+   },
+   "portfolio-0": {
+    "mode": "portfolio",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 82,
+    "virtualTrades": 155,
+    "refused": 73,
+    "net": 869819.7150550911,
+    "interest": 82462.07630391103,
+    "costs": 0,
+    "worstLot": -13905.09007210072,
+    "openAtEnd": 0,
+    "newLots": 9,
+    "newLotsNet": 272664.18841404334,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 9,
+      "net": 103622.66117034011
+     },
+     "KRE": {
+      "lots": 45,
+      "net": 322350.21107201604
+     },
+     "XBI": {
+      "lots": 16,
+      "net": 132508.28939920192
+     },
+     "GDX": {
+      "lots": 9,
+      "net": 272664.18841404334
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 38674.364999489684
+     }
+    },
+    "borrowingDollarDays": 273624162.2811594,
+    "minuteDrawdown": 485573.5427059666,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 449008.21560025075,
+    "endEquity": 2307551.167194168,
+    "strategyMark": 869819.7150550911,
+    "dailyPercent": 0.296386756462397,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584043200,
+    "minutePercent": 0.31027878482212456,
+    "folds": [
+     34641.37553106117,
+     287223.9397476905,
+     547954.3997763394
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3161.8758682681346,
+     31479.49966279303,
+     11962.336339547379,
+     104508.83333119431,
+     122855.51413461362,
+     47897.25594233518,
+     193908.61684235075,
+     87149.53621642437,
+     80623.72428347054,
+     186272.52243409376
+    ],
+    "yearly": [
+     0,
+     3161.8758682681346,
+     31479.49966279303,
+     239326.6838053553,
+     47897.25594233518,
+     235642.87128343468,
+     312311.52849290473
+    ],
+    "minimumRatio": {
+     "U35": 2.3333541513655303,
+     "U50": 1.6333479059558713,
+     "U60": 1.361123254963226,
+     "L50": 1.91638173892504,
+     "L60": 1.6992917812998845,
+     "G50": 1.8866082335321313,
+     "G60": 1.673058165732034
+    }
+   },
+   "portfolio-2": {
+    "mode": "portfolio",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 82,
+    "virtualTrades": 155,
+    "refused": 73,
+    "net": 859394.8375501334,
+    "interest": 82194.76014515912,
+    "costs": 8558.48152568758,
+    "worstLot": -13958.064159492933,
+    "openAtEnd": 0,
+    "newLots": 9,
+    "newLotsNet": 270941.8573188193,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 9,
+      "net": 102622.66374342375
+     },
+     "KRE": {
+      "lots": 45,
+      "net": 316030.91876979853
+     },
+     "XBI": {
+      "lots": 16,
+      "net": 131633.05426958282
+     },
+     "GDX": {
+      "lots": 9,
+      "net": 270941.8573188193
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 38166.34344850879
+     }
+    },
+    "borrowingDollarDays": 272737158.6634825,
+    "minuteDrawdown": 484982.54870528355,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 448036.3705699777,
+    "endEquity": 2293698.8799708267,
+    "strategyMark": 859394.8375501334,
+    "dailyPercent": 0.29650339008879,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584043200,
+    "minutePercent": 0.31050799745123325,
+    "folds": [
+     34570.99567634794,
+     283815.0313242003,
+     541008.8105495851
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3144.0782982314395,
+     31426.9173781165,
+     11958.592959799382,
+     103883.15163143608,
+     120900.00110621401,
+     47073.28562675079,
+     192161.53298263735,
+     86410.92957365693,
+     79476.13349024788,
+     182960.21450304298
+    ],
+    "yearly": [
+     0,
+     3144.0782982314395,
+     31426.9173781165,
+     236741.74569744949,
+     47073.28562675079,
+     233542.35657976975,
+     307466.4539698154
+    ],
+    "minimumRatio": {
+     "U35": 2.3333376148870517,
+     "U50": 1.6333363304209358,
+     "U60": 1.3611136086841134,
+     "L50": 1.916328802060495,
+     "L60": 1.6992858916998863,
+     "G50": 1.8865954570769874,
+     "G60": 1.673047087249183
+    }
+   },
+   "portfolio-5": {
+    "mode": "portfolio",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 82,
+    "virtualTrades": 155,
+    "refused": 73,
+    "net": 841432.0361125139,
+    "interest": 81742.36903921676,
+    "costs": 21259.87312538499,
+    "worstLot": -14018.9948600372,
+    "openAtEnd": 0,
+    "newLots": 9,
+    "newLotsNet": 268169.47881975834,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 9,
+      "net": 101099.95567360938
+     },
+     "KRE": {
+      "lots": 45,
+      "net": 306436.32851843676
+     },
+     "XBI": {
+      "lots": 16,
+      "net": 128361.05862908602
+     },
+     "GDX": {
+      "lots": 9,
+      "net": 268169.47881975834
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 37365.214471623156
+     }
+    },
+    "borrowingDollarDays": 271236042.7210373,
+    "minuteDrawdown": 485599.9992602782,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 448132.09070337634,
+    "endEquity": 2270264.325530123,
+    "strategyMark": 841432.0361125139,
+    "dailyPercent": 0.2966781505859238,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584043200,
+    "minutePercent": 0.3108515423395935,
+    "folds": [
+     34465.48813026103,
+     278727.635607782,
+     528238.9123744708
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3117.3952846831653,
+     31348.092845577863,
+     11952.98228338013,
+     102946.38183501974,
+     117981.74889756416,
+     45846.52259181795,
+     187526.93553879048,
+     85206.41698922747,
+     77675.57889612042,
+     177829.98095033248
+    ],
+    "yearly": [
+     0,
+     3117.3952846831653,
+     31348.092845577863,
+     232881.11301596405,
+     45846.52259181795,
+     228331.29584587435,
+     299907.6165285965
+    ],
+    "minimumRatio": {
+     "U35": 2.333312820608868,
+     "U50": 1.6333189744262073,
+     "U60": 1.3610991453551726,
+     "L50": 1.9162493136115448,
+     "L60": 1.6992770627374019,
+     "G50": 1.8865763015591173,
+     "G60": 1.6730304779597363
+    }
+   },
+   "portfolio-10": {
+    "mode": "portfolio",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 82,
+    "virtualTrades": 154,
+    "refused": 72,
+    "net": 811949.1777147793,
+    "interest": 80996.15224543883,
+    "costs": 42070.23631816319,
+    "worstLot": -14117.317116305028,
+    "openAtEnd": 0,
+    "newLots": 9,
+    "newLotsNet": 263613.8109803681,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 9,
+      "net": 98594.20350195844
+     },
+     "KRE": {
+      "lots": 45,
+      "net": 290707.6525587215
+     },
+     "XBI": {
+      "lots": 16,
+      "net": 122984.69892767147
+     },
+     "GDX": {
+      "lots": 9,
+      "net": 263613.8109803681
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 36048.81174605989
+     }
+    },
+    "borrowingDollarDays": 268759959.7235016,
+    "minuteDrawdown": 486570.62437960017,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 448255.341140843,
+    "endEquity": 2231766.838450107,
+    "strategyMark": 811949.1777147793,
+    "dailyPercent": 0.29696891243926715,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584043200,
+    "minutePercent": 0.31142338787080925,
+    "folds": [
+     34289.807970933754,
+     270317.39576542,
+     507341.97397842555
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3072.9591372456325,
+     31216.84883368812,
+     11943.642853143021,
+     101389.75824263835,
+     113157.78011082989,
+     43826.214558808715,
+     179918.92421742494,
+     83230.02607609163,
+     74730.16522828816,
+     169462.85845662083
+    ],
+    "yearly": [
+     0,
+     3072.9591372456325,
+     31216.84883368812,
+     226491.18120661125,
+     43826.214558808715,
+     219777.27866495174,
+     287564.6953134738
+    ],
+    "minimumRatio": {
+     "U35": 2.333271524627301,
+     "U50": 1.633290067239111,
+     "U60": 1.3610750560325926,
+     "L50": 1.9160787894754785,
+     "L60": 1.6992623622947642,
+     "G50": 1.886544400128899,
+     "G60": 1.6730028183027819
+    }
+   }
+  },
+  "S-add-GDX": {
+   "fixed-0": {
+    "mode": "fixed",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 81,
+    "virtualTrades": 180,
+    "refused": 99,
+    "net": 288668.38297971437,
+    "interest": 39901.3698630137,
+    "costs": 0,
+    "worstLot": -10003.934407397837,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 93064.47391401512,
+    "newLotYears": 5,
+    "bySymbol": {
+     "GDX": {
+      "lots": 21,
+      "net": 93064.47391401512
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 115044.32806519062
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 50654.070266339724
+     },
+     "XBI": {
+      "lots": 12,
+      "net": 29434.208485570136
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 471.3022485987515
+     }
+    },
+    "borrowingDollarDays": 132400000,
+    "minuteDrawdown": 26309.782346361004,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584022980,
+    "dailyDrawdown": 23587.057596280014,
+    "endEquity": null,
+    "strategyMark": 288668.38297971437,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     41004.86166222504,
+     141153.62085932272,
+     106509.90045816661
+    ],
+    "regimes": [
+     0,
+     0,
+     775.7195665917006,
+     7777.806951315926,
+     32451.335144317414,
+     10966.241100017825,
+     45553.311549945065,
+     63413.60146672517,
+     21220.466742634657,
+     36482.21293946722,
+     26177.3386179847,
+     3791.7338156579935,
+     40058.61508505669
+    ],
+    "yearly": [
+     0,
+     8553.526517907627,
+     32451.335144317414,
+     119933.15411668806,
+     21220.466742634657,
+     53292.99902774676,
+     53216.90143041985
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-2": {
+    "mode": "fixed",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 81,
+    "virtualTrades": 180,
+    "refused": 99,
+    "net": 285331.2857976773,
+    "interest": 39901.3698630137,
+    "costs": 3305.059672640399,
+    "worstLot": -10039.985897309505,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 92217.28360190135,
+    "newLotYears": 5,
+    "bySymbol": {
+     "GDX": {
+      "lots": 21,
+      "net": 92217.28360190135
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 114710.08348425072
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 49111.44099970308
+     },
+     "XBI": {
+      "lots": 12,
+      "net": 28941.83409897108
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 350.64361285114705
+     }
+    },
+    "borrowingDollarDays": 132400000,
+    "minuteDrawdown": 26389.882645812053,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584022980,
+    "dailyDrawdown": 23667.70233179388,
+    "endEquity": null,
+    "strategyMark": 285331.2857976773,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     40848.20960520784,
+     140249.39361657845,
+     104233.682575891
+    ],
+    "regimes": [
+     0,
+     0,
+     715.4820186560155,
+     7734.50267526206,
+     32398.224911289766,
+     10963.75300695069,
+     45211.806135097795,
+     63144.89839556503,
+     20928.936078964936,
+     35577.61504235747,
+     25964.973114942113,
+     3289.588891903695,
+     39401.50552668772
+    ],
+    "yearly": [
+     0,
+     8449.984693918075,
+     32398.224911289766,
+     119320.45753761352,
+     20928.936078964936,
+     52220.3258209115,
+     52013.3567549795
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-5": {
+    "mode": "fixed",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 81,
+    "virtualTrades": 180,
+    "refused": 99,
+    "net": 280277.66178612266,
+    "interest": 39901.3698630137,
+    "costs": 8260.17162562441,
+    "worstLot": -10094.036107072092,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 90896.65339832746,
+    "newLotYears": 5,
+    "bySymbol": {
+     "GDX": {
+      "lots": 21,
+      "net": 90896.65339832746
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 114208.96717099725
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 46798.65349350137
+     },
+     "XBI": {
+      "lots": 12,
+      "net": 28203.641615314435
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 169.74610798215713
+     }
+    },
+    "borrowingDollarDays": 132400000,
+    "minuteDrawdown": 26509.97304978662,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584022980,
+    "dailyDrawdown": 23788.608981739664,
+    "endEquity": null,
+    "strategyMark": 280277.66178612266,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     40613.348950009575,
+     138893.73058397823,
+     100770.58225213483
+    ],
+    "regimes": [
+     0,
+     0,
+     625.1708523356556,
+     7669.578723157303,
+     32318.599374516616,
+     10960.02273248721,
+     44699.80401388751,
+     62742.04521541479,
+     20491.858622188738,
+     34170.91649546122,
+     25646.584054908337,
+     2536.747926754848,
+     38416.333775010426
+    ],
+    "yearly": [
+     0,
+     8294.749575492959,
+     32318.599374516616,
+     118401.87196178951,
+     20491.858622188738,
+     50561.640302912536,
+     50208.941949222295
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-10": {
+    "mode": "fixed",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 83,
+    "virtualTrades": 181,
+    "refused": 98,
+    "net": 263570.21845239203,
+    "interest": 39117.80821917808,
+    "costs": 16903.007617705,
+    "worstLot": -10184.047795058383,
+    "openAtEnd": 0,
+    "newLots": 23,
+    "newLotsNet": 81359.13968962283,
+    "newLotYears": 5,
+    "bySymbol": {
+     "GDX": {
+      "lots": 23,
+      "net": 81359.13968962283
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 113374.44080317166
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 41993.842654755106
+     },
+     "XBI": {
+      "lots": 12,
+      "net": 26974.30408259123
+     },
+     "XRT": {
+      "lots": 3,
+      "net": -131.50877774878768
+     }
+    },
+    "borrowingDollarDays": 129800000,
+    "minuteDrawdown": 26709.96376249958,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584022980,
+    "dailyDrawdown": 23989.959017163914,
+    "endEquity": null,
+    "strategyMark": 263570.21845239203,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     32884.00490877997,
+     136636.0979412761,
+     94050.11560233595
+    ],
+    "regimes": [
+     0,
+     0,
+     -1995.8859287746463,
+     2693.894629672192,
+     32185.996207882425,
+     10953.810577111959,
+     43847.14913271103,
+     62071.15984947029,
+     19763.97838198283,
+     31828.29264163875,
+     25116.3597161707,
+     1283.0157700082054,
+     35822.447474518296
+    ],
+    "yearly": [
+     0,
+     698.0087008975456,
+     32185.996207882425,
+     116872.11955929328,
+     19763.97838198283,
+     47799.3738109,
+     46250.741791435954
+    ],
+    "minimumRatio": {}
+   },
+   "portfolio-0": {
+    "mode": "portfolio",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 81,
+    "virtualTrades": 180,
+    "refused": 99,
+    "net": 531511.1640438034,
+    "interest": 72674.63724319958,
+    "costs": 0,
+    "worstLot": -12097.332500683144,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 139926.46905806146,
+    "newLotYears": 5,
+    "bySymbol": {
+     "GDX": {
+      "lots": 21,
+      "net": 139926.46905806146
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 147079.12683797337
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 173872.32188681088
+     },
+     "XBI": {
+      "lots": 12,
+      "net": 69772.8622436766
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 860.3840172808268
+     }
+    },
+    "borrowingDollarDays": 241147659.94334403,
+    "minuteDrawdown": 495254.95541925915,
+    "minuteDrawdownPeak": 1640703600,
+    "minuteDrawdownTrough": 1665668160,
+    "dailyDrawdown": 462524.8701900451,
+    "endEquity": 1831509.4979529083,
+    "strategyMark": 531511.1640438034,
+    "dailyPercent": 0.30098651062351606,
+    "dailyPercentPeak": 1640638800,
+    "dailyPercentTrough": 1665777600,
+    "minutePercent": 0.3215954927901442,
+    "folds": [
+     40052.372418724,
+     212853.41815898186,
+     278605.3734660975
+    ],
+    "regimes": [
+     0,
+     0,
+     831.6036780644772,
+     7403.867698362757,
+     31816.901042296766,
+     12090.344421751543,
+     46820.00789707593,
+     96499.12982047684,
+     57443.93601967755,
+     81906.78963292993,
+     58799.68105567811,
+     8396.531256895221,
+     129502.37152059423
+    ],
+    "yearly": [
+     0,
+     8235.471376427235,
+     31816.901042296766,
+     155409.4821393043,
+     57443.93601967755,
+     118786.92272152801,
+     159818.45074456948
+    ],
+    "minimumRatio": {
+     "U35": 2.3333554303300024,
+     "U50": 1.6333488012310016,
+     "U60": 1.3611240010258345,
+     "L50": 1.911845178768071,
+     "L60": 1.6946687119527535,
+     "G50": 1.8869192146492002,
+     "G60": 1.672342507559954
+    }
+   },
+   "portfolio-2": {
+    "mode": "portfolio",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 81,
+    "virtualTrades": 180,
+    "refused": 99,
+    "net": 522056.6184851882,
+    "interest": 72483.0501383731,
+    "costs": 7807.048187452915,
+    "worstLot": -12143.01492957116,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 137816.6825177362,
+    "newLotYears": 5,
+    "bySymbol": {
+     "GDX": {
+      "lots": 21,
+      "net": 137816.6825177362
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 146391.28848250117
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 168831.6325530407
+     },
+     "XBI": {
+      "lots": 12,
+      "net": 68456.06184542141
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 560.9530864886765
+     }
+    },
+    "borrowingDollarDays": 240511939.09551063,
+    "minuteDrawdown": 496061.3935014531,
+    "minuteDrawdownPeak": 1640703600,
+    "minuteDrawdownTrough": 1665668160,
+    "dailyDrawdown": 463449.55866556475,
+    "endEquity": 1819411.377042553,
+    "strategyMark": 522056.6184851882,
+    "dailyPercent": 0.30221433373936285,
+    "dailyPercentPeak": 1640638800,
+    "dailyPercentTrough": 1665777600,
+    "minutePercent": 0.32278801052222855,
+    "folds": [
+     39890.480267161336,
+     211020.82983758976,
+     271145.30838043714
+    ],
+    "regimes": [
+     0,
+     0,
+     770.3430206221719,
+     7361.816174217261,
+     31758.3210723219,
+     12084.49471404995,
+     46397.05120315381,
+     95906.33567212071,
+     56632.94824826528,
+     79444.36309689394,
+     58052.969905075326,
+     6996.160353439511,
+     126651.81502502837
+    ],
+    "yearly": [
+     0,
+     8132.1591948394325,
+     31758.3210723219,
+     154387.88158932448,
+     56632.94824826528,
+     115778.03126040369,
+     155367.27712003345
+    ],
+    "minimumRatio": {
+     "U35": 2.3333388850619805,
+     "U50": 1.6333372195433864,
+     "U60": 1.3611143496194884,
+     "L50": 1.911813596805959,
+     "L60": 1.6946329543966003,
+     "G50": 1.886904277572559,
+     "G60": 1.6722808604461776
+    }
+   },
+   "portfolio-5": {
+    "mode": "portfolio",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 81,
+    "virtualTrades": 180,
+    "refused": 99,
+    "net": 507871.75932164845,
+    "interest": 72194.4201015999,
+    "costs": 19401.501045215013,
+    "worstLot": -12209.3913832143,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 134558.37637468812,
+    "newLotYears": 5,
+    "bySymbol": {
+     "GDX": {
+      "lots": 21,
+      "net": 134558.37637468812
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 145361.49222284945
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 161344.3849461698
+     },
+     "XBI": {
+      "lots": 12,
+      "net": 66493.3674508821
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 114.13832705895766
+     }
+    },
+    "borrowingDollarDays": 239554212.15530875,
+    "minuteDrawdown": 497356.1829373193,
+    "minuteDrawdownPeak": 1640703600,
+    "minuteDrawdownTrough": 1665668160,
+    "dailyDrawdown": 464923.6820921111,
+    "endEquity": 1801245.868508182,
+    "strategyMark": 507871.75932164845,
+    "dailyPercent": 0.3041196378841782,
+    "dailyPercentPeak": 1640638800,
+    "dailyPercentTrough": 1665777600,
+    "minutePercent": 0.3246384800154102,
+    "folds": [
+     39647.83233939708,
+     208281.68871984564,
+     259942.23826240574
+    ],
+    "regimes": [
+     0,
+     0,
+     678.5039499496206,
+     7298.788526464604,
+     31670.539862982856,
+     12075.729016812169,
+     45763.85741266553,
+     95020.00557354439,
+     55422.09671682355,
+     75663.07139835047,
+     56937.42958018556,
+     4920.8844170640805,
+     122420.85286680562
+    ],
+    "yearly": [
+     0,
+     7977.292476414224,
+     31670.539862982856,
+     152859.5920030221,
+     55422.09671682355,
+     111181.08250249684,
+     148761.1557599089
+    ],
+    "minimumRatio": {
+     "U35": 2.3333140775972567,
+     "U50": 1.6333198543180798,
+     "U60": 1.3610998785984,
+     "L50": 1.9117662177402839,
+     "L60": 1.6945793069809294,
+     "G50": 1.8868818812105146,
+     "G60": 1.6721883137056945
+    }
+   },
+   "portfolio-10": {
+    "mode": "portfolio",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 83,
+    "virtualTrades": 181,
+    "refused": 98,
+    "net": 466708.1640574869,
+    "interest": 69674.08002352725,
+    "costs": 38239.047430084735,
+    "worstLot": -12128.50050425806,
+    "openAtEnd": 0,
+    "newLots": 23,
+    "newLotsNet": 119702.03499104205,
+    "newLotYears": 5,
+    "bySymbol": {
+     "GDX": {
+      "lots": 23,
+      "net": 119702.03499104205
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 141448.6267641103
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 143887.06155213073
+     },
+     "XBI": {
+      "lots": 12,
+      "net": 62285.216141203855
+     },
+     "XRT": {
+      "lots": 3,
+      "net": -614.7753910001193
+     }
+    },
+    "borrowingDollarDays": 231191265.53261325,
+    "minuteDrawdown": 491824.21457379847,
+    "minuteDrawdownPeak": 1640703600,
+    "minuteDrawdownTrough": 1665668160,
+    "dailyDrawdown": 460180.862450439,
+    "endEquity": 1741149.4197632223,
+    "strategyMark": 466708.1640574869,
+    "dailyPercent": 0.3072907383705196,
+    "dailyPercentPeak": 1640638800,
+    "dailyPercentTrough": 1665777600,
+    "minutePercent": 0.32771888773683044,
+    "folds": [
+     31128.566138620354,
+     200614.9919965501,
+     234964.6059223165
+    ],
+    "regimes": [
+     0,
+     0,
+     -2020.67029901575,
+     2110.9507447890205,
+     31038.285692847083,
+     11875.324729653137,
+     44025.3544652643,
+     92114.41413700681,
+     52599.89866462583,
+     68371.62231196149,
+     54260.25080480758,
+     1507.2342030881555,
+     110825.49860245927
+    ],
+    "yearly": [
+     0,
+     90.28044577327046,
+     31038.285692847083,
+     148015.09333192426,
+     52599.89866462583,
+     102026.18749712332,
+     132938.41842519317
+    ],
+    "minimumRatio": {
+     "U35": 2.3332715210039225,
+     "U50": 1.6332900647027455,
+     "U60": 1.361075053918955,
+     "L50": 1.9114398438083604,
+     "L60": 1.694166112135311,
+     "G50": 1.8865435195757216,
+     "G60": 1.6717408127343307
+    }
+   }
+  },
+  "P-add-XOP": {
+   "fixed-0": {
+    "mode": "fixed",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 76,
+    "virtualTrades": 176,
+    "refused": 100,
+    "net": 330981.4075339303,
+    "interest": 44180.82191780823,
+    "costs": 0,
+    "worstLot": -10003.934407397837,
+    "openAtEnd": 0,
+    "newLots": 13,
+    "newLotsNet": 63498.60185892218,
+    "newLotYears": 5,
+    "bySymbol": {
+     "XOP": {
+      "lots": 13,
+      "net": 63498.60185892218
+     },
+     "VGT": {
+      "lots": 10,
+      "net": 111388.90623383358
+     },
+     "KRE": {
+      "lots": 36,
+      "net": 47579.630832508235
+     },
+     "XBI": {
+      "lots": 13,
+      "net": 30938.017037122438
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 77576.25157154383
+     }
+    },
+    "borrowingDollarDays": 146600000,
+    "minuteDrawdown": 34208.95960348539,
+    "minuteDrawdownPeak": 1599053400,
+    "minuteDrawdownTrough": 1603978500,
+    "dailyDrawdown": 30944.91362302784,
+    "endEquity": null,
+    "strategyMark": 330981.4075339303,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     47143.02836875591,
+     141999.53399299763,
+     141838.84517217678
+    ],
+    "regimes": [
+     0,
+     18795.566180531838,
+     2813.2457696144593,
+     -6129.562972389091,
+     31663.77939099871,
+     10966.241100017825,
+     4876.281997879923,
+     38262.76238955035,
+     87894.24850554953,
+     90065.86024360475,
+     6307.592513973825,
+     5406.77732954151,
+     40058.61508505669
+    ],
+    "yearly": [
+     0,
+     15479.248977757206,
+     31663.77939099871,
+     54105.2854874481,
+     87894.24850554953,
+     83118.70992997452,
+     58720.13524220226
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-2": {
+    "mode": "fixed",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 76,
+    "virtualTrades": 176,
+    "refused": 100,
+    "net": 328196.8873667487,
+    "interest": 44180.82191780823,
+    "costs": 3114.490561544672,
+    "worstLot": -10039.985897309505,
+    "openAtEnd": 0,
+    "newLots": 13,
+    "newLotsNet": 62948.6472036302,
+    "newLotYears": 5,
+    "bySymbol": {
+     "XOP": {
+      "lots": 13,
+      "net": 62948.6472036302
+     },
+     "VGT": {
+      "lots": 10,
+      "net": 110936.42472928492
+     },
+     "KRE": {
+      "lots": 36,
+      "net": 46118.323570394816
+     },
+     "XBI": {
+      "lots": 13,
+      "net": 30809.9560849813
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 77383.5357784574
+     }
+    },
+    "borrowingDollarDays": 146600000,
+    "minuteDrawdown": 34452.013598995865,
+    "minuteDrawdownPeak": 1599053400,
+    "minuteDrawdownTrough": 1603978500,
+    "dailyDrawdown": 31188.614271006634,
+    "endEquity": null,
+    "strategyMark": 328196.8873667487,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     46862.81260711212,
+     140972.75668166653,
+     140361.31807797006
+    ],
+    "regimes": [
+     0,
+     18771.329722806448,
+     2747.3980892504223,
+     -6226.654220560669,
+     31570.739015615924,
+     10963.75300695069,
+     4551.007984189637,
+     37965.71801168322,
+     87492.27767884298,
+     89836.6052223969,
+     6199.074811450206,
+     4924.1325174351805,
+     39401.505526687775
+    ],
+    "yearly": [
+     0,
+     15292.0735914962,
+     31570.739015615924,
+     53480.479002823544,
+     87492.27767884298,
+     82826.67598301603,
+     57534.64209495403
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-5": {
+    "mode": "fixed",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 76,
+    "virtualTrades": 176,
+    "refused": 100,
+    "net": 323463.93759513216,
+    "interest": 44180.82191780823,
+    "costs": 7783.916236924562,
+    "worstLot": -10094.036107072092,
+    "openAtEnd": 0,
+    "newLots": 13,
+    "newLotsNet": 62173.17021495506,
+    "newLotYears": 5,
+    "bySymbol": {
+     "XOP": {
+      "lots": 13,
+      "net": 62173.17021495506
+     },
+     "VGT": {
+      "lots": 10,
+      "net": 110258.04166399431
+     },
+     "KRE": {
+      "lots": 36,
+      "net": 43927.45810995523
+     },
+     "XBI": {
+      "lots": 13,
+      "net": 30010.661052787356
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 77094.60655344029
+     }
+    },
+    "borrowingDollarDays": 146600000,
+    "minuteDrawdown": 34816.4123928647,
+    "minuteDrawdownPeak": 1599053400,
+    "minuteDrawdownTrough": 1603978500,
+    "dailyDrawdown": 31553.98255883102,
+    "endEquity": null,
+    "strategyMark": 323463.93759513216,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     46491.741755840296,
+     139433.3604128044,
+     137538.83542648747
+    ],
+    "regimes": [
+     0,
+     18734.99320447755,
+     2697.718664185206,
+     -6372.218310772996,
+     31431.24819795054,
+     10960.02273248721,
+     4063.3407972477726,
+     37520.3741168299,
+     86889.62276623951,
+     88885.59494422565,
+     6036.37960526807,
+     4200.527101983374,
+     38416.33377501037
+    ],
+    "yearly": [
+     0,
+     15060.493557889758,
+     31431.24819795054,
+     52543.737646564885,
+     86889.62276623951,
+     81781.54437688293,
+     55757.29104960454
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-10": {
+    "mode": "fixed",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 76,
+    "virtualTrades": 175,
+    "refused": 99,
+    "net": 314583.77034323826,
+    "interest": 44090.41095890412,
+    "costs": 15559.04841453112,
+    "worstLot": -10184.047795058383,
+    "openAtEnd": 0,
+    "newLots": 13,
+    "newLotsNet": 60836.765206727454,
+    "newLotYears": 5,
+    "bySymbol": {
+     "XOP": {
+      "lots": 13,
+      "net": 60836.765206727454
+     },
+     "VGT": {
+      "lots": 10,
+      "net": 109128.30682899005
+     },
+     "KRE": {
+      "lots": 36,
+      "net": 39325.68828048514
+     },
+     "XBI": {
+      "lots": 13,
+      "net": 28679.567327844692
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 76613.44269919096
+     }
+    },
+    "borrowingDollarDays": 146300000,
+    "minuteDrawdown": 35423.25833630067,
+    "minuteDrawdownPeak": 1599053400,
+    "minuteDrawdownTrough": 1603978500,
+    "dailyDrawdown": 32162.443034158932,
+    "endEquity": null,
+    "strategyMark": 314583.77034323826,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     45828.8083071048,
+     136869.75044258105,
+     131885.2115935524
+    ],
+    "regimes": [
+     0,
+     18674.480740886866,
+     2570.009498652904,
+     -6614.631236231451,
+     31198.949303796486,
+     10953.810577111959,
+     3251.211725687157,
+     36778.727490735415,
+     85886.00064904652,
+     87301.84456089741,
+     5765.437638529111,
+     2995.4819196076132,
+     35822.44747451827
+    ],
+    "yearly": [
+     0,
+     14629.859003308318,
+     31198.949303796486,
+     50983.74979353453,
+     85886.00064904652,
+     80041.05048335248,
+     51844.16111019993
+    ],
+    "minimumRatio": {}
+   },
+   "portfolio-0": {
+    "mode": "portfolio",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 76,
+    "virtualTrades": 176,
+    "refused": 100,
+    "net": 672729.3693850391,
+    "interest": 78613.5598231891,
+    "costs": 0,
+    "worstLot": -14788.260956591635,
+    "openAtEnd": 0,
+    "newLots": 13,
+    "newLotsNet": 148794.26257083486,
+    "newLotYears": 5,
+    "bySymbol": {
+     "XOP": {
+      "lots": 13,
+      "net": 148794.26257083486
+     },
+     "VGT": {
+      "lots": 10,
+      "net": 127916.8393499091
+     },
+     "KRE": {
+      "lots": 36,
+      "net": 180004.70331166068
+     },
+     "XBI": {
+      "lots": 13,
+      "net": 76844.86081399428
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 139168.70333864042
+     }
+    },
+    "borrowingDollarDays": 260854084.8678549,
+    "minuteDrawdown": 391448.42009553825,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1655405580,
+    "dailyDrawdown": 376557.65094433725,
+    "endEquity": 1936215.775249541,
+    "strategyMark": 672729.3693850391,
+    "dailyPercent": 0.3455145083008428,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.36923162917677144,
+    "folds": [
+     43421.224567632904,
+     243003.3297747706,
+     386304.8150426356
+    ],
+    "regimes": [
+     0,
+     16491.663511228777,
+     2342.476129891671,
+     -6558.0127766186015,
+     31145.097703131058,
+     12166.385487567793,
+     3928.6669875952066,
+     42813.297141074756,
+     184094.98015853282,
+     220706.86621431366,
+     15376.940139406535,
+     13303.822654092102,
+     136917.1860348233
+    ],
+    "yearly": [
+     0,
+     12276.126864501846,
+     31145.097703131058,
+     58908.349616237756,
+     184094.98015853282,
+     203134.74762526894,
+     183170.06741736666
+    ],
+    "minimumRatio": {
+     "U35": 2.3333577540844934,
+     "U50": 1.6333504278591455,
+     "U60": 1.3611253565492878,
+     "L50": 1.9098252123907662,
+     "L60": 1.692216266434665,
+     "G50": 1.887484498760138,
+     "G60": 1.6742057159054826
+    }
+   },
+   "portfolio-2": {
+    "mode": "portfolio",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 76,
+    "virtualTrades": 176,
+    "refused": 100,
+    "net": 664522.4271339409,
+    "interest": 78434.50307608515,
+    "costs": 7335.060657582749,
+    "worstLot": -14828.366639497515,
+    "openAtEnd": 0,
+    "newLots": 13,
+    "newLotsNet": 147418.15695379343,
+    "newLotYears": 5,
+    "bySymbol": {
+     "XOP": {
+      "lots": 13,
+      "net": 147418.15695379343
+     },
+     "VGT": {
+      "lots": 10,
+      "net": 127020.60790503037
+     },
+     "KRE": {
+      "lots": 36,
+      "net": 175038.11816569255
+     },
+     "XBI": {
+      "lots": 13,
+      "net": 76571.56643748269
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 138473.97767194154
+     }
+    },
+    "borrowingDollarDays": 260259942.0251917,
+    "minuteDrawdown": 390571.2251467651,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1655405580,
+    "dailyDrawdown": 375722.7090716276,
+    "endEquity": 1925625.982315885,
+    "strategyMark": 664522.4271339409,
+    "dailyPercent": 0.3458914548286219,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.3695950968191283,
+    "folds": [
+     43131.620568855855,
+     240774.70030645042,
+     380616.1062586346
+    ],
+    "regimes": [
+     0,
+     16470.397883916885,
+     2277.6286703777005,
+     -6650.911421148518,
+     31034.505435709787,
+     12157.55511773072,
+     3560.4420814380574,
+     42268.62484000561,
+     182788.07826727603,
+     219639.00550717552,
+     15049.82574333984,
+     11870.761648654414,
+     134056.51335946482
+    ],
+    "yearly": [
+     0,
+     12097.115133146068,
+     31034.505435709787,
+     57986.622039174385,
+     182788.07826727603,
+     201956.37567553401,
+     178659.73058310058
+    ],
+    "minimumRatio": {
+     "U35": 2.33334121040523,
+     "U50": 1.6333388472836607,
+     "U60": 1.3611157060697172,
+     "L50": 1.9098084228957897,
+     "L60": 1.6921998645635468,
+     "G50": 1.8874699047005752,
+     "G60": 1.6741922568296572
+    }
+   },
+   "portfolio-5": {
+    "mode": "portfolio",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 76,
+    "virtualTrades": 176,
+    "refused": 100,
+    "net": 650352.977336725,
+    "interest": 78133.4160835931,
+    "costs": 18232.50692301342,
+    "worstLot": -14889.623554133286,
+    "openAtEnd": 0,
+    "newLots": 13,
+    "newLotsNet": 145322.56179469515,
+    "newLotYears": 5,
+    "bySymbol": {
+     "XOP": {
+      "lots": 13,
+      "net": 145322.56179469515
+     },
+     "VGT": {
+      "lots": 10,
+      "net": 125676.62141771318
+     },
+     "KRE": {
+      "lots": 36,
+      "net": 167503.82032633957
+     },
+     "XBI": {
+      "lots": 13,
+      "net": 74439.74823937425
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 137410.22555860257
+     }
+    },
+    "borrowingDollarDays": 259260880.64101377,
+    "minuteDrawdown": 390696.39769919193,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1655405580,
+    "dailyDrawdown": 375924.1613137005,
+    "endEquity": 1907670.6658919519,
+    "strategyMark": 650352.977336725,
+    "dailyPercent": 0.34645628874205003,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.3701397334653657,
+    "folds": [
+     42751.846396887115,
+     237469.4030150875,
+     370131.72792475036
+    ],
+    "regimes": [
+     0,
+     16438.51538419891,
+     2232.2238869607972,
+     -6790.7705325018815,
+     30871.877658229292,
+     12145.512553751112,
+     3009.801151820655,
+     41458.842133257895,
+     180855.24717625784,
+     216190.67065618566,
+     14546.20279557869,
+     9730.403536810365,
+     129664.45093617565
+    ],
+    "yearly": [
+     0,
+     11879.968738657824,
+     30871.877658229292,
+     56614.15583882966,
+     180855.24717625784,
+     198364.3399718004,
+     171767.38795294997
+    ],
+    "minimumRatio": {
+     "U35": 2.333316405087062,
+     "U50": 1.6333214835609433,
+     "U60": 1.3611012363007864,
+     "L50": 1.909783190319792,
+     "L60": 1.6921751950500123,
+     "G50": 1.8874479652336307,
+     "G60": 1.6741720012796542
+    }
+   },
+   "portfolio-10": {
+    "mode": "portfolio",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 76,
+    "virtualTrades": 175,
+    "refused": 99,
+    "net": 623804.9829597396,
+    "interest": 77338.38082976172,
+    "costs": 36105.134475543535,
+    "worstLot": -14989.415089674643,
+    "openAtEnd": 0,
+    "newLots": 13,
+    "newLotsNet": 141801.68796877196,
+    "newLotYears": 5,
+    "bySymbol": {
+     "XOP": {
+      "lots": 13,
+      "net": 141801.68796877196
+     },
+     "VGT": {
+      "lots": 10,
+      "net": 123445.6598635893
+     },
+     "KRE": {
+      "lots": 36,
+      "net": 152000.85843700537
+     },
+     "XBI": {
+      "lots": 13,
+      "net": 70916.83396777815
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 135639.94272259483
+     }
+    },
+    "borrowingDollarDays": 256622809.11693645,
+    "minuteDrawdown": 390849.52487993985,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1655405580,
+    "dailyDrawdown": 376204.8202708948,
+    "endEquity": 1874535.8828330776,
+    "strategyMark": 623804.9829597396,
+    "dailyPercent": 0.34739611998380493,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.37104595877333174,
+    "folds": [
+     42070.25009320261,
+     231976.02099264014,
+     349758.7118738969
+    ],
+    "regimes": [
+     0,
+     16385.42035220105,
+     2109.1210272935423,
+     -7022.875441202517,
+     30598.58415491053,
+     12124.359768349183,
+     2095.3614582633745,
+     40113.575347058235,
+     177642.72441896936,
+     210488.5846623762,
+     13717.899692638312,
+     6227.0519963250845,
+     119325.17552255729
+    ],
+    "yearly": [
+     0,
+     11471.665938292075,
+     30598.58415491053,
+     54333.29657367079,
+     177642.72441896936,
+     192429.48177307856,
+     157329.23010081833
+    ],
+    "minimumRatio": {
+     "U35": 2.333275089956331,
+     "U50": 1.6332925629694317,
+     "U60": 1.36107713580786,
+     "L50": 1.9097409800674225,
+     "L60": 1.6921338658987388,
+     "G50": 1.8874112431647339,
+     "G60": 1.6741380278033282
+    }
+   }
+  },
+  "S-add-XOP": {
+   "fixed-0": {
+    "mode": "fixed",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 73,
+    "virtualTrades": 165,
+    "refused": 92,
+    "net": 276704.0609771771,
+    "interest": 38153.424657534255,
+    "costs": 0,
+    "worstLot": -10003.934407397837,
+    "openAtEnd": 0,
+    "newLots": 3,
+    "newLotsNet": 24906.281977492363,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 12,
+      "net": 129550.56112259493
+     },
+     "XOP": {
+      "lots": 3,
+      "net": 24906.281977492363
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 66650.89329019883
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 41679.21042269676
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 13917.11416419427
+     }
+    },
+    "borrowingDollarDays": 126600000,
+    "minuteDrawdown": 31041.962044415624,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584978240,
+    "dailyDrawdown": 27648.88064780359,
+    "endEquity": null,
+    "strategyMark": 276704.0609771771,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     36145.72640834523,
+     102798.60038773263,
+     137759.73418109925
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3694.391264027823,
+     32451.33514431741,
+     10966.241100017833,
+     1802.3464321466963,
+     63413.601466725144,
+     26616.411388842957,
+     78762.25772826438,
+     13532.084038236731,
+     5406.777329541481,
+     40058.61508505666
+    ],
+    "yearly": [
+     0,
+     3694.391264027823,
+     32451.33514431741,
+     76182.18899888967,
+     26616.411388842957,
+     79039.59893889708,
+     58720.135242202174
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-2": {
+    "mode": "fixed",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 73,
+    "virtualTrades": 164,
+    "refused": 91,
+    "net": 274063.6338889066,
+    "interest": 38153.424657534255,
+    "costs": 2982.4560196895695,
+    "worstLot": -10039.985897309505,
+    "openAtEnd": 0,
+    "newLots": 3,
+    "newLotsNet": 24775.791042340446,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 12,
+      "net": 129008.71118594162
+     },
+     "XOP": {
+      "lots": 3,
+      "net": 24775.791042340446
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 65101.625526161646
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 41386.62069347737
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 13790.885440985574
+     }
+    },
+    "borrowingDollarDays": 126600000,
+    "minuteDrawdown": 31317.32729491425,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584978240,
+    "dailyDrawdown": 27924.92437888543,
+    "endEquity": null,
+    "strategyMark": 274063.6338889066,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     36071.82118209085,
+     101908.03072886108,
+     136083.7819779547
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3673.5962708010866,
+     32398.224911289763,
+     10963.753006950697,
+     1478.313799201067,
+     63144.89839556503,
+     26321.06552714428,
+     78333.98110812821,
+     13424.162825703621,
+     4924.132517435151,
+     39401.50552668772
+    ],
+    "yearly": [
+     0,
+     3673.5962708010866,
+     32398.224911289763,
+     75586.9652017168,
+     26321.06552714428,
+     78549.13988300075,
+     57534.642094953946
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-5": {
+    "mode": "fixed",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 73,
+    "virtualTrades": 164,
+    "refused": 91,
+    "net": 269497.6729854543,
+    "interest": 38153.424657534255,
+    "costs": 7453.904325071172,
+    "worstLot": -10094.036107072092,
+    "openAtEnd": 0,
+    "newLots": 3,
+    "newLotsNet": 24580.152458904333,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 12,
+      "net": 128196.3424653216
+     },
+     "XOP": {
+      "lots": 3,
+      "net": 24580.152458904333
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 62778.885250244115
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 40340.65583058142
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 13601.636980402825
+     }
+    },
+    "borrowingDollarDays": 126600000,
+    "minuteDrawdown": 31730.168749934608,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584978240,
+    "dailyDrawdown": 28338.78304617448,
+    "endEquity": null,
+    "strategyMark": 269497.6729854543,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     35961.01874392823,
+     100572.84383400116,
+     132963.81040752493
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3642.41936941162,
+     32318.599374516612,
+     10960.022732487218,
+     992.5077528059264,
+     62742.04521541478,
+     25878.26813329324,
+     77084.58762316799,
+     13262.361907363054,
+     4200.527101983433,
+     38416.333775010455
+    ],
+    "yearly": [
+     0,
+     3642.41936941162,
+     32318.599374516612,
+     74694.57570070792,
+     25878.26813329324,
+     77206.51935792028,
+     55757.29104960465
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-10": {
+    "mode": "fixed",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 73,
+    "virtualTrades": 163,
+    "refused": 90,
+    "net": 260940.57438125636,
+    "interest": 38063.013698630144,
+    "costs": 14899.317490984715,
+    "worstLot": -10184.047795058383,
+    "openAtEnd": 0,
+    "newLots": 3,
+    "newLotsNet": 24254.348744031122,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 12,
+      "net": 126843.47667383976
+     },
+     "XOP": {
+      "lots": 3,
+      "net": 24254.348744031122
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 57957.49971907397
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 38598.774285678424
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 13286.474958633105
+     }
+    },
+    "borrowingDollarDays": 126300000,
+    "minuteDrawdown": 32417.687936267328,
+    "minuteDrawdownPeak": 1582134540,
+    "minuteDrawdownTrough": 1584978240,
+    "dailyDrawdown": 29027.996231360194,
+    "endEquity": null,
+    "strategyMark": 260940.57438125636,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     35776.49560265249,
+     98349.31081329024,
+     126814.76796531363
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3590.499394770066,
+     32185.996207882425,
+     10953.810577111966,
+     183.47810311483772,
+     62071.15984947029,
+     25140.862283593146,
+     75003.92934202019,
+     12992.90922916762,
+     2995.481919607555,
+     35822.44747451827
+    ],
+    "yearly": [
+     0,
+     3590.499394770066,
+     32185.996207882425,
+     73208.4485296971,
+     25140.862283593146,
+     74970.60685511376,
+     51844.16111019987
+    ],
+    "minimumRatio": {}
+   },
+   "portfolio-0": {
+    "mode": "portfolio",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 73,
+    "virtualTrades": 165,
+    "refused": 92,
+    "net": 548282.983421808,
+    "interest": 67094.63690656365,
+    "costs": 0,
+    "worstLot": -11575.463935842825,
+    "openAtEnd": 0,
+    "newLots": 3,
+    "newLotsNet": 57761.28316192713,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 12,
+      "net": 159997.47655898714
+     },
+     "XOP": {
+      "lots": 3,
+      "net": 57761.28316192713
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 203962.70576919374
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 94776.49043071181
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 31785.027500988013
+     }
+    },
+    "borrowingDollarDays": 222632204.2808702,
+    "minuteDrawdown": 387970.12355811964,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 373947.5240452242,
+    "endEquity": 1797030.8590843063,
+    "strategyMark": 548282.983421808,
+    "dailyPercent": 0.3494320183287869,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.3730130742220383,
+    "folds": [
+     34641.37553106117,
+     164689.36455877774,
+     348952.2433319691
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3161.8758682681346,
+     31479.49966279303,
+     11962.336339547379,
+     23.679715468824725,
+     87863.28410010657,
+     64840.06440365498,
+     178471.2087818834,
+     31082.996629770845,
+     12338.547827502713,
+     127059.4900928121
+    ],
+    "yearly": [
+     0,
+     3161.8758682681346,
+     31479.49966279303,
+     99849.30015512276,
+     64840.06440365498,
+     179006.03881878807,
+     169946.204513181
+    ],
+    "minimumRatio": {
+     "U35": 2.333353400070123,
+     "U50": 1.633347380049086,
+     "U60": 1.361122816707572,
+     "L50": 1.908514584633278,
+     "L60": 1.6907550521162702,
+     "G50": 1.8864256031508098,
+     "G60": 1.6728190583472884
+    }
+   },
+   "portfolio-2": {
+    "mode": "portfolio",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 73,
+    "virtualTrades": 164,
+    "refused": 91,
+    "net": 541020.4318822981,
+    "interest": 66963.87919090492,
+    "costs": 6869.2747131590995,
+    "worstLot": -11636.489244661032,
+    "openAtEnd": 0,
+    "newLots": 3,
+    "newLotsNet": 57373.43317479362,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 12,
+      "net": 158913.30375262978
+     },
+     "XOP": {
+      "lots": 3,
+      "net": 57373.43317479362
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 199175.51692165228
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 94143.3933499313
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 31414.78468329119
+     }
+    },
+    "borrowingDollarDays": 222198326.40618455,
+    "minuteDrawdown": 388120.2506510506,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 373680.98598400515,
+    "endEquity": 1787753.9957045272,
+    "strategyMark": 541020.4318822981,
+    "dailyPercent": 0.3498055156152481,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.37337318523232166,
+    "folds": [
+     34570.99567634794,
+     163035.2635187765,
+     343414.1726871736
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3144.0782982314395,
+     31426.9173781165,
+     11958.592959799382,
+     -335.77320822765614,
+     87341.86295568847,
+     64070.58081151632,
+     177205.12830989007,
+     30753.204426814278,
+     11012.513549866795,
+     124443.32640060247
+    ],
+    "yearly": [
+     0,
+     3144.0782982314395,
+     31426.9173781165,
+     98964.6827072602,
+     64070.58081151632,
+     177601.79850186806,
+     165812.37418530555
+    ],
+    "minimumRatio": {
+     "U35": 2.333336876273396,
+     "U50": 1.6333358133913773,
+     "U60": 1.3611131778261478,
+     "L50": 1.9084363831116238,
+     "L60": 1.6907242146448902,
+     "G50": 1.8864159225962256,
+     "G60": 1.6728120329124512
+    }
+   },
+   "portfolio-5": {
+    "mode": "portfolio",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 73,
+    "virtualTrades": 164,
+    "refused": 91,
+    "net": 528286.6467957394,
+    "interest": 66730.10112799775,
+    "costs": 17080.74814194991,
+    "worstLot": -11712.819147043832,
+    "openAtEnd": 0,
+    "newLots": 3,
+    "newLotsNet": 56753.10954225401,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 12,
+      "net": 157258.18581489424
+     },
+     "XOP": {
+      "lots": 3,
+      "net": 56753.10954225401
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 191896.64117550704
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 91553.82178383257
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 30824.88847925153
+     }
+    },
+    "borrowingDollarDays": 221422608.28835627,
+    "minuteDrawdown": 389620.32157237316,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 374575.7100347185,
+    "endEquity": 1771732.1105657236,
+    "strategyMark": 528286.6467957394,
+    "dailyPercent": 0.350365259324995,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.373912867308005,
+    "folds": [
+     34465.48813026103,
+     160561.85323021858,
+     333259.3054352598
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3117.3952846831653,
+     31348.092845577863,
+     11952.98228338013,
+     -874.1394459304938,
+     86561.89695229096,
+     62921.11344047799,
+     173595.03569435872,
+     30224.153289000038,
+     9029.636846634734,
+     120410.4796052663
+    ],
+    "yearly": [
+     0,
+     3117.3952846831653,
+     31348.092845577863,
+     97640.7397897406,
+     62921.11344047799,
+     173785.73750305243,
+     159473.56793220737
+    ],
+    "minimumRatio": {
+     "U35": 2.3333121010142177,
+     "U50": 1.6333184707099524,
+     "U60": 1.3610987255916271,
+     "L50": 1.9083182146556124,
+     "L60": 1.690677959516214,
+     "G50": 1.8864014091918417,
+     "G60": 1.6728015009356216
+    }
+   },
+   "portfolio-10": {
+    "mode": "portfolio",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 73,
+    "virtualTrades": 163,
+    "refused": 90,
+    "net": 504413.9932860188,
+    "interest": 66073.82017250928,
+    "costs": 33847.475756261425,
+    "worstLot": -11837.91170974134,
+    "openAtEnd": 0,
+    "newLots": 3,
+    "newLotsNet": 55727.59698775371,
+    "newLotYears": 3,
+    "bySymbol": {
+     "VGT": {
+      "lots": 12,
+      "net": 154524.51853731574
+     },
+     "XOP": {
+      "lots": 3,
+      "net": 55727.59698775371
+     },
+     "KRE": {
+      "lots": 38,
+      "net": 177032.60502231526
+     },
+     "XBI": {
+      "lots": 17,
+      "net": 87278.35167344433
+     },
+     "XRT": {
+      "lots": 3,
+      "net": 29850.921065189992
+     }
+    },
+    "borrowingDollarDays": 219244948.7542354,
+    "minuteDrawdown": 392078.2489782048,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 376040.1334650158,
+    "endEquity": 1742183.9147850638,
+    "strategyMark": 504413.9932860188,
+    "dailyPercent": 0.3512968290775906,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584993600,
+    "minutePercent": 0.3748110483178055,
+    "folds": [
+     34289.807970933754,
+     156460.05322706056,
+     313664.13208802446
+    ],
+    "regimes": [
+     0,
+     0,
+     0,
+     3072.9591372456325,
+     31216.84883368812,
+     11943.642853143021,
+     -1769.2532329938185,
+     85267.70754041235,
+     61017.95606649901,
+     167640.52313872386,
+     29353.777261057112,
+     5781.55991805729,
+     110888.2717701862
+    ],
+    "yearly": [
+     0,
+     3072.9591372456325,
+     31216.84883368812,
+     95442.09716056156,
+     61017.95606649901,
+     167493.05167251336,
+     146171.0804155111
+    ],
+    "minimumRatio": {
+     "U35": 2.3332708367212986,
+     "U50": 1.633289585704909,
+     "U60": 1.3610746547540908,
+     "L50": 1.9081299060911934,
+     "L60": 1.690600870628202,
+     "G50": 1.8863772399797012,
+     "G60": 1.6727839641016455
+    }
+   }
+  },
+  "P-comb-GDX-XOP": {
+   "fixed-0": {
+    "mode": "fixed",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 86,
+    "virtualTrades": 194,
+    "refused": 108,
+    "net": 445523.65951760486,
+    "interest": 45235.616438356155,
+    "costs": 0,
+    "worstLot": -8432.943115024224,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 188204.88565582127,
+    "newLotYears": 6,
+    "bySymbol": {
+     "XOP": {
+      "lots": 11,
+      "net": 45396.78359277961
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 54572.124298290146
+     },
+     "KRE": {
+      "lots": 43,
+      "net": 90945.29647230123
+     },
+     "XBI": {
+      "lots": 11,
+      "net": 34225.10151964853
+     },
+     "GDX": {
+      "lots": 10,
+      "net": 142808.10206304165
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 77576.25157154383
+     }
+    },
+    "borrowingDollarDays": 150100000,
+    "minuteDrawdown": 38096.85854464909,
+    "minuteDrawdownPeak": 1591623180,
+    "minuteDrawdownTrough": 1603978500,
+    "dailyDrawdown": 34441.07982211234,
+    "endEquity": null,
+    "strategyMark": 445523.65951760486,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     47143.02836875591,
+     232009.52990968068,
+     166371.10123916826
+    ],
+    "regimes": [
+     0,
+     18795.566180531838,
+     2813.2457696144593,
+     -6129.562972389091,
+     31663.77939099871,
+     10966.241100017825,
+     91483.587737764,
+     41665.452566349384,
+     87894.24850554948,
+     62075.51051734353,
+     32016.299335284566,
+     25944.789422183065,
+     46334.5019643571
+    ],
+    "yearly": [
+     0,
+     15479.248977757206,
+     31663.77939099871,
+     144115.2814041312,
+     87894.24850554948,
+     78116.49347490241,
+     88254.60776426585
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-2": {
+    "mode": "fixed",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 86,
+    "virtualTrades": 194,
+    "refused": 108,
+    "net": 442292.9897617395,
+    "interest": 45235.616438356155,
+    "costs": 3537.5253638850513,
+    "worstLot": -8469.695190102932,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 187283.48332449092,
+    "newLotYears": 6,
+    "bySymbol": {
+     "XOP": {
+      "lots": 11,
+      "net": 44934.81152033231
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 54264.257295943986
+     },
+     "KRE": {
+      "lots": 43,
+      "net": 89186.0154154032
+     },
+     "XBI": {
+      "lots": 11,
+      "net": 34175.69794744386
+     },
+     "GDX": {
+      "lots": 10,
+      "net": 142348.67180415863
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 77383.5357784574
+     }
+    },
+    "borrowingDollarDays": 150100000,
+    "minuteDrawdown": 38809.32185664933,
+    "minuteDrawdownPeak": 1591623180,
+    "minuteDrawdownTrough": 1603978500,
+    "dailyDrawdown": 35154.26811746313,
+    "endEquity": null,
+    "strategyMark": 442292.9897617395,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     46862.81260711212,
+     230227.40597067832,
+     165202.77118394908
+    ],
+    "regimes": [
+     0,
+     18771.329722806448,
+     2747.3980892504223,
+     -6226.654220560669,
+     31570.739015615924,
+     10963.75300695069,
+     91019.8409999849,
+     40751.53428489977,
+     87492.27767884295,
+     61853.602116968425,
+     31881.497763031046,
+     25712.997585687903,
+     45754.67371826171
+    ],
+    "yearly": [
+     0,
+     15292.0735914962,
+     31570.739015615924,
+     142735.12829183537,
+     87492.27767884295,
+     77826.08639052353,
+     87376.68479342555
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-5": {
+    "mode": "fixed",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 86,
+    "virtualTrades": 194,
+    "refused": 108,
+    "net": 436891.15005206637,
+    "interest": 45235.616438356155,
+    "costs": 8841.18612523233,
+    "worstLot": -8524.795752439786,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 185951.11326829207,
+    "newLotYears": 6,
+    "bySymbol": {
+     "XOP": {
+      "lots": 11,
+      "net": 44291.24245196403
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 53802.68757728394
+     },
+     "KRE": {
+      "lots": 43,
+      "net": 86548.41263144856
+     },
+     "XBI": {
+      "lots": 11,
+      "net": 33494.330021601396
+     },
+     "GDX": {
+      "lots": 10,
+      "net": 141659.87081632804
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 77094.60655344029
+     }
+    },
+    "borrowingDollarDays": 150100000,
+    "minuteDrawdown": 39877.48274420551,
+    "minuteDrawdownPeak": 1591623180,
+    "minuteDrawdownTrough": 1603978500,
+    "dailyDrawdown": 36223.51593657941,
+    "endEquity": null,
+    "strategyMark": 436891.15005206637,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     46491.741755840296,
+     227555.55598716694,
+     162843.85230905912
+    ],
+    "regimes": [
+     0,
+     18734.99320447755,
+     2697.718664185206,
+     -6372.218310772996,
+     31431.24819795054,
+     10960.02273248721,
+     90324.56852955148,
+     39381.34195888872,
+     86889.62276623954,
+     60913.606262834044,
+     31679.39645530458,
+     25365.483587944123,
+     44885.36600297637
+    ],
+    "yearly": [
+     0,
+     15060.493557889758,
+     31431.24819795054,
+     140665.93322092743,
+     86889.62276623954,
+     76783.39385872224,
+     86060.45845033688
+    ],
+    "minimumRatio": {}
+   },
+   "fixed-10": {
+    "mode": "fixed",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 86,
+    "virtualTrades": 193,
+    "refused": 107,
+    "net": 427850.3028301475,
+    "interest": 45235.616438356155,
+    "costs": 17673.576678763613,
+    "worstLot": -8616.556628978848,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 183687.29492983263,
+    "newLotYears": 6,
+    "bySymbol": {
+     "XOP": {
+      "lots": 11,
+      "net": 43174.50827605567
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 53034.01952433064
+     },
+     "KRE": {
+      "lots": 43,
+      "net": 82155.9212819447
+     },
+     "XBI": {
+      "lots": 11,
+      "net": 32359.624394848604
+     },
+     "GDX": {
+      "lots": 10,
+      "net": 140512.78665377694
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 76613.44269919096
+     }
+    },
+    "borrowingDollarDays": 150100000,
+    "minuteDrawdown": 41656.32809840812,
+    "minuteDrawdownPeak": 1591623180,
+    "minuteDrawdownTrough": 1603978500,
+    "dailyDrawdown": 38004.17139558788,
+    "endEquity": null,
+    "strategyMark": 427850.3028301475,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "folds": [
+     45828.8083071048,
+     223106.03158905043,
+     158915.46293399227
+    ],
+    "regimes": [
+     0,
+     18674.480740886866,
+     2570.009498652904,
+     -6614.631236231451,
+     31198.949303796486,
+     10953.810577111959,
+     89166.7071826857,
+     37099.513180206326,
+     85886.00064904644,
+     59348.19858167332,
+     31342.83014163829,
+     24786.756480812153,
+     43437.677729868505
+    ],
+    "yearly": [
+     0,
+     14629.859003308318,
+     31198.949303796486,
+     137220.03094000398,
+     85886.00064904644,
+     75046.96184022812,
+     83868.50109376415
+    ],
+    "minimumRatio": {}
+   },
+   "portfolio-0": {
+    "mode": "portfolio",
+    "costBps": 0,
+    "fraction": 0.2,
+    "lots": 86,
+    "virtualTrades": 194,
+    "refused": 108,
+    "net": 1020806.7160167557,
+    "interest": 99589.51179485078,
+    "costs": 0,
+    "worstLot": -22077.632484412985,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 392471.0711614657,
+    "newLotYears": 6,
+    "bySymbol": {
+     "XOP": {
+      "lots": 11,
+      "net": 128054.01685555768
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 78402.93619067426
+     },
+     "KRE": {
+      "lots": 43,
+      "net": 294141.24749845103
+     },
+     "XBI": {
+      "lots": 11,
+      "net": 86453.86460422703
+     },
+     "GDX": {
+      "lots": 10,
+      "net": 264417.05430590804
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 169337.59656193826
+     }
+    },
+    "borrowingDollarDays": 330456107.31927747,
+    "minuteDrawdown": 545151.4723567227,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 495974.575546446,
+    "endEquity": 2468822.250580958,
+    "strategyMark": 1020806.7160167557,
+    "dailyPercent": 0.2963649877236976,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584043200,
+    "minutePercent": 0.3102682786483265,
+    "folds": [
+     43421.224567632904,
+     410462.4500006762,
+     566923.0414484466
+    ],
+    "regimes": [
+     0,
+     16491.663511228777,
+     2342.476129891671,
+     -6558.0127766186015,
+     31145.097703131058,
+     12166.385487567793,
+     106277.0420363262,
+     67545.41935361215,
+     224473.60312317006,
+     187985.14901470172,
+     93318.74478572386,
+     86303.86299609265,
+     199315.28465192835
+    ],
+    "yearly": [
+     0,
+     12276.126864501846,
+     31145.097703131058,
+     185988.84687750612,
+     224473.60312317006,
+     232675.26864057884,
+     334247.77280786773
+    ],
+    "minimumRatio": {
+     "U35": 2.3333577540844934,
+     "U50": 1.6333504278591455,
+     "U60": 1.3611253565492878,
+     "L50": 1.9187626783262135,
+     "L60": 1.7004413363426805,
+     "G50": 1.887484498760138,
+     "G60": 1.6742057159054826
+    }
+   },
+   "portfolio-2": {
+    "mode": "portfolio",
+    "costBps": 2,
+    "fraction": 0.2,
+    "lots": 86,
+    "virtualTrades": 194,
+    "refused": 108,
+    "net": 1008926.2691548786,
+    "interest": 99231.71941505566,
+    "costs": 9122.264401088172,
+    "worstLot": -22090.38951106745,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 389124.00297051185,
+    "newLotYears": 6,
+    "bySymbol": {
+     "XOP": {
+      "lots": 11,
+      "net": 126660.88908007751
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 77613.93540203253
+     },
+     "KRE": {
+      "lots": 43,
+      "net": 287701.3426923162
+     },
+     "XBI": {
+      "lots": 11,
+      "net": 86254.28286140363
+     },
+     "GDX": {
+      "lots": 10,
+      "net": 262463.1138904344
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 168232.7052286146
+     }
+    },
+    "borrowingDollarDays": 329268887.1499574,
+    "minuteDrawdown": 543498.40909476,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 494545.2953069261,
+    "endEquity": 2453052.417504573,
+    "strategyMark": 1008926.2691548786,
+    "dailyPercent": 0.29648167703277023,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584043200,
+    "minutePercent": 0.31049752316192797,
+    "folds": [
+     43131.620568855855,
+     405916.5787711642,
+     559878.0698148585
+    ],
+    "regimes": [
+     0,
+     16470.397883916885,
+     2277.6286703777005,
+     -6650.911421148518,
+     31034.505435709787,
+     12157.55511773072,
+     105597.16629077792,
+     65626.17248396031,
+     222535.6848786952,
+     186647.26985222747,
+     92492.53117552877,
+     85042.93359799695,
+     195695.33518910536
+    ],
+    "yearly": [
+     0,
+     12097.115133146068,
+     31034.505435709787,
+     183380.89389246894,
+     222535.6848786952,
+     230942.00571474008,
+     328936.06410011847
+    ],
+    "minimumRatio": {
+     "U35": 2.33334121040523,
+     "U50": 1.6333388472836607,
+     "U60": 1.3611157060697172,
+     "L50": 1.9187521163222825,
+     "L60": 1.7004329784910281,
+     "G50": 1.8874699047005752,
+     "G60": 1.6741922568296572
+    }
+   },
+   "portfolio-5": {
+    "mode": "portfolio",
+    "costBps": 5,
+    "fraction": 0.2,
+    "lots": 86,
+    "virtualTrades": 194,
+    "refused": 108,
+    "net": 988779.8630716552,
+    "interest": 98648.70109223218,
+    "costs": 22650.752613480738,
+    "worstLot": -22083.28162017028,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 383968.5437103131,
+    "newLotYears": 6,
+    "bySymbol": {
+     "XOP": {
+      "lots": 11,
+      "net": 124581.9882608523
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 76411.80335723063
+     },
+     "KRE": {
+      "lots": 43,
+      "net": 277950.9171416152
+     },
+     "XBI": {
+      "lots": 11,
+      "net": 83893.30687828598
+     },
+     "GDX": {
+      "lots": 10,
+      "net": 259386.5554494608
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 166555.2919842101
+     }
+    },
+    "borrowingDollarDays": 327334326.3514974,
+    "minuteDrawdown": 542694.2125192462,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 494125.72503672703,
+    "endEquity": 2426816.761570519,
+    "strategyMark": 988779.8630716552,
+    "dailyPercent": 0.29665652237460616,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584043200,
+    "minutePercent": 0.310841116459713,
+    "folds": [
+     42751.846396887115,
+     399180.0211893813,
+     546847.9954853868
+    ],
+    "regimes": [
+     0,
+     16438.51538419891,
+     2232.2238869607972,
+     -6790.7705325018815,
+     30871.877658229292,
+     12145.512553751112,
+     104590.38921662567,
+     62771.42196118075,
+     219672.69745782376,
+     182495.21652703482,
+     91159.89027478441,
+     83076.7424386621,
+     190116.14624490542
+    ],
+    "yearly": [
+     0,
+     11879.968738657824,
+     30871.877658229292,
+     179507.32373155752,
+     219672.69745782376,
+     226152.12538321567,
+     320695.8701021711
+    ],
+    "minimumRatio": {
+     "U35": 2.333316405087062,
+     "U50": 1.6333214835609433,
+     "U60": 1.3611012363007864,
+     "L50": 1.9187362230354963,
+     "L60": 1.7004203724438436,
+     "G50": 1.8874479652336307,
+     "G60": 1.6741720012796542
+    }
+   },
+   "portfolio-10": {
+    "mode": "portfolio",
+    "costBps": 10,
+    "fraction": 0.2,
+    "lots": 86,
+    "virtualTrades": 193,
+    "refused": 107,
+    "net": 955600.5270349075,
+    "interest": 97678.60563253557,
+    "costs": 44786.85661761477,
+    "worstLot": -22066.958770579484,
+    "openAtEnd": 0,
+    "newLots": 21,
+    "newLotsNet": 375414.0937483555,
+    "newLotYears": 6,
+    "bySymbol": {
+     "XOP": {
+      "lots": 11,
+      "net": 121100.45929468858
+     },
+     "VGT": {
+      "lots": 7,
+      "net": 74429.13362745437
+     },
+     "KRE": {
+      "lots": 43,
+      "net": 261968.32122200285
+     },
+     "XBI": {
+      "lots": 11,
+      "net": 80010.49965670897
+     },
+     "GDX": {
+      "lots": 10,
+      "net": 254313.63445366698
+     },
+     "XRT": {
+      "lots": 4,
+      "net": 163778.4787803856
+     }
+    },
+    "borrowingDollarDays": 324115373.2352318,
+    "minuteDrawdown": 541271.4215694275,
+    "minuteDrawdownPeak": 1641307740,
+    "minuteDrawdownTrough": 1665667980,
+    "dailyDrawdown": 493341.2866575329,
+    "endEquity": 2383523.9669478084,
+    "strategyMark": 955600.5270349075,
+    "dailyPercent": 0.29694742982496564,
+    "dailyPercentPeak": 1582146000,
+    "dailyPercentTrough": 1584043200,
+    "minutePercent": 0.31141304454459223,
+    "folds": [
+     42070.25009320261,
+     388028.0440523505,
+     525502.2328893543
+    ],
+    "regimes": [
+     0,
+     16385.42035220105,
+     2109.1210272935423,
+     -7022.875441202517,
+     30598.58415491053,
+     12124.359768349183,
+     102909.97018910944,
+     58054.517402054684,
+     214939.19669283723,
+     175671.47851471277,
+     88966.57390746311,
+     79855.79629635974,
+     181008.38417081872
+    ],
+    "yearly": [
+     0,
+     11471.665938292075,
+     30598.58415491053,
+     173088.8473595133,
+     214939.19669283723,
+     218278.47819664353,
+     307223.7546927108
+    ],
+    "minimumRatio": {
+     "U35": 2.333275089956331,
+     "U50": 1.6332925629694317,
+     "U60": 1.36107713580786,
+     "L50": 1.9187095728691295,
+     "L60": 1.7003991419318014,
+     "G50": 1.8874112431647339,
+     "G60": 1.6741380278033282
+    }
+   }
+  }
+ },
+ "gates": {
+  "P-add-GDX": {
+   "deltas": {
+    "0": 147540.88704966963,
+    "2": 147041.681220947,
+    "5": 146293.24669512614,
+    "10": 146000.09836565808
+   },
+   "foldDeltas": [
+    0,
+    88122.19557436254,
+    58171.0511207636
+   ],
+   "regimeDeltas": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    86261.22773230371,
+    1860.967842058868,
+    -2.9103830456733704e-11,
+    9582.946718578067,
+    20954.1156882589,
+    21164.95648596069,
+    6469.032227965945
+   ],
+   "withoutBestRegime": 60032.01896282243,
+   "netPerDrawdown": 14.654456916527769,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 592512.9926922857,
+   "portfolioDeltaShare": 0.3531590058045598,
+   "matchedS0EndEquity": 1843191.3291804276,
+   "matchedExtrapolated": false,
+   "matchedDelta": 427072.9963496954,
+   "T": {
+    "T1": true,
+    "T2": true,
+    "T3": true,
+    "T4": true,
+    "T5": true
+   },
+   "nominated": true
+  },
+  "S-add-GDX": {
+   "deltas": {
+    "0": 39494.484610400454,
+    "2": 38706.38676453836,
+    "5": 38081.65056483864,
+    "10": 29703.033264184254
+   },
+   "foldDeltas": [
+    4652.330206081344,
+    45432.6081496353,
+    -12003.287790878021
+   ],
+   "regimeDeltas": [
+    0,
+    0,
+    625.1708523356556,
+    4027.159353745683,
+    3.637978807091713e-12,
+    -7.275957614183426e-12,
+    40636.46321663972,
+    2.1827872842550278e-11,
+    4796.144932995579,
+    -25260.81190351215,
+    14921.303287862713,
+    -1663.7791752285848,
+    0
+   ],
+   "withoutBestRegime": -2554.812651801083,
+   "netPerDrawdown": 10.572536654780894,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 123494.53567034472,
+   "portfolioDeltaShare": 0.07360717482575892,
+   "matchedS0EndEquity": 1757920.3144399768,
+   "matchedExtrapolated": false,
+   "matchedDelta": 43325.55406820518,
+   "T": {
+    "T1": true,
+    "T2": true,
+    "T3": false,
+    "T4": true,
+    "T5": true
+   },
+   "nominated": false
+  },
+  "P-add-XOP": {
+   "deltas": {
+    "0": 81807.50916461641,
+    "2": 81571.98833360977,
+    "5": 81267.92637384814,
+    "10": 80716.58515503048
+   },
+   "foldDeltas": [
+    10530.723011912065,
+    45972.237978461475,
+    24764.965383474613
+   ],
+   "regimeDeltas": [
+    0,
+    18734.99320447755,
+    2697.718664185206,
+    -10014.637680184616,
+    -887.3511765660733,
+    -7.275957614183426e-12,
+    -1.4551915228366852e-11,
+    -25221.67109858487,
+    71193.90907704635,
+    29453.866545252284,
+    -4688.901161777554,
+    -5.820766091346741e-11,
+    -5.820766091346741e-11
+   ],
+   "withoutBestRegime": 10074.017296801787,
+   "netPerDrawdown": 9.290559117498937,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 229919.3330541146,
+   "portfolioDeltaShare": 0.13704017309002334,
+   "matchedS0EndEquity": 1810960.4194125566,
+   "matchedExtrapolated": false,
+   "matchedDelta": 96710.24647939531,
+   "T": {
+    "T1": true,
+    "T2": true,
+    "T3": true,
+    "T4": true,
+    "T5": true
+   },
+   "nominated": true
+  },
+  "S-add-XOP": {
+   "deltas": {
+    "0": 27530.162607863196,
+    "2": 27438.73485576769,
+    "5": 27301.661764170305,
+    "10": 27073.389193048584
+   },
+   "foldDeltas": [
+    0,
+    7111.721399658229,
+    20189.940364512076
+   ],
+   "regimeDeltas": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    -3070.8330444418607,
+    7.275957614183426e-12,
+    10182.554444100082,
+    17652.859224194617,
+    2537.0811403174303,
+    0,
+    2.9103830456733704e-11
+   ],
+   "withoutBestRegime": 9648.802539975688,
+   "netPerDrawdown": 8.493420728687733,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 93980.77772788634,
+   "portfolioDeltaShare": 0.05601591599925734,
+   "matchedS0EndEquity": 1709119.4644575457,
+   "matchedExtrapolated": false,
+   "matchedDelta": 62612.646108177956,
+   "T": {
+    "T1": true,
+    "T2": true,
+    "T3": false,
+    "T4": false,
+    "T5": true
+   },
+   "nominated": false
+  },
+  "P-comb-GDX-XOP": {
+   "deltas": {
+    "0": 196349.76114829094,
+    "2": 195668.09072860057,
+    "5": 194695.13883078235,
+    "10": 193983.11764193972
+   },
+   "foldDeltas": [
+    10530.723011912065,
+    134094.43355282402,
+    50069.98226604627
+   ],
+   "regimeDeltas": [
+    0,
+    18734.99320447755,
+    2697.718664185206,
+    -10014.637680184616,
+    -887.3511765660733,
+    -7.275957614183426e-12,
+    86261.2277323037,
+    -23360.703256526052,
+    71193.90907704638,
+    1481.8778638606746,
+    20954.115688258957,
+    21164.95648596069,
+    6469.032227965945
+   ],
+   "withoutBestRegime": 108433.91109847865,
+   "netPerDrawdown": 10.955835724499181,
+   "s0NetPerDrawdown": 8.450859214258255,
+   "portfolioDelta": 749065.4287326816,
+   "portfolioDeltaShare": 0.44646987552420697,
+   "matchedS0EndEquity": 1994178.7401017365,
+   "matchedExtrapolated": true,
+   "matchedDelta": 432638.02146878233,
+   "T": {
+    "T1": true,
+    "T2": false,
+    "T3": true,
+    "T4": true,
+    "T5": true
+   },
+   "nominated": false
+  }
+ },
+ "parity": [
+  {
+   "key": "S0",
+   "costBps": 0,
+   "differences": 0
+  },
+  {
+   "key": "S0",
+   "costBps": 2,
+   "differences": 0
+  },
+  {
+   "key": "S0",
+   "costBps": 5,
+   "differences": 0
+  },
+  {
+   "key": "S0",
+   "costBps": 10,
+   "differences": 0
+  },
+  {
+   "key": "P-add-GDX",
+   "costBps": 0,
+   "differences": 0
+  },
+  {
+   "key": "P-add-GDX",
+   "costBps": 2,
+   "differences": 0
+  },
+  {
+   "key": "P-add-GDX",
+   "costBps": 5,
+   "differences": 0
+  },
+  {
+   "key": "P-add-GDX",
+   "costBps": 10,
+   "differences": 0
+  },
+  {
+   "key": "S-add-GDX",
+   "costBps": 0,
+   "differences": 0
+  },
+  {
+   "key": "S-add-GDX",
+   "costBps": 2,
+   "differences": 0
+  },
+  {
+   "key": "S-add-GDX",
+   "costBps": 5,
+   "differences": 0
+  },
+  {
+   "key": "S-add-GDX",
+   "costBps": 10,
+   "differences": 0
+  },
+  {
+   "key": "P-add-XOP",
+   "costBps": 0,
+   "differences": 0
+  },
+  {
+   "key": "P-add-XOP",
+   "costBps": 2,
+   "differences": 0
+  },
+  {
+   "key": "P-add-XOP",
+   "costBps": 5,
+   "differences": 0
+  },
+  {
+   "key": "P-add-XOP",
+   "costBps": 10,
+   "differences": 0
+  },
+  {
+   "key": "S-add-XOP",
+   "costBps": 0,
+   "differences": 0
+  },
+  {
+   "key": "S-add-XOP",
+   "costBps": 2,
+   "differences": 0
+  },
+  {
+   "key": "S-add-XOP",
+   "costBps": 5,
+   "differences": 0
+  },
+  {
+   "key": "S-add-XOP",
+   "costBps": 10,
+   "differences": 0
+  },
+  {
+   "key": "P-comb-GDX-XOP",
+   "costBps": 0,
+   "differences": 0
+  },
+  {
+   "key": "P-comb-GDX-XOP",
+   "costBps": 2,
+   "differences": 0
+  },
+  {
+   "key": "P-comb-GDX-XOP",
+   "costBps": 5,
+   "differences": 0
+  },
+  {
+   "key": "P-comb-GDX-XOP",
+   "costBps": 10,
+   "differences": 0
+  }
+ ],
+ "parityPassed": true
+}

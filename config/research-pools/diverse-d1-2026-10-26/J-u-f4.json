@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "kind": "research-only-d1-pool",
+  "id": "diverse-d1/J-u-f4",
+  "label": "J-u-f4",
+  "arm": "J-u",
+  "procedure": "J (neighbourhood score)",
+  "status": "RESEARCH-ONLY: not nominated, not validated on 2024–2026, not approved for live deployment. Failed the final gates and the study’s walk-forward procedure gate; training-window (E1) evidence only.",
+  "evidence": "E1: training 2016-01-04 → 2023-12-29 only; never evaluated after 2023-12-29",
+  "key": "FXI:214.31.98.12.60.47.130.102|GDX:274.9.63.18.191.35.136.114|XHB:238.36.146.6.26.54.32.115",
+  "members": [
+    "FXI",
+    "GDX",
+    "XHB"
+  ],
+  "books": [
+    {
+      "symbol": "FXI",
+      "vectorId": "d1-c2c39685c7",
+      "origin": "paramMulti",
+      "grid": {
+        "targetPercentChange": 214,
+        "trailingBuyPercentage": 31,
+        "trailingStopPercentage": 98,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 60,
+        "intradayLossBuffer": 47,
+        "pullback": 130,
+        "continuationWindow": 102
+      },
+      "parameters": {
+        "targetPercentChange": "21.4%",
+        "trailingBuyPercentage": "3.1%",
+        "trailingStopPercentage": "9.8%",
+        "maximumHoldDays": 12,
+        "tickWindowSize": 60,
+        "intradayLossBuffer": "4.7%",
+        "pullback": "13.0%",
+        "continuationWindow": 102
+      },
+      "parametersSha256": "7f150bdaca6812a21991d41899b0b871481efa163110b06b13c68ee61a3a2e75"
+    },
+    {
+      "symbol": "GDX",
+      "vectorId": "d1-75b4a9e5d0",
+      "origin": "refine probe",
+      "grid": {
+        "targetPercentChange": 274,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 63,
+        "maximumHoldDays": 18,
+        "tickWindowSize": 191,
+        "intradayLossBuffer": 35,
+        "pullback": 136,
+        "continuationWindow": 114
+      },
+      "parameters": {
+        "targetPercentChange": "27.4%",
+        "trailingBuyPercentage": "0.9%",
+        "trailingStopPercentage": "6.3%",
+        "maximumHoldDays": 18,
+        "tickWindowSize": 191,
+        "intradayLossBuffer": "3.5%",
+        "pullback": "13.6%",
+        "continuationWindow": 114
+      },
+      "parametersSha256": "85a245f8d8943bf7e83cb1c484cdc4b32ab21476a281762bc3d05700680c3d55"
+    },
+    {
+      "symbol": "XHB",
+      "vectorId": "d1-7c91025a6a",
+      "origin": "sbx",
+      "grid": {
+        "targetPercentChange": 238,
+        "trailingBuyPercentage": 36,
+        "trailingStopPercentage": 146,
+        "maximumHoldDays": 6,
+        "tickWindowSize": 26,
+        "intradayLossBuffer": 54,
+        "pullback": 32,
+        "continuationWindow": 115
+      },
+      "parameters": {
+        "targetPercentChange": "23.8%",
+        "trailingBuyPercentage": "3.6%",
+        "trailingStopPercentage": "14.6%",
+        "maximumHoldDays": 6,
+        "tickWindowSize": 26,
+        "intradayLossBuffer": "5.4%",
+        "pullback": "3.2%",
+        "continuationWindow": 115
+      },
+      "parametersSha256": "311ebbb60222db3beff6aa2f69e4cf58b1241b65e95b1bd3d5040bf5657b6214"
+    }
+  ],
+  "sealed": {
+    "procedureScore": 237854.8053334008,
+    "pass": false,
+    "failedGates": [
+      "G7"
+    ],
+    "gates": [
+      {
+        "gate": "G1",
+        "pass": true,
+        "detail": "parity 0/0/0/0, identity true"
+      },
+      {
+        "gate": "G2",
+        "pass": true,
+        "detail": "DD@5 24,250, DD@10 24,642, portfolio 32.78%"
+      },
+      {
+        "gate": "G3",
+        "pass": true,
+        "detail": "31 lots in 5 years; J-marginals FXI 78,954, GDX 96,539, XHB 64,615"
+      },
+      {
+        "gate": "G4",
+        "pass": true,
+        "detail": "P50(net)@10 262,220 vs @5 266,039; centre 190,149/190,439/185,146"
+      },
+      {
+        "gate": "G5",
+        "pass": true,
+        "detail": "Q25(net) 233,111; net − top2 123,541; net − best regime 88,876"
+      },
+      {
+        "gate": "G6",
+        "pass": true,
+        "detail": "B4: ΔP50 138,009 [132,743, 141,326], ΔS 137,253 (M 50,000); B5: ΔP50 57,500 [46,710, 64,363], ΔS 61,970 (M 50,000)"
+      },
+      {
+        "gate": "G7",
+        "pass": false,
+        "detail": "end equity 1,570,995 vs B5 ladder 1,731,366"
+      },
+      {
+        "gate": "G8",
+        "pass": true,
+        "detail": "max tie-order change 0; boundary coordinates 0 of 24"
+      }
+    ],
+    "labels": [
+      "thin evidence",
+      "portfolio DD in (30%, 35%]"
+    ],
+    "centre5": {
+      "key": "FXI:214.31.98.12.60.47.130.102|GDX:274.9.63.18.191.35.136.114|XHB:238.36.146.6.26.54.32.115",
+      "costBps": 5,
+      "books": 3,
+      "members": [
+        "FXI",
+        "GDX",
+        "XHB"
+      ],
+      "net": 188452.876631195,
+      "realized": 188452.876631195,
+      "unrealized": 0,
+      "minuteDrawdown": 24250.21530192459,
+      "dailyDrawdown": 21214.880254010117,
+      "lots": 31,
+      "lotsBySymbol": {
+        "FXI": 4,
+        "GDX": 26,
+        "XHB": 1
+      },
+      "netBySymbol": {
+        "FXI": 13303.142012463772,
+        "GDX": 177062.3019577538,
+        "XHB": -1912.5673390225559
+      },
+      "virtualBySymbol": {
+        "FXI": 8,
+        "GDX": 30,
+        "XHB": 4
+      },
+      "regimesBySymbol": {
+        "FXI": 2,
+        "GDX": 8,
+        "XHB": 1
+      },
+      "virtualTrades": 42,
+      "inertBooks": 0,
+      "refused": 11,
+      "contested": 0,
+      "refusals": {
+        "XHB": {
+          "GDX": 3
+        },
+        "FXI": {
+          "GDX": 4
+        },
+        "GDX": {
+          "XHB": 1,
+          "FXI": 3
+        }
+      },
+      "heldDays": 681,
+      "utilization": 0.2851758793969849,
+      "interest": 20523.28767123288,
+      "costs": 3204.5411273272643,
+      "top1": 38599.594924724304,
+      "top2": 64911.44453561851,
+      "worstLot": -7871.858962060427,
+      "lotYears": 5,
+      "regimes": [
+        0,
+        0,
+        1916.2984707567352,
+        2999.5890996123385,
+        0,
+        0,
+        99576.75713497464,
+        8280.710975835813,
+        6914.496345002684,
+        15153.234225583481,
+        29061.88938079594,
+        21939.22415808597,
+        2610.676840547385
+      ],
+      "years": [
+        0,
+        4915.887570369074,
+        0,
+        107857.46811081046,
+        6914.496345002684,
+        35552.71810561755,
+        33212.30649939523
+      ],
+      "quarters": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1916.2984707567352,
+        2999.5890996123385,
+        0,
+        0,
+        0,
+        0,
+        73264.90752408044,
+        29870.212331686474,
+        7734.054501112143,
+        -3011.7062460685993,
+        -5630.284520479618,
+        2129.8349550078856,
+        3487.2540218152426,
+        6927.691888659174,
+        16110.528295794895,
+        8791.252485790668,
+        -10281.254863047361,
+        20932.192187079345,
+        25788.730067569908,
+        3952.9621777024295,
+        0,
+        3470.614254122891
+      ],
+      "positiveRegimes": 9,
+      "behaviourKey": "2b2d27328f87dc12",
+      "markAt": [
+        0,
+        0,
+        4915.887570369074,
+        111591.40441810316,
+        124167.70344026809,
+        154986.34946156974,
+        188452.876631195
+      ],
+      "funded": [
+        "GDX@1536155220",
+        "GDX@1584021420",
+        "GDX@1584366360",
+        "GDX@1584625500",
+        "GDX@1584970380",
+        "GDX@1585747920",
+        "GDX@1591364340",
+        "GDX@1597162980",
+        "GDX@1600955280",
+        "GDX@1605796560",
+        "GDX@1613595360",
+        "GDX@1615300560",
+        "GDX@1617112080",
+        "GDX@1624024560",
+        "GDX@1632837900",
+        "GDX@1638461760",
+        "XHB@1643050200",
+        "FXI@1647354240",
+        "FXI@1650636060",
+        "FXI@1652275860",
+        "GDX@1658842380",
+        "GDX@1660833240",
+        "GDX@1662557820",
+        "GDX@1663336260",
+        "GDX@1665409320",
+        "GDX@1667482980",
+        "GDX@1671201360",
+        "GDX@1677249240",
+        "GDX@1685107860",
+        "GDX@1696340520",
+        "FXI@1702564920"
+      ]
+    },
+    "confirmA": {
+      "nbJ": {
+        "n": 256,
+        "base": 188452.876631195,
+        "p50": 266038.6922258693,
+        "q25": 233110.85134028533,
+        "p10": 177541.5511354867,
+        "q75": 276751.3590303454,
+        "mad": 15025.22198994091,
+        "shareAbove": 0.84375,
+        "shareTied": 0,
+        "ddMedian": 45169.626379811496,
+        "dd90": 51028.521025314025,
+        "feasShare": 0.234375,
+        "moved": 15.83203125,
+        "lotsMedian": 23.5,
+        "top2ShareMedian": 0.6127101988099709,
+        "retention": 1.4116987598258361
+      },
+      "nbT": {
+        "n": 256,
+        "base": 103474.83230519418,
+        "p50": 158765.69820644998,
+        "q25": 123164.04552888765,
+        "p10": 94509.88362824617,
+        "q75": 173055.5013067454,
+        "mad": 20835.174184450792,
+        "shareAbove": 0.84375,
+        "shareTied": 0,
+        "ddMedian": 45169.626379811496,
+        "dd90": 51028.521025314025,
+        "feasShare": 0.234375,
+        "moved": 15.83203125,
+        "lotsMedian": 23.5,
+        "top2ShareMedian": null,
+        "retention": 1.5343411984295656
+      }
+    },
+    "portfolio5Symmetric": {
+      "label": "J-u-f4",
+      "mode": "portfolio",
+      "costBps": 5,
+      "fraction": 0.2,
+      "lotDividends": false,
+      "net": 286471.24498680595,
+      "lots": 31,
+      "interest": 43308.80558859942,
+      "minuteDrawdown": 493251.96436224796,
+      "dailyDrawdown": 465931.9791855491,
+      "endEquity": 1570994.670686496,
+      "dailyPercent": 0.3278280964385634,
+      "minutePercent": 0.34678258362096226,
+      "borrowingDollarDays": 143706491.2712617,
+      "lotDividendCash": 0,
+      "coreDividendCash": 62256.025174810355
+    },
+    "ladder": {
+      "matchedEndEquity": 1731365.5917772907,
+      "extrapolated": false,
+      "points": [
+        {
+          "fraction": 0.1,
+          "borrowingDollarDays": 110970051.00716639,
+          "endEquity": 1593220.9254594357
+        },
+        {
+          "fraction": 0.15,
+          "borrowingDollarDays": 183655287.17375594,
+          "endEquity": 1899945.7133552309
+        },
+        {
+          "fraction": 0.2,
+          "borrowingDollarDays": 270573459.5095026,
+          "endEquity": 2262888.7300480567
+        },
+        {
+          "fraction": 0.25,
+          "borrowingDollarDays": 374217500.81521225,
+          "endEquity": 2691747.3636819855
+        },
+        {
+          "fraction": 0.3,
+          "borrowingDollarDays": 497474827.37099373,
+          "endEquity": 3197788.1795572853
+        }
+      ]
+    }
+  },
+  "provenance": {
+    "study": "research/d1-diverse-pool-discovery",
+    "sealedAssessment": "research/d1-diverse-pool-discovery/results/rounds/final/select/J-u/assessment.json",
+    "sealedAssessmentSha256": "f0964a546cdc821e611fdacb919f344af51caf9254459e16d67f8997032827f2",
+    "frozenSelection": "research/d1-diverse-pool-discovery/FROZEN_SELECTION.json",
+    "frozenSelectionBodyHash": "ae20e9844c400fe24e2a78a8b4584062ea9cc4b0b9b2d8c5755a0e1b8f2cfe33",
+    "frozenSelectionRecord": "final/J-u/assessment.json",
+    "outcome": "no advancement — neither procedure passed its preregistered procedure gate GP (§14.5)"
+  },
+  "restrictions": [
+    "Not a pool of config/pools/ and not a phenotype of config/phenotypes/: no command runs it.",
+    "Do not backtest it on data after 2023-12-29 (the study never evaluated it there).",
+    "A prospective track needs a separate, user-approved protocol (research/prospective-b4-b5-shadow/PROTOCOL.md §7)."
+  ]
+}

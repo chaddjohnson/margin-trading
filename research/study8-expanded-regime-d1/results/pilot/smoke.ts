@@ -1,0 +1,17 @@
+import { openDoor } from '/home/chad/projects/margin-trading-study8/src/study8-expanded-regime-d1/data.ts';
+import { Evaluator, Lab, PointCache, baseSettings } from '/home/chad/projects/margin-trading-study8/src/study8-expanded-regime-d1/evaluate.ts';
+import { evidenceOf, qualificationOf } from '/home/chad/projects/margin-trading-study8/src/study8-expanded-regime-d1/evidence.ts';
+import { floorsOf } from '/home/chad/projects/margin-trading-study8/src/study8-expanded-regime-d1/fitness.ts';
+import { frozenGrids } from '/home/chad/projects/margin-trading-study8/src/study8-expanded-regime-d1/context.ts';
+import { Lab as S6, minuteSeries, periodMinuteDrawdown } from '/home/chad/projects/margin-trading/src/study6-b5-kre-robustness/evaluate.ts';
+const door = await openDoor('pilot-F24', ['VGT','XBI','XRT','KRE','GDX'], 'pre-freeze code-path smoke test on frozen controls (no figures printed)');
+const ev = new Evaluator(door); const lab = new Lab(ev, PointCache.memory(door));
+const floors = floorsOf(ev.yearsOfRun(), 2017, 2024);
+const b1 = evidenceOf(lab, { VGT: frozenGrids.VGT }, { prefix: 'smoke', track: 'x', fold: 'F24', floors, trainKey: 'TRAIN-F24' });
+const vg = evidenceOf(lab, { VGT: frozenGrids.VGT, GDX: frozenGrids.GDX }, { prefix: 'smoke', track: 'x', fold: 'F24', floors, trainKey: 'TRAIN-F24', testKey: 'TEST-F23' });
+const q = qualificationOf(vg, floors, { fold: 'F24', trainKey: 'TRAIN-F24', b1, pooled: true });
+const s6 = new S6(door as never); const r = s6.replay({ VGT: frozenGrids.VGT, GDX: frozenGrids.GDX }, baseSettings, true);
+const m = minuteSeries(s6, r, { VGT: frozenGrids.VGT, GDX: frozenGrids.GDX }, baseSettings);
+const pdd = periodMinuteDrawdown(m, door.dates, '2024-01-01', '2024-12-31');
+const keys = Object.keys(vg.centre.record.periods);
+console.log('code paths ok:', typeof q.qualified === 'boolean', Number.isFinite(pdd), m.matchesTracker, ['TRAIN-F24','TEST-F23','TRAIN-F21','TEST-F21','2024'].every((k) => keys.includes(k)), 'partial keys:', keys.filter((k) => k.includes('partial')).join(' '));

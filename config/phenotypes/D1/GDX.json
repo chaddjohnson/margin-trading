@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "architecture": "D1",
+  "symbol": "GDX",
+  "execution": "multi-etf-d1",
+  "phenotypes": {
+    "portfolioAware": {
+      "description": "Portfolio-aware D1 GDX book, accepted under research/portfolio-aware-d1-optimization (configuration P-add-GDX: All-lowDd shadow plus this book): X 27.4% Y 0.4% L 100 stop 7.1% hold 18 buffer 3.6% P 19.1% W 81. Selected on training for its incremental executable effect on the shared pool, not for its standalone result; its post-training evidence is seven lots, two of which carry the gain (see RECOMMENDATION.md).",
+      "parameters": {
+        "targetPercentChange": "27.4%",
+        "trailingBuyPercentage": "0.4%",
+        "trailingStopPercentage": "7.1%",
+        "maximumHoldDays": 18,
+        "tickWindowSize": 100,
+        "intradayLossBuffer": "3.6%",
+        "pullback": "19.1%",
+        "continuationWindow": 81
+      },
+      "provenance": {
+        "program": "portfolio-aware-d1",
+        "manifest": "research/portfolio-aware-d1-optimization/FROZEN_SELECTION.json",
+        "manifestHash": "2eb9defcf61e02f1ffc566f7ae73c49046619a2f15ea465a40c2f4e03fbf518e",
+        "candidateId": "d1-51ea8d4bd6",
+        "role": "Track P (portfolio-aware) vector of configuration P-add-GDX",
+        "origin": "ga:P:21",
+        "selectedAt": "2026-10-24T15:37:44.418Z",
+        "reference": "research/portfolio-aware-d1-optimization/results/evaluation/"
+      }
+    }
+  }
+}

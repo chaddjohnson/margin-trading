@@ -1,0 +1,489 @@
+{
+ "generatedAt": "2026-10-24T15:05:49.739Z",
+ "nature": "integrity only: no strategy result on any window",
+ "git": {
+  "branch": "research/trailing-buy-four-family-optimization",
+  "head": "cef1534697f03bf567d570fae8fb4743faf5f536",
+  "modifiedTracked": [
+   "config/phenotypes/COMPATIBILITY.md",
+   "package.json",
+   "src/phenotype/strategies.ts"
+  ],
+  "untracked": [
+   "research/portfolio-aware-d1-optimization/",
+   "src/app/portfolioAwareD1.ts",
+   "src/portfolio-aware-d1/"
+  ]
+ },
+ "partitions": {
+  "file": "data/partitions.json",
+  "sha256": "43893f3d3277d6804775a82e8975644fae6ffcdff30574b9ffc000212c0fefa6",
+  "partitions": {
+   "training": {
+    "start": "2016-01-01",
+    "end": "2023-12-31"
+   },
+   "holdout": {
+    "start": "2024-01-01",
+    "end": "2025-10-16"
+   },
+   "final": {
+    "start": "2025-10-17",
+    "end": null
+   },
+   "all": {
+    "start": null,
+    "end": null
+   }
+  }
+ },
+ "verifiers": [
+  {
+   "command": "npm run datasets -- verify",
+   "exitCode": 0,
+   "seconds": 86.676,
+   "tail": [
+    "  holdout  dates 2024-01-02 → 2025-10-16     182466 rows  sha256 caf5013be03d5bb4",
+    "  final    dates 2025-10-17 → 2026-10-13     106441 rows  sha256 e9d6e03462dd5f7d",
+    "  note: bars after 1:00 p.m. on 21 early-close days",
+    "",
+    "XRT: VERIFIED (verify) → data/XRT/data.csv",
+    "  canonical          1068251 rows  ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752  2016-01-04T14:30:00Z → 2026-10-13T20:50:00Z",
+    "  training dates 2016-01-04 → 2023-12-29     792337 rows  sha256 67bd21c47aa7929f",
+    "  holdout  dates 2024-01-02 → 2025-10-16     178080 rows  sha256 ce32cff7683b682f",
+    "  final    dates 2025-10-17 → 2026-10-13      97834 rows  sha256 2f90c5b92b13b893",
+    "  note: bars after 1:00 p.m. on 14 early-close days",
+    "",
+    "16 of 16 symbol(s) verified"
+   ]
+  },
+  {
+   "command": "npm run market-events -- verify",
+   "exitCode": 0,
+   "seconds": 86.664,
+   "tail": [
+    "> market-events",
+    "> node --env-file-if-exists=.env --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts marketEvents verify",
+    "",
+    "config/market-events/distributions.csv: 86 rows, sha256 3b4342eb7cdbb270; rebuilt from config/market-events/raw/vanguard-2026-10-24T084147Z: identical",
+    "  VGT: covered through 2026-10-24, last ex-date 2026-09-23",
+    "  VOOG: covered through 2026-10-24, last ex-date 2026-09-23",
+    "SPLIT VGT 8:1 on 2026-04-21: raw 809.13 → 101.57, adjusted overnight move 0.42%",
+    "SPLIT VOOG 6:1 on 2026-04-21: raw 460.46 → 77.25, adjusted overnight move 0.66%",
+    "SPLIT XOP 0.25:1 on 2020-03-30: raw 8.03 → 31.1, adjusted overnight move -3.18%",
+    "SPLIT XLE 2:1 on 2025-12-05: raw 92.22 → 46.03, adjusted overnight move -0.17%",
+    "SPLIT XLU 2:1 on 2025-12-05: raw 87.42 → 43.72, adjusted overnight move 0.02%",
+    "SPLIT XLY 2:1 on 2025-12-05: raw 238.14 → 119.18, adjusted overnight move 0.09%"
+   ]
+  },
+  {
+   "command": "npm run legacy-archive -- verify",
+   "exitCode": 0,
+   "seconds": 0.69,
+   "tail": [
+    "VERIFIED data/IWM/IWM-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/IWM/IWM-2016-2025-1-minute.csv: sha256 e94869c669a5b0ad51a3114ca372207a174e8d0f935c101c16841b6021c1f090",
+    "VERIFIED data/IWN/IWN-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/IWN/IWN-2016-2025-1-minute.csv: sha256 aea1d2bb792bdc562940f88edde146bed674ed6adc0c79f03cfbdeaaf652d947",
+    "VERIFIED data/KRE/KRE-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/KRE/KRE-2016-2025-1-minute.csv: sha256 5f8b2a284a862fdc15c1ba82649fbb749ce3dbbd66046c0f4c4c0f3f4c9e7e0b",
+    "VERIFIED data/VGT/VGT-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/VGT/VGT-2016-2025-1-minute.csv: sha256 600322afbe3d837a4c66ec62acb39e16d707079f49ec18d77f947bcb24c7962f",
+    "VERIFIED data/VGT/VGT-2016-2026.csv → data/archive/legacy-research-inputs/VGT/VGT-2016-2026.csv: sha256 653b0030da69518fa61f5a8aa43c523446676334fa309632915f5d3c5ed9d3b8",
+    "VERIFIED data/VOOG/VOOG-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/VOOG/VOOG-2016-2025-1-minute.csv: sha256 f4ad4d72f39b157fce64e023f644c4648db840be39ce6979ff42a5818d278cc2",
+    "VERIFIED data/XBI/XBI-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XBI/XBI-2016-2025-1-minute.csv: sha256 ad5521e33b53fa1590c07de5a4f5f6ca6738b06aae8bcb6224606901a5a56f7b",
+    "VERIFIED data/XLE/XLE-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XLE/XLE-2016-2025-1-minute.csv: sha256 e8adb598f40cdd95297b6dbda255ee0888a2a41e636734139ce04ff395c1922a",
+    "VERIFIED data/XLF/XLF-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XLF/XLF-2016-2025-1-minute.csv: sha256 d6cc7fe9f0d4ebdffb47e576f28e54373b40da909f411bdc7aca682d7fe445ed",
+    "VERIFIED data/XLY/XLY-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XLY/XLY-2016-2025-1-minute.csv: sha256 b58e2fbcd15d3b6a0c6b115fb6017490c3f2ed04d41fc61da4e74ca85b42155e",
+    "VERIFIED data/XRT/XRT-2016-2025-1-minute.csv → data/archive/legacy-research-inputs/XRT/XRT-2016-2025-1-minute.csv: sha256 c7c591557cc58576eb16da29ef5278643da0b0c23c183fe24cfb1c8f4bf79dc8",
+    "11 of 11 verified (data/archive/legacy-research-inputs)"
+   ]
+  }
+ ],
+ "members": [
+  {
+   "symbol": "VOOG",
+   "role": "core",
+   "file": "data/VOOG/data.csv",
+   "sha256": "a7aa42aeebd9e83f94368f0ee7761410ffacf734524f3cc7655af32354de51ab",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2026-04-21",
+     "ratio": 6,
+     "rawOvernight": -0.8322329844068974,
+     "adjustedOvernight": 0.006602093558615296,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "VGT",
+   "role": "frozen book",
+   "file": "data/VGT/data.csv",
+   "sha256": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2026-04-21",
+     "ratio": 8,
+     "rawOvernight": -0.8744701098710961,
+     "adjustedOvernight": 0.004239121031230919,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XBI",
+   "role": "frozen book",
+   "file": "data/XBI/data.csv",
+   "sha256": "9afecc0606330d68ca12f7b0c331f75a150f64d0dad2e6ff910538a667b0c031",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XRT",
+   "role": "frozen book",
+   "file": "data/XRT/data.csv",
+   "sha256": "ca0fdc6a4c77a97d047bb710bcefc24fe7fdbd0dc117794725008b33700a0752",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "KRE",
+   "role": "frozen book",
+   "file": "data/KRE/data.csv",
+   "sha256": "40e7bd6c72c1dffb343b265bed16d69c964ba5bee81ad297a15e6d8a5607e01a",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "GDX",
+   "role": "candidate",
+   "file": "data/GDX/data.csv",
+   "sha256": "86ce101fede1a412dd452fcc29dc87b69ade4ad67629230172fde878b7c2c320",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XOP",
+   "role": "candidate",
+   "file": "data/XOP/data.csv",
+   "sha256": "cb8f4d8852b2f7141d5a6fdc0ea5f7598d6d0ca9620899f0016aa2de6f049855",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2020-03-30",
+     "ratio": 0.25,
+     "rawOvernight": 2.8729763387297638,
+     "adjustedOvernight": -0.03175591531755906,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "EWZ",
+   "role": "candidate",
+   "file": "data/EWZ/data.csv",
+   "sha256": "b1cf63a676c2696cc5f68a432f0d601510a1900d014b600b3a52dfb7c1c7439a",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "TLT",
+   "role": "candidate",
+   "file": "data/TLT/data.csv",
+   "sha256": "f4df3690714ee876ac643067f8567f973d80b701629f5142db15d791df16818b",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XLE",
+   "role": "candidate",
+   "file": "data/XLE/data.csv",
+   "sha256": "57d013b051ccb20570e64a3058cd91959bac56dc2bd5533137d13f962d37f214",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2025-12-05",
+     "ratio": 2,
+     "rawOvernight": -0.5008674907829105,
+     "adjustedOvernight": -0.001734981565820859,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "XLU",
+   "role": "candidate",
+   "file": "data/XLU/data.csv",
+   "sha256": "ab2787a4198289317fb5324248ea8abb356925f5e6857c67ac2594aaae0fc1c3",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [
+    {
+     "effectiveDate": "2025-12-05",
+     "ratio": 2,
+     "rawOvernight": -0.4998856097002974,
+     "adjustedOvernight": 0.00022878059940523165,
+     "appliedOnce": true,
+     "priceMismatches": 0
+    }
+   ],
+   "unexplainedGaps": 0
+  },
+  {
+   "symbol": "GLD",
+   "role": "candidate",
+   "file": "data/GLD/data.csv",
+   "sha256": "d3dd1beb35bc9beeb8085bd803609d56e2403662bf29c052450ee2e89400a9cc",
+   "sameAsComplementaryAudit": true,
+   "sessions": 2710,
+   "firstDate": "2016-01-04",
+   "lastDate": "2026-10-13",
+   "splits": [],
+   "unexplainedGaps": 0
+  }
+ ],
+ "calendar": {
+  "identical": true,
+  "differences": [],
+  "lastCommon": "2026-10-13"
+ },
+ "liquidity": [
+  {
+   "symbol": "VOOG",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 15840293.00529999,
+   "medianRegularBars": 134,
+   "sparseSessions": 1629,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "VGT",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 125549539.72689992,
+   "medianRegularBars": 327,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "XBI",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 477004997.1313002,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "XRT",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 223422175.0984999,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "KRE",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 387312893.6230002,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "GDX",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 702135490.9397006,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "XOP",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 562691333.3828999,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "EWZ",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 729086762.2383002,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "TLT",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 1258834822.804399,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "XLE",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 1108376151.6063998,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "XLU",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 773094153.2602,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  },
+  {
+   "symbol": "GLD",
+   "trainingSessions": 2012,
+   "medianDailyDollarVolume": 997838998.4549003,
+   "medianRegularBars": 390,
+   "sparseSessions": 0,
+   "zeroVolumeBars": 0
+  }
+ ],
+ "distributionCoverage": {
+  "file": "config/market-events/distributions.csv",
+  "sha256": "3b4342eb7cdbb270d78a355576c2098d7692caae3ae0550bcbeb64d7a7528259",
+  "coverage": {
+   "VGT": "2026-10-24",
+   "VOOG": "2026-10-24"
+  },
+  "coversLastCommonSession": true
+ },
+ "splitsRegistry": [
+  {
+   "symbol": "VGT",
+   "effectiveDate": "2026-04-21",
+   "ratio": 8,
+   "source": "Vanguard press release 'Vanguard Announces Share Splits for Five Equity Index ETFs', 2026-03-24 (https://www.prnewswire.com/news-releases/vanguard-announces-share-splits-for-five-equity-index-etfs-302723368.html): VGT 8:1, record date 2026-04-17, payable 2026-04-20 after the close, split-adjusted trading from 2026-04-21; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "VOOG",
+   "effectiveDate": "2026-04-21",
+   "ratio": 6,
+   "source": "Vanguard press release 'Vanguard Announces Share Splits for Five Equity Index ETFs', 2026-03-24 (https://www.prnewswire.com/news-releases/vanguard-announces-share-splits-for-five-equity-index-etfs-302723368.html): VOOG 6:1, record date 2026-04-17, payable 2026-04-20 after the close, split-adjusted trading from 2026-04-21; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "XOP",
+   "effectiveDate": "2020-03-30",
+   "ratio": 0.25,
+   "source": "SSGA Funds Management Form 8937 for the SPDR S&P Oil & Gas Exploration and Production ETF, signed 2020-03-30 (https://www.ssga.com/library-content/products/fund-docs/etfs/us/tax-documents/J942-SPDR-SP-Oil-Gas-Exploration-and-Production-ETF-2020-Form-8937.pdf, copy config/market-events/raw/split-sources-2026-10-24/XOP-2020-Form-8937-ssga.pdf, sha256 ce6365b7…): '1:4 Reverse Share Split', 'Effective, March 30, 2020 … every four shares of the Fund's outstanding shares converted automatically into one (1) issued and outstanding share', CUSIP 78464A730 → 78468R556; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "XLE",
+   "effectiveDate": "2025-12-05",
+   "ratio": 2,
+   "source": "OCC Information Memo #57734, 2025-11-25, 'The Energy Select Sector SPDR Fund - 2 For 1 Stock Split' (https://www.miaxglobal.com/sites/default/files/alert-files/XLE_Split_57734.pdf, copy config/market-events/raw/split-sources-2026-10-24/XLE-OCC-57734.pdf, sha256 7c597f5f…): record date 2025-12-02, payable 2025-12-04, ex-distribution date 2025-12-05, CUSIP 81369Y506; State Street announced the Select Sector SPDR splits on 2025-11-20; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "XLU",
+   "effectiveDate": "2025-12-05",
+   "ratio": 2,
+   "source": "OCC Information Memo #57736, 2025-11-25, 'The Utilities Select Sector SPDR Fund - 2 For 1 Stock Split' (https://www.miaxglobal.com/sites/default/files/alert-files/XLU_Split_57736.pdf, copy config/market-events/raw/split-sources-2026-10-24/XLU-OCC-57736.pdf, sha256 01982dd5…): record date 2025-12-02, payable 2025-12-04, ex-distribution date 2025-12-05, CUSIP 81369Y886; retrieved 2026-10-24"
+  },
+  {
+   "symbol": "XLY",
+   "effectiveDate": "2025-12-05",
+   "ratio": 2,
+   "source": "OCC Information Memo #57733, 2025-11-25, 'The Consumer Discretionary Select Sector SPDR Fund - 2 For 1 Stock Split' (https://www.miaxglobal.com/sites/default/files/alert-files/XLY_Split_57733.pdf, copy config/market-events/raw/split-sources-2026-10-24/XLY-OCC-57733.pdf, sha256 28d7fb3b…): record date 2025-12-02, payable 2025-12-04, ex-distribution date 2025-12-05, CUSIP 81369Y407; retrieved 2026-10-24"
+  }
+ ],
+ "inputs": {
+  "data/partitions.json": "43893f3d3277d6804775a82e8975644fae6ffcdff30574b9ffc000212c0fefa6",
+  "config/market-events/splits.json": "aaa861d58fae8afb1d34b654dbcd5c3f31108465785e1b2241938690d4495639",
+  "config/market-events/distributions.csv": "3b4342eb7cdbb270d78a355576c2098d7692caae3ae0550bcbeb64d7a7528259",
+  "config/market-events/distributions.manifest.json": "d2c02b017d8167a0f3f40bccefe95ad79ef690f59b8c133c5ce15d0dc034c11e",
+  "config/allocator/multi-etf-allocator.json": "4df4940bb6dc8c8854d0732df8f6cd745c4bbdd2b35db46f7f6f443e473e555f",
+  "config/phenotypes/D1/VGT.json": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70",
+  "config/phenotypes/D1/XBI.json": "453c4fd00d9de91269da718011c78b3d20d4611a0791005285345cbdac12aff8",
+  "config/phenotypes/D1/XRT.json": "d7b7f222bb8921ec5a3781d3b98c32f3045eb775cb5e01ee5e6af05af4e7cee9",
+  "config/phenotypes/D1/KRE.json": "6b8889e20ab3c07e85f12e5c344166588495e95bc1f5573b36699e8a587a8c8d",
+  "research/multi-etf-d1/FROZEN_CANDIDATES.json": "94b0b646d7aa7520e6ed59a82707389f202d770cfae6464e1c354450d8be8124"
+ },
+ "code": {
+  "src/portfolio-aware-d1/audit.ts": "0fdf91558c7c1c73f6a4c83db589f58d9bfd2c3d52d6287a927ef0244172faed",
+  "src/portfolio-aware-d1/cli.ts": "31c41fa02dae7d219bb78e0ffc9bf56eca71527a01e3634e4cdf3fbc100b34a8",
+  "src/portfolio-aware-d1/compare.ts": "2fb64ffdacea3005aa60153bb0b8bfd33b79072b4b3cc41465d7bad284be95d0",
+  "src/portfolio-aware-d1/context.ts": "3165b9e794412829246400ad4fcfdce3cb513f44717eb510f08e1e999593b042",
+  "src/portfolio-aware-d1/controls.ts": "ca811d6a658c38a8f82a17be33057fcba4d82e4db771a1e75cda912efb26658a",
+  "src/portfolio-aware-d1/data.ts": "f63d945f52cc481f38d4ccb9ec5e504ad0ac93662154b09dcdad57fc1ddd9297",
+  "src/portfolio-aware-d1/evaluate.ts": "fbeaae5689c166b38b3c33652e1bf59295495a6525b886cfce95904e475d3179",
+  "src/portfolio-aware-d1/freeze.ts": "5283f78001b8b4d22b040b2a7e7a658463521f483c633dc648b3cdfc261bdf98",
+  "src/portfolio-aware-d1/nbook/engine.ts": "f0cf1e1e2f0958eeafc50f7372959314f531b447a1c00c4d9d32d6d4be6baad8",
+  "src/portfolio-aware-d1/nbook/ledger.ts": "5a1ae62eac585d97ba560c7bb03fb6eadd97671fdb95c4762de340812a31b7bd",
+  "src/portfolio-aware-d1/nbook/margin.ts": "ee84b70dae14c6fbbf53c077b973a2f7ae0eed82b87cfc726c10faf1933fc346",
+  "src/portfolio-aware-d1/nbook/universe.ts": "a72ff27a49caee26cae3c0139475befce22951f12e847ae8502e0a150b3d0459",
+  "src/portfolio-aware-d1/parity.ts": "4e4b68804eb5470b9a09ba498d0820555c31fde6f51005b34deead5040ceaee8",
+  "src/portfolio-aware-d1/phenotypes.ts": "f51f0d04115f1f018d61985149ccdcbaa2b90b663aaa180c00c9e7197edcb788",
+  "src/portfolio-aware-d1/replay.ts": "151b8dbd383d35c02d3fd904249304f911b96cad0a15386966ddcda5fa624ea6",
+  "src/portfolio-aware-d1/space.ts": "2ec2818f1407cb8f2c4a7ef273b8ff3b122a21d81d498d469fd7d2d0538b6d9a",
+  "src/portfolio-aware-d1/trace.ts": "508465ed7775dc91a7c3ebcbc67988df295674b418a5be8548f9208e526257a1",
+  "src/multi-etf-allocator/engine.ts": "fa13c2be38ac95b551309e487bfff7ac4d98922413636ccdf43bd4cfaacf66db",
+  "src/multi-etf-allocator/ledger.ts": "7a41e2748e94a1dd0b3fb5399e73c84cf8f63bb4c1e542329740781ef68c9115",
+  "src/multi-etf-allocator/shadow.ts": "d37332e9a7d47dc8b57b061fb228380cf8c3fa660ed802b4d6413a6c7835bb24",
+  "src/multi-etf-allocator/phenotypes.ts": "3e97c8d636a6e7661002d6391707c61e2815e1f34f363a85e0b3f8b746cf751b",
+  "src/multi-etf-allocator/data.ts": "9931a4173a139a592589d3052487f24de032e2f7c4c1c4a3b3d7e320c8a59400",
+  "src/multi-etf-allocator/dataset.ts": "8f5925f8563c0323ac25cc3eac27da1a70311b7b734a9ae785ed4939bb41a705",
+  "src/shared-margin-portfolio/strategy.ts": "0407559247569b2f471f8887faa9232502574fb28a34e3f435026fc3f0df7093",
+  "src/four-family/data.ts": "d73c2a9764c5401983b3cb2c83c8686c6254fb4fd003e9d2cac03cc31d7caa9a",
+  "src/multi-etf-d1/space.ts": "e5a49833cd48b765911bb1c0fa623471a2f5d72016877542eec0bd2804c51b11",
+  "src/multi-etf-d1/context.ts": "c407023075dc3957e009ac399ca1c8861e736f3dd8b5d6d0e5298e83c9ee3195",
+  "src/optimizer/nsga2.ts": "ce00e3c0aaa09283dc334f07faed2cf646ddca906d68302a4b19f364877ce5d5",
+  "src/optimizer/sobol.ts": "7f420687def739a7c1e1213a0f3bbf7c2224da8cd528f098543a4a89ae136976",
+  "src/lib/evaluation.ts": "770ca4ac5eb4dd8d022fd40af0f1bf71759cf11216be0d3d2545c6da279adf51",
+  "src/lib/dataset.ts": "fa92fd8a2665af8c3f8d9ea093e952aeb1d288d69d6d8eda695061a672aff0ed",
+  "src/lib/corporateActions.ts": "ebdae50b5599518dca329f41a771e0afe5f8bf498a6e99255f853b6b911bd36f",
+  "src/app/allIn-trailingBuy-postExitContinuation.ts": "de0935c3f402a42b41227c5fb362e9b37fb68fdfe01c14d020ea073dce795dc0"
+ },
+ "failures": [],
+ "passed": true
+}

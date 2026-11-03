@@ -1,0 +1,381 @@
+diff --git afrozen-body.ts bderived-body.ts
+index 3a3388e3..166e0502 100644
+--- afrozen-body.ts
++++ bderived-body.ts
+@@ -1,4 +1,4 @@
+-export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResult => {
++export const runPAllocator = (universe: NUniverse, config: PRunConfig): PRunResult => {
+   const endIndex = Math.min(config.endIndex ?? universe.sessionCount - 1, universe.sessionCount - 1);
+   const armStart = config.eligibilityIndex ?? universe.eligibilityIndex;
+   const startIndex = config.accountingStartIndex ?? 0;
+@@ -13,6 +13,25 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+   const securities = securitiesOf(config.symbols);
+   const lotKeys = lotKeysOf(config.symbols);
+   const tieOrder = tieOrderOf(config.symbols);
++  const allocation = config.allocation ?? p0Allocation;
++  const policy = allocation.policy;
++  const positions =
++    policy.rankedTies || policy.preemption
++      ? priorityPositions(config.symbols, allocation.priority!)
++      : new Map<string, number>();
++  const positionOf = (symbol: string) => positions.get(symbol)!;
++  const preemptions: PreemptionRecord[] = [];
++  const declines: PreemptionDecline[] = [];
++  const replacementOf = new Map<VirtualTrade, PreemptionRecord>();
++
++  interface Pending {
++    record: PreemptionRecord;
++    incumbent: Lot;
++    replacement: Reservation;
++    signal: NSignalRecord;
++  }
++
++  let pending: Pending | undefined;
+   const instrumentOf = (security: string) => {
+     const instrument = universe.instruments[security];
+ 
+@@ -154,7 +173,8 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+     const open = lots();
+     const parts = [
+       ...open.map((lot) => `${lot.symbol} lot ${lot.id}`),
+-      ...reservations.map((reservation) => `${reservation.symbol} pending order`)
++      ...reservations.map((reservation) => `${reservation.symbol} pending order`),
++      ...(pending ? [`${pending.replacement.symbol} preemption pending`] : [])
+     ];
+ 
+     return { count: open.length + reservations.length, label: parts.join('+') };
+@@ -574,11 +594,72 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+ 
+     signals.push(record);
+ 
++    const start = policy.preemption && !result.grant ? preemptionTest(book, signal, s, result) : undefined;
++
++    if (start && start.estimate) {
++      record.outcome = 'granted';
++      record.reason = `preemption pending (${start.reason})`;
++    } else if (start) {
++      record.reason = `${result.reason}; ${start.reason}`;
++    }
++
+     // Shadow semantics: the book takes the signal either way.
+-    const trade = book.commit(signal, s, result.grant ? 'granted' : 'refused');
++    const trade = book.commit(signal, s, record.outcome);
+ 
+     record.trade = trade;
+ 
++    if (start?.estimate) {
++      const lot = start.lot!;
++      const replacement: Reservation = {
++        trade,
++        symbol: book.symbol,
++        principal: result.principal,
++        equity: result.equity,
++        slot: 0,
++        decisionIndex: s
++      };
++      const preemption: PreemptionRecord = {
++        id: preemptions.length + 1,
++        decisionIndex: s,
++        decisionDate: dates[s]!,
++        decisionTime: signal.decisionTime,
++        sourceSymbol: lot.symbol,
++        sourceLotId: lot.id,
++        sourceTradeId: lot.trade.id,
++        sourcePosition: positionOf(lot.symbol),
++        targetSymbol: book.symbol,
++        targetTradeId: trade.id,
++        targetPosition: positionOf(book.symbol),
++        heldSessions: s - lot.entryIndex,
++        heldDays: (signal.decisionTime - lot.entryTime) / 86400,
++        estimatePrice: start.estimatePrice!,
++        estimateNet: start.estimate.net,
++        estimateInterest: start.estimate.interest,
++        threshold: policy.thresholdDollars,
++        outcome: 'pending',
++        reason: '',
++        executionIndex: -1,
++        executionDate: '',
++        executionTime: NaN,
++        executionBar: -1,
++        executionRawPrice: NaN,
++        executionPrice: NaN,
++        executionNet: NaN,
++        executionInterest: NaN,
++        executionGross: NaN,
++        entryFriction: lot.shares * (lot.entryPrice - lot.entryRawPrice),
++        exitFriction: NaN,
++        releasedPrincipal: 0,
++        replacementPrincipal: result.principal,
++        replacementLotId: -1,
++        incumbentVirtualOpen: true,
++        targetVirtualState: 'PENDING_FILL'
++      };
++
++      preemptions.push(preemption);
++      pending = { record: preemption, incumbent: lot, replacement, signal: record };
++    }
++
+     if (result.grant) {
+       reservations.push({
+         trade,
+@@ -800,6 +881,11 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+         }
+       }
+ 
++      // 3b. P1: a pending preemption resolves at the incumbent's first trade at or after the decision
++      if (pending) {
++        resolvePreemption(s, T, false);
++      }
++
+       // 4. core VGT orders
+       if (portfolio && present.has('VGT')) {
+         runCoreOrders('VGT', s, atBar.VGT!);
+@@ -840,6 +926,11 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+ 
+       const sameMinute = pendingSignals.length;
+ 
++      // P0R / P1: the same-minute decisions in the frozen priority order (the frozen order is alphabetical).
++      if (policy.rankedTies && pendingSignals.length > 1) {
++        pendingSignals.sort((a, b) => positionOf(a.book.symbol) - positionOf(b.book.symbol));
++      }
++
+       for (const { book, signal } of pendingSignals) {
+         handleDecision(book, signal, s, sameMinute);
+       }
+@@ -898,6 +989,10 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+       }
+     }
+ 
++    if (pending) {
++      resolvePreemption(s, closeTime, true);
++    }
++
+     if (portfolio) {
+       runCoreOrders('VGT', s, counts.VGT!);
+     }
+@@ -994,6 +1089,11 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+ 
+   const lastSessionTime = sTime[endIndex]!;
+ 
++  // A preemption still pending when the data end: the incumbent is kept (and marked below), the replacement unfunded.
++  if (pending) {
++    abortPreemption(endIndex, 'the data end before the incumbent could be sold');
++  }
++
+   for (const book of bookList) {
+     book.finish(endIndex);
+   }
+@@ -1051,9 +1151,182 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+       signals: book.signals.length,
+       armedAtEnd: book.machine.state === 'ARMED',
+       pendingAtEnd: Boolean(book.order)
+-    }))
++    })),
++    allocationKey: policy.key,
++    priorityOrder: allocation.priority ? [...allocation.priority.order] : [],
++    preemptions,
++    declines
+   };
+ 
++  // ----- P1: preemption helpers -----
++
++  // The incumbent's liquidation figures at a raw price in session s, by the ledger's own formula.
++  function liquidationOf(lot: Lot, rawPrice: number, s: number) {
++    return portfolio
++      ? portfolioLiquidation(lot, rawPrice, sTime[s]!, config.rate, config.costBps)
++      : fixedLiquidation(lot as unknown as RealLot, rawPrice, sTime[s]!, config.rate, config.costBps);
++  }
++
++  // At a decision the frozen gate refused: may this signal start a preemption? `undefined` when the pool is not held
++  // by exactly one lot alone (a reservation, a pending preemption, or a refusal for another reason).
++  function preemptionTest(
++    book: ShadowBook,
++    signal: ReboundSignal,
++    s: number,
++    result: Gate
++  ): PreemptionStart | undefined {
++    const open = lots();
++
++    if (pending || reservations.length > 0 || open.length !== 1) {
++      return undefined;
++    }
++
++    const lot = open[0]!;
++    const rankingId = allocation.priority!.rankingId;
++
++    if (!(positionOf(book.symbol) < positionOf(lot.symbol))) {
++      return { reason: `no preemption: ${book.symbol} is not above ${lot.symbol} in ${rankingId}` };
++    }
++
++    if (portfolio) {
++      const failure = !(result.principal > 0)
++        ? 'no positive principal'
++        : result.equity < protocol.minimumEquity
++          ? 'equity below the $2,000 minimum'
++          : result.principal > result.regTMaximum + 1e-9
++            ? 'Reg T initial margin'
++            : result.principal > result.houseMaximum + 1e-9
++              ? `house requirement at entry (${activeSchedule})`
++              : '';
++
++      if (failure) {
++        return { reason: `no preemption: ${failure} with the incumbent open` };
++      }
++    }
++
++    const estimatePrice = lastClose[lot.symbol]!;
++    const estimate = liquidationOf(lot, estimatePrice, s);
++
++    if (!(estimate.net >= policy.thresholdDollars)) {
++      declines.push({
++        decisionIndex: s,
++        decisionTime: signal.decisionTime,
++        targetSymbol: book.symbol,
++        sourceSymbol: lot.symbol,
++        sourceLotId: lot.id,
++        estimatePrice,
++        estimateNet: estimate.net
++      });
++
++      return {
++        reason: `preemption declined: ${lot.symbol} lot ${lot.id} liquidation net ${estimate.net.toFixed(2)} < ${policy.thresholdDollars}`
++      };
++    }
++
++    return {
++      reason: `${lot.symbol} lot ${lot.id}, estimated net ${estimate.net.toFixed(2)}`,
++      lot,
++      estimate,
++      estimatePrice
++    };
++  }
++
++  // After the virtual exits of a bar (atClose false: the bar starting at T) or of the close: the incumbent's own
++  // exit supersedes the preemption; otherwise its first trade at or after the decision sells it, if the net there
++  // is still at least the threshold.
++  function resolvePreemption(s: number, T: number, atClose: boolean) {
++    const { incumbent, record } = pending!;
++
++    if (incumbent.exitIndex >= 0) {
++      record.reason = `${incumbent.symbol} lot ${incumbent.id} exited first on its own rule (${incumbent.exitReason})`;
++      fundReplacement(s, 'superseded');
++      return;
++    }
++
++    const symbol = incumbent.symbol;
++    const ds = datasets[symbol]!;
++    let bar: number;
++
++    if (atClose) {
++      if (!(record.decisionTime < closeTimes[s]!) || Number.isNaN(ds.sClosingPrint[s]!)) {
++        return;
++      }
++
++      bar = ds.sBarCount[s]!;
++    } else {
++      bar = atBar[symbol]!;
++
++      if (bar < 0 || T < record.decisionTime) {
++        return;
++      }
++    }
++
++    const raw = priceAt(ds, s, bar);
++    const time = timeAt(ds, s, bar);
++    const fill = liquidationOf(incumbent, raw, s);
++
++    record.executionIndex = s;
++    record.executionDate = dates[s]!;
++    record.executionTime = time;
++    record.executionBar = bar;
++    record.executionRawPrice = raw;
++    record.executionPrice = fill.price;
++    record.executionNet = fill.net;
++    record.executionInterest = fill.interest;
++    record.executionGross = fill.proceeds - incumbent.originalPrincipal;
++    record.exitFriction = incumbent.shares * (raw - fill.price);
++
++    if (!(fill.net >= policy.thresholdDollars)) {
++      abortPreemption(s, `the liquidation net at the fill ${fill.net.toFixed(2)} < ${policy.thresholdDollars}`);
++      return;
++    }
++
++    exitRealLot(
++      incumbent,
++      s,
++      bar,
++      time,
++      raw,
++      preemptionReason as ExitReason,
++      atClose ? 'closing print' : 'first trade after decision',
++      0
++    );
++
++    if (incumbent.net !== fill.net) {
++      throw new Error(`${config.key}: preemption ${record.id} booked ${incumbent.net}, tested ${fill.net}`);
++    }
++
++    record.releasedPrincipal = incumbent.originalPrincipal;
++    record.reason = `${symbol} lot ${incumbent.id} sold at ${raw} for net ${fill.net.toFixed(2)}`;
++    fundReplacement(s, 'executed');
++  }
++
++  function fundReplacement(s: number, outcome: 'executed' | 'superseded') {
++    const { record, replacement } = pending!;
++
++    record.outcome = outcome;
++    record.incumbentVirtualOpen = Boolean(books.get(record.sourceSymbol)!.position);
++    record.targetVirtualState = books.get(record.targetSymbol)!.state;
++    pending = undefined;
++    replacementOf.set(replacement.trade, record);
++    reservations.push(replacement);
++    assertPoolCap(s, record.decisionTime);
++  }
++
++  function abortPreemption(s: number, reason: string) {
++    const { record, replacement, signal } = pending!;
++
++    record.outcome = 'aborted';
++    record.reason = reason;
++    record.incumbentVirtualOpen = Boolean(books.get(record.sourceSymbol)!.position);
++    record.targetVirtualState = books.get(record.targetSymbol)!.state;
++    signal.outcome = 'refused';
++    signal.reason = `preemption aborted: ${reason}`;
++    replacement.trade.allocator = 'refused';
++    pending = undefined;
++    void s;
++  }
++
+   // ----- helpers that need the run's state -----
+ 
+   function closeVirtual(book: ShadowBook, s: number, decision: ExitDecision) {
+@@ -1080,11 +1353,23 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+ 
+   function fillVirtual(book: ShadowBook, s: number, k: number) {
+     const order = book.order!;
++
++    // P1: the replacement's order fills while the incumbent is still held: the switch aborts, nothing is sold.
++    if (pending && pending.replacement.trade === order.trade) {
++      abortPreemption(s, `${book.symbol}'s order filled before ${pending.incumbent.symbol} could be sold`);
++    }
++
+     const reservation = reservations.find((candidate) => candidate.trade === order.trade);
+     const trade = book.open(s, k);
+ 
+     if (reservation) {
+       openRealLot(book, trade, reservation, s, k);
++
++      const record = replacementOf.get(trade);
++
++      if (record) {
++        record.replacementLotId = trade.fundedLotId;
++      }
+     }
+   }
+ 
+@@ -1183,5 +1468,3 @@ export const runNAllocator = (universe: NUniverse, config: NRunConfig): NRunResu
+     };
+   }
+ };
+-
+-export { baseSecurities };

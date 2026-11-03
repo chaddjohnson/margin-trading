@@ -1,0 +1,2269 @@
+{
+ "stage": "track2a",
+ "at": "2026-10-30T20:51:52.334Z",
+ "door": "search",
+ "window": {
+  "first": "2016-01-04",
+  "last": "2021-12-31"
+ },
+ "settings": {
+  "runs": [
+   {
+    "key": "s1",
+    "start": "C3"
+   },
+   {
+    "key": "s2",
+    "start": "C3"
+   },
+   {
+    "key": "s3",
+    "start": "C3"
+   },
+   {
+    "key": "s4",
+    "start": "T1-P"
+   }
+  ],
+  "rounds": 2,
+  "step": {
+   "populationSize": 48,
+   "maxNewVectors": 600,
+   "maxGenerations": 30,
+   "patience": 8,
+   "sobol": 256,
+   "minGain": 5000,
+   "maxChecks": 20
+  },
+  "joint": {
+   "populationSize": 64,
+   "maxNewVectors": 1500,
+   "maxGenerations": 40,
+   "patience": 8
+  },
+  "variation": {
+   "crossoverProbability": 0.9,
+   "crossoverEta": 15,
+   "mutationEta": 20
+  },
+  "tolerance": 0.0001,
+  "seedDiversity": 0.02,
+  "probeFeasibleShare": 0.75
+ },
+ "runs": [
+  {
+   "run": "s1",
+   "start": "C3",
+   "order": [
+    "KRE",
+    "VGT",
+    "GDX"
+   ],
+   "steps": [
+    {
+     "step": 1,
+     "round": 1,
+     "book": "KRE",
+     "incumbent": {
+      "net": 203452.75099730026,
+      "dd": 26509.97304978661,
+      "grid": {
+       "targetPercentChange": 299,
+       "trailingBuyPercentage": 27,
+       "trailingStopPercentage": 31,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 230,
+       "intradayLossBuffer": 23,
+       "pullback": 94,
+       "continuationWindow": 60
+      },
+      "short": "X 29.9% Y 2.7% L 230 stop 3.1% hold 4 buffer 2.3% P 9.4% W 60"
+     },
+     "accepted": {
+      "net": 232514.19441225915,
+      "dd": 31119.759768702876,
+      "grid": {
+       "targetPercentChange": 285,
+       "trailingBuyPercentage": 26,
+       "trailingStopPercentage": 125,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 248,
+       "intradayLossBuffer": 24,
+       "pullback": 132,
+       "continuationWindow": 63
+      },
+      "short": "X 28.5% Y 2.6% L 248 stop 12.5% hold 4 buffer 2.4% P 13.2% W 63"
+     },
+     "checks": [
+      {
+       "key": "VGT:216/3/73/8/74/29/90/60 KRE:285/26/125/4/248/24/132/63 GDX:274/4/71/18/100/36/191/81",
+       "net": 232514.19441225915,
+       "dd": 31119.759768702876,
+       "probes": 29,
+       "share": 0.896551724137931,
+       "probeMedian": 232514.19441225915,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s1:1:KRE",
+      "seed": [
+       12424579,
+       2265799237,
+       3353925415,
+       3183613785
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2652839012.598237,
+       2674469812.0040846,
+       2695866957.988606,
+       2696616675.2696576,
+       2710690177.000721,
+       2805471393.8510222,
+       2807591175.203514,
+       2825663186.80107,
+       2840722972.198543,
+       2840722972.198543,
+       2840722972.198543,
+       2843331254.65326,
+       2843331254.65326
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 3.975
+     },
+     "archiveSize": 884
+    },
+    {
+     "step": 2,
+     "round": 1,
+     "book": "VGT",
+     "incumbent": {
+      "net": 232514.19441225915,
+      "dd": 31119.759768702876,
+      "grid": {
+       "targetPercentChange": 216,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 8,
+       "tickWindowSize": 74,
+       "intradayLossBuffer": 29,
+       "pullback": 90,
+       "continuationWindow": 60
+      },
+      "short": "X 21.6% Y 0.3% L 74 stop 7.3% hold 8 buffer 2.9% P 9.0% W 60"
+     },
+     "accepted": {
+      "net": 262145.4873985002,
+      "dd": 28845.621890939372,
+      "grid": {
+       "targetPercentChange": 131,
+       "trailingBuyPercentage": 11,
+       "trailingStopPercentage": 49,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 195,
+       "intradayLossBuffer": 30,
+       "pullback": 58,
+       "continuationWindow": 175
+      },
+      "short": "X 13.1% Y 1.1% L 195 stop 4.9% hold 15 buffer 3.0% P 5.8% W 175"
+     },
+     "checks": [
+      {
+       "key": "VGT:131/11/49/15/195/30/58/175 KRE:285/26/125/4/248/24/132/63 GDX:274/4/71/18/100/36/191/81",
+       "net": 262145.4873985002,
+       "dd": 28845.621890939372,
+       "probes": 32,
+       "share": 0.875,
+       "probeMedian": 246945.38731633069,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s1:2:VGT",
+      "seed": [
+       8476090,
+       3589278752,
+       921670126,
+       1173597153
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2025371210.2328937,
+       2029852908.5533469,
+       2029852908.5533469,
+       2029852908.5533469,
+       2029852908.5533469,
+       2111030489.8793259,
+       2111456494.6368957,
+       2142366580.348158,
+       2150697349.6185937,
+       2154850879.279044,
+       2156491813.191261,
+       2198341941.7398763,
+       2198562317.1727724
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 3.446
+     },
+     "archiveSize": 889
+    },
+    {
+     "step": 3,
+     "round": 1,
+     "book": "GDX",
+     "incumbent": {
+      "net": 262145.4873985002,
+      "dd": 28845.621890939372,
+      "grid": {
+       "targetPercentChange": 274,
+       "trailingBuyPercentage": 4,
+       "trailingStopPercentage": 71,
+       "maximumHoldDays": 18,
+       "tickWindowSize": 100,
+       "intradayLossBuffer": 36,
+       "pullback": 191,
+       "continuationWindow": 81
+      },
+      "short": "X 27.4% Y 0.4% L 100 stop 7.1% hold 18 buffer 3.6% P 19.1% W 81"
+     },
+     "accepted": {
+      "net": 276517.2461465566,
+      "dd": 28845.621890939372,
+      "grid": {
+       "targetPercentChange": 257,
+       "trailingBuyPercentage": 11,
+       "trailingStopPercentage": 71,
+       "maximumHoldDays": 18,
+       "tickWindowSize": 137,
+       "intradayLossBuffer": 36,
+       "pullback": 187,
+       "continuationWindow": 73
+      },
+      "short": "X 25.7% Y 1.1% L 137 stop 7.1% hold 18 buffer 3.6% P 18.7% W 73"
+     },
+     "checks": [
+      {
+       "key": "VGT:131/11/49/15/195/30/58/175 KRE:285/26/125/4/248/24/132/63 GDX:257/11/71/18/137/36/187/73",
+       "net": 276517.2461465566,
+       "dd": 28845.621890939372,
+       "probes": 32,
+       "share": 1,
+       "probeMedian": 275871.4471013652,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s1:3:GDX",
+      "seed": [
+       3816790875,
+       2904554800,
+       2655343334,
+       2344078634
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2092866024.3814297,
+       2134640412.8791313,
+       2169853993.176173,
+       2169853993.176173,
+       2182753504.0860667,
+       2194079444.8117356,
+       2203145549.456376,
+       2212162210.6712623,
+       2212789627.737531,
+       2213128130.440813,
+       2214759444.630815,
+       2214759444.630815,
+       2214759444.630815
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.581
+     },
+     "archiveSize": 888
+    },
+    {
+     "step": 4,
+     "round": 2,
+     "book": "KRE",
+     "incumbent": {
+      "net": 276517.2461465566,
+      "dd": 28845.621890939372,
+      "grid": {
+       "targetPercentChange": 285,
+       "trailingBuyPercentage": 26,
+       "trailingStopPercentage": 125,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 248,
+       "intradayLossBuffer": 24,
+       "pullback": 132,
+       "continuationWindow": 63
+      },
+      "short": "X 28.5% Y 2.6% L 248 stop 12.5% hold 4 buffer 2.4% P 13.2% W 63"
+     },
+     "accepted": {
+      "net": 292557.13802075264,
+      "dd": 28845.621890939372,
+      "grid": {
+       "targetPercentChange": 275,
+       "trailingBuyPercentage": 5,
+       "trailingStopPercentage": 102,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 54,
+       "intradayLossBuffer": 26,
+       "pullback": 170,
+       "continuationWindow": 161
+      },
+      "short": "X 27.5% Y 0.5% L 54 stop 10.2% hold 4 buffer 2.6% P 17.0% W 161"
+     },
+     "checks": [
+      {
+       "key": "VGT:131/11/49/15/195/30/58/175 KRE:275/5/102/4/54/26/170/161 GDX:257/11/71/18/137/36/187/73",
+       "net": 292557.13802075264,
+       "dd": 28845.621890939372,
+       "probes": 31,
+       "share": 0.967741935483871,
+       "probeMedian": 289130.6746423361,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s1:4:KRE",
+      "seed": [
+       3632294130,
+       1780734626,
+       2767954098,
+       1679156972
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       1723255937.486335,
+       1723255937.486335,
+       1746624449.2749527,
+       1760905350.1256459,
+       1760905350.1256459,
+       1760905350.1256459,
+       1785388177.5308537,
+       1785388177.5308537,
+       1800507245.8843489,
+       1800507245.8843489,
+       1800507245.8843489,
+       1800507245.8843489,
+       1800507245.8843489
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.454
+     },
+     "archiveSize": 886
+    },
+    {
+     "step": 5,
+     "round": 2,
+     "book": "VGT",
+     "incumbent": {
+      "net": 292557.13802075264,
+      "dd": 28845.621890939372,
+      "grid": {
+       "targetPercentChange": 131,
+       "trailingBuyPercentage": 11,
+       "trailingStopPercentage": 49,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 195,
+       "intradayLossBuffer": 30,
+       "pullback": 58,
+       "continuationWindow": 175
+      },
+      "short": "X 13.1% Y 1.1% L 195 stop 4.9% hold 15 buffer 3.0% P 5.8% W 175"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s1:5:VGT",
+      "seed": [
+       3667000270,
+       2350279767,
+       691800419,
+       2367129794
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2491530752.9351587,
+       2683312810.0216613,
+       2684144408.5202136,
+       2684144408.5202136,
+       2684144408.5202136,
+       2684144408.5202136,
+       2684191321.623566,
+       2741696452.213726,
+       2756802981.787079,
+       2756802981.787079,
+       2770598437.0325155,
+       2918512170.32512,
+       2918512170.32512
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 3.921
+     },
+     "archiveSize": 889
+    },
+    {
+     "step": 6,
+     "round": 2,
+     "book": "GDX",
+     "incumbent": {
+      "net": 292557.13802075264,
+      "dd": 28845.621890939372,
+      "grid": {
+       "targetPercentChange": 257,
+       "trailingBuyPercentage": 11,
+       "trailingStopPercentage": 71,
+       "maximumHoldDays": 18,
+       "tickWindowSize": 137,
+       "intradayLossBuffer": 36,
+       "pullback": 187,
+       "continuationWindow": 73
+      },
+      "short": "X 25.7% Y 1.1% L 137 stop 7.1% hold 18 buffer 3.6% P 18.7% W 73"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s1:6:GDX",
+      "seed": [
+       919985958,
+       3685186999,
+       2991399967,
+       535036834
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2486622928.8873615,
+       2486622928.8873615,
+       2505644874.7181597,
+       2529042208.595513,
+       2529042208.595513,
+       2541133417.9770393,
+       2541133417.9770393,
+       2541133417.9770393,
+       2541133417.9770393,
+       2555173629.4046464,
+       2555173629.4046464,
+       2555173629.4046464,
+       2555173629.4046464
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.548
+     },
+     "archiveSize": 889
+    }
+   ],
+   "coordinate": {
+    "key": "VGT:131/11/49/15/195/30/58/175 KRE:275/5/102/4/54/26/170/161 GDX:257/11/71/18/137/36/187/73",
+    "books": {
+     "VGT": {
+      "targetPercentChange": 131,
+      "trailingBuyPercentage": 11,
+      "trailingStopPercentage": 49,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 195,
+      "intradayLossBuffer": 30,
+      "pullback": 58,
+      "continuationWindow": 175
+     },
+     "KRE": {
+      "targetPercentChange": 275,
+      "trailingBuyPercentage": 5,
+      "trailingStopPercentage": 102,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 54,
+      "intradayLossBuffer": 26,
+      "pullback": 170,
+      "continuationWindow": 161
+     },
+     "GDX": {
+      "targetPercentChange": 257,
+      "trailingBuyPercentage": 11,
+      "trailingStopPercentage": 71,
+      "maximumHoldDays": 18,
+      "tickWindowSize": 137,
+      "intradayLossBuffer": 36,
+      "pullback": 187,
+      "continuationWindow": 73
+     }
+    },
+    "net": 292557.13802075264,
+    "dd": 28845.621890939372
+   },
+   "joint": {
+    "key": "VGT:131/11/49/15/189/29/59/166 KRE:274/4/100/5/33/26/170/151 GDX:258/11/71/18/137/36/187/73",
+    "books": {
+     "VGT": {
+      "targetPercentChange": 131,
+      "trailingBuyPercentage": 11,
+      "trailingStopPercentage": 49,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 189,
+      "intradayLossBuffer": 29,
+      "pullback": 59,
+      "continuationWindow": 166
+     },
+     "KRE": {
+      "targetPercentChange": 274,
+      "trailingBuyPercentage": 4,
+      "trailingStopPercentage": 100,
+      "maximumHoldDays": 5,
+      "tickWindowSize": 33,
+      "intradayLossBuffer": 26,
+      "pullback": 170,
+      "continuationWindow": 151
+     },
+     "GDX": {
+      "targetPercentChange": 258,
+      "trailingBuyPercentage": 11,
+      "trailingStopPercentage": 71,
+      "maximumHoldDays": 18,
+      "tickWindowSize": 137,
+      "intradayLossBuffer": 36,
+      "pullback": 187,
+      "continuationWindow": 73
+     }
+    },
+    "net": 302507.9403745934,
+    "dd": 28845.621890939372,
+    "accepted": true,
+    "checks": [
+     {
+      "key": "VGT:131/11/49/15/189/29/59/166 KRE:274/4/100/5/33/26/170/151 GDX:258/11/71/18/137/36/187/73",
+      "net": 302507.9403745934,
+      "dd": 28845.621890939372,
+      "probes": 96,
+      "share": 0.9375,
+      "probeMedian": 301582.39761379594,
+      "passes": true
+     }
+    ],
+    "summary": {
+     "label": "ga:B2:s1:joint",
+     "seed": [
+      805795941,
+      3460873679,
+      306444933,
+      2435177468
+     ],
+     "seeded": 64,
+     "generations": 24,
+     "newVectors": 1500,
+     "hypervolume": [
+      2109152532.7676616,
+      2321915612.94442,
+      2757686741.3631134,
+      2919678165.4333305,
+      3126380719.815771,
+      3182222573.3893948,
+      3268910586.602352,
+      3273741675.611109,
+      3288201859.014531,
+      3342828336.97369,
+      3398745494.963503,
+      3473945357.593289,
+      3698988083.3670073,
+      3919252933.780797,
+      3938727349.2566404,
+      4154187297.4683843,
+      4258683803.752828,
+      4343886605.435585,
+      4383952401.971416,
+      4384338763.469427,
+      4387668938.104951,
+      4389078073.60337,
+      4390139140.701582,
+      4390289459.991989
+     ],
+     "stopReason": "budget",
+     "repairs": 0,
+     "seconds": 15.737
+    }
+   }
+  },
+  {
+   "run": "s2",
+   "start": "C3",
+   "order": [
+    "VGT",
+    "KRE",
+    "GDX"
+   ],
+   "steps": [
+    {
+     "step": 1,
+     "round": 1,
+     "book": "VGT",
+     "incumbent": {
+      "net": 203452.75099730026,
+      "dd": 26509.97304978661,
+      "grid": {
+       "targetPercentChange": 216,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 8,
+       "tickWindowSize": 74,
+       "intradayLossBuffer": 29,
+       "pullback": 90,
+       "continuationWindow": 60
+      },
+      "short": "X 21.6% Y 0.3% L 74 stop 7.3% hold 8 buffer 2.9% P 9.0% W 60"
+     },
+     "accepted": {
+      "net": 229219.43778865776,
+      "dd": 26662.608805349664,
+      "grid": {
+       "targetPercentChange": 238,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 64,
+       "maximumHoldDays": 6,
+       "tickWindowSize": 69,
+       "intradayLossBuffer": 29,
+       "pullback": 70,
+       "continuationWindow": 60
+      },
+      "short": "X 23.8% Y 0.1% L 69 stop 6.4% hold 6 buffer 2.9% P 7.0% W 60"
+     },
+     "checks": [
+      {
+       "key": "VGT:238/1/64/6/69/29/70/60 KRE:299/27/31/4/230/23/94/60 GDX:274/4/71/18/100/36/191/81",
+       "net": 229219.43778865776,
+       "dd": 26662.608805349664,
+       "probes": 30,
+       "share": 1,
+       "probeMedian": 229095.2002119735,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s2:1:VGT",
+      "seed": [
+       2194137942,
+       3345652200,
+       1673439360,
+       3502725566
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2805137670.7129908,
+       2809809458.4245734,
+       2821967573.447146,
+       2843390945.6906214,
+       2954243827.7133207,
+       2977272021.6914883,
+       3013435869.0866976,
+       3022601421.7243114,
+       3022601421.7243114,
+       3022601421.7243114,
+       3024447042.182751,
+       3024447042.182751,
+       3024676248.5314937
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 3.09
+     },
+     "archiveSize": 889
+    },
+    {
+     "step": 2,
+     "round": 1,
+     "book": "KRE",
+     "incumbent": {
+      "net": 229219.43778865776,
+      "dd": 26662.608805349664,
+      "grid": {
+       "targetPercentChange": 299,
+       "trailingBuyPercentage": 27,
+       "trailingStopPercentage": 31,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 230,
+       "intradayLossBuffer": 23,
+       "pullback": 94,
+       "continuationWindow": 60
+      },
+      "short": "X 29.9% Y 2.7% L 230 stop 3.1% hold 4 buffer 2.3% P 9.4% W 60"
+     },
+     "accepted": {
+      "net": 268448.08157972875,
+      "dd": 26333.185175359642,
+      "grid": {
+       "targetPercentChange": 287,
+       "trailingBuyPercentage": 6,
+       "trailingStopPercentage": 104,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 39,
+       "intradayLossBuffer": 18,
+       "pullback": 166,
+       "continuationWindow": 168
+      },
+      "short": "X 28.7% Y 0.6% L 39 stop 10.4% hold 4 buffer 1.8% P 16.6% W 168"
+     },
+     "checks": [
+      {
+       "key": "VGT:238/1/64/6/69/29/70/60 KRE:287/6/104/4/39/18/166/168 GDX:274/4/71/18/100/36/191/81",
+       "net": 268448.08157972875,
+       "dd": 26333.185175359642,
+       "probes": 31,
+       "share": 1,
+       "probeMedian": 268448.08157972875,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s2:2:KRE",
+      "seed": [
+       3358595305,
+       1992881992,
+       1323001336,
+       3894407373
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2002644726.812223,
+       2021411970.659032,
+       2075204363.8366203,
+       2330964200.158552,
+       2345022138.1387897,
+       2345404730.019766,
+       2368161062.0191584,
+       2374382715.7659764,
+       2459991215.953379,
+       2459991215.953379,
+       2462156081.524907,
+       2463639934.36723,
+       2472579717.05465
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 3.57
+     },
+     "archiveSize": 884
+    },
+    {
+     "step": 3,
+     "round": 1,
+     "book": "GDX",
+     "incumbent": {
+      "net": 268448.08157972875,
+      "dd": 26333.185175359642,
+      "grid": {
+       "targetPercentChange": 274,
+       "trailingBuyPercentage": 4,
+       "trailingStopPercentage": 71,
+       "maximumHoldDays": 18,
+       "tickWindowSize": 100,
+       "intradayLossBuffer": 36,
+       "pullback": 191,
+       "continuationWindow": 81
+      },
+      "short": "X 27.4% Y 0.4% L 100 stop 7.1% hold 18 buffer 3.6% P 19.1% W 81"
+     },
+     "accepted": {
+      "net": 301582.5943037079,
+      "dd": 26333.185175359642,
+      "grid": {
+       "targetPercentChange": 237,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 50,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 215,
+       "intradayLossBuffer": 35,
+       "pullback": 200,
+       "continuationWindow": 84
+      },
+      "short": "X 23.7% Y 0.3% L 215 stop 5.0% hold 4 buffer 3.5% P 20.0% W 84"
+     },
+     "checks": [
+      {
+       "key": "VGT:238/1/64/6/69/29/70/60 KRE:287/6/104/4/39/18/166/168 GDX:237/3/50/4/215/35/200/84",
+       "net": 301582.5943037079,
+       "dd": 26333.185175359642,
+       "probes": 29,
+       "share": 1,
+       "probeMedian": 301582.5943037079,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s2:3:GDX",
+      "seed": [
+       3356040636,
+       2030582622,
+       3635632298,
+       3421936795
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       3182716888.2078276,
+       3299887118.57562,
+       3323032085.3585463,
+       3400438765.4924335,
+       3404012283.6518755,
+       3450584128.810354,
+       3457598355.247245,
+       3476861150.00886,
+       3476987686.276711,
+       3477147392.3019214,
+       3490277980.3275294,
+       3518232405.569246,
+       3543201532.691885
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.339
+     },
+     "archiveSize": 888
+    },
+    {
+     "step": 4,
+     "round": 2,
+     "book": "VGT",
+     "incumbent": {
+      "net": 301582.5943037079,
+      "dd": 26333.185175359642,
+      "grid": {
+       "targetPercentChange": 238,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 64,
+       "maximumHoldDays": 6,
+       "tickWindowSize": 69,
+       "intradayLossBuffer": 29,
+       "pullback": 70,
+       "continuationWindow": 60
+      },
+      "short": "X 23.8% Y 0.1% L 69 stop 6.4% hold 6 buffer 2.9% P 7.0% W 60"
+     },
+     "accepted": {
+      "net": 307748.9011883316,
+      "dd": 25555.80615306148,
+      "grid": {
+       "targetPercentChange": 148,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 64,
+       "maximumHoldDays": 13,
+       "tickWindowSize": 247,
+       "intradayLossBuffer": 28,
+       "pullback": 51,
+       "continuationWindow": 56
+      },
+      "short": "X 14.8% Y 0.1% L 247 stop 6.4% hold 13 buffer 2.8% P 5.1% W 56"
+     },
+     "checks": [
+      {
+       "key": "VGT:148/1/64/13/247/28/51/56 KRE:287/6/104/4/39/18/166/168 GDX:237/3/50/4/215/35/200/84",
+       "net": 307748.9011883316,
+       "dd": 25555.80615306148,
+       "probes": 28,
+       "share": 0.8214285714285714,
+       "probeMedian": 307411.67445561,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s2:4:VGT",
+      "seed": [
+       3599187736,
+       1946661771,
+       1063460349,
+       3570051081
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       3100802322.0014915,
+       3119482989.8252234,
+       3119490523.7712,
+       3119540607.341104,
+       3119540607.341104,
+       3121963979.882422,
+       3133780977.631603,
+       3419695585.7500525,
+       3471616645.347722,
+       3471616645.3477225,
+       3471616645.3477225,
+       3477986314.6161075,
+       3481505583.832774
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 3.976
+     },
+     "archiveSize": 887
+    },
+    {
+     "step": 5,
+     "round": 2,
+     "book": "KRE",
+     "incumbent": {
+      "net": 307748.9011883316,
+      "dd": 25555.80615306148,
+      "grid": {
+       "targetPercentChange": 287,
+       "trailingBuyPercentage": 6,
+       "trailingStopPercentage": 104,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 39,
+       "intradayLossBuffer": 18,
+       "pullback": 166,
+       "continuationWindow": 168
+      },
+      "short": "X 28.7% Y 0.6% L 39 stop 10.4% hold 4 buffer 1.8% P 16.6% W 168"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s2:5:KRE",
+      "seed": [
+       3503510202,
+       270826355,
+       1999546374,
+       339829770
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       4293949442.7793274,
+       4295326550.213088,
+       4295817982.293597,
+       4296662301.6337,
+       4298516573.935005,
+       4300310426.450597,
+       4310328286.557199,
+       4316920803.528264,
+       4325026416.5001745,
+       4327579335.204434,
+       4327579335.204434,
+       4329757030.255302,
+       4329757030.255302
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.67
+     },
+     "archiveSize": 888
+    },
+    {
+     "step": 6,
+     "round": 2,
+     "book": "GDX",
+     "incumbent": {
+      "net": 307748.9011883316,
+      "dd": 25555.80615306148,
+      "grid": {
+       "targetPercentChange": 237,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 50,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 215,
+       "intradayLossBuffer": 35,
+       "pullback": 200,
+       "continuationWindow": 84
+      },
+      "short": "X 23.7% Y 0.3% L 215 stop 5.0% hold 4 buffer 3.5% P 20.0% W 84"
+     },
+     "accepted": {
+      "net": 316494.9721912705,
+      "dd": 25555.80615306148,
+      "grid": {
+       "targetPercentChange": 242,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 48,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 214,
+       "intradayLossBuffer": 33,
+       "pullback": 197,
+       "continuationWindow": 84
+      },
+      "short": "X 24.2% Y 0.3% L 214 stop 4.8% hold 4 buffer 3.3% P 19.7% W 84"
+     },
+     "checks": [
+      {
+       "key": "VGT:148/1/64/13/247/28/51/56 KRE:287/6/104/4/39/18/166/168 GDX:242/3/48/4/214/33/197/84",
+       "net": 316494.9721912705,
+       "dd": 25555.80615306148,
+       "probes": 29,
+       "share": 1,
+       "probeMedian": 313874.93750545586,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s2:6:GDX",
+      "seed": [
+       3224915582,
+       1398325222,
+       2507119565,
+       3654280718
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       3449455215.4751453,
+       3450266565.5121326,
+       3471308430.782391,
+       3484805773.670853,
+       3533052327.3363857,
+       3539743402.3624144,
+       3540680667.5345488,
+       3560399146.078227,
+       3560399146.078227,
+       3560496762.819586,
+       3560762961.4210896,
+       3562994040.07789,
+       3564042060.027174
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.628
+     },
+     "archiveSize": 886
+    }
+   ],
+   "coordinate": {
+    "key": "VGT:148/1/64/13/247/28/51/56 KRE:287/6/104/4/39/18/166/168 GDX:242/3/48/4/214/33/197/84",
+    "books": {
+     "VGT": {
+      "targetPercentChange": 148,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 64,
+      "maximumHoldDays": 13,
+      "tickWindowSize": 247,
+      "intradayLossBuffer": 28,
+      "pullback": 51,
+      "continuationWindow": 56
+     },
+     "KRE": {
+      "targetPercentChange": 287,
+      "trailingBuyPercentage": 6,
+      "trailingStopPercentage": 104,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 39,
+      "intradayLossBuffer": 18,
+      "pullback": 166,
+      "continuationWindow": 168
+     },
+     "GDX": {
+      "targetPercentChange": 242,
+      "trailingBuyPercentage": 3,
+      "trailingStopPercentage": 48,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 214,
+      "intradayLossBuffer": 33,
+      "pullback": 197,
+      "continuationWindow": 84
+     }
+    },
+    "net": 316494.9721912705,
+    "dd": 25555.80615306148
+   },
+   "joint": {
+    "key": "VGT:157/1/52/13/249/23/60/52 KRE:293/5/101/4/33/20/166/168 GDX:242/3/47/4/214/35/195/84",
+    "books": {
+     "VGT": {
+      "targetPercentChange": 157,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 52,
+      "maximumHoldDays": 13,
+      "tickWindowSize": 249,
+      "intradayLossBuffer": 23,
+      "pullback": 60,
+      "continuationWindow": 52
+     },
+     "KRE": {
+      "targetPercentChange": 293,
+      "trailingBuyPercentage": 5,
+      "trailingStopPercentage": 101,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 33,
+      "intradayLossBuffer": 20,
+      "pullback": 166,
+      "continuationWindow": 168
+     },
+     "GDX": {
+      "targetPercentChange": 242,
+      "trailingBuyPercentage": 3,
+      "trailingStopPercentage": 47,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 214,
+      "intradayLossBuffer": 35,
+      "pullback": 195,
+      "continuationWindow": 84
+     }
+    },
+    "net": 330409.98246815655,
+    "dd": 24362.766685579845,
+    "accepted": true,
+    "checks": [
+     {
+      "key": "VGT:157/1/52/13/249/23/60/52 KRE:293/5/101/4/33/20/166/168 GDX:242/3/47/4/214/35/195/84",
+      "net": 330409.98246815655,
+      "dd": 24362.766685579845,
+      "probes": 88,
+      "share": 0.9545454545454546,
+      "probeMedian": 328313.34400580276,
+      "passes": true
+     }
+    ],
+    "summary": {
+     "label": "ga:B2:s2:joint",
+     "seed": [
+      958819000,
+      1917687995,
+      3626684924,
+      2340600847
+     ],
+     "seeded": 64,
+     "generations": 24,
+     "newVectors": 1500,
+     "hypervolume": [
+      3891435506.5240717,
+      4010130369.365225,
+      4254636351.430508,
+      4311886343.105499,
+      4311886343.105499,
+      4364872886.096934,
+      4365927172.065136,
+      4366401344.734354,
+      4367734334.480983,
+      4367844804.624787,
+      4378336068.18508,
+      4386132981.85614,
+      4396081117.870176,
+      4418211889.782406,
+      4433508430.285643,
+      4434256199.2364645,
+      4443170595.165999,
+      4880405746.225768,
+      4882202622.13962,
+      4906651881.461021,
+      4918193692.002298,
+      5038426288.929043,
+      5045426894.725997,
+      5045972344.841968
+     ],
+     "stopReason": "budget",
+     "repairs": 0,
+     "seconds": 15.718
+    }
+   }
+  },
+  {
+   "run": "s3",
+   "start": "C3",
+   "order": [
+    "GDX",
+    "KRE",
+    "VGT"
+   ],
+   "steps": [
+    {
+     "step": 1,
+     "round": 1,
+     "book": "GDX",
+     "incumbent": {
+      "net": 203452.75099730026,
+      "dd": 26509.97304978661,
+      "grid": {
+       "targetPercentChange": 274,
+       "trailingBuyPercentage": 4,
+       "trailingStopPercentage": 71,
+       "maximumHoldDays": 18,
+       "tickWindowSize": 100,
+       "intradayLossBuffer": 36,
+       "pullback": 191,
+       "continuationWindow": 81
+      },
+      "short": "X 27.4% Y 0.4% L 100 stop 7.1% hold 18 buffer 3.6% P 19.1% W 81"
+     },
+     "accepted": {
+      "net": 209457.693144387,
+      "dd": 26509.97304978661,
+      "grid": {
+       "targetPercentChange": 273,
+       "trailingBuyPercentage": 11,
+       "trailingStopPercentage": 71,
+       "maximumHoldDays": 17,
+       "tickWindowSize": 103,
+       "intradayLossBuffer": 38,
+       "pullback": 167,
+       "continuationWindow": 54
+      },
+      "short": "X 27.3% Y 1.1% L 103 stop 7.1% hold 17 buffer 3.8% P 16.7% W 54"
+     },
+     "checks": [
+      {
+       "key": "VGT:216/3/73/8/74/29/90/60 KRE:299/27/31/4/230/23/94/60 GDX:273/11/71/17/103/38/167/54",
+       "net": 209457.693144387,
+       "dd": 26509.97304978661,
+       "probes": 32,
+       "share": 1,
+       "probeMedian": 209457.693144387,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s3:1:GDX",
+      "seed": [
+       2191567939,
+       1260187905,
+       644324275,
+       3213481943
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       1739172547.90524,
+       1759900904.087397,
+       1765655799.3701715,
+       1765655799.3701715,
+       1776659513.3305097,
+       1778301459.7253718,
+       1778301459.7253718,
+       1778301459.7253718,
+       1778301459.7253718,
+       1778301459.7253718,
+       1778301459.7253718,
+       1778301459.7253718,
+       1778301459.7253718
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.027
+     },
+     "archiveSize": 888
+    },
+    {
+     "step": 2,
+     "round": 1,
+     "book": "KRE",
+     "incumbent": {
+      "net": 209457.693144387,
+      "dd": 26509.97304978661,
+      "grid": {
+       "targetPercentChange": 299,
+       "trailingBuyPercentage": 27,
+       "trailingStopPercentage": 31,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 230,
+       "intradayLossBuffer": 23,
+       "pullback": 94,
+       "continuationWindow": 60
+      },
+      "short": "X 29.9% Y 2.7% L 230 stop 3.1% hold 4 buffer 2.3% P 9.4% W 60"
+     },
+     "accepted": {
+      "net": 250520.3696568968,
+      "dd": 30466.276714228385,
+      "grid": {
+       "targetPercentChange": 206,
+       "trailingBuyPercentage": 27,
+       "trailingStopPercentage": 108,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 42,
+       "intradayLossBuffer": 23,
+       "pullback": 34,
+       "continuationWindow": 199
+      },
+      "short": "X 20.6% Y 2.7% L 42 stop 10.8% hold 4 buffer 2.3% P 3.4% W 199"
+     },
+     "checks": [
+      {
+       "key": "VGT:216/3/73/8/74/29/90/60 KRE:206/27/106/4/44/33/42/198 GDX:273/11/71/17/103/38/167/54",
+       "net": 250666.53352939803,
+       "dd": 30466.276714228356,
+       "probes": 29,
+       "share": 0.7241379310344828,
+       "probeMedian": 247543.18615219224,
+       "passes": false
+      },
+      {
+       "key": "VGT:216/3/73/8/74/29/90/60 KRE:206/27/106/4/44/33/42/199 GDX:273/11/71/17/103/38/167/54",
+       "net": 250666.53352939803,
+       "dd": 30466.276714228356,
+       "probes": 29,
+       "share": 0.7241379310344828,
+       "probeMedian": 247543.18615219224,
+       "passes": false
+      },
+      {
+       "key": "VGT:216/3/73/8/74/29/90/60 KRE:206/27/108/4/42/23/34/199 GDX:273/11/71/17/103/38/167/54",
+       "net": 250520.3696568968,
+       "dd": 30466.276714228385,
+       "probes": 27,
+       "share": 0.7777777777777778,
+       "probeMedian": 247851.23141100502,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s3:2:KRE",
+      "seed": [
+       754902099,
+       77623242,
+       2826402246,
+       1458897795
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2436813511.1463003,
+       2541073960.3064065,
+       2553175094.5247493,
+       3111373268.8103275,
+       3111373268.8103275,
+       3116493218.0854244,
+       3127380484.9114704,
+       3127380484.9114704,
+       3127380484.9114704,
+       3127380484.9114704,
+       3127380484.9114704,
+       3132903238.852957,
+       3132903238.852957
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.032
+     },
+     "archiveSize": 884
+    },
+    {
+     "step": 3,
+     "round": 1,
+     "book": "VGT",
+     "incumbent": {
+      "net": 250520.3696568968,
+      "dd": 30466.276714228385,
+      "grid": {
+       "targetPercentChange": 216,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 8,
+       "tickWindowSize": 74,
+       "intradayLossBuffer": 29,
+       "pullback": 90,
+       "continuationWindow": 60
+      },
+      "short": "X 21.6% Y 0.3% L 74 stop 7.3% hold 8 buffer 2.9% P 9.0% W 60"
+     },
+     "accepted": {
+      "net": 257112.24622536357,
+      "dd": 30466.276714228385,
+      "grid": {
+       "targetPercentChange": 238,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 13,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 41,
+       "pullback": 94,
+       "continuationWindow": 60
+      },
+      "short": "X 23.8% Y 0.1% L 78 stop 7.3% hold 13 buffer 4.1% P 9.4% W 60"
+     },
+     "checks": [
+      {
+       "key": "VGT:238/1/73/13/78/41/94/60 KRE:206/27/108/4/42/23/34/199 GDX:273/11/71/17/103/38/167/54",
+       "net": 257112.24622536357,
+       "dd": 30466.276714228385,
+       "probes": 30,
+       "share": 0.7666666666666667,
+       "probeMedian": 256792.79428754392,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s3:3:VGT",
+      "seed": [
+       2211999263,
+       853729598,
+       3115806732,
+       3131126895
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2312654178.665015,
+       2316213672.914748,
+       2320837481.7678385,
+       2334147071.6993055,
+       2467403212.729627,
+       2474432354.974445,
+       2485891630.963372,
+       2486321492.6590996,
+       2492999139.729669,
+       2495159303.763401,
+       2495159303.763401,
+       2544858134.700167,
+       2551026019.7765617
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 3.492
+     },
+     "archiveSize": 889
+    },
+    {
+     "step": 4,
+     "round": 2,
+     "book": "GDX",
+     "incumbent": {
+      "net": 257112.24622536357,
+      "dd": 30466.276714228385,
+      "grid": {
+       "targetPercentChange": 273,
+       "trailingBuyPercentage": 11,
+       "trailingStopPercentage": 71,
+       "maximumHoldDays": 17,
+       "tickWindowSize": 103,
+       "intradayLossBuffer": 38,
+       "pullback": 167,
+       "continuationWindow": 54
+      },
+      "short": "X 27.3% Y 1.1% L 103 stop 7.1% hold 17 buffer 3.8% P 16.7% W 54"
+     },
+     "accepted": {
+      "net": 285770.4275418436,
+      "dd": 30466.276714228356,
+      "grid": {
+       "targetPercentChange": 273,
+       "trailingBuyPercentage": 12,
+       "trailingStopPercentage": 54,
+       "maximumHoldDays": 14,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 43,
+       "pullback": 170,
+       "continuationWindow": 68
+      },
+      "short": "X 27.3% Y 1.2% L 243 stop 5.4% hold 14 buffer 4.3% P 17.0% W 68"
+     },
+     "checks": [
+      {
+       "key": "VGT:238/1/73/13/78/41/94/60 KRE:206/27/108/4/42/23/34/199 GDX:273/12/54/14/243/43/170/68",
+       "net": 285770.4275418436,
+       "dd": 30466.276714228356,
+       "probes": 31,
+       "share": 1,
+       "probeMedian": 285770.4275418436,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s3:4:GDX",
+      "seed": [
+       3571361137,
+       1681260748,
+       216198960,
+       1274074883
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2216455289.437039,
+       2263595506.0594263,
+       2282808840.740455,
+       2317709687.599258,
+       2317709687.599258,
+       2329640652.958736,
+       2350272744.4912453,
+       2350604076.474152,
+       2377781789.178394,
+       2377781789.178394,
+       2425078566.1946135,
+       2425078566.1946135,
+       2425078566.1946135
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.475
+     },
+     "archiveSize": 889
+    },
+    {
+     "step": 5,
+     "round": 2,
+     "book": "KRE",
+     "incumbent": {
+      "net": 285770.4275418436,
+      "dd": 30466.276714228356,
+      "grid": {
+       "targetPercentChange": 206,
+       "trailingBuyPercentage": 27,
+       "trailingStopPercentage": 108,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 42,
+       "intradayLossBuffer": 23,
+       "pullback": 34,
+       "continuationWindow": 199
+      },
+      "short": "X 20.6% Y 2.7% L 42 stop 10.8% hold 4 buffer 2.3% P 3.4% W 199"
+     },
+     "accepted": {
+      "net": 294201.77814759384,
+      "dd": 30046.142226491298,
+      "grid": {
+       "targetPercentChange": 206,
+       "trailingBuyPercentage": 26,
+       "trailingStopPercentage": 101,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 42,
+       "intradayLossBuffer": 22,
+       "pullback": 33,
+       "continuationWindow": 200
+      },
+      "short": "X 20.6% Y 2.6% L 42 stop 10.1% hold 4 buffer 2.2% P 3.3% W 200"
+     },
+     "checks": [
+      {
+       "key": "VGT:238/1/73/13/78/41/94/60 KRE:203/26/101/4/42/23/34/199 GDX:273/12/54/14/243/43/170/68",
+       "net": 294201.77814759384,
+       "dd": 30046.142226491298,
+       "probes": 27,
+       "share": 0.7777777777777778,
+       "probeMedian": 284787.7254611204,
+       "passes": false
+      },
+      {
+       "key": "VGT:238/1/73/13/78/41/94/60 KRE:206/26/101/4/42/22/33/200 GDX:273/12/54/14/243/43/170/68",
+       "net": 294201.77814759384,
+       "dd": 30046.142226491298,
+       "probes": 27,
+       "share": 0.7777777777777778,
+       "probeMedian": 288283.92652474047,
+       "passes": true
+      }
+     ],
+     "summary": {
+      "label": "ga:B2:s3:5:KRE",
+      "seed": [
+       3338058419,
+       1437449300,
+       3413305054,
+       565913078
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       3331755758.000431,
+       3338212821.911053,
+       3394793394.365697,
+       3396249192.580435,
+       3411312613.213765,
+       3411312613.213765,
+       3419582865.626125,
+       3422017805.598287,
+       3431357826.949568,
+       3507194000.3129516,
+       3520352326.7028494,
+       3567399993.1286464,
+       3567399993.1286464
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.509
+     },
+     "archiveSize": 884
+    },
+    {
+     "step": 6,
+     "round": 2,
+     "book": "VGT",
+     "incumbent": {
+      "net": 294201.77814759384,
+      "dd": 30046.142226491298,
+      "grid": {
+       "targetPercentChange": 238,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 13,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 41,
+       "pullback": 94,
+       "continuationWindow": 60
+      },
+      "short": "X 23.8% Y 0.1% L 78 stop 7.3% hold 13 buffer 4.1% P 9.4% W 60"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s3:6:VGT",
+      "seed": [
+       1561817934,
+       2466794724,
+       2549236659,
+       3099126301
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2253672748.6602454,
+       2253672748.6602454,
+       2480136150.066318,
+       2480136150.066318,
+       2480136150.066318,
+       2491135149.258689,
+       2491262699.7011695,
+       2507338149.490976,
+       2512057110.9447107,
+       2538144148.805563,
+       2541196784.2007837,
+       2594933374.794306,
+       2594933374.794306
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.013
+     },
+     "archiveSize": 887
+    }
+   ],
+   "coordinate": {
+    "key": "VGT:238/1/73/13/78/41/94/60 KRE:206/26/101/4/42/22/33/200 GDX:273/12/54/14/243/43/170/68",
+    "books": {
+     "VGT": {
+      "targetPercentChange": 238,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 13,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 41,
+      "pullback": 94,
+      "continuationWindow": 60
+     },
+     "KRE": {
+      "targetPercentChange": 206,
+      "trailingBuyPercentage": 26,
+      "trailingStopPercentage": 101,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 42,
+      "intradayLossBuffer": 22,
+      "pullback": 33,
+      "continuationWindow": 200
+     },
+     "GDX": {
+      "targetPercentChange": 273,
+      "trailingBuyPercentage": 12,
+      "trailingStopPercentage": 54,
+      "maximumHoldDays": 14,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 43,
+      "pullback": 170,
+      "continuationWindow": 68
+     }
+    },
+    "net": 294201.77814759384,
+    "dd": 30046.142226491298
+   },
+   "joint": {
+    "key": "VGT:238/1/73/13/78/41/94/60 KRE:206/26/101/4/42/22/33/200 GDX:273/12/54/14/243/43/170/68",
+    "books": {
+     "VGT": {
+      "targetPercentChange": 238,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 13,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 41,
+      "pullback": 94,
+      "continuationWindow": 60
+     },
+     "KRE": {
+      "targetPercentChange": 206,
+      "trailingBuyPercentage": 26,
+      "trailingStopPercentage": 101,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 42,
+      "intradayLossBuffer": 22,
+      "pullback": 33,
+      "continuationWindow": 200
+     },
+     "GDX": {
+      "targetPercentChange": 273,
+      "trailingBuyPercentage": 12,
+      "trailingStopPercentage": 54,
+      "maximumHoldDays": 14,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 43,
+      "pullback": 170,
+      "continuationWindow": 68
+     }
+    },
+    "net": 294201.77814759384,
+    "dd": 30046.142226491298,
+    "accepted": false,
+    "checks": [],
+    "summary": {
+     "label": "ga:B2:s3:joint",
+     "seed": [
+      2638873066,
+      2846192942,
+      215278167,
+      3294903736
+     ],
+     "seeded": 64,
+     "generations": 24,
+     "newVectors": 1500,
+     "hypervolume": [
+      2457595386.752043,
+      2937530373.976537,
+      2941099868.9500656,
+      2942050633.0896454,
+      2962014421.295293,
+      2967126950.554654,
+      2978036910.3791375,
+      3642064745.4725566,
+      3648024112.7563934,
+      3650180827.682061,
+      3710428179.3338223,
+      3712207507.7542887,
+      3714898663.657637,
+      3789640614.275114,
+      3789640614.275114,
+      3790285783.0008755,
+      3790558691.7026763,
+      3795997263.487135,
+      3796597975.9104433,
+      3798599632.950972,
+      3804978974.266917,
+      3812757808.6330366,
+      3814820203.4981766,
+      3814973406.5221386
+     ],
+     "stopReason": "budget",
+     "repairs": 0,
+     "seconds": 14.003
+    }
+   }
+  },
+  {
+   "run": "s4",
+   "start": "T1-P",
+   "order": [
+    "KRE",
+    "VGT",
+    "GDX"
+   ],
+   "steps": [
+    {
+     "step": 1,
+     "round": 1,
+     "book": "KRE",
+     "incumbent": {
+      "net": 230924.29285156686,
+      "dd": 26509.97304978662,
+      "grid": {
+       "targetPercentChange": 299,
+       "trailingBuyPercentage": 27,
+       "trailingStopPercentage": 31,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 230,
+       "intradayLossBuffer": 23,
+       "pullback": 94,
+       "continuationWindow": 60
+      },
+      "short": "X 29.9% Y 2.7% L 230 stop 3.1% hold 4 buffer 2.3% P 9.4% W 60"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s4:1:KRE",
+      "seed": [
+       2520241672,
+       2636567291,
+       2881109092,
+       2907711763
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       3088204943.249229,
+       3205421040.0564575,
+       3205421040.0564575,
+       3225282502.0303793,
+       3228168029.6428685,
+       3228168029.6428685,
+       3228767987.2723813,
+       3231029003.622699,
+       3239365829.572254,
+       3247881112.1099567,
+       3252480152.7127976,
+       3256659443.4070415,
+       3256659443.4070415
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.648
+     },
+     "archiveSize": 884
+    },
+    {
+     "step": 2,
+     "round": 1,
+     "book": "VGT",
+     "incumbent": {
+      "net": 230924.29285156686,
+      "dd": 26509.97304978662,
+      "grid": {
+       "targetPercentChange": 216,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 8,
+       "tickWindowSize": 74,
+       "intradayLossBuffer": 29,
+       "pullback": 90,
+       "continuationWindow": 60
+      },
+      "short": "X 21.6% Y 0.3% L 74 stop 7.3% hold 8 buffer 2.9% P 9.0% W 60"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s4:2:VGT",
+      "seed": [
+       3339811724,
+       1928372499,
+       632645674,
+       3009350107
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       3076197026.794581,
+       3498844679.825529,
+       3499950101.148514,
+       3717918041.1267996,
+       3723123704.5015473,
+       3731082172.6219444,
+       3755984721.3370914,
+       3760941744.376189,
+       3760941744.376189,
+       3761928954.5307617,
+       3768312658.655511,
+       3768719662.175591,
+       3768719662.175591
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.141
+     },
+     "archiveSize": 889
+    },
+    {
+     "step": 3,
+     "round": 1,
+     "book": "GDX",
+     "incumbent": {
+      "net": 230924.29285156686,
+      "dd": 26509.97304978662,
+      "grid": {
+       "targetPercentChange": 258,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 72,
+       "maximumHoldDays": 11,
+       "tickWindowSize": 210,
+       "intradayLossBuffer": 34,
+       "pullback": 147,
+       "continuationWindow": 170
+      },
+      "short": "X 25.8% Y 0.9% L 210 stop 7.2% hold 11 buffer 3.4% P 14.7% W 170"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s4:3:GDX",
+      "seed": [
+       401126362,
+       347418524,
+       112432695,
+       1755127764
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       1960553469.7687716,
+       1960553469.7687716,
+       1968779025.0911434,
+       1968779025.0911434,
+       1968779025.0911434,
+       1968779025.0911434,
+       1968779025.091145,
+       1976263357.2453537,
+       1976263357.2453537,
+       1976263357.2453537,
+       1976263357.2453537,
+       1976263357.2453537,
+       1976263357.2453535
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.531
+     },
+     "archiveSize": 889
+    },
+    {
+     "step": 4,
+     "round": 2,
+     "book": "KRE",
+     "incumbent": {
+      "net": 230924.29285156686,
+      "dd": 26509.97304978662,
+      "grid": {
+       "targetPercentChange": 299,
+       "trailingBuyPercentage": 27,
+       "trailingStopPercentage": 31,
+       "maximumHoldDays": 4,
+       "tickWindowSize": 230,
+       "intradayLossBuffer": 23,
+       "pullback": 94,
+       "continuationWindow": 60
+      },
+      "short": "X 29.9% Y 2.7% L 230 stop 3.1% hold 4 buffer 2.3% P 9.4% W 60"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s4:4:KRE",
+      "seed": [
+       2912364917,
+       757287761,
+       768970498,
+       454314405
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       2794357795.743575,
+       3033820355.9979115,
+       3177842629.758258,
+       3180103646.108575,
+       3182550474.917301,
+       3182550474.917301,
+       3185865714.730564,
+       3192880611.0630617,
+       3192880611.0630617,
+       3193018210.457231,
+       3203825985.155938,
+       3203825985.155938,
+       3203838651.0672164
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.583
+     },
+     "archiveSize": 884
+    },
+    {
+     "step": 5,
+     "round": 2,
+     "book": "VGT",
+     "incumbent": {
+      "net": 230924.29285156686,
+      "dd": 26509.97304978662,
+      "grid": {
+       "targetPercentChange": 216,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 8,
+       "tickWindowSize": 74,
+       "intradayLossBuffer": 29,
+       "pullback": 90,
+       "continuationWindow": 60
+      },
+      "short": "X 21.6% Y 0.3% L 74 stop 7.3% hold 8 buffer 2.9% P 9.0% W 60"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s4:5:VGT",
+      "seed": [
+       3705129937,
+       1620753135,
+       293896704,
+       2650177871
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       3756473505.736183,
+       3756473505.736183,
+       3756473505.736183,
+       3756473505.7361836,
+       3756473505.7361836,
+       3759372526.192362,
+       3761897231.250115,
+       3761897231.250115,
+       3766583048.8579297,
+       3768488189.6087255,
+       3768501714.390076,
+       3768513251.629728,
+       3768513251.629728
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.042
+     },
+     "archiveSize": 889
+    },
+    {
+     "step": 6,
+     "round": 2,
+     "book": "GDX",
+     "incumbent": {
+      "net": 230924.29285156686,
+      "dd": 26509.97304978662,
+      "grid": {
+       "targetPercentChange": 258,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 72,
+       "maximumHoldDays": 11,
+       "tickWindowSize": 210,
+       "intradayLossBuffer": 34,
+       "pullback": 147,
+       "continuationWindow": 170
+      },
+      "short": "X 25.8% Y 0.9% L 210 stop 7.2% hold 11 buffer 3.4% P 14.7% W 170"
+     },
+     "accepted": null,
+     "checks": [],
+     "summary": {
+      "label": "ga:B2:s4:6:GDX",
+      "seed": [
+       1976366825,
+       3487439316,
+       178922077,
+       2260731856
+      ],
+      "seeded": 48,
+      "generations": 13,
+      "newVectors": 600,
+      "hypervolume": [
+       1960553469.7687714,
+       1960553469.7687716,
+       1968779025.0911431,
+       1968779025.0911431,
+       1968779025.0911446,
+       1968779025.0911446,
+       1976263357.2453532,
+       1976263357.2453535,
+       1976263357.2453535,
+       1976263357.2453535,
+       1976263357.2453537,
+       1976263357.2453537,
+       1976263357.2453537
+      ],
+      "stopReason": "budget",
+      "repairs": 0,
+      "seconds": 4.533
+     },
+     "archiveSize": 889
+    }
+   ],
+   "coordinate": {
+    "key": "VGT:216/3/73/8/74/29/90/60 KRE:299/27/31/4/230/23/94/60 GDX:258/9/72/11/210/34/147/170",
+    "books": {
+     "VGT": {
+      "targetPercentChange": 216,
+      "trailingBuyPercentage": 3,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 8,
+      "tickWindowSize": 74,
+      "intradayLossBuffer": 29,
+      "pullback": 90,
+      "continuationWindow": 60
+     },
+     "KRE": {
+      "targetPercentChange": 299,
+      "trailingBuyPercentage": 27,
+      "trailingStopPercentage": 31,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 230,
+      "intradayLossBuffer": 23,
+      "pullback": 94,
+      "continuationWindow": 60
+     },
+     "GDX": {
+      "targetPercentChange": 258,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 72,
+      "maximumHoldDays": 11,
+      "tickWindowSize": 210,
+      "intradayLossBuffer": 34,
+      "pullback": 147,
+      "continuationWindow": 170
+     }
+    },
+    "net": 230924.29285156686,
+    "dd": 26509.97304978662
+   },
+   "joint": {
+    "key": "VGT:216/3/73/8/74/29/90/60 KRE:299/27/31/4/230/23/94/60 GDX:258/9/72/11/210/34/147/170",
+    "books": {
+     "VGT": {
+      "targetPercentChange": 216,
+      "trailingBuyPercentage": 3,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 8,
+      "tickWindowSize": 74,
+      "intradayLossBuffer": 29,
+      "pullback": 90,
+      "continuationWindow": 60
+     },
+     "KRE": {
+      "targetPercentChange": 299,
+      "trailingBuyPercentage": 27,
+      "trailingStopPercentage": 31,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 230,
+      "intradayLossBuffer": 23,
+      "pullback": 94,
+      "continuationWindow": 60
+     },
+     "GDX": {
+      "targetPercentChange": 258,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 72,
+      "maximumHoldDays": 11,
+      "tickWindowSize": 210,
+      "intradayLossBuffer": 34,
+      "pullback": 147,
+      "continuationWindow": 170
+     }
+    },
+    "net": 230924.29285156686,
+    "dd": 26509.97304978662,
+    "accepted": false,
+    "checks": [],
+    "summary": {
+     "label": "ga:B2:s4:joint",
+     "seed": [
+      3082508380,
+      2680692239,
+      2485247180,
+      240225113
+     ],
+     "seeded": 64,
+     "generations": 24,
+     "newVectors": 1500,
+     "hypervolume": [
+      2478204944.9687405,
+      2479711689.3201566,
+      3014161984.7757387,
+      3015792373.748455,
+      3019820064.2962356,
+      3026348944.707313,
+      3026349879.0697784,
+      3026853706.5683675,
+      3026968894.306756,
+      3027220973.242591,
+      3035426665.6662107,
+      3035450558.231844,
+      3035511555.0439425,
+      3035511555.0439425,
+      3035511555.0439425,
+      3035518099.097601,
+      3035519421.678409,
+      3035529535.051414,
+      3039803838.0645676,
+      3039803838.064567,
+      3039803838.064567,
+      3039803838.064567,
+      3039813587.590314,
+      3039928775.328703
+     ],
+     "stopReason": "budget",
+     "repairs": 0,
+     "seconds": 14.032
+    }
+   }
+  }
+ ],
+ "pathDependence": [
+  {
+   "a": "s1",
+   "b": "s2",
+   "coordinateDistance": 0.6263157894736842,
+   "jointDistance": 0.6
+  },
+  {
+   "a": "s1",
+   "b": "s3",
+   "coordinateDistance": 0.8058823529411765,
+   "jointDistance": 0.8058823529411765
+  },
+  {
+   "a": "s1",
+   "b": "s4",
+   "coordinateDistance": 0.7652173913043478,
+   "jointDistance": 0.8565217391304348
+  },
+  {
+   "a": "s2",
+   "b": "s3",
+   "coordinateDistance": 0.7823529411764706,
+   "jointDistance": 0.7823529411764706
+  },
+  {
+   "a": "s2",
+   "b": "s4",
+   "coordinateDistance": 0.8304347826086956,
+   "jointDistance": 0.8565217391304348
+  },
+  {
+   "a": "s3",
+   "b": "s4",
+   "coordinateDistance": 0.8173913043478261,
+   "jointDistance": 0.8173913043478261
+  }
+ ],
+ "evaluations": 27945,
+ "archive": {
+  "file": "research/study5-gdx-d1-b5-three-etf-2026-10/results/track2/archive.jsonl",
+  "rows": 27945,
+  "fileSha256": "0e74e361cc7ee2a2bab93925075acc01a82ae50aa30b900a7acb1754afbc33eb"
+ },
+ "traces": 31567,
+ "seconds": 217.017,
+ "bodyHash": "f76905ea219fea60645ffb78eb7db1fd53c8ddc1ed985a40509fe844ea81b2ea"
+}

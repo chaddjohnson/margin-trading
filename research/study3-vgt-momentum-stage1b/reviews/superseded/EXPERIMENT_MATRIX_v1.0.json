@@ -1,0 +1,85 @@
+{
+ "schemaVersion": 1,
+ "study": "study3b-vgt-momentum-exits-exposure-chronology-v1",
+ "protocol": "PROTOCOL.md v1.0",
+ "symbol": "VGT",
+ "dataCap": "2023-12-29",
+ "forbiddenFrom": "2024-01-01",
+ "firstSession": "2016-01-04",
+ "firstDecisionClose": "2017-01-03",
+ "principal": 100000,
+ "rate": 0.11,
+ "costBps": 5,
+ "ddReference": 35000,
+ "rodFloor": 10000,
+ "histories": {
+  "A": { "developmentEnd": "2019-12-31", "window": ["2019-12-31", "2020-12-31"] },
+  "B": { "developmentEnd": "2020-12-31", "window": ["2020-12-31", "2021-12-31"] },
+  "C": { "developmentEnd": "2021-12-31", "window": ["2021-12-31", "2022-12-30"] },
+  "D": { "developmentEnd": "2022-12-30", "window": ["2022-12-30", "2023-12-29"] },
+  "H": { "developmentEnd": "2023-12-29", "window": null }
+ },
+ "pathStart": "2019-12-31",
+ "panelEntries": ["E02", "E03", "E05", "E06", "E07", "E09", "E11", "C-SMA"],
+ "exitControls": ["E06", "E05", "E03", "C-SMA"],
+ "optimisedExits": ["XF", "XV", "XS", "XT", "XRP", "XRD", "XD", "XP", "XO", "XE"],
+ "fixedExits": ["XF-T", "XM20", "XM60", "XM120", "XM250", "B-D1T", "B-D1N"],
+ "exitBoxes": {
+  "XF": { "h": [0.02, 0.2, 0.001, 0.08], "t": [0.03, 0.35, 0.001, 0.1], "ref": [0, 1, 1, 0], "own": [0, 1, 1, 1] },
+  "XF-T": { "h": [0.02, 0.2, 0.001, 0.08], "t": [0.03, 0.12, 0.001, 0.08], "ref": [0, 1, 1, 0], "own": [0, 1, 1, 1] },
+  "XV": { "k": [1, 8, 0.1, 3], "n": [5, 60, 1, 20], "dmin": [0.02, 0.1, 0.001, 0.04], "dgap": [0.02, 0.3, 0.001, 0.11], "h": [0.03, 0.2, 0.001, 0.08], "own": [0, 1, 1, 0] },
+  "XS": { "theta": [0.02, 0.15, 0.001, 0.05], "b": [0, 0.03, 0.001, 0.005], "h": [0.03, 0.2, 0.001, 0.1], "own": [0, 1, 1, 0] },
+  "XT": { "h": [0.05, 0.25, 0.001, 0.15], "N": [5, 120, 1, 50], "g": [0.03, 0.6, 0.001, 0.2], "t2": [0.03, 0.25, 0.001, 0.1], "rat": [0, 1, 1, 1], "own": [0, 1, 1, 0] },
+  "XRP": { "h": [0.03, 0.2, 0.001, 0.08], "a": [0.03, 0.6, 0.001, 0.15], "rho": [0.2, 0.9, 0.01, 0.5], "own": [0, 1, 1, 0] },
+  "XRD": { "h": [0.03, 0.2, 0.001, 0.08], "A": [2000, 80000, 500, 20000], "G": [5000, 60000, 500, 15000], "own": [0, 1, 1, 0] },
+  "XD": { "p": [0.03, 0.25, 0.001, 0.1], "N": [5, 120, 1, 20], "mode": [0, 2, 1, 1], "cat": [0.08, 0.3, 0.001, 0.15], "own": [0, 1, 1, 0] },
+  "XP": { "T": [5, 120, 1, 20], "m": [-0.05, 0.05, 0.001, 0.01], "d": [0, 0.1, 0.001, 0], "h": [0.03, 0.2, 0.001, 0.08], "own": [0, 1, 1, 0] },
+  "XO": { "cat": [0.08, 0.35, 0.001, 0.15], "c": [1, 5, 1, 1] },
+  "XE": { "t0": [0.06, 0.35, 0.001, 0.2], "gamma": [0, 2, 0.01, 1], "tmin": [0.02, 0.1, 0.001, 0.05], "h": [0.03, 0.2, 0.001, 0.08], "own": [0, 1, 1, 0] }
+ },
+ "boxFormat": "[lo, hi, quantum, default]; quantum 1 on [0,1] or [0,2] = binary/categorical",
+ "reentryRules": ["R3F", "RN", "RF", "R0", "RC10", "RP50", "RS", "RFL", "REF", "RPM"],
+ "sizing": {
+  "Z0": {},
+  "Z1": { "band": 0.05, "target": 100000 },
+  "Z2": [[0.25, 0], [0.5, 0], [0.5, 0.25], [1.0, 0], [1.0, 0.5]],
+  "Z3": [15000, 25000, 40000]
+ },
+ "pairings": {
+  "P01": ["E06", "XS"], "P02": ["E06", "XV"], "P03": ["E06", "XF-T"], "P04": ["E06", "XRD"],
+  "P05": ["E05", "XF"], "P06": ["E03", "XT"], "P07": ["E11", "XF-T"], "P08": ["E09", "XF"],
+  "P09": ["C-SMA", "XF"], "P10": ["E02", "XE"], "P11": ["E07", "XD"], "P12": "adaptive: best L-B RoD cell not in P01-P11"
+ },
+ "search": {
+  "feasibility": { "maxMinuteDd": 35000, "minClosedTrades": 6, "minCampaigns": 3, "minYearsHeld": 3, "netPositive": true },
+  "exitCell": { "global": 1024, "localSeeds": 4, "localPerSeed": 32, "localRadius": 0.1, "shortlist": 16, "joint": 32, "jointRadius": 0.1, "tenBps": true, "perCell": 1680 },
+  "pairing": { "global": 2048, "localSeeds": 4, "localPerSeed": 32, "localRadius": 0.1, "shortlist": 16, "joint": 32, "jointRadius": 0.1, "tenBps": true, "perPairing": 2704, "reentryPerPairing": 330 },
+  "sizing": { "pairings": 3, "variants": 9, "perPairing": 297 },
+  "championFeasibility": 0.75,
+  "scores": { "primary": "RoD = median_J32(net / max(minuteDD, 10000))", "secondary": "NET = median_J32(net)" },
+  "caps": { "perHistory": 140000, "total": 700000, "robustness": 80000, "repair": 5000, "diagnostics": 30000 },
+  "seedLabels": {
+   "global": "study3b|<history>|<cell>|global",
+   "local": "study3b|<history>|<cell>|local|<k>",
+   "joint": "study3b|<history>|<cell>|joint|<centerIndex>",
+   "J128": "study3b|<policy>|J128",
+   "missing": "study3b|missing|<rate>"
+  }
+ },
+ "neighbourhoods": { "oatStepFraction": 0.05, "oatSteps": [-2, -1, 1, 2], "jointDraws": 128, "jointRadius": 0.1 },
+ "transitions": ["S1", "S2", "S3"],
+ "primaryTransition": "S1",
+ "controls": ["C-AL", "C-ALR", "C-ALZ1", "C-SMA", "C-DON", "C-TSM", "C-STOP", "C-IDLE"],
+ "stresses": {
+  "costs": [0, 2, 10], "rates": [0.08, 0.14], "stopSlippageBps": [10, 25, 50], "entrySlippageBps": [10, 25],
+  "openSlippageBps": [50], "delayMinutes": [1, 5], "missingBars": [0.01, 0.05]
+ },
+ "rubric": {
+  "positiveWindow": 2000, "sumMin": 20000, "positiveWindowsMin": 3, "minWindow": -15000, "windowDd": 35000,
+  "chainDd": 35000, "excessSumMin": 10000, "excessWindow": 2000, "excessWindowsMin": 2, "controlMargin": 5000,
+  "controls": ["C-SMA", "C-DON", "C-TSM"], "neighbourhoodShareMin": 0.75, "minWindowsWithPosition": 3,
+  "minClosedTrades": 6, "stressChecks": ["costBps=10", "rate=0.14", "stopSlippageBps=25", "delayMinutes=1"]
+ },
+ "stage1Picks": { "A": "E06-9ee2ce7bd5", "B": "E04-86b6d59a31", "C": "E04-b4a27ac53b", "D": "E06-47640253c0", "H": "E06-4978efef20" },
+ "stages": ["audit", "freeze-protocol", "parity", "freeze-code", "repair", "develop-A", "develop-B", "develop-C", "develop-D", "develop-H", "evaluate", "robustness", "analysis"]
+}

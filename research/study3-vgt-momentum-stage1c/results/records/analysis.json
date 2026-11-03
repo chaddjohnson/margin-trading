@@ -1,0 +1,537 @@
+{
+ "stage": "analysis",
+ "study": "study3c-vgt-momentum-d1-protection-matrix-v1",
+ "createdAt": "2026-10-29T16:58:28.293Z",
+ "git": {
+  "head": "2a7996ddd5585849964a795151ac7a80d56f419f",
+  "outside": []
+ },
+ "protocolFreeze": "9c82742aa2777c312c5908aed4a7e404bdc197b725083331794cbcca86b8ac47",
+ "codeFreeze": "c0cea3914c5b15843b88e2f4b78e51d171a032eddc288dca1d99cae726bef07a",
+ "payloads": {
+  "ledgerProblems": {
+   "file": "research/study3-vgt-momentum-stage1c/results/payloads/analysis/ledgerProblems.json.gz",
+   "sha256": "f93b1c17303a347b8b556066ca0869a17e3de155c167c3e48d1f467818e9e8a4",
+   "bytes": 300
+  },
+  "descriptive": {
+   "file": "research/study3-vgt-momentum-stage1c/results/payloads/analysis/descriptive.json.gz",
+   "sha256": "b0793b4d7dbefc877522c1144bc2a8cc600b722b36d2492583b7f4f2cba049cc",
+   "bytes": 12061
+  }
+ },
+ "summary": {
+  "label": "no demonstrated edge",
+  "verdict": {
+   "label": "no demonstrated edge",
+   "failed": [
+    "g",
+    "f",
+    "e2"
+   ]
+  },
+  "netLabel": {
+   "label": "risk-incompatible",
+   "failed": [
+    "c"
+   ]
+  },
+  "aPass": true,
+  "selection": {
+   "nullMedian": 19285.740163036135,
+   "pi1Sum": 51668.78160400139,
+   "selectionIndistinguishable": false,
+   "nullPercentile": 0.8984375
+  },
+  "protection": {
+   "primary": {
+    "deltaSum": 26216.41350586961,
+    "deltaDd": -31870.21498401279,
+    "pairedShare": 0.3359375,
+    "holds": false
+   },
+   "procedure": {
+    "deltaSum": 68104.04501005894,
+    "deltaDd": -21823.662195410398,
+    "holds": true
+   },
+   "fixedParent": {
+    "holds": 0,
+    "of": 7,
+    "rows": [
+     {
+      "mask": "100",
+      "deltaSum": -11598.938496450712,
+      "deltaDd": 3546.1390459044487,
+      "holds": false
+     },
+     {
+      "mask": "010",
+      "deltaSum": -3419.1174390996966,
+      "deltaDd": 197.21683203313296,
+      "holds": false
+     },
+     {
+      "mask": "001",
+      "deltaSum": 0,
+      "deltaDd": 0,
+      "holds": false
+     },
+     {
+      "mask": "110",
+      "deltaSum": -4278.791374649769,
+      "deltaDd": 311.63973466814787,
+      "holds": false
+     },
+     {
+      "mask": "101",
+      "deltaSum": -11598.938496450712,
+      "deltaDd": 3546.1390459044487,
+      "holds": false
+     },
+     {
+      "mask": "011",
+      "deltaSum": -3419.1174390996966,
+      "deltaDd": 197.21683203313296,
+      "holds": false
+     },
+     {
+      "mask": "111",
+      "deltaSum": -4278.791374649769,
+      "deltaDd": 311.63973466814787,
+      "holds": false
+     }
+    ]
+   },
+   "y2022": {
+    "holds": true
+   }
+  },
+  "nomination": "none",
+  "evaluations": 5114598,
+  "items": {
+   "Pi1": {
+    "evidence": {
+     "ownRuleExits": 10,
+     "firstEntries": 10,
+     "firstEntryWindows": 4,
+     "positionWindows": 4,
+     "longShare": 0.7246520874751491,
+     "undefinedPicks": 0
+    },
+    "ePass": true,
+    "risk": {
+     "windowDd": [
+      23198.049784151393,
+      11086.354695216614,
+      22004.22253230139,
+      14169.50501820624
+     ],
+     "chainDd": 24192.916953117237
+    },
+    "cPass": true,
+    "profit": {
+     "W": [
+      23749.107650862803,
+      18148.45127951837,
+      -6414.964653079071,
+      16186.187326699292
+     ],
+     "sum": 51668.78160400139,
+     "positive": 3,
+     "min": -6414.964653079071
+    },
+    "bPass": true,
+    "d": {
+     "cActive": true,
+     "W2022": -6414.964653079071,
+     "off2022": -46766.1935880413,
+     "d1": true,
+     "trendWindows": [
+      0,
+      1,
+      3
+     ],
+     "trendSum": 58083.746257080464,
+     "trendOff": 72218.56168617308,
+     "d2": true
+    },
+    "dPass": true,
+    "g": {
+     "benchmark": [
+      {
+       "fMv": 0.8465762578889918,
+       "B": 25923.49239888443
+      },
+      {
+       "fMv": 0.9662605593740887,
+       "B": 19618.907640344376
+      },
+      {
+       "fMv": 0.7250417559251301,
+       "B": -27116.971457793737
+      },
+      {
+       "fMv": 0.5661295319770654,
+       "B": 22460.55072436598
+      }
+     ],
+     "excess": [
+      -2174.384748021628,
+      -1470.4563608260069,
+      20702.006804714667,
+      -6274.36339766669
+     ],
+     "sumExcess": 10782.802298200342,
+     "excessWindows": 1,
+     "controlMargins": {
+      "C-SMA": 2672.8378256142096,
+      "C-DON": 18808.784132365166,
+      "C-TSM": 8092.162032616972,
+      "C-STOP": 11452.61167152819
+     }
+    },
+    "gPass": false,
+    "f": {
+     "shareOk": 0.5859375,
+     "median": 21845.394556900865,
+     "p10": -4981.31872273729
+    },
+    "fPass": false,
+    "h": {
+     "cost10": {
+      "end": 49959.77343831147,
+      "chainDd": 24516.233266638046,
+      "windowDd": 23282.378894345442
+     },
+     "rate14": {
+      "end": 45854.899058914794,
+      "chainDd": 24736.88565769681,
+      "windowDd": 23457.48334213746
+     },
+     "stop25": {
+      "end": 48960.35035690009,
+      "chainDd": 24715.795441109447,
+      "windowDd": 23198.049784151393
+     },
+     "open50": {
+      "end": 50253.37027307755,
+      "chainDd": 24882.159786420358,
+      "windowDd": 23645.671785669725
+     },
+     "delay1": {
+      "end": 62274.397389830316,
+      "chainDd": 23546.48500035622,
+      "windowDd": 23196.739461150893
+     }
+    },
+    "hPass": true,
+    "e2": {
+     "largestCampaign": 37356.96470657907,
+     "sumMinusCampaign": 14311.816897422323,
+     "largestLeg": 30294.486926689373,
+     "sumMinusLeg": 21374.29467731202,
+     "givebackShare": 0.6059116863343951
+    },
+    "e2Pass": false
+   },
+   "Pi1-S2": {
+    "evidence": {
+     "ownRuleExits": 14,
+     "firstEntries": 11,
+     "firstEntryWindows": 4,
+     "positionWindows": 4,
+     "longShare": 0.7047713717693836,
+     "undefinedPicks": 0
+    },
+    "ePass": true,
+    "risk": {
+     "windowDd": [
+      23198.049784151393,
+      12780.640013838212,
+      40138.532075613264,
+      14578.26074236101
+     ],
+     "chainDd": 41286.995506513456
+    },
+    "cPass": false,
+    "profit": {
+     "W": [
+      23749.107650862803,
+      15334.5768707733,
+      -36580.19676371522,
+      14160.417860818467
+     ],
+     "sum": 16663.90561873935,
+     "positive": 3,
+     "min": -36580.19676371522
+    },
+    "bPass": false,
+    "d": null,
+    "dPass": null,
+    "g": {
+     "benchmark": [
+      {
+       "fMv": 0.8465762578889918,
+       "B": 25923.49239888443
+      },
+      {
+       "fMv": 0.9693197588567342,
+       "B": 19346.66374447228
+      },
+      {
+       "fMv": 0.6372510559287548,
+       "B": -24862.669421902687
+      },
+      {
+       "fMv": 0.5643131648810947,
+       "B": 20571.31778886578
+      }
+     ],
+     "excess": [
+      -2174.384748021628,
+      -4012.0868736989796,
+      -11717.527341812533,
+      -6410.8999280473145
+     ],
+     "sumExcess": -24314.898891580455,
+     "excessWindows": 0,
+     "controlMargins": {
+      "C-SMA": -32332.038159647833,
+      "C-DON": -16196.091852896876,
+      "C-TSM": -26912.71395264507,
+      "C-STOP": -23552.264313733853
+     }
+    },
+    "gPass": false,
+    "f": null,
+    "fPass": null,
+    "h": null,
+    "hPass": null,
+    "e2": {
+     "largestCampaign": 41877.01883165191,
+     "sumMinusCampaign": -25213.11321291256,
+     "largestLeg": 30294.486926689373,
+     "sumMinusLeg": -13630.581307950022,
+     "givebackShare": 0.77311962496586
+    },
+    "e2Pass": false
+   },
+   "Pi1-reset": {
+    "evidence": {
+     "ownRuleExits": 10,
+     "firstEntries": 10,
+     "firstEntryWindows": 4,
+     "positionWindows": 4,
+     "longShare": 0.7246520874751491,
+     "undefinedPicks": 0
+    },
+    "ePass": true,
+    "risk": {
+     "windowDd": [
+      23198.049784151393,
+      11086.354695216614,
+      22004.22253230139,
+      14169.50501820624
+     ],
+     "chainDd": 24192.916953117237
+    },
+    "cPass": true,
+    "profit": {
+     "W": [
+      23749.107650862803,
+      18148.45127951837,
+      -6414.964653079071,
+      16186.187326699292
+     ],
+     "sum": 51668.78160400139,
+     "positive": 3,
+     "min": -6414.964653079071
+    },
+    "bPass": true,
+    "d": null,
+    "dPass": null,
+    "g": {
+     "benchmark": [
+      {
+       "fMv": 0.8465762578889918,
+       "B": 25923.49239888443
+      },
+      {
+       "fMv": 0.9662605593740887,
+       "B": 19618.907640344376
+      },
+      {
+       "fMv": 0.7250417559251301,
+       "B": -27116.971457793737
+      },
+      {
+       "fMv": 0.5661295319770654,
+       "B": 22460.55072436598
+      }
+     ],
+     "excess": [
+      -2174.384748021628,
+      -1470.4563608260069,
+      20702.006804714667,
+      -6274.36339766669
+     ],
+     "sumExcess": 10782.802298200342,
+     "excessWindows": 1,
+     "controlMargins": {
+      "C-SMA": 2672.8378256142096,
+      "C-DON": 18808.784132365166,
+      "C-TSM": 8092.162032616972,
+      "C-STOP": 11452.61167152819
+     }
+    },
+    "gPass": false,
+    "f": null,
+    "fPass": null,
+    "h": null,
+    "hPass": null,
+    "e2": {
+     "largestCampaign": 37356.96470657907,
+     "sumMinusCampaign": 14311.816897422323,
+     "largestLeg": 30294.486926689373,
+     "sumMinusLeg": 21374.29467731202,
+     "givebackShare": 0.6059116863343951
+    },
+    "e2Pass": false
+   },
+   "Pi-NET": {
+    "evidence": {
+     "ownRuleExits": 20,
+     "firstEntries": 20,
+     "firstEntryWindows": 3,
+     "positionWindows": 4,
+     "longShare": 0.8797216699801192,
+     "undefinedPicks": 0
+    },
+    "ePass": true,
+    "risk": {
+     "windowDd": [
+      38663.65794728875,
+      11058.199943607622,
+      65968.24462900545,
+      23068.909179868908
+     ],
+     "chainDd": 66550.64397688954
+    },
+    "cPass": false,
+    "profit": {
+     "W": [
+      29393.316767050746,
+      18731.75539170747,
+      -60961.93942613623,
+      42820.0432374046
+     ],
+     "sum": 29983.175970026583,
+     "positive": 3,
+     "min": -60961.93942613623
+    },
+    "bPass": false,
+    "d": {
+     "cActive": false,
+     "W2022": -60961.93942613623,
+     "off2022": -59275.72541064821,
+     "d1": null,
+     "trendWindows": [
+      0,
+      1,
+      3
+     ],
+     "trendSum": 90945.11539616282,
+     "trendOff": 109999.93106092793,
+     "d2": true
+    },
+    "dPass": true,
+    "g": {
+     "benchmark": [
+      {
+       "fMv": 0.9163977574468187,
+       "B": 28161.676454348235
+      },
+      {
+       "fMv": 0.9656191327495032,
+       "B": 20211.275420395763
+      },
+      {
+       "fMv": 0.894373138141234,
+       "B": -35502.71568167504
+      },
+      {
+       "fMv": 1.2777916554369018,
+       "B": 46249.050156671896
+      }
+     ],
+     "excess": [
+      1231.6403127025114,
+      -1479.5200286882937,
+      -25459.22374446119,
+      -3429.0069192672963
+     ],
+     "sumExcess": -29136.110379714268,
+     "excessWindows": 0,
+     "controlMargins": {
+      "C-SMA": -19012.7678083606,
+      "C-DON": -2876.8215016096437,
+      "C-TSM": -13593.443601357838,
+      "C-STOP": -10232.99396244662
+     }
+    },
+    "gPass": false,
+    "f": {
+     "shareOk": 0,
+     "median": 26923.12787986714,
+     "p10": 12942.92215244034
+    },
+    "fPass": false,
+    "h": {
+     "cost10": {
+      "end": 27006.156527596824,
+      "chainDd": 68031.76179432351,
+      "windowDd": 67336.80077764222
+     },
+     "rate14": {
+      "end": 26043.928305395144,
+      "chainDd": 67822.46023198255,
+      "windowDd": 67116.85642957548
+     },
+     "stop25": {
+      "end": 27546.793446558346,
+      "chainDd": 66695.7590686963,
+      "windowDd": 66108.92872564253
+     },
+     "open50": {
+      "end": 24736.785696574996,
+      "chainDd": 73516.17760530964,
+      "windowDd": 72233.49953803039
+     },
+     "delay1": {
+      "end": 24803.844597209783,
+      "chainDd": 63492.701326761955,
+      "windowDd": 62737.44474167294
+     }
+    },
+    "hPass": false,
+    "e2": {
+     "largestCampaign": 52462.646849746845,
+     "sumMinusCampaign": -22479.470879720262,
+     "largestLeg": 57372.62771244522,
+     "sumMinusLeg": -27389.451742418634,
+     "givebackShare": 0.5266544814516856
+    },
+    "e2Pass": false
+   }
+  },
+  "nearMisses": [],
+  "runtime": {
+   "seconds": 0.079,
+   "workers": 0,
+   "peakRssMb": 330,
+   "node": "v24.21.0"
+  }
+ },
+ "bodyHash": "917c7c7da7fc38c6a7bd0464e437808ae6cbd60ec9d538e90d78b9811edabab8"
+}

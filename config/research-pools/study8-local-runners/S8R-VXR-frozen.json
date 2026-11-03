@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S8R-VXR-frozen",
+  "name": "VXR frozen \u2014 B5's VGT primary + XBI and XRT books (no retuning)",
+  "role": "frozen subset control (Study 7/8 \"VXR\")",
+  "status": "FROZEN SUBSET \u2014 B5's unchanged VGT/XBI/XRT books; runner configuration only",
+  "description": "The 3-book subset of frozen B5 holding its VGT primary (d1-ebc9f639b3), XBI lowDd (d1-0aabdaab89), XRT lowDd (d1-15c387627c) books, unchanged, under the same shadow single-slot allocator: the frozen VXR control of Studies 7 and 8.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "primary",
+      "phenotypeFile": "config/phenotypes/D1/VGT.json",
+      "candidateId": "d1-ebc9f639b3",
+      "parameters": {
+        "targetPercentChange": "21.6%",
+        "trailingBuyPercentage": "0.3%",
+        "trailingStopPercentage": "7.3%",
+        "maximumHoldDays": 8,
+        "tickWindowSize": 74,
+        "intradayLossBuffer": "2.9%",
+        "pullback": "9.0%",
+        "continuationWindow": 60
+      },
+      "parametersSha256": "62978dffae8291e66931c7bb2df824fb70aee8c6e8e8e08460765ec9911981b5"
+    },
+    {
+      "symbol": "XBI",
+      "phenotype": "lowDd",
+      "phenotypeFile": "config/phenotypes/D1/XBI.json",
+      "candidateId": "d1-0aabdaab89",
+      "parameters": {
+        "targetPercentChange": "30.0%",
+        "trailingBuyPercentage": "1.2%",
+        "trailingStopPercentage": "3.1%",
+        "maximumHoldDays": 5,
+        "tickWindowSize": 49,
+        "intradayLossBuffer": "0.1%",
+        "pullback": "8.2%",
+        "continuationWindow": 54
+      },
+      "parametersSha256": "4755dc6423da4ec1d98c9ef823e58862989eba2651fefdb7f949e9ebbe5da4c3"
+    },
+    {
+      "symbol": "XRT",
+      "phenotype": "lowDd",
+      "phenotypeFile": "config/phenotypes/D1/XRT.json",
+      "candidateId": "d1-15c387627c",
+      "parameters": {
+        "targetPercentChange": "24.4%",
+        "trailingBuyPercentage": "4.7%",
+        "trailingStopPercentage": "8.0%",
+        "maximumHoldDays": 17,
+        "tickWindowSize": 48,
+        "intradayLossBuffer": "3.6%",
+        "pullback": "6.2%",
+        "continuationWindow": 120
+      },
+      "parametersSha256": "92448568b2a8631462e2b3ab7cab6483a6779d2e7548e3afe6a576091db2f49d"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "frozenReference": {
+    "note": "books identical to config/pools/B5.json; verified by src/study8-runners/resolve.ts"
+  },
+  "provenance": {
+    "createdAt": "2026-11-01",
+    "createdBy": "src/study8-runners (execution tooling; no optimization)",
+    "source": "books copied verbatim from config/pools/B5.json (sha256 deef53ca531118064925a64e25288c927f3a71d8a05311075b439087960020fe); phenotypes resolved from the frozen registry config/phenotypes/D1/"
+  }
+}

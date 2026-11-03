@@ -1,0 +1,457 @@
+{
+ "family": "d1.gross",
+ "anchor": {
+  "targetPercentChange": 216,
+  "trailingBuyPercentage": 3,
+  "tickWindowSize": 74,
+  "trailingStopPercentage": 73,
+  "maximumHoldDays": 8,
+  "intradayLossBuffer": 29,
+  "pullback": 90,
+  "continuationWindow": 60,
+  "activationGain": 80
+ },
+ "box": {
+  "activationGain": [
+   5,
+   200
+  ],
+  "trailingStopPercentage": [
+   50,
+   100
+  ],
+  "maximumHoldDays": [
+   6,
+   16
+  ]
+ },
+ "samples": 2048,
+ "seedLabel": "trackB-gross",
+ "picks": [
+  {
+   "policy": "maxNet",
+   "pick": {
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "tickWindowSize": 74,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "intradayLossBuffer": 29,
+     "pullback": 90,
+     "continuationWindow": 60,
+     "activationGain": 80
+    },
+    "net": 183043.81914863546,
+    "minuteDrawdown": 19330.689951494183,
+    "entries": 20
+   },
+   "refined": {
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "tickWindowSize": 74,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "intradayLossBuffer": 29,
+     "pullback": 90,
+     "continuationWindow": 60,
+     "activationGain": 95
+    },
+    "net": 183872.61879603373,
+    "minuteDrawdown": 19330.689951494183,
+    "entries": 17,
+    "signature": "54f2a6916d1127d0"
+   },
+   "rounds": 1,
+   "evaluations": 250,
+   "stability": 0.7777777777777778,
+   "probeNetRange": [
+    140825.00394912722,
+    183872.61879603373
+   ],
+   "probeMaxDrawdown": 25077.677941942704,
+   "probeSignatures": 15
+  },
+  {
+   "policy": "balanced",
+   "pick": {
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "tickWindowSize": 74,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "intradayLossBuffer": 29,
+     "pullback": 90,
+     "continuationWindow": 60,
+     "activationGain": 80
+    },
+    "net": 183043.81914863546,
+    "minuteDrawdown": 19330.689951494183,
+    "entries": 20
+   },
+   "refined": {
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "tickWindowSize": 74,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "intradayLossBuffer": 29,
+     "pullback": 90,
+     "continuationWindow": 60,
+     "activationGain": 95
+    },
+    "net": 183872.61879603373,
+    "minuteDrawdown": 19330.689951494183,
+    "entries": 17,
+    "signature": "54f2a6916d1127d0"
+   },
+   "rounds": 1,
+   "evaluations": 0,
+   "stability": 0.7777777777777778,
+   "probeNetRange": [
+    140825.00394912722,
+    183872.61879603373
+   ],
+   "probeMaxDrawdown": 25077.677941942704,
+   "probeSignatures": 15
+  },
+  {
+   "policy": "lowDd",
+   "pick": {
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "tickWindowSize": 74,
+     "trailingStopPercentage": 74,
+     "maximumHoldDays": 8,
+     "intradayLossBuffer": 29,
+     "pullback": 90,
+     "continuationWindow": 60,
+     "activationGain": 51
+    },
+    "net": 166040.40355518807,
+    "minuteDrawdown": 18852.912616645837,
+    "entries": 23
+   },
+   "refined": {
+    "params": {
+     "targetPercentChange": 216,
+     "trailingBuyPercentage": 3,
+     "tickWindowSize": 74,
+     "trailingStopPercentage": 73,
+     "maximumHoldDays": 8,
+     "intradayLossBuffer": 29,
+     "pullback": 90,
+     "continuationWindow": 60,
+     "activationGain": 95
+    },
+    "net": 183872.61879603373,
+    "minuteDrawdown": 19330.689951494183,
+    "entries": 17,
+    "signature": "54f2a6916d1127d0"
+   },
+   "rounds": 1,
+   "evaluations": 190,
+   "stability": 0.7777777777777778,
+   "probeNetRange": [
+    140825.00394912722,
+    183872.61879603373
+   ],
+   "probeMaxDrawdown": 25077.677941942704,
+   "probeSignatures": 15
+  }
+ ],
+ "walkForward": [
+  {
+   "study": "trackB_gross",
+   "fold": "fold1",
+   "policy": "maxNet",
+   "anchorValidationNet": 78003.19195217728,
+   "anchorValidationDrawdown": 19330.689951494183,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold1",
+   "policy": "balanced",
+   "anchorValidationNet": 78003.19195217728,
+   "anchorValidationDrawdown": 19330.689951494183,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold1",
+   "policy": "lowDd",
+   "anchorValidationNet": 78003.19195217728,
+   "anchorValidationDrawdown": 19330.689951494183,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold1",
+   "policy": "frequent",
+   "anchorValidationNet": 78003.19195217728,
+   "anchorValidationDrawdown": 19330.689951494183,
+   "referenceValidationNet": 78003.19195217728,
+   "referenceValidationDrawdown": 19330.689951494183
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold2",
+   "policy": "maxNet",
+   "pick": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "tickWindowSize": 74,
+    "trailingStopPercentage": 86,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60,
+    "activationGain": 198
+   },
+   "trainingNet": 122825.07351446127,
+   "trainingDrawdown": 27563.783498452984,
+   "validationNet": -14892.840655651074,
+   "validationDrawdown": 27551.09837239307,
+   "validationEntries": 7,
+   "anchorValidationNet": 23074.049457457877,
+   "anchorValidationDrawdown": 17224.225360944605,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold2",
+   "policy": "balanced",
+   "pick": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "tickWindowSize": 74,
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60,
+    "activationGain": 80
+   },
+   "trainingNet": 114148.91836052251,
+   "trainingDrawdown": 19330.689951494183,
+   "validationNet": 23074.049457457877,
+   "validationDrawdown": 17224.225360944605,
+   "validationEntries": 9,
+   "anchorValidationNet": 23074.049457457877,
+   "anchorValidationDrawdown": 17224.225360944605,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold2",
+   "policy": "lowDd",
+   "pick": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "tickWindowSize": 74,
+    "trailingStopPercentage": 74,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60,
+    "activationGain": 51
+   },
+   "trainingNet": 100241.69416453975,
+   "trainingDrawdown": 18852.912616645837,
+   "validationNet": 20155.097650435942,
+   "validationDrawdown": 17349.215028635168,
+   "validationEntries": 10,
+   "anchorValidationNet": 23074.049457457877,
+   "anchorValidationDrawdown": 17224.225360944605,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold2",
+   "policy": "frequent",
+   "anchorValidationNet": 23074.049457457877,
+   "anchorValidationDrawdown": 17224.225360944605,
+   "referenceValidationNet": 23074.049457457877,
+   "referenceValidationDrawdown": 17224.225360944605
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold3",
+   "policy": "maxNet",
+   "pick": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "tickWindowSize": 74,
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60,
+    "activationGain": 80
+   },
+   "trainingNet": 137222.9678179804,
+   "trainingDrawdown": 19330.689951494183,
+   "validationNet": 0,
+   "validationDrawdown": 0,
+   "validationEntries": 0,
+   "anchorValidationNet": 0,
+   "anchorValidationDrawdown": 0,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold3",
+   "policy": "balanced",
+   "pick": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "tickWindowSize": 74,
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60,
+    "activationGain": 80
+   },
+   "trainingNet": 137222.9678179804,
+   "trainingDrawdown": 19330.689951494183,
+   "validationNet": 0,
+   "validationDrawdown": 0,
+   "validationEntries": 0,
+   "anchorValidationNet": 0,
+   "anchorValidationDrawdown": 0,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold3",
+   "policy": "lowDd",
+   "pick": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "tickWindowSize": 74,
+    "trailingStopPercentage": 74,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60,
+    "activationGain": 51
+   },
+   "trainingNet": 120396.79181497569,
+   "trainingDrawdown": 18852.912616645837,
+   "validationNet": 0,
+   "validationDrawdown": 0,
+   "validationEntries": 0,
+   "anchorValidationNet": 0,
+   "anchorValidationDrawdown": 0,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold3",
+   "policy": "frequent",
+   "anchorValidationNet": 0,
+   "anchorValidationDrawdown": 0,
+   "referenceValidationNet": 0,
+   "referenceValidationDrawdown": 0
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold4",
+   "policy": "maxNet",
+   "pick": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "tickWindowSize": 74,
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60,
+    "activationGain": 80
+   },
+   "trainingNet": 137222.9678179804,
+   "trainingDrawdown": 19330.689951494183,
+   "validationNet": 45820.851330655074,
+   "validationDrawdown": 10047.067698753352,
+   "validationEntries": 3,
+   "anchorValidationNet": 45820.851330655074,
+   "anchorValidationDrawdown": 10047.067698753352,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold4",
+   "policy": "balanced",
+   "pick": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "tickWindowSize": 74,
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60,
+    "activationGain": 80
+   },
+   "trainingNet": 137222.9678179804,
+   "trainingDrawdown": 19330.689951494183,
+   "validationNet": 45820.851330655074,
+   "validationDrawdown": 10047.067698753352,
+   "validationEntries": 3,
+   "anchorValidationNet": 45820.851330655074,
+   "anchorValidationDrawdown": 10047.067698753352,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold4",
+   "policy": "lowDd",
+   "pick": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "tickWindowSize": 74,
+    "trailingStopPercentage": 74,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60,
+    "activationGain": 51
+   },
+   "trainingNet": 120396.79181497569,
+   "trainingDrawdown": 18852.912616645837,
+   "validationNet": 45643.61174021238,
+   "validationDrawdown": 10212.40817105776,
+   "validationEntries": 3,
+   "anchorValidationNet": 45820.851330655074,
+   "anchorValidationDrawdown": 10047.067698753352,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  },
+  {
+   "study": "trackB_gross",
+   "fold": "fold4",
+   "policy": "frequent",
+   "anchorValidationNet": 45820.851330655074,
+   "anchorValidationDrawdown": 10047.067698753352,
+   "referenceValidationNet": 45820.851330655074,
+   "referenceValidationDrawdown": 10047.067698753352
+  }
+ ]
+}
