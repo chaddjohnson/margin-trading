@@ -14,6 +14,10 @@
   The user's chat message authorised the whole assignment, "including … the requested Git commit and push".
 - **Stages:** P0 Git integration — complete. P1 research-direction docs — complete. P2 UI — complete. P3 verification
   — complete. P4 commits and push — complete.
+- **Follow-up (2026-11-03T16:3xZ, at the user's request):** the user's `config/market-events` changes (the 2026-10-30
+  Vanguard re-check: byte-identical raw files, provenance-only ledger/manifest edits) were committed on `main` as
+  `aa5754d` and pushed; `main` was then merged into this branch (`ad23985`, pushed, no force) so the checkout keeps the
+  same bytes on disk. The working tree is clean. The "never commit" guard below applied to the state before this.
 - **Running processes:** none (the manual dev servers on ports 5180 and 5182 were stopped).
 - **Follow-up gate:** the **user's review of the UI**. Do not implement entry mechanisms, connect real data, optimise,
   or merge `feature/strategy-entry-explorer-ui` into `main` without a new instruction.
