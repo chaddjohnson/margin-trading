@@ -2,8 +2,9 @@
 
 ## Top screen (read this first)
 
-- **Updated:** 2026-11-03T10:19Z (UTC, from the clock). **Status: COMPLETE (research, reports and seal). Awaiting the user's
-  commit/push decision; nothing is committed or pushed.**
+- **Updated:** 2026-11-03T10:25Z (UTC, from the clock). **Status: COMPLETE.** The user approved commit + push. Commit
+  `38fa0f87498448547abff6bf36ea3f7a18649fa2` (413 files) was pushed as the branch's first push
+  (`origin/research/study9-phase-b-seven-pool`, upstream set); this checkpoint update follows as a separate commit.
 - **Chain:** 19 entries, all verified. Entry 19 is `report-final` `3e11ff3cf247` (2026-11-03T10:18:38Z, 70 files:
   reports, reviews, tools, runner evidence and all 49 tables). `scripts/s9b.sh verify-chain` → "chain OK: 19 entries;
   integrity OK (code 051bb8ed140a, engine f1f833a3177f, accepted by E3)" at 10:18:39Z.
@@ -19,9 +20,8 @@
 - **Final audit:** CLEARED WITH NOTES (0 blocking, 16 non-blocking), all resolved (E5,
   `reviews/FINAL_AUDIT_RESOLUTION.md`).
 - **Running:** nothing.
-- **Follow-up gate (the user's decision):**
-  1. whether to commit and push the Phase B files (see Guards) — the first push of this branch;
-  2. whether to start a separate, prospective study (RECOMMENDATION.md §7).
+- **Follow-up gate (the user's decision):** whether to start a separate, prospective study (RECOMMENDATION.md §7).
+  Nothing here authorises it; merging or opening a PR also needs the user's request.
 - **Do not rerun:** any sealed stage (each refuses); never `seal search|qualify` again; never edit a file sealed in
   chain 19 (verify-chain rehashes them).
 
@@ -29,13 +29,13 @@
 
 - Main checkout `/home/chad/projects/margin-trading`; no other worktree (`git worktree list`: one).
 - Branch `research/study9-phase-b-seven-pool`, created 2026-11-02T22:09Z from `research/study9-etf-pool-discovery` at
-  `2beb1bd86f3c8ccd138c718c9ccfb0e63ffff97a`. HEAD is still `2beb1bd`: nothing is committed, and the branch has never
-  been pushed.
+  `2beb1bd86f3c8ccd138c718c9ccfb0e63ffff97a`. Phase B is committed as `38fa0f8` and pushed (upstream
+  `origin/research/study9-phase-b-seven-pool`); this checkpoint update is a follow-up commit.
 - **Working tree** (`git status --short`):
   - **The user's own changes, never touched or staged:** `config/market-events/distributions.csv` and
     `distributions.manifest.json` are modified; `config/market-events/raw/vanguard-20261030T184421Z/` and seven
     `._.DS_Store` files are untracked.
-  - **Phase B (intended, uncommitted):**
+  - **Phase B (committed in `38fa0f8`):**
     - `package.json` (2 script lines, E4);
     - untracked `research/study9-phase-b/`, `src/study9-phase-b/`, `src/study9b-runners/`;
     - untracked `config/research-pools/study9-phase-b/` (42 files) and `config/research-phenotypes/study9-phase-b/`.
@@ -99,7 +99,7 @@ before sealing would need a complete deterministic replay, labelled a rerun; non
 | 8 | Runner, npm test, reports, tables | complete | `node … src/study9b-runners/main.ts research-configs` (before the npm script existed), reconciliation compare (RUN_COMMANDS.md), `npm test`, `tools/runner_edge_cases.sh evaluations/study9b-runs/edge-cases-20261103T093208Z`, `python3 research/study9-phase-b/tools/build_tables.py search qualify selection test folds tracks preference diagnostics execution slice` | 09:01 → 09:37 | `results/runner/`, `results/tables/`, the reports |
 | 9 | Final independent audit | complete: CLEARED WITH NOTES; 16 notes resolved (E5) | a fresh read-only agent; brief `reviews/FINAL_AUDIT_BRIEF.md` | 09:38:55 → ≈ 10:00; resolutions to 10:20 | `reviews/FINAL_AUDIT.md`, `reviews/FINAL_AUDIT_RESOLUTION.md` |
 | 10 | Report seal | complete | `scripts/s9b.sh seal report-final` (the 70 files under "Report seal") | 10:18:38 | chain 19 `3e11ff3cf247` |
-| 11 | Commit / push | not started; needs the user's answer | — | — | — |
+| 11 | Commit / push | complete (user approved) | `git commit` (413 files: the Phase B paths + `package.json`); `git push -u origin research/study9-phase-b-seven-pool` | 10:25 | `38fa0f8` on origin |
 
 ## Report seal (stage 10, complete)
 
