@@ -1,0 +1,194 @@
+node v24.21.0; HEAD 2beb1bd86f3c8ccd138c718c9ccfb0e63ffff97a; started 2026-11-03T10:13:02Z
+
+=== future-date (expect refuse) 2026-11-03T10:13:02Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-nominee --end 2026-11-02 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/future   (= npm run study9b-run -- run s9b-nominee --end 2026-11-02 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/future)
+study9b-run: --end 2026-11-02 is after the latest common complete session (2026-10-30) of KRE, EWW, GDX, MTUM; nothing complete after 2026-10-30 exists locally
+exit 2
+
+=== invalid-date (expect refuse) 2026-11-03T10:13:03Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-nominee --end 2026-02-30 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/invalid   (= npm run study9b-run -- run s9b-nominee --end 2026-02-30 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/invalid)
+study9b-run: --end must be a YYYY-MM-DD calendar date, not "2026-02-30"
+exit 2
+
+=== unknown-member (expect refuse) 2026-11-03T10:13:04Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-g4-ilf-7 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/unknown   (= npm run study9b-run -- run s9b-g4-ilf-7 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/unknown)
+study9b-run: unknown Phase B alias "s9b-g4-ilf-7"; use s9b-<track>-<profit|robust|balanced|extra1|extra2|best|1…6>, s9b-rank-<n> or s9b-nominee, track g4-ilf|g4-eww|n3-edv|n2-smh|v3-iwm|n2-edv|vg3-iwm; see `npm run study9b-run -- list`
+exit 2
+
+=== empty-role (expect refuse) 2026-11-03T10:13:04Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-n3-edv-extra2 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/empty   (= npm run study9b-run -- run s9b-n3-edv-extra2 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/empty)
+study9b-run: s9b-n3-edv-extra2: the sealed F24 selection has no extra2 role holder for N3-EDV (the role is empty)
+exit 2
+
+=== best-all-failed (expect refuse) 2026-11-03T10:13:05Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-n3-edv-best --out evaluations/study9b-runs/edge-cases-20261103T101302Z/best-all-failed   (= npm run study9b-run -- run s9b-n3-edv-best --out evaluations/study9b-runs/edge-cases-20261103T101302Z/best-all-failed)
+study9b-run: s9b-n3-edv-best: no best candidate — every N3-EDV F24 role holder failed the one-time test (run one by role, e.g. s9b-n3-edv-profit, labelled T FAIL)
+study9b-run: s9b-n3-edv-best: no best candidate — every N3-EDV F24 role holder failed the one-time test (run one by role, e.g. s9b-n3-edv-profit, labelled T FAIL)
+exit 2
+
+=== sealed-end (expect ok) 2026-11-03T10:13:05Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-nominee --end 2026-10-29 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/nominee-2026-10-29   (= npm run study9b-run -- run s9b-nominee --end 2026-10-29 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/nominee-2026-10-29)
+  status: RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 2 (TIER STRONG, ROLE PROFIT); 2025–2026 ONE-TIME T GATES: PASS
+Activity: 141 virtual trades → 141 pool decisions: 102 funded, 39 refused (10 pool occupied by the EWW lot, 16 pool occupied by the GDX lot, 5 pool occupied by the KRE lot, 8 pool occupied by the MTUM lot); 0 same-minute decisions
+FUNDED TRADES (102; only lots the shared allocator funded — refused shadow signals are in signals.csv; $100,000.00 per trade, never compounded)
+  gross P&L = shares × (exit fill − entry fill) before costs; net = gross − friction − interest (the engine's net);
+  gross P&L before costs        $336,156.13
+RECONCILIATION: all checks pass
+  PASS ledger total net = run summary net (exact)
+  PASS ledger interest = run summary interest (exact)
+  PASS funded trades = run summary lots
+  PASS realized + unrealized = total net (±$0.000001)
+  PASS gross − friction − interest = total net (±$0.000001)
+  PASS per-ETF nets sum to the total net (±$0.000001)
+  PASS every trade: gross − friction − interest = engine net (±$0.000001)
+  RESEARCH ONLY — NOT DEPLOYED · G4-EWW = KRE+EWW+GDX+MTUM; F24 role holder (training rank #2, profit, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 141 shadow-book trades → 141 funding decisions: 102 funded, 39 refused (10 pool occupied by the EWW lot, 16 pool occupied by the GDX lot, 5 pool occupied by the KRE lot, 8 pool occupied by the MTUM lot); 0 same-minute decisions
+  RECONCILIATION (totals and trade by trade): PASS — net (realized + marked unrealized) =; realized =; unrealized (open lot marked at the last close) =; margin interest =; friction =; max minute drawdown =; max daily drawdown =; funded lots =; 102 lots compared, 0 mismatches
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 27 checks
+  RETROSPECTIVE: every session through 2026-10-29 was inspected before Study 9 Phase B; the Phase B candidates were selected on 2016–2024 and evaluated once on 2025-01-02 → 2026-10-29 (a closed door on previously inspected history; GDX and KRE paths especially familiar). These runs are neither independent validation nor prospective monitoring. RESEARCH ONLY — NOT DEPLOYED.
+exit 0
+
+=== duplicate-out (expect refuse) 2026-11-03T10:13:17Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-nominee --end 2026-10-29 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/nominee-2026-10-29   (= npm run study9b-run -- run s9b-nominee --end 2026-10-29 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/nominee-2026-10-29)
+study9b-run: --out evaluations/study9b-runs/edge-cases-20261103T101302Z/nominee-2026-10-29 already exists; runs never overwrite earlier output
+exit 2
+
+=== default-end (expect ok) 2026-11-03T10:13:18Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-nominee --out evaluations/study9b-runs/edge-cases-20261103T101302Z/nominee-default   (= npm run study9b-run -- run s9b-nominee --out evaluations/study9b-runs/edge-cases-20261103T101302Z/nominee-default)
+  status: RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 2 (TIER STRONG, ROLE PROFIT); 2025–2026 ONE-TIME T GATES: PASS
+Activity: 141 virtual trades → 141 pool decisions: 102 funded, 39 refused (10 pool occupied by the EWW lot, 16 pool occupied by the GDX lot, 5 pool occupied by the KRE lot, 8 pool occupied by the MTUM lot); 0 same-minute decisions
+FUNDED TRADES (102; only lots the shared allocator funded — refused shadow signals are in signals.csv; $100,000.00 per trade, never compounded)
+  gross P&L = shares × (exit fill − entry fill) before costs; net = gross − friction − interest (the engine's net);
+  gross P&L before costs        $331,958.95
+RECONCILIATION: all checks pass
+  PASS ledger total net = run summary net (exact)
+  PASS ledger interest = run summary interest (exact)
+  PASS funded trades = run summary lots
+  PASS realized + unrealized = total net (±$0.000001)
+  PASS gross − friction − interest = total net (±$0.000001)
+  PASS per-ETF nets sum to the total net (±$0.000001)
+  PASS every trade: gross − friction − interest = engine net (±$0.000001)
+  RESEARCH ONLY — NOT DEPLOYED · G4-EWW = KRE+EWW+GDX+MTUM; F24 role holder (training rank #2, profit, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 141 shadow-book trades → 141 funding decisions: 102 funded, 39 refused (10 pool occupied by the EWW lot, 16 pool occupied by the GDX lot, 5 pool occupied by the KRE lot, 8 pool occupied by the MTUM lot); 0 same-minute decisions
+  RECONCILIATION: not applicable (the sealed Phase B figures are for the run to 2026-10-29 at 5 bps per side, 11%, stops at the stop; this run ends 2026-10-30 at 5 bps)
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 27 checks
+  RETROSPECTIVE: every session through 2026-10-29 was inspected before Study 9 Phase B; the Phase B candidates were selected on 2016–2024 and evaluated once on 2025-01-02 → 2026-10-29 (a closed door on previously inspected history; GDX and KRE paths especially familiar). These runs are neither independent validation nor prospective monitoring. RESEARCH ONLY — NOT DEPLOYED.
+  LATER LOCAL DATA: sessions after 2026-10-29 (here through 2026-10-30) are not part of the sealed Phase B test record (2026-10-30 is its separate report-only slice). Figures that include them are an unreviewed backtest on later bars — not validated, not prospective, not reconciled.
+exit 0
+
+=== cost-10 (expect ok) 2026-11-03T10:13:30Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-nominee --end 2026-10-29 --cost-bps 10 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/nominee-10bps   (= npm run study9b-run -- run s9b-nominee --end 2026-10-29 --cost-bps 10 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/nominee-10bps)
+  status: RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 2 (TIER STRONG, ROLE PROFIT); 2025–2026 ONE-TIME T GATES: PASS
+Activity: 142 virtual trades → 142 pool decisions: 102 funded, 40 refused (11 pool occupied by the EWW lot, 16 pool occupied by the GDX lot, 5 pool occupied by the KRE lot, 8 pool occupied by the MTUM lot); 0 same-minute decisions
+FUNDED TRADES (102; only lots the shared allocator funded — refused shadow signals are in signals.csv; $100,000.00 per trade, never compounded)
+  gross P&L = shares × (exit fill − entry fill) before costs; net = gross − friction − interest (the engine's net);
+  gross P&L before costs        $330,528.48
+RECONCILIATION: all checks pass
+  PASS ledger total net = run summary net (exact)
+  PASS ledger interest = run summary interest (exact)
+  PASS funded trades = run summary lots
+  PASS realized + unrealized = total net (±$0.000001)
+  PASS gross − friction − interest = total net (±$0.000001)
+  PASS per-ETF nets sum to the total net (±$0.000001)
+  PASS every trade: gross − friction − interest = engine net (±$0.000001)
+  RESEARCH ONLY — NOT DEPLOYED · G4-EWW = KRE+EWW+GDX+MTUM; F24 role holder (training rank #2, profit, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 142 shadow-book trades → 142 funding decisions: 102 funded, 40 refused (11 pool occupied by the EWW lot, 16 pool occupied by the GDX lot, 5 pool occupied by the KRE lot, 8 pool occupied by the MTUM lot); 0 same-minute decisions
+  RECONCILIATION: not applicable (the sealed Phase B figures are for the run to 2026-10-29 at 5 bps per side, 11%, stops at the stop; this run ends 2026-10-29 at 10 bps)
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 27 checks
+  RETROSPECTIVE: every session through 2026-10-29 was inspected before Study 9 Phase B; the Phase B candidates were selected on 2016–2024 and evaluated once on 2025-01-02 → 2026-10-29 (a closed door on previously inspected history; GDX and KRE paths especially familiar). These runs are neither independent validation nor prospective monitoring. RESEARCH ONLY — NOT DEPLOYED.
+exit 0
+
+=== end-2024 (expect ok) 2026-11-03T10:13:42Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s9b-vg3-iwm-profit --end 2024-12-31 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/vg3-iwm-profit-2024   (= npm run study9b-run -- run s9b-vg3-iwm-profit --end 2024-12-31 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/vg3-iwm-profit-2024)
+  status: RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 1 (TIER STRONG, ROLE PROFIT); 2025–2026 ONE-TIME T GATES: FAIL (FAILED T2, T2B)
+Activity: 56 virtual trades → 56 pool decisions: 35 funded, 21 refused (13 pool occupied by the GDX lot, 6 pool occupied by the IWM lot, 2 pool occupied by the VGT lot); 0 same-minute decisions
+FUNDED TRADES (35; only lots the shared allocator funded — refused shadow signals are in signals.csv; $100,000.00 per trade, never compounded)
+  gross P&L = shares × (exit fill − entry fill) before costs; net = gross − friction − interest (the engine's net);
+  gross P&L before costs        $293,975.94
+RECONCILIATION: all checks pass
+  PASS ledger total net = run summary net (exact)
+  PASS ledger interest = run summary interest (exact)
+  PASS funded trades = run summary lots
+  PASS realized + unrealized = total net (±$0.000001)
+  PASS gross − friction − interest = total net (±$0.000001)
+  PASS per-ETF nets sum to the total net (±$0.000001)
+  PASS every trade: gross − friction − interest = engine net (±$0.000001)
+  RESEARCH ONLY — NOT DEPLOYED · VG3-IWM = VGT+GDX+IWM; F24 role holder (training rank #1, profit, tier strong); 2025–2026 T gates FAIL (failed T2, T2b) — not a nomination
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 56 shadow-book trades → 56 funding decisions: 35 funded, 21 refused (13 pool occupied by the GDX lot, 6 pool occupied by the IWM lot, 2 pool occupied by the VGT lot); 0 same-minute decisions
+  RECONCILIATION: not applicable (the sealed Phase B figures are for the run to 2026-10-29 at 5 bps per side, 11%, stops at the stop; this run ends 2024-12-31 at 5 bps)
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 25 checks
+  RETROSPECTIVE: every session through 2026-10-29 was inspected before Study 9 Phase B; the Phase B candidates were selected on 2016–2024 and evaluated once on 2025-01-02 → 2026-10-29 (a closed door on previously inspected history; GDX and KRE paths especially familiar). These runs are neither independent validation nor prospective monitoring. RESEARCH ONLY — NOT DEPLOYED.
+exit 0
+
+=== comparator (expect ok) 2026-11-03T10:13:53Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts run s8-vg-balanced --end 2026-10-29 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/s8-vg-balanced-2026-10-29   (= npm run study9b-run -- run s8-vg-balanced --end 2026-10-29 --out evaluations/study9b-runs/edge-cases-20261103T101302Z/s8-vg-balanced-2026-10-29)
+  status: RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 2 (TIER STRONG, ROLE BALANCED); 2025–2026 ONE-TIME T GATES: PASS
+Activity: 62 virtual trades → 62 pool decisions: 48 funded, 14 refused (7 pool occupied by the GDX lot, 7 pool occupied by the VGT lot); 0 same-minute decisions
+FUNDED TRADES (48; only lots the shared allocator funded — refused shadow signals are in signals.csv; $100,000.00 per trade, never compounded)
+  gross P&L = shares × (exit fill − entry fill) before costs; net = gross − friction − interest (the engine's net);
+  gross P&L before costs        $385,893.77
+RECONCILIATION: all checks pass
+  PASS ledger total net = run summary net (exact)
+  PASS ledger interest = run summary interest (exact)
+  PASS funded trades = run summary lots
+  PASS realized + unrealized = total net (±$0.000001)
+  PASS gross − friction − interest = total net (±$0.000001)
+  PASS per-ETF nets sum to the total net (±$0.000001)
+  PASS every trade: gross − friction − interest = engine net (±$0.000001)
+  RESEARCH ONLY — NOT DEPLOYED · Study 8 — F24 role holder (training rank #2, balanced, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 62 shadow-book trades → 62 funding decisions: 48 funded, 14 refused (7 pool occupied by the GDX lot, 7 pool occupied by the VGT lot); 0 same-minute decisions
+  RECONCILIATION (totals and trade by trade): PASS — net (realized + marked unrealized) =; realized =; unrealized (open lot marked at the last close) =; margin interest =; friction =; max minute drawdown =; max daily drawdown =; funded lots =; 48 lots compared, 0 mismatches
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 23 checks
+  COMPARATOR: an existing configuration run unchanged through the Phase B runner; its rank, role and T status are its own study's (Study 8 selected its candidates on 2016–2024; B1 and B5 were chosen with 2024–2026 hindsight), not Phase B's. Every session through 2026-10-29 was inspected before Phase B. Neither independent validation nor prospective monitoring.
+exit 0
+
+=== compare-all (expect ok) 2026-11-03T10:14:00Z
+$ node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=8192 src/study9b-runners/main.ts compare --all --out evaluations/study9b-runs/edge-cases-20261103T101302Z/compare-all   (= npm run study9b-run -- compare --all --out evaluations/study9b-runs/edge-cases-20261103T101302Z/compare-all)
+  RESEARCH ONLY — NOT DEPLOYED · G4-ILF = KRE+GDX+ILF+MTUM; F24 role holder (training rank #8, balanced, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 98 shadow-book trades → 98 funding decisions: 67 funded, 31 refused (1 pool occupied by the MTUM lot, 9 pool occupied by the KRE lot, 13 pool occupied by the GDX lot, 8 pool occupied by the ILF lot); 0 same-minute decisions
+  RECONCILIATION: not applicable (the sealed Phase B figures are for the run to 2026-10-29 at 5 bps per side, 11%, stops at the stop; this run ends 2026-10-30 at 5 bps)
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 27 checks
+  RETROSPECTIVE: every session through 2026-10-29 was inspected before Study 9 Phase B; the Phase B candidates were selected on 2016–2024 and evaluated once on 2025-01-02 → 2026-10-29 (a closed door on previously inspected history; GDX and KRE paths especially familiar). These runs are neither independent validation nor prospective monitoring. RESEARCH ONLY — NOT DEPLOYED.
+  LATER LOCAL DATA: sessions after 2026-10-29 (here through 2026-10-30) are not part of the sealed Phase B test record (2026-10-30 is its separate report-only slice). Figures that include them are an unreviewed backtest on later bars — not validated, not prospective, not reconciled.
+  RESEARCH ONLY — NOT DEPLOYED · G4-EWW = KRE+EWW+GDX+MTUM; F24 role holder (training rank #2, profit, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 141 shadow-book trades → 141 funding decisions: 102 funded, 39 refused (10 pool occupied by the EWW lot, 16 pool occupied by the GDX lot, 5 pool occupied by the KRE lot, 8 pool occupied by the MTUM lot); 0 same-minute decisions
+  RECONCILIATION: not applicable (the sealed Phase B figures are for the run to 2026-10-29 at 5 bps per side, 11%, stops at the stop; this run ends 2026-10-30 at 5 bps)
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 27 checks
+  RETROSPECTIVE: every session through 2026-10-29 was inspected before Study 9 Phase B; the Phase B candidates were selected on 2016–2024 and evaluated once on 2025-01-02 → 2026-10-29 (a closed door on previously inspected history; GDX and KRE paths especially familiar). These runs are neither independent validation nor prospective monitoring. RESEARCH ONLY — NOT DEPLOYED.
+  LATER LOCAL DATA: sessions after 2026-10-29 (here through 2026-10-30) are not part of the sealed Phase B test record (2026-10-30 is its separate report-only slice). Figures that include them are an unreviewed backtest on later bars — not validated, not prospective, not reconciled.
+  RESEARCH ONLY — NOT DEPLOYED · N2-SMH = SMH+XHB; F24 role holder (training rank #14, profit, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 29 shadow-book trades → 29 funding decisions: 25 funded, 4 refused (2 pool occupied by the XHB lot, 2 pool occupied by the SMH lot); 0 same-minute decisions
+  RECONCILIATION: not applicable (the sealed Phase B figures are for the run to 2026-10-29 at 5 bps per side, 11%, stops at the stop; this run ends 2026-10-30 at 5 bps)
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 23 checks
+  RETROSPECTIVE: every session through 2026-10-29 was inspected before Study 9 Phase B; the Phase B candidates were selected on 2016–2024 and evaluated once on 2025-01-02 → 2026-10-29 (a closed door on previously inspected history; GDX and KRE paths especially familiar). These runs are neither independent validation nor prospective monitoring. RESEARCH ONLY — NOT DEPLOYED.
+  LATER LOCAL DATA: sessions after 2026-10-29 (here through 2026-10-30) are not part of the sealed Phase B test record (2026-10-30 is its separate report-only slice). Figures that include them are an unreviewed backtest on later bars — not validated, not prospective, not reconciled.
+  RESEARCH ONLY — NOT DEPLOYED · V3-IWM = VGT+IWM+XLF; F24 role holder (training rank #23, profit, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 81 shadow-book trades → 81 funding decisions: 47 funded, 34 refused (18 pool occupied by the VGT lot, 1 pool occupied by the IWM pending order, 14 pool occupied by the IWM lot, 1 pool occupied by the XLF lot); 2 same-minute decisions
+  RECONCILIATION: not applicable (the sealed Phase B figures are for the run to 2026-10-29 at 5 bps per side, 11%, stops at the stop; this run ends 2026-10-30 at 5 bps)
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 25 checks
+  RETROSPECTIVE: every session through 2026-10-29 was inspected before Study 9 Phase B; the Phase B candidates were selected on 2016–2024 and evaluated once on 2025-01-02 → 2026-10-29 (a closed door on previously inspected history; GDX and KRE paths especially familiar). These runs are neither independent validation nor prospective monitoring. RESEARCH ONLY — NOT DEPLOYED.
+  LATER LOCAL DATA: sessions after 2026-10-29 (here through 2026-10-30) are not part of the sealed Phase B test record (2026-10-30 is its separate report-only slice). Figures that include them are an unreviewed backtest on later bars — not validated, not prospective, not reconciled.
+  RESEARCH ONLY — NOT DEPLOYED · VG3-IWM = VGT+GDX+IWM; F24 role holder (training rank #10, extra, tier strong); 2025–2026 T gates AMBIGUOUS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 67 shadow-book trades → 67 funding decisions: 49 funded, 18 refused (1 pool occupied by the GDX pending order, 7 pool occupied by the GDX lot, 3 pool occupied by the IWM lot, 7 pool occupied by the VGT lot); 2 same-minute decisions
+  RECONCILIATION: not applicable (the sealed Phase B figures are for the run to 2026-10-29 at 5 bps per side, 11%, stops at the stop; this run ends 2026-10-30 at 5 bps)
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 25 checks
+  RETROSPECTIVE: every session through 2026-10-29 was inspected before Study 9 Phase B; the Phase B candidates were selected on 2016–2024 and evaluated once on 2025-01-02 → 2026-10-29 (a closed door on previously inspected history; GDX and KRE paths especially familiar). These runs are neither independent validation nor prospective monitoring. RESEARCH ONLY — NOT DEPLOYED.
+  LATER LOCAL DATA: sessions after 2026-10-29 (here through 2026-10-30) are not part of the sealed Phase B test record (2026-10-30 is its separate report-only slice). Figures that include them are an unreviewed backtest on later bars — not validated, not prospective, not reconciled.
+  RESEARCH ONLY — NOT DEPLOYED · Study 8 — F24 role holder (training rank #2, balanced, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED)
+  BY ETF (lots, closed/open, won/lost, gross, interest, friction, net, signals of that book refused)
+    signals: 62 shadow-book trades → 62 funding decisions: 48 funded, 14 refused (7 pool occupied by the GDX lot, 7 pool occupied by the VGT lot); 0 same-minute decisions
+  RECONCILIATION: not applicable (the sealed Study 8 figures are for the run to 2026-10-29 at 5 bps per side, 11%, stops at the stop; this run ends 2026-10-30 at 5 bps)
+  EXPORT CHECK (lots.csv, lots.json, trades.csv, yearly.csv, monthly.csv re-read): PASS — 23 checks
+exit 0
+
+finished 2026-11-03T10:15:16Z

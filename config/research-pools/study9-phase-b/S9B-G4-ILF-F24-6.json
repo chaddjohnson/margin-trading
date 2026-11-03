@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S9B-G4-ILF-F24-6",
+  "name": "Study 9 Phase B G4-ILF F24 #6",
+  "role": "Study 9 Phase B primary-fold candidate (KRE:d1-430e934fea+GDX:d1-b135bd809c+ILF:d1-5142377403+MTUM:d1-b715b178e4)",
+  "status": "RESEARCH ONLY — NOT DEPLOYED — SHORTLIST MEMBER WITHOUT A ROLE (TRAINING-QUALIFIED: YES; NEVER A NOMINEE); 2025–2026 ONE-TIME T GATES: FAIL (FAILED T3)",
+  "description": "Study 9 Phase B track G4-ILF, primary fold F24 (search on 2016-01-04 → 2024-12-31) shortlist member KRE:d1-430e934fea+GDX:d1-b135bd809c+ILF:d1-5142377403+MTUM:d1-b715b178e4. Research configuration for inspection only; Study 8 VG #2 balanced, B1 and B5 remain the comparators.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "KRE",
+      "phenotype": "s9bd1430e934fea",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/KRE.json",
+      "candidateId": "d1-430e934fea",
+      "parameters": {
+        "targetPercentChange": "27.8%",
+        "trailingBuyPercentage": "1.9%",
+        "trailingStopPercentage": "5.3%",
+        "maximumHoldDays": 5,
+        "tickWindowSize": 32,
+        "intradayLossBuffer": "3.0%",
+        "pullback": "18.3%",
+        "continuationWindow": 143
+      },
+      "parametersSha256": "bf9be01fe6a0809b8bcffdb16eb5380f4832251eb6b83cc50cda59ef16ee5a71"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "s9bd1b135bd809c",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/GDX.json",
+      "candidateId": "d1-b135bd809c",
+      "parameters": {
+        "targetPercentChange": "27.4%",
+        "trailingBuyPercentage": "4.4%",
+        "trailingStopPercentage": "5.0%",
+        "maximumHoldDays": 8,
+        "tickWindowSize": 29,
+        "intradayLossBuffer": "5.7%",
+        "pullback": "5.8%",
+        "continuationWindow": 167
+      },
+      "parametersSha256": "4b6100a83d6e2a3b99cbe3b8564bd3680cddec49b0494da99daa227bc177aca7"
+    },
+    {
+      "symbol": "ILF",
+      "phenotype": "s9bd15142377403",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/ILF.json",
+      "candidateId": "d1-5142377403",
+      "parameters": {
+        "targetPercentChange": "27.2%",
+        "trailingBuyPercentage": "1.6%",
+        "trailingStopPercentage": "3.8%",
+        "maximumHoldDays": 26,
+        "tickWindowSize": 220,
+        "intradayLossBuffer": "1.6%",
+        "pullback": "16.0%",
+        "continuationWindow": 76
+      },
+      "parametersSha256": "4dd40ac4a85033fda88d27cf25d173f2dfc4ab29b5705cde1b72daf2ace25b58"
+    },
+    {
+      "symbol": "MTUM",
+      "phenotype": "s9bd1b715b178e4",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/MTUM.json",
+      "candidateId": "d1-b715b178e4",
+      "parameters": {
+        "targetPercentChange": "13.7%",
+        "trailingBuyPercentage": "4.6%",
+        "trailingStopPercentage": "3.1%",
+        "maximumHoldDays": 10,
+        "tickWindowSize": 79,
+        "intradayLossBuffer": "4.8%",
+        "pullback": "19.0%",
+        "continuationWindow": 30
+      },
+      "parametersSha256": "11765e739d33dc1cf8e59d94f60378a2294f9da3d9d832102c8cd4f5bdc4668c"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-11-03",
+    "createdBy": "src/study9b-runners (research-configs)",
+    "selectionBodyHash": "87cea1e6a134f314769462ddfa8678db20b12aa03c0646ae42abf804463913b4",
+    "testBodyHash": "921344fbb83d08140c53898041973c39541692d77e5528ba1169ba755e47c872"
+  }
+}

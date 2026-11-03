@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "kind": "d1-shared-pool",
+  "id": "S9B-G4-EWW-F24-3",
+  "name": "Study 9 Phase B G4-EWW F24 #3",
+  "role": "Study 9 Phase B primary-fold candidate (KRE:d1-4037e50ec2+EWW:d1-44a144c528+GDX:d1-4eb90c5df5+MTUM:d1-157a0d5a1c)",
+  "status": "RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 5 (TIER STRONG, ROLE BALANCED); 2025–2026 ONE-TIME T GATES: PASS",
+  "description": "Study 9 Phase B track G4-EWW, primary fold F24 (search on 2016-01-04 → 2024-12-31) shortlist member KRE:d1-4037e50ec2+EWW:d1-44a144c528+GDX:d1-4eb90c5df5+MTUM:d1-157a0d5a1c. Research configuration for inspection only; Study 8 VG #2 balanced, B1 and B5 remain the comparators.",
+  "architecture": "D1",
+  "books": [
+    {
+      "symbol": "KRE",
+      "phenotype": "s9bd14037e50ec2",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/KRE.json",
+      "candidateId": "d1-4037e50ec2",
+      "parameters": {
+        "targetPercentChange": "29.8%",
+        "trailingBuyPercentage": "3.4%",
+        "trailingStopPercentage": "5.3%",
+        "maximumHoldDays": 3,
+        "tickWindowSize": 76,
+        "intradayLossBuffer": "3.7%",
+        "pullback": "13.6%",
+        "continuationWindow": 54
+      },
+      "parametersSha256": "60143837d32e1e1ca7937b3c154e163af9ffbf30ef654f6faa5b8deaea64a1e7"
+    },
+    {
+      "symbol": "EWW",
+      "phenotype": "s9bd144a144c528",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/EWW.json",
+      "candidateId": "d1-44a144c528",
+      "parameters": {
+        "targetPercentChange": "24.5%",
+        "trailingBuyPercentage": "1.2%",
+        "trailingStopPercentage": "3.4%",
+        "maximumHoldDays": 20,
+        "tickWindowSize": 54,
+        "intradayLossBuffer": "0.5%",
+        "pullback": "7.5%",
+        "continuationWindow": 46
+      },
+      "parametersSha256": "8380ce5dc095ba1f533fc7b1f8a8119a069d061338305849ae475f8f555d69c6"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "s9bd14eb90c5df5",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/GDX.json",
+      "candidateId": "d1-4eb90c5df5",
+      "parameters": {
+        "targetPercentChange": "28.7%",
+        "trailingBuyPercentage": "1.3%",
+        "trailingStopPercentage": "6.4%",
+        "maximumHoldDays": 9,
+        "tickWindowSize": 231,
+        "intradayLossBuffer": "0.2%",
+        "pullback": "15.4%",
+        "continuationWindow": 12
+      },
+      "parametersSha256": "b85b86f2aac4454e0a5af66df8fb0a8378fb1a502eb28e0d4c809d62da804e0f"
+    },
+    {
+      "symbol": "MTUM",
+      "phenotype": "s9bd1157a0d5a1c",
+      "phenotypeFile": "config/research-phenotypes/study9-phase-b/D1/MTUM.json",
+      "candidateId": "d1-157a0d5a1c",
+      "parameters": {
+        "targetPercentChange": "20.8%",
+        "trailingBuyPercentage": "0.1%",
+        "trailingStopPercentage": "4.4%",
+        "maximumHoldDays": 28,
+        "tickWindowSize": 80,
+        "intradayLossBuffer": "1.2%",
+        "pullback": "13.4%",
+        "continuationWindow": 180
+      },
+      "parametersSha256": "db760ca9b517911763fd164bdfecb3c206d74fede1340945100001380e99e81c"
+    }
+  ],
+  "funding": {
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false
+  },
+  "interest": {
+    "annualRate": "11%",
+    "method": "simple",
+    "dayCount": 365
+  },
+  "costs": {
+    "bpsPerSide": 5,
+    "sensitivityBps": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "commission": 0
+  },
+  "execution": {
+    "stopFill": "stop",
+    "stopSlippageBps": 0,
+    "firstEligibleDate": "2017-06-15"
+  },
+  "portfolio": {
+    "initialCore": {
+      "VOOG": 180000,
+      "VGT": 120000
+    },
+    "borrowedFraction": 0.2,
+    "dividends": "frozen"
+  },
+  "provenance": {
+    "createdAt": "2026-11-03",
+    "createdBy": "src/study9b-runners (research-configs)",
+    "selectionBodyHash": "87cea1e6a134f314769462ddfa8678db20b12aa03c0646ae42abf804463913b4",
+    "testBodyHash": "921344fbb83d08140c53898041973c39541692d77e5528ba1169ba755e47c872"
+  }
+}
