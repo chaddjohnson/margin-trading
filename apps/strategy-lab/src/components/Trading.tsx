@@ -2,11 +2,12 @@
 // Each symbol is a standalone backtest on its own $100,000 notional: nothing here is summed across symbols. A figure the
 // run could not compute is shown as "n/a" with its reason, never as 0.
 
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 
 import type { LabEvent, LabValue } from '../../shared/contract.ts';
 import type { Role } from '../chart/markers.ts';
 import { formatEt, formatPrice } from '../format.ts';
+import { formatMoney, pnlText, toneOf, type Trade, tradeList } from '../trades.ts';
 
 type Drawdown = {
   maximumUsd: number;
@@ -203,31 +204,61 @@ export function TradingMetrics({ m, symbol }: { m: TradingSymbolMetrics; symbol:
   );
 }
 
-const valueOf = (e: LabEvent | undefined, key: string): LabValue['value'] =>
+const valueOf = (e: LabEvent | null, key: string): LabValue['value'] =>
   e?.values.find((v) => v.key === key)?.value ?? null;
 
-/** The executed trades of ONE symbol of one run, from its (hash-verified) events: entry, exit, reason, P&L. */
+/** A trade's net P&L, coloured, labelled unrealized for an open position, or the reason it is unavailable. */
+export function PnlBadge({ trade, testId, compact }: { trade: Trade; testId?: string; compact?: boolean }) {
+  const tone = toneOf(trade);
+  if (!trade.pnl)
+    return (
+      <span className="na" data-testid={testId} data-tone="unknown">
+        P&amp;L unavailable — {trade.pnlUnavailable}
+      </span>
+    );
+  return (
+    <span className={`pnl tone-${tone}`} data-testid={testId} data-tone={tone} data-net={trade.pnl.netUsd}>
+      {pnlText(trade)}
+      {trade.pnl.unrealized ? (
+        <span className="pnl-kind">
+          {' '}
+          unrealized{!compact && trade.pnl.markDate ? ` (marked ${trade.pnl.markDate})` : ''}
+        </span>
+      ) : (
+        !compact && <span className="pnl-kind"> realized</span>
+      )}
+    </span>
+  );
+}
+
+/** The executed trades of ONE symbol of one run (already built from its events), the selected one highlighted. */
 export function TradeTable({
-  events,
+  trades,
   role,
-  symbol,
-  unrealizedNet,
-  selectedKey,
+  selectedTradeKey,
   onSelect
 }: {
-  events: readonly LabEvent[];
+  trades: ReadonlyMap<string, Trade>;
   role: Role;
-  symbol: string;
-  unrealizedNet: number | null;
-  selectedKey: string | null;
-  onSelect: (key: string) => void;
+  selectedTradeKey: string | null;
+  onSelect: (trade: Trade) => void;
 }) {
-  const mine = events.filter((e) => e.symbol === symbol);
-  const byId = new Map(mine.map((e) => [e.id, e]));
-  const entries = mine.filter((e) => e.kind === 'executed_entry');
-  if (entries.length === 0) return <p className="muted small">No executed trades for {symbol}.</p>;
+  const box = useRef<HTMLDivElement>(null);
+  const rows = tradeList(trades);
+  // Bring the selected trade's row into view inside the table's own scroll box (never the page).
+  useEffect(() => {
+    const el = box.current;
+    if (!el || !selectedTradeKey) return;
+    const row = el.querySelector<HTMLElement>(`tr[data-trade-key="${CSS.escape(selectedTradeKey)}"]`);
+    if (!row) return;
+    const head = el.querySelector('thead')?.getBoundingClientRect().height ?? 0;
+    const r = row.getBoundingClientRect();
+    const b = el.getBoundingClientRect();
+    if (r.top < b.top + head) el.scrollTop -= b.top + head - r.top;
+    else if (r.bottom > b.bottom) el.scrollTop += r.bottom - b.bottom;
+  }, [selectedTradeKey, trades]);
   return (
-    <div className="table-scroll">
+    <div className="table-scroll" ref={box}>
       <table className="event-table trades-table" data-testid={`trade-table-${role}`}>
         <thead>
           <tr>
@@ -238,48 +269,125 @@ export function TradeTable({
             <th scope="col">Exit fill</th>
             <th scope="col">Exit reason</th>
             <th scope="col">Held</th>
-            <th scope="col">Net</th>
-            <th scope="col">Net %</th>
+            <th scope="col">Net P&amp;L</th>
           </tr>
         </thead>
         <tbody>
-          {entries.map((en) => {
-            const ex = en.linkedEventId ? byId.get(en.linkedEventId) : undefined;
-            const key = `${role}:${en.id}`;
-            const net = ex ? (valueOf(ex, 'net') as number) : unrealizedNet;
+          {rows.map((t) => {
+            const on = t.key === selectedTradeKey;
             return (
               <tr
-                key={en.id}
-                data-trade={en.tradeId ?? ''}
-                data-symbol={en.symbol}
+                key={t.key}
+                data-trade={t.tradeId}
+                data-trade-key={t.key}
+                data-symbol={t.symbol}
                 tabIndex={0}
-                aria-selected={key === selectedKey}
-                className={key === selectedKey ? 'is-selected' : undefined}
-                onClick={() => onSelect(key)}
+                aria-selected={on}
+                className={on ? 'is-selected' : undefined}
+                onClick={() => onSelect(t)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    onSelect(key);
+                    onSelect(t);
                   }
                 }}
               >
-                <td className="mono small">{en.tradeId}</td>
-                <td className="mono nowrap">{formatEt(en.t, en.timePrecision)}</td>
-                <td className="mono num">{formatPrice(en.price)}</td>
-                <td className="mono nowrap">{ex ? formatEt(ex.t, ex.timePrecision) : 'open at the end'}</td>
-                <td className="mono num">{ex ? formatPrice(ex.price) : '—'}</td>
-                <td className="small">{ex ? String(valueOf(ex, 'exitReason')) : 'still open (marked, not sold)'}</td>
-                <td className="mono num">{ex ? `${Number(valueOf(ex, 'calendarDays')).toFixed(1)} d` : '—'}</td>
-                <td className="mono num">
-                  {net === null ? <span className="na">n/a</span> : signed(net)}
-                  {!ex && net !== null && <span className="muted small"> (unrealized)</span>}
+                <td className="mono small">{t.tradeId}</td>
+                <td className="mono nowrap">{t.entry ? formatEt(t.entry.t, t.entry.timePrecision) : 'not recorded'}</td>
+                <td className="mono num">{t.entry ? formatPrice(t.entry.price) : '—'}</td>
+                <td className="mono nowrap">
+                  {t.exit ? formatEt(t.exit.t, t.exit.timePrecision) : t.status === 'open' ? 'open at the end' : '—'}
                 </td>
-                <td className="mono num">{ex ? `${Number(valueOf(ex, 'netReturn')).toFixed(2)}%` : '—'}</td>
+                <td className="mono num">{t.exit ? formatPrice(t.exit.price) : '—'}</td>
+                <td className="small">
+                  {t.exit
+                    ? (t.exitReason ?? 'not recorded')
+                    : t.status === 'open'
+                      ? 'still open (marked, not sold)'
+                      : t.problem}
+                </td>
+                <td className="mono num">{t.heldDays === null ? '—' : `${t.heldDays.toFixed(1)} d`}</td>
+                <td className="mono num">
+                  <PnlBadge trade={t} compact />
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
     </div>
+  );
+}
+
+/** The selected trade's details, beneath the list. */
+export function TradeDetail({ trade }: { trade: Trade | null }) {
+  if (!trade)
+    return (
+      <p className="muted small trade-detail-empty" data-testid="trade-detail">
+        Select a trade (a row, or its entry or exit marker on the chart) to see its details here.
+      </p>
+    );
+  // Recorded amounts of the exit: the gross P&L signed; costs and interest as the (positive) amounts charged.
+  const money = (key: string, label: string, signed: boolean) => {
+    const v = valueOf(trade.exit, key);
+    return typeof v === 'number' ? (
+      <>
+        <dt>{label}</dt>
+        <dd className="mono">
+          {signed
+            ? formatMoney(v)
+            : `$${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+        </dd>
+      </>
+    ) : null;
+  };
+  return (
+    <section
+      className="trade-detail"
+      aria-label={`Trade ${trade.tradeId}`}
+      data-testid="trade-detail"
+      data-trade-key={trade.key}
+    >
+      <h4>
+        <span className={`role-badge role-${trade.role}`}>{trade.role}</span> {trade.runId} · {trade.symbol} ·{' '}
+        <span className="mono">{trade.tradeId}</span> ·{' '}
+        {trade.status === 'closed' ? 'closed' : trade.status === 'open' ? 'open at the end of the run' : 'not linked'}
+      </h4>
+      <dl className="detail-grid">
+        <dt>Entry</dt>
+        <dd>
+          {trade.entry
+            ? `${formatEt(trade.entry.t, trade.entry.timePrecision)} at ${formatPrice(trade.entry.price)}`
+            : 'not recorded'}
+          {trade.entry?.reason && <span className="muted small block">{trade.entry.reason}</span>}
+        </dd>
+        <dt>Exit</dt>
+        <dd>
+          {trade.exit
+            ? `${formatEt(trade.exit.t, trade.exit.timePrecision)} at ${formatPrice(trade.exit.price)}`
+            : trade.status === 'open'
+              ? 'none yet — the position is still open (marked, not sold)'
+              : (trade.problem ?? 'not recorded')}
+          {trade.exit?.reason && <span className="muted small block">{trade.exit.reason}</span>}
+        </dd>
+        {trade.exitReason && (
+          <>
+            <dt>Exit reason</dt>
+            <dd>{trade.exitReason}</dd>
+          </>
+        )}
+        <dt>Held</dt>
+        <dd>{trade.heldDays === null ? '—' : `${trade.heldDays.toFixed(1)} calendar days`}</dd>
+        <dt>Net P&amp;L</dt>
+        <dd>
+          <PnlBadge trade={trade} testId="trade-detail-pnl" />
+          {trade.pnl && <span className="muted small block">{trade.pnl.basis}</span>}
+        </dd>
+        {money('gross', 'Gross P&L', true)}
+        {money('costs', 'Costs charged', false)}
+        {money('friction', 'Friction (costs) charged', false)}
+        {money('interest', 'Margin interest charged', false)}
+      </dl>
+    </section>
   );
 }

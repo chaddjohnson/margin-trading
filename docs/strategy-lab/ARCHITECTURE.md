@@ -123,6 +123,30 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
 - **Markers.** Markers are an overlay of focusable buttons placed with Dygraphs' `toDomCoords(t, price)` at the
   event's exact instant and price. Decimation never moves or drops a marker. An event without a recorded price
   (rejected signals) is drawn on the price line at that instant and labelled "price not recorded".
+- **Trades** (`src/trades.ts`, `src/chart/link.ts`, `src/components/Trading.tsx`):
+  - **Pairing.** Executed entries and exits are paired only through the recorded `tradeId` and a mutual
+    `linkedEventId`, within one symbol, never by time or price. Inconsistent records (duplicates, one-way or crossed
+    links) are shown as "not linked".
+  - **Trade P&L in tooltips.** Both markers of a trade show the same trade-level net P&L, after costs and margin
+    interest, in $ and % (green profit, red loss):
+    - a closed trade: the exit's recorded `net`; the % is `netReturn`, else net ÷ the recorded principal;
+    - an open position: UNREALIZED, from the run's recorded mark. Trading backtests use
+      `metrics.perSymbol[symbol].pnl.unrealized`; the Study 8 import uses `metrics.trades.unrealized` only when the
+      pool has exactly one open lot;
+    - otherwise "P&L unavailable — reason", never a made-up figure.
+  - **Selection.** Clicking either marker of a trade selects the trade: its row in **Trades** is highlighted and
+    scrolled into view inside the list, and its details are shown beneath. Selecting the other marker of the same
+    trade keeps the selection. This works for trading backtests and imported multi-ETF runs, per symbol.
+  - **Hover link.** Hovering (or focusing) an executed entry or exit highlights both markers of its trade and draws a
+    temporary connector between them.
+    - The connector is dashed and translucent, green for a profit and red for a loss, under the markers, clipped to the
+      plot. It is drawn directly on the marker layer: no Dygraphs redraw, no re-initialisation. It follows a zoom
+      while hovered.
+    - The tooltip adds a summary (entry and exit date/price, holding period, net P&L) and opens on the side away from
+      the counterpart.
+    - A counterpart outside the view is reported ("The exit is later than the current view"); the chart is not
+      zoomed to it. An open position highlights only its entry and says it is still open.
+    - Everything is removed as soon as the pointer leaves the marker. No links appear during a measure or pan drag.
 - **Synthetic runs.** These (the demo) get their prices only from `apps/strategy-lab/fixtures/demo-dataset.v1.json`
   and are labelled synthetic everywhere. A real run never falls back to them: missing data shows an error instead of a
   chart.

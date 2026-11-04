@@ -8,12 +8,13 @@
 
 import Dygraph, { type dygraphs } from 'dygraphs';
 import 'dygraphs/dist/dygraph.css';
-import { type Ref, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { type Ref, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 
 import type { LabEvent } from '../../shared/contract.ts';
 import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
 import { etParts, formatEt, formatPrice } from '../format.ts';
 import { etTicks } from './etTicker.ts';
+import { type ChartLink, type Placement, placementOf } from './link.ts';
 import { MARKER_SIZE, PRICE_COLOR, type Role, glyphUri, markerOffset } from './markers.ts';
 import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure } from './measure.ts';
 import { isMacPlatform, panModifierFor, panWindow, startsPan } from './pan.ts';
@@ -61,7 +62,10 @@ interface Props {
   initialWindow: () => [number, number] | null;
   onWindowChange: (w: [number, number], full: boolean) => void;
   onActivate: (keys: string[]) => void;
-  onHover: (keys: string[] | null, anchor: DOMRect | null) => void;
+  /** Hovered (or focused) markers, the anchor for the tooltip, and where the hovered trade's counterpart lies. */
+  onHover: (keys: string[] | null, anchor: DOMRect | null, placement?: Placement) => void;
+  /** The counterpart of an executed entry/exit marker (tradeId + linkedEventId, resolved by the run view), or null. */
+  linkOf?: (key: string) => ChartLink | null;
   ref?: Ref<ChartHandle>;
 }
 
@@ -75,6 +79,7 @@ function clamp(g: Dygraph, a: number, b: number): [number, number] {
 }
 
 export function PriceChart(props: Props) {
+  const clipId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const { overview, events, selectedKey, ref } = props;
   const frameRef = useRef<HTMLDivElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
@@ -86,6 +91,12 @@ export function PriceChart(props: Props) {
   const eventsRef = useRef(events);
   const selectedRef = useRef(selectedKey);
   const buttons = useRef(new Map<string, HTMLButtonElement>());
+  // The hovered trade's connector: the hovered marker's key and its link, while the pointer (or focus) is on it.
+  const linkRef = useRef<{ key: string; link: ChartLink } | null>(null);
+  const linkSvgRef = useRef<SVGSVGElement>(null);
+  const linkClipRef = useRef<SVGRectElement>(null);
+  const linkLineRef = useRef<SVGLineElement>(null);
+  const gestureRef = useRef(false); // a measure or pan drag is in progress: no hover linking
   // Drag-to-measure: the two snapped endpoints (in drag order) and the overlay elements.
   const measureRef = useRef<{ a: MeasurePoint; b: MeasurePoint } | null>(null);
   const shadeRef = useRef<HTMLDivElement>(null);
@@ -155,6 +166,60 @@ export function PriceChart(props: Props) {
         buttons.current.delete(key);
       }
     layer.dataset.markerCount = String(visible);
+  };
+
+  // The centre of a marker button in layer pixels, or null when it is not placed or hidden.
+  const centreOf = (key: string | null) => {
+    const b = key ? buttons.current.get(key) : undefined;
+    if (!b || b.hidden || !b.isConnected) return null;
+    return [parseFloat(b.style.left) + MARKER_SIZE / 2, parseFloat(b.style.top) + MARKER_SIZE / 2] as const;
+  };
+
+  // Removes the connector and the temporary highlights (pointer left the marker, a drag started, data changed).
+  const clearLink = () => {
+    linkRef.current = null;
+    for (const b of buttons.current.values()) b.classList.remove('is-linked');
+    if (linkSvgRef.current) linkSvgRef.current.style.display = 'none';
+    delete frameRef.current?.dataset.link;
+  };
+
+  // Draws the hovered trade's connector between the two markers as they sit now (after a zoom, a pan or a redraw):
+  // clipped to the plot area, so a counterpart outside the view shows as a line running off the plot's edge.
+  const placeLink = () => {
+    const g = graphRef.current;
+    const cur = linkRef.current;
+    const svg = linkSvgRef.current;
+    if (!g || !cur || !svg || !linkLineRef.current || !linkClipRef.current) return;
+    const from = centreOf(cur.key);
+    if (!from) return clearLink();
+    buttons.current.get(cur.key)!.classList.add('is-linked');
+    const { partner, partnerKey, tone } = cur.link;
+    const frame = frameRef.current!;
+    frame.dataset.link = `${tone}:${placementOf(cur.link, g.xAxisRange() as [number, number])}`;
+    if (!partner) {
+      svg.style.display = 'none'; // an open position: only the entry is highlighted
+      return;
+    }
+    const partnerButton = partnerKey ? buttons.current.get(partnerKey) : undefined;
+    let to = centreOf(partnerKey);
+    if (to) partnerButton!.classList.add('is-linked');
+    else {
+      const [px, py] = g.toDomCoords(partner.t, partner.y ?? g.toDataYCoord(from[1]));
+      to = [px, py + markerOffset(partner.kind, 0) + MARKER_SIZE / 2];
+    }
+    const area = g.getArea();
+    const clip = linkClipRef.current;
+    clip.setAttribute('x', String(area.x));
+    clip.setAttribute('y', String(area.y));
+    clip.setAttribute('width', String(area.w));
+    clip.setAttribute('height', String(area.h));
+    const line = linkLineRef.current;
+    line.setAttribute('x1', String(from[0]));
+    line.setAttribute('y1', String(from[1]));
+    line.setAttribute('x2', String(to[0]));
+    line.setAttribute('y2', String(to[1]));
+    svg.setAttribute('class', `trade-link tone-${tone}`);
+    svg.style.display = '';
   };
 
   // Positions the measurement overlay for the current graph state (after a drag step, a zoom, a pan or a resize).
@@ -270,6 +335,7 @@ export function PriceChart(props: Props) {
             document.removeEventListener('contextmenu', finish);
             window.removeEventListener('blur', finish);
             endGesture = null;
+            gestureRef.current = false;
             up(last);
             context.destroy();
           };
@@ -287,6 +353,9 @@ export function PriceChart(props: Props) {
           document.addEventListener('contextmenu', finish);
           window.addEventListener('blur', finish);
           endGesture = finish;
+          gestureRef.current = true;
+          clearLink();
+          propsRef.current.onHover(null, null);
         };
         if (startsPan(event, PAN_MODIFIER)) {
           // Pan: the window at the mouse-down moved by the pointer's horizontal travel (the content follows the
@@ -454,6 +523,7 @@ export function PriceChart(props: Props) {
       },
       drawCallback: (g) => {
         placeMarkers();
+        if (linkRef.current) placeLink(); // the connector follows a zoom, pan or resize while hovering
         placeMeasure();
         const [a, b] = g.xAxisRange();
         frame.dataset.viewFrom = new Date(a).toISOString();
@@ -497,6 +567,7 @@ export function PriceChart(props: Props) {
       layer?.removeEventListener('wheel', onLayerWheel);
       g.destroy();
       graphRef.current = null;
+      linkRef.current = null;
       for (const b of markerMap.values()) b.remove();
       markerMap.clear();
     };
@@ -544,6 +615,27 @@ export function PriceChart(props: Props) {
 
   const target = (e: { target: EventTarget | null }) =>
     e.target instanceof HTMLElement ? e.target.closest<HTMLButtonElement>('button.marker') : null;
+  // Hovering a marker: the tooltip, and for an executed entry/exit its trade's connector and highlights (drawn on the
+  // layer directly: no React state of the chart, no Dygraphs redraw).
+  const hover = (b: HTMLButtonElement, keys: string[]) => {
+    clearLink();
+    const key = b.dataset.key!;
+    const link = propsRef.current.linkOf?.(key) ?? null;
+    const g = graphRef.current;
+    if (link) {
+      linkRef.current = { key, link };
+      placeLink();
+    }
+    propsRef.current.onHover(
+      keys,
+      b.getBoundingClientRect(),
+      g ? placementOf(link, g.xAxisRange() as [number, number]) : 'none'
+    );
+  };
+  const unhover = () => {
+    clearLink();
+    propsRef.current.onHover(null, null);
+  };
 
   return (
     <div className="chart-frame" ref={frameRef} data-testid="price-chart">
@@ -590,17 +682,17 @@ export function PriceChart(props: Props) {
         }}
         onMouseOver={(e) => {
           const b = target(e);
-          if (b) propsRef.current.onHover(overlapping(b), b.getBoundingClientRect());
+          if (b && !gestureRef.current) hover(b, overlapping(b));
         }}
         onMouseOut={(e) => {
-          if (target(e)) propsRef.current.onHover(null, null);
+          if (target(e)) unhover();
         }}
         onFocus={(e) => {
           const b = target(e);
-          if (b) propsRef.current.onHover([b.dataset.key!], b.getBoundingClientRect());
+          if (b) hover(b, [b.dataset.key!]);
         }}
         onBlur={(e) => {
-          if (target(e)) propsRef.current.onHover(null, null);
+          if (target(e)) unhover();
         }}
       >
         <div ref={crossRef} className="crosshair" data-testid="crosshair" hidden />
@@ -609,6 +701,20 @@ export function PriceChart(props: Props) {
         <div ref={lineBRef} className="measure-line" data-testid="measure-line" hidden />
         <div ref={dotARef} className="measure-dot" data-testid="measure-dot" hidden />
         <div ref={dotBRef} className="measure-dot" data-testid="measure-dot" hidden />
+        <svg
+          ref={linkSvgRef}
+          className="trade-link"
+          data-testid="trade-link"
+          style={{ display: 'none' }}
+          aria-hidden="true"
+        >
+          <defs>
+            <clipPath id={clipId}>
+              <rect ref={linkClipRef} />
+            </clipPath>
+          </defs>
+          <line ref={linkLineRef} clipPath={`url(#${clipId})`} />
+        </svg>
       </div>
       <div ref={readoutRef} className="chart-readout" data-testid="chart-readout" aria-live="off" />
     </div>

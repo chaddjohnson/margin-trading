@@ -256,3 +256,41 @@
     after a pan, and ⌘ on emulated macOS.
   - Negative control: without Ctrl as the modifier, the 4 Ctrl tests fail.
 - **Docs:** ARCHITECTURE ("Drag to pan"), RESEARCH_WORKFLOW §4.8.
+
+## Task 8 — COMPLETE (2026-11-04): trade tooltips, selection and visual linking
+
+- **Brief (user message):**
+  - both markers of a trade show its net P&L ($ and %, green/red; unrealized for open positions from the run's mark;
+    "unavailable" when not recorded);
+  - clicking either marker selects the trade (row highlighted and scrolled into view, details beneath), for trading
+    and imported multi-ETF runs, per symbol;
+  - hover highlights both markers with a temporary toned connector and a summary; an off-screen counterpart is
+    reported without zooming; cleared on leave;
+  - pairing only via `tradeId` + `linkedEventId`; chart interactions preserved; no change to strategies, rules,
+    results or artifacts.
+- **Baseline:** HEAD `b8169b5` (= origin), clean tree.
+- **Change:**
+  - `src/trades.ts` (pure trade index, P&L sources) and `src/chart/link.ts` (placement).
+  - `PriceChart.tsx`: the hover connector and highlights are drawn on the marker layer (SVG line clipped to the plot)
+    and suppressed during drags.
+  - `RunView.tsx`: trade-level selection; the Trades card now appears for any run with trades, including imports.
+  - `Trading.tsx`: `TradeTable` built from the index, plus `TradeDetail`. `Events.tsx`: the tooltip P&L and summary,
+    on the side away from the counterpart.
+  - No server, runner, importer or artifact change.
+- **P&L of the imported vg-balanced open GDX lot:** `metrics.trades.unrealized`, because the pool has exactly 1 open
+  lot. With more than 1 open lot it is reported as unavailable (only the pool total is recorded).
+- **Tests:** `tests/trades.test.ts` (9) and `e2e/trades.spec.ts` (8). The e2e creates trading runs "e2e trades VGT 2023"
+  and "e2e trades VGT GDX 2023" in the temporary e2e state. Docs: ARCHITECTURE ("Trades"), RESEARCH_WORKFLOW.
+- **Verification:** `npm run check` 19:36:32→19:38:32Z: typecheck + lint clean, Vitest 87/87, Playwright 32/32.
+  One existing walkthrough step needed a scroll: the Trades card now sits above the event table on vg-balanced.
+- **Disclosures (2026-11-04T19:38Z):**
+  - **Live DB.** Since the Task 5 backup it has one addition only: the user's run R-000017 (V-000017,
+    `rise-from-recent-low-trading`, hold off) and strategy row S-0004. R-000001…R-000016 and their files are
+    unchanged.
+  - **Running servers (not mine; not touched).**
+    - pid 2966097 is the user's live `start:vpn` server (:4317 on 127.0.0.1, 127.0.1.1 and the Tailscale IP), started
+      18:29Z. It serves `apps/strategy-lab/dist`, which every `vite build` / `npm run check` replaces, so it now
+      serves this task's UI.
+    - pid 2772895 is a stray smoke server from an EARLIER Claude session (127.0.0.1:4391, scratch state of session
+      `bbd6d528…`), running since 12:14Z. Task 5's 16:04Z check missed it (wrong ports in the grep; no
+      "strategy-lab" in its command line). Left running; the user is asked.

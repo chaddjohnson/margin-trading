@@ -234,7 +234,9 @@ test.describe('vg-balanced (Study 8 #2) entries and exits', () => {
       await expect(page.getByTestId('count-A-rejected_signal')).toHaveText(String(rejected));
       await expect(page.getByTestId('analysis-symbol-counts')).toHaveText(`${entries} · ${exits} · ${rejected}`);
       await expect(page.locator('[data-testid="event-table"] tbody tr')).toHaveCount(entries + exits + rejected);
-      // Hover by coordinates: neighbouring markers overlap at full zoom (the tooltip then lists all of them).
+      // Hover by coordinates: neighbouring markers overlap at full zoom (the tooltip then lists all of them). The
+      // table click above may have scrolled the chart away (the Trades card sits above the table): bring it back.
+      await page.getByTestId('price-chart').scrollIntoViewIfNeeded();
       const fb = (await page.locator('button.marker').first().boundingBox())!;
       await page.mouse.move(fb.x + fb.width / 2, fb.y + fb.height / 2);
       await expect(page.getByTestId('marker-tooltip')).toBeVisible();

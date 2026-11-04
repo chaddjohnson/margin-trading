@@ -82,7 +82,9 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
 10. **vg-balanced:** open *vg-balanced (s8-vg-balanced) — Study 8 #2 replay* (experiment *Study 8 imports*).
    - **VGT tab:** 6 entries, 6 exits and 7 rejected signals. **GDX tab:** 42 entries, 41 exits (one lot is still open
      at the end) and 7 rejected signals.
-   - Hover or click a marker for its Eastern date and time (EST/EDT), fill price, reason and trade link.
+   - Hover or click a marker for its Eastern date and time (EST/EDT), fill price, reason, and the trade's net P&L.
+     Hovering an entry or exit highlights its partner and draws a connector between them. Clicking either one selects
+     the lot under **Trades** and shows its details beneath.
    - The legend toggles each category.
 
 ## 5. Claude-led optimisation without a UI button

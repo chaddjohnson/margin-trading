@@ -18,7 +18,9 @@ import { useFetched, useScoped } from '../hooks.ts';
 import { EventTable, MarkerTooltip } from './Events.tsx';
 import { NotesList } from './Notes.tsx';
 import { AnalysisPanel, EventDetail, Glyph, ParametersPanel } from './Panels.tsx';
-import { TradeTable } from './Trading.tsx';
+import { TradeDetail, TradeTable } from './Trading.tsx';
+import type { ChartLink, Placement } from '../chart/link.ts';
+import { buildTrades, toneOf, type Trade } from '../trades.ts';
 import { RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING } from '../../shared/strategies.ts';
 
 type Detail = RunDetail & { request: LabRunRequest | null };
@@ -76,7 +78,7 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
   // Selection and hover belong to one run/symbol/comparison: they clear themselves when any of these changes.
   const scope = `${runId}|${symbol}|${compareId}`;
   const [rawSelectedKey, setSelectedKey] = useScoped<string | null>(scope, null);
-  const [hover, setHover] = useScoped<{ keys: string[]; anchor: DOMRect } | null>(scope, null);
+  const [hover, setHover] = useScoped<{ keys: string[]; anchor: DOMRect; placement: Placement } | null>(scope, null);
   const [view, setView] = useState<{ range: [number, number]; full: boolean } | null>(null);
   const lastWindow = useRef<[number, number] | null>(null);
   const chartRef = useRef<ChartHandle>(null);
@@ -158,6 +160,52 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
     [byKey, setSelectedKey]
   );
 
+  // Trades per run, from ALL of this symbol's events (pairing never depends on which kinds the legend shows): an entry
+  // and its exit are linked only through their recorded tradeId and mutual linkedEventId, never by time or price.
+  const tradesA = useMemo(
+    () => buildTrades(eventsA?.events ?? [], symbol ?? '', 'A', eventsA?.runId ?? '', run?.metrics),
+    [eventsA, symbol, run?.metrics]
+  );
+  const tradesB = useMemo(
+    () =>
+      eventsB && runB && !compareProblem
+        ? buildTrades(eventsB.events, symbol ?? '', 'B', eventsB.runId, runB.metrics)
+        : new Map<string, Trade>(),
+    [eventsB, runB, symbol, compareProblem]
+  );
+  const tradeOf = useCallback(
+    (c: ChartEvent): Trade | null =>
+      c.event.tradeId && c.event.symbol === symbol
+        ? ((c.role === 'A' ? tradesA : tradesB).get(c.event.tradeId) ?? null)
+        : null,
+    [tradesA, tradesB, symbol]
+  );
+  // The counterpart of a hovered executed entry/exit (for the chart's connector), or null.
+  const linkOf = useCallback(
+    (key: string): ChartLink | null => {
+      const c = byKey.get(key);
+      if (!c || (c.event.kind !== 'executed_entry' && c.event.kind !== 'executed_exit')) return null;
+      const t = tradeOf(c);
+      if (!t || t.status === 'unlinked') return null;
+      if (t.status === 'open')
+        return c.event.kind === 'executed_entry' ? { partnerKey: null, partner: null, tone: toneOf(t) } : null;
+      const partner = c.event.kind === 'executed_entry' ? t.exit : t.entry;
+      if (!partner || partner.symbol !== c.event.symbol) return null;
+      const response = c.role === 'A' ? eventsA : eventsB;
+      const partnerKey = `${c.role}:${partner.id}`;
+      return {
+        partnerKey: byKey.has(partnerKey) ? partnerKey : null,
+        partner: {
+          t: Date.parse(partner.t),
+          y: response?.display[partner.id] ?? partner.price,
+          kind: partner.kind as 'executed_entry' | 'executed_exit'
+        },
+        tone: toneOf(t)
+      };
+    },
+    [byKey, tradeOf, eventsA, eventsB]
+  );
+
   const onActivate = (keys: string[]) => {
     const i = keys.indexOf(selectedKey ?? '');
     const next = keys[(i + 1) % keys.length];
@@ -167,13 +215,12 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
   if (error) return <div className="main-empty form-error">{error}</div>;
   if (!run || !symbol) return <div className="main-empty">Loading run…</div>;
   const trading = run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key;
-  const unrealizedOf = (r: RunDetail | null) => {
-    const per = (
-      r?.metrics?.perSymbol as Record<string, { pnl?: { unrealized?: { netUsd: number } | null } }> | undefined
-    )?.[symbol];
-    return per?.pnl?.unrealized?.netUsd ?? null;
+  // The trade of the selected event (entry or exit alike): selecting the other marker of the same trade keeps it.
+  const selectedTrade = selected ? tradeOf(selected) : null;
+  const selectTrade = (t: Trade) => {
+    const key = [t.entry, t.exit].map((e) => (e ? `${t.role}:${e.id}` : '')).find((k) => byKey.has(k));
+    if (key) select(key, true);
   };
-  const tradingB = runB && !compareProblem && runB.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key;
 
   const counts = (role: Role) => {
     const src = role === 'A' ? eventsA : eventsB;
@@ -413,7 +460,10 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
                   lastWindow.current = full ? null : range;
                 }}
                 onActivate={onActivate}
-                onHover={(keys, anchor) => setHover(keys && anchor ? { keys, anchor } : null)}
+                onHover={(keys, anchor, placement) =>
+                  setHover(keys && anchor ? { keys, anchor, placement: placement ?? 'none' } : null)
+                }
+                linkOf={linkOf}
               />
             )
           ) : (
@@ -462,40 +512,35 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
       </section>
 
       <div className="lower">
-        {trading && (
+        {(tradesA.size > 0 || tradesB.size > 0) && (
           <section className="card trades" aria-label={`Trades of ${symbol}`} data-testid="trades-card">
             <div className="card-head">
               <h3>Trades · {symbol}</h3>
               <span className="muted small">
-                standalone backtest of {symbol}; click a trade to show it on the chart
+                {symbol}’s executed trades only; click a trade, or either of its markers, to select it
               </span>
             </div>
-            <h4 className="small">
-              <span className="role-badge role-A">A</span> {run.id}
-            </h4>
-            <TradeTable
-              events={eventsA?.events ?? []}
-              role="A"
-              symbol={symbol}
-              unrealizedNet={unrealizedOf(run)}
-              selectedKey={selectedKey}
-              onSelect={(k) => select(k, true)}
-            />
-            {tradingB && (
-              <>
-                <h4 className="small">
-                  <span className="role-badge role-B">B</span> {runB.id}
-                </h4>
-                <TradeTable
-                  events={eventsB?.events ?? []}
-                  role="B"
-                  symbol={symbol}
-                  unrealizedNet={unrealizedOf(runB)}
-                  selectedKey={selectedKey}
-                  onSelect={(k) => select(k, true)}
-                />
-              </>
-            )}
+            {(
+              [
+                ['A', run.id, tradesA],
+                ['B', runB?.id ?? '', tradesB]
+              ] as const
+            )
+              .filter(([, , trades]) => trades.size > 0)
+              .map(([role, id, trades]) => (
+                <div key={role}>
+                  <h4 className="small">
+                    <span className={`role-badge role-${role}`}>{role}</span> {id}
+                  </h4>
+                  <TradeTable
+                    trades={trades}
+                    role={role}
+                    selectedTradeKey={selectedTrade?.key ?? null}
+                    onSelect={selectTrade}
+                  />
+                </div>
+              ))}
+            <TradeDetail trade={selectedTrade} />
           </section>
         )}
         <EventDetail
@@ -538,7 +583,9 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
           <NotesList targetType="variation" targetId={run.variation.id} onChanged={onChanged} />
         </section>
       </div>
-      {hover && hovered.length > 0 && <MarkerTooltip items={hovered} anchor={hover.anchor} />}
+      {hover && hovered.length > 0 && (
+        <MarkerTooltip items={hovered} anchor={hover.anchor} tradeOf={tradeOf} placement={hover.placement} />
+      )}
     </div>
   );
 }
