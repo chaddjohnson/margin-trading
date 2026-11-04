@@ -3,7 +3,7 @@
 
 import { randomBytes } from 'node:crypto';
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { networkInterfaces } from 'node:os';
+import { hostname, networkInterfaces } from 'node:os';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -47,6 +47,30 @@ export function tailscaleAddress(): string | null {
   return null;
 }
 
+/**
+ * Loopback addresses that /etc/hosts gives this machine's own name. Debian and Ubuntu map the hostname to 127.0.1.1, so
+ * on apollo itself http://apollo:4317 goes to 127.0.1.1, not 127.0.0.1; the server binds those aliases too.
+ */
+export function hostnameLoopbacks(hostsText?: string, name: string = hostname()): string[] {
+  let text = hostsText;
+  if (text === undefined) {
+    try {
+      text = readFileSync('/etc/hosts', 'utf8');
+    } catch {
+      return [];
+    }
+  }
+  const me = name.toLowerCase();
+  const out: string[] = [];
+  for (const line of text.split('\n')) {
+    const [addr, ...names] = line.replace(/#.*/, '').trim().split(/\s+/);
+    if (!addr || !/^127\.\d+\.\d+\.\d+$/.test(addr) || addr === '127.0.0.1') continue;
+    if (names.some((n) => n.toLowerCase() === me || n.toLowerCase().startsWith(`${me}.`)) && !out.includes(addr))
+      out.push(addr);
+  }
+  return out;
+}
+
 const int = (v: string | undefined, d: number, min: number, max: number, name: string) => {
   if (v === undefined || v === '') return d;
   const n = Number(v);
@@ -86,6 +110,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     return ts;
   });
   if (hosts.length === 0) throw new Error('STRATEGY_LAB_HOSTS is empty');
+  // Serving 127.0.0.1 also serves the machine's own name on this machine (e.g. apollo → 127.0.1.1).
+  if (hosts.includes('127.0.0.1'))
+    for (const alias of hostnameLoopbacks()) if (!hosts.includes(alias)) hosts.push(alias);
   if (hosts.includes('0.0.0.0') || hosts.includes('::'))
     throw new Error('Refusing to bind every interface (0.0.0.0 / ::): name loopback and the Tailscale address instead');
   const needsToken = hosts.some((h) => !isLoopbackHost(h));

@@ -62,3 +62,20 @@
 - Do not modify any existing strategy, config, phenotype, pool, research record or `data/`.
 - No optimisation or sweep in the UI or API. No merge to `main`. No force-push. Do not kill the user's processes.
 - Do not commit `state/` or `logs/`.
+
+## Follow-up 2026-11-04T12:54Z: http://apollo:4317 (user report: only http://127.0.0.1:4317 reachable)
+
+- **Cause:**
+  - `/etc/hosts` maps `apollo` to 127.0.1.1, and the default server listened on 127.0.0.1 only;
+  - tailnet access additionally needed `STRATEGY_LAB_HOSTS=127.0.0.1,tailscale`.
+- **Fix:**
+  - `server/config.ts` `hostnameLoopbacks()`: when 127.0.0.1 is bound, the server also binds the hostname's /etc/hosts
+    loopback aliases (127.0.1.1);
+  - a new script `start:vpn` (= start with the Tailscale address);
+  - docs updated (OPERATIONS, README, RESEARCH_WORKFLOW, app README).
+- **Verified with temporary state on port 4317:**
+  - default `start`: 127.0.0.1 and `apollo` serve the UI and API;
+  - `start:vpn`: 127.0.0.1, `apollo`, 100.68.60.114 and `apollo.tail0a98ce.ts.net` → health 200, API 401 without the
+    token and 200 with it; the LAN address is refused;
+  - `npm run check`: Vitest 50/50, Playwright 9/9.
+- The user's own server was stopped by the user; no process of mine is running.

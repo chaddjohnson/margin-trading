@@ -4,7 +4,8 @@ A persistent, real-data strategy research workbench (`apps/strategy-lab/`). It r
 prototype of 2026-11-03.
 
 - **Start:** `npm --prefix apps/strategy-lab start`, then open http://127.0.0.1:4317.
-- **VPN:** `http://apollo:4317` with the access token; see [OPERATIONS.md](OPERATIONS.md).
+- **VPN:** `npm --prefix apps/strategy-lab run start:vpn` (or the service), then `http://apollo:4317` from any tailnet
+  machine, with the access token; see [OPERATIONS.md](OPERATIONS.md).
 - **What it does:**
   - saved runs, variations, experiments and strategies in SQLite;
   - manual single tests on real minute data from the browser;

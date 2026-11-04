@@ -344,6 +344,16 @@ describe('HTTP API', () => {
     s3.close();
   });
 
+  it('finds the loopback alias of the machine name in /etc/hosts (apollo → 127.0.1.1)', async () => {
+    const { hostnameLoopbacks } = await import('../server/config.ts');
+    const hosts =
+      '127.0.0.1 localhost\n127.0.1.1\tapollo apollo.lan # comment\n100.68.60.114 apollo-ts\n::1 ip6-localhost\n';
+    expect(hostnameLoopbacks(hosts, 'apollo')).toEqual(['127.0.1.1']);
+    expect(hostnameLoopbacks(hosts, 'APOLLO')).toEqual(['127.0.1.1']);
+    expect(hostnameLoopbacks(hosts, 'other')).toEqual([]);
+    expect(hostnameLoopbacks('127.0.0.1 apollo\n', 'apollo')).toEqual([]);
+  });
+
   it('refuses to bind every interface, and requires a token off loopback', () => {
     expect(() => config({ STRATEGY_LAB_HOSTS: '0.0.0.0' })).toThrow(/every interface/);
     const c = config({ STRATEGY_LAB_HOSTS: '127.0.0.1,100.101.102.103' });

@@ -43,7 +43,8 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
 
 ## 4. Using Strategy Lab (guide)
 
-1. **Start it:** `npm --prefix apps/strategy-lab start` and open http://127.0.0.1:4317. Over the VPN, see
+1. **Start it:** `npm --prefix apps/strategy-lab start` and open http://127.0.0.1:4317 or http://apollo:4317 on
+   apollo. For other machines on the VPN, use `npm --prefix apps/strategy-lab run start:vpn` instead; see
    [OPERATIONS.md](OPERATIONS.md).
 2. **Create a test:** click **+ New test**.
    - The strategy is *Rise from recent low (entry signal)*.

@@ -6,11 +6,16 @@ All commands run from the repository root (`/home/chad/projects/margin-trading`)
 
 | Purpose | Command | Serves |
 | --- | --- | --- |
-| Local use (installs dependencies and builds the UI if needed) | `npm --prefix apps/strategy-lab start` | http://127.0.0.1:4317 (loopback only, no token) |
-| VPN use, foreground | `STRATEGY_LAB_HOSTS=127.0.0.1,tailscale npm --prefix apps/strategy-lab start` | http://127.0.0.1:4317 and http://apollo:4317 on the tailnet (token required) |
-| VPN use, permanent (systemd user service) | `npm --prefix apps/strategy-lab run service:install -- --enable` | Same as above; restarts on failure and starts with the user session (linger is on for `chad`) |
+| Local use on apollo (installs dependencies and builds the UI if needed) | `npm --prefix apps/strategy-lab start` | http://127.0.0.1:4317 and http://apollo:4317 **on apollo itself** (loopback only, no token) |
+| VPN use, foreground | `npm --prefix apps/strategy-lab run start:vpn` | The above plus http://apollo:4317 from every machine on the tailnet (token required for the API) |
+| VPN use, permanent (systemd user service) | `npm --prefix apps/strategy-lab run service:install -- --enable` | Same as `start:vpn`; restarts on failure and starts with the user session (linger is on for `chad`) |
 | Development (hot reload) | `npm --prefix apps/strategy-lab run dev` | UI on http://127.0.0.1:5174 (Vite, proxies `/api`), API on 127.0.0.1:4317 |
 | Import a Study 8 replay | see [§Importing vg-balanced](#importing-vg-balanced) | — |
+
+**Why two names work on apollo itself.** `/etc/hosts` maps `apollo` to 127.0.1.1 (the Debian/Ubuntu convention), not
+to 127.0.0.1. Whenever the server listens on 127.0.0.1, it therefore also listens on the loopback aliases that
+`/etc/hosts` gives the machine's own name. On other tailnet machines, MagicDNS resolves `apollo` to the Tailscale
+address, which only `start:vpn` and the service listen on.
 
 The service unit is generated from `apps/strategy-lab/deploy/strategy-lab.service.template` with this Node binary and
 this checkout's path. Manage it with:
@@ -27,22 +32,24 @@ rebuilds automatically.
 - **Prerequisites:**
   - both machines are logged in to the same tailnet;
   - MagicDNS is enabled, which is needed for the short name `apollo`;
-  - the service runs with `STRATEGY_LAB_HOSTS=127.0.0.1,tailscale`.
+  - the server was started with `start:vpn` or as the service (plain `start` is loopback only).
 - **Access token.** On first non-loopback start, a random API token is created in `state/strategy-lab/api-token` (mode
   0600).
   - Show where it is with `npm --prefix apps/strategy-lab run token`.
   - Print it on apollo with `npm --prefix apps/strategy-lab run token -- --print`.
   - The browser asks for it once and keeps it in that browser's localStorage. The server remains the authority.
-- **On apollo itself,** use http://127.0.0.1:4317. The short name `apollo` resolves to 127.0.1.1 locally, which the
-  service does not bind.
+- **On apollo itself,** both http://127.0.0.1:4317 and http://apollo:4317 work: `apollo` resolves to 127.0.1.1
+  locally, which the server also listens on. In VPN mode the token is required there too.
 
-**Verified on apollo, 2026-11-04**, with a temporary instance on `127.0.0.1,tailscale`:
+**Verified on apollo, 2026-11-04**, with a temporary instance started by `start:vpn`:
 
 | Address | Result |
 | --- | --- |
-| 127.0.0.1, 100.68.60.114, `apollo.tail0a98ce.ts.net` | health 200; API 401 without the token, 200 with it; UI 200 |
+| 127.0.0.1, `apollo` (127.0.1.1), 100.68.60.114, `apollo.tail0a98ce.ts.net` | health 200; API 401 without the token, 200 with it; UI 200 |
 | LAN address 192.168.18.14 | connection refused |
-| Listening sockets | exactly 127.0.0.1:4317 and 100.68.60.114:4317 |
+| Listening sockets | exactly 127.0.0.1:4317, 127.0.1.1:4317 and 100.68.60.114:4317 |
+
+With plain `start`, http://apollo:4317 on apollo itself served the UI and the API without a token (loopback only).
 
 Not verified: access from a *second* tailnet device. `apollo-windows` was offline. To check from a laptop or phone on
 the tailnet, open `http://apollo:4317`, enter the token, and confirm the run list loads.

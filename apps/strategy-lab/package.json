@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node scripts/ensure-deps.mjs && node scripts/ensure-build.mjs && npm run serve",
+    "start:vpn": "node scripts/ensure-deps.mjs && node scripts/ensure-build.mjs && STRATEGY_LAB_HOSTS=127.0.0.1,tailscale npm run serve",
     "serve": "node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=4096 server/main.ts",
     "dev": "node scripts/dev.mjs",
     "build": "npm run typecheck && vite build",

@@ -29,7 +29,8 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 
 | Script | Purpose |
 | --- | --- |
-| `start` / `serve` | Production: install, build if stale, serve (`STRATEGY_LAB_*` variables configure it) / serve only |
+| `start` / `serve` | Production: install, build if stale, serve on loopback (127.0.0.1 and `apollo` on apollo itself) / serve only |
+| `start:vpn` | As `start`, plus the Tailscale address: `http://apollo:4317` from the tailnet (token required) |
 | `dev` | API on 4317 plus Vite with hot reload on 5174 |
 | `build`, `typecheck`, `lint` | Typecheck (client, server, e2e) and Vite build; ESLint |
 | `test`, `test:e2e`, `check` | Vitest; build + Playwright; all of them |
