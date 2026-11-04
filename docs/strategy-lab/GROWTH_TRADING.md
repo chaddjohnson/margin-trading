@@ -1,8 +1,18 @@
-# Growth trading backtest — `rise-from-recent-low-trading@1.0.0`
+# Growth — the trading backtest `rise-from-recent-low-trading`
 
-A trading backtest built on the **Rise from Recent Low** signal. It is meant to catch upward runs and stay invested
-while they last. Unlike the signal-only strategy, it produces real executed entries and exits, an open position where
-there is one, P&L, drawdowns and exposure.
+**Growth** (until 2026-11-04 displayed as "Rise from recent low (trading backtest)"; the key is unchanged) is a trading
+backtest built on the **Rise from Recent Low** signal. It is meant to catch upward runs and stay invested while they
+last. Unlike the signal-only strategy, it produces real executed entries and exits, an open position where there is
+one, P&L, drawdowns and exposure.
+
+**Versions** (one strategy in the UI; the version is shown in the run header and the Parameters panel):
+
+| Version | What | Launchable |
+| --- | --- | --- |
+| `1.1.0` (current) | 1.0.0 + **optional continuation entries** after a net-profitable exit (four methods, OFF by default) and a decision log — [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) | New Test, phenotypes |
+| `1.0.0` (legacy) | The base entry and the three exits below | No: its runs stay as recorded. With continuation OFF, 1.1.0 reproduces every 1.0.0 signal, fill, exit, mark and metric exactly (`src/growth-trading/tests/offParity.test.ts`, `apps/strategy-lab/tests/growth-parity.test.ts`); `npm --prefix apps/strategy-lab run replay -- R-…` re-executes a stored run and diffs it. Cloning a 1.0.0 run starts a 1.1.0 test with continuation OFF |
+
+Everything below describes both versions; continuation entries are in [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md).
 
 - **Code:** `src/growth-trading/riseTrading.ts` (engine) and `apps/strategy-lab/runner/trading-run.ts` (Strategy Lab
   runner).
@@ -13,7 +23,7 @@ there is one, P&L, drawdowns and exposure.
 
 ## Entry and re-entry
 
-- **Entry signal.** The only entry is the unchanged `rise-from-recent-low@1.0.0` scanner. Its rule, its edge trigger
+- **Entry signal.** The base entry is the unchanged `rise-from-recent-low@1.0.0` scanner. Its rule, its edge trigger
   and the bar resolution are identical, and so are its warm-up and data loading.
   - Its signal: the completed bar's close is at least **X%** above the lowest low of the last **N** bars, after a bar
     below that level.
@@ -101,8 +111,9 @@ The following are not implemented, offered or saved:
 - the recovery reset;
 - any reference-high or episode state.
 
-Also absent are D1's deep-dip trailing buy and its post-profitable-exit continuation entry, and any hard stop-loss or
-profit target. The tests assert that the engine has no such state.
+Also absent are D1's deep-dip trailing buy and any hard stop-loss or profit target. D1's post-profitable-exit
+continuation entry is available since 1.1.0 as the optional *Classic D1* continuation method (OFF by default;
+[GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md)). The tests assert that no post-loss restriction state exists.
 
 ## Accounting
 
@@ -146,19 +157,23 @@ shared-slot `vg-balanced` pool (R-000013).
    - On apollo: `npm --prefix apps/strategy-lab start`, then open http://127.0.0.1:4317 or http://apollo:4317.
    - Over Tailscale: `npm --prefix apps/strategy-lab run start:vpn`, then http://apollo:4317 with the access token
      (`npm --prefix apps/strategy-lab run token -- --print` on apollo). See [OPERATIONS.md](OPERATIONS.md).
-2. **+ New test → Strategy → "Rise from recent low (trading backtest)".**
-   - Inputs are grouped as Entry (X, N, resolution), Exits and Execution, with units, ranges, defaults and help.
+2. **+ New test → Strategy → "Growth".**
+   - Inputs are grouped as Entry (X, N, resolution), Exits, Continuation entries (OFF by default) and Execution, with
+     units, ranges, defaults and help.
    - The fixed assumptions are listed under the strategy.
 3. **The example run.**
    - Choose symbol **VGT**, set dates 2016-01-04 → 2023-12-29 and keep the defaults (X 5%, N 20, 1d; stop 7.3%;
      hold ON 8 days; buffer ON 2.9%; 5 bps).
    - Click **Run Test**. One configuration gives one run (`R-…`), queued → running → completed.
 4. **Inspect the result.**
-   - The header says **TRADING BACKTEST · STANDALONE PER SYMBOL**.
+   - The header says **TRADING BACKTEST · STANDALONE PER SYMBOL** and **Growth v1.1.0**.
    - The chart shows four marker kinds: *Executed entry* ▲, *Executed exit* ▽, *Entry signal* (a raw signal taken) and
      *Rejected signal* (a raw signal ignored). Each kind can be toggled.
-   - **Trades** lists every trade: entry and exit in ET, fills, exit reason, days held, net. Clicking a row shows it on
-     the chart.
+   - **Trades** lists every trade: origin (base Growth or the continuation method), entry and exit in ET, fills, exit
+     reason, days held, net. Clicking a row shows it on the chart. **Closed losses only** narrows the list to closed
+     trades whose recorded net after costs and interest is below zero (open positions and breakevens excluded; the chart
+     keeps every marker; a chart-selected trade hidden by the filter is explained, with **Show all trades**).
+   - **Export research bundle** downloads a ZIP for independent review ([EXPORTS.md](EXPORTS.md)).
    - **Analysis** shows the metrics above, with "n/a — reason" where a figure does not exist.
    - **Parameters** shows every value with ON/OFF and the effective rules, read back from the immutable run.
 5. **Clone to X = 6%.** Click **Parameters → Clone into new test…**, set X to 6 and click **Run Test**. This creates a
@@ -200,6 +215,10 @@ These are single exploratory runs on inspected data. Notes:
   - the absence of a restriction.
 - `src/growth-trading/tests/parity.test.ts` (real data): exact parity with the Study 8 engine's D1 books (see the
   audit), and a VGT smoke run.
+- `src/growth-trading/tests/offParity.test.ts` (real data): 1.1.0 with continuation OFF = the 1.0.0 baseline captured
+  before the change (`tests/fixtures/baseline-1.0.0.json`, six cases, daily and intraday).
+- `src/growth-trading/tests/continuation.test.ts`, `continuationRealData.test.ts`: the continuation methods
+  ([GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) §6).
 - `apps/strategy-lab/tests/trading.test.ts`: the registry, validation, the API (create, clone, toggle, immutability),
   the runner allowlist, and the unchanged signal-only snapshot.
 - `apps/strategy-lab/tests/real-data.test.ts`:

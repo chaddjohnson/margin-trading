@@ -1,8 +1,8 @@
 # Growth trading backtest — D1 exit audit and mapping
 
-What `rise-from-recent-low-trading@1.0.0` takes from the D1 family, from which code, with what chronology and units, and
-what is deliberately left out. The user guide is [GROWTH_TRADING.md](GROWTH_TRADING.md). Audited 2026-11-04 at
-`711bbab`.
+What Growth (`rise-from-recent-low-trading`) takes from the D1 family, from which code, with what chronology and units,
+and what is deliberately left out. The user guide is [GROWTH_TRADING.md](GROWTH_TRADING.md). Audited 2026-11-04 at
+`711bbab` for 1.0.0; §6 adds the 1.1.0 continuation entries (audited 2026-11-04 at `b590c60`).
 
 ## 1. The authoritative code
 
@@ -112,7 +112,39 @@ The new strategy **reuses the code above unchanged**. It constructs a `ShadowBoo
 
 ## 5. Not inherited (and not exposed)
 
-- Material-loss restriction, lower-price re-entry, recovery reset, frozen reference high, episodes.
-- D1's deep-dip trailing buy and post-profitable-exit continuation (P/W).
+- Material-loss restriction, lower-price re-entry, recovery reset, frozen loss-reference high.
+- D1's deep-dip trailing buy (its target is NaN: it never arms). D1's post-profitable-exit continuation (P/Y/W) is
+  inherited since 1.1.0 as the optional *Classic D1* method (§6), OFF by default.
 - The gross-breakeven stop policy (`d1.breakeven`), staged entries, hard stop-losses, profit targets.
 - Shared-capital allocation across symbols: each symbol is a standalone backtest.
+
+## 6. Growth 1.1.0: the Classic D1 continuation method (and the other three)
+
+Specification: [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md).
+
+| Aspect | D1 | Growth 1.1.0 `classic_d1` | Source |
+| --- | --- | --- | --- |
+| Machine | `EntryMachine` post-exit continuation (`postExit`, P = `pullback`, Y = `trailingBuyPercentage`, W = `continuationWindow`) | The same object, unchanged, inside the same `ShadowBook` that executes Growth (`exitParamsOf` sets P, Y, W and `postExit`; the deep-dip target stays NaN) | `src/shared-margin-portfolio/strategy.ts`, `src/growth-trading/riseTrading.ts` |
+| Window opening | `ShadowBook.close` → `onExit(s, raw exit price, net)`; opens iff net > 0 | Identical (the controller checks it agrees with net > 0) | `shadow.ts`, `continuation.ts` `afterExit` |
+| H | raw exit price; after each later session in the window, its high | Identical (`afterSession`) | `EntryMachine.afterSession` |
+| Eligibility | sessions s > s0 with s − s0 ≤ W, flat since the session start | Identical (`book.processBar` guards) | `continuationOpen`, `ShadowBook.processBar` |
+| Order per minute | exit(k), fill(k), processBar(k) | Identical: processBar of minute k runs at the next loop instant, after minute k's exit and fill and before minute k+1's | N-book engine loop; `simulateTrading` |
+| Arming | close ≤ H(1 − P) arms; arming closes the window; the arming minute never buys | Identical | `EntryMachine.processBar` |
+| Trigger and fill | close ≥ trailingLow(1 + Y); decision at the minute's end; `firstTradeAfterDecision`; carried overnight | Identical (`book.commit`) | `processBar`, `ShadowBook.commit` |
+| Armed setup | persists until it fires | Identical (also past s0+W) | — |
+| Competing entry | D1's deep arming can only start while no setup is armed, and closes the window | **Adaptation:** a taken Rise decision closes the window and **cancels** an armed setup (`cancelSetup`); a Rise decision at the same instant goes first | `continuation.ts` `beforeBaseEntry` |
+
+**Evidence.** The synthetic tests compare arming, trailing low, trigger and decision instants with D1's own
+`EntryMachine` driven directly; `continuationRealData.test.ts` compares Growth's trades and setup log with an
+independently written driver of D1's book in the N-book engine's order on VGT/GDX daily and VGT 60m (four
+configurations) — identical. Whole-strategy parity with D1 is NOT claimed: the base entry differs by design.
+
+**The other three methods** (`breakout`, `shallow_pullback`, `ma_cross`) are new rules on the run's resolution bars
+(`continuation.ts` `assessBar`), using the same book, fills and exits; they share no state with D1's machine (its
+`postExit` stays off).
+
+**OFF parity.** With continuation OFF, `exitParamsOf` returns exactly the 1.0.0 object, the book never arms, and the
+minute loop evaluates base decisions as before: `tests/offParity.test.ts` reproduces the 1.0.0 baseline captured before
+the change field for field (six real-data cases, daily and intraday); the runner-level replay reproduces the stored
+1.0.0 artifacts (`apps/strategy-lab/tests/growth-parity.test.ts`; the live run R-000017 was replayed with the same
+result on 2026-11-04).

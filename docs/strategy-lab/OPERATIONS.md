@@ -11,6 +11,10 @@ All commands run from the repository root (`/home/chad/projects/margin-trading`)
 | VPN use, permanent (systemd user service) | `npm --prefix apps/strategy-lab run service:install -- --enable` | Same as `start:vpn`; restarts on failure and starts with the user session (linger is on for `chad`) |
 | Development (hot reload) | `npm --prefix apps/strategy-lab run dev` | UI on http://127.0.0.1:5174 (Vite, proxies `/api`), API on 127.0.0.1:4317 |
 | Import a Study 8 replay | see [§Importing vg-balanced](#importing-vg-balanced) | — |
+| Import selected phenotypes | `npm --prefix apps/strategy-lab run import:phenotypes -- <export dir>` ([PHENOTYPES.md](PHENOTYPES.md)) | — |
+| Export a run's research bundle | `npm --prefix apps/strategy-lab run export -- R-000042 [--minute] [--out f.zip]` ([EXPORTS.md](EXPORTS.md)) | — |
+| Re-execute a stored Growth run and diff it | `npm --prefix apps/strategy-lab run replay -- R-000017` (read-only; scratch output) | — |
+| Audit a state directory (before/after a migration) | `npm --prefix apps/strategy-lab run audit:state -- state/strategy-lab [--json]` (read-only) | — |
 
 **Why two names work on apollo itself.** `/etc/hosts` maps `apollo` to 127.0.1.1 (the Debian/Ubuntu convention), not
 to 127.0.0.1. Whenever the server listens on 127.0.0.1, it therefore also listens on the loopback aliases that
@@ -120,6 +124,19 @@ Restore that run directory from a backup.
 Runs interrupted by a crash or a stop are marked `failed` with the reason on the next start. Start them again from
 the UI; this creates a new run.
 
+## Upgrading: migrations and the server restart
+
+A new migration is applied when the server starts (`openDb` → `migrate`, one transaction per migration; an edited
+applied migration refuses to start). Procedure, as used for migration 0002 on 2026-11-04:
+
+1. Check that no run is `queued` or `running` (`GET /api/runs`, or `audit:state`), so stopping interrupts nothing.
+2. Back up (§Backups) and audit: `npm --prefix apps/strategy-lab run audit:state -- state/strategy-lab --json > before.json`.
+3. Rehearse on a copy: copy the backup into a scratch state directory and start a scratch server on another port with
+   `STRATEGY_LAB_STATE_DIR` (or open it with `openDb`); audit it and compare with `before.json` — run and variation
+   immutable hashes, titles, bookmarks, notes, counts, foreign keys, integrity, event hashes.
+4. Stop the server, start it again the way it ran before (for example `start:vpn`), then audit the live directory the
+   same way.
+
 ## Importing vg-balanced
 
 ```sh
@@ -144,8 +161,14 @@ The strategy's own tests are part of the root `npm test` (`src/entry-signals/tes
 
 ## Limitations and known gaps
 
-- **Runnable strategies.** `rise-from-recent-low` (signal-only) and `rise-from-recent-low-trading` (trading backtest)
-  run from the UI. Imported and demo strategies are read-only.
+- **Runnable strategies.** `rise-from-recent-low` (signal-only) and **Growth** (`rise-from-recent-low-trading@1.1.0`)
+  run from the New Test form; Growth 1.0.0 is legacy (replayable, not launchable). The Study 8 shared-slot pool runs
+  only as a catalogue phenotype rerun (end date selectable, start fixed at 2016-01-04, sealed configuration and costs).
+  Imported and demo strategies are otherwise read-only.
+- **Phenotype catalogue.** Only CLI imports fill it; the repository ships a Growth *demonstration* export (not an
+  optimisation) and the sealed Study 8 `s8-vg-balanced` export. No Growth optimisation study exists yet.
+- **Minute marks** (`minute-marks.csv.gz`, Growth 1.1.0 runs only) are about 2–5 MB per symbol-decade compressed; the
+  export includes them only on request. Earlier runs have none.
 - **Exits.** The signal-only strategy has no exits: its events are entry signals, and its analysis is forward moves,
   not P&L. Its trading backtest (`rise-from-recent-low-trading`) has the D1 exits and full P&L. Its multi-symbol runs
   are independent standalone backtests, never a shared-capital pool ([GROWTH_TRADING.md](GROWTH_TRADING.md)).

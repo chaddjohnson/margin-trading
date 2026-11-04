@@ -139,4 +139,8 @@ A Claude-led study of Strategy Lab entry mechanisms, run from the CLI, should:
 - treat 2025–2026 as **exposed**.
 
 Its finished records (configurations, metrics, roles, test outcomes, record hashes) can then be imported into Strategy
-Lab as a read-only optimisation batch. The batch is displayed in the UI and never launched from it.
+Lab as a read-only optimisation batch. The batch is displayed in the UI and never launched from it. Its SELECTED
+configurations can additionally be exported as frozen phenotypes ([PHENOTYPES.md](PHENOTYPES.md)) and rerun one at a
+time. Study 8's own `s8-vg-balanced` is in the catalogue this way (exported read-only from the sealed records by
+`apps/strategy-lab/importers/export-study8-phenotypes.ts`); its reruns go through the unchanged Study 8 runner, and a
+rerun on 2025–2026 dates is an exposed exploratory replay, not another holdout.

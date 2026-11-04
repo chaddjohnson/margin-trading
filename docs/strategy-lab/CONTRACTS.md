@@ -1,7 +1,8 @@
 # Strategy Lab — data contracts
 
-Source of truth: `apps/strategy-lab/shared/contract.ts` (types), `shared/validate-events.ts` (event validation) and
-`shared/strategies.ts` (parameter schemas and run-request validation). Every strategy, importer and the UI use these.
+Source of truth: `apps/strategy-lab/shared/contract.ts` (types), `shared/validate-events.ts` (event validation),
+`shared/params.ts` (the parameter schema's logic), `shared/strategies.ts` (the registry and run-request validation) and
+`shared/phenotypes.ts` (the phenotype export contract). Every strategy, importer and the UI use these.
 
 ## Event contract, version 2
 
@@ -25,6 +26,11 @@ Source of truth: `apps/strategy-lab/shared/contract.ts` (types), `shared/validat
 | `meta` | object of scalars or `null` | Extra facts (e.g. `open: true` for a lot still open at the run's end; `synthetic`, `illustrative`) |
 
 - **Ordering:** by time, then kind (rejected, signal, exit, entry, so an exit precedes a same-minute re-entry), then id.
+- **Entry origin (Growth 1.1.0).** Growth events carry `values` `origin` (`base_growth` | `continuation`) and, for
+  continuation, `method` and `episode`; `meta.origin`/`meta.method` repeat them. A continuation trigger is an
+  `entry_signal` with id `SYM:continuation:<t>`; one suppressed by base priority is a `rejected_signal` (`meta.reasonCode
+  = base_priority`). Base event ids are unchanged (`SYM:entry_signal:<t>`, `SYM:T-n:entry|exit`). Earlier runs have no
+  origin (their only entry is the base one).
 - **Data origin** is a property of the run (`real` | `synthetic`). One run never mixes the two, and runs of different
   origins are never compared.
 - **Units of prices:** the run's currency (USD), forward split-adjusted to the run's basis date, which is the first
@@ -63,24 +69,40 @@ Source of truth: `apps/strategy-lab/shared/contract.ts` (types), `shared/validat
 }
 ```
 
-## Parameter schema
+## Parameter schema (version 2, since 2026-11-04)
 
-`StrategySpec` holds:
+One schema for every strategy (`shared/contract.ts` `ParamSchema`, logic in `shared/params.ts`). It replaced the
+version-1 `ParamSpec[]` (with `dependsOn`), and migration 0002 converted every stored strategy row; there is no second
+implementation.
 
-- `key`, `version`, `title`, `kind` (`entry_signal` | `trades`), `runnable`, `description`;
-- `params: ParamSpec[]`;
-- `resolutions` and `defaultResolution`;
-- optional `notes` (fixed execution facts shown with the form).
+`StrategySpec` = `ParamSchema` + `key`, `version`, `title`, `kind` (`entry_signal` | `trades`), `launch` (`form` = New
+Test, `phenotype` = catalogue reruns only, `none` = read-only), `runnable`, `description`, `resolutions`,
+`defaultResolution`, optional `notes`, `formerTitles` and `legacy` (`supersededBy`, `replay`).
 
-A `ParamSpec` is `{ key, label, description, type: number|integer|boolean, unit, default, min, max, step }`, plus two
-optional fields:
+`ParamSchema` = `{ schemaVersion: 2, params, groups, constraints, identity }`:
 
-- `group`: `entry`, `exit` or `execution` (a form section);
-- `dependsOn`: the key of the boolean switch that must be on for the value to apply.
+- **`params`** — each `{ key, label, description, type, unit, default, group?, activeWhen?, whenInactive?, execution? }`:
+  - `type: number | integer` with `min`, `max`, `step` and optional `search` (`min`, `max`, `step`, `scale`) for
+    optimisers; `type: boolean` (a rule switch); `type: enum` with `options` (`value`, `label`, `description`);
+  - `activeWhen`: a predicate (`{param, equals}`, `{param, in}`, `{all}`, `{any}`, `{not}`). A parameter is **active**
+    (applied) when its predicate holds **and every parameter it reads is itself active** (a chain);
+  - `whenInactive`: `disable` (shown disabled, "saved, not applied") or `hide` (not shown).
+- **`constraints`** — `requires` (`if` predicate ⇒ `then` predicate) and `less` (`a < b`, only while both are
+  active). Checked by the form and by the server (`validateParams`).
+- **`identity`** — the variation identity: `effective` = canonical JSON (sorted keys) of the **active** values plus
+  `|resolution`; `all-values` = of every stored value (frozen rule of Growth 1.0.0). For a strategy whose parameters are
+  always active both rules give the same string, so the signal-only identities are unchanged
+  (`{"advanceFromRecentLowPercent":5,"recentLowLookbackBars":20}|1d`).
 
-A `boolean` is a rule switch (`true`/`false`; min/max/step unused). The browser form is generated from the spec, and the
-server validates against the same object. Rules across parameters are checked by `crossParamErrors`; for now the only
-one is the buffer → hold dependency below.
+Validation of a request (`validateParams`): unknown keys are refused; every **active** parameter must be present and
+valid; an inactive one may be absent, but if present (a saved draft) must still be a valid value. The engine executes
+only the effective values (`effectiveParams`). The run's snapshot (`paramSnapshot`) lists every submitted value — a
+switch as ON/OFF, a choice by its label, an inactive one labelled "saved, not applied" — and the variation stores the
+effective configuration.
+
+Optimisation metadata (for future CLI optimisers; nothing in Strategy Lab searches): `searchSpaceOf(spec)` returns each
+dimension's legal domain (numeric range and step, enum values, booleans) with the predicate under which it applies, and
+the constraints; `sampleCandidate(spec, rng, base)` draws a valid effective candidate (smoke tests).
 
 `rise-from-recent-low@1.0.0`:
 
@@ -92,26 +114,28 @@ one is the buffer → hold dependency below.
 
 The rule itself is specified in `src/entry-signals/README.md`.
 
-`rise-from-recent-low-trading@1.0.0` (kind `trades`; [GROWTH_TRADING.md](GROWTH_TRADING.md)):
+**Growth** — `rise-from-recent-low-trading@1.1.0` (kind `trades`, launch `form`; [GROWTH_TRADING.md](GROWTH_TRADING.md)):
 
-| Key | Label | Type | Unit | Default | Range | Group / depends on |
+| Key | Label | Type | Unit | Default | Range | Group / applies when |
 | --- | --- | --- | --- | --- | --- | --- |
 | `advanceFromRecentLowPercent` | Advance from recent low (X) | number | percent | 5 | 0.1–100 | entry |
 | `recentLowLookbackBars` | Recent-low lookback (N) | integer | bars | 20 | 2–5000 | entry |
 | `trailingStopPercent` | Trailing stop (always on) | number | percent | 7.3 | 0.1–50 | exit |
 | `maximumHoldEnabled` | Maximum losing hold | boolean | — | true | — | exit |
-| `maximumHoldDays` | Maximum losing hold age | integer | days | 8 | 1–3650 | exit / `maximumHoldEnabled` |
-| `intradayLossBufferEnabled` | Buffered intraday-loss exit | boolean | — | true | — | exit / `maximumHoldEnabled` |
-| `intradayLossBufferPercent` | Intraday loss buffer (% of the $100,000 notional, net after interest) | number | percent | 2.9 | 0–50 | exit / `intradayLossBufferEnabled` |
+| `maximumHoldDays` | Maximum losing hold age | integer | days | 8 | 1–3650 | exit / hold ON (disabled otherwise) |
+| `intradayLossBufferEnabled` | Buffered intraday-loss exit | boolean | — | true | — | exit / hold ON (disabled otherwise) |
+| `intradayLossBufferPercent` | Intraday loss buffer (% of the $100,000 notional, net after interest) | number | percent | 2.9 | 0–50 | exit / buffer ON |
+| `continuationEnabled` … `crossMarginPercent` | the continuation entries (OFF by default; a method choice and only its inputs) | | | | | continuation — [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) §4 |
 | `costBpsPerSide` | Transaction cost per side | number | bps | 5 | 0–100 | execution |
 | *(run configuration)* `resolution` | Bar resolution | — | — | `1d` | as above | entry |
 
 - **Refused:** `intradayLossBufferEnabled: true` with `maximumHoldEnabled: false` (the buffer only exists from the
-  hold age).
-- **Saved values.** All values are saved, including those whose switch is off. The run's parameter snapshot shows each
-  switch as `ON`/`OFF` and labels an inactive value "saved, not applied (switch off)".
-- **Variation identity.** The canonical JSON of all the values, plus the resolution (for the signal-only strategy the
-  canonical string is unchanged, e.g. `{"advanceFromRecentLowPercent":5,"recentLowLookbackBars":20}|1d`).
+  hold age); with the shallow-pullback method, `pullbackMinimumPercent ≥ pullbackMaximumPercent`; a 1.1.0 request
+  without `continuationEnabled` (the switch is always active, so it is required).
+- **Growth 1.0.0** (launch `none`, identity `all-values`) keeps exactly its eight parameters above (without the
+  continuation ones). New runs of it are refused with the replay explanation; its stored runs are read as recorded.
+- **Display names are metadata.** Keys and versions never change; `strategies.title` and `former_title` hold the
+  display name and the earlier one (migration 0002 renamed `rise-from-recent-low-trading` to *Growth*).
 
 ## Manual run request (`POST /api/runs`)
 
@@ -129,8 +153,12 @@ The rule itself is specified in `src/entry-signals/README.md`.
 }
 ```
 
-A trading request has the same shape, with `"strategyKey": "rise-from-recent-low-trading"` and its eight parameters
-(numbers and the two switches as JSON booleans).
+A Growth request has the same shape, with `"strategyKey": "rise-from-recent-low-trading"`, `"strategyVersion":
+"1.1.0"` and its parameters (numbers, switches as JSON booleans, `continuationMethod` as a string; inactive ones may be
+omitted).
+
+A phenotype rerun (`POST /api/phenotypes/PH-0001/runs`, [PHENOTYPES.md](PHENOTYPES.md)) builds the same request from the
+frozen record plus `phenotypeId`, which the run records (`runs.phenotype_id`, an immutable input).
 
 **Exactly one configuration:** every parameter is a scalar, and unknown fields are rejected. This endpoint is not for
 optimisation, and Strategy Lab has no endpoint that is.
@@ -142,8 +170,11 @@ optimisation, and Strategy Lab has no endpoint that is.
 | `request.json` | The validated request plus `runId` (manual runs) |
 | `events.json` | Contract v2 events (sha256 recorded in `runs.artifact_sha256` and checked on every read) |
 | `metrics.json` | Entry-signal outcomes per symbol with an every-session baseline (`kind: entry-signal outcomes`); the imported trade summary (`kind: imported trades`); or, for a trading backtest, per symbol: signals, trades, P&L, drawdowns, exposure, holding, reconciliation checks, and `unavailable` reasons (`kind: trading backtest`) |
-| `trades.json` | Trading backtests: the trade ledger per symbol (decision, fills, exit reason, gross/costs/interest/net, holding, worst/best mark) |
+| `trades.json` | Trading backtests: the trade ledger per symbol (decision, fills, exit reason, gross/costs/interest/net, holding, worst/best mark; since 1.1.0 also `origin`, `method`, `episode`, `opensEpisode`) |
 | `daily.json` | Trading backtests: the daily marks per symbol (realized, unrealized, marked net, held at the close) |
+| `decisions.json` | Growth 1.1.0: per symbol, the continuation episodes and the chronological decision/state log ([GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) §5) |
+| `minute-marks.csv.gz` | Growth 1.1.0: gzip CSV `symbol,t_unix_utc,marked_net_usd`, one row per change of the minute-marked net (cents) |
+| `study8/`, `study8-output.json` | Shared-slot pool reruns: the unchanged Study 8 runner's output directory and the sha256 of each of its files |
 | `provenance.json` | Per symbol: the dataset window report (data file, sha256, partitions file sha256, evaluation and warm-up dates, split adjustments, access mode); the engine files' sha256; the Node version |
 | `import.json` | For imports: the source directory, source file sha256s and the verification checks |
 | `manifest.json` | sha256 of every file above |

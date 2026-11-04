@@ -330,8 +330,9 @@ A local browser workbench for strategy research. It shows saved runs in SQLite a
 on real minute data, with Eastern timestamps, bookmarks, notes and two-run comparison. It can start **one** manual test
 of an entry strategy on real data from the browser. It never optimises: sweeps and selection stay Claude/CLI
 workflows. The app is self-contained in `apps/strategy-lab/`. Its signal-only strategy lives in `src/entry-signals/`;
-the trading backtest built on it (`rise-from-recent-low-trading`: the same signals with the D1 exits, standalone per
-symbol) lives in `src/growth-trading/`.
+**Growth**, the trading backtest built on it (`rise-from-recent-low-trading`: the same signals with the D1 exits and
+optional continuation entries, standalone per symbol), lives in `src/growth-trading/`. Selected phenotypes of finished
+studies can be imported and rerun one at a time, and every run downloads as a research bundle.
 
 ```sh
 npm --prefix apps/strategy-lab start   # http://127.0.0.1:4317 (over the tailnet: see docs/strategy-lab/OPERATIONS.md)

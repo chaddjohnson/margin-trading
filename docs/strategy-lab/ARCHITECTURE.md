@@ -3,11 +3,14 @@
 Strategy Lab (`apps/strategy-lab/`) is a general-purpose strategy research workbench. In the browser you can:
 
 - inspect saved results (entries and exits, single-symbol and multi-ETF);
-- edit a strategy's parameters and start **one** manual test on real data: the signal-only entry strategy, or the
-  trading backtest built on it ([GROWTH_TRADING.md](GROWTH_TRADING.md));
+- edit a strategy's parameters and start **one** manual test on real data: the signal-only entry strategy, or
+  **Growth**, the trading backtest built on it, with optional continuation entries ([GROWTH_TRADING.md](GROWTH_TRADING.md),
+  [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md));
+- browse the frozen **phenotype catalogue** and run one selected phenotype ([PHENOTYPES.md](PHENOTYPES.md));
 - follow the run's progress;
 - bookmark and annotate runs and variations;
-- compare two runs on one symbol's chart.
+- compare two runs on one symbol's chart, with a descriptive side-by-side comparison;
+- download a run's **research bundle** ([EXPORTS.md](EXPORTS.md)).
 
 Optimisation, sweeps and selection are **not** in the browser or the API. They run as Claude/CLI research workflows
 ([RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md)), and only their finished records may be imported for display.
@@ -16,12 +19,15 @@ Optimisation, sweeps and selection are **not** in the browser or the API. They r
 browser (React + Dygraphs) ──HTTP/JSON──▶ server (Node, node:http) ──▶ SQLite (state/strategy-lab/strategy-lab.sqlite)
                                               │                    └─▶ run artifacts (state/strategy-lab/runs/R-…/)
                                               ├─ prices: canonical minute files data/<SYM>/data.csv (read-only)
-                                              └─ child process per manual run (allowlisted per strategy):
+                                              └─ child process per manual run (allowlisted per strategy key):
                                                    runner/entry-signal-run.ts   (signal-only)
-                                                   runner/trading-run.ts        (trading backtest)
+                                                   runner/trading-run.ts        (Growth; also replays legacy 1.0.0)
+                                                   runner/pool-run.ts           (shared-slot pool phenotype reruns)
                                                    └─ src/lib/evaluation.ts (dataset pipeline) + src/entry-signals/
-                                                      (+ src/growth-trading/ and the Study 8 D1 book for trading)
+                                                      (+ src/growth-trading/ and the Study 8 D1 book for Growth;
+                                                       the unchanged src/study8-runners/ for pools)
 importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 runner output + the sealed F24 record)
+importers/phenotypes.ts (CLI) ──▶ the phenotype catalogue (reads a verified phenotype export)
 ```
 
 ## Concepts and identifiers
@@ -29,10 +35,11 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
 | Concept | Meaning | Identifier |
 | --- | --- | --- |
 | **Experiment** | A research question or campaign ("Growth Entry Discovery", "Study 8 imports", "Demo (synthetic data)") | `E-0001` |
-| **Strategy** | A named algorithm at a version ("Rise from recent low" `rise-from-recent-low@1.0.0`; its trading backtest `rise-from-recent-low-trading@1.0.0`; "Study 8 D1 shared-slot pool") | `S-0001` (plus key and version) |
+| **Strategy** | A named algorithm at a version ("Rise from recent low" `rise-from-recent-low@1.0.0`; **Growth** `rise-from-recent-low-trading@1.1.0`, legacy `@1.0.0`; "Study 8 D1 shared-slot pool"). The display name is metadata (`strategies.title`, `former_title`); key and version never change | `S-0001` (plus key and version) |
 | **Variation** | One **immutable** parameter configuration of one strategy version in one experiment. Identity = strategy + experiment + canonical parameters; for runnable strategies the bar resolution is part of the configuration | `V-000001` |
 | **Run** | One execution (or import) of a variation: title, timestamps, status, symbols, window, data fingerprints, code revision, parameter snapshot, assumptions, events, metrics. Running the same variation again creates a **new run** | `R-000001` |
-| **Optimisation batch / trial** | Read-only history imported from a Claude/CLI optimisation study; never launched from Strategy Lab (schema in place, no batch imported yet) | `OB-0001` |
+| **Phenotype** | A frozen executable configuration a study selected, imported with its manifest; runnable one test at a time, never edited ([PHENOTYPES.md](PHENOTYPES.md)) | `PH-0001` (import `PI-0001`) |
+| **Optimisation batch / trial** | Read-only history imported from a Claude/CLI optimisation study (a phenotype export's optional `trials`); never launched from Strategy Lab | `OB-0001` |
 
 - **IDs are derived from the integer primary key and never change.** Titles are separate and editable.
 - **Annotations are mutable; execution facts are not.** Editable: titles, notes, bookmarks. Immutable, enforced by
@@ -45,10 +52,11 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
 
 `queued → running → completed | failed | cancelled`
 
-1. `POST /api/runs` validates the request against the strategy registry (`shared/strategies.ts`):
-   - known strategy and version;
-   - every parameter present, numeric and within its range;
-   - integers where required;
+1. `POST /api/runs` (or `POST /api/phenotypes/:id/runs`) validates the request against the strategy registry
+   (`shared/strategies.ts`, parameter schema v2 in `shared/params.ts`):
+   - a known strategy version that may be launched this way (legacy versions are refused with their replay rule);
+   - every ACTIVE parameter present and valid (type, range, integer, enum option); inactive ones optional but valid;
+   - the cross-field constraints;
    - 1–8 known symbols;
    - YYYY-MM-DD dates in order;
    - an allowed resolution;
@@ -96,11 +104,21 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
   - `optimization_batches`, `optimization_trials` (reserved for imports);
   - triggers `variations_immutable`, `variations_no_delete`, `runs_inputs_immutable`, `runs_results_immutable`,
     `runs_no_delete`.
+- **Migration 0002** (`0002_growth_schema_phenotypes.sql`, 2026-11-04; generated once by
+  `scripts/generate-migration-0002.ts`, which a test re-runs):
+  - display metadata only for existing rows: `strategies.former_title`; `rise-from-recent-low-trading@1.0.0` titled
+    **Growth**; every stored `param_schema_json` converted to the version-2 schema object; the pool row's description.
+    No run or variation column and no artifact is changed;
+  - `phenotype_imports`, `phenotypes` (immutable, never deleted), `runs.phenotype_id` (an immutable input: the
+    `runs_inputs_immutable` trigger is recreated with it).
+  - Verified on a copy of the live database before it was applied (counts, ids, immutable-column hashes, titles,
+    notes, bookmarks, foreign keys, integrity, events; `scripts/audit-state.ts`) and by `tests/migration.test.ts`.
 - **Artifacts** live in `state/strategy-lab/runs/R-xxxxxx/`. They are immutable files referenced by the run row:
   - `request.json` (manual runs);
   - `events.json` (contract v2, sorted, verified against `runs.artifact_sha256` on every read);
   - `metrics.json`, `provenance.json` (or `import.json`), `manifest.json`, `run.log`;
-  - trading backtests also: `trades.json`, `daily.json`.
+  - trading backtests also: `trades.json`, `daily.json`; Growth 1.1.0 also `decisions.json`, `minute-marks.csv.gz`;
+  - pool reruns: `study8/` (the Study 8 runner's own output) and `study8-output.json` (its file hashes).
 
   Writes are atomic: temporary file, fsync, rename, then fsync of the directory.
 - **Git:** everything under `state/` is ignored (root `.gitignore`). Migrations, code and the small demo fixture are
@@ -151,6 +169,12 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
   - **Selection.** Clicking either marker of a trade selects the trade: its row in **Trades** is highlighted and
     scrolled into view inside the list, and its details are shown beneath. Selecting the other marker of the same
     trade keeps the selection. This works for trading backtests and imported multi-ETF runs, per symbol.
+  - **Closed losses only** (since 2026-11-04, Task 10): a toggle above each Trades list keeps only CLOSED trades whose
+    recorded net after costs and interest is below zero (`isClosedLoss` in `src/trades.ts`): never an open position,
+    a breakeven, or a trade judged by its price difference. The list shows "k of n trades" and an empty state; the
+    chart keeps every marker; a chart-selected trade the filter hides is explained, with **Show all trades**.
+  - **Origin** (Growth 1.1.0): the Trades list shows whether each trade came from the base entry or a continuation
+    method.
   - **Hover link.** Hovering (or focusing) an executed entry or exit highlights both markers of its trade and draws a
     temporary connector between them.
     - The connector is dashed and translucent, green for a profit and red for a loss, under the markers, clipped to the
@@ -238,13 +262,27 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
     over the axes or at a zoom limit.
   - **Markers.** A wheel over a marker zooms as well.
 
+## Phenotypes, comparisons and exports
+
+- **Phenotype catalogue** ([PHENOTYPES.md](PHENOTYPES.md)): `importers/phenotypes.ts` (CLI) verifies a
+  `strategy-lab.phenotype-export` and promotes its selected phenotypes; `GET /api/phenotypes[/:id]` lists them with an
+  explicit capability (runnable with its runner, or view-only with the reason); `POST /api/phenotypes/:id/runs`
+  creates ONE run. A shared-slot pool phenotype runs through `runner/pool-run.ts`, which calls the unchanged Study 8
+  runner (`runFor`) — one allocator replay, never per-symbol tests.
+- **Comparison** (`server/compare.ts`, `GET /api/compare?a=&b=`): when a run B is selected under *Compare with (B)*,
+  the panel checks comparability (strategy and version, symbols, window, resolution, costs, capital model, base
+  parameters), then shows the metrics side by side with B − A, the trades identical / shifted / introduced / suppressed
+  with their origin, and the continuation window outcomes. It states that origin attribution is descriptive and B − A
+  is a path-dependent counterfactual. It never starts a run.
+- **Research bundle** ([EXPORTS.md](EXPORTS.md), `server/export.ts`, `server/zip.ts`, `GET /api/runs/:id/export`).
+
 ## Optimisation imports (design, display-only)
 
 `optimization_batches` (study reference, methodology reference, source path and sha256, summary) and
 `optimization_trials` (trial key, parameters, metrics, role, rank, and optional links to a variation and a run) hold
-**finished** results imported by a CLI. The API has only `GET /api/optimization-batches`; there is no route that
-creates, starts or schedules a search. [RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md) §4 describes the import
-procedure.
+**finished** results imported by a CLI (a phenotype export's optional `trials`). The API has only
+`GET /api/optimization-batches`; there is no route that creates, starts or schedules a search.
+[RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md) §5 describes the procedure.
 
 ## Security
 

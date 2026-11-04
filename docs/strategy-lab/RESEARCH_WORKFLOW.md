@@ -12,6 +12,7 @@ methodology ([STUDY8_METHODOLOGY.md](STUDY8_METHODOLOGY.md)).
 | Edit an entry strategy's parameters and run **one** test of **one** configuration on real data | Selection, neighbourhood robustness, role assignment, ranking |
 | Watch its progress; read its errors and log | Frozen protocols, sealed records, chronological test doors |
 | Bookmark, title and annotate runs and variations; compare two runs on one symbol | Importing the *finished* records of those studies (read-only) |
+| Run **one** selected frozen phenotype of a finished study; compare two existing runs side by side; download a research bundle | Choosing and exporting the phenotypes; any batch of runs |
 
 There is no "Optimize", "Sweep" or batch button, and no API endpoint that launches one. The tests prove both.
 
@@ -49,9 +50,10 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    apollo. For other machines on the VPN, use `npm --prefix apps/strategy-lab run start:vpn` instead; see
    [OPERATIONS.md](OPERATIONS.md).
 2. **Create a test:** click **+ New test**.
-   - Choose the strategy: *Rise from recent low (entry signal)*, which is signal-only, or *Rise from recent low
-     (trading backtest)*. The trading backtest buys on those signals and has exits and P&L
-     ([GROWTH_TRADING.md](GROWTH_TRADING.md)).
+   - Choose the strategy: *Rise from recent low (entry signal)*, which is signal-only, or **Growth**, the trading
+     backtest that buys on those signals and has exits and P&L ([GROWTH_TRADING.md](GROWTH_TRADING.md)). Growth's
+     *Continuation entries* group is OFF by default; switched ON, choose one of four methods and only its inputs
+     apply ([GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md)).
    - The trading backtest adds the exit rules (a mandatory trailing stop, plus switches for the maximum losing hold and
      the buffered intraday loss) and the cost per side.
    - The parameters show their units, ranges and defaults (X = 5%, N = 20 bars).
@@ -80,6 +82,14 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
 9. **Compare:** pick a run under **Compare with (B)**. Its events for the same symbol appear with an orange halo,
    and the event table and tooltips label them B. Marker colours mean the trade outcome for both runs: green net
    profit, red net loss, grey breakeven, blue open, purple rejected (see the legend).
+   - The **Compare** panel first says whether A and B are methodologically comparable (same strategy and version,
+     symbols, window, resolution, costs, capital model and base parameters) and lists every difference. Then: the
+     metrics side by side with B − A (net, gross, costs, interest, trades, wins/losses, worst trade, holding, exposure,
+     minute and daily drawdown), the trades matched by decision instant (identical, shifted, only in A, only in B, with
+     their origin) and the continuation windows (captured, expired with a later higher high, closed by a base entry).
+   - **Continuation ON vs OFF.** Clone the ON run, switch *Enable continuation entries* OFF (nothing else) and run it;
+     then compare. B − A is the path-dependent counterfactual of the switch; it is not the P&L of the continuation
+     trades, because the later trade sequence changes. Comparing never starts a run.
 10. **vg-balanced:** open *vg-balanced (s8-vg-balanced) — Study 8 #2 replay* (experiment *Study 8 imports*).
    - **VGT tab:** 6 entries, 6 exits and 7 rejected signals. **GDX tab:** 42 entries, 41 exits (one lot is still open
      at the end) and 7 rejected signals.
@@ -87,6 +97,13 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
      Hovering an entry or exit highlights its partner and draws a connector between them. Clicking either one selects
      the lot under **Trades** and shows its details beneath.
    - The legend toggles each category.
+11. **Closed losses only:** above the Trades list. Closed trades whose net after costs and interest is below zero;
+   open positions and breakevens are excluded; the chart is not filtered.
+12. **Phenotypes:** the header's *Phenotypes* tab ([PHENOTYPES.md](PHENOTYPES.md)). Find a phenotype, inspect its locked
+   configuration and data exposure, **Run selected phenotype…** for ONE run (an edit becomes a derived variation; a
+   shared-slot pool keeps its books and start and only takes an end date).
+13. **Export research bundle:** in a completed run's header ([EXPORTS.md](EXPORTS.md)) — a ZIP with the unmodified
+   artifacts, CSV ledgers, decision log, attribution, README and checksums, for review without the server.
 
 ## 5. Claude-led optimisation without a UI button
 
@@ -112,6 +129,18 @@ Lab:
    - optionally, for the nominated candidates, a full `import` run with entry and exit events, reconciled with the
      study's sealed record. This is how vg-balanced is imported today.
 3. Strategy Lab displays them. The browser never starts, resumes or schedules a search.
+
+**Selected phenotypes (since 2026-11-04).** A study that wants its nominations to be runnable from Strategy Lab also
+writes a `strategy-lab.phenotype-export` directory for the phenotypes it SELECTED (never every trial): effective
+parameters, execution kind, engine version, execution assumptions, the selection and test windows and the exposure,
+each record hashed, plus a manifest ([PHENOTYPES.md](PHENOTYPES.md) §2). `importers/phenotypes.ts` verifies it against
+the registry and the study's sealed records and promotes those phenotypes into the catalogue. The conditional search
+space of a strategy — which dimensions exist when, their legal domains and the constraints — comes from
+`searchSpaceOf(spec)` (`apps/strategy-lab/shared/params.ts`), so an optimiser of Growth can choose continuation OFF or
+ON and then one of the four methods without generating meaningless inactive combinations. Such a study should treat
+the method choice as a categorical dimension evaluated with its own budget, test method sensitivity separately from
+numeric neighbourhoods, and keep the Study 8 discipline (frozen protocol, training doors, neighbourhood scoring, roles,
+veto-only test doors, 2025–2026 exposed).
 
 **How vg-balanced was imported.**
 
