@@ -3,8 +3,9 @@
 **Recorded:** 2026-11-03, from the user's brief
 (`brief/2026-11-03-strategy-entry-explorer-ui-brief.md`). **Status:** research direction only.
 
-> **This document authorises nothing beyond Stage 0.** Stage 0 (the Strategy Entry Explorer with synthetic demo data)
-> is the only stage built so far. Every later stage needs a new instruction from the user and — for research stages — a
+> **This document authorises nothing beyond the stages marked done.** Stage 0 (the Strategy Entry Explorer with
+> synthetic demo data) and, on 2026-11-04, the Strategy Lab workbench with the first signal-only mechanism (see the
+> roadmap) are the stages built so far. Every later stage needs a new instruction from the user and — for research stages — a
 > study namespace under `research/<study>/` with its own frozen protocol, as every earlier study in this repository has.
 > No growth-entry mechanism has been implemented, run on market data or optimised.
 
@@ -47,7 +48,7 @@ not rediscover the same rules under new names.
 ## 3. Method (in order)
 
 1. **Interactive chart with synthetic data — Stage 0, done in this task.** The Strategy Entry Explorer
-   (`apps/strategy-entry-explorer/`, documented in [ENTRY_EXPLORER.md](ENTRY_EXPLORER.md)) shows a price series with
+   (now Strategy Lab, `apps/strategy-lab/`; the demo dataset contract is documented in [ENTRY_EXPLORER.md](ENTRY_EXPLORER.md)) shows a price series with
    the entry events of many variations, two at a time.
 2. **Standard results schema, then real data.** A strategy-agnostic, versioned dataset schema (v1) now exists.
    A later task connects real historical price series and entry-event outputs through a **read-only adapter** that
@@ -117,7 +118,8 @@ any parameter search. This document deliberately does not choose one.
 | Stage | Content | Status | Authorised |
 | --- | --- | --- | --- |
 | 0 | Strategy Entry Explorer, schema v1, synthetic demo fixture, this plan | **Done (2026-11-03), awaiting the user's review** | Yes (this task) |
-| 1 | User review of the UI; adjustments from that review | Next | Needs the user |
+| 1 | User review of the UI; adjustments from that review | Done: the user asked for Strategy Lab (2026-11-04) | Yes |
+| 1b | **Strategy Lab:** SQLite runs/variations, manual single tests on real data, first signal-only mechanism (rise from recent low, `src/entry-signals/`), vg-balanced entries/exits imported read-only; see docs/strategy-lab/ | **Done (2026-11-04), awaiting review** | Yes (brief docs/strategy-lab/brief/) |
 | 2 | Read-only real-data adapter (price series + existing D1/B5 entry events), with date-door enforcement | Future | No |
 | 3 | Growth-entry study protocol: hypotheses, criterion, horizons, baselines, splits, doors, budgets; frozen | Future | No |
 | 4 | Implement 5–10 distinct mechanisms; training-period visual and statistical evaluation, before optimisation | Future | No |
@@ -158,4 +160,4 @@ seen the outcome. In particular:
 | [ENTRY_EXPLORER.md](ENTRY_EXPLORER.md) | The explorer: data contract (schema v1), semantics, alignment, JSON example, architecture, demo generator |
 | `brief/2026-11-03-strategy-entry-explorer-ui-brief.md` | The user's brief for Stage 0, verbatim |
 | `reference/strategy-entry-explorer-mockup.png` | The design mockup supplied with the brief |
-| `../../../apps/strategy-entry-explorer/README.md` | How to run, test and extend the app |
+| `../../strategy-lab/README.md` | Strategy Lab: how to run, use, operate and extend it |

@@ -1,14 +1,21 @@
-# Strategy Entry Explorer — data contract and behaviour
+# Strategy Entry Explorer — demo dataset contract (v1) and original behaviour
+
+> **Historical (2026-11-03).** The app is now **Strategy Lab** (`apps/strategy-lab/`, docs in `docs/strategy-lab/`),
+> whose event contract is v2 ([CONTRACTS.md](../../strategy-lab/CONTRACTS.md)). This document remains the contract of
+> the synthetic demo dataset (`apps/strategy-lab/fixtures/demo-dataset.v1.json`, schema
+> `strategy-entry-explorer.dataset` v1), which Strategy Lab seeds as its "Demo (synthetic data)" experiment. Paths
+> below were updated for the move: the v1 schema and generator now live in `apps/strategy-lab/shared/demo-schema/` and
+> `shared/demo/`.
 
 The Strategy Entry Explorer is a local browser app. It draws one instrument's price series with the **entry events**
 of many strategy variations, two at a time, and keeps the date window you are looking at while you switch between
 variations. It is Stage 0 of the [growth-entry research direction](PLAN.md).
 
 **Current state:** a prototype driven by a **synthetic, fictional demo dataset**. It reads no market data, contains no
-real strategy and runs no backtest. Code, scripts and tests are in `apps/strategy-entry-explorer/` (see its README).
+real strategy and runs no backtest. Code, scripts and tests are in `apps/strategy-lab/` (see its README).
 
 ```sh
-npm --prefix apps/strategy-entry-explorer start     # from the repository root; installs on first run, opens the browser
+npm --prefix apps/strategy-lab start     # from the repository root; installs on first run, opens the browser
 ```
 
 ## 1. What the UI does
@@ -107,7 +114,7 @@ test fails when a reset is injected.
 
 ## 3. Data contract — schema version 1
 
-The TypeScript definition is `apps/strategy-entry-explorer/src/schema/types.ts`; the validator is `src/schema/validate.ts`.
+The TypeScript definition is `apps/strategy-lab/shared/demo-schema/types.ts`; the validator is `shared/demo-schema/validate.ts`.
 
 ### 3.1 Versioning
 
@@ -311,10 +318,10 @@ and for a baseline:
 With the demo fixture, these numbers describe a random walk and **say nothing about VGT or about any strategy**. The
 panel and the banner say so.
 
-## 5. Architecture
+## 5. Architecture (as built on 2026-11-03; superseded by docs/strategy-lab/ARCHITECTURE.md)
 
 ```text
-apps/strategy-entry-explorer/
+apps/strategy-entry-explorer/   (renamed apps/strategy-lab/ on 2026-11-04; this tree no longer exists)
   src/schema/      types.ts (contract v1) · validate.ts · time.ts (UTC ↔ exchange zone) · align.ts (alignment policies)
   src/data/        source.ts (DatasetSource interface, StaticJsonSource, loadDataset = fetch → validate → model)
                    model.ts (indexes, placed events)

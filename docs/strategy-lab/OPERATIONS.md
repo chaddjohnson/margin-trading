@@ -1,0 +1,153 @@
+# Strategy Lab — operations on apollo
+
+All commands run from the repository root (`/home/chad/projects/margin-trading`) with Node 24.21 (`.node-version`).
+
+## Start
+
+| Purpose | Command | Serves |
+| --- | --- | --- |
+| Local use (installs dependencies and builds the UI if needed) | `npm --prefix apps/strategy-lab start` | http://127.0.0.1:4317 (loopback only, no token) |
+| VPN use, foreground | `STRATEGY_LAB_HOSTS=127.0.0.1,tailscale npm --prefix apps/strategy-lab start` | http://127.0.0.1:4317 and http://apollo:4317 on the tailnet (token required) |
+| VPN use, permanent (systemd user service) | `npm --prefix apps/strategy-lab run service:install -- --enable` | Same as above; restarts on failure and starts with the user session (linger is on for `chad`) |
+| Development (hot reload) | `npm --prefix apps/strategy-lab run dev` | UI on http://127.0.0.1:5174 (Vite, proxies `/api`), API on 127.0.0.1:4317 |
+| Import a Study 8 replay | see [§Importing vg-balanced](#importing-vg-balanced) | — |
+
+The service unit is generated from `apps/strategy-lab/deploy/strategy-lab.service.template` with this Node binary and
+this checkout's path. Manage it with:
+
+- `systemctl --user status|restart|stop strategy-lab`;
+- `journalctl --user -u strategy-lab -f` for the logs.
+
+After changing the UI code, rebuild with `npm --prefix apps/strategy-lab run build`, then restart. The `start` script
+rebuilds automatically.
+
+## Connecting from another computer on the tailnet
+
+- **Address:** `http://apollo:4317` on MagicDNS, or `http://apollo.tail0a98ce.ts.net:4317`, or `http://100.68.60.114:4317`.
+- **Prerequisites:**
+  - both machines are logged in to the same tailnet;
+  - MagicDNS is enabled, which is needed for the short name `apollo`;
+  - the service runs with `STRATEGY_LAB_HOSTS=127.0.0.1,tailscale`.
+- **Access token.** On first non-loopback start, a random API token is created in `state/strategy-lab/api-token` (mode
+  0600).
+  - Show where it is with `npm --prefix apps/strategy-lab run token`.
+  - Print it on apollo with `npm --prefix apps/strategy-lab run token -- --print`.
+  - The browser asks for it once and keeps it in that browser's localStorage. The server remains the authority.
+- **On apollo itself,** use http://127.0.0.1:4317. The short name `apollo` resolves to 127.0.1.1 locally, which the
+  service does not bind.
+
+**Verified on apollo, 2026-11-04**, with a temporary instance on `127.0.0.1,tailscale`:
+
+| Address | Result |
+| --- | --- |
+| 127.0.0.1, 100.68.60.114, `apollo.tail0a98ce.ts.net` | health 200; API 401 without the token, 200 with it; UI 200 |
+| LAN address 192.168.18.14 | connection refused |
+| Listening sockets | exactly 127.0.0.1:4317 and 100.68.60.114:4317 |
+
+Not verified: access from a *second* tailnet device. `apollo-windows` was offline. To check from a laptop or phone on
+the tailnet, open `http://apollo:4317`, enter the token, and confirm the run list loads.
+
+## Configuration (environment variables; no secrets in the repository)
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `STRATEGY_LAB_HOSTS` | `127.0.0.1` | Comma-separated bind addresses. `tailscale` = the `tailscale0` IPv4 address. 0.0.0.0 and :: are refused |
+| `STRATEGY_LAB_PORT` | `4317` | Port |
+| `STRATEGY_LAB_STATE_DIR` | `state/strategy-lab` | Database, run artifacts, imports, token |
+| `STRATEGY_LAB_DB` | `<state>/strategy-lab.sqlite` | Database file |
+| `STRATEGY_LAB_TOKEN` / `STRATEGY_LAB_TOKEN_FILE` | `<state>/api-token` | API token (required whenever a bound host is not loopback; generated if missing) |
+| `STRATEGY_LAB_ALLOWED_CIDRS` | `127.0.0.0/8, ::1/128, 100.64.0.0/10, fd7a:115c:a1e0::/48` | Client addresses allowed (loopback and Tailscale) |
+| `STRATEGY_LAB_ALLOWED_HOSTS` | — | Extra Host-header names (localhost, 127.0.0.1, apollo, the bound IPs and `*.ts.net` are always allowed) |
+| `STRATEGY_LAB_MAX_CONCURRENT_RUNS` | `1` (max 2) | Manual runs executing at once; others wait queued |
+| `STRATEGY_LAB_RUN_TIMEOUT_SECONDS` | `1800` | A run is failed after this |
+| `STRATEGY_LAB_STATIC_DIR` | `apps/strategy-lab/dist` | The built UI; empty = API only |
+| `STRATEGY_LAB_SEED_DEMO` | `1` | Seed the synthetic demo experiment into an empty database |
+
+The service reads extra settings from `~/.config/strategy-lab/env` (outside the repository).
+
+## Security model
+
+- **Network exposure.** The service listens only on loopback and the Tailscale interface. It refuses to bind every
+  interface, so it is never on the LAN or the public Internet.
+- **Admission, before routing:**
+  - client address in the allowlist (403 otherwise);
+  - Host header in the allowlist (421 otherwise; prevents DNS rebinding);
+  - when a token is configured, `Authorization: Bearer <token>` on every `/api` request except `/api/health` (401
+    otherwise; compared in constant time).
+- **No cookies,** so cross-site requests cannot act as you (no CSRF). **No CORS headers.** The UI is served with a
+  strict Content-Security-Policy (`default-src 'self'`), `X-Frame-Options: DENY` and `nosniff`.
+- **Work launched from the browser:**
+  - only `POST /api/runs`, with exactly one validated configuration;
+  - the runner is started with an allowlisted executable and a fixed argument vector (no shell, no user text on the
+    command line, a minimal environment);
+  - bounded concurrency and a timeout.
+- **No optimisation, sweep or batch-launch endpoint exists.** The tests assert this.
+- **SQLite is only written server-side.** WAL mode; one writer process. The importer CLI uses the busy timeout when
+  the service is running.
+
+## Backups and recovery
+
+Everything stateful lives in `state/strategy-lab/` (git-ignored):
+
+- `strategy-lab.sqlite` (with `-wal` and `-shm` while running);
+- `runs/`;
+- `imports/`;
+- `api-token`.
+
+To back up while the service runs, take a consistent online copy of the database and copy the files:
+
+```sh
+mkdir -p ~/backups/strategy-lab
+sqlite3 state/strategy-lab/strategy-lab.sqlite ".backup '$HOME/backups/strategy-lab/strategy-lab-$(date -u +%Y%m%dT%H%M%SZ).sqlite'"
+rsync -a state/strategy-lab/runs state/strategy-lab/imports ~/backups/strategy-lab/
+```
+
+Without the sqlite3 CLI, stop the service and copy `state/strategy-lab/` whole.
+
+To restore, stop the service, put the database and `runs/` back, and start the service. Migrations are applied on
+start, and an altered migration file is refused.
+
+If an `events.json` no longer matches its recorded sha256, the API reports an error instead of serving altered data.
+Restore that run directory from a backup.
+
+Runs interrupted by a crash or a stop are marked `failed` with the reason on the next start. Start them again from
+the UI; this creates a new run.
+
+## Importing vg-balanced
+
+```sh
+# 1. Reproduce the Study 8 #2 run with the existing runner (≈7 s; reconciles trade by trade with the sealed record):
+npm run study8-run -- run s8-vg-balanced --end 2026-10-29 --out state/strategy-lab/imports/study8/$(date -u +%Y%m%dT%H%M%SZ)-s8-vg-balanced --quiet
+# 2. Import it (refuses unless every verification passes; refuses duplicates):
+npm --prefix apps/strategy-lab run import:study8 -- state/strategy-lab/imports/study8/<that directory>
+```
+
+[RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md) §3 describes the source and verification.
+
+## Tests
+
+From `apps/strategy-lab/`:
+
+- `npm run check` runs typecheck, lint, Vitest and the Playwright acceptance suite.
+- `npm test` runs Vitest only. Its real-data cases are skipped without `data/`.
+- `npm run test:e2e` builds, then runs the browser tests against a fresh temporary state on port 5299, using the
+  system Chrome.
+
+The strategy's own tests are part of the root `npm test` (`src/entry-signals/tests/`).
+
+## Limitations and known gaps
+
+- **Runnable strategies.** Only `rise-from-recent-low` runs from the UI. Imported and demo strategies are read-only.
+- **Exits.** Exits for the new strategy are deliberately not implemented. Its events are entry signals, and the
+  analysis is forward moves, not P&L.
+- **Optimisation batches.** The schema exists, but no batch is imported yet and there is no import CLI for one yet.
+- **Chart observations.** A saved chart observation (symbol, run, window, note) is not implemented. Use run and
+  variation notes, and record the window in the note.
+- **Intraday signals.** The forward outcomes of intraday signals start at the next session; the rest of the signal's
+  session is not included.
+- **Calendar.** The shared NYSE calendar (`src/lib/calendar.ts`) ends on 2026-12-31. Runs past it fail with a clear
+  error until it is extended.
+- **First load.** The first chart of a symbol loads its whole minute file into memory, which takes a few seconds for
+  the largest files. It is cached afterwards.
+- **Dense charts.** At full zoom, neighbouring markers overlap. The tooltip lists every marker under the pointer;
+  zoom in to separate them.
