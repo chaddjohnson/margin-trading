@@ -71,8 +71,9 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    shows the latest note's excerpt.
 7. **Symbols:** a multi-symbol run has one tab per symbol. Each tab shows only that symbol's price and events (the
    chart, tooltips, table and analysis). Switching symbols clears the selected event and keeps the zoom when it fits.
-8. **Measure:** drag across the chart to see the price change between two points (Eastern times, $ and %; green up,
-   red down), from the earlier point to the later one, whichever way you drag. Escape or a click clears it. Zoom with
+8. **Measure:** hold the mouse button and drag across the chart to see the price change between two points (Eastern
+   times, $ and %; green up, red down), from the earlier point to the later one, whichever way you drag. It is shown
+   only while the button is held: releasing it (anywhere) or pressing Escape clears it. Zoom with
    the trackpad or mouse wheel around the cursor (a two-finger swipe up zooms in, down zooms out), the buttons or the
    overview; dragging never zooms.
 9. **Compare:** pick a run under **Compare with (B)**. Its events for the same symbol appear in orange; run A's are in

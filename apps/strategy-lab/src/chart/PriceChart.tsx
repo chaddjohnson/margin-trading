@@ -93,7 +93,6 @@ export function PriceChart(props: Props) {
   const lineBRef = useRef<HTMLDivElement>(null);
   const dotARef = useRef<HTMLDivElement>(null);
   const dotBRef = useRef<HTMLDivElement>(null);
-  const clearMeasureRef = useRef<() => void>(() => {});
   const [measurement, setMeasurement] = useState<Measurement | null>(null);
 
   useEffect(() => {
@@ -230,15 +229,18 @@ export function PriceChart(props: Props) {
     let lastKey = '';
     const overviewSpan = overview.length ? overview.at(-1)![0] - overview[0]![0] : 0;
 
-    // Measurement updates: the overlay immediately, the read-out once per animation frame (live while dragging).
+    // Measurement updates: the overlay immediately, the read-out once per animation frame while dragging. Clearing
+    // is synchronous for both (and drops a pending frame), so nothing of a measurement outlives the release.
     let measureFrame = 0;
     const setMeasure = (m: { a: MeasurePoint; b: MeasurePoint } | null) => {
       measureRef.current = m;
       placeMeasure();
       cancelAnimationFrame(measureFrame);
-      measureFrame = requestAnimationFrame(() => setMeasurement(m ? measure(m.a, m.b) : null));
+      if (m) measureFrame = requestAnimationFrame(() => setMeasurement(measure(m.a, m.b)));
+      else setMeasurement(null);
     };
-    clearMeasureRef.current = () => setMeasure(null);
+    // The gesture in progress (measure or pan): ending it removes its listeners and runs its end handler once.
+    let endGesture: (() => void) | null = null;
     // Snap to the closest PLOTTED point: its time and its own price (never an interpolated screen position).
     const snap = (e: MouseEvent, g: Dygraph): MeasurePoint | null => {
       const [x] = g.eventToDomCoords(e);
@@ -249,21 +251,41 @@ export function PriceChart(props: Props) {
       const price = g.getValue(row, 1);
       return t === null || price === null ? null : { t, price };
     };
-    // Click-drag measures (no zoom, no pan); shift/alt-drag pans; double-click resets the zoom; touch keeps the
-    // Dygraphs defaults. Zoom is otherwise available through the zoom buttons and the range selector.
+    // Primary-button drag measures (no zoom, no pan) and the measurement exists ONLY while the button is held: the
+    // release — on the chart or anywhere else — clears it, and so does every cancellation (Escape, the window losing
+    // focus, a context menu, a move that reports the button no longer held because the release was missed, or the
+    // chart unmounting). Shift/alt-drag pans; double-click resets the zoom; touch keeps the Dygraphs defaults. Zoom is
+    // otherwise available through the wheel, the zoom buttons and the range selector.
     const interactionModel = {
       mousedown: (event: MouseEvent, g: Dygraph, context: DragContext) => {
-        if (event.button === 2) return;
+        if (event.button !== 0) return;
+        endGesture?.(); // a gesture whose release was never seen ends before a new one starts
         context.initializeMouseDown(event, g, context);
         const listen = (move: (e: MouseEvent) => void, up: (e: MouseEvent) => void) => {
-          const onUp = (e: MouseEvent) => {
-            document.removeEventListener('mousemove', move);
+          let last = event;
+          const finish = () => {
+            document.removeEventListener('mousemove', onMove);
             document.removeEventListener('mouseup', onUp);
-            up(e);
+            document.removeEventListener('contextmenu', finish);
+            window.removeEventListener('blur', finish);
+            endGesture = null;
+            up(last);
             context.destroy();
           };
-          document.addEventListener('mousemove', move);
+          const onMove = (e: MouseEvent) => {
+            last = e;
+            if ((e.buttons & 1) === 0) finish();
+            else move(e);
+          };
+          const onUp = (e: MouseEvent) => {
+            last = e;
+            finish();
+          };
+          document.addEventListener('mousemove', onMove);
           document.addEventListener('mouseup', onUp);
+          document.addEventListener('contextmenu', finish);
+          window.addEventListener('blur', finish);
+          endGesture = finish;
         };
         if (event.shiftKey || event.altKey) {
           D.startPan(event, g, context);
@@ -283,9 +305,7 @@ export function PriceChart(props: Props) {
             const end = snap(e, g);
             if (end) setMeasure({ a: start, b: end });
           },
-          () => {
-            if (!moved) setMeasure(null); // a plain click on the chart clears the measurement
-          }
+          () => setMeasure(null) // released or cancelled: the whole measurement goes
         );
       },
       willDestroyContextMyself: true,
@@ -314,14 +334,11 @@ export function PriceChart(props: Props) {
       touchmove: D.defaultInteractionModel.touchmove,
       touchend: D.defaultInteractionModel.touchend
     };
+    // Escape cancels a drag in progress (later moves of the same press no longer measure).
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && measureRef.current) setMeasure(null);
-    };
-    const onDocDown = (e: MouseEvent) => {
-      if (measureRef.current && !frame.contains(e.target as Node)) setMeasure(null);
+      if (e.key === 'Escape') endGesture?.();
     };
     window.addEventListener('keydown', onKey);
-    document.addEventListener('mousedown', onDocDown);
     // Markers sit above the canvas: a wheel over one zooms like a wheel over the chart.
     const layer = layerRef.current;
     const onLayerWheel = (e: WheelEvent) => {
@@ -447,10 +464,10 @@ export function PriceChart(props: Props) {
       clearTimeout(detailTimer);
       detailAbort?.abort();
       ro.disconnect();
+      endGesture?.();
       cancelAnimationFrame(measureFrame);
       window.removeEventListener('keydown', onKey);
       layer?.removeEventListener('wheel', onLayerWheel);
-      document.removeEventListener('mousedown', onDocDown);
       g.destroy();
       graphRef.current = null;
       for (const b of markerMap.values()) b.remove();
@@ -526,12 +543,13 @@ export function PriceChart(props: Props) {
             <b className="measure-percent" data-testid="measure-percent">
               {formatPercentChange(measurement.percent)}
             </b>
-            <button type="button" className="link small" onClick={() => clearMeasureRef.current()}>
-              clear (Esc)
-            </button>
+            <span className="muted small">release to clear · Esc cancels</span>
           </>
         ) : (
-          <span className="muted small">Drag across the chart to measure a price change (earlier → later point).</span>
+          <span className="muted small">
+            Hold the mouse button and drag across the chart to measure a price change (earlier → later point); it clears
+            when you release.
+          </span>
         )}
       </div>
       <div ref={hostRef} className="chart-host" />

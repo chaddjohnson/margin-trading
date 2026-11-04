@@ -138,15 +138,14 @@ test('after wheel zoom, drag still measures without zooming, and zoom buttons, o
   await page.mouse.move(a.x, a.y);
   await page.mouse.down();
   await page.mouse.move(b.x, b.y, { steps: 6 });
-  await page.mouse.up();
   await expect(page.getByTestId('measure-percent')).toBeVisible();
   expect(await view(page)).toEqual(zoomed);
-  // A wheel while a measurement is shown zooms (around the cursor) and keeps the measurement read-out.
-  await page.mouse.move(p.x, p.y);
+  // A wheel while the button is still held zooms (around the cursor) and keeps the live measurement.
   await page.mouse.wheel(0, SWIPE_UP);
   await expect.poll(() => spanOf(page)).toBeLessThan(zoomed[1] - zoomed[0]);
   await expect(page.getByTestId('measure-percent')).toBeVisible();
-  await page.keyboard.press('Escape');
+  await page.mouse.up(); // the release clears it
+  await expect(page.getByTestId('measure-percent')).toHaveCount(0);
   await page.getByRole('button', { name: '1M', exact: true }).click();
   await expect.poll(() => spanOf(page)).toBeLessThan(40 * DAY);
   await page.getByTestId('zoom-all').click();

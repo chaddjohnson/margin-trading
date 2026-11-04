@@ -149,14 +149,18 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
 - **Changing symbol or run** keeps the zoom when it still fits the new data (otherwise it shows everything) and clears
   the selected event.
 - **Drag to measure** (a custom Dygraphs `interactionModel`; `src/chart/measure.ts`):
-  - **Gesture.** Click-dragging never zooms or pans. It selects two points, each snapped with `findClosestRow` to
-    the closest plotted data point and that point's own price.
+  - **Gesture.** Dragging with the primary button held never zooms or pans. It selects two points, each snapped with
+    `findClosestRow` to the closest plotted data point and that point's own price.
   - **Display.** Two vertical lines, two dots on the line and translucent shading between them. Above the chart:
     the Eastern start and end times, the dollar change and the percentage change (green up, red down), updated live
     while dragging.
   - **Direction.** The result is always computed from the earlier to the later point, whichever way you drag.
-  - **Clearing.** The measurement stays after release; a plain click on the chart, a click elsewhere, Escape, or a
-    symbol or run change clears it.
+  - **Lifetime.** The measurement exists **only while the mouse button is held** (since 2026-11-04, Task 6).
+    - Releasing the button, on the chart or anywhere else, clears all of it at once: the shading, both lines, both
+      dots and the read-out. The read-out is cleared synchronously, not one frame later.
+    - A cancelled drag clears it the same way: Escape, the window losing focus, a context menu, a move reporting the
+      button no longer held (a missed release), or the chart unmounting (a symbol or run change).
+    - A plain click shows nothing.
   - **Navigation.** Shift-drag pans and double-click resets the zoom; zooming otherwise uses the buttons, the range
     selector and the mouse wheel.
 - **Mouse-wheel zoom** (`src/chart/wheelZoom.ts`, a `wheel` handler in the same interaction model):

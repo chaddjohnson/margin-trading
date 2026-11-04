@@ -206,3 +206,27 @@
   defaults: 116 raw signals, 52 trades (51 closed, 1 open), realized −$3,270.17, unrealized +$12,987.72, total
   +$9,717.54, minute DD $73,618 (73.6%). X 6%: 109 / 54 (53 + 1 open), realized +$549.69, total +$13,537.41.
 - Not verified manually: a physical trackpad or mouse (automated Chrome wheel events only); Safari/Firefox.
+
+## Task 6 — COMPLETE (2026-11-04): the measurement exists only while the mouse button is held
+
+- **Brief (user message):**
+  - drag-to-measure shows the lines, dots, shading, dates and $/% change only while the button is held, updating
+    live;
+  - releasing clears all of it immediately;
+  - so does a cancelled drag or a release outside the chart;
+  - cursor-centred zoom, the crosshair, markers and Shift+drag panning are preserved;
+  - tests; commit + push to `feature/strategy-entry-explorer-ui`; no merge.
+- **Baseline:** HEAD `b5cde1a` (= origin), clean tree.
+- **Change:** `src/chart/PriceChart.tsx`.
+  - Every end of the gesture runs one `finish()`: `mouseup` on the document (on or off the chart), Escape, window
+    `blur`, `contextmenu`, a `mousemove` with `(buttons & 1) === 0` (a missed release), or unmount.
+  - `setMeasure(null)` clears the overlay and the read-out synchronously.
+  - Only the primary button starts a gesture. The "clear (Esc)" button and the click-elsewhere listener were removed
+    (nothing persists).
+- **Tests:** `e2e/measure.spec.ts` was rewritten (3 tests).
+  - It checks live updates while held, the instant full clearing on release, release off the chart, Escape mid-drag
+    (later moves do not restore it), blur, a missed release, a plain click, Shift-drag panning, zoom buttons, markers
+    and the crosshair.
+  - `e2e/wheel.spec.ts` now wheels while the button is held.
+  - Negative control: keeping the measurement after release fails all 3 measure tests.
+- **Docs:** ARCHITECTURE (Lifetime), RESEARCH_WORKFLOW §4.8.
