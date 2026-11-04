@@ -37,10 +37,18 @@ export interface Trade {
   heldDays: number | null; // calendar days from the entry fill to the exit fill (closed trades only)
 }
 
-export type Tone = 'profit' | 'loss' | 'flat' | 'unknown';
+export type Tone = 'profit' | 'loss' | 'flat' | 'open' | 'unknown';
 
-export const toneOf = (t: Pick<Trade, 'pnl'> | null): Tone =>
-  !t?.pnl ? 'unknown' : t.pnl.netUsd > 0 ? 'profit' : t.pnl.netUsd < 0 ? 'loss' : 'flat';
+/**
+ * A trade's outcome tone (marker colours, connector, P&L text): the sign of the RECORDED net P&L after costs and
+ * interest of a closed trade; `open` for a position still open, whatever its unrealized P&L; `unknown` without one.
+ */
+export const toneOf = (t: Pick<Trade, 'status' | 'pnl'> | null): Tone => {
+  if (!t) return 'unknown';
+  if (t.status === 'open') return 'open';
+  if (t.status !== 'closed' || !t.pnl || t.pnl.unrealized) return 'unknown';
+  return t.pnl.netUsd > 0 ? 'profit' : t.pnl.netUsd < 0 ? 'loss' : 'flat';
+};
 
 const num = (e: LabEvent | null | undefined, key: string): number | null => {
   const v = e?.values.find((x) => x.key === key)?.value;

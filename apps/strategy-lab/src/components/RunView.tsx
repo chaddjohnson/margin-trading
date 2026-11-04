@@ -21,6 +21,7 @@ import { AnalysisPanel, EventDetail, Glyph, ParametersPanel } from './Panels.tsx
 import { TradeDetail, TradeTable } from './Trading.tsx';
 import type { ChartLink, Placement } from '../chart/link.ts';
 import { buildTrades, toneOf, type Trade } from '../trades.ts';
+import { legendToneOf, markerToneOf, TONE_COLOR, TONE_LABEL } from '../chart/markers.ts';
 import { RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING } from '../../shared/strategies.ts';
 
 type Detail = RunDetail & { request: LabRunRequest | null };
@@ -126,8 +127,22 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
       r.symbols.includes(symbol)
   );
 
+  // Trades per run, from ALL of this symbol's events (pairing never depends on which kinds the legend shows): an entry
+  // and its exit are linked only through their recorded tradeId and mutual linkedEventId, never by time or price.
+  const tradesA = useMemo(
+    () => buildTrades(eventsA?.events ?? [], symbol ?? '', 'A', eventsA?.runId ?? '', run?.metrics),
+    [eventsA, symbol, run?.metrics]
+  );
+  const tradesB = useMemo(
+    () =>
+      eventsB && runB && !compareProblem
+        ? buildTrades(eventsB.events, symbol ?? '', 'B', eventsB.runId, runB.metrics)
+        : new Map<string, Trade>(),
+    [eventsB, runB, symbol, compareProblem]
+  );
   // Chart events: ONLY the current symbol (the server filters too; this is the second guard), honouring the kinds.
   const chartEvents = useMemo((): ChartEvent[] => {
+    // Each marker's tone: its trade's outcome from the recorded net P&L (executed entries/exits), or its kind's colour.
     const make = (role: Role, r: EventsResponse | null) =>
       (r?.events ?? [])
         .filter((e) => e.symbol === symbol && kinds.has(e.kind))
@@ -136,10 +151,14 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
           role,
           runId: r!.runId,
           event,
-          y: r!.display[event.id] ?? event.price
+          y: r!.display[event.id] ?? event.price,
+          tone: markerToneOf(
+            event.kind,
+            event.tradeId ? ((role === 'A' ? tradesA : tradesB).get(event.tradeId) ?? null) : null
+          )
         }));
     return [...make('A', eventsA), ...make('B', compareProblem ? null : eventsB)];
-  }, [eventsA, eventsB, symbol, kinds, compareProblem]);
+  }, [eventsA, eventsB, symbol, kinds, compareProblem, tradesA, tradesB]);
 
   const byKey = useMemo(() => new Map(chartEvents.map((c) => [c.key, c])), [chartEvents]);
   // A selection whose event is filtered out or gone reads as no selection.
@@ -160,19 +179,6 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
     [byKey, setSelectedKey]
   );
 
-  // Trades per run, from ALL of this symbol's events (pairing never depends on which kinds the legend shows): an entry
-  // and its exit are linked only through their recorded tradeId and mutual linkedEventId, never by time or price.
-  const tradesA = useMemo(
-    () => buildTrades(eventsA?.events ?? [], symbol ?? '', 'A', eventsA?.runId ?? '', run?.metrics),
-    [eventsA, symbol, run?.metrics]
-  );
-  const tradesB = useMemo(
-    () =>
-      eventsB && runB && !compareProblem
-        ? buildTrades(eventsB.events, symbol ?? '', 'B', eventsB.runId, runB.metrics)
-        : new Map<string, Trade>(),
-    [eventsB, runB, symbol, compareProblem]
-  );
   const tradeOf = useCallback(
     (c: ChartEvent): Trade | null =>
       c.event.tradeId && c.event.symbol === symbol
@@ -411,17 +417,37 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
                 }
                 data-testid={`kind-${k}`}
               />
-              <Glyph kind={k} role="A" /> {EVENT_KIND_LABEL[k]} <b data-testid={`count-A-${k}`}>{countsA[k] ?? 0}</b>
+              <Glyph kind={k} role="A" tone={legendToneOf(k)} /> {EVENT_KIND_LABEL[k]}{' '}
+              <b data-testid={`count-A-${k}`}>{countsA[k] ?? 0}</b>
               {runB && !compareProblem && (
                 <>
                   {' '}
-                  · <Glyph kind={k} role="B" /> <b data-testid={`count-B-${k}`}>{countsB[k] ?? 0}</b>
+                  · <Glyph kind={k} role="B" tone={legendToneOf(k)} />{' '}
+                  <b data-testid={`count-B-${k}`}>{countsB[k] ?? 0}</b>
                 </>
               )}
             </label>
           ))}
           {run.status === 'completed' && kindsPresent.length === 0 && (
             <span className="muted small">No events for {symbol}.</span>
+          )}
+          {(countsA.executed_entry ?? 0) + (countsB.executed_entry ?? 0) > 0 && (
+            <span className="legend-tones small" data-testid="legend-tones">
+              Trade colours (net P&amp;L after costs and interest, both markers alike):
+              {(['profit', 'loss', 'flat', 'open', 'unknown'] as const)
+                .filter((t) => t !== 'unknown' || chartEvents.some((c) => c.tone === 'unknown'))
+                .map((t) => (
+                  <span key={t} className="legend-tone" data-tone={t}>
+                    <span className="tone-swatch" style={{ background: TONE_COLOR[t] }} aria-hidden="true" />{' '}
+                    {TONE_LABEL[t]}
+                  </span>
+                ))}
+              {runB && !compareProblem && (
+                <span className="legend-tone">
+                  <span className="tone-swatch tone-swatch-b" aria-hidden="true" /> run B (orange halo)
+                </span>
+              )}
+            </span>
           )}
           {trading && (
             <span className="muted small legend-note" data-testid="legend-trading-note">
@@ -547,6 +573,7 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
           event={selected?.event ?? null}
           role={selected?.role ?? null}
           runId={selected?.runId ?? null}
+          tone={selected?.tone ?? null}
           markerPrice={selected && selected.event.price === null ? selected.y : null}
           onSelect={(id) => {
             const key = `${selected?.role ?? 'A'}:${id}`;

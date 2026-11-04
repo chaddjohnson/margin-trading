@@ -127,6 +127,20 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
   - **Pairing.** Executed entries and exits are paired only through the recorded `tradeId` and a mutual
     `linkedEventId`, within one symbol, never by time or price. Inconsistent records (duplicates, one-way or crossed
     links) are shown as "not linked".
+  - **Marker colours** (`src/chart/markers.ts`, since 2026-11-04, Task 9). Shapes are unchanged: ▲ entry, ▼ exit,
+    ⊘ rejected, a hollow ▲ for a raw signal. The colour is the outcome:
+    - both markers of a trade are **green** for a net profit, **red** for a net loss and **grey** for exactly $0. The
+      outcome is the trade's RECORDED net P&L after costs and margin interest, never the price difference;
+    - an executed entry of a position still **open** is **sky blue**, whatever its unrealized P&L (its P&L text is the
+      same neutral blue);
+    - an executed event without a recorded trade P&L is **amber** (e.g. the synthetic demo's illustrative entries), so
+      it is never mistaken for breakeven;
+    - every **rejected signal** is **purple**, whatever the reason, and a **raw entry signal** is a hollow light
+      outline.
+    - The legend shows the executed kinds by shape and an outcome colour key. The hover highlight, the connector, the
+      tooltip glyphs, the P&L text and the event table use the same colours.
+    - Comparing runs: run B's markers keep the outcome colours and get an orange halo. Before this change, the colour
+      was the run role (A aqua, B orange).
   - **Trade P&L in tooltips.** Both markers of a trade show the same trade-level net P&L, after costs and margin
     interest, in $ and % (green profit, red loss):
     - a closed trade: the exit's recorded `net`; the % is `netReturn`, else net ÷ the recorded principal;

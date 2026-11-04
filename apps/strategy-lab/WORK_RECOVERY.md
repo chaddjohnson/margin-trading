@@ -294,3 +294,25 @@
     - pid 2772895 is a stray smoke server from an EARLIER Claude session (127.0.0.1:4391, scratch state of session
       `bbd6d528…`), running since 12:14Z. Task 5's 16:04Z check missed it (wrong ports in the grep; no
       "strategy-lab" in its command line). Left running; the user is asked.
+
+## Task 9 — COMPLETE (2026-11-04): trade marker colours
+
+- **Brief:** `~/.claude/uploads/…/362d372b-Claude_Strategy_Lab_Trade_Marker_Colours.md` (36 lines, read in full).
+  - Both markers of a trade: green net profit, red net loss, grey breakeven, by the recorded net after costs and
+    interest. Open positions blue, not classified by unrealized P&L. Rejected signals purple. Raw signals distinct.
+  - The same colours in the legend, hover highlights and connectors. Shapes kept. Standalone and imported runs alike.
+  - No change to results or artifacts. Tests; commit + push, no merge.
+- **Baseline:** HEAD `36cb82f` (= origin), clean tree.
+- **Change:**
+  - `src/chart/markers.ts`: `MarkerTone`, `TONE_COLOR`, `markerToneOf`, glyphs by tone; run B gets an orange halo.
+  - `src/trades.ts`: `toneOf` returns `open` for open positions.
+  - The chart events carry `tone`; `Glyph` takes a tone everywhere (chart, legend, table, tooltip, detail).
+  - The legend has an outcome key. CSS tones apply to the highlight outline, connector, P&L text and summary border.
+  - Test-only: `e2e/trade-colour-fixture.ts` seeds a synthetic run into the e2e server's TEMPORARY state. It has
+    profit, loss, an exactly $0 breakeven, a loss whose exit price is above its entry, an open position, rejected
+    signals and a raw signal. `e2e/helpers.ts` holds shared helpers.
+- **Tests:**
+  - `tests/markers.test.ts` (10) and `e2e/markers.spec.ts` (4): the fixture, the real VGT 2023 run, run-B comparison
+    and vg-balanced per symbol.
+  - Negative control: colouring open positions by unrealized P&L fails all 4 browser tests and 1 unit test.
+- **Docs:** ARCHITECTURE ("Marker colours"), RESEARCH_WORKFLOW §4.9.

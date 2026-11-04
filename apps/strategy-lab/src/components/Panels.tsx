@@ -3,7 +3,7 @@
 import type { LabEvent, LabValue, RunDetail } from '../../shared/contract.ts';
 import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
 import { RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING } from '../../shared/strategies.ts';
-import { glyphUri, type Role } from '../chart/markers.ts';
+import { glyphUri, type MarkerTone, type Role } from '../chart/markers.ts';
 import {
   formatEt,
   formatPercent,
@@ -140,14 +140,15 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
   );
 }
 
-export function Glyph({ kind, role }: { kind: LabEvent['kind']; role: Role }) {
-  return <img className="glyph" src={glyphUri(kind, role, 13)} alt="" width={13} height={13} />;
+export function Glyph({ kind, role, tone }: { kind: LabEvent['kind']; role: Role; tone: MarkerTone }) {
+  return <img className="glyph" src={glyphUri(kind, role, tone, 13)} alt="" width={13} height={13} data-tone={tone} />;
 }
 
 export function EventDetail({
   event,
   role,
   runId,
+  tone,
   markerPrice,
   onSelect,
   onZoom
@@ -155,6 +156,7 @@ export function EventDetail({
   event: LabEvent | null;
   role: Role | null;
   runId: string | null;
+  tone: MarkerTone | null;
   markerPrice: number | null;
   onSelect: (id: string) => void;
   onZoom: () => void;
@@ -171,7 +173,8 @@ export function EventDetail({
     <section className="card detail" aria-label="Selected event" data-testid="event-detail" data-event-id={event.id}>
       <div className="card-head">
         <h3>
-          <Glyph kind={event.kind} role={role} /> {EVENT_KIND_LABEL[event.kind]} · {event.symbol}
+          <Glyph kind={event.kind} role={role} tone={tone ?? 'unknown'} /> {EVENT_KIND_LABEL[event.kind]} ·{' '}
+          {event.symbol}
         </h3>
         <button type="button" className="btn-chip" onClick={onZoom}>
           Zoom here

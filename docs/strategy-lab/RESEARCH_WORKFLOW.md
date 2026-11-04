@@ -77,8 +77,9 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    the trackpad or mouse wheel around the cursor (a two-finger swipe up zooms in, down zooms out), the buttons or the
    overview; dragging never zooms. Hold ⌘ (macOS) or Ctrl (Windows, Linux), or Shift, while dragging to pan instead:
    dragging left shows later times, and the zoom level stays the same.
-9. **Compare:** pick a run under **Compare with (B)**. Its events for the same symbol appear in orange; run A's are in
-   aqua.
+9. **Compare:** pick a run under **Compare with (B)**. Its events for the same symbol appear with an orange halo,
+   and the event table and tooltips label them B. Marker colours mean the trade outcome for both runs: green net
+   profit, red net loss, grey breakeven, blue open, purple rejected (see the legend).
 10. **vg-balanced:** open *vg-balanced (s8-vg-balanced) — Study 8 #2 replay* (experiment *Study 8 imports*).
    - **VGT tab:** 6 entries, 6 exits and 7 rejected signals. **GDX tab:** 42 entries, 41 exits (one lot is still open
      at the end) and 7 rejected signals.

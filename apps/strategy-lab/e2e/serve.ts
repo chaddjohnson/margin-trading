@@ -1,5 +1,6 @@
-// The e2e server: a fresh state directory (temporary), the synthetic demo seeded, the latest local Study 8 vg-balanced
-// runner output imported (when present), then the real server on port 5299 serving the built UI.
+// The e2e server: a fresh state directory (temporary), the synthetic demo and the synthetic trade-colour fixture
+// seeded, the latest local Study 8 vg-balanced runner output imported (when present), then the real server on port
+// 5299 serving the built UI.
 import { existsSync, mkdtempSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -10,6 +11,7 @@ import { openDb } from '../server/db.ts';
 import { start } from '../server/main.ts';
 import { Repo } from '../server/repo.ts';
 import { seedDemo } from '../server/seed-demo.ts';
+import { seedTradeColourFixture } from './trade-colour-fixture.ts';
 
 const env = {
   ...process.env,
@@ -20,6 +22,7 @@ const cfg = loadConfig(env);
 const db = openDb(cfg.dbFile);
 const repo = new Repo(db);
 seedDemo(repo, cfg);
+seedTradeColourFixture(repo, cfg); // test-only synthetic trades (incl. an exactly breakeven one), temporary state only
 const dir = join(REPO_ROOT, 'state/strategy-lab/imports/study8');
 const latest = existsSync(dir)
   ? readdirSync(dir)

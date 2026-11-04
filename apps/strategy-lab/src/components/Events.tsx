@@ -149,7 +149,7 @@ export function EventTable({
                   <span className="mono small">{r.runId}</span>
                 </td>
                 <td className="nowrap">
-                  <Glyph kind={r.event.kind} role={r.role} /> {EVENT_KIND_LABEL[r.event.kind]}
+                  <Glyph kind={r.event.kind} role={r.role} tone={r.tone} /> {EVENT_KIND_LABEL[r.event.kind]}
                 </td>
                 <td className="mono nowrap">{formatEt(r.event.t, r.event.timePrecision)}</td>
                 <td className="mono num">
@@ -273,7 +273,7 @@ export function MarkerTooltip({
       {shown.map((c, i) => (
         <div key={c.key} className="tt-item" data-symbol={c.event.symbol} data-key={c.key}>
           <div className="tt-head">
-            <Glyph kind={c.event.kind} role={c.role} /> <b>{EVENT_KIND_LABEL[c.event.kind]}</b>
+            <Glyph kind={c.event.kind} role={c.role} tone={c.tone} /> <b>{EVENT_KIND_LABEL[c.event.kind]}</b>
             <span className="muted">
               {c.event.symbol} · {c.role} {c.runId}
             </span>

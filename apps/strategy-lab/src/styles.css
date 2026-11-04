@@ -1475,6 +1475,8 @@ svg.trade-link line {
   opacity: 0.9;
 }
 
+/* Trade tones — the same colours as the markers (src/chart/markers.ts TONE_COLOR): green net profit, red net loss,
+   grey breakeven, sky blue open (never judged on unrealized P&L), amber P&L not recorded. */
 svg.trade-link.tone-profit line {
   stroke: #4cc38a;
 }
@@ -1483,14 +1485,86 @@ svg.trade-link.tone-loss line {
   stroke: #f07070;
 }
 
+svg.trade-link.tone-flat line {
+  stroke: #94a3b8;
+}
+
+svg.trade-link.tone-unknown line {
+  stroke: #e9b44c;
+}
+
 .pnl.tone-profit,
 .tt-link.tone-profit b {
-  color: var(--ok);
+  color: #4cc38a;
 }
 
 .pnl.tone-loss,
 .tt-link.tone-loss b {
-  color: var(--danger);
+  color: #f07070;
+}
+
+.pnl.tone-flat,
+.tt-link.tone-flat b {
+  color: #94a3b8;
+}
+
+.pnl.tone-open,
+.tt-link.tone-open b {
+  color: #38bdf8;
+}
+
+.pnl.tone-unknown,
+.tt-link.tone-unknown b {
+  color: #e9b44c;
+}
+
+/* Hover highlight: the linked markers' dashed outline takes their trade's tone. */
+.marker.is-linked[data-tone='profit'] {
+  outline-color: #4cc38a;
+}
+
+.marker.is-linked[data-tone='loss'] {
+  outline-color: #f07070;
+}
+
+.marker.is-linked[data-tone='flat'] {
+  outline-color: #94a3b8;
+}
+
+.marker.is-linked[data-tone='open'] {
+  outline-color: #38bdf8;
+}
+
+.marker.is-linked[data-tone='unknown'] {
+  outline-color: #e9b44c;
+}
+
+.legend-tones {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  color: var(--text-2);
+}
+
+.legend-tone {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tone-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(15, 23, 42, 0.8);
+}
+
+.tone-swatch-b {
+  background: transparent;
+  border: 2px solid #d95926;
+  border-radius: 50%;
 }
 
 .pnl {
@@ -1521,6 +1595,18 @@ svg.trade-link.tone-loss line {
 
 .tt-link.tone-loss {
   border-left-color: #f07070;
+}
+
+.tt-link.tone-flat {
+  border-left-color: #94a3b8;
+}
+
+.tt-link.tone-open {
+  border-left-color: #38bdf8;
+}
+
+.tt-link.tone-unknown {
+  border-left-color: #e9b44c;
 }
 
 .tt-offscreen {

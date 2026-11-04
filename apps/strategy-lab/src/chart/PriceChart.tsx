@@ -15,7 +15,7 @@ import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
 import { etParts, formatEt, formatPrice } from '../format.ts';
 import { etTicks } from './etTicker.ts';
 import { type ChartLink, type Placement, placementOf } from './link.ts';
-import { MARKER_SIZE, PRICE_COLOR, type Role, glyphUri, markerOffset } from './markers.ts';
+import { MARKER_SIZE, type MarkerTone, PRICE_COLOR, type Role, glyphUri, markerOffset } from './markers.ts';
 import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure } from './measure.ts';
 import { isMacPlatform, panModifierFor, panWindow, startsPan } from './pan.ts';
 import { wheelZoomOutPx, wheelZoomWindow } from './wheelZoom.ts';
@@ -42,6 +42,7 @@ export interface ChartEvent {
   runId: string;
   event: LabEvent;
   y: number | null; // plotted price: the event's price, or the market price at that instant when not recorded
+  tone: MarkerTone; // the marker colour (trade outcome for executed entries/exits; see markers.ts)
 }
 
 export interface ChartHandle {
@@ -140,7 +141,6 @@ export function PriceChart(props: Props) {
         b.dataset.role = ce.role;
         b.dataset.runId = ce.runId;
         const img = document.createElement('img');
-        img.src = glyphUri(ce.event.kind, ce.role);
         img.alt = '';
         img.width = MARKER_SIZE;
         img.height = MARKER_SIZE;
@@ -151,6 +151,10 @@ export function PriceChart(props: Props) {
         );
         layer.appendChild(b);
         buttons.current.set(ce.key, b);
+      }
+      if (b.dataset.tone !== ce.tone) {
+        b.dataset.tone = ce.tone;
+        b.querySelector('img')!.src = glyphUri(ce.event.kind, ce.role, ce.tone);
       }
       b.style.left = `${Math.round(px - MARKER_SIZE / 2)}px`;
       b.style.top = `${Math.round(py + markerOffset(ce.event.kind, idx))}px`;
