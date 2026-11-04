@@ -149,8 +149,19 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
   - **Direction.** The result is always computed from the earlier to the later point, whichever way you drag.
   - **Clearing.** The measurement stays after release; a plain click on the chart, a click elsewhere, Escape, or a
     symbol or run change clears it.
-  - **Navigation.** Shift-drag pans and double-click resets the zoom; zooming otherwise uses the buttons and the
-    range selector.
+  - **Navigation.** Shift-drag pans and double-click resets the zoom; zooming otherwise uses the buttons, the range
+    selector and the mouse wheel.
+- **Mouse-wheel zoom** (`src/chart/wheelZoom.ts`, a `wheel` handler in the same interaction model):
+  - **Direction and centre.** Wheel up zooms in and wheel down zooms out, around the time under the cursor (it keeps
+    its screen position).
+  - **Steps.** Gentle: about ×0.86 or ×1.16 per 100-pixel notch, capped at ×0.7 or ×1.4 per event. Pixel, line and
+    page delta modes are normalised, so trackpads work too.
+  - **Axes.** Time axis only; the y axis keeps its auto-scaling.
+  - **Bounds.** The data's extent, and a minimum window of 30 minutes (minute data) or 20 sessions (the synthetic
+    daily demo).
+  - **Page scrolling.** The wheel event is consumed only when the window actually changes, so the page still scrolls
+    over the axes or at full extent.
+  - **Markers.** A wheel over a marker zooms as well.
 
 ## Optimisation imports (design, display-only)
 

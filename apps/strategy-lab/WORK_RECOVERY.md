@@ -110,3 +110,18 @@
     zoom buttons, markers, crosshair, ET intraday, symbol switch;
   - a negative control (default interaction model → the drag test fails);
   - `npm run check`: Vitest 54/54, Playwright 12/12.
+
+## Task 4 — COMPLETE (2026-11-04T13:28Z): mouse-wheel zoom
+- Brief (user message): wheel up = zoom in, down = out, centred on the time under the cursor, gradual steps, X axis
+  only, bounded by the data and a minimum span; drag-to-measure, markers, tooltips, crosshair, buttons and overview
+  are preserved; preventDefault only when actually zooming; pixel/line/page delta modes; tests; commit + push, no merge.
+- Plan: `src/chart/wheelZoom.ts` (pure) + a `wheel` handler in the PriceChart interactionModel; Vitest + e2e
+  `e2e/wheel.spec.ts`. Baseline HEAD `e4a812b`; Vitest 54/54; Playwright 12/12.
+- **Result:**
+  - `src/chart/wheelZoom.ts`, plus a `wheel` handler in the PriceChart interactionModel. The x position is taken from
+    clientX relative to the host, because `eventToDomCoords` uses offsetX, which is wrong for events forwarded from
+    marker buttons. A non-passive wheel listener on the marker layer forwards wheels over markers.
+  - The minimum span is 30 min (minute data) or 20 days (synthetic); the zoom factor is exp(Δpx × 0.0015), capped to
+    [0.7, 1.4].
+- **Tests:** `tests/wheelZoom.test.ts` (4) and `e2e/wheel.spec.ts` (3); a negative control (zooming on the window
+  centre) fails the cursor test.

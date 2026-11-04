@@ -16,6 +16,7 @@ import { etParts, formatEt, formatPrice } from '../format.ts';
 import { etTicks } from './etTicker.ts';
 import { MARKER_SIZE, PRICE_COLOR, type Role, glyphUri, markerOffset } from './markers.ts';
 import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure } from './measure.ts';
+import { normalizeWheelDelta, wheelZoomWindow } from './wheelZoom.ts';
 
 // Dygraphs' pan helpers and default touch handlers, reused by the custom interaction model.
 interface DragContext {
@@ -30,6 +31,9 @@ const D = Dygraph as unknown as {
   defaultInteractionModel: Record<string, unknown>;
 };
 const DRAG_THRESHOLD_PX = 3;
+// Wheel zoom stops at a window this narrow: 30 minutes of minute data, 20 sessions of the synthetic daily demo.
+const MIN_SPAN_MINUTE_DATA = 30 * 60_000;
+const MIN_SPAN_DAILY_DATA = 20 * 86_400_000;
 
 export interface ChartEvent {
   key: string; // `${role}:${event.id}`
@@ -286,6 +290,25 @@ export function PriceChart(props: Props) {
       },
       willDestroyContextMyself: true,
       dblclick: (_event: MouseEvent, g: Dygraph) => g.resetZoom(),
+      // Wheel: zoom the time axis around the cursor (the y axis keeps its auto-scaling). The event is consumed only
+      // when the window actually changes, so the page still scrolls at full extent or over the axes.
+      wheel: (event: WheelEvent, g: Dygraph) => {
+        // From clientX, not eventToDomCoords: that uses offsetX, which is relative to a marker button when the event
+        // comes from the marker layer. The graph's canvas sits at the host's top-left corner.
+        const domX = event.clientX - host.getBoundingClientRect().left;
+        const area = g.getArea();
+        if (domX < area.x || domX > area.x + area.w) return;
+        const next = wheelZoomWindow(
+          g.xAxisRange() as [number, number],
+          g.toDataXCoord(domX),
+          normalizeWheelDelta(event, window.innerHeight),
+          g.xAxisExtremes(),
+          propsRef.current.synthetic ? MIN_SPAN_DAILY_DATA : MIN_SPAN_MINUTE_DATA
+        );
+        if (!next) return;
+        event.preventDefault();
+        g.updateOptions({ dateWindow: next });
+      },
       touchstart: D.defaultInteractionModel.touchstart,
       touchmove: D.defaultInteractionModel.touchmove,
       touchend: D.defaultInteractionModel.touchend
@@ -298,6 +321,13 @@ export function PriceChart(props: Props) {
     };
     window.addEventListener('keydown', onKey);
     document.addEventListener('mousedown', onDocDown);
+    // Markers sit above the canvas: a wheel over one zooms like a wheel over the chart.
+    const layer = layerRef.current;
+    const onLayerWheel = (e: WheelEvent) => {
+      const g = graphRef.current;
+      if (g && e.target instanceof HTMLElement && e.target.closest('button.marker')) interactionModel.wheel(e, g);
+    };
+    layer?.addEventListener('wheel', onLayerWheel, { passive: false });
 
     const maybeFetchDetail = (g: Dygraph, a: number, b: number) => {
       if (!propsRef.current.overviewDecimated) return;
@@ -418,6 +448,7 @@ export function PriceChart(props: Props) {
       ro.disconnect();
       cancelAnimationFrame(measureFrame);
       window.removeEventListener('keydown', onKey);
+      layer?.removeEventListener('wheel', onLayerWheel);
       document.removeEventListener('mousedown', onDocDown);
       g.destroy();
       graphRef.current = null;

@@ -67,7 +67,7 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    chart, tooltips, table and analysis). Switching symbols clears the selected event and keeps the zoom when it fits.
 8. **Measure:** drag across the chart to see the price change between two points (Eastern times, $ and %; green up,
    red down), from the earlier point to the later one, whichever way you drag. Escape or a click clears it. Zoom with
-   the buttons or the overview; dragging never zooms.
+   the mouse wheel (around the cursor), the buttons or the overview; dragging never zooms.
 9. **Compare:** pick a run under **Compare with (B)**. Its events for the same symbol appear in orange; run A's are in
    aqua.
 10. **vg-balanced:** open *vg-balanced (s8-vg-balanced) — Study 8 #2 replay* (experiment *Study 8 imports*).

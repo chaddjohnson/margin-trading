@@ -426,7 +426,7 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             {view ? `${formatEtDate(view.range[0])} → ${formatEtDate(view.range[1])}` : ''}
             {prices?.decimated ? ' · overview decimated (min/max per bucket); zoom in for minute detail' : ''}
           </span>
-          <span className="muted small chart-hint">Drag to measure · shift-drag to pan · zoom: buttons, overview or double-click to reset</span>
+          <span className="muted small chart-hint">Drag to measure · scroll to zoom · shift-drag to pan · double-click resets</span>
         </div>
       </section>
 
