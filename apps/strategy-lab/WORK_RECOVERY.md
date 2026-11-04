@@ -2,8 +2,11 @@
 
 ## Top screen (read this first) — Task 5: growth-trading strategy + wheel direction — COMPLETE
 
-- **Updated:** 2026-11-04T16:50Z (UTC, from the clock). **Status: COMPLETE, committed; push next** (then a follow-up commit records
-  it). **No merge to `main`.** Commit + push were authorised by the brief (§0C.13, §7).
+- **Updated:** 2026-11-04T16:50Z (UTC, from the clock). **Status: COMPLETE, committed and pushed.** **No merge to
+  `main`.** Commit + push were authorised by the brief (§0C.13, §7).
+- **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `711bbab..b5ac849`, no force).
+  `git ls-remote` at 2026-11-04T16:50:10Z: `origin/feature/strategy-entry-explorer-ui` = `b5ac849af763…` (= local),
+  `origin/main` = `aa5754d…` (unchanged). This record follows as a separate commit, pushed the same way.
 - **Brief:** `docs/strategy-lab/brief/2026-11-04-growth-trading-strategy-brief.md` (verbatim, sha256
   `a8d96d8d5aab0950…8612edc66`). It superseded the cancelled brief (upload `223fd6da-…Growth_Entry_Exit_Strategy.md`,
   sha256 `a897556b…63dcbee`: material-loss restriction / lower re-entry / recovery reset — NOT implemented).
@@ -12,7 +15,7 @@
   `~/backups/strategy-lab/20261104T160405Z-pre-growth-trading/` (MANIFEST.md, consistent SQLite copy via node:sqlite
   `backup()`, runs/ + imports/ copies, `runs-fingerprint.json`).
 - **Commits** on `feature/strategy-entry-explorer-ui`: `028aed5` wheel direction; `38a7aa4` the strategy
-  (`src/growth-trading/`) + Strategy Lab integration; `42cf4d1` docs + brief; next: this checkpoint.
+  (`src/growth-trading/`) + Strategy Lab integration; `42cf4d1` docs + brief; `b5ac849` this checkpoint; next: the push record.
 - **Live data preserved:** `state/strategy-lab/` untouched — `runs-fingerprint.json` (16 runs, 16 variations, 2
   bookmarks, 0 notes, 1 migration) and every runs/imports file identical to the backup at 16:45Z; no migration added;
   old runs read and verified with the new code (16/16, on a copy). The service was not installed and is not running.
@@ -183,7 +186,7 @@
 | 5.4 engine `src/growth-trading/` + root tests | complete | `riseTrading.ts`; `tests/riseTrading.test.ts` 23/23; `tests/parity.test.ts` 3/3 (real data: B1 21 trades exact + both drawdowns; S8-VG-F24-3 VGT 13 + GDX 49 trades exact; VGT smoke 116 raw signals = scanner) |
 | 5.5 registry, runner, service, jobs, UI | complete | shared/contract.ts (boolean params, `days`/`bps` units, `LabRunRequest`; signal-only `RunRequest` default unchanged so `runner/entry-signal-run.ts` is untouched), shared/strategies.ts (`RISE_FROM_RECENT_LOW_TRADING`, `crossParamErrors`, `isParamApplied`), server/service.ts (profiles; signal-only snapshot identical), server/jobs.ts (`RUNNER_SCRIPTS` allowlist, optional artifacts in manifest), runner/trading-run.ts, src/components/{RunTestDialog,Trading,Panels,RunView}.tsx, styles |
 | 5.6 tests (vitest, e2e), real-data smoke, live-DB fingerprint check | complete | app `npm run check` 16:41:31→16:43:01Z: typecheck+lint clean, Vitest 71/71 (11 files; new `tests/trading.test.ts` 11, real-data +1), Playwright 19/19 (new `e2e/trading.spec.ts` 3, wheel 4). Old-run reads with the new code on a backup copy: 16/16 verified. Live DB: `runs-fingerprint.json` and every runs/imports file identical to the backup; DB mtime unchanged. No migration needed (schema unchanged) |
-| 5.7 docs, checkpoint, commit, push | complete (push pending at this write) | docs: GROWTH_TRADING.md, GROWTH_TRADING_AUDIT.md, CONTRACTS/ARCHITECTURE/OPERATIONS/RESEARCH_WORKFLOW/README updates, src/growth-trading/README.md. Commit plan: (1) wheel direction, (2) src/growth-trading engine + tests, (3) Strategy Lab integration, (4) docs + brief, (5) this checkpoint; then `git push origin feature/strategy-entry-explorer-ui` (no force, no merge) |
+| 5.7 docs, checkpoint, commit, push | complete (pushed 16:50Z) | docs: GROWTH_TRADING.md, GROWTH_TRADING_AUDIT.md, CONTRACTS/ARCHITECTURE/OPERATIONS/RESEARCH_WORKFLOW/README updates, src/growth-trading/README.md. Commit plan: (1) wheel direction, (2) src/growth-trading engine + tests, (3) Strategy Lab integration, (4) docs + brief, (5) this checkpoint; then `git push origin feature/strategy-entry-explorer-ui` (no force, no merge) |
 
 ### Guards
 
