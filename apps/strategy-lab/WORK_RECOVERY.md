@@ -1,6 +1,26 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
-## Top screen (read this first)
+## Top screen (read this first) — Task 5: growth-trading strategy + wheel direction — COMPLETE
+
+- **Updated:** 2026-11-04T16:50Z (UTC, from the clock). **Status: COMPLETE, committed; push next** (then a follow-up commit records
+  it). **No merge to `main`.** Commit + push were authorised by the brief (§0C.13, §7).
+- **Brief:** `docs/strategy-lab/brief/2026-11-04-growth-trading-strategy-brief.md` (verbatim, sha256
+  `a8d96d8d5aab0950…8612edc66`). It superseded the cancelled brief (upload `223fd6da-…Growth_Entry_Exit_Strategy.md`,
+  sha256 `a897556b…63dcbee`: material-loss restriction / lower re-entry / recovery reset — NOT implemented).
+- **Recovery (§0A):** the approved baseline is `711bbab` (= origin at the start). The interrupted session wrote nothing
+  (clean tree, no untracked files, no new commits, no stash): nothing was removed or reverted. Backup outside Git:
+  `~/backups/strategy-lab/20261104T160405Z-pre-growth-trading/` (MANIFEST.md, consistent SQLite copy via node:sqlite
+  `backup()`, runs/ + imports/ copies, `runs-fingerprint.json`).
+- **Commits** on `feature/strategy-entry-explorer-ui`: `028aed5` wheel direction; `38a7aa4` the strategy
+  (`src/growth-trading/`) + Strategy Lab integration; `42cf4d1` docs + brief; next: this checkpoint.
+- **Live data preserved:** `state/strategy-lab/` untouched — `runs-fingerprint.json` (16 runs, 16 variations, 2
+  bookmarks, 0 notes, 1 migration) and every runs/imports file identical to the backup at 16:45Z; no migration added;
+  old runs read and verified with the new code (16/16, on a copy). The service was not installed and is not running.
+- **Running processes:** none (the temporary :5317 UI server was stopped).
+- **Follow-up gate:** the user's review of the trading backtest in the UI; optional: restart any running Strategy Lab
+  server so it serves the new build (`npm --prefix apps/strategy-lab start` rebuilds when stale).
+
+## Tasks 1–4 (earlier on 2026-11-04) — COMPLETE
 
 - **Updated:** 2026-11-04T12:31Z (UTC, from the clock). **Status: COMPLETE, committed and pushed.** **No merge to `main`.**
 - **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `e95deac..44c63b6`, no force).
@@ -125,3 +145,61 @@
     [0.7, 1.4].
 - **Tests:** `tests/wheelZoom.test.ts` (4) and `e2e/wheel.spec.ts` (3); a negative control (zooming on the window
   centre) fails the cursor test.
+
+## Task 5 — growth-trading strategy `rise-from-recent-low-trading@1.0.0` + wheel direction (COMPLETE)
+
+### Decisions (written 2026-11-04T16:10Z, from the audit; the brief needs no user question)
+
+- **Entry:** the unchanged `scanRiseFromRecentLow` (edge-triggered) on `barsFromSessions(history, resolution)`, with the
+  signal-only runner's exact warm-up formula, so the raw signals are identical. A signal is an EVENT: one rejected
+  while invested or while an order is pending is discarded, never replayed. Re-arming = the scanner's own
+  false→true rule (no extra state, cooldown, lower-price test or reset).
+- **Execution:** the unchanged `ShadowBook` (`src/multi-etf-allocator/shadow.ts`, Study 8's per-symbol D1 book) driven
+  by Rise decisions via `commit()`; `processBar()` (D1's dip/continuation entry machine) is never called, so no D1
+  entry mechanism runs. Exits = its unchanged `ExitManager` (net-profit stop, maximum hold, buffered loss, overnight
+  carry); fills = `firstTradeAfterDecision` (next eligible trade; a decision at the close fills next session's open).
+- **Order at one instant:** decisions known at t are evaluated before trades executing at t (D1's bar-completion-then-
+  next-bar order). **Same-session re-entry is allowed** after the exit instant (not required by the verified fill
+  chronology: ShadowBook evaluates exits only for positions open at the session start, so a re-entry position first
+  exits next session, exactly like any D1 entry). D1's "no entry on a session that started invested" belongs to its
+  entry machine, which is not inherited.
+- **Toggles:** hold OFF → `maximumHoldDays = ∞`; buffer OFF → `intradayLossBuffer = ∞` (conditions never true in the
+  unchanged ExitManager). Buffer ON requires hold ON (rejected otherwise; the UI unticks and disables it).
+- **Defaults (D1 baseline, `src/app/allIn-trailingBuy-postExitContinuation.ts` + `strategies.d1`):** stop 7.3%, hold
+  8 calendar days, buffer 2.9% of the $100,000 notional; 11% simple interest, 365-day; costs 5 bps per side (pools /
+  Study 8 convention; editable); stop fills at the stop price. Labelled illustrative, not optimised.
+- **Events:** accepted raw signal → `entry_signal`; every other raw signal → `rejected_signal` with a reason; fills →
+  `executed_entry` / `executed_exit`; open position at the end → entry with `meta.open`. Multi-symbol = independent
+  standalone backtests, never summed.
+
+### Stage table
+
+| Stage | Status | Notes |
+| --- | --- | --- |
+| 5.0 recovery inventory + backup | complete (16:04Z) | see top screen |
+| 5.1 baseline: app `npm run check`, root `npm test` | complete | app 16:09:32→16:10:23Z: typecheck, lint clean; Vitest 58/58; Playwright 15/15. Root 16:10:40→16:12:34Z: 960 tests, 949 pass, 7 fail (pre-existing: golden master / allin-original.ts, protected-file hashes, Study 7 parity), 4 skipped. Logs `apps/strategy-lab/logs/task5/baseline-*` |
+| 5.2 audit doc `docs/strategy-lab/GROWTH_TRADING_AUDIT.md` | not started | |
+| 5.3 wheel direction fix + tests | complete | `src/chart/wheelZoom.ts` `wheelZoomOutPx` (swipe up = deltaY>0 = zoom in; Ctrl/pinch keeps page-zoom sign); Vitest 5/5; e2e wheel+measure 7/7; negative control (old sign) fails the direction test |
+| 5.4 engine `src/growth-trading/` + root tests | complete | `riseTrading.ts`; `tests/riseTrading.test.ts` 23/23; `tests/parity.test.ts` 3/3 (real data: B1 21 trades exact + both drawdowns; S8-VG-F24-3 VGT 13 + GDX 49 trades exact; VGT smoke 116 raw signals = scanner) |
+| 5.5 registry, runner, service, jobs, UI | complete | shared/contract.ts (boolean params, `days`/`bps` units, `LabRunRequest`; signal-only `RunRequest` default unchanged so `runner/entry-signal-run.ts` is untouched), shared/strategies.ts (`RISE_FROM_RECENT_LOW_TRADING`, `crossParamErrors`, `isParamApplied`), server/service.ts (profiles; signal-only snapshot identical), server/jobs.ts (`RUNNER_SCRIPTS` allowlist, optional artifacts in manifest), runner/trading-run.ts, src/components/{RunTestDialog,Trading,Panels,RunView}.tsx, styles |
+| 5.6 tests (vitest, e2e), real-data smoke, live-DB fingerprint check | complete | app `npm run check` 16:41:31→16:43:01Z: typecheck+lint clean, Vitest 71/71 (11 files; new `tests/trading.test.ts` 11, real-data +1), Playwright 19/19 (new `e2e/trading.spec.ts` 3, wheel 4). Old-run reads with the new code on a backup copy: 16/16 verified. Live DB: `runs-fingerprint.json` and every runs/imports file identical to the backup; DB mtime unchanged. No migration needed (schema unchanged) |
+| 5.7 docs, checkpoint, commit, push | complete (push pending at this write) | docs: GROWTH_TRADING.md, GROWTH_TRADING_AUDIT.md, CONTRACTS/ARCHITECTURE/OPERATIONS/RESEARCH_WORKFLOW/README updates, src/growth-trading/README.md. Commit plan: (1) wheel direction, (2) src/growth-trading engine + tests, (3) Strategy Lab integration, (4) docs + brief, (5) this checkpoint; then `git push origin feature/strategy-entry-explorer-ui` (no force, no merge) |
+
+### Guards
+
+- Do not modify existing strategies (`src/app/*`, `src/shared-margin-portfolio/*`, `src/multi-etf-allocator/*`,
+  `src/entry-signals/*`), the signal-only runner `runner/entry-signal-run.ts`, sealed research, `data/`, or
+  `state/strategy-lab/` (never delete/reseed; tests use temp state dirs; smoke servers use another port + temp state).
+- No material-loss / lower re-entry / recovery-reset code, controls or schema. No optimiser/sweep. No merge to `main`.
+
+### Final verification (2026-11-04)
+
+- Root `npm test` 16:45:21→16:47:20Z: 987 tests, 976 pass, 7 fail — the SAME 7 pre-existing failures as the baseline
+  (diffed by name) — 4 skipped; +27 new tests, all passing. Root `tsc` clean; root ESLint 306 problems (1 pre-existing
+  error) = baseline; `src/growth-trading` clean.
+- App `npm run check` 16:47:28→16:48:57Z (after the last code change): typecheck + lint clean; Vitest 71/71;
+  Playwright 19/19.
+- Exploratory example (engine, = the UI run R-000013 of the scratch server): VGT 2016-01-04→2023-12-29, X 5%/N 20/1d,
+  defaults: 116 raw signals, 52 trades (51 closed, 1 open), realized −$3,270.17, unrealized +$12,987.72, total
+  +$9,717.54, minute DD $73,618 (73.6%). X 6%: 109 / 54 (53 + 1 open), realized +$549.69, total +$13,537.41.
+- Not verified manually: a physical trackpad or mouse (automated Chrome wheel events only); Safari/Firefox.
