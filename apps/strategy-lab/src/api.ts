@@ -5,7 +5,7 @@ import type {
   LabEvent,
   Note,
   RunDetail,
-  RunRequest,
+  LabRunRequest,
   RunSummary,
   StrategySpec,
   SymbolInfo,
@@ -115,8 +115,8 @@ export const api = {
   runs: (q: ListQuery = {}) => call<RunSummary[]>('GET', `/api/runs${qs({ ...q })}`),
   variations: (q: ListQuery = {}) => call<VariationSummary[]>('GET', `/api/variations${qs({ ...q })}`),
   run: (id: string, signal?: AbortSignal) =>
-    call<RunDetail & { request: RunRequest | null }>('GET', `/api/runs/${id}`, undefined, signal),
-  createRun: (req: RunRequest) => call<RunDetail>('POST', '/api/runs', req),
+    call<RunDetail & { request: LabRunRequest | null }>('GET', `/api/runs/${id}`, undefined, signal),
+  createRun: (req: LabRunRequest) => call<RunDetail>('POST', '/api/runs', req),
   cancelRun: (id: string) => call<{ cancelled: boolean }>('POST', `/api/runs/${id}/cancel`),
   setRunTitle: (id: string, title: string) => call<RunDetail>('PATCH', `/api/runs/${id}`, { title }),
   bookmark: (type: 'run' | 'variation', id: string, on: boolean) =>

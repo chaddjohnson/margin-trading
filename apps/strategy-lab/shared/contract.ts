@@ -45,6 +45,8 @@ export type ValueUnit =
   | 'ratio'
   | 'index'
   | 'usd'
+  | 'days'
+  | 'bps'
   | 'text';
 
 /** A labelled value with an explicit unit. `percent` is percentage points (5.2 = 5.2%). `null` = unknown. */
@@ -199,19 +201,26 @@ export interface SymbolInfo {
 
 // ----- parameter schema -----
 
-export type ParamType = 'number' | 'integer';
+export type ParamType = 'number' | 'integer' | 'boolean';
 
+/** One input of a strategy. A `boolean` is a rule switch (min/max/step unused: 0, 1, 1). */
 export interface ParamSpec {
   key: string;
   label: string;
   description: string;
   type: ParamType;
   unit: ValueUnit;
-  default: number;
+  default: number | boolean;
   min: number;
   max: number;
   step: number;
+  /** Form section (entry, exit, execution); absent = the parameter list of a signal-only strategy. */
+  group?: 'entry' | 'exit' | 'execution';
+  /** The switch (a boolean parameter) this input belongs to: disabled, saved but not applied, while it is off. */
+  dependsOn?: string;
 }
+
+export type ParamValue = number | boolean;
 
 export interface StrategySpec {
   key: string;
@@ -224,13 +233,19 @@ export interface StrategySpec {
   params: ParamSpec[];
   resolutions: Resolution[];
   defaultResolution: Resolution;
+  /** Short facts shown with the form (fixed execution assumptions, multi-symbol policy). */
+  notes?: string[];
 }
 
-/** A manual single-test request (POST /api/runs). One configuration; never a sweep. */
-export interface RunRequest {
+/**
+ * A manual single-test request (POST /api/runs). One configuration; never a sweep. `V` is the parameter value type:
+ * the default (numbers only) is the signal-only shape runner/entry-signal-run.ts reads; requests in general carry
+ * numbers and rule switches (`LabRunRequest`).
+ */
+export interface RunRequest<V extends ParamValue = number> {
   strategyKey: string;
   strategyVersion: string;
-  params: Record<string, number>;
+  params: Record<string, V>;
   symbols: string[];
   from: string;
   to: string;
@@ -239,3 +254,5 @@ export interface RunRequest {
   /** The variation this configuration was cloned from (provenance only). */
   parentVariation?: string;
 }
+
+export type LabRunRequest = RunRequest<ParamValue>;

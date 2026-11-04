@@ -1,0 +1,446 @@
+// The Strategy Lab trading-backtest runner: ONE manual test of one configuration of rise-from-recent-low-trading@1.0.0,
+// started by the server as a child process with a fixed argument vector:
+//
+//   node --experimental-transform-types runner/trading-run.ts <absolute run directory>
+//
+// cwd must be the repository root. It reads <run dir>/request.json (validated by the server), loads each symbol through
+// the repository's dataset pipeline (src/lib/evaluation.ts: the window, warm-up sessions read for the scanner's lookback
+// only, forward split adjustment, the data file's sha256, access 'manual evaluation') exactly as the signal-only runner
+// does, runs the trading engine (src/growth-trading/riseTrading.ts: the unchanged Rise scanner as the only entry, the
+// Study 8 D1 book and exit manager), and writes events.json, metrics.json, trades.json, daily.json and provenance.json
+// atomically. Each symbol is an independent standalone backtest; nothing is summed across symbols. The run FAILS (exit 1)
+// if any accounting check does not close. It never searches parameters: one request, one configuration.
+
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { isSignalResolution } from '../../../src/entry-signals/bars.ts';
+import {
+  EXECUTION,
+  type LedgerRow,
+  type RiseTradingParams,
+  STRATEGY_KEY,
+  STRATEGY_VERSION,
+  exitParamsOf,
+  runRiseTrading,
+  summarizeSimulation,
+  warmupSessionsFor
+} from '../../../src/growth-trading/riseTrading.ts';
+import { resolveDataset } from '../../../src/lib/dataset.ts';
+import { loadDatasetSessions } from '../../../src/lib/evaluation.ts';
+import type { ExecutionPrice, ExitReason } from '../../../src/shared-margin-portfolio/strategy.ts';
+import { atomicWrite, writeEvents } from '../server/artifacts.ts';
+import type { LabEvent, LabRunRequest, LabValue, TimePrecision } from '../shared/contract.ts';
+
+const emit = (o: Record<string, unknown>) => process.stdout.write(`${JSON.stringify(o)}\n`);
+const progress = (message: string, fraction: number | null = null) => emit({ type: 'progress', message, fraction });
+
+const ENGINE_FILES = [
+  'src/entry-signals/bars.ts',
+  'src/entry-signals/riseFromRecentLow.ts',
+  'src/growth-trading/riseTrading.ts',
+  'src/multi-etf-allocator/shadow.ts',
+  'src/multi-etf-allocator/engine.ts',
+  'src/multi-etf-allocator/ledger.ts',
+  'src/shared-margin-portfolio/strategy.ts',
+  'src/four-family/data.ts',
+  'src/lib/evaluation.ts',
+  'src/lib/session.ts',
+  'src/lib/csv.ts',
+  'src/lib/corporateActions.ts',
+  'apps/strategy-lab/runner/trading-run.ts'
+];
+const TOLERANCE_USD = 1e-6;
+
+const iso = (sec: number) => new Date(sec * 1000).toISOString().replace('.000Z', 'Z');
+const dateOf = (sec: number) => new Date(sec * 1000).toISOString().slice(0, 10);
+const r2 = (x: number) => Math.round(x * 100) / 100;
+const r4 = (x: number) => Math.round(x * 10000) / 10000;
+const usd = (x: number) => `${x < 0 ? '−' : ''}$${Math.abs(x).toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+
+const NY = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+  timeZoneName: 'short'
+});
+const ny = (sec: number) => {
+  const p = Object.fromEntries(NY.formatToParts(new Date(sec * 1000)).map((x) => [x.type, x.value]));
+  return `${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute} ${p.timeZoneName}`;
+};
+
+const EXECUTION_TEXT: Record<ExecutionPrice, string> = {
+  'first trade after decision': 'the opening trade of the first minute after the decision',
+  'closing print': 'the closing-auction print',
+  'opening trade': 'the session’s opening trade',
+  'stop level': 'the stop price, crossed within the minute (assumed fill)',
+  'minute open through stop': 'the opening trade of a minute that opened through the stop',
+  'trigger minute close': 'the triggering minute’s last trade'
+};
+const timing = (execution: ExecutionPrice | ''): { precision: TimePrecision; meaning: string } =>
+  execution === 'closing print'
+    ? { precision: 'session-close', meaning: 'the scheduled close: the closing-auction print filled the order' }
+    : execution === 'stop level'
+      ? { precision: 'minute', meaning: 'start of the minute in which trading crossed the stop (filled at the stop price)' }
+      : { precision: 'minute', meaning: 'start of the minute whose opening trade filled the order' };
+const EXIT_LABEL: Record<ExitReason, string> = {
+  'trailing stop': 'Trailing stop',
+  'trailing stop gap': 'Trailing stop (gap at the open)',
+  'maximum hold': 'Maximum losing hold',
+  'buffered intraday loss': 'Buffered intraday loss',
+  displaced: 'Displaced',
+  'forced liquidation': 'Forced liquidation',
+  open: 'Open at the end'
+};
+
+const paramsOf = (request: LabRunRequest): RiseTradingParams => {
+  const p = request.params;
+  if (!isSignalResolution(request.resolution)) throw new Error(`unsupported resolution ${request.resolution}`);
+  return {
+    advanceFromRecentLowPercent: p.advanceFromRecentLowPercent as number,
+    recentLowLookbackBars: p.recentLowLookbackBars as number,
+    resolution: request.resolution,
+    trailingStopPercent: p.trailingStopPercent as number,
+    maximumHoldEnabled: p.maximumHoldEnabled as boolean,
+    maximumHoldDays: p.maximumHoldDays as number,
+    intradayLossBufferEnabled: p.intradayLossBufferEnabled as boolean,
+    intradayLossBufferPercent: p.intradayLossBufferPercent as number,
+    costBpsPerSide: p.costBpsPerSide as number
+  };
+};
+
+interface StoredRequest extends LabRunRequest {
+  runId: string;
+}
+
+async function main() {
+  const runDir = process.argv[2];
+  if (!runDir) throw new Error('usage: trading-run.ts <run directory>');
+  const request = JSON.parse(readFileSync(join(runDir, 'request.json'), 'utf8')) as StoredRequest;
+  if (request.strategyKey !== STRATEGY_KEY || request.strategyVersion !== STRATEGY_VERSION)
+    throw new Error(`unsupported strategy ${request.strategyKey}@${request.strategyVersion}`);
+  const params = paramsOf(request);
+  const exit = exitParamsOf(params); // validates, including the buffer → hold dependency
+  const n = params.recentLowLookbackBars;
+  const warmupSessions = warmupSessionsFor(params.resolution, n);
+  const daily = request.resolution === '1d';
+
+  const events: LabEvent[] = [];
+  const perSymbol: Record<string, unknown> = {};
+  const ledgers: Record<string, unknown[]> = {};
+  const marks: Record<string, unknown[]> = {};
+  const provenance: Record<string, unknown> = {};
+  const basisBySymbol: Record<string, string> = {};
+
+  for (const [k, symbol] of request.symbols.entries()) {
+    const base = k / request.symbols.length;
+    progress(`${symbol}: loading the canonical minute file`, base);
+    const dataset = resolveDataset(symbol, 'all');
+    const loaded = await loadDatasetSessions({
+      dataset,
+      startDate: request.from,
+      endDate: request.to,
+      warmupSessions,
+      access: 'manual evaluation'
+    });
+    progress(`${symbol}: ${loaded.sessions.length} sessions loaded; backtesting`, base + 0.5 / request.symbols.length);
+    const r = runRiseTrading(symbol, loaded.history, loaded.warmup, params, loaded.report!.dataSha256!);
+    const { ds, simulation: sim } = r;
+    const { rows, metrics } = summarizeSimulation(sim, ds);
+    basisBySymbol[symbol] = loaded.history[0]!.date;
+
+    // The run fails rather than report figures that do not close.
+    const c = metrics.checks;
+    if (!(c.fixedLedgerMaxDifferenceUsd <= TOLERANCE_USD && c.identityMaxResidualUsd <= TOLERANCE_USD))
+      throw new Error(`${symbol}: accounting check failed ${JSON.stringify(c)}`);
+    if (!(c.markedEqualsLedger <= TOLERANCE_USD)) throw new Error(`${symbol}: marks differ from the ledger`);
+
+    const tradeIds = new Map(rows.map((row) => [row.trade, `T-${row.number}`]));
+    let cumulative = 0;
+    const cumulativeAfter = new Map<LedgerRow, number>();
+    for (const row of rows) if (row.status === 'closed') cumulativeAfter.set(row, (cumulative += row.net));
+
+    // Raw signals: every one appears exactly once — taken (entry_signal) or not (rejected_signal).
+    for (const o of sim.outcomes) {
+      const s = o.decision.signal!;
+      const bar = r.bars[s.index]!;
+      const low = r.bars[s.recentLowIndex]!;
+      const t = iso(s.time);
+      const tradeId = o.trade ? tradeIds.get(o.trade) : undefined;
+      const values: LabValue[] = [
+        { key: 'advance', label: 'Advance above the recent low', value: r2(s.advancePercent), unit: 'percent' },
+        { key: 'previousAdvance', label: 'Advance on the previous bar', value: r2(s.previousAdvancePercent), unit: 'percent' },
+        { key: 'recentLow', label: `Recent low (${n}-bar window)`, value: r4(s.recentLow), unit: 'price' },
+        { key: 'recentLowBarEnd', label: 'Recent-low bar end', value: iso(low.end), unit: 'datetime' },
+        { key: 'thresholdPrice', label: 'Threshold price', value: r4(s.thresholdPrice), unit: 'price' },
+        { key: 'barStart', label: 'Signal bar start', value: iso(bar.start), unit: 'datetime' },
+        {
+          key: 'disposition',
+          label: 'Disposition',
+          value:
+            o.status === 'filled'
+              ? `taken: order filled (${tradeId})`
+              : o.status === 'unfilled_at_end'
+                ? 'taken: order not filled before the end of the window'
+                : o.reason === 'position_open'
+                  ? `ignored: invested (${tradeId ?? '?'})`
+                  : `ignored: the order for ${tradeId ?? '?'} is not filled yet`,
+          unit: 'text'
+        }
+      ];
+      const head = `Close ${s.close.toFixed(2)} is ${r2(s.advancePercent).toFixed(2)}% above the ${n}-bar low ${s.recentLow.toFixed(2)} (bar ending ${ny(low.end)})`;
+      const reason =
+        o.status === 'filled'
+          ? `${head}. Flat: order placed, filled ${ny(o.trade!.entryTime)} at ${o.trade!.entryRawPrice.toFixed(2)} (${tradeId})`
+          : o.status === 'unfilled_at_end'
+            ? `${head}. Flat: order placed, but no eligible trade inside the window — not filled`
+            : o.reason === 'position_open'
+              ? `${head}. Ignored: already invested (${tradeId}, bought ${ny(o.trade!.entryTime)}); not replayed later`
+              : `${head}. Ignored: the order of ${tradeId} is still waiting for its fill`;
+      events.push({
+        id: `${symbol}:${o.status === 'rejected' ? 'rejected_signal' : 'entry_signal'}:${t}`,
+        runId: request.runId,
+        symbol,
+        kind: o.status === 'rejected' ? 'rejected_signal' : 'entry_signal',
+        t,
+        timePrecision: daily ? 'session-close' : 'minute',
+        timeMeaning: daily
+          ? 'scheduled close of the session (16:00 ET, 13:00 on early-close days): the daily bar is complete'
+          : `end of the completed ${request.resolution} bar: the signal is first knowable`,
+        price: s.close,
+        priceBasis: 'bar-close',
+        reason,
+        values,
+        tradeId: o.status === 'filled' ? tradeId! : null,
+        linkedEventId: null,
+        meta: {
+          signalOnly: false,
+          standalone: true,
+          disposition: o.status === 'rejected' ? 'ignored' : o.status === 'filled' ? 'taken' : 'unfilled',
+          reasonCode: o.reason ?? o.status,
+          heldBy: o.status === 'rejected' ? (tradeId ?? null) : null
+        }
+      });
+    }
+
+    // Executed entries and exits.
+    for (const row of rows) {
+      const tr = row.trade;
+      const id = `T-${row.number}`;
+      const open = row.status === 'open';
+      const entryId = `${symbol}:${id}:entry`;
+      const exitId = `${symbol}:${id}:exit`;
+      const et = timing(tr.entryExecution);
+      events.push({
+        id: entryId,
+        runId: request.runId,
+        symbol,
+        kind: 'executed_entry',
+        t: iso(tr.entryTime),
+        timePrecision: et.precision,
+        timeMeaning: et.meaning,
+        price: tr.entryRawPrice,
+        priceBasis: 'fill',
+        reason: `Bought ${row.shares.toFixed(4)} shares ($${EXECUTION.notional.toLocaleString('en-US')}) at ${tr.entryRawPrice.toFixed(2)}, ${EXECUTION_TEXT[tr.entryExecution as ExecutionPrice]}, for the Rise signal decided ${ny(tr.decisionTime)} at ${tr.decisionPrice.toFixed(2)}${open ? ' — still open at the end of the window' : ''}`,
+        values: [
+          { key: 'decisionTime', label: 'Signal decided', value: iso(tr.decisionTime), unit: 'datetime' },
+          { key: 'decisionPrice', label: 'Signal bar close', value: r4(tr.decisionPrice), unit: 'price' },
+          { key: 'fill', label: 'Fill', value: tr.entryExecution, unit: 'text' },
+          { key: 'carriedOvernight', label: 'Waited for a later session', value: tr.carriedOvernight, unit: 'text' },
+          { key: 'priceAfterCost', label: 'Price after cost', value: r4(tr.entryPrice), unit: 'price' },
+          { key: 'shares', label: 'Shares', value: r4(row.shares), unit: 'count' },
+          { key: 'principal', label: 'Principal (borrowed)', value: row.principal, unit: 'usd' },
+          { key: 'entryCost', label: 'Entry cost', value: r2(row.entryFriction), unit: 'usd' }
+        ],
+        tradeId: id,
+        linkedEventId: open ? null : exitId,
+        meta: { open, standalone: true }
+      });
+      if (open) continue;
+      const xt = timing(tr.exitExecution);
+      const sigSession = Number.isNaN(tr.bufferSignalTime)
+        ? -1
+        : tr.bufferSignalTime > ds.bTime[ds.sBarStart[tr.exitIndex]!]!
+          ? tr.exitIndex
+          : tr.exitIndex - 1;
+      const bufferNet =
+        sigSession >= 0
+          ? row.shares * tr.bufferSignalPrice -
+            tr.investment -
+            (tr.investment * EXECUTION.annualRate * (ds.sTime[sigSession]! - ds.sTime[tr.entryIndex]!)) / (365 * 86400)
+          : NaN;
+      const detail =
+        tr.exitReason === 'maximum hold'
+          ? `${row.interestDays} calendar days held and the opening trade showed a net loss; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`
+          : tr.exitReason === 'buffered intraday loss'
+            ? `the minute ending ${ny(tr.bufferSignalTime)} closed at ${tr.bufferSignalPrice.toFixed(2)}: net ${usd(bufferNet)} after interest, at or below −${usd(params.intradayLossBufferPercent * 1000)}; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`
+            : tr.exitReason === 'trailing stop gap'
+              ? `the session opened at ${tr.exitRawPrice.toFixed(2)}, through the active stop ${tr.exitStopPrice.toFixed(2)}; sold at the opening trade`
+              : `the active stop ${tr.exitStopPrice.toFixed(2)} was reached; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`;
+      events.push({
+        id: exitId,
+        runId: request.runId,
+        symbol,
+        kind: 'executed_exit',
+        t: iso(tr.exitTime),
+        timePrecision: xt.precision,
+        timeMeaning: xt.meaning,
+        price: tr.exitRawPrice,
+        priceBasis: 'fill',
+        reason: `${EXIT_LABEL[tr.exitReason]}: ${detail}. Net ${usd(row.net)} (${row.netReturnPercent.toFixed(2)}% of the principal)`,
+        values: [
+          { key: 'exitReason', label: 'Exit reason', value: EXIT_LABEL[tr.exitReason], unit: 'text' },
+          { key: 'fill', label: 'Fill', value: tr.exitExecution, unit: 'text' },
+          { key: 'stopPrice', label: 'Trailing stop level at the exit', value: r4(tr.exitStopPrice), unit: 'price' },
+          { key: 'stopActive', label: 'Stop active that session', value: tr.stopActiveAtExit, unit: 'text' },
+          { key: 'maximumHoldDue', label: 'Maximum hold due at the open', value: tr.maximumHoldDue, unit: 'text' },
+          ...(sigSession >= 0
+            ? [
+                { key: 'bufferDecision', label: 'Buffer decision', value: iso(tr.bufferSignalTime), unit: 'datetime' as const },
+                { key: 'bufferPrice', label: 'Buffer decision close', value: r4(tr.bufferSignalPrice), unit: 'price' as const },
+                { key: 'bufferNet', label: 'Net at the buffer decision', value: r2(bufferNet), unit: 'usd' as const }
+              ]
+            : []),
+          { key: 'priceAfterCost', label: 'Price after cost', value: r4(tr.exitPrice), unit: 'price' },
+          { key: 'calendarDays', label: 'Held (calendar days)', value: r2(row.calendarDaysHeld), unit: 'days' },
+          { key: 'sessions', label: 'Held (sessions, inclusive)', value: row.sessionsHeld, unit: 'sessions' },
+          { key: 'gross', label: 'Gross P&L before costs', value: r2(row.grossBeforeCosts), unit: 'usd' },
+          { key: 'costs', label: 'Costs (entry + exit)', value: r2(row.entryFriction + row.exitFriction), unit: 'usd' },
+          { key: 'interest', label: 'Margin interest', value: r2(row.interest), unit: 'usd' },
+          { key: 'net', label: 'Net P&L', value: r2(row.net), unit: 'usd' },
+          { key: 'netReturn', label: 'Net return on the principal', value: r2(row.netReturnPercent), unit: 'percent' },
+          { key: 'priceReturn', label: 'Price return (raw fills)', value: r2(row.priceReturnPercent), unit: 'percent' },
+          { key: 'mae', label: 'Worst mark while held (net)', value: r2(row.excursion.worst), unit: 'usd' },
+          { key: 'mfe', label: 'Best mark while held (net)', value: r2(row.excursion.best), unit: 'usd' },
+          { key: 'cumulative', label: 'Cumulative realized net', value: r2(cumulativeAfter.get(row)!), unit: 'usd' }
+        ],
+        tradeId: id,
+        linkedEventId: entryId,
+        meta: { standalone: true }
+      });
+    }
+
+    const drawdown = (d: (typeof metrics.drawdown)['minute'], asDate: boolean) => ({
+      ...d,
+      peakTime: d.peakTime === null ? null : asDate ? dateOf(d.peakTime) : iso(d.peakTime),
+      troughTime: d.troughTime === null ? null : asDate ? dateOf(d.troughTime) : iso(d.troughTime),
+      recoveryTime: d.recoveryTime === null ? null : asDate ? dateOf(d.recoveryTime) : iso(d.recoveryTime)
+    });
+    perSymbol[symbol] = {
+      ...metrics,
+      drawdown: { minute: drawdown(metrics.drawdown.minute, false), daily: drawdown(metrics.drawdown.daily, true) },
+      exitParams: {
+        trailingStopFraction: exit.trailingStopPercentage,
+        maximumHoldDays: Number.isFinite(exit.maximumHoldDays) ? exit.maximumHoldDays : null,
+        intradayLossBufferFraction: Number.isFinite(exit.intradayLossBuffer) ? exit.intradayLossBuffer : null
+      }
+    };
+    ledgers[symbol] = rows.map((row) => ({
+      trade: `T-${row.number}`,
+      status: row.status,
+      decisionTimeUtc: iso(row.trade.decisionTime),
+      decisionTimeNewYork: ny(row.trade.decisionTime),
+      decisionPrice: row.trade.decisionPrice,
+      entryTimeUtc: iso(row.trade.entryTime),
+      entryTimeNewYork: ny(row.trade.entryTime),
+      entryFill: row.trade.entryExecution,
+      entryFillPrice: row.entryRawPrice,
+      entryPriceAfterCost: row.entryPrice,
+      shares: row.shares,
+      principal: row.principal,
+      exitTimeUtc: row.status === 'open' ? null : iso(row.trade.exitTime),
+      exitTimeNewYork: row.status === 'open' ? null : ny(row.trade.exitTime),
+      exitReason: row.trade.exitReason,
+      exitFill: row.status === 'open' ? null : row.trade.exitExecution,
+      exitFillPrice: row.status === 'open' ? null : row.exitRawPrice,
+      exitPriceAfterCost: row.status === 'open' ? null : row.exitPrice,
+      markPrice: row.status === 'open' ? row.exitRawPrice : null,
+      exitStopPrice: row.trade.exitStopPrice,
+      stopActiveAtExit: row.trade.stopActiveAtExit,
+      maximumHoldDue: row.trade.maximumHoldDue,
+      bufferSignalTimeUtc: Number.isNaN(row.trade.bufferSignalTime) ? null : iso(row.trade.bufferSignalTime),
+      bufferSignalPrice: Number.isNaN(row.trade.bufferSignalPrice) ? null : row.trade.bufferSignalPrice,
+      grossBeforeCosts: row.grossBeforeCosts,
+      entryCost: row.entryFriction,
+      exitCost: row.exitFriction,
+      interest: row.interest,
+      net: row.net,
+      netReturnPercent: row.netReturnPercent,
+      priceReturnPercent: row.priceReturnPercent,
+      calendarDaysHeld: row.calendarDaysHeld,
+      sessionsHeld: row.sessionsHeld,
+      interestDays: row.interestDays,
+      worstMark: row.excursion.worst,
+      worstMarkTimeUtc: iso(row.excursion.worstTime),
+      bestMark: row.excursion.best,
+      bestMarkTimeUtc: iso(row.excursion.bestTime)
+    }));
+    marks[symbol] = sim.daily.map((d) => ({
+      date: d.date,
+      close: d.close,
+      realized: d.realized,
+      unrealized: d.unrealized,
+      marked: d.marked,
+      heldAtClose: d.heldAtClose
+    }));
+    provenance[symbol] = { ...loaded.report, dataFile: loaded.report?.dataFile, firstSignalBar: r.firstSignalBar };
+    progress(
+      `${symbol}: ${metrics.signals.raw} signals, ${metrics.trades.filled} trades (${metrics.trades.open} open)`,
+      (k + 1) / request.symbols.length
+    );
+  }
+
+  const appRoot = fileURLToPath(new URL('..', import.meta.url));
+  const repoRoot = join(appRoot, '..', '..');
+  const engine = Object.fromEntries(
+    ENGINE_FILES.map((f) => [
+      f,
+      createHash('sha256')
+        .update(readFileSync(join(repoRoot, f)))
+        .digest('hex')
+    ])
+  );
+
+  const eventsSha = writeEvents(runDir, request.runId, events);
+  const json = (o: unknown) => `${JSON.stringify(o, null, 2)}\n`;
+  atomicWrite(
+    join(runDir, 'metrics.json'),
+    json({
+      kind: 'trading backtest',
+      strategy: { key: STRATEGY_KEY, version: STRATEGY_VERSION },
+      disclaimer:
+        'Exploratory backtest of one configuration on historical data, not an optimised or validated strategy. Each symbol is an independent standalone backtest on its own $100,000 notional: the per-symbol figures are never summed, and are not comparable with a shared-slot pool such as vg-balanced.',
+      execution: {
+        notionalUsd: EXECUTION.notional,
+        annualInterestRate: EXECUTION.annualRate,
+        interestBasis: 'simple, per calendar day between the entry and exit session dates, 365-day year',
+        costBpsPerSide: params.costBpsPerSide,
+        commissionUsd: 0,
+        stopFill: 'the stop price within a minute that crossed it, or the opening trade after a gap through it',
+        stopSlippageBps: EXECUTION.stopSlippageBps,
+        openPositionAtEnd: 'marked at the last close net of accrued interest; exit cost not charged; not closed',
+        drawdownBasis: 'realized net + open position marked net of interest; percent of the $100,000 notional',
+        priceUnits: 'USD per share, split-adjusted forward to each symbol’s first loaded session'
+      },
+      perSymbol
+    })
+  );
+  atomicWrite(join(runDir, 'trades.json'), json({ runId: request.runId, standalonePerSymbol: true, trades: ledgers }));
+  atomicWrite(join(runDir, 'daily.json'), json({ runId: request.runId, standalonePerSymbol: true, daily: marks }));
+  atomicWrite(
+    join(runDir, 'provenance.json'),
+    json({ request, warmupSessions, basisBySymbol, engine, node: process.version, symbols: provenance })
+  );
+  emit({ type: 'done', events: events.length, eventsSha256: eventsSha, runDir: relative(repoRoot, runDir) });
+}
+
+main().catch((e: unknown) => {
+  emit({ type: 'error', message: e instanceof Error ? e.message : String(e) });
+  process.exitCode = 1;
+});

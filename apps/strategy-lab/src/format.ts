@@ -91,6 +91,10 @@ export function formatValue(v: LabValue): string {
       return `${x} session${x === 1 ? '' : 's'}`;
     case 'minutes':
       return `${x} min`;
+    case 'days':
+      return `${x} day${x === 1 ? '' : 's'}`;
+    case 'bps':
+      return `${x} bps`;
     default:
       return Number.isInteger(x) ? String(x) : x.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
   }

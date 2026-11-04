@@ -1,7 +1,7 @@
 // Registry of the strategies Strategy Lab can execute as a manual single test, with their parameter schemas. Pure
 // data and validation (no engine code), so the browser form and the server validator share one definition.
 
-import type { ParamSpec, Resolution, RunRequest, StrategySpec } from './contract.ts';
+import type { LabRunRequest, ParamSpec, ParamValue, Resolution, StrategySpec } from './contract.ts';
 
 export const RISE_FROM_RECENT_LOW: StrategySpec = {
   key: 'rise-from-recent-low',
@@ -45,7 +45,118 @@ export const RISE_FROM_RECENT_LOW: StrategySpec = {
   defaultResolution: '1d'
 };
 
-export const RUNNABLE_STRATEGIES: readonly StrategySpec[] = [RISE_FROM_RECENT_LOW];
+// The growth-following trading backtest: the SAME scanner and signals as above as its only entry, executed all-in/flat
+// with the D1 exit manager (src/growth-trading/riseTrading.ts, docs/strategy-lab/GROWTH_TRADING.md). Defaults: the
+// registered VGT D1 baseline exits (config/phenotypes/D1/VGT.json `primary`), illustrative — not optimised.
+export const RISE_FROM_RECENT_LOW_TRADING: StrategySpec = {
+  key: 'rise-from-recent-low-trading',
+  version: '1.0.0',
+  title: 'Rise from recent low (trading backtest)',
+  kind: 'trades',
+  runnable: true,
+  description:
+    'Trading backtest. Buys (all-in, one position, $100,000 fixed notional) on each Rise-from-Recent-Low signal while ' +
+    'flat, at the next eligible trade after the signal bar completes; signals while invested are recorded as ' +
+    'ignored. Exits: the D1 profit-conditional trailing stop, plus (optional) the maximum losing hold and the ' +
+    'buffered intraday-loss exit. Re-entry needs only a fresh signal: no lower-price test, loss restriction or reset.',
+  params: [
+    { ...RISE_FROM_RECENT_LOW.params[0]!, group: 'entry' },
+    { ...RISE_FROM_RECENT_LOW.params[1]!, group: 'entry' },
+    {
+      key: 'trailingStopPercent',
+      label: 'Trailing stop',
+      description:
+        'Always on. The stop sits this far below the highest price since the fill (raised after each session, never ' +
+        'lowered) and is ACTIVE only on sessions where selling at the stop would be profitable after interest; a ' +
+        'losing position has no active stop. Fills at the stop price, or at the opening trade after a gap through it.',
+      type: 'number',
+      unit: 'percent',
+      default: 7.3,
+      min: 0.1,
+      max: 50,
+      step: 0.1,
+      group: 'exit'
+    },
+    {
+      key: 'maximumHoldEnabled',
+      label: 'Maximum losing hold',
+      description:
+        'From the given calendar-day age, a position whose opening trade shows a net loss (after interest) is sold at ' +
+        'the next trade after the open. A profitable position may stay longer. Off: no loss exit at all.',
+      type: 'boolean',
+      unit: 'text',
+      default: true,
+      min: 0,
+      max: 1,
+      step: 1,
+      group: 'exit'
+    },
+    {
+      key: 'maximumHoldDays',
+      label: 'Maximum losing hold age',
+      description: 'Calendar days from the fill session’s date (weekends and holidays count).',
+      type: 'integer',
+      unit: 'days',
+      default: 8,
+      min: 1,
+      max: 3650,
+      step: 1,
+      group: 'exit',
+      dependsOn: 'maximumHoldEnabled'
+    },
+    {
+      key: 'intradayLossBufferEnabled',
+      label: 'Buffered intraday-loss exit',
+      description:
+        'Only from the maximum-hold age: sells after the first completed minute whose close puts the net P&L (after ' +
+        'interest) at or below −buffer × $100,000, at the next eligible trade. Requires the maximum losing hold.',
+      type: 'boolean',
+      unit: 'text',
+      default: true,
+      min: 0,
+      max: 1,
+      step: 1,
+      group: 'exit',
+      dependsOn: 'maximumHoldEnabled'
+    },
+    {
+      key: 'intradayLossBufferPercent',
+      label: 'Intraday loss buffer',
+      description:
+        'Percent of the $100,000 invested notional, on net P&L after interest — not a price decline (2.9% = −$2,900).',
+      type: 'number',
+      unit: 'percent',
+      default: 2.9,
+      min: 0,
+      max: 50,
+      step: 0.1,
+      group: 'exit',
+      dependsOn: 'intradayLossBufferEnabled'
+    },
+    {
+      key: 'costBpsPerSide',
+      label: 'Transaction cost per side',
+      description: 'Charged on every fill (5 bps = the Study 8 pools convention). No separate commission.',
+      type: 'number',
+      unit: 'bps',
+      default: 5,
+      min: 0,
+      max: 100,
+      step: 0.5,
+      group: 'execution'
+    }
+  ],
+  resolutions: RISE_FROM_RECENT_LOW.resolutions,
+  defaultResolution: '1d',
+  notes: [
+    'Fixed $100,000 notional per trade, never compounded; 11% simple annual margin interest per calendar day (365-day year).',
+    'Stops fill at the stop price (no extra slippage) or at the gapped opening trade; minute-bar prices, no bid-ask spread.',
+    'A position never exits on its entry session; an open position at the end is marked at the last close (not closed).',
+    'Several symbols = independent standalone backtests, one per symbol, never summed or shared-capital.'
+  ]
+};
+
+export const RUNNABLE_STRATEGIES: readonly StrategySpec[] = [RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING];
 
 export function findStrategy(key: string, version: string): StrategySpec | undefined {
   return RUNNABLE_STRATEGIES.find((s) => s.key === key && s.version === version);
@@ -57,10 +168,27 @@ export const MAX_SYMBOLS_PER_RUN = 8;
 export const MAX_TITLE_LENGTH = 160;
 
 export function validateParam(spec: ParamSpec, value: unknown): string | null {
+  if (spec.type === 'boolean') return typeof value === 'boolean' ? null : `${spec.label}: must be on or off (true/false)`;
   if (typeof value !== 'number' || !Number.isFinite(value)) return `${spec.label}: must be a number`;
   if (spec.type === 'integer' && !Number.isInteger(value)) return `${spec.label}: must be a whole number`;
   if (value < spec.min || value > spec.max) return `${spec.label}: must be between ${spec.min} and ${spec.max}`;
   return null;
+}
+
+/** Rules across parameters (beyond each parameter's own range). */
+export function crossParamErrors(spec: StrategySpec, params: Record<string, unknown>): string[] {
+  if (spec.key === RISE_FROM_RECENT_LOW_TRADING.key && params.intradayLossBufferEnabled === true && params.maximumHoldEnabled === false)
+    return [
+      'Buffered intraday-loss exit: it applies only from the maximum losing-hold age — switch it off, or switch the maximum losing hold on'
+    ];
+  return [];
+}
+
+/** Whether a parameter is applied: its switch chain (dependsOn) is all on. */
+export function isParamApplied(spec: StrategySpec, params: Record<string, unknown>, key: string): boolean {
+  const p = spec.params.find((x) => x.key === key);
+  if (!p?.dependsOn) return true;
+  return params[p.dependsOn] === true && isParamApplied(spec, params, p.dependsOn);
 }
 
 /** Validates a manual run request against the registry. Returns the errors (empty when valid). */
@@ -97,6 +225,7 @@ export function validateRunRequest(req: unknown, knownSymbols: ReadonlySet<strin
       const e = validateParam(s, p[s.key]);
       if (e) errors.push(e);
     }
+    errors.push(...crossParamErrors(spec, p));
   }
 
   if (!Array.isArray(r.symbols) || r.symbols.length === 0) errors.push('symbols: choose at least one symbol');
@@ -131,15 +260,15 @@ export function validateRunRequest(req: unknown, knownSymbols: ReadonlySet<strin
   return errors;
 }
 
-export function isValidRunRequest(req: unknown, knownSymbols: ReadonlySet<string>): req is RunRequest {
+export function isValidRunRequest(req: unknown, knownSymbols: ReadonlySet<string>): req is LabRunRequest {
   return validateRunRequest(req, knownSymbols).length === 0;
 }
 
 /** Canonical JSON of a parameter set (sorted keys) — the identity of a variation together with the strategy version. */
-export function canonicalParams(params: Record<string, number>): string {
+export function canonicalParams(params: Record<string, ParamValue>): string {
   return JSON.stringify(Object.fromEntries(Object.entries(params).sort(([a], [b]) => (a < b ? -1 : 1))));
 }
 
-export function defaultParams(spec: StrategySpec): Record<string, number> {
+export function defaultParams(spec: StrategySpec): Record<string, ParamValue> {
   return Object.fromEntries(spec.params.map((p: ParamSpec) => [p.key, p.default]));
 }

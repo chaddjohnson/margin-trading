@@ -6,7 +6,7 @@ import {
   EVENT_KINDS,
   type EventKind,
   type RunDetail,
-  type RunRequest,
+  type LabRunRequest,
   type RunSummary
 } from '../../shared/contract.ts';
 import { api, type EventsResponse, type PricesResponse } from '../api.ts';
@@ -17,15 +17,17 @@ import { useFetched, useScoped } from '../hooks.ts';
 import { EventTable, MarkerTooltip } from './Events.tsx';
 import { NotesList } from './Notes.tsx';
 import { AnalysisPanel, EventDetail, Glyph, ParametersPanel } from './Panels.tsx';
+import { TradeTable } from './Trading.tsx';
+import { RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING } from '../../shared/strategies.ts';
 
-type Detail = RunDetail & { request: RunRequest | null };
+type Detail = RunDetail & { request: LabRunRequest | null };
 
 interface Props {
   runId: string;
   compareId: string | null;
   symbol: string | null;
   onRoute: (r: { run?: string; symbol?: string | null; compare?: string | null }) => void;
-  onClone: (req: Partial<RunRequest>) => void;
+  onClone: (req: Partial<LabRunRequest>) => void;
   onChanged: () => void;
   refreshKey: number;
 }
@@ -162,6 +164,14 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
 
   if (error) return <div className="main-empty form-error">{error}</div>;
   if (!run || !symbol) return <div className="main-empty">Loading run…</div>;
+  const trading = run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key;
+  const unrealizedOf = (r: RunDetail | null) => {
+    const per = (
+      r?.metrics?.perSymbol as Record<string, { pnl?: { unrealized?: { netUsd: number } | null } }> | undefined
+    )?.[symbol];
+    return per?.pnl?.unrealized?.netUsd ?? null;
+  };
+  const tradingB = runB && !compareProblem && runB.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key;
 
   const counts = (role: Role) => {
     const src = role === 'A' ? eventsA : eventsB;
@@ -233,6 +243,16 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             {run.dataOrigin === 'real' ? 'REAL MARKET DATA' : 'SYNTHETIC DEMO DATA'}
           </span>
           <span className="badge badge-muted">{run.kind}</span>
+          {run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key && (
+            <span className="badge badge-trading" data-testid="result-kind">
+              TRADING BACKTEST · STANDALONE PER SYMBOL
+            </span>
+          )}
+          {run.strategy.key === RISE_FROM_RECENT_LOW.key && (
+            <span className="badge badge-muted" data-testid="result-kind">
+              SIGNAL-ONLY
+            </span>
+          )}
           <button
             type="button"
             className={`star big${run.bookmarked ? ' is-on' : ''}`}
@@ -354,6 +374,12 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
           {run.status === 'completed' && kindsPresent.length === 0 && (
             <span className="muted small">No events for {symbol}.</span>
           )}
+          {trading && (
+            <span className="muted small legend-note" data-testid="legend-trading-note">
+              Entry signal = a raw Rise signal taken (order placed) · Rejected signal = a raw signal ignored (invested
+              or order pending) · Executed entry / exit = the fills.
+            </span>
+          )}
         </div>
         <div className="chart-body">
           {priceError ? (
@@ -426,11 +452,49 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             {view ? `${formatEtDate(view.range[0])} → ${formatEtDate(view.range[1])}` : ''}
             {prices?.decimated ? ' · overview decimated (min/max per bucket); zoom in for minute detail' : ''}
           </span>
-          <span className="muted small chart-hint">Drag to measure · scroll to zoom · shift-drag to pan · double-click resets</span>
+          <span className="muted small chart-hint">
+            Drag to measure · swipe up / scroll to zoom in, down to zoom out · shift-drag to pan · double-click resets
+          </span>
         </div>
       </section>
 
       <div className="lower">
+        {trading && (
+          <section className="card trades" aria-label={`Trades of ${symbol}`} data-testid="trades-card">
+            <div className="card-head">
+              <h3>Trades · {symbol}</h3>
+              <span className="muted small">
+                standalone backtest of {symbol}; click a trade to show it on the chart
+              </span>
+            </div>
+            <h4 className="small">
+              <span className="role-badge role-A">A</span> {run.id}
+            </h4>
+            <TradeTable
+              events={eventsA?.events ?? []}
+              role="A"
+              symbol={symbol}
+              unrealizedNet={unrealizedOf(run)}
+              selectedKey={selectedKey}
+              onSelect={(k) => select(k, true)}
+            />
+            {tradingB && (
+              <>
+                <h4 className="small">
+                  <span className="role-badge role-B">B</span> {runB.id}
+                </h4>
+                <TradeTable
+                  events={eventsB?.events ?? []}
+                  role="B"
+                  symbol={symbol}
+                  unrealizedNet={unrealizedOf(runB)}
+                  selectedKey={selectedKey}
+                  onSelect={(k) => select(k, true)}
+                />
+              </>
+            )}
+          </section>
+        )}
         <EventDetail
           event={selected?.event ?? null}
           role={selected?.role ?? null}

@@ -2,6 +2,7 @@
 
 import type { LabEvent, LabValue, RunDetail } from '../../shared/contract.ts';
 import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
+import { RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING } from '../../shared/strategies.ts';
 import { glyphUri, type Role } from '../chart/markers.ts';
 import {
   formatEt,
@@ -13,6 +14,14 @@ import {
   formatValue,
   PRECISION_LABEL
 } from '../format.ts';
+import { type TradingSymbolMetrics, TradingMetrics } from './Trading.tsx';
+
+/** What kind of result a run is: a trading backtest, signal-only research, or another source. */
+export function resultKindOf(run: Pick<RunDetail, 'strategy' | 'kind'>): string {
+  if (run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key) return 'trading backtest — standalone per symbol';
+  if (run.strategy.key === RISE_FROM_RECENT_LOW.key) return 'signal-only (no positions, exits or P&L)';
+  return run.kind === 'import' ? 'imported result' : run.kind;
+}
 
 export function ValueTable({ values, caption }: { values: LabValue[]; caption?: string }) {
   if (values.length === 0) return null;
@@ -88,7 +97,8 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
             value: `${run.strategy.title} (${run.strategy.key}@${run.strategy.version}, ${run.strategy.id})`,
             unit: 'text'
           },
-          { key: 'origin', label: 'Data origin', value: run.dataOrigin, unit: 'text' }
+          { key: 'origin', label: 'Data origin', value: run.dataOrigin, unit: 'text' },
+          { key: 'resultKind', label: 'Result kind', value: resultKindOf(run), unit: 'text' }
         ]}
         caption="Run"
       />
@@ -244,6 +254,23 @@ export function AnalysisPanel({ runs, symbol }: { runs: { role: Role; run: RunDe
       {sections.map(({ role, run }) => {
         const m = run.metrics as Record<string, unknown>;
         const per = (m.perSymbol as Record<string, Record<string, unknown>> | undefined)?.[symbol];
+        if (m.kind === 'trading backtest') {
+          return (
+            <div key={role} className="analysis-block" data-testid={`analysis-trading-${role}`}>
+              <h4>
+                <span className={`role-badge role-${role}`}>{role}</span> {run.id} · trading backtest · {symbol}
+              </h4>
+              <p className="muted small">{String(m.disclaimer)}</p>
+              {per ? (
+                <TradingMetrics m={per as unknown as TradingSymbolMetrics} symbol={symbol} />
+              ) : (
+                <p className="muted small">
+                  {run.id} has no results for {symbol}.
+                </p>
+              )}
+            </div>
+          );
+        }
         if (m.kind === 'imported trades') {
           const t = m.trades as Record<string, number>;
           const ps = per as { entries?: number; exits?: number; rejected?: number } | undefined;

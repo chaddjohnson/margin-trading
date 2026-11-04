@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { RunRequest } from '../shared/contract.ts';
+import type { LabRunRequest } from '../shared/contract.ts';
 import { api, type Meta, onTokenRequired, setToken } from './api.ts';
 import { RunTestDialog, TokenDialog } from './components/RunTestDialog.tsx';
 import { RunView } from './components/RunView.tsx';
@@ -41,7 +41,7 @@ export function App() {
   const [metaError, setMetaError] = useState<string | null>(null);
   const [route, setRouteState] = useState<Route>(parseHash);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [dialog, setDialog] = useState<{ initial: Partial<RunRequest> | null } | null>(null);
+  const [dialog, setDialog] = useState<{ initial: Partial<LabRunRequest> | null } | null>(null);
   const [needToken, setNeedToken] = useState(false);
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);

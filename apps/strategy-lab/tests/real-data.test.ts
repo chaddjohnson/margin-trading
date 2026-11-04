@@ -139,3 +139,100 @@ describe.skipIf(!hasData || !study8Out)('Study 8 vg-balanced import', () => {
     expect(() => importStudy8(c, repo, copy)).toThrow(/differs from the sealed record/);
   });
 });
+
+describe.skipIf(!hasData)('trading backtest on real data (rise-from-recent-low-trading)', () => {
+  const run = async (service: LabService, repo: Repo, body: Record<string, unknown>) => {
+    const r = service.createManualRun(body);
+    if ('errors' in r) throw new Error(r.errors.join('; '));
+    await waitFor(() => ['completed', 'failed'].includes(repo.runDetail(r.runId)!.status));
+    return repo.runDetail(r.runId)!;
+  };
+  const trading = (resolution: string, symbols: string[], from: string, to: string) => ({
+    strategyKey: 'rise-from-recent-low-trading',
+    strategyVersion: '1.0.0',
+    params: {
+      advanceFromRecentLowPercent: 5,
+      recentLowLookbackBars: 20,
+      trailingStopPercent: 7.3,
+      maximumHoldEnabled: true,
+      maximumHoldDays: 8,
+      intradayLossBufferEnabled: true,
+      intradayLossBufferPercent: 2.9,
+      costBpsPerSide: 5
+    },
+    symbols,
+    from,
+    to,
+    resolution
+  });
+  const signalOnly = (resolution: string, symbols: string[], from: string, to: string) => ({
+    strategyKey: 'rise-from-recent-low',
+    strategyVersion: '1.0.0',
+    params: { advanceFromRecentLowPercent: 5, recentLowLookbackBars: 20 },
+    symbols,
+    from,
+    to,
+    resolution
+  });
+
+  it('receives exactly the signal-only strategy’s raw signals, trades them per symbol, and reproduces', async () => {
+    const c = cfg();
+    const db = openDb(c.dbFile);
+    const repo = new Repo(db);
+    const service = new LabService(repo, c, new Jobs(repo, c), new MarketPrices(c.repoRoot));
+    for (const [resolution, symbols, from, to] of [
+      ['1d', ['VGT', 'GDX'], '2020-01-02', '2020-12-31'],
+      ['60m', ['VGT'], '2020-02-03', '2020-05-29']
+    ] as const) {
+      const t = await run(service, repo, trading(resolution, [...symbols], from, to));
+      const s = await run(service, repo, signalOnly(resolution, [...symbols], from, to));
+      expect(t.error).toBeNull();
+      expect(t.status).toBe('completed');
+      const te = readEvents(join(c.stateDir, t.artifactDir!), t.artifact.sha256).events;
+      const se = readEvents(join(c.stateDir, s.artifactDir!), s.artifact.sha256).events;
+      for (const symbol of symbols) {
+        const raw = te
+          .filter((e) => e.symbol === symbol && (e.kind === 'entry_signal' || e.kind === 'rejected_signal'))
+          .map((e) => [e.t, e.price]);
+        const reference = se.filter((e) => e.symbol === symbol).map((e) => [e.t, e.price]);
+        expect(reference.length).toBeGreaterThan(0);
+        expect(raw).toEqual(reference); // the same instants and closes, nothing added or dropped
+        // Executed trades: entry after its signal, exit after its entry, the next entry after the exit.
+        const entries = te.filter((e) => e.symbol === symbol && e.kind === 'executed_entry');
+        expect(entries.length).toBeGreaterThan(0);
+        let lastExit = -Infinity;
+        for (const en of entries) {
+          expect(Date.parse(en.t)).toBeGreaterThan(lastExit);
+          const ex = te.find((e) => e.id === en.linkedEventId);
+          if (ex) {
+            expect(ex.symbol).toBe(symbol);
+            expect(Date.parse(ex.t)).toBeGreaterThan(Date.parse(en.t));
+            lastExit = Date.parse(ex.t);
+          } else expect(en.meta.open).toBe(true);
+        }
+      }
+      expect(te.every((e) => symbols.includes(e.symbol as never))).toBe(true);
+      const m = t.metrics as { kind: string; perSymbol: Record<string, { checks: Record<string, number> }> };
+      expect(m.kind).toBe('trading backtest');
+      for (const symbol of symbols) expect(m.perSymbol[symbol]!.checks.fixedLedgerMaxDifferenceUsd).toBe(0);
+      const manifest = JSON.parse(readFileSync(join(c.stateDir, t.artifactDir!, 'manifest.json'), 'utf8')) as {
+        sha256: Record<string, string>;
+      };
+      expect(Object.keys(manifest.sha256).sort()).toEqual(
+        ['daily.json', 'events.json', 'metrics.json', 'provenance.json', 'request.json', 'trades.json'].sort()
+      );
+    }
+    // The same configuration again: the same variation, a new run, identical events.
+    const a = repo
+      .listRuns({ limit: 10 })
+      .find((r) => r.strategy.key === 'rise-from-recent-low-trading' && r.window.resolution === '1d')!;
+    const again = await run(service, repo, trading('1d', ['VGT', 'GDX'], '2020-01-02', '2020-12-31'));
+    expect(again.variation.id).toBe(a.variation.id);
+    expect(again.id).not.toBe(a.id);
+    const first = repo.runDetail(a.id)!;
+    expect(readEvents(join(c.stateDir, again.artifactDir!), null).events.map((e) => [e.id, e.t, e.price])).toEqual(
+      readEvents(join(c.stateDir, first.artifactDir!), null).events.map((e) => [e.id, e.t, e.price])
+    );
+    db.close();
+  }, 240_000);
+});

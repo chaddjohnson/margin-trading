@@ -14,6 +14,14 @@ import type { Config } from './config.ts';
 import type { Repo } from './repo.ts';
 
 export const RUNNER_SCRIPT = 'apps/strategy-lab/runner/entry-signal-run.ts';
+/** The allowlist: one fixed runner script per runnable strategy key (taken from the run's stored strategy, never from
+ * request text). */
+export const RUNNER_SCRIPTS: Readonly<Record<string, string>> = {
+  'rise-from-recent-low': RUNNER_SCRIPT,
+  'rise-from-recent-low-trading': 'apps/strategy-lab/runner/trading-run.ts'
+};
+/** Optional artifact files a runner may write besides the four every run has; all are covered by manifest.json. */
+const OPTIONAL_ARTIFACTS = ['trades.json', 'daily.json'];
 const NODE_FLAGS = [
   '--experimental-transform-types',
   '--disable-warning=ExperimentalWarning',
@@ -94,10 +102,13 @@ export class Jobs {
     const relDir = join('runs', publicId);
     const dir = join(this.cfg.stateDir, relDir);
     if (!existsSync(join(dir, 'request.json'))) throw new Error('request.json is missing');
+    const strategyKey = this.repo.runDetail(publicId)?.strategy.key ?? '';
+    const script = Object.hasOwn(RUNNER_SCRIPTS, strategyKey) ? RUNNER_SCRIPTS[strategyKey]! : null;
+    if (!script) throw new Error(`no runner for strategy ${strategyKey}`);
     this.repo.markRunning(id);
     this.repo.setProgress(id, 'Starting', 0);
     const logStream = createWriteStream(join(dir, 'run.log'), { flags: 'a' });
-    const child = spawn(process.execPath, [...NODE_FLAGS, join(this.cfg.repoRoot, RUNNER_SCRIPT), dir], {
+    const child = spawn(process.execPath, [...NODE_FLAGS, join(this.cfg.repoRoot, script), dir], {
       cwd: this.cfg.repoRoot,
       env: { PATH: process.env.PATH ?? '/usr/bin:/bin', HOME: process.env.HOME ?? '/tmp', LANG: 'C.UTF-8', TZ: 'UTC' },
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -177,7 +188,13 @@ export class Jobs {
     const prov = JSON.parse(readFileSync(join(dir, 'provenance.json'), 'utf8')) as {
       basisBySymbol: Record<string, string>;
     } & Record<string, unknown>;
-    writeManifest(dir, ['request.json', 'events.json', 'metrics.json', 'provenance.json']);
+    writeManifest(dir, [
+      'request.json',
+      'events.json',
+      'metrics.json',
+      'provenance.json',
+      ...OPTIONAL_ARTIFACTS.filter((f) => existsSync(join(dir, f)))
+    ]);
     const first = detail.symbols[0]!;
     const priceSource: PriceSource = {
       kind: 'market',

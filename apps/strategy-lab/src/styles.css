@@ -947,6 +947,21 @@ textarea {
   grid-row: span 2;
 }
 
+/* The trade ledger of a trading backtest spans the whole width, above the event detail and table. */
+.lower > .trades {
+  grid-column: 1 / -1;
+}
+
+.trades .table-scroll {
+  max-height: 360px;
+  overflow: auto;
+}
+
+.trades-table td,
+.trades-table th {
+  white-space: nowrap;
+}
+
 /* ---------- detail, tables ---------- */
 
 .detail-grid {
@@ -1326,6 +1341,102 @@ textarea {
 
 .strategy-card p {
   margin: 4px 0 0;
+}
+
+/* ---------- strategy choice, rule switches, trading results ---------- */
+
+.strategy-choice {
+  display: grid;
+  gap: 6px;
+}
+
+.strategy-choice .strategy-card {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 6px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.strategy-choice .strategy-card.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.block {
+  display: block;
+  margin-top: 2px;
+}
+
+.strategy-notes {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--text-2);
+}
+
+.badge-trading {
+  color: var(--accent);
+  border-color: rgba(57, 135, 229, 0.6);
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.switch-state {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-3);
+}
+
+.switch-state.is-on {
+  color: var(--ok);
+}
+
+.field.is-dependent {
+  margin-left: 18px;
+}
+
+.field.is-inactive input {
+  opacity: 0.55;
+}
+
+.field-label .badge {
+  margin: 0 4px 0 6px;
+}
+
+.metrics-table tr.section th {
+  padding-top: 10px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.not-applied {
+  color: var(--warn);
+  font-weight: 400;
+}
+
+.trades-table td.num,
+.metrics-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.pos {
+  color: var(--ok);
+}
+
+.neg {
+  color: var(--danger);
+}
+
+.na {
+  color: var(--text-3);
+  font-style: italic;
 }
 
 /* ---------- responsive ---------- */
