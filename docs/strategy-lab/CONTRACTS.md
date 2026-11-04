@@ -35,8 +35,9 @@ Source of truth: `apps/strategy-lab/shared/contract.ts` (types), `shared/validat
 `{ key, label, value, unit }`:
 
 - `value` is a number, string, boolean or **`null` (unknown, e.g. a censored outcome)**;
-- `unit` is one of `percent` (percentage points), `price`, `usd`, `bars`, `sessions`, `minutes`, `date`, `datetime`
-  (ISO UTC, displayed in ET), `count`, `ratio`, `index`, `text`.
+- `unit` is one of `percent` (percentage points), `price`, `usd`, `bars`, `sessions`, `minutes`, `days` (calendar
+  days), `bps` (basis points), `date`, `datetime` (ISO UTC, displayed in ET), `count`, `ratio`, `index`, `text`.
+  `days` and `bps` were added on 2026-11-04 for the trading backtest; no earlier event uses them.
 
 ### Example (a real signal of a manual run, abbreviated)
 
@@ -68,10 +69,18 @@ Source of truth: `apps/strategy-lab/shared/contract.ts` (types), `shared/validat
 
 - `key`, `version`, `title`, `kind` (`entry_signal` | `trades`), `runnable`, `description`;
 - `params: ParamSpec[]`;
-- `resolutions` and `defaultResolution`.
+- `resolutions` and `defaultResolution`;
+- optional `notes` (fixed execution facts shown with the form).
 
-A `ParamSpec` is `{ key, label, description, type: number|integer, unit, default, min, max, step }`. The browser form is
-generated from it, and the server validates against the same object.
+A `ParamSpec` is `{ key, label, description, type: number|integer|boolean, unit, default, min, max, step }`, plus two
+optional fields:
+
+- `group`: `entry`, `exit` or `execution` (a form section);
+- `dependsOn`: the key of the boolean switch that must be on for the value to apply.
+
+A `boolean` is a rule switch (`true`/`false`; min/max/step unused). The browser form is generated from the spec, and the
+server validates against the same object. Rules across parameters are checked by `crossParamErrors`; for now the only
+one is the buffer → hold dependency below.
 
 `rise-from-recent-low@1.0.0`:
 
@@ -82,6 +91,27 @@ generated from it, and the server validates against the same object.
 | *(run configuration)* `resolution` | Bar resolution | — | — | `1d` | `1d`, `60m`, `30m`, `15m`, `5m`, `1m` |
 
 The rule itself is specified in `src/entry-signals/README.md`.
+
+`rise-from-recent-low-trading@1.0.0` (kind `trades`; [GROWTH_TRADING.md](GROWTH_TRADING.md)):
+
+| Key | Label | Type | Unit | Default | Range | Group / depends on |
+| --- | --- | --- | --- | --- | --- | --- |
+| `advanceFromRecentLowPercent` | Advance from recent low (X) | number | percent | 5 | 0.1–100 | entry |
+| `recentLowLookbackBars` | Recent-low lookback (N) | integer | bars | 20 | 2–5000 | entry |
+| `trailingStopPercent` | Trailing stop (always on) | number | percent | 7.3 | 0.1–50 | exit |
+| `maximumHoldEnabled` | Maximum losing hold | boolean | — | true | — | exit |
+| `maximumHoldDays` | Maximum losing hold age | integer | days | 8 | 1–3650 | exit / `maximumHoldEnabled` |
+| `intradayLossBufferEnabled` | Buffered intraday-loss exit | boolean | — | true | — | exit / `maximumHoldEnabled` |
+| `intradayLossBufferPercent` | Intraday loss buffer (% of the $100,000 notional, net after interest) | number | percent | 2.9 | 0–50 | exit / `intradayLossBufferEnabled` |
+| `costBpsPerSide` | Transaction cost per side | number | bps | 5 | 0–100 | execution |
+| *(run configuration)* `resolution` | Bar resolution | — | — | `1d` | as above | entry |
+
+- **Refused:** `intradayLossBufferEnabled: true` with `maximumHoldEnabled: false` (the buffer only exists from the
+  hold age).
+- **Saved values.** All values are saved, including those whose switch is off. The run's parameter snapshot shows each
+  switch as `ON`/`OFF` and labels an inactive value "saved, not applied (switch off)".
+- **Variation identity.** The canonical JSON of all the values, plus the resolution (for the signal-only strategy the
+  canonical string is unchanged, e.g. `{"advanceFromRecentLowPercent":5,"recentLowLookbackBars":20}|1d`).
 
 ## Manual run request (`POST /api/runs`)
 
@@ -99,6 +129,9 @@ The rule itself is specified in `src/entry-signals/README.md`.
 }
 ```
 
+A trading request has the same shape, with `"strategyKey": "rise-from-recent-low-trading"` and its eight parameters
+(numbers and the two switches as JSON booleans).
+
 **Exactly one configuration:** every parameter is a scalar, and unknown fields are rejected. This endpoint is not for
 optimisation, and Strategy Lab has no endpoint that is.
 
@@ -108,7 +141,9 @@ optimisation, and Strategy Lab has no endpoint that is.
 | --- | --- |
 | `request.json` | The validated request plus `runId` (manual runs) |
 | `events.json` | Contract v2 events (sha256 recorded in `runs.artifact_sha256` and checked on every read) |
-| `metrics.json` | Entry-signal outcomes per symbol with an every-session baseline (`kind: entry-signal outcomes`), or the imported trade summary (`kind: imported trades`) |
+| `metrics.json` | Entry-signal outcomes per symbol with an every-session baseline (`kind: entry-signal outcomes`); the imported trade summary (`kind: imported trades`); or, for a trading backtest, per symbol: signals, trades, P&L, drawdowns, exposure, holding, reconciliation checks, and `unavailable` reasons (`kind: trading backtest`) |
+| `trades.json` | Trading backtests: the trade ledger per symbol (decision, fills, exit reason, gross/costs/interest/net, holding, worst/best mark) |
+| `daily.json` | Trading backtests: the daily marks per symbol (realized, unrealized, marked net, held at the close) |
 | `provenance.json` | Per symbol: the dataset window report (data file, sha256, partitions file sha256, evaluation and warm-up dates, split adjustments, access mode); the engine files' sha256; the Node version |
 | `import.json` | For imports: the source directory, source file sha256s and the verification checks |
 | `manifest.json` | sha256 of every file above |

@@ -3,7 +3,8 @@
 Strategy Lab (`apps/strategy-lab/`) is a general-purpose strategy research workbench. In the browser you can:
 
 - inspect saved results (entries and exits, single-symbol and multi-ETF);
-- edit an entry strategy's parameters and start **one** manual test on real data;
+- edit a strategy's parameters and start **one** manual test on real data: the signal-only entry strategy, or the
+  trading backtest built on it ([GROWTH_TRADING.md](GROWTH_TRADING.md));
 - follow the run's progress;
 - bookmark and annotate runs and variations;
 - compare two runs on one symbol's chart.
@@ -15,8 +16,11 @@ Optimisation, sweeps and selection are **not** in the browser or the API. They r
 browser (React + Dygraphs) ──HTTP/JSON──▶ server (Node, node:http) ──▶ SQLite (state/strategy-lab/strategy-lab.sqlite)
                                               │                    └─▶ run artifacts (state/strategy-lab/runs/R-…/)
                                               ├─ prices: canonical minute files data/<SYM>/data.csv (read-only)
-                                              └─ child process per manual run: runner/entry-signal-run.ts
+                                              └─ child process per manual run (allowlisted per strategy):
+                                                   runner/entry-signal-run.ts   (signal-only)
+                                                   runner/trading-run.ts        (trading backtest)
                                                    └─ src/lib/evaluation.ts (dataset pipeline) + src/entry-signals/
+                                                      (+ src/growth-trading/ and the Study 8 D1 book for trading)
 importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 runner output + the sealed F24 record)
 ```
 
@@ -25,7 +29,7 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
 | Concept | Meaning | Identifier |
 | --- | --- | --- |
 | **Experiment** | A research question or campaign ("Growth Entry Discovery", "Study 8 imports", "Demo (synthetic data)") | `E-0001` |
-| **Strategy** | A named algorithm at a version ("Rise from recent low" `rise-from-recent-low@1.0.0`; "Study 8 D1 shared-slot pool") | `S-0001` (plus key and version) |
+| **Strategy** | A named algorithm at a version ("Rise from recent low" `rise-from-recent-low@1.0.0`; its trading backtest `rise-from-recent-low-trading@1.0.0`; "Study 8 D1 shared-slot pool") | `S-0001` (plus key and version) |
 | **Variation** | One **immutable** parameter configuration of one strategy version in one experiment. Identity = strategy + experiment + canonical parameters; for runnable strategies the bar resolution is part of the configuration | `V-000001` |
 | **Run** | One execution (or import) of a variation: title, timestamps, status, symbols, window, data fingerprints, code revision, parameter snapshot, assumptions, events, metrics. Running the same variation again creates a **new run** | `R-000001` |
 | **Optimisation batch / trial** | Read-only history imported from a Claude/CLI optimisation study; never launched from Strategy Lab (schema in place, no batch imported yet) | `OB-0001` |
@@ -59,7 +63,8 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
    It writes `request.json` atomically and queues the run.
 2. The job manager (`server/jobs.ts`) starts at most `STRATEGY_LAB_MAX_CONCURRENT_RUNS` (default 1) children. Each is
    started with **an allowlisted executable and a fixed argument vector**: this Node binary, fixed flags, the runner
-   script and the server-generated run directory. There is no shell, no user text on the command line, a minimal
+   script of the run's stored strategy (`RUNNER_SCRIPTS`, one fixed script per runnable strategy key) and the
+   server-generated run directory. There is no shell, no user text on the command line, a minimal
    environment and a timeout (default 30 min). Progress is reported as JSON lines on stdout into `progress_json`;
    stdout and stderr go to `run.log`.
 3. The runner reads each symbol through `loadDatasetSessions` (access `manual evaluation`). That gives:
@@ -68,8 +73,10 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
    - forward split adjustment;
    - the data file's sha256.
 
-   The runner then builds the bars, scans for signals, measures forward outcomes inside the window, and writes
-   `events.json`, `metrics.json` and `provenance.json` atomically.
+   The signal-only runner then builds the bars, scans for signals, measures forward outcomes inside the window, and
+   writes `events.json`, `metrics.json` and `provenance.json` atomically. The trading runner scans the same bars, runs
+   one standalone backtest per symbol, and also writes `trades.json` (the ledger) and `daily.json` (daily marks). It
+   exits non-zero, so the run is marked `failed`, if any accounting check does not reconcile.
 4. The server validates the events against the contract, writes `manifest.json` (sha256 of every file), and records
    the result once: event count, events sha256, metrics, provenance, and the price basis per symbol.
 5. **Restart:** queued runs are re-queued, and a run left `running` by a stopped server is marked `failed`
@@ -92,7 +99,8 @@ importers/study8.ts (CLI) ──▶ same SQLite + artifacts (reads a Study 8 run
 - **Artifacts** live in `state/strategy-lab/runs/R-xxxxxx/`. They are immutable files referenced by the run row:
   - `request.json` (manual runs);
   - `events.json` (contract v2, sorted, verified against `runs.artifact_sha256` on every read);
-  - `metrics.json`, `provenance.json` (or `import.json`), `manifest.json`, `run.log`.
+  - `metrics.json`, `provenance.json` (or `import.json`), `manifest.json`, `run.log`;
+  - trading backtests also: `trades.json`, `daily.json`.
 
   Writes are atomic: temporary file, fsync, rename, then fsync of the directory.
 - **Git:** everything under `state/` is ignored (root `.gitignore`). Migrations, code and the small demo fixture are
@@ -152,15 +160,24 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
   - **Navigation.** Shift-drag pans and double-click resets the zoom; zooming otherwise uses the buttons, the range
     selector and the mouse wheel.
 - **Mouse-wheel zoom** (`src/chart/wheelZoom.ts`, a `wheel` handler in the same interaction model):
-  - **Direction and centre.** Wheel up zooms in and wheel down zooms out, around the time under the cursor (it keeps
-    its screen position).
+  - **Direction and centre.** A two-finger swipe **up** zooms **in**, a swipe down zooms out, around the time under
+    the cursor (it keeps its screen position).
+    - With the default natural scrolling of macOS and Windows precision touchpads, a swipe up arrives as
+      `deltaY > 0`. So `deltaY > 0` zooms in.
+    - The sign is decided in one place (`wheelZoomOutPx`), with no browser- or device-specific branch: browsers do not
+      reveal whether the device is a mouse or a trackpad, or whether natural scrolling is on.
+    - A mouse wheel therefore follows the operating system's scroll direction: with classic (non-natural) scrolling,
+      rolling it toward you zooms in.
+    - Pinch gestures (and Ctrl + wheel) arrive with `ctrlKey` and keep the browser's page-zoom sign: pinching out
+      zooms in.
+    - Changed on 2026-11-04 (Task 5): before, a swipe up zoomed out.
   - **Steps.** Gentle: about ×0.86 or ×1.16 per 100-pixel notch, capped at ×0.7 or ×1.4 per event. Pixel, line and
     page delta modes are normalised, so trackpads work too.
   - **Axes.** Time axis only; the y axis keeps its auto-scaling.
   - **Bounds.** The data's extent, and a minimum window of 30 minutes (minute data) or 20 sessions (the synthetic
     daily demo).
   - **Page scrolling.** The wheel event is consumed only when the window actually changes, so the page still scrolls
-    over the axes or at full extent.
+    over the axes or at a zoom limit.
   - **Markers.** A wheel over a marker zooms as well.
 
 ## Optimisation imports (design, display-only)

@@ -144,9 +144,14 @@ The strategy's own tests are part of the root `npm test` (`src/entry-signals/tes
 
 ## Limitations and known gaps
 
-- **Runnable strategies.** Only `rise-from-recent-low` runs from the UI. Imported and demo strategies are read-only.
-- **Exits.** Exits for the new strategy are deliberately not implemented. Its events are entry signals, and the
-  analysis is forward moves, not P&L.
+- **Runnable strategies.** `rise-from-recent-low` (signal-only) and `rise-from-recent-low-trading` (trading backtest)
+  run from the UI. Imported and demo strategies are read-only.
+- **Exits.** The signal-only strategy has no exits: its events are entry signals, and its analysis is forward moves,
+  not P&L. Its trading backtest (`rise-from-recent-low-trading`) has the D1 exits and full P&L. Its multi-symbol runs
+  are independent standalone backtests, never a shared-capital pool ([GROWTH_TRADING.md](GROWTH_TRADING.md)).
+- **Wheel direction.** A two-finger swipe up zooms in (`deltaY > 0`). Browsers cannot tell a mouse wheel from a
+  trackpad, so a classic mouse wheel zooms in when rolled toward you. Verified with automated browser events and a
+  negative control, not on physical devices.
 - **Optimisation batches.** The schema exists, but no batch is imported yet and there is no import CLI for one yet.
 - **Chart observations.** A saved chart observation (symbol, run, window, note) is not implemented. Use run and
   variation notes, and record the window in the note.

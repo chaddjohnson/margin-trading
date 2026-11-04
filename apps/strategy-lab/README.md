@@ -17,7 +17,8 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 | Path | What |
 | --- | --- |
 | `server/` | `main.ts` (entry), `config.ts`, `security.ts`, `db.ts` + `migrations/`, `repo.ts` (all SQL), `service.ts` (manual runs), `jobs.ts` (bounded child-process execution), `prices.ts` (chart prices, decimation), `artifacts.ts` (atomic files), `http.ts` (API + static UI), `seed-demo.ts` |
-| `runner/entry-signal-run.ts` | The child process of one manual run (dataset pipeline + `src/entry-signals/`) |
+| `runner/entry-signal-run.ts` | The child process of one manual signal-only run (dataset pipeline + `src/entry-signals/`) |
+| `runner/trading-run.ts` | The child process of one trading backtest (`src/growth-trading/`: the same signals + the Study 8 D1 book and exits) |
 | `importers/study8.ts` | Read-only import of a Study 8 runner output (verified against the sealed record) |
 | `shared/` | Contract v2, strategy registry and validation, event validation; the demo fixture's generator and v1 schema |
 | `src/` | UI: `App.tsx`, `components/` (sidebar, run view, panels, events, dialogs, notes), `chart/` (Dygraphs chart, marker overlay, Eastern ticker) |
