@@ -16,7 +16,7 @@ import { etParts, formatEt, formatPrice } from '../format.ts';
 import { etTicks } from './etTicker.ts';
 import { MARKER_SIZE, PRICE_COLOR, type Role, glyphUri, markerOffset } from './markers.ts';
 import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure } from './measure.ts';
-import { normalizeWheelDelta, wheelZoomWindow } from './wheelZoom.ts';
+import { wheelZoomOutPx, wheelZoomWindow } from './wheelZoom.ts';
 
 // Dygraphs' pan helpers and default touch handlers, reused by the custom interaction model.
 interface DragContext {
@@ -290,8 +290,9 @@ export function PriceChart(props: Props) {
       },
       willDestroyContextMyself: true,
       dblclick: (_event: MouseEvent, g: Dygraph) => g.resetZoom(),
-      // Wheel: zoom the time axis around the cursor (the y axis keeps its auto-scaling). The event is consumed only
-      // when the window actually changes, so the page still scrolls at full extent or over the axes.
+      // Wheel: zoom the time axis around the cursor (the y axis keeps its auto-scaling); swipe up zooms in, swipe down
+      // out (the sign is decided once, in wheelZoomOutPx). The event is consumed only when the window actually
+      // changes, so the page still scrolls at a zoom limit or over the axes.
       wheel: (event: WheelEvent, g: Dygraph) => {
         // From clientX, not eventToDomCoords: that uses offsetX, which is relative to a marker button when the event
         // comes from the marker layer. The graph's canvas sits at the host's top-left corner.
@@ -301,7 +302,7 @@ export function PriceChart(props: Props) {
         const next = wheelZoomWindow(
           g.xAxisRange() as [number, number],
           g.toDataXCoord(domX),
-          normalizeWheelDelta(event, window.innerHeight),
+          wheelZoomOutPx(event, window.innerHeight),
           g.xAxisExtremes(),
           propsRef.current.synthetic ? MIN_SPAN_DAILY_DATA : MIN_SPAN_MINUTE_DATA
         );
