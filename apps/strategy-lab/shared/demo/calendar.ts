@@ -2,7 +2,7 @@
 // modelled (the fixture says so in priceSeries.calendar). Each daily bar is stamped at its session close, 16:00
 // America/New_York, converted to UTC with the zone's daylight-saving rules (20:00Z in summer, 21:00Z in winter).
 
-import { sessionDateToUtcMidnight, utcMidnightToDate, zonedWallTimeToUtc } from '../schema/time.ts';
+import { sessionDateToUtcMidnight, utcMidnightToDate, zonedWallTimeToUtc } from '../demo-schema/time.ts';
 
 export const SESSION_CLOSE = { hour: 16, minute: 0 };
 

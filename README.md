@@ -324,16 +324,15 @@ Named multi-book **pools** bundle D1 phenotypes with one shared $100,000 funded 
 incumbent) in `config/pools/`, run with `npm run pools -- fixed B4` (or `portfolio`, `compare B4 B5`, `verify`), and
 their prospective comparison after 2026-10-13. See [docs/pools/README.md](docs/pools/README.md).
 
-## Strategy Entry Explorer (research UI, demo data)
+## Strategy Lab (research workbench)
 
-A local browser app that charts a price series with the entry events of strategy variations — two at a time, keeping
-the zoomed window while switching — for visual and statistical review of entries. It currently shows **synthetic demo
-data only** (no market data, no real strategy). It is self-contained in `apps/strategy-entry-explorer/` with its own
-dependencies, and it does not touch `src/` or any backtest.
+A local browser workbench for strategy research. It shows saved runs in SQLite and entry and exit markers per symbol
+on real minute data, with Eastern timestamps, bookmarks, notes and two-run comparison. It can start **one** manual test
+of an entry strategy on real data from the browser. It never optimises: sweeps and selection stay Claude/CLI
+workflows. The app is self-contained in `apps/strategy-lab/`; its signal-only strategy lives in `src/entry-signals/`.
 
 ```sh
-npm --prefix apps/strategy-entry-explorer start   # first run installs its dependencies; opens http://127.0.0.1:5173
+npm --prefix apps/strategy-lab start   # http://127.0.0.1:4317 (over the tailnet: see docs/strategy-lab/OPERATIONS.md)
 ```
 
-App guide: `apps/strategy-entry-explorer/README.md`. Data contract: `docs/research/growth-entry-discovery/ENTRY_EXPLORER.md`.
-Research direction (not an authorisation to run it): `docs/research/growth-entry-discovery/PLAN.md`.
+Documentation: `docs/strategy-lab/README.md`. Research direction: `docs/research/growth-entry-discovery/PLAN.md`.

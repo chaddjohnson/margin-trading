@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { alignEvents } from '../src/schema/align.ts';
-import type { EntryEvent, PriceBar } from '../src/schema/types.ts';
+import { alignEvents } from '../shared/demo-schema/align.ts';
+import type { EntryEvent, PriceBar } from '../shared/demo-schema/types.ts';
 
 const bars: PriceBar[] = [
   { t: '2024-03-08T21:00:00Z', d: '2024-03-08', o: 1, h: 1, l: 1, c: 1 },

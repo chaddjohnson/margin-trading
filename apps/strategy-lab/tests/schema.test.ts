@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { isIsoUtc, isSessionDate, sessionDateOf, zonedWallTimeToUtc } from '../src/schema/time.ts';
-import type { Dataset } from '../src/schema/types.ts';
-import { validateDataset } from '../src/schema/validate.ts';
+import { isIsoUtc, isSessionDate, sessionDateOf, zonedWallTimeToUtc } from '../shared/demo-schema/time.ts';
+import type { Dataset } from '../shared/demo-schema/types.ts';
+import { validateDataset } from '../shared/demo-schema/validate.ts';
 import { clone, readFixture } from './helpers.ts';
 
 const fixture = readFixture();

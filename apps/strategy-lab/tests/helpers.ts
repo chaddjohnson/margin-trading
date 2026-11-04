@@ -2,15 +2,9 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { Dataset } from '../src/schema/types.ts';
+import type { Dataset } from '../shared/demo-schema/types.ts';
 
-export const FIXTURE_PATH = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '..',
-  'public',
-  'data',
-  'demo-dataset.v1.json'
-);
+export const FIXTURE_PATH = join(dirname(fileURLToPath(import.meta.url)), '..', 'fixtures', 'demo-dataset.v1.json');
 
 export function readFixtureText(): string {
   return readFileSync(FIXTURE_PATH, 'utf8');

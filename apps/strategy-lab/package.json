@@ -1,23 +1,26 @@
 {
-  "name": "strategy-entry-explorer",
+  "name": "strategy-lab",
   "private": true,
   "license": "UNLICENSED",
-  "description": "Local research UI that charts a price series with the entry events of strategy variations (demo: synthetic data)",
+  "description": "Strategy Lab: local strategy research workbench (runs, entries/exits, SQLite, single manual tests)",
   "type": "module",
   "engines": {
     "node": ">=24.21.0"
   },
   "scripts": {
-    "start": "node scripts/ensure-deps.mjs && vite --open",
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
+    "start": "node scripts/ensure-deps.mjs && node scripts/ensure-build.mjs && npm run serve",
+    "serve": "node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=4096 server/main.ts",
+    "dev": "node scripts/dev.mjs",
+    "build": "npm run typecheck && vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.e2e.json",
     "lint": "eslint",
     "test": "vitest run",
-    "test:e2e": "playwright test",
-    "check": "npm run typecheck && npm run lint && npm run test && npm run build && npm run test:e2e",
-    "generate:fixture": "node --disable-warning=ExperimentalWarning scripts/generate-fixture.ts"
+    "test:e2e": "vite build && playwright test",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run test:e2e",
+    "import:study8": "node --experimental-transform-types --disable-warning=ExperimentalWarning importers/study8.ts",
+    "generate:fixture": "node --experimental-transform-types --disable-warning=ExperimentalWarning scripts/generate-fixture.ts",
+    "token": "node scripts/show-token.mjs",
+    "service:install": "node scripts/install-service.mjs"
   },
   "dependencies": {
     "dygraphs": "2.2.2",

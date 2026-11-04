@@ -3,8 +3,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { buildModel } from '../src/data/model.ts';
-import { validateDataset } from '../src/schema/validate.ts';
+import { buildModel } from '../shared/demo-schema/model.ts';
+import { validateDataset } from '../shared/demo-schema/validate.ts';
 
 const doc = join(
   dirname(fileURLToPath(import.meta.url)),

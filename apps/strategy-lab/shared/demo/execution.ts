@@ -3,7 +3,7 @@
 // position then counts as occupied for a fixed number of sessions (a placeholder, NOT an exit policy); signals that
 // arrive while it is occupied — or on the last session, with no next session to fill in — are not executed.
 
-import type { EntryEvent, ExecutionModel, ParameterValue } from '../schema/types.ts';
+import type { EntryEvent, ExecutionModel, ParameterValue } from '../demo-schema/types.ts';
 import type { Session } from './calendar.ts';
 import type { RawSignal } from './rules.ts';
 

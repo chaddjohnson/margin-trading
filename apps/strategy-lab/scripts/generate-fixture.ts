@@ -1,4 +1,4 @@
-// Regenerates the checked-in demo fixture (public/data/demo-dataset.v1.json) from the deterministic generator.
+// Regenerates the checked-in demo fixture (fixtures/demo-dataset.v1.json) from the deterministic generator.
 // Usage: npm run generate:fixture            (writes the file)
 //        npm run generate:fixture -- --check (exits 1 if the checked-in file differs from a fresh generation)
 
@@ -7,11 +7,11 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { generateDemoDataset } from '../src/demo/generate.ts';
-import { stableStringify } from '../src/demo/serialize.ts';
-import { validateDataset } from '../src/schema/validate.ts';
+import { generateDemoDataset } from '../shared/demo/generate.ts';
+import { stableStringify } from '../shared/demo/serialize.ts';
+import { validateDataset } from '../shared/demo-schema/validate.ts';
 
-const file = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'data', 'demo-dataset.v1.json');
+const file = join(dirname(fileURLToPath(import.meta.url)), '..', 'fixtures', 'demo-dataset.v1.json');
 const dataset = generateDemoDataset();
 const result = validateDataset(dataset);
 if (!result.ok) {

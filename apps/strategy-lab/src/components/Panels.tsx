@@ -1,0 +1,363 @@
+// Run-level panels: Parameters (inputs, assumptions, provenance), the selected event, and the analysis.
+
+import type { LabEvent, LabValue, RunDetail } from '../../shared/contract.ts';
+import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
+import { glyphUri, type Role } from '../chart/markers.ts';
+import {
+  formatEt,
+  formatPercent,
+  formatPrice,
+  formatShare,
+  formatUsd,
+  formatUtc,
+  formatValue,
+  PRECISION_LABEL
+} from '../format.ts';
+
+export function ValueTable({ values, caption }: { values: LabValue[]; caption?: string }) {
+  if (values.length === 0) return null;
+  return (
+    <table className="kv-table">
+      {caption && <caption>{caption}</caption>}
+      <tbody>
+        {values.map((v) => (
+          <tr key={v.key}>
+            <th scope="row">{v.label}</th>
+            <td className={v.value === null ? 'unknown' : ''}>{formatValue(v)}</td>
+            <td className="unit">{v.unit}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (() => void) | null }) {
+  const prov = run.provenance as Record<string, unknown>;
+  const runner = prov.runner as
+    | {
+        symbols?: Record<
+          string,
+          { dataSha256?: string; dataFile?: string; warmup?: { note?: string }; splitAdjustments?: unknown[] }
+        >;
+      }
+    | undefined;
+  const code = run.codeRevision as { commit?: string; dirty?: string[]; branch?: string } | null;
+  return (
+    <section className="card" aria-label="Parameters" data-testid="parameters">
+      <div className="card-head">
+        <h3>Parameters · {run.variation.id}</h3>
+        {onClone ? (
+          <button type="button" className="btn-chip" onClick={onClone} data-testid="clone-run">
+            Clone into new test…
+          </button>
+        ) : (
+          <span className="muted small">
+            {run.kind === 'import' ? 'Imported result: not executable here' : 'Synthetic demo: not executable'}
+          </span>
+        )}
+      </div>
+      <ValueTable values={run.params} caption="Inputs (immutable snapshot)" />
+      {run.paramSchema && (
+        <details className="small">
+          <summary>Parameter definitions</summary>
+          <ul>
+            {run.paramSchema.map((p) => (
+              <li key={p.key}>
+                <b>{p.label}</b> (<span className="mono">{p.key}</span>, {p.type}, {p.unit}, {p.min}–{p.max}, default{' '}
+                {p.default}): {p.description}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+      <ValueTable
+        values={[
+          { key: 'symbols', label: 'Symbols', value: run.symbols.join(', '), unit: 'text' },
+          {
+            key: 'window',
+            label: 'Window (NY session dates)',
+            value: `${run.window.from} → ${run.window.to}`,
+            unit: 'text'
+          },
+          { key: 'partition', label: 'Partitions touched', value: run.window.partition, unit: 'text' },
+          { key: 'resolution', label: 'Resolution', value: run.window.resolution, unit: 'text' },
+          {
+            key: 'strategy',
+            label: 'Strategy',
+            value: `${run.strategy.title} (${run.strategy.key}@${run.strategy.version}, ${run.strategy.id})`,
+            unit: 'text'
+          },
+          { key: 'origin', label: 'Data origin', value: run.dataOrigin, unit: 'text' }
+        ]}
+        caption="Run"
+      />
+      <ValueTable values={run.assumptions} caption="Assumptions" />
+      <details className="small provenance">
+        <summary>Provenance and reproducibility</summary>
+        <ul>
+          {code && (
+            <li>
+              Code: <span className="mono">{code.commit ?? 'unknown'}</span> on {code.branch ?? '?'}
+              {code.dirty && code.dirty.length > 0 ? ` (uncommitted: ${code.dirty.join(', ')})` : ' (clean)'}
+            </li>
+          )}
+          {runner?.symbols &&
+            Object.entries(runner.symbols).map(([s, r]) => (
+              <li key={s}>
+                {s}: {r.dataFile} sha256 <span className="mono">{String(r.dataSha256 ?? '').slice(0, 16)}…</span>;
+                warm-up: {r.warmup?.note}
+                {Array.isArray(r.splitAdjustments) && r.splitAdjustments.length
+                  ? `; splits forward-adjusted: ${JSON.stringify(r.splitAdjustments)}`
+                  : ''}
+              </li>
+            ))}
+          {Array.isArray(prov.checks) && (prov.checks as string[]).map((c) => <li key={c}>{c}</li>)}
+          {typeof prov.importedFrom === 'string' && <li>Imported from {prov.importedFrom}</li>}
+          {run.artifact.sha256 && (
+            <li>
+              Events file sha256 <span className="mono">{run.artifact.sha256}</span>
+            </li>
+          )}
+          <li>
+            Created {formatEt(run.createdAt)}
+            {run.startedAt ? `, started ${formatEt(run.startedAt)}` : ''}
+            {run.completedAt ? `, finished ${formatEt(run.completedAt)}` : ''}
+          </li>
+        </ul>
+      </details>
+    </section>
+  );
+}
+
+export function Glyph({ kind, role }: { kind: LabEvent['kind']; role: Role }) {
+  return <img className="glyph" src={glyphUri(kind, role, 13)} alt="" width={13} height={13} />;
+}
+
+export function EventDetail({
+  event,
+  role,
+  runId,
+  markerPrice,
+  onSelect,
+  onZoom
+}: {
+  event: LabEvent | null;
+  role: Role | null;
+  runId: string | null;
+  markerPrice: number | null;
+  onSelect: (id: string) => void;
+  onZoom: () => void;
+}) {
+  if (!event || !role) {
+    return (
+      <section className="card detail" aria-label="Selected event" data-testid="event-detail">
+        <h3>Selected event</h3>
+        <p className="muted small">Hover a marker for a summary; click it (or a table row) to pin its details here.</p>
+      </section>
+    );
+  }
+  return (
+    <section className="card detail" aria-label="Selected event" data-testid="event-detail" data-event-id={event.id}>
+      <div className="card-head">
+        <h3>
+          <Glyph kind={event.kind} role={role} /> {EVENT_KIND_LABEL[event.kind]} · {event.symbol}
+        </h3>
+        <button type="button" className="btn-chip" onClick={onZoom}>
+          Zoom here
+        </button>
+      </div>
+      <dl className="detail-grid">
+        <dt>Run</dt>
+        <dd>
+          <span className={`role-badge role-${role}`}>{role}</span> <span className="mono">{runId}</span>
+        </dd>
+        <dt>Time (ET)</dt>
+        <dd data-testid="detail-time">{formatEt(event.t, event.timePrecision)}</dd>
+        <dt>UTC instant</dt>
+        <dd className="mono small">{formatUtc(event.t)}</dd>
+        <dt>Precision</dt>
+        <dd className="small">
+          {PRECISION_LABEL[event.timePrecision]} — {event.timeMeaning}
+        </dd>
+        <dt>Price</dt>
+        <dd data-testid="detail-price">
+          {event.price === null ? (
+            <>
+              <b>not recorded</b>
+              {markerPrice !== null && (
+                <span className="muted"> (marker drawn at the market price {formatPrice(markerPrice)})</span>
+              )}
+            </>
+          ) : (
+            <>
+              {formatPrice(event.price)} <span className="muted">({event.priceBasis})</span>
+            </>
+          )}
+        </dd>
+        <dt>Reason</dt>
+        <dd>{event.reason ?? 'not recorded'}</dd>
+        {event.tradeId && (
+          <>
+            <dt>Trade</dt>
+            <dd>
+              {event.tradeId}
+              {event.linkedEventId && (
+                <>
+                  {' · '}
+                  <button type="button" className="link" onClick={() => onSelect(event.linkedEventId!)}>
+                    {event.kind === 'executed_entry' ? 'go to exit' : 'go to entry'}
+                  </button>
+                </>
+              )}
+              {event.meta.open === true && <span className="muted"> · open at the end of the run (no exit)</span>}
+            </dd>
+          </>
+        )}
+        <dt>Event ID</dt>
+        <dd className="mono small">{event.id}</dd>
+      </dl>
+      <ValueTable values={event.values} caption="Values" />
+      {event.kind === 'entry_signal' && (
+        <p className="muted small">An entry signal is not a trade: no position, exit or P&amp;L is implied.</p>
+      )}
+    </section>
+  );
+}
+
+type Summary = {
+  count: number;
+  nonOverlapping: number;
+  returns: { sessions: number; complete: number; medianPercent: number | null; positiveShare: number | null }[];
+  excursion: { complete: number; medianMfePercent: number | null; medianMaePercent: number | null };
+  targets: { percent: number; known: number; reached: number; share: number | null; medianSessions: number | null }[];
+};
+
+export function AnalysisPanel({ runs, symbol }: { runs: { role: Role; run: RunDetail }[]; symbol: string }) {
+  const sections = runs.filter((r) => r.run.metrics);
+  return (
+    <section className="card analysis" aria-label="Analysis" data-testid="analysis">
+      <div className="card-head">
+        <h3>Analysis · {symbol}</h3>
+      </div>
+      {sections.length === 0 && <p className="muted small">No metrics for this run yet.</p>}
+      {sections.map(({ role, run }) => {
+        const m = run.metrics as Record<string, unknown>;
+        const per = (m.perSymbol as Record<string, Record<string, unknown>> | undefined)?.[symbol];
+        if (m.kind === 'imported trades') {
+          const t = m.trades as Record<string, number>;
+          const ps = per as { entries?: number; exits?: number; rejected?: number } | undefined;
+          return (
+            <div key={role} className="analysis-block">
+              <h4>
+                <span className={`role-badge role-${role}`}>{role}</span> {run.id} · imported trades
+              </h4>
+              <p className="muted small">
+                {String(m.source)}. {String(m.disclaimer)}
+              </p>
+              <table className="metrics-table">
+                <tbody>
+                  <tr>
+                    <th>Net (realised + marked unrealised), whole pool</th>
+                    <td>{formatUsd(t.net)}</td>
+                  </tr>
+                  <tr>
+                    <th>Realised / unrealised</th>
+                    <td>
+                      {formatUsd(t.realized)} / {formatUsd(t.unrealized)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Interest · friction</th>
+                    <td>
+                      {formatUsd(t.interest)} · {formatUsd(t.friction)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Lots (open) · refused signals, all symbols</th>
+                    <td>
+                      {t.lots} ({t.openLots}) · {t.refusedSignals}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>{symbol}: entries · exits · rejected</th>
+                    <td data-testid="analysis-symbol-counts">
+                      {ps ? `${ps.entries} · ${ps.exits} · ${ps.rejected}` : 'none'}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          );
+        }
+        if (!per)
+          return (
+            <p key={role} className="muted small">
+              {run.id} has no results for {symbol}.
+            </p>
+          );
+        const o = per.outcomes as Summary;
+        const b = per.baseline as Summary;
+        const row = (label: string, a: string, c: string) => (
+          <tr key={label}>
+            <th scope="row">{label}</th>
+            <td>{a}</td>
+            <td className="baseline">{c}</td>
+          </tr>
+        );
+        return (
+          <div key={role} className="analysis-block">
+            <h4>
+              <span className={`role-badge role-${role}`}>{role}</span> {run.id} · entry signals vs every session
+            </h4>
+            <p className="muted small">
+              {String(m.disclaimer)} Censored values (window too short) are excluded, never counted as zero.
+            </p>
+            <table className="metrics-table" data-testid={`metrics-${role}`}>
+              <thead>
+                <tr>
+                  <th />
+                  <th>Signals</th>
+                  <th className="baseline">Baseline</th>
+                </tr>
+              </thead>
+              <tbody>
+                {row(
+                  'Count (non-overlapping 63s)',
+                  `${o.count} (${o.nonOverlapping})`,
+                  `${b.count} (${b.nonOverlapping})`
+                )}
+                {o.returns.map((r, j) =>
+                  row(
+                    `Median return after ${r.sessions} sessions (n)`,
+                    `${formatPercent(r.medianPercent)} (${r.complete})`,
+                    `${formatPercent(b.returns[j]?.medianPercent)} (${b.returns[j]?.complete})`
+                  )
+                )}
+                {o.returns.map((r, j) =>
+                  row(
+                    `Positive after ${r.sessions} sessions`,
+                    formatShare(r.positiveShare),
+                    formatShare(b.returns[j]?.positiveShare)
+                  )
+                )}
+                {row(
+                  'Median MFE / MAE over 63 sessions',
+                  `${formatPercent(o.excursion.medianMfePercent)} / ${formatPercent(o.excursion.medianMaePercent)}`,
+                  `${formatPercent(b.excursion.medianMfePercent)} / ${formatPercent(b.excursion.medianMaePercent)}`
+                )}
+                {o.targets.map((t, j) =>
+                  row(
+                    `Reached +${t.percent}% within 63 (median sessions)`,
+                    `${formatShare(t.share)} of ${t.known}${t.medianSessions !== null ? ` (${t.medianSessions})` : ''}`,
+                    `${formatShare(b.targets[j]?.share)} of ${b.targets[j]?.known}`
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
+    </section>
+  );
+}

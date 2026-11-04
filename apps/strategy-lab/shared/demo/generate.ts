@@ -7,7 +7,7 @@ import {
   type Dataset,
   type EntryEvent,
   type PriceBar
-} from '../schema/types.ts';
+} from '../demo-schema/types.ts';
 import { weekdaySessions } from './calendar.ts';
 import { OCCUPANCY_SESSIONS, applyExecution, demoExecutionModel } from './execution.ts';
 import { syntheticPath } from './prices.ts';

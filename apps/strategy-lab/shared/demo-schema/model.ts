@@ -1,8 +1,8 @@
 // The in-memory model the UI works with: a validated dataset plus indexes and each event's chart position. Built once
 // per dataset; nothing here depends on which variation is selected.
 
-import { type AlignmentPolicy, alignEvents } from '../schema/align.ts';
-import type { Dataset, EntryEvent, EntryEventType, Variation } from '../schema/types.ts';
+import { type AlignmentPolicy, alignEvents } from './align.ts';
+import type { Dataset, EntryEvent, EntryEventType, Variation } from './types.ts';
 
 /** An event placed on the chart: `x` is its bar's timestamp in ms (the chart's x value), `barIndex` its bar. */
 export type PlacedEvent = EntryEvent & { x: number; barIndex: number };

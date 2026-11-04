@@ -1,135 +1,195 @@
-// The price chart. Lifecycle: one Dygraph per dataset — created when the model arrives, destroyed on unmount. Every
-// later change (variation, comparison, filters, selection) only replaces the annotations with setAnnotations(), which
-// leaves the zoom/pan window alone. The window changes only through the user's own zoom gestures, the range selector
-// or an explicit command from the imperative handle.
+// The price chart (Dygraphs 2.2.2). One Dygraph per (run, symbol): created on mount, destroyed on unmount. Markers are
+// an overlay of focusable buttons placed at each event's exact instant and price with Dygraphs' own coordinate
+// transform (toDomCoords), so decimation or a change of data resolution never moves or drops a marker. A vertical
+// crosshair follows the highlighted (nearest) data point, with Dygraphs' highlight dot on the line.
+//
+// Data: the run window's overview (decimated) is loaded first; when the user zooms in, the visible window is fetched
+// at finer resolution and merged in, keeping the overview outside it so the range selector still shows everything.
 
 import Dygraph, { type dygraphs } from 'dygraphs';
 import 'dygraphs/dist/dygraph.css';
-import { type KeyboardEvent, type Ref, useEffect, useImperativeHandle, useRef } from 'react';
+import { type Ref, useEffect, useImperativeHandle, useRef } from 'react';
 
-import type { ExplorerModel } from '../data/model.ts';
-import { formatPrice, xToDate } from '../format.ts';
-import type { Cluster } from '../state/selectors.ts';
-import { type ClusterAnnotation, PRICE_COLOR, toAnnotations } from './markers.ts';
+import type { LabEvent } from '../../shared/contract.ts';
+import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
+import { etParts, formatEt, formatPrice } from '../format.ts';
+import { etTicks } from './etTicker.ts';
+import { MARKER_SIZE, PRICE_COLOR, type Role, glyphUri, markerOffset } from './markers.ts';
 
-export interface ChartHandle {
-  /** Shows [from, to] (clamped to the data); null shows everything. */
-  setWindow(range: readonly [number, number] | null): void;
-  /** Pans so that x is centred, keeping the current span. */
-  centerOn(x: number): void;
-  /** Shows a window of `span` ms centred on x. */
-  zoomAround(x: number, span: number): void;
-  getWindow(): [number, number] | null;
-  getExtremes(): [number, number] | null;
+export interface ChartEvent {
+  key: string; // `${role}:${event.id}`
+  role: Role;
+  runId: string;
+  event: LabEvent;
+  y: number | null; // plotted price: the event's price, or the market price at that instant when not recorded
 }
 
-export interface ChartView {
-  range: [number, number];
-  isFull: boolean;
+export interface ChartHandle {
+  setWindow(range: readonly [number, number] | null): void;
+  centerOn(x: number): void;
+  zoomAround(x: number, span: number): void;
+  getWindow(): [number, number] | null;
 }
 
 interface Props {
-  model: ExplorerModel;
-  clusters: readonly Cluster[];
-  selectedEventId: string | null;
-  /** Accessible label per cluster x (used for the focusable markers). */
-  describeCluster: (c: Cluster) => string;
-  onViewChange: (view: ChartView) => void;
-  /** `xs`: the clicked marker's bar first, then every other marker whose box overlaps it on screen. */
-  onActivateCluster: (xs: number[]) => void;
-  onHoverCluster: (xs: number[] | null, anchor: DOMRect | null) => void;
+  overview: [number, number][];
+  overviewDecimated: boolean;
+  synthetic: boolean;
+  fetchDetail: (from: number, to: number, signal: AbortSignal) => Promise<[number, number][]>;
+  events: readonly ChartEvent[];
+  selectedKey: string | null;
+  /** The window to open with, read once when the graph is created (null: everything). */
+  initialWindow: () => [number, number] | null;
+  onWindowChange: (w: [number, number], full: boolean) => void;
+  onActivate: (keys: string[]) => void;
+  onHover: (keys: string[] | null, anchor: DOMRect | null) => void;
   ref?: Ref<ChartHandle>;
 }
 
-const SERIES = 'Close';
-let instanceCounter = 0;
+const toRows = (pts: readonly [number, number][]) => pts.map(([t, v]) => [new Date(t), v]);
 
-function clampWindow(g: Dygraph, from: number, to: number): [number, number] {
+function clamp(g: Dygraph, a: number, b: number): [number, number] {
   const [lo, hi] = g.xAxisExtremes();
-  const span = Math.min(to - from, hi - lo);
-  const start = Math.max(lo, Math.min(from, hi - span));
+  const span = Math.min(b - a, hi - lo);
+  const start = Math.max(lo, Math.min(a, hi - span));
   return [start, start + span];
 }
 
-/**
- * The bars of every marker drawn under (overlapping) the given marker, the marker's own bar first. Neighbouring
- * sessions' markers overlap when zoomed out; each stays on its own bar, and this list makes all of them reachable.
- */
-function overlapping(marker: HTMLElement): number[] {
-  const own = Number(marker.dataset.x);
-  const r = marker.getBoundingClientRect();
-  const host = marker.parentElement;
-  const xs = [own];
-  host?.querySelectorAll<HTMLElement>('.see-marker').forEach((m) => {
-    if (m === marker || !m.dataset.x) return;
-    const o = m.getBoundingClientRect();
-    if (o.left < r.right && o.right > r.left && o.top < r.bottom && o.bottom > r.top) xs.push(Number(m.dataset.x));
-  });
-  return [own, ...xs.slice(1).sort((a, b) => a - b)];
-}
-
-function markerX(el: Element | null): number | null {
-  const m = el instanceof HTMLElement ? el.closest<HTMLElement>('.see-marker') : null;
-  return m?.dataset.x ? Number(m.dataset.x) : null;
-}
-
 export function PriceChart(props: Props) {
-  const { model, clusters, selectedEventId, ref } = props;
+  const { overview, events, selectedKey, ref } = props;
+  const frameRef = useRef<HTMLDivElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
+  const crossRef = useRef<HTMLDivElement>(null);
   const readoutRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Dygraph | null>(null);
   const propsRef = useRef(props);
-  const labelsRef = useRef(new Map<number, { label: string; ids: string }>());
-  const selectedXRef = useRef<number | null>(null);
-  const restoreFocusRef = useRef<number | null>(null);
+  const eventsRef = useRef(events);
+  const selectedRef = useRef(selectedKey);
+  const buttons = useRef(new Map<string, HTMLButtonElement>());
 
   useEffect(() => {
     propsRef.current = props;
   });
 
-  // Create the graph once per dataset.
+  // Places (and creates/removes) the marker buttons for the current graph state; reuses buttons so focus survives.
+  const placeMarkers = () => {
+    const g = graphRef.current;
+    const layer = layerRef.current;
+    if (!g || !layer) return;
+    const area = g.getArea();
+    const [x0, x1] = g.xAxisRange();
+    const [y0, y1] = g.yAxisRange();
+    const seen = new Set<string>();
+    const stack = new Map<string, number>();
+    let visible = 0;
+    for (const ce of eventsRef.current) {
+      const t = Date.parse(ce.event.t);
+      if (ce.y === null || t < x0 || t > x1 || ce.y < y0 || ce.y > y1) continue;
+      const [px, py] = g.toDomCoords(t, ce.y);
+      const stackKey = `${t}:${ce.event.kind === 'executed_exit' ? 'up' : 'down'}`;
+      const idx = stack.get(stackKey) ?? 0;
+      stack.set(stackKey, idx + 1);
+      let b = buttons.current.get(ce.key);
+      if (!b) {
+        b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'marker';
+        b.dataset.key = ce.key;
+        b.dataset.eventId = ce.event.id;
+        b.dataset.symbol = ce.event.symbol;
+        b.dataset.kind = ce.event.kind;
+        b.dataset.role = ce.role;
+        b.dataset.runId = ce.runId;
+        const img = document.createElement('img');
+        img.src = glyphUri(ce.event.kind, ce.role);
+        img.alt = '';
+        img.width = MARKER_SIZE;
+        img.height = MARKER_SIZE;
+        b.appendChild(img);
+        b.setAttribute(
+          'aria-label',
+          `${ce.role} ${ce.runId} ${EVENT_KIND_LABEL[ce.event.kind]} ${ce.event.symbol} ${formatEt(ce.event.t, ce.event.timePrecision)} at ${formatPrice(ce.event.price)}`
+        );
+        layer.appendChild(b);
+        buttons.current.set(ce.key, b);
+      }
+      b.style.left = `${Math.round(px - MARKER_SIZE / 2)}px`;
+      b.style.top = `${Math.round(py + markerOffset(ce.event.kind, idx))}px`;
+      b.classList.toggle('is-selected', ce.key === selectedRef.current);
+      b.hidden = px < area.x - 1 || px > area.x + area.w + 1;
+      seen.add(ce.key);
+      visible++;
+    }
+    for (const [key, b] of buttons.current)
+      if (!seen.has(key)) {
+        if (document.activeElement === b) b.blur();
+        b.remove();
+        buttons.current.delete(key);
+      }
+    layer.dataset.markerCount = String(visible);
+  };
+
+  const overlapping = (b: HTMLElement): string[] => {
+    const r = b.getBoundingClientRect();
+    const keys = [b.dataset.key!];
+    for (const o of buttons.current.values()) {
+      if (o === b || o.hidden) continue;
+      const q = o.getBoundingClientRect();
+      if (q.left < r.right && q.right > r.left && q.top < r.bottom && q.bottom > r.top) keys.push(o.dataset.key!);
+    }
+    return keys;
+  };
+
+  // Create the graph once per mount (the parent keys this component by run and symbol).
   useEffect(() => {
     const host = hostRef.current;
-    if (!host) return;
-    const bars = model.dataset.priceSeries.bars;
-    const data = model.barTimes.map((t, i) => [new Date(t), model.closes[i] as number]);
-    let frame = 0;
-    let resizeFrame = 0;
+    const frame = frameRef.current;
+    if (!host || !frame) return;
+    let frameReq = 0;
+    let resizeReq = 0;
+    let detailTimer: ReturnType<typeof setTimeout> | undefined;
+    let detailAbort: AbortController | null = null;
+    let detailKey = '';
     let lastKey = '';
+    const overviewSpan = overview.length ? overview.at(-1)![0] - overview[0]![0] : 0;
 
-    const decorate = () => {
-      host.querySelectorAll<HTMLElement>('.see-marker').forEach((div) => {
-        const m = /see-x-(\d+)/.exec(div.className);
-        if (!m) return;
-        const x = Number(m[1]);
-        const info = labelsRef.current.get(x);
-        div.dataset.x = String(x);
-        div.dataset.eventIds = info?.ids ?? '';
-        div.setAttribute('role', 'button');
-        div.setAttribute('aria-label', info?.label ?? 'Entry events');
-        div.removeAttribute('title');
-        div.tabIndex = 0;
-        const img = div.querySelector('img');
-        if (img) {
-          img.alt = '';
-          img.draggable = false;
+    const maybeFetchDetail = (g: Dygraph, a: number, b: number) => {
+      if (!propsRef.current.overviewDecimated) return;
+      clearTimeout(detailTimer);
+      const key = `${Math.round(a)}|${Math.round(b)}`;
+      if (key === detailKey) return;
+      detailTimer = setTimeout(() => {
+        detailKey = key;
+        detailAbort?.abort();
+        if (b - a > overviewSpan * 0.6) {
+          g.updateOptions({ file: toRows(overview) });
+          return;
         }
-        if (restoreFocusRef.current === x) {
-          restoreFocusRef.current = null;
-          div.focus({ preventScroll: true });
-        }
-      });
-      host.dataset.markerCount = String(host.querySelectorAll('.see-marker').length);
+        const ac = new AbortController();
+        detailAbort = ac;
+        propsRef.current
+          .fetchDetail(a, b, ac.signal)
+          .then((detail) => {
+            if (ac.signal.aborted || graphRef.current !== g || detail.length === 0) return;
+            const lo = detail[0]![0];
+            const hi = detail.at(-1)![0];
+            const merged = [...overview.filter(([t]) => t < lo), ...detail, ...overview.filter(([t]) => t > hi)];
+            const w = g.xAxisRange();
+            g.updateOptions({ file: toRows(merged), dateWindow: [w[0], w[1]] });
+          })
+          .catch(() => {});
+      }, 250);
     };
 
-    const options: dygraphs.Options = {
-      labels: ['Session', SERIES],
+    const opts: dygraphs.Options = {
+      labels: ['Time', 'Price'],
       colors: [PRICE_COLOR],
-      strokeWidth: 1.6,
-      labelsUTC: true,
+      strokeWidth: 1.4,
+      labelsUTC: false,
       legend: 'never',
       showRangeSelector: true,
-      rangeSelectorHeight: 46,
+      rangeSelectorHeight: 44,
       rangeSelectorPlotStrokeColor: PRICE_COLOR,
       rangeSelectorPlotFillColor: 'rgba(57, 135, 229, 0.28)',
       rangeSelectorPlotFillGradientColor: 'rgba(57, 135, 229, 0.04)',
@@ -139,105 +199,92 @@ export function PriceChart(props: Props) {
       gridLineColor: 'rgba(148, 163, 184, 0.12)',
       axisLineColor: '#2b3a55',
       axisLabelFontSize: 12,
-      xRangePad: 10,
-      yRangePad: 14,
-      highlightCircleSize: 4,
-      rightGap: 12,
+      xRangePad: 8,
+      yRangePad: 18,
+      highlightCircleSize: 4.5,
+      rightGap: 14,
+      connectSeparatedPoints: true,
       axes: {
-        x: { valueFormatter: (ms: number) => xToDate(ms), axisLabelWidth: 64 },
-        y: {
-          axisLabelWidth: 54,
-          valueFormatter: (v: number) => formatPrice(v),
-          axisLabelFormatter: (v: number | Date) => (typeof v === 'number' ? v.toFixed(0) : String(v))
-        }
+        x: {
+          valueFormatter: (ms: number) => formatEt(new Date(ms).toISOString()),
+          ticker: (min: number, max: number, pixels: number) => etTicks(min, max, pixels),
+          axisLabelWidth: 70
+        },
+        y: { axisLabelWidth: 58, valueFormatter: (v: number) => formatPrice(v) }
       },
-      highlightCallback: (_e, _x, _points, row) => {
-        const bar = bars[row];
-        if (readoutRef.current && bar)
-          readoutRef.current.textContent = `${bar.d} · close ${formatPrice(bar.c)} (synthetic)`;
+      highlightCallback: (_e, x, points) => {
+        const g = graphRef.current;
+        const p = points[0] as (dygraphs.Point & { canvasx?: number }) | undefined;
+        if (!g || !p || p.canvasx === undefined || !crossRef.current || !readoutRef.current) return;
+        const area = g.getArea();
+        const line = crossRef.current;
+        line.style.left = `${Math.round(p.canvasx)}px`;
+        line.style.top = `${area.y}px`;
+        line.style.height = `${area.h}px`;
+        line.hidden = false;
+        const when = propsRef.current.synthetic
+          ? `${etParts(x).date} (synthetic close)`
+          : formatEt(new Date(x).toISOString());
+        readoutRef.current.textContent = `${when} · ${formatPrice(p.yval)}`;
       },
       unhighlightCallback: () => {
+        if (crossRef.current) crossRef.current.hidden = true;
         if (readoutRef.current) readoutRef.current.textContent = '';
       },
-      underlayCallback: (ctx, area, g) => {
-        const x = selectedXRef.current;
-        if (x === null) return;
-        const px = Math.round(g.toDomXCoord(x)) + 0.5;
-        if (px < area.x || px > area.x + area.w) return;
-        ctx.save();
-        ctx.fillStyle = 'rgba(226, 232, 240, 0.07)';
-        ctx.fillRect(px - 4, area.y, 8, area.h);
-        ctx.strokeStyle = 'rgba(226, 232, 240, 0.6)';
-        ctx.setLineDash([3, 3]);
-        ctx.beginPath();
-        ctx.moveTo(px, area.y);
-        ctx.lineTo(px, area.y + area.h);
-        ctx.stroke();
-        ctx.restore();
-      },
       drawCallback: (g) => {
-        decorate();
-        const [from, to] = g.xAxisRange();
-        host.dataset.viewFrom = xToDate(from);
-        host.dataset.viewTo = xToDate(to);
-        // Report the window after Dygraphs has finished drawing (never set React state mid-draw).
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => {
-          const key = `${from}|${to}`;
+        placeMarkers();
+        const [a, b] = g.xAxisRange();
+        frame.dataset.viewFrom = new Date(a).toISOString();
+        frame.dataset.viewTo = new Date(b).toISOString();
+        cancelAnimationFrame(frameReq);
+        frameReq = requestAnimationFrame(() => {
+          const key = `${a}|${b}`;
           if (key === lastKey) return;
           lastKey = key;
-          propsRef.current.onViewChange({ range: [from, to], isFull: !g.isZoomed('x') });
+          propsRef.current.onWindowChange([a, b], !g.isZoomed('x'));
+          maybeFetchDetail(g, a, b);
         });
       }
     };
 
-    const g = new Dygraph(host, data, options);
+    const g = new Dygraph(host, toRows(overview), opts);
     graphRef.current = g;
-    host.dataset.instance = String(++instanceCounter);
-    host.dataset.pricePoints = String(data.length);
+    frame.dataset.points = String(overview.length);
+    const init = propsRef.current.initialWindow();
+    if (init) {
+      const [lo, hi] = g.xAxisExtremes();
+      if (init[1] > lo && init[0] < hi)
+        g.updateOptions({ dateWindow: clamp(g, Math.max(init[0], lo), Math.min(init[1], hi)) });
+    }
 
     const ro = new ResizeObserver(() => {
-      cancelAnimationFrame(resizeFrame);
-      resizeFrame = requestAnimationFrame(() => g.resize());
+      cancelAnimationFrame(resizeReq);
+      resizeReq = requestAnimationFrame(() => g.resize());
     });
     ro.observe(host);
-
+    const markerMap = buttons.current;
     return () => {
-      cancelAnimationFrame(frame);
-      cancelAnimationFrame(resizeFrame);
+      cancelAnimationFrame(frameReq);
+      cancelAnimationFrame(resizeReq);
+      clearTimeout(detailTimer);
+      detailAbort?.abort();
       ro.disconnect();
       g.destroy();
       graphRef.current = null;
+      for (const b of markerMap.values()) b.remove();
+      markerMap.clear();
     };
-  }, [model]);
+    // The graph is created once per mount (the parent keys this component by run and symbol, so the overview of a
+    // mount never changes); later data and window updates go through updateOptions.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Replace the markers whenever what is drawn (or selected) changes. The window is untouched.
+  // Events or selection changed: re-place markers without touching the window.
   useEffect(() => {
-    const g = graphRef.current;
-    if (!g) return;
-    selectedXRef.current = selectedEventId ? (model.eventById.get(selectedEventId)?.x ?? null) : null;
-    const labels = new Map<number, { label: string; ids: string }>();
-    for (const c of clusters)
-      labels.set(c.x, { label: propsRef.current.describeCluster(c), ids: c.items.map((d) => d.event.id).join(' ') });
-    labelsRef.current = labels;
-
-    const annotations = toAnnotations(clusters, SERIES, selectedEventId).map((a): ClusterAnnotation => ({
-      ...a,
-      clickHandler: (ann, _p, _g, e) => {
-        const el = e.target instanceof HTMLElement ? e.target.closest<HTMLElement>('.see-marker') : null;
-        propsRef.current.onActivateCluster(el ? overlapping(el) : [(ann as ClusterAnnotation).clusterX]);
-      },
-      mouseOverHandler: (ann, _p, _g, e) => {
-        const el = e.target instanceof HTMLElement ? e.target.closest<HTMLElement>('.see-marker') : null;
-        propsRef.current.onHoverCluster(
-          el ? overlapping(el) : [(ann as ClusterAnnotation).clusterX],
-          el?.getBoundingClientRect() ?? null
-        );
-      },
-      mouseOutHandler: () => propsRef.current.onHoverCluster(null, null)
-    }));
-    g.ready(() => g.setAnnotations(annotations));
-  }, [clusters, selectedEventId, model]);
+    eventsRef.current = events;
+    selectedRef.current = selectedKey;
+    placeMarkers();
+  }, [events, selectedKey]);
 
   useImperativeHandle(
     ref,
@@ -246,56 +293,58 @@ export function PriceChart(props: Props) {
         const g = graphRef.current;
         if (!g) return;
         if (range === null) g.resetZoom();
-        else g.updateOptions({ dateWindow: clampWindow(g, range[0], range[1]) });
+        else g.updateOptions({ dateWindow: clamp(g, range[0], range[1]) });
       },
       centerOn(x) {
         const g = graphRef.current;
         if (!g) return;
         const [a, b] = g.xAxisRange();
-        g.updateOptions({ dateWindow: clampWindow(g, x - (b - a) / 2, x + (b - a) / 2) });
+        g.updateOptions({ dateWindow: clamp(g, x - (b - a) / 2, x + (b - a) / 2) });
       },
       zoomAround(x, span) {
         const g = graphRef.current;
-        if (!g) return;
-        g.updateOptions({ dateWindow: clampWindow(g, x - span / 2, x + span / 2) });
+        if (g) g.updateOptions({ dateWindow: clamp(g, x - span / 2, x + span / 2) });
       },
       getWindow() {
         const g = graphRef.current;
         return g ? (g.xAxisRange() as [number, number]) : null;
-      },
-      getExtremes() {
-        const g = graphRef.current;
-        return g ? g.xAxisExtremes() : null;
       }
     }),
     []
   );
 
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    const x = markerX(e.target as Element);
-    if (x === null) return;
-    e.preventDefault();
-    restoreFocusRef.current = x;
-    props.onActivateCluster([x]);
-  };
+  const target = (e: { target: EventTarget | null }) =>
+    e.target instanceof HTMLElement ? e.target.closest<HTMLButtonElement>('button.marker') : null;
 
   return (
-    <div className="chart-frame">
+    <div className="chart-frame" ref={frameRef} data-testid="price-chart">
+      <div ref={hostRef} className="chart-host" />
       <div
-        ref={hostRef}
-        className="chart-host"
-        data-testid="price-chart"
-        onKeyDown={onKeyDown}
+        ref={layerRef}
+        className="marker-layer"
+        data-testid="marker-layer"
+        onClick={(e) => {
+          const b = target(e);
+          if (b) propsRef.current.onActivate(overlapping(b));
+        }}
+        onMouseOver={(e) => {
+          const b = target(e);
+          if (b) propsRef.current.onHover(overlapping(b), b.getBoundingClientRect());
+        }}
+        onMouseOut={(e) => {
+          if (target(e)) propsRef.current.onHover(null, null);
+        }}
         onFocus={(e) => {
-          const x = markerX(e.target);
-          if (x !== null) props.onHoverCluster([x], (e.target as HTMLElement).getBoundingClientRect());
+          const b = target(e);
+          if (b) propsRef.current.onHover([b.dataset.key!], b.getBoundingClientRect());
         }}
         onBlur={(e) => {
-          if (markerX(e.target) !== null) props.onHoverCluster(null, null);
+          if (target(e)) propsRef.current.onHover(null, null);
         }}
-      />
-      <div ref={readoutRef} className="chart-readout" aria-live="off" />
+      >
+        <div ref={crossRef} className="crosshair" data-testid="crosshair" hidden />
+      </div>
+      <div ref={readoutRef} className="chart-readout" data-testid="chart-readout" aria-live="off" />
     </div>
   );
 }

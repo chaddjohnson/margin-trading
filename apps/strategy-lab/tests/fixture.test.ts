@@ -1,12 +1,12 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 
-import { buildModel } from '../src/data/model.ts';
-import { argExtreme } from '../src/demo/indicators.ts';
-import { DEMO_SEED, generateDemoDataset } from '../src/demo/generate.ts';
-import { OCCUPANCY_SESSIONS } from '../src/demo/execution.ts';
-import { stableStringify } from '../src/demo/serialize.ts';
-import type { ParameterValue } from '../src/schema/types.ts';
+import { buildModel } from '../shared/demo-schema/model.ts';
+import { argExtreme } from '../shared/demo/indicators.ts';
+import { DEMO_SEED, generateDemoDataset } from '../shared/demo/generate.ts';
+import { OCCUPANCY_SESSIONS } from '../shared/demo/execution.ts';
+import { stableStringify } from '../shared/demo/serialize.ts';
+import type { ParameterValue } from '../shared/demo-schema/types.ts';
 import { readFixture, readFixtureText } from './helpers.ts';
 
 const value = (values: ParameterValue[], key: string) => values.find((v) => v.key === key)?.value;

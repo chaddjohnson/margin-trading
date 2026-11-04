@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { baselineSummary, outcomeAt, quantile, summarize } from '../src/analysis/forward.ts';
-import { markerHeight, toAnnotations } from '../src/chart/markers.ts';
-import type { PlacedEvent } from '../src/data/model.ts';
-import type { Cluster } from '../src/state/selectors.ts';
+import { baselineSummary, outcomeAt, quantile, summarize } from '../shared/forward.ts';
 
 const cfg = { horizon: 3, targets: [0.05, 0.1] };
 
@@ -55,42 +52,5 @@ describe('forward statistics', () => {
     expect(quantile([4, 1, 3, 2], 0.5)).toBe(2.5);
     expect(quantile([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 0.1)).toBe(2);
     expect(quantile([], 0.5)).toBeNull();
-  });
-});
-
-describe('markers', () => {
-  const ev = (id: string, type: 'signal' | 'executed', x: number): PlacedEvent => ({
-    id,
-    variationId: 'v',
-    type,
-    t: new Date(x).toISOString(),
-    d: '2020-01-01',
-    price: 1,
-    priceBasis: 'bar-close',
-    trigger: { summary: '', values: [] },
-    x,
-    barIndex: 0
-  });
-  const clusters: Cluster[] = [
-    { x: 1000, barIndex: 0, items: [{ role: 'A', event: ev('a1', 'signal', 1000) }] },
-    {
-      x: 2000,
-      barIndex: 1,
-      items: [
-        { role: 'A', event: ev('a2', 'executed', 2000) },
-        { role: 'B', event: ev('b2', 'signal', 2000) }
-      ]
-    }
-  ];
-
-  it('creates exactly one annotation per bar, sized to its stack, below the line', () => {
-    const anns = toAnnotations(clusters, 'Close', 'b2');
-    expect(anns.map((a) => a.xval)).toEqual([1000, 2000]);
-    expect(anns[1]!.height).toBe(markerHeight(2));
-    expect(anns[1]!.tickHeight).toBeLessThan(-anns[1]!.height!);
-    expect(anns[1]!.cssClass).toContain('is-selected');
-    expect(anns[1]!.cssClass).toContain('is-stacked');
-    expect(anns[0]!.cssClass).not.toContain('is-selected');
-    expect(decodeURIComponent(anns[1]!.icon!).match(/<polygon/g)).toHaveLength(2);
   });
 });

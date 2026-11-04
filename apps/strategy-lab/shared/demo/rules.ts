@@ -3,7 +3,7 @@
 // they are never run on market data, and none of their parameters was tuned (the values are round illustrations).
 // Real entry mechanisms are a later, separately authorised task (docs/research/growth-entry-discovery/PLAN.md).
 
-import type { ParameterValue } from '../schema/types.ts';
+import type { ParameterValue } from '../demo-schema/types.ts';
 import { type Series, argExtreme, realizedVol, rollingStd, rsi, sma } from './indicators.ts';
 
 export interface RuleContext {
