@@ -40,6 +40,22 @@ export interface Trade {
 export type Tone = 'profit' | 'loss' | 'flat' | 'open' | 'unknown';
 
 /**
+ * "Closed losses only": a CLOSED trade whose RECORDED realised net P&L (after per-side costs and margin interest) is
+ * strictly below zero. Never an open position (whatever its unrealized mark), never a breakeven, never a trade judged
+ * by its raw price difference, never a trade without a recorded net.
+ */
+export const isClosedLoss = (t: Pick<Trade, 'status' | 'pnl'>) =>
+  t.status === 'closed' && t.pnl !== null && !t.pnl.unrealized && t.pnl.netUsd < 0;
+
+/** The entry mechanism a trade's entry records (Growth 1.1.0), or null when the run records none. */
+export const originOf = (t: Pick<Trade, 'entry'>): { origin: string; method: string | null } | null => {
+  const o = t.entry?.meta?.origin;
+  if (typeof o !== 'string') return null;
+  const m = t.entry?.meta?.method;
+  return { origin: o, method: typeof m === 'string' ? m : null };
+};
+
+/**
  * A trade's outcome tone (marker colours, connector, P&L text): the sign of the RECORDED net P&L after costs and
  * interest of a closed trade; `open` for a position still open, whatever its unrealized P&L; `unknown` without one.
  */
@@ -83,7 +99,7 @@ function openPnl(
       };
     return { pnl: null, reason: 'the run recorded no mark for this open position' };
   }
-  if (metrics?.kind === 'imported trades') {
+  if (metrics?.kind === 'imported trades' || metrics?.kind === 'pool rerun') {
     const t = metrics.trades as { unrealized?: unknown; openLots?: unknown } | undefined;
     if (t?.openLots === 1 && typeof t.unrealized === 'number')
       return {

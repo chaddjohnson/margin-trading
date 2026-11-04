@@ -1,8 +1,11 @@
-// "New test" / "Clone settings": a schema-driven form that starts exactly ONE manual test of ONE configuration.
-// Parameter sweeps and optimisation are deliberately not available here (Claude/CLI research workflows only).
-// The strategy selector offers the signal-only scanner and the trading backtest built on it. A rule switch is a
-// boolean parameter saved with the run; an input whose switch is off stays editable-later but disabled and "not
-// applied", and the buffered-loss switch is unticked and disabled while the maximum losing hold is off.
+// "New test" / "Clone settings" / "Run selected phenotype": a schema-driven form (parameter schema v2,
+// shared/params.ts) that starts exactly ONE manual test of ONE configuration. Parameter sweeps and optimisation are
+// deliberately not available here (Claude/CLI research workflows only).
+//
+// Applicability comes from the schema: an inactive parameter is either disabled in place ("saved, not applied") or
+// hidden (the continuation method inputs of the methods not selected). Hidden drafts are kept while switching and are
+// sent only when edited away from their default; the server stores them as "saved, not applied" and executes only the
+// effective values. The same validator runs here and on the server.
 
 import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -14,12 +17,14 @@ import {
   type Resolution,
   type StrategySpec
 } from '../../shared/contract.ts';
-import { crossParamErrors, defaultParams, isParamApplied, validateParam } from '../../shared/strategies.ts';
-import { ApiError, api, type Meta } from '../api.ts';
+import { constraintErrors, defaultParams, isActive, predicateParams, validateValue } from '../../shared/params.ts';
+import { ApiError, api, type Meta, type PhenotypeView } from '../api.ts';
 
 interface Props {
   meta: Meta;
   initial: Partial<LabRunRequest> | null;
+  /** Run a catalogue phenotype (one run): the strategy and its origin are locked; edits make a derived variation. */
+  phenotype?: PhenotypeView | null;
   onClose: () => void;
   onCreated: (runId: string) => void;
 }
@@ -45,7 +50,7 @@ const partitionRange = (meta: Meta, names: string[], symbols: string[]) => {
   };
 };
 
-type Draft = Record<string, string | boolean>; // numbers as typed text, switches as booleans
+type Draft = Record<string, string | boolean>; // numbers as typed text, switches as booleans, choices as their value
 
 const draftOf = (spec: StrategySpec, values: Record<string, ParamValue>): Draft =>
   Object.fromEntries(
@@ -55,31 +60,54 @@ const draftOf = (spec: StrategySpec, values: Record<string, ParamValue>): Draft 
     })
   );
 
+const parseValue = (p: ParamSpec, d: string | boolean | undefined): ParamValue =>
+  p.type === 'boolean' ? d === true : p.type === 'enum' ? String(d ?? p.default) : Number(d);
+
 const parseDraft = (spec: StrategySpec, draft: Draft): Record<string, ParamValue> =>
-  Object.fromEntries(
-    spec.params.map((p) => [p.key, p.type === 'boolean' ? draft[p.key] === true : Number(draft[p.key])])
-  );
+  Object.fromEntries(spec.params.map((p) => [p.key, parseValue(p, draft[p.key])]));
 
 const UNIT_TEXT: Partial<Record<ParamSpec['unit'], string>> = {
   percent: '%',
   days: 'calendar days',
-  bps: 'bps per side'
+  bps: 'bps per side',
+  sessions: 'trading sessions',
+  bars: 'bars'
 };
-const GROUPS: { key: NonNullable<ParamSpec['group']>; title: string }[] = [
-  { key: 'entry', title: 'Entry — Rise from recent low (unchanged scanner)' },
-  { key: 'exit', title: 'Exits' },
-  { key: 'execution', title: 'Execution' }
-];
 
-export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
-  const initialSpec = meta.strategies.find((s) => s.key === initial?.strategyKey) ?? meta.strategies[0]!;
+// The values a request carries: every active one; an inactive one shown disabled (a visible saved draft); a hidden
+// inactive one only when edited away from its default and valid.
+function requestParams(spec: StrategySpec, parsed: Record<string, ParamValue>) {
+  return Object.fromEntries(
+    spec.params
+      .filter((p) => {
+        if (isActive(spec, parsed, p.key)) return true;
+        if ((p.whenInactive ?? 'disable') === 'disable') return true;
+        return parsed[p.key] !== p.default && validateValue(p, parsed[p.key]) === null;
+      })
+      .map((p) => [p.key, parsed[p.key]!])
+  );
+}
+
+export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: Props) {
+  const lockedSpec = phenotype
+    ? (meta.phenotypeStrategies.find((s) => s.key === phenotype.strategy.key && s.version === phenotype.strategy.version) ??
+      null)
+    : null;
+  const initialSpec =
+    lockedSpec ?? meta.strategies.find((s) => s.key === initial?.strategyKey) ?? meta.strategies[0]!;
+  const pool = phenotype?.executionKind === 'shared-slot pool';
   const [specKey, setSpecKey] = useState(initialSpec.key);
-  const spec = meta.strategies.find((s) => s.key === specKey) ?? initialSpec;
-  const [params, setParams] = useState<Draft>(() => draftOf(initialSpec, initial?.params ?? {}));
-  const [resolution, setResolution] = useState<Resolution>(initial?.resolution ?? initialSpec.defaultResolution);
-  const [symbols, setSymbols] = useState<string[]>(initial?.symbols ?? ['VGT']);
-  const [from, setFrom] = useState(initial?.from ?? meta.partitions.training?.start ?? '2016-01-04');
-  const [to, setTo] = useState(initial?.to ?? meta.partitions.training?.end ?? '2023-12-31');
+  const spec = lockedSpec ?? meta.strategies.find((s) => s.key === specKey) ?? initialSpec;
+  const origin = phenotype?.record.params ?? initial?.params ?? {};
+  const [params, setParams] = useState<Draft>(() => draftOf(initialSpec, origin));
+  const [resolution, setResolution] = useState<Resolution>(
+    (phenotype?.record.resolution as Resolution | undefined) ?? initial?.resolution ?? initialSpec.defaultResolution
+  );
+  const [symbols, setSymbols] = useState<string[]>(phenotype?.symbols ?? initial?.symbols ?? ['VGT']);
+  const [from, setFrom] = useState(
+    phenotype?.capability.fixedFrom ?? initial?.from ?? meta.partitions.training?.start ?? '2016-01-04'
+  );
+  const [to, setTo] = useState(initial?.to ?? (pool ? '2026-10-29' : (meta.partitions.training?.end ?? '2023-12-31')));
   const [title, setTitle] = useState('');
   const [filter, setFilter] = useState('');
   const [busy, setBusy] = useState(false);
@@ -92,30 +120,43 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
   }, []);
 
   const parsed = useMemo(() => parseDraft(spec, params), [params, spec]);
+  const active = (key: string) => isActive(spec, parsed, key);
+  const shown = (p: ParamSpec) => active(p.key) || (p.whenInactive ?? 'disable') === 'disable';
   const fieldErrors = Object.fromEntries(
     spec.params.map((p) => [
       p.key,
-      p.type !== 'boolean' && String(params[p.key] ?? '').trim() === ''
-        ? `${p.label}: required`
-        : validateParam(p, parsed[p.key])
+      !shown(p)
+        ? null
+        : p.type !== 'boolean' && p.type !== 'enum' && String(params[p.key] ?? '').trim() === ''
+          ? `${p.label}: required`
+          : validateValue(p, parsed[p.key])
     ])
   );
-  const crossErrors = crossParamErrors(spec, parsed);
+  const sent = requestParams(spec, parsed);
+  const crossErrors = constraintErrors(spec, sent);
   const holdoutStart = meta.partitions.holdout?.start ?? '2024-01-01';
   const touchesExposed = to >= holdoutStart;
+  const testWindows = phenotype?.record.data?.testWindows ?? [];
+  const touchesStudyTest = testWindows.filter((w) => from <= w.to && to >= w.from);
   const invalid =
-    Object.values(fieldErrors).some(Boolean) ||
-    crossErrors.length > 0 ||
+    (!pool && (Object.values(fieldErrors).some(Boolean) || crossErrors.length > 0)) ||
     symbols.length === 0 ||
     !from ||
     !to ||
     from > to;
+  const originParams = (phenotype?.record.params ?? initial?.params) as Record<string, ParamValue> | undefined;
   const changedFrom =
-    initial?.params && initial.strategyKey === spec.key
+    originParams && (phenotype || initial?.strategyKey === spec.key)
       ? spec.params
-          .filter((p) => initial.params![p.key] !== undefined && initial.params![p.key] !== parsed[p.key])
+          .filter((p) => active(p.key) && originParams[p.key] !== undefined && originParams[p.key] !== parsed[p.key])
           .map((p) => p.label)
       : [];
+  const edited =
+    Boolean(phenotype) &&
+    !pool &&
+    (changedFrom.length > 0 ||
+      resolution !== phenotype?.record.resolution ||
+      spec.params.some((p) => active(p.key) && originParams?.[p.key] === undefined && parsed[p.key] !== p.default));
   const trading = spec.kind === 'trades';
   const holdOff = trading && parsed.maximumHoldEnabled === false;
 
@@ -138,9 +179,10 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
   const setParam = (p: ParamSpec, value: string | boolean) =>
     setParams((x) => {
       const next: Draft = { ...x, [p.key]: value };
-      // A switch turned off also turns off the switches that depend on it (no enabled-but-inert checkbox).
+      // A switch turned off also turns off the switches that apply only with it (no enabled-but-inert checkbox).
       if (p.type === 'boolean' && value === false)
-        for (const q of spec.params) if (q.type === 'boolean' && q.dependsOn === p.key) next[q.key] = false;
+        for (const q of spec.params)
+          if (q.type === 'boolean' && q.activeWhen && predicateParams(q.activeWhen).includes(p.key)) next[q.key] = false;
       return next;
     });
 
@@ -150,10 +192,22 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
     setBusy(true);
     setServerErrors([]);
     try {
+      if (phenotype) {
+        const body: Record<string, unknown> = { to, ...(title.trim() ? { title: title.trim() } : {}) };
+        if (!pool) {
+          body.from = from;
+          body.symbols = symbols;
+          body.params = sent;
+          if (resolution !== phenotype.record.resolution) body.resolution = resolution;
+        }
+        const run = await api.runPhenotype(phenotype.id, body);
+        onCreated(run.id);
+        return;
+      }
       const req: LabRunRequest = {
         strategyKey: spec.key,
         strategyVersion: spec.version,
-        params: parsed,
+        params: sent,
         symbols,
         from,
         to,
@@ -179,18 +233,18 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
   const visibleSymbols = meta.symbols.filter((s) => s.symbol.includes(filter.trim().toUpperCase()));
 
   const field = (p: ParamSpec) => {
-    const applied = isParamApplied(spec, parsed, p.key);
-    const parentOn = !p.dependsOn || (isParamApplied(spec, parsed, p.dependsOn) && parsed[p.dependsOn] === true);
-    const disabled = Boolean(p.dependsOn) && !parentOn;
+    if (!shown(p)) return null;
+    const applied = active(p.key);
     const unit = UNIT_TEXT[p.unit] ?? p.unit;
+    const dependent = Boolean(p.activeWhen);
     if (p.type === 'boolean')
       return (
-        <label key={p.key} className={`field switch-field${p.dependsOn ? ' is-dependent' : ''}`}>
+        <label key={p.key} className={`field switch-field${dependent ? ' is-dependent' : ''}`}>
           <span className="switch-row">
             <input
               type="checkbox"
               checked={params[p.key] === true}
-              disabled={disabled}
+              disabled={!applied}
               onChange={(e) => setParam(p, e.target.checked)}
               data-testid={`param-${p.key}`}
             />
@@ -201,12 +255,35 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
           </span>
           <span className="field-help">
             {p.description} Default {p.default ? 'ON' : 'OFF'}.
-            {disabled && <> Unavailable while its parent rule is off.</>} <span className="mono">{p.key}</span>
+            {!applied && <> Unavailable while its parent rule is off.</>} <span className="mono">{p.key}</span>
           </span>
         </label>
       );
+    if (p.type === 'enum') {
+      const chosen = p.options.find((o) => o.value === params[p.key]);
+      return (
+        <label key={p.key} className={`field${dependent ? ' is-dependent' : ''}`}>
+          <span className="field-label">{p.label}</span>
+          <select
+            value={String(params[p.key])}
+            disabled={!applied}
+            onChange={(e) => setParam(p, e.target.value)}
+            data-testid={`param-${p.key}`}
+          >
+            {p.options.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+          <span className="field-help">
+            {chosen?.description ?? p.description} <span className="mono">{p.key} = {String(params[p.key])}</span>
+          </span>
+        </label>
+      );
+    }
     return (
-      <label key={p.key} className={`field${p.dependsOn ? ' is-dependent' : ''}${applied ? '' : ' is-inactive'}`}>
+      <label key={p.key} className={`field${dependent ? ' is-dependent' : ''}${applied ? '' : ' is-inactive'}`}>
         <span className="field-label">
           {p.label}
           {p.key === 'trailingStopPercent' && <span className="badge badge-muted">always on</span>}{' '}
@@ -253,7 +330,7 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
       </span>
     </label>
   );
-  const grouped = spec.params.some((p) => p.group);
+  const continuationOn = parsed.continuationEnabled === true;
 
   return (
     <dialog
@@ -266,7 +343,11 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
       <form onSubmit={submit} method="dialog">
         <header className="dialog-head">
           <h2 id="run-dialog-title">
-            {initial?.parentVariation ? `New test from ${initial.parentVariation}` : 'New test'}
+            {phenotype
+              ? `Run phenotype ${phenotype.id}`
+              : initial?.parentVariation
+                ? `New test from ${initial.parentVariation}`
+                : 'New test'}
           </h2>
           <button type="button" className="btn-ghost" onClick={() => dialogRef.current?.close()} aria-label="Close">
             ✕
@@ -278,41 +359,77 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
           available in the browser — they run as Claude/CLI research workflows (docs/strategy-lab/RESEARCH_WORKFLOW.md).
         </p>
 
-        <fieldset>
-          <legend>Strategy</legend>
-          <div className="strategy-choice" role="radiogroup" aria-label="Strategy">
-            {meta.strategies.map((s) => (
-              <label key={`${s.key}@${s.version}`} className={`strategy-card${s.key === spec.key ? ' is-on' : ''}`}>
-                <input
-                  type="radio"
-                  name="strategy"
-                  checked={s.key === spec.key}
-                  onChange={() => chooseStrategy(s.key)}
-                  data-testid={`strategy-${s.key}`}
-                />
-                <span>
-                  <b>{s.title}</b> <span className="mono muted">v{s.version}</span>{' '}
-                  <span className={`badge ${s.kind === 'trades' ? 'badge-trading' : 'badge-muted'}`}>
-                    {s.kind === 'trades' ? 'TRADING BACKTEST' : 'SIGNAL-ONLY'}
+        {phenotype ? (
+          <fieldset data-testid="phenotype-origin">
+            <legend>Frozen phenotype (locked origin)</legend>
+            <p className="small">
+              <b>{phenotype.name}</b> · <span className="mono">{phenotype.key}</span> · study{' '}
+              <span className="mono">{phenotype.studyRef}</span>
+              {phenotype.role ? ` · role ${phenotype.role}` : ''} · {phenotype.executionKind} ·{' '}
+              <span className="mono">
+                {phenotype.strategy.key}@{phenotype.strategy.version}
+              </span>
+            </p>
+            <p className="muted small">{phenotype.capability.reason}.</p>
+            {phenotype.record.data?.exposure && (
+              <p className="warn small" role="note">
+                Data exposure: {phenotype.record.data.exposure}
+              </p>
+            )}
+            {edited && (
+              <p className="warn small" role="note" data-testid="phenotype-edited">
+                Edited ({[...changedFrom, ...(resolution !== phenotype.record.resolution ? ['resolution'] : [])].join(', ') || 'parameters'}): this run is a
+                NEW variation derived from {phenotype.id}. The frozen phenotype itself is never changed.
+              </p>
+            )}
+          </fieldset>
+        ) : (
+          <fieldset>
+            <legend>Strategy</legend>
+            <div className="strategy-choice" role="radiogroup" aria-label="Strategy">
+              {meta.strategies.map((s) => (
+                <label key={`${s.key}@${s.version}`} className={`strategy-card${s.key === spec.key ? ' is-on' : ''}`}>
+                  <input
+                    type="radio"
+                    name="strategy"
+                    checked={s.key === spec.key}
+                    onChange={() => chooseStrategy(s.key)}
+                    data-testid={`strategy-${s.key}`}
+                  />
+                  <span>
+                    <b>{s.title}</b> <span className="mono muted">v{s.version}</span>{' '}
+                    <span className={`badge ${s.kind === 'trades' ? 'badge-trading' : 'badge-muted'}`}>
+                      {s.kind === 'trades' ? 'TRADING BACKTEST' : 'SIGNAL-ONLY'}
+                    </span>
+                    <span className="muted small block">{s.description}</span>
                   </span>
-                  <span className="muted small block">{s.description}</span>
-                </span>
-              </label>
-            ))}
-          </div>
-          {spec.notes && (
-            <ul className="strategy-notes small" data-testid="strategy-notes">
-              {spec.notes.map((n) => (
-                <li key={n}>{n}</li>
+                </label>
               ))}
-            </ul>
-          )}
-        </fieldset>
+            </div>
+            {spec.notes && (
+              <ul className="strategy-notes small" data-testid="strategy-notes">
+                {spec.notes.map((n) => (
+                  <li key={n}>{n}</li>
+                ))}
+              </ul>
+            )}
+          </fieldset>
+        )}
 
-        {grouped ? (
-          GROUPS.map((g) => (
+        {pool ? (
+          <fieldset data-testid="pool-config">
+            <legend>Sealed pool configuration (locked)</legend>
+            <p className="small">
+              Books {phenotype!.symbols.join(' + ')} in ONE shared funded $100,000 slot; sealed id{' '}
+              <span className="mono">{phenotype!.record.pool?.sealedId}</span>; {phenotype!.record.execution.costBpsPerSide}{' '}
+              bps per side. It is never run as independent per-symbol tests.
+            </p>
+          </fieldset>
+        ) : spec.groups.length ? (
+          spec.groups.map((g) => (
             <fieldset key={g.key} data-testid={`group-${g.key}`}>
               <legend>{g.title}</legend>
+              {g.description && <p className="muted small">{g.description}</p>}
               {spec.params.filter((p) => p.group === g.key).map(field)}
               {g.key === 'entry' && resolutionField}
               {g.key === 'exit' && holdOff && (
@@ -320,6 +437,12 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
                   Maximum losing hold is OFF: a losing position has no exit — the trailing stop only becomes active
                   while selling at it would be profitable after interest — so a loser can stay open indefinitely. It is
                   reported as an open position marked at the last close, never as a fabricated sale.
+                </p>
+              )}
+              {g.key === 'continuation' && continuationOn && (
+                <p className="muted small" data-testid="continuation-note">
+                  Only the selected method’s inputs apply; the others keep their drafts and are not executed. A base
+                  Growth entry has priority at the same instant and closes the window.
                 </p>
               )}
             </fieldset>
@@ -331,83 +454,101 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
             {resolutionField}
           </fieldset>
         )}
-        {crossErrors.length > 0 && (
+        {!pool && crossErrors.length > 0 && (
           <div className="form-error" role="alert" data-testid="cross-errors">
             {crossErrors.map((e) => (
               <div key={e}>{e}</div>
             ))}
           </div>
         )}
-        {changedFrom.length > 0 && (
+        {!phenotype && changedFrom.length > 0 && (
           <p className="muted small">Changed from the source run: {changedFrom.join(', ')}.</p>
         )}
 
-        <fieldset>
-          <legend>Symbols ({symbols.length} selected)</legend>
-          {trading && symbols.length > 1 && (
-            <p className="muted small" data-testid="multi-symbol-note">
-              {symbols.length} independent standalone backtests, one per symbol, each on its own $100,000 notional.
-              Their results are shown per symbol and never summed into one pool.
-            </p>
-          )}
-          <input
-            type="search"
-            placeholder="Filter symbols…"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            aria-label="Filter symbols"
-          />
-          <div className="symbol-grid" role="group" aria-label="Symbols">
-            {visibleSymbols.map((s) => (
-              <label
-                key={s.symbol}
-                className={`symbol-chip${symbols.includes(s.symbol) ? ' is-on' : ''}`}
-                title={`${s.firstSession} – ${s.lastSession}`}
-              >
-                <input
-                  type="checkbox"
-                  checked={symbols.includes(s.symbol)}
-                  onChange={(e) =>
-                    setSymbols((xs) => (e.target.checked ? [...xs, s.symbol] : xs.filter((x) => x !== s.symbol)))
-                  }
-                  data-testid={`symbol-${s.symbol}`}
-                />
-                {s.symbol}
-              </label>
-            ))}
-          </div>
-        </fieldset>
+        {!pool && (
+          <fieldset>
+            <legend>Symbols ({symbols.length} selected)</legend>
+            {trading && symbols.length > 1 && (
+              <p className="muted small" data-testid="multi-symbol-note">
+                {symbols.length} independent standalone backtests, one per symbol, each on its own $100,000 notional.
+                Their results are shown per symbol and never summed into one pool.
+              </p>
+            )}
+            <input
+              type="search"
+              placeholder="Filter symbols…"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              aria-label="Filter symbols"
+            />
+            <div className="symbol-grid" role="group" aria-label="Symbols">
+              {visibleSymbols.map((s) => (
+                <label
+                  key={s.symbol}
+                  className={`symbol-chip${symbols.includes(s.symbol) ? ' is-on' : ''}`}
+                  title={`${s.firstSession} – ${s.lastSession}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={symbols.includes(s.symbol)}
+                    onChange={(e) =>
+                      setSymbols((xs) => (e.target.checked ? [...xs, s.symbol] : xs.filter((x) => x !== s.symbol)))
+                    }
+                    data-testid={`symbol-${s.symbol}`}
+                  />
+                  {s.symbol}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )}
 
         <fieldset>
           <legend>Date range (New York session dates, inclusive)</legend>
           <div className="row">
             <label className="field inline">
               <span className="field-label">From</span>
-              <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} data-testid="run-from" />
+              <input
+                type="date"
+                value={from}
+                disabled={pool}
+                onChange={(e) => setFrom(e.target.value)}
+                data-testid="run-from"
+              />
             </label>
             <label className="field inline">
               <span className="field-label">To</span>
               <input type="date" value={to} onChange={(e) => setTo(e.target.value)} data-testid="run-to" />
             </label>
           </div>
-          <div className="row presets">
-            <button type="button" className="btn-chip" onClick={() => preset(['training'])}>
-              Training
-            </button>
-            <button type="button" className="btn-chip" onClick={() => preset(['holdout'])}>
-              Holdout
-            </button>
-            <button type="button" className="btn-chip" onClick={() => preset(['final'])}>
-              Final
-            </button>
-            <button type="button" className="btn-chip" onClick={() => preset(['training', 'holdout', 'final'])}>
-              All
-            </button>
-          </div>
+          {pool ? (
+            <p className="muted small">The start is fixed at {from} by the Study 8 contract (arming on 2017-06-15).</p>
+          ) : (
+            <div className="row presets">
+              <button type="button" className="btn-chip" onClick={() => preset(['training'])}>
+                Training
+              </button>
+              <button type="button" className="btn-chip" onClick={() => preset(['holdout'])}>
+                Holdout
+              </button>
+              <button type="button" className="btn-chip" onClick={() => preset(['final'])}>
+                Final
+              </button>
+              <button type="button" className="btn-chip" onClick={() => preset(['training', 'holdout', 'final'])}>
+                All
+              </button>
+            </div>
+          )}
           {touchesExposed && (
             <p className="warn small" role="note">
               This window reaches into holdout/final dates (from {holdoutStart}). Looking at them is data exposure for
               any future study of this question (docs/research/growth-entry-discovery/PLAN.md §6).
+            </p>
+          )}
+          {touchesStudyTest.length > 0 && (
+            <p className="warn small" role="note" data-testid="study-test-warning">
+              It overlaps the study’s {touchesStudyTest.map((w) => `${w.label} (${w.from} → ${w.to})`).join(', ')}:
+              those dates are already exposed. This rerun is exploratory, NOT another independent holdout.
             </p>
           )}
         </fieldset>
@@ -436,7 +577,7 @@ export function RunTestDialog({ meta, initial, onClose, onCreated }: Props) {
             Cancel
           </button>
           <button type="submit" className="btn-primary" disabled={invalid || busy} data-testid="run-submit">
-            {busy ? 'Starting…' : 'Run Test'}
+            {busy ? 'Starting…' : phenotype ? 'Run selected phenotype' : 'Run Test'}
           </button>
         </footer>
       </form>

@@ -1,0 +1,45 @@
+{
+  "note": "The four strategy rows of the live Strategy Lab database before migration 0002 (2026-11-04), verbatim: code-derived display metadata and the version-1 parameter schemas (ParamSpec[]). Used by tests/migration.test.ts to build a real-shaped prior database.",
+  "rows": [
+    {
+      "key": "demo-toy-rules",
+      "version": "1.0.0",
+      "title": "Demo toy rules (synthetic)",
+      "kind": "entry_signal",
+      "runnable": 0,
+      "description": "Twelve toy rules that make the synthetic fixture internally consistent. Not research candidates.",
+      "param_schema_json": null,
+      "source_ref": "apps/strategy-lab/shared/demo/rules.ts"
+    },
+    {
+      "key": "study8-d1-pool",
+      "version": "pools-engine",
+      "title": "Study 8 D1 shared-slot pool (pools engine)",
+      "kind": "trades",
+      "runnable": 0,
+      "description": "D1 books on one funded $100,000 slot (src/study8-runners/, src/portfolio-aware-d1/nbook/). Imported, not executable from Strategy Lab.",
+      "param_schema_json": null,
+      "source_ref": "src/study8-runners/"
+    },
+    {
+      "key": "rise-from-recent-low",
+      "version": "1.0.0",
+      "title": "Rise from recent low (entry signal)",
+      "kind": "entry_signal",
+      "runnable": 1,
+      "description": "Signal-only. Fires once, on the completed bar whose close first rises to at least X% above the lowest low of the last N completed bars (this bar included), after having been below that level on the previous bar. It rearms only after the advance falls back below X%. No exits, no positions, no P&L.",
+      "param_schema_json": "[{\"key\":\"advanceFromRecentLowPercent\",\"label\":\"Advance from recent low (X)\",\"description\":\"Minimum rise of the completed bar’s close above the rolling low, in percent. The signal fires on the first bar at or above this level after a bar below it.\",\"type\":\"number\",\"unit\":\"percent\",\"default\":5,\"min\":0.1,\"max\":100,\"step\":0.1},{\"key\":\"recentLowLookbackBars\",\"label\":\"Recent-low lookback (N)\",\"description\":\"Number of completed bars of the selected resolution in the rolling low, the current bar included. Counts bars present in the data (session gaps and missing minutes are not imputed).\",\"type\":\"integer\",\"unit\":\"bars\",\"default\":20,\"min\":2,\"max\":5000,\"step\":1}]",
+      "source_ref": "src/entry-signals/riseFromRecentLow.ts"
+    },
+    {
+      "key": "rise-from-recent-low-trading",
+      "version": "1.0.0",
+      "title": "Rise from recent low (trading backtest)",
+      "kind": "trades",
+      "runnable": 1,
+      "description": "Trading backtest. Buys (all-in, one position, $100,000 fixed notional) on each Rise-from-Recent-Low signal while flat, at the next eligible trade after the signal bar completes; signals while invested are recorded as ignored. Exits: the D1 profit-conditional trailing stop, plus (optional) the maximum losing hold and the buffered intraday-loss exit. Re-entry needs only a fresh signal: no lower-price test, loss restriction or reset.",
+      "param_schema_json": "[{\"key\":\"advanceFromRecentLowPercent\",\"label\":\"Advance from recent low (X)\",\"description\":\"Minimum rise of the completed bar’s close above the rolling low, in percent. The signal fires on the first bar at or above this level after a bar below it.\",\"type\":\"number\",\"unit\":\"percent\",\"default\":5,\"min\":0.1,\"max\":100,\"step\":0.1,\"group\":\"entry\"},{\"key\":\"recentLowLookbackBars\",\"label\":\"Recent-low lookback (N)\",\"description\":\"Number of completed bars of the selected resolution in the rolling low, the current bar included. Counts bars present in the data (session gaps and missing minutes are not imputed).\",\"type\":\"integer\",\"unit\":\"bars\",\"default\":20,\"min\":2,\"max\":5000,\"step\":1,\"group\":\"entry\"},{\"key\":\"trailingStopPercent\",\"label\":\"Trailing stop\",\"description\":\"Always on. The stop sits this far below the highest price since the fill (raised after each session, never lowered) and is ACTIVE only on sessions where selling at the stop would be profitable after interest; a losing position has no active stop. Fills at the stop price, or at the opening trade after a gap through it.\",\"type\":\"number\",\"unit\":\"percent\",\"default\":7.3,\"min\":0.1,\"max\":50,\"step\":0.1,\"group\":\"exit\"},{\"key\":\"maximumHoldEnabled\",\"label\":\"Maximum losing hold\",\"description\":\"From the given calendar-day age, a position whose opening trade shows a net loss (after interest) is sold at the next trade after the open. A profitable position may stay longer. Off: no loss exit at all.\",\"type\":\"boolean\",\"unit\":\"text\",\"default\":true,\"min\":0,\"max\":1,\"step\":1,\"group\":\"exit\"},{\"key\":\"maximumHoldDays\",\"label\":\"Maximum losing hold age\",\"description\":\"Calendar days from the fill session’s date (weekends and holidays count).\",\"type\":\"integer\",\"unit\":\"days\",\"default\":8,\"min\":1,\"max\":3650,\"step\":1,\"group\":\"exit\",\"dependsOn\":\"maximumHoldEnabled\"},{\"key\":\"intradayLossBufferEnabled\",\"label\":\"Buffered intraday-loss exit\",\"description\":\"Only from the maximum-hold age: sells after the first completed minute whose close puts the net P&L (after interest) at or below −buffer × $100,000, at the next eligible trade. Requires the maximum losing hold.\",\"type\":\"boolean\",\"unit\":\"text\",\"default\":true,\"min\":0,\"max\":1,\"step\":1,\"group\":\"exit\",\"dependsOn\":\"maximumHoldEnabled\"},{\"key\":\"intradayLossBufferPercent\",\"label\":\"Intraday loss buffer\",\"description\":\"Percent of the $100,000 invested notional, on net P&L after interest — not a price decline (2.9% = −$2,900).\",\"type\":\"number\",\"unit\":\"percent\",\"default\":2.9,\"min\":0,\"max\":50,\"step\":0.1,\"group\":\"exit\",\"dependsOn\":\"intradayLossBufferEnabled\"},{\"key\":\"costBpsPerSide\",\"label\":\"Transaction cost per side\",\"description\":\"Charged on every fill (5 bps = the Study 8 pools convention). No separate commission.\",\"type\":\"number\",\"unit\":\"bps\",\"default\":5,\"min\":0,\"max\":100,\"step\":0.5,\"group\":\"execution\"}]",
+      "source_ref": "src/growth-trading/riseTrading.ts"
+    }
+  ]
+}

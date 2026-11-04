@@ -18,10 +18,12 @@ export const RUNNER_SCRIPT = 'apps/strategy-lab/runner/entry-signal-run.ts';
  * request text). */
 export const RUNNER_SCRIPTS: Readonly<Record<string, string>> = {
   'rise-from-recent-low': RUNNER_SCRIPT,
-  'rise-from-recent-low-trading': 'apps/strategy-lab/runner/trading-run.ts'
+  'rise-from-recent-low-trading': 'apps/strategy-lab/runner/trading-run.ts',
+  // shared-slot pool phenotype reruns: the unchanged Study 8 runner, one allocator replay per run
+  'study8-d1-pool': 'apps/strategy-lab/runner/pool-run.ts'
 };
 /** Optional artifact files a runner may write besides the four every run has; all are covered by manifest.json. */
-const OPTIONAL_ARTIFACTS = ['trades.json', 'daily.json'];
+const OPTIONAL_ARTIFACTS = ['trades.json', 'daily.json', 'decisions.json', 'minute-marks.csv.gz', 'study8-output.json'];
 const NODE_FLAGS = [
   '--experimental-transform-types',
   '--disable-warning=ExperimentalWarning',

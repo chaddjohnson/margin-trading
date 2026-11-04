@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import type { LabRunRequest } from '../shared/contract.ts';
-import { api, type Meta, onTokenRequired, setToken } from './api.ts';
+import { api, type Meta, onTokenRequired, type PhenotypeView, setToken } from './api.ts';
+import { Phenotypes } from './components/Phenotypes.tsx';
 import { RunTestDialog, TokenDialog } from './components/RunTestDialog.tsx';
 import { RunView } from './components/RunView.tsx';
 import { Sidebar } from './components/Sidebar.tsx';
@@ -11,10 +12,15 @@ interface Route {
   run: string | null;
   symbol: string | null;
   compare: string | null;
+  /** The phenotype catalogue view (#/phenotypes, #/phenotype/PH-0001). */
+  phenotypes?: boolean;
+  phenotype?: string | null;
 }
 
 // #/run/R-000042?symbol=VGT&compare=R-000013 — survives a refresh and can be bookmarked in the browser.
 function parseHash(): Route {
+  const ph = /^#\/phenotype(?:s|\/(PH-\d{4,12}))$/.exec(window.location.hash);
+  if (ph) return { run: null, symbol: null, compare: null, phenotypes: true, phenotype: ph[1] ?? null };
   const m = /^#\/run\/(R-\d{6,12})(?:\?(.*))?$/.exec(window.location.hash);
   if (!m) return { run: null, symbol: null, compare: null };
   const p = new URLSearchParams(m[2] ?? '');
@@ -28,6 +34,7 @@ function parseHash(): Route {
 }
 
 function toHash(r: Route): string {
+  if (r.phenotypes) return r.phenotype ? `#/phenotype/${r.phenotype}` : '#/phenotypes';
   if (!r.run) return '#/';
   const p = new URLSearchParams();
   if (r.symbol) p.set('symbol', r.symbol);
@@ -41,7 +48,10 @@ export function App() {
   const [metaError, setMetaError] = useState<string | null>(null);
   const [route, setRouteState] = useState<Route>(parseHash);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [dialog, setDialog] = useState<{ initial: Partial<LabRunRequest> | null } | null>(null);
+  const [dialog, setDialog] = useState<{
+    initial: Partial<LabRunRequest> | null;
+    phenotype?: PhenotypeView | null;
+  } | null>(null);
   const [needToken, setNeedToken] = useState(false);
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
@@ -65,20 +75,20 @@ export function App() {
 
   // No run in the URL: open the most recent one.
   useEffect(() => {
-    if (route.run) return;
+    if (route.run || route.phenotypes) return;
     api
       .runs({ limit: 1 })
       .then((rs) => {
         if (rs[0]) window.location.replace(toHash({ run: rs[0].id, symbol: null, compare: null }));
       })
       .catch(() => {});
-  }, [route.run, refreshKey]);
+  }, [route.run, route.phenotypes, refreshKey]);
 
   const syntheticSelected =
     useFetched(route.run, (signal) => api.run(route.run!, signal)).data?.dataOrigin === 'synthetic';
 
   const navigate = (r: Partial<Route>) => {
-    const next: Route = { ...route, ...r };
+    const next: Route = { ...route, phenotypes: false, phenotype: null, ...r };
     if (r.run && r.run !== route.run) {
       next.compare = r.compare ?? null;
       next.symbol = r.symbol ?? route.symbol;
@@ -99,9 +109,22 @@ export function App() {
           </div>
         </div>
         <nav className="view-tabs" aria-label="Views">
-          <span className="view-tab is-active" aria-current="page">
+          <a
+            className={`view-tab${route.phenotypes ? '' : ' is-active'}`}
+            aria-current={route.phenotypes ? undefined : 'page'}
+            href={route.run ? toHash({ ...route, phenotypes: false }) : '#/'}
+            data-testid="view-runs"
+          >
             Runs
-          </span>
+          </a>
+          <a
+            className={`view-tab${route.phenotypes ? ' is-active' : ''}`}
+            aria-current={route.phenotypes ? 'page' : undefined}
+            href="#/phenotypes"
+            data-testid="view-phenotypes"
+          >
+            Phenotypes
+          </a>
           <span
             className="view-tab is-disabled"
             aria-disabled="true"
@@ -137,7 +160,15 @@ export function App() {
           onChanged={refresh}
         />
         <main className="main" data-testid="main">
-          {route.run ? (
+          {route.phenotypes ? (
+            <Phenotypes
+              selectedId={route.phenotype ?? null}
+              refreshKey={refreshKey}
+              onSelect={(id) => (window.location.hash = toHash({ ...route, phenotypes: true, phenotype: id }))}
+              onRun={(phenotype) => setDialog({ initial: null, phenotype })}
+              onOpenRun={(id) => navigate({ run: id, compare: null })}
+            />
+          ) : route.run ? (
             <RunView
               runId={route.run}
               compareId={route.compare}
@@ -156,6 +187,7 @@ export function App() {
         <RunTestDialog
           meta={meta}
           initial={dialog.initial}
+          phenotype={dialog.phenotype ?? null}
           onClose={() => setDialog(null)}
           onCreated={(id) => {
             setDialog(null);

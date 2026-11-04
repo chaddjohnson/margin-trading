@@ -1,4 +1,9 @@
-// rise-from-recent-low-trading v1.0.0: a growth-following trading backtest of ONE symbol (see README.md).
+// rise-from-recent-low-trading v1.1.0 ("Growth"): a growth-following trading backtest of ONE symbol (see README.md).
+//
+// v1.1.0 adds OPTIONAL continuation entries after a net-profitable exit (continuation.ts), OFF by default; with them
+// OFF every decision, fill, exit and mark is identical to v1.0.0 (tests/offParity.test.ts against the fixtures captured
+// from v1.0.0 before the change), so v1.0.0 runs replay as v1.1.0 with continuation OFF. It also records a
+// chronological decision log (base signals, exits, fills, continuation state transitions).
 //
 // Entry: the unchanged Rise-from-Recent-Low scanner (src/entry-signals/riseFromRecentLow.ts) is the ONLY entry. Each of
 // its signals is one entry DECISION at the signal bar's end (when its close is first knowable). A decision is taken
@@ -45,6 +50,17 @@ import { type DrawdownStats, Tracker } from '../multi-etf-allocator/engine.ts';
 import { FixedLedger } from '../multi-etf-allocator/ledger.ts';
 import { type BookSettings, type VirtualTrade, ShadowBook } from '../multi-etf-allocator/shadow.ts';
 import {
+  CONTINUATION_METHODS,
+  type ContinuationConfig,
+  ContinuationController,
+  type ContinuationMethod,
+  type ContinuationRuntime,
+  DecisionLog,
+  type Origin,
+  continuationConfigErrors,
+  continuationWarmupBars
+} from './continuation.ts';
+import {
   type ReboundSignal,
   type Setup,
   type SetupKind,
@@ -54,7 +70,9 @@ import {
 } from '../shared-margin-portfolio/strategy.ts';
 
 export const STRATEGY_KEY = 'rise-from-recent-low-trading';
-export const STRATEGY_VERSION = '1.0.0';
+export const STRATEGY_VERSION = '1.1.0';
+// Earlier versions this engine replays: 1.0.0 = this version with continuation OFF (no continuation fields).
+export const LEGACY_STRATEGY_VERSIONS = ['1.0.0'] as const;
 
 export interface RiseTradingParams {
   advanceFromRecentLowPercent: number; // X, percent
@@ -66,6 +84,7 @@ export interface RiseTradingParams {
   intradayLossBufferEnabled: boolean; // only together with the maximum hold
   intradayLossBufferPercent: number; // net loss after interest, percent of the invested notional
   costBpsPerSide: number; // basis points on every fill
+  continuation?: ContinuationConfig | null; // absent or null = OFF (v1.0.0 behaviour)
 }
 
 // The research defaults: X and N of rise-from-recent-low@1.0.0, the exits of the registered VGT D1 baseline
@@ -120,6 +139,7 @@ export const tradingParamErrors = (p: RiseTradingParams): string[] => {
     );
   if (!finite(p.costBpsPerSide) || p.costBpsPerSide < 0 || p.costBpsPerSide >= 1000)
     errors.push('costBpsPerSide must be in [0, 1000)');
+  if (p.continuation) errors.push(...continuationConfigErrors(p.continuation).map((e) => `continuation: ${e}`));
 
   return errors;
 };
@@ -138,12 +158,25 @@ export const percentToFraction = (percent: number) => {
   return Number.isFinite(fraction) ? fraction : percent / 100;
 };
 
-// The effective exit configuration as the unchanged ExitManager reads it. Only its exit fields are used; the D1 entry
-// fields are neutralised (the entry machine is never asked for a signal).
+// The effective exit configuration as the unchanged ExitManager reads it. Only its exit fields are used (ExitManager
+// reads stopPolicy, trailingStopPercentage, maximumHoldDays and intradayLossBuffer); the D1 entry fields are
+// neutralised. With the classic_d1 continuation the D1 machine's post-exit continuation fields are set (P, Y, W) while
+// its deep-dip arming stays disabled (a NaN target never compares true).
 export const exitParamsOf = (p: RiseTradingParams): StrategyParams => {
   assertTradingParams(p);
 
   const hold = p.maximumHoldEnabled;
+  const c = p.continuation;
+
+  if (c?.method === 'classic_d1')
+    return {
+      ...exitParamsOf({ ...p, continuation: null }),
+      label: `${STRATEGY_KEY} exits (D1 ExitManager) + D1 post-exit continuation (classic_d1)`,
+      postExit: true,
+      trailingBuyPercentage: percentToFraction(c.reboundPercent),
+      pullback: percentToFraction(c.pullbackPercent),
+      continuationWindow: c.windowSessions
+    };
 
   return {
     ...strategies.d1,
@@ -177,6 +210,14 @@ export const warmupSessionsFor = (resolution: SignalResolution, n: number) => {
 
   return resolution === '1d' ? n + 1 : Math.ceil((n + 1) / barsPerSession) + 1;
 };
+
+// The warm-up of a whole configuration: the scanner's, extended when a bar-based continuation method needs more
+// completed bars for its moving averages. With continuation OFF it is exactly the scanner's (v1.0.0).
+export const warmupSessionsForParams = (p: RiseTradingParams) =>
+  Math.max(
+    warmupSessionsFor(p.resolution, p.recentLowLookbackBars),
+    p.continuation ? warmupSessionsFor(p.resolution, continuationWarmupBars(p.continuation)) : 0
+  );
 
 // ----- decisions -----
 
@@ -219,6 +260,8 @@ export interface SimulationOptions {
   exit: StrategyParams;
   book: BookSettings;
   originSession?: number; // where the drawdown trackers start (default firstSession)
+  continuation?: ContinuationRuntime | null; // OFF when absent; classic_d1 also needs `exit` from exitParamsOf
+  recordMinuteMarks?: boolean; // keep the change points of the minute-marked net (for exports)
 }
 
 export interface Excursion {
@@ -254,10 +297,25 @@ export interface Simulation {
   dailyDrawdown: DrawdownStats;
   minuteMarks: number;
   realized: number;
+  log: DecisionLog; // chronological decisions and state transitions (always recorded)
+  continuation: ContinuationController | null;
+  markChanges: { t: number[]; marked: number[] } | null; // minute-marked net at each change (recordMinuteMarks)
 }
 
+// The origin of a trade: the base Rise entry, or a continuation method.
+export const originOf = (trade: VirtualTrade): { origin: Origin; method: ContinuationMethod | null } => {
+  const kind = trade.setupKind as string;
+
+  if (kind === 'rise') return { origin: 'base_growth', method: null };
+  if (kind === 'continuation') return { origin: 'continuation', method: 'classic_d1' };
+  if ((CONTINUATION_METHODS as readonly string[]).includes(kind))
+    return { origin: 'continuation', method: kind as ContinuationMethod };
+
+  throw new Error(`trade ${trade.id} has an unknown setup kind ${kind}`);
+};
+
 // The last regular-session minute that completes at or before `time` (informational: the decision's bar).
-const lastMinuteBefore = (ds: Dataset, s: number, time: number) => {
+export const lastMinuteBefore = (ds: Dataset, s: number, time: number) => {
   const start = ds.sBarStart[s]!;
   let k = ds.sBarCount[s]! - 1;
 
@@ -288,15 +346,29 @@ export const simulateTrading = (
       throw new Error(`decision ${d.id} is not inside its session ${ds.dates[d.sessionIndex]}`);
   }
 
-  // The book's own entry machine is constructed but never asked for a signal; arming would start after the data.
+  const classic = options.continuation?.config.method === 'classic_d1';
+
+  // classic_d1 needs the D1 machine's continuation fields (exitParamsOf sets them). Without classic_d1 a postExit flag
+  // in the exit params is inert (the machine never arms and processBar is never called), as in v1.0.0 — the Study 8
+  // exit-parity test feeds D1 books' own params this way.
+  if (classic && options.exit.postExit !== true)
+    throw new Error('classic_d1 continuation needs exit params with the D1 continuation fields (exitParamsOf)');
+
+  // The book's own entry machine is never asked for a deep-dip signal. Without classic_d1 it never arms (arming would
+  // start after the data); with it, only its post-exit continuation path can arm, from the first simulated session.
   const book = new ShadowBook(
     options.symbol as Sym,
     STRATEGY_KEY as PhenotypeName,
     ds,
     options.exit,
     options.book,
-    ds.sessionCount
+    classic ? firstSession : ds.sessionCount
   );
+  const log = new DecisionLog();
+  const continuation = options.continuation
+    ? new ContinuationController(ds, book, options.continuation, log, (s, time) => lastMinuteBefore(ds, s, time))
+    : null;
+  const markChanges = options.recordMinuteMarks ? { t: [] as number[], marked: [] as number[] } : null;
   const outcomes: DecisionOutcome[] = [];
   const byTrade = new Map<VirtualTrade, DecisionOutcome>();
   const excursions = new Map<VirtualTrade, Excursion>();
@@ -307,16 +379,41 @@ export const simulateTrading = (
   let minuteMarks = 0;
   let next = 0;
 
+  const baseEntry = (
+    d: EntryDecision,
+    s: number,
+    disposition: 'taken' | 'rejected',
+    reason: string | null,
+    trade: VirtualTrade
+  ) =>
+    log.add({
+      t: d.time,
+      session: s,
+      event: 'base_signal',
+      origin: 'base_growth',
+      method: null,
+      episode: null,
+      trade,
+      disposition,
+      reason,
+      values: { close: d.price, threshold: d.trigger, recentLow: d.reference }
+    });
+
   const decide = (d: EntryDecision, s: number) => {
     if (book.position) {
       outcomes.push({ decision: d, status: 'rejected', reason: 'position_open', trade: book.position.trade });
+      baseEntry(d, s, 'rejected', 'position_open', book.position.trade);
       return;
     }
 
     if (book.order) {
       outcomes.push({ decision: d, status: 'rejected', reason: 'order_pending', trade: book.order.trade });
+      baseEntry(d, s, 'rejected', 'order_pending', book.order.trade);
       return;
     }
+
+    // Base priority: an open continuation episode is closed (and an armed setup cancelled) before the base order.
+    continuation?.beforeBaseEntry(s, d.time);
 
     const setup: Setup = {
       id: outcomes.length + 1,
@@ -347,7 +444,64 @@ export const simulateTrading = (
 
     outcomes.push(outcome);
     byTrade.set(trade, outcome);
+    baseEntry(d, s, 'taken', null, trade);
   };
+
+  const r2 = (x: number) => Math.round(x * 100) / 100;
+  const tagOf = (trade: VirtualTrade) => {
+    const o = originOf(trade);
+
+    return { origin: o.origin, method: o.method };
+  };
+  const logExit = (trade: VirtualTrade, s: number) => {
+    const grossBeforeCosts = trade.shares * (trade.exitRawPrice - trade.entryRawPrice);
+    const costs =
+      trade.shares * (trade.entryPrice - trade.entryRawPrice) + trade.shares * (trade.exitRawPrice - trade.exitPrice);
+
+    log.add({
+      t: trade.exitTime,
+      session: s,
+      event: 'exit',
+      ...tagOf(trade),
+      episode: null,
+      trade,
+      disposition: null,
+      reason: trade.exitReason,
+      values: {
+        fill: trade.exitExecution,
+        price: trade.exitRawPrice,
+        stopPrice: trade.exitStopPrice,
+        stopActive: trade.stopActiveAtExit,
+        maximumHoldDue: trade.maximumHoldDue,
+        bufferDecision: Number.isNaN(trade.bufferSignalTime)
+          ? null
+          : new Date(trade.bufferSignalTime * 1000).toISOString(),
+        grossBeforeCosts: r2(grossBeforeCosts),
+        costs: r2(costs),
+        interest: r2(trade.interest),
+        net: r2(trade.net),
+        reconciles: Math.abs(grossBeforeCosts - costs - trade.interest - trade.net) < 1e-6,
+        qualifiesForContinuation: trade.net > 0
+      }
+    });
+  };
+  const logFill = (trade: VirtualTrade, s: number) =>
+    log.add({
+      t: trade.entryTime,
+      session: s,
+      event: 'fill',
+      ...tagOf(trade),
+      episode: null,
+      trade,
+      disposition: null,
+      reason: trade.entryExecution,
+      values: {
+        price: trade.entryRawPrice,
+        priceAfterCost: trade.entryPrice,
+        decision: new Date(trade.decisionTime * 1000).toISOString(),
+        carriedOvernight: trade.carriedOvernight
+      }
+    });
 
   for (let s = firstSession; s <= endSession; s++) {
     const start = ds.sBarStart[s]!;
@@ -355,29 +509,47 @@ export const simulateTrading = (
     const sessionTime = ds.sTime[s]!;
 
     book.beginSession(s);
+    continuation?.beginSession(s);
 
     let invested = Boolean(book.position);
 
     for (let k = 0; k <= count; k++) {
       const t = k < count ? ds.bTime[start + k]! : ds.sCloseTime[s]!;
+      const baseUntil = (time: number) => {
+        while (next < decisions.length && decisions[next]!.sessionIndex === s && decisions[next]!.time <= time) {
+          decide(decisions[next]!, s);
+          next++;
+        }
+      };
 
-      while (next < decisions.length && decisions[next]!.sessionIndex === s && decisions[next]!.time <= t) {
-        decide(decisions[next]!, s);
-        next++;
-      }
+      // In time order: a base decision at or before a continuation step goes first (base priority at a tie).
+      if (continuation)
+        for (let ct = continuation.nextTime(s, k, t); ct <= t; ct = continuation.nextTime(s, k, t)) {
+          baseUntil(ct);
+          continuation.evaluate(s, k);
+        }
+
+      baseUntil(t);
 
       const exit = book.exitAt(k);
 
       if (exit) {
-        realized += book.close(s, exit).net;
+        const trade = book.close(s, exit);
+
+        realized += trade.net;
+        logExit(trade, s);
+        continuation?.afterExit(s, trade);
       }
 
       if (book.fillAt(k)) {
         const trade = book.open(s, k);
+        const base = byTrade.get(trade);
 
-        byTrade.get(trade)!.status = 'filled';
+        if (base) base.status = 'filled';
+        else if (!continuation?.afterFill(trade)) throw new Error(`fill of an unknown order (trade ${trade.id})`);
         excursions.set(trade, { worst: Infinity, worstTime: NaN, best: -Infinity, bestTime: NaN, marks: 0 });
         invested = true;
+        logFill(trade, s);
       }
 
       const price = k < count ? ds.bClose[start + k]! : ds.sClose[s]!;
@@ -385,6 +557,11 @@ export const simulateTrading = (
 
       minute.updateStrict(realized + mark, t);
       minuteMarks++;
+
+      if (markChanges && markChanges.marked.at(-1) !== realized + mark) {
+        markChanges.t.push(t);
+        markChanges.marked.push(realized + mark);
+      }
 
       if (book.position) {
         const x = excursions.get(book.position.trade)!;
@@ -405,8 +582,11 @@ export const simulateTrading = (
 
     if (next < decisions.length && decisions[next]!.sessionIndex === s)
       throw new Error(`decision ${decisions[next]!.id} comes after the close of ${ds.dates[s]}`);
+    if (continuation && !continuation.classic && continuation.nextTime(s, count + 1, Infinity) !== Infinity)
+      throw new Error(`a continuation bar of ${ds.dates[s]} ends after its close`);
 
     book.afterSession(s);
+    continuation?.afterSession(s);
 
     const unrealized = book.markAt(ds.sClose[s]!, sessionTime);
 
@@ -424,6 +604,7 @@ export const simulateTrading = (
   }
 
   book.finish(endSession);
+  continuation?.finish(endSession);
 
   return {
     symbol: options.symbol,
@@ -438,7 +619,10 @@ export const simulateTrading = (
     minuteDrawdown: minute.stats(),
     dailyDrawdown: session.stats(),
     minuteMarks,
-    realized
+    realized,
+    log,
+    continuation,
+    markChanges
   };
 };
 
@@ -460,7 +644,8 @@ export const runRiseTrading = (
   history: MarketSession[],
   warmup: number,
   params: RiseTradingParams,
-  dataHash = 'unhashed'
+  dataHash = 'unhashed',
+  options: { recordMinuteMarks?: boolean } = {}
 ): RiseTradingRun => {
   assertTradingParams(params);
 
@@ -480,12 +665,17 @@ export const runRiseTrading = (
   ds.dataHash = dataHash;
 
   const decisions = decisionsFromSignals(bars, scan.signals);
+  const continuation = params.continuation
+    ? { config: params.continuation, bars: params.continuation.method === 'classic_d1' ? null : bars }
+    : null;
   const simulation = simulateTrading(ds, decisions, {
     symbol,
     firstSession: warmup,
     endSession: history.length - 1,
     exit: exitParamsOf(params),
-    book: bookSettingsOf(params)
+    book: bookSettingsOf(params),
+    continuation,
+    recordMinuteMarks: options.recordMinuteMarks
   });
 
   return { params, ds, bars, firstSignalBar, scan, decisions, simulation };
@@ -627,6 +817,92 @@ const median = (values: number[]) => {
 
 const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
 
+export const ATTRIBUTION_NOTE =
+  'Descriptive attribution: each trade is credited to the mechanism that opened it. This is NOT the incremental (causal) ' +
+  'effect of enabling a mechanism: enabling it changes which later signals are taken and so the whole trade sequence. ' +
+  'The causal comparison is a complete ON run against an otherwise identical OFF run (path-dependent counterfactual).';
+
+// Per origin (base Growth, each continuation method): entries, outcomes and the money of the trades it opened.
+export const attributionOf = (rows: readonly LedgerRow[]) => {
+  const groups = new Map<string, LedgerRow[]>();
+
+  for (const row of rows) {
+    const o = originOf(row.trade);
+    const key = o.origin === 'base_growth' ? 'base_growth' : `continuation:${o.method}`;
+
+    groups.set(key, [...(groups.get(key) ?? []), row]);
+  }
+
+  const byOrigin = Object.fromEntries(
+    [...groups].map(([key, list]) => {
+      const closed = list.filter((row) => row.status === 'closed');
+      const open = list.filter((row) => row.status === 'open');
+
+      return [
+        key,
+        {
+          entries: list.length,
+          closed: closed.length,
+          open: open.length,
+          wins: closed.filter((row) => row.net > 0).length,
+          losses: closed.filter((row) => row.net < 0).length,
+          breakeven: closed.filter((row) => row.net === 0).length,
+          realizedNetUsd: sum(closed.map((row) => row.net)),
+          realizedGrossBeforeCostsUsd: sum(closed.map((row) => row.grossBeforeCosts)),
+          realizedCostsUsd: sum(closed.map((row) => row.entryFriction + row.exitFriction)),
+          realizedInterestUsd: sum(closed.map((row) => row.interest)),
+          unrealizedNetUsd: sum(open.map((row) => row.net)),
+          worstClosedNetUsd: closed.length ? Math.min(...closed.map((row) => row.net)) : null,
+          bestClosedNetUsd: closed.length ? Math.max(...closed.map((row) => row.net)) : null,
+          meanCalendarDaysHeld: closed.length ? sum(closed.map((row) => row.calendarDaysHeld)) / closed.length : null,
+          calendarDaysInvested: sum(list.map((row) => row.calendarDaysHeld)),
+          worstMarkUsd: list.length ? Math.min(...list.map((row) => row.excursion.worst)) : null
+        }
+      ];
+    })
+  );
+
+  return { note: ATTRIBUTION_NOTE, byOrigin };
+};
+
+// The continuation episodes of a simulation, counted (descriptive diagnostics, never a ranking).
+export const continuationMetricsOf = (sim: Simulation) => {
+  const c = sim.continuation;
+  const exits = sim.trades.filter((t) => t.exitIndex >= 0);
+
+  if (!c) return { enabled: false as const, qualifyingExits: exits.filter((t) => t.net > 0).length };
+
+  const ends: Record<string, number> = {
+    triggered: 0,
+    base_entry: 0,
+    window_expired: 0,
+    pullback_too_deep: 0,
+    end_of_data: 0
+  };
+
+  for (const e of c.episodes) if (e.end) ends[e.end]!++;
+
+  const expired = c.episodes.filter((e) => e.end === 'window_expired' && Number.isFinite(e.maxHighInWindow));
+
+  return {
+    enabled: true as const,
+    method: c.method,
+    config: c.runtime.config,
+    qualifyingExits: exits.filter((t) => t.net > 0).length,
+    nonQualifyingExits: exits.filter((t) => !(t.net > 0)).length,
+    episodes: c.episodes.length,
+    endedBy: ends,
+    armed: c.episodes.filter((e) => Number.isFinite(e.armedTime)).length,
+    armedAtEnd: c.episodes.filter((e) => e.end === 'end_of_data' && Number.isFinite(e.armedTime)).length,
+    triggered: c.outcomes.filter((o) => o.status !== 'suppressed').length,
+    filled: c.outcomes.filter((o) => o.status === 'filled').length,
+    unfilledAtEnd: c.outcomes.filter((o) => o.status === 'unfilled_at_end').length,
+    suppressedBasePriority: c.outcomes.filter((o) => o.status === 'suppressed').length,
+    expiredWithLaterHigherHigh: expired.filter((e) => e.maxHighInWindow > e.exitPrice).length,
+    note: 'Episode counts are descriptive. "Expired with a later higher high" counts windows that expired although a session high above the exit price followed inside the window (a possible missed continuation); it is not a profit estimate.'
+  };
+};
+
 // Every figure a Strategy Lab run shows for one symbol. A figure that cannot be computed is null with a reason in
 // `unavailable`, never 0.
 export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
@@ -737,6 +1013,8 @@ export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
         longestCalendarDays: rows.length ? Math.max(...rows.map((row) => row.calendarDaysHeld)) : null,
         medianSessions: median(closed.map((row) => row.sessionsHeld))
       },
+      attribution: attributionOf(rows),
+      continuation: continuationMetricsOf(sim),
       checks: {
         fixedLedgerMaxDifferenceUsd: reconciliation.maxDifference,
         identityMaxResidualUsd: identity,

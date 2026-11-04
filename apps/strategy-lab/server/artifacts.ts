@@ -12,12 +12,13 @@ export const RUN_ID_PATTERN = /^R-\d{6,12}$/;
 
 export const sha256 = (data: string | Buffer) => createHash('sha256').update(data).digest('hex');
 
-export function atomicWrite(file: string, data: string) {
+export function atomicWrite(file: string, data: string | Buffer) {
   mkdirSync(dirname(file), { recursive: true });
   const tmp = `${file}.tmp-${randomBytes(6).toString('hex')}`;
   const fd = openSync(tmp, 'wx', 0o644);
   try {
-    writeSync(fd, data);
+    if (typeof data === 'string') writeSync(fd, data);
+    else writeSync(fd, data);
     fsyncSync(fd);
   } finally {
     closeSync(fd);

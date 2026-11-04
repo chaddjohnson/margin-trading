@@ -30,7 +30,7 @@ export function seedTradeColourFixture(repo: Repo, cfg: Config) {
     kind: 'trades',
     runnable: false,
     description: 'Synthetic trades with hand-set net P&L for the marker-colour tests.',
-    params: null,
+    schema: null,
     sourceRef: 'apps/strategy-lab/e2e/trade-colour-fixture.ts'
   });
   const params: LabValue[] = [{ key: 'fixture', label: 'Fixture', value: 'trade colours', unit: 'text' }];

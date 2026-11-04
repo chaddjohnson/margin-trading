@@ -1,4 +1,5 @@
-// The Strategy Lab trading-backtest runner: ONE manual test of one configuration of rise-from-recent-low-trading@1.0.0,
+// The Strategy Lab trading-backtest runner ("Growth"): ONE manual test of one configuration of
+// rise-from-recent-low-trading@1.1.0 (or a replay of a legacy @1.0.0 request, which is 1.1.0 with continuation OFF),
 // started by the server as a child process with a fixed argument vector:
 //
 //   node --experimental-transform-types runner/trading-run.ts <absolute run directory>
@@ -6,33 +7,40 @@
 // cwd must be the repository root. It reads <run dir>/request.json (validated by the server), loads each symbol through
 // the repository's dataset pipeline (src/lib/evaluation.ts: the window, warm-up sessions read for the scanner's lookback
 // only, forward split adjustment, the data file's sha256, access 'manual evaluation') exactly as the signal-only runner
-// does, runs the trading engine (src/growth-trading/riseTrading.ts: the unchanged Rise scanner as the only entry, the
-// Study 8 D1 book and exit manager), and writes events.json, metrics.json, trades.json, daily.json and provenance.json
-// atomically. Each symbol is an independent standalone backtest; nothing is summed across symbols. The run FAILS (exit 1)
+// does, runs the trading engine (src/growth-trading/riseTrading.ts: the unchanged Rise scanner as the base entry, the
+// optional continuation entries of continuation.ts, the Study 8 D1 book and exit manager), and writes events.json,
+// metrics.json, trades.json, daily.json, decisions.json, minute-marks.csv.gz and provenance.json atomically. Each symbol is an independent standalone backtest; nothing is summed across symbols. The run FAILS (exit 1)
 // if any accounting check does not close. It never searches parameters: one request, one configuration.
 
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 
-import { isSignalResolution } from '../../../src/entry-signals/bars.ts';
+import {
+  CONTINUATION_METHOD_LABEL,
+  type ContinuationMethod,
+  type LogEntry
+} from '../../../src/growth-trading/continuation.ts';
 import {
   EXECUTION,
+  LEGACY_STRATEGY_VERSIONS,
   type LedgerRow,
-  type RiseTradingParams,
   STRATEGY_KEY,
   STRATEGY_VERSION,
   exitParamsOf,
+  originOf,
   runRiseTrading,
   summarizeSimulation,
-  warmupSessionsFor
+  warmupSessionsForParams
 } from '../../../src/growth-trading/riseTrading.ts';
 import { resolveDataset } from '../../../src/lib/dataset.ts';
 import { loadDatasetSessions } from '../../../src/lib/evaluation.ts';
 import type { ExecutionPrice, ExitReason } from '../../../src/shared-margin-portfolio/strategy.ts';
 import { atomicWrite, writeEvents } from '../server/artifacts.ts';
 import type { LabEvent, LabRunRequest, LabValue, TimePrecision } from '../shared/contract.ts';
+import { paramsOf } from './growth-params.ts';
 
 const emit = (o: Record<string, unknown>) => process.stdout.write(`${JSON.stringify(o)}\n`);
 const progress = (message: string, fraction: number | null = null) => emit({ type: 'progress', message, fraction });
@@ -41,6 +49,7 @@ const ENGINE_FILES = [
   'src/entry-signals/bars.ts',
   'src/entry-signals/riseFromRecentLow.ts',
   'src/growth-trading/riseTrading.ts',
+  'src/growth-trading/continuation.ts',
   'src/multi-etf-allocator/shadow.ts',
   'src/multi-etf-allocator/engine.ts',
   'src/multi-etf-allocator/ledger.ts',
@@ -50,7 +59,9 @@ const ENGINE_FILES = [
   'src/lib/session.ts',
   'src/lib/csv.ts',
   'src/lib/corporateActions.ts',
-  'apps/strategy-lab/runner/trading-run.ts'
+  'apps/strategy-lab/runner/trading-run.ts',
+  'apps/strategy-lab/shared/params.ts',
+  'apps/strategy-lab/shared/strategies.ts'
 ];
 const TOLERANCE_USD = 1e-6;
 
@@ -99,21 +110,15 @@ const EXIT_LABEL: Record<ExitReason, string> = {
   open: 'Open at the end'
 };
 
-const paramsOf = (request: LabRunRequest): RiseTradingParams => {
-  const p = request.params;
-  if (!isSignalResolution(request.resolution)) throw new Error(`unsupported resolution ${request.resolution}`);
-  return {
-    advanceFromRecentLowPercent: p.advanceFromRecentLowPercent as number,
-    recentLowLookbackBars: p.recentLowLookbackBars as number,
-    resolution: request.resolution,
-    trailingStopPercent: p.trailingStopPercent as number,
-    maximumHoldEnabled: p.maximumHoldEnabled as boolean,
-    maximumHoldDays: p.maximumHoldDays as number,
-    intradayLossBufferEnabled: p.intradayLossBufferEnabled as boolean,
-    intradayLossBufferPercent: p.intradayLossBufferPercent as number,
-    costBpsPerSide: p.costBpsPerSide as number
-  };
-};
+const originValues = (origin: string, method: ContinuationMethod | null, episode: string | null): LabValue[] => [
+  { key: 'origin', label: 'Entry origin', value: origin, unit: 'text' },
+  ...(method
+    ? [
+        { key: 'method', label: 'Continuation method', value: CONTINUATION_METHOD_LABEL[method], unit: 'text' as const },
+        { key: 'episode', label: 'Continuation episode', value: episode, unit: 'text' as const }
+      ]
+    : [])
+];
 
 interface StoredRequest extends LabRunRequest {
   runId: string;
@@ -123,18 +128,22 @@ async function main() {
   const runDir = process.argv[2];
   if (!runDir) throw new Error('usage: trading-run.ts <run directory>');
   const request = JSON.parse(readFileSync(join(runDir, 'request.json'), 'utf8')) as StoredRequest;
-  if (request.strategyKey !== STRATEGY_KEY || request.strategyVersion !== STRATEGY_VERSION)
+  const legacy = (LEGACY_STRATEGY_VERSIONS as readonly string[]).includes(request.strategyVersion);
+  if (request.strategyKey !== STRATEGY_KEY || !(request.strategyVersion === STRATEGY_VERSION || legacy))
     throw new Error(`unsupported strategy ${request.strategyKey}@${request.strategyVersion}`);
   const params = paramsOf(request);
-  const exit = exitParamsOf(params); // validates, including the buffer → hold dependency
+  const exit = exitParamsOf(params); // validates, including the buffer → hold dependency and the continuation config
   const n = params.recentLowLookbackBars;
-  const warmupSessions = warmupSessionsFor(params.resolution, n);
+  const warmupSessions = warmupSessionsForParams(params);
   const daily = request.resolution === '1d';
+  const continuation = params.continuation ?? null;
 
   const events: LabEvent[] = [];
   const perSymbol: Record<string, unknown> = {};
   const ledgers: Record<string, unknown[]> = {};
   const marks: Record<string, unknown[]> = {};
+  const decisionLogs: Record<string, unknown> = {};
+  const minuteCsv: string[] = ['symbol,t_unix_utc,marked_net_usd'];
   const provenance: Record<string, unknown> = {};
   const basisBySymbol: Record<string, string> = {};
 
@@ -150,7 +159,9 @@ async function main() {
       access: 'manual evaluation'
     });
     progress(`${symbol}: ${loaded.sessions.length} sessions loaded; backtesting`, base + 0.5 / request.symbols.length);
-    const r = runRiseTrading(symbol, loaded.history, loaded.warmup, params, loaded.report!.dataSha256!);
+    const r = runRiseTrading(symbol, loaded.history, loaded.warmup, params, loaded.report!.dataSha256!, {
+      recordMinuteMarks: true
+    });
     const { ds, simulation: sim } = r;
     const { rows, metrics } = summarizeSimulation(sim, ds);
     basisBySymbol[symbol] = loaded.history[0]!.date;
@@ -192,7 +203,8 @@ async function main() {
                   ? `ignored: invested (${tradeId ?? '?'})`
                   : `ignored: the order for ${tradeId ?? '?'} is not filled yet`,
           unit: 'text'
-        }
+        },
+        ...originValues('base_growth', null, null)
       ];
       const head = `Close ${s.close.toFixed(2)} is ${r2(s.advancePercent).toFixed(2)}% above the ${n}-bar low ${s.recentLow.toFixed(2)} (bar ending ${ny(low.end)})`;
       const reason =
@@ -224,16 +236,83 @@ async function main() {
           standalone: true,
           disposition: o.status === 'rejected' ? 'ignored' : o.status === 'filled' ? 'taken' : 'unfilled',
           reasonCode: o.reason ?? o.status,
-          heldBy: o.status === 'rejected' ? (tradeId ?? null) : null
+          heldBy: o.status === 'rejected' ? (tradeId ?? null) : null,
+          origin: 'base_growth'
+        }
+      });
+    }
+
+    // Continuation signals: a trigger (taken: its order) or a trigger suppressed by a base entry at the same instant.
+    const ctl = sim.continuation;
+    for (const o of ctl?.outcomes ?? []) {
+      const t = iso(o.time);
+      const e = o.episode;
+      const taken = o.status !== 'suppressed';
+      const tradeId = o.trade ? tradeIds.get(o.trade) : undefined;
+      const values: LabValue[] = [
+        ...originValues('continuation', e.method, e.id),
+        { key: 'qualifyingExit', label: 'Opened by the profitable exit of', value: tradeIds.get(e.sourceTrade) ?? null, unit: 'text' },
+        { key: 'exitNet', label: 'That exit’s net', value: r2(e.exitNet), unit: 'usd' },
+        { key: 'windowFrom', label: 'Window first session', value: r.ds.dates[e.firstEligibleSession] ?? null, unit: 'date' },
+        { key: 'windowTo', label: 'Window last session', value: r.ds.dates[e.lastEligibleSession] ?? null, unit: 'date' },
+        ...Object.entries(o.values).map(([key, value]): LabValue => ({
+          key: `trigger.${key}`,
+          label: key,
+          value: typeof value === 'number' ? r4(value) : value,
+          unit: typeof value === 'number' ? (/Percent$/.test(key) ? 'percent' : 'price') : 'text'
+        })),
+        {
+          key: 'disposition',
+          label: 'Disposition',
+          value: taken
+            ? o.status === 'filled'
+              ? `taken: order filled (${tradeId})`
+              : 'taken: order not filled before the end of the window'
+            : 'suppressed: a base Growth entry was taken at the same instant (base priority)',
+          unit: 'text'
+        }
+      ];
+      const timeIsMinute = e.method === 'classic_d1' || !daily;
+      events.push({
+        id: `${symbol}:continuation:${t}`,
+        runId: request.runId,
+        symbol,
+        kind: taken ? 'entry_signal' : 'rejected_signal',
+        t,
+        timePrecision: timeIsMinute ? 'minute' : 'session-close',
+        timeMeaning: timeIsMinute
+          ? `end of the completed ${e.method === 'classic_d1' ? '1-minute' : request.resolution} bar: the continuation trigger is first knowable`
+          : 'scheduled close of the session: the daily bar is complete',
+        price: o.price,
+        priceBasis: 'bar-close',
+        reason: taken
+          ? `Continuation (${CONTINUATION_METHOD_LABEL[e.method]}, ${e.id}): trigger at ${o.price.toFixed(2)}; ${o.status === 'filled' ? `filled ${ny(o.trade!.entryTime)} at ${o.trade!.entryRawPrice.toFixed(2)} (${tradeId})` : 'no eligible trade before the end — not filled'}`
+          : `Continuation (${CONTINUATION_METHOD_LABEL[e.method]}, ${e.id}) would have triggered at ${o.price.toFixed(2)}, but a base Growth entry was taken at the same instant (base priority); not traded`,
+        values,
+        tradeId: taken && o.status === 'filled' ? tradeId! : null,
+        linkedEventId: null,
+        meta: {
+          signalOnly: false,
+          standalone: true,
+          origin: 'continuation',
+          method: e.method,
+          episode: e.id,
+          disposition: taken ? (o.status === 'filled' ? 'taken' : 'unfilled') : 'suppressed',
+          reasonCode: taken ? o.status : 'base_priority'
         }
       });
     }
 
     // Executed entries and exits.
+    const episodeOf = new Map(
+      (ctl?.episodes ?? []).filter((e) => e.trade).map((e) => [e.trade!, e.id] as const)
+    );
+    const opened = new Map((ctl?.episodes ?? []).map((e) => [e.sourceTrade, e.id] as const));
     for (const row of rows) {
       const tr = row.trade;
       const id = `T-${row.number}`;
       const open = row.status === 'open';
+      const origin = originOf(tr);
       const entryId = `${symbol}:${id}:entry`;
       const exitId = `${symbol}:${id}:exit`;
       const et = timing(tr.entryExecution);
@@ -247,7 +326,7 @@ async function main() {
         timeMeaning: et.meaning,
         price: tr.entryRawPrice,
         priceBasis: 'fill',
-        reason: `Bought ${row.shares.toFixed(4)} shares ($${EXECUTION.notional.toLocaleString('en-US')}) at ${tr.entryRawPrice.toFixed(2)}, ${EXECUTION_TEXT[tr.entryExecution as ExecutionPrice]}, for the Rise signal decided ${ny(tr.decisionTime)} at ${tr.decisionPrice.toFixed(2)}${open ? ' — still open at the end of the window' : ''}`,
+        reason: `Bought ${row.shares.toFixed(4)} shares ($${EXECUTION.notional.toLocaleString('en-US')}) at ${tr.entryRawPrice.toFixed(2)}, ${EXECUTION_TEXT[tr.entryExecution as ExecutionPrice]}, for the ${origin.method ? `continuation trigger (${CONTINUATION_METHOD_LABEL[origin.method]}, ${episodeOf.get(tr)})` : 'Rise signal'} decided ${ny(tr.decisionTime)} at ${tr.decisionPrice.toFixed(2)}${open ? ' — still open at the end of the window' : ''}`,
         values: [
           { key: 'decisionTime', label: 'Signal decided', value: iso(tr.decisionTime), unit: 'datetime' },
           { key: 'decisionPrice', label: 'Signal bar close', value: r4(tr.decisionPrice), unit: 'price' },
@@ -256,11 +335,12 @@ async function main() {
           { key: 'priceAfterCost', label: 'Price after cost', value: r4(tr.entryPrice), unit: 'price' },
           { key: 'shares', label: 'Shares', value: r4(row.shares), unit: 'count' },
           { key: 'principal', label: 'Principal (borrowed)', value: row.principal, unit: 'usd' },
-          { key: 'entryCost', label: 'Entry cost', value: r2(row.entryFriction), unit: 'usd' }
+          { key: 'entryCost', label: 'Entry cost', value: r2(row.entryFriction), unit: 'usd' },
+          ...originValues(origin.origin, origin.method, episodeOf.get(tr) ?? null)
         ],
         tradeId: id,
         linkedEventId: open ? null : exitId,
-        meta: { open, standalone: true }
+        meta: { open, standalone: true, origin: origin.origin, method: origin.method }
       });
       if (open) continue;
       const xt = timing(tr.exitExecution);
@@ -318,11 +398,22 @@ async function main() {
           { key: 'priceReturn', label: 'Price return (raw fills)', value: r2(row.priceReturnPercent), unit: 'percent' },
           { key: 'mae', label: 'Worst mark while held (net)', value: r2(row.excursion.worst), unit: 'usd' },
           { key: 'mfe', label: 'Best mark while held (net)', value: r2(row.excursion.best), unit: 'usd' },
-          { key: 'cumulative', label: 'Cumulative realized net', value: r2(cumulativeAfter.get(row)!), unit: 'usd' }
+          { key: 'cumulative', label: 'Cumulative realized net', value: r2(cumulativeAfter.get(row)!), unit: 'usd' },
+          ...originValues(origin.origin, origin.method, episodeOf.get(tr) ?? null),
+          ...(continuation
+            ? [
+                {
+                  key: 'opensContinuationWindow',
+                  label: 'Opens a continuation window',
+                  value: opened.get(tr) ?? (row.net > 0 ? 'qualifies' : 'no: net ≤ 0'),
+                  unit: 'text' as const
+                }
+              ]
+            : [])
         ],
         tradeId: id,
         linkedEventId: entryId,
-        meta: { standalone: true }
+        meta: { standalone: true, origin: origin.origin, method: origin.method }
       });
     }
 
@@ -344,6 +435,10 @@ async function main() {
     ledgers[symbol] = rows.map((row) => ({
       trade: `T-${row.number}`,
       status: row.status,
+      origin: originOf(row.trade).origin,
+      method: originOf(row.trade).method,
+      episode: episodeOf.get(row.trade) ?? null,
+      opensEpisode: opened.get(row.trade) ?? null,
       decisionTimeUtc: iso(row.trade.decisionTime),
       decisionTimeNewYork: ny(row.trade.decisionTime),
       decisionPrice: row.trade.decisionPrice,
@@ -389,6 +484,48 @@ async function main() {
       marked: d.marked,
       heldAtClose: d.heldAtClose
     }));
+    const when = (sec: number) => ({ utc: iso(sec), newYork: ny(sec) });
+    const tradeRef = (t: LogEntry['trade']) => (t ? (tradeIds.get(t) ?? `order (unfilled, decided ${iso(t.decisionTime)})`) : null);
+    decisionLogs[symbol] = {
+      episodes: (ctl?.episodes ?? []).map((e) => ({
+        id: e.id,
+        method: e.method,
+        openedBy: tradeIds.get(e.sourceTrade) ?? null,
+        exitTime: when(e.exitTime),
+        exitPrice: e.exitPrice,
+        exitNet: r2(e.exitNet),
+        anchorSession: r.ds.dates[e.anchorSession],
+        firstEligibleSession: r.ds.dates[e.firstEligibleSession] ?? null,
+        lastEligibleSession: r.ds.dates[e.lastEligibleSession] ?? `${r.ds.dates.at(-1)} (window extends past the data)`,
+        eligibleSessionsObserved: e.eligibleSessionsObserved,
+        barsEvaluated: e.barsEvaluated,
+        referenceHigh: e.referenceHigh,
+        maxHighInWindow: Number.isFinite(e.maxHighInWindow) ? e.maxHighInWindow : null,
+        armed: Number.isFinite(e.armedTime) ? { ...when(e.armedTime), price: e.armedPrice } : null,
+        trigger: Number.isFinite(e.triggerTime) ? { ...when(e.triggerTime), price: e.triggerPrice, values: e.triggerValues } : null,
+        end: e.end,
+        endTime: Number.isFinite(e.endTime) ? when(e.endTime) : null,
+        status: e.status,
+        trade: e.trade ? (tradeIds.get(e.trade) ?? null) : null
+      })),
+      log: sim.log.entries.map((x) => ({
+        seq: x.seq,
+        ...when(x.t),
+        precision: 'minute',
+        session: r.ds.dates[x.session],
+        event: x.event,
+        origin: x.origin,
+        method: x.method,
+        episode: x.episode,
+        trade: tradeRef(x.trade),
+        disposition: x.disposition,
+        reason: x.reason,
+        values: x.values
+      }))
+    };
+    const mc = sim.markChanges!;
+    for (let i = 0; i < mc.t.length; i++)
+      minuteCsv.push(`${symbol},${mc.t[i]},${mc.marked[i]!.toFixed(2)}`);
     provenance[symbol] = { ...loaded.report, dataFile: loaded.report?.dataFile, firstSignalBar: r.firstSignalBar };
     progress(
       `${symbol}: ${metrics.signals.raw} signals, ${metrics.trades.filled} trades (${metrics.trades.open} open)`,
@@ -413,7 +550,13 @@ async function main() {
     join(runDir, 'metrics.json'),
     json({
       kind: 'trading backtest',
-      strategy: { key: STRATEGY_KEY, version: STRATEGY_VERSION },
+      strategy: {
+        key: STRATEGY_KEY,
+        version: request.strategyVersion,
+        engineVersion: STRATEGY_VERSION,
+        ...(legacy ? { legacyReplay: `${request.strategyVersion} replayed as ${STRATEGY_VERSION} with continuation OFF` } : {})
+      },
+      continuation: continuation ?? { enabled: false },
       disclaimer:
         'Exploratory backtest of one configuration on historical data, not an optimised or validated strategy. Each symbol is an independent standalone backtest on its own $100,000 notional: the per-symbol figures are never summed, and are not comparable with a shared-slot pool such as vg-balanced.',
       execution: {
@@ -433,6 +576,18 @@ async function main() {
   );
   atomicWrite(join(runDir, 'trades.json'), json({ runId: request.runId, standalonePerSymbol: true, trades: ledgers }));
   atomicWrite(join(runDir, 'daily.json'), json({ runId: request.runId, standalonePerSymbol: true, daily: marks }));
+  atomicWrite(
+    join(runDir, 'decisions.json'),
+    json({
+      runId: request.runId,
+      kind: 'growth decision log',
+      note: 'Chronological decisions and state transitions per symbol: base signals (taken/rejected), fills, exits (with the gross/cost/interest/net identity), and continuation episodes (opened, armed, window closed, suppressed, triggered, expired). Times in UTC with the America/New_York wall-clock time; instants are minute-precise (a daily decision is the session close).',
+      continuation: continuation ?? { enabled: false },
+      perSymbol: decisionLogs
+    })
+  );
+  // Deterministic gzip (no file name or mtime in the header): the change points of the minute-marked net.
+  atomicWrite(join(runDir, 'minute-marks.csv.gz'), gzipSync(Buffer.from(`${minuteCsv.join('\n')}\n`, 'utf8'), { level: 6 }));
   atomicWrite(
     join(runDir, 'provenance.json'),
     json({ request, warmupSessions, basisBySymbol, engine, node: process.version, symbols: provenance })

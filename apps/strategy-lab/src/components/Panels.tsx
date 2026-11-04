@@ -2,7 +2,8 @@
 
 import type { LabEvent, LabValue, RunDetail } from '../../shared/contract.ts';
 import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
-import { RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING } from '../../shared/strategies.ts';
+import type { ParamSpec, Predicate } from '../../shared/contract.ts';
+import { findStrategy, RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL } from '../../shared/strategies.ts';
 import { glyphUri, type MarkerTone, type Role } from '../chart/markers.ts';
 import {
   formatEt,
@@ -20,6 +21,8 @@ import { type TradingSymbolMetrics, TradingMetrics } from './Trading.tsx';
 export function resultKindOf(run: Pick<RunDetail, 'strategy' | 'kind'>): string {
   if (run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key) return 'trading backtest — standalone per symbol';
   if (run.strategy.key === RISE_FROM_RECENT_LOW.key) return 'signal-only (no positions, exits or P&L)';
+  if (run.strategy.key === STUDY8_POOL.key)
+    return run.kind === 'import' ? 'imported shared-slot pool replay' : 'shared-slot pool rerun (one allocator replay)';
   return run.kind === 'import' ? 'imported result' : run.kind;
 }
 
@@ -41,7 +44,27 @@ export function ValueTable({ values, caption }: { values: LabValue[]; caption?: 
   );
 }
 
+const predicateText = (p: Predicate): string =>
+  'all' in p
+    ? p.all.map(predicateText).join(' and ')
+    : 'any' in p
+      ? p.any.map(predicateText).join(' or ')
+      : 'not' in p
+        ? `not (${predicateText(p.not)})`
+        : 'in' in p
+          ? `${p.param} ∈ {${p.in.join(', ')}}`
+          : `${p.param} = ${String(p.equals)}`;
+
+const definition = (p: ParamSpec) =>
+  p.type === 'enum'
+    ? `choice: ${p.options.map((o) => o.value).join(' | ')}, default ${p.default}`
+    : p.type === 'boolean'
+      ? `switch, default ${p.default ? 'ON' : 'OFF'}`
+      : `${p.type}, ${p.unit}, ${p.min}–${p.max}, default ${p.default}`;
+
 export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (() => void) | null }) {
+  const spec = findStrategy(run.strategy.key, run.strategy.version);
+  const phenotypeOrigin = (run.provenance as { phenotype?: { exposure?: string | null } }).phenotype;
   const prov = run.provenance as Record<string, unknown>;
   const runner = prov.runner as
     | {
@@ -62,21 +85,51 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
           </button>
         ) : (
           <span className="muted small">
-            {run.kind === 'import' ? 'Imported result: not executable here' : 'Synthetic demo: not executable'}
+            {run.kind === 'import'
+              ? 'Imported result: not executable here'
+              : run.phenotype
+                ? `Rerun of ${run.phenotype.id}: rerun it from the phenotype catalogue`
+                : 'Synthetic demo: not executable'}
           </span>
         )}
       </div>
+      {spec?.legacy && (
+        <p className="muted small" data-testid="legacy-version">
+          Version {run.strategy.version} (before continuation entries). It is kept as recorded; {spec.legacy.replay}.
+        </p>
+      )}
+      {run.phenotype && (
+        <p className="small phenotype-provenance" data-testid="run-phenotype">
+          Run of phenotype <a href={`#/phenotype/${run.phenotype.id}`}>{run.phenotype.id}</a>{' '}
+          <span className="mono">{run.phenotype.key}</span> from study <span className="mono">{run.phenotype.study}</span>
+          {run.phenotype.edited ? (
+            <b> — edited: a derived variation, not the frozen phenotype</b>
+          ) : (
+            ' — its frozen configuration, unedited'
+          )}
+          .{phenotypeOrigin?.exposure ? <span className="muted"> Data exposure: {phenotypeOrigin.exposure}</span> : null}
+        </p>
+      )}
       <ValueTable values={run.params} caption="Inputs (immutable snapshot)" />
-      {run.paramSchema && (
+      {run.paramSchema && run.paramSchema.params.length > 0 && (
         <details className="small">
-          <summary>Parameter definitions</summary>
+          <summary>Parameter definitions (schema v{run.paramSchema.schemaVersion})</summary>
           <ul>
-            {run.paramSchema.map((p) => (
+            {run.paramSchema.params.map((p) => (
               <li key={p.key}>
-                <b>{p.label}</b> (<span className="mono">{p.key}</span>, {p.type}, {p.unit}, {p.min}–{p.max}, default{' '}
-                {p.default}): {p.description}
+                <b>{p.label}</b> (<span className="mono">{p.key}</span>, {definition(p)}
+                {p.activeWhen ? `; applies when ${predicateText(p.activeWhen)}` : ''}): {p.description}
               </li>
             ))}
+            {run.paramSchema.constraints.map((c) => (
+              <li key={c.id}>
+                Rule <span className="mono">{c.id}</span>: {c.message}
+              </li>
+            ))}
+            <li>
+              Variation identity: {run.paramSchema.identity === 'effective' ? 'the effective (applied) values' : 'every stored value'}{' '}
+              plus the resolution.
+            </li>
           </ul>
         </details>
       )}
@@ -94,7 +147,7 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
           {
             key: 'strategy',
             label: 'Strategy',
-            value: `${run.strategy.title} (${run.strategy.key}@${run.strategy.version}, ${run.strategy.id})`,
+            value: `${run.strategy.title}${run.strategyFormerTitle ? ` (formerly “${run.strategyFormerTitle}”)` : ''} — ${run.strategy.key}@${run.strategy.version}, ${run.strategy.id}`,
             unit: 'text'
           },
           { key: 'origin', label: 'Data origin', value: run.dataOrigin, unit: 'text' },
@@ -274,14 +327,23 @@ export function AnalysisPanel({ runs, symbol }: { runs: { role: Role; run: RunDe
             </div>
           );
         }
-        if (m.kind === 'imported trades') {
+        if (m.kind === 'imported trades' || m.kind === 'pool rerun') {
           const t = m.trades as Record<string, number>;
           const ps = per as { entries?: number; exits?: number; rejected?: number } | undefined;
+          const rec = m.reconciliation as { applicable?: boolean; pass?: boolean; reason?: string } | undefined;
           return (
-            <div key={role} className="analysis-block">
+            <div key={role} className="analysis-block" data-testid={`analysis-pool-${role}`}>
               <h4>
-                <span className={`role-badge role-${role}`}>{role}</span> {run.id} · imported trades
+                <span className={`role-badge role-${role}`}>{role}</span> {run.id} ·{' '}
+                {m.kind === 'pool rerun' ? 'shared-slot pool rerun (one allocator replay)' : 'imported trades'}
               </h4>
+              {m.kind === 'pool rerun' && (
+                <p className="muted small" data-testid="pool-reconciliation">
+                  {String(m.semantics)} Sealed-record reconciliation:{' '}
+                  {rec?.applicable ? (rec.pass ? 'PASS (totals and trade by trade)' : 'FAILED') : `not applicable — ${rec?.reason ?? ''}`}
+                  .
+                </p>
+              )}
               <p className="muted small">
                 {String(m.source)}. {String(m.disclaimer)}
               </p>
@@ -320,6 +382,12 @@ export function AnalysisPanel({ runs, symbol }: { runs: { role: Role; run: RunDe
             </div>
           );
         }
+        if (m.kind !== 'entry-signal outcomes')
+          return (
+            <p key={role} className="muted small">
+              {run.id}: no analysis view for metrics of kind “{String(m.kind)}” (see Parameters and the export bundle).
+            </p>
+          );
         if (!per)
           return (
             <p key={role} className="muted small">

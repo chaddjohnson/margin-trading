@@ -1,10 +1,11 @@
 // The e2e server: a fresh state directory (temporary), the synthetic demo and the synthetic trade-colour fixture
-// seeded, the latest local Study 8 vg-balanced runner output imported (when present), then the real server on port
-// 5299 serving the built UI.
+// seeded, the latest local Study 8 vg-balanced runner output imported (when present), the two phenotype fixture
+// exports imported into the catalogue, then the real server on port 5299 serving the built UI.
 import { existsSync, mkdtempSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
+import { importPhenotypes } from '../importers/phenotypes.ts';
 import { importStudy8 } from '../importers/study8.ts';
 import { loadConfig, REPO_ROOT } from '../server/config.ts';
 import { openDb } from '../server/db.ts';
@@ -31,5 +32,7 @@ const latest = existsSync(dir)
       .at(-1)
   : undefined;
 if (latest) console.log(JSON.stringify(importStudy8(cfg, repo, join(dir, latest))));
+for (const exp of ['growth-demo-2026-11', 'study8-expanded-regime-d1'])
+  console.log(JSON.stringify(importPhenotypes(cfg, repo, join(REPO_ROOT, 'apps/strategy-lab/fixtures/phenotypes', exp))));
 db.close();
 start(env);

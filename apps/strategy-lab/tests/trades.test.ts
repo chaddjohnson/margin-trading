@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { LabEvent, LabValue } from '../shared/contract.ts';
 import { placementOf } from '../src/chart/link.ts';
-import { buildTrades, pnlText, toneOf, tradeList } from '../src/trades.ts';
+import { buildTrades, isClosedLoss, originOf, pnlText, toneOf, tradeList } from '../src/trades.ts';
 
 const ev = (
   over: Partial<LabEvent> & Pick<LabEvent, 'id' | 'kind' | 't'>,
@@ -179,5 +179,44 @@ describe('placementOf', () => {
     expect(placementOf(link(101), [0, 100])).toBe('after');
     expect(placementOf(link(null), [0, 100])).toBe('open');
     expect(placementOf(null, [0, 100])).toBe('none');
+  });
+});
+
+describe('Closed losses only (the Trades filter)', () => {
+  it('keeps only CLOSED trades whose recorded net after costs and interest is below zero', () => {
+    const events = [
+      ...pair('VGT', 'T-1', '2020-01-02T14:30:00Z', '2020-01-12T14:31:00Z', -0.01),
+      ...pair('VGT', 'T-2', '2020-02-02T14:30:00Z', '2020-02-12T14:31:00Z', 0),
+      ...pair('VGT', 'T-3', '2020-03-02T14:30:00Z', '2020-03-12T14:31:00Z', 2500),
+      // a "loss" by raw price (exit below entry) that is a recorded net PROFIT is not a loss
+      ...pair('VGT', 'T-4', '2020-04-02T14:30:00Z', '2020-04-12T14:31:00Z', 10).map((e) =>
+        e.kind === 'executed_exit' ? { ...e, price: 90 } : e
+      ),
+      ...pair('VGT', 'T-5', '2020-05-02T14:30:00Z', '2020-05-12T14:31:00Z', null), // no recorded net
+      ev({ id: 'VGT:T-6:entry', kind: 'executed_entry', t: '2020-06-02T14:30:00Z', tradeId: 'T-6', meta: { open: true } }),
+      ...pair('GDX', 'T-7', '2020-01-02T14:30:00Z', '2020-01-12T14:31:00Z', -500)
+    ];
+    const vgt = tradeList(buildTrades(events, 'VGT', 'A', 'R-000001', trading(-4000)));
+    expect(vgt.map((t) => t.tradeId)).toEqual(['T-1', 'T-2', 'T-3', 'T-4', 'T-5', 'T-6']);
+    expect(vgt.find((t) => t.tradeId === 'T-6')!.pnl!.netUsd).toBe(-4000); // an open loser by its mark …
+    expect(vgt.filter(isClosedLoss).map((t) => t.tradeId)).toEqual(['T-1']); // … is never a closed loss
+    // symbol isolation: GDX's loss is on its own list only
+    expect(tradeList(buildTrades(events, 'GDX', 'A', 'R-000001', trading(null))).filter(isClosedLoss).map((t) => t.tradeId)).toEqual(['T-7']);
+  });
+
+  it('works for the imported pool and the pool rerun (recorded net on the exit)', () => {
+    const events = pair('GDX', 'T-1', '2020-01-02T14:30:00Z', '2020-01-12T14:31:00Z', -1050.82);
+    for (const kind of ['imported trades', 'pool rerun'])
+      expect(tradeList(buildTrades(events, 'GDX', 'A', 'R-000013', { kind, trades: {} })).filter(isClosedLoss)).toHaveLength(1);
+  });
+
+  it('reads the entry origin recorded by Growth 1.1.0 (and none for older runs)', () => {
+    const [entry, exit] = pair('VGT', 'T-1', '2020-01-02T14:30:00Z', '2020-01-12T14:31:00Z', 5);
+    const tagged = { ...entry!, meta: { origin: 'continuation', method: 'breakout' } };
+    expect(originOf(buildTrades([tagged, exit!], 'VGT', 'A', 'R-1', trading(null)).get('T-1')!)).toEqual({
+      origin: 'continuation',
+      method: 'breakout'
+    });
+    expect(originOf(buildTrades([entry!, exit!], 'VGT', 'A', 'R-1', trading(null)).get('T-1')!)).toBeNull();
   });
 });

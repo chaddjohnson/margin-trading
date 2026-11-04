@@ -149,7 +149,7 @@ describe.skipIf(!hasData)('trading backtest on real data (rise-from-recent-low-t
   };
   const trading = (resolution: string, symbols: string[], from: string, to: string) => ({
     strategyKey: 'rise-from-recent-low-trading',
-    strategyVersion: '1.0.0',
+    strategyVersion: '1.1.0',
     params: {
       advanceFromRecentLowPercent: 5,
       recentLowLookbackBars: 20,
@@ -158,7 +158,8 @@ describe.skipIf(!hasData)('trading backtest on real data (rise-from-recent-low-t
       maximumHoldDays: 8,
       intradayLossBufferEnabled: true,
       intradayLossBufferPercent: 2.9,
-      costBpsPerSide: 5
+      costBpsPerSide: 5,
+      continuationEnabled: false // explicit: Growth 1.1.0 refuses a request without its continuation switch
     },
     symbols,
     from,
@@ -219,7 +220,16 @@ describe.skipIf(!hasData)('trading backtest on real data (rise-from-recent-low-t
         sha256: Record<string, string>;
       };
       expect(Object.keys(manifest.sha256).sort()).toEqual(
-        ['daily.json', 'events.json', 'metrics.json', 'provenance.json', 'request.json', 'trades.json'].sort()
+        [
+          'daily.json',
+          'decisions.json',
+          'events.json',
+          'metrics.json',
+          'minute-marks.csv.gz',
+          'provenance.json',
+          'request.json',
+          'trades.json'
+        ].sort()
       );
     }
     // The same configuration again: the same variation, a new run, identical events.

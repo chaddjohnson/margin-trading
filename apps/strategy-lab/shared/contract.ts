@@ -156,7 +156,11 @@ export interface RunSummary {
 
 export interface RunDetail extends RunSummary {
   params: LabValue[];
-  paramSchema: ParamSpec[] | null;
+  paramSchema: ParamSchema | null;
+  /** The strategy row's display metadata: earlier display names (e.g. the pre-rename title). */
+  strategyFormerTitle: string | null;
+  /** The catalogue phenotype the run was launched from, if any. */
+  phenotype: { id: string; key: string; name: string; study: string; executionKind: string; edited: boolean } | null;
   assumptions: LabValue[];
   priceSource: PriceSource;
   provenance: Record<string, unknown>;
@@ -199,42 +203,107 @@ export interface SymbolInfo {
   bytes: number;
 }
 
-// ----- parameter schema -----
+// ----- parameter schema (version 2: the one schema of every strategy; shared/params.ts holds its logic) -----
 
-export type ParamType = 'number' | 'integer' | 'boolean';
+export const PARAM_SCHEMA_VERSION = 2;
 
-/** One input of a strategy. A `boolean` is a rule switch (min/max/step unused: 0, 1, 1). */
-export interface ParamSpec {
+export type ParamType = 'number' | 'integer' | 'boolean' | 'enum';
+export type ParamValue = number | boolean | string;
+
+/** A condition on parameter values: applicability, enablement and constraints are all expressed with it. */
+export type Predicate =
+  | { param: string; equals: ParamValue }
+  | { param: string; in: readonly ParamValue[] }
+  | { all: readonly Predicate[] }
+  | { any: readonly Predicate[] }
+  | { not: Predicate };
+
+interface ParamSpecBase {
   key: string;
   label: string;
   description: string;
-  type: ParamType;
+  /** Form section (a key of the strategy's `groups`); absent = the strategy's single parameter list. */
+  group?: string;
+  /**
+   * When the value APPLIES (is part of the effective, executed configuration). Applicability chains: a parameter is
+   * active only if its predicate holds AND every parameter the predicate reads is itself active. Absent = always.
+   */
+  activeWhen?: Predicate;
+  /** How the form shows an inactive parameter: disabled in place ("saved, not applied"), or hidden. */
+  whenInactive?: 'disable' | 'hide';
+  /** Explicit execution semantics (how the engine reads the value), shown with the run's snapshot. */
+  execution?: string;
+}
+
+export interface NumericParamSpec extends ParamSpecBase {
+  type: 'number' | 'integer';
   unit: ValueUnit;
-  default: number | boolean;
+  default: number;
   min: number;
   max: number;
   step: number;
-  /** Form section (entry, exit, execution); absent = the parameter list of a signal-only strategy. */
-  group?: 'entry' | 'exit' | 'execution';
-  /** The switch (a boolean parameter) this input belongs to: disabled, saved but not applied, while it is off. */
-  dependsOn?: string;
+  /** Optimisation metadata for future CLI optimisers: the search domain (default = [min, max]) and its scale. */
+  search?: { min?: number; max?: number; step?: number; scale?: 'linear' | 'log' };
 }
 
-export type ParamValue = number | boolean;
+export interface BooleanParamSpec extends ParamSpecBase {
+  type: 'boolean';
+  unit: 'text';
+  default: boolean;
+}
 
-export interface StrategySpec {
+export interface EnumParamSpec extends ParamSpecBase {
+  type: 'enum';
+  unit: 'text';
+  default: string;
+  options: readonly { value: string; label: string; description?: string }[];
+}
+
+/** One input of a strategy. A `boolean` is a rule switch; an `enum` a categorical choice. */
+export type ParamSpec = NumericParamSpec | BooleanParamSpec | EnumParamSpec;
+
+/** A rule across parameters, checked by the browser form AND the server/runner (validateParams). */
+export type ParamConstraint =
+  | { kind: 'requires'; id: string; if: Predicate; then: Predicate; message: string }
+  | { kind: 'less'; id: string; a: string; b: string; message: string };
+
+export interface ParamGroup {
+  key: string;
+  title: string;
+  description?: string;
+}
+
+/** The stored form of a strategy's parameter schema (strategies.param_schema_json since migration 0002). */
+export interface ParamSchema {
+  schemaVersion: typeof PARAM_SCHEMA_VERSION;
+  params: ParamSpec[];
+  groups: ParamGroup[];
+  constraints: ParamConstraint[];
+  /** Variation identity: the canonical JSON of the effective (active) values, or (legacy 1.0.0) of all values. */
+  identity: 'effective' | 'all-values';
+}
+
+/** How a strategy version may be executed from Strategy Lab. */
+export type LaunchMode = 'form' | 'phenotype' | 'none';
+
+export interface StrategySpec extends ParamSchema {
   key: string;
   version: string;
   title: string;
   kind: 'entry_signal' | 'trades';
-  /** Whether Strategy Lab can execute it (manual single test). Imported/demo strategies are not runnable. */
+  /** `form`: New Test may run it; `phenotype`: only as a catalogue phenotype; `none`: read-only. */
+  launch: LaunchMode;
+  /** Whether Strategy Lab can execute it at all (launch ≠ none). */
   runnable: boolean;
   description: string;
-  params: ParamSpec[];
   resolutions: Resolution[];
   defaultResolution: Resolution;
   /** Short facts shown with the form (fixed execution assumptions, multi-symbol policy). */
   notes?: string[];
+  /** Earlier display names (renames are display metadata; keys and versions never change). */
+  formerTitles?: string[];
+  /** A superseded version: which version replaces it and how its runs replay. */
+  legacy?: { supersededBy: string; replay: string };
 }
 
 /**
@@ -253,6 +322,8 @@ export interface RunRequest<V extends ParamValue = number> {
   title?: string;
   /** The variation this configuration was cloned from (provenance only). */
   parentVariation?: string;
+  /** The catalogue phenotype this test runs (PH-…); the run records it and its study provenance. */
+  phenotypeId?: string;
 }
 
 export type LabRunRequest = RunRequest<ParamValue>;

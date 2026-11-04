@@ -14,7 +14,13 @@ export type Ev = {
   meta: Record<string, unknown>;
 };
 
-export async function tradingRun(page: Page, title: string, symbols: string[]) {
+export async function tradingRun(
+  page: Page,
+  title: string,
+  symbols: string[],
+  extra: Record<string, unknown> = {},
+  window: { from: string; to: string } = { from: '2023-01-03', to: '2023-12-29' }
+) {
   const found = (await (await page.request.get(`/api/runs?q=${encodeURIComponent(title)}`)).json()) as {
     id: string;
     status: string;
@@ -24,7 +30,7 @@ export async function tradingRun(page: Page, title: string, symbols: string[]) {
   const res = await page.request.post('/api/runs', {
     data: {
       strategyKey: 'rise-from-recent-low-trading',
-      strategyVersion: '1.0.0',
+      strategyVersion: '1.1.0',
       params: {
         advanceFromRecentLowPercent: 5,
         recentLowLookbackBars: 20,
@@ -33,11 +39,13 @@ export async function tradingRun(page: Page, title: string, symbols: string[]) {
         maximumHoldDays: 8,
         intradayLossBufferEnabled: true,
         intradayLossBufferPercent: 2.9,
-        costBpsPerSide: 5
+        costBpsPerSide: 5,
+        continuationEnabled: false,
+        ...extra
       },
       symbols,
-      from: '2023-01-03',
-      to: '2023-12-29',
+      from: window.from,
+      to: window.to,
       resolution: '1d',
       title
     }

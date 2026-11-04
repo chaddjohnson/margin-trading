@@ -10,6 +10,8 @@ import { forwardOutcome, summarizeOutcomes } from '../../../src/entry-signals/ou
 import type { LabEvent, LabValue, ValueUnit } from '../shared/contract.ts';
 import type { Dataset } from '../shared/demo-schema/types.ts';
 import { validateDataset } from '../shared/demo-schema/validate.ts';
+import { schemaOf } from '../shared/params.ts';
+import { DEMO_TOY_RULES } from '../shared/strategies.ts';
 import { atomicWrite, runDirName, writeEvents, writeManifest } from './artifacts.ts';
 import type { Config } from './config.ts';
 import type { Repo } from './repo.ts';
@@ -47,7 +49,7 @@ export function seedDemo(repo: Repo, cfg: Config): number {
     kind: 'entry_signal',
     runnable: false,
     description: 'Twelve toy rules that make the synthetic fixture internally consistent. Not research candidates.',
-    params: null,
+    schema: schemaOf(DEMO_TOY_RULES),
     sourceRef: 'apps/strategy-lab/shared/demo/rules.ts'
   });
   const bars = ds.priceSeries.bars;

@@ -7,8 +7,10 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 
 import { basisDateOf, EVENT_CONTRACT_VERSION, eventsForSymbol, type LabEvent } from '../shared/contract.ts';
-import { RUNNABLE_STRATEGIES, MAX_TITLE_LENGTH } from '../shared/strategies.ts';
+import { RUNNABLE_STRATEGIES, MAX_TITLE_LENGTH, STRATEGY_REGISTRY } from '../shared/strategies.ts';
 import { readEvents } from './artifacts.ts';
+import { CompareError, compareRuns } from './compare.ts';
+import { ExportError, buildResearchBundle } from './export.ts';
 import type { Config } from './config.ts';
 import type { Jobs } from './jobs.ts';
 import { priceAtOrBefore, syntheticSeries, windowPoints, type MarketPrices, type Series } from './prices.ts';
@@ -68,6 +70,24 @@ const SECURITY_HEADERS: Record<string, string> = {
     "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
 };
 
+/** A handler result that is a file download (the research bundle), not JSON. */
+interface Download {
+  download: Buffer;
+  filename: string;
+  contentType: string;
+}
+
+function sendFile(res: ServerResponse, d: Download) {
+  res.writeHead(200, {
+    ...SECURITY_HEADERS,
+    'Content-Type': d.contentType,
+    'Content-Length': String(d.download.length),
+    'Content-Disposition': `attachment; filename="${d.filename.replace(/[^A-Za-z0-9._-]/g, '_')}"`,
+    'Cache-Control': 'no-store'
+  });
+  res.end(d.download);
+}
+
 function send(res: ServerResponse, status: number, body: unknown) {
   const text = JSON.stringify(body);
   res.writeHead(status, { ...SECURITY_HEADERS, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
@@ -126,6 +146,17 @@ export function createHandler(d: Deps) {
       () => ({
         contractVersion: EVENT_CONTRACT_VERSION,
         strategies: RUNNABLE_STRATEGIES,
+        phenotypeStrategies: STRATEGY_REGISTRY.filter((s) => s.launch !== 'none'),
+        // every registered version (legacy and read-only ones too), for showing historical runs' schemas and names
+        registry: STRATEGY_REGISTRY.map((s) => ({
+          key: s.key,
+          version: s.version,
+          title: s.title,
+          kind: s.kind,
+          launch: s.launch,
+          formerTitles: s.formerTitles ?? [],
+          legacy: s.legacy ?? null
+        })),
         symbols: prices.symbols(),
         experiments: repo.listExperiments(),
         partitions: JSON.parse(readFileSync(join(cfg.repoRoot, 'data', 'partitions.json'), 'utf8')).partitions,
@@ -353,7 +384,71 @@ export function createHandler(d: Deps) {
         return { ok: true };
       }
     ],
-    ['GET', /^\/api\/optimization-batches$/, () => repo.listOptimizationBatches()]
+    ['GET', /^\/api\/optimization-batches$/, () => repo.listOptimizationBatches()],
+    [
+      'GET',
+      /^\/api\/runs\/(R-\d{6,12})\/export$/,
+      ({ m, url }) => {
+        try {
+          const b = buildResearchBundle(cfg, repo, m[1]!, { minuteMarks: url.searchParams.get('minute') === '1' });
+          return { download: b.zip, filename: b.filename, contentType: 'application/zip' } satisfies Download;
+        } catch (e) {
+          if (e instanceof ExportError) throw new HttpError(e.status, e.message);
+          throw e;
+        }
+      }
+    ],
+    [
+      'GET',
+      /^\/api\/compare$/,
+      ({ url }) => {
+        const a = url.searchParams.get('a') ?? '';
+        const b = url.searchParams.get('b') ?? '';
+        if (!/^R-\d{6,12}$/.test(a) || !/^R-\d{6,12}$/.test(b)) throw new HttpError(400, 'a and b: run ids');
+        if (a === b) throw new HttpError(400, 'compare two different runs');
+        try {
+          return compareRuns(cfg, repo, a, b);
+        } catch (e) {
+          if (e instanceof CompareError) throw new HttpError(e.status, e.message);
+          throw e;
+        }
+      }
+    ],
+    [
+      'GET',
+      /^\/api\/phenotypes$/,
+      ({ url }) =>
+        repo
+          .listPhenotypes({
+            q: url.searchParams.get('q')?.slice(0, 80) || undefined,
+            study: url.searchParams.get('study') || undefined,
+            strategy: url.searchParams.get('strategy') || undefined,
+            symbol: url.searchParams.get('symbol') || undefined,
+            role: url.searchParams.get('role') || undefined
+          })
+          .map((p) => ({ ...p, capability: service.capabilityOf({ ...p, internalId: 0 }) }))
+    ],
+    [
+      'GET',
+      /^\/api\/phenotypes\/(PH-\d{4,12})$/,
+      ({ m }) => {
+        const p = repo.phenotypeDetail(m[1]!);
+        if (!p) throw new HttpError(404, `no phenotype ${m[1]}`);
+        const pub = Object.fromEntries(Object.entries(p).filter(([k]) => k !== 'internalId'));
+        return { ...pub, capability: service.capabilityOf(p), runs: repo.listRuns({ phenotype: m[1]!, limit: 100 }) };
+      }
+    ],
+    [
+      // ONE run of ONE frozen phenotype per request (never a search, sweep or batch)
+      'POST',
+      /^\/api\/phenotypes\/(PH-\d{4,12})\/runs$/,
+      async ({ m, body }) => {
+        const r = service.createPhenotypeRun(m[1]!, await body());
+        if (r === null) throw new HttpError(404, `no phenotype ${m[1]}`);
+        if ('errors' in r) throw new HttpError(400, 'Invalid phenotype run', r.errors);
+        return { status: 201, body: repo.runDetail(r.runId) };
+      }
+    ]
   ];
 
   const readBody = (req: IncomingMessage) => async (): Promise<unknown> => {
@@ -408,6 +503,7 @@ export function createHandler(d: Deps) {
         if (!m) continue;
         if (req.method !== method) continue;
         const out = await handler({ req, url, m, body: readBody(req) });
+        if (out && typeof out === 'object' && 'download' in out) return sendFile(res, out as Download);
         if (
           out &&
           typeof out === 'object' &&

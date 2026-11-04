@@ -1,0 +1,126 @@
+{
+  "schema": "strategy-lab.phenotype-export",
+  "schemaVersion": 1,
+  "study": {
+    "id": "study8-expanded-regime-d1",
+    "title": "Study 8 — expanded-regime stability-first D1 reoptimisation (sealed selections)",
+    "kind": "sealed-study-selection",
+    "protocol": {
+      "path": "research/study8-expanded-regime-d1/PROTOCOL.md",
+      "sha256": "22eebc3704c56d4637ebf1895f1e05780ce1a59477ed491b3efb9e76799513b6"
+    },
+    "methodology": "docs/strategy-lab/STUDY8_METHODOLOGY.md",
+    "sealedRecords": [
+      {
+        "path": "research/study8-expanded-regime-d1/FROZEN_SELECTION.json",
+        "sha256": "88d079d15f00553949e23dbd16ea1b5d26c067722da7804a1549400577fa0d2f"
+      },
+      {
+        "path": "research/study8-expanded-regime-d1/results/test/F24/test.json",
+        "sha256": "4053d842ddebb16a2b7f4351baae6e83f0b131deaff04ccdd5a3f7ff6eeba715"
+      },
+      {
+        "path": "research/study8-expanded-regime-d1/results/test/F24/test-lots.jsonl.gz",
+        "sha256": "f06f18b63fc4f4ee0e77b937d0631e63bcb4563e7324a01d5dad05748288eb6b"
+      },
+      {
+        "path": "research/study8-expanded-regime-d1/results/chain.jsonl",
+        "sha256": "8086246b81d50c9dd4b10c83ba0365a8b16942bd1e5d6f4322747b8198445715"
+      }
+    ],
+    "dataExposure": "All of 2016-01-04 → 2026-10-29 inspected before the study; 2025–2026 exposed (PROTOCOL.md §3.4)."
+  },
+  "generatedAt": "2026-11-04T22:10:05.918Z",
+  "generator": {
+    "tool": "apps/strategy-lab/importers/export-study8-phenotypes.ts",
+    "commit": "b590c6057a7714c17e94bd067efec9b51479f4ef"
+  },
+  "phenotypes": [
+    {
+      "id": "study8-expanded-regime-d1/s8-vg-balanced",
+      "version": 1,
+      "name": "Study 8 s8-vg-balanced — VGT:d1-bd80e32ee4+GDX:d1-7b99d2833d",
+      "role": "balanced",
+      "rank": 2,
+      "strategy": {
+        "key": "study8-d1-pool",
+        "version": "pools-engine"
+      },
+      "executionKind": "shared-slot pool",
+      "symbols": [
+        "GDX",
+        "VGT"
+      ],
+      "pool": {
+        "runner": "study8",
+        "alias": "s8-vg-balanced",
+        "sealedId": "VGT:d1-bd80e32ee4+GDX:d1-7b99d2833d",
+        "config": {
+          "file": "config/research-pools/study8-expanded-regime-d1/S8-VG-F24-3.json",
+          "sha256": "27cbadf96b98f5b425e3cc12b2a278d37e320527deb9fff46091383ed506c0da"
+        },
+        "books": {
+          "VGT": {
+            "targetPercentChange": 235,
+            "trailingBuyPercentage": 9,
+            "trailingStopPercentage": 74,
+            "maximumHoldDays": 15,
+            "tickWindowSize": 78,
+            "intradayLossBuffer": 44,
+            "pullback": 110,
+            "continuationWindow": 55
+          },
+          "GDX": {
+            "targetPercentChange": 276,
+            "trailingBuyPercentage": 1,
+            "trailingStopPercentage": 57,
+            "maximumHoldDays": 12,
+            "tickWindowSize": 243,
+            "intradayLossBuffer": 29,
+            "pullback": 152,
+            "continuationWindow": 12
+          }
+        },
+        "fixedStart": "2016-01-04"
+      },
+      "engine": {
+        "version": "pools-engine",
+        "commit": "b590c6057a7714c17e94bd067efec9b51479f4ef"
+      },
+      "execution": {
+        "notionalUsd": 100000,
+        "annualInterestRate": 0.11,
+        "costBpsPerSide": 5,
+        "stopFill": "the stop price, or the gapped opening trade",
+        "capital": "ONE shared funded $100,000 slot across the books (first executable signal wins, no preemption)"
+      },
+      "data": {
+        "selectionWindow": {
+          "from": "2016-01-04",
+          "to": "2024-12-31"
+        },
+        "testWindows": [
+          {
+            "label": "F24 one-time test door (sealed)",
+            "from": "2025-01-02",
+            "to": "2026-10-29"
+          }
+        ],
+        "exposure": "All of 2016-01-04 → 2026-10-29 had been inspected before Study 8 (PROTOCOL.md §3.4); 2025–2026 is EXPOSED. A rerun is an exploratory replay, never an independent holdout."
+      },
+      "selection": {
+        "method": "Study 8 F24 training-only ranking and roles (FROZEN_SELECTION.json); one-time test gates may only veto",
+        "metrics": {
+          "sealedNetUsd": 340147.67,
+          "sealedMinuteDrawdownUsd": 21303.61030775204,
+          "sealedLots": 48,
+          "track": "VG",
+          "trainingRank": 2,
+          "testStatus": "pass"
+        }
+      },
+      "notes": "F24 role holder (training rank #2, balanced, tier strong); 2025–2026 T gates PASS — a research nomination (retrospective, NOT DEPLOYED); research only, NOT DEPLOYED",
+      "recordSha256": "d988cd36ae8b381f9f3afa9a949ffffc342111a3cb3a1806098273da096ad252"
+    }
+  ]
+}

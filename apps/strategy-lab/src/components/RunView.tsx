@@ -22,7 +22,8 @@ import { TradeDetail, TradeTable } from './Trading.tsx';
 import type { ChartLink, Placement } from '../chart/link.ts';
 import { buildTrades, toneOf, type Trade } from '../trades.ts';
 import { legendToneOf, markerToneOf, TONE_COLOR, TONE_LABEL } from '../chart/markers.ts';
-import { RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING } from '../../shared/strategies.ts';
+import { currentVersionOf, RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL } from '../../shared/strategies.ts';
+import { ComparisonPanel } from './Comparison.tsx';
 
 type Detail = RunDetail & { request: LabRunRequest | null };
 
@@ -84,6 +85,8 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
   const lastWindow = useRef<[number, number] | null>(null);
   const chartRef = useRef<ChartHandle>(null);
   const [editingTitle, setEditingTitle] = useState<string | null>(null);
+  const [withMinuteMarks, setWithMinuteMarks] = useState(false);
+  const [exporting, setExporting] = useState<{ busy: boolean; message: string | null }>({ busy: false, message: null });
   const basis = run && symbol ? basisDateOf(run.priceSource, symbol) : null;
 
   const pricesQ = useFetched<PricesResponse>(run && symbol ? `${run.id}|${symbol}` : null, (signal) =>
@@ -220,6 +223,17 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
 
   if (error) return <div className="main-empty form-error">{error}</div>;
   if (!run || !symbol) return <div className="main-empty">Loading run…</div>;
+  const exportBundle = async () => {
+    setExporting({ busy: true, message: null });
+    try {
+      const r = await api.downloadBundle(run.id, withMinuteMarks);
+      setExporting({ busy: false, message: `Downloaded ${r.filename} (${Math.round(r.bytes / 1024).toLocaleString('en-US')} KB)` });
+    } catch (e) {
+      setExporting({ busy: false, message: `Export failed: ${(e as Error).message}` });
+    }
+  };
+  const clonable =
+    run.kind === 'manual' && run.request && currentVersionOf(run.strategy.key) && run.strategy.key !== STUDY8_POOL.key;
   const trading = run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key;
   // The trade of the selected event (entry or exit alike): selecting the other marker of the same trade keeps it.
   const selectedTrade = selected ? tradeOf(selected) : null;
@@ -308,6 +322,22 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
               SIGNAL-ONLY
             </span>
           )}
+          {run.strategy.key === STUDY8_POOL.key && (
+            <span className="badge badge-trading" data-testid="result-kind">
+              SHARED-SLOT POOL · ONE ALLOCATOR REPLAY
+            </span>
+          )}
+          {run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key && (
+            <span className="badge badge-muted mono" data-testid="strategy-version" title={run.strategyFormerTitle ? `formerly “${run.strategyFormerTitle}”` : undefined}>
+              Growth v{run.strategy.version}
+            </span>
+          )}
+          {run.phenotype && (
+            <a className="badge badge-phenotype" href={`#/phenotype/${run.phenotype.id}`} data-testid="phenotype-badge">
+              PHENOTYPE {run.phenotype.id}
+              {run.phenotype.edited ? ' · EDITED' : ''}
+            </a>
+          )}
           <button
             type="button"
             className={`star big${run.bookmarked ? ' is-on' : ''}`}
@@ -374,6 +404,34 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             </select>
           </label>
           {compareProblem && <span className="muted small">{compareProblem}</span>}
+          {run.status === 'completed' && (
+            <span className="export-control">
+              <button
+                type="button"
+                className="btn-chip"
+                onClick={() => void exportBundle()}
+                disabled={exporting.busy}
+                data-testid="export-bundle"
+                title="A ZIP with the unmodified artifacts, trade/event/decision CSVs, parameters, attribution, README and checksums"
+              >
+                {exporting.busy ? 'Exporting…' : 'Export research bundle'}
+              </button>
+              <label className="small">
+                <input
+                  type="checkbox"
+                  checked={withMinuteMarks}
+                  onChange={(e) => setWithMinuteMarks(e.target.checked)}
+                  data-testid="export-minute-marks"
+                />{' '}
+                include minute marks
+              </label>
+              {exporting.message && (
+                <span className="muted small" role="status" data-testid="export-status">
+                  {exporting.message}
+                </span>
+              )}
+            </span>
+          )}
         </div>
       </section>
 
@@ -538,6 +596,9 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
       </section>
 
       <div className="lower">
+        {runB && !compareProblem && run.status === 'completed' && (
+          <ComparisonPanel a={run.id} b={runB.id} symbol={symbol} />
+        )}
         {(tradesA.size > 0 || tradesB.size > 0) && (
           <section className="card trades" aria-label={`Trades of ${symbol}`} data-testid="trades-card">
             <div className="card-head">
@@ -595,8 +656,13 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
         <ParametersPanel
           run={run}
           onClone={
-            run.kind === 'manual' && run.request
-              ? () => onClone({ ...run.request!, parentVariation: run.variation.id })
+            clonable
+              ? () => {
+                  // A clone is an ordinary manual test of the CURRENT version (a 1.0.0 Growth run → 1.1.0, continuation
+                  // OFF: its request has no continuation fields); a phenotype rerun's clone is no longer a phenotype run.
+                  const req = Object.fromEntries(Object.entries(run.request!).filter(([k]) => k !== 'phenotypeId'));
+                  onClone({ ...(req as Partial<LabRunRequest>), parentVariation: run.variation.id });
+                }
               : null
           }
         />

@@ -1,6 +1,7 @@
-// The trading backtest in Strategy Lab: its registry entry (defaults = the engine's, no restriction controls), switch
-// validation and the buffer → hold dependency, immutable variations and runs through the API (create, clone, toggle),
-// the effective-state snapshot, the runner allowlist — and that the signal-only strategy records exactly what it did.
+// The trading backtest ("Growth") in Strategy Lab: its registry entries (1.1.0 current, 1.0.0 legacy with its frozen
+// schema; defaults = the engine's, no restriction controls), switch validation and the buffer → hold dependency,
+// immutable variations and runs through the API (create, clone, toggle), the effective-state snapshot, the runner
+// allowlist — and that the signal-only strategy records exactly what it did.
 
 import { mkdtempSync } from 'node:fs';
 import { createServer, type Server } from 'node:http';
@@ -9,16 +10,17 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import type { LabValue, ParamValue, RunDetail } from '../shared/contract.ts';
+import type { LabValue, NumericParamSpec, ParamValue, RunDetail } from '../shared/contract.ts';
+import { constraintErrors, isActive } from '../shared/params.ts';
 import {
   canonicalParams,
-  crossParamErrors,
   defaultParams,
   findStrategy,
-  isParamApplied,
   RISE_FROM_RECENT_LOW,
   RISE_FROM_RECENT_LOW_TRADING,
+  RISE_FROM_RECENT_LOW_TRADING_1_0_0,
   RUNNABLE_STRATEGIES,
+  STRATEGY_REGISTRY,
   validateRunRequest
 } from '../shared/strategies.ts';
 import { loadConfig } from '../server/config.ts';
@@ -30,6 +32,7 @@ import { Repo } from '../server/repo.ts';
 import { LabService } from '../server/service.ts';
 
 const T = RISE_FROM_RECENT_LOW_TRADING;
+const LEGACY = RISE_FROM_RECENT_LOW_TRADING_1_0_0;
 const symbols = new Set(['VGT', 'GDX']);
 const tradingParams = (over: Record<string, ParamValue> = {}) => ({ ...defaultParams(T), ...over });
 const request = (over: Record<string, unknown> = {}) => ({
@@ -47,14 +50,24 @@ describe('registry', () => {
   it('offers the unchanged signal-only strategy and the new trading backtest, separately versioned', () => {
     expect(RUNNABLE_STRATEGIES.map((s) => `${s.key}@${s.version}:${s.kind}`)).toEqual([
       'rise-from-recent-low@1.0.0:entry_signal',
-      'rise-from-recent-low-trading@1.0.0:trades'
+      'rise-from-recent-low-trading@1.1.0:trades'
     ]);
+    // Every registered version, with how it may be launched: one visible "Growth", its 1.0.0 kept as legacy.
+    expect(STRATEGY_REGISTRY.map((s) => `${s.key}@${s.version}:${s.launch}:${s.title}`)).toEqual([
+      'rise-from-recent-low@1.0.0:form:Rise from recent low (entry signal)',
+      'rise-from-recent-low-trading@1.1.0:form:Growth',
+      'rise-from-recent-low-trading@1.0.0:none:Growth',
+      'study8-d1-pool@pools-engine:phenotype:Study 8 D1 shared-slot pool (pools engine)',
+      'demo-toy-rules@1.0.0:none:Demo toy rules (synthetic)'
+    ]);
+    expect(LEGACY.legacy?.supersededBy).toBe('1.1.0');
+    expect(T.formerTitles).toEqual(['Rise from recent low (trading backtest)']);
     // The signal-only strategy's schema is exactly what its runs recorded (keys, defaults, ranges, resolutions).
-    expect(RISE_FROM_RECENT_LOW.params.map((p) => [p.key, p.type, p.unit, p.default, p.min, p.max, p.step])).toEqual([
+    expect((RISE_FROM_RECENT_LOW.params as NumericParamSpec[]).map((p) => [p.key, p.type, p.unit, p.default, p.min, p.max, p.step])).toEqual([
       ['advanceFromRecentLowPercent', 'number', 'percent', 5, 0.1, 100, 0.1],
       ['recentLowLookbackBars', 'integer', 'bars', 20, 2, 5000, 1]
     ]);
-    expect(RISE_FROM_RECENT_LOW.params.every((p) => p.group === undefined && p.dependsOn === undefined)).toBe(true);
+    expect(RISE_FROM_RECENT_LOW.params.every((p) => p.group === undefined && p.activeWhen === undefined)).toBe(true);
     expect(RISE_FROM_RECENT_LOW.resolutions).toEqual(['1d', '60m', '30m', '15m', '5m', '1m']);
     expect(canonicalParams(defaultParams(RISE_FROM_RECENT_LOW)) + '|1d').toBe(
       '{"advanceFromRecentLowPercent":5,"recentLowLookbackBars":20}|1d'
@@ -62,8 +75,9 @@ describe('registry', () => {
   });
 
   // (src/growth-trading/tests/riseTrading.test.ts checks that these equal the engine's defaultTradingParams.)
-  it('trading defaults are the VGT D1 baseline exits; X and N are the scanner’s own', () => {
-    expect(defaultParams(T)).toEqual({
+  it('trading defaults are the VGT D1 baseline exits; X and N are the scanner’s own; continuation OFF', () => {
+    // 1.0.0 keeps exactly its eight parameters; 1.1.0 = the same eight + the continuation dimensions, OFF by default.
+    expect(defaultParams(LEGACY)).toEqual({
       advanceFromRecentLowPercent: 5,
       recentLowLookbackBars: 20,
       trailingStopPercent: 7.3,
@@ -73,6 +87,16 @@ describe('registry', () => {
       intradayLossBufferPercent: 2.9,
       costBpsPerSide: 5
     });
+    expect(Object.fromEntries(Object.entries(defaultParams(T)).filter(([k]) => k in defaultParams(LEGACY)))).toEqual(
+      defaultParams(LEGACY)
+    );
+    expect(defaultParams(T)).toMatchObject({
+      continuationEnabled: false,
+      continuationMethod: 'classic_d1',
+      continuationWindowSessions: 60,
+      classicPullbackPercent: 9,
+      classicReboundPercent: 0.3
+    });
     expect(T.params.slice(0, 2).map(({ group: _g, ...p }) => p)).toEqual(RISE_FROM_RECENT_LOW.params);
     expect(T.defaultResolution).toBe('1d');
   });
@@ -81,13 +105,14 @@ describe('registry', () => {
     const keys = T.params.map((p) => p.key);
     expect(keys).toContain('trailingStopPercent');
     expect(keys).not.toContain('trailingStopEnabled');
-    expect(T.params.find((p) => p.key === 'trailingStopPercent')!.dependsOn).toBeUndefined();
+    expect(T.params.find((p) => p.key === 'trailingStopPercent')!.activeWhen).toBeUndefined();
     expect(JSON.stringify(T)).not.toMatch(
       /material|lowerPrice|lower re-?entry level|retrace|recoveryReset|reference high/i
     );
     expect(T.params.filter((p) => p.type === 'boolean').map((p) => [p.key, p.default])).toEqual([
       ['maximumHoldEnabled', true],
-      ['intradayLossBufferEnabled', true]
+      ['intradayLossBufferEnabled', true],
+      ['continuationEnabled', false]
     ]);
   });
 });
@@ -129,17 +154,21 @@ describe('validation of switches and dependencies', () => {
     );
   });
 
-  it('a value whose switch is off is saved but not applied; the chain follows dependsOn', () => {
+  it('a value whose switch is off is saved but not applied; the applicability chain follows activeWhen', () => {
     const off = tradingParams({ maximumHoldEnabled: false, intradayLossBufferEnabled: false });
-    expect(isParamApplied(T, off, 'maximumHoldDays')).toBe(false);
-    expect(isParamApplied(T, off, 'intradayLossBufferPercent')).toBe(false);
-    expect(isParamApplied(T, off, 'trailingStopPercent')).toBe(true);
+    expect(isActive(T, off, 'maximumHoldDays')).toBe(false);
+    expect(isActive(T, off, 'intradayLossBufferPercent')).toBe(false);
+    expect(isActive(T, off, 'trailingStopPercent')).toBe(true);
     const noBuffer = tradingParams({ intradayLossBufferEnabled: false });
-    expect(isParamApplied(T, noBuffer, 'maximumHoldDays')).toBe(true);
-    expect(isParamApplied(T, noBuffer, 'intradayLossBufferPercent')).toBe(false);
-    expect(
-      crossParamErrors(RISE_FROM_RECENT_LOW, { maximumHoldEnabled: false, intradayLossBufferEnabled: true })
-    ).toEqual([]);
+    expect(isActive(T, noBuffer, 'maximumHoldDays')).toBe(true);
+    expect(isActive(T, noBuffer, 'intradayLossBufferPercent')).toBe(false);
+    // the chain: the buffer percent applies only while its switch applies, i.e. while the hold is on
+    expect(isActive(T, tradingParams({ maximumHoldEnabled: false, intradayLossBufferEnabled: true }), 'intradayLossBufferPercent')).toBe(false);
+    expect(constraintErrors(RISE_FROM_RECENT_LOW, { maximumHoldEnabled: false, intradayLossBufferEnabled: true })).toEqual([]);
+    for (const spec of [T, LEGACY])
+      expect(constraintErrors(spec, { maximumHoldEnabled: false, intradayLossBufferEnabled: true })[0]).toMatch(
+        /maximum losing-hold age/
+      );
   });
 });
 
@@ -147,10 +176,13 @@ describe('the runner allowlist', () => {
   it('maps each runnable strategy to one fixed script and nothing else', () => {
     expect(RUNNER_SCRIPTS).toEqual({
       'rise-from-recent-low': RUNNER_SCRIPT,
-      'rise-from-recent-low-trading': 'apps/strategy-lab/runner/trading-run.ts'
+      'rise-from-recent-low-trading': 'apps/strategy-lab/runner/trading-run.ts',
+      'study8-d1-pool': 'apps/strategy-lab/runner/pool-run.ts'
     });
     expect(RUNNER_SCRIPT).toBe('apps/strategy-lab/runner/entry-signal-run.ts');
-    expect(Object.keys(RUNNER_SCRIPTS).sort()).toEqual(RUNNABLE_STRATEGIES.map((s) => s.key).sort());
+    expect(Object.keys(RUNNER_SCRIPTS).sort()).toEqual(
+      STRATEGY_REGISTRY.filter((s) => s.launch !== 'none').map((s) => s.key).sort()
+    );
     expect(Object.hasOwn(RUNNER_SCRIPTS, '__proto__')).toBe(false);
   });
 });
@@ -195,10 +227,14 @@ describe('HTTP API: one configuration, immutable variations and runs', () => {
     expect(value(on.body.params, 'maximumHoldEnabled')!.value).toBe('ON');
     expect(value(on.body.params, 'maximumHoldDays')).toMatchObject({ value: 8, unit: 'days' });
     expect(value(on.body.params, 'maximumHoldDays')!.label).not.toMatch(/not applied/);
-    expect(on.body.variation.title).toBe('Trading · X 5% · N 20 bars · 1d · stop 7.3% · hold 8d · buffer 2.9% · 5 bps');
+    expect(on.body.variation.title).toBe(
+      'Growth · X 5% · N 20 bars · 1d · stop 7.3% · hold 8d · buffer 2.9% · 5 bps · continuation off'
+    );
+    expect(on.body.strategy).toMatchObject({ key: 'rise-from-recent-low-trading', version: '1.1.0', title: 'Growth' });
     expect(on.body.assumptions.map((a) => a.key)).toEqual([
       'kind',
       'entry',
+      'continuation',
       'position',
       'reentry',
       'stop',

@@ -5,7 +5,7 @@ import type {
   DataOrigin,
   LabValue,
   Note,
-  ParamSpec,
+  ParamSchema,
   PriceSource,
   RunDetail,
   RunKind,
@@ -28,7 +28,7 @@ export interface StrategyInput {
   kind: 'entry_signal' | 'trades';
   runnable: boolean;
   description: string;
-  params: ParamSpec[] | null;
+  schema: ParamSchema | null; // stored as param_schema_json (version 2)
   sourceRef: string | null;
 }
 
@@ -46,6 +46,7 @@ export interface NewRun {
   priceSource: PriceSource;
   provenance: Record<string, unknown>;
   codeRevision: Record<string, unknown> | null;
+  phenotypeId?: number | null; // the catalogue phenotype a rerun executes (immutable input)
 }
 
 export interface RunResult {
@@ -62,6 +63,7 @@ export interface ListOptions {
   q?: string;
   bookmarked?: boolean;
   variation?: string;
+  phenotype?: string;
   limit?: number;
   offset?: number;
 }
@@ -69,15 +71,18 @@ export interface ListOptions {
 const RUN_SELECT = `
   SELECT r.*, v.public_id AS v_public_id, v.title AS v_title,
          s.public_id AS s_public_id, s.key AS s_key, s.version AS s_version, s.title AS s_title,
-         s.param_schema_json AS s_param_schema_json,
+         s.param_schema_json AS s_param_schema_json, s.former_title AS s_former_title,
          e.public_id AS e_public_id, e.title AS e_title,
+         p.public_id AS p_public_id, p.phenotype_key AS p_key, p.name AS p_name, p.study_ref AS p_study,
+         p.execution_kind AS p_kind,
          (SELECT count(*) FROM notes n WHERE n.target_type = 'run' AND n.target_id = r.id) AS note_count,
          (SELECT n.body FROM notes n WHERE n.target_type = 'run' AND n.target_id = r.id
             ORDER BY n.updated_at DESC, n.id DESC LIMIT 1) AS note_latest
   FROM runs r
   JOIN variations v ON v.id = r.variation_id
   JOIN strategies s ON s.id = v.strategy_id
-  JOIN experiments e ON e.id = v.experiment_id`;
+  JOIN experiments e ON e.id = v.experiment_id
+  LEFT JOIN phenotypes p ON p.id = r.phenotype_id`;
 
 const excerpt = (body: unknown) => {
   if (typeof body !== 'string') return null;
@@ -131,7 +136,7 @@ export class Repo {
           s.kind,
           s.runnable ? 1 : 0,
           s.description,
-          s.params ? JSON.stringify(s.params) : null,
+          s.schema ? JSON.stringify(s.schema) : null,
           s.sourceRef,
           now()
         );
@@ -270,8 +275,8 @@ export class Repo {
         .prepare(
           `INSERT INTO runs (id, public_id, variation_id, title, kind, status, data_origin, symbols_json, window_from,
              window_to, resolution, partition, params_json, assumptions_json, request_json, price_source_json,
-             provenance_json, code_revision_json, created_at, queued_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+             provenance_json, code_revision_json, created_at, queued_at, phenotype_id)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
         )
         .run(
           id,
@@ -293,7 +298,8 @@ export class Repo {
           JSON.stringify(n.provenance),
           n.codeRevision ? JSON.stringify(n.codeRevision) : null,
           t,
-          n.status === 'queued' ? t : null
+          n.status === 'queued' ? t : null,
+          n.phenotypeId ?? null
         );
       const ins = this.db.prepare('INSERT INTO run_symbols (run_id, symbol) VALUES (?, ?)');
       for (const s of n.symbols) ins.run(id, s);
@@ -404,6 +410,10 @@ export class Repo {
       where.push('v.public_id = ?');
       args.push(o.variation);
     }
+    if (o.phenotype) {
+      where.push('p.public_id = ?');
+      args.push(o.phenotype);
+    }
     if (o.bookmarked) where.push('r.bookmarked_at IS NOT NULL');
     if (o.q) {
       where.push(
@@ -424,13 +434,28 @@ export class Repo {
     if (id === null) return null;
     const r = this.db.prepare(`${RUN_SELECT} WHERE r.id = ?`).get(id) as Row | undefined;
     if (!r) return null;
+    const schema = json<ParamSchema | unknown[] | null>(r.s_param_schema_json, null);
+    const provenance = json<Record<string, unknown>>(r.provenance_json, {});
     return {
       ...this.toSummary(r),
       params: json<LabValue[]>(r.params_json, []),
-      paramSchema: json<ParamSpec[] | null>(r.s_param_schema_json, null),
+      // Only the version-2 schema object is served (migration 0002 converted every stored row).
+      paramSchema: schema && !Array.isArray(schema) ? schema : null,
+      strategyFormerTitle: str(r.s_former_title),
+      phenotype:
+        r.p_public_id === null || r.p_public_id === undefined
+          ? null
+          : {
+              id: String(r.p_public_id),
+              key: String(r.p_key),
+              name: String(r.p_name),
+              study: String(r.p_study),
+              executionKind: String(r.p_kind),
+              edited: provenance.phenotypeEdited === true
+            },
       assumptions: json<LabValue[]>(r.assumptions_json, []),
       priceSource: json<PriceSource>(r.price_source_json, { kind: 'market', basisDate: String(r.window_from) }),
-      provenance: json<Record<string, unknown>>(r.provenance_json, {}),
+      provenance,
       codeRevision: json<Record<string, unknown> | null>(r.code_revision_json, null),
       metrics: json<Record<string, unknown> | null>(r.metrics_json, null),
       error: str(r.error),
@@ -522,7 +547,150 @@ export class Repo {
     );
   }
 
-  private nextId(table: 'experiments' | 'strategies' | 'variations' | 'runs'): number {
+  // ----- phenotype catalogue (frozen; written only by the importer CLI) -----
+
+  createPhenotypeImport(i: {
+    studyRef: string;
+    sourcePath: string;
+    sourceSha256: string;
+    manifest: unknown;
+    checks: string[];
+  }): { id: number; publicId: string } {
+    const id = this.nextId('phenotype_imports');
+    const publicId = formatPublicId('PI', id, 4);
+    this.db
+      .prepare(
+        `INSERT INTO phenotype_imports (id, public_id, study_ref, source_path, source_sha256, manifest_json, checks_json,
+           imported_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+      .run(id, publicId, i.studyRef, i.sourcePath, i.sourceSha256, JSON.stringify(i.manifest), JSON.stringify(i.checks), now());
+    return { id, publicId };
+  }
+
+  phenotypeImportBySha(sha256: string): string | null {
+    const r = this.db.prepare('SELECT public_id FROM phenotype_imports WHERE source_sha256 = ?').get(sha256) as
+      | Row
+      | undefined;
+    return r ? String(r.public_id) : null;
+  }
+
+  phenotypeByKey(key: string): { publicId: string; recordSha256: string } | null {
+    const r = this.db.prepare('SELECT public_id, record_sha256 FROM phenotypes WHERE phenotype_key = ?').get(key) as
+      | Row
+      | undefined;
+    return r ? { publicId: String(r.public_id), recordSha256: String(r.record_sha256) } : null;
+  }
+
+  insertPhenotype(p: {
+    key: string;
+    name: string;
+    importId: number;
+    studyRef: string;
+    role: string | null;
+    rank: number | null;
+    strategyKey: string;
+    strategyVersion: string;
+    executionKind: string;
+    runner: string | null;
+    symbols: string[];
+    resolution: string | null;
+    record: unknown;
+    recordSha256: string;
+  }): string {
+    const id = this.nextId('phenotypes');
+    const publicId = formatPublicId('PH', id, 4);
+    this.db
+      .prepare(
+        `INSERT INTO phenotypes (id, public_id, phenotype_key, name, import_id, study_ref, role, rank, strategy_key,
+           strategy_version, execution_kind, runner, symbols_json, resolution, record_json, record_sha256, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+      .run(
+        id,
+        publicId,
+        p.key,
+        p.name,
+        p.importId,
+        p.studyRef,
+        p.role,
+        p.rank,
+        p.strategyKey,
+        p.strategyVersion,
+        p.executionKind,
+        p.runner,
+        JSON.stringify(p.symbols),
+        p.resolution,
+        JSON.stringify(p.record),
+        p.recordSha256,
+        now()
+      );
+    return publicId;
+  }
+
+  private phenotypeRow(r: Row) {
+    return {
+      id: String(r.public_id),
+      key: String(r.phenotype_key),
+      name: String(r.name),
+      studyRef: String(r.study_ref),
+      role: str(r.role),
+      rank: r.rank === null ? null : Number(r.rank),
+      strategy: { key: String(r.strategy_key), version: String(r.strategy_version) },
+      executionKind: String(r.execution_kind),
+      runner: str(r.runner),
+      symbols: json<string[]>(r.symbols_json, []),
+      resolution: str(r.resolution),
+      record: json<Record<string, unknown>>(r.record_json, {}),
+      recordSha256: String(r.record_sha256),
+      import: { id: String(r.i_public_id), sourcePath: String(r.i_source_path), sourceSha256: String(r.i_source_sha256) },
+      createdAt: String(r.created_at),
+      runCount: Number(r.run_count ?? 0)
+    };
+  }
+
+  listPhenotypes(o: { q?: string; study?: string; strategy?: string; symbol?: string; role?: string } = {}) {
+    const where: string[] = [];
+    const args: string[] = [];
+    const add = (clause: string, arg: string) => {
+      where.push(clause);
+      args.push(arg);
+    };
+    if (o.study) add('p.study_ref = ?', o.study);
+    if (o.strategy) add('p.strategy_key = ?', o.strategy);
+    if (o.role) add('p.role = ?', o.role);
+    if (o.symbol) add('p.symbols_json LIKE ?', `%"${o.symbol}"%`);
+    if (o.q) {
+      where.push('(p.public_id LIKE ? OR p.phenotype_key LIKE ? OR p.name LIKE ? OR p.study_ref LIKE ?)');
+      const like = `%${o.q}%`;
+      args.push(like, like, like, like);
+    }
+    const rows = this.db
+      .prepare(
+        `SELECT p.*, i.public_id AS i_public_id, i.source_path AS i_source_path, i.source_sha256 AS i_source_sha256,
+           (SELECT count(*) FROM runs r WHERE r.phenotype_id = p.id) AS run_count
+         FROM phenotypes p JOIN phenotype_imports i ON i.id = p.import_id
+         ${where.length ? `WHERE ${where.join(' AND ')}` : ''} ORDER BY p.study_ref, p.rank IS NULL, p.rank, p.id`
+      )
+      .all(...args) as Row[];
+    return rows.map((r) => this.phenotypeRow(r));
+  }
+
+  phenotypeDetail(publicId: string) {
+    const id = parsePublicId('PH', publicId);
+    if (id === null) return null;
+    const r = this.db
+      .prepare(
+        `SELECT p.*, i.public_id AS i_public_id, i.source_path AS i_source_path, i.source_sha256 AS i_source_sha256,
+           (SELECT count(*) FROM runs r WHERE r.phenotype_id = p.id) AS run_count
+         FROM phenotypes p JOIN phenotype_imports i ON i.id = p.import_id WHERE p.id = ?`
+      )
+      .get(id) as Row | undefined;
+    return r ? { ...this.phenotypeRow(r), internalId: id } : null;
+  }
+
+  private nextId(
+    table: 'experiments' | 'strategies' | 'variations' | 'runs' | 'phenotypes' | 'phenotype_imports'
+  ): number {
     const r = this.db.prepare(`SELECT coalesce(max(id), 0) + 1 AS next FROM ${table}`).get() as Row;
     return Number(r.next);
   }

@@ -42,7 +42,7 @@ function seedRun(repo: Repo, opts: { canonical?: string; title?: string } = {}) 
     kind: 'entry_signal',
     runnable: false,
     description: '',
-    params: null,
+    schema: null,
     sourceRef: null
   });
   const v = repo.findOrCreateVariation({

@@ -1,18 +1,16 @@
 // Creating runs: manual single tests (validated, then queued for the runner) and the seeding of the synthetic demo.
 
 import { execFileSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { readPartitionConfig } from '../../../src/lib/partitions.ts';
 import type { LabRunRequest, LabValue, StrategySpec } from '../shared/contract.ts';
 import { RESOLUTION_LABEL } from '../shared/contract.ts';
-import {
-  canonicalParams,
-  findStrategy,
-  isParamApplied,
-  RISE_FROM_RECENT_LOW_TRADING,
-  validateRunRequest
-} from '../shared/strategies.ts';
+import { effectiveParams, isActive, optionLabel, paramOf, paramSnapshot, schemaOf, variationIdentity } from '../shared/params.ts';
+import type { PhenotypeRecord } from '../shared/phenotypes.ts';
+import { findStrategy, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL, validateRunRequest } from '../shared/strategies.ts';
+import type { PoolRerunRequest } from '../runner/pool-run.ts';
 import { atomicWrite, runDirName } from './artifacts.ts';
 import type { Config } from './config.ts';
 import type { Jobs } from './jobs.ts';
@@ -27,6 +25,19 @@ export const GROWTH_EXPERIMENT = {
 };
 
 const SOURCE_PATHS = ['src/entry-signals', 'src/lib', 'apps/strategy-lab/runner', 'apps/strategy-lab/shared'];
+// A shared-slot pool rerun executes the unchanged Study 8 runner and pools engine.
+export const POOL_SOURCE_PATHS = [
+  'apps/strategy-lab/runner',
+  'apps/strategy-lab/shared',
+  'apps/strategy-lab/importers',
+  'src/study8-runners',
+  'src/study7-runners',
+  'src/pools',
+  'src/portfolio-aware-d1',
+  'src/multi-etf-allocator',
+  'src/shared-margin-portfolio',
+  'src/lib'
+];
 // The trading backtest also executes the D1 book, exit manager, fill primitives, trackers and fixed ledger.
 const TRADING_SOURCE_PATHS = [
   ...SOURCE_PATHS,
@@ -70,7 +81,8 @@ export function partitionsTouched(repoRoot: string, from: string, to: string): s
 interface Profile {
   sourceRef: string;
   sourcePaths: readonly string[];
-  params: LabValue[];
+  params: LabValue[]; // the run's snapshot (inactive saved values labelled)
+  variationParams: LabValue[]; // the variation's: the effective configuration
   title: string;
   assumptions: LabValue[];
 }
@@ -79,13 +91,15 @@ const text = (key: string, label: string, value: string): LabValue => ({ key, la
 
 // The signal-only strategy: exactly the snapshot, title and assumptions it has always recorded.
 function signalOnlyProfile(spec: StrategySpec, req: LabRunRequest): Profile {
+  const params: LabValue[] = [
+    ...spec.params.map((p) => ({ key: p.key, label: p.label, value: req.params[p.key]!, unit: p.unit })),
+    { key: 'resolution', label: 'Bar resolution', value: req.resolution, unit: 'text' as const }
+  ];
   return {
     sourceRef: 'src/entry-signals/riseFromRecentLow.ts',
     sourcePaths: SOURCE_PATHS,
-    params: [
-      ...spec.params.map((p) => ({ key: p.key, label: p.label, value: req.params[p.key]!, unit: p.unit })),
-      { key: 'resolution', label: 'Bar resolution', value: req.resolution, unit: 'text' as const }
-    ],
+    params,
+    variationParams: params,
     title: `X ${req.params.advanceFromRecentLowPercent}% · N ${req.params.recentLowLookbackBars} bars · ${req.resolution}`,
     assumptions: [
       {
@@ -98,35 +112,64 @@ function signalOnlyProfile(spec: StrategySpec, req: LabRunRequest): Profile {
   };
 }
 
-// The trading backtest: every value as entered (a switch as ON/OFF; an input whose switch is off is saved and marked
-// "not applied"), and the effective rules spelled out in the assumptions.
+const pct = (v: unknown) => `${String(v)}%`;
+
+// The continuation part of the title and assumptions (Growth 1.1.0). Absent / OFF = the base Growth behaviour.
+function continuationText(spec: StrategySpec, p: Record<string, unknown>) {
+  if (p.continuationEnabled !== true)
+    return {
+      title: 'continuation off',
+      assumption: 'OFF: only the base Rise entry (identical to the version without continuation entries)'
+    };
+  const m = String(p.continuationMethod);
+  const w = `W ${String(p.continuationWindowSessions)}`;
+  const label = optionLabel(paramOf(spec, 'continuationMethod')!, m);
+  const detail: Record<string, [string, string]> = {
+    classic_d1: [
+      `D1 ${w} P ${pct(p.classicPullbackPercent)} Y ${pct(p.classicReboundPercent)}`,
+      `D1 mechanics on completed 1-minute bars: H = the exit fill, raised after each later session by its high; a minute closing at or below H × (1 − ${pct(p.classicPullbackPercent)}) arms a trailing buy (arming closes the window; the arming minute never buys), which buys when a minute closes at or above its trailing low × (1 + ${pct(p.classicReboundPercent)}); the armed setup persists (D1) until it fires or a base entry cancels it`
+    ],
+    breakout: [
+      `breakout ${w} b ${pct(p.breakoutBufferPercent)} F ${String(p.breakoutFormationBars)}`,
+      `after ${String(p.breakoutFormationBars)} completed eligible bar(s), a bar closing strictly above H × (1 + ${pct(p.breakoutBufferPercent)}); H = the exit fill raised by each completed eligible bar's high after it is evaluated (a bar never sees its own high)`
+    ],
+    shallow_pullback: [
+      `shallow ${w} SMA ${String(p.uptrendSmaBars)}/${String(p.uptrendSlopeBars)} pullback ${pct(p.pullbackMinimumPercent)}–${pct(p.pullbackMaximumPercent)} R ${pct(p.recoveryPercent)}`,
+      `uptrend = SMA${String(p.uptrendSmaBars)} above its value ${String(p.uptrendSlopeBars)} bars earlier × (1 + ${pct(p.uptrendMinimumRisePercent)}), at arming and at the trigger; a close ${pct(p.pullbackMinimumPercent)}–${pct(p.pullbackMaximumPercent)} below H arms (H freezes); deeper than ${pct(p.pullbackMaximumPercent)} ends the window; a close at or above the lowest close since arming × (1 + ${pct(p.recoveryPercent)}) triggers`
+    ],
+    ma_cross: [
+      `MA cross ${w} SMA ${String(p.crossSmaBars)} rising ${String(p.crossRisingBars)} m ${pct(p.crossMarginPercent)}`,
+      `the previous bar closed at or below its SMA${String(p.crossSmaBars)}, this bar closes strictly above SMA × (1 + ${pct(p.crossMarginPercent)}), and the SMA is above its value ${String(p.crossRisingBars)} bars earlier × (1 + ${pct(p.crossMinimumSlopePercent)}); one trigger per window`
+    ]
+  };
+  const [title, rule] = detail[m] ?? [m, m];
+  return {
+    title: `continuation ${title}`,
+    assumption: `ON — ${label}: ${rule}. Window: a realised net-profitable exit (net > 0 after costs and interest) opens eligible sessions s0+1 … s0+${String(p.continuationWindowSessions)}; evaluated only while flat with no order; a base entry has priority and closes it; decisions at bar ends, fills at the next eligible trade`
+  };
+}
+
+// The trading backtest: every value as entered (a switch as ON/OFF, a choice by its label; an inactive value is saved
+// and marked "not applied"), and the effective rules spelled out in the assumptions. The variation keeps the effective
+// configuration only.
 function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
   const p = req.params;
-  const applied = (key: string) => isParamApplied(spec, p, key);
-  const hold = p.maximumHoldEnabled === true;
-  const buffer = hold && p.intradayLossBufferEnabled === true;
-  const params: LabValue[] = [
-    ...spec.params.map((s): LabValue => {
-      const value = p[s.key]!;
-      if (s.type === 'boolean') return text(s.key, `${s.label} (switch)`, value === true ? 'ON' : 'OFF');
-      return {
-        key: s.key,
-        label: applied(s.key) ? s.label : `${s.label} — saved, not applied (switch off)`,
-        value: value as number,
-        unit: s.unit
-      };
-    }),
-    text('resolution', 'Bar resolution', req.resolution)
-  ];
+  const hold = isActive(spec, p, 'maximumHoldDays');
+  const buffer = isActive(spec, p, 'intradayLossBufferPercent');
+  const continuation = continuationText(spec, p);
+  const resolution = { key: 'resolution', label: 'Bar resolution', value: req.resolution, unit: 'text' as const };
+  const params: LabValue[] = [...paramSnapshot(spec, p), resolution];
+  const variationParams: LabValue[] = [...paramSnapshot(spec, effectiveParams(spec, p)), resolution];
   const title = [
-    'Trading',
+    'Growth',
     `X ${p.advanceFromRecentLowPercent}%`,
     `N ${p.recentLowLookbackBars} bars`,
     req.resolution,
     `stop ${p.trailingStopPercent}%`,
     hold ? `hold ${p.maximumHoldDays}d` : 'hold off',
     buffer ? `buffer ${p.intradayLossBufferPercent}%` : 'buffer off',
-    `${p.costBpsPerSide} bps`
+    `${p.costBpsPerSide} bps`,
+    continuation.title
   ].join(' · ');
   const assumptions: LabValue[] = [
     text(
@@ -137,8 +180,9 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
     text(
       'entry',
       'Entry',
-      'only the unchanged Rise-from-Recent-Low signal, decided when the signal bar completes; filled at the next eligible trade (a daily signal: the next session’s opening trade)'
+      'the unchanged Rise-from-Recent-Low signal (the base entry), decided when the signal bar completes; filled at the next eligible trade (a daily signal: the next session’s opening trade)'
     ),
+    text('continuation', 'Continuation entries', continuation.assumption),
     text(
       'position',
       'Position',
@@ -191,6 +235,7 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
     sourceRef: 'src/growth-trading/riseTrading.ts',
     sourcePaths: TRADING_SOURCE_PATHS,
     params,
+    variationParams,
     title,
     assumptions
   };
@@ -268,30 +313,28 @@ export class LabService {
   createManualRun(body: unknown): { errors: string[] } | { runId: string } {
     const errors = validateRunRequest(body, this.knownSymbols());
     if (errors.length) return { errors };
-    const req = body as LabRunRequest;
-    const spec = findStrategy(req.strategyKey, req.strategyVersion)!;
-    const exp = this.repo.ensureExperiment(
-      GROWTH_EXPERIMENT.slug,
-      GROWTH_EXPERIMENT.title,
-      GROWTH_EXPERIMENT.description
-    );
-    const profile = spec.key === RISE_FROM_RECENT_LOW_TRADING.key ? tradingProfile(spec, req) : signalOnlyProfile(spec, req);
-    const strat = this.repo.ensureStrategy({
-      key: spec.key,
-      version: spec.version,
-      title: spec.title,
-      kind: spec.kind,
-      runnable: true,
-      description: spec.description,
-      params: spec.params,
-      sourceRef: profile.sourceRef
+    return this.queueFormRun(body as LabRunRequest, GROWTH_EXPERIMENT, {
+      createdBy: 'Strategy Lab manual Run Test'
     });
-    const canonical = canonicalParams({ ...req.params }) + `|${req.resolution}`;
+  }
+
+  // A run of a form strategy (signal-only or Growth): its profile, variation, run row and request.json.
+  private queueFormRun(
+    req: LabRunRequest,
+    experiment: { slug: string; title: string; description: string },
+    provenance: Record<string, unknown>,
+    phenotypeId: number | null = null
+  ): { runId: string } {
+    const spec = findStrategy(req.strategyKey, req.strategyVersion)!;
+    const exp = this.repo.ensureExperiment(experiment.slug, experiment.title, experiment.description);
+    const profile = spec.key === RISE_FROM_RECENT_LOW_TRADING.key ? tradingProfile(spec, req) : signalOnlyProfile(spec, req);
+    const strat = this.ensureRegistered(spec, profile.sourceRef);
+    const canonical = variationIdentity(spec, req.params, req.resolution);
     const parent = req.parentVariation ? this.repo.variationIdOf(req.parentVariation) : null;
     const variation = this.repo.findOrCreateVariation({
       strategyId: strat.id,
       experimentId: exp.id,
-      params: profile.params,
+      params: profile.variationParams,
       canonical,
       title: profile.title,
       origin: 'manual',
@@ -311,12 +354,9 @@ export class LabService {
       assumptions,
       request: req,
       priceSource: { kind: 'market', basisDate: req.from },
-      provenance: {
-        createdBy: 'Strategy Lab manual Run Test',
-        variation: variation.publicId,
-        variationCreated: variation.created
-      },
-      codeRevision: codeRevision(this.cfg.repoRoot, profile.sourcePaths)
+      provenance: { ...provenance, variation: variation.publicId, variationCreated: variation.created },
+      codeRevision: codeRevision(this.cfg.repoRoot, profile.sourcePaths),
+      phenotypeId
     });
     atomicWrite(
       join(this.cfg.stateDir, runDirName(run.publicId), 'request.json'),
@@ -325,4 +365,215 @@ export class LabService {
     this.jobs.enqueue(run.id, run.publicId);
     return { runId: run.publicId };
   }
+
+  private ensureRegistered(spec: StrategySpec, sourceRef: string) {
+    return this.repo.ensureStrategy({
+      key: spec.key,
+      version: spec.version,
+      title: spec.title,
+      kind: spec.kind,
+      runnable: spec.launch === 'form',
+      description: spec.description,
+      schema: schemaOf(spec),
+      sourceRef
+    });
+  }
+
+  // ----- the phenotype catalogue: capabilities and single reruns (never a search) -----
+
+  /** Whether and how a phenotype can run here, decided from the registry and this checkout — never simulated. */
+  capabilityOf(ph: NonNullable<ReturnType<Repo['phenotypeDetail']>>): PhenotypeCapability {
+    const spec = findStrategy(ph.strategy.key, ph.strategy.version);
+    if (!spec) return { runnable: false, reason: `strategy ${ph.strategy.key}@${ph.strategy.version} is not registered here` };
+    if (ph.executionKind === 'shared-slot pool') {
+      const pool = (ph.record as { pool?: { runner?: string; config?: { file: string } } }).pool;
+      if (spec.launch !== 'phenotype' || pool?.runner !== 'study8')
+        return { runnable: false, reason: 'no registered runner executes this pool under its real allocator contract' };
+      const missing = [...STUDY8_RECORDS, pool.config!.file].filter((f) => !existsSync(join(this.cfg.repoRoot, f)));
+      if (missing.length)
+        return { runnable: false, reason: `view-only: the sealed Study 8 records are missing in this checkout (${missing.join(', ')})` };
+      const absent = ph.symbols.filter((x) => !this.knownSymbols().has(x));
+      if (absent.length) return { runnable: false, reason: `view-only: no local data for ${absent.join(', ')}` };
+      return {
+        runnable: true,
+        runner: 'study8-pool',
+        reason:
+          'one allocator replay through the unchanged Study 8 runner (one shared funded $100,000 slot); start fixed at 2016-01-04 (the Study 8 contract); choose the end; parameters, symbols and costs are locked to the sealed configuration',
+        locked: ['params', 'symbols', 'from', 'resolution', 'costs'],
+        fixedFrom: '2016-01-04'
+      };
+    }
+    if (spec.launch !== 'form') return { runnable: false, reason: `${spec.key}@${spec.version} is not launchable (legacy or read-only)` };
+    return {
+      runnable: true,
+      runner: spec.kind === 'trades' ? 'growth-trading' : 'entry-signal',
+      reason:
+        ph.executionKind === 'independent-symbol batch'
+          ? 'one standalone backtest per symbol in ONE run (independent $100,000 books, never summed); edits make a derived variation'
+          : 'one standalone backtest; edits (parameters, resolution) make a new variation derived from the frozen phenotype',
+      locked: []
+    };
+  }
+
+  /** ONE run of ONE catalogue phenotype (optionally with edits, which make a derived variation). */
+  createPhenotypeRun(publicId: string, body: unknown): { errors: string[] } | { runId: string } | null {
+    const ph = this.repo.phenotypeDetail(publicId);
+    if (!ph) return null;
+    const cap = this.capabilityOf(ph);
+    if (!cap.runnable) return { errors: [`phenotype ${publicId} cannot run here: ${cap.reason}`] };
+    if (typeof body !== 'object' || body === null || Array.isArray(body)) return { errors: ['request: must be a JSON object'] };
+    const b = body as Record<string, unknown>;
+    const allowed = new Set(['title', 'from', 'to', 'symbols', 'params', 'resolution']);
+    const unknown = Object.keys(b).filter((k) => !allowed.has(k));
+    if (unknown.length) return { errors: unknown.map((k) => `request: unknown field "${k}"`) };
+    const record = ph.record as unknown as PhenotypeRecord;
+    const origin = {
+      id: ph.id,
+      key: ph.key,
+      study: ph.studyRef,
+      role: ph.role,
+      rank: ph.rank,
+      recordSha256: ph.recordSha256,
+      import: ph.import.id,
+      exposure: record.data?.exposure ?? null
+    };
+    if (ph.executionKind === 'shared-slot pool') return this.createPoolRun(ph, record, b, origin);
+
+    const params = { ...(record.params ?? {}), ...((b.params as Record<string, unknown> | undefined) ?? {}) };
+    const req: LabRunRequest = {
+      strategyKey: ph.strategy.key,
+      strategyVersion: ph.strategy.version,
+      params: params as LabRunRequest['params'],
+      symbols: (b.symbols as string[] | undefined) ?? ph.symbols,
+      from: b.from as string,
+      to: b.to as string,
+      resolution: (b.resolution as LabRunRequest['resolution'] | undefined) ?? record.resolution!,
+      ...(typeof b.title === 'string' && b.title.trim() ? { title: b.title.trim() } : {}),
+      phenotypeId: ph.id
+    };
+    const errors = validateRunRequest(req, this.knownSymbols(), 'phenotype');
+    if (errors.length) return { errors };
+    const spec = findStrategy(req.strategyKey, req.strategyVersion)!;
+    const editedKeys = [
+      ...Object.keys({ ...effectiveParams(spec, req.params), ...(record.params ?? {}) }).filter(
+        (k) => effectiveParams(spec, req.params)[k] !== record.params?.[k]
+      ),
+      ...(req.resolution !== record.resolution ? ['resolution'] : [])
+    ];
+    return this.queueFormRun(
+      req,
+      PHENOTYPE_EXPERIMENT,
+      {
+        createdBy: 'Strategy Lab phenotype rerun (one configuration)',
+        phenotype: origin,
+        phenotypeEdited: editedKeys.length > 0,
+        editedKeys,
+        symbolsChanged: JSON.stringify([...req.symbols].sort()) !== JSON.stringify([...ph.symbols].sort())
+      },
+      ph.internalId
+    );
+  }
+
+  private createPoolRun(
+    ph: NonNullable<ReturnType<Repo['phenotypeDetail']>>,
+    record: PhenotypeRecord,
+    b: Record<string, unknown>,
+    origin: Record<string, unknown>
+  ): { errors: string[] } | { runId: string } {
+    const pool = record.pool!;
+    const errors: string[] = [];
+    if (b.params !== undefined) errors.push('params: a shared-slot pool phenotype runs its sealed configuration only');
+    if (b.resolution !== undefined) errors.push('resolution: fixed (1-minute pools engine)');
+    if (b.symbols !== undefined && JSON.stringify([...(b.symbols as string[])].sort()) !== JSON.stringify(ph.symbols))
+      errors.push(`symbols: fixed to the pool's books ${ph.symbols.join('+')} (never independent symbol tests)`);
+    if (b.from !== undefined && b.from !== pool.fixedStart) errors.push(`from: fixed at ${pool.fixedStart} by the Study 8 contract`);
+    if (typeof b.to !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(b.to) || b.to < '2017-06-15')
+      errors.push('to: a YYYY-MM-DD end date after the 2017-06-15 arming');
+    if (b.title !== undefined && (typeof b.title !== 'string' || b.title.length > 160)) errors.push('title: at most 160 characters');
+    if (errors.length) return { errors };
+    const spec = STUDY8_POOL;
+    const exp = this.repo.ensureExperiment(PHENOTYPE_EXPERIMENT.slug, PHENOTYPE_EXPERIMENT.title, PHENOTYPE_EXPERIMENT.description);
+    const strat = this.ensureRegistered(spec, 'src/study8-runners/');
+    const books: LabValue[] = [
+      text('sealedId', 'Sealed configuration', pool.sealedId),
+      text('alias', 'Study 8 alias', pool.alias),
+      text('config', 'Research pool config', `${pool.config.file} (sha256 ${pool.config.sha256.slice(0, 12)}…)`),
+      ...Object.entries(pool.books).flatMap(([sym, book]) =>
+        Object.entries(book).map(([k, v]) => ({ key: `${sym}.${k}`, label: `${sym} ${k} (engine encoding)`, value: v, unit: 'index' as const }))
+      )
+    ];
+    const variation = this.repo.findOrCreateVariation({
+      strategyId: strat.id,
+      experimentId: exp.id,
+      params: books,
+      canonical: pool.sealedId,
+      title: `${ph.name} (rerun)`,
+      origin: 'manual',
+      parentVariationId: null
+    });
+    const to = b.to as string;
+    const partition = partitionsTouched(this.cfg.repoRoot, pool.fixedStart, to);
+    const assumptions: LabValue[] = [
+      text('semantics', 'Shared-slot pool', 'ONE allocator replay: one funded $100,000 slot shared by the books, first executable signal wins, no preemption; never independent per-symbol backtests, never summed standalone results'),
+      text('runner', 'Runner', 'the unchanged Study 8 local runner (src/study8-runners/) and pools engine; Strategy Lab converts its lots and funding decisions into events'),
+      text('window', 'Window', `accounting from the close of ${pool.fixedStart}, arming on 2017-06-15 (fixed by the Study 8 contract), to ${to}`),
+      text('costs', 'Costs', `${record.execution.costBpsPerSide} bps per side (sealed), 11% simple interest, stops at the stop or the gapped open`),
+      text('reconciliation', 'Reconciliation', `with the sealed F24 record only for the sealed run (to 2026-10-29 at 5 bps); otherwise reported as not applicable`),
+      text('exposure', 'Data exposure', record.data.exposure)
+    ];
+    const request: Omit<PoolRerunRequest, 'runId'> = {
+      kind: 'study8-pool-rerun',
+      strategyKey: 'study8-d1-pool',
+      strategyVersion: 'pools-engine',
+      phenotypeId: ph.id,
+      alias: pool.alias,
+      sealedId: pool.sealedId,
+      end: to,
+      costBps: record.execution.costBpsPerSide,
+      symbols: ph.symbols
+    };
+    const run = this.repo.createRun({
+      variationId: variation.id,
+      title: typeof b.title === 'string' && b.title.trim() ? b.title.trim() : '',
+      kind: 'manual',
+      status: 'queued',
+      dataOrigin: 'real',
+      symbols: ph.symbols,
+      window: { from: pool.fixedStart, to, resolution: '1m', partition },
+      params: books,
+      assumptions,
+      request,
+      priceSource: { kind: 'market', basisDate: pool.fixedStart },
+      provenance: { createdBy: 'Strategy Lab phenotype rerun (shared-slot pool)', phenotype: origin, phenotypeEdited: false, variation: variation.publicId },
+      codeRevision: codeRevision(this.cfg.repoRoot, POOL_SOURCE_PATHS),
+      phenotypeId: ph.internalId
+    });
+    atomicWrite(
+      join(this.cfg.stateDir, runDirName(run.publicId), 'request.json'),
+      `${JSON.stringify({ runId: run.publicId, ...request }, null, 2)}\n`
+    );
+    this.jobs.enqueue(run.id, run.publicId);
+    return { runId: run.publicId };
+  }
 }
+
+export interface PhenotypeCapability {
+  runnable: boolean;
+  runner?: 'growth-trading' | 'entry-signal' | 'study8-pool';
+  reason: string;
+  locked?: string[];
+  fixedFrom?: string;
+}
+
+const STUDY8_RECORDS = [
+  'research/study8-expanded-regime-d1/FROZEN_SELECTION.json',
+  'research/study8-expanded-regime-d1/results/test/F24/test.json',
+  'research/study8-expanded-regime-d1/results/test/F24/test-lots.jsonl.gz'
+];
+
+export const PHENOTYPE_EXPERIMENT = {
+  slug: 'phenotype-reruns',
+  title: 'Phenotype reruns',
+  description:
+    'Single manual reruns of frozen catalogue phenotypes (one configuration per action; never a search). Each run records its phenotype and study.'
+};

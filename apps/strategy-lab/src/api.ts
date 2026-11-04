@@ -11,6 +11,7 @@ import type {
   SymbolInfo,
   VariationSummary
 } from '../shared/contract.ts';
+import type { ExecutionKind, PhenotypeRecord } from '../shared/phenotypes.ts';
 
 const TOKEN_KEY = 'strategy-lab-token';
 
@@ -65,6 +66,9 @@ async function call<T>(method: string, path: string, body?: unknown, signal?: Ab
 export interface Meta {
   contractVersion: number;
   strategies: StrategySpec[];
+  /** Strategies a catalogue phenotype may run (the form strategies and the shared-slot pool). */
+  phenotypeStrategies: StrategySpec[];
+  registry: { key: string; version: string; title: string; launch: string; formerTitles: string[]; legacy: unknown }[];
   symbols: SymbolInfo[];
   experiments: { id: string; slug: string; title: string; description: string }[];
   partitions: Record<string, { start: string | null; end: string | null }>;
@@ -102,6 +106,67 @@ export interface ListQuery {
   offset?: number;
 }
 
+export interface PhenotypeCapability {
+  runnable: boolean;
+  runner?: string;
+  reason: string;
+  locked?: string[];
+  fixedFrom?: string;
+}
+
+export interface PhenotypeView {
+  id: string;
+  key: string;
+  name: string;
+  studyRef: string;
+  role: string | null;
+  rank: number | null;
+  strategy: { key: string; version: string };
+  executionKind: ExecutionKind;
+  runner: string | null;
+  symbols: string[];
+  resolution: string | null;
+  record: PhenotypeRecord;
+  recordSha256: string;
+  import: { id: string; sourcePath: string; sourceSha256: string };
+  createdAt: string;
+  runCount: number;
+  capability: PhenotypeCapability;
+  runs?: RunSummary[];
+}
+
+export interface PhenotypeQuery {
+  q?: string;
+  study?: string;
+  strategy?: string;
+  symbol?: string;
+  role?: string;
+}
+
+/** Downloads the research bundle of a completed run (authenticated fetch → a file the browser saves). */
+async function downloadBundle(id: string, minuteMarks: boolean): Promise<{ filename: string; bytes: number }> {
+  const headers: Record<string, string> = {};
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const res = await fetch(`/api/runs/${id}/export${minuteMarks ? '?minute=1' : ''}`, { headers });
+  if (!res.ok) {
+    const data = (await res.json().catch(() => ({}))) as { error?: string; tokenRequired?: boolean };
+    if (res.status === 401 && data.tokenRequired) tokenListener?.();
+    throw new ApiError(res.status, data.error ?? `HTTP ${res.status}`);
+  }
+  const blob = await res.blob();
+  const filename = /filename="([^"]+)"/.exec(res.headers.get('Content-Disposition') ?? '')?.[1] ?? `strategy-lab-${id}.zip`;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  return { filename, bytes: blob.size };
+}
+
 const qs = (o: Record<string, string | number | boolean | undefined | null>) => {
   const p = new URLSearchParams();
   for (const [k, v] of Object.entries(o))
@@ -134,5 +199,48 @@ export const api = {
   addNote: (targetType: 'run' | 'variation', targetId: string, body: string) =>
     call<Note>('POST', '/api/notes', { targetType, targetId, body }),
   updateNote: (id: number, body: string) => call<{ ok: true }>('PATCH', `/api/notes/${id}`, { body }),
-  deleteNote: (id: number) => call<{ ok: true }>('DELETE', `/api/notes/${id}`)
+  deleteNote: (id: number) => call<{ ok: true }>('DELETE', `/api/notes/${id}`),
+  phenotypes: (q: PhenotypeQuery = {}) => call<PhenotypeView[]>('GET', `/api/phenotypes${qs({ ...q })}`),
+  phenotype: (id: string, signal?: AbortSignal) => call<PhenotypeView>('GET', `/api/phenotypes/${id}`, undefined, signal),
+  /** ONE run of ONE frozen phenotype. */
+  runPhenotype: (id: string, body: Record<string, unknown>) => call<RunDetail>('POST', `/api/phenotypes/${id}/runs`, body),
+  compare: (a: string, b: string, signal?: AbortSignal) =>
+    call<Comparison>('GET', `/api/compare${qs({ a, b })}`, undefined, signal),
+  downloadBundle
 };
+
+export interface ComparedTrade {
+  trade: string;
+  origin: string;
+  method: string | null;
+  decision: string;
+  entry: string;
+  exit: string | null;
+  exitReason: string;
+  net: number;
+  status: string;
+}
+
+export interface Comparison {
+  a: { id: string; title: string; strategy: RunSummary['strategy']; continuation: string };
+  b: { id: string; title: string; strategy: RunSummary['strategy']; continuation: string };
+  comparable: boolean;
+  mismatches: string[];
+  verdict: string;
+  control: string;
+  nonAdditivity: string;
+  perSymbol: Record<
+    string,
+    {
+      metrics: { a: Record<string, number | null> | null; b: Record<string, number | null> | null; bMinusA: Record<string, number | null> | null };
+      trades: {
+        identical: number;
+        shifted: { a: ComparedTrade; b: ComparedTrade }[];
+        introduced: ComparedTrade[];
+        suppressed: ComparedTrade[];
+        byOriginB: Record<string, number>;
+      };
+      continuation: { a: Record<string, unknown> | null; b: Record<string, unknown> | null };
+    }
+  >;
+}

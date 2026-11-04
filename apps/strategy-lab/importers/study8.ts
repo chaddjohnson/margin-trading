@@ -14,6 +14,8 @@ import { isAbsolute, join, relative, resolve } from 'node:path';
 import { gunzipSync } from 'node:zlib';
 
 import type { LabEvent, LabValue } from '../shared/contract.ts';
+import { schemaOf } from '../shared/params.ts';
+import { STUDY8_POOL } from '../shared/strategies.ts';
 import { validateEvents } from '../shared/validate-events.ts';
 import { atomicWrite, runDirName, writeEvents, writeManifest } from '../server/artifacts.ts';
 import { type Config, loadConfig } from '../server/config.ts';
@@ -22,7 +24,7 @@ import { Repo } from '../server/repo.ts';
 
 const SEALED_LOTS = 'research/study8-expanded-regime-d1/results/test/F24/test-lots.jsonl.gz';
 
-interface Lot {
+export interface Lot {
   trade: number;
   lot: number;
   symbol: string;
@@ -79,7 +81,7 @@ export interface ImportReport {
 const sha = (file: string) => createHash('sha256').update(readFileSync(file)).digest('hex');
 const isoZ = (s: string) => new Date(s).toISOString().replace('.000Z', 'Z');
 
-function parseCsv(text: string): Record<string, string>[] {
+export function parseCsv(text: string): Record<string, string>[] {
   const [head, ...lines] = text.trim().split('\n');
   const cols = head!.split(',');
   return lines.map((l) => {
@@ -87,6 +89,119 @@ function parseCsv(text: string): Record<string, string>[] {
     if (cells.length !== cols.length) throw new Error(`signals.csv: unexpected row ${l}`);
     return Object.fromEntries(cols.map((c, i) => [c, cells[i]!]));
   });
+}
+
+/**
+ * The Strategy Lab events of a Study 8 runner output (lots.json + the refused decisions of signals.csv), and the
+ * per-symbol counts. Pure; shared by the importer and the shared-slot pool rerun (runner/pool-run.ts), so both turn
+ * the same runner output into the same events.
+ */
+export function study8Events(
+  runId: string,
+  lots: readonly Lot[],
+  refused: readonly Record<string, string>[],
+  symbols: readonly string[]
+): { events: LabEvent[]; bySymbol: ImportReport['bySymbol'] } {
+  const events: LabEvent[] = [];
+  const bySymbol: ImportReport['bySymbol'] = Object.fromEntries(
+    symbols.map((s) => [s, { entries: 0, exits: 0, rejected: 0 }])
+  );
+  for (const l of lots) {
+    const tradeId = `T-${l.trade}`;
+    const entryId = `${l.symbol}:${tradeId}:entry`;
+    const exitId = `${l.symbol}:${tradeId}:exit`;
+    const open = l.status === 'open';
+    events.push({
+      id: entryId,
+      runId,
+      symbol: l.symbol,
+      kind: 'executed_entry',
+      t: isoZ(l.entryTimeUtc),
+      timePrecision: 'minute',
+      timeMeaning:
+        'start of the minute bar the engine filled in (fills at minute-bar prices); decision at the end of the signal minute',
+      price: l.entryFillPrice,
+      priceBasis: 'fill',
+      reason: `${l.entrySetup} setup; ${l.entryFillReason}`,
+      values: [
+        { key: 'decisionTime', label: 'Decision time', value: isoZ(l.decisionTimeUtc), unit: 'datetime' },
+        { key: 'decisionPrice', label: 'Decision price', value: l.decisionPrice, unit: 'price' },
+        {
+          key: 'priceAfterFriction',
+          label: 'Entry price after friction',
+          value: l.entryPriceAfterFriction,
+          unit: 'price'
+        },
+        { key: 'shares', label: 'Shares (first-session units)', value: l.shares, unit: 'count' },
+        { key: 'principal', label: 'Principal', value: l.principal, unit: 'usd' },
+        {
+          key: 'sameMinuteCandidates',
+          label: 'Same-minute candidates',
+          value: l.sameMinuteCandidates,
+          unit: 'count'
+        },
+        {
+          key: 'refusedWhileHeld',
+          label: 'Signals refused while held',
+          value: l.signalsRefusedWhileHeld,
+          unit: 'count'
+        }
+      ],
+      tradeId,
+      linkedEventId: open ? null : exitId,
+      meta: { lot: l.lot, open, entrySetup: l.entrySetup }
+    });
+    bySymbol[l.symbol]!.entries++;
+    if (open) continue;
+    events.push({
+      id: exitId,
+      runId,
+      symbol: l.symbol,
+      kind: 'executed_exit',
+      t: isoZ(l.exitTimeUtc),
+      timePrecision: 'minute',
+      timeMeaning: 'start of the minute bar the engine filled in (fills at minute-bar prices)',
+      price: l.exitFillPrice === '' ? null : l.exitFillPrice,
+      priceBasis: l.exitFillPrice === '' ? 'unknown' : 'fill',
+      reason: `${l.exitReason}; ${l.exitFillReason}`,
+      values: [
+        { key: 'net', label: 'Net P&L of the lot (as reported)', value: l.net, unit: 'usd' },
+        { key: 'gross', label: 'Gross P&L', value: l.grossPnl, unit: 'usd' },
+        { key: 'interest', label: 'Margin interest', value: l.marginInterest, unit: 'usd' },
+        { key: 'friction', label: 'Friction', value: l.totalFriction, unit: 'usd' },
+        { key: 'sessionsHeld', label: 'Sessions held', value: l.sessionsHeld, unit: 'sessions' },
+        { key: 'mae', label: 'MAE (engine marks)', value: l.maeDollars, unit: 'usd' },
+        { key: 'mfe', label: `MFE (${l.mfeStatus})`, value: l.mfeDollars === '' ? null : l.mfeDollars, unit: 'usd' }
+      ],
+      tradeId,
+      linkedEventId: entryId,
+      meta: { lot: l.lot, exitReason: l.exitReason }
+    });
+    bySymbol[l.symbol]!.exits++;
+  }
+  for (const [i, s] of refused.entries()) {
+    events.push({
+      id: `${s.symbol}:rejected:${i + 1}`,
+      runId,
+      symbol: s.symbol!,
+      kind: 'rejected_signal',
+      t: isoZ(s.decisionUtc!),
+      timePrecision: 'minute',
+      timeMeaning: 'end of the signal minute (the funding decision); not executed',
+      price: null,
+      priceBasis: 'unknown',
+      reason: `Refused: ${s.reason || 'no reason recorded'}${s.occupiedBy ? ` (slot held by lot ${s.occupiedBy})` : ''}`,
+      values: [
+        { key: 'phenotype', label: 'Book', value: s.phenotype ?? null, unit: 'text' },
+        { key: 'repeatedRefusals', label: 'Repeated refusals', value: Number(s.repeatedRefusals ?? 0), unit: 'count' }
+      ],
+      tradeId: null,
+      linkedEventId: null,
+      meta: { occupiedBy: s.occupiedBy || null }
+    });
+    bySymbol[s.symbol!]!.rejected++;
+  }
+  return { events, bySymbol };
 }
 
 export function importStudy8(
@@ -184,14 +299,13 @@ export function importStudy8(
     'Read-only imports of Study 8 local-runner replays (reconciled with the sealed F24 record).'
   );
   const strat = repo.ensureStrategy({
-    key: 'study8-d1-pool',
-    version: 'pools-engine',
-    title: 'Study 8 D1 shared-slot pool (pools engine)',
+    key: STUDY8_POOL.key,
+    version: STUDY8_POOL.version,
+    title: STUDY8_POOL.title,
     kind: 'trades',
-    runnable: false,
-    description:
-      'D1 books on one funded $100,000 slot (src/study8-runners/, src/portfolio-aware-d1/nbook/). Imported, not executable from Strategy Lab.',
-    params: null,
+    runnable: false, // not from the New Test form; phenotype reruns only (shared/strategies.ts STUDY8_POOL.launch)
+    description: STUDY8_POOL.description,
+    schema: schemaOf(STUDY8_POOL),
     sourceRef: 'src/study8-runners/'
   });
   const params: LabValue[] = [
@@ -279,105 +393,7 @@ export function importStudy8(
   }
 
   function finishImport(): ImportReport {
-    const events: LabEvent[] = [];
-    const bySymbol: ImportReport['bySymbol'] = Object.fromEntries(
-      symbols.map((s) => [s, { entries: 0, exits: 0, rejected: 0 }])
-    );
-    for (const l of lots) {
-      const tradeId = `T-${l.trade}`;
-      const entryId = `${l.symbol}:${tradeId}:entry`;
-      const exitId = `${l.symbol}:${tradeId}:exit`;
-      const open = l.status === 'open';
-      events.push({
-        id: entryId,
-        runId: run.publicId,
-        symbol: l.symbol,
-        kind: 'executed_entry',
-        t: isoZ(l.entryTimeUtc),
-        timePrecision: 'minute',
-        timeMeaning:
-          'start of the minute bar the engine filled in (fills at minute-bar prices); decision at the end of the signal minute',
-        price: l.entryFillPrice,
-        priceBasis: 'fill',
-        reason: `${l.entrySetup} setup; ${l.entryFillReason}`,
-        values: [
-          { key: 'decisionTime', label: 'Decision time', value: isoZ(l.decisionTimeUtc), unit: 'datetime' },
-          { key: 'decisionPrice', label: 'Decision price', value: l.decisionPrice, unit: 'price' },
-          {
-            key: 'priceAfterFriction',
-            label: 'Entry price after friction',
-            value: l.entryPriceAfterFriction,
-            unit: 'price'
-          },
-          { key: 'shares', label: 'Shares (first-session units)', value: l.shares, unit: 'count' },
-          { key: 'principal', label: 'Principal', value: l.principal, unit: 'usd' },
-          {
-            key: 'sameMinuteCandidates',
-            label: 'Same-minute candidates',
-            value: l.sameMinuteCandidates,
-            unit: 'count'
-          },
-          {
-            key: 'refusedWhileHeld',
-            label: 'Signals refused while held',
-            value: l.signalsRefusedWhileHeld,
-            unit: 'count'
-          }
-        ],
-        tradeId,
-        linkedEventId: open ? null : exitId,
-        meta: { lot: l.lot, open, entrySetup: l.entrySetup }
-      });
-      bySymbol[l.symbol]!.entries++;
-      if (open) continue;
-      events.push({
-        id: exitId,
-        runId: run.publicId,
-        symbol: l.symbol,
-        kind: 'executed_exit',
-        t: isoZ(l.exitTimeUtc),
-        timePrecision: 'minute',
-        timeMeaning: 'start of the minute bar the engine filled in (fills at minute-bar prices)',
-        price: l.exitFillPrice === '' ? null : l.exitFillPrice,
-        priceBasis: l.exitFillPrice === '' ? 'unknown' : 'fill',
-        reason: `${l.exitReason}; ${l.exitFillReason}`,
-        values: [
-          { key: 'net', label: 'Net P&L of the lot (as reported)', value: l.net, unit: 'usd' },
-          { key: 'gross', label: 'Gross P&L', value: l.grossPnl, unit: 'usd' },
-          { key: 'interest', label: 'Margin interest', value: l.marginInterest, unit: 'usd' },
-          { key: 'friction', label: 'Friction', value: l.totalFriction, unit: 'usd' },
-          { key: 'sessionsHeld', label: 'Sessions held', value: l.sessionsHeld, unit: 'sessions' },
-          { key: 'mae', label: 'MAE (engine marks)', value: l.maeDollars, unit: 'usd' },
-          { key: 'mfe', label: `MFE (${l.mfeStatus})`, value: l.mfeDollars === '' ? null : l.mfeDollars, unit: 'usd' }
-        ],
-        tradeId,
-        linkedEventId: entryId,
-        meta: { lot: l.lot, exitReason: l.exitReason }
-      });
-      bySymbol[l.symbol]!.exits++;
-    }
-    for (const [i, s] of refused.entries()) {
-      events.push({
-        id: `${s.symbol}:rejected:${i + 1}`,
-        runId: run.publicId,
-        symbol: s.symbol!,
-        kind: 'rejected_signal',
-        t: isoZ(s.decisionUtc!),
-        timePrecision: 'minute',
-        timeMeaning: 'end of the signal minute (the funding decision); not executed',
-        price: null,
-        priceBasis: 'unknown',
-        reason: `Refused: ${s.reason || 'no reason recorded'}${s.occupiedBy ? ` (slot held by lot ${s.occupiedBy})` : ''}`,
-        values: [
-          { key: 'phenotype', label: 'Book', value: s.phenotype ?? null, unit: 'text' },
-          { key: 'repeatedRefusals', label: 'Repeated refusals', value: Number(s.repeatedRefusals ?? 0), unit: 'count' }
-        ],
-        tradeId: null,
-        linkedEventId: null,
-        meta: { occupiedBy: s.occupiedBy || null }
-      });
-      bySymbol[s.symbol!]!.rejected++;
-    }
+    const { events, bySymbol } = study8Events(run.publicId, lots, refused, symbols);
     const errors = validateEvents(events, run.publicId, symbols);
     if (errors.length) throw new Error(`imported events violate the contract: ${errors.slice(0, 3).join('; ')}`);
 

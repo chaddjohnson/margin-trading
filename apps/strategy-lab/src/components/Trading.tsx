@@ -2,12 +2,12 @@
 // Each symbol is a standalone backtest on its own $100,000 notional: nothing here is summed across symbols. A figure the
 // run could not compute is shown as "n/a" with its reason, never as 0.
 
-import { type ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import type { LabEvent, LabValue } from '../../shared/contract.ts';
 import type { Role } from '../chart/markers.ts';
 import { formatEt, formatPrice } from '../format.ts';
-import { formatMoney, pnlText, toneOf, type Trade, tradeList } from '../trades.ts';
+import { formatMoney, isClosedLoss, originOf, pnlText, toneOf, type Trade, tradeList } from '../trades.ts';
 
 type Drawdown = {
   maximumUsd: number;
@@ -232,6 +232,19 @@ export function PnlBadge({ trade, testId, compact }: { trade: Trade; testId?: st
 }
 
 /** The executed trades of ONE symbol of one run (already built from its events), the selected one highlighted. */
+const ORIGIN_SHORT: Record<string, string> = {
+  classic_d1: 'Classic D1',
+  breakout: 'breakout',
+  shallow_pullback: 'shallow pullback',
+  ma_cross: 'MA cross'
+};
+
+export const originLabel = (t: Trade) => {
+  const o = originOf(t);
+  if (!o) return null;
+  return o.origin === 'continuation' ? `continuation · ${ORIGIN_SHORT[o.method ?? ''] ?? o.method}` : 'base Growth';
+};
+
 export function TradeTable({
   trades,
   role,
@@ -244,7 +257,11 @@ export function TradeTable({
   onSelect: (trade: Trade) => void;
 }) {
   const box = useRef<HTMLDivElement>(null);
-  const rows = tradeList(trades);
+  const [lossesOnly, setLossesOnly] = useState(false);
+  const all = tradeList(trades);
+  const rows = lossesOnly ? all.filter(isClosedLoss) : all;
+  const withOrigin = all.some((t) => originOf(t) !== null);
+  const hiddenSelection = lossesOnly && selectedTradeKey ? all.find((t) => t.key === selectedTradeKey && !isClosedLoss(t)) : undefined;
   // Bring the selected trade's row into view inside the table's own scroll box (never the page).
   useEffect(() => {
     const el = box.current;
@@ -256,66 +273,118 @@ export function TradeTable({
     const b = el.getBoundingClientRect();
     if (r.top < b.top + head) el.scrollTop -= b.top + head - r.top;
     else if (r.bottom > b.bottom) el.scrollTop += r.bottom - b.bottom;
-  }, [selectedTradeKey, trades]);
+  }, [selectedTradeKey, trades, lossesOnly]);
   return (
-    <div className="table-scroll" ref={box}>
-      <table className="event-table trades-table" data-testid={`trade-table-${role}`}>
-        <thead>
-          <tr>
-            <th scope="col">Trade</th>
-            <th scope="col">Entry (ET)</th>
-            <th scope="col">Entry fill</th>
-            <th scope="col">Exit (ET)</th>
-            <th scope="col">Exit fill</th>
-            <th scope="col">Exit reason</th>
-            <th scope="col">Held</th>
-            <th scope="col">Net P&amp;L</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((t) => {
-            const on = t.key === selectedTradeKey;
-            return (
-              <tr
-                key={t.key}
-                data-trade={t.tradeId}
-                data-trade-key={t.key}
-                data-symbol={t.symbol}
-                tabIndex={0}
-                aria-selected={on}
-                className={on ? 'is-selected' : undefined}
-                onClick={() => onSelect(t)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onSelect(t);
-                  }
-                }}
-              >
-                <td className="mono small">{t.tradeId}</td>
-                <td className="mono nowrap">{t.entry ? formatEt(t.entry.t, t.entry.timePrecision) : 'not recorded'}</td>
-                <td className="mono num">{t.entry ? formatPrice(t.entry.price) : '—'}</td>
-                <td className="mono nowrap">
-                  {t.exit ? formatEt(t.exit.t, t.exit.timePrecision) : t.status === 'open' ? 'open at the end' : '—'}
-                </td>
-                <td className="mono num">{t.exit ? formatPrice(t.exit.price) : '—'}</td>
-                <td className="small">
-                  {t.exit
-                    ? (t.exitReason ?? 'not recorded')
-                    : t.status === 'open'
-                      ? 'still open (marked, not sold)'
-                      : t.problem}
-                </td>
-                <td className="mono num">{t.heldDays === null ? '—' : `${t.heldDays.toFixed(1)} d`}</td>
-                <td className="mono num">
-                  <PnlBadge trade={t} compact />
+    <>
+      <div className="trade-filter" data-testid={`trade-filter-${role}`}>
+        <label className="switch-row small">
+          <input
+            type="checkbox"
+            checked={lossesOnly}
+            onChange={(e) => setLossesOnly(e.target.checked)}
+            data-testid={`losses-only-${role}`}
+            aria-describedby={`losses-only-help-${role}`}
+          />
+          <span>Closed losses only</span>
+        </label>
+        <span className="muted small" data-testid={`trade-count-${role}`} aria-live="polite">
+          {lossesOnly ? `${rows.length} of ${all.length} trades: closed with a net loss` : `${all.length} trades`}
+        </span>
+        <span id={`losses-only-help-${role}`} className="visually-hidden">
+          Shows only closed trades whose recorded net P&amp;L after costs and interest is below zero; open positions and
+          breakevens are excluded. Chart markers are not affected.
+        </span>
+      </div>
+      {hiddenSelection && (
+        <p className="warn small" role="status" data-testid={`hidden-selection-${role}`}>
+          The selected trade {hiddenSelection.tradeId} is hidden by “Closed losses only” (
+          {hiddenSelection.status === 'open'
+            ? 'it is still open'
+            : hiddenSelection.pnl
+              ? hiddenSelection.pnl.netUsd > 0
+                ? 'it closed with a net profit'
+                : 'it closed at exactly breakeven'
+              : 'its net P&L is not recorded'}
+          ); its details stay below.{' '}
+          <button type="button" className="btn-chip" onClick={() => setLossesOnly(false)} data-testid={`show-all-${role}`}>
+            Show all trades
+          </button>
+        </p>
+      )}
+      <div className="table-scroll" ref={box}>
+        <table className="event-table trades-table" data-testid={`trade-table-${role}`}>
+          <thead>
+            <tr>
+              <th scope="col">Trade</th>
+              {withOrigin && <th scope="col">Origin</th>}
+              <th scope="col">Entry (ET)</th>
+              <th scope="col">Entry fill</th>
+              <th scope="col">Exit (ET)</th>
+              <th scope="col">Exit fill</th>
+              <th scope="col">Exit reason</th>
+              <th scope="col">Held</th>
+              <th scope="col">Net P&amp;L</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan={withOrigin ? 9 : 8} className="muted small" data-testid={`trade-empty-${role}`}>
+                  {lossesOnly
+                    ? 'No closed trade of this symbol lost money after costs and interest.'
+                    : 'No executed trades for this symbol.'}
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+            )}
+            {rows.map((t) => {
+              const on = t.key === selectedTradeKey;
+              return (
+                <tr
+                  key={t.key}
+                  data-trade={t.tradeId}
+                  data-trade-key={t.key}
+                  data-symbol={t.symbol}
+                  tabIndex={0}
+                  aria-selected={on}
+                  className={on ? 'is-selected' : undefined}
+                  onClick={() => onSelect(t)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onSelect(t);
+                    }
+                  }}
+                >
+                  <td className="mono small">{t.tradeId}</td>
+                  {withOrigin && (
+                    <td className="small" data-testid="trade-origin">
+                      {originLabel(t) ?? '—'}
+                    </td>
+                  )}
+                  <td className="mono nowrap">{t.entry ? formatEt(t.entry.t, t.entry.timePrecision) : 'not recorded'}</td>
+                  <td className="mono num">{t.entry ? formatPrice(t.entry.price) : '—'}</td>
+                  <td className="mono nowrap">
+                    {t.exit ? formatEt(t.exit.t, t.exit.timePrecision) : t.status === 'open' ? 'open at the end' : '—'}
+                  </td>
+                  <td className="mono num">{t.exit ? formatPrice(t.exit.price) : '—'}</td>
+                  <td className="small">
+                    {t.exit
+                      ? (t.exitReason ?? 'not recorded')
+                      : t.status === 'open'
+                        ? 'still open (marked, not sold)'
+                        : t.problem}
+                  </td>
+                  <td className="mono num">{t.heldDays === null ? '—' : `${t.heldDays.toFixed(1)} d`}</td>
+                  <td className="mono num">
+                    <PnlBadge trade={t} compact />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
 
