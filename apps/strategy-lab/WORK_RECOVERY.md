@@ -2,9 +2,12 @@
 
 ## Top screen (read this first)
 
-- **Updated:** 2026-11-04T12:33Z (UTC, from the clock). **Status: COMPLETE** — implementation, tests, docs, local
-  state and commits are done; the push of `feature/strategy-entry-explorer-ui` follows this commit and is recorded in
-  the next one. **No merge to `main`.**
+- **Updated:** 2026-11-04T12:31Z (UTC, from the clock). **Status: COMPLETE, committed and pushed.** **No merge to `main`.**
+- **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `e95deac..44c63b6`, no force).
+  `git ls-remote` at 2026-11-04T12:31:41Z: `origin/feature/strategy-entry-explorer-ui` = `44c63b6b8b02caea…` (= local),
+  `origin/main` = `aa5754d…` (unchanged). This record follows as a separate commit, pushed the same way.
+- **Correction:** the previous version of this checkpoint (`44c63b6`) said "Updated 12:33Z". That was an estimate, not
+  read from the clock; the commit was made before 12:31:41Z.
 - **Task brief:** `docs/strategy-lab/brief/2026-11-04-strategy-lab-implementation-brief.md` (verbatim, sha256
   `366efeea59d19fe5…22d9a33d1`). The user's message authorised the whole assignment "including … the requested Git
   commit and push".
@@ -14,7 +17,8 @@
   - `957aaf3`: the strategy, `src/entry-signals/`;
   - `8cfc6ee`: the Strategy Lab app, root `.gitignore` and README;
   - `41ba3c3`: the docs;
-  - next: this checkpoint.
+  - `44c63b6`: this checkpoint;
+  - next: the push record.
 - **Running processes:** none of mine; the smoke, check and VPN-test servers were all stopped. The USER's own old dev
   server (`vite --open`, pids 2687429/2687450, 127.0.0.1:5173) was started from the old path
   `apps/strategy-entry-explorer`. It was left running and no longer serves the renamed app (report this).
