@@ -79,3 +79,34 @@
     token and 200 with it; the LAN address is refused;
   - `npm run check`: Vitest 50/50, Playwright 9/9.
 - The user's own server was stopped by the user; no process of mine is running.
+
+## Task 3 — COMPLETE (2026-11-04T13:15Z): drag-to-measure on the price chart
+
+- **Brief (user message):**
+  - click-drag on the chart selects two points snapped to plotted data (it must NOT zoom or pan);
+  - vertical lines, endpoint dots and translucent shading between them;
+  - above the chart: start/end ET times, $ change and % change (green or red);
+  - live while dragging; either direction (computed chronologically); stays after mouseup; a click elsewhere or
+    Escape clears it; it clears on symbol or run change;
+  - zoom stays available via the buttons and the overview; markers, tooltips and controls are preserved;
+  - add tests; commit and push to `feature/strategy-entry-explorer-ui`; no merge to main.
+- **Plan:**
+  - `src/chart/measure.ts` (pure calculation and snapping helpers);
+  - a custom Dygraphs `interactionModel` in `PriceChart.tsx`: drag = measure, shift-drag = pan, dblclick = reset;
+  - an overlay with lines, dots and shading in the marker layer;
+  - a measurement bar inside `PriceChart`;
+  - Vitest for `measure.ts`; Playwright for drag, reverse drag, no zoom, clearing, markers and zoom buttons.
+- **Baseline:** HEAD `28193cc` (= origin); Vitest 50/50; Playwright 9/9.
+- **Result:**
+  - `src/chart/measure.ts`;
+  - `PriceChart.tsx`: a custom `interactionModel` (drag = measure; shift/alt-drag = pan; double-click = reset; touch =
+    the Dygraphs defaults), snapping with `findClosestRow` and `getValue`, an overlay (shading, 2 lines, 2 dots), and
+    the live `measure-bar` read-out; Escape, a plain click and a click outside the chart clear it; remounting on a
+    symbol or run change clears it;
+  - CSS; docs (ARCHITECTURE, RESEARCH_WORKFLOW).
+- **Tests:**
+  - `tests/measure.test.ts` (4);
+  - `e2e/measure.spec.ts` (3): live, snapped to API points, reverse drag identical, window unchanged, clearing,
+    zoom buttons, markers, crosshair, ET intraday, symbol switch;
+  - a negative control (default interaction model → the drag test fails);
+  - `npm run check`: Vitest 54/54, Playwright 12/12.

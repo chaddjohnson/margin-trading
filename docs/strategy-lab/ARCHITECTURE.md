@@ -140,6 +140,17 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
   stored in UTC, and an event's precision (`minute`, `session-close`, `day`, `unknown`) is shown with it.
 - **Changing symbol or run** keeps the zoom when it still fits the new data (otherwise it shows everything) and clears
   the selected event.
+- **Drag to measure** (a custom Dygraphs `interactionModel`; `src/chart/measure.ts`):
+  - **Gesture.** Click-dragging never zooms or pans. It selects two points, each snapped with `findClosestRow` to
+    the closest plotted data point and that point's own price.
+  - **Display.** Two vertical lines, two dots on the line and translucent shading between them. Above the chart:
+    the Eastern start and end times, the dollar change and the percentage change (green up, red down), updated live
+    while dragging.
+  - **Direction.** The result is always computed from the earlier to the later point, whichever way you drag.
+  - **Clearing.** The measurement stays after release; a plain click on the chart, a click elsewhere, Escape, or a
+    symbol or run change clears it.
+  - **Navigation.** Shift-drag pans and double-click resets the zoom; zooming otherwise uses the buttons and the
+    range selector.
 
 ## Optimisation imports (design, display-only)
 

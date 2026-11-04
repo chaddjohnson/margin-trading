@@ -65,9 +65,12 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    shows the latest note's excerpt.
 7. **Symbols:** a multi-symbol run has one tab per symbol. Each tab shows only that symbol's price and events (the
    chart, tooltips, table and analysis). Switching symbols clears the selected event and keeps the zoom when it fits.
-8. **Compare:** pick a run under **Compare with (B)**. Its events for the same symbol appear in orange; run A's are in
+8. **Measure:** drag across the chart to see the price change between two points (Eastern times, $ and %; green up,
+   red down), from the earlier point to the later one, whichever way you drag. Escape or a click clears it. Zoom with
+   the buttons or the overview; dragging never zooms.
+9. **Compare:** pick a run under **Compare with (B)**. Its events for the same symbol appear in orange; run A's are in
    aqua.
-9. **vg-balanced:** open *vg-balanced (s8-vg-balanced) — Study 8 #2 replay* (experiment *Study 8 imports*).
+10. **vg-balanced:** open *vg-balanced (s8-vg-balanced) — Study 8 #2 replay* (experiment *Study 8 imports*).
    - **VGT tab:** 6 entries, 6 exits and 7 rejected signals. **GDX tab:** 42 entries, 41 exits (one lot is still open
      at the end) and 7 rejected signals.
    - Hover or click a marker for its Eastern date and time (EST/EDT), fill price, reason and trade link.

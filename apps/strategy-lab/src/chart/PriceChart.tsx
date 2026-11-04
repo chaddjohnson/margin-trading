@@ -8,13 +8,28 @@
 
 import Dygraph, { type dygraphs } from 'dygraphs';
 import 'dygraphs/dist/dygraph.css';
-import { type Ref, useEffect, useImperativeHandle, useRef } from 'react';
+import { type Ref, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import type { LabEvent } from '../../shared/contract.ts';
 import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
 import { etParts, formatEt, formatPrice } from '../format.ts';
 import { etTicks } from './etTicker.ts';
 import { MARKER_SIZE, PRICE_COLOR, type Role, glyphUri, markerOffset } from './markers.ts';
+import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure } from './measure.ts';
+
+// Dygraphs' pan helpers and default touch handlers, reused by the custom interaction model.
+interface DragContext {
+  initializeMouseDown: (e: MouseEvent, g: Dygraph, c: DragContext) => void;
+  isPanning: boolean;
+  destroy: () => void;
+}
+const D = Dygraph as unknown as {
+  startPan: (e: MouseEvent, g: Dygraph, c: DragContext) => void;
+  movePan: (e: MouseEvent, g: Dygraph, c: DragContext) => void;
+  endPan: (e: MouseEvent, g: Dygraph, c: DragContext) => void;
+  defaultInteractionModel: Record<string, unknown>;
+};
+const DRAG_THRESHOLD_PX = 3;
 
 export interface ChartEvent {
   key: string; // `${role}:${event.id}`
@@ -67,6 +82,15 @@ export function PriceChart(props: Props) {
   const eventsRef = useRef(events);
   const selectedRef = useRef(selectedKey);
   const buttons = useRef(new Map<string, HTMLButtonElement>());
+  // Drag-to-measure: the two snapped endpoints (in drag order) and the overlay elements.
+  const measureRef = useRef<{ a: MeasurePoint; b: MeasurePoint } | null>(null);
+  const shadeRef = useRef<HTMLDivElement>(null);
+  const lineARef = useRef<HTMLDivElement>(null);
+  const lineBRef = useRef<HTMLDivElement>(null);
+  const dotARef = useRef<HTMLDivElement>(null);
+  const dotBRef = useRef<HTMLDivElement>(null);
+  const clearMeasureRef = useRef<() => void>(() => {});
+  const [measurement, setMeasurement] = useState<Measurement | null>(null);
 
   useEffect(() => {
     propsRef.current = props;
@@ -130,6 +154,54 @@ export function PriceChart(props: Props) {
     layer.dataset.markerCount = String(visible);
   };
 
+  // Positions the measurement overlay for the current graph state (after a drag step, a zoom, a pan or a resize).
+  const placeMeasure = () => {
+    const g = graphRef.current;
+    const m = measureRef.current;
+    const els = [shadeRef.current, lineARef.current, lineBRef.current, dotARef.current, dotBRef.current];
+    if (!g || !m || els.some((e) => !e)) {
+      for (const e of els) if (e) e.hidden = true;
+      return;
+    }
+    const [shade, lineA, lineB, dotA, dotB] = els as [
+      HTMLDivElement,
+      HTMLDivElement,
+      HTMLDivElement,
+      HTMLDivElement,
+      HTMLDivElement
+    ];
+    const area = g.getArea();
+    const dir = measure(m.a, m.b).direction;
+    const [xa, ya] = g.toDomCoords(m.a.t, m.a.price);
+    const [xb, yb] = g.toDomCoords(m.b.t, m.b.price);
+    const inside = (x: number) => x >= area.x - 0.5 && x <= area.x + area.w + 0.5;
+    const left = Math.max(area.x, Math.min(xa, xb));
+    const right = Math.min(area.x + area.w, Math.max(xa, xb));
+    Object.assign(shade.style, {
+      left: `${left}px`,
+      top: `${area.y}px`,
+      width: `${Math.max(0, right - left)}px`,
+      height: `${area.h}px`
+    });
+    shade.className = `measure-shade dir-${dir}`;
+    shade.hidden = right <= left;
+    for (const [line, x] of [
+      [lineA, xa],
+      [lineB, xb]
+    ] as const) {
+      Object.assign(line.style, { left: `${Math.round(x)}px`, top: `${area.y}px`, height: `${area.h}px` });
+      line.hidden = !inside(x);
+    }
+    for (const [dot, x, y] of [
+      [dotA, xa, ya],
+      [dotB, xb, yb]
+    ] as const) {
+      Object.assign(dot.style, { left: `${x}px`, top: `${y}px` });
+      dot.className = `measure-dot dir-${dir}`;
+      dot.hidden = !inside(x);
+    }
+  };
+
   const overlapping = (b: HTMLElement): string[] => {
     const r = b.getBoundingClientRect();
     const keys = [b.dataset.key!];
@@ -153,6 +225,79 @@ export function PriceChart(props: Props) {
     let detailKey = '';
     let lastKey = '';
     const overviewSpan = overview.length ? overview.at(-1)![0] - overview[0]![0] : 0;
+
+    // Measurement updates: the overlay immediately, the read-out once per animation frame (live while dragging).
+    let measureFrame = 0;
+    const setMeasure = (m: { a: MeasurePoint; b: MeasurePoint } | null) => {
+      measureRef.current = m;
+      placeMeasure();
+      cancelAnimationFrame(measureFrame);
+      measureFrame = requestAnimationFrame(() => setMeasurement(m ? measure(m.a, m.b) : null));
+    };
+    clearMeasureRef.current = () => setMeasure(null);
+    // Snap to the closest PLOTTED point: its time and its own price (never an interpolated screen position).
+    const snap = (e: MouseEvent, g: Dygraph): MeasurePoint | null => {
+      const [x] = g.eventToDomCoords(e);
+      // findClosestRow is part of the Dygraphs API but missing from @types/dygraphs.
+      const row = (g as Dygraph & { findClosestRow(domX: number): number }).findClosestRow(x);
+      if (row === null || row === undefined || row < 0) return null;
+      const t = g.getValue(row, 0);
+      const price = g.getValue(row, 1);
+      return t === null || price === null ? null : { t, price };
+    };
+    // Click-drag measures (no zoom, no pan); shift/alt-drag pans; double-click resets the zoom; touch keeps the
+    // Dygraphs defaults. Zoom is otherwise available through the zoom buttons and the range selector.
+    const interactionModel = {
+      mousedown: (event: MouseEvent, g: Dygraph, context: DragContext) => {
+        if (event.button === 2) return;
+        context.initializeMouseDown(event, g, context);
+        const listen = (move: (e: MouseEvent) => void, up: (e: MouseEvent) => void) => {
+          const onUp = (e: MouseEvent) => {
+            document.removeEventListener('mousemove', move);
+            document.removeEventListener('mouseup', onUp);
+            up(e);
+            context.destroy();
+          };
+          document.addEventListener('mousemove', move);
+          document.addEventListener('mouseup', onUp);
+        };
+        if (event.shiftKey || event.altKey) {
+          D.startPan(event, g, context);
+          listen(
+            (e) => context.isPanning && D.movePan(e, g, context),
+            (e) => context.isPanning && D.endPan(e, g, context)
+          );
+          return;
+        }
+        const start = snap(event, g);
+        const x0 = event.clientX;
+        let moved = false;
+        listen(
+          (e) => {
+            if (!start || (!moved && Math.abs(e.clientX - x0) < DRAG_THRESHOLD_PX)) return;
+            moved = true;
+            const end = snap(e, g);
+            if (end) setMeasure({ a: start, b: end });
+          },
+          () => {
+            if (!moved) setMeasure(null); // a plain click on the chart clears the measurement
+          }
+        );
+      },
+      willDestroyContextMyself: true,
+      dblclick: (_event: MouseEvent, g: Dygraph) => g.resetZoom(),
+      touchstart: D.defaultInteractionModel.touchstart,
+      touchmove: D.defaultInteractionModel.touchmove,
+      touchend: D.defaultInteractionModel.touchend
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && measureRef.current) setMeasure(null);
+    };
+    const onDocDown = (e: MouseEvent) => {
+      if (measureRef.current && !frame.contains(e.target as Node)) setMeasure(null);
+    };
+    window.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onDocDown);
 
     const maybeFetchDetail = (g: Dygraph, a: number, b: number) => {
       if (!propsRef.current.overviewDecimated) return;
@@ -204,6 +349,7 @@ export function PriceChart(props: Props) {
       highlightCircleSize: 4.5,
       rightGap: 14,
       connectSeparatedPoints: true,
+      interactionModel,
       axes: {
         x: {
           valueFormatter: (ms: number) => formatEt(new Date(ms).toISOString()),
@@ -233,6 +379,7 @@ export function PriceChart(props: Props) {
       },
       drawCallback: (g) => {
         placeMarkers();
+        placeMeasure();
         const [a, b] = g.xAxisRange();
         frame.dataset.viewFrom = new Date(a).toISOString();
         frame.dataset.viewTo = new Date(b).toISOString();
@@ -269,6 +416,9 @@ export function PriceChart(props: Props) {
       clearTimeout(detailTimer);
       detailAbort?.abort();
       ro.disconnect();
+      cancelAnimationFrame(measureFrame);
+      window.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onDocDown);
       g.destroy();
       graphRef.current = null;
       for (const b of markerMap.values()) b.remove();
@@ -313,11 +463,45 @@ export function PriceChart(props: Props) {
     []
   );
 
+  const when = (ms: number) =>
+    props.synthetic ? `${etParts(ms).date} (synthetic)` : formatEt(new Date(ms).toISOString());
+
   const target = (e: { target: EventTarget | null }) =>
     e.target instanceof HTMLElement ? e.target.closest<HTMLButtonElement>('button.marker') : null;
 
   return (
     <div className="chart-frame" ref={frameRef} data-testid="price-chart">
+      <div
+        className={`measure-bar${measurement ? ` dir-${measurement.direction}` : ''}`}
+        data-testid="measure-bar"
+        aria-live="polite"
+        data-start-ms={measurement?.start.t}
+        data-end-ms={measurement?.end.t}
+        data-start-price={measurement?.start.price}
+        data-end-price={measurement?.end.price}
+      >
+        {measurement ? (
+          <>
+            <span className="measure-range" data-testid="measure-range">
+              {when(measurement.start.t)} → {when(measurement.end.t)}
+            </span>
+            <span className="measure-prices">
+              {formatPrice(measurement.start.price)} → {formatPrice(measurement.end.price)}
+            </span>
+            <b className="measure-change" data-testid="measure-change">
+              {formatChange(measurement.change)}
+            </b>
+            <b className="measure-percent" data-testid="measure-percent">
+              {formatPercentChange(measurement.percent)}
+            </b>
+            <button type="button" className="link small" onClick={() => clearMeasureRef.current()}>
+              clear (Esc)
+            </button>
+          </>
+        ) : (
+          <span className="muted small">Drag across the chart to measure a price change (earlier → later point).</span>
+        )}
+      </div>
       <div ref={hostRef} className="chart-host" />
       <div
         ref={layerRef}
@@ -343,6 +527,11 @@ export function PriceChart(props: Props) {
         }}
       >
         <div ref={crossRef} className="crosshair" data-testid="crosshair" hidden />
+        <div ref={shadeRef} className="measure-shade" data-testid="measure-shade" hidden />
+        <div ref={lineARef} className="measure-line" data-testid="measure-line" hidden />
+        <div ref={lineBRef} className="measure-line" data-testid="measure-line" hidden />
+        <div ref={dotARef} className="measure-dot" data-testid="measure-dot" hidden />
+        <div ref={dotBRef} className="measure-dot" data-testid="measure-dot" hidden />
       </div>
       <div ref={readoutRef} className="chart-readout" data-testid="chart-readout" aria-live="off" />
     </div>
