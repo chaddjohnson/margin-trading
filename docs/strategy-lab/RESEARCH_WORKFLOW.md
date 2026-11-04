@@ -75,7 +75,8 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    times, $ and %; green up, red down), from the earlier point to the later one, whichever way you drag. It is shown
    only while the button is held: releasing it (anywhere) or pressing Escape clears it. Zoom with
    the trackpad or mouse wheel around the cursor (a two-finger swipe up zooms in, down zooms out), the buttons or the
-   overview; dragging never zooms.
+   overview; dragging never zooms. Hold ⌘ (macOS) or Ctrl (Windows, Linux), or Shift, while dragging to pan instead:
+   dragging left shows later times, and the zoom level stays the same.
 9. **Compare:** pick a run under **Compare with (B)**. Its events for the same symbol appear in orange; run A's are in
    aqua.
 10. **vg-balanced:** open *vg-balanced (s8-vg-balanced) — Study 8 #2 replay* (experiment *Study 8 imports*).

@@ -161,8 +161,24 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
     - A cancelled drag clears it the same way: Escape, the window losing focus, a context menu, a move reporting the
       button no longer held (a missed release), or the chart unmounting (a symbol or run change).
     - A plain click shows nothing.
-  - **Navigation.** Shift-drag pans and double-click resets the zoom; zooming otherwise uses the buttons, the range
-    selector and the mouse wheel.
+  - **Navigation.** Double-click resets the zoom; zooming otherwise uses the buttons, the range selector and the
+    mouse wheel.
+- **Drag to pan** (`src/chart/pan.ts`, the same interaction model):
+  - **Modifier.** ⌘ Command + drag on macOS, Ctrl + drag on Windows and Linux. Shift + drag and Alt + drag pan on
+    every platform, as before. On macOS, Ctrl-click is a right-click, so Ctrl is not the pan key there.
+  - **Mode lock.** The modifier is read at the mouse-down and the mode is locked until the release: releasing the key
+    mid-drag keeps panning, and pressing it during a measurement keeps measuring.
+  - **Direction.** The content follows the pointer: dragging left shows later times, dragging right shows earlier
+    ones.
+  - **Smoothness and zoom.** The pan is continuous (applied once per animation frame with `updateOptions({ dateWindow
+    })`, so the chart is never re-initialised) and never changes the zoom level. The range selector (overview) stays
+    in step.
+  - **Bounds.** The window is clamped to the data's extent, the same bounds the wheel zoom uses. (Before 2026-11-04,
+    Shift-drag used Dygraphs' unbounded pan.)
+  - **No measurement.** No measurement lines, dots, shading or read-out are drawn while panning.
+  - **Ending.** The release ends a pan wherever it happens. Escape, focus loss, a context menu, a missed release, or
+    an unmount end it in place. No text is selected while panning (`html.chart-panning`: `user-select: none`, a
+    grabbing cursor).
 - **Mouse-wheel zoom** (`src/chart/wheelZoom.ts`, a `wheel` handler in the same interaction model):
   - **Direction and centre.** A two-finger swipe **up** zooms **in**, a swipe down zooms out, around the time under
     the cursor (it keeps its screen position).

@@ -11,6 +11,7 @@ import {
 } from '../../shared/contract.ts';
 import { api, type EventsResponse, type PricesResponse } from '../api.ts';
 import type { Role } from '../chart/markers.ts';
+import { isMacPlatform, PAN_MODIFIER_LABEL, panModifierFor } from '../chart/pan.ts';
 import { type ChartEvent, type ChartHandle, PriceChart } from '../chart/PriceChart.tsx';
 import { formatEt, formatEtDate, relativeTime } from '../format.ts';
 import { useFetched, useScoped } from '../hooks.ts';
@@ -33,6 +34,7 @@ interface Props {
 }
 
 const DAY = 86_400_000;
+const PAN_KEY = PAN_MODIFIER_LABEL[panModifierFor(isMacPlatform(navigator))];
 const active = (s: RunDetail['status']) => s === 'queued' || s === 'running';
 
 function useRun(id: string | null, refreshKey: number, onFinished: () => void) {
@@ -453,7 +455,8 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             {prices?.decimated ? ' · overview decimated (min/max per bucket); zoom in for minute detail' : ''}
           </span>
           <span className="muted small chart-hint">
-            Drag to measure · swipe up / scroll to zoom in, down to zoom out · shift-drag to pan · double-click resets
+            Drag to measure · swipe up / scroll to zoom in, down to zoom out · {PAN_KEY}-drag (or Shift-drag) to pan ·
+            double-click resets
           </span>
         </div>
       </section>

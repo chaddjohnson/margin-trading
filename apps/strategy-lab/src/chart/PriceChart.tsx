@@ -16,6 +16,7 @@ import { etParts, formatEt, formatPrice } from '../format.ts';
 import { etTicks } from './etTicker.ts';
 import { MARKER_SIZE, PRICE_COLOR, type Role, glyphUri, markerOffset } from './markers.ts';
 import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure } from './measure.ts';
+import { isMacPlatform, panModifierFor, panWindow, startsPan } from './pan.ts';
 import { wheelZoomOutPx, wheelZoomWindow } from './wheelZoom.ts';
 
 // Dygraphs' pan helpers and default touch handlers, reused by the custom interaction model.
@@ -25,11 +26,10 @@ interface DragContext {
   destroy: () => void;
 }
 const D = Dygraph as unknown as {
-  startPan: (e: MouseEvent, g: Dygraph, c: DragContext) => void;
-  movePan: (e: MouseEvent, g: Dygraph, c: DragContext) => void;
-  endPan: (e: MouseEvent, g: Dygraph, c: DragContext) => void;
   defaultInteractionModel: Record<string, unknown>;
 };
+// The pan modifier of this platform: ⌘ on macOS, Ctrl elsewhere (Shift and Alt pan everywhere too).
+const PAN_MODIFIER = panModifierFor(typeof navigator === 'undefined' ? false : isMacPlatform(navigator));
 const DRAG_THRESHOLD_PX = 3;
 // Wheel zoom stops at a window this narrow: 30 minutes of minute data, 20 sessions of the synthetic daily demo.
 const MIN_SPAN_MINUTE_DATA = 30 * 60_000;
@@ -254,8 +254,9 @@ export function PriceChart(props: Props) {
     // Primary-button drag measures (no zoom, no pan) and the measurement exists ONLY while the button is held: the
     // release — on the chart or anywhere else — clears it, and so does every cancellation (Escape, the window losing
     // focus, a context menu, a move that reports the button no longer held because the release was missed, or the
-    // chart unmounting). Shift/alt-drag pans; double-click resets the zoom; touch keeps the Dygraphs defaults. Zoom is
-    // otherwise available through the wheel, the zoom buttons and the range selector.
+    // chart unmounting). ⌘-drag (macOS) or Ctrl-drag (elsewhere), and Shift/Alt-drag, pan the time axis instead; the mode
+    // is read at the mouse-down and locked until the release. Double-click resets the zoom; touch keeps the Dygraphs
+    // defaults. Zoom is otherwise available through the wheel, the zoom buttons and the range selector.
     const interactionModel = {
       mousedown: (event: MouseEvent, g: Dygraph, context: DragContext) => {
         if (event.button !== 0) return;
@@ -287,11 +288,37 @@ export function PriceChart(props: Props) {
           window.addEventListener('blur', finish);
           endGesture = finish;
         };
-        if (event.shiftKey || event.altKey) {
-          D.startPan(event, g, context);
+        if (startsPan(event, PAN_MODIFIER)) {
+          // Pan: the window at the mouse-down moved by the pointer's horizontal travel (the content follows the
+          // pointer), span unchanged, clamped to the data's extent; applied at most once per animation frame with
+          // updateOptions, which redraws without re-initialising and keeps the range selector in step. No
+          // measurement is drawn. Text selection is off for the whole drag (initializeMouseDown already prevented
+          // the mouse-down's default; the class covers the pointer leaving the chart).
+          const startWindow = g.xAxisRange() as [number, number];
+          const x0 = event.clientX;
+          const width = g.getArea().w;
+          let x = x0;
+          let panFrame = 0;
+          const apply = () => {
+            panFrame = 0;
+            const next = panWindow(startWindow, x - x0, width, g.xAxisExtremes());
+            const [a, b] = g.xAxisRange();
+            if (next[0] !== a || next[1] !== b) g.updateOptions({ dateWindow: next });
+          };
+          document.documentElement.classList.add('chart-panning');
+          frame.dataset.panning = 'true';
           listen(
-            (e) => context.isPanning && D.movePan(e, g, context),
-            (e) => context.isPanning && D.endPan(e, g, context)
+            (e) => {
+              x = e.clientX;
+              if (!panFrame) panFrame = requestAnimationFrame(apply);
+            },
+            (e) => {
+              cancelAnimationFrame(panFrame);
+              x = e.clientX; // the last pointer position seen (release, last move, or the press itself)
+              apply();
+              document.documentElement.classList.remove('chart-panning');
+              delete frame.dataset.panning;
+            }
           );
           return;
         }
@@ -548,7 +575,7 @@ export function PriceChart(props: Props) {
         ) : (
           <span className="muted small">
             Hold the mouse button and drag across the chart to measure a price change (earlier → later point); it clears
-            when you release.
+            when you release. {PAN_MODIFIER === 'meta' ? '⌘' : 'Ctrl'}-drag pans.
           </span>
         )}
       </div>

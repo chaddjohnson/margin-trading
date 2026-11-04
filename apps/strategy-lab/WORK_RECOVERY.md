@@ -230,3 +230,29 @@
   - `e2e/wheel.spec.ts` now wheels while the button is held.
   - Negative control: keeping the measurement after release fails all 3 measure tests.
 - **Docs:** ARCHITECTURE (Lifetime), RESEARCH_WORKFLOW §4.8.
+
+## Task 7 — COMPLETE (2026-11-04): ⌘/Ctrl + drag pans the chart
+
+- **Brief (user message):**
+  - ⌘-drag (macOS) or Ctrl-drag (Windows/Linux) pans horizontally: left shows later times, right earlier;
+  - smooth, same zoom, bounded by the data, overview in sync, no measurement overlay;
+  - the modifier is locked at the mouse-down;
+  - release outside the chart, cancel and focus loss are handled; no text selection;
+  - the plain drag-to-measure and the other interactions are preserved;
+  - tests; commit + push, no merge.
+- **Baseline:** HEAD `2911379` (= origin), clean tree.
+- **Change:**
+  - `src/chart/pan.ts` (pure): `isMacPlatform`, `panModifierFor`, `startsPan`, and `panWindow`, which is
+    span-preserving and clamped to `g.xAxisExtremes()`.
+  - `PriceChart.tsx`: every pan (⌘/Ctrl and the existing Shift/Alt) now uses `panWindow`, applied once per animation
+    frame with `updateOptions({ dateWindow })`. Dygraphs' unbounded `startPan`/`movePan` are no longer used. Pans end
+    through the shared `finish()` (release, Escape, blur, contextmenu, missed release, unmount).
+  - `html.chart-panning` turns text selection off and shows a grabbing cursor.
+  - The hint text is platform-specific.
+- **Tests:**
+  - `tests/pan.test.ts` (7): modifier detection, direction, zoom preserved, clamping, continuity, degenerate input.
+  - `e2e/pan.spec.ts` (5): direction and live updates, the overview handles following the window, the mode lock both
+    ways, clamping at both ends, release outside the chart, blur, Escape, no text selected, the other interactions
+    after a pan, and ⌘ on emulated macOS.
+  - Negative control: without Ctrl as the modifier, the 4 Ctrl tests fail.
+- **Docs:** ARCHITECTURE ("Drag to pan"), RESEARCH_WORKFLOW §4.8.
