@@ -2,9 +2,18 @@
 
 ## Top screen (read this first) — Task 14: Growth optional rules (initial risk stop, trend-breakout entry, trend retention) — INCOMPLETE
 
-- **Updated:** 2026-11-05T22:53Z (UTC, from the clock). **Status: INCOMPLETE — 14.1 baselines, 14.2 engine, 14.3
-  registry/runner complete (wip commits `cbc72ed`, `edac193`, `f1e1516`); next 14.4 server (service titles/assumptions,
-  compare, export, preview capability note), then 14.5 UI.**
+- **Updated:** 2026-11-05T23:27Z (UTC, from the clock). **Status: INCOMPLETE — 14.1–14.5 complete, 14.6 engine tests
+  complete (wip commits `cbc72ed` … `1cae0d9` + this); next 14.6 app tests (runner/export/preview of the new options,
+  trades model) and e2e, 14.7 docs, 14.8 verification in the MAIN checkout after the merge, 14.9 push.**
+- **14.4/14.5 (23:11Z):** server texts/compare/export (`exit-fills.csv`, `optional-rules.md`)/preview upgrade note; UI
+  (half-filled ▼ partial-exit glyph + legend, `trades.ts` partials, Trades `+n partial`, trade detail partial fills and
+  initial stop, Analysis "Optional rules", failed-preview banner `preview-failed-banner` + panel line
+  `preview-error-shown`); tests moved to the 1.3.0 contract. App Vitest 215/215 (+2 skipped) `logs/task14/vitest-4.log`.
+  Root `node_modules` in the worktree is now a REAL copy (the traced-runner tests need it inside the repo root).
+- **14.6 engine tests (23:26Z):** new `src/growth-trading/tests/optionalRules.test.ts` 29/29 (`logs/task14/optional-rules-tests-3.log`);
+  they found a bookkeeping bug (a gap listed its own rule twice in `sameTrade`) — fixed in `optionalRules.ts` (a stop's
+  minute scan is skipped when it gapped; other rules listed once). Growth engine suites 183/183 (`engine-tests-2.log`),
+  real-data smoke unchanged (`smoke-rules-2.log`).
 - **Brief:** `docs/strategy-lab/brief/2026-11-05-growth-optional-rules-brief.md` (verbatim copy of the upload
   `bb5b150c-claude-growth-optional-rules.md`, 93 lines, read in full through "Required validation" and the delivery
   paragraph; sha256 `92d3d8329e3a327e0e8a95401341c9c3d88978f2d682c175cd037b464253abc4`). The user's message: "Proceed with

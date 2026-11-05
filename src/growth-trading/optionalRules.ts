@@ -718,12 +718,19 @@ export class PositionRules {
         }
       });
 
+    // A stop gapped through at the open takes the opening trade; its minute scan is then moot (as in the ExitManager,
+    // which returns at the gap).
+    let trailingGap = false;
+    let initialGap = false;
+
     if (mode === 'session') {
       const open = ds.sOpen[s]!;
 
       // At the open: a resting stop gapped through takes the opening trade.
-      if (st.active && open <= st.stopPrice) add('trailing_stop', 'trailing stop gap', 0, 'opening trade', open, 0, st.stopPrice);
-      if (hasStop && open <= P0) add('initial_stop', 'initial stop gap', 0, 'opening trade', open, 0, P0);
+      trailingGap = st.active && open <= st.stopPrice;
+      initialGap = hasStop && open <= P0;
+      if (trailingGap) add('trailing_stop', 'trailing stop gap', 0, 'opening trade', open, 0, st.stopPrice);
+      if (initialGap) add('initial_stop', 'initial stop gap', 0, 'opening trade', open, 0, P0);
 
       // A buffered sale left pending by an earlier session fills at this session's opening trade (lost without a
       // trade this session, exactly as the ExitManager).
@@ -749,7 +756,7 @@ export class PositionRules {
 
       // During the session: the first minute that reaches the active trailing stop (not when the hold is due: the
       // stop cannot be active then without a gap, as in the ExitManager).
-      if (st.active && !st.maximumHoldDue)
+      if (st.active && !st.maximumHoldDue && !trailingGap)
         for (let k = 0; k < count; k++) {
           if (ds.bOpen[start + k]! <= st.stopPrice) {
             add('trailing_stop', 'trailing stop', k, 'minute open through stop', ds.bOpen[start + k]!, 0, st.stopPrice);
@@ -766,7 +773,7 @@ export class PositionRules {
 
     // The initial risk stop: active from the fill, at a fixed level. On the entry session and after a partial sale
     // the minute `from` opened at (or before) the trade that started this evaluation: only its later prices count.
-    if (hasStop)
+    if (hasStop && !initialGap)
       for (let k = from; k < count; k++) {
         if (!(mode !== 'session' && k === from) && ds.bOpen[start + k]! <= P0) {
           add('initial_stop', 'initial stop', k, 'minute open through stop', ds.bOpen[start + k]!, 0, P0);
@@ -815,7 +822,10 @@ export class PositionRules {
       return undefined;
     }
 
-    const sameTrade = cands.filter((c) => c !== w && c.k === w.k && c.phase === 0 && w.phase === 0).map((c) => c.rule);
+    // the OTHER rules due at the very same trade (each once), resolved by the precedence above
+    const sameTrade = [
+      ...new Set(cands.filter((c) => c.rule !== w.rule && c.k === w.k && c.phase === 0 && w.phase === 0).map((c) => c.rule))
+    ];
     const partial = w.rule === 'trailing_stop' && partialPending;
     const values: Record<string, LogValue> = {
       rule: w.rule,
