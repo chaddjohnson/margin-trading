@@ -1,34 +1,41 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
-## Top screen (read this first) — Task 14: Growth optional rules (initial risk stop, trend-breakout entry, trend retention) — INCOMPLETE
+## Top screen (read this first) — Task 14: Growth optional rules (initial risk stop, trend-breakout entry, trend retention) — COMPLETE
 
-- **Updated:** 2026-11-05T23:45Z (UTC, from the clock). **Status: INCOMPLETE — implementation, tests and docs complete in
-  the worktree (wip head `9498513`); next 14.8: fast-forward `feature/strategy-entry-explorer-ui` in the MAIN checkout
-  to the wip branch, remove the worktree and the wip branch, then verify there (root tsc/ESLint, Growth engine suites,
-  root `npm test`, app `npm run check` — builds `dist`), audit the live state against the backup, then 14.9 push.**
-- **Backup before the merge (23:43:37Z):** `~/backups/strategy-lab/20261105T234337Z-pre-optional-rules/` (node:sqlite
-  online backup, integrity ok: 22 runs, 33 variations, 5 strategies, 3 migrations, 6 bookmarked runs; runs/ + imports/
-  rsync; `state-files.sha256` 129 files; `runs-fingerprint.json`). No migration in this task.
-- **Live server after the merge (expected, the user's):** pid 3645197 keeps its in-memory 1.2.0 registry: New Test
-  offers 1.2.0, executed by the new runner (identical to 1.2.0 by the parity tests); the rebuilt `dist` reads the
-  strategies from `/api/meta`, so it shows the 1.2.0 form. **Follow-up gate (the user's):** restart it the same way
-  (`npm --prefix apps/strategy-lab run start:vpn`) to offer Growth 1.3.0; no migration.
-- **14.6/14.7 (23:43Z):** app `tests/optional-rules.test.ts` 11/11 (found and fixed: the preview verifier counted
-  partial fills as trades; the runner's gate records of breakout decisions); `e2e/optional-rules.spec.ts` 3/3; full e2e
-  in the worktree 54 passed / 8 skipped (Study 8 imports need git-ignored outputs) after fixing the phone-width overflow
-  of the New Test dialog (fieldsets `min-inline-size: 0`, selects `min(320px, 100%)`) and the relabelled trend-group
-  text in `e2e/entry-gates.spec.ts`. Docs: new `docs/strategy-lab/GROWTH_OPTIONAL_RULES.md`; README, GROWTH_TRADING,
-  CONTRACTS, EXPORTS, INTERACTIVE_PREVIEW, OPERATIONS, RESEARCH_WORKFLOW, PHENOTYPES, root README. Root ESLint 306
-  (= baseline), root tsc clean, Growth engine 183/183 after prettier formatting (`engine-tests-3.log`).
-- **14.4/14.5 (23:11Z):** server texts/compare/export (`exit-fills.csv`, `optional-rules.md`)/preview upgrade note; UI
-  (half-filled ▼ partial-exit glyph + legend, `trades.ts` partials, Trades `+n partial`, trade detail partial fills and
-  initial stop, Analysis "Optional rules", failed-preview banner `preview-failed-banner` + panel line
-  `preview-error-shown`); tests moved to the 1.3.0 contract. App Vitest 215/215 (+2 skipped) `logs/task14/vitest-4.log`.
-  Root `node_modules` in the worktree is now a REAL copy (the traced-runner tests need it inside the repo root).
-- **14.6 engine tests (23:26Z):** new `src/growth-trading/tests/optionalRules.test.ts` 29/29 (`logs/task14/optional-rules-tests-3.log`);
-  they found a bookkeeping bug (a gap listed its own rule twice in `sameTrade`) — fixed in `optionalRules.ts` (a stop's
-  minute scan is skipped when it gapped; other rules listed once). Growth engine suites 183/183 (`engine-tests-2.log`),
-  real-data smoke unchanged (`smoke-rules-2.log`).
+- **Updated:** 2026-11-05T23:56Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, merged into
+  `feature/strategy-entry-explorer-ui` (fast-forward to `c4d3a04` at 23:44:01Z); this checkpoint commit and the push
+  follow (push record appended after it). No merge to `main`.**
+- **Verification (final, in the MAIN checkout, logs `apps/strategy-lab/logs/task14/`, git-ignored):** app `npm run check`
+  23:44:15Z→23:49:14Z (`check-1.log`): typecheck + lint clean, Vitest 228/228 (26 files), build (`dist` = this build),
+  Playwright 62/62. Root `tsc` clean; root ESLint 306 problems (= baseline; the one error is the pre-existing
+  `src/trailing-buy-variants/selection.ts`); Growth engine suites 183/183 (`growth-tests-main.log`); root `npm test`
+  23:51:39Z→23:55:09Z (`root-test.log`): 1143 tests / 1132 pass / 7 fail — the SAME 7 failing tests as Task 11's
+  `root-test-final.log` (compared by name; pre-existing, unrelated) / 4 skipped.
+- **Real data:** `data/VGT|GDX|XBI/data.csv` sha256 `2ee06310…` / `77dba9b2…` / `4a51bcbe…` = the pre-task values.
+- **Live state (23:55Z):** 129 runs/imports files identical to the backup, DB fingerprint (runs, variations, strategies,
+  notes, migrations) identical. Backup `~/backups/strategy-lab/20261105T234337Z-pre-optional-rules/`. No migration.
+- **Live server (the USER's) pid 3645197 (`start:vpn`, since 19:29:52Z) still running with its in-memory 1.2.0
+  registry; it now serves the rebuilt `dist` and spawns the new runner (1.2.0 requests execute identically).
+  Follow-up gate (the user's):** restart it the same way (`npm --prefix apps/strategy-lab run start:vpn`) to offer
+  Growth 1.3.0 in New Test; no migration; old preview-cache entries are recomputed on demand.
+- **My processes:** none (scratch UI servers on :5331 stopped; e2e servers exit with Playwright). The stray :4391 server
+  pid 2772895 (an earlier session) untouched. The worktree `<scratchpad>/wt` and branch `wip/growth-optional-rules`
+  are removed.
+- **Deliverables (sha256, first 16):** brief `92d3d8329e3a327e`; `optionalRules.ts` `2c0438f45fd5ee8b`;
+  `riseTrading.ts` `1ee3c286bfa1b96c`; `entryGates.ts` `02f71550e40d6ebd`; `continuation.ts` `07018cfb76f0d00b`;
+  `shared/strategies.ts` `14a5406a54ff1834`; `runner/growth-params.ts` `ccf97f80371d9ae7`; `runner/trading-run.ts`
+  `89e784a981dcc876`; `server/previews.ts` `e0592ae95786dae1`; `server/export.ts` `4837a600ce7cf912`;
+  `GROWTH_OPTIONAL_RULES.md` `95ed8272d563134b`; tests `optionalRules.test.ts` `a1da0c7a8cf8f829`,
+  `offParity-1.2.0.test.ts` `93de885e49c8f4a0`, app `optional-rules.test.ts` `b73613e7ee5047f7`, e2e
+  `optional-rules.spec.ts` `3076734c85ea67d9`; fixtures `baseline-1.2.0.json` `56587059a1f9f195`, runner
+  `SHA256SUMS` `dec69b62a5671e53`. 92 files changed vs `8d2800e` (+5555/−249).
+- **Disclosures:** (1) INCIDENT 23:00:00Z–23:02:28Z, the real `data/VGT/data.csv` was modified by a test through a
+  worktree symlink and restored byte-identical (details below); (2) Candidate A is INFERRED from the user's preview
+  cache, not a saved run; (3) the rebuilt `dist` is served by the still-running old server (1.2.0 form) until it is
+  restarted; (4) 1.2.0 runs are previewed only through the explicit "Preview as Growth 1.3.0" button after the restart;
+  (5) no option was optimised and no research campaign was run (exploratory smoke figures only, in logs).
+- **Next step:** none in this task. (Follow-up gate above; any study of the options = a separate protocol.)
+
 - **Brief:** `docs/strategy-lab/brief/2026-11-05-growth-optional-rules-brief.md` (verbatim copy of the upload
   `bb5b150c-claude-growth-optional-rules.md`, 93 lines, read in full through "Required validation" and the delivery
   paragraph; sha256 `92d3d8329e3a327e0e8a95401341c9c3d88978f2d682c175cd037b464253abc4`). The user's message: "Proceed with
