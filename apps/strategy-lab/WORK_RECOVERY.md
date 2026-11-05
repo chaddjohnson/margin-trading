@@ -2,9 +2,24 @@
 
 ## Top screen (read this first) — Task 14: Growth optional rules (initial risk stop, trend-breakout entry, trend retention) — INCOMPLETE
 
-- **Updated:** 2026-11-05T23:27Z (UTC, from the clock). **Status: INCOMPLETE — 14.1–14.5 complete, 14.6 engine tests
-  complete (wip commits `cbc72ed` … `1cae0d9` + this); next 14.6 app tests (runner/export/preview of the new options,
-  trades model) and e2e, 14.7 docs, 14.8 verification in the MAIN checkout after the merge, 14.9 push.**
+- **Updated:** 2026-11-05T23:45Z (UTC, from the clock). **Status: INCOMPLETE — implementation, tests and docs complete in
+  the worktree (wip head `9498513`); next 14.8: fast-forward `feature/strategy-entry-explorer-ui` in the MAIN checkout
+  to the wip branch, remove the worktree and the wip branch, then verify there (root tsc/ESLint, Growth engine suites,
+  root `npm test`, app `npm run check` — builds `dist`), audit the live state against the backup, then 14.9 push.**
+- **Backup before the merge (23:43:37Z):** `~/backups/strategy-lab/20261105T234337Z-pre-optional-rules/` (node:sqlite
+  online backup, integrity ok: 22 runs, 33 variations, 5 strategies, 3 migrations, 6 bookmarked runs; runs/ + imports/
+  rsync; `state-files.sha256` 129 files; `runs-fingerprint.json`). No migration in this task.
+- **Live server after the merge (expected, the user's):** pid 3645197 keeps its in-memory 1.2.0 registry: New Test
+  offers 1.2.0, executed by the new runner (identical to 1.2.0 by the parity tests); the rebuilt `dist` reads the
+  strategies from `/api/meta`, so it shows the 1.2.0 form. **Follow-up gate (the user's):** restart it the same way
+  (`npm --prefix apps/strategy-lab run start:vpn`) to offer Growth 1.3.0; no migration.
+- **14.6/14.7 (23:43Z):** app `tests/optional-rules.test.ts` 11/11 (found and fixed: the preview verifier counted
+  partial fills as trades; the runner's gate records of breakout decisions); `e2e/optional-rules.spec.ts` 3/3; full e2e
+  in the worktree 54 passed / 8 skipped (Study 8 imports need git-ignored outputs) after fixing the phone-width overflow
+  of the New Test dialog (fieldsets `min-inline-size: 0`, selects `min(320px, 100%)`) and the relabelled trend-group
+  text in `e2e/entry-gates.spec.ts`. Docs: new `docs/strategy-lab/GROWTH_OPTIONAL_RULES.md`; README, GROWTH_TRADING,
+  CONTRACTS, EXPORTS, INTERACTIVE_PREVIEW, OPERATIONS, RESEARCH_WORKFLOW, PHENOTYPES, root README. Root ESLint 306
+  (= baseline), root tsc clean, Growth engine 183/183 after prettier formatting (`engine-tests-3.log`).
 - **14.4/14.5 (23:11Z):** server texts/compare/export (`exit-fills.csv`, `optional-rules.md`)/preview upgrade note; UI
   (half-filled ▼ partial-exit glyph + legend, `trades.ts` partials, Trades `+n partial`, trade detail partial fills and
   initial stop, Analysis "Optional rules", failed-preview banner `preview-failed-banner` + panel line
