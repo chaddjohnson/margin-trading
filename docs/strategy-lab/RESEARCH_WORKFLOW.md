@@ -118,6 +118,10 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    Analysis panel's *Entry gates* section counts vetoed and deferred signals, trend blocks, opportunity ends and ages,
    and the trades by entry source; each signal's detail lists the observed trend values (`trend.*`) and policy values
    (`policy.*`).
+15. **Delete a result:** a run's header → **⋯ → Delete result…** → check the id, strategy, symbols and date →
+   **Delete result**. It removes that run (results, files, its notes and bookmark) permanently and keeps its
+   variation and everything else ([OPERATIONS.md](OPERATIONS.md) §Deleting a saved result). Bookmark instead of
+   deleting when in doubt.
 
 ## 5. Claude-led optimisation without a UI button
 

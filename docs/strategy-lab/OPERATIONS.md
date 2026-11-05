@@ -124,6 +124,37 @@ Restore that run directory from a backup.
 Runs interrupted by a crash or a stop are marked `failed` with the reason on the next start. Start them again from
 the UI; this creates a new run.
 
+## Deleting a saved result
+
+A run (`R-xxxxxx`) can be deleted from its header: **⋯ → Delete result…** opens a confirmation with the run id,
+strategy, symbols, run date and a permanence warning. **Cancel** has the focus and is the default (Enter, Escape and ✕
+cancel); only **Delete result** (destructive, never the default) deletes. The API is `DELETE /api/runs/R-xxxxxx` with
+the body `{"confirm": "R-xxxxxx"}` (the id repeated; any other body is refused). There is no bulk or wildcard
+deletion, and no ids are renumbered.
+
+- **Deleted:** the run row (its results, metrics, request, provenance, title and bookmark), its symbol rows, the notes
+  attached to that run, and its artifact directory `runs/R-xxxxxx` (events, metrics, trades, daily marks, decision
+  log, minute marks, logs, request).
+- **Kept:** the variation (a shared, immutable configuration — also when no run is left — with its own notes and
+  bookmark), the strategy and experiment, phenotypes and their imports, optimisation history, the Study 8 sources under
+  `imports/`, market data, every other run. A minimal tombstone (`run_deletions`: id, strategy, variation, symbols,
+  window, status, dates, counts — no results, title or note text) keeps the deletion auditable and the id unused.
+- **Refused:** an unknown or already deleted id (404); a queued or running run (409: cancel it and let it stop); a
+  run referenced by an imported optimisation trial (409: that history is kept); a run recording an artifact directory
+  other than `runs/R-xxxxxx` (409: nothing outside it is ever removed); a second deletion of the same run while one is
+  in progress (409).
+- **Consistency** (`server/delete-run.ts`): the artifact directory is moved to `state/strategy-lab/trash/` (one
+  atomic rename), then ONE transaction removes the rows. If the transaction fails, the directory is moved back and the
+  error says that nothing changed. If even the move back fails, the error says where the directory is, and the next
+  server start restores it (the run still exists). After the commit the trash copy is removed. If that fails, the run
+  is deleted and the success message says that its files are still in the trash; the next start purges them. The UI
+  reports success only from the server's completed response.
+- **After a deletion** the lists refresh; if the deleted run was open, the most recent remaining run opens; a
+  comparison with it is dropped. Deleted demo runs are not reseeded at the next start.
+- **Limitations:** a deletion cannot be undone except by restoring a backup (§Backups); notes on other runs or
+  variations that mention the id in their text keep that text; research bundles already downloaded are not
+  affected; deleting a Study 8 import run allows importing the same output again (a new id).
+
 ## Upgrading: migrations and the server restart
 
 A new migration is applied when the server starts (`openDb` → `migrate`, one transaction per migration; an edited
@@ -137,7 +168,9 @@ applied migration refuses to start). Procedure, as used for migration 0002 on 20
 4. Stop the server, start it again the way it ran before (for example `start:vpn`), then audit the live directory the
    same way.
 
-Growth 1.2.0 (2026-11-05: entry trend filter, persistent eligibility, strategy select) added **no migration**. Strategy
+Migration **0003** (2026-11-05, run deletion: a tombstone table and a guarded delete trigger) changes no existing
+row; it applies at the next start. Growth 1.2.0 (2026-11-05: entry trend filter, persistent eligibility, strategy
+select) added **no migration**. Strategy
 rows are created per version on first use, and no stored run, variation or artifact changes. A running server serves
 the new build after a restart; `audit:state` before and after shows unchanged rows and files.
 

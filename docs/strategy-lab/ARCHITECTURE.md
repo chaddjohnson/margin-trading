@@ -44,7 +44,9 @@ importers/phenotypes.ts (CLI) ──▶ the phenotype catalogue (reads a verifie
 - **IDs are derived from the integer primary key and never change.** Titles are separate and editable.
 - **Annotations are mutable; execution facts are not.** Editable: titles, notes, bookmarks. Immutable, enforced by
   SQLite triggers: a variation's parameters, and a run's inputs. A finished run's results can never be updated, and
-  runs and variations can never be deleted.
+  variations can never be deleted. A run can be **deleted as a whole**, explicitly, through `DELETE /api/runs/:id`
+  (the UI's *Delete result…*): since migration 0003 the database admits a run row's deletion only inside that
+  procedure's transaction, and its id is never reused (OPERATIONS.md §Deleting a saved result).
 - **Changing a parameter creates a new variation.** Cloning a run into a new test records `parentVariation`
   (provenance only).
 
@@ -113,6 +115,10 @@ importers/phenotypes.ts (CLI) ──▶ the phenotype catalogue (reads a verifie
     `runs_inputs_immutable` trigger is recreated with it).
   - Verified on a copy of the live database before it was applied (counts, ids, immutable-column hashes, titles,
     notes, bookmarks, foreign keys, integrity, events; `scripts/audit-state.ts`) and by `tests/migration.test.ts`.
+- **Migration 0003** (`0003_run_deletion.sql`, 2026-11-05): the `run_deletions` tombstone table (never deleted;
+  read by the run id allocator so a deleted id is never reused) and `runs_no_delete` recreated so that a run row can
+  be deleted only while its tombstone is in state `deleting` (the deletion transaction of `server/delete-run.ts`).
+  No existing row or artifact changes.
 - **Artifacts** live in `state/strategy-lab/runs/R-xxxxxx/`. They are immutable files referenced by the run row:
   - `request.json` (manual runs);
   - `events.json` (contract v2, sorted, verified against `runs.artifact_sha256` on every read);

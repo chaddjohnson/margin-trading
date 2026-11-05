@@ -174,6 +174,11 @@ A Growth request has the same shape, with `"strategyKey": "rise-from-recent-low-
 A phenotype rerun (`POST /api/phenotypes/PH-0001/runs`, [PHENOTYPES.md](PHENOTYPES.md)) builds the same request from the
 frozen record plus `phenotypeId`, which the run records (`runs.phenotype_id`, an immutable input).
 
+**Deleting a run** (`DELETE /api/runs/R-xxxxxx`, body `{"confirm": "R-xxxxxx"}`) returns `{ deleted, strategy,
+symbols, notesDeleted, bookmarkRemoved, variation: { id, otherRuns, kept }, artifacts: { existed, purged, warning } }`;
+errors 400 (body), 404 (unknown or already deleted), 409 (active, referenced, unexpected path, in progress), 500 (not
+deleted, with the reason). Semantics: [OPERATIONS.md](OPERATIONS.md) §Deleting a saved result.
+
 **Exactly one configuration:** every parameter is a scalar, and unknown fields are rejected. This endpoint is not for
 optimisation, and Strategy Lab has no endpoint that is.
 
