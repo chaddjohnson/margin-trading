@@ -1,5 +1,151 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
+## Top screen (read this first) — Task 13: Interactive Preview — COMPLETE (implemented, verified; commit + push next)
+
+- **Updated:** 2026-11-05T17:44Z (UTC, from the clock). **Status: COMPLETE — implemented and verified; next the commits
+  (code+tests, docs+brief, this checkpoint) and `git push origin feature/strategy-entry-explorer-ui` (no force, no
+  merge to `main`), then a push-record commit pushed the same way (outside the sandbox: no DNS inside it).**
+- **Verification (final, on the final code; logs `apps/strategy-lab/logs/task13/`, git-ignored):** app `npm run check`
+  17:38→17:42:51Z (`check-2.log`): typecheck + lint clean, Vitest 204/204 (25 files), build (`dist` = the final
+  build), Playwright 58/58. Root `tsc` clean (it covers `src/**`, which imports `shared/contract.ts`: type-only change);
+  `src/growth-trading/tests/riseTrading.test.ts` 24/24 (`root-riseTrading.log`). The root `npm test`/ESLint were not
+  rerun: no `src/` file changed and root ESLint ignores `apps/**`. The first `check` (`check.log`, 17:34→17:37:53Z,
+  before the `release()` fix) had 57/58: `strategy-lab.spec.ts:308` read `data-view-from` = null right after a symbol
+  switch (its "a marker is visible" wait can be met by the outgoing chart, then the attribute is read between the new
+  chart's mount and first draw — a race in that existing test; it passed in `e2e-all-1.log` and `check-2.log`; Task 10
+  `check-2.log` also once failed this test, on another assertion). Not changed.
+- **Live state (read-only checks 17:35Z and 17:43Z):** 119/119 backed-up `runs/`+`imports/` files identical, no new
+  files, DB fingerprint (runs, variations, strategies, notes, migrations) identical to the backup; no
+  `preview-cache/` in the live state (the live server runs the old code). Nothing of mine touched it.
+- **Live server (the USER's) pid 3532274 (`start:vpn`, since 16:13:34Z) still running, OLD code (health has no
+  `features`).** It serves the rebuilt `dist`: everything works as before; the *Interactive Preview* panel says the
+  server must be restarted (its routes 404). **Follow-up gate (the user's):** restart it the same way
+  (`npm --prefix apps/strategy-lab run start:vpn`); no migration; it creates `state/strategy-lab/preview-cache/`.
+- **My processes:** none (scratch UI server 3563631 on :5331 stopped between the 17:35:07Z and 17:37:53Z clock reads; e2e servers exit with Playwright). The
+  stray :4391 server pid 2772895 (session bbd6d528) untouched.
+- **Deliverables (sha256, first 16):** brief `244605135c512a98`; `server/previews.ts` `53dd64640780b02e`;
+  `server/preview-identity.ts` `4e8152cfbfddb734`; `server/preview-cache.ts` `eb280b868a4cffb7`; `shared/preview.ts`
+  `71c03067fc1f3207`; `src/preview/usePreview.ts` `45eafa97a44d574e`; `src/preview/model.ts` `8ad9ddd7a21c4515`;
+  `src/components/PreviewPanel.tsx` `938eaabe1fbbe487`; `src/components/RunView.tsx` `0e0db9200ae37eb5`;
+  `src/paramForm.ts` `3d6493fba2aadc70`; `docs/strategy-lab/INTERACTIVE_PREVIEW.md` `af51753df6ea3bf5`;
+  `e2e/preview.spec.ts` `def22b2f83c9ab64`; `tests/preview.test.ts` `872c7e4b31100811`.
+- **Disclosures:** (1) a preview executes ONLY the effective parameters, so a run saved from a preview stores no
+  "saved, not applied" drafts (New Test runs do); (2) the saved run's `request.json` is the executed request (no title
+  /parentVariation; those are in the DB row); (3) symbols are fixed to the saved run's in the panel; (4) legacy
+  Growth 1.0.0/1.1.0 runs are not previewable (explicit 1.2.0 upgrade button only); (5) the in-memory LRU layer the
+  brief calls optional was not built (the disk cache answers a hit in 45–140 ms end to end); (6) the cache identity
+  hashes ALL files of `data/<SYM>/` (a rewritten report invalidates conservatively); (7) not verified on browsers other
+  than Chrome, physical keyboards/screen readers beyond automated ARIA/keyboard checks, or the live server (old code).
+- **Brief:** `docs/strategy-lab/brief/2026-11-05-interactive-preview-brief.md` (verbatim copy of the upload
+  `aabd3f7f-Claude_Strategy_Lab_Interactive_Preview_Implementation.md`, 169 lines (170 with the trailing line the Read
+  tool shows), read in full through "Completion criteria"; sha256 `244605135c512a98fdc5c048498a55e6df46076ad50f60d973a429bd1c40788f`).
+  The user's message: "Proceed with the complete assignment, including implementation, research execution,
+  verification, and the requested Git commit and push". Brief §8: commit + push THIS branch, **no merge to `main`**; do
+  not run the Growth optimisation study (not run).
+- **Branch:** `feature/strategy-entry-explorer-ui`, HEAD at start `d2c3c1a` (= Task 12 push record), tree clean.
+- **Backup (before any change):** `~/backups/strategy-lab/20261105T164429Z-pre-interactive-preview/` (node:sqlite online
+  backup + integrity ok, 21 runs / 32 variations / 5 strategies / 3 migrations / 5 bookmarked runs; runs/ + imports/
+  rsync; `state-files.sha256` 119 files; `runs-fingerprint.json`).
+- **13.4 (2026-11-05T17:34Z):** full e2e on a scratch build 57/58 (`logs/task13/e2e-all-1.log`; the 1 failure was my test counting
+  markers under a kept 3M zoom → fixed, `e2e-preview-4.log` 6/6). Benchmark (`scripts/benchmark-preview.ts`,
+  `logs/task13/benchmark.json`, 17:31Z, temp state, HTTP path incl. detail+events+prices): VGT 1d 2016–2023 cold
+  2.52 s (runner 2.38) → warm median 58 ms (×43); VGT+GDX 1d gates ON cold 6.19 s → 140 ms (×44); VGT 60m 2018–2020
+  cold 2.09 s → 45 ms (×46); 15/15 warm = validated hits with the cold preview id. Docs: new
+  `docs/strategy-lab/INTERACTIVE_PREVIEW.md`; updated docs README, ARCHITECTURE, CONTRACTS, OPERATIONS (config, backups,
+  upgrade note: no migration, restart needed), RESEARCH_WORKFLOW (§2, §4 step 16), EXPORTS, app README, root README.
+- **13.3 UI (2026-11-05T17:28Z):** `src/paramForm.ts` (draft logic extracted from RunTestDialog, shared), `src/components/ParamHelp.tsx`
+  (the New Test help text, reused in popovers), `InfoPopover.tsx`, `PreviewPanel.tsx`, `PreviewBanner.tsx`,
+  `src/preview/model.ts` + `usePreview.ts`; changed `RunView.tsx` (shown = saved run | preview, prefetch before swap,
+  view prefs lifted, selection by stable identity, compare set aside while previewing), `App.tsx` (`?preview=`),
+  `api.ts`, `hooks.ts` (prefetched responses), `Events.tsx`/`Trading.tsx` (controlled view state), `Panels.tsx`,
+  `RunTestDialog.tsx` (same DOM), `styles.css`; `scripts/preview-cache.ts` + npm script `preview-cache`;
+  `tests/preview-model.test.ts` 4/4; `e2e/preview.spec.ts` 6/6 against a scratch build
+  (`STRATEGY_LAB_STATIC_DIR=<scratch>/dist`, log `logs/task13/e2e-preview-3.log`). `dist` NOT rebuilt yet.
+- **(historical, 17:28Z) My running processes then:** scratch UI server pid 3563631 (port 5331, state = scratchpad `ui-state`, static = scratchpad
+  `dist`, log scratchpad `logs/ui-server.log`) — mine, stop before the end. Full e2e (harness task b9x9qu36f, log
+  `apps/strategy-lab/logs/task13/e2e-all-1.log`, e2e server on 5299 with a temp state).
+- **13.2 tests (2026-11-05T17:07Z):** new `tests/preview-identity.test.ts` 10/10 (scanner, fingerprint = live fs/module trace of
+  both runners, distinct/equal identities, code/data/input edits in a repo copy, fail closed), `tests/preview-cache.test.ts`
+  5/5 (commit/hit/restart, tampering/format/foreign identity evicted, interrupted work removed, deterministic LRU by
+  count and bytes, nothing outside touched, dir guards), `tests/preview.test.ts` 23/23 (C1→C2→C1 two cold + hit, no
+  runs/variations, coalescing, cancellation, superseded tickets, parity with a normal run, Save as run fresh + cached +
+  duplicate confirm, export, restart, code edit same version / data edit / tampered payload in a repo copy, stale save
+  refused, non-previewable kinds, invalid requests, HTTP routes). Full app Vitest 198/198 (24 files;
+  `logs/task13/vitest-1.log`).
+- **13.2 (16:58Z):** new `server/preview-identity.ts`, `server/preview-cache.ts`, `server/previews.ts`,
+  `shared/preview.ts`; changed `server/jobs.ts` (exports NODE_FLAGS/RUNNER_ENV/runnerEnv/OPTIONAL_ARTIFACTS, same
+  behaviour), `server/config.ts` (preview cache dir/limits), `server/service.ts` (exports runProfile, dataAssumptions,
+  ensureRegistered public), `server/repo.ts` (runsSavedFromPreview), `server/http.ts` (shared events/prices helpers +
+  preview routes), `server/export.ts` (buildBundle + buildPreviewBundle), `server/main.ts`, `shared/contract.ts`
+  (RunKind `preview`), 6 test files (createHandler gets `previews`). Server tsc clean. Smoke (scratch, temp state):
+  VGT 1d 2016–2023 cold preview 2.6 s, cache hit 40 ms (identity 37 ms), save → R-000002, duplicate refused.
+  Static closure of trading-run.ts = the traced runtime set exactly (31 files + 5 npm packages).
+- **Brief:** `docs/strategy-lab/brief/2026-11-05-interactive-preview-brief.md` (verbatim copy of the upload
+  `aabd3f7f-Claude_Strategy_Lab_Interactive_Preview_Implementation.md`, 169 lines (170 with the trailing line the Read
+  tool shows), read in full through "Completion criteria"; sha256 `244605135c512a98fdc5c048498a55e6df46076ad50f60d973a429bd1c40788f`).
+  The user's message: "Proceed with the complete assignment, including implementation, research execution,
+  verification, and the requested Git commit and push". Brief §8: commit + push THIS branch, **no merge to `main`**; do
+  not run the Growth optimisation study.
+- **Branch:** `feature/strategy-entry-explorer-ui`, HEAD at start `d2c3c1a` (= Task 12 push record), tree clean.
+- **Live server (the USER's):** pid 3532274 (`start:vpn`, started 2026-11-05T16:13:34Z, :4317 on 127.0.0.1, 127.0.1.1,
+  100.68.60.114; default state dir; serves `apps/strategy-lab/dist`). NOT mine: never stop/restart without asking. Its
+  DB is at migration 0003 (21 runs; ids 21–26, 28–33 deleted by the user). Stray :4391 smoke server pid 2772895 (earlier
+  session bbd6d528, scratch state) — not mine, left alone. Every `vite build` replaces what the live server serves.
+- **Backup (before any change):** `~/backups/strategy-lab/20261105T164429Z-pre-interactive-preview/` (node:sqlite online
+  backup + integrity ok, 21 runs / 32 variations / 5 strategies / 3 migrations / 5 bookmarked runs; runs/ + imports/
+  rsync; `state-files.sha256` 119 files; `runs-fingerprint.json`). Rerunnable Growth 1.2.0 runs: R-000018/19/20/27
+  (VGT 1d); R-000017 Growth 1.0.0 (legacy); R-000014–16 signal-only; R-000013 Study 8 import; R-000001–12 demo.
+- **Measured facts:** the trading runner on VGT 1d 2016-01-04→2023-12-29 (X5 N20 defaults): 2.5 s wall, 618 MB RSS,
+  219 events, events sha `d8d3b944…`; artifacts ≈ 3.8 MB (minute-marks 2.8 MB). sha256 of data.csv: VGT 53 MB 31 ms,
+  GDX 80 MB 46 ms → the data identity is re-hashed on every request (no stat memo). Runtime-read non-code files
+  (fs trace): `config/market-events/splits.json`, `data/partitions.json`, `config/archive/legacy-research-inputs.json`,
+  `data/<SYM>/data.csv`. Loaded modules: 31 app/src files + npm `csv-parse`, `fs-extra`, `graceful-fs`, `jsonfile`,
+  `universalify` (+ node: builtins). Static closure must resolve `#lib`/`#types` (root package.json `imports`).
+- **Next step:** stage 13.2 — `server/preview-identity.ts`, `server/preview-cache.ts`, `server/previews.ts`, routes,
+  config, export refactor; tests. Nothing of the live state is touched by implementation or tests (temp state dirs).
+
+## Task 13 — design (written 2026-11-05T16:47Z, from the code audit; no user question needed)
+
+- **Scope.** A saved run's page gets an *Interactive Preview* toggle (chart card toolbar) opening a right-side panel
+  (closed by default). Previewable = completed `manual` run with a stored request of a strategy whose version is
+  `launch: form` (signal-only 1.0.0, Growth 1.2.0). Explicit disabled reasons: imports (Study 8 shared-slot replay — never
+  substituted by a standalone run), pool reruns, demo/synthetic, legacy Growth 1.0.0/1.1.0 (stored as recorded; an
+  explicit "preview with the current version" seeds a 1.2.0 draft, labelled as NOT a reproduction), runs not completed.
+- **Execution.** The same allowlisted runner script (`RUNNER_SCRIPTS`), Node flags, minimal env and timeout as
+  `server/jobs.ts`, in `<stateDir>/preview-cache/work/<exec>/` with `request.json` whose `runId` = the preview id
+  `PV-<64 hex key>`. The request is CANONICAL: only the effective parameters (`effectiveParams`) + symbols (order kept)
+  + from/to + resolution; so a cached result is a pure function of its identity. No SQLite row, variation, trial or
+  sidebar entry. Concurrency 1 (separate from runs), coalescing by key (one execution, many tickets), cancellation
+  when the last ticket is released (queued → dropped; running → SIGTERM/SIGKILL, never cached), ticket expiry 60 s
+  without a poll.
+- **Identity / key** = sha256(canonical JSON): format + event contract; strategy key, version, kind, runner script,
+  sha256 of its stored schema; canonical effective params (sorted keys, JS shortest numbers); symbols in order; from,
+  to, resolution; data: sha256 of every regular file in `data/<SYM>/` per symbol + the runtime inputs (splits.json,
+  partitions.json, legacy-research-inputs.json); implementation: sha256 over the runner's static import closure
+  (relative, `#` subpath imports, npm packages hashed whole + their dependencies), Node version/platform/arch, the
+  runner flags. Unresolvable → fail closed (no preview). After execution: the runner's recorded data sha256 and engine
+  file hashes must equal the identity's, and the identity is recomputed and must be unchanged — else not cached.
+- **Cache.** `<stateDir>/preview-cache/` (`STRATEGY_LAB_PREVIEW_CACHE_DIR`): `entries/<key>/` (runner artifacts +
+  `manifest.json` + `entry.json` {format, identity, files sha256/size, timings, codeRevision}), `work/`, marker file.
+  Commit = verify → write entry.json → rename the work dir (atomic). Every hit recomputes the identity, compares the
+  stored identity exactly, re-hashes every file, re-validates the events; any failure → evict + recompute. LRU
+  (`lastUsedAt`, tie-break key) bounded by entries (200) and bytes (2 GiB); startup removes `work/` leftovers. CLI
+  `npm run preview-cache -- status|verify|prune|clear` touches only that directory.
+- **API.** `GET /api/runs/:id/preview` (capability, seed request, drift vs the run's recorded engine/data hashes);
+  `POST /api/previews` (one configuration → ticket; immediate cache hit); `GET|POST /api/previews/tickets/:t[/cancel]`;
+  `GET /api/previews/:pv` (RunDetail-shaped, kind `preview`), `/events`, `/prices`, `/export`; `POST
+  /api/previews/:pv/save` (re-validates; materialises ONE normal immutable run: runId rewritten, manifest, contract
+  validation, same variation identity/experiment as New Test, parentVariation = source; provenance.preview; duplicate
+  saves reported, confirmed explicitly).
+- **UI.** Draft logic extracted from RunTestDialog into one shared module (no fork) + the New Test help text as one
+  component reused inside info popovers. Panel: strategy title + exact version, status chip (Modified / Running / Cache
+  hit / Preview ready / Error), dates + resolution, groups with compact controls, Run preview (Enter submits), Reset
+  (to the displayed configuration), Return to saved result, Save as run. Client revisions (monotonic), stale responses
+  ignored, prefetch of the new result's events + prices before the swap (no blank chart, no mixed executions). View
+  preferences lifted to RunView (marker kinds, event-table scope/search/sort, closed-losses toggle) so swaps keep them;
+  selection kept only when the same trade (same fills) exists. URL `?preview=PV-…` restores a displayed preview after a
+  reload while its cache entry validates (drafts are not persisted).
+
 ## Top screen (read this first) — Task 12: delete saved results (runs) — COMPLETE
 
 - **Updated:** 2026-11-05T16:06Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, committed and pushed.**
