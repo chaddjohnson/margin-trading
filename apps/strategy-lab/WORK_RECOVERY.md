@@ -1,5 +1,39 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
+## Top screen (read this first) — Task 14: Growth optional rules (initial risk stop, trend-breakout entry, trend retention) — INCOMPLETE
+
+- **Updated:** 2026-11-05T22:20Z (UTC, from the clock). **Status: INCOMPLETE — stage 14.1 (baselines) complete; 14.2 engine next.**
+- **Brief:** `docs/strategy-lab/brief/2026-11-05-growth-optional-rules-brief.md` (verbatim copy of the upload
+  `bb5b150c-claude-growth-optional-rules.md`, 93 lines, read in full through "Required validation" and the delivery
+  paragraph; sha256 `92d3d8329e3a327e0e8a95401341c9c3d88978f2d682c175cd037b464253abc4`). The user's message: "Proceed with
+  the complete assignment, including implementation, research execution, verification, and the requested Git commit and
+  push". Brief: implementation only — no optimisation, no research campaign; Candidate A stays the unchanged control; do
+  not save, delete or migrate the user's runs.
+- **Worktree (isolation, deliberate):** `<scratchpad>/wt` = `/tmp/claude-1000/-home-chad-projects-margin-trading/15b87586-3f07-427d-ac9a-34219f09806e/scratchpad/wt`,
+  branch `wip/growth-optional-rules` from `8d2800e` (= `feature/strategy-entry-explorer-ui` HEAD, clean). Reason: the
+  USER's live server (pid 3645197, `start:vpn`, started 2026-11-05T19:29:52Z, :4317) spawns the runner from the MAIN
+  checkout's files for every run and preview; half-edited engine code there could reach their results. `node_modules`
+  (root + app) and `data/<SYM>` are symlinks to the main checkout (read-only use). **End:** fast-forward
+  `feature/strategy-entry-explorer-ui` in the main checkout to the wip branch, remove the worktree and the wip branch.
+- **Candidate A (inferred, not a saved run):** the configuration the user explored most in Interactive Preview (cache
+  `request.json` files read, nothing changed): Growth 1.2.0, VGT 1d 2016-01-04 → 2026-10-30, X 8% N 60, stop 4%, losing
+  hold ON 15 d, buffer ON 2.9%, cost 5 bps, trend filter C rising SMA 50/40, eligibility OFF, continuation OFF.
+- **14.1 baselines (complete, unchanged code at 8d2800e):**
+  - engine `src/growth-trading/tests/fixtures/baseline-1.2.0.json` by `src/growth-trading/tools/capture-baseline-1.2.0.ts`
+    (9 cases incl. `candidate-a`; 22 s; engineDirty ""; riseTrading `a24903d8…`, continuation `81e79662…`, entryGates `9f8238d9…`).
+  - runner `apps/strategy-lab/tests/fixtures/growth-runner-baseline-1.2.0/` (gzip -n -9 + `SHA256SUMS`): R-920001
+    Candidate A; R-920002 VGT+GDX 1d trend A + eligibility 1 + ma_cross; R-920003 GDX 60m trend B + eligibility 5 +
+    buffer OFF; R-920005 VGT 1d buffer OFF (draft 2.9 present); R-920007 VGT 1d hold OFF (drafts present). Requests only:
+    R-920004 (= R-920005 effective-only) and R-920006 (= R-920007 effective-only).
+  - **Known OFF issue reproduced before the fix:** effective-only requests (what Interactive Preview executes) FAIL:
+    R-920004 "intradayLossBufferPercent must be in [0, 100)"; R-920006 "maximumHoldDays must be an integer ≥ 1;
+    intradayLossBufferEnabled must be true or false; intradayLossBufferPercent must be in [0, 100)"
+    (`apps/strategy-lab/logs/task14/before-fix-*.log`, git-ignored). Cause: `runner/growth-params.ts paramsOf` reads raw
+    values and `tradingParamErrors` validates inactive values.
+- **Live state:** read only (run/preview `request.json` files). Nothing written.
+- **Next step:** 14.2 engine (`src/growth-trading/`: version 1.3.0, the three options), then 14.3 registry/runner/fix,
+  14.4 server/export/preview, 14.5 UI, 14.6 tests, 14.7 docs, 14.8 verification, 14.9 commit/push.
+
 ## Top screen (read this first) — Task 13: Interactive Preview — COMPLETE
 
 - **Updated:** 2026-11-05T17:45Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, committed and
