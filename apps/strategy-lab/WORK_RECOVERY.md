@@ -1,10 +1,13 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
-## Top screen (read this first) — Task 13: Interactive Preview — COMPLETE (implemented, verified; commit + push next)
+## Top screen (read this first) — Task 13: Interactive Preview — COMPLETE
 
-- **Updated:** 2026-11-05T17:44Z (UTC, from the clock). **Status: COMPLETE — implemented and verified; next the commits
-  (code+tests, docs+brief, this checkpoint) and `git push origin feature/strategy-entry-explorer-ui` (no force, no
-  merge to `main`), then a push-record commit pushed the same way (outside the sandbox: no DNS inside it).**
+- **Updated:** 2026-11-05T17:45Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, committed and
+  pushed.** **No merge to `main`.**
+- **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `d2c3c1a..2f47482`, no force; outside
+  the sandbox, first attempt, 2026-11-05T17:44:19Z). `git ls-remote` at 17:44:24Z: branch = `2f47482b700d…` (= local),
+  `origin/main` = `aa5754d…` (unchanged). Commits `28197f6` code + tests, `99f85fa` docs + brief, `2f47482`
+  checkpoint; this push record follows, pushed the same way.
 - **Verification (final, on the final code; logs `apps/strategy-lab/logs/task13/`, git-ignored):** app `npm run check`
   17:38→17:42:51Z (`check-2.log`): typecheck + lint clean, Vitest 204/204 (25 files), build (`dist` = the final
   build), Playwright 58/58. Root `tsc` clean (it covers `src/**`, which imports `shared/contract.ts`: type-only change);
