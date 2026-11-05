@@ -77,7 +77,9 @@ implementation.
 
 `StrategySpec` = `ParamSchema` + `key`, `version`, `title`, `kind` (`entry_signal` | `trades`), `launch` (`form` = New
 Test, `phenotype` = catalogue reruns only, `none` = read-only), `runnable`, `description`, `resolutions`,
-`defaultResolution`, optional `notes`, `formerTitles` and `legacy` (`supersededBy`, `replay`).
+`defaultResolution`, optional `notes`, `formerTitles`, `legacy` (`supersededBy`, `replay`) and `groupNotes` (since
+Growth 1.2.0: value-dependent explanations and warnings shown inside a group while a predicate holds — `{ id, group,
+when, text, tone }`; display metadata, not part of the stored schema, so the form has no strategy-specific branches).
 
 `ParamSchema` = `{ schemaVersion: 2, params, groups, constraints, identity }`:
 
@@ -114,12 +116,19 @@ the constraints; `sampleCandidate(spec, rng, base)` draws a valid effective cand
 
 The rule itself is specified in `src/entry-signals/README.md`.
 
-**Growth** — `rise-from-recent-low-trading@1.1.0` (kind `trades`, launch `form`; [GROWTH_TRADING.md](GROWTH_TRADING.md)):
+**Growth** — `rise-from-recent-low-trading@1.2.0` (kind `trades`, launch `form`; [GROWTH_TRADING.md](GROWTH_TRADING.md)):
 
 | Key | Label | Type | Unit | Default | Range | Group / applies when |
 | --- | --- | --- | --- | --- | --- | --- |
 | `advanceFromRecentLowPercent` | Advance from recent low (X) | number | percent | 5 | 0.1–100 | entry |
 | `recentLowLookbackBars` | Recent-low lookback (N) | integer | bars | 20 | 2–5000 | entry |
+| `trendFilterEnabled` | Entry trend filter | boolean | — | false | — | trend |
+| `trendMethod` | Trend method (`price_change`, `regression_slope`, `rising_sma`, `higher_highs_lows`, `momentum`) | enum | — | `price_change` | — | trend / filter ON |
+| `trendChangeLookbackSessions` … `trendMomentumMinimumLongReturnPercent` | each method's inputs (sessions, percents; only the chosen method's apply) | | | | | trend / that method — [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md) §2.2 |
+| `eligibilityEnabled` | Persistent entry eligibility | boolean | — | false | — | eligibility |
+| `eligibilityPolicy` | Eligibility policy (`time_limited`, `minimum_strength`, `maximum_extension`, `deterioration`, `reset_renew`) | enum | — | `time_limited` | — | eligibility / ON |
+| `eligibilityMaxAgeSessions` | Maximum opportunity age (W) | integer | sessions | 10 | 1–120 | eligibility / ON (every policy) |
+| `eligibilityMinimumAdvancePercent` … `eligibilityRenewalReboundPercent` | each policy's inputs | | | | | eligibility / that policy — [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md) §3.2 |
 | `trailingStopPercent` | Trailing stop (always on) | number | percent | 7.3 | 0.1–50 | exit |
 | `maximumHoldEnabled` | Maximum losing hold | boolean | — | true | — | exit |
 | `maximumHoldDays` | Maximum losing hold age | integer | days | 8 | 1–3650 | exit / hold ON (disabled otherwise) |
@@ -130,8 +139,13 @@ The rule itself is specified in `src/entry-signals/README.md`.
 | *(run configuration)* `resolution` | Bar resolution | — | — | `1d` | as above | entry |
 
 - **Refused:** `intradayLossBufferEnabled: true` with `maximumHoldEnabled: false` (the buffer only exists from the
-  hold age); with the shallow-pullback method, `pullbackMinimumPercent ≥ pullbackMaximumPercent`; a 1.1.0 request
-  without `continuationEnabled` (the switch is always active, so it is required).
+  hold age); with the shallow-pullback method, `pullbackMinimumPercent ≥ pullbackMaximumPercent`; with the momentum
+  trend method, `trendMomentumShortSessions ≥ trendMomentumLongSessions` (constraint `momentum-short-long`); a 1.2.0
+  request without `continuationEnabled`, `trendFilterEnabled` or `eligibilityEnabled` (always-active switches are
+  required).
+- **Growth 1.1.0** (launch `phenotype`, identity `effective`) keeps exactly its parameters (the table without the
+  trend and eligibility rows). New Test refuses it with the replay explanation; its catalogue phenotypes rerun as 1.1.0
+  configurations; its stored runs are read as recorded.
 - **Growth 1.0.0** (launch `none`, identity `all-values`) keeps exactly its eight parameters above (without the
   continuation ones). New runs of it are refused with the replay explanation; its stored runs are read as recorded.
 - **Display names are metadata.** Keys and versions never change; `strategies.title` and `former_title` hold the
@@ -154,8 +168,8 @@ The rule itself is specified in `src/entry-signals/README.md`.
 ```
 
 A Growth request has the same shape, with `"strategyKey": "rise-from-recent-low-trading"`, `"strategyVersion":
-"1.1.0"` and its parameters (numbers, switches as JSON booleans, `continuationMethod` as a string; inactive ones may be
-omitted).
+"1.2.0"` and its parameters (numbers, switches as JSON booleans, `continuationMethod`, `trendMethod` and
+`eligibilityPolicy` as strings; inactive ones may be omitted).
 
 A phenotype rerun (`POST /api/phenotypes/PH-0001/runs`, [PHENOTYPES.md](PHENOTYPES.md)) builds the same request from the
 frozen record plus `phenotypeId`, which the run records (`runs.phenotype_id`, an immutable input).
@@ -170,9 +184,9 @@ optimisation, and Strategy Lab has no endpoint that is.
 | `request.json` | The validated request plus `runId` (manual runs) |
 | `events.json` | Contract v2 events (sha256 recorded in `runs.artifact_sha256` and checked on every read) |
 | `metrics.json` | Entry-signal outcomes per symbol with an every-session baseline (`kind: entry-signal outcomes`); the imported trade summary (`kind: imported trades`); or, for a trading backtest, per symbol: signals, trades, P&L, drawdowns, exposure, holding, reconciliation checks, and `unavailable` reasons (`kind: trading backtest`) |
-| `trades.json` | Trading backtests: the trade ledger per symbol (decision, fills, exit reason, gross/costs/interest/net, holding, worst/best mark; since 1.1.0 also `origin`, `method`, `episode`, `opensEpisode`) |
+| `trades.json` | Trading backtests: the trade ledger per symbol (decision, fills, exit reason, gross/costs/interest/net, holding, worst/best mark; since 1.1.0 also `origin`, `method`, `episode`, `opensEpisode`; since 1.2.0, with an entry gate ON, `entrySource`, `opportunity`, `opportunitySignalTimeUtc`, `opportunitySignalPrice`, `ageSessionsAtDecision`, `ageSessionsAtFill`) |
 | `daily.json` | Trading backtests: the daily marks per symbol (realized, unrealized, marked net, held at the close) |
-| `decisions.json` | Growth 1.1.0: per symbol, the continuation episodes and the chronological decision/state log ([GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) §5) |
+| `decisions.json` | Growth 1.1.0+: per symbol, the continuation episodes and the chronological decision/state log ([GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) §5); 1.2.0 with an entry gate ON adds `opportunities`, `renewalWatches` and `entryDecisions` ([GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md) §4); run level `trendFilter`, `eligibility` |
 | `minute-marks.csv.gz` | Growth 1.1.0: gzip CSV `symbol,t_unix_utc,marked_net_usd`, one row per change of the minute-marked net (cents) |
 | `study8/`, `study8-output.json` | Shared-slot pool reruns: the unchanged Study 8 runner's output directory and the sha256 of each of its files |
 | `provenance.json` | Per symbol: the dataset window report (data file, sha256, partitions file sha256, evaluation and warm-up dates, split adjustments, access mode); the engine files' sha256; the Node version |

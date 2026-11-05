@@ -137,6 +137,10 @@ applied migration refuses to start). Procedure, as used for migration 0002 on 20
 4. Stop the server, start it again the way it ran before (for example `start:vpn`), then audit the live directory the
    same way.
 
+Growth 1.2.0 (2026-11-05: entry trend filter, persistent eligibility, strategy select) added **no migration**. Strategy
+rows are created per version on first use, and no stored run, variation or artifact changes. A running server serves
+the new build after a restart; `audit:state` before and after shows unchanged rows and files.
+
 ## Importing vg-balanced
 
 ```sh
@@ -161,13 +165,17 @@ The strategy's own tests are part of the root `npm test` (`src/entry-signals/tes
 
 ## Limitations and known gaps
 
-- **Runnable strategies.** `rise-from-recent-low` (signal-only) and **Growth** (`rise-from-recent-low-trading@1.1.0`)
-  run from the New Test form; Growth 1.0.0 is legacy (replayable, not launchable). The Study 8 shared-slot pool runs
+- **Runnable strategies.** `rise-from-recent-low` (signal-only) and **Growth** (`rise-from-recent-low-trading@1.2.0`)
+  run from the New Test form. Growth 1.1.0 is legacy: its catalogue phenotypes rerun as 1.1.0 configurations, and its
+  runs replay. Growth 1.0.0 is legacy too: it replays, but is not launchable. The Study 8 shared-slot pool runs
   only as a catalogue phenotype rerun (end date selectable, start fixed at 2016-01-04, sealed configuration and costs).
   Imported and demo strategies are otherwise read-only.
-- **Phenotype catalogue.** Only CLI imports fill it; the repository ships a Growth *demonstration* export (not an
-  optimisation) and the sealed Study 8 `s8-vg-balanced` export. No Growth optimisation study exists yet.
-- **Minute marks** (`minute-marks.csv.gz`, Growth 1.1.0 runs only) are about 2–5 MB per symbol-decade compressed; the
+- **Phenotype catalogue.** Only CLI imports fill it. The repository ships two Growth *demonstration* exports (not
+  optimisations): `growth-demo-2026-11` (1.1.0, continuation) and `growth-gates-demo-2026-11` (1.2.0, entry gates ON).
+  It also ships the sealed Study 8 `s8-vg-balanced` export. No Growth optimisation study exists yet.
+- **Entry gates.** The capital hook of persistent eligibility (`blocked_by_capital`) is exercised only by the test
+  harness; standalone Growth always has its own capital. No shared-capital allocator uses Growth yet.
+- **Minute marks** (`minute-marks.csv.gz`, Growth 1.1.0 and later runs only) are about 2–5 MB per symbol-decade compressed; the
   export includes them only on request. Earlier runs have none.
 - **Exits.** The signal-only strategy has no exits: its events are entry signals, and its analysis is forward moves,
   not P&L. Its trading backtest (`rise-from-recent-low-trading`) has the D1 exits and full P&L. Its multi-symbol runs

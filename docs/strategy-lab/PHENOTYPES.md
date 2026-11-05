@@ -100,8 +100,11 @@ select one (`#/phenotype/PH-0001`) to see its locked configuration, execution ki
 selection, data windows and exposure, record hash, import, and its runs. **Run selected phenotype…** opens the test
 dialog in phenotype mode:
 
-- **Growth (standalone / batch).** The parameters start at the frozen values. Title, dates, symbols and resolution are
-  free. Editing anything executed shows *"this run is a NEW variation derived from PH-…"*; the frozen phenotype never
+- **Growth (standalone / batch).** The parameters start at the frozen values. The form is the schema of the
+  phenotype's OWN version: a 1.2.0 phenotype shows its entry trend filter and eligibility settings. A 1.1.0 phenotype
+  (for example `growth-demo-2026-11`) shows the 1.1.0 form and reruns **as a 1.1.0 configuration**: the 1.2.0 engine
+  with both entry gates OFF, recorded as `legacyReplay` and never silently reinterpreted. To try the gates on it, clone
+  the result into a New test. Title, dates, symbols and resolution are free. Editing anything executed shows *"this run is a NEW variation derived from PH-…"*; the frozen phenotype never
   changes. The run records `phenotype_id`, the study, role, record hash and import, and `phenotypeEdited` with the
   edited keys (`experiment: Phenotype reruns`).
 - **Shared-slot pool.** Only the title and the **end date** can be chosen: the start is fixed at 2016-01-04 (Study 8:
@@ -116,8 +119,20 @@ dialog in phenotype mode:
   is exploratory and **not another independent holdout**.
 
 **Capability is explicit** (`GET /api/phenotypes`): `runnable` with its runner (`growth-trading`, `entry-signal`,
-`study8-pool`) and what is locked, or **view-only** with the reason (an unregistered or legacy strategy version, a pool
-without a registered runner, missing sealed records or data). Nothing is simulated in place of a missing runner.
+`study8-pool`) and what is locked, or **view-only** with the reason (an unregistered or non-launchable strategy version,
+a pool without a registered runner, missing sealed records or data). A superseded Growth version with a replay contract
+(1.1.0: `launch: phenotype`) is runnable as itself, and its reason says so. Nothing is simulated in place of a missing
+runner.
+
+**Fixture exports** (`apps/strategy-lab/fixtures/phenotypes/`, demonstrations only — not optimisations, not imported
+into the live catalogue):
+- `growth-demo-2026-11`: 1.1.0, continuation OFF and each method;
+- `growth-gates-demo-2026-11`: 1.2.0 with the entry gates ON (trend A + policy 1, trend E + policy 5, trend C alone);
+  written by `scripts/make-growth-gates-demo-phenotypes.ts`;
+- `study8-expanded-regime-d1`: the sealed `s8-vg-balanced`.
+
+Import one into the live catalogue (permanent rows) with `npm --prefix apps/strategy-lab run import:phenotypes --
+apps/strategy-lab/fixtures/phenotypes/<export>`.
 
 ## 5. API
 

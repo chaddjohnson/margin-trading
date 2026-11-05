@@ -262,6 +262,24 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
     over the axes or at a zoom limit.
   - **Markers.** A wheel over a marker zooms as well.
 
+## The New Test dialog
+
+`src/components/RunTestDialog.tsx` renders every strategy from its registry schema (shared/params.ts): groups,
+applicability (`activeWhen`, hidden or disabled inactive inputs), the same validators as the server, and the
+value-dependent group notes of `StrategySpec.groupNotes`. There are no strategy-specific form branches.
+
+The strategy is chosen in `src/components/StrategyPicker.tsx`, a WAI-ARIA *select-only combobox*. The closed row shows
+the title, version, badge and a one-line subtitle, and a details region below it holds the full description. The popup
+`listbox` lists every strategy with its full description; it is `position: fixed` inside the modal's top layer, placed
+under (or above) the combobox, at most 420 px high and scrolling internally, and repositioned on any scroll or resize.
+The modal's own scrolling therefore never clips it.
+
+The keyboard follows the APG pattern: ↓/↑/Enter/Space/Alt+↓ open; ↓/↑/Home/End/PageUp/PageDown move the active option
+(`aria-activedescendant`); Enter/Space select; Escape closes the list only (the keydown is cancelled, so the modal stays
+open); Tab closes; typing jumps by title prefix. A click outside closes, and focus returns to the combobox after a
+choice. The value is exactly the strategy key the form submits (`data-value`). `e2e/entry-gates.spec.ts` tests all of
+this, also on a 390 × 640 viewport and in a scrolled dialog.
+
 ## Phenotypes, comparisons and exports
 
 - **Phenotype catalogue** ([PHENOTYPES.md](PHENOTYPES.md)): `importers/phenotypes.ts` (CLI) verifies a
@@ -272,8 +290,9 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
 - **Comparison** (`server/compare.ts`, `GET /api/compare?a=&b=`): when a run B is selected under *Compare with (B)*,
   the panel checks comparability (strategy and version, symbols, window, resolution, costs, capital model, base
   parameters), then shows the metrics side by side with B − A, the trades identical / shifted / introduced / suppressed
-  with their origin, and the continuation window outcomes. It states that origin attribution is descriptive and B − A
-  is a path-dependent counterfactual. It never starts a run.
+  with their origin, and the continuation window outcomes. It also names each run's entry-gate state (trend filter,
+  eligibility policy). It states that origin attribution is descriptive and B − A is a path-dependent counterfactual. It
+  never starts a run.
 - **Research bundle** ([EXPORTS.md](EXPORTS.md), `server/export.ts`, `server/zip.ts`, `GET /api/runs/:id/export`).
 
 ## Optimisation imports (design, display-only)

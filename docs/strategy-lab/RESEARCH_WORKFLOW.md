@@ -50,10 +50,16 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    apollo. For other machines on the VPN, use `npm --prefix apps/strategy-lab run start:vpn` instead; see
    [OPERATIONS.md](OPERATIONS.md).
 2. **Create a test:** click **+ New test**.
-   - Choose the strategy: *Rise from recent low (entry signal)*, which is signal-only, or **Growth**, the trading
-     backtest that buys on those signals and has exits and P&L ([GROWTH_TRADING.md](GROWTH_TRADING.md)). Growth's
-     *Continuation entries* group is OFF by default; switched ON, choose one of four methods and only its inputs
-     apply ([GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md)).
+   - Choose the strategy in the **Strategy to test** select (one compact row; open it with a click, ↓, Enter or
+     Space, or by typing the first letter). It lists every strategy with its version, badge and full description;
+     ↑/↓ move, Enter or Space choose, Escape closes it without a change. The choice's full description stays below
+     the select. *Rise from recent low (entry signal)* is signal-only; **Growth** is the trading backtest that buys on
+     those signals and has exits and P&L ([GROWTH_TRADING.md](GROWTH_TRADING.md)).
+   - Growth's optional groups are all OFF by default; switched ON, each shows only the chosen method's or policy's
+     inputs. *Entry trend filter* blocks entries whose recent trend fails (five methods, lookbacks in trading
+     sessions). *Persistent entry eligibility* keeps a signal available for at most W sessions under one of five
+     policies ([GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md)). *Continuation entries* adds entries after a
+     profitable exit ([GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md)).
    - The trading backtest adds the exit rules (a mandatory trailing stop, plus switches for the maximum losing hold and
      the buffered intraday loss) and the cost per side.
    - The parameters show their units, ranges and defaults (X = 5%, N = 20 bars).
@@ -87,9 +93,11 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
      metrics side by side with B − A (net, gross, costs, interest, trades, wins/losses, worst trade, holding, exposure,
      minute and daily drawdown), the trades matched by decision instant (identical, shifted, only in A, only in B, with
      their origin) and the continuation windows (captured, expired with a later higher high, closed by a base entry).
-   - **Continuation ON vs OFF.** Clone the ON run, switch *Enable continuation entries* OFF (nothing else) and run it;
-     then compare. B − A is the path-dependent counterfactual of the switch; it is not the P&L of the continuation
-     trades, because the later trade sequence changes. Comparing never starts a run.
+   - **Continuation (or an entry gate) ON vs OFF.** Clone the ON run, switch that option OFF (nothing else) and run it;
+     then compare. B − A is the path-dependent counterfactual of the switch; it is not the P&L of the trades that
+     option opened, because the later trade sequence changes. Comparing never starts a run. From the CLI,
+     `npm run growth-paired -- --request <run dir>/request.json` writes the paired entry-gate diagnostic (two runs on
+     identical data; retrospective).
 10. **vg-balanced:** open *vg-balanced (s8-vg-balanced) — Study 8 #2 replay* (experiment *Study 8 imports*).
    - **VGT tab:** 6 entries, 6 exits and 7 rejected signals. **GDX tab:** 42 entries, 41 exits (one lot is still open
      at the end) and 7 rejected signals.
@@ -103,7 +111,13 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    configuration and data exposure, **Run selected phenotype…** for ONE run (an edit becomes a derived variation; a
    shared-slot pool keeps its books and start and only takes an end date).
 13. **Export research bundle:** in a completed run's header ([EXPORTS.md](EXPORTS.md)) — a ZIP with the unmodified
-   artifacts, CSV ledgers, decision log, attribution, README and checksums, for review without the server.
+   artifacts, CSV ledgers, decision log, attribution, README and checksums, for review without the server. With an
+   entry gate ON it also holds `entry-decisions.csv`, `opportunities.csv` and `entry-gates.md`: the research log of
+   every crossing, opportunity, block and entry.
+14. **Entry gates in a run:** the Trades list labels latched and renewal entries (`base Growth · latched O-3`); the
+   Analysis panel's *Entry gates* section counts vetoed and deferred signals, trend blocks, opportunity ends and ages,
+   and the trades by entry source; each signal's detail lists the observed trend values (`trend.*`) and policy values
+   (`policy.*`).
 
 ## 5. Claude-led optimisation without a UI button
 

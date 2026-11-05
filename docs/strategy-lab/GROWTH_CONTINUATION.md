@@ -11,6 +11,11 @@ OFF reproduces the version without it exactly. There are four selectable, indepe
 - **Brief:** `brief/2026-11-04-growth-continuation-phenotypes-brief.md`.
 - **Not a recommendation.** The defaults are illustrative and were not optimised for Growth; nothing here was selected
   by a search.
+- **Since Growth 1.2.0** the continuation triggers are also checked by the optional entry trend filter. A blocked
+  trigger is recorded (`vetoed`) and ends its episode (`trend_veto`). A taken continuation entry supersedes a waiting
+  persistent-eligibility opportunity. A latched base decision has base priority at one instant, like any base entry
+  ([GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md) §2.3, §3.4). With both gates OFF, continuation is exactly the 1.1.0
+  behaviour.
 
 ## 1. What stays the same
 

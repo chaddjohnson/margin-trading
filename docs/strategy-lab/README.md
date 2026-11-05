@@ -9,7 +9,8 @@ prototype of 2026-11-03.
 - **What it does:**
   - saved runs, variations, experiments and strategies in SQLite;
   - manual single tests on real minute data from the browser: signal-only entries, or **Growth**, a trading backtest
-    with executed entries, exits, P&L and optional continuation entries ([GROWTH_TRADING.md](GROWTH_TRADING.md));
+    with executed entries, exits, P&L, optional continuation entries, an optional entry trend filter and optional
+    persistent entry eligibility ([GROWTH_TRADING.md](GROWTH_TRADING.md), [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md));
   - a frozen phenotype catalogue with single reruns ([PHENOTYPES.md](PHENOTYPES.md)), descriptive run comparisons and
     downloadable research bundles ([EXPORTS.md](EXPORTS.md));
   - entry and exit markers per symbol, with Eastern timestamps;
@@ -25,7 +26,8 @@ prototype of 2026-11-03.
 | [OPERATIONS.md](OPERATIONS.md) | Commands, apollo/Tailscale access, configuration, security model, backups and recovery, the vg-balanced import command, tests, limitations |
 | [RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md) | Manual exploration versus validation, roadmap, UI guide, Claude-led optimisation export/import, how vg-balanced was imported and verified |
 | [STUDY8_METHODOLOGY.md](STUDY8_METHODOLOGY.md) | What Study 8 actually did (the template for future optimisation) |
-| [GROWTH_TRADING.md](GROWTH_TRADING.md) | **Growth** (`rise-from-recent-low-trading`, 1.1.0 and legacy 1.0.0): entry and re-entry, the three exit rules and their switches, accounting, UI use, an exploratory example |
+| [GROWTH_TRADING.md](GROWTH_TRADING.md) | **Growth** (`rise-from-recent-low-trading`, 1.2.0; legacy 1.1.0 and 1.0.0): entry and re-entry, the three exit rules and their switches, accounting, UI use, an exploratory example |
+| [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md) | Growth 1.2.0 entry gates: the entry trend filter (five methods, trading-session sampling), persistent entry eligibility (five bounded policies, the opportunity lifecycle, reset-and-renew), priority and clashes, records and exports, worked examples, the paired CLI diagnostic, pitfalls, OFF parity |
 | [GROWTH_TRADING_AUDIT.md](GROWTH_TRADING_AUDIT.md) | Which D1 code it reuses, rule by rule (sources, chronology, units, fills), what differs, what is left out, and the parity evidence |
 | [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) | Growth 1.1.0 continuation entries: lifecycle and state diagram, the four methods with examples, parameters and defaults, records, evidence, diagnostic runs |
 | [PHENOTYPES.md](PHENOTYPES.md) | The frozen phenotype catalogue: the export contract a study emits, the import CLI, capabilities, single reruns (standalone and shared-slot pool) |
@@ -34,3 +36,4 @@ prototype of 2026-11-03.
 | `brief/2026-11-04-strategy-lab-implementation-brief.md` | The brief, verbatim |
 | `brief/2026-11-04-growth-trading-strategy-brief.md` | The growth-trading brief (Task 5), verbatim |
 | `brief/2026-11-04-growth-continuation-phenotypes-brief.md` | The Growth continuation / unified parameters / phenotypes / exports brief (Task 10), verbatim |
+| `brief/2026-11-05-growth-trend-filter-eligibility-brief.md` | The Growth entry trend filter / latched eligibility / compact strategy picker brief (Task 11), verbatim |

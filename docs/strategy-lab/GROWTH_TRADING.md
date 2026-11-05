@@ -9,10 +9,12 @@ one, P&L, drawdowns and exposure.
 
 | Version | What | Launchable |
 | --- | --- | --- |
-| `1.1.0` (current) | 1.0.0 + **optional continuation entries** after a net-profitable exit (four methods, OFF by default) and a decision log — [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) | New Test, phenotypes |
-| `1.0.0` (legacy) | The base entry and the three exits below | No: its runs stay as recorded. With continuation OFF, 1.1.0 reproduces every 1.0.0 signal, fill, exit, mark and metric exactly (`src/growth-trading/tests/offParity.test.ts`, `apps/strategy-lab/tests/growth-parity.test.ts`); `npm --prefix apps/strategy-lab run replay -- R-…` re-executes a stored run and diffs it. Cloning a 1.0.0 run starts a 1.1.0 test with continuation OFF |
+| `1.2.0` (current) | 1.1.0 + an optional **entry trend filter** (five methods) and optional **persistent entry eligibility** (five bounded policies), both OFF by default — [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md) | New Test, phenotypes |
+| `1.1.0` (legacy) | 1.0.0 + **optional continuation entries** after a net-profitable exit (four methods, OFF by default) and a decision log — [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) | Catalogue phenotypes only (rerun as 1.1.0 configurations). With both gates OFF, 1.2.0 reproduces every 1.1.0 artifact exactly (`src/growth-trading/tests/offParity-1.1.0.test.ts`, `apps/strategy-lab/tests/growth-parity.test.ts`). Cloning a 1.1.0 run starts a 1.2.0 test with both gates OFF |
+| `1.0.0` (legacy) | The base entry and the three exits below | No: its runs stay as recorded. With continuation and both gates OFF, 1.2.0 reproduces every 1.0.0 signal, fill, exit, mark and metric exactly (`src/growth-trading/tests/offParity.test.ts`, `apps/strategy-lab/tests/growth-parity.test.ts`); `npm --prefix apps/strategy-lab run replay -- R-…` re-executes a stored run and diffs it. Cloning a 1.0.0 run starts a 1.2.0 test with all options OFF |
 
-Everything below describes both versions; continuation entries are in [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md).
+Everything below describes every version; continuation entries are in [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md),
+the entry trend filter and persistent eligibility in [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md).
 
 - **Code:** `src/growth-trading/riseTrading.ts` (engine) and `apps/strategy-lab/runner/trading-run.ts` (Strategy Lab
   runner).
