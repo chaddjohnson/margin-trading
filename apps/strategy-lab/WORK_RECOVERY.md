@@ -2,8 +2,14 @@
 
 ## Top screen (read this first) — Task 11: Growth entry trend filter, latched entry eligibility, compact strategy picker — COMPLETE
 
-- **Updated:** 2026-11-05T14:18Z (UTC, from the clock). **Status: COMPLETE — implemented, verified; commit + push to
-  `feature/strategy-entry-explorer-ui` in progress (see the push record below once written).** **No merge to `main`.**
+- **Updated:** 2026-11-05T14:36Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, committed and
+  pushed.** **No merge to `main`.**
+- **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `0301c01..358b90f`, no force) completed
+  2026-11-05T14:32:21Z, after the earlier attempts timed out on intermittent DNS (github.com unresolvable inside the
+  command sandbox; the push ran outside it). `git ls-remote` at 2026-11-05T14:36:28Z:
+  `origin/feature/strategy-entry-explorer-ui` = `358b90fe82e0…` (= local), `origin/main` = `aa5754d…` (unchanged).
+  Commits: `3136940` code, `f078ab1` docs + brief, `358b90f` checkpoint; this push record follows as a separate commit,
+  pushed the same way.
 - **Verification (final, logs `apps/strategy-lab/logs/task11/`, git-ignored):**
   - root `npm test` 14:12:42Z→14:15:52Z (`root-test-final.log`): 1104 tests / 1093 pass / 7 fail (= the 7 pre-existing
     of Task 10, compared by test name) / 4 skipped;
