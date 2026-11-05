@@ -11,6 +11,7 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 - **apollo, VPN, service, backups:** [docs/strategy-lab/OPERATIONS.md](../../docs/strategy-lab/OPERATIONS.md)
 - **Design:** [ARCHITECTURE.md](../../docs/strategy-lab/ARCHITECTURE.md)
 - **Data contracts:** [CONTRACTS.md](../../docs/strategy-lab/CONTRACTS.md)
+- **Interactive Preview:** [INTERACTIVE_PREVIEW.md](../../docs/strategy-lab/INTERACTIVE_PREVIEW.md)
 
 ## Layout
 
@@ -23,10 +24,11 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 | `importers/study8.ts` | Read-only import of a Study 8 runner output (verified against the sealed record); its event conversion is shared with the pool runner |
 | `importers/phenotypes.ts`, `phenotype-export.ts`, `export-study8-phenotypes.ts` | The phenotype catalogue import (verified), the export writer, the Study 8 sealed-selection exporter |
 | `server/export.ts`, `zip.ts`, `compare.ts`, `replay.ts` | Research bundles, the deterministic ZIP writer, run comparisons, stored-run replays |
+| `server/previews.ts`, `preview-identity.ts`, `preview-cache.ts` | Interactive Preview: ONE configuration per submission through the same runner (no run row), its execution identity (data hashes + implementation fingerprint) and the persistent, validated cache; Save as run |
 | `shared/` | Contract v2, parameter schema v2 (`params.ts`), strategy registry and validation, phenotype export contract, artifact shapes, event validation; the demo fixture's generator and v1 schema |
 | `fixtures/phenotypes/` | The Growth demonstration exports (1.1.0 continuation; 1.2.0 entry gates) and the Study 8 `s8-vg-balanced` phenotype export |
 | `scripts/` | Service install, token, fixture generator, `generate-migration-0002.ts`, `audit-state.ts`, `replay-run.ts`, `export-run.ts`, `make-growth-demo-phenotypes.ts`, `make-growth-gates-demo-phenotypes.ts` |
-| `src/` | UI: `App.tsx`, `components/` (sidebar, run view, panels, events, dialogs incl. the `StrategyPicker` rich select, notes), `chart/` (Dygraphs chart, marker overlay, Eastern ticker) |
+| `src/` | UI: `App.tsx`, `components/` (sidebar, run view, panels, events, dialogs incl. the `StrategyPicker` rich select, notes, the Interactive Preview panel, banner and ⓘ popovers), `chart/` (Dygraphs chart, marker overlay, Eastern ticker), `paramForm.ts` (the schema-driven draft shared by New Test and the preview), `preview/` (the preview's state and pure logic) |
 | `tests/`, `e2e/` | Vitest (server, contracts, strategy integration, real-data runs and import), Playwright acceptance (system Chrome) |
 | `deploy/` | systemd user service template (`npm run service:install`) |
 | `fixtures/demo-dataset.v1.json` | The synthetic demo (seeded as the "Demo (synthetic data)" experiment) |
@@ -45,6 +47,7 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 | `export -- R-… [--minute] [--out f]` | Write a run's research bundle |
 | `replay -- R-…` | Re-execute a stored Growth run in scratch and diff its execution facts |
 | `audit:state -- <state dir> [--json]` | Read-only audit (counts, immutable hashes, FKs, integrity, events) |
+| `preview-cache -- status\|verify\|prune\|clear` | Interactive Preview cache maintenance (only the cache directory) |
 | `service:install [-- --enable]` | Write (and optionally enable) the systemd user service |
 | `token [-- --print]` | Where the API token is (or print it) |
 | `generate:fixture [-- --check]` | Regenerate or verify the demo fixture |

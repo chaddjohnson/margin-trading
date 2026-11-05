@@ -182,6 +182,20 @@ deleted, with the reason). Semantics: [OPERATIONS.md](OPERATIONS.md) §Deleting 
 **Exactly one configuration:** every parameter is a scalar, and unknown fields are rejected. This endpoint is not for
 optimisation, and Strategy Lab has no endpoint that is.
 
+## Interactive Preview (`POST /api/previews`)
+
+`{ "request": { strategyKey, strategyVersion, params, symbols, from, to, resolution }, "sourceRun": "R-…" }` — ONE
+configuration of a `launch: form` strategy version, validated by `validateRunRequest` after reduction to its
+**effective** parameters (`shared/preview.ts` `canonicalPreviewConfig`; unknown parameters and fields such as `title`
+are refused). The answer is a ticket (`PT-…`): `{ ticket, previewId, state, cacheHit, coalesced, progress, error,
+timing }`; `previewId` is `PV-` + the sha256 of the execution identity. A completed preview reads like a run
+(`GET /api/previews/PV-…`: a `RunDetail` with `kind: "preview"`, `request` = the canonical configuration and `preview`
+= `{ id, key, config, executedAt, executionMs, implementationSha256, dataSha256, savedAs }`), with `/events`, `/prices`
+and `/export` in the run routes' shapes. `RunKind` gained `preview` for this record only: no stored run has it. Save
+as run: `POST /api/previews/PV-…/save` `{ sourceRun, title?, confirmDuplicate? }` → 201 with the new run (409 when the
+identity no longer holds or the preview was already saved). Everything else:
+[INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md).
+
 ## Run artifacts (`state/strategy-lab/runs/R-xxxxxx/`)
 
 | File | Content |

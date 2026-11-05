@@ -13,6 +13,9 @@ prototype of 2026-11-03.
     persistent entry eligibility ([GROWTH_TRADING.md](GROWTH_TRADING.md), [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md));
   - a frozen phenotype catalogue with single reruns ([PHENOTYPES.md](PHENOTYPES.md)), descriptive run comparisons and
     downloadable research bundles ([EXPORTS.md](EXPORTS.md));
+  - **Interactive Preview**: edit a saved run's parameters beside its chart and run ONE configuration at a time,
+    without saving a run; repeated configurations come from a validated cache; **Save as run** keeps one
+    ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md));
   - entry and exit markers per symbol, with Eastern timestamps;
   - bookmarks and Markdown notes;
   - two-run comparison.
@@ -32,8 +35,10 @@ prototype of 2026-11-03.
 | [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) | Growth 1.1.0 continuation entries: lifecycle and state diagram, the four methods with examples, parameters and defaults, records, evidence, diagnostic runs |
 | [PHENOTYPES.md](PHENOTYPES.md) | The frozen phenotype catalogue: the export contract a study emits, the import CLI, capabilities, single reruns (standalone and shared-slot pool) |
 | [EXPORTS.md](EXPORTS.md) | The research bundle: contents, guarantees, how another analyst checks it |
+| [INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md) | Interactive Preview: the panel, statuses, Enter/Run, Reset, Save as run and Return; semantics and isolation; the persistent cache (execution identity, implementation fingerprint, storage, validation, retention, maintenance); concurrency; API; acceptance map; measured latency; limitations |
 | `../../src/entry-signals/README.md` | The rise-from-recent-low rule, maths, rearming, bars, forward outcomes |
 | `brief/2026-11-04-strategy-lab-implementation-brief.md` | The brief, verbatim |
 | `brief/2026-11-04-growth-trading-strategy-brief.md` | The growth-trading brief (Task 5), verbatim |
 | `brief/2026-11-04-growth-continuation-phenotypes-brief.md` | The Growth continuation / unified parameters / phenotypes / exports brief (Task 10), verbatim |
 | `brief/2026-11-05-growth-trend-filter-eligibility-brief.md` | The Growth entry trend filter / latched eligibility / compact strategy picker brief (Task 11), verbatim |
+| `brief/2026-11-05-interactive-preview-brief.md` | The Interactive Preview brief (Task 13), verbatim |

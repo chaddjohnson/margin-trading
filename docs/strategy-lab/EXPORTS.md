@@ -8,6 +8,11 @@ without access to the Strategy Lab server. The bundle never changes a run artifa
   completed runs export.
 - **CLI:** `npm --prefix apps/strategy-lab run export -- R-000042 [--minute] [--out file.zip] [--state DIR]`.
 - **Code:** `apps/strategy-lab/server/export.ts` (contents), `server/zip.ts` (the ZIP writer/reader).
+- **Interactive Preview:** a displayed preview exports the same bundle from its verified cache entry (header → **Export
+  preview bundle**; `GET /api/previews/PV-…/export`). Its README opens with a *TEMPORARY PREVIEW — not a saved run*
+  banner, `manifest.json` carries `preview` (id = the execution identity's sha256, source run, timings) and the file is
+  `strategy-lab-preview-PV-….zip`. The `artifacts/` are the cached files, verified against the cache entry
+  ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md)). A preview saved as a run exports as that run.
 
 ## Contents (`strategy-lab.research-bundle` v1)
 

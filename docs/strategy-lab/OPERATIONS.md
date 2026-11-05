@@ -73,6 +73,10 @@ the tailnet, open `http://apollo:4317`, enter the token, and confirm the run lis
 | `STRATEGY_LAB_RUN_TIMEOUT_SECONDS` | `1800` | A run is failed after this |
 | `STRATEGY_LAB_STATIC_DIR` | `apps/strategy-lab/dist` | The built UI; empty = API only |
 | `STRATEGY_LAB_SEED_DEMO` | `1` | Seed the synthetic demo experiment into an empty database |
+| `STRATEGY_LAB_PREVIEW_CACHE_DIR` | `<state>/preview-cache` | The Interactive Preview cache (disposable; never the state directory itself, `runs/`, `imports/` or the data) — [INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md) §3 |
+| `STRATEGY_LAB_PREVIEW_CACHE_MAX_ENTRIES` | `200` | Cached previews kept (least recently used evicted first) |
+| `STRATEGY_LAB_PREVIEW_CACHE_MAX_MB` | `2048` | Their total size |
+| `STRATEGY_LAB_MAX_CONCURRENT_PREVIEWS` | `1` (max 2) | Preview executions at once (separate from saved runs) |
 
 The service reads extra settings from `~/.config/strategy-lab/env` (outside the repository).
 
@@ -103,7 +107,10 @@ Everything stateful lives in `state/strategy-lab/` (git-ignored):
 - `strategy-lab.sqlite` (with `-wal` and `-shm` while running);
 - `runs/`;
 - `imports/`;
-- `api-token`.
+- `api-token`;
+- `preview-cache/` — **disposable**: temporary Interactive Preview results, rebuilt on demand. Backups need not include
+  it; deleting it loses no research record ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md) §3.3 for `status`,
+  `verify`, `prune`, `clear`).
 
 To back up while the service runs, take a consistent online copy of the database and copy the files:
 
@@ -174,6 +181,11 @@ select) added **no migration**. Strategy
 rows are created per version on first use, and no stored run, variation or artifact changes. A running server serves
 the new build after a restart; `audit:state` before and after shows unchanged rows and files.
 
+Interactive Preview (2026-11-05, Task 13) added **no migration** either: previews never touch the database. The first
+start with the new code creates `<state>/preview-cache/`. Until a running server is restarted, the new UI's
+*Interactive Preview* panel reports that the server does not offer it yet (its routes answer 404); everything else
+works as before.
+
 ## Importing vg-balanced
 
 ```sh
@@ -193,6 +205,8 @@ From `apps/strategy-lab/`:
 - `npm test` runs Vitest only. Its real-data cases are skipped without `data/`.
 - `npm run test:e2e` builds, then runs the browser tests against a fresh temporary state on port 5299, using the
   system Chrome.
+- `node --experimental-transform-types apps/strategy-lab/scripts/benchmark-preview.ts [out.json]` (from the repository
+  root) measures Interactive Preview cold and warm latency on real data in a temporary state.
 
 The strategy's own tests are part of the root `npm test` (`src/entry-signals/tests/`).
 
@@ -216,6 +230,9 @@ The strategy's own tests are part of the root `npm test` (`src/entry-signals/tes
 - **Wheel direction.** A two-finger swipe up zooms in (`deltaY > 0`). Browsers cannot tell a mouse wheel from a
   trackpad, so a classic mouse wheel zooms in when rolled toward you. Verified with automated browser events and a
   negative control, not on physical devices.
+- **Interactive Preview** ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md) §9): the symbols are the saved run's; drafts
+  are per tab; one preview executes at a time; a restart loses a running preview; legacy and shared-capital runs are not
+  previewable by design.
 - **Optimisation batches.** The schema exists, but no batch is imported yet and there is no import CLI for one yet.
 - **Chart observations.** A saved chart observation (symbol, run, window, note) is not implemented. Use run and
   variation notes, and record the window in the note.

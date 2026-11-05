@@ -10,7 +10,10 @@ Strategy Lab (`apps/strategy-lab/`) is a general-purpose strategy research workb
 - follow the run's progress;
 - bookmark and annotate runs and variations;
 - compare two runs on one symbol's chart, with a descriptive side-by-side comparison;
-- download a run's **research bundle** ([EXPORTS.md](EXPORTS.md)).
+- download a run's **research bundle** ([EXPORTS.md](EXPORTS.md));
+- **Interactive Preview**: edit a saved run's parameters beside its chart and run ONE configuration at a time with no
+  saved run; repeated configurations come from a persistent, validated cache; **Save as run** keeps one
+  ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md)).
 
 Optimisation, sweeps and selection are **not** in the browser or the API. They run as Claude/CLI research workflows
 ([RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md)), and only their finished records may be imported for display.
@@ -39,6 +42,7 @@ importers/phenotypes.ts (CLI) ──▶ the phenotype catalogue (reads a verifie
 | **Variation** | One **immutable** parameter configuration of one strategy version in one experiment. Identity = strategy + experiment + canonical parameters; for runnable strategies the bar resolution is part of the configuration | `V-000001` |
 | **Run** | One execution (or import) of a variation: title, timestamps, status, symbols, window, data fingerprints, code revision, parameter snapshot, assumptions, events, metrics. Running the same variation again creates a **new run** | `R-000001` |
 | **Phenotype** | A frozen executable configuration a study selected, imported with its manifest; runnable one test at a time, never edited ([PHENOTYPES.md](PHENOTYPES.md)) | `PH-0001` (import `PI-0001`) |
+| **Preview** | A temporary result of ONE configuration executed by Interactive Preview: no run row, variation or sidebar entry; cached by its execution identity until evicted; *Save as run* turns it into a normal run | `PV-` + 64 hex (the identity's sha256) |
 | **Optimisation batch / trial** | Read-only history imported from a Claude/CLI optimisation study (a phenotype export's optional `trials`); never launched from Strategy Lab | `OB-0001` |
 
 - **IDs are derived from the integer primary key and never change.** Titles are separate and editable.
@@ -93,6 +97,18 @@ importers/phenotypes.ts (CLI) ──▶ the phenotype catalogue (reads a verifie
    ("Interrupted …"). The browser polls `GET /api/runs/:id`, so a refresh loses nothing.
 6. **Cancel:** `POST /api/runs/:id/cancel` drops a queued run, or terminates a running child (SIGTERM, then SIGKILL).
 
+## Interactive Preview (summary)
+
+`server/previews.ts` executes a preview with the same allowlisted runner, flags and environment as a run, in
+`<state>/preview-cache/work/`, and caches only verified, reconciled results under their execution identity
+(`server/preview-identity.ts`: strategy version, effective parameters, symbols, window, bars, the content hashes of the
+data files and runtime inputs, and an implementation fingerprint over the runner's whole import closure, packages and
+Node runtime) in `server/preview-cache.ts`. Every hit recomputes and compares the identity and re-hashes the files.
+In the browser, `src/preview/usePreview.ts` holds the draft (logic shared with New Test in `src/paramForm.ts`), the
+revisioned submissions and the displayed result, `src/components/PreviewPanel.tsx` the panel and `PreviewBanner.tsx`
+the header; `RunView` renders a saved run or a preview through the same components. Details:
+[INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md).
+
 ## Storage
 
 - **SQLite** through Node's built-in `node:sqlite`. Default `state/strategy-lab/strategy-lab.sqlite`; override with
@@ -127,6 +143,8 @@ importers/phenotypes.ts (CLI) ──▶ the phenotype catalogue (reads a verifie
   - pool reruns: `study8/` (the Study 8 runner's own output) and `study8-output.json` (its file hashes).
 
   Writes are atomic: temporary file, fsync, rename, then fsync of the directory.
+- **Preview cache:** `state/strategy-lab/preview-cache/` (`entries/<key>/`, `work/`, `trash/`, a marker file):
+  disposable, bounded (LRU by count and bytes), never a store of record; no table in SQLite.
 - **Git:** everything under `state/` is ignored (root `.gitignore`). Migrations, code and the small demo fixture are
   committed.
 

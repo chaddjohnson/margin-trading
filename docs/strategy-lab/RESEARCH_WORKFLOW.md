@@ -31,6 +31,9 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
 - **A trading backtest is one exploratory configuration.** Its P&L is real accounting of simulated fills, but on data
   you have seen. Its defaults (the D1 baseline exits) were not optimised for it, and one good run is not an edge.
 - **No "best strategy" claims from the UI.** Selection happens in a frozen protocol with chronological doors (§5).
+- **Interactive Preview is exploration too.** Each preview is one explicit configuration you chose; nothing searches,
+  and nothing restricts or presets the dates you pick. A long sequence of previews is still a search you performed by
+  hand: count it as spent, exactly like saved runs.
 
 ## 3. Roadmap
 
@@ -122,6 +125,13 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    **Delete result**. It removes that run (results, files, its notes and bookmark) permanently and keeps its
    variation and everything else ([OPERATIONS.md](OPERATIONS.md) §Deleting a saved result). Bookmark instead of
    deleting when in doubt.
+16. **Interactive Preview:** on a completed run, **Interactive Preview** (right of the symbol tabs) opens a compact panel
+    beside the chart ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md)). Change a value (the ⓘ shows its full help),
+    press **Enter** or **Run preview**: the chart, events, trades and analysis show that ONE configuration as a
+    **TEMPORARY PREVIEW** (`PV-…`), with no new run. Going back to a configuration already previewed is a *Cache hit*.
+    **Save as run…** keeps the displayed preview as a normal run; **Return to saved result** shows the saved run again.
+    It is still manual exploration (§2): one explicit configuration per click, never a sweep, no automatic runs, and
+    the date range is yours to choose.
 
 ## 5. Claude-led optimisation without a UI button
 

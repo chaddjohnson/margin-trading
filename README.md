@@ -339,4 +339,5 @@ studies can be imported and rerun one at a time, and every run downloads as a re
 npm --prefix apps/strategy-lab start   # http://127.0.0.1:4317 (over the tailnet: see docs/strategy-lab/OPERATIONS.md)
 ```
 
-Documentation: `docs/strategy-lab/README.md`. Research direction: `docs/research/growth-entry-discovery/PLAN.md`.
+Documentation: `docs/strategy-lab/README.md` (Interactive Preview: `docs/strategy-lab/INTERACTIVE_PREVIEW.md`). Research
+direction: `docs/research/growth-entry-discovery/PLAN.md`.
