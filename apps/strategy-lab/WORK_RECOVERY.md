@@ -1,5 +1,52 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
+## Top screen (read this first) — Task 12: delete saved results (runs) — COMPLETE
+
+- **Updated:** 2026-11-05T16:06Z (UTC, from the clock). **Status: COMPLETE — implemented, verified; commit + push in progress (push record follows).** No merge to `main`; commit + push to `feature/strategy-entry-explorer-ui` requested by the user's message.
+- **Brief:** the user's chat message (Strategy Lab: Delete Saved Results) — a Delete action per run with a confirmation
+  dialog (run id, strategy, symbols, run date, permanence warning; Cancel default, destructive Delete), deletion of the
+  run's results, artifacts, run-only notes and bookmark; unrelated data preserved; consistent DB/filesystem; list and
+  selection refresh; feedback; no concurrent duplicates; no wildcard deletion, no renumbering; unknown ids rejected;
+  tests; docs.
+- **Start:** HEAD `d06576e` (= origin), tree clean. Live server not running. Backup of Task 11
+  (`~/backups/strategy-lab/20261105T125521Z-pre-trend-eligibility/`) = the live state (verified at 14:18Z).
+- **Audit (schema):** FK to runs: `run_symbols.run_id`, `optimization_trials.run_id`; `notes(target_type 'run',
+  target_id = runs.id)`; bookmark = `runs.bookmarked_at`; `runs.phenotype_id → phenotypes`, `runs.variation_id →
+  variations` (shared, immutable, never deleted). Trigger `runs_no_delete` forbids deletes; `nextId('runs')` =
+  max(id)+1 (a deleted newest id would be REUSED); `seedDemo` reseeds when the demo experiment has no run.
+- **Design:** migration 0003: `run_deletions` tombstone (minimal summary, never deleted, read by nextId so ids are
+  never reused) + `runs_no_delete` replaced by a guarded trigger (delete only while a 'deleting' tombstone exists).
+  Procedure (service, synchronous, per-run lock): refuse queued/running, refuse runs referenced by optimization trials;
+  rename `runs/R-x` → `trash/R-x.<stamp>`; one transaction (tombstone, run notes, run_symbols, run row, tombstone
+  'deleted'); on failure rename back and report; after commit purge the trash dir (failure → reported warning +
+  startup purge). Startup recovery: trash dir of a still-existing run → restored; of a deleted run → purged. seedDemo
+  skips when demo runs were deleted. UI: run header ⋯ menu → Delete result… → confirmation dialog.
+- **Implemented by 16:02Z:** `server/migrations/0003_run_deletion.sql`, `server/delete-run.ts` (new), `server/repo.ts`
+  (nextId skips deleted ids; runDeletionInfo, deleteRunRecords, tombstone queries), `server/http.ts` (`DELETE
+  /api/runs/:id`, body `{confirm}`), `server/main.ts` (recoverRunDeletions at start), `server/seed-demo.ts` (no reseed
+  after deleted demo runs), UI `src/components/DeleteRunDialog.tsx` (new), `RunView.tsx` (⋯ actions menu), `App.tsx`
+  (notice, route/compare update), `api.ts`, CSS; tests `tests/delete-run.test.ts` 13/13, `e2e/delete-run.spec.ts` 4/4;
+  updated `tests/migration.test.ts` (3 migrations), `tests/server.test.ts` (new trigger message); app Vitest 160/160.
+  Docs: OPERATIONS §Deleting a saved result (+ upgrade note), ARCHITECTURE (rule + migration 0003), CONTRACTS (route),
+  RESEARCH_WORKFLOW §4.15.
+- **LIVE SERVER RUNNING (the user's):** pid 3505161 (`start:vpn`, started 15:28:22Z, :4317 on 127.0.0.1/127.0.1.1/
+  100.68.60.114), the user is creating runs (R-000018…R-000033 by 16:01Z; it also imported the gates demo → 4
+  phenotypes). Its DB is still at migration 0002 (0003 applies at ITS next start; not restarted by me). It serves
+  `dist`, rebuilt by my e2e builds: the delete UI is visible there but its server process has no DELETE route until it
+  restarts (a delete attempt shows "Not deleted. … method not allowed"; nothing is lost).
+- **Fresh backup 16:01Z:** `~/backups/strategy-lab/20261105T160129Z-pre-run-deletion-0003/` (online node:sqlite backup,
+  runs/ + imports/, state-files.sha256, audit-before.json: 33 runs, 33/33 events, integrity ok, FK []).
+  **Rehearsal on a copy of it:** 0003 changes no audited key except schema_migrations 2→3; deleting R-000003 on the
+  copy: the other 32 runs, all variations and every other file identical, FK [], integrity ok, 32/32 events.
+- **Verification (final):** app `npm run check` 16:02:06Z→16:05:25Z (`apps/strategy-lab/logs/task12/check.log`):
+  typecheck + lint clean, Vitest 160/160 (21 files), build, Playwright 52/52 (dist = the final build). Root tsc clean;
+  root ESLint 306 (= baseline). The root `npm test` was not rerun: Task 12 changes only apps/strategy-lab server/UI
+  files that no root test imports (the 14:12Z run stands: 1104 / 1093 / 7 pre-existing / 4 skipped).
+- **Live data:** only read by me (backup + audits); the changes since 14:18Z are the user's own runs and imports.
+- **Follow-up gate (the user's):** restart the live server (same `start:vpn`) to apply migration 0003 and enable
+  deletion (rehearsed on a copy of the 16:01Z backup); then *⋯ → Delete result…* works in the UI.
+
+
 ## Top screen (read this first) — Task 11: Growth entry trend filter, latched entry eligibility, compact strategy picker — COMPLETE
 
 - **Updated:** 2026-11-05T14:36Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, committed and
