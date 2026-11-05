@@ -7,9 +7,11 @@
 //   event (id, kind, instant, price, reason, values, linkage, meta) — after removing only the fields v1.1.0 ADDED (the
 //   origin attribution, and the continuation signals, which an OFF run never has). Replayed with continuation and both
 //   entry gates OFF.
-// - 1.1.0 ('legacy-1.1.0'): trades.json, daily.json and events.json IN FULL (v1.2.0 adds nothing to them with both entry
-//   gates OFF), and every stored field of metrics.json and decisions.json (v1.2.0 adds only the run-level
-//   trendFilter/eligibility {enabled: false} and the engine version).
+// - 1.1.0 ('legacy-1.1.0'): trades.json, daily.json and events.json IN FULL (v1.2.0 and v1.3.0 add nothing to them with
+//   the entry gates and the optional rules OFF), and every stored field of metrics.json and decisions.json (later
+//   versions add only run-level {enabled: false} records and the engine version).
+// - 1.2.0 ('legacy-1.2.0'): the same comparison (v1.3.0 adds nothing to trades/daily/events with the Rise entry and the
+//   initial risk stop and trend retention OFF; it adds the run-level entryMethod/initialStop/retention records).
 // - the current version ('exact'): every file in full.
 
 import { spawnSync } from 'node:child_process';
@@ -63,11 +65,17 @@ export interface ReplayVerdict {
  * stored run is an earlier engine version — compare every stored field, ignoring only what later versions added;
  * `exact`: the same engine version — the files must be identical in full.
  */
-export type ReplayMode = 'legacy' | 'legacy-1.1.0' | 'exact';
+export type ReplayMode = 'legacy' | 'legacy-1.1.0' | 'legacy-1.2.0' | 'exact';
 
 /** The comparison a stored run of `version` gets when the current engine `current` replays it. */
 export function replayModeOf(version: string, current: string): ReplayMode {
-  return version === current ? 'exact' : version === '1.1.0' ? 'legacy-1.1.0' : 'legacy';
+  return version === current
+    ? 'exact'
+    : version === '1.2.0'
+      ? 'legacy-1.2.0'
+      : version === '1.1.0'
+        ? 'legacy-1.1.0'
+        : 'legacy';
 }
 
 export function compareRunOutputs(storedDir: string, freshDir: string, mode: ReplayMode): ReplayVerdict[] {
@@ -76,7 +84,9 @@ export function compareRunOutputs(storedDir: string, freshDir: string, mode: Rep
   for (const file of files) {
     const stored = readJson(storedDir, file) as Record<string, unknown>;
     const fresh = readJson(freshDir, file) as Record<string, unknown>;
-    const projected = mode === 'legacy' || (mode === 'legacy-1.1.0' && (file === 'metrics.json' || file === 'decisions.json'));
+    const projected =
+      mode === 'legacy' ||
+      ((mode === 'legacy-1.1.0' || mode === 'legacy-1.2.0') && (file === 'metrics.json' || file === 'decisions.json'));
     const compared = projected ? (projectOnto(stored, fresh) as Record<string, unknown>) : fresh;
     // a legacy replay records engineVersion/legacyReplay in metrics.strategy; the stored strategy is the reference
     if (mode !== 'exact' && file === 'metrics.json') compared.strategy = stored.strategy;

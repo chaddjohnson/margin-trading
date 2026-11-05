@@ -4,13 +4,19 @@
 //
 // Strategy versions:
 // - rise-from-recent-low@1.0.0           "Rise from recent low (entry signal)": signal-only, New Test.
-// - rise-from-recent-low-trading@1.2.0   "Growth": the trading backtest with optional continuation entries, an optional
-//                                        entry trend filter and optional persistent entry eligibility, New Test.
+// - rise-from-recent-low-trading@1.3.0   "Growth": the trading backtest with optional continuation entries, an optional
+//                                        entry trend filter, optional persistent entry eligibility and (1.3.0) an
+//                                        entry-method selector (Rise | trend breakout), an optional initial risk stop and
+//                                        optional trend retention, New Test.
+// - rise-from-recent-low-trading@1.2.0   "Growth" (legacy): before the three optional rules. Not offered by New Test; its
+//                                        catalogue phenotypes stay runnable; its runs replay as 1.3.0 with the three OFF
+//                                        (identical; src/growth-trading/tests/offParity-1.2.0.test.ts).
 // - rise-from-recent-low-trading@1.1.0   "Growth" (legacy): before the entry gates. Not offered by New Test; its catalogue
-//                                        phenotypes stay runnable; its runs replay as 1.2.0 with both gates OFF
-//                                        (identical; src/growth-trading/tests/offParity-1.1.0.test.ts).
+//                                        phenotypes stay runnable; its runs replay as 1.3.0 with both gates and the
+//                                        optional rules OFF (identical; src/growth-trading/tests/offParity-1.1.0.test.ts).
 // - rise-from-recent-low-trading@1.0.0   "Growth" (legacy): the pre-continuation version. Not launchable; its runs
-//                                        replay as 1.2.0 with continuation and both gates OFF (identical; tests/offParity).
+//                                        replay as 1.3.0 with continuation, both gates and the optional rules OFF
+//                                        (identical; tests/offParity).
 // - study8-d1-pool@pools-engine          the Study 8 D1 shared-slot pool: imported runs, and phenotype reruns only.
 // - demo-toy-rules@1.0.0                 the synthetic demo: read-only.
 // Display names are metadata: the keys and versions above never change (docs/strategy-lab/CONTRACTS.md).
@@ -888,6 +894,204 @@ const ELIGIBILITY_PARAMS: ParamSpec[] = [
 export const TREND_PARAM_KEYS = TREND_PARAMS.map((p) => p.key);
 export const ELIGIBILITY_PARAM_KEYS = ELIGIBILITY_PARAMS.map((p) => p.key);
 
+// ----- Growth 1.3.0: the entry-method selector with the trend-breakout entry, the initial risk stop and trend retention
+// (src/growth-trading/optionalRules.ts; docs/strategy-lab/GROWTH_OPTIONAL_RULES.md). Three namespaces — entryMethod /
+// breakout*, initialStop*, retention* — each OFF (or the Rise entry) by default. Defaults are the brief's starting
+// hypotheses, not optimised values. -----
+
+const RISE = 'rise_from_recent_low';
+const BREAKOUT = 'trend_breakout';
+const method13 = (m: string): Predicate => ({ param: 'entryMethod', equals: m });
+const OBSERVED_AT_CLOSE =
+  'Observed at the completed daily close (the scheduled 16:00 ET close, 13:00 on early-close days); the order fills at the next eligible trade — the next session’s opening trade.';
+
+const ENTRY_METHOD_PARAM: ParamSpec = {
+  key: 'entryMethod',
+  label: 'Entry method',
+  description:
+    'Which base entry signal Growth trades. Exactly one method operates; the other’s inputs are kept as a saved draft and not executed. One position at a time, no pyramiding, no duplicate pending orders.',
+  type: 'enum',
+  unit: 'text',
+  default: RISE,
+  options: [
+    {
+      value: RISE,
+      label: 'Rise from recent low (default)',
+      description: 'The unchanged Rise-from-Recent-Low scanner (X, N): the existing Growth entry.'
+    },
+    {
+      value: BREAKOUT,
+      label: 'Breakout above prior high in a rising trend',
+      description:
+        'At a completed daily close: close > its L-session SMA, that SMA > its value K sessions earlier, and close > the highest high of the N preceding sessions (all strict).'
+    }
+  ],
+  group: 'entry'
+};
+const breakoutParam = (p: Omit<NumericParamSpec, 'group' | 'whenInactive' | 'activeWhen'>): NumericParamSpec => ({
+  ...p,
+  group: 'entry',
+  activeWhen: method13(BREAKOUT),
+  whenInactive: 'hide'
+});
+const BREAKOUT_PARAMS: ParamSpec[] = [
+  breakoutParam({
+    key: 'breakoutSmaSessions',
+    label: 'Breakout trend SMA length (L, intrinsic)',
+    description:
+      'Part of the breakout method, always required (not the optional entry trend filter): the close must be strictly above the simple average of the last L completed session closes, this session’s close included. ' +
+      OBSERVED_AT_CLOSE,
+    type: 'integer',
+    unit: 'sessions',
+    default: 50,
+    min: 2,
+    max: 500,
+    step: 1,
+    search: { min: 10, max: 200, step: 10 },
+    execution: 'SMA_L(s) = mean(C_{s−L+1} … C_s) of completed session closes; condition C_s > SMA_L(s), strict.'
+  }),
+  breakoutParam({
+    key: 'breakoutSlopeComparisonSessions',
+    label: 'Breakout SMA slope comparison (K, intrinsic)',
+    description:
+      'Part of the breakout method, always required: the SMA must be strictly above its own value at the close K sessions earlier (a rising trend). Initial research value 40, following Candidate A’s trend horizon.',
+    type: 'integer',
+    unit: 'sessions',
+    default: 40,
+    min: 1,
+    max: 250,
+    step: 1,
+    search: { min: 5, max: 120, step: 5 },
+    execution: 'SMA_L(s) > SMA_L(s − K), strict.'
+  }),
+  breakoutParam({
+    key: 'breakoutPriorHighSessions',
+    label: 'Prior-high lookback (N)',
+    description:
+      'The close must be strictly above the highest session high of the N completed sessions BEFORE the signal session (the signal session’s own high excluded). Each qualifying close is its own signal; it is never replayed, and the reference high is never reset to an exit fill (no cooldown).',
+    type: 'integer',
+    unit: 'sessions',
+    default: 20,
+    min: 1,
+    max: 250,
+    step: 1,
+    search: { min: 5, max: 120, step: 5 },
+    execution: 'C_s > max(H_{s−N} … H_{s−1}), strict.'
+  })
+];
+
+const INITIAL_STOP_PARAMS: ParamSpec[] = [
+  {
+    key: 'initialStopEnabled',
+    label: 'Initial risk stop',
+    description:
+      'OFF (default): exactly the version without it. ON: every Growth position gets a FIXED stop at its actual fill price − m × ATR, active from the fill (on the entry session too) whatever its profit, interest or age. The profit trailing stop keeps its own rules; the higher active stop governs. An entry whose ATR cannot be computed is blocked and recorded — never entered without the requested protection.',
+    type: 'boolean',
+    unit: 'text',
+    default: false,
+    group: 'initialStop'
+  },
+  {
+    key: 'initialStopAtrSessions',
+    label: 'ATR lookback (L)',
+    description:
+      'Completed daily sessions before the fill session. True range = max(high, previous close) − min(low, previous close); ATR = their SIMPLE mean (no Wilder smoothing). The fill session’s own high, low and close are never used. Needs L + 1 completed sessions.',
+    type: 'integer',
+    unit: 'sessions',
+    default: 20,
+    min: 1,
+    max: 250,
+    step: 1,
+    search: { min: 5, max: 60, step: 5 },
+    group: 'initialStop',
+    activeWhen: on('initialStopEnabled'),
+    whenInactive: 'hide',
+    execution: 'ATR_L = mean of TR over the L sessions completed immediately before the fill session.'
+  },
+  {
+    key: 'initialStopAtrMultiple',
+    label: 'Initial-stop distance (m × ATR)',
+    description:
+      'Stop = actual fill price − m × ATR, fixed for the position. Initial research value 3 (2 versus 3 is a planned comparison); not an optimised value.',
+    type: 'number',
+    unit: 'ratio',
+    default: 3,
+    min: 0.1,
+    max: 20,
+    step: 0.1,
+    search: { min: 1, max: 5, step: 0.5 },
+    group: 'initialStop',
+    activeWhen: on('initialStopEnabled'),
+    whenInactive: 'hide',
+    execution:
+      'A gap through the stop fills at that opening trade; a minute crossing it fills at the stop level (an assumed fill).'
+  }
+];
+
+const RETENTION_PARAMS: ParamSpec[] = [
+  {
+    key: 'retentionEnabled',
+    label: 'Retain part of profitable trend',
+    description:
+      'OFF (default): exactly the version without it. ON: at the FIRST profit trailing-stop event only a fraction of the shares is sold; the remainder is kept and exits on consecutive completed closes below an SMA (the trailing stop is then consumed). The initial risk stop, the maximum losing hold and the buffered loss keep applying to the remaining shares.',
+    type: 'boolean',
+    unit: 'text',
+    default: false,
+    group: 'retention'
+  },
+  {
+    key: 'retentionSellPercent',
+    label: 'Fraction sold at the trailing-stop event',
+    description:
+      'Percent of the current shares sold at the first profit trailing-stop fill (a gap can still make it a loss — the actual fill is used). The principal is repaid in proportion; interest on the sold part is paid with it.',
+    type: 'number',
+    unit: 'percent',
+    default: 50,
+    min: 1,
+    max: 99,
+    step: 1,
+    search: { min: 10, max: 90, step: 10 },
+    group: 'retention',
+    activeWhen: on('retentionEnabled'),
+    whenInactive: 'hide'
+  },
+  {
+    key: 'retentionSmaSessions',
+    label: 'Remaining-position SMA length',
+    description: `Simple average of the last L completed session closes (this session’s close included). ${SESSIONS_NOTE}`,
+    type: 'integer',
+    unit: 'sessions',
+    default: 50,
+    min: 2,
+    max: 500,
+    step: 1,
+    search: { min: 10, max: 200, step: 10 },
+    group: 'retention',
+    activeWhen: on('retentionEnabled'),
+    whenInactive: 'hide'
+  },
+  {
+    key: 'retentionClosesBelow',
+    label: 'Consecutive closes below the SMA to exit',
+    description:
+      'Completed closes strictly below the SMA, in a row; a close not below resets the count. The partial-sale session’s own close is the first one counted. Decided at the qualifying close; the remainder is sold at the next eligible trade (the next session’s opening trade).',
+    type: 'integer',
+    unit: 'count',
+    default: 2,
+    min: 1,
+    max: 20,
+    step: 1,
+    search: { min: 1, max: 5, step: 1 },
+    group: 'retention',
+    activeWhen: on('retentionEnabled'),
+    whenInactive: 'hide'
+  }
+];
+
+export const ENTRY_METHOD_PARAM_KEYS = [ENTRY_METHOD_PARAM.key, ...BREAKOUT_PARAMS.map((p) => p.key)];
+export const INITIAL_STOP_PARAM_KEYS = INITIAL_STOP_PARAMS.map((p) => p.key);
+export const RETENTION_PARAM_KEYS = RETENTION_PARAMS.map((p) => p.key);
+
 // Growth 1.2.0: the 1.1.0 groups with the two entry gates after the entry.
 const GROWTH_GROUPS_1_2_0 = [
   GROWTH_GROUPS[0]!,
@@ -967,17 +1171,18 @@ const CONTINUATION_NOTE =
   'Continuation (when ON): Classic D1 reads completed 1-minute bars at every resolution; the other methods read completed bars of the selected resolution. Decisions at bar ends; fills at the next eligible trade.';
 
 /**
- * Growth, the current version (1.2.0): the 1.1.0 parameters plus the optional entry trend filter and the optional
- * persistent entry eligibility, both OFF by default (OFF = 1.1.0 exactly).
+ * Growth 1.2.0 (legacy, frozen): the 1.1.0 parameters plus the optional entry trend filter and the optional persistent
+ * entry eligibility, both OFF by default (OFF = 1.1.0 exactly). Its runs are historical facts; New Test no longer
+ * offers it, its catalogue phenotypes stay runnable, and it replays as 1.3.0 with the three optional rules OFF.
  */
-export const RISE_FROM_RECENT_LOW_TRADING: StrategySpec = {
+export const RISE_FROM_RECENT_LOW_TRADING_1_2_0: StrategySpec = {
   key: 'rise-from-recent-low-trading',
   version: '1.2.0',
   title: GROWTH_TITLE,
   kind: 'trades',
-  launch: 'form',
+  launch: 'phenotype',
   runnable: true,
-  description: `${GROWTH_DESCRIPTION} Optional: continuation entries after a profitable exit (four methods), an entry trend filter (five methods) and persistent entry eligibility (five bounded policies) — all OFF by default.`,
+  description: `${GROWTH_DESCRIPTION} Optional: continuation entries after a profitable exit (four methods), an entry trend filter (five methods) and persistent entry eligibility (five bounded policies) — all OFF by default. (Version 1.2.0, before the entry-method selector, the initial risk stop and trend retention.)`,
   schemaVersion: 2,
   params: [
     ...GROWTH_BASE_PARAMS.slice(0, 2),
@@ -1008,12 +1213,154 @@ export const RISE_FROM_RECENT_LOW_TRADING: StrategySpec = {
     'Entry trend filter / persistent eligibility (when ON): decisions at completed bar ends, trend windows in trading sessions; a later (latched) entry fills at the next eligible trade at the then-current price.'
   ],
   formerTitles: [GROWTH_FORMER_TITLE],
-  groupNotes: [...GROWTH_GROUP_NOTES, ...GATE_NOTES]
+  groupNotes: [...GROWTH_GROUP_NOTES, ...GATE_NOTES],
+  legacy: {
+    supersededBy: '1.3.0',
+    replay:
+      'version 1.3.0 with the Rise entry, the initial risk stop OFF and trend retention OFF reproduces every 1.2.0 signal, fill, exit, gate decision, continuation episode, decision-log entry, mark and metric exactly (src/growth-trading/tests/offParity-1.2.0.test.ts); its catalogue phenotypes rerun as 1.2.0 configurations; a clone starts a 1.3.0 test with the three OFF'
+  }
+};
+
+// Growth 1.3.0: the groups and parameters. The entry group holds the method selector with both methods' inputs; the
+// trend filter is relabelled as an ADDITIONAL gate (its inputs and meaning unchanged); persistent eligibility applies
+// to the Rise entry only (its switch is disabled and recorded as not applicable with the breakout).
+const GROWTH_GROUPS_1_3_0 = [
+  {
+    key: 'entry',
+    title: 'Entry',
+    description:
+      'The base entry method: the unchanged Rise-from-Recent-Low scanner (default) or the trend breakout. Only the selected method’s inputs apply.'
+  },
+  {
+    key: 'trend',
+    title: 'Entry trend filter (optional, an additional gate)',
+    description:
+      'An ADDITIONAL gate on every Growth entry decision, for either entry method; separate from the breakout’s own (intrinsic) SMA inputs, which the breakout always requires. Lookbacks count trading sessions, whatever the bar resolution. OFF reproduces Growth without the filter exactly. Defaults are illustrative, not optimised; a trend rule is not evidence of safer trading.'
+  },
+  {
+    key: 'eligibility',
+    title: 'Persistent entry eligibility (optional, Rise entry only)',
+    description:
+      'Keeps a qualifying Rise signal available for a bounded number of trading sessions, so that it can still be entered later at the then-current price if its policy stays satisfied. Not applicable to the breakout entry. OFF reproduces Growth without it exactly.'
+  },
+  { key: 'exit', title: 'Exits' },
+  {
+    key: 'initialStop',
+    title: 'Initial risk stop (optional)',
+    description:
+      'A fixed protective stop at fill − m × ATR, active from the fill. OFF reproduces Growth without it exactly. Defaults are starting hypotheses, not optimised.'
+  },
+  {
+    key: 'retention',
+    title: 'Retain part of profitable trend (optional)',
+    description:
+      'A partial sale at the first profit trailing-stop event and a trend exit for the remainder. OFF reproduces Growth without it exactly. Defaults are starting hypotheses, not optimised.'
+  },
+  ...GROWTH_GROUPS.slice(2)
+];
+
+const X_1_3_0: NumericParamSpec = { ...X_PARAM, group: 'entry', activeWhen: method13(RISE), whenInactive: 'hide' };
+const N_1_3_0: NumericParamSpec = { ...N_PARAM, group: 'entry', activeWhen: method13(RISE), whenInactive: 'hide' };
+const ELIGIBILITY_PARAMS_1_3_0: ParamSpec[] = ELIGIBILITY_PARAMS.map((p) =>
+  p.key === 'eligibilityEnabled'
+    ? { ...p, activeWhen: method13(RISE), whenInactive: 'disable' as const, description: `${p.description} Rise entry only: not applicable to the breakout.` }
+    : p
+);
+
+const OPTIONAL_RULES_NOTES: GroupNote[] = [
+  {
+    id: 'breakout-note',
+    group: 'entry',
+    when: method13(BREAKOUT),
+    tone: 'muted',
+    text: 'Breakout: the rising-trend condition (close above its SMA, the SMA above its value K sessions earlier) is part of the method and always applies; the optional Entry trend filter below is a separate, additional gate. A qualifying close while invested is recorded as ignored and never replayed. Persistent entry eligibility does not apply; continuation entries stay an independent option (OFF unless switched on), and a base entry keeps its priority.'
+  },
+  {
+    id: 'breakout-trend-note',
+    group: 'trend',
+    when: { all: [on('trendFilterEnabled'), method13(BREAKOUT)] },
+    tone: 'muted',
+    text: 'With the breakout entry this filter is an extra gate on top of the breakout’s own trend condition. A breakout signal it blocks is recorded and not taken later.'
+  },
+  {
+    id: 'eligibility-not-applicable',
+    group: 'eligibility',
+    when: method13(BREAKOUT),
+    tone: 'warn',
+    text: 'Not applicable with the breakout entry method: persistent eligibility is Rise-specific. Its inputs are kept as a saved draft and not executed (recorded as not applicable).'
+  },
+  {
+    id: 'initial-stop-note',
+    group: 'initialStop',
+    when: on('initialStopEnabled'),
+    tone: 'muted',
+    text: 'Fixed for the position from the fill; it never moves and never deactivates (a profit trailing stop becoming inactive does not affect it). Both stops are resting sell stops: the higher active level governs (with retention ON, a full initial-stop exit due at the same trade as the partial sale takes precedence). Gaps fill at the opening trade; a minute crossing the stop fills at the stop (assumed). Exits are recorded with the level, the ATR, the activation and decision times.'
+  },
+  {
+    id: 'retention-note',
+    group: 'retention',
+    when: on('retentionEnabled'),
+    tone: 'muted',
+    text: 'One position, several exit fills: the partial sale happens once; the position stays invested (no new base entry, no pyramiding) until the remainder is sold. It is counted as ONE closed trade, a win or a loss by its total net, when its last share is sold; the partial fills are shown separately. Debt-funded as before: each fill repays its share of the $100,000 principal and pays its interest; the maximum hold and the buffer use the remaining principal.'
+  }
+];
+
+/**
+ * Growth, the current version (1.3.0): the 1.2.0 parameters plus the entry-method selector (Rise | trend breakout),
+ * the optional initial risk stop and optional trend retention — the Rise entry and both rules OFF by default (= 1.2.0
+ * exactly).
+ */
+export const RISE_FROM_RECENT_LOW_TRADING: StrategySpec = {
+  key: 'rise-from-recent-low-trading',
+  version: '1.3.0',
+  title: GROWTH_TITLE,
+  kind: 'trades',
+  launch: 'form',
+  runnable: true,
+  description: `${GROWTH_DESCRIPTION} Optional: an alternative trend-breakout entry, an initial risk stop, trend retention (a partial sale and a trend exit for the remainder), continuation entries after a profitable exit (four methods), an entry trend filter (five methods) and persistent entry eligibility (five bounded policies) — the Rise entry and every option OFF by default.`,
+  schemaVersion: 2,
+  params: [
+    ENTRY_METHOD_PARAM,
+    X_1_3_0,
+    N_1_3_0,
+    ...BREAKOUT_PARAMS,
+    ...TREND_PARAMS,
+    ...ELIGIBILITY_PARAMS_1_3_0,
+    ...GROWTH_BASE_PARAMS.slice(2, -1),
+    ...INITIAL_STOP_PARAMS,
+    ...RETENTION_PARAMS,
+    ...CONTINUATION_PARAMS,
+    GROWTH_BASE_PARAMS.at(-1)!
+  ],
+  groups: GROWTH_GROUPS_1_3_0,
+  constraints: [
+    BUFFER_NEEDS_HOLD,
+    PULLBACK_BAND,
+    {
+      kind: 'less',
+      id: 'momentum-short-long',
+      a: 'trendMomentumShortSessions',
+      b: 'trendMomentumLongSessions',
+      message: 'Momentum trend filter: the short lookback S must be below the long lookback L'
+    }
+  ],
+  identity: 'effective',
+  resolutions: RESOLUTIONS,
+  defaultResolution: '1d',
+  notes: [
+    ...GROWTH_NOTES,
+    CONTINUATION_NOTE,
+    'Entry trend filter / persistent eligibility (when ON): decisions at completed bar ends, trend windows in trading sessions; a later (latched) entry fills at the next eligible trade at the then-current price.',
+    'Breakout entry / initial risk stop / trend retention (when ON): completed daily sessions only (whatever the bar resolution); decisions at completed closes fill at the next eligible trade; a position sold in several fills is one trade.'
+  ],
+  formerTitles: [GROWTH_FORMER_TITLE],
+  groupNotes: [...GROWTH_GROUP_NOTES, ...GATE_NOTES, ...OPTIONAL_RULES_NOTES]
 };
 
 /**
  * Growth 1.1.0 (legacy, frozen): its runs are historical facts; New Test no longer offers it, but its catalogue
- * phenotypes stay runnable as single tests. It replays as 1.2.0 with the trend filter and eligibility OFF.
+ * phenotypes stay runnable as single tests. It replays as 1.3.0 with the trend filter, eligibility and the three
+ * optional rules OFF.
  */
 export const RISE_FROM_RECENT_LOW_TRADING_1_1_0: StrategySpec = {
   key: 'rise-from-recent-low-trading',
@@ -1034,13 +1381,13 @@ export const RISE_FROM_RECENT_LOW_TRADING_1_1_0: StrategySpec = {
   formerTitles: [GROWTH_FORMER_TITLE],
   groupNotes: GROWTH_GROUP_NOTES,
   legacy: {
-    supersededBy: '1.2.0',
+    supersededBy: '1.3.0',
     replay:
-      'version 1.2.0 with the entry trend filter and persistent eligibility OFF reproduces every 1.1.0 signal, fill, exit, continuation episode, decision-log entry, mark and metric exactly (src/growth-trading/tests/offParity-1.1.0.test.ts); its catalogue phenotypes rerun as 1.1.0 configurations; a clone starts a 1.2.0 test with both OFF'
+      'version 1.3.0 with the entry trend filter, persistent eligibility and the three optional rules OFF reproduces every 1.1.0 signal, fill, exit, continuation episode, decision-log entry, mark and metric exactly (src/growth-trading/tests/offParity-1.1.0.test.ts); its catalogue phenotypes rerun as 1.1.0 configurations; a clone starts a 1.3.0 test with all of them OFF'
   }
 };
 
-/** Growth 1.0.0 (legacy, frozen): its runs are historical facts; it replays as 1.2.0 with continuation and both gates OFF. */
+/** Growth 1.0.0 (legacy, frozen): its runs are historical facts; it replays as 1.3.0 with every option OFF. */
 export const RISE_FROM_RECENT_LOW_TRADING_1_0_0: StrategySpec = {
   key: 'rise-from-recent-low-trading',
   version: '1.0.0',
@@ -1060,9 +1407,9 @@ export const RISE_FROM_RECENT_LOW_TRADING_1_0_0: StrategySpec = {
   formerTitles: [GROWTH_FORMER_TITLE],
   groupNotes: GROWTH_GROUP_NOTES.filter((n) => n.group !== 'continuation'),
   legacy: {
-    supersededBy: '1.2.0',
+    supersededBy: '1.3.0',
     replay:
-      'version 1.2.0 with continuation, the entry trend filter and persistent eligibility OFF reproduces every 1.0.0 signal, fill, exit, mark and metric exactly (src/growth-trading/tests/offParity.test.ts); a clone starts a 1.2.0 test with all of them OFF'
+      'version 1.3.0 with continuation, the entry trend filter, persistent eligibility and the three optional rules OFF reproduces every 1.0.0 signal, fill, exit, mark and metric exactly (src/growth-trading/tests/offParity.test.ts); a clone starts a 1.3.0 test with all of them OFF'
   }
 };
 
@@ -1111,6 +1458,7 @@ export const DEMO_TOY_RULES: StrategySpec = {
 export const STRATEGY_REGISTRY: readonly StrategySpec[] = [
   RISE_FROM_RECENT_LOW,
   RISE_FROM_RECENT_LOW_TRADING,
+  RISE_FROM_RECENT_LOW_TRADING_1_2_0,
   RISE_FROM_RECENT_LOW_TRADING_1_1_0,
   RISE_FROM_RECENT_LOW_TRADING_1_0_0,
   STUDY8_POOL,

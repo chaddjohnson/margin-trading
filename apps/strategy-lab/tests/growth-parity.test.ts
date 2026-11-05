@@ -9,6 +9,13 @@
 //    captured at 0301c01 with the unchanged runner) are reproduced (a) by replaying the stored 1.1.0 requests and (b) by
 //    the SAME configurations as 1.2.0 requests with the entry trend filter and persistent eligibility OFF: trades.json,
 //    daily.json and events.json in full, every stored field of metrics.json and decisions.json, the minute marks.
+// 1c. The before-change runner artifacts of rise-from-recent-low-trading@1.2.0 (tests/fixtures/
+//    growth-runner-baseline-1.2.0, captured at 8d2800e with the unchanged runner: R-920001 Candidate A, R-920002 VGT+GDX
+//    trend A + eligibility 1 + ma_cross, R-920003 GDX 60m trend B + eligibility 5 + buffer OFF, R-920005 buffer OFF,
+//    R-920007 hold OFF) are reproduced (a) by replaying the stored 1.2.0 requests, (b) by the SAME configurations as
+//    1.3.0 requests with the Rise entry and both new exit options OFF, and (c) — the 1.2.0 "buffer OFF" failure —
+//    by the same configurations reduced to their EFFECTIVE values (R-920004, R-920006: what Interactive Preview
+//    executes; the unchanged 1.2.0 runner refused them).
 // 2. The shared-slot pool rerun (runner/pool-run.ts) to the sealed end gives the same events as the Study 8 importer
 //    applied to the same runner output, and reconciles with the sealed F24 record.
 
@@ -52,7 +59,7 @@ describe.skipIf(!hasData)('runner-level reproducibility of Growth 1.0.0 (real da
         ['events.json', true]
       ]);
       const metrics = JSON.parse(readFileSync(join(dir, 'metrics.json'), 'utf8'));
-      expect(metrics.strategy).toMatchObject({ version: '1.0.0', engineVersion: '1.2.0' });
+      expect(metrics.strategy).toMatchObject({ version: '1.0.0', engineVersion: '1.3.0' });
     }, 600_000);
 });
 
@@ -95,8 +102,59 @@ describe.skipIf(!hasData)('runner-level OFF/OFF parity with Growth 1.1.0 (real d
         const metrics = JSON.parse(readFileSync(join(dir, 'metrics.json'), 'utf8'));
         expect(metrics.trendFilter).toEqual({ enabled: false });
         expect(metrics.eligibility).toEqual({ enabled: false });
-        expect(metrics.strategy).toMatchObject({ version: request.strategyVersion, engineVersion: '1.2.0' });
+        expect(metrics.strategy).toMatchObject({ version: request.strategyVersion, engineVersion: '1.3.0' });
       }, 600_000);
+});
+
+const FIXTURES_12 = join(import.meta.dirname, 'fixtures/growth-runner-baseline-1.2.0');
+const sums12 = (): Record<string, string> =>
+  Object.fromEntries(
+    readFileSync(join(FIXTURES_12, 'SHA256SUMS'), 'utf8')
+      .trim()
+      .split('\n')
+      .map((l) => [l.split(/\s+/)[1]!, l.split(/\s+/)[0]!])
+  );
+const stored12 = (id: string) =>
+  JSON.parse(gunzipSync(readFileSync(join(FIXTURES_12, id, 'request.json.gz'))).toString('utf8'));
+const OFF_1_3_0 = { entryMethod: 'rise_from_recent_low', initialStopEnabled: false, retentionEnabled: false };
+
+describe.skipIf(!hasData)('runner-level OFF parity with Growth 1.2.0 (real data)', () => {
+  const cases: [string, string, (r: Record<string, any>) => Record<string, any>][] = [];
+  for (const id of ['R-920001', 'R-920002', 'R-920003', 'R-920005', 'R-920007']) {
+    cases.push([id, '1.2.0 (replay)', (r) => r]);
+    cases.push([id, '1.3.0 with the three OFF', (r) => ({ ...r, strategyVersion: '1.3.0', params: { ...r.params, ...OFF_1_3_0 } })]);
+  }
+  // the effective-only forms (Interactive Preview): reproduce the run that carried the drafts
+  cases.push(['R-920005', '1.2.0 effective values only (R-920004)', () => ({ ...stored12('R-920004'), runId: 'R-920005' })]);
+  cases.push(['R-920007', '1.2.0 effective values only (R-920006)', () => ({ ...stored12('R-920006'), runId: 'R-920007' })]);
+  cases.push(['R-920007', '1.3.0 effective values only', () => ({ ...stored12('R-920006'), runId: 'R-920007', strategyVersion: '1.3.0', params: { ...stored12('R-920006').params, ...OFF_1_3_0 } })]);
+  for (const [id, as, make] of cases)
+    it(`${id} as ${as}: identical to the 1.2.0 artifacts captured before the change`, () => {
+      const dir = join(mkdtempSync(join(tmpdir(), 'strategy-lab-parity-')), id);
+      mkdirSync(dir);
+      const request = make(stored12(id));
+      writeFileSync(join(dir, 'request.json'), JSON.stringify(request));
+      const r = runner('apps/strategy-lab/runner/trading-run.ts', dir);
+      expect(r.status, r.stderr + r.stdout).toBe(0);
+      const verdicts = compareRunOutputs(join(FIXTURES_12, id), dir, 'legacy-1.2.0');
+      expect(verdicts.map((v) => [v.file, v.identical])).toEqual([
+        ['trades.json', true],
+        ['daily.json', true],
+        ['metrics.json', true],
+        ['decisions.json', true],
+        ['events.json', true]
+      ]);
+      expect(sha256(readFileSync(join(dir, 'events.json')))).toBe(sums12()[`${id}/events.json`]);
+      expect(sha256(readFileSync(join(dir, 'trades.json')))).toBe(sums12()[`${id}/trades.json`]);
+      expect(sha256(readFileSync(join(dir, 'daily.json')))).toBe(sums12()[`${id}/daily.json`]);
+      expect(sha256(gunzipSync(readFileSync(join(dir, 'minute-marks.csv.gz'))))).toBe(sums12()[`${id}/minute-marks.csv`]);
+      const metrics = JSON.parse(readFileSync(join(dir, 'metrics.json'), 'utf8'));
+      expect(metrics.initialStop).toEqual({ enabled: false });
+      expect(metrics.retention).toEqual({ enabled: false });
+      expect(metrics.entryMethod).toMatchObject({ method: 'rise_from_recent_low' });
+      expect(metrics.strategy).toMatchObject({ version: request.strategyVersion, engineVersion: '1.3.0' });
+      for (const sym of Object.keys(metrics.perSymbol)) expect(metrics.perSymbol[sym].optionalRules).toBeUndefined();
+    }, 600_000);
 });
 
 describe.skipIf(!hasData || !hasStudy8)('shared-slot pool rerun = the importer on the same Study 8 output (real data)', () => {

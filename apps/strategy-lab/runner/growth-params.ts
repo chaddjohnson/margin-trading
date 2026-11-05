@@ -2,8 +2,11 @@
 // (src/growth-trading/riseTrading.ts). Shared by the trading runner, the replay tool and the tests.
 //
 // A request is read with the schema of ITS OWN version: 1.0.0 has no continuation and no entry gates (all OFF); 1.1.0
-// has continuation but no entry gates (both OFF); 1.2.0 has all three. Only effective values are executed
-// (shared/params.ts), so a stored draft of another method or policy can never leak into the run.
+// has continuation but no entry gates (both OFF); 1.2.0 has all three; 1.3.0 adds the entry-method selector (Rise |
+// trend breakout), the initial risk stop and trend retention (absent before 1.3.0: the Rise entry, both OFF). Only
+// effective values are executed (shared/params.ts), so a stored draft of another method or policy — or a value whose
+// switch is OFF — can never leak into the run, and a request that carries ONLY the effective values (what Interactive
+// Preview executes) maps to the same engine parameters as one that also carries those drafts.
 
 import { isSignalResolution } from '../../../src/entry-signals/bars.ts';
 import type { ContinuationConfig, ContinuationMethod } from '../../../src/growth-trading/continuation.ts';
@@ -13,6 +16,12 @@ import type {
   TrendFilterConfig,
   TrendMethod
 } from '../../../src/growth-trading/entryGates.ts';
+import type {
+  BreakoutEntryConfig,
+  EntryMethod,
+  InitialStopConfig,
+  RetentionConfig
+} from '../../../src/growth-trading/optionalRules.ts';
 import type { RiseTradingParams } from '../../../src/growth-trading/riseTrading.ts';
 import type { LabRunRequest, ParamValue } from '../shared/contract.ts';
 import { effectiveParams } from '../shared/params.ts';
@@ -118,21 +127,67 @@ export const eligibilityOf = (request: LabRunRequest): EligibilityConfig | null 
   }
 };
 
-export const paramsOf = (request: LabRunRequest): RiseTradingParams => {
-  const p = request.params;
-  if (!isSignalResolution(request.resolution)) throw new Error(`unsupported resolution ${request.resolution}`);
+// 1.3.0: the base entry method a request executes (absent in earlier versions: the Rise entry).
+export const entryMethodOf = (request: LabRunRequest): EntryMethod =>
+  (effectiveOf(request).entryMethod as EntryMethod | undefined) ?? 'rise_from_recent_low';
+
+// 1.3.0: the trend-breakout inputs (null with the Rise entry).
+export const breakoutOf = (request: LabRunRequest): BreakoutEntryConfig | null => {
+  const p = effectiveOf(request);
+  if (p.entryMethod !== 'trend_breakout') return null;
   return {
-    advanceFromRecentLowPercent: p.advanceFromRecentLowPercent as number,
-    recentLowLookbackBars: p.recentLowLookbackBars as number,
+    smaSessions: p.breakoutSmaSessions as number,
+    slopeComparisonSessions: p.breakoutSlopeComparisonSessions as number,
+    priorHighSessions: p.breakoutPriorHighSessions as number
+  };
+};
+
+// 1.3.0: the initial risk stop (absent in earlier versions: OFF).
+export const initialStopOf = (request: LabRunRequest): InitialStopConfig | null => {
+  const p = effectiveOf(request);
+  if (p.initialStopEnabled !== true) return null;
+  return { atrSessions: p.initialStopAtrSessions as number, atrMultiple: p.initialStopAtrMultiple as number };
+};
+
+// 1.3.0: trend retention (absent in earlier versions: OFF).
+export const retentionOf = (request: LabRunRequest): RetentionConfig | null => {
+  const p = effectiveOf(request);
+  if (p.retentionEnabled !== true) return null;
+  return {
+    sellPercent: p.retentionSellPercent as number,
+    smaSessions: p.retentionSmaSessions as number,
+    closesBelow: p.retentionClosesBelow as number
+  };
+};
+
+// Every engine value comes from the EFFECTIVE values: a value whose switch is OFF is absent there and is passed as
+// NaN (never read by the engine: exitParamsOf uses ∞ for an OFF hold or buffer), and a switch that does not apply is
+// OFF. A stored 1.0.0–1.2.0 request with its drafts and the same request reduced to its effective values therefore
+// execute identically — the "intraday-loss buffer OFF" preview failure of 1.2.0 cannot recur.
+export const paramsOf = (request: LabRunRequest): RiseTradingParams => {
+  const p = effectiveOf(request);
+  if (!isSignalResolution(request.resolution)) throw new Error(`unsupported resolution ${request.resolution}`);
+  const n = (k: string) => (typeof p[k] === 'number' ? (p[k] as number) : NaN);
+  const method = entryMethodOf(request);
+  const breakout = breakoutOf(request);
+  const initialStop = initialStopOf(request);
+  const retention = retentionOf(request);
+  return {
+    advanceFromRecentLowPercent: n('advanceFromRecentLowPercent'),
+    recentLowLookbackBars: n('recentLowLookbackBars'),
     resolution: request.resolution,
-    trailingStopPercent: p.trailingStopPercent as number,
-    maximumHoldEnabled: p.maximumHoldEnabled as boolean,
-    maximumHoldDays: p.maximumHoldDays as number,
-    intradayLossBufferEnabled: p.intradayLossBufferEnabled as boolean,
-    intradayLossBufferPercent: p.intradayLossBufferPercent as number,
-    costBpsPerSide: p.costBpsPerSide as number,
+    trailingStopPercent: n('trailingStopPercent'),
+    maximumHoldEnabled: p.maximumHoldEnabled === true,
+    maximumHoldDays: n('maximumHoldDays'),
+    intradayLossBufferEnabled: p.intradayLossBufferEnabled === true,
+    intradayLossBufferPercent: n('intradayLossBufferPercent'),
+    costBpsPerSide: n('costBpsPerSide'),
     continuation: continuationOf(request),
     trendFilter: trendFilterOf(request),
-    eligibility: eligibilityOf(request)
+    eligibility: eligibilityOf(request),
+    // 1.3.0 fields only when they differ from the earlier versions' behaviour (so a legacy request maps exactly as before)
+    ...(method !== 'rise_from_recent_low' ? { entryMethod: method, breakout } : {}),
+    ...(initialStop ? { initialStop } : {}),
+    ...(retention ? { retention } : {})
   };
 };

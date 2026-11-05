@@ -1,6 +1,7 @@
 // The Strategy Lab trading-backtest runner ("Growth"): ONE manual test of one configuration of
-// rise-from-recent-low-trading@1.2.0 (or a replay of a legacy request: @1.1.0 = 1.2.0 with the entry trend filter and
-// persistent eligibility OFF; @1.0.0 = 1.2.0 with continuation and both gates OFF),
+// rise-from-recent-low-trading@1.3.0 (or a replay of a legacy request: @1.2.0 = 1.3.0 with the Rise entry, the initial
+// risk stop and trend retention OFF; @1.1.0 = also the entry trend filter and persistent eligibility OFF; @1.0.0 = also
+// continuation OFF),
 // started by the server as a child process with a fixed argument vector:
 //
 //   node --experimental-transform-types runner/trading-run.ts <absolute run directory>
@@ -32,6 +33,12 @@ import {
   TREND_METHOD_LABEL
 } from '../../../src/growth-trading/entryGates.ts';
 import {
+  ENTRY_METHOD_LABEL,
+  type ExitFill,
+  type ProtectedPosition,
+  describeRule
+} from '../../../src/growth-trading/optionalRules.ts';
+import {
   EXECUTION,
   LEGACY_STRATEGY_VERSIONS,
   type LedgerRow,
@@ -60,6 +67,7 @@ const ENGINE_FILES = [
   'src/growth-trading/riseTrading.ts',
   'src/growth-trading/continuation.ts',
   'src/growth-trading/entryGates.ts',
+  'src/growth-trading/optionalRules.ts',
   'src/multi-etf-allocator/shadow.ts',
   'src/multi-etf-allocator/engine.ts',
   'src/multi-etf-allocator/ledger.ts',
@@ -111,15 +119,20 @@ const timing = (execution: ExecutionPrice | ''): { precision: TimePrecision; mea
     : execution === 'stop level'
       ? { precision: 'minute', meaning: 'start of the minute in which trading crossed the stop (filled at the stop price)' }
       : { precision: 'minute', meaning: 'start of the minute whose opening trade filled the order' };
-const EXIT_LABEL: Record<ExitReason, string> = {
+const EXIT_LABEL: Record<ExitReason | 'initial stop' | 'initial stop gap' | 'trend exit', string> = {
   'trailing stop': 'Trailing stop',
   'trailing stop gap': 'Trailing stop (gap at the open)',
   'maximum hold': 'Maximum losing hold',
   'buffered intraday loss': 'Buffered intraday loss',
   displaced: 'Displaced',
   'forced liquidation': 'Forced liquidation',
-  open: 'Open at the end'
+  open: 'Open at the end',
+  // v1.3.0 optional rules
+  'initial stop': 'Initial risk stop',
+  'initial stop gap': 'Initial risk stop (gap at the open)',
+  'trend exit': 'Trend-retention exit'
 };
+const exitLabel = (reason: string) => EXIT_LABEL[reason as keyof typeof EXIT_LABEL] ?? reason;
 
 const originValues = (origin: string, method: ContinuationMethod | null, episode: string | null): LabValue[] => [
   { key: 'origin', label: 'Entry origin', value: origin, unit: 'text' },
@@ -144,6 +157,7 @@ const gateValues = (prefix: string, values: Record<string, LogValue>): LabValue[
 
 const SOURCE_LABEL: Record<string, string> = {
   rise_from_recent_low: 'the Rise signal',
+  trend_breakout: 'the breakout signal',
   'latched:rise_from_recent_low': 'a latched opportunity (a later decision of a Rise signal)',
   eligibility_renewal: 'a renewal signal (reset and fresh rebound)',
   'latched:eligibility_renewal': 'a latched renewal opportunity'
@@ -169,6 +183,12 @@ async function main() {
   const trendFilter = params.trendFilter ?? null;
   const eligibility = params.eligibility ?? null;
   const gated = Boolean(trendFilter || eligibility);
+  // v1.3.0 optional rules (each absent = OFF, the v1.2.0 artifacts exactly)
+  const entryMethod = params.entryMethod ?? 'rise_from_recent_low';
+  const breakoutCfg = params.breakout ?? null;
+  const initialStop = params.initialStop ?? null;
+  const retention = params.retention ?? null;
+  const optional = Boolean(breakoutCfg || initialStop || retention);
 
   const events: LabEvent[] = [];
   const perSymbol: Record<string, unknown> = {};
@@ -221,8 +241,95 @@ async function main() {
     const cumulativeAfter = new Map<LedgerRow, number>();
     for (const row of rows) if (row.status === 'closed') cumulativeAfter.set(row, (cumulative += row.net));
 
+    const rules = sim.rules;
+    const posOf = (t: LedgerRow['trade']): ProtectedPosition | undefined => rules?.positionOf(t);
+    // v1.3.0: the initial risk stop's decision-time values, when it was checked (blocked, or inside a gate result).
+    const protectionFields = (pc: { values: Record<string, LogValue> } | null | undefined): LabValue[] =>
+      pc ? gateValues('protection.', pc.values) : [];
+    const dispositionOf = (o: (typeof sim.outcomes)[number], tradeId: string | undefined, opId: string | undefined) =>
+      o.status === 'filled'
+        ? `taken: order filled (${tradeId})`
+        : o.status === 'unfilled_at_end'
+          ? 'taken: order not filled before the end of the window'
+          : o.status === 'vetoed'
+            ? `vetoed: ${o.reason}${o.protection ? ' (initial risk stop unavailable)' : ''}`
+            : o.status === 'deferred'
+              ? `deferred: armed as ${opId} (${o.gate?.gate?.reason ?? 'blocked'})`
+              : o.reason === 'position_open'
+                ? `ignored: invested (${tradeId ?? '?'})`
+                : `ignored: the order for ${tradeId ?? '?'} is not filled yet`;
+
     // Raw signals: every one appears exactly once — taken (entry_signal) or not (rejected_signal).
     for (const o of sim.outcomes) {
+      // v1.3.0: a trend-breakout signal (the completed daily close; each qualifying close once, never replayed).
+      if (o.decision.breakout) {
+        const b = o.decision.breakout;
+        const t = iso(b.time);
+        const tradeId = o.trade ? tradeIds.get(o.trade) : undefined;
+        const gd = o.gate;
+        const notTaken = o.status === 'rejected' || o.status === 'vetoed' || o.status === 'deferred';
+        const cfg = breakoutCfg!;
+        const head = `Breakout at the completed close ${b.close.toFixed(2)}: above its ${cfg.smaSessions}-session SMA ${b.sma.toFixed(2)}, which is above its value ${cfg.slopeComparisonSessions} sessions earlier (${b.smaThen.toFixed(2)}), and above the highest high ${b.priorHigh.toFixed(2)} of the ${cfg.priorHighSessions} preceding sessions (${r.ds.dates[b.priorHighSession]})`;
+        const reason =
+          o.status === 'filled'
+            ? `${head}. Flat: order placed, filled ${ny(o.trade!.entryTime)} at ${o.trade!.entryRawPrice.toFixed(2)} (${tradeId})`
+            : o.status === 'unfilled_at_end'
+              ? `${head}. Flat: order placed, but no eligible trade inside the window — not filled`
+              : o.status === 'vetoed'
+                ? `${head}. Not taken — ${o.protection ? o.protection.text : gateText(gd)}; never replayed later`
+                : o.reason === 'position_open'
+                  ? `${head}. Ignored: already invested (${tradeId}, bought ${ny(o.trade!.entryTime)}); never replayed later`
+                  : `${head}. Ignored: the order of ${tradeId} is still waiting for its fill`;
+        events.push({
+          id: `${symbol}:${notTaken ? 'rejected_signal' : 'entry_signal'}:${t}`,
+          runId: request.runId,
+          symbol,
+          kind: notTaken ? 'rejected_signal' : 'entry_signal',
+          t,
+          timePrecision: 'session-close',
+          timeMeaning:
+            'scheduled close of the session (16:00 ET, 13:00 on early-close days): the completed daily close the breakout is decided at',
+          price: b.close,
+          priceBasis: 'bar-close',
+          reason,
+          values: [
+            { key: 'entryMethod', label: 'Entry method', value: ENTRY_METHOD_LABEL.trend_breakout, unit: 'text' },
+            { key: 'close', label: 'Completed close', value: r4(b.close), unit: 'price' },
+            { key: 'sma', label: `SMA(${cfg.smaSessions}) at the close`, value: r4(b.sma), unit: 'price' },
+            { key: 'smaThen', label: `SMA(${cfg.smaSessions}) ${cfg.slopeComparisonSessions} sessions earlier`, value: r4(b.smaThen), unit: 'price' },
+            { key: 'smaRise', label: 'SMA rise over the comparison', value: r4((b.sma / b.smaThen - 1) * 100), unit: 'percent' },
+            { key: 'priorHigh', label: `Highest high of the ${cfg.priorHighSessions} preceding sessions`, value: r4(b.priorHigh), unit: 'price' },
+            { key: 'priorHighSession', label: 'Session of that high', value: r.ds.dates[b.priorHighSession]!, unit: 'date' },
+            { key: 'priorHighWindow', label: 'Prior-high window (signal session excluded)', value: `${r.ds.dates[b.session - cfg.priorHighSessions]} … ${r.ds.dates[b.session - 1]}`, unit: 'text' },
+            { key: 'disposition', label: 'Disposition', value: dispositionOf(o, tradeId, undefined), unit: 'text' },
+            ...originValues('base_growth', null, null),
+            ...(gd
+              ? [
+                  { key: 'entryGate', label: 'Entry gate', value: gd.gate ? gd.gate.reason : gd.disposition, unit: 'text' as const },
+                  ...(gd.gate?.trend ? gateValues('trend.', gd.gate.trend.values) : []),
+                  ...protectionFields(gd.gate?.protection)
+                ]
+              : []),
+            ...protectionFields(o.protection)
+          ],
+          tradeId: o.status === 'filled' ? tradeId! : null,
+          linkedEventId: null,
+          meta: {
+            signalOnly: false,
+            standalone: true,
+            disposition:
+              o.status === 'rejected' ? 'ignored' : o.status === 'filled' ? 'taken' : o.status === 'vetoed' ? 'vetoed' : 'unfilled',
+            reasonCode: o.reason ?? o.status,
+            heldBy: o.status === 'rejected' ? (tradeId ?? null) : null,
+            origin: 'base_growth',
+            entryMethod: 'trend_breakout',
+            entrySource: 'trend_breakout',
+            ...(gd ? { entryGate: gd.gate ? gd.gate.reason : gd.disposition } : {}),
+            ...(o.protection ? { entryGate: o.protection.reason, protection: 'initial_stop_unavailable' } : {})
+          }
+        });
+        continue;
+      }
       const s = o.decision.signal!;
       const bar = r.bars[s.index]!;
       const low = r.bars[s.recentLowIndex]!;
@@ -234,6 +341,7 @@ async function main() {
         ? [
             { key: 'entryGate', label: 'Entry gate', value: gd.gate ? gd.gate.reason : gd.disposition, unit: 'text' },
             ...(gd.gate?.trend ? gateValues('trend.', gd.gate.trend.values) : []),
+            ...protectionFields(gd.gate?.protection),
             ...(gd.validity ? gateValues('policy.', gd.validity) : []),
             ...(op
               ? [
@@ -269,7 +377,13 @@ async function main() {
           unit: 'text'
         },
         ...originValues('base_growth', null, null),
-        ...gateFields
+        ...gateFields,
+        ...(o.protection
+          ? [
+              { key: 'entryGate', label: 'Entry gate', value: o.protection.reason, unit: 'text' as const },
+              ...protectionFields(o.protection)
+            ]
+          : [])
       ];
       const head = `Close ${s.close.toFixed(2)} is ${r2(s.advancePercent).toFixed(2)}% above the ${n}-bar low ${s.recentLow.toFixed(2)} (bar ending ${ny(low.end)})`;
       const reason =
@@ -278,7 +392,7 @@ async function main() {
           : o.status === 'unfilled_at_end'
             ? `${head}. Flat: order placed, but no eligible trade inside the window — not filled`
             : o.status === 'vetoed'
-              ? `${head}. Not taken — ${gateText(gd)}${op ? ` (opportunity ${op.id} invalidated at arming)` : ''}; with persistent eligibility OFF it is not replayed later`
+              ? `${head}. Not taken — ${o.protection ? o.protection.text : gateText(gd)}${op ? ` (opportunity ${op.id} invalidated at arming)` : ''}; with persistent eligibility OFF it is not replayed later`
               : o.status === 'deferred'
                 ? `${head}. Not taken now — ${gateText(gd)}. Armed as opportunity ${op!.id} (${ELIGIBILITY_POLICY_LABEL[op!.policy]}, eligible through ${dateAt(op!.lastEligibleSession)}): ${fate(op!)}`
                 : o.reason === 'position_open'
@@ -315,7 +429,8 @@ async function main() {
           reasonCode: o.reason ?? o.status,
           heldBy: o.status === 'rejected' ? (tradeId ?? null) : null,
           origin: 'base_growth',
-          ...(gd ? { entrySource: 'rise_from_recent_low', entryGate: gd.gate ? gd.gate.reason : gd.disposition, opportunity: op?.id ?? null } : {})
+          ...(gd ? { entrySource: 'rise_from_recent_low', entryGate: gd.gate ? gd.gate.reason : gd.disposition, opportunity: op?.id ?? null } : {}),
+          ...(o.protection ? { entryGate: o.protection.reason, protection: 'initial_stop_unavailable' } : {})
         }
       });
     }
@@ -347,6 +462,7 @@ async function main() {
           : []),
         { key: 'entryGate', label: 'Entry gate', value: d.gate ? d.gate.reason : d.disposition, unit: 'text' },
         ...(d.gate?.trend ? gateValues('trend.', d.gate.trend.values) : []),
+        ...protectionFields(d.gate?.protection),
         ...(d.validity ? gateValues('policy.', d.validity) : []),
         {
           key: 'disposition',
@@ -463,6 +579,57 @@ async function main() {
       });
     }
 
+    // v1.3.0 retention: one partial fill of a position, as an executed exit of its trade (marked `partial`).
+    const partialEvent = (f: ExitFill, row: LedgerRow, id: string, entryId: string): LabEvent => {
+      const xt = timing(f.execution);
+      const level = f.instruction.level ?? NaN;
+      const ret = retention!;
+      const pos = posOf(row.trade);
+      const origin = originOf(row.trade);
+      const how =
+        f.reason === 'trailing stop gap'
+          ? `the session opened at ${f.rawPrice.toFixed(2)}, through the active profit trailing stop ${level.toFixed(2)}`
+          : `the active profit trailing stop ${level.toFixed(2)} was reached`;
+      return {
+        id: `${symbol}:${id}:partial-${f.n}`,
+        runId: request.runId,
+        symbol,
+        kind: 'executed_exit',
+        t: iso(f.time),
+        timePrecision: xt.precision,
+        timeMeaning: xt.meaning,
+        price: f.rawPrice,
+        priceBasis: 'fill',
+        reason: `Partial sale (retain part of profitable trend): ${how} — its first event. Sold ${ret.sellPercent}% (${f.shares.toFixed(4)} shares) at ${EXECUTION_TEXT[f.execution as ExecutionPrice]}, keeping ${f.sharesAfter.toFixed(4)} shares. This fill: net ${usd(f.net)} (repaid ${usd(f.principal)} of principal with ${usd(f.interest)} of interest)${f.net < 0 ? ' — a loss: the actual fill is used' : ''}. The trailing stop is consumed: the remainder exits after ${ret.closesBelow} consecutive completed close(s) below SMA(${ret.smaSessions}), or by the initial risk stop, the maximum losing hold or the buffered loss`,
+        values: [
+          { key: 'exitReason', label: 'Exit reason', value: 'Partial sale (retain part of profitable trend)', unit: 'text' },
+          { key: 'trigger', label: 'Triggered by', value: exitLabel(f.reason), unit: 'text' },
+          { key: 'fill', label: 'Fill', value: f.execution, unit: 'text' },
+          { key: 'fillNumber', label: 'Exit fill of the position', value: f.n, unit: 'count' },
+          { key: 'stopPrice', label: 'Profit trailing stop level', value: r4(level), unit: 'price' },
+          ...(pos?.stop ? [{ key: 'initialStop', label: 'Initial risk stop (still active)', value: r4(pos.stop.level), unit: 'price' as const }] : []),
+          { key: 'sellPercent', label: 'Fraction sold', value: ret.sellPercent, unit: 'percent' },
+          { key: 'sharesSold', label: 'Shares sold', value: r4(f.shares), unit: 'count' },
+          { key: 'sharesRemaining', label: 'Shares kept (remainder)', value: r4(f.sharesAfter), unit: 'count' },
+          { key: 'principalRepaid', label: 'Principal repaid (proportional)', value: r2(f.principal), unit: 'usd' },
+          { key: 'principalRemaining', label: 'Principal still borrowed', value: r2(f.principalAfter), unit: 'usd' },
+          { key: 'priceAfterCost', label: 'Price after cost', value: r4(f.price), unit: 'price' },
+          { key: 'proceeds', label: 'Proceeds', value: r2(f.proceeds), unit: 'usd' },
+          { key: 'gross', label: 'Gross P&L of this fill before costs', value: r2(f.grossBeforeCosts), unit: 'usd' },
+          { key: 'costs', label: 'Costs of this fill (its share of the entry cost + the exit cost)', value: r2(f.entryCost + f.exitCost), unit: 'usd' },
+          { key: 'interest', label: 'Interest paid with this fill', value: r2(f.interest), unit: 'usd' },
+          { key: 'fillNet', label: 'Net of this fill', value: r2(f.net), unit: 'usd' },
+          ...(f.instruction.sameTrade.length
+            ? [{ key: 'sameTrade', label: 'Also due at this trade', value: f.instruction.sameTrade.join(', '), unit: 'text' as const }]
+            : []),
+          ...originValues(origin.origin, origin.method, null)
+        ],
+        tradeId: id,
+        linkedEventId: entryId,
+        meta: { standalone: true, origin: origin.origin, method: origin.method, partial: true, fill: f.n, rule: f.rule }
+      };
+    };
+
     // Executed entries and exits.
     const episodeOf = new Map(
       (ctl?.episodes ?? []).filter((e) => e.trade).map((e) => [e.trade!, e.id] as const)
@@ -479,11 +646,19 @@ async function main() {
       const source = g ? entrySourceOf(sim, tr) : null;
       const gd = g?.decisionOf(tr);
       const op = gd?.opportunity ?? null;
+      const pos = posOf(tr);
+      const stop = pos?.stop ?? null;
+      const breakoutTrade = (tr.setupKind as string) === 'trend_breakout';
       const forWhat = origin.method
         ? `continuation trigger (${CONTINUATION_METHOD_LABEL[origin.method]}, ${episodeOf.get(tr)})`
-        : source && source !== 'rise_from_recent_low'
-          ? `${SOURCE_LABEL[source]} ${op?.id ?? ''}`.trim()
-          : 'Rise signal';
+        : breakoutTrade
+          ? 'breakout signal'
+          : source && source !== 'rise_from_recent_low'
+            ? `${SOURCE_LABEL[source]} ${op?.id ?? ''}`.trim()
+            : 'Rise signal';
+      const stopText = stop
+        ? `. Initial risk stop ${stop.level.toFixed(2)} = fill ${stop.fillPrice.toFixed(2)} − ${stop.atrMultiple} × ATR(${stop.atrSessions}) ${stop.atr.toFixed(4)} (true ranges of ${r.ds.dates[stop.atrFromSession]} … ${r.ds.dates[stop.atrToSession]}, before the fill session), active from the fill and fixed for the position`
+        : '';
       events.push({
         id: entryId,
         runId: request.runId,
@@ -494,7 +669,7 @@ async function main() {
         timeMeaning: et.meaning,
         price: tr.entryRawPrice,
         priceBasis: 'fill',
-        reason: `Bought ${row.shares.toFixed(4)} shares ($${EXECUTION.notional.toLocaleString('en-US')}) at ${tr.entryRawPrice.toFixed(2)}, ${EXECUTION_TEXT[tr.entryExecution as ExecutionPrice]}, for the ${forWhat} decided ${ny(tr.decisionTime)} at ${tr.decisionPrice.toFixed(2)}${op && op.signalTime !== tr.decisionTime ? ` (signal of ${ny(op.signalTime)} at ${op.signalPrice.toFixed(2)}, ${op.ageSessionsAtDecision} session(s) earlier)` : ''}${open ? ' — still open at the end of the window' : ''}`,
+        reason: `Bought ${row.shares.toFixed(4)} shares ($${EXECUTION.notional.toLocaleString('en-US')}) at ${tr.entryRawPrice.toFixed(2)}, ${EXECUTION_TEXT[tr.entryExecution as ExecutionPrice]}, for the ${forWhat} decided ${ny(tr.decisionTime)} at ${tr.decisionPrice.toFixed(2)}${op && op.signalTime !== tr.decisionTime ? ` (signal of ${ny(op.signalTime)} at ${op.signalPrice.toFixed(2)}, ${op.ageSessionsAtDecision} session(s) earlier)` : ''}${stopText}${open ? ' — still open at the end of the window' : ''}`,
         values: [
           { key: 'decisionTime', label: 'Signal decided', value: iso(tr.decisionTime), unit: 'datetime' },
           { key: 'decisionPrice', label: 'Signal bar close', value: r4(tr.decisionPrice), unit: 'price' },
@@ -518,6 +693,19 @@ async function main() {
                     ]
                   : [])
               ]
+            : []),
+          ...(breakoutTrade && !source
+            ? [{ key: 'entrySource', label: 'Entry source', value: 'trend_breakout', unit: 'text' as const }]
+            : []),
+          ...(stop
+            ? [
+                { key: 'initialStop', label: 'Initial risk stop (fixed)', value: r4(stop.level), unit: 'price' as const },
+                { key: 'initialStopAtr', label: `ATR(${stop.atrSessions}) before the fill session`, value: r4(stop.atr), unit: 'price' as const },
+                { key: 'initialStopMultiple', label: 'Stop distance (× ATR)', value: stop.atrMultiple, unit: 'ratio' as const },
+                { key: 'initialStopDistance', label: 'Stop distance', value: r4(stop.atrMultiple * stop.atr), unit: 'price' as const },
+                { key: 'initialStopAtrWindow', label: 'ATR sessions (completed before the fill)', value: `${r.ds.dates[stop.atrFromSession]} … ${r.ds.dates[stop.atrToSession]}`, unit: 'text' as const },
+                { key: 'initialStopActiveFrom', label: 'Initial stop active from (the fill)', value: iso(stop.activeFrom), unit: 'datetime' as const }
+              ]
             : [])
         ],
         tradeId: id,
@@ -527,9 +715,15 @@ async function main() {
           standalone: true,
           origin: origin.origin,
           method: origin.method,
-          ...(source ? { entrySource: source, opportunity: op?.id ?? null } : {})
+          ...(source ? { entrySource: source, opportunity: op?.id ?? null } : {}),
+          ...(breakoutTrade && !source ? { entrySource: 'trend_breakout' } : {}),
+          ...(stop ? { initialStop: stop.level } : {}),
+          ...(pos?.fills.some((f) => f.partial) ? { partialFills: pos.fills.filter((f) => f.partial).length } : {})
         }
       });
+      // v1.3.0 retention: each partial fill is an executed exit of the SAME trade, marked partial (the position stays
+      // open; its final exit, if any, is the trade's exit and carries the whole position's net).
+      for (const f of row.exitFills?.filter((x) => x.partial) ?? []) events.push(partialEvent(f, row, id, entryId));
       if (open) continue;
       const xt = timing(tr.exitExecution);
       const sigSession = Number.isNaN(tr.bufferSignalTime)
@@ -537,20 +731,39 @@ async function main() {
         : tr.bufferSignalTime > ds.bTime[ds.sBarStart[tr.exitIndex]!]!
           ? tr.exitIndex
           : tr.exitIndex - 1;
+      // v1.3.0: the final fill of a position under the optional rules (a remainder after partial fills: its own
+      // shares and principal are what the buffer and the hold judged).
+      const finalFill = pos?.fills.at(-1) ?? null;
+      const multi = Boolean(row.exitFills && row.exitFills.length > 1);
+      const fShares = multi ? finalFill!.shares : row.shares;
+      const fPrincipal = multi ? finalFill!.principal : tr.investment;
       const bufferNet =
         sigSession >= 0
-          ? row.shares * tr.bufferSignalPrice -
-            tr.investment -
-            (tr.investment * EXECUTION.annualRate * (ds.sTime[sigSession]! - ds.sTime[tr.entryIndex]!)) / (365 * 86400)
+          ? fShares * tr.bufferSignalPrice -
+            fPrincipal -
+            (fPrincipal * EXECUTION.annualRate * (ds.sTime[sigSession]! - ds.sTime[tr.entryIndex]!)) / (365 * 86400)
           : NaN;
+      const tv = finalFill?.instruction.values ?? {};
       const detail =
         tr.exitReason === 'maximum hold'
-          ? `${row.interestDays} calendar days held and the opening trade showed a net loss; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`
+          ? `${row.interestDays} calendar days held and the opening trade showed a net loss${multi ? ' on the remaining shares and principal' : ''}; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`
           : tr.exitReason === 'buffered intraday loss'
-            ? `the minute ending ${ny(tr.bufferSignalTime)} closed at ${tr.bufferSignalPrice.toFixed(2)}: net ${usd(bufferNet)} after interest, at or below −${usd(params.intradayLossBufferPercent * 1000)}; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`
+            ? `the minute ending ${ny(tr.bufferSignalTime)} closed at ${tr.bufferSignalPrice.toFixed(2)}: net ${usd(bufferNet)} after interest, at or below −${usd(multi ? (params.intradayLossBufferPercent * fPrincipal) / 100 : params.intradayLossBufferPercent * 1000)}${multi ? ` (${params.intradayLossBufferPercent}% of the remaining principal ${usd(fPrincipal)})` : ''}; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`
             : tr.exitReason === 'trailing stop gap'
               ? `the session opened at ${tr.exitRawPrice.toFixed(2)}, through the active stop ${tr.exitStopPrice.toFixed(2)}; sold at the opening trade`
-              : `the active stop ${tr.exitStopPrice.toFixed(2)} was reached; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`;
+              : (tr.exitReason as string) === 'initial stop gap'
+                ? `the session opened at ${tr.exitRawPrice.toFixed(2)}, through the initial risk stop ${pos!.stop!.level.toFixed(2)} (fill ${pos!.stop!.fillPrice.toFixed(2)} − ${pos!.stop!.atrMultiple} × ATR(${pos!.stop!.atrSessions}) ${pos!.stop!.atr.toFixed(4)}, active since ${ny(pos!.stop!.activeFrom)}); sold at the opening trade (not at the inaccessible stop level)`
+                : (tr.exitReason as string) === 'initial stop'
+                  ? `the initial risk stop ${pos!.stop!.level.toFixed(2)} (fill ${pos!.stop!.fillPrice.toFixed(2)} − ${pos!.stop!.atrMultiple} × ATR(${pos!.stop!.atrSessions}) ${pos!.stop!.atr.toFixed(4)}, active since ${ny(pos!.stop!.activeFrom)}) was reached${tr.exitIndex === tr.entryIndex ? ' on the entry session' : ''}; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`
+                  : (tr.exitReason as string) === 'trend exit'
+                    ? `${tv.closesBelow} consecutive completed close(s) strictly below SMA(${tv.smaSessions}) (${tv.closesBelowFrom} … ${tv.closesBelowTo}; the last ${Number(tv.decisionClose).toFixed(2)} < ${Number(tv.decisionSma).toFixed(2)}), decided at the close of ${tv.closesBelowTo}; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`
+                    : `the active stop ${tr.exitStopPrice.toFixed(2)} was reached; sold at ${EXECUTION_TEXT[tr.exitExecution as ExecutionPrice]}`;
+      const remainderText = multi
+        ? `Remainder (${fShares.toFixed(4)} shares after ${row.exitFills!.length - 1} partial fill(s)) — `
+        : '';
+      const netText = multi
+        ? `This fill: net ${usd(finalFill!.net)}; the position: net ${usd(row.net)} (${row.netReturnPercent.toFixed(2)}% of the principal) including its partial fill(s) ${usd(row.partialFillsNet!)}`
+        : `Net ${usd(row.net)} (${row.netReturnPercent.toFixed(2)}% of the principal)`;
       events.push({
         id: exitId,
         runId: request.runId,
@@ -561,9 +774,9 @@ async function main() {
         timeMeaning: xt.meaning,
         price: tr.exitRawPrice,
         priceBasis: 'fill',
-        reason: `${EXIT_LABEL[tr.exitReason]}: ${detail}. Net ${usd(row.net)} (${row.netReturnPercent.toFixed(2)}% of the principal)`,
+        reason: `${remainderText}${exitLabel(tr.exitReason)}: ${detail}. ${netText}`,
         values: [
-          { key: 'exitReason', label: 'Exit reason', value: EXIT_LABEL[tr.exitReason], unit: 'text' },
+          { key: 'exitReason', label: 'Exit reason', value: exitLabel(tr.exitReason), unit: 'text' },
           { key: 'fill', label: 'Fill', value: tr.exitExecution, unit: 'text' },
           { key: 'stopPrice', label: 'Trailing stop level at the exit', value: r4(tr.exitStopPrice), unit: 'price' },
           { key: 'stopActive', label: 'Stop active that session', value: tr.stopActiveAtExit, unit: 'text' },
@@ -597,11 +810,49 @@ async function main() {
                   unit: 'text' as const
                 }
               ]
+            : []),
+          ...(finalFill
+            ? [
+                { key: 'exitRule', label: 'Exit rule', value: describeRule(finalFill.rule), unit: 'text' as const },
+                ...(pos!.stop
+                  ? [
+                      { key: 'initialStop', label: 'Initial risk stop (fixed)', value: r4(pos!.stop.level), unit: 'price' as const },
+                      { key: 'initialStopAtr', label: `ATR(${pos!.stop.atrSessions}) before the fill session`, value: r4(pos!.stop.atr), unit: 'price' as const },
+                      { key: 'initialStopActiveFrom', label: 'Initial stop active from', value: iso(pos!.stop.activeFrom), unit: 'datetime' as const }
+                    ]
+                  : []),
+                { key: 'decisionTime', label: 'Exit decided', value: iso(finalFill.instruction.decidedAt), unit: 'datetime' as const },
+                ...(finalFill.instruction.sameTrade.length
+                  ? [{ key: 'sameTrade', label: 'Also due at this trade (precedence)', value: finalFill.instruction.sameTrade.join(', '), unit: 'text' as const }]
+                  : []),
+                ...((tr.exitReason as string) === 'trend exit'
+                  ? [
+                      { key: 'trendSma', label: `SMA(${tv.smaSessions}) at the deciding close`, value: r4(Number(tv.decisionSma)), unit: 'price' as const },
+                      { key: 'trendClose', label: 'Deciding close', value: r4(Number(tv.decisionClose)), unit: 'price' as const },
+                      { key: 'trendCloses', label: 'Consecutive closes below the SMA', value: `${tv.closesBelowFrom} … ${tv.closesBelowTo}`, unit: 'text' as const }
+                    ]
+                  : []),
+                ...(multi
+                  ? [
+                      { key: 'fills', label: 'Exit fills of the position', value: row.exitFills!.length, unit: 'count' as const },
+                      { key: 'finalFillShares', label: 'Shares sold by this final fill', value: r4(fShares), unit: 'count' as const },
+                      { key: 'finalFillPrincipal', label: 'Principal repaid by this final fill', value: r2(fPrincipal), unit: 'usd' as const },
+                      { key: 'finalFillNet', label: 'Net of this final fill', value: r2(finalFill.net), unit: 'usd' as const },
+                      { key: 'partialFillsNet', label: 'Net of the earlier partial fill(s)', value: r2(row.partialFillsNet!), unit: 'usd' as const },
+                      { key: 'averageExitPrice', label: 'Average exit price (shares-weighted, raw)', value: r4(row.averageExitRawPrice!), unit: 'price' as const }
+                    ]
+                  : [])
+              ]
             : [])
         ],
         tradeId: id,
         linkedEventId: entryId,
-        meta: { standalone: true, origin: origin.origin, method: origin.method }
+        meta: {
+          standalone: true,
+          origin: origin.origin,
+          method: origin.method,
+          ...(finalFill ? { exitRule: finalFill.rule, fills: pos!.fills.length } : {})
+        }
       });
     }
 
@@ -619,6 +870,56 @@ async function main() {
         maximumHoldDays: Number.isFinite(exit.maximumHoldDays) ? exit.maximumHoldDays : null,
         intradayLossBufferFraction: Number.isFinite(exit.intradayLossBuffer) ? exit.intradayLossBuffer : null
       }
+    };
+    // v1.3.0: the per-fill accounting of a position under the optional rules (every fill, its principal repayment,
+    // interest, costs and net; the stop; the open remainder), enough to re-book it independently.
+    const fillRecord = (f: ExitFill, entryIndex: number) => ({
+      fill: f.n,
+      partial: f.partial,
+      rule: f.rule,
+      reason: f.reason,
+      ...when(f.time),
+      session: r.ds.dates[f.session]!,
+      execution: f.execution,
+      rawPrice: f.rawPrice,
+      priceAfterCost: f.price,
+      shares: f.shares,
+      principalRepaid: f.principal,
+      interestPaid: f.interest,
+      interestDays: Math.round((ds.sTime[f.session]! - ds.sTime[entryIndex]!) / 86400),
+      proceeds: f.proceeds,
+      grossBeforeCosts: f.grossBeforeCosts,
+      entryCostShare: f.entryCost,
+      exitCost: f.exitCost,
+      net: f.net,
+      sharesAfter: f.sharesAfter,
+      principalAfter: f.principalAfter,
+      decidedUtc: iso(f.instruction.decidedAt),
+      level: f.instruction.level,
+      sameTrade: f.instruction.sameTrade
+    });
+    const ledgerRules = (row: LedgerRow) => {
+      const p = posOf(row.trade);
+      return {
+        initialStop: p?.stop
+          ? {
+              level: p.stop.level,
+              fillPrice: p.stop.fillPrice,
+              atr: p.stop.atr,
+              atrSessions: p.stop.atrSessions,
+              atrMultiple: p.stop.atrMultiple,
+              atrFromSession: r.ds.dates[p.stop.atrFromSession]!,
+              atrToSession: r.ds.dates[p.stop.atrToSession]!,
+              activeFromUtc: iso(p.stop.activeFrom),
+              decisionUtc: iso(p.stop.decisionTime)
+            }
+          : null,
+        stage: p ? (p.closed ? 'closed' : p.stage) : null,
+        exitFills: (p?.fills ?? []).map((f) => fillRecord(f, row.trade.entryIndex)),
+        partialFillsNet: p?.partialNet ?? 0,
+        remainderOpen: p && !p.closed && p.remainder ? { ...p.remainder, pendingTrendExit: p.pendingTrend ? { ...when(p.pendingTrend.time), values: p.pendingTrend.values } : null } : null,
+        averageExitRawPrice: row.averageExitRawPrice ?? (row.status === 'closed' ? row.exitRawPrice : null)
+      };
     };
     ledgers[symbol] = rows.map((row) => ({
       trade: `T-${row.number}`,
@@ -675,7 +976,10 @@ async function main() {
               ageSessionsAtFill: op ? row.trade.entryIndex - op.signalSession : null
             };
           })()
-        : {})
+        : {}),
+      // v1.3.0 (only with the breakout entry, the initial risk stop or retention ON)
+      ...((row.trade.setupKind as string) === 'trend_breakout' && !g ? { entrySource: 'trend_breakout' } : {}),
+      ...(rules ? ledgerRules(row) : {})
     }));
     marks[symbol] = sim.daily.map((d) => ({
       date: d.date,
@@ -811,7 +1115,46 @@ async function main() {
         reason: x.reason,
         values: x.values
       })),
-      ...(g ? gateRecords() : {})
+      ...(g ? gateRecords() : {}),
+      // v1.3.0: the optional rules' records (only with one ON)
+      ...(optional
+        ? {
+            optionalRules: {
+              ...(r.breakout
+                ? {
+                    breakout: {
+                      config: r.breakout.config,
+                      evaluatedSessions: r.breakout.evaluated,
+                      signals: r.breakout.signals.length,
+                      conditions: r.breakout.conditions,
+                      unavailableSessions: r.breakout.unavailable.map((u) => ({ session: r.ds.dates[u.session]!, reason: u.reason, text: u.text }))
+                    }
+                  }
+                : {}),
+              ...(rules?.initialStop
+                ? {
+                    initialStopBlocked: rules.blocked.map((b) => ({
+                      ...when(b.time),
+                      session: r.ds.dates[b.session]!,
+                      source: b.source,
+                      reason: b.check.reason,
+                      text: b.check.text,
+                      values: b.check.values
+                    }))
+                  }
+                : {}),
+              positions: [...(rules?.positions.values() ?? [])].map((p) => ({
+                trade: tradeIds.get(p.trade) ?? null,
+                initialStop: p.stop ? { level: p.stop.level, atr: p.stop.atr, activeFromUtc: iso(p.stop.activeFrom) } : null,
+                stage: p.closed ? 'closed' : p.stage,
+                remainderFromSession: p.remainderFromSession >= 0 ? r.ds.dates[p.remainderFromSession]! : null,
+                exitFills: p.fills.map((f) => fillRecord(f, p.trade.entryIndex)),
+                trendExitDecisions: p.trendDecisions,
+                pendingTrendExitAtEnd: !p.closed && p.pendingTrend ? { ...when(p.pendingTrend.time), values: p.pendingTrend.values } : null
+              }))
+            }
+          }
+        : {})
     };
     const mc = sim.markChanges!;
     for (let i = 0; i < mc.t.length; i++)
@@ -846,10 +1189,31 @@ async function main() {
         engineVersion: STRATEGY_VERSION,
         ...(legacy
           ? {
-              legacyReplay: `${request.strategyVersion} replayed as ${STRATEGY_VERSION} with ${request.strategyVersion === '1.0.0' ? 'continuation, the entry trend filter and persistent eligibility' : 'the entry trend filter and persistent eligibility'} OFF`
+              legacyReplay: `${request.strategyVersion} replayed as ${STRATEGY_VERSION} with ${request.strategyVersion === '1.0.0' ? 'continuation, the entry trend filter, persistent eligibility and the three optional rules' : request.strategyVersion === '1.1.0' ? 'the entry trend filter, persistent eligibility and the three optional rules' : 'the Rise entry and the initial risk stop and trend retention'} OFF`
             }
           : {})
       },
+      // v1.3.0: the base entry method and the two exit options (OFF = the earlier versions' behaviour)
+      entryMethod: { method: entryMethod, label: ENTRY_METHOD_LABEL[entryMethod], ...(breakoutCfg ? { breakout: breakoutCfg } : {}) },
+      initialStop: initialStop
+        ? {
+            enabled: true,
+            ...initialStop,
+            atrConvention:
+              'true range = max(high, previous close) − min(low, previous close) of completed daily sessions; ATR = their simple mean over the L sessions before the fill session (no Wilder smoothing)',
+            level: 'actual raw fill price − multiple × ATR, fixed for the position, active from the fill',
+            fills: 'a gap through the stop fills at that opening trade; a minute crossing it fills at the stop level (assumed)'
+          }
+        : { enabled: false },
+      retention: retention
+        ? {
+            enabled: true,
+            ...retention,
+            rule: 'at the first profit trailing-stop event sell sellPercent of the shares; the remainder exits after closesBelow consecutive completed closes strictly below SMA(smaSessions) (the partial-sale session’s close is the first counted), at the next eligible trade; the initial risk stop, the maximum losing hold and the buffered loss keep applying to the remainder on its remaining principal',
+            accounting:
+              'debt-funded as before: each fill repays its proportional share of the $100,000 principal and pays the simple interest accrued on that share since the entry session; per-side costs on every fill; one logical position = one closed trade when its last share is sold'
+          }
+        : { enabled: false },
       continuation: continuation ?? { enabled: false },
       trendFilter: trendFilter ? { enabled: true, label: TREND_METHOD_LABEL[trendFilter.method], ...trendFilter } : { enabled: false },
       eligibility: eligibility ? { enabled: true, label: ELIGIBILITY_POLICY_LABEL[eligibility.policy], ...eligibility } : { enabled: false },
@@ -881,6 +1245,16 @@ async function main() {
       continuation: continuation ?? { enabled: false },
       trendFilter: trendFilter ?? { enabled: false },
       eligibility: eligibility ?? { enabled: false },
+      ...(optional
+        ? {
+            entryMethod,
+            ...(breakoutCfg ? { breakout: breakoutCfg } : {}),
+            initialStop: initialStop ?? { enabled: false },
+            retention: retention ?? { enabled: false },
+            optionalRulesNote:
+              'With the trend-breakout entry, the initial risk stop or trend retention ON, each symbol also has `optionalRules`: the breakout scan (evaluated sessions, signals, sessions without enough history), every entry decision the initial risk stop blocked (ATR unavailable), and every position with its stop and its exit fills (partial and final: shares, principal repaid, interest, costs, net, the rule and why). The log holds initial_stop_set, partial_exit, trend_count and trend_exit_decision entries.'
+          }
+        : {}),
       ...(gated
         ? {
             entryGatesNote:
