@@ -4,7 +4,7 @@
 
 - **Updated:** 2026-11-05T17:45Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, committed and
   pushed.** **No merge to `main`.**
-- **Follow-up (user-requested, 2026-11-05T18:18Z; UNCOMMITTED until the user asks):** a preview shown without being
+- **Follow-up (user-requested, 2026-11-05T18:18Z; committed `a860c8c` and pushed `d288a2d..a860c8c` at 18:48:55Z on the user's "Yes"; `git ls-remote` = `a860c8c`, `origin/main` = `aa5754d` unchanged):** a preview shown without being
   run (reload, Back/Forward, link) is re-checked: `GET /api/previews/PV-…?current=1` → `preview.current {matches,
   differences}` (`server/previews.ts` `detail(…, {checkCurrent})`); the UI shows it at once and flags *Outdated* with
   the differences (banner `preview-stale`, status `stale`) and enables Run preview with the same values. Docs corrected
