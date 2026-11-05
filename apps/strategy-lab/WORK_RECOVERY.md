@@ -1,5 +1,190 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
+## Top screen (read this first) — Task 11: Growth entry trend filter, latched entry eligibility, compact strategy picker — COMPLETE
+
+- **Updated:** 2026-11-05T14:18Z (UTC, from the clock). **Status: COMPLETE — implemented, verified; commit + push to
+  `feature/strategy-entry-explorer-ui` in progress (see the push record below once written).** **No merge to `main`.**
+- **Verification (final, logs `apps/strategy-lab/logs/task11/`, git-ignored):**
+  - root `npm test` 14:12:42Z→14:15:52Z (`root-test-final.log`): 1104 tests / 1093 pass / 7 fail (= the 7 pre-existing
+    of Task 10, compared by test name) / 4 skipped;
+  - root `tsc` clean; root ESLint 306 problems (= baseline; `src/growth-trading` clean);
+  - Growth engine suite `src/growth-trading/tests/*.test.ts` 144/144 (`growth-tests.log`), incl. OFF parity with 1.1.0
+    (8) and 1.0.0 (7);
+  - app `npm run check` 14:09:27Z→14:12:33Z (`check.log`): typecheck + lint clean, Vitest 147/147 (20 files), build,
+    Playwright 48/48 (dist = the final build).
+- **Old runs / live data:** a COPY of the backup served by a scratch server (port 5321, stopped): all 17 runs open
+  with their events; exports of R-000017/R-000014/R-000013 OK; R-000017 (Growth 1.0.0, the user's run) **REPRODUCED**
+  by the 1.2.0 engine (`replay-run.ts`, legacy mode: trades/daily/metrics every stored field, 57 events identical);
+  its clone validates as 1.2.0 with continuation, trend filter and eligibility OFF. Live `state/strategy-lab/`:
+  `audit-state` identical to audit-before on 13 keys, 79 runs/imports files byte-identical to the backup, DB sha256
+  `65143e94…` unchanged; **no migration** needed or applied. Disclosure: the read-only audits created empty SQLite
+  sidecar files `strategy-lab.sqlite-wal` (0 bytes) and `-shm` next to the live DB (normal for read-only WAL opens).
+- **Running processes:** none of mine. The user's live :4317 server was NOT running at the start and was not started
+  (it is the user's to start; it will serve the new `dist`). The stray :4391 smoke server (pid 2772895, earlier session)
+  is untouched.
+- **Deliverables (sha256, first 16):** brief `a951b12c1653ccf9`; `entryGates.ts` `9f8238d940e29477`; `riseTrading.ts`
+  `a24903d8a99f7209`; `continuation.ts` `81e796624166ad1d`; `shared/strategies.ts` `72bdb47e131b2c0a`;
+  `runner/trading-run.ts` `5eb71e6d07dfbd84`; `runner/growth-params.ts` `f6c2017aa0595829`; `StrategyPicker.tsx`
+  `2eaa3515c7617d42`; `GROWTH_ENTRY_GATES.md` `81c59e992a1c972f`; `paired-comparison.ts` `a8ad79c69892b90a`; baselines
+  `baseline-1.1.0.json` `95f9f348d95ccdcd`, runner `SHA256SUMS` `804c0cba62b3cb2c`; gates demo export MANIFEST
+  `33411e02edbbe83d`.
+- **Follow-up gate (the user's):** review in the UI (strategy select; Growth → Entry trend filter / Persistent entry
+  eligibility; a run's Trades labels, Analysis → Entry gates, Export research bundle); restart the live server to serve
+  the new build; optionally import the 1.2.0 gates demo phenotypes (`npm --prefix apps/strategy-lab run
+  import:phenotypes -- apps/strategy-lab/fixtures/phenotypes/growth-gates-demo-2026-11`); any optimisation of the
+  gates = a separate CLI study with its own protocol.
+- **Brief:** `docs/strategy-lab/brief/2026-11-05-growth-trend-filter-eligibility-brief.md` (verbatim copy of the upload
+  `6b1708c5-Claude_Strategy_Lab_Growth_Trend_Filter_Entry_Eligibility_UI.md`, 172 lines (173 with the trailing line the
+  Read tool shows), read in full through §F's last line; sha256 `a951b12c1653ccf9dbb5626b2bd024bdf49963b1fa848cb1a8b841951fca1c2c`).
+  The user's message authorises the whole assignment "including implementation, research execution, verification, and
+  the requested Git commit and push"; the brief §F.5 asks for commit + push to THIS branch, **no merge to `main`**.
+- **Branch:** `feature/strategy-entry-explorer-ui`, HEAD at start `0301c01` (= the Task 10 push record), tree clean.
+- **Backup (before any change):** `~/backups/strategy-lab/20261105T125521Z-pre-trend-eligibility/` (consistent SQLite
+  copy via node:sqlite `backup()`, runs/ + imports/ copies, `state-files.sha256` (79 files), `runs-fingerprint.json`,
+  `audit-before.json`, MANIFEST.md). Live DB at start: 17 runs (R-000001…R-000017), 17 variations, 4 strategies,
+  phenotypes 1 (PH-0001 Study 8), migrations 0001 + 0002, FK [], integrity ok, 17/17 events verified.
+- **Live server:** NOT running at start (nothing on :4317; the Task 10 restart pid 3117173 is gone). Stray :4391 server
+  pid 2772895 (earlier session bbd6d528, scratch state) — not mine, left alone.
+- **Baselines (captured at 0301c01 with the UNCHANGED 1.1.0 engine and runner, before any code change):**
+  - engine: `src/growth-trading/tests/fixtures/baseline-1.1.0.json` (sha256 `95f9f348d95ccdcdb130d009d7d4fbdb1a7cc2a87d3521de12231b2c6975b83e`),
+    produced by `src/growth-trading/tools/capture-baseline-1.1.0.ts` (7 cases: vgt-1d-off, gdx-1d-classic,
+    vgt-1d-breakout, xbi-1d-ma-cross, vgt-60m-shallow, gdx-15m-classic-buffer-off, xbi-1d-off-n60; signals, trades,
+    excursions, daily, ledger, continuation outcomes, episodes, decision log, mark changes, metrics — full + hashes).
+    engine sha256 riseTrading `40862479…`, continuation `06f2e70a…` (= Task 10 deliverables); engineDirty "".
+  - runner: `apps/strategy-lab/tests/fixtures/growth-runner-baseline-1.1.0/` (R-910001 VGT+GDX 1d 2016–2023 OFF,
+    R-910002 VGT 1d breakout, R-910003 GDX 60m 2018–2020 classic_d1; gzip -n -9; `SHA256SUMS` of the uncompressed
+    files incl. decisions.json and the minute-marks content hash). Produced in scratch
+    `runner-baseline-1.1.0/` with `node … apps/strategy-lab/runner/trading-run.ts <dir>` from the repo root.
+- **Chart snapshots `no-1…yes-3`:** NOT available to Claude (the upload folder holds only the brief; none found under
+  /home/chad). Logged as unmatched; nothing was inferred from them.
+- **Stage 11.3 (engine) code done by 13:18Z (clock):** `src/growth-trading/entryGates.ts` (new: TrendGate A–E, predicate states,
+  EntryGates opportunities/renewal watch), `continuation.ts` (gate hooks: a blocked trigger ends its episode; log types),
+  `riseTrading.ts` (1.2.0; params trendFilter/eligibility; merged base→latched→continuation loop; entry sources;
+  `entryGates` metrics only when ON). Root tsc clean. **OFF parity verified (before 13:18Z):** `offParity-1.1.0.test.ts` 8/8
+  (7 cases × 2 OFF forms = baseline-1.1.0 exactly, full metrics + log + mark-change hashes) and `offParity.test.ts`
+  7/7 (1.0.0). Real-data smoke (scratch `smoke-gates.ts`, VGT/GDX 2016–2023, VGT 60m 2018–2020): every method and
+  policy runs, fixed-ledger difference 0; eligibility ON + no gate = OFF trades (52, +9,718).
+- **Stage 11.4 (synthetic unit tests) 13:26Z:** `src/growth-trading/tests/entryGates.test.ts` 39/39 (trend A–E incl.
+  equality, warm-up, invalid data, partial session, odd N, look-ahead guard; predicate edges = scanner crossings;
+  policies 1–5 incl. expiry boundary, drift, extension, deterioration, renewal vs policy 1, precedence; capital hook;
+  continuation veto / priority / supersede; orthogonality matrix 2×3×3; scope guard). DecisionLog.insert keeps the raw
+  crossing before the gate entries it causes. Existing riseTrading.test.ts: 2 expected contract failures (registry
+  version, Simulation keys) — to update with the registry.
+- **Stage 11.5 (registry, params mapping, runner, replay) code done 13:33Z:** `shared/strategies.ts` (Growth 1.2.0 = form;
+  1.1.0 frozen legacy `launch: phenotype`; 1.0.0 legacy; trend + eligibility params with bounds/search domains; group
+  notes as registry data `groupNotes`), `shared/contract.ts` (GroupNote), `shared/params.ts` (noteShown),
+  `runner/growth-params.ts` (each request read with ITS version's schema; trendFilterOf/eligibilityOf),
+  `runner/trading-run.ts` (gate fields only when ON; latched/renewal events; entryDecisions/opportunities/renewalWatches
+  in decisions.json; run-level trendFilter/eligibility), `server/replay.ts` (modes legacy | legacy-1.1.0 | exact),
+  `scripts/replay-run.ts`. **Runner parity 13:33Z:** `tests/growth-parity.test.ts` 9/9 (1.0.0 ×2; 1.1.0 replay ×3 and
+  1.2.0 OFF/OFF ×3 = growth-runner-baseline-1.1.0: events/trades/daily sha256 identical, metrics/decisions every stored
+  field, minute-mark content; pool rerun).
+- **Stage 11.6 (service, phenotypes, compare, export) + 11.7 (UI) code done 13:46Z:** `server/service.ts` (gate titles +
+  assumptions; capabilityOf runs legacy-Growth 1.1.0 phenotypes as themselves), `importers/phenotypes.ts` (accepts them),
+  `server/compare.ts` (gate states, version note), `server/export.ts` (entry-decisions.csv, opportunities.csv,
+  entry-gates.md, trades.csv entry_source/opportunity/age columns, README), `shared/artifact-types.ts`; UI:
+  `src/components/StrategyPicker.tsx` (new ARIA combobox + listbox, fixed popup), `RunTestDialog.tsx` (picker,
+  details region, registry group notes), `Trading.tsx` (EntryGateRows, entry-source label), `Panels.tsx` (legacy text),
+  CSS. Tests: app Vitest 140/140 (6 updated for the 1.2.0 contract: trading.test ×4, params.test, real-data.test);
+  root riseTrading/continuation/entryGates 92/92. E2E (`npm run test:e2e`, log `apps/strategy-lab/logs/task11/e2e-1.log`):
+  46/47, the failing one a phone-width page-overflow assertion of the pre-existing desktop run layout → narrowed to
+  "the modal adds none" (log e2e-gates-2.log: entry-gates.spec 4/4). New `e2e/entry-gates.spec.ts`; helpers
+  `chooseStrategy`; specs updated for the picker and 1.2.0.
+- **Stage 11.8–11.9 done 13:53Z:** `src/growth-trading/tools/paired-comparison.ts` + root script `growth-paired`
+  (smoke: scratch `paired-request.json` → `paired-out/`, VGT/GDX 2016–2023 trend A + time_limited, 5.5 s);
+  `src/growth-trading/tests/entryGatesRealData.test.ts` 18/18 (holiday + early close; independent recomputation of every
+  base decision for A–E; 60m partial session; 5 policies × VGT/GDX invariants; determinism; 1m tractable);
+  `apps/strategy-lab/tests/entry-gates.test.ts` 7/7 (registry, search space, phenotype import/rerun 1.2.0 + 1.1.0,
+  real gated run: records = ledger, bundle deterministic, exact replay, compare vs OFF). New fixture export
+  `apps/strategy-lab/fixtures/phenotypes/growth-gates-demo-2026-11/` (script `scripts/make-growth-gates-demo-phenotypes.ts`;
+  NOT imported live); `make-growth-demo-phenotypes.ts` now pinned to the frozen 1.1.0 spec (regenerates the checked-in
+  1.1.0 export byte-identically). E2E: serve.ts imports the gates demo; phenotypes.spec counts 9/8 + a 1.2.0 phenotype test.
+- **Stage 11.10 (docs) done 14:00Z:** new `docs/strategy-lab/GROWTH_ENTRY_GATES.md`; updated docs README, GROWTH_TRADING,
+  GROWTH_CONTINUATION, CONTRACTS, EXPORTS, OPERATIONS (no-migration upgrade note, limitations), RESEARCH_WORKFLOW (§4
+  guide), ARCHITECTURE (New Test dialog + picker), PHENOTYPES (legacy 1.1.0 reruns, fixtures), src/growth-trading README,
+  apps/strategy-lab README, root README. Trace examples: scratch `traces.txt` (traces.ts, traces2.ts; VGT/GDX/XBI
+  2016–2023 training only).
+- **Stage 11.11 (verification) done 14:18Z:** see the top screen. Fixed during it: 121 prettier/unused warnings in my
+  new `src/growth-trading` files (eslint --fix + declaration order; behaviour unchanged, Growth suite re-run 144/144);
+  one lint error in the new app test.
+- **Commits** on `feature/strategy-entry-explorer-ui` (base `0301c01` = origin at the start): `3136940` code (engine +
+  Strategy Lab + tests + fixtures + root `growth-paired` script), `f078ab1` docs + brief, then this checkpoint; next:
+  `git push origin feature/strategy-entry-explorer-ui` (no force, no merge) and the push record.
+
+## Task 11 — design decisions (written 2026-11-05T13:06Z, from the audit; no user question needed)
+
+- **Version.** Growth stays the user-facing name; engine `STRATEGY_VERSION` 1.2.0. 1.1.0 becomes legacy
+  (`launch: 'phenotype'`: not offered by New Test, but its catalogue phenotypes stay runnable; replay = 1.2.0 with
+  the trend filter and eligibility OFF). 1.0.0 stays legacy (`launch: none`), replay = 1.2.0 all OFF. With both new
+  switches OFF every simulation output, event, trade row, daily mark and decision-log entry is IDENTICAL to 1.1.0;
+  only metrics/decisions top-level metadata (strategy version, engineVersion, `trendFilter`/`eligibility`
+  `{enabled:false}`) differ. New fields appear only when a gate is ON.
+- **Trend filter (5 methods, sessions).** Observations P_0 = the decision price (the completed decision bar's close),
+  P_k = regular-session close of session s−k (k ≥ 1). Highs/lows: completed sessions' sHigh/sLow; the current session
+  only through minutes completed by the decision time (the full session incl. closing print for a decision at the
+  close). A: P_0 ≥ P_N(1+m)(1−1e-12). B: OLS of ln P over N+1 points (x = session index), slope% = (e^{bN}−1)·100 ≥
+  min; flat → exactly 0 (centred logs). C: P_0 > SMA_N(0..N−1) and SMA_N(now) > SMA_N(K..K+N−1) strictly. D: N
+  observations k=0..N−1, two halves of floor(N/2) (odd N: middle excluded); newer max high > older max high·(1+m)
+  AND newer min low > older min low·(1+m). E: both returns ≥ thresholds (threshold form), 0 < S < L. Missing history
+  → `insufficient_history` (block); non-positive/non-finite → `invalid_data` (block). Warm-up extended only when ON.
+- **Gate scope.** Every Growth entry decision: the base crossing, a latched opportunity decision, a renewal signal,
+  and a continuation trigger (a blocked continuation trigger ENDS its episode `trend_veto`: no repeated per-bar
+  re-triggering; classic_d1 setup cancelled). Exits untouched. Pending orders keep their semantics (a placed order
+  fills regardless of later trend changes). Optional harness-only `capacity(s,t)` hook = `blocked_by_capital`.
+- **Eligibility (5 bounded policies, W = max age, default 10 sessions, origin session = day 0, eligible through
+  origin+W, expired after its close).** Arms ONLY on a raw crossing taken while flat with no order (signals while
+  invested/pending stay ignored, nothing armed) or on a policy-5 renewal signal. Evaluated at its arming decision and
+  then at every completed signal-resolution bar end while flat with no order. Order: expiry → policy validity
+  (invalidate, terminal) → capital → trend → decision (order at the next eligible trade at the then-current price).
+  1 time_limited: valid while the current bar satisfies the original predicate C_i (rolling low, scanner formula).
+  2 minimum_strength: valid while close ≥ fixed signal-time recentLow·(1+a) (replaces the rolling predicate; checked
+  from the arming bar on). 3 maximum_extension: C_i AND close ≤ signal price·(1+e), else invalidated.
+  4 deterioration: C_i AND close > maxClose since arming·(1−d), else invalidated. 5 reset_renew: C_i as policy 1;
+  after an unconsumed opportunity expires/is invalidated, a renewal watch (bounded by W sessions after that end): a
+  later close ≤ ref·(1−D) resets (ref = the ended opportunity's signal price), trough = lowest close since the reset
+  (candidate excluded); the FIRST bar with close ≥ trough·(1+R) ends the watch — a renewal signal if C_i holds there
+  (source `eligibility_renewal`, new opportunity with lineage), otherwise no renewal (episode used once). A genuine
+  crossing takes precedence (clears the watch); any entry cancels it.
+- **Priority at one instant:** fresh crossing → live opportunity → continuation. Any taken entry closes the
+  continuation episode (base priority, as before) and supersedes a live opportunity / renewal watch of another
+  source. One live opportunity per symbol: a new crossing while one is live (possible only under policy 2)
+  supersedes it. Same-session re-entry after an exit stays allowed (existing Growth semantics).
+- **Records.** Outcome statuses add `vetoed` (gate, eligibility OFF) and `deferred` (armed, not taken at its own
+  decision); events: raw crossing once (entry_signal taken / rejected_signal otherwise), latched decisions
+  `SYM:latched:<t>`, renewal signals `SYM:renewal:<t>`; decisions.json gains `opportunities` + `entryDecisions`
+  (only when ON); metrics per symbol `entryGates` (only when ON); export adds opportunities.csv,
+  entry-decisions.csv, entry-gates.md.
+- **UI.** Generic registry-driven groups (trend, eligibility) with group notes in the registry (no strategy-specific
+  branches); strategy radio cards → accessible rich combobox (StrategyPicker) with a details region.
+
+
+## Task 11 — disclosures (for the final report)
+
+- **Existing tests changed because the contract changed (intent kept):** `apps/strategy-lab/tests/trading.test.ts`
+  (registry: 1.2.0 current, 1.1.0 legacy `launch: phenotype`; the boolean list adds the two gate switches; the runner
+  allowlist compares unique keys; the assumption keys add `trendFilter`, `eligibility`; the restriction test is renamed
+  "no post-LOSS restriction" with a comment: policy 5's reset/renew concerns an unconsumed opportunity, OFF by default),
+  `tests/params.test.ts` (constraint `momentum-short-long`), `tests/real-data.test.ts` (a 1.2.0 request with explicit
+  switches), `tests/growth-parity.test.ts` (engineVersion 1.2.0; new 1.1.0 section), `src/growth-trading/tests/
+  riseTrading.test.ts` (registry mapping read per version; `Simulation` keys + `gates`; the guard also scans
+  entryGates.ts), `offParity.test.ts` (describe title only), e2e specs (picker helper `chooseStrategy`, 1.2.0
+  requests, `Growth v1.2.0`, phenotype counts 6→9 / 5→8 because the e2e temp state also imports the gates demo).
+- **Phone-width check:** the run page behind the modal (the existing desktop layout) already overflows horizontally at
+  390 px. The e2e test asserts that the modal and its popup add no overflow and that the modal has no sideways scroll;
+  the run page's own layout was not changed (out of scope).
+- **Design choices worth stating:** signals while invested or pending arm nothing (unchanged "ignored"); a blocked
+  continuation trigger ends its episode (no per-bar re-trigger); eligibility without a blocker equals OFF in a
+  standalone run; the policy-5 watch is bounded by the same W (no extra parameter); policy 2 replaces the rolling
+  predicate by the fixed signal-time low; method D with odd N excludes the middle; method B passes a flat series at a
+  0% minimum (≥); the capital hook is harness-only; a raw crossing always logs first at its instant (DecisionLog.insert).
+- **`make-growth-demo-phenotypes.ts`** is now pinned to the frozen 1.1.0 spec (it would otherwise write 1.2.0 records
+  into the frozen 1.1.0 demo export); it regenerates the checked-in export byte-identically.
+- **Data read:** VGT, GDX, XBI 2016–2023 (training, already explored) by the new tests, smoke runs and traces; the root
+  suite reads whole data files as before (no embargo applies). The six chart snapshots `no-1…yes-3` were not available
+  and were not used or inferred.
+- **Not verified:** browsers other than Chrome; physical keyboards/screen readers beyond the automated ARIA/keyboard
+  checks; a 1.2.0 run on the live server (it was not running).
+
 ## Top screen (read this first) — Task 10: Growth name, continuation entries, unified parameters, phenotypes, exports — COMPLETE
 
 - **Updated:** 2026-11-04T23:04Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, migrated live,
