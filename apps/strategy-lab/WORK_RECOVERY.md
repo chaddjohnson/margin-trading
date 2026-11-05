@@ -3,8 +3,11 @@
 ## Top screen (read this first) — Task 14: Growth optional rules (initial risk stop, trend-breakout entry, trend retention) — COMPLETE
 
 - **Updated:** 2026-11-05T23:56Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, merged into
-  `feature/strategy-entry-explorer-ui` (fast-forward to `c4d3a04` at 23:44:01Z); this checkpoint commit and the push
-  follow (push record appended after it). No merge to `main`.**
+  `feature/strategy-entry-explorer-ui` (fast-forward to `c4d3a04` at 23:44:01Z), committed and PUSHED. No merge to
+  `main`.**
+- **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `8d2800e..ffb0465`, no force; outside
+  the sandbox, first attempt, 2026-11-05T23:56:11Z). `git ls-remote` at 23:56:15Z: branch = `ffb04656ea90…` (= local),
+  `origin/main` = `aa5754d…` (unchanged). This push record follows as its own commit, pushed the same way.
 - **Verification (final, in the MAIN checkout, logs `apps/strategy-lab/logs/task14/`, git-ignored):** app `npm run check`
   23:44:15Z→23:49:14Z (`check-1.log`): typecheck + lint clean, Vitest 228/228 (26 files), build (`dist` = this build),
   Playwright 62/62. Root `tsc` clean; root ESLint 306 problems (= baseline; the one error is the pre-existing
