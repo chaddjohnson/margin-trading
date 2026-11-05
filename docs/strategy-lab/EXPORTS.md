@@ -30,12 +30,16 @@ without access to the Strategy Lab server. The bundle never changes a run artifa
 | `entry-decisions.csv` | Growth 1.2.0 with the entry trend filter or persistent eligibility ON: one row per Growth entry decision (raw crossing, latched decision, renewal signal, continuation trigger) — time (UTC, New York), session, decision price, the crossing's threshold/low/advance, disposition and reason, the gate decision and text, the observed trend values and policy values (JSON), the opportunity or episode, the trade, its fill and its final realised or open unrealised net |
 | `opportunities.csv` | Growth 1.2.0 with persistent eligibility ON: every armed opportunity — source (raw crossing or renewal, with lineage), policy, signal, last eligible session, evaluations and blocked counts, the decision and its age, how it ended and why, its trade, fill and net, the transitions (JSON) |
 | `entry-gates.md` | Growth 1.2.0 with an entry gate ON: the gate configuration, the term definitions, and per symbol the vetoed/deferred counts, trend blocks, opportunity ends and ages, renewal watches and the trades by entry source — descriptive |
-| `daily-marks.csv` | Growth: realized, unrealized and marked net at each session close |
+| `exit-fills.csv` | Growth 1.3.0 with the initial risk stop or trend retention ON: one row per exit fill of every position (partial and final) — rule and reason, UTC and New York time, session, execution, raw and after-cost price, shares, principal repaid (proportional), interest paid and its calendar days, proceeds, gross, its share of the entry cost, exit cost, fill net, what remains, the decision instant, the stop level, rules also due at the same trade, the initial stop and its ATR, the position's net. The fills of a position add up to its `trades.csv` row |
+| `optional-rules.md` | Growth 1.3.0 with the breakout entry, the initial risk stop or retention ON: the configuration, the conventions and per symbol the counts (breakout signals, protected positions, stop exits, blocked decisions, partial fills and their net, remainder exits, closed positions with a partial sale) — descriptive |
+| `daily-marks.csv` | Growth: realized, unrealized and marked net at each session close (with retention: partial fills in realized, the remainder in unrealized) |
 | `attribution.json`, `attribution.md` | Per-origin attribution (base Growth, each continuation method) with continuation counts, drawdowns and P&L — **descriptive, not the causal effect** |
 | `artifacts/minute-marks.csv.gz` | Only with *include minute marks*: gzip CSV `symbol,t_unix_utc,marked_net_usd`, one row per change of the minute-marked net (it holds until the next row), cents |
 
 Missing pieces are stated, not invented: a Growth 1.0.0 run has no decision log or attribution; a run with both entry
-gates OFF (or before 1.2.0) has no entry-decision, opportunity or entry-gate file; an import has no trade ledger file
+gates OFF (or before 1.2.0) has no entry-decision, opportunity or entry-gate file; a run with the initial stop and
+retention OFF (or before 1.3.0) has no `exit-fills.csv` (every trade is one fill) and none of the three options ON, no
+`optional-rules.md`; an import has no trade ledger file
 (its trades are paired from the events); a signal-only or demo run has no trades.
 
 ## Guarantees

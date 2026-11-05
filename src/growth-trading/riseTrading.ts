@@ -181,7 +181,8 @@ export const tradingParamErrors = (p: RiseTradingParams): string[] => {
   const method = entryMethodOf(p);
   const hold = p.maximumHoldEnabled === true;
 
-  if (!(ENTRY_METHODS as readonly string[]).includes(method)) errors.push(`entryMethod ${String(method)} is not supported`);
+  if (!(ENTRY_METHODS as readonly string[]).includes(method))
+    errors.push(`entryMethod ${String(method)} is not supported`);
   if (method === 'rise_from_recent_low') {
     if (
       !finite(p.advanceFromRecentLowPercent) ||
@@ -196,7 +197,9 @@ export const tradingParamErrors = (p: RiseTradingParams): string[] => {
     if (!p.breakout) errors.push('breakout: the trend-breakout entry needs its inputs');
     else errors.push(...breakoutConfigErrors(p.breakout).map((e) => `breakout: ${e}`));
     if (p.eligibility)
-      errors.push('eligibility: persistent entry eligibility applies only to the Rise entry method (not applicable to the breakout)');
+      errors.push(
+        'eligibility: persistent entry eligibility applies only to the Rise entry method (not applicable to the breakout)'
+      );
   }
   if (!isSignalResolution(p.resolution)) errors.push(`resolution ${String(p.resolution)} is not supported`);
   if (!finite(p.trailingStopPercent) || p.trailingStopPercent <= 0 || p.trailingStopPercent >= 100)
@@ -698,7 +701,13 @@ export const simulateTrading = (
       const check = protect(s, d.time, 'base_signal');
 
       if (!check.pass) {
-        outcomes.push({ decision: d, status: 'vetoed', reason: check.reason as GateVetoReason, trade: null, protection: check });
+        outcomes.push({
+          decision: d,
+          status: 'vetoed',
+          reason: check.reason as GateVetoReason,
+          trade: null,
+          protection: check
+        });
         baseEntry(d, s, 'vetoed', check.text, null, null, log.entries.length, check);
         return;
       }
@@ -1033,7 +1042,8 @@ export const runRiseTrading = (
   ds.dataHash = dataHash;
 
   // v1.3.0: the trend-breakout entry decides at the window's completed session closes.
-  const breakout = method === 'trend_breakout' ? scanTrendBreakout(ds, warmup, history.length - 1, params.breakout!) : null;
+  const breakout =
+    method === 'trend_breakout' ? scanTrendBreakout(ds, warmup, history.length - 1, params.breakout!) : null;
   const decisions = breakout ? decisionsFromBreakout(breakout.signals) : decisionsFromSignals(bars, scan.signals);
   const continuation = params.continuation
     ? { config: params.continuation, bars: params.continuation.method === 'classic_d1' ? null : bars }
@@ -1423,7 +1433,8 @@ export const continuationMetricsOf = (sim: Simulation) => {
     triggered: c.outcomes.filter((o) => o.status !== 'suppressed' && o.status !== 'vetoed').length,
     // v1.2.0: triggers blocked by an entry gate (always 0 with both gates OFF; the key exists only with a gate ON;
     // v1.3.0: or the initial risk stop)
-    vetoedByEntryGate: sim.gates || sim.rules?.initialStop ? c.outcomes.filter((o) => o.status === 'vetoed').length : undefined,
+    vetoedByEntryGate:
+      sim.gates || sim.rules?.initialStop ? c.outcomes.filter((o) => o.status === 'vetoed').length : undefined,
     filled: c.outcomes.filter((o) => o.status === 'filled').length,
     unfilledAtEnd: c.outcomes.filter((o) => o.status === 'unfilled_at_end').length,
     suppressedBasePriority: c.outcomes.filter((o) => o.status === 'suppressed').length,
@@ -1817,7 +1828,9 @@ export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
       attribution: attributionOf(rows),
       continuation: continuationMetricsOf(sim),
       ...(sim.gates ? { entryGates: entryGatesMetricsOf(sim, rows) } : {}),
-      ...(sim.rules || sim.entryMethod !== 'rise_from_recent_low' ? { optionalRules: optionalRulesMetricsOf(sim, rows) } : {}),
+      ...(sim.rules || sim.entryMethod !== 'rise_from_recent_low'
+        ? { optionalRules: optionalRulesMetricsOf(sim, rows) }
+        : {}),
       checks: {
         fixedLedgerMaxDifferenceUsd: reconciliation.maxDifference,
         identityMaxResidualUsd: identity,

@@ -772,7 +772,14 @@ export class EntryGates {
 
     if (protection && !protection.pass) {
       count(protection.reason as GateReason);
-      return { pass: false, reason: protection.reason as GateReason, trend, capital, text: protection.text, protection };
+      return {
+        pass: false,
+        reason: protection.reason as GateReason,
+        trend,
+        capital,
+        text: protection.text,
+        protection
+      };
     }
 
     return {
@@ -1073,7 +1080,9 @@ export class EntryGates {
         o.transitions.push({ t: time, session: s, state, reason: gate.reason });
         this.entry(time, s, 'opportunity_blocked', o, null, gate.text, {
           ...(gate.trend?.values ?? {}),
-          ...(gate.protection ? Object.fromEntries(Object.entries(gate.protection.values).map(([k, v]) => [`protection.${k}`, v])) : {}),
+          ...(gate.protection
+            ? Object.fromEntries(Object.entries(gate.protection.values).map(([k, v]) => [`protection.${k}`, v]))
+            : {}),
           state,
           capital: gate.capital
         });

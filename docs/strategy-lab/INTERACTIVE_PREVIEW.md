@@ -87,9 +87,10 @@ The panel opens and explains why, instead of running anything else:
 - **Imported results**, such as the Study 8 shared-slot allocator replay: Strategy Lab never re-executes an import,
   and **never substitutes a standalone single-strategy simulation for a shared-capital strategy**.
 - **Shared-slot pool reruns**: one allocator replay of a sealed configuration. Rerun them from the phenotype catalogue.
-- **Legacy versions** (Growth 1.0.0, 1.1.0): kept exactly as recorded. The panel offers an explicit button, *Preview
-  this configuration as Growth 1.2.0*. It starts a 1.2.0 draft with the later options OFF, labelled as a NEW execution
-  and **not a reproduction**. Nothing is upgraded invisibly.
+- **Legacy versions** (Growth 1.0.0, 1.1.0 and, since 1.3.0, 1.2.0): kept exactly as recorded. The panel offers an
+  explicit button, *Preview this configuration as Growth 1.3.0*. It starts a draft of the current version with the
+  later options OFF, labelled as a NEW execution and **not a reproduction** (for 1.2.0 the note adds that 1.3.0 with
+  those options OFF reproduced every 1.2.0 artifact in the parity tests). Nothing is upgraded invisibly.
 - **Runs not completed**, and runs without a stored request.
 
 When a previewable run's recorded execution differs from this checkout, the panel says so. Its engine-file hashes or
@@ -273,6 +274,10 @@ touches running work, and a removed entry is simply recomputed. The cache is dis
   SIGKILL). A ticket not polled for 60 s is released, so a closed tab never keeps work alive.
 - Network errors, a server restart (`unknown preview ticket`), invalid input (400) and runner failures show **Error**
   in the panel. The displayed result is kept, and nothing is saved or cached.
+- Since Growth 1.3.0 a failed preview also says so where the results are: the panel adds *Not applied: the chart and
+  Analysis still show …* (the previous successful preview, or the saved run), and a red banner above the chart says
+  *Preview failed — not applied … NOT the configuration that failed; none of their figures describe it*. No figure of
+  a rejected configuration is ever shown (`e2e/optional-rules.spec.ts`).
 
 ## 6. API
 

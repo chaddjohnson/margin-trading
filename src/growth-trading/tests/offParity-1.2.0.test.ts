@@ -30,7 +30,9 @@ describe('Growth 1.3.0 with the three optional rules OFF = the 1.2.0 baseline (c
     assert.equal(fixture.engineDirty, '');
     assert.equal(fixture.cases.length, 9);
     assert.ok(fixture.cases.some((c: BaselineCase11) => c.id === 'candidate-a'));
-    assert.ok(fixture.cases.some((c: BaselineCase11) => c.params.trendFilter && c.params.eligibility && c.params.continuation));
+    assert.ok(
+      fixture.cases.some((c: BaselineCase11) => c.params.trendFilter && c.params.eligibility && c.params.continuation)
+    );
   });
 
   for (const expected of fixture.cases as (BaselineCase11 & Record<string, any>)[]) {
@@ -44,7 +46,13 @@ describe('Growth 1.3.0 with the three optional rules OFF = the 1.2.0 baseline (c
       // OFF: the configuration as 1.2.0 knew it (no v1.3.0 fields), and the explicit OFF of 1.3.0.
       for (const params of [
         expected.params,
-        { ...expected.params, entryMethod: 'rise_from_recent_low' as const, breakout: null, initialStop: null, retention: null }
+        {
+          ...expected.params,
+          entryMethod: 'rise_from_recent_low' as const,
+          breakout: null,
+          initialStop: null,
+          retention: null
+        }
       ]) {
         assert.equal(warmupSessionsForParams(params), expected.warmupSessions);
 

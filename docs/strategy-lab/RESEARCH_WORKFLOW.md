@@ -62,7 +62,11 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
      inputs. *Entry trend filter* blocks entries whose recent trend fails (five methods, lookbacks in trading
      sessions). *Persistent entry eligibility* keeps a signal available for at most W sessions under one of five
      policies ([GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md)). *Continuation entries* adds entries after a
-     profitable exit ([GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md)).
+     profitable exit ([GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md)). Since 1.3.0: *Entry method* chooses the Rise
+     entry (default) or the trend breakout (its SMA inputs are part of the method; eligibility is then not applicable);
+     *Initial risk stop* adds a fixed fill − m × ATR stop; *Retain part of profitable trend* sells only a fraction at the
+     first trailing-stop event and exits the rest on closes below an SMA ([GROWTH_OPTIONAL_RULES.md](GROWTH_OPTIONAL_RULES.md)).
+     Compare an option with Candidate A by cloning it and switching only that option ON.
    - The trading backtest adds the exit rules (a mandatory trailing stop, plus switches for the maximum losing hold and
      the buffered intraday loss) and the cost per side.
    - The parameters show their units, ranges and defaults (X = 5%, N = 20 bars).
@@ -121,11 +125,15 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    Analysis panel's *Entry gates* section counts vetoed and deferred signals, trend blocks, opportunity ends and ages,
    and the trades by entry source; each signal's detail lists the observed trend values (`trend.*`) and policy values
    (`policy.*`).
-15. **Delete a result:** a run's header → **⋯ → Delete result…** → check the id, strategy, symbols and date →
+15. **Optional rules in a run (1.3.0):** a partial exit is a half-filled ▼ on the chart and `+ 1 partial` in Trades
+   (the detail lists each fill and its own net; the trade's net is the whole position's); the Analysis panel's
+   *Optional rules* section counts protected positions, stop exits, blocked decisions and partial fills; the bundle adds
+   `exit-fills.csv` and `optional-rules.md`.
+16. **Delete a result:** a run's header → **⋯ → Delete result…** → check the id, strategy, symbols and date →
    **Delete result**. It removes that run (results, files, its notes and bookmark) permanently and keeps its
    variation and everything else ([OPERATIONS.md](OPERATIONS.md) §Deleting a saved result). Bookmark instead of
    deleting when in doubt.
-16. **Interactive Preview:** on a completed run, **Interactive Preview** (right of the symbol tabs) opens a compact panel
+17. **Interactive Preview:** on a completed run, **Interactive Preview** (right of the symbol tabs) opens a compact panel
     beside the chart ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md)). Change a value (the ⓘ shows its full help),
     press **Enter** or **Run preview**: the chart, events, trades and analysis show that ONE configuration as a
     **TEMPORARY PREVIEW** (`PV-…`), with no new run. Going back to a configuration already previewed is a *Cache hit*.

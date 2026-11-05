@@ -106,7 +106,8 @@ export const DEFAULT_BREAKOUT: Readonly<BreakoutEntryConfig> = {
 export const DEFAULT_INITIAL_STOP: Readonly<InitialStopConfig> = { atrSessions: 20, atrMultiple: 3 };
 export const DEFAULT_RETENTION: Readonly<RetentionConfig> = { sellPercent: 50, smaSessions: 50, closesBelow: 2 };
 
-const isInt = (v: unknown, min: number, max: number) => Number.isInteger(v) && (v as number) >= min && (v as number) <= max;
+const isInt = (v: unknown, min: number, max: number) =>
+  Number.isInteger(v) && (v as number) >= min && (v as number) <= max;
 const isNum = (v: unknown, min: number, max: number) =>
   typeof v === 'number' && Number.isFinite(v) && v >= min && v <= max;
 
@@ -167,7 +168,8 @@ export const sessionSma = (
   for (let i = s - length + 1; i <= s; i++) {
     const c = ds.sClose[i]!;
 
-    if (!validPrice(c)) return { ok: false, reason: 'invalid_data', text: `the close of ${ds.dates[i]} is not a positive finite price` };
+    if (!validPrice(c))
+      return { ok: false, reason: 'invalid_data', text: `the close of ${ds.dates[i]} is not a positive finite price` };
     sum += c;
   }
 
@@ -214,7 +216,10 @@ export const atrBefore = (
     sum += Math.max(high, previous) - Math.min(low, previous);
   }
 
-  return { ok: true, record: { atr: sum / length, sessions: length, fromSession: from, toSession: fillSession - 1, fillSession } };
+  return {
+    ok: true,
+    record: { atr: sum / length, sessions: length, fromSession: from, toSession: fillSession - 1, fillSession }
+  };
 };
 
 // ----- rule 2: the trend-breakout scan -----
@@ -238,12 +243,7 @@ export interface BreakoutScan {
 }
 
 // Every session close of [first, end] (the window) where all three conditions hold. Reads sessions ≤ s only.
-export const scanTrendBreakout = (
-  ds: Dataset,
-  first: number,
-  end: number,
-  c: BreakoutEntryConfig
-): BreakoutScan => {
+export const scanTrendBreakout = (ds: Dataset, first: number, end: number, c: BreakoutEntryConfig): BreakoutScan => {
   const errors = breakoutConfigErrors(c);
 
   if (errors.length) throw new Error(`invalid trend-breakout entry: ${errors.join('; ')}`);
@@ -287,7 +287,11 @@ export const scanTrendBreakout = (
     }
 
     if (!now.ok || !then.ok || bad) {
-      scan.unavailable.push({ session: s, reason: 'invalid_data', text: bad || (!now.ok ? now.text : (then as { text: string }).text) });
+      scan.unavailable.push({
+        session: s,
+        reason: 'invalid_data',
+        text: bad || (!now.ok ? now.text : (then as { text: string }).text)
+      });
       continue;
     }
 
@@ -400,7 +404,13 @@ export interface ProtectedPosition {
   trendDecisions: number;
   pendingTrend: { time: number; session: number; values: Record<string, LogValue> } | null;
   pendingBuffer: { time: number; price: number } | null;
-  sessionState: { s: number; maximumHoldDue: boolean; maximumHoldBar: number; active: boolean; stopPrice: number } | null;
+  sessionState: {
+    s: number;
+    maximumHoldDue: boolean;
+    maximumHoldBar: number;
+    active: boolean;
+    stopPrice: number;
+  } | null;
   remainder: { shares: number; principal: number; interest: number; mark: number; net: number } | null; // open at the end
   closed: boolean;
 }
@@ -682,7 +692,8 @@ export class PositionRules {
         active,
         stopPrice: mgr.stopPrice
       };
-    } else if (mode === 'entry') pos.sessionState = { s, maximumHoldDue: false, maximumHoldBar: -1, active: false, stopPrice: mgr.stopPrice };
+    } else if (mode === 'entry')
+      pos.sessionState = { s, maximumHoldDue: false, maximumHoldBar: -1, active: false, stopPrice: mgr.stopPrice };
 
     const st = pos.sessionState!;
 
@@ -740,7 +751,8 @@ export class PositionRules {
       if (pending) {
         const k = firstTradeAfterDecision(ds, s, pending.time);
 
-        if (k >= 0) add('buffered_loss', 'buffered intraday loss', k, 'opening trade', priceAt(ds, s, k), 0, NaN, pending);
+        if (k >= 0)
+          add('buffered_loss', 'buffered intraday loss', k, 'opening trade', priceAt(ds, s, k), 0, NaN, pending);
       }
 
       // A trend exit decided at an earlier close fills at the next eligible trade.
@@ -752,7 +764,14 @@ export class PositionRules {
 
       // Just after the open: the maximum hold sells at the next observed trade.
       if (st.maximumHoldDue && st.maximumHoldBar >= 0)
-        add('maximum_hold', 'maximum hold', st.maximumHoldBar, tradeExecution(ds, s, st.maximumHoldBar), priceAt(ds, s, st.maximumHoldBar), 0);
+        add(
+          'maximum_hold',
+          'maximum hold',
+          st.maximumHoldBar,
+          tradeExecution(ds, s, st.maximumHoldBar),
+          priceAt(ds, s, st.maximumHoldBar),
+          0
+        );
 
       // During the session: the first minute that reaches the active trailing stop (not when the hold is due: the
       // stop cannot be active then without a gap, as in the ExitManager).
@@ -769,7 +788,14 @@ export class PositionRules {
         }
     } else if (mode === 'after_partial' && st.maximumHoldDue && st.maximumHoldBar > from)
       // The hold was due at this session's open: the remainder is sold at its trade.
-      add('maximum_hold', 'maximum hold', st.maximumHoldBar, tradeExecution(ds, s, st.maximumHoldBar), priceAt(ds, s, st.maximumHoldBar), 0);
+      add(
+        'maximum_hold',
+        'maximum hold',
+        st.maximumHoldBar,
+        tradeExecution(ds, s, st.maximumHoldBar),
+        priceAt(ds, s, st.maximumHoldBar),
+        0
+      );
 
     // The initial risk stop: active from the fill, at a fixed level. On the entry session and after a partial sale
     // the minute `from` opened at (or before) the trade that started this evaluation: only its later prices count.
@@ -799,7 +825,17 @@ export class PositionRules {
           const signal = { time: decisionTime, price: ds.bClose[start + j]! };
 
           if (k < 0) carry = signal;
-          else add('buffered_loss', 'buffered intraday loss', k, tradeExecution(ds, s, k), priceAt(ds, s, k), 0, NaN, signal);
+          else
+            add(
+              'buffered_loss',
+              'buffered intraday loss',
+              k,
+              tradeExecution(ds, s, k),
+              priceAt(ds, s, k),
+              0,
+              NaN,
+              signal
+            );
           break;
         }
     }
@@ -809,10 +845,7 @@ export class PositionRules {
       : { trailing_stop: 0, initial_stop: 1, maximum_hold: 2, buffered_loss: 3, trend_exit: 4 };
 
     cands.sort(
-      (a, b) =>
-        a.k - b.k ||
-        a.phase - b.phase ||
-        (a.phase === 1 ? b.level - a.level : rank[a.rule] - rank[b.rule])
+      (a, b) => a.k - b.k || a.phase - b.phase || (a.phase === 1 ? b.level - a.level : rank[a.rule] - rank[b.rule])
     );
 
     const w = cands[0];
@@ -824,7 +857,9 @@ export class PositionRules {
 
     // the OTHER rules due at the very same trade (each once), resolved by the precedence above
     const sameTrade = [
-      ...new Set(cands.filter((c) => c.rule !== w.rule && c.k === w.k && c.phase === 0 && w.phase === 0).map((c) => c.rule))
+      ...new Set(
+        cands.filter((c) => c.rule !== w.rule && c.k === w.k && c.phase === 0 && w.phase === 0).map((c) => c.rule)
+      )
     ];
     const partial = w.rule === 'trailing_stop' && partialPending;
     const values: Record<string, LogValue> = {
@@ -941,11 +976,25 @@ export class PositionRules {
 
   // book.close() just closed the position with `decision`: the final fill and the logical position's totals.
   // `snapshot` restores the D1 continuation machine when the book judged a remainder alone (classic_d1).
-  finalize(trade: VirtualTrade, s: number, decision: ExitDecision, sharesSold: number, principalRepaid: number): ExitFill {
+  finalize(
+    trade: VirtualTrade,
+    s: number,
+    decision: ExitDecision,
+    sharesSold: number,
+    principalRepaid: number
+  ): ExitFill {
     const pos = this.positions.get(trade)!;
     const ins =
       this.instructions.get(decision) ??
-      ({ rule: 'trailing_stop', partial: false, phase: 0, level: null, decidedAt: decision.time, sameTrade: [], values: {} } as ExitInstruction);
+      ({
+        rule: 'trailing_stop',
+        partial: false,
+        phase: 0,
+        level: null,
+        decidedAt: decision.time,
+        sameTrade: [],
+        values: {}
+      } as ExitInstruction);
 
     if (ins.partial) throw new Error('a partial instruction closed the position');
 
@@ -1014,10 +1063,14 @@ export class PositionRules {
 
     if (!sma.ok) {
       if (pos.count > 0 || pos.run.length === 0)
-        entry('trend_count', `${sma.reason}: SMA(${c.smaSessions}) unavailable at this close — ${sma.text}; the count is reset`, {
-          close,
-          count: 0
-        });
+        entry(
+          'trend_count',
+          `${sma.reason}: SMA(${c.smaSessions}) unavailable at this close — ${sma.text}; the count is reset`,
+          {
+            close,
+            count: 0
+          }
+        );
       pos.count = 0;
       pos.run = [];
       return;
@@ -1026,20 +1079,28 @@ export class PositionRules {
     if (close < sma.value) {
       pos.count++;
       pos.run.push({ session: s, close, sma: sma.value });
-      entry('trend_count', `close ${close} < SMA(${c.smaSessions}) ${r6(sma.value)}: ${pos.count} of ${c.closesBelow} consecutive`, {
-        close,
-        sma: sma.value,
-        count: pos.count,
-        needed: c.closesBelow
-      });
-    } else {
-      if (pos.count > 0)
-        entry('trend_count', `close ${close} ≥ SMA(${c.smaSessions}) ${r6(sma.value)}: the count of ${pos.count} is reset`, {
+      entry(
+        'trend_count',
+        `close ${close} < SMA(${c.smaSessions}) ${r6(sma.value)}: ${pos.count} of ${c.closesBelow} consecutive`,
+        {
           close,
           sma: sma.value,
-          count: 0,
+          count: pos.count,
           needed: c.closesBelow
-        });
+        }
+      );
+    } else {
+      if (pos.count > 0)
+        entry(
+          'trend_count',
+          `close ${close} ≥ SMA(${c.smaSessions}) ${r6(sma.value)}: the count of ${pos.count} is reset`,
+          {
+            close,
+            sma: sma.value,
+            count: 0,
+            needed: c.closesBelow
+          }
+        );
       pos.count = 0;
       pos.run = [];
     }
@@ -1089,7 +1150,9 @@ export class PositionRules {
     if (pos.fills.length > 0) {
       trade.interest += pos.fills.reduce((a, x) => a + x.interest, 0);
       trade.gross =
-        pos.fills.reduce((a, x) => a + x.proceeds, 0) + position.lot.shares * pos.remainder.mark - pos.originalPrincipal;
+        pos.fills.reduce((a, x) => a + x.proceeds, 0) +
+        position.lot.shares * pos.remainder.mark -
+        pos.originalPrincipal;
       trade.net = pos.partialNet + pos.remainder.net;
     }
   }

@@ -181,6 +181,14 @@ select) added **no migration**. Strategy
 rows are created per version on first use, and no stored run, variation or artifact changes. A running server serves
 the new build after a restart; `audit:state` before and after shows unchanged rows and files.
 
+Growth 1.3.0 (2026-11-05, Task 14: the trend-breakout entry, the initial risk stop, trend retention) added **no
+migration**: the 1.3.0 strategy row is created on first use; 1.2.0 becomes a legacy version (its runs, variations and
+stored schema unchanged; byte-identical, `tests/optional-rules.test.ts`). Until a running server is restarted it keeps
+its in-memory 1.2.0 registry (New Test offers 1.2.0), and its runs execute through the new runner, which reproduces
+1.2.0 exactly with the three options OFF; after the restart New Test offers 1.3.0 and 1.2.0 runs are previewed through
+the explicit *Preview as Growth 1.3.0* button. Old preview-cache entries never match the new implementation
+fingerprint and are recomputed on demand (then evicted by the LRU).
+
 Interactive Preview (2026-11-05, Task 13) added **no migration** either: previews never touch the database. The first
 start with the new code creates `<state>/preview-cache/`. Until a running server is restarted, the new UI's
 *Interactive Preview* panel reports that the server does not offer it yet (its routes answer 404); everything else

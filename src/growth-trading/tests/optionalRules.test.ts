@@ -131,14 +131,34 @@ const sim = (
 };
 const near = (a: number, b: number, eps = 1e-6) => assert.ok(Math.abs(a - b) <= eps, `${a} ≠ ${b}`);
 const interest = (principal: number, days: number) => (principal * 0.11 * days) / 365;
-const start = (ds: Dataset, s: number, k: number) => ds.bTime[ds.sBarStart[s]! + k]!;
 
 // Four sessions whose true ranges are 6, 3 and 9 (the last a gap up): ATR(3) before session 4 = 6.
 const ATR_PATH: Spec[] = [
   c(100), // s0: the previous close of the first true range
-  { bars: [[100, 100, 100, 100], [100, 104, 100, 104], [104, 104, 98, 98], [98, 101, 98, 101]] }, // s1: H 104 L 98 C 101 → TR 6
-  { bars: [[101, 101, 101, 101], [101, 103, 101, 103], [103, 103, 100, 100], [100, 102, 100, 102]] }, // s2: H 103 L 100 C 102 → TR 3
-  { bars: [[110, 110, 110, 110], [110, 111, 110, 111], [111, 111, 109, 109], [109, 110, 109, 110]] } // s3: H 111 L 109 C 110, prev 102 → TR 9
+  {
+    bars: [
+      [100, 100, 100, 100],
+      [100, 104, 100, 104],
+      [104, 104, 98, 98],
+      [98, 101, 98, 101]
+    ]
+  }, // s1: H 104 L 98 C 101 → TR 6
+  {
+    bars: [
+      [101, 101, 101, 101],
+      [101, 103, 101, 103],
+      [103, 103, 100, 100],
+      [100, 102, 100, 102]
+    ]
+  }, // s2: H 103 L 100 C 102 → TR 3
+  {
+    bars: [
+      [110, 110, 110, 110],
+      [110, 111, 110, 111],
+      [111, 111, 109, 109],
+      [109, 110, 109, 110]
+    ]
+  } // s3: H 111 L 109 C 110, prev 102 → TR 9
 ];
 
 describe('rule 1 — the ATR convention and completed-data timing', () => {
@@ -161,24 +181,46 @@ describe('rule 1 — the ATR convention and completed-data timing', () => {
       const r = sim([...ATR_PATH, fillSession, c(112)], (d) => [atClose(d, 3)], {}, { initialStop: STOP });
       return r.sim.rules!.positionOf(r.trades[0]!)!.stop!;
     });
-    assert.deepEqual(levels.map((x) => [x.level, x.atr, x.fillPrice]), [[100, 6, 112], [100, 6, 112]]);
+    assert.deepEqual(
+      levels.map((x) => [x.level, x.atr, x.fillPrice]),
+      [
+        [100, 6, 112],
+        [100, 6, 112]
+      ]
+    );
     assert.equal(levels[0]!.atrToSession, 3);
   });
 
   test('an intraday decision filling in its own session uses the sessions before it (not the open session)', () => {
-    const r = sim([c(100), ...ATR_PATH, c(110, 112, 113, 113), c(113)], (d) => [afterMinute(d, 4, 0)], {}, { initialStop: STOP });
+    const r = sim(
+      [c(100), ...ATR_PATH, c(110, 112, 113, 113), c(113)],
+      (d) => [afterMinute(d, 4, 0)],
+      {},
+      { initialStop: STOP }
+    );
     const pos = r.sim.rules!.positionOf(r.trades[0]!)!;
     assert.equal(r.trades[0]!.entryIndex, 4);
     assert.deepEqual([pos.stop!.atrFromSession, pos.stop!.atrToSession], [1, 3]); // sessions 1..3, never session 4
   });
 
   test('without enough history the protected entry is BLOCKED and recorded; a later decision is taken', () => {
-    const r = sim([...ATR_PATH, c(112), c(112), c(112)], (d) => [atClose(d, 1), atClose(d, 3)], {}, { initialStop: STOP });
-    assert.deepEqual(r.sim.outcomes.map((o) => [o.status, o.reason]), [
-      ['vetoed', 'insufficient_history'],
-      ['filled', null]
-    ]);
-    assert.match(r.sim.outcomes[0]!.protection!.text, /initial risk stop unavailable.*never entered without the requested protection/);
+    const r = sim(
+      [...ATR_PATH, c(112), c(112), c(112)],
+      (d) => [atClose(d, 1), atClose(d, 3)],
+      {},
+      { initialStop: STOP }
+    );
+    assert.deepEqual(
+      r.sim.outcomes.map((o) => [o.status, o.reason]),
+      [
+        ['vetoed', 'insufficient_history'],
+        ['filled', null]
+      ]
+    );
+    assert.match(
+      r.sim.outcomes[0]!.protection!.text,
+      /initial risk stop unavailable.*never entered without the requested protection/
+    );
     assert.equal(r.sim.rules!.blocked.length, 1);
     assert.equal(r.trades.length, 1);
     const entry = r.sim.log.entries.find((e) => e.event === 'base_signal' && e.disposition === 'vetoed')!;
@@ -218,13 +260,17 @@ describe('rule 1 — the initial risk stop executes', () => {
 
   test('a gap through the stop fills at the first observed trade, not at the inaccessible stop level', () => {
     const t = entry(c(112, 112, 111, 112), c(95, 96)).trades[0]!;
-    assert.deepEqual([t.exitReason as string, t.exitExecution, t.exitRawPrice, t.exitBar], ['initial stop gap', 'opening trade', 95, 0]);
+    assert.deepEqual(
+      [t.exitReason as string, t.exitExecution, t.exitRawPrice, t.exitBar],
+      ['initial stop gap', 'opening trade', 95, 0]
+    );
   });
 
   test('active from the fill: it can exit on the entry session, and in the fill minute itself', () => {
     const a = entry(c(112, 110, 105, 99, 101), c(101));
     assert.deepEqual([a.trades[0]!.entryIndex, a.trades[0]!.exitIndex, a.trades[0]!.exitBar], [4, 4, 3]);
-    assert.equal(a.summary.metrics.optionalRules!.initialStop.exitsOnEntrySession, 1);
+    const stopCounts = a.summary.metrics.optionalRules!.initialStop;
+    assert.equal(stopCounts.enabled && stopCounts.exitsOnEntrySession, 1);
     // an intraday decision fills at minute 1's open (112); that minute trades down to 95: the stop, after the fill
     const b = sim([...ATR_PATH, c(112, 95, 96), c(96)], (d) => [afterMinute(d, 4, 0)], {}, { initialStop: STOP });
     const t = b.trades[0]!;
@@ -249,26 +295,82 @@ describe('rule 1 — the initial risk stop executes', () => {
 
   test('precedence with the maximum hold: the stop reached inside minute 0 sells before the hold’s 09:31 trade', () => {
     // the hold (1 day) is due at session 5's losing open 105; minute 0 trades down to 99 (through the stop at 100)
-    const hit = entry(c(112, 112, 111, 112), { bars: [[105, 105, 99, 104], [104, 104, 104, 104], [104, 104, 104, 104]] }, { maximumHoldDays: 1 });
-    assert.deepEqual([hit.trades[0]!.exitReason as string, hit.trades[0]!.exitBar, hit.trades[0]!.exitRawPrice], ['initial stop', 0, 100]);
+    const hit = entry(
+      c(112, 112, 111, 112),
+      {
+        bars: [
+          [105, 105, 99, 104],
+          [104, 104, 104, 104],
+          [104, 104, 104, 104]
+        ]
+      },
+      { maximumHoldDays: 1 }
+    );
+    assert.deepEqual(
+      [hit.trades[0]!.exitReason as string, hit.trades[0]!.exitBar, hit.trades[0]!.exitRawPrice],
+      ['initial stop', 0, 100]
+    );
     // not reached before minute 1: the hold sells at minute 1's opening trade
-    const hold = entry(c(112, 112, 111, 112), { bars: [[105, 105, 104, 104], [104, 104, 99, 99], [99, 99, 99, 99]] }, { maximumHoldDays: 1 });
-    assert.deepEqual([hold.trades[0]!.exitReason, hold.trades[0]!.exitBar, hold.trades[0]!.exitRawPrice], ['maximum hold', 1, 104]);
+    const hold = entry(
+      c(112, 112, 111, 112),
+      {
+        bars: [
+          [105, 105, 104, 104],
+          [104, 104, 99, 99],
+          [99, 99, 99, 99]
+        ]
+      },
+      { maximumHoldDays: 1 }
+    );
+    assert.deepEqual(
+      [hold.trades[0]!.exitReason, hold.trades[0]!.exitBar, hold.trades[0]!.exitRawPrice],
+      ['maximum hold', 1, 104]
+    );
   });
 
   test('a stop never reached (100 × ATR) reproduces the exits of the version without it exactly', () => {
-    const path = [...ATR_PATH, c(112, 120, 130, 130), c(128, 122, 99), c(100, 101), c(101, 90, 95), c(95), c(96), c(97)];
+    const path = [
+      ...ATR_PATH,
+      c(112, 120, 130, 130),
+      c(128, 122, 99),
+      c(100, 101),
+      c(101, 90, 95),
+      c(95),
+      c(96),
+      c(97)
+    ];
     const decisions = (d: Dataset) => [atClose(d, 3), atClose(d, 6), atClose(d, 8)];
     const off = sim(path, decisions, { maximumHoldDays: 2, intradayLossBufferPercent: 2 });
-    const inert = sim(path, decisions, { maximumHoldDays: 2, intradayLossBufferPercent: 2 }, { initialStop: { atrSessions: 3, atrMultiple: 100 } });
+    const inert = sim(
+      path,
+      decisions,
+      { maximumHoldDays: 2, intradayLossBufferPercent: 2 },
+      { initialStop: { atrSessions: 3, atrMultiple: 100 } }
+    );
     const fields = (ts: typeof off.trades) =>
       ts.map((t) => [
-        t.entryIndex, t.entryBar, t.entryRawPrice, t.exitIndex, t.exitBar, t.exitRawPrice, t.exitReason, t.exitExecution,
-        t.exitStopPrice, t.stopActiveAtExit, t.maximumHoldDue, t.bufferSignalTime, t.net, t.interest, t.stopActiveSessions
+        t.entryIndex,
+        t.entryBar,
+        t.entryRawPrice,
+        t.exitIndex,
+        t.exitBar,
+        t.exitRawPrice,
+        t.exitReason,
+        t.exitExecution,
+        t.exitStopPrice,
+        t.stopActiveAtExit,
+        t.maximumHoldDue,
+        t.bufferSignalTime,
+        t.net,
+        t.interest,
+        t.stopActiveSessions
       ]);
     assert.ok(off.trades.length >= 2);
     assert.deepEqual(fields(inert.trades), fields(off.trades));
-    assert.deepEqual(inert.sim.daily.map((x) => x.marked), off.sim.daily.map((x) => x.marked));
+    assert.deepEqual(
+      inert.sim.daily.map((x) => x.marked),
+      off.sim.daily.map((x) => x.marked)
+    );
     assert.deepEqual(inert.sim.minuteDrawdown, off.sim.minuteDrawdown);
   });
 });
@@ -287,8 +389,14 @@ describe('rule 2 — the trend-breakout entry', () => {
     const ds = fixtureDataset(history(rising(100, 8)));
     const scan = scanTrendBreakout(ds, 0, 7, BO);
     // sessions 0..3 lack history (needs max(3 + 2 − 1, 3) = 4 earlier sessions): recorded, never a signal
-    assert.deepEqual(scan.unavailable.map((u) => [u.session, u.reason]), [0, 1, 2, 3].map((s) => [s, 'insufficient_history']));
-    assert.deepEqual(scan.signals.map((x) => x.session), [4, 5, 6, 7]);
+    assert.deepEqual(
+      scan.unavailable.map((u) => [u.session, u.reason]),
+      [0, 1, 2, 3].map((s) => [s, 'insufficient_history'])
+    );
+    assert.deepEqual(
+      scan.signals.map((x) => x.session),
+      [4, 5, 6, 7]
+    );
     const s4 = scan.signals[0]!;
     assert.equal(s4.close, 104);
     assert.equal(s4.priorHigh, 103.5); // max of sessions 1..3 — the signal session's own high 104.5 is excluded
@@ -316,7 +424,13 @@ describe('rule 2 — the trend-breakout entry', () => {
       { bars: [[104.8, 105.5, 104.5, 105]] },
       { bars: [[105.8, 106.5, 105.5, 106]] },
       { bars: [[106.8, 107.5, 106.5, 107]] },
-      { bars: [[104, 104, 103.9, 104], [104, 104, 104, 104], [104, 108.5, 104, 108.5]] },
+      {
+        bars: [
+          [104, 104, 103.9, 104],
+          [104, 104, 104, 104],
+          [104, 108.5, 104, 108.5]
+        ]
+      },
       { bars: [[108.6, 109, 108.6, 109]] },
       { bars: [[109.1, 109.5, 109.1, 109.5]] }
     ];
@@ -337,12 +451,15 @@ describe('rule 2 — the trend-breakout entry', () => {
       ]
     );
     const [a, b] = s.trades;
-    assert.deepEqual([a!.entryIndex, a!.entryExecution, a!.exitIndex, a!.exitReason], [5, 'opening trade', 8, 'maximum hold']);
+    assert.deepEqual(
+      [a!.entryIndex, a!.entryExecution, a!.exitIndex, a!.exitReason],
+      [5, 'opening trade', 8, 'maximum hold']
+    );
     assert.equal(b!.decisionTime, r.ds.sCloseTime[8]); // the post-exit signal itself, never an earlier rejected one
     assert.equal(b!.entryIndex, 9);
     const s8 = r.breakout!.signals.find((x) => x.session === 8)!;
     assert.deepEqual([s8.priorHigh, s8.priorHighSession], [107.5, 7]); // the preceding sessions' high, not the exit fill
-    assert.equal((a!.setupKind as string), 'trend_breakout');
+    assert.equal(a!.setupKind as string, 'trend_breakout');
     assert.equal(summarizeSimulation(s, r.ds).metrics.optionalRules!.breakout!.rejectedWhileInvested, 5);
     // the decision log keeps the breakout's own values
     const logged = s.log.entries.find((e) => e.event === 'base_signal')!;
@@ -350,9 +467,18 @@ describe('rule 2 — the trend-breakout entry', () => {
   });
 
   test('the Rise inputs are not read and persistent eligibility is refused for the breakout (not applicable)', () => {
-    const params = { ...P, entryMethod: 'trend_breakout' as const, breakout: BO, advanceFromRecentLowPercent: NaN, recentLowLookbackBars: NaN };
+    const params = {
+      ...P,
+      entryMethod: 'trend_breakout' as const,
+      breakout: BO,
+      advanceFromRecentLowPercent: NaN,
+      recentLowLookbackBars: NaN
+    };
     assert.deepEqual(tradingParamErrors(params), []);
-    assert.match(tradingParamErrors({ ...params, eligibility: { policy: 'time_limited', maxAgeSessions: 5 } }).join(), /applies only to the Rise entry/);
+    assert.match(
+      tradingParamErrors({ ...params, eligibility: { policy: 'time_limited', maxAgeSessions: 5 } }).join(),
+      /applies only to the Rise entry/
+    );
     assert.match(tradingParamErrors({ ...P, entryMethod: 'trend_breakout' }).join(), /needs its inputs/);
     assert.match(tradingParamErrors({ ...P, breakout: BO }).join(), /the entry method is the Rise entry/);
   });
@@ -364,13 +490,21 @@ const RALLY = c(112, 120, 130, 130);
 describe('rule 3 — trend retention: one partial sale, the remainder, its trend exit', () => {
   test('the first trailing-stop event sells f of the shares once; the trailing stop is then consumed', () => {
     // s5: the stop 123.5 is crossed → sell half; later sessions fall far below 123.5 without another sale
-    const r = sim([...ATR_PATH, RALLY, c(128, 122, 125), c(124, 121, 123), c(124), c(125), c(126)], (d) => [atClose(d, 3)], {}, { retention: RETAIN });
+    const r = sim(
+      [...ATR_PATH, RALLY, c(128, 122, 125), c(124, 121, 123), c(124), c(125), c(126)],
+      (d) => [atClose(d, 3)],
+      {},
+      { retention: RETAIN }
+    );
     const pos = r.sim.rules!.positionOf(r.trades[0]!)!;
     const partial = pos.fills.filter((f) => f.partial);
     assert.equal(partial.length, 1);
     const f = partial[0]!;
     const Q = 100_000 / 112;
-    assert.deepEqual([f.session, f.bar, f.rawPrice, f.reason, f.execution], [5, 1, 123.5, 'trailing stop', 'stop level']);
+    assert.deepEqual(
+      [f.session, f.bar, f.rawPrice, f.reason, f.execution],
+      [5, 1, 123.5, 'trailing stop', 'stop level']
+    );
     near(f.shares, Q / 2);
     near(f.principal, 50_000);
     near(f.interest, interest(50_000, 1));
@@ -391,12 +525,26 @@ describe('rule 3 — trend retention: one partial sale, the remainder, its trend
     );
     const t = r.trades[0]!;
     const counts = r.sim.log.entries.filter((e) => e.event === 'trend_count').map((e) => [e.session, e.values.count]);
-    assert.deepEqual(counts, [[5, 1], [6, 0], [7, 1], [8, 2]]);
+    assert.deepEqual(counts, [
+      [5, 1],
+      [6, 0],
+      [7, 1],
+      [8, 2]
+    ]);
     assert.ok(r.sim.log.entries.some((e) => e.event === 'trend_exit_decision' && e.session === 8));
-    assert.deepEqual([t.exitIndex, t.exitBar, t.exitReason as string, t.exitExecution, t.exitRawPrice], [9, 0, 'trend exit', 'opening trade', 114]);
+    assert.deepEqual(
+      [t.exitIndex, t.exitBar, t.exitReason as string, t.exitExecution, t.exitRawPrice],
+      [9, 0, 'trend exit', 'opening trade', 114]
+    );
     near(sessionSma(r.ds, 8, 3).ok ? (sessionSma(r.ds, 8, 3) as { value: number }).value : NaN, (127 + 118 + 115) / 3);
     const fills = r.sim.rules!.positionOf(t)!.fills;
-    assert.deepEqual(fills.map((f) => [f.partial, f.rule]), [[true, 'trailing_stop'], [false, 'trend_exit']]);
+    assert.deepEqual(
+      fills.map((f) => [f.partial, f.rule]),
+      [
+        [true, 'trailing_stop'],
+        [false, 'trend_exit']
+      ]
+    );
     // ONE closed trade; its net is the sum of both fills; the shares sold add up to the position, never more
     assert.equal(r.summary.metrics.trades.closed, 1);
     near(t.net, fills[0]!.net + fills[1]!.net);
@@ -405,37 +553,70 @@ describe('rule 3 — trend retention: one partial sale, the remainder, its trend
 
   test('simultaneous triggers: a full risk exit due at the same trade takes precedence over the partial sale', () => {
     // a gap to 97 breaches the trailing stop (123.5) AND the initial stop (100): one full initial-stop exit
-    const r = sim([...ATR_PATH, RALLY, c(97, 98), c(98)], (d) => [atClose(d, 3)], {}, { initialStop: STOP, retention: RETAIN });
+    const r = sim(
+      [...ATR_PATH, RALLY, c(97, 98), c(98)],
+      (d) => [atClose(d, 3)],
+      {},
+      { initialStop: STOP, retention: RETAIN }
+    );
     const pos = r.sim.rules!.positionOf(r.trades[0]!)!;
-    assert.deepEqual(pos.fills.map((f) => [f.partial, f.reason, f.rawPrice]), [[false, 'initial stop gap', 97]]);
+    assert.deepEqual(
+      pos.fills.map((f) => [f.partial, f.reason, f.rawPrice]),
+      [[false, 'initial stop gap', 97]]
+    );
     assert.deepEqual(pos.fills[0]!.instruction.sameTrade, ['trailing_stop']);
     // a later lower stop in the same minute after the partial: the remainder is sold at it — two fills, no share twice
-    const two = sim([...ATR_PATH, RALLY, c(128, 122, 99), c(99)], (d) => [atClose(d, 3)], {}, { initialStop: STOP, retention: RETAIN });
+    const two = sim(
+      [...ATR_PATH, RALLY, c(128, 122, 99), c(99)],
+      (d) => [atClose(d, 3)],
+      {},
+      { initialStop: STOP, retention: RETAIN }
+    );
     const fills = two.sim.rules!.positionOf(two.trades[0]!)!.fills;
-    assert.deepEqual(fills.map((f) => [f.partial, f.reason, f.session, f.bar, f.rawPrice]), [
-      [true, 'trailing stop', 5, 1, 123.5],
-      [false, 'initial stop', 5, 2, 100]
-    ]);
+    assert.deepEqual(
+      fills.map((f) => [f.partial, f.reason, f.session, f.bar, f.rawPrice]),
+      [
+        [true, 'trailing stop', 5, 1, 123.5],
+        [false, 'initial stop', 5, 2, 100]
+      ]
+    );
     near(fills[0]!.shares + fills[1]!.shares, two.trades[0]!.shares);
     // partial profitable, total a loss: ONE closed trade classified as a loss by its whole net
     assert.ok(fills[0]!.net > 0 && fills[1]!.net < 0 && two.trades[0]!.net < 0);
-    assert.deepEqual([two.summary.metrics.trades.closed, two.summary.metrics.trades.wins, two.summary.metrics.trades.losses], [1, 0, 1]);
-    assert.equal(two.summary.metrics.optionalRules!.retention.closedPositionsWithPartial!.losses, 1);
+    assert.deepEqual(
+      [two.summary.metrics.trades.closed, two.summary.metrics.trades.wins, two.summary.metrics.trades.losses],
+      [1, 0, 1]
+    );
+    const retained = two.summary.metrics.optionalRules!.retention;
+    assert.equal(retained.enabled && retained.closedPositionsWithPartial.losses, 1);
   });
 
   test('a buffered loss pending at the same trade as the trailing-stop gap: the full buffer exit wins over the partial', () => {
     // hold 1 day, buffer 2%: session 5 opens in profit (113), spikes to 140 (the stop, inactive, is raised to 133 after
     // the close) and its last minute closes at 109 — a −2.7% net loss decided after the last trade (no closing print):
     // carried to session 6, which opens at 108, through the now ACTIVE trailing stop: two exits due at one trade
-    const s5: Spec = { bars: [[113, 113, 113, 113], [113, 140, 113, 140], [140, 140, 109, 109]], closingPrint: false };
+    const s5: Spec = {
+      bars: [
+        [113, 113, 113, 113],
+        [113, 140, 113, 140],
+        [140, 140, 109, 109]
+      ],
+      closingPrint: false
+    };
     const path = [...ATR_PATH, c(112, 112, 111, 112), s5, c(108, 109), c(109)];
     const over = { maximumHoldDays: 1, intradayLossBufferPercent: 2 };
     const r = sim(path, (d) => [atClose(d, 3)], over, { retention: RETAIN });
     const fills = r.sim.rules!.positionOf(r.trades[0]!)!.fills;
-    assert.deepEqual(fills.map((f) => [f.partial, f.reason, f.session, f.rawPrice]), [[false, 'buffered intraday loss', 6, 108]]);
+    assert.deepEqual(
+      fills.map((f) => [f.partial, f.reason, f.session, f.rawPrice]),
+      [[false, 'buffered intraday loss', 6, 108]]
+    );
     assert.deepEqual(fills[0]!.instruction.sameTrade, ['trailing_stop']);
     // without retention both are full exits: the resting stop takes the opening trade, as in the version before
-    for (const t of [sim(path, (d) => [atClose(d, 3)], over).trades[0]!, sim(path, (d) => [atClose(d, 3)], over, { initialStop: { atrSessions: 3, atrMultiple: 100 } }).trades[0]!])
+    for (const t of [
+      sim(path, (d) => [atClose(d, 3)], over).trades[0]!,
+      sim(path, (d) => [atClose(d, 3)], over, { initialStop: { atrSessions: 3, atrMultiple: 100 } }).trades[0]!
+    ])
       assert.deepEqual([t.exitReason, t.exitIndex, t.exitRawPrice], ['trailing stop gap', 6, 108]);
   });
 
@@ -450,7 +631,10 @@ describe('rule 3 — trend retention: one partial sale, the remainder, its trend
     );
     const t = r.trades[0]!;
     const fills = r.sim.rules!.positionOf(t)!.fills;
-    assert.deepEqual([fills.length, t.exitIndex, t.exitReason, t.exitBar, t.exitRawPrice], [2, 7, 'buffered intraday loss', 3, 108.5]);
+    assert.deepEqual(
+      [fills.length, t.exitIndex, t.exitReason, t.exitBar, t.exitRawPrice],
+      [2, 7, 'buffered intraday loss', 3, 108.5]
+    );
     const remainderNetAtSignal = fills[1]!.shares * 108.5 - 50_000 - interest(50_000, 3);
     assert.ok(remainderNetAtSignal <= -1_000 && remainderNetAtSignal > -2_000, String(remainderNetAtSignal));
     near(fills[1]!.principal, 50_000);
@@ -482,7 +666,8 @@ describe('the accounting of a position sold in several fills (debt-funded, as be
     withDate(c(117, 116), '2018-01-15'), // Monday: the remainder sold at the opening trade 117
     withDate(c(116), '2018-01-16')
   ];
-  const dated = (costBps: number) => sim(DATED, (d) => [atClose(d, 3)], { costBpsPerSide: costBps }, { retention: RETAIN });
+  const dated = (costBps: number) =>
+    sim(DATED, (d) => [atClose(d, 3)], { costBpsPerSide: costBps }, { retention: RETAIN });
 
   test('proportional principal, interest per calendar day of each part, per-fill costs; the identities close', () => {
     const r = dated(5);
@@ -492,10 +677,13 @@ describe('the accounting of a position sold in several fills (debt-funded, as be
     const Q = 100_000 / entryPrice;
     assert.equal(t.entryIndex, 4); // Friday 2018-01-05
     // the partial (Monday 01-08: 3 calendar days) and the remainder (trend exit, Monday 01-15: 10 days)
-    assert.deepEqual(fills.map((f) => [f.partial, r.ds.dates[f.session], f.reason]), [
-      [true, '2018-01-08', 'trailing stop'],
-      [false, '2018-01-15', 'trend exit']
-    ]);
+    assert.deepEqual(
+      fills.map((f) => [f.partial, r.ds.dates[f.session], f.reason]),
+      [
+        [true, '2018-01-08', 'trailing stop'],
+        [false, '2018-01-15', 'trend exit']
+      ]
+    );
     near(fills[0]!.shares, Q / 2);
     near(fills[0]!.price, 123.5 * 0.9995);
     near(fills[0]!.interest, interest(50_000, 3)); // Friday → Monday: the weekend is charged
@@ -504,7 +692,10 @@ describe('the accounting of a position sold in several fills (debt-funded, as be
     near(t.interest, interest(50_000, 3) + interest(50_000, 10));
     near(fills[0]!.exitCost, (Q / 2) * 123.5 * 0.0005);
     near(fills[0]!.entryCost + fills[1]!.entryCost, Q * (entryPrice - 112));
-    near(t.net, fills.reduce((a, f) => a + f.proceeds - f.principal - f.interest, 0));
+    near(
+      t.net,
+      fills.reduce((a, f) => a + f.proceeds - f.principal - f.interest, 0)
+    );
     const row = ledgerOf(r.sim, r.ds)[0]!;
     assert.equal(row.exitFills!.length, 2);
     near(row.identityResidual, 0, 1e-6);
@@ -512,11 +703,20 @@ describe('the accounting of a position sold in several fills (debt-funded, as be
     const rec = reconcileWithFixedLedger(r.sim, r.ds);
     assert.ok(rec.maxDifference < 1e-6, String(rec.maxDifference));
     const m = r.summary.metrics;
-    assert.ok(m.checks.fixedLedgerMaxDifferenceUsd < 1e-6 && m.checks.identityMaxResidualUsd < 1e-6 && m.checks.markedEqualsLedger < 1e-6);
+    assert.ok(
+      m.checks.fixedLedgerMaxDifferenceUsd < 1e-6 &&
+        m.checks.identityMaxResidualUsd < 1e-6 &&
+        m.checks.markedEqualsLedger < 1e-6
+    );
   });
 
   test('marks: the partial net is realized at the fill, the remainder marked — no double counting; drawdown from the marks', () => {
-    const r = sim([...ATR_PATH, RALLY, c(128, 122, 125), c(124), c(124)], (d) => [atClose(d, 3)], {}, { retention: RETAIN });
+    const r = sim(
+      [...ATR_PATH, RALLY, c(128, 122, 125), c(124), c(124)],
+      (d) => [atClose(d, 3)],
+      {},
+      { retention: RETAIN }
+    );
     const t = r.trades[0]!;
     const pos = r.sim.rules!.positionOf(t)!;
     const f = pos.fills[0]!;
@@ -588,11 +788,26 @@ describe('the accounting of a position sold in several fills (debt-funded, as be
 
 describe('valid OFF states and invalid configurations', () => {
   test('switched-off values may be absent (effective values only): the hold age, the buffer switch and percent', () => {
-    assert.deepEqual(tradingParamErrors({ ...P, maximumHoldEnabled: false, maximumHoldDays: NaN, intradayLossBufferEnabled: undefined as never, intradayLossBufferPercent: NaN }), []);
-    assert.deepEqual(tradingParamErrors({ ...P, intradayLossBufferEnabled: false, intradayLossBufferPercent: NaN }), []);
+    assert.deepEqual(
+      tradingParamErrors({
+        ...P,
+        maximumHoldEnabled: false,
+        maximumHoldDays: NaN,
+        intradayLossBufferEnabled: undefined as never,
+        intradayLossBufferPercent: NaN
+      }),
+      []
+    );
+    assert.deepEqual(
+      tradingParamErrors({ ...P, intradayLossBufferEnabled: false, intradayLossBufferPercent: NaN }),
+      []
+    );
     assert.match(tradingParamErrors({ ...P, maximumHoldDays: NaN }).join(), /maximumHoldDays/);
     assert.match(tradingParamErrors({ ...P, intradayLossBufferPercent: NaN }).join(), /intradayLossBufferPercent/);
-    assert.match(tradingParamErrors({ ...P, maximumHoldEnabled: false, intradayLossBufferEnabled: true }).join(), /applies only from the maximum losing-hold age/);
+    assert.match(
+      tradingParamErrors({ ...P, maximumHoldEnabled: false, intradayLossBufferEnabled: true }).join(),
+      /applies only from the maximum losing-hold age/
+    );
   });
 
   test('the options’ own bounds', () => {
@@ -604,7 +819,20 @@ describe('valid OFF states and invalid configurations', () => {
   });
 
   test('every combination of the three runs and reconciles on one path (no unsupported combination)', () => {
-    const specs = [...ATR_PATH, RALLY, c(128, 122, 120), c(118), c(115), c(114, 99), c(100), c(101), c(102), c(103), c(104), c(105)];
+    const specs = [
+      ...ATR_PATH,
+      RALLY,
+      c(128, 122, 120),
+      c(118),
+      c(115),
+      c(114, 99),
+      c(100),
+      c(101),
+      c(102),
+      c(103),
+      c(104),
+      c(105)
+    ];
     const sessions = sessionsOf(specs);
     for (const breakout of [false, true])
       for (const stop of [false, true])
@@ -614,7 +842,12 @@ describe('valid OFF states and invalid configurations', () => {
             advanceFromRecentLowPercent: 1,
             recentLowLookbackBars: 3,
             maximumHoldDays: 3,
-            ...(breakout ? { entryMethod: 'trend_breakout' as const, breakout: { smaSessions: 2, slopeComparisonSessions: 1, priorHighSessions: 2 } } : {}),
+            ...(breakout
+              ? {
+                  entryMethod: 'trend_breakout' as const,
+                  breakout: { smaSessions: 2, slopeComparisonSessions: 1, priorHighSessions: 2 }
+                }
+              : {}),
             ...(stop ? { initialStop: STOP } : {}),
             ...(retain ? { retention: RETAIN } : {})
           };

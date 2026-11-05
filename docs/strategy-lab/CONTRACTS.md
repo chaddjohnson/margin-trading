@@ -22,7 +22,7 @@ Source of truth: `apps/strategy-lab/shared/contract.ts` (types), `shared/validat
 | `reason` | string or `null` | Trigger or decision description |
 | `values` | LabValue[] | Structured trigger and decision values with units (below) |
 | `tradeId` | string or `null` | Trade linkage: an entry and its exit share it |
-| `linkedEventId` | string or `null` | The paired event (entry ↔ exit). It must exist and have the same symbol |
+| `linkedEventId` | string or `null` | The paired event (entry ↔ exit). It must exist and have the same symbol. Growth 1.3.0 retention: a partial fill is an `executed_exit` of the same trade with `meta.partial: true` (id `SYM:T-n:partial-k`, its own `fillNet`), linked to the entry; the entry links to the FINAL exit (`SYM:T-n:exit`), which carries the whole position's `net` — a reader pairs the entry with the non-partial exit and lists the partial ones apart ([GROWTH_OPTIONAL_RULES.md](GROWTH_OPTIONAL_RULES.md) §8) |
 | `meta` | object of scalars or `null` | Extra facts (e.g. `open: true` for a lot still open at the run's end; `synthetic`, `illustrative`) |
 
 - **Ordering:** by time, then kind (rejected, signal, exit, entry, so an exit precedes a same-minute re-entry), then id.
