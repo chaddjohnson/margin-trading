@@ -6,6 +6,7 @@ import { createServer, type Server } from 'node:http';
 
 import { loadConfig } from './config.ts';
 import { openDb } from './db.ts';
+import { recoverRunDeletions } from './delete-run.ts';
 import { createHandler } from './http.ts';
 import { Jobs } from './jobs.ts';
 import { MarketPrices } from './prices.ts';
@@ -22,6 +23,7 @@ export function start(env: NodeJS.ProcessEnv = process.env) {
   const prices = new MarketPrices(cfg.repoRoot, log);
   const jobs = new Jobs(repo, cfg, log);
   const service = new LabService(repo, cfg, jobs, prices);
+  recoverRunDeletions(cfg, repo, log); // finish an interrupted run deletion before anything reads the state
   if (cfg.seedDemo) {
     const n = seedDemo(repo, cfg);
     if (n) log(`seeded the synthetic demo experiment (${n} runs)`);

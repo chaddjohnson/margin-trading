@@ -107,7 +107,7 @@ describe('migration 0002', () => {
       { encoding: 'utf8' }
     );
     expect(generated).toBe(readFileSync(join(MIGRATIONS, '0002_growth_schema_phenotypes.sql'), 'utf8'));
-    expect(migrationFiles(MIGRATIONS).map((m) => m.name)).toEqual(['0001_init.sql', '0002_growth_schema_phenotypes.sql']);
+    expect(migrationFiles(MIGRATIONS).map((m) => m.name)).toEqual(['0001_init.sql', '0002_growth_schema_phenotypes.sql', '0003_run_deletion.sql']);
   });
 
   it('on a real-shaped 0001 database: counts, ids, immutable columns, titles, notes and bookmarks unchanged', () => {
@@ -116,7 +116,7 @@ describe('migration 0002', () => {
     const db = openDb(file); // applies 0002 in one transaction
     db.close();
     const after = audit(file);
-    expect(after.migrations.map((m) => m.name)).toEqual(['0001_init.sql', '0002_growth_schema_phenotypes.sql']);
+    expect(after.migrations.map((m) => m.name)).toEqual(['0001_init.sql', '0002_growth_schema_phenotypes.sql', '0003_run_deletion.sql']);
     expect(after.counts).toEqual(before.counts);
     expect(after.runs).toEqual(before.runs);
     expect(after.variations).toEqual(before.variations);

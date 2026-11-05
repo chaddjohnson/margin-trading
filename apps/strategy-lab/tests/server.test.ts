@@ -132,7 +132,7 @@ describe('SQLite schema, migrations and persistence', () => {
     expect(() => db.prepare("UPDATE runs SET status = 'failed' WHERE id = ?").run(r.id)).toThrow(
       /finished run is immutable/
     );
-    expect(() => db.prepare('DELETE FROM runs WHERE id = ?').run(r.id)).toThrow(/never deleted/);
+    expect(() => db.prepare('DELETE FROM runs WHERE id = ?').run(r.id)).toThrow(/deleted only by the explicit run deletion procedure/) // migration 0003: only DELETE /api/runs/:id;
     // Annotations stay editable.
     expect(repo.setRunTitle(r.publicId, 'new title')).toBe(true);
     expect(repo.setBookmark('run', r.publicId, true)).toBe(true);

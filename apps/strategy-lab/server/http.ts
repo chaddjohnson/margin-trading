@@ -7,6 +7,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 
 import { basisDateOf, EVENT_CONTRACT_VERSION, eventsForSymbol, type LabEvent } from '../shared/contract.ts';
+import { DeleteRunError, deleteRun } from './delete-run.ts';
 import { RUNNABLE_STRATEGIES, MAX_TITLE_LENGTH, STRATEGY_REGISTRY } from '../shared/strategies.ts';
 import { readEvents } from './artifacts.ts';
 import { CompareError, compareRuns } from './compare.ts';
@@ -196,6 +197,22 @@ export function createHandler(d: Deps) {
         runOr404(m[1]!);
         repo.setRunTitle(m[1]!, str(b.title, 'title', MAX_TITLE_LENGTH).trim());
         return runOr404(m[1]!);
+      }
+    ],
+    [
+      // Deletes exactly this run (server/delete-run.ts). The body must repeat the id: { "confirm": "R-…" }.
+      'DELETE',
+      /^\/api\/runs\/(R-\d{6,12})$/,
+      async ({ m, body }) => {
+        const b = (await body()) as Record<string, unknown> | undefined;
+        if (!b || typeof b !== 'object' || Object.keys(b).join() !== 'confirm' || b.confirm !== m[1])
+          throw new HttpError(400, `confirm the deletion with the body {"confirm": "${m[1]}"}`);
+        try {
+          return deleteRun(cfg, repo, m[1]!);
+        } catch (e) {
+          if (e instanceof DeleteRunError) throw new HttpError(e.status, e.message, e.details);
+          throw e;
+        }
       }
     ],
     [

@@ -38,6 +38,8 @@ export function seedDemo(repo: Repo, cfg: Config): number {
   );
   const existing = repo.listRuns({ experiment: exp.publicId, limit: 1 });
   if (existing.length > 0) return 0;
+  // Deleted demo runs stay deleted: never reseed the demo once the user removed any of its runs.
+  if (repo.deletedRunsOfKind('demo') > 0) return 0;
   const raw = JSON.parse(readFileSync(join(cfg.repoRoot, DEMO_FIXTURE), 'utf8')) as unknown;
   const valid = validateDataset(raw);
   if (!valid.ok) throw new Error(`demo fixture invalid: ${valid.errors[0]}`);

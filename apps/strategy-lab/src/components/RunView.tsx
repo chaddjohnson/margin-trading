@@ -9,7 +9,7 @@ import {
   type LabRunRequest,
   type RunSummary
 } from '../../shared/contract.ts';
-import { api, type EventsResponse, type PricesResponse } from '../api.ts';
+import { api, type DeleteRunResult, type EventsResponse, type PricesResponse } from '../api.ts';
 import type { Role } from '../chart/markers.ts';
 import { isMacPlatform, PAN_MODIFIER_LABEL, panModifierFor } from '../chart/pan.ts';
 import { type ChartEvent, type ChartHandle, PriceChart } from '../chart/PriceChart.tsx';
@@ -24,6 +24,7 @@ import { buildTrades, toneOf, type Trade } from '../trades.ts';
 import { legendToneOf, markerToneOf, TONE_COLOR, TONE_LABEL } from '../chart/markers.ts';
 import { currentVersionOf, RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL } from '../../shared/strategies.ts';
 import { ComparisonPanel } from './Comparison.tsx';
+import { DeleteRunDialog } from './DeleteRunDialog.tsx';
 
 type Detail = RunDetail & { request: LabRunRequest | null };
 
@@ -34,6 +35,8 @@ interface Props {
   onRoute: (r: { run?: string; symbol?: string | null; compare?: string | null }) => void;
   onClone: (req: Partial<LabRunRequest>) => void;
   onChanged: () => void;
+  /** After a completed deletion of this run (the parent updates the list, the route and the feedback). */
+  onDeleted: (result: DeleteRunResult) => void;
   refreshKey: number;
 }
 
@@ -72,9 +75,13 @@ function useRun(id: string | null, refreshKey: number, onFinished: () => void) {
   return { run: mine?.run ?? null, error: mine?.error ?? null };
 }
 
-export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClone, onChanged, refreshKey }: Props) {
+export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClone, onChanged, onDeleted, refreshKey }: Props) {
   const { run, error } = useRun(runId, refreshKey, onChanged);
-  const { run: runB } = useRun(compareId, refreshKey, () => {});
+  const { run: runB, error: errorB } = useRun(compareId, refreshKey, () => {});
+  // The comparison run no longer exists (deleted elsewhere): drop it instead of showing a stale selection.
+  useEffect(() => {
+    if (compareId && errorB && /no run|already deleted|not found/i.test(errorB)) onRoute({ compare: null });
+  }, [compareId, errorB, onRoute]);
   const symbol = run ? (routeSymbol && run.symbols.includes(routeSymbol) ? routeSymbol : run.symbols[0]!) : null;
   const [kinds, setKinds] = useState<Set<EventKind>>(() => new Set(EVENT_KINDS));
   // Selection and hover belong to one run/symbol/comparison: they clear themselves when any of these changes.
@@ -87,6 +94,21 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
   const [editingTitle, setEditingTitle] = useState<string | null>(null);
   const [withMinuteMarks, setWithMinuteMarks] = useState(false);
   const [exporting, setExporting] = useState<{ busy: boolean; message: string | null }>({ busy: false, message: null });
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const close = (e: Event) => {
+      if (e instanceof KeyboardEvent ? e.key === 'Escape' : !menuRef.current?.contains(e.target as Node)) setMenuOpen(false);
+    };
+    document.addEventListener('pointerdown', close, true);
+    document.addEventListener('keydown', close, true);
+    return () => {
+      document.removeEventListener('pointerdown', close, true);
+      document.removeEventListener('keydown', close, true);
+    };
+  }, [menuOpen]);
   const basis = run && symbol ? basisDateOf(run.priceSource, symbol) : null;
 
   const pricesQ = useFetched<PricesResponse>(run && symbol ? `${run.id}|${symbol}` : null, (signal) =>
@@ -352,7 +374,50 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
               <path d="M10 1.8l2.5 5.1 5.6.8-4 3.9.9 5.6-5-2.6-5 2.6.9-5.6-4-3.9 5.6-.8z" />
             </svg>
           </button>
+          <div className="run-actions" ref={menuRef}>
+            <button
+              type="button"
+              className="btn-ghost run-actions-button"
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              aria-controls="run-actions-menu"
+              aria-label={`Actions for ${run.id}`}
+              onClick={() => setMenuOpen((o) => !o)}
+              data-testid="run-actions"
+            >
+              ⋯
+            </button>
+            {menuOpen && (
+              <div className="run-actions-menu" role="menu" id="run-actions-menu" aria-label={`Actions for ${run.id}`}>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="menu-item is-danger"
+                  disabled={run.status === 'queued' || run.status === 'running'}
+                  title={run.status === 'queued' || run.status === 'running' ? 'Cancel the run and wait for it to stop first' : undefined}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setConfirmDelete(true);
+                  }}
+                  data-testid="run-action-delete"
+                  ref={(el) => el?.focus()}
+                >
+                  Delete result…
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+        {confirmDelete && (
+          <DeleteRunDialog
+            run={run}
+            onCancel={() => setConfirmDelete(false)}
+            onDeleted={(result) => {
+              setConfirmDelete(false);
+              onDeleted(result);
+            }}
+          />
+        )}
         <p className="run-meta small">
           {run.strategy.title} · variation <span className="mono">{run.variation.id}</span> ({run.variation.title}) ·{' '}
           {run.window.from} → {run.window.to}

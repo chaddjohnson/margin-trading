@@ -93,6 +93,25 @@ const excerpt = (body: unknown) => {
   return flat.length > 90 ? `${flat.slice(0, 89)}…` : flat;
 };
 
+export interface RunDeletionInfo {
+  internalId: number;
+  publicId: string;
+  kind: string;
+  status: RunStatus;
+  artifactDir: string | null;
+  symbols: string[];
+  window: { from: string; to: string; resolution: string | null };
+  createdAt: string;
+  completedAt: string | null;
+  bookmarked: boolean;
+  phenotype: number | null;
+  variation: string;
+  strategy: { key: string; version: string; title: string };
+  noteCount: number;
+  optimizationTrialRefs: number;
+  variationOtherRuns: number;
+}
+
 export class Repo {
   constructor(readonly db: Db) {}
 
@@ -691,7 +710,120 @@ export class Repo {
   private nextId(
     table: 'experiments' | 'strategies' | 'variations' | 'runs' | 'phenotypes' | 'phenotype_imports'
   ): number {
-    const r = this.db.prepare(`SELECT coalesce(max(id), 0) + 1 AS next FROM ${table}`).get() as Row;
+    // A deleted run's id is never reused (migration 0003): the next run id is above every live and deleted one.
+    const r = this.db
+      .prepare(
+        table === 'runs'
+          ? 'SELECT max(coalesce((SELECT max(id) FROM runs), 0), coalesce((SELECT max(run_id) FROM run_deletions), 0)) + 1 AS next'
+          : `SELECT coalesce(max(id), 0) + 1 AS next FROM ${table}`
+      )
+      .get() as Row;
     return Number(r.next);
+  }
+
+  // ----- deletion of ONE saved run (server/delete-run.ts orchestrates the files; migration 0003 the guard) -----
+
+  /** What a deletion of this run would remove and what blocks it (null: no such run). */
+  runDeletionInfo(publicId: string): RunDeletionInfo | null {
+    const r = this.db
+      .prepare(
+        `SELECT r.id, r.public_id, r.kind, r.status, r.artifact_dir, r.symbols_json, r.window_from, r.window_to, r.resolution,
+                r.created_at, r.completed_at, r.bookmarked_at, r.phenotype_id, v.public_id AS v_public_id, s.key AS s_key,
+                s.version AS s_version, s.title AS s_title,
+                (SELECT count(*) FROM notes n WHERE n.target_type = 'run' AND n.target_id = r.id) AS note_count,
+                (SELECT count(*) FROM optimization_trials t WHERE t.run_id = r.id) AS trial_refs,
+                (SELECT count(*) FROM runs o WHERE o.variation_id = r.variation_id AND o.id <> r.id) AS variation_other_runs
+         FROM runs r JOIN variations v ON v.id = r.variation_id JOIN strategies s ON s.id = v.strategy_id
+         WHERE r.public_id = ?`
+      )
+      .get(publicId) as Row | undefined;
+    if (!r) return null;
+    return {
+      internalId: Number(r.id),
+      publicId: String(r.public_id),
+      kind: String(r.kind),
+      status: String(r.status) as RunStatus,
+      artifactDir: (r.artifact_dir as string | null) ?? null,
+      symbols: JSON.parse(String(r.symbols_json)) as string[],
+      window: { from: String(r.window_from), to: String(r.window_to), resolution: (r.resolution as string | null) ?? null },
+      createdAt: String(r.created_at),
+      completedAt: (r.completed_at as string | null) ?? null,
+      bookmarked: r.bookmarked_at !== null,
+      phenotype: r.phenotype_id === null ? null : Number(r.phenotype_id),
+      variation: String(r.v_public_id),
+      strategy: { key: String(r.s_key), version: String(r.s_version), title: String(r.s_title) },
+      noteCount: Number(r.note_count),
+      optimizationTrialRefs: Number(r.trial_refs),
+      variationOtherRuns: Number(r.variation_other_runs)
+    };
+  }
+
+  /**
+   * Removes the run's rows in ONE transaction: the tombstone ('deleting'), the run's own notes, its symbols, the run row
+   * (the migration-0003 trigger admits it only with that tombstone), then the tombstone becomes 'deleted'. Nothing else
+   * is touched. `beforeCommit` lets a test inject a failure inside the transaction.
+   */
+  deleteRunRecords(info: RunDeletionInfo, files: { artifactDir: string | null; trashDir: string | null }, beforeCommit?: () => void) {
+    return tx(this.db, () => {
+      const t = now();
+      const summary = {
+        strategy: info.strategy,
+        variation: info.variation,
+        symbols: info.symbols,
+        window: info.window,
+        kind: info.kind,
+        status: info.status,
+        createdAt: info.createdAt,
+        completedAt: info.completedAt,
+        phenotype: info.phenotype,
+        notesDeleted: info.noteCount,
+        bookmarkRemoved: info.bookmarked
+      };
+      this.db
+        .prepare(
+          `INSERT INTO run_deletions (run_id, public_id, state, kind, summary_json, artifact_dir, trash_dir, requested_at)
+           VALUES (?, ?, 'deleting', ?, ?, ?, ?, ?)`
+        )
+        .run(info.internalId, info.publicId, info.kind, JSON.stringify(summary), files.artifactDir, files.trashDir, t);
+      const notes = this.db.prepare("DELETE FROM notes WHERE target_type = 'run' AND target_id = ?").run(info.internalId);
+      const symbols = this.db.prepare('DELETE FROM run_symbols WHERE run_id = ?').run(info.internalId);
+      const run = this.db.prepare('DELETE FROM runs WHERE id = ? AND public_id = ?').run(info.internalId, info.publicId);
+      if (Number(run.changes) !== 1) throw new Error(`${info.publicId}: expected to delete exactly one run row, deleted ${run.changes}`);
+      this.db.prepare("UPDATE run_deletions SET state = 'deleted', deleted_at = ? WHERE run_id = ?").run(now(), info.internalId);
+      beforeCommit?.();
+      return { notesDeleted: Number(notes.changes), symbolsDeleted: Number(symbols.changes) };
+    });
+  }
+
+  markRunArtifactsPurged(publicId: string) {
+    this.db.prepare('UPDATE run_deletions SET artifacts_purged = 1, trash_dir = NULL WHERE public_id = ?').run(publicId);
+  }
+
+  runDeletion(publicId: string): { publicId: string; state: string; deletedAt: string | null; artifactsPurged: boolean; trashDir: string | null } | null {
+    const r = this.db.prepare('SELECT public_id, state, deleted_at, artifacts_purged, trash_dir FROM run_deletions WHERE public_id = ?').get(publicId) as
+      | Row
+      | undefined;
+    return r
+      ? {
+          publicId: String(r.public_id),
+          state: String(r.state),
+          deletedAt: (r.deleted_at as string | null) ?? null,
+          artifactsPurged: Number(r.artifacts_purged) === 1,
+          trashDir: (r.trash_dir as string | null) ?? null
+        }
+      : null;
+  }
+
+  /** Deleted runs whose artifact directory still waits in the trash (a purge failed). */
+  pendingRunPurges(): { publicId: string; trashDir: string }[] {
+    return (
+      this.db
+        .prepare("SELECT public_id, trash_dir FROM run_deletions WHERE state = 'deleted' AND artifacts_purged = 0 AND trash_dir IS NOT NULL")
+        .all() as Row[]
+    ).map((r) => ({ publicId: String(r.public_id), trashDir: String(r.trash_dir) }));
+  }
+
+  deletedRunsOfKind(kind: string): number {
+    return Number((this.db.prepare('SELECT count(*) AS n FROM run_deletions WHERE kind = ?').get(kind) as Row).n);
   }
 }

@@ -63,6 +63,17 @@ async function call<T>(method: string, path: string, body?: unknown, signal?: Ab
   return data as T;
 }
 
+/** The server's report of a completed deletion (server/delete-run.ts). */
+export interface DeleteRunResult {
+  deleted: string;
+  strategy: { key: string; version: string; title: string };
+  symbols: string[];
+  notesDeleted: number;
+  bookmarkRemoved: boolean;
+  variation: { id: string; otherRuns: number; kept: true };
+  artifacts: { existed: boolean; purged: boolean; warning: string | null };
+}
+
 export interface Meta {
   contractVersion: number;
   strategies: StrategySpec[];
@@ -183,6 +194,8 @@ export const api = {
     call<RunDetail & { request: LabRunRequest | null }>('GET', `/api/runs/${id}`, undefined, signal),
   createRun: (req: LabRunRequest) => call<RunDetail>('POST', '/api/runs', req),
   cancelRun: (id: string) => call<{ cancelled: boolean }>('POST', `/api/runs/${id}/cancel`),
+  /** Deletes exactly this run; the body repeats its id (server/delete-run.ts). */
+  deleteRun: (id: string) => call<DeleteRunResult>('DELETE', `/api/runs/${id}`, { confirm: id }),
   setRunTitle: (id: string, title: string) => call<RunDetail>('PATCH', `/api/runs/${id}`, { title }),
   bookmark: (type: 'run' | 'variation', id: string, on: boolean) =>
     call<{ bookmarked: boolean }>(

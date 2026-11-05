@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import type { LabRunRequest } from '../shared/contract.ts';
-import { api, type Meta, onTokenRequired, type PhenotypeView, setToken } from './api.ts';
+import { api, type DeleteRunResult, type Meta, onTokenRequired, type PhenotypeView, setToken } from './api.ts';
 import { Phenotypes } from './components/Phenotypes.tsx';
 import { RunTestDialog, TokenDialog } from './components/RunTestDialog.tsx';
 import { RunView } from './components/RunView.tsx';
@@ -53,6 +53,8 @@ export function App() {
     phenotype?: PhenotypeView | null;
   } | null>(null);
   const [needToken, setNeedToken] = useState(false);
+  // Feedback of an action that changed the saved runs (a completed deletion); only ever set from a server response.
+  const [notice, setNotice] = useState<{ tone: 'ok' | 'warn'; text: string } | null>(null);
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
@@ -86,6 +88,30 @@ export function App() {
 
   const syntheticSelected =
     useFetched(route.run, (signal) => api.run(route.run!, signal)).data?.dataOrigin === 'synthetic';
+
+  // After a completed deletion: the lists refresh; if the deleted run was open, the most recent remaining run opens (or
+  // the empty view); if it was the comparison run, the comparison is dropped.
+  const onDeleted = (r: DeleteRunResult) => {
+    const what = `${r.deleted} (${r.strategy.title}, ${r.symbols.join(', ')})`;
+    const extra = [r.notesDeleted ? `${r.notesDeleted} note${r.notesDeleted === 1 ? '' : 's'}` : '', r.bookmarkRemoved ? 'its bookmark' : '']
+      .filter(Boolean)
+      .join(' and ');
+    setNotice(
+      r.artifacts.warning
+        ? { tone: 'warn', text: `Deleted ${what}${extra ? ` with ${extra}` : ''}. Note: ${r.artifacts.warning}.` }
+        : { tone: 'ok', text: `Deleted ${what}${extra ? ` with ${extra}` : ''}. Variation ${r.variation.id} is kept.` }
+    );
+    // The route changes in the same render as the refresh, so nothing refetches the deleted run.
+    const next: Route =
+      route.run === r.deleted
+        ? { ...route, run: null, symbol: null, compare: null }
+        : route.compare === r.deleted
+          ? { ...route, compare: null }
+          : route;
+    setRouteState(next);
+    if (next !== route) window.location.hash = next.run ? toHash(next) : '#/';
+    refresh();
+  };
 
   const navigate = (r: Partial<Route>) => {
     const next: Route = { ...route, phenotypes: false, phenotype: null, ...r };
@@ -150,6 +176,14 @@ export function App() {
           Cannot reach the Strategy Lab API: {metaError}
         </div>
       )}
+      {notice && (
+        <div className={`app-notice tone-${notice.tone}`} role="status" data-testid="app-notice">
+          <span>{notice.text}</span>
+          <button type="button" className="btn-ghost" onClick={() => setNotice(null)} aria-label="Dismiss">
+            ✕
+          </button>
+        </div>
+      )}
       <div className="layout">
         <Sidebar
           meta={meta}
@@ -176,6 +210,7 @@ export function App() {
               onRoute={(r) => navigate(r)}
               onClone={(initial) => setDialog({ initial })}
               onChanged={refresh}
+              onDeleted={onDeleted}
               refreshKey={refreshKey}
             />
           ) : (
