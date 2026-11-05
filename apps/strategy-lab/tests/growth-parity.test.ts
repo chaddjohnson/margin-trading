@@ -119,7 +119,8 @@ const stored12 = (id: string) =>
 const OFF_1_3_0 = { entryMethod: 'rise_from_recent_low', initialStopEnabled: false, retentionEnabled: false };
 
 describe.skipIf(!hasData)('runner-level OFF parity with Growth 1.2.0 (real data)', () => {
-  const cases: [string, string, (r: Record<string, any>) => Record<string, any>][] = [];
+  type Req = { params: Record<string, unknown> } & Record<string, unknown>;
+  const cases: [string, string, (r: Req) => Req][] = [];
   for (const id of ['R-920001', 'R-920002', 'R-920003', 'R-920005', 'R-920007']) {
     cases.push([id, '1.2.0 (replay)', (r) => r]);
     cases.push([id, '1.3.0 with the three OFF', (r) => ({ ...r, strategyVersion: '1.3.0', params: { ...r.params, ...OFF_1_3_0 } })]);

@@ -1,5 +1,5 @@
 // Event marker glyphs. Encoding (never colour alone):
-//   shape   ▲ entry (signal or executed) · ▼ executed exit · ⊘ rejected signal
+//   shape   ▲ entry (signal or executed) · ▼ executed exit (half-filled: a partial exit, Growth 1.3.0) · ⊘ rejected signal
 //   fill    hollow = a raw entry signal · filled = executed (or the rejected signal's ring)
 //   colour  the marker TONE: an executed entry and its exit share their trade's outcome — green net profit, red net
 //           loss, grey exactly breakeven, blue still open (never judged on unrealized P&L), amber no recorded P&L;
@@ -7,7 +7,7 @@
 //   halo    the run role when comparing: run A has a dark rim, run B an orange halo
 // Entries sit just below the price, exits just above it, rejected signals on it.
 
-import type { EventKind } from '../../shared/contract.ts';
+import { EVENT_KIND_LABEL, type EventKind } from '../../shared/contract.ts';
 import { type Trade, toneOf } from '../trades.ts';
 
 export type Role = 'A' | 'B';
@@ -50,7 +50,15 @@ export function markerToneOf(kind: EventKind, trade: Pick<Trade, 'status' | 'pnl
   return toneOf(trade);
 }
 
-export function glyphSvg(kind: EventKind, role: Role, tone: MarkerTone, size = MARKER_SIZE): string {
+/** A Growth 1.3.0 partial exit: an executed exit of a position that stays open (retention). */
+export const isPartialExit = (e: { kind: EventKind; meta?: Record<string, unknown> | null }) =>
+  e.kind === 'executed_exit' && e.meta?.partial === true;
+
+/** The label of an event's kind, a partial exit named as such. */
+export const eventKindLabel = (e: { kind: EventKind; meta?: Record<string, unknown> | null }) =>
+  isPartialExit(e) ? 'Executed exit (partial)' : EVENT_KIND_LABEL[e.kind];
+
+export function glyphSvg(kind: EventKind, role: Role, tone: MarkerTone, size = MARKER_SIZE, partial = false): string {
   const c = TONE_COLOR[tone];
   const s = size;
   // The role halo: the same outline, wider, under the glyph (run B orange, run A the dark surface).
@@ -73,7 +81,10 @@ export function glyphSvg(kind: EventKind, role: Role, tone: MarkerTone, size = M
     case 'executed_exit': {
       const pts = `1,1.5 ${s - 1},1.5 ${s / 2},${s - 1}`;
       rim = `<polygon points="${pts}" fill="none" stroke="${halo}" stroke-width="3" stroke-linejoin="round"/>`;
-      shape = `<polygon points="${pts}" fill="${c}" stroke="#f1f5f9" stroke-width="1.3" stroke-linejoin="round"/>`;
+      // a partial exit: the same ▼, only its left half filled (the position is still partly held)
+      shape = partial
+        ? `<polygon points="${pts}" fill="${SURFACE}" stroke="${c}" stroke-width="1.6" stroke-linejoin="round"/><polygon points="1.8,2.2 ${s / 2},2.2 ${s / 2},${s - 2}" fill="${c}"/>`
+        : `<polygon points="${pts}" fill="${c}" stroke="#f1f5f9" stroke-width="1.3" stroke-linejoin="round"/>`;
       break;
     }
     case 'rejected_signal': {
@@ -83,11 +94,11 @@ export function glyphSvg(kind: EventKind, role: Role, tone: MarkerTone, size = M
       break;
     }
   }
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" data-tone="${tone}">${role === 'B' ? rim : ''}${shape}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" data-tone="${tone}"${partial ? ' data-partial="true"' : ''}>${role === 'B' ? rim : ''}${shape}</svg>`;
 }
 
-export const glyphUri = (kind: EventKind, role: Role, tone: MarkerTone, size = MARKER_SIZE) =>
-  `data:image/svg+xml;charset=utf-8,${encodeURIComponent(glyphSvg(kind, role, tone, size))}`;
+export const glyphUri = (kind: EventKind, role: Role, tone: MarkerTone, size = MARKER_SIZE, partial = false) =>
+  `data:image/svg+xml;charset=utf-8,${encodeURIComponent(glyphSvg(kind, role, tone, size, partial))}`;
 
 /** The legend's tone for an event kind: executed kinds show their shape only (the outcome colours have their own key). */
 export const legendToneOf = (kind: EventKind): MarkerTone =>

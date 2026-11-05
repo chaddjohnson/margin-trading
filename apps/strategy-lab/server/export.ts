@@ -13,6 +13,9 @@
 //   entry-decisions.csv          Growth 1.2.0 with an entry gate ON: one row per entry decision (gate values, trade, net)
 //   opportunities.csv            Growth 1.2.0 with persistent eligibility ON: every armed opportunity and how it ended
 //   entry-gates.md               Growth 1.2.0 with an entry gate ON: the gate counts and outcomes by entry source
+//   exit-fills.csv               Growth 1.3.0 with the initial risk stop or retention ON: every exit fill of every
+//                                position (partial and final), with its principal repayment, interest, costs and net
+//   optional-rules.md            Growth 1.3.0 with an optional rule ON: the configuration, conventions and counts
 //   daily-marks.csv              Growth: the daily marks per symbol
 //   attribution.json / .md       per-origin attribution (descriptive, NOT the causal effect) and the continuation counts
 // The bundle never changes a run artifact, reads only the allowlisted files of that run's directory, and is refused if
@@ -22,7 +25,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { gunzipSync } from 'node:zlib';
 
-import type { DecisionsFile, SymbolMetrics } from '../shared/artifact-types.ts';
+import type { DecisionsFile, ExitFillRecord, SymbolMetrics } from '../shared/artifact-types.ts';
 import type { LabEvent, RunDetail } from '../shared/contract.ts';
 import type { PreviewService } from './previews.ts';
 import { effectiveParams, isActive } from '../shared/params.ts';
@@ -218,7 +221,14 @@ function buildBundle(cfg: Config, src: BundleSource, opts: { minuteMarks?: boole
         t.decisionTimeUtc, t.decisionTimeNewYork, t.entryTimeUtc, t.entryTimeNewYork, t.entryFill, t.entryFillPrice,
         t.exitTimeUtc, t.exitTimeNewYork, t.exitReason, t.exitFillPrice ?? t.markPrice, t.shares, t.principal,
         t.grossBeforeCosts, Number(t.entryCost ?? 0) + Number(t.exitCost ?? 0), t.interest, t.net, t.netReturnPercent,
-        t.calendarDaysHeld, t.sessionsHeld, t.status === 'open' ? 'trades.json (open: marked at the last close, unrealized)' : 'trades.json',
+        t.calendarDaysHeld, t.sessionsHeld,
+        `${t.status === 'open' ? 'trades.json (open: marked at the last close, unrealized)' : 'trades.json'}${
+          Array.isArray(t.exitFills) && (t.exitFills as unknown[]).length > 1
+            ? `; ONE position closed in ${(t.exitFills as unknown[]).length} fills (see exit-fills.csv; the net is the whole position)`
+            : Array.isArray(t.exitFills) && t.status === 'open' && (t.exitFills as unknown[]).length
+              ? '; open remainder after a partial fill (see exit-fills.csv; the net is the whole position, partial fill realized)'
+              : ''
+        }`,
         t.entrySource ?? null, t.opportunity ?? null, t.ageSessionsAtDecision ?? null
       ])
     );
@@ -305,6 +315,37 @@ function buildBundle(cfg: Config, src: BundleSource, opts: { minuteMarks?: boole
       );
     else unavailable['opportunities.csv'] = 'persistent eligibility was OFF (or the run predates Growth 1.2.0)';
   } else unavailable['decision-log.csv'] = 'not recorded by this run (only Growth 1.1.0 and later runs write decisions.json)';
+  // Growth 1.3.0: every exit fill of the positions under the initial risk stop or retention.
+  const fillRows = Object.entries(tradesFile?.trades ?? {}).flatMap(([symbol, list]) =>
+    list.flatMap((t) =>
+      ((t.exitFills as ExitFillRecord[] | undefined) ?? []).map((f) => {
+        const stop = t.initialStop as { level?: number; atr?: number; atrFromSession?: string; atrToSession?: string } | null | undefined;
+        return [
+          symbol, t.trade, t.status, f.fill, f.partial ? 'partial' : 'final', f.rule, f.reason, f.utc, f.newYork, f.session, f.execution,
+          f.rawPrice, f.priceAfterCost, f.shares, f.principalRepaid, f.interestPaid, f.interestDays, f.proceeds, f.grossBeforeCosts,
+          f.entryCostShare, f.exitCost, f.net, f.sharesAfter, f.principalAfter, f.decidedUtc, f.level, f.sameTrade.join(' '),
+          stop?.level ?? null, stop?.atr ?? null, stop ? `${stop.atrFromSession} … ${stop.atrToSession}` : null, t.net
+        ];
+      })
+    )
+  );
+  if (fillRows.length)
+    add(
+      'exit-fills.csv',
+      csv(
+        ['symbol', 'trade', 'trade_status', 'fill', 'fill_kind', 'rule', 'reason', 't_utc', 't_new_york', 'session', 'execution', 'raw_price', 'price_after_cost', 'shares', 'principal_repaid_usd', 'interest_paid_usd', 'interest_days', 'proceeds_usd', 'gross_before_costs_usd', 'entry_cost_share_usd', 'exit_cost_usd', 'fill_net_usd', 'shares_after', 'principal_after_usd', 'decided_utc', 'stop_level', 'same_trade', 'initial_stop', 'initial_stop_atr', 'atr_sessions', 'position_net_usd'],
+        fillRows
+      ),
+      'every exit fill (partial and final) of every position under the initial risk stop or trend retention: shares, the principal it repaid, the interest it paid, costs and net — the fills of a position add up to its trade row'
+    );
+  else unavailable['exit-fills.csv'] = 'the initial risk stop and trend retention were OFF (or the run predates Growth 1.3.0): every trade is one exit fill, in trades.csv';
+  const perSymbolMetrics = (metrics?.perSymbol ?? {}) as Record<string, SymbolMetrics>;
+  const optional = Object.fromEntries(
+    Object.entries(perSymbolMetrics).filter(([, m]) => m && typeof m === 'object' && m.optionalRules).map(([sym, m]) => [sym, m.optionalRules!])
+  );
+  if (Object.keys(optional).length) add('optional-rules.md', optionalRulesMarkdown(optional, metrics), 'the optional rules (breakout entry, initial risk stop, trend retention): configuration, conventions and counts (descriptive)');
+  else unavailable['optional-rules.md'] = 'the breakout entry, the initial risk stop and trend retention were OFF (or the run predates Growth 1.3.0)';
+
   if (dailyFile?.daily)
     add(
       'daily-marks.csv',
@@ -406,6 +447,38 @@ function attributionMarkdown(a: Record<string, Pick<SymbolMetrics, 'attribution'
   return `${lines.join('\n')}\n`;
 }
 
+function optionalRulesMarkdown(o: Record<string, NonNullable<SymbolMetrics['optionalRules']>>, metrics: Record<string, unknown> | null) {
+  const cfg = (k: string) => JSON.stringify((metrics as Record<string, unknown> | null)?.[k] ?? { enabled: false });
+  const kv = (r: Record<string, number> | undefined) => Object.entries(r ?? {}).map(([k, n]) => `${k} ${n}`).join(', ') || 'none';
+  const lines = [
+    '# Optional rules: trend-breakout entry, initial risk stop, trend retention (descriptive)',
+    '',
+    `Entry method: \`${cfg('entryMethod')}\`. Initial risk stop: \`${cfg('initialStop')}\`. Retention: \`${cfg('retention')}\`.`,
+    '',
+    o[Object.keys(o)[0]!]?.note ?? '',
+    '',
+    'Conventions: completed daily sessions only. Breakout = close > SMA_L, SMA_L > SMA_L K sessions earlier, close > the highest high of the N preceding sessions (all strict), decided at the close, filled at the next opening trade. Initial stop = actual raw fill − m × ATR_L, ATR_L = simple mean of the true ranges of the L sessions completed before the fill session; fixed, active from the fill. Retention = one partial sale at the first profit trailing-stop event, the remainder exited on K consecutive closes strictly below SMA_L (the partial-sale session’s close counted first) at the next eligible trade. A position sold in several fills is ONE trade (exit-fills.csv lists its fills); its net is the sum of its fills.',
+    ''
+  ];
+  for (const [sym, x] of Object.entries(o)) {
+    lines.push(`## ${sym}`, '', `Entry method: ${x.entryMethod}.`);
+    if (x.breakout)
+      lines.push(`Breakout signals ${x.breakout.signals}: taken ${x.breakout.taken}, ignored while invested ${x.breakout.rejectedWhileInvested}, vetoed ${x.breakout.vetoed}.`);
+    const st = x.initialStop;
+    if (st.enabled)
+      lines.push(
+        `Initial risk stop: ${st.protectedPositions} protected position(s); exits by the stop ${st.exitsByInitialStop} (gap ${st.exitsByInitialStopGap}, assumed fill at the level ${st.exitsByInitialStopAssumedFill}, on the entry session ${st.exitsOnEntrySession}); decisions blocked for want of ATR history ${st.blockedChecks} (${kv(st.blockedBySource)}).`
+      );
+    const r = x.retention;
+    if (r.enabled)
+      lines.push(
+        `Retention: ${r.positionsWithPartialSale} position(s) with a partial sale (${r.partialFills} partial fill(s): ${kv(r.partialFillsByReason)}; net ${usd(r.partialFillsNetUsd ?? 0)}; at a loss ${r.partialFillsAtALoss}); remainder exits ${kv(r.remainderExitsByReason)}; trend-exit decisions ${r.trendExitDecisions}; open remainder at the end ${r.openRemainderAtEnd} (pending trend exit ${r.pendingTrendExitAtEnd}). Closed positions with a partial sale: ${r.closedPositionsWithPartial?.count ?? 0} (W/L ${r.closedPositionsWithPartial?.wins ?? 0}/${r.closedPositionsWithPartial?.losses ?? 0}, net ${usd(r.closedPositionsWithPartial?.netUsd ?? 0)}).`
+      );
+    lines.push('');
+  }
+  return `${lines.join('\n')}\n`;
+}
+
 function entryGatesMarkdown(
   g: Record<string, { entryGates: NonNullable<SymbolMetrics['entryGates']>; signals: NonNullable<SymbolMetrics['signals']> }>,
   metrics: Record<string, unknown> | null
@@ -474,6 +547,7 @@ ${preview ? `\n> **Interactive Preview — not a saved run.** Preview id \`${run
 - **Drawdowns** are falls of the marked net (realized + open position) from an earlier peak: *minute* at every minute close and session close, *daily* at session closes; % = of the $100,000 notional, not of equity.
 - **Times** are stored in UTC (\`…Z\`); the \`*_new_york\` columns give America/New_York wall-clock time with EST/EDT. \`time_precision\`: minute, session-close (a daily bar's close), day (date only) or unknown.
 - **Origin** (Growth 1.1.0+): \`base_growth\` = the Rise-from-Recent-Low entry; \`continuation\` = an entry of the selected continuation method. Origin-attributed P&L is DESCRIPTIVE: it is not the incremental effect of enabling a method, because enabling it changes the whole later trade sequence. Compare a complete ON run with an otherwise identical OFF run for the counterfactual.
+- **Optional rules** (Growth 1.3.0, when ON): the entry method (\`rise_from_recent_low\` or \`trend_breakout\`; trades.csv \`entry_source\` \`trend_breakout\`), the initial risk stop (fixed at fill − m × ATR, active from the fill; exit reasons \`initial stop\` / \`initial stop gap\`) and trend retention (a partial sale at the first profit trailing-stop event, events.csv \`SYM:T-n:partial-k\` executed exits with \`meta.partial\`; the remainder's exit reason \`trend exit\` or a risk exit). A position sold in several fills is ONE trade row (its net = all its fills); exit-fills.csv has every fill with its principal repayment and interest; optional-rules.md the counts. Runs without these options have no exit-fills.csv and their trade rows are unchanged.
 - **Entry gates** (Growth 1.2.0, when ON): the entry trend filter judges every entry decision on trading-session observations complete at the decision; persistent eligibility keeps a raw crossing available as an *opportunity* for a bounded number of sessions. \`entry_source\` (trades.csv): \`rise_from_recent_low\` (the crossing itself), \`latched:…\` (a later decision of an armed opportunity, filled at the then-current price), \`eligibility_renewal\` (a policy-5 renewal signal), \`continuation:<method>\`. A raw crossing appears once in events.csv; latched decisions and renewal signals are separate events (\`SYM:latched:<t>\`, \`SYM:renewal:<t>\`). See entry-decisions.csv, opportunities.csv and entry-gates.md.
 - **Exploratory, not validated.** A single run on historical data (often already inspected) is not evidence of an edge, and a rerun of a study's phenotype on exposed dates is not another holdout.
 

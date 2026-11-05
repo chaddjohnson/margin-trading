@@ -119,7 +119,10 @@ function continuationText(spec: StrategySpec, p: Record<string, unknown>) {
   if (p.continuationEnabled !== true)
     return {
       title: 'continuation off',
-      assumption: 'OFF: only the base Rise entry (identical to the version without continuation entries)'
+      assumption:
+        p.entryMethod === 'trend_breakout'
+          ? 'OFF: only the base trend-breakout entry'
+          : 'OFF: only the base Rise entry (identical to the version without continuation entries)'
     };
   const m = String(p.continuationMethod);
   const w = `W ${String(p.continuationWindowSessions)}`;
@@ -216,13 +219,56 @@ function gateTexts(spec: StrategySpec, p: Record<string, unknown>, resolution: s
       text(
         'eligibility',
         'Persistent entry eligibility',
-        eligibilityOn
+        p.entryMethod === 'trend_breakout'
+          ? 'not applicable: persistent eligibility is Rise-specific; with the trend-breakout entry a signal not taken at its own decision is gone (its inputs, if any, are a saved draft, not executed)'
+          : eligibilityOn
           ? `ON — ${optionLabel(paramOf(spec, 'eligibilityPolicy')!, p.eligibilityPolicy)}, maximum age ${n('eligibilityMaxAgeSessions')} trading sessions (the signal session is day 0; decisions through origin + W inclusive; expired after that close): ${policyRule}. A raw crossing met while flat arms ONE opportunity (not an order, no capital reserved), re-evaluated at each completed ${resolution} bar while flat with no order; a later entry fills at the next eligible trade at the then-current price, never at the signal price; signals while invested arm nothing; no repeated entries from one opportunity. Without a trend filter nothing blocks a standalone run, so every opportunity is taken at once`
           : spec.params.some((x) => x.key === 'eligibilityEnabled')
             ? 'OFF: a signal not taken at its own decision is gone (identical to Growth 1.1.0)'
             : 'not part of this strategy version (OFF)'
       )
     ]
+  };
+}
+
+// Growth 1.3.0: the entry method, the initial risk stop and trend retention in the title and assumptions. Absent
+// (earlier versions) = the Rise entry with both OFF, and the earlier versions' texts are unchanged.
+function optionalRuleTexts(spec: StrategySpec, p: Record<string, unknown>) {
+  const has = spec.params.some((x) => x.key === 'entryMethod');
+  const breakout = p.entryMethod === 'trend_breakout';
+  const stop = p.initialStopEnabled === true && isActive(spec, p, 'initialStopAtrSessions');
+  const retain = p.retentionEnabled === true && isActive(spec, p, 'retentionSellPercent');
+  const n = (k: string) => String(p[k]);
+  return {
+    has,
+    entryTitle: breakout
+      ? [`breakout SMA ${n('breakoutSmaSessions')}/${n('breakoutSlopeComparisonSessions')} high ${n('breakoutPriorHighSessions')}`]
+      : [`X ${n('advanceFromRecentLowPercent')}%`, `N ${n('recentLowLookbackBars')} bars`],
+    titles: [
+      ...(stop ? [`initial stop ${n('initialStopAtrMultiple')}×ATR${n('initialStopAtrSessions')}`] : []),
+      ...(retain ? [`retain ${n('retentionSellPercent')}%→${n('retentionClosesBelow')}× < SMA ${n('retentionSmaSessions')}`] : [])
+    ],
+    entry: breakout
+      ? `the trend-breakout entry (the Rise scanner is not used): at a completed daily close, close strictly above its ${n('breakoutSmaSessions')}-session SMA, that SMA strictly above its value ${n('breakoutSlopeComparisonSessions')} sessions earlier (both intrinsic to the method, whatever the optional trend filter), and close strictly above the highest high of the ${n('breakoutPriorHighSessions')} preceding sessions (the signal session excluded); decided at the scheduled close, filled at the next session’s opening trade; each qualifying close is its own signal, never replayed; not enough history is recorded per session`
+      : 'the unchanged Rise-from-Recent-Low signal (the base entry), decided when the signal bar completes; filled at the next eligible trade (a daily signal: the next session’s opening trade)',
+    assumptions: has
+      ? [
+          text(
+            'initialStop',
+            'Initial risk stop',
+            stop
+              ? `ON — fill − ${n('initialStopAtrMultiple')} × ATR(${n('initialStopAtrSessions')}), ATR = simple mean of the true ranges (max(high, previous close) − min(low, previous close)) of the ${n('initialStopAtrSessions')} sessions completed before the fill session; fixed for the position, active from the fill (also on the entry session) whatever the profit, interest or age; gaps fill at the opening trade, a minute crossing it at the stop (assumed); the higher active stop governs; an entry without the ATR history is blocked and recorded`
+              : 'OFF (identical to Growth 1.2.0)'
+          ),
+          text(
+            'retention',
+            'Retain part of profitable trend',
+            retain
+              ? `ON — at the first profit trailing-stop event sell ${n('retentionSellPercent')}% of the shares (once); the remainder exits after ${n('retentionClosesBelow')} consecutive completed close(s) strictly below SMA(${n('retentionSmaSessions')}) (the partial-sale session’s close counted first), at the next eligible trade; the initial risk stop, the maximum losing hold and the buffered loss keep applying to the remainder on its remaining principal; a full exit due at the same trade takes precedence over the partial sale; one position = one closed trade when its last share is sold`
+              : 'OFF (identical to Growth 1.2.0)'
+          )
+        ]
+      : []
   };
 }
 
@@ -235,20 +281,21 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
   const buffer = isActive(spec, p, 'intradayLossBufferPercent');
   const continuation = continuationText(spec, p);
   const gates = gateTexts(spec, p, req.resolution);
+  const optional = optionalRuleTexts(spec, p);
   const resolution = { key: 'resolution', label: 'Bar resolution', value: req.resolution, unit: 'text' as const };
   const params: LabValue[] = [...paramSnapshot(spec, p), resolution];
   const variationParams: LabValue[] = [...paramSnapshot(spec, effectiveParams(spec, p)), resolution];
   const title = [
     'Growth',
-    `X ${p.advanceFromRecentLowPercent}%`,
-    `N ${p.recentLowLookbackBars} bars`,
+    ...optional.entryTitle,
     req.resolution,
     `stop ${p.trailingStopPercent}%`,
     hold ? `hold ${p.maximumHoldDays}d` : 'hold off',
     buffer ? `buffer ${p.intradayLossBufferPercent}%` : 'buffer off',
     `${p.costBpsPerSide} bps`,
     continuation.title,
-    ...gates.titles
+    ...gates.titles,
+    ...optional.titles
   ].join(' · ');
   const assumptions: LabValue[] = [
     text(
@@ -256,13 +303,10 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
       'Trading backtest',
       'executed entries and exits with P&L; each symbol an independent standalone backtest, never summed or shared-capital; not comparable with a shared-slot pool such as vg-balanced'
     ),
-    text(
-      'entry',
-      'Entry',
-      'the unchanged Rise-from-Recent-Low signal (the base entry), decided when the signal bar completes; filled at the next eligible trade (a daily signal: the next session’s opening trade)'
-    ),
+    text('entry', 'Entry', optional.entry),
     text('continuation', 'Continuation entries', continuation.assumption),
     ...(spec.params.some((x) => x.key === 'trendFilterEnabled') ? gates.assumptions : []),
+    ...optional.assumptions,
     text(
       'position',
       'Position',

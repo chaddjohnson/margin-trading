@@ -78,19 +78,40 @@ export function compareRuns(cfg: Config, repo: Repo, a: string, b: string) {
     mismatches.push(
       `strategy version: A ${A.run.strategy.version} ≠ B ${B.run.strategy.version}${
         A.run.strategy.key === 'rise-from-recent-low-trading' && B.run.strategy.key === A.run.strategy.key
-          ? ' (1.0.0 = 1.1.0 with continuation OFF = 1.2.0 with continuation and the entry gates OFF, proven trade for trade; the difference is noted, not disqualifying)'
+          ? ' (1.0.0 = 1.1.0 with continuation OFF = 1.2.0 with continuation and the entry gates OFF = 1.3.0 with also the Rise entry and the initial risk stop and trend retention OFF, proven trade for trade; the difference is noted, not disqualifying)'
           : ''
       }`
     );
   const pa = A.request?.params ?? {};
   const pb = B.request?.params ?? {};
+  // v1.3.0: the entry method is an option under study (like continuation): the Rise inputs X and N are base parameters
+  // only when both runs use the Rise entry.
+  const entryMethod = (p: Record<string, unknown>) => String(p.entryMethod ?? 'rise_from_recent_low');
+  const bothRise = entryMethod(pa) === 'rise_from_recent_low' && entryMethod(pb) === 'rise_from_recent_low';
   if (A.run.strategy.key === 'rise-from-recent-low-trading' && B.run.strategy.key === A.run.strategy.key)
-    for (const k of BASE_KEYS) diff(`base parameter ${k}`, pa[k], pb[k]);
+    for (const k of BASE_KEYS)
+      if (bothRise || (k !== 'advanceFromRecentLowPercent' && k !== 'recentLowLookbackBars'))
+        diff(`base parameter ${k}`, pa[k], pb[k]);
   const continuation = (p: Record<string, unknown>) => (p.continuationEnabled === true ? `ON (${String(p.continuationMethod)})` : 'OFF');
   // v1.2.0 entry gates (absent in earlier versions = OFF)
   const trendFilter = (p: Record<string, unknown>) => (p.trendFilterEnabled === true ? `ON (${String(p.trendMethod)})` : 'OFF');
   const eligibility = (p: Record<string, unknown>) =>
-    p.eligibilityEnabled === true ? `ON (${String(p.eligibilityPolicy)}, W ${String(p.eligibilityMaxAgeSessions)})` : 'OFF';
+    entryMethod(p) === 'trend_breakout'
+      ? 'not applicable (breakout entry)'
+      : p.eligibilityEnabled === true
+        ? `ON (${String(p.eligibilityPolicy)}, W ${String(p.eligibilityMaxAgeSessions)})`
+        : 'OFF';
+  // v1.3.0 optional rules (absent in earlier versions = the Rise entry, OFF)
+  const method = (p: Record<string, unknown>) =>
+    entryMethod(p) === 'trend_breakout'
+      ? `trend breakout (SMA ${String(p.breakoutSmaSessions)}/${String(p.breakoutSlopeComparisonSessions)}, high ${String(p.breakoutPriorHighSessions)})`
+      : 'Rise from recent low';
+  const initialStop = (p: Record<string, unknown>) =>
+    p.initialStopEnabled === true ? `ON (${String(p.initialStopAtrMultiple)} × ATR ${String(p.initialStopAtrSessions)})` : 'OFF';
+  const retention = (p: Record<string, unknown>) =>
+    p.retentionEnabled === true
+      ? `ON (sell ${String(p.retentionSellPercent)}%, ${String(p.retentionClosesBelow)} close(s) < SMA ${String(p.retentionSmaSessions)})`
+      : 'OFF';
   const versionOnly = mismatches.every((m) => m.startsWith('strategy version'));
   const comparable = mismatches.length === 0 || (versionOnly && A.run.strategy.key === 'rise-from-recent-low-trading');
 
@@ -191,17 +212,17 @@ export function compareRuns(cfg: Config, repo: Repo, a: string, b: string) {
     })
   );
   return {
-    a: { id: A.run.id, title: A.run.title, strategy: A.run.strategy, continuation: continuation(pa), trendFilter: trendFilter(pa), eligibility: eligibility(pa) },
-    b: { id: B.run.id, title: B.run.title, strategy: B.run.strategy, continuation: continuation(pb), trendFilter: trendFilter(pb), eligibility: eligibility(pb) },
+    a: { id: A.run.id, title: A.run.title, strategy: A.run.strategy, continuation: continuation(pa), trendFilter: trendFilter(pa), eligibility: eligibility(pa), entryMethod: method(pa), initialStop: initialStop(pa), retention: retention(pa) },
+    b: { id: B.run.id, title: B.run.title, strategy: B.run.strategy, continuation: continuation(pb), trendFilter: trendFilter(pb), eligibility: eligibility(pb), entryMethod: method(pb), initialStop: initialStop(pb), retention: retention(pb) },
     comparable,
     mismatches,
     verdict: comparable
       ? mismatches.length
-        ? 'comparable (only the strategy version differs, and the earlier Growth versions equal 1.2.0 with the later options OFF)'
+        ? 'comparable (only the strategy version differs, and the earlier Growth versions equal 1.3.0 with the later options OFF)'
         : 'methodologically comparable: same strategy, symbols, window, resolution, costs, capital model and base parameters'
       : 'NOT comparable: the runs differ in the assumptions listed; the figures are shown side by side, not as an apples-to-apples comparison',
     control:
-      'No matching control? Open the ON run, Parameters → Clone into new test…, switch the option under study (continuation, the entry trend filter or persistent eligibility) OFF (nothing else) and Run Test; then compare the two runs here. Strategy Lab never starts a control run by itself; tools/paired-comparison.ts produces the paired OFF diagnostic from the CLI.',
+      'No matching control? Open the ON run, Parameters → Clone into new test…, switch the option under study (the entry method back to Rise, the initial risk stop, trend retention, continuation, the entry trend filter or persistent eligibility) OFF (nothing else) and Run Test; then compare the two runs here. Strategy Lab never starts a control run by itself; tools/paired-comparison.ts produces the paired OFF diagnostic from the CLI.',
     nonAdditivity: NON_ADDITIVITY,
     perSymbol
   };

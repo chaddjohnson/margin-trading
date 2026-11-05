@@ -33,12 +33,15 @@ const OFF = {
   costBpsPerSide: 5,
   continuationEnabled: false,
   trendFilterEnabled: false,
-  eligibilityEnabled: false
+  eligibilityEnabled: false,
+  entryMethod: 'rise_from_recent_low',
+  initialStopEnabled: false,
+  retentionEnabled: false
 };
 const CASES = [
-  { name: 'Growth 1.2.0 VGT 1d 2016-01-04→2023-12-29, X 10', symbols: ['VGT'], from: '2016-01-04', to: '2023-12-29', resolution: '1d', params: OFF },
+  { name: 'Growth 1.3.0 VGT 1d 2016-01-04→2023-12-29, X 10', symbols: ['VGT'], from: '2016-01-04', to: '2023-12-29', resolution: '1d', params: OFF },
   {
-    name: 'Growth 1.2.0 VGT+GDX 1d 2016-01-04→2023-12-29, trend A + eligibility time_limited',
+    name: 'Growth 1.3.0 VGT+GDX 1d 2016-01-04→2023-12-29, trend A + eligibility time_limited',
     symbols: ['VGT', 'GDX'],
     from: '2016-01-04',
     to: '2023-12-29',
@@ -55,7 +58,7 @@ const CASES = [
       eligibilityMaxAgeSessions: 10
     }
   },
-  { name: 'Growth 1.2.0 VGT 60m 2018-01-02→2020-12-31, X 10', symbols: ['VGT'], from: '2018-01-02', to: '2020-12-31', resolution: '60m', params: OFF }
+  { name: 'Growth 1.3.0 VGT 60m 2018-01-02→2020-12-31, X 10', symbols: ['VGT'], from: '2018-01-02', to: '2020-12-31', resolution: '60m', params: OFF }
 ] as const;
 
 const cfg = loadConfig({ STRATEGY_LAB_STATE_DIR: mkdtempSync(join(tmpdir(), 'strategy-lab-bench-')), STRATEGY_LAB_STATIC_DIR: '', STRATEGY_LAB_SEED_DEMO: '0' });
@@ -83,7 +86,7 @@ async function once(c: (typeof CASES)[number]) {
     fetch(`${base}/api/previews`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ request: { strategyKey: 'rise-from-recent-low-trading', strategyVersion: '1.2.0', ...request } })
+      body: JSON.stringify({ request: { strategyKey: 'rise-from-recent-low-trading', strategyVersion: '1.3.0', ...request } })
     }).then((r) => {
       if (!r.ok) throw new Error(`HTTP ${r.status} (${_name})`);
       return r;

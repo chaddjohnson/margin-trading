@@ -27,7 +27,9 @@ export const UNIT_TEXT: Partial<Record<ParamSpec['unit'], string>> = {
   days: 'calendar days',
   bps: 'bps per side',
   sessions: 'trading sessions',
-  bars: 'bars'
+  bars: 'bars',
+  ratio: '× ATR',
+  count: 'closes'
 };
 
 /** Whether the form shows a parameter: it applies, or it is shown disabled while inactive ("saved, not applied"). */

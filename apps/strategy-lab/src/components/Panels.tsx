@@ -1,11 +1,10 @@
 // Run-level panels: Parameters (inputs, assumptions, provenance), the selected event, and the analysis.
 
 import type { LabEvent, LabValue, RunDetail } from '../../shared/contract.ts';
-import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
 import type { ParamSpec, Predicate } from '../../shared/contract.ts';
 import { findStrategy, RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL } from '../../shared/strategies.ts';
 import { displayId } from '../api.ts';
-import { glyphUri, type MarkerTone, type Role } from '../chart/markers.ts';
+import { eventKindLabel, glyphUri, isPartialExit, type MarkerTone, type Role } from '../chart/markers.ts';
 import {
   formatEt,
   formatPercent,
@@ -198,8 +197,18 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
   );
 }
 
-export function Glyph({ kind, role, tone }: { kind: LabEvent['kind']; role: Role; tone: MarkerTone }) {
-  return <img className="glyph" src={glyphUri(kind, role, tone, 13)} alt="" width={13} height={13} data-tone={tone} />;
+export function Glyph({ kind, role, tone, partial = false }: { kind: LabEvent['kind']; role: Role; tone: MarkerTone; partial?: boolean }) {
+  return (
+    <img
+      className="glyph"
+      src={glyphUri(kind, role, tone, 13, partial)}
+      alt=""
+      width={13}
+      height={13}
+      data-tone={tone}
+      data-partial={partial ? 'true' : undefined}
+    />
+  );
 }
 
 export function EventDetail({
@@ -231,7 +240,7 @@ export function EventDetail({
     <section className="card detail" aria-label="Selected event" data-testid="event-detail" data-event-id={event.id}>
       <div className="card-head">
         <h3>
-          <Glyph kind={event.kind} role={role} tone={tone ?? 'unknown'} /> {EVENT_KIND_LABEL[event.kind]} ·{' '}
+          <Glyph kind={event.kind} role={role} tone={tone ?? 'unknown'} partial={isPartialExit(event)} /> {eventKindLabel(event)} ·{' '}
           {event.symbol}
         </h3>
         <button type="button" className="btn-chip" onClick={onZoom}>

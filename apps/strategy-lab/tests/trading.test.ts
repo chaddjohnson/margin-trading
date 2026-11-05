@@ -1,4 +1,4 @@
-// The trading backtest ("Growth") in Strategy Lab: its registry entries (1.2.0 current, 1.1.0 and 1.0.0 legacy with their
+// The trading backtest ("Growth") in Strategy Lab: its registry entries (1.3.0 current, 1.2.0, 1.1.0 and 1.0.0 legacy with their
 // frozen schemas; defaults = the engine's, no post-loss restriction controls), switch validation and the buffer → hold dependency,
 // immutable variations and runs through the API (create, clone, toggle), the effective-state snapshot, the runner
 // allowlist — and that the signal-only strategy records exactly what it did.
@@ -19,6 +19,7 @@ import {
   RISE_FROM_RECENT_LOW,
   RISE_FROM_RECENT_LOW_TRADING,
   RISE_FROM_RECENT_LOW_TRADING_1_0_0,
+  RISE_FROM_RECENT_LOW_TRADING_1_2_0,
   RUNNABLE_STRATEGIES,
   STRATEGY_REGISTRY,
   validateRunRequest
@@ -51,20 +52,22 @@ describe('registry', () => {
   it('offers the unchanged signal-only strategy and the new trading backtest, separately versioned', () => {
     expect(RUNNABLE_STRATEGIES.map((s) => `${s.key}@${s.version}:${s.kind}`)).toEqual([
       'rise-from-recent-low@1.0.0:entry_signal',
-      'rise-from-recent-low-trading@1.2.0:trades'
+      'rise-from-recent-low-trading@1.3.0:trades'
     ]);
-    // Every registered version, with how it may be launched: one visible "Growth"; 1.1.0 kept as legacy whose catalogue
-    // phenotypes still rerun (launch: phenotype), 1.0.0 kept as legacy (not launchable).
+    // Every registered version, with how it may be launched: one visible "Growth"; 1.2.0 and 1.1.0 kept as legacy whose
+    // catalogue phenotypes still rerun (launch: phenotype), 1.0.0 kept as legacy (not launchable).
     expect(STRATEGY_REGISTRY.map((s) => `${s.key}@${s.version}:${s.launch}:${s.title}`)).toEqual([
       'rise-from-recent-low@1.0.0:form:Rise from recent low (entry signal)',
-      'rise-from-recent-low-trading@1.2.0:form:Growth',
+      'rise-from-recent-low-trading@1.3.0:form:Growth',
+      'rise-from-recent-low-trading@1.2.0:phenotype:Growth',
       'rise-from-recent-low-trading@1.1.0:phenotype:Growth',
       'rise-from-recent-low-trading@1.0.0:none:Growth',
       'study8-d1-pool@pools-engine:phenotype:Study 8 D1 shared-slot pool (pools engine)',
       'demo-toy-rules@1.0.0:none:Demo toy rules (synthetic)'
     ]);
-    expect(LEGACY.legacy?.supersededBy).toBe('1.2.0');
-    expect(findStrategy(T.key, '1.1.0')!.legacy?.supersededBy).toBe('1.2.0');
+    expect(LEGACY.legacy?.supersededBy).toBe('1.3.0');
+    expect(findStrategy(T.key, '1.1.0')!.legacy?.supersededBy).toBe('1.3.0');
+    expect(findStrategy(T.key, '1.2.0')!.legacy?.supersededBy).toBe('1.3.0');
     expect(T.formerTitles).toEqual(['Rise from recent low (trading backtest)']);
     // The signal-only strategy's schema is exactly what its runs recorded (keys, defaults, ranges, resolutions).
     expect((RISE_FROM_RECENT_LOW.params as NumericParamSpec[]).map((p) => [p.key, p.type, p.unit, p.default, p.min, p.max, p.step])).toEqual([
@@ -101,7 +104,12 @@ describe('registry', () => {
       classicPullbackPercent: 9,
       classicReboundPercent: 0.3
     });
-    expect(T.params.slice(0, 2).map(({ group: _g, ...p }) => p)).toEqual(RISE_FROM_RECENT_LOW.params);
+    // 1.2.0 (legacy) starts with the scanner's X and N as they were; 1.3.0 puts the entry-method selector first and X
+    // and N apply to the Rise entry only (its default): the same specs, plus their applicability.
+    expect(RISE_FROM_RECENT_LOW_TRADING_1_2_0.params.slice(0, 2).map(({ group: _g, ...p }) => p)).toEqual(RISE_FROM_RECENT_LOW.params);
+    expect(T.params[0]).toMatchObject({ key: 'entryMethod', type: 'enum', default: 'rise_from_recent_low' });
+    expect(T.params.slice(1, 3).map(({ group: _g, activeWhen: _a, whenInactive: _w, ...p }) => p)).toEqual(RISE_FROM_RECENT_LOW.params);
+    expect(defaultParams(T)).toMatchObject({ entryMethod: 'rise_from_recent_low', initialStopEnabled: false, retentionEnabled: false });
     expect(T.defaultResolution).toBe('1d');
   });
 
@@ -120,6 +128,8 @@ describe('registry', () => {
       ['eligibilityEnabled', false],
       ['maximumHoldEnabled', true],
       ['intradayLossBufferEnabled', true],
+      ['initialStopEnabled', false],
+      ['retentionEnabled', false],
       ['continuationEnabled', false]
     ]);
   });
@@ -238,13 +248,15 @@ describe('HTTP API: one configuration, immutable variations and runs', () => {
     expect(on.body.variation.title).toBe(
       'Growth · X 5% · N 20 bars · 1d · stop 7.3% · hold 8d · buffer 2.9% · 5 bps · continuation off'
     );
-    expect(on.body.strategy).toMatchObject({ key: 'rise-from-recent-low-trading', version: '1.2.0', title: 'Growth' });
+    expect(on.body.strategy).toMatchObject({ key: 'rise-from-recent-low-trading', version: '1.3.0', title: 'Growth' });
     expect(on.body.assumptions.map((a) => a.key)).toEqual([
       'kind',
       'entry',
       'continuation',
       'trendFilter',
       'eligibility',
+      'initialStop',
+      'retention',
       'position',
       'reentry',
       'stop',

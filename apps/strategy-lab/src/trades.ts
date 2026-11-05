@@ -28,7 +28,8 @@ export interface Trade {
   symbol: string;
   tradeId: string;
   entry: LabEvent | null;
-  exit: LabEvent | null;
+  exit: LabEvent | null; // the FINAL exit (the trade's exit); Growth 1.3.0 partial fills are in `partials`
+  partials: LabEvent[]; // Growth 1.3.0 retention: executed exits marked `meta.partial` (the position stayed open), in time order
   status: 'closed' | 'open' | 'unlinked';
   problem: string | null; // why the entry and exit are not linked (inconsistent records)
   pnl: TradePnl | null;
@@ -85,7 +86,23 @@ function openPnl(
   const pct = (net: number) => (principal && principal > 0 ? (net / principal) * 100 : null);
   if (metrics?.kind === 'trading backtest') {
     const per = (metrics.perSymbol as Record<string, { pnl?: { unrealized?: unknown } }> | undefined)?.[symbol];
-    const u = per?.pnl?.unrealized as { netUsd?: unknown; markDate?: unknown } | null | undefined;
+    const u = per?.pnl?.unrealized as
+      | { netUsd?: unknown; markDate?: unknown; positionNetUsd?: unknown; partialFillsNetUsd?: unknown }
+      | null
+      | undefined;
+    // Growth 1.3.0: an open position with partial fills — its net is the whole position (the partial fills realized +
+    // the remainder marked), never the remainder alone.
+    if (u && typeof u.positionNetUsd === 'number' && typeof u.netUsd === 'number' && typeof u.partialFillsNetUsd === 'number')
+      return {
+        pnl: {
+          netUsd: u.positionNetUsd,
+          percent: pct(u.positionNetUsd),
+          unrealized: true,
+          basis: `the whole open position: its partial fill(s) realized ${formatMoney(u.partialFillsNetUsd)} + the remainder marked at the last close ${formatMoney(u.netUsd)} (net of accrued interest; exit cost not charged)`,
+          markDate: typeof u.markDate === 'string' ? u.markDate : null
+        },
+        reason: null
+      };
     if (u && typeof u.netUsd === 'number')
       return {
         pnl: {
@@ -125,11 +142,11 @@ export function buildTrades(
   runId: string,
   metrics: Metrics
 ): Map<string, Trade> {
-  const groups = new Map<string, { entries: LabEvent[]; exits: LabEvent[] }>();
+  const groups = new Map<string, { entries: LabEvent[]; exits: LabEvent[]; partials: LabEvent[] }>();
   for (const e of events) {
     if (e.symbol !== symbol || !e.tradeId || (e.kind !== 'executed_entry' && e.kind !== 'executed_exit')) continue;
-    const g = groups.get(e.tradeId) ?? { entries: [], exits: [] };
-    (e.kind === 'executed_entry' ? g.entries : g.exits).push(e);
+    const g = groups.get(e.tradeId) ?? { entries: [], exits: [], partials: [] };
+    (e.kind === 'executed_entry' ? g.entries : e.meta?.partial === true ? g.partials : g.exits).push(e);
     groups.set(e.tradeId, g);
   }
   const out = new Map<string, Trade>();
@@ -184,6 +201,7 @@ export function buildTrades(
       tradeId,
       entry: linked || g.entries.length === 1 ? entry : null,
       exit: linked ? exit : null,
+      partials: [...g.partials].sort((a, b) => Date.parse(a.t) - Date.parse(b.t) || (a.id < b.id ? -1 : 1)),
       status,
       problem,
       pnl,

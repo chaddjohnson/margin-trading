@@ -25,7 +25,7 @@ import { AnalysisPanel, EventDetail, Glyph, ParametersPanel } from './Panels.tsx
 import { TradeDetail, TradeTable } from './Trading.tsx';
 import type { ChartLink, Placement } from '../chart/link.ts';
 import { buildTrades, toneOf, type Trade } from '../trades.ts';
-import { legendToneOf, markerToneOf, TONE_COLOR, TONE_LABEL } from '../chart/markers.ts';
+import { isPartialExit, legendToneOf, markerToneOf, TONE_COLOR, TONE_LABEL } from '../chart/markers.ts';
 import { currentVersionOf, RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL } from '../../shared/strategies.ts';
 import { ComparisonPanel } from './Comparison.tsx';
 import { DeleteRunDialog } from './DeleteRunDialog.tsx';
@@ -351,6 +351,21 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
             onOpenRun={(id) => onRoute({ run: id })}
           />
         )}
+        {pv.error && (
+          <div className="preview-banner is-error" role="alert" data-testid="preview-failed-banner">
+            <b>Preview failed — not applied.</b> The chart, events, trades and Analysis below still show{' '}
+            {pv.displayed ? (
+              <>
+                the previous successful preview <span className="mono">{displayId(pv.displayed.detail.id)}</span>
+              </>
+            ) : (
+              <>
+                the saved result <span className="mono">{run.id}</span>
+              </>
+            )}
+            , NOT the configuration that failed; none of their figures describe it. <span className="small">{pv.error}</span>
+          </div>
+        )}
         {pv.loading && (
           <div className="preview-banner is-loading" role="status" data-testid="preview-loading">
             Loading the temporary preview {displayId(pv.loading)}… (the saved result is shown meanwhile)
@@ -654,6 +669,12 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
               )}
             </label>
           ))}
+          {chartEvents.some((c) => isPartialExit(c.event)) && (
+            <span className="legend-kind small" data-testid="legend-partial">
+              <Glyph kind="executed_exit" role="A" tone="shape" partial /> half-filled: a partial exit (retention; the position
+              stays open until its final exit)
+            </span>
+          )}
           {shown.status === 'completed' && kindsPresent.length === 0 && (
             <span className="muted small">No events for {symbol}.</span>
           )}

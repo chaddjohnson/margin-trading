@@ -46,7 +46,10 @@ const PARAMS = {
   costBpsPerSide: 5,
   continuationEnabled: false,
   trendFilterEnabled: false,
-  eligibilityEnabled: false
+  eligibilityEnabled: false,
+  entryMethod: 'rise_from_recent_low',
+  initialStopEnabled: false,
+  retentionEnabled: false
 };
 const REQ = {
   strategyKey: GROWTH.key,
@@ -141,10 +144,10 @@ describe.skipIf(!hasData)('Interactive Preview on real data', () => {
     runDirs = readdirSync(join(l.cfg.stateDir, 'runs')).sort();
   }, 240_000);
 
-  it('capability: a completed Growth 1.2.0 run is previewable, seeded with its own stored request', () => {
+  it('capability: a completed run of the current Growth version is previewable, seeded with its own stored request', () => {
     const cap = l.previews.capability(source.id);
     expect(cap.previewable).toBe(true);
-    expect(cap.strategy).toMatchObject({ key: GROWTH.key, version: '1.2.0' });
+    expect(cap.strategy).toMatchObject({ key: GROWTH.key, version: GROWTH.version });
     expect(cap.seed).toMatchObject({ symbols: ['VGT'], from: '2019-01-02', to: '2021-12-31', resolution: '1d' });
     expect(cap.seed!.params).toEqual(PARAMS);
     expect(cap.drift).toEqual({ implementation: [], data: [], checked: true });
@@ -328,7 +331,19 @@ describe.skipIf(!hasData)('Interactive Preview on real data', () => {
     const legacy = l.previews.capability(fake(GROWTH.key, '1.0.0', 'manual', { ...REQ, strategyVersion: '1.0.0', params: { ...PARAMS, continuationEnabled: undefined, trendFilterEnabled: undefined, eligibilityEnabled: undefined } }));
     expect(legacy.previewable).toBe(false);
     expect(legacy.reason).toMatch(/superseded version, kept exactly as recorded.*never upgrades a run invisibly/);
-    expect(legacy.upgrade).toMatchObject({ version: '1.2.0', seed: { strategyVersion: '1.2.0', params: { continuationEnabled: false, trendFilterEnabled: false, eligibilityEnabled: false } } });
+    expect(legacy.upgrade).toMatchObject({
+      version: '1.3.0',
+      seed: { strategyVersion: '1.3.0', params: { continuationEnabled: false, trendFilterEnabled: false, eligibilityEnabled: false, entryMethod: 'rise_from_recent_low', initialStopEnabled: false, retentionEnabled: false } }
+    });
+    // Growth 1.2.0 (the user's current runs) is superseded too: previewable only through the explicit 1.3.0 upgrade,
+    // which seeds its stored values with the three new options OFF (identical by the parity tests) and says so
+    const v120 = l.previews.capability(fake(GROWTH.key, '1.2.0', 'manual', { ...REQ, strategyVersion: '1.2.0', params: { ...PARAMS, entryMethod: undefined, initialStopEnabled: undefined, retentionEnabled: undefined, trendFilterEnabled: true, trendMethod: 'rising_sma', trendSmaSessions: 50, trendSmaComparisonSessions: 40 } }));
+    expect(v120.previewable).toBe(false);
+    expect(v120.upgrade).toMatchObject({
+      version: '1.3.0',
+      seed: { strategyVersion: '1.3.0', params: { trendFilterEnabled: true, trendMethod: 'rising_sma', trendSmaSessions: 50, trendSmaComparisonSessions: 40, entryMethod: 'rise_from_recent_low', initialStopEnabled: false, retentionEnabled: false } }
+    });
+    expect(v120.upgrade!.note).toMatch(/reproduced every 1\.2\.0 artifact in the parity tests.*still labelled a new execution/);
     expect(legacy.upgrade!.note).toMatch(/not a reproduction/);
     // the API refuses legacy versions and the pool outright (never substituted by a standalone run)
     for (const request of [{ ...REQ, strategyVersion: '1.1.0' }, { ...REQ, strategyKey: STUDY8_POOL.key, strategyVersion: STUDY8_POOL.version }])
@@ -365,7 +380,7 @@ describe.skipIf(!hasData)('cache invalidation in a repository copy: code edit (s
     expect(l.previews.detail(first.previewId).preview.current).toBeUndefined(); // checked only on request
     expect(l.previews.detail(first.previewId, { checkCurrent: true }).preview.current).toEqual({ matches: true, differences: [] });
 
-    // 1. a code edit that keeps STRATEGY_VERSION = 1.2.0
+    // 1. a code edit that keeps STRATEGY_VERSION
     const engine = join(root, 'src/growth-trading/riseTrading.ts');
     writeFileSync(engine, `${readFileSync(engine, 'utf8')}\n// edited without a version change\n`);
     // the earlier preview, shown without being run (reload, Back/Forward), now says it is outdated, and why
@@ -376,7 +391,7 @@ describe.skipIf(!hasData)('cache invalidation in a repository copy: code edit (s
     const afterCode = await preview(l, withX(10));
     expect([afterCode.state, afterCode.cacheHit]).toEqual(['completed', false]);
     expect(afterCode.previewId).not.toBe(first.previewId);
-    expect(l.previews.detail(afterCode.previewId).strategy.version).toBe('1.2.0');
+    expect(l.previews.detail(afterCode.previewId).strategy.version).toBe(GROWTH.version);
 
     // 2. a data edit (one 2016 price, outside the window: the content hash changes all the same)
     const data = join(root, 'data/VGT/data.csv');

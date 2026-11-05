@@ -11,11 +11,10 @@ import 'dygraphs/dist/dygraph.css';
 import { type Ref, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 
 import type { LabEvent } from '../../shared/contract.ts';
-import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
 import { etParts, formatEt, formatPrice } from '../format.ts';
 import { etTicks } from './etTicker.ts';
 import { type ChartLink, type Placement, placementOf } from './link.ts';
-import { MARKER_SIZE, type MarkerTone, PRICE_COLOR, type Role, glyphUri, markerOffset } from './markers.ts';
+import { MARKER_SIZE, type MarkerTone, PRICE_COLOR, type Role, eventKindLabel, glyphUri, isPartialExit, markerOffset } from './markers.ts';
 import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure } from './measure.ts';
 import { isMacPlatform, panModifierFor, panWindow, startsPan } from './pan.ts';
 import { wheelZoomOutPx, wheelZoomWindow } from './wheelZoom.ts';
@@ -138,6 +137,7 @@ export function PriceChart(props: Props) {
         b.dataset.eventId = ce.event.id;
         b.dataset.symbol = ce.event.symbol;
         b.dataset.kind = ce.event.kind;
+        if (isPartialExit(ce.event)) b.dataset.partial = 'true';
         b.dataset.role = ce.role;
         b.dataset.runId = ce.runId;
         const img = document.createElement('img');
@@ -147,14 +147,14 @@ export function PriceChart(props: Props) {
         b.appendChild(img);
         b.setAttribute(
           'aria-label',
-          `${ce.role} ${ce.runId} ${EVENT_KIND_LABEL[ce.event.kind]} ${ce.event.symbol} ${formatEt(ce.event.t, ce.event.timePrecision)} at ${formatPrice(ce.event.price)}`
+          `${ce.role} ${ce.runId} ${eventKindLabel(ce.event)} ${ce.event.symbol} ${formatEt(ce.event.t, ce.event.timePrecision)} at ${formatPrice(ce.event.price)}`
         );
         layer.appendChild(b);
         buttons.current.set(ce.key, b);
       }
       if (b.dataset.tone !== ce.tone) {
         b.dataset.tone = ce.tone;
-        b.querySelector('img')!.src = glyphUri(ce.event.kind, ce.role, ce.tone);
+        b.querySelector('img')!.src = glyphUri(ce.event.kind, ce.role, ce.tone, MARKER_SIZE, isPartialExit(ce.event));
       }
       b.style.left = `${Math.round(px - MARKER_SIZE / 2)}px`;
       b.style.top = `${Math.round(py + markerOffset(ce.event.kind, idx))}px`;

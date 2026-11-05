@@ -36,7 +36,10 @@ const BASE = {
   costBpsPerSide: 5,
   continuationEnabled: false,
   trendFilterEnabled: false,
-  eligibilityEnabled: false
+  eligibilityEnabled: false,
+  entryMethod: 'rise_from_recent_low',
+  initialStopEnabled: false,
+  retentionEnabled: false
 };
 const request = (over: Record<string, unknown> = {}, params: Record<string, unknown> = {}) => ({
   strategyKey: GROWTH.key,
@@ -194,6 +197,11 @@ describe('identity: distinct for every result-changing input, equal for inactive
       costs: key(config({}, { costBpsPerSide: 5.5 })),
       hold: key(config({}, { maximumHoldEnabled: false })),
       trend: key(config({}, { trendFilterEnabled: true })),
+      // Growth 1.3.0: each optional rule, and its inputs, changes what executes
+      initialStop: key(config({}, { initialStopEnabled: true, initialStopAtrSessions: 20, initialStopAtrMultiple: 3 })),
+      initialStop2: key(config({}, { initialStopEnabled: true, initialStopAtrSessions: 20, initialStopAtrMultiple: 2 })),
+      retention: key(config({}, { retentionEnabled: true, retentionSellPercent: 50, retentionSmaSessions: 50, retentionClosesBelow: 2 })),
+      breakout: key(config({}, { entryMethod: 'trend_breakout', breakoutSmaSessions: 50, breakoutSlopeComparisonSessions: 40, breakoutPriorHighSessions: 20 })),
       symbols: key(config({ symbols: ['VGT', 'GDX'] })),
       order: key(config({ symbols: ['GDX', 'VGT'] })),
       signalOnly: key(
@@ -223,6 +231,10 @@ describe('identity: distinct for every result-changing input, equal for inactive
     // another continuation method's inputs while classic_d1 is chosen
     const on = { continuationEnabled: true, continuationMethod: 'classic_d1', continuationWindowSessions: 10, classicPullbackPercent: 3, classicReboundPercent: 2 };
     expect(key(config({}, { ...on, breakoutBufferPercent: 1.7, crossSmaBars: 33 }))).toBe(key(config({}, on)));
+    // Growth 1.3.0: a switched-off option's inputs, and the Rise inputs under the breakout entry, are drafts
+    expect(key(config({}, { initialStopAtrSessions: 33, initialStopAtrMultiple: 9, retentionSellPercent: 10, breakoutSmaSessions: 7 }))).toBe(key(config()));
+    const breakout = { entryMethod: 'trend_breakout', breakoutSmaSessions: 50, breakoutSlopeComparisonSessions: 40, breakoutPriorHighSessions: 20 };
+    expect(key(config({}, { ...breakout, advanceFromRecentLowPercent: 9, recentLowLookbackBars: 77, eligibilityEnabled: true }))).toBe(key(config({}, breakout)));
     // 5 and 5.0 are one number
     expect(previewConfigKey(config({}, { advanceFromRecentLowPercent: Number('5.0') }))).toBe(previewConfigKey(config()));
   });

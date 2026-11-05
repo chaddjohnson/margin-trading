@@ -2,7 +2,9 @@
 
 ## Top screen (read this first) — Task 14: Growth optional rules (initial risk stop, trend-breakout entry, trend retention) — INCOMPLETE
 
-- **Updated:** 2026-11-05T22:20Z (UTC, from the clock). **Status: INCOMPLETE — stage 14.1 (baselines) complete; 14.2 engine next.**
+- **Updated:** 2026-11-05T22:53Z (UTC, from the clock). **Status: INCOMPLETE — 14.1 baselines, 14.2 engine, 14.3
+  registry/runner complete (wip commits `cbc72ed`, `edac193`, `f1e1516`); next 14.4 server (service titles/assumptions,
+  compare, export, preview capability note), then 14.5 UI.**
 - **Brief:** `docs/strategy-lab/brief/2026-11-05-growth-optional-rules-brief.md` (verbatim copy of the upload
   `bb5b150c-claude-growth-optional-rules.md`, 93 lines, read in full through "Required validation" and the delivery
   paragraph; sha256 `92d3d8329e3a327e0e8a95401341c9c3d88978f2d682c175cd037b464253abc4`). The user's message: "Proceed with
@@ -13,8 +15,20 @@
   branch `wip/growth-optional-rules` from `8d2800e` (= `feature/strategy-entry-explorer-ui` HEAD, clean). Reason: the
   USER's live server (pid 3645197, `start:vpn`, started 2026-11-05T19:29:52Z, :4317) spawns the runner from the MAIN
   checkout's files for every run and preview; half-edited engine code there could reach their results. `node_modules`
-  (root + app) and `data/<SYM>` are symlinks to the main checkout (read-only use). **End:** fast-forward
+  (root + app) are symlinks to the main checkout; `data/` holds REAL copies of VGT, GDX and XBI (since 23:03Z; see the
+  incident below — never symlink data into a test worktree). **End:** fast-forward
   `feature/strategy-entry-explorer-ui` in the main checkout to the wip branch, remove the worktree and the wip branch.
+- **INCIDENT (disclose in the final report), 2026-11-05T23:00:00Z–23:02:28Z:** the first full app Vitest run in the
+  worktree (`logs/task14/vitest-1.log`) MODIFIED the user's real `data/VGT/data.csv` in the main checkout: the worktree's
+  `data/VGT` was a SYMLINK to it, and `tests/preview-identity.test.ts` `repoCopy(['VGT'], true)` copies `data/VGT` with
+  `cpSync` (which copies the symlink, not the files), then appends one "\n" to "its copy" (`.replace(/\n$/, '\n\n')`) —
+  i.e. to the real file (sha256 `2ee06310…` → `2d03c036…`, 53395054 → 53395055 bytes). **Restored at 23:02:28Z** by
+  removing that one trailing byte (`truncate -s -1`): sha256 `2ee06310f2fa8926220fd9629c093ba77fe5d35fd2515da7f7c54caa50b5412e`
+  again (= the pre-task value in `baseline-1.2.0.json`); only its mtime changed (now 2026-11-06 00:02:28 CET). The
+  modified copy is kept at `<scratchpad>/VGT-data.csv.modified-by-test`. No other file under `data/`, `node_modules/` or
+  `state/strategy-lab/` changed in that window (find -newermt); the user's newest preview entry is 22:03:16Z and the DB
+  was last written 20:03:54Z, so nothing of theirs was computed on the altered file. **Fix:** the worktree's `data/`
+  now holds REAL copies of VGT, GDX, XBI only (hashes verified equal); no symlink to the main checkout's data remains.
 - **Candidate A (inferred, not a saved run):** the configuration the user explored most in Interactive Preview (cache
   `request.json` files read, nothing changed): Growth 1.2.0, VGT 1d 2016-01-04 → 2026-10-30, X 8% N 60, stop 4%, losing
   hold ON 15 d, buffer ON 2.9%, cost 5 bps, trend filter C rising SMA 50/40, eligibility OFF, continuation OFF.
@@ -31,8 +45,27 @@
     (`apps/strategy-lab/logs/task14/before-fix-*.log`, git-ignored). Cause: `runner/growth-params.ts paramsOf` reads raw
     values and `tradingParamErrors` validates inactive values.
 - **Live state:** read only (run/preview `request.json` files). Nothing written.
-- **Next step:** 14.2 engine (`src/growth-trading/`: version 1.3.0, the three options), then 14.3 registry/runner/fix,
-  14.4 server/export/preview, 14.5 UI, 14.6 tests, 14.7 docs, 14.8 verification, 14.9 commit/push.
+- **14.2 engine (22:43Z):** new `src/growth-trading/optionalRules.ts` (configs, breakout scan, ATR, PositionRules with
+  an event-ordered exit evaluator: candidates by bar, phase (open trade 0 / intraminute 1), higher level inside a minute,
+  precedence `retention partial pending: initial > hold > buffer > trailing(partial)`, else `trailing > initial > hold >
+  buffer > trend`; partial sale re-evaluates the remainder from the same trade). `riseTrading.ts` 1.3.0 (validation
+  checks only applicable values; `rules`/`entryMethod` in Simulation; multi-fill ledger, FixedLedger per-fill lots,
+  realized partial fills of an open position counted as realized, remainder as unrealized). `entryGates.ts`: optional
+  `protection` hook (absent = unchanged). **OFF parity:** `tests/offParity-1.2.0.test.ts` 9 cases × 2 OFF forms exact
+  (log `logs/task14/offparity-1.2.0-1.log`); engine suites 144/144 after the expected `Simulation` keys update in
+  `riseTrading.test.ts`. Real-data smoke (`<scratchpad>/smoke-rules.ts`, `logs/task14/smoke-rules-1.log`): every option
+  alone and combined runs, fixed-ledger diff ≤ 1.5e-11; Candidate A + stop at 100 ATR (never reached) = Candidate A OFF.
+- **14.3 registry/runner (22:52Z):** `shared/strategies.ts` 1.3.0 (`launch: form`; entryMethod + breakout*, initialStop*,
+  retention*; X/N active only for the Rise entry; eligibilityEnabled disabled for the breakout; 5 group notes); 1.2.0
+  → `RISE_FROM_RECENT_LOW_TRADING_1_2_0` (`launch: phenotype`, params/groups/constraints/identity unchanged).
+  `runner/growth-params.ts`: everything from the EFFECTIVE values (inactive → NaN/OFF) — fixes R-920004/R-920006.
+  `runner/trading-run.ts`: breakout signal events, protection-blocked decisions, initial-stop values on entries, partial
+  exits = `executed_exit` with `meta.partial`, final exit carries the position net, `trades.json` `exitFills`,
+  `decisions.json` `optionalRules`; new fields only when an option is ON. `server/replay.ts` mode `legacy-1.2.0`.
+  `tests/growth-parity.test.ts` 22/22 (`logs/task14/growth-parity-1.log`, 80 s).
+- **Next step:** 14.4 server (service titles/assumptions, compare, export CSVs, preview upgrade note), 14.5 UI (form
+  groups, markers for partial exits, Trades/Events/Analysis, failed-preview banner), 14.6 synthetic engine tests + app
+  tests, 14.7 docs, 14.8 full verification, 14.9 merge into the feature branch + push.
 
 ## Top screen (read this first) — Task 13: Interactive Preview — COMPLETE
 

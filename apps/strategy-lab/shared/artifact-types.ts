@@ -51,7 +51,71 @@ export interface SymbolMetrics {
   attribution?: { note: string; byOrigin: Record<string, OriginAttribution> };
   continuation?: ContinuationCounts;
   entryGates?: EntryGateCounts; // Growth 1.2.0, only with the trend filter or eligibility ON
+  optionalRules?: OptionalRulesCounts; // Growth 1.3.0, only with the breakout entry, the initial stop or retention ON
   signals?: { raw?: number; filled?: number; rejected?: number; vetoed?: number; deferred?: number; vetoedByReason?: Record<string, number> };
+}
+
+// Growth 1.3.0 (riseTrading.ts optionalRulesMetricsOf): descriptive counts of the optional rules.
+export interface OptionalRulesCounts {
+  entryMethod: string;
+  breakout?: { signals: number; taken: number; rejectedWhileInvested: number; vetoed: number };
+  initialStop: {
+    enabled: boolean;
+    config?: { atrSessions: number; atrMultiple: number } | null;
+    atrConvention?: string;
+    protectedPositions?: number;
+    blockedChecks?: number;
+    blockedBySource?: Record<string, number>;
+    blockedByReason?: Record<string, number>;
+    exitsByInitialStop?: number;
+    exitsByInitialStopGap?: number;
+    exitsByInitialStopAssumedFill?: number;
+    exitsOnEntrySession?: number;
+  };
+  retention: {
+    enabled: boolean;
+    config?: { sellPercent: number; smaSessions: number; closesBelow: number } | null;
+    positionsWithPartialSale?: number;
+    partialFills?: number;
+    partialFillsByReason?: Record<string, number>;
+    partialFillsNetUsd?: number;
+    partialFillsAtALoss?: number;
+    remainderExitsByReason?: Record<string, number>;
+    trendExitDecisions?: number;
+    pendingTrendExitAtEnd?: number;
+    openRemainderAtEnd?: number;
+    closedPositionsWithPartial?: { count: number; wins: number; losses: number; netUsd: number };
+    classification?: string;
+  };
+  note: string;
+}
+
+// Growth 1.3.0 (trades.json `exitFills`): one exit fill of a position under the optional rules.
+export interface ExitFillRecord {
+  fill: number;
+  partial: boolean;
+  rule: string;
+  reason: string;
+  utc: string;
+  newYork: string;
+  session: string;
+  execution: string;
+  rawPrice: number;
+  priceAfterCost: number;
+  shares: number;
+  principalRepaid: number;
+  interestPaid: number;
+  interestDays: number;
+  proceeds: number;
+  grossBeforeCosts: number;
+  entryCostShare: number;
+  exitCost: number;
+  net: number;
+  sharesAfter: number;
+  principalAfter: number;
+  decidedUtc: string;
+  level: number | null;
+  sameTrade: string[];
 }
 
 export interface SourceStats {

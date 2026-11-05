@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
-import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
 import type { ChartEvent } from '../chart/PriceChart.tsx';
 import type { Placement } from '../chart/link.ts';
+import { eventKindLabel, isPartialExit } from '../chart/markers.ts';
 import { formatEt, formatPrice } from '../format.ts';
 import { pnlText, toneOf, type Trade } from '../trades.ts';
 import { PnlBadge } from './Trading.tsx';
@@ -164,7 +164,7 @@ export function EventTable({
                   <span className="mono small">{r.runId}</span>
                 </td>
                 <td className="nowrap">
-                  <Glyph kind={r.event.kind} role={r.role} tone={r.tone} /> {EVENT_KIND_LABEL[r.event.kind]}
+                  <Glyph kind={r.event.kind} role={r.role} tone={r.tone} partial={isPartialExit(r.event)} /> {eventKindLabel(r.event)}
                 </td>
                 <td className="mono nowrap">{formatEt(r.event.t, r.event.timePrecision)}</td>
                 <td className="mono num">
@@ -288,7 +288,7 @@ export function MarkerTooltip({
       {shown.map((c, i) => (
         <div key={c.key} className="tt-item" data-symbol={c.event.symbol} data-key={c.key}>
           <div className="tt-head">
-            <Glyph kind={c.event.kind} role={c.role} tone={c.tone} /> <b>{EVENT_KIND_LABEL[c.event.kind]}</b>
+            <Glyph kind={c.event.kind} role={c.role} tone={c.tone} partial={isPartialExit(c.event)} /> <b>{eventKindLabel(c.event)}</b>
             <span className="muted">
               {c.event.symbol} · {c.role} {c.runId}
             </span>

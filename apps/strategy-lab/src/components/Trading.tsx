@@ -4,7 +4,7 @@
 
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 
-import type { EntryGateCounts } from '../../shared/artifact-types.ts';
+import type { EntryGateCounts, OptionalRulesCounts } from '../../shared/artifact-types.ts';
 import type { LabEvent, LabValue } from '../../shared/contract.ts';
 import type { Role } from '../chart/markers.ts';
 import { formatEt, formatPrice } from '../format.ts';
@@ -58,6 +58,11 @@ export interface TradingSymbolMetrics {
       netUsd: number;
       markPrice: number;
       markDate: string;
+      // Growth 1.3.0: an open position with partial fills (the remainder above; its partial fills are realized)
+      remainderShares?: number;
+      remainderPrincipalUsd?: number;
+      partialFillsNetUsd?: number;
+      positionNetUsd?: number;
     } | null;
     totalMarkedNetUsd: number;
     totalInterestUsd: number;
@@ -78,6 +83,7 @@ export interface TradingSymbolMetrics {
     medianSessions: number | null;
   };
   entryGates?: EntryGateCounts;
+  optionalRules?: OptionalRulesCounts; // Growth 1.3.0, only with the breakout entry, the initial stop or retention ON
   unavailable: Record<string, string>;
 }
 
@@ -149,7 +155,7 @@ export function TradingMetrics({ m, symbol }: { m: TradingSymbolMetrics; symbol:
         {row('Realized margin interest', money(m.pnl.realizedInterestUsd))}
         {row('Realized net', signed(m.pnl.realizedNetUsd), 'metric-realized')}
         {row(
-          'Unrealized net of the open position',
+          u?.positionNetUsd !== undefined ? 'Unrealized net of the open remainder' : 'Unrealized net of the open position',
           u ? (
             <>
               {signed(u.netUsd)}
@@ -157,6 +163,13 @@ export function TradingMetrics({ m, symbol }: { m: TradingSymbolMetrics; symbol:
                 gross {money(u.grossBeforeCostsUsd)} − entry cost {money(u.entryCostUsd)} − accrued interest{' '}
                 {money(u.accruedInterestUsd)}; exit cost not charged
               </span>
+              {u.positionNetUsd !== undefined && (
+                <span className="muted small block" data-testid="metric-open-partial">
+                  {u.remainderShares?.toFixed(4)} shares kept after a partial sale (principal still borrowed{' '}
+                  {money(u.remainderPrincipalUsd ?? 0)}); the partial fill(s) {money(u.partialFillsNetUsd ?? 0)} are in
+                  realized; the whole open position: {money(u.positionNetUsd)}
+                </span>
+              )}
             </>
           ) : (
             na('no open position')
@@ -201,6 +214,7 @@ export function TradingMetrics({ m, symbol }: { m: TradingSymbolMetrics; symbol:
           'metric-exit-reasons'
         )}
         {m.entryGates && <EntryGateRows g={m.entryGates} signals={m.signals} row={row} />}
+        {m.optionalRules && <OptionalRuleRows o={m.optionalRules} row={row} />}
         {row(
           'Raw signals: taken · ignored (invested / order pending) · unfilled',
           `${m.signals.raw}: ${m.signals.filled} · ${m.signals.rejectedByReason.position_open} / ${m.signals.rejectedByReason.order_pending} · ${m.signals.unfilledAtEnd}`,
@@ -208,6 +222,61 @@ export function TradingMetrics({ m, symbol }: { m: TradingSymbolMetrics; symbol:
         )}
       </tbody>
     </table>
+  );
+}
+
+// Growth 1.3.0: the breakout entry, the initial risk stop and trend retention (descriptive; only when one was ON).
+function OptionalRuleRows({ o, row }: { o: OptionalRulesCounts; row: (label: string, value: ReactNode, testId?: string) => ReactNode }) {
+  const list = (r: Record<string, number> | undefined) =>
+    Object.entries(r ?? {})
+      .filter(([, n]) => n)
+      .map(([k, n]) => `${k} ${n}`)
+      .join(' · ') || 'none';
+  const s = o.initialStop;
+  const r = o.retention;
+  return (
+    <>
+      <tr className="section">
+        <th colSpan={2}>Optional rules (descriptive; the effect needs a paired OFF run)</th>
+      </tr>
+      {row(
+        'Entry method',
+        o.entryMethod === 'trend_breakout'
+          ? `breakout above the prior high in a rising trend${o.breakout ? ` — ${o.breakout.signals} signals: ${o.breakout.taken} taken · ${o.breakout.rejectedWhileInvested} ignored (invested) · ${o.breakout.vetoed} vetoed` : ''}`
+          : 'Rise from recent low',
+        'metric-entry-method'
+      )}
+      {s.enabled &&
+        row(
+          `Initial risk stop (${s.config?.atrMultiple} × ATR ${s.config?.atrSessions})`,
+          `${s.protectedPositions} protected · exits ${s.exitsByInitialStop} (gap ${s.exitsByInitialStopGap}, assumed fill ${s.exitsByInitialStopAssumedFill}, entry session ${s.exitsOnEntrySession}) · blocked for want of ATR history ${s.blockedChecks}`,
+          'metric-initial-stop'
+        )}
+      {r.enabled && (
+        <>
+          {row(
+            `Retention (sell ${r.config?.sellPercent}%, ${r.config?.closesBelow} close(s) < SMA ${r.config?.smaSessions})`,
+            <>
+              {r.positionsWithPartialSale} position(s) with a partial sale · partial fills net {signed(r.partialFillsNetUsd ?? 0)} ({r.partialFillsAtALoss} at a loss)
+            </>,
+            'metric-retention'
+          )}
+          {row('Remainder exits · trend decisions · open remainder', `${list(r.remainderExitsByReason)} · ${r.trendExitDecisions} · ${r.openRemainderAtEnd}`, 'metric-remainder')}
+          {row(
+            'Closed positions with a partial sale (one trade each, by total net)',
+            r.closedPositionsWithPartial ? (
+              <>
+                {r.closedPositionsWithPartial.count} ({r.closedPositionsWithPartial.wins} W / {r.closedPositionsWithPartial.losses} L) ·{' '}
+                {signed(r.closedPositionsWithPartial.netUsd)}
+              </>
+            ) : (
+              'none'
+            ),
+            'metric-retention-closed'
+          )}
+        </>
+      )}
+    </>
   );
 }
 
@@ -313,6 +382,7 @@ const ORIGIN_SHORT: Record<string, string> = {
 };
 
 const SOURCE_SHORT: Record<string, string> = {
+  trend_breakout: 'breakout entry',
   'latched:rise_from_recent_low': 'latched',
   eligibility_renewal: 'renewal',
   'latched:eligibility_renewal': 'latched renewal'
@@ -463,8 +533,16 @@ export function TradeTable({
                     {t.exit
                       ? (t.exitReason ?? 'not recorded')
                       : t.status === 'open'
-                        ? 'still open (marked, not sold)'
+                        ? t.partials.length
+                          ? 'remainder still open (marked, not sold)'
+                          : 'still open (marked, not sold)'
                         : t.problem}
+                    {t.partials.length > 0 && (
+                      <span className="badge badge-muted partial-badge" data-testid="trade-partials" title={t.partials.map((p) => `${formatEt(p.t, p.timePrecision)} at ${formatPrice(p.price)}`).join('; ')}>
+                        {' '}
+                        + {t.partials.length} partial
+                      </span>
+                    )}
                   </td>
                   <td className="mono num">{t.heldDays === null ? '—' : `${t.heldDays.toFixed(1)} d`}</td>
                   <td className="mono num">
@@ -476,6 +554,23 @@ export function TradeTable({
           </tbody>
         </table>
       </div>
+    </>
+  );
+}
+
+// Growth 1.3.0: one partial fill of a trade (retention), with its own net (the trade's net is the whole position).
+function PartialFill({ event, n }: { event: LabEvent; n: number }) {
+  const net = valueOf(event, 'fillNet');
+  const sold = valueOf(event, 'sharesSold');
+  const kept = valueOf(event, 'sharesRemaining');
+  return (
+    <>
+      <dt>Partial exit {n}</dt>
+      <dd data-testid="trade-detail-partial">
+        {formatEt(event.t, event.timePrecision)} at {formatPrice(event.price)} · sold {typeof sold === 'number' ? sold.toFixed(4) : '?'} shares, kept{' '}
+        {typeof kept === 'number' ? kept.toFixed(4) : '?'} · this fill {typeof net === 'number' ? formatMoney(net) : 'n/a'}
+        <span className="muted small block">{event.reason}</span>
+      </dd>
     </>
   );
 }
@@ -522,7 +617,20 @@ export function TradeDetail({ trade }: { trade: Trade | null }) {
             : 'not recorded'}
           {trade.entry?.reason && <span className="muted small block">{trade.entry.reason}</span>}
         </dd>
-        <dt>Exit</dt>
+        {typeof valueOf(trade.entry, 'initialStop') === 'number' && (
+          <>
+            <dt>Initial risk stop</dt>
+            <dd data-testid="trade-detail-initial-stop">
+              {formatPrice(valueOf(trade.entry, 'initialStop') as number)} (fixed; {String(valueOf(trade.entry, 'initialStopMultiple'))} × ATR{' '}
+              {formatPrice(valueOf(trade.entry, 'initialStopAtr') as number)} of {String(valueOf(trade.entry, 'initialStopAtrWindow'))}; active from
+              the fill)
+            </dd>
+          </>
+        )}
+        {trade.partials.map((p, i) => (
+          <PartialFill key={p.id} event={p} n={i + 1} />
+        ))}
+        <dt>{trade.partials.length ? 'Final exit' : 'Exit'}</dt>
         <dd>
           {trade.exit
             ? `${formatEt(trade.exit.t, trade.exit.timePrecision)} at ${formatPrice(trade.exit.price)}`

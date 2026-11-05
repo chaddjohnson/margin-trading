@@ -178,7 +178,7 @@ export class PreviewService {
                 to: request.to,
                 resolution: request.resolution
               },
-              note: `A preview as ${current.title} ${current.version} with the options added after ${spec.version} OFF — a NEW execution on the current version, not a reproduction of ${runId}.`
+              note: `A preview as ${current.title} ${current.version} with the options added after ${spec.version} OFF — a NEW execution on the current version, not a reproduction of ${runId}${spec.legacy ? ` (with those options OFF, ${current.version} reproduced every ${spec.version} artifact in the parity tests; the result is still labelled a new execution)` : ''}.`
             }
           : null;
       return {

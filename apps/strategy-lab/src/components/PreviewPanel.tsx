@@ -8,6 +8,7 @@ import type { FormEvent, KeyboardEvent } from 'react';
 
 import { type ParamSpec, RESOLUTION_LABEL, type Resolution } from '../../shared/contract.ts';
 import { isActive, noteShown } from '../../shared/params.ts';
+import { displayId } from '../api.ts';
 import { isShown, parseDraft, UNIT_TEXT } from '../paramForm.ts';
 import { type PreviewController, STATUS_LABEL } from '../preview/usePreview.ts';
 import { InfoPopover } from './InfoPopover.tsx';
@@ -250,6 +251,11 @@ export function PreviewPanel({ c, sourceRunId, onClose }: { c: PreviewController
           {c.error && (
             <p className="form-error small" role="alert" data-testid="preview-error">
               {c.error}
+              <span className="block" data-testid="preview-error-shown">
+                Not applied: the chart and Analysis still show{' '}
+                {c.displayed ? `the previous successful preview ${displayId(c.displayed.detail.id)}` : `the saved result ${sourceRunId}`}, not this
+                configuration.
+              </span>
             </p>
           )}
         </header>

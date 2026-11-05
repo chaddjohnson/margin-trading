@@ -55,7 +55,7 @@ test('the panel: hidden by default, beside the chart, bounded and scrolling, com
   const toggle = page.getByTestId('preview-toggle');
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
   await expect(page.getByTestId('preview-strategy')).toContainText('Growth');
-  await expect(page.getByTestId('preview-version')).toHaveText('v1.2.0');
+  await expect(page.getByTestId('preview-version')).toHaveText('v1.3.0');
   await expect(status(page)).toHaveAttribute('data-state', 'saved');
   // beside the chart: the chart narrows, the panel is no taller than the chart section and scrolls by itself
   const panel = (await page.getByTestId('preview-panel').boundingBox())!;

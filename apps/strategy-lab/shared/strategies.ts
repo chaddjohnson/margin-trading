@@ -968,7 +968,7 @@ const BREAKOUT_PARAMS: ParamSpec[] = [
     key: 'breakoutPriorHighSessions',
     label: 'Prior-high lookback (N)',
     description:
-      'The close must be strictly above the highest session high of the N completed sessions BEFORE the signal session (the signal session’s own high excluded). Each qualifying close is its own signal; it is never replayed, and the reference high is never reset to an exit fill (no cooldown).',
+      'The close must be strictly above the highest session high of the N completed sessions BEFORE the signal session (the signal session’s own high excluded). Each qualifying close is its own signal and is never replayed; the window always ends the session before the signal and is never re-anchored at an exit fill (no cooldown).',
     type: 'integer',
     unit: 'sessions',
     default: 20,
