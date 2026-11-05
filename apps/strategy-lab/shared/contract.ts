@@ -104,7 +104,8 @@ export function eventsForSymbol(events: readonly LabEvent[], symbol: string): La
 // ----- runs, variations, strategies, experiments -----
 
 export type RunStatus = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
-export type RunKind = 'manual' | 'import' | 'demo';
+/** `preview`: a temporary Interactive Preview result (never stored as a run; its id is PV-…, never R-…). */
+export type RunKind = 'manual' | 'import' | 'demo' | 'preview';
 export type Resolution = '1m' | '5m' | '15m' | '30m' | '60m' | '1d';
 
 export const RESOLUTION_LABEL: Record<Resolution, string> = {

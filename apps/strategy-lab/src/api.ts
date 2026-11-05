@@ -12,6 +12,7 @@ import type {
   VariationSummary
 } from '../shared/contract.ts';
 import type { ExecutionKind, PhenotypeRecord } from '../shared/phenotypes.ts';
+import type { PreviewCapability, PreviewConfig, PreviewDetail, PreviewTicketStatus } from '../shared/preview.ts';
 
 const TOKEN_KEY = 'strategy-lab-token';
 
@@ -154,12 +155,18 @@ export interface PhenotypeQuery {
   role?: string;
 }
 
-/** Downloads the research bundle of a completed run (authenticated fetch → a file the browser saves). */
+/** The API path of a run-shaped result: a saved run (R-…) or an Interactive Preview (PV-…, never a run). */
+export const resultPath = (id: string) => (id.startsWith('PV-') ? `/api/previews/${id}` : `/api/runs/${id}`);
+
+/** A result id as shown in tables and headings: a preview's 64-hex id is shortened (the full id is in its record). */
+export const displayId = (id: string) => (id.startsWith('PV-') ? `${id.slice(0, 13)}…` : id);
+
+/** Downloads the research bundle of a completed run or preview (authenticated fetch → a file the browser saves). */
 async function downloadBundle(id: string, minuteMarks: boolean): Promise<{ filename: string; bytes: number }> {
   const headers: Record<string, string> = {};
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
-  const res = await fetch(`/api/runs/${id}/export${minuteMarks ? '?minute=1' : ''}`, { headers });
+  const res = await fetch(`${resultPath(id)}/export${minuteMarks ? '?minute=1' : ''}`, { headers });
   if (!res.ok) {
     const data = (await res.json().catch(() => ({}))) as { error?: string; tokenRequired?: boolean };
     if (res.status === 401 && data.tokenRequired) tokenListener?.();
@@ -203,9 +210,9 @@ export const api = {
       `/api/${type === 'run' ? 'runs' : 'variations'}/${id}/bookmark`
     ),
   events: (id: string, symbol: string, basis: string | null, signal?: AbortSignal) =>
-    call<EventsResponse>('GET', `/api/runs/${id}/events${qs({ symbol, basis })}`, undefined, signal),
+    call<EventsResponse>('GET', `${resultPath(id)}/events${qs({ symbol, basis })}`, undefined, signal),
   prices: (id: string, symbol: string, range: { from?: number; to?: number; points?: number }, signal?: AbortSignal) =>
-    call<PricesResponse>('GET', `/api/runs/${id}/prices${qs({ symbol, ...range })}`, undefined, signal),
+    call<PricesResponse>('GET', `${resultPath(id)}/prices${qs({ symbol, ...range })}`, undefined, signal),
   log: (id: string) => call<{ log: string }>('GET', `/api/runs/${id}/log`),
   notes: (targetType: 'run' | 'variation', targetId: string) =>
     call<Note[]>('GET', `/api/notes${qs({ targetType, targetId })}`),
@@ -217,6 +224,17 @@ export const api = {
   phenotype: (id: string, signal?: AbortSignal) => call<PhenotypeView>('GET', `/api/phenotypes/${id}`, undefined, signal),
   /** ONE run of ONE frozen phenotype. */
   runPhenotype: (id: string, body: Record<string, unknown>) => call<RunDetail>('POST', `/api/phenotypes/${id}/runs`, body),
+  // Interactive Preview: ONE configuration per submission; nothing is saved unless savePreview is called.
+  previewCapability: (runId: string, signal?: AbortSignal) =>
+    call<PreviewCapability>('GET', `/api/runs/${runId}/preview`, undefined, signal),
+  submitPreview: (request: PreviewConfig, sourceRun: string) =>
+    call<PreviewTicketStatus>('POST', '/api/previews', { request, sourceRun }),
+  previewTicket: (ticket: string, signal?: AbortSignal) =>
+    call<PreviewTicketStatus>('GET', `/api/previews/tickets/${ticket}`, undefined, signal),
+  cancelPreviewTicket: (ticket: string) => call<PreviewTicketStatus>('POST', `/api/previews/tickets/${ticket}/cancel`, {}),
+  preview: (id: string, signal?: AbortSignal) => call<PreviewDetail>('GET', `/api/previews/${id}`, undefined, signal),
+  savePreview: (id: string, body: { title?: string; sourceRun: string; confirmDuplicate?: boolean }) =>
+    call<RunDetail>('POST', `/api/previews/${id}/save`, body),
   compare: (a: string, b: string, signal?: AbortSignal) =>
     call<Comparison>('GET', `/api/compare${qs({ a, b })}`, undefined, signal),
   downloadBundle

@@ -6,18 +6,19 @@ import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 
-import { basisDateOf, EVENT_CONTRACT_VERSION, eventsForSymbol, type LabEvent } from '../shared/contract.ts';
+import { basisDateOf, EVENT_CONTRACT_VERSION, eventsForSymbol, type LabEvent, type RunDetail } from '../shared/contract.ts';
 import { DeleteRunError, deleteRun } from './delete-run.ts';
 import { RUNNABLE_STRATEGIES, MAX_TITLE_LENGTH, STRATEGY_REGISTRY } from '../shared/strategies.ts';
 import { readEvents } from './artifacts.ts';
 import { CompareError, compareRuns } from './compare.ts';
-import { ExportError, buildResearchBundle } from './export.ts';
+import { ExportError, buildPreviewBundle, buildResearchBundle } from './export.ts';
 import type { Config } from './config.ts';
 import type { Jobs } from './jobs.ts';
 import { priceAtOrBefore, syntheticSeries, windowPoints, type MarketPrices, type Series } from './prices.ts';
 import type { Repo } from './repo.ts';
 import { clientAllowed, hostAllowed, makeClientAllowlist, tokenMatches } from './security.ts';
 import { DEMO_FIXTURE } from './seed-demo.ts';
+import { PreviewError, type PreviewService } from './previews.ts';
 import type { LabService } from './service.ts';
 
 export class HttpError extends Error {
@@ -39,6 +40,9 @@ interface Ctx {
 
 type Handler = (c: Ctx) => unknown | Promise<unknown>;
 
+/** A run-shaped result whose chart and events are served: a saved run or an Interactive Preview. */
+type Shown = Pick<RunDetail, 'id' | 'symbols' | 'priceSource' | 'window' | 'dataOrigin'>;
+
 const MAX_BODY = 64 * 1024;
 const NOTE_MAX = 20000;
 
@@ -48,6 +52,7 @@ export interface Deps {
   jobs: Jobs;
   prices: MarketPrices;
   service: LabService;
+  previews: PreviewService;
   log: (m: string) => void;
 }
 
@@ -110,7 +115,7 @@ const intParam = (url: URL, name: string, def: number, min: number, max: number)
 };
 
 export function createHandler(d: Deps) {
-  const { cfg, repo, jobs, prices, service } = d;
+  const { cfg, repo, jobs, prices, service, previews } = d;
   const clients = makeClientAllowlist(cfg.allowedClientCidrs);
   let synthetic: Series | null = null;
   const demoSeries = () => (synthetic ??= syntheticSeries(join(cfg.repoRoot, DEMO_FIXTURE)));
@@ -127,7 +132,7 @@ export function createHandler(d: Deps) {
     return { events: readEvents(join(cfg.stateDir, run.artifactDir), run.artifact.sha256).events, run };
   };
 
-  const seriesFor = async (run: NonNullable<ReturnType<Repo['runDetail']>>, symbol: string) => {
+  const seriesFor = async (run: Shown, symbol: string) => {
     if (!run.symbols.includes(symbol)) throw new HttpError(400, `${symbol} is not a symbol of ${run.id}`);
     if (run.priceSource.kind === 'synthetic') return { series: demoSeries(), factor: () => 1, basis: null };
     const basis = basisDateOf(run.priceSource, symbol) ?? run.window.from;
@@ -135,11 +140,94 @@ export function createHandler(d: Deps) {
     return { series, factor: prices.factorFor(symbol, basis, series), basis };
   };
 
+  // The events of one symbol of a run-shaped result (a saved run or a preview): the same response for both.
+  const eventsResponse = async (run: Shown, events: LabEvent[], url: URL) => {
+    const symbol = url.searchParams.get('symbol');
+    const selected = symbol ? eventsForSymbol(events, symbol) : events;
+    // Markers of events without a recorded price are placed on the price line at that instant; the event's own
+    // price stays null (unknown) and the UI says so.
+    const markerPrices: Record<string, number | null> = {};
+    const unknown = selected.filter((e) => e.price === null);
+    if (unknown.length && symbol) {
+      const { series, factor } = await seriesFor(run, symbol);
+      for (const e of unknown) markerPrices[e.id] = priceAtOrBefore(series, factor, Date.parse(e.t));
+    }
+    // `display`: the plotting price in the share units of `basis` (another run's chart, when comparing); the
+    // events' own prices are returned unchanged.
+    const basis = url.searchParams.get('basis');
+    if (basis !== null && !/^\d{4}-\d{2}-\d{2}$/.test(basis)) throw new HttpError(400, 'basis: YYYY-MM-DD');
+    const runBasis = symbol ? basisDateOf(run.priceSource, symbol) : null;
+    const conv = basis && runBasis && symbol ? prices.conversion(symbol, runBasis, basis) : 1;
+    const display: Record<string, number | null> = {};
+    for (const e of selected) {
+      const p = e.price ?? markerPrices[e.id] ?? null;
+      display[e.id] = p === null ? null : p * conv;
+    }
+    return {
+      runId: run.id,
+      symbol,
+      events: selected,
+      markerPrices,
+      display,
+      conversion: conv,
+      total: events.length
+    };
+  };
+
+  // The chart prices of one symbol of a run-shaped result: only its own window, in its split basis.
+  const pricesResponse = async (run: Shown, url: URL) => {
+    const symbol = url.searchParams.get('symbol') ?? '';
+    const { series, factor, basis } = await seriesFor(run, symbol);
+    const num = (k: string) => {
+      const v = url.searchParams.get(k);
+      if (v === null) return null;
+      const n = Number(v);
+      if (!Number.isFinite(n)) throw new HttpError(400, `${k}: a number (ms)`);
+      return n;
+    };
+    const pts = windowPoints(
+      series,
+      factor,
+      run.window.from,
+      run.window.to,
+      num('from'),
+      num('to'),
+      intParam(url, 'points', 3000, 100, 8000)
+    );
+    return {
+      runId: run.id,
+      symbol,
+      dataOrigin: run.dataOrigin,
+      basisDate: basis,
+      units:
+        run.priceSource.kind === 'synthetic'
+          ? 'synthetic price units'
+          : `USD per share, split-adjusted to ${basis} share units`,
+      ...pts
+    };
+  };
+
+  const preview = <T>(fn: () => T): T => {
+    try {
+      return fn();
+    } catch (e) {
+      if (e instanceof PreviewError) throw new HttpError(e.status, e.message, e.details);
+      if (e instanceof ExportError) throw new HttpError(e.status, e.message);
+      throw e;
+    }
+  };
+
   const ROUTES: [string, RegExp, Handler][] = [
     [
       'GET',
       /^\/api\/health$/,
-      () => ({ ok: true, contractVersion: EVENT_CONTRACT_VERSION, activeRuns: jobs.activeCount })
+      () => ({
+        ok: true,
+        contractVersion: EVENT_CONTRACT_VERSION,
+        activeRuns: jobs.activeCount,
+        activePreviews: previews.activeCount,
+        features: ['interactive-preview']
+      })
     ],
     [
       'GET',
@@ -240,73 +328,13 @@ export function createHandler(d: Deps) {
       /^\/api\/runs\/(R-\d{6,12})\/events$/,
       async ({ m, url }) => {
         const { events, run } = loadRunEvents(m[1]!);
-        const symbol = url.searchParams.get('symbol');
-        const selected = symbol ? eventsForSymbol(events, symbol) : events;
-        // Markers of events without a recorded price are placed on the price line at that instant; the event's own
-        // price stays null (unknown) and the UI says so.
-        const markerPrices: Record<string, number | null> = {};
-        const unknown = selected.filter((e) => e.price === null);
-        if (unknown.length && symbol) {
-          const { series, factor } = await seriesFor(run, symbol);
-          for (const e of unknown) markerPrices[e.id] = priceAtOrBefore(series, factor, Date.parse(e.t));
-        }
-        // `display`: the plotting price in the share units of `basis` (another run's chart, when comparing); the
-        // events' own prices are returned unchanged.
-        const basis = url.searchParams.get('basis');
-        if (basis !== null && !/^\d{4}-\d{2}-\d{2}$/.test(basis)) throw new HttpError(400, 'basis: YYYY-MM-DD');
-        const runBasis = symbol ? basisDateOf(run.priceSource, symbol) : null;
-        const conv = basis && runBasis && symbol ? prices.conversion(symbol, runBasis, basis) : 1;
-        const display: Record<string, number | null> = {};
-        for (const e of selected) {
-          const p = e.price ?? markerPrices[e.id] ?? null;
-          display[e.id] = p === null ? null : p * conv;
-        }
-        return {
-          runId: run.id,
-          symbol,
-          events: selected,
-          markerPrices,
-          display,
-          conversion: conv,
-          total: events.length
-        };
+        return eventsResponse(run, events, url);
       }
     ],
     [
       'GET',
       /^\/api\/runs\/(R-\d{6,12})\/prices$/,
-      async ({ m, url }) => {
-        const run = runOr404(m[1]!);
-        const symbol = url.searchParams.get('symbol') ?? '';
-        const { series, factor, basis } = await seriesFor(run, symbol);
-        const num = (k: string) => {
-          const v = url.searchParams.get(k);
-          if (v === null) return null;
-          const n = Number(v);
-          if (!Number.isFinite(n)) throw new HttpError(400, `${k}: a number (ms)`);
-          return n;
-        };
-        const pts = windowPoints(
-          series,
-          factor,
-          run.window.from,
-          run.window.to,
-          num('from'),
-          num('to'),
-          intParam(url, 'points', 3000, 100, 8000)
-        );
-        return {
-          runId: run.id,
-          symbol,
-          dataOrigin: run.dataOrigin,
-          basisDate: basis,
-          units:
-            run.priceSource.kind === 'synthetic'
-              ? 'synthetic price units'
-              : `USD per share, split-adjusted to ${basis} share units`,
-          ...pts
-        };
-      }
+      async ({ m, url }) => pricesResponse(runOr404(m[1]!), url)
     ],
     [
       'GET',
@@ -429,6 +457,44 @@ export function createHandler(d: Deps) {
           if (e instanceof CompareError) throw new HttpError(e.status, e.message);
           throw e;
         }
+      }
+    ],
+    // ----- Interactive Preview: ONE configuration at a time, never a run row (server/previews.ts) -----
+    ['GET', /^\/api\/runs\/(R-\d{6,12})\/preview$/, ({ m }) => preview(() => previews.capability(m[1]!))],
+    ['POST', /^\/api\/previews$/, async ({ body }) => { const b = await body(); return preview(() => previews.submit(b)); }],
+    ['GET', /^\/api\/previews\/tickets\/(PT-[0-9a-f]{24})$/, ({ m }) => preview(() => previews.status(m[1]!))],
+    ['POST', /^\/api\/previews\/tickets\/(PT-[0-9a-f]{24})\/cancel$/, ({ m }) => preview(() => previews.cancel(m[1]!))],
+    ['GET', /^\/api\/previews\/(PV-[0-9a-f]{64})$/, ({ m }) => preview(() => previews.detail(m[1]!))],
+    [
+      'GET',
+      /^\/api\/previews\/(PV-[0-9a-f]{64})\/events$/,
+      async ({ m, url }) => {
+        const { events, detail } = preview(() => previews.events(m[1]!));
+        return eventsResponse(detail, events, url);
+      }
+    ],
+    [
+      'GET',
+      /^\/api\/previews\/(PV-[0-9a-f]{64})\/prices$/,
+      async ({ m, url }) => pricesResponse(preview(() => previews.chartSource(m[1]!)), url)
+    ],
+    [
+      'GET',
+      /^\/api\/previews\/(PV-[0-9a-f]{64})\/export$/,
+      ({ m, url }) =>
+        preview(() => {
+          const b = buildPreviewBundle(cfg, previews, m[1]!, { minuteMarks: url.searchParams.get('minute') === '1' });
+          return { download: b.zip, filename: b.filename, contentType: 'application/zip' } satisfies Download;
+        })
+    ],
+    [
+      // Save as run: ONE new immutable run from this cached preview, only after re-validating its identity.
+      'POST',
+      /^\/api\/previews\/(PV-[0-9a-f]{64})\/save$/,
+      async ({ m, body }) => {
+        const b = await body();
+        const r = preview(() => previews.save(m[1]!, b));
+        return { status: 201, body: repo.runDetail(r.runId) };
       }
     ],
     [

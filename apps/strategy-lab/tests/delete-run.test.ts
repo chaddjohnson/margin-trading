@@ -17,6 +17,7 @@ import { type Config, loadConfig } from '../server/config.ts';
 import { openDb } from '../server/db.ts';
 import { DeleteRunError, deleteRun, recoverRunDeletions, trashDirOf } from '../server/delete-run.ts';
 import { createHandler } from '../server/http.ts';
+import { PreviewService } from '../server/previews.ts';
 import type { Jobs } from '../server/jobs.ts';
 import { MarketPrices } from '../server/prices.ts';
 import { Repo } from '../server/repo.ts';
@@ -321,6 +322,7 @@ describe('HTTP: DELETE /api/runs/:id', () => {
       jobs,
       prices,
       service: new LabService(repo, cfg, jobs, prices),
+      previews: new PreviewService(cfg, repo, new LabService(repo, cfg, jobs, prices)),
       log: () => {}
     });
     server = createServer((req, res) => void handler(req, res));

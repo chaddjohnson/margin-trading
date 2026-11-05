@@ -24,6 +24,7 @@ import { gunzipSync } from 'node:zlib';
 
 import type { DecisionsFile, SymbolMetrics } from '../shared/artifact-types.ts';
 import type { LabEvent, RunDetail } from '../shared/contract.ts';
+import type { PreviewService } from './previews.ts';
 import { effectiveParams, isActive } from '../shared/params.ts';
 import { findStrategy } from '../shared/strategies.ts';
 import { readEvents, sha256 } from './artifacts.ts';
@@ -88,13 +89,6 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
   if (!run) throw new ExportError(404, `no run ${runId}`);
   if (run.status !== 'completed' || !run.artifactDir) throw new ExportError(409, `${runId} is ${run.status}: only completed runs export`);
   const dir = join(cfg.stateDir, run.artifactDir);
-  const request = repo.runRequest(runId);
-  const unavailable: Record<string, string> = {};
-  const files: { name: string; data: Buffer; description: string }[] = [];
-  const add = (name: string, data: string | Buffer, description: string) =>
-    files.push({ name, data: typeof data === 'string' ? Buffer.from(data, 'utf8') : data, description });
-
-  // 1. Unmodified artifacts, verified before inclusion.
   const stored = existsSync(join(dir, 'manifest.json'))
     ? (JSON.parse(readFileSync(join(dir, 'manifest.json'), 'utf8')) as { sha256: Record<string, string> }).sha256
     : {};
@@ -106,15 +100,52 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
       throw new ExportError(500, `${f} of ${runId} no longer matches its manifest sha256 (restore it from a backup)`);
     return data;
   };
+  const shown: RunDetail & { artifactDir?: string | null } = { ...run };
+  delete shown.artifactDir; // a server path, never part of the bundle
+  return buildBundle(cfg, { run: shown, request: repo.runRequest(runId), events, stored, read, has: (f) => existsSync(join(dir, f)) }, opts);
+}
+
+/**
+ * The research bundle of a cached Interactive Preview: the same contents as a saved run's, every artifact verified
+ * against the cache entry, and labelled TEMPORARY PREVIEW (id PV-…, not a saved run) in the README and manifest.
+ */
+export function buildPreviewBundle(cfg: Config, previews: PreviewService, previewId: string, opts: { minuteMarks?: boolean } = {}): Bundle {
+  const detail = previews.detail(previewId);
+  const entry = previews.entryOf(previewId);
+  const read = (f: string) => (entry.meta.files[f] ? previews.cache.readFile(entry, f) : null);
+  const stored = (JSON.parse(read('manifest.json')!.toString('utf8')) as { sha256: Record<string, string> }).sha256;
+  const events = (JSON.parse(read('events.json')!.toString('utf8')) as { events: LabEvent[] }).events;
+  return buildBundle(cfg, { run: detail, request: detail.request, events, stored, read, has: (f) => Boolean(entry.meta.files[f]) }, opts);
+}
+
+interface BundleSource {
+  run: RunDetail;
+  request: unknown;
+  events: LabEvent[];
+  /** The source's own manifest (file → sha256). */
+  stored: Record<string, string>;
+  /** One artifact, verified against the source's records; null when the source has no such file. */
+  read: (file: string) => Buffer | null;
+  has: (file: string) => boolean;
+}
+
+function buildBundle(cfg: Config, src: BundleSource, opts: { minuteMarks?: boolean }): Bundle {
+  const { run, request, events, stored, read } = src;
+  const unavailable: Record<string, string> = {};
+  const files: { name: string; data: Buffer; description: string }[] = [];
+  const add = (name: string, data: string | Buffer, description: string) =>
+    files.push({ name, data: typeof data === 'string' ? Buffer.from(data, 'utf8') : data, description });
+
+  // 1. Unmodified artifacts, verified before inclusion.
   for (const f of [...ARTIFACT_FILES, ...(opts.minuteMarks ? [MINUTE_FILE] : [])]) {
     const data = read(f);
-    if (data) add(`artifacts/${f}`, data, `unmodified copy of the run artifact ${f}${stored[f] ? ' (sha256 verified against the run manifest)' : ''}`);
+    if (data) add(`artifacts/${f}`, data, `unmodified copy of the ${run.kind === 'preview' ? 'preview' : 'run'} artifact ${f}${stored[f] ? ` (sha256 verified against the ${run.kind === 'preview' ? 'preview cache entry' : 'run manifest'})` : ''}`);
   }
   if (!opts.minuteMarks)
-    unavailable[MINUTE_FILE] = existsSync(join(dir, MINUTE_FILE))
+    unavailable[MINUTE_FILE] = src.has(MINUTE_FILE)
       ? 'not included by default (large); export with "include minute marks" to add it'
       : 'not recorded by this run (runs before Growth 1.1.0, imports and signal-only runs have none)';
-  else if (!existsSync(join(dir, MINUTE_FILE))) unavailable[MINUTE_FILE] = 'not recorded by this run';
+  else if (!src.has(MINUTE_FILE)) unavailable[MINUTE_FILE] = 'not recorded by this run';
 
   const json = (f: string) => {
     const data = read(f);
@@ -126,7 +157,7 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
   const decisions = json('decisions.json') as DecisionsFile | null;
 
   // 2. Run record and parameters.
-  const publicRun = Object.fromEntries(Object.entries(run).filter(([k]) => k !== 'artifactDir' && k !== 'progress'));
+  const publicRun = Object.fromEntries(Object.entries(run).filter(([k]) => k !== 'artifactDir' && k !== 'progress' && k !== 'request'));
   add('run.json', `${JSON.stringify({ ...publicRun, request }, null, 2)}\n`, 'the run record: inputs, assumptions, provenance, code revision, metrics, phenotype link');
   const spec = findStrategy(run.strategy.key, run.strategy.version);
   const reqParams = (request as { params?: Record<string, unknown> } | null)?.params ?? null;
@@ -314,6 +345,9 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
     schema: BUNDLE_SCHEMA,
     schemaVersion: BUNDLE_VERSION,
     runId: run.id,
+    ...(run.kind === 'preview'
+      ? { preview: { temporary: true, note: 'An Interactive Preview: a temporary result, not a saved run (no R- id). Save it as a run to keep it.', ...(run as RunDetail & { preview?: unknown }).preview as object } }
+      : {}),
     title: run.title,
     strategy: run.strategy,
     exportedFor: run.completedAt,
@@ -321,7 +355,10 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
     source: {
       eventsSha256: run.artifact.sha256,
       runManifestSha256: stored,
-      note: 'artifacts/ holds unmodified copies; their sha256 equal the run manifest (and events.json the database record)'
+      note:
+        run.kind === 'preview'
+          ? 'artifacts/ holds unmodified copies of the cached preview; their sha256 equal the cache entry and its manifest'
+          : 'artifacts/ holds unmodified copies; their sha256 equal the run manifest (and events.json the database record)'
     },
     files: Object.fromEntries(sorted.map((f) => [f.name, { sha256: sha256(f.data), bytes: f.data.length, description: f.description }])),
     unavailable
@@ -337,7 +374,7 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
     }
   }
   return {
-    filename: `strategy-lab-${run.id}${opts.minuteMarks ? '-with-minute-marks' : ''}.zip`,
+    filename: `strategy-lab-${run.kind === 'preview' ? `preview-${run.id.slice(0, 15)}` : run.id}${opts.minuteMarks ? '-with-minute-marks' : ''}.zip`,
     zip: writeZip(entries.sort((a, b) => (a.name < b.name ? -1 : 1)), stamp),
     manifest
   };
@@ -415,13 +452,14 @@ function readme(run: RunDetail, request: unknown, files: [string, string][], una
         ? 'SIGNAL-ONLY: entry signals and their forward outcomes; no positions, fills, exits or P&L.'
         : 'See run.json for the run’s semantics.';
   const origin = run.kind === 'import' ? 'IMPORTED (a replay produced outside Strategy Lab and verified on import)' : run.dataOrigin === 'synthetic' ? 'SYNTHETIC demo data — not market data' : 'SIMULATED by Strategy Lab on real local minute data';
-  return `# Strategy Lab research bundle — ${run.id}
+  const preview = run.kind === 'preview';
+  return `# Strategy Lab research bundle — ${preview ? 'TEMPORARY PREVIEW' : run.id}
 
 **${run.title}**
-
+${preview ? `\n> **Interactive Preview — not a saved run.** Preview id \`${run.id}\` (the sha256 of its execution identity: strategy version, effective parameters, symbols, window, bars, market-data hashes and the implementation fingerprint). It has no R- id, variation, notes or bookmark; the source run's page it was started from is in \`run.json\` provenance. It was computed by the same runner and accounting as a saved run.\n` : ''}
 | | |
 | --- | --- |
-| Run | ${run.id} (${run.kind}, ${run.status}); variation ${run.variation.id}; experiment ${run.experiment.title} |
+| Run | ${preview ? `${run.id} (temporary preview, not saved)` : `${run.id} (${run.kind}, ${run.status}); variation ${run.variation.id}; experiment ${run.experiment.title}`} |
 | Strategy | ${run.strategy.title} — \`${run.strategy.key}@${run.strategy.version}\`${run.strategyFormerTitle ? ` (formerly “${run.strategyFormerTitle}”)` : ''} |
 | Phenotype | ${run.phenotype ? `${run.phenotype.id} \`${run.phenotype.key}\` from study \`${run.phenotype.study}\`${run.phenotype.edited ? ' — EDITED (a derived variation, not the frozen phenotype)' : ''}` : 'none'} |
 | Symbols | ${run.symbols.join(', ')} |
@@ -455,6 +493,6 @@ ${minute ? '\n`artifacts/minute-marks.csv.gz`: gzip CSV `symbol,t_unix_utc,marke
 2. Per trade: \`net_usd\` = \`gross_before_costs_usd\` − \`costs_usd\` − \`interest_usd\` (to the cent); interest = 100,000 × 0.11 × calendar days between the entry and exit session dates / 365.
 3. Entries and exits pair only by \`trade_id\` and \`linked_event_id\`; every executed entry fills strictly after its decision time.
 4. Growth: the totals in \`artifacts/metrics.json\` (per symbol: realized + unrealized = total marked net) equal the sums of \`trades.csv\`.
-5. The request (\`artifacts/request.json\`, parameters in \`parameters.json\`) plus the code revision in \`run.json\` reproduce the run: \`node --experimental-transform-types apps/strategy-lab/scripts/replay-run.ts ${run.id}\` on the machine that holds the data.
+5. The request (\`artifacts/request.json\`, parameters in \`parameters.json\`) plus the code revision in \`run.json\` reproduce the run${preview ? ' (a preview: start the same configuration again in Interactive Preview, or save it as a run and replay that run)' : `: \`node --experimental-transform-types apps/strategy-lab/scripts/replay-run.ts ${run.id}\` on the machine that holds the data`}.
 ${request ? '' : '\nThis run was not created from a Strategy Lab request (an import or demo): see `artifacts/import.json` or `run.json` provenance.\n'}`;
 }

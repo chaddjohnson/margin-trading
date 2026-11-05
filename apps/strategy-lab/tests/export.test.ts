@@ -18,6 +18,7 @@ import { loadConfig } from '../server/config.ts';
 import { openDb } from '../server/db.ts';
 import { buildResearchBundle, csv, newYork } from '../server/export.ts';
 import { createHandler } from '../server/http.ts';
+import { PreviewService } from '../server/previews.ts';
 import type { Jobs } from '../server/jobs.ts';
 import { MarketPrices } from '../server/prices.ts';
 import { Repo } from '../server/repo.ts';
@@ -203,7 +204,7 @@ describe('HTTP: download and compare routes', () => {
     const jobs = { enqueue: () => {}, cancel: () => false, activeCount: 0 } as unknown as Jobs;
     const prices = new MarketPrices(cfg.repoRoot);
     const service = new LabService(repo, cfg, jobs, prices);
-    const handler = createHandler({ cfg, repo, jobs, prices, service, log: () => {} });
+    const handler = createHandler({ cfg, repo, jobs, prices, service, previews: new PreviewService(cfg, repo, service), log: () => {} });
     server = createServer((req, res) => void handler(req, res));
     await new Promise<void>((r) => server.listen(0, '127.0.0.1', () => r()));
     base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;

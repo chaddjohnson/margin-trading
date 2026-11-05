@@ -14,6 +14,7 @@ import { RISE_FROM_RECENT_LOW } from '../shared/strategies.ts';
 import { type Config, loadConfig } from '../server/config.ts';
 import { migrate, migrationFiles, openDb } from '../server/db.ts';
 import { createHandler } from '../server/http.ts';
+import { PreviewService } from '../server/previews.ts';
 import type { Jobs } from '../server/jobs.ts';
 import { MarketPrices } from '../server/prices.ts';
 import { Repo } from '../server/repo.ts';
@@ -196,7 +197,7 @@ describe('HTTP API', () => {
     } as unknown as Jobs;
     const prices = new MarketPrices(cfg.repoRoot);
     const service = new LabService(repo, cfg, jobs, prices);
-    const handler = createHandler({ cfg, repo, jobs, prices, service, log: () => {} });
+    const handler = createHandler({ cfg, repo, jobs, prices, service, previews: new PreviewService(cfg, repo, service), log: () => {} });
     server = createServer((req, res) => void handler(req, res));
     await new Promise<void>((r) => server.listen(0, '127.0.0.1', () => r()));
     base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
@@ -298,6 +299,7 @@ describe('HTTP API', () => {
       jobs,
       prices,
       service: new LabService(repo, tokenCfg, jobs, prices),
+      previews: new PreviewService(tokenCfg, repo, new LabService(repo, tokenCfg, jobs, prices)),
       log: () => {}
     });
     const s2 = createServer((req, res) => void h(req, res));
@@ -314,6 +316,7 @@ describe('HTTP API', () => {
       jobs,
       prices,
       service: new LabService(repo3, cfg3, jobs, prices),
+      previews: new PreviewService(cfg3, repo3, new LabService(repo3, cfg3, jobs, prices)),
       log: () => {}
     });
     const s3 = createServer((req, res) => void h3(req, res));

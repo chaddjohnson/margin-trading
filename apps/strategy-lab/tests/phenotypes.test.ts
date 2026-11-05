@@ -17,6 +17,7 @@ import { sealRecord } from '../importers/phenotype-export.ts';
 import { loadConfig } from '../server/config.ts';
 import { openDb } from '../server/db.ts';
 import { createHandler } from '../server/http.ts';
+import { PreviewService } from '../server/previews.ts';
 import type { Jobs } from '../server/jobs.ts';
 import { MarketPrices } from '../server/prices.ts';
 import { Repo } from '../server/repo.ts';
@@ -45,7 +46,7 @@ beforeAll(async () => {
   const service = new LabService(repo, cfg, jobs, prices);
   // the API needs local symbols for Growth reruns: allow VGT/GDX whether or not data/ is present
   service.knownSymbols = () => new Set(['VGT', 'GDX']);
-  const handler = createHandler({ cfg, repo, jobs, prices, service, log: () => {} });
+  const handler = createHandler({ cfg, repo, jobs, prices, service, previews: new PreviewService(cfg, repo, service), log: () => {} });
   server = createServer((req, res) => void handler(req, res));
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', () => r()));
   base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
@@ -198,7 +199,7 @@ describe('API: read-only catalogue, one run per action', () => {
   });
 
   it('exposes no optimisation, sweep, batch or search-launching route', async () => {
-    const handler = createHandler({ cfg, repo, jobs: {} as Jobs, prices: new MarketPrices(cfg.repoRoot), service: {} as LabService, log: () => {} });
+    const handler = createHandler({ cfg, repo, jobs: {} as Jobs, prices: new MarketPrices(cfg.repoRoot), service: {} as LabService, previews: new PreviewService(cfg, repo, {} as LabService), log: () => {} });
     const mutating = handler.routes.filter((r) => !r.startsWith('GET '));
     expect(mutating.some((r) => /optimi|sweep|grid|batch|search|tune/i.test(r))).toBe(false);
     expect(mutating.filter((r) => /phenotype/.test(r))).toEqual(['POST ^\\/api\\/phenotypes\\/(PH-\\d{4,12})\\/runs$']);

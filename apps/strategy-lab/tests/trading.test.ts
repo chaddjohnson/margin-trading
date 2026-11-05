@@ -26,6 +26,7 @@ import {
 import { loadConfig } from '../server/config.ts';
 import { openDb } from '../server/db.ts';
 import { createHandler } from '../server/http.ts';
+import { PreviewService } from '../server/previews.ts';
 import { RUNNER_SCRIPT, RUNNER_SCRIPTS, type Jobs } from '../server/jobs.ts';
 import { MarketPrices } from '../server/prices.ts';
 import { Repo } from '../server/repo.ts';
@@ -209,7 +210,7 @@ describe('HTTP API: one configuration, immutable variations and runs', () => {
     const jobs = { enqueue: (_id: number, pid: string) => enqueued.push(pid), cancel: () => false, activeCount: 0 };
     const prices = new MarketPrices(cfg.repoRoot);
     const service = new LabService(repo, cfg, jobs as unknown as Jobs, prices);
-    const handler = createHandler({ cfg, repo, jobs: jobs as unknown as Jobs, prices, service, log: () => {} });
+    const handler = createHandler({ cfg, repo, jobs: jobs as unknown as Jobs, prices, service, previews: new PreviewService(cfg, repo, service), log: () => {} });
     server = createServer((req, res) => void handler(req, res));
     await new Promise<void>((r) => server.listen(0, '127.0.0.1', () => r()));
     base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;

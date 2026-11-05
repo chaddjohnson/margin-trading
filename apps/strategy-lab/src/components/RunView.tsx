@@ -5,16 +5,20 @@ import {
   EVENT_KIND_LABEL,
   EVENT_KINDS,
   type EventKind,
+  type LabEvent,
   type RunDetail,
   type LabRunRequest,
   type RunSummary
 } from '../../shared/contract.ts';
-import { api, type DeleteRunResult, type EventsResponse, type PricesResponse } from '../api.ts';
+import type { PreviewDetail } from '../../shared/preview.ts';
+import { api, type DeleteRunResult, displayId, type EventsResponse, type PricesResponse } from '../api.ts';
 import type { Role } from '../chart/markers.ts';
 import { isMacPlatform, PAN_MODIFIER_LABEL, panModifierFor } from '../chart/pan.ts';
 import { type ChartEvent, type ChartHandle, PriceChart } from '../chart/PriceChart.tsx';
 import { formatEt, formatEtDate, relativeTime } from '../format.ts';
-import { useFetched, useScoped } from '../hooks.ts';
+import { remember, useFetched, useScoped } from '../hooks.ts';
+import { matchSelection } from '../preview/model.ts';
+import { usePreview } from '../preview/usePreview.ts';
 import { EventTable, MarkerTooltip } from './Events.tsx';
 import { NotesList } from './Notes.tsx';
 import { AnalysisPanel, EventDetail, Glyph, ParametersPanel } from './Panels.tsx';
@@ -25,6 +29,9 @@ import { legendToneOf, markerToneOf, TONE_COLOR, TONE_LABEL } from '../chart/mar
 import { currentVersionOf, RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL } from '../../shared/strategies.ts';
 import { ComparisonPanel } from './Comparison.tsx';
 import { DeleteRunDialog } from './DeleteRunDialog.tsx';
+import { PreviewBanner } from './PreviewBanner.tsx';
+import { PreviewPanel } from './PreviewPanel.tsx';
+import type { EventTableView } from './Events.tsx';
 
 type Detail = RunDetail & { request: LabRunRequest | null };
 
@@ -32,11 +39,15 @@ interface Props {
   runId: string;
   compareId: string | null;
   symbol: string | null;
-  onRoute: (r: { run?: string; symbol?: string | null; compare?: string | null }) => void;
+  /** The Interactive Preview the page displays instead of the saved result (PV-…), or null. */
+  previewId: string | null;
+  onRoute: (r: { run?: string; symbol?: string | null; compare?: string | null; preview?: string | null }) => void;
   onClone: (req: Partial<LabRunRequest>) => void;
   onChanged: () => void;
   /** After a completed deletion of this run (the parent updates the list, the route and the feedback). */
   onDeleted: (result: DeleteRunResult) => void;
+  /** After Save as run created a new run from the displayed preview (the parent refreshes the list). */
+  onSaved: (runId: string, sourceRun: string) => void;
   refreshKey: number;
 }
 
@@ -75,22 +86,51 @@ function useRun(id: string | null, refreshKey: number, onFinished: () => void) {
   return { run: mine?.run ?? null, error: mine?.error ?? null };
 }
 
-export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClone, onChanged, onDeleted, refreshKey }: Props) {
+export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRoute, onClone, onChanged, onDeleted, onSaved, refreshKey }: Props) {
   const { run, error } = useRun(runId, refreshKey, onChanged);
-  const { run: runB, error: errorB } = useRun(compareId, refreshKey, () => {});
+  // Interactive Preview: the displayed result is the saved run, or a temporary preview that replaces EVERY result view
+  // at once (chart, events, trades, analysis, parameters). The saved run itself is never modified.
+  const symbolNow = run ? (routeSymbol && run.symbols.includes(routeSymbol) ? routeSymbol : run.symbols[0]!) : null;
+  // Loads a completed preview's chart data for the current symbol BEFORE it is displayed (no blank chart, no mixing).
+  const prefetch = async (d: PreviewDetail) => {
+    const sym = symbolNow && d.symbols.includes(symbolNow) ? symbolNow : d.symbols[0]!;
+    const b = basisDateOf(d.priceSource, sym);
+    const [ev, px] = await Promise.all([api.events(d.id, sym, b), api.prices(d.id, sym, { points: 3000 })]);
+    remember(`events|${d.id}|${sym}|${b}`, ev);
+    remember(`prices|${d.id}|${sym}`, px);
+  };
+  const pv = usePreview({
+    run,
+    routePreview: previewId,
+    setRoutePreview: (id) => onRoute({ preview: id }),
+    prefetch,
+    onSaved: (id) => onSaved(id, runId)
+  });
+  const previewing = Boolean(pv.displayed);
+  const shown: Detail | null = pv.displayed ? pv.displayed.detail : run;
+  const { run: runB0, error: errorB } = useRun(compareId, refreshKey, () => {});
+  // A comparison is between saved runs: while a preview is displayed, run B is set aside (not mixed in).
+  const runB = previewing ? null : runB0;
   // The comparison run no longer exists (deleted elsewhere): drop it instead of showing a stale selection.
   useEffect(() => {
     if (compareId && errorB && /no run|already deleted|not found/i.test(errorB)) onRoute({ compare: null });
   }, [compareId, errorB, onRoute]);
-  const symbol = run ? (routeSymbol && run.symbols.includes(routeSymbol) ? routeSymbol : run.symbols[0]!) : null;
+  const symbol = shown ? (routeSymbol && shown.symbols.includes(routeSymbol) ? routeSymbol : shown.symbols[0]!) : null;
+  // Presentation preferences belong to the page, not to a result: they survive every preview swap.
   const [kinds, setKinds] = useState<Set<EventKind>>(() => new Set(EVENT_KINDS));
-  // Selection and hover belong to one run/symbol/comparison: they clear themselves when any of these changes.
-  const scope = `${runId}|${symbol}|${compareId}`;
-  const [rawSelectedKey, setSelectedKey] = useScoped<string | null>(scope, null);
+  const [tableView, setTableView] = useState<EventTableView>({ scope: 'window', q: '', sort: { key: 'time', dir: 1 } });
+  const [lossesOnly, setLossesOnly] = useState<{ A: boolean; B: boolean }>({ A: false, B: false });
+  // Hover belongs to one displayed result/symbol/comparison; selection too, except that a swap to another result of the
+  // same page keeps the selected event when the new result has the SAME one (same kind, instant, price; for a fill the
+  // same trade legs) — never by its ordinal id.
+  const base = `${runId}|${symbol}|${compareId}`;
+  const scope = `${base}|${shown?.id}`;
+  const [sel, setSel] = useState<{ base: string; shownId: string; key: string; event: LabEvent; from: LabEvent[] } | null>(null);
   const [hover, setHover] = useScoped<{ keys: string[]; anchor: DOMRect; placement: Placement } | null>(scope, null);
   const [view, setView] = useState<{ range: [number, number]; full: boolean } | null>(null);
   const lastWindow = useRef<[number, number] | null>(null);
   const chartRef = useRef<ChartHandle>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const [editingTitle, setEditingTitle] = useState<string | null>(null);
   const [withMinuteMarks, setWithMinuteMarks] = useState(false);
   const [exporting, setExporting] = useState<{ busy: boolean; message: string | null }>({ busy: false, message: null });
@@ -109,16 +149,16 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
       document.removeEventListener('keydown', close, true);
     };
   }, [menuOpen]);
-  const basis = run && symbol ? basisDateOf(run.priceSource, symbol) : null;
+  const basis = shown && symbol ? basisDateOf(shown.priceSource, symbol) : null;
 
-  const pricesQ = useFetched<PricesResponse>(run && symbol ? `${run.id}|${symbol}` : null, (signal) =>
-    api.prices(run!.id, symbol!, { points: 3000 }, signal)
+  const pricesQ = useFetched<PricesResponse>(shown && symbol ? `prices|${shown.id}|${symbol}` : null, (signal) =>
+    api.prices(shown!.id, symbol!, { points: 3000 }, signal)
   );
   const prices = pricesQ.data;
   const priceError = pricesQ.error;
   const eventsA = useFetched<EventsResponse>(
-    run && symbol && run.status === 'completed' ? `${run.id}|${symbol}|${basis}` : null,
-    (signal) => api.events(run!.id, symbol!, basis, signal)
+    shown && symbol && shown.status === 'completed' ? `events|${shown.id}|${symbol}|${basis}` : null,
+    (signal) => api.events(shown!.id, symbol!, basis, signal)
   ).data;
 
   const compareProblem =
@@ -155,8 +195,8 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
   // Trades per run, from ALL of this symbol's events (pairing never depends on which kinds the legend shows): an entry
   // and its exit are linked only through their recorded tradeId and mutual linkedEventId, never by time or price.
   const tradesA = useMemo(
-    () => buildTrades(eventsA?.events ?? [], symbol ?? '', 'A', eventsA?.runId ?? '', run?.metrics),
-    [eventsA, symbol, run?.metrics]
+    () => buildTrades(eventsA?.events ?? [], symbol ?? '', 'A', eventsA?.runId ?? '', shown?.metrics),
+    [eventsA, symbol, shown?.metrics]
   );
   const tradesB = useMemo(
     () =>
@@ -186,6 +226,14 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
   }, [eventsA, eventsB, symbol, kinds, compareProblem, tradesA, tradesB]);
 
   const byKey = useMemo(() => new Map(chartEvents.map((c) => [c.key, c])), [chartEvents]);
+  // The selection: kept within one displayed result; carried to another result of the same page only by stable identity.
+  const rawSelectedKey = useMemo(() => {
+    if (!sel || sel.base !== base || !shown) return null;
+    if (sel.shownId === shown.id) return sel.key;
+    if (!sel.key.startsWith('A:') || !eventsA || eventsA.runId !== shown.id) return null;
+    const match = matchSelection(sel.event, sel.from, eventsA.events);
+    return match ? `A:${match.id}` : null;
+  }, [sel, base, shown, eventsA]);
   // A selection whose event is filtered out or gone reads as no selection.
   const selected = rawSelectedKey ? (byKey.get(rawSelectedKey) ?? null) : null;
   const selectedKey = selected ? rawSelectedKey : null;
@@ -193,15 +241,16 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
   const select = useCallback(
     (key: string, locate: boolean) => {
       const c = byKey.get(key);
-      if (!c) return;
-      setSelectedKey(key);
+      if (!c || !shown) return;
+      const from = (c.role === 'A' ? eventsA : eventsB)?.events ?? [];
+      setSel({ base, shownId: shown.id, key, event: c.event, from });
       if (locate) {
         const t = Date.parse(c.event.t);
         const w = chartRef.current?.getWindow();
         if (w && (t < w[0] || t > w[1])) chartRef.current?.centerOn(t);
       }
     },
-    [byKey, setSelectedKey]
+    [byKey, base, shown, eventsA, eventsB]
   );
 
   const tradeOf = useCallback(
@@ -244,19 +293,22 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
   };
 
   if (error) return <div className="main-empty form-error">{error}</div>;
-  if (!run || !symbol) return <div className="main-empty">Loading run…</div>;
+  if (!run || !shown || !symbol) return <div className="main-empty">Loading run…</div>;
   const exportBundle = async () => {
     setExporting({ busy: true, message: null });
     try {
-      const r = await api.downloadBundle(run.id, withMinuteMarks);
+      const r = await api.downloadBundle(shown.id, withMinuteMarks);
       setExporting({ busy: false, message: `Downloaded ${r.filename} (${Math.round(r.bytes / 1024).toLocaleString('en-US')} KB)` });
     } catch (e) {
       setExporting({ busy: false, message: `Export failed: ${(e as Error).message}` });
     }
   };
   const clonable =
-    run.kind === 'manual' && run.request && currentVersionOf(run.strategy.key) && run.strategy.key !== STUDY8_POOL.key;
-  const trading = run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key;
+    (shown.kind === 'manual' || shown.kind === 'preview') &&
+    shown.request &&
+    currentVersionOf(shown.strategy.key) &&
+    shown.strategy.key !== STUDY8_POOL.key;
+  const trading = shown.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key;
   // The trade of the selected event (entry or exit alike): selecting the other marker of the same trade keeps it.
   const selectedTrade = selected ? tradeOf(selected) : null;
   const selectTrade = (t: Trade) => {
@@ -287,8 +339,33 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
 
   return (
     <div className="run-view" data-run-id={run.id} data-symbol={symbol}>
-      <section className="card run-header" aria-label="Run" data-testid="run-header">
-        <div className="run-title-row">
+      <section className={`card run-header${previewing ? ' is-previewing' : ''}`} aria-label="Run" data-testid="run-header">
+        {pv.displayed && (
+          <PreviewBanner
+            preview={pv.displayed.detail}
+            cacheHit={pv.displayed.cacheHit}
+            restored={pv.displayed.restored}
+            source={run}
+            onReturn={pv.returnToSaved}
+            onSave={pv.save}
+            onOpenRun={(id) => onRoute({ run: id })}
+          />
+        )}
+        {pv.loading && (
+          <div className="preview-banner is-loading" role="status" data-testid="preview-loading">
+            Loading the temporary preview {displayId(pv.loading)}… (the saved result is shown meanwhile)
+          </div>
+        )}
+        {pv.notice && (
+          <div className="app-notice tone-warn" role="status" data-testid="preview-notice">
+            <span>{pv.notice}</span>
+            <button type="button" className="btn-ghost" onClick={pv.dismissNotice} aria-label="Dismiss">
+              ✕
+            </button>
+          </div>
+        )}
+        <div className={`run-title-row${previewing ? ' is-source' : ''}`}>
+          {previewing && <span className="source-label small">Source (saved, unchanged):</span>}
           <span className="mono run-id" data-testid="run-id">
             {run.id}
           </span>
@@ -418,12 +495,14 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             }}
           />
         )}
-        <p className="run-meta small">
-          {run.strategy.title} · variation <span className="mono">{run.variation.id}</span> ({run.variation.title}) ·{' '}
-          {run.window.from} → {run.window.to}
-          {run.window.resolution ? ` · ${run.window.resolution}` : ''} · created {formatEt(run.createdAt)}
-          {run.completedAt ? ` · finished ${relativeTime(run.completedAt)}` : ''}
-        </p>
+        {!previewing && (
+          <p className="run-meta small">
+            {run.strategy.title} · variation <span className="mono">{run.variation.id}</span> ({run.variation.title}) ·{' '}
+            {run.window.from} → {run.window.to}
+            {run.window.resolution ? ` · ${run.window.resolution}` : ''} · created {formatEt(run.createdAt)}
+            {run.completedAt ? ` · finished ${relativeTime(run.completedAt)}` : ''}
+          </p>
+        )}
         {active(run.status) && (
           <div className="progress" role="status" data-testid="run-progress">
             <span>{run.progress?.message ?? (run.status === 'queued' ? 'Queued' : 'Running')}…</span>
@@ -454,6 +533,8 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             <select
               value={compareId ?? ''}
               onChange={(e) => onRoute({ compare: e.target.value || null })}
+              disabled={previewing}
+              title={previewing ? 'Comparisons are between saved runs: return to the saved result (or save the preview) to compare' : undefined}
               data-testid="compare-select"
               aria-label="Compare with another run"
             >
@@ -469,7 +550,8 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             </select>
           </label>
           {compareProblem && <span className="muted small">{compareProblem}</span>}
-          {run.status === 'completed' && (
+          {previewing && compareId && <span className="muted small">Run B is set aside while a preview is shown.</span>}
+          {shown.status === 'completed' && (
             <span className="export-control">
               <button
                 type="button"
@@ -477,9 +559,13 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
                 onClick={() => void exportBundle()}
                 disabled={exporting.busy}
                 data-testid="export-bundle"
-                title="A ZIP with the unmodified artifacts, trade/event/decision CSVs, parameters, attribution, README and checksums"
+                title={
+                  previewing
+                    ? 'A ZIP of the displayed TEMPORARY PREVIEW (labelled as such): artifacts, CSVs, parameters, README and checksums'
+                    : 'A ZIP with the unmodified artifacts, trade/event/decision CSVs, parameters, attribution, README and checksums'
+                }
               >
-                {exporting.busy ? 'Exporting…' : 'Export research bundle'}
+                {exporting.busy ? 'Exporting…' : previewing ? 'Export preview bundle' : 'Export research bundle'}
               </button>
               <label className="small">
                 <input
@@ -500,9 +586,10 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
         </div>
       </section>
 
-      <section className="card chart-card" aria-label={`${symbol} price and events`}>
+      <section className={`card chart-card${pv.open ? ' has-preview-panel' : ''}`} aria-label={`${symbol} price and events`}>
+        <div className="chart-toolbar">
         <div className="symbol-tabs" role="tablist" aria-label="Symbol" data-testid="symbol-tabs">
-          {run.symbols.map((s) => (
+          {shown.symbols.map((s) => (
             <button
               key={s}
               type="button"
@@ -517,13 +604,29 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
           ))}
           <span className="muted small symbol-note">
             Only {symbol}’s price and {symbol}’s events are shown
-            {run.symbols.length > 1 ? '; other symbols are on their own tabs' : ''}.
+            {shown.symbols.length > 1 ? '; other symbols are on their own tabs' : ''}.
           </span>
         </div>
+          <button
+            type="button"
+            className={`btn-chip preview-toggle${pv.open ? ' is-on' : ''}${previewing ? ' is-previewing' : ''}`}
+            aria-pressed={pv.open}
+            aria-expanded={pv.open}
+            aria-controls="preview-panel"
+            onClick={() => pv.setOpen(!pv.open)}
+            ref={toggleRef}
+            data-testid="preview-toggle"
+            title="Edit this strategy's parameters and run ONE configuration at a time, without saving a run"
+          >
+            Interactive Preview{previewing ? ' · showing a preview' : ''}
+          </button>
+        </div>
+        <div className="chart-split">
+        <div className="chart-main">
         <div className="legend" data-testid="legend">
           <span className="legend-price">
             <span className="line-key" /> {symbol}{' '}
-            {run.dataOrigin === 'synthetic' ? '(synthetic)' : prices ? `(${prices.units})` : ''}
+            {shown.dataOrigin === 'synthetic' ? '(synthetic)' : prices ? `(${prices.units})` : ''}
           </span>
           {kindsPresent.map((k) => (
             <label key={k} className={`legend-kind${kinds.has(k) ? '' : ' is-off'}`}>
@@ -551,7 +654,7 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
               )}
             </label>
           ))}
-          {run.status === 'completed' && kindsPresent.length === 0 && (
+          {shown.status === 'completed' && kindsPresent.length === 0 && (
             <span className="muted small">No events for {symbol}.</span>
           )}
           {(countsA.executed_entry ?? 0) + (countsB.executed_entry ?? 0) > 0 && (
@@ -587,18 +690,18 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
           ) : prices ? (
             prices.points.length === 0 ? (
               <div className="chart-missing" role="alert">
-                No {symbol} price data in {run.window.from} → {run.window.to}. No substitute chart is shown.
+                No {symbol} price data in {shown.window.from} → {shown.window.to}. No substitute chart is shown.
               </div>
             ) : (
               <PriceChart
-                key={`${run.id}:${symbol}`}
+                key={`${shown.id}:${symbol}`}
                 ref={chartRef}
                 overview={prices.points}
                 overviewDecimated={prices.decimated}
-                synthetic={run.dataOrigin === 'synthetic'}
+                synthetic={shown.dataOrigin === 'synthetic'}
                 fetchDetail={(from, to, signal) =>
                   api
-                    .prices(run.id, symbol, { from: Math.floor(from), to: Math.ceil(to), points: 3000 }, signal)
+                    .prices(shown.id, symbol, { from: Math.floor(from), to: Math.ceil(to), points: 3000 }, signal)
                     .then((p) => p.points)
                 }
                 events={chartEvents}
@@ -658,10 +761,22 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             double-click resets
           </span>
         </div>
+        </div>
+        {pv.open && (
+          <PreviewPanel
+            c={pv}
+            sourceRunId={run.id}
+            onClose={() => {
+              pv.setOpen(false);
+              toggleRef.current?.focus();
+            }}
+          />
+        )}
+        </div>
       </section>
 
       <div className="lower">
-        {runB && !compareProblem && run.status === 'completed' && (
+        {runB && !compareProblem && run.status === 'completed' && !previewing && (
           <ComparisonPanel a={run.id} b={runB.id} symbol={symbol} />
         )}
         {(tradesA.size > 0 || tradesB.size > 0) && (
@@ -674,7 +789,7 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
             </div>
             {(
               [
-                ['A', run.id, tradesA],
+                ['A', shown.id, tradesA],
                 ['B', runB?.id ?? '', tradesB]
               ] as const
             )
@@ -682,13 +797,16 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
               .map(([role, id, trades]) => (
                 <div key={role}>
                   <h4 className="small">
-                    <span className={`role-badge role-${role}`}>{role}</span> {id}
+                    <span className={`role-badge role-${role}`}>{role}</span> {displayId(id)}
+                    {role === 'A' && previewing ? <span className="badge badge-preview">temporary preview</span> : null}
                   </h4>
                   <TradeTable
                     trades={trades}
                     role={role}
                     selectedTradeKey={selectedTrade?.key ?? null}
                     onSelect={selectTrade}
+                    lossesOnly={lossesOnly[role]}
+                    onLossesOnly={(on) => setLossesOnly((x) => ({ ...x, [role]: on }))}
                   />
                 </div>
               ))}
@@ -713,19 +831,22 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
           window={view && !view.full ? view.range : null}
           selectedKey={selectedKey}
           onSelect={(k) => select(k, true)}
+          view={tableView}
+          onView={setTableView}
         />
         <AnalysisPanel
-          runs={[{ role: 'A' as Role, run }, ...(runB && !compareProblem ? [{ role: 'B' as Role, run: runB }] : [])]}
+          runs={[{ role: 'A' as Role, run: shown }, ...(runB && !compareProblem ? [{ role: 'B' as Role, run: runB }] : [])]}
           symbol={symbol}
         />
         <ParametersPanel
-          run={run}
+          run={shown}
           onClone={
             clonable
               ? () => {
                   // A clone is an ordinary manual test of the CURRENT version (a 1.0.0 Growth run → 1.1.0, continuation
                   // OFF: its request has no continuation fields); a phenotype rerun's clone is no longer a phenotype run.
-                  const req = Object.fromEntries(Object.entries(run.request!).filter(([k]) => k !== 'phenotypeId'));
+                  // A preview's clone starts New Test from the preview's configuration (derived from the saved run).
+                  const req = Object.fromEntries(Object.entries(shown.request!).filter(([k]) => k !== 'phenotypeId'));
                   onClone({ ...(req as Partial<LabRunRequest>), parentVariation: run.variation.id });
                 }
               : null
@@ -735,6 +856,12 @@ export function RunView({ runId, compareId, symbol: routeSymbol, onRoute, onClon
           <div className="card-head">
             <h3>Notes</h3>
           </div>
+          {previewing && (
+            <p className="muted small" data-testid="notes-preview-note">
+              Notes belong to saved runs. These are the notes of the source run {run.id}; save the preview as a run to annotate
+              it.
+            </p>
+          )}
           <h4 className="small">Run {run.id}</h4>
           <NotesList targetType="run" targetId={run.id} onChanged={onChanged} />
           <h4 className="small">Variation {run.variation.id}</h4>

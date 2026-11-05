@@ -4,6 +4,7 @@ import type { LabEvent, LabValue, RunDetail } from '../../shared/contract.ts';
 import { EVENT_KIND_LABEL } from '../../shared/contract.ts';
 import type { ParamSpec, Predicate } from '../../shared/contract.ts';
 import { findStrategy, RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL } from '../../shared/strategies.ts';
+import { displayId } from '../api.ts';
 import { glyphUri, type MarkerTone, type Role } from '../chart/markers.ts';
 import {
   formatEt,
@@ -19,7 +20,9 @@ import { type TradingSymbolMetrics, TradingMetrics } from './Trading.tsx';
 
 /** What kind of result a run is: a trading backtest, signal-only research, or another source. */
 export function resultKindOf(run: Pick<RunDetail, 'strategy' | 'kind'>): string {
-  if (run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key) return 'trading backtest — standalone per symbol';
+  const preview = run.kind === 'preview' ? 'TEMPORARY PREVIEW (not saved) of a ' : '';
+  if (run.strategy.key === RISE_FROM_RECENT_LOW_TRADING.key) return `${preview}trading backtest — standalone per symbol`;
+  if (preview && run.strategy.key === RISE_FROM_RECENT_LOW.key) return `${preview}signal-only test (no positions, exits or P&L)`;
   if (run.strategy.key === RISE_FROM_RECENT_LOW.key) return 'signal-only (no positions, exits or P&L)';
   if (run.strategy.key === STUDY8_POOL.key)
     return run.kind === 'import' ? 'imported shared-slot pool replay' : 'shared-slot pool rerun (one allocator replay)';
@@ -78,7 +81,7 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
   return (
     <section className="card" aria-label="Parameters" data-testid="parameters">
       <div className="card-head">
-        <h3>Parameters · {run.variation.id}</h3>
+        <h3>Parameters · {run.kind === 'preview' ? 'temporary preview (no variation)' : run.variation.id}</h3>
         {onClone ? (
           <button type="button" className="btn-chip" onClick={onClone} data-testid="clone-run">
             Clone into new test…
@@ -89,7 +92,9 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
               ? 'Imported result: not executable here'
               : run.phenotype
                 ? `Rerun of ${run.phenotype.id}: rerun it from the phenotype catalogue`
-                : 'Synthetic demo: not executable'}
+                : run.kind === 'preview'
+                  ? 'Temporary preview: Save as run to keep it'
+                  : 'Synthetic demo: not executable'}
           </span>
         )}
       </div>
@@ -236,7 +241,7 @@ export function EventDetail({
       <dl className="detail-grid">
         <dt>Run</dt>
         <dd>
-          <span className={`role-badge role-${role}`}>{role}</span> <span className="mono">{runId}</span>
+          <span className={`role-badge role-${role}`}>{role}</span> <span className="mono">{runId ? displayId(runId) : runId}</span>
         </dd>
         <dt>Time (ET)</dt>
         <dd data-testid="detail-time">{formatEt(event.t, event.timePrecision)}</dd>
@@ -314,14 +319,14 @@ export function AnalysisPanel({ runs, symbol }: { runs: { role: Role; run: RunDe
           return (
             <div key={role} className="analysis-block" data-testid={`analysis-trading-${role}`}>
               <h4>
-                <span className={`role-badge role-${role}`}>{role}</span> {run.id} · trading backtest · {symbol}
+                <span className={`role-badge role-${role}`}>{role}</span> {displayId(run.id)} · trading backtest · {symbol}
               </h4>
               <p className="muted small">{String(m.disclaimer)}</p>
               {per ? (
                 <TradingMetrics m={per as unknown as TradingSymbolMetrics} symbol={symbol} />
               ) : (
                 <p className="muted small">
-                  {run.id} has no results for {symbol}.
+                  {displayId(run.id)} has no results for {symbol}.
                 </p>
               )}
             </div>
@@ -334,7 +339,7 @@ export function AnalysisPanel({ runs, symbol }: { runs: { role: Role; run: RunDe
           return (
             <div key={role} className="analysis-block" data-testid={`analysis-pool-${role}`}>
               <h4>
-                <span className={`role-badge role-${role}`}>{role}</span> {run.id} ·{' '}
+                <span className={`role-badge role-${role}`}>{role}</span> {displayId(run.id)} ·{' '}
                 {m.kind === 'pool rerun' ? 'shared-slot pool rerun (one allocator replay)' : 'imported trades'}
               </h4>
               {m.kind === 'pool rerun' && (
@@ -385,13 +390,13 @@ export function AnalysisPanel({ runs, symbol }: { runs: { role: Role; run: RunDe
         if (m.kind !== 'entry-signal outcomes')
           return (
             <p key={role} className="muted small">
-              {run.id}: no analysis view for metrics of kind “{String(m.kind)}” (see Parameters and the export bundle).
+              {displayId(run.id)}: no analysis view for metrics of kind “{String(m.kind)}” (see Parameters and the export bundle).
             </p>
           );
         if (!per)
           return (
             <p key={role} className="muted small">
-              {run.id} has no results for {symbol}.
+              {displayId(run.id)} has no results for {symbol}.
             </p>
           );
         const o = per.outcomes as Summary;
@@ -406,7 +411,7 @@ export function AnalysisPanel({ runs, symbol }: { runs: { role: Role; run: RunDe
         return (
           <div key={role} className="analysis-block">
             <h4>
-              <span className={`role-badge role-${role}`}>{role}</span> {run.id} · entry signals vs every session
+              <span className={`role-badge role-${role}`}>{role}</span> {displayId(run.id)} · entry signals vs every session
             </h4>
             <p className="muted small">
               {String(m.disclaimer)} Censored values (window too short) are excluded, never counted as zero.

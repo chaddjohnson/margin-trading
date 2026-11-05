@@ -4,7 +4,7 @@
 import { randomBytes } from 'node:crypto';
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { hostname, networkInterfaces } from 'node:os';
-import { dirname, isAbsolute, join, resolve } from 'node:path';
+import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export interface Config {
@@ -23,6 +23,11 @@ export interface Config {
   runTimeoutSeconds: number;
   staticDir: string | null;
   seedDemo: boolean;
+  /** Interactive Preview: the cache directory (disposable; never a saved run), its limits, concurrent executions. */
+  previewCacheDir: string;
+  previewCacheMaxEntries: number;
+  previewCacheMaxBytes: number;
+  maxConcurrentPreviews: number;
 }
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -152,6 +157,28 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
       'STRATEGY_LAB_RUN_TIMEOUT_SECONDS'
     ),
     staticDir: staticDir && existsSync(staticDir) ? staticDir : null,
-    seedDemo: (env.STRATEGY_LAB_SEED_DEMO ?? '1') !== '0'
+    seedDemo: (env.STRATEGY_LAB_SEED_DEMO ?? '1') !== '0',
+    previewCacheDir: previewCacheDirOf(stateDir, env.STRATEGY_LAB_PREVIEW_CACHE_DIR ? abs(env.STRATEGY_LAB_PREVIEW_CACHE_DIR) : null),
+    previewCacheMaxEntries: int(env.STRATEGY_LAB_PREVIEW_CACHE_MAX_ENTRIES, 200, 1, 100_000, 'STRATEGY_LAB_PREVIEW_CACHE_MAX_ENTRIES'),
+    previewCacheMaxBytes:
+      int(env.STRATEGY_LAB_PREVIEW_CACHE_MAX_MB, 2048, 16, 1_048_576, 'STRATEGY_LAB_PREVIEW_CACHE_MAX_MB') * 1024 * 1024,
+    maxConcurrentPreviews: int(env.STRATEGY_LAB_MAX_CONCURRENT_PREVIEWS, 1, 1, 2, 'STRATEGY_LAB_MAX_CONCURRENT_PREVIEWS')
   };
+}
+
+/**
+ * The preview cache directory: <stateDir>/preview-cache by default. Never the state directory itself, an ancestor of
+ * it, the repository, market data, or a directory inside the saved runs, imports or deletion trash.
+ */
+export function previewCacheDirOf(stateDir: string, override: string | null): string {
+  const dir = resolve(override ?? join(stateDir, 'preview-cache'));
+  const within = (p: string, parent: string) => p === parent || p.startsWith(`${parent}${sep}`);
+  const state = resolve(stateDir);
+  const bad =
+    within(state, dir) ||
+    within(REPO_ROOT, dir) ||
+    within(dir, resolve(REPO_ROOT, 'data')) ||
+    ['runs', 'imports', 'trash'].some((d) => within(dir, resolve(state, d)));
+  if (bad) throw new Error(`STRATEGY_LAB_PREVIEW_CACHE_DIR must be a directory of its own, not ${dir}`);
+  return dir;
 }

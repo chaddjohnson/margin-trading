@@ -10,23 +10,38 @@ import { Glyph } from './Panels.tsx';
 
 type SortKey = 'time' | 'kind' | 'price' | 'run';
 
+/** The table's view (scope, search, sort): owned by the page when given, so it survives a result swap. */
+export interface EventTableView {
+  scope: 'window' | 'all';
+  q: string;
+  sort: { key: SortKey; dir: 1 | -1 };
+}
+
 /** The events of the CURRENT SYMBOL only (both runs when comparing), honouring the kind filter. */
 export function EventTable({
   rows,
   symbol,
   window,
   selectedKey,
-  onSelect
+  onSelect,
+  view,
+  onView
 }: {
   rows: readonly ChartEvent[];
   symbol: string;
   window: [number, number] | null;
   selectedKey: string | null;
   onSelect: (key: string) => void;
+  view?: EventTableView;
+  onView?: (v: EventTableView) => void;
 }) {
-  const [scope, setScope] = useState<'window' | 'all'>('window');
-  const [q, setQ] = useState('');
-  const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: 'time', dir: 1 });
+  const [own, setOwn] = useState<EventTableView>({ scope: 'window', q: '', sort: { key: 'time', dir: 1 } });
+  const current = view ?? own;
+  const change = onView ?? setOwn;
+  const { scope, q, sort } = current;
+  const setScope = (v: EventTableView['scope']) => change({ ...current, scope: v });
+  const setQ = (v: string) => change({ ...current, q: v });
+  const setSort = (fn: (s: EventTableView['sort']) => EventTableView['sort']) => change({ ...current, sort: fn(current.sort) });
   const inWindow = useMemo(
     () => rows.filter((r) => !window || (Date.parse(r.event.t) >= window[0] && Date.parse(r.event.t) <= window[1])),
     [rows, window]

@@ -334,15 +334,22 @@ export function TradeTable({
   trades,
   role,
   selectedTradeKey,
-  onSelect
+  onSelect,
+  lossesOnly: lossesOnlyProp,
+  onLossesOnly
 }: {
   trades: ReadonlyMap<string, Trade>;
   role: Role;
   selectedTradeKey: string | null;
   onSelect: (trade: Trade) => void;
+  /** "Closed losses only", owned by the page when given (it survives a result swap). */
+  lossesOnly?: boolean;
+  onLossesOnly?: (on: boolean) => void;
 }) {
   const box = useRef<HTMLDivElement>(null);
-  const [lossesOnly, setLossesOnly] = useState(false);
+  const [ownLossesOnly, setOwnLossesOnly] = useState(false);
+  const lossesOnly = lossesOnlyProp ?? ownLossesOnly;
+  const setLossesOnly = onLossesOnly ?? setOwnLossesOnly;
   const all = tradeList(trades);
   const rows = lossesOnly ? all.filter(isClosedLoss) : all;
   const withOrigin = all.some((t) => originOf(t) !== null);

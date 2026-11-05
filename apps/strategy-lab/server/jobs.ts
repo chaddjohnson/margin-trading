@@ -23,12 +23,21 @@ export const RUNNER_SCRIPTS: Readonly<Record<string, string>> = {
   'study8-d1-pool': 'apps/strategy-lab/runner/pool-run.ts'
 };
 /** Optional artifact files a runner may write besides the four every run has; all are covered by manifest.json. */
-const OPTIONAL_ARTIFACTS = ['trades.json', 'daily.json', 'decisions.json', 'minute-marks.csv.gz', 'study8-output.json'];
-const NODE_FLAGS = [
+export const OPTIONAL_ARTIFACTS = ['trades.json', 'daily.json', 'decisions.json', 'minute-marks.csv.gz', 'study8-output.json'];
+/** The runner's Node flags (shared by saved runs and Interactive Preview executions, server/previews.ts). */
+export const NODE_FLAGS = [
   '--experimental-transform-types',
   '--disable-warning=ExperimentalWarning',
   '--max-old-space-size=6144'
 ];
+
+/** The runner's minimal environment (no secrets, no user text): the same for saved runs and previews. */
+export const RUNNER_ENV_FIXED = { LANG: 'C.UTF-8', TZ: 'UTC' } as const;
+export const runnerEnv = (): NodeJS.ProcessEnv => ({
+  PATH: process.env.PATH ?? '/usr/bin:/bin',
+  HOME: process.env.HOME ?? '/tmp',
+  ...RUNNER_ENV_FIXED
+});
 
 interface Active {
   child: ChildProcess;
@@ -112,7 +121,7 @@ export class Jobs {
     const logStream = createWriteStream(join(dir, 'run.log'), { flags: 'a' });
     const child = spawn(process.execPath, [...NODE_FLAGS, join(this.cfg.repoRoot, script), dir], {
       cwd: this.cfg.repoRoot,
-      env: { PATH: process.env.PATH ?? '/usr/bin:/bin', HOME: process.env.HOME ?? '/tmp', LANG: 'C.UTF-8', TZ: 'UTC' },
+      env: runnerEnv(),
       stdio: ['ignore', 'pipe', 'pipe'],
       shell: false
     });

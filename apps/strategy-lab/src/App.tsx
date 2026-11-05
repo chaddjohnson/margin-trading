@@ -12,12 +12,14 @@ interface Route {
   run: string | null;
   symbol: string | null;
   compare: string | null;
+  /** A displayed Interactive Preview (PV-…) of the run's page; restored from its validated cache entry on reload. */
+  preview?: string | null;
   /** The phenotype catalogue view (#/phenotypes, #/phenotype/PH-0001). */
   phenotypes?: boolean;
   phenotype?: string | null;
 }
 
-// #/run/R-000042?symbol=VGT&compare=R-000013 — survives a refresh and can be bookmarked in the browser.
+// #/run/R-000042?symbol=VGT&compare=R-000013(&preview=PV-…) — survives a refresh and can be bookmarked in the browser.
 function parseHash(): Route {
   const ph = /^#\/phenotype(?:s|\/(PH-\d{4,12}))$/.exec(window.location.hash);
   if (ph) return { run: null, symbol: null, compare: null, phenotypes: true, phenotype: ph[1] ?? null };
@@ -26,10 +28,12 @@ function parseHash(): Route {
   const p = new URLSearchParams(m[2] ?? '');
   const sym = p.get('symbol');
   const cmp = p.get('compare');
+  const pv = p.get('preview');
   return {
     run: m[1]!,
     symbol: sym && /^[A-Z0-9][A-Z0-9.-]{0,9}$/.test(sym) ? sym : null,
-    compare: cmp && /^R-\d{6,12}$/.test(cmp) ? cmp : null
+    compare: cmp && /^R-\d{6,12}$/.test(cmp) ? cmp : null,
+    preview: pv && /^PV-[0-9a-f]{64}$/.test(pv) ? pv : null
   };
 }
 
@@ -39,6 +43,7 @@ function toHash(r: Route): string {
   const p = new URLSearchParams();
   if (r.symbol) p.set('symbol', r.symbol);
   if (r.compare) p.set('compare', r.compare);
+  if (r.preview) p.set('preview', r.preview);
   const q = p.toString();
   return `#/run/${r.run}${q ? `?${q}` : ''}`;
 }
@@ -118,6 +123,7 @@ export function App() {
     if (r.run && r.run !== route.run) {
       next.compare = r.compare ?? null;
       next.symbol = r.symbol ?? route.symbol;
+      next.preview = r.preview ?? null; // a preview belongs to the page it was made on
     }
     window.location.hash = toHash(next);
   };
@@ -211,6 +217,11 @@ export function App() {
               onClone={(initial) => setDialog({ initial })}
               onChanged={refresh}
               onDeleted={onDeleted}
+              previewId={route.preview ?? null}
+              onSaved={(id, source) => {
+                setNotice({ tone: 'ok', text: `Saved the preview as ${id}: a new immutable run (${source} is unchanged).` });
+                refresh();
+              }}
               refreshKey={refreshKey}
             />
           ) : (

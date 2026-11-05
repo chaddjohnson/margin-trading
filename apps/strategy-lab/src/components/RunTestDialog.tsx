@@ -16,11 +16,12 @@ import {
   type ParamSpec,
   type ParamValue,
   RESOLUTION_LABEL,
-  type Resolution,
-  type StrategySpec
+  type Resolution
 } from '../../shared/contract.ts';
-import { constraintErrors, defaultParams, isActive, noteShown, predicateParams, validateValue } from '../../shared/params.ts';
+import { constraintErrors, defaultParams, isActive, noteShown } from '../../shared/params.ts';
 import { ApiError, api, type Meta, type PhenotypeView } from '../api.ts';
+import { type Draft, draftOf, fieldErrorsOf, isShown, parseDraft, requestParams, UNIT_TEXT, withValue } from '../paramForm.ts';
+import { ParamHelpText, ResolutionHelpText } from './ParamHelp.tsx';
 import { StrategyPicker } from './StrategyPicker.tsx';
 
 interface Props {
@@ -52,44 +53,6 @@ const partitionRange = (meta: Meta, names: string[], symbols: string[]) => {
     to: [...ends].sort().at(-1)! > last ? last : [...ends].sort().at(-1)!
   };
 };
-
-type Draft = Record<string, string | boolean>; // numbers as typed text, switches as booleans, choices as their value
-
-const draftOf = (spec: StrategySpec, values: Record<string, ParamValue>): Draft =>
-  Object.fromEntries(
-    spec.params.map((p) => {
-      const v = values[p.key] ?? p.default;
-      return [p.key, p.type === 'boolean' ? v === true : String(v)];
-    })
-  );
-
-const parseValue = (p: ParamSpec, d: string | boolean | undefined): ParamValue =>
-  p.type === 'boolean' ? d === true : p.type === 'enum' ? String(d ?? p.default) : Number(d);
-
-const parseDraft = (spec: StrategySpec, draft: Draft): Record<string, ParamValue> =>
-  Object.fromEntries(spec.params.map((p) => [p.key, parseValue(p, draft[p.key])]));
-
-const UNIT_TEXT: Partial<Record<ParamSpec['unit'], string>> = {
-  percent: '%',
-  days: 'calendar days',
-  bps: 'bps per side',
-  sessions: 'trading sessions',
-  bars: 'bars'
-};
-
-// The values a request carries: every active one; an inactive one shown disabled (a visible saved draft); a hidden
-// inactive one only when edited away from its default and valid.
-function requestParams(spec: StrategySpec, parsed: Record<string, ParamValue>) {
-  return Object.fromEntries(
-    spec.params
-      .filter((p) => {
-        if (isActive(spec, parsed, p.key)) return true;
-        if ((p.whenInactive ?? 'disable') === 'disable') return true;
-        return parsed[p.key] !== p.default && validateValue(p, parsed[p.key]) === null;
-      })
-      .map((p) => [p.key, parsed[p.key]!])
-  );
-}
 
 export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: Props) {
   const lockedSpec = phenotype
@@ -124,17 +87,8 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
 
   const parsed = useMemo(() => parseDraft(spec, params), [params, spec]);
   const active = (key: string) => isActive(spec, parsed, key);
-  const shown = (p: ParamSpec) => active(p.key) || (p.whenInactive ?? 'disable') === 'disable';
-  const fieldErrors = Object.fromEntries(
-    spec.params.map((p) => [
-      p.key,
-      !shown(p)
-        ? null
-        : p.type !== 'boolean' && p.type !== 'enum' && String(params[p.key] ?? '').trim() === ''
-          ? `${p.label}: required`
-          : validateValue(p, parsed[p.key])
-    ])
-  );
+  const shown = (p: ParamSpec) => isShown(spec, parsed, p);
+  const fieldErrors = fieldErrorsOf(spec, params, parsed);
   const sent = requestParams(spec, parsed);
   const crossErrors = constraintErrors(spec, sent);
   const holdoutStart = meta.partitions.holdout?.start ?? '2024-01-01';
@@ -186,15 +140,8 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
     setSpecKey(next.key);
   };
 
-  const setParam = (p: ParamSpec, value: string | boolean) =>
-    setParams((x) => {
-      const next: Draft = { ...x, [p.key]: value };
-      // A switch turned off also turns off the switches that apply only with it (no enabled-but-inert checkbox).
-      if (p.type === 'boolean' && value === false)
-        for (const q of spec.params)
-          if (q.type === 'boolean' && q.activeWhen && predicateParams(q.activeWhen).includes(p.key)) next[q.key] = false;
-      return next;
-    });
+  // A switch turned off also turns off the switches that apply only with it (no enabled-but-inert checkbox).
+  const setParam = (p: ParamSpec, value: string | boolean) => setParams((x) => withValue(spec, x, p, value));
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -264,13 +211,11 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
             </span>
           </span>
           <span className="field-help">
-            {p.description} Default {p.default ? 'ON' : 'OFF'}.
-            {!applied && <> Unavailable while its parent rule is off.</>} <span className="mono">{p.key}</span>
+            <ParamHelpText p={p} value={params[p.key]} applied={applied} />
           </span>
         </label>
       );
     if (p.type === 'enum') {
-      const chosen = p.options.find((o) => o.value === params[p.key]);
       return (
         <label key={p.key} className={`field${dependent ? ' is-dependent' : ''}`}>
           <span className="field-label">{p.label}</span>
@@ -287,7 +232,7 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
             ))}
           </select>
           <span className="field-help">
-            {chosen?.description ?? p.description} <span className="mono">{p.key} = {String(params[p.key])}</span>
+            <ParamHelpText p={p} value={params[p.key]} applied={applied} />
           </span>
         </label>
       );
@@ -313,7 +258,7 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
           data-testid={`param-${p.key}`}
         />
         <span className="field-help">
-          {p.description} Range {p.min}–{p.max}; default {String(p.default)}. <span className="mono">{p.key}</span>
+          <ParamHelpText p={p} value={params[p.key]} applied={applied} />
         </span>
         {fieldErrors[p.key] && <span className="form-error">{fieldErrors[p.key]}</span>}
       </label>
@@ -335,8 +280,7 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
         ))}
       </select>
       <span className="field-help">
-        N = {String(params.recentLowLookbackBars ?? '?') || '?'} completed {RESOLUTION_LABEL[resolution]}
-        {resolution === '1d' ? ' (sessions)' : ' within the regular session; overnight gaps are not counted'}.
+        <ResolutionHelpText resolution={resolution} lookback={params.recentLowLookbackBars} />
       </span>
     </label>
   );

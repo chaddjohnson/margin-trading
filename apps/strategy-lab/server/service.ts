@@ -78,7 +78,7 @@ export function partitionsTouched(repoRoot: string, from: string, to: string): s
   return names.join('+') || 'outside partitions';
 }
 
-interface Profile {
+export interface Profile {
   sourceRef: string;
   sourcePaths: readonly string[];
   params: LabValue[]; // the run's snapshot (inactive saved values labelled)
@@ -321,8 +321,12 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
   };
 }
 
+/** A form strategy's run profile (parameter snapshot, variation parameters, title, assumptions, code paths). */
+export const runProfile = (spec: StrategySpec, req: LabRunRequest): Profile =>
+  spec.key === RISE_FROM_RECENT_LOW_TRADING.key ? tradingProfile(spec, req) : signalOnlyProfile(spec, req);
+
 // Recorded for every manual run (after the strategy's own assumptions), as they always were.
-function dataAssumptions(req: LabRunRequest, partition: string): LabValue[] {
+export function dataAssumptions(req: LabRunRequest, partition: string): LabValue[] {
   const common: LabValue[] = [
     {
       key: 'bars',
@@ -407,7 +411,7 @@ export class LabService {
   ): { runId: string } {
     const spec = findStrategy(req.strategyKey, req.strategyVersion)!;
     const exp = this.repo.ensureExperiment(experiment.slug, experiment.title, experiment.description);
-    const profile = spec.key === RISE_FROM_RECENT_LOW_TRADING.key ? tradingProfile(spec, req) : signalOnlyProfile(spec, req);
+    const profile = runProfile(spec, req);
     const strat = this.ensureRegistered(spec, profile.sourceRef);
     const canonical = variationIdentity(spec, req.params, req.resolution);
     const parent = req.parentVariation ? this.repo.variationIdOf(req.parentVariation) : null;
@@ -446,7 +450,8 @@ export class LabService {
     return { runId: run.publicId };
   }
 
-  private ensureRegistered(spec: StrategySpec, sourceRef: string) {
+  /** The strategy row of a registry version (created on first use; display metadata kept current). */
+  ensureRegistered(spec: StrategySpec, sourceRef: string) {
     return this.repo.ensureStrategy({
       key: spec.key,
       version: spec.version,

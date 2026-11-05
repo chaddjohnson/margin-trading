@@ -489,6 +489,15 @@ export class Repo {
     return json<unknown>(this.runRow(publicId)?.request_json, null);
   }
 
+  /** Saved runs made from one Interactive Preview (Save as run records the preview's cache key), oldest first. */
+  runsSavedFromPreview(key: string): string[] {
+    return (
+      this.db
+        .prepare("SELECT public_id FROM runs WHERE json_extract(provenance_json, '$.preview.key') = ? ORDER BY id")
+        .all(key) as Row[]
+    ).map((r) => String(r.public_id));
+  }
+
   setRunTitle(publicId: string, title: string): boolean {
     const id = parsePublicId('R', publicId);
     return id !== null && this.db.prepare('UPDATE runs SET title = ? WHERE id = ?').run(title, id).changes === 1;
