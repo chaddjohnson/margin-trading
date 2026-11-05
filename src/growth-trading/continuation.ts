@@ -222,7 +222,12 @@ export type LogEvent =
   | 'renewal_watch'
   | 'renewal_reset'
   | 'renewal_signal'
-  | 'renewal_watch_ended';
+  | 'renewal_watch_ended'
+  // v1.3.0 optional rules (src/growth-trading/optionalRules.ts), only with the rule ON
+  | 'initial_stop_set'
+  | 'partial_exit'
+  | 'trend_count'
+  | 'trend_exit_decision';
 
 export interface LogEntry {
   seq: number;

@@ -1,4 +1,13 @@
-// rise-from-recent-low-trading v1.2.0 ("Growth"): a growth-following trading backtest of ONE symbol (see README.md).
+// rise-from-recent-low-trading v1.3.0 ("Growth"): a growth-following trading backtest of ONE symbol (see README.md).
+//
+// v1.3.0 adds three OPTIONAL, independently switchable rules (optionalRules.ts), all OFF by default: an INITIAL RISK
+// STOP (fill − m × ATR, active from the fill), an alternative TREND-BREAKOUT base entry (an entry-method selector; the
+// Rise entry stays the default) and TREND RETENTION (a partial sale at the first profit trailing-stop event, the
+// remainder exited on consecutive closes below an SMA). With all three OFF none of their code runs: every decision,
+// fill, exit, mark and log entry is identical to v1.2.0 (tests/offParity-1.2.0.test.ts, against the fixture captured
+// from v1.2.0 before the change), so v1.2.0 runs replay as v1.3.0 with the three OFF. The engine validation no longer
+// checks a value whose switch is OFF (the maximum-hold age, the buffer switch and percent): requests that carry only
+// the effective values (Interactive Preview) are valid.
 //
 // v1.2.0 adds two OPTIONAL entry gates (entryGates.ts), both OFF by default: an entry TREND FILTER (five methods, on
 // trading-session observations) applied to every Growth entry decision, and PERSISTENT ENTRY ELIGIBILITY (five bounded
@@ -79,6 +88,27 @@ import {
   trendWarmupSessions
 } from './entryGates.ts';
 import {
+  type BreakoutEntryConfig,
+  type BreakoutScan,
+  type BreakoutSignal,
+  ENTRY_METHODS,
+  type EntryMethod,
+  type ExitFill,
+  type InitialStopConfig,
+  PositionRules,
+  type PositionRulesRuntime,
+  type ProtectionCheck,
+  type RetentionConfig,
+  breakoutConfigErrors,
+  breakoutWarmupSessions,
+  initialStopConfigErrors,
+  initialStopWarmupSessions,
+  retentionConfigErrors,
+  retentionWarmupSessions,
+  scanTrendBreakout
+} from './optionalRules.ts';
+import {
+  type ExitReason,
   type ReboundSignal,
   type Setup,
   type SetupKind,
@@ -88,25 +118,34 @@ import {
 } from '../shared-margin-portfolio/strategy.ts';
 
 export const STRATEGY_KEY = 'rise-from-recent-low-trading';
-export const STRATEGY_VERSION = '1.2.0';
-// Earlier versions this engine replays: 1.0.0 = this version with continuation and both entry gates OFF (no
-// continuation fields); 1.1.0 = this version with both entry gates OFF (its continuation settings unchanged).
-export const LEGACY_STRATEGY_VERSIONS = ['1.0.0', '1.1.0'] as const;
+export const STRATEGY_VERSION = '1.3.0';
+// Earlier versions this engine replays: 1.0.0 = this version with continuation, both entry gates and the three optional
+// rules OFF (no continuation fields); 1.1.0 = with both entry gates and the optional rules OFF (its continuation
+// settings unchanged); 1.2.0 = with the three optional rules OFF (its gates and continuation unchanged).
+export const LEGACY_STRATEGY_VERSIONS = ['1.0.0', '1.1.0', '1.2.0'] as const;
 
 export interface RiseTradingParams {
-  advanceFromRecentLowPercent: number; // X, percent
-  recentLowLookbackBars: number; // N, bars of `resolution`
+  advanceFromRecentLowPercent: number; // X, percent (the Rise entry; not read by the breakout entry)
+  recentLowLookbackBars: number; // N, bars of `resolution` (the Rise entry; not read by the breakout entry)
   resolution: SignalResolution;
   trailingStopPercent: number; // mandatory: the stop sits this far below the post-entry high
   maximumHoldEnabled: boolean;
-  maximumHoldDays: number; // calendar days between session dates
+  maximumHoldDays: number; // calendar days between session dates (read only with the maximum hold ON)
   intradayLossBufferEnabled: boolean; // only together with the maximum hold
-  intradayLossBufferPercent: number; // net loss after interest, percent of the invested notional
+  intradayLossBufferPercent: number; // net loss after interest, percent of the invested notional (buffer ON only)
   costBpsPerSide: number; // basis points on every fill
   continuation?: ContinuationConfig | null; // absent or null = OFF (v1.0.0 behaviour)
   trendFilter?: TrendFilterConfig | null; // absent or null = OFF (v1.1.0 behaviour)
-  eligibility?: EligibilityConfig | null; // absent or null = OFF (v1.1.0 behaviour)
+  eligibility?: EligibilityConfig | null; // absent or null = OFF (v1.1.0 behaviour); the Rise entry only
+  // v1.3.0 (absent = the v1.2.0 behaviour): the base entry method, its breakout inputs, and the two exit options.
+  entryMethod?: EntryMethod; // absent = 'rise_from_recent_low'
+  breakout?: BreakoutEntryConfig | null; // required with entryMethod 'trend_breakout', absent otherwise
+  initialStop?: InitialStopConfig | null; // absent or null = OFF
+  retention?: RetentionConfig | null; // absent or null = OFF
 }
+
+export const entryMethodOf = (p: Pick<RiseTradingParams, 'entryMethod'>): EntryMethod =>
+  p.entryMethod ?? 'rise_from_recent_low';
 
 // The research defaults: X and N of rise-from-recent-low@1.0.0, the exits of the registered VGT D1 baseline
 // (config/phenotypes/D1/VGT.json `primary` = the constants of src/app/allIn-trailingBuy-postExitContinuation.ts), and
@@ -133,26 +172,46 @@ export const EXECUTION = {
   stopSlippageBps: 0
 };
 
+// Only values that apply are checked: the maximum-hold age only with the hold ON, the buffer switch only with the hold
+// ON (absent = OFF), the buffer percent only with the buffer ON, X and N only with the Rise entry. A switched-off value
+// is never read by the engine (exitParamsOf), so a request carrying only the effective values is valid.
 export const tradingParamErrors = (p: RiseTradingParams): string[] => {
   const errors: string[] = [];
   const finite = (v: unknown) => typeof v === 'number' && Number.isFinite(v);
+  const method = entryMethodOf(p);
+  const hold = p.maximumHoldEnabled === true;
 
-  if (
-    !finite(p.advanceFromRecentLowPercent) ||
-    p.advanceFromRecentLowPercent <= 0 ||
-    p.advanceFromRecentLowPercent > 100
-  )
-    errors.push('advanceFromRecentLowPercent must be in (0, 100]');
-  if (!Number.isInteger(p.recentLowLookbackBars) || p.recentLowLookbackBars < 2)
-    errors.push('recentLowLookbackBars must be an integer ≥ 2');
+  if (!(ENTRY_METHODS as readonly string[]).includes(method)) errors.push(`entryMethod ${String(method)} is not supported`);
+  if (method === 'rise_from_recent_low') {
+    if (
+      !finite(p.advanceFromRecentLowPercent) ||
+      p.advanceFromRecentLowPercent <= 0 ||
+      p.advanceFromRecentLowPercent > 100
+    )
+      errors.push('advanceFromRecentLowPercent must be in (0, 100]');
+    if (!Number.isInteger(p.recentLowLookbackBars) || p.recentLowLookbackBars < 2)
+      errors.push('recentLowLookbackBars must be an integer ≥ 2');
+    if (p.breakout) errors.push('breakout: inputs given, but the entry method is the Rise entry');
+  } else if (method === 'trend_breakout') {
+    if (!p.breakout) errors.push('breakout: the trend-breakout entry needs its inputs');
+    else errors.push(...breakoutConfigErrors(p.breakout).map((e) => `breakout: ${e}`));
+    if (p.eligibility)
+      errors.push('eligibility: persistent entry eligibility applies only to the Rise entry method (not applicable to the breakout)');
+  }
   if (!isSignalResolution(p.resolution)) errors.push(`resolution ${String(p.resolution)} is not supported`);
   if (!finite(p.trailingStopPercent) || p.trailingStopPercent <= 0 || p.trailingStopPercent >= 100)
     errors.push('trailingStopPercent must be in (0, 100)');
   if (typeof p.maximumHoldEnabled !== 'boolean') errors.push('maximumHoldEnabled must be true or false');
-  if (!Number.isInteger(p.maximumHoldDays) || p.maximumHoldDays < 1)
+  if (hold && (!Number.isInteger(p.maximumHoldDays) || p.maximumHoldDays < 1))
     errors.push('maximumHoldDays must be an integer ≥ 1');
-  if (typeof p.intradayLossBufferEnabled !== 'boolean') errors.push('intradayLossBufferEnabled must be true or false');
-  if (!finite(p.intradayLossBufferPercent) || p.intradayLossBufferPercent < 0 || p.intradayLossBufferPercent >= 100)
+  // the buffer switch applies only with the hold ON; with the hold OFF it may be absent (OFF)
+  if ((hold || p.intradayLossBufferEnabled !== undefined) && typeof p.intradayLossBufferEnabled !== 'boolean')
+    errors.push('intradayLossBufferEnabled must be true or false');
+  if (
+    hold &&
+    p.intradayLossBufferEnabled === true &&
+    (!finite(p.intradayLossBufferPercent) || p.intradayLossBufferPercent < 0 || p.intradayLossBufferPercent >= 100)
+  )
     errors.push('intradayLossBufferPercent must be in [0, 100)');
   if (p.intradayLossBufferEnabled === true && p.maximumHoldEnabled === false)
     errors.push(
@@ -163,6 +222,8 @@ export const tradingParamErrors = (p: RiseTradingParams): string[] => {
   if (p.continuation) errors.push(...continuationConfigErrors(p.continuation).map((e) => `continuation: ${e}`));
   if (p.trendFilter) errors.push(...trendConfigErrors(p.trendFilter).map((e) => `trend filter: ${e}`));
   if (p.eligibility) errors.push(...eligibilityConfigErrors(p.eligibility).map((e) => `eligibility: ${e}`));
+  if (p.initialStop) errors.push(...initialStopConfigErrors(p.initialStop).map((e) => `initial stop: ${e}`));
+  if (p.retention) errors.push(...retentionConfigErrors(p.retention).map((e) => `retention: ${e}`));
 
   return errors;
 };
@@ -238,11 +299,17 @@ export const warmupSessionsFor = (resolution: SignalResolution, n: number) => {
 // completed bars for its moving averages, and when the trend filter reads older sessions (its lookback in sessions).
 // With continuation and the trend filter OFF it is exactly the scanner's (v1.0.0); persistent eligibility reads the
 // scanner's own bars and needs nothing more.
+// v1.3.0: the breakout entry replaces the scanner's warm-up by its own (its SMA comparison and prior-high window);
+// the initial risk stop needs ATR + 1 sessions before a fill, retention its SMA. With the three OFF: v1.2.0 exactly.
 export const warmupSessionsForParams = (p: RiseTradingParams) =>
   Math.max(
-    warmupSessionsFor(p.resolution, p.recentLowLookbackBars),
+    entryMethodOf(p) === 'trend_breakout'
+      ? breakoutWarmupSessions(p.breakout)
+      : warmupSessionsFor(p.resolution, p.recentLowLookbackBars),
     p.continuation ? warmupSessionsFor(p.resolution, continuationWarmupBars(p.continuation)) : 0,
-    p.trendFilter ? trendWarmupSessions(p.trendFilter) : 0
+    p.trendFilter ? trendWarmupSessions(p.trendFilter) : 0,
+    initialStopWarmupSessions(p.initialStop),
+    retentionWarmupSessions(p.retention)
   );
 
 // ----- decisions -----
@@ -253,8 +320,9 @@ export interface EntryDecision {
   time: number; // Unix seconds: when it is first knowable (the signal bar's end)
   price: number; // the decision price: the signal bar's close
   trigger: number; // the scanner's threshold price (NaN for other decision sources)
-  reference: number; // the scanner's recent low (NaN for other decision sources)
+  reference: number; // the scanner's recent low (NaN for other decision sources); the breakout: SMA_L at the signal
   signal?: RiseSignal;
+  breakout?: BreakoutSignal; // v1.3.0: a trend-breakout decision (trigger = the prior high, reference = the SMA)
 }
 
 export type RejectReason = 'position_open' | 'order_pending';
@@ -270,6 +338,7 @@ export interface DecisionOutcome {
   reason: RejectReason | GateVetoReason | null;
   trade: VirtualTrade | null; // the trade it opened, or (rejected) the trade holding the position or the order
   gate?: GatedDecision; // v1.2.0: the gate record of a crossing met while flat (absent with both gates OFF)
+  protection?: ProtectionCheck; // v1.3.0: the initial risk stop was unavailable (absent otherwise)
 }
 
 export const decisionsFromSignals = (bars: readonly SignalBar[], signals: readonly RiseSignal[]): EntryDecision[] =>
@@ -283,6 +352,20 @@ export const decisionsFromSignals = (bars: readonly SignalBar[], signals: readon
     signal
   }));
 
+// v1.3.0: one decision per breakout session close (its id is the close instant: a signal decides once).
+export const decisionsFromBreakout = (signals: readonly BreakoutSignal[]): EntryDecision[] =>
+  signals.map((b) => ({
+    id: `${b.time}`,
+    sessionIndex: b.session,
+    time: b.time,
+    price: b.close,
+    trigger: b.priorHigh,
+    reference: b.sma,
+    breakout: b
+  }));
+
+const EMPTY_SCAN: RiseScan = { signals: [], evaluableBars: 0, barsAtOrAboveThreshold: 0 };
+
 // ----- the simulation -----
 
 export interface SimulationOptions {
@@ -295,6 +378,10 @@ export interface SimulationOptions {
   continuation?: ContinuationRuntime | null; // OFF when absent; classic_d1 also needs `exit` from exitParamsOf
   gates?: GateRuntime | null; // the entry trend filter / persistent eligibility (v1.2.0); OFF when absent
   recordMinuteMarks?: boolean; // keep the change points of the minute-marked net (for exports)
+  // v1.3.0: the base entry method of `decisions` (absent = the Rise entry) and the initial risk stop / trend retention
+  // (absent, or both null = OFF: the v1.2.0 exit path).
+  entryMethod?: EntryMethod;
+  rules?: PositionRulesRuntime | null;
 }
 
 export interface Excursion {
@@ -334,13 +421,15 @@ export interface Simulation {
   continuation: ContinuationController | null;
   gates: EntryGates | null; // v1.2.0 entry gates (null with both OFF)
   markChanges: { t: number[]; marked: number[] } | null; // minute-marked net at each change (recordMinuteMarks)
+  entryMethod: EntryMethod; // v1.3.0
+  rules: PositionRules | null; // v1.3.0: the initial risk stop / trend retention (null with both OFF)
 }
 
-// The origin of a trade: the base Rise entry, or a continuation method.
+// The origin of a trade: the base Growth entry (the Rise entry, or v1.3.0's trend breakout), or a continuation method.
 export const originOf = (trade: VirtualTrade): { origin: Origin; method: ContinuationMethod | null } => {
   const kind = trade.setupKind as string;
 
-  if (kind === 'rise') return { origin: 'base_growth', method: null };
+  if (kind === 'rise' || kind === 'trend_breakout') return { origin: 'base_growth', method: null };
   if (kind === 'continuation') return { origin: 'continuation', method: 'classic_d1' };
   if ((CONTINUATION_METHODS as readonly string[]).includes(kind))
     return { origin: 'continuation', method: kind as ContinuationMethod };
@@ -361,11 +450,13 @@ export const lastMinuteBefore = (ds: Dataset, s: number, time: number) => {
 const prefixed = (prefix: string, values: Record<string, LogValue>) =>
   Object.fromEntries(Object.entries(values).map(([k, v]) => [`${prefix}${k}`, v]));
 
-// The log values of a gate result: the decision ('pass' or the block reason) and the trend filter's observed values.
+// The log values of a gate result: the decision ('pass' or the block reason) and the trend filter's observed values
+// (v1.3.0: and the initial risk stop's availability, only with that stop ON).
 export const gateLogValues = (g: GateResult): Record<string, LogValue> => ({
   gate: g.reason,
   ...(g.capital === null ? {} : { capitalAvailable: g.capital }),
-  ...prefixed('trend.', g.trend?.values ?? {})
+  ...prefixed('trend.', g.trend?.values ?? {}),
+  ...(g.protection ? prefixed('protection.', g.protection.values) : {})
 });
 
 export const simulateTrading = (
@@ -409,7 +500,24 @@ export const simulateTrading = (
     classic ? firstSession : ds.sessionCount
   );
   const log = new DecisionLog();
-  const gateRuntime = options.gates ?? null;
+  const entryMethod: EntryMethod = options.entryMethod ?? 'rise_from_recent_low';
+  // v1.3.0: the initial risk stop / trend retention. Null with both OFF: none of their code runs (the v1.2.0 paths).
+  const rules =
+    options.rules && (options.rules.initialStop || options.rules.retention)
+      ? new PositionRules(ds, options.rules, book, options.exit, options.book, log)
+      : null;
+  // The initial risk stop's decision-time availability, wherever an entry is decided (a failure is noted once per
+  // check; the caller records the blocked decision).
+  const protect = (s: number, time: number, source: string) => {
+    const check = rules!.protection(s, time)!;
+
+    if (!check.pass) rules!.noteBlocked(time, s, source, check);
+    return check;
+  };
+  const gateRuntime =
+    options.gates && rules?.initialStop
+      ? { ...options.gates, protection: (s: number, time: number) => protect(s, time, 'entry_gate') }
+      : (options.gates ?? null);
   const gated = Boolean(gateRuntime && (gateRuntime.trend || gateRuntime.eligibility || gateRuntime.capacity));
   let continuation: ContinuationController | null = null;
   let setupSeq = 0;
@@ -421,7 +529,8 @@ export const simulateTrading = (
 
     const setup: Setup = {
       id: gated ? ++setupSeq : outcomes.length + 1,
-      kind: 'rise' as string as SetupKind, // ShadowBook only records it; not a D1 setup kind
+      // ShadowBook only records it; not a D1 setup kind
+      kind: (entryMethod === 'trend_breakout' ? 'trend_breakout' : 'rise') as string as SetupKind,
       activationIndex: s,
       activationTime: d.time,
       activationPrice: d.price,
@@ -443,13 +552,17 @@ export const simulateTrading = (
       trigger: d.trigger,
       trailingLow: d.reference
     };
+    const trade = book.commit(signal, s, 'granted');
 
-    return book.commit(signal, s, 'granted');
+    rules?.attach(trade, s, d.time); // v1.3.0: fixes the initial risk stop's ATR for this order
+
+    return trade;
   };
   const gates =
     gated && gateRuntime
       ? new EntryGates(ds, gateRuntime, log, { enter, flatWithoutOrder: () => !book.position && !book.order })
       : null;
+  const protectedOnly = Boolean(rules?.initialStop && !gates);
 
   continuation = options.continuation
     ? new ContinuationController(
@@ -465,9 +578,22 @@ export const simulateTrading = (
 
                 return { pass: g.pass, reason: g.reason, text: g.text, values: gateLogValues(g) };
               },
-              afterEntry: (trade, s, time) => gates.afterEntry(trade, s, time, 'a continuation entry')
+              afterEntry: (trade, s, time) => {
+                rules?.attach(trade, s, time);
+                gates.afterEntry(trade, s, time, 'a continuation entry');
+              }
             }
-          : null
+          : protectedOnly
+            ? {
+                // v1.3.0, the initial risk stop ON without an entry gate: its availability is the only check.
+                check: (s, time) => {
+                  const c = protect(s, time, 'continuation');
+
+                  return { pass: c.pass, reason: c.reason, text: c.text, values: prefixed('protection.', c.values) };
+                },
+                afterEntry: (trade, s, time) => rules!.attach(trade, s, time)
+              }
+            : null
       )
     : null;
   const markChanges = options.recordMinuteMarks ? { t: [] as number[], marked: [] as number[] } : null;
@@ -487,7 +613,8 @@ export const simulateTrading = (
     reason: string | null,
     trade: VirtualTrade | null,
     g: GatedDecision | null = null,
-    at = log.entries.length
+    at = log.entries.length,
+    protection: ProtectionCheck | null = null
   ) =>
     log.insert(at, {
       t: d.time,
@@ -502,9 +629,18 @@ export const simulateTrading = (
       reason,
       values: {
         close: d.price,
-        threshold: d.trigger,
-        recentLow: d.reference,
-        ...(g ? { ...(g.gate ? gateLogValues(g.gate) : {}), ...prefixed('policy.', g.validity ?? {}) } : {})
+        // v1.3.0 breakout decisions: the prior high and the intrinsic SMA (the Rise entry: its threshold and low)
+        ...(d.breakout
+          ? {
+              entryMethod: 'trend_breakout',
+              priorHigh: d.breakout.priorHigh,
+              priorHighSession: ds.dates[d.breakout.priorHighSession]!,
+              sma: d.breakout.sma,
+              smaThen: d.breakout.smaThen
+            }
+          : { threshold: d.trigger, recentLow: d.reference }),
+        ...(g ? { ...(g.gate ? gateLogValues(g.gate) : {}), ...prefixed('policy.', g.validity ?? {}) } : {}),
+        ...(protection ? { gate: protection.reason, ...prefixed('protection.', protection.values) } : {})
       }
     });
 
@@ -557,6 +693,17 @@ export const simulateTrading = (
       return;
     }
 
+    // v1.3.0, the initial risk stop ON without an entry gate: no entry without the requested protection.
+    if (protectedOnly) {
+      const check = protect(s, d.time, 'base_signal');
+
+      if (!check.pass) {
+        outcomes.push({ decision: d, status: 'vetoed', reason: check.reason as GateVetoReason, trade: null, protection: check });
+        baseEntry(d, s, 'vetoed', check.text, null, null, log.entries.length, check);
+        return;
+      }
+    }
+
     const trade = enter(d, s);
     const outcome: DecisionOutcome = { decision: d, status: 'unfilled_at_end', reason: null, trade };
 
@@ -572,9 +719,16 @@ export const simulateTrading = (
     return { origin: o.origin, method: o.method };
   };
   const logExit = (trade: VirtualTrade, s: number) => {
-    const grossBeforeCosts = trade.shares * (trade.exitRawPrice - trade.entryRawPrice);
-    const costs =
-      trade.shares * (trade.entryPrice - trade.entryRawPrice) + trade.shares * (trade.exitRawPrice - trade.exitPrice);
+    // v1.3.0: a position closed in several fills sums its fills (the trade's net, interest and gross are its totals).
+    const pos = rules?.positionOf(trade);
+    const fills = pos && pos.fills.length > 1 ? pos.fills : null;
+    const grossBeforeCosts = fills
+      ? fills.reduce((a, f) => a + f.grossBeforeCosts, 0)
+      : trade.shares * (trade.exitRawPrice - trade.entryRawPrice);
+    const costs = fills
+      ? trade.shares * (trade.entryPrice - trade.entryRawPrice) + fills.reduce((a, f) => a + f.exitCost, 0)
+      : trade.shares * (trade.entryPrice - trade.entryRawPrice) + trade.shares * (trade.exitRawPrice - trade.exitPrice);
+    const final = pos?.fills.at(-1);
 
     log.add({
       t: trade.exitTime,
@@ -599,7 +753,23 @@ export const simulateTrading = (
         interest: r2(trade.interest),
         net: r2(trade.net),
         reconciles: Math.abs(grossBeforeCosts - costs - trade.interest - trade.net) < 1e-6,
-        qualifiesForContinuation: trade.net > 0
+        qualifiesForContinuation: trade.net > 0,
+        ...(final
+          ? {
+              rule: final.rule,
+              ...(pos!.stop ? { initialStop: pos!.stop.level } : {}),
+              ...(final.instruction.sameTrade.length ? { sameTrade: final.instruction.sameTrade.join(',') } : {}),
+              fills: pos!.fills.length,
+              ...(fills
+                ? {
+                    finalFillShares: final.shares,
+                    finalFillNet: r2(final.net),
+                    partialFillsNet: r2(pos!.partialNet),
+                    positionNet: r2(trade.net)
+                  }
+                : {})
+            }
+          : {})
       }
     });
   };
@@ -620,6 +790,52 @@ export const simulateTrading = (
         carriedOvernight: trade.carriedOvernight
       }
     });
+
+  // v1.3.0 (the initial risk stop or retention ON): the exits due at bar k, in order. A partial sale keeps the
+  // position and the remainder's next exit may be due at the same bar (a lower stop crossed later in the minute).
+  const exitsAt = (s: number, k: number) => {
+    for (let guard = 0; guard < 3; guard++) {
+      const exit = book.exitAt(k);
+
+      if (!exit) return;
+
+      const instruction = rules!.instructionOf(exit);
+
+      if (instruction?.partial) {
+        const fill = rules!.partialSale(s, exit);
+
+        realized += fill.net;
+        continue;
+      }
+
+      const position = book.position!;
+      const sharesSold = position.lot.shares;
+      const principalRepaid = position.lot.investment;
+      const partials = rules!.positionOf(position.trade)?.fills.length ?? 0;
+      // classic_d1: the D1 machine opens its continuation window from the net the book computes, which after partial
+      // fills is the remainder's alone; it is re-judged on the whole position's net below.
+      const m = book.machine;
+      const machine = partials
+        ? { a: m.continuationActive, h: m.continuationHigh, st: m.continuationStart, w: m.continuationWindows }
+        : null;
+      const trade = book.close(s, exit);
+      const fill = rules!.finalize(trade, s, exit, sharesSold, principalRepaid);
+
+      if (machine) {
+        m.continuationActive = machine.a;
+        m.continuationHigh = machine.h;
+        m.continuationStart = machine.st;
+        m.continuationWindows = machine.w;
+        m.onExit(s, exit.price, trade.net);
+      }
+      realized += fill.net;
+      logExit(trade, s);
+      continuation?.afterExit(s, trade);
+      return;
+    }
+
+    throw new Error(`more than two exit fills at one bar (${ds.dates[s]} bar ${k})`);
+  };
 
   for (let s = firstSession; s <= endSession; s++) {
     const start = ds.sBarStart[s]!;
@@ -659,14 +875,17 @@ export const simulateTrading = (
 
       baseUntil(t);
 
-      const exit = book.exitAt(k);
+      if (rules) exitsAt(s, k);
+      else {
+        const exit = book.exitAt(k);
 
-      if (exit) {
-        const trade = book.close(s, exit);
+        if (exit) {
+          const trade = book.close(s, exit);
 
-        realized += trade.net;
-        logExit(trade, s);
-        continuation?.afterExit(s, trade);
+          realized += trade.net;
+          logExit(trade, s);
+          continuation?.afterExit(s, trade);
+        }
       }
 
       if (book.fillAt(k)) {
@@ -680,10 +899,18 @@ export const simulateTrading = (
         excursions.set(trade, { worst: Infinity, worstTime: NaN, best: -Infinity, bestTime: NaN, marks: 0 });
         invested = true;
         logFill(trade, s);
+
+        // v1.3.0: the position's rules start at its fill; the initial risk stop may already act in this minute.
+        if (rules) {
+          rules.onFill(trade, s, k);
+          exitsAt(s, k);
+        }
       }
 
       const price = k < count ? ds.bClose[start + k]! : ds.sClose[s]!;
       const mark = book.markAt(price, sessionTime);
+      // v1.3.0: a position's own excursion includes the net of its partial fills (the book marks the remainder).
+      const positionMark = rules && book.position ? mark + rules.openPartialNet() : mark;
 
       minute.updateStrict(realized + mark, t);
       minuteMarks++;
@@ -698,13 +925,13 @@ export const simulateTrading = (
 
         x.marks++;
 
-        if (mark < x.worst) {
-          x.worst = mark;
+        if (positionMark < x.worst) {
+          x.worst = positionMark;
           x.worstTime = t;
         }
 
-        if (mark > x.best) {
-          x.best = mark;
+        if (positionMark > x.best) {
+          x.best = positionMark;
           x.bestTime = t;
         }
       }
@@ -718,6 +945,7 @@ export const simulateTrading = (
       throw new Error(`an eligibility bar of ${ds.dates[s]} ends after its close`);
 
     book.afterSession(s);
+    rules?.afterSession(s); // v1.3.0: the trend-retention count at the completed close
     continuation?.afterSession(s);
     gates?.afterSession(s);
 
@@ -737,6 +965,7 @@ export const simulateTrading = (
   }
 
   book.finish(endSession);
+  rules?.finish(endSession);
   continuation?.finish(endSession);
   gates?.finish(endSession);
 
@@ -757,7 +986,9 @@ export const simulateTrading = (
     log,
     continuation,
     gates,
-    markChanges
+    markChanges,
+    entryMethod,
+    rules
   };
 };
 
@@ -768,7 +999,8 @@ export interface RiseTradingRun {
   ds: Dataset;
   bars: SignalBar[];
   firstSignalBar: number;
-  scan: RiseScan;
+  scan: RiseScan; // the Rise scanner's (empty with the breakout entry, which does not run it)
+  breakout: BreakoutScan | null; // v1.3.0: the trend-breakout scan (null with the Rise entry)
   decisions: EntryDecision[];
   simulation: Simulation;
 }
@@ -790,16 +1022,19 @@ export const runRiseTrading = (
     advanceFromRecentLowPercent: params.advanceFromRecentLowPercent,
     recentLowLookbackBars: params.recentLowLookbackBars
   };
+  const method = entryMethodOf(params);
   const bars = barsFromSessions(history, params.resolution);
   const first = bars.findIndex((bar) => bar.sessionIndex >= warmup);
   const firstSignalBar = first < 0 ? bars.length : first;
-  const scan = scanRiseFromRecentLow(bars, scanParams, firstSignalBar);
+  const scan = method === 'rise_from_recent_low' ? scanRiseFromRecentLow(bars, scanParams, firstSignalBar) : EMPTY_SCAN;
   const ds = fixtureDataset(history);
 
   ds.id = `${symbol}:${dataHash.slice(0, 16)}:${ds.lastDate}`;
   ds.dataHash = dataHash;
 
-  const decisions = decisionsFromSignals(bars, scan.signals);
+  // v1.3.0: the trend-breakout entry decides at the window's completed session closes.
+  const breakout = method === 'trend_breakout' ? scanTrendBreakout(ds, warmup, history.length - 1, params.breakout!) : null;
+  const decisions = breakout ? decisionsFromBreakout(breakout.signals) : decisionsFromSignals(bars, scan.signals);
   const continuation = params.continuation
     ? { config: params.continuation, bars: params.continuation.method === 'classic_d1' ? null : bars }
     : null;
@@ -820,10 +1055,15 @@ export const runRiseTrading = (
     book: bookSettingsOf(params),
     continuation,
     gates,
-    recordMinuteMarks: options.recordMinuteMarks
+    recordMinuteMarks: options.recordMinuteMarks,
+    entryMethod: method,
+    rules:
+      params.initialStop || params.retention
+        ? { initialStop: params.initialStop ?? null, retention: params.retention ?? null }
+        : null
   });
 
-  return { params, ds, bars, firstSignalBar, scan, decisions, simulation };
+  return { params, ds, bars, firstSignalBar, scan, breakout, decisions, simulation };
 };
 
 // ----- the trade ledger, reconciliation and metrics -----
@@ -850,13 +1090,73 @@ export interface LedgerRow {
   interestDays: number; // calendar days between the entry and exit (or last) session dates
   excursion: Excursion;
   identityResidual: number; // gross − entryFriction − exitFriction − interest − net
+  // v1.3.0, only for a position closed in several fills (or open with a partial fill): every exit fill (partial ones
+  // first), the net of the partial fills, the open remainder, and the share-weighted average exit price. The row's
+  // gross, frictions, interest and net are then the whole logical position's totals.
+  exitFills?: ExitFill[];
+  partialFillsNet?: number;
+  remainder?: { shares: number; principal: number; interest: number; mark: number; net: number } | null;
+  averageExitRawPrice?: number;
 }
+
+// The fills of a position whose ledger row must sum several fills (null for an ordinary one-fill position).
+const multiFillOf = (sim: Pick<Simulation, 'rules'>, trade: VirtualTrade) => {
+  const pos = sim.rules?.positionOf(trade);
+
+  if (!pos) return null;
+
+  const open = trade.exitIndex < 0;
+
+  return pos.fills.length > 1 || (open && pos.fills.length > 0) ? pos : null;
+};
 
 export const ledgerOf = (sim: Simulation, ds: Dataset): LedgerRow[] =>
   sim.trades.map((trade, i) => {
     const open = trade.exitIndex < 0;
     const lastIndex = open ? sim.endSession : trade.exitIndex;
     const endTime = open ? ds.sCloseTime[sim.endSession]! : trade.exitTime;
+    const multi = multiFillOf(sim, trade);
+
+    if (multi) {
+      const rem = open ? multi.remainder! : null;
+      const grossBeforeCosts =
+        multi.fills.reduce((a, f) => a + f.grossBeforeCosts, 0) +
+        (rem ? rem.shares * (trade.exitRawPrice - trade.entryRawPrice) : 0);
+      const entryFriction = trade.shares * (trade.entryPrice - trade.entryRawPrice);
+      const exitFriction = multi.fills.reduce((a, f) => a + f.exitCost, 0);
+      const averageExitRawPrice =
+        (multi.fills.reduce((a, f) => a + f.shares * f.rawPrice, 0) + (rem ? rem.shares * trade.exitRawPrice : 0)) /
+        trade.shares;
+
+      return {
+        trade,
+        number: i + 1,
+        status: open ? 'open' : 'closed',
+        shares: trade.shares,
+        principal: trade.investment,
+        entryRawPrice: trade.entryRawPrice,
+        entryPrice: trade.entryPrice,
+        exitRawPrice: trade.exitRawPrice,
+        exitPrice: open ? NaN : trade.exitPrice,
+        grossBeforeCosts,
+        entryFriction,
+        exitFriction,
+        interest: trade.interest,
+        net: trade.net,
+        netReturnPercent: (trade.net / trade.investment) * 100,
+        priceReturnPercent: (averageExitRawPrice / trade.entryRawPrice - 1) * 100,
+        calendarDaysHeld: (endTime - trade.entryTime) / secondsPerDay,
+        sessionsHeld: lastIndex - trade.entryIndex + 1,
+        interestDays: Math.round((ds.sTime[lastIndex]! - ds.sTime[trade.entryIndex]!) / secondsPerDay),
+        excursion: sim.excursions.get(trade)!,
+        identityResidual: grossBeforeCosts - entryFriction - exitFriction - trade.interest - trade.net,
+        exitFills: multi.fills,
+        partialFillsNet: multi.partialNet,
+        remainder: rem,
+        averageExitRawPrice
+      };
+    }
+
     const grossBeforeCosts = trade.shares * (trade.exitRawPrice - trade.entryRawPrice);
     const entryFriction = trade.shares * (trade.entryPrice - trade.entryRawPrice);
     const exitFriction = open ? 0 : trade.shares * (trade.exitRawPrice - trade.exitPrice);
@@ -895,6 +1195,82 @@ export const reconcileWithFixedLedger = (sim: Simulation, ds: Dataset) => {
 
   sim.trades.forEach((trade, i) => {
     const entryPrice = ledger.buyPrice(trade.entryRawPrice);
+    const multi = multiFillOf(sim, trade);
+
+    // v1.3.0: a position closed in several fills is re-booked as one lot per fill (its shares and the principal it
+    // repays), each closed at its own fill with its own interest; an open remainder is marked. The fills must add up
+    // to the position (shares, principal) and their nets to its net.
+    if (multi) {
+      const lotOf = (shares: number, principal: number, n: number) =>
+        ledger.openLot({
+          id: (i + 1) * 1000 + n,
+          symbol: trade.symbol,
+          trade,
+          slot: 0,
+          shares,
+          entryIndex: trade.entryIndex,
+          entryBar: trade.entryBar,
+          entryTime: trade.entryTime,
+          entryRawPrice: trade.entryRawPrice,
+          entryPrice,
+          entryExecution: trade.entryExecution,
+          entryTimestamp: ds.sTime[trade.entryIndex]!,
+          decisionIndex: trade.decisionIndex,
+          decisionTime: trade.decisionTime,
+          decisionPrice: trade.decisionPrice,
+          equityAtDecision: NaN,
+          fraction: NaN,
+          originalPrincipal: principal,
+          principal,
+          accruedBefore: 0,
+          accrualStart: ds.sTime[trade.entryIndex]!,
+          posted: 0,
+          accrued: 0,
+          repaidByCore: 0,
+          dividends: 0
+        });
+      let net = 0;
+      let shares = 0;
+      let principal = 0;
+
+      diff(entryPrice, trade.entryPrice);
+      for (const f of multi.fills) {
+        const lot = lotOf(f.shares, f.principal, f.n);
+        const isStop = f.reason === 'trailing stop' || f.reason === 'trailing stop gap';
+        const fillNet = ledger.closeLot(lot, {
+          index: f.session,
+          bar: f.bar,
+          time: f.time,
+          rawPrice: f.rawPrice,
+          reason: f.reason as ExitReason,
+          execution: f.execution,
+          sessionTime: ds.sTime[f.session]!,
+          extraSlippage: isStop ? sim.book.stopSlippageBps / 10000 : 0
+        });
+
+        diff(fillNet, f.net);
+        diff(lot.interest, f.interest);
+        diff(lot.exitPrice, f.price);
+        net += fillNet;
+        shares += f.shares;
+        principal += f.principal;
+      }
+      if (multi.remainder) {
+        const r = multi.remainder;
+        const lot = lotOf(r.shares, r.principal, 0);
+
+        diff(ledger.mark(lot, r.mark, ds.sTime[sim.endSession]!), r.net);
+        diff(ledger.lotInterest(lot, ds.sTime[sim.endSession]!), r.interest);
+        net += r.net;
+        shares += r.shares;
+        principal += r.principal;
+      }
+      diff(net, trade.net);
+      diff(shares * entryPrice, sim.book.notional);
+      diff(principal, sim.book.notional);
+      return;
+    }
+
     const lot = ledger.openLot({
       id: i + 1,
       symbol: trade.symbol,
@@ -1023,8 +1399,11 @@ export const continuationMetricsOf = (sim: Simulation) => {
     window_expired: 0,
     pullback_too_deep: 0,
     end_of_data: 0,
-    // v1.2.0: a trigger blocked by an entry gate ends its episode (keys present only with a gate ON)
-    ...(sim.gates ? { trend_veto: 0, insufficient_history: 0, invalid_data: 0, capital_unavailable: 0 } : {})
+    // v1.2.0: a trigger blocked by an entry gate ends its episode (keys present only with a gate ON; v1.3.0: or with
+    // the initial risk stop ON, whose unavailability blocks a trigger as insufficient_history / invalid_data)
+    ...(sim.gates || sim.rules?.initialStop
+      ? { trend_veto: 0, insufficient_history: 0, invalid_data: 0, capital_unavailable: 0 }
+      : {})
   };
 
   for (const e of c.episodes) if (e.end) ends[e.end]!++;
@@ -1042,8 +1421,9 @@ export const continuationMetricsOf = (sim: Simulation) => {
     armed: c.episodes.filter((e) => Number.isFinite(e.armedTime)).length,
     armedAtEnd: c.episodes.filter((e) => e.end === 'end_of_data' && Number.isFinite(e.armedTime)).length,
     triggered: c.outcomes.filter((o) => o.status !== 'suppressed' && o.status !== 'vetoed').length,
-    // v1.2.0: triggers blocked by an entry gate (always 0 with both gates OFF; the key exists only with a gate ON)
-    vetoedByEntryGate: sim.gates ? c.outcomes.filter((o) => o.status === 'vetoed').length : undefined,
+    // v1.2.0: triggers blocked by an entry gate (always 0 with both gates OFF; the key exists only with a gate ON;
+    // v1.3.0: or the initial risk stop)
+    vetoedByEntryGate: sim.gates || sim.rules?.initialStop ? c.outcomes.filter((o) => o.status === 'vetoed').length : undefined,
     filled: c.outcomes.filter((o) => o.status === 'filled').length,
     unfilledAtEnd: c.outcomes.filter((o) => o.status === 'unfilled_at_end').length,
     suppressedBasePriority: c.outcomes.filter((o) => o.status === 'suppressed').length,
@@ -1056,6 +1436,7 @@ export const continuationMetricsOf = (sim: Simulation) => {
 
 export type EntrySource =
   | 'rise_from_recent_low'
+  | 'trend_breakout' // v1.3.0
   | 'latched:rise_from_recent_low'
   | 'eligibility_renewal'
   | 'latched:eligibility_renewal'
@@ -1067,6 +1448,7 @@ export const entrySourceOf = (sim: Pick<Simulation, 'gates'>, trade: VirtualTrad
   const o = originOf(trade);
 
   if (o.origin === 'continuation') return `continuation:${o.method!}`;
+  if ((trade.setupKind as string) === 'trend_breakout') return 'trend_breakout';
 
   const d = sim.gates?.decisionOf(trade);
 
@@ -1192,6 +1574,102 @@ export const entryGatesMetricsOf = (sim: Simulation, rows: readonly LedgerRow[])
   };
 };
 
+// ----- v1.3.0 optional rules: descriptive counts -----
+
+export const OPTIONAL_RULES_NOTE =
+  'Descriptive counts of one run, not the effect of a rule: a stop, a breakout entry or a retained remainder changes ' +
+  'every later decision (path dependence). Compare a complete ON run with an otherwise identical OFF run. Retrospective ' +
+  'historical data only; the defaults are starting hypotheses, not optimised values.';
+
+export const optionalRulesMetricsOf = (sim: Simulation, rows: readonly LedgerRow[]) => {
+  const rules = sim.rules;
+  const positions = rules ? [...rules.positions.values()] : [];
+  const byRule = (fills: readonly ExitFill[]) => {
+    const out: Record<string, number> = {};
+
+    for (const f of fills) out[f.reason] = (out[f.reason] ?? 0) + 1;
+    return out;
+  };
+  const breakout = sim.entryMethod === 'trend_breakout';
+  const decisions = sim.outcomes;
+  const initialStop = rules?.initialStop
+    ? (() => {
+        const finals = positions.filter((p) => p.closed).map((p) => p.fills.at(-1)!);
+        const byStop = finals.filter((f) => f.rule === 'initial_stop');
+
+        return {
+          enabled: true as const,
+          config: rules.initialStop,
+          atrConvention:
+            'simple mean of the true ranges (max(high, previous close) − min(low, previous close)) of the L sessions completed before the fill session',
+          protectedPositions: positions.filter((p) => p.stop).length,
+          blockedChecks: rules.blocked.length,
+          blockedBySource: rules.blocked.reduce<Record<string, number>>(
+            (a, b) => ((a[b.source] = (a[b.source] ?? 0) + 1), a),
+            {}
+          ),
+          blockedByReason: rules.blocked.reduce<Record<string, number>>(
+            (a, b) => ((a[b.check.reason] = (a[b.check.reason] ?? 0) + 1), a),
+            {}
+          ),
+          exitsByInitialStop: byStop.length,
+          exitsByInitialStopGap: byStop.filter((f) => f.reason === 'initial stop gap').length,
+          exitsByInitialStopAssumedFill: byStop.filter((f) => f.execution === 'stop level').length,
+          exitsOnEntrySession: positions.filter(
+            (p) => p.closed && p.fills.at(-1)!.rule === 'initial_stop' && p.fills.at(-1)!.session === p.trade.entryIndex
+          ).length
+        };
+      })()
+    : { enabled: false as const };
+  const retention = rules?.retention
+    ? (() => {
+        const withPartial = positions.filter((p) => p.fills.some((f) => f.partial));
+        const partialFills = positions.flatMap((p) => p.fills.filter((f) => f.partial));
+        const remainderFinals = withPartial.filter((p) => p.closed).map((p) => p.fills.at(-1)!);
+        const rowOf = new Map(rows.map((r) => [r.trade, r]));
+
+        return {
+          enabled: true as const,
+          config: rules.retention,
+          positionsWithPartialSale: withPartial.length,
+          partialFills: partialFills.length,
+          partialFillsByReason: byRule(partialFills),
+          partialFillsNetUsd: sum(partialFills.map((f) => f.net)),
+          partialFillsAtALoss: partialFills.filter((f) => f.net < 0).length,
+          remainderExitsByReason: byRule(remainderFinals),
+          trendExitDecisions: sum(positions.map((p) => p.trendDecisions)),
+          pendingTrendExitAtEnd: positions.filter((p) => !p.closed && p.pendingTrend).length,
+          openRemainderAtEnd: withPartial.filter((p) => !p.closed).length,
+          closedPositionsWithPartial: {
+            count: remainderFinals.length,
+            wins: withPartial.filter((p) => p.closed && rowOf.get(p.trade)!.net > 0).length,
+            losses: withPartial.filter((p) => p.closed && rowOf.get(p.trade)!.net < 0).length,
+            netUsd: sum(withPartial.filter((p) => p.closed).map((p) => rowOf.get(p.trade)!.net))
+          },
+          classification:
+            'a position is ONE closed trade when its last share is sold, a win or a loss by its total net (all its fills); partial fills are reported separately'
+        };
+      })()
+    : { enabled: false as const };
+
+  return {
+    entryMethod: sim.entryMethod,
+    ...(breakout
+      ? {
+          breakout: {
+            signals: decisions.length,
+            taken: decisions.filter((o) => o.status === 'filled' || o.status === 'unfilled_at_end').length,
+            rejectedWhileInvested: decisions.filter((o) => o.status === 'rejected').length,
+            vetoed: decisions.filter((o) => o.status === 'vetoed').length
+          }
+        }
+      : {}),
+    initialStop,
+    retention,
+    note: OPTIONAL_RULES_NOTE
+  };
+};
+
 // Every figure a Strategy Lab run shows for one symbol. A figure that cannot be computed is null with a reason in
 // `unavailable`, never 0.
 export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
@@ -1221,8 +1699,13 @@ export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
   const firstOpen = ds.bTime[ds.sBarStart[sim.firstSession]!]!;
   const lastClose = ds.sCloseTime[sim.endSession]!;
   const windowDays = (lastClose - firstOpen) / secondsPerDay;
-  const realizedNet = sum(closed.map((row) => row.net));
-  const unrealizedNet = open?.net ?? 0;
+  // v1.3.0: an open position with partial fills holds realized cash (its partial fills) and the marked remainder;
+  // the partial fills count as realized, the remainder as unrealized (each exactly once). Otherwise as before.
+  const openFills = open?.remainder ? open.exitFills! : null;
+  const closedNet = sum(closed.map((row) => row.net));
+  const realizedNet = openFills ? closedNet + open!.partialFillsNet! : closedNet;
+  const unrealizedNet = openFills ? open!.remainder!.net : (open?.net ?? 0);
+  const openPart = (pick: (f: ExitFill) => number) => (openFills ? sum(openFills.map(pick)) : 0);
   const reconciliation = reconcileWithFixedLedger(sim, ds);
   const identity = Math.max(0, ...rows.map((row) => Math.abs(row.identityResidual)));
   const lastDaily = sim.daily.at(-1);
@@ -1250,7 +1733,7 @@ export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
         rejectedByReason: rejected,
         unfilledAtEnd: sim.outcomes.filter((o) => o.status === 'unfilled_at_end').length,
         // v1.2.0 entry gates (only with a gate ON): raw crossings met while flat but not taken at their own decision
-        ...(sim.gates
+        ...(sim.gates || sim.rules?.initialStop
           ? {
               vetoed: sim.outcomes.filter((o) => o.status === 'vetoed').length,
               vetoedByReason: Object.fromEntries(
@@ -1271,26 +1754,43 @@ export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
         breakeven: closed.length - wins.length - losses.length,
         winRatePercent: closed.length ? (wins.length / closed.length) * 100 : null,
         profitFactor: losses.length ? grossWins / grossLosses : null,
-        averageNetUsd: closed.length ? realizedNet / closed.length : null,
+        averageNetUsd: closed.length ? closedNet / closed.length : null,
         bestNetUsd: closed.length ? Math.max(...closed.map((row) => row.net)) : null,
         worstNetUsd: closed.length ? Math.min(...closed.map((row) => row.net)) : null,
         exitReasons: reasons
       },
       pnl: {
-        realizedGrossBeforeCostsUsd: sum(closed.map((row) => row.grossBeforeCosts)),
-        realizedCostsUsd: sum(closed.map((row) => row.entryFriction + row.exitFriction)),
-        realizedInterestUsd: sum(closed.map((row) => row.interest)),
+        realizedGrossBeforeCostsUsd:
+          sum(closed.map((row) => row.grossBeforeCosts)) + openPart((f) => f.grossBeforeCosts),
+        realizedCostsUsd:
+          sum(closed.map((row) => row.entryFriction + row.exitFriction)) + openPart((f) => f.entryCost + f.exitCost),
+        realizedInterestUsd: sum(closed.map((row) => row.interest)) + openPart((f) => f.interest),
         realizedNetUsd: realizedNet,
         unrealized: open
-          ? {
-              grossBeforeCostsUsd: open.grossBeforeCosts,
-              entryCostUsd: open.entryFriction,
-              accruedInterestUsd: open.interest,
-              netUsd: open.net,
-              markPrice: open.exitRawPrice,
-              markDate: ds.dates[sim.endSession]!,
-              exitCostCharged: false
-            }
+          ? openFills
+            ? {
+                // the remainder of a position with partial fills (its partial fills are in realized)
+                grossBeforeCostsUsd: open.remainder!.shares * (open.exitRawPrice - open.entryRawPrice),
+                entryCostUsd: open.remainder!.shares * (open.entryPrice - open.entryRawPrice),
+                accruedInterestUsd: open.remainder!.interest,
+                netUsd: open.remainder!.net,
+                markPrice: open.exitRawPrice,
+                markDate: ds.dates[sim.endSession]!,
+                exitCostCharged: false,
+                remainderShares: open.remainder!.shares,
+                remainderPrincipalUsd: open.remainder!.principal,
+                partialFillsNetUsd: open.partialFillsNet!,
+                positionNetUsd: open.net
+              }
+            : {
+                grossBeforeCostsUsd: open.grossBeforeCosts,
+                entryCostUsd: open.entryFriction,
+                accruedInterestUsd: open.interest,
+                netUsd: open.net,
+                markPrice: open.exitRawPrice,
+                markDate: ds.dates[sim.endSession]!,
+                exitCostCharged: false
+              }
           : null,
         totalMarkedNetUsd: realizedNet + unrealizedNet,
         totalInterestUsd: sum(rows.map((row) => row.interest)),
@@ -1317,6 +1817,7 @@ export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
       attribution: attributionOf(rows),
       continuation: continuationMetricsOf(sim),
       ...(sim.gates ? { entryGates: entryGatesMetricsOf(sim, rows) } : {}),
+      ...(sim.rules || sim.entryMethod !== 'rise_from_recent_low' ? { optionalRules: optionalRulesMetricsOf(sim, rows) } : {}),
       checks: {
         fixedLedgerMaxDifferenceUsd: reconciliation.maxDifference,
         identityMaxResidualUsd: identity,

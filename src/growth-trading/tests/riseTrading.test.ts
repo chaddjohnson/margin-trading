@@ -447,7 +447,8 @@ describe('fresh-signal re-entry, occupancy and no restriction', () => {
     // v1.1.0 adds continuation EPISODES, which only a net-PROFITABLE exit opens (tests/continuation.test.ts); the
     // cancelled post-loss restriction, lower re-entry, recovery reset and cooldowns stay absent from both files.
     // v1.2.0's entry gates (entryGates.ts) are scanned too: its reset-and-renew watch follows an UNCONSUMED opportunity.
-    for (const file of ['../riseTrading.ts', '../continuation.ts', '../entryGates.ts']) {
+    // v1.3.0's optional rules (optionalRules.ts) too: the breakout's reference high is never reset to an exit fill.
+    for (const file of ['../riseTrading.ts', '../continuation.ts', '../entryGates.ts', '../optionalRules.ts']) {
       const source = readFileSync(new URL(file, import.meta.url), 'utf8');
       assert.doesNotMatch(source, /materialLoss|lowerPrice[A-Z]|lowerLevel|retrace|recoveryReset|lossExitPrice/);
     }
@@ -456,12 +457,15 @@ describe('fresh-signal re-entry, occupancy and no restriction', () => {
     const { sim } = run(specs, decisions, { maximumHoldDays: 3 });
     assert.equal(sim.continuation, null); // OFF by default
     assert.equal(sim.gates, null); // both entry gates OFF by default
+    assert.equal(sim.rules, null); // v1.3.0: the initial risk stop and trend retention OFF by default
+    assert.equal(sim.entryMethod, 'rise_from_recent_low'); // v1.3.0: the Rise entry by default
     assert.deepEqual(Object.keys(sim).sort(), [
       'book',
       'continuation',
       'daily',
       'dailyDrawdown',
       'endSession',
+      'entryMethod',
       'excursions',
       'exit',
       'firstSession',
@@ -472,6 +476,7 @@ describe('fresh-signal re-entry, occupancy and no restriction', () => {
       'minuteMarks',
       'outcomes',
       'realized',
+      'rules',
       'symbol',
       'trades'
     ]);

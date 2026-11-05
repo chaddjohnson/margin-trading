@@ -544,6 +544,7 @@ export type OpportunityState =
   | 'armed'
   | 'blocked_by_trend'
   | 'blocked_by_capital'
+  | 'blocked_by_protection' // v1.3.0: the initial risk stop is unavailable for this decision's fill
   | 'ordered'
   | 'consumed'
   | 'invalidated'
@@ -623,6 +624,15 @@ export interface GateResult {
   trend: TrendEvaluation | null;
   capital: boolean | null; // null = no capital hook (standalone)
   text: string;
+  protection?: ProtectionResult; // v1.3.0: present only with the initial risk stop ON
+}
+
+// v1.3.0: the initial risk stop's decision-time availability (optionalRules.ts PositionRules.protection).
+export interface ProtectionResult {
+  pass: boolean;
+  reason: 'pass' | 'insufficient_history' | 'invalid_data';
+  text: string;
+  values: Record<string, LogValue>;
 }
 
 // The record of one Growth entry decision judged by the gates (the raw crossing, a latched decision, a renewal signal).
@@ -648,6 +658,9 @@ export interface GateRuntime {
   // Harness-only stand-in for a future shared-capital allocator: false = the slot is occupied at (s, time). Absent in
   // Strategy Lab (standalone Growth always has its own capital).
   capacity?: ((s: number, time: number) => boolean) | null;
+  // v1.3.0: the initial risk stop's availability for a decision at (s, time), checked after the trend filter. A failure
+  // BLOCKS like the trend filter (a crossing is vetoed; a latched opportunity waits). Absent = no initial stop.
+  protection?: ((s: number, time: number) => ProtectionResult) | null;
 }
 
 export interface CrossingInput {
@@ -755,7 +768,21 @@ export class EntryGates {
       return { pass: false, reason, trend, capital, text: trend.reason };
     }
 
-    return { pass: true, reason: 'pass', trend, capital, text: trend ? trend.reason : 'no trend filter' };
+    const protection = this.runtime.protection ? this.runtime.protection(s, time) : null;
+
+    if (protection && !protection.pass) {
+      count(protection.reason as GateReason);
+      return { pass: false, reason: protection.reason as GateReason, trend, capital, text: protection.text, protection };
+    }
+
+    return {
+      pass: true,
+      reason: 'pass',
+      trend,
+      capital,
+      text: trend ? trend.reason : 'no trend filter',
+      ...(protection ? { protection } : {})
+    };
   }
 
   // ----- the raw crossing -----
@@ -1031,7 +1058,12 @@ export class EntryGates {
     const gate = this.check(s, time, price, kind === 'crossing' ? 'base_signal' : kind);
 
     if (!gate.pass) {
-      const state: OpportunityState = gate.reason === 'capital_unavailable' ? 'blocked_by_capital' : 'blocked_by_trend';
+      const state: OpportunityState =
+        gate.reason === 'capital_unavailable'
+          ? 'blocked_by_capital'
+          : gate.protection && !gate.protection.pass
+            ? 'blocked_by_protection'
+            : 'blocked_by_trend';
 
       o.blockedEvaluations[gate.reason as GateReason]++;
       if (Number.isNaN(o.firstBlockedTime)) o.firstBlockedTime = time;
@@ -1041,6 +1073,7 @@ export class EntryGates {
         o.transitions.push({ t: time, session: s, state, reason: gate.reason });
         this.entry(time, s, 'opportunity_blocked', o, null, gate.text, {
           ...(gate.trend?.values ?? {}),
+          ...(gate.protection ? Object.fromEntries(Object.entries(gate.protection.values).map(([k, v]) => [`protection.${k}`, v])) : {}),
           state,
           capital: gate.capital
         });
