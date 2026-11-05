@@ -180,7 +180,7 @@ test('the entry trend filter and persistent eligibility: OFF by default, only th
   await expect(eligibility).not.toBeChecked();
   for (const k of ['trendMethod', 'eligibilityPolicy', 'eligibilityMaxAgeSessions', ...Object.values(TREND_FIELDS).flat(), ...Object.values(POLICY_FIELDS).flat()])
     await expect(page.getByTestId(`param-${k}`)).toHaveCount(0);
-  await expect(dialog.getByTestId('group-trend')).toContainText('Blocks new Growth entries');
+  await expect(dialog.getByTestId('group-trend')).toContainText('An ADDITIONAL gate on every Growth entry decision'); // 1.3.0: relabelled, same inputs
 
   await trend.check();
   await expect(page.getByTestId('param-trendMethod')).toHaveValue('price_change');
