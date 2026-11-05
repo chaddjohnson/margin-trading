@@ -2,7 +2,11 @@
 
 ## Top screen (read this first) — Task 12: delete saved results (runs) — COMPLETE
 
-- **Updated:** 2026-11-05T16:06Z (UTC, from the clock). **Status: COMPLETE — implemented, verified; commit + push in progress (push record follows).** No merge to `main`; commit + push to `feature/strategy-entry-explorer-ui` requested by the user's message.
+- **Updated:** 2026-11-05T16:06Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, committed and pushed.**
+- **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `d06576e..6352dce`, no force; run outside
+  the sandbox, which has no DNS). `git ls-remote` at 2026-11-05T16:06:50Z: branch = `6352dcea5a63…` (= local),
+  `origin/main` = `aa5754d…` (unchanged). Commits `9c7ec9f` code + tests, `4e4a7d8` docs, `6352dce` checkpoint; this
+  push record follows, pushed the same way. No merge to `main`; commit + push to `feature/strategy-entry-explorer-ui` requested by the user's message.
 - **Brief:** the user's chat message (Strategy Lab: Delete Saved Results) — a Delete action per run with a confirmation
   dialog (run id, strategy, symbols, run date, permanence warning; Cancel default, destructive Delete), deletion of the
   run's results, artifacts, run-only notes and bookmark; unrelated data preserved; consistent DB/filesystem; list and
