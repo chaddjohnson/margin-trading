@@ -372,6 +372,47 @@ test('after repeated swaps the chart still hovers, links, zooms, measures and pa
   expect(Math.abs((await span()) - s0)).toBeLessThan(60_000); // the zoom span is unchanged (to the minute)
 });
 
+test('a preview shown without being run is re-checked; an outdated one says why and can be run again with the same values', async ({ page }) => {
+  test.setTimeout(180_000);
+  const id = await source(page);
+  await openPanel(page, id);
+  await setX(page, 9);
+  await page.getByTestId('pv-param-advanceFromRecentLowPercent').press('Enter');
+  await expect(status(page)).toHaveAttribute('data-state', 'ready', { timeout: 120_000 });
+  const pv = (await page.getByTestId('preview-id').getAttribute('title'))!;
+  // a reload re-checks it against the current code and data: unchanged here, so it is simply restored
+  const checks: string[] = [];
+  page.on('request', (r) => {
+    if (/\/api\/previews\/PV-[0-9a-f]{64}\?current=1$/.test(r.url())) checks.push(r.url());
+  });
+  await page.reload();
+  await expect(page.getByTestId('preview-banner')).toContainText('restored from the cache');
+  await expect(page.getByTestId('preview-stale')).toHaveCount(0);
+  expect(checks.length).toBe(1);
+  // the server reports that the code changed since (simulated: editing the real code under a running suite is not)
+  await page.route(/\/api\/previews\/PV-[0-9a-f]{64}\?current=1$/, async (route) => {
+    const res = await route.fetch();
+    const body = (await res.json()) as { preview: Record<string, unknown> };
+    body.preview.current = { matches: false, differences: ['code src/growth-trading/riseTrading.ts'] };
+    await route.fulfill({ response: res, json: body });
+  });
+  await page.reload();
+  await expect(page.getByTestId('preview-stale')).toContainText('code src/growth-trading/riseTrading.ts');
+  await expect(page.getByTestId('preview-id')).toHaveAttribute('title', pv);
+  await page.getByTestId('preview-toggle').click();
+  await expect(status(page)).toHaveAttribute('data-state', 'stale');
+  await expect(page.getByTestId('pv-param-advanceFromRecentLowPercent')).toHaveValue('9');
+  await expect(page.getByTestId('preview-run')).toBeEnabled(); // the same values can be recomputed
+  // Back/Forward to a preview the tab already holds: shown at once, and re-checked again
+  await page.unroute(/\/api\/previews\/PV-[0-9a-f]{64}\?current=1$/);
+  const before = checks.length;
+  await page.goBack();
+  await page.goForward();
+  await expect(page.getByTestId('preview-id')).toHaveAttribute('title', pv);
+  await expect.poll(() => checks.length).toBeGreaterThan(before);
+  await expect(page.getByTestId('preview-stale')).toHaveCount(0);
+});
+
 test('runs that cannot be previewed say why: the synthetic demo and an imported shared-slot replay', async ({ page }) => {
   const demo = ((await (await page.request.get('/api/runs?q=synthetic%20demo')).json()) as { id: string }[])[0]!.id;
   await page.goto(`/#/run/${demo}`);

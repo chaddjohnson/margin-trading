@@ -23,7 +23,10 @@ The design brief is `brief/2026-11-05-interactive-preview-brief.md`.
    - **Running**: with the runner's progress.
    - **Preview ready**: a fresh computation.
    - **Cache hit**: a validated earlier computation was reused.
-   - **Preview (restored)**: reloaded from the address.
+   - **Preview (restored)**: shown again without being run (a reload, Back/Forward, a link) and re-checked: still what
+     the current code and data would produce.
+   - **Outdated: code or data changed**: shown again without being run, but the re-check found that the code or data
+     changed since it was computed. The banner lists what changed; **Run preview** with the same values recomputes it.
    - **Error**: the message is shown below the status.
 3. Edit the **Test window** (from/to dates and the bar resolution; the symbols are the saved run's) and the parameters.
    The panel shows labels and controls only. The **ⓘ** beside a label opens that field's full help text, the same text
@@ -110,9 +113,20 @@ a reproduction.
   under `runs/`, `imports/` or the market data. The runner works in `preview-cache/work/<execution>/`, and only a
   verified result becomes a cache entry.
 - **Lifetime.** Preview state lives per browser tab and per saved run's page; it resets when you open another run.
-  The displayed preview is in the address (`#/run/R-…?preview=PV-…`). A reload or Back/Forward restores it from its
-  validated cache entry for as long as the entry exists. Unsaved draft edits do not survive a reload, and nothing
-  syncs across devices.
+  The displayed preview is in the address (`#/run/R-…?preview=PV-…`), so a reload, Back/Forward or a link shows it
+  again for as long as its cache entry exists. Unsaved draft edits do not survive a reload, and nothing syncs across
+  devices.
+- **A preview shown again is re-checked.** Showing a preview without running it (a reload, Back/Forward, a link) asks
+  the server to recompute its identity from the current code and data (`GET /api/previews/PV-…?current=1`):
+  - still the same: it is shown as **Preview (restored)**;
+  - changed (or not establishable): it is still shown, because it is exactly the result of that earlier execution,
+    but the banner marks it **Outdated** and lists the differences (for example `code
+    src/growth-trading/riseTrading.ts` or `market data of VGT`). **Run preview** is then enabled with the same values:
+    the current identity has a different key, so the configuration runs again with the current code and data. An
+    outdated preview cannot be saved as a run (§4 re-checks too).
+
+  A preview that this tab already holds (Back/Forward) appears at once and is flagged as soon as the check answers.
+  A preview the tab has just run is not re-checked on that first display: the run itself established it.
 - **Export.** In the banner's run header, **Export preview bundle** downloads the same research bundle as for a saved
   run ([EXPORTS.md](EXPORTS.md)), built from the verified cache entry. It is labelled *TEMPORARY PREVIEW* (README
   banner, `manifest.json` `preview`) and named `strategy-lab-preview-PV-….zip`.
@@ -187,10 +201,27 @@ preview-cache/
   (default 200) and `STRATEGY_LAB_PREVIEW_CACHE_MAX_MB` (default 2048). It is applied after each commit, and the newly
   committed entry is protected. A typical Growth entry is 3–6 MB per run of two symbols over eight years of daily bars,
   mostly minute marks.
+- **A code or data change deletes nothing.** It changes the keys that requests compute, so the older entries simply no
+  longer match any request; they stay on disk until the limits evict them or you run `prune`/`clear` (§3.4). If the
+  code and data return to exactly their earlier state, those entries match again, correctly: identical inputs.
+
+### 3.3 Where results are kept: the server's disk, and the browser tab's memory
+
+- **Server: disk only.** Preview results are cached only in `preview-cache/`. The server's memory holds an index of
+  the entries (size and last use, for eviction), the executions currently running (to join identical requests) and
+  the tickets. It holds no results.
+- **Browser: per tab, for display only.** A tab keeps the chart data (events and prices) of up to 48 previews it has
+  loaded and the records of up to 12, so that a swap appears at once and Back/Forward is quick. This memory is keyed by
+  preview id (the identity hash, so an entry always holds exactly that execution's result) and is lost on a reload.
+- **The browser never answers a Run preview from its memory.** Every Run preview (or Enter) goes to the server, which
+  recomputes the identity from the current code and data and only then reuses a matching disk entry or runs the
+  configuration. After a code or data change, the same values therefore get a new preview id, and nothing the tab
+  remembers can stand in for it. The only use of the tab's memory without a request is showing a preview it already
+  holds (Back/Forward), and that display is re-checked as described in §2.
 - **Restarts.** Entries survive restarts. A preview that was running when the server stopped is lost; the browser says
   so and you run it again.
 
-### 3.3 Maintenance
+### 3.4 Maintenance
 
 ```sh
 npm --prefix apps/strategy-lab run preview-cache -- status   # entries, bytes, limits
@@ -250,7 +281,7 @@ touches running work, and a removed entry is simply recomputed. The cache is dis
 | `GET /api/runs/R-…/preview` | Capability: previewable or the reason; the seed request; a legacy run's explicit upgrade; drift |
 | `POST /api/previews` `{request, sourceRun}` | ONE configuration → a ticket (`state`, `cacheHit`, `coalesced`, `progress`, `timing`) |
 | `GET /api/previews/tickets/PT-…` / `POST …/cancel` | Poll / release a ticket |
-| `GET /api/previews/PV-…` | The preview as a run-shaped record (`kind: "preview"`, `preview: {id, key, config, savedAs, …}`) |
+| `GET /api/previews/PV-…[?current=1]` | The preview as a run-shaped record (`kind: "preview"`, `preview: {id, key, config, savedAs, …}`); `?current=1` adds `preview.current = {matches, differences}`, its identity recomputed from the current code and data |
 | `GET /api/previews/PV-…/events?symbol=&basis=`, `/prices?symbol=&from=&to=&points=` | Same shapes as the run routes |
 | `GET /api/previews/PV-…/export[?minute=1]` | The preview's research bundle |
 | `POST /api/previews/PV-…/save` | Save as run (§4) |

@@ -7,8 +7,10 @@
 //   explicit. Edits only mark it Modified; nothing executes until Run preview (or Enter).
 // - Each submission gets the next revision number. Only the latest revision may change what is displayed: an earlier
 //   one's ticket is released at once (the server cancels work nobody waits for) and its late answers are ignored.
-// - State lives per tab and per saved run (it resets when the run changes). A reload restores a displayed preview from
-//   its validated cache entry; unsaved draft edits do not survive a reload.
+// - State lives per tab and per saved run (it resets when the run changes). A preview shown WITHOUT being run — a
+//   reload, Back/Forward, a link — is re-checked by the server against the current code and data (`?current=1`): one
+//   this tab already holds is shown at once and flagged "Outdated" if the check says so; Run preview then recomputes
+//   it. Unsaved draft edits do not survive a reload.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -20,7 +22,7 @@ import { useFetched } from '../hooks.ts';
 import { type Draft, draftOf, withValue } from '../paramForm.ts';
 import { type DraftState, draftState, type DraftWindow, runDisabledReason } from './model.ts';
 
-export type PreviewStatus = 'saved' | 'modified' | 'running' | 'cache-hit' | 'ready' | 'restored' | 'error';
+export type PreviewStatus = 'saved' | 'modified' | 'running' | 'cache-hit' | 'ready' | 'restored' | 'stale' | 'error';
 
 export const STATUS_LABEL: Record<PreviewStatus, string> = {
   saved: 'Showing the saved result',
@@ -29,6 +31,7 @@ export const STATUS_LABEL: Record<PreviewStatus, string> = {
   'cache-hit': 'Cache hit',
   ready: 'Preview ready',
   restored: 'Preview (restored)',
+  stale: 'Outdated: code or data changed',
   error: 'Error'
 };
 
@@ -123,6 +126,8 @@ export function usePreview({ run, routePreview, setRoutePreview, prefetch, onSav
   const update = useCallback((fn: (x: State) => State) => setSt((x) => fn(x.runId === runId ? x : initial(runId))), [runId]);
   const rev = useRef(0);
   const inflight = useRef<{ rev: number; ticket: string | null } | null>(null);
+  // The preview a submission of this tab has just produced (and validated): its first display needs no re-check.
+  const justRun = useRef<string | null>(null);
 
   const release = () => {
     const t = inflight.current?.ticket;
@@ -152,15 +157,25 @@ export function usePreview({ run, routePreview, setRoutePreview, prefetch, onSav
   const displayed = routePreview ? (s.details[routePreview] ?? null) : null;
   const loading = routePreview && !displayed ? routePreview : null;
 
-  // A preview in the URL that this page has not loaded (a reload, Back/Forward): load it from the validated cache.
+  // A preview shown without being run (a reload, Back/Forward, a link): the server re-checks it against the current
+  // code and data. One this tab already holds stays on screen meanwhile; a new one is loaded first.
+  const known = Boolean(routePreview && s.details[routePreview]);
   useEffect(() => {
-    if (!routePreview || !run || s.details[routePreview]) return;
+    if (!routePreview || !run) return;
+    if (justRun.current === routePreview) {
+      justRun.current = null;
+      return;
+    }
     const ac = new AbortController();
     api
-      .preview(routePreview, ac.signal)
+      .preview(routePreview, ac.signal, true)
       .then(async (d) => {
-        await prefetch(d);
-        if (!ac.signal.aborted) update((x) => ({ ...x, details: { ...x.details, [d.id]: { detail: d, cacheHit: false, restored: true } } }));
+        if (!known) await prefetch(d);
+        if (!ac.signal.aborted)
+          update((x) => ({
+            ...x,
+            details: { ...x.details, [d.id]: x.details[d.id] ? { ...x.details[d.id]!, detail: d } : { detail: d, cacheHit: false, restored: true } }
+          }));
       })
       .catch((e: unknown) => {
         if (ac.signal.aborted) return;
@@ -168,9 +183,9 @@ export function usePreview({ run, routePreview, setRoutePreview, prefetch, onSav
         setRoutePreview(null);
       });
     return () => ac.abort();
-    // prefetch and setRoutePreview are stable in intent; the preview id and the run identify the load
+    // prefetch, known and setRoutePreview are read at the navigation; the preview id and the run identify the check
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routePreview, runId, Boolean(routePreview && s.details[routePreview])]);
+  }, [routePreview, runId]);
 
   // The configuration displayed now, and the base a draft starts from.
   const base = useMemo(() => {
@@ -188,7 +203,10 @@ export function usePreview({ run, routePreview, setRoutePreview, prefetch, onSav
     const spec = seed ? findStrategy(seed.strategyKey, seed.strategyVersion) : undefined;
     return seed && spec ? previewConfigKey(canonicalPreviewConfig(spec, seed)) : null;
   }, [capability]);
-  const displayedKey = displayed ? previewConfigKey(displayed.detail.preview.config) : savedKey;
+  const shownKey = displayed ? previewConfigKey(displayed.detail.preview.config) : savedKey;
+  // An outdated preview (the current code or data would give another result) can be run again with the same values.
+  const stale = displayed?.detail.preview.current?.matches === false;
+  const displayedKey = stale ? null : shownKey;
 
   const spec = base?.spec ?? null;
   const explicit = s.draft && spec && s.draft.spec === specKeyOf(spec) ? s.draft : null;
@@ -205,10 +223,12 @@ export function usePreview({ run, routePreview, setRoutePreview, prefetch, onSav
       ? 'running'
       : s.job.phase === 'error' && (s.job.key === null || s.job.key === state?.key)
         ? 'error'
-        : state && state.key !== displayedKey
+        : state && state.key !== shownKey
           ? 'modified'
           : displayed
-            ? displayed.restored
+            ? stale
+              ? 'stale'
+              : displayed.restored
               ? 'restored'
               : displayed.cacheHit
                 ? 'cache-hit'
@@ -256,6 +276,7 @@ export function usePreview({ run, routePreview, setRoutePreview, prefetch, onSav
         inflight.current = null;
         const cacheHit = t.cacheHit;
         update((x) => ({ ...x, job: { phase: 'idle' }, details: { ...trim(x.details), [detail.id]: { detail, cacheHit, restored: false } } }));
+        justRun.current = detail.id;
         setRoutePreview(detail.id);
       } catch (e) {
         if (!current()) return;
@@ -294,7 +315,13 @@ export function usePreview({ run, routePreview, setRoutePreview, prefetch, onSav
     try {
       const saved = await api.savePreview(id, { sourceRun: run.id, ...(title?.trim() ? { title: title.trim() } : {}), ...(confirmDuplicate ? { confirmDuplicate } : {}) });
       const fresh = await api.preview(id).catch(() => null);
-      if (fresh) update((x) => (x.details[id] ? { ...x, details: { ...x.details, [id]: { ...x.details[id]!, detail: fresh } } } : x));
+      if (fresh)
+        update((x) => {
+          const had = x.details[id];
+          if (!had) return x;
+          const current = had.detail.preview.current; // keep the last currency check (this read did not repeat it)
+          return { ...x, details: { ...x.details, [id]: { ...had, detail: { ...fresh, preview: { ...fresh.preview, ...(current ? { current } : {}) } } } } };
+        });
       onSaved(saved.id);
       return { runId: saved.id };
     } catch (e) {

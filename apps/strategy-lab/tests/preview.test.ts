@@ -362,10 +362,17 @@ describe.skipIf(!hasData)('cache invalidation in a repository copy: code edit (s
     const first = await preview(l, withX(10));
     expect([first.state, first.cacheHit], first.error ?? '').toEqual(['completed', false]);
     expect(l.previews.submit({ request: withX(10) })).toMatchObject({ cacheHit: true, previewId: first.previewId });
+    expect(l.previews.detail(first.previewId).preview.current).toBeUndefined(); // checked only on request
+    expect(l.previews.detail(first.previewId, { checkCurrent: true }).preview.current).toEqual({ matches: true, differences: [] });
 
     // 1. a code edit that keeps STRATEGY_VERSION = 1.2.0
     const engine = join(root, 'src/growth-trading/riseTrading.ts');
     writeFileSync(engine, `${readFileSync(engine, 'utf8')}\n// edited without a version change\n`);
+    // the earlier preview, shown without being run (reload, Back/Forward), now says it is outdated, and why
+    expect(l.previews.detail(first.previewId, { checkCurrent: true }).preview.current).toEqual({
+      matches: false,
+      differences: ['code src/growth-trading/riseTrading.ts']
+    });
     const afterCode = await preview(l, withX(10));
     expect([afterCode.state, afterCode.cacheHit]).toEqual(['completed', false]);
     expect(afterCode.previewId).not.toBe(first.previewId);
@@ -417,6 +424,9 @@ describe.skipIf(!hasData)('preview HTTP routes', () => {
       expect(s.state).toBe('completed');
       const detail = (await (await get(`/api/previews/${s.previewId}`)).json()) as PreviewDetail;
       expect(detail).toMatchObject({ id: s.previewId, kind: 'preview', status: 'completed', preview: { savedAs: [] } });
+      expect(detail.preview.current).toBeUndefined();
+      const checked = (await (await get(`/api/previews/${s.previewId}?current=1`)).json()) as PreviewDetail;
+      expect(checked.preview.current).toEqual({ matches: true, differences: [] });
       const ev = (await (await get(`/api/previews/${s.previewId}/events?symbol=VGT`)).json()) as { runId: string; events: LabEvent[] };
       expect(ev.runId).toBe(s.previewId);
       expect(ev.events.length).toBe(detail.eventCount);

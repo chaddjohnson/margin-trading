@@ -464,7 +464,12 @@ export function createHandler(d: Deps) {
     ['POST', /^\/api\/previews$/, async ({ body }) => { const b = await body(); return preview(() => previews.submit(b)); }],
     ['GET', /^\/api\/previews\/tickets\/(PT-[0-9a-f]{24})$/, ({ m }) => preview(() => previews.status(m[1]!))],
     ['POST', /^\/api\/previews\/tickets\/(PT-[0-9a-f]{24})\/cancel$/, ({ m }) => preview(() => previews.cancel(m[1]!))],
-    ['GET', /^\/api\/previews\/(PV-[0-9a-f]{64})$/, ({ m }) => preview(() => previews.detail(m[1]!))],
+    [
+      'GET',
+      /^\/api\/previews\/(PV-[0-9a-f]{64})$/,
+      // ?current=1: also recompute its identity from the current code and data (`preview.current`)
+      ({ m, url }) => preview(() => previews.detail(m[1]!, { checkCurrent: url.searchParams.get('current') === '1' }))
+    ],
     [
       'GET',
       /^\/api\/previews\/(PV-[0-9a-f]{64})\/events$/,

@@ -588,8 +588,12 @@ export class PreviewService {
     return JSON.parse(this.cache.readFile(entry, file).toString('utf8')) as T;
   }
 
-  /** The preview as a run-shaped record (kind `preview`, id PV-…): what the run page renders. */
-  detail(previewId: string): PreviewDetail {
+  /**
+   * The preview as a run-shaped record (kind `preview`, id PV-…): what the run page renders. With `checkCurrent`, its
+   * execution identity is recomputed from the current code and data and compared with the stored one (`current`), so
+   * a preview shown without being run (a reload, Back/Forward, a link) says when it is outdated.
+   */
+  detail(previewId: string, { checkCurrent = false }: { checkCurrent?: boolean } = {}): PreviewDetail {
     const entry = this.entryOf(previewId);
     const { config, spec } = this.configOf(entry);
     const metrics = this.readJson<Record<string, unknown>>(entry, 'metrics.json');
@@ -646,9 +650,20 @@ export class PreviewService {
         executionMs: m.executionMs,
         implementationSha256: m.identity.implementation.sha256,
         dataSha256: Object.fromEntries(Object.entries(m.identity.data.symbols).map(([s, f]) => [s, f[`data/${s}/data.csv`]!])),
-        savedAs: this.repo.runsSavedFromPreview(m.key)
+        savedAs: this.repo.runsSavedFromPreview(m.key),
+        ...(checkCurrent ? { current: this.currentOf(m.identity, spec, config) } : {})
       }
     };
+  }
+
+  /** Whether a stored identity is still the one the current code and data give (fail closed: unknown = outdated). */
+  private currentOf(stored: PreviewIdentity, spec: StrategySpec, config: PreviewConfig): { matches: boolean; differences: string[] } {
+    try {
+      const differences = identityDifferences(stored, previewIdentity(this.cfg.repoRoot, spec, config));
+      return { matches: differences.length === 0, differences };
+    } catch (e) {
+      return { matches: false, differences: [`the current identity cannot be established: ${(e as Error).message}`] };
+    }
   }
 
   private configOf(entry: CacheEntry): { config: PreviewConfig; spec: StrategySpec } {

@@ -109,7 +109,7 @@ Everything stateful lives in `state/strategy-lab/` (git-ignored):
 - `imports/`;
 - `api-token`;
 - `preview-cache/` — **disposable**: temporary Interactive Preview results, rebuilt on demand. Backups need not include
-  it; deleting it loses no research record ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md) §3.3 for `status`,
+  it; deleting it loses no research record ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md) §3.4 for `status`,
   `verify`, `prune`, `clear`).
 
 To back up while the service runs, take a consistent online copy of the database and copy the files:

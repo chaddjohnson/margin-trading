@@ -232,7 +232,9 @@ export const api = {
   previewTicket: (ticket: string, signal?: AbortSignal) =>
     call<PreviewTicketStatus>('GET', `/api/previews/tickets/${ticket}`, undefined, signal),
   cancelPreviewTicket: (ticket: string) => call<PreviewTicketStatus>('POST', `/api/previews/tickets/${ticket}/cancel`, {}),
-  preview: (id: string, signal?: AbortSignal) => call<PreviewDetail>('GET', `/api/previews/${id}`, undefined, signal),
+  /** A preview's record; `current` also re-checks it against the current code and data (`preview.current`). */
+  preview: (id: string, signal?: AbortSignal, current = false) =>
+    call<PreviewDetail>('GET', `/api/previews/${id}${current ? '?current=1' : ''}`, undefined, signal),
   savePreview: (id: string, body: { title?: string; sourceRun: string; confirmDuplicate?: boolean }) =>
     call<RunDetail>('POST', `/api/previews/${id}/save`, body),
   compare: (a: string, b: string, signal?: AbortSignal) =>

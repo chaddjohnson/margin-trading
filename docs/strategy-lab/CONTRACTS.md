@@ -190,8 +190,9 @@ configuration of a `launch: form` strategy version, validated by `validateRunReq
 are refused). The answer is a ticket (`PT-…`): `{ ticket, previewId, state, cacheHit, coalesced, progress, error,
 timing }`; `previewId` is `PV-` + the sha256 of the execution identity. A completed preview reads like a run
 (`GET /api/previews/PV-…`: a `RunDetail` with `kind: "preview"`, `request` = the canonical configuration and `preview`
-= `{ id, key, config, executedAt, executionMs, implementationSha256, dataSha256, savedAs }`), with `/events`, `/prices`
-and `/export` in the run routes' shapes. `RunKind` gained `preview` for this record only: no stored run has it. Save
+= `{ id, key, config, executedAt, executionMs, implementationSha256, dataSha256, savedAs }`; with `?current=1` also
+`current = { matches, differences }`, its identity recomputed from the current code and data), with `/events`,
+`/prices` and `/export` in the run routes' shapes. `RunKind` gained `preview` for this record only: no stored run has it. Save
 as run: `POST /api/previews/PV-…/save` `{ sourceRun, title?, confirmDuplicate? }` → 201 with the new run (409 when the
 identity no longer holds or the preview was already saved). Everything else:
 [INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md).

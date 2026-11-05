@@ -91,6 +91,12 @@ export interface PreviewInfo {
   dataSha256: Record<string, string>;
   /** Saved runs made from this preview (Save as run), oldest first. */
   savedAs: string[];
+  /**
+   * Whether this preview is still what the current code and data would produce (its execution identity recomputed
+   * now): checked when a preview is shown without being run (reload, Back/Forward, a link; `?current=1`). Absent when
+   * not checked (right after a run or a cache hit, which established it).
+   */
+  current?: { matches: boolean; differences: string[] };
 }
 
 export type PreviewDetail = RunDetail & { preview: PreviewInfo; request: PreviewConfig };

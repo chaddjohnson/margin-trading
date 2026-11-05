@@ -81,6 +81,14 @@ export function PreviewBanner({ preview, cacheHit, restored, source, onReturn, o
           </button>
         </span>
       </div>
+      {p.current && !p.current.matches && (
+        <p className="warn small" role="alert" data-testid="preview-stale">
+          <b>Outdated:</b> computed with code or data that has changed since ({p.current.differences.slice(0, 6).join(', ')}
+          {p.current.differences.length > 6 ? ', …' : ''}). This is still exactly the result of that earlier execution;
+          press <b>Run preview</b> with the same values to recompute it with the current code and data. It cannot be saved
+          as a run.
+        </p>
+      )}
       {known.length > 0 && (
         <p className="small" data-testid="preview-saved-as">
           Saved as{' '}

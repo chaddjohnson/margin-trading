@@ -4,6 +4,14 @@
 
 - **Updated:** 2026-11-05T17:45Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, committed and
   pushed.** **No merge to `main`.**
+- **Follow-up (user-requested, 2026-11-05T18:18Z; UNCOMMITTED until the user asks):** a preview shown without being
+  run (reload, Back/Forward, link) is re-checked: `GET /api/previews/PV-…?current=1` → `preview.current {matches,
+  differences}` (`server/previews.ts` `detail(…, {checkCurrent})`); the UI shows it at once and flags *Outdated* with
+  the differences (banner `preview-stale`, status `stale`) and enables Run preview with the same values. Docs corrected
+  (INTERACTIVE_PREVIEW §1 statuses, §2 re-check, §3.2 "a code or data change deletes nothing", new §3.3 server disk vs
+  browser memory, §6 API; CONTRACTS). Tests: `tests/preview.test.ts` (outdated after a code edit; `?current=1`), new
+  e2e test (re-check on reload and Back/Forward; outdated simulated with `page.route`). `npm run check` 18:14→18:17:42Z
+  (`logs/task13/check-3.log`): typecheck + lint clean, Vitest 204/204, build (`dist` = this code), Playwright 59/59.
 - **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `d2c3c1a..2f47482`, no force; outside
   the sandbox, first attempt, 2026-11-05T17:44:19Z). `git ls-remote` at 17:44:24Z: branch = `2f47482b700d…` (= local),
   `origin/main` = `aa5754d…` (unchanged). Commits `28197f6` code + tests, `99f85fa` docs + brief, `2f47482`
