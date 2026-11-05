@@ -171,7 +171,7 @@ describe('optimisation-domain introspection (smoke checks, no optimiser)', () =>
     expect(dim('continuationMethod').activeWhen).toEqual({ param: 'continuationEnabled', equals: true });
     expect(dim('breakoutBufferPercent').activeWhen).toEqual({ param: 'continuationMethod', equals: 'breakout' });
     expect(dim('classicPullbackPercent').domain).toMatchObject({ min: 0.1, max: 50, step: 0.1, scale: 'linear' });
-    expect(space.constraints.map((c) => c.id)).toEqual(['buffer-requires-hold', 'pullback-band']);
+    expect(space.constraints.map((c) => c.id)).toEqual(['buffer-requires-hold', 'pullback-band', 'momentum-short-long']);
   });
 
   it('samples only valid effective candidates (no inactive dimension), deterministically per seed', () => {

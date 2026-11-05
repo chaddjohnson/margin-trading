@@ -1,4 +1,10 @@
-// rise-from-recent-low-trading v1.1.0 ("Growth"): a growth-following trading backtest of ONE symbol (see README.md).
+// rise-from-recent-low-trading v1.2.0 ("Growth"): a growth-following trading backtest of ONE symbol (see README.md).
+//
+// v1.2.0 adds two OPTIONAL entry gates (entryGates.ts), both OFF by default: an entry TREND FILTER (five methods, on
+// trading-session observations) applied to every Growth entry decision, and PERSISTENT ENTRY ELIGIBILITY (five bounded
+// policies) that keeps a raw crossing available for a limited number of sessions. With both OFF no gate code runs and
+// every decision, fill, exit, mark and log entry is identical to v1.1.0 (tests/offParity-1.1.0.test.ts, against the
+// fixture captured from v1.1.0 before the change), so v1.1.0 runs replay as v1.2.0 with both gates OFF.
 //
 // v1.1.0 adds OPTIONAL continuation entries after a net-profitable exit (continuation.ts), OFF by default; with them
 // OFF every decision, fill, exit and mark is identical to v1.0.0 (tests/offParity.test.ts against the fixtures captured
@@ -56,10 +62,22 @@ import {
   type ContinuationMethod,
   type ContinuationRuntime,
   DecisionLog,
+  type LogValue,
   type Origin,
   continuationConfigErrors,
   continuationWarmupBars
 } from './continuation.ts';
+import {
+  type EligibilityConfig,
+  EntryGates,
+  type GateResult,
+  type GateRuntime,
+  type GatedDecision,
+  type TrendFilterConfig,
+  eligibilityConfigErrors,
+  trendConfigErrors,
+  trendWarmupSessions
+} from './entryGates.ts';
 import {
   type ReboundSignal,
   type Setup,
@@ -70,9 +88,10 @@ import {
 } from '../shared-margin-portfolio/strategy.ts';
 
 export const STRATEGY_KEY = 'rise-from-recent-low-trading';
-export const STRATEGY_VERSION = '1.1.0';
-// Earlier versions this engine replays: 1.0.0 = this version with continuation OFF (no continuation fields).
-export const LEGACY_STRATEGY_VERSIONS = ['1.0.0'] as const;
+export const STRATEGY_VERSION = '1.2.0';
+// Earlier versions this engine replays: 1.0.0 = this version with continuation and both entry gates OFF (no
+// continuation fields); 1.1.0 = this version with both entry gates OFF (its continuation settings unchanged).
+export const LEGACY_STRATEGY_VERSIONS = ['1.0.0', '1.1.0'] as const;
 
 export interface RiseTradingParams {
   advanceFromRecentLowPercent: number; // X, percent
@@ -85,6 +104,8 @@ export interface RiseTradingParams {
   intradayLossBufferPercent: number; // net loss after interest, percent of the invested notional
   costBpsPerSide: number; // basis points on every fill
   continuation?: ContinuationConfig | null; // absent or null = OFF (v1.0.0 behaviour)
+  trendFilter?: TrendFilterConfig | null; // absent or null = OFF (v1.1.0 behaviour)
+  eligibility?: EligibilityConfig | null; // absent or null = OFF (v1.1.0 behaviour)
 }
 
 // The research defaults: X and N of rise-from-recent-low@1.0.0, the exits of the registered VGT D1 baseline
@@ -140,6 +161,8 @@ export const tradingParamErrors = (p: RiseTradingParams): string[] => {
   if (!finite(p.costBpsPerSide) || p.costBpsPerSide < 0 || p.costBpsPerSide >= 1000)
     errors.push('costBpsPerSide must be in [0, 1000)');
   if (p.continuation) errors.push(...continuationConfigErrors(p.continuation).map((e) => `continuation: ${e}`));
+  if (p.trendFilter) errors.push(...trendConfigErrors(p.trendFilter).map((e) => `trend filter: ${e}`));
+  if (p.eligibility) errors.push(...eligibilityConfigErrors(p.eligibility).map((e) => `eligibility: ${e}`));
 
   return errors;
 };
@@ -212,11 +235,14 @@ export const warmupSessionsFor = (resolution: SignalResolution, n: number) => {
 };
 
 // The warm-up of a whole configuration: the scanner's, extended when a bar-based continuation method needs more
-// completed bars for its moving averages. With continuation OFF it is exactly the scanner's (v1.0.0).
+// completed bars for its moving averages, and when the trend filter reads older sessions (its lookback in sessions).
+// With continuation and the trend filter OFF it is exactly the scanner's (v1.0.0); persistent eligibility reads the
+// scanner's own bars and needs nothing more.
 export const warmupSessionsForParams = (p: RiseTradingParams) =>
   Math.max(
     warmupSessionsFor(p.resolution, p.recentLowLookbackBars),
-    p.continuation ? warmupSessionsFor(p.resolution, continuationWarmupBars(p.continuation)) : 0
+    p.continuation ? warmupSessionsFor(p.resolution, continuationWarmupBars(p.continuation)) : 0,
+    p.trendFilter ? trendWarmupSessions(p.trendFilter) : 0
   );
 
 // ----- decisions -----
@@ -232,12 +258,18 @@ export interface EntryDecision {
 }
 
 export type RejectReason = 'position_open' | 'order_pending';
+// v1.2.0 (an entry gate ON): why a raw crossing met while flat was not taken at its own decision.
+export type GateVetoReason =
+  'trend_veto' | 'insufficient_history' | 'invalid_data' | 'capital_unavailable' | 'policy_invalidated';
 
 export interface DecisionOutcome {
   decision: EntryDecision;
-  status: 'filled' | 'rejected' | 'unfilled_at_end';
-  reason: RejectReason | null;
+  // vetoed: not taken and nothing remains (a gate blocked it with eligibility OFF, or its opportunity was invalidated
+  // at arming); deferred: not taken at its own decision, but its armed opportunity stays live (see `gate`).
+  status: 'filled' | 'rejected' | 'unfilled_at_end' | 'vetoed' | 'deferred';
+  reason: RejectReason | GateVetoReason | null;
   trade: VirtualTrade | null; // the trade it opened, or (rejected) the trade holding the position or the order
+  gate?: GatedDecision; // v1.2.0: the gate record of a crossing met while flat (absent with both gates OFF)
 }
 
 export const decisionsFromSignals = (bars: readonly SignalBar[], signals: readonly RiseSignal[]): EntryDecision[] =>
@@ -261,6 +293,7 @@ export interface SimulationOptions {
   book: BookSettings;
   originSession?: number; // where the drawdown trackers start (default firstSession)
   continuation?: ContinuationRuntime | null; // OFF when absent; classic_d1 also needs `exit` from exitParamsOf
+  gates?: GateRuntime | null; // the entry trend filter / persistent eligibility (v1.2.0); OFF when absent
   recordMinuteMarks?: boolean; // keep the change points of the minute-marked net (for exports)
 }
 
@@ -299,6 +332,7 @@ export interface Simulation {
   realized: number;
   log: DecisionLog; // chronological decisions and state transitions (always recorded)
   continuation: ContinuationController | null;
+  gates: EntryGates | null; // v1.2.0 entry gates (null with both OFF)
   markChanges: { t: number[]; marked: number[] } | null; // minute-marked net at each change (recordMinuteMarks)
 }
 
@@ -323,6 +357,16 @@ export const lastMinuteBefore = (ds: Dataset, s: number, time: number) => {
 
   return k;
 };
+
+const prefixed = (prefix: string, values: Record<string, LogValue>) =>
+  Object.fromEntries(Object.entries(values).map(([k, v]) => [`${prefix}${k}`, v]));
+
+// The log values of a gate result: the decision ('pass' or the block reason) and the trend filter's observed values.
+export const gateLogValues = (g: GateResult): Record<string, LogValue> => ({
+  gate: g.reason,
+  ...(g.capital === null ? {} : { capitalAvailable: g.capital }),
+  ...prefixed('trend.', g.trend?.values ?? {})
+});
 
 export const simulateTrading = (
   ds: Dataset,
@@ -365,58 +409,18 @@ export const simulateTrading = (
     classic ? firstSession : ds.sessionCount
   );
   const log = new DecisionLog();
-  const continuation = options.continuation
-    ? new ContinuationController(ds, book, options.continuation, log, (s, time) => lastMinuteBefore(ds, s, time))
-    : null;
-  const markChanges = options.recordMinuteMarks ? { t: [] as number[], marked: [] as number[] } : null;
+  const gateRuntime = options.gates ?? null;
+  const gated = Boolean(gateRuntime && (gateRuntime.trend || gateRuntime.eligibility || gateRuntime.capacity));
+  let continuation: ContinuationController | null = null;
+  let setupSeq = 0;
   const outcomes: DecisionOutcome[] = [];
-  const byTrade = new Map<VirtualTrade, DecisionOutcome>();
-  const excursions = new Map<VirtualTrade, Excursion>();
-  const daily: DailyMark[] = [];
-  const minute = new Tracker(0, ds.bTime[ds.sBarStart[origin]!]!);
-  const session = new Tracker(0, ds.sTime[origin]!);
-  let realized = 0;
-  let minuteMarks = 0;
-  let next = 0;
-
-  const baseEntry = (
-    d: EntryDecision,
-    s: number,
-    disposition: 'taken' | 'rejected',
-    reason: string | null,
-    trade: VirtualTrade
-  ) =>
-    log.add({
-      t: d.time,
-      session: s,
-      event: 'base_signal',
-      origin: 'base_growth',
-      method: null,
-      episode: null,
-      trade,
-      disposition,
-      reason,
-      values: { close: d.price, threshold: d.trigger, recentLow: d.reference }
-    });
-
-  const decide = (d: EntryDecision, s: number) => {
-    if (book.position) {
-      outcomes.push({ decision: d, status: 'rejected', reason: 'position_open', trade: book.position.trade });
-      baseEntry(d, s, 'rejected', 'position_open', book.position.trade);
-      return;
-    }
-
-    if (book.order) {
-      outcomes.push({ decision: d, status: 'rejected', reason: 'order_pending', trade: book.order.trade });
-      baseEntry(d, s, 'rejected', 'order_pending', book.order.trade);
-      return;
-    }
-
+  // Places the order of a base-family decision (the crossing, a latched opportunity, a renewal signal).
+  const enter = (d: Pick<EntryDecision, 'id' | 'time' | 'price' | 'trigger' | 'reference'>, s: number) => {
     // Base priority: an open continuation episode is closed (and an armed setup cancelled) before the base order.
     continuation?.beforeBaseEntry(s, d.time);
 
     const setup: Setup = {
-      id: outcomes.length + 1,
+      id: gated ? ++setupSeq : outcomes.length + 1,
       kind: 'rise' as string as SetupKind, // ShadowBook only records it; not a D1 setup kind
       activationIndex: s,
       activationTime: d.time,
@@ -439,7 +443,121 @@ export const simulateTrading = (
       trigger: d.trigger,
       trailingLow: d.reference
     };
-    const trade = book.commit(signal, s, 'granted');
+
+    return book.commit(signal, s, 'granted');
+  };
+  const gates =
+    gated && gateRuntime
+      ? new EntryGates(ds, gateRuntime, log, { enter, flatWithoutOrder: () => !book.position && !book.order })
+      : null;
+
+  continuation = options.continuation
+    ? new ContinuationController(
+        ds,
+        book,
+        options.continuation,
+        log,
+        (s, time) => lastMinuteBefore(ds, s, time),
+        gates
+          ? {
+              check: (s, time, price) => {
+                const g = gates.check(s, time, price, 'continuation');
+
+                return { pass: g.pass, reason: g.reason, text: g.text, values: gateLogValues(g) };
+              },
+              afterEntry: (trade, s, time) => gates.afterEntry(trade, s, time, 'a continuation entry')
+            }
+          : null
+      )
+    : null;
+  const markChanges = options.recordMinuteMarks ? { t: [] as number[], marked: [] as number[] } : null;
+  const byTrade = new Map<VirtualTrade, DecisionOutcome>();
+  const excursions = new Map<VirtualTrade, Excursion>();
+  const daily: DailyMark[] = [];
+  const minute = new Tracker(0, ds.bTime[ds.sBarStart[origin]!]!);
+  const session = new Tracker(0, ds.sTime[origin]!);
+  let realized = 0;
+  let minuteMarks = 0;
+  let next = 0;
+
+  const baseEntry = (
+    d: EntryDecision,
+    s: number,
+    disposition: 'taken' | 'rejected' | 'vetoed' | 'deferred' | 'invalidated',
+    reason: string | null,
+    trade: VirtualTrade | null,
+    g: GatedDecision | null = null,
+    at = log.entries.length
+  ) =>
+    log.insert(at, {
+      t: d.time,
+      session: s,
+      event: 'base_signal',
+      origin: 'base_growth',
+      method: null,
+      episode: null,
+      ...(g?.opportunity ? { opportunity: g.opportunity.id } : {}),
+      trade,
+      disposition,
+      reason,
+      values: {
+        close: d.price,
+        threshold: d.trigger,
+        recentLow: d.reference,
+        ...(g ? { ...(g.gate ? gateLogValues(g.gate) : {}), ...prefixed('policy.', g.validity ?? {}) } : {})
+      }
+    });
+
+  const decide = (d: EntryDecision, s: number) => {
+    if (book.position) {
+      outcomes.push({ decision: d, status: 'rejected', reason: 'position_open', trade: book.position.trade });
+      baseEntry(d, s, 'rejected', 'position_open', book.position.trade);
+      return;
+    }
+
+    if (book.order) {
+      outcomes.push({ decision: d, status: 'rejected', reason: 'order_pending', trade: book.order.trade });
+      baseEntry(d, s, 'rejected', 'order_pending', book.order.trade);
+      return;
+    }
+
+    if (gates) {
+      const at = log.entries.length; // the raw crossing is logged before the entries the gates add for it
+      const g = gates.onCrossing(
+        { time: d.time, price: d.price, trigger: d.trigger, reference: d.reference, barIndex: d.signal?.index ?? null },
+        s
+      );
+
+      if (g.disposition === 'taken') {
+        const outcome: DecisionOutcome = {
+          decision: d,
+          status: 'unfilled_at_end',
+          reason: null,
+          trade: g.trade,
+          gate: g
+        };
+
+        outcomes.push(outcome);
+        byTrade.set(g.trade!, outcome);
+        baseEntry(d, s, 'taken', null, g.trade, g, at);
+      } else {
+        const reason: GateVetoReason =
+          g.disposition === 'invalidated' ? 'policy_invalidated' : (g.gate!.reason as GateVetoReason);
+
+        outcomes.push({
+          decision: d,
+          status: g.disposition === 'deferred' ? 'deferred' : 'vetoed',
+          reason,
+          trade: null,
+          gate: g
+        });
+        baseEntry(d, s, g.disposition, g.reason, null, g, at);
+      }
+
+      return;
+    }
+
+    const trade = enter(d, s);
     const outcome: DecisionOutcome = { decision: d, status: 'unfilled_at_end', reason: null, trade };
 
     outcomes.push(outcome);
@@ -510,19 +628,29 @@ export const simulateTrading = (
 
     book.beginSession(s);
     continuation?.beginSession(s);
+    gates?.beginSession(s);
 
     let invested = Boolean(book.position);
 
     for (let k = 0; k <= count; k++) {
       const t = k < count ? ds.bTime[start + k]! : ds.sCloseTime[s]!;
+      // Base decisions and (v1.2.0) latched-opportunity steps due at or before `time`, in time order; at one instant a
+      // fresh crossing goes first, then the live opportunity. With both gates OFF this is the v1.1.0 base loop.
       const baseUntil = (time: number) => {
-        while (next < decisions.length && decisions[next]!.sessionIndex === s && decisions[next]!.time <= time) {
-          decide(decisions[next]!, s);
-          next++;
+        for (;;) {
+          const tb = next < decisions.length && decisions[next]!.sessionIndex === s ? decisions[next]!.time : Infinity;
+          const tg = gates ? gates.nextTime(s, time) : Infinity;
+
+          if (tb <= time && tb <= tg) {
+            decide(decisions[next]!, s);
+            next++;
+          } else if (tg <= time) gates!.evaluate(s);
+          else return;
         }
       };
 
-      // In time order: a base decision at or before a continuation step goes first (base priority at a tie).
+      // In time order: a base decision (and a latched step) at or before a continuation step goes first (priority at a
+      // tie: fresh crossing, then live opportunity, then continuation).
       if (continuation)
         for (let ct = continuation.nextTime(s, k, t); ct <= t; ct = continuation.nextTime(s, k, t)) {
           baseUntil(ct);
@@ -544,9 +672,11 @@ export const simulateTrading = (
       if (book.fillAt(k)) {
         const trade = book.open(s, k);
         const base = byTrade.get(trade);
+        const gatedFill = gates ? gates.afterFill(trade) : false;
 
         if (base) base.status = 'filled';
-        else if (!continuation?.afterFill(trade)) throw new Error(`fill of an unknown order (trade ${trade.id})`);
+        else if (!gatedFill && !continuation?.afterFill(trade))
+          throw new Error(`fill of an unknown order (trade ${trade.id})`);
         excursions.set(trade, { worst: Infinity, worstTime: NaN, best: -Infinity, bestTime: NaN, marks: 0 });
         invested = true;
         logFill(trade, s);
@@ -584,9 +714,12 @@ export const simulateTrading = (
       throw new Error(`decision ${decisions[next]!.id} comes after the close of ${ds.dates[s]}`);
     if (continuation && !continuation.classic && continuation.nextTime(s, count + 1, Infinity) !== Infinity)
       throw new Error(`a continuation bar of ${ds.dates[s]} ends after its close`);
+    if (gates && gates.nextTime(s, Infinity) !== Infinity)
+      throw new Error(`an eligibility bar of ${ds.dates[s]} ends after its close`);
 
     book.afterSession(s);
     continuation?.afterSession(s);
+    gates?.afterSession(s);
 
     const unrealized = book.markAt(ds.sClose[s]!, sessionTime);
 
@@ -605,6 +738,7 @@ export const simulateTrading = (
 
   book.finish(endSession);
   continuation?.finish(endSession);
+  gates?.finish(endSession);
 
   return {
     symbol: options.symbol,
@@ -622,6 +756,7 @@ export const simulateTrading = (
     realized,
     log,
     continuation,
+    gates,
     markChanges
   };
 };
@@ -668,6 +803,15 @@ export const runRiseTrading = (
   const continuation = params.continuation
     ? { config: params.continuation, bars: params.continuation.method === 'classic_d1' ? null : bars }
     : null;
+  const gates: GateRuntime | null =
+    params.trendFilter || params.eligibility
+      ? {
+          trend: params.trendFilter ?? null,
+          eligibility: params.eligibility ?? null,
+          bars,
+          entry: scanParams
+        }
+      : null;
   const simulation = simulateTrading(ds, decisions, {
     symbol,
     firstSession: warmup,
@@ -675,6 +819,7 @@ export const runRiseTrading = (
     exit: exitParamsOf(params),
     book: bookSettingsOf(params),
     continuation,
+    gates,
     recordMinuteMarks: options.recordMinuteMarks
   });
 
@@ -877,7 +1022,9 @@ export const continuationMetricsOf = (sim: Simulation) => {
     base_entry: 0,
     window_expired: 0,
     pullback_too_deep: 0,
-    end_of_data: 0
+    end_of_data: 0,
+    // v1.2.0: a trigger blocked by an entry gate ends its episode (keys present only with a gate ON)
+    ...(sim.gates ? { trend_veto: 0, insufficient_history: 0, invalid_data: 0, capital_unavailable: 0 } : {})
   };
 
   for (const e of c.episodes) if (e.end) ends[e.end]!++;
@@ -894,12 +1041,154 @@ export const continuationMetricsOf = (sim: Simulation) => {
     endedBy: ends,
     armed: c.episodes.filter((e) => Number.isFinite(e.armedTime)).length,
     armedAtEnd: c.episodes.filter((e) => e.end === 'end_of_data' && Number.isFinite(e.armedTime)).length,
-    triggered: c.outcomes.filter((o) => o.status !== 'suppressed').length,
+    triggered: c.outcomes.filter((o) => o.status !== 'suppressed' && o.status !== 'vetoed').length,
+    // v1.2.0: triggers blocked by an entry gate (always 0 with both gates OFF; the key exists only with a gate ON)
+    vetoedByEntryGate: sim.gates ? c.outcomes.filter((o) => o.status === 'vetoed').length : undefined,
     filled: c.outcomes.filter((o) => o.status === 'filled').length,
     unfilledAtEnd: c.outcomes.filter((o) => o.status === 'unfilled_at_end').length,
     suppressedBasePriority: c.outcomes.filter((o) => o.status === 'suppressed').length,
     expiredWithLaterHigherHigh: expired.filter((e) => e.maxHighInWindow > e.exitPrice).length,
     note: 'Episode counts are descriptive. "Expired with a later higher high" counts windows that expired although a session high above the exit price followed inside the window (a possible missed continuation); it is not a profit estimate.'
+  };
+};
+
+// ----- v1.2.0 entry gates: entry sources and descriptive counts -----
+
+export type EntrySource =
+  | 'rise_from_recent_low'
+  | 'latched:rise_from_recent_low'
+  | 'eligibility_renewal'
+  | 'latched:eligibility_renewal'
+  | `continuation:${ContinuationMethod}`;
+
+// Which decision opened a trade: the raw crossing itself, a later (latched) decision of its opportunity, a renewal
+// signal, a later decision of a renewal opportunity, or a continuation method.
+export const entrySourceOf = (sim: Pick<Simulation, 'gates'>, trade: VirtualTrade): EntrySource => {
+  const o = originOf(trade);
+
+  if (o.origin === 'continuation') return `continuation:${o.method!}`;
+
+  const d = sim.gates?.decisionOf(trade);
+
+  if (!d || d.kind === 'crossing') return 'rise_from_recent_low';
+  if (d.kind === 'renewal') return 'eligibility_renewal';
+
+  return d.opportunity?.source === 'eligibility_renewal'
+    ? 'latched:eligibility_renewal'
+    : 'latched:rise_from_recent_low';
+};
+
+export const ENTRY_GATES_NOTE =
+  'Descriptive counts of one run. A blocked or added entry changes every later decision (path dependence), so these ' +
+  'are not the effect of the filter or of eligibility; compare a complete ON run with an otherwise identical OFF run ' +
+  '(tools/paired-comparison.ts). Retrospective historical data only; not evidence that a rule makes trading safer.';
+
+export const entryGatesMetricsOf = (sim: Simulation, rows: readonly LedgerRow[]) => {
+  const g = sim.gates!;
+  const rowOf = new Map(rows.map((row) => [row.trade, row]));
+  const stats = (list: readonly LedgerRow[]) => {
+    const closed = list.filter((row) => row.status === 'closed');
+
+    return {
+      entries: list.length,
+      closed: closed.length,
+      open: list.length - closed.length,
+      wins: closed.filter((row) => row.net > 0).length,
+      losses: closed.filter((row) => row.net < 0).length,
+      breakeven: closed.filter((row) => row.net === 0).length,
+      realizedNetUsd: sum(closed.map((row) => row.net)),
+      unrealizedNetUsd: sum(list.filter((row) => row.status === 'open').map((row) => row.net)),
+      interestUsd: sum(list.map((row) => row.interest))
+    };
+  };
+  const bySource: Record<string, LedgerRow[]> = {};
+
+  for (const row of rows) (bySource[entrySourceOf(sim, row.trade)] ??= []).push(row);
+
+  const trend = g.trend
+    ? {
+        enabled: true as const,
+        method: g.runtime.trend!.method,
+        config: g.runtime.trend,
+        evaluations: g.trend.evaluations,
+        blockedByDecisionKind: g.gateBlocks,
+        note: 'blockedByDecisionKind counts every blocked evaluation (a latched opportunity is evaluated at each completed bar while it waits)'
+      }
+    : { enabled: false as const };
+  const e = g.eligibility;
+  const ops = g.opportunities;
+  const ended = (state: string) => ops.filter((o) => o.endState === state).length;
+  const reasons: Record<string, number> = {};
+
+  for (const o of ops)
+    if (o.endState === 'invalidated')
+      reasons[o.endReason!.split(':')[0]!] = (reasons[o.endReason!.split(':')[0]!] ?? 0) + 1;
+
+  const decided = ops.filter((o) => Number.isFinite(o.decisionTime));
+  const ages = decided.map((o) => o.ageSessionsAtDecision);
+  const histogram: Record<string, number> = {};
+
+  for (const a of ages) histogram[String(a)] = (histogram[String(a)] ?? 0) + 1;
+
+  const opportunityTrades = decided.map((o) => o.trade).filter((t): t is VirtualTrade => Boolean(t && rowOf.has(t)));
+  const eligibility = e
+    ? {
+        enabled: true as const,
+        policy: e.policy,
+        config: e,
+        opportunities: ops.length,
+        bySource: {
+          rise_from_recent_low: ops.filter((o) => o.source === 'rise_from_recent_low').length,
+          eligibility_renewal: ops.filter((o) => o.source === 'eligibility_renewal').length
+        },
+        endedBy: {
+          consumed: ended('consumed'),
+          expired: ended('expired'),
+          invalidated: ended('invalidated'),
+          superseded: ended('superseded'),
+          unfilled_at_end: ended('unfilled_at_end'),
+          end_of_data: ended('end_of_data')
+        },
+        invalidatedByReason: reasons,
+        takenAtArming: decided.filter((o) => o.decisionTime === o.signalTime).length,
+        takenLater: decided.filter((o) => o.decisionTime !== o.signalTime).length,
+        everBlocked: ops.filter((o) => Number.isFinite(o.firstBlockedTime)).length,
+        blockedEvaluations: {
+          trend_veto: sum(ops.map((o) => o.blockedEvaluations.trend_veto)),
+          insufficient_history: sum(ops.map((o) => o.blockedEvaluations.insufficient_history)),
+          invalid_data: sum(ops.map((o) => o.blockedEvaluations.invalid_data)),
+          capital_unavailable: sum(ops.map((o) => o.blockedEvaluations.capital_unavailable))
+        },
+        ageSessionsAtDecision: {
+          mean: ages.length ? sum(ages) / ages.length : null,
+          median: median(ages),
+          max: ages.length ? Math.max(...ages) : null,
+          histogram
+        },
+        renewals: {
+          watches: g.watches.length,
+          resets: g.watches.filter((w) => Number.isFinite(w.resetTime)).length,
+          endedBy: Object.fromEntries(
+            [
+              'renewed',
+              'predicate_false_at_rebound',
+              'lapsed',
+              'superseded_by_crossing',
+              'entry_taken',
+              'end_of_data'
+            ].map((k) => [k, g.watches.filter((w) => w.end === k).length])
+          )
+        },
+        tradesFromOpportunities: stats(opportunityTrades.map((t) => rowOf.get(t)!))
+      }
+    : { enabled: false as const };
+
+  return {
+    trendFilter: trend,
+    eligibility,
+    capitalHook: g.runtime.capacity ? 'harness capacity hook (not Strategy Lab)' : null,
+    bySource: Object.fromEntries(Object.entries(bySource).map(([k, list]) => [k, stats(list)])),
+    note: ENTRY_GATES_NOTE
   };
 };
 
@@ -916,7 +1205,7 @@ export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
   const rejected: Record<RejectReason, number> = { position_open: 0, order_pending: 0 };
 
   for (const row of closed) reasons[row.trade.exitReason] = (reasons[row.trade.exitReason] ?? 0) + 1;
-  for (const o of sim.outcomes) if (o.status === 'rejected') rejected[o.reason!]++;
+  for (const o of sim.outcomes) if (o.status === 'rejected') rejected[o.reason as RejectReason]++;
 
   if (closed.length === 0) {
     unavailable.winRate = 'no closed trades';
@@ -959,7 +1248,19 @@ export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
         filled: sim.outcomes.filter((o) => o.status === 'filled').length,
         rejected: sim.outcomes.filter((o) => o.status === 'rejected').length,
         rejectedByReason: rejected,
-        unfilledAtEnd: sim.outcomes.filter((o) => o.status === 'unfilled_at_end').length
+        unfilledAtEnd: sim.outcomes.filter((o) => o.status === 'unfilled_at_end').length,
+        // v1.2.0 entry gates (only with a gate ON): raw crossings met while flat but not taken at their own decision
+        ...(sim.gates
+          ? {
+              vetoed: sim.outcomes.filter((o) => o.status === 'vetoed').length,
+              vetoedByReason: Object.fromEntries(
+                ['trend_veto', 'insufficient_history', 'invalid_data', 'capital_unavailable', 'policy_invalidated'].map(
+                  (r) => [r, sim.outcomes.filter((o) => o.status === 'vetoed' && o.reason === r).length]
+                )
+              ),
+              deferred: sim.outcomes.filter((o) => o.status === 'deferred').length
+            }
+          : {})
       },
       trades: {
         filled: rows.length,
@@ -1015,6 +1316,7 @@ export const summarizeSimulation = (sim: Simulation, ds: Dataset) => {
       },
       attribution: attributionOf(rows),
       continuation: continuationMetricsOf(sim),
+      ...(sim.gates ? { entryGates: entryGatesMetricsOf(sim, rows) } : {}),
       checks: {
         fixedLedgerMaxDifferenceUsd: reconciliation.maxDifference,
         identityMaxResidualUsd: identity,

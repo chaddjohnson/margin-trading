@@ -10,6 +10,7 @@ import { join } from 'node:path';
 
 import { readZip } from '../server/zip.ts';
 import { failOnConsoleProblems, hasData } from './console.ts';
+import { chooseStrategy } from './helpers.ts';
 
 failOnConsoleProblems();
 
@@ -24,9 +25,9 @@ test('the Growth form: continuation OFF by default, method-specific inputs only,
   await page.goto('/');
   await expect(page.getByTestId('run-id')).toBeVisible();
   await page.getByTestId('new-test').click();
-  await page.getByTestId('strategy-rise-from-recent-low-trading').check();
+  await chooseStrategy(page, 'rise-from-recent-low-trading');
   const dialog = page.getByTestId('run-dialog');
-  await expect(dialog.getByRole('radiogroup', { name: 'Strategy' })).toContainText('Growth');
+  await expect(dialog.getByRole('combobox', { name: 'Strategy to test' })).toContainText('Growth');
   await expect(dialog).not.toContainText('Rise from recent low (trading backtest)');
   const enable = page.getByTestId('param-continuationEnabled');
   await expect(enable).not.toBeChecked();
@@ -68,7 +69,7 @@ test('(real data) one Classic D1 run: attributed continuation entries, applied p
   await expect(page.getByTestId('run-id')).toBeVisible();
   const before = (await page.getByTestId('run-id').innerText()).trim();
   await page.getByTestId('new-test').click();
-  await page.getByTestId('strategy-rise-from-recent-low-trading').check();
+  await chooseStrategy(page, 'rise-from-recent-low-trading');
   await page.getByTestId('param-continuationEnabled').check();
   await page.getByTestId('run-from').fill('2016-01-04');
   await page.getByTestId('run-to').fill('2023-12-29');
@@ -77,7 +78,7 @@ test('(real data) one Classic D1 run: attributed continuation entries, applied p
   await expect(page.getByTestId('run-id')).not.toHaveText(before);
   await expect(page.getByTestId('run-status')).toHaveText('completed', { timeout: 120_000 });
   const id = (await page.getByTestId('run-id').innerText()).trim();
-  await expect(page.getByTestId('strategy-version')).toHaveText('Growth v1.1.0');
+  await expect(page.getByTestId('strategy-version')).toHaveText('Growth v1.2.0');
 
   const table = page.getByTestId('trade-table-A');
   await expect(table.getByTestId('trade-origin').filter({ hasText: 'continuation · Classic D1' }).first()).toBeVisible();

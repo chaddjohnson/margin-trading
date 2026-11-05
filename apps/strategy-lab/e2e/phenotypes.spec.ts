@@ -11,12 +11,12 @@ failOnConsoleProblems();
 test('catalogue: filter, inspect and run ONE Growth phenotype with an edit (a derived variation)', async ({ page }) => {
   await page.goto('/#/phenotypes');
   const table = page.getByTestId('phenotype-table');
-  await expect(table.locator('tbody tr[data-phenotype]')).toHaveCount(6);
+  await expect(table.locator('tbody tr[data-phenotype]')).toHaveCount(9);
   await page.getByTestId('phenotype-filter-role').selectOption('balanced');
   await expect(table.locator('tbody tr[data-phenotype]')).toHaveCount(1);
   await page.getByTestId('phenotype-filter-role').selectOption('');
   await page.getByTestId('phenotype-filter-strategy').selectOption('rise-from-recent-low-trading');
-  await expect(table.locator('tbody tr[data-phenotype]')).toHaveCount(5);
+  await expect(table.locator('tbody tr[data-phenotype]')).toHaveCount(8);
   await page.getByTestId('phenotype-search').fill('classic');
   await expect(table.locator('tbody tr[data-phenotype]')).toHaveCount(1);
   await table.locator('tbody tr[data-phenotype]').first().click();
@@ -32,6 +32,9 @@ test('catalogue: filter, inspect and run ONE Growth phenotype with an edit (a de
   await expect(dialog.getByTestId('phenotype-origin')).toContainText('growth-demo-2026-11');
   await expect(page.getByTestId('param-continuationEnabled')).toBeChecked();
   await expect(page.getByTestId('param-continuationMethod')).toHaveValue('classic_d1');
+  // a 1.1.0 phenotype runs as itself: its own schema, without the later entry-gate controls
+  await expect(dialog.getByTestId('group-trend')).toHaveCount(0);
+  await expect(dialog.getByTestId('phenotype-origin')).toContainText('rerun as 1.1.0');
   await expect(page.getByTestId('phenotype-edited')).toHaveCount(0);
   await page.getByTestId('param-classicPullbackPercent').fill('6');
   await expect(page.getByTestId('phenotype-edited')).toContainText('NEW variation derived from');
@@ -66,4 +69,28 @@ test('(real data) the shared-slot pool phenotype: locked books and start, one al
   await expect(page.getByTestId('result-kind')).toHaveText('SHARED-SLOT POOL · ONE ALLOCATOR REPLAY');
   await expect(page.getByTestId('symbol-tabs')).toContainText('GDX');
   await expect(page.getByTestId('clone-run')).toHaveCount(0); // a pool rerun is repeated from the catalogue only
+});
+
+test('(real data) a Growth 1.2.0 phenotype with the entry gates: its switches in the form, ONE run with provenance', async ({ page }) => {
+  test.skip(!hasData, 'needs the local market data');
+  await page.goto('/#/phenotypes');
+  await page.getByTestId('phenotype-search').fill('trend-c-gdx');
+  const table = page.getByTestId('phenotype-table');
+  await expect(table.locator('tbody tr[data-phenotype]')).toHaveCount(1);
+  await table.locator('tbody tr[data-phenotype]').first().click();
+  await expect(page.getByTestId('phenotype-params')).toContainText('C — Rising moving average');
+  await page.getByTestId('run-phenotype').click();
+  const dialog = page.getByTestId('run-dialog');
+  await expect(dialog.getByTestId('phenotype-origin')).toContainText('growth-gates-demo-2026-11');
+  await expect(page.getByTestId('param-trendFilterEnabled')).toBeChecked();
+  await expect(page.getByTestId('param-trendMethod')).toHaveValue('rising_sma');
+  await expect(page.getByTestId('param-eligibilityEnabled')).not.toBeChecked();
+  await expect(page.getByTestId('phenotype-edited')).toHaveCount(0);
+  await page.getByTestId('run-from').fill('2020-01-02');
+  await page.getByTestId('run-to').fill('2021-12-31');
+  await page.getByTestId('run-submit').click();
+  await expect(page.getByTestId('run-status')).toHaveText('completed', { timeout: 120_000 });
+  await expect(page.getByTestId('strategy-version')).toHaveText('Growth v1.2.0');
+  await expect(page.getByTestId('run-phenotype')).toContainText('its frozen configuration, unedited');
+  await expect(page.getByTestId('parameters')).toContainText('C — Rising moving average (rising_sma)');
 });

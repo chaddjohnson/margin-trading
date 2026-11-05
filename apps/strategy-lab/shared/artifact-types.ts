@@ -50,6 +50,42 @@ export interface SymbolMetrics {
   drawdown?: { minute?: { maximumUsd?: number }; daily?: { maximumUsd?: number } };
   attribution?: { note: string; byOrigin: Record<string, OriginAttribution> };
   continuation?: ContinuationCounts;
+  entryGates?: EntryGateCounts; // Growth 1.2.0, only with the trend filter or eligibility ON
+  signals?: { raw?: number; filled?: number; rejected?: number; vetoed?: number; deferred?: number; vetoedByReason?: Record<string, number> };
+}
+
+export interface SourceStats {
+  entries: number;
+  closed: number;
+  open: number;
+  wins: number;
+  losses: number;
+  breakeven: number;
+  realizedNetUsd: number;
+  unrealizedNetUsd: number;
+  interestUsd: number;
+}
+
+export interface EntryGateCounts {
+  trendFilter: { enabled: boolean; method?: string; evaluations?: number; blockedByDecisionKind?: Record<string, Record<string, number>> };
+  eligibility: {
+    enabled: boolean;
+    policy?: string;
+    config?: Record<string, unknown>;
+    opportunities?: number;
+    bySource?: Record<string, number>;
+    endedBy?: Record<string, number>;
+    invalidatedByReason?: Record<string, number>;
+    takenAtArming?: number;
+    takenLater?: number;
+    everBlocked?: number;
+    blockedEvaluations?: Record<string, number>;
+    ageSessionsAtDecision?: { mean: number | null; median: number | null; max: number | null; histogram: Record<string, number> };
+    renewals?: { watches: number; resets: number; endedBy: Record<string, number> };
+    tradesFromOpportunities?: SourceStats;
+  };
+  bySource: Record<string, SourceStats>;
+  note: string;
 }
 
 export interface StampedTime {
@@ -89,8 +125,60 @@ export interface LogRecord extends StampedTime {
   values: Record<string, unknown>;
 }
 
+// Growth 1.2.0 (only with an entry gate ON): one opportunity, one entry decision.
+export interface OpportunityRecord {
+  id: string;
+  source: string;
+  renewedFrom: string | null;
+  policy: string;
+  signal: StampedTime & { session: string; price: number; recentLow: number; threshold: number; advancePercent: number };
+  lastEligibleSession: string;
+  evaluations: number;
+  blockedEvaluations: Record<string, number>;
+  firstBlocked: StampedTime | null;
+  decision: (StampedTime & { price: number; ageSessions: number; values: Record<string, unknown> }) | null;
+  end: { state: string | null; reason: string | null; utc: string | null; newYork: string | null; session: string | null; values: Record<string, unknown> };
+  renewal: Record<string, unknown> | null;
+  transitions: (StampedTime & { session: string; state: string; reason: string })[];
+  trade: string | null;
+  status: string | null;
+  netUsd: number | null;
+  netKind: string | null;
+  fill: (StampedTime & { price: number }) | null;
+}
+
+export interface EntryDecisionRecord {
+  id: string;
+  kind: 'crossing' | 'latched' | 'renewal' | 'continuation';
+  source: string;
+  time: StampedTime;
+  session: string | null;
+  price: number;
+  crossing: { threshold: number; recentLow: number; advancePercent: number } | null;
+  disposition: string;
+  reason: string | null;
+  gate: { decision: string | null; text: string | null; capital: boolean | null; trend: Record<string, unknown> | null } | null;
+  policy: Record<string, unknown> | null;
+  opportunity: string | null;
+  episode?: string;
+  trade: string | null;
+  status: string | null;
+  netUsd: number | null;
+  netKind: string | null;
+  fill: (StampedTime & { price: number }) | null;
+}
+
 export interface DecisionsFile {
-  perSymbol?: Record<string, { episodes: EpisodeRecord[]; log: LogRecord[] }>;
+  perSymbol?: Record<
+    string,
+    {
+      episodes: EpisodeRecord[];
+      log: LogRecord[];
+      opportunities?: OpportunityRecord[];
+      renewalWatches?: Record<string, unknown>[];
+      entryDecisions?: EntryDecisionRecord[];
+    }
+  >;
 }
 
 export interface LedgerRecord {

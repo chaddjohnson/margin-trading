@@ -3,9 +3,11 @@
 // deliberately not available here (Claude/CLI research workflows only).
 //
 // Applicability comes from the schema: an inactive parameter is either disabled in place ("saved, not applied") or
-// hidden (the continuation method inputs of the methods not selected). Hidden drafts are kept while switching and are
-// sent only when edited away from their default; the server stores them as "saved, not applied" and executes only the
-// effective values. The same validator runs here and on the server.
+// hidden (the inputs of the continuation methods, trend methods and eligibility policies not selected). Hidden drafts are
+// kept while switching and are sent only when edited away from their default; the server stores them as "saved, not
+// applied" and executes only the effective values. The same validator runs here and on the server. Value-dependent
+// notes and warnings come from the registry (StrategySpec.groupNotes), not from strategy-specific code here. The
+// strategy itself is chosen in a compact rich select (StrategyPicker).
 
 import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -17,8 +19,9 @@ import {
   type Resolution,
   type StrategySpec
 } from '../../shared/contract.ts';
-import { constraintErrors, defaultParams, isActive, predicateParams, validateValue } from '../../shared/params.ts';
+import { constraintErrors, defaultParams, isActive, noteShown, predicateParams, validateValue } from '../../shared/params.ts';
 import { ApiError, api, type Meta, type PhenotypeView } from '../api.ts';
+import { StrategyPicker } from './StrategyPicker.tsx';
 
 interface Props {
   meta: Meta;
@@ -158,7 +161,14 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
       resolution !== phenotype?.record.resolution ||
       spec.params.some((p) => active(p.key) && originParams?.[p.key] === undefined && parsed[p.key] !== p.default));
   const trading = spec.kind === 'trades';
-  const holdOff = trading && parsed.maximumHoldEnabled === false;
+  const notesOf = (group: string) =>
+    (spec.groupNotes ?? [])
+      .filter((n) => n.group === group && noteShown(spec, parsed, n.when))
+      .map((n) => (
+        <p key={n.id} className={`${n.tone === 'warn' ? 'warn' : 'muted'} small`} role="note" data-testid={n.id}>
+          {n.text}
+        </p>
+      ));
 
   const chooseStrategy = (key: string) => {
     const next = meta.strategies.find((s) => s.key === key);
@@ -330,7 +340,6 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
       </span>
     </label>
   );
-  const continuationOn = parsed.continuationEnabled === true;
 
   return (
     <dialog
@@ -386,26 +395,22 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
         ) : (
           <fieldset>
             <legend>Strategy</legend>
-            <div className="strategy-choice" role="radiogroup" aria-label="Strategy">
-              {meta.strategies.map((s) => (
-                <label key={`${s.key}@${s.version}`} className={`strategy-card${s.key === spec.key ? ' is-on' : ''}`}>
-                  <input
-                    type="radio"
-                    name="strategy"
-                    checked={s.key === spec.key}
-                    onChange={() => chooseStrategy(s.key)}
-                    data-testid={`strategy-${s.key}`}
-                  />
-                  <span>
-                    <b>{s.title}</b> <span className="mono muted">v{s.version}</span>{' '}
-                    <span className={`badge ${s.kind === 'trades' ? 'badge-trading' : 'badge-muted'}`}>
-                      {s.kind === 'trades' ? 'TRADING BACKTEST' : 'SIGNAL-ONLY'}
-                    </span>
-                    <span className="muted small block">{s.description}</span>
-                  </span>
-                </label>
-              ))}
-            </div>
+            <StrategyPicker
+              label="Strategy to test"
+              value={spec.key}
+              onChange={chooseStrategy}
+              options={meta.strategies.map((s) => ({
+                value: s.key,
+                title: s.title,
+                version: s.version,
+                badge: s.kind === 'trades' ? 'TRADING BACKTEST' : 'SIGNAL-ONLY',
+                badgeClass: s.kind === 'trades' ? 'badge-trading' : 'badge-muted',
+                description: s.description
+              }))}
+            />
+            <p className="muted small strategy-details" data-testid="strategy-details">
+              {spec.description}
+            </p>
             {spec.notes && (
               <ul className="strategy-notes small" data-testid="strategy-notes">
                 {spec.notes.map((n) => (
@@ -432,19 +437,7 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
               {g.description && <p className="muted small">{g.description}</p>}
               {spec.params.filter((p) => p.group === g.key).map(field)}
               {g.key === 'entry' && resolutionField}
-              {g.key === 'exit' && holdOff && (
-                <p className="warn small" role="note" data-testid="hold-off-warning">
-                  Maximum losing hold is OFF: a losing position has no exit — the trailing stop only becomes active
-                  while selling at it would be profitable after interest — so a loser can stay open indefinitely. It is
-                  reported as an open position marked at the last close, never as a fabricated sale.
-                </p>
-              )}
-              {g.key === 'continuation' && continuationOn && (
-                <p className="muted small" data-testid="continuation-note">
-                  Only the selected method’s inputs apply; the others keep their drafts and are not executed. A base
-                  Growth entry has priority at the same instant and closes the window.
-                </p>
-              )}
+              {notesOf(g.key)}
             </fieldset>
           ))
         ) : (

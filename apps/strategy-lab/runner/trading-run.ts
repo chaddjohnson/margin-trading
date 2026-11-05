@@ -1,5 +1,6 @@
 // The Strategy Lab trading-backtest runner ("Growth"): ONE manual test of one configuration of
-// rise-from-recent-low-trading@1.1.0 (or a replay of a legacy @1.0.0 request, which is 1.1.0 with continuation OFF),
+// rise-from-recent-low-trading@1.2.0 (or a replay of a legacy request: @1.1.0 = 1.2.0 with the entry trend filter and
+// persistent eligibility OFF; @1.0.0 = 1.2.0 with continuation and both gates OFF),
 // started by the server as a child process with a fixed argument vector:
 //
 //   node --experimental-transform-types runner/trading-run.ts <absolute run directory>
@@ -21,14 +22,22 @@ import { gzipSync } from 'node:zlib';
 import {
   CONTINUATION_METHOD_LABEL,
   type ContinuationMethod,
-  type LogEntry
+  type LogEntry,
+  type LogValue
 } from '../../../src/growth-trading/continuation.ts';
+import {
+  ELIGIBILITY_POLICY_LABEL,
+  type GatedDecision,
+  type Opportunity,
+  TREND_METHOD_LABEL
+} from '../../../src/growth-trading/entryGates.ts';
 import {
   EXECUTION,
   LEGACY_STRATEGY_VERSIONS,
   type LedgerRow,
   STRATEGY_KEY,
   STRATEGY_VERSION,
+  entrySourceOf,
   exitParamsOf,
   originOf,
   runRiseTrading,
@@ -50,6 +59,7 @@ const ENGINE_FILES = [
   'src/entry-signals/riseFromRecentLow.ts',
   'src/growth-trading/riseTrading.ts',
   'src/growth-trading/continuation.ts',
+  'src/growth-trading/entryGates.ts',
   'src/multi-etf-allocator/shadow.ts',
   'src/multi-etf-allocator/engine.ts',
   'src/multi-etf-allocator/ledger.ts',
@@ -60,6 +70,7 @@ const ENGINE_FILES = [
   'src/lib/csv.ts',
   'src/lib/corporateActions.ts',
   'apps/strategy-lab/runner/trading-run.ts',
+  'apps/strategy-lab/runner/growth-params.ts',
   'apps/strategy-lab/shared/params.ts',
   'apps/strategy-lab/shared/strategies.ts'
 ];
@@ -120,6 +131,24 @@ const originValues = (origin: string, method: ContinuationMethod | null, episode
     : [])
 ];
 
+// v1.2.0 entry gates: an observed value as a labelled event value (units from the key).
+const unitOf = (key: string): LabValue['unit'] =>
+  /Percent|percent/.test(key) ? 'percent' : /Sessions$|sessionsNeeded|sessionsAvailable|halfSessions|ageSessions/.test(key) ? 'sessions' : /Session$/.test(key) ? 'date' : /Close$|Price$|price$|sma|High$|Low$|Level$|threshold|Threshold|trough|reference|recentLow|close$/.test(key) ? 'price' : 'text';
+const gateValues = (prefix: string, values: Record<string, LogValue>): LabValue[] =>
+  Object.entries(values).map(([key, value]) => ({
+    key: `${prefix}${key}`,
+    label: `${prefix}${key}`,
+    value: typeof value === 'number' ? r4(value) : value,
+    unit: typeof value === 'number' ? unitOf(key) : 'text'
+  }));
+
+const SOURCE_LABEL: Record<string, string> = {
+  rise_from_recent_low: 'the Rise signal',
+  'latched:rise_from_recent_low': 'a latched opportunity (a later decision of a Rise signal)',
+  eligibility_renewal: 'a renewal signal (reset and fresh rebound)',
+  'latched:eligibility_renewal': 'a latched renewal opportunity'
+};
+
 interface StoredRequest extends LabRunRequest {
   runId: string;
 }
@@ -137,6 +166,9 @@ async function main() {
   const warmupSessions = warmupSessionsForParams(params);
   const daily = request.resolution === '1d';
   const continuation = params.continuation ?? null;
+  const trendFilter = params.trendFilter ?? null;
+  const eligibility = params.eligibility ?? null;
+  const gated = Boolean(trendFilter || eligibility);
 
   const events: LabEvent[] = [];
   const perSymbol: Record<string, unknown> = {};
@@ -173,6 +205,18 @@ async function main() {
     if (!(c.markedEqualsLedger <= TOLERANCE_USD)) throw new Error(`${symbol}: marks differ from the ledger`);
 
     const tradeIds = new Map(rows.map((row) => [row.trade, `T-${row.number}`]));
+    const g = sim.gates;
+    const rowOf = new Map(rows.map((row) => [row.trade, row]));
+    const when = (sec: number) => ({ utc: iso(sec), newYork: ny(sec) });
+    const dateAt = (i: number) => r.ds.dates[i] ?? `${r.ds.dates.at(-1)} + ${i - r.ds.sessionCount + 1} session(s) (past the data)`;
+    // What finally became of an opportunity (for the event texts).
+    const fate = (o: Opportunity) =>
+      o.trade && tradeIds.get(o.trade)
+        ? `decided ${ny(o.decisionTime)} at ${o.decisionPrice.toFixed(2)} (age ${o.ageSessionsAtDecision} session(s)), filled as ${tradeIds.get(o.trade)}`
+        : o.endState === 'unfilled_at_end'
+          ? 'decided, but its order was not filled before the end of the window'
+          : `${o.endState}${o.endReason ? ` (${o.endReason})` : ''}`;
+    const gateText = (d: GatedDecision | undefined) => (d?.gate ? d.gate.text : d?.reason ?? '');
     let cumulative = 0;
     const cumulativeAfter = new Map<LedgerRow, number>();
     for (const row of rows) if (row.status === 'closed') cumulativeAfter.set(row, (cumulative += row.net));
@@ -184,6 +228,22 @@ async function main() {
       const low = r.bars[s.recentLowIndex]!;
       const t = iso(s.time);
       const tradeId = o.trade ? tradeIds.get(o.trade) : undefined;
+      const gd = o.gate;
+      const op = gd?.opportunity ?? null;
+      const gateFields: LabValue[] = gd
+        ? [
+            { key: 'entryGate', label: 'Entry gate', value: gd.gate ? gd.gate.reason : gd.disposition, unit: 'text' },
+            ...(gd.gate?.trend ? gateValues('trend.', gd.gate.trend.values) : []),
+            ...(gd.validity ? gateValues('policy.', gd.validity) : []),
+            ...(op
+              ? [
+                  { key: 'opportunity', label: 'Opportunity', value: op.id, unit: 'text' as const },
+                  { key: 'opportunityEligibleThrough', label: 'Eligible through', value: dateAt(op.lastEligibleSession), unit: 'date' as const },
+                  { key: 'opportunityOutcome', label: 'Opportunity outcome', value: fate(op), unit: 'text' as const }
+                ]
+              : [])
+          ]
+        : [];
       const values: LabValue[] = [
         { key: 'advance', label: 'Advance above the recent low', value: r2(s.advancePercent), unit: 'percent' },
         { key: 'previousAdvance', label: 'Advance on the previous bar', value: r2(s.previousAdvancePercent), unit: 'percent' },
@@ -199,12 +259,17 @@ async function main() {
               ? `taken: order filled (${tradeId})`
               : o.status === 'unfilled_at_end'
                 ? 'taken: order not filled before the end of the window'
-                : o.reason === 'position_open'
-                  ? `ignored: invested (${tradeId ?? '?'})`
-                  : `ignored: the order for ${tradeId ?? '?'} is not filled yet`,
+                : o.status === 'vetoed'
+                  ? `vetoed: ${o.reason}`
+                  : o.status === 'deferred'
+                    ? `deferred: armed as ${op?.id} (${gd?.gate?.reason ?? 'blocked'})`
+                    : o.reason === 'position_open'
+                      ? `ignored: invested (${tradeId ?? '?'})`
+                      : `ignored: the order for ${tradeId ?? '?'} is not filled yet`,
           unit: 'text'
         },
-        ...originValues('base_growth', null, null)
+        ...originValues('base_growth', null, null),
+        ...gateFields
       ];
       const head = `Close ${s.close.toFixed(2)} is ${r2(s.advancePercent).toFixed(2)}% above the ${n}-bar low ${s.recentLow.toFixed(2)} (bar ending ${ny(low.end)})`;
       const reason =
@@ -212,14 +277,19 @@ async function main() {
           ? `${head}. Flat: order placed, filled ${ny(o.trade!.entryTime)} at ${o.trade!.entryRawPrice.toFixed(2)} (${tradeId})`
           : o.status === 'unfilled_at_end'
             ? `${head}. Flat: order placed, but no eligible trade inside the window — not filled`
-            : o.reason === 'position_open'
-              ? `${head}. Ignored: already invested (${tradeId}, bought ${ny(o.trade!.entryTime)}); not replayed later`
-              : `${head}. Ignored: the order of ${tradeId} is still waiting for its fill`;
+            : o.status === 'vetoed'
+              ? `${head}. Not taken — ${gateText(gd)}${op ? ` (opportunity ${op.id} invalidated at arming)` : ''}; with persistent eligibility OFF it is not replayed later`
+              : o.status === 'deferred'
+                ? `${head}. Not taken now — ${gateText(gd)}. Armed as opportunity ${op!.id} (${ELIGIBILITY_POLICY_LABEL[op!.policy]}, eligible through ${dateAt(op!.lastEligibleSession)}): ${fate(op!)}`
+                : o.reason === 'position_open'
+                  ? `${head}. Ignored: already invested (${tradeId}, bought ${ny(o.trade!.entryTime)}); not replayed later`
+                  : `${head}. Ignored: the order of ${tradeId} is still waiting for its fill`;
+      const notTaken = o.status === 'rejected' || o.status === 'vetoed' || o.status === 'deferred';
       events.push({
-        id: `${symbol}:${o.status === 'rejected' ? 'rejected_signal' : 'entry_signal'}:${t}`,
+        id: `${symbol}:${notTaken ? 'rejected_signal' : 'entry_signal'}:${t}`,
         runId: request.runId,
         symbol,
-        kind: o.status === 'rejected' ? 'rejected_signal' : 'entry_signal',
+        kind: notTaken ? 'rejected_signal' : 'entry_signal',
         t,
         timePrecision: daily ? 'session-close' : 'minute',
         timeMeaning: daily
@@ -234,10 +304,94 @@ async function main() {
         meta: {
           signalOnly: false,
           standalone: true,
-          disposition: o.status === 'rejected' ? 'ignored' : o.status === 'filled' ? 'taken' : 'unfilled',
+          disposition:
+            o.status === 'rejected'
+              ? 'ignored'
+              : o.status === 'filled'
+                ? 'taken'
+                : o.status === 'vetoed' || o.status === 'deferred'
+                  ? o.status
+                  : 'unfilled',
           reasonCode: o.reason ?? o.status,
           heldBy: o.status === 'rejected' ? (tradeId ?? null) : null,
-          origin: 'base_growth'
+          origin: 'base_growth',
+          ...(gd ? { entrySource: 'rise_from_recent_low', entryGate: gd.gate ? gd.gate.reason : gd.disposition, opportunity: op?.id ?? null } : {})
+        }
+      });
+    }
+
+    // v1.2.0: the later decisions of latched opportunities and the renewal signals (each once; never a repeated
+    // per-bar signal). A latched decision is the entry decision of its trade; the raw crossing above stays its origin.
+    for (const d of g?.decisions ?? []) {
+      if (d.kind === 'crossing') continue;
+      const op = d.opportunity!;
+      const t = iso(d.time);
+      const taken = d.disposition === 'taken';
+      const tradeId = d.trade ? tradeIds.get(d.trade) : undefined;
+      const values: LabValue[] = [
+        ...originValues('base_growth', null, null),
+        { key: 'entrySource', label: 'Entry source', value: d.kind === 'latched' ? `latched:${op.source}` : 'eligibility_renewal', unit: 'text' },
+        { key: 'opportunity', label: 'Opportunity', value: op.id, unit: 'text' },
+        { key: 'opportunitySignal', label: 'Opportunity armed (signal)', value: iso(op.signalTime), unit: 'datetime' },
+        { key: 'opportunitySignalPrice', label: 'Signal price (not the fill)', value: r4(op.signalPrice), unit: 'price' },
+        { key: 'ageSessions', label: 'Age at this decision (sessions)', value: d.session - op.signalSession, unit: 'sessions' },
+        { key: 'opportunityEligibleThrough', label: 'Eligible through', value: dateAt(op.lastEligibleSession), unit: 'date' },
+        ...(op.renewedFrom ? [{ key: 'renewedFrom', label: 'Renewed from', value: op.renewedFrom, unit: 'text' as const }] : []),
+        ...(op.renewal
+          ? [
+              { key: 'renewal.reference', label: 'Ended opportunity’s signal price', value: r4(op.renewal.reference), unit: 'price' as const },
+              { key: 'renewal.resetPrice', label: 'Reset close', value: r4(op.renewal.resetPrice), unit: 'price' as const },
+              { key: 'renewal.trough', label: 'Lowest close since the reset', value: r4(op.renewal.trough), unit: 'price' as const },
+              { key: 'renewal.reboundThreshold', label: 'Rebound threshold', value: r4(op.renewal.reboundThreshold), unit: 'price' as const }
+            ]
+          : []),
+        { key: 'entryGate', label: 'Entry gate', value: d.gate ? d.gate.reason : d.disposition, unit: 'text' },
+        ...(d.gate?.trend ? gateValues('trend.', d.gate.trend.values) : []),
+        ...(d.validity ? gateValues('policy.', d.validity) : []),
+        {
+          key: 'disposition',
+          label: 'Disposition',
+          value: taken
+            ? tradeId
+              ? `taken: order filled (${tradeId})`
+              : 'taken: order not filled before the end of the window'
+            : d.disposition === 'deferred'
+              ? `deferred: ${op.id} waits (${d.gate?.reason})`
+              : `invalidated: ${d.reason}`,
+          unit: 'text'
+        }
+      ];
+      const what =
+        d.kind === 'latched'
+          ? `Latched opportunity ${op.id} (armed by the ${op.source === 'eligibility_renewal' ? 'renewal' : 'Rise'} signal of ${ny(op.signalTime)} at ${op.signalPrice.toFixed(2)}; ${ELIGIBILITY_POLICY_LABEL[op.policy]}), age ${d.session - op.signalSession} session(s): its policy and the gates pass at ${d.price.toFixed(2)}`
+          : `Renewal signal (${op.renewedFrom} ended unconsumed; reset to ${op.renewal!.resetPrice.toFixed(2)}, rebound ≥ ${op.renewal!.reboundThreshold.toFixed(2)}), close ${d.price.toFixed(2)}: opportunity ${op.id}`;
+      events.push({
+        id: `${symbol}:${d.kind}:${t}`,
+        runId: request.runId,
+        symbol,
+        kind: taken ? 'entry_signal' : 'rejected_signal',
+        t,
+        timePrecision: daily ? 'session-close' : 'minute',
+        timeMeaning: daily
+          ? 'scheduled close of the session (16:00 ET, 13:00 on early-close days): the daily bar is complete'
+          : `end of the completed ${request.resolution} bar: the decision is first knowable`,
+        price: d.price,
+        priceBasis: 'bar-close',
+        reason: taken
+          ? `${what}. Order placed for the next eligible trade at the then-current price; ${tradeId ? `filled ${ny(d.trade!.entryTime)} at ${d.trade!.entryRawPrice.toFixed(2)} (${tradeId})` : 'not filled before the end of the window'}`
+          : `${what}. Not taken now — ${gateText(d)}: ${fate(op)}`,
+        values,
+        tradeId: taken && tradeId ? tradeId : null,
+        linkedEventId: null,
+        meta: {
+          signalOnly: false,
+          standalone: true,
+          origin: 'base_growth',
+          entrySource: d.kind === 'latched' ? `latched:${op.source}` : 'eligibility_renewal',
+          opportunity: op.id,
+          disposition: taken ? (tradeId ? 'taken' : 'unfilled') : d.disposition,
+          reasonCode: taken ? (tradeId ? 'filled' : 'unfilled_at_end') : (d.gate?.reason ?? d.disposition),
+          entryGate: d.gate ? d.gate.reason : d.disposition
         }
       });
     }
@@ -247,7 +401,8 @@ async function main() {
     for (const o of ctl?.outcomes ?? []) {
       const t = iso(o.time);
       const e = o.episode;
-      const taken = o.status !== 'suppressed';
+      const taken = o.status !== 'suppressed' && o.status !== 'vetoed';
+      const vetoed = o.status === 'vetoed';
       const tradeId = o.trade ? tradeIds.get(o.trade) : undefined;
       const values: LabValue[] = [
         ...originValues('continuation', e.method, e.id),
@@ -268,7 +423,9 @@ async function main() {
             ? o.status === 'filled'
               ? `taken: order filled (${tradeId})`
               : 'taken: order not filled before the end of the window'
-            : 'suppressed: a base Growth entry was taken at the same instant (base priority)',
+            : vetoed
+              ? `vetoed: ${o.reason} (the entry gate blocked the trigger; the window ends)`
+              : 'suppressed: a base Growth entry was taken at the same instant (base priority)',
           unit: 'text'
         }
       ];
@@ -287,7 +444,9 @@ async function main() {
         priceBasis: 'bar-close',
         reason: taken
           ? `Continuation (${CONTINUATION_METHOD_LABEL[e.method]}, ${e.id}): trigger at ${o.price.toFixed(2)}; ${o.status === 'filled' ? `filled ${ny(o.trade!.entryTime)} at ${o.trade!.entryRawPrice.toFixed(2)} (${tradeId})` : 'no eligible trade before the end — not filled'}`
-          : `Continuation (${CONTINUATION_METHOD_LABEL[e.method]}, ${e.id}) would have triggered at ${o.price.toFixed(2)}, but a base Growth entry was taken at the same instant (base priority); not traded`,
+          : vetoed
+            ? `Continuation (${CONTINUATION_METHOD_LABEL[e.method]}, ${e.id}) triggered at ${o.price.toFixed(2)}, but the entry gate blocked it (${o.reason}); not traded, and the window ends (no later re-trigger)`
+            : `Continuation (${CONTINUATION_METHOD_LABEL[e.method]}, ${e.id}) would have triggered at ${o.price.toFixed(2)}, but a base Growth entry was taken at the same instant (base priority); not traded`,
         values,
         tradeId: taken && o.status === 'filled' ? tradeId! : null,
         linkedEventId: null,
@@ -297,8 +456,9 @@ async function main() {
           origin: 'continuation',
           method: e.method,
           episode: e.id,
-          disposition: taken ? (o.status === 'filled' ? 'taken' : 'unfilled') : 'suppressed',
-          reasonCode: taken ? o.status : 'base_priority'
+          disposition: taken ? (o.status === 'filled' ? 'taken' : 'unfilled') : vetoed ? 'vetoed' : 'suppressed',
+          reasonCode: taken ? o.status : vetoed ? o.reason : 'base_priority',
+          ...(gated ? { entryGate: vetoed ? o.reason : taken ? 'pass' : null } : {})
         }
       });
     }
@@ -316,6 +476,14 @@ async function main() {
       const entryId = `${symbol}:${id}:entry`;
       const exitId = `${symbol}:${id}:exit`;
       const et = timing(tr.entryExecution);
+      const source = g ? entrySourceOf(sim, tr) : null;
+      const gd = g?.decisionOf(tr);
+      const op = gd?.opportunity ?? null;
+      const forWhat = origin.method
+        ? `continuation trigger (${CONTINUATION_METHOD_LABEL[origin.method]}, ${episodeOf.get(tr)})`
+        : source && source !== 'rise_from_recent_low'
+          ? `${SOURCE_LABEL[source]} ${op?.id ?? ''}`.trim()
+          : 'Rise signal';
       events.push({
         id: entryId,
         runId: request.runId,
@@ -326,7 +494,7 @@ async function main() {
         timeMeaning: et.meaning,
         price: tr.entryRawPrice,
         priceBasis: 'fill',
-        reason: `Bought ${row.shares.toFixed(4)} shares ($${EXECUTION.notional.toLocaleString('en-US')}) at ${tr.entryRawPrice.toFixed(2)}, ${EXECUTION_TEXT[tr.entryExecution as ExecutionPrice]}, for the ${origin.method ? `continuation trigger (${CONTINUATION_METHOD_LABEL[origin.method]}, ${episodeOf.get(tr)})` : 'Rise signal'} decided ${ny(tr.decisionTime)} at ${tr.decisionPrice.toFixed(2)}${open ? ' — still open at the end of the window' : ''}`,
+        reason: `Bought ${row.shares.toFixed(4)} shares ($${EXECUTION.notional.toLocaleString('en-US')}) at ${tr.entryRawPrice.toFixed(2)}, ${EXECUTION_TEXT[tr.entryExecution as ExecutionPrice]}, for the ${forWhat} decided ${ny(tr.decisionTime)} at ${tr.decisionPrice.toFixed(2)}${op && op.signalTime !== tr.decisionTime ? ` (signal of ${ny(op.signalTime)} at ${op.signalPrice.toFixed(2)}, ${op.ageSessionsAtDecision} session(s) earlier)` : ''}${open ? ' — still open at the end of the window' : ''}`,
         values: [
           { key: 'decisionTime', label: 'Signal decided', value: iso(tr.decisionTime), unit: 'datetime' },
           { key: 'decisionPrice', label: 'Signal bar close', value: r4(tr.decisionPrice), unit: 'price' },
@@ -336,11 +504,31 @@ async function main() {
           { key: 'shares', label: 'Shares', value: r4(row.shares), unit: 'count' },
           { key: 'principal', label: 'Principal (borrowed)', value: row.principal, unit: 'usd' },
           { key: 'entryCost', label: 'Entry cost', value: r2(row.entryFriction), unit: 'usd' },
-          ...originValues(origin.origin, origin.method, episodeOf.get(tr) ?? null)
+          ...originValues(origin.origin, origin.method, episodeOf.get(tr) ?? null),
+          ...(source
+            ? [
+                { key: 'entrySource', label: 'Entry source', value: source, unit: 'text' as const },
+                ...(op
+                  ? [
+                      { key: 'opportunity', label: 'Opportunity', value: op.id, unit: 'text' as const },
+                      { key: 'opportunitySignal', label: 'Opportunity armed (signal)', value: iso(op.signalTime), unit: 'datetime' as const },
+                      { key: 'opportunitySignalPrice', label: 'Signal price', value: r4(op.signalPrice), unit: 'price' as const },
+                      { key: 'ageSessionsAtDecision', label: 'Age at the decision (sessions)', value: op.ageSessionsAtDecision, unit: 'sessions' as const },
+                      { key: 'ageSessionsAtFill', label: 'Age at the fill (sessions)', value: tr.entryIndex - op.signalSession, unit: 'sessions' as const }
+                    ]
+                  : [])
+              ]
+            : [])
         ],
         tradeId: id,
         linkedEventId: open ? null : exitId,
-        meta: { open, standalone: true, origin: origin.origin, method: origin.method }
+        meta: {
+          open,
+          standalone: true,
+          origin: origin.origin,
+          method: origin.method,
+          ...(source ? { entrySource: source, opportunity: op?.id ?? null } : {})
+        }
       });
       if (open) continue;
       const xt = timing(tr.exitExecution);
@@ -474,7 +662,20 @@ async function main() {
       worstMark: row.excursion.worst,
       worstMarkTimeUtc: iso(row.excursion.worstTime),
       bestMark: row.excursion.best,
-      bestMarkTimeUtc: iso(row.excursion.bestTime)
+      bestMarkTimeUtc: iso(row.excursion.bestTime),
+      ...(g
+        ? (() => {
+            const op = g.decisionOf(row.trade)?.opportunity ?? null;
+            return {
+              entrySource: entrySourceOf(sim, row.trade),
+              opportunity: op?.id ?? null,
+              opportunitySignalTimeUtc: op ? iso(op.signalTime) : null,
+              opportunitySignalPrice: op?.signalPrice ?? null,
+              ageSessionsAtDecision: op ? op.ageSessionsAtDecision : null,
+              ageSessionsAtFill: op ? row.trade.entryIndex - op.signalSession : null
+            };
+          })()
+        : {})
     }));
     marks[symbol] = sim.daily.map((d) => ({
       date: d.date,
@@ -484,8 +685,95 @@ async function main() {
       marked: d.marked,
       heldAtClose: d.heldAtClose
     }));
-    const when = (sec: number) => ({ utc: iso(sec), newYork: ny(sec) });
     const tradeRef = (t: LogEntry['trade']) => (t ? (tradeIds.get(t) ?? `order (unfilled, decided ${iso(t.decisionTime)})`) : null);
+    // v1.2.0: machine-readable entry-gate records (only with a gate ON): every opportunity with its lifecycle, every
+    // renewal watch, and one record per Growth entry decision with its gate values, trade, fill and final net.
+    const netOf = (t: LogEntry['trade']) => {
+      const row = t ? rowOf.get(t) : undefined;
+      return row ? { trade: tradeIds.get(t!)!, status: row.status, netUsd: r2(row.net), netKind: row.status === 'open' ? 'unrealized (marked at the last close)' : 'realized', fill: { ...when(t!.entryTime), price: t!.entryRawPrice } } : { trade: t ? `order (unfilled, decided ${iso(t.decisionTime)})` : null, status: null, netUsd: null, netKind: null, fill: null };
+    };
+    const gateRecords = () => ({
+      opportunities: g!.opportunities.map((o) => ({
+        id: o.id,
+        source: o.source,
+        renewedFrom: o.renewedFrom,
+        policy: o.policy,
+        signal: { ...when(o.signalTime), session: r.ds.dates[o.signalSession], price: o.signalPrice, recentLow: o.recentLow, threshold: r4(o.threshold), advancePercent: r4(o.advancePercent) },
+        lastEligibleSession: dateAt(o.lastEligibleSession),
+        evaluations: o.evaluations,
+        blockedEvaluations: o.blockedEvaluations,
+        firstBlocked: Number.isFinite(o.firstBlockedTime) ? when(o.firstBlockedTime) : null,
+        decision: Number.isFinite(o.decisionTime) ? { ...when(o.decisionTime), price: o.decisionPrice, ageSessions: o.ageSessionsAtDecision, values: o.decisionValues } : null,
+        end: { state: o.endState, reason: o.endReason, ...(Number.isFinite(o.endTime) ? when(o.endTime) : { utc: null, newYork: null }), session: o.endSession >= 0 ? r.ds.dates[o.endSession] : null, values: o.endValues },
+        renewal: o.renewal ? { ...o.renewal, resetTime: when(o.renewal.resetTime), troughTime: when(o.renewal.troughTime) } : null,
+        transitions: o.transitions.map((x) => ({ ...when(x.t), session: r.ds.dates[x.session], state: x.state, reason: x.reason })),
+        ...netOf(o.trade)
+      })),
+      renewalWatches: g!.watches.map((w) => ({
+        id: w.id,
+        after: w.from.id,
+        reference: w.reference,
+        start: when(w.startTime),
+        lastSession: dateAt(w.lastSession),
+        reset: Number.isFinite(w.resetTime) ? { ...when(w.resetTime), price: w.resetPrice } : null,
+        trough: Number.isFinite(w.trough) ? { ...when(w.troughTime), price: w.trough } : null,
+        end: w.end,
+        endTime: Number.isFinite(w.endTime) ? when(w.endTime) : null
+      })),
+      entryDecisions: [
+        ...sim.outcomes.map((o) => ({
+          id: `${symbol}:${o.status === 'rejected' || o.status === 'vetoed' || o.status === 'deferred' ? 'rejected_signal' : 'entry_signal'}:${iso(o.decision.time)}`,
+          kind: 'crossing' as const,
+          source: 'rise_from_recent_low',
+          t: o.decision.time,
+          s: o.decision.sessionIndex,
+          price: o.decision.price,
+          crossing: { threshold: r4(o.decision.trigger), recentLow: o.decision.reference, advancePercent: r4(o.decision.signal!.advancePercent) },
+          disposition: o.status,
+          reason: o.reason,
+          gate: o.gate?.gate ? { decision: o.gate.gate.reason, text: o.gate.gate.text, capital: o.gate.gate.capital, trend: o.gate.gate.trend?.values ?? null } : null,
+          policy: o.gate?.validity ?? null,
+          opportunity: o.gate?.opportunity?.id ?? null,
+          ...netOf(o.status === 'rejected' ? null : o.trade)
+        })),
+        ...g!.decisions
+          .filter((d) => d.kind !== 'crossing')
+          .map((d) => ({
+            id: `${symbol}:${d.kind}:${iso(d.time)}`,
+            kind: d.kind,
+            source: d.kind === 'latched' ? `latched:${d.opportunity!.source}` : 'eligibility_renewal',
+            t: d.time,
+            s: d.session,
+            price: d.price,
+            crossing: null,
+            disposition: d.disposition,
+            reason: d.reason,
+            gate: d.gate ? { decision: d.gate.reason, text: d.gate.text, capital: d.gate.capital, trend: d.gate.trend?.values ?? null } : null,
+            policy: d.validity,
+            opportunity: d.opportunity?.id ?? null,
+            ...netOf(d.trade)
+          })),
+        ...(ctl?.outcomes ?? []).map((o) => ({
+          id: `${symbol}:continuation:${iso(o.time)}`,
+          kind: 'continuation' as const,
+          source: `continuation:${o.episode.method}`,
+          t: o.time,
+          s: o.session,
+          price: o.price,
+          crossing: null,
+          disposition: o.status,
+          reason: o.reason,
+          gate: o.status === 'vetoed' ? { decision: o.reason, text: null, capital: null, trend: null } : null,
+          policy: null,
+          opportunity: null,
+          episode: o.episode.id,
+          values: o.values,
+          ...netOf(o.trade)
+        }))
+      ]
+        .sort((a, b) => a.t - b.t || (a.id < b.id ? -1 : 1))
+        .map(({ t, s: session, ...rest }) => ({ ...rest, time: when(t), session: r.ds.dates[session] ?? null }))
+    });
     decisionLogs[symbol] = {
       episodes: (ctl?.episodes ?? []).map((e) => ({
         id: e.id,
@@ -517,11 +805,13 @@ async function main() {
         origin: x.origin,
         method: x.method,
         episode: x.episode,
+        ...(x.opportunity ? { opportunity: x.opportunity } : {}),
         trade: tradeRef(x.trade),
         disposition: x.disposition,
         reason: x.reason,
         values: x.values
-      }))
+      })),
+      ...(g ? gateRecords() : {})
     };
     const mc = sim.markChanges!;
     for (let i = 0; i < mc.t.length; i++)
@@ -554,9 +844,15 @@ async function main() {
         key: STRATEGY_KEY,
         version: request.strategyVersion,
         engineVersion: STRATEGY_VERSION,
-        ...(legacy ? { legacyReplay: `${request.strategyVersion} replayed as ${STRATEGY_VERSION} with continuation OFF` } : {})
+        ...(legacy
+          ? {
+              legacyReplay: `${request.strategyVersion} replayed as ${STRATEGY_VERSION} with ${request.strategyVersion === '1.0.0' ? 'continuation, the entry trend filter and persistent eligibility' : 'the entry trend filter and persistent eligibility'} OFF`
+            }
+          : {})
       },
       continuation: continuation ?? { enabled: false },
+      trendFilter: trendFilter ? { enabled: true, label: TREND_METHOD_LABEL[trendFilter.method], ...trendFilter } : { enabled: false },
+      eligibility: eligibility ? { enabled: true, label: ELIGIBILITY_POLICY_LABEL[eligibility.policy], ...eligibility } : { enabled: false },
       disclaimer:
         'Exploratory backtest of one configuration on historical data, not an optimised or validated strategy. Each symbol is an independent standalone backtest on its own $100,000 notional: the per-symbol figures are never summed, and are not comparable with a shared-slot pool such as vg-balanced.',
       execution: {
@@ -583,6 +879,14 @@ async function main() {
       kind: 'growth decision log',
       note: 'Chronological decisions and state transitions per symbol: base signals (taken/rejected), fills, exits (with the gross/cost/interest/net identity), and continuation episodes (opened, armed, window closed, suppressed, triggered, expired). Times in UTC with the America/New_York wall-clock time; instants are minute-precise (a daily decision is the session close).',
       continuation: continuation ?? { enabled: false },
+      trendFilter: trendFilter ?? { enabled: false },
+      eligibility: eligibility ?? { enabled: false },
+      ...(gated
+        ? {
+            entryGatesNote:
+              'With the entry trend filter or persistent eligibility ON, each symbol also has `opportunities` (every armed opportunity: signal, lifecycle transitions, decision, end, trade and its realized or open unrealized net), `renewalWatches` (policy 5) and `entryDecisions` (one record per Growth entry decision — raw crossing, latched decision, renewal signal, continuation trigger — with the gate result, the observed trend values, the policy values, the opportunity, the trade, the fill and the final net). A blocked latched opportunity is evaluated at every completed bar; only its state changes are logged.'
+          }
+        : {}),
       perSymbol: decisionLogs
     })
   );

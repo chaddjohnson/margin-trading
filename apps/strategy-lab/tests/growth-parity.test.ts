@@ -1,8 +1,14 @@
 // Real data (skipped without the git-ignored data/ files): reproducibility at the RUNNER level.
 // 1. The before-change runner artifacts of rise-from-recent-low-trading@1.0.0 (tests/fixtures/
 //    growth-runner-baseline-1.0.0: R-900001 VGT+GDX daily 2016–2023, R-900002 VGT 60m 2018–2020, captured at b590c60
-//    with the unchanged runner) are reproduced by the current runner replaying the same 1.0.0 requests (1.1.0 with
-//    continuation OFF): every stored field of trades.json, daily.json and metrics.json and every stored event.
+//    with the unchanged runner) are reproduced by the current runner replaying the same 1.0.0 requests (1.2.0 with
+//    continuation and both entry gates OFF): every stored field of trades.json, daily.json and metrics.json and every
+//    stored event.
+// 1b. The before-change runner artifacts of rise-from-recent-low-trading@1.1.0 (tests/fixtures/
+//    growth-runner-baseline-1.1.0: R-910001 VGT+GDX daily OFF, R-910002 VGT daily breakout, R-910003 GDX 60m classic_d1,
+//    captured at 0301c01 with the unchanged runner) are reproduced (a) by replaying the stored 1.1.0 requests and (b) by
+//    the SAME configurations as 1.2.0 requests with the entry trend filter and persistent eligibility OFF: trades.json,
+//    daily.json and events.json in full, every stored field of metrics.json and decisions.json, the minute marks.
 // 2. The shared-slot pool rerun (runner/pool-run.ts) to the sealed end gives the same events as the Study 8 importer
 //    applied to the same runner output, and reconciles with the sealed F24 record.
 
@@ -14,7 +20,7 @@ import { gunzipSync } from 'node:zlib';
 import { describe, expect, it } from 'vitest';
 
 import { importStudy8 } from '../importers/study8.ts';
-import { readEvents } from '../server/artifacts.ts';
+import { readEvents, sha256 } from '../server/artifacts.ts';
 import { loadConfig, REPO_ROOT } from '../server/config.ts';
 import { openDb } from '../server/db.ts';
 import { compareRunOutputs } from '../server/replay.ts';
@@ -46,8 +52,51 @@ describe.skipIf(!hasData)('runner-level reproducibility of Growth 1.0.0 (real da
         ['events.json', true]
       ]);
       const metrics = JSON.parse(readFileSync(join(dir, 'metrics.json'), 'utf8'));
-      expect(metrics.strategy).toMatchObject({ version: '1.0.0', engineVersion: '1.1.0' });
+      expect(metrics.strategy).toMatchObject({ version: '1.0.0', engineVersion: '1.2.0' });
     }, 600_000);
+});
+
+const FIXTURES_11 = join(import.meta.dirname, 'fixtures/growth-runner-baseline-1.1.0');
+const sums = (): Record<string, string> =>
+  Object.fromEntries(
+    readFileSync(join(FIXTURES_11, 'SHA256SUMS'), 'utf8')
+      .trim()
+      .split('\n')
+      .map((l) => [l.split(/\s+/)[1]!, l.split(/\s+/)[0]!])
+  );
+
+describe.skipIf(!hasData)('runner-level OFF/OFF parity with Growth 1.1.0 (real data)', () => {
+  for (const id of ['R-910001', 'R-910002', 'R-910003'])
+    for (const as of ['1.1.0 (replay)', '1.2.0 with both gates OFF'] as const)
+      it(`${id} as ${as}: identical to the 1.1.0 artifacts captured before the change`, () => {
+        const dir = join(mkdtempSync(join(tmpdir(), 'strategy-lab-parity-')), id);
+        mkdirSync(dir);
+        const stored = JSON.parse(gunzipSync(readFileSync(join(FIXTURES_11, id, 'request.json.gz'))).toString('utf8'));
+        const request =
+          as === '1.1.0 (replay)'
+            ? stored
+            : { ...stored, strategyVersion: '1.2.0', params: { ...stored.params, trendFilterEnabled: false, eligibilityEnabled: false } };
+        writeFileSync(join(dir, 'request.json'), JSON.stringify(request));
+        const r = runner('apps/strategy-lab/runner/trading-run.ts', dir);
+        expect(r.status, r.stderr + r.stdout).toBe(0);
+        const verdicts = compareRunOutputs(join(FIXTURES_11, id), dir, 'legacy-1.1.0');
+        expect(verdicts.map((v) => [v.file, v.identical])).toEqual([
+          ['trades.json', true],
+          ['daily.json', true],
+          ['metrics.json', true],
+          ['decisions.json', true],
+          ['events.json', true]
+        ]);
+        // the events byte for byte (the runId is the stored one), and the minute marks' content
+        expect(sha256(readFileSync(join(dir, 'events.json')))).toBe(sums()[`${id}/events.json`]);
+        expect(sha256(readFileSync(join(dir, 'trades.json')))).toBe(sums()[`${id}/trades.json`]);
+        expect(sha256(readFileSync(join(dir, 'daily.json')))).toBe(sums()[`${id}/daily.json`]);
+        expect(sha256(gunzipSync(readFileSync(join(dir, 'minute-marks.csv.gz'))))).toBe(sums()[`${id}/minute-marks.csv`]);
+        const metrics = JSON.parse(readFileSync(join(dir, 'metrics.json'), 'utf8'));
+        expect(metrics.trendFilter).toEqual({ enabled: false });
+        expect(metrics.eligibility).toEqual({ enabled: false });
+        expect(metrics.strategy).toMatchObject({ version: request.strategyVersion, engineVersion: '1.2.0' });
+      }, 600_000);
 });
 
 describe.skipIf(!hasData || !hasStudy8)('shared-slot pool rerun = the importer on the same Study 8 output (real data)', () => {

@@ -30,7 +30,7 @@ export async function tradingRun(
   const res = await page.request.post('/api/runs', {
     data: {
       strategyKey: 'rise-from-recent-low-trading',
-      strategyVersion: '1.1.0',
+      strategyVersion: '1.2.0',
       params: {
         advanceFromRecentLowPercent: 5,
         recentLowLookbackBars: 20,
@@ -41,6 +41,8 @@ export async function tradingRun(
         intradayLossBufferPercent: 2.9,
         costBpsPerSide: 5,
         continuationEnabled: false,
+        trendFilterEnabled: false,
+        eligibilityEnabled: false,
         ...extra
       },
       symbols,
@@ -57,6 +59,16 @@ export async function tradingRun(
     })
     .toBe('completed');
   return id;
+}
+
+/** Chooses a strategy in the New Test rich select (StrategyPicker) with the pointer and checks the submitted value. */
+export async function chooseStrategy(page: Page, key: string) {
+  const combo = page.getByTestId('strategy-picker');
+  if ((await combo.getAttribute('data-value')) === key) return;
+  await combo.click();
+  await page.getByTestId(`strategy-option-${key}`).click();
+  await expect(combo).toHaveAttribute('data-value', key);
+  await expect(page.getByTestId('strategy-listbox')).toBeHidden();
 }
 
 export const eventsOf = async (page: Page, id: string, symbol: string) =>

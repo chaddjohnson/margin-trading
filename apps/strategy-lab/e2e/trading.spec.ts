@@ -7,6 +7,8 @@ import { type Page, expect, test } from '@playwright/test';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { chooseStrategy } from './helpers.ts';
+
 const REPO = join(import.meta.dirname, '..', '..', '..');
 const hasData = ['VGT', 'GDX'].every((s) => existsSync(join(REPO, `data/${s}/data.csv`)));
 
@@ -24,8 +26,8 @@ const openTradingDialog = async (page: Page) => {
   await page.goto('/');
   await expect(page.getByTestId('run-id')).toBeVisible();
   await page.getByTestId('new-test').click();
-  await expect(page.getByTestId('strategy-rise-from-recent-low')).toBeChecked(); // the signal-only default
-  await page.getByTestId('strategy-rise-from-recent-low-trading').check();
+  await expect(page.getByTestId('strategy-picker')).toHaveAttribute('data-value', 'rise-from-recent-low'); // the signal-only default
+  await chooseStrategy(page, 'rise-from-recent-low-trading');
   return page.getByTestId('run-dialog');
 };
 type Run = {
@@ -133,7 +135,7 @@ test.describe('real data', () => {
 
     // Clone into a new test: same strategy and values, X 5% → 6%.
     await page.getByTestId('clone-run').click();
-    await expect(page.getByTestId('strategy-rise-from-recent-low-trading')).toBeChecked();
+    await expect(page.getByTestId('strategy-picker')).toHaveAttribute('data-value', 'rise-from-recent-low-trading');
     await expect(page.getByTestId('param-advanceFromRecentLowPercent')).toHaveValue('5');
     await expect(page.getByTestId('param-maximumHoldEnabled')).toBeChecked();
     await page.getByTestId('param-advanceFromRecentLowPercent').fill('6');

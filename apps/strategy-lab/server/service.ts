@@ -149,6 +149,83 @@ function continuationText(spec: StrategySpec, p: Record<string, unknown>) {
   };
 }
 
+// The entry trend filter and persistent eligibility (Growth 1.2.0) in the title and assumptions. Absent (older versions)
+// or OFF = Growth without them.
+function gateTexts(spec: StrategySpec, p: Record<string, unknown>, resolution: string) {
+  const trendOn = p.trendFilterEnabled === true && isActive(spec, p, 'trendMethod');
+  const eligibilityOn = p.eligibilityEnabled === true && isActive(spec, p, 'eligibilityPolicy');
+  const n = (k: string) => String(p[k]);
+  const trendRules: Record<string, [string, string]> = {
+    price_change: [
+      `A N ${n('trendChangeLookbackSessions')} ≥ ${pct(p.trendChangeMinimumReturnPercent)}`,
+      `the decision price at least ${pct(p.trendChangeMinimumReturnPercent)} above the close ${n('trendChangeLookbackSessions')} trading sessions back`
+    ],
+    regression_slope: [
+      `B N ${n('trendSlopeLookbackSessions')} ≥ ${pct(p.trendSlopeMinimumPercent)}`,
+      `the least-squares fit of log prices over the last ${n('trendSlopeLookbackSessions')} sessions (decision price last) rising at least ${pct(p.trendSlopeMinimumPercent)} over that span`
+    ],
+    rising_sma: [
+      `C SMA ${n('trendSmaSessions')}/${n('trendSmaComparisonSessions')}`,
+      `the decision price strictly above its ${n('trendSmaSessions')}-session SMA, and that SMA strictly above its value ${n('trendSmaComparisonSessions')} sessions earlier`
+    ],
+    higher_highs_lows: [
+      `D N ${n('trendStructureLookbackSessions')} m ${pct(p.trendStructureMinimumIncreasePercent)}`,
+      `over the last ${n('trendStructureLookbackSessions')} sessions (the current one up to the decision), the newer half with a higher high and a higher low than the older half (by more than ${pct(p.trendStructureMinimumIncreasePercent)}; odd N: the middle session excluded)`
+    ],
+    momentum: [
+      `E S ${n('trendMomentumShortSessions')} ≥ ${pct(p.trendMomentumMinimumShortReturnPercent)} L ${n('trendMomentumLongSessions')} ≥ ${pct(p.trendMomentumMinimumLongReturnPercent)}`,
+      `the return over ${n('trendMomentumShortSessions')} sessions at least ${pct(p.trendMomentumMinimumShortReturnPercent)} AND over ${n('trendMomentumLongSessions')} sessions at least ${pct(p.trendMomentumMinimumLongReturnPercent)}`
+    ]
+  };
+  const policyRules: Record<string, [string, string]> = {
+    time_limited: ['1', 'valid while each completed bar still satisfies the original Rise predicate (close ≥ X% over the rolling N-bar low)'],
+    minimum_strength: [
+      `2 a ${pct(p.eligibilityMinimumAdvancePercent)}`,
+      `valid while the close stays at least ${pct(p.eligibilityMinimumAdvancePercent)} above the recent low FIXED at the signal`
+    ],
+    maximum_extension: [
+      `3 e ${pct(p.eligibilityMaximumExtensionPercent)}`,
+      `the Rise predicate, and the decision price at most ${pct(p.eligibilityMaximumExtensionPercent)} above the original signal price (beyond it: invalidated)`
+    ],
+    deterioration: [
+      `4 d ${pct(p.eligibilityDeteriorationDropPercent)}`,
+      `the Rise predicate, and cancelled when a close falls ${pct(p.eligibilityDeteriorationDropPercent)} below the highest close since arming`
+    ],
+    reset_renew: [
+      `5 D ${pct(p.eligibilityResetDropPercent)} R ${pct(p.eligibilityRenewalReboundPercent)}`,
+      `the Rise predicate; after an unconsumed opportunity ends, a close ${pct(p.eligibilityResetDropPercent)} below its signal price resets and the first close ${pct(p.eligibilityRenewalReboundPercent)} above the lowest close since then (with the predicate true, within W sessions) renews it as a new opportunity`
+    ]
+  };
+  const [trendTitle, trendRule] = trendOn ? (trendRules[String(p.trendMethod)] ?? [n('trendMethod'), n('trendMethod')]) : ['', ''];
+  const [policyTitle, policyRule] = eligibilityOn ? (policyRules[String(p.eligibilityPolicy)] ?? [n('eligibilityPolicy'), n('eligibilityPolicy')]) : ['', ''];
+  return {
+    titles: [
+      ...(trendOn ? [`trend ${trendTitle}`] : []),
+      ...(eligibilityOn ? [`latch ${policyTitle} W ${n('eligibilityMaxAgeSessions')}`] : [])
+    ],
+    assumptions: [
+      text(
+        'trendFilter',
+        'Entry trend filter',
+        trendOn
+          ? `ON — ${optionLabel(paramOf(spec, 'trendMethod')!, p.trendMethod)}: allows ${trendRule}. Checked at every Growth entry decision (the base crossing, a latched opportunity, a renewal signal, a continuation trigger) with data complete at the decision — the decision bar's close and completed earlier TRADING SESSIONS, whatever the bar resolution; not enough history blocks (insufficient_history); exits are never filtered; a blocked decision is recorded with its values, not traded`
+          : spec.params.some((x) => x.key === 'trendFilterEnabled')
+            ? 'OFF: every entry decision is taken as without the filter (identical to Growth 1.1.0)'
+            : 'not part of this strategy version (OFF)'
+      ),
+      text(
+        'eligibility',
+        'Persistent entry eligibility',
+        eligibilityOn
+          ? `ON — ${optionLabel(paramOf(spec, 'eligibilityPolicy')!, p.eligibilityPolicy)}, maximum age ${n('eligibilityMaxAgeSessions')} trading sessions (the signal session is day 0; decisions through origin + W inclusive; expired after that close): ${policyRule}. A raw crossing met while flat arms ONE opportunity (not an order, no capital reserved), re-evaluated at each completed ${resolution} bar while flat with no order; a later entry fills at the next eligible trade at the then-current price, never at the signal price; signals while invested arm nothing; no repeated entries from one opportunity. Without a trend filter nothing blocks a standalone run, so every opportunity is taken at once`
+          : spec.params.some((x) => x.key === 'eligibilityEnabled')
+            ? 'OFF: a signal not taken at its own decision is gone (identical to Growth 1.1.0)'
+            : 'not part of this strategy version (OFF)'
+      )
+    ]
+  };
+}
+
 // The trading backtest: every value as entered (a switch as ON/OFF, a choice by its label; an inactive value is saved
 // and marked "not applied"), and the effective rules spelled out in the assumptions. The variation keeps the effective
 // configuration only.
@@ -157,6 +234,7 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
   const hold = isActive(spec, p, 'maximumHoldDays');
   const buffer = isActive(spec, p, 'intradayLossBufferPercent');
   const continuation = continuationText(spec, p);
+  const gates = gateTexts(spec, p, req.resolution);
   const resolution = { key: 'resolution', label: 'Bar resolution', value: req.resolution, unit: 'text' as const };
   const params: LabValue[] = [...paramSnapshot(spec, p), resolution];
   const variationParams: LabValue[] = [...paramSnapshot(spec, effectiveParams(spec, p)), resolution];
@@ -169,7 +247,8 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
     hold ? `hold ${p.maximumHoldDays}d` : 'hold off',
     buffer ? `buffer ${p.intradayLossBufferPercent}%` : 'buffer off',
     `${p.costBpsPerSide} bps`,
-    continuation.title
+    continuation.title,
+    ...gates.titles
   ].join(' · ');
   const assumptions: LabValue[] = [
     text(
@@ -183,6 +262,7 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
       'the unchanged Rise-from-Recent-Low signal (the base entry), decided when the signal bar completes; filled at the next eligible trade (a daily signal: the next session’s opening trade)'
     ),
     text('continuation', 'Continuation entries', continuation.assumption),
+    ...(spec.params.some((x) => x.key === 'trendFilterEnabled') ? gates.assumptions : []),
     text(
       'position',
       'Position',
@@ -403,14 +483,21 @@ export class LabService {
         fixedFrom: '2016-01-04'
       };
     }
-    if (spec.launch !== 'form') return { runnable: false, reason: `${spec.key}@${spec.version} is not launchable (legacy or read-only)` };
+    // A superseded Growth version keeps its phenotypes runnable as ITSELF: its configuration replays on the current
+    // engine with the later options OFF (proven identical by the OFF parity tests), never reinterpreted.
+    const legacyGrowth = spec.launch === 'phenotype' && spec.kind === 'trades' && Boolean(spec.legacy);
+    if (spec.launch !== 'form' && !legacyGrowth)
+      return { runnable: false, reason: `${spec.key}@${spec.version} is not launchable (legacy or read-only)` };
+    const base =
+      ph.executionKind === 'independent-symbol batch'
+        ? 'one standalone backtest per symbol in ONE run (independent $100,000 books, never summed); edits make a derived variation'
+        : 'one standalone backtest; edits (parameters, resolution) make a new variation derived from the frozen phenotype';
     return {
       runnable: true,
       runner: spec.kind === 'trades' ? 'growth-trading' : 'entry-signal',
-      reason:
-        ph.executionKind === 'independent-symbol batch'
-          ? 'one standalone backtest per symbol in ONE run (independent $100,000 books, never summed); edits make a derived variation'
-          : 'one standalone backtest; edits (parameters, resolution) make a new variation derived from the frozen phenotype',
+      reason: legacyGrowth
+        ? `${base}; a ${spec.version} configuration, rerun as ${spec.version} (${spec.legacy!.replay.split(';')[0]}). To try the newer options on it, clone the result into a New test`
+        : base,
       locked: []
     };
   }

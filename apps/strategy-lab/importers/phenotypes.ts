@@ -79,7 +79,10 @@ export function phenotypeErrors(repoRoot: string, e: PhenotypeExport): string[] 
       if (JSON.stringify(Object.keys(pool.books).sort()) !== JSON.stringify([...p.symbols].sort()))
         errors.push(`${at}: symbols must be the pool's books`);
     } else {
-      if (spec.launch !== 'form') errors.push(`${at}: ${spec.key}@${spec.version} cannot be launched (legacy or read-only)`);
+      // a form strategy, or a superseded Growth version whose phenotypes rerun as themselves (server capabilityOf)
+      const legacyGrowth = spec.launch === 'phenotype' && spec.kind === 'trades' && Boolean(spec.legacy);
+      if (spec.launch !== 'form' && !legacyGrowth)
+        errors.push(`${at}: ${spec.key}@${spec.version} cannot be launched (legacy or read-only)`);
       if (p.engine.version !== spec.version) errors.push(`${at}: engine ${p.engine.version} ≠ strategy ${spec.version}`);
       const v = validateParams(spec, p.params ?? {});
       if (v.length) errors.push(...v.map((x) => `${at}: ${x}`));

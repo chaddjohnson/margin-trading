@@ -11,13 +11,14 @@ import { describe, test } from 'node:test';
 import { barsFromSessions } from '../../entry-signals/bars.ts';
 import { scanRiseFromRecentLow } from '../../entry-signals/riseFromRecentLow.ts';
 import type { Dataset } from '../../four-family/data.ts';
-import { continuationOf } from '../../../apps/strategy-lab/runner/growth-params.ts';
+import { continuationOf, eligibilityOf, trendFilterOf } from '../../../apps/strategy-lab/runner/growth-params.ts';
 import type { ParamValue } from '../../../apps/strategy-lab/shared/contract.ts';
 import {
   RISE_FROM_RECENT_LOW_TRADING,
   RISE_FROM_RECENT_LOW_TRADING_1_0_0
 } from '../../../apps/strategy-lab/shared/strategies.ts';
 import { CONTINUATION_METHODS, DEFAULT_CONTINUATION } from '../continuation.ts';
+import { DEFAULT_ELIGIBILITY, DEFAULT_TREND, ELIGIBILITY_POLICIES, TREND_METHODS } from '../entryGates.ts';
 import { type SessionSpec, buildData, flat } from '../../shared-margin-portfolio/tests/fixtures.ts';
 import {
   type EntryDecision,
@@ -303,19 +304,53 @@ describe('switches, dependency and validation', () => {
     const { resolution, ...rest } = defaultTradingParams;
     // the legacy 1.0.0 schema: exactly the engine's base parameters
     assert.deepEqual(defaults(RISE_FROM_RECENT_LOW_TRADING_1_0_0), rest);
-    // 1.1.0: the same base defaults, plus the continuation dimensions whose defaults are the engine's own
+    // 1.2.0: the same base defaults, plus the continuation dimensions and the two entry gates whose defaults are the
+    // engine's own; every switch OFF by default
     const current = defaults(RISE_FROM_RECENT_LOW_TRADING);
+    const req = (params: Record<string, ParamValue>) =>
+      ({
+        strategyKey: RISE_FROM_RECENT_LOW_TRADING.key,
+        strategyVersion: RISE_FROM_RECENT_LOW_TRADING.version,
+        params
+      }) as never;
     assert.deepEqual(Object.fromEntries(Object.keys(rest).map((k) => [k, current[k]])), rest);
     assert.equal(current.continuationEnabled, false);
-    assert.equal(continuationOf({ strategyVersion: '1.1.0', params: current } as never), null);
+    assert.equal(current.trendFilterEnabled, false);
+    assert.equal(current.eligibilityEnabled, false);
+    assert.equal(continuationOf(req(current)), null);
+    assert.equal(trendFilterOf(req(current)), null);
+    assert.equal(eligibilityOf(req(current)), null);
     for (const method of CONTINUATION_METHODS)
       assert.deepEqual(
-        continuationOf({
-          strategyVersion: '1.1.0',
-          params: { ...current, continuationEnabled: true, continuationMethod: method }
-        } as never),
+        continuationOf(req({ ...current, continuationEnabled: true, continuationMethod: method })),
         DEFAULT_CONTINUATION[method]
       );
+    for (const method of TREND_METHODS)
+      assert.deepEqual(
+        trendFilterOf(req({ ...current, trendFilterEnabled: true, trendMethod: method })),
+        DEFAULT_TREND[method]
+      );
+    for (const policy of ELIGIBILITY_POLICIES)
+      assert.deepEqual(
+        eligibilityOf(req({ ...current, eligibilityEnabled: true, eligibilityPolicy: policy })),
+        DEFAULT_ELIGIBILITY[policy]
+      );
+    // a legacy request is read with its own version's schema: 1.0.0 and 1.1.0 have no entry gates (OFF)
+    const legacy11 = {
+      strategyKey: RISE_FROM_RECENT_LOW_TRADING.key,
+      strategyVersion: '1.1.0',
+      params: {
+        ...rest,
+        continuationEnabled: true,
+        continuationMethod: 'breakout',
+        continuationWindowSessions: 60,
+        breakoutBufferPercent: 1,
+        breakoutFormationBars: 1,
+        trendFilterEnabled: true
+      }
+    } as never;
+    assert.deepEqual(continuationOf(legacy11), DEFAULT_CONTINUATION.breakout);
+    assert.equal(trendFilterOf(legacy11), null);
     assert.equal(RISE_FROM_RECENT_LOW_TRADING.defaultResolution, resolution);
   });
 
@@ -411,7 +446,8 @@ describe('fresh-signal re-entry, occupancy and no restriction', () => {
   test('no post-loss restriction state or guard exists in the strategy (code and behaviour)', () => {
     // v1.1.0 adds continuation EPISODES, which only a net-PROFITABLE exit opens (tests/continuation.test.ts); the
     // cancelled post-loss restriction, lower re-entry, recovery reset and cooldowns stay absent from both files.
-    for (const file of ['../riseTrading.ts', '../continuation.ts']) {
+    // v1.2.0's entry gates (entryGates.ts) are scanned too: its reset-and-renew watch follows an UNCONSUMED opportunity.
+    for (const file of ['../riseTrading.ts', '../continuation.ts', '../entryGates.ts']) {
       const source = readFileSync(new URL(file, import.meta.url), 'utf8');
       assert.doesNotMatch(source, /materialLoss|lowerPrice[A-Z]|lowerLevel|retrace|recoveryReset|lossExitPrice/);
     }
@@ -419,6 +455,7 @@ describe('fresh-signal re-entry, occupancy and no restriction', () => {
     assert.match(continuation, /const qualifies = trade\.net > 0;/);
     const { sim } = run(specs, decisions, { maximumHoldDays: 3 });
     assert.equal(sim.continuation, null); // OFF by default
+    assert.equal(sim.gates, null); // both entry gates OFF by default
     assert.deepEqual(Object.keys(sim).sort(), [
       'book',
       'continuation',
@@ -428,6 +465,7 @@ describe('fresh-signal re-entry, occupancy and no restriction', () => {
       'excursions',
       'exit',
       'firstSession',
+      'gates',
       'log',
       'markChanges',
       'minuteDrawdown',

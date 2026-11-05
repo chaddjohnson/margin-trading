@@ -31,7 +31,7 @@ const project = (baseline: unknown, current: unknown): unknown => {
   );
 };
 
-describe('Growth 1.1.0 with continuation OFF = the 1.0.0 baseline (captured before the change)', () => {
+describe('Growth (current engine) with continuation and both entry gates OFF = the 1.0.0 baseline (captured before the change)', () => {
   test('the fixture is the before-change capture', () => {
     assert.equal(fixture.strategy.version, '1.0.0');
     assert.equal(fixture.commit, 'b590c6057a7714c17e94bd067efec9b51479f4ef');

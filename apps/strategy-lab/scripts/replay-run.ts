@@ -4,8 +4,9 @@
 //
 // Re-executes the run's stored request.json with the CURRENT trading runner in a new scratch directory (default: a
 // fresh directory under the OS temp dir) and compares the execution facts with the stored artifacts
-// (server/replay.ts). A legacy rise-from-recent-low-trading@1.0.0 run is replayed by 1.1.0 with continuation OFF and
-// compared on every field it stored; a 1.1.0 run must reproduce in full. Exit 0 = reproduced, 1 = differs, 2 = usage.
+// (server/replay.ts). A legacy rise-from-recent-low-trading@1.0.0 run is replayed by 1.2.0 with continuation and both
+// entry gates OFF and compared on every field it stored; a 1.1.0 run is replayed with both entry gates OFF (trades,
+// daily marks and events in full); a 1.2.0 run must reproduce in full. Exit 0 = reproduced, 1 = differs, 2 = usage.
 // Run from the repository root (the data files are read through the normal dataset pipeline).
 
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
@@ -14,7 +15,7 @@ import { join, resolve } from 'node:path';
 
 import { STRATEGY_VERSION } from '../../../src/growth-trading/riseTrading.ts';
 import { RUNNER_SCRIPTS } from '../server/jobs.ts';
-import { replayStoredRun } from '../server/replay.ts';
+import { replayModeOf, replayStoredRun } from '../server/replay.ts';
 
 const args = process.argv.slice(2);
 const runId = args.find((a) => /^R-\d{6,12}$/.test(a));
@@ -35,7 +36,7 @@ if (request.strategyKey !== 'rise-from-recent-low-trading') {
   process.exit(2);
 }
 const base = opt('--out') ? resolve(opt('--out')!) : join(mkdtempSync(join(tmpdir(), 'strategy-lab-replay-')), runId);
-const mode = request.strategyVersion === STRATEGY_VERSION ? 'exact' : 'legacy';
+const mode = replayModeOf(request.strategyVersion, STRATEGY_VERSION);
 console.log(`${runId}: ${request.strategyKey}@${request.strategyVersion}, replayed by engine ${STRATEGY_VERSION} (${mode}) into ${base}`);
 const { verdicts } = replayStoredRun(repoRoot, storedDir, base, RUNNER_SCRIPTS[request.strategyKey]!, mode);
 for (const v of verdicts) console.log(`  ${v.identical ? 'OK  ' : 'DIFF'} ${v.file}: ${v.detail}`);

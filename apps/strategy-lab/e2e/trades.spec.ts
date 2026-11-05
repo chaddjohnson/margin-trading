@@ -47,7 +47,7 @@ async function tradingRun(page: Page, title: string, symbols: string[]) {
     const res = await page.request.post('/api/runs', {
       data: {
         strategyKey: 'rise-from-recent-low-trading',
-        strategyVersion: '1.1.0',
+        strategyVersion: '1.2.0',
         params: {
           advanceFromRecentLowPercent: 5,
           recentLowLookbackBars: 20,
@@ -57,7 +57,9 @@ async function tradingRun(page: Page, title: string, symbols: string[]) {
           intradayLossBufferEnabled: true,
           intradayLossBufferPercent: 2.9,
           costBpsPerSide: 5,
-          continuationEnabled: false
+          continuationEnabled: false,
+          trendFilterEnabled: false,
+          eligibilityEnabled: false
         },
         symbols,
         from: '2023-01-03',

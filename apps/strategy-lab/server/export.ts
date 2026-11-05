@@ -10,6 +10,9 @@
 //   trades.csv                   the trade ledger (Growth: trades.json; imports and pools: paired from the events)
 //   continuation-episodes.csv    Growth with continuation: every episode (window, arming, trigger, end)
 //   decision-log.csv             Growth: the chronological decision/state log
+//   entry-decisions.csv          Growth 1.2.0 with an entry gate ON: one row per entry decision (gate values, trade, net)
+//   opportunities.csv            Growth 1.2.0 with persistent eligibility ON: every armed opportunity and how it ended
+//   entry-gates.md               Growth 1.2.0 with an entry gate ON: the gate counts and outcomes by entry source
 //   daily-marks.csv              Growth: the daily marks per symbol
 //   attribution.json / .md       per-origin attribution (descriptive, NOT the causal effect) and the continuation counts
 // The bundle never changes a run artifact, reads only the allowlisted files of that run's directory, and is refused if
@@ -176,7 +179,7 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
   );
 
   // 4. Trades.
-  const tradeHeader = ['symbol', 'trade', 'status', 'origin', 'method', 'episode', 'decision_utc', 'decision_new_york', 'entry_utc', 'entry_new_york', 'entry_fill', 'entry_price', 'exit_utc', 'exit_new_york', 'exit_reason', 'exit_price', 'shares', 'principal_usd', 'gross_before_costs_usd', 'costs_usd', 'interest_usd', 'net_usd', 'net_return_percent', 'calendar_days_held', 'sessions_held', 'source'];
+  const tradeHeader = ['symbol', 'trade', 'status', 'origin', 'method', 'episode', 'decision_utc', 'decision_new_york', 'entry_utc', 'entry_new_york', 'entry_fill', 'entry_price', 'exit_utc', 'exit_new_york', 'exit_reason', 'exit_price', 'shares', 'principal_usd', 'gross_before_costs_usd', 'costs_usd', 'interest_usd', 'net_usd', 'net_return_percent', 'calendar_days_held', 'sessions_held', 'source', 'entry_source', 'opportunity', 'age_sessions_at_decision'];
   if (tradesFile?.trades) {
     const rows = Object.entries(tradesFile.trades).flatMap(([symbol, list]) =>
       list.map((t) => [
@@ -184,7 +187,8 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
         t.decisionTimeUtc, t.decisionTimeNewYork, t.entryTimeUtc, t.entryTimeNewYork, t.entryFill, t.entryFillPrice,
         t.exitTimeUtc, t.exitTimeNewYork, t.exitReason, t.exitFillPrice ?? t.markPrice, t.shares, t.principal,
         t.grossBeforeCosts, Number(t.entryCost ?? 0) + Number(t.exitCost ?? 0), t.interest, t.net, t.netReturnPercent,
-        t.calendarDaysHeld, t.sessionsHeld, t.status === 'open' ? 'trades.json (open: marked at the last close, unrealized)' : 'trades.json'
+        t.calendarDaysHeld, t.sessionsHeld, t.status === 'open' ? 'trades.json (open: marked at the last close, unrealized)' : 'trades.json',
+        t.entrySource ?? null, t.opportunity ?? null, t.ageSessionsAtDecision ?? null
       ])
     );
     add('trades.csv', csv(tradeHeader, rows), 'the trade ledger from trades.json (origin = the mechanism that opened the trade)');
@@ -200,7 +204,8 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
         paired ? ex.t : null, paired ? newYork(ex.t) : null, paired ? ex.meta?.exitReason ?? ex.reason : null, paired ? ex.price : null,
         value(en, 'shares'), value(en, 'principal'), paired ? value(ex, 'gross') : null, paired ? value(ex, 'friction') : null,
         paired ? value(ex, 'interest') : null, paired ? value(ex, 'net') : null, null, null, paired ? value(ex, 'sessionsHeld') : null,
-        'paired from events.json (tradeId + linkedEventId); the source recorded no separate ledger'
+        'paired from events.json (tradeId + linkedEventId); the source recorded no separate ledger',
+        null, null, null
       ];
     });
     if (rows.length) add('trades.csv', csv(tradeHeader, rows), 'the trades, paired from the executed events (no ledger artifact for this run kind)');
@@ -235,7 +240,40 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
       ),
       'the chronological decision/state log (base signals, fills, exits with the net identity, continuation transitions)'
     );
-  } else unavailable['decision-log.csv'] = 'not recorded by this run (only Growth 1.1.0 runs write decisions.json)';
+    // Growth 1.2.0 entry gates (only with the trend filter or eligibility ON)
+    const decisionRows = Object.entries(decisions.perSymbol).flatMap(([symbol, d]) => (d.entryDecisions ?? []).map((x) => ({ symbol, ...x })));
+    if (decisionRows.length)
+      add(
+        'entry-decisions.csv',
+        csv(
+          ['symbol', 'id', 'kind', 'source', 't_utc', 't_new_york', 'session', 'decision_price', 'crossing_threshold', 'crossing_recent_low', 'crossing_advance_percent', 'disposition', 'reason', 'gate', 'gate_text', 'capital_available', 'trend_values_json', 'policy_values_json', 'opportunity', 'episode', 'trade', 'trade_status', 'fill_utc', 'fill_price', 'net_usd', 'net_kind'],
+          decisionRows.map((x) => [
+            x.symbol, x.id, x.kind, x.source, x.time.utc, x.time.newYork, x.session, x.price, x.crossing?.threshold ?? null, x.crossing?.recentLow ?? null,
+            x.crossing?.advancePercent ?? null, x.disposition, x.reason, x.gate?.decision ?? null, x.gate?.text ?? null, x.gate?.capital ?? null,
+            x.gate?.trend ?? null, x.policy, x.opportunity, x.episode ?? null, x.trade, x.status, x.fill?.utc ?? null, x.fill?.price ?? null, x.netUsd, x.netKind
+          ])
+        ),
+        'every Growth entry decision judged by the entry gates (raw crossings, latched decisions, renewal signals, continuation triggers) with the observed trend values, the policy values, the trade and its final realized or open unrealized net'
+      );
+    else unavailable['entry-decisions.csv'] = 'the entry trend filter and persistent eligibility were OFF (or the run predates Growth 1.2.0)';
+    const opportunityRows = Object.entries(decisions.perSymbol).flatMap(([symbol, d]) => (d.opportunities ?? []).map((o) => ({ symbol, ...o })));
+    if (opportunityRows.length)
+      add(
+        'opportunities.csv',
+        csv(
+          ['symbol', 'id', 'source', 'renewed_from', 'policy', 'signal_utc', 'signal_new_york', 'signal_session', 'signal_price', 'recent_low', 'threshold', 'advance_percent', 'last_eligible_session', 'evaluations', 'blocked_trend', 'blocked_insufficient_history', 'blocked_capital', 'first_blocked_utc', 'decision_utc', 'decision_price', 'age_sessions_at_decision', 'end_state', 'end_reason', 'end_utc', 'end_session', 'trade', 'trade_status', 'fill_utc', 'fill_price', 'net_usd', 'net_kind', 'transitions_json'],
+          opportunityRows.map((o) => [
+            o.symbol, o.id, o.source, o.renewedFrom, o.policy, o.signal.utc, o.signal.newYork, o.signal.session, o.signal.price, o.signal.recentLow,
+            o.signal.threshold, o.signal.advancePercent, o.lastEligibleSession, o.evaluations, o.blockedEvaluations.trend_veto ?? 0,
+            o.blockedEvaluations.insufficient_history ?? 0, o.blockedEvaluations.capital_unavailable ?? 0, o.firstBlocked?.utc ?? null,
+            o.decision?.utc ?? null, o.decision?.price ?? null, o.decision?.ageSessions ?? null, o.end.state, o.end.reason, o.end.utc, o.end.session,
+            o.trade, o.status, o.fill?.utc ?? null, o.fill?.price ?? null, o.netUsd, o.netKind, o.transitions
+          ])
+        ),
+        'every armed opportunity (persistent eligibility): signal, age bound, blocked evaluations, decision, how it ended, its trade and final net'
+      );
+    else unavailable['opportunities.csv'] = 'persistent eligibility was OFF (or the run predates Growth 1.2.0)';
+  } else unavailable['decision-log.csv'] = 'not recorded by this run (only Growth 1.1.0 and later runs write decisions.json)';
   if (dailyFile?.daily)
     add(
       'daily-marks.csv',
@@ -260,6 +298,13 @@ export function buildResearchBundle(cfg: Config, repo: Repo, runId: string, opts
     add('attribution.json', `${JSON.stringify(attribution, null, 2)}\n`, 'per-origin attribution (descriptive), continuation counts, drawdowns, P&L per symbol');
     add('attribution.md', attributionMarkdown(attribution), 'the attribution tables in prose form');
   } else unavailable['attribution.json'] = 'no per-origin attribution recorded (runs before Growth 1.1.0, imports, signal-only)';
+  const gates = Object.fromEntries(
+    Object.entries(perSymbol)
+      .filter(([, m]) => m && typeof m === 'object' && m.entryGates)
+      .map(([sym, m]) => [sym, { entryGates: m.entryGates!, signals: m.signals ?? {} }])
+  );
+  if (Object.keys(gates).length) add('entry-gates.md', entryGatesMarkdown(gates, metrics), 'the entry trend filter and persistent eligibility: counts, ages and outcomes by entry source (descriptive)');
+  else unavailable['entry-gates.md'] = 'the entry trend filter and persistent eligibility were OFF (or the run predates Growth 1.2.0)';
 
   // 7. README and manifest (deterministic: the run's own completion time is the bundle's timestamp).
   const stamp = new Date(run.completedAt ?? run.createdAt);
@@ -324,6 +369,41 @@ function attributionMarkdown(a: Record<string, Pick<SymbolMetrics, 'attribution'
   return `${lines.join('\n')}\n`;
 }
 
+function entryGatesMarkdown(
+  g: Record<string, { entryGates: NonNullable<SymbolMetrics['entryGates']>; signals: NonNullable<SymbolMetrics['signals']> }>,
+  metrics: Record<string, unknown> | null
+) {
+  const cfg = (k: string) => JSON.stringify((metrics as Record<string, unknown> | null)?.[k] ?? { enabled: false });
+  const lines = [
+    '# Entry trend filter and persistent eligibility (descriptive)',
+    '',
+    `Trend filter: \`${cfg('trendFilter')}\`. Persistent eligibility: \`${cfg('eligibility')}\`.`,
+    '',
+    g[Object.keys(g)[0]!]?.entryGates.note ?? '',
+    '',
+    'Terms: a **signal** is a raw Rise crossing (recorded once); an **armed opportunity** keeps it available (not an order, no capital reserved) for a bounded age; a **vetoed** crossing was blocked at its own decision with eligibility OFF (never replayed); a **deferred** one armed an opportunity that kept waiting; an **entry** is an actual fill at the next eligible trade at the then-current price.',
+    ''
+  ];
+  for (const [sym, x] of Object.entries(g)) {
+    const e = x.entryGates;
+    const s = x.signals;
+    lines.push(`## ${sym}`, '', `Raw crossings ${s.raw ?? 'n/a'}: taken ${s.filled ?? 0}, ignored while invested/pending ${s.rejected ?? 0}, vetoed ${s.vetoed ?? 0} (${Object.entries(s.vetoedByReason ?? {}).filter(([, n]) => n).map(([k, n]) => `${k} ${n}`).join(', ') || 'none'}), deferred ${s.deferred ?? 0}.`, '');
+    if (e.trendFilter.enabled)
+      lines.push(`Trend filter (${e.trendFilter.method}): ${e.trendFilter.evaluations} evaluations; blocked by decision kind: ${Object.entries(e.trendFilter.blockedByDecisionKind ?? {}).map(([k, v]) => `${k} ${Object.entries(v).filter(([, n]) => n).map(([r, n]) => `${r} ${n}`).join('/') || '0'}`).join('; ') || 'none'}.`, '');
+    const el = e.eligibility;
+    if (el.enabled)
+      lines.push(
+        `Eligibility (${el.policy}): ${el.opportunities} opportunities (${Object.entries(el.bySource ?? {}).map(([k, n]) => `${k} ${n}`).join(', ')}); ended by ${Object.entries(el.endedBy ?? {}).map(([k, n]) => `${k} ${n}`).join(', ')}; invalidated by ${Object.entries(el.invalidatedByReason ?? {}).map(([k, n]) => `${k} ${n}`).join(', ') || 'nothing'}; taken at arming ${el.takenAtArming}, later ${el.takenLater}; age at decision mean ${el.ageSessionsAtDecision?.mean?.toFixed(2) ?? 'n/a'}, max ${el.ageSessionsAtDecision?.max ?? 'n/a'} session(s); renewal watches ${el.renewals?.watches ?? 0} (${Object.entries(el.renewals?.endedBy ?? {}).filter(([, n]) => n).map(([k, n]) => `${k} ${n}`).join(', ') || 'none'}).`,
+        ''
+      );
+    lines.push('| Entry source | Entries | Closed (W/L/0) | Open | Realized net | Unrealized | Interest |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: |');
+    for (const [k, v] of Object.entries(e.bySource))
+      lines.push(`| ${k} | ${v.entries} | ${v.closed} (${v.wins}/${v.losses}/${v.breakeven}) | ${v.open} | ${usd(v.realizedNetUsd)} | ${usd(v.unrealizedNetUsd)} | ${usd(v.interestUsd)} |`);
+    lines.push('');
+  }
+  return `${lines.join('\n')}\n`;
+}
+
 function readme(run: RunDetail, request: unknown, files: [string, string][], unavailable: Record<string, string>, minute: boolean) {
   const pool = run.strategy.key === 'study8-d1-pool';
   const growth = run.strategy.key === 'rise-from-recent-low-trading';
@@ -355,7 +435,8 @@ function readme(run: RunDetail, request: unknown, files: [string, string][], una
 - **Net P&L** = gross − per-side costs − margin interest (11% simple, per calendar day between session dates, 365-day year), on the fixed $100,000 notional. **Realized** = closed trades; **unrealized** = an open position marked at the last close net of accrued interest (its exit cost not charged).
 - **Drawdowns** are falls of the marked net (realized + open position) from an earlier peak: *minute* at every minute close and session close, *daily* at session closes; % = of the $100,000 notional, not of equity.
 - **Times** are stored in UTC (\`…Z\`); the \`*_new_york\` columns give America/New_York wall-clock time with EST/EDT. \`time_precision\`: minute, session-close (a daily bar's close), day (date only) or unknown.
-- **Origin** (Growth 1.1.0): \`base_growth\` = the Rise-from-Recent-Low entry; \`continuation\` = an entry of the selected continuation method. Origin-attributed P&L is DESCRIPTIVE: it is not the incremental effect of enabling a method, because enabling it changes the whole later trade sequence. Compare a complete ON run with an otherwise identical OFF run for the counterfactual.
+- **Origin** (Growth 1.1.0+): \`base_growth\` = the Rise-from-Recent-Low entry; \`continuation\` = an entry of the selected continuation method. Origin-attributed P&L is DESCRIPTIVE: it is not the incremental effect of enabling a method, because enabling it changes the whole later trade sequence. Compare a complete ON run with an otherwise identical OFF run for the counterfactual.
+- **Entry gates** (Growth 1.2.0, when ON): the entry trend filter judges every entry decision on trading-session observations complete at the decision; persistent eligibility keeps a raw crossing available as an *opportunity* for a bounded number of sessions. \`entry_source\` (trades.csv): \`rise_from_recent_low\` (the crossing itself), \`latched:…\` (a later decision of an armed opportunity, filled at the then-current price), \`eligibility_renewal\` (a policy-5 renewal signal), \`continuation:<method>\`. A raw crossing appears once in events.csv; latched decisions and renewal signals are separate events (\`SYM:latched:<t>\`, \`SYM:renewal:<t>\`). See entry-decisions.csv, opportunities.csv and entry-gates.md.
 - **Exploratory, not validated.** A single run on historical data (often already inspected) is not evidence of an edge, and a rerun of a study's phenotype on exposed dates is not another holdout.
 
 ## Files

@@ -10,6 +10,7 @@
 //   saved draft with the run, never as part of what was executed.
 
 import type {
+  GroupNote,
   LabValue,
   NumericParamSpec,
   ParamConstraint,
@@ -170,6 +171,11 @@ export function paramSnapshot(spec: Pick<ParamSchema, 'params'>, values: Values)
     else out.push({ key: p.key, label: `${p.label}${suffix}`, value: v as number, unit: p.unit });
   }
   return out;
+}
+
+/** Whether a group note applies: its condition holds and every parameter it reads is active. */
+export function noteShown(spec: Pick<ParamSchema, 'params'>, values: Values, when: GroupNote['when']): boolean {
+  return evalPredicate(when, values) && predicateParams(when).every((k) => isActive(spec, values, k));
 }
 
 /** The stored form of a strategy's schema (strategies.param_schema_json). */

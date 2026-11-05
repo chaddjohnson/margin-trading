@@ -2,17 +2,20 @@
 // configurations — continuation OFF and each of the four continuation methods — with the illustrative schema defaults
 // on VGT daily bars. They exist to exercise the export → import → catalogue → single rerun path and the export
 // contract a future CLI optimiser emits. NOT selected by any search, ranking or optimisation, and not candidates.
+// The checked-in export was written on 2026-11-04 by Growth 1.1.0 and is frozen as a 1.1.0 export (its phenotypes rerun
+// as 1.1.0 configurations). The 1.2.0 entry-gate demonstration is make-growth-gates-demo-phenotypes.ts.
 //
 //   node --experimental-transform-types apps/strategy-lab/scripts/make-growth-demo-phenotypes.ts <new directory>
 // (from the repository root: the engine's data module resolves repository-relative paths when it loads)
 
 import { resolve } from 'node:path';
 
-import { STRATEGY_VERSION } from '../../../src/growth-trading/riseTrading.ts';
 import { sealRecord, writePhenotypeExport } from '../importers/phenotype-export.ts';
 import type { PhenotypeExport } from '../shared/phenotypes.ts';
 import { defaultParams, effectiveParams } from '../shared/params.ts';
-import { RISE_FROM_RECENT_LOW_TRADING as GROWTH } from '../shared/strategies.ts';
+import { RISE_FROM_RECENT_LOW_TRADING_1_1_0 as GROWTH } from '../shared/strategies.ts';
+
+const STRATEGY_VERSION = GROWTH.version; // the frozen 1.1.0 export (its engine version at writing)
 
 const variants = [
   { slug: 'off', name: 'Growth, continuation OFF', over: { continuationEnabled: false } },

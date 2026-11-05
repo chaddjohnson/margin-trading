@@ -95,7 +95,7 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
       </div>
       {spec?.legacy && (
         <p className="muted small" data-testid="legacy-version">
-          Version {run.strategy.version} (before continuation entries). It is kept as recorded; {spec.legacy.replay}.
+          Version {run.strategy.version} (superseded by {spec.legacy.supersededBy}). It is kept as recorded; {spec.legacy.replay}.
         </p>
       )}
       {run.phenotype && (

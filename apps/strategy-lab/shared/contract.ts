@@ -304,6 +304,21 @@ export interface StrategySpec extends ParamSchema {
   formerTitles?: string[];
   /** A superseded version: which version replaces it and how its runs replay. */
   legacy?: { supersededBy: string; replay: string };
+  /**
+   * Form notes shown inside a parameter group while their condition holds (display metadata, not part of the stored
+   * parameter schema): explanations and warnings that depend on the values, without strategy-specific form code.
+   */
+  groupNotes?: GroupNote[];
+}
+
+export interface GroupNote {
+  /** Stable id (also the test id of the rendered note). */
+  id: string;
+  group: string;
+  /** Shown while this holds and every parameter it reads is active. */
+  when: Predicate;
+  text: string;
+  tone: 'muted' | 'warn';
 }
 
 /**

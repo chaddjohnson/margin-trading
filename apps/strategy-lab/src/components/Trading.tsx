@@ -4,6 +4,7 @@
 
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 
+import type { EntryGateCounts } from '../../shared/artifact-types.ts';
 import type { LabEvent, LabValue } from '../../shared/contract.ts';
 import type { Role } from '../chart/markers.ts';
 import { formatEt, formatPrice } from '../format.ts';
@@ -26,6 +27,10 @@ export interface TradingSymbolMetrics {
     rejected: number;
     rejectedByReason: { position_open: number; order_pending: number };
     unfilledAtEnd: number;
+    // Growth 1.2.0 with an entry gate ON
+    vetoed?: number;
+    vetoedByReason?: Record<string, number>;
+    deferred?: number;
   };
   trades: {
     filled: number;
@@ -72,6 +77,7 @@ export interface TradingSymbolMetrics {
     longestCalendarDays: number | null;
     medianSessions: number | null;
   };
+  entryGates?: EntryGateCounts;
   unavailable: Record<string, string>;
 }
 
@@ -194,6 +200,7 @@ export function TradingMetrics({ m, symbol }: { m: TradingSymbolMetrics; symbol:
             : na(noClosed),
           'metric-exit-reasons'
         )}
+        {m.entryGates && <EntryGateRows g={m.entryGates} signals={m.signals} row={row} />}
         {row(
           'Raw signals: taken · ignored (invested / order pending) · unfilled',
           `${m.signals.raw}: ${m.signals.filled} · ${m.signals.rejectedByReason.position_open} / ${m.signals.rejectedByReason.order_pending} · ${m.signals.unfilledAtEnd}`,
@@ -201,6 +208,72 @@ export function TradingMetrics({ m, symbol }: { m: TradingSymbolMetrics; symbol:
         )}
       </tbody>
     </table>
+  );
+}
+
+// Growth 1.2.0: the entry trend filter and persistent eligibility counts (descriptive; only when a gate was ON).
+function EntryGateRows({
+  g,
+  signals,
+  row
+}: {
+  g: EntryGateCounts;
+  signals: TradingSymbolMetrics['signals'];
+  row: (label: string, value: ReactNode, testId?: string) => ReactNode;
+}) {
+  const e = g.eligibility;
+  const list = (o: Record<string, number> | undefined) =>
+    Object.entries(o ?? {})
+      .filter(([, n]) => n)
+      .map(([k, n]) => `${k} ${n}`)
+      .join(' · ') || 'none';
+  return (
+    <>
+      <tr className="section">
+        <th colSpan={2}>Entry gates (descriptive; the effect needs a paired OFF run)</th>
+      </tr>
+      {row(
+        'Raw crossings vetoed · deferred (armed)',
+        `${signals.vetoed ?? 0} (${list(signals.vetoedByReason)}) · ${signals.deferred ?? 0}`,
+        'metric-gate-signals'
+      )}
+      {g.trendFilter.enabled &&
+        row(
+          `Trend filter (${g.trendFilter.method}): evaluations · blocked`,
+          `${g.trendFilter.evaluations} · ${Object.entries(g.trendFilter.blockedByDecisionKind ?? {})
+            .map(([k, v]) => `${k}: ${list(v)}`)
+            .join('; ') || 'none'}`,
+          'metric-trend'
+        )}
+      {e.enabled && (
+        <>
+          {row(
+            `Opportunities (${e.policy}) · ended by`,
+            `${e.opportunities} · ${list(e.endedBy)}`,
+            'metric-opportunities'
+          )}
+          {row('Invalidated by', list(e.invalidatedByReason))}
+          {row(
+            'Taken at arming · later · age at decision (mean / max)',
+            `${e.takenAtArming} · ${e.takenLater} · ${e.ageSessionsAtDecision?.mean?.toFixed(2) ?? 'n/a'} / ${e.ageSessionsAtDecision?.max ?? 'n/a'} sessions`,
+            'metric-opportunity-age'
+          )}
+          {e.policy === 'reset_renew' &&
+            row('Renewal watches · resets · ended by', `${e.renewals?.watches ?? 0} · ${e.renewals?.resets ?? 0} · ${list(e.renewals?.endedBy)}`, 'metric-renewals')}
+        </>
+      )}
+      {row(
+        'Trades by entry source (closed W/L · open · realized net)',
+        <>
+          {Object.entries(g.bySource).map(([k, v]) => (
+            <span key={k} className="block" data-testid={`metric-source-${k}`}>
+              {k}: {v.entries} ({v.wins}/{v.losses} · {v.open} open) · {signed(v.realizedNetUsd)}
+            </span>
+          ))}
+        </>,
+        'metric-by-source'
+      )}
+    </>
   );
 }
 
@@ -239,10 +312,22 @@ const ORIGIN_SHORT: Record<string, string> = {
   ma_cross: 'MA cross'
 };
 
+const SOURCE_SHORT: Record<string, string> = {
+  'latched:rise_from_recent_low': 'latched',
+  eligibility_renewal: 'renewal',
+  'latched:eligibility_renewal': 'latched renewal'
+};
+
 export const originLabel = (t: Trade) => {
   const o = originOf(t);
   if (!o) return null;
-  return o.origin === 'continuation' ? `continuation · ${ORIGIN_SHORT[o.method ?? ''] ?? o.method}` : 'base Growth';
+  if (o.origin === 'continuation') return `continuation · ${ORIGIN_SHORT[o.method ?? ''] ?? o.method}`;
+  // Growth 1.2.0: a later decision of an armed opportunity, or a renewal signal
+  const source = t.entry?.meta?.entrySource;
+  const opportunity = t.entry?.meta?.opportunity;
+  return typeof source === 'string' && SOURCE_SHORT[source]
+    ? `base Growth · ${SOURCE_SHORT[source]}${typeof opportunity === 'string' ? ` ${opportunity}` : ''}`
+    : 'base Growth';
 };
 
 export function TradeTable({

@@ -2,10 +2,15 @@
 // directory and compares the execution facts with the stored, immutable artifacts. Read-only towards the state
 // directory: nothing is written next to the stored run.
 //
-// What must be identical: every field the stored artifacts have, in trades.json, daily.json and metrics.json, and every
-// stored event (id, kind, instant, price, reason, values, linkage, meta) — after removing only the fields a later
-// engine version ADDED (the origin attribution of v1.1.0, and the continuation signals, which an OFF run never has).
-// A legacy rise-from-recent-low-trading@1.0.0 run is replayed by 1.1.0 with continuation OFF.
+// What must be identical, by the stored run's version:
+// - 1.0.0 ('legacy'): every field the stored artifacts have, in trades.json, daily.json and metrics.json, and every stored
+//   event (id, kind, instant, price, reason, values, linkage, meta) — after removing only the fields v1.1.0 ADDED (the
+//   origin attribution, and the continuation signals, which an OFF run never has). Replayed with continuation and both
+//   entry gates OFF.
+// - 1.1.0 ('legacy-1.1.0'): trades.json, daily.json and events.json IN FULL (v1.2.0 adds nothing to them with both entry
+//   gates OFF), and every stored field of metrics.json and decisions.json (v1.2.0 adds only the run-level
+//   trendFilter/eligibility {enabled: false} and the engine version).
+// - the current version ('exact'): every file in full.
 
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -58,16 +63,25 @@ export interface ReplayVerdict {
  * stored run is an earlier engine version — compare every stored field, ignoring only what later versions added;
  * `exact`: the same engine version — the files must be identical in full.
  */
-export function compareRunOutputs(storedDir: string, freshDir: string, mode: 'legacy' | 'exact'): ReplayVerdict[] {
+export type ReplayMode = 'legacy' | 'legacy-1.1.0' | 'exact';
+
+/** The comparison a stored run of `version` gets when the current engine `current` replays it. */
+export function replayModeOf(version: string, current: string): ReplayMode {
+  return version === current ? 'exact' : version === '1.1.0' ? 'legacy-1.1.0' : 'legacy';
+}
+
+export function compareRunOutputs(storedDir: string, freshDir: string, mode: ReplayMode): ReplayVerdict[] {
   const verdicts: ReplayVerdict[] = [];
-  for (const file of ['trades.json', 'daily.json', 'metrics.json']) {
+  const files = ['trades.json', 'daily.json', 'metrics.json', ...(mode === 'legacy' ? [] : ['decisions.json'])];
+  for (const file of files) {
     const stored = readJson(storedDir, file) as Record<string, unknown>;
     const fresh = readJson(freshDir, file) as Record<string, unknown>;
-    const compared = mode === 'legacy' ? (projectOnto(stored, fresh) as Record<string, unknown>) : fresh;
+    const projected = mode === 'legacy' || (mode === 'legacy-1.1.0' && (file === 'metrics.json' || file === 'decisions.json'));
+    const compared = projected ? (projectOnto(stored, fresh) as Record<string, unknown>) : fresh;
     // a legacy replay records engineVersion/legacyReplay in metrics.strategy; the stored strategy is the reference
-    if (mode === 'legacy' && file === 'metrics.json') compared.strategy = stored.strategy;
+    if (mode !== 'exact' && file === 'metrics.json') compared.strategy = stored.strategy;
     const identical = same(compared, stored);
-    verdicts.push({ file, identical, detail: identical ? `identical (${mode === 'legacy' ? 'every stored field' : 'in full'})` : 'differs' });
+    verdicts.push({ file, identical, detail: identical ? `identical (${projected ? 'every stored field' : 'in full'})` : 'differs' });
   }
   const storedEvents = (readJson(storedDir, 'events.json') as { events: LabEvent[] }).events;
   const freshEvents = (readJson(freshDir, 'events.json') as { events: LabEvent[] }).events;
@@ -89,7 +103,7 @@ export function replayStoredRun(
   storedDir: string,
   scratchDir: string,
   runner: string,
-  mode: 'legacy' | 'exact'
+  mode: ReplayMode
 ) {
   if (existsSync(scratchDir)) throw new Error(`${scratchDir} exists: choose a new scratch directory`);
   mkdirSync(scratchDir, { recursive: true });

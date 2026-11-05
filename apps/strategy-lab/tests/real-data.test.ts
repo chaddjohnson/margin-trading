@@ -149,7 +149,7 @@ describe.skipIf(!hasData)('trading backtest on real data (rise-from-recent-low-t
   };
   const trading = (resolution: string, symbols: string[], from: string, to: string) => ({
     strategyKey: 'rise-from-recent-low-trading',
-    strategyVersion: '1.1.0',
+    strategyVersion: '1.2.0',
     params: {
       advanceFromRecentLowPercent: 5,
       recentLowLookbackBars: 20,
@@ -159,7 +159,9 @@ describe.skipIf(!hasData)('trading backtest on real data (rise-from-recent-low-t
       intradayLossBufferEnabled: true,
       intradayLossBufferPercent: 2.9,
       costBpsPerSide: 5,
-      continuationEnabled: false // explicit: Growth 1.1.0 refuses a request without its continuation switch
+      continuationEnabled: false, // explicit: Growth refuses a request without its option switches
+      trendFilterEnabled: false,
+      eligibilityEnabled: false
     },
     symbols,
     from,

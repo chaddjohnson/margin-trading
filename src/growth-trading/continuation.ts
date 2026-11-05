@@ -157,7 +157,17 @@ const fraction = (percent: number) => {
 // ----- records -----
 
 export type Origin = 'base_growth' | 'continuation';
-export type EpisodeEnd = 'triggered' | 'base_entry' | 'window_expired' | 'pullback_too_deep' | 'end_of_data';
+export type EpisodeEnd =
+  | 'triggered'
+  | 'base_entry'
+  | 'window_expired'
+  | 'pullback_too_deep'
+  | 'end_of_data'
+  // v1.2.0, only with an entry gate ON: the trigger was blocked by the trend filter (or the harness capital hook)
+  | 'trend_veto'
+  | 'insufficient_history'
+  | 'invalid_data'
+  | 'capital_unavailable';
 export type LogValue = number | string | boolean | null;
 
 export interface Episode {
@@ -199,7 +209,20 @@ export type LogEvent =
   | 'setup_cancelled'
   | 'continuation_signal'
   | 'episode_closed'
-  | 'fill';
+  | 'fill'
+  // v1.2.0 entry gates (src/growth-trading/entryGates.ts), only with a gate ON
+  | 'opportunity_armed'
+  | 'opportunity_blocked'
+  | 'opportunity_decision'
+  | 'opportunity_invalidated'
+  | 'opportunity_expired'
+  | 'opportunity_superseded'
+  | 'opportunity_consumed'
+  | 'opportunity_closed'
+  | 'renewal_watch'
+  | 'renewal_reset'
+  | 'renewal_signal'
+  | 'renewal_watch_ended';
 
 export interface LogEntry {
   seq: number;
@@ -209,8 +232,9 @@ export interface LogEntry {
   origin: Origin | null;
   method: ContinuationMethod | null;
   episode: string | null;
+  opportunity?: string; // v1.2.0: the persistent-eligibility opportunity (absent otherwise)
   trade: VirtualTrade | null;
-  disposition: 'taken' | 'rejected' | 'suppressed' | null;
+  disposition: 'taken' | 'rejected' | 'suppressed' | 'vetoed' | 'deferred' | 'invalidated' | null;
   reason: string | null;
   values: Record<string, LogValue>;
 }
@@ -220,7 +244,7 @@ export interface ContinuationOutcome {
   time: number;
   session: number;
   price: number;
-  status: 'filled' | 'unfilled_at_end' | 'ordered' | 'suppressed';
+  status: 'filled' | 'unfilled_at_end' | 'ordered' | 'suppressed' | 'vetoed'; // vetoed: v1.2.0 entry gate
   reason: string | null;
   trade: VirtualTrade | null;
   values: Record<string, LogValue>;
@@ -232,6 +256,13 @@ export class DecisionLog {
 
   add(e: Omit<LogEntry, 'seq'>) {
     this.entries.push({ seq: this.entries.length + 1, ...e });
+  }
+
+  // v1.2.0: inserts an entry at a position (the raw crossing before the opportunity entries it caused at the same
+  // instant) and renumbers the entries after it.
+  insert(at: number, e: Omit<LogEntry, 'seq'>) {
+    this.entries.splice(at, 0, { seq: at + 1, ...e });
+    for (let i = at + 1; i < this.entries.length; i++) this.entries[i]!.seq = i + 1;
   }
 }
 
@@ -337,6 +368,18 @@ export interface ContinuationRuntime {
   bars: readonly SignalBar[] | null; // the run-resolution bars (warm-up included) for the bar-based methods
 }
 
+// v1.2.0: the entry gates seen from a continuation trigger. Absent (both gates OFF) = v1.1.0 behaviour exactly.
+export interface ContinuationGateHooks {
+  // The gate result at the trigger instant: `pass` false blocks the trigger (the episode ends with `reason`).
+  check: (
+    s: number,
+    time: number,
+    price: number
+  ) => { pass: boolean; reason: string; text: string; values: Record<string, LogValue> };
+  // An entry was taken by the continuation (the gates end a live opportunity of another source).
+  afterEntry: (trade: VirtualTrade, s: number, time: number) => void;
+}
+
 // Drives one method for one symbol inside simulateTrading. `nextTime` / `evaluate` are called from the minute loop;
 // `beforeBaseEntry`, `afterExit`, `afterFill`, `afterSession` and `finish` from the corresponding points.
 export class ContinuationController {
@@ -355,7 +398,8 @@ export class ContinuationController {
     readonly book: ShadowBook,
     readonly runtime: ContinuationRuntime,
     readonly log: DecisionLog,
-    private readonly minuteBefore: (s: number, time: number) => number
+    private readonly minuteBefore: (s: number, time: number) => number,
+    private readonly gates: ContinuationGateHooks | null = null
   ) {
     if (runtime.config.method !== 'classic_d1' && !runtime.bars) throw new Error('bar-based continuation needs bars');
   }
@@ -542,6 +586,13 @@ export class ContinuationController {
     values: Record<string, LogValue>,
     d1: ReboundSignal | { trailingLow: number; trigger: number }
   ) {
+    const gate = this.gates ? this.gates.check(s, time, price) : null;
+
+    if (gate && !gate.pass) {
+      this.veto(e, s, time, price, values, gate);
+      return;
+    }
+
     const signal: ReboundSignal =
       'setup' in d1
         ? d1
@@ -601,6 +652,44 @@ export class ContinuationController {
       'taken'
     );
     this.entry(time, s, 'episode_closed', e, trade, 'triggered', {});
+    this.gates?.afterEntry(trade, s, time);
+  }
+
+  // v1.2.0: a trigger blocked by an entry gate. It is recorded (never traded) and ENDS the episode, so a condition that
+  // stays true cannot re-trigger on every later bar and the trigger is never replayed when the gate later passes.
+  private veto(
+    e: Episode,
+    s: number,
+    time: number,
+    price: number,
+    values: Record<string, LogValue>,
+    gate: { reason: string; text: string; values: Record<string, LogValue> }
+  ) {
+    const all = { ...values, ...gate.values };
+
+    this.outcomes.push({
+      episode: e,
+      time,
+      session: s,
+      price,
+      status: 'vetoed',
+      reason: gate.reason,
+      trade: null,
+      values: all
+    });
+    this.entry(time, s, 'continuation_signal', e, null, gate.text, all, 'vetoed');
+
+    if (this.classic) {
+      const m = this.book.machine;
+
+      if (m.setup) m.cancelSetup(s);
+      m.continuationActive = false;
+    }
+
+    e.triggerTime = time;
+    e.triggerPrice = price;
+    e.triggerValues = all;
+    this.close(e, gate.reason as EpisodeEnd, time, s, {});
   }
 
   // A base Growth decision is about to be taken at `time` (the book is flat with no order). It has priority: the open

@@ -4,14 +4,19 @@
 //
 // Strategy versions:
 // - rise-from-recent-low@1.0.0           "Rise from recent low (entry signal)": signal-only, New Test.
-// - rise-from-recent-low-trading@1.1.0   "Growth": the trading backtest with optional continuation entries, New Test.
+// - rise-from-recent-low-trading@1.2.0   "Growth": the trading backtest with optional continuation entries, an optional
+//                                        entry trend filter and optional persistent entry eligibility, New Test.
+// - rise-from-recent-low-trading@1.1.0   "Growth" (legacy): before the entry gates. Not offered by New Test; its catalogue
+//                                        phenotypes stay runnable; its runs replay as 1.2.0 with both gates OFF
+//                                        (identical; src/growth-trading/tests/offParity-1.1.0.test.ts).
 // - rise-from-recent-low-trading@1.0.0   "Growth" (legacy): the pre-continuation version. Not launchable; its runs
-//                                        replay as 1.1.0 with continuation OFF (identical; tests/offParity).
+//                                        replay as 1.2.0 with continuation and both gates OFF (identical; tests/offParity).
 // - study8-d1-pool@pools-engine          the Study 8 D1 shared-slot pool: imported runs, and phenotype reruns only.
 // - demo-toy-rules@1.0.0                 the synthetic demo: read-only.
 // Display names are metadata: the keys and versions above never change (docs/strategy-lab/CONTRACTS.md).
 
 import type {
+  GroupNote,
   LabRunRequest,
   NumericParamSpec,
   ParamConstraint,
@@ -83,6 +88,7 @@ export const RISE_FROM_RECENT_LOW: StrategySpec = {
 
 const on = (param: string): Predicate => ({ param, equals: true });
 
+// The groups of Growth 1.1.0 (frozen with its legacy schema).
 const GROWTH_GROUPS = [
   { key: 'entry', title: 'Entry — Rise from recent low (unchanged scanner)' },
   { key: 'exit', title: 'Exits' },
@@ -465,6 +471,475 @@ const CONTINUATION_PARAMS: ParamSpec[] = [
 
 export const CONTINUATION_PARAM_KEYS = CONTINUATION_PARAMS.map((p) => p.key);
 
+// ----- Growth 1.2.0: the entry trend filter and persistent entry eligibility (src/growth-trading/entryGates.ts;
+// docs/strategy-lab/GROWTH_ENTRY_GATES.md). Every bound and default lives here; the form, the server, the runner and
+// future CLI optimisers read the same definitions. Defaults are illustrative, not optimised. -----
+
+const trendMethod = (m: string): Predicate => ({ param: 'trendMethod', equals: m });
+const trendParam = (p: Omit<NumericParamSpec, 'group' | 'whenInactive'>, m: string): NumericParamSpec => ({
+  ...p,
+  group: 'trend',
+  activeWhen: trendMethod(m),
+  whenInactive: 'hide'
+});
+const SESSIONS_NOTE = 'Trading sessions of the data (NYSE sessions present), whatever the bar resolution.';
+
+const TREND_PARAMS: ParamSpec[] = [
+  {
+    key: 'trendFilterEnabled',
+    label: 'Entry trend filter',
+    description:
+      'Block new Growth entries when the selected recent-price trend condition is not satisfied. OFF (default): exactly ' +
+      'the version without the filter. ON: every Growth entry decision (the base crossing, a latched opportunity, a ' +
+      'renewal, a continuation trigger) is checked at its decision instant; exits are never filtered. A blocked decision ' +
+      'is recorded with its values, not traded.',
+    type: 'boolean',
+    unit: 'text',
+    default: false,
+    group: 'trend'
+  },
+  {
+    key: 'trendMethod',
+    label: 'Trend method',
+    description:
+      'How the recent trend is judged. Observations: the decision bar’s close (latest) and the closes of completed ' +
+      'earlier sessions; highs/lows of the current session only up to the decision. Not enough history = blocked.',
+    type: 'enum',
+    unit: 'text',
+    default: 'price_change',
+    options: [
+      {
+        value: 'price_change',
+        label: 'A — N-session price change',
+        description:
+          'Allows when the decision price is at least m% above the close N trading sessions back (a simple endpoint comparison).'
+      },
+      {
+        value: 'regression_slope',
+        label: 'B — Regression trend slope',
+        description:
+          'Least-squares line through the log prices of the last N sessions (N + 1 points, the decision price last); allows when its rise over the N sessions, e^(slope × N) − 1, is at least the minimum. A flat series is exactly 0%.'
+      },
+      {
+        value: 'rising_sma',
+        label: 'C — Rising moving average',
+        description:
+          'Allows when the price is above its N-session simple average AND that average is strictly higher than K sessions earlier.'
+      },
+      {
+        value: 'higher_highs_lows',
+        label: 'D — Higher highs and higher lows',
+        description:
+          'Splits the last N sessions into an older and a newer half (odd N: the middle one is left out); allows when the newer half has both a higher high and a higher low (by at least m%). A simple two-window structure proxy, not swing pivots.'
+      },
+      {
+        value: 'momentum',
+        label: 'E — Short-/long-term momentum',
+        description:
+          'Allows when the return over S sessions reaches its minimum AND the return over L sessions reaches its own (which may be negative: a tolerated longer-term decline during a recovery).'
+      }
+    ],
+    group: 'trend',
+    activeWhen: on('trendFilterEnabled'),
+    whenInactive: 'hide'
+  },
+  trendParam(
+    {
+      key: 'trendChangeLookbackSessions',
+      label: 'Lookback (N)',
+      description: `The reference close is N sessions before the decision session. ${SESSIONS_NOTE}`,
+      type: 'integer',
+      unit: 'sessions',
+      default: 20,
+      min: 1,
+      max: 500,
+      step: 1,
+      search: { min: 5, max: 120, step: 5 }
+    },
+    'price_change'
+  ),
+  trendParam(
+    {
+      key: 'trendChangeMinimumReturnPercent',
+      label: 'Minimum return (m)',
+      description: 'Decision price ≥ reference close × (1 + m). 0 = not below; negative values tolerate a decline.',
+      type: 'number',
+      unit: 'percent',
+      default: 0,
+      min: -50,
+      max: 50,
+      step: 0.1,
+      search: { min: -5, max: 10, step: 0.5 }
+    },
+    'price_change'
+  ),
+  trendParam(
+    {
+      key: 'trendSlopeLookbackSessions',
+      label: 'Regression window (N)',
+      description: `N + 1 points: the closes of the N previous sessions and the decision price. ${SESSIONS_NOTE}`,
+      type: 'integer',
+      unit: 'sessions',
+      default: 20,
+      min: 2,
+      max: 500,
+      step: 1,
+      search: { min: 5, max: 120, step: 5 }
+    },
+    'regression_slope'
+  ),
+  trendParam(
+    {
+      key: 'trendSlopeMinimumPercent',
+      label: 'Minimum fitted rise',
+      description: 'The fitted rise over the N sessions, (e^(slope × N) − 1) × 100, must be at least this (0 admits a flat line).',
+      type: 'number',
+      unit: 'percent',
+      default: 0,
+      min: -50,
+      max: 50,
+      step: 0.1,
+      search: { min: -5, max: 10, step: 0.5 }
+    },
+    'regression_slope'
+  ),
+  trendParam(
+    {
+      key: 'trendSmaSessions',
+      label: 'Moving-average length (N)',
+      description: `Simple average of the decision price and the closes of the N − 1 previous sessions. ${SESSIONS_NOTE}`,
+      type: 'integer',
+      unit: 'sessions',
+      default: 50,
+      min: 2,
+      max: 500,
+      step: 1,
+      search: { min: 10, max: 200, step: 10 }
+    },
+    'rising_sma'
+  ),
+  trendParam(
+    {
+      key: 'trendSmaComparisonSessions',
+      label: 'Slope comparison (K)',
+      description: 'The average must be strictly higher than its value at the close K sessions earlier.',
+      type: 'integer',
+      unit: 'sessions',
+      default: 5,
+      min: 1,
+      max: 250,
+      step: 1,
+      search: { min: 1, max: 30, step: 1 }
+    },
+    'rising_sma'
+  ),
+  trendParam(
+    {
+      key: 'trendStructureLookbackSessions',
+      label: 'Structure window (N)',
+      description: `N sessions (the current one up to the decision included), split into two halves of ⌊N/2⌋. ${SESSIONS_NOTE}`,
+      type: 'integer',
+      unit: 'sessions',
+      default: 20,
+      min: 2,
+      max: 500,
+      step: 1,
+      search: { min: 4, max: 120, step: 2 }
+    },
+    'higher_highs_lows'
+  ),
+  trendParam(
+    {
+      key: 'trendStructureMinimumIncreasePercent',
+      label: 'Minimum structure increase (m)',
+      description: 'The newer high and the newer low must exceed the older ones by more than m% (0 = strictly higher).',
+      type: 'number',
+      unit: 'percent',
+      default: 0,
+      min: 0,
+      max: 20,
+      step: 0.1,
+      search: { min: 0, max: 5, step: 0.25 }
+    },
+    'higher_highs_lows'
+  ),
+  trendParam(
+    {
+      key: 'trendMomentumShortSessions',
+      label: 'Short lookback (S)',
+      description: `Return of the decision price over S sessions. ${SESSIONS_NOTE} S must be below L.`,
+      type: 'integer',
+      unit: 'sessions',
+      default: 5,
+      min: 1,
+      max: 250,
+      step: 1,
+      search: { min: 2, max: 30, step: 1 }
+    },
+    'momentum'
+  ),
+  trendParam(
+    {
+      key: 'trendMomentumLongSessions',
+      label: 'Long lookback (L)',
+      description: 'Return of the decision price over L sessions (L > S).',
+      type: 'integer',
+      unit: 'sessions',
+      default: 60,
+      min: 2,
+      max: 500,
+      step: 1,
+      search: { min: 20, max: 250, step: 10 }
+    },
+    'momentum'
+  ),
+  trendParam(
+    {
+      key: 'trendMomentumMinimumShortReturnPercent',
+      label: 'Minimum short return',
+      description: 'Decision price ≥ close S sessions back × (1 + this).',
+      type: 'number',
+      unit: 'percent',
+      default: 0,
+      min: -50,
+      max: 50,
+      step: 0.1,
+      search: { min: -2, max: 10, step: 0.5 }
+    },
+    'momentum'
+  ),
+  trendParam(
+    {
+      key: 'trendMomentumMinimumLongReturnPercent',
+      label: 'Minimum long return',
+      description: 'Decision price ≥ close L sessions back × (1 + this). A negative value tolerates a longer-term decline (e.g. −5%).',
+      type: 'number',
+      unit: 'percent',
+      default: 0,
+      min: -50,
+      max: 50,
+      step: 0.1,
+      search: { min: -15, max: 10, step: 0.5 }
+    },
+    'momentum'
+  )
+];
+
+const policy = (m: string): Predicate => ({ param: 'eligibilityPolicy', equals: m });
+const eligibilityParam = (p: Omit<NumericParamSpec, 'group' | 'whenInactive'>, m: string): NumericParamSpec => ({
+  ...p,
+  group: 'eligibility',
+  activeWhen: policy(m),
+  whenInactive: 'hide'
+});
+
+const ELIGIBILITY_PARAMS: ParamSpec[] = [
+  {
+    key: 'eligibilityEnabled',
+    label: 'Persistent entry eligibility',
+    description:
+      'A qualifying Growth signal can remain available for a limited time, allowing later entry if its conditions are ' +
+      'still met (for example, when a trend filter turns favourable or a future shared-capital allocator frees the ' +
+      'slot). Never a retroactive fill at the original signal price. OFF (default): a signal not taken is gone.',
+    type: 'boolean',
+    unit: 'text',
+    default: false,
+    group: 'eligibility'
+  },
+  {
+    key: 'eligibilityPolicy',
+    label: 'Eligibility policy',
+    description: 'What keeps an armed opportunity valid while it waits (every policy is bounded by the maximum age).',
+    type: 'enum',
+    unit: 'text',
+    default: 'time_limited',
+    options: [
+      {
+        value: 'time_limited',
+        label: '1 — Time-limited opportunity',
+        description:
+          'Valid while each completed bar still satisfies the original Rise predicate (close ≥ X% over the rolling N-bar low); invalidated when it does not.'
+      },
+      {
+        value: 'minimum_strength',
+        label: '2 — Minimum trend strength',
+        description:
+          'Valid while the close stays at least a% above the FIXED recent low recorded at the signal (no drift when the rolling low moves); invalidated below it.'
+      },
+      {
+        value: 'maximum_extension',
+        label: '3 — Maximum price extension',
+        description:
+          'As 1, and the decision price must not exceed the original signal price by more than e%: beyond it the opportunity is invalidated (no late chasing, no reactivation).'
+      },
+      {
+        value: 'deterioration',
+        label: '4 — Trend-deterioration invalidation',
+        description:
+          'As 1, and cancelled when a close falls d% below the highest completed-bar close since arming; a recovery does not revive it.'
+      },
+      {
+        value: 'reset_renew',
+        label: '5 — Reset and renew after a fresh recovery',
+        description:
+          'As 1; after an unconsumed opportunity expires or is invalidated, a close D% below its signal price resets, and the first later close R% above the lowest close since then — with the Rise predicate true — is a renewal signal with its own bounded opportunity.'
+      }
+    ],
+    group: 'eligibility',
+    activeWhen: on('eligibilityEnabled'),
+    whenInactive: 'hide'
+  },
+  {
+    key: 'eligibilityMaxAgeSessions',
+    label: 'Maximum opportunity age (W)',
+    description:
+      'Trading sessions. The signal’s session is day 0; decisions are allowed through session origin + W inclusive; the ' +
+      'opportunity expires after that session’s close. Applies to every policy (no unbounded eligibility).',
+    type: 'integer',
+    unit: 'sessions',
+    default: 10,
+    min: 1,
+    max: 120,
+    step: 1,
+    search: { min: 1, max: 30, step: 1 },
+    group: 'eligibility',
+    activeWhen: on('eligibilityEnabled'),
+    whenInactive: 'hide'
+  },
+  eligibilityParam(
+    {
+      key: 'eligibilityMinimumAdvancePercent',
+      label: 'Minimum advance over the signal’s low (a)',
+      description:
+        'Close ≥ the recent low fixed at the signal × (1 + a), checked from the signal bar on. Above X, a crossing whose own advance is smaller is invalidated at once.',
+      type: 'number',
+      unit: 'percent',
+      default: 3,
+      min: 0,
+      max: 100,
+      step: 0.1,
+      search: { min: 0, max: 10, step: 0.5 }
+    },
+    'minimum_strength'
+  ),
+  eligibilityParam(
+    {
+      key: 'eligibilityMaximumExtensionPercent',
+      label: 'Maximum extension above the signal price (e)',
+      description: 'Decision price ≤ the original signal price × (1 + e); a close beyond it invalidates the opportunity.',
+      type: 'number',
+      unit: 'percent',
+      default: 3,
+      min: 0.1,
+      max: 50,
+      step: 0.1,
+      search: { min: 0.5, max: 10, step: 0.5 }
+    },
+    'maximum_extension'
+  ),
+  eligibilityParam(
+    {
+      key: 'eligibilityDeteriorationDropPercent',
+      label: 'Deterioration drop (d)',
+      description: 'Cancelled when a completed-bar close is at or below the highest close since arming × (1 − d).',
+      type: 'number',
+      unit: 'percent',
+      default: 3,
+      min: 0.1,
+      max: 50,
+      step: 0.1,
+      search: { min: 0.5, max: 10, step: 0.5 }
+    },
+    'deterioration'
+  ),
+  eligibilityParam(
+    {
+      key: 'eligibilityResetDropPercent',
+      label: 'Reset drop (D)',
+      description: 'After an unconsumed opportunity ends: a later close at or below its signal price × (1 − D) arms the renewal watch.',
+      type: 'number',
+      unit: 'percent',
+      default: 3,
+      min: 0.1,
+      max: 50,
+      step: 0.1,
+      search: { min: 1, max: 10, step: 0.5 }
+    },
+    'reset_renew'
+  ),
+  eligibilityParam(
+    {
+      key: 'eligibilityRenewalReboundPercent',
+      label: 'Renewal rebound (R)',
+      description:
+        'The first later close at or above the lowest close since the reset × (1 + R) ends the watch; it renews only if the Rise predicate holds on that bar. The watch lasts at most W sessions.',
+      type: 'number',
+      unit: 'percent',
+      default: 2,
+      min: 0.1,
+      max: 50,
+      step: 0.1,
+      search: { min: 0.5, max: 10, step: 0.5 }
+    },
+    'reset_renew'
+  )
+];
+
+export const TREND_PARAM_KEYS = TREND_PARAMS.map((p) => p.key);
+export const ELIGIBILITY_PARAM_KEYS = ELIGIBILITY_PARAMS.map((p) => p.key);
+
+// Growth 1.2.0: the 1.1.0 groups with the two entry gates after the entry.
+const GROWTH_GROUPS_1_2_0 = [
+  GROWTH_GROUPS[0]!,
+  {
+    key: 'trend',
+    title: 'Entry trend filter (optional)',
+    description:
+      'Blocks new Growth entries when the selected recent-price trend condition is not satisfied. Lookbacks count trading sessions, whatever the bar resolution. OFF reproduces Growth without the filter exactly. Defaults are illustrative, not optimised; a trend rule is not evidence of safer trading.'
+  },
+  {
+    key: 'eligibility',
+    title: 'Persistent entry eligibility (optional)',
+    description:
+      'Keeps a qualifying Growth signal available for a bounded number of trading sessions, so that it can still be entered later at the then-current price if its policy stays satisfied. OFF reproduces Growth without it exactly.'
+  },
+  ...GROWTH_GROUPS.slice(1)
+];
+
+// Value-dependent explanations and warnings in the form (display metadata; not part of the stored schema).
+const GROWTH_GROUP_NOTES: GroupNote[] = [
+  {
+    id: 'hold-off-warning',
+    group: 'exit',
+    when: { param: 'maximumHoldEnabled', equals: false },
+    tone: 'warn',
+    text: 'Maximum losing hold is OFF: a losing position has no exit — the trailing stop only becomes active while selling at it would be profitable after interest — so a loser can stay open indefinitely. It is reported as an open position marked at the last close, never as a fabricated sale.'
+  },
+  {
+    id: 'continuation-note',
+    group: 'continuation',
+    when: on('continuationEnabled'),
+    tone: 'muted',
+    text: 'Only the selected method’s inputs apply; the others keep their drafts and are not executed. A base Growth entry has priority at the same instant and closes the window.'
+  }
+];
+const GATE_NOTES: GroupNote[] = [
+  {
+    id: 'trend-note',
+    group: 'trend',
+    when: { all: [on('trendFilterEnabled'), { param: 'eligibilityEnabled', equals: false }] },
+    tone: 'muted',
+    text: 'With persistent eligibility OFF a blocked crossing stays blocked: no later entry is made when the trend turns favourable. A trigger of a continuation method that is blocked ends its window.'
+  },
+  {
+    id: 'eligibility-note',
+    group: 'eligibility',
+    when: on('eligibilityEnabled'),
+    tone: 'muted',
+    text: 'Signal = the raw Rise crossing (recorded once). Armed opportunity = that signal kept available — not an order, no capital reserved — for at most W sessions while its policy holds. Filtered = a decision the trend filter blocked (recorded with its values; the opportunity keeps waiting). Entry = an actual order, filled at the next eligible trade at the then-current price. Signals while invested arm nothing. Without a trend filter nothing blocks a standalone Growth run, so every opportunity is taken at once (identical to OFF).'
+  }
+];
+
 const GROWTH_NOTES = [
   'Fixed $100,000 notional per trade, never compounded; 11% simple annual margin interest per calendar day (365-day year).',
   'Stops fill at the stop price (no extra slippage) or at the gapped opening trade; minute-bar prices, no bid-ask spread.',
@@ -481,26 +956,47 @@ const GROWTH_DESCRIPTION =
 export const GROWTH_TITLE = 'Growth';
 export const GROWTH_FORMER_TITLE = 'Rise from recent low (trading backtest)';
 
-/** Growth, the current version: the 1.0.0 parameters plus the optional continuation entries (OFF by default). */
+const PULLBACK_BAND: ParamConstraint = {
+  kind: 'less',
+  id: 'pullback-band',
+  a: 'pullbackMinimumPercent',
+  b: 'pullbackMaximumPercent',
+  message: 'Shallow pullback: the minimum pullback must be below the maximum pullback'
+};
+const CONTINUATION_NOTE =
+  'Continuation (when ON): Classic D1 reads completed 1-minute bars at every resolution; the other methods read completed bars of the selected resolution. Decisions at bar ends; fills at the next eligible trade.';
+
+/**
+ * Growth, the current version (1.2.0): the 1.1.0 parameters plus the optional entry trend filter and the optional
+ * persistent entry eligibility, both OFF by default (OFF = 1.1.0 exactly).
+ */
 export const RISE_FROM_RECENT_LOW_TRADING: StrategySpec = {
   key: 'rise-from-recent-low-trading',
-  version: '1.1.0',
+  version: '1.2.0',
   title: GROWTH_TITLE,
   kind: 'trades',
   launch: 'form',
   runnable: true,
-  description: `${GROWTH_DESCRIPTION} Optional continuation entries after a profitable exit (four methods; OFF by default).`,
+  description: `${GROWTH_DESCRIPTION} Optional: continuation entries after a profitable exit (four methods), an entry trend filter (five methods) and persistent entry eligibility (five bounded policies) — all OFF by default.`,
   schemaVersion: 2,
-  params: [...GROWTH_BASE_PARAMS.slice(0, -1), ...CONTINUATION_PARAMS, GROWTH_BASE_PARAMS.at(-1)!],
-  groups: GROWTH_GROUPS,
+  params: [
+    ...GROWTH_BASE_PARAMS.slice(0, 2),
+    ...TREND_PARAMS,
+    ...ELIGIBILITY_PARAMS,
+    ...GROWTH_BASE_PARAMS.slice(2, -1),
+    ...CONTINUATION_PARAMS,
+    GROWTH_BASE_PARAMS.at(-1)!
+  ],
+  groups: GROWTH_GROUPS_1_2_0,
   constraints: [
     BUFFER_NEEDS_HOLD,
+    PULLBACK_BAND,
     {
       kind: 'less',
-      id: 'pullback-band',
-      a: 'pullbackMinimumPercent',
-      b: 'pullbackMaximumPercent',
-      message: 'Shallow pullback: the minimum pullback must be below the maximum pullback'
+      id: 'momentum-short-long',
+      a: 'trendMomentumShortSessions',
+      b: 'trendMomentumLongSessions',
+      message: 'Momentum trend filter: the short lookback S must be below the long lookback L'
     }
   ],
   identity: 'effective',
@@ -508,12 +1004,43 @@ export const RISE_FROM_RECENT_LOW_TRADING: StrategySpec = {
   defaultResolution: '1d',
   notes: [
     ...GROWTH_NOTES,
-    'Continuation (when ON): Classic D1 reads completed 1-minute bars at every resolution; the other methods read completed bars of the selected resolution. Decisions at bar ends; fills at the next eligible trade.'
+    CONTINUATION_NOTE,
+    'Entry trend filter / persistent eligibility (when ON): decisions at completed bar ends, trend windows in trading sessions; a later (latched) entry fills at the next eligible trade at the then-current price.'
   ],
-  formerTitles: [GROWTH_FORMER_TITLE]
+  formerTitles: [GROWTH_FORMER_TITLE],
+  groupNotes: [...GROWTH_GROUP_NOTES, ...GATE_NOTES]
 };
 
-/** Growth 1.0.0 (legacy, frozen): its runs are historical facts; it replays as 1.1.0 with continuation OFF. */
+/**
+ * Growth 1.1.0 (legacy, frozen): its runs are historical facts; New Test no longer offers it, but its catalogue
+ * phenotypes stay runnable as single tests. It replays as 1.2.0 with the trend filter and eligibility OFF.
+ */
+export const RISE_FROM_RECENT_LOW_TRADING_1_1_0: StrategySpec = {
+  key: 'rise-from-recent-low-trading',
+  version: '1.1.0',
+  title: GROWTH_TITLE,
+  kind: 'trades',
+  launch: 'phenotype',
+  runnable: true,
+  description: `${GROWTH_DESCRIPTION} Optional continuation entries after a profitable exit (four methods; OFF by default). (Version 1.1.0, before the entry trend filter and persistent eligibility.)`,
+  schemaVersion: 2,
+  params: [...GROWTH_BASE_PARAMS.slice(0, -1), ...CONTINUATION_PARAMS, GROWTH_BASE_PARAMS.at(-1)!],
+  groups: GROWTH_GROUPS,
+  constraints: [BUFFER_NEEDS_HOLD, PULLBACK_BAND],
+  identity: 'effective',
+  resolutions: RESOLUTIONS,
+  defaultResolution: '1d',
+  notes: [...GROWTH_NOTES, CONTINUATION_NOTE],
+  formerTitles: [GROWTH_FORMER_TITLE],
+  groupNotes: GROWTH_GROUP_NOTES,
+  legacy: {
+    supersededBy: '1.2.0',
+    replay:
+      'version 1.2.0 with the entry trend filter and persistent eligibility OFF reproduces every 1.1.0 signal, fill, exit, continuation episode, decision-log entry, mark and metric exactly (src/growth-trading/tests/offParity-1.1.0.test.ts); its catalogue phenotypes rerun as 1.1.0 configurations; a clone starts a 1.2.0 test with both OFF'
+  }
+};
+
+/** Growth 1.0.0 (legacy, frozen): its runs are historical facts; it replays as 1.2.0 with continuation and both gates OFF. */
 export const RISE_FROM_RECENT_LOW_TRADING_1_0_0: StrategySpec = {
   key: 'rise-from-recent-low-trading',
   version: '1.0.0',
@@ -531,10 +1058,11 @@ export const RISE_FROM_RECENT_LOW_TRADING_1_0_0: StrategySpec = {
   defaultResolution: '1d',
   notes: GROWTH_NOTES,
   formerTitles: [GROWTH_FORMER_TITLE],
+  groupNotes: GROWTH_GROUP_NOTES.filter((n) => n.group !== 'continuation'),
   legacy: {
-    supersededBy: '1.1.0',
+    supersededBy: '1.2.0',
     replay:
-      'version 1.1.0 with continuation OFF reproduces every 1.0.0 signal, fill, exit, mark and metric exactly (src/growth-trading/tests/offParity.test.ts); a clone starts a 1.1.0 test with continuation OFF'
+      'version 1.2.0 with continuation, the entry trend filter and persistent eligibility OFF reproduces every 1.0.0 signal, fill, exit, mark and metric exactly (src/growth-trading/tests/offParity.test.ts); a clone starts a 1.2.0 test with all of them OFF'
   }
 };
 
@@ -583,6 +1111,7 @@ export const DEMO_TOY_RULES: StrategySpec = {
 export const STRATEGY_REGISTRY: readonly StrategySpec[] = [
   RISE_FROM_RECENT_LOW,
   RISE_FROM_RECENT_LOW_TRADING,
+  RISE_FROM_RECENT_LOW_TRADING_1_1_0,
   RISE_FROM_RECENT_LOW_TRADING_1_0_0,
   STUDY8_POOL,
   DEMO_TOY_RULES
