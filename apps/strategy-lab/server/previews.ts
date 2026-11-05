@@ -550,7 +550,7 @@ export class PreviewService {
     e: Execution,
     events: LabEvent[],
     metrics: { perSymbol: Record<string, Record<string, unknown>> },
-    trades: { trades: Record<string, { status: string; net: number }[]> }
+    trades: { trades: Record<string, { status: string; net: number; exitFills?: { partial: boolean; net: number }[] }[]> }
   ) {
     for (const s of e.config.symbols) {
       const m = metrics.perSymbol[s] as {
@@ -566,9 +566,16 @@ export class PreviewService {
       const closed = rows.filter((r) => r.status === 'closed');
       const ofKind = (k: LabEvent['kind']) => events.filter((x) => x.symbol === s && x.kind === k).length;
       if (rows.length !== m.trades.filled || closed.length !== m.trades.closed) throw new Error(`${s}: the ledger and the metrics count different trades`);
-      if (ofKind('executed_entry') !== rows.length || ofKind('executed_exit') !== closed.length)
+      // Growth 1.3.0: a partial fill (retention) is an executed exit marked `partial`; the trade's exit is its final one
+      const partialFills = rows.flatMap((r) => (r.exitFills ?? []).filter((f) => f.partial));
+      const exits = events.filter((x) => x.symbol === s && x.kind === 'executed_exit');
+      const partialEvents = exits.filter((x) => x.meta?.partial === true).length;
+      if (ofKind('executed_entry') !== rows.length || exits.length - partialEvents !== closed.length || partialEvents !== partialFills.length)
         throw new Error(`${s}: the events and the ledger count different fills`);
-      const realized = closed.reduce((n, r) => n + r.net, 0);
+      // realized = the closed positions + the partial fills of a position still open (its remainder is unrealized)
+      const realized =
+        closed.reduce((n, r) => n + r.net, 0) +
+        rows.filter((r) => r.status === 'open').reduce((n, r) => n + (r.exitFills ?? []).filter((f) => f.partial).reduce((a, f) => a + f.net, 0), 0);
       if (Math.abs(realized - m.pnl.realizedNetUsd) > TOLERANCE_USD) throw new Error(`${s}: the ledger's realized net differs from the metrics`);
     }
   }

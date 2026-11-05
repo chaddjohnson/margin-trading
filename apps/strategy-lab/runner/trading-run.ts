@@ -1028,11 +1028,16 @@ async function main() {
         ...sim.outcomes.map((o) => ({
           id: `${symbol}:${o.status === 'rejected' || o.status === 'vetoed' || o.status === 'deferred' ? 'rejected_signal' : 'entry_signal'}:${iso(o.decision.time)}`,
           kind: 'crossing' as const,
-          source: 'rise_from_recent_low',
+          source: o.decision.breakout ? 'trend_breakout' : 'rise_from_recent_low',
           t: o.decision.time,
           s: o.decision.sessionIndex,
           price: o.decision.price,
-          crossing: { threshold: r4(o.decision.trigger), recentLow: o.decision.reference, advancePercent: r4(o.decision.signal!.advancePercent) },
+          crossing: o.decision.breakout
+            ? null
+            : { threshold: r4(o.decision.trigger), recentLow: o.decision.reference, advancePercent: r4(o.decision.signal!.advancePercent) },
+          ...(o.decision.breakout
+            ? { breakout: { priorHigh: o.decision.breakout.priorHigh, sma: o.decision.breakout.sma, smaThen: o.decision.breakout.smaThen } }
+            : {}),
           disposition: o.status,
           reason: o.reason,
           gate: o.gate?.gate ? { decision: o.gate.gate.reason, text: o.gate.gate.text, capital: o.gate.gate.capital, trend: o.gate.gate.trend?.values ?? null } : null,
