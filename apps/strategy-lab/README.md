@@ -19,7 +19,7 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 | --- | --- |
 | `server/` | `main.ts` (entry), `config.ts`, `security.ts`, `db.ts` + `migrations/`, `repo.ts` (all SQL), `service.ts` (manual runs), `jobs.ts` (bounded child-process execution), `prices.ts` (chart prices, decimation), `artifacts.ts` (atomic files), `http.ts` (API + static UI), `seed-demo.ts` |
 | `runner/entry-signal-run.ts` | The child process of one manual signal-only run (dataset pipeline + `src/entry-signals/`) |
-| `runner/trading-run.ts` | The child process of one Growth backtest (`src/growth-trading/`: the same signals, optional continuation entries, the optional entry trend filter and persistent eligibility, the Study 8 D1 book and exits); `runner/growth-params.ts` maps a request (read with its own version's schema) to the engine |
+| `runner/trading-run.ts` | The child process of one Growth backtest (`src/growth-trading/`: the same signals, optional continuation entries, the optional entry trend filter and persistent eligibility, the 1.3.0 options, the 1.4.0 Drawdown Recovery Gate, the Study 8 D1 book and exits); `runner/growth-params.ts` maps a request (read with its own version's schema) to the engine |
 | `runner/pool-run.ts` | The child process of one shared-slot pool phenotype rerun (the unchanged Study 8 runner) |
 | `importers/study8.ts` | Read-only import of a Study 8 runner output (verified against the sealed record); its event conversion is shared with the pool runner |
 | `importers/phenotypes.ts`, `phenotype-export.ts`, `export-study8-phenotypes.ts` | The phenotype catalogue import (verified), the export writer, the Study 8 sealed-selection exporter |
@@ -48,6 +48,7 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 | `replay -- R-…` | Re-execute a stored Growth run in scratch and diff its execution facts |
 | `audit:state -- <state dir> [--json]` | Read-only audit (counts, immutable hashes, FKs, integrity, events) |
 | `preview-cache -- status\|verify\|prune\|clear` | Interactive Preview cache maintenance (only the cache directory) |
+| `export-requests -- --out <dir> <request.json> …` | Run request files in a NEW scratch state (never the live one) and write their research bundles |
 | `service:install [-- --enable]` | Write (and optionally enable) the systemd user service |
 | `token [-- --print]` | Where the API token is (or print it) |
 | `generate:fixture [-- --check]` | Regenerate or verify the demo fixture |

@@ -10,9 +10,10 @@ prototype of 2026-11-03.
   - saved runs, variations, experiments and strategies in SQLite;
   - manual single tests on real minute data from the browser: signal-only entries, or **Growth**, a trading backtest
     with executed entries, exits, P&L, optional continuation entries, an optional entry trend filter, optional
-    persistent entry eligibility and (1.3.0) an alternative trend-breakout entry, an optional initial risk stop and
-    optional trend retention ([GROWTH_TRADING.md](GROWTH_TRADING.md), [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md),
-    [GROWTH_OPTIONAL_RULES.md](GROWTH_OPTIONAL_RULES.md));
+    persistent entry eligibility, an alternative trend-breakout entry, an optional initial risk stop, optional trend
+    retention and (1.4.0) the optional Drawdown Recovery Gate ([GROWTH_TRADING.md](GROWTH_TRADING.md),
+    [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md), [GROWTH_OPTIONAL_RULES.md](GROWTH_OPTIONAL_RULES.md),
+    [GROWTH_DRAWDOWN_GATE.md](GROWTH_DRAWDOWN_GATE.md));
   - a frozen phenotype catalogue with single reruns ([PHENOTYPES.md](PHENOTYPES.md)), descriptive run comparisons and
     downloadable research bundles ([EXPORTS.md](EXPORTS.md));
   - **Interactive Preview**: edit a saved run's parameters beside its chart and run ONE configuration at a time,
@@ -31,7 +32,8 @@ prototype of 2026-11-03.
 | [OPERATIONS.md](OPERATIONS.md) | Commands, apollo/Tailscale access, configuration, security model, backups and recovery, the vg-balanced import command, tests, limitations |
 | [RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md) | Manual exploration versus validation, roadmap, UI guide, Claude-led optimisation export/import, how vg-balanced was imported and verified |
 | [STUDY8_METHODOLOGY.md](STUDY8_METHODOLOGY.md) | What Study 8 actually did (the template for future optimisation) |
-| [GROWTH_TRADING.md](GROWTH_TRADING.md) | **Growth** (`rise-from-recent-low-trading`, 1.3.0; legacy 1.2.0, 1.1.0 and 1.0.0): entry and re-entry, the three exit rules and their switches, accounting, UI use, an exploratory example |
+| [GROWTH_TRADING.md](GROWTH_TRADING.md) | **Growth** (`rise-from-recent-low-trading`, 1.4.0; legacy 1.3.0, 1.2.0, 1.1.0 and 1.0.0): entry and re-entry, the three exit rules and their switches, accounting, UI use, an exploratory example |
+| [GROWTH_DRAWDOWN_GATE.md](GROWTH_DRAWDOWN_GATE.md) | Growth 1.4.0 Drawdown Recovery Gate: a filter on entry eligibility (never a signal); observations on completed minutes, chronological peak-before-trough detection, the latched anchor, the full-decline retracement threshold, the Y-session confirmation clock (gaps, early closes, DST, missing minutes), the state machine, interaction with eligibility/trend/continuation, the intraday release decision, records and exports, OFF parity, limitations. Report and evidence: `reports/2026-11-06-drawdown-recovery-gate/` |
 | [GROWTH_OPTIONAL_RULES.md](GROWTH_OPTIONAL_RULES.md) | Growth 1.3.0 optional rules: the initial risk stop (ATR convention, timing, blocking, fills), the trend-breakout entry (strict conditions, no replay, no cooldown), trend retention (one partial sale, the remainder's trend exit, financing on the remaining principal, accounting of several fills, one logical trade), the exit order and precedence, records and exports, Interactive Preview, reproducing Candidate A with all OFF, combinations, tests |
 | [GROWTH_ENTRY_GATES.md](GROWTH_ENTRY_GATES.md) | Growth 1.2.0 entry gates: the entry trend filter (five methods, trading-session sampling), persistent entry eligibility (five bounded policies, the opportunity lifecycle, reset-and-renew), priority and clashes, records and exports, worked examples, the paired CLI diagnostic, pitfalls, OFF parity |
 | [GROWTH_TRADING_AUDIT.md](GROWTH_TRADING_AUDIT.md) | Which D1 code it reuses, rule by rule (sources, chronology, units, fills), what differs, what is left out, and the parity evidence |
@@ -46,3 +48,4 @@ prototype of 2026-11-03.
 | `brief/2026-11-05-growth-trend-filter-eligibility-brief.md` | The Growth entry trend filter / latched eligibility / compact strategy picker brief (Task 11), verbatim |
 | `brief/2026-11-05-interactive-preview-brief.md` | The Interactive Preview brief (Task 13), verbatim |
 | `brief/2026-11-05-growth-optional-rules-brief.md` | The Growth optional rules brief (Task 14: initial risk stop, trend-breakout entry, trend retention), verbatim |
+| `brief/2026-11-06-growth-drawdown-recovery-gate-brief.md` | The Growth Drawdown Recovery Gate brief (Task 15), verbatim |

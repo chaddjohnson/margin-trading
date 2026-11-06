@@ -381,7 +381,8 @@ export interface ContinuationGateHooks {
   check: (
     s: number,
     time: number,
-    price: number
+    price: number,
+    ref?: Record<string, LogValue> // v1.4.0: the episode (named in the Drawdown Recovery Gate's block records)
   ) => { pass: boolean; reason: string; text: string; values: Record<string, LogValue> };
   // An entry was taken by the continuation (the gates end a live opportunity of another source).
   afterEntry: (trade: VirtualTrade, s: number, time: number) => void;
@@ -593,7 +594,7 @@ export class ContinuationController {
     values: Record<string, LogValue>,
     d1: ReboundSignal | { trailingLow: number; trigger: number }
   ) {
-    const gate = this.gates ? this.gates.check(s, time, price) : null;
+    const gate = this.gates ? this.gates.check(s, time, price, { episode: e.id, method: e.method }) : null;
 
     if (gate && !gate.pass) {
       this.veto(e, s, time, price, values, gate);

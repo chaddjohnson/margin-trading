@@ -66,6 +66,9 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
      entry (default) or the trend breakout (its SMA inputs are part of the method; eligibility is then not applicable);
      *Initial risk stop* adds a fixed fill − m × ATR stop; *Retain part of profitable trend* sells only a fraction at the
      first trailing-stop event and exits the rest on closes below an SMA ([GROWTH_OPTIONAL_RULES.md](GROWTH_OPTIONAL_RULES.md)).
+     Since 1.4.0: *Drawdown Recovery Gate* blocks entries while a significant chronological dip is unresolved, until a
+     share of the whole decline is recovered and held for Y sessions on completed minutes — a filter, never a signal
+     ([GROWTH_DRAWDOWN_GATE.md](GROWTH_DRAWDOWN_GATE.md)).
      Compare an option with Candidate A by cloning it and switching only that option ON.
    - The trading backtest adds the exit rules (a mandatory trailing stop, plus switches for the maximum losing hold and
      the buffered intraday loss) and the cost per side.
@@ -129,6 +132,11 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    (the detail lists each fill and its own net; the trade's net is the whole position's); the Analysis panel's
    *Optional rules* section counts protected positions, stop exits, blocked decisions and partial fills; the bundle adds
    `exit-fills.csv` and `optional-rules.md`.
+   **The Drawdown Recovery Gate in a run (1.4.0):** the Analysis panel's *Drawdown Recovery Gate* section counts
+   episodes, confirmations and resets, blocked decisions and entries decided at a release; a signal's detail lists the
+   gate's values (`drawdown.*`, `blockedBy`); Trades labels an entry decided at a release; the bundle adds
+   `drawdown-episodes.csv`, `drawdown-transitions.csv` and `drawdown-gate.md`. Its effect is judged only against the
+   paired run with the gate OFF (`npm run growth-paired -- --request … --off drawdown-gate`).
 16. **Delete a result:** a run's header → **⋯ → Delete result…** → check the id, strategy, symbols and date →
    **Delete result**. It removes that run (results, files, its notes and bookmark) permanently and keeps its
    variation and everything else ([OPERATIONS.md](OPERATIONS.md) §Deleting a saved result). Bookmark instead of

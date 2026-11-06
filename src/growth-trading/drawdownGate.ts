@@ -8,8 +8,12 @@
 //   open     the opening trade (the first regular minute's open), at that minute's start — continuity only;
 //   reopen   after missing minutes inside a session, the next bar's open, at its start — continuity only;
 //   minute   each completed one-minute close, at the minute's end (start + 60 s) — a FULL observation;
-//   close    the closing print (the official close; the last minute's close without one), at the scheduled close
-//            (16:00 ET, 13:00 on early-close days) — a FULL observation.
+//   close    the closing print (the official close), at the scheduled close (16:00 ET, 13:00 on early-close days) —
+//            a FULL observation; a session without a closing print has none (its last minute close is never
+//            re-observed at the close: missing data are never evidence).
+// A close is known at its instant, so a decision at that instant knows it. An opening or reopening TRADE at an instant
+// happens after the decisions of that instant (it can be their own fill), so the simulation hands it to the gate only
+// after them (riseTrading.ts baseUntil; check() allows exactly that pending trade).
 // Full observations drive everything (detection, trough, recovery start, qualification, resolution, resets);
 // continuity-only observations can only break a recovery streak (a gap below the threshold). A minute's high and low
 // are never used: their intrabar order is unknowable.
@@ -37,9 +41,10 @@
 // next actual observation). Sessions are the dataset's (the NYSE sessions present in the canonical data); weekends,
 // holidays and overnight gaps are not sessions and are never assumed to hold prices.
 //
-// AVAILABILITY. The gate permits only in NORMAL or RECOVERY_CONFIRMED, and only when the discovery window lies inside
-// the loaded history (session index ≥ N): otherwise it blocks (fail closed, `insufficient_history`). The run loads N
-// sessions of warm-up for it; the detector starts at the first loaded session with a fresh epoch.
+// AVAILABILITY. The detector starts N sessions before the run's first session (or at the first loaded session when the
+// data begin later) with a fresh epoch — whatever other options load as warm-up, so the gate's history never depends
+// on them. It permits only in NORMAL or RECOVERY_CONFIRMED, and only once N sessions have been observed (the discovery
+// window complete); otherwise it blocks (fail closed, `insufficient_history`).
 //
 // "≥" / "≤" against a level absorb binary rounding only (relative 1e-12, as the Rise scanner); a new trough must be
 // strictly lower.
@@ -142,7 +147,8 @@ export const observationsOf = (ds: Dataset, first = 0, last = ds.sessionCount - 
         out.push({ seq: out.length, kind: 'reopen', session: s, bar: k, time: t, price: ds.bOpen[start + k]! });
       out.push({ seq: out.length, kind: 'minute', session: s, bar: k, time: t + 60, price: ds.bClose[start + k]! });
     }
-    out.push({ seq: out.length, kind: 'close', session: s, bar: -1, time: ds.sCloseTime[s]!, price: ds.sClose[s]! });
+    if (Number.isFinite(ds.sClosingPrint[s]!))
+      out.push({ seq: out.length, kind: 'close', session: s, bar: -1, time: ds.sCloseTime[s]!, price: ds.sClose[s]! });
   }
 
   return out;
@@ -270,6 +276,9 @@ export class DrawdownRecoveryGate {
   private readonly offsetBySession = new Map<number, number>();
   private windowCompleteNoted = false;
 
+  // the first session the detector reads: N sessions before the run's first one (or the first loaded session)
+  readonly origin: number;
+
   constructor(
     readonly ds: Dataset,
     readonly config: DrawdownGateConfig,
@@ -280,7 +289,9 @@ export class DrawdownRecoveryGate {
     if (errors.length) throw new Error(`invalid drawdown recovery gate: ${errors.join('; ')}`);
     this.d = fraction(config.dipThresholdPercent);
     this.r = fraction(config.recoveryRetracementPercent);
-    this.nextT = this.timeAt(0, 0, 0);
+    this.origin = Math.max(0, runStartSession - config.lookbackSessions);
+    this.cs = this.origin;
+    this.nextT = this.timeAt(this.origin, 0, 0);
   }
 
   // ----- the cursor -----
@@ -293,7 +304,7 @@ export class DrawdownRecoveryGate {
 
     const start = ds.sBarStart[s]!;
 
-    if (phase === 2) return ds.sCloseTime[s]!;
+    if (phase === 2) return Number.isFinite(ds.sClosingPrint[s]!) ? ds.sCloseTime[s]! : NaN;
     if (phase === 1) return ds.bTime[start + k]! + 60;
     if (k === 0) return ds.bTime[start]!;
 
@@ -328,6 +339,11 @@ export class DrawdownRecoveryGate {
   // When the next unprocessed observation is first known (Infinity past the data).
   get nextTime() {
     return this.nextT;
+  }
+
+  // Whether the next unprocessed observation is a full one (a completed close), not an opening or reopening trade.
+  get nextIsFull() {
+    return this.cp !== 0;
   }
 
   // Processes the next observation and returns it.
@@ -367,7 +383,7 @@ export class DrawdownRecoveryGate {
   }
 
   windowCompleteAt(s: number) {
-    return s - this.config.lookbackSessions >= 0;
+    return s - this.config.lookbackSessions >= this.origin;
   }
 
   get permissive() {
@@ -769,7 +785,8 @@ export class DrawdownRecoveryGate {
   // The gate at a decision at `time` in session s (decision price `price`). Every observation known at `time` must have
   // been processed (the simulation interleaves them); a later observation is never read.
   check(s: number, time: number, price: number): DrawdownCheck {
-    if (this.nextT <= time)
+    // pending at the decision instant may be only an opening/reopening trade of that instant (it follows the decision)
+    if (this.nextT < time || (this.nextT === time && this.nextIsFull))
       throw new Error(`drawdown gate: observations up to ${iso(time)} were not processed before the decision`);
 
     const e = this.current;

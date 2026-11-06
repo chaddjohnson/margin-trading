@@ -218,6 +218,29 @@ describe('observations: chronological, causal, the high/low never used', () => {
         ['close', 960, 12.2]
       ]
     );
+    // a session without a closing print has no close observation (its last minute is never re-observed at 16:00)
+    const noPrint = observationsOf(
+      dsOf([
+        {
+          date: D[0]!,
+          bars: [
+            ['09:30', 10],
+            ['15:40', 11]
+          ],
+          closingPrint: null
+        }
+      ])
+    );
+
+    assert.deepEqual(
+      noPrint.map((o) => [o.kind, minuteOfDay(o.time)]),
+      [
+        ['open', 570],
+        ['minute', 571],
+        ['reopen', 940],
+        ['minute', 941]
+      ]
+    );
     // the gate's cursor walks exactly these observations
     const g = new DrawdownRecoveryGate(ds, cfg(), 0);
     const walked: Observation[] = [];
@@ -1161,5 +1184,139 @@ describe('the simulation: a filter on Growth decisions, never a signal', () => {
 
     assert.equal(end, 'drawdown_gate');
     void DEFAULT_CONTINUATION;
+  });
+});
+
+// ----- review fixes: same-instant trades, stale closes, the detector's own history, every blocker named -----
+
+describe('ordering and history (each a regression test of a review finding)', () => {
+  test('an opening/reopening trade at a decision instant is handed to the gate after the decision (it may be its fill)', () => {
+    // DD-1 on D[1] (100 → 90, threshold 97); confirmed on D[2] at the 09:31 close (98, Y = 0); the 10:00 bar reopens
+    // at 96 after missing minutes. A decision at 10:00 is taken on the state before that trade, and fills at it.
+    const days: Day[] = [
+      flatDay(D[0]!, 100),
+      path(D[1]!, [100, 95, 90, 90, 90, 90]),
+      {
+        date: D[2]!,
+        bars: [
+          ['09:30', 98],
+          ['10:00', 98, 96],
+          ['10:01', 98]
+        ]
+      }
+    ];
+    const sessions = days.map(session);
+    const ds = fixtureDataset(sessions);
+    const T = et(D[2]!, '10:00');
+    const p: RiseTradingParams = { ...BASE, drawdownGate: cfg({ confirmationSessions: 0 }) };
+    const sim = simulateTrading(ds, [{ id: 'x', sessionIndex: 2, time: T, price: 98, trigger: NaN, reference: NaN }], {
+      symbol: 'TEST',
+      firstSession: 0,
+      endSession: 2,
+      exit: exitParamsOf(p),
+      book: bookSettingsOf(p),
+      drawdown: p.drawdownGate
+    });
+    const o = sim.outcomes[0]!;
+
+    assert.equal(o.status, 'filled');
+    assert.equal(o.gate!.gate!.drawdown!.state, 'recovery_confirmed');
+    assert.equal(sim.trades[0]!.entryTime, T);
+    assert.equal(sim.trades[0]!.entryRawPrice, 96); // the reopening trade: after the decision, never known to it
+    const reset = sim.gates!.drawdown!.transitions.find((t) => t.event === 'confirmation_lost')!;
+
+    assert.equal([reset.values.cause, reset.t].join(), ['reopen_gap', T].join()); // the gate still saw it, after
+    // the guard: a pending CLOSE of the instant refuses the decision; a pending TRADE of the instant does not
+    const g = new DrawdownRecoveryGate(ds, cfg({ confirmationSessions: 0 }), 0);
+
+    g.advanceTo(T - 1);
+    assert.equal([g.nextTime, g.nextIsFull].join(), [T, false].join());
+    assert.equal(g.check(2, T, 98).state, 'recovery_confirmed');
+    g.step();
+    assert.throws(() => g.check(2, T + 60, 98), /not processed before the decision/);
+  });
+
+  test('a session without a closing print: its last minute is not re-observed at the close (no stale qualification)', () => {
+    // DD-1 on Monday 02-11 (threshold 97); a streak from Tuesday's 16:00 closing print (m0 = 16:00, Y = 1); Wednesday's
+    // data end at 15:40 without a print
+    const days: Day[] = [
+      flatDay('2019-02-08', 100),
+      path('2019-02-11', [100, 95, 90, 90, 90, 90]),
+      {
+        date: '2019-02-12',
+        bars: [
+          ['09:30', 96],
+          ['15:59', 96]
+        ],
+        closingPrint: 98
+      },
+      {
+        date: '2019-02-13',
+        bars: [
+          ['09:30', 98],
+          ['15:40', 98]
+        ],
+        closingPrint: null
+      },
+      {
+        date: '2019-02-14',
+        bars: [
+          ['09:30', 98],
+          ['09:31', 98]
+        ]
+      }
+    ];
+    const { g } = runGate(days, cfg({ confirmationSessions: 1 }));
+
+    assert.equal(at(g.transitions.find((t) => t.event === 'recovery_started')!), '2019-02-12 16:00');
+    // not at 16:00 on 02-13 from the stale 15:40 close: at the next actual observation, 02-14 09:31
+    assert.deepEqual(confirmedAt(g), ['2019-02-14 09:31']);
+  });
+
+  test('the detector reads N sessions before the run whatever else is loaded: identical records with more warm-up', () => {
+    const days = randomDays(5, 60);
+    const c = cfg({
+      lookbackSessions: 5,
+      dipThresholdPercent: 2,
+      recoveryRetracementPercent: 60,
+      confirmationSessions: 1
+    });
+    // the same run start (days[20]) with 20 sessions loaded before it (another option's warm-up) or with exactly 5
+    const a = new DrawdownRecoveryGate(dsOf(days), c, 20);
+    const b = new DrawdownRecoveryGate(dsOf(days.slice(15)), c, 5);
+
+    a.advanceTo(Infinity);
+    b.advanceTo(Infinity);
+    assert.equal([a.origin, b.origin].join(), '15,0');
+    const view = (g: DrawdownRecoveryGate) =>
+      g.transitions.map((t) => [t.t, t.event, t.price, t.episode, t.state, t.reason].join('|'));
+
+    assert.ok(a.transitions.length > 5);
+    assert.deepEqual(view(a), view(b));
+    assert.equal([a.windowCompleteAt(19), a.windowCompleteAt(20)].join(), 'false,true');
+  });
+
+  test('blockedBy names every blocker, the initial-stop availability included', () => {
+    const ds = dsOf([flatDay(D[0]!, 100), flatDay(D[1]!, 100), flatDay(D[2]!, 100)]);
+    const dd = new DrawdownRecoveryGate(ds, cfg(), 0);
+    const gates = new EntryGates(
+      ds,
+      {
+        trend: null,
+        eligibility: null,
+        bars: [],
+        entry: { advanceFromRecentLowPercent: NaN, recentLowLookbackBars: NaN },
+        drawdown: dd,
+        protection: () => ({ pass: false, reason: 'insufficient_history', text: 'no ATR history', values: {} })
+      },
+      new DecisionLog(),
+      { enter: () => assert.fail('no entry'), flatWithoutOrder: () => true }
+    );
+
+    dd.advanceTo(ds.sCloseTime[2]!);
+    const r = gates.check(2, ds.sCloseTime[2]!, 100, 'base_signal');
+
+    assert.equal([r.pass, r.reason, r.drawdown!.pass].join(), 'false,insufficient_history,true');
+    assert.deepEqual(r.blockedBy, ['protection']);
   });
 });

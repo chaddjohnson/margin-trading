@@ -79,6 +79,11 @@ Notes on each method:
 
 ### 2.3 Where it applies
 
+(Growth 1.4.0 adds a third entry-side filter, the **Drawdown Recovery Gate**, applied at the same decisions after the
+trend filter; with both ON both must allow, and each block is logged — [GROWTH_DRAWDOWN_GATE.md](GROWTH_DRAWDOWN_GATE.md).
+With eligibility ON, an opportunity it blocked may also be decided at the gate's release minute, §7.1 there.)
+
+
 The filter is checked at **every Growth-owned entry decision**: the base crossing, a later decision of a latched
 opportunity, a renewal signal, and a **continuation trigger** of any method. Decisions of other strategies are never
 filtered, and neither are exits.

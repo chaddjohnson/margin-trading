@@ -70,9 +70,15 @@ test('New test offers the trading backtest with its switches, defaults, units, d
     .locator('input, select, button')
     .evaluateAll((els) => els.map((e) => `${(e as HTMLElement).dataset.testid ?? ''} ${e.textContent ?? ''}`));
   expect(inputs.some((t) => /trailingStopEnabled/.test(t))).toBe(false);
-  expect(inputs.some((t) => /material|lowerPrice|reentry|recovery|retrace|reference|optimi|sweep|grid/i.test(t))).toBe(
-    false
-  );
+  // Growth 1.4.0's Drawdown Recovery Gate filters on the MARKET's decline (not a trade's loss): its one control shown
+  // while OFF is exactly its switch; the guard applies to every other control.
+  const gate = inputs.filter((t) => t.startsWith('param-drawdownRecoveryGateEnabled '));
+  expect(gate).toHaveLength(1);
+  expect(
+    inputs
+      .filter((t) => !gate.includes(t))
+      .some((t) => /material|lowerPrice|reentry|recovery|retrace|reference|optimi|sweep|grid/i.test(t))
+  ).toBe(false);
 
   // Hold OFF: the buffer switch is unticked and disabled, both values are kept but not applied, and a warning shows.
   await page.getByTestId('param-maximumHoldEnabled').uncheck();

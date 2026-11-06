@@ -622,8 +622,8 @@ export const simulateTrading = (
         (s, time) => lastMinuteBefore(ds, s, time),
         gates
           ? {
-              check: (s, time, price) => {
-                const g = gates.check(s, time, price, 'continuation');
+              check: (s, time, price, ref) => {
+                const g = gates.check(s, time, price, 'continuation', ref);
 
                 return { pass: g.pass, reason: g.reason, text: g.text, values: gateLogValues(g) };
               },
@@ -907,8 +907,9 @@ export const simulateTrading = (
       const t = k < count ? ds.bTime[start + k]! : ds.sCloseTime[s]!;
       // Base decisions and (v1.2.0) latched-opportunity steps due at or before `time`, in time order; at one instant a
       // fresh crossing goes first, then the live opportunity. With both gates OFF this is the v1.1.0 base loop.
-      // v1.4.0: the Drawdown Recovery Gate's observations join the merge; at one instant the observation goes first
-      // (a decision at that instant knows it), and a release it causes may schedule a latched step at that instant.
+      // v1.4.0: the Drawdown Recovery Gate's observations join the merge; at one instant a completed close goes first (a
+      // decision at that instant knows it; a release it causes may schedule a latched step then), while an opening or
+      // reopening trade at that instant goes after the decisions (it can be their own fill).
       const baseUntil = (time: number) => {
         for (;;) {
           const tb = next < decisions.length && decisions[next]!.sessionIndex === s ? decisions[next]!.time : Infinity;
@@ -917,7 +918,9 @@ export const simulateTrading = (
           if (drawdownGate) {
             const to = drawdownGate.nextTime;
 
-            if (to <= time && to <= tb && to <= tg) {
+            // a completed close is known at its instant (before the decisions then); an opening or reopening TRADE at
+            // an instant comes after that instant's decisions (it may be their fill), so it waits for a later instant
+            if (drawdownGate.nextIsFull ? to <= time && to <= tb && to <= tg : to < time && to < tb && to < tg) {
               drawdownGate.step();
               continue;
             }

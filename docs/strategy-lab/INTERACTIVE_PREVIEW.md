@@ -87,10 +87,11 @@ The panel opens and explains why, instead of running anything else:
 - **Imported results**, such as the Study 8 shared-slot allocator replay: Strategy Lab never re-executes an import,
   and **never substitutes a standalone single-strategy simulation for a shared-capital strategy**.
 - **Shared-slot pool reruns**: one allocator replay of a sealed configuration. Rerun them from the phenotype catalogue.
-- **Legacy versions** (Growth 1.0.0, 1.1.0 and, since 1.3.0, 1.2.0): kept exactly as recorded. The panel offers an
-  explicit button, *Preview this configuration as Growth 1.3.0*. It starts a draft of the current version with the
-  later options OFF, labelled as a NEW execution and **not a reproduction** (for 1.2.0 the note adds that 1.3.0 with
-  those options OFF reproduced every 1.2.0 artifact in the parity tests). Nothing is upgraded invisibly.
+- **Legacy versions** (Growth 1.0.0, 1.1.0, since 1.3.0 also 1.2.0 and since 1.4.0 also 1.3.0): kept exactly as
+  recorded. The panel offers an explicit button, *Preview this configuration as Growth 1.4.0*. It starts a draft of the
+  current version with the later options OFF (for 1.3.0: the Drawdown Recovery Gate OFF), labelled as a NEW execution
+  and **not a reproduction** (for 1.2.0 and 1.3.0 the note adds that 1.4.0 with those options OFF reproduced every
+  artifact of that version in the parity tests). Nothing is upgraded invisibly.
 - **Runs not completed**, and runs without a stored request.
 
 When a previewable run's recorded execution differs from this checkout, the panel says so. Its engine-file hashes or

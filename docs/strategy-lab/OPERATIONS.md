@@ -189,6 +189,15 @@ its in-memory 1.2.0 registry (New Test offers 1.2.0), and its runs execute throu
 the explicit *Preview as Growth 1.3.0* button. Old preview-cache entries never match the new implementation
 fingerprint and are recomputed on demand (then evicted by the LRU).
 
+Growth 1.4.0 (2026-11-06, Task 15: the Drawdown Recovery Gate) added **no migration**: the 1.4.0 strategy row is
+created on first use; 1.3.0 becomes a legacy version (its runs, variations and stored schema unchanged; byte-identical,
+`tests/drawdown-gate.test.ts`). Until a running server is restarted it keeps its in-memory 1.3.0 registry (New Test
+offers 1.3.0), and its runs execute through the new runner, which reproduces 1.3.0 exactly with the gate OFF
+(`tests/growth-parity.test.ts`); after the restart New Test offers 1.4.0 and 1.3.0 runs are previewed through the
+explicit *Preview as Growth 1.4.0* button. Old preview-cache entries never match the new implementation fingerprint and
+are recomputed on demand. `npm --prefix apps/strategy-lab run export-requests -- --out <dir> <request.json> …` runs
+request files in a scratch state (never the live one) and writes their research bundles.
+
 Interactive Preview (2026-11-05, Task 13) added **no migration** either: previews never touch the database. The first
 start with the new code creates `<state>/preview-cache/`. Until a running server is restarted, the new UI's
 *Interactive Preview* panel reports that the server does not offer it yet (its routes answer 404); everything else

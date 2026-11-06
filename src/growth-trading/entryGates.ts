@@ -831,7 +831,8 @@ export class EntryGates {
         capital,
         text: protection.text,
         protection,
-        ...extra
+        ...extra,
+        ...(dd ? { blockedBy: [...extra.blockedBy!, 'protection'] } : {})
       };
     }
 

@@ -1,15 +1,18 @@
-// A paired DIAGNOSTIC comparison of one Growth configuration with the entry trend filter and/or persistent eligibility
-// ON against the same configuration with both OFF (continuation, exits, costs, symbols, window and data identical).
+// A paired DIAGNOSTIC comparison of one Growth configuration with an option under study ON against the same
+// configuration with ONLY that option OFF (everything else, costs, symbols, window and data identical):
+//   --off entry-gates    (default when the request has a gate ON) the entry trend filter and persistent eligibility OFF;
+//   --off drawdown-gate  (default when only the Drawdown Recovery Gate is ON, Growth 1.4.0) only that gate OFF.
 // It runs exactly two configurations per symbol — no grid, no search, no fitting, no selection — and reports
 // descriptive differences of ONE retrospective history: entries added/removed, blocked and deferred signals,
-// eligibility ages, closed/open trades, realised and marked net, interest, minute/daily drawdowns, time in market.
+// eligibility ages, the gate's episodes and blocks, closed/open trades, realised and marked net, interest, minute/daily
+// drawdowns, time in market.
 //
-//   npm run growth-paired -- --request <request.json> [--out <dir>]
+//   npm run growth-paired -- --request <request.json> [--off entry-gates|drawdown-gate] [--out <dir>]
 //
-// <request.json> is a Strategy Lab Growth 1.2.0 request (the `request.json` of a run directory, or the same shape:
-// strategyKey, strategyVersion, params, symbols, from, to, resolution). Both runs load the SAME sessions (the ON
-// configuration's warm-up, which is never shorter than OFF's; the scanner's signals do not depend on extra warm-up), so
-// the data are identical. Output: <out>/paired-comparison.json and .md (default: a new directory under the OS temp dir).
+// <request.json> is a Strategy Lab Growth request of the current version (the `request.json` of a run directory, or
+// the same shape: strategyKey, strategyVersion, params, symbols, from, to, resolution). Both runs load the SAME
+// sessions (the longer of the two warm-ups; the scanner's signals do not depend on extra warm-up), so the data are
+// identical. Output: <out>/paired-comparison.json and .md (default: a new directory under the OS temp dir).
 // Run from the repository root (the engine reads repository files at load).
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -33,9 +36,15 @@ import {
 
 export const RETROSPECTIVE_NOTE =
   'RETROSPECTIVE DIAGNOSTIC of one configuration on one historical window: two runs on identical data and costs, the ' +
-  'only difference being the entry trend filter / persistent eligibility. Path dependence: one blocked or added entry ' +
+  'only difference being the option under study (named in the report). Path dependence: one blocked or added entry ' +
   'changes every later decision, so differences are not attributable trade by trade. Not an optimisation, not a ' +
   'selection, not evidence of an edge or of safer trading.';
+
+export type PairedOff = 'entry-gates' | 'drawdown-gate';
+export const PAIRED_OFF_LABEL: Record<PairedOff, string> = {
+  'entry-gates': 'entry gates (trend filter / persistent eligibility) ON vs both OFF',
+  'drawdown-gate': 'Drawdown Recovery Gate ON vs OFF (everything else identical)'
+};
 
 const r2 = (x: number) => Math.round(x * 100) / 100;
 const iso = (sec: number) => new Date(sec * 1000).toISOString().replace('.000Z', 'Z');
@@ -111,7 +120,32 @@ export const pairedComparison = (off: RiseTradingRun, on: RiseTradingRun) => {
       g && g.trendFilter.enabled
         ? { evaluations: g.trendFilter.evaluations, blocked: g.trendFilter.blockedByDecisionKind }
         : null,
-    bySourceOn: g?.bySource ?? null
+    bySourceOn: g?.bySource ?? null,
+    // Growth 1.4.0: the Drawdown Recovery Gate of the ON run (null when it is OFF there)
+    drawdownGate: (() => {
+      const dd = on.simulation.gates?.drawdown;
+      if (!dd) return null;
+      const blocked = dd.transitions.filter((t) => t.event === 'entry_blocked_by_drawdown_gate');
+      const byKind: Record<string, number> = {};
+      for (const t of blocked) byKind[String(t.values.decisionKind)] = (byKind[String(t.values.decisionKind)] ?? 0) + 1;
+      return {
+        config: dd.config,
+        episodes: dd.episodes.length,
+        resolved: dd.episodes.filter((e) => e.state === 'resolved').length,
+        resolvedBeforeConfirmation: dd.episodes.filter((e) => e.resolvedBeforeConfirmation).length,
+        deepestDipPercent: dd.episodes.length ? r2(Math.max(...dd.episodes.map((e) => e.maxDipPercent))) : null,
+        confirmations: dd.episodes.reduce((a, e) => a + e.confirmations, 0),
+        resetsBeforeConfirmation: dd.episodes.reduce((a, e) => a + e.confirmationResets, 0),
+        confirmationsLost: dd.episodes.reduce((a, e) => a + e.confirmationLosses, 0),
+        releases: dd.releases.length,
+        blockedDecisions: blocked.length,
+        blockedByKind: byKind,
+        releaseDecisionsTaken: (on.simulation.gates?.decisions ?? []).filter(
+          (d) => d.via === 'drawdown_release' && d.disposition === 'taken'
+        ).length,
+        stateAtEnd: dd.state
+      };
+    })()
   };
 };
 
@@ -122,9 +156,10 @@ export const pairedMarkdown = (report: {
   request: LabRunRequest;
   perSymbol: Record<string, ReturnType<typeof pairedComparison>>;
   partitions: string;
+  offMode?: PairedOff;
 }) => {
   const lines = [
-    `# Paired diagnostic: entry gates ON vs both OFF (${STRATEGY_KEY}@${STRATEGY_VERSION})`,
+    `# Paired diagnostic: ${PAIRED_OFF_LABEL[report.offMode ?? 'entry-gates']} (${STRATEGY_KEY}@${STRATEGY_VERSION})`,
     '',
     `> ${RETROSPECTIVE_NOTE}`,
     '',
@@ -154,6 +189,20 @@ export const pairedMarkdown = (report: {
             ', '
           )}; ${c.eligibility.takenLater} taken later; age at decision mean ${c.eligibility.meanAgeSessionsAtDecision?.toFixed(2) ?? 'n/a'}, max ${c.eligibility.maxAgeSessionsAtDecision ?? 'n/a'} session(s).`
       );
+    if (c.drawdownGate) {
+      const d = c.drawdownGate;
+      lines.push(
+        '',
+        `Drawdown Recovery Gate (ON run; N ${d.config.lookbackSessions}, d ${d.config.dipThresholdPercent}%, r ${d.config.recoveryRetracementPercent}%, Y ${d.config.confirmationSessions}): ${d.episodes} episode(s), ${d.resolved} resolved (${d.resolvedBeforeConfirmation} by regaining the peak before a confirmation), deepest ${d.deepestDipPercent ?? 'n/a'}%; ${d.confirmations} confirmation(s), ${d.resetsBeforeConfirmation} reset(s) before confirming, ${d.confirmationsLost} lost; ${d.releases} release(s); ${d.blockedDecisions} blocked decision(s) ${JSON.stringify(d.blockedByKind)}; ${d.releaseDecisionsTaken} latched decision(s) taken at a release; state at the end: ${d.stateAtEnd}.`
+      );
+    }
+    if (c.entries.removedByOn.length || c.entries.addedByOn.length)
+      lines.push(
+        '',
+        `Entries only OFF (decision → entry, source, net): ${c.entries.removedByOn.map((t) => `${t.decision} → ${t.entry} ${t.source} ${usd(t.netUsd)}`).join('; ') || 'none'}.`,
+        '',
+        `Entries only ON: ${c.entries.addedByOn.map((t) => `${t.decision} → ${t.entry} ${t.source} ${usd(t.netUsd)}`).join('; ') || 'none'}.`
+      );
     lines.push('');
   }
   return `${lines.join('\n')}\n`;
@@ -181,9 +230,20 @@ const main = async () => {
       `a ${STRATEGY_KEY}@${STRATEGY_VERSION} request is needed (got ${body.strategyKey}@${body.strategyVersion})`
     );
   const on: RiseTradingParams = paramsOf(body);
-  if (!on.trendFilter && !on.eligibility)
+  const offMode = (opt('--off') ??
+    (on.trendFilter || on.eligibility ? 'entry-gates' : on.drawdownGate ? 'drawdown-gate' : null)) as PairedOff | null;
+  if (offMode !== 'entry-gates' && offMode !== 'drawdown-gate')
+    throw new Error(
+      offMode === null
+        ? 'the entry gates and the Drawdown Recovery Gate are OFF in this request: nothing to compare'
+        : `--off ${offMode}: one of entry-gates, drawdown-gate`
+    );
+  if (offMode === 'entry-gates' && !on.trendFilter && !on.eligibility)
     throw new Error('both entry gates are OFF in this request: nothing to compare');
-  const off: RiseTradingParams = { ...on, trendFilter: null, eligibility: null };
+  if (offMode === 'drawdown-gate' && !on.drawdownGate)
+    throw new Error('the Drawdown Recovery Gate is OFF in this request: nothing to compare');
+  const off: RiseTradingParams =
+    offMode === 'entry-gates' ? { ...on, trendFilter: null, eligibility: null } : { ...on, drawdownGate: null };
   const cfg = readPartitionConfig(join(process.cwd(), 'data'));
   const touched = (['training', 'holdout', 'final'] as const).filter((p) => {
     const { start, end } = cfg.partitions[p];
@@ -212,13 +272,24 @@ const main = async () => {
     );
   }
   const report = {
-    kind: 'growth paired entry-gate diagnostic',
+    kind: offMode === 'entry-gates' ? 'growth paired entry-gate diagnostic' : 'growth paired drawdown-gate diagnostic',
+    offMode,
     note: RETROSPECTIVE_NOTE,
     engine: { key: STRATEGY_KEY, version: STRATEGY_VERSION },
     request: body,
     partitions: touched.join('+'),
-    on: { trendFilter: on.trendFilter, eligibility: on.eligibility, continuation: on.continuation ?? null },
-    off: { trendFilter: null, eligibility: null, continuation: off.continuation ?? null },
+    on: {
+      trendFilter: on.trendFilter ?? null,
+      eligibility: on.eligibility ?? null,
+      drawdownGate: on.drawdownGate ?? null,
+      continuation: on.continuation ?? null
+    },
+    off: {
+      trendFilter: off.trendFilter ?? null,
+      eligibility: off.eligibility ?? null,
+      drawdownGate: off.drawdownGate ?? null,
+      continuation: off.continuation ?? null
+    },
     perSymbol
   };
   const out = opt('--out') ? resolve(base, opt('--out')!) : mkdtempSync(join(tmpdir(), 'growth-paired-'));

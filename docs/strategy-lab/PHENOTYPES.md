@@ -103,7 +103,7 @@ dialog in phenotype mode:
 - **Growth (standalone / batch).** The parameters start at the frozen values. The form is the schema of the
   phenotype's OWN version: a 1.2.0 phenotype shows its entry trend filter and eligibility settings. A 1.1.0 phenotype
   (for example `growth-demo-2026-11`) shows the 1.1.0 form and reruns **as a 1.1.0 configuration**: the current engine
-  with both entry gates and the 1.3.0 options OFF (a 1.2.0 phenotype likewise reruns as 1.2.0), recorded as `legacyReplay` and never silently reinterpreted. To try the gates on it, clone
+  with both entry gates, the 1.3.0 options and the Drawdown Recovery Gate OFF (a 1.2.0 or 1.3.0 phenotype likewise reruns as its own version), recorded as `legacyReplay` and never silently reinterpreted. To try the gates on it, clone
   the result into a New test. Title, dates, symbols and resolution are free. Editing anything executed shows *"this run is a NEW variation derived from PH-…"*; the frozen phenotype never
   changes. The run records `phenotype_id`, the study, role, record hash and import, and `phenotypeEdited` with the
   edited keys (`experiment: Phenotype reruns`).

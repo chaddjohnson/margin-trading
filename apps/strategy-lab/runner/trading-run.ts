@@ -951,7 +951,7 @@ async function main() {
       const tr = gate.transitions.filter((x) => x.kind !== 'decision');
       for (let s = 0; s <= sim.endSession; s++) {
         while (i < tr.length && tr[i]!.t <= ds.sCloseTime[s]!) state = tr[i++]!.state;
-        if (s >= sim.firstSession) atClose[s < gate.config.lookbackSessions ? 'insufficient_history' : state]!++;
+        if (s >= sim.firstSession) atClose[gate.windowCompleteAt(s) ? state : 'insufficient_history']!++;
       }
       return {
         config: gate.config,
@@ -1165,14 +1165,14 @@ async function main() {
       return {
         config: gate.config,
         detector: {
-          firstSession: r.ds.dates[0],
+          firstSession: r.ds.dates[gate.origin],
           firstSimulatedSession: r.ds.dates[sim.firstSession],
-          windowCompleteFrom: r.ds.dates[gate.config.lookbackSessions] ?? null,
+          windowCompleteFrom: r.ds.dates[gate.origin + gate.config.lookbackSessions] ?? null,
           observations: gate.observations,
           fullObservations: gate.fullObservations,
           stateAtEnd: gate.state,
           observationRule:
-            'opening trade and reopening trade after missing minutes: continuity only; every completed regular-session minute close (at the minute end) and the closing print (at the scheduled close): full observations'
+            'opening trade and reopening trade after missing minutes: continuity only (handed to the gate after the decisions of their own instant); every completed regular-session minute close (at the minute end) and the closing print when the data have one (at the scheduled close): full observations; the detector reads from N sessions before the first simulated session'
         },
         episodes: gate.episodes.map((e) => ({
           id: e.id,

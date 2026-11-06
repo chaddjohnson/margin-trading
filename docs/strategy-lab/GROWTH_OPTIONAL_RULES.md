@@ -1,6 +1,8 @@
 # Growth optional rules: initial risk stop, trend-breakout entry, trend retention (Growth 1.3.0)
 
-Growth 1.3.0 (`rise-from-recent-low-trading@1.3.0`) adds three research options. Each is **OFF by default** (the entry
+Growth 1.3.0 (`rise-from-recent-low-trading@1.3.0`) adds three research options. (Since 2026-11-06 the current version
+is 1.4.0, which adds the Drawdown Recovery Gate — [GROWTH_DRAWDOWN_GATE.md](GROWTH_DRAWDOWN_GATE.md); with that gate
+OFF it reproduces 1.3.0 exactly, so everything below holds for 1.4.0, and 1.3.0 is now a legacy version.) Each is **OFF by default** (the entry
 method defaults to the existing Rise entry), and each can be tested alone or combined with the others. This is an
 implementation, **not a claim that any of them improves returns**. The defaults are the brief's starting hypotheses,
 not optimised values. Candidate A stays the unchanged research control (§10).
