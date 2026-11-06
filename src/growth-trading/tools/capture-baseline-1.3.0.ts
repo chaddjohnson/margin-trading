@@ -139,8 +139,7 @@ export const recordCase13 = async (c: BaselineCase11) => {
   });
   const sim = run.simulation;
   const tradeNumber = new Map(sim.trades.map((t, i) => [t, i + 1]));
-  const ref = (t: VirtualTrade | null | undefined) =>
-    t ? (tradeNumber.get(t) ?? `order@${t.decisionTime}`) : null;
+  const ref = (t: VirtualTrade | null | undefined) => (t ? (tradeNumber.get(t) ?? `order@${t.decisionTime}`) : null);
   const g = sim.gates;
   const gateRecords = g
     ? {

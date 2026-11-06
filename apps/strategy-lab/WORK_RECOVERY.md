@@ -2,7 +2,21 @@
 
 ## Top screen (read this first) — Task 15: Growth Drawdown Recovery Gate — INCOMPLETE
 
-- **Updated:** 2026-11-06T13:55Z (UTC, from the clock). **Status: INCOMPLETE — stage 15.0 (audit) in progress.**
+- **Updated:** 2026-11-06T14:26Z (UTC, from the clock). **Status: INCOMPLETE — 15.1 baselines + 15.2 engine done; next 15.3
+  registry/runner.**
+- **15.1 baselines (complete, commit `79fac8c`, unchanged code at `d13148a`):** engine
+  `src/growth-trading/tests/fixtures/baseline-1.3.0.json` (sha256 `344fb135f4fcf6e3…`; 7 cases; engineDirty "") by
+  `tools/capture-baseline-1.3.0.ts` (log `apps/strategy-lab/logs/task15/capture-baseline-1.3.0.log`); runner
+  `apps/strategy-lab/tests/fixtures/growth-runner-baseline-1.3.0/` R-930001 (VGT+GDX breakout + trend A + continuation
+  breakout + initial stop), R-930002 (VGT Candidate-A-like + stop + retention, 2016–2023), R-930003 (GDX 60m trend D +
+  eligibility 2 + stop + classic_d1), R-930004 (XBI retention + hold OFF + eligibility 3 + trend C, EFFECTIVE values
+  only); `SHA256SUMS` sha256 `f2e0571e30d3b349…`. Requests made by `<scratchpad>/make-requests-1.3.0.ts`.
+- **15.2 engine (uncommitted, verified):** new `src/growth-trading/drawdownGate.ts`; `entryGates.ts` (check order,
+  blockedBy, release wake, releaseValidity, count keys only when ON), `riseTrading.ts` 1.4.0 (params `drawdownGate`,
+  warm-up N, merge loop in `baseUntil`, `SimulationOptions.drawdown`), `continuation.ts` (EpisodeEnd
+  `drawdown_gate`). Tests: new `tests/offParity-1.3.0.test.ts` (7 cases × 2 OFF forms) + every Growth suite 191/191
+  (`logs/task15/growth-tests-1.log`, before the new unit file); new `tests/drawdownGate.test.ts` 42/42. Smoke (VGT
+  2016–2023 default gate): 23 episodes, ~1.1k transitions, 2.1 s vs 2.0 s OFF (`logs/task15/smoke-gate-vgt*.log`).
 - **Brief:** `docs/strategy-lab/brief/2026-11-06-growth-drawdown-recovery-gate-brief.md` (verbatim copy of the upload
   `8490846b-Claude_Growth_Drawdown_Recovery_Gate_Implementation.md`, 133 lines + trailing line, read in full through §9
   and the core acceptance criterion; sha256 `808dcdafb0b6b0a2ce1c811be29da8dd4f0a965b5a6b7a63723a6766b781293a`). The
@@ -18,8 +32,10 @@
   Partitions: training 2016-01-01→2023-12-31 (real-data diagnostics use ONLY this), holdout 2024-01-01→2025-10-16 and
   final 2025-10-17→ (not used for any diagnostic).
 - **Live state:** `state/strategy-lab/` read-only; tests use temp state dirs; `dist` rebuilt only at the final check.
-- **Next step:** finish the code audit (riseTrading/entryGates/continuation/optionalRules, strategies.ts,
-  growth-params.ts, trading-run.ts, previews, export), write the design section, capture the 1.3.0 OFF baselines.
+- **Next step:** 15.3 registry 1.4.0 (`shared/strategies.ts`, 1.3.0 legacy), `runner/growth-params.ts`
+  (`drawdownGateOf`), `runner/trading-run.ts` (events, decisions.json `drawdownGate`, metrics), replay `legacy-1.3.0`,
+  runner parity vs R-93000x; then 15.4 server/export, 15.5 UI, 15.6 app/e2e tests, 15.7 docs, 15.8 paired
+  diagnostics (training 2016–2023 only), 15.9 report, 15.10 full verification, 15.11 commit + push.
 
 ## Task 15 — design (written 2026-11-06T14:05Z, from the code audit; no user question needed)
 

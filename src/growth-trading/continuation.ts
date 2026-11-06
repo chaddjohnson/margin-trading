@@ -167,7 +167,9 @@ export type EpisodeEnd =
   | 'trend_veto'
   | 'insufficient_history'
   | 'invalid_data'
-  | 'capital_unavailable';
+  | 'capital_unavailable'
+  // v1.4.0, only with the Drawdown Recovery Gate ON: the trigger was blocked by it
+  | 'drawdown_gate';
 export type LogValue = number | string | boolean | null;
 
 export interface Episode {

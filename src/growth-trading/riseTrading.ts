@@ -1,4 +1,13 @@
-// rise-from-recent-low-trading v1.3.0 ("Growth"): a growth-following trading backtest of ONE symbol (see README.md).
+// rise-from-recent-low-trading v1.4.0 ("Growth"): a growth-following trading backtest of ONE symbol (see README.md).
+//
+// v1.4.0 adds the OPTIONAL Drawdown Recovery Gate (drawdownGate.ts), OFF by default: a filter on every Growth-owned
+// entry decision, never an entry signal. Maintained on completed one-minute observations independently of the signal
+// resolution, it blocks entries while a significant chronological peak-to-trough dip is unresolved, until the price has
+// recovered the configured share of the whole decline and held it for Y trading-session intervals (or regained the
+// peak). Its observations are interleaved with the decisions in time order (baseUntil), so a decision reads only
+// observations known at its instant; a release of the gate may decide an already-armed opportunity intraday (fill at
+// the next eligible trade). With it OFF none of its code runs: every decision, fill, exit, mark and log entry is the
+// v1.3.0 one (tests/offParity-1.3.0.test.ts), so v1.3.0 runs replay as v1.4.0 with the gate OFF.
 //
 // v1.3.0 adds three OPTIONAL, independently switchable rules (optionalRules.ts), all OFF by default: an INITIAL RISK
 // STOP (fill − m × ATR, active from the fill), an alternative TREND-BREAKOUT base entry (an entry-method selector; the
@@ -88,6 +97,12 @@ import {
   trendWarmupSessions
 } from './entryGates.ts';
 import {
+  type DrawdownGateConfig,
+  DrawdownRecoveryGate,
+  drawdownGateConfigErrors,
+  drawdownGateWarmupSessions
+} from './drawdownGate.ts';
+import {
   type BreakoutEntryConfig,
   type BreakoutScan,
   type BreakoutSignal,
@@ -118,11 +133,12 @@ import {
 } from '../shared-margin-portfolio/strategy.ts';
 
 export const STRATEGY_KEY = 'rise-from-recent-low-trading';
-export const STRATEGY_VERSION = '1.3.0';
-// Earlier versions this engine replays: 1.0.0 = this version with continuation, both entry gates and the three optional
-// rules OFF (no continuation fields); 1.1.0 = with both entry gates and the optional rules OFF (its continuation
-// settings unchanged); 1.2.0 = with the three optional rules OFF (its gates and continuation unchanged).
-export const LEGACY_STRATEGY_VERSIONS = ['1.0.0', '1.1.0', '1.2.0'] as const;
+export const STRATEGY_VERSION = '1.4.0';
+// Earlier versions this engine replays (each with the Drawdown Recovery Gate OFF): 1.0.0 = with continuation, both
+// entry gates and the three optional rules OFF (no continuation fields); 1.1.0 = with both entry gates and the optional
+// rules OFF (its continuation settings unchanged); 1.2.0 = with the three optional rules OFF (its gates and
+// continuation unchanged); 1.3.0 = its own settings unchanged.
+export const LEGACY_STRATEGY_VERSIONS = ['1.0.0', '1.1.0', '1.2.0', '1.3.0'] as const;
 
 export interface RiseTradingParams {
   advanceFromRecentLowPercent: number; // X, percent (the Rise entry; not read by the breakout entry)
@@ -142,6 +158,7 @@ export interface RiseTradingParams {
   breakout?: BreakoutEntryConfig | null; // required with entryMethod 'trend_breakout', absent otherwise
   initialStop?: InitialStopConfig | null; // absent or null = OFF
   retention?: RetentionConfig | null; // absent or null = OFF
+  drawdownGate?: DrawdownGateConfig | null; // v1.4.0: the Drawdown Recovery Gate; absent or null = OFF
 }
 
 export const entryMethodOf = (p: Pick<RiseTradingParams, 'entryMethod'>): EntryMethod =>
@@ -227,6 +244,8 @@ export const tradingParamErrors = (p: RiseTradingParams): string[] => {
   if (p.eligibility) errors.push(...eligibilityConfigErrors(p.eligibility).map((e) => `eligibility: ${e}`));
   if (p.initialStop) errors.push(...initialStopConfigErrors(p.initialStop).map((e) => `initial stop: ${e}`));
   if (p.retention) errors.push(...retentionConfigErrors(p.retention).map((e) => `retention: ${e}`));
+  if (p.drawdownGate)
+    errors.push(...drawdownGateConfigErrors(p.drawdownGate).map((e) => `drawdown recovery gate: ${e}`));
 
   return errors;
 };
@@ -304,6 +323,7 @@ export const warmupSessionsFor = (resolution: SignalResolution, n: number) => {
 // scanner's own bars and needs nothing more.
 // v1.3.0: the breakout entry replaces the scanner's warm-up by its own (its SMA comparison and prior-high window);
 // the initial risk stop needs ATR + 1 sessions before a fill, retention its SMA. With the three OFF: v1.2.0 exactly.
+// v1.4.0: the Drawdown Recovery Gate needs its N-session discovery window (OFF: nothing more).
 export const warmupSessionsForParams = (p: RiseTradingParams) =>
   Math.max(
     entryMethodOf(p) === 'trend_breakout'
@@ -312,7 +332,8 @@ export const warmupSessionsForParams = (p: RiseTradingParams) =>
     p.continuation ? warmupSessionsFor(p.resolution, continuationWarmupBars(p.continuation)) : 0,
     p.trendFilter ? trendWarmupSessions(p.trendFilter) : 0,
     initialStopWarmupSessions(p.initialStop),
-    retentionWarmupSessions(p.retention)
+    retentionWarmupSessions(p.retention),
+    drawdownGateWarmupSessions(p.drawdownGate)
   );
 
 // ----- decisions -----
@@ -331,7 +352,12 @@ export interface EntryDecision {
 export type RejectReason = 'position_open' | 'order_pending';
 // v1.2.0 (an entry gate ON): why a raw crossing met while flat was not taken at its own decision.
 export type GateVetoReason =
-  'trend_veto' | 'insufficient_history' | 'invalid_data' | 'capital_unavailable' | 'policy_invalidated';
+  | 'trend_veto'
+  | 'insufficient_history'
+  | 'invalid_data'
+  | 'capital_unavailable'
+  | 'policy_invalidated'
+  | 'drawdown_gate'; // v1.4.0
 
 export interface DecisionOutcome {
   decision: EntryDecision;
@@ -385,6 +411,9 @@ export interface SimulationOptions {
   // (absent, or both null = OFF: the v1.2.0 exit path).
   entryMethod?: EntryMethod;
   rules?: PositionRulesRuntime | null;
+  // v1.4.0: the Drawdown Recovery Gate (absent or null = OFF). The simulation creates it on this dataset (its detector
+  // starts at the first loaded session) and adds it to the entry gates.
+  drawdown?: DrawdownGateConfig | null;
 }
 
 export interface Excursion {
@@ -459,7 +488,9 @@ export const gateLogValues = (g: GateResult): Record<string, LogValue> => ({
   gate: g.reason,
   ...(g.capital === null ? {} : { capitalAvailable: g.capital }),
   ...prefixed('trend.', g.trend?.values ?? {}),
-  ...(g.protection ? prefixed('protection.', g.protection.values) : {})
+  ...(g.protection ? prefixed('protection.', g.protection.values) : {}),
+  // v1.4.0: only with the Drawdown Recovery Gate ON
+  ...(g.drawdown ? { ...prefixed('drawdown.', g.drawdown.values), blockedBy: g.blockedBy!.join(',') } : {})
 });
 
 export const simulateTrading = (
@@ -517,11 +548,26 @@ export const simulateTrading = (
     if (!check.pass) rules!.noteBlocked(time, s, source, check);
     return check;
   };
+  // v1.4.0: the Drawdown Recovery Gate joins the entry gates (alone: without the trend filter and eligibility).
+  const drawdownGate = options.drawdown ? new DrawdownRecoveryGate(ds, options.drawdown, firstSession) : null;
+  const baseGates: GateRuntime | null = drawdownGate
+    ? {
+        ...(options.gates ?? {
+          trend: null,
+          eligibility: null,
+          bars: [],
+          entry: { advanceFromRecentLowPercent: NaN, recentLowLookbackBars: NaN }
+        }),
+        drawdown: drawdownGate
+      }
+    : (options.gates ?? null);
   const gateRuntime =
-    options.gates && rules?.initialStop
-      ? { ...options.gates, protection: (s: number, time: number) => protect(s, time, 'entry_gate') }
-      : (options.gates ?? null);
-  const gated = Boolean(gateRuntime && (gateRuntime.trend || gateRuntime.eligibility || gateRuntime.capacity));
+    baseGates && rules?.initialStop
+      ? { ...baseGates, protection: (s: number, time: number) => protect(s, time, 'entry_gate') }
+      : (baseGates ?? null);
+  const gated = Boolean(
+    gateRuntime && (gateRuntime.trend || gateRuntime.eligibility || gateRuntime.capacity || gateRuntime.drawdown)
+  );
   let continuation: ContinuationController | null = null;
   let setupSeq = 0;
   const outcomes: DecisionOutcome[] = [];
@@ -861,10 +907,21 @@ export const simulateTrading = (
       const t = k < count ? ds.bTime[start + k]! : ds.sCloseTime[s]!;
       // Base decisions and (v1.2.0) latched-opportunity steps due at or before `time`, in time order; at one instant a
       // fresh crossing goes first, then the live opportunity. With both gates OFF this is the v1.1.0 base loop.
+      // v1.4.0: the Drawdown Recovery Gate's observations join the merge; at one instant the observation goes first
+      // (a decision at that instant knows it), and a release it causes may schedule a latched step at that instant.
       const baseUntil = (time: number) => {
         for (;;) {
           const tb = next < decisions.length && decisions[next]!.sessionIndex === s ? decisions[next]!.time : Infinity;
           const tg = gates ? gates.nextTime(s, time) : Infinity;
+
+          if (drawdownGate) {
+            const to = drawdownGate.nextTime;
+
+            if (to <= time && to <= tb && to <= tg) {
+              drawdownGate.step();
+              continue;
+            }
+          }
 
           if (tb <= time && tb <= tg) {
             decide(decisions[next]!, s);
@@ -1070,7 +1127,8 @@ export const runRiseTrading = (
     rules:
       params.initialStop || params.retention
         ? { initialStop: params.initialStop ?? null, retention: params.retention ?? null }
-        : null
+        : null,
+    drawdown: params.drawdownGate ?? null
   });
 
   return { params, ds, bars, firstSignalBar, scan, breakout, decisions, simulation };

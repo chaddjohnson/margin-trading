@@ -46,6 +46,7 @@ import { RELATIVE_TOLERANCE } from '../entry-signals/riseFromRecentLow.ts';
 import type { Dataset } from '../four-family/data.ts';
 import type { VirtualTrade } from '../multi-etf-allocator/shadow.ts';
 import type { DecisionLog, LogEntry, LogValue } from './continuation.ts';
+import type { DrawdownCheck, DrawdownRecoveryGate, DrawdownRelease } from './drawdownGate.ts';
 
 // ----- the trend filter -----
 
@@ -545,6 +546,7 @@ export type OpportunityState =
   | 'blocked_by_trend'
   | 'blocked_by_capital'
   | 'blocked_by_protection' // v1.3.0: the initial risk stop is unavailable for this decision's fill
+  | 'blocked_by_drawdown_gate' // v1.4.0: the Drawdown Recovery Gate requires a (confirmed) recovery
   | 'ordered'
   | 'consumed'
   | 'invalidated'
@@ -552,7 +554,13 @@ export type OpportunityState =
   | 'superseded'
   | 'unfilled_at_end'
   | 'end_of_data';
-export type GateReason = 'trend_veto' | 'insufficient_history' | 'invalid_data' | 'capital_unavailable';
+export type GateReason =
+  | 'trend_veto'
+  | 'insufficient_history'
+  | 'invalid_data'
+  | 'capital_unavailable'
+  // v1.4.0, only with the Drawdown Recovery Gate ON (count records get this key only then)
+  | 'drawdown_gate';
 
 export interface Opportunity {
   id: string; // O-1, O-2 … per symbol
@@ -625,6 +633,10 @@ export interface GateResult {
   capital: boolean | null; // null = no capital hook (standalone)
   text: string;
   protection?: ProtectionResult; // v1.3.0: present only with the initial risk stop ON
+  // v1.4.0, only with the Drawdown Recovery Gate ON: its result, and every gate that blocked (it is evaluated even
+  // when the trend filter already blocked, so both reasons are logged independently)
+  drawdown?: DrawdownCheck;
+  blockedBy?: string[];
 }
 
 // v1.3.0: the initial risk stop's decision-time availability (optionalRules.ts PositionRules.protection).
@@ -648,6 +660,8 @@ export interface GatedDecision {
   validity: Record<string, LogValue> | null;
   trade: VirtualTrade | null;
   status: 'ordered' | 'filled' | 'unfilled_at_end' | null;
+  // v1.4.0: a latched decision taken at the Drawdown Recovery Gate's release instant (intraday), not at a bar end
+  via?: 'drawdown_release';
 }
 
 export interface GateRuntime {
@@ -661,6 +675,9 @@ export interface GateRuntime {
   // v1.3.0: the initial risk stop's availability for a decision at (s, time), checked after the trend filter. A failure
   // BLOCKS like the trend filter (a crossing is vetoed; a latched opportunity waits). Absent = no initial stop.
   protection?: ((s: number, time: number) => ProtectionResult) | null;
+  // v1.4.0: the Drawdown Recovery Gate, maintained on minute observations by the simulation (it interleaves them with
+  // the decisions). Checked after the trend filter, before the initial stop. Absent = OFF.
+  drawdown?: DrawdownRecoveryGate | null;
 }
 
 export interface CrossingInput {
@@ -694,6 +711,11 @@ export class EntryGates {
   private watch: RenewalWatch | undefined;
   private byTrade = new Map<VirtualTrade, GatedDecision>();
   private nextBar = 0;
+  // v1.4.0 (the drawdown gate ON with eligibility): the live opportunity whose latest evaluation the drawdown gate
+  // blocked, the release that wakes it, and when each opportunity was last evaluated
+  private drawdownWaiting: Opportunity | null = null;
+  private wake: DrawdownRelease | null = null;
+  private lastEvaluated = new Map<Opportunity, number>();
 
   constructor(
     readonly ds: Dataset,
@@ -714,6 +736,26 @@ export class EntryGates {
           runtime.entry.recentLowLookbackBars
         )
       : null;
+    // v1.4.0: a blocking → permissive transition of the drawdown gate wakes the live opportunity it was blocking
+    if (runtime.drawdown && runtime.eligibility)
+      runtime.drawdown.onRelease = (r) => {
+        if (this.live && this.drawdownWaiting === this.live) this.wake = r;
+      };
+  }
+
+  get drawdown() {
+    return this.runtime.drawdown ?? null;
+  }
+
+  // The block counters (v1.4.0: the drawdown key only with that gate ON, so OFF records keep their shape).
+  private blockCounts(): Record<GateReason, number> {
+    return {
+      trend_veto: 0,
+      insufficient_history: 0,
+      invalid_data: 0,
+      capital_unavailable: 0,
+      ...(this.runtime.drawdown ? { drawdown_gate: 0 } : {})
+    } as Record<GateReason, number>;
   }
 
   get eligibility() {
@@ -730,15 +772,10 @@ export class EntryGates {
 
   // ----- the gate (capital, then the trend filter) -----
 
-  check(s: number, time: number, price: number, origin: string): GateResult {
+  check(s: number, time: number, price: number, origin: string, ref: Record<string, LogValue> = {}): GateResult {
     const capital = this.runtime.capacity ? this.runtime.capacity(s, time) : null;
     const count = (reason: GateReason) => {
-      const c = (this.gateBlocks[origin] ??= {
-        trend_veto: 0,
-        insufficient_history: 0,
-        invalid_data: 0,
-        capital_unavailable: 0
-      });
+      const c = (this.gateBlocks[origin] ??= this.blockCounts());
 
       c[reason]++;
     };
@@ -755,6 +792,16 @@ export class EntryGates {
     }
 
     const trend = this.trend ? this.trend.evaluate(s, time, price) : null;
+    // v1.4.0: the drawdown gate is evaluated whatever the trend filter says, and its block is recorded on its own
+    const dd = this.runtime.drawdown ? this.runtime.drawdown.check(s, time, price) : null;
+    const extra = dd
+      ? {
+          drawdown: dd,
+          blockedBy: [...(trend && !trend.pass ? ['trend'] : []), ...(dd.pass ? [] : ['drawdown'])]
+        }
+      : {};
+
+    if (dd && !dd.pass && origin !== 'latched') this.runtime.drawdown!.noteBlocked(s, time, price, origin, ref, dd);
 
     if (trend && !trend.pass) {
       const reason: GateReason =
@@ -765,7 +812,12 @@ export class EntryGates {
             : 'trend_veto';
 
       count(reason);
-      return { pass: false, reason, trend, capital, text: trend.reason };
+      return { pass: false, reason, trend, capital, text: trend.reason, ...extra };
+    }
+
+    if (dd && !dd.pass) {
+      count('drawdown_gate');
+      return { pass: false, reason: 'drawdown_gate', trend, capital, text: dd.text, ...extra };
     }
 
     const protection = this.runtime.protection ? this.runtime.protection(s, time) : null;
@@ -778,7 +830,8 @@ export class EntryGates {
         trend,
         capital,
         text: protection.text,
-        protection
+        protection,
+        ...extra
       };
     }
 
@@ -787,8 +840,9 @@ export class EntryGates {
       reason: 'pass',
       trend,
       capital,
-      text: trend ? trend.reason : 'no trend filter',
-      ...(protection ? { protection } : {})
+      text: trend ? trend.reason : dd ? dd.text : 'no trend filter',
+      ...(protection ? { protection } : {}),
+      ...extra
     };
   }
 
@@ -796,7 +850,7 @@ export class EntryGates {
 
   onCrossing(d: CrossingInput, s: number): GatedDecision {
     if (!this.eligibility) {
-      const gate = this.check(s, d.time, d.price, 'base_signal');
+      const gate = this.check(s, d.time, d.price, 'base_signal', { crossing: new Date(d.time * 1000).toISOString() });
 
       if (!gate.pass)
         return this.record({
@@ -853,11 +907,27 @@ export class EntryGates {
     if (!this.eligibility) return Infinity;
 
     const bar = this.runtime.bars[this.nextBar];
+    const tb = bar && bar.sessionIndex === s && bar.end <= t ? bar.end : Infinity;
 
-    return bar && bar.sessionIndex === s && bar.end <= t ? bar.end : Infinity;
+    // v1.4.0: a pending drawdown-gate release (its instant is never later than the observation being processed)
+    return this.wake && this.wake.time <= t ? Math.min(tb, this.wake.time) : tb;
   }
 
   evaluate(s: number) {
+    // v1.4.0: a release before the next bar end is decided first; at the same instant the bar goes first
+    if (this.wake) {
+      const bar = this.runtime.bars[this.nextBar];
+      const tb = bar && bar.sessionIndex === s ? bar.end : Infinity;
+
+      if (this.wake.time < tb) {
+        const w = this.wake;
+
+        this.wake = null;
+        this.release(s, w);
+        return;
+      }
+    }
+
     const j = this.nextBar++;
     const bar = this.runtime.bars[j]!;
 
@@ -901,7 +971,7 @@ export class EntryGates {
       lastEligibleSession: s + cfg.maxAgeSessions,
       state: 'armed',
       evaluations: 0,
-      blockedEvaluations: { trend_veto: 0, insufficient_history: 0, invalid_data: 0, capital_unavailable: 0 },
+      blockedEvaluations: this.blockCounts(),
       firstBlockedTime: NaN,
       lastBlockReason: null,
       maxClose: price,
@@ -1038,11 +1108,13 @@ export class EntryGates {
     j: number,
     time: number,
     price: number,
-    kind: 'crossing' | 'latched' | 'renewal'
+    kind: 'crossing' | 'latched' | 'renewal',
+    release: DrawdownRelease | null = null
   ): GatedDecision {
     o.evaluations++;
+    if (this.runtime.drawdown) this.lastEvaluated.set(o, time);
 
-    const v = this.validity(o, j, price);
+    const v = release ? this.releaseValidity(o, j, price) : this.validity(o, j, price);
     const base = {
       kind,
       time,
@@ -1051,8 +1123,28 @@ export class EntryGates {
       opportunity: o,
       validity: v.values,
       trade: null,
-      status: null
+      status: null,
+      ...(release ? { via: 'drawdown_release' as const } : {})
     } as const;
+
+    // v1.4.0, a release instant between bar ends: a price condition of the policy that does not hold now only defers
+    // the decision (the opportunity is invalidated only at a completed bar of its schedule)
+    if (release && !v.valid) {
+      this.entry(
+        time,
+        s,
+        'opportunity_blocked',
+        o,
+        null,
+        `drawdown release: ${v.reason}; the opportunity waits for its next bar`,
+        {
+          ...v.values,
+          state: o.state,
+          via: 'drawdown_release'
+        }
+      );
+      return { ...base, disposition: 'deferred', reason: v.reason, gate: null } as GatedDecision;
+    }
 
     if (!v.valid) {
       this.end(o, 'invalidated', v.reason, time, s, v.values);
@@ -1062,7 +1154,16 @@ export class EntryGates {
         : this.record({ ...base, disposition: 'invalidated', reason: v.reason, gate: null });
     }
 
-    const gate = this.check(s, time, price, kind === 'crossing' ? 'base_signal' : kind);
+    const gate = this.check(s, time, price, kind === 'crossing' ? 'base_signal' : kind, { opportunity: o.id });
+    const ddBlocked = Boolean(gate.drawdown && !gate.drawdown.pass);
+
+    // v1.4.0: a latched opportunity's drawdown block is logged when it starts (not at every bar), and remembered so a
+    // release of the gate can wake it
+    if (gate.drawdown) {
+      if (ddBlocked && kind === 'latched' && this.drawdownWaiting !== o)
+        this.runtime.drawdown!.noteBlocked(s, time, price, 'latched', { opportunity: o.id }, gate.drawdown);
+      this.drawdownWaiting = ddBlocked ? o : this.drawdownWaiting === o ? null : this.drawdownWaiting;
+    }
 
     if (!gate.pass) {
       const state: OpportunityState =
@@ -1070,7 +1171,9 @@ export class EntryGates {
           ? 'blocked_by_capital'
           : gate.protection && !gate.protection.pass
             ? 'blocked_by_protection'
-            : 'blocked_by_trend';
+            : gate.reason === 'drawdown_gate'
+              ? 'blocked_by_drawdown_gate'
+              : 'blocked_by_trend';
 
       o.blockedEvaluations[gate.reason as GateReason]++;
       if (Number.isNaN(o.firstBlockedTime)) o.firstBlockedTime = time;
@@ -1082,6 +1185,12 @@ export class EntryGates {
           ...(gate.trend?.values ?? {}),
           ...(gate.protection
             ? Object.fromEntries(Object.entries(gate.protection.values).map(([k, v]) => [`protection.${k}`, v]))
+            : {}),
+          ...(gate.drawdown
+            ? {
+                ...Object.fromEntries(Object.entries(gate.drawdown.values).map(([k, v]) => [`drawdown.${k}`, v])),
+                blockedBy: gate.blockedBy!.join(',')
+              }
             : {}),
           state,
           capital: gate.capital
@@ -1104,9 +1213,21 @@ export class EntryGates {
     o.decisionPrice = price;
     o.decisionSession = s;
     o.ageSessionsAtDecision = s - o.signalSession;
-    o.decisionValues = { ...v.values, ...(gate.trend?.values ?? {}) };
+    o.decisionValues = {
+      ...v.values,
+      ...(gate.trend?.values ?? {}),
+      ...(gate.drawdown
+        ? Object.fromEntries(Object.entries(gate.drawdown.values).map(([k, v]) => [`drawdown.${k}`, v]))
+        : {}),
+      ...(release ? { via: 'drawdown_release' } : {})
+    };
     o.trade = trade;
-    o.transitions.push({ t: time, session: s, state: 'ordered', reason: kind });
+    o.transitions.push({
+      t: time,
+      session: s,
+      state: 'ordered',
+      reason: release ? `${kind} (drawdown release)` : kind
+    });
     this.live = undefined;
     this.cancelWatch('entry_taken', time, s);
     this.entry(
@@ -1115,7 +1236,7 @@ export class EntryGates {
       'opportunity_decision',
       o,
       trade,
-      `${kind === 'latched' ? 'latched decision' : kind === 'renewal' ? 'renewal signal' : 'crossing'}: order placed for the next eligible trade`,
+      `${release ? 'latched decision at the drawdown gate release' : kind === 'latched' ? 'latched decision' : kind === 'renewal' ? 'renewal signal' : 'crossing'}: order placed for the next eligible trade`,
       {
         ageSessions: o.ageSessionsAtDecision,
         ...o.decisionValues
@@ -1123,6 +1244,73 @@ export class EntryGates {
     );
 
     return this.record({ ...base, disposition: 'taken', reason: gate.text, gate, trade, status: 'ordered' });
+  }
+
+  // v1.4.0: the drawdown gate turned permissive at `w` (a completed minute close or the closing print) while the live
+  // opportunity was waiting on it. One extra decision at that instant — never a new signal: the opportunity must still
+  // be live, flat with no order, not already evaluated at or after the instant, and pass every other gate.
+  private release(s: number, w: DrawdownRelease) {
+    const o = this.live;
+    const dd = this.runtime.drawdown!;
+
+    if (!o || this.drawdownWaiting !== o || !this.hooks.flatWithoutOrder()) return;
+    if ((this.lastEvaluated.get(o) ?? -Infinity) >= w.time) return;
+    if (w.session !== s) throw new Error('a drawdown release outside its session');
+
+    // the decision price: the latest full observation at the release instant (the closing print may follow a minute)
+    const last = dd.lastFull!;
+    const j = this.barAt(w.time);
+
+    if (j < o.signalBar) return;
+    this.evaluateOpportunity(o, s, j, w.time, last.price, 'latched', w);
+  }
+
+  // The policy at a release instant between bar ends: its rolling-predicate part as of the last completed bar j (the
+  // opportunity is live, so it held there) and its price conditions (policies 2, 3, 4) at the release price, without
+  // updating policy 4's running maximum. Read-only.
+  private releaseValidity(
+    o: Opportunity,
+    j: number,
+    price: number
+  ): { valid: boolean; reason: string; values: Record<string, LogValue> } {
+    const cfg = this.eligibility!;
+    const p = this.predicate!;
+    const holds = p.holds[j] === 1;
+    const base = { close: price, lastBar: j, lastBarPredicate: holds };
+
+    switch (cfg.policy) {
+      case 'time_limited':
+      case 'reset_renew':
+        return holds
+          ? { valid: true, reason: 'predicate held at the last completed bar', values: base }
+          : { valid: false, reason: 'predicate_false at the last completed bar', values: base };
+      case 'minimum_strength': {
+        const level = o.recentLow * (1 + fraction(cfg.minimumAdvancePercent));
+        const values = { ...base, referenceLow: o.recentLow, strengthLevel: r6(level) };
+
+        return atOrAbove(price, level)
+          ? { valid: true, reason: 'strength holds at the release price', values }
+          : { valid: false, reason: 'strength_below_minimum at the release price', values };
+      }
+      case 'maximum_extension': {
+        const cap = o.signalPrice * (1 + fraction(cfg.maximumExtensionPercent));
+        const values = { ...base, signalPrice: o.signalPrice, capPrice: r6(cap) };
+
+        if (!holds) return { valid: false, reason: 'predicate_false at the last completed bar', values };
+        return atOrBelow(price, cap)
+          ? { valid: true, reason: 'within the extension cap at the release price', values }
+          : { valid: false, reason: 'extension_exceeded at the release price (no late chasing)', values };
+      }
+      case 'deterioration': {
+        const floor = o.maxClose * (1 - fraction(cfg.deteriorationDropPercent));
+        const values = { ...base, highestCloseSinceArming: o.maxClose, deteriorationLevel: r6(floor) };
+
+        if (!holds) return { valid: false, reason: 'predicate_false at the last completed bar', values };
+        return atOrBelow(price, floor)
+          ? { valid: false, reason: 'deteriorated at the release price', values }
+          : { valid: true, reason: 'not deteriorated at the release price', values };
+      }
+    }
   }
 
   private record(d: GatedDecision) {
@@ -1359,6 +1547,8 @@ export class EntryGates {
 
   finish(endSession: number) {
     const t = this.ds.sCloseTime[endSession]!;
+
+    this.runtime.drawdown?.finish(endSession);
 
     if (this.live) this.end(this.live, 'end_of_data', 'end of the data: still armed', t, endSession, {});
     if (this.watch) this.endWatch(this.watch, 'end_of_data', t, endSession);
