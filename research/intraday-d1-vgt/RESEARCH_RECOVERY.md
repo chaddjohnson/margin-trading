@@ -30,8 +30,10 @@
 - Commits:
   - `f90d990`: protocol freeze, before the search;
   - `b3571c1`: selection freeze, before validation;
-  - the final commit adds the validation, reports and tools, and is followed by the push of the branch (requested by
-    the user).
+  - `ef2e74a`: validation, reports and tools.
+  - **Pushed** at the user's request: new remote branch `origin/research/intraday-d1-vgt`. `git ls-remote` showed
+    `ef2e74acf11c7846af51a022a071a6e682099b26` = local, verified 2026-11-06T17:49:21Z. No PR and no merge.
+  - This checkpoint update is a follow-up commit, pushed the same way.
 - Node 24.21.0; 16 threads, 59 GB RAM. File listings show local time (UTC+1); every time here is UTC.
 
 ## Authority and chain (`npm run intraday-d1 -- verify`: 7 entries, 0 problems)
