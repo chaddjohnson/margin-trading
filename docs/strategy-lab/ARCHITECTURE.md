@@ -159,6 +159,15 @@ the header; `RunView` renders a saved run or a preview through the same componen
   basis with the recorded split ratios (`display` prices); the events' own prices are never changed.
 - **Run windows only.** A run's chart shows only its own window. A training-only run therefore never renders holdout
   dates (PLAN §6).
+- **Daily candles** (since 2026-11-06, Task 16; [DAILY_CANDLES.md](DAILY_CANDLES.md)). The same cached load keeps each
+  session's open, high, low and close as defined by the session builder:
+  - open = the first regular minute's open;
+  - high / low = the regular minutes' highs / lows and the closing print;
+  - close = the closing print, else the last regular minute's close.
+
+  `GET /api/runs/:id/candles?symbol=S` (and the preview route) serves one candle per NYSE session of the run's
+  window. All four prices are split-adjusted with the same factor to the run's basis. A session failing the OHLC
+  order gets no candle and is listed. The synthetic demo is refused (409).
 - **Decimation.** Long windows keep the minimum and the maximum of every bucket in time order, so spikes survive. The
   browser loads an overview first. When you zoom in, it fetches the visible window at finer resolution and merges it
   in; the range selector keeps the overview.
@@ -226,6 +235,17 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
 ## Chart behaviour
 
 - **Library.** Dygraphs 2.2.2, kept as the base.
+- **Chart types** (since 2026-11-06, Task 16; [DAILY_CANDLES.md](DAILY_CANDLES.md)).
+  - **Candles · 1D** is the default for real data. It draws daily OHLC candles with a custom plotter over four series
+    (open, high, low, close), so the y axis autoscales to the highs and lows. Up days are hollow teal-green, down days
+    solid red, a doji a grey bar. Below 2 px per day, each session becomes a thin low–high line, with a note.
+  - On candles, markers sit on their New York session's candle at their recorded price; several in one session fan
+    out left → right in time order (not a time scale), with their exact times in tooltips and the table. Drag-to-measure
+    is daily close → close.
+  - **Line · intraday** is the minute chart described below, unchanged.
+  - Switching keeps the run, symbol, window, selection and marker checkboxes. The synthetic demo has only the line.
+  - The component is keyed by run, symbol and chart type, and both types share one real-time x axis.
+  - The behaviour below applies to both types unless it names the line.
 - **Crosshair.** A vertical line follows the nearest highlighted data point, with Dygraphs' highlight dot on the line
   and a readout showing the Eastern time and price.
 - **Axis.** Ticks fall on America/New_York boundaries, from a custom ticker, so labels never shift a day with the

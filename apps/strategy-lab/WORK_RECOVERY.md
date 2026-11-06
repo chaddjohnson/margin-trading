@@ -1,6 +1,91 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
-## Top screen (read this first) — Task 15: Growth Drawdown Recovery Gate — COMPLETE
+## Top screen (read this first) — Task 16: daily OHLC candlestick chart — COMPLETE (push pending at this write)
+
+- **Updated:** 2026-11-06T16:37Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, documented; being
+  committed and pushed** (`git push origin feature/strategy-entry-explorer-ui`, outside the sandbox, retries; NO merge
+  to `main`). If this line still says "pending" and `git log origin/feature/strategy-entry-explorer-ui` lacks the Task
+  16 commits, the push is the only step left; then record it here in a follow-up commit and push that too.
+- **Follow-up gate (the user's):** start the Strategy Lab server the usual way (`npm --prefix apps/strategy-lab run
+  start:vpn`); `dist` = check-2's build; no migration. Real runs open on Candles · 1D.
+- **Final verification:** `npm run check` check-2 2026-11-06T16:29:36Z→16:35:24Z (`logs/task16/check-2.log`): typecheck
+  + lint clean, Vitest 281/281 (29 files), build, Playwright 74/74 (64 existing + 10 new). check-1 (16:28:48Z) failed
+  at typecheck (DOM type in the Node tsconfig) → fixed (`CandleContext`). Scratch-build full run (`full-1.log`):
+  Vitest 281/281, e2e 72/74 → 2 regressions fixed in PRODUCT code (legend wording; locate/zoom on the candle x),
+  rerun 22/22 (`e2e-rerun-1.log`). Root tsc clean (`root-tsc.log`); root ESLint 306 = baseline (1 error
+  `src/study7-stability-first-d1/search.ts:310`, untouched; Task 15's checkpoint named trailing-buy-variants — a misread
+  of the summary line); root `npm test` not run (no root source change). Live state byte-identical to
+  `logs/task16/live-state-baseline.sha256` (131 files; nothing newer); data sha256 unchanged; no diff in `src/`,
+  runners, `shared/strategies.ts`, `shared/contract.ts`, `config/`.
+- **Deliverables (sha256 prefix at 16:37Z):** `shared/candles.ts` 71f9af4d977f0456, `server/prices.ts` 2df9dd881934fc0e,
+  `server/http.ts` e1f83ba48fb4229b, `src/chart/candles.ts` d6ec1fbb835092d6, `src/chart/PriceChart.tsx`
+  9c35e02b5ce5b3aa, `src/components/RunView.tsx` deb9e38f32a8bb89, `tests/candles.test.ts` e06aca92d26e0772 (22),
+  `tests/candle-chart.test.ts` 4afb16ddd6b82ede (15), `e2e/candles.spec.ts` f4bd7993e8bf3d71 (10);
+  `docs/strategy-lab/DAILY_CANDLES.md` c82698f8f1963c8c; report
+  `docs/strategy-lab/reports/2026-11-06-daily-candles/REPORT.md` 3508443411741e0f + 5 PNG screenshots (sha256 cea239b8…,
+  002ea0ee…, 05bc1dcb…, 66afdf16…, 882b0a66…); doc updates ARCHITECTURE, CONTRACTS, INTERACTIVE_PREVIEW, README (docs,
+  app, root), RESEARCH_WORKFLOW; also `src/api.ts`, `src/components/Events.tsx`, `src/preview/usePreview.ts` (comment),
+  `src/styles.css`.
+- **Disclosures:** see the report §Disclosures (test edits: helpers + 3 line-specific tests choose the line; candle-only
+  locate/zoom change; Chrome/Linux only, ⌘-drag not exercised on macOS; `-shm` excluded from the state hash; limitations).
+- **Servers at the end:** scratch :4393 stopped; the stray :4391 server (pid 2772895, earlier session) untouched; the
+  user's live server not running.
+- **Brief:** `docs/strategy-lab/brief/2026-11-06-daily-ohlc-candlesticks-brief.md` (verbatim copy of the upload
+  `b2934bf7-Claude_Strategy_Lab_Daily_OHLC_Candlesticks.md`, 84 lines / 12,277 bytes, read in full through §6 and the
+  Acceptance paragraph; sha256 `c285ce6b633241eef731a659dcfa416e8dc3e57053193ca55d092e6f140cb6d6`). The user's message:
+  "Proceed with the complete assignment, including implementation, research execution, verification, and the requested
+  Git commit and push". Brief §6: commit + push the feature branch, **do not merge into `main`**; UI/data-presentation
+  only — no trading logic, strategy, optimiser, schema migration or saved-artifact change.
+- **Branch:** `feature/strategy-entry-explorer-ui`, HEAD at start `353798c` (= Task 15 push record), tree clean. Work in
+  the MAIN checkout. Node 24.21.0 (`.node-version`).
+- **Real data (pre-task sha256, = Task 15):** VGT `2ee06310f2fa8926…`, GDX `77dba9b21c4b6849…`, XBI `4a51bcbe67e4460e…`.
+  VGT split 8:1 effective 2026-04-21 (`config/market-events/splits.json`).
+- **Live state:** `state/strategy-lab/` read-only. Baseline file hashes (131 files, preview-cache excluded):
+  `logs/task16/live-state-baseline.sha256` (sha256 of the list `34de8b44…`). Local clock = CET (UTC+1): `ls` times are
+  CET. Servers at start: only the stray :4391 server pid 2772895 (earlier session, scratch state; untouched). The user's
+  live server is NOT running. `dist` = Task 15's final build; rebuild only at the final check.
+- **No chart preference exists** (localStorage holds only the API token) → chart type = page state, no migration.
+- **Next step:** commit (implementation + tests; docs + report + checkpoint), push the feature branch outside the
+  sandbox with retries, verify with `git ls-remote`, then a push-record commit + push. No merge to `main`.
+
+## Task 16 — design (written between 15:50Z and 16:04Z — not clocked; bounded by `date -u` 15:49:43Z and the scratch server log 16:04:01Z; from the code audit; no user question needed)
+
+- **Audit facts.** Chart = `src/chart/PriceChart.tsx` (Dygraphs 2.2.2, one graph per mount keyed by run:symbol; custom
+  interactionModel: drag = measure, ⌘/Ctrl/Shift/Alt-drag = pan, wheel = zoom, dblclick reset; markers = button overlay
+  via `toDomCoords`; overview + debounced detail fetch). Server `server/prices.ts` loads each canonical file once with
+  `src/lib/csv.ts` + `src/lib/session.ts` `groupMarketSessions` (cache keyed by symbol, invalidated by size+mtime).
+  `groupMarketSessions` ALREADY defines the daily OHLC convention: open = first regular minute's open; high/low = max/min
+  of regular minute highs/lows AND the closing print; close = closing print (the 16:00 / 13:00 ET bar's open) else the
+  last regular minute's close; pre/after-hours dropped; early closes from `src/lib/calendar.ts`. Real-data probe
+  (`<scratchpad>/probe.ts`): 0 sessions / 0 bars violate low ≤ min(o,c) ≤ max(o,c) ≤ high (VGT, GDX, XBI); trade-less
+  minutes are COMMON (VGT 2,555 / 2,723 sessions < 390 bars) → minute counts are informational, never "invalid";
+  no closing print: VGT 5, GDX 1, XBI 1 sessions; print outside the minute range: VGT 87, GDX 17, XBI 10 sessions; minute
+  wicks beyond every minute close: ~all sessions. Kinds checkboxes are page state in `RunView` (survive run/symbol/
+  preview swaps); RunView is not remounted on run change.
+- **Server.** `Series.daily` (raw per-session o/h/l/c, closing-print flag, minute count, early flag, open/close times)
+  built in the same load (cached + invalidated with the series). `dailyCandles(series, factorOf, from, to)` → columnar,
+  split-adjusted (one factor per session for all four prices), invariant-checked (bad sessions omitted AND listed).
+  Routes `GET /api/runs/:id/candles?symbol=` and `GET /api/previews/:id/candles?symbol=` (run window only, the run's basis,
+  symbol must belong to the run; synthetic → 409 "no genuine OHLC"). Types + validator in `shared/candles.ts`.
+- **Client.** Chart type = page state in RunView (`candles` default; synthetic → `line`, candles disabled with the
+  reason); radio group "Candles · 1D" / "Line · intraday". PriceChart keyed by run:symbol:mode (remount on switch) and
+  opened with the last window (same real-time x axis in both modes; a window < 7 days is widened around its centre for
+  candles). Candle mode: rows [x, O, H, L, C] (x = midpoint of the session's scheduled hours), custom plotter (series 0
+  draws all, by point.idx), Dygraphs autoscale over all four series (→ highs/lows), range selector shows Close only, no
+  detail fetch, ticker on trading sessions, wheel min span 7 days, measure snaps to the session and uses its CLOSE.
+  Colours (validated, `logs/task16/candle-palette-validation.log`): up #26a69a hollow body, down #ef5350 solid, doji
+  #a4b1c4 bar; dense mode (< 3 px per day) = each session a thin high–low line, labelled, never aggregated.
+- **Markers in candle mode.** Session = the event's America/New_York date (the date the UI shows); x = that session's
+  candle x (fallback: its own instant when no candle), y = the same recorded/display price as line mode; several events
+  in one session are fanned left→right in canonical time order (offset in px, not a time scale); data-session/data-t
+  attributes; tooltip adds "session D (daily candle)"; exact ET time and price unchanged. Line mode unchanged.
+- **Tests planned.** Vitest `tests/candles.test.ts` (fixture repo: wick beyond closes, pre/after-hours, early close,
+  holiday, DST, missing bars, missing print, print outside range, split basis, invalid row, window, cache +
+  invalidation, HTTP routes + validator, artifacts unchanged), `tests/candle-chart.test.ts` (pure: colours, widths,
+  shapes, placement/clusters, ticks); e2e `e2e/candles.spec.ts`; existing real-data line-mode e2e tests switch to
+  "Line · intraday" first (test edit → disclose).
+
+## Previous top screen — Task 15: Growth Drawdown Recovery Gate — COMPLETE
 
 - **Updated:** 2026-11-06T15:36Z (UTC, from the clock). **Status: COMPLETE — implemented, reviewed, verified, committed and
   PUSHED. No merge to `main`.**

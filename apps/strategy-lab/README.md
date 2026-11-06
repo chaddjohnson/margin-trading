@@ -17,7 +17,7 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 
 | Path | What |
 | --- | --- |
-| `server/` | `main.ts` (entry), `config.ts`, `security.ts`, `db.ts` + `migrations/`, `repo.ts` (all SQL), `service.ts` (manual runs), `jobs.ts` (bounded child-process execution), `prices.ts` (chart prices, decimation), `artifacts.ts` (atomic files), `http.ts` (API + static UI), `seed-demo.ts` |
+| `server/` | `main.ts` (entry), `config.ts`, `security.ts`, `db.ts` + `migrations/`, `repo.ts` (all SQL), `service.ts` (manual runs), `jobs.ts` (bounded child-process execution), `prices.ts` (chart prices, decimation, daily OHLC candles), `artifacts.ts` (atomic files), `http.ts` (API + static UI), `seed-demo.ts` |
 | `runner/entry-signal-run.ts` | The child process of one manual signal-only run (dataset pipeline + `src/entry-signals/`) |
 | `runner/trading-run.ts` | The child process of one Growth backtest (`src/growth-trading/`: the same signals, optional continuation entries, the optional entry trend filter and persistent eligibility, the 1.3.0 options, the 1.4.0 Drawdown Recovery Gate, the Study 8 D1 book and exits); `runner/growth-params.ts` maps a request (read with its own version's schema) to the engine |
 | `runner/pool-run.ts` | The child process of one shared-slot pool phenotype rerun (the unchanged Study 8 runner) |
@@ -25,10 +25,10 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 | `importers/phenotypes.ts`, `phenotype-export.ts`, `export-study8-phenotypes.ts` | The phenotype catalogue import (verified), the export writer, the Study 8 sealed-selection exporter |
 | `server/export.ts`, `zip.ts`, `compare.ts`, `replay.ts` | Research bundles, the deterministic ZIP writer, run comparisons, stored-run replays |
 | `server/previews.ts`, `preview-identity.ts`, `preview-cache.ts` | Interactive Preview: ONE configuration per submission through the same runner (no run row), its execution identity (data hashes + implementation fingerprint) and the persistent, validated cache; Save as run |
-| `shared/` | Contract v2, parameter schema v2 (`params.ts`), strategy registry and validation, phenotype export contract, artifact shapes, event validation; the demo fixture's generator and v1 schema |
+| `shared/` | Contract v2, parameter schema v2 (`params.ts`), strategy registry and validation, phenotype export contract, artifact shapes, event validation, the daily candles response and its validator (`candles.ts`); the demo fixture's generator and v1 schema |
 | `fixtures/phenotypes/` | The Growth demonstration exports (1.1.0 continuation; 1.2.0 entry gates) and the Study 8 `s8-vg-balanced` phenotype export |
 | `scripts/` | Service install, token, fixture generator, `generate-migration-0002.ts`, `audit-state.ts`, `replay-run.ts`, `export-run.ts`, `make-growth-demo-phenotypes.ts`, `make-growth-gates-demo-phenotypes.ts` |
-| `src/` | UI: `App.tsx`, `components/` (sidebar, run view, panels, events, dialogs incl. the `StrategyPicker` rich select, notes, the Interactive Preview panel, banner and ⓘ popovers), `chart/` (Dygraphs chart, marker overlay, Eastern ticker), `paramForm.ts` (the schema-driven draft shared by New Test and the preview), `preview/` (the preview's state and pure logic) |
+| `src/` | UI: `App.tsx`, `components/` (sidebar, run view, panels, events, dialogs incl. the `StrategyPicker` rich select, notes, the Interactive Preview panel, banner and ⓘ popovers), `chart/` (Dygraphs chart — Candles · 1D and Line · intraday — marker overlay, candle drawing and session placement in `candles.ts`, Eastern ticker), `paramForm.ts` (the schema-driven draft shared by New Test and the preview), `preview/` (the preview's state and pure logic) |
 | `tests/`, `e2e/` | Vitest (server, contracts, strategy integration, real-data runs and import), Playwright acceptance (system Chrome) |
 | `deploy/` | systemd user service template (`npm run service:install`) |
 | `fixtures/demo-dataset.v1.json` | The synthetic demo (seeded as the "Demo (synthetic data)" experiment) |

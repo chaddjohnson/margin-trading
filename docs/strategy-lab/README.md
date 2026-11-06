@@ -19,6 +19,8 @@ prototype of 2026-11-03.
   - **Interactive Preview**: edit a saved run's parameters beside its chart and run ONE configuration at a time,
     without saving a run; repeated configurations come from a validated cache; **Save as run** keeps one
     ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md));
+  - a price chart of **daily OHLC candles** per NYSE session (the default for real data) or the **intraday minute
+    line**, switched above the legend ([DAILY_CANDLES.md](DAILY_CANDLES.md));
   - entry and exit markers per symbol, with Eastern timestamps;
   - bookmarks and Markdown notes;
   - two-run comparison.
@@ -40,6 +42,7 @@ prototype of 2026-11-03.
 | [GROWTH_CONTINUATION.md](GROWTH_CONTINUATION.md) | Growth 1.1.0 continuation entries: lifecycle and state diagram, the four methods with examples, parameters and defaults, records, evidence, diagnostic runs |
 | [PHENOTYPES.md](PHENOTYPES.md) | The frozen phenotype catalogue: the export contract a study emits, the import CLI, capabilities, single reruns (standalone and shared-slot pool) |
 | [EXPORTS.md](EXPORTS.md) | The research bundle: contents, guarantees, how another analyst checks it |
+| [DAILY_CANDLES.md](DAILY_CANDLES.md) | The chart types: **Candles · 1D** (daily OHLC from the canonical minute bars: the open, highs/lows, closing-print and regular-session conventions, early closes, DST, missing minutes, split units, invalid data; drawing, dense mode, axis, read-out; the marker session policy and fan; close → close measuring; the API, caching and validation; tests; limitations) and **Line · intraday**. Report and screenshots: `reports/2026-11-06-daily-candles/` |
 | [INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md) | Interactive Preview: the panel, statuses, Enter/Run, Reset, Save as run and Return; semantics and isolation; the persistent cache (execution identity, implementation fingerprint, storage, validation, retention, maintenance); concurrency; API; acceptance map; measured latency; limitations |
 | `../../src/entry-signals/README.md` | The rise-from-recent-low rule, maths, rearming, bars, forward outcomes |
 | `brief/2026-11-04-strategy-lab-implementation-brief.md` | The brief, verbatim |
@@ -49,3 +52,4 @@ prototype of 2026-11-03.
 | `brief/2026-11-05-interactive-preview-brief.md` | The Interactive Preview brief (Task 13), verbatim |
 | `brief/2026-11-05-growth-optional-rules-brief.md` | The Growth optional rules brief (Task 14: initial risk stop, trend-breakout entry, trend retention), verbatim |
 | `brief/2026-11-06-growth-drawdown-recovery-gate-brief.md` | The Growth Drawdown Recovery Gate brief (Task 15), verbatim |
+| `brief/2026-11-06-daily-ohlc-candlesticks-brief.md` | The daily OHLC candlestick chart brief (Task 16), verbatim |

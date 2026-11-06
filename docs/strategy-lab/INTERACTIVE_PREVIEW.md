@@ -288,11 +288,11 @@ touches running work, and a removed entry is simply recomputed. The cache is dis
 | `POST /api/previews` `{request, sourceRun}` | ONE configuration → a ticket (`state`, `cacheHit`, `coalesced`, `progress`, `timing`) |
 | `GET /api/previews/tickets/PT-…` / `POST …/cancel` | Poll / release a ticket |
 | `GET /api/previews/PV-…[?current=1]` | The preview as a run-shaped record (`kind: "preview"`, `preview: {id, key, config, savedAs, …}`); `?current=1` adds `preview.current = {matches, differences}`, its identity recomputed from the current code and data |
-| `GET /api/previews/PV-…/events?symbol=&basis=`, `/prices?symbol=&from=&to=&points=` | Same shapes as the run routes |
+| `GET /api/previews/PV-…/events?symbol=&basis=`, `/prices?symbol=&from=&to=&points=`, `/candles?symbol=` | Same shapes as the run routes (`/candles`: the daily OHLC candles, [DAILY_CANDLES.md](DAILY_CANDLES.md)) |
 | `GET /api/previews/PV-…/export[?minute=1]` | The preview's research bundle |
 | `POST /api/previews/PV-…/save` | Save as run (§4) |
 
-`GET /api/health` lists `features: ["interactive-preview"]`. A server started before this feature answers 404 to these
+`GET /api/health` lists `features: ["interactive-preview", "daily-candles"]` (the second since Task 16). A server started before this feature answers 404 to these
 routes, and the panel then says the server needs a restart. No route searches, sweeps or batches configurations
 (`tests/server.test.ts`).
 

@@ -192,10 +192,23 @@ timing }`; `previewId` is `PV-` + the sha256 of the execution identity. A comple
 (`GET /api/previews/PV-…`: a `RunDetail` with `kind: "preview"`, `request` = the canonical configuration and `preview`
 = `{ id, key, config, executedAt, executionMs, implementationSha256, dataSha256, savedAs }`; with `?current=1` also
 `current = { matches, differences }`, its identity recomputed from the current code and data), with `/events`,
-`/prices` and `/export` in the run routes' shapes. `RunKind` gained `preview` for this record only: no stored run has it. Save
+`/prices`, `/candles` and `/export` in the run routes' shapes. `RunKind` gained `preview` for this record only: no stored run has it. Save
 as run: `POST /api/previews/PV-…/save` `{ sourceRun, title?, confirmDuplicate? }` → 201 with the new run (409 when the
 identity no longer holds or the preview was already saved). Everything else:
 [INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md).
+
+## Daily candles (`GET /api/runs/:id/candles?symbol=S`, since 2026-11-06)
+
+A read-only, presentation-only response (`shared/candles.ts` `CandlesResponse`). It is columnar, one entry per NYSE
+session of the run's window, in the run's split basis:
+
+- `d`, `x`;
+- `o`, `h`, `l`, `c`;
+- `print`, `minutes`, `scheduled`, `factor`;
+- `omitted`.
+
+The browser checks every response with `validateCandles` and refuses a malformed one. The synthetic demo answers 409.
+Nothing is stored. Definitions, conventions and errors: [DAILY_CANDLES.md](DAILY_CANDLES.md).
 
 ## Run artifacts (`state/strategy-lab/runs/R-xxxxxx/`)
 

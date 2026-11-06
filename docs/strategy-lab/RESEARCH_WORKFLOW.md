@@ -89,7 +89,13 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    shows the latest note's excerpt.
 7. **Symbols:** a multi-symbol run has one tab per symbol. Each tab shows only that symbol's price and events (the
    chart, tooltips, table and analysis). Switching symbols clears the selected event and keeps the zoom when it fits.
-8. **Measure:** hold the mouse button and drag across the chart to see the price change between two points (Eastern
+8. **Chart type:** real runs open on **Candles · 1D**, one daily OHLC candle per NYSE session from the minute bars.
+   Up days are hollow teal-green, down days solid red. Hover a candle for its session date and O/H/L/C. Markers sit
+   on their session's candle at their recorded price; several in one session fan out left → right; their exact
+   Eastern times are in the tooltip and the table. Choose **Line · intraday** for the minute path; switching keeps
+   the zoom, the selection and the checkboxes ([DAILY_CANDLES.md](DAILY_CANDLES.md)). On candles, measuring (below)
+   runs from one session's daily close to another's.
+   **Measure:** hold the mouse button and drag across the chart to see the price change between two points (Eastern
    times, $ and %; green up, red down), from the earlier point to the later one, whichever way you drag. It is shown
    only while the button is held: releasing it (anywhere) or pressing Escape clears it. Zoom with
    the trackpad or mouse wheel around the cursor (a two-finger swipe up zooms in, down zooms out), the buttons or the
