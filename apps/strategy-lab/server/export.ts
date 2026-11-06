@@ -16,6 +16,10 @@
 //   exit-fills.csv               Growth 1.3.0 with the initial risk stop or retention ON: every exit fill of every
 //                                position (partial and final), with its principal repayment, interest, costs and net
 //   optional-rules.md            Growth 1.3.0 with an optional rule ON: the configuration, conventions and counts
+//   drawdown-episodes.csv        Growth 1.4.0 with the Drawdown Recovery Gate ON: every dip episode (peak, first
+//                                qualifying observation, trough, threshold, confirmations, resets, resolution)
+//   drawdown-transitions.csv     Growth 1.4.0 with the gate ON: every causal gate transition and blocked decision
+//   drawdown-gate.md             Growth 1.4.0 with the gate ON: the configuration, conventions and counts
 //   daily-marks.csv              Growth: the daily marks per symbol
 //   attribution.json / .md       per-origin attribution (descriptive, NOT the causal effect) and the continuation counts
 // The bundle never changes a run artifact, reads only the allowlisted files of that run's directory, and is refused if
@@ -25,7 +29,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { gunzipSync } from 'node:zlib';
 
-import type { DecisionsFile, ExitFillRecord, SymbolMetrics } from '../shared/artifact-types.ts';
+import type { DecisionsFile, DrawdownGateCounts, ExitFillRecord, SymbolMetrics } from '../shared/artifact-types.ts';
 import type { LabEvent, RunDetail } from '../shared/contract.ts';
 import type { PreviewService } from './previews.ts';
 import { effectiveParams, isActive } from '../shared/params.ts';
@@ -283,16 +287,38 @@ function buildBundle(cfg: Config, src: BundleSource, opts: { minuteMarks?: boole
     );
     // Growth 1.2.0 entry gates (only with the trend filter or eligibility ON)
     const decisionRows = Object.entries(decisions.perSymbol).flatMap(([symbol, d]) => (d.entryDecisions ?? []).map((x) => ({ symbol, ...x })));
+    // Growth 1.4.0: the Drawdown Recovery Gate's columns, only when it was ON (earlier bundles keep their columns)
+    const ddOn = Object.values(decisions.perSymbol).some((d) => d.drawdownGate);
+    const ddOf = (x: (typeof decisionRows)[number]): Record<string, unknown> | null => {
+      if (x.gate?.drawdown) return x.gate.drawdown;
+      const v = x.values ?? {};
+      return 'drawdown.state' in v
+        ? Object.fromEntries(Object.entries(v).filter(([k]) => k.startsWith('drawdown.')).map(([k, y]) => [k.slice(9), y]))
+        : null;
+    };
     if (decisionRows.length)
       add(
         'entry-decisions.csv',
         csv(
-          ['symbol', 'id', 'kind', 'source', 't_utc', 't_new_york', 'session', 'decision_price', 'crossing_threshold', 'crossing_recent_low', 'crossing_advance_percent', 'disposition', 'reason', 'gate', 'gate_text', 'capital_available', 'trend_values_json', 'policy_values_json', 'opportunity', 'episode', 'trade', 'trade_status', 'fill_utc', 'fill_price', 'net_usd', 'net_kind'],
-          decisionRows.map((x) => [
-            x.symbol, x.id, x.kind, x.source, x.time.utc, x.time.newYork, x.session, x.price, x.crossing?.threshold ?? null, x.crossing?.recentLow ?? null,
-            x.crossing?.advancePercent ?? null, x.disposition, x.reason, x.gate?.decision ?? null, x.gate?.text ?? null, x.gate?.capital ?? null,
-            x.gate?.trend ?? null, x.policy, x.opportunity, x.episode ?? null, x.trade, x.status, x.fill?.utc ?? null, x.fill?.price ?? null, x.netUsd, x.netKind
-          ])
+          [
+            'symbol', 'id', 'kind', 'source', 't_utc', 't_new_york', 'session', 'decision_price', 'crossing_threshold', 'crossing_recent_low', 'crossing_advance_percent', 'disposition', 'reason', 'gate', 'gate_text', 'capital_available', 'trend_values_json', 'policy_values_json', 'opportunity', 'episode', 'trade', 'trade_status', 'fill_utc', 'fill_price', 'net_usd', 'net_kind',
+            ...(ddOn ? ['blocked_by', 'drawdown_state', 'drawdown_episode', 'drawdown_peak', 'drawdown_trough', 'drawdown_threshold', 'drawdown_confirmation_start', 'via', 'drawdown_values_json'] : [])
+          ],
+          decisionRows.map((x) => {
+            const d = ddOf(x);
+            return [
+              x.symbol, x.id, x.kind, x.source, x.time.utc, x.time.newYork, x.session, x.price, x.crossing?.threshold ?? null, x.crossing?.recentLow ?? null,
+              x.crossing?.advancePercent ?? null, x.disposition, x.reason, x.gate?.decision ?? null, x.gate?.text ?? null, x.gate?.capital ?? null,
+              x.gate?.trend ?? null, x.policy, x.opportunity, x.episode ?? null, x.trade, x.status, x.fill?.utc ?? null, x.fill?.price ?? null, x.netUsd, x.netKind,
+              ...(ddOn
+                ? [
+                    x.gate?.blockedBy ? x.gate.blockedBy.join(' ') : ((x.values ?? {}).blockedBy ?? null),
+                    d?.state ?? null, d?.episode ?? null, d?.peak ?? null, d?.trough ?? null, d?.threshold ?? null, d?.confirmationStart ?? null,
+                    x.via ?? null, d
+                  ]
+                : [])
+            ];
+          })
         ),
         'every Growth entry decision judged by the entry gates (raw crossings, latched decisions, renewal signals, continuation triggers) with the observed trend values, the policy values, the trade and its final realized or open unrealized net'
       );
@@ -314,6 +340,40 @@ function buildBundle(cfg: Config, src: BundleSource, opts: { minuteMarks?: boole
         'every armed opportunity (persistent eligibility): signal, age bound, blocked evaluations, decision, how it ended, its trade and final net'
       );
     else unavailable['opportunities.csv'] = 'persistent eligibility was OFF (or the run predates Growth 1.2.0)';
+    // Growth 1.4.0: the Drawdown Recovery Gate's episodes and causal transitions (only with it ON)
+    const ddSymbols = Object.entries(decisions.perSymbol).filter(([, d]) => d.drawdownGate);
+    if (ddSymbols.length) {
+      add(
+        'drawdown-episodes.csv',
+        csv(
+          ['symbol', 'id', 'epoch', 'state', 'peak_utc', 'peak_new_york', 'peak_session', 'peak_price', 'peak_observation', 'detected_utc', 'detected_new_york', 'detected_session', 'detected_price', 'detected_dip_percent', 'trough_utc', 'trough_new_york', 'trough_session', 'trough_price', 'max_dip_percent', 'retracement_percent', 'threshold', 'trough_updates', 'recovery_starts', 'confirmations', 'resets_before_confirmation', 'confirmations_lost', 'resets_by_cause_json', 'first_confirmed_utc', 'resolved_utc', 'resolved_new_york', 'resolved_session', 'resolved_price', 'resolved_before_confirmation', 'window_complete_at_detection', 'detected_before_window', 'blocked_decisions_json'],
+          ddSymbols.flatMap(([symbol, d]) =>
+            d.drawdownGate!.episodes.map((e) => [
+              symbol, e.id, e.epoch, e.state, e.peak.utc, e.peak.newYork, e.peak.session, e.peak.price, e.peak.observation, e.detected.utc,
+              e.detected.newYork, e.detected.session, e.detected.price, e.detected.dipPercent, e.trough.utc, e.trough.newYork, e.trough.session,
+              e.trough.price, e.maxDipPercent, e.retracementPercent, e.threshold, e.troughUpdates, e.recoveryStarts, e.confirmations,
+              e.confirmationResets, e.confirmationLosses, e.resetsByCause, e.firstConfirmed?.utc ?? null, e.resolved?.utc ?? null,
+              e.resolved?.newYork ?? null, e.resolved?.session ?? null, e.resolved?.price ?? null, e.resolved?.beforeConfirmation ?? null,
+              e.windowCompleteAtDetection, e.detectedBeforeWindow, e.blockedDecisions
+            ])
+          )
+        ),
+        'every Drawdown Recovery Gate episode (stable id DD-n): the peak (which precedes the trough), the first observation at least d below it, the trough, the recovery threshold, confirmations, resets by cause and the resolution'
+      );
+      add(
+        'drawdown-transitions.csv',
+        csv(
+          ['symbol', 'seq', 't_utc', 't_new_york', 'session', 'event', 'episode', 'observation', 'price', 'state_after', 'reason', 'values_json'],
+          ddSymbols.flatMap(([symbol, d]) =>
+            d.drawdownGate!.transitions.map((x) => [symbol, x.seq, x.utc, x.newYork, x.session, x.event, x.episode, x.observation, x.price, x.state, x.reason, x.values])
+          )
+        ),
+        'every causal Drawdown Recovery Gate transition in time order (dip_detected, new_trough — one row per session for a run of new lows —, recovery_started, confirmation_reset, recovery_confirmed, confirmation_lost, dip_resolved, window_complete) and every entry decision it blocked (entry_blocked_by_drawdown_gate), with the observation and the state after it'
+      );
+    } else {
+      unavailable['drawdown-episodes.csv'] = 'the Drawdown Recovery Gate was OFF (or the run predates Growth 1.4.0)';
+      unavailable['drawdown-transitions.csv'] = 'the Drawdown Recovery Gate was OFF (or the run predates Growth 1.4.0)';
+    }
   } else unavailable['decision-log.csv'] = 'not recorded by this run (only Growth 1.1.0 and later runs write decisions.json)';
   // Growth 1.3.0: every exit fill of the positions under the initial risk stop or retention.
   const fillRows = Object.entries(tradesFile?.trades ?? {}).flatMap(([symbol, list]) =>
@@ -377,6 +437,11 @@ function buildBundle(cfg: Config, src: BundleSource, opts: { minuteMarks?: boole
   );
   if (Object.keys(gates).length) add('entry-gates.md', entryGatesMarkdown(gates, metrics), 'the entry trend filter and persistent eligibility: counts, ages and outcomes by entry source (descriptive)');
   else unavailable['entry-gates.md'] = 'the entry trend filter and persistent eligibility were OFF (or the run predates Growth 1.2.0)';
+  const dd = Object.fromEntries(
+    Object.entries(perSymbol).filter(([, m]) => m && typeof m === 'object' && m.drawdownGate).map(([sym, m]) => [sym, m.drawdownGate!])
+  );
+  if (Object.keys(dd).length) add('drawdown-gate.md', drawdownGateMarkdown(dd), 'the Drawdown Recovery Gate: configuration, conventions and counts (descriptive)');
+  else unavailable['drawdown-gate.md'] = 'the Drawdown Recovery Gate was OFF (or the run predates Growth 1.4.0)';
 
   // 7. README and manifest (deterministic: the run's own completion time is the bundle's timestamp).
   const stamp = new Date(run.completedAt ?? run.createdAt);
@@ -443,6 +508,45 @@ function attributionMarkdown(a: Record<string, Pick<SymbolMetrics, 'attribution'
       lines.push('', `Continuation (${c.method}): ${c.episodes} episode(s) from ${c.qualifyingExits} qualifying exit(s); ended by ${Object.entries(c.endedBy ?? {}).map(([k, n]) => `${k} ${n}`).join(', ')}; ${c.armed} armed; ${c.filled} filled; ${c.suppressedBasePriority} suppressed by base priority; ${c.expiredWithLaterHigherHigh} expired although a higher high followed in the window.`);
     else lines.push('', 'Continuation: OFF.');
     lines.push('', `Drawdown (minute / daily): ${usd(x.drawdown?.minute?.maximumUsd)} / ${usd(x.drawdown?.daily?.maximumUsd)}. Total marked net: ${usd(x.pnl?.totalMarkedNetUsd)}.`, '');
+  }
+  return `${lines.join('\n')}\n`;
+}
+
+function drawdownGateMarkdown(d: Record<string, DrawdownGateCounts>) {
+  const first = Object.values(d)[0]!;
+  const c = first.config;
+  const lines = [
+    '# Drawdown Recovery Gate (descriptive)',
+    '',
+    `Configuration: dip lookback N = ${c.lookbackSessions} sessions, significant decline d = ${c.dipThresholdPercent}%, required retracement r = ${c.recoveryRetracementPercent}% of the whole decline, confirmation Y = ${c.confirmationSessions} session interval(s).`,
+    '',
+    'Conventions:',
+    '',
+    '- A filter on every Growth entry decision (base signal, latched opportunity, renewal, continuation trigger), never an entry signal; exits are never filtered.',
+    '- Observations: every completed regular-session one-minute close (at the minute end) and the closing print (at the scheduled close) are full observations; the opening trade and the reopening trade after missing minutes only test continuity. A minute’s high and low are never used.',
+    '- Detection: a close at least d below the highest EARLIER close of the current session and the N sessions before it (the peak precedes the trough). The window only discovers; an episode stays until a close regains its peak (then a fresh detection epoch starts).',
+    '- Threshold: trough + (peak − trough) × r; a lower trough moves it and restarts the confirmation.',
+    '- Confirmation: from the first full observation at/above the threshold (session 0), every later observation stays at/above it until the first full observation in session 0 + Y at/after the same New York time (or later: early close, missing minute). Y = 0: at once.',
+    '- Blocking states: recovery required, and the discovery window reaching before the loaded data (insufficient history). With persistent eligibility ON an armed opportunity blocked by the gate may be decided at the release minute (fill at the next eligible trade); OFF, a blocked signal is never replayed.',
+    '',
+    'Counts are descriptive: a blocked or delayed entry changes every later decision (path dependence), so they are not per-trade causal effects. Compare an otherwise identical run with the gate OFF.',
+    ''
+  ];
+  for (const [sym, x] of Object.entries(d)) {
+    const e = x.episodes;
+    lines.push(
+      `## ${sym}`,
+      '',
+      `- Episodes: ${e.total} (resolved ${e.resolved}, of which ${e.resolvedBeforeConfirmation} by regaining the peak before a confirmation; unresolved at the end ${JSON.stringify(e.unresolvedAtEnd)}; detected in the warm-up ${e.detectedBeforeWindow}; detected while the window was incomplete ${e.detectedWhileWindowIncomplete}).`,
+      `- Deepest decline per episode (%): mean ${e.maxDipPercent.mean ?? 'n/a'}, median ${e.maxDipPercent.median ?? 'n/a'}, max ${e.maxDipPercent.max ?? 'n/a'}. Sessions from detection to resolution: median ${e.sessionsDetectionToResolution.median ?? 'n/a'}, max ${e.sessionsDetectionToResolution.max ?? 'n/a'}.`,
+      `- Recovery streaks started ${x.confirmations.recoveryStarts}; confirmed ${x.confirmations.confirmed}; reset before confirming ${x.confirmations.resetsBeforeConfirmation}; confirmations lost ${x.confirmations.confirmationsLost}; resets by cause ${JSON.stringify(x.confirmations.resetsByCause)}.`,
+      `- Releases (blocking → permissive): ${x.releases.total} ${JSON.stringify(x.releases.byCause)}.`,
+      `- Blocked entry decisions: ${x.blockedDecisions.total} ${JSON.stringify(x.blockedDecisions.byKind)} (a latched opportunity once per blocked stretch); blocked crossings ${x.blockedCrossings} ${JSON.stringify(x.blockedCrossingsByDisposition)}; blocked continuation triggers ${x.blockedContinuations}.`,
+      `- Opportunities the gate blocked at least once: ${x.opportunitiesBlocked}; later entered: ${x.deferredEligibleEntries}; decisions at a release instant: ${x.releaseDecisions.taken} taken of ${x.releaseDecisions.total}.`,
+      `- Trades from an opportunity the gate had blocked: ${x.tradesAfterAGateBlock.trades} (closed ${x.tradesAfterAGateBlock.closed}, wins ${x.tradesAfterAGateBlock.wins}, realized net $${x.tradesAfterAGateBlock.realizedNetUsd}).`,
+      `- Gate state at the window’s session closes: ${JSON.stringify(x.windowSessionsAtClose)}; at the end: ${x.stateAtEnd}.`,
+      ''
+    );
   }
   return `${lines.join('\n')}\n`;
 }
@@ -548,6 +652,7 @@ ${preview ? `\n> **Interactive Preview — not a saved run.** Preview id \`${run
 - **Times** are stored in UTC (\`…Z\`); the \`*_new_york\` columns give America/New_York wall-clock time with EST/EDT. \`time_precision\`: minute, session-close (a daily bar's close), day (date only) or unknown.
 - **Origin** (Growth 1.1.0+): \`base_growth\` = the Rise-from-Recent-Low entry; \`continuation\` = an entry of the selected continuation method. Origin-attributed P&L is DESCRIPTIVE: it is not the incremental effect of enabling a method, because enabling it changes the whole later trade sequence. Compare a complete ON run with an otherwise identical OFF run for the counterfactual.
 - **Optional rules** (Growth 1.3.0, when ON): the entry method (\`rise_from_recent_low\` or \`trend_breakout\`; trades.csv \`entry_source\` \`trend_breakout\`), the initial risk stop (fixed at fill − m × ATR, active from the fill; exit reasons \`initial stop\` / \`initial stop gap\`) and trend retention (a partial sale at the first profit trailing-stop event, events.csv \`SYM:T-n:partial-k\` executed exits with \`meta.partial\`; the remainder's exit reason \`trend exit\` or a risk exit). A position sold in several fills is ONE trade row (its net = all its fills); exit-fills.csv has every fill with its principal repayment and interest; optional-rules.md the counts. Runs without these options have no exit-fills.csv and their trade rows are unchanged.
+- **Drawdown Recovery Gate** (Growth 1.4.0, when ON): a filter on every Growth entry decision, never a signal, maintained on completed one-minute closes and closing prints whatever the bar resolution: entries are blocked while a significant chronological dip (a close at least d below the highest EARLIER close of the current session and the N before it) is unresolved, until the price recovers r of the whole decline and holds it at every observation for Y trading-session intervals (to the same New York time) or regains the peak. drawdown-episodes.csv / drawdown-transitions.csv hold its causal records; entry-decisions.csv its state at each decision (\`blocked_by\`, \`via\` = \`drawdown_release\` for a latched decision taken intraday at the release).
 - **Entry gates** (Growth 1.2.0, when ON): the entry trend filter judges every entry decision on trading-session observations complete at the decision; persistent eligibility keeps a raw crossing available as an *opportunity* for a bounded number of sessions. \`entry_source\` (trades.csv): \`rise_from_recent_low\` (the crossing itself), \`latched:…\` (a later decision of an armed opportunity, filled at the then-current price), \`eligibility_renewal\` (a policy-5 renewal signal), \`continuation:<method>\`. A raw crossing appears once in events.csv; latched decisions and renewal signals are separate events (\`SYM:latched:<t>\`, \`SYM:renewal:<t>\`). See entry-decisions.csv, opportunities.csv and entry-gates.md.
 - **Exploratory, not validated.** A single run on historical data (often already inspected) is not evidence of an edge, and a rerun of a study's phenotype on exposed dates is not another holdout.
 

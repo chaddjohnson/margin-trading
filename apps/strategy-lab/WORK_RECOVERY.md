@@ -2,8 +2,20 @@
 
 ## Top screen (read this first) — Task 15: Growth Drawdown Recovery Gate — INCOMPLETE
 
-- **Updated:** 2026-11-06T14:26Z (UTC, from the clock). **Status: INCOMPLETE — 15.1 baselines + 15.2 engine done; next 15.3
-  registry/runner.**
+- **Updated:** 2026-11-06T14:44Z (UTC, from the clock). **Status: INCOMPLETE — 15.1–15.4 done (baselines, engine, registry/runner/
+  server/export, Analysis UI, app tests); next: e2e spec, paired-comparison CLI option, docs, paired diagnostics,
+  report, full verification, commit + push.**
+- **15.3/15.4 (commit after this checkpoint):** registry 1.4.0 (`DRAWDOWN_GATE_PARAMS`, group `drawdownGate`, notes;
+  1.3.0 → `RISE_FROM_RECENT_LOW_TRADING_1_3_0`, launch phenotype, schema hash `a2cca065…` unchanged); `growth-params.ts`
+  `drawdownGateOf`; runner (events `drawdown.*` + `blockedBy`, release decisions `via`, trades.json `drawdownGate`,
+  decisions.json `drawdownGate` {detector, episodes, transitions, releases, summary} only when ON, metrics run-level
+  `drawdownGate` + per-symbol summary); replay `legacy-1.3.0`; service titles/assumptions; compare `drawdownGate`;
+  export `drawdown-episodes.csv`, `drawdown-transitions.csv`, `drawdown-gate.md`, entry-decisions gate columns (only
+  ON); Analysis rows; trade label "at the drawdown-gate release". Tests: `growth-parity.test.ts` 30/30 incl. the
+  8 new 1.3.0 cases (`logs/task15/growth-parity-1.log`; decisions/events/trades/daily byte-identical, metrics + only
+  `drawdownGate {enabled:false}`); new `tests/drawdown-gate.test.ts` 8/8; expected-contract test updates (version
+  strings, groups list, switch required, the `/retrace/` guard scoped to non-gate params) in trading, entry-gates,
+  optional-rules, preview-model, real-data, preview tests and 6 e2e specs. App typecheck + lint clean.
 - **15.1 baselines (complete, commit `79fac8c`, unchanged code at `d13148a`):** engine
   `src/growth-trading/tests/fixtures/baseline-1.3.0.json` (sha256 `344fb135f4fcf6e3…`; 7 cases; engineDirty "") by
   `tools/capture-baseline-1.3.0.ts` (log `apps/strategy-lab/logs/task15/capture-baseline-1.3.0.log`); runner

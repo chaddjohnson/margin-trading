@@ -239,7 +239,7 @@ describe.skipIf(!hasData)('(real data) the three options: one run, records, bund
   it('Candidate A + retention + the initial stop: partial fills, one trade per position, the bundle, an exact replay', async () => {
     const on = await start({ ...CANDIDATE_A, ...STOP, ...RETAIN });
     expect(on.error).toBeNull();
-    expect(on.strategy.version).toBe('1.3.0');
+    expect(on.strategy.version).toBe(G.version);
     const dir = join(c.stateDir, on.artifactDir!);
     const events = (JSON.parse(readFileSync(join(dir, 'events.json'), 'utf8')) as { events: LabEvent[] }).events;
     expect(validateEvents(events, on.id, ['VGT'])).toEqual([]);
@@ -313,7 +313,7 @@ describe.skipIf(!hasData)('(real data) the three options: one run, records, bund
     // the same configuration with drafts is ONE identity: an immediate cache hit, never a second execution
     const again = await run({ ...D, ...BREAKOUT, ...STOP, ...RETAIN, advanceFromRecentLowPercent: 9 });
     expect([again.state, again.cacheHit, again.previewId]).toEqual(['completed', true, all.previewId]);
-    expect(previews.detail(all.previewId!).strategy.version).toBe('1.3.0');
+    expect(previews.detail(all.previewId!).strategy.version).toBe(G.version);
     // the 1.2.0 failure: buffer OFF / hold OFF with only the effective values — now executed
     const offs: Record<string, ParamValue>[] = [{ intradayLossBufferEnabled: false }, { maximumHoldEnabled: false, intradayLossBufferEnabled: false }];
     for (const off of offs) {

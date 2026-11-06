@@ -12,6 +12,8 @@
 //   versions add only run-level {enabled: false} records and the engine version).
 // - 1.2.0 ('legacy-1.2.0'): the same comparison (v1.3.0 adds nothing to trades/daily/events with the Rise entry and the
 //   initial risk stop and trend retention OFF; it adds the run-level entryMethod/initialStop/retention records).
+// - 1.3.0 ('legacy-1.3.0'): the same comparison (v1.4.0 adds nothing to trades/daily/events/decisions with the Drawdown
+//   Recovery Gate OFF; it adds the run-level drawdownGate {enabled: false} record to metrics.json).
 // - the current version ('exact'): every file in full.
 
 import { spawnSync } from 'node:child_process';
@@ -65,14 +67,16 @@ export interface ReplayVerdict {
  * stored run is an earlier engine version — compare every stored field, ignoring only what later versions added;
  * `exact`: the same engine version — the files must be identical in full.
  */
-export type ReplayMode = 'legacy' | 'legacy-1.1.0' | 'legacy-1.2.0' | 'exact';
+export type ReplayMode = 'legacy' | 'legacy-1.1.0' | 'legacy-1.2.0' | 'legacy-1.3.0' | 'exact';
 
 /** The comparison a stored run of `version` gets when the current engine `current` replays it. */
 export function replayModeOf(version: string, current: string): ReplayMode {
   return version === current
     ? 'exact'
-    : version === '1.2.0'
-      ? 'legacy-1.2.0'
+    : version === '1.3.0'
+      ? 'legacy-1.3.0'
+      : version === '1.2.0'
+        ? 'legacy-1.2.0'
       : version === '1.1.0'
         ? 'legacy-1.1.0'
         : 'legacy';
@@ -86,7 +90,8 @@ export function compareRunOutputs(storedDir: string, freshDir: string, mode: Rep
     const fresh = readJson(freshDir, file) as Record<string, unknown>;
     const projected =
       mode === 'legacy' ||
-      ((mode === 'legacy-1.1.0' || mode === 'legacy-1.2.0') && (file === 'metrics.json' || file === 'decisions.json'));
+      ((mode === 'legacy-1.1.0' || mode === 'legacy-1.2.0' || mode === 'legacy-1.3.0') &&
+        (file === 'metrics.json' || file === 'decisions.json'));
     const compared = projected ? (projectOnto(stored, fresh) as Record<string, unknown>) : fresh;
     // a legacy replay records engineVersion/legacyReplay in metrics.strategy; the stored strategy is the reference
     if (mode !== 'exact' && file === 'metrics.json') compared.strategy = stored.strategy;

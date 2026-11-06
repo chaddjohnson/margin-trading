@@ -272,6 +272,30 @@ function optionalRuleTexts(spec: StrategySpec, p: Record<string, unknown>) {
   };
 }
 
+// Growth 1.4.0: the Drawdown Recovery Gate in the title and assumptions. Absent (earlier versions) = OFF, and their
+// texts are unchanged.
+function drawdownGateTexts(spec: StrategySpec, p: Record<string, unknown>) {
+  const has = spec.params.some((x) => x.key === 'drawdownRecoveryGateEnabled');
+  const on = p.drawdownRecoveryGateEnabled === true && isActive(spec, p, 'dipLookbackSessions');
+  const n = (k: string) => String(p[k]);
+  return {
+    titles: on
+      ? [`drawdown gate N ${n('dipLookbackSessions')} d ${n('dipThresholdPercent')}% r ${n('recoveryRetracementPercent')}% Y ${n('recoveryConfirmationSessions')}`]
+      : [],
+    assumptions: has
+      ? [
+          text(
+            'drawdownGate',
+            'Drawdown Recovery Gate',
+            on
+              ? `ON — a filter on every Growth entry decision (never a signal; exits never filtered), on completed regular-session one-minute closes and the closing print whatever the bar resolution: a dip episode starts when a close is at least ${n('dipThresholdPercent')}% below the highest EARLIER close of the current session and the ${n('dipLookbackSessions')} before it (the peak precedes the trough; the window only discovers, it never expires an episode); entries are blocked until a close reaches trough + ${n('recoveryRetracementPercent')}% × (peak − trough) and every later observation (minute closes, opening trades, closing prints) stays at or above it for ${n('recoveryConfirmationSessions')} trading-session interval(s), to the same New York time (0 = at once), or until a close regains the peak (resolved: a fresh detection epoch); a lower trough restarts it; while the discovery window reaches before the loaded data the gate blocks; with persistent eligibility ON an armed opportunity it blocked may be decided at the confirming minute and fills at the next eligible trade, with it OFF a blocked signal is never replayed`
+              : 'OFF (identical to Growth 1.3.0)'
+          )
+        ]
+      : []
+  };
+}
+
 // The trading backtest: every value as entered (a switch as ON/OFF, a choice by its label; an inactive value is saved
 // and marked "not applied"), and the effective rules spelled out in the assumptions. The variation keeps the effective
 // configuration only.
@@ -282,6 +306,7 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
   const continuation = continuationText(spec, p);
   const gates = gateTexts(spec, p, req.resolution);
   const optional = optionalRuleTexts(spec, p);
+  const drawdown = drawdownGateTexts(spec, p);
   const resolution = { key: 'resolution', label: 'Bar resolution', value: req.resolution, unit: 'text' as const };
   const params: LabValue[] = [...paramSnapshot(spec, p), resolution];
   const variationParams: LabValue[] = [...paramSnapshot(spec, effectiveParams(spec, p)), resolution];
@@ -295,7 +320,8 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
     `${p.costBpsPerSide} bps`,
     continuation.title,
     ...gates.titles,
-    ...optional.titles
+    ...optional.titles,
+    ...drawdown.titles
   ].join(' · ');
   const assumptions: LabValue[] = [
     text(
@@ -307,6 +333,7 @@ function tradingProfile(spec: StrategySpec, req: LabRunRequest): Profile {
     text('continuation', 'Continuation entries', continuation.assumption),
     ...(spec.params.some((x) => x.key === 'trendFilterEnabled') ? gates.assumptions : []),
     ...optional.assumptions,
+    ...drawdown.assumptions,
     text(
       'position',
       'Position',

@@ -3,13 +3,15 @@
 //
 // A request is read with the schema of ITS OWN version: 1.0.0 has no continuation and no entry gates (all OFF); 1.1.0
 // has continuation but no entry gates (both OFF); 1.2.0 has all three; 1.3.0 adds the entry-method selector (Rise |
-// trend breakout), the initial risk stop and trend retention (absent before 1.3.0: the Rise entry, both OFF). Only
+// trend breakout), the initial risk stop and trend retention (absent before 1.3.0: the Rise entry, both OFF); 1.4.0 adds the
+// Drawdown Recovery Gate (absent before 1.4.0: OFF). Only
 // effective values are executed (shared/params.ts), so a stored draft of another method or policy — or a value whose
 // switch is OFF — can never leak into the run, and a request that carries ONLY the effective values (what Interactive
 // Preview executes) maps to the same engine parameters as one that also carries those drafts.
 
 import { isSignalResolution } from '../../../src/entry-signals/bars.ts';
 import type { ContinuationConfig, ContinuationMethod } from '../../../src/growth-trading/continuation.ts';
+import type { DrawdownGateConfig } from '../../../src/growth-trading/drawdownGate.ts';
 import type {
   EligibilityConfig,
   EligibilityPolicy,
@@ -160,6 +162,18 @@ export const retentionOf = (request: LabRunRequest): RetentionConfig | null => {
   };
 };
 
+// 1.4.0: the Drawdown Recovery Gate (absent in earlier versions: OFF).
+export const drawdownGateOf = (request: LabRunRequest): DrawdownGateConfig | null => {
+  const p = effectiveOf(request);
+  if (p.drawdownRecoveryGateEnabled !== true) return null;
+  return {
+    lookbackSessions: p.dipLookbackSessions as number,
+    dipThresholdPercent: p.dipThresholdPercent as number,
+    recoveryRetracementPercent: p.recoveryRetracementPercent as number,
+    confirmationSessions: p.recoveryConfirmationSessions as number
+  };
+};
+
 // Every engine value comes from the EFFECTIVE values: a value whose switch is OFF is absent there and is passed as
 // NaN (never read by the engine: exitParamsOf uses ∞ for an OFF hold or buffer), and a switch that does not apply is
 // OFF. A stored 1.0.0–1.2.0 request with its drafts and the same request reduced to its effective values therefore
@@ -172,6 +186,7 @@ export const paramsOf = (request: LabRunRequest): RiseTradingParams => {
   const breakout = breakoutOf(request);
   const initialStop = initialStopOf(request);
   const retention = retentionOf(request);
+  const drawdownGate = drawdownGateOf(request);
   return {
     advanceFromRecentLowPercent: n('advanceFromRecentLowPercent'),
     recentLowLookbackBars: n('recentLowLookbackBars'),
@@ -185,9 +200,10 @@ export const paramsOf = (request: LabRunRequest): RiseTradingParams => {
     continuation: continuationOf(request),
     trendFilter: trendFilterOf(request),
     eligibility: eligibilityOf(request),
-    // 1.3.0 fields only when they differ from the earlier versions' behaviour (so a legacy request maps exactly as before)
+    // 1.3.0/1.4.0 fields only when they differ from the earlier versions' behaviour (a legacy request maps exactly as before)
     ...(method !== 'rise_from_recent_low' ? { entryMethod: method, breakout } : {}),
     ...(initialStop ? { initialStop } : {}),
-    ...(retention ? { retention } : {})
+    ...(retention ? { retention } : {}),
+    ...(drawdownGate ? { drawdownGate } : {})
   };
 };

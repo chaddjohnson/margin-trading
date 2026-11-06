@@ -1,4 +1,4 @@
-// The trading backtest ("Growth") in Strategy Lab: its registry entries (1.3.0 current, 1.2.0, 1.1.0 and 1.0.0 legacy with their
+// The trading backtest ("Growth") in Strategy Lab: its registry entries (1.4.0 current, 1.3.0, 1.2.0, 1.1.0 and 1.0.0 legacy with their
 // frozen schemas; defaults = the engine's, no post-loss restriction controls), switch validation and the buffer → hold dependency,
 // immutable variations and runs through the API (create, clone, toggle), the effective-state snapshot, the runner
 // allowlist — and that the signal-only strategy records exactly what it did.
@@ -52,22 +52,24 @@ describe('registry', () => {
   it('offers the unchanged signal-only strategy and the new trading backtest, separately versioned', () => {
     expect(RUNNABLE_STRATEGIES.map((s) => `${s.key}@${s.version}:${s.kind}`)).toEqual([
       'rise-from-recent-low@1.0.0:entry_signal',
-      'rise-from-recent-low-trading@1.3.0:trades'
+      'rise-from-recent-low-trading@1.4.0:trades'
     ]);
-    // Every registered version, with how it may be launched: one visible "Growth"; 1.2.0 and 1.1.0 kept as legacy whose
+    // Every registered version, with how it may be launched: one visible "Growth"; 1.3.0, 1.2.0 and 1.1.0 kept as legacy whose
     // catalogue phenotypes still rerun (launch: phenotype), 1.0.0 kept as legacy (not launchable).
     expect(STRATEGY_REGISTRY.map((s) => `${s.key}@${s.version}:${s.launch}:${s.title}`)).toEqual([
       'rise-from-recent-low@1.0.0:form:Rise from recent low (entry signal)',
-      'rise-from-recent-low-trading@1.3.0:form:Growth',
+      'rise-from-recent-low-trading@1.4.0:form:Growth',
+      'rise-from-recent-low-trading@1.3.0:phenotype:Growth',
       'rise-from-recent-low-trading@1.2.0:phenotype:Growth',
       'rise-from-recent-low-trading@1.1.0:phenotype:Growth',
       'rise-from-recent-low-trading@1.0.0:none:Growth',
       'study8-d1-pool@pools-engine:phenotype:Study 8 D1 shared-slot pool (pools engine)',
       'demo-toy-rules@1.0.0:none:Demo toy rules (synthetic)'
     ]);
-    expect(LEGACY.legacy?.supersededBy).toBe('1.3.0');
-    expect(findStrategy(T.key, '1.1.0')!.legacy?.supersededBy).toBe('1.3.0');
-    expect(findStrategy(T.key, '1.2.0')!.legacy?.supersededBy).toBe('1.3.0');
+    expect(LEGACY.legacy?.supersededBy).toBe('1.4.0');
+    expect(findStrategy(T.key, '1.1.0')!.legacy?.supersededBy).toBe('1.4.0');
+    expect(findStrategy(T.key, '1.2.0')!.legacy?.supersededBy).toBe('1.4.0');
+    expect(findStrategy(T.key, '1.3.0')!.legacy?.supersededBy).toBe('1.4.0');
     expect(T.formerTitles).toEqual(['Rise from recent low (trading backtest)']);
     // The signal-only strategy's schema is exactly what its runs recorded (keys, defaults, ranges, resolutions).
     expect((RISE_FROM_RECENT_LOW.params as NumericParamSpec[]).map((p) => [p.key, p.type, p.unit, p.default, p.min, p.max, p.step])).toEqual([
@@ -120,12 +122,17 @@ describe('registry', () => {
     expect(keys).toContain('trailingStopPercent');
     expect(keys).not.toContain('trailingStopEnabled');
     expect(T.params.find((p) => p.key === 'trailingStopPercent')!.activeWhen).toBeUndefined();
-    expect(JSON.stringify(T)).not.toMatch(
-      /material|lowerPrice|lower re-?entry level|retrace|recoveryReset|reference high/i
-    );
+    // Growth 1.4.0's Drawdown Recovery Gate is a filter on the MARKET's decline (a retracement of a price dip), never a
+    // trade's loss: its five inputs are exactly these, and the guard applies to everything else.
+    const drawdownKeys = ['drawdownRecoveryGateEnabled', 'dipLookbackSessions', 'dipThresholdPercent', 'recoveryRetracementPercent', 'recoveryConfirmationSessions'];
+    expect(T.params.filter((p) => p.group === 'drawdownGate').map((p) => p.key)).toEqual(drawdownKeys);
+    expect(
+      JSON.stringify({ ...T, params: T.params.filter((p) => p.group !== 'drawdownGate'), groups: T.groups.filter((g) => g.key !== 'drawdownGate'), groupNotes: T.groupNotes?.filter((n) => n.group !== 'drawdownGate'), notes: T.notes?.filter((n) => !n.startsWith('Drawdown Recovery Gate')), description: '' })
+    ).not.toMatch(/material|lowerPrice|lower re-?entry level|retrace|recoveryReset|reference high/i);
     expect(T.params.filter((p) => p.type === 'boolean').map((p) => [p.key, p.default])).toEqual([
       ['trendFilterEnabled', false],
       ['eligibilityEnabled', false],
+      ['drawdownRecoveryGateEnabled', false],
       ['maximumHoldEnabled', true],
       ['intradayLossBufferEnabled', true],
       ['initialStopEnabled', false],
@@ -248,7 +255,7 @@ describe('HTTP API: one configuration, immutable variations and runs', () => {
     expect(on.body.variation.title).toBe(
       'Growth · X 5% · N 20 bars · 1d · stop 7.3% · hold 8d · buffer 2.9% · 5 bps · continuation off'
     );
-    expect(on.body.strategy).toMatchObject({ key: 'rise-from-recent-low-trading', version: '1.3.0', title: 'Growth' });
+    expect(on.body.strategy).toMatchObject({ key: 'rise-from-recent-low-trading', version: '1.4.0', title: 'Growth' });
     expect(on.body.assumptions.map((a) => a.key)).toEqual([
       'kind',
       'entry',
@@ -257,6 +264,7 @@ describe('HTTP API: one configuration, immutable variations and runs', () => {
       'eligibility',
       'initialStop',
       'retention',
+      'drawdownGate',
       'position',
       'reentry',
       'stop',

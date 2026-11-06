@@ -30,6 +30,7 @@ import {
   ENTRY_METHOD_PARAM_KEYS,
   INITIAL_STOP_PARAM_KEYS,
   RETENTION_PARAM_KEYS,
+  DRAWDOWN_GATE_PARAM_KEYS,
   defaultParams,
   validateRunRequest
 } from '../shared/strategies.ts';
@@ -91,9 +92,9 @@ describe('the registry: both gates OFF by default, only the chosen inputs apply'
     expect(validateRunRequest(req({ ...momentum, trendMomentumShortSessions: 5 }), symbols)).toEqual([]);
     expect(validateRunRequest(req({ ...D, eligibilityEnabled: true, eligibilityMaxAgeSessions: 0 }), symbols).join()).toMatch(/between 1 and 120/);
     expect(validateRunRequest(req({ ...D, eligibilityEnabled: true, eligibilityPolicy: 'forever' }), symbols).join()).toMatch(/Eligibility policy: one of/);
-    const later = [...TREND_PARAM_KEYS, ...ELIGIBILITY_PARAM_KEYS, ...ENTRY_METHOD_PARAM_KEYS, ...INITIAL_STOP_PARAM_KEYS, ...RETENTION_PARAM_KEYS];
+    const later = [...TREND_PARAM_KEYS, ...ELIGIBILITY_PARAM_KEYS, ...ENTRY_METHOD_PARAM_KEYS, ...INITIAL_STOP_PARAM_KEYS, ...RETENTION_PARAM_KEYS, ...DRAWDOWN_GATE_PARAM_KEYS];
     const v110 = { ...req(effectiveParams(G, D)), strategyVersion: '1.1.0', params: Object.fromEntries(Object.entries(D).filter(([k]) => !later.includes(k))) };
-    expect(validateRunRequest(v110, symbols).join()).toMatch(/not runnable \(superseded by 1\.3\.0/);
+    expect(validateRunRequest(v110, symbols).join()).toMatch(/not runnable \(superseded by 1\.4\.0/);
     expect(validateRunRequest(v110, symbols, 'phenotype')).toEqual([]);
   });
 

@@ -49,7 +49,8 @@ const PARAMS = {
   eligibilityEnabled: false,
   entryMethod: 'rise_from_recent_low',
   initialStopEnabled: false,
-  retentionEnabled: false
+  retentionEnabled: false,
+  drawdownRecoveryGateEnabled: false
 };
 const REQ = {
   strategyKey: GROWTH.key,
@@ -332,18 +333,26 @@ describe.skipIf(!hasData)('Interactive Preview on real data', () => {
     expect(legacy.previewable).toBe(false);
     expect(legacy.reason).toMatch(/superseded version, kept exactly as recorded.*never upgrades a run invisibly/);
     expect(legacy.upgrade).toMatchObject({
-      version: '1.3.0',
-      seed: { strategyVersion: '1.3.0', params: { continuationEnabled: false, trendFilterEnabled: false, eligibilityEnabled: false, entryMethod: 'rise_from_recent_low', initialStopEnabled: false, retentionEnabled: false } }
+      version: '1.4.0',
+      seed: { strategyVersion: '1.4.0', params: { continuationEnabled: false, trendFilterEnabled: false, eligibilityEnabled: false, entryMethod: 'rise_from_recent_low', initialStopEnabled: false, retentionEnabled: false, drawdownRecoveryGateEnabled: false } }
     });
-    // Growth 1.2.0 (the user's current runs) is superseded too: previewable only through the explicit 1.3.0 upgrade,
-    // which seeds its stored values with the three new options OFF (identical by the parity tests) and says so
-    const v120 = l.previews.capability(fake(GROWTH.key, '1.2.0', 'manual', { ...REQ, strategyVersion: '1.2.0', params: { ...PARAMS, entryMethod: undefined, initialStopEnabled: undefined, retentionEnabled: undefined, trendFilterEnabled: true, trendMethod: 'rising_sma', trendSmaSessions: 50, trendSmaComparisonSessions: 40 } }));
+    // Growth 1.2.0 is superseded too: previewable only through the explicit 1.4.0 upgrade, which seeds its stored values
+    // with the later options OFF (identical by the parity tests) and says so
+    const v120 = l.previews.capability(fake(GROWTH.key, '1.2.0', 'manual', { ...REQ, strategyVersion: '1.2.0', params: { ...PARAMS, entryMethod: undefined, initialStopEnabled: undefined, retentionEnabled: undefined, drawdownRecoveryGateEnabled: undefined, trendFilterEnabled: true, trendMethod: 'rising_sma', trendSmaSessions: 50, trendSmaComparisonSessions: 40 } }));
     expect(v120.previewable).toBe(false);
     expect(v120.upgrade).toMatchObject({
-      version: '1.3.0',
-      seed: { strategyVersion: '1.3.0', params: { trendFilterEnabled: true, trendMethod: 'rising_sma', trendSmaSessions: 50, trendSmaComparisonSessions: 40, entryMethod: 'rise_from_recent_low', initialStopEnabled: false, retentionEnabled: false } }
+      version: '1.4.0',
+      seed: { strategyVersion: '1.4.0', params: { trendFilterEnabled: true, trendMethod: 'rising_sma', trendSmaSessions: 50, trendSmaComparisonSessions: 40, entryMethod: 'rise_from_recent_low', initialStopEnabled: false, retentionEnabled: false, drawdownRecoveryGateEnabled: false } }
     });
     expect(v120.upgrade!.note).toMatch(/reproduced every 1\.2\.0 artifact in the parity tests.*still labelled a new execution/);
+    // Growth 1.3.0 (the user's current runs) likewise: the explicit 1.4.0 upgrade with the Drawdown Recovery Gate OFF
+    const v130 = l.previews.capability(fake(GROWTH.key, '1.3.0', 'manual', { ...REQ, strategyVersion: '1.3.0', params: { ...PARAMS, drawdownRecoveryGateEnabled: undefined, initialStopEnabled: true, initialStopAtrSessions: 14, initialStopAtrMultiple: 2 } }));
+    expect(v130.previewable).toBe(false);
+    expect(v130.upgrade).toMatchObject({
+      version: '1.4.0',
+      seed: { strategyVersion: '1.4.0', params: { initialStopEnabled: true, initialStopAtrSessions: 14, initialStopAtrMultiple: 2, drawdownRecoveryGateEnabled: false } }
+    });
+    expect(v130.upgrade!.note).toMatch(/reproduced every 1\.3\.0 artifact in the parity tests.*still labelled a new execution/);
     expect(legacy.upgrade!.note).toMatch(/not a reproduction/);
     // the API refuses legacy versions and the pool outright (never substituted by a standalone run)
     for (const request of [{ ...REQ, strategyVersion: '1.1.0' }, { ...REQ, strategyKey: STUDY8_POOL.key, strategyVersion: STUDY8_POOL.version }])

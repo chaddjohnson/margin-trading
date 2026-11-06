@@ -78,7 +78,7 @@ test('(real data) one Classic D1 run: attributed continuation entries, applied p
   await expect(page.getByTestId('run-id')).not.toHaveText(before);
   await expect(page.getByTestId('run-status')).toHaveText('completed', { timeout: 120_000 });
   const id = (await page.getByTestId('run-id').innerText()).trim();
-  await expect(page.getByTestId('strategy-version')).toHaveText('Growth v1.3.0');
+  await expect(page.getByTestId('strategy-version')).toHaveText('Growth v1.4.0');
 
   const table = page.getByTestId('trade-table-A');
   await expect(table.getByTestId('trade-origin').filter({ hasText: 'continuation · Classic D1' }).first()).toBeVisible();

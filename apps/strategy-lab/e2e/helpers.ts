@@ -30,7 +30,7 @@ export async function tradingRun(
   const res = await page.request.post('/api/runs', {
     data: {
       strategyKey: 'rise-from-recent-low-trading',
-      strategyVersion: '1.3.0',
+      strategyVersion: '1.4.0',
       params: {
         advanceFromRecentLowPercent: 5,
         recentLowLookbackBars: 20,
@@ -46,6 +46,7 @@ export async function tradingRun(
         entryMethod: 'rise_from_recent_low',
         initialStopEnabled: false,
         retentionEnabled: false,
+        drawdownRecoveryGateEnabled: false,
         ...extra
       },
       symbols,

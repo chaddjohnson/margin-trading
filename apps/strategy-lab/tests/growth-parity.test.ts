@@ -16,6 +16,13 @@
 //    1.3.0 requests with the Rise entry and both new exit options OFF, and (c) — the 1.2.0 "buffer OFF" failure —
 //    by the same configurations reduced to their EFFECTIVE values (R-920004, R-920006: what Interactive Preview
 //    executes; the unchanged 1.2.0 runner refused them).
+// 1d. The before-change runner artifacts of rise-from-recent-low-trading@1.3.0 (tests/fixtures/
+//    growth-runner-baseline-1.3.0, captured at d13148a with the unchanged runner: R-930001 VGT+GDX breakout + trend A +
+//    continuation breakout + initial stop, R-930002 VGT + trend C + initial stop + retention, R-930003 GDX 60m trend D +
+//    eligibility 2 + initial stop + classic_d1, R-930004 XBI retention + hold OFF + eligibility 3 + trend C as EFFECTIVE
+//    values only) are reproduced (a) by replaying the stored 1.3.0 requests and (b) by the SAME configurations as 1.4.0
+//    requests with the Drawdown Recovery Gate OFF: trades.json, daily.json, events.json and decisions.json byte for
+//    byte, the minute marks, and every stored field of metrics.json (1.4.0 adds only drawdownGate {enabled: false}).
 // 2. The shared-slot pool rerun (runner/pool-run.ts) to the sealed end gives the same events as the Study 8 importer
 //    applied to the same runner output, and reconciles with the sealed F24 record.
 
@@ -59,7 +66,7 @@ describe.skipIf(!hasData)('runner-level reproducibility of Growth 1.0.0 (real da
         ['events.json', true]
       ]);
       const metrics = JSON.parse(readFileSync(join(dir, 'metrics.json'), 'utf8'));
-      expect(metrics.strategy).toMatchObject({ version: '1.0.0', engineVersion: '1.3.0' });
+      expect(metrics.strategy).toMatchObject({ version: '1.0.0', engineVersion: '1.4.0' });
     }, 600_000);
 });
 
@@ -102,7 +109,7 @@ describe.skipIf(!hasData)('runner-level OFF/OFF parity with Growth 1.1.0 (real d
         const metrics = JSON.parse(readFileSync(join(dir, 'metrics.json'), 'utf8'));
         expect(metrics.trendFilter).toEqual({ enabled: false });
         expect(metrics.eligibility).toEqual({ enabled: false });
-        expect(metrics.strategy).toMatchObject({ version: request.strategyVersion, engineVersion: '1.3.0' });
+        expect(metrics.strategy).toMatchObject({ version: request.strategyVersion, engineVersion: '1.4.0' });
       }, 600_000);
 });
 
@@ -153,10 +160,61 @@ describe.skipIf(!hasData)('runner-level OFF parity with Growth 1.2.0 (real data)
       expect(metrics.initialStop).toEqual({ enabled: false });
       expect(metrics.retention).toEqual({ enabled: false });
       expect(metrics.entryMethod).toMatchObject({ method: 'rise_from_recent_low' });
-      expect(metrics.strategy).toMatchObject({ version: request.strategyVersion, engineVersion: '1.3.0' });
+      expect(metrics.strategy).toMatchObject({ version: request.strategyVersion, engineVersion: '1.4.0' });
       for (const sym of Object.keys(metrics.perSymbol)) expect(metrics.perSymbol[sym].optionalRules).toBeUndefined();
     }, 600_000);
 });
+
+const FIXTURES_13 = join(import.meta.dirname, 'fixtures/growth-runner-baseline-1.3.0');
+const sums13 = (): Record<string, string> =>
+  Object.fromEntries(
+    readFileSync(join(FIXTURES_13, 'SHA256SUMS'), 'utf8')
+      .trim()
+      .split('\n')
+      .map((l) => [l.split(/\s+/)[1]!, l.split(/\s+/)[0]!])
+  );
+const stored13 = (id: string) =>
+  JSON.parse(gunzipSync(readFileSync(join(FIXTURES_13, id, 'request.json.gz'))).toString('utf8'));
+
+describe.skipIf(!hasData || !['XBI'].every((s) => existsSync(join(REPO_ROOT, 'data', s, 'data.csv'))))(
+  'runner-level OFF parity with Growth 1.3.0 (real data)',
+  () => {
+    type Req = { params: Record<string, unknown> } & Record<string, unknown>;
+    const cases: [string, string, (r: Req) => Req][] = [];
+    for (const id of ['R-930001', 'R-930002', 'R-930003', 'R-930004']) {
+      cases.push([id, '1.3.0 (replay)', (r) => r]);
+      cases.push([id, '1.4.0 with the gate OFF', (r) => ({ ...r, strategyVersion: '1.4.0', params: { ...r.params, drawdownRecoveryGateEnabled: false } })]);
+    }
+    for (const [id, as, make] of cases)
+      it(`${id} as ${as}: identical to the 1.3.0 artifacts captured before the change`, () => {
+        const dir = join(mkdtempSync(join(tmpdir(), 'strategy-lab-parity-')), id);
+        mkdirSync(dir);
+        const request = make(stored13(id));
+        writeFileSync(join(dir, 'request.json'), JSON.stringify(request));
+        const r = runner('apps/strategy-lab/runner/trading-run.ts', dir);
+        expect(r.status, r.stderr + r.stdout).toBe(0);
+        const verdicts = compareRunOutputs(join(FIXTURES_13, id), dir, 'legacy-1.3.0');
+        expect(verdicts.map((v) => [v.file, v.identical])).toEqual([
+          ['trades.json', true],
+          ['daily.json', true],
+          ['metrics.json', true],
+          ['decisions.json', true],
+          ['events.json', true]
+        ]);
+        for (const f of ['events.json', 'trades.json', 'daily.json', 'decisions.json'])
+          expect(sha256(readFileSync(join(dir, f))), f).toBe(sums13()[`${id}/${f}`]);
+        expect(sha256(gunzipSync(readFileSync(join(dir, 'minute-marks.csv.gz'))))).toBe(sums13()[`${id}/minute-marks.csv`]);
+        const metrics = JSON.parse(readFileSync(join(dir, 'metrics.json'), 'utf8'));
+        expect(metrics.drawdownGate).toEqual({ enabled: false });
+        expect(metrics.strategy).toMatchObject({ version: request.strategyVersion, engineVersion: '1.4.0' });
+        // metrics.json = the stored one plus only the run-level drawdownGate record and the engine version
+        const stored = JSON.parse(gunzipSync(readFileSync(join(FIXTURES_13, id, 'metrics.json.gz'))).toString('utf8'));
+        const without = (o: Record<string, unknown>, keys: string[]) => Object.fromEntries(Object.entries(o).filter(([k]) => !keys.includes(k)));
+        expect(without(metrics, ['drawdownGate', 'strategy'])).toEqual(without(stored, ['strategy']));
+        for (const sym of Object.keys(metrics.perSymbol)) expect(metrics.perSymbol[sym].drawdownGate).toBeUndefined();
+      }, 600_000);
+  }
+);
 
 describe.skipIf(!hasData || !hasStudy8)('shared-slot pool rerun = the importer on the same Study 8 output (real data)', () => {
   it('s8-vg-balanced to 2026-10-29: reconciled, the importer’s events exactly', () => {

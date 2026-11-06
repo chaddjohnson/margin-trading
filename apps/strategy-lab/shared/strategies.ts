@@ -4,19 +4,22 @@
 //
 // Strategy versions:
 // - rise-from-recent-low@1.0.0           "Rise from recent low (entry signal)": signal-only, New Test.
-// - rise-from-recent-low-trading@1.3.0   "Growth": the trading backtest with optional continuation entries, an optional
-//                                        entry trend filter, optional persistent entry eligibility and (1.3.0) an
-//                                        entry-method selector (Rise | trend breakout), an optional initial risk stop and
-//                                        optional trend retention, New Test.
+// - rise-from-recent-low-trading@1.4.0   "Growth": the trading backtest with optional continuation entries, an optional
+//                                        entry trend filter, optional persistent entry eligibility, an entry-method
+//                                        selector (Rise | trend breakout), an optional initial risk stop, optional trend
+//                                        retention and (1.4.0) the optional Drawdown Recovery Gate, New Test.
+// - rise-from-recent-low-trading@1.3.0   "Growth" (legacy): before the Drawdown Recovery Gate. Not offered by New Test;
+//                                        its catalogue phenotypes stay runnable; its runs replay as 1.4.0 with the gate
+//                                        OFF (identical; src/growth-trading/tests/offParity-1.3.0.test.ts).
 // - rise-from-recent-low-trading@1.2.0   "Growth" (legacy): before the three optional rules. Not offered by New Test; its
-//                                        catalogue phenotypes stay runnable; its runs replay as 1.3.0 with the three OFF
-//                                        (identical; src/growth-trading/tests/offParity-1.2.0.test.ts).
+//                                        catalogue phenotypes stay runnable; its runs replay as 1.4.0 with the three and
+//                                        the gate OFF (identical; src/growth-trading/tests/offParity-1.2.0.test.ts).
 // - rise-from-recent-low-trading@1.1.0   "Growth" (legacy): before the entry gates. Not offered by New Test; its catalogue
-//                                        phenotypes stay runnable; its runs replay as 1.3.0 with both gates and the
-//                                        optional rules OFF (identical; src/growth-trading/tests/offParity-1.1.0.test.ts).
+//                                        phenotypes stay runnable; its runs replay as 1.4.0 with both gates, the
+//                                        optional rules and the drawdown gate OFF (identical; tests/offParity-1.1.0).
 // - rise-from-recent-low-trading@1.0.0   "Growth" (legacy): the pre-continuation version. Not launchable; its runs
-//                                        replay as 1.3.0 with continuation, both gates and the optional rules OFF
-//                                        (identical; tests/offParity).
+//                                        replay as 1.4.0 with continuation, both gates, the optional rules and the
+//                                        drawdown gate OFF (identical; tests/offParity).
 // - study8-d1-pool@pools-engine          the Study 8 D1 shared-slot pool: imported runs, and phenotype reruns only.
 // - demo-toy-rules@1.0.0                 the synthetic demo: read-only.
 // Display names are metadata: the keys and versions above never change (docs/strategy-lab/CONTRACTS.md).
@@ -1173,7 +1176,8 @@ const CONTINUATION_NOTE =
 /**
  * Growth 1.2.0 (legacy, frozen): the 1.1.0 parameters plus the optional entry trend filter and the optional persistent
  * entry eligibility, both OFF by default (OFF = 1.1.0 exactly). Its runs are historical facts; New Test no longer
- * offers it, its catalogue phenotypes stay runnable, and it replays as 1.3.0 with the three optional rules OFF.
+ * offers it, its catalogue phenotypes stay runnable, and it replays as 1.4.0 with the three optional rules and the
+ * Drawdown Recovery Gate OFF.
  */
 export const RISE_FROM_RECENT_LOW_TRADING_1_2_0: StrategySpec = {
   key: 'rise-from-recent-low-trading',
@@ -1215,9 +1219,9 @@ export const RISE_FROM_RECENT_LOW_TRADING_1_2_0: StrategySpec = {
   formerTitles: [GROWTH_FORMER_TITLE],
   groupNotes: [...GROWTH_GROUP_NOTES, ...GATE_NOTES],
   legacy: {
-    supersededBy: '1.3.0',
+    supersededBy: '1.4.0',
     replay:
-      'version 1.3.0 with the Rise entry, the initial risk stop OFF and trend retention OFF reproduces every 1.2.0 signal, fill, exit, gate decision, continuation episode, decision-log entry, mark and metric exactly (src/growth-trading/tests/offParity-1.2.0.test.ts); its catalogue phenotypes rerun as 1.2.0 configurations; a clone starts a 1.3.0 test with the three OFF'
+      'version 1.4.0 with the Rise entry, the initial risk stop, trend retention and the Drawdown Recovery Gate OFF reproduces every 1.2.0 signal, fill, exit, gate decision, continuation episode, decision-log entry, mark and metric exactly (src/growth-trading/tests/offParity-1.2.0.test.ts); its catalogue phenotypes rerun as 1.2.0 configurations; a clone starts a 1.4.0 test with those OFF'
   }
 };
 
@@ -1306,18 +1310,18 @@ const OPTIONAL_RULES_NOTES: GroupNote[] = [
 ];
 
 /**
- * Growth, the current version (1.3.0): the 1.2.0 parameters plus the entry-method selector (Rise | trend breakout),
- * the optional initial risk stop and optional trend retention — the Rise entry and both rules OFF by default (= 1.2.0
- * exactly).
+ * Growth 1.3.0 (legacy, frozen): the 1.2.0 parameters plus the entry-method selector (Rise | trend breakout), the
+ * optional initial risk stop and optional trend retention. Its runs are historical facts; New Test no longer offers
+ * it, its catalogue phenotypes stay runnable, and it replays as 1.4.0 with the Drawdown Recovery Gate OFF.
  */
-export const RISE_FROM_RECENT_LOW_TRADING: StrategySpec = {
+export const RISE_FROM_RECENT_LOW_TRADING_1_3_0: StrategySpec = {
   key: 'rise-from-recent-low-trading',
   version: '1.3.0',
   title: GROWTH_TITLE,
   kind: 'trades',
-  launch: 'form',
+  launch: 'phenotype',
   runnable: true,
-  description: `${GROWTH_DESCRIPTION} Optional: an alternative trend-breakout entry, an initial risk stop, trend retention (a partial sale and a trend exit for the remainder), continuation entries after a profitable exit (four methods), an entry trend filter (five methods) and persistent entry eligibility (five bounded policies) — the Rise entry and every option OFF by default.`,
+  description: `${GROWTH_DESCRIPTION} Optional: an alternative trend-breakout entry, an initial risk stop, trend retention (a partial sale and a trend exit for the remainder), continuation entries after a profitable exit (four methods), an entry trend filter (five methods) and persistent entry eligibility (five bounded policies) — the Rise entry and every option OFF by default. (Version 1.3.0, before the Drawdown Recovery Gate.)`,
   schemaVersion: 2,
   params: [
     ENTRY_METHOD_PARAM,
@@ -1354,13 +1358,186 @@ export const RISE_FROM_RECENT_LOW_TRADING: StrategySpec = {
     'Breakout entry / initial risk stop / trend retention (when ON): completed daily sessions only (whatever the bar resolution); decisions at completed closes fill at the next eligible trade; a position sold in several fills is one trade.'
   ],
   formerTitles: [GROWTH_FORMER_TITLE],
-  groupNotes: [...GROWTH_GROUP_NOTES, ...GATE_NOTES, ...OPTIONAL_RULES_NOTES]
+  groupNotes: [...GROWTH_GROUP_NOTES, ...GATE_NOTES, ...OPTIONAL_RULES_NOTES],
+  legacy: {
+    supersededBy: '1.4.0',
+    replay:
+      'version 1.4.0 with the Drawdown Recovery Gate OFF reproduces every 1.3.0 signal, fill, exit, gate decision, optional-rule record, continuation episode, decision-log entry, mark and metric exactly (src/growth-trading/tests/offParity-1.3.0.test.ts); its catalogue phenotypes rerun as 1.3.0 configurations; a clone starts a 1.4.0 test with the gate OFF'
+  }
+};
+
+// Growth 1.4.0: the Drawdown Recovery Gate — an optional FILTER on Growth entry eligibility (never an entry signal),
+// one switch and four inputs; percentages are percentage points (5 = 5%), as for every Growth input.
+const drawdownOn = on('drawdownRecoveryGateEnabled');
+const DRAWDOWN_OBSERVATIONS =
+  'Observed on completed regular-session one-minute closes (and the closing print), oldest to newest, whatever the bar resolution; a minute’s high and low are never used.';
+const DRAWDOWN_GATE_PARAMS: ParamSpec[] = [
+  {
+    key: 'drawdownRecoveryGateEnabled',
+    label: 'Drawdown Recovery Gate',
+    description:
+      'OFF (default): exactly the version without it. ON: a filter on every Growth entry decision (the base signal, a latched opportunity, a renewal, a continuation trigger) — never an entry signal of its own. It permits entries when no significant recent decline is unresolved, or once the price has recovered the required share of the WHOLE peak-to-trough decline and held it for Y trading-session intervals (or regained the peak). Exits are never filtered. A blocked decision is recorded with the gate’s values, not traded; with persistent eligibility OFF it is never replayed later.',
+    type: 'boolean',
+    unit: 'text',
+    default: false,
+    group: 'drawdownGate'
+  },
+  {
+    key: 'dipLookbackSessions',
+    label: 'Dip lookback (N)',
+    description: `The DISCOVERY window: a dip is found when a close is at least d below the highest EARLIER close of the current session and the N sessions before it (the peak always precedes the trough). Once found, the dip stays active until it is resolved — the window never expires it. ${SESSIONS_NOTE}`,
+    type: 'integer',
+    unit: 'sessions',
+    default: 30,
+    min: 1,
+    max: 500,
+    step: 1,
+    search: { min: 10, max: 120, step: 10 },
+    group: 'drawdownGate',
+    activeWhen: drawdownOn,
+    whenInactive: 'hide',
+    execution: `${DRAWDOWN_OBSERVATIONS} The run loads N sessions of warm-up; while the window reaches before the loaded data the gate blocks (insufficient history).`
+  },
+  {
+    key: 'dipThresholdPercent',
+    label: 'Significant decline (d)',
+    description:
+      'The minimum peak-to-subsequent-trough decline, (peak − close) ÷ peak, that starts a dip episode. A gradual decline counts as much as a single drop.',
+    type: 'number',
+    unit: 'percent',
+    default: 5,
+    min: 0.1,
+    max: 90,
+    step: 0.1,
+    search: { min: 2, max: 15, step: 0.5 },
+    group: 'drawdownGate',
+    activeWhen: drawdownOn,
+    whenInactive: 'hide',
+    execution: 'Equality qualifies (binary rounding absorbed: relative 1e-12). A later lower close lowers the trough.'
+  },
+  {
+    key: 'recoveryRetracementPercent',
+    label: 'Required retracement (r)',
+    description:
+      'The share of the WHOLE decline to recover: threshold = trough + (peak − trough) × r. Peak 100, trough 90, r 70% → 97 — not 70% above the trough, not a rebound measured from the trough. 100% = the peak itself.',
+    type: 'number',
+    unit: 'percent',
+    default: 70,
+    min: 0.1,
+    max: 100,
+    step: 0.1,
+    search: { min: 30, max: 100, step: 10 },
+    group: 'drawdownGate',
+    activeWhen: drawdownOn,
+    whenInactive: 'hide',
+    execution: 'A new lower trough recomputes the threshold and restarts the confirmation; the peak stays the anchor.'
+  },
+  {
+    key: 'recoveryConfirmationSessions',
+    label: 'Confirmation (Y sessions)',
+    description:
+      'Trading-session intervals the recovery must hold: from the first completed minute at/above the threshold (session 0), every later minute close, opening trade and closing print must stay at/above it until the same New York time Y sessions later (Monday 11:15, Y = 2 → Wednesday 11:15). One observation below restarts it. Y = 0: permitted at the first minute at/above the threshold. Regaining the peak resolves the dip at once.',
+    type: 'integer',
+    unit: 'sessions',
+    default: 2,
+    min: 0,
+    max: 60,
+    step: 1,
+    search: { min: 0, max: 10, step: 1 },
+    group: 'drawdownGate',
+    activeWhen: drawdownOn,
+    whenInactive: 'hide',
+    execution:
+      'Early close or a missing minute at that time: the next actual completed minute. With persistent eligibility ON, an armed opportunity the gate was blocking may be decided at that minute and filled at the next trade.'
+  }
+];
+export const DRAWDOWN_GATE_PARAM_KEYS = DRAWDOWN_GATE_PARAMS.map((p) => p.key);
+
+const GROWTH_GROUPS_1_4_0 = [
+  ...GROWTH_GROUPS_1_3_0.slice(0, 3),
+  {
+    key: 'drawdownGate',
+    title: 'Drawdown Recovery Gate (optional)',
+    description:
+      'A filter on Growth entry eligibility — never an entry signal: entries are permitted when no significant recent decline is unresolved, or after a confirmed recovery of a share of the whole decline. Observed on completed one-minute prices. OFF reproduces Growth without it exactly. Defaults are illustrative, not optimised; the gate is not evidence of safer trading.'
+  },
+  ...GROWTH_GROUPS_1_3_0.slice(3)
+];
+
+const DRAWDOWN_GATE_NOTES: GroupNote[] = [
+  {
+    id: 'drawdown-gate-note',
+    group: 'drawdownGate',
+    when: drawdownOn,
+    tone: 'muted',
+    text: 'States: Normal (no unresolved dip: permits) → Recovery required (blocks) ⇄ Recovery confirmed (permits while the threshold holds) → Resolved (the peak regained: Normal, a fresh detection epoch; the old dip never re-arms). The gate never opens a trade by itself; the trend filter, eligibility and continuation remain independent switches — with both filters ON both must allow a decision.'
+  },
+  {
+    id: 'drawdown-gate-eligibility-off',
+    group: 'drawdownGate',
+    when: { all: [drawdownOn, { param: 'eligibilityEnabled', equals: false }] },
+    tone: 'muted',
+    text: 'Persistent eligibility is OFF: a signal the gate blocks is vetoed and never replayed — when the gate later permits, no entry is created until a new genuine signal. With eligibility ON, a blocked signal stays armed for its policy’s lifetime and may be entered (at the then-current price) once the gate permits, intraday at the confirming minute.'
+  }
+];
+
+/**
+ * Growth, the current version (1.4.0): the 1.3.0 parameters plus the optional Drawdown Recovery Gate (OFF by default
+ * = 1.3.0 exactly).
+ */
+export const RISE_FROM_RECENT_LOW_TRADING: StrategySpec = {
+  key: 'rise-from-recent-low-trading',
+  version: '1.4.0',
+  title: GROWTH_TITLE,
+  kind: 'trades',
+  launch: 'form',
+  runnable: true,
+  description: `${GROWTH_DESCRIPTION} Optional: an alternative trend-breakout entry, an initial risk stop, trend retention (a partial sale and a trend exit for the remainder), continuation entries after a profitable exit (four methods), an entry trend filter (five methods), persistent entry eligibility (five bounded policies) and the Drawdown Recovery Gate (entries only without an unresolved significant dip, or after a confirmed recovery of a share of the whole decline) — the Rise entry and every option OFF by default.`,
+  schemaVersion: 2,
+  params: [
+    ENTRY_METHOD_PARAM,
+    X_1_3_0,
+    N_1_3_0,
+    ...BREAKOUT_PARAMS,
+    ...TREND_PARAMS,
+    ...ELIGIBILITY_PARAMS_1_3_0,
+    ...DRAWDOWN_GATE_PARAMS,
+    ...GROWTH_BASE_PARAMS.slice(2, -1),
+    ...INITIAL_STOP_PARAMS,
+    ...RETENTION_PARAMS,
+    ...CONTINUATION_PARAMS,
+    GROWTH_BASE_PARAMS.at(-1)!
+  ],
+  groups: GROWTH_GROUPS_1_4_0,
+  constraints: [
+    BUFFER_NEEDS_HOLD,
+    PULLBACK_BAND,
+    {
+      kind: 'less',
+      id: 'momentum-short-long',
+      a: 'trendMomentumShortSessions',
+      b: 'trendMomentumLongSessions',
+      message: 'Momentum trend filter: the short lookback S must be below the long lookback L'
+    }
+  ],
+  identity: 'effective',
+  resolutions: RESOLUTIONS,
+  defaultResolution: '1d',
+  notes: [
+    ...GROWTH_NOTES,
+    CONTINUATION_NOTE,
+    'Entry trend filter / persistent eligibility (when ON): decisions at completed bar ends, trend windows in trading sessions; a later (latched) entry fills at the next eligible trade at the then-current price.',
+    'Breakout entry / initial risk stop / trend retention (when ON): completed daily sessions only (whatever the bar resolution); decisions at completed closes fill at the next eligible trade; a position sold in several fills is one trade.',
+    'Drawdown Recovery Gate (when ON): maintained on completed one-minute closes whatever the bar resolution; it only allows or blocks Growth entry decisions (exits never); an armed opportunity may be decided at the confirming minute and fills at the next eligible trade.'
+  ],
+  formerTitles: [GROWTH_FORMER_TITLE],
+  groupNotes: [...GROWTH_GROUP_NOTES, ...GATE_NOTES, ...OPTIONAL_RULES_NOTES, ...DRAWDOWN_GATE_NOTES]
 };
 
 /**
  * Growth 1.1.0 (legacy, frozen): its runs are historical facts; New Test no longer offers it, but its catalogue
- * phenotypes stay runnable as single tests. It replays as 1.3.0 with the trend filter, eligibility and the three
- * optional rules OFF.
+ * phenotypes stay runnable as single tests. It replays as 1.4.0 with the trend filter, eligibility, the three
+ * optional rules and the Drawdown Recovery Gate OFF.
  */
 export const RISE_FROM_RECENT_LOW_TRADING_1_1_0: StrategySpec = {
   key: 'rise-from-recent-low-trading',
@@ -1381,13 +1558,13 @@ export const RISE_FROM_RECENT_LOW_TRADING_1_1_0: StrategySpec = {
   formerTitles: [GROWTH_FORMER_TITLE],
   groupNotes: GROWTH_GROUP_NOTES,
   legacy: {
-    supersededBy: '1.3.0',
+    supersededBy: '1.4.0',
     replay:
-      'version 1.3.0 with the entry trend filter, persistent eligibility and the three optional rules OFF reproduces every 1.1.0 signal, fill, exit, continuation episode, decision-log entry, mark and metric exactly (src/growth-trading/tests/offParity-1.1.0.test.ts); its catalogue phenotypes rerun as 1.1.0 configurations; a clone starts a 1.3.0 test with all of them OFF'
+      'version 1.4.0 with the entry trend filter, persistent eligibility, the three optional rules and the Drawdown Recovery Gate OFF reproduces every 1.1.0 signal, fill, exit, continuation episode, decision-log entry, mark and metric exactly (src/growth-trading/tests/offParity-1.1.0.test.ts); its catalogue phenotypes rerun as 1.1.0 configurations; a clone starts a 1.4.0 test with all of them OFF'
   }
 };
 
-/** Growth 1.0.0 (legacy, frozen): its runs are historical facts; it replays as 1.3.0 with every option OFF. */
+/** Growth 1.0.0 (legacy, frozen): its runs are historical facts; it replays as 1.4.0 with every option OFF. */
 export const RISE_FROM_RECENT_LOW_TRADING_1_0_0: StrategySpec = {
   key: 'rise-from-recent-low-trading',
   version: '1.0.0',
@@ -1407,9 +1584,9 @@ export const RISE_FROM_RECENT_LOW_TRADING_1_0_0: StrategySpec = {
   formerTitles: [GROWTH_FORMER_TITLE],
   groupNotes: GROWTH_GROUP_NOTES.filter((n) => n.group !== 'continuation'),
   legacy: {
-    supersededBy: '1.3.0',
+    supersededBy: '1.4.0',
     replay:
-      'version 1.3.0 with continuation, the entry trend filter, persistent eligibility and the three optional rules OFF reproduces every 1.0.0 signal, fill, exit, mark and metric exactly (src/growth-trading/tests/offParity.test.ts); a clone starts a 1.3.0 test with all of them OFF'
+      'version 1.4.0 with continuation, the entry trend filter, persistent eligibility, the three optional rules and the Drawdown Recovery Gate OFF reproduces every 1.0.0 signal, fill, exit, mark and metric exactly (src/growth-trading/tests/offParity.test.ts); a clone starts a 1.4.0 test with all of them OFF'
   }
 };
 
@@ -1458,6 +1635,7 @@ export const DEMO_TOY_RULES: StrategySpec = {
 export const STRATEGY_REGISTRY: readonly StrategySpec[] = [
   RISE_FROM_RECENT_LOW,
   RISE_FROM_RECENT_LOW_TRADING,
+  RISE_FROM_RECENT_LOW_TRADING_1_3_0,
   RISE_FROM_RECENT_LOW_TRADING_1_2_0,
   RISE_FROM_RECENT_LOW_TRADING_1_1_0,
   RISE_FROM_RECENT_LOW_TRADING_1_0_0,

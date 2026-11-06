@@ -1608,7 +1608,9 @@ export const entryGatesMetricsOf = (sim: Simulation, rows: readonly LedgerRow[])
           trend_veto: sum(ops.map((o) => o.blockedEvaluations.trend_veto)),
           insufficient_history: sum(ops.map((o) => o.blockedEvaluations.insufficient_history)),
           invalid_data: sum(ops.map((o) => o.blockedEvaluations.invalid_data)),
-          capital_unavailable: sum(ops.map((o) => o.blockedEvaluations.capital_unavailable))
+          capital_unavailable: sum(ops.map((o) => o.blockedEvaluations.capital_unavailable)),
+          // v1.4.0, only with the Drawdown Recovery Gate ON
+          ...(g.drawdown ? { drawdown_gate: sum(ops.map((o) => o.blockedEvaluations.drawdown_gate)) } : {})
         },
         ageSessionsAtDecision: {
           mean: ages.length ? sum(ages) / ages.length : null,

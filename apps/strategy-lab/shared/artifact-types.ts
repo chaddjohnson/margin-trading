@@ -52,7 +52,88 @@ export interface SymbolMetrics {
   continuation?: ContinuationCounts;
   entryGates?: EntryGateCounts; // Growth 1.2.0, only with the trend filter or eligibility ON
   optionalRules?: OptionalRulesCounts; // Growth 1.3.0, only with the breakout entry, the initial stop or retention ON
+  drawdownGate?: DrawdownGateCounts; // Growth 1.4.0, only with the Drawdown Recovery Gate ON
   signals?: { raw?: number; filled?: number; rejected?: number; vetoed?: number; deferred?: number; vetoedByReason?: Record<string, number> };
+}
+
+// Growth 1.4.0 (runner/trading-run.ts drawdownSummary): descriptive counts of the Drawdown Recovery Gate.
+export interface DrawdownGateCounts {
+  config: { lookbackSessions: number; dipThresholdPercent: number; recoveryRetracementPercent: number; confirmationSessions: number };
+  episodes: {
+    total: number;
+    detectedBeforeWindow: number;
+    detectedWhileWindowIncomplete: number;
+    resolved: number;
+    resolvedBeforeConfirmation: number;
+    unresolvedAtEnd: Record<string, number>;
+    maxDipPercent: { n: number; mean: number | null; median: number | null; min: number | null; max: number | null };
+    sessionsDetectionToResolution: { n: number; mean: number | null; median: number | null; min: number | null; max: number | null };
+  };
+  confirmations: {
+    recoveryStarts: number;
+    confirmed: number;
+    resetsBeforeConfirmation: number;
+    confirmationsLost: number;
+    resetsByCause: Record<string, number>;
+  };
+  releases: { total: number; byCause: Record<string, number> };
+  blockedDecisions: { total: number; byKind: Record<string, number> };
+  blockedCrossings: number;
+  blockedCrossingsByDisposition: Record<string, number>;
+  blockedContinuations: number;
+  opportunitiesBlocked: number;
+  deferredEligibleEntries: number;
+  releaseDecisions: { total: number; taken: number };
+  tradesAfterAGateBlock: { trades: number; closed: number; wins: number; realizedNetUsd: number };
+  windowSessionsAtClose: Record<string, number>;
+  stateAtEnd: string;
+  note: string;
+}
+
+// Growth 1.4.0 (decisions.json perSymbol.drawdownGate, only with the gate ON): one episode, one transition.
+export interface DrawdownEpisodeRecord {
+  id: string;
+  epoch: number;
+  state: string;
+  peak: StampedTime & { session: string | null; price: number; observation: string };
+  detected: StampedTime & { session: string | null; price: number; dipPercent: number };
+  trough: StampedTime & { session: string | null; price: number };
+  maxDipPercent: number;
+  retracementPercent: number;
+  threshold: number;
+  troughUpdates: number;
+  recoveryStarts: number;
+  confirmations: number;
+  confirmationResets: number;
+  confirmationLosses: number;
+  resetsByCause: Record<string, number>;
+  firstConfirmed: StampedTime | null;
+  resolved: (StampedTime & { session: string | null; price: number; beforeConfirmation: boolean }) | null;
+  windowCompleteAtDetection: boolean;
+  detectedBeforeWindow: boolean;
+  blockedDecisions: Record<string, number>;
+  streakAtEnd: Record<string, unknown> | null;
+}
+
+export interface DrawdownTransitionRecord extends StampedTime {
+  seq: number;
+  session: string | null;
+  event: string;
+  episode: string | null;
+  observation: string;
+  price: number;
+  state: string;
+  reason: string;
+  values: Record<string, unknown>;
+}
+
+export interface DrawdownGateRecords {
+  config: DrawdownGateCounts['config'];
+  detector: Record<string, unknown>;
+  episodes: DrawdownEpisodeRecord[];
+  transitions: DrawdownTransitionRecord[];
+  releases: (StampedTime & { session: string | null; price: number; observation: string; episode: string | null; cause: string })[];
+  summary: DrawdownGateCounts | null;
 }
 
 // Growth 1.3.0 (riseTrading.ts optionalRulesMetricsOf): descriptive counts of the optional rules.
@@ -221,10 +302,19 @@ export interface EntryDecisionRecord {
   crossing: { threshold: number; recentLow: number; advancePercent: number } | null;
   disposition: string;
   reason: string | null;
-  gate: { decision: string | null; text: string | null; capital: boolean | null; trend: Record<string, unknown> | null } | null;
+  gate: {
+    decision: string | null;
+    text: string | null;
+    capital: boolean | null;
+    trend: Record<string, unknown> | null;
+    drawdown?: Record<string, unknown>; // Growth 1.4.0, only with the Drawdown Recovery Gate ON
+    blockedBy?: string[];
+  } | null;
   policy: Record<string, unknown> | null;
   opportunity: string | null;
   episode?: string;
+  via?: string; // Growth 1.4.0: 'drawdown_release' for a latched decision taken at the gate's release
+  values?: Record<string, unknown>;
   trade: string | null;
   status: string | null;
   netUsd: number | null;
@@ -241,6 +331,7 @@ export interface DecisionsFile {
       opportunities?: OpportunityRecord[];
       renewalWatches?: Record<string, unknown>[];
       entryDecisions?: EntryDecisionRecord[];
+      drawdownGate?: DrawdownGateRecords; // Growth 1.4.0, only with the Drawdown Recovery Gate ON
     }
   >;
 }

@@ -1,7 +1,7 @@
 // The Strategy Lab trading-backtest runner ("Growth"): ONE manual test of one configuration of
-// rise-from-recent-low-trading@1.3.0 (or a replay of a legacy request: @1.2.0 = 1.3.0 with the Rise entry, the initial
-// risk stop and trend retention OFF; @1.1.0 = also the entry trend filter and persistent eligibility OFF; @1.0.0 = also
-// continuation OFF),
+// rise-from-recent-low-trading@1.4.0 (or a replay of a legacy request: @1.3.0 = 1.4.0 with the Drawdown Recovery Gate
+// OFF; @1.2.0 = also the Rise entry, the initial risk stop and trend retention OFF; @1.1.0 = also the entry trend filter
+// and persistent eligibility OFF; @1.0.0 = also continuation OFF),
 // started by the server as a child process with a fixed argument vector:
 //
 //   node --experimental-transform-types runner/trading-run.ts <absolute run directory>
@@ -26,8 +26,10 @@ import {
   type LogEntry,
   type LogValue
 } from '../../../src/growth-trading/continuation.ts';
+import type { DrawdownCheck, DrawdownRecoveryGate } from '../../../src/growth-trading/drawdownGate.ts';
 import {
   ELIGIBILITY_POLICY_LABEL,
+  type GateResult,
   type GatedDecision,
   type Opportunity,
   TREND_METHOD_LABEL
@@ -68,6 +70,7 @@ const ENGINE_FILES = [
   'src/growth-trading/continuation.ts',
   'src/growth-trading/entryGates.ts',
   'src/growth-trading/optionalRules.ts',
+  'src/growth-trading/drawdownGate.ts',
   'src/multi-etf-allocator/shadow.ts',
   'src/multi-etf-allocator/engine.ts',
   'src/multi-etf-allocator/ledger.ts',
@@ -182,7 +185,9 @@ async function main() {
   const continuation = params.continuation ?? null;
   const trendFilter = params.trendFilter ?? null;
   const eligibility = params.eligibility ?? null;
-  const gated = Boolean(trendFilter || eligibility);
+  // v1.4.0: the Drawdown Recovery Gate (absent = OFF: the 1.3.0 artifacts exactly, plus metrics' {enabled: false})
+  const drawdownCfg = params.drawdownGate ?? null;
+  const gated = Boolean(trendFilter || eligibility || drawdownCfg);
   // v1.3.0 optional rules (each absent = OFF, the v1.2.0 artifacts exactly)
   const entryMethod = params.entryMethod ?? 'rise_from_recent_low';
   const breakoutCfg = params.breakout ?? null;
@@ -237,6 +242,49 @@ async function main() {
           ? 'decided, but its order was not filled before the end of the window'
           : `${o.endState}${o.endReason ? ` (${o.endReason})` : ''}`;
     const gateText = (d: GatedDecision | undefined) => (d?.gate ? d.gate.text : d?.reason ?? '');
+    // v1.4.0: the Drawdown Recovery Gate (null with it OFF) and its state at each trade's entry decision
+    const dd: DrawdownRecoveryGate | null = g?.drawdown ?? null;
+    const continuationOutcomeOf = new Map(
+      (sim.continuation?.outcomes ?? []).filter((o) => o.trade).map((o) => [o.trade!, o] as const)
+    );
+    const entryDrawdown = (t: LedgerRow['trade']): { state: string; values: Record<string, LogValue> } | null => {
+      const c: DrawdownCheck | undefined = g?.decisionOf(t)?.gate?.drawdown;
+      if (c) return { state: c.state, values: c.values };
+      const o = continuationOutcomeOf.get(t);
+      if (!o || !('drawdown.state' in o.values)) return null;
+      const values = Object.fromEntries(
+        Object.entries(o.values)
+          .filter(([key]) => key.startsWith('drawdown.'))
+          .map(([key, v]) => [key.slice('drawdown.'.length), v])
+      );
+      return { state: String(values.state), values };
+    };
+    const entryDrawdownValues = (t: LedgerRow['trade']): LabValue[] => {
+      const d = entryDrawdown(t);
+      return d
+        ? [
+            { key: 'drawdown.stateAtDecision', label: 'Drawdown gate at the decision', value: d.state, unit: 'text' as const },
+            ...(d.values.episode ? [{ key: 'drawdown.episode', label: 'Drawdown episode', value: d.values.episode, unit: 'text' as const }] : []),
+            ...(typeof d.values.threshold === 'number'
+              ? [{ key: 'drawdown.threshold', label: 'Recovery threshold at the decision', value: r4(d.values.threshold), unit: 'price' as const }]
+              : [])
+          ]
+        : [];
+    };
+    // the opportunities the gate blocked at least once (an entry_blocked transition names them)
+    const ddBlockedOpportunities = new Set(
+      (dd?.transitions ?? [])
+        .filter((x) => x.event === 'entry_blocked_by_drawdown_gate' && typeof x.values.opportunity === 'string')
+        .map((x) => x.values.opportunity as string)
+    );
+    // v1.4.0: the Drawdown Recovery Gate's values at a decision (only with it ON)
+    const ddFields = (gr: GateResult | null | undefined): LabValue[] =>
+      gr?.drawdown
+        ? [
+            ...gateValues('drawdown.', gr.drawdown.values),
+            { key: 'blockedBy', label: 'Blocked by', value: gr.blockedBy!.length ? gr.blockedBy!.join(', ') : 'none', unit: 'text' as const }
+          ]
+        : [];
     let cumulative = 0;
     const cumulativeAfter = new Map<LedgerRow, number>();
     for (const row of rows) if (row.status === 'closed') cumulativeAfter.set(row, (cumulative += row.net));
@@ -307,7 +355,8 @@ async function main() {
               ? [
                   { key: 'entryGate', label: 'Entry gate', value: gd.gate ? gd.gate.reason : gd.disposition, unit: 'text' as const },
                   ...(gd.gate?.trend ? gateValues('trend.', gd.gate.trend.values) : []),
-                  ...protectionFields(gd.gate?.protection)
+                  ...protectionFields(gd.gate?.protection),
+                  ...ddFields(gd.gate)
                 ]
               : []),
             ...protectionFields(o.protection)
@@ -342,6 +391,7 @@ async function main() {
             { key: 'entryGate', label: 'Entry gate', value: gd.gate ? gd.gate.reason : gd.disposition, unit: 'text' },
             ...(gd.gate?.trend ? gateValues('trend.', gd.gate.trend.values) : []),
             ...protectionFields(gd.gate?.protection),
+            ...ddFields(gd.gate),
             ...(gd.validity ? gateValues('policy.', gd.validity) : []),
             ...(op
               ? [
@@ -463,6 +513,10 @@ async function main() {
         { key: 'entryGate', label: 'Entry gate', value: d.gate ? d.gate.reason : d.disposition, unit: 'text' },
         ...(d.gate?.trend ? gateValues('trend.', d.gate.trend.values) : []),
         ...protectionFields(d.gate?.protection),
+        ...ddFields(d.gate),
+        ...(d.via
+          ? [{ key: 'via', label: 'Decided at', value: 'the Drawdown Recovery Gate release (a completed one-minute close, intraday)', unit: 'text' as const }]
+          : []),
         ...(d.validity ? gateValues('policy.', d.validity) : []),
         {
           key: 'disposition',
@@ -479,7 +533,7 @@ async function main() {
       ];
       const what =
         d.kind === 'latched'
-          ? `Latched opportunity ${op.id} (armed by the ${op.source === 'eligibility_renewal' ? 'renewal' : 'Rise'} signal of ${ny(op.signalTime)} at ${op.signalPrice.toFixed(2)}; ${ELIGIBILITY_POLICY_LABEL[op.policy]}), age ${d.session - op.signalSession} session(s): its policy and the gates pass at ${d.price.toFixed(2)}`
+          ? `Latched opportunity ${op.id} (armed by the ${op.source === 'eligibility_renewal' ? 'renewal' : 'Rise'} signal of ${ny(op.signalTime)} at ${op.signalPrice.toFixed(2)}; ${ELIGIBILITY_POLICY_LABEL[op.policy]}), age ${d.session - op.signalSession} session(s)${d.via ? `, decided at the Drawdown Recovery Gate release ${ny(d.time)} (the minute close at which the gate turned permissive; not a new signal)` : ''}: its policy and the gates pass at ${d.price.toFixed(2)}`
           : `Renewal signal (${op.renewedFrom} ended unconsumed; reset to ${op.renewal!.resetPrice.toFixed(2)}, rebound ≥ ${op.renewal!.reboundThreshold.toFixed(2)}), close ${d.price.toFixed(2)}: opportunity ${op.id}`;
       events.push({
         id: `${symbol}:${d.kind}:${t}`,
@@ -487,10 +541,12 @@ async function main() {
         symbol,
         kind: taken ? 'entry_signal' : 'rejected_signal',
         t,
-        timePrecision: daily ? 'session-close' : 'minute',
-        timeMeaning: daily
-          ? 'scheduled close of the session (16:00 ET, 13:00 on early-close days): the daily bar is complete'
-          : `end of the completed ${request.resolution} bar: the decision is first knowable`,
+        timePrecision: daily && !d.via ? 'session-close' : 'minute',
+        timeMeaning: d.via
+          ? 'end of the completed one-minute bar at which the Drawdown Recovery Gate turned permissive: the decision is first knowable (intraday; the fill is the next eligible trade)'
+          : daily
+            ? 'scheduled close of the session (16:00 ET, 13:00 on early-close days): the daily bar is complete'
+            : `end of the completed ${request.resolution} bar: the decision is first knowable`,
         price: d.price,
         priceBasis: 'bar-close',
         reason: taken
@@ -507,7 +563,8 @@ async function main() {
           opportunity: op.id,
           disposition: taken ? (tradeId ? 'taken' : 'unfilled') : d.disposition,
           reasonCode: taken ? (tradeId ? 'filled' : 'unfilled_at_end') : (d.gate?.reason ?? d.disposition),
-          entryGate: d.gate ? d.gate.reason : d.disposition
+          entryGate: d.gate ? d.gate.reason : d.disposition,
+          ...(d.via ? { via: d.via } : {})
         }
       });
     }
@@ -697,6 +754,8 @@ async function main() {
           ...(breakoutTrade && !source
             ? [{ key: 'entrySource', label: 'Entry source', value: 'trend_breakout', unit: 'text' as const }]
             : []),
+          // v1.4.0: the Drawdown Recovery Gate at the decision (only with it ON)
+          ...(drawdownCfg ? entryDrawdownValues(tr) : []),
           ...(stop
             ? [
                 { key: 'initialStop', label: 'Initial risk stop (fixed)', value: r4(stop.level), unit: 'price' as const },
@@ -718,7 +777,8 @@ async function main() {
           ...(source ? { entrySource: source, opportunity: op?.id ?? null } : {}),
           ...(breakoutTrade && !source ? { entrySource: 'trend_breakout' } : {}),
           ...(stop ? { initialStop: stop.level } : {}),
-          ...(pos?.fills.some((f) => f.partial) ? { partialFills: pos.fills.filter((f) => f.partial).length } : {})
+          ...(pos?.fills.some((f) => f.partial) ? { partialFills: pos.fills.filter((f) => f.partial).length } : {}),
+          ...(drawdownCfg ? { drawdownGate: entryDrawdown(tr)?.state ?? null, ...(gd?.via ? { via: gd.via } : {}) } : {})
         }
       });
       // v1.3.0 retention: each partial fill is an executed exit of the SAME trade, marked partial (the position stays
@@ -856,6 +916,84 @@ async function main() {
       });
     }
 
+    // v1.4.0: the Drawdown Recovery Gate's descriptive counts (path dependence: never a per-trade causal attribution)
+    const drawdownSummary = () => {
+      const gate = dd!;
+      const eps = gate.episodes;
+      const stats = (xs: number[]) => {
+        if (!xs.length) return { n: 0, mean: null, median: null, min: null, max: null };
+        const a = [...xs].sort((x, y) => x - y);
+        const mid = a.length >> 1;
+        return {
+          n: a.length,
+          mean: r4(a.reduce((x, y) => x + y, 0) / a.length),
+          median: r4(a.length % 2 ? a[mid]! : (a[mid - 1]! + a[mid]!) / 2),
+          min: r4(a[0]!),
+          max: r4(a.at(-1)!)
+        };
+      };
+      const count = <T,>(xs: T[], key: (x: T) => string) =>
+        xs.reduce<Record<string, number>>((acc, x) => ((acc[key(x)] = (acc[key(x)] ?? 0) + 1), acc), {});
+      const blocked = gate.transitions.filter((x) => x.event === 'entry_blocked_by_drawdown_gate');
+      const ddBlocks = (gr: GateResult | null | undefined) => Boolean(gr?.drawdown && !gr.drawdown.pass);
+      const crossingsBlocked = sim.outcomes.filter((o) => ddBlocks(o.gate?.gate));
+      const continuationsBlocked = (sim.continuation?.outcomes ?? []).filter((o) => o.status === 'vetoed' && o.values['drawdown.state'] !== undefined && String(o.values.blockedBy ?? '').includes('drawdown'));
+      const releaseDecisions = (g?.decisions ?? []).filter((d) => d.via === 'drawdown_release');
+      const deferredTaken = (g?.opportunities ?? []).filter((o) => ddBlockedOpportunities.has(o.id) && o.trade);
+      const afterBlockRows = rows.filter((row) => {
+        const op = g?.decisionOf(row.trade)?.opportunity;
+        return Boolean(op && ddBlockedOpportunities.has(op.id));
+      });
+      // the gate's state at each window session's close (reconstructed from its transitions, which carry the state after)
+      const atClose: Record<string, number> = { normal: 0, recovery_required: 0, recovery_confirmed: 0, insufficient_history: 0 };
+      let state = 'normal';
+      let i = 0;
+      const tr = gate.transitions.filter((x) => x.kind !== 'decision');
+      for (let s = 0; s <= sim.endSession; s++) {
+        while (i < tr.length && tr[i]!.t <= ds.sCloseTime[s]!) state = tr[i++]!.state;
+        if (s >= sim.firstSession) atClose[s < gate.config.lookbackSessions ? 'insufficient_history' : state]!++;
+      }
+      return {
+        config: gate.config,
+        episodes: {
+          total: eps.length,
+          detectedBeforeWindow: eps.filter((e) => e.beforeRun).length,
+          detectedWhileWindowIncomplete: eps.filter((e) => !e.windowCompleteAtDetection).length,
+          resolved: eps.filter((e) => e.state === 'resolved').length,
+          resolvedBeforeConfirmation: eps.filter((e) => e.resolvedBeforeConfirmation).length,
+          unresolvedAtEnd: count(eps.filter((e) => e.state !== 'resolved'), (e) => e.state),
+          maxDipPercent: stats(eps.map((e) => e.maxDipPercent)),
+          sessionsDetectionToResolution: stats(eps.filter((e) => e.state === 'resolved').map((e) => e.resolvedSession - e.detectedSession))
+        },
+        confirmations: {
+          recoveryStarts: eps.reduce((a, e) => a + e.recoveryStarts, 0),
+          confirmed: eps.reduce((a, e) => a + e.confirmations, 0),
+          resetsBeforeConfirmation: eps.reduce((a, e) => a + e.confirmationResets, 0),
+          confirmationsLost: eps.reduce((a, e) => a + e.confirmationLosses, 0),
+          resetsByCause: eps.reduce<Record<string, number>>((acc, e) => {
+            for (const [k, v] of Object.entries(e.resetsByCause)) acc[k] = (acc[k] ?? 0) + v;
+            return acc;
+          }, {})
+        },
+        releases: { total: gate.releases.length, byCause: count(gate.releases, (x) => x.cause) },
+        blockedDecisions: { total: blocked.length, byKind: count(blocked, (x) => String(x.values.decisionKind)) },
+        blockedCrossings: crossingsBlocked.length,
+        blockedCrossingsByDisposition: count(crossingsBlocked, (o) => o.status),
+        blockedContinuations: continuationsBlocked.length,
+        opportunitiesBlocked: ddBlockedOpportunities.size,
+        deferredEligibleEntries: deferredTaken.length,
+        releaseDecisions: { total: releaseDecisions.length, taken: releaseDecisions.filter((d) => d.disposition === 'taken').length },
+        tradesAfterAGateBlock: {
+          trades: afterBlockRows.length,
+          closed: afterBlockRows.filter((x) => x.status === 'closed').length,
+          wins: afterBlockRows.filter((x) => x.status === 'closed' && x.net > 0).length,
+          realizedNetUsd: r2(afterBlockRows.filter((x) => x.status === 'closed').reduce((a, x) => a + x.net, 0))
+        },
+        windowSessionsAtClose: atClose,
+        stateAtEnd: gate.state,
+        note: 'Descriptive counts of one run. Path dependence: a blocked or delayed entry changes every later decision, so these are not causal per-trade contributions — compare with an otherwise identical run with the gate OFF (paired).'
+      };
+    };
     const drawdown = (d: (typeof metrics.drawdown)['minute'], asDate: boolean) => ({
       ...d,
       peakTime: d.peakTime === null ? null : asDate ? dateOf(d.peakTime) : iso(d.peakTime),
@@ -869,7 +1007,9 @@ async function main() {
         trailingStopFraction: exit.trailingStopPercentage,
         maximumHoldDays: Number.isFinite(exit.maximumHoldDays) ? exit.maximumHoldDays : null,
         intradayLossBufferFraction: Number.isFinite(exit.intradayLossBuffer) ? exit.intradayLossBuffer : null
-      }
+      },
+      // v1.4.0: descriptive Drawdown Recovery Gate counts (only with it ON)
+      ...(dd ? { drawdownGate: drawdownSummary() } : {})
     };
     // v1.3.0: the per-fill accounting of a position under the optional rules (every fill, its principal repayment,
     // interest, costs and net; the stop; the open remainder), enough to re-book it independently.
@@ -979,7 +1119,28 @@ async function main() {
         : {}),
       // v1.3.0 (only with the breakout entry, the initial risk stop or retention ON)
       ...((row.trade.setupKind as string) === 'trend_breakout' && !g ? { entrySource: 'trend_breakout' } : {}),
-      ...(rules ? ledgerRules(row) : {})
+      ...(rules ? ledgerRules(row) : {}),
+      // v1.4.0 (only with the Drawdown Recovery Gate ON): the gate at this trade's entry decision
+      ...(drawdownCfg
+        ? (() => {
+            const d = entryDrawdown(row.trade);
+            const gd = g?.decisionOf(row.trade);
+            const op = gd?.opportunity ?? null;
+            return {
+              drawdownGate: d
+                ? {
+                    stateAtDecision: d.state,
+                    episode: d.values.episode ?? null,
+                    threshold: d.values.threshold ?? null,
+                    peak: d.values.peak ?? null,
+                    trough: d.values.trough ?? null,
+                    decidedAtRelease: gd?.via === 'drawdown_release',
+                    opportunityBlockedByGateBefore: op ? ddBlockedOpportunities.has(op.id) : false
+                  }
+                : null
+            };
+          })()
+        : {})
     }));
     marks[symbol] = sim.daily.map((d) => ({
       date: d.date,
@@ -995,6 +1156,66 @@ async function main() {
     const netOf = (t: LogEntry['trade']) => {
       const row = t ? rowOf.get(t) : undefined;
       return row ? { trade: tradeIds.get(t!)!, status: row.status, netUsd: r2(row.net), netKind: row.status === 'open' ? 'unrealized (marked at the last close)' : 'realized', fill: { ...when(t!.entryTime), price: t!.entryRawPrice } } : { trade: t ? `order (unfilled, decided ${iso(t.decisionTime)})` : null, status: null, netUsd: null, netKind: null, fill: null };
+    };
+    // v1.4.0: a gate result's drawdown part (absent with the gate OFF: the 1.3.0 record shape)
+    const ddRecord = (gr: GateResult) => (gr.drawdown ? { drawdown: gr.drawdown.values, blockedBy: gr.blockedBy } : {});
+    const sessionDate = (i: number) => (i >= 0 ? (r.ds.dates[i] ?? null) : null);
+    const drawdownRecords = () => {
+      const gate = dd!;
+      return {
+        config: gate.config,
+        detector: {
+          firstSession: r.ds.dates[0],
+          firstSimulatedSession: r.ds.dates[sim.firstSession],
+          windowCompleteFrom: r.ds.dates[gate.config.lookbackSessions] ?? null,
+          observations: gate.observations,
+          fullObservations: gate.fullObservations,
+          stateAtEnd: gate.state,
+          observationRule:
+            'opening trade and reopening trade after missing minutes: continuity only; every completed regular-session minute close (at the minute end) and the closing print (at the scheduled close): full observations'
+        },
+        episodes: gate.episodes.map((e) => ({
+          id: e.id,
+          epoch: e.epoch,
+          state: e.state,
+          peak: { ...when(e.peakTime), session: sessionDate(e.peakSession), price: e.peak, observation: e.peakKind },
+          detected: { ...when(e.detectedTime), session: sessionDate(e.detectedSession), price: e.detectedPrice, dipPercent: r4(e.detectedDipPercent) },
+          trough: { ...when(e.troughTime), session: sessionDate(e.troughSession), price: e.trough },
+          maxDipPercent: r4(e.maxDipPercent),
+          retracementPercent: gate.config.recoveryRetracementPercent,
+          threshold: r4(e.threshold),
+          troughUpdates: e.troughUpdates,
+          recoveryStarts: e.recoveryStarts,
+          confirmations: e.confirmations,
+          confirmationResets: e.confirmationResets,
+          confirmationLosses: e.confirmationLosses,
+          resetsByCause: e.resetsByCause,
+          firstConfirmed: Number.isFinite(e.firstConfirmedTime) ? when(e.firstConfirmedTime) : null,
+          resolved: Number.isFinite(e.resolvedTime)
+            ? { ...when(e.resolvedTime), session: sessionDate(e.resolvedSession), price: e.resolvedPrice, beforeConfirmation: e.resolvedBeforeConfirmation }
+            : null,
+          windowCompleteAtDetection: e.windowCompleteAtDetection,
+          detectedBeforeWindow: e.beforeRun,
+          blockedDecisions: e.blocked,
+          streakAtEnd: e.streak
+            ? { start: when(e.streak.startTime), startSession: sessionDate(e.streak.startSession), startPrice: e.streak.startPrice, confirmed: e.streak.confirmedSession >= 0 }
+            : null
+        })),
+        transitions: gate.transitions.map((x) => ({
+          seq: x.seq,
+          ...when(x.t),
+          session: sessionDate(x.session),
+          event: x.event,
+          episode: x.episode,
+          observation: x.kind,
+          price: x.price,
+          state: x.state,
+          reason: x.reason,
+          values: x.values
+        })),
+        releases: gate.releases.map((x) => ({ ...when(x.time), session: sessionDate(x.session), price: x.price, observation: x.kind, episode: x.episode, cause: x.cause })),
+        summary: perSymbol[symbol] ? (perSymbol[symbol] as { drawdownGate?: unknown }).drawdownGate ?? null : null
+      };
     };
     const gateRecords = () => ({
       opportunities: g!.opportunities.map((o) => ({
@@ -1040,7 +1261,7 @@ async function main() {
             : {}),
           disposition: o.status,
           reason: o.reason,
-          gate: o.gate?.gate ? { decision: o.gate.gate.reason, text: o.gate.gate.text, capital: o.gate.gate.capital, trend: o.gate.gate.trend?.values ?? null } : null,
+          gate: o.gate?.gate ? { decision: o.gate.gate.reason, text: o.gate.gate.text, capital: o.gate.gate.capital, trend: o.gate.gate.trend?.values ?? null, ...ddRecord(o.gate.gate) } : null,
           policy: o.gate?.validity ?? null,
           opportunity: o.gate?.opportunity?.id ?? null,
           ...netOf(o.status === 'rejected' ? null : o.trade)
@@ -1057,9 +1278,10 @@ async function main() {
             crossing: null,
             disposition: d.disposition,
             reason: d.reason,
-            gate: d.gate ? { decision: d.gate.reason, text: d.gate.text, capital: d.gate.capital, trend: d.gate.trend?.values ?? null } : null,
+            gate: d.gate ? { decision: d.gate.reason, text: d.gate.text, capital: d.gate.capital, trend: d.gate.trend?.values ?? null, ...ddRecord(d.gate) } : null,
             policy: d.validity,
             opportunity: d.opportunity?.id ?? null,
+            ...(d.via ? { via: d.via } : {}),
             ...netOf(d.trade)
           })),
         ...(ctl?.outcomes ?? []).map((o) => ({
@@ -1121,6 +1343,8 @@ async function main() {
         values: x.values
       })),
       ...(g ? gateRecords() : {}),
+      // v1.4.0: the Drawdown Recovery Gate's records (only with it ON)
+      ...(dd ? { drawdownGate: drawdownRecords() } : {}),
       // v1.3.0: the optional rules' records (only with one ON)
       ...(optional
         ? {
@@ -1194,7 +1418,7 @@ async function main() {
         engineVersion: STRATEGY_VERSION,
         ...(legacy
           ? {
-              legacyReplay: `${request.strategyVersion} replayed as ${STRATEGY_VERSION} with ${request.strategyVersion === '1.0.0' ? 'continuation, the entry trend filter, persistent eligibility and the three optional rules' : request.strategyVersion === '1.1.0' ? 'the entry trend filter, persistent eligibility and the three optional rules' : 'the Rise entry and the initial risk stop and trend retention'} OFF`
+              legacyReplay: `${request.strategyVersion} replayed as ${STRATEGY_VERSION} with ${request.strategyVersion === '1.0.0' ? 'continuation, the entry trend filter, persistent eligibility, the three optional rules and the Drawdown Recovery Gate' : request.strategyVersion === '1.1.0' ? 'the entry trend filter, persistent eligibility, the three optional rules and the Drawdown Recovery Gate' : request.strategyVersion === '1.2.0' ? 'the Rise entry, the initial risk stop, trend retention and the Drawdown Recovery Gate' : 'the Drawdown Recovery Gate'} OFF`
             }
           : {})
       },
@@ -1222,6 +1446,15 @@ async function main() {
       continuation: continuation ?? { enabled: false },
       trendFilter: trendFilter ? { enabled: true, label: TREND_METHOD_LABEL[trendFilter.method], ...trendFilter } : { enabled: false },
       eligibility: eligibility ? { enabled: true, label: ELIGIBILITY_POLICY_LABEL[eligibility.policy], ...eligibility } : { enabled: false },
+      // v1.4.0 (OFF = the earlier versions' behaviour)
+      drawdownGate: drawdownCfg
+        ? {
+            enabled: true,
+            ...drawdownCfg,
+            units: 'dipThresholdPercent and recoveryRetracementPercent in percentage points; lookbackSessions and confirmationSessions in trading sessions of the data',
+            rule: 'a filter on every Growth entry decision, never a signal: permits when no significant chronological dip (a close at least d below the highest EARLIER close of the current session and the N before it) is unresolved, or once the price has recovered r of the whole peak-to-trough decline and held it at every observation for Y trading-session intervals (to the same New York time), or regained the peak'
+          }
+        : { enabled: false },
       disclaimer:
         'Exploratory backtest of one configuration on historical data, not an optimised or validated strategy. Each symbol is an independent standalone backtest on its own $100,000 notional: the per-symbol figures are never summed, and are not comparable with a shared-slot pool such as vg-balanced.',
       execution: {
@@ -1260,7 +1493,14 @@ async function main() {
               'With the trend-breakout entry, the initial risk stop or trend retention ON, each symbol also has `optionalRules`: the breakout scan (evaluated sessions, signals, sessions without enough history), every entry decision the initial risk stop blocked (ATR unavailable), and every position with its stop and its exit fills (partial and final: shares, principal repaid, interest, costs, net, the rule and why). The log holds initial_stop_set, partial_exit, trend_count and trend_exit_decision entries.'
           }
         : {}),
-      ...(gated
+      ...(drawdownCfg
+        ? {
+            drawdownGate: { enabled: true, ...drawdownCfg },
+            drawdownGateNote:
+              'With the Drawdown Recovery Gate ON, each symbol also has `drawdownGate`: the detector (observation rule, first loaded session, when the discovery window is complete), every episode (stable id DD-n: peak, first qualifying observation, trough, threshold, confirmations, resets by cause, resolution), every causal transition (dip_detected, new_trough — one record per session for a run of new lows —, recovery_started, confirmation_reset, recovery_confirmed, confirmation_lost, dip_resolved, window_complete, entry_blocked_by_drawdown_gate) with its observation and the state after it, every release (blocking → permissive) and the summary counts. Gate results in entryDecisions carry `drawdown` and `blockedBy`; a latched decision taken at a release has `via: drawdown_release`.'
+          }
+        : {}),
+      ...(gated && (trendFilter || eligibility)
         ? {
             entryGatesNote:
               'With the entry trend filter or persistent eligibility ON, each symbol also has `opportunities` (every armed opportunity: signal, lifecycle transitions, decision, end, trade and its realized or open unrealized net), `renewalWatches` (policy 5) and `entryDecisions` (one record per Growth entry decision — raw crossing, latched decision, renewal signal, continuation trigger — with the gate result, the observed trend values, the policy values, the opportunity, the trade, the fill and the final net). A blocked latched opportunity is evaluated at every completed bar; only its state changes are logged.'

@@ -55,7 +55,7 @@ describe('draft → canonical configuration', () => {
     // Growth 1.3.0: the entry-method selector and the two exit options are registry data like the others
     const entry = paramOf(G, 'entryMethod')!;
     expect(entry.type === 'enum' && entry.options.map((o) => o.value)).toEqual(['rise_from_recent_low', 'trend_breakout']);
-    expect(G.groups.map((g) => g.key)).toEqual(['entry', 'trend', 'eligibility', 'exit', 'initialStop', 'retention', 'continuation', 'execution']);
+    expect(G.groups.map((g) => g.key)).toEqual(['entry', 'trend', 'eligibility', 'drawdownGate', 'exit', 'initialStop', 'retention', 'continuation', 'execution']);
     expect(draftState(RISE_FROM_RECENT_LOW, draftOf(RISE_FROM_RECENT_LOW, {}), W).config!.params).toEqual({
       advanceFromRecentLowPercent: 5,
       recentLowLookbackBars: 20

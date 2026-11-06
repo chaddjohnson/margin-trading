@@ -4,7 +4,7 @@
 
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 
-import type { EntryGateCounts, OptionalRulesCounts } from '../../shared/artifact-types.ts';
+import type { DrawdownGateCounts, EntryGateCounts, OptionalRulesCounts } from '../../shared/artifact-types.ts';
 import type { LabEvent, LabValue } from '../../shared/contract.ts';
 import type { Role } from '../chart/markers.ts';
 import { formatEt, formatPrice } from '../format.ts';
@@ -84,6 +84,7 @@ export interface TradingSymbolMetrics {
   };
   entryGates?: EntryGateCounts;
   optionalRules?: OptionalRulesCounts; // Growth 1.3.0, only with the breakout entry, the initial stop or retention ON
+  drawdownGate?: DrawdownGateCounts; // Growth 1.4.0, only with the Drawdown Recovery Gate ON
   unavailable: Record<string, string>;
 }
 
@@ -215,6 +216,7 @@ export function TradingMetrics({ m, symbol }: { m: TradingSymbolMetrics; symbol:
         )}
         {m.entryGates && <EntryGateRows g={m.entryGates} signals={m.signals} row={row} />}
         {m.optionalRules && <OptionalRuleRows o={m.optionalRules} row={row} />}
+        {m.drawdownGate && <DrawdownGateRows d={m.drawdownGate} row={row} />}
         {row(
           'Raw signals: taken · ignored (invested / order pending) · unfilled',
           `${m.signals.raw}: ${m.signals.filled} · ${m.signals.rejectedByReason.position_open} / ${m.signals.rejectedByReason.order_pending} · ${m.signals.unfilledAtEnd}`,
@@ -222,6 +224,63 @@ export function TradingMetrics({ m, symbol }: { m: TradingSymbolMetrics; symbol:
         )}
       </tbody>
     </table>
+  );
+}
+
+// Growth 1.4.0: the Drawdown Recovery Gate (descriptive; only when it was ON). The episodes and every transition are in
+// the research bundle (drawdown-episodes.csv, drawdown-transitions.csv) and decisions.json.
+function DrawdownGateRows({ d, row }: { d: DrawdownGateCounts; row: (label: string, value: ReactNode, testId?: string) => ReactNode }) {
+  const list = (r: Record<string, number> | undefined) =>
+    Object.entries(r ?? {})
+      .filter(([, n]) => n)
+      .map(([k, n]) => `${k.replaceAll('_', ' ')} ${n}`)
+      .join(' · ') || 'none';
+  const c = d.config;
+  const e = d.episodes;
+  const num = (x: number | null) => (x === null ? 'n/a' : String(x));
+  return (
+    <>
+      <tr className="section">
+        <th colSpan={2}>
+          Drawdown Recovery Gate — N {c.lookbackSessions} · d {c.dipThresholdPercent}% · r {c.recoveryRetracementPercent}% · Y{' '}
+          {c.confirmationSessions} (descriptive; the effect needs a paired OFF run)
+        </th>
+      </tr>
+      {row(
+        'Dip episodes · resolved (of which by regaining the peak before a confirmation) · unresolved at the end',
+        `${e.total} · ${e.resolved} (${e.resolvedBeforeConfirmation}) · ${list(e.unresolvedAtEnd)}`,
+        'metric-dd-episodes'
+      )}
+      {row(
+        'Deepest decline per episode (median / max) · sessions to resolution (median / max)',
+        `${num(e.maxDipPercent.median)}% / ${num(e.maxDipPercent.max)}% · ${num(e.sessionsDetectionToResolution.median)} / ${num(e.sessionsDetectionToResolution.max)}`,
+        'metric-dd-depth'
+      )}
+      {row(
+        'Recovery streaks · confirmed · reset before confirming · confirmations lost',
+        `${d.confirmations.recoveryStarts} · ${d.confirmations.confirmed} · ${d.confirmations.resetsBeforeConfirmation} · ${d.confirmations.confirmationsLost}`,
+        'metric-dd-confirmations'
+      )}
+      {row('Resets by cause', list(d.confirmations.resetsByCause), 'metric-dd-resets')}
+      {row(
+        'Blocked entry decisions (crossings · continuation triggers)',
+        `${d.blockedDecisions.total} (${list(d.blockedDecisions.byKind)}) · crossings ${d.blockedCrossings} · continuations ${d.blockedContinuations}`,
+        'metric-dd-blocked'
+      )}
+      {row(
+        'Blocked opportunities later entered · decisions at a release (intraday)',
+        `${d.deferredEligibleEntries} of ${d.opportunitiesBlocked} · ${d.releaseDecisions.taken}`,
+        'metric-dd-deferred'
+      )}
+      {row(
+        'Trades from an opportunity the gate had blocked (closed W · realized net)',
+        <>
+          {d.tradesAfterAGateBlock.trades} ({d.tradesAfterAGateBlock.wins} W of {d.tradesAfterAGateBlock.closed}) · {signed(d.tradesAfterAGateBlock.realizedNetUsd)}
+        </>,
+        'metric-dd-trades'
+      )}
+      {row('Gate state at the window’s session closes', list(d.windowSessionsAtClose), 'metric-dd-state')}
+    </>
   );
 }
 
@@ -395,8 +454,10 @@ export const originLabel = (t: Trade) => {
   // Growth 1.2.0: a later decision of an armed opportunity, or a renewal signal
   const source = t.entry?.meta?.entrySource;
   const opportunity = t.entry?.meta?.opportunity;
+  // Growth 1.4.0: a latched decision taken at the Drawdown Recovery Gate's release (intraday)
+  const release = t.entry?.meta?.via === 'drawdown_release' ? ' · at the drawdown-gate release' : '';
   return typeof source === 'string' && SOURCE_SHORT[source]
-    ? `base Growth · ${SOURCE_SHORT[source]}${typeof opportunity === 'string' ? ` ${opportunity}` : ''}`
+    ? `base Growth · ${SOURCE_SHORT[source]}${typeof opportunity === 'string' ? ` ${opportunity}` : ''}${release}`
     : 'base Growth';
 };
 

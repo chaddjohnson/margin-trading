@@ -78,7 +78,7 @@ export function compareRuns(cfg: Config, repo: Repo, a: string, b: string) {
     mismatches.push(
       `strategy version: A ${A.run.strategy.version} ≠ B ${B.run.strategy.version}${
         A.run.strategy.key === 'rise-from-recent-low-trading' && B.run.strategy.key === A.run.strategy.key
-          ? ' (1.0.0 = 1.1.0 with continuation OFF = 1.2.0 with continuation and the entry gates OFF = 1.3.0 with also the Rise entry and the initial risk stop and trend retention OFF, proven trade for trade; the difference is noted, not disqualifying)'
+          ? ' (1.0.0 = 1.1.0 with continuation OFF = 1.2.0 with continuation and the entry gates OFF = 1.3.0 with also the Rise entry and the initial risk stop and trend retention OFF = 1.4.0 with also the Drawdown Recovery Gate OFF, proven trade for trade; the difference is noted, not disqualifying)'
           : ''
       }`
     );
@@ -111,6 +111,11 @@ export function compareRuns(cfg: Config, repo: Repo, a: string, b: string) {
   const retention = (p: Record<string, unknown>) =>
     p.retentionEnabled === true
       ? `ON (sell ${String(p.retentionSellPercent)}%, ${String(p.retentionClosesBelow)} close(s) < SMA ${String(p.retentionSmaSessions)})`
+      : 'OFF';
+  // v1.4.0 (absent in earlier versions = OFF)
+  const drawdownGate = (p: Record<string, unknown>) =>
+    p.drawdownRecoveryGateEnabled === true
+      ? `ON (N ${String(p.dipLookbackSessions)}, d ${String(p.dipThresholdPercent)}%, r ${String(p.recoveryRetracementPercent)}%, Y ${String(p.recoveryConfirmationSessions)})`
       : 'OFF';
   const versionOnly = mismatches.every((m) => m.startsWith('strategy version'));
   const comparable = mismatches.length === 0 || (versionOnly && A.run.strategy.key === 'rise-from-recent-low-trading');
@@ -212,17 +217,17 @@ export function compareRuns(cfg: Config, repo: Repo, a: string, b: string) {
     })
   );
   return {
-    a: { id: A.run.id, title: A.run.title, strategy: A.run.strategy, continuation: continuation(pa), trendFilter: trendFilter(pa), eligibility: eligibility(pa), entryMethod: method(pa), initialStop: initialStop(pa), retention: retention(pa) },
-    b: { id: B.run.id, title: B.run.title, strategy: B.run.strategy, continuation: continuation(pb), trendFilter: trendFilter(pb), eligibility: eligibility(pb), entryMethod: method(pb), initialStop: initialStop(pb), retention: retention(pb) },
+    a: { id: A.run.id, title: A.run.title, strategy: A.run.strategy, continuation: continuation(pa), trendFilter: trendFilter(pa), eligibility: eligibility(pa), entryMethod: method(pa), initialStop: initialStop(pa), retention: retention(pa), drawdownGate: drawdownGate(pa) },
+    b: { id: B.run.id, title: B.run.title, strategy: B.run.strategy, continuation: continuation(pb), trendFilter: trendFilter(pb), eligibility: eligibility(pb), entryMethod: method(pb), initialStop: initialStop(pb), retention: retention(pb), drawdownGate: drawdownGate(pb) },
     comparable,
     mismatches,
     verdict: comparable
       ? mismatches.length
-        ? 'comparable (only the strategy version differs, and the earlier Growth versions equal 1.3.0 with the later options OFF)'
+        ? 'comparable (only the strategy version differs, and the earlier Growth versions equal 1.4.0 with the later options OFF)'
         : 'methodologically comparable: same strategy, symbols, window, resolution, costs, capital model and base parameters'
       : 'NOT comparable: the runs differ in the assumptions listed; the figures are shown side by side, not as an apples-to-apples comparison',
     control:
-      'No matching control? Open the ON run, Parameters → Clone into new test…, switch the option under study (the entry method back to Rise, the initial risk stop, trend retention, continuation, the entry trend filter or persistent eligibility) OFF (nothing else) and Run Test; then compare the two runs here. Strategy Lab never starts a control run by itself; tools/paired-comparison.ts produces the paired OFF diagnostic from the CLI.',
+      'No matching control? Open the ON run, Parameters → Clone into new test…, switch the option under study (the entry method back to Rise, the initial risk stop, trend retention, continuation, the entry trend filter, persistent eligibility or the Drawdown Recovery Gate) OFF (nothing else) and Run Test; then compare the two runs here. Strategy Lab never starts a control run by itself; tools/paired-comparison.ts produces the paired OFF diagnostic from the CLI.',
     nonAdditivity: NON_ADDITIVITY,
     perSymbol
   };

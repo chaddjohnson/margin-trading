@@ -82,7 +82,7 @@ test('the strategy rich select: keyboard, pointer, Escape, click-away, Tab, type
   await expect(combo).toHaveAttribute('data-value', 'rise-from-recent-low-trading');
   await expect(combo).toBeFocused();
   await expect(combo).toContainText('Growth');
-  await expect(combo).toContainText('v1.3.0');
+  await expect(combo).toContainText('v1.4.0');
   await expect(dialog.getByTestId('group-trend')).toBeVisible(); // the form follows the selected strategy
   await expect(dialog.getByTestId('strategy-details')).toContainText('persistent entry eligibility');
 
@@ -243,7 +243,7 @@ test('(real data) one trend-filter + latched-eligibility run: latched entries, c
   await expect(page.getByTestId('run-id')).not.toHaveText(before);
   await expect(page.getByTestId('run-status')).toHaveText('completed', { timeout: 120_000 });
   const id = (await page.getByTestId('run-id').innerText()).trim();
-  await expect(page.getByTestId('strategy-version')).toHaveText('Growth v1.3.0');
+  await expect(page.getByTestId('strategy-version')).toHaveText('Growth v1.4.0');
 
   // trades: latched entries are attributed; the analysis has the gate counts
   const table = page.getByTestId('trade-table-A');

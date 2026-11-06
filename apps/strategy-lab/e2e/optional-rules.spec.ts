@@ -92,7 +92,7 @@ test('(real data) one run with the initial stop and retention: partial exits on 
   }, { from: '2016-01-04', to: '2023-12-29' });
   await page.goto(`/#/run/${id}`);
   await expect(page.locator('button.marker').first()).toBeVisible();
-  await expect(page.getByTestId('strategy-version')).toHaveText('Growth v1.3.0');
+  await expect(page.getByTestId('strategy-version')).toHaveText('Growth v1.4.0');
   // the chart: partial exits are executed exits with their own half-filled glyph, named in the legend
   await expect(page.getByTestId('legend-partial')).toBeVisible();
   const events = ((await (await page.request.get(`/api/runs/${id}/events?symbol=VGT`)).json()) as { events: { id: string; kind: string; meta: Record<string, unknown>; tradeId: string | null; t: string }[] }).events;
