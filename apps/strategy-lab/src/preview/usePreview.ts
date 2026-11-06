@@ -1,7 +1,7 @@
 // Interactive Preview state of one saved run's page (docs/strategy-lab/INTERACTIVE_PREVIEW.md §UI state):
 //
 // - The URL (`?preview=PV-…`) says which result is displayed: none = the saved run. A completed preview is loaded (its
-//   detail and the current symbol's events and prices, via `prefetch`) BEFORE the URL switches to it, so a swap
+//   detail and the current symbol's events and chart data — candles or prices — via `prefetch`) BEFORE the URL switches to it, so a swap
 //   replaces every view at once and never shows a blank or half-swapped chart.
 // - The draft is the configuration being edited. `null` = "the displayed configuration"; the first edit makes it
 //   explicit. Edits only mark it Modified; nothing executes until Run preview (or Enter).

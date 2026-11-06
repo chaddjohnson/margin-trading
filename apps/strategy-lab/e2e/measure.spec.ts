@@ -6,6 +6,7 @@
 import { type Page, expect, test } from '@playwright/test';
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { chooseChart } from './helpers.ts';
 
 const REPO = join(import.meta.dirname, '..', '..', '..');
 const importsDir = join(REPO, 'state/strategy-lab/imports/study8');
@@ -233,6 +234,7 @@ test.describe('real intraday data', () => {
     const id = await runId(page, 'vg-balanced');
     await page.goto(`/#/run/${id}?symbol=VGT`);
     await expect(page.locator('button.marker').first()).toBeVisible({ timeout: 60_000 });
+    await chooseChart(page, 'line'); // minute instants are the line's (candles measure close → close: candles.spec.ts)
     const before = await window_(page);
     await press(page, 0.55, 0.25);
     await expect(page.getByTestId('measure-percent')).toBeVisible();

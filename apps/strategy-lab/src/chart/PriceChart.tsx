@@ -3,15 +3,35 @@
 // transform (toDomCoords), so decimation or a change of data resolution never moves or drops a marker. A vertical
 // crosshair follows the highlighted (nearest) data point, with Dygraphs' highlight dot on the line.
 //
-// Data: the run window's overview (decimated) is loaded first; when the user zooms in, the visible window is fetched
-// at finer resolution and merged in, keeping the overview outside it so the range selector still shows everything.
+// Two chart types share this component, the interaction model and one real-time x axis (so a window carries over):
+// - 'line' ("Line · intraday"): the run window's overview (decimated) is loaded first; when the user zooms in, the
+//   visible window is fetched at finer resolution and merged in, keeping the overview outside it so the range selector
+//   still shows everything.
+// - 'candles' ("Candles · 1D"): one daily OHLC candle per NYSE session (shared/candles.ts, src/chart/candles.ts), all
+//   loaded at once (a decade is ~2,700 rows). Four series (open, high, low, close) so Dygraphs' autoscaling covers the
+//   highs and lows; one custom plotter draws every candle; the range selector shows the closes. Markers sit on their
+//   session's candle at their recorded price (see candles.ts for the policy); drag-to-measure uses daily CLOSES.
 
 import Dygraph, { type dygraphs } from 'dygraphs';
 import 'dygraphs/dist/dygraph.css';
 import { type Ref, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 
+import type { CandlesResponse } from '../../shared/candles.ts';
 import type { LabEvent } from '../../shared/contract.ts';
 import { etParts, formatEt, formatPrice } from '../format.ts';
+import {
+  type MarkerSlot,
+  MIN_SPAN_CANDLES,
+  candleReadout,
+  candleShape,
+  candleTicks,
+  candleWidths,
+  drawCandle,
+  fanOffset,
+  formatCandleReadout,
+  markerSlots,
+  sessionIndex
+} from './candles.ts';
 import { etTicks } from './etTicker.ts';
 import { type ChartLink, type Placement, placementOf } from './link.ts';
 import { MARKER_SIZE, type MarkerTone, PRICE_COLOR, type Role, eventKindLabel, glyphUri, isPartialExit, markerOffset } from './markers.ts';
@@ -34,6 +54,26 @@ const DRAG_THRESHOLD_PX = 3;
 // Wheel zoom stops at a window this narrow: 30 minutes of minute data, 20 sessions of the synthetic daily demo.
 const MIN_SPAN_MINUTE_DATA = 30 * 60_000;
 const MIN_SPAN_DAILY_DATA = 20 * 86_400_000;
+const DAY = 86_400_000;
+
+/** What the chart draws: the intraday line (minute closes + closing prints) or the daily OHLC candles. */
+export type ChartData =
+  | {
+      mode: 'line';
+      overview: [number, number][];
+      overviewDecimated: boolean;
+      fetchDetail: (from: number, to: number, signal: AbortSignal) => Promise<[number, number][]>;
+    }
+  | { mode: 'candles'; candles: CandlesResponse };
+
+/** The part of a Dygraphs plotter call the candle plotter reads (the typings declare `plotter` as any). */
+interface PlotterEvent {
+  points: (dygraphs.Point & { canvasx: number })[];
+  seriesIndex: number;
+  drawingContext: CanvasRenderingContext2D;
+  dygraph: Dygraph;
+  plotArea: { x: number; y: number; w: number; h: number };
+}
 
 export interface ChartEvent {
   key: string; // `${role}:${event.id}`
@@ -49,13 +89,14 @@ export interface ChartHandle {
   centerOn(x: number): void;
   zoomAround(x: number, span: number): void;
   getWindow(): [number, number] | null;
+  /** Where an instant is drawn: itself on the line; on candles its New York session's candle (to locate a marker). */
+  chartX(t: number): number;
 }
 
 interface Props {
-  overview: [number, number][];
-  overviewDecimated: boolean;
+  /** The data of this mount; the parent keys the component by run, symbol AND chart type, so it never changes. */
+  data: ChartData;
   synthetic: boolean;
-  fetchDetail: (from: number, to: number, signal: AbortSignal) => Promise<[number, number][]>;
   events: readonly ChartEvent[];
   selectedKey: string | null;
   /** The window to open with, read once when the graph is created (null: everything). */
@@ -80,7 +121,13 @@ function clamp(g: Dygraph, a: number, b: number): [number, number] {
 
 export function PriceChart(props: Props) {
   const clipId = useId().replace(/[^a-zA-Z0-9_-]/g, '');
-  const { overview, events, selectedKey, ref } = props;
+  const { data, events, selectedKey, ref } = props;
+  const candles = data.mode === 'candles' ? data.candles : null;
+  // The same candles for the overlay helpers below, which read refs only (constant within a mount).
+  const candlesRef = useRef(candles);
+  // Candle mode: each candle's index by its New York date, and the session slot of each marker (per events list).
+  const byDateRef = useRef<ReadonlyMap<string, number> | null>(null);
+  const slotsRef = useRef<{ events: readonly ChartEvent[]; slots: Map<string, MarkerSlot> } | null>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const layerRef = useRef<HTMLDivElement>(null);
@@ -104,11 +151,24 @@ export function PriceChart(props: Props) {
   const lineBRef = useRef<HTMLDivElement>(null);
   const dotARef = useRef<HTMLDivElement>(null);
   const dotBRef = useRef<HTMLDivElement>(null);
+  const densityRef = useRef<HTMLDivElement>(null);
   const [measurement, setMeasurement] = useState<Measurement | null>(null);
 
   useEffect(() => {
     propsRef.current = props;
   });
+
+  // The chart x of an instant: itself on the line; in candle mode the x of its New York session's candle (or itself
+  // when that date has no candle). Used for trade connectors and "is the counterpart in view".
+  const chartX = (t: number) => {
+    const cd = candlesRef.current;
+    if (!cd) return t;
+    byDateRef.current ??= sessionIndex(cd.d);
+    const i = byDateRef.current.get(etParts(t).date);
+    return i === undefined ? t : cd.x[i]!;
+  };
+  const chartLink = (link: ChartLink | null): ChartLink | null =>
+    link?.partner ? { ...link, partner: { ...link.partner, t: chartX(link.partner.t) } } : link;
 
   // Places (and creates/removes) the marker buttons for the current graph state; reuses buttons so focus survives.
   const placeMarkers = () => {
@@ -120,14 +180,33 @@ export function PriceChart(props: Props) {
     const [y0, y1] = g.yAxisRange();
     const seen = new Set<string>();
     const stack = new Map<string, number>();
+    // Candle mode: each marker's session slot (candles.ts markerSlots), recomputed only when the events list changes;
+    // the candle index by New York date is built once per mount (the candles never change in a mount).
+    const cd = candlesRef.current;
+    let slotOf: Map<string, MarkerSlot> | null = null;
+    if (cd) {
+      byDateRef.current ??= sessionIndex(cd.d);
+      const evs = eventsRef.current;
+      if (slotsRef.current?.events !== evs) slotsRef.current = { events: evs, slots: markerSlots(evs, byDateRef.current) };
+      slotOf = slotsRef.current.slots;
+    }
+    const pxPerDay = (area.w * DAY) / (x1 - x0);
     let visible = 0;
     for (const ce of eventsRef.current) {
       const t = Date.parse(ce.event.t);
-      if (ce.y === null || t < x0 || t > x1 || ce.y < y0 || ce.y > y1) continue;
-      const [px, py] = g.toDomCoords(t, ce.y);
-      const stackKey = `${t}:${ce.event.kind === 'executed_exit' ? 'up' : 'down'}`;
-      const idx = stack.get(stackKey) ?? 0;
-      stack.set(stackKey, idx + 1);
+      // Candle mode: on its session's candle, fanned with the session's other markers; line mode: its exact instant.
+      const slot = slotOf?.get(ce.key);
+      const x = slot && slot.session !== null ? cd!.x[slot.session]! : t;
+      if (ce.y === null || x < x0 || x > x1 || ce.y < y0 || ce.y > y1) continue;
+      const [cx, py] = g.toDomCoords(x, ce.y);
+      let idx = 0;
+      let px = cx;
+      if (slot && slot.session !== null) px += fanOffset(slot.rank, slot.count, pxPerDay);
+      else {
+        const stackKey = `${t}:${ce.event.kind === 'executed_exit' ? 'up' : 'down'}`;
+        idx = stack.get(stackKey) ?? 0;
+        stack.set(stackKey, idx + 1);
+      }
       let b = buttons.current.get(ce.key);
       if (!b) {
         b = document.createElement('button');
@@ -137,6 +216,7 @@ export function PriceChart(props: Props) {
         b.dataset.eventId = ce.event.id;
         b.dataset.symbol = ce.event.symbol;
         b.dataset.kind = ce.event.kind;
+        b.dataset.t = ce.event.t; // the event's exact recorded instant (UTC), in both chart types
         if (isPartialExit(ce.event)) b.dataset.partial = 'true';
         b.dataset.role = ce.role;
         b.dataset.runId = ce.runId;
@@ -147,10 +227,15 @@ export function PriceChart(props: Props) {
         b.appendChild(img);
         b.setAttribute(
           'aria-label',
-          `${ce.role} ${ce.runId} ${eventKindLabel(ce.event)} ${ce.event.symbol} ${formatEt(ce.event.t, ce.event.timePrecision)} at ${formatPrice(ce.event.price)}`
+          `${ce.role} ${ce.runId} ${eventKindLabel(ce.event)} ${ce.event.symbol} ${formatEt(ce.event.t, ce.event.timePrecision)} at ${formatPrice(ce.event.price)}${slot && slot.session !== null ? ` (shown on the ${slot.date} daily candle)` : ''}`
         );
         layer.appendChild(b);
         buttons.current.set(ce.key, b);
+      }
+      if (slot) {
+        b.dataset.session = slot.date;
+        b.dataset.cluster = `${slot.rank + 1}/${slot.count}`;
+        if (slot.session === null) b.dataset.offSession = 'true';
       }
       if (b.dataset.tone !== ce.tone) {
         b.dataset.tone = ce.tone;
@@ -199,7 +284,7 @@ export function PriceChart(props: Props) {
     buttons.current.get(cur.key)!.classList.add('is-linked');
     const { partner, partnerKey, tone } = cur.link;
     const frame = frameRef.current!;
-    frame.dataset.link = `${tone}:${placementOf(cur.link, g.xAxisRange() as [number, number])}`;
+    frame.dataset.link = `${tone}:${placementOf(chartLink(cur.link), g.xAxisRange() as [number, number])}`;
     if (!partner) {
       svg.style.display = 'none'; // an open position: only the entry is highlighted
       return;
@@ -208,7 +293,7 @@ export function PriceChart(props: Props) {
     let to = centreOf(partnerKey);
     if (to) partnerButton!.classList.add('is-linked');
     else {
-      const [px, py] = g.toDomCoords(partner.t, partner.y ?? g.toDataYCoord(from[1]));
+      const [px, py] = g.toDomCoords(chartX(partner.t), partner.y ?? g.toDataYCoord(from[1]));
       to = [px, py + markerOffset(partner.kind, 0) + MARKER_SIZE / 2];
     }
     const area = g.getArea();
@@ -285,7 +370,7 @@ export function PriceChart(props: Props) {
     return keys;
   };
 
-  // Create the graph once per mount (the parent keys this component by run and symbol).
+  // Create the graph once per mount (the parent keys this component by run, symbol and chart type).
   useEffect(() => {
     const host = hostRef.current;
     const frame = frameRef.current;
@@ -296,7 +381,15 @@ export function PriceChart(props: Props) {
     let detailAbort: AbortController | null = null;
     let detailKey = '';
     let lastKey = '';
+    const line = data.mode === 'line' ? data : null;
+    const overview = line?.overview ?? [];
     const overviewSpan = overview.length ? overview.at(-1)![0] - overview[0]![0] : 0;
+    // Candle rows: [x, open, high, low, close] — four series, so the y axis autoscales to the highs and lows in view.
+    const rows = candles
+      ? candles.x.map((x, i) => [new Date(x), candles.o[i]!, candles.h[i]!, candles.l[i]!, candles.c[i]!])
+      : toRows(overview);
+    // The narrowest wheel-zoom window: 30 minutes of minute data, 20 sessions of the synthetic demo, a week of candles.
+    const minSpan = candles ? MIN_SPAN_CANDLES : propsRef.current.synthetic ? MIN_SPAN_DAILY_DATA : MIN_SPAN_MINUTE_DATA;
 
     // Measurement updates: the overlay immediately, the read-out once per animation frame while dragging. Clearing
     // is synchronous for both (and drops a pending frame), so nothing of a measurement outlives the release.
@@ -310,14 +403,15 @@ export function PriceChart(props: Props) {
     };
     // The gesture in progress (measure or pan): ending it removes its listeners and runs its end handler once.
     let endGesture: (() => void) | null = null;
-    // Snap to the closest PLOTTED point: its time and its own price (never an interpolated screen position).
+    // Snap to the closest PLOTTED point: its time and its own price (never an interpolated screen position). On candles
+    // that is the closest session and its daily CLOSE (column 4), so a measurement is close → close.
     const snap = (e: MouseEvent, g: Dygraph): MeasurePoint | null => {
       const [x] = g.eventToDomCoords(e);
       // findClosestRow is part of the Dygraphs API but missing from @types/dygraphs.
       const row = (g as Dygraph & { findClosestRow(domX: number): number }).findClosestRow(x);
       if (row === null || row === undefined || row < 0) return null;
       const t = g.getValue(row, 0);
-      const price = g.getValue(row, 1);
+      const price = g.getValue(row, candles ? 4 : 1);
       return t === null || price === null ? null : { t, price };
     };
     // Primary-button drag measures (no zoom, no pan) and the measurement exists ONLY while the button is held: the
@@ -424,7 +518,7 @@ export function PriceChart(props: Props) {
           g.toDataXCoord(domX),
           wheelZoomOutPx(event, window.innerHeight),
           g.xAxisExtremes(),
-          propsRef.current.synthetic ? MIN_SPAN_DAILY_DATA : MIN_SPAN_MINUTE_DATA
+          minSpan
         );
         if (!next) return;
         event.preventDefault();
@@ -447,8 +541,10 @@ export function PriceChart(props: Props) {
     };
     layer?.addEventListener('wheel', onLayerWheel, { passive: false });
 
+    // Line only: candles are all loaded at once, never fetched per window.
     const maybeFetchDetail = (g: Dygraph, a: number, b: number) => {
-      if (!propsRef.current.overviewDecimated) return;
+      const current = propsRef.current.data;
+      if (current.mode !== 'line' || !current.overviewDecimated) return;
       clearTimeout(detailTimer);
       const key = `${Math.round(a)}|${Math.round(b)}`;
       if (key === detailKey) return;
@@ -461,7 +557,7 @@ export function PriceChart(props: Props) {
         }
         const ac = new AbortController();
         detailAbort = ac;
-        propsRef.current
+        current
           .fetchDetail(a, b, ac.signal)
           .then((detail) => {
             if (ac.signal.aborted || graphRef.current !== g || detail.length === 0) return;
@@ -475,9 +571,35 @@ export function PriceChart(props: Props) {
       }, 250);
     };
 
+    // Candles: Dygraphs calls the plotter once per series; the first (Open) draws every candle in view from the candle
+    // data by row index, the other three draw nothing. Widths follow the zoom; too dense → thin low–high lines.
+    const candlePlotter = (e: PlotterEvent) => {
+      if (!candles || e.seriesIndex !== 0) return;
+      const g = e.dygraph;
+      const [x0, x1] = g.xAxisRange();
+      const w = candleWidths((e.plotArea.w * DAY) / (x1 - x0));
+      const y = (v: number) => g.toDomYCoord(v);
+      let inView = 0;
+      for (const p of e.points) {
+        const i = p.idx;
+        drawCandle(e.drawingContext, candleShape(p.canvasx, candles.o[i]!, candles.h[i]!, candles.l[i]!, candles.c[i]!, y, w));
+        if ((p.xval ?? NaN) >= x0 && (p.xval ?? NaN) <= x1) inView++;
+      }
+      frame.dataset.candlesInView = String(inView);
+      frame.dataset.candleBody = w.bodies ? String(w.body) : '0';
+      frame.dataset.candleDensity = w.bodies ? 'bodies' : 'dense';
+      const note = densityRef.current;
+      if (note) {
+        note.hidden = w.bodies;
+        note.textContent = w.bodies
+          ? ''
+          : `${inView.toLocaleString('en-US')} sessions in view — too dense for candle bodies: each session is a thin low–high line in its colour (never merged with its neighbours). Zoom in to see the bodies.`;
+      }
+    };
+
     const opts: dygraphs.Options = {
-      labels: ['Time', 'Price'],
-      colors: [PRICE_COLOR],
+      labels: candles ? ['Time', 'Open', 'High', 'Low', 'Close'] : ['Time', 'Price'],
+      colors: candles ? [PRICE_COLOR, PRICE_COLOR, PRICE_COLOR, PRICE_COLOR] : [PRICE_COLOR],
       strokeWidth: 1.4,
       labelsUTC: false,
       legend: 'never',
@@ -492,16 +614,25 @@ export function PriceChart(props: Props) {
       gridLineColor: 'rgba(148, 163, 184, 0.12)',
       axisLineColor: '#2b3a55',
       axisLabelFontSize: 12,
-      xRangePad: 8,
+      xRangePad: candles ? 24 : 8,
       yRangePad: 18,
       highlightCircleSize: 4.5,
       rightGap: 14,
       connectSeparatedPoints: true,
       interactionModel,
+      ...(candles
+        ? {
+            plotter: candlePlotter,
+            // the range selector (overview) shows the daily closes; no highlight dots on the candles
+            series: { Close: { showInRangeSelector: true } },
+            drawHighlightPointCallback: () => {}
+          }
+        : {}),
       axes: {
         x: {
-          valueFormatter: (ms: number) => formatEt(new Date(ms).toISOString()),
-          ticker: (min: number, max: number, pixels: number) => etTicks(min, max, pixels),
+          valueFormatter: (ms: number) => (candles ? etParts(ms).date : formatEt(new Date(ms).toISOString())),
+          ticker: (min: number, max: number, pixels: number) =>
+            candles ? candleTicks(min, max, pixels, candles.x, candles.d) : etTicks(min, max, pixels),
           axisLabelWidth: 70
         },
         y: { axisLabelWidth: 58, valueFormatter: (v: number) => formatPrice(v) }
@@ -516,6 +647,14 @@ export function PriceChart(props: Props) {
         line.style.top = `${area.y}px`;
         line.style.height = `${area.h}px`;
         line.hidden = false;
+        if (candles) {
+          // A candle: its New York session date and O/H/L/C, never a minute time.
+          const c = candleReadout(candles, p.idx);
+          const out = readoutRef.current;
+          out.textContent = formatCandleReadout(c) + (c.notes.length ? ` · ${c.notes.join(' · ')}` : '');
+          Object.assign(out.dataset, { date: c.date, dir: c.dir, o: c.o, h: c.h, l: c.l, c: c.c });
+          return;
+        }
         const when = propsRef.current.synthetic
           ? `${etParts(x).date} (synthetic close)`
           : formatEt(new Date(x).toISOString());
@@ -532,6 +671,12 @@ export function PriceChart(props: Props) {
         const [a, b] = g.xAxisRange();
         frame.dataset.viewFrom = new Date(a).toISOString();
         frame.dataset.viewTo = new Date(b).toISOString();
+        // The y range and plot area as drawn (tests check that the axis covers the highs and lows in view).
+        const [y0, y1] = g.yAxisRange();
+        const area = g.getArea();
+        frame.dataset.yMin = String(y0);
+        frame.dataset.yMax = String(y1);
+        frame.dataset.area = `${area.x},${area.y},${area.w},${area.h}`;
         cancelAnimationFrame(frameReq);
         frameReq = requestAnimationFrame(() => {
           const key = `${a}|${b}`;
@@ -543,15 +688,26 @@ export function PriceChart(props: Props) {
       }
     };
 
-    const g = new Dygraph(host, toRows(overview), opts);
+    const g = new Dygraph(host, rows, opts);
     graphRef.current = g;
-    frame.dataset.points = String(overview.length);
+    frame.dataset.points = String(rows.length);
+    // The window to open with (the previous chart's, e.g. after a chart-type switch: both types share one time axis):
+    // its overlap with the data, widened around its centre to this chart's minimum span (a week for candles).
     const init = propsRef.current.initialWindow();
     if (init) {
       const [lo, hi] = g.xAxisExtremes();
-      if (init[1] > lo && init[0] < hi)
-        g.updateOptions({ dateWindow: clamp(g, Math.max(init[0], lo), Math.min(init[1], hi)) });
+      if (init[1] > lo && init[0] < hi) {
+        let a = Math.max(init[0], lo);
+        let b = Math.min(init[1], hi);
+        if (b - a < minSpan) {
+          const mid = (a + b) / 2;
+          a = mid - minSpan / 2;
+          b = mid + minSpan / 2;
+        }
+        g.updateOptions({ dateWindow: clamp(g, a, b) });
+      }
     }
+
 
     const ro = new ResizeObserver(() => {
       cancelAnimationFrame(resizeReq);
@@ -609,13 +765,21 @@ export function PriceChart(props: Props) {
       getWindow() {
         const g = graphRef.current;
         return g ? (g.xAxisRange() as [number, number]) : null;
+      },
+      chartX(t) {
+        return chartX(t);
       }
     }),
     []
   );
 
+  // A measured point: a minute instant on the line; on candles a session's daily close (never a minute time).
   const when = (ms: number) =>
-    props.synthetic ? `${etParts(ms).date} (synthetic)` : formatEt(new Date(ms).toISOString());
+    candles
+      ? `${etParts(ms).date} close`
+      : props.synthetic
+        ? `${etParts(ms).date} (synthetic)`
+        : formatEt(new Date(ms).toISOString());
 
   const target = (e: { target: EventTarget | null }) =>
     e.target instanceof HTMLElement ? e.target.closest<HTMLButtonElement>('button.marker') : null;
@@ -633,7 +797,7 @@ export function PriceChart(props: Props) {
     propsRef.current.onHover(
       keys,
       b.getBoundingClientRect(),
-      g ? placementOf(link, g.xAxisRange() as [number, number]) : 'none'
+      g ? placementOf(chartLink(link), g.xAxisRange() as [number, number]) : 'none'
     );
   };
   const unhover = () => {
@@ -642,11 +806,12 @@ export function PriceChart(props: Props) {
   };
 
   return (
-    <div className="chart-frame" ref={frameRef} data-testid="price-chart">
+    <div className="chart-frame" ref={frameRef} data-testid="price-chart" data-chart-mode={data.mode}>
       <div
         className={`measure-bar${measurement ? ` dir-${measurement.direction}` : ''}`}
         data-testid="measure-bar"
         aria-live="polite"
+        data-basis={candles ? 'daily-close' : props.synthetic ? 'synthetic-close' : 'minute'}
         data-start-ms={measurement?.start.t}
         data-end-ms={measurement?.end.t}
         data-start-price={measurement?.start.price}
@@ -654,6 +819,11 @@ export function PriceChart(props: Props) {
       >
         {measurement ? (
           <>
+            {candles && (
+              <span className="measure-kind" data-testid="measure-kind">
+                Daily close → daily close
+              </span>
+            )}
             <span className="measure-range" data-testid="measure-range">
               {when(measurement.start.t)} → {when(measurement.end.t)}
             </span>
@@ -670,8 +840,10 @@ export function PriceChart(props: Props) {
           </>
         ) : (
           <span className="muted small">
-            Hold the mouse button and drag across the chart to measure a price change (earlier → later point); it clears
-            when you release. {PAN_MODIFIER === 'meta' ? '⌘' : 'Ctrl'}-drag pans.
+            {candles
+              ? 'Hold the mouse button and drag across the candles to measure the change from one session’s daily CLOSE to another’s (earlier → later); it clears when you release.'
+              : 'Hold the mouse button and drag across the chart to measure a price change (earlier → later point); it clears when you release.'}{' '}
+            {PAN_MODIFIER === 'meta' ? '⌘' : 'Ctrl'}-drag pans.
           </span>
         )}
       </div>
@@ -721,6 +893,7 @@ export function PriceChart(props: Props) {
         </svg>
       </div>
       <div ref={readoutRef} className="chart-readout" data-testid="chart-readout" aria-live="off" />
+      {candles && <div ref={densityRef} className="candle-density" data-testid="candle-density" role="note" hidden />}
     </div>
   );
 }

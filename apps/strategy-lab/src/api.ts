@@ -11,6 +11,7 @@ import type {
   SymbolInfo,
   VariationSummary
 } from '../shared/contract.ts';
+import { type CandlesResponse, validateCandles } from '../shared/candles.ts';
 import type { ExecutionKind, PhenotypeRecord } from '../shared/phenotypes.ts';
 import type { PreviewCapability, PreviewConfig, PreviewDetail, PreviewTicketStatus } from '../shared/preview.ts';
 
@@ -213,6 +214,13 @@ export const api = {
     call<EventsResponse>('GET', `${resultPath(id)}/events${qs({ symbol, basis })}`, undefined, signal),
   prices: (id: string, symbol: string, range: { from?: number; to?: number; points?: number }, signal?: AbortSignal) =>
     call<PricesResponse>('GET', `${resultPath(id)}/prices${qs({ symbol, ...range })}`, undefined, signal),
+  /** One symbol's daily OHLC candles (shared/candles.ts), validated before use: a malformed response is refused. */
+  candles: async (id: string, symbol: string, signal?: AbortSignal) => {
+    const r = await call<CandlesResponse>('GET', `${resultPath(id)}/candles${qs({ symbol })}`, undefined, signal);
+    const errors = validateCandles(r);
+    if (errors.length) throw new ApiError(500, `invalid daily candles: ${errors.slice(0, 3).join('; ')}`, errors);
+    return r;
+  },
   log: (id: string) => call<{ log: string }>('GET', `/api/runs/${id}/log`),
   notes: (targetType: 'run' | 'variation', targetId: string) =>
     call<Note[]>('GET', `/api/notes${qs({ targetType, targetId })}`),

@@ -5,6 +5,7 @@
 import { type Page, expect, test } from '@playwright/test';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { chooseChart } from './helpers.ts';
 
 const REPO = join(import.meta.dirname, '..', '..', '..');
 const hasData = existsSync(join(REPO, 'data/VGT/data.csv'));
@@ -188,6 +189,7 @@ test.describe('real data', () => {
     const id = await runIdByTitle(page, 'e2e five percent');
     await page.goto(`/#/run/${id}`);
     await expect(page.locator('button.marker').first()).toBeVisible();
+    await chooseChart(page, 'line'); // the minute line's read-out (candles have their own: e2e/candles.spec.ts)
     const host = (await page.locator('.chart-host').boundingBox())!;
     await page.mouse.move(host.x + host.width * 0.4, host.y + host.height * 0.4);
     await expect(page.getByTestId('crosshair')).toBeVisible();
@@ -260,6 +262,7 @@ test.describe('vg-balanced (Study 8 #2) entries and exits', () => {
     const vgt = lots().filter((l) => l.symbol === 'VGT');
     await page.goto(`/#/run/${id}?symbol=VGT`);
     await expect(page.locator('button.marker').first()).toBeVisible({ timeout: 60_000 });
+    await chooseChart(page, 'line'); // minute detail and the minute read-out are the line's (candles: candles.spec.ts)
     await page.getByTestId('event-table').getByText('All dates', { exact: true }).click();
     const fmt = new Intl.DateTimeFormat('en-US', {
       timeZone: 'America/New_York',

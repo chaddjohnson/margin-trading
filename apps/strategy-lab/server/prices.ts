@@ -6,6 +6,10 @@
 //
 // Long windows are decimated with a min/max-per-bucket rule (both extremes of every bucket are kept, in time order), so
 // the line never loses a spike. Decimation only affects the line: event markers keep their exact instants and prices.
+//
+// Daily candles (shared/candles.ts) come from the same load: one per session, with the session builder's own open, high,
+// low and close (minute OPENS/HIGHS/LOWS, never minute closes alone; the closing print is the close and part of the
+// range), so they are cached and invalidated with the series and can never disagree with the line.
 
 import { closeSync, existsSync, openSync, readFileSync, readSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -13,6 +17,7 @@ import { join } from 'node:path';
 import { type SplitEvent, readSplits, splitFactor } from '../../../src/lib/corporateActions.ts';
 import { loadCsvMinuteBacktestData } from '../../../src/lib/csv.ts';
 import { groupMarketSessions } from '../../../src/lib/session.ts';
+import { type CandlesResponse, ohlcProblem } from '../shared/candles.ts';
 import type { SymbolInfo } from '../shared/contract.ts';
 
 export interface Series {
@@ -24,7 +29,26 @@ export interface Series {
   sessionFirst: Int32Array; // session → first point
   sessionLast: Int32Array; // session → last point
   stamp: string; // file size + mtime, to notice appended data
+  daily?: DailySessions; // real minute data only (the synthetic demo has closes only, no OHLC)
 }
+
+/** Raw (unadjusted) daily OHLC per session, from src/lib/session.ts groupMarketSessions. */
+export interface DailySessions {
+  open: Float64Array;
+  high: Float64Array;
+  low: Float64Array;
+  close: Float64Array;
+  print: Uint8Array; // 1 = the close is the closing print, 0 = the last regular minute's close (no print in the file)
+  minutes: Int32Array; // regular-session minute bars present
+  early: Uint8Array; // 1 = a 13:00 ET early close
+  openTime: Float64Array; // Unix seconds: the scheduled open (09:30 ET)
+  closeTime: Float64Array; // Unix seconds: the scheduled close (16:00 or 13:00 ET)
+}
+
+export type DailyCandles = Omit<CandlesResponse, 'runId' | 'symbol' | 'dataOrigin' | 'basisDate' | 'units' | 'source'>;
+
+/** Regular-session minutes of a full and of an early-close session (09:30–16:00 and 09:30–13:00 ET). */
+export const SCHEDULED_MINUTES = { full: 390, early: 210 } as const;
 
 export interface PricePoints {
   points: [number, number][]; // [ms, price]
@@ -106,6 +130,64 @@ export function windowPoints(
   return { points: out, decimated: true, rawPoints: n, ...range };
 }
 
+/**
+ * One candle per session between two inclusive session dates, every price of a session multiplied by that session's split
+ * factor. A session whose adjusted prices fail low ≤ min(open, close) ≤ max(open, close) ≤ high gets no candle and is
+ * listed in `omitted` with the reason; nothing is ever repaired or invented.
+ */
+export function dailyCandles(
+  s: Series,
+  factorOf: (sessionIndex: number) => number,
+  fromDate: string,
+  toDate: string
+): DailyCandles {
+  const daily = s.daily;
+  if (!daily) throw new Error(`${s.key}: no daily OHLC (closes only)`);
+  const firstS = dateBound(s.sessionDates, fromDate, false);
+  const lastS = dateBound(s.sessionDates, toDate, true) - 1;
+  const out: DailyCandles = {
+    firstSession: null,
+    lastSession: null,
+    d: [],
+    x: [],
+    o: [],
+    h: [],
+    l: [],
+    c: [],
+    print: [],
+    minutes: [],
+    scheduled: [],
+    factor: [],
+    omitted: []
+  };
+  if (firstS > lastS) return out;
+  out.firstSession = s.sessionDates[firstS]!;
+  out.lastSession = s.sessionDates[lastS]!;
+  for (let i = firstS; i <= lastS; i++) {
+    const f = factorOf(i);
+    const o = daily.open[i]! * f;
+    const h = daily.high[i]! * f;
+    const l = daily.low[i]! * f;
+    const c = daily.close[i]! * f;
+    const problem = ohlcProblem(o, h, l, c);
+    if (problem) {
+      out.omitted.push({ date: s.sessionDates[i]!, reason: problem });
+      continue;
+    }
+    out.d.push(s.sessionDates[i]!);
+    out.x.push(((daily.openTime[i]! + daily.closeTime[i]!) / 2) * 1000);
+    out.o.push(o);
+    out.h.push(h);
+    out.l.push(l);
+    out.c.push(c);
+    out.print.push(daily.print[i] ? 1 : 0);
+    out.minutes.push(daily.minutes[i]!);
+    out.scheduled.push(daily.early[i] ? SCHEDULED_MINUTES.early : SCHEDULED_MINUTES.full);
+    out.factor.push(f);
+  }
+  return out;
+}
+
 /** The adjusted price of the last point at or before an instant (for placing markers of events without a price). */
 export function priceAtOrBefore(s: Series, factorOf: (i: number) => number, ms: number): number | null {
   const i = lowerBound(s.t, ms / 1000 + 1e-6) - 1;
@@ -181,8 +263,31 @@ export class MarketPrices {
     const sessionOf = new Int32Array(n);
     const sessionFirst = new Int32Array(sessions.length);
     const sessionLast = new Int32Array(sessions.length);
+    const m = sessions.length;
+    const daily: DailySessions = {
+      open: new Float64Array(m),
+      high: new Float64Array(m),
+      low: new Float64Array(m),
+      close: new Float64Array(m),
+      print: new Uint8Array(m),
+      minutes: new Int32Array(m),
+      early: new Uint8Array(m),
+      openTime: new Float64Array(m),
+      closeTime: new Float64Array(m)
+    };
     let k = 0;
     sessions.forEach((s, si) => {
+      // The session builder's own daily values: open = first regular minute's open, high/low = regular minutes'
+      // highs/lows and the closing print, close = the closing print (else the last regular minute's close).
+      daily.open[si] = s.open;
+      daily.high[si] = s.high;
+      daily.low[si] = s.low;
+      daily.close[si] = s.close;
+      daily.print[si] = s.closingPrint === undefined ? 0 : 1;
+      daily.minutes[si] = s.bars.length;
+      daily.early[si] = s.isEarlyClose ? 1 : 0;
+      daily.openTime[si] = s.openTime;
+      daily.closeTime[si] = s.closeTime;
       sessionFirst[si] = k;
       for (const b of s.bars) {
         t[k] = b.time;
@@ -205,7 +310,8 @@ export class MarketPrices {
       sessionDates: sessions.map((s) => s.date),
       sessionFirst,
       sessionLast,
-      stamp
+      stamp,
+      daily
     };
   }
 }

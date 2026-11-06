@@ -10,11 +10,13 @@ import {
   type LabRunRequest,
   type RunSummary
 } from '../../shared/contract.ts';
+import type { CandlesResponse } from '../../shared/candles.ts';
 import type { PreviewDetail } from '../../shared/preview.ts';
 import { api, type DeleteRunResult, displayId, type EventsResponse, type PricesResponse } from '../api.ts';
+import { CANDLE_COLOR, CANDLE_UP_FILL, markerSlots, sessionIndex } from '../chart/candles.ts';
 import type { Role } from '../chart/markers.ts';
 import { isMacPlatform, PAN_MODIFIER_LABEL, panModifierFor } from '../chart/pan.ts';
-import { type ChartEvent, type ChartHandle, PriceChart } from '../chart/PriceChart.tsx';
+import { type ChartData, type ChartEvent, type ChartHandle, PriceChart } from '../chart/PriceChart.tsx';
 import { formatEt, formatEtDate, relativeTime } from '../format.ts';
 import { remember, useFetched, useScoped } from '../hooks.ts';
 import { matchSelection } from '../preview/model.ts';
@@ -54,6 +56,21 @@ interface Props {
 const DAY = 86_400_000;
 const PAN_KEY = PAN_MODIFIER_LABEL[panModifierFor(isMacPlatform(navigator))];
 const active = (s: RunDetail['status']) => s === 'queued' || s === 'running';
+const CANDLES_UNAVAILABLE =
+  'Candles · 1D is unavailable here: the synthetic demo has one synthetic close per session, no genuine open, high or low, so it is shown as a line only.';
+
+/** "Candles · 1D" (daily OHLC, the default for real market data) or "Line · intraday" (the minute price line). */
+export type ChartType = 'candles' | 'line';
+/** The synthetic demo has one synthetic close per session: no genuine OHLC, so always the line. */
+const chartTypeOf = (chosen: ChartType, origin: RunDetail['dataOrigin'] | undefined): ChartType =>
+  origin === 'synthetic' ? 'line' : chosen;
+
+/** Fetches a response once per key and keeps it for the page, so switching chart types back and forth is instant. */
+const keep = <T,>(key: string, load: Promise<T>) =>
+  load.then((r) => {
+    remember(key, r);
+    return r;
+  });
 
 function useRun(id: string | null, refreshKey: number, onFinished: () => void) {
   const [state, setState] = useState<{ id: string; run: Detail | null; error: string | null } | null>(null);
@@ -91,13 +108,25 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
   // Interactive Preview: the displayed result is the saved run, or a temporary preview that replaces EVERY result view
   // at once (chart, events, trades, analysis, parameters). The saved run itself is never modified.
   const symbolNow = run ? (routeSymbol && run.symbols.includes(routeSymbol) ? routeSymbol : run.symbols[0]!) : null;
-  // Loads a completed preview's chart data for the current symbol BEFORE it is displayed (no blank chart, no mixing).
+  // The chart type is a page preference like the marker checkboxes: it survives run, symbol and preview changes. No
+  // stored preference exists (and none is added): a new page opens on the candles.
+  const [chosenChart, setChosenChart] = useState<ChartType>('candles');
+  const chosenChartRef = useRef(chosenChart);
+  useEffect(() => {
+    chosenChartRef.current = chosenChart;
+  });
+  // Loads a completed preview's chart data for the current symbol and chart type BEFORE it is displayed (no blank
+  // chart, no mixing).
   const prefetch = async (d: PreviewDetail) => {
     const sym = symbolNow && d.symbols.includes(symbolNow) ? symbolNow : d.symbols[0]!;
     const b = basisDateOf(d.priceSource, sym);
-    const [ev, px] = await Promise.all([api.events(d.id, sym, b), api.prices(d.id, sym, { points: 3000 })]);
+    const candleChart = chartTypeOf(chosenChartRef.current, d.dataOrigin) === 'candles';
+    const [ev, px] = await Promise.all([
+      api.events(d.id, sym, b),
+      candleChart ? api.candles(d.id, sym) : api.prices(d.id, sym, { points: 3000 })
+    ]);
     remember(`events|${d.id}|${sym}|${b}`, ev);
-    remember(`prices|${d.id}|${sym}`, px);
+    remember(`${candleChart ? 'candles' : 'prices'}|${d.id}|${sym}`, px);
   };
   const pv = usePreview({
     run,
@@ -150,12 +179,20 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
     };
   }, [menuOpen]);
   const basis = shown && symbol ? basisDateOf(shown.priceSource, symbol) : null;
+  const chartType = chartTypeOf(chosenChart, shown?.dataOrigin);
 
-  const pricesQ = useFetched<PricesResponse>(shown && symbol ? `prices|${shown.id}|${symbol}` : null, (signal) =>
-    api.prices(shown!.id, symbol!, { points: 3000 }, signal)
+  // Only the displayed chart type's data is requested: the decimated minute line, or the daily candles.
+  const pricesKey = shown && symbol && chartType === 'line' ? `prices|${shown.id}|${symbol}` : null;
+  const pricesQ = useFetched<PricesResponse>(pricesKey, (signal) =>
+    keep(pricesKey!, api.prices(shown!.id, symbol!, { points: 3000 }, signal))
   );
   const prices = pricesQ.data;
-  const priceError = pricesQ.error;
+  const candlesKey = shown && symbol && chartType === 'candles' ? `candles|${shown.id}|${symbol}` : null;
+  const candlesQ = useFetched<CandlesResponse>(candlesKey, (signal) =>
+    keep(candlesKey!, api.candles(shown!.id, symbol!, signal))
+  );
+  const candles = candlesQ.data;
+  const priceError = chartType === 'candles' ? candlesQ.error : pricesQ.error;
   const eventsA = useFetched<EventsResponse>(
     shown && symbol && shown.status === 'completed' ? `events|${shown.id}|${symbol}|${basis}` : null,
     (signal) => api.events(shown!.id, symbol!, basis, signal)
@@ -245,9 +282,11 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
       const from = (c.role === 'A' ? eventsA : eventsB)?.events ?? [];
       setSel({ base, shownId: shown.id, key, event: c.event, from });
       if (locate) {
+        // Where its marker is drawn (on candles: its session's candle), so the located marker is in view.
         const t = Date.parse(c.event.t);
+        const x = chartRef.current?.chartX(t) ?? t;
         const w = chartRef.current?.getWindow();
-        if (w && (t < w[0] || t > w[1])) chartRef.current?.centerOn(t);
+        if (w && (x < w[0] || x > w[1])) chartRef.current?.centerOn(x);
       }
     },
     [byKey, base, shown, eventsA, eventsB]
@@ -284,6 +323,20 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
       };
     },
     [byKey, tradeOf, eventsA, eventsB]
+  );
+
+  // Candles · 1D: the session slot of each marker (the same pure placement the chart uses), for tooltips and the table.
+  const candleSlots = useMemo(
+    () => (chartType === 'candles' && candles ? markerSlots(chartEvents, sessionIndex(candles.d)) : null),
+    [chartType, candles, chartEvents]
+  );
+  const slotOf = useCallback((c: ChartEvent) => candleSlots?.get(c.key) ?? null, [candleSlots]);
+  const tableX = useCallback(
+    (c: ChartEvent) => {
+      const slot = candleSlots?.get(c.key);
+      return slot && slot.session !== null && candles ? candles.x[slot.session]! : Date.parse(c.event.t);
+    },
+    [candleSlots, candles]
   );
 
   const onActivate = (keys: string[]) => {
@@ -326,6 +379,19 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
   const countsB = counts('B');
   const kindsPresent = EVENT_KINDS.filter((k) => (countsA[k] ?? 0) + (countsB[k] ?? 0) > 0);
   const hovered = hover ? hover.keys.map((k) => byKey.get(k)).filter((x): x is ChartEvent => Boolean(x)) : [];
+  const chartData: ChartData | null =
+    chartType === 'candles'
+      ? candles && { mode: 'candles', candles }
+      : prices && {
+          mode: 'line',
+          overview: prices.points,
+          overviewDecimated: prices.decimated,
+          fetchDetail: (from, to, signal) =>
+            api
+              .prices(shown.id, symbol, { from: Math.floor(from), to: Math.ceil(to), points: 3000 }, signal)
+              .then((p) => p.points)
+        };
+  const chartEmpty = chartData?.mode === 'candles' ? chartData.candles.d.length === 0 : prices?.points.length === 0;
 
   const saveTitle = async () => {
     if (editingTitle === null) return;
@@ -638,11 +704,55 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
         </div>
         <div className="chart-split">
         <div className="chart-main">
-        <div className="legend" data-testid="legend">
-          <span className="legend-price">
-            <span className="line-key" /> {symbol}{' '}
-            {shown.dataOrigin === 'synthetic' ? '(synthetic)' : prices ? `(${prices.units})` : ''}
+        <div className="chart-type-row">
+          <div className="segmented small chart-type" role="radiogroup" aria-label="Chart type" data-testid="chart-type">
+            {(
+              [
+                ['candles', 'Candles · 1D'],
+                ['line', 'Line · intraday']
+              ] as const
+            ).map(([t, label]) => {
+              const unavailable = t === 'candles' && shown.dataOrigin === 'synthetic';
+              return (
+                <label
+                  key={t}
+                  className={`${chartType === t ? 'is-on' : ''}${unavailable ? ' is-disabled' : ''}`}
+                  title={unavailable ? CANDLES_UNAVAILABLE : undefined}
+                >
+                  <input
+                    type="radio"
+                    name="chart-type"
+                    value={t}
+                    checked={chartType === t}
+                    disabled={unavailable}
+                    onChange={() => setChosenChart(t)}
+                    data-testid={`chart-type-${t}`}
+                  />
+                  {label}
+                </label>
+              );
+            })}
+          </div>
+          <span className="muted small chart-type-note" data-testid="chart-type-note">
+            {shown.dataOrigin === 'synthetic'
+              ? CANDLES_UNAVAILABLE
+              : chartType === 'candles'
+                ? 'Daily OHLC: one candle per NYSE session from the minute bars (09:30–16:00 ET; the closing print is the close). Markers sit on their session’s candle at their recorded price; several in one session fan out left → right (not a time scale). Exact ET times: tooltips and the table; minute detail: Line · intraday.'
+                : 'Intraday line: regular-session minute closes and closing prints; markers at their exact instant and price.'}
           </span>
+        </div>
+        <div className="legend" data-testid="legend">
+          {chartType === 'candles' ? (
+            <span className="legend-price" data-testid="legend-candles">
+              <CandleKey /> {symbol}
+              {candles ? ` (${candles.units})` : ''} · daily OHLC
+            </span>
+          ) : (
+            <span className="legend-price">
+              <span className="line-key" /> {symbol}{' '}
+              {shown.dataOrigin === 'synthetic' ? '(synthetic)' : prices ? `(${prices.units})` : ''}
+            </span>
+          )}
           {kindsPresent.map((k) => (
             <label key={k} className={`legend-kind${kinds.has(k) ? '' : ' is-off'}`}>
               <input
@@ -706,25 +816,20 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
         <div className="chart-body">
           {priceError ? (
             <div className="chart-missing" role="alert">
-              Price data unavailable for {symbol}: {priceError}. No substitute chart is shown.
+              {chartType === 'candles' ? 'Daily candles' : 'Price data'} unavailable for {symbol}: {priceError}. No
+              substitute chart is shown.
             </div>
-          ) : prices ? (
-            prices.points.length === 0 ? (
+          ) : chartData ? (
+            chartEmpty ? (
               <div className="chart-missing" role="alert">
                 No {symbol} price data in {shown.window.from} → {shown.window.to}. No substitute chart is shown.
               </div>
             ) : (
               <PriceChart
-                key={`${shown.id}:${symbol}`}
+                key={`${shown.id}:${symbol}:${chartType}`}
                 ref={chartRef}
-                overview={prices.points}
-                overviewDecimated={prices.decimated}
+                data={chartData}
                 synthetic={shown.dataOrigin === 'synthetic'}
-                fetchDetail={(from, to, signal) =>
-                  api
-                    .prices(shown.id, symbol, { from: Math.floor(from), to: Math.ceil(to), points: 3000 }, signal)
-                    .then((p) => p.points)
-                }
                 events={chartEvents}
                 selectedKey={selectedKey}
                 initialWindow={() => lastWindow.current}
@@ -740,9 +845,18 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
               />
             )
           ) : (
-            <div className="chart-missing">Loading {symbol} prices…</div>
+            <div className="chart-missing">
+              Loading {symbol} {chartType === 'candles' ? 'daily candles' : 'prices'}…
+            </div>
           )}
         </div>
+        {candles && candles.omitted.length > 0 && chartType === 'candles' && (
+          <div className="app-notice tone-warn small" role="status" data-testid="candles-omitted">
+            {candles.omitted.length} session{candles.omitted.length === 1 ? '' : 's'} without a candle: the data fails the
+            OHLC check ({candles.omitted.slice(0, 3).map((o) => `${o.date}: ${o.reason}`).join('; ')}
+            {candles.omitted.length > 3 ? '; …' : ''}). Nothing is drawn for {candles.omitted.length === 1 ? 'it' : 'them'}.
+          </div>
+        )}
         <div className="chart-tools">
           <div className="row" role="group" aria-label="Zoom">
             {[
@@ -775,11 +889,13 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
           </div>
           <span className="muted small">
             {view ? `${formatEtDate(view.range[0])} → ${formatEtDate(view.range[1])}` : ''}
-            {prices?.decimated ? ' · overview decimated (min/max per bucket); zoom in for minute detail' : ''}
+            {chartType === 'line' && prices?.decimated
+              ? ' · overview decimated (min/max per bucket); zoom in for minute detail'
+              : ''}
           </span>
           <span className="muted small chart-hint">
-            Drag to measure · swipe up / scroll to zoom in, down to zoom out · {PAN_KEY}-drag (or Shift-drag) to pan ·
-            double-click resets
+            {chartType === 'candles' ? 'Drag to measure (daily close → close)' : 'Drag to measure'} · swipe up /
+            scroll to zoom in, down to zoom out · {PAN_KEY}-drag (or Shift-drag) to pan · double-click resets
           </span>
         </div>
         </div>
@@ -844,7 +960,10 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
             const key = `${selected?.role ?? 'A'}:${id}`;
             select(key, true);
           }}
-          onZoom={() => selected && chartRef.current?.zoomAround(Date.parse(selected.event.t), 30 * DAY)}
+          onZoom={() => {
+            if (!selected || !chartRef.current) return;
+            chartRef.current.zoomAround(chartRef.current.chartX(Date.parse(selected.event.t)), 30 * DAY);
+          }}
         />
         <EventTable
           rows={chartEvents}
@@ -854,6 +973,7 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
           onSelect={(k) => select(k, true)}
           view={tableView}
           onView={setTableView}
+          chartX={candleSlots ? tableX : undefined}
         />
         <AnalysisPanel
           runs={[{ role: 'A' as Role, run: shown }, ...(runB && !compareProblem ? [{ role: 'B' as Role, run: runB }] : [])]}
@@ -890,8 +1010,31 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
         </section>
       </div>
       {hover && hovered.length > 0 && (
-        <MarkerTooltip items={hovered} anchor={hover.anchor} tradeOf={tradeOf} placement={hover.placement} />
+        <MarkerTooltip
+          items={hovered}
+          anchor={hover.anchor}
+          tradeOf={tradeOf}
+          placement={hover.placement}
+          slotOf={candleSlots ? slotOf : undefined}
+        />
       )}
     </div>
+  );
+}
+
+/** The legend key of the candle chart: an up (hollow), a down (solid) and a doji candle, with their meaning. */
+function CandleKey() {
+  return (
+    <span className="candle-key" title="Up day: hollow teal body · down day: solid red body · doji (close = open): grey bar">
+      <svg width="30" height="16" viewBox="0 0 30 16" aria-hidden="true">
+        <line x1="4.5" y1="1" x2="4.5" y2="15" stroke={CANDLE_COLOR.up} />
+        <rect x="1.75" y="4.75" width="5.5" height="7.5" fill={CANDLE_UP_FILL} stroke={CANDLE_COLOR.up} strokeWidth="1.5" />
+        <line x1="15.5" y1="1" x2="15.5" y2="15" stroke={CANDLE_COLOR.down} />
+        <rect x="12" y="3" width="7" height="9" fill={CANDLE_COLOR.down} />
+        <line x1="25.5" y1="2" x2="25.5" y2="14" stroke={CANDLE_COLOR.doji} />
+        <rect x="22" y="7" width="7" height="2" fill={CANDLE_COLOR.doji} />
+      </svg>
+      <span className="visually-hidden">Up day hollow teal, down day solid red, doji grey bar.</span>
+    </span>
   );
 }

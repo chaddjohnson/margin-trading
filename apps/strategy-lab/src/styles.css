@@ -2370,3 +2370,67 @@ a.view-tab:not(.is-active):hover {
   margin-left: 4px;
   white-space: nowrap;
 }
+
+/* ---------- Task 16: daily OHLC candles ("Candles · 1D") and the chart-type selector ---------- */
+
+.chart-type-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin: 2px 0 4px;
+}
+
+.chart-type {
+  flex: none;
+}
+
+.segmented label.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.chart-type-note {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.candle-key {
+  display: inline-flex;
+  align-items: center;
+}
+
+.candle-density {
+  position: absolute;
+  left: 72px;
+  top: 34px;
+  max-width: min(560px, calc(100% - 100px));
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(11, 18, 32, 0.88);
+  color: var(--text-2);
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.candle-density[hidden] {
+  display: none;
+}
+
+.measure-kind {
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.tt-session {
+  margin-top: 4px;
+  color: var(--text-2);
+  font-size: 11.5px;
+}
+
+/* The candle read-out can be long: it wraps inside the chart instead of running off its left edge. */
+.chart-frame[data-chart-mode='candles'] .chart-readout {
+  max-width: calc(100% - 90px);
+  text-align: right;
+}

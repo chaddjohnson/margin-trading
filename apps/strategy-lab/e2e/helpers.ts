@@ -19,7 +19,8 @@ export async function tradingRun(
   title: string,
   symbols: string[],
   extra: Record<string, unknown> = {},
-  window: { from: string; to: string } = { from: '2023-01-03', to: '2023-12-29' }
+  window: { from: string; to: string } = { from: '2023-01-03', to: '2023-12-29' },
+  resolution: '1d' | '1m' | '5m' = '1d'
 ) {
   const found = (await (await page.request.get(`/api/runs?q=${encodeURIComponent(title)}`)).json()) as {
     id: string;
@@ -52,7 +53,7 @@ export async function tradingRun(
       symbols,
       from: window.from,
       to: window.to,
-      resolution: '1d',
+      resolution,
       title
     }
   });
@@ -103,3 +104,10 @@ export const expectedTone = (events: Ev[], tradeId: string) => {
     ?.values.find((v) => v.key === 'net')?.value as number;
   return net > 0 ? 'profit' : net < 0 ? 'loss' : 'flat';
 };
+
+/** Chooses the chart type with the pointer (Candles · 1D is the default for real data) and waits for its chart. */
+export async function chooseChart(page: Page, type: 'candles' | 'line') {
+  await page.getByTestId('chart-type').locator('label', { hasText: type === 'candles' ? 'Candles · 1D' : 'Line · intraday' }).click();
+  await expect(page.getByTestId(`chart-type-${type}`)).toBeChecked();
+  await expect(page.getByTestId('price-chart')).toHaveAttribute('data-chart-mode', type);
+}

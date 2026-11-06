@@ -6,6 +6,7 @@ import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 
+import type { CandlesResponse } from '../shared/candles.ts';
 import { basisDateOf, EVENT_CONTRACT_VERSION, eventsForSymbol, type LabEvent, type RunDetail } from '../shared/contract.ts';
 import { DeleteRunError, deleteRun } from './delete-run.ts';
 import { RUNNABLE_STRATEGIES, MAX_TITLE_LENGTH, STRATEGY_REGISTRY } from '../shared/strategies.ts';
@@ -14,7 +15,7 @@ import { CompareError, compareRuns } from './compare.ts';
 import { ExportError, buildPreviewBundle, buildResearchBundle } from './export.ts';
 import type { Config } from './config.ts';
 import type { Jobs } from './jobs.ts';
-import { priceAtOrBefore, syntheticSeries, windowPoints, type MarketPrices, type Series } from './prices.ts';
+import { dailyCandles, priceAtOrBefore, syntheticSeries, windowPoints, type MarketPrices, type Series } from './prices.ts';
 import type { Repo } from './repo.ts';
 import { clientAllowed, hostAllowed, makeClientAllowlist, tokenMatches } from './security.ts';
 import { DEMO_FIXTURE } from './seed-demo.ts';
@@ -207,6 +208,27 @@ export function createHandler(d: Deps) {
     };
   };
 
+  // The daily OHLC candles of one symbol of a run-shaped result (shared/candles.ts): one per NYSE session of its own window,
+  // in its split basis, from the same cached series as the line. Read-only. The synthetic demo has closes only: refused.
+  const candlesResponse = async (run: Shown, url: URL): Promise<CandlesResponse> => {
+    const symbol = url.searchParams.get('symbol') ?? '';
+    const { series, factor, basis } = await seriesFor(run, symbol);
+    if (run.priceSource.kind === 'synthetic' || !series.daily || basis === null)
+      throw new HttpError(
+        409,
+        'Daily candles are unavailable: the synthetic demo has one synthetic close per session, no genuine open, high or low'
+      );
+    return {
+      runId: run.id,
+      symbol,
+      dataOrigin: 'real',
+      basisDate: basis,
+      units: `USD per share, split-adjusted to ${basis} share units`,
+      source: `data/${symbol}/data.csv regular-session minute bars (09:30–16:00 ET; 13:00 on early closes) and the closing print, one candle per NYSE session`,
+      ...dailyCandles(series, factor, run.window.from, run.window.to)
+    };
+  };
+
   const preview = <T>(fn: () => T): T => {
     try {
       return fn();
@@ -226,7 +248,7 @@ export function createHandler(d: Deps) {
         contractVersion: EVENT_CONTRACT_VERSION,
         activeRuns: jobs.activeCount,
         activePreviews: previews.activeCount,
-        features: ['interactive-preview']
+        features: ['interactive-preview', 'daily-candles']
       })
     ],
     [
@@ -336,6 +358,7 @@ export function createHandler(d: Deps) {
       /^\/api\/runs\/(R-\d{6,12})\/prices$/,
       async ({ m, url }) => pricesResponse(runOr404(m[1]!), url)
     ],
+    ['GET', /^\/api\/runs\/(R-\d{6,12})\/candles$/, async ({ m, url }) => candlesResponse(runOr404(m[1]!), url)],
     [
       'GET',
       /^\/api\/runs\/(R-\d{6,12})\/log$/,
@@ -482,6 +505,11 @@ export function createHandler(d: Deps) {
       'GET',
       /^\/api\/previews\/(PV-[0-9a-f]{64})\/prices$/,
       async ({ m, url }) => pricesResponse(preview(() => previews.chartSource(m[1]!)), url)
+    ],
+    [
+      'GET',
+      /^\/api\/previews\/(PV-[0-9a-f]{64})\/candles$/,
+      async ({ m, url }) => candlesResponse(preview(() => previews.chartSource(m[1]!)), url)
     ],
     [
       'GET',

@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import type { ChartEvent } from '../chart/PriceChart.tsx';
+import type { MarkerSlot } from '../chart/candles.ts';
 import type { Placement } from '../chart/link.ts';
 import { eventKindLabel, isPartialExit } from '../chart/markers.ts';
 import { formatEt, formatPrice } from '../format.ts';
@@ -25,7 +26,8 @@ export function EventTable({
   selectedKey,
   onSelect,
   view,
-  onView
+  onView,
+  chartX
 }: {
   rows: readonly ChartEvent[];
   symbol: string;
@@ -34,6 +36,8 @@ export function EventTable({
   onSelect: (key: string) => void;
   view?: EventTableView;
   onView?: (v: EventTableView) => void;
+  /** Where the chart draws a row's marker (on candles: its session's candle); "Chart window" uses it. Default: its time. */
+  chartX?: (r: ChartEvent) => number;
 }) {
   const [own, setOwn] = useState<EventTableView>({ scope: 'window', q: '', sort: { key: 'time', dir: 1 } });
   const current = view ?? own;
@@ -42,10 +46,10 @@ export function EventTable({
   const setScope = (v: EventTableView['scope']) => change({ ...current, scope: v });
   const setQ = (v: string) => change({ ...current, q: v });
   const setSort = (fn: (s: EventTableView['sort']) => EventTableView['sort']) => change({ ...current, sort: fn(current.sort) });
-  const inWindow = useMemo(
-    () => rows.filter((r) => !window || (Date.parse(r.event.t) >= window[0] && Date.parse(r.event.t) <= window[1])),
-    [rows, window]
-  );
+  const inWindow = useMemo(() => {
+    const x = chartX ?? ((r: ChartEvent) => Date.parse(r.event.t));
+    return rows.filter((r) => !window || (x(r) >= window[0] && x(r) <= window[1]));
+  }, [rows, window, chartX]);
   const shown = useMemo(() => {
     const base = scope === 'window' ? inWindow : [...rows];
     const query = q.trim().toLowerCase();
@@ -241,12 +245,15 @@ export function MarkerTooltip({
   items,
   anchor,
   tradeOf,
-  placement = 'none'
+  placement = 'none',
+  slotOf
 }: {
   items: ChartEvent[];
   anchor: DOMRect;
   tradeOf?: (c: ChartEvent) => Trade | null;
   placement?: Placement;
+  /** Candles · 1D: the session slot of a marker (its candle and its place in that session's fan). */
+  slotOf?: (c: ChartEvent) => MarkerSlot | null;
 }) {
   // The hovered trade's counterpart lies later (to the right) for an entry: the tooltip then opens to the left.
   const first = items[0];
@@ -299,6 +306,7 @@ export function MarkerTooltip({
             </span>
             <span>{formatEt(c.event.t, c.event.timePrecision)}</span>
           </div>
+          {slotOf?.(c) && <SessionNote slot={slotOf(c)!} />}
           {c.event.reason && <div className="tt-reason">{c.event.reason}</div>}
           {(c.event.kind === 'executed_entry' || c.event.kind === 'executed_exit') && (
             <TradePnl item={c} trade={tradeOf?.(c) ?? null} />
@@ -309,6 +317,17 @@ export function MarkerTooltip({
         </div>
       ))}
       {items.length > shown.length && <div className="muted small">+ {items.length - shown.length} more</div>}
+    </div>
+  );
+}
+
+/** Candles · 1D: where the marker sits, and that its time (above) is the exact one, not the candle's position. */
+function SessionNote({ slot }: { slot: MarkerSlot }) {
+  return (
+    <div className="tt-session" data-testid="tt-session">
+      {slot.session === null
+        ? `No ${slot.date} candle: the marker sits at its own instant.`
+        : `Shown on the ${slot.date} daily candle${slot.count > 1 ? ` (${slot.rank + 1} of ${slot.count} events that session, fanned left → right in time order)` : ''}; the time above is the exact event time.`}
     </div>
   );
 }
