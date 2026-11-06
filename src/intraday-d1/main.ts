@@ -5,6 +5,8 @@
 //   npm run intraday-d1 -- freeze                 roles, ranking → FROZEN_SELECTION.json (commit it before validate)
 //   npm run intraday-d1 -- validate               the validation door, once → results/validation/
 //   npm run intraday-d1 -- report                 tables, ledgers and diagnostics from the sealed records
+//   npm run intraday-d1 -- run --B … --X … [--door development|full]   one parameter set (the strategy entry point)
+//   npm run intraday-d1 -- diagnose               development-only diagnostics (report-only)
 //   npm run intraday-d1 -- verify                 re-hash the chain
 import { execFileSync } from 'node:child_process';
 import os from 'node:os';
@@ -207,6 +209,16 @@ const run = async () => {
       const { runReport } = await import('./report.ts');
 
       return runReport(args);
+    }
+    case 'run': {
+      const { runOne } = await import('./run.ts');
+
+      return runOne(args);
+    }
+    case 'diagnose': {
+      const { runDiagnostics } = await import('./diagnostics.ts');
+
+      return runDiagnostics();
     }
     case 'verify': {
       const result = await verifyChain();

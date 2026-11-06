@@ -9,14 +9,20 @@ import { frozenSelectionFile, resultFile } from './context.ts';
 import { loadDevelopmentSessions } from './data.ts';
 import { log, readSealed, recordDoor, writeSealed } from './seal.ts';
 
-type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+type Json = Record<string, any>;
 
 const reportDir = resultFile('report');
-const n0 = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? Math.round(v).toLocaleString('en-US') : String(v ?? ''));
+const n0 = (v: unknown) =>
+  typeof v === 'number' && Number.isFinite(v) ? Math.round(v).toLocaleString('en-US') : String(v ?? '');
 const n2 = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v.toFixed(2) : String(v ?? ''));
-const pct = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? `${(v * 100).toFixed(1)}%` : String(v ?? ''));
+const pct = (v: unknown) =>
+  typeof v === 'number' && Number.isFinite(v) ? `${(v * 100).toFixed(1)}%` : String(v ?? '');
 const table = (header: string[], rows: unknown[][]) =>
-  [`| ${header.join(' | ')} |`, `|${header.map(() => '---').join('|')}|`, ...rows.map((r) => `| ${r.map((c) => String(c ?? '')).join(' | ')} |`)].join('\n');
+  [
+    `| ${header.join(' | ')} |`,
+    `|${header.map(() => '---').join('|')}|`,
+    ...rows.map((r) => `| ${r.map((c) => String(c ?? '')).join(' | ')} |`)
+  ].join('\n');
 
 // Development-period regimes from VGT's own daily closes (development door): per calendar month, the month's return
 // (bull ≥ 0 > bear) and its realized volatility tercile (daily close-to-close returns).
@@ -41,7 +47,8 @@ const developmentRegimes = async () => {
 
   const rows = [...months.entries()].map(([month, rets]) => {
     const mean = rets.reduce((a, b) => a + b, 0) / rets.length;
-    const vol = Math.sqrt(rets.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, rets.length - 1)) * Math.sqrt(252);
+    const vol =
+      Math.sqrt(rets.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, rets.length - 1)) * Math.sqrt(252);
 
     return { month, ret: monthEndClose.get(month)! / monthStartClose.get(month)! - 1, vol };
   });
@@ -50,7 +57,15 @@ const developmentRegimes = async () => {
   const hi = quantile(vols, 2 / 3);
 
   return Object.fromEntries(
-    rows.map((r) => [r.month, { trend: r.ret >= 0 ? 'bull month' : 'bear month', vol: r.vol <= lo ? 'low vol' : r.vol <= hi ? 'mid vol' : 'high vol', ret: r.ret, annualVol: r.vol }])
+    rows.map((r) => [
+      r.month,
+      {
+        trend: r.ret >= 0 ? 'bull month' : 'bear month',
+        vol: r.vol <= lo ? 'low vol' : r.vol <= hi ? 'mid vol' : 'high vol',
+        ret: r.ret,
+        annualVol: r.vol
+      }
+    ])
   ) as Record<string, { trend: string; vol: string; ret: number; annualVol: number }>;
 };
 
@@ -59,7 +74,9 @@ const ledgerOf = async (file: string) => {
   const cols = header!.split(',');
 
   return lines.map((line) => {
-    const cells = line.match(/("([^"]|"")*"|[^,]*)(,|$)/g)!.map((c) => c.replace(/,$/, '').replace(/^"|"$/g, '').replace(/""/g, '"'));
+    const cells = line
+      .match(/("([^"]|"")*"|[^,]*)(,|$)/g)!
+      .map((c) => c.replace(/,$/, '').replace(/^"|"$/g, '').replace(/""/g, '"'));
 
     return Object.fromEntries(cols.map((c, i) => [c, cells[i]])) as Record<string, string>;
   });
@@ -76,7 +93,12 @@ export const runReport = async (args: string[]) => {
   const regimes = await developmentRegimes();
   const out: string[] = [];
 
-  out.push('# Intraday D1 (VGT) — generated tables', '', 'Generated from the sealed records by `npm run intraday-d1 -- report`. Report-only; nothing here selects.', '');
+  out.push(
+    '# Intraday D1 (VGT) — generated tables',
+    '',
+    'Generated from the sealed records by `npm run intraday-d1 -- report`. Report-only; nothing here selects.',
+    ''
+  );
 
   // search funnel
   const c = search.counts;
@@ -96,7 +118,10 @@ export const runReport = async (args: string[]) => {
         ['islands run', c.islandsRun],
         ['point evaluations', search.points],
         ['minutes', n2(search.seconds / 60)],
-        ['T1 / T2 / T3', `${JSON.stringify(search.triggers.T1.islandsRun)} islands / ${search.triggers.T2.fired ? 'fired' : 'not fired'} / ${search.triggers.T3.fired ? 'fired' : 'not fired'}`]
+        [
+          'T1 / T2 / T3',
+          `${JSON.stringify(search.triggers.T1.islandsRun)} islands / ${search.triggers.T2.fired ? 'fired' : 'not fired'} / ${search.triggers.T3.fired ? 'fired' : 'not fired'}`
+        ]
       ]
     ),
     ''
@@ -106,7 +131,19 @@ export const runReport = async (args: string[]) => {
   out.push('## Shortlist and qualification (development door; confirm 3 × 128)', '');
   out.push(
     table(
-      ['#', 'pick', 'id', 'parameters', 'centre net', 'nb share', 'nb median/yr', 'nb p10/yr', 'p90 DD', 'qualified', 'failed gates'],
+      [
+        '#',
+        'pick',
+        'id',
+        'parameters',
+        'centre net',
+        'nb share',
+        'nb median/yr',
+        'nb p10/yr',
+        'p90 DD',
+        'qualified',
+        'failed gates'
+      ],
       qualification.candidates.map((cand: Json) => [
         cand.rank,
         cand.pick,
@@ -134,17 +171,42 @@ export const runReport = async (args: string[]) => {
     frozen.ranked.length
       ? table(
           ['rank', 'role', 'id', 'tier', 'confirmation robust/yr', 'B1 robust/yr', 'parameters'],
-          frozen.ranked.map((h: Json) => [h.rank, h.role, h.id, h.tier, n0(h.robustPerYear), n0(h.b1RobustPerYear), h.describe])
+          frozen.ranked.map((h: Json) => [
+            h.rank,
+            h.role,
+            h.id,
+            h.tier,
+            n0(h.robustPerYear),
+            n0(h.b1RobustPerYear),
+            h.describe
+          ])
         )
       : 'No role holder: no shortlist member qualified on the development door.',
     ''
   );
 
   if (validation) {
-    out.push('## Validation (once, 2025-01-02 → 2026-10-30)', '', `Recommendation (pre-registered mapping): **${validation.recommendation}**.`, '');
+    out.push(
+      '## Validation (once, 2025-01-02 → 2026-10-30)',
+      '',
+      `Recommendation (pre-registered mapping): **${validation.recommendation}**.`,
+      ''
+    );
     out.push(
       table(
-        ['candidate', 'status', 'failed', 'DEV net', 'VAL net', '2025', '2026 (partial)', 'whole-run min DD', 'test share', 'test median VAL', 'break-even bps DEV / VAL'],
+        [
+          'candidate',
+          'status',
+          'failed',
+          'DEV net',
+          'VAL net',
+          '2025',
+          '2026 (partial)',
+          'whole-run min DD',
+          'test share',
+          'test median VAL',
+          'break-even bps DEV / VAL'
+        ],
         validation.candidates.map((v: Json) => [
           `${v.label} ${v.id}`,
           v.status,
@@ -168,15 +230,77 @@ export const runReport = async (args: string[]) => {
       out.push(`### ${v.label} ${v.id}: ${v.describe}`, '');
       out.push(
         table(
-          ['year', 'window', 'trades', 'win %', 'avg win', 'avg loss', 'median', 'expectancy', 'gross pre-cost', 'costs', 'financing', 'net (by entry)', 'attributed', 'min DD in yr', 'daily DD in yr', 'PF', 'exposure %', 'worst', 'max loss streak'],
-          v.years.map((y: Json) => [y.year, y.window, y.trades, n2(y.winRate), n0(y.avgWin), n0(y.avgLoss), n0(y.medianNet), n0(y.expectancy), n0(y.grossBeforeCosts), n0(y.costs), n0(y.financing), n0(y.net), n0(y.attributedNet), n0(y.minuteDrawdownInYear), n0(y.dailyDrawdownInYear), n2(y.profitFactor), n2(y.exposurePct), n0(y.worstTrade), y.maxConsecutiveLosses])
+          [
+            'year',
+            'window',
+            'trades',
+            'win %',
+            'avg win',
+            'avg loss',
+            'median',
+            'expectancy',
+            'gross pre-cost',
+            'costs',
+            'financing',
+            'net (by entry)',
+            'attributed',
+            'min DD in yr',
+            'daily DD in yr',
+            'PF',
+            'exposure %',
+            'worst',
+            'max loss streak'
+          ],
+          v.years.map((y: Json) => [
+            y.year,
+            y.window,
+            y.trades,
+            n2(y.winRate),
+            n0(y.avgWin),
+            n0(y.avgLoss),
+            n0(y.medianNet),
+            n0(y.expectancy),
+            n0(y.grossBeforeCosts),
+            n0(y.costs),
+            n0(y.financing),
+            n0(y.net),
+            n0(y.attributedNet),
+            n0(y.minuteDrawdownInYear),
+            n0(y.dailyDrawdownInYear),
+            n2(y.profitFactor),
+            n2(y.exposurePct),
+            n0(y.worstTrade),
+            y.maxConsecutiveLosses
+          ])
         ),
         ''
       );
       out.push(
         table(
-          ['window', 'trades', 'win %', 'expectancy', 'net (by entry)', 'attributed', 'PF', 'median hold (min)', 'overnight trades', 'stop-level fills'],
-          v.windows.map((w: Json) => [w.window, w.trades, n2(w.winRate), n0(w.expectancy), n0(w.net), n0(w.attributedNet), n2(w.profitFactor), n2(w.medianHoldMinutes), w.overnightTrades, w.stopLevelFills])
+          [
+            'window',
+            'trades',
+            'win %',
+            'expectancy',
+            'net (by entry)',
+            'attributed',
+            'PF',
+            'median hold (min)',
+            'overnight trades',
+            'stop-level fills'
+          ],
+          v.windows.map((w: Json) => [
+            w.window,
+            w.trades,
+            n2(w.winRate),
+            n0(w.expectancy),
+            n0(w.net),
+            n0(w.attributedNet),
+            n2(w.profitFactor),
+            n2(w.medianHoldMinutes),
+            w.overnightTrades,
+            w.stopLevelFills
+          ])
         ),
         ''
       );
