@@ -2,17 +2,19 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-06T17:35Z (UTC, from the clock). **Status: INCOMPLETE — about to freeze the protocol.**
-- **Current stage:** implementation complete (`src/intraday-d1/`: engine, periods, data doors, space, records, lab +
-  worker pool, fitness (Study 8 functions imported), search (Study 8 V-track port), evidence/qualify/freeze, validate,
-  ledger, tables; tests). `PROTOCOL.md` written. Study tests 17/17 pass; data-free D1 suites 21/21 pass; tsc/eslint
-  clean. Smoke search ran end to end (scratch output only).
-- **Next commands (repo root):** `npm run intraday-d1 -- seal-protocol`, then `npm run intraday-d1 -- parity`, then
-  git commit (protocol freeze), then `npm run intraday-d1 -- search` (background, log to
-  `research/intraday-d1-vgt/results/logs/search.log`).
-- **Authority:** the brief `research/intraday-d1-vgt/brief/BRIEF.md` (sha256 `1ef65015…c639b147b639`, verified complete).
-  No protocol frozen yet; no amendments.
-- **Stages complete:** Phase 1 audit (files below). **Running:** nothing.
+- **Updated:** 2026-11-06T17:40Z (UTC, from the clock). **Status: INCOMPLETE — selection frozen; committing the freeze
+  before the validation door.**
+- **Outcome so far (development, sealed):** the Study 8 V-track search found **no feasible configuration** (0/7,890 at
+  rung 1, 0/192 rung 2, 0/48 rung 3; 182,054 points, 0.8 min). Binding constraint of the best near-misses: C5 median
+  ≥ $10k/yr only (median ≈ $6.5k/yr, share 1.0). Near-misses sit at the box's daily-like upper edges (B 130, X 4.96%,
+  H max). Shortlist = 4 "infeasible on training" fillers; all fail E1 (+ forced). **No role holder; preferred none.**
+  Pre-registered recommendation: "no robust edge"; validation still runs once for the frozen shortlist (diagnostic).
+- **Records:** search `results/search/search.json` (sha256 `db62256e…`, body `a5ec3c61…`); qualification
+  `results/qualify/qualification.json` (sha256 `ae6313a5…`, body `7d9ce9b8…`); `FROZEN_SELECTION.json` body
+  `1dd6700c…`; chain 6 entries, verifies (protocol, amendment-A1, parity, search, qualify, selection).
+- **Committed:** `f90d990` (protocol freeze). The freeze commit is next.
+- **Next commands:** git commit (freeze) → `npm run intraday-d1 -- validate` (once) → `npm run intraday-d1 -- report`
+  → development-only diagnostics → REPORT.md → full `npm test` → final commit → push.
 
 ## Environment
 
