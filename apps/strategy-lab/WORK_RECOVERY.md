@@ -1,5 +1,78 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
+## Top screen (read this first) — Task 15: Growth Drawdown Recovery Gate — INCOMPLETE
+
+- **Updated:** 2026-11-06T13:55Z (UTC, from the clock). **Status: INCOMPLETE — stage 15.0 (audit) in progress.**
+- **Brief:** `docs/strategy-lab/brief/2026-11-06-growth-drawdown-recovery-gate-brief.md` (verbatim copy of the upload
+  `8490846b-Claude_Growth_Drawdown_Recovery_Gate_Implementation.md`, 133 lines + trailing line, read in full through §9
+  and the core acceptance criterion; sha256 `808dcdafb0b6b0a2ce1c811be29da8dd4f0a965b5a6b7a63723a6766b781293a`). The
+  user's message: "Proceed with the complete assignment, including implementation, research execution, verification,
+  and the requested Git commit and push". Brief §9: commit + push the feature branch, **no merge to `main`**; do not run
+  the Study 9 optimisation; no market-data, Study 8, historical-result or trading-system change.
+- **Branch:** `feature/strategy-entry-explorer-ui`, HEAD at start `d13148a` (= Task 14 push record), tree clean. Work in
+  the MAIN checkout (the user's live server is NOT running at 13:53Z; only the stray :4391 server pid 2772895 of an
+  earlier session, untouched). Node 24.21.0 (`.node-version`).
+- **Version:** deployed Growth is **1.3.0** (Task 14), not the brief's 1.2.0 → the gate ships as **1.4.0**; 1.3.0
+  becomes legacy (`launch: phenotype`), OFF parity is proven against 1.3.0 (and transitively 1.2.0/1.1.0/1.0.0).
+- **Real data (pre-task, sha256):** VGT `2ee06310f2fa8926…`, GDX `77dba9b21c4b6849…`, XBI `4a51bcbe67e4460e…`.
+  Partitions: training 2016-01-01→2023-12-31 (real-data diagnostics use ONLY this), holdout 2024-01-01→2025-10-16 and
+  final 2025-10-17→ (not used for any diagnostic).
+- **Live state:** `state/strategy-lab/` read-only; tests use temp state dirs; `dist` rebuilt only at the final check.
+- **Next step:** finish the code audit (riseTrading/entryGates/continuation/optionalRules, strategies.ts,
+  growth-params.ts, trading-run.ts, previews, export), write the design section, capture the 1.3.0 OFF baselines.
+
+## Task 15 — design (written 2026-11-06T14:05Z, from the code audit; no user question needed)
+
+- **Version.** Engine/registry `rise-from-recent-low-trading@1.4.0` (title stays **Growth**). 1.3.0 → legacy
+  (`launch: phenotype`, schema frozen byte-identical); replay mode `legacy-1.3.0` (trades/daily/events in full,
+  metrics/decisions projected, as legacy-1.2.0). Clone of a ≤1.3.0 run starts a 1.4.0 test with the gate OFF.
+- **Params (group `drawdownGate`, "Drawdown Recovery Gate (optional)", percentages as percentage points like every
+  Growth input):** `drawdownRecoveryGateEnabled` (false), `dipLookbackSessions` N (30; integer 1–500 sessions),
+  `dipThresholdPercent` d (5; 0.1–90), `recoveryRetracementPercent` r (70; 0.1–100, 100 allowed),
+  `recoveryConfirmationSessions` Y (2; integer 0–60). Inputs `activeWhen` the switch, hidden when OFF.
+- **Engine module** `src/growth-trading/drawdownGate.ts` (`DrawdownRecoveryGate`) + a simple rescanning reference
+  implementation for parity tests. Wired through `GateRuntime.drawdown` into `EntryGates.check` (order: capital →
+  trend → drawdown → protection; trend AND drawdown both evaluated and logged when both ON; primary reason = the first
+  failure; new GateReason `drawdown_gate`, keys added to count records ONLY when the gate is ON → OFF shapes unchanged).
+- **Observations (per session, chronological):** the opening trade (first regular minute's open, at its start) and,
+  after missing minutes inside a session, the reopening bar's open = CONTINUITY-ONLY (below the threshold → reset);
+  every completed regular-session minute close (at bar start + 60 s) and the closing print / official close (at the
+  scheduled close) = FULL observations (detection, trough, recovery start, qualification, resolution, reset).
+- **Detection (NORMAL):** at full observation j in session s: candidates = full observations i < j, i ≥ epoch start,
+  session(i) ≥ s − N (the current session and the N sessions before it). M = max close (ties → most recent).
+  Compare BEFORE pushing j: c_j ≤ M(1 − d)(1 + 1e-12) → episode `DD-k` (peak M & time, first qualifying obs, trough
+  c_j). Monotonic deque; a rescanning reference must agree exactly.
+- **Episode:** trough = strictly lower full close (ties keep the earlier); threshold R = T + (P − T)·r/100 recomputed
+  on a new trough (resets/loses confirmation). Order per full obs: (1) c ≥ P(1 − 1e-12) → RESOLVED (`dip_resolved`,
+  `resolvedBeforeConfirmation` flag) → NORMAL, fresh epoch starting AT that observation (old prices never re-arm);
+  (2) c < T → new trough; (3) c ≥ R(1 − 1e-12): start a streak (Y = 0 → confirmed at once) or qualify; c below →
+  reset (streak) / lost (confirmed). One episode at a time.
+- **Confirmation clock:** streak start obs j0 (session s0, ET minute-of-day m0 via America/New_York offset). Y ≥ 1:
+  confirmed at the first FULL observation with continuity intact and (session = s0 + Y and ET minute ≥ m0, or session
+  > s0 + Y — early close / missing minute → the next actual observation). Sessions = the dataset's sessions (NYSE).
+  Every continuity and full observation in between must be ≥ R; a violation resets (cause: opening_gap, reopen_gap,
+  minute_close, closing_print, new_trough). Missing minutes are never evidence: qualification needs an observed close.
+- **Permissive** = state NORMAL or RECOVERY_CONFIRMED AND the discovery window complete (session index ≥ N in the loaded
+  data); otherwise BLOCK (`drawdown_gate`, state `insufficient_history` | `recovery_required`). Warm-up = N sessions
+  (strict, as every Growth lookback); the detector starts at the first loaded session (path state before it is
+  unknown: documented limitation; peak-censored flag when the peak is the first loaded observation).
+- **Simulation order:** in `baseUntil(time)` a merge of (gate observation, base decision, gates step): at one instant
+  observation → fresh crossing → live opportunity step (bar before release wake). `check` asserts the gate was
+  advanced through the decision instant (ordering bugs fail loudly). With the gate OFF the loop is the 1.3.0 loop.
+- **Release wake (eligibility ON only):** a blocking→permissive transition at a full observation (t*, price c*) while
+  the live opportunity's latest evaluation was blocked WITH the drawdown gate among its blockers → one extra latched
+  evaluation at t* (`via: drawdown_release`): policy validity = its last completed run-resolution bar (it is live, so
+  it held) + price conditions of policies 2/3/4 re-checked at c* WITHOUT mutating state (failure: no decision now,
+  stays armed); then capital, trend at (s, t*, c*), drawdown, protection → order → fill at the next eligible trade
+  (next minute's open / next session's open). Without a live opportunity a release creates nothing.
+- **Eligibility OFF:** a blocked crossing = `vetoed` (reason `drawdown_gate`), never replayed. **Continuation:** a
+  blocked trigger is vetoed and ENDS its episode (end `drawdown_gate`) — the established trend-veto semantics, kept.
+- **Records:** gate transitions (`dip_detected`, `new_trough`, `recovery_started`, `confirmation_reset`,
+  `recovery_confirmed`, `confirmation_lost`, `dip_resolved`, `entry_blocked_by_drawdown_gate`) in
+  decisions.json `drawdownGate`; episodes with stable ids; `drawdown.*` values on gate results; per-symbol metrics
+  `drawdownGate` (descriptive); run-level `drawdownGate {enabled…}`; bundle `drawdown-episodes.csv`,
+  `drawdown-transitions.csv`, `drawdown-gate.md`, entry-decisions columns.
+
 ## Top screen (read this first) — Task 14: Growth optional rules (initial risk stop, trend-breakout entry, trend retention) — COMPLETE
 
 - **Updated:** 2026-11-05T23:56Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, merged into
