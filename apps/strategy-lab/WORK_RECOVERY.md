@@ -1,10 +1,15 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
-## Top screen (read this first) — Task 15: Growth Drawdown Recovery Gate — COMPLETE (push pending at this commit)
+## Top screen (read this first) — Task 15: Growth Drawdown Recovery Gate — COMPLETE
 
-- **Updated:** 2026-11-06T15:34Z (UTC, from the clock). **Status: COMPLETE — implemented, reviewed, verified on the final code; this
-  checkpoint is committed with the report and evidence; next: `git push origin feature/strategy-entry-explorer-ui`
-  (fast-forward; outside the sandbox with retries), then a push-record commit. No merge to `main`.**
+- **Updated:** 2026-11-06T15:36Z (UTC, from the clock). **Status: COMPLETE — implemented, reviewed, verified, committed and
+  PUSHED. No merge to `main`.**
+- **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `d13148a..54fc2f9`, no force; outside the
+  sandbox, first attempt, 2026-11-06T15:35:04Z→15:35:09Z). `git ls-remote` at 15:35:09Z: branch = `54fc2f9bc86d…`
+  (= local), `origin/main` = `aa5754d…` (unchanged). This push record follows as its own commit, pushed the same way.
+- **Follow-up gate (the user's):** start (or restart) the Strategy Lab server the usual way
+  (`npm --prefix apps/strategy-lab run start:vpn`) to offer Growth 1.4.0 in New Test; no migration. Any study of the
+  gate (tuning, validation) = a separate protocol on untouched data.
 - **Final verification (on `2206a41`):** Growth suites 237/237 (`logs/task15/growth-tests-3.log`); app `npm run check`
   15:23:57Z→15:29:29Z (`logs/task15/check-3.log`): typecheck + lint clean, Vitest 244/244, build (`dist` = this build),
   Playwright 64/64; root `tsc` clean; root ESLint 306 = baseline; root `npm test` 15:29:52Z→15:33:56Z
