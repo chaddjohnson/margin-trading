@@ -1,11 +1,13 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
-## Top screen (read this first) — Task 16: daily OHLC candlestick chart — COMPLETE (push pending at this write)
+## Top screen (read this first) — Task 16: daily OHLC candlestick chart — COMPLETE
 
-- **Updated:** 2026-11-06T16:37Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, documented; being
-  committed and pushed** (`git push origin feature/strategy-entry-explorer-ui`, outside the sandbox, retries; NO merge
-  to `main`). If this line still says "pending" and `git log origin/feature/strategy-entry-explorer-ui` lacks the Task
-  16 commits, the push is the only step left; then record it here in a follow-up commit and push that too.
+- **Updated:** 2026-11-06T16:38Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, documented,
+  committed and PUSHED. No merge to `main`.**
+- **Push:** `git push origin feature/strategy-entry-explorer-ui` (fast-forward `353798c..a1826fe`, no force; outside the
+  sandbox, first attempt, 2026-11-06T16:37:38Z→16:37:43Z). `git ls-remote` at 16:37:48Z: branch = `a1826fe6e1f6…`
+  (= local), `origin/main` = `aa5754d…` (unchanged). Commits: `aaaa8d8` implementation + tests, `a1826fe` docs +
+  report + checkpoint; this push record follows as its own commit, pushed the same way.
 - **Follow-up gate (the user's):** start the Strategy Lab server the usual way (`npm --prefix apps/strategy-lab run
   start:vpn`); `dist` = check-2's build; no migration. Real runs open on Candles · 1D.
 - **Final verification:** `npm run check` check-2 2026-11-06T16:29:36Z→16:35:24Z (`logs/task16/check-2.log`): typecheck
@@ -45,8 +47,7 @@
   CET. Servers at start: only the stray :4391 server pid 2772895 (earlier session, scratch state; untouched). The user's
   live server is NOT running. `dist` = Task 15's final build; rebuild only at the final check.
 - **No chart preference exists** (localStorage holds only the API token) → chart type = page state, no migration.
-- **Next step:** commit (implementation + tests; docs + report + checkpoint), push the feature branch outside the
-  sandbox with retries, verify with `git ls-remote`, then a push-record commit + push. No merge to `main`.
+- **Next step:** none in this task. The follow-up gate above is the user's.
 
 ## Task 16 — design (written between 15:50Z and 16:04Z — not clocked; bounded by `date -u` 15:49:43Z and the scratch server log 16:04:01Z; from the code audit; no user question needed)
 
