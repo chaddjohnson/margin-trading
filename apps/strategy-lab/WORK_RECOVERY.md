@@ -1,10 +1,56 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
-## Top screen (read this first) — Task 15: Growth Drawdown Recovery Gate — INCOMPLETE
+## Top screen (read this first) — Task 15: Growth Drawdown Recovery Gate — COMPLETE (push pending at this commit)
 
-- **Updated:** 2026-11-06T14:44Z (UTC, from the clock). **Status: INCOMPLETE — 15.1–15.4 done (baselines, engine, registry/runner/
-  server/export, Analysis UI, app tests); next: e2e spec, paired-comparison CLI option, docs, paired diagnostics,
-  report, full verification, commit + push.**
+- **Updated:** 2026-11-06T15:34Z (UTC, from the clock). **Status: COMPLETE — implemented, reviewed, verified on the final code; this
+  checkpoint is committed with the report and evidence; next: `git push origin feature/strategy-entry-explorer-ui`
+  (fast-forward; outside the sandbox with retries), then a push-record commit. No merge to `main`.**
+- **Final verification (on `2206a41`):** Growth suites 237/237 (`logs/task15/growth-tests-3.log`); app `npm run check`
+  15:23:57Z→15:29:29Z (`logs/task15/check-3.log`): typecheck + lint clean, Vitest 244/244, build (`dist` = this build),
+  Playwright 64/64; root `tsc` clean; root ESLint 306 = baseline; root `npm test` 15:29:52Z→15:33:56Z
+  (`logs/task15/root-test-2.log`): 1197 / 1186 pass / 7 fail = the same 7 names as Task 14 / 4 skipped. Data sha256 =
+  pre-task; no live-state file changed (none newer than 13:53Z). The user's live server is NOT running (only the stray
+  :4391 server pid 2772895 of an earlier session, untouched); after the user starts it, New Test offers 1.4.0.
+- **Deliverables:** engine `src/growth-trading/drawdownGate.ts`, `entryGates.ts`, `riseTrading.ts`, `continuation.ts`;
+  tests `drawdownGate.test.ts` (46), `offParity-1.3.0.test.ts`, fixtures `baseline-1.3.0.json` (`344fb135…`) and
+  `apps/strategy-lab/tests/fixtures/growth-runner-baseline-1.3.0/` (`SHA256SUMS` `f2e0571e…`); app: registry 1.4.0,
+  runner, server, export, Analysis UI, `tests/drawdown-gate.test.ts` (8), `e2e/drawdown-gate.spec.ts` (2),
+  `scripts/export-requests.ts`; CLI `growth-paired --off drawdown-gate`; docs `docs/strategy-lab/GROWTH_DRAWDOWN_GATE.md`
+  + updates; report `docs/strategy-lab/reports/2026-11-06-drawdown-recovery-gate/REPORT.md` with `requests/`, `paired/`,
+  `bundles/` (sha256 in the report §8). Commits: `79fac8c` baselines, `af32c10` engine, `9f17a82` Strategy Lab,
+  `2206a41` review fixes + e2e + tools + docs, then this report/checkpoint commit.
+- **Disclosures:** (1) deployed version was 1.3.0, so the gate is 1.4.0; (2) review found 1 bug + 2 risks + 2 nits, all
+  fixed before the final verification; (3) test edits: version strings, the groups list, the required switch, the
+  `/retrace/` and `/recovery/` guards scoped to every control except the gate's (unit + e2e); (4) the known flaky
+  `strategy-lab.spec.ts:308` failed once (check-2) and passed in the rerun; (5) diagnostics: training partition only, no
+  optimisation, no Study 9, no claims; (6) no chart overlay (optional in the brief); (7) the detector's initial state
+  depends on the loaded history (documented).
+- **Review (read-only subagent, 15:07Z):** 1 bug (same-instant opening/reopening trade seen by a decision → handed to the
+  gate after the decisions), 2 risks (stale close without a closing print → no close observation; detector history
+  coupled to other warm-ups → origin = firstSession − N), 2 nits (`blockedBy` + `protection`; continuation ref). All
+  fixed in `2206a41` with 4 regression tests (`drawdownGate.test.ts` 46/46). Growth suites 237/237
+  (`logs/task15/growth-tests-3.log`), app gate + parity 38/38 (`logs/task15/vitest-fixes-1.log`). Evidence rerun on
+  `2206a41`: paired outputs byte-identical; bundle CSVs identical except `drawdown-transitions.csv` `seq` (observation
+  counter) — report §10.
+- **Verification so far:** check-1 (before the fixes, 14:53→14:58Z): typecheck/lint OK, Vitest 244/244, e2e 63/64 (the
+  `/recovery/` guard in `trading.spec.ts` matched the gate switch → scoped; rerun 3/3). check-2 (on `2206a41`,
+  15:18→15:23Z): Vitest 244/244, e2e 63/64 — `strategy-lab.spec.ts:308` `data-view-from` null = the KNOWN flaky race
+  (memory); check-3 rerun RUNNING (harness task b3tfh4dkk, log `logs/task15/check-3.log`). Root tsc clean; root ESLint
+  306 problems (= baseline; the error is the pre-existing `src/trailing-buy-variants/selection.ts`); root `npm test`
+  (before the fixes) 1193 / 1182 pass / 7 fail = the SAME 7 failing names as Task 14 / 4 skipped (`logs/task15/root-test.log`)
+  — rerun on the final code after check-3. Data sha256 unchanged; no live-state file newer than 13:53Z.
+- **15.5–15.9 (uncommitted, on disk):** `e2e/drawdown-gate.spec.ts` (2/2 on a scratch build,
+  `logs/task15/e2e-dd-1.log`); `src/growth-trading/tools/paired-comparison.ts` (`--off entry-gates|drawdown-gate`);
+  `apps/strategy-lab/scripts/export-requests.ts` + npm script `export-requests`; docs: new
+  `docs/strategy-lab/GROWTH_DRAWDOWN_GATE.md`, updates to README, GROWTH_TRADING, GROWTH_OPTIONAL_RULES,
+  GROWTH_ENTRY_GATES, EXPORTS, INTERACTIVE_PREVIEW, OPERATIONS, RESEARCH_WORKFLOW, CONTRACTS, PHENOTYPES, app README,
+  root README; report `docs/strategy-lab/reports/2026-11-06-drawdown-recovery-gate/REPORT.md` (§9 VERIFICATION_PLACEHOLDER
+  to fill) with `requests/` (A, B, C ON + OFF), `paired/` (growth-paired outputs, training 2016-01-04→2023-12-29 VGT/GDX/
+  XBI; logs `logs/task15/paired-*.log`) and `bundles/` (6 research ZIPs, 3.8 MB, sha256 in the report §8).
+- **Next step:** read the check log + review findings; fix if needed (then rerun the affected suites/check); run root
+  `tsc`, root ESLint (baseline 306), Growth suites, root `npm test` (baseline: the same 7 pre-existing failures as
+  Task 14 `logs/task14/root-test.log`); verify data sha256 unchanged; fill REPORT §9; final checkpoint; commit; push
+  (`git push origin feature/strategy-entry-explorer-ui`, outside the sandbox, retries); push-record commit.
 - **15.3/15.4 (commit after this checkpoint):** registry 1.4.0 (`DRAWDOWN_GATE_PARAMS`, group `drawdownGate`, notes;
   1.3.0 → `RISE_FROM_RECENT_LOW_TRADING_1_3_0`, launch phenotype, schema hash `a2cca065…` unchanged); `growth-params.ts`
   `drawdownGateOf`; runner (events `drawdown.*` + `blockedBy`, release decisions `via`, trades.json `drawdownGate`,

@@ -1,0 +1,2527 @@
+{
+  "kind": "growth paired drawdown-gate diagnostic",
+  "offMode": "drawdown-gate",
+  "note": "RETROSPECTIVE DIAGNOSTIC of one configuration on one historical window: two runs on identical data and costs, the only difference being the option under study (named in the report). Path dependence: one blocked or added entry changes every later decision, so differences are not attributable trade by trade. Not an optimisation, not a selection, not evidence of an edge or of safer trading.",
+  "engine": {
+    "key": "rise-from-recent-low-trading",
+    "version": "1.4.0"
+  },
+  "request": {
+    "strategyKey": "rise-from-recent-low-trading",
+    "strategyVersion": "1.4.0",
+    "params": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "breakoutSmaSessions": 50,
+      "breakoutSlopeComparisonSessions": 40,
+      "breakoutPriorHighSessions": 20,
+      "trendFilterEnabled": false,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 20,
+      "trendChangeMinimumReturnPercent": 0,
+      "trendSlopeLookbackSessions": 20,
+      "trendSlopeMinimumPercent": 0,
+      "trendSmaSessions": 50,
+      "trendSmaComparisonSessions": 5,
+      "trendStructureLookbackSessions": 20,
+      "trendStructureMinimumIncreasePercent": 0,
+      "trendMomentumShortSessions": 5,
+      "trendMomentumLongSessions": 60,
+      "trendMomentumMinimumShortReturnPercent": 0,
+      "trendMomentumMinimumLongReturnPercent": 0,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 10,
+      "eligibilityMinimumAdvancePercent": 3,
+      "eligibilityMaximumExtensionPercent": 3,
+      "eligibilityDeteriorationDropPercent": 3,
+      "eligibilityResetDropPercent": 3,
+      "eligibilityRenewalReboundPercent": 2,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 30,
+      "dipThresholdPercent": 5,
+      "recoveryRetracementPercent": 70,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 50,
+      "retentionClosesBelow": 2,
+      "continuationEnabled": false,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 60,
+      "classicPullbackPercent": 9,
+      "classicReboundPercent": 0.3,
+      "breakoutBufferPercent": 1,
+      "breakoutFormationBars": 1,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "crossSmaBars": 20,
+      "crossRisingBars": 5,
+      "crossMinimumSlopePercent": 0,
+      "crossMarginPercent": 0,
+      "costBpsPerSide": 5
+    },
+    "symbols": [
+      "VGT",
+      "GDX",
+      "XBI"
+    ],
+    "from": "2016-01-04",
+    "to": "2023-12-29",
+    "resolution": "1d"
+  },
+  "partitions": "training",
+  "on": {
+    "trendFilter": null,
+    "eligibility": {
+      "policy": "time_limited",
+      "maxAgeSessions": 10
+    },
+    "drawdownGate": {
+      "lookbackSessions": 30,
+      "dipThresholdPercent": 5,
+      "recoveryRetracementPercent": 70,
+      "confirmationSessions": 2
+    },
+    "continuation": null
+  },
+  "off": {
+    "trendFilter": null,
+    "eligibility": {
+      "policy": "time_limited",
+      "maxAgeSessions": 10
+    },
+    "drawdownGate": null,
+    "continuation": null
+  },
+  "perSymbol": {
+    "VGT": {
+      "window": {
+        "firstDate": "2016-01-04",
+        "lastDate": "2023-12-29",
+        "calendarDays": 2916.2708333333335
+      },
+      "sameRawSignals": true,
+      "off": {
+        "rawSignals": 116,
+        "taken": 52,
+        "ignoredWhileInvestedOrPending": 64,
+        "vetoed": 0,
+        "deferred": 0,
+        "tradesClosed": 51,
+        "tradesOpen": 1,
+        "wins": 13,
+        "losses": 38,
+        "realizedNetUsd": -3270.17,
+        "markedNetUsd": 9717.54,
+        "interestUsd": 62293.15,
+        "costsUsd": 5178.66,
+        "maxMinuteDrawdownUsd": 73618.48,
+        "maxDailyDrawdownUsd": 73384.72,
+        "sessionsInvestedPercent": 73.11133200795229,
+        "calendarTimeInvestedPercent": 70.90571815698794
+      },
+      "on": {
+        "rawSignals": 116,
+        "taken": 15,
+        "ignoredWhileInvestedOrPending": 34,
+        "vetoed": 0,
+        "deferred": 67,
+        "tradesClosed": 29,
+        "tradesOpen": 1,
+        "wins": 5,
+        "losses": 24,
+        "realizedNetUsd": 15188.05,
+        "markedNetUsd": 26411.9,
+        "interestUsd": 36465.75,
+        "costsUsd": 2974.97,
+        "maxMinuteDrawdownUsd": 30353.2,
+        "maxDailyDrawdownUsd": 30050.32,
+        "sessionsInvestedPercent": 42.79324055666004,
+        "calendarTimeInvestedPercent": 41.48351085742588
+      },
+      "onMinusOff": {
+        "rawSignals": 0,
+        "taken": -37,
+        "ignoredWhileInvestedOrPending": -30,
+        "vetoed": 0,
+        "deferred": 67,
+        "tradesClosed": -22,
+        "tradesOpen": 0,
+        "wins": -8,
+        "losses": -14,
+        "realizedNetUsd": 18458.22,
+        "markedNetUsd": 16694.36,
+        "interestUsd": -25827.4,
+        "costsUsd": -2203.69,
+        "maxMinuteDrawdownUsd": -43265.28,
+        "maxDailyDrawdownUsd": -43334.4,
+        "sessionsInvestedPercent": -30.32,
+        "calendarTimeInvestedPercent": -29.42
+      },
+      "entries": {
+        "common": 6,
+        "addedByOn": [
+          {
+            "decision": "2016-05-27T13:31:00Z",
+            "entry": "2016-05-27T13:31:00Z",
+            "entryPrice": 109.13,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -74.96
+          },
+          {
+            "decision": "2016-07-12T13:37:00Z",
+            "entry": "2016-07-12T13:39:00Z",
+            "entryPrice": 110.7,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 32634.94
+          },
+          {
+            "decision": "2018-02-20T17:19:00Z",
+            "entry": "2018-02-20T17:19:00Z",
+            "entryPrice": 175.94,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2368.38
+          },
+          {
+            "decision": "2018-05-11T16:21:00Z",
+            "entry": "2018-05-11T16:21:00Z",
+            "entryPrice": 183.07,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -712.36
+          },
+          {
+            "decision": "2018-06-12T20:00:00Z",
+            "entry": "2018-06-13T13:30:00Z",
+            "entryPrice": 189.23,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -441.35
+          },
+          {
+            "decision": "2018-07-16T13:31:00Z",
+            "entry": "2018-07-16T13:31:00Z",
+            "entryPrice": 189.75,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -900.88
+          },
+          {
+            "decision": "2018-08-08T20:00:00Z",
+            "entry": "2018-08-09T13:30:00Z",
+            "entryPrice": 193.94,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1183.25
+          },
+          {
+            "decision": "2018-08-17T20:00:00Z",
+            "entry": "2018-08-20T13:30:00Z",
+            "entryPrice": 194.21,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -583.89
+          },
+          {
+            "decision": "2019-03-12T19:44:00Z",
+            "entry": "2019-03-12T19:44:00Z",
+            "entryPrice": 194.9978,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 603.88
+          },
+          {
+            "decision": "2019-07-09T20:00:00Z",
+            "entry": "2019-07-10T13:30:00Z",
+            "entryPrice": 216.15,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1524.04
+          },
+          {
+            "decision": "2019-09-09T13:31:00Z",
+            "entry": "2019-09-09T13:31:00Z",
+            "entryPrice": 219.51,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1233.05
+          },
+          {
+            "decision": "2019-10-15T13:31:00Z",
+            "entry": "2019-10-15T13:31:00Z",
+            "entryPrice": 219.31,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2304.34
+          },
+          {
+            "decision": "2019-10-28T13:31:00Z",
+            "entry": "2019-10-28T13:31:00Z",
+            "entryPrice": 223.69,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 9037.39
+          },
+          {
+            "decision": "2020-07-02T13:31:00Z",
+            "entry": "2020-07-02T13:31:00Z",
+            "entryPrice": 282,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1467.68
+          },
+          {
+            "decision": "2020-07-31T20:00:00Z",
+            "entry": "2020-08-03T13:30:00Z",
+            "entryPrice": 299.48,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -311.14
+          },
+          {
+            "decision": "2020-11-18T14:36:00Z",
+            "entry": "2020-11-18T14:36:00Z",
+            "entryPrice": 327.31,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 5364.3
+          },
+          {
+            "decision": "2021-04-07T13:34:00Z",
+            "entry": "2021-04-07T13:34:00Z",
+            "entryPrice": 370.45,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -665.55
+          },
+          {
+            "decision": "2021-10-20T13:56:00Z",
+            "entry": "2021-10-20T13:56:00Z",
+            "entryPrice": 427.74,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 30.53
+          },
+          {
+            "decision": "2021-11-24T21:00:00Z",
+            "entry": "2021-11-26T14:30:00Z",
+            "entryPrice": 446.53,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2573.69
+          },
+          {
+            "decision": "2021-12-27T17:23:00Z",
+            "entry": "2021-12-27T17:23:00Z",
+            "entryPrice": 463.73,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -606.02
+          },
+          {
+            "decision": "2023-06-28T20:00:00Z",
+            "entry": "2023-06-29T13:30:00Z",
+            "entryPrice": 435,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -138.95
+          },
+          {
+            "decision": "2023-07-13T20:00:00Z",
+            "entry": "2023-07-14T13:30:00Z",
+            "entryPrice": 451.16,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -516.46
+          },
+          {
+            "decision": "2023-07-31T20:00:00Z",
+            "entry": "2023-08-01T13:30:00Z",
+            "entryPrice": 452.88,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4887.37
+          },
+          {
+            "decision": "2023-11-03T19:29:00Z",
+            "entry": "2023-11-03T19:29:00Z",
+            "entryPrice": 428.44,
+            "source": "latched:rise_from_recent_low",
+            "status": "open",
+            "netUsd": 11223.85
+          }
+        ],
+        "removedByOn": [
+          {
+            "decision": "2016-02-16T21:00:00Z",
+            "entry": "2016-02-17T14:30:00Z",
+            "entryPrice": 98.39,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 175.95
+          },
+          {
+            "decision": "2016-06-30T20:00:00Z",
+            "entry": "2016-07-01T13:30:00Z",
+            "entryPrice": 106.97,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 37530.51
+          },
+          {
+            "decision": "2018-02-12T21:00:00Z",
+            "entry": "2018-02-13T14:30:00Z",
+            "entryPrice": 166.5,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2508.28
+          },
+          {
+            "decision": "2018-04-12T20:00:00Z",
+            "entry": "2018-04-13T13:30:00Z",
+            "entryPrice": 174.97,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1086.47
+          },
+          {
+            "decision": "2018-05-01T20:00:00Z",
+            "entry": "2018-05-02T13:30:00Z",
+            "entryPrice": 174.04,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 3922.13
+          },
+          {
+            "decision": "2018-10-16T20:00:00Z",
+            "entry": "2018-10-17T13:30:00Z",
+            "entryPrice": 192.83,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5547.68
+          },
+          {
+            "decision": "2018-10-31T20:00:00Z",
+            "entry": "2018-11-01T13:30:00Z",
+            "entryPrice": 185.81,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -728.88
+          },
+          {
+            "decision": "2018-11-28T21:00:00Z",
+            "entry": "2018-11-29T14:30:00Z",
+            "entryPrice": 182.07,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2011.81
+          },
+          {
+            "decision": "2018-12-26T21:00:00Z",
+            "entry": "2018-12-27T14:30:00Z",
+            "entryPrice": 161.94,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -674.17
+          },
+          {
+            "decision": "2019-01-04T21:00:00Z",
+            "entry": "2019-01-07T14:30:00Z",
+            "entryPrice": 165.82,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 16706.22
+          },
+          {
+            "decision": "2019-06-05T20:00:00Z",
+            "entry": "2019-06-06T13:30:00Z",
+            "entryPrice": 200.2,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 1655.74
+          },
+          {
+            "decision": "2019-08-08T20:00:00Z",
+            "entry": "2019-08-09T13:30:00Z",
+            "entryPrice": 212.89,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -163.98
+          },
+          {
+            "decision": "2019-08-21T20:00:00Z",
+            "entry": "2019-08-22T13:30:00Z",
+            "entryPrice": 215.71,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -679.12
+          },
+          {
+            "decision": "2019-09-04T20:00:00Z",
+            "entry": "2019-09-05T13:30:00Z",
+            "entryPrice": 217.27,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1051.26
+          },
+          {
+            "decision": "2019-09-17T20:00:00Z",
+            "entry": "2019-09-18T13:30:00Z",
+            "entryPrice": 217.93,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1189.09
+          },
+          {
+            "decision": "2019-10-11T20:00:00Z",
+            "entry": "2019-10-14T13:30:00Z",
+            "entryPrice": 218.27,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1867.83
+          },
+          {
+            "decision": "2019-10-24T20:00:00Z",
+            "entry": "2019-10-25T13:30:00Z",
+            "entryPrice": 219,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 11358.88
+          },
+          {
+            "decision": "2020-02-28T21:00:00Z",
+            "entry": "2020-03-02T14:30:00Z",
+            "entryPrice": 239.38,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -6054.31
+          },
+          {
+            "decision": "2020-03-10T20:00:00Z",
+            "entry": "2020-03-11T13:30:00Z",
+            "entryPrice": 224.29,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -14836.78
+          },
+          {
+            "decision": "2020-03-24T20:00:00Z",
+            "entry": "2020-03-25T13:30:00Z",
+            "entryPrice": 206.88,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2648.39
+          },
+          {
+            "decision": "2020-06-29T20:00:00Z",
+            "entry": "2020-06-30T13:30:00Z",
+            "entryPrice": 273.61,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 13339.45
+          },
+          {
+            "decision": "2020-09-28T20:00:00Z",
+            "entry": "2020-09-29T13:30:00Z",
+            "entryPrice": 309.87,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1934.43
+          },
+          {
+            "decision": "2020-11-04T21:00:00Z",
+            "entry": "2020-11-05T14:30:00Z",
+            "entryPrice": 323.99,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -631.33
+          },
+          {
+            "decision": "2020-12-14T21:00:00Z",
+            "entry": "2020-12-15T14:30:00Z",
+            "entryPrice": 342.81,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 1281.82
+          },
+          {
+            "decision": "2021-02-24T21:00:00Z",
+            "entry": "2021-02-25T14:30:00Z",
+            "entryPrice": 364.64,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5165.64
+          },
+          {
+            "decision": "2021-03-09T21:00:00Z",
+            "entry": "2021-03-10T14:30:00Z",
+            "entryPrice": 356.66,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1457.97
+          },
+          {
+            "decision": "2021-03-22T20:00:00Z",
+            "entry": "2021-03-23T13:30:00Z",
+            "entryPrice": 358.94,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1359.7
+          },
+          {
+            "decision": "2021-05-24T20:00:00Z",
+            "entry": "2021-05-25T13:30:00Z",
+            "entryPrice": 373.69,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1036.97
+          },
+          {
+            "decision": "2021-10-14T20:00:00Z",
+            "entry": "2021-10-15T13:30:00Z",
+            "entryPrice": 418.75,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 759.69
+          },
+          {
+            "decision": "2022-01-24T21:00:00Z",
+            "entry": "2022-01-25T14:30:00Z",
+            "entryPrice": 397.17,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1534.88
+          },
+          {
+            "decision": "2022-02-24T21:00:00Z",
+            "entry": "2022-02-25T14:30:00Z",
+            "entryPrice": 398.86,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2192.14
+          },
+          {
+            "decision": "2022-03-09T21:00:00Z",
+            "entry": "2022-03-10T14:30:00Z",
+            "entryPrice": 382.67,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 3110.49
+          },
+          {
+            "decision": "2022-04-28T20:00:00Z",
+            "entry": "2022-04-29T13:30:00Z",
+            "entryPrice": 378.84,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -6098.56
+          },
+          {
+            "decision": "2022-05-13T20:00:00Z",
+            "entry": "2022-05-16T13:30:00Z",
+            "entryPrice": 347.9,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2428.64
+          },
+          {
+            "decision": "2022-05-26T20:00:00Z",
+            "entry": "2022-05-27T13:30:00Z",
+            "entryPrice": 355.35,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -73.46
+          },
+          {
+            "decision": "2022-06-23T20:00:00Z",
+            "entry": "2022-06-24T13:30:00Z",
+            "entryPrice": 335.46,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4338.6
+          },
+          {
+            "decision": "2022-07-05T20:00:00Z",
+            "entry": "2022-07-06T13:30:00Z",
+            "entryPrice": 332.99,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1766.09
+          },
+          {
+            "decision": "2022-09-09T20:00:00Z",
+            "entry": "2022-09-12T13:30:00Z",
+            "entryPrice": 356.65,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -7178.45
+          },
+          {
+            "decision": "2022-10-04T20:00:00Z",
+            "entry": "2022-10-05T13:30:00Z",
+            "entryPrice": 322.99,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -9604.51
+          },
+          {
+            "decision": "2022-10-13T20:00:00Z",
+            "entry": "2022-10-14T13:30:00Z",
+            "entryPrice": 312.75,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1303.21
+          },
+          {
+            "decision": "2022-12-13T21:00:00Z",
+            "entry": "2022-12-14T14:30:00Z",
+            "entryPrice": 346.45,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -7140.42
+          },
+          {
+            "decision": "2023-01-10T21:00:00Z",
+            "entry": "2023-01-11T14:30:00Z",
+            "entryPrice": 327.27,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 3485.35
+          },
+          {
+            "decision": "2023-03-16T20:00:00Z",
+            "entry": "2023-03-17T13:30:00Z",
+            "entryPrice": 367.92,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -222.38
+          },
+          {
+            "decision": "2023-04-17T20:00:00Z",
+            "entry": "2023-04-18T13:30:00Z",
+            "entryPrice": 385.05,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3080.81
+          },
+          {
+            "decision": "2023-05-10T20:00:00Z",
+            "entry": "2023-05-11T13:30:00Z",
+            "entryPrice": 387.46,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 7972.9
+          },
+          {
+            "decision": "2023-11-02T20:00:00Z",
+            "entry": "2023-11-03T13:30:00Z",
+            "entryPrice": 421.85,
+            "source": "rise_from_recent_low",
+            "status": "open",
+            "netUsd": 12987.72
+          }
+        ]
+      },
+      "eligibility": {
+        "opportunities": 82,
+        "endedBy": {
+          "consumed": 30,
+          "expired": 13,
+          "invalidated": 39,
+          "superseded": 0,
+          "unfilled_at_end": 0,
+          "end_of_data": 0
+        },
+        "takenLater": 15,
+        "meanAgeSessionsAtDecision": 1.7666666666666666,
+        "maxAgeSessionsAtDecision": 10
+      },
+      "trendFilter": null,
+      "bySourceOn": {
+        "latched:rise_from_recent_low": {
+          "entries": 15,
+          "closed": 14,
+          "open": 1,
+          "wins": 5,
+          "losses": 9,
+          "breakeven": 0,
+          "realizedNetUsd": 37337.82318404005,
+          "unrealizedNetUsd": 11223.849852813297,
+          "interestUsd": 30950.684931506847
+        },
+        "rise_from_recent_low": {
+          "entries": 15,
+          "closed": 15,
+          "open": 0,
+          "wins": 0,
+          "losses": 15,
+          "breakeven": 0,
+          "realizedNetUsd": -22149.770555580428,
+          "unrealizedNetUsd": 0,
+          "interestUsd": 5515.068493150687
+        }
+      },
+      "drawdownGate": {
+        "config": {
+          "lookbackSessions": 30,
+          "dipThresholdPercent": 5,
+          "recoveryRetracementPercent": 70,
+          "confirmationSessions": 2
+        },
+        "episodes": 23,
+        "resolved": 23,
+        "resolvedBeforeConfirmation": 8,
+        "deepestDipPercent": 37.39,
+        "confirmations": 28,
+        "resetsBeforeConfirmation": 425,
+        "confirmationsLost": 13,
+        "releases": 36,
+        "blockedDecisions": 67,
+        "blockedByKind": {
+          "base_signal": 67
+        },
+        "releaseDecisionsTaken": 15,
+        "stateAtEnd": "normal"
+      }
+    },
+    "GDX": {
+      "window": {
+        "firstDate": "2016-01-04",
+        "lastDate": "2023-12-29",
+        "calendarDays": 2916.2708333333335
+      },
+      "sameRawSignals": true,
+      "off": {
+        "rawSignals": 124,
+        "taken": 85,
+        "ignoredWhileInvestedOrPending": 39,
+        "vetoed": 0,
+        "deferred": 0,
+        "tradesClosed": 85,
+        "tradesOpen": 0,
+        "wins": 22,
+        "losses": 63,
+        "realizedNetUsd": 9941.94,
+        "markedNetUsd": 9941.94,
+        "interestUsd": 41709.59,
+        "costsUsd": 8525.84,
+        "maxMinuteDrawdownUsd": 82665.14,
+        "maxDailyDrawdownUsd": 79544.12,
+        "sessionsInvestedPercent": 51.689860834990064,
+        "calendarTimeInvestedPercent": 47.498874847300684
+      },
+      "on": {
+        "rawSignals": 124,
+        "taken": 4,
+        "ignoredWhileInvestedOrPending": 1,
+        "vetoed": 0,
+        "deferred": 119,
+        "tradesClosed": 11,
+        "tradesOpen": 0,
+        "wins": 3,
+        "losses": 8,
+        "realizedNetUsd": -23816.62,
+        "markedNetUsd": -23816.62,
+        "interestUsd": 4008.22,
+        "costsUsd": 1090.09,
+        "maxMinuteDrawdownUsd": 60804.29,
+        "maxDailyDrawdownUsd": 58508.64,
+        "sessionsInvestedPercent": 5.168986083499006,
+        "calendarTimeInvestedPercent": 4.539377963199767
+      },
+      "onMinusOff": {
+        "rawSignals": 0,
+        "taken": -81,
+        "ignoredWhileInvestedOrPending": -38,
+        "vetoed": 0,
+        "deferred": 119,
+        "tradesClosed": -74,
+        "tradesOpen": 0,
+        "wins": -19,
+        "losses": -55,
+        "realizedNetUsd": -33758.56,
+        "markedNetUsd": -33758.56,
+        "interestUsd": -37701.37,
+        "costsUsd": -7435.75,
+        "maxMinuteDrawdownUsd": -21860.85,
+        "maxDailyDrawdownUsd": -21035.48,
+        "sessionsInvestedPercent": -46.52,
+        "calendarTimeInvestedPercent": -42.96
+      },
+      "entries": {
+        "common": 2,
+        "addedByOn": [
+          {
+            "decision": "2016-04-08T16:29:00Z",
+            "entry": "2016-04-08T16:29:00Z",
+            "entryPrice": 21.4,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 12187.52
+          },
+          {
+            "decision": "2016-06-07T17:55:00Z",
+            "entry": "2016-06-07T17:55:00Z",
+            "entryPrice": 25.14,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1326.22
+          },
+          {
+            "decision": "2019-09-20T19:36:00Z",
+            "entry": "2019-09-20T19:36:00Z",
+            "entryPrice": 28.47,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5910.38
+          },
+          {
+            "decision": "2019-10-08T20:00:00Z",
+            "entry": "2019-10-09T13:30:00Z",
+            "entryPrice": 28.35,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -6754.38
+          },
+          {
+            "decision": "2019-11-01T20:00:00Z",
+            "entry": "2019-11-04T14:30:00Z",
+            "entryPrice": 27.92,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -6101.76
+          },
+          {
+            "decision": "2019-12-26T15:31:00Z",
+            "entry": "2019-12-26T15:31:00Z",
+            "entryPrice": 29.195,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -478.7
+          },
+          {
+            "decision": "2020-01-10T21:00:00Z",
+            "entry": "2020-01-13T14:30:00Z",
+            "entryPrice": 28.27,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -411.72
+          },
+          {
+            "decision": "2020-03-05T14:31:00Z",
+            "entry": "2020-03-05T14:31:00Z",
+            "entryPrice": 29.43,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -20962.62
+          },
+          {
+            "decision": "2020-07-06T15:28:00Z",
+            "entry": "2020-07-06T15:28:00Z",
+            "entryPrice": 36.77,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 11251.76
+          }
+        ],
+        "removedByOn": [
+          {
+            "decision": "2016-03-24T20:00:00Z",
+            "entry": "2016-03-28T13:30:00Z",
+            "entryPrice": 19.62,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 8308.38
+          },
+          {
+            "decision": "2016-06-03T20:00:00Z",
+            "entry": "2016-06-06T13:30:00Z",
+            "entryPrice": 25.27,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -54.92
+          },
+          {
+            "decision": "2016-09-02T20:00:00Z",
+            "entry": "2016-09-06T13:30:00Z",
+            "entryPrice": 27.92,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5672.39
+          },
+          {
+            "decision": "2016-09-21T20:00:00Z",
+            "entry": "2016-09-22T13:30:00Z",
+            "entryPrice": 28.25,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4124.87
+          },
+          {
+            "decision": "2016-10-18T20:00:00Z",
+            "entry": "2016-10-19T13:30:00Z",
+            "entryPrice": 24.65,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1840.56
+          },
+          {
+            "decision": "2016-11-14T21:00:00Z",
+            "entry": "2016-11-15T14:30:00Z",
+            "entryPrice": 21.23,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2882.07
+          },
+          {
+            "decision": "2016-11-28T21:00:00Z",
+            "entry": "2016-11-29T14:30:00Z",
+            "entryPrice": 20.88,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -635.27
+          },
+          {
+            "decision": "2016-12-27T21:00:00Z",
+            "entry": "2016-12-28T14:30:00Z",
+            "entryPrice": 19.75,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 18865.99
+          },
+          {
+            "decision": "2017-03-15T20:00:00Z",
+            "entry": "2017-03-16T13:30:00Z",
+            "entryPrice": 23.35,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2266.31
+          },
+          {
+            "decision": "2017-05-10T20:00:00Z",
+            "entry": "2017-05-11T13:30:00Z",
+            "entryPrice": 22.02,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1200.11
+          },
+          {
+            "decision": "2017-07-18T20:00:00Z",
+            "entry": "2017-07-19T13:30:00Z",
+            "entryPrice": 22.15,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -198.99
+          },
+          {
+            "decision": "2017-08-09T20:00:00Z",
+            "entry": "2017-08-10T13:30:00Z",
+            "entryPrice": 23.01,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -279.5
+          },
+          {
+            "decision": "2017-08-21T20:00:00Z",
+            "entry": "2017-08-22T13:30:00Z",
+            "entryPrice": 23.2,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 1293.88
+          },
+          {
+            "decision": "2017-12-20T21:00:00Z",
+            "entry": "2017-12-21T14:30:00Z",
+            "entryPrice": 22.43,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 1344.26
+          },
+          {
+            "decision": "2018-02-12T21:00:00Z",
+            "entry": "2018-02-13T14:30:00Z",
+            "entryPrice": 21.99,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -848.2
+          },
+          {
+            "decision": "2018-02-23T21:00:00Z",
+            "entry": "2018-02-26T14:30:00Z",
+            "entryPrice": 22.08,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -883.98
+          },
+          {
+            "decision": "2018-03-06T21:00:00Z",
+            "entry": "2018-03-07T14:30:00Z",
+            "entryPrice": 21.98,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2068.16
+          },
+          {
+            "decision": "2018-03-23T20:00:00Z",
+            "entry": "2018-03-26T13:30:00Z",
+            "entryPrice": 22.31,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1370.94
+          },
+          {
+            "decision": "2018-04-10T20:00:00Z",
+            "entry": "2018-04-11T13:30:00Z",
+            "entryPrice": 22.47,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -506.05
+          },
+          {
+            "decision": "2018-04-24T20:00:00Z",
+            "entry": "2018-04-25T13:30:00Z",
+            "entryPrice": 22.43,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1281.69
+          },
+          {
+            "decision": "2018-08-22T20:00:00Z",
+            "entry": "2018-08-23T13:30:00Z",
+            "entryPrice": 18.87,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1426.34
+          },
+          {
+            "decision": "2018-09-17T20:00:00Z",
+            "entry": "2018-09-18T13:30:00Z",
+            "entryPrice": 18.3,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -713.46
+          },
+          {
+            "decision": "2018-10-11T20:00:00Z",
+            "entry": "2018-10-12T13:30:00Z",
+            "entryPrice": 19.77,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3018.29
+          },
+          {
+            "decision": "2018-10-30T20:00:00Z",
+            "entry": "2018-10-31T13:30:00Z",
+            "entryPrice": 18.84,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -408.57
+          },
+          {
+            "decision": "2018-11-16T21:00:00Z",
+            "entry": "2018-11-19T14:30:00Z",
+            "entryPrice": 19.35,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -754.07
+          },
+          {
+            "decision": "2018-11-28T21:00:00Z",
+            "entry": "2018-11-29T14:30:00Z",
+            "entryPrice": 19.44,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 10128.33
+          },
+          {
+            "decision": "2019-03-12T20:00:00Z",
+            "entry": "2019-03-13T13:30:00Z",
+            "entryPrice": 22.81,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -910.4
+          },
+          {
+            "decision": "2019-05-31T20:00:00Z",
+            "entry": "2019-06-03T13:30:00Z",
+            "entryPrice": 22.03,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 16578.31
+          },
+          {
+            "decision": "2019-09-17T20:00:00Z",
+            "entry": "2019-09-18T13:30:00Z",
+            "entryPrice": 28.11,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2787.83
+          },
+          {
+            "decision": "2019-10-04T20:00:00Z",
+            "entry": "2019-10-07T13:30:00Z",
+            "entryPrice": 27.6,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3019.53
+          },
+          {
+            "decision": "2019-10-24T20:00:00Z",
+            "entry": "2019-10-25T13:30:00Z",
+            "entryPrice": 28.01,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1078.97
+          },
+          {
+            "decision": "2019-11-20T21:00:00Z",
+            "entry": "2019-11-21T14:30:00Z",
+            "entryPrice": 27.19,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2104.64
+          },
+          {
+            "decision": "2019-12-03T21:00:00Z",
+            "entry": "2019-12-04T14:30:00Z",
+            "entryPrice": 27.63,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -805.06
+          },
+          {
+            "decision": "2019-12-18T21:00:00Z",
+            "entry": "2019-12-19T14:30:00Z",
+            "entryPrice": 27.5,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 97.33
+          },
+          {
+            "decision": "2020-01-15T21:00:00Z",
+            "entry": "2020-01-16T14:30:00Z",
+            "entryPrice": 28.6,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 78.12
+          },
+          {
+            "decision": "2020-03-02T21:00:00Z",
+            "entry": "2020-03-03T14:30:00Z",
+            "entryPrice": 27.82,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3501.08
+          },
+          {
+            "decision": "2020-03-13T20:00:00Z",
+            "entry": "2020-03-16T13:30:00Z",
+            "entryPrice": 16.75,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 40150.01
+          },
+          {
+            "decision": "2020-06-09T20:00:00Z",
+            "entry": "2020-06-10T13:30:00Z",
+            "entryPrice": 33.46,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2371.29
+          },
+          {
+            "decision": "2020-06-19T20:00:00Z",
+            "entry": "2020-06-22T13:30:00Z",
+            "entryPrice": 34.4,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 18544.41
+          },
+          {
+            "decision": "2020-08-13T20:00:00Z",
+            "entry": "2020-08-14T13:30:00Z",
+            "entryPrice": 40.46,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 765.23
+          },
+          {
+            "decision": "2020-08-26T20:00:00Z",
+            "entry": "2020-08-27T13:30:00Z",
+            "entryPrice": 42.34,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3856.66
+          },
+          {
+            "decision": "2020-09-09T20:00:00Z",
+            "entry": "2020-09-10T13:30:00Z",
+            "entryPrice": 42.76,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1352.66
+          },
+          {
+            "decision": "2020-09-29T20:00:00Z",
+            "entry": "2020-09-30T13:30:00Z",
+            "entryPrice": 39.1,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -903.14
+          },
+          {
+            "decision": "2020-10-08T20:00:00Z",
+            "entry": "2020-10-09T13:30:00Z",
+            "entryPrice": 39.91,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1858.24
+          },
+          {
+            "decision": "2020-11-02T21:00:00Z",
+            "entry": "2020-11-03T14:30:00Z",
+            "entryPrice": 39.1,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5910.92
+          },
+          {
+            "decision": "2020-11-13T21:00:00Z",
+            "entry": "2020-11-16T14:30:00Z",
+            "entryPrice": 37.86,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -12083.13
+          },
+          {
+            "decision": "2020-12-01T21:00:00Z",
+            "entry": "2020-12-02T14:30:00Z",
+            "entryPrice": 35.92,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1425.71
+          },
+          {
+            "decision": "2020-12-15T21:00:00Z",
+            "entry": "2020-12-16T14:30:00Z",
+            "entryPrice": 35.6,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 784.73
+          },
+          {
+            "decision": "2021-01-12T21:00:00Z",
+            "entry": "2021-01-13T14:30:00Z",
+            "entryPrice": 36,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -590.8
+          },
+          {
+            "decision": "2021-02-01T21:00:00Z",
+            "entry": "2021-02-02T14:30:00Z",
+            "entryPrice": 34.88,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1972.86
+          },
+          {
+            "decision": "2021-02-22T21:00:00Z",
+            "entry": "2021-02-23T14:30:00Z",
+            "entryPrice": 33.8,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -7641.43
+          },
+          {
+            "decision": "2021-03-09T21:00:00Z",
+            "entry": "2021-03-10T14:30:00Z",
+            "entryPrice": 32.39,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -737.06
+          },
+          {
+            "decision": "2021-03-31T20:00:00Z",
+            "entry": "2021-04-01T13:30:00Z",
+            "entryPrice": 32.95,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 10496.62
+          },
+          {
+            "decision": "2021-07-15T20:00:00Z",
+            "entry": "2021-07-16T13:30:00Z",
+            "entryPrice": 34.84,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5275.89
+          },
+          {
+            "decision": "2021-07-29T20:00:00Z",
+            "entry": "2021-07-30T13:30:00Z",
+            "entryPrice": 34.8,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5999.17
+          },
+          {
+            "decision": "2021-08-27T20:00:00Z",
+            "entry": "2021-08-30T13:30:00Z",
+            "entryPrice": 32.61,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1474.04
+          },
+          {
+            "decision": "2021-09-14T20:00:00Z",
+            "entry": "2021-09-15T13:30:00Z",
+            "entryPrice": 32.02,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5800.92
+          },
+          {
+            "decision": "2021-10-06T20:00:00Z",
+            "entry": "2021-10-07T13:30:00Z",
+            "entryPrice": 30.09,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 3733.76
+          },
+          {
+            "decision": "2021-11-05T20:00:00Z",
+            "entry": "2021-11-08T14:30:00Z",
+            "entryPrice": 33.09,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1291.72
+          },
+          {
+            "decision": "2021-12-16T21:00:00Z",
+            "entry": "2021-12-17T14:30:00Z",
+            "entryPrice": 31.35,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1022.71
+          },
+          {
+            "decision": "2022-01-10T21:00:00Z",
+            "entry": "2022-01-11T14:30:00Z",
+            "entryPrice": 30.62,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -11.71
+          },
+          {
+            "decision": "2022-02-01T21:00:00Z",
+            "entry": "2022-02-02T14:30:00Z",
+            "entryPrice": 30.61,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 18949.28
+          },
+          {
+            "decision": "2022-05-04T20:00:00Z",
+            "entry": "2022-05-05T13:30:00Z",
+            "entryPrice": 36.1,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -16792.73
+          },
+          {
+            "decision": "2022-05-16T20:00:00Z",
+            "entry": "2022-05-17T13:30:00Z",
+            "entryPrice": 31.57,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4050.92
+          },
+          {
+            "decision": "2022-06-10T20:00:00Z",
+            "entry": "2022-06-13T13:30:00Z",
+            "entryPrice": 31.27,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3280.22
+          },
+          {
+            "decision": "2022-07-28T20:00:00Z",
+            "entry": "2022-07-29T13:30:00Z",
+            "entryPrice": 26.18,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1580.34
+          },
+          {
+            "decision": "2022-08-25T20:00:00Z",
+            "entry": "2022-08-26T13:30:00Z",
+            "entryPrice": 26.01,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -8343.57
+          },
+          {
+            "decision": "2022-09-07T20:00:00Z",
+            "entry": "2022-09-08T13:30:00Z",
+            "entryPrice": 24.1,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3905.94
+          },
+          {
+            "decision": "2022-09-19T20:00:00Z",
+            "entry": "2022-09-20T13:30:00Z",
+            "entryPrice": 24.05,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -6239.51
+          },
+          {
+            "decision": "2022-09-28T20:00:00Z",
+            "entry": "2022-09-29T13:30:00Z",
+            "entryPrice": 23.38,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2132.27
+          },
+          {
+            "decision": "2022-11-04T20:00:00Z",
+            "entry": "2022-11-07T14:30:00Z",
+            "entryPrice": 25.1,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 11189.47
+          },
+          {
+            "decision": "2022-12-20T21:00:00Z",
+            "entry": "2022-12-21T14:30:00Z",
+            "entryPrice": 28.98,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -410.33
+          },
+          {
+            "decision": "2023-01-03T21:00:00Z",
+            "entry": "2023-01-04T14:30:00Z",
+            "entryPrice": 30.2799,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 810.84
+          },
+          {
+            "decision": "2023-03-01T21:00:00Z",
+            "entry": "2023-03-02T14:30:00Z",
+            "entryPrice": 28,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2446.08
+          },
+          {
+            "decision": "2023-03-13T20:00:00Z",
+            "entry": "2023-03-14T13:30:00Z",
+            "entryPrice": 29.03,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 14015.84
+          },
+          {
+            "decision": "2023-04-27T20:00:00Z",
+            "entry": "2023-04-28T13:30:00Z",
+            "entryPrice": 33.79,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1674.9
+          },
+          {
+            "decision": "2023-06-01T20:00:00Z",
+            "entry": "2023-06-02T13:30:00Z",
+            "entryPrice": 32.059,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3763.63
+          },
+          {
+            "decision": "2023-07-03T17:00:00Z",
+            "entry": "2023-07-05T13:30:00Z",
+            "entryPrice": 30.73,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -760.59
+          },
+          {
+            "decision": "2023-08-23T20:00:00Z",
+            "entry": "2023-08-24T13:30:00Z",
+            "entryPrice": 28.65,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1677.28
+          },
+          {
+            "decision": "2023-09-11T20:00:00Z",
+            "entry": "2023-09-12T13:30:00Z",
+            "entryPrice": 28.4,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1190.21
+          },
+          {
+            "decision": "2023-10-09T20:00:00Z",
+            "entry": "2023-10-10T13:30:00Z",
+            "entryPrice": 27.67,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 308.13
+          },
+          {
+            "decision": "2023-11-16T21:00:00Z",
+            "entry": "2023-11-17T14:30:00Z",
+            "entryPrice": 28.69,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2368.18
+          },
+          {
+            "decision": "2023-12-13T21:00:00Z",
+            "entry": "2023-12-14T14:30:00Z",
+            "entryPrice": 31.19,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1352.74
+          }
+        ]
+      },
+      "eligibility": {
+        "opportunities": 123,
+        "endedBy": {
+          "consumed": 11,
+          "expired": 29,
+          "invalidated": 83,
+          "superseded": 0,
+          "unfilled_at_end": 0,
+          "end_of_data": 0
+        },
+        "takenLater": 7,
+        "meanAgeSessionsAtDecision": 2,
+        "maxAgeSessionsAtDecision": 10
+      },
+      "trendFilter": null,
+      "bySourceOn": {
+        "latched:rise_from_recent_low": {
+          "entries": 7,
+          "closed": 7,
+          "open": 0,
+          "wins": 2,
+          "losses": 5,
+          "breakeven": 0,
+          "realizedNetUsd": -11340.393716289134,
+          "unrealizedNetUsd": 0,
+          "interestUsd": 3043.835616438356
+        },
+        "rise_from_recent_low": {
+          "entries": 4,
+          "closed": 4,
+          "open": 0,
+          "wins": 1,
+          "losses": 3,
+          "breakeven": 0,
+          "realizedNetUsd": -12476.221706374832,
+          "unrealizedNetUsd": 0,
+          "interestUsd": 964.3835616438356
+        }
+      },
+      "drawdownGate": {
+        "config": {
+          "lookbackSessions": 30,
+          "dipThresholdPercent": 5,
+          "recoveryRetracementPercent": 70,
+          "confirmationSessions": 2
+        },
+        "episodes": 21,
+        "resolved": 20,
+        "resolvedBeforeConfirmation": 17,
+        "deepestDipPercent": 52.96,
+        "confirmations": 10,
+        "resetsBeforeConfirmation": 282,
+        "confirmationsLost": 7,
+        "releases": 25,
+        "blockedDecisions": 119,
+        "blockedByKind": {
+          "base_signal": 119
+        },
+        "releaseDecisionsTaken": 6,
+        "stateAtEnd": "recovery_required"
+      }
+    },
+    "XBI": {
+      "window": {
+        "firstDate": "2016-01-04",
+        "lastDate": "2023-12-29",
+        "calendarDays": 2916.2708333333335
+      },
+      "sameRawSignals": true,
+      "off": {
+        "rawSignals": 120,
+        "taken": 79,
+        "ignoredWhileInvestedOrPending": 41,
+        "vetoed": 0,
+        "deferred": 0,
+        "tradesClosed": 78,
+        "tradesOpen": 1,
+        "wins": 19,
+        "losses": 59,
+        "realizedNetUsd": -71691.8,
+        "markedNetUsd": -45016.13,
+        "interestUsd": 40805.48,
+        "costsUsd": 7833.85,
+        "maxMinuteDrawdownUsd": 94981.62,
+        "maxDailyDrawdownUsd": 94703.9,
+        "sessionsInvestedPercent": 49.75149105367793,
+        "calendarTimeInvestedPercent": 46.47987941220592
+      },
+      "on": {
+        "rawSignals": 120,
+        "taken": 2,
+        "ignoredWhileInvestedOrPending": 3,
+        "vetoed": 0,
+        "deferred": 115,
+        "tradesClosed": 15,
+        "tradesOpen": 0,
+        "wins": 2,
+        "losses": 13,
+        "realizedNetUsd": -34418.05,
+        "markedNetUsd": -34418.05,
+        "interestUsd": 7232.88,
+        "costsUsd": 1486.4,
+        "maxMinuteDrawdownUsd": 44828.01,
+        "maxDailyDrawdownUsd": 42817.62,
+        "sessionsInvestedPercent": 8.846918489065606,
+        "calendarTimeInvestedPercent": 8.19704102699652
+      },
+      "onMinusOff": {
+        "rawSignals": 0,
+        "taken": -77,
+        "ignoredWhileInvestedOrPending": -38,
+        "vetoed": 0,
+        "deferred": 115,
+        "tradesClosed": -63,
+        "tradesOpen": -1,
+        "wins": -17,
+        "losses": -46,
+        "realizedNetUsd": 37273.75,
+        "markedNetUsd": 10598.08,
+        "interestUsd": -33572.6,
+        "costsUsd": -6347.45,
+        "maxMinuteDrawdownUsd": -50153.61,
+        "maxDailyDrawdownUsd": -51886.28,
+        "sessionsInvestedPercent": -40.9,
+        "calendarTimeInvestedPercent": -38.28
+      },
+      "entries": {
+        "common": 2,
+        "addedByOn": [
+          {
+            "decision": "2016-09-08T19:51:00Z",
+            "entry": "2016-09-08T19:51:00Z",
+            "entryPrice": 63.52,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 28.96
+          },
+          {
+            "decision": "2016-11-14T15:43:00Z",
+            "entry": "2016-11-14T15:43:00Z",
+            "entryPrice": 65.99,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5533.47
+          },
+          {
+            "decision": "2017-05-01T13:36:00Z",
+            "entry": "2017-05-01T13:36:00Z",
+            "entryPrice": 71.779,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4904.67
+          },
+          {
+            "decision": "2017-06-09T15:15:00Z",
+            "entry": "2017-06-09T15:15:00Z",
+            "entryPrice": 72.55,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -566.56
+          },
+          {
+            "decision": "2017-08-31T13:34:00Z",
+            "entry": "2017-08-31T13:34:00Z",
+            "entryPrice": 82.18,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2310.34
+          },
+          {
+            "decision": "2018-01-04T15:44:00Z",
+            "entry": "2018-01-04T15:44:00Z",
+            "entryPrice": 87.74,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -121.69
+          },
+          {
+            "decision": "2018-07-10T13:41:00Z",
+            "entry": "2018-07-10T13:41:00Z",
+            "entryPrice": 100.58,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -698.61
+          },
+          {
+            "decision": "2018-08-31T14:09:00Z",
+            "entry": "2018-08-31T14:09:00Z",
+            "entryPrice": 100.27,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3639.33
+          },
+          {
+            "decision": "2019-04-03T19:59:00Z",
+            "entry": "2019-04-03T19:59:00Z",
+            "entryPrice": 92.73,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1297.68
+          },
+          {
+            "decision": "2020-02-05T15:01:00Z",
+            "entry": "2020-02-05T15:01:00Z",
+            "entryPrice": 96.06,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2960.5
+          },
+          {
+            "decision": "2020-06-19T15:00:00Z",
+            "entry": "2020-06-19T15:00:00Z",
+            "entryPrice": 107.89,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2857.02
+          },
+          {
+            "decision": "2020-11-04T15:14:00Z",
+            "entry": "2020-11-04T15:14:00Z",
+            "entryPrice": 123.62,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -421.86
+          },
+          {
+            "decision": "2021-01-14T17:02:00Z",
+            "entry": "2021-01-14T17:02:00Z",
+            "entryPrice": 152.68,
+            "source": "latched:rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2251.5
+          }
+        ],
+        "removedByOn": [
+          {
+            "decision": "2016-02-03T21:00:00Z",
+            "entry": "2016-02-04T14:30:00Z",
+            "entryPrice": 48.94,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5587.13
+          },
+          {
+            "decision": "2016-02-12T21:00:00Z",
+            "entry": "2016-02-16T14:30:00Z",
+            "entryPrice": 48.09,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1400.5
+          },
+          {
+            "decision": "2016-03-18T20:00:00Z",
+            "entry": "2016-03-21T13:30:00Z",
+            "entryPrice": 49.54,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1067.01
+          },
+          {
+            "decision": "2016-05-09T20:00:00Z",
+            "entry": "2016-05-10T13:30:00Z",
+            "entryPrice": 52.61,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1404.42
+          },
+          {
+            "decision": "2016-06-28T20:00:00Z",
+            "entry": "2016-06-29T13:30:00Z",
+            "entryPrice": 53.23,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 11279.51
+          },
+          {
+            "decision": "2016-09-07T20:00:00Z",
+            "entry": "2016-09-08T13:30:00Z",
+            "entryPrice": 62.81,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 1169.56
+          },
+          {
+            "decision": "2016-11-07T21:00:00Z",
+            "entry": "2016-11-08T14:30:00Z",
+            "entryPrice": 56.8,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 9297.3
+          },
+          {
+            "decision": "2017-01-04T21:00:00Z",
+            "entry": "2017-01-05T14:30:00Z",
+            "entryPrice": 62.55,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -557.56
+          },
+          {
+            "decision": "2017-04-25T20:00:00Z",
+            "entry": "2017-04-26T13:30:00Z",
+            "entryPrice": 70.69,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -242.12
+          },
+          {
+            "decision": "2017-06-02T20:00:00Z",
+            "entry": "2017-06-05T13:30:00Z",
+            "entryPrice": 71.66,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -745.33
+          },
+          {
+            "decision": "2017-08-24T20:00:00Z",
+            "entry": "2017-08-25T13:30:00Z",
+            "entryPrice": 78.94,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2547.27
+          },
+          {
+            "decision": "2017-11-03T20:00:00Z",
+            "entry": "2017-11-06T14:30:00Z",
+            "entryPrice": 85.81,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5347.11
+          },
+          {
+            "decision": "2017-11-30T21:00:00Z",
+            "entry": "2017-12-01T14:30:00Z",
+            "entryPrice": 83.23,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -443.46
+          },
+          {
+            "decision": "2017-12-13T21:00:00Z",
+            "entry": "2017-12-14T14:30:00Z",
+            "entryPrice": 83.17,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 7395.53
+          },
+          {
+            "decision": "2018-02-06T21:00:00Z",
+            "entry": "2018-02-07T14:30:00Z",
+            "entryPrice": 90.74,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -125.53
+          },
+          {
+            "decision": "2018-03-21T20:00:00Z",
+            "entry": "2018-03-22T13:30:00Z",
+            "entryPrice": 91.93,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5941.01
+          },
+          {
+            "decision": "2018-04-04T20:00:00Z",
+            "entry": "2018-04-05T13:30:00Z",
+            "entryPrice": 87.84,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -115.28
+          },
+          {
+            "decision": "2018-04-26T20:00:00Z",
+            "entry": "2018-04-27T13:30:00Z",
+            "entryPrice": 88.17,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -865.87
+          },
+          {
+            "decision": "2018-05-09T20:00:00Z",
+            "entry": "2018-05-10T13:30:00Z",
+            "entryPrice": 90,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 3045.38
+          },
+          {
+            "decision": "2018-07-03T17:00:00Z",
+            "entry": "2018-07-05T13:30:00Z",
+            "entryPrice": 97.6,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -733.4
+          },
+          {
+            "decision": "2018-08-27T20:00:00Z",
+            "entry": "2018-08-28T13:30:00Z",
+            "entryPrice": 98.03,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2521
+          },
+          {
+            "decision": "2018-10-16T20:00:00Z",
+            "entry": "2018-10-17T13:30:00Z",
+            "entryPrice": 89,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -12845.39
+          },
+          {
+            "decision": "2018-11-01T20:00:00Z",
+            "entry": "2018-11-02T13:30:00Z",
+            "entryPrice": 84.5,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4988.45
+          },
+          {
+            "decision": "2018-11-16T21:00:00Z",
+            "entry": "2018-11-19T14:30:00Z",
+            "entryPrice": 79.15,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -901.29
+          },
+          {
+            "decision": "2018-12-26T21:00:00Z",
+            "entry": "2018-12-27T14:30:00Z",
+            "entryPrice": 69,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 22695.59
+          },
+          {
+            "decision": "2019-03-26T20:00:00Z",
+            "entry": "2019-03-27T13:30:00Z",
+            "entryPrice": 89.64,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -215.62
+          },
+          {
+            "decision": "2019-04-23T20:00:00Z",
+            "entry": "2019-04-24T13:30:00Z",
+            "entryPrice": 87.11,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4481.09
+          },
+          {
+            "decision": "2019-05-06T20:00:00Z",
+            "entry": "2019-05-07T13:30:00Z",
+            "entryPrice": 87,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -7161.81
+          },
+          {
+            "decision": "2019-06-17T20:00:00Z",
+            "entry": "2019-06-18T13:30:00Z",
+            "entryPrice": 86.3,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2007.98
+          },
+          {
+            "decision": "2019-08-08T20:00:00Z",
+            "entry": "2019-08-09T13:30:00Z",
+            "entryPrice": 84.4,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1596.81
+          },
+          {
+            "decision": "2019-09-11T20:00:00Z",
+            "entry": "2019-09-12T13:30:00Z",
+            "entryPrice": 83.6,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1452.37
+          },
+          {
+            "decision": "2019-10-03T20:00:00Z",
+            "entry": "2019-10-04T13:30:00Z",
+            "entryPrice": 76.89,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -180.45
+          },
+          {
+            "decision": "2020-02-04T21:00:00Z",
+            "entry": "2020-02-05T14:30:00Z",
+            "entryPrice": 94.93,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1798.57
+          },
+          {
+            "decision": "2020-02-28T21:00:00Z",
+            "entry": "2020-03-02T14:30:00Z",
+            "entryPrice": 90.01,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5313.3
+          },
+          {
+            "decision": "2020-03-10T20:00:00Z",
+            "entry": "2020-03-11T13:30:00Z",
+            "entryPrice": 82.51,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -19858.54
+          },
+          {
+            "decision": "2020-06-15T20:00:00Z",
+            "entry": "2020-06-16T13:30:00Z",
+            "entryPrice": 105.27,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 5352.8
+          },
+          {
+            "decision": "2020-07-27T20:00:00Z",
+            "entry": "2020-07-28T13:30:00Z",
+            "entryPrice": 115.05,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -835.99
+          },
+          {
+            "decision": "2020-08-17T20:00:00Z",
+            "entry": "2020-08-18T13:30:00Z",
+            "entryPrice": 114.32,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4098.66
+          },
+          {
+            "decision": "2020-09-09T20:00:00Z",
+            "entry": "2020-09-10T13:30:00Z",
+            "entryPrice": 106.19,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 1275
+          },
+          {
+            "decision": "2020-11-03T21:00:00Z",
+            "entry": "2020-11-04T14:30:00Z",
+            "entryPrice": 118.67,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 17506.04
+          },
+          {
+            "decision": "2021-01-06T21:00:00Z",
+            "entry": "2021-01-07T14:30:00Z",
+            "entryPrice": 144.92,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 10489.51
+          },
+          {
+            "decision": "2021-02-24T21:00:00Z",
+            "entry": "2021-02-25T14:30:00Z",
+            "entryPrice": 152.99,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -11200.17
+          },
+          {
+            "decision": "2021-03-05T21:00:00Z",
+            "entry": "2021-03-08T14:30:00Z",
+            "entryPrice": 140,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -853.3
+          },
+          {
+            "decision": "2021-03-25T20:00:00Z",
+            "entry": "2021-03-26T13:30:00Z",
+            "entryPrice": 135.38,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1634.89
+          },
+          {
+            "decision": "2021-04-15T20:00:00Z",
+            "entry": "2021-04-16T13:30:00Z",
+            "entryPrice": 134.55,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 51.59
+          },
+          {
+            "decision": "2021-05-11T20:00:00Z",
+            "entry": "2021-05-12T13:30:00Z",
+            "entryPrice": 123.43,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 4477.28
+          },
+          {
+            "decision": "2021-07-21T20:00:00Z",
+            "entry": "2021-07-22T13:30:00Z",
+            "entryPrice": 129.53,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4205.01
+          },
+          {
+            "decision": "2021-08-05T20:00:00Z",
+            "entry": "2021-08-06T13:30:00Z",
+            "entryPrice": 129.19,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -4530.64
+          },
+          {
+            "decision": "2021-08-23T20:00:00Z",
+            "entry": "2021-08-24T13:30:00Z",
+            "entryPrice": 127.7,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -551.22
+          },
+          {
+            "decision": "2021-11-01T20:00:00Z",
+            "entry": "2021-11-02T13:30:00Z",
+            "entryPrice": 129.37,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1128.69
+          },
+          {
+            "decision": "2021-12-07T21:00:00Z",
+            "entry": "2021-12-08T14:30:00Z",
+            "entryPrice": 115.5,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1776.84
+          },
+          {
+            "decision": "2021-12-17T21:00:00Z",
+            "entry": "2021-12-20T14:30:00Z",
+            "entryPrice": 114.52,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 130.02
+          },
+          {
+            "decision": "2022-01-03T21:00:00Z",
+            "entry": "2022-01-04T14:30:00Z",
+            "entryPrice": 115.25,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -9815.3
+          },
+          {
+            "decision": "2022-01-24T21:00:00Z",
+            "entry": "2022-01-25T14:30:00Z",
+            "entryPrice": 90.7,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1318.42
+          },
+          {
+            "decision": "2022-02-24T21:00:00Z",
+            "entry": "2022-02-25T14:30:00Z",
+            "entryPrice": 89.06,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -6110.86
+          },
+          {
+            "decision": "2022-03-09T21:00:00Z",
+            "entry": "2022-03-10T14:30:00Z",
+            "entryPrice": 87.31,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2212.82
+          },
+          {
+            "decision": "2022-05-02T20:00:00Z",
+            "entry": "2022-05-03T13:30:00Z",
+            "entryPrice": 76.78,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -13924.75
+          },
+          {
+            "decision": "2022-05-12T20:00:00Z",
+            "entry": "2022-05-13T13:30:00Z",
+            "entryPrice": 66.47,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2888.7
+          },
+          {
+            "decision": "2022-06-15T20:00:00Z",
+            "entry": "2022-06-16T13:30:00Z",
+            "entryPrice": 63.66,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 22329.22
+          },
+          {
+            "decision": "2022-08-03T20:00:00Z",
+            "entry": "2022-08-04T13:30:00Z",
+            "entryPrice": 86.12,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 1922.53
+          },
+          {
+            "decision": "2022-09-08T20:00:00Z",
+            "entry": "2022-09-09T13:30:00Z",
+            "entryPrice": 87.86,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -6586.8
+          },
+          {
+            "decision": "2022-09-28T20:00:00Z",
+            "entry": "2022-09-29T13:30:00Z",
+            "entryPrice": 80.32,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2921.37
+          },
+          {
+            "decision": "2022-10-13T20:00:00Z",
+            "entry": "2022-10-14T13:30:00Z",
+            "entryPrice": 81.05,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3100.65
+          },
+          {
+            "decision": "2022-10-25T20:00:00Z",
+            "entry": "2022-10-26T13:30:00Z",
+            "entryPrice": 80.87,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1811.07
+          },
+          {
+            "decision": "2022-11-10T21:00:00Z",
+            "entry": "2022-11-11T14:30:00Z",
+            "entryPrice": 83.049,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2962.3
+          },
+          {
+            "decision": "2022-11-23T21:00:00Z",
+            "entry": "2022-11-25T14:30:00Z",
+            "entryPrice": 80.87,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -29.23
+          },
+          {
+            "decision": "2022-12-07T21:00:00Z",
+            "entry": "2022-12-08T14:30:00Z",
+            "entryPrice": 81.77,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2479.06
+          },
+          {
+            "decision": "2022-12-22T21:00:00Z",
+            "entry": "2022-12-23T14:30:00Z",
+            "entryPrice": 82.7,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1077.66
+          },
+          {
+            "decision": "2023-01-04T21:00:00Z",
+            "entry": "2023-01-05T14:30:00Z",
+            "entryPrice": 82.85,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2450.82
+          },
+          {
+            "decision": "2023-03-13T20:00:00Z",
+            "entry": "2023-03-14T13:30:00Z",
+            "entryPrice": 79.36,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5074.21
+          },
+          {
+            "decision": "2023-03-29T20:00:00Z",
+            "entry": "2023-03-30T13:30:00Z",
+            "entryPrice": 76.64,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -653.05
+          },
+          {
+            "decision": "2023-04-13T20:00:00Z",
+            "entry": "2023-04-14T13:30:00Z",
+            "entryPrice": 79.42,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -579.78
+          },
+          {
+            "decision": "2023-06-06T20:00:00Z",
+            "entry": "2023-06-07T13:30:00Z",
+            "entryPrice": 88.15,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -216.38
+          },
+          {
+            "decision": "2023-07-17T20:00:00Z",
+            "entry": "2023-07-18T13:30:00Z",
+            "entryPrice": 85.81,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3763.8
+          },
+          {
+            "decision": "2023-09-01T20:00:00Z",
+            "entry": "2023-09-05T13:30:00Z",
+            "entryPrice": 80.85,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1910.29
+          },
+          {
+            "decision": "2023-11-01T20:00:00Z",
+            "entry": "2023-11-02T13:30:00Z",
+            "entryPrice": 68.38,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2561.7
+          },
+          {
+            "decision": "2023-11-13T21:00:00Z",
+            "entry": "2023-11-14T14:30:00Z",
+            "entryPrice": 69.69,
+            "source": "rise_from_recent_low",
+            "status": "open",
+            "netUsd": 26675.67
+          }
+        ]
+      },
+      "eligibility": {
+        "opportunities": 117,
+        "endedBy": {
+          "consumed": 15,
+          "expired": 27,
+          "invalidated": 75,
+          "superseded": 0,
+          "unfilled_at_end": 0,
+          "end_of_data": 0
+        },
+        "takenLater": 13,
+        "meanAgeSessionsAtDecision": 3.2666666666666666,
+        "maxAgeSessionsAtDecision": 8
+      },
+      "trendFilter": null,
+      "bySourceOn": {
+        "latched:rise_from_recent_low": {
+          "entries": 13,
+          "closed": 13,
+          "open": 0,
+          "wins": 2,
+          "losses": 11,
+          "breakeven": 0,
+          "realizedNetUsd": -21820.22080669816,
+          "unrealizedNetUsd": 0,
+          "interestUsd": 6690.410958904111
+        },
+        "rise_from_recent_low": {
+          "entries": 2,
+          "closed": 2,
+          "open": 0,
+          "wins": 0,
+          "losses": 2,
+          "breakeven": 0,
+          "realizedNetUsd": -12597.825063388933,
+          "unrealizedNetUsd": 0,
+          "interestUsd": 542.4657534246575
+        }
+      },
+      "drawdownGate": {
+        "config": {
+          "lookbackSessions": 30,
+          "dipThresholdPercent": 5,
+          "recoveryRetracementPercent": 70,
+          "confirmationSessions": 2
+        },
+        "episodes": 17,
+        "resolved": 16,
+        "resolvedBeforeConfirmation": 10,
+        "deepestDipPercent": 64.44,
+        "confirmations": 24,
+        "resetsBeforeConfirmation": 666,
+        "confirmationsLost": 18,
+        "releases": 34,
+        "blockedDecisions": 115,
+        "blockedByKind": {
+          "base_signal": 115
+        },
+        "releaseDecisionsTaken": 13,
+        "stateAtEnd": "recovery_required"
+      }
+    }
+  }
+}

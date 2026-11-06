@@ -1,0 +1,641 @@
+{
+  "kind": "growth paired drawdown-gate diagnostic",
+  "offMode": "drawdown-gate",
+  "note": "RETROSPECTIVE DIAGNOSTIC of one configuration on one historical window: two runs on identical data and costs, the only difference being the option under study (named in the report). Path dependence: one blocked or added entry changes every later decision, so differences are not attributable trade by trade. Not an optimisation, not a selection, not evidence of an edge or of safer trading.",
+  "engine": {
+    "key": "rise-from-recent-low-trading",
+    "version": "1.4.0"
+  },
+  "request": {
+    "strategyKey": "rise-from-recent-low-trading",
+    "strategyVersion": "1.4.0",
+    "params": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 8,
+      "recentLowLookbackBars": 60,
+      "breakoutSmaSessions": 50,
+      "breakoutSlopeComparisonSessions": 40,
+      "breakoutPriorHighSessions": 20,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendChangeLookbackSessions": 20,
+      "trendChangeMinimumReturnPercent": 0,
+      "trendSlopeLookbackSessions": 20,
+      "trendSlopeMinimumPercent": 0,
+      "trendSmaSessions": 50,
+      "trendSmaComparisonSessions": 40,
+      "trendStructureLookbackSessions": 20,
+      "trendStructureMinimumIncreasePercent": 0,
+      "trendMomentumShortSessions": 5,
+      "trendMomentumLongSessions": 60,
+      "trendMomentumMinimumShortReturnPercent": 0,
+      "trendMomentumMinimumLongReturnPercent": 0,
+      "eligibilityEnabled": false,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 10,
+      "eligibilityMinimumAdvancePercent": 3,
+      "eligibilityMaximumExtensionPercent": 3,
+      "eligibilityDeteriorationDropPercent": 3,
+      "eligibilityResetDropPercent": 3,
+      "eligibilityRenewalReboundPercent": 2,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 30,
+      "dipThresholdPercent": 5,
+      "recoveryRetracementPercent": 70,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 4,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 15,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 50,
+      "retentionClosesBelow": 2,
+      "continuationEnabled": false,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 60,
+      "classicPullbackPercent": 9,
+      "classicReboundPercent": 0.3,
+      "breakoutBufferPercent": 1,
+      "breakoutFormationBars": 1,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "crossSmaBars": 20,
+      "crossRisingBars": 5,
+      "crossMinimumSlopePercent": 0,
+      "crossMarginPercent": 0,
+      "costBpsPerSide": 5
+    },
+    "symbols": [
+      "VGT",
+      "GDX",
+      "XBI"
+    ],
+    "from": "2016-01-04",
+    "to": "2023-12-29",
+    "resolution": "1d"
+  },
+  "partitions": "training",
+  "on": {
+    "trendFilter": {
+      "method": "rising_sma",
+      "movingAverageSessions": 50,
+      "slopeComparisonSessions": 40
+    },
+    "eligibility": null,
+    "drawdownGate": {
+      "lookbackSessions": 30,
+      "dipThresholdPercent": 5,
+      "recoveryRetracementPercent": 70,
+      "confirmationSessions": 2
+    },
+    "continuation": null
+  },
+  "off": {
+    "trendFilter": {
+      "method": "rising_sma",
+      "movingAverageSessions": 50,
+      "slopeComparisonSessions": 40
+    },
+    "eligibility": null,
+    "drawdownGate": null,
+    "continuation": null
+  },
+  "perSymbol": {
+    "VGT": {
+      "window": {
+        "firstDate": "2016-01-04",
+        "lastDate": "2023-12-29",
+        "calendarDays": 2916.2708333333335
+      },
+      "sameRawSignals": true,
+      "off": {
+        "rawSignals": 69,
+        "taken": 20,
+        "ignoredWhileInvestedOrPending": 15,
+        "vetoed": 34,
+        "deferred": 0,
+        "tradesClosed": 20,
+        "tradesOpen": 0,
+        "wins": 11,
+        "losses": 9,
+        "realizedNetUsd": 43706.79,
+        "markedNetUsd": 43706.79,
+        "interestUsd": 27997.26,
+        "costsUsd": 2035.87,
+        "maxMinuteDrawdownUsd": 13797.57,
+        "maxDailyDrawdownUsd": 12249.57,
+        "sessionsInvestedPercent": 32.95228628230616,
+        "calendarTimeInvestedPercent": 31.892256806280848
+      },
+      "on": {
+        "rawSignals": 69,
+        "taken": 8,
+        "ignoredWhileInvestedOrPending": 9,
+        "vetoed": 52,
+        "deferred": 0,
+        "tradesClosed": 8,
+        "tradesOpen": 0,
+        "wins": 4,
+        "losses": 4,
+        "realizedNetUsd": 20955.65,
+        "markedNetUsd": 20955.65,
+        "interestUsd": 13380.82,
+        "costsUsd": 817.18,
+        "maxMinuteDrawdownUsd": 10254.55,
+        "maxDailyDrawdownUsd": 8504.46,
+        "sessionsInvestedPercent": 15.55666003976143,
+        "calendarTimeInvestedPercent": 15.24533091395737
+      },
+      "onMinusOff": {
+        "rawSignals": 0,
+        "taken": -12,
+        "ignoredWhileInvestedOrPending": -6,
+        "vetoed": 18,
+        "deferred": 0,
+        "tradesClosed": -12,
+        "tradesOpen": 0,
+        "wins": -7,
+        "losses": -5,
+        "realizedNetUsd": -22751.14,
+        "markedNetUsd": -22751.14,
+        "interestUsd": -14616.44,
+        "costsUsd": -1218.69,
+        "maxMinuteDrawdownUsd": -3543.02,
+        "maxDailyDrawdownUsd": -3745.11,
+        "sessionsInvestedPercent": -17.4,
+        "calendarTimeInvestedPercent": -16.65
+      },
+      "entries": {
+        "common": 7,
+        "addedByOn": [
+          {
+            "decision": "2017-07-19T20:00:00Z",
+            "entry": "2017-07-20T13:30:00Z",
+            "entryPrice": 148.86,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1551.94
+          }
+        ],
+        "removedByOn": [
+          {
+            "decision": "2016-07-11T20:00:00Z",
+            "entry": "2016-07-12T13:30:00Z",
+            "entryPrice": 110.55,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 1868.21
+          },
+          {
+            "decision": "2017-06-13T20:00:00Z",
+            "entry": "2017-06-14T13:30:00Z",
+            "entryPrice": 144.5,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1872.48
+          },
+          {
+            "decision": "2017-07-12T20:00:00Z",
+            "entry": "2017-07-13T13:30:00Z",
+            "entryPrice": 145.47,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -1159.34
+          },
+          {
+            "decision": "2018-02-14T21:00:00Z",
+            "entry": "2018-02-15T14:30:00Z",
+            "entryPrice": 173.1,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -912.3
+          },
+          {
+            "decision": "2019-06-07T20:00:00Z",
+            "entry": "2019-06-10T13:30:00Z",
+            "entryPrice": 207.24,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 1835.49
+          },
+          {
+            "decision": "2019-09-05T20:00:00Z",
+            "entry": "2019-09-06T13:30:00Z",
+            "entryPrice": 219.41,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -2069.28
+          },
+          {
+            "decision": "2020-09-25T20:00:00Z",
+            "entry": "2020-09-28T13:30:00Z",
+            "entryPrice": 309.145,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2814.26
+          },
+          {
+            "decision": "2020-11-04T21:00:00Z",
+            "entry": "2020-11-05T14:30:00Z",
+            "entryPrice": 323.99,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 4071.34
+          },
+          {
+            "decision": "2021-03-01T21:00:00Z",
+            "entry": "2021-03-02T14:30:00Z",
+            "entryPrice": 369.18,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3304.01
+          },
+          {
+            "decision": "2021-04-01T20:00:00Z",
+            "entry": "2021-04-05T13:30:00Z",
+            "entryPrice": 368.55,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -30.63
+          },
+          {
+            "decision": "2021-06-04T20:00:00Z",
+            "entry": "2021-06-07T13:30:00Z",
+            "entryPrice": 375.27,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 4221.8
+          },
+          {
+            "decision": "2021-10-19T20:00:00Z",
+            "entry": "2021-10-20T13:30:00Z",
+            "entryPrice": 428.26,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 2810.21
+          },
+          {
+            "decision": "2023-04-26T20:00:00Z",
+            "entry": "2023-04-27T13:30:00Z",
+            "entryPrice": 374.9,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 12925.93
+          }
+        ]
+      },
+      "eligibility": null,
+      "trendFilter": {
+        "evaluations": 60,
+        "blocked": {
+          "base_signal": {
+            "trend_veto": 34,
+            "insufficient_history": 0,
+            "invalid_data": 0,
+            "capital_unavailable": 0,
+            "drawdown_gate": 18
+          }
+        }
+      },
+      "bySourceOn": {
+        "rise_from_recent_low": {
+          "entries": 8,
+          "closed": 8,
+          "open": 0,
+          "wins": 4,
+          "losses": 4,
+          "breakeven": 0,
+          "realizedNetUsd": 20955.6476251923,
+          "unrealizedNetUsd": 0,
+          "interestUsd": 13380.821917808218
+        }
+      },
+      "drawdownGate": {
+        "config": {
+          "lookbackSessions": 30,
+          "dipThresholdPercent": 5,
+          "recoveryRetracementPercent": 70,
+          "confirmationSessions": 2
+        },
+        "episodes": 23,
+        "resolved": 23,
+        "resolvedBeforeConfirmation": 8,
+        "deepestDipPercent": 37.39,
+        "confirmations": 28,
+        "resetsBeforeConfirmation": 425,
+        "confirmationsLost": 13,
+        "releases": 36,
+        "blockedDecisions": 51,
+        "blockedByKind": {
+          "base_signal": 51
+        },
+        "releaseDecisionsTaken": 0,
+        "stateAtEnd": "normal"
+      }
+    },
+    "GDX": {
+      "window": {
+        "firstDate": "2016-01-04",
+        "lastDate": "2023-12-29",
+        "calendarDays": 2916.2708333333335
+      },
+      "sameRawSignals": true,
+      "off": {
+        "rawSignals": 83,
+        "taken": 4,
+        "ignoredWhileInvestedOrPending": 4,
+        "vetoed": 75,
+        "deferred": 0,
+        "tradesClosed": 4,
+        "tradesOpen": 0,
+        "wins": 2,
+        "losses": 2,
+        "realizedNetUsd": -6197.63,
+        "markedNetUsd": -6197.63,
+        "interestUsd": 1898.63,
+        "costsUsd": 397.85,
+        "maxMinuteDrawdownUsd": 16963.48,
+        "maxDailyDrawdownUsd": 14702.2,
+        "sessionsInvestedPercent": 2.286282306163022,
+        "calendarTimeInvestedPercent": 2.161864824511898
+      },
+      "on": {
+        "rawSignals": 83,
+        "taken": 2,
+        "ignoredWhileInvestedOrPending": 3,
+        "vetoed": 78,
+        "deferred": 0,
+        "tradesClosed": 2,
+        "tradesOpen": 0,
+        "wins": 2,
+        "losses": 0,
+        "realizedNetUsd": 6203.71,
+        "markedNetUsd": 6203.71,
+        "interestUsd": 994.52,
+        "costsUsd": 203.6,
+        "maxMinuteDrawdownUsd": 6493.68,
+        "maxDailyDrawdownUsd": 5063.8,
+        "sessionsInvestedPercent": 1.143141153081511,
+        "calendarTimeInvestedPercent": 1.1331061596454757
+      },
+      "onMinusOff": {
+        "rawSignals": 0,
+        "taken": -2,
+        "ignoredWhileInvestedOrPending": -1,
+        "vetoed": 3,
+        "deferred": 0,
+        "tradesClosed": -2,
+        "tradesOpen": 0,
+        "wins": 0,
+        "losses": -2,
+        "realizedNetUsd": 12401.34,
+        "markedNetUsd": 12401.34,
+        "interestUsd": -904.11,
+        "costsUsd": -194.25,
+        "maxMinuteDrawdownUsd": -10469.8,
+        "maxDailyDrawdownUsd": -9638.4,
+        "sessionsInvestedPercent": -1.14,
+        "calendarTimeInvestedPercent": -1.03
+      },
+      "entries": {
+        "common": 2,
+        "addedByOn": [],
+        "removedByOn": [
+          {
+            "decision": "2017-10-11T20:00:00Z",
+            "entry": "2017-10-12T13:30:00Z",
+            "entryPrice": 23.76,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -6564.51
+          },
+          {
+            "decision": "2018-02-14T21:00:00Z",
+            "entry": "2018-02-15T14:30:00Z",
+            "entryPrice": 23.06,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5836.83
+          }
+        ]
+      },
+      "eligibility": null,
+      "trendFilter": {
+        "evaluations": 80,
+        "blocked": {
+          "base_signal": {
+            "trend_veto": 75,
+            "insufficient_history": 0,
+            "invalid_data": 0,
+            "capital_unavailable": 0,
+            "drawdown_gate": 3
+          }
+        }
+      },
+      "bySourceOn": {
+        "rise_from_recent_low": {
+          "entries": 2,
+          "closed": 2,
+          "open": 0,
+          "wins": 2,
+          "losses": 0,
+          "breakeven": 0,
+          "realizedNetUsd": 6203.709927200172,
+          "unrealizedNetUsd": 0,
+          "interestUsd": 994.5205479452054
+        }
+      },
+      "drawdownGate": {
+        "config": {
+          "lookbackSessions": 30,
+          "dipThresholdPercent": 5,
+          "recoveryRetracementPercent": 70,
+          "confirmationSessions": 2
+        },
+        "episodes": 21,
+        "resolved": 20,
+        "resolvedBeforeConfirmation": 17,
+        "deepestDipPercent": 52.96,
+        "confirmations": 10,
+        "resetsBeforeConfirmation": 282,
+        "confirmationsLost": 7,
+        "releases": 25,
+        "blockedDecisions": 77,
+        "blockedByKind": {
+          "base_signal": 77
+        },
+        "releaseDecisionsTaken": 0,
+        "stateAtEnd": "recovery_required"
+      }
+    },
+    "XBI": {
+      "window": {
+        "firstDate": "2016-01-04",
+        "lastDate": "2023-12-29",
+        "calendarDays": 2916.2708333333335
+      },
+      "sameRawSignals": true,
+      "off": {
+        "rawSignals": 72,
+        "taken": 4,
+        "ignoredWhileInvestedOrPending": 2,
+        "vetoed": 66,
+        "deferred": 0,
+        "tradesClosed": 4,
+        "tradesOpen": 0,
+        "wins": 2,
+        "losses": 2,
+        "realizedNetUsd": 2382.24,
+        "markedNetUsd": 2382.24,
+        "interestUsd": 1838.36,
+        "costsUsd": 402.11,
+        "maxMinuteDrawdownUsd": 15374.15,
+        "maxDailyDrawdownUsd": 14741.76,
+        "sessionsInvestedPercent": 2.2365805168986084,
+        "calendarTimeInvestedPercent": 2.105523844902761
+      },
+      "on": {
+        "rawSignals": 72,
+        "taken": 1,
+        "ignoredWhileInvestedOrPending": 0,
+        "vetoed": 71,
+        "deferred": 0,
+        "tradesClosed": 1,
+        "tradesOpen": 0,
+        "wins": 1,
+        "losses": 0,
+        "realizedNetUsd": 7204.31,
+        "markedNetUsd": 7204.31,
+        "interestUsd": 391.78,
+        "costsUsd": 103.8,
+        "maxMinuteDrawdownUsd": 4375.3,
+        "maxDailyDrawdownUsd": 3855.75,
+        "sessionsInvestedPercent": 0.4970178926441352,
+        "calendarTimeInvestedPercent": 0.4542521246931131
+      },
+      "onMinusOff": {
+        "rawSignals": 0,
+        "taken": -3,
+        "ignoredWhileInvestedOrPending": -2,
+        "vetoed": 5,
+        "deferred": 0,
+        "tradesClosed": -3,
+        "tradesOpen": 0,
+        "wins": -1,
+        "losses": -2,
+        "realizedNetUsd": 4822.07,
+        "markedNetUsd": 4822.07,
+        "interestUsd": -1446.58,
+        "costsUsd": -298.31,
+        "maxMinuteDrawdownUsd": -10998.85,
+        "maxDailyDrawdownUsd": -10886.01,
+        "sessionsInvestedPercent": -1.74,
+        "calendarTimeInvestedPercent": -1.65
+      },
+      "entries": {
+        "common": 0,
+        "addedByOn": [
+          {
+            "decision": "2017-06-13T20:00:00Z",
+            "entry": "2017-06-14T13:30:00Z",
+            "entryPrice": 72.1,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 7204.31
+          }
+        ],
+        "removedByOn": [
+          {
+            "decision": "2017-06-08T20:00:00Z",
+            "entry": "2017-06-09T13:30:00Z",
+            "entryPrice": 71.6,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 7805
+          },
+          {
+            "decision": "2018-04-17T20:00:00Z",
+            "entry": "2018-04-18T13:30:00Z",
+            "entryPrice": 91.45,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -5074.54
+          },
+          {
+            "decision": "2018-08-29T20:00:00Z",
+            "entry": "2018-08-30T13:30:00Z",
+            "entryPrice": 99.37,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": -3708.75
+          },
+          {
+            "decision": "2023-01-04T21:00:00Z",
+            "entry": "2023-01-05T14:30:00Z",
+            "entryPrice": 82.85,
+            "source": "rise_from_recent_low",
+            "status": "closed",
+            "netUsd": 3360.54
+          }
+        ]
+      },
+      "eligibility": null,
+      "trendFilter": {
+        "evaluations": 72,
+        "blocked": {
+          "base_signal": {
+            "trend_veto": 66,
+            "insufficient_history": 0,
+            "invalid_data": 0,
+            "capital_unavailable": 0,
+            "drawdown_gate": 5
+          }
+        }
+      },
+      "bySourceOn": {
+        "rise_from_recent_low": {
+          "entries": 1,
+          "closed": 1,
+          "open": 0,
+          "wins": 1,
+          "losses": 0,
+          "breakeven": 0,
+          "realizedNetUsd": 7204.314057133644,
+          "unrealizedNetUsd": 0,
+          "interestUsd": 391.7808219178082
+        }
+      },
+      "drawdownGate": {
+        "config": {
+          "lookbackSessions": 30,
+          "dipThresholdPercent": 5,
+          "recoveryRetracementPercent": 70,
+          "confirmationSessions": 2
+        },
+        "episodes": 17,
+        "resolved": 16,
+        "resolvedBeforeConfirmation": 10,
+        "deepestDipPercent": 64.44,
+        "confirmations": 24,
+        "resetsBeforeConfirmation": 666,
+        "confirmationsLost": 18,
+        "releases": 34,
+        "blockedDecisions": 71,
+        "blockedByKind": {
+          "base_signal": 71
+        },
+        "releaseDecisionsTaken": 0,
+        "stateAtEnd": "recovery_required"
+      }
+    }
+  }
+}
