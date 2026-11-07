@@ -144,6 +144,185 @@ if (sens) {
   );
 }
 
+// ----- searches and qualification per cutoff -----
+
+for (const C of ['C19', 'C21', 'C23', 'C24']) {
+  const s = read(`search/${C}.json`);
+  const q = read(`qualify/${C}.json`);
+
+  if (s) {
+    const rows = s.cells.map((c: any) => {
+      const pc = s.evaluations.perCell[c.spec.key] ?? {};
+      const isl = c.islands.map((i: any) => `${i.generations ?? i.generation} gen / ${i.newConfigs} new (${i.stop})`).join('; ');
+      const sat = c.saturation.map((x: any) => `${x.islands}: ${x.saturated ? 'saturated' : 'not saturated'}`).join('; ') || '—';
+
+      return [
+        c.spec.key,
+        c.screen ? `${c.screen.n} → ${c.screen.unique} distinct, ${c.screen.plausible} plausible, ${c.screen.promoted} promoted; ${c.screen.ledgers} ledgers` : c.local ? `${c.local.seeds.length} seeds, ${c.local.unique} local designs` : '—',
+        `${c.summary.rung1Centres} (${c.summary.rung1Feasible} feasible)`,
+        isl || '—',
+        sat,
+        c.r2,
+        c.r3.length,
+        c.refinements.map((r: any) => (r.start === r.endpoint ? 'stay' : 'moved')).join(', ') || '—',
+        c.shortlist.length,
+        (pc.fresh ?? 0).toLocaleString(),
+        (pc.hits ?? 0).toLocaleString()
+      ];
+    });
+
+    add(
+      `search-${C}.md`,
+      `# Search ${C} (training door ${s.door}; ${s.started} → ${s.finished})\n\n- Evaluations: ${s.evaluations.fresh.toLocaleString()} fresh, ${s.evaluations.archiveHits.toLocaleString()} archive hits, ${s.evaluations.failures} failed; ${s.evaluations.archivePoints.toLocaleString()} distinct configurations in the job archive; ${s.evaluations.fits.toLocaleString()} fits. Peak job memory ${num(s.memory.peakCgroupCurrent / 2 ** 30, 2)} GiB.\n\n${table(['cell', 'screen / seeds', 'rung-1 centres', 'islands', 'saturation', 'rung 2', 'rung 3', 'refinement', 'shortlist', 'fresh', 'hits'], rows)}\n\n## Shortlists\n\n${table(
+        ['cell', 'pick', 'id', 'switches', 'centre net', 'centre DD', 'r3 median', 'r3 p10', 'r3 p90', 'r3 ledgers'],
+        s.cells.flatMap((c: any) => c.shortlist.map((f: any) => [c.spec.key, f.pick, f.id, sw(switchOf(f.config)), usd(f.centre.net), usd(f.centre.dd), usd(f.nb.medianNet), usd(f.nb.p10Net), usd(f.nb.p90Dd), f.nb.ledgers]))
+      )}\n\n## Profitable centres that failed feasibility (visible)\n\n${table(['cell', 'id', 'centre net', 'centre DD', 'p90', 'p10', 'failed'], s.cells.flatMap((c: any) => c.visibleInfeasible.map((v: any) => [c.spec.key, v.id, usd(v.centreNet), usd(v.centreDd), usd(v.p90), usd(v.p10), Object.keys(v.parts).join(', ')])))}\n`
+    );
+  }
+
+  if (q) {
+    const rank = new Map((q.ranking as any[]).map((r) => [r.id, r.rank]));
+    const prim = Object.entries<string | null>(q.primaries.primaries ?? q.primaries);
+
+    add(
+      `qualify-${C}.md`,
+      `# Qualification ${C} (training door; selection 2 × 128, confirmation 3 × 128)\n\nPrimaries: ${prim.map(([k, v]) => `${k} ${v ?? 'none'}`).join('; ')}.\n\n${table(
+        ['rank', 'id', 'label', 'centre net', 'centre DD', 'trades (W/L)', 'dollar losses', 'exposure', 'top episode (share)', 'net ex top episode', 'select robust', 'select p90', 'confirm median', 'confirm p10', 'confirm p90', 'breaches > $35k (worst)', 'small / broad median', '10 / 20 bps net', 'gates'],
+        (q.members as any[]).map((m) => [
+          rank.get(m.id) ?? '—',
+          m.id,
+          m.label,
+          usd(m.centre.net),
+          usd(m.centre.dd),
+          `${m.centre.trades} (${m.centre.wins}/${m.centre.losses})`,
+          usd(m.centre.lossSum),
+          `${num(m.centre.exposure, 1)}%`,
+          `${usd(m.centre.topMove)} (${pct(m.centre.topMoveShare, 0)})`,
+          usd(m.centre.netExTopMove),
+          usd(m.select.robustNet),
+          usd(m.select.p90Dd),
+          usd(m.confirm.medianNet),
+          usd(m.confirm.p10Net),
+          usd(m.confirm.p90Dd),
+          `${pct(m.breaches.share)} (${usd(m.breaches.worstDd)})`,
+          `${usd(m.small.medianNet)} / ${usd(m.broad.medianNet)}`,
+          `${usd(m.stress['10bps'].net)} / ${usd(m.stress['20bps'].net)}`,
+          m.qualified ? 'qualified' : `fail ${m.failed.join(', ')}`
+        ])
+      )}\n`
+    );
+  }
+}
+
+function switchOf(c: any) {
+  return {
+    family: c.entryMethod === 'trend_breakout' ? 'breakout' : 'rise',
+    hold: c.maximumHoldEnabled ? 'on' : 'off',
+    buffer: c.intradayLossBufferEnabled ? 'on' : 'off',
+    gate: c.drawdownRecoveryGateEnabled ? 'on' : 'off',
+    istop: c.initialStopEnabled ? 'on' : 'off',
+    retain: c.retentionEnabled ? 'on' : 'off',
+    trend: c.trendFilterEnabled ? c.trendMethod : 'off',
+    elig: c.eligibilityEnabled ? c.eligibilityPolicy : 'off',
+    cont: c.continuationEnabled ? c.continuationMethod : 'off'
+  };
+}
+
+// ----- folds and the sequential policies -----
+
+for (const C of ['C19', 'C21', 'C23']) {
+  const sel = read(`folds/${C}/FOLD_SELECTION.json`);
+  const ev = read(`folds/${C}/evaluation.json`);
+
+  if (!sel || !ev) continue;
+
+  const m = new Map((sel.members as any[]).map((x) => [x.id, x]));
+  const rank = new Map((sel.ranking as any[]).map((r) => [r.id, r.rank]));
+
+  add(
+    'folds.md',
+    `## Fold ${C}: selected on 2016 → ${sel.cutoff.boundary}, evaluated ${sel.cutoff.evalFirst} → ${sel.cutoff.evalLast}\n\nPrimaries: ${Object.entries<string | null>(sel.primaries).map(([k, v]) => `${k} ${v ?? 'none'}`).join('; ')}.\n\n${table(
+      ['rank', 'id', 'label', 'qualified', 'train centre net', 'slice net', 'slice DD', '10 / 20 bps slice', 'carried in', 'new trades W/L (losses $)', 'open at end', 'nb slice median / p10 (positive)'],
+      (ev.rows as any[]).map((r) => {
+        const x = m.get(r.id);
+
+        return [
+          rank.get(r.id) ?? '—',
+          r.id,
+          r.label,
+          x ? (x.qualified ? 'yes' : `no (${x.failed.join(', ')})`) : 'control',
+          usd(x?.centre.net),
+          usd(r.sliceNet),
+          dd(r.sliceDrawdown),
+          `${usd(r.stress['10bps'])} / ${usd(r.stress['20bps'])}`,
+          r.carriedIn.map((c: any) => `${c.entryDate}: ${usd(c.validationPart)}`).join('; ') || '—',
+          `${r.newWins}/${r.newLosses} (${usd(r.newLossSum)})`,
+          r.openAtEnd.map((o: any) => `${o.entry} ${usd(o.net)}`).join('; ') || '—',
+          `${usd(r.neighbourhood.median)} / ${usd(r.neighbourhood.p10)} (${pct(r.neighbourhood.positiveShare, 0)})`
+        ];
+      })
+    )}\n`
+  );
+}
+
+const seq = read('folds/sequential.json');
+
+if (seq)
+  add(
+    'folds.md',
+    `## Sequential policies (2020–2021 | 2022–2023 | 2024; switches charged 5 bps per implied side)\n\n${table(
+      ['policy', 'C19 → 2020–21', 'C21 → 2022–23', 'C23 → 2024', 'net', 'before switch charges', 'switches', 'sequential DD', 'within $35k'],
+      Object.entries<any>(seq.policies).map(([k, p]) => [k, ...p.slices.map((s: any) => (s.id ? `${s.id} ${usd(s.sliceNet)}` : 'flat')), usd(p.net), usd(p.grossOfSwitches), p.switches, usd(p.drawdown), p.withinCeiling ? 'yes' : 'no'])
+    )}\n\nDecision (PROTOCOL.md §7.5): eligible ${seq.decision.eligible.join(', ') || 'none'}; chosen **${seq.decision.chosen ?? 'none (chronologically unsupported)'}**.\n`
+  );
+
+// ----- the final comparison -----
+
+const fin = read('final/final.json');
+
+if (fin) {
+  const all = [{ ...fin.four, role: 'control' }, ...fin.finalists, ...fin.prior];
+  const line = (m: any) => [
+    m.label,
+    m.id,
+    usd(m.development.net),
+    dd(m.development.drawdown),
+    usd(m.validation.net),
+    dd(m.validation.drawdown),
+    `${m.validation.wins}/${m.validation.losses} (${usd(m.validation.lossSum)})`,
+    pct(m.validation.exposureSessions),
+    m.validation.openAtEnd.map((o: any) => usd(o.net)).join('; ') || '0',
+    usd(m.full.net),
+    dd(m.full.drawdown),
+    `${m.full.trades.wins}/${m.full.trades.losses}/${m.full.trades.breakeven}`,
+    `${num(m.full.occupancy.sessionsInvestedPercent, 1)}%`,
+    `${usd(m.stress['10bps'].validationNet)} / ${usd(m.stress['20bps'].validationNet)}`,
+    `${usd(m.neighbourhood.validationMedian)} / ${usd(m.neighbourhood.validationP10)}; p90 ${usd(m.neighbourhood.p90RunDd)}`,
+    m.status === 'pass' ? 'pass' : `fail ${m.failed.join(', ')}`
+  ];
+
+  add(
+    'final.md',
+    `# Final comparison (FULL door, opened once; ${fin.at})\n\n- #4 parity: ${fin.parity4?.passed ? '**exact**' : '**FAILED**'} — ${Object.entries<any>(fin.parity4?.observed ?? {}).map(([k, v]) => `${k} ${v}`).join(', ')}.\n- Continuity: development span digest equal ${fin.continuity.developmentSpanDigestEqual}; validation sessions ${fin.continuity.validationSessions} (yVal ${fin.yVal}).\n- Configurations evaluated on this window: ${fin.configurationsEvaluated.toLocaleString()} (${fin.evaluations.fresh.toLocaleString()} fresh).\n\n${table(
+      ['configuration', 'id', 'dev net', 'dev DD', 'val net', 'val DD (from 2024 close)', 'val W/L (losses $)', 'val exposure', 'open at end', 'full net', 'full DD', 'full W/L/B', 'full exposure', 'val 10 / 20 bps', 'val nb median / p10; nb p90 run DD', 'V-gates'],
+      all.map(line)
+    )}\n\n## Versus #4 (same dates)\n\n${table(
+      ['configuration', 'Δ val net', 'Δ val DD', 'Δ full net', 'Δ full DD', 'higher val net with ≤ DD', '#4 val winners retained / retimed / lost', 'new val winning moves', 'full-run #4 winners lost'],
+      [...fin.finalists, ...fin.prior].map((m: any) => [
+        m.label,
+        usd(m.versus4.validationNetDelta),
+        usd(m.versus4.validationDrawdownDelta),
+        usd(m.versus4.fullNetDelta),
+        usd(m.versus4.fullDrawdownDelta),
+        m.versus4.higherNetEqualOrLowerDd ? 'yes' : 'no',
+        `${m.versus4.winnersValidation.retained} / ${m.versus4.winnersValidation.retimed} / ${m.versus4.winnersValidation.lostControlWinners.length}${m.versus4.winnersValidation.sparse ? ' (sparse)' : ''}`,
+        m.versus4.winnersValidation.newWinningMoves,
+        m.versus4.winnersFull.lostControlWinners.map((l: any) => `${l.entryDate} ${usd(l.net)}`).join('; ') || '—'
+      ])
+    )}\n`
+  );
+}
+
 // ----- write -----
 
 fs.mkdirSync(outDir, { recursive: true });
