@@ -2,17 +2,20 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-07T11:48Z (UTC, from the clock). **Status: INCOMPLETE.**
-- **Current stage:** 3 — protocol frozen 11:47:25Z; committing the freeze next. No search, qualification, selection or
-  validation statistic exists.
+- **Updated:** 2026-11-07T13:01Z (UTC, from the clock). **Status: INCOMPLETE.**
+- **Current stage:** 6 — selection FROZEN 13:01:40Z (`FROZEN_SELECTION.json` sha256
+  `0064deba9f371863b2e5a1626a3c004bc016149a4d3430ad6b8a583a94e19bce`, chmod 444); committing it, then `validate`
+  (the full door has not been opened). Search complete 12:58:51Z (`results/search/search.json` `222ccf50…fc26`);
+  qualification complete 13:01:18Z (`results/qualify/qualify.json` `b2e505b9…03e8`). Primary candidate:
+  `ec124684b6466d77` (profit role, rank 1, tier modest).
 - **Authority:** `PROTOCOL.md` sha256 `ae3bfa41d5c264c3e1ebba99a8631636d548f19ef0c98ef53ec08fc53a47bac6`;
   `results/protocol_freeze.json` `0200033cb9605e9b9f4f642cad43b241546dbaec77feb6070eba26cdc952810a`; code closure
   `2da66c39e229d6c1ab7298aa589ee6201b8f5db2499ba3d48f19e9c12162fcc6` (108 files), engine digest `5ec0cc7e…7d8e`;
   `AMENDMENTS.md` `2ea1f402…1ae7` (no amendments); brief `brief/BRIEF.md` `9146b7f0…21c2`.
-- **Running processes:** none (`systemctl --user list-units 'growth140*'`).
-- **Next commands:** commit the freeze; P1 parity
-  (`npm run -s growth140-s8m -- launch --unit growth140-s8m-parity --wait -- parity --workers 4`); then the search
-  (RUN_COMMANDS.md).
+- **Running processes:** none.
+- **Next commands:** commit and push the frozen selection; then
+  `npm run -s growth140-s8m -- launch --unit growth140-s8m-validate --wait -- validate --workers 12` (once; a stopped run
+  is resumed by the same command, which reuses its archive).
 - **User instruction 2026-11-07 ≈11:05Z:** MemoryHigh=44G, MemoryMax=48G permitted (replaces the brief's 20G/24G).
 
 ## Environment
@@ -44,11 +47,20 @@
 | Pilot F′ parity | `launch … parity --pilot --job pilot-parity-b` | complete 11:38Z, PASSED | `results/pilot/pilot-parity-b.json` | — |
 | Pilot A3/G restart | `pilot2`, units a2u/a3c/a3d | complete 11:44Z, identical | `results/pilot/pilot-restart-checks.json` | — |
 | Protocol freeze | `freeze-protocol` | complete 11:47:25Z | `results/protocol_freeze.json` | write-once |
-| P1 parity | `launch --unit growth140-s8m-parity -- parity --workers 4` | not started | `results/parity/parity.json` | write-once (rerun only by amendment) |
-| Search | `launch --unit growth140-s8m-search -- search --job search --workers 12` | not started | `results/search/search.json`, archive `.cache/growth140-vgt-s8m/jobs/search/` | `--resume` from checkpoint (exact) |
-| Qualify | `launch --unit growth140-s8m-qualify -- qualify --workers 12` | not started | `results/qualify/qualify.json` | rerun same command (archive) |
-| Freeze selection | `freeze-selection`, then commit | not started | `FROZEN_SELECTION.json` (444) | write-once |
+| P1 parity | `launch --unit growth140-s8m-parity -- parity --workers 4` | complete 11:49:23Z, PASSED | `results/parity/parity.json` | write-once (rerun only by amendment) |
+| Search | `launch --unit growth140-s8m-search -- search --job search --workers 12` | complete 12:58:51Z (69 min, 427,894 fresh, peak 8.38 GiB) | `results/search/search.json`, archive `.cache/growth140-vgt-s8m/jobs/search/` | `--resume` from checkpoint (exact) |
+| Qualify | `launch --unit growth140-s8m-qualify -- qualify --workers 12` | complete 13:01:18Z (6 qualified; roles profit/robust/balanced/extra1) | `results/qualify/qualify.json` | rerun same command (archive) |
+| Freeze selection | `freeze-selection`, then commit | complete 13:01:40Z | `FROZEN_SELECTION.json` (444) | write-once |
 | Validate | `launch --unit growth140-s8m-validate -- validate --workers 12` | not started | `results/validation/validation.json` | rerun same command (archive); door once |
+
+## Search progress (from the log and checkpoint)
+
+- Screen 11:53:03Z: 16,384 distinct configurations, 3,142 plausible, 2,560 promoted (≈ 87 evaluations/s, 12 workers).
+- Rung 1 on the screen 12:00:49Z: 0/2,560 feasible (every one fails C5 median ≥ $10k/yr; 99% C7 top trade ≤ 25%).
+- Island 0 12:14:22Z: 32 generations, 5,120 new, stop budget, hv 1.434e8, 1,645 rung-1 feasible.
+- Islands 1–3: 1,382 / 865 / 1,470 rung-1 feasible; T1 not fired (4 islands); archive 23,040 configurations, 5,362
+  rung-1 feasible; rung 2 112/192 feasible; rung 3 47/48; refinement accepted no move; T2 fired (8 re-scored).
+- Memory: cgroup peak 8.38 GiB (memory.peak), workers ≤ 710 MiB, coordinator ≤ 371 MiB, no memory events.
 
 ## Memory diagnosis (summary; MEMORY.md has the detail)
 
