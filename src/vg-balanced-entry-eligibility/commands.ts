@@ -346,7 +346,40 @@ const validateCommand = async (args: string[]) => {
   await validate(Number(option(args, 'workers', '6')));
 };
 
+// Report-only illustration (PROTOCOL.md §9 "Examples"): one D1-stress point's ledgers on D24, the reference and OFF.
+const example = async (args: string[]) => {
+  const { runDetails } = await import('./job.ts');
+  const { d1StressSpecs, matched, reference } = await import('./diagnostics.ts');
+  const [family, index] = [args[0] as 'explore' | 'confirm', Number(args[1])];
+  const row = d1StressSpecs(reference, [family]).find((r) => r.index === index);
+
+  if (!row) throw new Error(`no D1-stress point ${family} ${index}`);
+
+  const [off, variant] = await runDetails<import('./diagnostics.ts').Detail>(
+    { name: `example-${family}-${index}`, door: 'D24', purpose: 'report-only example (D1-stress point)', workers: 2 },
+    [row.off, row.variant]
+  );
+  const dir = path.join(resultsDir, 'diagnostics', 'D24', 'examples', `${family}-${index}`);
+  const { toCsv } = await import('../multi-etf-allocator/metrics.ts');
+
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'variant-lots.csv'), toCsv(variant!.lots));
+  fs.writeFileSync(path.join(dir, 'off-lots.csv'), toCsv(off!.lots));
+  fs.writeFileSync(path.join(dir, 'variant-transitions.csv'), toCsv(variant!.transitions as never));
+  writeJson(path.join(dir, 'example.json'), {
+    note: 'report-only illustration at a nearby D1 parameter point (development door D24); not a candidate',
+    family,
+    index,
+    d1: row.off.d1,
+    off: { net: off!.record.net, dd: off!.record.dd },
+    variant: { net: variant!.record.net, dd: variant!.record.dd, late: variant!.record.late },
+    matched: matched(off!, variant!)
+  });
+  log(`example ${family}-${index}: Δ ${(variant!.record.net - off!.record.net).toFixed(2)}`);
+};
+
 export const commands: Record<string, (args: string[]) => Promise<void>> = {
+  example,
   'freeze-selection': freezeSelectionCommand,
   validate: validateCommand,
   diagnostics,
