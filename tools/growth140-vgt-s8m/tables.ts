@@ -228,7 +228,16 @@ if (v) {
 
     if (x) bt(x, nameOf(m, i), x.versus4);
   });
-  vb.push('', '## Coverage', '', '```json', JSON.stringify(v.coverage, null, 1), '```', '', '## Continuity', '', '```json', JSON.stringify({ continuity: v.continuity, control: v.control.developmentContinuity, members: v.members.map((m: any) => ({ id: m.id, ...m.developmentContinuity })) }, null, 1), '```');
+  vb.push('', '## Coverage (regular-session minute bars against the NYSE calendar)', '');
+  vb.push('| Window | sessions | missing sessions | bars < 90% of scheduled | bars < 50% | fewest bars | median bars | early closes (calendar) | no closing print |', '|---|---:|---:|---:|---:|---:|---:|---|---|');
+  for (const [k, c] of Object.entries(v.coverage) as [string, any][]) {
+    const sorted = c.partialSessions.map((x: any) => x.bars).sort((a: number, b: number) => a - b);
+    const half = c.partialSessions.filter((x: any) => x.bars < 0.5 * x.scheduled);
+    const fewest = c.partialSessions.reduce((m: any, x: any) => (!m || x.bars < m.bars ? x : m), null);
+
+    vb.push(`| ${k} | ${c.sessions} | ${c.missingSessions.length}${c.missingSessions.length ? ` (${c.missingSessions.join(', ')})` : ''} | ${c.partialSessions.length} | ${half.length}${half.length ? ` (${half.map((x: any) => `${x.date} ${x.bars}/${x.scheduled}`).join(', ')})` : ''} | ${fewest ? `${fewest.bars}/${fewest.scheduled} (${fewest.date})` : '—'} | ${sorted.length ? sorted[Math.floor(sorted.length / 2)] : '—'} (of the < 90% sessions) | ${c.earlyCloses.length} (${c.earlyClosesExpected.length}) | ${c.sessionsWithoutClosingPrint.join(', ') || 'none'} |`);
+  }
+  vb.push('', 'Minute bars exist only for minutes with a trade; the engine never imputes a missing minute (it fills and marks on the next actual minute), identically in every run, so thin minutes do not affect comparability between configurations.', '', '## Continuity', '', '```json', JSON.stringify({ continuity: v.continuity, control: v.control.developmentContinuity, members: v.members.map((m: any) => ({ id: m.id, ...m.developmentContinuity })) }, null, 1), '```');
   fs.writeFileSync(path.join(outDir, 'validation.md'), `${vb.join('\n')}\n`);
 }
 

@@ -40,6 +40,14 @@ $N freeze-selection                                                # FROZEN_SELE
 L growth140-s8m-validate validate --workers 12                     # once; rerun the same command to resume
 ```
 
+## Reports and the archive (post-freeze helpers; they read the sealed records only)
+
+```bash
+node --experimental-transform-types --disable-warning=ExperimentalWarning tools/growth140-vgt-s8m/tables.ts
+node --experimental-transform-types --disable-warning=ExperimentalWarning tools/growth140-vgt-s8m/export-archive.ts search qualify validate parity
+$N memory-report search qualify validate parity --out research/growth140-vgt-s8m/results/memory-summary-study.json
+```
+
 ## Checks
 
 ```bash

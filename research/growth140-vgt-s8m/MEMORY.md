@@ -64,3 +64,38 @@
 
 Per-phase figures: `results/pilot/memory-summary.json`; every 10-second sample: `results/memory/<job>.jsonl`; the
 driver records: `results/pilot/pilot-driver.json`, `pilot-driver-2.json`, `pilot-restart-checks.json`.
+
+## 4. The study's own jobs (measured, `results/memory-summary-study.json`, every 10-second sample in `results/memory/`)
+
+| Job (unit) | Workers | Runtime | Fresh evaluations | Per worker at ready / steady median / max | Worker ArrayBuffers max | Coordinator RSS max | Job cgroup `memory.peak` | Memory events |
+|---|---:|---:|---:|---|---:|---:|---:|---|
+| P1 parity (`growth140-s8m-parity`) | 4 | 46 s | 14 (+ browser runs) | 389 / 389 / 477 MiB | 28 MiB | 129 MiB | 2.15 GiB | none |
+| search (`growth140-s8m-search`) | 12 | 69 min | 427,894 (≈ 103/s) | 389 / 651 / 710 MiB | 254 MiB | 371 MiB | **8.38 GiB** | none |
+| qualify (`growth140-s8m-qualify`) | 12 | 117 s | 9,830 | 389 / 460 / 637 MiB | 198 MiB | 329 MiB | 6.78 GiB | none |
+| validate (`growth140-s8m-validate`) | 12 | 59 s | 2,694 (full door) | 432 / 482 / 549 MiB | 69 MiB | 682 MiB (loads both doors for coverage) | 8.30 GiB | none |
+
+- **Peak.** The highest aggregate job memory of the whole study was 8.38 GiB, against MemoryHigh 44 GiB and
+  MemoryMax 48 GiB. That is 19% of MemoryHigh, and far below the 16 GiB checkpoint threshold.
+- **No interventions.** No job was throttled (`memory.events high = 0`), stopped or killed, and none used swap.
+- **The archive.** The search archive's LRU evicted 832,942 times and read 3,653 records back from disk, with
+  identical results by construction. The pilot's eviction test C checked that.
+- **The search checkpoint.** It was written at every island generation (≈ 1.8 MB, atomic).
+
+## 5. Containment settings and commands
+
+- **The unit.** `systemd-run --user --unit=<unit> --collect -p MemoryHigh=44G -p MemoryMax=48G -p MemorySwapMax=0 -p
+  KillMode=mixed -p TimeoutStopSec=120 -p StandardOutput=append:<log> -p StandardError=append:<log>
+  --working-directory=<repo> <node> --expose-gc --max-old-space-size=2048 --experimental-transform-types
+  src/growth140-vgt-s8m/main.ts <stage …>`, issued by `npm run growth140-s8m -- launch --unit <unit> -- <stage …>`.
+- **Verified on the live units.**
+  - `systemctl --user show` reported `MemoryHigh=47244640256`, `MemoryMax=51539607552`, `MemorySwapMax=0`,
+    `Restart=no`, `KillMode=mixed`.
+  - `/proc/<pid>/cgroup` showed `…/app.slice/growth140-s8m-<stage>.service`, separate from the tmux scope.
+  - The ancestors `user.slice`, `user-1000.slice`, `user@1000.service` and `app.slice` all have `memory.max = max`.
+- **Swap.** Swap is set to 0 because the host's 8 GB swap was already full with other workloads, so the job can
+  neither thrash nor push them further out.
+- **Fresh start:** `npm run -s growth140-s8m -- launch --unit growth140-s8m-search -- search --job search --workers 12`.
+- **Resume after any stop, SIGTERM or SIGKILL:**
+  `npm run -s growth140-s8m -- launch --unit growth140-s8m-search-r1 -- search --job search --workers 12 --resume`.
+  It was verified to reproduce an uninterrupted run exactly (pilot D: a deliberate stop; E: SIGKILL of the whole
+  unit). Qualification and validation resume by rerunning the same command, also verified.
