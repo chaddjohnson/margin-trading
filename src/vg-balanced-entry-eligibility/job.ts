@@ -150,20 +150,20 @@ export const runJob = async (o: JobOptions, specs: readonly Spec[]): Promise<Eva
   );
   await monitor.sample('job-start');
 
-  if (missing.length > 0) {
-    stage = 'starting workers';
-    await pool.start();
-    await monitor.sample('workers-ready');
-  }
-
   monitor.start();
-  stage = 'evaluating';
 
   const timer = setInterval(writeCheckpoint, resources.checkpointEveryMs);
 
   timer.unref();
 
   try {
+    if (missing.length > 0) {
+      stage = 'starting workers';
+      await pool.start();
+      await monitor.sample('workers-ready');
+    }
+
+    stage = 'evaluating';
     await pool.run<EvalRecord>(
       missing.map((key): Task => ({ k: key, spec: decode<Spec>(key) })),
       (task, record) => {

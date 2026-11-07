@@ -208,11 +208,13 @@ const option = (args: string[], name: string, fallback?: string) => {
 
 // S5: the pilot (pilot- job names only; never read by a study stage): 12 fixed specs on D24 for containment, memory and
 // the interruption/resume tests. `compare-jobs` checks that two archives hold identical records (runtime excluded).
-const pilotSpecs = async () => {
+const pilotSpecs = async (args: string[] = []) => {
   const { OFF, gridSpecs } = await import('./specs.ts');
   const grid = gridSpecs();
 
-  return [OFF, ...[0, 7, 19, 22, 28, 33, 39, 44, 50, 55, 59].map((i) => grid[i]!.spec)];
+  return option(args, 'set') === 'grid'
+    ? [OFF, ...grid.map((g) => g.spec)]
+    : [OFF, ...[0, 7, 19, 22, 28, 33, 39, 44, 50, 55, 59].map((i) => grid[i]!.spec)];
 };
 
 const pilot = async (args: string[]) => {
@@ -230,7 +232,7 @@ const pilot = async (args: string[]) => {
       workers: Number(option(args, 'workers', '2')),
       ...(stopAfter ? { stopAfterFresh: Number(stopAfter) } : {})
     },
-    await pilotSpecs()
+    await pilotSpecs(args)
   );
 
   log(`${name}: ${records.length} records`);
@@ -240,7 +242,7 @@ const compareJobs = async (args: string[]) => {
   const { Store } = await import('../growth140-vgt-s8m/store.ts');
   const { jobDir } = await import('./job.ts');
   const { specId } = await import('./specs.ts');
-  const specs = await pilotSpecs();
+  const specs = await pilotSpecs(args);
   const read = (name: string) => {
     const store = new Store(path.join(jobDir(name), 'archive.sqlite'), {
       binding: {},
@@ -324,7 +326,30 @@ const freeze = async () => {
   log(`protocol frozen: ${sha256File(protocolFile)}`);
 };
 
+// S8: report-only development diagnostics on D24 (after the C24 selection is sealed).
+const diagnostics = async (args: string[]) => {
+  const { diagnose } = await import('./diagnostics.ts');
+
+  await diagnose((args[0] ?? 'D24') as DoorName, Number(option(args, 'workers', '6')));
+};
+
+// S9–S10: the frozen selection (committed before the validation) and the one-time validation on FULL.
+const freezeSelectionCommand = async () => {
+  const { freezeSelection } = await import('./validate.ts');
+
+  await freezeSelection();
+};
+
+const validateCommand = async (args: string[]) => {
+  const { validate } = await import('./validate.ts');
+
+  await validate(Number(option(args, 'workers', '6')));
+};
+
 export const commands: Record<string, (args: string[]) => Promise<void>> = {
+  'freeze-selection': freezeSelectionCommand,
+  validate: validateCommand,
+  diagnostics,
   freeze,
   search,
   'eval-fold': evalFold,

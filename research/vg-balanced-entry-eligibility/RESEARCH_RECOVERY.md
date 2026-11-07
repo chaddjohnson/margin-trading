@@ -2,14 +2,14 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-07T23:19Z (UTC, from `date -u`)
-- **Status:** INCOMPLETE — S0–S4 complete (protocol FROZEN); S5 pilot next
-- **Current stage:** S5 pilot (pilot- jobs on D24: containment, memory, interruption/resume)
+- **Updated:** 2026-11-07T23:39Z (UTC, from `date -u`)
+- **Status:** INCOMPLETE — S0–S9 complete (FROZEN_SELECTION.json sha256 8aba2d5ecdd0f2bdc6d7694bf9c7e54baa42bf03d85e3ebfc1dcc91857214943, read-only: OFF retained); S10 validation next (after the commit)
+- **Current stage:** S10 one-time validation on FULL (`vg-eligibility -- validate --workers 6`)
 - **Authority:** `brief/BRIEF.md` (sha256 `55718a6892d07fb1cc95309eff6c843f82d1619da51385ee7dc2e1ed168a76eb`); `PROTOCOL.md`
   FROZEN 2026-11-07T23:19:00Z, sha256 `9636fc1f2ffef03aa579c68a4be6671345de04e3f837f41a28046470736213b4`
   (`results/protocol-freeze.json` sha256 `0532f2a67254138eb00e3d57957dfe24b8ac48e5edb2802a7aa7e6a07b505075`, read-only;
-  evaluation code digest `03bbcafa02e12b683c9c4cf218e3bd50f7d5f916d0f95aa74c923d303b434bce`). Amendment head: R3
-  (pre-freeze); no E* entries yet.
+  evaluation code digest `03bbcafa02e12b683c9c4cf218e3bd50f7d5f916d0f95aa74c923d303b434bce`). Amendment head: E2
+  (post-freeze implementation of §9–§10; no rule changed).
 - **Complete:** S0, S1 (control reproduced, reconciles to Study 8 trade by trade), S2 (OFF parity exact on D19/D21/D23/D24/FULL,
   rerun after R2/R3 through both paths; runner files byte-identical), S3 (Phase A), S4 (freeze). **Not complete:** S5–S12.
 - **Running processes:** none.
@@ -53,8 +53,13 @@ Both data files end 2026-10-30 (latest common complete session per the Study 8 r
 | S2 OFF parity (new engine vs control) | complete | `vg-eligibility -- build-doors` (pins `results/doors-pins.json` sha256 46136dd4…), `-- parity` (`results/parity/off-parity.json` 7ff27958…: exact on all 5 doors, cash to the cent), `-- runner-parity` (`results/parity/runner-format-parity.json` 5bced89a…: 7 runner files byte-identical, dev and full). Deterministic; rerun-safe. |
 | S3 Phase A audit (development only) | complete | `vg-eligibility -- audit` (unit `vgbe-s3-audit`, D24 only): `results/audit/phase-a.json` sha256 79043903…0871, `phase-a-refusals.csv` e058be7e…79e. 14 refusals (all lot-occupied); availability ≤1/3/5/10/20 sessions 2/3/6/9/12; not invalidated 0/0/0/1/2; first-order selectable: 1 (VGT 2022-05-20, only A20-E5). Rerun-safe (descriptive). |
 | S4 protocol freeze | complete | `vg-eligibility -- freeze` at 2026-11-07T23:19:00Z (record read-only; refuses a second freeze) |
-| S5 pilot (containment, interruption, resume) | not started | `pilot-` job names only |
-| S6–S12 search, folds, confirmation, selection freeze, validation, report | not started | |
+| S5 pilot (containment, interruption, resume) | complete | `results/pilot/PILOT.md`: containment verified; graceful stop, worker SIGKILL and unit SIGTERM each resume to identical records; peak 1.6 GB (2 workers); E1 fix |
+| S6 fold searches | complete | `vg-eligibility -- search C19|C21|C23|C24 --workers 6` (units `vgbe-s6-search-*`, logs `results/logs/search-*.log`), 23:24–23:30Z. Sealed (read-only, `results/seals.jsonl`): `folds/C19/selection.json` 3d2e6a35…, `C21` 882cee53…, `C23` efe5f317…, `C24` 350c5107…. Every fold: 0 qualified → selected OFF. C23/C24: 2 activated (VGT A20 E5, VGT+GDX A20 E5; one ledger), Δ −28,244.67, dd 33,641.44. Do not rerun (sealed; the command refuses). |
+| S7 fold evaluations | complete | `vg-eligibility -- eval-fold C19|C21|C23 --workers 1`: sealed `folds/C*/evaluation.json` (OFF vs OFF, Δ 0). |
+| S8 diagnostics (report-only, D24) | complete | `vg-eligibility -- diagnostics D24 --workers 6` (unit `vgbe-s8-diagnostics`, 23:33–23:36Z): `results/diagnostics/D24/diagnostics.json` + ledgers. Reference Δ −28,244.67 (1 late lot −522.64; 2 displaced +8,761.13; 5 new fresh GDX −18,960.89); D1 stress paired median Δ 0 (39% worse, 9–13% better); invalidation 'none' 45/60 worse. Rerun-safe (archives). |
+| S9 frozen selection | complete | `vg-eligibility -- freeze-selection` 23:38:17Z → `FROZEN_SELECTION.json` (read-only). Commit before S10. |
+| S10 validation (FULL, once) | not started | guard = FROZEN_SELECTION.json sha256; the command refuses a second opening (sealed output) |
+| S11 report, tables, charts, final checks | not started | |
 
 ## Pre-audit specification
 

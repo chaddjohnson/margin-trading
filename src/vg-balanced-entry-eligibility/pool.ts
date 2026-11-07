@@ -121,7 +121,12 @@ export class Pool {
         const error = new Error(`worker ${child.pid} exited (${code ?? signal})`);
 
         if (!this.ws.includes(w)) reject(error);
-        else if (!this.closing) this.fail(error);
+        else if (!this.closing) {
+          // its in-flight tasks are lost (never archived): drop them so the run loop can end and the job fail cleanly
+          w.busy.clear();
+          this.ws.splice(this.ws.indexOf(w), 1);
+          this.fail(error);
+        }
       });
     });
   }
