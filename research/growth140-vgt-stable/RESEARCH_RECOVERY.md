@@ -2,22 +2,19 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-07T14:41Z (UTC, from the clock). **Status: INCOMPLETE.**
-- **Current stage:** S2 — protocol frozen 14:40:30Z and committed (the "protocol freeze" commit on this branch). Next:
-  P0 parity, then the audit.
-- **Authority** (sha256):
-
-  | File | sha256 |
-  |---|---|
-  | `brief/BRIEF.md` (105 lines, read in full) | `c3977d248d89be83c0eea6f033fa10247fdd92bb63bc94f2fe797b4260ac2ad1` |
-  | `PROTOCOL.md` (frozen) | `cf850484c3a82b0323d39070df7a4dd21466c0cc0e77e674c07fe350b9f1a203` |
-  | `AMENDMENTS.md` (no amendments; head = none) | `d76f88356fd3918c4b016e78c8ee548e20216d3cc02bde48de1a26bc0a2a18a5` |
-  | `results/protocol_freeze.json` (code closure `deea867f…ffcdd`, 118 files; engine `e34baa86…`) | `f286b4c8708063fb7eeecccdfde450c0e8adb7af9038dc975a06bc7340eec8c9` |
-  | `results/doors-pins.json` | `a7c47d268800193cce5113b304b90dc1c82bfad0c1abb95282debbf3813b8aa5` |
-
-- **Running:** nothing.
-- **Next command:** `npm run -s growth140-stable -- launch --unit growth140-stable-parity --wait -- parity --workers 4`
-  (P0, sealed `results/parity/parity.json`); then `npm run -s growth140-stable -- audit`.
+- **Updated:** 2026-11-07T14:53Z (UTC). **Status: INCOMPLETE.**
+- **Current stage:** S6 — the chronological chain is being launched: `.cache/growth140-vgt-stable/chain3.sh`
+  (log `.cache/growth140-vgt-stable/chain3.log`): for C19, C21, C23: search → qualify → freeze-fold → git commit →
+  evaluate-fold; then `sequential`; then the C24 search and qualification. Fail-fast; host check before each launch.
+- **Authority:** PROTOCOL.md `cf850484…1a203` (frozen 14:40:30Z, commit `a836cd5`); AMENDMENTS.md head **O1**
+  (operational incident, no protocol or code change); code closure `deea867f…ffcdd`.
+- **Sealed records** (`results/seals.jsonl`): audit `72c4c9c2…`, audit candidates `e7ea45f8…`, P0 parity `082c06f7…`
+  (12 configurations 0 differences; causality 36/36; archive reuse 241/241), audit re-evaluation `2ec6f0d1…`,
+  sensitivity `a87b467e…`, seeds `705b5e49…` (6 rise, 6 breakout).
+- **Running:** see the chain; units `growth140-stable-{search,qualify,evaluate}-<C>`; `systemctl --user list-units 'growth140-stable*'`.
+  A search resumes by relaunching its unit command (`launch --unit growth140-stable-search-<C>-rN --wait -- search --cutoff <C> --workers 14`);
+  the chain can then be restarted from the failed step (sealed steps refuse to rerun; skip them).
+- **Next:** after CHAIN-DONE: read sequential.json and the C24 qualification, run `final-select`, commit, then `final`.
 
 ## Stage table
 
@@ -29,8 +26,8 @@
 | Pilot attempt 2 | complete 14:20–14:32Z | `results/pilot/pilot-driver.json`: B, C, D identical to A; fold stop/resume identical; peak 8.61 GiB, no memory events |
 | Benches, pilot P0 and sensitivity code | complete 14:33–14:39Z | D24 87.6/s at 14 workers; D19 157.8/s; pilot parity 0 differences |
 | Protocol freeze | complete 14:40:30Z | committed |
-| P0 parity | not started | resume: rerun the same command (idempotent archive); sealed output refuses a rerun |
-| Audit, audit re-evaluation, sensitivity, seeds | not started | |
+| P0 parity | complete 14:45Z (rerun after O1) | sealed `082c06f7…`; passed |
+| Audit, audit re-evaluation, sensitivity, seeds | complete 14:41–14:52Z | sealed (see top screen); re-evaluation and sensitivity resumed after O1 |
 | Cutoffs C19, C21, C23 (search, qualify, fold freeze, evaluation) | not started | each search resumes from `.cache/growth140-vgt-stable/jobs/search-<C>/checkpoint.json` by rerunning its command |
 | Sequential, C24 search and qualify, final selection, final comparison | not started | |
 
