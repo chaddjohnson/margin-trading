@@ -1,0 +1,1699 @@
+{
+  "schemaVersion": 1,
+  "kind": "pool-run",
+  "generatedAt": "2026-11-07T22:50:20.299Z",
+  "node": "v24.21.0",
+  "pool": {
+    "id": "S8-VG-F24-3",
+    "name": "Study 8 VG F24 #3",
+    "role": "Study 8 primary-fold candidate (VGT:d1-bd80e32ee4+GDX:d1-7b99d2833d)",
+    "status": "RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 2 (TIER STRONG, ROLE BALANCED); 2025–2026 ONE-TIME T GATES: PASS",
+    "file": "config/research-pools/study8-expanded-regime-d1/S8-VG-F24-3.json",
+    "fileSha256": "27cbadf96b98f5b425e3cc12b2a278d37e320527deb9fff46091383ed506c0da",
+    "configHash": "93e7c0ac956f4369745583e1a9abdc3cd7030b7b7ed4e5ba127898fc942b2fa0"
+  },
+  "books": [
+    {
+      "symbol": "VGT",
+      "phenotype": "s8d1bd80e32ee4",
+      "phenotypeFile": "config/research-phenotypes/study8-expanded-regime-d1/D1/VGT.json",
+      "phenotypeFileSha256": "aeea8d93e5e2e0b145c5016d8c32880c81419bf3bd066721a6a84eadd5d9a4a2",
+      "candidateId": "d1-bd80e32ee4",
+      "parametersSha256": "078c4339081a0c5f2475792aa5ca45adccb6224803cc3db2415efffba4e570a8",
+      "grid": {
+        "targetPercentChange": 235,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 78,
+        "intradayLossBuffer": 44,
+        "pullback": 110,
+        "continuationWindow": 55
+      },
+      "short": "X 23.5% Y 0.9% L 78 stop 7.4% hold 15 buffer 4.4% P 11.0% W 55"
+    },
+    {
+      "symbol": "GDX",
+      "phenotype": "s8d17b99d2833d",
+      "phenotypeFile": "config/research-phenotypes/study8-expanded-regime-d1/D1/GDX.json",
+      "phenotypeFileSha256": "585643cc78ec6658fc43df0b9945c5159b62fc1b821f5fb6ff47cc0ca3430055",
+      "candidateId": "d1-7b99d2833d",
+      "parametersSha256": "95e0dd8090faa3989ecc83e18de5d51da3238876666a3f0154b3ad310e83696a",
+      "grid": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 57,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 243,
+        "intradayLossBuffer": 29,
+        "pullback": 152,
+        "continuationWindow": 12
+      },
+      "short": "X 27.6% Y 0.1% L 243 stop 5.7% hold 12 buffer 2.9% P 15.2% W 12"
+    }
+  ],
+  "frozenCheck": "none (Study 8 research pool; not a frozen benchmark)",
+  "run": {
+    "mode": "fixed",
+    "dataset": "all",
+    "end": "2026-10-30",
+    "costBpsPerSide": 5,
+    "commission": 0,
+    "policy": "shadow",
+    "fundedSlots": 1,
+    "notionalPerTrade": 100000,
+    "compounding": false,
+    "annualRate": 0.11,
+    "interestMethod": "simple, 365-day year",
+    "stopFill": "stop",
+    "stopSlippageBps": 0
+  },
+  "data": {
+    "partition": "all",
+    "partitionsFile": "data/partitions.json",
+    "partitionsSha256": "43893f3d3277d6804775a82e8975644fae6ffcdff30574b9ffc000212c0fefa6",
+    "first": "2016-01-04",
+    "last": "2026-10-30",
+    "sessions": 2723,
+    "warmupSessions": 0,
+    "firstEligible": "2017-06-15",
+    "timeZone": "America/New_York (NYSE sessions; regular minutes)",
+    "members": {
+      "VGT": {
+        "file": "data/VGT/data.csv",
+        "sha256": "2ee06310f2fa8926220fd9629c093ba77fe5d35fd2515da7f7c54caa50b5412e",
+        "first": "2016-01-04",
+        "last": "2026-10-30",
+        "sessions": 2723,
+        "frozenPin": null,
+        "matchesFrozen": false,
+        "splitAdjustments": [
+          {
+            "symbol": "VGT",
+            "effectiveDate": "2026-04-21",
+            "ratio": 8
+          }
+        ]
+      },
+      "GDX": {
+        "file": "data/GDX/data.csv",
+        "sha256": "77dba9b21c4b684996283e7b8f17917696139f890441b1ca900d664b59ea5049",
+        "first": "2016-01-04",
+        "last": "2026-10-30",
+        "sessions": 2723,
+        "frozenPin": null,
+        "matchesFrozen": false,
+        "splitAdjustments": []
+      }
+    },
+    "distributions": {
+      "file": "config/market-events/distributions.csv",
+      "sha256": "30feaa99e47404696e162e25df72833de49cedb28481ff059750e024c50e41a6",
+      "coverage": {
+        "VGT": "2026-10-30",
+        "VOOG": "2026-10-30"
+      }
+    },
+    "frozenAll": false,
+    "frozenAllNote": "NOT the frozen canonical all (a different file hash, end date or partition); the regression anchors do not apply"
+  },
+  "figures": {
+    "virtualTrades": 62,
+    "decisions": 62,
+    "granted": 48,
+    "refused": 14,
+    "refusalReasons": {
+      "pool occupied by the GDX lot": 7,
+      "pool occupied by the VGT lot": 7
+    },
+    "sameMinuteDecisions": 0,
+    "fundedLots": 48,
+    "closedLots": 47,
+    "openLots": 1,
+    "openPosition": [
+      {
+        "symbol": "GDX",
+        "entryUtc": "2026-10-23T13:33:00.000Z",
+        "entryPrice": 81.45070499999999,
+        "shares": 1227.7364572841943,
+        "markNet": -5564.75541207104
+      }
+    ],
+    "realized": 340476.6853880574,
+    "unrealized": -5564.75541207104,
+    "net": 334911.92997598636,
+    "interest": 40835.61643835618,
+    "frictionDollars": 4940.6221819519105,
+    "costBpsPerSide": 5,
+    "notionalPerTrade": 100000,
+    "notionalViolations": 0,
+    "overlappingLots": 0,
+    "maxSimultaneousFundedLots": 1,
+    "sessions": 2358,
+    "heldSessions": 938,
+    "timeInMarket": 0.3977947413061917,
+    "borrowingDollarDays": 135500000,
+    "netPerMillionBorrowingDollarDays": 2471.6747599703795,
+    "minuteDrawdown": 21303.61030775204,
+    "minuteDrawdownPeakUtc": "2026-04-01T15:44:00.000Z",
+    "minuteDrawdownTroughUtc": "2026-07-17T13:34:00.000Z",
+    "dailyDrawdown": 18800.569998312567,
+    "initialEquity": null,
+    "endEquity": null,
+    "dailyPercentDrawdown": null,
+    "dailyPercentPeakUtc": "",
+    "dailyPercentTroughUtc": "",
+    "minutePercentDrawdown": null,
+    "cumulativeDividends": 0,
+    "dividends": "none (fixed pool: price-only lots)",
+    "minuteDrawdownPercentOfNotional": 0.21303610307752038,
+    "dailyDrawdownPercentOfNotional": 0.18800569998312566,
+    "worstLot": -9113.942453833773,
+    "bySymbol": {
+      "VGT": {
+        "lots": 6,
+        "net": 94494.43520440836,
+        "wins": 5,
+        "lotDays": 535,
+        "refusals": 7
+      },
+      "GDX": {
+        "lots": 42,
+        "net": 240417.49477157797,
+        "wins": 27,
+        "lotDays": 820,
+        "refusals": 7
+      }
+    }
+  },
+  "summary": {
+    "lots": 48,
+    "virtualTrades": 62,
+    "net": 334911.92997598636,
+    "interest": 40835.61643835618,
+    "openAtEnd": 1,
+    "newLots": 0,
+    "newLotDays": 0,
+    "worstLot": -9113.942453833773,
+    "borrowingDollarDays": 135500000,
+    "minuteDrawdown": 21303.61030775204,
+    "minuteDrawdownPeak": 1775058240,
+    "minuteDrawdownTrough": 1784295240,
+    "dailyDrawdown": 18800.569998312567,
+    "endEquity": null,
+    "dailyPercent": null,
+    "dailyPercentPeak": null,
+    "dailyPercentTrough": null,
+    "minutePercent": null,
+    "segments": [
+      {
+        "segment": "development",
+        "firstDate": "2016-01-05",
+        "lastDate": "2023-12-29",
+        "sessions": 2011,
+        "startEquity": 0,
+        "endEquity": 231598.59141764443,
+        "equityChange": 231598.59141764443,
+        "equityReturn": null,
+        "strategyPnl": 231598.59141764443,
+        "interest": 29021.917808219176,
+        "dividends": 0,
+        "lotsEntered": 34,
+        "lotsExited": 34,
+        "maxDrawdown": 15683.830473577487,
+        "maxDrawdownPercent": 0.07348259851289969,
+        "drawdownPeak": "2023-01-25",
+        "drawdownTrough": "2023-02-24",
+        "maxPercentDrawdown": 5.818640134884543,
+        "maxPercentDrawdownDollars": 1557.1537352348196,
+        "percentDrawdownPeak": "2017-06-15",
+        "percentDrawdownTrough": "2017-06-20"
+      },
+      {
+        "segment": "holdout",
+        "firstDate": "2024-01-02",
+        "lastDate": "2025-10-16",
+        "sessions": 450,
+        "startEquity": 231598.59141764443,
+        "endEquity": 308830.2369670607,
+        "equityChange": 77231.64554941628,
+        "equityReturn": 0.33347200031170976,
+        "strategyPnl": 77231.64554941628,
+        "interest": 7383.561643835619,
+        "dividends": 0,
+        "lotsEntered": 4,
+        "lotsExited": 3,
+        "maxDrawdown": 7822.94789387405,
+        "maxDrawdownPercent": 0.029712558521772896,
+        "drawdownPeak": "2024-04-11",
+        "drawdownTrough": "2025-04-08",
+        "maxPercentDrawdown": 0.029712558521772896,
+        "maxPercentDrawdownDollars": 7822.94789387405,
+        "percentDrawdownPeak": "2024-04-11",
+        "percentDrawdownTrough": "2025-04-08"
+      },
+      {
+        "segment": "final",
+        "firstDate": "2025-10-17",
+        "lastDate": "2026-10-30",
+        "sessions": 261,
+        "startEquity": 308830.2369670607,
+        "endEquity": 334911.92997598636,
+        "equityChange": 26081.69300892565,
+        "equityReturn": 0.0844531716358703,
+        "strategyPnl": 26081.69300892565,
+        "interest": 4430.136986301382,
+        "dividends": 0,
+        "lotsEntered": 10,
+        "lotsExited": 10,
+        "maxDrawdown": 18800.569998312567,
+        "maxDrawdownPercent": 0.058038612665179797,
+        "drawdownPeak": "2026-04-01",
+        "drawdownTrough": "2026-06-10",
+        "maxPercentDrawdown": 0.058038612665179797,
+        "maxPercentDrawdownDollars": 18800.569998312567,
+        "percentDrawdownPeak": "2026-04-01",
+        "percentDrawdownTrough": "2026-06-10"
+      },
+      {
+        "segment": "full",
+        "firstDate": "2016-01-05",
+        "lastDate": "2026-10-30",
+        "sessions": 2722,
+        "startEquity": 0,
+        "endEquity": 334911.92997598636,
+        "equityChange": 334911.92997598636,
+        "equityReturn": null,
+        "strategyPnl": 334911.92997598636,
+        "interest": 40835.61643835618,
+        "dividends": 0,
+        "lotsEntered": 48,
+        "lotsExited": 47,
+        "maxDrawdown": 18800.569998312567,
+        "maxDrawdownPercent": 0.058038612665179797,
+        "drawdownPeak": "2026-04-01",
+        "drawdownTrough": "2026-06-10",
+        "maxPercentDrawdown": 5.818640134884543,
+        "maxPercentDrawdownDollars": 1557.1537352348196,
+        "percentDrawdownPeak": "2017-06-15",
+        "percentDrawdownTrough": "2017-06-20"
+      }
+    ]
+  },
+  "anchors": {
+    "applicable": false,
+    "reason": "anchors apply only to the frozen all at 5 bps",
+    "checks": []
+  },
+  "tradeLedger": {
+    "definitions": {
+      "trades": "every lot the shared allocator funded (refused shadow signals are in signals.csv), in entry order",
+      "fills": "the engine's raw execution prices; cost-adjusted prices include the per-side friction",
+      "grossBeforeCosts": "shares × (exit fill − entry fill); for an open lot, shares × (last close − entry fill)",
+      "friction": "shares × the per-side cost on each fill (no exit friction on an open lot)",
+      "interest": "principal × annual rate × interestDays ÷ 365; interestDays = whole days from the entry session date to the exit (or last) session date",
+      "net": "the engine's net: gross before costs − friction − interest",
+      "maximumAdverseExcursion": "the engine's worst minute mark while held: shares × last price − principal − accrued interest",
+      "minuteDrawdown": "the engine's largest fall of the marked P&L from its running peak, sampled each regular minute",
+      "dailyDrawdown": "the same, sampled at session closes",
+      "drawdownPercent": "of the notional per trade"
+    },
+    "bySymbol": {
+      "GDX": {
+        "trades": 42,
+        "profitable": 27,
+        "losing": 14,
+        "flat": 0,
+        "grossBeforeCosts": 269415.10904095054,
+        "interest": 24712.328767123283,
+        "friction": 4285.285502249295,
+        "net": 240417.49477157797,
+        "open": 1
+      },
+      "VGT": {
+        "trades": 6,
+        "profitable": 5,
+        "losing": 1,
+        "flat": 0,
+        "grossBeforeCosts": 111273.05955534385,
+        "interest": 16123.287671232878,
+        "friction": 655.3366797026146,
+        "net": 94494.43520440836,
+        "open": 0
+      }
+    },
+    "totals": {
+      "fundedTrades": 48,
+      "realizedTrades": 47,
+      "openTrades": 1,
+      "profitable": 32,
+      "losing": 15,
+      "grossBeforeCosts": 380688.1685962944,
+      "interest": 40835.61643835618,
+      "friction": 4940.6221819519105,
+      "netRealized": 340476.6853880574,
+      "unrealizedOpen": -5564.75541207104,
+      "totalNet": 334911.92997598636,
+      "largestWin": 46506.92242948732,
+      "largestLoss": -9113.942453833773,
+      "worstAdverseExcursion": -11770.47630733574
+    },
+    "openPositions": [
+      {
+        "symbol": "GDX",
+        "entryNewYork": "2026-10-23 09:33",
+        "entryFillPrice": 81.41,
+        "shares": 1227.7364572841943,
+        "markPrice": 77.09,
+        "accruedInterest": 210.95890410958904,
+        "unrealizedNet": -5564.75541207104,
+        "markedAt": "2026-10-30 close"
+      }
+    ],
+    "identity": {
+      "maximumResidual": 1.6370904631912708e-11,
+      "pass": true
+    },
+    "reconciliation": {
+      "checks": [
+        {
+          "name": "ledger total net = run summary net (exact)",
+          "expected": 334911.92997598636,
+          "actual": 334911.92997598636,
+          "pass": true
+        },
+        {
+          "name": "ledger interest = run summary interest (exact)",
+          "expected": 40835.61643835618,
+          "actual": 40835.61643835618,
+          "pass": true
+        },
+        {
+          "name": "funded trades = run summary lots",
+          "expected": 48,
+          "actual": 48,
+          "pass": true
+        },
+        {
+          "name": "realized + unrealized = total net (±$0.000001)",
+          "expected": 334911.92997598636,
+          "actual": 334911.92997598636,
+          "pass": true
+        },
+        {
+          "name": "gross − friction − interest = total net (±$0.000001)",
+          "expected": 334911.92997598636,
+          "actual": 334911.92997598636,
+          "pass": true
+        },
+        {
+          "name": "per-ETF nets sum to the total net (±$0.000001)",
+          "expected": 334911.92997598636,
+          "actual": 334911.92997598636,
+          "pass": true
+        },
+        {
+          "name": "every trade: gross − friction − interest = engine net (±$0.000001)",
+          "expected": 0,
+          "actual": 1.6370904631912708e-11,
+          "pass": true
+        }
+      ],
+      "pass": true
+    }
+  },
+  "outDir": "evaluations/study8-runs/20261107T225014Z-run-s8-vg-balanced",
+  "years": [
+    {
+      "period": "2016",
+      "first": "2016-01-05",
+      "last": "2016-12-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017",
+      "first": "2017-01-03",
+      "last": "2017-12-29",
+      "strategyChange": 8416.599212712958,
+      "equityChange": 8416.599212712958,
+      "lotsEntered": 2,
+      "interest": 2652.054794520548
+    },
+    {
+      "period": "2018",
+      "first": "2018-01-02",
+      "last": "2018-12-31",
+      "strategyChange": 10312.689698917362,
+      "equityChange": 10312.689698917362,
+      "lotsEntered": 3,
+      "interest": 2320.5479452054788
+    },
+    {
+      "period": "2019",
+      "first": "2019-01-02",
+      "last": "2019-12-31",
+      "strategyChange": 16958.33697336159,
+      "equityChange": 16958.33697336159,
+      "lotsEntered": 0,
+      "interest": 4008.2191780821913
+    },
+    {
+      "period": "2020",
+      "first": "2020-01-02",
+      "last": "2020-12-31",
+      "strategyChange": 110085.82256119447,
+      "equityChange": 110085.82256119447,
+      "lotsEntered": 6,
+      "interest": 2471.232876712327
+    },
+    {
+      "period": "2021",
+      "first": "2021-01-04",
+      "last": "2021-12-31",
+      "strategyChange": 22616.30509932706,
+      "equityChange": 22616.30509932706,
+      "lotsEntered": 7,
+      "interest": 6268.493150684933
+    },
+    {
+      "period": "2022",
+      "first": "2022-01-03",
+      "last": "2022-12-30",
+      "strategyChange": 30086.806986895244,
+      "equityChange": 30086.806986895244,
+      "lotsEntered": 12,
+      "interest": 7443.835616438355
+    },
+    {
+      "period": "2023",
+      "first": "2023-01-03",
+      "last": "2023-12-29",
+      "strategyChange": 33122.030885235756,
+      "equityChange": 33122.030885235756,
+      "lotsEntered": 4,
+      "interest": 3857.534246575342
+    },
+    {
+      "period": "2024",
+      "first": "2024-01-02",
+      "last": "2024-12-31",
+      "strategyChange": 28624.542274090083,
+      "equityChange": 28624.542274090083,
+      "lotsEntered": 2,
+      "interest": 1838.3561643835637
+    },
+    {
+      "period": "2025",
+      "first": "2025-01-02",
+      "last": "2025-12-31",
+      "strategyChange": 47239.33557771606,
+      "equityChange": 47239.33557771606,
+      "lotsEntered": 2,
+      "interest": 6208.219178082192
+    },
+    {
+      "period": "2026",
+      "first": "2026-01-02",
+      "last": "2026-10-30",
+      "strategyChange": 27449.460706535785,
+      "equityChange": 27449.460706535785,
+      "lotsEntered": 10,
+      "interest": 3767.1232876712456
+    }
+  ],
+  "months": [
+    {
+      "period": "2016-01",
+      "first": "2016-01-05",
+      "last": "2016-01-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-02",
+      "first": "2016-02-01",
+      "last": "2016-02-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-03",
+      "first": "2016-03-01",
+      "last": "2016-03-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-04",
+      "first": "2016-04-01",
+      "last": "2016-04-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-05",
+      "first": "2016-05-02",
+      "last": "2016-05-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-06",
+      "first": "2016-06-01",
+      "last": "2016-06-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-07",
+      "first": "2016-07-01",
+      "last": "2016-07-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-08",
+      "first": "2016-08-01",
+      "last": "2016-08-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-09",
+      "first": "2016-09-01",
+      "last": "2016-09-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-10",
+      "first": "2016-10-03",
+      "last": "2016-10-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-11",
+      "first": "2016-11-01",
+      "last": "2016-11-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2016-12",
+      "first": "2016-12-01",
+      "last": "2016-12-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017-01",
+      "first": "2017-01-03",
+      "last": "2017-01-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017-02",
+      "first": "2017-02-01",
+      "last": "2017-02-28",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017-03",
+      "first": "2017-03-01",
+      "last": "2017-03-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017-04",
+      "first": "2017-04-03",
+      "last": "2017-04-28",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017-05",
+      "first": "2017-05-01",
+      "last": "2017-05-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017-06",
+      "first": "2017-06-01",
+      "last": "2017-06-30",
+      "strategyChange": -1050.824860236666,
+      "equityChange": -1050.824860236666,
+      "lotsEntered": 1,
+      "interest": 452.05479452054794
+    },
+    {
+      "period": "2017-07",
+      "first": "2017-07-03",
+      "last": "2017-07-31",
+      "strategyChange": 5034.643123802281,
+      "equityChange": 5034.643123802281,
+      "lotsEntered": 1,
+      "interest": 843.8356164383562
+    },
+    {
+      "period": "2017-08",
+      "first": "2017-08-01",
+      "last": "2017-08-31",
+      "strategyChange": 7680.537784099675,
+      "equityChange": 7680.537784099675,
+      "lotsEntered": 0,
+      "interest": 934.2465753424656
+    },
+    {
+      "period": "2017-09",
+      "first": "2017-09-01",
+      "last": "2017-09-29",
+      "strategyChange": -3247.7568349523317,
+      "equityChange": -3247.7568349523317,
+      "lotsEntered": 0,
+      "interest": 421.91780821917837
+    },
+    {
+      "period": "2017-10",
+      "first": "2017-10-02",
+      "last": "2017-10-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017-11",
+      "first": "2017-11-01",
+      "last": "2017-11-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2017-12",
+      "first": "2017-12-01",
+      "last": "2017-12-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2018-01",
+      "first": "2018-01-02",
+      "last": "2018-01-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2018-02",
+      "first": "2018-02-01",
+      "last": "2018-02-28",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2018-03",
+      "first": "2018-03-01",
+      "last": "2018-03-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2018-04",
+      "first": "2018-04-02",
+      "last": "2018-04-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2018-05",
+      "first": "2018-05-01",
+      "last": "2018-05-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2018-06",
+      "first": "2018-06-01",
+      "last": "2018-06-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2018-07",
+      "first": "2018-07-02",
+      "last": "2018-07-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2018-08",
+      "first": "2018-08-01",
+      "last": "2018-08-31",
+      "strategyChange": -316.71652578597696,
+      "equityChange": -316.71652578597696,
+      "lotsEntered": 1,
+      "interest": 482.19178082191775
+    },
+    {
+      "period": "2018-09",
+      "first": "2018-09-04",
+      "last": "2018-09-28",
+      "strategyChange": 717.0344718003225,
+      "equityChange": 717.0344718003225,
+      "lotsEntered": 1,
+      "interest": 813.6986301369866
+    },
+    {
+      "period": "2018-10",
+      "first": "2018-10-01",
+      "last": "2018-10-31",
+      "strategyChange": 3718.7446786725523,
+      "equityChange": 3718.7446786725523,
+      "lotsEntered": 0,
+      "interest": 813.6986301369857
+    },
+    {
+      "period": "2018-11",
+      "first": "2018-11-01",
+      "last": "2018-11-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2018-12",
+      "first": "2018-12-03",
+      "last": "2018-12-31",
+      "strategyChange": 6193.627074230464,
+      "equityChange": 6193.627074230464,
+      "lotsEntered": 1,
+      "interest": 210.95890410958873
+    },
+    {
+      "period": "2019-01",
+      "first": "2019-01-02",
+      "last": "2019-01-31",
+      "strategyChange": 7567.660342425741,
+      "equityChange": 7567.660342425741,
+      "lotsEntered": 0,
+      "interest": 934.2465753424658
+    },
+    {
+      "period": "2019-02",
+      "first": "2019-02-01",
+      "last": "2019-02-28",
+      "strategyChange": 7575.156980301392,
+      "equityChange": 7575.156980301392,
+      "lotsEntered": 0,
+      "interest": 843.8356164383567
+    },
+    {
+      "period": "2019-03",
+      "first": "2019-03-01",
+      "last": "2019-03-29",
+      "strategyChange": 3762.8513501616108,
+      "equityChange": 3762.8513501616108,
+      "lotsEntered": 0,
+      "interest": 873.9726027397255
+    },
+    {
+      "period": "2019-04",
+      "first": "2019-04-01",
+      "last": "2019-04-30",
+      "strategyChange": 7186.731997926901,
+      "equityChange": 7186.731997926901,
+      "lotsEntered": 0,
+      "interest": 964.3835616438355
+    },
+    {
+      "period": "2019-05",
+      "first": "2019-05-01",
+      "last": "2019-05-31",
+      "strategyChange": -9134.063697454054,
+      "equityChange": -9134.063697454054,
+      "lotsEntered": 0,
+      "interest": 391.78082191780777
+    },
+    {
+      "period": "2019-06",
+      "first": "2019-06-03",
+      "last": "2019-06-28",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2019-07",
+      "first": "2019-07-01",
+      "last": "2019-07-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2019-08",
+      "first": "2019-08-01",
+      "last": "2019-08-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2019-09",
+      "first": "2019-09-03",
+      "last": "2019-09-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2019-10",
+      "first": "2019-10-01",
+      "last": "2019-10-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2019-11",
+      "first": "2019-11-01",
+      "last": "2019-11-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2019-12",
+      "first": "2019-12-02",
+      "last": "2019-12-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2020-01",
+      "first": "2020-01-02",
+      "last": "2020-01-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2020-02",
+      "first": "2020-02-03",
+      "last": "2020-02-28",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2020-03",
+      "first": "2020-03-02",
+      "last": "2020-03-31",
+      "strategyChange": 65693.31447327284,
+      "equityChange": 65693.31447327284,
+      "lotsEntered": 4,
+      "interest": 180.82191780821813
+    },
+    {
+      "period": "2020-04",
+      "first": "2020-04-01",
+      "last": "2020-04-30",
+      "strategyChange": 27570.975593891897,
+      "equityChange": 27570.975593891897,
+      "lotsEntered": 1,
+      "interest": 421.91780821917746
+    },
+    {
+      "period": "2020-05",
+      "first": "2020-05-01",
+      "last": "2020-05-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2020-06",
+      "first": "2020-06-01",
+      "last": "2020-06-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2020-07",
+      "first": "2020-07-01",
+      "last": "2020-07-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2020-08",
+      "first": "2020-08-03",
+      "last": "2020-08-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2020-09",
+      "first": "2020-09-01",
+      "last": "2020-09-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2020-10",
+      "first": "2020-10-01",
+      "last": "2020-10-30",
+      "strategyChange": 10.411670612185844,
+      "equityChange": 10.411670612185844,
+      "lotsEntered": 1,
+      "interest": 0
+    },
+    {
+      "period": "2020-11",
+      "first": "2020-11-02",
+      "last": "2020-11-30",
+      "strategyChange": 11552.377564673588,
+      "equityChange": 11552.377564673588,
+      "lotsEntered": 0,
+      "interest": 934.2465753424658
+    },
+    {
+      "period": "2020-12",
+      "first": "2020-12-01",
+      "last": "2020-12-31",
+      "strategyChange": 5258.743258743954,
+      "equityChange": 5258.743258743954,
+      "lotsEntered": 0,
+      "interest": 934.2465753424658
+    },
+    {
+      "period": "2021-01",
+      "first": "2021-01-04",
+      "last": "2021-01-29",
+      "strategyChange": -1709.321719038504,
+      "equityChange": -1709.321719038504,
+      "lotsEntered": 0,
+      "interest": 873.9726027397264
+    },
+    {
+      "period": "2021-02",
+      "first": "2021-02-01",
+      "last": "2021-02-26",
+      "strategyChange": 229.7966878566076,
+      "equityChange": 229.7966878566076,
+      "lotsEntered": 0,
+      "interest": 753.4246575342459
+    },
+    {
+      "period": "2021-03",
+      "first": "2021-03-01",
+      "last": "2021-03-31",
+      "strategyChange": 3781.6792430728674,
+      "equityChange": 3781.6792430728674,
+      "lotsEntered": 2,
+      "interest": 843.8356164383567
+    },
+    {
+      "period": "2021-04",
+      "first": "2021-04-01",
+      "last": "2021-04-30",
+      "strategyChange": 6006.995140927116,
+      "equityChange": 6006.995140927116,
+      "lotsEntered": 0,
+      "interest": 843.8356164383549
+    },
+    {
+      "period": "2021-05",
+      "first": "2021-05-03",
+      "last": "2021-05-28",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2021-06",
+      "first": "2021-06-01",
+      "last": "2021-06-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2021-07",
+      "first": "2021-07-01",
+      "last": "2021-07-30",
+      "strategyChange": 5114.578261628427,
+      "equityChange": 5114.578261628427,
+      "lotsEntered": 1,
+      "interest": 331.5068493150684
+    },
+    {
+      "period": "2021-08",
+      "first": "2021-08-02",
+      "last": "2021-08-31",
+      "strategyChange": -2190.3940818547853,
+      "equityChange": -2190.3940818547853,
+      "lotsEntered": 1,
+      "interest": 602.7397260273974
+    },
+    {
+      "period": "2021-09",
+      "first": "2021-09-01",
+      "last": "2021-09-30",
+      "strategyChange": -6023.640594462486,
+      "equityChange": -6023.640594462486,
+      "lotsEntered": 1,
+      "interest": 693.1506849315065
+    },
+    {
+      "period": "2021-10",
+      "first": "2021-10-01",
+      "last": "2021-10-29",
+      "strategyChange": 7457.6449096007855,
+      "equityChange": 7457.6449096007855,
+      "lotsEntered": 1,
+      "interest": 843.8356164383586
+    },
+    {
+      "period": "2021-11",
+      "first": "2021-11-01",
+      "last": "2021-11-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2021-12",
+      "first": "2021-12-01",
+      "last": "2021-12-31",
+      "strategyChange": 9948.96725159703,
+      "equityChange": 9948.96725159703,
+      "lotsEntered": 1,
+      "interest": 482.19178082191866
+    },
+    {
+      "period": "2022-01",
+      "first": "2022-01-03",
+      "last": "2022-01-31",
+      "strategyChange": -2800.1818291583622,
+      "equityChange": -2800.1818291583622,
+      "lotsEntered": 1,
+      "interest": 271.232876712329
+    },
+    {
+      "period": "2022-02",
+      "first": "2022-02-01",
+      "last": "2022-02-28",
+      "strategyChange": 11042.533671310986,
+      "equityChange": 11042.533671310986,
+      "lotsEntered": 0,
+      "interest": 753.424657534244
+    },
+    {
+      "period": "2022-03",
+      "first": "2022-03-01",
+      "last": "2022-03-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2022-04",
+      "first": "2022-04-01",
+      "last": "2022-04-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2022-05",
+      "first": "2022-05-02",
+      "last": "2022-05-31",
+      "strategyChange": 4789.998351754795,
+      "equityChange": 4789.998351754795,
+      "lotsEntered": 1,
+      "interest": 572.6027397260259
+    },
+    {
+      "period": "2022-06",
+      "first": "2022-06-01",
+      "last": "2022-06-30",
+      "strategyChange": -1054.5853391473065,
+      "equityChange": -1054.5853391473065,
+      "lotsEntered": 1,
+      "interest": 783.5616438356155
+    },
+    {
+      "period": "2022-07",
+      "first": "2022-07-01",
+      "last": "2022-07-29",
+      "strategyChange": 12310.596341894387,
+      "equityChange": 12310.596341894387,
+      "lotsEntered": 1,
+      "interest": 843.8356164383549
+    },
+    {
+      "period": "2022-08",
+      "first": "2022-08-01",
+      "last": "2022-08-31",
+      "strategyChange": -4102.085696291382,
+      "equityChange": -4102.085696291382,
+      "lotsEntered": 1,
+      "interest": 843.8356164383586
+    },
+    {
+      "period": "2022-09",
+      "first": "2022-09-01",
+      "last": "2022-09-30",
+      "strategyChange": 1088.2497548787796,
+      "equityChange": 1088.2497548787796,
+      "lotsEntered": 2,
+      "interest": 843.8356164383586
+    },
+    {
+      "period": "2022-10",
+      "first": "2022-10-03",
+      "last": "2022-10-31",
+      "strategyChange": 202.28114544478012,
+      "equityChange": 202.28114544478012,
+      "lotsEntered": 2,
+      "interest": 813.6986301369834
+    },
+    {
+      "period": "2022-11",
+      "first": "2022-11-01",
+      "last": "2022-11-30",
+      "strategyChange": 17769.09956470481,
+      "equityChange": 17769.09956470481,
+      "lotsEntered": 1,
+      "interest": 873.9726027397301
+    },
+    {
+      "period": "2022-12",
+      "first": "2022-12-01",
+      "last": "2022-12-30",
+      "strategyChange": -9159.098978496244,
+      "equityChange": -9159.098978496244,
+      "lotsEntered": 2,
+      "interest": 843.8356164383549
+    },
+    {
+      "period": "2023-01",
+      "first": "2023-01-03",
+      "last": "2023-01-31",
+      "strategyChange": 10514.518625487864,
+      "equityChange": 10514.518625487864,
+      "lotsEntered": 0,
+      "interest": 964.3835616438373
+    },
+    {
+      "period": "2023-02",
+      "first": "2023-02-01",
+      "last": "2023-02-28",
+      "strategyChange": -9483.497402515728,
+      "equityChange": -9483.497402515728,
+      "lotsEntered": 2,
+      "interest": 693.1506849315047
+    },
+    {
+      "period": "2023-03",
+      "first": "2023-03-01",
+      "last": "2023-03-31",
+      "strategyChange": 19350.58692041374,
+      "equityChange": 19350.58692041374,
+      "lotsEntered": 1,
+      "interest": 904.1095890410979
+    },
+    {
+      "period": "2023-04",
+      "first": "2023-04-03",
+      "last": "2023-04-28",
+      "strategyChange": 5122.610953279771,
+      "equityChange": 5122.610953279771,
+      "lotsEntered": 0,
+      "interest": 572.6027397260259
+    },
+    {
+      "period": "2023-05",
+      "first": "2023-05-01",
+      "last": "2023-05-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2023-06",
+      "first": "2023-06-01",
+      "last": "2023-06-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2023-07",
+      "first": "2023-07-03",
+      "last": "2023-07-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2023-08",
+      "first": "2023-08-01",
+      "last": "2023-08-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2023-09",
+      "first": "2023-09-01",
+      "last": "2023-09-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2023-10",
+      "first": "2023-10-02",
+      "last": "2023-10-31",
+      "strategyChange": 7617.811788570107,
+      "equityChange": 7617.811788570107,
+      "lotsEntered": 1,
+      "interest": 723.2876712328762
+    },
+    {
+      "period": "2023-11",
+      "first": "2023-11-01",
+      "last": "2023-11-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2023-12",
+      "first": "2023-12-01",
+      "last": "2023-12-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2024-01",
+      "first": "2024-01-02",
+      "last": "2024-01-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2024-02",
+      "first": "2024-02-01",
+      "last": "2024-02-29",
+      "strategyChange": 1667.058854811592,
+      "equityChange": 1667.058854811592,
+      "lotsEntered": 2,
+      "interest": 452.0547945205508
+    },
+    {
+      "period": "2024-03",
+      "first": "2024-03-01",
+      "last": "2024-03-28",
+      "strategyChange": 19471.84052532012,
+      "equityChange": 19471.84052532012,
+      "lotsEntered": 0,
+      "interest": 843.8356164383549
+    },
+    {
+      "period": "2024-04",
+      "first": "2024-04-01",
+      "last": "2024-04-30",
+      "strategyChange": 7485.642893958371,
+      "equityChange": 7485.642893958371,
+      "lotsEntered": 0,
+      "interest": 542.465753424658
+    },
+    {
+      "period": "2024-05",
+      "first": "2024-05-01",
+      "last": "2024-05-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2024-06",
+      "first": "2024-06-03",
+      "last": "2024-06-28",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2024-07",
+      "first": "2024-07-01",
+      "last": "2024-07-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2024-08",
+      "first": "2024-08-01",
+      "last": "2024-08-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2024-09",
+      "first": "2024-09-03",
+      "last": "2024-09-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2024-10",
+      "first": "2024-10-01",
+      "last": "2024-10-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2024-11",
+      "first": "2024-11-01",
+      "last": "2024-11-29",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2024-12",
+      "first": "2024-12-02",
+      "last": "2024-12-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2025-01",
+      "first": "2025-01-02",
+      "last": "2025-01-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2025-02",
+      "first": "2025-02-03",
+      "last": "2025-02-28",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2025-03",
+      "first": "2025-03-03",
+      "last": "2025-03-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2025-04",
+      "first": "2025-04-01",
+      "last": "2025-04-30",
+      "strategyChange": 12671.760718346457,
+      "equityChange": 12671.760718346457,
+      "lotsEntered": 2,
+      "interest": 452.05479452054715
+    },
+    {
+      "period": "2025-05",
+      "first": "2025-05-01",
+      "last": "2025-05-30",
+      "strategyChange": 10720.289790399373,
+      "equityChange": 10720.289790399373,
+      "lotsEntered": 0,
+      "interest": 904.1095890410943
+    },
+    {
+      "period": "2025-06",
+      "first": "2025-06-02",
+      "last": "2025-06-30",
+      "strategyChange": 10688.110569491633,
+      "equityChange": 10688.110569491633,
+      "lotsEntered": 0,
+      "interest": 934.2465753424658
+    },
+    {
+      "period": "2025-07",
+      "first": "2025-07-01",
+      "last": "2025-07-31",
+      "strategyChange": 4618.589319369174,
+      "equityChange": 4618.589319369174,
+      "lotsEntered": 0,
+      "interest": 934.2465753424694
+    },
+    {
+      "period": "2025-08",
+      "first": "2025-08-01",
+      "last": "2025-08-29",
+      "strategyChange": 433.05754533503205,
+      "equityChange": 433.05754533503205,
+      "lotsEntered": 0,
+      "interest": 873.9726027397264
+    },
+    {
+      "period": "2025-09",
+      "first": "2025-09-02",
+      "last": "2025-09-30",
+      "strategyChange": 9197.775839637965,
+      "equityChange": 9197.775839637965,
+      "lotsEntered": 0,
+      "interest": 964.38356164383
+    },
+    {
+      "period": "2025-10",
+      "first": "2025-10-01",
+      "last": "2025-10-31",
+      "strategyChange": 8578.482221114624,
+      "equityChange": 8578.482221114624,
+      "lotsEntered": 0,
+      "interest": 934.2465753424694
+    },
+    {
+      "period": "2025-11",
+      "first": "2025-11-03",
+      "last": "2025-11-28",
+      "strategyChange": -9668.730425978196,
+      "equityChange": -9668.730425978196,
+      "lotsEntered": 0,
+      "interest": 210.95890410958964
+    },
+    {
+      "period": "2025-12",
+      "first": "2025-12-01",
+      "last": "2025-12-31",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2026-01",
+      "first": "2026-01-02",
+      "last": "2026-01-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2026-02",
+      "first": "2026-02-02",
+      "last": "2026-02-27",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2026-03",
+      "first": "2026-03-02",
+      "last": "2026-03-31",
+      "strategyChange": 11353.735832901846,
+      "equityChange": 11353.735832901846,
+      "lotsEntered": 2,
+      "interest": 331.5068493150684
+    },
+    {
+      "period": "2026-04",
+      "first": "2026-04-01",
+      "last": "2026-04-30",
+      "strategyChange": -2018.7569605655735,
+      "equityChange": -2018.7569605655735,
+      "lotsEntered": 0,
+      "interest": 60.273972602743015
+    },
+    {
+      "period": "2026-05",
+      "first": "2026-05-01",
+      "last": "2026-05-29",
+      "strategyChange": 5176.55155363644,
+      "equityChange": 5176.55155363644,
+      "lotsEntered": 1,
+      "interest": 301.3698630137005
+    },
+    {
+      "period": "2026-06",
+      "first": "2026-06-01",
+      "last": "2026-06-30",
+      "strategyChange": -11527.91259333439,
+      "equityChange": -11527.91259333439,
+      "lotsEntered": 2,
+      "interest": 723.2876712328798
+    },
+    {
+      "period": "2026-07",
+      "first": "2026-07-01",
+      "last": "2026-07-31",
+      "strategyChange": -2189.10087245662,
+      "equityChange": -2189.10087245662,
+      "lotsEntered": 3,
+      "interest": 843.8356164383658
+    },
+    {
+      "period": "2026-08",
+      "first": "2026-08-03",
+      "last": "2026-08-31",
+      "strategyChange": 33856.93300115917,
+      "equityChange": 33856.93300115917,
+      "lotsEntered": 0,
+      "interest": 843.8356164383513
+    },
+    {
+      "period": "2026-09",
+      "first": "2026-09-01",
+      "last": "2026-09-30",
+      "strategyChange": 0,
+      "equityChange": 0,
+      "lotsEntered": 0,
+      "interest": 0
+    },
+    {
+      "period": "2026-10",
+      "first": "2026-10-01",
+      "last": "2026-10-30",
+      "strategyChange": -7201.989254805085,
+      "equityChange": -7201.989254805085,
+      "lotsEntered": 2,
+      "interest": 663.0136986301368
+    }
+  ]
+}

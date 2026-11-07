@@ -1,0 +1,125 @@
+Pool S8-VG-F24-3 — Study 8 VG F24 #3  [Study 8 primary-fold candidate (VGT:d1-bd80e32ee4+GDX:d1-7b99d2833d)]
+  status: RESEARCH ONLY — NOT DEPLOYED — TRAINING RANK 2 (TIER STRONG, ROLE BALANCED); 2025–2026 ONE-TIME T GATES: PASS
+  config: config/research-pools/study8-expanded-regime-d1/S8-VG-F24-3.json (sha256 27cbadf96b98…; algorithmic hash 93e7c0ac956f…)
+  books (none (Study 8 research pool; not a frozen benchmark)):
+    VGT  s8d1bd80e32ee4  X 23.5% Y 0.9% L 78 stop 7.4% hold 15 buffer 4.4% P 11.0% W 55  [config/research-phenotypes/study8-expanded-regime-d1/D1/VGT.json sha256 aeea8d93e5e2…; d1-bd80e32ee4; grid 078c4339081a…]
+    GDX  s8d17b99d2833d  X 27.6% Y 0.1% L 243 stop 5.7% hold 12 buffer 2.9% P 15.2% W 12  [config/research-phenotypes/study8-expanded-regime-d1/D1/GDX.json sha256 585643cc78ec…; d1-7b99d2833d; grid 95e0dd8090fa…]
+
+Run: FIXED pool — one shared funded slot, $100,000.00 on every funded trade (constant, never compounded; at most one funded lot or reservation at a time); the books monitor signals concurrently under the frozen shadow policy (same-minute decisions in alphabetical symbol order)
+  friction 5 bps per side on every fill (commission $0); margin interest 11.00% simple, 365-day year; stops fill at the stop
+Data: all — 2016-01-04 → 2026-10-29, 2,722 sessions (America/New_York (NYSE sessions; regular minutes)); first eligible session 2017-06-15
+    VGT  data/VGT/data.csv sha256 2ee06310f2fa…  splits: 2026-04-21 ×8 (forward-adjusted)
+    GDX  data/GDX/data.csv sha256 77dba9b21c4b… 
+  NOT the frozen canonical all (a different file hash, end date or partition); the regression anchors do not apply
+
+Activity: 62 virtual trades → 62 pool decisions: 48 funded, 14 refused (7 pool occupied by the GDX lot, 7 pool occupied by the VGT lot); 0 same-minute decisions
+  funded lots 48 (closed 47, open 1: GDX since 2026-10-23T13:33:00.000Z, marked −$329.02)
+  notional: $100,000.00 on every lot (0 exceptions); overlapping lots 0; max simultaneous funded lots 1
+  time in market 39.8% of the 2,357 sessions from the first eligible one; borrowing dollar-days 135,400,000 → strategy net per $1M borrowing-dollar-days $2,512.17
+
+FUNDED TRADES (48; only lots the shared allocator funded — refused shadow signals are in signals.csv; $100,000.00 per trade, never compounded)
+  fills: the engine's raw execution prices; friction = 5 bps per side on each fill (commission $0); interest = 11% simple on $100,000.00 for the session-date days held (interestDays in the CSV);
+  gross P&L = shares × (exit fill − entry fill) before costs; net = gross − friction − interest (the engine's net);
+  MAE = the engine's worst minute mark while held (shares × last price − principal − accrued interest).
+  prices and shares are in the run's first-session share units (splits forward-adjusted: VGT 2026-04-21 ×8); dollar figures are unaffected.
+   #  ETF  entry (New York)  exit (New York)         entry fill     exit fill      size   shares   days  exit reason         gross P&L   interest  friction     net P&L  cumulative net          MAE
+  --  ---  ----------------  ----------------------  ----------  ------------  --------  -------  -----  -----------------  ----------  ---------  --------  ----------  --------------  -----------
+   1  GDX  2017-06-15 09:32  2017-06-30 09:31           22.0300       21.9200  $100,000  4537.00   15.0  maximum hold         −$499.07    $452.05    $99.70  −$1,050.82      −$1,050.82   −$1,471.02
+   2  GDX  2017-07-03 09:38  2017-09-14 09:30           21.5800       24.1219  $100,000  4631.60   73.0  trailing stop      $11,773.26  $2,200.00   $105.84   $9,467.42       $8,416.60   −$2,947.26
+   3  GDX  2018-08-15 10:58  2018-09-04 09:31           18.5101       18.2000  $100,000  5399.76   19.9  maximum hold       −$1,674.46    $602.74    $99.11  −$2,376.32       $6,040.28   −$2,327.18
+   4  GDX  2018-09-05 09:37  2018-10-25 10:20           17.8900       19.3409  $100,000  5586.92   50.0  trailing stop       $8,106.23  $1,506.85   $104.00   $6,495.38      $12,535.66   −$3,638.82
+   5  VGT  2018-12-24 10:13  2019-05-13 10:01          156.7100      199.8030  $100,000   637.80  139.9  trailing stop      $27,484.83  $4,219.18   $113.69  $23,151.96      $35,687.63   −$1,306.45
+   6  GDX  2020-03-12 09:32  2020-03-13 09:30           22.8600       23.2900  $100,000  4372.27    1.0  trailing stop gap   $1,880.07     $30.14   $100.89   $1,749.05      $37,436.67   −$3,722.68
+   7  GDX  2020-03-16 09:46  2020-03-18 09:30           17.1200       23.9145  $100,000  5838.20    2.0  trailing stop      $39,667.55     $60.27   $119.78  $39,487.49      $76,924.17   −$4,895.68
+   8  GDX  2020-03-19 09:32  2020-03-20 09:30           20.4750       22.7400  $100,000  4881.56    1.0  trailing stop gap  $11,056.74     $30.14   $105.48  $10,921.13      $87,845.29   −$5,590.55
+   9  GDX  2020-03-23 09:32  2020-03-25 10:00           21.6200       24.5840  $100,000  4623.04    2.0  trailing stop      $13,702.72     $60.27   $106.80  $13,535.65     $101,380.94   −$2,084.11
+  10  GDX  2020-04-01 09:31  2020-04-15 09:30           23.1500       29.6600  $100,000  4317.50   14.0  trailing stop gap  $28,106.90    $421.92   $114.00  $27,570.98     $128,951.92        $0.00
+  11  VGT  2020-10-30 12:18  2021-02-23 09:38          297.9300      354.4080  $100,000   335.48  115.9  trailing stop      $18,947.32  $3,495.89   $109.42  $15,342.01     $144,293.92   −$1,043.00
+  12  GDX  2021-03-02 09:32  2021-03-24 09:49           31.1600       32.5146  $100,000  3207.64   22.0  trailing stop       $4,345.20    $663.01   $102.12   $3,580.06     $147,873.98   −$1,667.89
+  13  GDX  2021-03-25 09:32  2021-04-28 09:30           32.3600       34.7354  $100,000  3088.69   34.0  trailing stop       $7,336.89  $1,024.66   $103.62   $6,208.61     $154,082.60   −$2,393.63
+  14  GDX  2021-07-19 11:32  2021-08-06 09:30           33.0999       33.3800  $100,000  3019.65   17.9  trailing stop gap     $845.80    $542.47   $100.37     $202.96     $154,285.56     −$668.46
+  15  GDX  2021-08-18 10:30  2021-09-13 09:31           31.6000       31.7000  $100,000  3162.98   26.0  maximum hold          $316.30    $783.56   $100.11    −$567.37     $153,718.19   −$2,941.11
+  16  GDX  2021-09-20 09:33  2021-10-04 09:31           30.1900       29.4500  $100,000  3310.70   14.0  maximum hold       −$2,449.92    $421.92    $98.73  −$2,970.56     $150,747.63   −$4,807.21
+  17  GDX  2021-10-05 09:32  2021-10-29 09:30           29.5000       32.0149  $100,000  3388.14   24.0  trailing stop       $8,520.65    $723.29   $104.21   $7,693.16     $158,440.79   −$1,032.53
+  18  GDX  2021-12-15 14:02  2022-01-06 09:30           28.9900       30.1900  $100,000  3447.74   21.8  trailing stop gap   $4,137.29    $663.01   $102.02   $3,372.26     $161,813.04      −$49.98
+  19  GDX  2022-01-28 10:03  2022-02-25 09:30           29.0900       33.6800  $100,000  3435.89   28.0  trailing stop gap  $15,770.73    $843.84   $107.84  $14,819.06     $176,632.11     −$788.69
+  20  GDX  2022-05-12 13:08  2022-06-09 09:42           30.1000       31.6094  $100,000  3320.60   27.9  trailing stop       $5,011.98    $843.84   $102.46   $4,065.69     $180,697.79   −$1,474.51
+  21  VGT  2022-06-13 11:40  2022-06-30 09:31          325.9100      326.8300  $100,000   306.68   16.9  maximum hold          $282.15    $512.33   $100.09    −$330.27     $180,367.52   −$3,894.15
+  22  VGT  2022-07-01 09:47  2022-08-26 15:35          327.0000      362.6100  $100,000   305.66   56.2  trailing stop      $10,884.47  $1,687.67   $105.39   $9,091.40     $189,458.92   −$1,863.87
+  23  GDX  2022-08-31 09:32  2022-09-15 09:30           24.0000       24.2300  $100,000  4164.58   15.0  trailing stop gap     $957.85    $452.05   $100.43     $405.37     $189,864.29   −$4,286.34
+  24  GDX  2022-09-16 09:32  2022-09-28 09:31           23.3100       22.6300  $100,000  4287.86   12.0  maximum hold       −$2,915.75    $361.64    $98.49  −$3,375.88     $186,488.41   −$8,005.18
+  25  GDX  2022-09-29 09:34  2022-10-07 15:04           23.3300       24.6217  $100,000  4284.18    8.2  trailing stop       $5,534.01    $241.10   $102.72   $5,190.20     $191,678.61   −$1,378.07
+  26  GDX  2022-10-10 09:32  2022-10-24 09:31           24.0500       23.7850  $100,000  4155.93   14.0  maximum hold       −$1,101.32    $421.92    $99.40  −$1,622.64     $190,055.97   −$6,540.51
+  27  GDX  2022-10-25 09:32  2022-11-17 09:30           24.1500       26.8661  $100,000  4138.72   23.0  trailing stop      $11,241.05    $693.15   $105.57  $10,442.32     $200,498.29   −$6,818.58
+  28  GDX  2022-11-18 09:33  2022-12-12 10:26           27.0100       28.5446  $100,000  3700.48   24.0  trailing stop       $5,678.80    $723.29   $102.79   $4,852.72     $205,351.01     −$991.50
+  29  GDX  2022-12-13 09:35  2022-12-27 09:31           30.1499       28.9300  $100,000  3315.10   14.0  maximum hold       −$4,044.09    $421.92    $97.93  −$4,563.94     $200,787.07   −$8,833.16
+  30  GDX  2022-12-28 09:32  2023-02-02 14:29           29.3000       31.4396  $100,000  3411.26   36.2  trailing stop       $7,298.81  $1,084.93   $103.60   $6,110.28     $206,897.35   −$3,078.05
+  31  GDX  2023-02-06 09:42  2023-02-21 09:31           30.1199       28.3400  $100,000  3318.40   15.0  maximum hold       −$5,906.43    $452.05    $97.00  −$6,455.48     $200,441.87   −$8,046.67
+  32  GDX  2023-02-22 09:32  2023-03-07 09:31           27.7050       27.7400  $100,000  3607.65   13.0  maximum hold          $126.27    $391.78   $100.01    −$365.53     $200,076.34   −$3,880.25
+  33  GDX  2023-03-08 09:33  2023-04-19 09:30           27.0800       33.9300  $100,000  3690.92   42.0  trailing stop gap  $25,282.78  $1,265.75   $112.59  $23,904.43     $223,980.78   −$1,851.38
+  34  GDX  2023-10-02 10:17  2023-10-26 10:05           26.2250       28.4409  $100,000  3811.25   24.0  trailing stop       $8,445.27    $723.29   $104.17   $7,617.81     $231,598.59   −$2,358.89
+  35  GDX  2024-02-13 09:54  2024-02-27 09:31           26.2050       26.1900  $100,000  3814.16   14.0  maximum hold          −$57.21    $421.92    $99.92    −$579.05     $231,019.54   −$1,995.20
+  36  GDX  2024-02-28 09:32  2024-04-15 09:38           25.7800       33.7075  $100,000  3877.04   47.0  trailing stop      $30,735.35  $1,416.44   $115.32  $29,203.59     $260,223.13     −$437.68
+  37  VGT  2025-04-04 09:48  2025-04-10 12:18          493.0000      498.0000  $100,000   202.74    6.1  trailing stop       $1,013.69    $180.82   $100.46     $732.41     $260,955.55   −$8,522.62
+  38  VGT  2025-04-21 15:44  2025-11-07 10:46          489.4150      747.2727  $100,000   204.22  199.8  trailing stop      $52,660.60  $6,027.40   $126.28  $46,506.92     $307,462.47     −$198.04
+  39  GDX  2026-03-19 09:32  2026-03-26 12:36           82.0450       83.0500  $100,000  1218.23    7.1  trailing stop       $1,224.34    $210.96   $100.56     $912.82     $308,375.29   −$4,021.10
+  40  GDX  2026-03-27 09:32  2026-04-02 09:30           82.9350       90.1600  $100,000  1205.16    6.0  trailing stop gap   $8,707.29    $180.82   $104.30   $8,422.16     $316,797.45     −$519.99
+  41  GDX  2026-05-19 09:33  2026-06-01 10:37           84.8000       85.2095  $100,000  1178.66   13.0  trailing stop         $482.64    $391.78   $100.19      −$9.34     $316,788.11   −$2,012.58
+  42  GDX  2026-06-05 09:32  2026-06-18 09:55           83.3650       84.8606  $100,000  1198.94   13.0  trailing stop       $1,793.11    $391.78   $100.85   $1,300.48     $318,088.59  −$11,770.48
+  43  GDX  2026-06-22 09:32  2026-07-06 09:31           81.4400       79.9000  $100,000  1227.28   14.0  maximum hold       −$1,890.02    $421.92    $99.01  −$2,410.94     $315,677.65   −$9,554.20
+  44  GDX  2026-07-07 09:32  2026-07-20 09:31           78.1500       71.4050  $100,000  1278.95   13.0  maximum hold       −$8,626.52    $391.78    $95.64  −$9,113.94     $306,563.71  −$11,068.95
+  45  GDX  2026-07-21 09:32  2026-07-28 09:41           72.6600       73.5446  $100,000  1375.59    7.0  trailing stop       $1,216.80    $210.96   $100.56     $905.28     $307,468.99     −$696.50
+  46  GDX  2026-07-29 09:35  2026-08-28 12:18           73.4400       99.6468  $100,000  1360.98   30.1  trailing stop      $35,666.82    $904.11   $117.78  $34,644.93     $342,113.92   −$1,723.97
+  47  GDX  2026-10-07 09:35  2026-10-22 09:31           84.6900       83.7700  $100,000  1180.19   15.0  maximum hold       −$1,085.77    $452.05    $99.41  −$1,637.23     $340,476.69   −$2,851.44
+  48  GDX  2026-10-23 09:33  OPEN, 2026-10-29 close     81.4100  81.3300 mark  $100,000  1227.74    6.3  open                  −$98.22    $180.82    $49.98    −$329.02     $340,147.67   −$3,082.48
+
+BY ETF:
+  ETF  trades  profitable  losing  open    gross P&L    interest   friction      net P&L
+  ---  ------  ----------  ------  ----  -----------  ----------  ---------  -----------
+  GDX      42          27      14     1  $274,620.71  $24,682.19  $4,285.29  $245,653.23
+  VGT       6           5       1     0  $111,273.06  $16,123.29    $655.34   $94,494.44
+  all      48          32      15     1  $385,893.77  $40,805.48  $4,940.62  $340,147.67
+
+TOTALS:
+  gross P&L before costs        $385,893.77
+  margin interest               −$40,805.48
+  execution friction             −$4,940.62
+  net realized P&L              $340,476.69   (47 closed trades)
+  unrealized (open) P&L            −$329.02   (1 open)
+  total net P&L                 $340,147.67
+  largest closed win / loss $46,506.92 / −$9,113.94; worst MAE −$11,770.48 (profitable/losing count closed trades only)
+
+DRAWDOWNS (the engine's existing definitions; % of the $100,000.00 notional):
+  max MINUTE-sampled drawdown $21,303.61 = 21.30%: the largest fall of the pool's marked P&L (realized + open position at each regular minute's price − accrued interest) from its running peak (peak 2026-04-01 11:44, trough 2026-07-17 09:34 New York)
+  max DAILY drawdown          $18,800.57 = 18.80%: the same mark sampled at session closes only
+
+OPEN POSITION AT THE ENDPOINT (unrealized; marked at the last close, no exit friction):
+  GDX: entered 2026-10-23 09:33 at 81.4100, 1227.74 shares; 2026-10-29 close mark 81.3300; accrued interest $180.82; marked net −$329.02
+
+RECONCILIATION: all checks pass
+  PASS ledger total net = run summary net (exact)
+  PASS ledger interest = run summary interest (exact)
+  PASS funded trades = run summary lots
+  PASS realized + unrealized = total net (±$0.000001)
+  PASS gross − friction − interest = total net (±$0.000001)
+  PASS per-ETF nets sum to the total net (±$0.000001)
+  PASS every trade: gross − friction − interest = engine net (±$0.000001)
+
+
+By calendar year (one continuous run; state carried across years):
+    year     strategy   interest  lots
+    2016        $0.00      $0.00     0
+    2017    $8,416.60  $2,652.05     2
+    2018   $10,312.69  $2,320.55     3
+    2019   $16,958.34  $4,008.22     0
+    2020  $110,085.82  $2,471.23     6
+    2021   $22,616.31  $6,268.49     7
+    2022   $30,086.81  $7,443.84    12
+    2023   $33,122.03  $3,857.53     4
+    2024   $28,624.54  $1,838.36     2
+    2025   $47,239.34  $6,208.22     2
+    2026   $32,685.20  $3,736.99    10
+
+Regression anchors: not checked (anchors apply only to the frozen all at 5 bps)
+Outputs: evaluations/study8-runs/20261107T225027Z-run-s8-vg-balanced/ (report.txt, summary.json, trades.csv, trades.json, signals.csv, daily.csv, yearly.csv, monthly.csv)
+These are inspected historical figures, not expected future returns.
