@@ -58,3 +58,15 @@ systemctl --user stop <unit>.service                     # graceful: checkpoint,
 N verify                                                 # protocol, code closure, door and data pins
 node --experimental-transform-types --disable-warning=ExperimentalWarning --test src/growth140-vgt-stable/tests/study.test.ts
 ```
+
+## The chains actually run (fail-fast; `chains/`)
+
+- `chains/chain2.sh` (14:43–14:52Z): P0 parity, audit re-evaluation, sensitivity, seeds — after incident O1 (the first
+  chain, log `chains/chain1.log`, did not stop on P0's failure; see AMENDMENTS.md O1).
+- `chains/chain3.sh` (14:53–18:27Z): for C19, C21, C23 — search, qualify, freeze-fold, git commit, evaluate-fold; then
+  sequential; then the C24 search and qualification. Host check before every launch. Log `chains/chain3.log`.
+- Then `npm run -s growth140-stable -- final-select`, the commit, and
+  `npm run -s growth140-stable -- launch --unit growth140-stable-final --wait -- final --workers 14`.
+- Afterwards: `tools/growth140-vgt-stable/tables.ts`, `tools/growth140-vgt-stable/export-archive.ts <jobs…>`,
+  `memory-report … --out research/growth140-vgt-stable/results/memory-summary-study.json`, and the full `npm test` in a
+  capped unit (`results/runlogs/npm-test.log`).

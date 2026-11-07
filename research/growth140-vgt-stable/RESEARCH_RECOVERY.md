@@ -2,34 +2,66 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-07T18:28Z (UTC). **Status: INCOMPLETE.** All development stages complete; C24 search (322,475 fresh) and qualification (17/18 qualified) sealed; `FROZEN_SELECTION.json` frozen 18:27:30Z (sha256 `a2a99883384b4af165803735eba6903d7c96fab3cc377f5c4ac623c8a3f56c6e`, 10 finalists, primary `6aeb2e0f3918e574` chronologically unsupported) and committed ("final selection" commit). Next: `launch --unit growth140-stable-final --wait -- final --workers 14` (the FULL door, once; rerun the same command to resume).
-- **Current stage:** S6 — the chronological chain is being launched: `.cache/growth140-vgt-stable/chain3.sh`
-  (log `.cache/growth140-vgt-stable/chain3.log`): for C19, C21, C23: search → qualify → freeze-fold → git commit →
-  evaluate-fold; then `sequential`; then the C24 search and qualification. Fail-fast; host check before each launch.
-- **Authority:** PROTOCOL.md `cf850484…1a203` (frozen 14:40:30Z, commit `a836cd5`); AMENDMENTS.md head **O1**
-  (operational incident, no protocol or code change); code closure `deea867f…ffcdd`.
-- **Sealed records** (`results/seals.jsonl`): audit `72c4c9c2…`, audit candidates `e7ea45f8…`, P0 parity `082c06f7…`
-  (12 configurations 0 differences; causality 36/36; archive reuse 241/241), audit re-evaluation `2ec6f0d1…`,
-  sensitivity `a87b467e…`, seeds `705b5e49…` (6 rise, 6 breakout).
-- **Running:** see the chain; units `growth140-stable-{search,qualify,evaluate}-<C>`; `systemctl --user list-units 'growth140-stable*'`.
-  A search resumes by relaunching its unit command (`launch --unit growth140-stable-search-<C>-rN --wait -- search --cutoff <C> --workers 14`);
-  the chain can then be restarted from the failed step (sealed steps refuse to rerun; skip them).
-- **Next:** after CHAIN-DONE: read sequential.json and the C24 qualification, run `final-select`, commit, then `final`.
+- **Updated:** 2026-11-07T18:36Z (UTC, from the clock). **Status: COMPLETE.** Selection for this study is closed (the
+  FULL door was opened once, 18:27:58–18:29:25Z).
+- **Outcome.** On development all 10 frozen finalists out-earned #4 within the $35,000 ceiling and met the stability
+  criteria; on 2025–2026 none beat #4 ($52,892.75); the primary `6aeb2e0f3918e574` (chronologically unsupported: every
+  independent 2020–2024 sequential policy breached the ceiling) failed V1/V2/V4/V5; only `08500a60ec56cfae` passed every
+  final gate (full history $160,974.09 / DD $19,344.80 vs #4 $145,468.46 / $14,578.10; 2025–2026 $45,464.93). #4
+  development reproduction and full-history browser parity exact. Details: `REPORT.md`.
+- **Authority and sealed records** (sha256, recomputed 18:35Z):
 
-## Stage table
+  | File | sha256 |
+  |---|---|
+  | `PROTOCOL.md` (frozen 14:40:30Z, commit `a836cd5`) | `cf850484c3a82b0323d39070df7a4dd21466c0cc0e77e674c07fe350b9f1a203` |
+  | `AMENDMENTS.md` (head O1, operational; no protocol or code change) | `be4fb8bf675c56e5f213dcceed6c6f297459000ad3a2c770ab25d8d7f2965bd3` |
+  | `results/protocol_freeze.json` (code closure `deea867f…ffcdd`, 118 files) | `f286b4c8708063fb7eeecccdfde450c0e8adb7af9038dc975a06bc7340eec8c9` |
+  | `results/doors-pins.json` | `a7c47d268800193cce5113b304b90dc1c82bfad0c1abb95282debbf3813b8aa5` |
+  | `results/parity/parity.json` (P0 passed) | `082c06f70ed72694a641defd6761ef838da0e06ecd66f90c57c6164e6b69eeb2` |
+  | `results/audit/audit.json` / `audit-candidates.json` | `72c4c9c2…a6872c5` / `e7ea45f8…1890a` |
+  | `results/audit/reeval.json` | `2ec6f0d141526e4c1c1d0a2d4ef505eaf19451a4ccda0e0740e03cd3366a47c1` |
+  | `results/sensitivity/sensitivity.json` | `a87b467efbc1954341efd1023d7dfdaa1aee6c5e0bd1c6dac8c8c325cfd4417d` |
+  | `results/seeds/SEEDS.json` | `705b5e49c49568fd7dd1cd1cf30e0398a4b4aa7ca70ce5730170669a195e3afb` |
+  | `results/search/C19 / C21 / C23 / C24.json` | `01d585c2…` / `89677829…` / `4d80752e…` / `680e00e2…` |
+  | `results/qualify/C19 / C21 / C23 / C24.json` | `8635f017…` / `c4b50707…` / `602204b1…` / `0e586e07…` |
+  | `results/folds/C19 / C21 / C23/FOLD_SELECTION.json` (commits `2ea8481` / `a10e24f` / `a634d5b`) | `eb5d8c5d…` / `65a19878…` / `bcaa0904…` |
+  | `results/folds/C19 / C21 / C23/evaluation.json` | `a1e1cdd4…` / `7d60d3da…` / `1d4c63e7…` |
+  | `results/folds/sequential.json` (chosen procedure: none) | `56588d45ffbcfb8fbe7ea5db8cf98528736c897f8481f413d9f7e0a8b169017c` |
+  | `FROZEN_SELECTION.json` (444; commit `ebf3d74`) | `a2a99883384b4af165803735eba6903d7c96fab3cc377f5c4ac623c8a3f56c6e` |
+  | `results/final/final.json` (opened once) | `e4c5cc10dab7cd0236543c68c3542edcb5a524aed887f30e5771f1c8ac65cba7` |
+  | `results/archive/MANIFEST.json` | `9e36a86409ce1d261255211808486d3461ee9806eb99a7b11cdc415c570f967b` |
 
-| Stage | Status | Notes |
+- **Running processes:** none (`systemctl --user list-units 'growth140-stable*'` empty).
+- **Follow-up gate (needs the user).** Any new question (an exposure cap, a mandatory losing-hold limit, a prospective
+  test on VGT data after 2026-10-30) needs a new study namespace. Nothing here is deployed or recommended.
+
+## Deliverables (audited)
+
+`REPORT.md`; `PROTOCOL.md`, `AMENDMENTS.md`, `RUN_COMMANDS.md`, `README.md`, `chains/` (the stage chains run), `NOTES.md` (working notes, not
+authoritative); `FROZEN_SELECTION.json`; `results/tables/*.md` (audit, sensitivity, search and qualification per
+cutoff, folds, final); the sealed records above; `results/archive/` (trial archive; the four searches' point and
+configuration shards are git-ignored and kept on disk, hashes in MANIFEST.json); `results/memory/*.jsonl`,
+`results/memory-summary-study.json`, `results/pilot/*.json`, `results/runlogs/*.log` (including `npm-test.log`:
+1,230 tests, 1,219 pass, the 7 known pre-existing failures, 4 skipped).
+
+## Stage table (all complete)
+
+| Stage | Time (UTC) | Notes |
 |---|---|---|
-| S0 setup | complete | 13:56Z |
-| Code, doors, smoke, unit tests | complete | tsc and eslint clean; 8 unit tests pass |
-| Pilot attempt 1 | aborted 14:19Z | fine-step change; files in `.cache/growth140-vgt-stable/pilot-attempt-1/` |
-| Pilot attempt 2 | complete 14:20–14:32Z | `results/pilot/pilot-driver.json`: B, C, D identical to A; fold stop/resume identical; peak 8.61 GiB, no memory events |
-| Benches, pilot P0 and sensitivity code | complete 14:33–14:39Z | D24 87.6/s at 14 workers; D19 157.8/s; pilot parity 0 differences |
-| Protocol freeze | complete 14:40:30Z | committed |
-| P0 parity | complete 14:45Z (rerun after O1) | sealed `082c06f7…`; passed |
-| Audit, audit re-evaluation, sensitivity, seeds | complete 14:41–14:52Z | sealed (see top screen); re-evaluation and sensitivity resumed after O1 |
-| Cutoffs C19, C21, C23 (search, qualify, fold freeze, evaluation) | not started | each search resumes from `.cache/growth140-vgt-stable/jobs/search-<C>/checkpoint.json` by rerunning its command |
-| Sequential, C24 search and qualify, final selection, final comparison | not started | |
+| Setup, code, doors, smoke, unit tests | 13:56–14:15 | |
+| Pilot attempt 1 (aborted, fine-step change) / attempt 2 | 14:15–14:19 / 14:20–14:32 | attempt 2 all identities true |
+| Benches, pilot P0 and sensitivity code | 14:33–14:39 | |
+| Protocol freeze | 14:40:30 | commit `a836cd5` |
+| P0 parity (first run failed on a job-name collision, O1; rerun passed) | 14:41 / 14:43–14:45 | |
+| Audit (archive only) | 14:41:51 | |
+| Audit re-evaluation, sensitivity (stopped by O1, resumed), seeds | 14:45–14:52 | commit `be8006e` |
+| C19 search / qualify / fold freeze / evaluation | 14:53–15:29 | commit `2ea8481` |
+| C21 | 15:29–16:17 | commit `a10e24f` |
+| C23, sequential | 16:17–17:24 | commit `a634d5b`, `0406c17` |
+| C24 search / qualify | 17:24–18:27 | |
+| Final selection | 18:27:30 | commit `ebf3d74` |
+| Final comparison (FULL door, once) | 18:27:58–18:29:25 | |
+| Full npm test (capped unit) | started 18:30 | 7 known pre-existing failures only |
 
 ## Environment
 
@@ -67,3 +99,6 @@
 
 - Prior knowledge: the completed study's development and validation outcomes, and #4's full-history browser
   selection (2016–2026, 2025–2026 in view).
+- O1 (AMENDMENTS.md): P0's first run failed on a pilot job-name collision; the audit and two development jobs started
+  before P0 passed and were stopped; P0 rerun passed before any result was used.
+- The pre-freeze pilot opened D19–D24 (engineering booleans only); the informed seeds carry later information.
