@@ -32,6 +32,8 @@
   | `results/archive/MANIFEST.json` | `9e36a86409ce1d261255211808486d3461ee9806eb99a7b11cdc415c570f967b` |
 
 - **Running processes:** none (`systemctl --user list-units 'growth140-stable*'` empty).
+- **Git.** Branch `research/growth140-vgt-stable` (8 study commits `a836cd5` … `f04fd3f`) pushed to `origin` at
+  18:40Z; `git ls-remote` confirmed `f04fd3ff26be0a84bca6915c87aaaa0319bd444d`. Not merged into `main`.
 - **Follow-up gate (needs the user).** Any new question (an exposure cap, a mandatory losing-hold limit, a prospective
   test on VGT data after 2026-10-30) needs a new study namespace. Nothing here is deployed or recommended.
 
