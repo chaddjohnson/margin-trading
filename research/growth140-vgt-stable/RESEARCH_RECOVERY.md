@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-07T17:26Z (UTC). **Status: INCOMPLETE.** C19, C21, C23 complete (folds `eb5d8c5d…`/`65a19878…`/`bcaa0904…`, commits `2ea8481`/`a10e24f`/`a634d5b`); sequential sealed (no eligible global policy: primary chronologically unsupported); C24 search running (unit `growth140-stable-search-C24`), then C24 qualify (chain3).
+- **Updated:** 2026-11-07T18:28Z (UTC). **Status: INCOMPLETE.** All development stages complete; C24 search (322,475 fresh) and qualification (17/18 qualified) sealed; `FROZEN_SELECTION.json` frozen 18:27:30Z (sha256 `a2a99883384b4af165803735eba6903d7c96fab3cc377f5c4ac623c8a3f56c6e`, 10 finalists, primary `6aeb2e0f3918e574` chronologically unsupported) and committed ("final selection" commit). Next: `launch --unit growth140-stable-final --wait -- final --workers 14` (the FULL door, once; rerun the same command to resume).
 - **Current stage:** S6 — the chronological chain is being launched: `.cache/growth140-vgt-stable/chain3.sh`
   (log `.cache/growth140-vgt-stable/chain3.log`): for C19, C21, C23: search → qualify → freeze-fold → git commit →
   evaluate-fold; then `sequential`; then the C24 search and qualification. Fail-fast; host check before each launch.
