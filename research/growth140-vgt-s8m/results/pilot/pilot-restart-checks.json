@@ -1,0 +1,17 @@
+{
+ "study": "growth140-vgt-s8m",
+ "kind": "pilot restart checks in qualification and validation (engineering; no figure)",
+ "qualify": {
+  "uninterrupted": "pilot-a-qualify-u (unit growth140-s8m-pilot-a2u, 2 workers)",
+  "stoppedThenResumed": "pilot-a-qualify-r (units growth140-s8m-pilot-a3c exit 75 after stop-after 1500, a3d resume)"
+ },
+ "validate": {
+  "uninterrupted": "pilot-validate (unit growth140-s8m-pilot-g)",
+  "stoppedThenResumed": "pilot-validate-r (units g2a exit 75 after stop-after 400, g2b resume)"
+ },
+ "identical": {
+  "qualifyStoppedAndResumedEqualsUninterrupted": true,
+  "validateStoppedAndResumedEqualsUninterrupted": true
+ },
+ "note": "pilot-a-qualify (A2) ran before the ISO time format of trade rows was aligned with the browser runner (\".000Z\" \u2192 \"Z\"); its 179 differences from the resumed run are that format only (no value differs)."
+}
