@@ -1,0 +1,400 @@
+{
+ "kind": "vg-d1-growth-joint control fixtures",
+ "economics": {
+  "budget": 100000,
+  "notional": 100000,
+  "costBps": 5,
+  "rate": 0.11,
+  "stopFill": "stop",
+  "stopSlippageBps": 0,
+  "ceiling": 35000
+ },
+ "d1": {
+  "vg2GDX": {
+   "name": "VG #2's GDX book (d1-7b99d2833d)",
+   "symbol": "GDX",
+   "grid": {
+    "targetPercentChange": 276,
+    "trailingBuyPercentage": 1,
+    "trailingStopPercentage": 57,
+    "maximumHoldDays": 12,
+    "tickWindowSize": 243,
+    "intradayLossBuffer": 29,
+    "pullback": 152,
+    "continuationWindow": 12
+   },
+   "strategyParams": {
+    "key": "d1",
+    "label": "GDX d1-276,1,57,12,243,29,152,12",
+    "entryMode": "deep",
+    "postExit": true,
+    "stopPolicy": "net",
+    "targetPercentChange": 0.276,
+    "tickWindowSize": 243,
+    "trailingBuyPercentage": 0.001,
+    "trailingStopPercentage": 0.057,
+    "maximumHoldDays": 12,
+    "intradayLossBuffer": 0.029,
+    "pullback": 0.152,
+    "continuationWindow": 12,
+    "swingLookback": "NaN",
+    "swingProximity": "NaN"
+   }
+  },
+  "vg2VGT": {
+   "name": "VG #2's VGT book (d1-bd80e32ee4)",
+   "symbol": "VGT",
+   "grid": {
+    "targetPercentChange": 235,
+    "trailingBuyPercentage": 9,
+    "trailingStopPercentage": 74,
+    "maximumHoldDays": 15,
+    "tickWindowSize": 78,
+    "intradayLossBuffer": 44,
+    "pullback": 110,
+    "continuationWindow": 55
+   },
+   "strategyParams": {
+    "key": "d1",
+    "label": "VGT d1-235,9,74,15,78,44,110,55",
+    "entryMode": "deep",
+    "postExit": true,
+    "stopPolicy": "net",
+    "targetPercentChange": 0.235,
+    "tickWindowSize": 78,
+    "trailingBuyPercentage": 0.009,
+    "trailingStopPercentage": 0.074,
+    "maximumHoldDays": 15,
+    "intradayLossBuffer": 0.044,
+    "pullback": 0.11,
+    "continuationWindow": 55,
+    "swingLookback": "NaN",
+    "swingProximity": "NaN"
+   }
+  },
+  "primary": {
+   "name": "VGT D1 shipped primary",
+   "symbol": "VGT",
+   "grid": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 8,
+    "tickWindowSize": 74,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60
+   },
+   "strategyParams": {
+    "key": "d1",
+    "label": "VGT d1-216,3,73,8,74,29,90,60",
+    "entryMode": "deep",
+    "postExit": true,
+    "stopPolicy": "net",
+    "targetPercentChange": 0.216,
+    "tickWindowSize": 74,
+    "trailingBuyPercentage": 0.003,
+    "trailingStopPercentage": 0.073,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 0.029,
+    "pullback": 0.09,
+    "continuationWindow": 60,
+    "swingLookback": "NaN",
+    "swingProximity": "NaN"
+   }
+  }
+ },
+ "growth": {
+  "g4": {
+   "name": "Growth #4 420cd989e4fa7749",
+   "symbol": "VGT",
+   "id": "420cd989e4fa7749",
+   "effective": {
+    "entryMethod": "rise_from_recent_low",
+    "advanceFromRecentLowPercent": 5,
+    "recentLowLookbackBars": 90,
+    "trendFilterEnabled": true,
+    "trendMethod": "price_change",
+    "trendChangeLookbackSessions": 30,
+    "trendChangeMinimumReturnPercent": -2,
+    "eligibilityEnabled": true,
+    "eligibilityPolicy": "time_limited",
+    "eligibilityMaxAgeSessions": 20,
+    "drawdownRecoveryGateEnabled": true,
+    "dipLookbackSessions": 60,
+    "dipThresholdPercent": 10,
+    "recoveryRetracementPercent": 45,
+    "recoveryConfirmationSessions": 2,
+    "trailingStopPercent": 6,
+    "maximumHoldEnabled": true,
+    "maximumHoldDays": 21,
+    "intradayLossBufferEnabled": true,
+    "intradayLossBufferPercent": 2.9,
+    "initialStopEnabled": true,
+    "initialStopAtrSessions": 20,
+    "initialStopAtrMultiple": 1.5,
+    "retentionEnabled": false,
+    "continuationEnabled": true,
+    "continuationMethod": "shallow_pullback",
+    "continuationWindowSessions": 60,
+    "uptrendSmaBars": 50,
+    "uptrendSlopeBars": 10,
+    "uptrendMinimumRisePercent": 0,
+    "pullbackMinimumPercent": 1.5,
+    "pullbackMaximumPercent": 8,
+    "recoveryPercent": 1,
+    "costBpsPerSide": 5
+   },
+   "engineParams": {
+    "advanceFromRecentLowPercent": 5,
+    "recentLowLookbackBars": 90,
+    "resolution": "1d",
+    "trailingStopPercent": 6,
+    "maximumHoldEnabled": true,
+    "maximumHoldDays": 21,
+    "intradayLossBufferEnabled": true,
+    "intradayLossBufferPercent": 2.9,
+    "costBpsPerSide": 5,
+    "continuation": {
+     "method": "shallow_pullback",
+     "windowSessions": 60,
+     "smaBars": 50,
+     "slopeBars": 10,
+     "minimumRisePercent": 0,
+     "pullbackMinimumPercent": 1.5,
+     "pullbackMaximumPercent": 8,
+     "recoveryPercent": 1
+    },
+    "trendFilter": {
+     "method": "price_change",
+     "lookbackSessions": 30,
+     "minimumReturnPercent": -2
+    },
+    "eligibility": {
+     "policy": "time_limited",
+     "maxAgeSessions": 20
+    },
+    "initialStop": {
+     "atrSessions": 20,
+     "atrMultiple": 1.5
+    },
+    "drawdownGate": {
+     "lookbackSessions": 60,
+     "dipThresholdPercent": 10,
+     "recoveryRetracementPercent": 45,
+     "confirmationSessions": 2
+    }
+   }
+  },
+  "g085": {
+   "name": "Growth 08500a60ec56cfae",
+   "symbol": "VGT",
+   "id": "08500a60ec56cfae",
+   "effective": {
+    "entryMethod": "rise_from_recent_low",
+    "advanceFromRecentLowPercent": 1,
+    "recentLowLookbackBars": 80,
+    "trendFilterEnabled": true,
+    "trendMethod": "price_change",
+    "trendChangeLookbackSessions": 10,
+    "trendChangeMinimumReturnPercent": -5,
+    "eligibilityEnabled": true,
+    "eligibilityPolicy": "reset_renew",
+    "eligibilityMaxAgeSessions": 24,
+    "eligibilityResetDropPercent": 5.5,
+    "eligibilityRenewalReboundPercent": 5,
+    "drawdownRecoveryGateEnabled": true,
+    "dipLookbackSessions": 90,
+    "dipThresholdPercent": 2,
+    "recoveryRetracementPercent": 30,
+    "recoveryConfirmationSessions": 4,
+    "trailingStopPercent": 9,
+    "maximumHoldEnabled": false,
+    "initialStopEnabled": true,
+    "initialStopAtrSessions": 55,
+    "initialStopAtrMultiple": 1,
+    "retentionEnabled": true,
+    "retentionSellPercent": 50,
+    "retentionSmaSessions": 160,
+    "retentionClosesBelow": 1,
+    "continuationEnabled": true,
+    "continuationMethod": "ma_cross",
+    "continuationWindowSessions": 50,
+    "crossSmaBars": 110,
+    "crossRisingBars": 19,
+    "crossMinimumSlopePercent": 0.4,
+    "crossMarginPercent": 2.75,
+    "costBpsPerSide": 5
+   },
+   "engineParams": {
+    "advanceFromRecentLowPercent": 1,
+    "recentLowLookbackBars": 80,
+    "resolution": "1d",
+    "trailingStopPercent": 9,
+    "maximumHoldEnabled": false,
+    "maximumHoldDays": "NaN",
+    "intradayLossBufferEnabled": false,
+    "intradayLossBufferPercent": "NaN",
+    "costBpsPerSide": 5,
+    "continuation": {
+     "method": "ma_cross",
+     "windowSessions": 50,
+     "smaBars": 110,
+     "risingBars": 19,
+     "minimumSlopePercent": 0.4,
+     "marginPercent": 2.75
+    },
+    "trendFilter": {
+     "method": "price_change",
+     "lookbackSessions": 10,
+     "minimumReturnPercent": -5
+    },
+    "eligibility": {
+     "policy": "reset_renew",
+     "maxAgeSessions": 24,
+     "resetDropPercent": 5.5,
+     "renewalReboundPercent": 5
+    },
+    "initialStop": {
+     "atrSessions": 55,
+     "atrMultiple": 1
+    },
+    "retention": {
+     "sellPercent": 50,
+     "smaSessions": 160,
+     "closesBelow": 1
+    },
+    "drawdownGate": {
+     "lookbackSessions": 90,
+     "dipThresholdPercent": 2,
+     "recoveryRetracementPercent": 30,
+     "confirmationSessions": 4
+    }
+   }
+  },
+  "appA": {
+   "name": "Appendix A GDX Growth 07cac3329fc7a520",
+   "symbol": "GDX",
+   "id": "07cac3329fc7a520",
+   "effective": {
+    "entryMethod": "rise_from_recent_low",
+    "advanceFromRecentLowPercent": 3,
+    "recentLowLookbackBars": 22,
+    "trendFilterEnabled": true,
+    "trendMethod": "price_change",
+    "trendChangeLookbackSessions": 30,
+    "trendChangeMinimumReturnPercent": -2,
+    "eligibilityEnabled": true,
+    "eligibilityPolicy": "time_limited",
+    "eligibilityMaxAgeSessions": 20,
+    "drawdownRecoveryGateEnabled": true,
+    "dipLookbackSessions": 60,
+    "dipThresholdPercent": 10,
+    "recoveryRetracementPercent": 49,
+    "recoveryConfirmationSessions": 2,
+    "trailingStopPercent": 7,
+    "maximumHoldEnabled": false,
+    "initialStopEnabled": true,
+    "initialStopAtrSessions": 20,
+    "initialStopAtrMultiple": 2,
+    "retentionEnabled": false,
+    "continuationEnabled": true,
+    "continuationMethod": "shallow_pullback",
+    "continuationWindowSessions": 60,
+    "uptrendSmaBars": 50,
+    "uptrendSlopeBars": 10,
+    "uptrendMinimumRisePercent": 0,
+    "pullbackMinimumPercent": 1.5,
+    "pullbackMaximumPercent": 8,
+    "recoveryPercent": 2,
+    "costBpsPerSide": 5
+   },
+   "engineParams": {
+    "advanceFromRecentLowPercent": 3,
+    "recentLowLookbackBars": 22,
+    "resolution": "1d",
+    "trailingStopPercent": 7,
+    "maximumHoldEnabled": false,
+    "maximumHoldDays": "NaN",
+    "intradayLossBufferEnabled": false,
+    "intradayLossBufferPercent": "NaN",
+    "costBpsPerSide": 5,
+    "continuation": {
+     "method": "shallow_pullback",
+     "windowSessions": 60,
+     "smaBars": 50,
+     "slopeBars": 10,
+     "minimumRisePercent": 0,
+     "pullbackMinimumPercent": 1.5,
+     "pullbackMaximumPercent": 8,
+     "recoveryPercent": 2
+    },
+    "trendFilter": {
+     "method": "price_change",
+     "lookbackSessions": 30,
+     "minimumReturnPercent": -2
+    },
+    "eligibility": {
+     "policy": "time_limited",
+     "maxAgeSessions": 20
+    },
+    "initialStop": {
+     "atrSessions": 20,
+     "atrMultiple": 2
+    },
+    "drawdownGate": {
+     "lookbackSessions": 60,
+     "dipThresholdPercent": 10,
+     "recoveryRetracementPercent": 49,
+     "confirmationSessions": 2
+    }
+   }
+  }
+ },
+ "provenance": {
+  "primary": {
+   "file": "config/phenotypes/D1/VGT.json",
+   "fileSha256": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70",
+   "candidateId": "d1-ebc9f639b3",
+   "checkedAgainst": "D1 shipped constants"
+  },
+  "vg2": {
+   "alias": "s8-vg-balanced",
+   "configuration": "S8-VG-F24-3",
+   "configFile": "config/research-pools/study8-expanded-regime-d1/S8-VG-F24-3.json",
+   "candidates": {
+    "GDX": "d1-7b99d2833d",
+    "VGT": "d1-bd80e32ee4"
+   },
+   "nativeArming": "2017-06-15",
+   "tieOrder": "same-minute decisions alphabetical (GDX before VGT)",
+   "selection": "Study 8 F24 (search 2016-01-04 → 2024-12-31) rank 2, tier strong, role balanced, shortlist #3"
+  },
+  "g085": {
+   "source": "research/growth140-vgt-stable/FROZEN_SELECTION.json finalists",
+   "id": "08500a60ec56cfae"
+  },
+  "g4": {
+   "source": "src/growth140-vgt-s8m/space.ts control4",
+   "id": "420cd989e4fa7749"
+  },
+  "appA": {
+   "source": "brief Appendix A (the user's 'GDX Growth trial ledger.md', preview PV-3a29190f20a3c844263b3d4e9d17f6f7e1e7c28a8d864481c32fab0505a6610f of R-000040)",
+   "recovery": "no backend archive exists (no repository record; the run folder R-000040 is absent, the trash is empty; the preview cache and the Strategy Lab database were not opened); mapped from the transcription with every value explicit",
+   "id": "07cac3329fc7a520",
+   "selection": "browser-selected with 2016-01-04 → 2026-10-30 in view (informed only; never an earlier-cutoff seed)",
+   "target": {
+    "window": [
+     "2016-01-04",
+     "2026-10-30"
+    ],
+    "net": 141157.37,
+    "minuteDd": 17709.96,
+    "closedTrades": 19,
+    "wins": 17,
+    "losses": 2,
+    "open": 0
+   }
+  }
+ }
+}
