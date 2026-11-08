@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-07T23:48Z (UTC, from `date -u`)
+- **Updated:** 2026-11-08T00:19Z (UTC, from `date -u`)
 - **Status:** **COMPLETE** — every stage S0–S11 is done. Result: **no useful benefit**; the frozen selection keeps OFF.
 - **Authority:** `brief/BRIEF.md` sha256 `55718a6892d07fb1cc95309eff6c843f82d1619da51385ee7dc2e1ed168a76eb`.
   `PROTOCOL.md` sha256 `9636fc1f2ffef03aa579c68a4be6671345de04e3f837f41a28046470736213b4`, frozen 2026-11-07T23:19:00Z
@@ -12,8 +12,11 @@
   read-only, committed in `8dc2710` before validation. The validation is sealed (`results/seals.jsonl`).
 - **Running processes:** none (every unit `vgbe-*` has finished).
 - **Next action:** none authorized. The follow-up gate is the user's (and ChatGPT's) decision on REPORT.md's
-  "Priority 1 review — decision before Priority 2". Pushing the branch also needs the user's answer: the brief forbids
-  pushing, while the wrapper mentions a push.
+  "Priority 1 review — decision before Priority 2". Priority 2 is not started.
+- **Push:** the brief forbade pushing and the user's wrapper asked for a push; asked once at the end, the user chose
+  commit and push. `research/vg-balanced-entry-eligibility` was pushed to origin as a new branch at `4f1c78f`
+  (verified by `git ls-remote`, 2026-11-08T00:19Z); nothing was merged into `main`. This record is a follow-up commit, pushed the
+  same way.
 
 ## Environment
 
