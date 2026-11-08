@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-08T21:48Z (UTC, from `date -u`). File listings on this host show local time (UTC+1).
-- **Status: INCOMPLETE.** S1 (manifest) is sealed and is being committed. The next stage is S2, the pilot.
+- **Updated:** 2026-11-08T21:56Z (UTC, from `date -u`). File listings on this host show local time (UTC+1).
+- **Status: INCOMPLETE.** S1–S4 are complete and sealed (S1 committed in `63352297`; S3/S4 are not yet committed). The next stage is S5, the report.
 - **Authority:**
   - `PROTOCOL.md` sha256 `a82513520c65857985b6d007bd19e1c10977611c086a91fab26c5d0636d75250`, frozen by the manifest.
   - `COMPARISON_MANIFEST.json` sha256 `8d01c734027bd936be3fdacb07fcee7c291b682a9c01e597b7e3a5256288e416`, sealed
@@ -12,13 +12,22 @@
     1.0.0, `8c38ac15…e639d`; preflight PASS).
   - `AMENDMENTS.md`: none.
 - **Stages:**
-  - S1 manifest: complete.
-  - S2 pilot, S3 comparison, S4 neighbourhood, S5 report: not started.
+  - S1 manifest: complete (commit `63352297`).
+  - S2 pilot: complete, 21:49–21:51Z, `results/logs/pilot-chain.log`, `PILOT-DONE`. p1a: the worker kill failed the job
+    in 18 s (exit 1, 606 committed). p1b resumed (606 hits + 1,722 fresh). p2a: SIGTERM gave exit 75 (854 committed).
+    p2b resumed (854 hits + 1,474 fresh). The p1 and p2 records are equal, and the joint-primary reproduction passed
+    in both. Peak 3.1 GiB of unit memory with 8 workers.
+  - S3 comparison: sealed 21:51:35Z, `results/comparison.json` sha256 `66bb9912c6a8663f…` (unit `vgtpair-compare`, 5.6 s,
+    712 MB). 24/24 comparator records equal Priority 2's sealed ones; the identities and reconciliations pass.
+  - S4 neighbourhood: sealed 21:53:08Z, `results/neighbourhood.json` sha256 `8b77e6f552d003ca…` (unit `vgtpair-nbhd`,
+    33.8 s, 2,328 fresh evaluations, peak 3.19 GiB). The joint primary reproduced in all 21 fields; the pair evidence
+    equals pilot p1's.
+  - Amendment E1: a label-only correction (the scope text of three reused rows); no number changes.
+  - S5 report: not started.
   - Task B documents: the standard, template, registry and preflight are written. The `CLAUDE.md`/`AGENTS.md` links,
     the roadmap and the doc links are not started.
 - **Running:** nothing.
-- **Next command:** commit S1, then
-  `npm run vgt-pair -- launch --unit vgtpair-pilot-p1 --wait -- neighbourhood --pilot p1 --kill-worker-after 300`.
+- **Next command:** none to run. Write `REPORT.md` from `results/tables/` (regenerate with `node --experimental-transform-types --disable-warning=ExperimentalWarning tools/vgt-d1-growth-separate-pooled/tables.ts`).
 
 ## Environment
 
@@ -47,9 +56,9 @@ The evaluation digest is `c936f691…` and the closure digest `65de4cc4…`. Bot
 | Stage | Status | Command (repository root) | Output | Rerun |
 |---|---|---|---|---|
 | S1 manifest | complete | `npm run vgt-pair -- manifest` | `COMPARISON_MANIFEST.json` | refuses (exists) |
-| S2 pilot | not started | `npm run vgt-pair -- launch --unit vgtpair-pilot-p1 --wait -- neighbourhood --pilot p1 --kill-worker-after 300` (must fail, exit 1), then the same command without `--kill-worker-after`; then `--pilot p2` stopped with `systemctl --user kill -s SIGTERM vgtpair-pilot-p2` (exit 75), then rerun | `.cache/vgt-d1-growth-separate-pooled/pilot/` | pilot only, resumable from the archive |
-| S3 comparison | not started | `npm run vgt-pair -- launch --unit vgtpair-compare --wait -- compare` | `results/comparison.json`, `results/ledgers/` | once; reruns whole if interrupted (nothing sealed until the end) |
-| S4 neighbourhood | not started | `npm run vgt-pair -- launch --unit vgtpair-nbhd --wait -- neighbourhood --workers 8` | `results/neighbourhood.json` | once; resumes from its archive |
+| S2 pilot | complete | `bash research/vgt-d1-growth-separate-pooled/chains/pilot.sh` (p1a: 2 workers, `--kill-worker-after 300`; p1b: 8 workers; p2a: SIGTERM to the main process at ≥ 300 completed; p2b) | `.cache/vgt-d1-growth-separate-pooled/pilot/p{1,2}/neighbourhood.json` | pilot only |
+| S3 comparison | complete (sealed `66bb9912…`) | `npm run vgt-pair -- launch --unit vgtpair-compare --wait -- compare` | `results/comparison.json`, `results/ledgers/` | once; reruns whole if interrupted (nothing sealed until the end) |
+| S4 neighbourhood | complete (sealed `8b77e6f5…`) | `npm run vgt-pair -- launch --unit vgtpair-nbhd --wait -- neighbourhood --workers 8` | `results/neighbourhood.json` | once; resumes from its archive |
 | S5 report | not started | tables tool, `REPORT.md` | — | safe |
 
 ## Guards
