@@ -13,8 +13,7 @@
   - `STANDARD_ADOPTION.json`: `90140a3945d15a63…` (standard 1.0.0, `8c38ac1528575324…`; preflight PASS).
   - `AMENDMENTS.md` head: E1 (a label correction only).
 - **Running:** nothing. The last unit, `vgtpair-npm-test`, finished at about 22:00Z.
-- **Next command:** none. Await the review, and do not rerun anything. Whether to push is asked once at the end of the
-  session.
+- **Next command:** none. Await the review, and do not rerun anything. The branch is pushed (see Guards).
 - **Verification at closing:**
   - `npm run vgt-pair -- verify`: all 3 seals ok;
   - `npm run research-preflight -- --all`: PASS;
@@ -82,8 +81,9 @@ Every sealed stage refuses a rerun.
 - **Never edit** anything under `research/vgt-d1-growth-joint/` or `src/vgt-d1-growth-joint/`.
 - **Never rewrite** this study's sealed records, protocol or manifest. Changes go to `AMENDMENTS.md`.
 - **No search, no Priority 3, no Strategy Lab.**
-- **Push:** ask once (memory: brief vs wrapper). The brief needs separate session authorization, and the wrapper asked
-  for "the requested Git commit and push".
+- **Push (done):** asked once at the end; the user chose commit and push. Branch
+  `research/vgt-d1-growth-separate-pooled` was pushed to origin at `743cc8f2` (2026-11-08T22:04Z, confirmed with
+  `git ls-remote`); there is no merge into main. This record is a follow-up commit, pushed the same way.
 
 ## Disclosures
 
