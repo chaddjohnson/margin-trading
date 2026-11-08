@@ -1,0 +1,69 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vgt-d1-growth-separate-pooled",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "1.0.0",
+  "sha256": "8c38ac15285753240be52c1a55739b2d1f4bed0e49531821c19e7437d3ae639d"
+ },
+ "readAt": "2026-11-08T21:42:27Z",
+ "adoptedAt": "2026-11-08T21:47:58Z",
+ "protocol": {
+  "path": "research/vgt-d1-growth-separate-pooled/PROTOCOL.md",
+  "sha256": "a82513520c65857985b6d007bd19e1c10977611c086a91fab26c5d0636d75250"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "none: a bounded retrospective diagnostic of Priority 2's frozen single-family selections pooled; no case is selected, ranked for selection or relabelled; Priority 2's frozen primary (C24/informed#1 top) is unchanged",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": null,
+  "notes": "no search (0 proposals). Evaluations are fixed by the manifest: 6 cases + 12 comparators on D24 and FULL, 36 causal-removal reruns, and Priority 2's neighbourhood instrument for the pair plus the joint primary's reproduction (about 2,330 D24 evaluations); the counts are reported from the sealed records"
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§1.8",
+   "kind": "adaptation",
+   "description": "no search and no earlier-cutoff reruns; the pair's components come from Priority 2's frozen C24 single-family lanes",
+   "justification": "a diagnostic (§0.1); the brief forbids a new search and rerunning expensive searches",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "Priority 2's sealed parity (parity-3, 341/341) is reused for its unchanged engine, guarded by its evaluation and closure digests; every comparator must reproduce its sealed record exactly and the instrument must reproduce the joint primary's sealed C24 evidence",
+   "justification": "the engine is byte-identical to the frozen one; reproduction checks replace a new parity stage",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§6.4",
+   "kind": "adaptation",
+   "description": "no tuning benchmark; interruption tests (worker kill, graceful stop, each resumed) on the only parallel stage; the comparison stage is one in-process run that seals only at its end",
+   "justification": "the brief forbids a broad tuning benchmark; the comparison stage takes seconds",
+   "userAgreement": null
+  }
+ ]
+}
