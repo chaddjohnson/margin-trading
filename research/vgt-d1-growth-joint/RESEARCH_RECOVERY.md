@@ -2,21 +2,27 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-08T08:02Z (UTC, from `date -u`)
-- **Status:** INCOMPLETE — stage S2 (engineering pilot part 2 running). No study search has run.
-- **Authority:** `brief/BRIEF.md` (sha256 `b6dc8758…a2a88fb`). `PROTOCOL.md` drafted, not frozen (§14 to fill from the
-  bench). Amendment head: none.
-- **Complete:** engine; doors + `results/doors-pins.json`; `fixtures/controls.json`; synthetic tests 13/13;
-  **parity sealed** `results/parity/parity.json` (sha256 `b80790f0…7115`, 341 checks, 0 failed, evaluation digest
-  `a9e7c186…`); pilot part 1 (`results/logs/pilot-chain.log`: A straight, B stop→resume, C unit SIGKILL→resume, D worker
-  death failed in 20 s→resume; `PILOT-COMPARE {"b":true,"c":true,"d":true}`); pilot X1–X3 expected failures.
-- **Running:** `chains/pilot2.sh` (background shell `bcdlrq31g`, log `results/logs/pilot2-chain.log`): E (C24-shaped,
-  every lane, pilot budgets) → F (C19/C21/C23 pilot + sequential) → bench (D24 8/12/14 workers, D19 14). Done iff the log
-  ends `PILOT2-DONE`; a failure prints `PILOT-FAILED`.
-- **Next command:** fill PROTOCOL §14 from `.cache/vgt-d1-growth-joint/pilot/bench.jsonl`; `npm run vgt-joint --
-  freeze-protocol`; commit; then `bash research/vgt-d1-growth-joint/chains/study.sh` (background).
-- **Do not change** any file in `src/vgt-d1-growth-joint/lab.ts` `evaluationFiles` without re-sealing parity under a new
-  name and an amendment (the parity record pins digest `a9e7c186…`).
+- **Updated:** 2026-11-08T11:30Z (UTC, from `date -u`)
+- **Status:** INCOMPLETE — stage S6 (the study chain is running: C24 search). C19, C21, C23 and the sequential policies complete.
+- **Authority:** `PROTOCOL.md` **frozen** (sha256 `7a680692…cc74`, `results/protocol-freeze.json`; evaluation digest
+  `c936f691…`, closure digest `65de4cc4…`, 217 files); `AMENDMENTS.md` head **R5** (pre-freeze; no post-freeze entry);
+  brief sha256 `b6dc8758…a2a88fb`. Freeze commit **`3bc7856`**.
+- **C19 (sealed):** search `bce8c7bf9f04…`, selection `9d6a4d1ffe34…` (committed `a5ad22ad` before its slice), evaluation `2bdd6cc7f20f…`; primary `C19/indep/A/rise/off#1 top`.
+- **C21 (sealed):** search `e716ad446187…`, selection `217effeb93de…` (committed `eda1578a` before its slice), evaluation `f9eaf98f1f23…`; primary `C21/indep/A/breakout/on#1 top`.
+- **C23 (sealed):** search `70bb81af58de…`, selection `5fa09d0ba093…` (committed `72c13b56`), evaluation `7249f2dbd2f6…`; primary `C23/indep/A/breakout/on#1 top`.
+- **Sequential (sealed `d86d362d2cca…`, committed `ad6edb44`):** joint procedure 2020–2024 −$1,691.64, sequential minute DD $64,570.38 → **chronologically unsupported** (frozen rule).
+- **Complete (sealed):** `results/parity/parity-3.json` (sha256 `c61415c9…b336`, 341/341; the frozen code's parity;
+  `parity.json`, `parity-2.json` history), the pilot (`results/pilot/PILOT.md`), fixtures, door pins.
+- **Running:** `vgtj-chain.service` (bash `chains/study.sh`, log `results/logs/study-chain.log`), which launches one unit
+  at a time: `vgtj-search-C19` → `vgtj-qualify-C19` → commit → `vgtj-eval-C19` → C21 … → C23 … → `vgtj-sequential` →
+  commit → `vgtj-search-C24` → `vgtj-qualify-C24` → `vgtj-diagnostics` → commit → `CHAIN-DONE`. Each unit logs to
+  `results/logs/<unit>.log`; memory samples `results/memory/<job>.jsonl`. Started 08:52:30Z. Estimate 3.5–4.5 h.
+- **Check before anything:** `systemctl --user list-units 'vgtj-*'`; `tail results/logs/study-chain.log`. A failure
+  prints `CHAIN-FAILED at <step>`. If the chain unit died but a stage unit is gone too, rerun
+  `bash research/vgt-d1-growth-joint/chains/study.sh` inside a unit (it skips sealed stages; an interrupted search or
+  qualification resumes from its archive in `.cache/vgt-d1-growth-joint/jobs/<job>/`).
+- **Next after CHAIN-DONE:** `npm run vgt-joint -- freeze-selection`; commit `FROZEN_SELECTION.json`; then
+  `npm run vgt-joint -- launch --unit vgtj-validate --wait -- validate --workers 6`; tables, charts, report.
 
 ## Environment
 
