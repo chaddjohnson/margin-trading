@@ -60,8 +60,9 @@
 
 - **Do not rerun:** every stage refuses once sealed. The validation opened FULL once. Never edit a sealed record or
   the frozen protocol.
-- **Push:** the user's wrapper asks for "the requested Git commit and push" while the brief says not to push without
-  separate authorization. Commits are local until the user confirms (memory: brief-vs-wrapper-commit-push).
+- **Push (done):** asked once at the end; the user chose commit and push. Branch `research/vgt-d1-growth-joint` was
+  pushed to origin at `0d1dfb71` (2026-11-08, confirmed with `git ls-remote`); no merge into main. This record is a
+  follow-up commit, pushed the same way.
 
 ## Disclosures (also in REPORT.md §9)
 
