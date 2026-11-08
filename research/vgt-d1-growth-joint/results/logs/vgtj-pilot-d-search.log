@@ -1,0 +1,17 @@
+[vgt-d1-growth-joint 07:56:12Z] job pilot-d-search-P18: door D19, 8 worker(s), cgroup /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/vgtjoint.slice/vgtj-pilot-d-search.service (memory.high 47244640256, memory.max 51539607552, swap.max 0), stop at 17179869184
+[vgt-d1-growth-joint 07:56:12Z] lane P18/indep/A/rise/off (indep) starts
+[vgt-d1-growth-joint 07:56:24Z] P18/indep/A/rise/off island 0 (A): 16 new, 2 generations, stop budget
+[vgt-d1-growth-joint 07:56:25Z] P18/indep/A/rise/off island 1 (A): 16 new, 2 generations, stop budget
+[vgt-d1-growth-joint 07:56:32Z] pool failure: worker 785869 exited (SIGKILL)
+[vgt-d1-growth-joint 07:56:32Z] job pilot-d-search-P18: failed: worker 785869 exited (SIGKILL) (2445 fresh, 17 archive hits); peak cgroup 2219003904, peak RSS 2548027392
+/home/chad/projects/margin-trading/src/vgt-d1-growth-joint/workers.ts:120
+        const error = new Error(`worker ${child.pid} exited (${code ?? signal})`);
+                      ^
+
+Error: worker 785869 exited (SIGKILL)
+    at ChildProcess.<anonymous> (/home/chad/projects/margin-trading/src/vgt-d1-growth-joint/workers.ts:120:23)
+    at ChildProcess.wrapper (node:events:639:12)
+    at ChildProcess.emit (node:events:514:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:295:12)
+
+Node.js v24.21.0

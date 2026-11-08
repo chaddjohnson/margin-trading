@@ -28,3 +28,17 @@ npm run vgt-joint -- launch --unit <unit> --wait -- <command> [options]     # lo
 rerun the same command: archived evaluations are read back, never recomputed, and the replay reproduces the
 uninterrupted run. The chain is fail-fast: rerun it after fixing the cause; completed stages refuse to rerun, so it must
 be restarted from the first incomplete stage (edit a copy of the chain, never delete a sealed record).
+
+## Executed (2026-11-08, UTC)
+
+| Time | Stage | Command (unit) | Result |
+|---|---|---|---|
+| 07:42–07:59 | pilot part 1 | `chains/pilot.sh` (units `vgtj-pilot-{a,b,c,d}-*`) | A=B=C=D; stop exit 75; worker death exit 1 after 20 s |
+| 07:59–08:47 | pilot part 2 | `chains/pilot2.sh` (X1–X3, E, F, bench) and `validate --pilot e` (`vgtj-pilot-g-validate`) | all as expected |
+| 08:00, 08:49, 08:52 | parity | `launch --unit vgtj-parity[-2,-3] --wait -- parity [--name parity-2|parity-3]` | 341/341 each; `parity-3.json` is the frozen code's |
+| 08:52 | freeze | `npm run vgt-joint -- freeze-protocol`; commit `3bc7856` | protocol sha256 `7a680692…` |
+| 08:52–13:02 | study chain | `systemd-run --user --unit=vgtj-chain --slice=vgtjoint.slice … bash chains/study.sh` | C19 `a5ad22ad`, C21 `eda1578a`, C23 `72c13b56`, sequential `ad6edb44`, C24 + diagnostics `00be6975`; `CHAIN-DONE` |
+| 13:03 | frozen selection | `npm run vgt-joint -- freeze-selection`; commit `3ed30ff0` | `FROZEN_SELECTION.json` sha256 `e677e894…` |
+| 13:03 | validation (once) | `launch --unit vgtj-validate --wait -- validate --workers 8` | sealed; primary +$22,251.64 |
+| 13:05– | tests | `systemd-run … --unit=vgtj-npm-test … npm test` | `results/logs/npm-test.log` |
+| after | tables, charts | `node --experimental-transform-types tools/vgt-d1-growth-joint/tables.ts`; `charts.ts <ledgers> <out> <title> <NN=…> 2024-12-31`; `example.ts > results/diagnostics/partial-release-synthetic.json` | report helpers |
