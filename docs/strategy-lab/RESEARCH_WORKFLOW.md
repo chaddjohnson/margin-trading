@@ -157,6 +157,10 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
 
 ## 5. Claude-led optimisation without a UI button
 
+> **Binding rules for new studies:** [docs/research/OPTIMIZATION_STANDARD.md](../research/OPTIMIZATION_STANDARD.md)
+> (versioned; adoption manifest and `npm run research-preflight`). The summary below is the Study 8 discipline that
+> the standard consolidates; where they differ, the standard applies.
+
 A future optimisation of an entry mechanism follows [STUDY8_METHODOLOGY.md](STUDY8_METHODOLOGY.md) §8:
 
 - a frozen protocol;

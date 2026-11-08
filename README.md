@@ -252,6 +252,9 @@ exactly (every summary field and daily row).
   makes them part of the tuning data, so they no longer measure out-of-sample performance; keep final-period results
   out of optimization reports and strategy selection.
 - VGT's 2024–2025 period was inspected by earlier VGT programs, so it is not a sealed holdout for VGT.
+- New optimization studies follow [docs/research/OPTIMIZATION_STANDARD.md](docs/research/OPTIMIZATION_STANDARD.md)
+  (development 2016–2024, validation 2025–2026 of frozen selections only; adoption preflight
+  `npm run research-preflight`). Research priorities: [docs/research/ROADMAP.md](docs/research/ROADMAP.md).
 
 ### Legacy research inputs and reproducibility
 

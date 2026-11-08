@@ -170,6 +170,10 @@ docs/claude/context-recovery.md` and committing).
 
 ## 4. Notes for this repository
 
+- Optimization studies (and bounded diagnostics of frozen selections) also follow
+  `docs/research/OPTIMIZATION_STANDARD.md`: the checkpoint records the pinned standard version and the latest
+  preflight result, and a continuation after a newer standard records "retained pinned standard x.y.z" or the
+  amendment that adopts the new version.
 - Completed studies under `research/` are frozen: their protocols, manifests, sealed records and phenotypes are never
   edited, re-hashed or rerun. A new question gets a new study namespace and its own protocol.
 - Several studies verify a code manifest spanning `src/**/*.ts`; adding source files later changes that manifest.

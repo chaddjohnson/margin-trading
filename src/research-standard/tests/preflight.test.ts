@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { describe, it } from 'node:test';
+import { after, describe, it } from 'node:test';
 import {
   type Adoption,
   checkAdoption,
@@ -29,8 +29,16 @@ interface Fixture {
 
 // A minimal repository: the standard at 1.0.0 (optionally 1.1.0 as current), its registry, one study with a protocol
 // that records the standard, and a valid adoption manifest.
+const roots: string[] = [];
+
+after(() => {
+  for (const r of roots) fs.rmSync(r, { recursive: true, force: true });
+});
+
 const fixture = (o: { current?: '1.0.0' | '1.1.0' } = {}): Fixture => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'preflight-'));
+
+  roots.push(root);
   const v100 = standardText('1.0.0');
   const v110 = standardText('1.1.0', '\nA new rule.\n');
   const current = o.current === '1.1.0' ? v110 : v100;

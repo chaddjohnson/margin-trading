@@ -127,6 +127,9 @@ Further details:
 
 ## 8. What a future entry-mechanism optimisation should carry over
 
+> This list is the historical starting point. New studies follow the versioned
+> [optimization standard](../research/OPTIMIZATION_STANDARD.md), which consolidates it with the later studies' lessons.
+
 A Claude-led study of Strategy Lab entry mechanisms, run from the CLI, should:
 
 - write and freeze a protocol before searching: hypotheses, criterion, folds, doors, budgets, seeds;
