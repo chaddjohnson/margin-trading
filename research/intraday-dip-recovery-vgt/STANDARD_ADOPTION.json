@@ -1,0 +1,48 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/intraday-dip-recovery-vgt",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.0.0",
+  "sha256": "2005a88c2e24f5e2ab4e461b0425f97d006781a45518f78d9f10fd9320f40105"
+ },
+ "readAt": "2026-11-09T18:09:38Z",
+ "adoptedAt": "2026-11-09T19:10:42Z",
+ "protocol": {
+  "path": "research/intraday-dip-recovery-vgt/PROTOCOL.md",
+  "sha256": "8a71e641da357ab6257f2606715ae99627cb6914e5a8718764706f377b2f4e6a"
+ },
+ "dateSplit": {
+  "development": { "from": "2016-01-04", "to": "2024-12-31" },
+  "validation": { "from": "2025-01-01", "to": "2026-10-30" },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "the actual-profit role of the C24 selectable set (qualified members of the independent and informed lane shortlists and the Intraday D1 incumbent vectors projected into F1-F4): the highest development centre net after 5 bps per side and 11% interest; ties by the lower centre maximum minute drawdown, then the canonical candidate ID (PROTOCOL.md §9.3); qualification Q1 centre net > 0, Q2 centre minute DD <= 35,000, Q3 confirmation (3 x 128) p90 minute DD <= 35,000; no qualified member: no qualifying primary",
+  "roles": ["actual-profit", "robust-profit", "balanced", "lower-drawdown"]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 207000,
+  "backendEvaluations": 2110000,
+  "notes": "planned base schedule (PROTOCOL.md §7.3, budgets.ts): independent lane per family and cutoff 6 cells x 1,024 screened + 256 promoted + 4 islands x 1,024 new proposals (+ up to 2 extension islands) + rungs 48 @ 64 / 16 @ 128 + refinement ~ 10,400 proposals and ~ 88,000 evaluations (~ 12,500 / 123,000 with every extension), identical at C19, C21, C23 and C24 (16 lanes ~ 166,000 proposals, ~ 1.41M evaluations); informed lane (C24, per family) ~ 5,100 proposals / 83,000 evaluations; exploratory 2-bp lane (C24, per family, never selectable) ~ 5,200 / 45,000; qualification ~ 1,290 evaluations per member (~ 191,000). Caps with every extension: ~ 255,000 proposals, ~ 2.9M evaluations. Reports count centres, neighbours per stage, fold work, retries and archive/cache hits separately; actual counts come from the sealed search and qualification records."
+ },
+ "deviations": [
+  { "id": "AD1", "section": "§2.5", "kind": "adaptation", "description": "primary = actual profit (highest qualified centre net; ties lower centre DD, then ID); balanced divides by max(selection p90 DD, $1); lower-drawdown vacant when the primary's selection robust net is not positive", "justification": "brief §3.1-3.2 require actual development net as the primary target and the four roles with exact formulas", "userAgreement": null },
+  { "id": "AD2", "section": "§2.1", "kind": "adaptation", "description": "gates Q1 centre net > 0, Q2 centre minute DD <= $35,000, Q3 confirmation p90 minute DD <= $35,000 (inclusive); the brief's 'selection/confirmation p90' resolved as confirmation for qualification, selection for ranking, rung p90 as search feasibility; no neighbourhood profit gate", "justification": "brief §3.1 (the neighbourhood DD gate is [S]; do not treat median/p10 profitability as a gate); standard §2.3 (confirmation qualifies, selection ranks)", "userAgreement": null },
+  { "id": "AD3", "section": "§4.1", "kind": "adaptation", "description": "NSGA-II with four objectives (-centre net, centre DD, -robust net, p90 DD); promotion 1/4 centre net, 1/4 robust net or constrained rank, 1/2 round robin over six protected cells (dip depth x lookback scale)", "justification": "brief §3.1 and §5.1 (centre net and DD central; >= 25% centre-profit promotion; protected strata)", "userAgreement": null },
+  { "id": "AD4", "section": "§5.3", "kind": "adaptation", "description": "radii in grid steps (B +-1 level; X, Y, S, P +-3; H, L, W +-2; U +-5); one-scope families entry {B,X,Y,L}, exit {S,H,U}, continuation {P,W}; the family fixed in every neighbourhood", "justification": "the Intraday D1 grid's relative radii (+-19-21%); brief §5.2 (categorical choices held fixed)", "userAgreement": null },
+  { "id": "AD5", "section": "§3.4", "kind": "adaptation", "description": "pooled-method arms (§3.4), multi-component participation (§4.7), combined-strategy participation (§2.7) and participation attribution (§2.9) are not applicable: one VGT book, one funded position, F1-F4 are alternatives never funded together; family on/off effects reported as causal whole-replay differences", "justification": "brief §3.3 ('not applicable to the primary study. Explicitly say why in the protocol')", "userAgreement": null },
+  { "id": "AD6", "section": "§5.1", "kind": "adaptation", "description": "single-family identity: no pool exists; parity P6 proves the worker (search) path equals the local (report) path; pooled identities n/a", "justification": "brief §6.4", "userAgreement": null },
+  { "id": "AD7", "section": "§2.6", "kind": "adaptation", "description": "episodes for concentration = calendar months with an entry; the top-month blackout rerun bars new funding there and nothing else", "justification": "brief §7 (define episodes causally and predeclare)", "userAgreement": null },
+  { "id": "AD8", "section": "§1.7", "kind": "adaptation", "description": "accounting from 2016-01-04, one common arming date 2016-02-01 for every candidate and harmonized control; native daily D1 keeps no arming date", "justification": "the grid's longest lookback needs >= 10 sessions of history (Intraday D1's convention); continuous runs from 2016-01-04 otherwise", "userAgreement": null },
+  { "id": "D1", "section": "§1.8", "kind": "departure", "description": "the earlier-cutoff repeat (C19, C21, C23, identical budgets) covers the independent four-family procedure; the informed lane and the exploratory 2-bp lane run at C24 only (every incumbent and informed seed was selected or diagnosed with data through 2024, after each earlier cutoff); the chronological verdict tests the independent procedure only and the C24 primary may come from the informed set", "justification": "no cutoff-eligible informed seed exists at C19-C23, and an informed fold carries no chronological evidence (§1.9)", "userAgreement": "brief research/intraday-dip-recovery-vgt/brief/BRIEF.md §4: 'Run full search and frozen selection for each, using the same declared budget, criteria, families and independent-lane construction as the main cutoff'; §3.3: 'Earlier-cutoff folds may use an independent lane as chronological evidence only to the extent that seeds, ranges and selection genuinely exclude later-selected configurations and examined outcomes'" }
+ ]
+}

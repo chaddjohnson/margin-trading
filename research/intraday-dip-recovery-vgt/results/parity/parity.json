@@ -1,0 +1,5905 @@
+{
+ "stage": "parity",
+ "at": "2026-11-09T19:10:15Z",
+ "code": {
+  "digest": "13e803f3953cdd3ef8f0b9eb6dd6ea9375a8b12a3be201a42699e19058219a49",
+  "files": {
+   "src/intraday-d1/engine.ts": "abd24e04b2b36a5ac255dd7cb76ade0937f2b8e89b312e303316fa0bbdc8c535",
+   "src/intraday-d1/periods.ts": "d2ff37a065d83cfde6731f18ee0dfc6c54710261bb6d58c8a19137dd00705838",
+   "src/intraday-dip-recovery/bench.ts": "3472546256693a965ee3248472ca17ac8b415b0906f0fe6a6bb302cb93ec6e50",
+   "src/intraday-dip-recovery/budgets.ts": "030add21290b8888833e887afb5caca8925201a5b7bbc5ea077f70d5e7225717",
+   "src/intraday-dip-recovery/context.ts": "1df2c39ffc51a25dd8731f1542319d5f25cb8906eadb8f2ff9d992261c1a4028",
+   "src/intraday-dip-recovery/data.ts": "213c708689bec39249e084f23bd6a4af44b9aa282b6f44a34a1aa9523e1d880d",
+   "src/intraday-dip-recovery/engine.ts": "188429c58c23dd35c39118c92cf09c56af09fdb1bfca5c23fd3db4f51b5d02dd",
+   "src/intraday-dip-recovery/evaluate.ts": "b204d325d928c6bae213656936a8a678c0582f29f3b73789361ca46a94e6d255",
+   "src/intraday-dip-recovery/fitness.ts": "5b7908dbb0386571254b133e8c1633752c773dc4b3932c2e6ef959b029ecbd7b",
+   "src/intraday-dip-recovery/lab.ts": "0abf70edf3adb8aeb997c42edd5a713a8243795a6a06fe8c0791fa44398c4ffa",
+   "src/intraday-dip-recovery/main.ts": "21193389f20a920325679a17edb9ef5490fdeb03851a5a112ba4c926369bdfb9",
+   "src/intraday-dip-recovery/parity.ts": "511a35be0dad43b49cf7ac05cf3d87156295cdb8b82b4627778735ddb7657e7f",
+   "src/intraday-dip-recovery/pool.ts": "a010c2bcfa09e5aed99314084506c0f18ab798c9546ee6ab418a1aae062c263f",
+   "src/intraday-dip-recovery/post.ts": "66b38fa8d73f0f69cfac8c5e050b9ad5693f5b22f4bbd4b40aa7af0eeb6994e1",
+   "src/intraday-dip-recovery/qualify.ts": "4cef84e70fb9093e24d84bfde40e0081d736f5ef7ff99454bdfb914e85efcfe2",
+   "src/intraday-dip-recovery/reference.ts": "e461c40c308821d6443d2b4503fd51c6de55500ac0fe0c25a442418be3bc4afe",
+   "src/intraday-dip-recovery/resources.ts": "16a93eab84cecf6c25c4901c94e4aa49f5f39677cf916d4f8042122da83d2fe1",
+   "src/intraday-dip-recovery/seal.ts": "7a9a92c5a7ae6a40ecc9a29054378a612b852091813fa7d9eae773ad5d7d5ea0",
+   "src/intraday-dip-recovery/search.ts": "3efd6c1615e4425a35f350f51bfc30af2e2fd99b4fe4037bfcc8dd9acd691917",
+   "src/intraday-dip-recovery/space.ts": "4620d1e2cde3a590283c7c2e02c185ec38091c7b430168014a34e333549bada1",
+   "src/intraday-dip-recovery/stages.ts": "245bc3e9c3dc366fabfff6a7af4c1f3a9656c742de43e85423a8e3f8c1e72eb4",
+   "src/intraday-dip-recovery/worker.ts": "f0dcc48647dd8d1acecc3bfc453b1a09ea84f3bf16543a09f51c5568d9b683f7",
+   "src/lib/calendar.ts": "3a2a564c0ac40358be4f29625ed817934d99ff3ce890a851348c08660414cbcc",
+   "src/lib/corporateActions.ts": "ebdae50b5599518dca329f41a771e0afe5f8bf498a6e99255f853b6b911bd36f",
+   "src/lib/csv.ts": "0976732b35d2c39da5a9e81309bb121beea3b655b4290d2b24a69d011dd637c9",
+   "src/lib/session.ts": "319b069c49bc6aec5371bb0b01258aa7ef4da23486a6872a102c25e538853b98",
+   "src/optimizer/nsga2.ts": "ce00e3c0aaa09283dc334f07faed2cf646ddca906d68302a4b19f364877ce5d5",
+   "src/optimizer/rng.ts": "9c5402674fcb106fc54cd938fbc216d00bba80dc4458f5b38ce21256ddc8b849",
+   "src/optimizer/sobol.ts": "7f420687def739a7c1e1213a0f3bbf7c2224da8cd528f098543a4a89ae136976",
+   "src/research-standard/preflight.ts": "22e9f246bdf306d703bac1c00f173ab12a866e023b0f3841415b6cb068615614",
+   "src/study5-gdx-b5-three-etf/grid.ts": "e2d3ec3156505e46cd6527c0ef9ebe0898ca1ca611d4c6683ebd55db92ae8ced"
+  }
+ },
+ "passed": true,
+ "failures": [],
+ "results": {
+  "P1": {
+   "stop": {
+    "trades": 17,
+    "net": 137222.9678179804,
+    "minuteDd": 19330.689951494183,
+    "dailyDd": 15611.46155590692,
+    "d1": {
+     "net": 137222.9678179804,
+     "minuteDd": 19330.689951494183,
+     "dailyDd": 15611.46155590692
+    },
+    "problems": []
+   },
+   "next-open": {
+    "trades": 17,
+    "net": 138063.40727122003,
+    "minuteDd": 18982.82091121922,
+    "dailyDd": 15263.592515631957,
+    "d1": {
+     "net": 138063.40727122003,
+     "minuteDd": 18982.82091121922,
+     "dailyDd": 15263.592515631957
+    },
+    "problems": []
+   },
+   "sealedRecord": {
+    "net": 137222.97,
+    "minuteDd": 19330.69,
+    "dailyDd": 15611.46,
+    "trades": 17,
+    "source": "research/intraday-d1-vgt/REPORT.md §1 (canonical D1 CLI on the 2016–2024 prefix)",
+    "reproduced": true
+   }
+  },
+  "P2": {
+   "comparisons": 262,
+   "withDifferences": 0,
+   "runs": [
+    {
+     "door": "D24",
+     "label": "id-5.1v.e.1f.1y.t.1y.6.1f",
+     "variant": "base",
+     "lots": 83,
+     "net": 71245.58721423517,
+     "dd": 17279.912656021334,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-5.1v.a.1f.1y.s.1q.6.1r",
+     "variant": "cost10",
+     "lots": 80,
+     "net": 57340.406525768696,
+     "dd": 16581.19959037674,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-5.1v.e.1f.1y.r.2o.5.1f",
+     "variant": "rate14",
+     "lots": 88,
+     "net": 74261.25255069714,
+     "dd": 17403.200327254213,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-5.1v.d.1f.1y.l.1f.4.1h",
+     "variant": "nextOpen",
+     "lots": 76,
+     "net": 53625.59681249456,
+     "dd": 17392.074042614753,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-2.k.1v.19.1q.19.1b.v.1p",
+     "variant": "slip25",
+     "lots": 668,
+     "net": -91513.32360943336,
+     "dd": 92044.96258683219,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-0.1p.17.1q.1r.9.2b.17.1f",
+     "variant": "minuteLow",
+     "lots": 57,
+     "net": 45485.540916110695,
+     "dd": 24088.242590759008,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-1.1o.11.1r.1t.9.23.19.17",
+     "variant": "base",
+     "lots": 75,
+     "net": 92283.9267539343,
+     "dd": 14306.59116854132,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-2.1s.1i.1p.1s.h.1c.14.16",
+     "variant": "cost10",
+     "lots": 60,
+     "net": 72083.9394593494,
+     "dd": 22382.077247861107,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-3.1p.15.1h.1s.5.1.h.k",
+     "variant": "rate14",
+     "lots": 97,
+     "net": 96412.54733209936,
+     "dd": 14100.247184099473,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-4.1u.1l.1r.1m.r.2.l.1o",
+     "variant": "nextOpen",
+     "lots": 70,
+     "net": 67296.55573172552,
+     "dd": 20721.934597360203,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "id-5.1v.a.1d.1y.i.2i.i.1n",
+     "variant": "slip25",
+     "lots": 82,
+     "net": 60099.248364799016,
+     "dd": 13892.530873221513,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol0",
+     "variant": "minuteLow",
+     "lots": 191,
+     "net": -50280.86350031971,
+     "dd": 53885.06602316334,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol1",
+     "variant": "base",
+     "lots": 574,
+     "net": 32545.476298187692,
+     "dd": 56893.3615808551,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol2",
+     "variant": "cost10",
+     "lots": 3716,
+     "net": -695270.5062401351,
+     "dd": 695688.0697519742,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol3",
+     "variant": "rate14",
+     "lots": 639,
+     "net": 5014.423346279966,
+     "dd": 52654.90856031803,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol4",
+     "variant": "nextOpen",
+     "lots": 264,
+     "net": 7179.359546179531,
+     "dd": 32757.3956113547,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol5",
+     "variant": "slip25",
+     "lots": 7779,
+     "net": -1585112.722829376,
+     "dd": 1585404.0574025547,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol6",
+     "variant": "minuteLow",
+     "lots": 212,
+     "net": -64471.97080387361,
+     "dd": 75645.55974609763,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol7",
+     "variant": "base",
+     "lots": 3667,
+     "net": -366231.179098879,
+     "dd": 367163.08112122735,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol8",
+     "variant": "cost10",
+     "lots": 197,
+     "net": -45584.51432630909,
+     "dd": 45987.61608319194,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol9",
+     "variant": "rate14",
+     "lots": 1315,
+     "net": -57988.303665705884,
+     "dd": 82408.92175306816,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol10",
+     "variant": "nextOpen",
+     "lots": 540,
+     "net": -38165.434088832924,
+     "dd": 45039.638964708654,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol11",
+     "variant": "slip25",
+     "lots": 1697,
+     "net": -136160.0354557374,
+     "dd": 149291.12775137209,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol12",
+     "variant": "minuteLow",
+     "lots": 2,
+     "net": -2106.857539947321,
+     "dd": 9002.135391761318,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol13",
+     "variant": "base",
+     "lots": 1198,
+     "net": -42916.136734452644,
+     "dd": 73113.83667164901,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol14",
+     "variant": "cost10",
+     "lots": 372,
+     "net": -69004.38346646815,
+     "dd": 82929.72325612955,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol15",
+     "variant": "rate14",
+     "lots": 2607,
+     "net": -200248.34684420397,
+     "dd": 210112.0523623458,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol16",
+     "variant": "nextOpen",
+     "lots": 343,
+     "net": 62680.23333029978,
+     "dd": 55969.13001355172,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol17",
+     "variant": "slip25",
+     "lots": 709,
+     "net": -196204.45658219862,
+     "dd": 197444.5402701088,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol18",
+     "variant": "minuteLow",
+     "lots": 4,
+     "net": 5189.758616554071,
+     "dd": 2553.0844263471663,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol19",
+     "variant": "base",
+     "lots": 2296,
+     "net": -192199.07955713748,
+     "dd": 194547.66749406775,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol20",
+     "variant": "cost10",
+     "lots": 424,
+     "net": -50044.43882922758,
+     "dd": 57525.18529259697,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol21",
+     "variant": "rate14",
+     "lots": 3269,
+     "net": -238234.0766183693,
+     "dd": 240210.2873813986,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol22",
+     "variant": "nextOpen",
+     "lots": 906,
+     "net": -101605.8043195754,
+     "dd": 107079.18286623068,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol23",
+     "variant": "slip25",
+     "lots": 191,
+     "net": 61973.74120093762,
+     "dd": 59525.715412458674,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol24",
+     "variant": "minuteLow",
+     "lots": 60,
+     "net": -20265.22570690986,
+     "dd": 24393.964487694222,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol25",
+     "variant": "base",
+     "lots": 1021,
+     "net": -118936.9425609536,
+     "dd": 129336.97336144894,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol26",
+     "variant": "cost10",
+     "lots": 82,
+     "net": -45807.8492066683,
+     "dd": 51544.50384632656,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol27",
+     "variant": "rate14",
+     "lots": 15617,
+     "net": -1434411.6446793892,
+     "dd": 1434799.3705505626,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol28",
+     "variant": "nextOpen",
+     "lots": 7944,
+     "net": -829905.2810419535,
+     "dd": 830196.9093043874,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol29",
+     "variant": "slip25",
+     "lots": 803,
+     "net": -22396.24372429529,
+     "dd": 77164.81205375966,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol30",
+     "variant": "minuteLow",
+     "lots": 76,
+     "net": -26700.741612678456,
+     "dd": 47206.0997445615,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol31",
+     "variant": "base",
+     "lots": 1047,
+     "net": -649.68173339801,
+     "dd": 32935.788674546115,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol32",
+     "variant": "cost10",
+     "lots": 481,
+     "net": 3422.088012166594,
+     "dd": 74842.15172673947,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol33",
+     "variant": "rate14",
+     "lots": 2797,
+     "net": -250306.768506021,
+     "dd": 254640.21474748477,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol34",
+     "variant": "nextOpen",
+     "lots": 88,
+     "net": -18501.39830028217,
+     "dd": 25159.033562268967,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol35",
+     "variant": "slip25",
+     "lots": 1228,
+     "net": -268547.81770006364,
+     "dd": 271713.93253860506,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol36",
+     "variant": "minuteLow",
+     "lots": 158,
+     "net": -50382.15261695387,
+     "dd": 58593.76330138417,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol37",
+     "variant": "base",
+     "lots": 2069,
+     "net": -189789.30325232592,
+     "dd": 189789.30325232592,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol38",
+     "variant": "cost10",
+     "lots": 755,
+     "net": -140051.58152187703,
+     "dd": 140807.21740033888,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol39",
+     "variant": "rate14",
+     "lots": 772,
+     "net": 31379.13995572358,
+     "dd": 44264.44239758393,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol40",
+     "variant": "nextOpen",
+     "lots": 330,
+     "net": -8986.610827175198,
+     "dd": 23600.177490963986,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol41",
+     "variant": "slip25",
+     "lots": 1095,
+     "net": -284941.28155732265,
+     "dd": 285979.33446632087,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol42",
+     "variant": "minuteLow",
+     "lots": 159,
+     "net": -2816.5250070079173,
+     "dd": 51995.71032597449,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol43",
+     "variant": "base",
+     "lots": 4953,
+     "net": -460270.12359486264,
+     "dd": 463062.02050570626,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol44",
+     "variant": "cost10",
+     "lots": 612,
+     "net": -105665.1811352096,
+     "dd": 106958.53939288466,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol45",
+     "variant": "rate14",
+     "lots": 159,
+     "net": 74758.4309162685,
+     "dd": 51613.135431384915,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol46",
+     "variant": "nextOpen",
+     "lots": 2,
+     "net": 4342.545311346968,
+     "dd": 5197.57299140557,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol47",
+     "variant": "slip25",
+     "lots": 1751,
+     "net": -276437.2367305391,
+     "dd": 278964.6473392957,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol48",
+     "variant": "minuteLow",
+     "lots": 10,
+     "net": -2363.5481263577253,
+     "dd": 14372.736287126841,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol49",
+     "variant": "base",
+     "lots": 919,
+     "net": 60786.100957342576,
+     "dd": 51672.34283144996,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol50",
+     "variant": "cost10",
+     "lots": 883,
+     "net": -136264.7849126273,
+     "dd": 136815.0392501366,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol51",
+     "variant": "rate14",
+     "lots": 2321,
+     "net": -135588.18128501388,
+     "dd": 144200.11096871682,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol52",
+     "variant": "nextOpen",
+     "lots": 525,
+     "net": 20174.147442181096,
+     "dd": 42622.34622198236,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol53",
+     "variant": "slip25",
+     "lots": 1733,
+     "net": -239963.46068524395,
+     "dd": 241942.50820740493,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol54",
+     "variant": "minuteLow",
+     "lots": 524,
+     "net": -135589.4229776502,
+     "dd": 151396.27456044598,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol55",
+     "variant": "base",
+     "lots": 2287,
+     "net": -125944.28125928817,
+     "dd": 130970.95363339843,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol56",
+     "variant": "cost10",
+     "lots": 183,
+     "net": -34097.52562451297,
+     "dd": 39194.36973191785,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol57",
+     "variant": "rate14",
+     "lots": 450,
+     "net": 15633.37876853836,
+     "dd": 64031.58550879132,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol58",
+     "variant": "nextOpen",
+     "lots": 73,
+     "net": 3867.6856078661326,
+     "dd": 12530.039730132376,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol59",
+     "variant": "slip25",
+     "lots": 621,
+     "net": -88116.80506441461,
+     "dd": 111447.798517591,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol60",
+     "variant": "minuteLow",
+     "lots": 23,
+     "net": -764.8092124125369,
+     "dd": 13455.19546085378,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol61",
+     "variant": "base",
+     "lots": 4151,
+     "net": -342330.091309357,
+     "dd": 344548.1036825,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol62",
+     "variant": "cost10",
+     "lots": 546,
+     "net": -58948.08203034909,
+     "dd": 82305.95282583858,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol63",
+     "variant": "rate14",
+     "lots": 5380,
+     "net": -465401.4014700703,
+     "dd": 466607.4718385183,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol64",
+     "variant": "nextOpen",
+     "lots": 228,
+     "net": -18801.978758841342,
+     "dd": 31520.84528841883,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol65",
+     "variant": "slip25",
+     "lots": 2070,
+     "net": -451398.5275140538,
+     "dd": 454704.2798363571,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol66",
+     "variant": "minuteLow",
+     "lots": 10,
+     "net": 9183.782350393234,
+     "dd": 21625.40392011287,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol67",
+     "variant": "base",
+     "lots": 5684,
+     "net": -499141.4681042756,
+     "dd": 500149.86978163593,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol68",
+     "variant": "cost10",
+     "lots": 22,
+     "net": 8416.445251826428,
+     "dd": 3255.204838117541,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol69",
+     "variant": "rate14",
+     "lots": 280,
+     "net": 46219.18691426356,
+     "dd": 45106.91074207594,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol70",
+     "variant": "nextOpen",
+     "lots": 1856,
+     "net": -152281.0673666654,
+     "dd": 161365.46302272138,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol71",
+     "variant": "slip25",
+     "lots": 2350,
+     "net": -408710.826406735,
+     "dd": 410317.8034722994,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol72",
+     "variant": "minuteLow",
+     "lots": 2,
+     "net": 503.09290044523186,
+     "dd": 8998.866730458236,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol73",
+     "variant": "base",
+     "lots": 2979,
+     "net": -245613.23435344355,
+     "dd": 246838.86728481523,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol74",
+     "variant": "cost10",
+     "lots": 1961,
+     "net": -301207.52588834276,
+     "dd": 314847.68806557846,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol75",
+     "variant": "rate14",
+     "lots": 673,
+     "net": -30121.403472145772,
+     "dd": 53497.478470818256,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol76",
+     "variant": "nextOpen",
+     "lots": 743,
+     "net": -7381.96136008588,
+     "dd": 53587.547833358214,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol77",
+     "variant": "slip25",
+     "lots": 2417,
+     "net": -251942.72976525684,
+     "dd": 253836.5034933474,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol78",
+     "variant": "minuteLow",
+     "lots": 305,
+     "net": -92600.47961548762,
+     "dd": 94983.46112361016,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol79",
+     "variant": "base",
+     "lots": 291,
+     "net": 79183.23250004674,
+     "dd": 59959.316328756104,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol80",
+     "variant": "cost10",
+     "lots": 381,
+     "net": -29820.537514674375,
+     "dd": 33987.358601092375,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol81",
+     "variant": "rate14",
+     "lots": 643,
+     "net": -648.929712934193,
+     "dd": 74257.43463569738,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol82",
+     "variant": "nextOpen",
+     "lots": 551,
+     "net": -49811.75720196988,
+     "dd": 56669.328025600196,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol83",
+     "variant": "slip25",
+     "lots": 4867,
+     "net": -441363.7698678268,
+     "dd": 442856.0911409854,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol84",
+     "variant": "minuteLow",
+     "lots": 581,
+     "net": -234667.610556209,
+     "dd": 235570.302394746,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol85",
+     "variant": "base",
+     "lots": 3590,
+     "net": -333189.3073291107,
+     "dd": 335397.7301389252,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol86",
+     "variant": "cost10",
+     "lots": 5,
+     "net": -1068.2945757327907,
+     "dd": 13713.778805576794,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol87",
+     "variant": "rate14",
+     "lots": 2022,
+     "net": -138825.52769320627,
+     "dd": 140880.9903894166,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol88",
+     "variant": "nextOpen",
+     "lots": 2051,
+     "net": -157706.98721323546,
+     "dd": 167753.5725125024,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol89",
+     "variant": "slip25",
+     "lots": 693,
+     "net": -9093.615886755968,
+     "dd": 70948.23252216293,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol90",
+     "variant": "minuteLow",
+     "lots": 114,
+     "net": -13544.804929544356,
+     "dd": 25420.380040434335,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol91",
+     "variant": "base",
+     "lots": 1187,
+     "net": 1855.9708256515637,
+     "dd": 70989.07881854071,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol92",
+     "variant": "cost10",
+     "lots": 162,
+     "net": -33713.54665248409,
+     "dd": 51941.46169123711,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol93",
+     "variant": "rate14",
+     "lots": 2765,
+     "net": -301491.8992129281,
+     "dd": 301541.5863724736,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol94",
+     "variant": "nextOpen",
+     "lots": 347,
+     "net": -78684.96929363688,
+     "dd": 83780.2974000553,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol95",
+     "variant": "slip25",
+     "lots": 4406,
+     "net": -1410341.5481487846,
+     "dd": 1410725.197289064,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol96",
+     "variant": "minuteLow",
+     "lots": 99,
+     "net": -20300.083145246783,
+     "dd": 32554.116271643514,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol97",
+     "variant": "base",
+     "lots": 574,
+     "net": 7014.64862548346,
+     "dd": 55479.871686720595,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol98",
+     "variant": "cost10",
+     "lots": 426,
+     "net": -116395.91617992317,
+     "dd": 117373.27279397009,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol99",
+     "variant": "rate14",
+     "lots": 1480,
+     "net": -70643.82698671645,
+     "dd": 110727.04281551408,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol100",
+     "variant": "nextOpen",
+     "lots": 831,
+     "net": -39882.220315063845,
+     "dd": 70400.35321862179,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol101",
+     "variant": "slip25",
+     "lots": 3147,
+     "net": -966032.6662049243,
+     "dd": 967011.7965325182,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol102",
+     "variant": "minuteLow",
+     "lots": 77,
+     "net": -13256.160946269765,
+     "dd": 17129.074245720152,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol103",
+     "variant": "base",
+     "lots": 21575,
+     "net": -2045492.1621121487,
+     "dd": 2045619.4907805237,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol104",
+     "variant": "cost10",
+     "lots": 1382,
+     "net": -244167.41246546578,
+     "dd": 244479.09835999814,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol105",
+     "variant": "rate14",
+     "lots": 1551,
+     "net": -63409.38192050701,
+     "dd": 80678.33070301371,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol106",
+     "variant": "nextOpen",
+     "lots": 2,
+     "net": 2436.0280302415485,
+     "dd": 899.1414324532088,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol107",
+     "variant": "slip25",
+     "lots": 845,
+     "net": -145404.88277582973,
+     "dd": 150980.98056510612,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol108",
+     "variant": "minuteLow",
+     "lots": 133,
+     "net": -20680.523319450214,
+     "dd": 48301.46051702052,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol109",
+     "variant": "base",
+     "lots": 2282,
+     "net": -122648.17949449328,
+     "dd": 140899.97424493908,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol110",
+     "variant": "cost10",
+     "lots": 453,
+     "net": -50273.510590598824,
+     "dd": 77203.12543414148,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol111",
+     "variant": "rate14",
+     "lots": 1047,
+     "net": -76681.64206091718,
+     "dd": 80457.86841694,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol112",
+     "variant": "nextOpen",
+     "lots": 892,
+     "net": -62023.05947515119,
+     "dd": 75370.50864558772,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol113",
+     "variant": "slip25",
+     "lots": 1333,
+     "net": -378552.82084124844,
+     "dd": 379217.2176047045,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol114",
+     "variant": "minuteLow",
+     "lots": 31,
+     "net": -5208.716272208485,
+     "dd": 22136.782511993828,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol115",
+     "variant": "base",
+     "lots": 3090,
+     "net": -309426.98718999256,
+     "dd": 310296.17463666457,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol116",
+     "variant": "cost10",
+     "lots": 7,
+     "net": 2330.6030591977033,
+     "dd": 1199.3760860398615,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol117",
+     "variant": "rate14",
+     "lots": 527,
+     "net": 46939.380272143084,
+     "dd": 64516.61484616165,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol118",
+     "variant": "nextOpen",
+     "lots": 245,
+     "net": -6687.166175692768,
+     "dd": 34533.1642830424,
+     "problems": []
+    },
+    {
+     "door": "D24",
+     "label": "sobol119",
+     "variant": "slip25",
+     "lots": 3328,
+     "net": -397546.7554701864,
+     "dd": 399005.07681979844,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-5.1v.e.1f.1y.t.1y.6.1f",
+     "variant": "base",
+     "lots": 21,
+     "net": 14996.37026471408,
+     "dd": 13787.736420616457,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-5.1v.a.1f.1y.s.1q.6.1r",
+     "variant": "cost10",
+     "lots": 20,
+     "net": 14050.560682096473,
+     "dd": 13979.349613339575,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-5.1v.e.1f.1y.r.2o.5.1f",
+     "variant": "rate14",
+     "lots": 21,
+     "net": 15632.369003526317,
+     "dd": 13935.68162609591,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-5.1v.d.1f.1y.l.1f.4.1h",
+     "variant": "nextOpen",
+     "lots": 21,
+     "net": 15082.640685560667,
+     "dd": 13787.736420616457,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-2.k.1v.19.1q.19.1b.v.1p",
+     "variant": "slip25",
+     "lots": 216,
+     "net": -31203.831503892026,
+     "dd": 41299.25295923272,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-0.1p.17.1q.1r.9.2b.17.1f",
+     "variant": "minuteLow",
+     "lots": 13,
+     "net": 22341.248004214438,
+     "dd": 8297.089975201194,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-1.1o.11.1r.1t.9.23.19.17",
+     "variant": "base",
+     "lots": 11,
+     "net": 29006.994983063367,
+     "dd": 9008.733093272762,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-2.1s.1i.1p.1s.h.1c.14.16",
+     "variant": "cost10",
+     "lots": 12,
+     "net": 31659.025365609952,
+     "dd": 8616.698399155244,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-3.1p.15.1h.1s.5.1.h.k",
+     "variant": "rate14",
+     "lots": 21,
+     "net": 30117.98120795645,
+     "dd": 8100.555860616452,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-4.1u.1l.1r.1m.r.2.l.1o",
+     "variant": "nextOpen",
+     "lots": 11,
+     "net": 19612.10378683376,
+     "dd": 6877.513159862503,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "id-5.1v.a.1d.1y.i.2i.i.1n",
+     "variant": "slip25",
+     "lots": 24,
+     "net": 14881.675112411656,
+     "dd": 13892.530873221513,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol0",
+     "variant": "minuteLow",
+     "lots": 26,
+     "net": -299.9392467502972,
+     "dd": 3992.827908390133,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol1",
+     "variant": "base",
+     "lots": 166,
+     "net": 19787.497409016236,
+     "dd": 37983.90643848872,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol2",
+     "variant": "cost10",
+     "lots": 1174,
+     "net": -206861.33560834167,
+     "dd": 207152.13252538658,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol3",
+     "variant": "rate14",
+     "lots": 215,
+     "net": -8909.529887419681,
+     "dd": 46443.970725358726,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol4",
+     "variant": "nextOpen",
+     "lots": 54,
+     "net": -4988.222167953019,
+     "dd": 24927.363049563857,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol5",
+     "variant": "slip25",
+     "lots": 2813,
+     "net": -521774.74173052714,
+     "dd": 522423.1299097498,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol6",
+     "variant": "minuteLow",
+     "lots": 47,
+     "net": -16540.882632980763,
+     "dd": 21566.080882674352,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol7",
+     "variant": "base",
+     "lots": 947,
+     "net": -98332.17610553598,
+     "dd": 99599.10978323818,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol8",
+     "variant": "cost10",
+     "lots": 33,
+     "net": -7378.601210646681,
+     "dd": 7852.554529760411,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol9",
+     "variant": "rate14",
+     "lots": 481,
+     "net": -2573.669917236396,
+     "dd": 33078.9199930189,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol10",
+     "variant": "nextOpen",
+     "lots": 125,
+     "net": -8276.46771491703,
+     "dd": 15345.06404527475,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol11",
+     "variant": "slip25",
+     "lots": 506,
+     "net": -30644.379285728468,
+     "dd": 50237.45145942907,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol12",
+     "variant": "minuteLow",
+     "lots": 0,
+     "net": 0,
+     "dd": 0,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol13",
+     "variant": "base",
+     "lots": 366,
+     "net": 8486.665247714498,
+     "dd": 24285.109454307923,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol14",
+     "variant": "cost10",
+     "lots": 92,
+     "net": -5806.1755179702905,
+     "dd": 25892.925592576466,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol15",
+     "variant": "rate14",
+     "lots": 812,
+     "net": -58453.80301228079,
+     "dd": 70644.27766739421,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol16",
+     "variant": "nextOpen",
+     "lots": 95,
+     "net": 39701.80583429461,
+     "dd": 30611.62688770381,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol17",
+     "variant": "slip25",
+     "lots": 236,
+     "net": -62413.30916994667,
+     "dd": 62707.69221326328,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol18",
+     "variant": "minuteLow",
+     "lots": 0,
+     "net": 0,
+     "dd": 0,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol19",
+     "variant": "base",
+     "lots": 622,
+     "net": -48263.25950775651,
+     "dd": 56007.11097080725,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol20",
+     "variant": "cost10",
+     "lots": 82,
+     "net": -2354.4553940274554,
+     "dd": 9864.385593336949,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol21",
+     "variant": "rate14",
+     "lots": 969,
+     "net": -72319.59571794428,
+     "dd": 82315.1781788178,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol22",
+     "variant": "nextOpen",
+     "lots": 235,
+     "net": -43373.16126182854,
+     "dd": 45108.72261359332,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol23",
+     "variant": "slip25",
+     "lots": 57,
+     "net": 42375.50071250482,
+     "dd": 29820.92401777453,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol24",
+     "variant": "minuteLow",
+     "lots": 0,
+     "net": 0,
+     "dd": 0,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol25",
+     "variant": "base",
+     "lots": 309,
+     "net": -24761.93025481174,
+     "dd": 34254.28424521833,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol26",
+     "variant": "cost10",
+     "lots": 19,
+     "net": -21252.20417140119,
+     "dd": 24119.523710750393,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol27",
+     "variant": "rate14",
+     "lots": 6220,
+     "net": -568970.1792593293,
+     "dd": 569910.7322364098,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol28",
+     "variant": "nextOpen",
+     "lots": 2255,
+     "net": -214487.80701996875,
+     "dd": 215385.10645643057,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol29",
+     "variant": "slip25",
+     "lots": 246,
+     "net": 20352.3493020528,
+     "dd": 36038.561800010946,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol30",
+     "variant": "minuteLow",
+     "lots": 17,
+     "net": 2691.3480745059996,
+     "dd": 8358.0301303919,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol31",
+     "variant": "base",
+     "lots": 315,
+     "net": -9325.817491434325,
+     "dd": 32935.788674546115,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol32",
+     "variant": "cost10",
+     "lots": 131,
+     "net": 21196.920011986873,
+     "dd": 43277.699503373326,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol33",
+     "variant": "rate14",
+     "lots": 1149,
+     "net": -109521.58241285877,
+     "dd": 112399.58055225157,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol34",
+     "variant": "nextOpen",
+     "lots": 12,
+     "net": -4272.338150805903,
+     "dd": 5744.46018915029,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol35",
+     "variant": "slip25",
+     "lots": 426,
+     "net": -73003.25674996068,
+     "dd": 79689.51098374151,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol36",
+     "variant": "minuteLow",
+     "lots": 32,
+     "net": -97.77548469547253,
+     "dd": 5099.385592975499,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol37",
+     "variant": "base",
+     "lots": 574,
+     "net": -48157.9928217463,
+     "dd": 55142.831193992104,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol38",
+     "variant": "cost10",
+     "lots": 169,
+     "net": -34349.50016814093,
+     "dd": 35320.40172698456,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol39",
+     "variant": "rate14",
+     "lots": 250,
+     "net": 8356.263239382652,
+     "dd": 41568.44394847282,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol40",
+     "variant": "nextOpen",
+     "lots": 27,
+     "net": 6243.459378518992,
+     "dd": 1489.7748466144403,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol41",
+     "variant": "slip25",
+     "lots": 374,
+     "net": -96220.4257501444,
+     "dd": 96492.63598694334,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol42",
+     "variant": "minuteLow",
+     "lots": 38,
+     "net": -6277.673011991981,
+     "dd": 30188.544028871955,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol43",
+     "variant": "base",
+     "lots": 1608,
+     "net": -131886.7227929142,
+     "dd": 135951.11885672502,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol44",
+     "variant": "cost10",
+     "lots": 129,
+     "net": -17948.012343971564,
+     "dd": 19226.728468762678,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol45",
+     "variant": "rate14",
+     "lots": 46,
+     "net": 36354.00583050282,
+     "dd": 30501.274364299265,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol46",
+     "variant": "nextOpen",
+     "lots": 0,
+     "net": 0,
+     "dd": 0,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol47",
+     "variant": "slip25",
+     "lots": 518,
+     "net": -71369.676740997,
+     "dd": 82363.88259682592,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol48",
+     "variant": "minuteLow",
+     "lots": 0,
+     "net": 0,
+     "dd": 0,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol49",
+     "variant": "base",
+     "lots": 284,
+     "net": 24909.544761194527,
+     "dd": 28893.947492416482,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol50",
+     "variant": "cost10",
+     "lots": 207,
+     "net": -38658.295730710524,
+     "dd": 42715.13765947801,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol51",
+     "variant": "rate14",
+     "lots": 765,
+     "net": -48046.142629683134,
+     "dd": 60571.719901504744,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol52",
+     "variant": "nextOpen",
+     "lots": 121,
+     "net": -6715.706409194102,
+     "dd": 27053.492567043668,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol53",
+     "variant": "slip25",
+     "lots": 512,
+     "net": -59696.688846803154,
+     "dd": 60357.376043739976,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol54",
+     "variant": "minuteLow",
+     "lots": 113,
+     "net": -32574.81263831288,
+     "dd": 48248.06965659434,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol55",
+     "variant": "base",
+     "lots": 653,
+     "net": -39848.00822268613,
+     "dd": 50779.616100734216,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol56",
+     "variant": "cost10",
+     "lots": 25,
+     "net": -10505.757903560081,
+     "dd": 12835.61839542247,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol57",
+     "variant": "rate14",
+     "lots": 145,
+     "net": 13498.622356537442,
+     "dd": 32023.920732671377,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol58",
+     "variant": "nextOpen",
+     "lots": 7,
+     "net": 2044.3491954699255,
+     "dd": 2952.563447796958,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol59",
+     "variant": "slip25",
+     "lots": 172,
+     "net": 3158.4072353216625,
+     "dd": 24751.333533638557,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol60",
+     "variant": "minuteLow",
+     "lots": 2,
+     "net": 747.2225049801305,
+     "dd": 4204.349551396461,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol61",
+     "variant": "base",
+     "lots": 1504,
+     "net": -103834.25692414933,
+     "dd": 112219.94485028427,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol62",
+     "variant": "cost10",
+     "lots": 169,
+     "net": -15730.590320556521,
+     "dd": 44185.2868045888,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol63",
+     "variant": "rate14",
+     "lots": 1851,
+     "net": -165294.2905882841,
+     "dd": 169502.55748436032,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol64",
+     "variant": "nextOpen",
+     "lots": 48,
+     "net": 3717.142014943881,
+     "dd": 11125.187558294889,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol65",
+     "variant": "slip25",
+     "lots": 815,
+     "net": -130183.19535476755,
+     "dd": 133907.4881473458,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol66",
+     "variant": "minuteLow",
+     "lots": 1,
+     "net": 4529.764384165548,
+     "dd": 7915.728707305101,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol67",
+     "variant": "base",
+     "lots": 1536,
+     "net": -156379.47125823674,
+     "dd": 157453.6958529919,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol68",
+     "variant": "cost10",
+     "lots": 2,
+     "net": 2186.6341613695695,
+     "dd": 425.34152963600354,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol69",
+     "variant": "rate14",
+     "lots": 89,
+     "net": 21824.38564174658,
+     "dd": 20154.086093694415,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol70",
+     "variant": "nextOpen",
+     "lots": 604,
+     "net": -23952.15780165347,
+     "dd": 40344.70411035602,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol71",
+     "variant": "slip25",
+     "lots": 764,
+     "net": -114289.65458157992,
+     "dd": 121606.47271567676,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol72",
+     "variant": "minuteLow",
+     "lots": 0,
+     "net": 0,
+     "dd": 0,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol73",
+     "variant": "base",
+     "lots": 951,
+     "net": -76718.59622720808,
+     "dd": 78707.25014521333,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol74",
+     "variant": "cost10",
+     "lots": 538,
+     "net": -84007.90860122273,
+     "dd": 92868.50236517822,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol75",
+     "variant": "rate14",
+     "lots": 213,
+     "net": -6359.438988625387,
+     "dd": 24064.9726143259,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol76",
+     "variant": "nextOpen",
+     "lots": 202,
+     "net": 16761.52130721584,
+     "dd": 30009.528994049615,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol77",
+     "variant": "slip25",
+     "lots": 785,
+     "net": -64632.11086191897,
+     "dd": 76906.62394288303,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol78",
+     "variant": "minuteLow",
+     "lots": 79,
+     "net": -21567.25599955611,
+     "dd": 27470.464412014633,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol79",
+     "variant": "base",
+     "lots": 73,
+     "net": 35766.210218120716,
+     "dd": 36601.085288409275,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol80",
+     "variant": "cost10",
+     "lots": 70,
+     "net": -4913.292597350768,
+     "dd": 7155.078869660358,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol81",
+     "variant": "rate14",
+     "lots": 218,
+     "net": 23598.25556980564,
+     "dd": 25934.887685796726,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol82",
+     "variant": "nextOpen",
+     "lots": 124,
+     "net": -13198.06426599109,
+     "dd": 18627.09319897815,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol83",
+     "variant": "slip25",
+     "lots": 1512,
+     "net": -127436.58124896444,
+     "dd": 139115.90696175417,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol84",
+     "variant": "minuteLow",
+     "lots": 138,
+     "net": -53717.06273847246,
+     "dd": 54321.04891829424,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol85",
+     "variant": "base",
+     "lots": 1184,
+     "net": -102162.50829405835,
+     "dd": 111287.53753980677,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol86",
+     "variant": "cost10",
+     "lots": 0,
+     "net": 0,
+     "dd": 0,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol87",
+     "variant": "rate14",
+     "lots": 568,
+     "net": -37981.8199213232,
+     "dd": 40345.40302596109,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol88",
+     "variant": "nextOpen",
+     "lots": 614,
+     "net": -49777.821874363355,
+     "dd": 56970.99775179023,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol89",
+     "variant": "slip25",
+     "lots": 212,
+     "net": 10544.37362222425,
+     "dd": 29803.985757822848,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol90",
+     "variant": "minuteLow",
+     "lots": 7,
+     "net": 648.3449621956242,
+     "dd": 2767.3358715661598,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol91",
+     "variant": "base",
+     "lots": 403,
+     "net": -2456.584237554951,
+     "dd": 36122.47755671377,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol92",
+     "variant": "cost10",
+     "lots": 35,
+     "net": 3638.963036335217,
+     "dd": 12794.465869532403,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol93",
+     "variant": "rate14",
+     "lots": 755,
+     "net": -68420.19090000038,
+     "dd": 68509.83174579275,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol94",
+     "variant": "nextOpen",
+     "lots": 83,
+     "net": -23896.606851559787,
+     "dd": 31910.217576473347,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol95",
+     "variant": "slip25",
+     "lots": 1510,
+     "net": -464047.60240222,
+     "dd": 465214.2111527524,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol96",
+     "variant": "minuteLow",
+     "lots": 2,
+     "net": -843.2669664317364,
+     "dd": 2430.6176765054115,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol97",
+     "variant": "base",
+     "lots": 186,
+     "net": 23970.124782045565,
+     "dd": 13890.804515953934,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol98",
+     "variant": "cost10",
+     "lots": 97,
+     "net": -20637.779488482964,
+     "dd": 22321.145652913947,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol99",
+     "variant": "rate14",
+     "lots": 430,
+     "net": -210.25873176139612,
+     "dd": 41768.987999488316,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol100",
+     "variant": "nextOpen",
+     "lots": 231,
+     "net": -31547.145275707757,
+     "dd": 39602.98835287321,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol101",
+     "variant": "slip25",
+     "lots": 1163,
+     "net": -350609.45056163584,
+     "dd": 351883.81765307055,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol102",
+     "variant": "minuteLow",
+     "lots": 13,
+     "net": -3899.7213332145907,
+     "dd": 4633.308045213154,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol103",
+     "variant": "base",
+     "lots": 7470,
+     "net": -695617.7630545998,
+     "dd": 695769.5762757012,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol104",
+     "variant": "cost10",
+     "lots": 336,
+     "net": -64477.53189463567,
+     "dd": 65676.35684213057,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol105",
+     "variant": "rate14",
+     "lots": 496,
+     "net": -21601.965555606195,
+     "dd": 43577.76730703868,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol106",
+     "variant": "nextOpen",
+     "lots": 0,
+     "net": 0,
+     "dd": 0,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol107",
+     "variant": "slip25",
+     "lots": 271,
+     "net": -46155.94612189734,
+     "dd": 56155.54199068788,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol108",
+     "variant": "minuteLow",
+     "lots": 32,
+     "net": -2451.537163259693,
+     "dd": 22517.79875704026,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol109",
+     "variant": "base",
+     "lots": 746,
+     "net": -52637.5393179092,
+     "dd": 60466.0151133013,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol110",
+     "variant": "cost10",
+     "lots": 117,
+     "net": -10674.684578126089,
+     "dd": 24558.282175659842,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol111",
+     "variant": "rate14",
+     "lots": 306,
+     "net": -37469.55505392873,
+     "dd": 42352.8294813354,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol112",
+     "variant": "nextOpen",
+     "lots": 171,
+     "net": -16370.018210774833,
+     "dd": 27647.70931185208,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol113",
+     "variant": "slip25",
+     "lots": 481,
+     "net": -131153.33722024813,
+     "dd": 133030.17562482314,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol114",
+     "variant": "minuteLow",
+     "lots": 1,
+     "net": -93.67767532418657,
+     "dd": 2826.861614194917,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol115",
+     "variant": "base",
+     "lots": 886,
+     "net": -82822.47838665154,
+     "dd": 83589.8993714487,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol116",
+     "variant": "cost10",
+     "lots": 0,
+     "net": 0,
+     "dd": 0,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol117",
+     "variant": "rate14",
+     "lots": 133,
+     "net": 42833.9914024442,
+     "dd": 32274.048716925183,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol118",
+     "variant": "nextOpen",
+     "lots": 63,
+     "net": 8262.955961889435,
+     "dd": 12508.052251318119,
+     "problems": []
+    },
+    {
+     "door": "D19",
+     "label": "sobol119",
+     "variant": "slip25",
+     "lots": 1105,
+     "net": -111444.95127108772,
+     "dd": 118355.32222813972,
+     "problems": []
+    }
+   ]
+  },
+  "P3": [
+   {
+    "id": "id-5.1v.e.1f.1y.t.1y.6.1f",
+    "net": 71245.58721423517,
+    "dd": 17279.912656021334,
+    "lots": 83,
+    "sealed": {
+     "net": 71245.59,
+     "perYear": 7997.277808463252,
+     "realized": 71245.59,
+     "unrealized": 0,
+     "dd": 17279.912656021334,
+     "ddDaily": 16010.9358659241,
+     "lots": 83,
+     "episodes": 13,
+     "lotYears": 6,
+     "bookLots": {
+      "VGT": 83
+     },
+     "bookNet": {
+      "VGT": 71245.59
+     },
+     "heldDays": 418.005,
+     "perCapitalYear": 62211.33,
+     "top1Share": 0.0969,
+     "bestYear": 29465.43,
+     "bestYearKey": "2020",
+     "bestYearShare": 0.4135754928831385,
+     "exBestPerYear": 5282.789924736578,
+     "refused": 0,
+     "signature": "9b56de166ea8abfa",
+     "periods": {
+      "2016": 0,
+      "2017": 0,
+      "2018": 1672.47,
+      "2019": 13323.9,
+      "2020": 29465.43,
+      "2021": 3181.33,
+      "2022": 10846.47,
+      "2023": 0,
+      "2024": 12755.99,
+      "DEV": 71245.59,
+      "2016H1": 0,
+      "2016H2": 0,
+      "2017H1": 0,
+      "2017H2": 0,
+      "2018H1": 1515.94,
+      "2018H2": 156.53,
+      "2019H1": 13323.9,
+      "2019H2": 0,
+      "2020H1": 6202.73,
+      "2020H2": 23262.7,
+      "2021H1": 3181.33,
+      "2021H2": 0,
+      "2022H1": 5012.48,
+      "2022H2": 5833.99,
+      "2023H1": 0,
+      "2023H2": 0,
+      "2024H1": 0,
+      "2024H2": 12755.99
+     }
+    },
+    "problems": []
+   },
+   {
+    "id": "id-5.1v.a.1f.1y.s.1q.6.1r",
+    "net": 70901.54852762088,
+    "dd": 17279.912656021334,
+    "lots": 83,
+    "sealed": {
+     "net": 70901.55,
+     "perYear": 7958.659510022272,
+     "realized": 70901.55,
+     "unrealized": 0,
+     "dd": 17279.912656021334,
+     "ddDaily": 15958.155243318372,
+     "lots": 83,
+     "episodes": 13,
+     "lotYears": 6,
+     "bookLots": {
+      "VGT": 83
+     },
+     "bookNet": {
+      "VGT": 70901.55
+     },
+     "heldDays": 418.022,
+     "perCapitalYear": 61908.35,
+     "top1Share": 0.0974,
+     "bestYear": 29497.82,
+     "bestYearKey": "2020",
+     "bestYearShare": 0.41603914159845584,
+     "exBestPerYear": 5235.193156046163,
+     "refused": 0,
+     "signature": "0f32abad307e270e",
+     "periods": {
+      "2016": 0,
+      "2017": 0,
+      "2018": 1672.47,
+      "2019": 13316.02,
+      "2020": 29497.82,
+      "2021": 3156,
+      "2022": 10961.25,
+      "2023": 0,
+      "2024": 12297.98,
+      "DEV": 70901.55,
+      "2016H1": 0,
+      "2016H2": 0,
+      "2017H1": 0,
+      "2017H2": 0,
+      "2018H1": 1515.94,
+      "2018H2": 156.53,
+      "2019H1": 13316.02,
+      "2019H2": 0,
+      "2020H1": 6127.62,
+      "2020H2": 23370.2,
+      "2021H1": 3156,
+      "2021H2": 0,
+      "2022H1": 5127.08,
+      "2022H2": 5834.18,
+      "2023H1": 0,
+      "2023H2": 0,
+      "2024H1": 0,
+      "2024H2": 12297.98
+     }
+    },
+    "problems": []
+   },
+   {
+    "id": "id-5.1v.e.1f.1y.r.2o.5.1f",
+    "net": 71208.0372444347,
+    "dd": 17279.912656021334,
+    "lots": 83,
+    "sealed": {
+     "net": 71208.04,
+     "perYear": 7993.062841870824,
+     "realized": 71208.04,
+     "unrealized": 0,
+     "dd": 17279.912656021334,
+     "ddDaily": 16010.9358659241,
+     "lots": 83,
+     "episodes": 13,
+     "lotYears": 6,
+     "bookLots": {
+      "VGT": 83
+     },
+     "bookNet": {
+      "VGT": 71208.04
+     },
+     "heldDays": 418.006,
+     "perCapitalYear": 62178.44,
+     "top1Share": 0.097,
+     "bestYear": 29427.88,
+     "bestYearKey": "2020",
+     "bestYearShare": 0.41326625476561357,
+     "exBestPerYear": 5282.789924736577,
+     "refused": 0,
+     "signature": "a0b602b9b92c6679",
+     "periods": {
+      "2016": 0,
+      "2017": 0,
+      "2018": 1672.47,
+      "2019": 13323.9,
+      "2020": 29427.88,
+      "2021": 3181.33,
+      "2022": 10846.47,
+      "2023": 0,
+      "2024": 12755.99,
+      "DEV": 71208.04,
+      "2016H1": 0,
+      "2016H2": 0,
+      "2017H1": 0,
+      "2017H2": 0,
+      "2018H1": 1515.94,
+      "2018H2": 156.53,
+      "2019H1": 13323.9,
+      "2019H2": 0,
+      "2020H1": 6202.73,
+      "2020H2": 23225.15,
+      "2021H1": 3181.33,
+      "2021H2": 0,
+      "2022H1": 5012.48,
+      "2022H2": 5833.99,
+      "2023H1": 0,
+      "2023H2": 0,
+      "2024H1": 0,
+      "2024H2": 12755.99
+     }
+    },
+    "problems": []
+   },
+   {
+    "id": "id-5.1v.d.1f.1y.l.1f.4.1h",
+    "net": 71242.68213589961,
+    "dd": 17279.912656021334,
+    "lots": 83,
+    "sealed": {
+     "net": 71242.68,
+     "perYear": 7996.951162583518,
+     "realized": 71242.68,
+     "unrealized": 0,
+     "dd": 17279.912656021334,
+     "ddDaily": 16010.9358659241,
+     "lots": 83,
+     "episodes": 13,
+     "lotYears": 6,
+     "bookLots": {
+      "VGT": 83
+     },
+     "bookNet": {
+      "VGT": 71242.68
+     },
+     "heldDays": 418.011,
+     "perCapitalYear": 62207.87,
+     "top1Share": 0.0969,
+     "bestYear": 29427.88,
+     "bestYearKey": "2020",
+     "bestYearShare": 0.4130653142189486,
+     "exBestPerYear": 5287.169894631208,
+     "refused": 0,
+     "signature": "321aae913fb92318",
+     "periods": {
+      "2016": 0,
+      "2017": 0,
+      "2018": 1672.47,
+      "2019": 13269.09,
+      "2020": 29427.88,
+      "2021": 3156,
+      "2022": 10961.25,
+      "2023": 0,
+      "2024": 12755.99,
+      "DEV": 71242.68,
+      "2016H1": 0,
+      "2016H2": 0,
+      "2017H1": 0,
+      "2017H2": 0,
+      "2018H1": 1515.94,
+      "2018H2": 156.53,
+      "2019H1": 13269.09,
+      "2019H2": 0,
+      "2020H1": 6202.73,
+      "2020H2": 23225.15,
+      "2021H1": 3156,
+      "2021H2": 0,
+      "2022H1": 5127.08,
+      "2022H2": 5834.18,
+      "2023H1": 0,
+      "2023H2": 0,
+      "2024H1": 0,
+      "2024H2": 12755.99
+     }
+    },
+    "problems": []
+   },
+   {
+    "id": "B1 (daily D1 primary, session clock, 5 bps, 11%, arming 2016-02-01)",
+    "net": 135359.0411970347,
+    "dd": 19534.41364010408,
+    "lots": 17,
+    "note": "research/intraday-d1-vgt REPORT §4.3 states $135,359 (rounded)",
+    "problems": []
+   }
+  ],
+  "P4": {
+   "runs": 90,
+   "withDifferences": 0,
+   "detail": [
+    {
+     "ruleSet": "L0",
+     "n": 0,
+     "door": "D19",
+     "lots": 0,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 0,
+     "door": "D21",
+     "lots": 3,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 0,
+     "door": "D23",
+     "lots": 3,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 1,
+     "door": "D19",
+     "lots": 643,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 1,
+     "door": "D21",
+     "lots": 1214,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 1,
+     "door": "D23",
+     "lots": 1846,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 2,
+     "door": "D19",
+     "lots": 603,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 2,
+     "door": "D21",
+     "lots": 1291,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 2,
+     "door": "D23",
+     "lots": 2121,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 3,
+     "door": "D19",
+     "lots": 1286,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 3,
+     "door": "D21",
+     "lots": 2723,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 3,
+     "door": "D23",
+     "lots": 4106,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 4,
+     "door": "D19",
+     "lots": 72,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 4,
+     "door": "D21",
+     "lots": 354,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 4,
+     "door": "D23",
+     "lots": 500,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 5,
+     "door": "D19",
+     "lots": 717,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 5,
+     "door": "D21",
+     "lots": 1578,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 5,
+     "door": "D23",
+     "lots": 2466,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 6,
+     "door": "D19",
+     "lots": 216,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 6,
+     "door": "D21",
+     "lots": 589,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 6,
+     "door": "D23",
+     "lots": 905,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 7,
+     "door": "D19",
+     "lots": 49,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 7,
+     "door": "D21",
+     "lots": 117,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 7,
+     "door": "D23",
+     "lots": 182,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 8,
+     "door": "D19",
+     "lots": 37,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 8,
+     "door": "D21",
+     "lots": 143,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 8,
+     "door": "D23",
+     "lots": 200,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 9,
+     "door": "D19",
+     "lots": 7758,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 9,
+     "door": "D21",
+     "lots": 13349,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 9,
+     "door": "D23",
+     "lots": 19396,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 10,
+     "door": "D19",
+     "lots": 1,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 10,
+     "door": "D21",
+     "lots": 15,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 10,
+     "door": "D23",
+     "lots": 19,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 11,
+     "door": "D19",
+     "lots": 1830,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 11,
+     "door": "D21",
+     "lots": 4628,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 11,
+     "door": "D23",
+     "lots": 7485,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 12,
+     "door": "D19",
+     "lots": 0,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 12,
+     "door": "D21",
+     "lots": 83,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 12,
+     "door": "D23",
+     "lots": 83,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 13,
+     "door": "D19",
+     "lots": 117,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 13,
+     "door": "D21",
+     "lots": 253,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 13,
+     "door": "D23",
+     "lots": 398,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 14,
+     "door": "D19",
+     "lots": 1773,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 14,
+     "door": "D21",
+     "lots": 4018,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 14,
+     "door": "D23",
+     "lots": 6516,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 15,
+     "door": "D19",
+     "lots": 1028,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 15,
+     "door": "D21",
+     "lots": 2230,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 15,
+     "door": "D23",
+     "lots": 3431,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 16,
+     "door": "D19",
+     "lots": 7807,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 16,
+     "door": "D21",
+     "lots": 16060,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 16,
+     "door": "D23",
+     "lots": 25506,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 17,
+     "door": "D19",
+     "lots": 29,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 17,
+     "door": "D21",
+     "lots": 71,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 17,
+     "door": "D23",
+     "lots": 109,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 18,
+     "door": "D19",
+     "lots": 3,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 18,
+     "door": "D21",
+     "lots": 134,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 18,
+     "door": "D23",
+     "lots": 153,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 19,
+     "door": "D19",
+     "lots": 2008,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 19,
+     "door": "D21",
+     "lots": 3678,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 19,
+     "door": "D23",
+     "lots": 5724,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 20,
+     "door": "D19",
+     "lots": 31,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 20,
+     "door": "D21",
+     "lots": 111,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 20,
+     "door": "D23",
+     "lots": 182,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 21,
+     "door": "D19",
+     "lots": 539,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 21,
+     "door": "D21",
+     "lots": 938,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 21,
+     "door": "D23",
+     "lots": 1433,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 22,
+     "door": "D19",
+     "lots": 16,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 22,
+     "door": "D21",
+     "lots": 94,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 22,
+     "door": "D23",
+     "lots": 124,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 23,
+     "door": "D19",
+     "lots": 9323,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 23,
+     "door": "D21",
+     "lots": 18016,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 23,
+     "door": "D23",
+     "lots": 27160,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 24,
+     "door": "D19",
+     "lots": 91,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 24,
+     "door": "D21",
+     "lots": 463,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 24,
+     "door": "D23",
+     "lots": 608,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 25,
+     "door": "D19",
+     "lots": 1577,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 25,
+     "door": "D21",
+     "lots": 3468,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 25,
+     "door": "D23",
+     "lots": 5349,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 26,
+     "door": "D19",
+     "lots": 274,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 26,
+     "door": "D21",
+     "lots": 785,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 26,
+     "door": "D23",
+     "lots": 1186,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 27,
+     "door": "D19",
+     "lots": 152,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 27,
+     "door": "D21",
+     "lots": 344,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 27,
+     "door": "D23",
+     "lots": 537,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 28,
+     "door": "D19",
+     "lots": 72,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 28,
+     "door": "D21",
+     "lots": 168,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 28,
+     "door": "D23",
+     "lots": 264,
+     "open": true,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 29,
+     "door": "D19",
+     "lots": 3619,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 29,
+     "door": "D21",
+     "lots": 7487,
+     "open": false,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 29,
+     "door": "D23",
+     "lots": 11397,
+     "open": false,
+     "problems": []
+    }
+   ]
+  },
+  "P5": {
+   "runs": 30,
+   "withDifferences": 0,
+   "detail": [
+    {
+     "ruleSet": "L0",
+     "n": 0,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 1,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 2,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 3,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 4,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 5,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 6,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 7,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 8,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 9,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 10,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 11,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 12,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 13,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 14,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 15,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 16,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 17,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 18,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 19,
+     "problems": []
+    },
+    {
+     "ruleSet": "L0",
+     "n": 20,
+     "problems": []
+    },
+    {
+     "ruleSet": "L1",
+     "n": 21,
+     "problems": []
+    },
+    {
+     "ruleSet": "L2",
+     "n": 22,
+     "problems": []
+    },
+    {
+     "ruleSet": "L3",
+     "n": 23,
+     "problems": []
+    },
+    {
+     "ruleSet": "L4",
+     "n": 24,
+     "problems": []
+    },
+    {
+     "ruleSet": "L5",
+     "n": 25,
+     "problems": []
+    },
+    {
+     "ruleSet": "F1",
+     "n": 26,
+     "problems": []
+    },
+    {
+     "ruleSet": "F2",
+     "n": 27,
+     "problems": []
+    },
+    {
+     "ruleSet": "F3",
+     "n": 28,
+     "problems": []
+    },
+    {
+     "ruleSet": "F4",
+     "n": 29,
+     "problems": []
+    }
+   ]
+  },
+  "P6": {
+   "runs": 24,
+   "identical": 24,
+   "pooledIdentities": "not applicable: one VGT book, one funded position, no pool of families (PROTOCOL.md §4)"
+  },
+  "P7": {
+   "runs": 120,
+   "withDifferences": 0,
+   "detail": [
+    {
+     "n": 0,
+     "ruleSet": "F1",
+     "stress": "bps10",
+     "lots": 1596,
+     "net": -259288.2811339308,
+     "problems": []
+    },
+    {
+     "n": 0,
+     "ruleSet": "F1",
+     "stress": "bps20",
+     "lots": 1596,
+     "net": -577652.8808107941,
+     "problems": []
+    },
+    {
+     "n": 0,
+     "ruleSet": "F1",
+     "stress": "rate14",
+     "lots": 1596,
+     "net": -99990.61484404438,
+     "problems": []
+    },
+    {
+     "n": 0,
+     "ruleSet": "F1",
+     "stress": "nextOpen",
+     "lots": 1452,
+     "net": -115968.81045403866,
+     "problems": []
+    },
+    {
+     "n": 0,
+     "ruleSet": "F1",
+     "stress": "slip25",
+     "lots": 1596,
+     "net": -498618.7889918574,
+     "problems": []
+    },
+    {
+     "n": 0,
+     "ruleSet": "F1",
+     "stress": "minuteLow",
+     "lots": 1596,
+     "net": -199549.4275817691,
+     "problems": []
+    },
+    {
+     "n": 1,
+     "ruleSet": "F2",
+     "stress": "bps10",
+     "lots": 521,
+     "net": -1272.7949983727278,
+     "problems": []
+    },
+    {
+     "n": 1,
+     "ruleSet": "F2",
+     "stress": "bps20",
+     "lots": 521,
+     "net": -105460.25874769203,
+     "problems": []
+    },
+    {
+     "n": 1,
+     "ruleSet": "F2",
+     "stress": "rate14",
+     "lots": 521,
+     "net": 24457.942532912246,
+     "problems": []
+    },
+    {
+     "n": 1,
+     "ruleSet": "F2",
+     "stress": "nextOpen",
+     "lots": 521,
+     "net": 43553.08727004317,
+     "problems": []
+    },
+    {
+     "n": 1,
+     "ruleSet": "F2",
+     "stress": "slip25",
+     "lots": 521,
+     "net": -79470.92835949721,
+     "problems": []
+    },
+    {
+     "n": 1,
+     "ruleSet": "F2",
+     "stress": "minuteLow",
+     "lots": 521,
+     "net": 33794.90577858931,
+     "problems": []
+    },
+    {
+     "n": 2,
+     "ruleSet": "F3",
+     "stress": "bps10",
+     "lots": 3065,
+     "net": -540822.2719798901,
+     "problems": []
+    },
+    {
+     "n": 2,
+     "ruleSet": "F3",
+     "stress": "bps20",
+     "lots": 3066,
+     "net": -1152374.8704423364,
+     "problems": []
+    },
+    {
+     "n": 2,
+     "ruleSet": "F3",
+     "stress": "rate14",
+     "lots": 3065,
+     "net": -234813.2444022115,
+     "problems": []
+    },
+    {
+     "n": 2,
+     "ruleSet": "F3",
+     "stress": "nextOpen",
+     "lots": 2786,
+     "net": -258709.51994422142,
+     "problems": []
+    },
+    {
+     "n": 2,
+     "ruleSet": "F3",
+     "stress": "slip25",
+     "lots": 3065,
+     "net": -999403.5710988172,
+     "problems": []
+    },
+    {
+     "n": 2,
+     "ruleSet": "F3",
+     "stress": "minuteLow",
+     "lots": 3065,
+     "net": -425628.3770873931,
+     "problems": []
+    },
+    {
+     "n": 3,
+     "ruleSet": "F4",
+     "stress": "bps10",
+     "lots": 895,
+     "net": -102190.68881698938,
+     "problems": []
+    },
+    {
+     "n": 3,
+     "ruleSet": "F4",
+     "stress": "bps20",
+     "lots": 895,
+     "net": -279625.19325452123,
+     "problems": []
+    },
+    {
+     "n": 3,
+     "ruleSet": "F4",
+     "stress": "rate14",
+     "lots": 895,
+     "net": -22973.453333246172,
+     "problems": []
+    },
+    {
+     "n": 3,
+     "ruleSet": "F4",
+     "stress": "nextOpen",
+     "lots": 891,
+     "net": -25268.909528677912,
+     "problems": []
+    },
+    {
+     "n": 3,
+     "ruleSet": "F4",
+     "stress": "slip25",
+     "lots": 895,
+     "net": -233733.5589561543,
+     "problems": []
+    },
+    {
+     "n": 3,
+     "ruleSet": "F4",
+     "stress": "minuteLow",
+     "lots": 894,
+     "net": -48977.17917486539,
+     "problems": []
+    },
+    {
+     "n": 4,
+     "ruleSet": "F1",
+     "stress": "bps10",
+     "lots": 21,
+     "net": 12624.541204313544,
+     "problems": []
+    },
+    {
+     "n": 4,
+     "ruleSet": "F1",
+     "stress": "bps20",
+     "lots": 21,
+     "net": 8403.504716319672,
+     "problems": []
+    },
+    {
+     "n": 4,
+     "ruleSet": "F1",
+     "stress": "rate14",
+     "lots": 21,
+     "net": 14738.223643578676,
+     "problems": []
+    },
+    {
+     "n": 4,
+     "ruleSet": "F1",
+     "stress": "nextOpen",
+     "lots": 20,
+     "net": 15317.743471129754,
+     "problems": []
+    },
+    {
+     "n": 4,
+     "ruleSet": "F1",
+     "stress": "slip25",
+     "lots": 21,
+     "net": 9451.378084469878,
+     "problems": []
+    },
+    {
+     "n": 4,
+     "ruleSet": "F1",
+     "stress": "minuteLow",
+     "lots": 21,
+     "net": 12536.649370516447,
+     "problems": []
+    },
+    {
+     "n": 5,
+     "ruleSet": "F2",
+     "stress": "bps10",
+     "lots": 37810,
+     "net": -6992858.21256571,
+     "problems": []
+    },
+    {
+     "n": 5,
+     "ruleSet": "F2",
+     "stress": "bps20",
+     "lots": 37810,
+     "net": -14533379.497867672,
+     "problems": []
+    },
+    {
+     "n": 5,
+     "ruleSet": "F2",
+     "stress": "rate14",
+     "lots": 37810,
+     "net": -3235010.758658107,
+     "problems": []
+    },
+    {
+     "n": 5,
+     "ruleSet": "F2",
+     "stress": "nextOpen",
+     "lots": 35722,
+     "net": -3409154.4178001187,
+     "problems": []
+    },
+    {
+     "n": 5,
+     "ruleSet": "F2",
+     "stress": "slip25",
+     "lots": 37810,
+     "net": -12661318.26989228,
+     "problems": []
+    },
+    {
+     "n": 5,
+     "ruleSet": "F2",
+     "stress": "minuteLow",
+     "lots": 37810,
+     "net": -4159526.6360617634,
+     "problems": []
+    },
+    {
+     "n": 6,
+     "ruleSet": "F3",
+     "stress": "bps10",
+     "lots": 433,
+     "net": 35897.43176656385,
+     "problems": []
+    },
+    {
+     "n": 6,
+     "ruleSet": "F3",
+     "stress": "bps20",
+     "lots": 453,
+     "net": -64281.01076774761,
+     "problems": []
+    },
+    {
+     "n": 6,
+     "ruleSet": "F3",
+     "stress": "rate14",
+     "lots": 425,
+     "net": 57015.98877240056,
+     "problems": []
+    },
+    {
+     "n": 6,
+     "ruleSet": "F3",
+     "stress": "nextOpen",
+     "lots": 421,
+     "net": 83971.64670534186,
+     "problems": []
+    },
+    {
+     "n": 6,
+     "ruleSet": "F3",
+     "stress": "slip25",
+     "lots": 421,
+     "net": 64474.93072787877,
+     "problems": []
+    },
+    {
+     "n": 6,
+     "ruleSet": "F3",
+     "stress": "minuteLow",
+     "lots": 421,
+     "net": 81377.118963166,
+     "problems": []
+    },
+    {
+     "n": 7,
+     "ruleSet": "F4",
+     "stress": "bps10",
+     "lots": 10557,
+     "net": -1854996.0686176687,
+     "problems": []
+    },
+    {
+     "n": 7,
+     "ruleSet": "F4",
+     "stress": "bps20",
+     "lots": 10559,
+     "net": -3963402.664703684,
+     "problems": []
+    },
+    {
+     "n": 7,
+     "ruleSet": "F4",
+     "stress": "rate14",
+     "lots": 10557,
+     "net": -821929.6239979278,
+     "problems": []
+    },
+    {
+     "n": 7,
+     "ruleSet": "F4",
+     "stress": "nextOpen",
+     "lots": 10209,
+     "net": -910359.1522385493,
+     "problems": []
+    },
+    {
+     "n": 7,
+     "ruleSet": "F4",
+     "stress": "slip25",
+     "lots": 10557,
+     "net": -3437194.649279016,
+     "problems": []
+    },
+    {
+     "n": 7,
+     "ruleSet": "F4",
+     "stress": "minuteLow",
+     "lots": 10557,
+     "net": -1151360.0068624024,
+     "problems": []
+    },
+    {
+     "n": 8,
+     "ruleSet": "F1",
+     "stress": "bps10",
+     "lots": 8,
+     "net": 1545.7747644506599,
+     "problems": []
+    },
+    {
+     "n": 8,
+     "ruleSet": "F1",
+     "stress": "bps20",
+     "lots": 8,
+     "net": -55.71849480556557,
+     "problems": []
+    },
+    {
+     "n": 8,
+     "ruleSet": "F1",
+     "stress": "rate14",
+     "lots": 8,
+     "net": 2347.7219137633656,
+     "problems": []
+    },
+    {
+     "n": 8,
+     "ruleSet": "F1",
+     "stress": "nextOpen",
+     "lots": 8,
+     "net": 2481.50906478909,
+     "problems": []
+    },
+    {
+     "n": 8,
+     "ruleSet": "F1",
+     "stress": "slip25",
+     "lots": 8,
+     "net": 341.85260897903936,
+     "problems": []
+    },
+    {
+     "n": 8,
+     "ruleSet": "F1",
+     "stress": "minuteLow",
+     "lots": 8,
+     "net": 369.0325254612544,
+     "problems": []
+    },
+    {
+     "n": 9,
+     "ruleSet": "F2",
+     "stress": "bps10",
+     "lots": 2486,
+     "net": -363008.09821144666,
+     "problems": []
+    },
+    {
+     "n": 9,
+     "ruleSet": "F2",
+     "stress": "bps20",
+     "lots": 2486,
+     "net": -859078.8217034737,
+     "problems": []
+    },
+    {
+     "n": 9,
+     "ruleSet": "F2",
+     "stress": "rate14",
+     "lots": 2486,
+     "net": -140762.51319199696,
+     "problems": []
+    },
+    {
+     "n": 9,
+     "ruleSet": "F2",
+     "stress": "nextOpen",
+     "lots": 2468,
+     "net": -150912.74661764764,
+     "problems": []
+    },
+    {
+     "n": 9,
+     "ruleSet": "F2",
+     "stress": "slip25",
+     "lots": 2486,
+     "net": -735804.2227703941,
+     "problems": []
+    },
+    {
+     "n": 9,
+     "ruleSet": "F2",
+     "stress": "minuteLow",
+     "lots": 2486,
+     "net": -212605.80514992157,
+     "problems": []
+    },
+    {
+     "n": 10,
+     "ruleSet": "F3",
+     "stress": "bps10",
+     "lots": 1951,
+     "net": -365802.9971148767,
+     "problems": []
+    },
+    {
+     "n": 10,
+     "ruleSet": "F3",
+     "stress": "bps20",
+     "lots": 1951,
+     "net": -754885.9192411,
+     "problems": []
+    },
+    {
+     "n": 10,
+     "ruleSet": "F3",
+     "stress": "rate14",
+     "lots": 1951,
+     "net": -171356.171063224,
+     "problems": []
+    },
+    {
+     "n": 10,
+     "ruleSet": "F3",
+     "stress": "nextOpen",
+     "lots": 1897,
+     "net": -194754.61026621642,
+     "problems": []
+    },
+    {
+     "n": 10,
+     "ruleSet": "F3",
+     "stress": "slip25",
+     "lots": 1951,
+     "net": -658295.9861150079,
+     "problems": []
+    },
+    {
+     "n": 10,
+     "ruleSet": "F3",
+     "stress": "minuteLow",
+     "lots": 1951,
+     "net": -267974.0618918588,
+     "problems": []
+    },
+    {
+     "n": 11,
+     "ruleSet": "F4",
+     "stress": "bps10",
+     "lots": 1036,
+     "net": -101169.6213521353,
+     "problems": []
+    },
+    {
+     "n": 11,
+     "ruleSet": "F4",
+     "stress": "bps20",
+     "lots": 1183,
+     "net": -362791.8296689509,
+     "problems": []
+    },
+    {
+     "n": 11,
+     "ruleSet": "F4",
+     "stress": "rate14",
+     "lots": 971,
+     "net": -20188.035272584457,
+     "problems": []
+    },
+    {
+     "n": 11,
+     "ruleSet": "F4",
+     "stress": "nextOpen",
+     "lots": 969,
+     "net": -2297.5036322827627,
+     "problems": []
+    },
+    {
+     "n": 11,
+     "ruleSet": "F4",
+     "stress": "slip25",
+     "lots": 969,
+     "net": -37681.169196501505,
+     "problems": []
+    },
+    {
+     "n": 11,
+     "ruleSet": "F4",
+     "stress": "minuteLow",
+     "lots": 969,
+     "net": -5361.983546332485,
+     "problems": []
+    },
+    {
+     "n": 12,
+     "ruleSet": "F1",
+     "stress": "bps10",
+     "lots": 856,
+     "net": -84809.0215524609,
+     "problems": []
+    },
+    {
+     "n": 12,
+     "ruleSet": "F1",
+     "stress": "bps20",
+     "lots": 856,
+     "net": -255751.6571669391,
+     "problems": []
+    },
+    {
+     "n": 12,
+     "ruleSet": "F1",
+     "stress": "rate14",
+     "lots": 856,
+     "net": -24146.54714133764,
+     "problems": []
+    },
+    {
+     "n": 12,
+     "ruleSet": "F1",
+     "stress": "nextOpen",
+     "lots": 853,
+     "net": -15831.155177904166,
+     "problems": []
+    },
+    {
+     "n": 12,
+     "ruleSet": "F1",
+     "stress": "slip25",
+     "lots": 856,
+     "net": -213190.20887511212,
+     "problems": []
+    },
+    {
+     "n": 12,
+     "ruleSet": "F1",
+     "stress": "minuteLow",
+     "lots": 856,
+     "net": -33658.14561282692,
+     "problems": []
+    },
+    {
+     "n": 13,
+     "ruleSet": "F2",
+     "stress": "bps10",
+     "lots": 1601,
+     "net": -302571.5064170625,
+     "problems": []
+    },
+    {
+     "n": 13,
+     "ruleSet": "F2",
+     "stress": "bps20",
+     "lots": 1601,
+     "net": -621855.1320445018,
+     "problems": []
+    },
+    {
+     "n": 13,
+     "ruleSet": "F2",
+     "stress": "rate14",
+     "lots": 1601,
+     "net": -143701.30945976594,
+     "problems": []
+    },
+    {
+     "n": 13,
+     "ruleSet": "F2",
+     "stress": "nextOpen",
+     "lots": 1595,
+     "net": -160696.67234751052,
+     "problems": []
+    },
+    {
+     "n": 13,
+     "ruleSet": "F2",
+     "stress": "slip25",
+     "lots": 1601,
+     "net": -542592.8918025483,
+     "problems": []
+    },
+    {
+     "n": 13,
+     "ruleSet": "F2",
+     "stress": "minuteLow",
+     "lots": 1601,
+     "net": -200259.38840756583,
+     "problems": []
+    },
+    {
+     "n": 14,
+     "ruleSet": "F3",
+     "stress": "bps10",
+     "lots": 2038,
+     "net": -334611.24165362044,
+     "problems": []
+    },
+    {
+     "n": 14,
+     "ruleSet": "F3",
+     "stress": "bps20",
+     "lots": 2038,
+     "net": -741158.526076374,
+     "problems": []
+    },
+    {
+     "n": 14,
+     "ruleSet": "F3",
+     "stress": "rate14",
+     "lots": 2038,
+     "net": -134065.71807030996,
+     "problems": []
+    },
+    {
+     "n": 14,
+     "ruleSet": "F3",
+     "stress": "nextOpen",
+     "lots": 1970,
+     "net": -160530.0461781097,
+     "problems": []
+    },
+    {
+     "n": 14,
+     "ruleSet": "F3",
+     "stress": "slip25",
+     "lots": 2038,
+     "net": -640233.0606244378,
+     "problems": []
+    },
+    {
+     "n": 14,
+     "ruleSet": "F3",
+     "stress": "minuteLow",
+     "lots": 2038,
+     "net": -237075.08539961008,
+     "problems": []
+    },
+    {
+     "n": 15,
+     "ruleSet": "F4",
+     "stress": "bps10",
+     "lots": 14051,
+     "net": -2635005.6731803245,
+     "problems": []
+    },
+    {
+     "n": 15,
+     "ruleSet": "F4",
+     "stress": "bps20",
+     "lots": 14024,
+     "net": -5423994.255625547,
+     "problems": []
+    },
+    {
+     "n": 15,
+     "ruleSet": "F4",
+     "stress": "rate14",
+     "lots": 14091,
+     "net": -1235298.2200243063,
+     "problems": []
+    },
+    {
+     "n": 15,
+     "ruleSet": "F4",
+     "stress": "nextOpen",
+     "lots": 13762,
+     "net": -1337670.1113288207,
+     "problems": []
+    },
+    {
+     "n": 15,
+     "ruleSet": "F4",
+     "stress": "slip25",
+     "lots": 14029,
+     "net": -4731510.876815429,
+     "problems": []
+    },
+    {
+     "n": 15,
+     "ruleSet": "F4",
+     "stress": "minuteLow",
+     "lots": 14070,
+     "net": -1590552.7578254195,
+     "problems": []
+    },
+    {
+     "n": 16,
+     "ruleSet": "F1",
+     "stress": "bps10",
+     "lots": 153,
+     "net": 77408.30670489198,
+     "problems": []
+    },
+    {
+     "n": 16,
+     "ruleSet": "F1",
+     "stress": "bps20",
+     "lots": 153,
+     "net": 46619.221246109475,
+     "problems": []
+    },
+    {
+     "n": 16,
+     "ruleSet": "F1",
+     "stress": "rate14",
+     "lots": 153,
+     "net": 70321.82011919869,
+     "problems": []
+    },
+    {
+     "n": 16,
+     "ruleSet": "F1",
+     "stress": "nextOpen",
+     "lots": 152,
+     "net": 87893.46019153301,
+     "problems": []
+    },
+    {
+     "n": 16,
+     "ruleSet": "F1",
+     "stress": "slip25",
+     "lots": 153,
+     "net": 54387.53669381502,
+     "problems": []
+    },
+    {
+     "n": 16,
+     "ruleSet": "F1",
+     "stress": "minuteLow",
+     "lots": 153,
+     "net": 86285.87825269395,
+     "problems": []
+    },
+    {
+     "n": 17,
+     "ruleSet": "F2",
+     "stress": "bps10",
+     "lots": 2548,
+     "net": -410780.236192305,
+     "problems": []
+    },
+    {
+     "n": 17,
+     "ruleSet": "F2",
+     "stress": "bps20",
+     "lots": 2547,
+     "net": -918796.1712532635,
+     "problems": []
+    },
+    {
+     "n": 17,
+     "ruleSet": "F2",
+     "stress": "rate14",
+     "lots": 2548,
+     "net": -165214.2362907502,
+     "problems": []
+    },
+    {
+     "n": 17,
+     "ruleSet": "F2",
+     "stress": "nextOpen",
+     "lots": 2537,
+     "net": -200920.0732491551,
+     "problems": []
+    },
+    {
+     "n": 17,
+     "ruleSet": "F2",
+     "stress": "slip25",
+     "lots": 2547,
+     "net": -792650.9239626253,
+     "problems": []
+    },
+    {
+     "n": 17,
+     "ruleSet": "F2",
+     "stress": "minuteLow",
+     "lots": 2546,
+     "net": -245352.31401440033,
+     "problems": []
+    },
+    {
+     "n": 18,
+     "ruleSet": "F3",
+     "stress": "bps10",
+     "lots": 1111,
+     "net": -151065.59629248828,
+     "problems": []
+    },
+    {
+     "n": 18,
+     "ruleSet": "F3",
+     "stress": "bps20",
+     "lots": 1116,
+     "net": -382384.21304217546,
+     "problems": []
+    },
+    {
+     "n": 18,
+     "ruleSet": "F3",
+     "stress": "rate14",
+     "lots": 1106,
+     "net": -36858.20141315672,
+     "problems": []
+    },
+    {
+     "n": 18,
+     "ruleSet": "F3",
+     "stress": "nextOpen",
+     "lots": 1104,
+     "net": -36888.51030074098,
+     "problems": []
+    },
+    {
+     "n": 18,
+     "ruleSet": "F3",
+     "stress": "slip25",
+     "lots": 1105,
+     "net": -148705.70480595296,
+     "problems": []
+    },
+    {
+     "n": 18,
+     "ruleSet": "F3",
+     "stress": "minuteLow",
+     "lots": 1105,
+     "net": -55973.64214038183,
+     "problems": []
+    },
+    {
+     "n": 19,
+     "ruleSet": "F4",
+     "stress": "bps10",
+     "lots": 7744,
+     "net": -1434636.4332189655,
+     "problems": []
+    },
+    {
+     "n": 19,
+     "ruleSet": "F4",
+     "stress": "bps20",
+     "lots": 7744,
+     "net": -2978974.4949520906,
+     "problems": []
+    },
+    {
+     "n": 19,
+     "ruleSet": "F4",
+     "stress": "rate14",
+     "lots": 7744,
+     "net": -663380.3974199607,
+     "problems": []
+    },
+    {
+     "n": 19,
+     "ruleSet": "F4",
+     "stress": "nextOpen",
+     "lots": 7619,
+     "net": -717708.3513920852,
+     "problems": []
+    },
+    {
+     "n": 19,
+     "ruleSet": "F4",
+     "stress": "slip25",
+     "lots": 7744,
+     "net": -2595392.5653968006,
+     "problems": []
+    },
+    {
+     "n": 19,
+     "ruleSet": "F4",
+     "stress": "minuteLow",
+     "lots": 7744,
+     "net": -885580.6728432656,
+     "problems": []
+    }
+   ]
+  },
+  "P8": {
+   "runs": 160,
+   "withLots": 155,
+   "withDifferences": 0,
+   "detail": [
+    {
+     "n": 0,
+     "ruleSet": "L0",
+     "variant": "base",
+     "lots": 89,
+     "net": -7098.71429771483,
+     "problems": []
+    },
+    {
+     "n": 1,
+     "ruleSet": "L1",
+     "variant": "cost10",
+     "lots": 25,
+     "net": -2907.985008117008,
+     "problems": []
+    },
+    {
+     "n": 2,
+     "ruleSet": "L2",
+     "variant": "rate14",
+     "lots": 51,
+     "net": -11623.933272448363,
+     "problems": []
+    },
+    {
+     "n": 3,
+     "ruleSet": "L3",
+     "variant": "nextOpen",
+     "lots": 283,
+     "net": -25827.359743132645,
+     "problems": []
+    },
+    {
+     "n": 4,
+     "ruleSet": "L4",
+     "variant": "slip25",
+     "lots": 372,
+     "net": -136693.71481889358,
+     "problems": []
+    },
+    {
+     "n": 5,
+     "ruleSet": "L5",
+     "variant": "minuteLow",
+     "lots": 8,
+     "net": -3475.230402042137,
+     "problems": []
+    },
+    {
+     "n": 6,
+     "ruleSet": "F1",
+     "variant": "base",
+     "lots": 22,
+     "net": 409.13135722469815,
+     "problems": []
+    },
+    {
+     "n": 7,
+     "ruleSet": "F2",
+     "variant": "cost10",
+     "lots": 189,
+     "net": -37749.11712216102,
+     "problems": []
+    },
+    {
+     "n": 8,
+     "ruleSet": "F3",
+     "variant": "rate14",
+     "lots": 62,
+     "net": 890.538474573174,
+     "problems": []
+    },
+    {
+     "n": 9,
+     "ruleSet": "F4",
+     "variant": "nextOpen",
+     "lots": 132,
+     "net": -16112.39278548827,
+     "problems": []
+    },
+    {
+     "n": 10,
+     "ruleSet": "L0",
+     "variant": "slip25",
+     "lots": 46,
+     "net": 4621.287772168359,
+     "problems": []
+    },
+    {
+     "n": 11,
+     "ruleSet": "L1",
+     "variant": "minuteLow",
+     "lots": 334,
+     "net": -136333.46995818417,
+     "problems": []
+    },
+    {
+     "n": 12,
+     "ruleSet": "L2",
+     "variant": "base",
+     "lots": 10,
+     "net": 5917.748201082,
+     "problems": []
+    },
+    {
+     "n": 13,
+     "ruleSet": "L3",
+     "variant": "cost10",
+     "lots": 169,
+     "net": -30307.731261456345,
+     "problems": []
+    },
+    {
+     "n": 14,
+     "ruleSet": "L4",
+     "variant": "rate14",
+     "lots": 14,
+     "net": -988.4849648287636,
+     "problems": []
+    },
+    {
+     "n": 15,
+     "ruleSet": "L5",
+     "variant": "nextOpen",
+     "lots": 36,
+     "net": -1450.5371310835928,
+     "problems": []
+    },
+    {
+     "n": 16,
+     "ruleSet": "F1",
+     "variant": "slip25",
+     "lots": 56,
+     "net": -18308.009883998846,
+     "problems": []
+    },
+    {
+     "n": 17,
+     "ruleSet": "F2",
+     "variant": "minuteLow",
+     "lots": 77,
+     "net": -30440.321877957344,
+     "problems": []
+    },
+    {
+     "n": 18,
+     "ruleSet": "F3",
+     "variant": "base",
+     "lots": 11,
+     "net": 935.6426377072562,
+     "problems": []
+    },
+    {
+     "n": 19,
+     "ruleSet": "F4",
+     "variant": "cost10",
+     "lots": 423,
+     "net": -83730.19326738769,
+     "problems": []
+    },
+    {
+     "n": 20,
+     "ruleSet": "L0",
+     "variant": "rate14",
+     "lots": 71,
+     "net": -4791.1999443922205,
+     "problems": []
+    },
+    {
+     "n": 21,
+     "ruleSet": "L1",
+     "variant": "nextOpen",
+     "lots": 891,
+     "net": -91247.24471552584,
+     "problems": []
+    },
+    {
+     "n": 22,
+     "ruleSet": "L2",
+     "variant": "slip25",
+     "lots": 842,
+     "net": -290687.63807122933,
+     "problems": []
+    },
+    {
+     "n": 23,
+     "ruleSet": "L3",
+     "variant": "minuteLow",
+     "lots": 73,
+     "net": -28856.571354649663,
+     "problems": []
+    },
+    {
+     "n": 24,
+     "ruleSet": "L4",
+     "variant": "base",
+     "lots": 680,
+     "net": -57657.992405840756,
+     "problems": []
+    },
+    {
+     "n": 25,
+     "ruleSet": "L5",
+     "variant": "cost10",
+     "lots": 6,
+     "net": 6861.90403907389,
+     "problems": []
+    },
+    {
+     "n": 26,
+     "ruleSet": "F1",
+     "variant": "rate14",
+     "lots": 48,
+     "net": -7076.447854951279,
+     "problems": []
+    },
+    {
+     "n": 27,
+     "ruleSet": "F2",
+     "variant": "nextOpen",
+     "lots": 9,
+     "net": 189.48145446954686,
+     "problems": []
+    },
+    {
+     "n": 28,
+     "ruleSet": "F3",
+     "variant": "slip25",
+     "lots": 35,
+     "net": -5507.245014460401,
+     "problems": []
+    },
+    {
+     "n": 29,
+     "ruleSet": "F4",
+     "variant": "minuteLow",
+     "lots": 1333,
+     "net": -543711.5295060982,
+     "problems": []
+    },
+    {
+     "n": 30,
+     "ruleSet": "L0",
+     "variant": "base",
+     "lots": 33,
+     "net": -2897.7744420802283,
+     "problems": []
+    },
+    {
+     "n": 31,
+     "ruleSet": "L1",
+     "variant": "cost10",
+     "lots": 87,
+     "net": -14730.76939586662,
+     "problems": []
+    },
+    {
+     "n": 32,
+     "ruleSet": "L2",
+     "variant": "rate14",
+     "lots": 98,
+     "net": -13114.999357808465,
+     "problems": []
+    },
+    {
+     "n": 33,
+     "ruleSet": "L3",
+     "variant": "nextOpen",
+     "lots": 5,
+     "net": 590.334401083509,
+     "problems": []
+    },
+    {
+     "n": 34,
+     "ruleSet": "L4",
+     "variant": "slip25",
+     "lots": 1578,
+     "net": -538710.9865525692,
+     "problems": []
+    },
+    {
+     "n": 35,
+     "ruleSet": "L5",
+     "variant": "minuteLow",
+     "lots": 48,
+     "net": -19735.688355777784,
+     "problems": []
+    },
+    {
+     "n": 36,
+     "ruleSet": "F1",
+     "variant": "base",
+     "lots": 589,
+     "net": -57539.716526634584,
+     "problems": []
+    },
+    {
+     "n": 37,
+     "ruleSet": "F2",
+     "variant": "cost10",
+     "lots": 82,
+     "net": -11834.531154759017,
+     "problems": []
+    },
+    {
+     "n": 38,
+     "ruleSet": "F3",
+     "variant": "rate14",
+     "lots": 79,
+     "net": -11316.36998883003,
+     "problems": []
+    },
+    {
+     "n": 39,
+     "ruleSet": "F4",
+     "variant": "nextOpen",
+     "lots": 19,
+     "net": 3882.514070549037,
+     "problems": []
+    },
+    {
+     "n": 40,
+     "ruleSet": "L0",
+     "variant": "slip25",
+     "lots": 53,
+     "net": -10373.901907088142,
+     "problems": []
+    },
+    {
+     "n": 41,
+     "ruleSet": "L1",
+     "variant": "minuteLow",
+     "lots": 563,
+     "net": -237605.20199200528,
+     "problems": []
+    },
+    {
+     "n": 42,
+     "ruleSet": "L2",
+     "variant": "base",
+     "lots": 23,
+     "net": -3691.2638197277893,
+     "problems": []
+    },
+    {
+     "n": 43,
+     "ruleSet": "L3",
+     "variant": "cost10",
+     "lots": 4,
+     "net": 5452.5696868816285,
+     "problems": []
+    },
+    {
+     "n": 44,
+     "ruleSet": "L4",
+     "variant": "rate14",
+     "lots": 371,
+     "net": -43607.9979242494,
+     "problems": []
+    },
+    {
+     "n": 45,
+     "ruleSet": "L5",
+     "variant": "nextOpen",
+     "lots": 62,
+     "net": -5488.699710919688,
+     "problems": []
+    },
+    {
+     "n": 46,
+     "ruleSet": "F1",
+     "variant": "slip25",
+     "lots": 56,
+     "net": -14564.788759981464,
+     "problems": []
+    },
+    {
+     "n": 47,
+     "ruleSet": "F2",
+     "variant": "minuteLow",
+     "lots": 43,
+     "net": -19269.271107986286,
+     "problems": []
+    },
+    {
+     "n": 48,
+     "ruleSet": "F3",
+     "variant": "base",
+     "lots": 44,
+     "net": -4626.151796061933,
+     "problems": []
+    },
+    {
+     "n": 49,
+     "ruleSet": "F4",
+     "variant": "cost10",
+     "lots": 238,
+     "net": -42288.151628378204,
+     "problems": []
+    },
+    {
+     "n": 50,
+     "ruleSet": "L0",
+     "variant": "rate14",
+     "lots": 445,
+     "net": -44949.430360449136,
+     "problems": []
+    },
+    {
+     "n": 51,
+     "ruleSet": "L1",
+     "variant": "nextOpen",
+     "lots": 186,
+     "net": -20748.142755544217,
+     "problems": []
+    },
+    {
+     "n": 52,
+     "ruleSet": "L2",
+     "variant": "slip25",
+     "lots": 20,
+     "net": -5701.842352668875,
+     "problems": []
+    },
+    {
+     "n": 53,
+     "ruleSet": "L3",
+     "variant": "minuteLow",
+     "lots": 72,
+     "net": -29734.042488020525,
+     "problems": []
+    },
+    {
+     "n": 54,
+     "ruleSet": "L4",
+     "variant": "base",
+     "lots": 32,
+     "net": -943.160215516401,
+     "problems": []
+    },
+    {
+     "n": 55,
+     "ruleSet": "L5",
+     "variant": "cost10",
+     "lots": 24,
+     "net": -3749.6033920177433,
+     "problems": []
+    },
+    {
+     "n": 56,
+     "ruleSet": "F1",
+     "variant": "rate14",
+     "lots": 43,
+     "net": -6024.227445377671,
+     "problems": []
+    },
+    {
+     "n": 57,
+     "ruleSet": "F2",
+     "variant": "nextOpen",
+     "lots": 5,
+     "net": 6089.297557454127,
+     "problems": []
+    },
+    {
+     "n": 58,
+     "ruleSet": "F3",
+     "variant": "slip25",
+     "lots": 77,
+     "net": -9481.009789681924,
+     "problems": []
+    },
+    {
+     "n": 59,
+     "ruleSet": "F4",
+     "variant": "minuteLow",
+     "lots": 28,
+     "net": -12227.62179267838,
+     "problems": []
+    },
+    {
+     "n": 60,
+     "ruleSet": "L0",
+     "variant": "base",
+     "lots": 63,
+     "net": 786.3998577222651,
+     "problems": []
+    },
+    {
+     "n": 61,
+     "ruleSet": "L1",
+     "variant": "cost10",
+     "lots": 158,
+     "net": -24683.512313344494,
+     "problems": []
+    },
+    {
+     "n": 62,
+     "ruleSet": "L2",
+     "variant": "rate14",
+     "lots": 12,
+     "net": -10411.937196718176,
+     "problems": []
+    },
+    {
+     "n": 63,
+     "ruleSet": "L3",
+     "variant": "nextOpen",
+     "lots": 14,
+     "net": 365.38257359727686,
+     "problems": []
+    },
+    {
+     "n": 64,
+     "ruleSet": "L4",
+     "variant": "slip25",
+     "lots": 18,
+     "net": -914.8336899544979,
+     "problems": []
+    },
+    {
+     "n": 65,
+     "ruleSet": "L5",
+     "variant": "minuteLow",
+     "lots": 39,
+     "net": -17236.200650201434,
+     "problems": []
+    },
+    {
+     "n": 66,
+     "ruleSet": "F1",
+     "variant": "base",
+     "lots": 125,
+     "net": -9863.301038992777,
+     "problems": []
+    },
+    {
+     "n": 67,
+     "ruleSet": "F2",
+     "variant": "cost10",
+     "lots": 7,
+     "net": -3164.716839473033,
+     "problems": []
+    },
+    {
+     "n": 68,
+     "ruleSet": "F3",
+     "variant": "rate14",
+     "lots": 9,
+     "net": -1941.7459505184088,
+     "problems": []
+    },
+    {
+     "n": 69,
+     "ruleSet": "F4",
+     "variant": "nextOpen",
+     "lots": 1275,
+     "net": -133926.3346076206,
+     "problems": []
+    },
+    {
+     "n": 70,
+     "ruleSet": "L0",
+     "variant": "slip25",
+     "lots": 92,
+     "net": -5205.854907116897,
+     "problems": []
+    },
+    {
+     "n": 71,
+     "ruleSet": "L1",
+     "variant": "minuteLow",
+     "lots": 10,
+     "net": -2100.211351733687,
+     "problems": []
+    },
+    {
+     "n": 72,
+     "ruleSet": "L2",
+     "variant": "base",
+     "lots": 146,
+     "net": -19375.657048280475,
+     "problems": []
+    },
+    {
+     "n": 73,
+     "ruleSet": "L3",
+     "variant": "cost10",
+     "lots": 55,
+     "net": -11338.997600525572,
+     "problems": []
+    },
+    {
+     "n": 74,
+     "ruleSet": "L4",
+     "variant": "rate14",
+     "lots": 37,
+     "net": -279.6644937794638,
+     "problems": []
+    },
+    {
+     "n": 75,
+     "ruleSet": "L5",
+     "variant": "nextOpen",
+     "lots": 908,
+     "net": -87758.35605597447,
+     "problems": []
+    },
+    {
+     "n": 76,
+     "ruleSet": "F1",
+     "variant": "slip25",
+     "lots": 41,
+     "net": -15638.170228619116,
+     "problems": []
+    },
+    {
+     "n": 77,
+     "ruleSet": "F2",
+     "variant": "minuteLow",
+     "lots": 1073,
+     "net": -438322.8602321525,
+     "problems": []
+    },
+    {
+     "n": 78,
+     "ruleSet": "F3",
+     "variant": "base",
+     "lots": 12,
+     "net": -1590.4919820296066,
+     "problems": []
+    },
+    {
+     "n": 79,
+     "ruleSet": "F4",
+     "variant": "cost10",
+     "lots": 47,
+     "net": -9272.597535913552,
+     "problems": []
+    },
+    {
+     "n": 80,
+     "ruleSet": "L0",
+     "variant": "rate14",
+     "lots": 65,
+     "net": -5537.035846326888,
+     "problems": []
+    },
+    {
+     "n": 81,
+     "ruleSet": "L1",
+     "variant": "nextOpen",
+     "lots": 28,
+     "net": -1061.7642636588998,
+     "problems": []
+    },
+    {
+     "n": 82,
+     "ruleSet": "L2",
+     "variant": "slip25",
+     "lots": 135,
+     "net": -21979.1365864597,
+     "problems": []
+    },
+    {
+     "n": 83,
+     "ruleSet": "L3",
+     "variant": "minuteLow",
+     "lots": 9,
+     "net": -1961.0201299165278,
+     "problems": []
+    },
+    {
+     "n": 84,
+     "ruleSet": "L4",
+     "variant": "base",
+     "lots": 91,
+     "net": -6391.286259515153,
+     "problems": []
+    },
+    {
+     "n": 85,
+     "ruleSet": "L5",
+     "variant": "cost10",
+     "lots": 47,
+     "net": -3818.236451384708,
+     "problems": []
+    },
+    {
+     "n": 86,
+     "ruleSet": "F1",
+     "variant": "rate14",
+     "lots": 31,
+     "net": -2667.095329866199,
+     "problems": []
+    },
+    {
+     "n": 87,
+     "ruleSet": "F2",
+     "variant": "nextOpen",
+     "lots": 13,
+     "net": 2535.267263789426,
+     "problems": []
+    },
+    {
+     "n": 88,
+     "ruleSet": "F3",
+     "variant": "slip25",
+     "lots": 49,
+     "net": -4200.137481111061,
+     "problems": []
+    },
+    {
+     "n": 89,
+     "ruleSet": "F4",
+     "variant": "minuteLow",
+     "lots": 32,
+     "net": -10494.155664814709,
+     "problems": []
+    },
+    {
+     "n": 90,
+     "ruleSet": "L0",
+     "variant": "base",
+     "lots": 48,
+     "net": -864.2932379156655,
+     "problems": []
+    },
+    {
+     "n": 91,
+     "ruleSet": "L1",
+     "variant": "cost10",
+     "lots": 50,
+     "net": -8368.828354369349,
+     "problems": []
+    },
+    {
+     "n": 92,
+     "ruleSet": "L2",
+     "variant": "rate14",
+     "lots": 905,
+     "net": -91540.7981931654,
+     "problems": []
+    },
+    {
+     "n": 93,
+     "ruleSet": "L3",
+     "variant": "nextOpen",
+     "lots": 291,
+     "net": -27974.561422502644,
+     "problems": []
+    },
+    {
+     "n": 94,
+     "ruleSet": "L4",
+     "variant": "slip25",
+     "lots": 30,
+     "net": -9577.464263387612,
+     "problems": []
+    },
+    {
+     "n": 95,
+     "ruleSet": "L5",
+     "variant": "minuteLow",
+     "lots": 356,
+     "net": -141968.5897958452,
+     "problems": []
+    },
+    {
+     "n": 96,
+     "ruleSet": "F1",
+     "variant": "base",
+     "lots": 1287,
+     "net": -109713.83782400524,
+     "problems": []
+    },
+    {
+     "n": 97,
+     "ruleSet": "F2",
+     "variant": "cost10",
+     "lots": 444,
+     "net": -93901.51375551656,
+     "problems": []
+    },
+    {
+     "n": 98,
+     "ruleSet": "F3",
+     "variant": "rate14",
+     "lots": 132,
+     "net": -15648.173255013207,
+     "problems": []
+    },
+    {
+     "n": 99,
+     "ruleSet": "F4",
+     "variant": "nextOpen",
+     "lots": 7,
+     "net": 5030.434646526566,
+     "problems": []
+    },
+    {
+     "n": 100,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L0",
+     "variant": "base",
+     "lots": 0,
+     "net": 0,
+     "problems": []
+    },
+    {
+     "n": 101,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L1",
+     "variant": "cost10",
+     "lots": 136,
+     "net": -5338.095472917131,
+     "problems": []
+    },
+    {
+     "n": 102,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L2",
+     "variant": "rate14",
+     "lots": 322,
+     "net": -19053.449855364193,
+     "problems": []
+    },
+    {
+     "n": 103,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L3",
+     "variant": "nextOpen",
+     "lots": 575,
+     "net": -51407.57982810891,
+     "problems": []
+    },
+    {
+     "n": 104,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L4",
+     "variant": "slip25",
+     "lots": 256,
+     "net": -84354.48434353528,
+     "problems": []
+    },
+    {
+     "n": 105,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L5",
+     "variant": "minuteLow",
+     "lots": 4,
+     "net": 247.4504417522694,
+     "problems": []
+    },
+    {
+     "n": 106,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F1",
+     "variant": "base",
+     "lots": 2599,
+     "net": -218258.80116381316,
+     "problems": []
+    },
+    {
+     "n": 107,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F2",
+     "variant": "cost10",
+     "lots": 785,
+     "net": -113956.8647968464,
+     "problems": []
+    },
+    {
+     "n": 108,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F3",
+     "variant": "rate14",
+     "lots": 1502,
+     "net": -141727.40421018325,
+     "problems": []
+    },
+    {
+     "n": 109,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F4",
+     "variant": "nextOpen",
+     "lots": 7286,
+     "net": -704269.9883493369,
+     "problems": []
+    },
+    {
+     "n": 110,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L0",
+     "variant": "slip25",
+     "lots": 1419,
+     "net": -306855.5395571541,
+     "problems": []
+    },
+    {
+     "n": 111,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L1",
+     "variant": "minuteLow",
+     "lots": 4,
+     "net": -3191.6514713964752,
+     "problems": []
+    },
+    {
+     "n": 112,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L2",
+     "variant": "base",
+     "lots": 3,
+     "net": 538.751185015295,
+     "problems": []
+    },
+    {
+     "n": 113,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L3",
+     "variant": "cost10",
+     "lots": 79,
+     "net": -9574.189562625304,
+     "problems": []
+    },
+    {
+     "n": 114,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L4",
+     "variant": "rate14",
+     "lots": 415,
+     "net": -27408.127403153074,
+     "problems": []
+    },
+    {
+     "n": 115,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L5",
+     "variant": "nextOpen",
+     "lots": 131,
+     "net": 9726.52650122535,
+     "problems": []
+    },
+    {
+     "n": 116,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F1",
+     "variant": "slip25",
+     "lots": 78,
+     "net": -24402.51916007322,
+     "problems": []
+    },
+    {
+     "n": 117,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F2",
+     "variant": "minuteLow",
+     "lots": 26,
+     "net": 7606.576874179857,
+     "problems": []
+    },
+    {
+     "n": 118,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F3",
+     "variant": "base",
+     "lots": 672,
+     "net": -34247.51167272583,
+     "problems": []
+    },
+    {
+     "n": 119,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F4",
+     "variant": "cost10",
+     "lots": 0,
+     "net": 0,
+     "problems": []
+    },
+    {
+     "n": 120,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L0",
+     "variant": "rate14",
+     "lots": 832,
+     "net": -103658.75124313451,
+     "problems": []
+    },
+    {
+     "n": 121,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L1",
+     "variant": "nextOpen",
+     "lots": 452,
+     "net": -22371.50596330026,
+     "problems": []
+    },
+    {
+     "n": 122,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L2",
+     "variant": "slip25",
+     "lots": 517,
+     "net": -179132.17684322182,
+     "problems": []
+    },
+    {
+     "n": 123,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L3",
+     "variant": "minuteLow",
+     "lots": 1451,
+     "net": -605214.8771520562,
+     "problems": []
+    },
+    {
+     "n": 124,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L4",
+     "variant": "base",
+     "lots": 1162,
+     "net": -102053.35994203559,
+     "problems": []
+    },
+    {
+     "n": 125,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L5",
+     "variant": "cost10",
+     "lots": 226,
+     "net": -48221.80488788933,
+     "problems": []
+    },
+    {
+     "n": 126,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F1",
+     "variant": "rate14",
+     "lots": 192,
+     "net": -1079.3171246072238,
+     "problems": []
+    },
+    {
+     "n": 127,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F2",
+     "variant": "nextOpen",
+     "lots": 24,
+     "net": -7266.252770234151,
+     "problems": []
+    },
+    {
+     "n": 128,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F3",
+     "variant": "slip25",
+     "lots": 235,
+     "net": -57212.98178533676,
+     "problems": []
+    },
+    {
+     "n": 129,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F4",
+     "variant": "minuteLow",
+     "lots": 1040,
+     "net": -432369.92070790293,
+     "problems": []
+    },
+    {
+     "n": 130,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L0",
+     "variant": "base",
+     "lots": 1083,
+     "net": -103995.18776752005,
+     "problems": []
+    },
+    {
+     "n": 131,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L1",
+     "variant": "cost10",
+     "lots": 665,
+     "net": -116188.11361234615,
+     "problems": []
+    },
+    {
+     "n": 132,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L2",
+     "variant": "rate14",
+     "lots": 230,
+     "net": -16709.844128140965,
+     "problems": []
+    },
+    {
+     "n": 133,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L3",
+     "variant": "nextOpen",
+     "lots": 0,
+     "net": 0,
+     "problems": []
+    },
+    {
+     "n": 134,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L4",
+     "variant": "slip25",
+     "lots": 94,
+     "net": -7213.721064760218,
+     "problems": []
+    },
+    {
+     "n": 135,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L5",
+     "variant": "minuteLow",
+     "lots": 397,
+     "net": -168759.41687385153,
+     "problems": []
+    },
+    {
+     "n": 136,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F1",
+     "variant": "base",
+     "lots": 32,
+     "net": 7760.584473301312,
+     "problems": []
+    },
+    {
+     "n": 137,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F2",
+     "variant": "cost10",
+     "lots": 755,
+     "net": -135636.12719694577,
+     "problems": []
+    },
+    {
+     "n": 138,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F3",
+     "variant": "rate14",
+     "lots": 3,
+     "net": 573.6639034775965,
+     "problems": []
+    },
+    {
+     "n": 139,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F4",
+     "variant": "nextOpen",
+     "lots": 541,
+     "net": -54605.26208528776,
+     "problems": []
+    },
+    {
+     "n": 140,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L0",
+     "variant": "slip25",
+     "lots": 0,
+     "net": 0,
+     "problems": []
+    },
+    {
+     "n": 141,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L1",
+     "variant": "minuteLow",
+     "lots": 40,
+     "net": -15812.122286188956,
+     "problems": []
+    },
+    {
+     "n": 142,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L2",
+     "variant": "base",
+     "lots": 573,
+     "net": -44937.03958290965,
+     "problems": []
+    },
+    {
+     "n": 143,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L3",
+     "variant": "cost10",
+     "lots": 4037,
+     "net": -734922.6310025736,
+     "problems": []
+    },
+    {
+     "n": 144,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L4",
+     "variant": "rate14",
+     "lots": 2626,
+     "net": -230357.52133148676,
+     "problems": []
+    },
+    {
+     "n": 145,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L5",
+     "variant": "nextOpen",
+     "lots": 2656,
+     "net": -265707.072009328,
+     "problems": []
+    },
+    {
+     "n": 146,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F1",
+     "variant": "slip25",
+     "lots": 84,
+     "net": -20333.40802004755,
+     "problems": []
+    },
+    {
+     "n": 147,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F2",
+     "variant": "minuteLow",
+     "lots": 26,
+     "net": 8912.216154567866,
+     "problems": []
+    },
+    {
+     "n": 148,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F3",
+     "variant": "base",
+     "lots": 534,
+     "net": -24958.353339561283,
+     "problems": []
+    },
+    {
+     "n": 149,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F4",
+     "variant": "cost10",
+     "lots": 1454,
+     "net": -268656.95488977665,
+     "problems": []
+    },
+    {
+     "n": 150,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L0",
+     "variant": "rate14",
+     "lots": 1206,
+     "net": -95710.72144377713,
+     "problems": []
+    },
+    {
+     "n": 151,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L1",
+     "variant": "nextOpen",
+     "lots": 0,
+     "net": 0,
+     "problems": []
+    },
+    {
+     "n": 152,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L2",
+     "variant": "slip25",
+     "lots": 519,
+     "net": -133988.55134235375,
+     "problems": []
+    },
+    {
+     "n": 153,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L3",
+     "variant": "minuteLow",
+     "lots": 300,
+     "net": -110005.1320178781,
+     "problems": []
+    },
+    {
+     "n": 154,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L4",
+     "variant": "base",
+     "lots": 57,
+     "net": -1580.200958910853,
+     "problems": []
+    },
+    {
+     "n": 155,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "L5",
+     "variant": "cost10",
+     "lots": 28,
+     "net": 20898.888686076305,
+     "problems": []
+    },
+    {
+     "n": 156,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F1",
+     "variant": "rate14",
+     "lots": 7,
+     "net": -492.93771084085165,
+     "problems": []
+    },
+    {
+     "n": 157,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F2",
+     "variant": "nextOpen",
+     "lots": 6275,
+     "net": -594818.5841227244,
+     "problems": []
+    },
+    {
+     "n": 158,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F3",
+     "variant": "slip25",
+     "lots": 351,
+     "net": -111411.73245740468,
+     "problems": []
+    },
+    {
+     "n": 159,
+     "window": "2016-01-04 → 2018-12-31",
+     "ruleSet": "F4",
+     "variant": "minuteLow",
+     "lots": 784,
+     "net": -305229.5570437172,
+     "problems": []
+    }
+   ]
+  }
+ },
+ "runtimeSeconds": 32.048
+}

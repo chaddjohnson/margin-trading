@@ -1,0 +1,8 @@
+PASS research/intraday-dip-recovery-vgt (standard 2.0.0, scope optimization)
+  notice: the date split is covered by a recorded departure for §1
+manual date-split check (the preflight's §1 checks are skipped because departure D1 cites §1.8, a §1 prefix):
+  PASS development.to <= 2024-12-31
+  PASS validation.from >= 2025-01-01
+  PASS development.from <= development.to < validation.from
+  PASS validation.to == commonCompleteEndpoint
+  PASS endpoint == measured (results/data/coverage.json)

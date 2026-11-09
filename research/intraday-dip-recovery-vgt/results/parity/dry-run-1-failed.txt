@@ -1,0 +1,17 @@
+Parity dry run 1 (engineering, not sealed), 2026-11-09T18:40:23Z, command: npm run dip-recovery -- parity --dry
+Result: P1–P7 passed with 0 differences; P8 (the independent reference) differed on 1 of 100 runs:
+  FAILED P8 L2 #92: lots 905 ≠ 899
+  FAILED P8 L2 #92: lot 45 bars 7210/7213 vs 7210/7218
+  FAILED P8 L2 #92: lot 46 bars 7215/7217 vs 7220/7231
+  FAILED P8 L2 #92: lot 47 bars 7220/7231 vs 7234/7284
+  FAILED P8 L2 #92: lot 48 bars 7234/7284 vs 7288/7292
+  FAILED P8 L2 #92: lot 49 bars 7288/7292 vs 7298/7306
+  FAILED P8 L2 #92: net -91540.7981931654 vs -90356.06668548699
+  FAILED P8 L2 #92: dd 93755.22327173485 vs 92570.49176405642
+  FAILED P8 L2 #92: daily mark 22
+Diagnosis: a defect of the REFERENCE (reference.ts), not of the engine. Lot 44 was held at the start of period 572 with
+its maximum hold due (which suspends the intraday stop for that period) and was sold at the period's opening trade
+(gap through the stop). Lot 45 re-entered in the same period (L2 permits it); the reference kept the suspension for
+the new position, so its stop did not act until the next period. The rule suspends the stop of the position held at
+the period's start only (D1: the maximum-hold decision is made for that position at the period open). Fix:
+reference.ts applies the suspension only while the position is the one held at the start. Dry run 2: 0 failures.
