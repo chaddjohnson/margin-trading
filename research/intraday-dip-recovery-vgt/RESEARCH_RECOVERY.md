@@ -2,68 +2,94 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-09T20:12Z (UTC, from `date -u`). **Status: INCOMPLETE.** The study chain is complete:
-  C19 (`d76e2cab`, `5bc068e2`), C21 (`a13ae56b`, `f69be3f4`), C23 (`0c047bea`, `37c6737b`), sequential, ablation and
-  controls (`bbcec0e0`), C24 searches, qualification and diagnostics (`929d3c52`). `FROZEN_SELECTION.json` is sealed
-  (sha256 `f1752269…c580`, primary `F2-4.1v.m.1x.0.u.0.1r.1e`; sequential verdict **unsupported**) and is committed in
-  this step. The validation door has NOT been opened.
+- **Updated:** 2026-11-09T20:18Z (UTC, from `date -u`). **Status: COMPLETE.** Verdict **(c) no attractive edge
+  demonstrated** (`REPORT.md`). Every stage is sealed and committed; the validation ran once.
 - **Authority:**
-  - `PROTOCOL.md`, sha256 `8a71e641da35…`, frozen by `results/protocol-freeze.json` at 2026-11-09T19:10:57Z;
-  - code digest `13e803f3953c…`;
-  - `AMENDMENTS.md`: no amendment;
-  - standard 2.0.0 (`2005a88c…0105`);
+  - `PROTOCOL.md`, sha256 `8a71e641da357ab6…`, frozen by `results/protocol-freeze.json` (`8e3c50de…`) at
+    2026-11-09T19:10:57Z and committed in `0be0088e`;
+  - code digest `13e803f3953c…`, unchanged through validation;
+  - `AMENDMENTS.md` (`bfb04414…`): no amendment;
+  - standard 2.0.0 (`2005a88c…0105`), retained pinned;
   - brief `brief/BRIEF.md` (`7224c602…7c4c`).
-- **Stages complete (sealed):**
-  - coverage (endpoint 2026-10-30);
-  - doors;
-  - parity (0 failures, P1–P8);
-  - the pilot (`results/pilot/PILOT.md`, cache outputs);
-  - the protocol freeze;
-  - C19 (searches, qualification, fold selection, fold evaluation).
-- **Running processes:** the study chain (one `dip-*` systemd unit at a time inside `diprecovery.slice`).
-- **Next command:** `npm run dip-recovery -- launch --unit dip-validate --wait -- validate` (ONCE; it refuses unless
-  `FROZEN_SELECTION.json` is committed and unchanged), then the report. (Earlier text: wait for the chain (C21, C23, sequential, ablation, controls, C24 searches, C24 qualification,
-  diagnostics). If it was interrupted: inspect the log and `systemctl --user list-units 'dip-*'`, then rerun
-  `bash research/intraday-dip-recovery-vgt/chains/study.sh` only after removing the completed stages from it (sealed
-  stages refuse to rerun; an interrupted search resumes from its archive). Then by hand: `freeze-selection`, commit,
-  `validate`.
+- **Outcome:**
+  - Primary `F2-4.1v.m.1x.0.u.0.1r.1e` (independent lane): development +$85,809 at DD $15,270; qualified.
+  - Chronological procedure **unsupported** (sequential +$9,710, DD $46,082).
+  - Validation once: +$5,645, V1–V3 pass, −68% pace.
+  - Daily D1 control: +$40,901 in validation.
+- **Running processes:** none (`systemctl --user list-units 'dip-*'` is empty after the units).
+- **Follow-up gate (needs the user):** none required. Phase 2 is not recommended (`REPORT.md` §11). Any execution-cost or
+  limit-order study, GDX, portfolio combination, Strategy Lab integration or live use needs a separately authorized
+  brief.
+
+## Audited deliverables (sha256 prefix, recomputed 2026-11-09T20:17:48Z)
+
+| File | sha256 |
+|---|---|
+| `PROTOCOL.md` | `8a71e641da357ab6` |
+| `STANDARD_ADOPTION.json` | `ff70cf4327d81f38` |
+| `STANDARD_COMPLIANCE_MAP.md` | `5d0be5d58801c7fd` |
+| `EXISTING_FINDINGS_AND_CHANGE_MAP.md` | `f59abbeef9aa7041` |
+| `AMENDMENTS.md` | `bfb04414253a546f` |
+| `FROZEN_SELECTION.json` | `f175226982f3b2b0` |
+| `results/protocol-freeze.json` | `8e3c50dee9c96d1b` |
+| `results/parity/parity.json` | `63b6747df5cd39d4` |
+| `results/qualify/C19.json` / `C21.json` / `C23.json` / `C24.json` | `cd961c28` / `70792f5a` / `4d3bf8a3` / `ba6e3720` |
+| `results/folds/sequential.json` | `e6a6015c3940c98f` |
+| `results/ablation/ablation.json` | `4b955d0b1cb8ebc0` |
+| `results/controls/development.json` | `c3650cf555182250` |
+| `results/diagnostics/diagnostics.json` | `198af49a7650329b` |
+| `results/validation/validation.json` | `88ac1c5719f852a3` |
+| `results/data/coverage.json` | `771ef2c3dee91700` |
+| `results/pilot/PILOT.md` | `ef48bfdac241f85d` |
+
+`REPORT.md` and `REPORT_TABLES.md` are narrative and generated tables: report-only and regenerable (`tools/intraday-dip-recovery/tables.ts`). They are not sealed. Every sealed record (345) is in
+`results/seals.jsonl` and verifies (`npm run dip-recovery -- verify`: 0 problems).
 
 ## Environment
 
 - Repository root `/home/chad/projects/margin-trading-2`, main checkout.
 - Branch `research/intraday-dip-recovery-vgt`, from `8c20f855`. No other worktree.
-- Node 24.21.0; 16 threads; 59 GiB RAM.
-- Heavy work runs in `diprecovery.slice` (44G/48G/swap 0): 12 workers, GC every 1,024 evaluations, pressure stop at
-  32 GiB.
-- Data: `data/VGT/data.csv` (git-ignored), sha256 `2ee06310…412e`. Doors are pinned in `src/intraday-dip-recovery/context.ts`.
+- Node 24.21.0; 16 threads (8 cores); 59 GiB RAM.
+- `diprecovery.slice` (MemoryHigh 44G, MemoryMax 48G, swap 0); 12 workers. Peak unit memory 8.9 GiB; zero swap.
+- Data `data/VGT/data.csv` (git-ignored), sha256 `2ee06310…412e`. The endpoint 2026-10-30 is measured.
 
-## Stage table
+## Stage table (all complete; commits in order)
 
-| Stage | Status | Command | Output | Resume semantics |
-|---|---|---|---|---|
-| coverage | complete | `npm run dip-recovery -- coverage` | `results/data/coverage.json` (sealed) | refuses to rerun |
-| doors | complete | `… doors` | `results/data/doors.json` (sealed) | refuses to rerun |
-| parity | complete (0 failures) | `… launch --unit dip-parity --wait -- parity` | `results/parity/parity.json` (sealed); dry-run 1 failure preserved | refuses to rerun |
-| pilot | complete | `bash research/intraday-dip-recovery-vgt/chains/pilot.sh` + bench | `results/pilot/PILOT.md`, `bench.jsonl`; cache | engineering only |
-| protocol freeze | complete (commit pending) | `… freeze-protocol` | `results/protocol-freeze.json` (sealed) | refuses to rerun |
-| C19 / C21 / C23 searches → qualify → seal-fold (commit) → fold-eval | not started | `chains/study.sh` | `results/search/<cutoff>/`, `results/qualify/`, `results/folds/` | a search resumes from its job archive on rerun; sealed stages refuse |
-| sequential, ablation, controls | not started | `chains/study.sh` | `results/folds/sequential.json`, `results/ablation/`, `results/controls/` | deterministic, sealed |
-| C24 searches (indep, informed, explore2) → qualify → diagnostics → freeze-selection (commit) | not started | `chains/study.sh` | `results/search/C24/`, … `FROZEN_SELECTION.json` | as above |
-| validation (once) | not started | `… launch --unit dip-validate --wait -- validate` | `results/validation/` | runs once; refuses unless the frozen selection is committed |
+| Stage | Commit | Record |
+|---|---|---|
+| coverage, doors, parity (0 failures), pilot, protocol freeze | `0be0088e` | `results/data/`, `results/parity/`, `results/pilot/`, `results/protocol-freeze.json` |
+| C19 searches + qualification + fold selection (before its slice) | `d76e2cab` | `results/search/C19/`, `results/qualify/C19.json`, `results/folds/C19-selection.json` |
+| C19 fold evaluation | `5bc068e2` | `results/folds/C19-evaluation.json` |
+| C21 (selection / evaluation) | `a13ae56b` / `f69be3f4` | as above |
+| C23 (selection / evaluation) | `0c047bea` / `37c6737b` | as above |
+| sequential verdict, L0–L5 ablation, development controls | `bbcec0e0` | `results/folds/sequential.json`, `results/ablation/`, `results/controls/` |
+| C24 searches (indep, informed, explore2), qualification, diagnostics | `929d3c52` | `results/search/C24/`, `results/qualify/C24.json`, `results/diagnostics/` |
+| C24 frozen selection (before validation) | `440b8d87` | `FROZEN_SELECTION.json` |
+| validation (FULL opened once, 20:11:54Z) | `b1e7935a` | `results/validation/` |
+| report, tables, final checkpoint, push | the final commit | `REPORT.md`, `REPORT_TABLES.md`, `results/report/`, `results/verification/` |
 
 ## Guards (do not rerun or reopen)
 
-- No 2025–2026 price is parsed before `FROZEN_SELECTION.json` is sealed and committed. The coverage scan read
-  timestamps only.
-- A fold's slice is never evaluated before its selection is committed.
+- Every sealed stage refuses to rerun. The validation is sealed: never reopen FULL for selection, tuning or a rescue
+  search.
+- Do not edit the frozen protocol, gates, budgets or `FROZEN_SELECTION.json`. A new question needs a new study
+  namespace.
 - Never edit `research/intraday-d1-vgt/`, `src/intraday-d1/`, D1, Study 8, Growth or Strategy Lab files.
 
-## Disclosures so far
+## Disclosures
 
-- Parity dry run 1 found a defect of the independent reference (not the engine), fixed before sealing
+- **Parity dry run 1:** a defect of the independent reference, not the engine, fixed before sealing
   (`results/parity/dry-run-1-failed.txt`).
-- The pilot logs printed pilot-budget development results on P18/D19 (2016–2019). These are inside every cutoff's
-  training window and inform no choice.
-- Two 2016 sessions lack a closing-print row (complete regular bars).
-- The preflight's §1 date-split checks are skipped because departure D1 cites §1.8; the date split was checked manually
-  (`results/preflight/preflight-at-freeze.txt`).
+- **Departure D1** (brief §4, §3.3): the earlier-cutoff repeat covers the independent four-family procedure only. The
+  preflight's §1 checks are therefore skipped, and the date split was verified by hand.
+- **Exposure before validation:**
+  - the coverage scan read every row's timestamp (no price);
+  - the pilot and bench logs printed development-only pilot results;
+  - D24 was opened for engineering probes before the freeze.
+
+  Every opening is in `results/doors.jsonl`.
+- **Data quality:** two 2016 sessions lack a closing-print row.
+- **Box edges:** the S upper bound (4.99%) binds in several slow members; the bounds were frozen and not moved.
+- **Code quality:** the study code has 0 eslint errors and 338 formatting warnings, deliberately left because
+  reformatting would change the frozen digest.
+- **Validation framing:** validation is on previously examined history, not an untouched holdout.
