@@ -31,3 +31,13 @@ by an amendment once results they govern exist. Entries `R*` precede the protoco
   the pilot record (`results/pilot/PILOT.md`); `STANDARD_ADOPTION.json` re-adopted with the new protocol sha256.
 - **Results that existed.** Engineering only (parity, pilot); no search, qualification or fold result of the study.
 - **Effect.** Wording only; no rule changed.
+
+## After the freeze
+
+### O1 — 2026-11-09T00:19Z — the study chain runs as its own systemd user unit
+
+- **Change.** `chains/study.sh` calls Node by its absolute path, so the chain itself can run as a transient user unit
+  (`vgjoint-chain`, outside the memory slice: it only launches and waits for the heavy units, one at a time, inside
+  `vgjoint.slice`) independent of the interactive session.
+- **Results that existed.** None (no study stage had run).
+- **Effect.** Operational only.

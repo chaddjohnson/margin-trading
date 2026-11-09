@@ -5,6 +5,7 @@
 # validation). Fail-fast: every step's status is tested; host checks before every launch; one heavy unit at a time; a
 # resumed chain skips the stages whose sealed record exists.
 R=/home/chad/projects/margin-trading; cd $R || exit 1
+NODE=/home/chad/.local/share/fnm/node-versions/v24.21.0/installation/bin/node
 S=research/vg-d1-growth-joint/results
 W=15
 hostok() {
@@ -14,7 +15,7 @@ hostok() {
     echo "$(date -u +%T) host busy: MemAvailable ${a} kB, PSI avg60 ${p}; waiting"; sleep 30
   done; echo "CHAIN-FAILED host"; exit 1
 }
-L() { u=$1; shift; hostok; node --experimental-transform-types --disable-warning=ExperimentalWarning src/vg-d1-growth-joint/main.ts launch --unit "$u" --wait -- "$@" > /dev/null; s=$?; echo "$(date -u +%T) $u status $s"; [ $s -eq 0 ] || { echo "CHAIN-FAILED at $u"; exit 1; }; }
+L() { u=$1; shift; hostok; $NODE --experimental-transform-types --disable-warning=ExperimentalWarning src/vg-d1-growth-joint/main.ts launch --unit "$u" --wait -- "$@" > /dev/null; s=$?; echo "$(date -u +%T) $u status $s"; [ $s -eq 0 ] || { echo "CHAIN-FAILED at $u"; exit 1; }; }
 X() { f=$1; shift; if [ -f "$f" ]; then echo "$(date -u +%T) skip $1 ($f exists)"; else L "$@"; fi; }
 C() { if git diff --quiet HEAD -- "$@" 2>/dev/null && [ -z "$(git ls-files --others --exclude-standard -- "$@")" ]; then echo "$(date -u +%T) already committed: $MSG"; return 0; fi; git add -- "$@" && git commit -q -m "vg-d1-growth-joint: $MSG
 
