@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-09T00:18Z (UTC, from the clock). **Status: INCOMPLETE — stage 3 (pilot PASSED; parity SEALED 495/0;
-  protocol final, re-adopted; about to freeze and launch the study chain).**
+- **Updated:** 2026-11-09T03:21Z (UTC, from the clock). **Status: INCOMPLETE — stage 4 (the study chain is RUNNING: the folds
+  C19–C23 and the sequential verdict are sealed and committed; C24 arm D running).**
 - **Brief:** `research/vg-d1-growth-joint/brief/BRIEF.md`, sha256
   `4554b859e71eda0cbb66ba8dc2c085ab38c208c6facff9fd8fb7c2a03513aac7` (210 lines, read in full through Appendix A).
   Authorizes implementation, research, the CLAUDE.md delivery instruction, commit and push of this branch without
@@ -13,13 +13,53 @@
 - **Authority:** `PROTOCOL.md` (draft; adopted in `STANDARD_ADOPTION.json` at 2026-11-08T23:39:07Z with sha256
   `b3f30793…9898`; any later edit before the freeze must re-adopt: update `protocol.sha256`/`adoptedAt` and add an
   `R*` entry to `AMENDMENTS.md`). Standard 1.0.0 (`8c38ac15…639d`). Preflight PASS at 23:39Z.
-- **Running:** nothing. The pilot chain finished `PILOT-DONE` at 00:14:06Z (`results/pilot/PILOT.md`); parity sealed
-  `results/parity/parity.json` at 00:15:59Z (495 checks, 0 failed).
-- **Next steps (in order):** (1) pilot passes → write `results/pilot/PILOT.md` (timings, memory, equality booleans);
-  (2) seal parity: `npm run vg-joint -- launch --unit vgjoint-parity --wait -- parity` (must be 0 failures on the
-  final code); (3) final protocol touches → re-adopt → preflight; (4) `freeze-protocol` and COMMIT; (5) launch
-  `chains/study.sh` (log `results/logs/study-chain.log`); (6) by hand: freeze-selection, inspect, commit, validate,
-  commit; (7) report, roadmap, tests, memory, commit, push.
+- **Frozen:** `results/protocol-freeze.json` sha256 `69d30c4183850698b138b1d9f168d7704c0ef83a6709f205b8829867090eb704`
+  (2026-11-09T00:16:54Z; protocol `f9f8b79a…cbfc8`; evaluation digest `147cad7c…4e88` = the sealed parity's; closure
+  225 files, digest `f7fc49aa…e69b`; gitHead `6cf50085`), committed `634c75a0`. O1 (chain as a unit) committed
+  `6d528c9d`. Parity sealed 495/0 (00:15:59Z). Pilot PASSED (`results/pilot/PILOT.md`).
+- **Running:** the study chain, systemd user unit **`vgjoint-chain`** (started 2026-11-09T00:17:13Z;
+  `/bin/bash research/vg-d1-growth-joint/chains/study.sh`), log `results/logs/study-chain.log`. It launches one heavy
+  unit at a time (`vgjoint-search-<C>-<arm>`, `vgjoint-qualify-<C>`, `vgjoint-eval-<C>`, `vgjoint-sequential`,
+  `vgjoint-qualify-gpair-C24`, `vgjoint-diagnostics`; logs `results/logs/<unit>.log`) and COMMITS the fold selections
+  and C24 records itself (do not write the git index while it runs: use `git --no-optional-locks status`). It ends with
+  `CHAIN-DONE` or `CHAIN-FAILED at …`. Check: `systemctl --user list-units 'vgjoint-*'`; `tail
+  results/logs/study-chain.log`; a job's progress: `.cache/vg-d1-growth-joint/jobs/<job>/progress.json`.
+  **If the chain unit died but a stage unit still runs, do not relaunch; wait. To resume after a failure: fix, then
+  relaunch the same systemd-run command (it skips stages whose sealed record exists; an interrupted search resumes
+  from its archive).**
+- **Chain launch command (for a resume):** `systemd-run --user --unit=vgjoint-chain --collect -p KillMode=mixed -p
+  StandardOutput=append:/home/chad/projects/margin-trading/research/vg-d1-growth-joint/results/logs/study-chain.log -p
+  StandardError=append:/home/chad/projects/margin-trading/research/vg-d1-growth-joint/results/logs/study-chain.log
+  --working-directory=/home/chad/projects/margin-trading /bin/bash
+  /home/chad/projects/margin-trading/research/vg-d1-growth-joint/chains/study.sh`
+- **Next steps (in order):** (1) wait for `CHAIN-DONE` (≈ 5–7 h); (2) by hand: `npm run vg-joint -- launch --unit
+  vgjoint-freeze-selection --wait -- freeze-selection`, inspect `FROZEN_SELECTION.json`, COMMIT it with seals.jsonl;
+  (3) `npm run vg-joint -- launch --unit vgjoint-validate --wait -- validate --workers 15`, commit; (4) tables
+  (`tools/vg-d1-growth-joint/tables.ts`), REPORT.md, ROADMAP, full npm test (contained unit), memory notes; commit;
+  push (CLAUDE.md delivery instruction; `git push origin research/vg-d1-growth-joint` outside the sandbox, verify with
+  `git ls-remote`).
+
+## Stage table (the study chain; sealed records, `npm run vg-joint -- verify` rechecks them)
+
+| Stage | Unit | Time (UTC) | Record | Commit |
+|---|---|---|---|---|
+| C19 arm-D search | vgjoint-search-C19-indep | 00:17 → 00:56 (39 min) | results/search/C19/indep.json | 686e9075 |
+| C19 qualification | vgjoint-qualify-C19 | 00:56 → 00:59 | results/folds/C19/selection.json (15/15 qualified) | 686e9075 (before the slice) |
+| C19 fold evaluation | vgjoint-eval-C19 | 00:59 | results/folds/C19/evaluation.json | (next chain commit) |
+| C21 arm-D search | vgjoint-search-C21-indep | 00:59 → 01:54 (55 min) | results/search/C21/indep.json | dc611c07 |
+| C21 qualification | vgjoint-qualify-C21 | 01:54 → 01:58 | results/folds/C21/selection.json | dc611c07 (before the slice) |
+| C21 fold evaluation | vgjoint-eval-C21 | 01:58 | results/folds/C21/evaluation.json | 99d8d161 |
+| C23 arm-D search | vgjoint-search-C23-indep | 01:58 → 03:14 (76 min; 350,673 fresh) | results/search/C23/indep.json | 1eb54415 |
+| C23 qualification | vgjoint-qualify-C23 | 03:14 → 03:19 | results/folds/C23/selection.json | 1eb54415 (before the slice) |
+| C23 fold evaluation, sequential | vgjoint-eval-C23, vgjoint-sequential | 03:19 | results/folds/C23/evaluation.json, results/folds/sequential.json | 99d8d161 |
+| C24 arm D → arm B → B selection → arm C → qualification → diagnostics | chain | from 03:19 | — | — |
+
+**Sealed chronological verdict (arm D): chronologically UNSUPPORTED** — fold primaries C19 `GDX-rise_VGT-breakout#1
+profit`, C21 `GDX-breakout_VGT-breakout#1 profit`, C23 `GDX-rise_VGT-rise#1 profit`; slices −$29,723 / −$33,880 /
++$2,258; sequential net −$61,544.61, sequential minute DD $102,257.90. Every role's sequence also lost and breached.
+
+Resume semantics: a search or qualification interrupted mid-stage resumes from its job archive when the same command
+reruns (identical result, pilot-tested); a sealed stage refuses to rerun; the chain skips sealed stages.
 
 ## Environment
 
