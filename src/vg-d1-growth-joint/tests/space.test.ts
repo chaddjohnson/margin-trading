@@ -51,7 +51,9 @@ describe('identity and the genome', () => {
 
   test('the screen pins the cell and cycles the four gate pairs', () => {
     const cell = { GDX: 'breakout' as const, VGT: 'rise' as const };
-    const gs = screenGenomes(16, 'coarse', 'test', 'screen').map((g, i) => pinGates(pinCell(g, cell), gatePairs[i % 4]!));
+    const gs = screenGenomes(16, 'coarse', 'test', 'screen').map((g, i) =>
+      pinGates(pinCell(g, cell), gatePairs[i % 4]!)
+    );
     const qs = gs.map((g) => decode(g, 'coarse'));
 
     for (const [i, q] of qs.entries()) {
@@ -80,7 +82,8 @@ describe('neighbourhoods and moves', () => {
       assert.deepEqual(structureOf(p.quad.g.GDX), structureOf(q0.g.GDX));
     }
 
-    for (const p of neighbourhood(q0, { name: 'n', n: 32, labels: ['t', 2], scope: 'd1' })) assert.deepEqual(p.quad.g, q0.g);
+    for (const p of neighbourhood(q0, { name: 'n', n: 32, labels: ['t', 2], scope: 'd1' }))
+      assert.deepEqual(p.quad.g, q0.g);
   });
 
   test('refinement moves: numeric steps of every book, the flipped priority, optional rules OFF; Growth-only lanes keep D1', () => {
@@ -106,11 +109,20 @@ const rec = (net: number, dd: number, lots: Partial<Record<string, number>> = {}
     dd,
     mixed: (lots['D1:GDX'] ?? 0) + (lots['D1:VGT'] ?? 0) > 0 && (lots['G:GDX'] ?? 0) + (lots['G:VGT'] ?? 0) > 0,
     books: Object.fromEntries(
-      ['D1:GDX', 'D1:VGT', 'G:GDX', 'G:VGT'].map((b) => [b, { lots: lots[b] ?? 0, principalDays: (lots[b] ?? 0) * 1000 }])
+      ['D1:GDX', 'D1:VGT', 'G:GDX', 'G:VGT'].map((b) => [
+        b,
+        { lots: lots[b] ?? 0, principalDays: (lots[b] ?? 0) * 1000 }
+      ])
     ),
     fam: {
-      D1: { lots: (lots['D1:GDX'] ?? 0) + (lots['D1:VGT'] ?? 0), principalDays: ((lots['D1:GDX'] ?? 0) + (lots['D1:VGT'] ?? 0)) * 1000 },
-      G: { lots: (lots['G:GDX'] ?? 0) + (lots['G:VGT'] ?? 0), principalDays: ((lots['G:GDX'] ?? 0) + (lots['G:VGT'] ?? 0)) * 1000 }
+      D1: {
+        lots: (lots['D1:GDX'] ?? 0) + (lots['D1:VGT'] ?? 0),
+        principalDays: ((lots['D1:GDX'] ?? 0) + (lots['D1:VGT'] ?? 0)) * 1000
+      },
+      G: {
+        lots: (lots['G:GDX'] ?? 0) + (lots['G:VGT'] ?? 0),
+        principalDays: ((lots['G:GDX'] ?? 0) + (lots['G:VGT'] ?? 0)) * 1000
+      }
     }
   }) as unknown as Rec;
 

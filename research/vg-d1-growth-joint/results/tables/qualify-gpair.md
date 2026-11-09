@@ -1,0 +1,20 @@
+# Arm B — the Growth pair (Growth-only pool, C24)
+
+Shortlist (the distinct role holders): C24/gpair/GDX-rise_VGT-rise#1 profit [actual-profit, robust-profit]; C24/gpair/GDX-rise_VGT-breakout#2 robust [balanced]; C24/gpair/GDX-breakout_VGT-rise#3 profit order [lower-drawdown]
+
+| Member | Centre net | Centre DD | Sel. robust | Sel. p90 DD | Conf. median / p10 | Conf. p90 DD | Conf. breaches | Wide p10 / p90 DD (breach) | Unique draws |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| C24/gpair/GDX-rise_VGT-rise#1 profit | $126,648.83 | $32,521.34 | $109,783.45 | $33,773.39 | $116,933.54 / $101,368.59 | $33,594.52 | 5.7% (22; excess $3,804.03; worst $45,758.88) | $91,082.50 / $35,553.14 (10.2%) | 384/384, 377 ledgers, 359 clipped |
+| C24/gpair/GDX-rise_VGT-rise#2 gate-alternative | $65,304.87 | $21,664.55 | $57,218.22 | $33,163.10 | $70,851.89 / $42,154.01 | $32,947.36 | 6.3% (24; excess $4,884.58; worst $52,123.52) | $10,453.50 / $46,505.55 (25.8%) | 384/384, 384 ledgers, 308 clipped |
+| C24/gpair/GDX-rise_VGT-rise#3 profit order | $113,736.53 | $29,991.35 | $74,270.93 | $33,060.75 | $94,408.82 / $52,122.69 | $33,585.34 | 7.8% (30; excess $6,377.89; worst $48,548.30) | $54,677.20 / $35,344.11 (10.9%) | 384/384, 352 ledgers, 359 clipped |
+| C24/gpair/GDX-rise_VGT-breakout#1 profit | $119,454.70 | $20,798.30 | $89,050.12 | $26,016.44 | $96,751.54 / $80,856.44 | $26,033.17 | 2.6% (10; excess $10,948.10; worst $48,822.90) | $68,409.37 / $33,924.52 (7.8%) | 384/384, 381 ledgers, 238 clipped |
+| C24/gpair/GDX-rise_VGT-breakout#2 robust | $119,324.51 | $22,300.90 | $98,202.40 | $25,172.11 | $105,590.50 / $89,105.57 | $24,337.48 | 2.6% (10; excess $11,089.41; worst $49,334.46) | $78,053.77 / $33,632.03 (8.6%) | 384/384, 383 ledgers, 277 clipped |
+| C24/gpair/GDX-rise_VGT-breakout#3 gate-alternative | $27,325.27 | $7,031.85 | $23,753.49 | $10,142.31 | $26,693.17 / $20,851.17 | $10,035.77 | 0.0% (0; excess $0.00; worst $12,524.37) | $19,207.64 / $12,622.53 (0.0%) | 384/384, 377 ledgers, 318 clipped |
+| C24/gpair/GDX-breakout_VGT-rise#1 profit | $99,699.83 | $19,026.89 | $57,762.13 | $21,269.34 | $66,902.69 / $51,412.76 | $21,694.90 | 0.0% (0; excess $0.00; worst $28,198.26) | $37,573.55 / $32,409.60 (5.5%) | 384/384, 384 ledgers, 373 clipped |
+| C24/gpair/GDX-breakout_VGT-rise#2 robust | $73,801.85 | $29,681.81 | $69,647.51 | $31,930.43 | $72,876.02 / $66,402.85 | $31,930.43 | 0.0% (0; excess $0.00; worst $34,012.06) | $58,026.99 / $34,253.44 (7.0%) | 384/384, 125 ledgers, 367 clipped |
+| C24/gpair/GDX-breakout_VGT-rise#3 profit order | $82,849.55 | $17,580.29 | $57,358.30 | $21,171.55 | $67,521.50 / $47,894.50 | $21,827.26 | 2.1% (8; excess $11,900.25; worst $56,926.74) | $39,353.24 / $35,225.61 (10.9%) | 384/384, 383 ledgers, 366 clipped |
+| C24/gpair/GDX-breakout_VGT-breakout#1 profit | $107,122.85 | $33,021.29 | $93,304.01 | $33,535.36 | $107,210.94 / $77,872.41 | $33,522.04 | 2.9% (11; excess $496.45; worst $35,968.15) | $77,232.06 / $35,567.82 (14.1%) | 384/384, 380 ledgers, 264 clipped |
+| C24/gpair/GDX-breakout_VGT-breakout#2 gate-alternative | $74,057.52 | $28,881.13 | $69,692.41 | $29,579.83 | $74,365.76 / $65,871.65 | $29,625.97 | 0.5% (2; excess $32,459.58; worst $77,995.25) | $42,651.49 / $49,029.85 (10.9%) | 384/384, 378 ledgers, 272 clipped |
+| C24/gpair/GDX-breakout_VGT-breakout#3 profit order | $94,264.86 | $31,026.42 | $81,201.55 | $34,813.21 | $90,662.27 / $71,137.98 | $34,061.97 | 5.2% (20; excess $1,836.71; worst $45,019.11) | $60,395.48 / $36,954.28 (18.8%) | 384/384, 380 ledgers, 264 clipped |
+| control: Growth pair: #4 (VGT) + Appendix A (GDX) (fails Q3,Q4) | $79,459.91 | $21,972.42 | $377.50 | $50,103.71 | $12,771.33 / −$10,807.98 | $51,575.80 | 45.3% (174; excess $10,212.24; worst $69,950.63) | −$27,030.70 / $62,552.55 (49.2%) | 384/384, 384 ledgers, 300 clipped |
+| control: Growth pair: 08500a60 (VGT) + Appendix A (GDX) (fails Q3) | $68,925.26 | $25,102.33 | $34,962.67 | $43,444.97 | $54,390.77 / $17,806.26 | $42,276.42 | 22.4% (86; excess $8,296.23; worst $62,499.01) | $309.49 / $53,632.46 (34.4%) | 384/384, 384 ledgers, 381 clipped |

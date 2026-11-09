@@ -1,7 +1,7 @@
 # Research roadmap — D1 + Growth shared-pool priorities
 
-The sequence the user agreed (Priority 1 brief, 2026-11-08), with status and outcome as of 2026-11-08. Every priority follows the
-[optimization standard](OPTIMIZATION_STANDARD.md):
+The sequence the user agreed (Priority 1 brief, 2026-11-08; reordered by the Priority 3 brief, 2026-11-08), with status and
+outcome as of 2026-11-09. Every priority follows the [optimization standard](OPTIMIZATION_STANDARD.md):
 - development 2016-01-04 → 2024-12-31 for all optimization and selection;
 - 2025-01-01 → the common complete endpoint only for validating frozen selections, which is validation on previously
   examined history, not an untouched holdout;
@@ -11,12 +11,18 @@ Each priority is commissioned and reviewed separately. Nothing starts automatica
 
 | # | Priority | Status | Study | Outcome |
 |---|---|---|---|---|
-| 1 | Bounded D1 entry eligibility for VG #2 Balanced | **Complete** (2026-11-08) | [`research/vg-balanced-entry-eligibility/`](../../research/vg-balanced-entry-eligibility/REPORT.md) | No useful benefit at the fixed control: eligibility stays OFF. The cost came from capital displacement, not the delayed trade. |
-| 2 | Joint D1 + Growth optimization for VGT in one shared $100,000 pool | **Complete** (2026-11-08) | [`research/vgt-d1-growth-joint/`](../../research/vgt-d1-growth-joint/REPORT.md) | A working combination, but no robust improvement. The plain D1 primary + Growth #4 combination beat the joint primary. The joint selection procedure was chronologically unsupported. Architecture A was supported. |
-| 2 follow-up | The separately optimized D1 and Growth selections, pooled; the optimization standard | **Complete** (2026-11-08) | [`research/vgt-d1-growth-separate-pooled/`](../../research/vgt-d1-growth-separate-pooled/REPORT.md); [standard 1.0.0](OPTIMIZATION_STANDARD.md) | Retrospective diagnostic: the pooled pair ($145,470.37 development, +$23,858.51 validation, $169,328.88 full; whole-run DD $34,336.64) is below the joint primary on development and full history, and far below both fixed incumbent combinations, with more drawdown. D1's slot occupancy refused four Growth trades. The optimization standard, adoption manifest and preflight are in place. |
-| 3 | Joint D1 + Growth for VGT + GDX in one shared $100,000 pool | **Pending review** (not started) | — | — |
-| 4 | Joint D1 + Growth for GDX alone | Not started | — | — |
-| 5 | Other ETFs suited to Growth | Not started | — | — |
+| 1 | D1 entry eligibility (VG #2 Balanced) | **Complete** (2026-11-08) | [`research/vg-balanced-entry-eligibility/`](../../research/vg-balanced-entry-eligibility/REPORT.md) | No useful benefit at the fixed control: eligibility stays OFF. The cost came from capital displacement, not the delayed trade. |
+| 2 | VGT D1 + Growth in one shared $100,000 pool, and its separate-then-pooled follow-up | **Complete** (2026-11-08) | [`research/vgt-d1-growth-joint/`](../../research/vgt-d1-growth-joint/REPORT.md); [follow-up](../../research/vgt-d1-growth-separate-pooled/REPORT.md); [standard 1.0.0](OPTIMIZATION_STANDARD.md) | A working combination, but no robust improvement: the plain D1 primary + Growth #4 combination beat the joint primary; the joint procedure was chronologically unsupported; architecture A supported. The separately optimized pair pooled was weaker still. |
+| 3 | **VGT + GDX D1 + Growth** in one shared $100,000 pool (four components) | **Complete** (2026-11-09) | [`research/vg-d1-growth-joint/`](../../research/vg-d1-growth-joint/REPORT.md) | **Negative result.** The frozen primary (an informed four-component refinement: $338,642.84 / DD $20,393.61 on development) lost $32,190.25 on 2025–2026 with a $57,568.06 DD (V1–V3 fail). The independent joint procedure was chronologically unsupported (−$61,544.61, sequential DD $102,257.90), although its C24 primary passed validation (+$76,802.05) without funding Growth·GDX. No combined system credibly improved on VG #2 (validation +$74,688.80). The unchanged VG #2 + Growth #4 + Appendix A combination failed the development tail gate (Q3) but did best afterwards, descriptively (+$139,887.46). Searched GDX Growth books were mostly unfunded. |
+| 4 | GDX-only D1 + Growth | Not started | — | — |
+| 5 | Compare alternative pooling and funding behaviour | Not started | — | Includes actual-position (funding-aware) state, persistent refused opportunities, reassessment on capital release and allocation alternatives. **The current virtual-book behaviour is preserved through Priorities 3 and 4** (the user's decision). |
+| 6 | Explore Growth for other ETFs | Not started | — | — |
+
+**Decisions recorded (Priority 3 brief, 2026-11-08).**
+- Funding-behaviour changes are deferred to Priority 5. Through Priorities 3 and 4 a refused entry still starts the
+  component's virtual trade, funding never feeds back into a book, and freed capital never revives a refusal.
+- The as-is (unchanged) benchmark is retained beside any joint refinement: combining unchanged phenotypes and refining
+  them are separate experiments, and the unchanged combinations stay in every comparison.
 
 ## VG #2 Balanced is already a jointly optimized VGT + GDX D1 pool
 
@@ -63,26 +69,19 @@ Each priority is commissioned and reviewed separately. Nothing starts automatica
 - **Priority 2's external context:** $334,911.93 through 2026-10-30 with a $21,303.61 DD.
 - **Status:** research only, not deployed.
 
-## Planning note for Priority 3 (recorded, not implemented)
+## Priority 3 (complete) — what it implies for Priority 4
 
-Priority 3 needs the user's review of Priority 2 and its follow-up first, then a new study protocol that adopts the
-current standard and passes the preflight. The agreed direction:
+- **The study:** [`research/vg-d1-growth-joint/REPORT.md`](../../research/vg-d1-growth-joint/REPORT.md). It ran four
+  arms in one shared $100,000 slot (architecture A):
+  - the unchanged controls;
+  - a Growth-pair search combined as-is with VG #2;
+  - an informed four-component refinement;
+  - an independent four-component search with C19/C21/C23 folds.
+- **What it suggests for GDX alone:**
+  - the searches rarely funded a GDX Growth book next to D1·GDX;
+  - Appendix A's browser-selected GDX Growth (reproduced to the cent: $141,157.37 / $17,709.96, flat at the end) was
+    the only substantively funded one.
 
-- **A staged benchmark without a fresh D1 search.**
-  - Reuse VG #2 (both D1 books and their allocator conventions) as the D1 incumbent.
-  - Newly optimize a **VGT + GDX Growth pool**.
-  - Evaluate the combination in **one shared $100,000 pool**, not $100,000 per strategy family.
-- **Labelled honestly: not a matched-budget method comparison.**
-  - VG #2 comes from an earlier, much larger search (Study 8: 9,983,389 point evaluations, 55.4 CPU-hours), under
-    native conventions: arming on 2017-06-15 and the alphabetical same-minute tie order.
-  - The staged system's provenance and compute differ from any new joint search (standard §3.4).
-- **What Priority 3's design should include:**
-  - the staged system as a benchmark **and** as an informed seed;
-  - a **full four-component joint refinement** (D1 VGT, D1 GDX, Growth VGT, Growth GDX);
-  - an **independent joint search** with its own chronological folds;
-  - the exact incumbents (VG #2, and the Priority 2 controls where relevant) in the selectable set, or a frozen
-    no-improvement fallback (standard §3.2).
-- **The final evaluation** runs the full shared pool, so it accounts for the conflicts between families and ETFs that
-  separate family pools could not anticipate.
-- **Nothing is fixed permanently.** The final D1 parameters are not frozen merely because an incumbent exists: the
-  joint refinement may move them.
+  Priority 4 can test GDX D1 + Growth without VGT, with VG #2's GDX book and Appendix A as controls.
+- **Both failures traced to long Growth holds occupying the exclusive slot.** That is Priority 5's question; the
+  behaviour stays fixed until then.
