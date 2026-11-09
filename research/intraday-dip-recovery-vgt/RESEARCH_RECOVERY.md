@@ -2,10 +2,11 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-09T19:20Z (UTC, from `date -u`). **Status: INCOMPLETE.** The study chain is running
-  (`chains/study.sh`, log `results/logs/study-chain.log`, started 19:11:56Z in a background shell; check
-  `systemctl --user list-units 'dip-*'`). Protocol frozen and committed (`0be0088e`). C19 complete: its selection was
-  committed in `d76e2cab` before its slice opened; its evaluation was committed in `5bc068e2`.
+- **Updated:** 2026-11-09T20:12Z (UTC, from `date -u`). **Status: INCOMPLETE.** The study chain is complete:
+  C19 (`d76e2cab`, `5bc068e2`), C21 (`a13ae56b`, `f69be3f4`), C23 (`0c047bea`, `37c6737b`), sequential, ablation and
+  controls (`bbcec0e0`), C24 searches, qualification and diagnostics (`929d3c52`). `FROZEN_SELECTION.json` is sealed
+  (sha256 `f1752269…c580`, primary `F2-4.1v.m.1x.0.u.0.1r.1e`; sequential verdict **unsupported**) and is committed in
+  this step. The validation door has NOT been opened.
 - **Authority:**
   - `PROTOCOL.md`, sha256 `8a71e641da35…`, frozen by `results/protocol-freeze.json` at 2026-11-09T19:10:57Z;
   - code digest `13e803f3953c…`;
@@ -20,7 +21,8 @@
   - the protocol freeze;
   - C19 (searches, qualification, fold selection, fold evaluation).
 - **Running processes:** the study chain (one `dip-*` systemd unit at a time inside `diprecovery.slice`).
-- **Next command:** wait for the chain (C21, C23, sequential, ablation, controls, C24 searches, C24 qualification,
+- **Next command:** `npm run dip-recovery -- launch --unit dip-validate --wait -- validate` (ONCE; it refuses unless
+  `FROZEN_SELECTION.json` is committed and unchanged), then the report. (Earlier text: wait for the chain (C21, C23, sequential, ablation, controls, C24 searches, C24 qualification,
   diagnostics). If it was interrupted: inspect the log and `systemctl --user list-units 'dip-*'`, then rerun
   `bash research/intraday-dip-recovery-vgt/chains/study.sh` only after removing the completed stages from it (sealed
   stages refuse to rerun; an interrupted search resumes from its archive). Then by hand: `freeze-selection`, commit,
