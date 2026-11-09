@@ -1,0 +1,3250 @@
+{
+ "stage": "fold evaluation",
+ "cutoff": "C21",
+ "door": "D23",
+ "slice": [
+  "2022-01-03",
+  "2023-12-29"
+ ],
+ "boundary": "2021-12-31",
+ "guardSha256": "65159c767f1cf093594f08de4b2b826a179bc664323625fa151742db78061154",
+ "primary": "C21/indep/GDX-breakout_VGT-breakout#1 profit",
+ "rows": [
+  {
+   "label": "C21/indep/GDX-breakout_VGT-breakout#1 profit",
+   "role": "actual-profit",
+   "id": "09b4f79d6a342131",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 279,
+      "trailingBuyPercentage": 19,
+      "trailingStopPercentage": 51,
+      "maximumHoldDays": 29,
+      "tickWindowSize": 111,
+      "intradayLossBuffer": 9,
+      "pullback": 162,
+      "continuationWindow": 161
+     },
+     "VGT": {
+      "targetPercentChange": 236,
+      "trailingBuyPercentage": 29,
+      "trailingStopPercentage": 87,
+      "maximumHoldDays": 20,
+      "tickWindowSize": 230,
+      "intradayLossBuffer": 7,
+      "pullback": 85,
+      "continuationWindow": 101
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 140,
+      "breakoutSlopeComparisonSessions": 45,
+      "breakoutPriorHighSessions": 25,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 8.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 25,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 40,
+      "classicPullbackPercent": 11.5,
+      "classicReboundPercent": 2.4,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 100,
+      "breakoutSlopeComparisonSessions": 25,
+      "breakoutPriorHighSessions": 5,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 4,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 20,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "G"
+   },
+   "enabled": {},
+   "sliceNet": -33880.48,
+   "sliceDd": 69053.76,
+   "boundaryEquity": 242500.46,
+   "wholeNet": 208619.98,
+   "wholeDd": 70616.68,
+   "openAtBoundary": [
+    "D1:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "09b4f79d6a342131",
+    "net": 208619.98,
+    "realized": 205353.92,
+    "unrealized": 3266.06,
+    "dd": 70616.68,
+    "ddPeakT": 1637594580,
+    "ddTroughT": 1673016300,
+    "ddRecoveryT": "__NaN",
+    "ddDaily": 69949.46,
+    "lots": 28,
+    "wins": 16,
+    "losses": 11,
+    "partials": 2,
+    "lossSum": -63334.91,
+    "worstLoss": -15927.64,
+    "largestWin": 46092.66,
+    "interest": 65080.82,
+    "costs": 2884.99,
+    "books": {
+     "D1:GDX": {
+      "lots": 12,
+      "wins": 8,
+      "losses": 4,
+      "booked": 42020.44,
+      "principalDays": 21900000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 21,
+      "granted": 12,
+      "refused": 9
+     },
+     "D1:VGT": {
+      "lots": 8,
+      "wins": 5,
+      "losses": 3,
+      "booked": 101384.43,
+      "principalDays": 95400000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 17,
+      "granted": 8,
+      "refused": 9
+     },
+     "G:GDX": {
+      "lots": 3,
+      "wins": 1,
+      "losses": 2,
+      "booked": 14526.14,
+      "principalDays": 10800000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 12,
+      "granted": 3,
+      "refused": 9
+     },
+     "G:VGT": {
+      "lots": 5,
+      "wins": 2,
+      "losses": 2,
+      "booked": 50688.98,
+      "principalDays": 87850000,
+      "partials": 2,
+      "open": 1,
+      "decisions": 11,
+      "granted": 5,
+      "refused": 6
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 20,
+      "wins": 13,
+      "losses": 7,
+      "booked": 143404.87,
+      "principalDays": 117300000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 38,
+      "granted": 20,
+      "refused": 18
+     },
+     "G": {
+      "lots": 8,
+      "wins": 3,
+      "losses": 4,
+      "booked": 65215.11,
+      "principalDays": 98650000,
+      "partials": 2,
+      "open": 1,
+      "decisions": 23,
+      "granted": 8,
+      "refused": 15
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "sessionsHeld": 1607,
+    "peakPrincipal": 100000,
+    "peakValue": 168058.98,
+    "years": {
+     "2016": 8588.21,
+     "2017": 29574.75,
+     "2018": 11687.52,
+     "2019": 47311.47,
+     "2020": 128923.05,
+     "2021": 16415.45,
+     "2022": -63653.26,
+     "2023": 29772.78
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 242500.46,
+      "after": -33880.48,
+      "dd": 69053.76
+     }
+    ],
+    "topEpisode": 118609.14,
+    "topEpisodeShare": 0.5685,
+    "episodes": 10,
+    "signature": "bb042f733ceb29e1",
+    "virtual": {
+     "D1:GDX": {
+      "trades": 21,
+      "net": 58692.35,
+      "dd": 51687.33,
+      "first": "2016-10-06"
+     },
+     "D1:VGT": {
+      "trades": 17,
+      "net": 83827.12,
+      "dd": 40480.16,
+      "first": "2018-12-26"
+     },
+     "G:GDX": {
+      "trades": 12,
+      "net": 11942.33,
+      "dd": 30662.45,
+      "first": "2017-08-11"
+     },
+     "G:VGT": {
+      "trades": 11,
+      "net": 65066.14,
+      "dd": 21934.52,
+      "first": "2016-07-01"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "C21/indep/GDX-breakout_VGT-breakout#2 robust",
+   "role": "robust-profit,balanced",
+   "id": "e424b4c79788e7b6",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 299,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 63,
+      "maximumHoldDays": 19,
+      "tickWindowSize": 241,
+      "intradayLossBuffer": 55,
+      "pullback": 172,
+      "continuationWindow": 105
+     },
+     "VGT": {
+      "targetPercentChange": 220,
+      "trailingBuyPercentage": 35,
+      "trailingStopPercentage": 81,
+      "maximumHoldDays": 20,
+      "tickWindowSize": 145,
+      "intradayLossBuffer": 15,
+      "pullback": 106,
+      "continuationWindow": 48
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 50,
+      "breakoutSlopeComparisonSessions": 115,
+      "breakoutPriorHighSessions": 38,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 28,
+      "trendMomentumLongSessions": 130,
+      "trendMomentumMinimumShortReturnPercent": 4,
+      "trendMomentumMinimumLongReturnPercent": -2.5,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 9.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 60,
+      "classicPullbackPercent": 11,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 80,
+      "breakoutSlopeComparisonSessions": 15,
+      "breakoutPriorHighSessions": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 6.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 11,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 80,
+      "retentionSmaSessions": 110,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 100,
+      "classicPullbackPercent": 11.5,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {},
+   "sliceNet": -24341.01,
+   "sliceDd": 50745.65,
+   "boundaryEquity": 223678.38,
+   "wholeNet": 199337.37,
+   "wholeDd": 50883.56,
+   "openAtBoundary": [
+    "D1:GDX"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "e424b4c79788e7b6",
+    "net": 199337.37,
+    "realized": 196071.31,
+    "unrealized": 3266.06,
+    "dd": 50883.56,
+    "ddPeakT": 1640982960,
+    "ddTroughT": 1677249000,
+    "ddRecoveryT": "__NaN",
+    "ddDaily": 49615.69,
+    "lots": 31,
+    "wins": 16,
+    "losses": 14,
+    "partials": 2,
+    "lossSum": -44410.75,
+    "worstLoss": -9532,
+    "largestWin": 46497.7,
+    "interest": 53860.82,
+    "costs": 3174.73,
+    "books": {
+     "D1:GDX": {
+      "lots": 14,
+      "wins": 9,
+      "losses": 5,
+      "booked": 86492.03,
+      "principalDays": 25500000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 27,
+      "granted": 14,
+      "refused": 13
+     },
+     "D1:VGT": {
+      "lots": 7,
+      "wins": 4,
+      "losses": 3,
+      "booked": 71877.58,
+      "principalDays": 51500000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 10,
+      "granted": 7,
+      "refused": 3
+     },
+     "G:GDX": {
+      "lots": 3,
+      "wins": 1,
+      "losses": 2,
+      "booked": -1614.78,
+      "principalDays": 10300000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 8,
+      "granted": 3,
+      "refused": 5
+     },
+     "G:VGT": {
+      "lots": 7,
+      "wins": 2,
+      "losses": 4,
+      "booked": 42582.55,
+      "principalDays": 91420000,
+      "partials": 2,
+      "open": 1,
+      "decisions": 15,
+      "granted": 7,
+      "refused": 8
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 21,
+      "wins": 13,
+      "losses": 8,
+      "booked": 158369.6,
+      "principalDays": 77000000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 37,
+      "granted": 21,
+      "refused": 16
+     },
+     "G": {
+      "lots": 10,
+      "wins": 3,
+      "losses": 6,
+      "booked": 40967.77,
+      "principalDays": 101720000,
+      "partials": 2,
+      "open": 1,
+      "decisions": 23,
+      "granted": 10,
+      "refused": 13
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "sessionsHeld": 1403,
+    "peakPrincipal": 100000,
+    "peakValue": 163943.54,
+    "years": {
+     "2016": 4114.17,
+     "2017": 27897.09,
+     "2018": 7521.49,
+     "2019": 39560.68,
+     "2020": 130872.37,
+     "2021": 13712.57,
+     "2022": -32906.68,
+     "2023": 8565.67
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 223678.38,
+      "after": -24341.01,
+      "dd": 50745.65
+     }
+    ],
+    "topEpisode": 124120.51,
+    "topEpisodeShare": 0.6227,
+    "episodes": 12,
+    "signature": "eab0a793075cd9e3",
+    "virtual": {
+     "D1:GDX": {
+      "trades": 27,
+      "net": 137200.62,
+      "dd": 41130.23,
+      "first": "2016-12-15"
+     },
+     "D1:VGT": {
+      "trades": 10,
+      "net": 63873.07,
+      "dd": 32416.58,
+      "first": "2018-12-26"
+     },
+     "G:GDX": {
+      "trades": 8,
+      "net": -18093.51,
+      "dd": 45411.17,
+      "first": "2018-01-02"
+     },
+     "G:VGT": {
+      "trades": 15,
+      "net": 38227.54,
+      "dd": 20201.05,
+      "first": "2016-07-12"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "C21/indep/GDX-breakout_VGT-breakout#3 gate-alternative",
+   "role": "lower-drawdown",
+   "id": "089b5f4e8b39d1cb",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 295,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 63,
+      "maximumHoldDays": 19,
+      "tickWindowSize": 25,
+      "intradayLossBuffer": 25,
+      "pullback": 181,
+      "continuationWindow": 147
+     },
+     "VGT": {
+      "targetPercentChange": 232,
+      "trailingBuyPercentage": 30,
+      "trailingStopPercentage": 85,
+      "maximumHoldDays": 19,
+      "tickWindowSize": 212,
+      "intradayLossBuffer": 21,
+      "pullback": 111,
+      "continuationWindow": 49
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 50,
+      "breakoutSlopeComparisonSessions": 15,
+      "breakoutPriorHighSessions": 105,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 15,
+      "trendMomentumLongSessions": 130,
+      "trendMomentumMinimumShortReturnPercent": 4,
+      "trendMomentumMinimumLongReturnPercent": -2.5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 100,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 90,
+      "recoveryConfirmationSessions": 6,
+      "trailingStopPercent": 8.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 9,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 60,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 14,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 50,
+      "breakoutSlopeComparisonSessions": 115,
+      "breakoutPriorHighSessions": 75,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 130,
+      "trendSmaComparisonSessions": 15,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 4,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 70,
+      "retentionSmaSessions": 150,
+      "retentionClosesBelow": 2,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 90,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {},
+   "sliceNet": -3818.7,
+   "sliceDd": 35122.63,
+   "boundaryEquity": 165759.37,
+   "wholeNet": 161940.67,
+   "wholeDd": 48328.74,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "089b5f4e8b39d1cb",
+    "net": 161940.67,
+    "realized": 158674.61,
+    "unrealized": 3266.06,
+    "dd": 48328.74,
+    "ddPeakT": 1613485920,
+    "ddTroughT": 1665667920,
+    "ddRecoveryT": "__NaN",
+    "ddDaily": 44988.73,
+    "lots": 31,
+    "wins": 15,
+    "losses": 15,
+    "partials": 4,
+    "lossSum": -42931.84,
+    "worstLoss": -9157.62,
+    "largestWin": 46687.25,
+    "interest": 46245.21,
+    "costs": 3152.22,
+    "books": {
+     "D1:GDX": {
+      "lots": 5,
+      "wins": 5,
+      "losses": 0,
+      "booked": 73524.88,
+      "principalDays": 3600000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 8,
+      "granted": 5,
+      "refused": 3
+     },
+     "D1:VGT": {
+      "lots": 12,
+      "wins": 6,
+      "losses": 6,
+      "booked": 74235.18,
+      "principalDays": 85500000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 13,
+      "granted": 12,
+      "refused": 1
+     },
+     "G:GDX": {
+      "lots": 1,
+      "wins": 0,
+      "losses": 1,
+      "booked": -525.8,
+      "principalDays": 1200000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 4,
+      "granted": 1,
+      "refused": 3
+     },
+     "G:VGT": {
+      "lots": 13,
+      "wins": 4,
+      "losses": 8,
+      "booked": 14706.4,
+      "principalDays": 63150000,
+      "partials": 4,
+      "open": 1,
+      "decisions": 20,
+      "granted": 13,
+      "refused": 7
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 17,
+      "wins": 11,
+      "losses": 6,
+      "booked": 147760.06,
+      "principalDays": 89100000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 21,
+      "granted": 17,
+      "refused": 4
+     },
+     "G": {
+      "lots": 14,
+      "wins": 4,
+      "losses": 9,
+      "booked": 14180.61,
+      "principalDays": 64350000,
+      "partials": 4,
+      "open": 1,
+      "decisions": 24,
+      "granted": 14,
+      "refused": 10
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "sessionsHeld": 1385,
+    "peakPrincipal": 100000,
+    "peakValue": 164899.57,
+    "years": {
+     "2016": -3262.08,
+     "2017": 12631.14,
+     "2018": 7463.43,
+     "2019": 21097.21,
+     "2020": 133834.12,
+     "2021": -6004.45,
+     "2022": -28567.45,
+     "2023": 24748.75
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 165759.37,
+      "after": -3818.7,
+      "dd": 35122.63
+     }
+    ],
+    "topEpisode": 124112.94,
+    "topEpisodeShare": 0.7664,
+    "episodes": 15,
+    "signature": "47545a0ee2375617",
+    "virtual": {
+     "D1:GDX": {
+      "trades": 8,
+      "net": 75294.7,
+      "dd": 17280.74,
+      "first": "2020-03-12"
+     },
+     "D1:VGT": {
+      "trades": 13,
+      "net": 72871.32,
+      "dd": 42155.76,
+      "first": "2018-12-26"
+     },
+     "G:GDX": {
+      "trades": 4,
+      "net": -7144.77,
+      "dd": 19123.03,
+      "first": "2016-08-02"
+     },
+     "G:VGT": {
+      "trades": 20,
+      "net": 16704.93,
+      "dd": 16278.82,
+      "first": "2016-09-02"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: VG #2 Balanced (D1·GDX + D1·VGT)",
+   "role": "control (D1-only)",
+   "id": "7a377d49c2b9aa55",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {
+    "G:GDX": false,
+    "G:VGT": false
+   },
+   "sliceNet": 63208.84,
+   "sliceDd": 17027.86,
+   "boundaryEquity": 176653.64,
+   "wholeNet": 239862.48,
+   "wholeDd": 20801.07,
+   "openAtBoundary": [
+    "D1:GDX"
+   ],
+   "openAtEnd": [],
+   "record": {
+    "id": "7a377d49c2b9aa55",
+    "net": 239862.48,
+    "realized": 239862.48,
+    "unrealized": 0,
+    "dd": 20801.07,
+    "ddPeakT": 1492103100,
+    "ddTroughT": 1499781900,
+    "ddRecoveryT": 1539610380,
+    "ddDaily": 18470.77,
+    "lots": 43,
+    "wins": 28,
+    "losses": 15,
+    "partials": 0,
+    "lossSum": -45647.83,
+    "worstLoss": -7817.59,
+    "largestWin": 39487.49,
+    "interest": 33873.97,
+    "costs": 4436.94,
+    "books": {
+     "D1:GDX": {
+      "lots": 39,
+      "wins": 25,
+      "losses": 14,
+      "booked": 192607.38,
+      "principalDays": 79500000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 46,
+      "granted": 39,
+      "refused": 7
+     },
+     "D1:VGT": {
+      "lots": 4,
+      "wins": 3,
+      "losses": 1,
+      "booked": 47255.1,
+      "principalDays": 32900000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 11,
+      "granted": 4,
+      "refused": 7
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 43,
+      "wins": 28,
+      "losses": 15,
+      "booked": 239862.48,
+      "principalDays": 112400000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 57,
+      "granted": 43,
+      "refused": 14
+     },
+     "G": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     }
+    },
+    "mixed": false,
+    "funded": [
+     "D1:GDX",
+     "D1:VGT"
+    ],
+    "sessionsHeld": 815,
+    "peakPrincipal": 100000,
+    "peakValue": 147823.28,
+    "years": {
+     "2016": 9257.3,
+     "2017": 7423.18,
+     "2018": 10312.69,
+     "2019": 16958.34,
+     "2020": 110085.82,
+     "2021": 22616.31,
+     "2022": 30086.81,
+     "2023": 33122.03
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 176653.64,
+      "after": 63208.84,
+      "dd": 17027.86
+     }
+    ],
+    "topEpisode": 93264.29,
+    "topEpisodeShare": 0.3888,
+    "episodes": 10,
+    "signature": "bbf344e3937deecf",
+    "virtual": {
+     "D1:GDX": {
+      "trades": 46,
+      "net": 165716.07,
+      "dd": 36160.34,
+      "first": "2016-12-19"
+     },
+     "D1:VGT": {
+      "trades": 11,
+      "net": 102770.89,
+      "dd": 21793.66,
+      "first": "2018-12-24"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: Growth pair: #4 (VGT) + Appendix A (GDX)",
+   "role": "control (Growth-only)",
+   "id": "0f17bddbd7f63a56",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {
+    "D1:GDX": false,
+    "D1:VGT": false
+   },
+   "sliceNet": 209.98,
+   "sliceDd": 15642.8,
+   "boundaryEquity": 61956.03,
+   "wholeNet": 62166.01,
+   "wholeDd": 21972.42,
+   "openAtBoundary": [],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "0f17bddbd7f63a56",
+    "net": 62166.01,
+    "realized": 49178.3,
+    "unrealized": 12987.72,
+    "dd": 21972.42,
+    "ddPeakT": 1630345800,
+    "ddTroughT": 1696361580,
+    "ddRecoveryT": "__NaN",
+    "ddDaily": 21402.53,
+    "lots": 17,
+    "wins": 11,
+    "losses": 5,
+    "partials": 0,
+    "lossSum": -22688.38,
+    "worstLoss": -7394.32,
+    "largestWin": 16899.85,
+    "interest": 22090.41,
+    "costs": 1684.78,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 9,
+      "wins": 7,
+      "losses": 2,
+      "booked": 36333.53,
+      "principalDays": 37100000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 10,
+      "granted": 9,
+      "refused": 1
+     },
+     "G:VGT": {
+      "lots": 8,
+      "wins": 4,
+      "losses": 3,
+      "booked": 25832.48,
+      "principalDays": 36200000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 10,
+      "granted": 8,
+      "refused": 2
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G": {
+      "lots": 17,
+      "wins": 11,
+      "losses": 5,
+      "booked": 62166.01,
+      "principalDays": 73300000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 20,
+      "granted": 17,
+      "refused": 3
+     }
+    },
+    "mixed": false,
+    "funded": [
+     "G:GDX",
+     "G:VGT"
+    ],
+    "sessionsHeld": 526,
+    "peakPrincipal": 100000,
+    "peakValue": 126857.45,
+    "years": {
+     "2016": 24502.2,
+     "2017": 0,
+     "2018": 0,
+     "2019": 12233.2,
+     "2020": 17150.29,
+     "2021": 8070.34,
+     "2022": -4227.67,
+     "2023": 4437.65
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 61956.03,
+      "after": 209.98,
+      "dd": 15642.8
+     }
+    ],
+    "topEpisode": 17295.54,
+    "topEpisodeShare": 0.2782,
+    "episodes": 11,
+    "signature": "a27c3a6e5f88a8bd",
+    "virtual": {
+     "G:GDX": {
+      "trades": 10,
+      "net": 40370.59,
+      "dd": 17430.56,
+      "first": "2016-04-08"
+     },
+     "G:VGT": {
+      "trades": 10,
+      "net": 82722.94,
+      "dd": 14578.1,
+      "first": "2016-06-28"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: Growth pair: 08500a60 (VGT) + Appendix A (GDX)",
+   "role": "control (Growth-only)",
+   "id": "008233e872d69f92",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 10,
+      "trendChangeMinimumReturnPercent": -5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 2,
+      "recoveryRetracementPercent": 30,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 50,
+      "crossSmaBars": 110,
+      "crossRisingBars": 19,
+      "crossMinimumSlopePercent": 0.4,
+      "crossMarginPercent": 2.75,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {
+    "D1:GDX": false,
+    "D1:VGT": false
+   },
+   "sliceNet": 556.14,
+   "sliceDd": 21466.41,
+   "boundaryEquity": 61099.26,
+   "wholeNet": 61655.4,
+   "wholeDd": 25102.33,
+   "openAtBoundary": [],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "008233e872d69f92",
+    "net": 61655.4,
+    "realized": 44960.01,
+    "unrealized": 16695.39,
+    "dd": 25102.33,
+    "ddPeakT": 1595861160,
+    "ddTroughT": 1698333780,
+    "ddRecoveryT": "__NaN",
+    "ddDaily": 23403.66,
+    "lots": 11,
+    "wins": 6,
+    "losses": 4,
+    "partials": 1,
+    "lossSum": -16139.25,
+    "worstLoss": -7394.32,
+    "largestWin": 16899.85,
+    "interest": 16756.16,
+    "costs": 1079.97,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 6,
+      "wins": 5,
+      "losses": 1,
+      "booked": 41406.35,
+      "principalDays": 17700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 10,
+      "granted": 6,
+      "refused": 4
+     },
+     "G:VGT": {
+      "lots": 5,
+      "wins": 1,
+      "losses": 3,
+      "booked": 20249.05,
+      "principalDays": 37900000,
+      "partials": 1,
+      "open": 1,
+      "decisions": 7,
+      "granted": 5,
+      "refused": 2
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G": {
+      "lots": 11,
+      "wins": 6,
+      "losses": 4,
+      "booked": 61655.4,
+      "principalDays": 55600000,
+      "partials": 1,
+      "open": 1,
+      "decisions": 17,
+      "granted": 11,
+      "refused": 6
+     }
+    },
+    "mixed": false,
+    "funded": [
+     "G:GDX",
+     "G:VGT"
+    ],
+    "sessionsHeld": 494,
+    "peakPrincipal": 100000,
+    "peakValue": 126857.45,
+    "years": {
+     "2016": 24502.2,
+     "2017": 0,
+     "2018": 0,
+     "2019": 18864.42,
+     "2020": 17732.64,
+     "2021": 0,
+     "2022": -4213.26,
+     "2023": 4769.4
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 61099.26,
+      "after": 556.14,
+      "dd": 21466.41
+     }
+    ],
+    "topEpisode": 16899.85,
+    "topEpisodeShare": 0.2741,
+    "episodes": 8,
+    "signature": "037dcf47280f71cf",
+    "virtual": {
+     "G:GDX": {
+      "trades": 10,
+      "net": 40370.59,
+      "dd": 17430.56,
+      "first": "2016-04-08"
+     },
+     "G:VGT": {
+      "trades": 7,
+      "net": 115680.42,
+      "dd": 19344.8,
+      "first": "2016-07-06"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: Appendix A GDX Growth alone",
+   "role": "control (Growth-only)",
+   "id": "b5c47cb035a78a99",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {
+    "D1:GDX": false,
+    "D1:VGT": false,
+    "G:VGT": false
+   },
+   "sliceNet": -7394.32,
+   "sliceDd": 13292.07,
+   "boundaryEquity": 47764.91,
+   "wholeNet": 40370.59,
+   "wholeDd": 17430.56,
+   "openAtBoundary": [],
+   "openAtEnd": [],
+   "record": {
+    "id": "b5c47cb035a78a99",
+    "net": 40370.59,
+    "realized": 40370.59,
+    "unrealized": 0,
+    "dd": 17430.56,
+    "ddPeakT": 1582554600,
+    "ddTroughT": 1586786340,
+    "ddRecoveryT": 1589898900,
+    "ddDaily": 14658.73,
+    "lots": 10,
+    "wins": 8,
+    "losses": 2,
+    "partials": 0,
+    "lossSum": -14304.7,
+    "worstLoss": -7394.32,
+    "largestWin": 16899.85,
+    "interest": 12024.66,
+    "costs": 1026.21,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 10,
+      "wins": 8,
+      "losses": 2,
+      "booked": 40370.59,
+      "principalDays": 39900000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 10,
+      "granted": 10,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G": {
+      "lots": 10,
+      "wins": 8,
+      "losses": 2,
+      "booked": 40370.59,
+      "principalDays": 39900000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 10,
+      "granted": 10,
+      "refused": 0
+     }
+    },
+    "mixed": false,
+    "funded": [
+     "G:GDX"
+    ],
+    "sessionsHeld": 287,
+    "peakPrincipal": 100000,
+    "peakValue": 126857.45,
+    "years": {
+     "2016": 24502.2,
+     "2017": 0,
+     "2018": 0,
+     "2019": 6544.52,
+     "2020": 16718.19,
+     "2021": 0,
+     "2022": 0,
+     "2023": -7394.32
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 47764.91,
+      "after": -7394.32,
+      "dd": 13292.07
+     }
+    ],
+    "topEpisode": 16899.85,
+    "topEpisodeShare": 0.4186,
+    "episodes": 7,
+    "signature": "80e054782232e2a0",
+    "virtual": {
+     "G:GDX": {
+      "trades": 10,
+      "net": 40370.59,
+      "dd": 17430.56,
+      "first": "2016-04-08"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: VGT only: D1 primary + Growth #4 · A (Priority 2)",
+   "role": "control (VGT-only)",
+   "id": "dbe7be81867b739a",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 216,
+      "trailingBuyPercentage": 3,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 8,
+      "tickWindowSize": 74,
+      "intradayLossBuffer": 29,
+      "pullback": 90,
+      "continuationWindow": 60
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {
+    "D1:GDX": false,
+    "G:GDX": false
+   },
+   "sliceNet": 33977.17,
+   "sliceDd": 17420.75,
+   "boundaryEquity": 161110.28,
+   "wholeNet": 195087.45,
+   "wholeDd": 19534.41,
+   "openAtBoundary": [],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "dbe7be81867b739a",
+    "net": 195087.45,
+    "realized": 182099.73,
+    "unrealized": 12987.72,
+    "dd": 19534.41,
+    "ddPeakT": 1582134540,
+    "ddTroughT": 1584556020,
+    "ddRecoveryT": 1585143180,
+    "ddDaily": 15817.01,
+    "lots": 22,
+    "wins": 15,
+    "losses": 6,
+    "partials": 0,
+    "lossSum": -13350.72,
+    "worstLoss": -3544.16,
+    "largestWin": 51263.87,
+    "interest": 52197.26,
+    "costs": 2266.34,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 17,
+      "wins": 13,
+      "losses": 4,
+      "booked": 135359.04,
+      "principalDays": 91700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 17,
+      "granted": 17,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 5,
+      "wins": 2,
+      "losses": 2,
+      "booked": 59728.41,
+      "principalDays": 81500000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 10,
+      "granted": 5,
+      "refused": 5
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 17,
+      "wins": 13,
+      "losses": 4,
+      "booked": 135359.04,
+      "principalDays": 91700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 17,
+      "granted": 17,
+      "refused": 0
+     },
+     "G": {
+      "lots": 5,
+      "wins": 2,
+      "losses": 2,
+      "booked": 59728.41,
+      "principalDays": 81500000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 10,
+      "granted": 5,
+      "refused": 5
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 1216,
+    "peakPrincipal": 100000,
+    "peakValue": 170815.88,
+    "years": {
+     "2016": 10276.71,
+     "2017": 30239.86,
+     "2018": 5952.22,
+     "2019": 29318.33,
+     "2020": 75296.19,
+     "2021": 10026.97,
+     "2022": 22145.2,
+     "2023": 11831.97
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 161110.28,
+      "after": 33977.17,
+      "dd": 17420.75
+     }
+    ],
+    "topEpisode": 76619.44,
+    "topEpisodeShare": 0.3927,
+    "episodes": 8,
+    "signature": "c9013011d7c0de5a",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 17,
+      "net": 135359.04,
+      "dd": 19534.41,
+      "first": "2018-12-21"
+     },
+     "G:VGT": {
+      "trades": 10,
+      "net": 82722.94,
+      "dd": 14578.1,
+      "first": "2016-06-28"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: VGT only: D1 primary + Growth 08500a60 · A (Priority 2)",
+   "role": "control (VGT-only)",
+   "id": "51da785f9a3b5f26",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 216,
+      "trailingBuyPercentage": 3,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 8,
+      "tickWindowSize": 74,
+      "intradayLossBuffer": 29,
+      "pullback": 90,
+      "continuationWindow": 60
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 10,
+      "trendChangeMinimumReturnPercent": -5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 2,
+      "recoveryRetracementPercent": 30,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 50,
+      "crossSmaBars": 110,
+      "crossRisingBars": 19,
+      "crossMinimumSlopePercent": 0.4,
+      "crossMarginPercent": 2.75,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {
+    "D1:GDX": false,
+    "G:GDX": false
+   },
+   "sliceNet": 34308.92,
+   "sliceDd": 17420.75,
+   "boundaryEquity": 157670.8,
+   "wholeNet": 191979.72,
+   "wholeDd": 19534.41,
+   "openAtBoundary": [],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "51da785f9a3b5f26",
+    "net": 191979.72,
+    "realized": 175284.33,
+    "unrealized": 16695.39,
+    "dd": 19534.41,
+    "ddPeakT": 1582134540,
+    "ddTroughT": 1584556020,
+    "ddRecoveryT": 1585143180,
+    "ddDaily": 16849.25,
+    "lots": 21,
+    "wins": 14,
+    "losses": 6,
+    "partials": 1,
+    "lossSum": -13726.38,
+    "worstLoss": -3544.16,
+    "largestWin": 51263.87,
+    "interest": 51473.97,
+    "costs": 2162.54,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 17,
+      "wins": 13,
+      "losses": 4,
+      "booked": 135359.04,
+      "principalDays": 91700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 17,
+      "granted": 17,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 4,
+      "wins": 1,
+      "losses": 2,
+      "booked": 56620.68,
+      "principalDays": 79100000,
+      "partials": 1,
+      "open": 1,
+      "decisions": 7,
+      "granted": 4,
+      "refused": 3
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 17,
+      "wins": 13,
+      "losses": 4,
+      "booked": 135359.04,
+      "principalDays": 91700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 17,
+      "granted": 17,
+      "refused": 0
+     },
+     "G": {
+      "lots": 4,
+      "wins": 1,
+      "losses": 2,
+      "booked": 56620.68,
+      "principalDays": 79100000,
+      "partials": 1,
+      "open": 1,
+      "decisions": 7,
+      "granted": 4,
+      "refused": 3
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 1289,
+    "peakPrincipal": 100000,
+    "peakValue": 169058.38,
+    "years": {
+     "2016": 9296,
+     "2017": 29815.86,
+     "2018": 8987.52,
+     "2019": 32318.6,
+     "2020": 75296.19,
+     "2021": 1956.63,
+     "2022": 22145.2,
+     "2023": 12163.72
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 157670.8,
+      "after": 34308.92,
+      "dd": 17420.75
+     }
+    ],
+    "topEpisode": 76619.44,
+    "topEpisodeShare": 0.3991,
+    "episodes": 8,
+    "signature": "9cbdf9f20f01f0d3",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 17,
+      "net": 135359.04,
+      "dd": 19534.41,
+      "first": "2018-12-21"
+     },
+     "G:VGT": {
+      "trades": 7,
+      "net": 115680.42,
+      "dd": 19344.8,
+      "first": "2016-07-06"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: VG #2 + Growth #4 (VGT) — three components",
+   "role": "control (three-component)",
+   "id": "f324035d15f69610",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {
+    "G:GDX": false
+   },
+   "sliceNet": 63195.33,
+   "sliceDd": 17027.86,
+   "boundaryEquity": 229737.81,
+   "wholeNet": 292933.14,
+   "wholeDd": 17332.09,
+   "openAtBoundary": [
+    "D1:GDX"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "f324035d15f69610",
+    "net": 292933.14,
+    "realized": 279945.42,
+    "unrealized": 12987.72,
+    "dd": 17332.09,
+    "ddPeakT": 1556725440,
+    "ddTroughT": 1584021060,
+    "ddRecoveryT": 1584368640,
+    "ddDaily": 15683.83,
+    "lots": 37,
+    "wins": 26,
+    "losses": 10,
+    "partials": 0,
+    "lossSum": -27473.74,
+    "worstLoss": -6455.48,
+    "largestWin": 42826.37,
+    "interest": 51624.66,
+    "costs": 3815,
+    "books": {
+     "D1:GDX": {
+      "lots": 24,
+      "wins": 18,
+      "losses": 6,
+      "booked": 171644.05,
+      "principalDays": 46400000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 46,
+      "granted": 24,
+      "refused": 22
+     },
+     "D1:VGT": {
+      "lots": 4,
+      "wins": 3,
+      "losses": 1,
+      "booked": 47255.1,
+      "principalDays": 32900000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 11,
+      "granted": 4,
+      "refused": 7
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 9,
+      "wins": 5,
+      "losses": 3,
+      "booked": 74033.99,
+      "principalDays": 92000000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 10,
+      "granted": 9,
+      "refused": 1
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 28,
+      "wins": 21,
+      "losses": 7,
+      "booked": 218899.15,
+      "principalDays": 79300000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 57,
+      "granted": 28,
+      "refused": 29
+     },
+     "G": {
+      "lots": 9,
+      "wins": 5,
+      "losses": 3,
+      "booked": 74033.99,
+      "principalDays": 92000000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 10,
+      "granted": 9,
+      "refused": 1
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 1217,
+    "peakPrincipal": 100000,
+    "peakValue": 170815.88,
+    "years": {
+     "2016": 10276.71,
+     "2017": 30239.86,
+     "2018": 12622.49,
+     "2019": 13958.07,
+     "2020": 128619.07,
+     "2021": 34021.61,
+     "2022": 25859.14,
+     "2023": 37336.19
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 229737.81,
+      "after": 63195.33,
+      "dd": 17027.86
+     }
+    ],
+    "topEpisode": 97337.76,
+    "topEpisodeShare": 0.3323,
+    "episodes": 13,
+    "signature": "2d018215fb11952a",
+    "virtual": {
+     "D1:GDX": {
+      "trades": 46,
+      "net": 165716.07,
+      "dd": 36160.34,
+      "first": "2016-12-19"
+     },
+     "D1:VGT": {
+      "trades": 11,
+      "net": 102770.89,
+      "dd": 21793.66,
+      "first": "2018-12-24"
+     },
+     "G:VGT": {
+      "trades": 10,
+      "net": 82722.94,
+      "dd": 14578.1,
+      "first": "2016-06-28"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: VG #2 + Growth 08500a60 (VGT) — three components",
+   "role": "control (three-component)",
+   "id": "3688e97b90639d60",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 10,
+      "trendChangeMinimumReturnPercent": -5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 2,
+      "recoveryRetracementPercent": 30,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 50,
+      "crossSmaBars": 110,
+      "crossRisingBars": 19,
+      "crossMinimumSlopePercent": 0.4,
+      "crossMarginPercent": 2.75,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {
+    "G:GDX": false
+   },
+   "sliceNet": 63541.49,
+   "sliceDd": 17027.86,
+   "boundaryEquity": 200311.05,
+   "wholeNet": 263852.54,
+   "wholeDd": 18119.12,
+   "openAtBoundary": [
+    "D1:GDX"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "3688e97b90639d60",
+    "net": 263852.54,
+    "realized": 247157.15,
+    "unrealized": 16695.39,
+    "dd": 18119.12,
+    "ddPeakT": 1517000400,
+    "ddTroughT": 1518201540,
+    "ddRecoveryT": 1535648700,
+    "ddDaily": 16849.25,
+    "lots": 34,
+    "wins": 22,
+    "losses": 11,
+    "partials": 1,
+    "lossSum": -28996.6,
+    "worstLoss": -6455.48,
+    "largestWin": 44456.96,
+    "interest": 47917.81,
+    "costs": 3496.71,
+    "books": {
+     "D1:GDX": {
+      "lots": 25,
+      "wins": 18,
+      "losses": 7,
+      "booked": 164190.02,
+      "principalDays": 45200000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 46,
+      "granted": 25,
+      "refused": 21
+     },
+     "D1:VGT": {
+      "lots": 4,
+      "wins": 3,
+      "losses": 1,
+      "booked": 47255.1,
+      "principalDays": 32900000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 11,
+      "granted": 4,
+      "refused": 7
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 5,
+      "wins": 1,
+      "losses": 3,
+      "booked": 52407.42,
+      "principalDays": 80900000,
+      "partials": 1,
+      "open": 1,
+      "decisions": 7,
+      "granted": 5,
+      "refused": 2
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 29,
+      "wins": 21,
+      "losses": 8,
+      "booked": 211445.12,
+      "principalDays": 78100000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 57,
+      "granted": 29,
+      "refused": 28
+     },
+     "G": {
+      "lots": 5,
+      "wins": 1,
+      "losses": 3,
+      "booked": 52407.42,
+      "principalDays": 80900000,
+      "partials": 1,
+      "open": 1,
+      "decisions": 7,
+      "granted": 5,
+      "refused": 2
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 1216,
+    "peakPrincipal": 100000,
+    "peakValue": 169058.38,
+    "years": {
+     "2016": 9296,
+     "2017": 29815.86,
+     "2018": 11538.73,
+     "2019": 16958.34,
+     "2020": 110085.82,
+     "2021": 22616.31,
+     "2022": 25873.55,
+     "2023": 37667.94
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 200311.05,
+      "after": 63541.49,
+      "dd": 17027.86
+     }
+    ],
+    "topEpisode": 93264.29,
+    "topEpisodeShare": 0.3535,
+    "episodes": 10,
+    "signature": "e0f0e1ef28b4e6d6",
+    "virtual": {
+     "D1:GDX": {
+      "trades": 46,
+      "net": 165716.07,
+      "dd": 36160.34,
+      "first": "2016-12-19"
+     },
+     "D1:VGT": {
+      "trades": 11,
+      "net": 102770.89,
+      "dd": 21793.66,
+      "first": "2018-12-24"
+     },
+     "G:VGT": {
+      "trades": 7,
+      "net": 115680.42,
+      "dd": 19344.8,
+      "first": "2016-07-06"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: VG #2 + Growth #4 (VGT) + Appendix A (GDX)",
+   "role": "control (unchanged four-component)",
+   "id": "d4cde31356e2306a",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {},
+   "sliceNet": 63195.33,
+   "sliceDd": 17027.86,
+   "boundaryEquity": 229894.13,
+   "wholeNet": 293089.46,
+   "wholeDd": 20801.07,
+   "openAtBoundary": [
+    "D1:GDX"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "d4cde31356e2306a",
+    "net": 293089.46,
+    "realized": 280101.75,
+    "unrealized": 12987.72,
+    "dd": 20801.07,
+    "ddPeakT": 1492103100,
+    "ddTroughT": 1499781900,
+    "ddRecoveryT": 1539610380,
+    "ddDaily": 18470.77,
+    "lots": 53,
+    "wins": 35,
+    "losses": 17,
+    "partials": 0,
+    "lossSum": -57403.96,
+    "worstLoss": -7817.59,
+    "largestWin": 39487.49,
+    "interest": 49243.84,
+    "costs": 5413.89,
+    "books": {
+     "D1:GDX": {
+      "lots": 35,
+      "wins": 23,
+      "losses": 12,
+      "booked": 188324.54,
+      "principalDays": 71300000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 46,
+      "granted": 35,
+      "refused": 11
+     },
+     "D1:VGT": {
+      "lots": 4,
+      "wins": 3,
+      "losses": 1,
+      "booked": 47255.1,
+      "principalDays": 32900000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 11,
+      "granted": 4,
+      "refused": 7
+     },
+     "G:GDX": {
+      "lots": 7,
+      "wins": 6,
+      "losses": 1,
+      "booked": 40366.3,
+      "principalDays": 32700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 10,
+      "granted": 7,
+      "refused": 3
+     },
+     "G:VGT": {
+      "lots": 7,
+      "wins": 3,
+      "losses": 3,
+      "booked": 17143.53,
+      "principalDays": 26500000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 10,
+      "granted": 7,
+      "refused": 3
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 39,
+      "wins": 26,
+      "losses": 13,
+      "booked": 235579.64,
+      "principalDays": 104200000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 57,
+      "granted": 39,
+      "refused": 18
+     },
+     "G": {
+      "lots": 14,
+      "wins": 9,
+      "losses": 4,
+      "booked": 57509.82,
+      "principalDays": 59200000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 20,
+      "granted": 14,
+      "refused": 6
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "sessionsHeld": 1177,
+    "peakPrincipal": 100000,
+    "peakValue": 147823.28,
+    "years": {
+     "2016": 33759.5,
+     "2017": 7423.18,
+     "2018": 10312.69,
+     "2019": 20502.59,
+     "2020": 123874.55,
+     "2021": 34021.61,
+     "2022": 25859.14,
+     "2023": 37336.19
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 229894.13,
+      "after": 63195.33,
+      "dd": 17027.86
+     }
+    ],
+    "topEpisode": 93254.12,
+    "topEpisodeShare": 0.3182,
+    "episodes": 15,
+    "signature": "a1d95bd41e54cb54",
+    "virtual": {
+     "D1:GDX": {
+      "trades": 46,
+      "net": 165716.07,
+      "dd": 36160.34,
+      "first": "2016-12-19"
+     },
+     "D1:VGT": {
+      "trades": 11,
+      "net": 102770.89,
+      "dd": 21793.66,
+      "first": "2018-12-24"
+     },
+     "G:GDX": {
+      "trades": 10,
+      "net": 40370.59,
+      "dd": 17430.56,
+      "first": "2016-04-08"
+     },
+     "G:VGT": {
+      "trades": 10,
+      "net": 82722.94,
+      "dd": 14578.1,
+      "first": "2016-06-28"
+     }
+    },
+    "sessions": 2012
+   }
+  },
+  {
+   "label": "control: VG #2 + Growth 08500a60 (VGT) + Appendix A (GDX)",
+   "role": "control (unchanged four-component)",
+   "id": "676731bfd4ec280f",
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 10,
+      "trendChangeMinimumReturnPercent": -5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 2,
+      "recoveryRetracementPercent": 30,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 50,
+      "crossSmaBars": 110,
+      "crossRisingBars": 19,
+      "crossMinimumSlopePercent": 0.4,
+      "crossMarginPercent": 2.75,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "enabled": {},
+   "sliceNet": 63541.49,
+   "sliceDd": 17027.86,
+   "boundaryEquity": 221057,
+   "wholeNet": 284598.49,
+   "wholeDd": 20801.07,
+   "openAtBoundary": [
+    "D1:GDX"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "record": {
+    "id": "676731bfd4ec280f",
+    "net": 284598.49,
+    "realized": 267903.09,
+    "unrealized": 16695.39,
+    "dd": 20801.07,
+    "ddPeakT": 1492103100,
+    "ddTroughT": 1499781900,
+    "ddRecoveryT": 1539610380,
+    "ddDaily": 18470.77,
+    "lots": 54,
+    "wins": 34,
+    "losses": 19,
+    "partials": 0,
+    "lossSum": -61303.14,
+    "worstLoss": -7817.59,
+    "largestWin": 39487.49,
+    "interest": 47013.7,
+    "costs": 5506.64,
+    "books": {
+     "D1:GDX": {
+      "lots": 38,
+      "wins": 24,
+      "losses": 14,
+      "booked": 184989.57,
+      "principalDays": 77100000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 46,
+      "granted": 38,
+      "refused": 8
+     },
+     "D1:VGT": {
+      "lots": 4,
+      "wins": 3,
+      "losses": 1,
+      "booked": 47255.1,
+      "principalDays": 32900000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 11,
+      "granted": 4,
+      "refused": 7
+     },
+     "G:GDX": {
+      "lots": 8,
+      "wins": 7,
+      "losses": 1,
+      "booked": 44403.35,
+      "principalDays": 35500000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 10,
+      "granted": 8,
+      "refused": 2
+     },
+     "G:VGT": {
+      "lots": 4,
+      "wins": 0,
+      "losses": 3,
+      "booked": 7950.46,
+      "principalDays": 10500000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 7,
+      "granted": 4,
+      "refused": 3
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 42,
+      "wins": 27,
+      "losses": 15,
+      "booked": 232244.67,
+      "principalDays": 110000000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 57,
+      "granted": 42,
+      "refused": 15
+     },
+     "G": {
+      "lots": 12,
+      "wins": 7,
+      "losses": 4,
+      "booked": 52353.82,
+      "principalDays": 46000000,
+      "partials": 0,
+      "open": 1,
+      "decisions": 17,
+      "granted": 12,
+      "refused": 5
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "sessionsHeld": 1127,
+    "peakPrincipal": 100000,
+    "peakValue": 147823.28,
+    "years": {
+     "2016": 33759.5,
+     "2017": 7423.18,
+     "2018": 10312.69,
+     "2019": 23502.86,
+     "2020": 123442.45,
+     "2021": 22616.31,
+     "2022": 25873.55,
+     "2023": 37667.94
+    },
+    "periods": [
+     {
+      "boundary": "2021-12-31",
+      "equity": 221057,
+      "after": 63541.49,
+      "dd": 17027.86
+     }
+    ],
+    "topEpisode": 93217.71,
+    "topEpisodeShare": 0.3275,
+    "episodes": 15,
+    "signature": "ebdcf4c5af43fd5e",
+    "virtual": {
+     "D1:GDX": {
+      "trades": 46,
+      "net": 165716.07,
+      "dd": 36160.34,
+      "first": "2016-12-19"
+     },
+     "D1:VGT": {
+      "trades": 11,
+      "net": 102770.89,
+      "dd": 21793.66,
+      "first": "2018-12-24"
+     },
+     "G:GDX": {
+      "trades": 10,
+      "net": 40370.59,
+      "dd": 17430.56,
+      "first": "2016-04-08"
+     },
+     "G:VGT": {
+      "trades": 7,
+      "net": 115680.42,
+      "dd": 19344.8,
+      "first": "2016-07-06"
+     }
+    },
+    "sessions": 2012
+   }
+  }
+ ],
+ "finished": "2026-11-09T01:58:08.274Z"
+}
