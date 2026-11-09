@@ -93,3 +93,10 @@
 - **Code quality:** the study code has 0 eslint errors and 338 formatting warnings, deliberately left because
   reformatting would change the frozen digest.
 - **Validation framing:** validation is on previously examined history, not an untouched holdout.
+
+## Push (verified)
+
+- `git push -u origin research/intraday-dip-recovery-vgt` created the remote branch. `git ls-remote origin
+  refs/heads/research/intraday-dip-recovery-vgt` showed `f6ca52b2b1cbcba5eafd6a935b301e9b995edbc9`, equal to the local `HEAD` (`f6ca52b2`), at 2026-11-09T20:19:23Z.
+  No PR, no merge into `main`, no deployment.
+- This checkpoint update is a follow-up commit, pushed the same way.
