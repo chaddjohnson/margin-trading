@@ -80,5 +80,8 @@ validation identical across arms.
 
 ## Push record
 
-(to be appended after the push: `git push -u origin research/vg-growth-funding-lifecycle`, verified with
-`git ls-remote`.)
+- **Pushed** (CLAUDE.md standing preference, no confirmation needed): `git push -u origin
+  research/vg-growth-funding-lifecycle` at 2026-11-09T16:25:11Z, a new remote branch, first attempt, outside the
+  sandbox. `git ls-remote` at 16:25:16Z: `refs/heads/research/vg-growth-funding-lifecycle` =
+  `3bec50d6be08213691784b3628a9e86d7575e867` = local `HEAD`; `refs/heads/main` = `aa5754d…` (unchanged). No merge, no
+  PR, no deployment, no force-push. This push record is its own follow-up commit, pushed the same way.
