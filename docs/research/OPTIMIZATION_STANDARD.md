@@ -1,6 +1,7 @@
 # Optimization research standard
 
-- **Version:** 1.0.0 — **effective** 2026-11-08 — **status:** current.
+- **Version:** 1.1.0 — **effective** 2026-11-09 — **status:** current (1.0.0, effective 2026-11-08, remains registered
+  for the studies that pinned it).
 - **Authoritative path:** `docs/research/OPTIMIZATION_STANDARD.md` (this file). There is no other copy; earlier versions
   are read from git history (`git log -p -- docs/research/OPTIMIZATION_STANDARD.md`).
 - **Version registry:** `docs/research/optimization-standard.versions.json` (version → sha256 of this file).
@@ -23,8 +24,8 @@ own protocol; every new study writes one from the template and pins the version 
 - **Every material continuation of one.** That includes a new search lane, a new budget, a new cutoff, a new
   validation, or new selectable candidates added to a frozen set.
 - **Bounded diagnostics of frozen selections that open validation data** (for example a retrospective pooled
-  comparison). They adopt the standard with scope `diagnostic`. §1, §2.1, §3.4, §5 and §6 apply. §4 (search) does not,
-  except that a diagnostic never searches.
+  comparison). They adopt the standard with scope `diagnostic`. §1, §2.1, §3.4, §5 and §6 apply, and (from 1.1.0) the
+  report-only §2.8 and §2.9 where they are relevant. §4 (search) does not, except that a diagnostic never searches.
 - **Not retroactive.** Studies completed before 2026-11-08 keep their own frozen protocols. They are never edited,
   re-hashed or rerun to look compliant (see [context-recovery.md](../claude/context-recovery.md) §4).
 
@@ -77,6 +78,23 @@ items where amendments most often arise.
   - median, p90 and worst of the neighbours' DD;
   - the breach count and share (DD > the ceiling), the mean excess and the worst.
   - Quantiles interpolate linearly between order statistics (`src/vgt-d1-growth-joint/fitness.ts` `quantile`).
+- **Tail-severity statistics** (report-only, §5.8; added in 1.1.0). Over the n neighbours' maximum minute drawdowns:
+  - **p95 DD:** the 0.95 quantile under the same interpolation;
+  - **worst-10% mean DD:** the mean of the k = ⌈0.1 × n⌉ largest drawdowns (for n = 384, k = 39). It includes every
+    draw in that tail, breaching or not;
+  - **mean excess among breaches:** the mean of (DD − ceiling) over the draws with DD > ceiling (§5.5).
+- **Original gate verdict / descriptive evidence / user-directed consideration** (§2.8; added in 1.1.0).
+  - *Original gate verdict:* a candidate's sealed qualification result, gate by gate.
+  - *Descriptive evidence:* any later or report-only figure about it (a diagnostic, a validation, a toggle).
+  - *User-directed consideration:* the user's explicit decision to keep investigating a candidate. It is never a
+    qualification.
+- **Participation stages** (§2.9; added in 1.1.0). Why a component of a pool trades or not, stage by stage:
+  - *signals:* raw entry conditions and crossings of its own book;
+  - *filters:* filter blocks, eligibility arming, expiry and invalidation, continuation and pending orders;
+  - *capital competition:* its decisions refused because a real lot or reservation held the capital (named occupant);
+  - *virtual-state waiting:* time its refused virtual trade stays open while the capital is idle;
+  - *search/promotion attrition:* participation classes lost between proposal, evaluation, feasibility, promotion and
+    the shortlist.
 - **Distinct candidate proposal.** A configuration with a new canonical identity, proposed by the search as a
   **centre**. The identity canonicalizes inactive genes, so behaviourally inert differences do not count twice.
 - **Backend evaluation.** One complete pooled simulation of one configuration under one option set on one door,
@@ -197,6 +215,40 @@ user's agreement. When the brief is silent, this standard applies.
    - Equal shares and high minimum trade counts are not imposed.
    - Token participation (§0.3) and any negative causal contribution are labelled explicitly in the selection record
      and the report.
+8. **[R] Candidate consideration is not qualification** (added in 1.1.0).
+   - **Three separate fields.** When the user directs that a candidate stay under investigation, every later record
+     and report about it keeps three fields apart:
+     1. the **original gate verdict**, exactly as sealed (for example "fails Q3");
+     2. the **descriptive evidence**, from diagnostics, validation or report-only instruments;
+     3. the **user-directed consideration:** who decided, where it is recorded (a brief line or a session instruction),
+        its date and its scope.
+   - **What consideration does not do.** It never:
+     - relabels a failed gate as passed;
+     - changes a sealed outcome;
+     - approves deployment;
+     - sets a numeric tolerance or a global risk threshold;
+     - changes the $35,000 centre budget (§2.1).
+   - **Using a considered candidate.** It enters a later study only as that study's brief says: as a control, or as an
+     informed seed under §3.3. It is labelled "considered despite failing Qn".
+9. **[R] Participation attribution** (added in 1.1.0).
+   - **When it applies.** A pooled search or selected system leaves a component unfunded, token or rarely funded, and
+     the report explains why.
+   - **Each stage separately** (§0.3 participation stages):
+     - signals;
+     - filters and eligibility;
+     - real capital competition (who held the capital, by family and symbol; in a pool of one family, the competitor
+       is a book of that family, so a four-component explanation is not carried over to it);
+     - virtual-state waiting;
+     - search and promotion attrition.
+   - **Counting.** Every available opportunity and every independent market episode are both counted. Actual time
+     invested and idle is reported apart from virtual time invested. Overlapping intervals are disclosed, never counted
+     twice.
+   - **Not an achievable improvement.**
+     - An unfunded virtual trade's standalone profit is descriptive. Such profits are never summed as an improvement the
+       pool could achieve.
+     - A condition that holds while a book is virtually invested is not automatically a missed valid decision.
+     - A counterfactual that needs another funding lifecycle stays unresolved until that lifecycle is implemented and
+       tested.
 
 **Amendment items:** role formulas, the primary rule, the promotion shares, the token threshold.
 
@@ -282,6 +334,19 @@ user's agreement. When the brief is silent, this standard applies.
    - A material reduction, or any change after the freeze, is an amendment that states the new level of search and its
      coverage implications (for example "768 instead of 1,024 proposals per island").
    - A pilot never turns a broad search into a different, smaller kind of study without saying so.
+7. **[S] Protected investigation of multi-component participation** (added in 1.1.0; multi-symbol Growth studies and
+   other pools whose components can crowd one another out).
+   - **What the protocol states.** Whether, and how, it protects exploration of configurations that fund **every
+     symbol's Growth book** (or every component), next to the unconstrained portfolio search and comparison. For
+     example: a protected stratum, reserved promotion slots, or a separate report-only lane.
+   - **What is frozen before search:** its exact budget (proposals and evaluations) and how its members are promoted,
+     qualified and selected. Unless the protocol says otherwise, they compete under the same gates and primary rule.
+   - **What it is not:**
+     - equal activity, equal shares or a minimum trade count;
+     - a rule that the winner must fund every component;
+     - a reward for trades for their own sake.
+   - **Choosing not to protect** is allowed if the protocol justifies it. The participation attribution (§2.9) is
+     reported either way.
 
 **Amendment items:** budgets, caps, triggers, cells/strata, grids, the method.
 
@@ -334,6 +399,17 @@ user's agreement. When the brief is silent, this standard applies.
 7. **[M] Failures are kept.**
    - Failed tests and amendments are preserved, never deleted.
    - A parity failure stops every dependent stage until it is fixed and re-sealed.
+8. **[R] Tail severity beside frequency** (added in 1.1.0). Every neighbourhood risk review reports, beside the p90 DD
+   and the §5.5 disclosure:
+   - the p95 DD and the **worst-10% mean DD** (§0.3);
+   - the breach share with its finite-draw uncertainty (for example a Wilson 95% interval);
+   - how the breach share and the tail change with the radius (the small and wide families);
+   - the number of distinct ledgers behind the breaches.
+
+   These statistics are report-only. They are never a qualification gate, a ranking input or a numeric tolerance. The
+   p90 gates and the $35,000 centre budget are unchanged. A neighbourhood's breach frequency is not an estimate of the
+   probability of a future market loss. Neither p90 alone nor breach frequency alone shows that one candidate is safer
+   than another: a rare but severe tail and a frequent but mild one are reported side by side.
 
 **Amendment items:** the instrument (radii, seeds, fidelities), stresses, the parity set.
 
@@ -443,4 +519,5 @@ threshold, and any change of the cap (with the user's approval).
 
 | Version | Effective | Change | Rationale and evidence | Implications |
 |---|---|---|---|---|
+| 1.1.0 | 2026-11-09 | **Minor** (§7.4: new guidance and [S]/[R] items; no [M] rule added, removed or changed; existing item numbers kept). Adds: §0.3 tail-severity statistics (p95, the worst-10% mean DD), the three consideration fields and the participation stages; §2.8 [R] candidate consideration is not qualification; §2.9 [R] participation attribution; §4.7 [S] protected investigation of multi-component participation; §5.8 [R] tail severity beside frequency. The companions follow: the protocol template (§4, §6, §9, §15) and the roadmap's sequencing note. The preflight's checks are unchanged (these items are protocol and report content it cannot verify, §7.6); its tests now also cover a study that retains 1.0.0 under a current 1.1.0. | The user's agreed process decisions in the Priority 3A brief (`research/vg-d1-growth-diagnostic/brief/BRIEF.md` §7, 2026-11-09). Evidence: Priority 3 (`research/vg-d1-growth-joint/REPORT.md`): (1) the unchanged VG #2 + Growth #4 / 08500a60 + Appendix A combinations failed Q3 (p90 DD $36,277.63 / $35,131.47) yet are kept by the user as candidates to investigate → §2.8; (2) the frozen primary passed Q3 with rare but severe breaches (2.6%, worst $103,278.13) while those combinations failed it with more frequent, milder breaches (13.3% / 10.9%, mean excess ≈ $4,000) → §5.8; (3) searched Growth·GDX books were mostly unfunded, without a stage-by-stage explanation → §2.9, §4.7. | Applies to studies adopting it from 2026-11-09. It does not change any frozen study's rules or results: studies pinned to 1.0.0 keep their pin (the preflight passes with a notice; a continuation records "retained pinned standard 1.0.0" or migrates by amendment, §7.5). The $35,000 budget and every gate are unchanged; no numeric tolerance is introduced. The first adopter is `research/vg-d1-growth-diagnostic/` (scope `diagnostic`). |
 | 1.0.0 | 2026-11-08 | First version. Consolidates the practice of Study 8, growth140-vgt-stable, Priority 1 (`research/vg-balanced-entry-eligibility/`) and Priority 2 (`research/vgt-d1-growth-joint/`). Adds the adoption manifest, the preflight and the `CLAUDE.md` read instruction. | The user's Priority 2 follow-up brief (`research/vgt-d1-growth-separate-pooled/brief/BRIEF.md`). Evidence: Priority 2's fixed D1 primary + Growth #4 combination beat its joint primary, but was not selectable (→ §3.2); its folds failed chronologically while the final neighbourhood looked stable (→ §1.10, §5.4); the stable Growth study's promotion excluded Rise and gate structures (→ §2.4, §4.3); Priority 1's capital-displacement finding (→ §5.2); the 2026-11-07 OOM and the dead-worker hang (→ §6.2, §6.4). | Applies to new studies from 2026-11-08. Completed studies are not retrofitted. The first adopter is `research/vgt-d1-growth-separate-pooled/` (scope `diagnostic`). |

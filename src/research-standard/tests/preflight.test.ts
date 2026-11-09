@@ -257,4 +257,32 @@ describe('the repository', () => {
 
     for (const d of studies) assert.deepEqual(checkAdoption(path.join('research', d), { repoRoot }).errors, [], d);
   });
+
+  // §7.4–§7.5: a new version is appended, never rewritten, and the studies that pinned an earlier one keep it
+  it('keeps every earlier version registered with its original sha256', () => {
+    const registry = JSON.parse(fs.readFileSync(path.join(repoRoot, registryPath), 'utf8')) as {
+      current: string;
+      versions: { version: string; sha256: string }[];
+    };
+    const v100 = registry.versions.find((v) => v.version === '1.0.0');
+
+    assert.equal(v100?.sha256, '8c38ac15285753240be52c1a55739b2d1f4bed0e49531821c19e7437d3ae639d');
+    assert.equal(registry.versions.at(-1)!.version, registry.current);
+  });
+
+  it('passes the studies pinned to 1.0.0 with a retained-pin notice once a later version is current', () => {
+    const pinned = ['research/vgt-d1-growth-separate-pooled', 'research/vg-d1-growth-joint'];
+
+    for (const study of pinned) {
+      const r = checkAdoption(study, { repoRoot });
+
+      assert.equal(r.ok, true, study);
+      assert.equal(r.version, '1.0.0', study);
+      if (JSON.parse(fs.readFileSync(path.join(repoRoot, registryPath), 'utf8')).current !== '1.0.0')
+        assert.ok(
+          r.notices.some((n) => /pinned to standard 1\.0\.0/.test(n)),
+          study
+        );
+    }
+  });
 });

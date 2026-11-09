@@ -78,6 +78,11 @@ governed work). Afterwards it is never edited; changes go to `AMENDMENTS.md` (ap
 - **Parameters:** boxes and grids, with exact incumbent values representable on them.
 - **Structure:** dependencies and inactive genes; identity and behavioural equivalence (the ledger signature);
   cells/strata with protected budgets.
+- **Protected investigation of multi-component participation** (standard §4.7; multi-symbol Growth pools and other
+  pools whose components can crowd one another out): `<protected stratum | reserved promotion slots | report-only lane
+  | not protected, because …>`, its budget in proposals and evaluations, and how its members are promoted, qualified
+  and selected (by default under the same gates and primary rule). Not an equal-activity rule, not a requirement that
+  the winner fund every component.
 
 ## 7. Search, budget and stopping (search studies)
 
@@ -105,6 +110,20 @@ governed work). Afterwards it is never edited; changes go to `AMENDMENTS.md` (ap
 | `<Q1…>` | `<exact rule>` |
 
 **Report-only evidence:** stresses, toggles, causal family removal, episode concentration, participation labels.
+
+**Tail severity beside frequency** (standard §5.8, report-only, never a gate or a tolerance): for each neighbourhood,
+the p90 and p95 DD, the **worst-10% mean DD** (the mean of the ⌈0.1 × n⌉ largest drawdowns), the breach share with its
+Wilson 95% interval, the mean excess among breaches, the worst DD, the distinct ledgers behind the breaches, and the
+small and wide families beside the main radius.
+
+**Candidate consideration records** (standard §2.8; only when the user directs that a candidate stay under
+investigation):
+
+| Candidate | Original gate verdict (as sealed) | Descriptive evidence | User-directed consideration (source, date, scope) |
+|---|---|---|---|
+| `<label, id>` | `<e.g. fails Q3: confirmation p90 DD $…>` | `<diagnostics, validation, report-only figures>` | `<brief line or session instruction>` |
+
+Consideration never relabels a gate, changes a sealed outcome, approves deployment or sets a tolerance.
 
 ## 10. Chronological procedure tests
 
@@ -143,7 +162,10 @@ governed work). Afterwards it is never edited; changes go to `AMENDMENTS.md` (ap
 - **Drawdown:** DD in dollars and as a percentage of the fixed budget, with its dates.
 - **Activity and costs:** trades, wins/losses, exposure, interest and costs; family contributions (booked and
   causal); open positions; funding refusals.
-- **Robustness:** neighbourhoods and the breach disclosure.
+- **Robustness:** neighbourhoods, the breach disclosure and the tail severity (standard §5.5, §5.8).
+- **Participation attribution** (standard §2.9) for any unfunded, token or rarely funded component: signals, filters
+  and eligibility, real capital competition (named occupants), virtual-state waiting and search/promotion attrition,
+  each separately; all opportunities and independent episodes; actual versus virtual time invested.
 - **Chronology:** fold and sequential results, including procedure failures.
 - **Search:** coverage and attrition; the stopping condition.
 - **Compute and resources:** compute, and the observed memory and CPU use.
