@@ -84,6 +84,23 @@ export const checkP3 = () => {
 
 export const archivePins = () => Object.fromEntries(p3.archives.map((job) => [job, sha256File(archiveFile(job))]));
 
+// A code change after the freeze is accepted only with an amendment in AMENDMENTS.md and its acknowledged digest here.
+export const acknowledgementsFile = path.join(resultsDir, 'code-acknowledgements.jsonl');
+
+export const acknowledged = (): { digest: string; amendment: string; t: string }[] => {
+  if (!fs.existsSync(acknowledgementsFile)) return [];
+
+  const amendments = fs.readFileSync(path.join(researchDir, 'AMENDMENTS.md'), 'utf8');
+
+  return fs
+    .readFileSync(acknowledgementsFile, 'utf8')
+    .trim()
+    .split('\n')
+    .filter(Boolean)
+    .map((l) => JSON.parse(l) as { digest: string; amendment: string; t: string })
+    .filter((a) => amendments.includes(`### ${a.amendment} `));
+};
+
 interface Freeze {
   protocolSha256: string;
   manifestSha256: string;
@@ -102,8 +119,10 @@ export const guards = (o: { archives?: boolean } = {}) => {
     throw new Error('PROTOCOL.md changed after the freeze');
   if (sha256File(manifestFile) !== f.manifestSha256)
     throw new Error('DIAGNOSTIC_MANIFEST.json changed after the freeze');
-  if (diagnosticDigest() !== f.diagnosticDigest)
-    throw new Error('the diagnostic code changed after the freeze (amend first)');
+  const digest = diagnosticDigest();
+
+  if (digest !== f.diagnosticDigest && !acknowledged().some((a) => a.digest === digest))
+    throw new Error('the diagnostic code changed after the freeze without an acknowledged amendment');
   if (
     execSync(`git ls-files --error-unmatch ${rel(freezeFile)}`, { cwd: repoRoot })
       .toString()
@@ -425,7 +444,8 @@ export const stageN = async () => {
 
       development++;
 
-      const diff = firstDifference(plain(ob.rec), d.rec);
+      // both sides in the archive's encoding (the archived record is decoded on read: NaN stays NaN)
+      const diff = firstDifference(plain(ob.rec), plain(d.rec));
 
       if (diff) throw new Error(`${key} draw ${d.id} does not reproduce its archived record: ${diff}`);
 
