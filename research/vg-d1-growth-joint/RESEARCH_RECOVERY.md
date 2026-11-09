@@ -11,8 +11,10 @@
   - The independent procedure is chronologically unsupported (−$61,544.61, sequential DD $102,257.90).
   - No combined system credibly improved on VG #2.
 - **Brief:** `brief/BRIEF.md`, sha256 `4554b859e71eda0cbb66ba8dc2c085ab38c208c6facff9fd8fb7c2a03513aac7`.
-- **Branch:** `research/vg-d1-growth-joint` (main checkout), from `d61e6bea`. The push of the final commit is recorded
-  below once done (CLAUDE.md delivery instruction).
+- **Branch:** `research/vg-d1-growth-joint` (main checkout), from `d61e6bea`. **Pushed** (CLAUDE.md delivery
+  instruction, no confirmation needed): `git push origin research/vg-d1-growth-joint` at 2026-11-09T06:07:17Z, new
+  remote branch, first attempt, outside the sandbox; `git ls-remote` = local = `45b16e34f6c91f616a173435ab9855c887a4e7a8`.
+  No merge, no PR, no deployment. This push record is its own follow-up commit, pushed the same way.
 - **Running processes:** none (`systemctl --user list-units 'vgjoint-*'` is empty).
 - **Next step:** none in this study. A new question needs a new study namespace; completed records are never rerun or
   edited.
