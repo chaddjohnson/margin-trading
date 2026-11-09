@@ -267,7 +267,20 @@ describe('the repository', () => {
     const v100 = registry.versions.find((v) => v.version === '1.0.0');
 
     assert.equal(v100?.sha256, '8c38ac15285753240be52c1a55739b2d1f4bed0e49531821c19e7437d3ae639d');
+    assert.equal(
+      registry.versions.find((v) => v.version === '1.1.0')?.sha256,
+      'e86b0160e0d757948da46194481aeb961b59afa841c3e4d6428f266b978beff8'
+    );
     assert.equal(registry.versions.at(-1)!.version, registry.current);
+  });
+
+  it('passes the study pinned to 1.1.0 with a retained-pin notice once a later version is current', () => {
+    const r = checkAdoption('research/vg-d1-growth-diagnostic', { repoRoot });
+
+    assert.equal(r.ok, true);
+    assert.equal(r.version, '1.1.0');
+    if (JSON.parse(fs.readFileSync(path.join(repoRoot, registryPath), 'utf8')).current !== '1.1.0')
+      assert.ok(r.notices.some((n) => /pinned to standard 1\.1\.0/.test(n)));
   });
 
   it('passes the studies pinned to 1.0.0 with a retained-pin notice once a later version is current', () => {

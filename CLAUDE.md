@@ -10,6 +10,17 @@
 - Verify the push with `git ls-remote origin <branch>` (equal to the local commit) and record it in the task's
   checkpoint.
 
+## Reporting: written analysis and tables only, no visuals (standing preference)
+
+> Report research with written analysis, Markdown tables and machine-readable results only. Do not create charts,
+> plots, SVGs, screenshots, images, dashboards, HTML visual reports, PDFs or other visual artifacts, and do not spend
+> time rendering or inspecting report graphics.
+
+- Recorded at the user's request in the Priority 5A brief (`research/vg-growth-funding-lifecycle/brief/BRIEF.md` §1,
+  2026-11-09) and enacted as optimization standard 2.0.0 §7.7. It replaces the earlier permission for backend report
+  charts. Visuals of earlier studies are preserved, never deleted or regenerated. Only a brief that explicitly asks for
+  a visual overrides it (recorded as a departure). Strategy Lab's own application interface is outside this rule.
+
 ## Context recovery (applies to every session)
 
 - For any substantial multi-stage task, follow @docs/claude/context-recovery.md and, at session start and after any context compaction, reread that guide and the task's on-disk recovery checkpoint before executing work.

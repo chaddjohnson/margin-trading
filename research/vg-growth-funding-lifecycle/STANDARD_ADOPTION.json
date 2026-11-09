@@ -1,0 +1,85 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-growth-funding-lifecycle",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.0.0",
+  "sha256": "2005a88c2e24f5e2ab4e461b0425f97d006781a45518f78d9f10fd9320f40105"
+ },
+ "readAt": "2026-11-09T16:00:00Z",
+ "adoptedAt": "2026-11-09T16:07:46Z",
+ "protocol": {
+  "path": "research/vg-growth-funding-lifecycle/PROTOCOL.md",
+  "sha256": "5db1e08b393f3d94661c23afcd08b8b50622d14d4be8d27ba2c7ac6e15a0154a"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "none: a bounded fixed-arm comparison (L0/L1/L2 Growth funding lifecycles) and diagnostic of frozen, unchanged phenotypes; nothing is searched, selected or tuned; interpretation rules R1–R6 (PROTOCOL.md §11) are descriptive",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 14612,
+  "notes": "no search (0 proposals). Frozen ceilings (brief §9): 20,000 fresh development simulations and 200 full-history simulations. Planned: development 14,563 (V 353, C 130, N 12,160 fresh with 5,120 archived L0 draws read, S 1,920), full 49. Consistency rounds inside an L1/L2 evaluation, Growth book re-simulations, archive reads and retries are disclosed apart. About 390 engineering pilot evaluations ran before the freeze (mechanics only)."
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§1.8",
+   "kind": "adaptation",
+   "description": "no search, no earlier-cutoff repetition, no primary or roles (also §2.3–§2.5, §3.2, §4)",
+   "justification": "a fixed-arm comparison of frozen subjects (diagnostic scope, §0.1); the brief: 'a fixed-arm architecture comparison and diagnostic, without a parameter search … Do not repeat full historical-cutoff optimization searches'",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "the §5.1 gates precede a large search, and there is none; stage V (L0 reproduction of sealed records, L0 book parity of the lifecycle engine, causal prefixes, accounting, single-book identities, invariance) replaces them; no execution stresses",
+   "justification": "nothing is qualified or selected; the engine is Priority 3's with a bounded, verified lifecycle adapter",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "no tuning benchmark; 12 workers from Priority 3's measured saturation; the pilot reports observed use",
+   "justification": "diagnostic scope (§6.3: diagnostics report observed use)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "FULL opens only for frozen subjects and arms after the sealed development records and verdicts, behind the committed FULL_MANIFEST.json and Priority 3's guard; previously examined history",
+   "justification": "brief §7: freeze and commit the full-history evaluation manifest before opening new validation results",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "a common family-level instrument for the standalone books (one Latin-hypercube column per Growth input, the same in every subject)",
+   "justification": "brief §8: a common, explicitly specified family-level instrument with the same distribution, radii, sample count, seeds and boundary rules",
+   "userAgreement": null
+  }
+ ]
+}

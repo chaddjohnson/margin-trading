@@ -71,7 +71,9 @@ governed work). Afterwards it is never edited; changes go to `AMENDMENTS.md` (ap
 - **Economics:** principal budget; per-side costs; interest (rate, day count); stop fills; shares (fractional or whole);
   dividends.
 - **Native → harmonized bridge:** start, arming, warm-up, friction, split handling.
-- **Funding rules:** for a pool, the architecture, priority, reservations and minimum allocation.
+- **Funding rules:** for a pool, the architecture, priority, reservations and minimum allocation, and the funding
+  lifecycle of each family: the current virtual-book behaviour (a refused entry keeps its virtual trade) or an
+  experimental lifecycle, which is labelled in every result and never becomes a default without the user's review.
 
 ## 6. Space
 
@@ -158,6 +160,9 @@ Consideration never relabels a gate, changes a sealed outcome, approves deployme
 
 ## 15. Reporting commitments
 
+- **Format** (standard 2.0.0 §7.7, mandatory): written analysis, Markdown tables and machine-readable results (JSON,
+  JSONL, CSV) only. No charts, plots, SVGs, screenshots, images, dashboards, HTML visual reports or PDFs, and no time
+  spent rendering or inspecting graphics, unless the brief explicitly asks for one (a recorded departure).
 - **Windows:** development, validation and full-history net, each with the realized/unrealized split.
 - **Drawdown:** DD in dollars and as a percentage of the fixed budget, with its dates.
 - **Activity and costs:** trades, wins/losses, exposure, interest and costs; family contributions (booked and

@@ -1,0 +1,68 @@
+1c1
+< export const simulateTrading = (
+---
+> export const simulateLifecycle = (
+4,5c4,6
+<   options: SimulationOptions
+< ): Simulation => {
+---
+>   options: SimulationOptions,
+>   life: LifeRuntime | null = null
+> ): LifeSimulation => {
+33,40c34,53
+<   const book = new ShadowBook(
+<     options.symbol as Sym,
+<     STRATEGY_KEY as PhenotypeName,
+<     ds,
+<     options.exit,
+<     options.book,
+<     classic ? firstSession : ds.sessionCount
+<   );
+---
+>   // LIFECYCLE: L1/L2 books ask the allocator at every order; L0 (or no lifecycle) is the canonical ShadowBook.
+>   const lifecycle = life && life.mode !== 'L0' ? life : null;
+>   const book = lifecycle
+>     ? new LifecycleBook(
+>         options.symbol as Sym,
+>         STRATEGY_KEY as PhenotypeName,
+>         ds,
+>         options.exit,
+>         options.book,
+>         classic ? firstSession : ds.sessionCount,
+>         lifecycle.ask
+>       )
+>     : new ShadowBook(
+>         options.symbol as Sym,
+>         STRATEGY_KEY as PhenotypeName,
+>         ds,
+>         options.exit,
+>         options.book,
+>         classic ? firstSession : ds.sessionCount
+>       );
+399a413,425
+>   // LIFECYCLE: the request log and L2's retained opportunity (absent in L0).
+>   const lifeState = lifecycle
+>     ? lifecycleState(ds, lifecycle, book as LifecycleBook, {
+>         enter,
+>         gates,
+>         rules,
+>         protect,
+>         outcomes,
+>         byTrade,
+>         entryMethod
+>       })
+>     : null;
+> 
+407a434
+>     lifeState?.beginSession(s); // LIFECYCLE
+450a478
+>       lifeState?.until(s, t); // LIFECYCLE: L2 reassessments due at or before t, after the canonical decisions
+524a553
+>     lifeState?.afterSession(s); // LIFECYCLE: L2 expiry after the close
+544a574
+>   lifeState?.finish(endSession); // LIFECYCLE
+565c595,596
+<     rules
+---
+>     rules,
+>     life: lifeState ? lifeState.outcome() : null // LIFECYCLE

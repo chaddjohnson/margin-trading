@@ -1,7 +1,7 @@
 # Optimization research standard
 
-- **Version:** 1.1.0 — **effective** 2026-11-09 — **status:** current (1.0.0, effective 2026-11-08, remains registered
-  for the studies that pinned it).
+- **Version:** 2.0.0 — **effective** 2026-11-09 — **status:** current (1.1.0, effective 2026-11-09, and 1.0.0,
+  effective 2026-11-08, remain registered for the studies that pinned them).
 - **Authoritative path:** `docs/research/OPTIMIZATION_STANDARD.md` (this file). There is no other copy; earlier versions
   are read from git history (`git log -p -- docs/research/OPTIMIZATION_STANDARD.md`).
 - **Version registry:** `docs/research/optimization-standard.versions.json` (version → sha256 of this file).
@@ -31,7 +31,8 @@ own protocol; every new study writes one from the template and pins the version 
 
 All research is backend work: canonical data, headless runners and CLI commands. Strategy Lab, its HTTP endpoints,
 Interactive Preview and browser automation are never part of an optimization (see
-[RESEARCH_WORKFLOW.md](../strategy-lab/RESEARCH_WORKFLOW.md) §1, §5). Backend-generated report charts are allowed.
+[RESEARCH_WORKFLOW.md](../strategy-lab/RESEARCH_WORKFLOW.md) §1, §5). Research is reported in written analysis,
+Markdown tables and machine-readable results only, with no visual artifacts (§7.7, from 2.0.0).
 
 ### 0.2 Requirement levels
 
@@ -514,10 +515,20 @@ threshold, and any change of the cap (with the user's approval).
    - **What it cannot verify:** that an agent read or understood the document, or that the study's code obeys it.
    - **Who checks those:** protocol reviews, the study's own guards (doors, seals, freezes) and the user's review.
    - The `CLAUDE.md` instruction is an instruction, not a mechanism.
+7. **[M] Reporting format: no visuals** (added in 2.0.0; the user's standing preference).
+   - **What a study delivers:** written analysis, Markdown tables and machine-readable results (JSON, JSONL, CSV).
+   - **What it never creates:** charts, plots, SVGs, screenshots, images, dashboards, HTML visual reports, PDFs or other
+     visual artifacts. No time is spent rendering or inspecting report graphics.
+   - **Earlier artifacts:** visuals of studies completed before 2.0.0 are preserved as they are, never deleted,
+     regenerated or retrofitted (§0.1, not retroactive).
+   - **Exceptions:** only a brief that explicitly asks for a visual artifact, recorded as a departure citing it (§7.3).
+   - **Scope:** research and its reports, records and checkpoints. Strategy Lab's own application interface (its
+     charts are product features, not research reports) is outside this rule.
 
 ## 8. Change log
 
 | Version | Effective | Change | Rationale and evidence | Implications |
 |---|---|---|---|---|
+| 2.0.0 | 2026-11-09 | **Major** (§7.4: a mandatory rule added). Adds §7.7 [M] *Reporting format: no visuals*: research is reported in written analysis, Markdown tables and machine-readable results only; no charts, plots, SVGs, screenshots, images, dashboards, HTML visual reports, PDFs or other visual artifacts; earlier visuals are preserved; a brief that explicitly asks for a visual is a recorded departure. §0.1's sentence allowing backend-generated report charts is replaced by a pointer to §7.7. No other rule changes. The companions follow: the protocol template (§15), `CLAUDE.md` (the standing reporting preference) and the roadmap. | The user's explicit reporting preference for future work, recorded in the Priority 5A brief (`research/vg-growth-funding-lifecycle/brief/BRIEF.md` §1, 2026-11-09), authorized there without a further approval question. It reconciles the earlier permission (§0.1 of 1.0.0 and 1.1.0) and the charts produced by Priority 3A (`research/vg-d1-growth-diagnostic/results/charts/`, preserved). | Applies to studies adopting it from 2026-11-09. Studies pinned to 1.0.0 or 1.1.0 keep their pin (the preflight passes with a notice; a continuation records "retained pinned standard x.y.z" or migrates by amendment, §7.5); their existing charts stay as they are. No research-method rule, gate, window, budget or the $35,000 ceiling changes. The first adopter is `research/vg-growth-funding-lifecycle/` (scope `diagnostic`). |
 | 1.1.0 | 2026-11-09 | **Minor** (§7.4: new guidance and [S]/[R] items; no [M] rule added, removed or changed; existing item numbers kept). Adds: §0.3 tail-severity statistics (p95, the worst-10% mean DD), the three consideration fields and the participation stages; §2.8 [R] candidate consideration is not qualification; §2.9 [R] participation attribution; §4.7 [S] protected investigation of multi-component participation; §5.8 [R] tail severity beside frequency. The companions follow: the protocol template (§4, §6, §9, §15) and the roadmap's sequencing note. The preflight's checks are unchanged (these items are protocol and report content it cannot verify, §7.6); its tests now also cover a study that retains 1.0.0 under a current 1.1.0. | The user's agreed process decisions in the Priority 3A brief (`research/vg-d1-growth-diagnostic/brief/BRIEF.md` §7, 2026-11-09). Evidence: Priority 3 (`research/vg-d1-growth-joint/REPORT.md`): (1) the unchanged VG #2 + Growth #4 / 08500a60 + Appendix A combinations failed Q3 (p90 DD $36,277.63 / $35,131.47) yet are kept by the user as candidates to investigate → §2.8; (2) the frozen primary passed Q3 with rare but severe breaches (2.6%, worst $103,278.13) while those combinations failed it with more frequent, milder breaches (13.3% / 10.9%, mean excess ≈ $4,000) → §5.8; (3) searched Growth·GDX books were mostly unfunded, without a stage-by-stage explanation → §2.9, §4.7. | Applies to studies adopting it from 2026-11-09. It does not change any frozen study's rules or results: studies pinned to 1.0.0 keep their pin (the preflight passes with a notice; a continuation records "retained pinned standard 1.0.0" or migrates by amendment, §7.5). The $35,000 budget and every gate are unchanged; no numeric tolerance is introduced. The first adopter is `research/vg-d1-growth-diagnostic/` (scope `diagnostic`). |
 | 1.0.0 | 2026-11-08 | First version. Consolidates the practice of Study 8, growth140-vgt-stable, Priority 1 (`research/vg-balanced-entry-eligibility/`) and Priority 2 (`research/vgt-d1-growth-joint/`). Adds the adoption manifest, the preflight and the `CLAUDE.md` read instruction. | The user's Priority 2 follow-up brief (`research/vgt-d1-growth-separate-pooled/brief/BRIEF.md`). Evidence: Priority 2's fixed D1 primary + Growth #4 combination beat its joint primary, but was not selectable (→ §3.2); its folds failed chronologically while the final neighbourhood looked stable (→ §1.10, §5.4); the stable Growth study's promotion excluded Rise and gate structures (→ §2.4, §4.3); Priority 1's capital-displacement finding (→ §5.2); the 2026-11-07 OOM and the dead-worker hang (→ §6.2, §6.4). | Applies to new studies from 2026-11-08. Completed studies are not retrofitted. The first adopter is `research/vgt-d1-growth-separate-pooled/` (scope `diagnostic`). |

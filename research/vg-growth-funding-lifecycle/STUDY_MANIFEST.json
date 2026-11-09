@@ -1,0 +1,5611 @@
+{
+ "study": "vg-growth-funding-lifecycle",
+ "kind": "STUDY MANIFEST — frozen before any development performance result of L1 or L2; never edited (changes go to AMENDMENTS.md)",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.0.0",
+  "sha256": "2005a88c2e24f5e2ab4e461b0425f97d006781a45518f78d9f10fd9320f40105"
+ },
+ "brief": {
+  "file": "research/vg-growth-funding-lifecycle/brief/BRIEF.md",
+  "sha256": "26be1bceb44c28bf4cfee1cd902365e3fa287bd4d20ed65099f26635bbf970e3"
+ },
+ "priority3": {
+  "study": "research/vg-d1-growth-joint",
+  "evaluationDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+  "closureDigest": "f7fc49aae5d35e6aef67096ddf211572779712796a1ab1e58a5c206b2923e69b",
+  "records": {
+   "CONTROL_MANIFEST.json": "0f40efd76aec8ec10a504fb2cf508891a572061df51db065363a910fb68adaa1",
+   "FROZEN_SELECTION.json": "e29e35e290c1f9a424410b02c048889021fa818f16c324085bae8bf5bdcebfe2",
+   "results/protocol-freeze.json": "69d30c4183850698b138b1d9f168d7704c0ef83a6709f205b8829867090eb704",
+   "results/search/C24/indep.json": "813fb96a2d95be0a9fb55a864545f74e766e12d467a7d0ea7b6b0fcaf8e77e94",
+   "results/search/C24/gpair.json": "ffe03d0e60ead0fbadc49b7ea1cbd71c90302d6daddbddea26d28432ced2cdd9",
+   "results/search/C24/informed.json": "b30fd648af06f4ca0d11c812d7b1585da5fa21fa4e21800f1a0dd54a810ba06e",
+   "results/gpair/C24/selection.json": "c833c85dcecd6cd678d23ecbd81f6e11d45e294de3f9995e8c1dec281f2c47fb",
+   "results/folds/C24/selection.json": "32953b919363002a1b7a87a7e5643941068685782948e80a44064c20b76f76b1",
+   "results/diagnostics/D24/diagnostics.json": "3e18a20fb022dc42557e0dcb5df846645b2fd1d09ad14c87151eb8347f585252",
+   "results/validation/validation.json": "77328e9cb7154939d9b455c2d62b48de5bfdb8e051a31ad790c3ade40bc4dad1"
+  }
+ },
+ "windows": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-02",
+   "to": "2026-10-30"
+  },
+  "boundary": "2024-12-31",
+  "prefixDoor": "D23"
+ },
+ "arms": {
+  "L0": "the current model (exact control): a refused Growth entry proceeds as an unfunded virtual position; freed capital never revives it (Priority 3 evaluate.ts run, unchanged)",
+  "L1": "Growth responds to actual funding: a refused request leaves the book flat (decision-time transitions canonical, no order, no position); no retry; later entries only from fresh canonical decisions",
+  "L2": "L1 plus one retained refused BASE opportunity per Growth book (continuation refusals stay L1), reassessed at each completed signal bar while flat, after the canonical decisions of the instant",
+  "L2constants": {
+   "maxAgeSessions": 20,
+   "maxExtension": 0.05,
+   "note": "fixed experimental design choices (the brief §5), never optimized or changed after results"
+  },
+  "D1": "D1's canonical shadow lifecycle in every arm"
+ },
+ "subjects": [
+  {
+   "key": "D",
+   "label": "VG #2 VGT+GDX D1 only (D1-only control)",
+   "group": "core",
+   "p3Key": "D",
+   "id": "7a377d49c2b9aa55",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT"
+   ],
+   "need": "mixed",
+   "growth": {},
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "G:GDX": false,
+     "G:VGT": false
+    }
+   }
+  },
+  {
+   "key": "E",
+   "label": "VG #2 + existing GDX Growth (Appendix A) only",
+   "group": "core",
+   "p3Key": null,
+   "id": "c45f4efa028203e9",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "07cac3329fc7a520",
+     "name": "GDX Growth (Appendix A)"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "G:VGT": false
+    }
+   }
+  },
+  {
+   "key": "C4",
+   "label": "VG #2 + VGT Growth #4 only",
+   "group": "core",
+   "p3Key": "C",
+   "id": "f324035d15f69610",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "VGT": {
+     "id": "420cd989e4fa7749",
+     "name": "VGT Growth #4"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 21
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "G:GDX": false
+    }
+   }
+  },
+  {
+   "key": "C85",
+   "label": "VG #2 + VGT Growth 08500a60 only",
+   "group": "core",
+   "p3Key": "O08",
+   "id": "3688e97b90639d60",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "VGT": {
+     "id": "08500a60ec56cfae",
+     "name": "VGT Growth 08500a60"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 22
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 10,
+      "trendChangeMinimumReturnPercent": -5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 2,
+      "recoveryRetracementPercent": 30,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 50,
+      "crossSmaBars": 110,
+      "crossRisingBars": 19,
+      "crossMinimumSlopePercent": 0.4,
+      "crossMarginPercent": 2.75,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "G:GDX": false
+    }
+   }
+  },
+  {
+   "key": "A",
+   "label": "VG #2 + VGT Growth #4 + existing GDX Growth",
+   "group": "core",
+   "p3Key": "A",
+   "id": "d4cde31356e2306a",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "07cac3329fc7a520",
+     "name": "GDX Growth (Appendix A)"
+    },
+    "VGT": {
+     "id": "420cd989e4fa7749",
+     "name": "VGT Growth #4"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 21
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "B",
+   "label": "VG #2 + VGT Growth 08500a60 + existing GDX Growth",
+   "group": "core",
+   "p3Key": "B",
+   "id": "676731bfd4ec280f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "07cac3329fc7a520",
+     "name": "GDX Growth (Appendix A)"
+    },
+    "VGT": {
+     "id": "08500a60ec56cfae",
+     "name": "VGT Growth 08500a60"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 22
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 10,
+      "trendChangeMinimumReturnPercent": -5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 2,
+      "recoveryRetracementPercent": 30,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 50,
+      "crossSmaBars": 110,
+      "crossRisingBars": 19,
+      "crossMinimumSlopePercent": 0.4,
+      "crossMarginPercent": 2.75,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "GP4",
+   "label": "Growth only: VGT #4 + existing GDX Growth",
+   "group": "core",
+   "p3Key": "GP4",
+   "id": "0f17bddbd7f63a56",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "07cac3329fc7a520",
+     "name": "GDX Growth (Appendix A)"
+    },
+    "VGT": {
+     "id": "420cd989e4fa7749",
+     "name": "VGT Growth #4"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 21
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "GP85",
+   "label": "Growth only: VGT 08500a60 + existing GDX Growth",
+   "group": "core",
+   "p3Key": "GP085",
+   "id": "008233e872d69f92",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "07cac3329fc7a520",
+     "name": "GDX Growth (Appendix A)"
+    },
+    "VGT": {
+     "id": "08500a60ec56cfae",
+     "name": "VGT Growth 08500a60"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 22
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 10,
+      "trendChangeMinimumReturnPercent": -5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 2,
+      "recoveryRetracementPercent": 30,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 50,
+      "crossSmaBars": 110,
+      "crossRisingBars": 19,
+      "crossMinimumSlopePercent": 0.4,
+      "crossMarginPercent": 2.75,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "V4",
+   "label": "Shipped VGT D1 primary + VGT Growth #4",
+   "group": "core",
+   "p3Key": "O06",
+   "id": "dbe7be81867b739a",
+   "enabled": [
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "VGT": {
+     "id": "420cd989e4fa7749",
+     "name": "VGT Growth #4"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 21
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 216,
+      "trailingBuyPercentage": 3,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 8,
+      "tickWindowSize": 74,
+      "intradayLossBuffer": 29,
+      "pullback": 90,
+      "continuationWindow": 60
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "G:GDX": false
+    }
+   }
+  },
+  {
+   "key": "V85",
+   "label": "Shipped VGT D1 primary + VGT Growth 08500a60",
+   "group": "core",
+   "p3Key": "O07",
+   "id": "51da785f9a3b5f26",
+   "enabled": [
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "VGT": {
+     "id": "08500a60ec56cfae",
+     "name": "VGT Growth 08500a60"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 22
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 216,
+      "trailingBuyPercentage": 3,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 8,
+      "tickWindowSize": 74,
+      "intradayLossBuffer": 29,
+      "pullback": 90,
+      "continuationWindow": 60
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 10,
+      "trendChangeMinimumReturnPercent": -5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 2,
+      "recoveryRetracementPercent": 30,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 50,
+      "crossSmaBars": 110,
+      "crossRisingBars": 19,
+      "crossMinimumSlopePercent": 0.4,
+      "crossMarginPercent": 2.75,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "G:GDX": false
+    }
+   }
+  },
+  {
+   "key": "SG",
+   "label": "GDX Growth (Appendix A) alone",
+   "group": "standalone",
+   "p3Key": null,
+   "id": "b5c47cb035a78a99",
+   "enabled": [
+    "G:GDX"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "07cac3329fc7a520",
+     "name": "GDX Growth (Appendix A)"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false,
+     "G:VGT": false
+    }
+   }
+  },
+  {
+   "key": "S4",
+   "label": "VGT Growth #4 alone",
+   "group": "standalone",
+   "p3Key": null,
+   "id": "90f84e00063dcc76",
+   "enabled": [
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "VGT": {
+     "id": "420cd989e4fa7749",
+     "name": "VGT Growth #4"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:VGT",
+     "inputs": 21
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false,
+     "G:GDX": false
+    }
+   }
+  },
+  {
+   "key": "S85",
+   "label": "VGT Growth 08500a60 alone",
+   "group": "standalone",
+   "p3Key": null,
+   "id": "b30bf34f6b63ca84",
+   "enabled": [
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "VGT": {
+     "id": "08500a60ec56cfae",
+     "name": "VGT Growth 08500a60"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:VGT",
+     "inputs": 22
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 10,
+      "trendChangeMinimumReturnPercent": -5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 2,
+      "recoveryRetracementPercent": 30,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 50,
+      "crossSmaBars": 110,
+      "crossRisingBars": 19,
+      "crossMinimumSlopePercent": 0.4,
+      "crossMarginPercent": 2.75,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false,
+     "G:GDX": false
+    }
+   }
+  },
+  {
+   "key": "IP",
+   "label": "Priority 3 informed primary (C24/informed#1 profit)",
+   "group": "mechanism",
+   "p3Key": "IP",
+   "id": "575545f4d6438577",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "f81f02bc2db755d9",
+     "name": "Growth f81f02bc2db755d9"
+    },
+    "VGT": {
+     "id": "5d5b05b0b932c4fd",
+     "name": "Growth 5d5b05b0b932c4fd"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 11
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 16
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 53,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 249,
+      "intradayLossBuffer": 29,
+      "pullback": 154,
+      "continuationWindow": 30
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 72,
+      "intradayLossBuffer": 47,
+      "pullback": 93,
+      "continuationWindow": 65
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 95,
+      "breakoutSlopeComparisonSessions": 62,
+      "breakoutPriorHighSessions": 62,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.7,
+      "recoveryRetracementPercent": 86.8,
+      "recoveryConfirmationSessions": 10,
+      "trailingStopPercent": 12.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 105,
+      "classicPullbackPercent": 11.5,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 100,
+      "breakoutSlopeComparisonSessions": 20,
+      "breakoutPriorHighSessions": 5,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 65,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 65,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 7.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 52,
+      "retentionSmaSessions": 137,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 100,
+      "crossSmaBars": 105,
+      "crossRisingBars": 15,
+      "crossMinimumSlopePercent": 1,
+      "crossMarginPercent": 1.5,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "XP",
+   "label": "Priority 3 independent primary (C24/indep/GDX-rise_VGT-rise#1 profit)",
+   "group": "mechanism",
+   "p3Key": "XP",
+   "id": "86d25530b9e9141d",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "ed20222010d9269d",
+     "name": "Growth ed20222010d9269d"
+    },
+    "VGT": {
+     "id": "15678af77df4d65a",
+     "name": "Growth 15678af77df4d65a"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 22
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 15
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 260,
+      "trailingBuyPercentage": 8,
+      "trailingStopPercentage": 61,
+      "maximumHoldDays": 23,
+      "tickWindowSize": 38,
+      "intradayLossBuffer": 28,
+      "pullback": 192,
+      "continuationWindow": 178
+     },
+     "VGT": {
+      "targetPercentChange": 240,
+      "trailingBuyPercentage": 15,
+      "trailingStopPercentage": 69,
+      "maximumHoldDays": 9,
+      "tickWindowSize": 100,
+      "intradayLossBuffer": 44,
+      "pullback": 112,
+      "continuationWindow": 155
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5.5,
+      "recentLowLookbackBars": 230,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 15,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 4.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 3,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 0.5,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 100,
+      "crossSmaBars": 100,
+      "crossRisingBars": 15,
+      "crossMinimumSlopePercent": 1,
+      "crossMarginPercent": 1.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 14.5,
+      "recentLowLookbackBars": 140,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "maximum_extension",
+      "eligibilityMaxAgeSessions": 15,
+      "eligibilityMaximumExtensionPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 17,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 4.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 60,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "SP",
+   "label": "Priority 3 staged primary (VG #2 + C24/gpair/GDX-breakout_VGT-rise#3)",
+   "group": "mechanism",
+   "p3Key": "SP",
+   "id": "d3bc148449ea59e6",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "ce7007da1907dcc9",
+     "name": "Growth ce7007da1907dcc9"
+    },
+    "VGT": {
+     "id": "eeab2daccb4da946",
+     "name": "Growth eeab2daccb4da946"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 14
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 17
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 120,
+      "breakoutSlopeComparisonSessions": 60,
+      "breakoutPriorHighSessions": 40,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 7,
+      "trendMomentumLongSessions": 220,
+      "trendMomentumMinimumShortReturnPercent": 10,
+      "trendMomentumMinimumLongReturnPercent": 8.5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 100,
+      "dipThresholdPercent": 9.5,
+      "recoveryRetracementPercent": 70,
+      "recoveryConfirmationSessions": 6,
+      "trailingStopPercent": 3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 12,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 4.5,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 17.5,
+      "recentLowLookbackBars": 150,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 17,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 28,
+      "eligibilityMinimumAdvancePercent": 2,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 90,
+      "retentionSmaSessions": 170,
+      "retentionClosesBelow": 5,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 180,
+      "uptrendSmaBars": 20,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 2.5,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 4,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "G01",
+   "label": "C24/gpair/GDX-rise_VGT-rise#1 profit",
+   "group": "finalist",
+   "p3Key": "G01",
+   "id": "006c6c14d45fbbf0",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "da116c2ffd2aeb02",
+     "name": "Growth da116c2ffd2aeb02"
+    },
+    "VGT": {
+     "id": "2d7bdcfc63eec03f",
+     "name": "Growth 2d7bdcfc63eec03f"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 14
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 17
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 19,
+      "recentLowLookbackBars": 230,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 60,
+      "trendSlopeMinimumPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 10,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 7,
+      "trailingStopPercent": 3,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1.5,
+      "recentLowLookbackBars": 56,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 120,
+      "trendSlopeMinimumPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 1,
+      "eligibilityMinimumAdvancePercent": 1,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 11,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 60,
+      "retentionSmaSessions": 140,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 140,
+      "classicPullbackPercent": 18,
+      "classicReboundPercent": 4,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G02",
+   "label": "C24/gpair/GDX-rise_VGT-rise#2 gate-alternative",
+   "group": "finalist",
+   "p3Key": "G02",
+   "id": "063ace2424d19e1d",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "bfcefe9a83dcbc47",
+     "name": "Growth bfcefe9a83dcbc47"
+    },
+    "VGT": {
+     "id": "399f1df3b4a63d85",
+     "name": "Growth 399f1df3b4a63d85"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 12
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 17
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3.5,
+      "recentLowLookbackBars": 150,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 100,
+      "trendSlopeMinimumPercent": -4,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "deterioration",
+      "eligibilityMaxAgeSessions": 19,
+      "eligibilityDeteriorationDropPercent": 1.5,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 4,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 140,
+      "breakoutBufferPercent": 1,
+      "breakoutFormationBars": 20,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 9,
+      "recentLowLookbackBars": 50,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 70,
+      "trendSmaComparisonSessions": 8,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 80,
+      "dipThresholdPercent": 13.5,
+      "recoveryRetracementPercent": 40,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 10,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 6,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 70,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 10,
+      "classicPullbackPercent": 7,
+      "classicReboundPercent": 4,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G03",
+   "label": "C24/gpair/GDX-rise_VGT-rise#3 profit order",
+   "group": "finalist",
+   "p3Key": "G03",
+   "id": "8544e2510cbe84b9",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "da116c2ffd2aeb02",
+     "name": "Growth da116c2ffd2aeb02"
+    },
+    "VGT": {
+     "id": "0bdb60d34dfe2c83",
+     "name": "Growth 0bdb60d34dfe2c83"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 14
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 17
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 19,
+      "recentLowLookbackBars": 230,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 60,
+      "trendSlopeMinimumPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 10,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 7,
+      "trailingStopPercent": 3,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1.5,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 120,
+      "trendSlopeMinimumPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 1,
+      "eligibilityMinimumAdvancePercent": 1,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 11,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 55,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 60,
+      "retentionSmaSessions": 140,
+      "retentionClosesBelow": 4,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 140,
+      "classicPullbackPercent": 18,
+      "classicReboundPercent": 4,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G04",
+   "label": "C24/gpair/GDX-rise_VGT-breakout#1 profit",
+   "group": "finalist",
+   "p3Key": "G04",
+   "id": "5fc9b979be93841d",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "e287ddf5efc1a4fb",
+     "name": "Growth e287ddf5efc1a4fb"
+    },
+    "VGT": {
+     "id": "08c299b4f140efe1",
+     "name": "Growth 08c299b4f140efe1"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 10
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 15,
+      "recentLowLookbackBars": 160,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 60,
+      "trendSlopeMinimumPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 25,
+      "eligibilityMinimumAdvancePercent": 7,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 80,
+      "recoveryConfirmationSessions": 10,
+      "trailingStopPercent": 12.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 10,
+      "retentionSmaSessions": 60,
+      "retentionClosesBelow": 5,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 130,
+      "crossSmaBars": 100,
+      "crossRisingBars": 15,
+      "crossMinimumSlopePercent": 1,
+      "crossMarginPercent": 1.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 100,
+      "breakoutSlopeComparisonSessions": 20,
+      "breakoutPriorHighSessions": 15,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 60,
+      "retentionSmaSessions": 120,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 100,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G05",
+   "label": "C24/gpair/GDX-rise_VGT-breakout#2 robust",
+   "group": "finalist",
+   "p3Key": "G05",
+   "id": "b271aa2b05ae6f37",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "e287ddf5efc1a4fb",
+     "name": "Growth e287ddf5efc1a4fb"
+    },
+    "VGT": {
+     "id": "b1acc1179d6ac5d4",
+     "name": "Growth b1acc1179d6ac5d4"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 10
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 15,
+      "recentLowLookbackBars": 160,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 60,
+      "trendSlopeMinimumPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 25,
+      "eligibilityMinimumAdvancePercent": 7,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 80,
+      "recoveryConfirmationSessions": 10,
+      "trailingStopPercent": 12.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 10,
+      "retentionSmaSessions": 60,
+      "retentionClosesBelow": 5,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 130,
+      "crossSmaBars": 100,
+      "crossRisingBars": 15,
+      "crossMinimumSlopePercent": 1,
+      "crossMarginPercent": 1.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 100,
+      "breakoutSlopeComparisonSessions": 20,
+      "breakoutPriorHighSessions": 9,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 60,
+      "retentionSmaSessions": 120,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 100,
+      "breakoutBufferPercent": 2,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G06",
+   "label": "C24/gpair/GDX-rise_VGT-breakout#3 gate-alternative",
+   "group": "finalist",
+   "p3Key": "G06",
+   "id": "9e8ca5cbe0a5656d",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "d47ca7d37f8616e0",
+     "name": "Growth d47ca7d37f8616e0"
+    },
+    "VGT": {
+     "id": "012c4bd4407d9a28",
+     "name": "Growth 012c4bd4407d9a28"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 18
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 16
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5.5,
+      "recentLowLookbackBars": 110,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "deterioration",
+      "eligibilityMaxAgeSessions": 14,
+      "eligibilityDeteriorationDropPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 7,
+      "recoveryRetracementPercent": 80,
+      "recoveryConfirmationSessions": 1,
+      "trailingStopPercent": 3.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 19,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 170,
+      "breakoutBufferPercent": 4.25,
+      "breakoutFormationBars": 17,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 140,
+      "breakoutSlopeComparisonSessions": 110,
+      "breakoutPriorHighSessions": 50,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 60,
+      "trendChangeMinimumReturnPercent": 2.5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 3,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 3,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 90,
+      "retentionSmaSessions": 120,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 100,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G07",
+   "label": "C24/gpair/GDX-breakout_VGT-rise#1 profit",
+   "group": "finalist",
+   "p3Key": "G07",
+   "id": "1b9fef084a67daad",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "ce7007da1907dcc9",
+     "name": "Growth ce7007da1907dcc9"
+    },
+    "VGT": {
+     "id": "e29479740cbd3b7a",
+     "name": "Growth e29479740cbd3b7a"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 14
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 17
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 120,
+      "breakoutSlopeComparisonSessions": 60,
+      "breakoutPriorHighSessions": 40,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 7,
+      "trendMomentumLongSessions": 220,
+      "trendMomentumMinimumShortReturnPercent": 10,
+      "trendMomentumMinimumLongReturnPercent": 8.5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 100,
+      "dipThresholdPercent": 9.5,
+      "recoveryRetracementPercent": 70,
+      "recoveryConfirmationSessions": 6,
+      "trailingStopPercent": 3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 12,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 4.5,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 19.4,
+      "recentLowLookbackBars": 126,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 17,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 28,
+      "eligibilityMinimumAdvancePercent": 2,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 90,
+      "retentionSmaSessions": 170,
+      "retentionClosesBelow": 5,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 180,
+      "uptrendSmaBars": 20,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 2.5,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 4,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G08",
+   "label": "C24/gpair/GDX-breakout_VGT-rise#2 robust",
+   "group": "finalist",
+   "p3Key": "G08",
+   "id": "0e0f79e48d1d2726",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "3e6331413b9d2585",
+     "name": "Growth 3e6331413b9d2585"
+    },
+    "VGT": {
+     "id": "6c1fb90fb61f514e",
+     "name": "Growth 6c1fb90fb61f514e"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 19
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 110,
+      "breakoutSlopeComparisonSessions": 65,
+      "breakoutPriorHighSessions": 35,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 2,
+      "trendMomentumLongSessions": 120,
+      "trendMomentumMinimumShortReturnPercent": 10,
+      "trendMomentumMinimumLongReturnPercent": -2,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 90,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 40,
+      "recoveryConfirmationSessions": 1,
+      "trailingStopPercent": 4,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 20,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 60,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5.5,
+      "recentLowLookbackBars": 230,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 120,
+      "trendSlopeMinimumPercent": 5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 4,
+      "eligibilityMinimumAdvancePercent": 6,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 10.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 34,
+      "retentionSmaSessions": 180,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 20,
+      "uptrendSmaBars": 110,
+      "uptrendSlopeBars": 29,
+      "uptrendMinimumRisePercent": 3.25,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 13,
+      "recoveryPercent": 1.5,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G09",
+   "label": "C24/gpair/GDX-breakout_VGT-rise#3 profit order",
+   "group": "finalist",
+   "p3Key": "G09",
+   "id": "f22e7ba4f7d81f70",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "ce7007da1907dcc9",
+     "name": "Growth ce7007da1907dcc9"
+    },
+    "VGT": {
+     "id": "eeab2daccb4da946",
+     "name": "Growth eeab2daccb4da946"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 14
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 17
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 120,
+      "breakoutSlopeComparisonSessions": 60,
+      "breakoutPriorHighSessions": 40,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 7,
+      "trendMomentumLongSessions": 220,
+      "trendMomentumMinimumShortReturnPercent": 10,
+      "trendMomentumMinimumLongReturnPercent": 8.5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 100,
+      "dipThresholdPercent": 9.5,
+      "recoveryRetracementPercent": 70,
+      "recoveryConfirmationSessions": 6,
+      "trailingStopPercent": 3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 12,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 4.5,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 17.5,
+      "recentLowLookbackBars": 150,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 17,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 28,
+      "eligibilityMinimumAdvancePercent": 2,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 90,
+      "retentionSmaSessions": 170,
+      "retentionClosesBelow": 5,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 180,
+      "uptrendSmaBars": 20,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 2.5,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 4,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G10",
+   "label": "C24/gpair/GDX-breakout_VGT-breakout#1 profit",
+   "group": "finalist",
+   "p3Key": "G10",
+   "id": "1cf27c0d50c4a6d2",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "cc3167332afdee16",
+     "name": "Growth cc3167332afdee16"
+    },
+    "VGT": {
+     "id": "efaa440b3ebbfe61",
+     "name": "Growth efaa440b3ebbfe61"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 24
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 10
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 190,
+      "breakoutSlopeComparisonSessions": 10,
+      "breakoutPriorHighSessions": 40,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 16,
+      "trendMomentumLongSessions": 130,
+      "trendMomentumMinimumShortReturnPercent": 2,
+      "trendMomentumMinimumLongReturnPercent": -2.5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 20,
+      "dipThresholdPercent": 8,
+      "recoveryRetracementPercent": 90,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 13,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 18,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 100,
+      "uptrendSmaBars": 100,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 2.5,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 2.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 50,
+      "breakoutSlopeComparisonSessions": 65,
+      "breakoutPriorHighSessions": 115,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 8.2,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 72,
+      "retentionSmaSessions": 190,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 130,
+      "classicPullbackPercent": 12,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G11",
+   "label": "C24/gpair/GDX-breakout_VGT-breakout#2 gate-alternative",
+   "group": "finalist",
+   "p3Key": "G11",
+   "id": "ee2f29fb336b1122",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "818db45e2161600f",
+     "name": "Growth 818db45e2161600f"
+    },
+    "VGT": {
+     "id": "bd27ad9c2f6ff61b",
+     "name": "Growth bd27ad9c2f6ff61b"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 12
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 14
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 180,
+      "breakoutSlopeComparisonSessions": 105,
+      "breakoutPriorHighSessions": 85,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 60,
+      "trendSlopeMinimumPercent": 3.5,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 4,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 5,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 100,
+      "classicPullbackPercent": 11.5,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 110,
+      "breakoutSlopeComparisonSessions": 50,
+      "breakoutPriorHighSessions": 5,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 9.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 30,
+      "retentionSmaSessions": 190,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 20,
+      "classicPullbackPercent": 11.5,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "G12",
+   "label": "C24/gpair/GDX-breakout_VGT-breakout#3 profit order",
+   "group": "finalist",
+   "p3Key": "G12",
+   "id": "da50c24706526883",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "G",
+   "growth": {
+    "GDX": {
+     "id": "cc3167332afdee16",
+     "name": "Growth cc3167332afdee16"
+    },
+    "VGT": {
+     "id": "542c4c59f30109bd",
+     "name": "Growth 542c4c59f30109bd"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "G:GDX",
+     "inputs": 24
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 10
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 190,
+      "breakoutSlopeComparisonSessions": 10,
+      "breakoutPriorHighSessions": 40,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 16,
+      "trendMomentumLongSessions": 130,
+      "trendMomentumMinimumShortReturnPercent": 2,
+      "trendMomentumMinimumLongReturnPercent": -2.5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 20,
+      "dipThresholdPercent": 8,
+      "recoveryRetracementPercent": 90,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 13,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 18,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 100,
+      "uptrendSmaBars": 100,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 2.5,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 2.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 50,
+      "breakoutSlopeComparisonSessions": 65,
+      "breakoutPriorHighSessions": 115,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 80,
+      "retentionSmaSessions": 190,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 130,
+      "classicPullbackPercent": 12,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {
+    "enabled": {
+     "D1:GDX": false,
+     "D1:VGT": false
+    }
+   }
+  },
+  {
+   "key": "I02",
+   "label": "C24/indep/GDX-rise_VGT-rise#2 robust",
+   "group": "finalist",
+   "p3Key": "I02",
+   "id": "239aae85f9e0532c",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "199cdb524fb89113",
+     "name": "Growth 199cdb524fb89113"
+    },
+    "VGT": {
+     "id": "5f5d230ddd14ce25",
+     "name": "Growth 5f5d230ddd14ce25"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 18
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 274,
+      "trailingBuyPercentage": 8,
+      "trailingStopPercentage": 46,
+      "maximumHoldDays": 21,
+      "tickWindowSize": 37,
+      "intradayLossBuffer": 34,
+      "pullback": 136,
+      "continuationWindow": 175
+     },
+     "VGT": {
+      "targetPercentChange": 300,
+      "trailingBuyPercentage": 15,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 28,
+      "tickWindowSize": 180,
+      "intradayLossBuffer": 36,
+      "pullback": 54,
+      "continuationWindow": 121
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 2,
+      "recentLowLookbackBars": 190,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 23,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 5.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 23,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3.5,
+      "recentLowLookbackBars": 110,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 60,
+      "trendChangeMinimumReturnPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "deterioration",
+      "eligibilityMaxAgeSessions": 17,
+      "eligibilityDeteriorationDropPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 3.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 4.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 90,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I03",
+   "label": "C24/indep/GDX-rise_VGT-rise#3 balanced",
+   "group": "finalist",
+   "p3Key": "I03",
+   "id": "337064efda9e0d56",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "b0d1f840ccf4ad02",
+     "name": "Growth b0d1f840ccf4ad02"
+    },
+    "VGT": {
+     "id": "54c6aa5b2aaca9b6",
+     "name": "Growth 54c6aa5b2aaca9b6"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 24
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 24
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 268,
+      "trailingBuyPercentage": 6,
+      "trailingStopPercentage": 51,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 36,
+      "intradayLossBuffer": 55,
+      "pullback": 196,
+      "continuationWindow": 145
+     },
+     "VGT": {
+      "targetPercentChange": 297,
+      "trailingBuyPercentage": 6,
+      "trailingStopPercentage": 70,
+      "maximumHoldDays": 16,
+      "tickWindowSize": 144,
+      "intradayLossBuffer": 21,
+      "pullback": 154,
+      "continuationWindow": 170
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3.5,
+      "recentLowLookbackBars": 200,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 16,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 9.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 90,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 100,
+      "uptrendSmaBars": 100,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 2.5,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 2.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1.5,
+      "recentLowLookbackBars": 60,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 120,
+      "trendSmaComparisonSessions": 22,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "maximum_extension",
+      "eligibilityMaxAgeSessions": 23,
+      "eligibilityMaximumExtensionPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 5.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 15,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 170,
+      "uptrendSmaBars": 100,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 2.25,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 2.25,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I04",
+   "label": "C24/indep/GDX-rise_VGT-rise#4 profit order",
+   "group": "finalist",
+   "p3Key": "I04",
+   "id": "90a863305ef3a865",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "ed20222010d9269d",
+     "name": "Growth ed20222010d9269d"
+    },
+    "VGT": {
+     "id": "f3c8610d21414879",
+     "name": "Growth f3c8610d21414879"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 22
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 17
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 260,
+      "trailingBuyPercentage": 8,
+      "trailingStopPercentage": 66,
+      "maximumHoldDays": 23,
+      "tickWindowSize": 38,
+      "intradayLossBuffer": 28,
+      "pullback": 192,
+      "continuationWindow": 178
+     },
+     "VGT": {
+      "targetPercentChange": 240,
+      "trailingBuyPercentage": 15,
+      "trailingStopPercentage": 69,
+      "maximumHoldDays": 9,
+      "tickWindowSize": 100,
+      "intradayLossBuffer": 44,
+      "pullback": 112,
+      "continuationWindow": 155
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5.5,
+      "recentLowLookbackBars": 230,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 15,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 4.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 3,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 0.5,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 100,
+      "crossSmaBars": 100,
+      "crossRisingBars": 15,
+      "crossMinimumSlopePercent": 1,
+      "crossMarginPercent": 1.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 14.5,
+      "recentLowLookbackBars": 140,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 60,
+      "trendChangeMinimumReturnPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "maximum_extension",
+      "eligibilityMaxAgeSessions": 15,
+      "eligibilityMaximumExtensionPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 17,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 4.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 60,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I05",
+   "label": "C24/indep/GDX-rise_VGT-breakout#1 profit",
+   "group": "finalist",
+   "p3Key": "I05",
+   "id": "0ad7e7e2d739d3e1",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "1ff8e11912e846f4",
+     "name": "Growth 1ff8e11912e846f4"
+    },
+    "VGT": {
+     "id": "8fe2ba9a1005835e",
+     "name": "Growth 8fe2ba9a1005835e"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 12
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 259,
+      "trailingBuyPercentage": 5,
+      "trailingStopPercentage": 61,
+      "maximumHoldDays": 13,
+      "tickWindowSize": 22,
+      "intradayLossBuffer": 50,
+      "pullback": 75,
+      "continuationWindow": 175
+     },
+     "VGT": {
+      "targetPercentChange": 243,
+      "trailingBuyPercentage": 20,
+      "trailingStopPercentage": 78,
+      "maximumHoldDays": 22,
+      "tickWindowSize": 119,
+      "intradayLossBuffer": 10,
+      "pullback": 82,
+      "continuationWindow": 40
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 19.5,
+      "recentLowLookbackBars": 118,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 60,
+      "trendSlopeMinimumPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 15,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 9,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 10.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 100,
+      "classicPullbackPercent": 11.5,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 20,
+      "breakoutSlopeComparisonSessions": 100,
+      "breakoutPriorHighSessions": 15,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 60,
+      "trendSlopeMinimumPercent": 2.5,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 4.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 140,
+      "retentionClosesBelow": 5,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 120,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I06",
+   "label": "C24/indep/GDX-rise_VGT-breakout#2 robust",
+   "group": "finalist",
+   "p3Key": "I06",
+   "id": "359b9593c19eedeb",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "ac7661a2c8030b80",
+     "name": "Growth ac7661a2c8030b80"
+    },
+    "VGT": {
+     "id": "2f8bdcee1e34271c",
+     "name": "Growth 2f8bdcee1e34271c"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 15
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 14
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 275,
+      "trailingBuyPercentage": 10,
+      "trailingStopPercentage": 81,
+      "maximumHoldDays": 26,
+      "tickWindowSize": 26,
+      "intradayLossBuffer": 28,
+      "pullback": 73,
+      "continuationWindow": 161
+     },
+     "VGT": {
+      "targetPercentChange": 288,
+      "trailingBuyPercentage": 8,
+      "trailingStopPercentage": 60,
+      "maximumHoldDays": 21,
+      "tickWindowSize": 238,
+      "intradayLossBuffer": 11,
+      "pullback": 174,
+      "continuationWindow": 183
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 2,
+      "recentLowLookbackBars": 240,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 16,
+      "trendMomentumLongSessions": 140,
+      "trendMomentumMinimumShortReturnPercent": 4,
+      "trendMomentumMinimumLongReturnPercent": -2.5,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 14,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 15,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 110,
+      "crossSmaBars": 100,
+      "crossRisingBars": 15,
+      "crossMinimumSlopePercent": 1,
+      "crossMarginPercent": 1.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 30,
+      "breakoutSlopeComparisonSessions": 30,
+      "breakoutPriorHighSessions": 30,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 60,
+      "trendChangeMinimumReturnPercent": 2.5,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 36,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 130,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 170,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "G"
+   },
+   "options": {}
+  },
+  {
+   "key": "I07",
+   "label": "C24/indep/GDX-rise_VGT-breakout#3 balanced",
+   "group": "finalist",
+   "p3Key": "I07",
+   "id": "0fc65c09c2312d7f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "5fbc20c3938b54c1",
+     "name": "Growth 5fbc20c3938b54c1"
+    },
+    "VGT": {
+     "id": "9584fe272fa8ca1a",
+     "name": "Growth 9584fe272fa8ca1a"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 16
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 7
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 296,
+      "trailingBuyPercentage": 4,
+      "trailingStopPercentage": 70,
+      "maximumHoldDays": 8,
+      "tickWindowSize": 23,
+      "intradayLossBuffer": 27,
+      "pullback": 75,
+      "continuationWindow": 16
+     },
+     "VGT": {
+      "targetPercentChange": 240,
+      "trailingBuyPercentage": 21,
+      "trailingStopPercentage": 87,
+      "maximumHoldDays": 21,
+      "tickWindowSize": 24,
+      "intradayLossBuffer": 26,
+      "pullback": 166,
+      "continuationWindow": 58
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 210,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 60,
+      "trendSlopeMinimumPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 15,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 70,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 5.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 12,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 50,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 70,
+      "breakoutSlopeComparisonSessions": 75,
+      "breakoutPriorHighSessions": 25,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 4.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 70,
+      "retentionSmaSessions": 110,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I08",
+   "label": "C24/indep/GDX-rise_VGT-breakout#4 profit order",
+   "group": "finalist",
+   "p3Key": "I08",
+   "id": "66535437cab87071",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "515c5091921a4f23",
+     "name": "Growth 515c5091921a4f23"
+    },
+    "VGT": {
+     "id": "5ad4435cbc445e33",
+     "name": "Growth 5ad4435cbc445e33"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 14
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 9
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 260,
+      "trailingBuyPercentage": 5,
+      "trailingStopPercentage": 67,
+      "maximumHoldDays": 13,
+      "tickWindowSize": 23,
+      "intradayLossBuffer": 24,
+      "pullback": 75,
+      "continuationWindow": 24
+     },
+     "VGT": {
+      "targetPercentChange": 241,
+      "trailingBuyPercentage": 21,
+      "trailingStopPercentage": 91,
+      "maximumHoldDays": 21,
+      "tickWindowSize": 117,
+      "intradayLossBuffer": 26,
+      "pullback": 154,
+      "continuationWindow": 56
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 19.5,
+      "recentLowLookbackBars": 150,
+      "trendFilterEnabled": true,
+      "trendMethod": "higher_highs_lows",
+      "trendStructureLookbackSessions": 66,
+      "trendStructureMinimumIncreasePercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 8,
+      "eligibilityMinimumAdvancePercent": 5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 6,
+      "trailingStopPercent": 4.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 12,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 20,
+      "breakoutSlopeComparisonSessions": 105,
+      "breakoutPriorHighSessions": 25,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 4.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 70,
+      "retentionSmaSessions": 100,
+      "retentionClosesBelow": 5,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I09",
+   "label": "C24/indep/GDX-breakout_VGT-rise#1 profit",
+   "group": "finalist",
+   "p3Key": "I09",
+   "id": "8ff9ae9c5f22e42f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "3f2233691131cbdc",
+     "name": "Growth 3f2233691131cbdc"
+    },
+    "VGT": {
+     "id": "2e16c62423c360ec",
+     "name": "Growth 2e16c62423c360ec"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 17
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 17
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 295,
+      "trailingBuyPercentage": 36,
+      "trailingStopPercentage": 41,
+      "maximumHoldDays": 21,
+      "tickWindowSize": 24,
+      "intradayLossBuffer": 21,
+      "pullback": 88,
+      "continuationWindow": 174
+     },
+     "VGT": {
+      "targetPercentChange": 228,
+      "trailingBuyPercentage": 25,
+      "trailingStopPercentage": 54,
+      "maximumHoldDays": 7,
+      "tickWindowSize": 74,
+      "intradayLossBuffer": 51,
+      "pullback": 47,
+      "continuationWindow": 161
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 140,
+      "breakoutSlopeComparisonSessions": 40,
+      "breakoutPriorHighSessions": 65,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 11.5,
+      "recoveryRetracementPercent": 100,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 26,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3.5,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 100,
+      "uptrendSmaBars": 100,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 2.5,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 2.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 10.5,
+      "recentLowLookbackBars": 120,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 60,
+      "trendChangeMinimumReturnPercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 15,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 12.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 15,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 110,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 90,
+      "classicPullbackPercent": 11.5,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "G"
+   },
+   "options": {}
+  },
+  {
+   "key": "I10",
+   "label": "C24/indep/GDX-breakout_VGT-rise#2 robust",
+   "group": "finalist",
+   "p3Key": "I10",
+   "id": "011ccea1f10a4468",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "164d40ee9ea5c175",
+     "name": "Growth 164d40ee9ea5c175"
+    },
+    "VGT": {
+     "id": "7be10277fd2040d3",
+     "name": "Growth 7be10277fd2040d3"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 15
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 295,
+      "trailingBuyPercentage": 2,
+      "trailingStopPercentage": 49,
+      "maximumHoldDays": 24,
+      "tickWindowSize": 59,
+      "intradayLossBuffer": 33,
+      "pullback": 182,
+      "continuationWindow": 197
+     },
+     "VGT": {
+      "targetPercentChange": 226,
+      "trailingBuyPercentage": 25,
+      "trailingStopPercentage": 59,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 74,
+      "intradayLossBuffer": 26,
+      "pullback": 46,
+      "continuationWindow": 45
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 60,
+      "breakoutSlopeComparisonSessions": 110,
+      "breakoutPriorHighSessions": 65,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 80,
+      "dipThresholdPercent": 11.5,
+      "recoveryRetracementPercent": 100,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 10.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 26,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 6,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 100,
+      "uptrendSmaBars": 100,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 2.75,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 2.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 10.5,
+      "recentLowLookbackBars": 170,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 60,
+      "trendChangeMinimumReturnPercent": 2.5,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 12.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 26,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 2.5,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 40,
+      "retentionClosesBelow": 2,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I11",
+   "label": "C24/indep/GDX-breakout_VGT-rise#3 balanced",
+   "group": "finalist",
+   "p3Key": "I11",
+   "id": "bdfc464b30cbc78e",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "0f011a3e790f1b61",
+     "name": "Growth 0f011a3e790f1b61"
+    },
+    "VGT": {
+     "id": "39a23f884c7db192",
+     "name": "Growth 39a23f884c7db192"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 17
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 298,
+      "trailingBuyPercentage": 17,
+      "trailingStopPercentage": 55,
+      "maximumHoldDays": 24,
+      "tickWindowSize": 24,
+      "intradayLossBuffer": 33,
+      "pullback": 80,
+      "continuationWindow": 197
+     },
+     "VGT": {
+      "targetPercentChange": 229,
+      "trailingBuyPercentage": 22,
+      "trailingStopPercentage": 55,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 22,
+      "intradayLossBuffer": 22,
+      "pullback": 150,
+      "continuationWindow": 30
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 140,
+      "breakoutSlopeComparisonSessions": 110,
+      "breakoutPriorHighSessions": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "higher_highs_lows",
+      "trendStructureLookbackSessions": 106,
+      "trendStructureMinimumIncreasePercent": 4.75,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 11.5,
+      "recoveryRetracementPercent": 100,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 3.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 100,
+      "uptrendSmaBars": 100,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 2.5,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 2.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 6,
+      "recentLowLookbackBars": 190,
+      "trendFilterEnabled": true,
+      "trendMethod": "higher_highs_lows",
+      "trendStructureLookbackSessions": 62,
+      "trendStructureMinimumIncreasePercent": 2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 15,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 13.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 30,
+      "crossSmaBars": 100,
+      "crossRisingBars": 15,
+      "crossMinimumSlopePercent": 1,
+      "crossMarginPercent": 1.5,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I12",
+   "label": "C24/indep/GDX-breakout_VGT-rise#4 gate-alternative",
+   "group": "finalist",
+   "p3Key": "I12",
+   "id": "2497ffd8394f287a",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "e9bf8da448e95fad",
+     "name": "Growth e9bf8da448e95fad"
+    },
+    "VGT": {
+     "id": "5507d217c8dfa912",
+     "name": "Growth 5507d217c8dfa912"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 21
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 15
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 298,
+      "trailingBuyPercentage": 17,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 29,
+      "tickWindowSize": 131,
+      "intradayLossBuffer": 16,
+      "pullback": 196,
+      "continuationWindow": 198
+     },
+     "VGT": {
+      "targetPercentChange": 261,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 21,
+      "tickWindowSize": 168,
+      "intradayLossBuffer": 2,
+      "pullback": 147,
+      "continuationWindow": 156
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 200,
+      "breakoutSlopeComparisonSessions": 60,
+      "breakoutPriorHighSessions": 45,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 60,
+      "trendChangeMinimumReturnPercent": 2.5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 50,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 100,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 15,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.5,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 25,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 170,
+      "uptrendSmaBars": 100,
+      "uptrendSlopeBars": 2,
+      "uptrendMinimumRisePercent": 2.5,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 2.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 12,
+      "recentLowLookbackBars": 100,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 60,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 5.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 15,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 160,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "G"
+   },
+   "options": {}
+  },
+  {
+   "key": "I13",
+   "label": "C24/indep/GDX-breakout_VGT-breakout#1 profit",
+   "group": "finalist",
+   "p3Key": "I13",
+   "id": "250fe74a17ab98d9",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "660b7445fff7c5eb",
+     "name": "Growth 660b7445fff7c5eb"
+    },
+    "VGT": {
+     "id": "a2496b8781467888",
+     "name": "Growth a2496b8781467888"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 15
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 15
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 270,
+      "trailingBuyPercentage": 26,
+      "trailingStopPercentage": 48,
+      "maximumHoldDays": 6,
+      "tickWindowSize": 25,
+      "intradayLossBuffer": 27,
+      "pullback": 71,
+      "continuationWindow": 174
+     },
+     "VGT": {
+      "targetPercentChange": 240,
+      "trailingBuyPercentage": 28,
+      "trailingStopPercentage": 99,
+      "maximumHoldDays": 17,
+      "tickWindowSize": 58,
+      "intradayLossBuffer": 52,
+      "pullback": 76,
+      "continuationWindow": 131
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 70,
+      "breakoutSlopeComparisonSessions": 115,
+      "breakoutPriorHighSessions": 60,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 11,
+      "recoveryRetracementPercent": 100,
+      "recoveryConfirmationSessions": 7,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 30,
+      "classicPullbackPercent": 11.5,
+      "classicReboundPercent": 2.6,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 110,
+      "breakoutSlopeComparisonSessions": 5,
+      "breakoutPriorHighSessions": 5,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 8.5,
+      "recoveryRetracementPercent": 50,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 8,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 190,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "G"
+   },
+   "options": {}
+  },
+  {
+   "key": "I14",
+   "label": "C24/indep/GDX-breakout_VGT-breakout#2 robust",
+   "group": "finalist",
+   "p3Key": "I14",
+   "id": "bbd2634acbe3954f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "657a9d0763ca9828",
+     "name": "Growth 657a9d0763ca9828"
+    },
+    "VGT": {
+     "id": "6538d8bf6aafa99f",
+     "name": "Growth 6538d8bf6aafa99f"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 15
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 12
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 294,
+      "trailingBuyPercentage": 22,
+      "trailingStopPercentage": 50,
+      "maximumHoldDays": 6,
+      "tickWindowSize": 25,
+      "intradayLossBuffer": 27,
+      "pullback": 167,
+      "continuationWindow": 79
+     },
+     "VGT": {
+      "targetPercentChange": 240,
+      "trailingBuyPercentage": 35,
+      "trailingStopPercentage": 102,
+      "maximumHoldDays": 16,
+      "tickWindowSize": 46,
+      "intradayLossBuffer": 16,
+      "pullback": 84,
+      "continuationWindow": 137
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 70,
+      "breakoutSlopeComparisonSessions": 115,
+      "breakoutPriorHighSessions": 55,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 16,
+      "trendMomentumLongSessions": 130,
+      "trendMomentumMinimumShortReturnPercent": 4,
+      "trendMomentumMinimumLongReturnPercent": -2,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 14.5,
+      "recoveryRetracementPercent": 100,
+      "recoveryConfirmationSessions": 6,
+      "trailingStopPercent": 8.5,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 100,
+      "classicPullbackPercent": 9.5,
+      "classicReboundPercent": 1,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 110,
+      "breakoutSlopeComparisonSessions": 5,
+      "breakoutPriorHighSessions": 5,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.8,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 190,
+      "retentionClosesBelow": 1,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 80,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I15",
+   "label": "C24/indep/GDX-breakout_VGT-breakout#3 gate-alternative",
+   "group": "finalist",
+   "p3Key": "I15",
+   "id": "88d919ac78c4ad8f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "797500725ad0e639",
+     "name": "Growth 797500725ad0e639"
+    },
+    "VGT": {
+     "id": "70dd0e38cfde2155",
+     "name": "Growth 70dd0e38cfde2155"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 20
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 12
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 296,
+      "trailingBuyPercentage": 24,
+      "trailingStopPercentage": 50,
+      "maximumHoldDays": 6,
+      "tickWindowSize": 25,
+      "intradayLossBuffer": 27,
+      "pullback": 164,
+      "continuationWindow": 111
+     },
+     "VGT": {
+      "targetPercentChange": 246,
+      "trailingBuyPercentage": 28,
+      "trailingStopPercentage": 102,
+      "maximumHoldDays": 16,
+      "tickWindowSize": 35,
+      "intradayLossBuffer": 35,
+      "pullback": 83,
+      "continuationWindow": 137
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 80,
+      "breakoutSlopeComparisonSessions": 115,
+      "breakoutPriorHighSessions": 65,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 16,
+      "trendMomentumLongSessions": 130,
+      "trendMomentumMinimumShortReturnPercent": 4,
+      "trendMomentumMinimumLongReturnPercent": -3,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 70,
+      "dipThresholdPercent": 14.5,
+      "recoveryRetracementPercent": 90,
+      "recoveryConfirmationSessions": 6,
+      "trailingStopPercent": 8.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 30,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 100,
+      "crossSmaBars": 100,
+      "crossRisingBars": 15,
+      "crossMinimumSlopePercent": 1,
+      "crossMarginPercent": 1.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 110,
+      "breakoutSlopeComparisonSessions": 15,
+      "breakoutPriorHighSessions": 5,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 100,
+      "trendSmaComparisonSessions": 15,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 9,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 150,
+      "retentionClosesBelow": 2,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 80,
+      "breakoutBufferPercent": 2.25,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  },
+  {
+   "key": "I16",
+   "label": "C24/indep/GDX-breakout_VGT-breakout#4 profit order",
+   "group": "finalist",
+   "p3Key": "I16",
+   "id": "8ce92fb2d143104e",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "need": "mixed",
+   "growth": {
+    "GDX": {
+     "id": "de28c05a4910144e",
+     "name": "Growth de28c05a4910144e"
+    },
+    "VGT": {
+     "id": "019d91680aa351c1",
+     "name": "Growth 019d91680aa351c1"
+    }
+   },
+   "activeInputs": [
+    {
+     "book": "D1:GDX",
+     "inputs": 8
+    },
+    {
+     "book": "D1:VGT",
+     "inputs": 8
+    },
+    {
+     "book": "G:GDX",
+     "inputs": 19
+    },
+    {
+     "book": "G:VGT",
+     "inputs": 11
+    }
+   ],
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 268,
+      "trailingBuyPercentage": 23,
+      "trailingStopPercentage": 50,
+      "maximumHoldDays": 5,
+      "tickWindowSize": 25,
+      "intradayLossBuffer": 26,
+      "pullback": 71,
+      "continuationWindow": 174
+     },
+     "VGT": {
+      "targetPercentChange": 232,
+      "trailingBuyPercentage": 29,
+      "trailingStopPercentage": 98,
+      "maximumHoldDays": 17,
+      "tickWindowSize": 72,
+      "intradayLossBuffer": 35,
+      "pullback": 86,
+      "continuationWindow": 131
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 80,
+      "breakoutSlopeComparisonSessions": 115,
+      "breakoutPriorHighSessions": 60,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 60,
+      "trendChangeMinimumReturnPercent": 2.5,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10.5,
+      "recoveryRetracementPercent": 100,
+      "recoveryConfirmationSessions": 8,
+      "trailingStopPercent": 8.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 3,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 170,
+      "uptrendSmaBars": 100,
+      "uptrendSlopeBars": 15,
+      "uptrendMinimumRisePercent": 2.5,
+      "pullbackMinimumPercent": 2,
+      "pullbackMaximumPercent": 10,
+      "recoveryPercent": 2.5,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 110,
+      "breakoutSlopeComparisonSessions": 20,
+      "breakoutPriorHighSessions": 10,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 8,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 50,
+      "retentionSmaSessions": 180,
+      "retentionClosesBelow": 3,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 80,
+      "breakoutBufferPercent": 2.5,
+      "breakoutFormationBars": 10,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "options": {}
+  }
+ ],
+ "instruments": {
+  "core": {
+   "subjects": [
+    "E",
+    "C4",
+    "C85",
+    "A",
+    "B",
+    "GP4",
+    "GP85",
+    "V4",
+    "V85"
+   ],
+   "families": {
+    "confirm": "3 × 128, labels ('confirm', rep, 'C24'), scale 1",
+    "small": "128, labels ('small', 'C24'), scale 0.5",
+    "wide": "128, labels ('wide', 'C24'), scale 1.5"
+   },
+   "scope": "joint for pools with D1, g for Growth-only pools (Priority 3)",
+   "draws": {
+    "E": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "C4": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "C85": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "A": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "B": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "GP4": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "GP85": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "V4": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "V85": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    }
+   },
+   "reference": "D: Priority 3 archived L0 families (invariant under L1/L2, stage V)"
+  },
+  "standalone": {
+   "subjects": [
+    "SG",
+    "S4",
+    "S85"
+   ],
+   "seeds": "deriveSeed('vg-growth-funding-lifecycle', 'nbhd', 'standalone', family, rep)",
+   "columns": "one Latin-hypercube column per Growth numeric input (50), common to every subject",
+   "radius": "10% of each input range × scale (growth140-vgt-stable radiusValue); fine grid; clip to the box widened to include the centre",
+   "families": {
+    "confirm": "3 × 128, scale 1",
+    "small": "128, scale 0.5",
+    "wide": "128, scale 1.5"
+   },
+   "draws": {
+    "SG": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "S4": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    },
+    "S85": {
+     "confirm": 384,
+     "small": 128,
+     "wide": 128
+    }
+   }
+  }
+ },
+ "episodes": [
+  {
+   "subject": "GP85",
+   "book": "G:VGT",
+   "date": "2016-07-06",
+   "note": "refused behind a G·GDX lot released 2016-07-20; virtual hold → 2018-10-12, 563 idle closes (3A)"
+  },
+  {
+   "subject": "GP85",
+   "book": "G:VGT",
+   "date": "2020-04-13",
+   "note": "refused behind a G·GDX lot released 2020-04-15; virtual hold → 2022-01-20, 400 idle closes (3A)"
+  },
+  {
+   "subject": "GP4",
+   "book": "G:VGT",
+   "date": "2016-06-28",
+   "note": "refused behind a G·GDX lot released 2016-07-20; virtual hold → 2018-02-05, 389 idle closes (3A)"
+  },
+  {
+   "subject": "B",
+   "book": "G:VGT",
+   "date": "2020-04-13",
+   "note": "refused behind a D1·GDX lot released 2020-04-15; virtual hold → 2022-01-20, 210 idle closes (3A)"
+  }
+ ],
+ "interpretation": {
+  "band": 2500,
+  "R1": "per lifecycle, the Pareto set of {E, C4, C85, A, B} on centre net ↑, centre DD ↓, confirmation p10 net ↑, confirmation p90 DD ↓",
+  "R2": "per subject, median paired Δnet and Δ p90 DD on the confirmation draws: helps / mixed / hurts / hurts (tail risk) / helps (tail risk) / little with ±$2,500 bands (report-only)",
+  "R3": "admission of GDX Growth: (A − C4), (B − C85), (GP4 − S4), (GP85 − S85) at the centre: net, VGT Growth booked, D1 booked; L1/L2 vs L0",
+  "R4": "E against A, B, C4, C85 per lifecycle: dominance on the four objectives; E non-dominated or not",
+  "R5": "standalone: retention p10/centre net and inflation p90 DD/centre DD on the common instrument; stronger iff better on both",
+  "R6": "an arm deserves 3B optimization (provisional) iff labelled helps* vs L0 for ≥ 2 of {A, B, GP4, GP85} and hurts* for none of the nine core Growth subjects"
+ },
+ "plan": {
+  "V": {
+   "development": 353
+  },
+  "C": {
+   "development": 130
+  },
+  "N": {
+   "development": 12160,
+   "archivedL0": 5120,
+   "note": "archived L0 draws missing from the archive are evaluated fresh (disclosed)"
+  },
+  "S": {
+   "development": 1920
+  },
+  "P": {
+   "development": 0
+  },
+  "F": {
+   "full": 49
+  }
+ },
+ "full": {
+  "subjects": [
+   "D",
+   "E",
+   "C4",
+   "C85",
+   "A",
+   "B",
+   "GP4",
+   "GP85",
+   "V4",
+   "V85",
+   "SG",
+   "S4",
+   "S85",
+   "IP",
+   "XP",
+   "SP"
+  ],
+  "modes": [
+   "L0",
+   "L1",
+   "L2"
+  ],
+  "native": true,
+  "knownL0": {
+   "D": {
+    "net": 343175.82,
+    "dd": 21303.61
+   },
+   "C4": {
+    "net": 401867.24,
+    "dd": 21536.85
+   },
+   "C85": {
+    "net": 339905.35,
+    "dd": 19821.14
+   },
+   "A": {
+    "net": 450270.82,
+    "dd": 21536.85
+   },
+   "B": {
+    "net": 408898.55,
+    "dd": 20801.07
+   },
+   "V4": {
+    "net": 271525.33,
+    "dd": 19534.41
+   },
+   "V85": {
+    "net": 252359.65,
+    "dd": 19556.63
+   },
+   "SG": {
+    "net": 141157.37,
+    "dd": 17709.96
+   },
+   "S4": {
+    "net": 145468.46,
+    "dd": 14578.1
+   },
+   "S85": {
+    "net": 160974.09,
+    "dd": 19344.8
+   }
+  }
+ },
+ "ceilings": {
+  "development": 20000,
+  "full": 200
+ },
+ "resources": {
+  "slice": "vgflc.slice",
+  "memoryHigh": "44G",
+  "memoryMax": "48G",
+  "memorySwapMax": "0",
+  "workers": 12,
+  "gcEvery": 64,
+  "gcArrayBufferBytes": 268435456,
+  "inflightPerWorker": 2,
+  "pressureBytes": 38654705664
+ }
+}
