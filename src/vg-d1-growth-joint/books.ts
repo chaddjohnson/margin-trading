@@ -275,11 +275,7 @@ export const runD1Book = (
 
 export type GrowthConfig = Record<string, number | boolean | string>; // flat Strategy Lab parameters (effective)
 
-export const growthParamsOf = (
-  c: GrowthConfig,
-  s: Sym,
-  window: { from: string; to: string }
-): RiseTradingParams =>
+export const growthParamsOf = (c: GrowthConfig, s: Sym, window: { from: string; to: string }): RiseTradingParams =>
   paramsOf({
     strategyKey: growthKey,
     strategyVersion: growthVersion,

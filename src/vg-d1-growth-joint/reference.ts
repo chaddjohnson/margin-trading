@@ -148,7 +148,8 @@ export const referencePool = (
     if (shares > 0) {
       const sTime = ds.sTime[options.endIndex]!;
 
-      unrealized = shares * ds.sClose[options.endIndex]! - principal - principal * rate * ((sTime - entryTs) / secondsPerYear);
+      unrealized =
+        shares * ds.sClose[options.endIndex]! - principal - principal * rate * ((sTime - entryTs) / secondsPerYear);
     }
   }
 

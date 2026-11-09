@@ -2,48 +2,63 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-08T23:10Z (UTC, from the clock). **Status: INCOMPLETE — stage 1 (engine written; dry parity
-  495/495 on D19/D21/D24; control manifest SEALED and committed; protocol not yet written).**
+- **Updated:** 2026-11-09T00:18Z (UTC, from the clock). **Status: INCOMPLETE — stage 3 (pilot PASSED; parity SEALED 495/0;
+  protocol final, re-adopted; about to freeze and launch the study chain).**
 - **Brief:** `research/vg-d1-growth-joint/brief/BRIEF.md`, sha256
-  `4554b859e71eda0cbb66ba8dc2c085ab38c208c6facff9fd8fb7c2a03513aac7` (the user's attachment, read in full: 210 lines,
-  through Appendix A). The brief authorizes implementation, research, the CLAUDE.md delivery instruction, commit and
-  push of the task branch without routine confirmation (no merge, no deploy, no force-push).
-- **Branch:** `research/vg-d1-growth-joint`, created 2026-11-08T22:50Z in the main checkout from
-  `research/vgt-d1-growth-separate-pooled` at `d61e6bea01a9b3f9fc38505256d6282fcd425d11`. Every prior research branch
-  the brief names (Study 8, growth140-vgt-stable, growth-vgt-study8, vg-balanced-entry-eligibility, vgt-d1-growth-joint,
-  separate-pooled) is an ancestor of that commit; nothing had to be merged.
-- **Running processes:** none.
-- **Sealed so far:** `CONTROL_MANIFEST.json` sha256 `0f40efd76aec8ec10a504fb2cf508891a572061df51db065363a910fb68adaa1`
-  (2026-11-08T23:09:00Z; fixtures `fixtures/controls.json` sha256 `6659569e…dffa`). Frozen before any pooled result of
-  a combined control existed. Appendix A identity `07cac3329fc7a520` (transcription mapping).
-- **Engine status:** `src/vg-d1-growth-joint/` books/pool/evaluate/space/controls/parity/reference written; dry parity
-  (cache `.cache/vg-d1-growth-joint/parity-dry/dry1-*.json`, not a study record) 495 checks, 0 failed, 65 s: VG #2
-  native D24 = $260,223.13 / $17,280.74 / 36 lots (= Study 8 sealed); harmonized $268,487.02 / $20,801.07 / 45 lots
-  (first entry 2016-12-19); Priority 2 sealed VGT combos reproduced to the cent. Synthetic tests 11/11.
-- **Next step:** search/qualify/stages/post/main, protocol draft, adoption manifest, preflight, pilot (bench and
-  interruption tests), then the protocol freeze commit.
+  `4554b859e71eda0cbb66ba8dc2c085ab38c208c6facff9fd8fb7c2a03513aac7` (210 lines, read in full through Appendix A).
+  Authorizes implementation, research, the CLAUDE.md delivery instruction, commit and push of this branch without
+  routine confirmation (no merge, no deploy, no force-push).
+- **Branch:** `research/vg-d1-growth-joint` (main checkout), from `d61e6bea`. Commits so far: `1c867708` (engine,
+  parity harness, tests, sealed control manifest).
+- **Authority:** `PROTOCOL.md` (draft; adopted in `STANDARD_ADOPTION.json` at 2026-11-08T23:39:07Z with sha256
+  `b3f30793…9898`; any later edit before the freeze must re-adopt: update `protocol.sha256`/`adoptedAt` and add an
+  `R*` entry to `AMENDMENTS.md`). Standard 1.0.0 (`8c38ac15…639d`). Preflight PASS at 23:39Z.
+- **Running:** nothing. The pilot chain finished `PILOT-DONE` at 00:14:06Z (`results/pilot/PILOT.md`); parity sealed
+  `results/parity/parity.json` at 00:15:59Z (495 checks, 0 failed).
+- **Next steps (in order):** (1) pilot passes → write `results/pilot/PILOT.md` (timings, memory, equality booleans);
+  (2) seal parity: `npm run vg-joint -- launch --unit vgjoint-parity --wait -- parity` (must be 0 failures on the
+  final code); (3) final protocol touches → re-adopt → preflight; (4) `freeze-protocol` and COMMIT; (5) launch
+  `chains/study.sh` (log `results/logs/study-chain.log`); (6) by hand: freeze-selection, inspect, commit, validate,
+  commit; (7) report, roadmap, tests, memory, commit, push.
 
 ## Environment
 
 - Host apollo (AMD Ryzen 7 9800X3D, 8 cores / 16 threads, 59 GiB RAM visible, swap full from other workloads).
-- Node v24.21.0 (`.node-version`).
-- Canonical data (git-ignored): `data/VGT/data.csv` sha256 `2ee06310…412e` (= Priority 2's pin), `data/GDX/data.csv`
-  sha256 `77dba9b21c4b684996283e7b8f17917696139f890441b1ca900d664b59ea5049`. Both dataset reports: 2,723 sessions
-  2016-01-04 → 2026-10-30, no missing session, last row 2026-10-30T23:59Z (after the close). No GDX split in
-  `config/market-events/splits.json`; VGT 8:1 on 2026-04-21 (after development).
+- Node v24.21.0 (`.node-version`); absolute path for units:
+  `/home/chad/.local/share/fnm/node-versions/v24.21.0/installation/bin/node` (main.ts `launch` uses process.execPath).
+- Canonical data (git-ignored): `data/VGT/data.csv` sha256 `2ee06310…412e`, `data/GDX/data.csv` sha256
+  `77dba9b21c4b684996283e7b8f17917696139f890441b1ca900d664b59ea5049`; both 2,723 sessions 2016-01-04 → 2026-10-30.
+- Doors: `.cache/vg-d1-growth-joint/doors/{GDX,VGT}-D{19,21,23,24}.csv` (pins in `src/vg-d1-growth-joint/context.ts`).
+- Working tree: study files under `research/vg-d1-growth-joint/` and `src/vg-d1-growth-joint/`, `package.json`
+  (`vg-joint` script), `CLAUDE.md`/`AGENTS.md`/`docs/claude/context-recovery.md` (the delivery instruction). Nothing
+  else changed.
 
-## Facts established so far (verified from files)
+## Sealed / fixed so far
 
-- VG #2 Balanced = `S8-VG-F24-3` (`config/research-pools/study8-expanded-regime-d1/S8-VG-F24-3.json`), books VGT
-  `d1-bd80e32ee4` (23.5/0.9/7.4/15/78/4.4/11.0/55) and GDX `d1-7b99d2833d` (27.6/0.1/5.7/12/243/2.9/15.2/12); native
-  F24 training centre (Study 8 `results/qualify/VG/F24/qualification.json` candidates[2]): net $260,223.13,
-  DD $17,280.736920916825, 36 lots (GDX 32, VGT 4), 14 refusals, interest $30,860.27, costs $3,745.62, 25 wins;
-  native arming 2017-06-15, same-minute ties alphabetical (GDX before VGT).
-- Appendix A (GDX Growth, preview PV-3a29…/R-000040): no backend archive exists (no repository record; the Strategy
-  Lab run folder R-000040 is absent and the trash is empty; the preview cache and the SQLite DB were NOT opened).
-  It is mapped from the transcription to the Growth 1.4.0 schema; its known full-history target is compared only at
-  the final validation stage (brief §3).
+- `CONTROL_MANIFEST.json` sha256 `0f40efd76aec8ec10a504fb2cf508891a572061df51db065363a910fb68adaa1` (sealed
+  2026-11-08T23:09:00Z, committed `1c867708`) — before any pooled result of a combined control.
+- `fixtures/controls.json` sha256 `6659569e…dffa`.
+- Appendix A identity `07cac3329fc7a520` (transcription mapping; no backend archive; its full-history target is
+  compared at validation only).
 
-## Disclosures
+## Engineering facts (measured)
 
-- None yet.
+- Dry parity (`.cache/vg-d1-growth-joint/parity-dry/dry1-*.json`, pre-format code): 495 checks, 0 failed. VG #2 native
+  D24 = $260,223.13 / $17,280.74 / 36 lots / 14 refusals (= Study 8 sealed); harmonized $268,487.02 / $20,801.07 / 45
+  lots (first entry 2016-12-19); Priority 2 sealed VGT combos reproduced to the cent.
+- Tests: `tests/pool.test.ts` 11/11, `tests/space.test.ts` 9/9.
+- Bench (`.cache/vg-d1-growth-joint/pilot/bench.jsonl`; PROTOCOL §13.4): ≈ 50 evaluations/s at 12–16 workers with GC
+  every 8; 64.3/s at 15 workers with GC every 64 (9.5 GiB peak). Chosen: 15 workers, GC 64 (AMENDMENTS R1).
+
+## Guards
+
+- Do not run any study stage before `results/protocol-freeze.json` is sealed and committed (the runner refuses).
+- Do not open FULL before `FROZEN_SELECTION.json` is committed (the door refuses without the guard).
+- Never edit `CONTROL_MANIFEST.json` or any sealed record.
+
+## Disclosures (so far)
+
+- The dry parity computed the Growth controls (Appendix A included) alone on D19/D24 and VG #2's D1 pair (known
+  incumbents); no combined control was evaluated before the manifest was sealed.
+- The pilot evaluates controls and combined controls on development doors with pilot budgets (cache outputs; only
+  timings, memory, counts and equality booleans are read).

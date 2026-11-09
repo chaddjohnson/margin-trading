@@ -1,4 +1,4 @@
-// The bounded evaluation pool (PROTOCOL.md §10): child-process workers started one at a time (one door each), ≤
+// The bounded evaluation pool (PROTOCOL.md §13): child-process workers started four at a time (one door each), ≤
 // `inflightPerWorker` tasks per worker, a bounded queue fed in chunks by the caller, and the stop path (a requested
 // stop ends dispatching, in-flight work finishes, the caller commits and exits). A worker that dies fails the job
 // at once — its in-flight tasks are dropped so the wait loop ends (the defect found by Priority 1's pilot,
@@ -60,8 +60,10 @@ export class Pool {
     return this.options.workers;
   }
 
+  // workers load their door in batches of four (bounded transient memory while the minute files are parsed)
   async start() {
-    for (let i = 0; i < this.options.workers; i++) await this.spawn(i);
+    for (let i = 0; i < this.options.workers; i += 4)
+      await Promise.all(Array.from({ length: Math.min(4, this.options.workers - i) }, (_v, k) => this.spawn(i + k)));
   }
 
   private spawn(index: number) {

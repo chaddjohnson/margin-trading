@@ -39,7 +39,17 @@ import type { Priority } from './pool.ts';
 import { type Sym, seedOf, symbols } from './context.ts';
 
 export type { GConfig, Structure };
-export { activeGenes, effectiveOf, fineStepOf, gId, numericGenes, radiusValue, roundStep, structuralGenes, structureOf };
+export {
+  activeGenes,
+  effectiveOf,
+  fineStepOf,
+  gId,
+  numericGenes,
+  radiusValue,
+  roundStep,
+  structuralGenes,
+  structureOf
+};
 
 export interface Quad {
   d1: Record<Sym, D1Grid>;

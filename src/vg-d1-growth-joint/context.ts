@@ -156,16 +156,19 @@ export const frozenSelectionFile = path.join(researchDir, 'FROZEN_SELECTION.json
 // The job's resource contract (the user's limits; PROTOCOL.md §13). Execution settings are set from the pilot bench.
 export const resources = {
   slice: 'vgjoint.slice',
+  workers: 15, // the pilot bench's choice: throughput saturates at ≈ 12–16 workers on the 8-core host
   memoryHigh: '44G',
   memoryMax: '48G',
   memorySwapMax: '0',
   pressureBytes: 24 * 2 ** 30, // checkpoint-and-exit threshold of the job cgroup (well below MemoryHigh)
   coordinatorOldSpaceMb: 4096,
   workerOldSpaceMb: 1536,
-  gcEveryEvaluations: 8,
+  gcEveryEvaluations: Number(process.env.VGJ_GC_EVERY ?? 64), // the pilot bench's choice (8 → 64: +27% throughput, same memory)
   gcArrayBufferBytes: 256 * 2 ** 20,
   inflightPerWorker: 2,
-  bookCacheEntries: 48, // per worker and per book (D1·GDX, D1·VGT, Growth·GDX, Growth·VGT): compact trade lists only
+  // per worker and per book (D1·GDX, D1·VGT, Growth·GDX, Growth·VGT): compact trade lists only; the bench may override
+  // it (VGJ_BOOK_CACHE) — the size changes speed and memory, never a result
+  bookCacheEntries: Number(process.env.VGJ_BOOK_CACHE ?? 48),
   lruCapacity: 50000,
   storeCommitRows: 500,
   storeCommitMs: 2000,

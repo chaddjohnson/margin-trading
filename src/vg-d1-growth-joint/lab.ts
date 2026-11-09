@@ -1,4 +1,4 @@
-// The coordinator's evaluation service (PROTOCOL.md §10): one door, one pool of workers, one SQLite archive bound to
+// The coordinator's evaluation service (PROTOCOL.md §13): one door, one pool of workers, one SQLite archive bound to
 // the job (study, job name, door and its pin, the evaluation-code digest), a bounded LRU in front, the 10-second memory
 // monitor with its stop threshold, and an atomic progress checkpoint at least once a minute.
 //

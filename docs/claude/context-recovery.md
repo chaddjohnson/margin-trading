@@ -180,5 +180,7 @@ docs/claude/context-recovery.md` and committing).
   Check a historical study at its own commit (e.g. a detached `git worktree`) rather than relaxing its guard.
 - Market data under `data/<SYMBOL>/` is local and git-ignored (see `docs/canonical-dataset-migration.md`). A
   checkpoint should record data hashes, not assume they are versioned.
-- Committing, pushing and broker access always need the user's explicit request.
+- Committing and pushing follow the delivery preference in `CLAUDE.md` (at completion, commit task-related work and
+  push the task's branch without routine confirmation; never force-push, merge into `main`, deploy or publish outside
+  the repository without separate authorization). Broker access always needs the user's explicit request.
 - If work happens in another `git worktree`, record its path in the checkpoint; `git worktree list` shows them.

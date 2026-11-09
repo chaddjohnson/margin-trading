@@ -100,9 +100,16 @@ export const runParity = async (name = 'parity', dry = false) => {
     const pg = randomGrowth(big ? 48 : 24, `${door.name}-p3`);
 
     for (const first of ['D1', 'G'] as const) {
-      checks.push(checkP2(door, 'VGT', oneSymbol('VGT', c.d1.primary, c.g.g4, first, fill), `${door.name} primary+#4 ${first}`));
       checks.push(
-        checkP2(door, 'VGT', oneSymbol('VGT', c.d1.primary, c.g.g085, first, fill), `${door.name} primary+08500a60 ${first}`)
+        checkP2(door, 'VGT', oneSymbol('VGT', c.d1.primary, c.g.g4, first, fill), `${door.name} primary+#4 ${first}`)
+      );
+      checks.push(
+        checkP2(
+          door,
+          'VGT',
+          oneSymbol('VGT', c.d1.primary, c.g.g085, first, fill),
+          `${door.name} primary+08500a60 ${first}`
+        )
       );
     }
     for (let i = 0; i < pd.length; i++)
@@ -153,7 +160,8 @@ export const runParity = async (name = 'parity', dry = false) => {
   t('VG #2 native development minute DD', vgNative.minuteDrawdown.maximum, Math.round(s8.dd! * 100) / 100);
   checks.push({
     name: 'P6 VG #2 native development lots / refusals (36 / 14)',
-    pass: vgNative.lots.length === s8.lots && vgNative.signals.filter((x) => x.outcome === 'refused').length === s8.refused,
+    pass:
+      vgNative.lots.length === s8.lots && vgNative.signals.filter((x) => x.outcome === 'refused').length === s8.refused,
     detail: { lots: vgNative.lots.length, refused: vgNative.signals.filter((x) => x.outcome === 'refused').length }
   });
   targets['VG #2 D24 native'] = { net: r2(vgNet), dd: r2(vgNative.minuteDrawdown.maximum), lots: vgNative.lots.length };
@@ -171,7 +179,9 @@ export const runParity = async (name = 'parity', dry = false) => {
 
   if (sha256Text(sel) !== p2SelectionSha) throw new Error(`${p2Selection} is not Priority 2's sealed record`);
 
-  const p2 = JSON.parse(sel.toString('utf8')) as { evidence: { label: string; centre: { net: number; dd: number; lots: number } }[] };
+  const p2 = JSON.parse(sel.toString('utf8')) as {
+    evidence: { label: string; centre: { net: number; dd: number; lots: number } }[];
+  };
   const p2c = (label: string) => p2.evidence.find((e) => e.label === `control: ${label}`)!.centre;
   const vgtOnly = { 'D1:GDX': false, 'G:GDX': false } as const;
 
@@ -184,7 +194,11 @@ export const runParity = async (name = 'parity', dry = false) => {
 
     t(`Priority 2 sealed ${label}: net`, r.net, want.net);
     t(`Priority 2 sealed ${label}: minute DD`, r.dd, want.dd);
-    checks.push({ name: `P6 Priority 2 sealed ${label}: lots`, pass: r.lots === want.lots, detail: { got: r.lots, want: want.lots } });
+    checks.push({
+      name: `P6 Priority 2 sealed ${label}: lots`,
+      pass: r.lots === want.lots,
+      detail: { got: r.lots, want: want.lots }
+    });
   }
 
   for (const [label, g, want] of [
@@ -199,7 +213,11 @@ export const runParity = async (name = 'parity', dry = false) => {
 
   const prim = canonicalD1(d24, { VGT: c.d1.primary }, nativeArm(d24));
 
-  t('D1 primary development net (B1 at 5 bps)', prim.lots.reduce((a, l) => a + l.net, 0), p2c('D1 primary alone').net);
+  t(
+    'D1 primary development net (B1 at 5 bps)',
+    prim.lots.reduce((a, l) => a + l.net, 0),
+    p2c('D1 primary alone').net
+  );
   t('D1 primary development minute DD', prim.minuteDrawdown.maximum, p2c('D1 primary alone').dd);
 
   const failed = checks.filter((x) => !x.pass);
@@ -223,7 +241,9 @@ export const runParity = async (name = 'parity', dry = false) => {
     fs.writeFileSync(file, JSON.stringify(record, null, 1));
   } else sealJson(file, record, name);
 
-  log(`parity: ${checks.length} checks, ${failed.length} failed (${record.seconds} s) → ${path.relative(repoRoot, file)}`);
+  log(
+    `parity: ${checks.length} checks, ${failed.length} failed (${record.seconds} s) → ${path.relative(repoRoot, file)}`
+  );
   if (failed.length) {
     for (const f of failed.slice(0, 30)) log(`FAILED ${f.name}: ${JSON.stringify(f.detail).slice(0, 400)}`);
     process.exit(1);

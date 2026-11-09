@@ -53,6 +53,7 @@ export interface PoolOptions {
   periods?: readonly number[]; // boundary session indices (period minute drawdowns reset at each boundary close)
   detail?: boolean; // keep the funding log, lots' marks and daily rows
   recordMarks?: boolean; // keep every change of the minute-marked net (t, value) — slices and charts only
+  tieOrder?: readonly BookId[]; // diagnostics only: an explicit same-instant order replacing the frozen one
 }
 
 export interface FundingRecord {
@@ -165,7 +166,10 @@ export const runPool = (
   const budget = options.budget ?? economics.budget;
   const rate = options.rate ?? economics.rate;
   const enabled = (b: BookId) => options.enabled?.[b] !== false;
-  const order = tieOrderOf(first).filter((b) => books.some((x) => x.book === b));
+  const order = (options.tieOrder ?? tieOrderOf(first)).filter((b) => books.some((x) => x.book === b));
+
+  if (options.tieOrder && new Set(options.tieOrder).size !== 4)
+    throw new Error('a tie order names all four books once');
   const bookOf = new Map(books.map((b) => [b.book, b]));
 
   if (bookOf.size !== books.length) throw new Error('a book is given twice');

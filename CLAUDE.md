@@ -1,5 +1,15 @@
 # Margin trading — project instructions for Claude Code
 
+## Delivery: commit and push at completion (standing preference)
+
+> At completion, commit task-related work and push the task's branch to its configured remote without asking for routine confirmation. This applies to research, documentation and negative results. Stage only task-related changes, preserve unrelated work, and exclude secrets and inappropriate large data artifacts. Verify the push and report branch and commit. If a concrete problem prevents a safe push, preserve the work and explain the blocker. Do not force-push, merge into main, deploy, or publish outside the repository without separate authorization.
+
+- Recorded at the user's request in the Priority 3 brief (`research/vg-d1-growth-joint/brief/BRIEF.md` §1, 2026-11-08).
+  It replaces the earlier routine "ask before committing or pushing" practice; broker access still needs the user's
+  explicit request.
+- Verify the push with `git ls-remote origin <branch>` (equal to the local commit) and record it in the task's
+  checkpoint.
+
 ## Context recovery (applies to every session)
 
 - For any substantial multi-stage task, follow @docs/claude/context-recovery.md and, at session start and after any context compaction, reread that guide and the task's on-disk recovery checkpoint before executing work.

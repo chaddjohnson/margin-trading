@@ -8,7 +8,7 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import type { MarketSession, Tick } from '#types';
-import { fixtureDataset, type Dataset } from '../../four-family/data.ts';
+import type { Dataset } from '../../four-family/data.ts';
 import type { BookId, VBook, VTrade } from '../books.ts';
 import { fixtureDoorOf } from '../data.ts';
 import { runPool, tieOrderOf } from '../pool.ts';
@@ -24,7 +24,15 @@ const session = (date: string, closes: number[], slots: number[]): MarketSession
   const bars: Tick[] = closes.map((close, i) => {
     const open = i === 0 ? close : closes[i - 1]!;
 
-    return { time: openTime + slots[i]! * spm, open, high: Math.max(open, close), low: Math.min(open, close), close, volume: 1000, trades: NaN };
+    return {
+      time: openTime + slots[i]! * spm,
+      open,
+      high: Math.max(open, close),
+      low: Math.min(open, close),
+      close,
+      volume: 1000,
+      trades: NaN
+    };
   });
 
   return {
@@ -49,12 +57,16 @@ const day = (i: number, start = '2018-12-27') =>
 
 // GDX prints every minute 0..5; VGT only at minutes 1, 3, 5 (so some instants have one symbol only).
 const histories = (n: number, start?: string) => ({
-  GDX: Array.from({ length: n }, (_v, s) => session(day(s, start), [20 + s, 20.5 + s, 21 + s, 21.5 + s, 22 + s, 22.5 + s], [0, 1, 2, 3, 4, 5])),
+  GDX: Array.from({ length: n }, (_v, s) =>
+    session(day(s, start), [20 + s, 20.5 + s, 21 + s, 21.5 + s, 22 + s, 22.5 + s], [0, 1, 2, 3, 4, 5])
+  ),
   VGT: Array.from({ length: n }, (_v, s) => session(day(s, start), [200 + 2 * s, 201 + 2 * s, 202 + 2 * s], [1, 3, 5]))
 });
 
-const bt = (ds: Dataset, s: number, k: number) => (k < ds.sBarCount[s]! ? ds.bTime[ds.sBarStart[s]! + k]! : ds.sCloseTime[s]!);
-const px = (ds: Dataset, s: number, k: number) => (k < ds.sBarCount[s]! ? ds.bOpen[ds.sBarStart[s]! + k]! : ds.sClosingPrint[s]!);
+const bt = (ds: Dataset, s: number, k: number) =>
+  k < ds.sBarCount[s]! ? ds.bTime[ds.sBarStart[s]! + k]! : ds.sCloseTime[s]!;
+const px = (ds: Dataset, s: number, k: number) =>
+  k < ds.sBarCount[s]! ? ds.bOpen[ds.sBarStart[s]! + k]! : ds.sClosingPrint[s]!;
 
 // A virtual trade: decided at time dT (in session dS), filled at (eS, eK) of its symbol, exit fills as given.
 const vt = (
@@ -153,7 +165,10 @@ describe('funding at one instant', () => {
     const d1g = bk('D1:GDX', [vt(G, 'D1:GDX', 1, 1, bt(G, 1, 0) + 60, [1, 1], [{ s: 2, k: 3 }])], end);
     const d1v = bk(
       'D1:VGT',
-      [vt(V, 'D1:VGT', 1, 2, T, [2, 2], [{ s: 4, k: 0 }]), vt(V, 'D1:VGT', 2, 5, bt(V, 5, 0) + 60, [5, 1], [{ s: 6, k: 1 }])],
+      [
+        vt(V, 'D1:VGT', 1, 2, T, [2, 2], [{ s: 4, k: 0 }]),
+        vt(V, 'D1:VGT', 2, 5, bt(V, 5, 0) + 60, [5, 1], [{ s: 6, k: 1 }])
+      ],
       end
     );
     const r = agree([d1g, d1v], 'D1');
@@ -208,7 +223,10 @@ describe('virtual and funded positions are independent', () => {
     const d1g = bk('D1:GDX', [vt(G, 'D1:GDX', 1, 1, bt(G, 1, 0) + 60, [1, 1], [{ s: 2, k: 1 }])], end);
     const gv = bk(
       'G:VGT',
-      [vt(V, 'G:VGT', 1, 1, V.sCloseTime[1]!, [2, 0], [{ s: 6, k: 1 }]), vt(V, 'G:VGT', 2, 7, V.sCloseTime[7]!, [8, 0], [])],
+      [
+        vt(V, 'G:VGT', 1, 1, V.sCloseTime[1]!, [2, 0], [{ s: 6, k: 1 }]),
+        vt(V, 'G:VGT', 2, 7, V.sCloseTime[7]!, [8, 0], [])
+      ],
       end
     );
     const r = agree([d1g, gv], 'D1');
@@ -238,10 +256,30 @@ describe('virtual and funded positions are independent', () => {
   });
 
   test('a partial exit keeps the slot under A until the final exit; partial exits are counted apart', () => {
-    const gg = bk('G:GDX', [vt(G, 'G:GDX', 1, 0, G.sCloseTime[0]!, [1, 0], [{ s: 2, k: 2, partial: true, f: 0.3 }, { s: 5, k: 4 }])], end);
+    const gg = bk(
+      'G:GDX',
+      [
+        vt(
+          G,
+          'G:GDX',
+          1,
+          0,
+          G.sCloseTime[0]!,
+          [1, 0],
+          [
+            { s: 2, k: 2, partial: true, f: 0.3 },
+            { s: 5, k: 4 }
+          ]
+        )
+      ],
+      end
+    );
     const d1v = bk(
       'D1:VGT',
-      [vt(V, 'D1:VGT', 1, 3, bt(V, 3, 0) + 60, [3, 1], [{ s: 4, k: 1 }]), vt(V, 'D1:VGT', 2, 6, bt(V, 6, 0) + 60, [6, 1], [{ s: 7, k: 2 }])],
+      [
+        vt(V, 'D1:VGT', 1, 3, bt(V, 3, 0) + 60, [3, 1], [{ s: 4, k: 1 }]),
+        vt(V, 'D1:VGT', 2, 6, bt(V, 6, 0) + 60, [6, 1], [{ s: 7, k: 2 }])
+      ],
       end
     );
     const r = agree([gg, d1v], 'G');
@@ -253,7 +291,10 @@ describe('virtual and funded positions are independent', () => {
     assert.equal(g.fills[0]!.partial, true);
     assert.ok(Math.abs(g.fills[0]!.principal - 30000) < 1e-9);
     assert.equal(r.lots.length, 2);
-    assert.equal(r.lots.reduce((a, l) => a + l.fills.filter((f) => f.partial).length, 0), 1);
+    assert.equal(
+      r.lots.reduce((a, l) => a + l.fills.filter((f) => f.partial).length, 0),
+      1
+    );
   });
 
   test('a disabled component is never funded and the next one takes the slot', () => {
@@ -295,7 +336,9 @@ describe('accounting across time', () => {
       const trades: VTrade[] = [];
 
       for (let s = i % 2; s + 2 < n; s += 3)
-        trades.push(vt(ds, b, trades.length + 1, s, ds.sCloseTime[s]! - 60 * (i + 1), [s + 1, 0], [{ s: s + 2, k: 1 }]));
+        trades.push(
+          vt(ds, b, trades.length + 1, s, ds.sCloseTime[s]! - 60 * (i + 1), [s + 1, 0], [{ s: s + 2, k: 1 }])
+        );
       books.push(bk(b, trades, end));
     }
 

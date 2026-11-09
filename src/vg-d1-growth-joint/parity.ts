@@ -120,7 +120,12 @@ export const checkD1 = (door: Door, grids: Partial<Record<Sym, D1Grid>>, armStar
     const p = pool.lots[i];
 
     if (!p) return;
-    if (p.symbol !== l.symbol || p.entryT !== l.entryTime || p.shares0 !== l.shares || p.principal0 !== l.originalPrincipal)
+    if (
+      p.symbol !== l.symbol ||
+      p.entryT !== l.entryTime ||
+      p.shares0 !== l.shares ||
+      p.principal0 !== l.originalPrincipal
+    )
       problems.push(`lot ${i + 1} entry`);
     if (!eq(p.net, l.net) || !eq(p.interest, l.interest)) problems.push(`lot ${i + 1} net ${p.net} vs ${l.net}`);
   });
@@ -320,7 +325,12 @@ export const checkP2 = (door: Door, s: Sym, q: Quad, label: string): Check => {
 
 // ----- P4: cross-symbol pools against the independent reference -----
 
-export const checkReference = (door: Door, q: Quad, enabled: Partial<Record<BookId, boolean>>, label: string): Check => {
+export const checkReference = (
+  door: Door,
+  q: Quad,
+  enabled: Partial<Record<BookId, boolean>>,
+  label: string
+): Check => {
   const problems: string[] = [];
   const x = run(door, q, { enabled }, true);
   const r = x.result;
@@ -347,7 +357,8 @@ export const checkReference = (door: Door, q: Quad, enabled: Partial<Record<Book
   if (r.peakPrincipal > economics.budget + 1e-6) problems.push(`principal ${r.peakPrincipal}`);
   for (const l of r.lots) {
     if (enabled[l.book] === false) problems.push(`${l.book} disabled but funded`);
-    if (l.entryT !== l.trade.eT || l.entryPrice !== l.trade.ePrice) problems.push(`lot ${l.id} entry ≠ its virtual entry`);
+    if (l.entryT !== l.trade.eT || l.entryPrice !== l.trade.ePrice)
+      problems.push(`lot ${l.id} entry ≠ its virtual entry`);
     l.fills.forEach((f, i) => {
       const v = l.trade.fills[i]!;
 

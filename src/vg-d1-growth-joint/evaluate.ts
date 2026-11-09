@@ -30,6 +30,7 @@ export interface EvalOptions {
   wholeShares?: boolean;
   blackouts?: { first: string; last: string }[];
   boundaries?: string[]; // period boundary dates (report: P&L after each boundary close, reset drawdowns)
+  tieOrder?: BookId[]; // diagnostics only: an explicit same-instant order (default: the frozen order of `first`)
 }
 
 export const enabledKey = (o: EvalOptions) => bookIds.map((b) => (o.enabled?.[b] === false ? 0 : 1)).join('');
@@ -46,7 +47,8 @@ export const optionsKey = (o: EvalOptions = {}) => {
     `en${enabledKey(o)}`,
     `ws${o.wholeShares ? 1 : 0}`,
     `bo${(o.blackouts ?? []).map((b) => `${b.first}:${b.last}`).join(';')}`,
-    `bd${(o.boundaries ?? []).join(';')}`
+    `bd${(o.boundaries ?? []).join(';')}`,
+    ...(o.tieOrder ? [`to${o.tieOrder.join(';')}`] : [])
   ];
 
   return parts.join('|');
@@ -129,7 +131,8 @@ export const booksOf = (door: Door, q: Quad, o: EvalOptions = {}): VBook[] => {
       );
     } else {
       const g = q.g[s];
-      const gfr: Friction = fr.stopFill === 'next-open' && !growthNextOpenSupported(g) ? { ...fr, stopFill: 'stop' } : fr;
+      const gfr: Friction =
+        fr.stopFill === 'next-open' && !growthNextOpenSupported(g) ? { ...fr, stopFill: 'stop' } : fr;
 
       out.push(
         caches[b].get(`${fk(gfr)}|${growthKeyOf(g)}`, () =>
@@ -153,6 +156,7 @@ export const poolOptionsOf = (door: Door, o: EvalOptions = {}, detail = false): 
     first: indexOnOrAfter(door, b.first),
     last: indexOnOrAfter(door, b.last)
   })),
+  tieOrder: o.tieOrder,
   periods: (o.boundaries ?? []).map((d) => {
     const i = door.dates.indexOf(d);
 

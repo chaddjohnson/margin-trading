@@ -255,7 +255,8 @@ export const resolveControls = async (): Promise<Controls> => {
         recovery:
           'no backend archive exists (no repository record; the run folder R-000040 is absent, the trash is empty; the preview cache and the Strategy Lab database were not opened); mapped from the transcription with every value explicit',
         id: gId(appA),
-        selection: 'browser-selected with 2016-01-04 → 2026-10-30 in view (informed only; never an earlier-cutoff seed)',
+        selection:
+          'browser-selected with 2016-01-04 → 2026-10-30 in view (informed only; never an earlier-cutoff seed)',
         target: appendixATarget
       }
     }
@@ -264,7 +265,12 @@ export const resolveControls = async (): Promise<Controls> => {
 
 // The complete fixtures (written once, before the protocol freeze).
 export const writeFixtures = (c: Controls) => {
-  const d1 = (name: string, s: Sym, g: D1Grid) => ({ name, symbol: s, grid: g, strategyParams: d1StrategyParams(s, g) });
+  const d1 = (name: string, s: Sym, g: D1Grid) => ({
+    name,
+    symbol: s,
+    grid: g,
+    strategyParams: d1StrategyParams(s, g)
+  });
   const gr = (name: string, s: Sym, g: GConfig) => ({
     name,
     symbol: s,
@@ -410,8 +416,7 @@ export const controlManifestFile = path.join(researchDir, 'CONTROL_MANIFEST.json
 
 export const controlManifestOf = (c: Controls, extra: Record<string, unknown>) => ({
   kind: 'vg-d1-growth-joint control manifest',
-  note:
-    'Frozen before any pooled result of a combined control (D1 + Growth) of this study existed. The vectors are immutable for the whole study; the joint-refinement arm never overwrites them.',
+  note: 'Frozen before any pooled result of a combined control (D1 + Growth) of this study existed. The vectors are immutable for the whole study; the joint-refinement arm never overwrites them.',
   conventions: {
     harmonized:
       'the study convention for every comparison: funding from 2016-01-04, D1 arming from the first session (each D1 machine arms once its L-session reference high exists), Growth warm-up 0, one exclusive $100,000 slot, same-instant tie order D1-first then GDX before VGT (Growth-first reported as a toggle)',
