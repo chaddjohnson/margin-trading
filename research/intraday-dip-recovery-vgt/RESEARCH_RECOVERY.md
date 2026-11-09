@@ -2,8 +2,10 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-09T19:11Z (UTC, from `date -u`). **Status: INCOMPLETE.** The protocol is frozen and is being
-  committed. No search, ablation, qualification, fold or validation result exists yet.
+- **Updated:** 2026-11-09T19:20Z (UTC, from `date -u`). **Status: INCOMPLETE.** The study chain is running
+  (`chains/study.sh`, log `results/logs/study-chain.log`, started 19:11:56Z in a background shell; check
+  `systemctl --user list-units 'dip-*'`). Protocol frozen and committed (`0be0088e`). C19 complete: its selection was
+  committed in `d76e2cab` before its slice opened; its evaluation was committed in `5bc068e2`.
 - **Authority:**
   - `PROTOCOL.md`, sha256 `8a71e641da35…`, frozen by `results/protocol-freeze.json` at 2026-11-09T19:10:57Z;
   - code digest `13e803f3953c…`;
@@ -15,10 +17,14 @@
   - doors;
   - parity (0 failures, P1–P8);
   - the pilot (`results/pilot/PILOT.md`, cache outputs);
-  - the protocol freeze.
-- **Running processes:** none.
-- **Next command:** commit the freeze, then `bash research/intraday-dip-recovery-vgt/chains/study.sh` (C19 → C21 → C23
-  with fold commits, then C24).
+  - the protocol freeze;
+  - C19 (searches, qualification, fold selection, fold evaluation).
+- **Running processes:** the study chain (one `dip-*` systemd unit at a time inside `diprecovery.slice`).
+- **Next command:** wait for the chain (C21, C23, sequential, ablation, controls, C24 searches, C24 qualification,
+  diagnostics). If it was interrupted: inspect the log and `systemctl --user list-units 'dip-*'`, then rerun
+  `bash research/intraday-dip-recovery-vgt/chains/study.sh` only after removing the completed stages from it (sealed
+  stages refuse to rerun; an interrupted search resumes from its archive). Then by hand: `freeze-selection`, commit,
+  `validate`.
 
 ## Environment
 
