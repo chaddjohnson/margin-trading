@@ -2,13 +2,16 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-09T13:55Z (UTC). **Status: INCOMPLETE** — protocol frozen; no substantive stage run yet.
+- **Updated:** 2026-11-09T14:02Z (UTC). **Status: INCOMPLETE** — every stage sealed (R, S, N, P, F); analysis, tables,
+  report and documentation remain.
 - **Authority:** `PROTOCOL.md` sha256 `3d985efb2dca53b5a723712c45b85b5f09801df197f6b5df020d0ed829745bd9`;
   `DIAGNOSTIC_MANIFEST.json` `ed21241304bf50b081d605f05daa986dff7f63ddafb5eca3dede10def56e5494`;
-  `results/protocol-freeze.json` `b027a6bb777d762e0969d2b4abfa33dde32311da995c1f2e31b7484445cbd0a8`; amendments: none.
-- **Stages:** freeze complete; R, S, N, P, F not started.
+  `results/protocol-freeze.json` `b027a6bb777d762e0969d2b4abfa33dde32311da995c1f2e31b7484445cbd0a8`; amendments: **A1**
+  (stage N's comparator; acknowledged digest `10d86a22…70ce`).
+- **Stages:** freeze, R, S, N, P, F complete and sealed (`npm run vg-diag -- verify`: 7 records ok).
 - **Running processes:** none.
-- **Next command:** `npm run vg-diag -- launch --unit vgdiag-R --wait -- stage R` (after the freeze commit).
+- **Next step:** tables (`tools/vg-d1-growth-diagnostic/tables.ts`), `REPORT.md`, roadmap; full `npm test` in a unit;
+  commit and push.
 
 ## Environment
 
@@ -25,11 +28,14 @@
 | Stage | Command | Output | Status |
 |---|---|---|---|
 | Freeze | `npm run vg-diag -- manifest`, `… freeze` | `DIAGNOSTIC_MANIFEST.json`, `results/protocol-freeze.json` | complete (sealed 13:54Z) |
-| R | `npm run vg-diag -- launch --unit vgdiag-R --wait -- stage R` | `results/development/participation.json` | not started |
-| S | `… --unit vgdiag-S … stage S` | `results/archive/audit.json` | not started |
-| N | `… --unit vgdiag-N … stage N` | `results/risk/neighbourhoods.json` | not started |
-| P | `… --unit vgdiag-P … stage P` | `results/risk/probes.json` | not started |
-| F | `… --unit vgdiag-F … stage F` | `results/full/retrospective.json` | not started |
+| R | `npm run vg-diag -- launch --unit vgdiag-R --wait -- stage R` | `results/development/participation.json` `a7b0ac76…c4f6` | complete 13:55Z (24 s, 1 GB) |
+| S | `… --unit vgdiag-S … stage S` | `results/archive/audit.json` `5aa23c68…117e` | complete 13:55Z (29 s) |
+| N | `… --unit vgdiag-N2 … stage N` (first attempt `vgdiag-N` stopped on the comparator, A1) | `results/risk/neighbourhoods.json` `65375954…e5a8` | complete 14:00Z (2 min, 2.1 GB) |
+| P | `… --unit vgdiag-P … stage P` | `results/risk/probes.json` `9c260e36…65e5` | complete 14:00Z (18 s) |
+| F | `… --unit vgdiag-F … stage F` | `results/full/retrospective.json` `cd288cb9…4963` | complete 14:00Z (12 s) |
+
+Counts (sealed records): development 1,152 (+2 in the stopped first N attempt), FULL 10, probes 214 (24 duplicates
+not run), observer book runs 855 — inside the ceilings 4,000 / 64 / 256 / 4,000.
 
 Resume semantics: each stage seals only at its end; an interrupted stage left nothing and reruns from the start.
 
