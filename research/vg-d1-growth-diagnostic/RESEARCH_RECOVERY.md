@@ -12,8 +12,10 @@
 - **Stages:** freeze, R, S, N, P, F complete and sealed (`npm run vg-diag -- verify`: 7 records ok).
 - **Running processes:** none (`systemctl --user list-units 'vgdiag-*'` empty).
 - **Next step:** none in this study. A new question needs a new study namespace; sealed records are never rerun.
-- **Delivery:** commit and push of `research/vg-d1-growth-diagnostic` (CLAUDE.md standing preference); the push record
-  is appended below once verified.
+- **Pushed** (CLAUDE.md standing preference, no confirmation needed): `git push -u origin
+  research/vg-d1-growth-diagnostic` at 2026-11-09T14:16:21Z, new remote branch, first attempt, outside the sandbox;
+  `git ls-remote` = local = `fb64022b0c5ad71f747e9514a1f888e10ddb6b94`. No merge, no PR, no deployment. This push
+  record is its own follow-up commit, pushed the same way.
 
 ## Environment
 
