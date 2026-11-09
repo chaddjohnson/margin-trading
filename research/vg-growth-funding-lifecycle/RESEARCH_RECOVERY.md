@@ -2,16 +2,26 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-09T16:00Z (UTC, from the clock). **Status: INCOMPLETE** — pre-freeze engineering (stage 0): code and synthetic tests written; engineering pilots next.
-- **Task:** `brief/BRIEF.md` (sha256 `26be1bceb44c28bf4cfee1cd902365e3fa287bd4d20ed65099f26635bbf970e3`, 236 lines,
-  read in full including §11). Bounded fixed-arm comparison (L0/L1/L2 Growth refusal lifecycles) on unchanged
-  phenotypes, matched neighbourhoods, standalone neighbourhood assessment. No search. No Strategy Lab, no broker.
-- **Branch:** `research/vg-growth-funding-lifecycle` in the main checkout, from `927cd0ab` (end of Priority 3A).
-- **Authority:** the brief; the protocol is not written yet (no freeze, no substantive result exists).
+- **Updated:** 2026-11-09T16:18Z (UTC, from the clock). **Status: INCOMPLETE** — development stages V, C, N, S, P sealed
+  (V PASSED); committing them, then the FULL manifest (seal + commit), then stage F.
+- **Task:** `brief/BRIEF.md` (sha256 `26be1bce…70e3`, 236 lines, read in full). Bounded fixed-arm comparison (L0/L1/L2)
+  on unchanged phenotypes. No search. No Strategy Lab, no broker.
+- **Branch:** `research/vg-growth-funding-lifecycle` (main checkout), from `927cd0ab`; freeze commit `6b0ecf10`.
+- **Authority:** `PROTOCOL.md` `5db1e08b…`; `STUDY_MANIFEST.json` `b37cf60c…5bbf`; `results/protocol-freeze.json`
+  `c95a7709…c7bf`; amendments: none.
+- **Sealed:** V `results/verification/verification.json` `4b88dff7eacc2c107f0ca725e87508bc011a57c4cb0f681f3d6b173c70918eb7`
+  (PASSED, 353 dev sims); C `results/development/centres.json` `09afda78f6fa40fb18a43557e4e24a3bf7fe159c148cc6858b72b2c31785feb8`
+  (130); N `results/development/neighbourhoods.json` `86d14f19876f942cd500071c380302ecb9e54f77dfb894e1fc3e2e2998b1e7ca`
+  (12,160 fresh + 5,120 archived; all 24 archived families reproduce Priority 3's sealed statistics); S
+  `results/development/standalone.json` `35f28d1851c1cec5872d414c3283423ebb513056324c32b48c69648ba05e7154` (1,920); P
+  `results/development/verdicts.json` `3a16a387eb5de81f137d61389174ecbac22284665c759d7449380853368fe319` (R6: neither L1 nor
+  L2 recommended for 3B; run 3B under L0 with protected both-symbol exploration). `npm run vg-life -- verify`: 7 ok.
+- **Not started:** FULL manifest, F.
 - **Running processes:** none.
-- **Next step:** engineering pilots (`npm run vg-life -- launch --unit vgflc-pilot-ref --wait -- pilot ref`, then the
-  graceful / worker-kill / unit-kill resumption tests), then PROTOCOL.md, STANDARD_ADOPTION.json, preflight, manifest,
-  freeze, commit; then stages V → C → N → S → P → (commit, full-manifest, commit) → F.
+- **Next commands:** commit; `npm run vg-life -- full-manifest`; commit; `npm run vg-life -- launch --unit vgflc-F --wait
+  -- stage F`; tables; report; docs; full npm test (unit); commit; push.
+- **Resume semantics:** each stage seals only at its end; an interrupted stage resumes from its job archive
+  (`.cache/vg-growth-funding-lifecycle/jobs/<job>/results.jsonl`) when relaunched; a sealed stage refuses to rerun.
 
 ## Done so far (pre-freeze, no L1/L2 performance figure has been viewed)
 
