@@ -2,20 +2,24 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-10T22:59Z (UTC, from the clock). **Status: INCOMPLETE — Stage 1 (scan running).**
+- **Updated:** 2026-11-10T23:14Z (UTC, from the clock). **Status: INCOMPLETE — Stage 3 next-slice cohort runs running.**
 - **Task:** the user's bounded optimization-process audit brief (`brief/BRIEF.md`, sha256
   `75842bfb3e0fa849cc298ed0da897c73bfe1daf289a1d75f9358adfc621062f1`, 147 lines, read in full to "Stop for review.").
-- **Branch:** `research/optimization-process-audit` (main checkout), from `f52deea7`.
-- **Authority:** `PROTOCOL.md` sha256 `e5f42a4e160b…` FROZEN by `results/protocol-freeze.json` (sha256 `a4b95fa3671d…`),
-  committed `6933fbf5`. `AMENDMENTS.md`: none yet. Standard 2.0.0 adopted (`STANDARD_ADOPTION.json`; preflight PASS).
-- **Stages:** 0 set-up — complete; 1 — **running** (archive scan unit `opa-scan`), then inventory → reproduce (G1–G7)
-  → commit → mechanism; 2 policy freeze — not started; 3 — not started; 4 — not started.
-- **Running:** systemd user unit `opa-scan.service` in `opa.slice` (44G/48G/swap 0), `npm run opa -- stage1 scan`,
-  started 2026-11-10T22:50:34Z, log `results/logs/opa-scan.log`; outputs `.cache/optimization-process-audit/scan/<3B|4A>-<C19|C21|C23>.jsonl`
-  (3B C19 `459d7b75…`, 3B C21 `11263470…` done). Finished cleanly when the log shows "4A C23: … configurations" and the
-  unit is inactive. A rerun skips existing scan files (delete a partial one first; files are written atomically).
-- **Next action:** after the scan: `bash research/optimization-process-audit/chains/unit.sh opa-s1a --wait stage1 inventory`
-  then `… opa-s1b --wait stage1 reproduce`; require 0 failed checks; commit; then `… opa-s1c --wait stage1 mechanism`.
+- **Branch:** `research/optimization-process-audit` (main checkout), from `f52deea7`; last commit `001a84f4`.
+- **Authority:** `PROTOCOL.md` (sha256 `e5f42a4e160b…`) FROZEN by `results/protocol-freeze.json` (`a4b95fa3671da47a…`,
+  commit `6933fbf5`); `AMENDMENTS.md` head **A1** (G7 check bug; no result changed); `POLICIES.md` + 
+  `results/stage2/POLICY_FREEZE.json` (`3d24db3d9f1b0b53…`, commit `d5878865`; code closure `304d4922ac20…`).
+- **Sealed records (sha256 prefix):** inventory `94c69898b40b1b38`, reproduction `fcb4cc1562edcb2a` (G1–G6 pass, G7 6
+  failed by a check bug), g7-recheck `98eaf312e7a62211` (0 failed), mechanism `7f4b2243d322553f`, POLICY_FREEZE
+  `3d24db3d9f1b0b53`, CHOICES `84df484303132c79` (commit `001a84f4`), SOURCE_MANIFEST `e46fe8700b9fb9eb`.
+- **Stages:** 0 complete; 1 complete; 2 complete (P1 severity, P2 subperiod, P3 episode); 3 — choices/cohorts sealed and
+  committed; **next-slice runs RUNNING**; analysis not started; 4 not started.
+- **Running:** unit `opa-s3b.service` (opa.slice), `npm run opa -- stage3 run`, started 2026-11-10T23:12:05Z, log
+  `results/logs/opa-s3b.log`; archives `.cache/optimization-process-audit/jobs/cohort-<s>-<cut>/archive.sqlite`
+  (resumable: rerun the same command; archived keys are replayed). Done when `results/stage3/outcomes.json` is sealed.
+- **Next actions:** commit outcomes → `chains/unit.sh opa-s3c --wait stage3 analyse` → commit → `… opa-s4a --wait stage4
+  freeze` → commit → `stage4 validate` only if C24_FREEZE.json says `futile: false`.
+- **Compute so far:** fresh 4,230 (Stage 1 4,076; pilot 154); next-period 42 of 800.
 
 ## Environment
 
