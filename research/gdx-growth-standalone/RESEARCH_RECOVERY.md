@@ -2,7 +2,10 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-10T18:49Z (UTC). **Status: COMPLETE** (the final commit and push are recorded below once done).
+- **Updated:** 2026-11-10T18:48Z (UTC). **Status: COMPLETE.** Pushed: `git push -u origin research/gdx-growth-standalone`
+  (new remote branch, no force, outside the sandbox, 2026-11-10T18:47Z); `git ls-remote` at 18:47:58Z =
+  `7cb829aab879fbd878fb2d9edc8aa5b677f9a20b` = local; `origin/main` unchanged (`aa5754d4`). No PR, no merge into
+  `main`. This push record is its own follow-up commit, pushed the same way.
   Every stage sealed; `REPORT.md` (sha256 `8e272aaa…0633`), tables, roadmap written. Nothing is running.
 - **Outcome:** qualified on development, not reliable forward. Primary = independent primary =
   `C24/indep-rise#1 profit` ($139,668.45 / DD $17,483.62; conf. p10 $63,711.46, p90 DD $24,504.45; dominates Appendix A
