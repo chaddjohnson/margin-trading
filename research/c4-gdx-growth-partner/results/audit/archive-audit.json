@@ -1,0 +1,829 @@
+{
+ "stage": "archive audit",
+ "rule": "a configuration matches an arm iff its enabled D1 books carry VG #2's exact vectors (none for the Growth-only arm), Growth·VGT carries the arm's exact VGT vector, and Growth·GDX is either disabled or any vector",
+ "anchors": {
+  "vgt": {
+   "R": "c3c1c0d56c4ee3b0",
+   "O": "420cd989e4fa7749",
+   "G": "420cd989e4fa7749"
+  },
+  "vg2D1": {
+   "GDX": {
+    "targetPercentChange": 276,
+    "trailingBuyPercentage": 1,
+    "trailingStopPercentage": 57,
+    "maximumHoldDays": 12,
+    "tickWindowSize": 243,
+    "intradayLossBuffer": 29,
+    "pullback": 152,
+    "continuationWindow": 12
+   },
+   "VGT": {
+    "targetPercentChange": 235,
+    "trailingBuyPercentage": 9,
+    "trailingStopPercentage": 74,
+    "maximumHoldDays": 15,
+    "tickWindowSize": 78,
+    "intradayLossBuffer": 44,
+    "pullback": 110,
+    "continuationWindow": 55
+   }
+  }
+ },
+ "jobs": [
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "qualify-C19",
+   "door": "D19",
+   "doorPin": "GDX:528786451a8fa1ab40c3ba784937581d8a74d6ec088c9110f8655f64c3ac1e48,VGT:a2e4c721eee98fd0ad1f96f413c99c953b3804fdfe033c4e44e866d31dce81d1",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "qualify-C21",
+   "door": "D21",
+   "doorPin": "GDX:3f98c79b4f8d20b50a15e7d6951936b47cb00872dd27484f6dff9299a5402e84,VGT:681742034cde1b9d52580b50b8f0c7f02d3c6bc54b9428f3f427a788f9a2a60e",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "qualify-C23",
+   "door": "D23",
+   "doorPin": "GDX:a9ea93aaace8f2a7cc29988c366b8ea1c7888bee5e2072a0703ec4a16a71b002,VGT:920f3a20299b3241759fcc70b15045f4634ff3b7d423125c8abe87edbb5a812c",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "qualify-C24",
+   "door": "D24",
+   "doorPin": "GDX:f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c,VGT:c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "search-C19-indep",
+   "door": "D19",
+   "doorPin": "GDX:528786451a8fa1ab40c3ba784937581d8a74d6ec088c9110f8655f64c3ac1e48,VGT:a2e4c721eee98fd0ad1f96f413c99c953b3804fdfe033c4e44e866d31dce81d1",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 78988,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "search-C21-indep",
+   "door": "D21",
+   "doorPin": "GDX:3f98c79b4f8d20b50a15e7d6951936b47cb00872dd27484f6dff9299a5402e84,VGT:681742034cde1b9d52580b50b8f0c7f02d3c6bc54b9428f3f427a788f9a2a60e",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 74917,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "search-C23-indep",
+   "door": "D23",
+   "doorPin": "GDX:a9ea93aaace8f2a7cc29988c366b8ea1c7888bee5e2072a0703ec4a16a71b002,VGT:920f3a20299b3241759fcc70b15045f4634ff3b7d423125c8abe87edbb5a812c",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 79875,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "search-C24-indep",
+   "door": "D24",
+   "doorPin": "GDX:f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c,VGT:c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 92278,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "search-C24-informed",
+   "door": "D24",
+   "doorPin": "GDX:f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c,VGT:c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 47466,
+   "matches": 4
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "validation-neighbours",
+   "door": "FULL",
+   "doorPin": "FULL",
+   "codeDigest": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "qualify-C19",
+   "door": "D19",
+   "doorPin": "GDX:528786451a8fa1ab40c3ba784937581d8a74d6ec088c9110f8655f64c3ac1e48,VGT:a2e4c721eee98fd0ad1f96f413c99c953b3804fdfe033c4e44e866d31dce81d1",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "qualify-C21",
+   "door": "D21",
+   "doorPin": "GDX:3f98c79b4f8d20b50a15e7d6951936b47cb00872dd27484f6dff9299a5402e84,VGT:681742034cde1b9d52580b50b8f0c7f02d3c6bc54b9428f3f427a788f9a2a60e",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "qualify-C23",
+   "door": "D23",
+   "doorPin": "GDX:a9ea93aaace8f2a7cc29988c366b8ea1c7888bee5e2072a0703ec4a16a71b002,VGT:920f3a20299b3241759fcc70b15045f4634ff3b7d423125c8abe87edbb5a812c",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "qualify-C24",
+   "door": "D24",
+   "doorPin": "GDX:f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c,VGT:c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "qualify-gpair-C24",
+   "door": "D24",
+   "doorPin": "GDX:f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c,VGT:c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 0,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "search-C19-indep",
+   "door": "D19",
+   "doorPin": "GDX:528786451a8fa1ab40c3ba784937581d8a74d6ec088c9110f8655f64c3ac1e48,VGT:a2e4c721eee98fd0ad1f96f413c99c953b3804fdfe033c4e44e866d31dce81d1",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 18655,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "search-C21-indep",
+   "door": "D21",
+   "doorPin": "GDX:3f98c79b4f8d20b50a15e7d6951936b47cb00872dd27484f6dff9299a5402e84,VGT:681742034cde1b9d52580b50b8f0c7f02d3c6bc54b9428f3f427a788f9a2a60e",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 17921,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "search-C23-indep",
+   "door": "D23",
+   "doorPin": "GDX:a9ea93aaace8f2a7cc29988c366b8ea1c7888bee5e2072a0703ec4a16a71b002,VGT:920f3a20299b3241759fcc70b15045f4634ff3b7d423125c8abe87edbb5a812c",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 19218,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "search-C24-gpair",
+   "door": "D24",
+   "doorPin": "GDX:f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c,VGT:c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 9186,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "search-C24-indep",
+   "door": "D24",
+   "doorPin": "GDX:f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c,VGT:c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 20267,
+   "matches": 0
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "search-C24-informed",
+   "door": "D24",
+   "doorPin": "GDX:f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c,VGT:c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 5242,
+   "matches": 1
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "validate-perturbations",
+   "door": "FULL",
+   "doorPin": "FULL",
+   "codeDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+   "configs": 0,
+   "matches": 0
+  }
+ ],
+ "matches": [
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "search-C24-informed",
+   "arm": "O",
+   "configKey": "2f49a1cc226b4ece",
+   "gdxEnabled": false,
+   "gdxId": null,
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "p3Id": "f324035d15f69610",
+   "archived": {
+    "found": true,
+    "net": 302785.91,
+    "dd": 17332.09,
+    "gdxLots": 0,
+    "lots": 38
+   },
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "fresh": {
+    "net": 302785.91,
+    "dd": 17332.09,
+    "lots": 38,
+    "gdxLots": 0,
+    "signature": "02491f53d72585fa"
+   },
+   "identical": true,
+   "note": ""
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "search-C24-informed",
+   "arm": "O",
+   "configKey": "66f3dca63091dfa6",
+   "gdxEnabled": true,
+   "gdxId": "07cac3329fc7a520",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "p3Id": "d4cde31356e2306a",
+   "archived": {
+    "found": true,
+    "net": 310383.36,
+    "dd": 20801.07,
+    "gdxLots": 9,
+    "lots": 56
+   },
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "fresh": {
+    "net": 310383.36,
+    "dd": 20801.07,
+    "lots": 56,
+    "gdxLots": 9,
+    "signature": "0cc9296d13482d88"
+   },
+   "identical": true,
+   "note": ""
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "search-C24-informed",
+   "arm": "R",
+   "configKey": "0f017f0ab9b26f24",
+   "gdxEnabled": false,
+   "gdxId": null,
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "p3Id": "07443ffaeef41e85",
+   "archived": {
+    "found": true,
+    "net": 360569.71,
+    "dd": 17280.74,
+    "gdxLots": 0,
+    "lots": 41
+   },
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 20,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": false,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 7.3,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 8,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5.8,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 21,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 64,
+      "dipThresholdPercent": 12.4,
+      "recoveryRetracementPercent": 48.9,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 5.7,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.8,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 43,
+      "uptrendSlopeBars": 9,
+      "uptrendMinimumRisePercent": 3.9,
+      "pullbackMinimumPercent": 3,
+      "pullbackMaximumPercent": 7.9,
+      "recoveryPercent": 2.73,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "fresh": {
+    "net": 360569.71,
+    "dd": 17280.74,
+    "lots": 41,
+    "gdxLots": 0,
+    "signature": "f662ec8dae29743b"
+   },
+   "identical": true,
+   "note": ""
+  },
+  {
+   "study": "Priority 3B (vg-d1-growth-expanded)",
+   "job": "search-C24-informed",
+   "arm": "R",
+   "configKey": "f1cea8ee61154ce7",
+   "gdxEnabled": true,
+   "gdxId": "07cac3329fc7a520",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "p3Id": "68e9ab372b4ba734",
+   "archived": {
+    "found": true,
+    "net": 361319.81,
+    "dd": 20801.07,
+    "gdxLots": 7,
+    "lots": 56
+   },
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5.8,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 21,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 64,
+      "dipThresholdPercent": 12.4,
+      "recoveryRetracementPercent": 48.9,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 5.7,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.8,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 43,
+      "uptrendSlopeBars": 9,
+      "uptrendMinimumRisePercent": 3.9,
+      "pullbackMinimumPercent": 3,
+      "pullbackMaximumPercent": 7.9,
+      "recoveryPercent": 2.73,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "fresh": {
+    "net": 361319.81,
+    "dd": 20801.07,
+    "lots": 56,
+    "gdxLots": 7,
+    "signature": "d71fa11603ac3ddd"
+   },
+   "identical": true,
+   "note": ""
+  },
+  {
+   "study": "Priority 3 (vg-d1-growth-joint)",
+   "job": "search-C24-informed",
+   "arm": "O",
+   "configKey": "d4cde31356e2306a",
+   "gdxEnabled": true,
+   "gdxId": "07cac3329fc7a520",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "p3Id": "d4cde31356e2306a",
+   "archived": {
+    "found": true,
+    "net": 310383.36,
+    "dd": 20801.07,
+    "gdxLots": 9,
+    "lots": 56
+   },
+   "quad": {
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 276,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 243,
+      "intradayLossBuffer": 29,
+      "pullback": 152,
+      "continuationWindow": 12
+     },
+     "VGT": {
+      "targetPercentChange": 235,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 44,
+      "pullback": 110,
+      "continuationWindow": 55
+     }
+    },
+    "g": {
+     "GDX": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "VGT": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 5,
+      "recentLowLookbackBars": 90,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 45,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 21,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.9,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 1.5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 1,
+      "costBpsPerSide": 5
+     }
+    },
+    "first": "D1"
+   },
+   "fresh": {
+    "net": 310383.36,
+    "dd": 20801.07,
+    "lots": 56,
+    "gdxLots": 9,
+    "signature": "0cc9296d13482d88"
+   },
+   "identical": true,
+   "note": ""
+  }
+ ],
+ "reuse": "nothing is imported: every match is re-evaluated fresh in this study (identical = the fresh record equals the archived one field for field)",
+ "seeds": [],
+ "finished": "2026-11-10T12:39:30.127Z"
+}
