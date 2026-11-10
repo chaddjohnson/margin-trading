@@ -17,8 +17,7 @@ const commands: Record<string, () => Promise<unknown> | unknown> = {
   stage1: async () => (await import('./stage1.ts')).runStage1(args),
   stage2: async () => (await import('./stage2.ts')).runStage2(args),
   stage3: async () => (await import('./stage3.ts')).runStage3(args),
-  stage4: async () => (await import('./stage4.ts')).runStage4(args),
-  tables: async () => (await import('./tables.ts')).runTables(args)
+  stage4: async () => (await import('./stage4.ts')).runStage4(args)
 };
 
 const main = async () => {
@@ -30,6 +29,10 @@ const main = async () => {
 main().then(
   () => process.exit(0),
   (error) => {
+    if ((error as Error).constructor?.name === 'StopRequested') {
+      log(`stopped (${(error as Error).message}); resume with the same command`);
+      process.exit(75);
+    }
     log(`FAILED: ${(error as Error).stack ?? error}`);
     process.exit(1);
   }
