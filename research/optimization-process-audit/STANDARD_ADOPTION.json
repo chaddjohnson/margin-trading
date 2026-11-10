@@ -1,0 +1,95 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/optimization-process-audit",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.0.0",
+  "sha256": "2005a88c2e24f5e2ab4e461b0425f97d006781a45518f78d9f10fd9320f40105"
+ },
+ "readAt": "2026-11-10T22:40:00Z",
+ "adoptedAt": "2026-11-10T22:44:35Z",
+ "protocol": {
+  "path": "research/optimization-process-audit/PROTOCOL.md",
+  "sha256": "e5f42a4e160b71b9058a663fb64e5cf828ff55120ea0d63ac6feafefdc6b253b"
+ },
+ "dateSplit": {
+  "development": { "from": "2016-01-04", "to": "2024-12-31" },
+  "validation": { "from": "2025-01-01", "to": "2026-10-30" },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "No new primary strategy is adopted (departure D3). The objects compared are selection policies on each subject's archived independent candidate sets: the reference policy P0 is the subjects' unchanged actual-profit rule (highest centre net among qualified members; ties by the higher selection robust net, the lower centre DD, then the label); at most three experimental policies are frozen in the Stage 2 record under PROTOCOL.md section 7.1 and judged by the frozen decision rule of section 7.5.",
+  "roles": ["actual-profit", "robust-profit", "balanced", "lower-drawdown"]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 600,
+  "backendEvaluations": 100000,
+  "notes": "Zero new strategy-parameter search proposals (departure D1). distinctProposals counts distinct ARCHIVED candidate configurations re-evaluated on a next-period door (cap 600: <= 96 per subject and cutoff at C19/C21/C23 plus the C24 frozen choices). backendEvaluations is the cap on all fresh backend simulations of every kind (feature reruns, detailed neighbour reruns, causal reruns, reproduction, cohort, validation); within it at most 800 fresh next-slice or full-history simulations. Archive hits are counted apart by kind (PROTOCOL.md section 9)."
+ },
+ "deviations": [
+  {
+   "id": "D1",
+   "section": "§1.8",
+   "kind": "departure",
+   "description": "No complete search is repeated at any cutoff; the subjects' actual independently generated cutoff candidate sets (C19, C21, C23, C24 archives and sealed shortlists) are reused and the inference is limited to selection conditional on those archived discoveries (also §3.4, §4: no new search).",
+   "justification": "a bounded archive-reselection experiment on selection, as the brief commissions",
+   "userAgreement": "BRIEF.md 'Read and reconcile before work': 'The user authorizes that scoped substitution for full new searches at earlier cutoffs: reuse the actual independently generated cutoff candidate sets and clearly limit the inference to selection conditional on those sets. Record this departure where the standard would otherwise require repeating a complete new search.'"
+  },
+  {
+   "id": "D2",
+   "section": "§5.8",
+   "kind": "departure",
+   "description": "The experimental selection formulas (at most three, frozen in Stage 2) may use tail-severity statistics and episode or subperiod diagnostics that are report-only in ordinary studies (also §0.2 [R], §2.6). Only for this audit's experimental policies; ordinary studies, historical verdicts and the standard are unchanged.",
+   "justification": "testing whether such information improves selection is the audit's question",
+   "userAgreement": "BRIEF.md 'Read and reconcile before work': 'The user also authorizes testing up to three alternative selection formulas, including use of tail severity or episode/subperiod diagnostics that are report-only in ordinary studies. This permission applies only to the new experimental policies in this audit, with frozen formulas.'"
+  },
+  {
+   "id": "D3",
+   "section": "§2.5",
+   "kind": "departure",
+   "description": "No new primary strategy and no new roles are selected (also §2.3); the subjects' sealed roles are the reference and contextual controls, and the compared objects are selection policies.",
+   "justification": "the audit compares policies; it must not adopt a portfolio or a new standard",
+   "userAgreement": "BRIEF.md 'Assignment and limits': 'Do not launch another broad strategy optimization, tune until a preferred answer appears, or adopt a new live/research portfolio.' and 'Do not automatically make a winning experimental policy the new optimization standard.'"
+  },
+  {
+   "id": "AD1",
+   "section": "§4.2",
+   "kind": "adaptation",
+   "description": "budget units: 0 new search proposals; distinct archived candidates re-evaluated (cap 600); 100,000 fresh simulations of which <= 800 next-slice/full-history; archive hits apart",
+   "justification": "brief 'Hard bounds and stopping'",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "no tuning benchmark; one in-process runner per stage in a contained unit; measured throughput and memory reported",
+   "justification": "brief: measure throughput and freeze a smaller operational plan if appropriate; the fresh workload is small",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "stricter doors: next-slice doors open for non-published candidates only behind the sealed and committed policy freeze and choice record; FULL only behind the sealed and committed C24 freeze and only if the futility rule does not stop the audit (also §1.6)",
+   "justification": "no outcome leakage into policy design or choices",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "the subjects' engines and conventions are reused unchanged; parity is re-verified against the subjects' sealed records (gates G1-G7)",
+   "justification": "archive reselection must use each subject's own engine, space, execution, costs, doors and accounting",
+   "userAgreement": null
+  }
+ ]
+}
