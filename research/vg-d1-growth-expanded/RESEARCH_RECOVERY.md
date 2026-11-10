@@ -2,7 +2,9 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-10T10:47Z (UTC). **Status: COMPLETE** (the push record follows in the next commit). Every stage sealed; `REPORT.md`, tables, roadmap written. **Outcome: keep C4** — no qualified candidate
+- **Updated:** 2026-11-10T10:47Z (UTC). **Status: COMPLETE.** Pushed: `git push -u origin research/vg-d1-growth-expanded` (new remote branch, no force,
+  outside the sandbox, 2026-11-10T10:46:33Z); `git ls-remote` at 10:46:38Z = `0bfb5c8b2dc0ae2ecf83ff5d7279ac75efd79de8`
+  = local. No PR, no merge into `main`. This push record is its own follow-up commit, pushed the same way. Every stage sealed; `REPORT.md`, tables, roadmap written. **Outcome: keep C4** — no qualified candidate
   dominates C4 on development (no replacement candidate); the formal primary `C24/informed-joint#1 profit` is a
   higher-profit trade-off (development +$79,377.88; p90 DD $31,814.77 vs $24,519.07; validation $95,627.06 vs C4
   $99,081.34); the independent procedure is chronologically unsupported.
