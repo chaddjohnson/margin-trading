@@ -2,8 +2,10 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-10T15:59Z (UTC). **Status: COMPLETE** (pending the commit and push of the report; the push record
-  follows as its own commit). Every stage sealed; `REPORT.md` (sha256 `74b30bcb…b521`), tables and roadmap written.
+- **Updated:** 2026-11-10T16:00Z (UTC). **Status: COMPLETE.** Pushed: `git push -u origin research/c4-gdx-growth-partner`
+  (new remote branch, no force, outside the sandbox, 2026-11-10T16:00:19Z); `git ls-remote` at 16:00:25Z =
+  `10c1e2f39611c4b93eda773a4c8b7803ca70e9d0` = local. No PR, no merge into `main`. This push record is its own follow-up
+  commit, pushed the same way. Every stage sealed; `REPORT.md` (sha256 `74b30bcb…b521`), tables and roadmap written.
 - **Outcome: keep GDX Growth OFF beside every baseline** (frozen rule): no partner dominated C4-refined or C4 on
   development (no partner candidate); beside VGT #4 alone the trivial candidate (`C24/G/broad-breakout#3 balanced`,
   +$863.66) trailed the baseline in validation. Development gains (≈ +$39k R and O, ≈ +$120k G) rest on few GDX trades
