@@ -275,13 +275,15 @@ for (const cut of cuts) {
           .map(([b, v]) => `${b} ${v.meanDays}d`)
           .join(', ');
 
-        return [short(s.label), usd(r.net), usd(r.realized), usd(r.unrealized), usd(r.dd), ddPct(r.dd), `${date(r.ddPeakT)} → ${date(r.ddTroughT)}`, int(r.sessionsHeld), int(r.lots), `${r.wins}/${r.losses}`, int(r.partials), hold || '—', usd(r.interest), usd(r.costs)];
+        const pd = r.fam.D1.principalDays + r.fam.G.principalDays;
+
+        return [short(s.label), usd(r.net), usd(r.realized), usd(r.unrealized), usd(r.dd), ddPct(r.dd), `${date(r.ddPeakT)} → ${date(r.ddTroughT)}`, int(r.sessionsHeld), `${(pd / 1e6).toFixed(1)} M`, int(r.lots), `${r.wins}/${r.losses}`, int(r.partials), hold || '—', usd(r.interest), usd(r.costs)];
       });
 
     write(
       'development.md',
       'Development 2016-01-04 → 2024-12-31 (D24; harmonized; C4 first)',
-      table(['Subject', 'Marked net', 'Realized', 'Open P&L', 'Max minute DD', 'DD % of $100k', 'DD peak → trough', 'Closes held', 'Funded lots', 'Wins/losses', 'Partial exits', 'Mean hold', 'Interest', 'Costs'], w)
+      table(['Subject', 'Marked net', 'Realized', 'Open P&L', 'Max minute DD', 'DD % of $100k', 'DD peak → trough', 'Closes held', 'Principal-days ($·days)', 'Funded lots', 'Wins/losses', 'Partial exits', 'Mean hold', 'Interest', 'Costs'], w)
     );
   }
 }
@@ -315,6 +317,32 @@ for (const cut of cuts) {
       'validation.md',
       'Validation 2025-01-02 → 2026-10-30 and full history (previously examined history; continuous runs)',
       `${table(['Subject', 'Development net', 'Validation P&L', 'Reset val. DD', 'Val. DD %', 'Full net', 'Realized', 'Open P&L', 'Whole-run DD', 'DD %', 'DD peak → trough', '2025 / 2026', 'Lots after 2024', 'V1 V2 V3'], rows)}\n\n**Recommendation (frozen rule):** ${v.recommendation}`
+    );
+  }
+}
+
+// ----- complete effective settings (every frozen final member and every control) -----
+
+{
+  const fz = read(pilot ? path.join(base, 'FROZEN_SELECTION.json') : path.join(study, 'FROZEN_SELECTION.json'));
+  const cm = read(path.join(study, 'CONTROL_MANIFEST.json'));
+
+  if (fz) {
+    const roleHolders = new Set<string>();
+
+    for (const r of Object.values(fz.roles as Record<string, J>)) for (const l of Object.values(r.roles)) if (l) roleHolders.add(l as string);
+
+    const parts = (fz.finalSet as J[])
+      .filter((m) => roleHolders.has(m.label) || m.label.startsWith('control: '))
+      .map((m) => `## ${short(m.label)}\n\n\`\`\`json\n${JSON.stringify(m.settings, null, 1)}\n\`\`\``);
+    const ctl = cm
+      ? (cm.controls as J[]).filter((c) => !c.settings.inclusion).map((c) => `## ${c.key} (${c.label})\n\n\`\`\`json\n${JSON.stringify(c.settings, null, 1)}\n\`\`\``)
+      : [];
+
+    write(
+      'settings.md',
+      'Complete effective settings (role holders of every frozen set and every control; inactive flags and allocator settings included)',
+      `Every final-set member's settings are also in \`FROZEN_SELECTION.json\` (\`finalSet[].settings\`); the controls' in \`CONTROL_MANIFEST.json\`.\n\n${[...parts, ...ctl].join('\n\n')}`
     );
   }
 }

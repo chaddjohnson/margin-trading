@@ -46,3 +46,31 @@ results they govern exist.
 - **Results that existed.** Engineering only (gates, pilot mechanics); no search, qualification or fold result of the
   study.
 - **Effect.** Wording only; no rule changed.
+
+## After the freeze (disclosures; no rule, record or result changed)
+
+### A1 — 2026-11-10T10:40Z — the fixed-D1 lane's search neighbourhoods perturbed the Growth books only
+
+- **What the code did.** In `informed-fixed`, every search-time neighbourhood (rungs 1–3 and refinement fits) restored
+  VG #2's D1 vectors after the perturbation (`search.ts` `fitMany` applies the lane's `fixedUp` to each neighbour), so
+  those rung statistics moved only the enabled Growth books — effectively scope `g` — while §8.2 lists the joint scope
+  for the rung families. The near and broad seed designs were likewise Growth-only after the reset (intended: the lane
+  freezes D1).
+- **What it did not affect.** Qualification (selection, fresh confirmation, scopes, small/wide, archived instrument)
+  used the joint instrument for every member of every lane, so every gate verdict, role and C4 label is on the common
+  instrument. The other lanes are unaffected.
+- **Found:** while auditing the sealed informed search record after the chain (the C4 refinement's robust net differs
+  between the two lanes at the same start).
+- **Effect.** A disclosure: the fixed lane's search-internal promotion measured robustness to Growth perturbations only;
+  its shortlist members were then qualified on the joint instrument like everyone else.
+
+### A2 — 2026-11-10T10:40Z — refinement could switch a B configuration to V or G in the independent B cells
+
+- **What the code did.** The refinement move set (`config.ts` `movesOf`) adds the inclusion moves B → V and B → G for
+  every B configuration, not only in the informed lanes as §7.3 states ("the inclusion moves of the informed lanes").
+  The V/G → B moves (which need a partner vector) were informed-only, as stated.
+- **Where it mattered.** Across C19, C21, C23 and C24 exactly one shortlisted independent member left its cell's
+  inclusion: C24 `B_GDX-breakout_VGT-breakout#1 profit` is a V configuration (its profit refinement dropped Growth·GDX);
+  it failed Q3 and holds no role. No fold role holder and no fold primary was affected; the independence of the procedure
+  (no incumbent, control or later vector) is unaffected.
+- **Effect.** A disclosure; reported in the coverage and near-miss tables with its actual inclusion.

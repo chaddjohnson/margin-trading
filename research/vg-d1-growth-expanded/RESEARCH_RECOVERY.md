@@ -2,7 +2,18 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-10T10:39Z (UTC). **Status: INCOMPLETE** — protocol FROZEN; the study chain is RUNNING (C19, C21, C23 folds and the sequential verdict sealed; the chain finished 10:36:45Z; diagnostics and the frozen selection sealed; next: commit, then the one-time validation).
+- **Updated:** 2026-11-10T10:47Z (UTC). **Status: COMPLETE** (the push record follows in the next commit). Every stage sealed; `REPORT.md`, tables, roadmap written. **Outcome: keep C4** — no qualified candidate
+  dominates C4 on development (no replacement candidate); the formal primary `C24/informed-joint#1 profit` is a
+  higher-profit trade-off (development +$79,377.88; p90 DD $31,814.77 vs $24,519.07; validation $95,627.06 vs C4
+  $99,081.34); the independent procedure is chronologically unsupported.
+- **Follow-up gate:** the user's review of `REPORT.md`. Nothing further is started (next in the roadmap: 4A).
+- **Validation:** `results/validation/validation.json` `e7e467de…1425` (committed `e3e8a321`); 20/25 pass V1–V3; all known
+  targets reproduced to the cent.
+- **Full `npm test`** (unit `vgexp-npm-test` in `vgexp.slice`, shell PATH set; 10:41:53Z → 10:45:57Z): 1,373 tests,
+  1,362 pass, 7 fail, 4 skipped — exactly the 7 known pre-existing failures (intraday-study ×1, minute-optimizer ×1,
+  trailing-buy ×4, study7-runners ×1); this study added 18 passing tests. No regression.
+- **Disclosures:** amendments A1 (fixed-D1 lane's search neighbourhoods Growth-only) and A2 (B → V/G refinement moves
+  in independent cells; one occurrence, C24, no role) — after the results, no record changed.
 - **Authority:** `PROTOCOL.md` sha256 `79494d1e67d77649ff21ef15002559674439659dd47fb921cd2e6b0b0de5e9e2`;
   `results/protocol-freeze.json` `e700c679a2b7f8a4b73d1dcc5d1c2afc71bc5b6ceabc61d0f4713224362c5182` (frozen
   2026-11-09T18:34:25Z, closure 252 files, digest `ed5103b76489…`); `AMENDMENTS.md` R1–R4 (pre-freeze); adoption
