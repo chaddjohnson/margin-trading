@@ -1,0 +1,732 @@
+{
+ "stage": "sequential (descriptive fixed-anchor repeats)",
+ "folds": [
+  {
+   "fold": "C19",
+   "slice": [
+    "2020-01-02",
+    "2021-12-31"
+   ],
+   "primaries": {
+    "R": "C19/R/seeded#4 profit order",
+    "O": "C19/O/seeded#1 profit",
+    "G": "C19/G/seeded#3 balanced"
+   }
+  },
+  {
+   "fold": "C21",
+   "slice": [
+    "2022-01-03",
+    "2023-12-29"
+   ],
+   "primaries": {
+    "R": "C21/R/broad-rise#1 profit",
+    "O": "C21/O/broad-rise#1 profit",
+    "G": "C21/G/broad-rise#1 profit"
+   }
+  },
+  {
+   "fold": "C23",
+   "slice": [
+    "2024-01-02",
+    "2024-12-31"
+   ],
+   "primaries": {
+    "R": "C23/R/broad-rise#1 profit",
+    "O": "C23/O/broad-rise#1 profit",
+    "G": "C23/G/broad-rise#3 profit order"
+   }
+  }
+ ],
+ "switchCharge": "5 bps on $100000 per open lot closed or adopted at a boundary",
+ "arms": {
+  "R": {
+   "primaries": [
+    {
+     "fold": "C19",
+     "primary": "C19/R/seeded#4 profit order",
+     "isBaseline": false
+    },
+    {
+     "fold": "C21",
+     "primary": "C21/R/broad-rise#1 profit",
+     "isBaseline": false
+    },
+    {
+     "fold": "C23",
+     "primary": "C23/R/broad-rise#1 profit",
+     "isBaseline": false
+    }
+   ],
+   "policies": [
+    {
+     "arm": "R",
+     "name": "fixed-anchor procedure (each fold primary of the arm)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/R/seeded#4 profit order",
+       "sliceNet": 152748.55,
+       "sliceDd": 22400.6,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/R/broad-rise#1 profit",
+       "sliceNet": 66403.32,
+       "sliceDd": 19782.43,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/R/broad-rise#1 profit",
+       "sliceNet": 42306.71,
+       "sliceDd": 10549.05,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 261458.58,
+     "charges": 200,
+     "net": 261258.58,
+     "sequentialDd": 22400.6,
+     "ddPeak": "2020-04-14 14:02Z",
+     "ddTrough": "2020-06-29 13:52Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "R",
+     "name": "baseline (GDX OFF) in every slice",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "control: R0",
+       "sliceNet": 165189.97,
+       "sliceDd": 17280.74,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "control: R0",
+       "sliceNet": 76196.55,
+       "sliceDd": 17027.86,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "control: R0",
+       "sliceNet": 42306.71,
+       "sliceDd": 10549.05,
+       "charge": 0
+      }
+     ],
+     "netBeforeCharges": 283693.23,
+     "charges": 0,
+     "net": 283693.23,
+     "sequentialDd": 17280.74,
+     "ddPeak": "2020-03-19 19:26Z",
+     "ddTrough": "2020-03-19 20:00Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "R",
+     "name": "role robust-profit",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/R/seeded#2 robust",
+       "sliceNet": 80942.28,
+       "sliceDd": 56151.22,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/R/broad-breakout#2 robust",
+       "sliceNet": 67300.4,
+       "sliceDd": 17433.52,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/R/broad-rise#3 balanced",
+       "sliceNet": 42306.71,
+       "sliceDd": 10549.05,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 190549.39,
+     "charges": 200,
+     "net": 190349.39,
+     "sequentialDd": 56151.22,
+     "ddPeak": "2020-02-19 17:49Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "arm": "R",
+     "name": "role balanced",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/R/broad-rise#2 robust",
+       "sliceNet": 165189.97,
+       "sliceDd": 17280.74,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/R/seeded#2 robust",
+       "sliceNet": 76196.55,
+       "sliceDd": 17027.86,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/R/broad-rise#3 balanced",
+       "sliceNet": 42306.71,
+       "sliceDd": 10549.05,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 283693.23,
+     "charges": 200,
+     "net": 283493.23,
+     "sequentialDd": 17280.74,
+     "ddPeak": "2020-03-19 19:26Z",
+     "ddTrough": "2020-03-19 20:00Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "R",
+     "name": "role lower-drawdown",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "control: R0",
+       "sliceNet": 165189.97,
+       "sliceDd": 17280.74,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "control: R0",
+       "sliceNet": 76196.55,
+       "sliceDd": 17027.86,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "control: R0",
+       "sliceNet": 42306.71,
+       "sliceDd": 10549.05,
+       "charge": 0
+      }
+     ],
+     "netBeforeCharges": 283693.23,
+     "charges": 0,
+     "net": 283693.23,
+     "sequentialDd": 17280.74,
+     "ddPeak": "2020-03-19 19:26Z",
+     "ddTrough": "2020-03-19 20:00Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "R",
+     "name": "fixed control: RA in every slice",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "control: RA",
+       "sliceNet": 155920.89,
+       "sliceDd": 18556.54,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "control: RA",
+       "sliceNet": 76196.55,
+       "sliceDd": 17027.86,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "control: RA",
+       "sliceNet": 49747.84,
+       "sliceDd": 10549.05,
+       "charge": 0
+      }
+     ],
+     "netBeforeCharges": 281865.28,
+     "charges": 0,
+     "net": 281865.28,
+     "sequentialDd": 18556.54,
+     "ddPeak": "2020-02-24 14:30Z",
+     "ddTrough": "2020-03-12 13:51Z",
+     "withinCeiling": true
+    }
+   ],
+   "verdict": {
+    "standard": "descriptive — supported by the standard rule (every fold produced a primary; sequential net > 0; sequential minute DD ≤ $35,000)",
+    "incremental": "descriptive — the fold primaries did not beat the baseline over the slices (Δ −$22,434.65)"
+   }
+  },
+  "O": {
+   "primaries": [
+    {
+     "fold": "C19",
+     "primary": "C19/O/seeded#1 profit",
+     "isBaseline": false
+    },
+    {
+     "fold": "C21",
+     "primary": "C21/O/broad-rise#1 profit",
+     "isBaseline": false
+    },
+    {
+     "fold": "C23",
+     "primary": "C23/O/broad-rise#1 profit",
+     "isBaseline": false
+    }
+   ],
+   "policies": [
+    {
+     "arm": "O",
+     "name": "fixed-anchor procedure (each fold primary of the arm)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/O/seeded#1 profit",
+       "sliceNet": 54783.14,
+       "sliceDd": 45937.9,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/O/broad-rise#1 profit",
+       "sliceNet": 63195.33,
+       "sliceDd": 17027.86,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/O/broad-rise#1 profit",
+       "sliceNet": 9852.77,
+       "sliceDd": 10047.41,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 127831.24,
+     "charges": 200,
+     "net": 127631.24,
+     "sequentialDd": 45937.9,
+     "ddPeak": "1970-01-01 00:00Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "arm": "O",
+     "name": "baseline (GDX OFF) in every slice",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "control: O0",
+       "sliceNet": 162640.68,
+       "sliceDd": 17280.74,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "control: O0",
+       "sliceNet": 63195.33,
+       "sliceDd": 17027.86,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "control: O0",
+       "sliceNet": 9852.77,
+       "sliceDd": 10047.41,
+       "charge": 0
+      }
+     ],
+     "netBeforeCharges": 235688.78,
+     "charges": 0,
+     "net": 235688.78,
+     "sequentialDd": 17280.74,
+     "ddPeak": "2020-03-19 19:26Z",
+     "ddTrough": "2020-03-19 20:00Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "O",
+     "name": "role robust-profit",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/O/seeded#2 robust",
+       "sliceNet": 56057.46,
+       "sliceDd": 45937.9,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/O/seeded#2 robust",
+       "sliceNet": 63195.33,
+       "sliceDd": 17027.86,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/O/seeded#2 robust",
+       "sliceNet": 4416.21,
+       "sliceDd": 12670.8,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 123669,
+     "charges": 200,
+     "net": 123469,
+     "sequentialDd": 45937.9,
+     "ddPeak": "1970-01-01 00:00Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "arm": "O",
+     "name": "role balanced",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/O/broad-breakout#2 robust",
+       "sliceNet": 148353.53,
+       "sliceDd": 20569.19,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/O/seeded#2 robust",
+       "sliceNet": 63195.33,
+       "sliceDd": 17027.86,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/O/seeded#2 robust",
+       "sliceNet": 4416.21,
+       "sliceDd": 12670.8,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 215965.07,
+     "charges": 200,
+     "net": 215765.07,
+     "sequentialDd": 20569.19,
+     "ddPeak": "2020-02-24 14:30Z",
+     "ddTrough": "2020-03-12 13:51Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "O",
+     "name": "role lower-drawdown",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "control: O0",
+       "sliceNet": 162640.68,
+       "sliceDd": 17280.74,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "control: O0",
+       "sliceNet": 63195.33,
+       "sliceDd": 17027.86,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "control: O0",
+       "sliceNet": 9852.77,
+       "sliceDd": 10047.41,
+       "charge": 0
+      }
+     ],
+     "netBeforeCharges": 235688.78,
+     "charges": 0,
+     "net": 235688.78,
+     "sequentialDd": 17280.74,
+     "ddPeak": "2020-03-19 19:26Z",
+     "ddTrough": "2020-03-19 20:00Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "O",
+     "name": "fixed control: OA in every slice",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "control: OA",
+       "sliceNet": 157896.17,
+       "sliceDd": 18556.54,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "control: OA",
+       "sliceNet": 63195.33,
+       "sliceDd": 17027.86,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "control: OA",
+       "sliceNet": 17293.89,
+       "sliceDd": 10047.41,
+       "charge": 0
+      }
+     ],
+     "netBeforeCharges": 238385.39,
+     "charges": 0,
+     "net": 238385.39,
+     "sequentialDd": 18556.54,
+     "ddPeak": "2020-02-24 14:30Z",
+     "ddTrough": "2020-03-12 13:51Z",
+     "withinCeiling": true
+    }
+   ],
+   "verdict": {
+    "standard": "descriptive — unsupported by the standard rule",
+    "incremental": "descriptive — the fold primaries did not beat the baseline over the slices (Δ −$108,057.54; sequential DD above $35,000)"
+   }
+  },
+  "G": {
+   "primaries": [
+    {
+     "fold": "C19",
+     "primary": "C19/G/seeded#3 balanced",
+     "isBaseline": false
+    },
+    {
+     "fold": "C21",
+     "primary": "C21/G/broad-rise#1 profit",
+     "isBaseline": false
+    },
+    {
+     "fold": "C23",
+     "primary": "C23/G/broad-rise#3 profit order",
+     "isBaseline": false
+    }
+   ],
+   "policies": [
+    {
+     "arm": "G",
+     "name": "fixed-anchor procedure (each fold primary of the arm)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/G/seeded#3 balanced",
+       "sliceNet": 24278.75,
+       "sliceDd": 13301.9,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/G/broad-rise#1 profit",
+       "sliceNet": 4673.87,
+       "sliceDd": 20098.92,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "C23/G/broad-rise#3 profit order",
+       "sliceNet": 9852.77,
+       "sliceDd": 10047.41,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 38805.39,
+     "charges": 100,
+     "net": 38705.39,
+     "sequentialDd": 26558.18,
+     "ddPeak": "2021-08-30 17:50Z",
+     "ddTrough": "2022-09-07 13:31Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "G",
+     "name": "baseline (GDX OFF) in every slice",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "control: G0",
+       "sliceNet": 26603.59,
+       "sliceDd": 9500.74,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "control: G0",
+       "sliceNet": 7604.3,
+       "sliceDd": 6578.4,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "control: G0",
+       "sliceNet": 9852.77,
+       "sliceDd": 10047.41,
+       "charge": 0
+      }
+     ],
+     "netBeforeCharges": 44060.66,
+     "charges": 0,
+     "net": 44060.66,
+     "sequentialDd": 14578.1,
+     "ddPeak": "2021-08-30 17:50Z",
+     "ddTrough": "2023-10-03 19:33Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "G",
+     "name": "role robust-profit",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/G/seeded#2 robust",
+       "sliceNet": 19687.62,
+       "sliceDd": 45937.9,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/G/broad-rise#2 robust",
+       "sliceNet": 21177.27,
+       "sliceDd": 13033.22,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "C23/G/broad-rise#2 robust",
+       "sliceNet": 9852.77,
+       "sliceDd": 10047.41,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 50717.66,
+     "charges": 100,
+     "net": 50617.66,
+     "sequentialDd": 45937.9,
+     "ddPeak": "1970-01-01 00:00Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "arm": "G",
+     "name": "role balanced",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/G/broad-breakout#3 balanced",
+       "sliceNet": 15091.97,
+       "sliceDd": 20898.78,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/G/broad-rise#2 robust",
+       "sliceNet": 21177.27,
+       "sliceDd": 13033.22,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "C23/G/broad-rise#2 robust",
+       "sliceNet": 9852.77,
+       "sliceDd": 10047.41,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 46122.01,
+     "charges": 100,
+     "net": 46022.01,
+     "sequentialDd": 20898.78,
+     "ddPeak": "2020-05-12 13:31Z",
+     "ddTrough": "2020-06-29 13:52Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "G",
+     "name": "role lower-drawdown",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/G/broad-breakout#3 balanced",
+       "sliceNet": 15091.97,
+       "sliceDd": 20898.78,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/G/broad-rise#2 robust",
+       "sliceNet": 21177.27,
+       "sliceDd": 13033.22,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "C23/G/broad-rise#2 robust",
+       "sliceNet": 9852.77,
+       "sliceDd": 10047.41,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 46122.01,
+     "charges": 100,
+     "net": 46022.01,
+     "sequentialDd": 20898.78,
+     "ddPeak": "2020-05-12 13:31Z",
+     "ddTrough": "2020-06-29 13:52Z",
+     "withinCeiling": true
+    },
+    {
+     "arm": "G",
+     "name": "fixed control: GA in every slice",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "control: GA",
+       "sliceNet": 25220.63,
+       "sliceDd": 17430.56,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "control: GA",
+       "sliceNet": 209.98,
+       "sliceDd": 15642.8,
+       "charge": 0
+      },
+      {
+       "fold": "C23",
+       "label": "control: GA",
+       "sliceNet": 17293.89,
+       "sliceDd": 10047.41,
+       "charge": 0
+      }
+     ],
+     "netBeforeCharges": 42724.5,
+     "charges": 0,
+     "net": 42724.5,
+     "sequentialDd": 21972.42,
+     "ddPeak": "2021-08-30 17:50Z",
+     "ddTrough": "2023-10-03 19:33Z",
+     "withinCeiling": true
+    }
+   ],
+   "verdict": {
+    "standard": "descriptive — supported by the standard rule (every fold produced a primary; sequential net > 0; sequential minute DD ≤ $35,000)",
+    "incremental": "descriptive — the fold primaries did not beat the baseline over the slices (Δ −$5,355.27)"
+   }
+  }
+ },
+ "scope": "descriptive only: the anchors (VG #2, VGT Growth #4, C4-refined) were chosen with later data in view; a fixed-anchor repeat cannot erase that provenance and is never chronological evidence of an independent procedure (standard §1.9)"
+}

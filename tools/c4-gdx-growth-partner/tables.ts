@@ -174,6 +174,54 @@ for (const cut of cuts) {
   write(`stresses-${cut}.md`, `Stresses (centre net / DD) and the causal GDX contribution at ${cut}`, sb);
 }
 
+// ----- the development ledger of the final cutoff (centre runs; exposure, episodes, realized/open) -----
+
+{
+  const sel = read(path.join(base, 'folds', pilot ? 'P18' : 'C24', 'selection.json'));
+
+  if (sel) {
+    let body = '';
+
+    for (const arm of [...arms, null]) {
+      const ev: J[] = sel.evidence.filter((e: J) => e.arm === arm).sort(sortEv);
+
+      if (!ev.length) continue;
+      body += `\n## ${arm ? armName[arm] : 'Contextual controls'}\n\n${table(
+        [
+          'Member',
+          'Marked net (realized / open)',
+          'Max minute DD (%)',
+          'DD peak → trough',
+          'Funded lots (wins / losses; partial exits)',
+          'Independent episodes',
+          'Sessions held',
+          'Principal-days ($·days)',
+          'Interest / costs',
+          'GDX lots / principal-days share'
+        ],
+        ev.map((e) => {
+          const r = e.centre;
+          const tot = ['D1:GDX', 'D1:VGT', 'G:GDX', 'G:VGT'].reduce((a, b) => a + r.books[b].principalDays, 0);
+
+          return [
+            short(e.label),
+            `${usd(r.net)} (${usd(r.realized)} / ${usd(r.unrealized)})`,
+            `${usd(r.dd)} (${ddPct(r.dd)})`,
+            `${date(r.ddPeakT)} → ${date(r.ddTroughT)}`,
+            `${r.lots} (${r.wins} / ${r.losses}; ${r.partials})`,
+            int(r.episodes),
+            int(r.sessionsHeld),
+            int(tot),
+            `${usd(r.interest)} / ${usd(r.costs)}`,
+            e.enabled.includes('G:GDX') ? `${r.books['G:GDX'].lots} / ${pct(tot ? r.books['G:GDX'].principalDays / tot : 0)}` : 'OFF'
+          ];
+        })
+      )}\n`;
+    }
+    write('development.md', `Development centre runs at ${pilot ? 'P18' : 'C24'} (2016-01-04 → ${pilot ? '2018-12-31' : '2024-12-31'})`, body);
+  }
+}
+
 // ----- coverage and effort -----
 
 {
@@ -371,7 +419,7 @@ for (const cut of cuts) {
 
       body += `\n## Sequential, ${armName[arm]} (descriptive)\n\nFold primaries: ${a.primaries.map((p: J) => `${p.fold} ${p.primary ? short(p.primary) : 'none'}${p.isBaseline ? ' (baseline)' : ''}`).join('; ')}.\n\n${table(
         ['Policy', 'Net before charges', 'Charges', 'Net', 'Sequential DD', 'DD peak → trough'],
-        a.policies.map((p: J) => [p.name, usd(p.netBeforeCharges), usd(p.charges), usd(p.net), usd(p.sequentialDd), `${p.ddPeak} → ${p.ddTrough}`])
+        a.policies.map((p: J) => [p.name, usd(p.netBeforeCharges), usd(p.charges), usd(p.net), usd(p.sequentialDd), `${String(p.ddPeak).startsWith('1970') ? 'the sequence start (2020-01-02)' : p.ddPeak} → ${p.ddTrough}`])
       )}\n\nVerdicts: ${a.verdict.standard}; ${a.verdict.incremental}.\n`;
     }
   if (body) write('folds.md', 'Fixed-anchor repeats at earlier cutoffs (descriptive)', body);
