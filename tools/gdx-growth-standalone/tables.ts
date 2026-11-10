@@ -322,7 +322,7 @@ for (const cut of cuts) {
         usd(r.sliceNet),
         usd(r.sliceDd),
         `${usd(r.wholeNet)} / ${usd(r.wholeDd)}`,
-        `${r.wholeDdPeak ?? '—'} → ${r.wholeDdTrough ?? '—'} (${r.wholeDdRecovery ?? 'not recovered'})`,
+        num(r.wholeDd) > 0 ? `${r.wholeDdPeak ?? '—'} → ${r.wholeDdTrough ?? '—'} (${r.wholeDdRecovery ?? 'not recovered'})` : '—',
         `${r.sliceLots.length} (${r.sliceLots.filter((l: J) => l.carriedIn).length})`,
         r.openAtEnd.length
       ])
@@ -341,8 +341,8 @@ for (const cut of cuts) {
         usd(p.charges),
         usd(p.net),
         usd(p.sequentialDd),
-        `${p.ddPeak ?? '—'} → ${p.ddTrough ?? '—'}`,
-        p.recovered ? p.ddRecovery : 'not recovered',
+        num(p.sequentialDd) > 0 ? `${p.ddPeak ?? '—'} → ${p.ddTrough ?? '—'}` : '—',
+        num(p.sequentialDd) > 0 ? (p.recovered ? p.ddRecovery : 'not recovered') : '—',
         p.withinCeiling ? 'yes' : 'no'
       ])
     );
@@ -446,7 +446,7 @@ for (const cut of cuts) {
         usd(r.validationDd),
         `${usd(r.fullNet)} (${usd(r.fullRealized)} / ${usd(r.fullUnrealized)})`,
         `${usd(r.wholeDd)} (${ddPct(r.wholeDd)})`,
-        `${r.wholeDdPeak ?? '—'} → ${r.wholeDdTrough ?? '—'} (${r.wholeDdRecovery ?? 'not recovered'})`,
+        num(r.wholeDd) > 0 ? `${r.wholeDdPeak ?? '—'} → ${r.wholeDdTrough ?? '—'} (${r.wholeDdRecovery ?? 'not recovered'})` : '—',
         `${usd(r.years['2025'])} / ${usd(r.years['2026'])}`,
         `${r.lotsAfterBoundary} (${r.episodesAfterBoundary})`,
         r.crossingBoundary,

@@ -30,3 +30,19 @@ results they govern exist.
   GC every 256 gave the fastest stable configuration (177.5/s, 7.7 GiB) with flat worker ArrayBuffers (≈ 62.5 MiB).
 - **Results that existed.** Engineering only (bench, pilot, gates).
 - **Effect.** Operational settings only; budgets, rules and gates unchanged.
+
+## After the freeze
+
+### A1 — 2026-11-10T18:37:29Z — a post-validation, report-only decision-funnel diagnostic on FULL
+
+- **Change.** `tools/gdx-growth-standalone/validation-funnel.ts` opens FULL once more, behind the committed frozen
+  selection, and computes Priority 3A's Growth·GDX decision funnel (signals and crossings, dispositions, eligibility
+  arming, expiry and invalidation, decisions) for every frozen validation member over 2025-01-02 → 2026-10-30 and over
+  2024, sealed as `results/validation/funnel.json`.
+- **Why.** The sealed validation (`f28fabd1`) shows that the primary and most role holders made no trade after 2024
+  (validation P&L $0.00, V1 fails). The brief asks for the reasons for sparse decisions; the frozen diagnostics covered
+  2016–2024 only.
+- **Results that existed.** Every development record, `FROZEN_SELECTION.json` and the validation (all sealed and
+  committed).
+- **Effect.** Report-only: it reads frozen configurations, selects nothing, changes no gate, role, primary, record or
+  verdict; no rescue search, no retuning. The extra door opening is logged in `results/doors.jsonl`.

@@ -9,6 +9,11 @@
   higher-profit trade-off (development +$79,377.88; p90 DD $31,814.77 vs $24,519.07; validation $95,627.06 vs C4
   $99,081.34); the independent procedure is chronologically unsupported.
 - **Follow-up gate:** the user's review of `REPORT.md`. Nothing further is started (next in the roadmap: 4A).
+- **Clarification (appended 2026-11-10 by Priority 4A; nothing above rewritten):** `C24/informed-fixed#1 profit` is the
+  accepted alias **C4-refined** (Priority 4A brief). Describing it as #4 with only "trend filter OFF, 5.7% trailing
+  stop" is incomplete: its VGT Growth vector differs from #4 in 17 settings, including the initial stop OFF
+  (`research/c4-gdx-growth-partner/CONTROL_MANIFEST.json` `c4Refined.differencesFromGrowth4`). Its recorded results
+  are unchanged.
 - **Validation:** `results/validation/validation.json` `e7e467de…1425` (committed `e3e8a321`); 20/25 pass V1–V3; all known
   targets reproduced to the cent.
 - **Full `npm test`** (unit `vgexp-npm-test` in `vgexp.slice`, shell PATH set; 10:41:53Z → 10:45:57Z): 1,373 tests,

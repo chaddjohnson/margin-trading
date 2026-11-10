@@ -16,6 +16,11 @@
   pass, 7 fail, 4 skipped — exactly the 7 known pre-existing failures (intraday-study ×1, minute-optimizer ×1,
   trailing-buy ×4, study7-runners ×1); this study added 9 passing tests. No regression.
 - **Follow-up gate:** the user's review of `REPORT.md`. Nothing further is started (next in the roadmap: 4A).
+- **Review outcome (appended 2026-11-10 by Priority 4A; nothing above rewritten):** the user reviewed 3C and **declined**
+  adopting a GDX Growth partner (Priority 4A brief), particularly because the earlier-cutoff selections underperformed
+  their GDX-off baselines. Non-adoption is not a failed qualification (every searched partner qualified); R's robust and
+  balanced holders added +$1,766.52 in validation. C4-refined is the accepted alias of 3B's `C24/informed-fixed#1
+  profit`; C4 and C4-refined stay separate baselines. Next: Priority 4A (`research/gdx-growth-standalone/`).
 - **Authority:** `PROTOCOL.md` `1307e46a…bcf1`, frozen by `results/protocol-freeze.json` `5c40244e…c8a275`
   (2026-11-10T13:23:18Z; closure 254 files unchanged since); `AMENDMENTS.md` R1–R3 (pre-freeze; none after);
   adoption 2.0.0. Commits: `e66fe6b7` pre-freeze, `f2cd47a9` freeze, `bf2ac4df` / `0e738299` / `37c70094` fold
