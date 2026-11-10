@@ -8,8 +8,10 @@
   choices are frozen and committed, `stage4 validate` was not run, no FULL door opened.
 - **Task:** the user's bounded optimization-process audit brief (`brief/BRIEF.md`, sha256
   `75842bfb3e0fa849cc298ed0da897c73bfe1daf289a1d75f9358adfc621062f1`, 147 lines, read in full to "Stop for review.").
-- **Branch:** `research/optimization-process-audit` (main checkout), from `f52deea7`. The final commit and its push
-  are recorded below once made.
+- **Branch:** `research/optimization-process-audit` (main checkout), from `f52deea7`. **Pushed** (new remote branch,
+  no force, no merge): final deliverables commit `4e61149441c59eccf2ab7c4841edc5210b0f27a9`; `git ls-remote origin
+  refs/heads/research/optimization-process-audit` = local at 2026-11-10T23:23:11Z. This checkpoint's push-record
+  commit follows it on the same branch.
 - **Authority:** `PROTOCOL.md` (sha256 `e5f42a4e160b71b9…`) FROZEN by `results/protocol-freeze.json`
   (`a4b95fa3671da47a…`, commit `6933fbf5`); `AMENDMENTS.md` head **A3** (A1 G7 check bug, A2 POLICIES.md erratum,
   A3 futility stop recorded); `POLICIES.md` (`218335ec75ceda9c…`) frozen with `results/stage2/POLICY_FREEZE.json`.
