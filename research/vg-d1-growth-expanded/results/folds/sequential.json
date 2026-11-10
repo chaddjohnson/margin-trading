@@ -1,0 +1,364 @@
+{
+ "stage": "sequential",
+ "folds": [
+  {
+   "fold": "C19",
+   "slice": [
+    "2020-01-02",
+    "2021-12-31"
+   ],
+   "primary": "C19/indep/B_GDX-breakout_VGT-breakout#1 profit"
+  },
+  {
+   "fold": "C21",
+   "slice": [
+    "2022-01-03",
+    "2023-12-29"
+   ],
+   "primary": "C21/indep/G_GDX-rise#1 profit"
+  },
+  {
+   "fold": "C23",
+   "slice": [
+    "2024-01-02",
+    "2024-12-31"
+   ],
+   "primary": "C23/indep/B_GDX-rise_VGT-rise#1 profit"
+  }
+ ],
+ "switchCharge": "5 bps on $100000 per open lot closed or adopted at a boundary",
+ "policies": [
+  {
+   "name": "independent procedure (each fold primary; flat without one)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/indep/B_GDX-breakout_VGT-breakout#1 profit",
+     "sliceNet": 14619.98,
+     "sliceDd": 60874.87,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "C21/indep/G_GDX-rise#1 profit",
+     "sliceNet": -14870.14,
+     "sliceDd": 57075.51,
+     "charge": 100
+    },
+    {
+     "fold": "C23",
+     "label": "C23/indep/B_GDX-rise_VGT-rise#1 profit",
+     "sliceNet": 13505.87,
+     "sliceDd": 12639.84,
+     "charge": 50
+    }
+   ],
+   "netBeforeCharges": 13255.71,
+   "charges": 150,
+   "net": 13105.71,
+   "sequentialDd": 60874.87,
+   "ddPeak": "2020-02-19 17:49Z",
+   "ddTrough": "2020-03-17 13:44Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "role robust-profit",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/indep/B_GDX-breakout_VGT-breakout#3 balanced",
+     "sliceNet": 15280.03,
+     "sliceDd": 68795.52,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "C21/indep/V_VGT-rise#2 robust",
+     "sliceNet": -25503.96,
+     "sliceDd": 58846.72,
+     "charge": 100
+    },
+    {
+     "fold": "C23",
+     "label": "C23/indep/V_VGT-breakout#2 robust",
+     "sliceNet": 5504.11,
+     "sliceDd": 21345.78,
+     "charge": 100
+    }
+   ],
+   "netBeforeCharges": -4719.82,
+   "charges": 200,
+   "net": -4919.82,
+   "sequentialDd": 68795.52,
+   "ddPeak": "2020-02-19 17:49Z",
+   "ddTrough": "2020-03-20 19:59Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "role balanced",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/indep/V_VGT-breakout#2 robust",
+     "sliceNet": -6689.23,
+     "sliceDd": 55168.42,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "C21/indep/V_VGT-rise#2 robust",
+     "sliceNet": -25503.96,
+     "sliceDd": 58846.72,
+     "charge": 100
+    },
+    {
+     "fold": "C23",
+     "label": "C23/indep/B_GDX-breakout_VGT-breakout#2 robust",
+     "sliceNet": -17613.65,
+     "sliceDd": 23362.25,
+     "charge": 100
+    }
+   ],
+   "netBeforeCharges": -49806.84,
+   "charges": 200,
+   "net": -50006.84,
+   "sequentialDd": 97510.12,
+   "ddPeak": "2020-09-02 13:30Z",
+   "ddTrough": "2022-10-13 13:32Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "role lower-drawdown",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/indep/B_GDX-rise_VGT-breakout#1 profit",
+     "sliceNet": 9461.6,
+     "sliceDd": 53347.94,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "C21/indep/G_GDX-rise#3 balanced",
+     "sliceNet": -3715.97,
+     "sliceDd": 28644.51,
+     "charge": 100
+    },
+    {
+     "fold": "C23",
+     "label": "C23/indep/G_GDX-rise#3 balanced",
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 5745.63,
+   "charges": 100,
+   "net": 5645.63,
+   "sequentialDd": 53347.94,
+   "ddPeak": "2020-02-19 17:49Z",
+   "ddTrough": "2020-03-16 13:53Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "fixed control: C4 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: C4",
+     "sliceNet": 162640.68,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: C4",
+     "sliceNet": 63195.33,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: C4",
+     "sliceNet": 9852.77,
+     "sliceDd": 10047.41,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 235688.78,
+   "charges": 0,
+   "net": 235688.78,
+   "sequentialDd": 17280.74,
+   "ddPeak": "2020-03-19 19:26Z",
+   "ddTrough": "2020-03-19 20:00Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: E (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: E",
+     "sliceNet": 146058.76,
+     "sliceDd": 18556.54,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: E",
+     "sliceNet": 63208.84,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: E",
+     "sliceNet": 42070.45,
+     "sliceDd": 11334.86,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 251338.05,
+   "charges": 0,
+   "net": 251338.05,
+   "sequentialDd": 18556.54,
+   "ddPeak": "2020-02-24 14:30Z",
+   "ddTrough": "2020-03-12 13:51Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: A (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: A",
+     "sliceNet": 157896.17,
+     "sliceDd": 18556.54,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: A",
+     "sliceNet": 63195.33,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: A",
+     "sliceNet": 17293.89,
+     "sliceDd": 10047.41,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 238385.39,
+   "charges": 0,
+   "net": 238385.39,
+   "sequentialDd": 18556.54,
+   "ddPeak": "2020-02-24 14:30Z",
+   "ddTrough": "2020-03-12 13:51Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: B (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: B",
+     "sliceNet": 146058.76,
+     "sliceDd": 18556.54,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: B",
+     "sliceNet": 63541.49,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: B",
+     "sliceNet": 7269.86,
+     "sliceDd": 14322.77,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 216870.11,
+   "charges": 0,
+   "net": 216870.11,
+   "sequentialDd": 18556.54,
+   "ddPeak": "2020-02-24 14:30Z",
+   "ddTrough": "2020-03-12 13:51Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: C85 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: C85",
+     "sliceNet": 132702.13,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: C85",
+     "sliceNet": 63541.49,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: C85",
+     "sliceNet": -171.27,
+     "sliceDd": 14322.77,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 196072.35,
+   "charges": 0,
+   "net": 196072.35,
+   "sequentialDd": 17280.74,
+   "ddPeak": "2020-03-19 19:26Z",
+   "ddTrough": "2020-03-19 20:00Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: D (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: D",
+     "sliceNet": 132702.13,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: D",
+     "sliceNet": 63208.84,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: D",
+     "sliceNet": 28624.54,
+     "sliceDd": 8839.65,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 224535.51,
+   "charges": 0,
+   "net": 224535.51,
+   "sequentialDd": 17280.74,
+   "ddPeak": "2020-03-19 19:26Z",
+   "ddTrough": "2020-03-19 20:00Z",
+   "withinCeiling": true
+  }
+ ],
+ "verdict": "chronologically unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+ "scope": "the independent procedure only; the informed lanes and the controls inherit later-selected settings and have no chronological test"
+}

@@ -2,18 +2,42 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-09T18:35Z (UTC, from the clock). **Status: INCOMPLETE** — about to freeze the protocol. Pilot
-  complete (every path; interruption tests identical), engineering gates sealed (`results/parity/parity.json`
-  `49b203c5…c799`: 233 checks, 0 failed), control manifest sealed (`CONTROL_MANIFEST.json` `2ed9cec0…41dc`).
-- **Task:** `brief/BRIEF.md` (sha256 `803df2048c5443ebf7c8918caec7603d8cc9f1908082336d52a1685c870e4188`, 190 lines, read in
-  full). Backend only; L0 only; one exclusive funded slot; C4 = preferred benchmark and fallback.
-- **Branch:** `research/vg-d1-growth-expanded` (main checkout, no worktree), from `8c20f855`.
-- **Authority:** `PROTOCOL.md` (re-adopted 2026-11-09T18:33:20Z, sha `79494d1e67d7…`), `AMENDMENTS.md` (R1–R4),
-  `STANDARD_ADOPTION.json` (standard 2.0.0 `2005a88c…0105`, scope optimization); preflight PASS.
-- **Running processes:** none.
-- **Next steps:** commit (pre-freeze) → `npm run vg-exp -- freeze-protocol` → commit the freeze → launch the study chain
-  as unit `vgexp-chain` (`RUN_COMMANDS.md`) → while it runs: report drafting; after it: diagnostics →
-  freeze-selection → commit → validate → tables → report → full npm test (contained, PATH set) → commit and push.
+- **Updated:** 2026-11-10T10:39Z (UTC). **Status: INCOMPLETE** — protocol FROZEN; the study chain is RUNNING (C19, C21, C23 folds and the sequential verdict sealed; the chain finished 10:36:45Z; diagnostics and the frozen selection sealed; next: commit, then the one-time validation).
+- **Authority:** `PROTOCOL.md` sha256 `79494d1e67d77649ff21ef15002559674439659dd47fb921cd2e6b0b0de5e9e2`;
+  `results/protocol-freeze.json` `e700c679a2b7f8a4b73d1dcc5d1c2afc71bc5b6ceabc61d0f4713224362c5182` (frozen
+  2026-11-09T18:34:25Z, closure 252 files, digest `ed5103b76489…`); `AMENDMENTS.md` R1–R4 (pre-freeze); adoption
+  standard 2.0.0 (preflight PASS); engineering gates `results/parity/parity.json` `49b203c5…c799` (233 checks, 0
+  failed); `CONTROL_MANIFEST.json` `2ed9cec0…41dc`. Commits: `a6ab9a2d` (pre-freeze), `1997c2d0` (freeze).
+- **Running:** unit `vgexp-chain` (bash `chains/study.sh`, outside the slice; log `results/logs/study-chain.log`), started
+  2026-11-09T18:34:35Z. It runs, one unit at a time inside `vgexp.slice`: C19 search → qualify → commit selection →
+  fold-eval → C21 … → C23 … → sequential → C24 indep search → C24 informed search → C24 qualify. Each step's log is
+  `results/logs/<unit>.log`; progress `.cache/vg-d1-growth-expanded/jobs/<job>/progress.json`.
+  Check: `systemctl --user list-units 'vgexp*'`; `tail results/logs/study-chain.log`.
+- **Stage log (sealed records; verify with `npm run vg-exp -- verify`):**
+  | Stage | Record | sha256 | Wall | Fresh evaluations |
+  |---|---|---|---:|---:|
+  | C19 search indep | `results/search/C19/indep.json` | `7b644217…21b1` | 2.42 h (18:34:35Z → 21:00:00Z) | 1,212,750 (137,216 distinct proposals; 6 of 8 cells "triggers not met") |
+  | C19 qualify | `results/folds/C19/selection.json` | `8ad0f610…bf9c` (committed `583fac45`) | 4.8 min | 57,088 (40 members, 39 qualified) |
+  | C19 fold evaluation | `results/folds/C19/evaluation.json` (slice 2020–2021, D21) | `929477d3…7b23` | 4 s | in-process |
+  | C21 search indep | `results/search/C21/indep.json` | `3c2b36d9…dd8b` | 2.74 h (21:04:56Z → 23:49:20Z) | 1,169,417 (133,120 distinct proposals; 8/8 "triggers not met") |
+  | C21 qualify | `results/folds/C21/selection.json` | `49f6bae7…d28b` (committed `b63418d2`) | 6.6 min | 40 members, 40 qualified |
+  | C21 fold evaluation | `results/folds/C21/evaluation.json` (slice 2022–2023, D23) | `81380c54…4cfb` | 6 s | in-process |
+  | C23 search indep | `results/search/C23/indep.json` | `5e48f8fb…0106` | 3.47 h (23:56Z → 03:26Z) | 1,178,935 (137,216 distinct proposals; 8/8 "triggers not met") |
+  | C23 qualify | `results/folds/C23/selection.json` | `ef9b5bd5…9724` (committed `878b9b6e`) | ≈ 7 min | 40 members, 39 qualified |
+  | C23 fold evaluation | `results/folds/C23/evaluation.json` (slice 2024, D24) | `b08aa710…35c4` | 6 s | in-process |
+  | Sequential | `results/folds/sequential.json` | `aa7ffc3d…0106` | 1 s | verdict **chronologically unsupported** (procedure net +$13,105.71, sequential DD $60,874.87) |
+  | C24 search indep | `results/search/C24/indep.json` | `1ab3880d…887e` | 4.60 h (03:33Z → 08:09Z) | 1,308,569 (149,504 distinct proposals; 8/8 "triggers not met"; peak 13.8 GB) |
+  | C24 search informed | `results/search/C24/informed.json` | `bc820b02…3cd9` | 2.07 h (08:09Z → 10:14Z) | fixed + joint lanes |
+  | C24 qualify | `results/folds/C24/selection.json` | `4b17acc4…8b30` | 22.7 min | 114,109 (61 final + 3 historical; 53 of 61 final qualified); primary `C24/informed-joint#1 profit`; C4 qualified; no replacement candidate |
+  | Diagnostics | `results/diagnostics/D24/diagnostics.json` | `f3291633…3616` | 1 min | 22 subjects, 66 ledger files |
+  | Frozen selection | `FROZEN_SELECTION.json` | `f7629968…422e` | — | sealed 2026-11-10T10:37:52Z; to be committed before the validation |
+- **If the chain stopped:** read its log; if a step was interrupted (exit 75 or a killed unit), rerun the chain unit
+  with the same command (`RUN_COMMANDS.md`): sealed steps are skipped, the interrupted step resumes from its archive.
+  A failure (exit 1) needs diagnosis first; never rerun a sealed step.
+- **Next (by hand, after CHAIN DONE):** diagnostics → freeze-selection → commit FROZEN_SELECTION.json → validate →
+  tables → REPORT.md → roadmap → full npm test (contained, PATH) → commit and push. The diagnostics/final/tables code
+  was completed before the freeze and piloted; if it changes before its stage runs, record an `O*` amendment with the
+  new closure digest (§14).
 
 ## Environment
 
