@@ -3,7 +3,7 @@
 ## Top screen
 
 - **Updated:** 2026-11-11T17:28Z (UTC, from the clock). **Status: COMPLETE — every stage sealed (28 records verify);
-  report written; committing and pushing. Follow-up gate: the user's review (nothing starts automatically).**
+  report written; committed and pushed (`7169e900`). Follow-up gate: the user's review (nothing starts automatically).**
 - **Task:** the user's brief "Matched optimization under L0, L1 and L2 funding lifecycles" (`brief/BRIEF.md`, sha256
   `224480b4…6d9`).
 - **Branch:** `research/vg-lifecycle-matched-optimization` (main checkout), from `b8a5a058`.
@@ -18,6 +18,10 @@
   `520cc385f550f43a`; results/parity/parity-A1.json `d18ebc6cfb984d65`; results/protocol-freeze.json `1a72c321df38bf4f`;
   REPORT.md and results/tables/ (unsealed reporting); results/supplementary/c19-l2-primary-mechanism.json (report-only,
   outside the frozen plan).
+- **Pushed:** `git push -u origin research/vg-lifecycle-matched-optimization` (new remote branch, no force, outside the
+  sandbox, first attempt, 2026-11-11T17:29:03Z); `git ls-remote` at 17:29:11Z: branch = `7169e900…` (= local);
+  `origin/main` = `aa5754d…` (unchanged). This record follows as its own commit, pushed the same way. No merge, no
+  deployment. Unit and chain logs (`results/logs/`, gitignored) and job archives (`.cache/`) are local only.
 - **Running processes:** none.
 - **Do not rerun:** any sealed stage (they refuse); the validation ran once.
 
