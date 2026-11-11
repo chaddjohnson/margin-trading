@@ -125,11 +125,15 @@ for (const cut of cutoffsAll) {
   const seq = read(path.join(out, 'folds', 'sequential.json'));
 
   if (seq) {
-    const pol = (p: J) => [p.name, p.parts.map((x: J) => `${x.fold}: ${x.sym ?? 'cash'} ${usd(x.sliceNet)}`).join('; '), usd(p.charges), usd(p.net), usd(p.sequentialDd), p.ddPeak ?? '—', p.ddTrough ?? '—', p.recovered ? 'yes' : 'no', p.verdict];
+    // slice reset DDs from the sealed fold evaluations (amendment A1: the sequential record's part.sliceDd runs to 2024-12-31)
+    const evalDd = (fold: string, label: string | null) =>
+      label ? ((read(path.join(out, 'folds', fold, 'evaluation.json'))?.rows as J[] | undefined)?.find((r) => r.label === label)?.sliceDd ?? null) : null;
+
+    const pol = (p: J) => [p.name, p.parts.map((x: J) => `${x.fold}: ${x.sym ?? 'cash'} ${usd(x.sliceNet)} (slice DD ${usd(evalDd(x.fold, x.label))})`).join('; '), usd(p.charges), usd(p.net), usd(p.sequentialDd), p.ddPeak ?? '—', p.ddTrough ?? '—', p.recovered ? 'yes' : 'no', p.verdict];
 
     parts.push(`## Sequential policies 2020–2024\n\n${md(['Policy', 'Slices', 'Charges', 'Net', 'Sequential DD', 'Peak', 'Trough', 'Recovered', 'Verdict'], [pol(seq.universe), pol(seq.new)])}`);
     parts.push(
-      `## Every ETF's own procedure (its fold primaries)\n\nSupported: ${(seq.supportedEtfs as string[]).join(', ') || 'none'}.\n\n${md(['ETF', 'C19 → 2020–21', 'C21 → 2022–23', 'C23 → 2024', 'Charges', 'Net', 'Sequential DD', 'Verdict'], (seq.perEtf as J[]).sort((a, b) => b.net - a.net).map((p) => [p.sym, ...p.parts.map((x: J) => (x.label ? usd(x.sliceNet) : 'no primary')), usd(p.charges), usd(p.net), usd(p.sequentialDd), p.verdict]))}`
+      `## Every ETF's own procedure (its fold primaries)\n\nSupported: ${(seq.supportedEtfs as string[]).join(', ') || 'none'}.\n\n${md(['ETF', 'C19 → 2020–21', 'C21 → 2022–23', 'C23 → 2024', 'Charges', 'Net', 'Sequential DD', 'Verdict'], (seq.perEtf as J[]).sort((a, b) => b.net - a.net).map((p) => [p.sym, ...p.parts.map((x: J) => (x.label ? `${usd(x.sliceNet)} (DD ${usd(evalDd(x.fold, x.label))})` : 'no primary')), usd(p.charges), usd(p.net), usd(p.sequentialDd), p.verdict]))}`
     );
   }
 
@@ -204,6 +208,87 @@ for (const cut of cutoffsAll) {
     write(
       'validation.md',
       `# Validation (FULL, once; 2025-01-02 → 2026-10-30; previously examined history)\n\n${md(['Member', 'ETF', 'Why', 'Development net', 'Validation P&L', 'Realized', 'Open', 'Reset val. DD', 'Whole-run net', 'Whole-run DD', 'Lots after 2024', 'Carried in', '2025', '2026', 'V1–V3'], rows)}\n\n## Native reproduction of the transfer vectors\n\n${md(['Key', 'Vector', 'ETF', 'Full net', 'Target', 'Full DD', 'Target', 'Lots', 'Target', 'Validation', 'Target', 'Result'], nat)}\n\n## Validation-window neighbourhoods (report-only; 128 C24 confirmation rep-1 draws)\n\n${md(['Member', 'Draws', 'Positive', 'Zero', 'Median P&L', 'p10 P&L', 'p90 reset DD', 'p90 whole DD', 'Whole-run DD > $35k'], nb)}`
+    );
+  }
+}
+
+// ----- every ETF across the cutoffs (qualification and the actual-profit holder at each training door) -----
+
+{
+  const cuts = cutoffsAll.filter((c) => fs.existsSync(path.join(out, 'qualify', c)));
+
+  if (cuts.length > 1) {
+    const syms = fs
+      .readdirSync(path.join(out, 'qualify', cuts[0]!))
+      .filter((f) => f.endsWith('.json'))
+      .map((f) => f.slice(0, -5))
+      .sort();
+    const rows = syms.map((sym) => [
+      sym,
+      ...cuts.map((c) => {
+        const q = read(path.join(out, 'qualify', c, `${sym}.json`));
+
+        if (!q) return '—';
+
+        const ap = (q.summary as J[]).find((x) => x.label === q.roles.roles['actual-profit']);
+
+        return ap ? `${q.roles.qualified} q; ${usd(ap.net)} / DD ${usd(ap.dd)}` : `0 q (best ${usd(Math.max(-Infinity, ...(q.summary as J[]).map((x) => x.net)))})`;
+      })
+    ]);
+
+    write(
+      'etf-by-cutoff.md',
+      `# Every ETF at every cutoff (training door only): qualified members and the actual-profit holder's centre net / DD\n\n${md(['ETF', ...cuts.map((c) => `${c} (training ${c === 'C19' ? '2016–2019' : c === 'C21' ? '2016–2021' : c === 'C23' ? '2016–2023' : '2016–2024'})`)], rows)}`
+    );
+  }
+}
+
+// ----- the per-ETF development comparison (C24 roles, own procedure, transfers, buy-and-hold) -----
+
+{
+  const f = read(path.join(out, 'final', 'selection-C24.json'));
+  const d = read(path.join(out, 'final', 'diagnostics.json'));
+  const cut = cutoffsAll.includes('C24') ? 'C24' : 'P18';
+
+  if (f) {
+    const rows = (f.rows as J[])
+      .map((r) => {
+        const q = read(path.join(out, 'qualify', cut, `${r.sym}.json`))!;
+        const best = Math.max(-Infinity, ...(q.summary as J[]).map((x) => x.net));
+        const ap = r.actualProfit;
+        const t = read(path.join(out, 'transfer', `${r.sym}.json`));
+        const bt = t ? (t.centres as J[]).filter((c) => c.plausible).sort((a, b) => b.net - a.net)[0] : null;
+        const bh = d?.buyAndHold.rows[r.sym];
+
+        return {
+          sort: ap?.net ?? -1e12 + best,
+          row: [
+            r.sym,
+            r.cluster,
+            r.control ? 'control' : '',
+            usd(best),
+            r.qualified,
+            usd(ap?.net),
+            usd(ap?.dd),
+            ap ? `${ap.lots} / ${ap.episodes}` : '—',
+            pct(ap?.topEpisodeShare),
+            usd(ap?.confirmP10),
+            usd(ap?.confirmP90Dd),
+            usd(r.robustProfit?.selectRobust),
+            r.chronology ? `${r.chronology.supported ? 'SUPPORTED' : 'unsupported'} (${usd(r.chronology.net)}, DD ${usd(r.chronology.dd)})` : '—',
+            bt ? `${bt.key} ${usd(bt.net)}` : 'none plausible',
+            r.transfer.qualified,
+            bh ? usd(bh.financed.net) : '—',
+            bh ? usd(bh.financed.dd) : '—'
+          ]
+        };
+      })
+      .sort((a, b) => b.sort - a.sort)
+      .map((x) => x.row);
+
+    write(
+      'etf-comparison.md',
+      `# Per-ETF development comparison (C24 independent screen; own procedure 2020–2024; transfer lane; buy-and-hold reference)\n\nSorted by the C24 actual-profit holder's centre net (ETFs without a qualified member last, by their best shortlist centre). "Best shortlist centre" is search evidence; qualification needs Q1–Q5 on fresh confirmation draws. Buy-and-hold: financed at 11% on $100,000, report-only, never a gate.\n\n${md(['ETF', 'Cluster', 'Ctrl', 'Best shortlist centre net', 'Qualified', 'Actual-profit net', 'Its DD', 'Lots / episodes', 'Top episode share', 'Conf. p10', 'Conf. p90 DD', 'Robust-profit sel. robust', 'Own procedure 2020–2024 (net, sequential DD)', 'Best plausible transfer (centre net)', 'Qualified transfers', 'Buy-and-hold financed net', 'Buy-and-hold DD'], rows)}`
     );
   }
 }

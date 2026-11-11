@@ -68,3 +68,21 @@ results they govern exist.
 - **Results that existed.** Engineering only (pilot P18 records in the cache; the earlier pilot outputs are kept, not
   used).
 - **Effect.** Exact proposal accounting; no gate, budget or rule changes.
+
+## After the freeze
+
+### A1 — 2026-11-11T22:19Z — a mislabelled report field in the sealed sequential record (report-only; no rerun)
+
+- **What.** In `results/folds/sequential.json`, each policy part's `sliceDd` is the reset minute DD of the member's D24
+  replay from the boundary close to **2024-12-31** (the D24 door's end), not to the slice end (e.g. GDX's C19 part reads
+  $52,559.77; its sealed fold evaluation on D21 — the slice 2020–2021 — reads $26,605.80). `folds.ts` `sliceRun` cuts
+  the marks and the slice P&L at the slice end but takes the period drawdown from the engine's boundary period, which
+  runs to the door's end.
+- **Effect on results.** None on any verdict, net or sequential drawdown: the sequential DD is computed from the marks
+  cut at the slice end, and every slice P&L was cross-checked to the cent against the sealed fold evaluations (the stage
+  would have failed otherwise). The validation stage's use of the same function is correct (its slice ends at the door's
+  end). The sealed record is not rewritten; the report and the tables take every slice reset DD from the sealed fold
+  evaluations (`results/folds/<cut>/evaluation.json`), whose doors end at the slice end.
+- **Results that existed.** The C19, C21 and C23 selections and fold evaluations (sealed and committed) and the
+  sequential record (sealed); C24 screens running.
+- **No rerun, no rule or code change.**
