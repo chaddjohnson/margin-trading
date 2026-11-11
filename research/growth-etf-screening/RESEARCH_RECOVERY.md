@@ -70,4 +70,7 @@ ledger 1,184,305 fresh, 94,666 hits). Windows: development 2016-01-04 → 2024-1
 
 ## Push
 
-(filled in after the push)
+- `git push -u origin research/growth-etf-screening` (new branch, no force; outside the sandbox, first attempt,
+  2026-11-11T23:08:17Z). `git ls-remote origin research/growth-etf-screening` = `052b1c47074da8bd…` = local HEAD (the
+  report, roadmap and checkpoint commit). `main` untouched; no merge, deployment or trading. This push record follows as
+  its own commit, pushed the same way.
