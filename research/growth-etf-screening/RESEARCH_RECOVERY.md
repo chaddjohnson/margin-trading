@@ -2,28 +2,18 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-11T21:50Z (UTC, from the clock). **Status: INCOMPLETE** — stage S4 (the study chain is running).
-- **Chain milestones:** C19 screens 21:15:53Z→21:29:12Z; C19 selection (primary SMH#1) committed `5f115f1e`; C19 fold
-  evaluation sealed 21:30:25Z; C21 screens →21:49Z; C21 selection (primary XLK#1) committed `52504dbd`; C21 fold eval
-  running at 21:49Z.
-- **Authority:** brief `brief/BRIEF.md` (`c86c1a76…7b01`); standard 2.0.0 (`2005a88c…0105`); **PROTOCOL.md FROZEN**
-  (sha256 `70bda053f5a4…`, `results/protocol-freeze.json`, committed `10aad620` at 21:15:44Z; code closure 249 files,
-  digest `0be33ab394a5…`); amendments R1–R4 (pre-freeze), none after. Preflight PASS.
-- **Complete (sealed):** universe + R1 (60 eligible), DOORS.json, TRANSFER_MANIFEST.json, parity.json (730/0), pilot
-  (`results/pilot/PILOT.md`), protocol freeze. Ledger before the study: 59,751 fresh simulations.
-- **Running:** systemd unit **`getf-chain`** (outside the slice; started 2026-11-11T21:15:52Z; `W=8 K=2`;
-  `research/growth-etf-screening/chains/study.sh`; log `results/logs/study-chain.log`). It launches, one at a time inside
-  `getf.slice`: `getf-screen-C19` → `getf-select-C19` → commit → `getf-eval-C19` → … C21, C23 → `getf-sequential` →
-  `getf-screen-C24` → `getf-transfer` → `getf-final-select` → `getf-diagnostics` → `getf-freeze-selection`. Each unit
-  logs to `results/logs/<unit>.log`. Finished cleanly when the chain log ends with `CHAIN DONE`; a failure ends with
-  `CHAIN STOPPED …`.
-- **Resume:** if the chain stops or the session is lost: check `systemctl --user status getf-chain` and the units
-  (`systemctl --user list-units 'getf-*'`); never start a second chain while one is active. Rerunning the same
-  `systemd-run … study.sh` command (RUN_COMMANDS.md) resumes at the first unfinished step (sealed steps skipped;
-  completed ETF jobs skipped; an interrupted ETF job resumes from its archive).
-- **Next (by hand after CHAIN DONE):** `npm run getf -- verify`; commit `FROZEN_SELECTION.json` and results; then
-  `npm run getf -- launch --unit getf-validate --wait -- validate --workers 8` (FULL, once); tables; REPORT.md; roadmap;
-  final checkpoint; commit; push.
+- **Updated:** 2026-11-11T22:58Z (UTC, from the clock). **Status: INCOMPLETE** — stage S5 (validation next/running).
+- **Authority:** brief (`c86c1a76…`); standard 2.0.0; PROTOCOL.md FROZEN (`70bda053…`, freeze committed `10aad620`);
+  amendments R1–R4 (pre-freeze), A1 (post-freeze, report-only: sequential part `sliceDd` runs to 2024-12-31; use the
+  fold evaluations' slice DDs).
+- **Complete (sealed, 556 records verify):** C19/C21/C23 screens + selections (committed `5f115f1e`, `52504dbd`,
+  `b8aace04` before their slices) + fold evaluations; sequential (universe UNSUPPORTED: net +$1,292.58, DD $57,711.81;
+  own procedures supported: EEM, GDX, GLD, IAU, XHB); C24 screens; transfer lane; final selection (shortlist XHB, EEM,
+  GLD; IAU substitute; near misses IAU, SMH, IWF; universe primary C24/SMH#1); diagnostics; **FROZEN_SELECTION.json**
+  (sealed 22:57:21Z, committed `f07c7039` 22:57:42Z). The chain unit `getf-chain` finished (CHAIN DONE 22:57:21Z).
+- **Do not rerun:** any sealed stage; FULL may open ONCE (validation).
+- **Next:** `npm run getf -- launch --unit getf-validate --wait -- validate --workers 8` (FULL once; sealed
+  `results/validation/validation.json`), then tables, audit-compute, REPORT.md, roadmap, checkpoint, commit, push.
 
 ## Environment
 
