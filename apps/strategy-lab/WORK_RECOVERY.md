@@ -2,9 +2,13 @@
 
 ## Top screen (read this first) — Task 17 (Priority 6): pooled-candidate viewing — COMPLETE
 
-- **Updated:** 2026-11-11T19:31Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, documented; commit + push
-  follow (the push record is appended as its own commit). No merge to `main`. Stop for the user's review; Priority 7 does
+- **Updated:** 2026-11-11T19:31Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, documented, committed and
+  PUSHED (see Push). No merge to `main`. Stop for the user's review; Priority 7 does
   NOT start.**
+- **Push:** `git push -u origin feature/strategy-lab-pooled-candidates` (new branch, no force; outside the sandbox, first
+  attempt, 2026-11-11T19:32:10Z). `git ls-remote` at 19:32:15Z: branch = `6f176dfd13ac…` (= local, the implementation +
+  docs + report commit), `origin/main` = `aa5754d4…` (unchanged). This push record follows as its own commit, pushed the
+  same way.
 - **Follow-up gate (the user's):** review the Portfolios tab at **http://apollo:4317/#/portfolios** (tailnet, token) /
   http://127.0.0.1:4317/#/portfolios (apollo). Then decide on merging, and on Priority 7 (Growth for other ETFs).
 - **Running at the end:** transient user unit **`strategy-lab-p6`** (started 19:29:43Z; MainPID 2264143 at start): this
