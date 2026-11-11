@@ -2,22 +2,30 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-11T10:32Z (UTC). **Status: INCOMPLETE — protocol FROZEN (`results/protocol-freeze.json`,
-  frozenAt 10:30:57Z); being committed; no governed stage run yet.**
+- **Updated:** 2026-11-11T10:49Z (UTC). **Status: INCOMPLETE — protocol frozen (`1c43f722`); amendment A1 (engine failure fixed:
+  L2 retained order granted at a door's last session) with stage V re-sealed (`results/parity/parity-A1.json`, 1,425
+  checks, 0 failed); chain 1 being restarted from C19 (the failed C19 archive moved aside unread).**
 - **Task:** the user's brief "Matched optimization under L0, L1 and L2 funding lifecycles", copied verbatim to
   `brief/BRIEF.md` (161 lines, 21,099 bytes, sha256 `224480b4b0e39e9647e4403dbc7963f1c0c3f5f9c17883bce23776ec0dae06d9`).
 - **Branch:** `research/vg-lifecycle-matched-optimization` (main checkout), from `b8a5a058`. Code:
   `src/vg-lifecycle-matched-optimization/`; CLI `npm run vg-lmo -- <command>` from the repository root.
 - **Authority:** PROTOCOL.md sha256 `7e8260647c9ec4406609f41863fe81c4106206abcf4b0027229aaaec1af0e993` (frozen);
-  AMENDMENTS head R2 (pre-freeze); standard 2.0.0 (`2005a88c…0105`), preflight PASS 10:30Z.
+  AMENDMENTS head **A1** (post-freeze; the evaluation digest `3f902532…e3b` acknowledged in
+  `results/code-acknowledgements.jsonl` with `parity-A1.json`); standard 2.0.0 (`2005a88c…0105`).
 - **Sealed:** `CONTROL_MANIFEST.json` `e56bc7a6…ecef7`; `results/parity/parity.json` (stage V: 1,415 checks, 0 failed,
   773 simulations); `results/protocol-freeze.json` (evaluation digest `682cef28…cf40`, closure `a0bd79bc…3130`, 256
   files). `npm run vg-lmo -- verify` → 3 ok.
-- **Running processes:** `vglmo-npmtest.service` (full `npm test`, started 10:27:30Z; log
-  `.cache/vg-lifecycle-matched-optimization/logs/vglmo-npmtest.log`).
-- **Next step:** commit the freeze; then C19: `launch --unit vglmo-C19-search --wait -- search --cutoff C19 --arm indep`,
-  then `qualify --cutoff C19`, commit the selection, `crosstest --cutoff C19`, `fold-eval --cutoff C19`; then C21, C23,
-  sequential, C24 (RUN_COMMANDS.md).
+- **Running processes:** chain 1 = `research/vg-lifecycle-matched-optimization/chains/chain1.sh` (first start
+  10:31:59Z failed at the C19 search, 10:33:51Z, A1 — log `results/logs/chain1.failed-A1.log`; restarted after A1, log
+  `results/logs/chain1.log`); it launches one unit at a time in `vglmo.slice` (`vglmo-<stage>`; logs
+  `results/logs/vglmo-<stage>.log`) and commits each fold selection before its slice. Check with
+  `systemctl --user list-units 'vglmo-*'` and `tail results/logs/chain1.log`. If the shell died but a unit runs, let the
+  unit finish; relaunching the same stage command resumes from its archive (never start a second copy while one runs).
+- Full `npm test` (2026-11-11, contained unit, PATH set): 1,422 tests, 1,411 pass, 7 fail, 4 skipped — exactly the 7
+  known pre-existing failures (intraday-study, minute-optimizer, study7-runners, trailing-buy × 4). No regression.
+- **Next step:** when chain 1 ends (CHAIN1 DONE): inspect the C24 records; `npm run vg-lmo -- freeze-selection`; commit
+  FROZEN_SELECTION.json; `launch --unit vglmo-validate --wait -- validate`; tables; report; roadmap; commit; push.
+- **Do not rerun:** stage V, the freeze, any sealed search/qualify/cross-test/fold record (they refuse anyway).
 
 ## Engineering done (pre-protocol; mechanics only, no candidate performance read)
 
@@ -56,5 +64,10 @@
   launch --unit NAME [--wait] -- <command>`; engineering logs in `.cache/vg-lifecycle-matched-optimization/logs/`.
 
 ## Disclosures
+
+- A1 (post-freeze): the first C19 search failed on an explicit engine check (L2 retained order granted at D19's last
+  session had no pool record); fixed in `lifeBook.ts` (5A's code untouched); stage V re-sealed as `parity-A1.json`; the
+  failed archive (11,761 fresh evaluations, unread) moved to `.cache/…/jobs/search-C19-indep.discarded-A1/` and counted as
+  discarded work against the ceiling.
 
 - `package.json`: script `vg-lmo` added.

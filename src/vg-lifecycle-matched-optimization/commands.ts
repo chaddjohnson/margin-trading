@@ -77,7 +77,7 @@ export const commands: Record<string, (args: string[], opt: Opt, flag: Flag) => 
     else sealJson(controlManifestFile, m, 'control manifest');
   },
   parity: async (_a, _o, flag) => {
-    await runParity({ dry: flag('dry-run') });
+    await runParity({ dry: flag('dry-run'), out: _o('out') });
   },
   'freeze-protocol': async () => {
     freezeProtocol();

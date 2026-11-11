@@ -63,7 +63,16 @@ export const studyGuards = (env: Env) => {
   if (!isSealed(parityFile)) throw new Error('the engineering gates are not sealed (results/parity/parity.json)');
   if (readJson<{ failed: number }>(parityFile).failed !== 0)
     throw new Error('an engineering gate failed: every dependent stage is blocked');
-  assertFrozenCode();
+
+  const code = assertFrozenCode();
+
+  // an acknowledged evaluation change (AMENDMENTS.md A1) runs only behind its own sealed stage V with 0 failures
+  if (code?.ack) {
+    const f = path.join(repoRoot, code.ack.parity);
+
+    if (!isSealed(f)) throw new Error(`${code.ack.parity} (the stage V of ${code.ack.amendment}) is not sealed`);
+    if (readJson<{ failed: number }>(f).failed !== 0) throw new Error(`${code.ack.parity}: an engineering gate failed`);
+  }
 };
 
 // A sealed record that must also be committed unchanged before the next door opens (the freeze, fold selections, the

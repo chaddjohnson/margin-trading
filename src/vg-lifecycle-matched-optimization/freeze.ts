@@ -80,26 +80,40 @@ export const freezeProtocol = () => {
   return record;
 };
 
-// Every later stage checks that the evaluation code is the frozen one (or an acknowledged amendment).
-export const assertFrozenCode = () => {
-  if (!fs.existsSync(freezeFile)) return null;
+// Every later stage checks that the evaluation code is the frozen one, or a digest acknowledged by an amendment in
+// results/code-acknowledgements.jsonl ({ digest, amendment, parity }): an acknowledged evaluation change must name its
+// own sealed stage V record, which the stage guards require with 0 failures (PROTOCOL.md §12, AMENDMENTS.md A1).
+export interface Acknowledgement {
+  t: string;
+  digest: string;
+  amendment: string;
+  parity: string; // repository-relative sealed stage V record of that code
+}
 
-  const f = readJson<{ evaluationDigest: string }>(freezeFile);
-  const now = codeDigest();
+export const acknowledgements = (): Acknowledgement[] => {
   const ackFile = path.join(resultsDir, 'code-acknowledgements.jsonl');
-  const acks = fs.existsSync(ackFile)
+
+  return fs.existsSync(ackFile)
     ? fs
         .readFileSync(ackFile, 'utf8')
         .trim()
         .split('\n')
         .filter(Boolean)
-        .map((l) => JSON.parse(l) as { digest: string })
+        .map((l) => JSON.parse(l) as Acknowledgement)
     : [];
+};
 
-  if (now !== f.evaluationDigest && !acks.some((a) => a.digest === now))
+export const assertFrozenCode = (): { digest: string; ack: Acknowledgement | null } | null => {
+  if (!fs.existsSync(freezeFile)) return null;
+
+  const f = readJson<{ evaluationDigest: string }>(freezeFile);
+  const now = codeDigest();
+  const ack = now === f.evaluationDigest ? null : (acknowledgements().find((a) => a.digest === now) ?? null);
+
+  if (now !== f.evaluationDigest && !ack)
     throw new Error(
       `the evaluation code changed after the freeze (${now.slice(0, 12)}… ≠ ${f.evaluationDigest.slice(0, 12)}…) without an acknowledged amendment`
     );
   if (p3EvaluationDigest() !== p3.evaluationDigest) throw new Error("Priority 3's evaluation code changed");
-  return now;
+  return { digest: now, ack };
 };

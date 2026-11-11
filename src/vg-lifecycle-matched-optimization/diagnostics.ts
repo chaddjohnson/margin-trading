@@ -32,7 +32,7 @@ import {
   sourcesOf,
   summaryOf
 } from '../vg-growth-funding-lifecycle/evaluate.ts';
-import { type LifeBook, lifeBookOf } from '../vg-growth-funding-lifecycle/growthBook.ts';
+import { type LifeBook, lifeBookOf } from './lifeBook.ts';
 import { simulationCaps } from './budgets.ts';
 import { type Mode, log, modes, r2, repoRoot } from './context.ts';
 import { type Cfg, cfgId, optionsOf } from './config.ts';

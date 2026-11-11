@@ -31,10 +31,10 @@ import { type EvalOptions, type Rec, datasetsOf, evalKey, evaluate, growthNextOp
 import { referencePool } from '../vg-d1-growth-joint/reference.ts';
 import type { PoolResult } from '../vg-d1-growth-joint/pool.ts';
 import { runCoupled } from '../vg-growth-funding-lifecycle/coupled.ts';
-import { lifeBookOf } from '../vg-growth-funding-lifecycle/growthBook.ts';
+import { completions, lifeBookOf } from './lifeBook.ts';
 import { simulationCaps } from './budgets.ts';
 import { type Mode, economics, log, modes, r2, repoRoot, resultsDir } from './context.ts';
-import { type Cfg, cells, decode, gId, optionsOf, pinCell, pinStratum, placeholder, canonicalOf, screenGenomes } from './config.ts';
+import { type Cfg, cells, decode, gId, optionsOf, pinCell, pinStratum, placeholder, canonicalOf, quadId, screenGenomes } from './config.ts';
 import { controlOf, loadControls, p3bCfg, p3bMembers, p5aCentres, p5aReproductionKeys, readPinned } from './controls.ts';
 import { openStudyDoor } from './doors.ts';
 import { lifeKey, runLife } from './life.ts';
@@ -45,6 +45,7 @@ import { researchDir } from './context.ts';
 import { stresses } from './qualify.ts';
 
 export const parityFile = path.join(resultsDir, 'parity', 'parity.json');
+export const parityFileOf = (name?: string) => (name ? path.join(resultsDir, 'parity', name) : parityFile);
 
 // The 3B sealed C24 qualification evidence (centres of C4-refined and the 3B seeds).
 const p3bSelection = {
@@ -106,9 +107,11 @@ const accounting = (rec: Rec, r: PoolResult) => {
   };
 };
 
-export const runParity = async (o: { dry?: boolean } = {}) => {
+export const runParity = async (o: { dry?: boolean; out?: string } = {}) => {
+  const outFile = parityFileOf(o.out);
+
   if (!o.dry) requireStandardAdoption(researchDir, { repoRoot });
-  if (isSealed(parityFile)) throw new Error('the engineering gates are sealed');
+  if (!o.dry && isSealed(outFile)) throw new Error(`${outFile} is sealed`);
 
   const checks: Check[] = [];
   let simulations = 0;
@@ -376,6 +379,57 @@ export const runParity = async (o: { dry?: boolean } = {}) => {
     } else add('V7', 'failure detection: a configuration needing ≥ 2 rounds exists', false);
   }
 
+  // ----- V10 (amendment A1): the end-of-door completion and a convergence scan -----
+  {
+    // the configuration that failed C19's first search: screen R2/B #970 (quad 34fa81fd38cbda69), L2 on D19
+    const cell = cells.find((x) => x.inc === 'B')!;
+    const g = screenGenomes(1024, 'coarse', 'screen', 'C19/indep/R2/B')[970]!;
+    const c = decode(pinStratum(pinCell(g, cell), cell, 970), 'coarse');
+    const o = optionsOf(c);
+    const D19 = doors.D19!;
+    const before = completions.endOfDoorOrders;
+    const x = life(D19, c.quad, o, 'L2');
+    const last = D19.sessions - 1;
+    const rec = x.result.funding.find((f) => f.book === 'G:GDX' && f.s === last && f.outcome === 'granted');
+
+    add('V10', 'A1 case: quad 34fa81fd38cbda69 is the failing configuration', quadId(c.quad) === '34fa81fd38cbda69');
+    add('V10', 'A1 case: L2 on D19 converges; the order granted at the last session is a record, unfilled, no lot', completions.endOfDoorOrders > before && !!rec && !x.result.lots.some((l) => l.book === 'G:GDX' && l.entryS > last), { rounds: x.rounds });
+    for (const [a, ok] of Object.entries(accounting(recordOf(D19, c.quad, x, o), x.result))) add('V10', `A1 case accounting ${a}`, ok);
+    for (const mode of ['L1'] as const) {
+      const mine = life(D19, c.quad, o, mode);
+      const theirs = runCoupled(D19, c.quad, o, mode);
+
+      simulations++;
+      add('V10', `A1 case: ${mode} on D19 = 5A runCoupled`, same(recordOf(D19, c.quad, mine, o), recordOf(D19, c.quad, theirs, o)));
+    }
+
+    // every random configuration converges under L1 and L2 on every prefix door (the doors' last sessions included)
+    const scan = randomCfgs(64, 'v10');
+    const allDoors: Record<string, Door> = { ...doors, D24 };
+    let runs = 0;
+    let failures = 0;
+    const c0 = completions.endOfDoorOrders;
+
+    for (const [dn, door] of Object.entries(allDoors))
+      for (const sc of scan)
+        for (const mode of ['L1', 'L2'] as const) {
+          runs++;
+          try {
+            const y = life(door, sc.quad, optionsOf(sc), mode);
+            const acc = accounting(recordOf(door, sc.quad, y, optionsOf(sc)), y.result);
+
+            if (!Object.values(acc).every(Boolean)) {
+              failures++;
+              add('V10', `scan ${dn} ${mode} ${quadId(sc.quad)} accounting`, false, acc);
+            }
+          } catch (e) {
+            failures++;
+            add('V10', `scan ${dn} ${mode} ${quadId(sc.quad)} converges`, false, String(e).slice(0, 300));
+          }
+        }
+    add('V10', `convergence scan: ${runs} runs (192 configurations × L1, L2 × D19, D21, D23, D24) converge with consistent accounting; ${completions.endOfDoorOrders - c0} end-of-door completions`, failures === 0);
+  }
+
   // ----- V9: archive keys -----
   {
     const c = rand[0]!;
@@ -402,13 +456,14 @@ export const runParity = async (o: { dry?: boolean } = {}) => {
     finished: new Date().toISOString()
   };
 
+  (record as Record<string, unknown>).endOfDoorCompletions = completions.endOfDoorOrders;
   if (o.dry) {
     // a dry run (development of the gates, before the protocol is adopted): printed, never sealed
     console.log(JSON.stringify({ ...record, list: record.list.filter((l) => l.startsWith('FAIL')) }, null, 1));
     log(`stage V DRY RUN: ${checks.length} checks, ${failed.length} failed; ${simulations} simulations (not sealed)`);
     return record;
   }
-  sealJson(parityFile, record, 'parity');
+  sealJson(outFile, record, o.out ? `parity (${o.out})` : 'parity');
   log(`stage V: ${checks.length} checks, ${failed.length} failed; ${simulations} simulations`);
   return record;
 };

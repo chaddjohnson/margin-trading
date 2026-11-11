@@ -9,6 +9,9 @@ import type { SymDoor } from '../../vg-d1-growth-joint/data.ts';
 import { simulateGrowthLife } from '../../vg-growth-funding-lifecycle/growthBook.ts';
 import type { Ask, LifeSimulation, Mode } from '../../vg-growth-funding-lifecycle/lifecycle.ts';
 import { doorOf, riseParams } from '../../vg-growth-funding-lifecycle/tests/fixtures.ts';
+import { lifeBookOf as p5aLifeBookOf } from '../../vg-growth-funding-lifecycle/growthBook.ts';
+import { lifeBookOf } from '../lifeBook.ts';
+import { placeholder } from '../config.ts';
 
 const scripted = (answers: boolean[], fallback = true) => {
   const asked: number[] = [];
@@ -78,5 +81,36 @@ describe('L2 supersession', () => {
     assert.equal(second!.refusedSession, 4);
     assert.equal(second!.bound, 4 + 20, 'the newer one counts from its own refusal');
     assert.equal(r.trades.length, 0);
+  });
+});
+
+describe('A1: an L2 retained order granted at the door’s last session', () => {
+  // Rise 5% / 20 bars: the crossing at s21 (101 over a 95 low) is refused and retained; at s22 the slot is still
+  // occupied (waiting); at s23 — the door's last session — the reassessment is granted: the order is never filled
+  const door = doorOf([...Array<number>(20).fill(100), 95, 101, 101.5, 102]);
+  const g = { ...placeholder, maximumHoldEnabled: false } as typeof placeholder;
+
+  test('5A’s book omits it; this study’s book records it (granted, unfilled, reserving the slot to the end)', () => {
+    const s5a = scripted([false, false, true]);
+    const p5a = p5aLifeBookOf(door.sym.VGT, door, g, 'L2', s5a.ask);
+    const mine = scripted([false, false, true]);
+    const b = lifeBookOf(door.sym.VGT, door, g, 'L2', mine.ask);
+
+    assert.deepEqual(s5a.asked, [21, 22, 23]);
+    assert.equal(p5a.life!.requests.at(-1)!.outcome, 'granted');
+    assert.equal(p5a.trades.filter((t) => t.dS === 23).length, 0, '5A: no record for the granted request at s23');
+
+    const last = b.trades.filter((t) => t.dS === 23);
+
+    assert.equal(last.length, 1);
+    assert.equal(last[0]!.eS, -1);
+    assert.equal(b.trades.length, p5a.trades.length + 1);
+  });
+
+  test('without the end-of-door case the book is 5A’s, record for record', () => {
+    const b = lifeBookOf(door.sym.VGT, door, g, 'L2', scripted([false, true]).ask);
+    const p = p5aLifeBookOf(door.sym.VGT, door, g, 'L2', scripted([false, true]).ask);
+
+    assert.deepEqual(b.trades, p.trades);
   });
 });

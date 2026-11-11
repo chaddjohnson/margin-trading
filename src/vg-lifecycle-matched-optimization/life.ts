@@ -36,7 +36,8 @@ import {
 import { type PoolResult, runPool } from '../vg-d1-growth-joint/pool.ts';
 import type { Quad } from '../vg-d1-growth-joint/space.ts';
 import { MAX_ROUNDS, occupancyOf } from '../vg-growth-funding-lifecycle/coupled.ts';
-import { type LifeBook, isPhantom, lifeBookOf } from '../vg-growth-funding-lifecycle/growthBook.ts';
+import { isPhantom } from '../vg-growth-funding-lifecycle/growthBook.ts';
+import { type LifeBook, lifeBookOf } from './lifeBook.ts'; // 5A's book + the A1 end-of-door completion
 import type { Ask, LifeOutcome, Mode } from '../vg-growth-funding-lifecycle/lifecycle.ts';
 
 export interface LifeRun {
