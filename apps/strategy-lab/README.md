@@ -12,6 +12,7 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 - **Design:** [ARCHITECTURE.md](../../docs/strategy-lab/ARCHITECTURE.md)
 - **Data contracts:** [CONTRACTS.md](../../docs/strategy-lab/CONTRACTS.md)
 - **Interactive Preview:** [INTERACTIVE_PREVIEW.md](../../docs/strategy-lab/INTERACTIVE_PREVIEW.md)
+- **Pooled portfolio candidates (Portfolios tab):** [POOLED_CANDIDATES.md](../../docs/strategy-lab/POOLED_CANDIDATES.md)
 
 ## Layout
 
@@ -21,6 +22,8 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 | `runner/entry-signal-run.ts` | The child process of one manual signal-only run (dataset pipeline + `src/entry-signals/`) |
 | `runner/trading-run.ts` | The child process of one Growth backtest (`src/growth-trading/`: the same signals, optional continuation entries, the optional entry trend filter and persistent eligibility, the 1.3.0 options, the 1.4.0 Drawdown Recovery Gate, the Study 8 D1 book and exits); `runner/growth-params.ts` maps a request (read with its own version's schema) to the engine |
 | `runner/pool-run.ts` | The child process of one shared-slot pool phenotype rerun (the unchanged Study 8 runner) |
+| `runner/portfolio-run.ts`, `portfolio-bridge.ts`, `portfolio-catalog*.ts`, `portfolio-ledgers.ts` | Pooled portfolio candidates: the child process of ONE candidate replay (the research engine via 5B `runLife` L0), the bridge into events / positions / equity / metrics, the catalog build and reader, the archived-ledger comparison (parity only) |
+| `server/portfolios.ts`, `catalog/pooled-candidates.json` | The pooled-candidate service (catalog routes, replay identity, the namespaced replay cache, tickets) and the frozen five-candidate catalog |
 | `importers/study8.ts` | Read-only import of a Study 8 runner output (verified against the sealed record); its event conversion is shared with the pool runner |
 | `importers/phenotypes.ts`, `phenotype-export.ts`, `export-study8-phenotypes.ts` | The phenotype catalogue import (verified), the export writer, the Study 8 sealed-selection exporter |
 | `server/export.ts`, `zip.ts`, `compare.ts`, `replay.ts` | Research bundles, the deterministic ZIP writer, run comparisons, stored-run replays |
@@ -48,6 +51,8 @@ npm --prefix apps/strategy-lab start      # from the repository root: installs, 
 | `replay -- R-…` | Re-execute a stored Growth run in scratch and diff its execution facts |
 | `audit:state -- <state dir> [--json]` | Read-only audit (counts, immutable hashes, FKs, integrity, events) |
 | `preview-cache -- status\|verify\|prune\|clear` | Interactive Preview cache maintenance (only the cache directory) |
+| `portfolio-catalog [-- --check]` | Rebuild (or check) the pooled-candidate catalog from the research records |
+| `portfolio-parity [-- --out f.json]` | Replay the five pooled candidates (read-only) and compare them with every archived target, record and ledger |
 | `export-requests -- --out <dir> <request.json> …` | Run request files in a NEW scratch state (never the live one) and write their research bundles |
 | `service:install [-- --enable]` | Write (and optionally enable) the systemd user service |
 | `token [-- --print]` | Where the API token is (or print it) |

@@ -5,6 +5,8 @@
 //           loss, grey exactly breakeven, blue still open (never judged on unrealized P&L), amber no recorded P&L;
 //           rejected signals are purple whatever the reason; raw entry signals are a hollow light outline
 //   halo    the run role when comparing: run A has a dark rim, run B an orange halo
+//   frame   pooled portfolio candidates only (Priority 6): the COMPONENT — a square frame for D1, a round frame for
+//           Growth — so two strategies trading the same symbol stay distinguishable in monochrome and in clusters
 // Entries sit just below the price, exits just above it, rejected signals on it.
 
 import { EVENT_KIND_LABEL, type EventKind } from '../../shared/contract.ts';
@@ -16,6 +18,11 @@ export const PRICE_COLOR = '#3987e5';
 export const ROLE_COLOR: Record<Role, string> = { A: '#199e70', B: '#d95926' };
 const SURFACE = '#0b1220';
 export const MARKER_SIZE = 14;
+/** A framed (component) marker: the shape at MARKER_SIZE − 2 inside a frame of this size. */
+export const FRAMED_SIZE = 18;
+/** The component frame of a pooled-portfolio marker (D1 square, Growth round); none elsewhere. */
+export type Frame = 'square' | 'round';
+const FRAME_COLOR = '#e2e8f0';
 
 /** What a marker's colour says. `shape` is the legend's neutral rendering of an executed glyph (shape only). */
 export type MarkerTone = 'profit' | 'loss' | 'flat' | 'open' | 'unknown' | 'rejected' | 'signal' | 'shape';
@@ -58,7 +65,27 @@ export const isPartialExit = (e: { kind: EventKind; meta?: Record<string, unknow
 export const eventKindLabel = (e: { kind: EventKind; meta?: Record<string, unknown> | null }) =>
   isPartialExit(e) ? 'Executed exit (partial)' : EVENT_KIND_LABEL[e.kind];
 
-export function glyphSvg(kind: EventKind, role: Role, tone: MarkerTone, size = MARKER_SIZE, partial = false): string {
+export function glyphSvg(
+  kind: EventKind,
+  role: Role,
+  tone: MarkerTone,
+  size = MARKER_SIZE,
+  partial = false,
+  frame: Frame | null = null
+): string {
+  if (frame) {
+    // The plain glyph, smaller, centred inside the component's frame (square = D1, round = Growth).
+    const inner = Math.round(size * 0.68);
+    const o = (size - inner) / 2;
+    const body = glyphSvg(kind, role, tone, inner, partial)
+      .replace(/^<svg[^>]*>/, '')
+      .replace(/<\/svg>$/, '');
+    const f =
+      frame === 'square'
+        ? `<rect x="0.9" y="0.9" width="${size - 1.8}" height="${size - 1.8}" rx="2.2" fill="${SURFACE}" fill-opacity="0.72" stroke="${FRAME_COLOR}" stroke-width="1.4"/>`
+        : `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 0.9}" fill="${SURFACE}" fill-opacity="0.72" stroke="${FRAME_COLOR}" stroke-width="1.4"/>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" data-tone="${tone}" data-frame="${frame}"${partial ? ' data-partial="true"' : ''}>${f}<g transform="translate(${o} ${o})">${body}</g></svg>`;
+  }
   const c = TONE_COLOR[tone];
   const s = size;
   // The role halo: the same outline, wider, under the glyph (run B orange, run A the dark surface).
@@ -97,17 +124,23 @@ export function glyphSvg(kind: EventKind, role: Role, tone: MarkerTone, size = M
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" data-tone="${tone}"${partial ? ' data-partial="true"' : ''}>${role === 'B' ? rim : ''}${shape}</svg>`;
 }
 
-export const glyphUri = (kind: EventKind, role: Role, tone: MarkerTone, size = MARKER_SIZE, partial = false) =>
-  `data:image/svg+xml;charset=utf-8,${encodeURIComponent(glyphSvg(kind, role, tone, size, partial))}`;
+export const glyphUri = (
+  kind: EventKind,
+  role: Role,
+  tone: MarkerTone,
+  size = MARKER_SIZE,
+  partial = false,
+  frame: Frame | null = null
+) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(glyphSvg(kind, role, tone, size, partial, frame))}`;
 
 /** The legend's tone for an event kind: executed kinds show their shape only (the outcome colours have their own key). */
 export const legendToneOf = (kind: EventKind): MarkerTone =>
   kind === 'entry_signal' ? 'signal' : kind === 'rejected_signal' ? 'rejected' : 'shape';
 
 /** Vertical placement of a marker relative to its price point: offset of the icon's top edge in px. */
-export function markerOffset(kind: EventKind, stackIndex: number): number {
-  const step = MARKER_SIZE + 2;
-  if (kind === 'executed_exit') return -(MARKER_SIZE + 2) - stackIndex * step;
-  if (kind === 'rejected_signal') return -MARKER_SIZE / 2 + stackIndex * step;
+export function markerOffset(kind: EventKind, stackIndex: number, size = MARKER_SIZE): number {
+  const step = size + 2;
+  if (kind === 'executed_exit') return -(size + 2) - stackIndex * step;
+  if (kind === 'rejected_signal') return -size / 2 + stackIndex * step;
   return 2 + stackIndex * step;
 }

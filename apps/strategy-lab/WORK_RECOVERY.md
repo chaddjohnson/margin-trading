@@ -1,6 +1,88 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
-## Top screen (read this first) — Task 16: daily OHLC candlestick chart — COMPLETE
+## Top screen (read this first) — Task 17 (Priority 6): pooled-candidate viewing — COMPLETE
+
+- **Updated:** 2026-11-11T19:31Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, documented; commit + push
+  follow (the push record is appended as its own commit). No merge to `main`. Stop for the user's review; Priority 7 does
+  NOT start.**
+- **Follow-up gate (the user's):** review the Portfolios tab at **http://apollo:4317/#/portfolios** (tailnet, token) /
+  http://127.0.0.1:4317/#/portfolios (apollo). Then decide on merging, and on Priority 7 (Growth for other ETFs).
+- **Running at the end:** transient user unit **`strategy-lab-p6`** (started 19:29:43Z; MainPID 2264143 at start): this
+  branch's `server/main.ts` on :4317, hosts 127.0.0.1 + 127.0.1.1 + 100.68.60.114 (Tailscale), live state
+  `state/strategy-lab/`, `dist/` = check-2's build; MemoryHigh 6G / MemoryMax 8G. Stop: `systemctl --user stop
+  strategy-lab-p6`; logs `journalctl --user -u strategy-lab-p6`. The usual way to start later: `npm --prefix apps/strategy-lab
+  run start:vpn`. Scratch :4397 server stopped. No other node server.
+- **Final verification:** check-2 (`logs/task17/check-2.log`, 19:22:50Z→19:29:20Z) ALL GREEN: typecheck, lint, Vitest 314/314
+  (34 files), build, Playwright 81/81. check-1 80/81 (candles.spec.ts:439 resize-timing race while my parity run loaded the
+  CPU; passed fresh; its repeat failures received the correct `cache-hit`); e2e-full-1 80/81 (known flaky
+  strategy-lab.spec.ts:311; 3/3 on rerun). Root tsc clean; root ESLint 793 (5 errors) = base 60eb7690 exactly; root
+  `npm test` 1,424 / 1,413 pass / 7 known failures / 4 skipped (`root-npm-test.log`). Final parity ALL VERIFIED
+  (`docs/strategy-lab/reports/2026-11-11-pooled-candidates/parity.json` 59424ff9…). Live task instance in Chrome over
+  Tailscale: all five verified, R-000042 + Phenotypes load, no console problems.
+- **Preservation:** live-state `audit:state` before/after identical in every key (`logs/task17/audit-{before,after}.json`);
+  190 non-database files byte-identical to the 18:1xZ baseline; `strategy-lab.sqlite` unmodified (2026-11-07); disclosed:
+  the read-only audit (19:04:12Z) created an empty `strategy-lab.sqlite-wal`; added: `portfolio-cache/` (5 entries, 2.0 MB).
+  Data VGT 2ee06310…, GDX 77dba9b2… unchanged. No `research/` file changed.
+- **Deliverables (sha256 prefix at 19:31Z):** catalog `apps/strategy-lab/catalog/pooled-candidates.json` 9166e00a6019e3cb;
+  `runner/portfolio-bridge.ts` b546608d9adb64dd; `runner/portfolio-run.ts` a0e1572c18af0848; `server/portfolios.ts`
+  bb3a9958f083564e; `src/components/PortfolioView.tsx` 677e513cf73557cd; `docs/strategy-lab/POOLED_CANDIDATES.md`
+  782a750508e39a9c; report `REPORT.md` 2277ed15461819ca; `parity.json` 59424ff9b238ef26. Plus catalog build/read,
+  ledgers comparator, scripts, `src/portfolio.ts`, `src/chart/EquityChart.tsx`, marker frames, tests (6 Vitest files + 3
+  helpers, 1 e2e spec), doc pointers, ROADMAP (5B reviewed; Priority 6 = this task; Priority 7 = ETFs after review).
+- **Brief:** `docs/strategy-lab/brief/2026-11-11-pooled-candidate-viewing-brief.md` (verbatim copy of upload
+  `6022b8c4-Claude_-_Priority_6_-_Strategy_Lab_Pooled_Candidate_Viewing.md`, 143 lines / 21,248 bytes, read in full
+  through "Stop for user review after Priority 6"; sha256 `2e32830e8e35feee1bc64eb9ad977dc7627517e9fe99fd136717aca49af99a06`).
+  Authorizes: implementation, local task instance + browser verification, replay of the five frozen candidates
+  (incl. 2025–2026), commit + push of the task branch. Forbids: search/retuning/substitution, merge to main,
+  force-push, deploy, broker orders, starting Priority 7.
+- **Branch:** `feature/strategy-lab-pooled-candidates`, created 2026-11-11T18:10:44Z from `60eb7690` (= origin
+  `research/vg-lifecycle-matched-optimization`; contains `feature/strategy-entry-explorer-ui` 353e33f2 as ancestor;
+  unmerged remote branches btcusdt-d1-spot, d1-standalone-etf-opportunity-robustness, intraday-dip-recovery-vgt,
+  market-normalization-and-multihorizon, vgt-drawdown-entry-risk touch neither Strategy Lab nor the pooled runners).
+  Main checkout (no extra worktree). Node 24.21.0.
+- **Preservation baselines:** live state `state/strategy-lab/` (1.2 GB; read-only for this task) hashed to
+  `apps/strategy-lab/logs/task17/live-state-baseline.sha256` (191 files, preview-cache and `-shm` excluded; list sha256
+  `e0f801b3…601d`). Data: VGT `2ee06310f2fa8926…`, GDX `77dba9b21c4b6849…` (= Task 15/16). No Strategy Lab server or
+  other node job running at 18:0xZ.
+- **Next step:** implement per the design below (catalog → bridge → parity → server → UI → tests).
+
+## Task 17 — design (written between 2026-11-11T18:12Z and 18:34Z, both from `date -u`; from the audit; no user question needed)
+
+- **One engine for all five:** Priority 3's quad pool (`src/vg-d1-growth-joint/evaluate.ts` `run`/`recordOf`,
+  `pool.ts` `runPool`), called through 5B's `runLife(door, quad, o, 'L0', {recordMarks:true})` (= P3 `run`; the A1
+  wrapper is L1/L2-only and is NOT on this path). VG candidates: `enabled {G:GDX:false}`; VGT-only: `enabled
+  {D1:GDX:false, G:GDX:false}` with P3's placeholder vectors (P3 verified this against Priority 2's frozen `run`: parity
+  P3 + FULL ledgers byte-identical). Door: P3 `openFullDoor(purpose, {file: P3 FROZEN_SELECTION, sha256:
+  p3.frozenSelectionSha256}, quietLog=true)` — read-only, pins canonical data sha256, writes nothing (5B's
+  `openStudyDoor` would append to its doors.jsonl: not used). Options `{...enabled, boundaries:['2024-12-31']}`.
+- **Identities (catalog):** R01 `67cfdd9b62d1e16f`/quad `a2e385640ca61012`/G `6b5f909b30cfa516`; C4-refined R21
+  `0f017f0ab9b26f24`/quad `07443ffaeef41e85`/G `c3c1c0d56c4ee3b0`; C4 R20 cfg `2f49a1cc226b4ece`/quad
+  `f324035d15f69610`/G `420cd989e4fa7749` (5B `FROZEN_SELECTION.json` `crossTestSubjects`); VGT-only #4 P2 joint
+  `04741779be90e639`/P3 quad `dbe7be81867b739a`; 08500a60 P2 `a8833010dd6f9c30`/P3 quad `51da785f9a3b5f26` (P2
+  `FROZEN_SELECTION.json` controls; P3 `CONTROL_MANIFEST.json` `p2:primary+g4|g085`). Standalone D1 primary =
+  `config/phenotypes/D1/VGT.json` primary `d1-ebc9f639b3` [216,3,73,8,74,29,90,60] ≠ VG #2 VGT [235,9,74,15,78,44,110,55]
+  ≠ L0's modified VGT [237,9,73,15,72,42,103,41].
+- **Parity sources:** headline + `record` (all fields incl. `signature`) from 5B `results/validation/validation.json`
+  (R01/R20/R21 L0) and P3 `results/validation/validation.json` (VGT-only rows) + P2 validation targets; event-level FULL
+  ledgers: C4 = P3 ledger 18, #4 = P3 16 / P2 14, 08500a60 = P3 17 / P2 11; R01 and C4R: 5B
+  `results/diagnostics/ledgers/{…}/L0/lots.csv` (D24, 2016–2024) + the whole-run signature. Dev DD = strict tracker over
+  the continuous run's marks up to the 2024-12-31 close.
+- **Artifacts of a replay:** contract-v2 `events.json` (executed entries / partial exits `meta.partial` / final exits;
+  rejected_signal ONLY for pool refusals with reason "slot occupied", `meta.refused`), `positions.json` (ledger with
+  fills), `equity.json` (per session: close marked net, minute-DD from the running minute peak), `metrics.json`
+  (portfolio totals, periods, attribution, parity), `provenance.json`. Event ids `SYM:P-<lot>:entry|partial-k|exit`
+  (lot ids are global, so position ids are unique across symbols and components); `meta.component` D1|Growth,
+  `meta.book`. Granted-but-unfilled orders at the endpoint are reported, never events. Shadow trades never exported.
+- **Server:** `server/portfolios.ts` — catalog routes, a separate namespaced cache `<state>/portfolio-cache/` (marker
+  file, entries/<key>, LRU), identity = catalog entry sha + window + data fingerprint + implementation fingerprint of
+  `runner/portfolio-run.ts` (reuse `preview-identity.ts` helpers); one child replay at a time, coalesced, tickets
+  released → cancel. No SQLite writes, no runs.
+- **UI:** a "Portfolios" view tab (`#/portfolios`, `#/portfolio/<id>?symbol=&range=`): selector (brief order),
+  composition, details (settings/conventions/hashes collapsed), portfolio summary + equity/DD chart, symbol tabs, the
+  existing PriceChart with component frames (D1 square, Growth round), legend toggles (components, entries/partials/
+  finals, refused OFF), positions ledger with expandable fills and filters, jump-to-chart. Visibility = client filter.
+
+## Previous top screen — Task 16: daily OHLC candlestick chart — COMPLETE
 
 - **Updated:** 2026-11-06T16:38Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, documented,
   committed and PUSHED. No merge to `main`.**

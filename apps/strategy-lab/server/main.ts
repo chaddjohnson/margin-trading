@@ -9,6 +9,7 @@ import { openDb } from './db.ts';
 import { recoverRunDeletions } from './delete-run.ts';
 import { createHandler } from './http.ts';
 import { Jobs } from './jobs.ts';
+import { PortfolioService } from './portfolios.ts';
 import { PreviewService } from './previews.ts';
 import { MarketPrices } from './prices.ts';
 import { Repo } from './repo.ts';
@@ -32,7 +33,9 @@ export function start(env: NodeJS.ProcessEnv = process.env) {
   jobs.recover();
   const previews = new PreviewService(cfg, repo, service, log);
   previews.init(); // the preview cache: interrupted work removed; entries validated when used
-  const handler = createHandler({ cfg, repo, jobs, prices, service, previews, log });
+  const portfolios = new PortfolioService(cfg, log);
+  portfolios.init(); // the pooled-candidate replay cache: interrupted work removed; entries validated when used
+  const handler = createHandler({ cfg, repo, jobs, prices, service, previews, portfolios, log });
   const servers: Server[] = cfg.hosts.map((host) => {
     const s = createServer((req, res) => void handler(req, res));
     s.requestTimeout = 120_000;
@@ -48,6 +51,7 @@ export function start(env: NodeJS.ProcessEnv = process.env) {
     log('stopping');
     jobs.stopAll();
     previews.stop();
+    portfolios.stop();
     for (const s of servers) s.close();
     setTimeout(() => {
       db.close();
@@ -56,7 +60,7 @@ export function start(env: NodeJS.ProcessEnv = process.env) {
   };
   process.once('SIGTERM', stop);
   process.once('SIGINT', stop);
-  return { cfg, db, repo, jobs, previews, servers, stop };
+  return { cfg, db, repo, jobs, previews, portfolios, servers, stop };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) start();

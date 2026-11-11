@@ -34,7 +34,7 @@ import {
 } from './candles.ts';
 import { etTicks } from './etTicker.ts';
 import { type ChartLink, type Placement, placementOf } from './link.ts';
-import { MARKER_SIZE, type MarkerTone, PRICE_COLOR, type Role, eventKindLabel, glyphUri, isPartialExit, markerOffset } from './markers.ts';
+import { FRAMED_SIZE, type Frame, MARKER_SIZE, type MarkerTone, PRICE_COLOR, type Role, eventKindLabel, glyphUri, isPartialExit, markerOffset } from './markers.ts';
 import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure } from './measure.ts';
 import { isMacPlatform, panModifierFor, panWindow, startsPan } from './pan.ts';
 import { wheelZoomOutPx, wheelZoomWindow } from './wheelZoom.ts';
@@ -82,6 +82,9 @@ export interface ChartEvent {
   event: LabEvent;
   y: number | null; // plotted price: the event's price, or the market price at that instant when not recorded
   tone: MarkerTone; // the marker colour (trade outcome for executed entries/exits; see markers.ts)
+  /** Pooled portfolios: the component frame (D1 square, Growth round) and the label's prefix instead of role and id. */
+  frame?: Frame;
+  labelPrefix?: string;
 }
 
 export interface ChartHandle {
@@ -207,6 +210,7 @@ export function PriceChart(props: Props) {
         idx = stack.get(stackKey) ?? 0;
         stack.set(stackKey, idx + 1);
       }
+      const size = ce.frame ? FRAMED_SIZE : MARKER_SIZE;
       let b = buttons.current.get(ce.key);
       if (!b) {
         b = document.createElement('button');
@@ -220,14 +224,16 @@ export function PriceChart(props: Props) {
         if (isPartialExit(ce.event)) b.dataset.partial = 'true';
         b.dataset.role = ce.role;
         b.dataset.runId = ce.runId;
+        if (ce.frame) b.dataset.frame = ce.frame;
+        if (ce.frame) b.classList.add('is-framed');
         const img = document.createElement('img');
         img.alt = '';
-        img.width = MARKER_SIZE;
-        img.height = MARKER_SIZE;
+        img.width = size;
+        img.height = size;
         b.appendChild(img);
         b.setAttribute(
           'aria-label',
-          `${ce.role} ${ce.runId} ${eventKindLabel(ce.event)} ${ce.event.symbol} ${formatEt(ce.event.t, ce.event.timePrecision)} at ${formatPrice(ce.event.price)}${slot && slot.session !== null ? ` (shown on the ${slot.date} daily candle)` : ''}`
+          `${ce.labelPrefix ?? `${ce.role} ${ce.runId}`} ${eventKindLabel(ce.event)} ${ce.event.symbol} ${formatEt(ce.event.t, ce.event.timePrecision)} at ${formatPrice(ce.event.price)}${slot && slot.session !== null ? ` (shown on the ${slot.date} daily candle)` : ''}`
         );
         layer.appendChild(b);
         buttons.current.set(ce.key, b);
@@ -239,10 +245,10 @@ export function PriceChart(props: Props) {
       }
       if (b.dataset.tone !== ce.tone) {
         b.dataset.tone = ce.tone;
-        b.querySelector('img')!.src = glyphUri(ce.event.kind, ce.role, ce.tone, MARKER_SIZE, isPartialExit(ce.event));
+        b.querySelector('img')!.src = glyphUri(ce.event.kind, ce.role, ce.tone, size, isPartialExit(ce.event), ce.frame ?? null);
       }
-      b.style.left = `${Math.round(px - MARKER_SIZE / 2)}px`;
-      b.style.top = `${Math.round(py + markerOffset(ce.event.kind, idx))}px`;
+      b.style.left = `${Math.round(px - size / 2)}px`;
+      b.style.top = `${Math.round(py + markerOffset(ce.event.kind, idx, size))}px`;
       b.classList.toggle('is-selected', ce.key === selectedRef.current);
       b.hidden = px < area.x - 1 || px > area.x + area.w + 1;
       seen.add(ce.key);

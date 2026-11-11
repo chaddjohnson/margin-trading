@@ -11,6 +11,7 @@ import type {
   SymbolInfo,
   VariationSummary
 } from '../shared/contract.ts';
+import type { CandidateCatalog, CandidateEntry, PortfolioEquity, PortfolioReplayDetail } from '../shared/portfolio.ts';
 import { type CandlesResponse, validateCandles } from '../shared/candles.ts';
 import type { ExecutionKind, PhenotypeRecord } from '../shared/phenotypes.ts';
 import type { PreviewCapability, PreviewConfig, PreviewDetail, PreviewTicketStatus } from '../shared/preview.ts';
@@ -156,11 +157,15 @@ export interface PhenotypeQuery {
   role?: string;
 }
 
-/** The API path of a run-shaped result: a saved run (R-…) or an Interactive Preview (PV-…, never a run). */
-export const resultPath = (id: string) => (id.startsWith('PV-') ? `/api/previews/${id}` : `/api/runs/${id}`);
+/**
+ * The API path of a run-shaped result: a saved run (R-…), an Interactive Preview (PV-…, never a run) or a pooled
+ * portfolio candidate's replay (PR-…, never a run).
+ */
+export const resultPath = (id: string) =>
+  id.startsWith('PV-') ? `/api/previews/${id}` : id.startsWith('PR-') ? `/api/portfolio-replays/${id}` : `/api/runs/${id}`;
 
-/** A result id as shown in tables and headings: a preview's 64-hex id is shortened (the full id is in its record). */
-export const displayId = (id: string) => (id.startsWith('PV-') ? `${id.slice(0, 13)}…` : id);
+/** A result id as shown in tables and headings: a preview's or replay's 64-hex id is shortened (the full id is in its record). */
+export const displayId = (id: string) => (id.startsWith('PV-') || id.startsWith('PR-') ? `${id.slice(0, 13)}…` : id);
 
 /** Downloads the research bundle of a completed run or preview (authenticated fetch → a file the browser saves). */
 async function downloadBundle(id: string, minuteMarks: boolean): Promise<{ filename: string; bytes: number }> {
@@ -247,8 +252,33 @@ export const api = {
     call<RunDetail>('POST', `/api/previews/${id}/save`, body),
   compare: (a: string, b: string, signal?: AbortSignal) =>
     call<Comparison>('GET', `/api/compare${qs({ a, b })}`, undefined, signal),
+  // Pooled portfolio candidates (read-only frozen presets): the catalog and ONE replay per request; never a run.
+  portfolios: (signal?: AbortSignal) => call<PortfolioCatalogView>('GET', '/api/portfolios', undefined, signal),
+  replayPortfolio: (candidateId: string) => call<PortfolioTicket>('POST', `/api/portfolios/${candidateId}/replay`),
+  portfolioTicket: (ticket: string, signal?: AbortSignal) =>
+    call<PortfolioTicket>('GET', `/api/portfolio-replays/tickets/${ticket}`, undefined, signal),
+  releasePortfolioTicket: (ticket: string) => call<PortfolioTicket>('POST', `/api/portfolio-replays/tickets/${ticket}/release`),
+  portfolioReplay: (id: string, signal?: AbortSignal) =>
+    call<PortfolioReplayDetail>('GET', `/api/portfolio-replays/${id}`, undefined, signal),
+  portfolioEquity: (id: string, signal?: AbortSignal) =>
+    call<PortfolioEquity & { replayId: string }>('GET', `/api/portfolio-replays/${id}/equity`, undefined, signal),
   downloadBundle
 };
+
+export type PortfolioCatalogView = Omit<CandidateCatalog, 'candidates' | 'builtBy'> & {
+  candidates: (CandidateEntry & { cached: boolean })[];
+};
+
+export interface PortfolioTicket {
+  ticket: string;
+  candidateId: string;
+  replayId: string;
+  state: 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+  cacheHit: boolean;
+  coalesced: boolean;
+  progress: { message: string; fraction: number | null } | null;
+  error: string | null;
+}
 
 export interface ComparedTrade {
   trade: string;

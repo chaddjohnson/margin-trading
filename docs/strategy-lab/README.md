@@ -19,6 +19,9 @@ prototype of 2026-11-03.
   - **Interactive Preview**: edit a saved run's parameters beside its chart and run ONE configuration at a time,
     without saving a run; repeated configurations come from a validated cache; **Save as run** keeps one
     ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md));
+  - **Portfolios**: pick one of five frozen D1 + Growth portfolio candidates and inspect its actual funded trades from
+    ONE replay of the research engine (one shared $100,000 pool, VGT and GDX tabs, partial exits, a positions ledger,
+    the portfolio's equity and minute drawdown; refused signals optional) ([POOLED_CANDIDATES.md](POOLED_CANDIDATES.md));
   - a price chart of **daily OHLC candles** per NYSE session (the default for real data) or the **intraday minute
     line**, switched above the legend ([DAILY_CANDLES.md](DAILY_CANDLES.md));
   - entry and exit markers per symbol, with Eastern timestamps;
@@ -43,6 +46,7 @@ prototype of 2026-11-03.
 | [PHENOTYPES.md](PHENOTYPES.md) | The frozen phenotype catalogue: the export contract a study emits, the import CLI, capabilities, single reruns (standalone and shared-slot pool) |
 | [EXPORTS.md](EXPORTS.md) | The research bundle: contents, guarantees, how another analyst checks it |
 | [DAILY_CANDLES.md](DAILY_CANDLES.md) | The chart types: **Candles · 1D** (daily OHLC from the canonical minute bars: the open, highs/lows, closing-print and regular-session conventions, early closes, DST, missing minutes, split units, invalid data; drawing, dense mode, axis, read-out; the marker session policy and fan; close → close measuring; the API, caching and validation; tests; limitations) and **Line · intraday**. Report and screenshots: `reports/2026-11-06-daily-candles/` |
+| [POOLED_CANDIDATES.md](POOLED_CANDIDATES.md) | Pooled portfolio candidates (Priority 6): the five frozen candidates and their exact identities, the catalog build, replay semantics (engine, door, conventions, L0, shadow state, refusals, partial exits, pending orders), figure and P&L definitions, the replay cache and isolation, parity results, API, limitations. Report: `reports/2026-11-11-pooled-candidates/` |
 | [INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md) | Interactive Preview: the panel, statuses, Enter/Run, Reset, Save as run and Return; semantics and isolation; the persistent cache (execution identity, implementation fingerprint, storage, validation, retention, maintenance); concurrency; API; acceptance map; measured latency; limitations |
 | `../../src/entry-signals/README.md` | The rise-from-recent-low rule, maths, rearming, bars, forward outcomes |
 | `brief/2026-11-04-strategy-lab-implementation-brief.md` | The brief, verbatim |
@@ -53,3 +57,4 @@ prototype of 2026-11-03.
 | `brief/2026-11-05-growth-optional-rules-brief.md` | The Growth optional rules brief (Task 14: initial risk stop, trend-breakout entry, trend retention), verbatim |
 | `brief/2026-11-06-growth-drawdown-recovery-gate-brief.md` | The Growth Drawdown Recovery Gate brief (Task 15), verbatim |
 | `brief/2026-11-06-daily-ohlc-candlesticks-brief.md` | The daily OHLC candlestick chart brief (Task 16), verbatim |
+| `brief/2026-11-11-pooled-candidate-viewing-brief.md` | The pooled-candidate viewing brief (Priority 6, Task 17), verbatim |

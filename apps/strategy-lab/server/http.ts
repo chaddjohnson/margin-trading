@@ -19,6 +19,7 @@ import { dailyCandles, priceAtOrBefore, syntheticSeries, windowPoints, type Mark
 import type { Repo } from './repo.ts';
 import { clientAllowed, hostAllowed, makeClientAllowlist, tokenMatches } from './security.ts';
 import { DEMO_FIXTURE } from './seed-demo.ts';
+import { PortfolioError, type PortfolioService } from './portfolios.ts';
 import { PreviewError, type PreviewService } from './previews.ts';
 import type { LabService } from './service.ts';
 
@@ -54,6 +55,8 @@ export interface Deps {
   prices: MarketPrices;
   service: LabService;
   previews: PreviewService;
+  /** Pooled portfolio candidates (absent in some unit tests: the routes then answer 503). */
+  portfolios?: PortfolioService;
   log: (m: string) => void;
 }
 
@@ -239,6 +242,17 @@ export function createHandler(d: Deps) {
     }
   };
 
+  // Pooled portfolio candidates (server/portfolios.ts): the read-only catalog and ONE replay per request; no run row.
+  const portfolio = <T>(fn: (p: PortfolioService) => T): T => {
+    if (!d.portfolios) throw new HttpError(503, 'pooled-candidate viewing is not configured on this server');
+    try {
+      return fn(d.portfolios);
+    } catch (e) {
+      if (e instanceof PortfolioError) throw new HttpError(e.status, e.message);
+      throw e;
+    }
+  };
+
   const ROUTES: [string, RegExp, Handler][] = [
     [
       'GET',
@@ -248,7 +262,7 @@ export function createHandler(d: Deps) {
         contractVersion: EVENT_CONTRACT_VERSION,
         activeRuns: jobs.activeCount,
         activePreviews: previews.activeCount,
-        features: ['interactive-preview', 'daily-candles']
+        features: ['interactive-preview', 'daily-candles', ...(d.portfolios ? ['pooled-candidates'] : [])]
       })
     ],
     [
@@ -530,6 +544,28 @@ export function createHandler(d: Deps) {
         return { status: 201, body: repo.runDetail(r.runId) };
       }
     ],
+    // ----- pooled portfolio candidates: the frozen catalog and ONE replay of ONE candidate per request -----
+    ['GET', /^\/api\/portfolios$/, () => portfolio((p) => p.list())],
+    ['GET', /^\/api\/portfolios\/([a-z0-9][a-z0-9-]{0,40})$/, ({ m }) => portfolio((p) => p.candidate(m[1]!))],
+    ['POST', /^\/api\/portfolios\/([a-z0-9][a-z0-9-]{0,40})\/replay$/, ({ m }) => portfolio((p) => p.submit(m[1]!))],
+    ['GET', /^\/api\/portfolio-replays\/tickets\/(PQ-[0-9a-f]{24})$/, ({ m }) => portfolio((p) => p.status(m[1]!))],
+    ['POST', /^\/api\/portfolio-replays\/tickets\/(PQ-[0-9a-f]{24})\/release$/, ({ m }) => portfolio((p) => p.release(m[1]!))],
+    [
+      'GET',
+      /^\/api\/portfolio-replays\/(PR-[0-9a-f]{64})$/,
+      ({ m, url }) => portfolio((p) => p.detail(m[1]!, { checkCurrent: url.searchParams.get('current') === '1' }))
+    ],
+    [
+      'GET',
+      /^\/api\/portfolio-replays\/(PR-[0-9a-f]{64})\/events$/,
+      async ({ m, url }) => {
+        const { events, source } = portfolio((p) => p.events(m[1]!));
+        return eventsResponse(source, events, url);
+      }
+    ],
+    ['GET', /^\/api\/portfolio-replays\/(PR-[0-9a-f]{64})\/prices$/, async ({ m, url }) => pricesResponse(portfolio((p) => p.chartSource(m[1]!)), url)],
+    ['GET', /^\/api\/portfolio-replays\/(PR-[0-9a-f]{64})\/candles$/, async ({ m, url }) => candlesResponse(portfolio((p) => p.chartSource(m[1]!)), url)],
+    ['GET', /^\/api\/portfolio-replays\/(PR-[0-9a-f]{64})\/equity$/, ({ m }) => portfolio((p) => p.equity(m[1]!))],
     [
       'GET',
       /^\/api\/phenotypes$/,

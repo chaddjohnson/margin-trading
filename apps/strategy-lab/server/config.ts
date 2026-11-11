@@ -28,6 +28,10 @@ export interface Config {
   previewCacheMaxEntries: number;
   previewCacheMaxBytes: number;
   maxConcurrentPreviews: number;
+  /** Pooled portfolio candidates: the replay cache directory (disposable; never a saved run) and its limits. */
+  portfolioCacheDir: string;
+  portfolioCacheMaxEntries: number;
+  portfolioCacheMaxBytes: number;
 }
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -162,7 +166,16 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     previewCacheMaxEntries: int(env.STRATEGY_LAB_PREVIEW_CACHE_MAX_ENTRIES, 200, 1, 100_000, 'STRATEGY_LAB_PREVIEW_CACHE_MAX_ENTRIES'),
     previewCacheMaxBytes:
       int(env.STRATEGY_LAB_PREVIEW_CACHE_MAX_MB, 2048, 16, 1_048_576, 'STRATEGY_LAB_PREVIEW_CACHE_MAX_MB') * 1024 * 1024,
-    maxConcurrentPreviews: int(env.STRATEGY_LAB_MAX_CONCURRENT_PREVIEWS, 1, 1, 2, 'STRATEGY_LAB_MAX_CONCURRENT_PREVIEWS')
+    maxConcurrentPreviews: int(env.STRATEGY_LAB_MAX_CONCURRENT_PREVIEWS, 1, 1, 2, 'STRATEGY_LAB_MAX_CONCURRENT_PREVIEWS'),
+    portfolioCacheDir: ownCacheDirOf(
+      stateDir,
+      env.STRATEGY_LAB_PORTFOLIO_CACHE_DIR ? abs(env.STRATEGY_LAB_PORTFOLIO_CACHE_DIR) : null,
+      'portfolio-cache',
+      'STRATEGY_LAB_PORTFOLIO_CACHE_DIR'
+    ),
+    portfolioCacheMaxEntries: int(env.STRATEGY_LAB_PORTFOLIO_CACHE_MAX_ENTRIES, 40, 1, 10_000, 'STRATEGY_LAB_PORTFOLIO_CACHE_MAX_ENTRIES'),
+    portfolioCacheMaxBytes:
+      int(env.STRATEGY_LAB_PORTFOLIO_CACHE_MAX_MB, 512, 16, 1_048_576, 'STRATEGY_LAB_PORTFOLIO_CACHE_MAX_MB') * 1024 * 1024
   };
 }
 
@@ -171,7 +184,16 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
  * it, the repository, market data, or a directory inside the saved runs, imports or deletion trash.
  */
 export function previewCacheDirOf(stateDir: string, override: string | null): string {
-  const dir = resolve(override ?? join(stateDir, 'preview-cache'));
+  return ownCacheDirOf(stateDir, override, 'preview-cache', 'STRATEGY_LAB_PREVIEW_CACHE_DIR');
+}
+
+/**
+ * A disposable cache directory of its own: <stateDir>/<name> by default (the preview cache, the pooled-candidate
+ * replay cache). Never the state directory itself, an ancestor of it, the repository, market data, or a directory inside
+ * the saved runs, imports or deletion trash.
+ */
+export function ownCacheDirOf(stateDir: string, override: string | null, name: string, variable: string): string {
+  const dir = resolve(override ?? join(stateDir, name));
   const within = (p: string, parent: string) => p === parent || p.startsWith(`${parent}${sep}`);
   const state = resolve(stateDir);
   const bad =
@@ -179,6 +201,6 @@ export function previewCacheDirOf(stateDir: string, override: string | null): st
     within(REPO_ROOT, dir) ||
     within(dir, resolve(REPO_ROOT, 'data')) ||
     ['runs', 'imports', 'trash'].some((d) => within(dir, resolve(state, d)));
-  if (bad) throw new Error(`STRATEGY_LAB_PREVIEW_CACHE_DIR must be a directory of its own, not ${dir}`);
+  if (bad) throw new Error(`${variable} must be a directory of its own, not ${dir}`);
   return dir;
 }

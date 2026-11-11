@@ -81,9 +81,32 @@ type Metrics = Record<string, unknown> | null | undefined;
 function openPnl(
   metrics: Metrics,
   symbol: string,
-  principal: number | null
+  principal: number | null,
+  entry: LabEvent | null = null
 ): { pnl: TradePnl | null; reason: string | null } {
   const pct = (net: number) => (principal && principal > 0 ? (net / principal) * 100 : null);
+  // Pooled portfolio candidates (Priority 6): each open position's entry carries its own end-of-run mark — the whole
+  // position (realized partial exits + the remainder marked at the last close, net of accrued interest, exit cost not
+  // charged).
+  if (metrics?.kind === 'pooled candidate replay') {
+    const net = num(entry, 'positionNet');
+    const remainder = num(entry, 'remainderMarked');
+    const partials = num(entry, 'partialFillsNet');
+    if (net === null) return { pnl: null, reason: 'the replay recorded no mark for this open position' };
+    return {
+      pnl: {
+        netUsd: net,
+        percent: pct(net),
+        unrealized: true,
+        basis:
+          partials
+            ? `the whole open position: its partial exit(s) realized ${formatMoney(partials)} + the remainder marked at the last close ${formatMoney(remainder ?? 0)} (net of accrued interest; exit cost not charged)`
+            : 'marked at the last close of the replay, net of accrued interest; exit cost not charged',
+        markDate: text(entry, 'markDate')
+      },
+      reason: null
+    };
+  }
   if (metrics?.kind === 'trading backtest') {
     const per = (metrics.perSymbol as Record<string, { pnl?: { unrealized?: unknown } }> | undefined)?.[symbol];
     const u = per?.pnl?.unrealized as
@@ -185,7 +208,7 @@ export function buildTrades(
         };
       }
     } else if (status === 'open') {
-      const o = openPnl(metrics, symbol, principal);
+      const o = openPnl(metrics, symbol, principal, entry);
       pnl = o.pnl;
       pnlUnavailable = o.reason;
     } else pnlUnavailable = problem ?? (entry ? 'no exit is linked to this entry' : 'no entry is linked to this exit');

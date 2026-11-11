@@ -13,6 +13,7 @@ All commands run from the repository root (`/home/chad/projects/margin-trading`)
 | Import a Study 8 replay | see [§Importing vg-balanced](#importing-vg-balanced) | — |
 | Import selected phenotypes | `npm --prefix apps/strategy-lab run import:phenotypes -- <export dir>` ([PHENOTYPES.md](PHENOTYPES.md)) | — |
 | Export a run's research bundle | `npm --prefix apps/strategy-lab run export -- R-000042 [--minute] [--out f.zip]` ([EXPORTS.md](EXPORTS.md)) | — |
+| Rebuild / check the pooled-candidate catalog; replay the five candidates against every archived target and ledger (read-only) | `npm --prefix apps/strategy-lab run portfolio-catalog -- --check`; `npm --prefix apps/strategy-lab run portfolio-parity -- --out parity.json` ([POOLED_CANDIDATES.md](POOLED_CANDIDATES.md)) | — |
 | Re-execute a stored Growth run and diff it | `npm --prefix apps/strategy-lab run replay -- R-000017` (read-only; scratch output) | — |
 | Audit a state directory (before/after a migration) | `npm --prefix apps/strategy-lab run audit:state -- state/strategy-lab [--json]` (read-only) | — |
 
@@ -77,6 +78,9 @@ the tailnet, open `http://apollo:4317`, enter the token, and confirm the run lis
 | `STRATEGY_LAB_PREVIEW_CACHE_MAX_ENTRIES` | `200` | Cached previews kept (least recently used evicted first) |
 | `STRATEGY_LAB_PREVIEW_CACHE_MAX_MB` | `2048` | Their total size |
 | `STRATEGY_LAB_MAX_CONCURRENT_PREVIEWS` | `1` (max 2) | Preview executions at once (separate from saved runs) |
+| `STRATEGY_LAB_PORTFOLIO_CACHE_DIR` | `<state>/portfolio-cache` | The pooled-candidate replay cache (disposable; never the state directory itself, `runs/`, `imports/` or the data) — [POOLED_CANDIDATES.md](POOLED_CANDIDATES.md) §5 |
+| `STRATEGY_LAB_PORTFOLIO_CACHE_MAX_ENTRIES` | `40` | Cached replays kept (least recently used evicted first) |
+| `STRATEGY_LAB_PORTFOLIO_CACHE_MAX_MB` | `512` | Their total size (a replay is about 0.3 MB) |
 
 The service reads extra settings from `~/.config/strategy-lab/env` (outside the repository).
 
@@ -108,6 +112,8 @@ Everything stateful lives in `state/strategy-lab/` (git-ignored):
 - `runs/`;
 - `imports/`;
 - `api-token`;
+- `portfolio-cache/` — **disposable**: pooled-candidate replays, recomputed on demand (about 6 s each); backups need not
+  include it;
 - `preview-cache/` — **disposable**: temporary Interactive Preview results, rebuilt on demand. Backups need not include
   it; deleting it loses no research record ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md) §3.4 for `status`,
   `verify`, `prune`, `clear`).
@@ -197,6 +203,10 @@ offers 1.3.0), and its runs execute through the new runner, which reproduces 1.3
 explicit *Preview as Growth 1.4.0* button. Old preview-cache entries never match the new implementation fingerprint and
 are recomputed on demand. `npm --prefix apps/strategy-lab run export-requests -- --out <dir> <request.json> …` runs
 request files in a scratch state (never the live one) and writes their research bundles.
+
+Pooled portfolio candidates (2026-11-11, Priority 6) added **no migration**: replays never touch the database. The
+first start with the new code creates `<state>/portfolio-cache/`; until a running server is restarted, the Portfolios
+tab reports that its routes are missing (404).
 
 Interactive Preview (2026-11-05, Task 13) added **no migration** either: previews never touch the database. The first
 start with the new code creates `<state>/preview-cache/`. Until a running server is restarted, the new UI's

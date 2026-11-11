@@ -2434,3 +2434,388 @@ a.view-tab:not(.is-active):hover {
   max-width: calc(100% - 90px);
   text-align: right;
 }
+
+/* ---------- pooled portfolio candidates (Priority 6, src/components/PortfolioView.tsx) ---------- */
+
+.portfolio-view {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 12px;
+}
+
+.candidate-selector-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin-bottom: 8px;
+}
+
+.candidate-selector-head h2,
+.candidate-title-row h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.candidate-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 8px;
+}
+
+.candidate-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text-1);
+  text-align: left;
+  cursor: pointer;
+}
+
+.candidate-card:hover {
+  border-color: var(--accent);
+}
+
+.candidate-card.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.candidate-name {
+  font-weight: 650;
+  font-size: 13.5px;
+}
+
+.candidate-order {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  margin-right: 4px;
+  border-radius: 4px;
+  background: var(--surface-3);
+  color: var(--text-2);
+  font-size: 11px;
+}
+
+.candidate-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.component-chip {
+  padding: 0 6px;
+  border: 1px solid var(--border-strong);
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.component-chip.comp-D1 {
+  border-radius: 3px;
+}
+
+.component-chip.comp-Growth {
+  border-radius: 9px;
+}
+
+.component-chip.is-off {
+  color: var(--text-3);
+  border-style: dashed;
+}
+
+.candidate-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.badge-ok {
+  color: var(--ok);
+  border-color: rgba(76, 195, 138, 0.55);
+}
+
+.badge-danger {
+  color: var(--danger);
+  border-color: rgba(240, 112, 112, 0.6);
+}
+
+.candidate-summary {
+  margin: 8px 0 4px;
+  color: var(--text-1);
+}
+
+.candidate-distinctions {
+  margin: 0 0 8px;
+  padding-left: 18px;
+}
+
+.replay-status {
+  margin: 6px 0;
+  color: var(--text-2);
+}
+
+.candidate-details > summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 13px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 10px 16px;
+  margin-top: 8px;
+}
+
+.details-block h4 {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.details-wide {
+  grid-column: 1 / -1;
+}
+
+.param-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.param-table th,
+.param-table td {
+  padding: 1px 6px 1px 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+  word-break: break-word;
+}
+
+.param-table th {
+  color: var(--text-3);
+  font-weight: 500;
+}
+
+.source-list {
+  margin: 0;
+  padding-left: 16px;
+  word-break: break-all;
+}
+
+.portfolio-summary h3,
+.equity-head h3,
+.ledger-head h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 10px 18px;
+}
+
+.summary-block h4 {
+  margin: 4px 0;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+.summary-block dl {
+  display: grid;
+  grid-template-columns: minmax(11em, 1fr) minmax(0, 1.25fr);
+  gap: 2px 10px;
+  margin: 0 0 6px;
+  font-size: 12.5px;
+}
+
+.summary-block dt {
+  color: var(--text-3);
+}
+
+.summary-block dd {
+  margin: 0;
+  text-align: right;
+}
+
+.summary-block dd .dd-dates {
+  display: block;
+}
+
+.summary-block dd.big {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.pos {
+  color: var(--ok);
+}
+
+.neg {
+  color: var(--danger);
+}
+
+.attribution {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+}
+
+.attribution caption {
+  text-align: left;
+  color: var(--text-3);
+  padding-bottom: 4px;
+}
+
+.attribution th,
+.attribution td {
+  padding: 2px 8px 2px 0;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.attribution th[scope='row'],
+.attribution thead th:first-child {
+  text-align: left;
+}
+
+.attribution tr.total {
+  font-weight: 700;
+}
+
+.equity-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.equity-graph {
+  width: 100%;
+}
+
+.equity-panel-label {
+  margin-top: 4px;
+}
+
+.equity-readout {
+  min-height: 1.4em;
+}
+
+.portfolio-legend .legend-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin-right: 12px;
+}
+
+.marker.is-framed {
+  width: 18px;
+  height: 18px;
+}
+
+.marker.is-framed[data-frame='round'] {
+  border-radius: 50%;
+}
+
+.tt-grid {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 1px 8px;
+  margin: 4px 0;
+}
+
+.tt-grid > span:nth-child(odd) {
+  color: var(--text-3);
+}
+
+.selected-event {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface-2);
+  font-size: 12.5px;
+}
+
+.ledger-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.ledger-filters {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ledger .table-scroll {
+  max-height: 520px;
+  overflow: auto;
+}
+
+.ledger-table,
+.fills-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.ledger-table th,
+.ledger-table td,
+.fills-table th,
+.fills-table td {
+  padding: 2px 8px 2px 0;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  text-align: left;
+}
+
+.ledger-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-1);
+  z-index: 1;
+}
+
+.ledger-table tr.is-selected > td {
+  background: var(--accent-soft);
+}
+
+.ledger-table tr.ledger-fills > td {
+  background: var(--surface-2);
+}
+
+.fills-table {
+  margin: 4px 0;
+}
+
+.btn-ghost.expand {
+  padding: 0 6px;
+}
+
+@media (max-width: 700px) {
+  .candidate-list {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-block dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .summary-block dd {
+    text-align: left;
+  }
+}

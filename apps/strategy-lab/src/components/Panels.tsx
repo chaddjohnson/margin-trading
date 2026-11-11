@@ -4,7 +4,7 @@ import type { LabEvent, LabValue, RunDetail } from '../../shared/contract.ts';
 import type { ParamSpec, Predicate } from '../../shared/contract.ts';
 import { findStrategy, RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL } from '../../shared/strategies.ts';
 import { displayId } from '../api.ts';
-import { eventKindLabel, glyphUri, isPartialExit, type MarkerTone, type Role } from '../chart/markers.ts';
+import { eventKindLabel, type Frame, glyphUri, isPartialExit, type MarkerTone, type Role } from '../chart/markers.ts';
 import {
   formatEt,
   formatPercent,
@@ -197,16 +197,31 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
   );
 }
 
-export function Glyph({ kind, role, tone, partial = false }: { kind: LabEvent['kind']; role: Role; tone: MarkerTone; partial?: boolean }) {
+export function Glyph({
+  kind,
+  role,
+  tone,
+  partial = false,
+  frame = null
+}: {
+  kind: LabEvent['kind'];
+  role: Role;
+  tone: MarkerTone;
+  partial?: boolean;
+  /** Pooled portfolios: the component frame (D1 square, Growth round). */
+  frame?: Frame | null;
+}) {
+  const size = frame ? 16 : 13;
   return (
     <img
       className="glyph"
-      src={glyphUri(kind, role, tone, 13, partial)}
+      src={glyphUri(kind, role, tone, size, partial, frame)}
       alt=""
-      width={13}
-      height={13}
+      width={size}
+      height={size}
       data-tone={tone}
       data-partial={partial ? 'true' : undefined}
+      data-frame={frame ?? undefined}
     />
   );
 }

@@ -1,0 +1,2765 @@
+{
+  "schema": "strategy-lab.pooled-candidate-catalog",
+  "version": 1,
+  "note": "Five frozen portfolio candidates for inspection in Strategy Lab (Priority 6). Listed in the order of the Priority 6 brief; the order is not a safety ranking, no candidate is an adopted favourite, and inclusion is permission to inspect, not a trading instruction or a deployment.",
+  "builtBy": "apps/strategy-lab/scripts/build-candidate-catalog.ts (runner/portfolio-catalog.ts buildCatalog)",
+  "benchmark": {
+    "from": "2016-01-04",
+    "to": "2026-10-30",
+    "boundary": "2024-12-31",
+    "validationFrom": "2025-01-02",
+    "principal": 100000,
+    "compounding": false,
+    "costBpsPerSide": 5,
+    "interestRateAnnual": 0.11
+  },
+  "candidates": [
+    {
+      "id": "l0-primary",
+      "order": 1,
+      "name": "New L0 primary",
+      "summary": "Modified D1·VGT + modified D1·GDX + VGT Growth 6b5f909b; GDX Growth OFF; Growth funding lifecycle L0 (matched lifecycle study C24/L0/informed/R1#1 profit).",
+      "distinctions": [
+        "Its two D1 books are modified relatives of VG #2 Balanced’s pair (D1·VGT 237,9,73,15,72,42,103,41; D1·GDX 277,1,61,13,232,25,152,10), NOT VG #2’s unchanged books.",
+        "Selected by the matched L0/L1/L2 lifecycle optimization (Priority 5B) as the L0 arm’s primary; its 2025–2026 figures are validation on previously examined history."
+      ],
+      "symbols": [
+        "VGT",
+        "GDX"
+      ],
+      "lifecycle": "L0",
+      "engine": {
+        "path": "src/vg-lifecycle-matched-optimization/life.ts runLife(door, quad, options, \"L0\") = src/vg-d1-growth-joint/evaluate.ts run + recordOf (src/vg-d1-growth-joint/pool.ts runPool)",
+        "door": "Priority 3 FULL door (src/vg-d1-growth-joint/data.ts openFullDoor, quiet): canonical VGT and GDX minute files, partition all, forward split adjustment to 2016-01-04",
+        "options": {
+          "enabled": {
+            "D1:GDX": true,
+            "D1:VGT": true,
+            "G:GDX": false,
+            "G:VGT": true
+          },
+          "boundaries": [
+            "2024-12-31"
+          ]
+        }
+      },
+      "components": [
+        {
+          "book": "D1:VGT",
+          "family": "D1",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "d1-237,9,73,15,72,42,103,41",
+          "grid": {
+            "targetPercentChange": 237,
+            "trailingBuyPercentage": 9,
+            "trailingStopPercentage": 73,
+            "maximumHoldDays": 15,
+            "tickWindowSize": 72,
+            "intradayLossBuffer": 42,
+            "pullback": 103,
+            "continuationWindow": 41
+          },
+          "gridUnits": {
+            "targetPercentChange": "tenths of a percentage point",
+            "trailingBuyPercentage": "tenths of a percentage point",
+            "trailingStopPercentage": "tenths of a percentage point",
+            "maximumHoldDays": "calendar days",
+            "tickWindowSize": "sessions",
+            "intradayLossBuffer": "tenths of a percentage point",
+            "pullback": "tenths of a percentage point",
+            "continuationWindow": "sessions"
+          },
+          "engineParams": {
+            "continuationWindow": 41,
+            "entryMode": "deep",
+            "intradayLossBuffer": 0.042,
+            "key": "d1",
+            "label": "VGT d1-237,9,73,15,72,42,103,41",
+            "maximumHoldDays": 15,
+            "postExit": true,
+            "pullback": 0.103,
+            "stopPolicy": "net",
+            "swingLookback": null,
+            "swingProximity": null,
+            "targetPercentChange": 0.237,
+            "tickWindowSize": 72,
+            "trailingBuyPercentage": 0.009,
+            "trailingStopPercentage": 0.073
+          },
+          "inactive": [
+            "swingLookback",
+            "swingProximity"
+          ]
+        },
+        {
+          "book": "D1:GDX",
+          "family": "D1",
+          "symbol": "GDX",
+          "enabled": true,
+          "identity": "d1-277,1,61,13,232,25,152,10",
+          "grid": {
+            "targetPercentChange": 277,
+            "trailingBuyPercentage": 1,
+            "trailingStopPercentage": 61,
+            "maximumHoldDays": 13,
+            "tickWindowSize": 232,
+            "intradayLossBuffer": 25,
+            "pullback": 152,
+            "continuationWindow": 10
+          },
+          "gridUnits": {
+            "targetPercentChange": "tenths of a percentage point",
+            "trailingBuyPercentage": "tenths of a percentage point",
+            "trailingStopPercentage": "tenths of a percentage point",
+            "maximumHoldDays": "calendar days",
+            "tickWindowSize": "sessions",
+            "intradayLossBuffer": "tenths of a percentage point",
+            "pullback": "tenths of a percentage point",
+            "continuationWindow": "sessions"
+          },
+          "engineParams": {
+            "continuationWindow": 10,
+            "entryMode": "deep",
+            "intradayLossBuffer": 0.025,
+            "key": "d1",
+            "label": "GDX d1-277,1,61,13,232,25,152,10",
+            "maximumHoldDays": 13,
+            "postExit": true,
+            "pullback": 0.152,
+            "stopPolicy": "net",
+            "swingLookback": null,
+            "swingProximity": null,
+            "targetPercentChange": 0.277,
+            "tickWindowSize": 232,
+            "trailingBuyPercentage": 0.001,
+            "trailingStopPercentage": 0.061
+          },
+          "inactive": [
+            "swingLookback",
+            "swingProximity"
+          ]
+        },
+        {
+          "book": "G:VGT",
+          "family": "Growth",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "6b5f909b30cfa516",
+          "effective": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5.6,
+            "recentLowLookbackBars": 84,
+            "trendFilterEnabled": false,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "time_limited",
+            "eligibilityMaxAgeSessions": 20,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 64,
+            "dipThresholdPercent": 11.9,
+            "recoveryRetracementPercent": 46.2,
+            "recoveryConfirmationSessions": 5,
+            "trailingStopPercent": 5.7,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 22,
+            "intradayLossBufferEnabled": false,
+            "initialStopEnabled": true,
+            "initialStopAtrSessions": 16,
+            "initialStopAtrMultiple": 1.2,
+            "retentionEnabled": false,
+            "continuationEnabled": true,
+            "continuationMethod": "classic_d1",
+            "continuationWindowSessions": 67,
+            "classicPullbackPercent": 11.5,
+            "classicReboundPercent": 3.01,
+            "costBpsPerSide": 5
+          },
+          "engineParams": {
+            "advanceFromRecentLowPercent": 5.6,
+            "continuation": {
+              "method": "classic_d1",
+              "pullbackPercent": 11.5,
+              "reboundPercent": 3.01,
+              "windowSessions": 67
+            },
+            "costBpsPerSide": 5,
+            "drawdownGate": {
+              "confirmationSessions": 5,
+              "dipThresholdPercent": 11.9,
+              "lookbackSessions": 64,
+              "recoveryRetracementPercent": 46.2
+            },
+            "eligibility": {
+              "maxAgeSessions": 20,
+              "policy": "time_limited"
+            },
+            "initialStop": {
+              "atrMultiple": 1.2,
+              "atrSessions": 16
+            },
+            "intradayLossBufferEnabled": false,
+            "intradayLossBufferPercent": null,
+            "maximumHoldDays": 22,
+            "maximumHoldEnabled": true,
+            "recentLowLookbackBars": 84,
+            "resolution": "1d",
+            "trailingStopPercent": 5.7,
+            "trendFilter": null
+          },
+          "inactive": [
+            "intradayLossBufferPercent"
+          ]
+        },
+        {
+          "book": "G:GDX",
+          "family": "Growth",
+          "symbol": "GDX",
+          "enabled": false,
+          "identity": null,
+          "note": "OFF: never run, never funded (the engine carries a placeholder vector for the identity only)"
+        }
+      ],
+      "enabled": {
+        "D1:GDX": true,
+        "D1:VGT": true,
+        "G:GDX": false,
+        "G:VGT": true
+      },
+      "quad": {
+        "d1": {
+          "GDX": {
+            "targetPercentChange": 277,
+            "trailingBuyPercentage": 1,
+            "trailingStopPercentage": 61,
+            "maximumHoldDays": 13,
+            "tickWindowSize": 232,
+            "intradayLossBuffer": 25,
+            "pullback": 152,
+            "continuationWindow": 10
+          },
+          "VGT": {
+            "targetPercentChange": 237,
+            "trailingBuyPercentage": 9,
+            "trailingStopPercentage": 73,
+            "maximumHoldDays": 15,
+            "tickWindowSize": 72,
+            "intradayLossBuffer": 42,
+            "pullback": 103,
+            "continuationWindow": 41
+          }
+        },
+        "g": {
+          "GDX": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5,
+            "recentLowLookbackBars": 20,
+            "trendFilterEnabled": false,
+            "eligibilityEnabled": false,
+            "drawdownRecoveryGateEnabled": false,
+            "trailingStopPercent": 7.3,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 8,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "initialStopEnabled": false,
+            "retentionEnabled": false,
+            "continuationEnabled": false,
+            "costBpsPerSide": 5
+          },
+          "VGT": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5.6,
+            "recentLowLookbackBars": 84,
+            "trendFilterEnabled": false,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "time_limited",
+            "eligibilityMaxAgeSessions": 20,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 64,
+            "dipThresholdPercent": 11.9,
+            "recoveryRetracementPercent": 46.2,
+            "recoveryConfirmationSessions": 5,
+            "trailingStopPercent": 5.7,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 22,
+            "intradayLossBufferEnabled": false,
+            "initialStopEnabled": true,
+            "initialStopAtrSessions": 16,
+            "initialStopAtrMultiple": 1.2,
+            "retentionEnabled": false,
+            "continuationEnabled": true,
+            "continuationMethod": "classic_d1",
+            "continuationWindowSessions": 67,
+            "classicPullbackPercent": 11.5,
+            "classicReboundPercent": 3.01,
+            "costBpsPerSide": 5
+          }
+        },
+        "first": "D1"
+      },
+      "identities": {
+        "study5bCfgId": "67cfdd9b62d1e16f",
+        "priority3QuadId": "a2e385640ca61012",
+        "growthVgt": "6b5f909b30cfa516",
+        "growthGdxPlaceholder": "1af5b55987a56e2f",
+        "d1Vgt": "d1-237,9,73,15,72,42,103,41",
+        "d1Gdx": "d1-277,1,61,13,232,25,152,10"
+      },
+      "conventions": {
+        "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+        "d1Lifecycle": "canonical shadow book in every arm (refusals never feed back into D1)",
+        "architecture": "A: one exclusive funded slot",
+        "principalBudget": 100000,
+        "compounding": false,
+        "preemption": false,
+        "simultaneousFundedPositions": false,
+        "partialExitReleasesSlot": false,
+        "sameInstantOrder": [
+          "D1:GDX",
+          "D1:VGT",
+          "G:GDX",
+          "G:VGT"
+        ],
+        "costBpsPerSide": 5,
+        "commission": 0,
+        "interest": "11% simple annual on outstanding principal, calendar days / 365",
+        "stopFill": "at the stop or the gapped open; no extra slippage",
+        "shares": "fractional",
+        "fundingFrom": "2016-01-04",
+        "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+        "d1DelayedEligibility": false
+      },
+      "targets": {
+        "fullNet": 479605.18,
+        "fullMinuteDd": 20385.99,
+        "validationNet": 96883.72,
+        "validationResetDd": 20385.99,
+        "developmentNet": 382721.46,
+        "developmentMinuteDd": 19459.83,
+        "developmentLots": 34,
+        "fullRealized": 485169.93,
+        "fullUnrealized": -5564.76,
+        "lots": 46,
+        "signature": "7b17578108747911",
+        "record": {
+          "id": "a2e385640ca61012",
+          "net": 479605.18,
+          "realized": 485169.93,
+          "unrealized": -5564.76,
+          "dd": 20385.99,
+          "ddPeakT": 1781718120,
+          "ddTroughT": 1784295240,
+          "ddRecoveryT": 1786109400,
+          "ddDaily": 18109.98,
+          "lots": 46,
+          "wins": 37,
+          "losses": 8,
+          "partials": 0,
+          "lossSum": -22042.05,
+          "worstLoss": -9113.94,
+          "largestWin": 51723.87,
+          "interest": 73142.47,
+          "costs": 4829.17,
+          "books": {
+            "D1:GDX": {
+              "lots": 31,
+              "wins": 23,
+              "losses": 7,
+              "booked": 221780.72,
+              "principalDays": 61300000,
+              "partials": 0,
+              "open": 1,
+              "decisions": 54,
+              "granted": 31,
+              "refused": 23
+            },
+            "D1:VGT": {
+              "lots": 7,
+              "wins": 6,
+              "losses": 1,
+              "booked": 146898.43,
+              "principalDays": 69000000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 13,
+              "granted": 7,
+              "refused": 6
+            },
+            "G:GDX": {
+              "lots": 0,
+              "wins": 0,
+              "losses": 0,
+              "booked": 0,
+              "principalDays": 0,
+              "partials": 0,
+              "open": 0,
+              "decisions": 0,
+              "granted": 0,
+              "refused": 0
+            },
+            "G:VGT": {
+              "lots": 8,
+              "wins": 8,
+              "losses": 0,
+              "booked": 110926.02,
+              "principalDays": 112400000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 12,
+              "granted": 8,
+              "refused": 4
+            }
+          },
+          "fam": {
+            "D1": {
+              "lots": 38,
+              "wins": 29,
+              "losses": 8,
+              "booked": 368679.16,
+              "principalDays": 130300000,
+              "partials": 0,
+              "open": 1,
+              "decisions": 67,
+              "granted": 38,
+              "refused": 29
+            },
+            "G": {
+              "lots": 8,
+              "wins": 8,
+              "losses": 0,
+              "booked": 110926.02,
+              "principalDays": 112400000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 12,
+              "granted": 8,
+              "refused": 4
+            }
+          },
+          "mixed": true,
+          "funded": [
+            "D1:GDX",
+            "D1:VGT",
+            "G:VGT"
+          ],
+          "sessionsHeld": 1722,
+          "peakPrincipal": 100000,
+          "peakValue": 168181.14,
+          "years": {
+            "2016": 8588.21,
+            "2017": 23852.14,
+            "2018": 18525.08,
+            "2019": 29004.74,
+            "2020": 138877.67,
+            "2021": 32525.03,
+            "2022": 43474.42,
+            "2023": 43764.07,
+            "2024": 44110.1,
+            "2025": 47530.51,
+            "2026": 49353.21
+          },
+          "periods": [
+            {
+              "boundary": "2024-12-31",
+              "equity": 382721.46,
+              "after": 96883.72,
+              "dd": 20385.99
+            }
+          ],
+          "topEpisode": 120348.41,
+          "topEpisodeShare": 0.2509,
+          "episodes": 15,
+          "signature": "7b17578108747911",
+          "virtual": {
+            "D1:GDX": {
+              "trades": 54,
+              "net": 188264.92,
+              "dd": 35975.28,
+              "first": "2016-12-02"
+            },
+            "D1:VGT": {
+              "trades": 13,
+              "net": 151195.97,
+              "dd": 21656.11,
+              "first": "2018-12-24"
+            },
+            "G:VGT": {
+              "trades": 12,
+              "net": 131607.86,
+              "dd": 17036.05,
+              "first": "2016-07-01"
+            }
+          },
+          "sessions": 2723
+        },
+        "recordFormat": "Priority 3 recordOf (5B validation, FULL door, boundary 2024-12-31, L0)"
+      },
+      "sources": [
+        {
+          "role": "settings",
+          "path": "research/vg-lifecycle-matched-optimization/FROZEN_SELECTION.json",
+          "pointer": "crossTestSubjects[row=R01] (quad, settings)",
+          "sha256": "cd223a0d18c44925af7102b98efae1e369899664b8fb07ee2f8a579816255793"
+        },
+        {
+          "role": "full-history and validation targets, archived record",
+          "path": "research/vg-lifecycle-matched-optimization/results/validation/validation.json",
+          "pointer": "rows[row=R01, mode=L0]",
+          "sha256": "8393113915ee91f98e66f3005a84b82cc78686bde9416759ae61a82846cc7afd"
+        },
+        {
+          "role": "development check",
+          "path": "research/vg-lifecycle-matched-optimization/FROZEN_SELECTION.json",
+          "pointer": "arms.L0.primary (net, dd, lots)",
+          "sha256": "cd223a0d18c44925af7102b98efae1e369899664b8fb07ee2f8a579816255793"
+        },
+        {
+          "role": "Growth identities",
+          "path": "research/vg-lifecycle-matched-optimization/CONTROL_MANIFEST.json",
+          "pointer": "growthIdentities",
+          "sha256": "e56bc7a6672ae3659bfe5e41bbb31d0f51b75860f70e62510346756ff21ecef7"
+        }
+      ],
+      "ledgers": [
+        {
+          "scope": "development (D24 door, 2016-01-04 → 2024-12-31)",
+          "engine": "Priority 3 pool (5B diagnostics, L0)",
+          "files": {
+            "lots": {
+              "path": "research/vg-lifecycle-matched-optimization/results/diagnostics/ledgers/C24_L0_informed_R1#1_profit/L0/lots.csv",
+              "sha256": "9a8f4cea41ee07003fd0f3a95d8ef4823a98f8e5633e6c5383977bf49aa48ee8"
+            }
+          }
+        }
+      ],
+      "entrySha256": "cd753c3b301f48f7e7f596a3114ea237f5126c5ac0eb82350cc1f00b8c13d5cd"
+    },
+    {
+      "id": "c4-refined",
+      "order": 2,
+      "name": "C4-refined",
+      "summary": "VG #2 Balanced’s unchanged D1·VGT + D1·GDX books + the refined VGT Growth (c3c1c0d5); GDX Growth OFF. Alias of Priority 3B C24/informed-fixed#1 profit.",
+      "distinctions": [
+        "Alias of 3B `C24/informed-fixed#1 profit` — not `informed-joint#1` and not the new L0 primary.",
+        "Its VGT Growth differs from Growth #4 in 17 settings, including the initial stop OFF; it is not “#4 with the trend filter OFF and a 5.7% trailing stop”."
+      ],
+      "symbols": [
+        "VGT",
+        "GDX"
+      ],
+      "lifecycle": "L0",
+      "engine": {
+        "path": "src/vg-lifecycle-matched-optimization/life.ts runLife(door, quad, options, \"L0\") = src/vg-d1-growth-joint/evaluate.ts run + recordOf (src/vg-d1-growth-joint/pool.ts runPool)",
+        "door": "Priority 3 FULL door (src/vg-d1-growth-joint/data.ts openFullDoor, quiet): canonical VGT and GDX minute files, partition all, forward split adjustment to 2016-01-04",
+        "options": {
+          "enabled": {
+            "D1:GDX": true,
+            "D1:VGT": true,
+            "G:GDX": false,
+            "G:VGT": true
+          },
+          "boundaries": [
+            "2024-12-31"
+          ]
+        }
+      },
+      "components": [
+        {
+          "book": "D1:VGT",
+          "family": "D1",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "d1-235,9,74,15,78,44,110,55",
+          "grid": {
+            "targetPercentChange": 235,
+            "trailingBuyPercentage": 9,
+            "trailingStopPercentage": 74,
+            "maximumHoldDays": 15,
+            "tickWindowSize": 78,
+            "intradayLossBuffer": 44,
+            "pullback": 110,
+            "continuationWindow": 55
+          },
+          "gridUnits": {
+            "targetPercentChange": "tenths of a percentage point",
+            "trailingBuyPercentage": "tenths of a percentage point",
+            "trailingStopPercentage": "tenths of a percentage point",
+            "maximumHoldDays": "calendar days",
+            "tickWindowSize": "sessions",
+            "intradayLossBuffer": "tenths of a percentage point",
+            "pullback": "tenths of a percentage point",
+            "continuationWindow": "sessions"
+          },
+          "engineParams": {
+            "continuationWindow": 55,
+            "entryMode": "deep",
+            "intradayLossBuffer": 0.044,
+            "key": "d1",
+            "label": "VGT d1-235,9,74,15,78,44,110,55",
+            "maximumHoldDays": 15,
+            "postExit": true,
+            "pullback": 0.11,
+            "stopPolicy": "net",
+            "swingLookback": null,
+            "swingProximity": null,
+            "targetPercentChange": 0.235,
+            "tickWindowSize": 78,
+            "trailingBuyPercentage": 0.009,
+            "trailingStopPercentage": 0.074
+          },
+          "inactive": [
+            "swingLookback",
+            "swingProximity"
+          ]
+        },
+        {
+          "book": "D1:GDX",
+          "family": "D1",
+          "symbol": "GDX",
+          "enabled": true,
+          "identity": "d1-276,1,57,12,243,29,152,12",
+          "grid": {
+            "targetPercentChange": 276,
+            "trailingBuyPercentage": 1,
+            "trailingStopPercentage": 57,
+            "maximumHoldDays": 12,
+            "tickWindowSize": 243,
+            "intradayLossBuffer": 29,
+            "pullback": 152,
+            "continuationWindow": 12
+          },
+          "gridUnits": {
+            "targetPercentChange": "tenths of a percentage point",
+            "trailingBuyPercentage": "tenths of a percentage point",
+            "trailingStopPercentage": "tenths of a percentage point",
+            "maximumHoldDays": "calendar days",
+            "tickWindowSize": "sessions",
+            "intradayLossBuffer": "tenths of a percentage point",
+            "pullback": "tenths of a percentage point",
+            "continuationWindow": "sessions"
+          },
+          "engineParams": {
+            "continuationWindow": 12,
+            "entryMode": "deep",
+            "intradayLossBuffer": 0.029,
+            "key": "d1",
+            "label": "GDX d1-276,1,57,12,243,29,152,12",
+            "maximumHoldDays": 12,
+            "postExit": true,
+            "pullback": 0.152,
+            "stopPolicy": "net",
+            "swingLookback": null,
+            "swingProximity": null,
+            "targetPercentChange": 0.276,
+            "tickWindowSize": 243,
+            "trailingBuyPercentage": 0.001,
+            "trailingStopPercentage": 0.057
+          },
+          "inactive": [
+            "swingLookback",
+            "swingProximity"
+          ]
+        },
+        {
+          "book": "G:VGT",
+          "family": "Growth",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "c3c1c0d56c4ee3b0",
+          "effective": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5.8,
+            "recentLowLookbackBars": 80,
+            "trendFilterEnabled": false,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "time_limited",
+            "eligibilityMaxAgeSessions": 21,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 64,
+            "dipThresholdPercent": 12.4,
+            "recoveryRetracementPercent": 48.9,
+            "recoveryConfirmationSessions": 5,
+            "trailingStopPercent": 5.7,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 21,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.8,
+            "initialStopEnabled": false,
+            "retentionEnabled": false,
+            "continuationEnabled": true,
+            "continuationMethod": "shallow_pullback",
+            "continuationWindowSessions": 60,
+            "uptrendSmaBars": 43,
+            "uptrendSlopeBars": 9,
+            "uptrendMinimumRisePercent": 3.9,
+            "pullbackMinimumPercent": 3,
+            "pullbackMaximumPercent": 7.9,
+            "recoveryPercent": 2.73,
+            "costBpsPerSide": 5
+          },
+          "engineParams": {
+            "advanceFromRecentLowPercent": 5.8,
+            "continuation": {
+              "method": "shallow_pullback",
+              "minimumRisePercent": 3.9,
+              "pullbackMaximumPercent": 7.9,
+              "pullbackMinimumPercent": 3,
+              "recoveryPercent": 2.73,
+              "slopeBars": 9,
+              "smaBars": 43,
+              "windowSessions": 60
+            },
+            "costBpsPerSide": 5,
+            "drawdownGate": {
+              "confirmationSessions": 5,
+              "dipThresholdPercent": 12.4,
+              "lookbackSessions": 64,
+              "recoveryRetracementPercent": 48.9
+            },
+            "eligibility": {
+              "maxAgeSessions": 21,
+              "policy": "time_limited"
+            },
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.8,
+            "maximumHoldDays": 21,
+            "maximumHoldEnabled": true,
+            "recentLowLookbackBars": 80,
+            "resolution": "1d",
+            "trailingStopPercent": 5.7,
+            "trendFilter": null
+          },
+          "inactive": []
+        },
+        {
+          "book": "G:GDX",
+          "family": "Growth",
+          "symbol": "GDX",
+          "enabled": false,
+          "identity": null,
+          "note": "OFF: never run, never funded (the engine carries a placeholder vector for the identity only)"
+        }
+      ],
+      "enabled": {
+        "D1:GDX": true,
+        "D1:VGT": true,
+        "G:GDX": false,
+        "G:VGT": true
+      },
+      "quad": {
+        "d1": {
+          "GDX": {
+            "targetPercentChange": 276,
+            "trailingBuyPercentage": 1,
+            "trailingStopPercentage": 57,
+            "maximumHoldDays": 12,
+            "tickWindowSize": 243,
+            "intradayLossBuffer": 29,
+            "pullback": 152,
+            "continuationWindow": 12
+          },
+          "VGT": {
+            "targetPercentChange": 235,
+            "trailingBuyPercentage": 9,
+            "trailingStopPercentage": 74,
+            "maximumHoldDays": 15,
+            "tickWindowSize": 78,
+            "intradayLossBuffer": 44,
+            "pullback": 110,
+            "continuationWindow": 55
+          }
+        },
+        "g": {
+          "GDX": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5,
+            "recentLowLookbackBars": 20,
+            "trendFilterEnabled": false,
+            "eligibilityEnabled": false,
+            "drawdownRecoveryGateEnabled": false,
+            "trailingStopPercent": 7.3,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 8,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "initialStopEnabled": false,
+            "retentionEnabled": false,
+            "continuationEnabled": false,
+            "costBpsPerSide": 5
+          },
+          "VGT": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5.8,
+            "recentLowLookbackBars": 80,
+            "trendFilterEnabled": false,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "time_limited",
+            "eligibilityMaxAgeSessions": 21,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 64,
+            "dipThresholdPercent": 12.4,
+            "recoveryRetracementPercent": 48.9,
+            "recoveryConfirmationSessions": 5,
+            "trailingStopPercent": 5.7,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 21,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.8,
+            "initialStopEnabled": false,
+            "retentionEnabled": false,
+            "continuationEnabled": true,
+            "continuationMethod": "shallow_pullback",
+            "continuationWindowSessions": 60,
+            "uptrendSmaBars": 43,
+            "uptrendSlopeBars": 9,
+            "uptrendMinimumRisePercent": 3.9,
+            "pullbackMinimumPercent": 3,
+            "pullbackMaximumPercent": 7.9,
+            "recoveryPercent": 2.73,
+            "costBpsPerSide": 5
+          }
+        },
+        "first": "D1"
+      },
+      "identities": {
+        "study5bCfgId": "0f017f0ab9b26f24",
+        "priority3QuadId": "07443ffaeef41e85",
+        "growthVgt": "c3c1c0d56c4ee3b0",
+        "growthGdxPlaceholder": "1af5b55987a56e2f",
+        "d1Vgt": "d1-235,9,74,15,78,44,110,55",
+        "d1Gdx": "d1-276,1,57,12,243,29,152,12",
+        "vg2Config": "S8-VG-F24-3",
+        "d1VgtVg2": "d1-bd80e32ee4",
+        "d1GdxVg2": "d1-7b99d2833d",
+        "alias3B": "C24/informed-fixed#1 profit",
+        "settingsChangedFromGrowth4": "advanceFromRecentLowPercent, recentLowLookbackBars, trendFilterEnabled, eligibilityMaxAgeSessions, dipLookbackSessions, dipThresholdPercent, recoveryRetracementPercent, recoveryConfirmationSessions, trailingStopPercent, intradayLossBufferPercent, initialStopEnabled, uptrendSmaBars, uptrendSlopeBars, uptrendMinimumRisePercent, pullbackMinimumPercent, pullbackMaximumPercent, recoveryPercent",
+        "settingsInactiveVersusGrowth4": "trendMethod, trendChangeLookbackSessions, trendChangeMinimumReturnPercent, initialStopAtrSessions, initialStopAtrMultiple"
+      },
+      "conventions": {
+        "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+        "d1Lifecycle": "canonical shadow book in every arm (refusals never feed back into D1)",
+        "architecture": "A: one exclusive funded slot",
+        "principalBudget": 100000,
+        "compounding": false,
+        "preemption": false,
+        "simultaneousFundedPositions": false,
+        "partialExitReleasesSlot": false,
+        "sameInstantOrder": [
+          "D1:GDX",
+          "D1:VGT",
+          "G:GDX",
+          "G:VGT"
+        ],
+        "costBpsPerSide": 5,
+        "commission": 0,
+        "interest": "11% simple annual on outstanding principal, calendar days / 365",
+        "stopFill": "at the stop or the gapped open; no extra slippage",
+        "shares": "fractional",
+        "fundingFrom": "2016-01-04",
+        "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+        "d1DelayedEligibility": false
+      },
+      "targets": {
+        "fullNet": 452082.36,
+        "fullMinuteDd": 19477.66,
+        "validationNet": 91512.65,
+        "validationResetDd": 19477.66,
+        "developmentNet": 360569.71,
+        "developmentMinuteDd": 17280.74,
+        "developmentLots": 41,
+        "fullRealized": 457647.11,
+        "fullUnrealized": -5564.76,
+        "lots": 53,
+        "signature": "67e8aee2317be650",
+        "record": {
+          "id": "07443ffaeef41e85",
+          "net": 452082.36,
+          "realized": 457647.11,
+          "unrealized": -5564.76,
+          "dd": 19477.66,
+          "ddPeakT": 1780430280,
+          "ddTroughT": 1784295240,
+          "ddRecoveryT": 1786109400,
+          "ddDaily": 17507.46,
+          "lots": 53,
+          "wins": 41,
+          "losses": 11,
+          "partials": 0,
+          "lossSum": -32909.74,
+          "worstLoss": -9113.94,
+          "largestWin": 46506.92,
+          "interest": 75312.33,
+          "costs": 5516.48,
+          "books": {
+            "D1:GDX": {
+              "lots": 33,
+              "wins": 24,
+              "losses": 8,
+              "booked": 237034.71,
+              "principalDays": 62000000,
+              "partials": 0,
+              "open": 1,
+              "decisions": 58,
+              "granted": 33,
+              "refused": 25
+            },
+            "D1:VGT": {
+              "lots": 6,
+              "wins": 5,
+              "losses": 1,
+              "booked": 94494.44,
+              "principalDays": 53500000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 13,
+              "granted": 6,
+              "refused": 7
+            },
+            "G:GDX": {
+              "lots": 0,
+              "wins": 0,
+              "losses": 0,
+              "booked": 0,
+              "principalDays": 0,
+              "partials": 0,
+              "open": 0,
+              "decisions": 0,
+              "granted": 0,
+              "refused": 0
+            },
+            "G:VGT": {
+              "lots": 14,
+              "wins": 12,
+              "losses": 2,
+              "booked": 120553.21,
+              "principalDays": 134400000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 19,
+              "granted": 14,
+              "refused": 5
+            }
+          },
+          "fam": {
+            "D1": {
+              "lots": 39,
+              "wins": 29,
+              "losses": 9,
+              "booked": 331529.15,
+              "principalDays": 115500000,
+              "partials": 0,
+              "open": 1,
+              "decisions": 71,
+              "granted": 39,
+              "refused": 32
+            },
+            "G": {
+              "lots": 14,
+              "wins": 12,
+              "losses": 2,
+              "booked": 120553.21,
+              "principalDays": 134400000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 19,
+              "granted": 14,
+              "refused": 5
+            }
+          },
+          "mixed": true,
+          "funded": [
+            "D1:GDX",
+            "D1:VGT",
+            "G:VGT"
+          ],
+          "sessionsHeld": 1774,
+          "peakPrincipal": 100000,
+          "peakValue": 164752.17,
+          "years": {
+            "2016": 5709.76,
+            "2017": 23392.89,
+            "2018": 17662.57,
+            "2019": 30111.24,
+            "2020": 130550.03,
+            "2021": 34639.94,
+            "2022": 30086.81,
+            "2023": 46109.75,
+            "2024": 42306.71,
+            "2025": 45372.74,
+            "2026": 46139.91
+          },
+          "periods": [
+            {
+              "boundary": "2024-12-31",
+              "equity": 360569.71,
+              "after": 91512.65,
+              "dd": 19477.66
+            }
+          ],
+          "topEpisode": 97744.92,
+          "topEpisodeShare": 0.2162,
+          "episodes": 18,
+          "signature": "67e8aee2317be650",
+          "virtual": {
+            "D1:GDX": {
+              "trades": 58,
+              "net": 221790.07,
+              "dd": 36160.34,
+              "first": "2016-12-19"
+            },
+            "D1:VGT": {
+              "trades": 13,
+              "net": 150010.23,
+              "dd": 21793.66,
+              "first": "2018-12-24"
+            },
+            "G:VGT": {
+              "trades": 19,
+              "net": 150361.5,
+              "dd": 16013.23,
+              "first": "2016-07-08"
+            }
+          },
+          "sessions": 2723
+        },
+        "recordFormat": "Priority 3 recordOf (5B validation, FULL door, boundary 2024-12-31, L0)"
+      },
+      "sources": [
+        {
+          "role": "settings",
+          "path": "research/vg-lifecycle-matched-optimization/FROZEN_SELECTION.json",
+          "pointer": "crossTestSubjects[row=R21] (quad, settings)",
+          "sha256": "cd223a0d18c44925af7102b98efae1e369899664b8fb07ee2f8a579816255793"
+        },
+        {
+          "role": "full-history and validation targets, archived record",
+          "path": "research/vg-lifecycle-matched-optimization/results/validation/validation.json",
+          "pointer": "rows[row=R21, mode=L0]",
+          "sha256": "8393113915ee91f98e66f3005a84b82cc78686bde9416759ae61a82846cc7afd"
+        },
+        {
+          "role": "development check",
+          "path": "research/vg-lifecycle-matched-optimization/CONTROL_MANIFEST.json",
+          "pointer": "controls[key=C4R].sealedDevelopmentCentreL0",
+          "sha256": "e56bc7a6672ae3659bfe5e41bbb31d0f51b75860f70e62510346756ff21ecef7"
+        },
+        {
+          "role": "Growth identities",
+          "path": "research/vg-lifecycle-matched-optimization/CONTROL_MANIFEST.json",
+          "pointer": "growthIdentities",
+          "sha256": "e56bc7a6672ae3659bfe5e41bbb31d0f51b75860f70e62510346756ff21ecef7"
+        },
+        {
+          "role": "VG #2 Balanced D1 books",
+          "path": "config/research-pools/study8-expanded-regime-d1/S8-VG-F24-3.json",
+          "pointer": "books[] (VGT, GDX)",
+          "sha256": "27cbadf96b98f5b425e3cc12b2a278d37e320527deb9fff46091383ed506c0da"
+        },
+        {
+          "role": "alias source (3B)",
+          "path": "research/vg-d1-growth-expanded/FROZEN_SELECTION.json",
+          "pointer": "finalSet[label=C24/informed-fixed#1 profit]",
+          "sha256": "f76299683bcb92a9175864daaf3b46f1aab62879a14aeda49a7f9ad3f5bf422e"
+        },
+        {
+          "role": "alias and differences from #4",
+          "path": "research/c4-gdx-growth-partner/CONTROL_MANIFEST.json",
+          "pointer": "c4Refined (vgtEffective, differencesFromGrowth4)",
+          "sha256": "0c81f3f0dc3e8b5c98582a99148bca8cfefcd4e4eeb9799eeb1f48f8fdbebf3f"
+        }
+      ],
+      "ledgers": [
+        {
+          "scope": "development (D24 door, 2016-01-04 → 2024-12-31)",
+          "engine": "Priority 3 pool (5B diagnostics, L0)",
+          "files": {
+            "lots": {
+              "path": "research/vg-lifecycle-matched-optimization/results/diagnostics/ledgers/control_C4R/L0/lots.csv",
+              "sha256": "c7d9dc26f308b3fd23093fbdb96593a43e7f6301589b527b05196d2aceb9c214"
+            }
+          }
+        }
+      ],
+      "entrySha256": "29906d962411716371da99c7b860d6712214c55e5eb7b9a6fb9f9ec9848fb55c"
+    },
+    {
+      "id": "c4",
+      "order": 3,
+      "name": "Original C4",
+      "summary": "VG #2 Balanced’s D1·VGT + D1·GDX pair + the original VGT Growth #4 (420cd989); GDX Growth OFF.",
+      "distinctions": [
+        "VG #2 Balanced is Study 8 `S8-VG-F24-3` (`s8-vg-balanced`), not Study 7’s older `vg-balanced` pool.",
+        "Uses the combined studies’ harmonized D1 arming (from 2016-01-04), not the native VG #2 runner’s 2017-06-15 start."
+      ],
+      "symbols": [
+        "VGT",
+        "GDX"
+      ],
+      "lifecycle": "L0",
+      "engine": {
+        "path": "src/vg-lifecycle-matched-optimization/life.ts runLife(door, quad, options, \"L0\") = src/vg-d1-growth-joint/evaluate.ts run + recordOf (src/vg-d1-growth-joint/pool.ts runPool)",
+        "door": "Priority 3 FULL door (src/vg-d1-growth-joint/data.ts openFullDoor, quiet): canonical VGT and GDX minute files, partition all, forward split adjustment to 2016-01-04",
+        "options": {
+          "enabled": {
+            "D1:GDX": true,
+            "D1:VGT": true,
+            "G:GDX": false,
+            "G:VGT": true
+          },
+          "boundaries": [
+            "2024-12-31"
+          ]
+        }
+      },
+      "components": [
+        {
+          "book": "D1:VGT",
+          "family": "D1",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "d1-235,9,74,15,78,44,110,55",
+          "grid": {
+            "targetPercentChange": 235,
+            "trailingBuyPercentage": 9,
+            "trailingStopPercentage": 74,
+            "maximumHoldDays": 15,
+            "tickWindowSize": 78,
+            "intradayLossBuffer": 44,
+            "pullback": 110,
+            "continuationWindow": 55
+          },
+          "gridUnits": {
+            "targetPercentChange": "tenths of a percentage point",
+            "trailingBuyPercentage": "tenths of a percentage point",
+            "trailingStopPercentage": "tenths of a percentage point",
+            "maximumHoldDays": "calendar days",
+            "tickWindowSize": "sessions",
+            "intradayLossBuffer": "tenths of a percentage point",
+            "pullback": "tenths of a percentage point",
+            "continuationWindow": "sessions"
+          },
+          "engineParams": {
+            "continuationWindow": 55,
+            "entryMode": "deep",
+            "intradayLossBuffer": 0.044,
+            "key": "d1",
+            "label": "VGT d1-235,9,74,15,78,44,110,55",
+            "maximumHoldDays": 15,
+            "postExit": true,
+            "pullback": 0.11,
+            "stopPolicy": "net",
+            "swingLookback": null,
+            "swingProximity": null,
+            "targetPercentChange": 0.235,
+            "tickWindowSize": 78,
+            "trailingBuyPercentage": 0.009,
+            "trailingStopPercentage": 0.074
+          },
+          "inactive": [
+            "swingLookback",
+            "swingProximity"
+          ]
+        },
+        {
+          "book": "D1:GDX",
+          "family": "D1",
+          "symbol": "GDX",
+          "enabled": true,
+          "identity": "d1-276,1,57,12,243,29,152,12",
+          "grid": {
+            "targetPercentChange": 276,
+            "trailingBuyPercentage": 1,
+            "trailingStopPercentage": 57,
+            "maximumHoldDays": 12,
+            "tickWindowSize": 243,
+            "intradayLossBuffer": 29,
+            "pullback": 152,
+            "continuationWindow": 12
+          },
+          "gridUnits": {
+            "targetPercentChange": "tenths of a percentage point",
+            "trailingBuyPercentage": "tenths of a percentage point",
+            "trailingStopPercentage": "tenths of a percentage point",
+            "maximumHoldDays": "calendar days",
+            "tickWindowSize": "sessions",
+            "intradayLossBuffer": "tenths of a percentage point",
+            "pullback": "tenths of a percentage point",
+            "continuationWindow": "sessions"
+          },
+          "engineParams": {
+            "continuationWindow": 12,
+            "entryMode": "deep",
+            "intradayLossBuffer": 0.029,
+            "key": "d1",
+            "label": "GDX d1-276,1,57,12,243,29,152,12",
+            "maximumHoldDays": 12,
+            "postExit": true,
+            "pullback": 0.152,
+            "stopPolicy": "net",
+            "swingLookback": null,
+            "swingProximity": null,
+            "targetPercentChange": 0.276,
+            "tickWindowSize": 243,
+            "trailingBuyPercentage": 0.001,
+            "trailingStopPercentage": 0.057
+          },
+          "inactive": [
+            "swingLookback",
+            "swingProximity"
+          ]
+        },
+        {
+          "book": "G:VGT",
+          "family": "Growth",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "420cd989e4fa7749",
+          "effective": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5,
+            "recentLowLookbackBars": 90,
+            "trendFilterEnabled": true,
+            "trendMethod": "price_change",
+            "trendChangeLookbackSessions": 30,
+            "trendChangeMinimumReturnPercent": -2,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "time_limited",
+            "eligibilityMaxAgeSessions": 20,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 60,
+            "dipThresholdPercent": 10,
+            "recoveryRetracementPercent": 45,
+            "recoveryConfirmationSessions": 2,
+            "trailingStopPercent": 6,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 21,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "initialStopEnabled": true,
+            "initialStopAtrSessions": 20,
+            "initialStopAtrMultiple": 1.5,
+            "retentionEnabled": false,
+            "continuationEnabled": true,
+            "continuationMethod": "shallow_pullback",
+            "continuationWindowSessions": 60,
+            "uptrendSmaBars": 50,
+            "uptrendSlopeBars": 10,
+            "uptrendMinimumRisePercent": 0,
+            "pullbackMinimumPercent": 1.5,
+            "pullbackMaximumPercent": 8,
+            "recoveryPercent": 1,
+            "costBpsPerSide": 5
+          },
+          "engineParams": {
+            "advanceFromRecentLowPercent": 5,
+            "continuation": {
+              "method": "shallow_pullback",
+              "minimumRisePercent": 0,
+              "pullbackMaximumPercent": 8,
+              "pullbackMinimumPercent": 1.5,
+              "recoveryPercent": 1,
+              "slopeBars": 10,
+              "smaBars": 50,
+              "windowSessions": 60
+            },
+            "costBpsPerSide": 5,
+            "drawdownGate": {
+              "confirmationSessions": 2,
+              "dipThresholdPercent": 10,
+              "lookbackSessions": 60,
+              "recoveryRetracementPercent": 45
+            },
+            "eligibility": {
+              "maxAgeSessions": 20,
+              "policy": "time_limited"
+            },
+            "initialStop": {
+              "atrMultiple": 1.5,
+              "atrSessions": 20
+            },
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "maximumHoldDays": 21,
+            "maximumHoldEnabled": true,
+            "recentLowLookbackBars": 90,
+            "resolution": "1d",
+            "trailingStopPercent": 6,
+            "trendFilter": {
+              "lookbackSessions": 30,
+              "method": "price_change",
+              "minimumReturnPercent": -2
+            }
+          },
+          "inactive": []
+        },
+        {
+          "book": "G:GDX",
+          "family": "Growth",
+          "symbol": "GDX",
+          "enabled": false,
+          "identity": null,
+          "note": "OFF: never run, never funded (the engine carries a placeholder vector for the identity only)"
+        }
+      ],
+      "enabled": {
+        "D1:GDX": true,
+        "D1:VGT": true,
+        "G:GDX": false,
+        "G:VGT": true
+      },
+      "quad": {
+        "d1": {
+          "GDX": {
+            "targetPercentChange": 276,
+            "trailingBuyPercentage": 1,
+            "trailingStopPercentage": 57,
+            "maximumHoldDays": 12,
+            "tickWindowSize": 243,
+            "intradayLossBuffer": 29,
+            "pullback": 152,
+            "continuationWindow": 12
+          },
+          "VGT": {
+            "targetPercentChange": 235,
+            "trailingBuyPercentage": 9,
+            "trailingStopPercentage": 74,
+            "maximumHoldDays": 15,
+            "tickWindowSize": 78,
+            "intradayLossBuffer": 44,
+            "pullback": 110,
+            "continuationWindow": 55
+          }
+        },
+        "g": {
+          "GDX": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5,
+            "recentLowLookbackBars": 20,
+            "trendFilterEnabled": false,
+            "eligibilityEnabled": false,
+            "drawdownRecoveryGateEnabled": false,
+            "trailingStopPercent": 7.3,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 8,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "initialStopEnabled": false,
+            "retentionEnabled": false,
+            "continuationEnabled": false,
+            "costBpsPerSide": 5
+          },
+          "VGT": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5,
+            "recentLowLookbackBars": 90,
+            "trendFilterEnabled": true,
+            "trendMethod": "price_change",
+            "trendChangeLookbackSessions": 30,
+            "trendChangeMinimumReturnPercent": -2,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "time_limited",
+            "eligibilityMaxAgeSessions": 20,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 60,
+            "dipThresholdPercent": 10,
+            "recoveryRetracementPercent": 45,
+            "recoveryConfirmationSessions": 2,
+            "trailingStopPercent": 6,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 21,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "initialStopEnabled": true,
+            "initialStopAtrSessions": 20,
+            "initialStopAtrMultiple": 1.5,
+            "retentionEnabled": false,
+            "continuationEnabled": true,
+            "continuationMethod": "shallow_pullback",
+            "continuationWindowSessions": 60,
+            "uptrendSmaBars": 50,
+            "uptrendSlopeBars": 10,
+            "uptrendMinimumRisePercent": 0,
+            "pullbackMinimumPercent": 1.5,
+            "pullbackMaximumPercent": 8,
+            "recoveryPercent": 1,
+            "costBpsPerSide": 5
+          }
+        },
+        "first": "D1"
+      },
+      "identities": {
+        "study5bCfgId": "2f49a1cc226b4ece",
+        "priority3QuadId": "f324035d15f69610",
+        "growthVgt": "420cd989e4fa7749",
+        "growthGdxPlaceholder": "1af5b55987a56e2f",
+        "d1Vgt": "d1-235,9,74,15,78,44,110,55",
+        "d1Gdx": "d1-276,1,57,12,243,29,152,12",
+        "vg2Config": "S8-VG-F24-3",
+        "d1VgtVg2": "d1-bd80e32ee4",
+        "d1GdxVg2": "d1-7b99d2833d"
+      },
+      "conventions": {
+        "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+        "d1Lifecycle": "canonical shadow book in every arm (refusals never feed back into D1)",
+        "architecture": "A: one exclusive funded slot",
+        "principalBudget": 100000,
+        "compounding": false,
+        "preemption": false,
+        "simultaneousFundedPositions": false,
+        "partialExitReleasesSlot": false,
+        "sameInstantOrder": [
+          "D1:GDX",
+          "D1:VGT",
+          "G:GDX",
+          "G:VGT"
+        ],
+        "costBpsPerSide": 5,
+        "commission": 0,
+        "interest": "11% simple annual on outstanding principal, calendar days / 365",
+        "stopFill": "at the stop or the gapped open; no extra slippage",
+        "shares": "fractional",
+        "fundingFrom": "2016-01-04",
+        "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+        "d1DelayedEligibility": false
+      },
+      "targets": {
+        "fullNet": 401867.24,
+        "fullMinuteDd": 21536.85,
+        "validationNet": 99081.34,
+        "validationResetDd": 21536.85,
+        "developmentNet": 302785.91,
+        "developmentMinuteDd": 17332.09,
+        "developmentLots": 38,
+        "fullRealized": 407432,
+        "fullUnrealized": -5564.76,
+        "lots": 49,
+        "signature": "6b2cb27f44cc7a85",
+        "record": {
+          "id": "f324035d15f69610",
+          "net": 401867.24,
+          "realized": 407432,
+          "unrealized": -5564.76,
+          "dd": 21536.85,
+          "ddPeakT": 1780430280,
+          "ddTroughT": 1784295240,
+          "ddRecoveryT": 1786109400,
+          "ddDaily": 19565.7,
+          "lots": 49,
+          "wins": 35,
+          "losses": 13,
+          "partials": 0,
+          "lossSum": -40635.86,
+          "worstLoss": -9113.94,
+          "largestWin": 46506.92,
+          "interest": 67958.9,
+          "costs": 5087.69,
+          "books": {
+            "D1:GDX": {
+              "lots": 32,
+              "wins": 22,
+              "losses": 9,
+              "booked": 197802.37,
+              "principalDays": 56300000,
+              "partials": 0,
+              "open": 1,
+              "decisions": 58,
+              "granted": 32,
+              "refused": 26
+            },
+            "D1:VGT": {
+              "lots": 6,
+              "wins": 5,
+              "losses": 1,
+              "booked": 94494.44,
+              "principalDays": 53500000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 13,
+              "granted": 6,
+              "refused": 7
+            },
+            "G:GDX": {
+              "lots": 0,
+              "wins": 0,
+              "losses": 0,
+              "booked": 0,
+              "principalDays": 0,
+              "partials": 0,
+              "open": 0,
+              "decisions": 0,
+              "granted": 0,
+              "refused": 0
+            },
+            "G:VGT": {
+              "lots": 11,
+              "wins": 8,
+              "losses": 3,
+              "booked": 109570.44,
+              "principalDays": 115700000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 13,
+              "granted": 11,
+              "refused": 2
+            }
+          },
+          "fam": {
+            "D1": {
+              "lots": 38,
+              "wins": 27,
+              "losses": 10,
+              "booked": 292296.8,
+              "principalDays": 109800000,
+              "partials": 0,
+              "open": 1,
+              "decisions": 71,
+              "granted": 38,
+              "refused": 33
+            },
+            "G": {
+              "lots": 11,
+              "wins": 8,
+              "losses": 3,
+              "booked": 109570.44,
+              "principalDays": 115700000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 13,
+              "granted": 11,
+              "refused": 2
+            }
+          },
+          "mixed": true,
+          "funded": [
+            "D1:GDX",
+            "D1:VGT",
+            "G:VGT"
+          ],
+          "sessionsHeld": 1604,
+          "peakPrincipal": 100000,
+          "peakValue": 170815.88,
+          "years": {
+            "2016": 10276.71,
+            "2017": 30239.86,
+            "2018": 12622.49,
+            "2019": 13958.07,
+            "2020": 128619.07,
+            "2021": 34021.61,
+            "2022": 25859.14,
+            "2023": 37336.19,
+            "2024": 9852.77,
+            "2025": 47239.34,
+            "2026": 51842
+          },
+          "periods": [
+            {
+              "boundary": "2024-12-31",
+              "equity": 302785.91,
+              "after": 99081.34,
+              "dd": 21536.85
+            }
+          ],
+          "topEpisode": 97337.76,
+          "topEpisodeShare": 0.2422,
+          "episodes": 17,
+          "signature": "6b2cb27f44cc7a85",
+          "virtual": {
+            "D1:GDX": {
+              "trades": 58,
+              "net": 221790.07,
+              "dd": 36160.34,
+              "first": "2016-12-19"
+            },
+            "D1:VGT": {
+              "trades": 13,
+              "net": 150010.23,
+              "dd": 21793.66,
+              "first": "2018-12-24"
+            },
+            "G:VGT": {
+              "trades": 13,
+              "net": 145468.46,
+              "dd": 14578.1,
+              "first": "2016-06-28"
+            }
+          },
+          "sessions": 2723
+        },
+        "recordFormat": "Priority 3 recordOf (5B validation, FULL door, boundary 2024-12-31, L0)"
+      },
+      "sources": [
+        {
+          "role": "settings",
+          "path": "research/vg-lifecycle-matched-optimization/FROZEN_SELECTION.json",
+          "pointer": "crossTestSubjects[row=R20] (quad, settings)",
+          "sha256": "cd223a0d18c44925af7102b98efae1e369899664b8fb07ee2f8a579816255793"
+        },
+        {
+          "role": "full-history and validation targets, archived record",
+          "path": "research/vg-lifecycle-matched-optimization/results/validation/validation.json",
+          "pointer": "rows[row=R20, mode=L0]",
+          "sha256": "8393113915ee91f98e66f3005a84b82cc78686bde9416759ae61a82846cc7afd"
+        },
+        {
+          "role": "development check",
+          "path": "research/vg-lifecycle-matched-optimization/CONTROL_MANIFEST.json",
+          "pointer": "controls[key=C4].sealedDevelopmentCentreL0",
+          "sha256": "e56bc7a6672ae3659bfe5e41bbb31d0f51b75860f70e62510346756ff21ecef7"
+        },
+        {
+          "role": "Growth identities",
+          "path": "research/vg-lifecycle-matched-optimization/CONTROL_MANIFEST.json",
+          "pointer": "growthIdentities",
+          "sha256": "e56bc7a6672ae3659bfe5e41bbb31d0f51b75860f70e62510346756ff21ecef7"
+        },
+        {
+          "role": "VG #2 Balanced D1 books",
+          "path": "config/research-pools/study8-expanded-regime-d1/S8-VG-F24-3.json",
+          "pointer": "books[] (VGT, GDX)",
+          "sha256": "27cbadf96b98f5b425e3cc12b2a278d37e320527deb9fff46091383ed506c0da"
+        },
+        {
+          "role": "full-history ledger index",
+          "path": "research/vg-d1-growth-joint/results/validation/ledgers/INDEX.md",
+          "pointer": "entry 18",
+          "sha256": "cbd1d14dd7e4e9d8ddbab179fd4c85d40511c2da69d707ac36734059c507130a"
+        }
+      ],
+      "ledgers": [
+        {
+          "scope": "full",
+          "engine": "Priority 3 pool (validation, FULL)",
+          "files": {
+            "lots": {
+              "path": "research/vg-d1-growth-joint/results/validation/ledgers/18-lots.csv",
+              "sha256": "fb88ee39e11fdac86a36154036481f8b9da72a591b61a9ee86726e8da6427c5c"
+            },
+            "funding": {
+              "path": "research/vg-d1-growth-joint/results/validation/ledgers/18-funding.csv",
+              "sha256": "ce9389abfd1952aa0ec729023bf56b8d93740edfd1313152f2734289a40148f9"
+            },
+            "daily": {
+              "path": "research/vg-d1-growth-joint/results/validation/ledgers/18-daily.csv",
+              "sha256": "45072fdf3ddd51ea2009f6fc67c9fc52f35007c7cce430cb0a14fd7ce7ff774e"
+            }
+          }
+        },
+        {
+          "scope": "development (D24 door, 2016-01-04 → 2024-12-31)",
+          "engine": "Priority 3 pool (5B diagnostics, L0)",
+          "files": {
+            "lots": {
+              "path": "research/vg-lifecycle-matched-optimization/results/diagnostics/ledgers/control_C4/L0/lots.csv",
+              "sha256": "81adc6d2b5e8ad18223deaa795f6707d5744cd2fd3cc4cd713b9e46b434bedf4"
+            }
+          }
+        }
+      ],
+      "entrySha256": "1fb91462ac659404f3c30852ed94aef05c36dd38c5085362fca4e5e58083a3dd"
+    },
+    {
+      "id": "vgt-d1-g4",
+      "order": 4,
+      "name": "VGT-only: D1 primary + Growth #4",
+      "summary": "The existing standalone VGT D1 primary (d1-ebc9f639b3) paired as-is with VGT Growth #4 (420cd989) under Priority 2’s architecture A, D1 first. No GDX component.",
+      "distinctions": [
+        "The D1 primary is the shipped standalone VGT D1 (216,3,73,8,74,29,90,60): not VG #2’s VGT book, not the optimized D1-only winner."
+      ],
+      "symbols": [
+        "VGT"
+      ],
+      "lifecycle": "L0",
+      "engine": {
+        "path": "src/vg-lifecycle-matched-optimization/life.ts runLife(door, quad, options, \"L0\") = src/vg-d1-growth-joint/evaluate.ts run + recordOf (src/vg-d1-growth-joint/pool.ts runPool)",
+        "door": "Priority 3 FULL door (src/vg-d1-growth-joint/data.ts openFullDoor, quiet): canonical VGT and GDX minute files, partition all, forward split adjustment to 2016-01-04",
+        "options": {
+          "enabled": {
+            "D1:GDX": false,
+            "D1:VGT": true,
+            "G:GDX": false,
+            "G:VGT": true
+          },
+          "boundaries": [
+            "2024-12-31"
+          ]
+        }
+      },
+      "components": [
+        {
+          "book": "D1:VGT",
+          "family": "D1",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "d1-ebc9f639b3",
+          "grid": {
+            "targetPercentChange": 216,
+            "trailingBuyPercentage": 3,
+            "trailingStopPercentage": 73,
+            "maximumHoldDays": 8,
+            "tickWindowSize": 74,
+            "intradayLossBuffer": 29,
+            "pullback": 90,
+            "continuationWindow": 60
+          },
+          "gridUnits": {
+            "targetPercentChange": "tenths of a percentage point",
+            "trailingBuyPercentage": "tenths of a percentage point",
+            "trailingStopPercentage": "tenths of a percentage point",
+            "maximumHoldDays": "calendar days",
+            "tickWindowSize": "sessions",
+            "intradayLossBuffer": "tenths of a percentage point",
+            "pullback": "tenths of a percentage point",
+            "continuationWindow": "sessions"
+          },
+          "engineParams": {
+            "continuationWindow": 60,
+            "entryMode": "deep",
+            "intradayLossBuffer": 0.029,
+            "key": "d1",
+            "label": "VGT d1-216,3,73,8,74,29,90,60",
+            "maximumHoldDays": 8,
+            "postExit": true,
+            "pullback": 0.09,
+            "stopPolicy": "net",
+            "swingLookback": null,
+            "swingProximity": null,
+            "targetPercentChange": 0.216,
+            "tickWindowSize": 74,
+            "trailingBuyPercentage": 0.003,
+            "trailingStopPercentage": 0.073
+          },
+          "inactive": [
+            "swingLookback",
+            "swingProximity"
+          ]
+        },
+        {
+          "book": "G:VGT",
+          "family": "Growth",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "420cd989e4fa7749",
+          "effective": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5,
+            "recentLowLookbackBars": 90,
+            "trendFilterEnabled": true,
+            "trendMethod": "price_change",
+            "trendChangeLookbackSessions": 30,
+            "trendChangeMinimumReturnPercent": -2,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "time_limited",
+            "eligibilityMaxAgeSessions": 20,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 60,
+            "dipThresholdPercent": 10,
+            "recoveryRetracementPercent": 45,
+            "recoveryConfirmationSessions": 2,
+            "trailingStopPercent": 6,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 21,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "initialStopEnabled": true,
+            "initialStopAtrSessions": 20,
+            "initialStopAtrMultiple": 1.5,
+            "retentionEnabled": false,
+            "continuationEnabled": true,
+            "continuationMethod": "shallow_pullback",
+            "continuationWindowSessions": 60,
+            "uptrendSmaBars": 50,
+            "uptrendSlopeBars": 10,
+            "uptrendMinimumRisePercent": 0,
+            "pullbackMinimumPercent": 1.5,
+            "pullbackMaximumPercent": 8,
+            "recoveryPercent": 1,
+            "costBpsPerSide": 5
+          },
+          "engineParams": {
+            "advanceFromRecentLowPercent": 5,
+            "continuation": {
+              "method": "shallow_pullback",
+              "minimumRisePercent": 0,
+              "pullbackMaximumPercent": 8,
+              "pullbackMinimumPercent": 1.5,
+              "recoveryPercent": 1,
+              "slopeBars": 10,
+              "smaBars": 50,
+              "windowSessions": 60
+            },
+            "costBpsPerSide": 5,
+            "drawdownGate": {
+              "confirmationSessions": 2,
+              "dipThresholdPercent": 10,
+              "lookbackSessions": 60,
+              "recoveryRetracementPercent": 45
+            },
+            "eligibility": {
+              "maxAgeSessions": 20,
+              "policy": "time_limited"
+            },
+            "initialStop": {
+              "atrMultiple": 1.5,
+              "atrSessions": 20
+            },
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "maximumHoldDays": 21,
+            "maximumHoldEnabled": true,
+            "recentLowLookbackBars": 90,
+            "resolution": "1d",
+            "trailingStopPercent": 6,
+            "trendFilter": {
+              "lookbackSessions": 30,
+              "method": "price_change",
+              "minimumReturnPercent": -2
+            }
+          },
+          "inactive": []
+        },
+        {
+          "book": "G:GDX",
+          "family": "Growth",
+          "symbol": "GDX",
+          "enabled": false,
+          "identity": null,
+          "note": "OFF: never run, never funded (the engine carries a placeholder vector for the identity only)"
+        },
+        {
+          "book": "D1:GDX",
+          "family": "D1",
+          "symbol": "GDX",
+          "enabled": false,
+          "identity": null,
+          "note": "OFF: never run, never funded (the engine carries a placeholder vector for the identity only)"
+        }
+      ],
+      "enabled": {
+        "D1:GDX": false,
+        "D1:VGT": true,
+        "G:GDX": false,
+        "G:VGT": true
+      },
+      "quad": {
+        "d1": {
+          "GDX": {
+            "targetPercentChange": 80,
+            "trailingBuyPercentage": 1,
+            "trailingStopPercentage": 30,
+            "maximumHoldDays": 3,
+            "tickWindowSize": 20,
+            "intradayLossBuffer": 0,
+            "pullback": 30,
+            "continuationWindow": 10
+          },
+          "VGT": {
+            "targetPercentChange": 216,
+            "trailingBuyPercentage": 3,
+            "trailingStopPercentage": 73,
+            "maximumHoldDays": 8,
+            "tickWindowSize": 74,
+            "intradayLossBuffer": 29,
+            "pullback": 90,
+            "continuationWindow": 60
+          }
+        },
+        "g": {
+          "GDX": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5,
+            "recentLowLookbackBars": 20,
+            "trendFilterEnabled": false,
+            "eligibilityEnabled": false,
+            "drawdownRecoveryGateEnabled": false,
+            "trailingStopPercent": 7.3,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 8,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "initialStopEnabled": false,
+            "retentionEnabled": false,
+            "continuationEnabled": false,
+            "costBpsPerSide": 5
+          },
+          "VGT": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5,
+            "recentLowLookbackBars": 90,
+            "trendFilterEnabled": true,
+            "trendMethod": "price_change",
+            "trendChangeLookbackSessions": 30,
+            "trendChangeMinimumReturnPercent": -2,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "time_limited",
+            "eligibilityMaxAgeSessions": 20,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 60,
+            "dipThresholdPercent": 10,
+            "recoveryRetracementPercent": 45,
+            "recoveryConfirmationSessions": 2,
+            "trailingStopPercent": 6,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 21,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "initialStopEnabled": true,
+            "initialStopAtrSessions": 20,
+            "initialStopAtrMultiple": 1.5,
+            "retentionEnabled": false,
+            "continuationEnabled": true,
+            "continuationMethod": "shallow_pullback",
+            "continuationWindowSessions": 60,
+            "uptrendSmaBars": 50,
+            "uptrendSlopeBars": 10,
+            "uptrendMinimumRisePercent": 0,
+            "pullbackMinimumPercent": 1.5,
+            "pullbackMaximumPercent": 8,
+            "recoveryPercent": 1,
+            "costBpsPerSide": 5
+          }
+        },
+        "first": "D1"
+      },
+      "identities": {
+        "priority2JointId": "04741779be90e639",
+        "priority3QuadId": "dbe7be81867b739a",
+        "growthVgt": "420cd989e4fa7749",
+        "d1Vgt": "d1-ebc9f639b3",
+        "d1VgtGrid": "d1-216,3,73,8,74,29,90,60"
+      },
+      "conventions": {
+        "architecture": "A: one exclusive funded slot (Priority 2)",
+        "principalBudget": 100000,
+        "compounding": false,
+        "preemption": false,
+        "simultaneousFundedPositions": false,
+        "partialExitReleasesSlot": false,
+        "sameInstantOrder": [
+          "D1:VGT",
+          "G:VGT"
+        ],
+        "costBpsPerSide": 5,
+        "commission": 0,
+        "interest": "11% simple annual on outstanding principal, calendar days / 365",
+        "stopFill": "at the stop or the gapped open; no extra slippage",
+        "shares": "fractional",
+        "fundingFrom": "2016-01-04",
+        "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists); the D1 primary’s first signal is 2018-12-21 under either arming",
+        "growthLifecycle": "L0 — a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back",
+        "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)"
+      },
+      "targets": {
+        "fullNet": 271525.33,
+        "fullMinuteDd": 19534.41,
+        "validationNet": 66585.12,
+        "validationResetDd": 14950.77,
+        "developmentNet": 204940.21,
+        "developmentMinuteDd": 19534.41,
+        "developmentLots": 23,
+        "fullRealized": 271525.33,
+        "fullUnrealized": 0,
+        "lots": 28,
+        "signature": "a66b3fa30197dbac",
+        "record": {
+          "id": "dbe7be81867b739a",
+          "net": 271525.33,
+          "realized": 271525.33,
+          "unrealized": 0,
+          "dd": 19534.41,
+          "ddPeakT": 1582134540,
+          "ddTroughT": 1584556020,
+          "ddRecoveryT": 1585143180,
+          "ddDaily": 15817.01,
+          "lots": 28,
+          "wins": 20,
+          "losses": 8,
+          "partials": 0,
+          "lossSum": -17915.12,
+          "worstLoss": -3544.16,
+          "largestWin": 51263.87,
+          "interest": 68109.59,
+          "costs": 2969.9,
+          "books": {
+            "D1:GDX": {
+              "lots": 0,
+              "wins": 0,
+              "losses": 0,
+              "booked": 0,
+              "principalDays": 0,
+              "partials": 0,
+              "open": 0,
+              "decisions": 0,
+              "granted": 0,
+              "refused": 0
+            },
+            "D1:VGT": {
+              "lots": 21,
+              "wins": 15,
+              "losses": 6,
+              "booked": 176260.47,
+              "principalDays": 120800000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 21,
+              "granted": 21,
+              "refused": 0
+            },
+            "G:GDX": {
+              "lots": 0,
+              "wins": 0,
+              "losses": 0,
+              "booked": 0,
+              "principalDays": 0,
+              "partials": 0,
+              "open": 0,
+              "decisions": 0,
+              "granted": 0,
+              "refused": 0
+            },
+            "G:VGT": {
+              "lots": 7,
+              "wins": 5,
+              "losses": 2,
+              "booked": 95264.86,
+              "principalDays": 105200000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 13,
+              "granted": 7,
+              "refused": 6
+            }
+          },
+          "fam": {
+            "D1": {
+              "lots": 21,
+              "wins": 15,
+              "losses": 6,
+              "booked": 176260.47,
+              "principalDays": 120800000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 21,
+              "granted": 21,
+              "refused": 0
+            },
+            "G": {
+              "lots": 7,
+              "wins": 5,
+              "losses": 2,
+              "booked": 95264.86,
+              "principalDays": 105200000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 13,
+              "granted": 7,
+              "refused": 6
+            }
+          },
+          "mixed": true,
+          "funded": [
+            "D1:VGT",
+            "G:VGT"
+          ],
+          "sessionsHeld": 1581,
+          "peakPrincipal": 100000,
+          "peakValue": 170815.88,
+          "years": {
+            "2016": 10276.71,
+            "2017": 30239.86,
+            "2018": 5952.22,
+            "2019": 29318.33,
+            "2020": 75296.19,
+            "2021": 10026.97,
+            "2022": 22145.2,
+            "2023": 11831.97,
+            "2024": 9852.77,
+            "2025": 47462.75,
+            "2026": 19122.37
+          },
+          "periods": [
+            {
+              "boundary": "2024-12-31",
+              "equity": 204940.21,
+              "after": 66585.12,
+              "dd": 14950.77
+            }
+          ],
+          "topEpisode": 76619.44,
+          "topEpisodeShare": 0.2822,
+          "episodes": 11,
+          "signature": "a66b3fa30197dbac",
+          "virtual": {
+            "D1:VGT": {
+              "trades": 21,
+              "net": 176260.47,
+              "dd": 19534.41,
+              "first": "2018-12-21"
+            },
+            "G:VGT": {
+              "trades": 13,
+              "net": 145468.46,
+              "dd": 14578.1,
+              "first": "2016-06-28"
+            }
+          },
+          "sessions": 2723
+        },
+        "recordFormat": "Priority 3 recordOf (P3 validation reproduction of the Priority 2 control, FULL door, boundary 2024-12-31)"
+      },
+      "sources": [
+        {
+          "role": "settings (Priority 2 frozen control)",
+          "path": "research/vgt-d1-growth-joint/FROZEN_SELECTION.json",
+          "pointer": "controls[label=D1 primary + Growth #4 · A].joint",
+          "sha256": "e677e894738324f03dd17413f330d218fd5fcc0aa5fb76e7193e6c2d8e5f7d72"
+        },
+        {
+          "role": "shared-engine representation (Priority 3)",
+          "path": "research/vg-d1-growth-joint/CONTROL_MANIFEST.json",
+          "pointer": "controls[key=p2:primary+g4] (quad, enabled)",
+          "sha256": "0f40efd76aec8ec10a504fb2cf508891a572061df51db065363a910fb68adaa1"
+        },
+        {
+          "role": "standalone VGT D1 primary",
+          "path": "config/phenotypes/D1/VGT.json",
+          "pointer": "phenotypes.primary",
+          "sha256": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70"
+        },
+        {
+          "role": "full-history and validation targets (Priority 2)",
+          "path": "research/vgt-d1-growth-joint/results/validation/validation.json",
+          "pointer": "rows[label=control: D1 primary + Growth #4 · A]",
+          "sha256": "573c84a30e4544c2eee9bb61cc05e00711c3ac4291a9d44ffb325cafd45159b6"
+        },
+        {
+          "role": "archived record (Priority 3 reproduction)",
+          "path": "research/vg-d1-growth-joint/results/validation/validation.json",
+          "pointer": "rows[id=dbe7be81867b739a]",
+          "sha256": "77328e9cb7154939d9b455c2d62b48de5bfdb8e051a31ad790c3ade40bc4dad1"
+        },
+        {
+          "role": "development check",
+          "path": "research/vgt-d1-growth-separate-pooled/results/comparison.json",
+          "pointer": "subjects[D1 primary + Growth #4 · A].windows.development, .D24.record",
+          "sha256": "66bb9912c6a8663f11c89231752ed042495ffb857a3cb229d18cddadbfd0c992"
+        },
+        {
+          "role": "full-history ledger index (P3)",
+          "path": "research/vg-d1-growth-joint/results/validation/ledgers/INDEX.md",
+          "pointer": "entry 16",
+          "sha256": "cbd1d14dd7e4e9d8ddbab179fd4c85d40511c2da69d707ac36734059c507130a"
+        },
+        {
+          "role": "full-history ledger index (P2)",
+          "path": "research/vgt-d1-growth-joint/results/validation/ledgers/INDEX.md",
+          "pointer": "entry 14",
+          "sha256": "ab99ecb261be0337e627d938ef6506371aab8c7a57f3d570de24d260bbdede67"
+        },
+        {
+          "role": "Growth identities",
+          "path": "research/vg-lifecycle-matched-optimization/CONTROL_MANIFEST.json",
+          "pointer": "growthIdentities",
+          "sha256": "e56bc7a6672ae3659bfe5e41bbb31d0f51b75860f70e62510346756ff21ecef7"
+        }
+      ],
+      "ledgers": [
+        {
+          "scope": "full",
+          "engine": "Priority 3 pool (validation, FULL)",
+          "files": {
+            "lots": {
+              "path": "research/vg-d1-growth-joint/results/validation/ledgers/16-lots.csv",
+              "sha256": "a8f254c8cbf8372989d15254b32d3e5649e0a4316eadd3360c0be9d7fbe37b14"
+            },
+            "funding": {
+              "path": "research/vg-d1-growth-joint/results/validation/ledgers/16-funding.csv",
+              "sha256": "77bc572e12cf9febd3c520e74830078fe0d04b299d7a74ee63b2ca79ec5b2487"
+            },
+            "daily": {
+              "path": "research/vg-d1-growth-joint/results/validation/ledgers/16-daily.csv",
+              "sha256": "af34c08daafaf05a132ced6f572a501a6fa3844854cd40123a37c1a612c5d593"
+            }
+          }
+        },
+        {
+          "scope": "full",
+          "engine": "Priority 2 one-symbol pool (validation, FULL)",
+          "files": {
+            "lots": {
+              "path": "research/vgt-d1-growth-joint/results/validation/ledgers/14-lots.csv",
+              "sha256": "1a15313a76dc2dfee8416402129cb5939288380f0cd139870114129b474d02bb"
+            },
+            "funding": {
+              "path": "research/vgt-d1-growth-joint/results/validation/ledgers/14-funding.csv",
+              "sha256": "ea1a45e20b471c67cc3c55d344ad2b85ffa58ccff29b37d9eec8649bfaab510b"
+            },
+            "daily": {
+              "path": "research/vgt-d1-growth-joint/results/validation/ledgers/14-daily.csv",
+              "sha256": "af34c08daafaf05a132ced6f572a501a6fa3844854cd40123a37c1a612c5d593"
+            }
+          }
+        }
+      ],
+      "entrySha256": "9144ea1fb6828326886a30cad8ee987bdd0665968912e1d0ccbe4da6b860acc0"
+    },
+    {
+      "id": "vgt-d1-g085",
+      "order": 5,
+      "name": "VGT-only: D1 primary + Growth 08500a60",
+      "summary": "The same standalone VGT D1 primary paired as-is with Growth 08500a60ec56cfae under architecture A, D1 first. No GDX component. Growth sells 50% at its first trailing-stop event and manages the remainder.",
+      "distinctions": [
+        "Growth 08500a60 retains a remainder after a partial exit (50% at the first profit trailing-stop event); the remainder exits after one close below its 160-session SMA, or at its initial stop. The remainder keeps the slot until its final exit."
+      ],
+      "symbols": [
+        "VGT"
+      ],
+      "lifecycle": "L0",
+      "engine": {
+        "path": "src/vg-lifecycle-matched-optimization/life.ts runLife(door, quad, options, \"L0\") = src/vg-d1-growth-joint/evaluate.ts run + recordOf (src/vg-d1-growth-joint/pool.ts runPool)",
+        "door": "Priority 3 FULL door (src/vg-d1-growth-joint/data.ts openFullDoor, quiet): canonical VGT and GDX minute files, partition all, forward split adjustment to 2016-01-04",
+        "options": {
+          "enabled": {
+            "D1:GDX": false,
+            "D1:VGT": true,
+            "G:GDX": false,
+            "G:VGT": true
+          },
+          "boundaries": [
+            "2024-12-31"
+          ]
+        }
+      },
+      "components": [
+        {
+          "book": "D1:VGT",
+          "family": "D1",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "d1-ebc9f639b3",
+          "grid": {
+            "targetPercentChange": 216,
+            "trailingBuyPercentage": 3,
+            "trailingStopPercentage": 73,
+            "maximumHoldDays": 8,
+            "tickWindowSize": 74,
+            "intradayLossBuffer": 29,
+            "pullback": 90,
+            "continuationWindow": 60
+          },
+          "gridUnits": {
+            "targetPercentChange": "tenths of a percentage point",
+            "trailingBuyPercentage": "tenths of a percentage point",
+            "trailingStopPercentage": "tenths of a percentage point",
+            "maximumHoldDays": "calendar days",
+            "tickWindowSize": "sessions",
+            "intradayLossBuffer": "tenths of a percentage point",
+            "pullback": "tenths of a percentage point",
+            "continuationWindow": "sessions"
+          },
+          "engineParams": {
+            "continuationWindow": 60,
+            "entryMode": "deep",
+            "intradayLossBuffer": 0.029,
+            "key": "d1",
+            "label": "VGT d1-216,3,73,8,74,29,90,60",
+            "maximumHoldDays": 8,
+            "postExit": true,
+            "pullback": 0.09,
+            "stopPolicy": "net",
+            "swingLookback": null,
+            "swingProximity": null,
+            "targetPercentChange": 0.216,
+            "tickWindowSize": 74,
+            "trailingBuyPercentage": 0.003,
+            "trailingStopPercentage": 0.073
+          },
+          "inactive": [
+            "swingLookback",
+            "swingProximity"
+          ]
+        },
+        {
+          "book": "G:VGT",
+          "family": "Growth",
+          "symbol": "VGT",
+          "enabled": true,
+          "identity": "08500a60ec56cfae",
+          "effective": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 1,
+            "recentLowLookbackBars": 80,
+            "trendFilterEnabled": true,
+            "trendMethod": "price_change",
+            "trendChangeLookbackSessions": 10,
+            "trendChangeMinimumReturnPercent": -5,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "reset_renew",
+            "eligibilityMaxAgeSessions": 24,
+            "eligibilityResetDropPercent": 5.5,
+            "eligibilityRenewalReboundPercent": 5,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 90,
+            "dipThresholdPercent": 2,
+            "recoveryRetracementPercent": 30,
+            "recoveryConfirmationSessions": 4,
+            "trailingStopPercent": 9,
+            "maximumHoldEnabled": false,
+            "initialStopEnabled": true,
+            "initialStopAtrSessions": 55,
+            "initialStopAtrMultiple": 1,
+            "retentionEnabled": true,
+            "retentionSellPercent": 50,
+            "retentionSmaSessions": 160,
+            "retentionClosesBelow": 1,
+            "continuationEnabled": true,
+            "continuationMethod": "ma_cross",
+            "continuationWindowSessions": 50,
+            "crossSmaBars": 110,
+            "crossRisingBars": 19,
+            "crossMinimumSlopePercent": 0.4,
+            "crossMarginPercent": 2.75,
+            "costBpsPerSide": 5
+          },
+          "engineParams": {
+            "advanceFromRecentLowPercent": 1,
+            "continuation": {
+              "marginPercent": 2.75,
+              "method": "ma_cross",
+              "minimumSlopePercent": 0.4,
+              "risingBars": 19,
+              "smaBars": 110,
+              "windowSessions": 50
+            },
+            "costBpsPerSide": 5,
+            "drawdownGate": {
+              "confirmationSessions": 4,
+              "dipThresholdPercent": 2,
+              "lookbackSessions": 90,
+              "recoveryRetracementPercent": 30
+            },
+            "eligibility": {
+              "maxAgeSessions": 24,
+              "policy": "reset_renew",
+              "renewalReboundPercent": 5,
+              "resetDropPercent": 5.5
+            },
+            "initialStop": {
+              "atrMultiple": 1,
+              "atrSessions": 55
+            },
+            "intradayLossBufferEnabled": false,
+            "intradayLossBufferPercent": null,
+            "maximumHoldDays": null,
+            "maximumHoldEnabled": false,
+            "recentLowLookbackBars": 80,
+            "resolution": "1d",
+            "retention": {
+              "closesBelow": 1,
+              "sellPercent": 50,
+              "smaSessions": 160
+            },
+            "trailingStopPercent": 9,
+            "trendFilter": {
+              "lookbackSessions": 10,
+              "method": "price_change",
+              "minimumReturnPercent": -5
+            }
+          },
+          "inactive": [
+            "intradayLossBufferPercent",
+            "maximumHoldDays"
+          ]
+        },
+        {
+          "book": "G:GDX",
+          "family": "Growth",
+          "symbol": "GDX",
+          "enabled": false,
+          "identity": null,
+          "note": "OFF: never run, never funded (the engine carries a placeholder vector for the identity only)"
+        },
+        {
+          "book": "D1:GDX",
+          "family": "D1",
+          "symbol": "GDX",
+          "enabled": false,
+          "identity": null,
+          "note": "OFF: never run, never funded (the engine carries a placeholder vector for the identity only)"
+        }
+      ],
+      "enabled": {
+        "D1:GDX": false,
+        "D1:VGT": true,
+        "G:GDX": false,
+        "G:VGT": true
+      },
+      "quad": {
+        "d1": {
+          "GDX": {
+            "targetPercentChange": 80,
+            "trailingBuyPercentage": 1,
+            "trailingStopPercentage": 30,
+            "maximumHoldDays": 3,
+            "tickWindowSize": 20,
+            "intradayLossBuffer": 0,
+            "pullback": 30,
+            "continuationWindow": 10
+          },
+          "VGT": {
+            "targetPercentChange": 216,
+            "trailingBuyPercentage": 3,
+            "trailingStopPercentage": 73,
+            "maximumHoldDays": 8,
+            "tickWindowSize": 74,
+            "intradayLossBuffer": 29,
+            "pullback": 90,
+            "continuationWindow": 60
+          }
+        },
+        "g": {
+          "GDX": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 5,
+            "recentLowLookbackBars": 20,
+            "trendFilterEnabled": false,
+            "eligibilityEnabled": false,
+            "drawdownRecoveryGateEnabled": false,
+            "trailingStopPercent": 7.3,
+            "maximumHoldEnabled": true,
+            "maximumHoldDays": 8,
+            "intradayLossBufferEnabled": true,
+            "intradayLossBufferPercent": 2.9,
+            "initialStopEnabled": false,
+            "retentionEnabled": false,
+            "continuationEnabled": false,
+            "costBpsPerSide": 5
+          },
+          "VGT": {
+            "entryMethod": "rise_from_recent_low",
+            "advanceFromRecentLowPercent": 1,
+            "recentLowLookbackBars": 80,
+            "trendFilterEnabled": true,
+            "trendMethod": "price_change",
+            "trendChangeLookbackSessions": 10,
+            "trendChangeMinimumReturnPercent": -5,
+            "eligibilityEnabled": true,
+            "eligibilityPolicy": "reset_renew",
+            "eligibilityMaxAgeSessions": 24,
+            "eligibilityResetDropPercent": 5.5,
+            "eligibilityRenewalReboundPercent": 5,
+            "drawdownRecoveryGateEnabled": true,
+            "dipLookbackSessions": 90,
+            "dipThresholdPercent": 2,
+            "recoveryRetracementPercent": 30,
+            "recoveryConfirmationSessions": 4,
+            "trailingStopPercent": 9,
+            "maximumHoldEnabled": false,
+            "initialStopEnabled": true,
+            "initialStopAtrSessions": 55,
+            "initialStopAtrMultiple": 1,
+            "retentionEnabled": true,
+            "retentionSellPercent": 50,
+            "retentionSmaSessions": 160,
+            "retentionClosesBelow": 1,
+            "continuationEnabled": true,
+            "continuationMethod": "ma_cross",
+            "continuationWindowSessions": 50,
+            "crossSmaBars": 110,
+            "crossRisingBars": 19,
+            "crossMinimumSlopePercent": 0.4,
+            "crossMarginPercent": 2.75,
+            "costBpsPerSide": 5
+          }
+        },
+        "first": "D1"
+      },
+      "identities": {
+        "priority2JointId": "a8833010dd6f9c30",
+        "priority3QuadId": "51da785f9a3b5f26",
+        "growthVgt": "08500a60ec56cfae",
+        "d1Vgt": "d1-ebc9f639b3",
+        "d1VgtGrid": "d1-216,3,73,8,74,29,90,60"
+      },
+      "conventions": {
+        "architecture": "A: one exclusive funded slot (Priority 2)",
+        "principalBudget": 100000,
+        "compounding": false,
+        "preemption": false,
+        "simultaneousFundedPositions": false,
+        "partialExitReleasesSlot": false,
+        "sameInstantOrder": [
+          "D1:VGT",
+          "G:VGT"
+        ],
+        "costBpsPerSide": 5,
+        "commission": 0,
+        "interest": "11% simple annual on outstanding principal, calendar days / 365",
+        "stopFill": "at the stop or the gapped open; no extra slippage",
+        "shares": "fractional",
+        "fundingFrom": "2016-01-04",
+        "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists); the D1 primary’s first signal is 2018-12-21 under either arming",
+        "growthLifecycle": "L0 — a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back",
+        "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)"
+      },
+      "targets": {
+        "fullNet": 252359.65,
+        "fullMinuteDd": 19556.63,
+        "validationNet": 60551.2,
+        "validationResetDd": 16336.4,
+        "developmentNet": 191808.45,
+        "developmentMinuteDd": 19534.41,
+        "developmentLots": 21,
+        "fullRealized": 242983.43,
+        "fullUnrealized": 9376.22,
+        "lots": 26,
+        "signature": "496e0ea7148f973a",
+        "record": {
+          "id": "51da785f9a3b5f26",
+          "net": 252359.65,
+          "realized": 242983.43,
+          "unrealized": 9376.22,
+          "dd": 19556.63,
+          "ddPeakT": 1721056860,
+          "ddTroughT": 1744033320,
+          "ddRecoveryT": 1746106200,
+          "ddDaily": 16849.25,
+          "lots": 26,
+          "wins": 17,
+          "losses": 8,
+          "partials": 3,
+          "lossSum": -18290.78,
+          "worstLoss": -3544.16,
+          "largestWin": 51263.87,
+          "interest": 69134.25,
+          "costs": 2729.62,
+          "books": {
+            "D1:GDX": {
+              "lots": 0,
+              "wins": 0,
+              "losses": 0,
+              "booked": 0,
+              "principalDays": 0,
+              "partials": 0,
+              "open": 0,
+              "decisions": 0,
+              "granted": 0,
+              "refused": 0
+            },
+            "D1:VGT": {
+              "lots": 21,
+              "wins": 15,
+              "losses": 6,
+              "booked": 176260.47,
+              "principalDays": 120800000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 21,
+              "granted": 21,
+              "refused": 0
+            },
+            "G:GDX": {
+              "lots": 0,
+              "wins": 0,
+              "losses": 0,
+              "booked": 0,
+              "principalDays": 0,
+              "partials": 0,
+              "open": 0,
+              "decisions": 0,
+              "granted": 0,
+              "refused": 0
+            },
+            "G:VGT": {
+              "lots": 5,
+              "wins": 2,
+              "losses": 2,
+              "booked": 76099.18,
+              "principalDays": 108600000,
+              "partials": 3,
+              "open": 1,
+              "decisions": 9,
+              "granted": 5,
+              "refused": 4
+            }
+          },
+          "fam": {
+            "D1": {
+              "lots": 21,
+              "wins": 15,
+              "losses": 6,
+              "booked": 176260.47,
+              "principalDays": 120800000,
+              "partials": 0,
+              "open": 0,
+              "decisions": 21,
+              "granted": 21,
+              "refused": 0
+            },
+            "G": {
+              "lots": 5,
+              "wins": 2,
+              "losses": 2,
+              "booked": 76099.18,
+              "principalDays": 108600000,
+              "partials": 3,
+              "open": 1,
+              "decisions": 9,
+              "granted": 5,
+              "refused": 4
+            }
+          },
+          "mixed": true,
+          "funded": [
+            "D1:VGT",
+            "G:VGT"
+          ],
+          "sessionsHeld": 1782,
+          "peakPrincipal": 100000,
+          "peakValue": 169058.38,
+          "years": {
+            "2016": 9296,
+            "2017": 29815.86,
+            "2018": 8987.52,
+            "2019": 32318.6,
+            "2020": 75296.19,
+            "2021": 1956.63,
+            "2022": 22145.2,
+            "2023": 12163.72,
+            "2024": -171.27,
+            "2025": 47462.75,
+            "2026": 13088.45
+          },
+          "periods": [
+            {
+              "boundary": "2024-12-31",
+              "equity": 191808.45,
+              "after": 60551.2,
+              "dd": 16336.4
+            }
+          ],
+          "topEpisode": 76619.44,
+          "topEpisodeShare": 0.3036,
+          "episodes": 10,
+          "signature": "496e0ea7148f973a",
+          "virtual": {
+            "D1:VGT": {
+              "trades": 21,
+              "net": 176260.47,
+              "dd": 19534.41,
+              "first": "2018-12-21"
+            },
+            "G:VGT": {
+              "trades": 9,
+              "net": 160974.09,
+              "dd": 19344.8,
+              "first": "2016-07-06"
+            }
+          },
+          "sessions": 2723
+        },
+        "recordFormat": "Priority 3 recordOf (P3 validation reproduction of the Priority 2 control, FULL door, boundary 2024-12-31)"
+      },
+      "sources": [
+        {
+          "role": "settings (Priority 2 frozen control)",
+          "path": "research/vgt-d1-growth-joint/FROZEN_SELECTION.json",
+          "pointer": "controls[label=D1 primary + Growth 08500a60 · A].joint",
+          "sha256": "e677e894738324f03dd17413f330d218fd5fcc0aa5fb76e7193e6c2d8e5f7d72"
+        },
+        {
+          "role": "shared-engine representation (Priority 3)",
+          "path": "research/vg-d1-growth-joint/CONTROL_MANIFEST.json",
+          "pointer": "controls[key=p2:primary+g085] (quad, enabled)",
+          "sha256": "0f40efd76aec8ec10a504fb2cf508891a572061df51db065363a910fb68adaa1"
+        },
+        {
+          "role": "standalone VGT D1 primary",
+          "path": "config/phenotypes/D1/VGT.json",
+          "pointer": "phenotypes.primary",
+          "sha256": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70"
+        },
+        {
+          "role": "full-history and validation targets (Priority 2)",
+          "path": "research/vgt-d1-growth-joint/results/validation/validation.json",
+          "pointer": "rows[label=control: D1 primary + Growth 08500a60 · A]",
+          "sha256": "573c84a30e4544c2eee9bb61cc05e00711c3ac4291a9d44ffb325cafd45159b6"
+        },
+        {
+          "role": "archived record (Priority 3 reproduction)",
+          "path": "research/vg-d1-growth-joint/results/validation/validation.json",
+          "pointer": "rows[id=51da785f9a3b5f26]",
+          "sha256": "77328e9cb7154939d9b455c2d62b48de5bfdb8e051a31ad790c3ade40bc4dad1"
+        },
+        {
+          "role": "development check",
+          "path": "research/vgt-d1-growth-separate-pooled/results/comparison.json",
+          "pointer": "subjects[D1 primary + Growth 08500a60 · A].windows.development, .D24.record",
+          "sha256": "66bb9912c6a8663f11c89231752ed042495ffb857a3cb229d18cddadbfd0c992"
+        },
+        {
+          "role": "full-history ledger index (P3)",
+          "path": "research/vg-d1-growth-joint/results/validation/ledgers/INDEX.md",
+          "pointer": "entry 17",
+          "sha256": "cbd1d14dd7e4e9d8ddbab179fd4c85d40511c2da69d707ac36734059c507130a"
+        },
+        {
+          "role": "full-history ledger index (P2)",
+          "path": "research/vgt-d1-growth-joint/results/validation/ledgers/INDEX.md",
+          "pointer": "entry 11",
+          "sha256": "ab99ecb261be0337e627d938ef6506371aab8c7a57f3d570de24d260bbdede67"
+        },
+        {
+          "role": "Growth 08500a60 identity",
+          "path": "research/growth140-vgt-stable/FROZEN_SELECTION.json",
+          "pointer": "finalists[id=08500a60ec56cfae]",
+          "sha256": "a2a99883384b4af165803735eba6903d7c96fab3cc377f5c4ac623c8a3f56c6e"
+        },
+        {
+          "role": "Growth identities",
+          "path": "research/vg-lifecycle-matched-optimization/CONTROL_MANIFEST.json",
+          "pointer": "growthIdentities",
+          "sha256": "e56bc7a6672ae3659bfe5e41bbb31d0f51b75860f70e62510346756ff21ecef7"
+        }
+      ],
+      "ledgers": [
+        {
+          "scope": "full",
+          "engine": "Priority 3 pool (validation, FULL)",
+          "files": {
+            "lots": {
+              "path": "research/vg-d1-growth-joint/results/validation/ledgers/17-lots.csv",
+              "sha256": "3ead670629e95c48e30f75f853c40c94028b4d1beee15ccc9a0b5eada27ffa7a"
+            },
+            "funding": {
+              "path": "research/vg-d1-growth-joint/results/validation/ledgers/17-funding.csv",
+              "sha256": "ad1acc3f9e58f86db803d3a494f4155427e35ee2695bbbc7f7980126c45f036b"
+            },
+            "daily": {
+              "path": "research/vg-d1-growth-joint/results/validation/ledgers/17-daily.csv",
+              "sha256": "1be314571a7462aab7f38596d3b12cd881cec588b69ee2a14b367f554f136732"
+            }
+          }
+        },
+        {
+          "scope": "full",
+          "engine": "Priority 2 one-symbol pool (validation, FULL)",
+          "files": {
+            "lots": {
+              "path": "research/vgt-d1-growth-joint/results/validation/ledgers/11-lots.csv",
+              "sha256": "1acf302a42857a456c3485310d5f9af2e2b75a2c0569dde2fb029edd69cdd043"
+            },
+            "funding": {
+              "path": "research/vgt-d1-growth-joint/results/validation/ledgers/11-funding.csv",
+              "sha256": "c30277636a69bbcb94cda7a6a3f07668fcb7d3782facfa7161e151cf887390dc"
+            },
+            "daily": {
+              "path": "research/vgt-d1-growth-joint/results/validation/ledgers/11-daily.csv",
+              "sha256": "1be314571a7462aab7f38596d3b12cd881cec588b69ee2a14b367f554f136732"
+            }
+          }
+        }
+      ],
+      "entrySha256": "70875892cc003ff7563309c8ed57951dbd86ecf112d15a29130cc7c3ac8dcec4"
+    }
+  ]
+}

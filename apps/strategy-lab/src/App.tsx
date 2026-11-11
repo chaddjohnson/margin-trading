@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { LabRunRequest } from '../shared/contract.ts';
 import { api, type DeleteRunResult, type Meta, onTokenRequired, type PhenotypeView, setToken } from './api.ts';
 import { Phenotypes } from './components/Phenotypes.tsx';
+import { PortfolioView } from './components/PortfolioView.tsx';
 import { RunTestDialog, TokenDialog } from './components/RunTestDialog.tsx';
 import { RunView } from './components/RunView.tsx';
 import { Sidebar } from './components/Sidebar.tsx';
@@ -17,10 +18,24 @@ interface Route {
   /** The phenotype catalogue view (#/phenotypes, #/phenotype/PH-0001). */
   phenotypes?: boolean;
   phenotype?: string | null;
+  /** Pooled portfolio candidates (#/portfolios, #/portfolio/<candidate>?symbol=VGT). */
+  portfolios?: boolean;
+  candidate?: string | null;
 }
 
 // #/run/R-000042?symbol=VGT&compare=R-000013(&preview=PV-…) — survives a refresh and can be bookmarked in the browser.
 function parseHash(): Route {
+  const pf = /^#\/portfolio(?:s|\/([a-z0-9][a-z0-9-]{0,40}))(?:\?(.*))?$/.exec(window.location.hash);
+  if (pf) {
+    const sym = new URLSearchParams(pf[2] ?? '').get('symbol');
+    return {
+      run: null,
+      symbol: sym && /^[A-Z0-9][A-Z0-9.-]{0,9}$/.test(sym) ? sym : null,
+      compare: null,
+      portfolios: true,
+      candidate: pf[1] ?? null
+    };
+  }
   const ph = /^#\/phenotype(?:s|\/(PH-\d{4,12}))$/.exec(window.location.hash);
   if (ph) return { run: null, symbol: null, compare: null, phenotypes: true, phenotype: ph[1] ?? null };
   const m = /^#\/run\/(R-\d{6,12})(?:\?(.*))?$/.exec(window.location.hash);
@@ -38,6 +53,8 @@ function parseHash(): Route {
 }
 
 function toHash(r: Route): string {
+  if (r.portfolios)
+    return r.candidate ? `#/portfolio/${r.candidate}${r.symbol ? `?symbol=${r.symbol}` : ''}` : '#/portfolios';
   if (r.phenotypes) return r.phenotype ? `#/phenotype/${r.phenotype}` : '#/phenotypes';
   if (!r.run) return '#/';
   const p = new URLSearchParams();
@@ -82,14 +99,14 @@ export function App() {
 
   // No run in the URL: open the most recent one.
   useEffect(() => {
-    if (route.run || route.phenotypes) return;
+    if (route.run || route.phenotypes || route.portfolios) return;
     api
       .runs({ limit: 1 })
       .then((rs) => {
         if (rs[0]) window.location.replace(toHash({ run: rs[0].id, symbol: null, compare: null }));
       })
       .catch(() => {});
-  }, [route.run, route.phenotypes, refreshKey]);
+  }, [route.run, route.phenotypes, route.portfolios, refreshKey]);
 
   const syntheticSelected =
     useFetched(route.run, (signal) => api.run(route.run!, signal)).data?.dataOrigin === 'synthetic';
@@ -119,7 +136,7 @@ export function App() {
   };
 
   const navigate = (r: Partial<Route>) => {
-    const next: Route = { ...route, phenotypes: false, phenotype: null, ...r };
+    const next: Route = { ...route, phenotypes: false, phenotype: null, portfolios: false, candidate: null, ...r };
     if (r.run && r.run !== route.run) {
       next.compare = r.compare ?? null;
       next.symbol = r.symbol ?? route.symbol;
@@ -142,12 +159,21 @@ export function App() {
         </div>
         <nav className="view-tabs" aria-label="Views">
           <a
-            className={`view-tab${route.phenotypes ? '' : ' is-active'}`}
-            aria-current={route.phenotypes ? undefined : 'page'}
-            href={route.run ? toHash({ ...route, phenotypes: false }) : '#/'}
+            className={`view-tab${route.phenotypes || route.portfolios ? '' : ' is-active'}`}
+            aria-current={route.phenotypes || route.portfolios ? undefined : 'page'}
+            href={route.run ? toHash({ ...route, phenotypes: false, portfolios: false }) : '#/'}
             data-testid="view-runs"
           >
             Runs
+          </a>
+          <a
+            className={`view-tab${route.portfolios ? ' is-active' : ''}`}
+            aria-current={route.portfolios ? 'page' : undefined}
+            href="#/portfolios"
+            data-testid="view-portfolios"
+            title="Five frozen D1 + Growth portfolio candidates, each replayed as ONE shared $100,000 pool"
+          >
+            Portfolios
           </a>
           <a
             className={`view-tab${route.phenotypes ? ' is-active' : ''}`}
@@ -200,7 +226,22 @@ export function App() {
           onChanged={refresh}
         />
         <main className="main" data-testid="main">
-          {route.phenotypes ? (
+          {route.portfolios ? (
+            <PortfolioView
+              candidateId={route.candidate ?? null}
+              symbol={route.symbol}
+              onRoute={(r) => {
+                const next: Route = {
+                  run: null,
+                  compare: null,
+                  portfolios: true,
+                  candidate: r.candidate !== undefined ? r.candidate : (route.candidate ?? null),
+                  symbol: r.symbol !== undefined ? r.symbol : route.symbol
+                };
+                window.location.hash = toHash(next);
+              }}
+            />
+          ) : route.phenotypes ? (
             <Phenotypes
               selectedId={route.phenotype ?? null}
               refreshKey={refreshKey}

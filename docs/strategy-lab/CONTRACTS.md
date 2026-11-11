@@ -197,6 +197,25 @@ as run: `POST /api/previews/PV-…/save` `{ sourceRun, title?, confirmDuplicate?
 identity no longer holds or the preview was already saved). Everything else:
 [INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md).
 
+## Pooled portfolio candidates (`/api/portfolios…`, `/api/portfolio-replays…`, since 2026-11-11)
+
+Types: `shared/portfolio.ts`. The catalog (`GET /api/portfolios`, `GET /api/portfolios/:id`) is the committed
+`apps/strategy-lab/catalog/pooled-candidates.json` (`strategy-lab.pooled-candidate-catalog` v1; each entry carries its
+own `entrySha256`). `POST /api/portfolios/:id/replay` starts or reuses ONE replay of ONE candidate and answers a ticket
+`{ ticket: "PQ-…", candidateId, replayId: "PR-…", state, cacheHit, coalesced, progress, error }` (poll `GET
+/api/portfolio-replays/tickets/PQ-…`, release `POST …/release`). A replay (`GET /api/portfolio-replays/PR-…`) is
+`{ id, candidateId, catalogEntrySha256, window, executedAt, executionMs, name, symbols, metrics, positions, priceSource,
+implementationSha256, dataSha256 }`; `/events`, `/prices` and `/candles` have the run routes' shapes, `/equity` the
+per-session `{ dates, closeMs, marked, realized, drawdown, low }`.
+
+Replay events are contract v2 with `runId` = the `PR-…` id: `executed_entry` / `executed_exit` of FUNDED positions
+(`tradeId` = the position `P-n`; a partial exit is `meta.partial: true`, id `SYM:P-n:partial-k`, linked to the entry; the
+entry links to the final exit `SYM:P-n:exit`), every event with `meta.component` (`D1` | `Growth`), `meta.book` and
+`meta.position`; an open position's entry carries `meta.open: true` and its end-of-run mark (`positionNet`,
+`remainderMarked`, `partialFillsNet`, `markDate`). Refused executable decisions are `rejected_signal` with `meta.refused:
+true`, `reasonCode: slot_occupied`, `occupantBook` (never fills). No virtual (shadow) trade is ever exported. Definitions:
+[POOLED_CANDIDATES.md](POOLED_CANDIDATES.md) §3–§4, §7.
+
 ## Daily candles (`GET /api/runs/:id/candles?symbol=S`, since 2026-11-06)
 
 A read-only, presentation-only response (`shared/candles.ts` `CandlesResponse`). It is columnar, one entry per NYSE

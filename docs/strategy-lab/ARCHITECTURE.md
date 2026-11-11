@@ -14,6 +14,10 @@ Strategy Lab (`apps/strategy-lab/`) is a general-purpose strategy research workb
 - **Interactive Preview**: edit a saved run's parameters beside its chart and run ONE configuration at a time with no
   saved run; repeated configurations come from a persistent, validated cache; **Save as run** keeps one
   ([INTERACTIVE_PREVIEW.md](INTERACTIVE_PREVIEW.md)).
+- **Portfolios** (pooled portfolio candidates, since 2026-11-11, Priority 6): select one of five frozen D1 + Growth
+  candidates and inspect its actual funded trades from ONE replay of the research engine — one shared $100,000 pool,
+  VGT and GDX tabs, partial exits, a positions ledger, the portfolio's equity and minute drawdown — with no saved run;
+  replays are kept in their own validated cache ([POOLED_CANDIDATES.md](POOLED_CANDIDATES.md)).
 
 Optimisation, sweeps and selection are **not** in the browser or the API. They run as Claude/CLI research workflows
 ([RESEARCH_WORKFLOW.md](RESEARCH_WORKFLOW.md)), and only their finished records may be imported for display.
@@ -43,6 +47,8 @@ importers/phenotypes.ts (CLI) ──▶ the phenotype catalogue (reads a verifie
 | **Run** | One execution (or import) of a variation: title, timestamps, status, symbols, window, data fingerprints, code revision, parameter snapshot, assumptions, events, metrics. Running the same variation again creates a **new run** | `R-000001` |
 | **Phenotype** | A frozen executable configuration a study selected, imported with its manifest; runnable one test at a time, never edited ([PHENOTYPES.md](PHENOTYPES.md)) | `PH-0001` (import `PI-0001`) |
 | **Preview** | A temporary result of ONE configuration executed by Interactive Preview: no run row, variation or sidebar entry; cached by its execution identity until evicted; *Save as run* turns it into a normal run | `PV-` + 64 hex (the identity's sha256) |
+| **Pooled candidate** | A frozen portfolio candidate of the read-only catalog `apps/strategy-lab/catalog/pooled-candidates.json` (built from the research records): its components' exact vectors, conventions and archived targets ([POOLED_CANDIDATES.md](POOLED_CANDIDATES.md)) | catalog id (`l0-primary`, `c4-refined`, `c4`, `vgt-d1-g4`, `vgt-d1-g085`) |
+| **Portfolio replay** | ONE replay of a pooled candidate by the research engine (`runner/portfolio-run.ts`): no run row; cached by its identity (catalog entry, window, data, implementation) | `PR-` + 64 hex |
 | **Optimisation batch / trial** | Read-only history imported from a Claude/CLI optimisation study (a phenotype export's optional `trials`); never launched from Strategy Lab | `OB-0001` |
 
 - **IDs are derived from the integer primary key and never change.** Titles are separate and editable.
@@ -145,6 +151,9 @@ the header; `RunView` renders a saved run or a preview through the same componen
   Writes are atomic: temporary file, fsync, rename, then fsync of the directory.
 - **Preview cache:** `state/strategy-lab/preview-cache/` (`entries/<key>/`, `work/`, `trash/`, a marker file):
   disposable, bounded (LRU by count and bytes), never a store of record; no table in SQLite.
+- **Pooled-candidate replay cache:** `state/strategy-lab/portfolio-cache/` (`entries/<key>/`, `work/`, `trash/`, the
+  marker `PORTFOLIO_CACHE.md`): disposable, bounded (LRU), never a store of record; no table in SQLite
+  ([POOLED_CANDIDATES.md](POOLED_CANDIDATES.md) §5).
 - **Git:** everything under `state/` is ignored (root `.gitignore`). Migrations, code and the small demo fixture are
   committed.
 
@@ -218,6 +227,10 @@ the header; `RunView` renders a saved run or a preview through the same componen
     - A counterpart outside the view is reported ("The exit is later than the current view"); the chart is not
       zoomed to it. An open position highlights only its entry and says it is still open.
     - Everything is removed as soon as the pointer leaves the marker. No links appear during a measure or pan drag.
+- **Component frames** (pooled candidates only, since 2026-11-11): a D1 marker sits in a square frame, a Growth
+  marker in a round frame, so two strategies trading one symbol stay distinguishable without colour; the outcome
+  colours apply to the whole position (a partial exit takes its position's colour; its own fill P&L is in its tooltip).
+  Unframed markers of every other view are unchanged.
 - **Synthetic runs.** These (the demo) get their prices only from `apps/strategy-lab/fixtures/demo-dataset.v1.json`
   and are labelled synthetic everywhere. A real run never falls back to them: missing data shows an error instead of a
   chart.

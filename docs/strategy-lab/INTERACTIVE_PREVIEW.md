@@ -292,7 +292,9 @@ touches running work, and a removed entry is simply recomputed. The cache is dis
 | `GET /api/previews/PV-…/export[?minute=1]` | The preview's research bundle |
 | `POST /api/previews/PV-…/save` | Save as run (§4) |
 
-`GET /api/health` lists `features: ["interactive-preview", "daily-candles"]` (the second since Task 16). A server started before this feature answers 404 to these
+`GET /api/health` lists `features: ["interactive-preview", "daily-candles", "pooled-candidates"]` (the second since
+Task 16, the third since Priority 6; pooled-candidate replays have their own cache and routes,
+[POOLED_CANDIDATES.md](POOLED_CANDIDATES.md)). A server started before this feature answers 404 to these
 routes, and the panel then says the server needs a restart. No route searches, sweeps or batches configurations
 (`tests/server.test.ts`).
 

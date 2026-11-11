@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import type { ChartEvent } from '../chart/PriceChart.tsx';
 import type { MarkerSlot } from '../chart/candles.ts';
@@ -246,7 +246,8 @@ export function MarkerTooltip({
   anchor,
   tradeOf,
   placement = 'none',
-  slotOf
+  slotOf,
+  itemBody
 }: {
   items: ChartEvent[];
   anchor: DOMRect;
@@ -254,6 +255,8 @@ export function MarkerTooltip({
   placement?: Placement;
   /** Candles · 1D: the session slot of a marker (its candle and its place in that session's fan). */
   slotOf?: (c: ChartEvent) => MarkerSlot | null;
+  /** A view's own item content (pooled portfolios: component, action, quantity, position); replaces the default body. */
+  itemBody?: (c: ChartEvent) => ReactNode;
 }) {
   // The hovered trade's counterpart lies later (to the right) for an entry: the tooltip then opens to the left.
   const first = items[0];
@@ -292,7 +295,13 @@ export function MarkerTooltip({
           {items.length} overlapping events here — zoom in to separate them; click again for the next.
         </div>
       )}
-      {shown.map((c, i) => (
+      {shown.map((c, i) =>
+        itemBody ? (
+          <div key={c.key} className="tt-item" data-symbol={c.event.symbol} data-key={c.key}>
+            {itemBody(c)}
+            {slotOf?.(c) && <SessionNote slot={slotOf(c)!} />}
+          </div>
+        ) : (
         <div key={c.key} className="tt-item" data-symbol={c.event.symbol} data-key={c.key}>
           <div className="tt-head">
             <Glyph kind={c.event.kind} role={c.role} tone={c.tone} partial={isPartialExit(c.event)} /> <b>{eventKindLabel(c.event)}</b>
@@ -315,7 +324,8 @@ export function MarkerTooltip({
             <TradeSummary trade={tradeOf(c)!} item={c} placement={placement} />
           )}
         </div>
-      ))}
+        )
+      )}
       {items.length > shown.length && <div className="muted small">+ {items.length - shown.length} more</div>}
     </div>
   );
