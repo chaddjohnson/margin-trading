@@ -128,8 +128,20 @@ raw crossing, flat, no order ──▶ ARMED (O-k: signal time/price, fixed rece
 - **Capital.** Standalone Growth always has its own capital. A harness-only hook (`GateRuntime.capacity`, used by the
   tests, not by Strategy Lab) stands in for a future shared-capital allocator: `blocked_by_capital` until released. An
   allocator's exit only frees capital; it never fabricates a Growth signal.
-- **Without a trend filter** (and with standalone capital) nothing blocks, so every opportunity is taken at once:
-  eligibility ON = OFF, trade for trade (tested).
+- **When ON equals OFF.** An opportunity is evaluated at its own arming bar. If nothing blocks it there — no trend
+  filter, no Drawdown Recovery Gate (1.4.0) and an initial risk stop that is OFF or available (1.3.0), with standalone
+  capital — it is decided at once **if its policy is valid at that bar**, and invalidated at once otherwise:
+  - policies 1, 3, 4 and 5 are always valid at their arming bar (the crossing's own predicate holds, the decision price
+    is the signal price, and the highest close since arming is that close), so for them eligibility ON = OFF, trade for
+    trade (tested for every policy at its defaults);
+  - policy 2 is valid at its arming bar only when the crossing's advance over the fixed recent low reaches the minimum
+    a: with a ≤ X that always holds, so ON = OFF; with a > X every crossing whose own advance is below a is vetoed at
+    once (§3.2), so the book enters only on bars at least a above their recent low (and through the continuations such
+    entries open) — fewer trades than OFF with no blocker at all.
+
+  Any active blocker (the trend filter, the recovery gate, an unavailable initial stop; in a harness, the capacity
+  hook) also makes ON differ from OFF: ON keeps the blocked opportunity armed and may decide it later, OFF vetoes the
+  decision.
 
 ### 3.2 The five policies
 
@@ -272,7 +284,9 @@ demonstration export with gates ON: `apps/strategy-lab/fixtures/phenotypes/growt
 - With the filter ON, extra warm-up sessions are loaded. Prices are split-adjusted forward to the first loaded session,
   so a split inside the extra warm-up rescales all prices consistently; percentages and dollar P&L on the fixed
   notional are unaffected up to rounding.
-- Without a trend filter, eligibility changes nothing in a standalone run: it needs a blocker.
+- Eligibility changes a standalone run only through a blocker (the trend filter, the Drawdown Recovery Gate, an
+  unavailable initial risk stop) or through policy 2 with a minimum a above the Rise trigger X, which invalidates weaker
+  crossings at once (§3.1). Without either, ON = OFF trade for trade.
 
 ## 9. Versions, OFF parity and old runs
 
