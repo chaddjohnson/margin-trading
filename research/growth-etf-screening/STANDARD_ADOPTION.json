@@ -1,0 +1,154 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/growth-etf-screening",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.0.0",
+  "sha256": "2005a88c2e24f5e2ab4e461b0425f97d006781a45518f78d9f10fd9320f40105"
+ },
+ "readAt": "2026-11-11T20:20:33Z",
+ "adoptedAt": "2026-11-11T21:11:49Z",
+ "protocol": {
+  "path": "research/growth-etf-screening/PROTOCOL.md",
+  "sha256": "70bda053f5a46e2e0810fc51456a32ed47457c2b6d63d2a38644c1916820fd2c"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "At every cutoff (C19, C21, C23, C24) the actual-profit role among the qualified independent members of ALL eligible ETFs (ETF and phenotype together; controls VGT and GDX on equal terms): the highest development centre net among members passing Q1-Q5, ties by the higher selection robust net, the lower centre DD, then the label; no qualified member -> no primary (cash). A new-ETF procedure (controls excluded) is reported beside it; transfer-lane members are informed and never selectable. The ETF shortlist for a possible 7B (<= 3 new ETFs) follows the frozen tiered rule of PROTOCOL.md section 9.5.",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 246300,
+  "backendEvaluations": 2000000,
+  "notes": "Distinct new centre proposals: independent 1,024 per ETF per cutoff (2 paired seeds x 2 protected entry cells x (160 screen + 96 island)), 60 eligible ETFs x 4 cutoffs = 245,760; transfer lane 9 exact vectors x 60 ETFs = 540 centres at C24. No extension. Backend evaluations: the brief's hard ceiling of 2,000,000 fresh simulations including pilot, bench, parity, centres, neighbours, earlier cutoffs, stresses, folds, diagnostics and validation; archive hits counted apart. Worst cases: 6,821 per ETF x cutoff screen job (1,637,040 in all), 1,186 per ETF transfer job (71,160), reserve 60,000; the plan check refuses the freeze unless the ledger plus every remaining worst case fits (PROTOCOL.md section 7.3)."
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3, §2.5, §3.2",
+   "kind": "adaptation",
+   "description": "the primary at each cutoff is the actual-profit role among every eligible ETF's qualified independent members (ETF and phenotype); a new-ETF procedure is reported beside it; transfer members are informed and never selectable",
+   "justification": "brief: Selection and historical tests 3 (ETF choice is part of optimization); Screening search (transfers are hypotheses)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4.1, §4.6, §5.3",
+   "kind": "adaptation",
+   "description": "Study 8 pipeline scaled to a bounded screen: per ETF per cutoff 4 lanes x (160 screen + one island of 96); rung 1 = 8 draws, rung 2 = 4 x 32 per lane; no rung 3 or refinement; selection 1 x 128 for <= 4 shortlist members; confirmation 3 x 128 for <= 3 picks",
+   "justification": "brief: Planning budget and hard ceiling (60 ETFs x 4 cutoffs within 2,000,000); smaller early rungs are screening estimates only",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "one perturbation scope with common random numbers across every member and every ETF of a cutoff",
+   "justification": "brief: identical ranges, grids, seeds and neighbourhood definitions across ETFs",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§4.1, §5.3",
+   "kind": "adaptation",
+   "description": "centre-first fidelity at rung 1",
+   "justification": "as Priorities 3B, 3C and 4A",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "Priority 3's pooled engine reused unchanged with only the Growth slot enabled holding the ETF's door; gates E1-E8 verify it trade by trade against the canonical runRiseTrading path with the true symbol on every eligible ETF",
+   "justification": "brief: verify engine parity against the canonical Growth runner on controls and varied configurations",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§1.4, §1.6",
+   "kind": "adaptation",
+   "description": "stricter: FULL never opened before FROZEN_SELECTION.json is sealed and committed, even for known native targets",
+   "justification": "brief: reproduce known full-history targets only at the final authorized validation stage",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§4.5",
+   "kind": "adaptation",
+   "description": "no extension: every ETF gets exactly 1,024 proposals per cutoff; stopping = base budget exhausted (not convergence)",
+   "justification": "brief: up to 2,048 under a frozen extension rule; the ceiling must hold the whole universe",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§1.8, §1.9, §3.3",
+   "kind": "adaptation",
+   "description": "the transfer lane runs at C24 only; earlier cutoffs repeat the complete independent universe screen and selection",
+   "justification": "brief: informed transfers never enter a historical cutoff",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "§4.7, §2.7, §2.9",
+   "kind": "adaptation",
+   "description": "not applicable: one Growth book alone per configuration",
+   "justification": "standalone Growth per ETF (brief: Dates, accounting and scope)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD10",
+   "section": "§2.4, §4.3",
+   "kind": "adaptation",
+   "description": "promotion guard: 1/4 centre net at screen and rung-2 promotion; profit slots in lane picks, the ETF shortlist and the confirmation picks",
+   "justification": "brief: protect center-profit alternatives alongside robustness and structural diversity",
+   "userAgreement": null
+  },
+  {
+   "id": "AD11",
+   "section": "§1.8, §2.5",
+   "kind": "adaptation",
+   "description": "study-specific ETF-shortlisting rule (Tier 1 = qualified at C24 and own C19-C23 procedure supported; rank(P)+rank(R); <= 1 per cluster; <= 3) and futility rule, frozen before outcomes",
+   "justification": "brief: Selection and historical tests 2",
+   "userAgreement": null
+  },
+  {
+   "id": "AD12",
+   "section": "§1.3, §0.3",
+   "kind": "adaptation",
+   "description": "universe rules: Study 9's D1-D5 plus D3b (amendment R1, before any performance screening): 60 eligible; untested GDXJ, OIH, XLRE, XLF",
+   "justification": "brief: Universe and data audit",
+   "userAgreement": null
+  },
+  {
+   "id": "DP1",
+   "section": "§4.4",
+   "kind": "departure",
+   "description": "no incumbent-informed refinement lane; the informed lane is the brief's exact transfer lane (same predeclared exact vectors on every ETF, unchanged)",
+   "justification": "a bounded screening; VGT's and GDX's incumbent refinements were done by growth140 and 4A",
+   "userAgreement": "brief research/growth-etf-screening/brief/BRIEF.md 'Screening search': 'A small, separately counted informed transfer lane at C24, using the same predeclared set of exact existing Growth vectors for every ETF' and 'This is screening, not an exhaustive optimization.'"
+  }
+ ]
+}
