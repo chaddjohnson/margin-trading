@@ -2,30 +2,46 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-11T10:49Z (UTC). **Status: INCOMPLETE — protocol frozen (`1c43f722`); amendment A1 (engine failure fixed:
-  L2 retained order granted at a door's last session) with stage V re-sealed (`results/parity/parity-A1.json`, 1,425
-  checks, 0 failed); chain 1 being restarted from C19 (the failed C19 archive moved aside unread).**
-- **Task:** the user's brief "Matched optimization under L0, L1 and L2 funding lifecycles", copied verbatim to
-  `brief/BRIEF.md` (161 lines, 21,099 bytes, sha256 `224480b4b0e39e9647e4403dbc7963f1c0c3f5f9c17883bce23776ec0dae06d9`).
-- **Branch:** `research/vg-lifecycle-matched-optimization` (main checkout), from `b8a5a058`. Code:
-  `src/vg-lifecycle-matched-optimization/`; CLI `npm run vg-lmo -- <command>` from the repository root.
-- **Authority:** PROTOCOL.md sha256 `7e8260647c9ec4406609f41863fe81c4106206abcf4b0027229aaaec1af0e993` (frozen);
-  AMENDMENTS head **A1** (post-freeze; the evaluation digest `3f902532…e3b` acknowledged in
-  `results/code-acknowledgements.jsonl` with `parity-A1.json`); standard 2.0.0 (`2005a88c…0105`).
-- **Sealed:** `CONTROL_MANIFEST.json` `e56bc7a6…ecef7`; `results/parity/parity.json` (stage V: 1,415 checks, 0 failed,
-  773 simulations); `results/protocol-freeze.json` (evaluation digest `682cef28…cf40`, closure `a0bd79bc…3130`, 256
-  files). `npm run vg-lmo -- verify` → 3 ok.
-- **Running processes:** chain 1 = `research/vg-lifecycle-matched-optimization/chains/chain1.sh` (first start
-  10:31:59Z failed at the C19 search, 10:33:51Z, A1 — log `results/logs/chain1.failed-A1.log`; restarted after A1, log
-  `results/logs/chain1.log`); it launches one unit at a time in `vglmo.slice` (`vglmo-<stage>`; logs
-  `results/logs/vglmo-<stage>.log`) and commits each fold selection before its slice. Check with
-  `systemctl --user list-units 'vglmo-*'` and `tail results/logs/chain1.log`. If the shell died but a unit runs, let the
-  unit finish; relaunching the same stage command resumes from its archive (never start a second copy while one runs).
-- Full `npm test` (2026-11-11, contained unit, PATH set): 1,422 tests, 1,411 pass, 7 fail, 4 skipped — exactly the 7
-  known pre-existing failures (intraday-study, minute-optimizer, study7-runners, trailing-buy × 4). No regression.
-- **Next step:** when chain 1 ends (CHAIN1 DONE): inspect the C24 records; `npm run vg-lmo -- freeze-selection`; commit
-  FROZEN_SELECTION.json; `launch --unit vglmo-validate --wait -- validate`; tables; report; roadmap; commit; push.
-- **Do not rerun:** stage V, the freeze, any sealed search/qualify/cross-test/fold record (they refuse anyway).
+- **Updated:** 2026-11-11T17:28Z (UTC, from the clock). **Status: COMPLETE — every stage sealed (28 records verify);
+  report written; committing and pushing. Follow-up gate: the user's review (nothing starts automatically).**
+- **Task:** the user's brief "Matched optimization under L0, L1 and L2 funding lifecycles" (`brief/BRIEF.md`, sha256
+  `224480b4…6d9`).
+- **Branch:** `research/vg-lifecycle-matched-optimization` (main checkout), from `b8a5a058`.
+- **Authority:** PROTOCOL.md `7e826064…e993` (frozen 10:30:57Z, `1c43f722`); AMENDMENTS head A1 (`c03f5ac7`); standard
+  2.0.0.
+- **Outcome (frozen labels, before validation):** L1 vs L0 **harmful** (tail risk, no profit gain); L2 vs L0
+  **conditional profit/risk trade-off** (no development gain; supported but fragile chronological path). Validation:
+  primaries L0 +$96,883.72, L1 +$91,128.15, L2 +$95,627.06 (all trail C4 +$99,081.34); every known target reproduced.
+- **Deliverables (sha256 prefix):** FROZEN_SELECTION.json `cd223a0d18c44925`; results/validation/validation.json
+  `8393113915ee91f9`; results/folds/sequential.json `7bf8c74463461b96`; results/folds/C24/selection.json
+  `0615262bec59bdde`; results/crosstest/C24/matrix.json `e87d080eb87ba812`; results/diagnostics/diagnostics.json
+  `520cc385f550f43a`; results/parity/parity-A1.json `d18ebc6cfb984d65`; results/protocol-freeze.json `1a72c321df38bf4f`;
+  REPORT.md and results/tables/ (unsealed reporting); results/supplementary/c19-l2-primary-mechanism.json (report-only,
+  outside the frozen plan).
+- **Running processes:** none.
+- **Do not rerun:** any sealed stage (they refuse); the validation ran once.
+
+## Stage log (study; UTC from the chain log)
+
+| Stage | Window | Result | Commit |
+|---|---|---|---|
+| C19 search (indep, 3 arms) | 10:49:29 → 11:32:50 | 317,159 unique; 1 extension round (5 positions), then resource guard | eb7a5b34 |
+| C19 qualify | 11:32:50 → 11:38:13 | primaries L0 R2/B#1, L1 R1/B#1, L2 R1/V#1 | eb7a5b34 |
+| C19 cross-test + fold | 11:38:13 → 11:39:09 | slice 2020–21: L0 +$9,083.51 (DD $39,527.29), L1 −$39,829.71 ($65,926.68), L2 +$26,887.52 ($29,279.04) | 04957b61 |
+| C21 search | 11:39:09 → 12:41:28 | 310,693 unique; 1 extension round (6 positions), then resource guard | aa57a2dc |
+| C21 qualify | 12:41:28 → 12:49:14 | primaries L0 R1/V#1, L1 R1/B#1, L2 R2/B#1 | aa57a2dc |
+| C21 cross-test + fold | 12:49:14 → 12:50:39 | slice 2022–23: L0 −$38,341.52 (DD $57,259.44), L1 −$13,416.67 ($52,273.52), L2 +$21,050.14 ($25,971.37) | 7813564b |
+| C23 search | 12:50:39 → 13:58:54 | 287,041 unique; 4 extension rounds, then no trigger fired | acfab5c2 |
+| C23 qualify | 13:58:54 → 14:07:55 | primaries L0 R2/G#1, L1 R2/G#1, L2 R1/B#1 | acfab5c2 |
+| C23 cross-test + fold | 14:07:55 → 14:09:17 | slice 2024: L0 $0.00 (no trade), L1 +$23,363.92 (DD $15,733.96), L2 +$1,730.70 ($9,182.94) | cff56224 |
+| C24 independent search | 14:09:18 → 15:31:49 | 313,892 unique; 8 extension rounds, then no trigger fired | 9479ba49 |
+| C24 informed search | 15:31:49 → 16:50:59 | 235,609 unique; no extension (no trigger fired) | 9479ba49 |
+| C24 qualify | 16:50:59 → 17:12:47 | 72,351 unique; primaries (all informed, V): L0 R1#1 $382,721.46 / $19,459.83, L1 R1#1 $382,163.79, L2 R2#1 $382,163.79; independent primaries L0 R2/G#1 $199,115.31, L1 R1/B#1 $214,405.77, L2 R2/B#1 $195,286.84 | 9479ba49 |
+| C24 cross-test | 17:12:47 → 17:17:46 | 14,700 unique; 28 rows × 3 lifecycles | 3798b5d1 |
+| Diagnostics | 17:17:46 → 17:21:07 | 1,962 in-process simulations | 3798b5d1 |
+| Frozen selection | 17:21:31 | labels L1 harmful, L2 conditional trade-off | 290deefa |
+| Validation (FULL, once) | 17:21:41 → 17:23:11 | 75/84 rows pass V1–V3; all known targets reproduced | (final commit) |
+| Sequential | 14:09:17 → 14:09:18 | L0 unsupported −$29,358.01 / DD $67,214.22; L1 unsupported −$30,032.46 / $106,883.44; L2 supported +$49,518.36 / $29,279.04 (replicate-alone paths of L2 breach: R1 $35,918.05, R2 $52,503.46) | d3d4bfe2 |
 
 ## Engineering done (pre-protocol; mechanics only, no candidate performance read)
 

@@ -8,3 +8,7 @@ evidence labels and a phenotype × lifecycle cross-test matrix.
 - Brief: `brief/BRIEF.md` · Protocol: `PROTOCOL.md` · Amendments: `AMENDMENTS.md` · Adoption: `STANDARD_ADOPTION.json`
 - Checkpoint: `RESEARCH_RECOVERY.md` · Commands: `RUN_COMMANDS.md` · Report: `REPORT.md` (when complete)
 - Code: `src/vg-lifecycle-matched-optimization/` · CLI: `npm run vg-lmo -- <command>` from the repository root
+
+**Status: complete (2026-11-11), awaiting review.** No demonstrated improvement from L1 or L2 over a freshly optimized
+L0; frozen labels L1 *harmful*, L2 *conditional profit/risk trade-off* (fragile chronological support from one episode).
+See `REPORT.md`.

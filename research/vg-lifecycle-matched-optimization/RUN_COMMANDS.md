@@ -35,6 +35,11 @@ npm run vg-lmo -- freeze-protocol                                               
 
 ## Study stages (after the freeze is committed)
 
+As run: `research/vg-lifecycle-matched-optimization/chains/chain1.sh` (fail-fast; C19 → C21 → C23 → sequential → C24
+searches, qualification, cross-test, diagnostics; it commits each fold selection before its slice; log
+`results/logs/chain1.log`; the first start failed on amendment A1, `results/logs/chain1.failed-A1.log`), then
+`freeze-selection`, the commit, and `validate`. The equivalent individual commands:
+
 ```
 # C19, C21, C23 (in this order; commit each selection before its fold evaluation)
 npm run vg-lmo -- launch --unit vglmo-C19-search --wait -- search --cutoff C19 --arm indep
@@ -54,4 +59,10 @@ npm run vg-lmo -- launch --unit vglmo-diagnostics --wait -- diagnostics
 npm run vg-lmo -- freeze-selection        # sealed FROZEN_SELECTION.json — commit it before the validation
 npm run vg-lmo -- launch --unit vglmo-validate --wait -- validate
 node --experimental-transform-types --disable-warning=ExperimentalWarning tools/vg-lifecycle-matched-optimization/tables.ts
+```
+
+## Supplementary (report-only, outside the frozen plan)
+
+```
+node --experimental-transform-types --disable-warning=ExperimentalWarning tools/vg-lifecycle-matched-optimization/c19-l2-mechanism.ts
 ```
