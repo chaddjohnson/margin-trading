@@ -2,26 +2,31 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-12T03:25Z (UTC, from the clock). **Status: INCOMPLETE — the protocol is FROZEN (03:24:11Z) and
-  committed with this checkpoint; the study chain `chains/chain1.sh` is next (C19 → C21 → C23 → sequential → C24 →
-  cross-test → diagnostics → frozen selection (commit) → validation (commit)).**
+- **Updated:** 2026-11-12T07:13Z (UTC, from the clock). **Status: COMPLETE — every stage sealed (27 records verify);
+  report written; committed and pushed (see Push). Follow-up gate: the user's review (nothing starts automatically; New
+  L0 stays the frozen benchmark; no replacement, catalog change or deployment).**
 - **Task:** the user's brief "New L0 Trading-Session Re-Optimization" (`brief/BRIEF.md`, sha256
-  `df4856db43331f9054916ac479cebfa7f187c9181c5aa663b0ec2179287c2bd2`, 462 lines, read in full through "Final Priority").
-- **Branch:** `research/vg-l0-session-hold` (main checkout), from `a1a9675d`; commits `6eb85160` (Phases 1–2),
-  `e3b0ae37` (Phase 3), then the freeze commit (this checkpoint's commit).
-- **Authority:** `PROTOCOL.md` sha256 `50e441c33a26ca645692cbca075347e6ac813aff1222342ee27f8fa9bb8c00e3` (frozen
-  03:24:11Z); `AMENDMENTS.md` head R2 (`103032c0…`); standard 2.1.0 (`ac5c2c69…`); reference method NL0 1.0.0
-  (`9b387bb4…`); `results/protocol-freeze.json` `c2c85256…`; `results/parity/parity.json` `9f6bd2a2…` (705 checks, 0
-  failed); `CONTROL_MANIFEST.json` `b2f47d5b…`; evaluation digest `a38174fa…`; Priority 3 digest now `781d7e49…`
-  (historical `147cad7c…`, AD12); closure digest `45803fb6…` (266 files).
-- **Running:** nothing yet (the chain starts after this commit).
-- **Next command:** `R=/home/chad/projects/margin-trading; (cd $R && bash research/vg-l0-session-hold/chains/chain1.sh >
-  $R/research/vg-l0-session-hold/results/logs/chain1.log 2>&1; echo "CHAIN EXIT $?" >> $R/research/vg-l0-session-hold/results/logs/chain1.log)`
-  in the background; a chain stopped mid-way is relaunched with the same script (sealed stages refuse to rerun, so
-  remove the completed steps from a COPY of the script or run the remaining commands from RUN_COMMANDS.md; an
-  interrupted stage resumes from its job archive).
-- **Do not:** edit `chains/chain1.sh` while it runs (bash reads scripts incrementally — see Disclosures); rerun a sealed
-  stage; open FULL before `FROZEN_SELECTION.json` is committed (the guard refuses).
+  `df4856db43331f9054916ac479cebfa7f187c9181c5aa663b0ec2179287c2bd2`).
+- **Branch:** `research/vg-l0-session-hold` (main checkout), from `a1a9675d`.
+- **Authority:** `PROTOCOL.md` `50e441c3…` (frozen 03:24:11Z, `6eebe8fc`); `AMENDMENTS.md` head R2; standard 2.1.0
+  (`ac5c2c69…`); reference method NL0 1.0.0 (`9b387bb4…`).
+- **Outcome:** calendar-day holds remain preferable. A (New L0, cal) development $382,721.46 / validation $96,883.72 /
+  full $479,605.18; B (New L0, ses) $340,857.79 / $97,846.00 / $438,703.79 (fails Q3); C (`C24/ses/informed/R3#1
+  profit`, cfg `787c566e42550ed4`) $373,676.67 / $88,765.28 / $462,441.95. Frozen labels: B vs A harmful, C vs A
+  harmful, C vs B conditional profit/risk trade-off. Session procedure chronologically unsupported (+$25,237.54, DD
+  $58,866.62).
+- **Deliverables (sha256 prefix):** REPORT.md `a0a7d9b3…` (and `results/tables/*.md`, `summary.json`: unsealed reporting);
+  FROZEN_SELECTION.json `b17421ba…`; results/validation/validation.json `f474c421…`; results/folds/sequential.json
+  `e36d47c4…`; results/folds/C24/selection.json `f5c6c052…`; results/crosstest/C24/matrix.json `4cc139f6…`;
+  results/diagnostics/diagnostics.json `401e40d2…`; results/search/C24/{indep `f4a87868…`, informed `0b5b01db…`};
+  results/parity/parity.json `9f6bd2a2…`; results/protocol-freeze.json `c2c85256…`; recovery/original-recovery.json,
+  recovery/backward-compat.json; docs/research/methods/NEW_L0_METHOD.md `9b387bb4…`; docs/research/OPTIMIZATION_STANDARD.md
+  2.1.0 `ac5c2c69…`; report-only: results/post/strategy-lab-parity.json `f3425ebc…` (5/5 Strategy Lab candidates verified
+  after the engine change), results/supplementary/missed-opportunities.json `66a40485…`.
+- **Tests:** full `npm test` (unit `vgl0sh-npm-test`, after the validation): 1,475 tests, 1,464 pass, 7 fail = the known
+  pre-existing set (6 × `allin-original.ts`, Study 7 data-end), 4 skipped; this study added 39 passing tests.
+- **Running processes:** none.
+- **Do not rerun:** any sealed stage (they refuse); the validation ran once.
 
 ## Stage table
 
@@ -36,7 +41,20 @@
 | Control manifest | sealed 03:14:20Z | `npm run vg-l0sh -- control-manifest` | `CONTROL_MANIFEST.json` `b2f47d5b…` | write-once |
 | Stage V | sealed 03:24:03Z | `npm run vg-l0sh -- launch --unit vgl0sh-parity --wait -- parity` | `results/parity/parity.json` `9f6bd2a2…`: 705 checks, 0 failed (G1 8, G2 2 incl. 1,000 archived 5B records identical, G3 48, G4 36, G5 540, G6 32, G7 2, G8 36, G9 1), 1,338 simulations | write-once |
 | Protocol freeze | sealed 03:24:11Z | `npm run vg-l0sh -- freeze-protocol` | `results/protocol-freeze.json` `c2c85256…` | write-once |
-| Study chain (C19 → … → validation) | not started | `bash research/vg-l0-session-hold/chains/chain1.sh` | `results/…`, `FROZEN_SELECTION.json` | each stage resumes from its job archive when relaunched with the same command; sealed stages refuse |
+| C19 search (indep) | complete 03:24:46 → 03:49:41Z (24.9 min), sealed, committed `9636812e` | chain1 | `results/search/C19/indep.json`: 28,928 proposals, 65 islands, 4 extension rounds then triggers not met, 4,884 refinement moves, 304,047 requested, 313,462 fresh, 2,695 hits | sealed: refuses |
+| C19 qualify | complete 03:49:41 → 03:53:09Z, sealed, committed `9636812e` | chain1 | `results/folds/C19/selection.json`: 60 members, 59 qualified; fold primary `C19/ses/indep/R6/V1#1 profit` $123,812.69; 39,060 fresh | sealed: refuses |
+| C19 cross-test + fold | complete 03:53Z, committed `fbb55417` | chain1 | slice 2020–2021: fold primary +$45,828.28 (slice DD $55,449.12); New L0 cal $171,402.70 / ses $159,766.65 | sealed |
+| C21 search, qualify | complete 03:53:39 → 04:29:49Z, committed | chain1 | 26,880 proposals, 276,504 requested, 286,101 fresh (31.6 min); 60/60 qualified; fold primary `C21/ses/indep/R1/V3#1 profit` $240,514.68 | sealed |
+| C21 cross-test + fold | complete 04:30:29Z, committed `00a65a96` | chain1 | slice 2022–2023: fold primary −$25,018.62 (DD $57,489.79); New L0 cal $87,238.48 / ses $85,660.40 | sealed |
+| C23 search, qualify, cross-test, fold | complete 04:30:29 → 05:14:44Z, committed `8bc749cd` | chain1 | 31,488 proposals, 252,267 requested, 261,553 fresh (37.2 min, 5 extension rounds); 59/60 qualified; fold primary `C23/ses/indep/R5/V2#1 profit` $201,920.45; slice 2024: +$4,627.88 (DD $20,299.72); New L0 cal $44,110.10 / ses $15,460.57 | sealed |
+| Sequential | complete 05:14:45Z, committed `baeffe09` | chain1 | `results/folds/sequential.json`: session procedure +$25,237.54, sequential DD $58,866.62 — **chronologically unsupported**; same selections under cal +$75,529.19 / $47,761.66 (cross row); New L0 fixed: ses $260,887.62 / $23,473.39, cal $302,751.28 / $19,459.83 (descriptive) | sealed |
+| C24 independent search | complete 05:14:45 → 06:00:29Z (45.7 min), sealed (committed with the C24 qualification) | chain1 | 33,024 proposals, 271,412 requested, 280,575 fresh, 5 extension rounds; best shortlisted centre `C24/ses/indep/R3/V3` profit $247,744.92 | sealed |
+| C24 informed search | complete 06:00:29 → 06:48:54Z (48.4 min), committed `d589a842` | chain1 | 12,570 proposals (6 × 559 designs + 6 × 4 × 384), 11,605 refinement moves, 355,437 requested, 239,309 fresh, 116,113 hits; extension stopped by the resource guard (192,938 + 13,056 + 180,000 > 370,000: budget-bound) | sealed |
+| C24 qualify | complete 06:48:54 → 07:01:36Z, committed `d589a842` | chain1 | 98 selectable / 110 members; **primary C `C24/ses/informed/R3#1 profit` $373,676.67 / DD $20,374.21** (conf p10 $203,987.88, p90 DD $27,574.23); independent primary `C24/ses/indep/R3/V3#1 profit`; A (cal NL0) $382,721.46 qualified; B (ses NL0) $340,857.79 fails Q3 (p90 $37,684.14); every control fails Q3 under ses; 65,745 fresh | sealed |
+| C24 cross-test + diagnostics | complete 07:01:36 → 07:04:29Z, committed `6831518f` | chain1 | `results/crosstest/C24/matrix.json` (7,730 fresh), `results/diagnostics/diagnostics.json` (657 in-process simulations) | sealed |
+| Frozen selection | sealed 07:04:30Z, committed `8ae00df8` before FULL | chain1 | `FROZEN_SELECTION.json`: C, A, B, roles, labels B vs A harmful, C vs A harmful, C vs B conditional trade-off | sealed |
+| Validation (FULL, once) | complete 07:04:30 → 07:05:17Z, committed `59b68357` | chain1 | `results/validation/validation.json`: 37/40 rows pass V1–V3; known targets (New L0, C4, C4-refined, D, VG #2 native) reproduced exactly; 72 in-process + 512 neighbour simulations | sealed; ran once |
+| Post-validation (report-only) | complete 07:05–07:13Z | `tools/vg-l0-session-hold/missed.ts`; `apps/strategy-lab/scripts/portfolio-parity.ts --out results/post/strategy-lab-parity.json`; FULL calendar check (both files: 2,723 sessions, 0 non-NYSE dates, 0 missing sessions); `tools/vg-l0-session-hold/tables.ts`; full `npm test` | see the top screen | idempotent | `bash research/vg-l0-session-hold/chains/chain1.sh` | `results/…`, `FROZEN_SELECTION.json` | each stage resumes from its job archive when relaunched with the same command; sealed stages refuse |
 
 ## Environment
 

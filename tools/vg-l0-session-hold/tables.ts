@@ -554,7 +554,7 @@ const parseCsv = (text: string): Record<string, string>[] => {
 
   if (v && d && frozen) {
     const boundary = pilot ? '2018-12-31' : '2024-12-31';
-    const devSessions = pilot ? 754 : 2262;
+    const devSessions = pilot ? 754 : 2264;
     const fullSessions = pilot ? 1006 : 2723;
     const devDays = (Date.parse(`${boundary}T00:00:00Z`) - Date.parse('2016-01-04T00:00:00Z')) / 86_400_000 + 1;
     const fullDays =
@@ -837,6 +837,155 @@ const parseCsv = (text: string): Record<string, string>[] => {
         ),
         '**Parameter changes of C against New L0 (A):**',
         paramRows.length ? table(['Parameter', 'New L0 (A)', 'C'], paramRows) : 'none (C is New L0).'
+      ]
+    );
+  }
+}
+
+// ----- 7. robustness and overfitting evidence of A, B, C (development instrument; report-only) -----
+{
+  const s = sel[final];
+  const d = read(path.join(dir, 'diagnostics', 'diagnostics.json'));
+  const x = read(path.join(dir, 'crosstest', final, 'matrix.json'));
+
+  if (s && frozen) {
+    const ev = s.evidence as Any[];
+    const A = ev.find((e) => e.unit === 'cal' && e.control === 'NL0');
+    const B = ev.find((e) => e.unit === 'ses' && e.control === 'NL0');
+    const C = ev.find((e) => e.label === frozen.configurations.C.label);
+    const IP = ev.find((e) => e.label === s.independentPrimary?.ses);
+    const subjects: [string, Any][] = [
+      ['A', A],
+      ['B', B],
+      ['C', C],
+      ['independent primary', IP]
+    ].filter((r): r is [string, Any] => !!r[1]);
+    const rob = subjects.map(([k, e]) => [
+      k,
+      usd(e.centre.net),
+      usd(e.centre.dd),
+      usd(e.select.robust),
+      usd(e.confirm.median),
+      usd(e.confirm.p10),
+      usd(e.confirm.p90Dd),
+      usd(e.confirmTail?.p95Dd),
+      usd(e.confirmTail?.worst10Mean),
+      `${pct(e.confirm.breachShare)} [${pct(e.confirmTail?.breachInterval?.[0])}, ${pct(e.confirmTail?.breachInterval?.[1])}]`,
+      usd(e.confirm.meanExcess),
+      usd(e.confirm.worstDd),
+      e.confirm.distinct,
+      e.qualified ? 'qualified' : `fails ${e.failed.join(',')}`
+    ]);
+    const stress = subjects.map(([k, e]) => [
+      k,
+      ...['cost 10 bps', 'cost 20 bps', 'interest 14%', 'stop slippage +25 bps', 'next-open stops'].map((n) =>
+        e.stress[n] ? `${usd(e.stress[n].net)} / ${usd(e.stress[n].dd)}` : '—'
+      )
+    ]);
+    const removal = subjects.flatMap(([k, e]) =>
+      Object.entries(e.removal as Record<string, Any>).map(([n, r]) => [k, n, usd(r.net), usd(e.centre.net - r.net)])
+    );
+    const reps = [1, 2, 3, 4, 5, 6]
+      .map((r) => evOf(final, (s.roles as Any)[`ses/informed R${r}`]?.roles['actual-profit'])?.centre.net)
+      .filter((v): v is number => typeof v === 'number');
+    const ireps = [1, 2, 3, 4, 5, 6]
+      .map((r) => evOf(final, (s.roles as Any)[`ses/independent R${r}`]?.roles['actual-profit'])?.centre.net)
+      .filter((v): v is number => typeof v === 'number');
+    const fam = x
+      ? (x.rows as Any[])
+          .filter((r) => r.columns.ses.small || r.columns.ses.wide)
+          .map((r) => [
+            r.row,
+            r.control ?? r.exportedBy.map((b: Any) => b.roles.join('/')).join('; '),
+            ...['small', 'wide'].flatMap((f) =>
+              r.columns.ses[f]
+                ? [usd(r.columns.ses[f].nb.p10), usd(r.columns.ses[f].nb.p90Dd), pct(r.columns.ses[f].nb.breachShare)]
+                : ['—', '—', '—']
+            )
+          ])
+      : [];
+    const epis = d
+      ? (d.episodeDependence as Any[]).map((e) => [
+          e.cutoff,
+          e.role,
+          e.label,
+          e.centreLeadingEpisode
+            ? `${e.centreLeadingEpisode.first} → ${e.centreLeadingEpisode.last} (${usd(e.centreLeadingEpisode.net)}, ${pct(e.centreLeadingEpisode.shareOfCentreNet)} of the centre)`
+            : '—',
+          pct(e.overlapShare),
+          e.inWindowShare ? pct(e.inWindowShare.median) : '—',
+          e.neighboursWithNetAtMostZero,
+          e.clippedDraws
+        ])
+      : [];
+    const blackout = x
+      ? (x.rows as Any[])
+          .filter((r) => r.principal)
+          .flatMap((r) =>
+            ['cal', 'ses'].map((u) => [
+              r.row,
+              r.control ?? r.exportedBy.map((b: Any) => b.roles.join('/')).join('; '),
+              u,
+              r.columns[u].leadingEpisode
+                ? `${r.columns[u].leadingEpisode.first} → ${r.columns[u].leadingEpisode.last}`
+                : '—',
+              usd(r.columns[u].centre.net),
+              usd(r.columns[u].withoutLeadingEpisode?.net)
+            ])
+          )
+      : [];
+
+    summary.robustness = { informedReplicateBests: reps, independentReplicateBests: ireps };
+    write(
+      'robustness.md',
+      'A / B / C: neighbourhood robustness, stresses, causal removals and overfitting evidence (development 2016–2024)',
+      [
+        'One instrument for all rows (this study’s selection and confirmation families; the same draws under both units). Local stability is not chronological reliability; perturbation frequencies on one history are not probabilities of future losses.',
+        table(
+          [
+            'Row',
+            'Centre net',
+            'Centre DD',
+            'Sel. robust',
+            'Conf. median',
+            'Conf. p10',
+            'Conf. p90 DD',
+            'Conf. p95 DD',
+            'Worst-10% mean DD',
+            'Draws > $35k [Wilson 95%]',
+            'Mean excess',
+            'Worst DD',
+            'Distinct ledgers',
+            'Gates'
+          ],
+          rob
+        ),
+        '**Stresses (centre net / DD):**',
+        table(['Row', '10 bps', '20 bps', '14% interest', '+25 bps stop slippage', 'Next-open stops'], stress),
+        '**Causal removals (net without the component; its causal contribution):**',
+        table(['Row', 'Removed', 'Net without', 'Causal contribution'], removal),
+        `**Search variability.** Informed replicates' seed-level bests: ${reps.map(usd).join(', ')} (spread ${usd(reps.length ? Math.max(...reps) - Math.min(...reps) : NaN)}). Independent replicates' bests: ${ireps.map(usd).join(', ')} (spread ${usd(ireps.length ? Math.max(...ireps) - Math.min(...ireps) : NaN)}).`,
+        '**Half- and 1.5×-radius families under sessions (p10 net, p90 DD, draws > $35,000):**',
+        table(
+          ['Row', 'Exported as', 'Small p10', 'Small p90 DD', 'Small > $35k', 'Wide p10', 'Wide p90 DD', 'Wide > $35k'],
+          fam
+        ),
+        '**Leading winning episode blacked out (causal rerun, no new funding inside it):**',
+        table(['Row', 'Exported as', 'Unit', 'Leading episode', 'Centre net', 'Net without it'], blackout),
+        '**Episode dependence of the selection neighbourhoods (128 draws, session unit):**',
+        table(
+          [
+            'Cutoff',
+            'Role',
+            'Holder',
+            'Centre leading episode',
+            'Neighbours sharing it',
+            'Median share of net inside it',
+            'Neighbours ≤ $0',
+            'Clipped'
+          ],
+          epis
+        )
       ]
     );
   }

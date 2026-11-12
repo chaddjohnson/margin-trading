@@ -9,3 +9,8 @@ unit — **NYSE trading sessions instead of calendar days** — with at least th
 - Brief: `brief/BRIEF.md` · Protocol: `PROTOCOL.md` · Amendments: `AMENDMENTS.md` · Adoption: `STANDARD_ADOPTION.json`
 - Recovery (Phase 1): `recovery/` · Checkpoint: `RESEARCH_RECOVERY.md` · Commands: `RUN_COMMANDS.md` · Report: `REPORT.md`
 - Code: `src/vg-l0-session-hold/` · CLI: `npm run vg-l0sh -- <command>` from the repository root
+
+**Status: complete (2026-11-12), awaiting review.** Calendar-day holds remain preferable: trading sessions hurt New L0's
+fixed phenotype (B − A −$41,863.67 on development) and the re-optimized C ($373,676.67) still trails New L0 on
+development, validation and full history. Frozen labels: B vs A *harmful*, C vs A *harmful*, C vs B *conditional
+profit/risk trade-off*. New L0 stays the frozen benchmark. See `REPORT.md`.
