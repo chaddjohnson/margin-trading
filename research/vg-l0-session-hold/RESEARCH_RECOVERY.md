@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-12T07:13Z (UTC, from the clock). **Status: COMPLETE — every stage sealed (27 records verify);
+- **Updated:** 2026-11-12T07:11Z (UTC, from the clock). **Status: COMPLETE — every stage sealed (27 records verify);
   report written; committed and pushed (see Push). Follow-up gate: the user's review (nothing starts automatically; New
   L0 stays the frozen benchmark; no replacement, catalog change or deployment).**
 - **Task:** the user's brief "New L0 Trading-Session Re-Optimization" (`brief/BRIEF.md`, sha256
@@ -25,6 +25,10 @@
   after the engine change), results/supplementary/missed-opportunities.json `66a40485…`.
 - **Tests:** full `npm test` (unit `vgl0sh-npm-test`, after the validation): 1,475 tests, 1,464 pass, 7 fail = the known
   pre-existing set (6 × `allin-original.ts`, Study 7 data-end), 4 skipped; this study added 39 passing tests.
+- **Push:** `git push -u origin research/vg-l0-session-hold` (new remote branch, no force, outside the sandbox, first
+  attempt, 2026-11-12T07:11:39Z); `git ls-remote` at 07:11:45Z: branch = `8604463382b2dc74df94a2e968b9952691f2bc26` (=
+  local); `origin/main` = `aa5754d4…` (unchanged). This record follows as its own commit, pushed the same way. No merge,
+  no deployment. Unit and chain logs (`results/logs/`, git-ignored) and job archives (`.cache/`) are local only.
 - **Running processes:** none.
 - **Do not rerun:** any sealed stage (they refuse); the validation ran once.
 
@@ -79,6 +83,8 @@
 
 ## Disclosures
 
+- **A checkpoint timestamp was first written ahead of the clock** ("07:13Z" before 07:12Z); corrected to the clock time
+  when the push was recorded.
 - **Pilot interruption by a protocol edit (engineering only, 03:13Z).** The R1 edit of the draft protocol changed its
   sha256 while the straight pilot was running; the pilot's cross-test step then refused to start (preflight: mismatched
   protocol hash), exactly as the guard intends. The protocol was re-adopted (`readopt`, 03:13:30Z) and the pilot resumed
