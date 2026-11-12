@@ -1,6 +1,6 @@
 # Optimization research standard
 
-- **Version:** 2.0.0 — **effective** 2026-11-09 — **status:** current (1.1.0, effective 2026-11-09, and 1.0.0,
+- **Version:** 2.1.0 — **effective** 2026-11-12 — **status:** current (2.0.0 and 1.1.0, effective 2026-11-09, and 1.0.0,
   effective 2026-11-08, remain registered for the studies that pinned them).
 - **Authoritative path:** `docs/research/OPTIMIZATION_STANDARD.md` (this file). There is no other copy; earlier versions
   are read from git history (`git log -p -- docs/research/OPTIMIZATION_STANDARD.md`).
@@ -9,6 +9,8 @@
   - [STUDY_PROTOCOL_TEMPLATE.md](STUDY_PROTOCOL_TEMPLATE.md) — the protocol skeleton every new study starts from.
   - [templates/STANDARD_ADOPTION.template.json](templates/STANDARD_ADOPTION.template.json) — the adoption manifest.
   - The preflight `npm run research-preflight -- --study research/<study>` (`src/research-standard/`).
+  - [methods/](methods/) — versioned **reference methods** (registry `methods/methods.versions.json`), e.g.
+    [NEW_L0_METHOD.md](methods/NEW_L0_METHOD.md), the recovered procedure that produced New L0 (§4.8, from 2.1.0).
 - **Change log:** at the end of this file (§8).
 
 This standard sets how optimization research is done in this repository: what is mandatory, what each study must
@@ -284,6 +286,18 @@ user's agreement. When the brief is silent, this standard applies.
    - **[M]** No study claims that one optimization method is superior from a single favourable historical pair. A
      method claim needs matched budgets and repeated, chronologically separated evidence.
 
+5. **[S] Convention changes** (added in 2.1.0). When a study's question is one engine convention (for example the unit
+   of a maximum hold), the protocol states, and the report shows:
+   - **A**, the frozen incumbent under the original convention, reproduced to the cent;
+   - **B**, the same phenotype, parameters and allocator under the new convention, with no re-optimization;
+   - **C**, the study's frozen selection under the new convention;
+   - the decomposition C − A = (B − A), the convention effect, + (C − B), the re-optimization effect, and C's phenotype
+     under the original convention (report-only), which shows whether C's gain depends on the new convention.
+
+   The new convention is an explicit, separately keyed evaluation option; the original remains the default and keeps
+   producing the original results (verified against archived records before any search). No gate, role, window or the
+   $35,000 ceiling changes because of this item.
+
 **Amendment items:** the incumbent list, the fallback, the comparison arms and their budgets.
 
 ## 4. Search coverage, budget and stopping
@@ -348,6 +362,23 @@ user's agreement. When the brief is silent, this standard applies.
      - a reward for trades for their own sake.
    - **Choosing not to protect** is allowed if the protocol justifies it. The participation attribution (§2.9) is
      reported either way.
+
+8. **[S] Reproducing a reference method** (added in 2.1.0). A study that re-executes a registered reference method
+   (`docs/research/methods/`, versioned with a sha256 in `methods.versions.json`):
+   - **pins** the method's id, version and sha256 in its protocol and in `STANDARD_ADOPTION.json` (`referenceMethod`; the
+     preflight checks the pin against the registry);
+   - **maps** every original stage to its own and states each adaptation, omission and reassignment. An omitted
+     discovery stage (for example a structure cell outside a fixed scope) keeps its recorded budget, which is reassigned
+     to the retained scope through the original per-stage schedules;
+   - **scales** effort proportionally (more replicates of the unchanged per-lane schedules), so that the executed
+     allocation among stages is preserved; it never enlarges one stage alone;
+   - **shows budget equivalence** side by side with the original's executed work in the units both studies record
+     (configured and executed proposals, islands, refinement starts and moves, requested evaluations, unique fresh
+     simulations, archive hits), against the original's effective budget — the work that produced the reproduced
+     result, for example its own arm — and states where the evidence is incomplete. Equal or greater effort is claimed
+     only for those units.
+
+   A reference method describes what was executed; it never relaxes an [M] rule of the version a study adopts.
 
 **Amendment items:** budgets, caps, triggers, cells/strata, grids, the method.
 
@@ -529,6 +560,7 @@ threshold, and any change of the cap (with the user's approval).
 
 | Version | Effective | Change | Rationale and evidence | Implications |
 |---|---|---|---|---|
+| 2.1.0 | 2026-11-12 | **Minor** (§7.4: new [S] items; no [M] rule added, removed or changed). Adds §3.5 [S] *Convention changes* (A frozen incumbent / B direct conversion / C re-optimized selection, with the decomposition; the new convention an explicit option, the original the default) and §4.8 [S] *Reproducing a reference method* (pin, stage map, omitted-stage reassignment through the original schedules, proportional scaling by replicates, side-by-side budget equivalence against the effective original budget). Adds the companion directory `docs/research/methods/` with its registry and the first reference method, NL0 1.0.0 (`methods/NEW_L0_METHOD.md`). The preflight gains an optional check of a declared `referenceMethod` pin; the protocol template gains the matching rows. | The user's brief for the New L0 trading-session study (`research/vg-l0-session-hold/brief/BRIEF.md`, 2026-11-12, Phase 2: "Update the appropriate documentation … Where the original methodology contains reusable practices, incorporate them appropriately into the optimization documentation … Where something is specific to New L0, preserve it in a dedicated, versioned reference protocol"). Evidence: Priority 5B (`research/vg-lifecycle-matched-optimization/`), whose L0 arm produced New L0; its executed budget and stage allocation recovered in `methods/NEW_L0_METHOD.md` §4; Priorities 5A/5B's lifecycle-on-fixed-phenotype versus matched-optimization designs (the precedent for §3.5). | Applies to studies adopting it from 2026-11-12. Studies pinned to 2.0.0, 1.1.0 or 1.0.0 keep their pin (the preflight passes with a notice). No gate, window, budget, instrument or the $35,000 ceiling changes. The first adopter is `research/vg-l0-session-hold/` (scope `optimization`). |
 | 2.0.0 | 2026-11-09 | **Major** (§7.4: a mandatory rule added). Adds §7.7 [M] *Reporting format: no visuals*: research is reported in written analysis, Markdown tables and machine-readable results only; no charts, plots, SVGs, screenshots, images, dashboards, HTML visual reports, PDFs or other visual artifacts; earlier visuals are preserved; a brief that explicitly asks for a visual is a recorded departure. §0.1's sentence allowing backend-generated report charts is replaced by a pointer to §7.7. No other rule changes. The companions follow: the protocol template (§15), `CLAUDE.md` (the standing reporting preference) and the roadmap. | The user's explicit reporting preference for future work, recorded in the Priority 5A brief (`research/vg-growth-funding-lifecycle/brief/BRIEF.md` §1, 2026-11-09), authorized there without a further approval question. It reconciles the earlier permission (§0.1 of 1.0.0 and 1.1.0) and the charts produced by Priority 3A (`research/vg-d1-growth-diagnostic/results/charts/`, preserved). | Applies to studies adopting it from 2026-11-09. Studies pinned to 1.0.0 or 1.1.0 keep their pin (the preflight passes with a notice; a continuation records "retained pinned standard x.y.z" or migrates by amendment, §7.5); their existing charts stay as they are. No research-method rule, gate, window, budget or the $35,000 ceiling changes. The first adopter is `research/vg-growth-funding-lifecycle/` (scope `diagnostic`). |
 | 1.1.0 | 2026-11-09 | **Minor** (§7.4: new guidance and [S]/[R] items; no [M] rule added, removed or changed; existing item numbers kept). Adds: §0.3 tail-severity statistics (p95, the worst-10% mean DD), the three consideration fields and the participation stages; §2.8 [R] candidate consideration is not qualification; §2.9 [R] participation attribution; §4.7 [S] protected investigation of multi-component participation; §5.8 [R] tail severity beside frequency. The companions follow: the protocol template (§4, §6, §9, §15) and the roadmap's sequencing note. The preflight's checks are unchanged (these items are protocol and report content it cannot verify, §7.6); its tests now also cover a study that retains 1.0.0 under a current 1.1.0. | The user's agreed process decisions in the Priority 3A brief (`research/vg-d1-growth-diagnostic/brief/BRIEF.md` §7, 2026-11-09). Evidence: Priority 3 (`research/vg-d1-growth-joint/REPORT.md`): (1) the unchanged VG #2 + Growth #4 / 08500a60 + Appendix A combinations failed Q3 (p90 DD $36,277.63 / $35,131.47) yet are kept by the user as candidates to investigate → §2.8; (2) the frozen primary passed Q3 with rare but severe breaches (2.6%, worst $103,278.13) while those combinations failed it with more frequent, milder breaches (13.3% / 10.9%, mean excess ≈ $4,000) → §5.8; (3) searched Growth·GDX books were mostly unfunded, without a stage-by-stage explanation → §2.9, §4.7. | Applies to studies adopting it from 2026-11-09. It does not change any frozen study's rules or results: studies pinned to 1.0.0 keep their pin (the preflight passes with a notice; a continuation records "retained pinned standard 1.0.0" or migrates by amendment, §7.5). The $35,000 budget and every gate are unchanged; no numeric tolerance is introduced. The first adopter is `research/vg-d1-growth-diagnostic/` (scope `diagnostic`). |
 | 1.0.0 | 2026-11-08 | First version. Consolidates the practice of Study 8, growth140-vgt-stable, Priority 1 (`research/vg-balanced-entry-eligibility/`) and Priority 2 (`research/vgt-d1-growth-joint/`). Adds the adoption manifest, the preflight and the `CLAUDE.md` read instruction. | The user's Priority 2 follow-up brief (`research/vgt-d1-growth-separate-pooled/brief/BRIEF.md`). Evidence: Priority 2's fixed D1 primary + Growth #4 combination beat its joint primary, but was not selectable (→ §3.2); its folds failed chronologically while the final neighbourhood looked stable (→ §1.10, §5.4); the stable Growth study's promotion excluded Rise and gate structures (→ §2.4, §4.3); Priority 1's capital-displacement finding (→ §5.2); the 2026-11-07 OOM and the dead-worker hang (→ §6.2, §6.4). | Applies to new studies from 2026-11-08. Completed studies are not retrofitted. The first adopter is `research/vgt-d1-growth-separate-pooled/` (scope `diagnostic`). |

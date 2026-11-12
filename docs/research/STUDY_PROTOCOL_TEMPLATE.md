@@ -19,6 +19,7 @@ governed work). Afterwards it is never edited; changes go to `AMENDMENTS.md` (ap
 | Scope | `optimization` \| `continuation` \| `diagnostic` |
 | Brief | `research/<study>/brief/BRIEF.md`, sha256 `<…>` |
 | Branch / base commit | `<branch>` from `<sha>` |
+| Reference method (standard §4.8, if the study reproduces one) | `docs/research/methods/<METHOD>.md` id `<id>` version `<x.y.z>`, sha256 `<64 hex>` (also `referenceMethod` in the adoption manifest), with the stage map, omissions and budget equivalence in §7 — or "none" |
 
 ### Adaptations and departures
 
@@ -64,6 +65,9 @@ governed work). Afterwards it is never edited; changes go to `AMENDMENTS.md` (ap
   - the no-improvement fallback (standard §3.2).
 - **Method arms where relevant:** fixed pooled; separately optimized then pooled; joint; staged. For each arm give its
   budget and provenance.
+- **A convention change** (standard §3.5, from 2.1.0): A the frozen incumbent under the original convention, B the same
+  phenotype under the new one, C the study's selection under the new one; the decomposition and the cross rows; how the
+  new convention is keyed and how the original default is verified unchanged.
 
 ## 5. Engine and conventions
 

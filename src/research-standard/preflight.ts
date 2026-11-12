@@ -18,6 +18,7 @@ import path from 'node:path';
 
 export const standardPath = 'docs/research/OPTIMIZATION_STANDARD.md';
 export const registryPath = 'docs/research/optimization-standard.versions.json';
+export const methodRegistryPath = 'docs/research/methods/methods.versions.json'; // reference methods (§4.8, from 2.1.0)
 export const manifestName = 'STANDARD_ADOPTION.json';
 
 export const scopes = ['optimization', 'continuation', 'diagnostic'] as const;
@@ -72,7 +73,55 @@ export interface Adoption {
   risk: { maximumMinuteDrawdown: number; principalBudget: number; denominator: string };
   budget: { distinctProposals: number | null; backendEvaluations: number | null; notes: string };
   deviations: Deviation[];
+  referenceMethod?: { id: string; path: string; version: string; sha256: string }; // optional (§4.8, from 2.1.0)
 }
+
+export interface MethodRegistry {
+  kind: string;
+  schema: number;
+  methods: { id: string; path: string; current: string; versions: RegistryEntry[] }[];
+}
+
+// A declared reference-method pin (§4.8): the method is registered, the version is listed with that sha256, and the file
+// at the registered path is that version (or, for an earlier version, the pin matches its registered sha256).
+export const checkReferenceMethod = (repoRoot: string, m: NonNullable<Adoption['referenceMethod']>) => {
+  const errors: string[] = [];
+  const notices: string[] = [];
+  const file = path.join(repoRoot, methodRegistryPath);
+
+  if (!fs.existsSync(file)) return { errors: [`the reference-method registry ${methodRegistryPath} is missing`], notices };
+
+  let reg: MethodRegistry;
+
+  try {
+    reg = JSON.parse(fs.readFileSync(file, 'utf8')) as MethodRegistry;
+  } catch (error) {
+    return { errors: [`${methodRegistryPath} is not valid JSON: ${(error as Error).message}`], notices };
+  }
+
+  const method = (Array.isArray(reg.methods) ? reg.methods : []).find((x) => x.id === m.id);
+
+  if (!method) return { errors: [`reference method ${m.id} is not registered in ${methodRegistryPath}`], notices };
+  if (method.path !== m.path) errors.push(`reference method ${m.id}: path ${m.path} is not the registered ${method.path}`);
+
+  const v = method.versions.find((x) => x.version === m.version);
+
+  if (!v) errors.push(`reference method ${m.id} version ${m.version} is not registered`);
+  else if (v.sha256 !== m.sha256)
+    errors.push(`mismatched reference-method hash: ${m.id} ${m.version} is ${v.sha256.slice(0, 12)}…, the pin ${String(m.sha256).slice(0, 12)}…`);
+
+  const cur = method.versions.find((x) => x.version === method.current);
+  const target = path.join(repoRoot, method.path);
+
+  if (!cur) errors.push(`reference method ${m.id}: current ${method.current} is not listed`);
+  else if (!fs.existsSync(target)) errors.push(`reference method ${m.id}: ${method.path} is missing`);
+  else if (sha256File(target) !== cur.sha256)
+    errors.push(`${method.path} is not the registered ${m.id} ${method.current}: edited without a new registered version`);
+  if (v && cur && v.version !== cur.version)
+    notices.push(`pinned to reference method ${m.id} ${v.version}; the current version is ${cur.version}`);
+
+  return { errors, notices };
+};
 
 export interface Result {
   ok: boolean;
@@ -306,6 +355,20 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
   } else
     for (const k of ['distinctProposals', 'backendEvaluations'] as const)
       if (!count(b[k]) || (b[k] as number) <= 0) errors.push(`budget.${k} must be declared (§4.2)`);
+
+  // the reference method, if the study declares one (§4.8)
+  if (a.referenceMethod !== undefined) {
+    const m = a.referenceMethod;
+
+    if (!m || !text(m.id) || !text(m.path) || !semver.test(m.version ?? '') || !hex64.test(m.sha256 ?? ''))
+      errors.push('referenceMethod needs id, path, version x.y.z and a 64-hex sha256');
+    else {
+      const r = checkReferenceMethod(repoRoot, m);
+
+      errors.push(...r.errors);
+      notices.push(...r.notices);
+    }
+  }
 
   // deviations (§7.3)
   if (!Array.isArray(a.deviations)) errors.push('deviations must be a list (empty when there are none)');

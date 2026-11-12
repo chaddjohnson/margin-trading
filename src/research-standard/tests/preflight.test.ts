@@ -9,8 +9,10 @@ import { after, describe, it } from 'node:test';
 import {
   type Adoption,
   checkAdoption,
+  checkReferenceMethod,
   checkRegistry,
   manifestName,
+  methodRegistryPath,
   registryPath,
   requireStandardAdoption,
   standardPath
@@ -99,7 +101,57 @@ const run = (f: Fixture) => checkAdoption(f.study, { repoRoot: f.root, now });
 const clone = (a: Adoption) => JSON.parse(JSON.stringify(a)) as Adoption;
 const hasError = (r: ReturnType<typeof run>, pattern: RegExp) => r.errors.some((e) => pattern.test(e));
 
+// A reference method (§4.8, from 2.1.0) in the fixture repository: its file and registry, and the manifest's pin.
+const withMethod = (f: Fixture) => {
+  const text = '# Reference method X\n\n- version 1.0.0\n';
+  const rel = 'docs/research/methods/X.md';
+
+  fs.mkdirSync(path.join(f.root, 'docs/research/methods'), { recursive: true });
+  fs.writeFileSync(path.join(f.root, rel), text);
+  fs.writeFileSync(
+    path.join(f.root, methodRegistryPath),
+    JSON.stringify({
+      kind: 'reference-method-registry',
+      schema: 1,
+      methods: [{ id: 'X', path: rel, current: '1.0.0', versions: [{ version: '1.0.0', effective: '2026-11-08', sha256: sha(text), summary: 'x' }] }]
+    })
+  );
+
+  const a = clone(f.adoption);
+
+  a.referenceMethod = { id: 'X', path: rel, version: '1.0.0', sha256: sha(text) };
+  f.write(a);
+  return { a, rel };
+};
+
 describe('optimization-standard preflight', () => {
+  it('passes a declared reference method pinned to its registered version and sha256', () => {
+    const f = fixture();
+
+    withMethod(f);
+    assert.deepEqual(run(f).errors, []);
+  });
+
+  it('fails a reference-method pin that is unregistered, has another hash, or whose file was edited', () => {
+    const f = fixture();
+    const { a, rel } = withMethod(f);
+    const unknown = clone(a);
+
+    unknown.referenceMethod!.id = 'Y';
+    f.write(unknown);
+    assert.ok(hasError(run(f), /reference method Y is not registered/));
+
+    const wrong = clone(a);
+
+    wrong.referenceMethod!.sha256 = 'e'.repeat(64);
+    f.write(wrong);
+    assert.ok(hasError(run(f), /mismatched reference-method hash/));
+
+    f.write(a);
+    fs.appendFileSync(path.join(f.root, rel), 'an unregistered edit\n');
+    assert.ok(hasError(run(f), /edited without a new registered version/));
+  });
+
   it('passes a complete, consistent adoption', () => {
     const r = run(fixture());
 
@@ -256,6 +308,19 @@ describe('the repository', () => {
       .filter((d) => fs.existsSync(path.join(repoRoot, 'research', d, manifestName)));
 
     for (const d of studies) assert.deepEqual(checkAdoption(path.join('research', d), { repoRoot }).errors, [], d);
+  });
+
+  // §4.8: every registered reference method's current file matches its registered sha256
+  it('keeps every registered reference method at its registered sha256', () => {
+    const reg = JSON.parse(fs.readFileSync(path.join(repoRoot, methodRegistryPath), 'utf8')) as {
+      methods: { id: string; path: string; current: string; versions: { version: string; sha256: string }[] }[];
+    };
+
+    for (const m of reg.methods) {
+      const cur = m.versions.find((v) => v.version === m.current)!;
+
+      assert.deepEqual(checkReferenceMethod(repoRoot, { id: m.id, path: m.path, version: cur.version, sha256: cur.sha256 }).errors, [], m.id);
+    }
   });
 
   // §7.4–§7.5: a new version is appended, never rewritten, and the studies that pinned an earlier one keep it
