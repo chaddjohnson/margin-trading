@@ -1,0 +1,47 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/<study>",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "<x.y.z>",
+  "sha256": "<64 hex: sha256 of the standard file at that version>"
+ },
+ "readAt": "<YYYY-MM-DDTHH:MM:SSZ, from date -u>",
+ "adoptedAt": "<YYYY-MM-DDTHH:MM:SSZ, at or after readAt>",
+ "protocol": {
+  "path": "research/<study>/PROTOCOL.md",
+  "sha256": "<64 hex: sha256 of the protocol as adopted (it must contain the standard's version and sha256)>"
+ },
+ "dateSplit": {
+  "development": { "from": "2016-01-04", "to": "2024-12-31" },
+  "validation": { "from": "2025-01-01", "to": "<common complete endpoint>" },
+  "commonCompleteEndpoint": "<YYYY-MM-DD, verified from the canonical files>"
+ },
+ "objective": {
+  "prioritizes": "actual-profit | robust-profit | compromise | not-applicable",
+  "primaryRule": "<the frozen primary-selection rule, or why none applies>",
+  "roles": ["actual-profit", "robust-profit", "balanced", "lower-drawdown"]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": null,
+  "backendEvaluations": null,
+  "notes": "<both units, with what is counted (centres, neighbours, folds, retries, cache hits)>"
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§<n>",
+   "kind": "adaptation | departure",
+   "description": "<what differs from the standard>",
+   "justification": "<why>",
+   "userAgreement": "<required for a departure: the brief line or session instruction; null for an adaptation>"
+  }
+ ]
+}
