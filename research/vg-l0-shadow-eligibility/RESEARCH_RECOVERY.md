@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-12T12:50Z (UTC, from the clock). **Status: INCOMPLETE — protocol FROZEN; the study chain is
-  RUNNING (≈ 50 h of compute planned).**
+- **Updated:** 2026-11-12T20:02Z (UTC, from the clock). **Status: INCOMPLETE — protocol FROZEN; the study chain is
+  RUNNING (C21 B1 qualification; C19 complete).**
 - **Task:** the user's brief "New L0 Shadow-Position Eligibility: Implementation and Comprehensive Optimization"
   (`brief/BRIEF.md`, 831 lines, sha256 `3547d5efee0e92f26977231b6425e869859369ec367efcb70ecf05d3f51e8ed3`, read in full
   to its final section "Overall Objective"; not truncated).
@@ -29,6 +29,18 @@
 - **Next step after "CHAIN1 DONE":** `node --experimental-transform-types tools/vg-l0-shadow-eligibility/tables.ts`;
   full `npm test` (after the validation only); REPORT.md; ROADMAP row + Phase 8 decision; final checkpoint; commit; push.
 - **Do not rerun:** stage V, the control manifest, the freeze, any sealed stage; FULL opens only in step f03 (once).
+
+## Chain progress (from `results/logs/chain1.log`; every block below is sealed and committed by the chain)
+
+| Step | Stage | Window (UTC) | Result | Commit |
+|---|---|---|---|---|
+| a01–a02 | phase 2 (New L0 × 8, D24) | 12:48–12:49 | 5,208 fresh; all-OFF best ($382,721.46); every D1 toggle combination harmful | `0f338cf4` |
+| b11 | C19 search B1 (96 lanes) | 12:49–15:04 | 1,666,266 fresh, 14,043 hits; 95 lanes triggers not met, 1 at cap | `5265b419` |
+| b12 | C19 qualify B1 | 15:04–15:22 | 32/32 replicates qualified; primary `C19/B1/R21/V2#1 profit` $148,747.23 / DD $24,916.05 (111) | `5265b419` |
+| b13–b14 | C19 B2 step d1 (48 lanes) + finalists | 15:22–15:51 | 878,968 fresh; F1 $102,840.62 (010), F2 $84,907.67 (010) | `5265b419` |
+| b15–b16 | C19 B2 step g (48 lanes) + selection | 15:51–16:40 | 667,758 fresh; primary `C19/B2-g/F1/R8/V3#1 profit` (011) | `5265b419` |
+| b18 | C19 fold evaluation (D21) | 16:41 | slice 2020–2021: B1 +$89,021.67 (DD $48,255.05); B2 +$48,104.08 (DD $44,645.13); New L0 $171,402.70 (descriptive) | `de0e13ab` |
+| b21 | C21 search B1 | 16:41–20:00 | 1,712,642 fresh, 13,866 hits | (with b27) |
 
 ## Phase 0 (complete)
 
