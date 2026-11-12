@@ -1,0 +1,3455 @@
+{
+ "kind": "vg-l0-session-hold control manifest",
+ "sources": {
+  "p3bFrozenSelection": {
+   "file": "research/vg-d1-growth-expanded/FROZEN_SELECTION.json",
+   "sha256": "f76299683bcb92a9175864daaf3b46f1aab62879a14aeda49a7f9ad3f5bf422e"
+  },
+  "p5aCentres": {
+   "file": "research/vg-growth-funding-lifecycle/results/development/centres.json",
+   "sha256": "09afda78f6fa40fb18a43557e4e24a3bf7fe159c148cc6858b72b2c31785feb8"
+  },
+  "p5bFrozenSelection": {
+   "file": "research/vg-lifecycle-matched-optimization/FROZEN_SELECTION.json",
+   "sha256": "cd223a0d18c44925af7102b98efae1e369899664b8fb07ee2f8a579816255793"
+  }
+ },
+ "growthIdentities": {
+  "g4": "420cd989e4fa7749",
+  "g085": "08500a60ec56cfae",
+  "appA": "07cac3329fc7a520",
+  "c4RefinedVgt": "c3c1c0d56c4ee3b0",
+  "newL0Vgt": "6b5f909b30cfa516"
+ },
+ "controls": [
+  {
+   "key": "NL0",
+   "label": "New L0 primary: 5B C24/L0/informed/R1#1 profit (modified D1·VGT + D1·GDX + VGT Growth 6b5f909b; GDX Growth OFF)",
+   "role": "baseline",
+   "selectable": true,
+   "id": "67cfdd9b62d1e16f",
+   "priority3Id": "a2e385640ca61012",
+   "source": "research/vg-lifecycle-matched-optimization/FROZEN_SELECTION.json crossTestSubjects[R01] (C24/L0/informed/R1#1 profit)",
+   "options": {
+    "enabled": {
+     "G:GDX": false
+    }
+   },
+   "settings": {
+    "cal": {
+     "id": "67cfdd9b62d1e16f",
+     "priority3QuadId": "a2e385640ca61012",
+     "inclusion": "V",
+     "holdUnit": "cal",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 277,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 61,
+        "maximumHoldDays": 13,
+        "tickWindowSize": 232,
+        "intradayLossBuffer": 25,
+        "pullback": 152,
+        "continuationWindow": 10
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-277,1,61,13,232,25,152,10",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.277,
+        "tickWindowSize": 232,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.061,
+        "maximumHoldDays": 13,
+        "intradayLossBuffer": 0.025,
+        "pullback": 0.152,
+        "continuationWindow": 10,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 237,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 73,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 72,
+        "intradayLossBuffer": 42,
+        "pullback": 103,
+        "continuationWindow": 41
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-237,9,73,15,72,42,103,41",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.237,
+        "tickWindowSize": 72,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.073,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.042,
+        "pullback": 0.103,
+        "continuationWindow": 41,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "6b5f909b30cfa516",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 5.6,
+        "recentLowLookbackBars": 84,
+        "trendFilterEnabled": false,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "time_limited",
+        "eligibilityMaxAgeSessions": 20,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 64,
+        "dipThresholdPercent": 11.9,
+        "recoveryRetracementPercent": 46.2,
+        "recoveryConfirmationSessions": 5,
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 22,
+        "intradayLossBufferEnabled": false,
+        "initialStopEnabled": true,
+        "initialStopAtrSessions": 16,
+        "initialStopAtrMultiple": 1.2,
+        "retentionEnabled": false,
+        "continuationEnabled": true,
+        "continuationMethod": "classic_d1",
+        "continuationWindowSessions": 67,
+        "classicPullbackPercent": 11.5,
+        "classicReboundPercent": 3.01,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": "cal",
+       "engineParams": {
+        "advanceFromRecentLowPercent": 5.6,
+        "recentLowLookbackBars": 84,
+        "resolution": "1d",
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 22,
+        "intradayLossBufferEnabled": false,
+        "intradayLossBufferPercent": "__NaN",
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "classic_d1",
+         "windowSessions": 67,
+         "pullbackPercent": 11.5,
+         "reboundPercent": 3.01
+        },
+        "trendFilter": null,
+        "eligibility": {
+         "policy": "time_limited",
+         "maxAgeSessions": 20
+        },
+        "initialStop": {
+         "atrSessions": 16,
+         "atrMultiple": 1.2
+        },
+        "drawdownGate": {
+         "lookbackSessions": 64,
+         "dipThresholdPercent": 11.9,
+         "recoveryRetracementPercent": 46.2,
+         "confirmationSessions": 5
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "calendar days between session dates (the frozen convention under which New L0 was selected; the engine default)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    },
+    "ses": {
+     "id": "67cfdd9b62d1e16f",
+     "priority3QuadId": "a2e385640ca61012",
+     "inclusion": "V",
+     "holdUnit": "ses",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 277,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 61,
+        "maximumHoldDays": 13,
+        "tickWindowSize": 232,
+        "intradayLossBuffer": 25,
+        "pullback": 152,
+        "continuationWindow": 10
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-277,1,61,13,232,25,152,10",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.277,
+        "tickWindowSize": 232,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.061,
+        "maximumHoldDays": 13,
+        "intradayLossBuffer": 0.025,
+        "pullback": 0.152,
+        "continuationWindow": 10,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 237,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 73,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 72,
+        "intradayLossBuffer": 42,
+        "pullback": 103,
+        "continuationWindow": 41
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-237,9,73,15,72,42,103,41",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.237,
+        "tickWindowSize": 72,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.073,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.042,
+        "pullback": 0.103,
+        "continuationWindow": 41,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "6b5f909b30cfa516",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 5.6,
+        "recentLowLookbackBars": 84,
+        "trendFilterEnabled": false,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "time_limited",
+        "eligibilityMaxAgeSessions": 20,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 64,
+        "dipThresholdPercent": 11.9,
+        "recoveryRetracementPercent": 46.2,
+        "recoveryConfirmationSessions": 5,
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 22,
+        "intradayLossBufferEnabled": false,
+        "initialStopEnabled": true,
+        "initialStopAtrSessions": 16,
+        "initialStopAtrMultiple": 1.2,
+        "retentionEnabled": false,
+        "continuationEnabled": true,
+        "continuationMethod": "classic_d1",
+        "continuationWindowSessions": 67,
+        "classicPullbackPercent": 11.5,
+        "classicReboundPercent": 3.01,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": "ses",
+       "engineParams": {
+        "advanceFromRecentLowPercent": 5.6,
+        "recentLowLookbackBars": 84,
+        "resolution": "1d",
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 22,
+        "intradayLossBufferEnabled": false,
+        "intradayLossBufferPercent": "__NaN",
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "classic_d1",
+         "windowSessions": 67,
+         "pullbackPercent": 11.5,
+         "reboundPercent": 3.01
+        },
+        "trendFilter": null,
+        "eligibility": {
+         "policy": "time_limited",
+         "maxAgeSessions": 20
+        },
+        "initialStop": {
+         "atrSessions": 16,
+         "atrMultiple": 1.2
+        },
+        "drawdownGate": {
+         "lookbackSessions": 64,
+         "dipThresholdPercent": 11.9,
+         "recoveryRetracementPercent": 46.2,
+         "confirmationSessions": 5
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    }
+   }
+  },
+  {
+   "key": "C4",
+   "label": "C4: VG #2 + VGT Growth #4; GDX Growth OFF",
+   "role": "benchmark",
+   "selectable": true,
+   "id": "2f49a1cc226b4ece",
+   "priority3Id": "f324035d15f69610",
+   "source": "5B control C4 (src/vg-lifecycle-matched-optimization/controls.ts, its pinned sources)",
+   "options": {
+    "enabled": {
+     "G:GDX": false
+    }
+   },
+   "settings": {
+    "cal": {
+     "id": "2f49a1cc226b4ece",
+     "priority3QuadId": "f324035d15f69610",
+     "inclusion": "V",
+     "holdUnit": "cal",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 57,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 243,
+        "intradayLossBuffer": 29,
+        "pullback": 152,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-276,1,57,12,243,29,152,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.276,
+        "tickWindowSize": 243,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.057,
+        "maximumHoldDays": 12,
+        "intradayLossBuffer": 0.029,
+        "pullback": 0.152,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 235,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 78,
+        "intradayLossBuffer": 44,
+        "pullback": 110,
+        "continuationWindow": 55
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-235,9,74,15,78,44,110,55",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.235,
+        "tickWindowSize": 78,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.044,
+        "pullback": 0.11,
+        "continuationWindow": 55,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "420cd989e4fa7749",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 90,
+        "trendFilterEnabled": true,
+        "trendMethod": "price_change",
+        "trendChangeLookbackSessions": 30,
+        "trendChangeMinimumReturnPercent": -2,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "time_limited",
+        "eligibilityMaxAgeSessions": 20,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 60,
+        "dipThresholdPercent": 10,
+        "recoveryRetracementPercent": 45,
+        "recoveryConfirmationSessions": 2,
+        "trailingStopPercent": 6,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 21,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "initialStopEnabled": true,
+        "initialStopAtrSessions": 20,
+        "initialStopAtrMultiple": 1.5,
+        "retentionEnabled": false,
+        "continuationEnabled": true,
+        "continuationMethod": "shallow_pullback",
+        "continuationWindowSessions": 60,
+        "uptrendSmaBars": 50,
+        "uptrendSlopeBars": 10,
+        "uptrendMinimumRisePercent": 0,
+        "pullbackMinimumPercent": 1.5,
+        "pullbackMaximumPercent": 8,
+        "recoveryPercent": 1,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": "cal",
+       "engineParams": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 90,
+        "resolution": "1d",
+        "trailingStopPercent": 6,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 21,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "shallow_pullback",
+         "windowSessions": 60,
+         "smaBars": 50,
+         "slopeBars": 10,
+         "minimumRisePercent": 0,
+         "pullbackMinimumPercent": 1.5,
+         "pullbackMaximumPercent": 8,
+         "recoveryPercent": 1
+        },
+        "trendFilter": {
+         "method": "price_change",
+         "lookbackSessions": 30,
+         "minimumReturnPercent": -2
+        },
+        "eligibility": {
+         "policy": "time_limited",
+         "maxAgeSessions": 20
+        },
+        "initialStop": {
+         "atrSessions": 20,
+         "atrMultiple": 1.5
+        },
+        "drawdownGate": {
+         "lookbackSessions": 60,
+         "dipThresholdPercent": 10,
+         "recoveryRetracementPercent": 45,
+         "confirmationSessions": 2
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "calendar days between session dates (the frozen convention under which New L0 was selected; the engine default)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    },
+    "ses": {
+     "id": "2f49a1cc226b4ece",
+     "priority3QuadId": "f324035d15f69610",
+     "inclusion": "V",
+     "holdUnit": "ses",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 57,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 243,
+        "intradayLossBuffer": 29,
+        "pullback": 152,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-276,1,57,12,243,29,152,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.276,
+        "tickWindowSize": 243,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.057,
+        "maximumHoldDays": 12,
+        "intradayLossBuffer": 0.029,
+        "pullback": 0.152,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 235,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 78,
+        "intradayLossBuffer": 44,
+        "pullback": 110,
+        "continuationWindow": 55
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-235,9,74,15,78,44,110,55",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.235,
+        "tickWindowSize": 78,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.044,
+        "pullback": 0.11,
+        "continuationWindow": 55,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "420cd989e4fa7749",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 90,
+        "trendFilterEnabled": true,
+        "trendMethod": "price_change",
+        "trendChangeLookbackSessions": 30,
+        "trendChangeMinimumReturnPercent": -2,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "time_limited",
+        "eligibilityMaxAgeSessions": 20,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 60,
+        "dipThresholdPercent": 10,
+        "recoveryRetracementPercent": 45,
+        "recoveryConfirmationSessions": 2,
+        "trailingStopPercent": 6,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 21,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "initialStopEnabled": true,
+        "initialStopAtrSessions": 20,
+        "initialStopAtrMultiple": 1.5,
+        "retentionEnabled": false,
+        "continuationEnabled": true,
+        "continuationMethod": "shallow_pullback",
+        "continuationWindowSessions": 60,
+        "uptrendSmaBars": 50,
+        "uptrendSlopeBars": 10,
+        "uptrendMinimumRisePercent": 0,
+        "pullbackMinimumPercent": 1.5,
+        "pullbackMaximumPercent": 8,
+        "recoveryPercent": 1,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": "ses",
+       "engineParams": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 90,
+        "resolution": "1d",
+        "trailingStopPercent": 6,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 21,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "shallow_pullback",
+         "windowSessions": 60,
+         "smaBars": 50,
+         "slopeBars": 10,
+         "minimumRisePercent": 0,
+         "pullbackMinimumPercent": 1.5,
+         "pullbackMaximumPercent": 8,
+         "recoveryPercent": 1
+        },
+        "trendFilter": {
+         "method": "price_change",
+         "lookbackSessions": 30,
+         "minimumReturnPercent": -2
+        },
+        "eligibility": {
+         "policy": "time_limited",
+         "maxAgeSessions": 20
+        },
+        "initialStop": {
+         "atrSessions": 20,
+         "atrMultiple": 1.5
+        },
+        "drawdownGate": {
+         "lookbackSessions": 60,
+         "dipThresholdPercent": 10,
+         "recoveryRetracementPercent": 45,
+         "confirmationSessions": 2
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    }
+   }
+  },
+  {
+   "key": "C4R",
+   "label": "C4-refined: 3B C24/informed-fixed#1 profit — VG #2 D1 + refined VGT Growth; GDX Growth OFF",
+   "role": "benchmark",
+   "selectable": true,
+   "id": "0f017f0ab9b26f24",
+   "priority3Id": "07443ffaeef41e85",
+   "source": "5B control C4R (src/vg-lifecycle-matched-optimization/controls.ts, its pinned sources)",
+   "options": {
+    "enabled": {
+     "G:GDX": false
+    }
+   },
+   "settings": {
+    "cal": {
+     "id": "0f017f0ab9b26f24",
+     "priority3QuadId": "07443ffaeef41e85",
+     "inclusion": "V",
+     "holdUnit": "cal",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 57,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 243,
+        "intradayLossBuffer": 29,
+        "pullback": 152,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-276,1,57,12,243,29,152,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.276,
+        "tickWindowSize": 243,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.057,
+        "maximumHoldDays": 12,
+        "intradayLossBuffer": 0.029,
+        "pullback": 0.152,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 235,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 78,
+        "intradayLossBuffer": 44,
+        "pullback": 110,
+        "continuationWindow": 55
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-235,9,74,15,78,44,110,55",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.235,
+        "tickWindowSize": 78,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.044,
+        "pullback": 0.11,
+        "continuationWindow": 55,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "c3c1c0d56c4ee3b0",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 5.8,
+        "recentLowLookbackBars": 80,
+        "trendFilterEnabled": false,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "time_limited",
+        "eligibilityMaxAgeSessions": 21,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 64,
+        "dipThresholdPercent": 12.4,
+        "recoveryRetracementPercent": 48.9,
+        "recoveryConfirmationSessions": 5,
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 21,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.8,
+        "initialStopEnabled": false,
+        "retentionEnabled": false,
+        "continuationEnabled": true,
+        "continuationMethod": "shallow_pullback",
+        "continuationWindowSessions": 60,
+        "uptrendSmaBars": 43,
+        "uptrendSlopeBars": 9,
+        "uptrendMinimumRisePercent": 3.9,
+        "pullbackMinimumPercent": 3,
+        "pullbackMaximumPercent": 7.9,
+        "recoveryPercent": 2.73,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": "cal",
+       "engineParams": {
+        "advanceFromRecentLowPercent": 5.8,
+        "recentLowLookbackBars": 80,
+        "resolution": "1d",
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 21,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.8,
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "shallow_pullback",
+         "windowSessions": 60,
+         "smaBars": 43,
+         "slopeBars": 9,
+         "minimumRisePercent": 3.9,
+         "pullbackMinimumPercent": 3,
+         "pullbackMaximumPercent": 7.9,
+         "recoveryPercent": 2.73
+        },
+        "trendFilter": null,
+        "eligibility": {
+         "policy": "time_limited",
+         "maxAgeSessions": 21
+        },
+        "drawdownGate": {
+         "lookbackSessions": 64,
+         "dipThresholdPercent": 12.4,
+         "recoveryRetracementPercent": 48.9,
+         "confirmationSessions": 5
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "calendar days between session dates (the frozen convention under which New L0 was selected; the engine default)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    },
+    "ses": {
+     "id": "0f017f0ab9b26f24",
+     "priority3QuadId": "07443ffaeef41e85",
+     "inclusion": "V",
+     "holdUnit": "ses",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 57,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 243,
+        "intradayLossBuffer": 29,
+        "pullback": 152,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-276,1,57,12,243,29,152,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.276,
+        "tickWindowSize": 243,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.057,
+        "maximumHoldDays": 12,
+        "intradayLossBuffer": 0.029,
+        "pullback": 0.152,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 235,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 78,
+        "intradayLossBuffer": 44,
+        "pullback": 110,
+        "continuationWindow": 55
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-235,9,74,15,78,44,110,55",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.235,
+        "tickWindowSize": 78,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.044,
+        "pullback": 0.11,
+        "continuationWindow": 55,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "c3c1c0d56c4ee3b0",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 5.8,
+        "recentLowLookbackBars": 80,
+        "trendFilterEnabled": false,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "time_limited",
+        "eligibilityMaxAgeSessions": 21,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 64,
+        "dipThresholdPercent": 12.4,
+        "recoveryRetracementPercent": 48.9,
+        "recoveryConfirmationSessions": 5,
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 21,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.8,
+        "initialStopEnabled": false,
+        "retentionEnabled": false,
+        "continuationEnabled": true,
+        "continuationMethod": "shallow_pullback",
+        "continuationWindowSessions": 60,
+        "uptrendSmaBars": 43,
+        "uptrendSlopeBars": 9,
+        "uptrendMinimumRisePercent": 3.9,
+        "pullbackMinimumPercent": 3,
+        "pullbackMaximumPercent": 7.9,
+        "recoveryPercent": 2.73,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": "ses",
+       "engineParams": {
+        "advanceFromRecentLowPercent": 5.8,
+        "recentLowLookbackBars": 80,
+        "resolution": "1d",
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 21,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.8,
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "shallow_pullback",
+         "windowSessions": 60,
+         "smaBars": 43,
+         "slopeBars": 9,
+         "minimumRisePercent": 3.9,
+         "pullbackMinimumPercent": 3,
+         "pullbackMaximumPercent": 7.9,
+         "recoveryPercent": 2.73
+        },
+        "trendFilter": null,
+        "eligibility": {
+         "policy": "time_limited",
+         "maxAgeSessions": 21
+        },
+        "drawdownGate": {
+         "lookbackSessions": 64,
+         "dipThresholdPercent": 12.4,
+         "recoveryRetracementPercent": 48.9,
+         "confirmationSessions": 5
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    }
+   }
+  },
+  {
+   "key": "C85",
+   "label": "C85: VG #2 + VGT Growth 08500a60; GDX Growth OFF",
+   "role": "control",
+   "selectable": true,
+   "id": "38be30d42d55ec7f",
+   "priority3Id": "3688e97b90639d60",
+   "source": "5B control C85 (src/vg-lifecycle-matched-optimization/controls.ts, its pinned sources)",
+   "options": {
+    "enabled": {
+     "G:GDX": false
+    }
+   },
+   "settings": {
+    "cal": {
+     "id": "38be30d42d55ec7f",
+     "priority3QuadId": "3688e97b90639d60",
+     "inclusion": "V",
+     "holdUnit": "cal",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 57,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 243,
+        "intradayLossBuffer": 29,
+        "pullback": 152,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-276,1,57,12,243,29,152,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.276,
+        "tickWindowSize": 243,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.057,
+        "maximumHoldDays": 12,
+        "intradayLossBuffer": 0.029,
+        "pullback": 0.152,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 235,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 78,
+        "intradayLossBuffer": 44,
+        "pullback": 110,
+        "continuationWindow": 55
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-235,9,74,15,78,44,110,55",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.235,
+        "tickWindowSize": 78,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.044,
+        "pullback": 0.11,
+        "continuationWindow": 55,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "08500a60ec56cfae",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 1,
+        "recentLowLookbackBars": 80,
+        "trendFilterEnabled": true,
+        "trendMethod": "price_change",
+        "trendChangeLookbackSessions": 10,
+        "trendChangeMinimumReturnPercent": -5,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "reset_renew",
+        "eligibilityMaxAgeSessions": 24,
+        "eligibilityResetDropPercent": 5.5,
+        "eligibilityRenewalReboundPercent": 5,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 90,
+        "dipThresholdPercent": 2,
+        "recoveryRetracementPercent": 30,
+        "recoveryConfirmationSessions": 4,
+        "trailingStopPercent": 9,
+        "maximumHoldEnabled": false,
+        "initialStopEnabled": true,
+        "initialStopAtrSessions": 55,
+        "initialStopAtrMultiple": 1,
+        "retentionEnabled": true,
+        "retentionSellPercent": 50,
+        "retentionSmaSessions": 160,
+        "retentionClosesBelow": 1,
+        "continuationEnabled": true,
+        "continuationMethod": "ma_cross",
+        "continuationWindowSessions": 50,
+        "crossSmaBars": 110,
+        "crossRisingBars": 19,
+        "crossMinimumSlopePercent": 0.4,
+        "crossMarginPercent": 2.75,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": null,
+       "engineParams": {
+        "advanceFromRecentLowPercent": 1,
+        "recentLowLookbackBars": 80,
+        "resolution": "1d",
+        "trailingStopPercent": 9,
+        "maximumHoldEnabled": false,
+        "maximumHoldDays": "__NaN",
+        "intradayLossBufferEnabled": false,
+        "intradayLossBufferPercent": "__NaN",
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "ma_cross",
+         "windowSessions": 50,
+         "smaBars": 110,
+         "risingBars": 19,
+         "minimumSlopePercent": 0.4,
+         "marginPercent": 2.75
+        },
+        "trendFilter": {
+         "method": "price_change",
+         "lookbackSessions": 10,
+         "minimumReturnPercent": -5
+        },
+        "eligibility": {
+         "policy": "reset_renew",
+         "maxAgeSessions": 24,
+         "resetDropPercent": 5.5,
+         "renewalReboundPercent": 5
+        },
+        "initialStop": {
+         "atrSessions": 55,
+         "atrMultiple": 1
+        },
+        "retention": {
+         "sellPercent": 50,
+         "smaSessions": 160,
+         "closesBelow": 1
+        },
+        "drawdownGate": {
+         "lookbackSessions": 90,
+         "dipThresholdPercent": 2,
+         "recoveryRetracementPercent": 30,
+         "confirmationSessions": 4
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "calendar days between session dates (the frozen convention under which New L0 was selected; the engine default)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    },
+    "ses": {
+     "id": "38be30d42d55ec7f",
+     "priority3QuadId": "3688e97b90639d60",
+     "inclusion": "V",
+     "holdUnit": "ses",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 57,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 243,
+        "intradayLossBuffer": 29,
+        "pullback": 152,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-276,1,57,12,243,29,152,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.276,
+        "tickWindowSize": 243,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.057,
+        "maximumHoldDays": 12,
+        "intradayLossBuffer": 0.029,
+        "pullback": 0.152,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 235,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 78,
+        "intradayLossBuffer": 44,
+        "pullback": 110,
+        "continuationWindow": 55
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-235,9,74,15,78,44,110,55",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.235,
+        "tickWindowSize": 78,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.044,
+        "pullback": 0.11,
+        "continuationWindow": 55,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "08500a60ec56cfae",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 1,
+        "recentLowLookbackBars": 80,
+        "trendFilterEnabled": true,
+        "trendMethod": "price_change",
+        "trendChangeLookbackSessions": 10,
+        "trendChangeMinimumReturnPercent": -5,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "reset_renew",
+        "eligibilityMaxAgeSessions": 24,
+        "eligibilityResetDropPercent": 5.5,
+        "eligibilityRenewalReboundPercent": 5,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 90,
+        "dipThresholdPercent": 2,
+        "recoveryRetracementPercent": 30,
+        "recoveryConfirmationSessions": 4,
+        "trailingStopPercent": 9,
+        "maximumHoldEnabled": false,
+        "initialStopEnabled": true,
+        "initialStopAtrSessions": 55,
+        "initialStopAtrMultiple": 1,
+        "retentionEnabled": true,
+        "retentionSellPercent": 50,
+        "retentionSmaSessions": 160,
+        "retentionClosesBelow": 1,
+        "continuationEnabled": true,
+        "continuationMethod": "ma_cross",
+        "continuationWindowSessions": 50,
+        "crossSmaBars": 110,
+        "crossRisingBars": 19,
+        "crossMinimumSlopePercent": 0.4,
+        "crossMarginPercent": 2.75,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": null,
+       "engineParams": {
+        "advanceFromRecentLowPercent": 1,
+        "recentLowLookbackBars": 80,
+        "resolution": "1d",
+        "trailingStopPercent": 9,
+        "maximumHoldEnabled": false,
+        "maximumHoldDays": "__NaN",
+        "intradayLossBufferEnabled": false,
+        "intradayLossBufferPercent": "__NaN",
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "ma_cross",
+         "windowSessions": 50,
+         "smaBars": 110,
+         "risingBars": 19,
+         "minimumSlopePercent": 0.4,
+         "marginPercent": 2.75
+        },
+        "trendFilter": {
+         "method": "price_change",
+         "lookbackSessions": 10,
+         "minimumReturnPercent": -5
+        },
+        "eligibility": {
+         "policy": "reset_renew",
+         "maxAgeSessions": 24,
+         "resetDropPercent": 5.5,
+         "renewalReboundPercent": 5
+        },
+        "initialStop": {
+         "atrSessions": 55,
+         "atrMultiple": 1
+        },
+        "retention": {
+         "sellPercent": 50,
+         "smaSessions": 160,
+         "closesBelow": 1
+        },
+        "drawdownGate": {
+         "lookbackSessions": 90,
+         "dipThresholdPercent": 2,
+         "recoveryRetracementPercent": 30,
+         "confirmationSessions": 4
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    }
+   }
+  },
+  {
+   "key": "IJ1",
+   "label": "3B informed-joint#1 profit (3B formal primary; 5B L2 primary; the New L0 lineage seed)",
+   "role": "control",
+   "selectable": false,
+   "id": "940fdaf770eedc9d",
+   "priority3Id": "354aa9850b2cb48e",
+   "source": "research/vg-d1-growth-expanded/FROZEN_SELECTION.json finalSet \"C24/informed-joint#1 profit\"",
+   "options": {
+    "enabled": {
+     "G:GDX": false
+    }
+   },
+   "settings": {
+    "cal": {
+     "id": "940fdaf770eedc9d",
+     "priority3QuadId": "354aa9850b2cb48e",
+     "inclusion": "V",
+     "holdUnit": "cal",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 277,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 61,
+        "maximumHoldDays": 13,
+        "tickWindowSize": 232,
+        "intradayLossBuffer": 25,
+        "pullback": 157,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-277,1,61,13,232,25,157,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.277,
+        "tickWindowSize": 232,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.061,
+        "maximumHoldDays": 13,
+        "intradayLossBuffer": 0.025,
+        "pullback": 0.157,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 238,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 72,
+        "intradayLossBuffer": 42,
+        "pullback": 103,
+        "continuationWindow": 52
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-238,9,74,15,72,42,103,52",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.238,
+        "tickWindowSize": 72,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.042,
+        "pullback": 0.103,
+        "continuationWindow": 52,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "7dd6318957976c02",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 5.6,
+        "recentLowLookbackBars": 84,
+        "trendFilterEnabled": false,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "time_limited",
+        "eligibilityMaxAgeSessions": 20,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 64,
+        "dipThresholdPercent": 11.9,
+        "recoveryRetracementPercent": 46.2,
+        "recoveryConfirmationSessions": 4,
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 22,
+        "intradayLossBufferEnabled": false,
+        "initialStopEnabled": true,
+        "initialStopAtrSessions": 16,
+        "initialStopAtrMultiple": 1.2,
+        "retentionEnabled": false,
+        "continuationEnabled": true,
+        "continuationMethod": "classic_d1",
+        "continuationWindowSessions": 67,
+        "classicPullbackPercent": 11.5,
+        "classicReboundPercent": 2.6,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": "cal",
+       "engineParams": {
+        "advanceFromRecentLowPercent": 5.6,
+        "recentLowLookbackBars": 84,
+        "resolution": "1d",
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 22,
+        "intradayLossBufferEnabled": false,
+        "intradayLossBufferPercent": "__NaN",
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "classic_d1",
+         "windowSessions": 67,
+         "pullbackPercent": 11.5,
+         "reboundPercent": 2.6
+        },
+        "trendFilter": null,
+        "eligibility": {
+         "policy": "time_limited",
+         "maxAgeSessions": 20
+        },
+        "initialStop": {
+         "atrSessions": 16,
+         "atrMultiple": 1.2
+        },
+        "drawdownGate": {
+         "lookbackSessions": 64,
+         "dipThresholdPercent": 11.9,
+         "recoveryRetracementPercent": 46.2,
+         "confirmationSessions": 4
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "calendar days between session dates (the frozen convention under which New L0 was selected; the engine default)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    },
+    "ses": {
+     "id": "940fdaf770eedc9d",
+     "priority3QuadId": "354aa9850b2cb48e",
+     "inclusion": "V",
+     "holdUnit": "ses",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 277,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 61,
+        "maximumHoldDays": 13,
+        "tickWindowSize": 232,
+        "intradayLossBuffer": 25,
+        "pullback": 157,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-277,1,61,13,232,25,157,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.277,
+        "tickWindowSize": 232,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.061,
+        "maximumHoldDays": 13,
+        "intradayLossBuffer": 0.025,
+        "pullback": 0.157,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 238,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 72,
+        "intradayLossBuffer": 42,
+        "pullback": 103,
+        "continuationWindow": 52
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-238,9,74,15,72,42,103,52",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.238,
+        "tickWindowSize": 72,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.042,
+        "pullback": 0.103,
+        "continuationWindow": 52,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": true,
+       "identity": "7dd6318957976c02",
+       "effective": {
+        "entryMethod": "rise_from_recent_low",
+        "advanceFromRecentLowPercent": 5.6,
+        "recentLowLookbackBars": 84,
+        "trendFilterEnabled": false,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "time_limited",
+        "eligibilityMaxAgeSessions": 20,
+        "drawdownRecoveryGateEnabled": true,
+        "dipLookbackSessions": 64,
+        "dipThresholdPercent": 11.9,
+        "recoveryRetracementPercent": 46.2,
+        "recoveryConfirmationSessions": 4,
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 22,
+        "intradayLossBufferEnabled": false,
+        "initialStopEnabled": true,
+        "initialStopAtrSessions": 16,
+        "initialStopAtrMultiple": 1.2,
+        "retentionEnabled": false,
+        "continuationEnabled": true,
+        "continuationMethod": "classic_d1",
+        "continuationWindowSessions": 67,
+        "classicPullbackPercent": 11.5,
+        "classicReboundPercent": 2.6,
+        "costBpsPerSide": 5
+       },
+       "maximumHoldUnit": "ses",
+       "engineParams": {
+        "advanceFromRecentLowPercent": 5.6,
+        "recentLowLookbackBars": 84,
+        "resolution": "1d",
+        "trailingStopPercent": 5.7,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 22,
+        "intradayLossBufferEnabled": false,
+        "intradayLossBufferPercent": "__NaN",
+        "costBpsPerSide": 5,
+        "continuation": {
+         "method": "classic_d1",
+         "windowSessions": 67,
+         "pullbackPercent": 11.5,
+         "reboundPercent": 2.6
+        },
+        "trendFilter": null,
+        "eligibility": {
+         "policy": "time_limited",
+         "maxAgeSessions": 20
+        },
+        "initialStop": {
+         "atrSessions": 16,
+         "atrMultiple": 1.2
+        },
+        "drawdownGate": {
+         "lookbackSessions": 64,
+         "dipThresholdPercent": 11.9,
+         "recoveryRetracementPercent": 46.2,
+         "confirmationSessions": 4
+        }
+       }
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    }
+   }
+  },
+  {
+   "key": "D",
+   "label": "D: VG #2 Balanced S8-VG-F24-3 D1 only (VGT + GDX); Growth OFF",
+   "role": "d1-only",
+   "selectable": false,
+   "id": "8490a1e5c68f41cf",
+   "priority3Id": "7a377d49c2b9aa55",
+   "source": "5B control D (src/vg-lifecycle-matched-optimization/controls.ts, its pinned sources)",
+   "options": {
+    "enabled": {
+     "G:GDX": false,
+     "G:VGT": false
+    }
+   },
+   "settings": {
+    "cal": {
+     "id": "8490a1e5c68f41cf",
+     "priority3QuadId": "7a377d49c2b9aa55",
+     "inclusion": "V",
+     "holdUnit": "cal",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 57,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 243,
+        "intradayLossBuffer": 29,
+        "pullback": 152,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-276,1,57,12,243,29,152,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.276,
+        "tickWindowSize": 243,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.057,
+        "maximumHoldDays": 12,
+        "intradayLossBuffer": 0.029,
+        "pullback": 0.152,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 235,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 78,
+        "intradayLossBuffer": 44,
+        "pullback": 110,
+        "continuationWindow": 55
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in calendar days; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-235,9,74,15,78,44,110,55",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.235,
+        "tickWindowSize": 78,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.044,
+        "pullback": 0.11,
+        "continuationWindow": 55,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "calendar days between session dates (the frozen convention under which New L0 was selected; the engine default)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    },
+    "ses": {
+     "id": "8490a1e5c68f41cf",
+     "priority3QuadId": "7a377d49c2b9aa55",
+     "inclusion": "V",
+     "holdUnit": "ses",
+     "enabled": [
+      "D1:GDX",
+      "D1:VGT"
+     ],
+     "d1": {
+      "GDX": {
+       "grid": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 57,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 243,
+        "intradayLossBuffer": 29,
+        "pullback": 152,
+        "continuationWindow": 12
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "GDX d1-276,1,57,12,243,29,152,12",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.276,
+        "tickWindowSize": 243,
+        "trailingBuyPercentage": 0.001,
+        "trailingStopPercentage": 0.057,
+        "maximumHoldDays": 12,
+        "intradayLossBuffer": 0.029,
+        "pullback": 0.152,
+        "continuationWindow": 12,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      },
+      "VGT": {
+       "grid": {
+        "targetPercentChange": 235,
+        "trailingBuyPercentage": 9,
+        "trailingStopPercentage": 74,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 78,
+        "intradayLossBuffer": 44,
+        "pullback": 110,
+        "continuationWindow": 55
+       },
+       "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+       "strategyParams": {
+        "key": "d1",
+        "label": "VGT d1-235,9,74,15,78,44,110,55",
+        "entryMode": "deep",
+        "postExit": true,
+        "stopPolicy": "net",
+        "targetPercentChange": 0.235,
+        "tickWindowSize": 78,
+        "trailingBuyPercentage": 0.009,
+        "trailingStopPercentage": 0.074,
+        "maximumHoldDays": 15,
+        "intradayLossBuffer": 0.044,
+        "pullback": 0.11,
+        "continuationWindow": 55,
+        "swingLookback": "__NaN",
+        "swingProximity": "__NaN",
+        "holdUnit": "sessions"
+       }
+      }
+     },
+     "growth": {
+      "GDX": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      },
+      "VGT": {
+       "enabled": false,
+       "placeholderIdentity": "1af5b55987a56e2f",
+       "note": "disabled: never run or funded (placeholder vector)"
+      }
+     },
+     "allocator": {
+      "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+      "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+      "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+      "architecture": "A: one exclusive funded slot",
+      "principalBudget": 100000,
+      "compounding": false,
+      "preemption": false,
+      "simultaneousFundedPositions": false,
+      "partialExitReleasesSlot": false,
+      "sameInstantOrder": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:GDX",
+       "G:VGT"
+      ],
+      "costBpsPerSide": 5,
+      "commission": 0,
+      "interest": "11% simple annual on outstanding principal, calendar days / 365",
+      "stopFill": "at the stop or the gapped open; no extra slippage",
+      "shares": "fractional",
+      "fundingFrom": "2016-01-04",
+      "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+      "d1DelayedEligibility": false
+     }
+    }
+   }
+  }
+ ],
+ "informedSeeds": [
+  {
+   "key": "C4",
+   "source": "5B seed C4 (V), unchanged",
+   "focus": true,
+   "id": "2f49a1cc226b4ece",
+   "priority3QuadId": "f324035d15f69610",
+   "inclusion": "V",
+   "settings": {
+    "id": "2f49a1cc226b4ece",
+    "priority3QuadId": "f324035d15f69610",
+    "inclusion": "V",
+    "holdUnit": "ses",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,57,12,243,29,152,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 243,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.057,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.152,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,55",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 55,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "420cd989e4fa7749",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 90,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 30,
+       "trendChangeMinimumReturnPercent": -2,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 20,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 10,
+       "recoveryRetracementPercent": 45,
+       "recoveryConfirmationSessions": 2,
+       "trailingStopPercent": 6,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 21,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 20,
+       "initialStopAtrMultiple": 1.5,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 60,
+       "uptrendSmaBars": 50,
+       "uptrendSlopeBars": 10,
+       "uptrendMinimumRisePercent": 0,
+       "pullbackMinimumPercent": 1.5,
+       "pullbackMaximumPercent": 8,
+       "recoveryPercent": 1,
+       "costBpsPerSide": 5
+      },
+      "maximumHoldUnit": "ses",
+      "engineParams": {
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 90,
+       "resolution": "1d",
+       "trailingStopPercent": 6,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 21,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "shallow_pullback",
+        "windowSessions": 60,
+        "smaBars": 50,
+        "slopeBars": 10,
+        "minimumRisePercent": 0,
+        "pullbackMinimumPercent": 1.5,
+        "pullbackMaximumPercent": 8,
+        "recoveryPercent": 1
+       },
+       "trendFilter": {
+        "method": "price_change",
+        "lookbackSessions": 30,
+        "minimumReturnPercent": -2
+       },
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 20
+       },
+       "initialStop": {
+        "atrSessions": 20,
+        "atrMultiple": 1.5
+       },
+       "drawdownGate": {
+        "lookbackSessions": 60,
+        "dipThresholdPercent": 10,
+        "recoveryRetracementPercent": 45,
+        "confirmationSessions": 2
+       }
+      }
+     }
+    },
+    "allocator": {
+     "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+     "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+     "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   }
+  },
+  {
+   "key": "C4R",
+   "source": "5B seed C4R (V), unchanged",
+   "focus": true,
+   "id": "0f017f0ab9b26f24",
+   "priority3QuadId": "07443ffaeef41e85",
+   "inclusion": "V",
+   "settings": {
+    "id": "0f017f0ab9b26f24",
+    "priority3QuadId": "07443ffaeef41e85",
+    "inclusion": "V",
+    "holdUnit": "ses",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,57,12,243,29,152,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 243,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.057,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.152,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,55",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 55,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "c3c1c0d56c4ee3b0",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5.8,
+       "recentLowLookbackBars": 80,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 21,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 64,
+       "dipThresholdPercent": 12.4,
+       "recoveryRetracementPercent": 48.9,
+       "recoveryConfirmationSessions": 5,
+       "trailingStopPercent": 5.7,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 21,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.8,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 60,
+       "uptrendSmaBars": 43,
+       "uptrendSlopeBars": 9,
+       "uptrendMinimumRisePercent": 3.9,
+       "pullbackMinimumPercent": 3,
+       "pullbackMaximumPercent": 7.9,
+       "recoveryPercent": 2.73,
+       "costBpsPerSide": 5
+      },
+      "maximumHoldUnit": "ses",
+      "engineParams": {
+       "advanceFromRecentLowPercent": 5.8,
+       "recentLowLookbackBars": 80,
+       "resolution": "1d",
+       "trailingStopPercent": 5.7,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 21,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.8,
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "shallow_pullback",
+        "windowSessions": 60,
+        "smaBars": 43,
+        "slopeBars": 9,
+        "minimumRisePercent": 3.9,
+        "pullbackMinimumPercent": 3,
+        "pullbackMaximumPercent": 7.9,
+        "recoveryPercent": 2.73
+       },
+       "trendFilter": null,
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 21
+       },
+       "drawdownGate": {
+        "lookbackSessions": 64,
+        "dipThresholdPercent": 12.4,
+        "recoveryRetracementPercent": 48.9,
+        "confirmationSessions": 5
+       }
+      }
+     }
+    },
+    "allocator": {
+     "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+     "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+     "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   }
+  },
+  {
+   "key": "C85",
+   "source": "5B seed C85 (V), unchanged",
+   "focus": false,
+   "id": "38be30d42d55ec7f",
+   "priority3QuadId": "3688e97b90639d60",
+   "inclusion": "V",
+   "settings": {
+    "id": "38be30d42d55ec7f",
+    "priority3QuadId": "3688e97b90639d60",
+    "inclusion": "V",
+    "holdUnit": "ses",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,57,12,243,29,152,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 243,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.057,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.152,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,55",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 55,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "08500a60ec56cfae",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 1,
+       "recentLowLookbackBars": 80,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 10,
+       "trendChangeMinimumReturnPercent": -5,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "reset_renew",
+       "eligibilityMaxAgeSessions": 24,
+       "eligibilityResetDropPercent": 5.5,
+       "eligibilityRenewalReboundPercent": 5,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 90,
+       "dipThresholdPercent": 2,
+       "recoveryRetracementPercent": 30,
+       "recoveryConfirmationSessions": 4,
+       "trailingStopPercent": 9,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 55,
+       "initialStopAtrMultiple": 1,
+       "retentionEnabled": true,
+       "retentionSellPercent": 50,
+       "retentionSmaSessions": 160,
+       "retentionClosesBelow": 1,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 50,
+       "crossSmaBars": 110,
+       "crossRisingBars": 19,
+       "crossMinimumSlopePercent": 0.4,
+       "crossMarginPercent": 2.75,
+       "costBpsPerSide": 5
+      },
+      "maximumHoldUnit": null,
+      "engineParams": {
+       "advanceFromRecentLowPercent": 1,
+       "recentLowLookbackBars": 80,
+       "resolution": "1d",
+       "trailingStopPercent": 9,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "ma_cross",
+        "windowSessions": 50,
+        "smaBars": 110,
+        "risingBars": 19,
+        "minimumSlopePercent": 0.4,
+        "marginPercent": 2.75
+       },
+       "trendFilter": {
+        "method": "price_change",
+        "lookbackSessions": 10,
+        "minimumReturnPercent": -5
+       },
+       "eligibility": {
+        "policy": "reset_renew",
+        "maxAgeSessions": 24,
+        "resetDropPercent": 5.5,
+        "renewalReboundPercent": 5
+       },
+       "initialStop": {
+        "atrSessions": 55,
+        "atrMultiple": 1
+       },
+       "retention": {
+        "sellPercent": 50,
+        "smaSessions": 160,
+        "closesBelow": 1
+       },
+       "drawdownGate": {
+        "lookbackSessions": 90,
+        "dipThresholdPercent": 2,
+        "recoveryRetracementPercent": 30,
+        "confirmationSessions": 4
+       }
+      }
+     }
+    },
+    "allocator": {
+     "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+     "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+     "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   }
+  },
+  {
+   "key": "IJ1",
+   "source": "5B seed IJ1 (V), unchanged",
+   "focus": false,
+   "id": "940fdaf770eedc9d",
+   "priority3QuadId": "354aa9850b2cb48e",
+   "inclusion": "V",
+   "settings": {
+    "id": "940fdaf770eedc9d",
+    "priority3QuadId": "354aa9850b2cb48e",
+    "inclusion": "V",
+    "holdUnit": "ses",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 277,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 61,
+       "maximumHoldDays": 13,
+       "tickWindowSize": 232,
+       "intradayLossBuffer": 25,
+       "pullback": 157,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-277,1,61,13,232,25,157,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.277,
+       "tickWindowSize": 232,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.061,
+       "maximumHoldDays": 13,
+       "intradayLossBuffer": 0.025,
+       "pullback": 0.157,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 238,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 72,
+       "intradayLossBuffer": 42,
+       "pullback": 103,
+       "continuationWindow": 52
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-238,9,74,15,72,42,103,52",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.238,
+       "tickWindowSize": 72,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.042,
+       "pullback": 0.103,
+       "continuationWindow": 52,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "7dd6318957976c02",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5.6,
+       "recentLowLookbackBars": 84,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 20,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 64,
+       "dipThresholdPercent": 11.9,
+       "recoveryRetracementPercent": 46.2,
+       "recoveryConfirmationSessions": 4,
+       "trailingStopPercent": 5.7,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 22,
+       "intradayLossBufferEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 16,
+       "initialStopAtrMultiple": 1.2,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "classic_d1",
+       "continuationWindowSessions": 67,
+       "classicPullbackPercent": 11.5,
+       "classicReboundPercent": 2.6,
+       "costBpsPerSide": 5
+      },
+      "maximumHoldUnit": "ses",
+      "engineParams": {
+       "advanceFromRecentLowPercent": 5.6,
+       "recentLowLookbackBars": 84,
+       "resolution": "1d",
+       "trailingStopPercent": 5.7,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 22,
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "classic_d1",
+        "windowSessions": 67,
+        "pullbackPercent": 11.5,
+        "reboundPercent": 2.6
+       },
+       "trendFilter": null,
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 20
+       },
+       "initialStop": {
+        "atrSessions": 16,
+        "atrMultiple": 1.2
+       },
+       "drawdownGate": {
+        "lookbackSessions": 64,
+        "dipThresholdPercent": 11.9,
+        "recoveryRetracementPercent": 46.2,
+        "confirmationSessions": 4
+       }
+      }
+     }
+    },
+    "allocator": {
+     "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+     "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+     "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   }
+  },
+  {
+   "key": "IJ3:V",
+   "source": "5B seed IJ3 (B) projected to V (its D1 books + its VGT Growth; GDX Growth OFF)",
+   "focus": false,
+   "id": "8bf11be9d015c624",
+   "priority3QuadId": "8930091a68ddf426",
+   "inclusion": "V",
+   "settings": {
+    "id": "8bf11be9d015c624",
+    "priority3QuadId": "8930091a68ddf426",
+    "inclusion": "V",
+    "holdUnit": "ses",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 277,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 70,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 242,
+       "intradayLossBuffer": 20,
+       "pullback": 153,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-277,1,70,12,242,20,153,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.277,
+       "tickWindowSize": 242,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.07,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.02,
+       "pullback": 0.153,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 45
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,45",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 45,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "51f3ece34fd76652",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 7.2,
+       "recentLowLookbackBars": 50,
+       "trendFilterEnabled": true,
+       "trendMethod": "rising_sma",
+       "trendSmaSessions": 70,
+       "trendSmaComparisonSessions": 8,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 23,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 8.8,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": true,
+       "retentionSellPercent": 73,
+       "retentionSmaSessions": 160,
+       "retentionClosesBelow": 1,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 12,
+       "crossSmaBars": 105,
+       "crossRisingBars": 15,
+       "crossMinimumSlopePercent": 1,
+       "crossMarginPercent": 1.5,
+       "costBpsPerSide": 5
+      },
+      "maximumHoldUnit": null,
+      "engineParams": {
+       "advanceFromRecentLowPercent": 7.2,
+       "recentLowLookbackBars": 50,
+       "resolution": "1d",
+       "trailingStopPercent": 8.8,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "ma_cross",
+        "windowSessions": 12,
+        "smaBars": 105,
+        "risingBars": 15,
+        "minimumSlopePercent": 1,
+        "marginPercent": 1.5
+       },
+       "trendFilter": {
+        "method": "rising_sma",
+        "movingAverageSessions": 70,
+        "slopeComparisonSessions": 8
+       },
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 23
+       },
+       "retention": {
+        "sellPercent": 73,
+        "smaSessions": 160,
+        "closesBelow": 1
+       }
+      }
+     }
+    },
+    "allocator": {
+     "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+     "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+     "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   }
+  },
+  {
+   "key": "IP:V",
+   "source": "5B seed IP (B) projected to V (its D1 books + its VGT breakout Growth; GDX Growth OFF)",
+   "focus": false,
+   "id": "0ade26709b497ca7",
+   "priority3QuadId": "5358b51d92589860",
+   "inclusion": "V",
+   "settings": {
+    "id": "0ade26709b497ca7",
+    "priority3QuadId": "5358b51d92589860",
+    "inclusion": "V",
+    "holdUnit": "ses",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 53,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 249,
+       "intradayLossBuffer": 29,
+       "pullback": 154,
+       "continuationWindow": 30
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,53,12,249,29,154,30",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 249,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.053,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.154,
+       "continuationWindow": 30,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 72,
+       "intradayLossBuffer": 47,
+       "pullback": 93,
+       "continuationWindow": 65
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,72,47,93,65",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 72,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.047,
+       "pullback": 0.093,
+       "continuationWindow": 65,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "5d5b05b0b932c4fd",
+      "effective": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 100,
+       "breakoutSlopeComparisonSessions": 20,
+       "breakoutPriorHighSessions": 5,
+       "trendFilterEnabled": false,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 65,
+       "dipThresholdPercent": 8.5,
+       "recoveryRetracementPercent": 65,
+       "recoveryConfirmationSessions": 5,
+       "trailingStopPercent": 7.5,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": true,
+       "retentionSellPercent": 52,
+       "retentionSmaSessions": 137,
+       "retentionClosesBelow": 3,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 100,
+       "crossSmaBars": 105,
+       "crossRisingBars": 15,
+       "crossMinimumSlopePercent": 1,
+       "crossMarginPercent": 1.5,
+       "costBpsPerSide": 5
+      },
+      "maximumHoldUnit": null,
+      "engineParams": {
+       "advanceFromRecentLowPercent": "__NaN",
+       "recentLowLookbackBars": "__NaN",
+       "resolution": "1d",
+       "trailingStopPercent": 7.5,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "ma_cross",
+        "windowSessions": 100,
+        "smaBars": 105,
+        "risingBars": 15,
+        "minimumSlopePercent": 1,
+        "marginPercent": 1.5
+       },
+       "trendFilter": null,
+       "eligibility": null,
+       "entryMethod": "trend_breakout",
+       "breakout": {
+        "smaSessions": 100,
+        "slopeComparisonSessions": 20,
+        "priorHighSessions": 5
+       },
+       "retention": {
+        "sellPercent": 52,
+        "smaSessions": 137,
+        "closesBelow": 3
+       },
+       "drawdownGate": {
+        "lookbackSessions": 65,
+        "dipThresholdPercent": 8.5,
+        "recoveryRetracementPercent": 65,
+        "confirmationSessions": 5
+       }
+      }
+     }
+    },
+    "allocator": {
+     "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+     "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+     "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   }
+  },
+  {
+   "key": "NL0",
+   "source": "New L0 (5B L0 primary), the brief’s incumbent — added as a focus seed",
+   "focus": true,
+   "id": "67cfdd9b62d1e16f",
+   "priority3QuadId": "a2e385640ca61012",
+   "inclusion": "V",
+   "settings": {
+    "id": "67cfdd9b62d1e16f",
+    "priority3QuadId": "a2e385640ca61012",
+    "inclusion": "V",
+    "holdUnit": "ses",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 277,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 61,
+       "maximumHoldDays": 13,
+       "tickWindowSize": 232,
+       "intradayLossBuffer": 25,
+       "pullback": 152,
+       "continuationWindow": 10
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-277,1,61,13,232,25,152,10",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.277,
+       "tickWindowSize": 232,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.061,
+       "maximumHoldDays": 13,
+       "intradayLossBuffer": 0.025,
+       "pullback": 0.152,
+       "continuationWindow": 10,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 237,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 72,
+       "intradayLossBuffer": 42,
+       "pullback": 103,
+       "continuationWindow": 41
+      },
+      "unit": "tenths of a percentage point; maximumHoldDays in NYSE trading sessions; L and W in sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-237,9,73,15,72,42,103,41",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.237,
+       "tickWindowSize": 72,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.073,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.042,
+       "pullback": 0.103,
+       "continuationWindow": 41,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN",
+       "holdUnit": "sessions"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "6b5f909b30cfa516",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5.6,
+       "recentLowLookbackBars": 84,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 20,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 64,
+       "dipThresholdPercent": 11.9,
+       "recoveryRetracementPercent": 46.2,
+       "recoveryConfirmationSessions": 5,
+       "trailingStopPercent": 5.7,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 22,
+       "intradayLossBufferEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 16,
+       "initialStopAtrMultiple": 1.2,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "classic_d1",
+       "continuationWindowSessions": 67,
+       "classicPullbackPercent": 11.5,
+       "classicReboundPercent": 3.01,
+       "costBpsPerSide": 5
+      },
+      "maximumHoldUnit": "ses",
+      "engineParams": {
+       "advanceFromRecentLowPercent": 5.6,
+       "recentLowLookbackBars": 84,
+       "resolution": "1d",
+       "trailingStopPercent": 5.7,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 22,
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "classic_d1",
+        "windowSessions": 67,
+        "pullbackPercent": 11.5,
+        "reboundPercent": 3.01
+       },
+       "trendFilter": null,
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 20
+       },
+       "initialStop": {
+        "atrSessions": 16,
+        "atrMultiple": 1.2
+       },
+       "drawdownGate": {
+        "lookbackSessions": 64,
+        "dipThresholdPercent": 11.9,
+        "recoveryRetracementPercent": 46.2,
+        "confirmationSessions": 5
+       }
+      }
+     }
+    },
+    "allocator": {
+     "maximumHoldUnit": "NYSE trading sessions after the entry session (EXPERIMENTAL: src/lib/tradingSessions.ts; weekends and exchange holidays never count; a genuine session missing from the data still counts)",
+     "growthLifecycle": "L0 — current virtual-book model: a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back; virtual continuation rights kept",
+     "d1Lifecycle": "canonical shadow book (refusals never feed back into D1)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   }
+  }
+ ],
+ "omittedSeeds": [
+  {
+   "key": "A",
+   "why": "5B seed A (B: VG #2 + #4 + Appendix A) projects to V as C4 — a duplicate of seed C4"
+  },
+  {
+   "key": "E",
+   "why": "5B seed E (G: VG #2 + Appendix A) has no VGT Growth book: no V projection"
+  },
+  {
+   "key": "GB1",
+   "why": "5B seed GB1 (G: 3B indep/G_GDX-breakout#1) has no VGT Growth book: no V projection"
+  }
+ ]
+}
