@@ -2,23 +2,33 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-12T12:23Z (UTC, from the clock). **Status: INCOMPLETE — engine and pipeline implemented and
-  tested; protocol drafted (not frozen); engineering pilot RUNNING. No study stage, search or FULL door has run.**
+- **Updated:** 2026-11-12T12:50Z (UTC, from the clock). **Status: INCOMPLETE — protocol FROZEN; the study chain is
+  RUNNING (≈ 50 h of compute planned).**
 - **Task:** the user's brief "New L0 Shadow-Position Eligibility: Implementation and Comprehensive Optimization"
   (`brief/BRIEF.md`, 831 lines, sha256 `3547d5efee0e92f26977231b6425e869859369ec367efcb70ecf05d3f51e8ed3`, read in full
   to its final section "Overall Objective"; not truncated).
-- **Branch:** `research/vg-l0-shadow-eligibility` (main checkout), from `6eb85160` (NL0 1.0.0 + standard 2.1.0, before
-  the trading-session engine change `e3b0ae37`) + merge of `main` `2346a1b5` (`cb82958b`); engine commit `0b73570c`.
-- **Authority:** `PROTOCOL.md` (draft; not frozen), `AMENDMENTS.md` (none), `STANDARD_ADOPTION.json` (standard 2.1.0
-  `ac5c2c69…`, NL0 1.0.0 `9b387bb4…`; preflight PASS).
-- **Running:** the pilot chain `bash research/vg-l0-shadow-eligibility/chains/pilot.sh` (harness background task
-  `b0bnsktcv`), log `.cache/vg-l0-shadow-eligibility/logs/pilot-chain.log`, unit logs
-  `.cache/vg-l0-shadow-eligibility/logs/vgl0se-pilot-*.log`; outputs `.cache/vg-l0-shadow-eligibility/pilot/`. Finished
-  cleanly iff the chain log ends with "PILOT DONE". Resume: `bash …/pilot.sh <sNN>` (sealed pilot records refuse to rerun).
-- **Next step:** after "PILOT DONE": `npm run vg-l0se -- control-manifest`; stage V
-  (`npm run vg-l0se -- launch --unit vgl0se-parity --wait -- parity`); `readopt` if the protocol changed; commit; 
-  `npm run vg-l0se -- freeze-protocol`; commit; then launch `bash research/vg-l0-shadow-eligibility/chains/chain1.sh`
-  (≈ 50 h of compute).
+- **Branch:** `research/vg-l0-shadow-eligibility` (main checkout), from `6eb85160` (before the trading-session engine change
+  `e3b0ae37`) + merge of `main` `2346a1b5`; pushed at `0bd0db96` (2026-11-12T12:48Z; `git ls-remote` = local).
+- **Authority:** `PROTOCOL.md` sha256 `fc6dbdcc4f8b933b…` (frozen 2026-11-12T12:47:53Z, record
+  `results/protocol-freeze.json`, commit `0bd0db96`; code-closure digest `16bd44c056b8…`); `AMENDMENTS.md` (none);
+  standard 2.1.0 (`ac5c2c69…`); NL0 1.0.0 (`9b387bb4…`); stage V `results/parity/parity.json` and
+  `results/parity/parity-frozen-code.json` (730 checks, 0 failed each); `CONTROL_MANIFEST.json` sealed.
+- **Running:** systemd user unit `vgl0se-chain1.service` (outside the session; KillMode=process) running
+  `bash research/vg-l0-shadow-eligibility/chains/chain1.sh`, started 2026-11-12T12:48:18Z; chain log
+  `research/vg-l0-shadow-eligibility/results/logs/chain1.log` (git-ignored); each stage is its own unit
+  `vgl0se-<stage>` with log `results/logs/<unit>.log`; job progress `.cache/vg-l0-shadow-eligibility/jobs/<job>/progress.json`.
+  The chain commits each sealed block itself (step ids a01 … f04). Finished cleanly iff the chain log ends with
+  "CHAIN1 DONE"; a failure prints "CHAIN FAILED at [id]".
+- **Recovery:** if the chain unit is gone without "CHAIN1 DONE": read the chain log's last "start [id]"; check
+  `systemctl --user list-units 'vgl0se-*'` (never start a duplicate of a running stage unit); then relaunch the chain from
+  that id: `systemd-run --user --unit=vgl0se-chain1b --collect -p KillMode=process -E PATH="$PATH" -E HOME="$HOME"
+  --working-directory=/home/chad/projects/margin-trading -p StandardOutput=append:<abs>/results/logs/chain1.log
+  -p StandardError=append:<abs>/results/logs/chain1.log /bin/bash research/vg-l0-shadow-eligibility/chains/chain1.sh <id>`
+  (an interrupted job resumes from its archive; sealed stages refuse to rerun; a commit step is idempotent only if
+  something is staged — resume at the step after a completed commit).
+- **Next step after "CHAIN1 DONE":** `node --experimental-transform-types tools/vg-l0-shadow-eligibility/tables.ts`;
+  full `npm test` (after the validation only); REPORT.md; ROADMAP row + Phase 8 decision; final checkpoint; commit; push.
+- **Do not rerun:** stage V, the control manifest, the freeze, any sealed stage; FULL opens only in step f03 (once).
 
 ## Phase 0 (complete)
 
@@ -38,7 +48,13 @@
   the session-hold `validation.json` (`f474c421…`) and Strategy Lab parity (`59424ff9…`); reproduced through this engine
   at the validation stage (FULL stays closed until the frozen selection: PROTOCOL AD11).
 
-## Engineering results so far (not sealed)
+## Engineering results (pilot and bench: cache only; stage V sealed)
+
+- Pilot `straight` (2026-11-12T12:21–12:29Z): all 21 stage paths on P18 passed; interruption tests: SIGTERM (exit 75)
+  and worker SIGKILL (exit 1) resumed identically; the unit kill needed two retries (first two attempts killed nothing or
+  only during worker start-up — disclosed below); the third (kill at 15 s; 599 records archived) resumed with 667 archive
+  hits; `pilot-compare ref straight sigterm wkill unitkill` → identical lane results. Pilot `p2` (12:36–12:43Z) re-ran every
+  stage path on the final code (compact stress/removal evidence): identical lane results, primaries and nominee.
 
 - Unit tests: `src/vg-l0-shadow-eligibility/tests/{allocator,position,study}.test.ts` — 32 pass.
 - Stage V dry run (2026-11-12T12:08Z, unit `vgl0se-dryv1`, 102 s, 1,363 simulations): 730 checks, 0 failed (G1 9, G2 2
@@ -49,6 +65,14 @@
 - Engineering smoke (D24, New L0 centres, disclosed in PROTOCOL §2): every D1-toggle combination far below all-OFF.
 
 ## Disclosures
+
+- The pilot's first unit-kill attempts did not test a mid-job kill (the job finished before the 45 s kill; a reused unit name
+  made the next launch exit at once; an 8 s kill landed during worker start-up with nothing archived); fixed (fresh unit names,
+  kill at 15 s) and repeated successfully; pilot outputs of those attempts were removed from the cache only.
+- After the first pilot, stress and removal reruns are kept in compact form in the evidence (full records stay in the job
+  archives) to keep the committed records proportionate; the second pilot verified identical results.
+- The code was prettier-formatted after the first sealed stage V; a second sealed stage V on the formatted (frozen) code
+  passed identically (`results/parity/parity-frozen-code.json`).
 
 - The New L0 × 8 combination centres on D24 were seen during engineering, before the protocol (PROTOCOL §2); no
   combination is excluded from any search.
