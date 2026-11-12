@@ -17,6 +17,7 @@ import {
   runGrowthBook,
   symbolOf
 } from './books.ts';
+import type { HoldUnit } from '../shared-margin-portfolio/strategy.ts';
 import { type Sym, economics, r2, resources, symbols } from './context.ts';
 import { type Door, indexOnOrAfter } from './data.ts';
 import { type Quad, quadId } from './space.ts';
@@ -31,6 +32,10 @@ export interface EvalOptions {
   blackouts?: { first: string; last: string }[];
   boundaries?: string[]; // period boundary dates (report: P&L after each boundary close, reset drawdowns)
   tieOrder?: BookId[]; // diagnostics only: an explicit same-instant order (default: the frozen order of `first`)
+  // EXPERIMENTAL (research/vg-l0-session-hold): the unit of every enabled book's maximum hold. Absent or
+  // 'calendar-days': calendar days between session dates (the frozen behaviour; keys and records unchanged);
+  // 'sessions': NYSE trading sessions after the hold session (src/lib/tradingSessions.ts).
+  holdUnit?: HoldUnit;
 }
 
 export const enabledKey = (o: EvalOptions) => bookIds.map((b) => (o.enabled?.[b] === false ? 0 : 1)).join('');
@@ -48,7 +53,8 @@ export const optionsKey = (o: EvalOptions = {}) => {
     `ws${o.wholeShares ? 1 : 0}`,
     `bo${(o.blackouts ?? []).map((b) => `${b.first}:${b.last}`).join(';')}`,
     `bd${(o.boundaries ?? []).join(';')}`,
-    ...(o.tieOrder ? [`to${o.tieOrder.join(';')}`] : [])
+    ...(o.tieOrder ? [`to${o.tieOrder.join(';')}`] : []),
+    ...(o.holdUnit === 'sessions' ? ['husessions'] : []) // the default unit adds nothing: earlier keys are unchanged
   ];
 
   return parts.join('|');
@@ -111,7 +117,9 @@ export const isEnabled = (o: EvalOptions, b: BookId) => o.enabled?.[b] !== false
 
 export const booksOf = (door: Door, q: Quad, o: EvalOptions = {}): VBook[] => {
   const fr = frictionOf(o);
-  const fk = (f: Friction) => `${door.name}|${f.costBps}|${f.rate}|${f.stopFill}|${f.stopSlippageBps}`;
+  const hu = o.holdUnit === 'sessions' ? ('sessions' as const) : undefined;
+  const fk = (f: Friction) =>
+    `${door.name}|${f.costBps}|${f.rate}|${f.stopFill}|${f.stopSlippageBps}${hu ? '|husessions' : ''}`;
   const out: VBook[] = [];
 
   for (const b of bookIds) {
@@ -126,7 +134,13 @@ export const booksOf = (door: Door, q: Quad, o: EvalOptions = {}): VBook[] => {
 
       out.push(
         caches[b].get(`${fk(fr)}|${armStart}|${d1KeyOf(q.d1[s])}`, () =>
-          runD1Book(sd.ds, s, q.d1[s], { armStart, accountingStart: 0, endIndex: end, friction: fr })
+          runD1Book(sd.ds, s, q.d1[s], {
+            armStart,
+            accountingStart: 0,
+            endIndex: end,
+            friction: fr,
+            ...(hu ? { holdUnit: hu } : {})
+          })
         )
       );
     } else {
@@ -136,7 +150,7 @@ export const booksOf = (door: Door, q: Quad, o: EvalOptions = {}): VBook[] => {
 
       out.push(
         caches[b].get(`${fk(gfr)}|${growthKeyOf(g)}`, () =>
-          runGrowthBook(sd, door, g, { friction: gfr, costBps: gfr.costBps })
+          runGrowthBook(sd, door, g, { friction: gfr, costBps: gfr.costBps, ...(hu ? { holdUnit: hu } : {}) })
         )
       );
     }

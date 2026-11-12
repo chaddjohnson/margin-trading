@@ -60,9 +60,9 @@ import {
   ExitManager,
   firstTradeAfterDecision,
   firstTradeFrom,
+  holdAge,
   interestOn,
   priceAt,
-  secondsPerDay,
   secondsPerMinute,
   secondsPerYear,
   timeAt,
@@ -669,7 +669,7 @@ export class PositionRules {
     const count = ds.sBarCount[s]!;
     const interest = interestOn(lot, this.settings.rate, ds.sTime[s]!);
     const profitAt = (price: number) => lot.shares * price - lot.investment - interest;
-    const daysHeld = (ds.sTime[s]! - lot.holdTimestamp) / secondsPerDay;
+    const daysHeld = holdAge(p, lot.holdTimestamp, ds.sTime[s]!); // the unit of p.maximumHoldDays (default calendar days)
     const P0 = pos.stop?.level ?? NaN;
     const hasStop = pos.stop !== null;
     const partialPending = this.runtime.retention !== null && pos.stage === 'full';

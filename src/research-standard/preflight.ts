@@ -89,7 +89,8 @@ export const checkReferenceMethod = (repoRoot: string, m: NonNullable<Adoption['
   const notices: string[] = [];
   const file = path.join(repoRoot, methodRegistryPath);
 
-  if (!fs.existsSync(file)) return { errors: [`the reference-method registry ${methodRegistryPath} is missing`], notices };
+  if (!fs.existsSync(file))
+    return { errors: [`the reference-method registry ${methodRegistryPath} is missing`], notices };
 
   let reg: MethodRegistry;
 
@@ -102,13 +103,16 @@ export const checkReferenceMethod = (repoRoot: string, m: NonNullable<Adoption['
   const method = (Array.isArray(reg.methods) ? reg.methods : []).find((x) => x.id === m.id);
 
   if (!method) return { errors: [`reference method ${m.id} is not registered in ${methodRegistryPath}`], notices };
-  if (method.path !== m.path) errors.push(`reference method ${m.id}: path ${m.path} is not the registered ${method.path}`);
+  if (method.path !== m.path)
+    errors.push(`reference method ${m.id}: path ${m.path} is not the registered ${method.path}`);
 
   const v = method.versions.find((x) => x.version === m.version);
 
   if (!v) errors.push(`reference method ${m.id} version ${m.version} is not registered`);
   else if (v.sha256 !== m.sha256)
-    errors.push(`mismatched reference-method hash: ${m.id} ${m.version} is ${v.sha256.slice(0, 12)}…, the pin ${String(m.sha256).slice(0, 12)}…`);
+    errors.push(
+      `mismatched reference-method hash: ${m.id} ${m.version} is ${v.sha256.slice(0, 12)}…, the pin ${String(m.sha256).slice(0, 12)}…`
+    );
 
   const cur = method.versions.find((x) => x.version === method.current);
   const target = path.join(repoRoot, method.path);
@@ -116,7 +120,9 @@ export const checkReferenceMethod = (repoRoot: string, m: NonNullable<Adoption['
   if (!cur) errors.push(`reference method ${m.id}: current ${method.current} is not listed`);
   else if (!fs.existsSync(target)) errors.push(`reference method ${m.id}: ${method.path} is missing`);
   else if (sha256File(target) !== cur.sha256)
-    errors.push(`${method.path} is not the registered ${m.id} ${method.current}: edited without a new registered version`);
+    errors.push(
+      `${method.path} is not the registered ${m.id} ${method.current}: edited without a new registered version`
+    );
   if (v && cur && v.version !== cur.version)
     notices.push(`pinned to reference method ${m.id} ${v.version}; the current version is ${cur.version}`);
 

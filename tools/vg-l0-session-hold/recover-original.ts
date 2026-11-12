@@ -54,7 +54,9 @@ for (const [cut, arm] of [
   ['C24', 'indep'],
   ['C24', 'informed']
 ] as const)
-  searches[`${cut}/${arm}`] = pinned<Any>(`research/vg-lifecycle-matched-optimization/results/search/${cut}/${arm}.json`);
+  searches[`${cut}/${arm}`] = pinned<Any>(
+    `research/vg-lifecycle-matched-optimization/results/search/${cut}/${arm}.json`
+  );
 
 const selections: Record<string, { value: Any; sha256: string }> = { C24: sel24 };
 
@@ -65,7 +67,9 @@ for (const cut of ['C19', 'C21', 'C23'])
 
 const r01 = (frozen.value.crossTestSubjects as Any[]).find((x) => x.row === 'R01')!;
 const primary = frozen.value.arms.L0.primary as Any;
-const catalog = JSON.parse(fs.readFileSync(path.join(repoRoot, 'apps/strategy-lab/catalog/pooled-candidates.json'), 'utf8'));
+const catalog = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, 'apps/strategy-lab/catalog/pooled-candidates.json'), 'utf8')
+);
 const cat = (catalog.candidates as Any[]).find((c) => c.id === 'l0-primary')!;
 const quad = r01.quad;
 const options: EvalOptions = r01.options;
@@ -82,7 +86,8 @@ const identity = {
 
 if (identity.study5bCfgId !== '67cfdd9b62d1e16f' || identity.priority3QuadId !== 'a2e385640ca61012')
   throw new Error(`New L0 identity ${identity.study5bCfgId} / ${identity.priority3QuadId}`);
-if (primary.id !== r01.id || !identity.catalogQuadIdentical) throw new Error('New L0: frozen selection and catalog disagree');
+if (primary.id !== r01.id || !identity.catalogQuadIdentical)
+  throw new Error('New L0: frozen selection and catalog disagree');
 
 // ----- 2. the executed budget of the L0 arm (and of the whole study, for context) -----
 
@@ -154,7 +159,8 @@ const qualification = Object.fromEntries(
     const per: Record<string, { members: number; requested: number }> = {};
 
     for (const e of s.value.evidence as Any[]) {
-      const n = 1 + Object.keys(e.stress).length + Object.keys(e.removal).length + e.selectDraws.drawn + e.confirmDraws.drawn;
+      const n =
+        1 + Object.keys(e.stress).length + Object.keys(e.removal).length + e.selectDraws.drawn + e.confirmDraws.drawn;
       const p = (per[e.mode] ??= { members: 0, requested: 0 });
 
       p.members++;
@@ -180,7 +186,11 @@ const jobs = Object.fromEntries(
 
 // ----- 3. development reproduction through the unchanged engine (D24, in-process) -----
 
-const door = await openPrefixDoor('D24', 'vg-l0-session-hold Phase 1: New L0 development reproduction (read-only)', true);
+const door = await openPrefixDoor(
+  'D24',
+  'vg-l0-session-hold Phase 1: New L0 development reproduction (read-only)',
+  true
+);
 const t0 = Date.now();
 const centre = evaluate(door, quad, options);
 const sealedEv = (sel24.value.evidence as Any[]).find((e) => e.label === primary.label)!;
@@ -213,7 +223,10 @@ const out = {
   kind: 'vg-l0-session-hold Phase 1 recovery of the New L0 primary (5B C24/L0/informed/R1#1 profit)',
   generated: new Date().toISOString(),
   sources: {
-    frozenSelection: { file: 'research/vg-lifecycle-matched-optimization/FROZEN_SELECTION.json', sha256: frozen.sha256 },
+    frozenSelection: {
+      file: 'research/vg-lifecycle-matched-optimization/FROZEN_SELECTION.json',
+      sha256: frozen.sha256
+    },
     selections: Object.fromEntries(Object.entries(selections).map(([k, s]) => [k, s.sha256])),
     searches: Object.fromEntries(Object.entries(searches).map(([k, s]) => [k, s.sha256])),
     catalogEntrySha256: cat.entrySha256
@@ -221,8 +234,7 @@ const out = {
   identity,
   candidate: { quad, options, settings: r01.settings },
   budget: {
-    note:
-      'Per lane: distinct proposals = screen + seed designs + island children + fillers (refinement moves apart); requested = every evaluation the lane asked for (centres and neighbours, archive hits included). Unique fresh simulations are counted per job (all three arms).',
+    note: 'Per lane: distinct proposals = screen + seed designs + island children + fillers (refinement moves apart); requested = every evaluation the lane asked for (centres and neighbours, archive hits included). Unique fresh simulations are counted per job (all three arms).',
     L0: byJob('L0'),
     allArms: byJob(null),
     jobs,
@@ -230,7 +242,11 @@ const out = {
     lanes: laneRows
   },
   reproduction: {
-    door: { name: door.name, sessions: door.sessions, sha256: { GDX: door.sym.GDX.dataSha256, VGT: door.sym.VGT.dataSha256 } },
+    door: {
+      name: door.name,
+      sessions: door.sessions,
+      sha256: { GDX: door.sym.GDX.dataSha256, VGT: door.sym.VGT.dataSha256 }
+    },
     centre,
     sealedCentre: sealedEv.centre,
     centreFieldsCompared: fields.length,

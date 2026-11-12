@@ -14,12 +14,18 @@
 import type { Dataset } from '../four-family/data.ts';
 import { computeReferenceHighs } from '../four-family/data.ts';
 import { computeReferenceLows } from '../d1-refinement/engine.ts';
+import { nyseSessionsHeld } from '../lib/tradingSessions.ts';
 
 export const secondsPerMinute = 60;
 export const secondsPerDay = 24 * 60 * 60;
 export const secondsPerYear = 365 * secondsPerDay;
 
 export type StopFill = 'stop' | 'next-open';
+// The unit of maximumHoldDays. 'calendar-days' (the default, also when absent): calendar days between session dates.
+// 'sessions' (EXPERIMENTAL, research/vg-l0-session-hold): NYSE trading sessions after the hold session
+// (src/lib/tradingSessions.ts). Only the unit changes: the maximum hold still applies from the first session whose age
+// reaches maximumHoldDays — its loss exit at the open and the buffered intraday loss from that age on are unchanged.
+export type HoldUnit = 'calendar-days' | 'sessions';
 export type StopPolicy = 'net' | 'breakeven';
 export type EntryMode = 'deep' | 'swing';
 export type SetupKind = 'deep' | 'continuation' | 'swing';
@@ -54,6 +60,7 @@ export interface StrategyParams {
   trailingBuyPercentage: number; // Y, the rebound that buys
   trailingStopPercentage: number;
   maximumHoldDays: number;
+  holdUnit?: HoldUnit; // absent = 'calendar-days'
   intradayLossBuffer: number;
   pullback: number; // continuation
   continuationWindow: number;
@@ -149,6 +156,12 @@ export interface LotState {
 
 export const interestOn = (lot: LotState, rate: number, sessionTime: number) =>
   lot.investment * rate * ((sessionTime - lot.entryTimestamp) / secondsPerYear);
+
+// The position's age at a session in the unit of maximumHoldDays (both times are session midnights, Dataset.sTime).
+export const holdAge = (params: { holdUnit?: HoldUnit }, holdTimestamp: number, sessionTime: number) =>
+  params.holdUnit === 'sessions'
+    ? nyseSessionsHeld(holdTimestamp, sessionTime)
+    : (sessionTime - holdTimestamp) / secondsPerDay;
 
 export interface ExitDecision {
   reason: ExitReason;
@@ -262,7 +275,7 @@ export class ExitManager {
       this.stopActiveSessions++;
     }
 
-    const daysHeld = (ds.sTime[s]! - lot.holdTimestamp) / secondsPerDay;
+    const daysHeld = holdAge(params, lot.holdTimestamp, ds.sTime[s]!);
     const isMaximumHoldDue = daysHeld >= maximumHoldDays && profitAt(ds.sOpen[s]!) < 0;
     const pendingTime = this.pendingSignalTime;
     const pendingPrice = this.pendingSignalPrice;

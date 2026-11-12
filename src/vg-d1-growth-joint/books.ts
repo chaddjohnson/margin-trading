@@ -37,7 +37,7 @@ import {
   simulateTrading
 } from '../growth-trading/riseTrading.ts';
 import type { GateRuntime } from '../growth-trading/entryGates.ts';
-import type { StopFill, StrategyParams } from '../shared-margin-portfolio/strategy.ts';
+import type { HoldUnit, StopFill, StrategyParams } from '../shared-margin-portfolio/strategy.ts';
 import { type Sym, economics, growthKey, growthVersion, resolution, symbols } from './context.ts';
 import type { SymDoor } from './data.ts';
 
@@ -138,10 +138,14 @@ export const runD1Book = (
   ds: Dataset,
   s0: Sym,
   grid: D1Grid,
-  opts: { armStart: number; accountingStart: number; endIndex: number; friction?: Friction }
+  opts: { armStart: number; accountingStart: number; endIndex: number; friction?: Friction; holdUnit?: HoldUnit }
 ): VBook => {
   const fr = opts.friction ?? baseFriction;
-  const params = d1StrategyParams(s0, grid);
+  // the experimental session unit of the maximum hold (absent: calendar days, the frozen behaviour)
+  const params =
+    opts.holdUnit === 'sessions'
+      ? { ...d1StrategyParams(s0, grid), holdUnit: opts.holdUnit }
+      : d1StrategyParams(s0, grid);
   const settings: BookSettings = {
     notional: economics.notional,
     rate: fr.rate,
@@ -294,7 +298,7 @@ const EMPTY_SCAN = { signals: [], evaluableBars: 0, barsAtOrAboveThreshold: 0 };
 export const simulateGrowth = (
   sd: SymDoor,
   params: RiseTradingParams,
-  options: { friction?: Friction; recordMinuteMarks?: boolean } = {}
+  options: { friction?: Friction; recordMinuteMarks?: boolean; holdUnit?: HoldUnit } = {}
 ): { simulation: Simulation; decisions: number } => {
   assertTradingParams(params);
 
@@ -329,7 +333,9 @@ export const simulateGrowth = (
     symbol: sd.symbol,
     firstSession: warmup,
     endSession,
-    exit: exitParamsOf(params),
+    // the experimental session unit of the maximum hold reaches both exit evaluators through the exit parameters
+    exit:
+      options.holdUnit === 'sessions' ? { ...exitParamsOf(params), holdUnit: options.holdUnit } : exitParamsOf(params),
     book,
     continuation,
     gates,
@@ -351,11 +357,17 @@ export const runGrowthBook = (
   sd: SymDoor,
   window: { from: string; to: string },
   config: GrowthConfig,
-  options: { friction?: Friction; costBps?: number } = {}
+  options: { friction?: Friction; costBps?: number; holdUnit?: HoldUnit } = {}
 ): VBook => {
   const c = options.costBps === undefined ? config : { ...config, costBpsPerSide: options.costBps };
   const params = growthParamsOf(c, sd.symbol, window);
-  const { simulation: sim } = simulateGrowth(sd, params, { friction: options.friction });
+  const { simulation: sim } = simulateGrowth(
+    sd,
+    params,
+    options.holdUnit === 'sessions'
+      ? { friction: options.friction, holdUnit: options.holdUnit }
+      : { friction: options.friction }
+  );
   const ds = sd.ds;
   const id = bookId('G', sd.symbol);
   const sellFraction = params.retention ? fractionOf(params.retention.sellPercent) : 1;

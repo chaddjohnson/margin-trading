@@ -113,7 +113,14 @@ const withMethod = (f: Fixture) => {
     JSON.stringify({
       kind: 'reference-method-registry',
       schema: 1,
-      methods: [{ id: 'X', path: rel, current: '1.0.0', versions: [{ version: '1.0.0', effective: '2026-11-08', sha256: sha(text), summary: 'x' }] }]
+      methods: [
+        {
+          id: 'X',
+          path: rel,
+          current: '1.0.0',
+          versions: [{ version: '1.0.0', effective: '2026-11-08', sha256: sha(text), summary: 'x' }]
+        }
+      ]
     })
   );
 
@@ -319,7 +326,11 @@ describe('the repository', () => {
     for (const m of reg.methods) {
       const cur = m.versions.find((v) => v.version === m.current)!;
 
-      assert.deepEqual(checkReferenceMethod(repoRoot, { id: m.id, path: m.path, version: cur.version, sha256: cur.sha256 }).errors, [], m.id);
+      assert.deepEqual(
+        checkReferenceMethod(repoRoot, { id: m.id, path: m.path, version: cur.version, sha256: cur.sha256 }).errors,
+        [],
+        m.id
+      );
     }
   });
 

@@ -2,9 +2,9 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-12T03:05Z (UTC, from the clock). **Status: INCOMPLETE — Phases 1–2 complete (recovery,
-  development reproduction, reference method NL0 1.0.0, standard 2.1.0) and committed; Phase 3 (session-hold engine
-  option) next.**
+- **Updated:** 2026-11-12T02:48Z (UTC, from the clock). **Status: INCOMPLETE — Phases 1–3 complete and committed
+  (recovery, reference method NL0 1.0.0, standard 2.1.0, the experimental session hold unit with tests and the archive
+  replay); Phase 4 (the study code, protocol, stage V, pilot, freeze) next.**
 - **Task:** the user's brief "New L0 Trading-Session Re-Optimization" (`brief/BRIEF.md`, sha256
   `df4856db43331f9054916ac479cebfa7f187c9181c5aa663b0ec2179287c2bd2`, 462 lines, read in full through "Final Priority").
 - **Branch:** `research/vg-l0-session-hold` (main checkout), from `a1a9675d` (end of Priority 7A).
@@ -17,8 +17,16 @@
 - **Phase 2:** `docs/research/methods/NEW_L0_METHOD.md` NL0 1.0.0 (registry `docs/research/methods/methods.versions.json`);
   standard 2.1.0 (§3.5, §4.8; registry updated; preflight checks a declared `referenceMethod` pin; 20 preflight tests
   pass).
-- **Next step:** Phase 3 — the explicit trading-session hold option in the engine, its tests, and the
-  calendar-default backward-compatibility verification against archived 5B records.
+- **Phase 3:** engine option `holdUnit` ('calendar-days' default | 'sessions'): `src/lib/tradingSessions.ts` (NYSE
+  ordinal counter), `strategy.ts` `holdAge` (D1 ExitManager), `optionalRules.ts` (Growth rule evaluator),
+  `vg-d1-growth-joint/books.ts` + `evaluate.ts` (`EvalOptions.holdUnit`, key suffix `|husessions` only for sessions;
+  book-cache keys too). Tests: 275 synthetic engine tests pass (new: tradingSessions 7, D1 holdUnit 8, Growth holdUnit
+  2, pool key 2, preflight +3). Archive replay `recovery/backward-compat.json` (tool
+  `tools/vg-l0-session-hold/backward-compat.ts`, unit `vgl0sh-backcompat2`, 133 s): 1,500 / 1,500 archived 5B L0
+  records identical (D19, D21, D23, D24 × V/G/B); 125 interleaved calendar → sessions → calendar runs stable; 5,037
+  hold-gated exits obey the age invariant in both units.
+- **Next step:** Phase 4 — study code `src/vg-l0-session-hold/` (from 5B's, V only, single session arm), protocol,
+  adoption + preflight, stage V, bench + pilot, freeze (commit), then the chain.
 
 ## Findings so far (on disk in the sources named; to be written into `recovery/` and the method document)
 
