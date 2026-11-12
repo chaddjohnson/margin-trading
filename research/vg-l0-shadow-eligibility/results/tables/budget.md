@@ -8,13 +8,14 @@ Generated from the sealed records by `tools/vg-l0-shadow-eligibility/tables.ts` 
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | C19 | B1 | 96 | 151,040 | 334 | 224 / 26,851 | 1,615,667 | 1,666,266 | 14,043 | 2,213,376 | 135 min | 95 triggers not met; 1 extension cap reached | 314/320 (208,320 fresh) |
 | C19 | B2-d1 | 48 | 74,240 | 162 | 112 / 6,960 | 852,894 | 878,968 | 6,469 | 1,106,688 | 26 min | 48 triggers not met | 156/160 (103,680 fresh) |
+| C19 | B2-g | 48 | 69,376 | 143 | 112 / 6,085 | 641,512 | 667,758 | 6,344 | 1,106,688 | 41 min | 48 triggers not met | 160/160 (104,160 fresh) |
 
 ## 2. Track totals
 
 | Track | Distinct proposals | Islands | Refinement starts / moves | Search requested | Search unique fresh | Archive hits | Qualification fresh | Search + qualification fresh | Search wall |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | B1 | 151,040 | 334 | 224 / 26,851 | 1,615,667 | 1,666,266 | 14,043 | 208,320 | 1,874,586 | 2.2 h |
-| B2 | 74,240 | 162 | 112 / 6,960 | 852,894 | 878,968 | 6,469 | 103,680 | 982,648 | 0.4 h |
+| B2 | 143,616 | 305 | 224 / 13,045 | 1,494,406 | 1,546,726 | 12,813 | 207,840 | 1,754,566 | 1.1 h |
 
 ## 3. Against the references
 

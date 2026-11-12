@@ -24,3 +24,10 @@ Generated from the sealed records by `tools/vg-l0-shadow-eligibility/tables.ts` 
 | 010 D1·VGT | 8,192 | 2,522 | 1,010 | 11,478 | 9,866 |
 | 100 D1·GDX | 8,192 | 2,677 | 1,044 | 11,355 | 9,747 |
 | 110 D1·GDX + D1·VGT | 8,192 | 2,647 | 1,029 | 11,370 | 9,751 |
+
+### C19 B2-g
+
+| Toggles | Screened | Plausible | Promoted | Rung-1 centres | Feasible (rung 1) |
+|---|---:|---:|---:|---:|---:|
+| 010 D1·VGT | 16,384 | 5,806 | 1,791 | 17,353 | 10,866 |
+| 011 D1·VGT + Growth·VGT | 16,384 | 9,942 | 2,305 | 23,351 | 18,173 |
