@@ -1,0 +1,152 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-session-hold",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.1.0",
+  "sha256": "ac5c2c69987faa8d2b0dba7dfd452e278658167fa172ab210a8a2e8de7696f9b"
+ },
+ "readAt": "2026-11-12T02:55:00Z",
+ "adoptedAt": "2026-11-12T03:13:30Z",
+ "protocol": {
+  "path": "research/vg-l0-session-hold/PROTOCOL.md",
+  "sha256": "50e441c33a26ca645692cbca075347e6ac813aff1222342ee27f8fa9bb8c00e3"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "reference method NL0: the actual-profit role of the C24 final selectable set under the session hold unit (independent and informed shortlists and the controls New L0, C4, C4-refined, C85 under sessions): the highest development centre net among qualified members (gates Q1-Q6; the fresh confirmation decides qualification), ties by the higher selection robust net, the lower centre DD, then the label; the controls are the qualifying-incumbent fallback (New L0 under sessions = the brief's B). The independent and informed primaries and every role are kept; at C19/C21/C23 the fold primary is the independent actual-profit role (PROTOCOL.md §9).",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 218394,
+  "backendEvaluations": 3000000,
+  "notes": "Distinct candidate proposals (centres): independent 24,576 base / 49,152 maximum per cutoff x 4 cutoffs (6 replicates x 3 V sub-cells with 5B's V, G and B schedules); informed <= 12,570 base / <= 21,786 maximum at C24 (6 replicates); <= 110,874 base / <= 218,394 maximum (refinement moves counted apart). Against the original (reference method NL0 §4): the 5B L0 arm's configured base 36,802 and executed 49,346 proposals, 489,695 requested search evaluations, 64,554 qualification evaluations; the whole 5B study's base 110,406. Backend evaluations: the 3,000,000 planning ceiling of fresh simulations, enforced by 5B's frozen per-job caps summing to 2,865,000 (PROTOCOL.md §7.4; resource guard on extension rounds). Counted separately: screen, rung-1/2/3 and refinement centres and neighbours, qualification, cross-tests, folds, sequential, diagnostics, validation, retries (runs.jsonl) and archive hits."
+ },
+ "referenceMethod": {
+  "id": "NL0",
+  "path": "docs/research/methods/NEW_L0_METHOD.md",
+  "version": "1.0.0",
+  "sha256": "9b387bb47ce02178ee27bb8379a11e4940c9c6c5a44c3e7ab5fcc3c2cc0411e4"
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3, §2.5, §3.2",
+   "kind": "adaptation",
+   "description": "NL0's primary rule: actual-profit role of the final selectable set under sessions; controls New L0 (= B), C4, C4-refined, C85 compete under the same gates and rule",
+   "justification": "reference method NL0 §3.5; brief Phase 6",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4.1, §3.4",
+   "kind": "adaptation",
+   "description": "architecture A only; fixed same-instant order D1, GDX, VGT; lifecycle L0 only; no allocation or lifecycle search",
+   "justification": "brief Phase 4.1: the same allocator, priorities and conflict rules",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§4.1, §4.8",
+   "kind": "adaptation",
+   "description": "fixed structure V; 5B's V/G/B structure cells omitted and their budgets reassigned through their schedules to three V sub-cells; inclusion pinned to V in every lane",
+   "justification": "brief Phase 4.1-4.2: fixed combination; document the omission and reassignment",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§4.7",
+   "kind": "adaptation",
+   "description": "both-Growth protections inapplicable to V: shares fall through, protected island ordinary, both-Growth refinement start reassigned to profit-2",
+   "justification": "fixed structure V",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§4.2, §4.8",
+   "kind": "adaptation",
+   "description": "effort scaled by 6 replicates of 5B's unchanged per-lane schedules (= 5B's 3 arms x 2 replicates); 5B's per-job caps",
+   "justification": "brief Phase 4.3: equal or greater budget preserving the stage balance",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§4.5",
+   "kind": "adaptation",
+   "description": "extension per lane (no cross-arm synchronization); 5B's triggers, caps and resource guard",
+   "justification": "one searched arm",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§3.3, §1.9",
+   "kind": "adaptation",
+   "description": "informed seeds: 5B's V seeds, its B seeds projected to V, G seeds omitted; New L0 added as a third focus seed; informed provenance",
+   "justification": "brief: re-optimize New L0's combination",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§3.5",
+   "kind": "adaptation",
+   "description": "the convention under test: maximum-hold unit; configurations A, B, C with the decomposition",
+   "justification": "brief Phases 3 and 5",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "§1.8, §3.3",
+   "kind": "departure",
+   "description": "earlier-cutoff repetition for the independent lanes only; the informed lane runs at C24 with no chronological test or claim (as in NL0 / 5B AD9)",
+   "justification": "the reference method's own recorded departure, reproduced for fidelity",
+   "userAgreement": "Brief Phase 4.2: 'Preserve its ... validation safeguards ... Reuse the methodology recovered and documented in Phases 1-2' (NL0 §3.6 records 5B AD9, agreed in 5B's brief: 'Incumbent-informed discovery/refinement at C24 ... do not mix these results into an independent chronological claim')"
+  },
+  {
+   "id": "AD10",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "qualification evidence: centre, selection 2x128, confirmation 3x128, stresses, removals; small/wide families for export rows only",
+   "justification": "reference method NL0 (5B AD10)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD11",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "stricter: FULL never opened before the committed frozen selection, not even for known targets; no futility stop",
+   "justification": "reference method NL0 (5B AD12)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD12",
+   "section": "§5.1, §6.3",
+   "kind": "adaptation",
+   "description": "Priority 3's sealed evaluation digest no longer matches by design (the hold-unit option); stage V G2 proves the default unit unchanged on 5B's archived records, bound to the current digest",
+   "justification": "brief Phase 3: the calendar behaviour must remain available and produce the same results",
+   "userAgreement": null
+  }
+ ]
+}
