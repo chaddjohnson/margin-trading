@@ -15,7 +15,7 @@ as the next optimization study after the user reported Priority 7 complete, by t
 L0 shadow-position eligibility study (row 9) commissioned by the shadow-eligibility brief, 2026-11-12; the New L0 risk-aware
 successor foundation (row A1: standard 2.2.0 and the optional D1 risk controls) commissioned by the Assignment 1 brief,
 2026-11-13), with status and outcome as of 2026-11-13. Every priority follows the [optimization standard](OPTIMIZATION_STANDARD.md)
-(current version 2.2.0; reports are text and tables only, §7.7):
+(current version 2.2.0, effective 2026-11-13; reports are text and tables only, §7.7):
 - development 2016-01-04 → 2024-12-31 for all optimization and selection;
 - 2025-01-01 → the common complete endpoint only for validating frozen selections, which is validation on previously
   examined history, not an untouched holdout;
