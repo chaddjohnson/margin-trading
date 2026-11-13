@@ -81,4 +81,11 @@ Code: `src/d1-risk-controls/` (config, exit, book, run + tests), `src/research-s
 
 ## Delivery
 
-(The push record is appended below after `git push`, verified with `git ls-remote`.)
+- **Research branch:** `git push -u origin research/vg-l0-risk-controls-foundation` (new remote branch, no force;
+  outside the sandbox). `git ls-remote` at 2026-11-13T23:26:38Z: `refs/heads/research/vg-l0-risk-controls-foundation` =
+  `eff2cc407bfabf1efcfda2a293d8c114fabdfe5e` = local (the report commit). This push record follows as its own
+  commit, pushed the same way.
+- **`main` (documentation only, authorized by brief §1.3 "if … can be performed cleanly … do so"):** `git push origin
+  main:main`, a fast-forward `2346a1b5..108c241b`, no force. `git ls-remote` at 2026-11-13T23:26:38Z: `refs/heads/main` =
+  `108c241b1811a1c9083ac83d3dbd5376576301ed` = local `main`. It contains no engine code. The research branch is not
+  merged into `main`.
