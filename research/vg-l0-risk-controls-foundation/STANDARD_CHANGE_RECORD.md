@@ -60,7 +60,13 @@ what was executed before these items existed).
 
 - **Research branch:** `research/vg-l0-risk-controls-foundation` carries the standard, its companions and the preflight
   change together with this study.
-- **`main`:** a documentation-only commit applying the four standard documents, plus the brief and this record so that
-  the change log's references resolve. It contains no engine code; see `REPORT.md` §6 for the commit and its push
-  verification. `main` does not carry `src/research-standard/` (as for 2.1.0, precedent `2346a1b5`), so the
-  preflight change stays on the research line until the user merges it.
+- **`main`:** one documentation-only commit adds:
+  - the four standard documents;
+  - the roadmap's version note;
+  - the brief and this record, so that the change log's approval reference resolves.
+
+  It contains no engine code, and its hash and push verification are recorded on the research branch
+  (`research/vg-l0-risk-controls-foundation/REPORT.md` §6 and `RESEARCH_RECOVERY.md`). `main` does not carry
+  `src/research-standard/` (as for 2.1.0, precedent `2346a1b5`), so the preflight change stays on the research line
+  until the user merges it. The change log's evidence paths (the walk-forward diagnostic) also live on the research
+  line.
