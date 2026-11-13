@@ -11,6 +11,7 @@ import {
   checkAdoption,
   checkReferenceMethod,
   checkRegistry,
+  compareVersions,
   manifestName,
   methodRegistryPath,
   registryPath,
@@ -295,6 +296,97 @@ describe('optimization-standard preflight', () => {
   });
 });
 
+// §1.8 [S] (from 2.2.0): an optimization or continuation adopting 2.2.0 or later declares the consequence of its
+// chronological verdict; a diagnostic need not; a study pinned to an earlier version is not held to it.
+describe('the chronological-verdict consequence (standard 2.2.0 §1.8)', () => {
+  // A repository whose registry lists 2.1.0 and 2.2.0 (current), and a study adopting the given version.
+  const fixture22 = (version: '2.1.0' | '2.2.0') => {
+    const f = fixture();
+    const v210 = standardText('2.1.0', '\n2.1.0 text.\n');
+    const v220 = standardText('2.2.0', '\n2.2.0 text with §1.8 consequence.\n');
+
+    fs.writeFileSync(path.join(f.root, standardPath), v220);
+    fs.writeFileSync(
+      path.join(f.root, registryPath),
+      JSON.stringify({
+        standard: standardPath,
+        current: '2.2.0',
+        versions: [
+          { version: '2.1.0', effective: '2026-11-12', sha256: sha(v210), summary: 'older' },
+          { version: '2.2.0', effective: '2026-11-13', sha256: sha(v220), summary: 'current' }
+        ]
+      })
+    );
+
+    const pinnedText = version === '2.2.0' ? v220 : v210;
+    const protocol = `# Protocol\n\nStandard version ${version}, sha256 ${sha(pinnedText)}.\n`;
+
+    fs.writeFileSync(path.join(f.root, f.study, 'PROTOCOL.md'), protocol);
+
+    const a = clone(f.adoption);
+
+    a.standard = { path: standardPath, version, sha256: sha(pinnedText) };
+    a.readAt = '2026-11-13T22:00:00Z';
+    a.adoptedAt = '2026-11-13T22:05:00Z';
+    a.protocol = { path: `${f.study}/PROTOCOL.md`, sha256: sha(protocol) };
+    f.write(a);
+    return { f, a };
+  };
+  const later = new Date('2026-11-14T00:00:00Z');
+  const check = (f: Fixture) => checkAdoption(f.study, { repoRoot: f.root, now: later });
+
+  it('orders versions numerically', () => {
+    assert.ok(compareVersions('2.2.0', '2.1.0') > 0);
+    assert.ok(compareVersions('2.10.0', '2.2.0') > 0);
+    assert.equal(compareVersions('2.2.0', '2.2.0'), 0);
+    assert.ok(compareVersions('1.1.0', '2.2.0') < 0);
+  });
+
+  it('fails an optimization adopting 2.2.0 without a declared consequence', () => {
+    const { f } = fixture22('2.2.0');
+    const r = check(f);
+
+    assert.equal(r.ok, false);
+    assert.ok(r.errors.some((e) => /chronologicalConsequence is missing/.test(e)));
+  });
+
+  it('passes an optimization adopting 2.2.0 that declares its consequence, and a continuation likewise', () => {
+    const { f, a } = fixture22('2.2.0');
+
+    a.chronologicalConsequence =
+      'no chronological support: the final selection is not a deployment-qualified candidate without an explicit user decision';
+    f.write(a);
+    assert.deepEqual(check(f).errors, []);
+    a.scope = 'continuation';
+    f.write(a);
+    assert.deepEqual(check(f).errors, []);
+    a.chronologicalConsequence = '   ';
+    f.write(a);
+    assert.ok(check(f).errors.some((e) => /chronologicalConsequence is missing/.test(e)));
+  });
+
+  it('does not require it of a diagnostic, but refuses an empty statement when one is given', () => {
+    const { f, a } = fixture22('2.2.0');
+
+    a.scope = 'diagnostic';
+    a.objective.prioritizes = 'not-applicable';
+    a.objective.roles = [];
+    f.write(a);
+    assert.deepEqual(check(f).errors, []);
+    a.chronologicalConsequence = '';
+    f.write(a);
+    assert.ok(check(f).errors.some((e) => /must be a non-empty statement/.test(e)));
+  });
+
+  it('does not hold a study pinned to 2.1.0 to it (retained pin, with a notice)', () => {
+    const { f } = fixture22('2.1.0');
+    const r = check(f);
+
+    assert.deepEqual(r.errors, []);
+    assert.ok(r.notices.some((n) => /pinned to standard 2\.1\.0; the current version is 2\.2\.0/.test(n)));
+  });
+});
+
 describe('the repository', () => {
   const repoRoot = path.resolve(import.meta.dirname, '../../..');
 
@@ -336,6 +428,14 @@ describe('the repository', () => {
       registry.versions.find((v) => v.version === '1.1.0')?.sha256,
       'e86b0160e0d757948da46194481aeb961b59afa841c3e4d6428f266b978beff8'
     );
+    assert.equal(
+      registry.versions.find((v) => v.version === '2.0.0')?.sha256,
+      '2005a88c2e24f5e2ab4e461b0425f97d006781a45518f78d9f10fd9320f40105'
+    );
+    assert.equal(
+      registry.versions.find((v) => v.version === '2.1.0')?.sha256,
+      'ac5c2c69987faa8d2b0dba7dfd452e278658167fa172ab210a8a2e8de7696f9b'
+    );
     assert.equal(registry.versions.at(-1)!.version, registry.current);
   });
 
@@ -359,6 +459,22 @@ describe('the repository', () => {
       if (JSON.parse(fs.readFileSync(path.join(repoRoot, registryPath), 'utf8')).current !== '1.0.0')
         assert.ok(
           r.notices.some((n) => /pinned to standard 1\.0\.0/.test(n)),
+          study
+        );
+    }
+  });
+
+  it('passes the studies pinned to 2.1.0 with a retained-pin notice once a later version is current', () => {
+    const pinned = ['research/vg-l0-session-hold', 'research/vg-l0-shadow-eligibility', 'research/vg-l0-walk-forward-diagnostic'];
+
+    for (const study of pinned) {
+      const r = checkAdoption(study, { repoRoot });
+
+      assert.equal(r.ok, true, study);
+      assert.equal(r.version, '2.1.0', study);
+      if (JSON.parse(fs.readFileSync(path.join(repoRoot, registryPath), 'utf8')).current !== '2.1.0')
+        assert.ok(
+          r.notices.some((n) => /pinned to standard 2\.1\.0/.test(n)),
           study
         );
     }

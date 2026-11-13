@@ -1,0 +1,102 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-risk-controls-foundation",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.2.0",
+  "sha256": "0085cff292161e15f59e122d45793200fee01c610306ed37a3a0fab195dd5e24"
+ },
+ "readAt": "2026-11-13T22:45:01Z",
+ "adoptedAt": "2026-11-13T23:05:57Z",
+ "protocol": {
+  "path": "research/vg-l0-risk-controls-foundation/PROTOCOL.md",
+  "sha256": "d04ec35df8c868be185caa4f1011955f45c881d4e14ea7e4da3e9ce8275a05eb"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched, ranked or selected (adaptation AD1). The study adopts standard 2.2.0 and builds and verifies optional D1 risk controls; its outcomes are pass/fail engineering gates G0-G7 (PROTOCOL.md section 12).",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 2000,
+  "notes": "No search proposals. backendEvaluations caps all fresh pooled simulations on real data: G1 New L0 on FULL (legacy only), G3 New L0 on D19/D21/D23/D24, G4 60 random configurations x D21/D24 (legacy), G5 120 random (configuration, controls) pairs on D24 with causal prefixes on D21 (invariants only; no performance figure recorded, AD7). Synthetic test runs are not counted."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search and no chronological verdict (AD2); Assignment 2's protocol must declare its own (default of standard 2.2.0 section 1.8)",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3",
+   "kind": "adaptation",
+   "description": "no roles and no primary; nothing is selected",
+   "justification": "diagnostic scope; brief: 'Do not choose binding new risk thresholds, optimization weights, or a winner in Assignment 1'",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4",
+   "kind": "adaptation",
+   "description": "no search, no earlier-cutoff repeat, no chronological verdict",
+   "justification": "brief: 'Do not launch genetic optimization, large parameter searches, walk-forward re-optimization'",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "stricter doors: FULL opened only to reproduce the frozen New L0 under legacy defaults (guarded by 5B's sealed FROZEN_SELECTION.json and Priority 3's guard); never for a non-default control",
+   "justification": "brief section 0 and 3.3.2: reproduce the frozen New L0 reference on the full 2016-2026 dataset; AD7 keeps validation data free of new outcomes",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "the risk controls are a research extension of the frozen engine; canonical parity is gates G1-G4 (trade by trade, zero tolerance, New L0 and seeded random configurations)",
+   "justification": "brief section 3.3",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.9",
+   "kind": "adaptation",
+   "description": "not applicable: no fold primary or final candidate; the instruments are designed for Assignment 2 in the handoff",
+   "justification": "no search (AD2)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "no tuning benchmark; one contained systemd unit at a time; observed memory reported",
+   "justification": "standard section 6.3: diagnostics report observed use",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§1.5",
+   "kind": "adaptation",
+   "description": "stricter: no performance figure of any non-default control on real data; such runs use development doors D21/D24 only and record pass counts and hashes",
+   "justification": "brief section 4: 'Do not choose binding new risk thresholds ... Those choices belong in later precommitted research protocols'; keeps Assignment 2's boxes uninformed by outcomes seen here",
+   "userAgreement": null
+  }
+ ]
+}

@@ -8,7 +8,8 @@
 //   protocol's sha256 (a protocol edited after adoption fails until it is re-adopted or amended);
 // - the protocol itself records the standard's version and sha256;
 // - the declared date split and risk budget agree with the standard, unless a departure for that section cites the
-//   user's agreement; every departure cites one.
+//   user's agreement; every departure cites one;
+// - from 2.2.0, an optimization or continuation declares the consequence of its chronological verdict (§1.8).
 //
 // It verifies a declaration and its hashes. It cannot verify that an agent read or understood the standard, or that a
 // study's code obeys it (§7.6).
@@ -24,6 +25,8 @@ export const manifestName = 'STANDARD_ADOPTION.json';
 export const scopes = ['optimization', 'continuation', 'diagnostic'] as const;
 export const priorities = ['actual-profit', 'robust-profit', 'compromise', 'not-applicable'] as const;
 export const requiredRoles = ['actual-profit', 'robust-profit', 'balanced'] as const;
+// The first version whose §1.8 [S] requires the consequence of the chronological verdict to be declared.
+export const consequenceSince = '2.2.0';
 
 // The standard's fixed values (§1.1, §2.1); a different declared value needs a departure for that section.
 export const rules = {
@@ -74,6 +77,7 @@ export interface Adoption {
   budget: { distinctProposals: number | null; backendEvaluations: number | null; notes: string };
   deviations: Deviation[];
   referenceMethod?: { id: string; path: string; version: string; sha256: string }; // optional (§4.8, from 2.1.0)
+  chronologicalConsequence?: string; // §1.8 [S], from 2.2.0: required for optimization and continuation scopes
 }
 
 export interface MethodRegistry {
@@ -139,6 +143,15 @@ const hex64 = /^[0-9a-f]{64}$/;
 const isoUtc = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?Z$/;
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 const text = (v: unknown) => typeof v === 'string' && v.trim().length > 0;
+
+// Semantic-version order of two x.y.z strings (negative, zero or positive).
+export const compareVersions = (a: string, b: string) => {
+  const x = a.split('.').map(Number);
+  const y = b.split('.').map(Number);
+
+  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i]! - y[i]!;
+  return 0;
+};
 
 // The version the standard's own header declares ("- **Version:** x.y.z").
 export const declaredVersion = (standardText: string) => /\*\*Version:\*\*\s*(\d+\.\d+\.\d+)/.exec(standardText)?.[1];
@@ -355,6 +368,16 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
   } else
     for (const k of ['distinctProposals', 'backendEvaluations'] as const)
       if (!count(b[k]) || (b[k] as number) <= 0) errors.push(`budget.${k} must be declared (§4.2)`);
+
+  // the consequence of the chronological verdict (§1.8 [S], from 2.2.0): declared before searching
+  if (pinned && compareVersions(pinned.version, consequenceSince) >= 0 && a.scope !== 'diagnostic') {
+    if (!text(a.chronologicalConsequence))
+      errors.push(
+        `chronologicalConsequence is missing: standard ${pinned.version} §1.8 requires the protocol to state, before ` +
+          'searching, what a failed independent chronological verdict means for the final selection'
+      );
+  } else if (a.chronologicalConsequence !== undefined && !text(a.chronologicalConsequence))
+    errors.push('chronologicalConsequence must be a non-empty statement when given');
 
   // the reference method, if the study declares one (§4.8)
   if (a.referenceMethod !== undefined) {
