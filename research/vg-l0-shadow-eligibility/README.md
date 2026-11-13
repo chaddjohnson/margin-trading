@@ -9,5 +9,6 @@ Research only (not deployed; New L0 is not replaced). The user's brief: [`brief/
   marked SHADOW insertions), `position.ts` (the independent real position of a delayed entry), `evaluate.ts` (the
   evaluation and the three toggles), the NL0 pipeline (`config.ts`, `search.ts`, `stages.ts`, `qualify.ts`, `folds.ts`), the
   fixed-parameter comparison (`phase2.ts`), `ablation.ts`, `diagnostics.ts`, `final.ts`, stage V (`parity.ts`).
-- **Results:** sealed records under `results/` (hashes in `results/seals.jsonl`); `FROZEN_SELECTION.json`; the report
-  `REPORT.md` with `results/tables/`.
+- **Report:** [`REPORT.md`](REPORT.md) (outcome: no material improvement; keep New L0) with `results/tables/`;
+  [`IMPLEMENTATION.md`](IMPLEMENTATION.md) (the eligibility mechanism).
+- **Results:** sealed records under `results/` (hashes in `results/seals.jsonl`); `FROZEN_SELECTION.json`.

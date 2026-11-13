@@ -709,6 +709,57 @@ const fz = study
   }
 }
 
+// ----- 5b. phenotypes of the frozen selections against New L0 -----
+{
+  if (fz) {
+    const subjects: [string, J][] = [
+      ['A: New L0', fz.A.evidence],
+      ...(Object.entries(fz.trackPrimaries as Record<string, J>).map(([t, v]) => [`${t} primary`, v.evidence]) as [string, J][]),
+      ['nominee', fz.nominee.evidence]
+    ];
+    const d1Keys = ['targetPercentChange', 'trailingBuyPercentage', 'trailingStopPercentage', 'maximumHoldDays', 'tickWindowSize', 'intradayLossBuffer', 'pullback', 'continuationWindow'];
+    const d1 = (e: J, s: string) => (e ? `[${d1Keys.map((k) => e.settings.d1[s].grid[k]).join(',')}]` : '—');
+    const g = (e: J) => {
+      const x = e?.settings.growth.VGT;
+
+      if (!x?.enabled) return 'disabled';
+
+      const c = x.effective;
+
+      return [
+        `${c.entryMethod === 'trend_breakout' ? 'breakout' : `rise ${c.advanceFromRecentLowPercent}%/${c.recentLowLookbackBars}`}`,
+        `trail ${c.trailingStopPercent}%`,
+        c.maximumHoldEnabled ? `hold ${c.maximumHoldDays} d` : 'hold off',
+        c.trendFilterEnabled ? 'trend on' : '',
+        c.eligibilityEnabled ? `elig ${c.eligibilityPolicy ?? ''} ${c.eligibilityMaxAgeSessions ?? ''}` : '',
+        c.drawdownRecoveryGateEnabled
+          ? `gate dip ${c.dipThresholdPercent}%/${c.dipLookbackSessions} rec ${c.recoveryRetracementPercent}% conf ${c.recoveryConfirmationSessions}`
+          : '',
+        c.initialStopEnabled ? `istop ${c.initialStopAtrSessions}×${c.initialStopAtrMultiple}` : '',
+        c.retentionEnabled ? 'retain' : '',
+        c.continuationEnabled
+          ? `cont ${c.continuationMethod ?? ''} ${c.continuationWindowSessions ?? ''}${c.continuationMethod === 'classic_d1' ? ` pb ${c.classicPullbackPercent}% rb ${c.classicReboundPercent}%` : ''}`
+          : '',
+        `id ${x.identity}`
+      ]
+        .filter(Boolean)
+        .join(', ');
+    };
+
+    write(
+      'phenotypes.md',
+      'Phenotypes of the frozen selections against New L0',
+      [
+        'D1 vectors: [X, Y, stop, hold, L, buffer, P, W] in tenths of a percentage point; hold in calendar days; L and W in sessions.\n',
+        table(
+          ['Subject', 'Label', 'Toggles', 'D1·VGT', 'D1·GDX', 'Growth·VGT', 'Centre net', 'Centre DD'],
+          subjects.map(([n, e]) => [n, e?.label ?? '—', e ? `${e.sh} ${shLabel(e.sh)}` : '—', d1(e, 'VGT'), d1(e, 'GDX'), g(e), usd(e?.net), usd(e?.dd)])
+        )
+      ].join('\n')
+    );
+  }
+}
+
 // ----- 6. the ablation matrix -----
 {
   const a = read('ablation', FIN, 'matrix.json');

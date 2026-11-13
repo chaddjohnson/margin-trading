@@ -2,33 +2,34 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-13T04:28Z (UTC, from the clock). **Status: INCOMPLETE — protocol FROZEN; the study chain is
-  RUNNING (C24 searches; C19, C21, C23 and the sequential paths complete).**
+- **Updated:** 2026-11-13T17:27Z (UTC, from the clock). **Status: COMPLETE — every stage sealed (90 records verify);
+  report written; committed and pushed (see Push). Follow-up gate: the user's review (nothing starts automatically; New L0
+  stays the frozen benchmark; no replacement, catalog change, merge of the engine into `main` or deployment; the Phase 8
+  decision A/B is the user's, recorded in the roadmap, not taken).**
 - **Task:** the user's brief "New L0 Shadow-Position Eligibility: Implementation and Comprehensive Optimization"
-  (`brief/BRIEF.md`, 831 lines, sha256 `3547d5efee0e92f26977231b6425e869859369ec367efcb70ecf05d3f51e8ed3`, read in full
-  to its final section "Overall Objective"; not truncated).
-- **Branch:** `research/vg-l0-shadow-eligibility` (main checkout), from `6eb85160` (before the trading-session engine change
-  `e3b0ae37`) + merge of `main` `2346a1b5`; pushed at `0bd0db96` (2026-11-12T12:48Z; `git ls-remote` = local).
-- **Authority:** `PROTOCOL.md` sha256 `fc6dbdcc4f8b933b…` (frozen 2026-11-12T12:47:53Z, record
-  `results/protocol-freeze.json`, commit `0bd0db96`; code-closure digest `16bd44c056b8…`); `AMENDMENTS.md` (none);
-  standard 2.1.0 (`ac5c2c69…`); NL0 1.0.0 (`9b387bb4…`); stage V `results/parity/parity.json` and
-  `results/parity/parity-frozen-code.json` (730 checks, 0 failed each); `CONTROL_MANIFEST.json` sealed.
-- **Running:** systemd user unit `vgl0se-chain1.service` (outside the session; KillMode=process) running
-  `bash research/vg-l0-shadow-eligibility/chains/chain1.sh`, started 2026-11-12T12:48:18Z; chain log
-  `research/vg-l0-shadow-eligibility/results/logs/chain1.log` (git-ignored); each stage is its own unit
-  `vgl0se-<stage>` with log `results/logs/<unit>.log`; job progress `.cache/vg-l0-shadow-eligibility/jobs/<job>/progress.json`.
-  The chain commits each sealed block itself (step ids a01 … f04). Finished cleanly iff the chain log ends with
-  "CHAIN1 DONE"; a failure prints "CHAIN FAILED at [id]".
-- **Recovery:** if the chain unit is gone without "CHAIN1 DONE": read the chain log's last "start [id]"; check
-  `systemctl --user list-units 'vgl0se-*'` (never start a duplicate of a running stage unit); then relaunch the chain from
-  that id: `systemd-run --user --unit=vgl0se-chain1b --collect -p KillMode=process -E PATH="$PATH" -E HOME="$HOME"
-  --working-directory=/home/chad/projects/margin-trading -p StandardOutput=append:<abs>/results/logs/chain1.log
-  -p StandardError=append:<abs>/results/logs/chain1.log /bin/bash research/vg-l0-shadow-eligibility/chains/chain1.sh <id>`
-  (an interrupted job resumes from its archive; sealed stages refuse to rerun; a commit step is idempotent only if
-  something is staged — resume at the step after a completed commit).
-- **Next step after "CHAIN1 DONE":** `node --experimental-transform-types tools/vg-l0-shadow-eligibility/tables.ts`;
-  full `npm test` (after the validation only); REPORT.md; ROADMAP row + Phase 8 decision; final checkpoint; commit; push.
-- **Do not rerun:** stage V, the control manifest, the freeze, any sealed stage; FULL opens only in step f03 (once).
+  (`brief/BRIEF.md`, 831 lines, sha256 `3547d5efee0e92f26977231b6425e869859369ec367efcb70ecf05d3f51e8ed3`).
+- **Branch:** `research/vg-l0-shadow-eligibility` (main checkout), from `6eb85160` (before the trading-session engine change)
+  + merge of `main` `2346a1b5`. Phase 0 documentation integration on `main`: `2346a1b5` (pushed 2026-11-12T11:36Z).
+- **Authority:** `PROTOCOL.md` `fc6dbdcc4f8b933b…` (frozen 2026-11-12T12:47:53Z, `results/protocol-freeze.json`
+  `a3a31a6bca5dce18…`); `AMENDMENTS.md` (none); standard 2.1.0 (`ac5c2c69…`); NL0 1.0.0 (`9b387bb4…`).
+- **Outcome:** no material improvement; keep New L0 (all toggles OFF). Fixed parameters: Growth·VGT inert, every D1
+  combination harmful. Nominee `C24/A1/R26#1 profit` (Growth·VGT) $386,376.04 / DD $19,459.83 — inconclusive vs A; A2
+  primary `C24/A2-g/F1/R2#1 profit` $384,122.07 — no material difference; B1 `C24/B1/R15/V3#1 profit` $232,082.54 and B2
+  `C24/B2-g/F1/R7/V1#1 profit` $315,441.49 — harmful; fresh procedures chronologically unsupported (B1 +$71,407.39 / DD
+  $80,475.04; B2 −$11,516.74 / DD $74,307.21). Validation (examined): New L0 reproduced exactly ($96,883.72 / $479,605.18);
+  nominee $94,336.06 / $480,712.10; A2 $100,436.47 / $484,558.55.
+- **Deliverables (sha256 prefix):** REPORT.md `4fcf6636…`; IMPLEMENTATION.md `ed45226f…`; FROZEN_SELECTION.json `b52fdae2…`;
+  results/validation/validation.json `077009f9…`; results/folds/sequential.json `7ee87c24…`; results/folds/C24/final/
+  selection.json `086ea319…`; results/ablation/C24/matrix.json `1353d3db…`; results/diagnostics/diagnostics.json `d6509f39…`;
+  results/phase2/fixed-parameter.json `ecd51b16…`; results/parity/parity.json `3773efcc…` and parity-frozen-code.json
+  `627210cb…`; CONTROL_MANIFEST.json `81a686a8…`; tables `results/tables/*.md` + `summary.json` (unsealed reporting);
+  docs/research/ROADMAP.md (row 9 + the recorded Phase 8 decision).
+- **Tests:** full `npm test` (unit `vgl0se-npm-test`, after the validation): 1,471 tests, 1,460 pass, 7 fail = the known
+  pre-existing set (6 golden-master / byte checks of `allIn.ts` / `allin-original.ts` in trailing-buy, minute-optimizer,
+  intraday-study; Study 7's data-end parity), 4 skipped; this study's 32 tests pass.
+- **Push:** see the Push section (recorded after the final push).
+- **Running processes:** none (the chain unit `vgl0se-chain1` ended with "CHAIN1 DONE" at 2026-11-13T17:17:34Z).
+- **Do not rerun:** any sealed stage (they refuse); the validation ran once.
 
 ## Chain progress (from `results/logs/chain1.log`; every block below is sealed and committed by the chain)
 
@@ -45,7 +46,11 @@
 | b31–b36 | C23 searches and selections | 2026-11-12T22:24 → 11-13T04:25 | B1 1,314,271 fresh; primaries `C23/B1/R5/V3#1 profit` (000), `C23/B2-g/F1/R8/V3#1 profit` (000) | b37 |
 | b38 | C23 fold evaluation (D24) | 04:25 | slice 2024: B1 +$6,494.57 (DD $14,520.92); B2 +$4,141.11 (DD $34,117.37); New L0 $44,110.10 | `8cdf68e1` |
 | c01 | sequential paths | 04:25 | B1 +$71,407.39, DD $80,475.04 — unsupported (0/32 replicate paths supported); B2 −$11,516.74, DD $74,307.21 — unsupported (0/8) | `da5c22d1` |
-| d01 | C24 search B1 | from 2026-11-13T04:25:42Z | running | — |
+| d01–d06 | C24 B1, B2 searches and selections | 04:25–11:03 | B1 1,265,797 fresh, primary $232,082.54 (none); B2 d1 finalists F1 $260,532.52 (none), F2 $190,717.09 (D1·VGT); B2 primary $315,441.49 (Growth·VGT) | `b240b394` |
+| d08–d15 | C24 A1, A2 searches and selections; controls; final selection | 11:03–17:15 | A1 1,092,948 fresh + 498,973 hits, primary $386,376.04 (Growth·VGT); A2 finalists F1 $334,652.16, F2 $293,557.57 (none); A2 primary $384,122.07 (Growth·VGT); nominee `C24/A1/R26#1 profit` | `0d0d40d3` |
+| e01–e02 | ablation, diagnostics | 17:15–17:16 | decompositions; matched lots | `62c7a541` |
+| f01 | frozen selection | 17:16:41 | labels: F(D1 toggles) harmful, F(001) no material difference; nominee/A1 inconclusive; A2 no material difference; B1, B2 harmful; A1 vs A2 no material difference; B1 vs B2 harmful | `c691bcd6` |
+| f03 | validation (FULL, once) | 17:16–17:17 | 99/106 rows pass V1–V3; New L0 reproduced exactly | `998cdcb8` |
 
 ## Phase 0 (complete)
 
