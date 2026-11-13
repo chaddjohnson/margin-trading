@@ -1,0 +1,2073 @@
+{
+ "stage": "sequential",
+ "folds": [
+  {
+   "fold": "C19",
+   "slice": [
+    "2020-01-02",
+    "2021-12-31"
+   ],
+   "primary": {
+    "B1": "C19/B1/R21/V2#1 profit",
+    "B2": "C19/B2-g/F1/R8/V3#1 profit"
+   }
+  },
+  {
+   "fold": "C21",
+   "slice": [
+    "2022-01-03",
+    "2023-12-29"
+   ],
+   "primary": {
+    "B1": "C21/B1/R9/V3#1 profit",
+    "B2": "C21/B2-g/F1/R7/V2#1 profit"
+   }
+  },
+  {
+   "fold": "C23",
+   "slice": [
+    "2024-01-02",
+    "2024-12-31"
+   ],
+   "primary": {
+    "B1": "C23/B1/R5/V3#1 profit",
+    "B2": "C23/B2-g/F1/R8/V3#1 profit"
+   }
+  }
+ ],
+ "verdicts": {
+  "B1": "chronologically unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+  "B2": "chronologically unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)"
+ },
+ "switchCharge": "5 bps on $100000 per open lot closed or adopted at a boundary",
+ "procedures": [
+  {
+   "track": "B1",
+   "verdict": "chronologically unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+   "procedure": {
+    "name": "B1: the procedure (each fold primary; flat without one)",
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/B1/R21/V2#1 profit",
+      "sliceNet": 89021.67,
+      "sliceDd": 48255.05,
+      "charge": 0
+     },
+     {
+      "fold": "C21",
+      "label": "C21/B1/R9/V3#1 profit",
+      "sliceNet": -23908.85,
+      "sliceDd": 79663.64,
+      "charge": 100
+     },
+     {
+      "fold": "C23",
+      "label": "C23/B1/R5/V3#1 profit",
+      "sliceNet": 6494.57,
+      "sliceDd": 14520.92,
+      "charge": 100
+     }
+    ],
+    "netBeforeCharges": 71607.39,
+    "charges": 200,
+    "net": 71407.39,
+    "sequentialDd": 80475.04,
+    "ddPeak": "2021-11-22 15:23Z",
+    "ddTrough": "2022-09-28 13:56Z",
+    "withinCeiling": false
+   },
+   "policies": [
+    {
+     "name": "B1: the procedure (each fold primary; flat without one)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R21/V2#1 profit",
+       "sliceNet": 89021.67,
+       "sliceDd": 48255.05,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R9/V3#1 profit",
+       "sliceNet": -23908.85,
+       "sliceDd": 79663.64,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R5/V3#1 profit",
+       "sliceNet": 6494.57,
+       "sliceDd": 14520.92,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 71607.39,
+     "charges": 200,
+     "net": 71407.39,
+     "sequentialDd": 80475.04,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-09-28 13:56Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: role robust-profit",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R31/V2#1 profit",
+       "sliceNet": 39031.48,
+       "sliceDd": 48303.78,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R31/V1#1 profit",
+       "sliceNet": -34108.5,
+       "sliceDd": 68239.01,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R17/V2#1 profit",
+       "sliceNet": -5207.43,
+       "sliceDd": 13993.63,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": -284.45,
+     "charges": 200,
+     "net": -484.45,
+     "sequentialDd": 69378.85,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: role balanced",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R20/V3#2 robust",
+       "sliceNet": 26013.23,
+       "sliceDd": 39836.45,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R11/V3#2 robust",
+       "sliceNet": -24966.66,
+       "sliceDd": 41831.17,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R5/V3#2 robust",
+       "sliceNet": -3459.21,
+       "sliceDd": 15402.32,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": -2412.64,
+     "charges": 150,
+     "net": -2562.64,
+     "sequentialDd": 42017.97,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: role lower-drawdown",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R4/V3#3 balanced",
+       "sliceNet": 72530.13,
+       "sliceDd": 17358.97,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R11/V2#3 balanced",
+       "sliceNet": -11044.79,
+       "sliceDd": 54470.83,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R10/V3#3 balanced",
+       "sliceNet": -4595.22,
+       "sliceDd": 6413.93,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 56890.12,
+     "charges": 200,
+     "net": 56690.12,
+     "sequentialDd": 67968.63,
+     "ddPeak": "2021-02-16 14:32Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R1 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R1/V3#1 profit",
+       "sliceNet": 79873,
+       "sliceDd": 36336.91,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R1/V2#1 profit",
+       "sliceNet": -13477.1,
+       "sliceDd": 64016.83,
+       "charge": 50
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R1/V3#1 profit",
+       "sliceNet": 0,
+       "sliceDd": 0,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 66395.9,
+     "charges": 100,
+     "net": 66295.9,
+     "sequentialDd": 75795.72,
+     "ddPeak": "2021-11-16 14:36Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R2 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R2/V3#1 profit",
+       "sliceNet": 127637.63,
+       "sliceDd": 26112.12,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R2/V3#1 profit",
+       "sliceNet": 38189.7,
+       "sliceDd": 52895.86,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R2/V3#1 profit",
+       "sliceNet": -2779.54,
+       "sliceDd": 2779.54,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 163047.79,
+     "charges": 200,
+     "net": 162847.79,
+     "sequentialDd": 52895.86,
+     "ddPeak": "2022-03-08 15:45Z",
+     "ddTrough": "2022-09-27 17:41Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R3 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R3/V2#1 profit",
+       "sliceNet": 11421.08,
+       "sliceDd": 53182.21,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R3/V2#1 profit",
+       "sliceNet": -29567.32,
+       "sliceDd": 50955.86,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R3/V1#1 profit",
+       "sliceNet": 4790.56,
+       "sliceDd": 13545.88,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": -13355.68,
+     "charges": 150,
+     "net": -13505.68,
+     "sequentialDd": 68842.11,
+     "ddPeak": "2020-09-02 13:30Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R4 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R4/V1#1 profit",
+       "sliceNet": 25539.64,
+       "sliceDd": 32408.92,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R4/V2#1 profit",
+       "sliceNet": 13956.52,
+       "sliceDd": 49809.06,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R4/V3#1 profit",
+       "sliceNet": 14489.3,
+       "sliceDd": 9863.18,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 53985.46,
+     "charges": 200,
+     "net": 53785.46,
+     "sequentialDd": 50077.4,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R5 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R5/V3#1 profit",
+       "sliceNet": 104131.37,
+       "sliceDd": 25660.52,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R5/V3#1 profit",
+       "sliceNet": -7176.57,
+       "sliceDd": 64885.49,
+       "charge": 50
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R5/V3#1 profit",
+       "sliceNet": 6494.57,
+       "sliceDd": 14520.92,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 103449.37,
+     "charges": 150,
+     "net": 103299.37,
+     "sequentialDd": 73003.68,
+     "ddPeak": "2021-11-16 14:36Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R6 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R6/V1#1 profit",
+       "sliceNet": 50822.9,
+       "sliceDd": 48435.52,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R6/V3#1 profit",
+       "sliceNet": 29913.18,
+       "sliceDd": 43594.95,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R6/V2#1 profit",
+       "sliceNet": 3488.21,
+       "sliceDd": 7588.3,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 84224.29,
+     "charges": 200,
+     "net": 84024.29,
+     "sequentialDd": 48435.52,
+     "ddPeak": "2020-02-19 17:49Z",
+     "ddTrough": "2020-03-23 15:44Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R7 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R7/V2#1 profit",
+       "sliceNet": 33612.66,
+       "sliceDd": 32675.94,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R7/V3#1 profit",
+       "sliceNet": -22482.61,
+       "sliceDd": 55452.39,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R7/V1#1 profit",
+       "sliceNet": -498.97,
+       "sliceDd": 12170.4,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 10631.08,
+     "charges": 200,
+     "net": 10431.08,
+     "sequentialDd": 55749.79,
+     "ddPeak": "2020-10-14 15:28Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R8 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R8/V1#1 profit",
+       "sliceNet": 62753.41,
+       "sliceDd": 46704.21,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R8/V2#1 profit",
+       "sliceNet": -14484.34,
+       "sliceDd": 23040.48,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R8/V1#1 profit",
+       "sliceNet": 423.5,
+       "sliceDd": 10948.51,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 48692.57,
+     "charges": 150,
+     "net": 48542.57,
+     "sequentialDd": 46704.21,
+     "ddPeak": "2020-02-19 17:49Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R9 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R9/V2#1 profit",
+       "sliceNet": 61401.93,
+       "sliceDd": 47951.76,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R9/V3#1 profit",
+       "sliceNet": -23908.85,
+       "sliceDd": 79663.64,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R9/V2#1 profit",
+       "sliceNet": 6686.5,
+       "sliceDd": 9703.28,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 44179.58,
+     "charges": 200,
+     "net": 43979.58,
+     "sequentialDd": 79663.64,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-09-28 13:56Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R10 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R10/V2#1 profit",
+       "sliceNet": 60081.83,
+       "sliceDd": 44835.19,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R10/V2#1 profit",
+       "sliceNet": 34826.3,
+       "sliceDd": 30673.38,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R10/V3#1 profit",
+       "sliceNet": 16231.16,
+       "sliceDd": 18275.62,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 111139.29,
+     "charges": 200,
+     "net": 110939.29,
+     "sequentialDd": 44835.19,
+     "ddPeak": "2020-02-19 17:49Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R11 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R11/V1#1 profit",
+       "sliceNet": 19083.63,
+       "sliceDd": 73135.71,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R11/V2#1 profit",
+       "sliceNet": -26030.1,
+       "sliceDd": 35765.25,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R11/V3#1 profit",
+       "sliceNet": -8012.79,
+       "sliceDd": 20295.3,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": -14959.26,
+     "charges": 200,
+     "net": -15159.26,
+     "sequentialDd": 73135.71,
+     "ddPeak": "2020-02-19 17:49Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R12 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R12/V1#1 profit",
+       "sliceNet": 53802.04,
+       "sliceDd": 47163.19,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R12/V2#1 profit",
+       "sliceNet": -22732.59,
+       "sliceDd": 69089.08,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R12/V3#1 profit",
+       "sliceNet": -2723.59,
+       "sliceDd": 20479.87,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 28345.86,
+     "charges": 200,
+     "net": 28145.86,
+     "sequentialDd": 74688.03,
+     "ddPeak": "2021-02-16 14:32Z",
+     "ddTrough": "2022-10-13 13:45Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R13 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R13/V1#1 profit",
+       "sliceNet": 32322.65,
+       "sliceDd": 54677.24,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R13/V2#1 profit",
+       "sliceNet": 27043.02,
+       "sliceDd": 49309.39,
+       "charge": 50
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R13/V2#1 profit",
+       "sliceNet": -10825.33,
+       "sliceDd": 18201.61,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 48540.34,
+     "charges": 100,
+     "net": 48440.34,
+     "sequentialDd": 57451.49,
+     "ddPeak": "2020-09-02 13:30Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R14 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R14/V1#1 profit",
+       "sliceNet": 19278.29,
+       "sliceDd": 59559.19,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R14/V1#1 profit",
+       "sliceNet": 10066.6,
+       "sliceDd": 44671.6,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R14/V1#1 profit",
+       "sliceNet": 1363.1,
+       "sliceDd": 12803.9,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 30707.99,
+     "charges": 150,
+     "net": 30557.99,
+     "sequentialDd": 59559.19,
+     "ddPeak": "2020-02-19 17:49Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R15 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R15/V1#1 profit",
+       "sliceNet": -195.11,
+       "sliceDd": 49962.82,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R15/V1#1 profit",
+       "sliceNet": -37286.28,
+       "sliceDd": 70682.77,
+       "charge": 50
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R15/V3#1 profit",
+       "sliceNet": -4658.86,
+       "sliceDd": 21594.63,
+       "charge": 0
+      }
+     ],
+     "netBeforeCharges": -42140.25,
+     "charges": 50,
+     "net": -42190.25,
+     "sequentialDd": 89663.73,
+     "ddPeak": "2020-09-10 14:02Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R16 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R16/V1#1 profit",
+       "sliceNet": 4343.98,
+       "sliceDd": 60537.9,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R16/V2#1 profit",
+       "sliceNet": 5097.25,
+       "sliceDd": 42500.69,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R16/V1#1 profit",
+       "sliceNet": -6159.4,
+       "sliceDd": 6461.42,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 3281.83,
+     "charges": 200,
+     "net": 3081.83,
+     "sequentialDd": 60537.9,
+     "ddPeak": "2020-02-19 17:49Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R17 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R17/V3#1 profit",
+       "sliceNet": -4026.64,
+       "sliceDd": 45917.82,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R17/V2#1 profit",
+       "sliceNet": -19720.42,
+       "sliceDd": 71974.11,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R17/V2#1 profit",
+       "sliceNet": -5207.43,
+       "sliceDd": 13993.63,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": -28954.49,
+     "charges": 200,
+     "net": -29154.49,
+     "sequentialDd": 103381.55,
+     "ddPeak": "2020-09-02 13:30Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R18 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R18/V1#1 profit",
+       "sliceNet": 68202.32,
+       "sliceDd": 49882.87,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R18/V3#1 profit",
+       "sliceNet": -17172.74,
+       "sliceDd": 33767.97,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R18/V1#1 profit",
+       "sliceNet": -6640.95,
+       "sliceDd": 12245.79,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 44388.63,
+     "charges": 150,
+     "net": 44238.63,
+     "sequentialDd": 49882.87,
+     "ddPeak": "2020-02-19 17:49Z",
+     "ddTrough": "2020-03-18 18:27Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R19 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R19/V3#1 profit",
+       "sliceNet": 55306.48,
+       "sliceDd": 48583.51,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R19/V3#1 profit",
+       "sliceNet": 4145.83,
+       "sliceDd": 47767.13,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R19/V1#1 profit",
+       "sliceNet": 1163.3,
+       "sliceDd": 18518.38,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 60615.61,
+     "charges": 200,
+     "net": 60415.61,
+     "sequentialDd": 49598.8,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-09-27 17:41Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R20 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R20/V3#1 profit",
+       "sliceNet": 25250.09,
+       "sliceDd": 52982.15,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R20/V1#1 profit",
+       "sliceNet": 30011.2,
+       "sliceDd": 44942.46,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R20/V1#1 profit",
+       "sliceNet": 6635.77,
+       "sliceDd": 10860.59,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 61897.06,
+     "charges": 200,
+     "net": 61697.06,
+     "sequentialDd": 52982.15,
+     "ddPeak": "2020-01-24 14:59Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R21 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R21/V2#1 profit",
+       "sliceNet": 89021.67,
+       "sliceDd": 48255.05,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R21/V2#1 profit",
+       "sliceNet": -15530.55,
+       "sliceDd": 62748.84,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R21/V1#1 profit",
+       "sliceNet": -15356.22,
+       "sliceDd": 20097.84,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 58134.9,
+     "charges": 200,
+     "net": 57934.9,
+     "sequentialDd": 63795.56,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R22 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R22/V2#1 profit",
+       "sliceNet": 38535.21,
+       "sliceDd": 59068.17,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R22/V2#1 profit",
+       "sliceNet": -44253.69,
+       "sliceDd": 82015.82,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R22/V3#1 profit",
+       "sliceNet": -5934.1,
+       "sliceDd": 12939.46,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": -11652.58,
+     "charges": 200,
+     "net": -11852.58,
+     "sequentialDd": 83045.99,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R23 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R23/V2#1 profit",
+       "sliceNet": 15444.68,
+       "sliceDd": 65366.21,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R23/V1#1 profit",
+       "sliceNet": -16176.6,
+       "sliceDd": 46622.75,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R23/V1#1 profit",
+       "sliceNet": -8742.25,
+       "sliceDd": 14642.05,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": -9474.17,
+     "charges": 200,
+     "net": -9674.17,
+     "sequentialDd": 65366.21,
+     "ddPeak": "2020-02-19 17:49Z",
+     "ddTrough": "2020-03-16 13:53Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R24 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R24/V2#2 robust",
+       "sliceNet": 64368.34,
+       "sliceDd": 59669.81,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R24/V2#1 profit",
+       "sliceNet": -8743.67,
+       "sliceDd": 69421.7,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R24/V1#1 profit",
+       "sliceNet": -838.33,
+       "sliceDd": 13569.06,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 54786.34,
+     "charges": 200,
+     "net": 54586.34,
+     "sequentialDd": 69421.7,
+     "ddPeak": "2022-03-08 15:45Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R25 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R25/V2#1 profit",
+       "sliceNet": -19279.29,
+       "sliceDd": 57613.49,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R25/V3#1 profit",
+       "sliceNet": -42955.27,
+       "sliceDd": 61735.81,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R25/V2#1 profit",
+       "sliceNet": 10225.94,
+       "sliceDd": 16067.62,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": -52008.62,
+     "charges": 200,
+     "net": -52208.62,
+     "sequentialDd": 107134.1,
+     "ddPeak": "2020-09-02 13:30Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R26 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R26/V2#1 profit",
+       "sliceNet": 41762.38,
+       "sliceDd": 41737.64,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R26/V3#1 profit",
+       "sliceNet": -51381.83,
+       "sliceDd": 73117.07,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R26/V3#1 profit",
+       "sliceNet": -2770.78,
+       "sliceDd": 15415.83,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": -12390.23,
+     "charges": 200,
+     "net": -12590.23,
+     "sequentialDd": 73935.98,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R27 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R27/V2#1 profit",
+       "sliceNet": 15154.26,
+       "sliceDd": 38821.05,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R27/V1#1 profit",
+       "sliceNet": -22631.77,
+       "sliceDd": 41875.83,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R27/V3#1 profit",
+       "sliceNet": 9372.58,
+       "sliceDd": 6517.14,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 1895.07,
+     "charges": 200,
+     "net": 1695.07,
+     "sequentialDd": 47969.12,
+     "ddPeak": "2020-11-06 14:30Z",
+     "ddTrough": "2023-10-26 16:50Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R28 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R28/V1#1 profit",
+       "sliceNet": 105941.59,
+       "sliceDd": 35047.69,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R28/V1#1 profit",
+       "sliceNet": -7952.94,
+       "sliceDd": 48160.27,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R28/V3#1 profit",
+       "sliceNet": 14972.62,
+       "sliceDd": 20448.33,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 112961.27,
+     "charges": 200,
+     "net": 112761.27,
+     "sequentialDd": 49584.34,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R29 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R29/V1#1 profit",
+       "sliceNet": 11557.66,
+       "sliceDd": 49683.42,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R29/V2#1 profit",
+       "sliceNet": -25935.53,
+       "sliceDd": 45563.33,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R29/V1#1 profit",
+       "sliceNet": -13325.9,
+       "sliceDd": 24939.49,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": -27703.77,
+     "charges": 200,
+     "net": -27903.77,
+     "sequentialDd": 60848,
+     "ddPeak": "2020-09-02 13:30Z",
+     "ddTrough": "2022-07-05 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R30 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R30/V1#1 profit",
+       "sliceNet": 76797.3,
+       "sliceDd": 28396.78,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R30/V2#1 profit",
+       "sliceNet": -21643.56,
+       "sliceDd": 56916.09,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R30/V3#1 profit",
+       "sliceNet": -2943.5,
+       "sliceDd": 32018.26,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 52210.24,
+     "charges": 150,
+     "net": 52060.24,
+     "sequentialDd": 60760.33,
+     "ddPeak": "2021-04-21 14:26Z",
+     "ddTrough": "2022-11-03 18:05Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R31 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R31/V2#1 profit",
+       "sliceNet": 39031.48,
+       "sliceDd": 48303.78,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R31/V1#1 profit",
+       "sliceNet": -34108.5,
+       "sliceDd": 68239.01,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R31/V3#1 profit",
+       "sliceNet": 11006.26,
+       "sliceDd": 6408.32,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 15929.24,
+     "charges": 150,
+     "net": 15779.24,
+     "sequentialDd": 69378.85,
+     "ddPeak": "2021-11-22 15:23Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B1: replicate R32 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B1/R32/V3#1 profit",
+       "sliceNet": 58995.83,
+       "sliceDd": 45232.79,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B1/R32/V3#1 profit",
+       "sliceNet": 35830.5,
+       "sliceDd": 50484.07,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B1/R32/V3#1 profit",
+       "sliceNet": -2750.9,
+       "sliceDd": 13872.99,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 92075.43,
+     "charges": 200,
+     "net": 91875.43,
+     "sequentialDd": 50484.07,
+     "ddPeak": "2022-03-08 15:45Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    }
+   ]
+  },
+  {
+   "track": "B2",
+   "verdict": "chronologically unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+   "procedure": {
+    "name": "B2: the procedure (each fold primary; flat without one)",
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/B2-g/F1/R8/V3#1 profit",
+      "sliceNet": 48104.08,
+      "sliceDd": 44645.13,
+      "charge": 0
+     },
+     {
+      "fold": "C21",
+      "label": "C21/B2-g/F1/R7/V2#1 profit",
+      "sliceNet": -63611.93,
+      "sliceDd": 74307.21,
+      "charge": 100
+     },
+     {
+      "fold": "C23",
+      "label": "C23/B2-g/F1/R8/V3#1 profit",
+      "sliceNet": 4141.11,
+      "sliceDd": 34117.37,
+      "charge": 50
+     }
+    ],
+    "netBeforeCharges": -11366.74,
+    "charges": 150,
+    "net": -11516.74,
+    "sequentialDd": 74307.21,
+    "ddPeak": "2022-01-04 14:30Z",
+    "ddTrough": "2022-09-01 15:00Z",
+    "withinCeiling": false
+   },
+   "policies": [
+    {
+     "name": "B2: the procedure (each fold primary; flat without one)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F1/R8/V3#1 profit",
+       "sliceNet": 48104.08,
+       "sliceDd": 44645.13,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F1/R7/V2#1 profit",
+       "sliceNet": -63611.93,
+       "sliceDd": 74307.21,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F1/R8/V3#1 profit",
+       "sliceNet": 4141.11,
+       "sliceDd": 34117.37,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": -11366.74,
+     "charges": 150,
+     "net": -11516.74,
+     "sequentialDd": 74307.21,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-09-01 15:00Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: role robust-profit",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F2/R1/V3#4 gate-alternative",
+       "sliceNet": 74581.21,
+       "sliceDd": 56206.26,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F2/R3/V3#1 profit",
+       "sliceNet": -5474.46,
+       "sliceDd": 59404.51,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F2/R7/V2#2 robust",
+       "sliceNet": 1739.88,
+       "sliceDd": 21887.61,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 70846.63,
+     "charges": 150,
+     "net": 70696.63,
+     "sequentialDd": 61349.92,
+     "ddPeak": "2021-12-27 21:00Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: role balanced",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F2/R6/V3#3 balanced",
+       "sliceNet": 74581.21,
+       "sliceDd": 56206.26,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F1/R3/V2#2 robust",
+       "sliceNet": -42807.07,
+       "sliceDd": 77113.82,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F2/R8/V3#2 robust",
+       "sliceNet": 4727.47,
+       "sliceDd": 12341.24,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 36501.61,
+     "charges": 200,
+     "net": 36301.61,
+     "sequentialDd": 78831.87,
+     "ddPeak": "2021-12-27 21:00Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: role lower-drawdown",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F2/R3/V2#3 entry alternative",
+       "sliceNet": 74581.21,
+       "sliceDd": 56206.26,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F1/R4/V3#3 entry alternative",
+       "sliceNet": 3840.15,
+       "sliceDd": 65448.8,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F2/R8/V3#4 profit order",
+       "sliceNet": 510,
+       "sliceDd": 6025.72,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 78931.36,
+     "charges": 200,
+     "net": 78731.36,
+     "sequentialDd": 67166.85,
+     "ddPeak": "2021-12-27 21:00Z",
+     "ddTrough": "2022-09-01 15:00Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: replicate R1 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F1/R1/V2#1 profit",
+       "sliceNet": 44363.93,
+       "sliceDd": 48385.28,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F1/R1/V1#1 profit",
+       "sliceNet": -42538.87,
+       "sliceDd": 76940.13,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F2/R1/V2#1 profit",
+       "sliceNet": -2713.53,
+       "sliceDd": 18956.07,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": -888.47,
+     "charges": 200,
+     "net": -1088.47,
+     "sequentialDd": 76940.13,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: replicate R2 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F1/R2/V1#1 profit",
+       "sliceNet": 30125.39,
+       "sliceDd": 48385.28,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F1/R2/V1#1 profit",
+       "sliceNet": -7194.38,
+       "sliceDd": 62303.97,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F1/R2/V1#1 profit",
+       "sliceNet": -3356.7,
+       "sliceDd": 35213.12,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 19574.31,
+     "charges": 150,
+     "net": 19424.31,
+     "sequentialDd": 62303.97,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-09-01 15:00Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: replicate R3 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F1/R3/V3#1 profit",
+       "sliceNet": 64072.92,
+       "sliceDd": 48385.28,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F2/R3/V3#1 profit",
+       "sliceNet": -5474.46,
+       "sliceDd": 59404.51,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F1/R3/V2#1 profit",
+       "sliceNet": -1411.68,
+       "sliceDd": 11795.69,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 57186.78,
+     "charges": 150,
+     "net": 57036.78,
+     "sequentialDd": 59404.51,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: replicate R4 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F1/R4/V1#1 profit",
+       "sliceNet": 44544.84,
+       "sliceDd": 48385.28,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F1/R4/V2#1 profit",
+       "sliceNet": -32887.47,
+       "sliceDd": 70576.89,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F1/R4/V3#1 profit",
+       "sliceNet": 19875.96,
+       "sliceDd": 8775.5,
+       "charge": 100
+      }
+     ],
+     "netBeforeCharges": 31533.33,
+     "charges": 200,
+     "net": 31333.33,
+     "sequentialDd": 70576.89,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: replicate R5 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F1/R5/V3#1 profit",
+       "sliceNet": 44363.93,
+       "sliceDd": 48385.28,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F1/R5/V1#1 profit",
+       "sliceNet": -13213.95,
+       "sliceDd": 66902.04,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F1/R5/V3#1 profit",
+       "sliceNet": -3202.14,
+       "sliceDd": 36845.96,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 27947.84,
+     "charges": 150,
+     "net": 27797.84,
+     "sequentialDd": 66902.04,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-10-13 13:32Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: replicate R6 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F1/R6/V2#1 profit",
+       "sliceNet": 44363.93,
+       "sliceDd": 48385.28,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F2/R6/V3#1 profit",
+       "sliceNet": -8575.23,
+       "sliceDd": 59404.51,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F1/R6/V1#1 profit",
+       "sliceNet": -3208.16,
+       "sliceDd": 11391.49,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 32580.54,
+     "charges": 150,
+     "net": 32430.54,
+     "sequentialDd": 59404.51,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: replicate R7 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F1/R7/V3#1 profit",
+       "sliceNet": 16203.7,
+       "sliceDd": 49594.37,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F1/R7/V2#1 profit",
+       "sliceNet": -63611.93,
+       "sliceDd": 74307.21,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F1/R7/V3#4 profit order",
+       "sliceNet": 5173.57,
+       "sliceDd": 35047.96,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": -42234.66,
+     "charges": 150,
+     "net": -42384.66,
+     "sequentialDd": 74307.21,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-09-01 15:00Z",
+     "withinCeiling": false
+    },
+    {
+     "name": "B2: replicate R8 alone (seed-level actual-profit; reporting only)",
+     "parts": [
+      {
+       "fold": "C19",
+       "label": "C19/B2-g/F1/R8/V3#1 profit",
+       "sliceNet": 48104.08,
+       "sliceDd": 44645.13,
+       "charge": 0
+      },
+      {
+       "fold": "C21",
+       "label": "C21/B2-g/F2/R8/V1#3 entry alternative",
+       "sliceNet": -5474.46,
+       "sliceDd": 59404.51,
+       "charge": 100
+      },
+      {
+       "fold": "C23",
+       "label": "C23/B2-g/F1/R8/V3#1 profit",
+       "sliceNet": 4141.11,
+       "sliceDd": 34117.37,
+       "charge": 50
+      }
+     ],
+     "netBeforeCharges": 46770.73,
+     "charges": 150,
+     "net": 46620.73,
+     "sequentialDd": 59404.51,
+     "ddPeak": "2022-01-04 14:30Z",
+     "ddTrough": "2022-09-26 17:39Z",
+     "withinCeiling": false
+    }
+   ]
+  }
+ ],
+ "fixed": [
+  {
+   "name": "fixed control: NL0 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: NL0",
+     "sliceNet": 171402.7,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: NL0",
+     "sliceNet": 87238.48,
+     "sliceDd": 19459.83,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: NL0",
+     "sliceNet": 44110.1,
+     "sliceDd": 9105.84,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 302751.28,
+   "charges": 0,
+   "net": 302751.28,
+   "sequentialDd": 19459.83,
+   "ddPeak": "2023-01-25 20:49Z",
+   "ddTrough": "2023-02-24 14:30Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: NL0/sh100 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: NL0/sh100",
+     "sliceNet": 162747.05,
+     "sliceDd": 17516.06,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: NL0/sh100",
+     "sliceNet": 57454.66,
+     "sliceDd": 32231.24,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: NL0/sh100",
+     "sliceNet": 39417.47,
+     "sliceDd": 11501.85,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 259619.18,
+   "charges": 0,
+   "net": 259619.18,
+   "sequentialDd": 32231.24,
+   "ddPeak": "2022-06-02 19:03Z",
+   "ddTrough": "2022-09-26 17:39Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: NL0/sh010 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: NL0/sh010",
+     "sliceNet": 96353.3,
+     "sliceDd": 23639.35,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: NL0/sh010",
+     "sliceNet": 47124.29,
+     "sliceDd": 21923.46,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: NL0/sh010",
+     "sliceNet": 44110.1,
+     "sliceDd": 9105.84,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 187587.69,
+   "charges": 0,
+   "net": 187587.69,
+   "sequentialDd": 23639.35,
+   "ddPeak": "2020-02-19 17:49Z",
+   "ddTrough": "2020-03-23 15:44Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: NL0/sh001 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: NL0/sh001",
+     "sliceNet": 171402.7,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: NL0/sh001",
+     "sliceNet": 87238.48,
+     "sliceDd": 19459.83,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: NL0/sh001",
+     "sliceNet": 44110.1,
+     "sliceDd": 9105.84,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 302751.28,
+   "charges": 0,
+   "net": 302751.28,
+   "sequentialDd": 19459.83,
+   "ddPeak": "2023-01-25 20:49Z",
+   "ddTrough": "2023-02-24 14:30Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: NL0/sh110 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: NL0/sh110",
+     "sliceNet": 87697.65,
+     "sliceDd": 23639.35,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: NL0/sh110",
+     "sliceNet": 46944.36,
+     "sliceDd": 42661.05,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: NL0/sh110",
+     "sliceNet": 39417.47,
+     "sliceDd": 11501.85,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 174059.48,
+   "charges": 0,
+   "net": 174059.48,
+   "sequentialDd": 42661.05,
+   "ddPeak": "2022-06-02 19:03Z",
+   "ddTrough": "2022-10-13 13:32Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "fixed control: NL0/sh101 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: NL0/sh101",
+     "sliceNet": 162747.05,
+     "sliceDd": 17516.06,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: NL0/sh101",
+     "sliceNet": 57454.66,
+     "sliceDd": 32231.24,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: NL0/sh101",
+     "sliceNet": 39417.47,
+     "sliceDd": 11501.85,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 259619.18,
+   "charges": 0,
+   "net": 259619.18,
+   "sequentialDd": 32231.24,
+   "ddPeak": "2022-06-02 19:03Z",
+   "ddTrough": "2022-09-26 17:39Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: NL0/sh011 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: NL0/sh011",
+     "sliceNet": 96353.3,
+     "sliceDd": 23639.35,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: NL0/sh011",
+     "sliceNet": 47124.29,
+     "sliceDd": 21923.46,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: NL0/sh011",
+     "sliceNet": 44110.1,
+     "sliceDd": 9105.84,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 187587.69,
+   "charges": 0,
+   "net": 187587.69,
+   "sequentialDd": 23639.35,
+   "ddPeak": "2020-02-19 17:49Z",
+   "ddTrough": "2020-03-23 15:44Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: NL0/sh111 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: NL0/sh111",
+     "sliceNet": 87697.65,
+     "sliceDd": 23639.35,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: NL0/sh111",
+     "sliceNet": 46944.36,
+     "sliceDd": 42661.05,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: NL0/sh111",
+     "sliceNet": 39417.47,
+     "sliceDd": 11501.85,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 174059.48,
+   "charges": 0,
+   "net": 174059.48,
+   "sequentialDd": 42661.05,
+   "ddPeak": "2022-06-02 19:03Z",
+   "ddTrough": "2022-10-13 13:32Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "fixed control: C4 (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: C4",
+     "sliceNet": 162640.68,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: C4",
+     "sliceNet": 63195.33,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: C4",
+     "sliceNet": 9852.77,
+     "sliceDd": 10047.41,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 235688.78,
+   "charges": 0,
+   "net": 235688.78,
+   "sequentialDd": 17280.74,
+   "ddPeak": "2020-03-19 19:26Z",
+   "ddTrough": "2020-03-19 20:00Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: C4R (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: C4R",
+     "sliceNet": 165189.97,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: C4R",
+     "sliceNet": 76196.55,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: C4R",
+     "sliceNet": 42306.71,
+     "sliceDd": 10549.05,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 283693.23,
+   "charges": 0,
+   "net": 283693.23,
+   "sequentialDd": 17280.74,
+   "ddPeak": "2020-03-19 19:26Z",
+   "ddTrough": "2020-03-19 20:00Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: D (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: D",
+     "sliceNet": 132702.13,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: D",
+     "sliceNet": 63208.84,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: D",
+     "sliceNet": 28624.54,
+     "sliceDd": 8839.65,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 224535.51,
+   "charges": 0,
+   "net": 224535.51,
+   "sequentialDd": 17280.74,
+   "ddPeak": "2020-03-19 19:26Z",
+   "ddTrough": "2020-03-19 20:00Z",
+   "withinCeiling": true
+  }
+ ],
+ "scope": "each fresh procedure (B1 joint, B2 sequential) is a frozen chronological test (its verdict); roles, replicates and the fixed controls are descriptive; the informed tracks (A1, A2) and the controls inherit later-selected settings and have no chronological test"
+}
