@@ -36,3 +36,18 @@ Append-only. Each entry: ID, UTC time, the change, why, which results existed, i
 - **Results existing at this time.** Sealed: protocol freeze, gates, D3/D4 replays (primaries, session), D5, D6, D7, D8.
   Their outcomes were seen (the breaching episodes are 2020-02/03 and 2022). The regime metrics above were chosen as the
   standard descriptive set for dip-buying exposure before computing them; no metric is added after seeing its value.
+
+## A3 — 2026-11-13T19:01:56Z — D10 coverage check of New L0 at C21 (hindsight, report-only)
+
+- **Change.** Adds D10: New L0 (the shadow study's `control: NL0`, toggles 000) evaluated as if it had been a C21
+  member, on the C21 training door D21 only: its centre, the 10 bps stress (gate Q5) and the confirmation family the
+  shadow study would have drawn for a C21 member (`famOf('confirm', ['confirm', rep, 'C21'], 'joint')`, reps 1–3, 384
+  draws) — gates Q1–Q6 as NL0 defines them, and its rank by centre net among the C21 qualified sets of 5B L0, B1 and B2
+  (calendar studies). 386 fresh simulations (total ≤ 4,698 of the 5,000 cap).
+- **Why.** The sealed replays show New L0's own causal net at 2021-12-31 ($251,372.87) above every C21 fold primary's
+  ($218,446.88–$248,305.56). Whether it would also have qualified on 2016–2021 data decides whether the C21 failure is
+  partly a **search-coverage** failure (a better-scoring, gate-passing region existed and the fresh searches missed it)
+  rather than only a selection failure. **New L0 was chosen with later data; it was not in any C21 archive and could not
+  have been selected at C21.** The result is labelled hindsight and is never presented as an achievable C21 selection.
+- **Results existing at this time.** All sealed stages D2–D9; New L0's slice outcome 2022–2023 (+$87,238.48, DD
+  $19,459.83) is already published by the shadow study. No criterion changes; nothing is selected.
