@@ -2,64 +2,77 @@
 
 ## Top screen
 
-- **Updated (UTC):** 2026-11-13T19:00Z
-- **Status:** **INCOMPLETE** — all diagnostics D2–D9 sealed (commit `819cab00`); next: tables script, REPORT.md,
-  final checkpoint, commit, push, worktree removal.
+- **Updated (UTC):** 2026-11-13T19:12Z
+- **Status:** **COMPLETE** — diagnosis and recommendations delivered (`REPORT.md`); nothing adopted, deployed or changed in
+  any strategy, allocator, threshold, standard or NL0 1.0.0. Commit and push of `research/vg-l0-walk-forward-diagnostic`
+  recorded below.
 - **Brief:** `brief/BRIEF.md` sha256 `fb939d2596623cdbc6abd83493f01343097d800d6f124e199fa699376a818d3e` (140 lines by
-  `wc -l`, no trailing newline; verified complete).
+  `wc -l`, no trailing newline; read in full, final section present).
 - **Protocol:** `PROTOCOL.md` sha256 `e88b3ef5dc101009f74efc989aa08471434b6961afbbd7ebb9e1536183d29bb3`, frozen by
-  `results/protocol-freeze.json` (sha256 `f0347cd53d47a5024df11de428d22998e721366ca0953e9e973de6b8c6785260`), committed
-  `4ee66fc4`. Amendments A1 (caps: D7 4,000, total 5,000; D6 source; dry runs in-process) and A2 (D9 regimes).
-  Standard 2.1.0 (scope diagnostic), preflight PASS. Fresh simulations so far: 4,312 (cap 5,000).
-- **Running processes:** none.
-- **Next command:** write `tools/vg-l0-walk-forward-diagnostic/tables.ts` (records → `results/tables/*.md`, no
-  simulation), then REPORT.md. The session worktree still exists (remove at the end:
-  `git worktree remove --force <scratchpad>/wt-ses`).
+  `results/protocol-freeze.json` (`f0347cd5…`), committed `4ee66fc4` before any replay. Amendments (`AMENDMENTS.md`,
+  sha256 `c6a8de6b…`): A1 (caps D7 4,000 / total 5,000; D6 source; dry runs in-process), A2 (D9 regimes), A3 (D10
+  coverage check, hindsight). Standard 2.1.0, scope diagnostic; preflight PASS (2026-11-13T19:12Z).
+- **Running processes:** none. The temporary session worktree was removed (`git worktree list` shows only the main
+  checkout).
+- **Next step (needs the user):** review `REPORT.md` §6 (ranked recommendations) and the proposed standard 2.2.0
+  (report-only) amendment; decide whether and how the TSLA/MSFT studies and the Strategy Lab chart fix proceed. Nothing
+  starts automatically.
 
 ## Environment
 
 - Main checkout; branch `research/vg-l0-walk-forward-diagnostic` from `73712149` (tip of `research/vg-l0-shadow-eligibility`).
-- Node v24.21.0 (`.node-version`); absolute node path for systemd units:
+- Node v24.21.0; systemd units in `vgwfd.slice` (MemoryHigh 44G / MemoryMax 48G / swap 0); absolute node path
   `/home/chad/.local/share/fnm/node-versions/v24.21.0/installation/bin/node`.
-- Scripts: `tools/vg-l0-walk-forward-diagnostic/` (common, freeze, gates, episodes, core, replay). Not in `src/`.
-- `--dry` writes unsealed copies to `$WFD_SCRATCH/dry/...` (session scratchpad), for checks before sealing.
+- Scripts: `tools/vg-l0-walk-forward-diagnostic/` (common, freeze, gates, episodes, core, replay, replay-ses, selection,
+  d8, neighbours, alternatives, regimes, coverage, tables). No `src/` change. `docs/research/ROADMAP.md` gained row WF.
 
-## Stages
+## Stages (all complete; sealed records verify against `results/seals.jsonl`, 10/10)
 
-| Stage | Status | Command (repo root) | Output (sealed) | sha256 |
-|---|---|---|---|---|
-| S0 setup | complete | — | brief, branch | — |
-| S1 protocol freeze | complete (18:38Z) | `node … tools/vg-l0-walk-forward-diagnostic/freeze.ts` | `results/protocol-freeze.json` | `f0347cd5…` |
-| G1/G2/G4 + D2 | complete (18:39Z; 3.5 s, 1.3 GB in-process) | `node … gates.ts` | `results/gates/gates.json` | `46cba3c7f29b077b8a0c038319bb167f3ad026b080664117788b77f32141a5d9` |
-| D3/D4/D8/G3 primaries (5B, B1, B2, NL0) | complete (18:44Z; unit `vgwfd-replay-primaries`, 16 s, peak 1.6 GB; 71 simulations) | `systemd-run … replay.ts` | `results/replays/primaries.json` | `2c3483689c04d4a3639e59d8e7fd8289eb1e31b2beeca2e8880481d91a425492` |
-| Session replays (G3, D3, D4) | complete (18:46Z; unit `vgwfd-replay-session`, 15 s, 1.8 GB; 21 sims) | `WFD_SES_WT=… replay-ses.ts` | `results/replays/session.json` | `c6e6f50f5a535100e3b26c9e7208fc1d1716a68636f64c24da3bf9b74e5b584f` |
-| D5 selection trace (records) | complete (18:53Z; in-process) | `selection.ts` | `results/selection/selection.json` | `1d24f861…` (seals.jsonl) |
-| D8 checks (jumps, holds, reconciliation) | complete (18:53Z) | `d8.ts` | `results/gates/d8.json` | `152671eb…` |
-| D7 selection neighbourhoods on slices | complete (18:55Z; unit `vgwfd-neighbours`; 3,072 sims; parity 12/12) | `WFD_SES_WT=… neighbours.ts` | `results/neighbours/selection-neighbourhoods.json` | `ba96f3e6…` |
-| D6 evaluated rows (172) | complete (18:56Z; unit `vgwfd-evaluated-rows`, 35 s, 3.7 GB; 172 sims; G3 0 failed) | `WFD_SES_WT=… alternatives.ts` | `results/replays/evaluated-rows.json` | `634259ca…` |
-| D9 regimes (A2) | complete (18:58Z) | `regimes.ts` | `results/regimes/regimes.json` | `5ff540ec…` |
-| S5 report, tables, commit, push | not started | | | |
+| Stage | Command (repo root; RUN_COMMANDS.md) | Output | sha256 | Simulations |
+|---|---|---|---|---:|
+| S1 protocol freeze | `freeze.ts` | `results/protocol-freeze.json` | `f0347cd53d47a5024df11de428d22998e721366ca0953e9e973de6b8c6785260` | 0 |
+| G1/G2/G4 + D2 | `gates.ts` | `results/gates/gates.json` | `46cba3c7f29b077b8a0c038319bb167f3ad026b080664117788b77f32141a5d9` | 0 |
+| D3/D4/D8/G3 primaries | `replay.ts` (unit) | `results/replays/primaries.json` | `2c3483689c04d4a3639e59d8e7fd8289eb1e31b2beeca2e8880481d91a425492` | 71 (+129 dry) |
+| Session replays | `replay-ses.ts` (unit, worktree `18674b39`) | `results/replays/session.json` | `c6e6f50f5a535100e3b26c9e7208fc1d1716a68636f64c24da3bf9b74e5b584f` | 21 (+21 dry) |
+| D5 selection trace | `selection.ts` | `results/selection/selection.json` | `1d24f8610a03d2a5…` | 0 |
+| D8 checks | `d8.ts` | `results/gates/d8.json` | `152671ebf0041308…` | 0 |
+| D7 neighbourhoods | `neighbours.ts` (unit) | `results/neighbours/selection-neighbourhoods.json` | `ba96f3e6df0df208…` | 3,072 (+768 dry) |
+| D6 evaluated rows | `alternatives.ts` (unit) | `results/replays/evaluated-rows.json` | `634259caec15835e…` | 172 (+58 dry) |
+| D9 regimes | `regimes.ts` | `results/regimes/regimes.json` | `5ff540ec178b4286…` | 0 |
+| D10 coverage | `coverage.ts` (unit) | `results/coverage/newl0-at-c21.json` | `4a9c7b7948ff2e5a…` | 386 |
+| Tables | `tables.ts` | `results/tables/*.md`, `summary.json` | regenerated (not sealed) | 0 |
 
-Resume semantics: every stage is a deterministic replay of sealed configurations; a sealed output refuses to be rewritten.
-A stage interrupted before sealing is simply rerun (no partial state). Gates passed: G1 36/36, G2 3/3 digests equal,
-G3 12/12 records field-for-field + 9/9 causal prefixes (training door = sealed selection centre), G4 4/4.
+Total fresh simulations 4,698 (cap 5,000, A1); development doors only; FULL never opened.
 
-## Findings so far (on disk in the sealed records above; analysis not yet written)
+## Deliverables (sha256)
 
-- Every audited path has exactly two breaching episodes: Feb–Mar 2020 crash ($39.5k–$55.4k, C19 slice) and the 2022
-  bear (peak 2020-09-10 / 2021-11-22 / 2022-01-04 → trough Sep–Oct 2022; $58.9k–$80.5k; unrecovered by 2024-12-31).
-- 2022: the C21 primaries carried one lot bought near the 2020 bottom across the cutoff, marked at +$73k (5B), +$127k
-  (B1), +$120k (B2) at 2021-12-31 (≈ 33–53% of their training net); −$24k/−$35k/−$34k given back in January 2022; then
-  strings of max-hold D1 losses. New L0 carried +$10k.
-- D1 lots: net-profit stop policy → no loss stop before the maximum hold (engine `src/shared-margin-portfolio/strategy.ts`
-  `isStopActive` / `evaluate`).
+| File | sha256 |
+|---|---|
+| `REPORT.md` | `05e65e38490536c5258ce51457abbc3ccaaeb2719038c3f561911007a9d9335d` |
+| `README.md` | `2b5a00519ad51dee18fb4acf6149588ee56276640398fc0a3b3365ad8d19b593` |
+| `RUN_COMMANDS.md` | `be8376ce421072a690dd7da5547160914b9c4bc5ad735763bafca4f52b9f253e` |
+| `results/tables/audit.md` | `4c2303daa0a97238a5a704e1216816a0d8b91aadac8a2af1e75aa276d24d5fb8` |
+| `results/tables/chronology.md` | `aa1af71236193de5574da69eba8b8907ca55a496293a01ca9fe743389239e5a9` |
+| `results/tables/selection.md` | `7dad468f41931293450e5ead0bfaf55d3ad3c0bed7eac69b131527bc24041e33` |
+| `results/tables/neighbours.md` | `2f5ea94e6a0cb93aa390987bfe10dfb3bc2adedc0088b78656b8c3fa7a734ce0` |
+| `results/tables/summary.json` | `05becb46f5b1c834e29c63753ed98b38af28ecfa097fc82e188b5cf341609baa` |
 
-## Running work
+## Results (sealed; narrative in REPORT.md)
 
-- None. Temporary worktree: `/tmp/claude-1000/-home-chad-projects-margin-trading/de8b0eea-b9c7-4e2d-9d62-dc92d2add80c/scratchpad/wt-ses`
-  (detached at `18674b39`, door copies, `node_modules` symlink); remove at the end.
+- Anchors reproduced to the cent: 5B L0 −$29,358.01 / DD $67,214.22; session +$25,237.54 / $58,866.62; B1 +$71,407.39 /
+  $80,475.04; B2 −$11,516.74 / $74,307.21. Every breach is in the 2020 crash or the 2022 bear.
+- Gates: G1 36/36, G2 digests equal (Priority 3, 5B, shadow; session at its commit), G3 190/190 replays equal their sealed
+  records, causal prefixes 12/12, G4 4/4, D7 parity 12/12. No software defect.
+- Hypotheses (REPORT §4.2): H1 directly verified/strongly supported; H2 strongly supported; H3 instability verified,
+  narrow optima not supported; H4 mechanism verified; H5 directly verified; H6 not primary; H7 strongly supported
+  (coverage part hindsight); H8 not supported.
+
+## Disclosures
+
+- Dry runs ran in-process (≤ 1.9 GB, < 25 s each); sealing runs in units (A1).
+- A2's heading time was first typed by hand and corrected to the clock reading (18:57:51Z) before commit.
+- D10 uses New L0 (chosen with later data) as a hypothetical C21 member: coverage evidence only, never a selectable result.
 
 ## Guards
 
-- Do not rerun sealed stages. FULL never opened. Do not edit audited studies' files. Remove the session worktree at the
-  end (`git worktree remove`), never commit from it.
+- Do not rerun sealed stages (they refuse). Do not edit audited studies' files. No standard or NL0 edit without the user.

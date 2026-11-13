@@ -464,7 +464,19 @@ fs.writeFileSync(
       paths: gates.g4.paths.map((g: any) => ({ path: g.path, net: g.net, sequentialDd: g.dd, peak: g.peak, trough: g.trough, slices: g.parts.map((p: any) => ({ fold: p.fold, label: p.label, sliceNet: p.sliceNet, sliceDd: p.resetDd })) })),
       neighbourhoods: nb.map((x) => ({ path: x.path, fold: x.fold, trainingBreachShare: x.training.selectBreachShare, sliceBreachShare: x.slice.breachShare, sliceBreaches: x.slice.breaches, draws: x.draws })),
       evaluatedRows: folds.map((f) => ({ fold: f.fold, rows: ev.filter((r) => r.fold === f.fold).length, breaching: ev.filter((r) => r.fold === f.fold && r.breach).length })),
-      pooledCorrelations: sel.pooledByFold
+      pooledCorrelations: sel.pooledByFold,
+      hypotheses: [
+        { id: 'H1', name: 'limited or unrepresentative training episodes', label: 'directly verified (facts); strongly supported (cause)' },
+        { id: 'H2', name: 'regime sensitivity', label: 'strongly supported' },
+        { id: 'H3', name: 'parameter instability / narrow optima', label: 'instability directly verified; narrow optima not supported' },
+        { id: 'H4', name: 'objective/gate mismatch', label: 'directly verified (mechanism); strongly supported (cause)' },
+        { id: 'H5', name: 'local versus chronological robustness', label: 'directly verified' },
+        { id: 'H6', name: 'shared-capital effects', label: 'not supported as primary cause; secondary modifier' },
+        { id: 'H7', name: 'search and selection effects (coverage, near-tie selection)', label: 'strongly supported (coverage part hindsight)' },
+        { id: 'H8', name: 'accounting or implementation defects', label: 'not supported (affirmative evidence against)' }
+      ],
+      coverageNewL0AtC21: { qualifies: cov.qualifies, centreNet: cov.centre.net, rank: cov.rankAmongC21QualifiedSets.map((x: any) => ({ path: x.path, rank: x.newL0WouldRank })) },
+      freshSimulations: 4698
     },
     null,
     1
