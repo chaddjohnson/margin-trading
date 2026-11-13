@@ -27,7 +27,11 @@
 - **Tests:** full `npm test` (unit `vgl0se-npm-test`, after the validation): 1,471 tests, 1,460 pass, 7 fail = the known
   pre-existing set (6 golden-master / byte checks of `allIn.ts` / `allin-original.ts` in trailing-buy, minute-optimizer,
   intraday-study; Study 7's data-end parity), 4 skipped; this study's 32 tests pass.
-- **Push:** see the Push section (recorded after the final push).
+- **Push:** `git push origin research/vg-l0-shadow-eligibility` (no force, outside the sandbox, first attempt,
+  2026-11-13T17:27Z); `git ls-remote` at 17:27:24Z: branch = `32a52915370c5d8dbac1df4aab2b3c364bb799ed` (= local); `main` =
+  `2346a1b5…` (the Phase 0 documentation integration; unchanged since). This record follows as its own commit, pushed the same
+  way. No merge of the study's engine into `main`; no deployment. Logs (`results/logs/`, git-ignored) and job archives
+  (`.cache/vg-l0-shadow-eligibility/`, ≈ 80 GB) are local only.
 - **Running processes:** none (the chain unit `vgl0se-chain1` ended with "CHAIN1 DONE" at 2026-11-13T17:17:34Z).
 - **Do not rerun:** any sealed stage (they refuse); the validation ran once.
 
