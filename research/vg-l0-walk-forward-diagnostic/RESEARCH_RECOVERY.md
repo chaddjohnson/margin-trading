@@ -67,6 +67,12 @@ Total fresh simulations 4,698 (cap 5,000, A1); development doors only; FULL neve
   narrow optima not supported; H4 mechanism verified; H5 directly verified; H6 not primary; H7 strongly supported
   (coverage part hindsight); H8 not supported.
 
+## Delivery
+
+- Pushed `research/vg-l0-walk-forward-diagnostic` to `origin` at 2026-11-13T19:13:13Z: `git ls-remote origin
+  refs/heads/research/vg-l0-walk-forward-diagnostic` = `bb66e100a58d29ab8b1b6ea84bb277cb69559650` = the local report
+  commit. Not merged into `main`; no force-push; no deployment.
+
 ## Disclosures
 
 - Dry runs ran in-process (≤ 1.9 GB, < 25 s each); sealing runs in units (A1).
