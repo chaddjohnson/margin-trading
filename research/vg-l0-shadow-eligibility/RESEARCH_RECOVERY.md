@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-12T20:02Z (UTC, from the clock). **Status: INCOMPLETE — protocol FROZEN; the study chain is
-  RUNNING (C21 B1 qualification; C19 complete).**
+- **Updated:** 2026-11-13T04:28Z (UTC, from the clock). **Status: INCOMPLETE — protocol FROZEN; the study chain is
+  RUNNING (C24 searches; C19, C21, C23 and the sequential paths complete).**
 - **Task:** the user's brief "New L0 Shadow-Position Eligibility: Implementation and Comprehensive Optimization"
   (`brief/BRIEF.md`, 831 lines, sha256 `3547d5efee0e92f26977231b6425e869859369ec367efcb70ecf05d3f51e8ed3`, read in full
   to its final section "Overall Objective"; not truncated).
@@ -40,7 +40,12 @@
 | b13–b14 | C19 B2 step d1 (48 lanes) + finalists | 15:22–15:51 | 878,968 fresh; F1 $102,840.62 (010), F2 $84,907.67 (010) | `5265b419` |
 | b15–b16 | C19 B2 step g (48 lanes) + selection | 15:51–16:40 | 667,758 fresh; primary `C19/B2-g/F1/R8/V3#1 profit` (011) | `5265b419` |
 | b18 | C19 fold evaluation (D21) | 16:41 | slice 2020–2021: B1 +$89,021.67 (DD $48,255.05); B2 +$48,104.08 (DD $44,645.13); New L0 $171,402.70 (descriptive) | `de0e13ab` |
-| b21 | C21 search B1 | 16:41–20:00 | 1,712,642 fresh, 13,866 hits | (with b27) |
+| b21–b26 | C21 searches and selections (B1; B2 d1 → finalists → g) | 16:41–22:24 | B1 1,712,642 fresh; B1 primary `C21/B1/R9/V3#1 profit` $241,331.83 / DD $34,041.80 (101) | b27 |
+| b28 | C21 fold evaluation (D23) | 22:24 | slice 2022–2023: B1 −$23,908.85 (DD $79,663.64); B2 `C21/B2-g/F1/R7/V2#1 profit` (111) −$63,611.93 (DD $74,307.21); New L0 $87,238.48 | `6b72321b` |
+| b31–b36 | C23 searches and selections | 2026-11-12T22:24 → 11-13T04:25 | B1 1,314,271 fresh; primaries `C23/B1/R5/V3#1 profit` (000), `C23/B2-g/F1/R8/V3#1 profit` (000) | b37 |
+| b38 | C23 fold evaluation (D24) | 04:25 | slice 2024: B1 +$6,494.57 (DD $14,520.92); B2 +$4,141.11 (DD $34,117.37); New L0 $44,110.10 | `8cdf68e1` |
+| c01 | sequential paths | 04:25 | B1 +$71,407.39, DD $80,475.04 — unsupported (0/32 replicate paths supported); B2 −$11,516.74, DD $74,307.21 — unsupported (0/8) | `da5c22d1` |
+| d01 | C24 search B1 | from 2026-11-13T04:25:42Z | running | — |
 
 ## Phase 0 (complete)
 
