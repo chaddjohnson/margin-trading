@@ -13,7 +13,7 @@ by the Priority 6 brief, 2026-11-11; Priority 6 reviewed and Priority 7 split in
 optimization pending review, by the Priority 7A brief, 2026-11-11; the New L0 trading-session re-optimization commissioned
 as the next optimization study after the user reported Priority 7 complete, by the Priority 8 brief, 2026-11-12), with
 status and outcome as of 2026-11-12. Every priority follows the [optimization standard](OPTIMIZATION_STANDARD.md)
-(current version 2.1.0; reports are text and tables only, §7.7):
+(current version 2.2.0, effective 2026-11-13; reports are text and tables only, §7.7):
 - development 2016-01-04 → 2024-12-31 for all optimization and selection;
 - 2025-01-01 → the common complete endpoint only for validating frozen selections, which is validation on previously
   examined history, not an untouched holdout;

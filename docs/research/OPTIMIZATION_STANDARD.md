@@ -1,7 +1,7 @@
 # Optimization research standard
 
-- **Version:** 2.1.0 — **effective** 2026-11-12 — **status:** current (2.0.0 and 1.1.0, effective 2026-11-09, and 1.0.0,
-  effective 2026-11-08, remain registered for the studies that pinned them).
+- **Version:** 2.2.0 — **effective** 2026-11-13 — **status:** current (2.1.0, effective 2026-11-12, 2.0.0 and 1.1.0,
+  effective 2026-11-09, and 1.0.0, effective 2026-11-08, remain registered for the studies that pinned them).
 - **Authoritative path:** `docs/research/OPTIMIZATION_STANDARD.md` (this file). There is no other copy; earlier versions
   are read from git history (`git log -p -- docs/research/OPTIMIZATION_STANDARD.md`).
 - **Version registry:** `docs/research/optimization-standard.versions.json` (version → sha256 of this file).
@@ -158,6 +158,18 @@ user's agreement. When the brief is silent, this standard applies.
    - **Verdict.** A sequential policy chains the fold primaries over their slices. The protocol freezes a verdict
      rule (default: *supported* iff every fold produced a primary, the sequential net > 0 and the sequential minute DD
      ≤ the ceiling).
+   - **[S] Consequence** (added in 2.2.0). Before any search, the protocol states what an independent chronological
+     verdict that fails, or cannot be computed (for example a fold without a primary), means for the study's final
+     selection. Default (adapt with justification): *"no chronological support: the final selection is not a
+     deployment-qualified candidate without an explicit user decision"*.
+     - The consequence is governance: a label on the final selection and a decision point for the user. It is never a
+       fitness term, a ranking input, an objective weight or a numeric gate. It never changes a sealed gate verdict
+       (the §2.8 discipline applies).
+     - "No qualifying candidate" is a valid outcome of a study and is reported as such.
+     - A selection from an informed lane (§1.9) has no independent chronological test by construction. Its label is
+       "no independent chronological test", and it never claims the independent lanes' folds as its support. The
+       protocol's consequence applies to it as to a failed verdict unless the protocol justifies otherwise.
+     - Studies that pinned an earlier version keep their own labels; they are not re-labelled (§0.1, §7.5).
 9. **[M] Independent versus informed cutoff evidence.**
    - Only independent lanes count as chronological evidence of a procedure.
    - An informed search seeded with later-selected settings is labelled informed and has no chronological test
@@ -167,7 +179,8 @@ user's agreement. When the brief is silent, this standard applies.
     evidence (§5.4).
 11. **[M] Standard changes never reach into an active study.** See §7.5.
 
-**Amendment items:** the endpoint (if the data change), doors, fold cutoffs, the verdict rule.
+**Amendment items:** the endpoint (if the data change), doors, fold cutoffs, the verdict rule, the verdict's
+consequence (from 2.2.0).
 
 ## 2. Objectives and candidate retention
 
@@ -415,7 +428,7 @@ user's agreement. When the brief is silent, this standard applies.
      confirmation.
 4. **[M] Local stability is not chronological reliability.** A good neighbourhood shows insensitivity to small
    parameter changes on the same history. Only fold and validation evidence speaks to other periods. Reports keep the
-   two apart.
+   two apart. (From 2.2.0, §5.9 reports how each fold's training-selected neighbourhood behaved on the next slice.)
 5. **[M] p90 constraints disclose their breaches.** A p90 neighbourhood-DD constraint can allow up to 10% of
    neighbours above the ceiling. Every report gives:
    - the breach frequency;
@@ -442,8 +455,67 @@ user's agreement. When the brief is silent, this standard applies.
    p90 gates and the $35,000 centre budget are unchanged. A neighbourhood's breach frequency is not an estimate of the
    probability of a future market loss. Neither p90 alone nor breach frequency alone shows that one candidate is safer
    than another: a rare but severe tail and a frequent but mild one are reported side by side.
+9. **[R] Chronological exposure disclosure** (added in 2.2.0). For every earlier-cutoff selection (each fold primary)
+   and every final candidate, the report gives the items below. They come from complete pooled replays (§5.2), and
+   each is labelled training or next slice.
+   - **Open-lot share of training net,** at each cutoff close the study evaluates (for a final candidate: the
+     development end, 2024-12-31, and every earlier cutoff it is replayed at).
+     - *Numerator:* the sum over the lots open at that close of their marked value: shares × close − outstanding
+       principal − accrued interest, with the exit cost not yet charged (as in the marked net, §0.3).
+     - *Denominator:* the training net, which is the marked net at that close.
+     - *When the training net is ≤ 0:* the share is "undefined (training net ≤ 0)", and both dollar amounts are
+       given instead.
+     - A negative open-lot value gives a negative share, and a share above 100% is reported as it is.
+   - **Largest open lot's market-value multiple** at that close, for the open lot with the largest market value:
+     - shares × close ÷ that lot's original fixed principal (for example $100,000);
+     - with its book, entry date and entry price.
+   - **That lot's give-back on the next slice:**
+     - its mark at the cutoff close, its highest and lowest later marks (with dates) and the change of its mark to its
+       exit, or to the slice end while still open;
+     - its exit date, reason and raw price.
 
-**Amendment items:** the instrument (radii, seeds, fidelities), stresses, the parity set.
+     When no lot is open at the cutoff, the report says "none open".
+   - **Per-lot adverse excursion,** separately for training and for the next slice:
+     - the distribution over funded lots (count, median, p90, worst) of the **maximum adverse excursion**, which is the
+       lowest marked P&L of a lot during its life (realized fills plus the remainder, after costs and interest), in
+       dollars;
+     - the **adverse loss severity:** the worst realized lot net and the mean net of the losing lots.
+   - **D1 maximum-hold-window tail stress,** for each D1 book. Over a **declared reference history**, it reports the
+     loss of a $100,000 lot bought at each entry instant of the book (or at a declared proxy of it, for example every
+     session close) and held over the book's maximum-hold window (its configured calendar days, or its declared upper
+     bound when the hold is adaptive or disabled):
+     - the worst and p95 of those losses, with dates;
+     - for a book with a price stop before its maximum hold, the worst **gap through the stop** (open below the stop
+       level), because a stop does not bound a loss.
+
+     The reference history is preferably data disjoint from every window the search read (for example the same
+     symbol before 2016, or a declared peer). When no disjoint data exist, a declared proxy or stress path is used and
+     labelled "proxy" or "in-sample stress", never as evidence from unseen history.
+   - **Training neighbourhood on the next slice,** for each fold primary. Its own selection neighbourhood (the sealed
+     draws, regenerated with the study's code and seeds) is replayed over the next chronological slice, with the
+     slice DD reset at the cutoff close. The report gives:
+     - the share of draws above the ceiling, with its Wilson 95% interval;
+     - the median and worst slice DD.
+
+     It describes how the training-selected region behaved on the following slice. It is not evidence of prospective
+     robustness.
+
+   Rules for these items:
+   - **Report-only (§0.2).** None of them is a selection, ranking, stopping or qualification input, a fitness
+     adjustment or a numeric tolerance. This version attaches no threshold to any of them. A study that wants one as a
+     gate or objective term must declare it in its protocol before searching, as its own rule. That is a departure
+     needing the user's agreement (§7.3), or a later version of this standard.
+   - **Evidence limits.** The reports state them plainly:
+     - 2020, 2022 and 2025–2026 have been examined by many studies, so a retrospective stress over them is labelled
+       "retrospective, previously examined history", not a pristine holdout;
+     - the $35,000 ceiling is a research criterion on historical paths, not an enforceable future loss limit;
+     - a price stop does not cap a loss (gaps, halts);
+     - there is one market history, with few independent breaking events.
+   - **Cost.** The next-slice neighbourhood costs about 256 replays per fold (the walk-forward diagnostic's D7); the
+     other items come from replays the study already runs.
+
+**Amendment items:** the instrument (radii, seeds, fidelities), stresses, the parity set, the §5.9 reference history
+(from 2.2.0).
 
 ## 6. Memory, throughput and recoverability
 
@@ -560,6 +632,7 @@ threshold, and any change of the cap (with the user's approval).
 
 | Version | Effective | Change | Rationale and evidence | Implications |
 |---|---|---|---|---|
+| 2.2.0 | 2026-11-13 | **Minor** (§7.4: a new [S] item and a new [R] item; no [M] rule added, removed or changed; existing item numbers kept). Adds §1.8 [S] *Consequence*: before searching, the protocol states what a failed or uncomputable independent chronological verdict means for the final selection (default: "no chronological support: not a deployment-qualified candidate without an explicit user decision"). It is governance, not a fitness term, ranking input or gate. "No qualifying candidate" is a valid outcome. An informed lane's selection is labelled "no independent chronological test". Adds §5.9 [R] *Chronological exposure disclosure* for every fold primary and final candidate: the open-lot share of training net (denominator and ≤ 0 handling fixed), the largest open lot's market-value multiple and its give-back on the next slice, the per-lot MAE distribution and loss severity, a D1 maximum-hold-window tail stress on a declared reference history (disjoint data, or a labelled proxy), and the training neighbourhood replayed on the next slice; with the evidence limits stated. One-line pointers in §5.4 and the amendment items. The companions follow: the protocol template (§10, §15), the adoption template (`chronologicalConsequence`), the preflight (it requires `chronologicalConsequence` from optimization and continuation studies adopting 2.2.0 or later), the roadmap. | The user's approval in the Assignment 1 brief (`research/vg-l0-risk-controls-foundation/brief/BRIEF.md` §1: "the user has approved these diagnostic/governance safeguards"). Evidence: the walk-forward diagnostic (`research/vg-l0-walk-forward-diagnostic/REPORT.md` §3–§4, recommendations 1–4 and its "Proposed narrowly scoped amendment"): 4 of 4 anchor procedures and 6 earlier ones failed chronologically; carried open lots were 33–53% of the C21 training nets of 5B, B1 and B2, at 1.5–2.5× exposure (ρ +0.72 with the 2022–2023 DD); training neighbourhoods breached in 0–8% of draws against 54–100% on the next slice; D1 dip-buys had no loss exit before their maximum hold. | Applies to studies adopting it from 2026-11-13. Studies pinned to 2.1.0, 2.0.0, 1.1.0 or 1.0.0 keep their pin, labels and sealed verdicts (the preflight passes with a notice; a continuation records "retained pinned standard x.y.z" or migrates by amendment, §7.5). No gate, window, budget, instrument, objective weight or the $35,000 ceiling changes. No numeric threshold is attached to any §5.9 item. NL0 1.0.0 (`methods/NEW_L0_METHOD.md`) is unchanged: it records what was executed, before these items existed. The first adopter is `research/vg-l0-risk-controls-foundation/` (scope `diagnostic`). |
 | 2.1.0 | 2026-11-12 | **Minor** (§7.4: new [S] items; no [M] rule added, removed or changed). Adds §3.5 [S] *Convention changes* (A frozen incumbent / B direct conversion / C re-optimized selection, with the decomposition; the new convention an explicit option, the original the default) and §4.8 [S] *Reproducing a reference method* (pin, stage map, omitted-stage reassignment through the original schedules, proportional scaling by replicates, side-by-side budget equivalence against the effective original budget). Adds the companion directory `docs/research/methods/` with its registry and the first reference method, NL0 1.0.0 (`methods/NEW_L0_METHOD.md`). The preflight gains an optional check of a declared `referenceMethod` pin; the protocol template gains the matching rows. | The user's brief for the New L0 trading-session study (`research/vg-l0-session-hold/brief/BRIEF.md`, 2026-11-12, Phase 2: "Update the appropriate documentation … Where the original methodology contains reusable practices, incorporate them appropriately into the optimization documentation … Where something is specific to New L0, preserve it in a dedicated, versioned reference protocol"). Evidence: Priority 5B (`research/vg-lifecycle-matched-optimization/`), whose L0 arm produced New L0; its executed budget and stage allocation recovered in `methods/NEW_L0_METHOD.md` §4; Priorities 5A/5B's lifecycle-on-fixed-phenotype versus matched-optimization designs (the precedent for §3.5). | Applies to studies adopting it from 2026-11-12. Studies pinned to 2.0.0, 1.1.0 or 1.0.0 keep their pin (the preflight passes with a notice). No gate, window, budget, instrument or the $35,000 ceiling changes. The first adopter is `research/vg-l0-session-hold/` (scope `optimization`). |
 | 2.0.0 | 2026-11-09 | **Major** (§7.4: a mandatory rule added). Adds §7.7 [M] *Reporting format: no visuals*: research is reported in written analysis, Markdown tables and machine-readable results only; no charts, plots, SVGs, screenshots, images, dashboards, HTML visual reports, PDFs or other visual artifacts; earlier visuals are preserved; a brief that explicitly asks for a visual is a recorded departure. §0.1's sentence allowing backend-generated report charts is replaced by a pointer to §7.7. No other rule changes. The companions follow: the protocol template (§15), `CLAUDE.md` (the standing reporting preference) and the roadmap. | The user's explicit reporting preference for future work, recorded in the Priority 5A brief (`research/vg-growth-funding-lifecycle/brief/BRIEF.md` §1, 2026-11-09), authorized there without a further approval question. It reconciles the earlier permission (§0.1 of 1.0.0 and 1.1.0) and the charts produced by Priority 3A (`research/vg-d1-growth-diagnostic/results/charts/`, preserved). | Applies to studies adopting it from 2026-11-09. Studies pinned to 1.0.0 or 1.1.0 keep their pin (the preflight passes with a notice; a continuation records "retained pinned standard x.y.z" or migrates by amendment, §7.5); their existing charts stay as they are. No research-method rule, gate, window, budget or the $35,000 ceiling changes. The first adopter is `research/vg-growth-funding-lifecycle/` (scope `diagnostic`). |
 | 1.1.0 | 2026-11-09 | **Minor** (§7.4: new guidance and [S]/[R] items; no [M] rule added, removed or changed; existing item numbers kept). Adds: §0.3 tail-severity statistics (p95, the worst-10% mean DD), the three consideration fields and the participation stages; §2.8 [R] candidate consideration is not qualification; §2.9 [R] participation attribution; §4.7 [S] protected investigation of multi-component participation; §5.8 [R] tail severity beside frequency. The companions follow: the protocol template (§4, §6, §9, §15) and the roadmap's sequencing note. The preflight's checks are unchanged (these items are protocol and report content it cannot verify, §7.6); its tests now also cover a study that retains 1.0.0 under a current 1.1.0. | The user's agreed process decisions in the Priority 3A brief (`research/vg-d1-growth-diagnostic/brief/BRIEF.md` §7, 2026-11-09). Evidence: Priority 3 (`research/vg-d1-growth-joint/REPORT.md`): (1) the unchanged VG #2 + Growth #4 / 08500a60 + Appendix A combinations failed Q3 (p90 DD $36,277.63 / $35,131.47) yet are kept by the user as candidates to investigate → §2.8; (2) the frozen primary passed Q3 with rare but severe breaches (2.6%, worst $103,278.13) while those combinations failed it with more frequent, milder breaches (13.3% / 10.9%, mean excess ≈ $4,000) → §5.8; (3) searched Growth·GDX books were mostly unfunded, without a stage-by-stage explanation → §2.9, §4.7. | Applies to studies adopting it from 2026-11-09. It does not change any frozen study's rules or results: studies pinned to 1.0.0 keep their pin (the preflight passes with a notice; a continuation records "retained pinned standard 1.0.0" or migrates by amendment, §7.5). The $35,000 budget and every gate are unchanged; no numeric tolerance is introduced. The first adopter is `research/vg-d1-growth-diagnostic/` (scope `diagnostic`). |

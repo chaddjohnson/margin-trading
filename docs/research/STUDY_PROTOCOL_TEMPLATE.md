@@ -136,6 +136,13 @@ Consideration never relabels a gate, changes a sealed outcome, approves deployme
 - **Cutoffs and doors:** the fold selections are sealed and committed before their slices.
 - **Sequential policy and switch charges:** `<…>`.
 - **The frozen verdict rule:** `<…>`.
+- **The verdict's consequence** (standard §1.8, from 2.2.0; also `chronologicalConsequence` in the adoption manifest):
+  `<default: "no chronological support: the final selection is not a deployment-qualified candidate without an explicit
+  user decision" | an adaptation, justified>`. State also:
+  - the label of an informed lane's selection ("no independent chronological test");
+  - that "no qualifying candidate" is a valid outcome.
+
+  It is governance only: never a fitness term, a ranking input or a gate.
 
 ## 11. Validation plan (frozen before validation data open)
 
@@ -175,7 +182,19 @@ Consideration never relabels a gate, changes a sealed outcome, approves deployme
 - **Participation attribution** (standard §2.9) for any unfunded, token or rarely funded component: signals, filters
   and eligibility, real capital competition (named occupants), virtual-state waiting and search/promotion attrition,
   each separately; all opportunities and independent episodes; actual versus virtual time invested.
-- **Chronology:** fold and sequential results, including procedure failures.
+- **Chronology:** fold and sequential results, including procedure failures, and the precommitted consequence of the
+  verdict (standard §1.8).
+- **Chronological exposure disclosure** (standard §5.9, from 2.2.0; report-only, never a gate, ranking input or
+  tolerance). For each fold primary and final candidate:
+  - the open-lot share of training net at each cutoff (state the ≤ 0 handling);
+  - the largest open lot's market-value multiple and its give-back on the next slice;
+  - the per-lot MAE distribution and loss severity (training and next slice);
+  - the D1 maximum-hold-window tail stress on the declared reference history `<path, dates, disjoint | proxy |
+    in-sample stress>`;
+  - the training neighbourhood on the next slice (breach share with its Wilson interval, median and worst slice DD).
+
+  Also state the evidence limits: previously examined history, and the $35,000 ceiling as a research criterion rather
+  than a loss limit.
 - **Search:** coverage and attrition; the stopping condition.
 - **Compute and resources:** compute, and the observed memory and CPU use.
 - **Limitations:** uncertainty and limitations, including "historical compliance is not a guarantee".
