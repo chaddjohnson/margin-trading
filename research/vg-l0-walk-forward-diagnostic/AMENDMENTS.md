@@ -22,3 +22,17 @@ Append-only. Each entry: ID, UTC time, the change, why, which results existed, i
   change only allows the planned run to complete.
 - **Simulations so far (before the D7 sealed run):** primaries 58 + 71 dry and 71 sealed; session 21 dry and 21 sealed;
   D7 768 dry — 1,010 in all.
+
+## A2 — 2026-11-13T18:57:51Z — D9 market-regime description (data only, no simulation)
+
+- **Change.** Adds D9: a descriptive table of the VGT and GDX price regimes in each training window (2016–2019,
+  2016–2021, 2016–2023) and slice (2020–2021, 2022–2023, 2024), from the engine's own session closes of door D24
+  (Priority 3's `openPrefixDoor`; development data only): total return, maximum close-to-close drawdown with its peak,
+  trough and duration, the worst 15- and 30-calendar-day close-to-close declines (the exposure window of a D1 lot held to
+  its maximum hold), distinct peak-to-trough declines of 15% and 20%, and the share of sessions below the 200-session
+  simple moving average. Report-only; it chooses nothing and changes no criterion.
+- **Why.** Hypothesis H2 (regime sensitivity) needs an objective statement of what the training windows did and did not
+  contain; the sealed records describe strategies, not markets.
+- **Results existing at this time.** Sealed: protocol freeze, gates, D3/D4 replays (primaries, session), D5, D6, D7, D8.
+  Their outcomes were seen (the breaching episodes are 2020-02/03 and 2022). The regime metrics above were chosen as the
+  standard descriptive set for dip-buying exposure before computing them; no metric is added after seeing its value.
