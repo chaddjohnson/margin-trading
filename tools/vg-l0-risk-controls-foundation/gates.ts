@@ -226,14 +226,15 @@ const newl0 = async () => {
 
       if (selSha !== '0615262bec59bdde4871f907052e61a396c94b4722cda5733d9756257f614fb7') throw new Error('5B C24 selection pin');
 
+      // the member's CENTRE record (amendment A1: its stress records share the ledger signature by construction)
       const found: Record<string, unknown>[] = [];
-      const walk = (x: unknown) => {
-        if (Array.isArray(x)) x.forEach(walk);
+      const walk = (x: unknown, key = '') => {
+        if (Array.isArray(x)) x.forEach((v) => walk(v));
         else if (x && typeof x === 'object') {
           const o = x as Record<string, unknown>;
 
-          if (o.signature === c.refRec.signature && typeof o.net === 'number') found.push(o);
-          else Object.values(o).forEach(walk);
+          if (key === 'centre' && o.signature === c.refRec.signature && typeof o.net === 'number') found.push(o);
+          else for (const [k, v] of Object.entries(o)) walk(v, k);
         }
       };
 
@@ -392,7 +393,9 @@ const invariants = async () => {
     simulations += 1;
     for (const bk of a.books) {
       const pb = p.books.find((x) => x.book === bk.book)!;
-      const closedBy = (t: VBook['trades'][number]) => t.fills.length > 0 && t.fills.at(-1)!.s <= end21;
+      // fully closed by the D21 end (amendment A2: a Growth trade with a retention partial inside D21 and its final
+      // exit after it is still open on D21)
+      const closedBy = (t: VBook['trades'][number]) => !t.open && t.fills.length > 0 && t.fills.at(-1)!.s <= end21;
       const longClosed = bk.trades.filter(closedBy);
       const shortClosed = pb.trades.filter(closedBy);
 
@@ -499,7 +502,9 @@ const invariants = async () => {
     if (i % 20 === 19) console.log(`G5 ${i + 1}/${n} sims ${simulations} rss ${memory().rssMb} MB`);
   }
 
-  seal('gates/g5-invariants.json', { stage: 'G5', at: now(), head: head(), pairs: n, note: 'AD7: pass counts and output hashes only; no net, drawdown or P&L of a non-default control is recorded', checks, failures: fails, simulations, memory: memory(), rows }, 'G5');
+  const tag = process.argv.includes('--rerun') ? `-${process.argv[process.argv.indexOf('--rerun') + 1]}` : '';
+
+  seal(`gates/g5-invariants${tag}.json`, { stage: 'G5', at: now(), head: head(), pairs: n, note: 'AD7: pass counts and output hashes only; no net, drawdown or P&L of a non-default control is recorded', checks, failures: fails, simulations, memory: memory(), rows }, 'G5');
   if (fails.length) throw new Error(`G5: ${fails.length} failures, e.g. ${fails.slice(0, 5).join(' | ')}`);
 };
 
@@ -521,7 +526,9 @@ const frozen = () => {
     for (const l of lines) latest.set(l.file, l.sha256);
 
     const bad = [...latest].filter(([file, h]) => {
-      const p = path.isAbsolute(file) ? file : path.join(repoRoot, file.startsWith('research/') ? file : path.join('research', study, file));
+      // paths in seals.jsonl are repository-relative (research records and, for Priority 3, its sealed pilot caches under
+      // .cache/); amendment A3: never re-prefix them
+      const p = path.isAbsolute(file) ? file : fs.existsSync(path.join(repoRoot, file)) ? path.join(repoRoot, file) : path.join(repoRoot, 'research', study, file);
 
       return !fs.existsSync(p) || sha256File(p) !== h;
     });
@@ -531,7 +538,9 @@ const frozen = () => {
 
   const ok = results.every((r) => r.ok) && Object.values(seals).every((s) => s.bad.length === 0);
 
-  seal('gates/g7-frozen.json', { stage: 'G7', at: now(), head: head(), ok, preflight: results.map((r) => ({ study: r.study, ok: r.ok, version: r.version, notices: r.notices })), seals }, 'G7');
+  const tag = process.argv.includes('--rerun') ? `-${process.argv[process.argv.indexOf('--rerun') + 1]}` : '';
+
+  seal(`gates/g7-frozen${tag}.json`, { stage: 'G7', at: now(), head: head(), ok, preflight: results.map((r) => ({ study: r.study, ok: r.ok, version: r.version, notices: r.notices })), seals }, 'G7');
   if (!ok) throw new Error('G7 failed');
 };
 

@@ -2,19 +2,25 @@
 
 ## Top screen
 
-- **Updated (UTC):** 2026-11-13T23:04Z (from `date -u`).
-- **Status:** **INCOMPLETE** — standard 2.2.0 written and registered (sha256 `0085cff292161e15f59e122d45793200fee01c610306ed37a3a0fab195dd5e24`;
-  preflight 13/13 PASS, preflight tests 26/26); `SPECIFICATION.md` written before the code; `src/d1-risk-controls/`
-  implemented (config, exit, book, run) with 74 synthetic tests passing (config 9, exit 35, book 20, pool 10). Nothing
-  committed yet. Real-data gates not started.
-- **Brief:** `brief/BRIEF.md` sha256 `4a2e14f3f923196ab517810e34a74562f25b61b5c2b1a27efa01f2ecdab1c3a5` (225 newlines,
-  24,193 bytes, final section "Success criterion" present; copied unchanged from the user's upload).
-- **Branch:** `research/vg-l0-risk-controls-foundation` from `38222fb9` (tip of `research/vg-l0-walk-forward-diagnostic`),
-  main checkout (no extra worktree). Working tree was clean at the start.
-- **Running processes:** none started by this task. The Strategy Lab server (`server/main.ts`, PIDs 2277032/58/59) is the
-  user's live service: never touch it.
-- **Next step:** PROTOCOL.md + STANDARD_ADOPTION.json (2.2.0, scope diagnostic) → preflight → freeze record → commit;
-  then the real-data gates (tools/vg-l0-risk-controls-foundation/).
+- **Updated (UTC):** 2026-11-13T23:30Z (from `date -u`).
+- **Status:** **INCOMPLETE** — every gate passed and is sealed; documents written; remaining: final REPORT.md, the
+  docs-only integration into `main`, commits and pushes. No process is running.
+- **Commits:** `92f37734` (standard 2.2.0, module, protocol freeze); the gate-records commit follows this update.
+- **Sealed records** (`results/seals.jsonl`): protocol freeze `4e9409fe…`; G0 `2c9aa9f1…`; demonstrations `0d1e9c2a…`;
+  G1–G3 `b05b5c78…`; G4 (120/120); G5 first run (7 tool-error failures, kept) and G5 rerun `-a2` `f698f6be…` (0
+  failures); G7 first run (resolver error, kept) and G7 rerun `-a3` `4b710e9c…` (pass). Amendments A1–A4 (tool fixes
+  and post-freeze tests; no engine change).
+- **Tests:** module 81/81, preflight 26/26, full `npm test` 1,551 / 1,540 pass / 7 known failures / 4 skipped
+  (before A4's 7 tests), `tsc` 0 errors, `vg-lmo verify` 28, `vg-l0se verify` 90.
+- **Brief:** `brief/BRIEF.md` sha256 `4a2e14f3f923196ab517810e34a74562f25b61b5c2b1a27efa01f2ecdab1c3a5` (complete).
+- **Branch:** `research/vg-l0-risk-controls-foundation` from `38222fb9`, main checkout. Standard 2.2.0
+  `0085cff292161e15f59e122d45793200fee01c610306ed37a3a0fab195dd5e24`; adoption preflight PASS (scope diagnostic).
+- **Protocol:** `PROTOCOL.md` sha256 `d04ec35df8c868be185caa4f1011955f45c881d4e14ea7e4da3e9ce8275a05eb`, frozen.
+- **Next step:** REPORT.md; commit; push the branch (unsandboxed, retried); the docs-only commit on `main` (plumbing
+  with a temporary index, no checkout switch) if `origin/main` is still `2346a1b5`; push `main` (fast-forward only);
+  verify with `git ls-remote`; record the pushes here.
+- **Do not rerun:** S1, G0, G1–G3, G4, G5, G5-a2, G7, G7-a3, demonstrations (sealed; they refuse). Do not touch the
+  Strategy Lab server (PIDs 2277032/58/59).
 
 ## Environment
 

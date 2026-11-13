@@ -300,6 +300,39 @@ describe('precedence inside one session (SPECIFICATION.md §4.1)', () => {
   });
 });
 
+describe('shortened sessions and boundary timestamps', () => {
+  it('an early close (13:00): a buffered signal in its last minute is carried; a protective gap takes the next open', () => {
+    const ds = datasetOf([
+      sessionOf('2021-11-24', [{ o: 100, c: 100 }]),
+      // the day after Thanksgiving: last minute 12:59 New York (slot 209), its decision at the 13:00 close
+      sessionOf('2021-11-26', [{ o: 100.5, c: 100.5, slot: 0 }, { o: 99, c: 97, slot: 209 }], { early: true, closingPrint: 97 }),
+      sessionOf('2021-11-29', [{ o: 90, c: 91 }])
+    ]);
+    const m = new RiskExitManager(ds, exitParams({ maximumHoldDays: 1, intradayLossBuffer: 0.02 }), settings(), { protectiveLevel: 92, hold: { mode: 'legacy', days: 1 } });
+    const lot = lotAt(ds, 0, 100 * COST);
+
+    m.onEntry(lot, 0, 0, 100);
+    assert.equal(m.evaluate(lot, 1), undefined, 'no trade after the early close: the sale is carried');
+    assert.equal(m.pendingSignalTime, ds.sCloseTime[1], 'decided at the early close (13:00)');
+    m.afterSession(lot, 1);
+
+    const d = m.evaluate(lot, 2)!;
+
+    assert.deepEqual([d.reason, d.price, d.execution], ['protective stop gap', 90, 'opening trade']);
+  });
+
+  it('the same early-close session without the gap: the carried sale fills at the next opening trade', () => {
+    const ds = datasetOf([
+      sessionOf('2021-11-24', [{ o: 100, c: 100 }]),
+      sessionOf('2021-11-26', [{ o: 100.5, c: 100.5, slot: 0 }, { o: 99, c: 97, slot: 209 }], { early: true, closingPrint: 97 }),
+      sessionOf('2021-11-29', [{ o: 96, c: 95 }])
+    ]);
+    const x = drive(ds, new RiskExitManager(ds, exitParams({ maximumHoldDays: 1, intradayLossBuffer: 0.02 }), settings(), { protectiveLevel: 92, hold: { mode: 'legacy', days: 1 } }), 100);
+
+    assert.deepEqual([x.s, x.d?.reason, x.d?.price, x.d?.execution], [2, 'buffered intraday loss', 96, 'opening trade']);
+  });
+});
+
 describe('the adaptive (progress-extended) hold', () => {
   // entry at 100 raw on 2021-03-01 (Mon); base 3 days, extended 10, progress 5% → 105
   const adaptive = (extended = 10): ExitPolicy => ({
