@@ -3,6 +3,7 @@
 // logs are only read.
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { decode } from '../../src/growth140-vgt-s8m/store.ts';
 
@@ -35,10 +36,21 @@ export const readRecord = <T>(file: string): T => decode<T>(fs.readFileSync(file
 
 export const isSealed = (file: string) => fs.existsSync(file) && (fs.statSync(file).mode & 0o222) === 0;
 
-export const sealJson = (file: string, value: unknown, stage: string) => {
-  if (fs.existsSync(file)) throw new Error(`${rel(file)} exists: a sealed record is never rewritten`);
+// --dry: write the record to WFD_SCRATCH (default: the OS temp dir) instead, unsealed, for a check before sealing
+export const dry = process.argv.includes('--dry');
 
+export const sealJson = (file: string, value: unknown, stage: string) => {
   const text = `${JSON.stringify(encodeValue(value), null, 1)}\n`;
+
+  if (dry) {
+    const out = path.join(process.env.WFD_SCRATCH ?? os.tmpdir(), 'dry', rel(file));
+
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, text);
+    console.log(`dry run: ${out}`);
+    return sha256Text(text);
+  }
+  if (fs.existsSync(file)) throw new Error(`${rel(file)} exists: a sealed record is never rewritten`);
 
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(`${file}.tmp`, text);
