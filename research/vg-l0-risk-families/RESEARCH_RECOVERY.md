@@ -2,14 +2,19 @@
 
 ## Top screen
 
-- **Updated (UTC):** 2026-11-14T02:12Z (from `date -u`).
-- **Status:** **INCOMPLETE** — stage V sealed (0 failures); pilot, bench and calibration done; protocol about to be
-  frozen; the study chain (`chains/chain1.sh`) not yet launched.
+- **Updated (UTC):** 2026-11-14T02:16Z (from `date -u`).
+- **Status:** **INCOMPLETE** — protocol FROZEN (`results/protocol-freeze.json`, commit `77c569ca`); the study chain
+  `chains/chain1.sh` RUNNING as unit `vgl0rf-chain1` (started 2026-11-14T02:12:30Z), step c101 (C19 base search).
 - **Authority:** brief `brief/BRIEF.md` sha256 `aaf36fbc…89cac8`; protocol `PROTOCOL.md` sha256 `7e803dc4…66b9d9`
   (draft, pre-freeze; adoption manifest `7cb2f0e0…`); amendments `AMENDMENTS.md` `b4048975…` (R1); RC 2 specification
   `SPECIFICATION_RC2.md` `594ef146…`. Standard 2.2.0 (`0085cff2…`), NL0 1.0.0 (`9b387bb4…`).
-- **Running processes:** none.
-- **Next command (after the freeze commit):** launch the chain as its own unit (see "Commands" below).
+- **Running processes:** `vgl0rf-chain1.service` (bash chain1.sh, KillMode=process, log `results/logs/chain1.log`); it
+  launches each step as a sub-unit `vgl0rf-<C>-<step>` (logs `results/logs/vgl0rf-*.log`; job archives and
+  `progress.json` in `.cache/vg-l0-risk-families/jobs/<job>/`). Finished cleanly when the log ends with `CHAIN1 DONE`;
+  a failure prints `CHAIN FAILED at [<id>]`.
+- **Next action:** wait for the chain (≈ 30–40 h); meanwhile write the report-only diagnostics tooling in
+  `tools/vg-l0-risk-families/` (never a selection input). Resume after a failure: fix (amendment if code), then
+  relaunch the chain unit with the failed step id.
 
 ## Environment
 
@@ -30,8 +35,8 @@
 | Bench | `bench --door D24 --centres 392 --workers {10,12,14,16}` | `.cache/…/pilot/bench/` | 200–205/s flat; 12 workers chosen |
 | Pilot (straight + interruption) | `chains/pilot.sh` | `.cache/…/pilot/` | every stage OK; sigterm / worker kill / unit kill identical |
 | Calibration | `VGL0RF_PILOT_BUDGET=study`, P18 | `.cache/…/pilot/calib/` | ≈ 18k requested per broad lane (D19), 652 per member |
-| Protocol freeze | `npm run vg-l0rf -- freeze-protocol` | `results/protocol-freeze.json` | not yet |
-| Study chain | `chains/chain1.sh` (c101 … f04) | `results/search`, `results/folds`, `FROZEN_SELECTION.json`, `results/validation` | not started |
+| Protocol freeze | `npm run vg-l0rf -- freeze-protocol` | `results/protocol-freeze.json` | sealed 02:12:22Z, commit `77c569ca` (evaluation `6bc03fec…`, decision `3b9efbc7…`) |
+| Study chain | `chains/chain1.sh` (c101 … f04) | `results/search`, `results/folds`, `FROZEN_SELECTION.json`, `results/validation` | running since 02:12:30Z (unit `vgl0rf-chain1`) |
 
 ## Commands
 
