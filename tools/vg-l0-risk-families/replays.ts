@@ -145,6 +145,25 @@ export const variantsOf = (x: Cfg, nl0: Cfg) => {
       }
     }
   }
+  // per-control ablations (each book separately; the cell label is informational: RC 2 validates the controls)
+  for (const s of ['GDX', 'VGT'] as const) {
+    const c = x.controls?.books[`D1:${s}`];
+
+    if (!c) continue;
+
+    const withBook = (b: typeof c | undefined): Cfg => {
+      const books = { ...x.controls!.books };
+
+      if (b && Object.keys(b).length) books[`D1:${s}`] = b;
+      else delete books[`D1:${s}`];
+      return { cell: `${x.cell} (ablation)`, d1: x.d1, controls: Object.keys(books).length ? { version: x.controls!.version, books } : null };
+    };
+
+    if (c.protectiveStop?.mode === 'on' && c.hold?.mode !== 'disabled') out[`${s} without the protective stop`] = withBook({ ...c, protectiveStop: undefined });
+    if (c.hold && c.hold.mode !== 'legacy') out[`${s} legacy calendar hold instead of ${c.hold.mode}`] = withBook({ ...c, hold: undefined });
+    if (c.declineGate?.mode === 'on') out[`${s} without the decline gate`] = withBook({ ...c, declineGate: undefined });
+  }
+
   return out;
 };
 

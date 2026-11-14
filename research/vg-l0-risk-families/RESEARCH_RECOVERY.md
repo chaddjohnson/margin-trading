@@ -2,9 +2,11 @@
 
 ## Top screen
 
-- **Updated (UTC):** 2026-11-14T02:16Z (from `date -u`).
+- **Updated (UTC):** 2026-11-14T07:23Z (from `date -u`).
 - **Status:** **INCOMPLETE** — protocol FROZEN (`results/protocol-freeze.json`, commit `77c569ca`); the study chain
-  `chains/chain1.sh` RUNNING as unit `vgl0rf-chain1` (started 2026-11-14T02:12:30Z), step c101 (C19 base search).
+  `chains/chain1.sh` RUNNING as unit `vgl0rf-chain1` (started 2026-11-14T02:12:30Z). **C19 complete** (searches
+  `0eed6af7`; qualification, refinement plan (13 cells), refinement, selection `95b63dbc`; fold evaluation `52f4d42c`).
+  Now c201 (C21 base search, started 07:21:17Z).
 - **Authority:** brief `brief/BRIEF.md` sha256 `aaf36fbc…89cac8`; protocol `PROTOCOL.md` sha256 `7e803dc4…66b9d9`
   (draft, pre-freeze; adoption manifest `7cb2f0e0…`); amendments `AMENDMENTS.md` `b4048975…` (R1); RC 2 specification
   `SPECIFICATION_RC2.md` `594ef146…`. Standard 2.2.0 (`0085cff2…`), NL0 1.0.0 (`9b387bb4…`).
