@@ -147,8 +147,9 @@ export const freezeSelection = async (env: Env) => {
 
 // ----- validation (FULL, once) -----
 
-const fullRun = (door: Awaited<ReturnType<typeof openStudyDoor>>, cfg: Cfg, friction?: EvalOptions['friction']) => {
-  const o: EvalOptions = { ...vOptions, boundaries: [chronology.developmentEnd], ...(friction ? { friction } : {}) };
+// the boundary is the development end on FULL (the pilot's stand-in door D19 uses its pseudo-fold's cutoff)
+const fullRun = (door: Awaited<ReturnType<typeof openStudyDoor>>, cfg: Cfg, friction?: EvalOptions['friction'], boundary: string = chronology.developmentEnd) => {
+  const o: EvalOptions = { ...vOptions, boundaries: [boundary], ...(friction ? { friction } : {}) };
   const x = runWithControls2(door, quadOf(cfg), cfg.controls, o, false, false);
   const rec = recordOf(door, quadOf(cfg), x, o);
   const p = rec.periods[0]!;
@@ -179,7 +180,8 @@ export const runValidation = async (env: Env) => {
 
   const f = readJson<{ finalists: { label: string; cfg: Cfg }[]; newL0: { cfg: Cfg }; procedures: { population: PopulationName; selector: SelectorName; primary: string | null; status: string }[] }>(frozen);
   const door = env.schedule === 'study' ? await openStudyDoor('FULL', 'validation (once) of the frozen selection') : await openStudyDoor('D19', 'pilot validation stand-in');
-  const nl0 = fullRun(door, f.newL0.cfg);
+  const boundary = env.schedule === 'study' ? chronology.developmentEnd : '2018-12-31';
+  const nl0 = fullRun(door, f.newL0.cfg, undefined, boundary);
 
   if (env.schedule === 'study' && (r2(nl0.net) !== knownNewL0.full.net || r2(nl0.dd) !== knownNewL0.full.dd || nl0.lots !== knownNewL0.full.lots))
     throw new Error(`New L0 does not reproduce on FULL: ${JSON.stringify({ net: nl0.net, dd: nl0.dd, lots: nl0.lots })}`);
@@ -187,10 +189,10 @@ export const runValidation = async (env: Env) => {
   const rows = f.finalists.map((x) => ({
     label: x.label,
     cell: x.cfg.cell,
-    ...fullRun(door, x.cfg),
+    ...fullRun(door, x.cfg, undefined, boundary),
     stresses: Object.fromEntries(
       Object.entries(stresses).map(([k, fr]) => {
-        const s = fullRun(door, x.cfg, fr);
+        const s = fullRun(door, x.cfg, fr, boundary);
 
         return [k, { net: r2(s.net), dd: r2(s.dd), validationPnl: s.validationPnl, resetValidationDd: s.resetValidationDd }];
       })

@@ -253,6 +253,11 @@ extension cap reached (budget-bound, not converged); resource guard. **Budget ex
 | Refinement qualification (≤ 204 members) | — | members × 700 |
 | Fold evaluation (next-slice neighbourhoods) | — | 60,000 |
 
+**Measured before the freeze (pilot, cache only; timings and counts only):** the bench on D24 gave 200–205 evaluations/s,
+flat from 10 to 16 workers (6.5–10.2 GB); a study-fidelity calibration of 4 broad lanes on D19 requested 12,459–29,808
+evaluations per lane (mean ≈ 18,000; one lane ran 6 islands) at ≈ 447/s, and qualification 652 evaluations per member.
+Expected compute ≈ 30–40 hours in all (the doors' lengths scale the cost per evaluation).
+
 Four cutoffs: **1,605,632 base / 3,211,264 maximum broad proposals** and ≈ 264,000 / ≈ 473,000 refinement proposals;
 worst-case evaluation caps ≈ 48 M, expected ≈ 20–28 M (NL0's executed ≈ 15k requested per V lane). Against NL0's
 effective budget (5B's L0 arm: 8,192 independent base proposals per cutoff, 489,695 requested search evaluations in
@@ -397,13 +402,16 @@ The full `npm test` runs in a contained unit beside stage V (known pre-existing 
 ## 14. Resources, recoverability and integrity
 
 - Slice `vgl0rf.slice` (MemoryHigh 44G, MemoryMax 48G, MemorySwapMax 0) for every heavy unit (`npm run vg-l0rf --
-  launch`); child-process workers (count from the pilot bench, default 14), RC 2 D1-book cache 64 and Growth cache 48 per
+  launch`); **12** child-process workers (the bench's throughput was flat at 10–16; 12 leaves headroom for the
+coordinator and the host), RC 2 D1-book cache 64 and Growth cache 48 per
   worker, gc every 64 evaluations or above 256 MiB of ArrayBuffers, pressure stop at 36 GiB (checkpoint, exit 75). Every
   evaluation is archived per job (SQLite bound to the study, job, door pin and evaluation digest); a rerun of the same
   command replays the job exactly; extension decisions at barriers; no automatic restart. The pilot (P18 pseudo-fold on
   D19, 4 cells, pilot budgets, `pilot-` names, cache only) exercises every stage and a graceful stop, a worker SIGKILL and
   a unit SIGKILL with identical resumption, and the bench measures 10–16 workers; it reads only timings, memory and
-  plausibility shares.
+  plausibility shares. A cost-calibration pilot may run the study's per-lane schedule on the pilot cells
+  (`VGL0RF_PILOT_BUDGET=study`, pilot only). The chain is `chains/chain1.sh` (fail-fast; its own systemd unit; it
+  commits each sealed block).
 - `results/protocol-freeze.json` records the protocol, amendments, brief, adoption manifest, RC 2 specification and
   reference-method hashes, the evaluation digest, the decision digest (search, space, fitness, qualify, select,
   budgets, folds, final, stages, nl0), Priority 3's evaluation digest (= its sealed historical value), door pins, budgets

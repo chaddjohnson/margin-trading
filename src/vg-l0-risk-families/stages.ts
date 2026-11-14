@@ -162,7 +162,8 @@ export const runSearch = async (cutKey: string, part: Part, env: Env) => {
   if (part === 'pilot' && env.schedule !== 'pilot') throw new Error('the pilot part is for the pilot');
 
   const specs = part === 'refine' ? refineLanes(cut, env) : broadLanes(cut, part, env);
-  const budget = budgets[env.schedule][kind];
+  // the cost calibration pilot (engineering only) may run the study's per-lane schedule on its pilot cells
+  const budget = budgets[env.schedule === 'pilot' && process.env.VGL0RF_PILOT_BUDGET === 'study' ? 'study' : env.schedule][kind];
   const job = `${env.prefix}search-${cutKey}-${part}`;
   const laneFile = (k: string) => path.join(cacheRoot, 'jobs', job, 'lanes', `${k.replaceAll('/', '_')}.json`);
   const cap = env.schedule === 'study' ? specs.length * perLaneCap[kind] : undefined;
