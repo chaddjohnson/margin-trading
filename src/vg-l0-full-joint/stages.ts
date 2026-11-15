@@ -182,7 +182,10 @@ export const runSearch = async (cutKey: string, part: Part, env: Env) => {
   studyGuards(env);
   chronologyGuard(env, cutKey);
   if (fs.existsSync(file)) throw new Error(`${path.relative(repoRoot, file)} exists: that search is complete`);
-  if ((part === 'pilot' || part === 'pilot-informed') !== (env.schedule === 'pilot')) throw new Error('pilot parts are for the pilot, study parts for the study');
+  const pilotOnly = part === 'pilot' || part === 'pilot-informed';
+
+  if (pilotOnly && env.schedule !== 'pilot') throw new Error('pilot parts are for the pilot');
+  if (env.schedule === 'pilot' && !pilotOnly && part !== 'refine') throw new Error('the pilot runs the pilot parts and refine only');
   if (kind === 'informed' && !finalCutoff(cutKey)) throw new Error('Track N runs at C24 only (the pilot at P18)');
 
   const specs = part === 'refine' ? refineLanes(cut, env) : kind === 'informed' ? informedLanes(cut, part, env) : broadLanes(cut, part, env);
