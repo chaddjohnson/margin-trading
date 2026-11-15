@@ -332,7 +332,22 @@ is made beyond the units that match.
 
 ### 8.4 Measured before the freeze (pilot, cache only; timings and counts only)
 
-(filled in from the bench and the calibration before the freeze; recorded in `AMENDMENTS.md` R-entries)
+- **Bench** (D24; a rung-1 mix of 256 quasi-random full joint centres over all 64 cells × their 16 neighbours, after a
+  warm-up): 96.7 / 97.6 / 98.8 / 99.0 evaluations/s at 10 / 12 / 14 / 16 workers (flat: the 8 physical cores saturate),
+  peak cgroup 6.5–10.2 GiB; 2% of random centres plausible. **12 workers** (Assignment 2's choice; headroom for the
+  coordinator and the host), Growth cache 48 and RC 2 D1 cache 64 per worker, gc every 64 evaluations or above 256 MiB
+  of ArrayBuffers.
+- **Calibration** (D19, the study's per-lane schedules on the pilot's 4 cells and 2 family pairs, 1 replicate;
+  `VGL0FJ_PILOT_BUDGET=study`): broad lanes 15,344 / 15,493 / 17,896 / 26,822 requested evaluations (mean **18,889**;
+  3, 3, 4 and 6 islands; ≈ 191 fresh/s on D19); refinement lanes 36,510–48,906 (mean **42,546**; 3 seeds each, 4–5
+  islands); informed lanes 54,471 / 74,701 (mean **64,586**; 656 designs; 5 and 8 islands); qualification ≈ 653
+  evaluations per member. A broad lane's fresh simulations: screen 2.7%, rung 1 75.2%, rung 2 4.1%, rung 3 4.8%,
+  refinement 13.2% (NL0 executed: ≈ 4%, 66–75%, ≈ 5%, ≈ 6–7%, 15–19%).
+- **R_N (§8.3):** Track I's expected C24 search = 128 × 18,889 + 34 × 42,546 = 3,864,356 requested evaluations; one Track
+  N replicate = 16 × 64,586 = 1,033,376 → **R_N = 4** (4,133,504 ≥ 3,864,356): 64 informed lanes.
+- **Per-lane caps (worst case):** PLC_broad **41,000**, PLC_refine **110,000**, PLC_informed **114,000**.
+- **Expected compute:** ≈ 21 M requested evaluations (each cutoff ≈ 3.9 M search + ≈ 0.4 M qualification; Track N
+  ≈ 4.1 M + ≈ 0.25 M) and ≈ 50 hours (D19 ≈ 190/s … D24 ≈ 97/s); worst case ≈ 46 M (the job caps).
 
 Against NL0's effective budget (5B's L0 arm: 8,192 independent base proposals per cutoff, 489,695 requested search
 evaluations in all) the Track I broad stage is 16× its independent base per cutoff; against Priority 3B (131,072

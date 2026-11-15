@@ -20,3 +20,15 @@ Append-only. Each entry: ID, UTC time, the change, why, which results existed, a
   engine's logged state, rarely its trades). The third dry run (12:36Z) passed: 0 failed of 18,087.
 - **Results existing.** Only the three stage-V dry runs (pass/fail counts), the diagnostic counts and the unit tests. No
   search, no pilot, no searched configuration's performance. No box, rule, threshold or budget changed.
+
+## R2 — 2026-11-15T13:26Z — the pilot's measurements, R_N and one guard fix (before the freeze)
+
+- **Changes.** (1) `PROTOCOL.md` §8.4: the bench, the calibration, R_N = 4 by the precommitted rule of §8.3, the per-lane
+  caps and the expected compute. (2) `stages.ts`: the pilot's first run stopped at its refinement step because a guard
+  treated `refine` (shared by the pilot and the study) as a study-only part; the guard now refuses only a pilot-only part
+  outside the pilot and a study-only part inside it (no study path changed). No box, rule, threshold, quota, cell or
+  budget formula changed; R_N = 4 is the value the draft's code already held.
+- **Results existing.** Stage V (sealed, 0 failed of 18,091), the full `npm test` (1,654 tests, the 7 known failures), the
+  bench, the straight pilot, the interruption tests and the calibration (pilot outputs in the cache; only timings,
+  counts, stops, memory and pass/fail were read). No study search has run. The evaluation digest is unchanged since
+  stage V (`2aeeee42…`).
