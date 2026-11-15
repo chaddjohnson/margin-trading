@@ -149,6 +149,124 @@ const briefHead = ['Row', 'Cell', 'Centre net', 'Centre DD', 'Sel. robust', 'Sel
   }
 }
 
+// ----- finalists (report-only replays) -----
+{
+  type B = { net: number; dd: number; lots: number; periods: { after: number; dd: number }[] };
+  const fin = diag<{ rows: { label: string; why: string[]; cell: string; development: Record<string, B>; full: Record<string, B> | string; nextSlice2025: { sliceNet: number; sliceDd: number; giveBack: Record<string, unknown> | null; nextSlice: Record<string, unknown> } | null; trainingNeighbourhoodOn2025: { breachShare: number; wilson95: number[]; medianSliceDd: number; worstSliceDd: number; trainingBreachShare: number } | null; episodes: Record<string, { dd: number; losingD1Entries: number; exitReasons: Record<string, number> }>; gapsThroughStop: { development: Record<string, unknown>[]; full: Record<string, unknown>[] | null } }[] }>('finalists');
+
+  if (fin) {
+    const parts: string[] = ['# C24 finalists (report-only replays; development = D24, FULL = 2016-01-04 → 2026-10-30, examined history)'];
+    const full = (r: (typeof fin.rows)[number]) => (typeof r.full === 'string' ? null : r.full);
+
+    parts.push(
+      table(
+        ['Finalist', 'Cell', 'Dev net', 'Dev DD', 'Full net', 'Full DD', '2025–26 P&L', '2025–26 reset DD', 'Carried lot at 2024-12-31 → change', 'C24 nbhd on 2025–26: breach share (training)'],
+        fin.rows.map((r) => {
+          const f = full(r)?.finalist;
+          const gb = r.nextSlice2025?.giveBack as { book: string; markAtCutoff: number; changeFromCutoff: number } | null | undefined;
+          const nb = r.trainingNeighbourhoodOn2025;
+
+          return [r.label.replace('C24/', ''), `\`${r.cell}\``, usd(r.development.finalist?.net), usd(r.development.finalist?.dd), usd(f?.net), usd(f?.dd), usd(f?.periods[0]?.after), usd(f?.periods[0]?.dd), gb ? `${gb.book} ${usd(gb.markAtCutoff)} → ${usd(gb.changeFromCutoff)}` : 'none open', nb ? `${pct(nb.breachShare)} [${nb.wilson95.map((x) => pct(x)).join(', ')}] (${pct(nb.trainingBreachShare)})` : '—'];
+        })
+      )
+    );
+
+    const mech = (door: 'development' | 'full') =>
+      table(
+        ['Finalist', 'Finalist', 'Its D1 under legacy mechanics', 'New L0 D1 under its mechanics', 'New L0', 'Parameter effect (legacy-mech − New L0)', 'Mechanics effect on its D1', 'Mechanics effect on New L0 D1'],
+        fin.rows
+          .filter((r) => r.label !== 'control: New L0')
+          .map((r) => {
+            const v = door === 'development' ? r.development : full(r);
+
+            if (!v) return [r.label, '—', '—', '—', '—', '—', '—', '—'];
+
+            const x = v.finalist!.net;
+            const lm = v['finalist D1 under legacy mechanics']!.net;
+            const nm = v['New L0 D1 under the finalist mechanics']!.net;
+            const n = v['New L0']!.net;
+
+            return [r.label.replace('C24/', ''), usd(x), usd(lm), usd(nm), usd(n), usd(lm - n), usd(x - lm), usd(nm - n)];
+          })
+      );
+
+    parts.push(`## Mechanics versus parameters — development (2016–2024)\n\n${mech('development')}`);
+    parts.push(`## Mechanics versus parameters — FULL\n\n${mech('full')}`);
+
+    const toggles = fin.rows.flatMap((r) =>
+      Object.entries(r.development)
+        .filter(([k]) => !['finalist', 'finalist D1 under legacy mechanics', 'New L0 D1 under the finalist mechanics', 'New L0'].includes(k))
+        .map(([k, v]) => [r.label.replace('C24/', ''), k, usd(v.net - r.development.finalist!.net), usd(v.dd - r.development.finalist!.dd), full(r)?.[k] ? usd(full(r)![k]!.net - full(r)!.finalist!.net) : '—', full(r)?.[k] ? usd(full(r)![k]!.dd - full(r)!.finalist!.dd) : '—'])
+    );
+
+    parts.push(`## Activation flips, K ± 1 and per-control ablations (Δ against the finalist)\n\n${table(['Finalist', 'Variant', 'Δ dev net', 'Δ dev DD', 'Δ full net', 'Δ full DD'], toggles)}`);
+    parts.push(
+      `## Episodes (development door)\n\n${table(
+        ['Finalist', '2020 crash DD', '2020 losing D1 entries', '2022 bear DD', '2022 losing D1 entries', '2022 exits'],
+        fin.rows.map((r) => [r.label.replace('C24/', ''), usd(r.episodes['crash 2020']?.dd), num(r.episodes['crash 2020']?.losingD1Entries), usd(r.episodes['bear 2022']?.dd), num(r.episodes['bear 2022']?.losingD1Entries), Object.entries(r.episodes['bear 2022']?.exitReasons ?? {}).map(([k, v]) => `${k} ${v}`).join('; ')])
+      )}`
+    );
+
+    const gaps = fin.rows.flatMap((r) => (r.gapsThroughStop.full ?? []).map((g) => [r.label.replace('C24/', ''), String(g.book), String(g.entry), String(g.exit), `${g.stopDistancePct}%`, `${g.realizedPct}%`, `${g.beyondStopPct}`, usd(g.net)]));
+
+    parts.push(`## Protective exits filled below their level (gap or minute open through the stop), FULL\n\n${gaps.length ? table(['Finalist', 'Book', 'Entry', 'Exit', 'Stop distance', 'Realized move', 'Points beyond the stop', 'Lot net'], gaps) : 'none'}`);
+    write('finalists.md', `${parts.join('\n\n')}\n`);
+  }
+}
+
+// ----- tail stress and fold-primary episodes -----
+{
+  const tail = diag<{ labels: Record<string, string>; rows: { label: string; cell: string; books: Record<string, { holdDays: number; holdBasis: string; stopDistancePct: number | null; inSample: { unprotected: Record<string, unknown>; protected: Record<string, unknown> | null }; proxy: { symbol: string; unprotected: Record<string, unknown>; protected: Record<string, unknown> | null }; syntheticGaps: Record<string, unknown> }> }[] }>('tail-stress');
+
+  if (tail) {
+    const rows = tail.rows.flatMap((r) =>
+      Object.entries(r.books).map(([b, x]) => [
+        r.label.replace('C24/', ''),
+        b,
+        `${x.holdDays} (${x.holdBasis.split(':')[0]})`,
+        x.stopDistancePct === null ? 'none' : `${x.stopDistancePct}%`,
+        `${usd(x.inSample.unprotected.worstLoss)} (${x.inSample.unprotected.worstEntry})`,
+        usd(x.inSample.unprotected.p95Loss),
+        x.inSample.protected ? usd(x.inSample.protected.worstLoss) : '—',
+        x.inSample.protected ? String((x.inSample.protected.worstGapThroughStopPct as { beyondStopPct: number })?.beyondStopPct ?? '—') : '—',
+        `${x.proxy.symbol}: ${usd(x.proxy.unprotected.worstLoss)}${x.proxy.protected ? ` / ${usd(x.proxy.protected.worstLoss)}` : ''}`,
+        Object.entries(x.syntheticGaps).map(([k, v]) => `${k} ${typeof v === 'number' ? usd(v) : 'no stop'}`).join('; ')
+      ])
+    );
+
+    write(
+      'tail-stress.md',
+      `# D1 hold-window tail stress (${Object.values(tail.labels).join('; ')})\n\nA $100,000 lot bought at each session close and held over the book's window; worst and p95 losses after costs and 11% interest.\n\n${table(['Row', 'Book', 'Window (days)', 'Stop', 'In-sample worst (entry)', 'In-sample p95', 'With the stop: worst', 'Worst points beyond the stop', 'Proxy worst: unprotected / protected', 'Synthetic opening gaps: lot net'], rows)}\n`
+    );
+  }
+
+  const fp = diag<{ rows: { cutoff: string; label: string; procedures: string[]; cell: string; slice: { after: number; dd: number }; episodes: Record<string, { dd: number; losingD1Entries: number; byBook: Record<string, { lots: number; net: number; losing: number }>; exitReasons: Record<string, number> }>; gapsThroughStop: Record<string, unknown>[] }[] }>('fold-primaries');
+
+  if (fp)
+    write(
+      'fold-primaries.md',
+      `# Fold primaries: the 2020 and 2022 episodes inside their slices (report-only)\n\n${table(
+        ['Fold', 'Primary of', 'Cell', 'Slice net / DD', 'Episode', 'Episode DD', 'Losing D1 entries', 'Lots by book (net)', 'Exit reasons', 'Gaps through a stop'],
+        fp.rows.flatMap((r) => {
+          const eps = Object.entries(r.episodes);
+
+          return (eps.length ? eps : [['—', null] as const]).map(([k, e]) => [
+            r.cutoff,
+            r.procedures.join(', '),
+            `\`${r.cell}\``,
+            `${usd(r.slice.after)} / ${usd(r.slice.dd)}`,
+            String(k),
+            e ? usd(e.dd) : '—',
+            e ? num(e.losingD1Entries) : '—',
+            e ? Object.entries(e.byBook).map(([b, x]) => `${b} ${x.lots} (${usd(x.net)})`).join('; ') : '—',
+            e ? Object.entries(e.exitReasons).map(([a, n]) => `${a} ${n}`).join('; ') : '—',
+            r.gapsThroughStop.map((g) => `${g.book} ${g.exit} +${g.beyondStopPct} pts`).join('; ') || 'none'
+          ]);
+        })
+      )}\n`
+    );
+}
+
 fs.mkdirSync(out, { recursive: true });
 for (const [name, text] of Object.entries(files)) fs.writeFileSync(path.join(out, name), text);
 fs.writeFileSync(
