@@ -2,72 +2,60 @@
 
 ## Top screen
 
-- **Updated (UTC):** 2026-11-14T23:33Z (from `date -u`).
-- **Status:** **INCOMPLETE** — protocol FROZEN (`results/protocol-freeze.json`, commit `77c569ca`); the study chain
-  `chains/chain1.sh` RUNNING as unit `vgl0rf-chain1` (started 2026-11-14T02:12:30Z). **C19 complete** (searches
-  `0eed6af7`; qualification, refinement plan (13 cells), refinement, selection `95b63dbc`; fold evaluation `52f4d42c`).
-  **C21 complete** (searches `14c7ec66`; selection `5ef43fe1`; fold evaluation `fc2aa9b4`). **C23 complete** (searches
-  `eb8293bd`; selection `b0e14f65`; fold `e6b9e22a`); **sequential verdicts sealed** `3cf237b6` (all 9 procedures
-  unsupported; F/RA1 best: +$100,002.36, DD $39,855.06 from the 2020 crash). Now c401 (C24 base, started 23:30:09Z).
-- **Authority:** brief `brief/BRIEF.md` sha256 `aaf36fbc…89cac8`; protocol `PROTOCOL.md` sha256 `7e803dc4…66b9d9`
-  (draft, pre-freeze; adoption manifest `7cb2f0e0…`); amendments `AMENDMENTS.md` `b4048975…` (R1); RC 2 specification
-  `SPECIFICATION_RC2.md` `594ef146…`. Standard 2.2.0 (`0085cff2…`), NL0 1.0.0 (`9b387bb4…`).
-- **Running processes:** `vgl0rf-chain1.service` (bash chain1.sh, KillMode=process, log `results/logs/chain1.log`); it
-  launches each step as a sub-unit `vgl0rf-<C>-<step>` (logs `results/logs/vgl0rf-*.log`; job archives and
-  `progress.json` in `.cache/vg-l0-risk-families/jobs/<job>/`). Finished cleanly when the log ends with `CHAIN1 DONE`;
-  a failure prints `CHAIN FAILED at [<id>]`.
-- **Next action:** wait for the chain (≈ 30–40 h); meanwhile write the report-only diagnostics tooling in
-  `tools/vg-l0-risk-families/` (never a selection input). Resume after a failure: fix (amendment if code), then
-  relaunch the chain unit with the failed step id.
+- **Updated (UTC):** 2026-11-15T09:20Z (from `date -u`).
+- **Status:** **COMPLETE.** RC 2 implemented and verified; the frozen study chain ran end to end (C19 → C21 → C23 →
+  sequential → C24 → frozen selection → FULL validation once); report-only diagnostics sealed; `REPORT.md` and
+  `ASSIGNMENT3_HANDOFF.md` written. **Outcome: no qualifying successor** (all 9 procedures chronologically
+  unsupported); New L0 reproduced exactly and remains the reference.
+- **Follow-up gate (the user's):** review `REPORT.md` and `ASSIGNMENT3_HANDOFF.md` §6 (the Assignment 3 design, the
+  primary selection rule, a pre-2016 data decision, a prospective shadow comparison, review of the RC 1/RC 2 modules for
+  merging). Assignment 3 does not start automatically; nothing is merged into `main`.
+- **Authority:** brief `brief/BRIEF.md` `aaf36fbc…`; protocol `PROTOCOL.md` `7e803dc4…` frozen by
+  `results/protocol-freeze.json` (`3e4c005d…`, commit `77c569ca`); amendments: R1 only (before the freeze), no
+  post-freeze amendment; standard 2.2.0 (`0085cff2…`), NL0 1.0.0 (`9b387bb4…`).
+- **Running processes:** none (`vgl0rf-chain1` and every `vgl0rf-*` unit finished and were collected).
 
 ## Environment
 
-- Main checkout `/home/chad/projects/margin-trading` (no extra worktree), branch `research/vg-l0-risk-families` from
-  `26014af1` (= `origin/research/vg-l0-risk-controls-foundation`); `main` = `origin/main` = `108c241b`.
-- Commits so far: `3771c28b` (RC 2 + spec + tests), `bbe5c2aa` (protocol draft, adoption, pipeline, unit tests).
-- Node v24.21.0; slice `vgl0rf.slice` (MemoryHigh 44G, MemoryMax 48G, swap 0); 12 workers.
-- Evaluation digest `6bc03fecd92a732b139f52b6755aa8eb2e21f17e47fd4fdb9132782a672f212d` (= stage V's); Priority 3's
-  `147cad7c…` (= sealed historical).
+- Main checkout `/home/chad/projects/margin-trading`, branch `research/vg-l0-risk-families` from `26014af1`; no extra
+  worktree. `main` = `108c241b`, untouched. Node v24.21.0; `vgl0rf.slice` (44G/48G/0); 12 workers; peak 19.7 GiB.
+- Evaluation digest `6bc03fec…` and decision digest `3b9efbc7…` unchanged from the freeze through the validation;
+  Priority 3 `147cad7c…` (= its sealed historical value).
 
-## Stages
+## Stages (all complete; 47 sealed records verify: `npm run vg-l0rf -- verify`)
 
-| Stage | Command (repo root) | Output | sha256 / result |
-|---|---|---|---|
-| RC 2 module + tests | `node … --test src/d1-risk-controls-rc2/tests/*.test.ts` | — | 35/35 (116 with RC 1) |
-| Stage V (sealed) | `npm run vg-l0rf -- launch --unit vgl0rf-parity --wait -- parity` | `results/parity/parity.json` | `dbedfa49…de08a`; 0 failed of 25,933 checks; 907 simulations |
-| Full npm test | unit `vgl0rf-npm-test` | `results/logs/npm-test.log` | 1,610 tests: 1,599 pass, 7 known pre-existing failures, 4 skipped |
-| Bench | `bench --door D24 --centres 392 --workers {10,12,14,16}` | `.cache/…/pilot/bench/` | 200–205/s flat; 12 workers chosen |
-| Pilot (straight + interruption) | `chains/pilot.sh` | `.cache/…/pilot/` | every stage OK; sigterm / worker kill / unit kill identical |
-| Calibration | `VGL0RF_PILOT_BUDGET=study`, P18 | `.cache/…/pilot/calib/` | ≈ 18k requested per broad lane (D19), 652 per member |
-| Protocol freeze | `npm run vg-l0rf -- freeze-protocol` | `results/protocol-freeze.json` | sealed 02:12:22Z, commit `77c569ca` (evaluation `6bc03fec…`, decision `3b9efbc7…`) |
-| Study chain | `chains/chain1.sh` (c101 … f04) | `results/search`, `results/folds`, `FROZEN_SELECTION.json`, `results/validation` | running since 02:12:30Z (unit `vgl0rf-chain1`) |
+| Stage | Commit | Key record (sha256 prefix) |
+|---|---|---|
+| RC 2 + tests | `3771c28b` | 35/35 tests |
+| Protocol draft, pipeline | `bbe5c2aa` | — |
+| Stage V | `90d32176` | `results/parity/parity.json` `dbedfa49…` (0 failed of 25,933) |
+| Freeze | `77c569ca` | `results/protocol-freeze.json` `3e4c005d…` |
+| C19 searches / selection / fold | `0eed6af7` / `95b63dbc` / `52f4d42c` | `results/folds/C19/` |
+| C21 | `14c7ec66` / `5ef43fe1` / `fc2aa9b4` | `results/folds/C21/` |
+| C23 | `eb8293bd` / `b0e14f65` / `e6b9e22a` | `results/folds/C23/` |
+| Sequential verdicts | `3cf237b6` | `results/folds/sequential.json` `6bd3e338…` |
+| C24 searches / selection | `09d7b443` / `41d05abd` | `results/folds/C24/` |
+| Frozen selection | `2920a64f` | `FROZEN_SELECTION.json` `4174ae53…` |
+| Validation (FULL, once) | `17938e89` | `results/validation/validation.json` `730dc780…` |
+| Report-only diagnostics, tables, report, handoff | `5d193d2f` | `results/diagnostics/*.json` (7 sealed), `results/tables/*.md` |
 
-## Commands
-
-```
-R=/home/chad/projects/margin-trading
-systemd-run --user --unit=vgl0rf-chain1 --collect -p KillMode=process -E PATH="$PATH" -E HOME="$HOME" \
-  -p StandardOutput=append:$R/research/vg-l0-risk-families/results/logs/chain1.log \
-  -p StandardError=append:$R/research/vg-l0-risk-families/results/logs/chain1.log \
-  --working-directory=$R /bin/bash $R/research/vg-l0-risk-families/chains/chain1.sh [STEP]
-```
-
-Resume with the failed or next step id (c101 … c414, f01 … f04); sealed stages refuse to rerun; an interrupted search
-or qualification resumes exactly from its archive (`.cache/vg-l0-risk-families/jobs/<job>/archive.sqlite`). Check a
-running unit: `systemctl --user status vgl0rf-chain1`, the step units `vgl0rf-<cutoff>-…`, and `results/logs/*.log`,
-`.cache/vg-l0-risk-families/jobs/<job>/progress.json`.
+Compute: 34.21 M fresh pooled simulations (30.75 M search, 3.46 M qualification, 3,584 next-slice replays), plus stage
+V (907) and the pilot and bench (cache only); chain wall time 30.95 h (2026-11-14T02:12:30Z → 2026-11-15T09:09:33Z).
 
 ## Guards
 
-- Do not edit `chains/chain1.sh` while it runs (copy it); do not commit manually while a chain commit may run.
-- No FULL opening except stage V's New L0 legacy reproduction (AD3) until `FROZEN_SELECTION.json` is sealed and
-  committed. Do not rerun sealed stages. Do not change `src/vg-l0-risk-families/` decision or evaluation code after the
-  freeze without an amendment and an acknowledged digest.
+- Every stage is sealed; do not rerun (they refuse). FULL was opened for the validation once; it is not reopened for
+  this study's selections. The standard, NL0, RC 1 and earlier studies are untouched.
 
-## Disclosures so far
+## Disclosures
 
-- 24 single-process RC 2 timing evaluations on D24 before the protocol (timing only, door log 01:27Z).
-- The pilot validation stand-in boundary bug (pilot-only path) fixed before the freeze (R1).
-- V4 re-derives entry-day exits with the same `entryDayTrigger` function on the raw bars plus independent invariants;
-  the function itself is verified by synthetic tests. Real-data V4: 86 entry-day exits, all later-minute lows; the
-  fill-minute and minute-open cases occur only in the synthetic tests.
+- 24 single-process timing evaluations before the protocol (timing only); a pilot-only boundary fix before the freeze
+  (R1); V4's re-derivation reuses `entryDayTrigger` (verified separately by synthetic tests).
+- The resource guard bound 117–155 lanes per cutoff from C21 on (budget-bound, not converged).
+- The C23 slice carried no D1 trade for any fold primary.
+- Report-only diagnostics ran after the validation, as precommitted.
+
+## Delivery
+
+- Branch `research/vg-l0-risk-families` pushed to `origin` (verified with `git ls-remote`; the push record follows as
+  its own commit).
