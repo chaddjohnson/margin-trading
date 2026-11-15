@@ -2,9 +2,10 @@
 
 ## Top screen
 
-- **Updated (UTC):** 2026-11-15T13:38Z (from `date -u`).
+- **Updated (UTC):** 2026-11-15T18:46Z (from `date -u`).
 - **Status:** **INCOMPLETE.** Stage: **the study chain is running** (`chains/chain1.sh` as unit `vgl0fj-chain1`, started
-  2026-11-15T13:27:08Z at step `c101` = C19 Track I `broad1`). Protocol FROZEN; stage V sealed (0 failed).
+  2026-11-15T13:27:08Z). **C19 complete** (selection committed `cdd37dc2`, fold evaluation `3d489a73`, 13:27Z → 18:44Z);
+  C21 Track I `broad1` (step `c201`) started 18:44:15Z. Protocol FROZEN; stage V sealed (0 failed).
 - **Authority:** brief `brief/BRIEF.md` `5620330a…`; protocol `PROTOCOL.md` **`ec9de0d623e3…`** frozen by
   `results/protocol-freeze.json` (`869ae1a7e68052e0fc210230a51d1400a8838ac0913131d36cf93137af97b739`, commit `2a56e9b6`,
   2026-11-15T13:26:59Z); amendments R1, R2 (both before the freeze), no post-freeze amendment; standard 2.2.0
@@ -41,9 +42,10 @@
 | Full `npm test` | complete | `results/logs/npm-test.log` | 1,654 tests, 1,643 pass, the 7 known failures, 4 skipped |
 | Bench, pilot, interruption tests, calibration | complete | cache `.cache/vg-l0-full-joint/pilot/` | 97–99 evals/s flat 10–16 workers; resumptions identical; R_N = 4 |
 | Freeze | complete, sealed | `results/protocol-freeze.json` `869ae1a7…` | commit `2a56e9b6` |
-| C19 Track I broad1 / broad2 | **running** (c101) | `results/search/C19/broad{1,2}.json` | job archives `.cache/vg-l0-full-joint/jobs/search-C19-broad*/` |
-| C19 qualify / plan / refine / qualify / select / fold | not started | `results/folds/C19/` | the selection is committed before D21 opens |
-| C21, C23 (same order), sequential | not started | `results/folds/C2x/`, `results/folds/sequential.json` | |
+| C19 Track I broad1 / broad2 | complete, sealed | `results/search/C19/broad{1,2}.json` | broad1 98 min, 1.24 M fresh, 0 resource-guard stops, 14 lanes at the 6-island cap |
+| C19 qualify / plan / refine / qualify / select / fold | complete, sealed, committed | `results/folds/C19/` | refine plan 13 cells; selection `cdd37dc2` before D21 opened; fold `3d489a73` |
+| C21 | **running** (c201 broad1) | `results/search/C21/`, `results/folds/C21/` | |
+| C23, sequential | not started | `results/folds/C23/`, `results/folds/sequential.json` | |
 | C24 Track I, Track N (informed1/2, 64 lanes), qualify, select | not started | `results/search/C24/`, `results/folds/C24/` | |
 | Frozen selection, validation (FULL once) | not started | `FROZEN_SELECTION.json`, `results/validation/validation.json` | |
 | Report-only diagnostics, tables, REPORT | not started | `results/diagnostics/`, `results/tables/` | tooling in `tools/vg-l0-full-joint/` |
