@@ -57,5 +57,7 @@ V (907) and the pilot and bench (cache only); chain wall time 30.95 h (2026-11-1
 
 ## Delivery
 
-- Branch `research/vg-l0-risk-families` pushed to `origin` (verified with `git ls-remote`; the push record follows as
-  its own commit).
+- `git push origin research/vg-l0-risk-families` (fast-forward `6d8efc47..104774e4`, no force; outside the sandbox).
+  `git ls-remote` at 2026-11-15T09:19:03Z: `refs/heads/research/vg-l0-risk-families` =
+  `104774e40ef38b59af2d3e8a1ae01dea8fd03e95` = local. This push record follows as its own commit, pushed the same way.
+  `main` was not touched; nothing was merged.
