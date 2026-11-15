@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated (UTC):** 2026-11-15T13:28Z (from `date -u`).
+- **Updated (UTC):** 2026-11-15T13:38Z (from `date -u`).
 - **Status:** **INCOMPLETE.** Stage: **the study chain is running** (`chains/chain1.sh` as unit `vgl0fj-chain1`, started
   2026-11-15T13:27:08Z at step `c101` = C19 Track I `broad1`). Protocol FROZEN; stage V sealed (0 failed).
 - **Authority:** brief `brief/BRIEF.md` `5620330a…`; protocol `PROTOCOL.md` **`ec9de0d623e3…`** frozen by
@@ -13,8 +13,10 @@
   it launches one stage unit at a time (`vgl0fj-<C>-<step>`, log `results/logs/<unit>.log`, memory
   `results/memory/<job>.jsonl`). Check: `systemctl --user is-active vgl0fj-chain1`; `tail results/logs/chain1.log`.
 - **Next step:** wait for the chain (expected ≈ 50 h: C19 ≈ 6 h, C21 ≈ 8 h, C23 ≈ 11 h, C24 Track I ≈ 12 h + Track N
-  ≈ 12 h, then the frozen selection and FULL once). Meanwhile write the report-only tooling in `tools/vg-l0-full-joint/`
-  (never in `src/vg-l0-full-joint/`: the decision digest covers it).
+  ≈ 12 h, then the frozen selection and FULL once; C19 broad1 ran at ≈ 196 fresh/s, 6.7 GiB). The report-only tooling is
+  written and committed (`934a8c5a`, `tools/vg-l0-full-joint/`: analyses, replays, tail, tables; dry-tested on the
+  pilot's records with `VGL0FJ_TOOLS_DIR=<pilot dir> VGL0FJ_TOOLS_CUTS=P18`). After the validation: `analyses.ts all`,
+  `replays.ts folds`, `replays.ts finalists`, `replays.ts ledgers`, `tail.ts`, `tables.ts`, then REPORT.md.
 - **If the chain stopped:** read the last `start [id]` / `end [id] … exit` lines; a non-zero step left a resumable
   archive. Resume with the SAME command from that step (never edit `chain1.sh` while it runs):
   `R=/home/chad/projects/margin-trading; systemd-run --user --unit=vgl0fj-chain1b --collect -p KillMode=process -E PATH="$PATH" -E HOME="$HOME" -p StandardOutput=append:$R/research/vg-l0-full-joint/results/logs/chain1.log -p StandardError=append:$R/research/vg-l0-full-joint/results/logs/chain1.log --working-directory=$R /bin/bash $R/research/vg-l0-full-joint/chains/chain1.sh <step id>`
@@ -26,7 +28,7 @@
 - Main checkout `/home/chad/projects/margin-trading` (no extra worktree), branch `research/vg-l0-full-joint` from
   `73d3a748` (the verified tip of `research/vg-l0-risk-families` = its remote; contains `main` = `108c241b`, untouched).
 - Commits: `8b762e6e` pre-registration draft; `bcc166d4` stage V sealed + test report; `45a47409` protocol final draft;
-  `2a56e9b6` freeze. The chain commits each sealed block itself (avoid manual commits while a chain commit may run).
+  `2a56e9b6` freeze; `f7b58ab5` checkpoint; `934a8c5a` report-only tooling. The chain commits each sealed block itself (avoid manual commits while a chain commit may run).
 - Node v24.21.0; slice `vgl0fj.slice` (MemoryHigh 44G, MemoryMax 48G, swap 0); 12 workers; Growth cache 48, D1 cache 64.
 - `results/logs/` is git-ignored by a global pattern: force-add the logs at completion (`git add -f`), as Assignment 2 did.
 
