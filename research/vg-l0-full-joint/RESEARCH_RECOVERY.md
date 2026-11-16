@@ -2,10 +2,11 @@
 
 ## Top screen
 
-- **Updated (UTC):** 2026-11-15T18:46Z (from `date -u`).
+- **Updated (UTC):** 2026-11-16T02:44Z (from `date -u`).
 - **Status:** **INCOMPLETE.** Stage: **the study chain is running** (`chains/chain1.sh` as unit `vgl0fj-chain1`, started
   2026-11-15T13:27:08Z). **C19 complete** (selection committed `cdd37dc2`, fold evaluation `3d489a73`, 13:27Z → 18:44Z);
-  C21 Track I `broad1` (step `c201`) started 18:44:15Z. Protocol FROZEN; stage V sealed (0 failed).
+  **C21 complete** (selection `a8b9e2f4`, fold `96286b77`, 18:44Z → 02:42Z); C23 Track I `broad1` (step `c301`) started
+  2026-11-16T02:41:59Z. Protocol FROZEN; stage V sealed (0 failed).
 - **Authority:** brief `brief/BRIEF.md` `5620330a…`; protocol `PROTOCOL.md` **`ec9de0d623e3…`** frozen by
   `results/protocol-freeze.json` (`869ae1a7e68052e0fc210230a51d1400a8838ac0913131d36cf93137af97b739`, commit `2a56e9b6`,
   2026-11-15T13:26:59Z); amendments R1, R2 (both before the freeze), no post-freeze amendment; standard 2.2.0
@@ -44,8 +45,9 @@
 | Freeze | complete, sealed | `results/protocol-freeze.json` `869ae1a7…` | commit `2a56e9b6` |
 | C19 Track I broad1 / broad2 | complete, sealed | `results/search/C19/broad{1,2}.json` | broad1 98 min, 1.24 M fresh, 0 resource-guard stops, 14 lanes at the 6-island cap |
 | C19 qualify / plan / refine / qualify / select / fold | complete, sealed, committed | `results/folds/C19/` | refine plan 13 cells; selection `cdd37dc2` before D21 opened; fold `3d489a73` |
-| C21 | **running** (c201 broad1) | `results/search/C21/`, `results/folds/C21/` | |
-| C23, sequential | not started | `results/folds/C23/`, `results/folds/sequential.json` | |
+| C21 | complete, sealed, committed | `results/search/C21/`, `results/folds/C21/` | selection `a8b9e2f4` before D23 opened; fold `96286b77` |
+| C23 | **running** (c301 broad1) | `results/search/C23/`, `results/folds/C23/` | |
+| Sequential verdicts | not started | `results/folds/sequential.json` | after C23 (c316–c317) |
 | C24 Track I, Track N (informed1/2, 64 lanes), qualify, select | not started | `results/search/C24/`, `results/folds/C24/` | |
 | Frozen selection, validation (FULL once) | not started | `FROZEN_SELECTION.json`, `results/validation/validation.json` | |
 | Report-only diagnostics, tables, REPORT | not started | `results/diagnostics/`, `results/tables/` | tooling in `tools/vg-l0-full-joint/` |
