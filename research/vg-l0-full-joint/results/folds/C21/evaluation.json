@@ -1,0 +1,2087 @@
+{
+ "stage": "fold evaluation",
+ "cutoff": "C21",
+ "door": "D23",
+ "slice": [
+  "2022-01-03",
+  "2023-12-29"
+ ],
+ "boundary": "2021-12-31",
+ "selectionGuard": "23ec75f3df8c6ef2aefabe82e6322aa8a809dd4791cd8ed9ce7fb920d1e3d06b",
+ "primaries": {
+  "L": {
+   "original": "C21/refine/GA0.VA0/R1#1 profit",
+   "RA1": "C21/broad/GA0.VA0/R1#2 robust",
+   "RA2": "C21/broad/GA0.VA0/R1#3 Growth entry alternative"
+  },
+  "B": {
+   "original": "C21/refine/GD0.VA0/R1#1 profit",
+   "RA1": "C21/broad/GD1.VD0/R1#1 profit",
+   "RA2": "C21/refine/GB1.VA1/R1#1 profit"
+  },
+  "F": {
+   "original": "C21/refine/GD0.VA0/R1#1 profit",
+   "RA1": "C21/refine/GA0.VB1/R1#1 profit",
+   "RA2": "C21/refine/GA0.VB1/R2#1 profit"
+  }
+ },
+ "rows": [
+  {
+   "label": "C21/refine/GA0.VA0/R1#1 profit",
+   "roles": [
+    "primary L/original",
+    "role L/actual-profit"
+   ],
+   "cell": "GA0.VA0",
+   "id": "615a467f6709f56e",
+   "cfg": {
+    "cell": "GA0.VA0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 295,
+      "trailingBuyPercentage": 8,
+      "trailingStopPercentage": 48,
+      "maximumHoldDays": 18,
+      "tickWindowSize": 44,
+      "intradayLossBuffer": 1,
+      "pullback": 115,
+      "continuationWindow": 170
+     },
+     "VGT": {
+      "targetPercentChange": 234,
+      "trailingBuyPercentage": 33,
+      "trailingStopPercentage": 58,
+      "maximumHoldDays": 14,
+      "tickWindowSize": 80,
+      "intradayLossBuffer": 60,
+      "pullback": 55,
+      "continuationWindow": 30
+     }
+    },
+    "controls": null,
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 36,
+     "breakoutSlopeComparisonSessions": 6,
+     "breakoutPriorHighSessions": 15,
+     "trendFilterEnabled": true,
+     "trendMethod": "regression_slope",
+     "trendSlopeLookbackSessions": 44,
+     "trendSlopeMinimumPercent": 2.3,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 10.6,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 32,
+     "initialStopAtrMultiple": 3,
+     "retentionEnabled": true,
+     "retentionSellPercent": 11,
+     "retentionSmaSessions": 161,
+     "retentionClosesBelow": 1,
+     "continuationEnabled": true,
+     "continuationMethod": "breakout",
+     "continuationWindowSessions": 171,
+     "breakoutBufferPercent": 4.85,
+     "breakoutFormationBars": 17,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -6230.28,
+   "sliceDd": 24180.11,
+   "boundaryEquity": 227944.93,
+   "wholeNet": 221714.65,
+   "wholeDd": 24245.91,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2020-05-08",
+    "entryRaw": 250.22,
+    "markAtCutoff": 59720.56,
+    "multipleAtCutoff": 1.83,
+    "highestLater": {
+     "mark": 61227.28,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": 44386.21,
+     "date": "2022-01-19"
+    },
+    "exit": {
+     "date": "2022-01-20",
+     "reason": "trend exit",
+     "raw": 420.42
+    },
+    "final": 45688.92,
+    "changeFromCutoff": -14031.64
+   },
+   "nextSlice": {
+    "lots": 8,
+    "byBook": {
+     "D1:GDX": 0,
+     "D1:VGT": 5,
+     "G:VGT": 3
+    },
+    "maeMedian": -4002.9,
+    "maeP90": -6965.97,
+    "maeWorst": -8501.87,
+    "worstRealized": -8501.87,
+    "meanLosing": -5189.86,
+    "losing": 3,
+    "exitReasons": {
+     "trailing stop gap": 1,
+     "maximum hold": 2,
+     "trailing stop": 2,
+     "initial stop": 1,
+     "trend exit": 1
+    }
+   },
+   "years": {
+    "2016": 6655.74,
+    "2017": 30098.85,
+    "2018": 15946.31,
+    "2019": 22733.09,
+    "2020": 125192.87,
+    "2021": 27318.05,
+    "2022": -15089.74,
+    "2023": 8859.47
+   }
+  },
+  {
+   "label": "C21/broad/GA0.VA0/R1#2 robust",
+   "roles": [
+    "primary L/RA1"
+   ],
+   "cell": "GA0.VA0",
+   "id": "fe9f688382252342",
+   "cfg": {
+    "cell": "GA0.VA0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 282,
+      "trailingBuyPercentage": 28,
+      "trailingStopPercentage": 50,
+      "maximumHoldDays": 11,
+      "tickWindowSize": 58,
+      "intradayLossBuffer": 38,
+      "pullback": 133,
+      "continuationWindow": 152
+     },
+     "VGT": {
+      "targetPercentChange": 234,
+      "trailingBuyPercentage": 34,
+      "trailingStopPercentage": 81,
+      "maximumHoldDays": 23,
+      "tickWindowSize": 84,
+      "intradayLossBuffer": 49,
+      "pullback": 108,
+      "continuationWindow": 61
+     }
+    },
+    "controls": null,
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 49,
+     "breakoutSlopeComparisonSessions": 70,
+     "breakoutPriorHighSessions": 10,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 7,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 18,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 5,
+     "initialStopEnabled": false,
+     "retentionEnabled": false,
+     "continuationEnabled": false,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -16246.96,
+   "sliceDd": 23351.45,
+   "boundaryEquity": 159515.71,
+   "wholeNet": 143268.75,
+   "wholeDd": 32943.95,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2021-12-28",
+    "entryRaw": 466.83,
+    "markAtCutoff": -1994.52,
+    "multipleAtCutoff": 0.98,
+    "highestLater": {
+     "mark": -1143.04,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": -10031.46,
+     "date": "2022-01-10"
+    },
+    "exit": {
+     "date": "2022-01-18",
+     "reason": "maximum hold",
+     "raw": 426.9106
+    },
+    "final": -9275.44,
+    "changeFromCutoff": -7280.92
+   },
+   "nextSlice": {
+    "lots": 13,
+    "byBook": {
+     "D1:GDX": 7,
+     "D1:VGT": 1,
+     "G:VGT": 5
+    },
+    "maeMedian": -3867.83,
+    "maeP90": -7628.52,
+    "maeWorst": -8149.59,
+    "worstRealized": -6817.92,
+    "meanLosing": -3930.73,
+    "losing": 8,
+    "exitReasons": {
+     "maximum hold": 8,
+     "trailing stop": 4
+    }
+   },
+   "years": {
+    "2016": 4696.67,
+    "2017": 28115.07,
+    "2018": -939.15,
+    "2019": 22625.81,
+    "2020": 105522.26,
+    "2021": -504.96,
+    "2022": -7402.08,
+    "2023": -8844.88
+   }
+  },
+  {
+   "label": "C21/broad/GA0.VA0/R1#3 Growth entry alternative",
+   "roles": [
+    "primary L/RA2"
+   ],
+   "cell": "GA0.VA0",
+   "id": "7eb0e6e9fc713c88",
+   "cfg": {
+    "cell": "GA0.VA0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 269,
+      "trailingBuyPercentage": 21,
+      "trailingStopPercentage": 49,
+      "maximumHoldDays": 16,
+      "tickWindowSize": 190,
+      "intradayLossBuffer": 43,
+      "pullback": 185,
+      "continuationWindow": 168
+     },
+     "VGT": {
+      "targetPercentChange": 188,
+      "trailingBuyPercentage": 5,
+      "trailingStopPercentage": 109,
+      "maximumHoldDays": 11,
+      "tickWindowSize": 163,
+      "intradayLossBuffer": 50,
+      "pullback": 174,
+      "continuationWindow": 151
+     }
+    },
+    "controls": null,
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 30,
+     "breakoutPriorHighSessions": 45,
+     "trendFilterEnabled": true,
+     "trendMethod": "regression_slope",
+     "trendSlopeLookbackSessions": 110,
+     "trendSlopeMinimumPercent": 6.5,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 6.5,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 55,
+     "initialStopAtrMultiple": 4.5,
+     "retentionEnabled": true,
+     "retentionSellPercent": 80,
+     "retentionSmaSessions": 160,
+     "retentionClosesBelow": 5,
+     "continuationEnabled": true,
+     "continuationMethod": "breakout",
+     "continuationWindowSessions": 90,
+     "breakoutBufferPercent": 0.5,
+     "breakoutFormationBars": 10,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": 3949.09,
+   "sliceDd": 60311.75,
+   "boundaryEquity": 179022.82,
+   "wholeNet": 182971.91,
+   "wholeDd": 60311.75,
+   "openAtBoundary": [],
+   "openAtEnd": [],
+   "giveBack": null,
+   "nextSlice": {
+    "lots": 17,
+    "byBook": {
+     "D1:GDX": 6,
+     "D1:VGT": 11,
+     "G:VGT": 0
+    },
+    "maeMedian": -3678.93,
+    "maeP90": -11245.93,
+    "maeWorst": -14163.11,
+    "worstRealized": -11051.7,
+    "meanLosing": -3931.34,
+    "losing": 12,
+    "exitReasons": {
+     "trailing stop gap": 1,
+     "maximum hold": 12,
+     "trailing stop": 4
+    }
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 2329.3,
+    "2019": 20808.64,
+    "2020": 118262.47,
+    "2021": 5611.15,
+    "2022": -27060.54,
+    "2023": 31009.63
+   }
+  },
+  {
+   "label": "C21/refine/GA0.VA0/R1#2 robust",
+   "roles": [
+    "role L/robust-profit"
+   ],
+   "cell": "GA0.VA0",
+   "id": "01c74c12b32190a2",
+   "cfg": {
+    "cell": "GA0.VA0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 300,
+      "trailingBuyPercentage": 18,
+      "trailingStopPercentage": 51,
+      "maximumHoldDays": 28,
+      "tickWindowSize": 59,
+      "intradayLossBuffer": 11,
+      "pullback": 104,
+      "continuationWindow": 170
+     },
+     "VGT": {
+      "targetPercentChange": 230,
+      "trailingBuyPercentage": 33,
+      "trailingStopPercentage": 59,
+      "maximumHoldDays": 8,
+      "tickWindowSize": 79,
+      "intradayLossBuffer": 60,
+      "pullback": 79,
+      "continuationWindow": 61
+     }
+    },
+    "controls": null,
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 24,
+     "breakoutSlopeComparisonSessions": 23,
+     "breakoutPriorHighSessions": 24,
+     "trendFilterEnabled": true,
+     "trendMethod": "rising_sma",
+     "trendSmaSessions": 105,
+     "trendSmaComparisonSessions": 15,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 6.8,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": true,
+     "retentionSellPercent": 12,
+     "retentionSmaSessions": 183,
+     "retentionClosesBelow": 1,
+     "continuationEnabled": true,
+     "continuationMethod": "classic_d1",
+     "continuationWindowSessions": 199,
+     "classicPullbackPercent": 11.5,
+     "classicReboundPercent": 2.5,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -26483.09,
+   "sliceDd": 51956.54,
+   "boundaryEquity": 217222.43,
+   "wholeNet": 190739.35,
+   "wholeDd": 53436.17,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2020-05-08",
+    "entryRaw": 250.22,
+    "markAtCutoff": 57409.7,
+    "multipleAtCutoff": 1.83,
+    "highestLater": {
+     "mark": 58899.49,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": 40259.67,
+     "date": "2022-01-20"
+    },
+    "exit": {
+     "date": "2022-01-21",
+     "reason": "trend exit",
+     "raw": 409.21
+    },
+    "final": 39570.68,
+    "changeFromCutoff": -17839.02
+   },
+   "nextSlice": {
+    "lots": 8,
+    "byBook": {
+     "D1:GDX": 3,
+     "D1:VGT": 3,
+     "G:VGT": 2
+    },
+    "maeMedian": -5208.51,
+    "maeP90": -13207.33,
+    "maeWorst": -15168.78,
+    "worstRealized": -12282.5,
+    "meanLosing": -6691.21,
+    "losing": 4,
+    "exitReasons": {
+     "maximum hold": 4,
+     "trailing stop": 1,
+     "trailing stop gap": 1,
+     "trend exit": 1
+    }
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 15462.85,
+    "2019": 22598.22,
+    "2020": 120138.99,
+    "2021": 27011.11,
+    "2022": -47605.18,
+    "2023": 21122.1
+   }
+  },
+  {
+   "label": "C21/refine/GA0.VA0/R2#2 robust",
+   "roles": [
+    "role L/balanced",
+    "role L/lower-drawdown",
+    "role B/balanced"
+   ],
+   "cell": "GA0.VA0",
+   "id": "59eb122f8910d076",
+   "cfg": {
+    "cell": "GA0.VA0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 280,
+      "trailingBuyPercentage": 19,
+      "trailingStopPercentage": 52,
+      "maximumHoldDays": 30,
+      "tickWindowSize": 54,
+      "intradayLossBuffer": 56,
+      "pullback": 110,
+      "continuationWindow": 140
+     },
+     "VGT": {
+      "targetPercentChange": 229,
+      "trailingBuyPercentage": 29,
+      "trailingStopPercentage": 59,
+      "maximumHoldDays": 10,
+      "tickWindowSize": 90,
+      "intradayLossBuffer": 60,
+      "pullback": 88,
+      "continuationWindow": 69
+     }
+    },
+    "controls": null,
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 11,
+     "breakoutSlopeComparisonSessions": 99,
+     "breakoutPriorHighSessions": 25,
+     "trendFilterEnabled": true,
+     "trendMethod": "regression_slope",
+     "trendSlopeLookbackSessions": 54,
+     "trendSlopeMinimumPercent": -0.6,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 109,
+     "dipThresholdPercent": 8,
+     "recoveryRetracementPercent": 33.4,
+     "recoveryConfirmationSessions": 1,
+     "trailingStopPercent": 6.6,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": true,
+     "retentionSellPercent": 10,
+     "retentionSmaSessions": 175,
+     "retentionClosesBelow": 1,
+     "continuationEnabled": true,
+     "continuationMethod": "classic_d1",
+     "continuationWindowSessions": 198,
+     "classicPullbackPercent": 10.4,
+     "classicReboundPercent": 4.2,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -30099.79,
+   "sliceDd": 43136.6,
+   "boundaryEquity": 214138.89,
+   "wholeNet": 184039.1,
+   "wholeDd": 44649.86,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2020-05-08",
+    "entryRaw": 250.22,
+    "markAtCutoff": 58675.82,
+    "multipleAtCutoff": 1.83,
+    "highestLater": {
+     "mark": 60199.48,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": 43169.18,
+     "date": "2022-01-19"
+    },
+    "exit": {
+     "date": "2022-01-20",
+     "reason": "trend exit",
+     "raw": 420.42
+    },
+    "final": 44486.52,
+    "changeFromCutoff": -14189.3
+   },
+   "nextSlice": {
+    "lots": 9,
+    "byBook": {
+     "D1:GDX": 2,
+     "D1:VGT": 5,
+     "G:VGT": 2
+    },
+    "maeMedian": -3678.31,
+    "maeP90": -12196.82,
+    "maeWorst": -18735.68,
+    "worstRealized": -16023.65,
+    "meanLosing": -5202.89,
+    "losing": 5,
+    "exitReasons": {
+     "maximum hold": 5,
+     "trailing stop gap": 2,
+     "trend exit": 1
+    }
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 16066.71,
+    "2019": 18147.18,
+    "2020": 120288.73,
+    "2021": 27625,
+    "2022": -36514.79,
+    "2023": 6415
+   }
+  },
+  {
+   "label": "C21/refine/GD0.VA0/R1#1 profit",
+   "roles": [
+    "primary B/original",
+    "role B/actual-profit",
+    "primary F/original",
+    "role F/actual-profit"
+   ],
+   "cell": "GD0.VA0",
+   "id": "802b01d5e6cc2124",
+   "cfg": {
+    "cell": "GD0.VA0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 266,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 59,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 154,
+      "intradayLossBuffer": 47,
+      "pullback": 168,
+      "continuationWindow": 147
+     },
+     "VGT": {
+      "targetPercentChange": 230,
+      "trailingBuyPercentage": 25,
+      "trailingStopPercentage": 127,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 144,
+      "intradayLossBuffer": 40,
+      "pullback": 184,
+      "continuationWindow": 96
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:GDX": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 162
+       },
+       "hold": {
+        "mode": "adaptive",
+        "extendedHoldDays": 48,
+        "progressTenths": 81
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 12,
+     "breakoutSlopeComparisonSessions": 19,
+     "breakoutPriorHighSessions": 6,
+     "trendFilterEnabled": true,
+     "trendMethod": "price_change",
+     "trendChangeLookbackSessions": 119,
+     "trendChangeMinimumReturnPercent": -3.2,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 15,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": true,
+     "retentionSellPercent": 24,
+     "retentionSmaSessions": 129,
+     "retentionClosesBelow": 3,
+     "continuationEnabled": false,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -31478.21,
+   "sliceDd": 65005.67,
+   "boundaryEquity": 253562.04,
+   "wholeNet": 222083.82,
+   "wholeDd": 66716.46,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2020-04-20",
+    "entryRaw": 232.49,
+    "markAtCutoff": 78287.42,
+    "multipleAtCutoff": 1.97,
+    "highestLater": {
+     "mark": 80118.67,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": 45621.37,
+     "date": "2022-01-24"
+    },
+    "exit": {
+     "date": "2022-01-27",
+     "reason": "trend exit",
+     "raw": 402.79
+    },
+    "final": 52681.5,
+    "changeFromCutoff": -25605.92
+   },
+   "nextSlice": {
+    "lots": 1,
+    "byBook": {
+     "D1:GDX": 0,
+     "D1:VGT": 0,
+     "G:VGT": 1
+    },
+    "maeMedian": -37568.5,
+    "maeP90": -37568.5,
+    "maeWorst": -37568.5,
+    "worstRealized": null,
+    "meanLosing": null,
+    "losing": 0,
+    "exitReasons": {}
+   },
+   "years": {
+    "2016": 9620.11,
+    "2017": 30059.85,
+    "2018": 3257.03,
+    "2019": 38152.86,
+    "2020": 138598.07,
+    "2021": 33874.12,
+    "2022": -59066.36,
+    "2023": 27588.15
+   }
+  },
+  {
+   "label": "C21/broad/GD1.VD0/R1#1 profit",
+   "roles": [
+    "primary B/RA1"
+   ],
+   "cell": "GD1.VD0",
+   "id": "1d279bcfde36a7ce",
+   "cfg": {
+    "cell": "GD1.VD0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 299,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 71,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 231,
+      "intradayLossBuffer": 57,
+      "pullback": 89,
+      "continuationWindow": 100
+     },
+     "VGT": {
+      "targetPercentChange": 220,
+      "trailingBuyPercentage": 34,
+      "trailingStopPercentage": 142,
+      "maximumHoldDays": 16,
+      "tickWindowSize": 231,
+      "intradayLossBuffer": 50,
+      "pullback": 159,
+      "continuationWindow": 82
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:GDX": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 198
+       },
+       "hold": {
+        "mode": "adaptive",
+        "extendedHoldDays": 27,
+        "progressTenths": 46
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 3,
+        "recoveryTenths": 200,
+        "maxBlockSessions": 240
+       }
+      },
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 98
+       },
+       "hold": {
+        "mode": "adaptive",
+        "extendedHoldDays": 21,
+        "progressTenths": 28
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 110,
+     "breakoutSlopeComparisonSessions": 15,
+     "breakoutPriorHighSessions": 75,
+     "trendFilterEnabled": true,
+     "trendMethod": "price_change",
+     "trendChangeLookbackSessions": 105,
+     "trendChangeMinimumReturnPercent": 3.5,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 40,
+     "dipThresholdPercent": 4.5,
+     "recoveryRetracementPercent": 90,
+     "recoveryConfirmationSessions": 5,
+     "trailingStopPercent": 13.3,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 50,
+     "initialStopAtrMultiple": 4,
+     "retentionEnabled": true,
+     "retentionSellPercent": 10,
+     "retentionSmaSessions": 160,
+     "retentionClosesBelow": 3,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 30,
+     "uptrendSmaBars": 80,
+     "uptrendSlopeBars": 6,
+     "uptrendMinimumRisePercent": 3.25,
+     "pullbackMinimumPercent": 2.5,
+     "pullbackMaximumPercent": 5,
+     "recoveryPercent": 1.75,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": 11770.08,
+   "sliceDd": 35415.89,
+   "boundaryEquity": 219640.12,
+   "wholeNet": 231410.21,
+   "wholeDd": 44846.29,
+   "openAtBoundary": [],
+   "openAtEnd": [
+    "D1:VGT"
+   ],
+   "giveBack": null,
+   "nextSlice": {
+    "lots": 9,
+    "byBook": {
+     "D1:GDX": 1,
+     "D1:VGT": 8,
+     "G:VGT": 0
+    },
+    "maeMedian": -5478.82,
+    "maeP90": -10482.46,
+    "maeWorst": -11164,
+    "worstRealized": -11164,
+    "meanLosing": -3443.84,
+    "losing": 8,
+    "exitReasons": {
+     "protective stop gap": 1,
+     "maximum hold": 6,
+     "protective stop": 1
+    }
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 12994.32,
+    "2019": 37771.66,
+    "2020": 119263.86,
+    "2021": 17599.02,
+    "2022": -27550.75,
+    "2023": 39320.83
+   }
+  },
+  {
+   "label": "C21/refine/GB1.VA1/R1#1 profit",
+   "roles": [
+    "primary B/RA2"
+   ],
+   "cell": "GB1.VA1",
+   "id": "babed267f670fd7a",
+   "cfg": {
+    "cell": "GB1.VA1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 264,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 67,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 90,
+      "intradayLossBuffer": 1,
+      "pullback": 77,
+      "continuationWindow": 63
+     },
+     "VGT": {
+      "targetPercentChange": 243,
+      "trailingBuyPercentage": 2,
+      "trailingStopPercentage": 58,
+      "maximumHoldDays": 12,
+      "tickWindowSize": 223,
+      "intradayLossBuffer": 28,
+      "pullback": 87,
+      "continuationWindow": 109
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:GDX": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 131
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 3,
+        "recoveryTenths": 800,
+        "maxBlockSessions": 47
+       }
+      },
+      "D1:VGT": {
+       "declineGate": {
+        "mode": "on",
+        "losses": 3,
+        "recoveryTenths": 420,
+        "maxBlockSessions": 214
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 2.5,
+     "recentLowLookbackBars": 60,
+     "trendFilterEnabled": true,
+     "trendMethod": "regression_slope",
+     "trendSlopeLookbackSessions": 44,
+     "trendSlopeMinimumPercent": -4.9,
+     "eligibilityEnabled": false,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 7.9,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 12,
+     "intradayLossBufferEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 59,
+     "initialStopAtrMultiple": 2.5,
+     "retentionEnabled": true,
+     "retentionSellPercent": 42,
+     "retentionSmaSessions": 180,
+     "retentionClosesBelow": 3,
+     "continuationEnabled": false,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -22844.53,
+   "sliceDd": 35944.88,
+   "boundaryEquity": 252121.86,
+   "wholeNet": 229277.32,
+   "wholeDd": 36882.47,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2020-11-03",
+    "entryRaw": 300.83,
+    "markAtCutoff": 28643.4,
+    "multipleAtCutoff": 1.52,
+    "highestLater": {
+     "mark": 29448.36,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": 13308.64,
+     "date": "2022-01-24"
+    },
+    "exit": {
+     "date": "2022-01-25",
+     "reason": "trend exit",
+     "raw": 397.17
+    },
+    "final": 16413.23,
+    "changeFromCutoff": -12230.17
+   },
+   "nextSlice": {
+    "lots": 14,
+    "byBook": {
+     "D1:GDX": 7,
+     "D1:VGT": 5,
+     "G:VGT": 2
+    },
+    "maeMedian": -4107.49,
+    "maeP90": -8006.54,
+    "maeWorst": -9548.64,
+    "worstRealized": -6777.23,
+    "meanLosing": -2981.04,
+    "losing": 10,
+    "exitReasons": {
+     "maximum hold": 9,
+     "trailing stop gap": 2,
+     "trailing stop": 2,
+     "buffered intraday loss": 1
+    }
+   },
+   "years": {
+    "2016": 10276.71,
+    "2017": 30239.86,
+    "2018": 10441.82,
+    "2019": 34489.44,
+    "2020": 153828.52,
+    "2021": 12845.49,
+    "2022": -22301.89,
+    "2023": -542.64
+   }
+  },
+  {
+   "label": "C21/refine/GB0.VC0/R1#2 robust",
+   "roles": [
+    "role B/robust-profit",
+    "role F/robust-profit"
+   ],
+   "cell": "GB0.VC0",
+   "id": "83cc5eef868633b5",
+   "cfg": {
+    "cell": "GB0.VC0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 243,
+      "trailingBuyPercentage": 10,
+      "trailingStopPercentage": 56,
+      "maximumHoldDays": 29,
+      "tickWindowSize": 119,
+      "intradayLossBuffer": 34,
+      "pullback": 192,
+      "continuationWindow": 52
+     },
+     "VGT": {
+      "targetPercentChange": 226,
+      "trailingBuyPercentage": 50,
+      "trailingStopPercentage": 62,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 115,
+      "intradayLossBuffer": 0,
+      "pullback": 168,
+      "continuationWindow": 79
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:GDX": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 223
+       }
+      },
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 187
+       },
+       "hold": {
+        "mode": "disabled"
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 21,
+     "breakoutSlopeComparisonSessions": 7,
+     "breakoutPriorHighSessions": 15,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 32,
+     "dipThresholdPercent": 11.7,
+     "recoveryRetracementPercent": 33.1,
+     "recoveryConfirmationSessions": 7,
+     "trailingStopPercent": 10.2,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 32,
+     "initialStopAtrMultiple": 3,
+     "retentionEnabled": true,
+     "retentionSellPercent": 10,
+     "retentionSmaSessions": 123,
+     "retentionClosesBelow": 4,
+     "continuationEnabled": true,
+     "continuationMethod": "breakout",
+     "continuationWindowSessions": 150,
+     "breakoutBufferPercent": 2.5,
+     "breakoutFormationBars": 10,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -36015.68,
+   "sliceDd": 77199.89,
+   "boundaryEquity": 240081.34,
+   "wholeNet": 204065.66,
+   "wholeDd": 78739.6,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2020-04-20",
+    "entryRaw": 232.49,
+    "markAtCutoff": 73193.84,
+    "multipleAtCutoff": 1.97,
+    "highestLater": {
+     "mark": 74841.96,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": 51003.16,
+     "date": "2022-01-21"
+    },
+    "exit": {
+     "date": "2022-01-24",
+     "reason": "trend exit",
+     "raw": 393.88
+    },
+    "final": 47591.6,
+    "changeFromCutoff": -25602.24
+   },
+   "nextSlice": {
+    "lots": 10,
+    "byBook": {
+     "D1:GDX": 7,
+     "D1:VGT": 0,
+     "G:VGT": 3
+    },
+    "maeMedian": -7835.37,
+    "maeP90": -14286.12,
+    "maeWorst": -16428.54,
+    "worstRealized": -14954.43,
+    "meanLosing": -7638.09,
+    "losing": 5,
+    "exitReasons": {
+     "initial stop": 1,
+     "maximum hold": 4,
+     "trailing stop": 3,
+     "trend exit": 1
+    }
+   },
+   "years": {
+    "2016": 9554.56,
+    "2017": 31312.55,
+    "2018": 15203.85,
+    "2019": 17919.59,
+    "2020": 135604.08,
+    "2021": 30486.71,
+    "2022": -53159.76,
+    "2023": 17144.08
+   }
+  },
+  {
+   "label": "C21/refine/GC1.VC1/R1#3 balanced",
+   "roles": [
+    "role B/lower-drawdown"
+   ],
+   "cell": "GC1.VC1",
+   "id": "00b65f2147667d99",
+   "cfg": {
+    "cell": "GC1.VC1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 259,
+      "trailingBuyPercentage": 4,
+      "trailingStopPercentage": 58,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 31,
+      "intradayLossBuffer": 0,
+      "pullback": 178,
+      "continuationWindow": 75
+     },
+     "VGT": {
+      "targetPercentChange": 221,
+      "trailingBuyPercentage": 29,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 155,
+      "intradayLossBuffer": 0,
+      "pullback": 151,
+      "continuationWindow": 115
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:GDX": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 74
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 4,
+        "recoveryTenths": 560,
+        "maxBlockSessions": 200
+       }
+      },
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 66
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 3,
+        "recoveryTenths": 220,
+        "maxBlockSessions": 229
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 42,
+     "breakoutSlopeComparisonSessions": 72,
+     "breakoutPriorHighSessions": 25,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 39,
+     "dipThresholdPercent": 8.2,
+     "recoveryRetracementPercent": 86.7,
+     "recoveryConfirmationSessions": 9,
+     "trailingStopPercent": 6.1,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": true,
+     "retentionSellPercent": 42,
+     "retentionSmaSessions": 140,
+     "retentionClosesBelow": 4,
+     "continuationEnabled": false,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -21765.4,
+   "sliceDd": 32789.18,
+   "boundaryEquity": 183502.39,
+   "wholeNet": 161736.99,
+   "wholeDd": 33737.14,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2020-07-07",
+    "entryRaw": 284.95,
+    "markAtCutoff": 30115.75,
+    "multipleAtCutoff": 1.61,
+    "highestLater": {
+     "mark": 30969.46,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": 18380.3,
+     "date": "2022-01-21"
+    },
+    "exit": {
+     "date": "2022-01-24",
+     "reason": "trend exit",
+     "raw": 393.88
+    },
+    "final": 16576.84,
+    "changeFromCutoff": -13538.91
+   },
+   "nextSlice": {
+    "lots": 9,
+    "byBook": {
+     "D1:GDX": 1,
+     "D1:VGT": 7,
+     "G:VGT": 1
+    },
+    "maeMedian": -4746.05,
+    "maeP90": -6916.37,
+    "maeWorst": -7085.13,
+    "worstRealized": -7085.13,
+    "meanLosing": -6866.64,
+    "losing": 4,
+    "exitReasons": {
+     "protective stop": 4,
+     "trailing stop": 4
+    }
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 10187.69,
+    "2019": 16750.81,
+    "2020": 109697.28,
+    "2021": 14855.36,
+    "2022": -24347.04,
+    "2023": 2581.64
+   }
+  },
+  {
+   "label": "C21/refine/GA0.VB1/R1#1 profit",
+   "roles": [
+    "primary F/RA1"
+   ],
+   "cell": "GA0.VB1",
+   "id": "f896aa39b6fa49ce",
+   "cfg": {
+    "cell": "GA0.VB1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 300,
+      "trailingBuyPercentage": 5,
+      "trailingStopPercentage": 67,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 173,
+      "intradayLossBuffer": 46,
+      "pullback": 81,
+      "continuationWindow": 173
+     },
+     "VGT": {
+      "targetPercentChange": 230,
+      "trailingBuyPercentage": 30,
+      "trailingStopPercentage": 84,
+      "maximumHoldDays": 14,
+      "tickWindowSize": 71,
+      "intradayLossBuffer": 19,
+      "pullback": 95,
+      "continuationWindow": 55
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 132,
+        "activation": "entry-day"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 3,
+        "recoveryTenths": 730,
+        "maxBlockSessions": 86
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 5.5,
+     "recentLowLookbackBars": 79,
+     "trendFilterEnabled": false,
+     "eligibilityEnabled": true,
+     "eligibilityPolicy": "reset_renew",
+     "eligibilityMaxAgeSessions": 24,
+     "eligibilityResetDropPercent": 4.5,
+     "eligibilityRenewalReboundPercent": 5.2,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 27,
+     "dipThresholdPercent": 13.7,
+     "recoveryRetracementPercent": 37.2,
+     "recoveryConfirmationSessions": 5,
+     "trailingStopPercent": 5.4,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "breakout",
+     "continuationWindowSessions": 77,
+     "breakoutBufferPercent": 4.75,
+     "breakoutFormationBars": 13,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -3652.61,
+   "sliceDd": 38874.35,
+   "boundaryEquity": 248850.91,
+   "wholeNet": 245198.3,
+   "wholeDd": 43632.89,
+   "openAtBoundary": [],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": null,
+   "nextSlice": {
+    "lots": 1,
+    "byBook": {
+     "D1:GDX": 0,
+     "D1:VGT": 0,
+     "G:VGT": 1
+    },
+    "maeMedian": -36254.01,
+    "maeP90": -36254.01,
+    "maeWorst": -36254.01,
+    "worstRealized": null,
+    "meanLosing": null,
+    "losing": 0,
+    "exitReasons": {}
+   },
+   "years": {
+    "2016": 9620.11,
+    "2017": 24991.07,
+    "2018": 19704.13,
+    "2019": 29281.92,
+    "2020": 151035.14,
+    "2021": 14218.54,
+    "2022": -32016.08,
+    "2023": 28363.47
+   }
+  },
+  {
+   "label": "C21/refine/GA0.VB1/R2#1 profit",
+   "roles": [
+    "primary F/RA2"
+   ],
+   "cell": "GA0.VB1",
+   "id": "37b581e24e3fb7a3",
+   "cfg": {
+    "cell": "GA0.VB1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 294,
+      "trailingBuyPercentage": 5,
+      "trailingStopPercentage": 68,
+      "maximumHoldDays": 21,
+      "tickWindowSize": 28,
+      "intradayLossBuffer": 49,
+      "pullback": 77,
+      "continuationWindow": 173
+     },
+     "VGT": {
+      "targetPercentChange": 237,
+      "trailingBuyPercentage": 32,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 11,
+      "tickWindowSize": 97,
+      "intradayLossBuffer": 25,
+      "pullback": 107,
+      "continuationWindow": 114
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 130,
+        "activation": "entry-day"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 4,
+        "recoveryTenths": 720,
+        "maxBlockSessions": 243
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 5.8,
+     "recentLowLookbackBars": 72,
+     "trendFilterEnabled": true,
+     "trendMethod": "rising_sma",
+     "trendSmaSessions": 102,
+     "trendSmaComparisonSessions": 16,
+     "eligibilityEnabled": true,
+     "eligibilityPolicy": "reset_renew",
+     "eligibilityMaxAgeSessions": 24,
+     "eligibilityResetDropPercent": 1.8,
+     "eligibilityRenewalReboundPercent": 6.9,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 29,
+     "dipThresholdPercent": 14,
+     "recoveryRetracementPercent": 30.5,
+     "recoveryConfirmationSessions": 7,
+     "trailingStopPercent": 5.2,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "breakout",
+     "continuationWindowSessions": 154,
+     "breakoutBufferPercent": 3.3,
+     "breakoutFormationBars": 13,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": 9421.38,
+   "sliceDd": 19111.82,
+   "boundaryEquity": 250166.76,
+   "wholeNet": 259588.15,
+   "wholeDd": 19111.82,
+   "openAtBoundary": [],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": null,
+   "nextSlice": {
+    "lots": 6,
+    "byBook": {
+     "D1:GDX": 0,
+     "D1:VGT": 5,
+     "G:VGT": 1
+    },
+    "maeMedian": -6842.05,
+    "maeP90": -8463.07,
+    "maeWorst": -8618.65,
+    "worstRealized": -5422.75,
+    "meanLosing": -2051.6,
+    "losing": 4,
+    "exitReasons": {
+     "maximum hold": 4,
+     "trailing stop": 1
+    }
+   },
+   "years": {
+    "2016": 9620.11,
+    "2017": 25272.36,
+    "2018": 14997.65,
+    "2019": 31085.78,
+    "2020": 156972.55,
+    "2021": 12218.32,
+    "2022": -393.32,
+    "2023": 9814.71
+   }
+  },
+  {
+   "label": "C21/refine/GB0.VC0/R2#2 robust",
+   "roles": [
+    "role F/balanced"
+   ],
+   "cell": "GB0.VC0",
+   "id": "243a475b7c96a334",
+   "cfg": {
+    "cell": "GB0.VC0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 247,
+      "trailingBuyPercentage": 23,
+      "trailingStopPercentage": 74,
+      "maximumHoldDays": 4,
+      "tickWindowSize": 101,
+      "intradayLossBuffer": 55,
+      "pullback": 200,
+      "continuationWindow": 91
+     },
+     "VGT": {
+      "targetPercentChange": 229,
+      "trailingBuyPercentage": 37,
+      "trailingStopPercentage": 86,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 128,
+      "intradayLossBuffer": 0,
+      "pullback": 182,
+      "continuationWindow": 49
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:GDX": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 178,
+        "activation": "entry-day"
+       }
+      },
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 193
+       },
+       "hold": {
+        "mode": "disabled"
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 15,
+     "breakoutSlopeComparisonSessions": 11,
+     "breakoutPriorHighSessions": 11,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 27,
+     "dipThresholdPercent": 12.5,
+     "recoveryRetracementPercent": 30,
+     "recoveryConfirmationSessions": 7,
+     "trailingStopPercent": 7.6,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": true,
+     "retentionSellPercent": 11,
+     "retentionSmaSessions": 171,
+     "retentionClosesBelow": 1,
+     "continuationEnabled": true,
+     "continuationMethod": "ma_cross",
+     "continuationWindowSessions": 53,
+     "crossSmaBars": 104,
+     "crossRisingBars": 29,
+     "crossMinimumSlopePercent": 1.4,
+     "crossMarginPercent": 1.6,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -20933.1,
+   "sliceDd": 54259.12,
+   "boundaryEquity": 232997.8,
+   "wholeNet": 212064.7,
+   "wholeDd": 55781.73,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2020-04-20",
+    "entryRaw": 232.49,
+    "markAtCutoff": 73103.23,
+    "multipleAtCutoff": 1.97,
+    "highestLater": {
+     "mark": 74733.04,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": 56638.32,
+     "date": "2022-01-19"
+    },
+    "exit": {
+     "date": "2022-01-20",
+     "reason": "trend exit",
+     "raw": 420.42
+    },
+    "final": 58042.42,
+    "changeFromCutoff": -15060.81
+   },
+   "nextSlice": {
+    "lots": 1,
+    "byBook": {
+     "D1:GDX": 0,
+     "D1:VGT": 0,
+     "G:VGT": 1
+    },
+    "maeMedian": -37568.5,
+    "maeP90": -37568.5,
+    "maeWorst": -37568.5,
+    "worstRealized": null,
+    "meanLosing": null,
+    "losing": 0,
+    "exitReasons": {}
+   },
+   "years": {
+    "2016": 7794.43,
+    "2017": 30632.67,
+    "2018": 16299.16,
+    "2019": 14542.04,
+    "2020": 133581.53,
+    "2021": 30147.96,
+    "2022": -48521.25,
+    "2023": 27588.15
+   }
+  },
+  {
+   "label": "C21/broad/GC1.VC1/R1#2 robust",
+   "roles": [
+    "role F/lower-drawdown"
+   ],
+   "cell": "GC1.VC1",
+   "id": "41adc0f49daeef0e",
+   "cfg": {
+    "cell": "GC1.VC1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 267,
+      "trailingBuyPercentage": 4,
+      "trailingStopPercentage": 65,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 41,
+      "intradayLossBuffer": 0,
+      "pullback": 179,
+      "continuationWindow": 128
+     },
+     "VGT": {
+      "targetPercentChange": 221,
+      "trailingBuyPercentage": 29,
+      "trailingStopPercentage": 83,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 150,
+      "intradayLossBuffer": 0,
+      "pullback": 165,
+      "continuationWindow": 115
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:GDX": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 74,
+        "activation": "entry-day"
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 2,
+        "recoveryTenths": 560,
+        "maxBlockSessions": 247
+       }
+      },
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 139
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 3,
+        "recoveryTenths": 220,
+        "maxBlockSessions": 228
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 40,
+     "breakoutSlopeComparisonSessions": 115,
+     "breakoutPriorHighSessions": 25,
+     "trendFilterEnabled": true,
+     "trendMethod": "momentum",
+     "trendMomentumShortSessions": 24,
+     "trendMomentumLongSessions": 80,
+     "trendMomentumMinimumShortReturnPercent": 2.5,
+     "trendMomentumMinimumLongReturnPercent": 6.5,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 7,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": true,
+     "retentionSellPercent": 70,
+     "retentionSmaSessions": 140,
+     "retentionClosesBelow": 5,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 150,
+     "uptrendSmaBars": 100,
+     "uptrendSlopeBars": 6,
+     "uptrendMinimumRisePercent": 3.75,
+     "pullbackMinimumPercent": 3.5,
+     "pullbackMaximumPercent": 10,
+     "recoveryPercent": 1.25,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": -19019.98,
+   "sliceDd": 52823.83,
+   "boundaryEquity": 161951.88,
+   "wholeNet": 142931.9,
+   "wholeDd": 53314.16,
+   "openAtBoundary": [
+    "G:VGT"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "G:VGT",
+    "entry": "2020-07-07",
+    "entryRaw": 284.95,
+    "markAtCutoff": 19856.98,
+    "multipleAtCutoff": 1.61,
+    "highestLater": {
+     "mark": 20298.56,
+     "date": "2022-01-04"
+    },
+    "lowestLater": {
+     "mark": 11495.27,
+     "date": "2022-01-24"
+    },
+    "exit": {
+     "date": "2022-01-25",
+     "reason": "trend exit",
+     "raw": 397.17
+    },
+    "final": 13191.09,
+    "changeFromCutoff": -6665.89
+   },
+   "nextSlice": {
+    "lots": 5,
+    "byBook": {
+     "D1:GDX": 2,
+     "D1:VGT": 2,
+     "G:VGT": 1
+    },
+    "maeMedian": -8095.29,
+    "maeP90": -14914.92,
+    "maeWorst": -15221.67,
+    "worstRealized": -15221.67,
+    "meanLosing": -10420.53,
+    "losing": 3,
+    "exitReasons": {
+     "protective stop": 3,
+     "trailing stop": 1
+    }
+   },
+   "years": {
+    "2016": -956.72,
+    "2017": 25728.28,
+    "2018": 5441.88,
+    "2019": 15096.43,
+    "2020": 108958.21,
+    "2021": 7683.8,
+    "2022": -46588.89,
+    "2023": 27568.91
+   }
+  },
+  {
+   "label": "control: New L0",
+   "roles": [
+    "control (descriptive: chosen with later data)"
+   ],
+   "cell": "GA0.VA0",
+   "id": "a2e385640ca61012",
+   "cfg": {
+    "cell": "GA0.VA0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 277,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 61,
+      "maximumHoldDays": 13,
+      "tickWindowSize": 232,
+      "intradayLossBuffer": 25,
+      "pullback": 152,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 237,
+      "trailingBuyPercentage": 9,
+      "trailingStopPercentage": 73,
+      "maximumHoldDays": 15,
+      "tickWindowSize": 72,
+      "intradayLossBuffer": 42,
+      "pullback": 103,
+      "continuationWindow": 41
+     }
+    },
+    "controls": null,
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 5.6,
+     "recentLowLookbackBars": 84,
+     "trendFilterEnabled": false,
+     "eligibilityEnabled": true,
+     "eligibilityPolicy": "time_limited",
+     "eligibilityMaxAgeSessions": 20,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 64,
+     "dipThresholdPercent": 11.9,
+     "recoveryRetracementPercent": 46.2,
+     "recoveryConfirmationSessions": 5,
+     "trailingStopPercent": 5.7,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 22,
+     "intradayLossBufferEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 16,
+     "initialStopAtrMultiple": 1.2,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "classic_d1",
+     "continuationWindowSessions": 67,
+     "classicPullbackPercent": 11.5,
+     "classicReboundPercent": 3.01,
+     "costBpsPerSide": 5
+    }
+   },
+   "sliceNet": 87238.48,
+   "sliceDd": 19459.83,
+   "boundaryEquity": 251372.87,
+   "wholeNet": 338611.35,
+   "wholeDd": 19459.83,
+   "openAtBoundary": [
+    "D1:GDX"
+   ],
+   "openAtEnd": [
+    "G:VGT"
+   ],
+   "giveBack": {
+    "book": "D1:GDX",
+    "entry": "2021-12-15",
+    "entryRaw": 28.98,
+    "markAtCutoff": 9987.07,
+    "multipleAtCutoff": 1.1,
+    "highestLater": {
+     "mark": 9784.65,
+     "date": "2022-01-05"
+    },
+    "lowestLater": {
+     "mark": 3494.71,
+     "date": "2022-01-06"
+    },
+    "exit": {
+     "date": "2022-01-06",
+     "reason": "trailing stop",
+     "raw": 30.118425000000006
+    },
+    "final": 3161.42,
+    "changeFromCutoff": -6825.65
+   },
+   "nextSlice": {
+    "lots": 15,
+    "byBook": {
+     "D1:GDX": 12,
+     "D1:VGT": 2,
+     "G:VGT": 1
+    },
+    "maeMedian": -2302.97,
+    "maeP90": -7530.54,
+    "maeWorst": -8046.67,
+    "worstRealized": -6455.48,
+    "meanLosing": -1775.99,
+    "losing": 5,
+    "exitReasons": {
+     "trailing stop gap": 2,
+     "trailing stop": 7,
+     "maximum hold": 5
+    }
+   },
+   "years": {
+    "2016": 8588.21,
+    "2017": 23852.14,
+    "2018": 18525.08,
+    "2019": 29004.74,
+    "2020": 138877.67,
+    "2021": 32525.03,
+    "2022": 43474.42,
+    "2023": 43764.07
+   }
+  }
+ ],
+ "nextSliceNeighbourhoods": {
+  "rows": {
+   "C21/refine/GA0.VA0/R1#1 profit": {
+    "draws": 256,
+    "breaches": 19,
+    "breachShare": 0.07,
+    "wilson95": [
+     0.05,
+     0.11
+    ],
+    "medianSliceDd": 23441.31,
+    "worstSliceDd": 54401.08,
+    "trainingBreachShare": 0
+   },
+   "C21/broad/GA0.VA0/R1#2 robust": {
+    "draws": 256,
+    "breaches": 5,
+    "breachShare": 0.02,
+    "wilson95": [
+     0.01,
+     0.04
+    ],
+    "medianSliceDd": 26339.81,
+    "worstSliceDd": 37671.87,
+    "trainingBreachShare": 0
+   },
+   "C21/broad/GA0.VA0/R1#3 Growth entry alternative": {
+    "draws": 256,
+    "breaches": 212,
+    "breachShare": 0.83,
+    "wilson95": [
+     0.78,
+     0.87
+    ],
+    "medianSliceDd": 46359.81,
+    "worstSliceDd": 84918.59,
+    "trainingBreachShare": 0.0703
+   },
+   "C21/refine/GD0.VA0/R1#1 profit": {
+    "draws": 256,
+    "breaches": 244,
+    "breachShare": 0.95,
+    "wilson95": [
+     0.92,
+     0.97
+    ],
+    "medianSliceDd": 50257.05,
+    "worstSliceDd": 84696.1,
+    "trainingBreachShare": 0
+   },
+   "C21/broad/GD1.VD0/R1#1 profit": {
+    "draws": 256,
+    "breaches": 194,
+    "breachShare": 0.76,
+    "wilson95": [
+     0.7,
+     0.81
+    ],
+    "medianSliceDd": 43039.08,
+    "worstSliceDd": 88129.12,
+    "trainingBreachShare": 0.0078
+   },
+   "C21/refine/GB1.VA1/R1#1 profit": {
+    "draws": 256,
+    "breaches": 33,
+    "breachShare": 0.13,
+    "wilson95": [
+     0.09,
+     0.18
+    ],
+    "medianSliceDd": 25550.83,
+    "worstSliceDd": 55402.68,
+    "trainingBreachShare": 0.0078
+   },
+   "C21/refine/GA0.VB1/R1#1 profit": {
+    "draws": 256,
+    "breaches": 251,
+    "breachShare": 0.98,
+    "wilson95": [
+     0.96,
+     0.99
+    ],
+    "medianSliceDd": 39080.99,
+    "worstSliceDd": 53188.42,
+    "trainingBreachShare": 0.0117
+   },
+   "C21/refine/GA0.VB1/R2#1 profit": {
+    "draws": 256,
+    "breaches": 23,
+    "breachShare": 0.09,
+    "wilson95": [
+     0.06,
+     0.13
+    ],
+    "medianSliceDd": 20762.5,
+    "worstSliceDd": 43993.09,
+    "trainingBreachShare": 0
+   }
+  },
+  "compute": {
+   "unique": 2048,
+   "freshAllRuns": 2048,
+   "priorRuns": [],
+   "fresh": 2048,
+   "archiveHits": 0,
+   "workerSeconds": 224.8,
+   "wallSeconds": 32.7,
+   "tallies": {
+    "next-slice neighbourhood": {
+     "fresh": 2048,
+     "hits": 0,
+     "ms": 224800.05384099975
+    }
+   }
+  }
+ },
+ "finished": "2026-11-16T02:41:59.422Z"
+}
