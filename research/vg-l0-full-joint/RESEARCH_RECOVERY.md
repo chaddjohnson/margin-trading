@@ -2,20 +2,21 @@
 
 ## Top screen
 
-- **Updated (UTC):** 2026-11-16T20:00Z (from `date -u`).
-- **Status:** **INCOMPLETE.** Stage: **the study chain is running** (`chains/chain1.sh` as unit `vgl0fj-chain1`, started
-  2026-11-15T13:27:08Z). **C19 complete** (selection committed `cdd37dc2`, fold evaluation `3d489a73`, 13:27Z → 18:44Z);
-  **C21 complete** (selection `a8b9e2f4`, fold `96286b77`, 18:44Z → 02:42Z); **C23 complete** (selection `41db5e2d`, fold
-  `5ca7cf3f`, → 11:03Z); **sequential verdicts sealed** (`7ecf9a68`): L/RA1 SUPPORTED (+$40,600.52 / $31,318.53), F/RA2
-  supported (secondary ablation), the other 7 unsupported. **C24 Track I sealed** (broad `a3131048`, qualification/plan/refinement `619cdcce`, 11:03Z → 19:59Z); **C24 Track N** `informed1`
-  (step `c409`) started 2026-11-16T19:58:43Z. Protocol FROZEN; stage V sealed (0 failed).
+- **Updated (UTC):** 2026-11-17T09:53Z (from `date -u`).
+- **Status:** **INCOMPLETE.** Stage: **report-only diagnostics** (unit `vgl0fj-diagnostics`, `chains/diagnostics.sh`, log
+  `results/logs/diagnostics.log`), then tables, REPORT.md, final checkpoint, commit and push. **The study chain is
+  COMPLETE** (`CHAIN1 DONE` 2026-11-17T09:50:48Z): C19 `cdd37dc2`/`3d489a73`, C21 `a8b9e2f4`/`96286b77`, C23
+  `41db5e2d`/`5ca7cf3f`, sequential `7ecf9a68` (L/RA1 supported +$40,600.52 / $31,318.53; F/RA2 supported, ablation;
+  7 unsupported), C24 Track I `a3131048`/`619cdcce`, C24 selection `39db58e4`, FROZEN_SELECTION `1370534e`, validation
+  (FULL once) `4063ea52`. **Outcome: no qualifying successor** (L/RA1's C24 primary dominated by New L0 and failed V2/V3;
+  every other procedure unsupported or informed). New L0 reproduced exactly on FULL.
 - **Authority:** brief `brief/BRIEF.md` `5620330a…`; protocol `PROTOCOL.md` **`ec9de0d623e3…`** frozen by
   `results/protocol-freeze.json` (`869ae1a7e68052e0fc210230a51d1400a8838ac0913131d36cf93137af97b739`, commit `2a56e9b6`,
   2026-11-15T13:26:59Z); amendments R1, R2 (both before the freeze), no post-freeze amendment; standard 2.2.0
   (`0085cff2…`), NL0 1.0.0 (`9b387bb4…`). Evaluation digest `2aeeee42decc…`, decision digest `fbf9fc671883…`.
-- **Running processes:** `vgl0fj-chain1.service` (the chain; log `research/vg-l0-full-joint/results/logs/chain1.log`);
-  it launches one stage unit at a time (`vgl0fj-<C>-<step>`, log `results/logs/<unit>.log`, memory
-  `results/memory/<job>.jsonl`). Check: `systemctl --user is-active vgl0fj-chain1`; `tail results/logs/chain1.log`.
+- **Running processes:** `vgl0fj-diagnostics.service` (report-only; rerunnable: each tool refuses to overwrite a sealed
+  diagnostic, so a rerun after a failure starts from the first missing one by editing nothing and launching the remaining
+  tools by hand). The chain unit has exited.
 - **Next step:** wait for the chain (expected ≈ 50 h: C19 ≈ 6 h, C21 ≈ 8 h, C23 ≈ 11 h, C24 Track I ≈ 12 h + Track N
   ≈ 12 h, then the frozen selection and FULL once; C19 broad1 ran at ≈ 196 fresh/s, 6.7 GiB). The report-only tooling is
   written and committed (`934a8c5a`, `tools/vg-l0-full-joint/`: analyses, replays, tail, tables; dry-tested on the
@@ -50,9 +51,9 @@
 | C21 | complete, sealed, committed | `results/search/C21/`, `results/folds/C21/` | selection `a8b9e2f4` before D23 opened; fold `96286b77` |
 | C23 | complete, sealed, committed | `results/search/C23/`, `results/folds/C23/` | selection `41db5e2d` before D24 opened; fold `5ca7cf3f` |
 | Sequential verdicts | complete, sealed, committed | `results/folds/sequential.json` | `7ecf9a68`; L/RA1 supported, F/RA2 supported (ablation), 7 unsupported |
-| C24 Track I, Track N (informed1/2, 64 lanes), qualify, select | Track I complete (`a3131048`, `619cdcce`); **Track N running** (c409) | `results/search/C24/`, `results/folds/C24/` | |
-| Frozen selection, validation (FULL once) | not started | `FROZEN_SELECTION.json`, `results/validation/validation.json` | |
-| Report-only diagnostics, tables, REPORT | not started | `results/diagnostics/`, `results/tables/` | tooling in `tools/vg-l0-full-joint/` |
+| C24 Track I, Track N (informed1/2, 64 lanes), qualify, select | complete, sealed, committed (`a3131048`, `619cdcce`, `39db58e4`) | `results/search/C24/`, `results/folds/C24/` | |
+| Frozen selection, validation (FULL once) | complete, sealed, committed (`1370534e`, `4063ea52`) | `FROZEN_SELECTION.json`, `results/validation/validation.json` | |
+| Report-only diagnostics, tables, REPORT | **running** (diagnostics unit) | `results/diagnostics/`, `results/tables/` | tooling in `tools/vg-l0-full-joint/` |
 
 ## Guards
 
