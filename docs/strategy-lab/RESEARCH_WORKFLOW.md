@@ -95,9 +95,11 @@ compare. That is exploratory and hindsight-prone. Every chart you look at is dat
    Eastern times are in the tooltip and the table. Choose **Line · intraday** for the minute path; switching keeps
    the zoom, the selection and the checkboxes ([DAILY_CANDLES.md](DAILY_CANDLES.md)). On candles, measuring (below)
    runs from one session's daily close to another's.
-   **Measure:** hold the mouse button and drag across the chart to see the price change between two points (Eastern
-   times, $ and %; green up, red down), from the earlier point to the later one, whichever way you drag. It is shown
-   only while the button is held: releasing it (anywhere) or pressing Escape clears it. Zoom with
+   **Measure:** drag across the chart to see the price change between two points: each endpoint's date (Eastern
+   time on the line) and price, then $ and % (green up, red down), from the earlier point to the later one, whichever
+   way you drag. On candles that is daily close → close. The measurement stays after you release the button. Click
+   the chart or press Escape to clear it; the next drag replaces it. The hovered candle's or point's own read-out has
+   its own row below the measurement. Zoom with
    the trackpad or mouse wheel around the cursor (a two-finger swipe up zooms in, down zooms out), the buttons or the
    overview; dragging never zooms. Hold ⌘ (macOS) or Ctrl (Windows, Linux), or Shift, while dragging to pan instead:
    dragging left shows later times, and the zoom level stays the same.

@@ -260,7 +260,13 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
   - The component is keyed by run, symbol and chart type, and both types share one real-time x axis.
   - The behaviour below applies to both types unless it names the line.
 - **Crosshair.** A vertical line follows the nearest highlighted data point, with Dygraphs' highlight dot on the line
-  and a readout showing the Eastern time and price.
+  and a readout showing the Eastern time and price (on candles the session's O/H/L/C). The readout has its own row
+  between the measurement bar and the plot: one line of fixed height (a long candle readout ends in an ellipsis), so
+  hovering never moves the chart and never covers the measurement (since 2026-11-18, Task 18).
+- **Overlay layer.** Markers, the crosshair, the trade connector and the measurement's lines, dots and shading are
+  placed in canvas coordinates (`toDomCoords`, `getArea`). Their layer and the graph's canvas share one box
+  (`.chart-plot`), so nothing is offset by the rows above the plot. (From 2026-11-04 to 2026-11-18 the layer spanned
+  the whole frame, including the measurement bar, and every overlay sat 28 px too high.)
 - **Axis.** Ticks fall on America/New_York boundaries, from a custom ticker, so labels never shift a day with the
   browser's time zone.
 - **Times.** Every displayed time is America/New_York with an EST/EDT label (Intl, daylight-saving exact). Instants are
@@ -268,18 +274,32 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
 - **Changing symbol or run** keeps the zoom when it still fits the new data (otherwise it shows everything) and clears
   the selected event.
 - **Drag to measure** (a custom Dygraphs `interactionModel`; `src/chart/measure.ts`):
-  - **Gesture.** Dragging with the primary button held never zooms or pans. It selects two points, each snapped with
-    `findClosestRow` to the closest plotted data point and that point's own price.
-  - **Display.** Two vertical lines, two dots on the line and translucent shading between them. Above the chart:
-    the Eastern start and end times, the dollar change and the percentage change (green up, red down), updated live
-    while dragging.
-  - **Direction.** The result is always computed from the earlier to the later point, whichever way you drag.
-  - **Lifetime.** The measurement exists **only while the mouse button is held** (since 2026-11-04, Task 6).
-    - Releasing the button, on the chart or anywhere else, clears all of it at once: the shading, both lines, both
-      dots and the read-out. The read-out is cleared synchronously, not one frame later.
-    - A cancelled drag clears it the same way: Escape, the window losing focus, a context menu, a move reporting the
-      button no longer held (a missed release), or the chart unmounting (a symbol or run change).
-    - A plain click shows nothing.
+  - **Gesture.** Dragging with the primary button held never zooms or pans. It selects two points, each snapped to
+    the plotted row nearest in time to the pointer **among the rows inside the visible window**, with that row's own
+    price (`nearestRow` in `measure.ts`). The pointer's x comes from `clientX` minus the canvas's left edge, so it is
+    right wherever the pointer is during the drag: over a marker, the bar, the range selector or off the chart. A
+    pointer past the plot's edge stops at the first or last row in view. (Before 2026-11-18 it used Dygraphs'
+    `eventToDomCoords`, whose `offsetX` is relative to the element under the pointer: over a marker the end jumped
+    to the window's left edge, even to a session outside the window.)
+  - **What is measured.** Candles: one session's daily **close** to another's ("Daily close → daily close"; no
+    weekend or holiday is invented). Line: one plotted point's price to another's ("Minute close → minute close"):
+    regular-session minute closes at the minute's start, plus each session's closing print at the scheduled close.
+    Long windows plot a decimated subset (min/max per bucket), so zoom in to measure between exact minutes. The
+    synthetic demo: "Synthetic close → close". All prices are the chart's own split-adjusted prices.
+  - **Display.** Two vertical lines, two dots on the measured points and translucent shading between them. The
+    measurement bar above the chart reads the basis, then each endpoint with its price (`2020-09-30 close $311.45 →
+    2021-12-13 close $453.29`), the dollar change and the percentage change (green up, red down), updated live while
+    dragging. The hover readout has its own row below it and never covers it (see Crosshair).
+  - **Arithmetic.** `change = later − earlier`, `percent = change / earlier × 100`, always from the earlier to the
+    later point, whichever way you drag. Zero reads `$0.00` / `0.00%` without a sign. A non-zero change too small for
+    two decimals keeps four (`+$0.0040`), and anything smaller reads `<0.0001`. A zero start price reads `—`.
+  - **Lifetime** (since 2026-11-18, Task 18; from 2026-11-04 to 2026-11-18 it existed only while the button was held).
+    - The measurement **stays after the release**, wherever the button is released, and through a release the chart
+      never sees (the window losing focus, a context menu, a move reporting the button no longer held). It follows
+      zooms and pans. An endpoint outside the window hides its line and dot, and the bar still reads both endpoints.
+    - It is cleared by a plain click on the chart (a press that moves less than 3 px), by Escape (also mid-drag:
+      later moves of that press do nothing), by the next drag (which replaces it) or by the chart unmounting (a
+      symbol, run or chart-type change). Panning keeps it.
   - **Navigation.** Double-click resets the zoom; zooming otherwise uses the buttons, the range selector and the
     mouse wheel.
 - **Drag to pan** (`src/chart/pan.ts`, the same interaction model):
@@ -294,7 +314,7 @@ contributes only its events for the same symbol. Real and synthetic runs are nev
     in step.
   - **Bounds.** The window is clamped to the data's extent, the same bounds the wheel zoom uses. (Before 2026-11-04,
     Shift-drag used Dygraphs' unbounded pan.)
-  - **No measurement.** No measurement lines, dots, shading or read-out are drawn while panning.
+  - **No measurement.** Panning never starts a measurement. An existing one stays and follows the pan.
   - **Ending.** The release ends a pan wherever it happens. Escape, focus loss, a context menu, a missed release, or
     an unmount end it in place. No text is selected while panning (`html.chart-panning`: `user-select: none`, a
     grabbing cursor).

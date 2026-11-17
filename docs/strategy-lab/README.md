@@ -58,3 +58,4 @@ prototype of 2026-11-03.
 | `brief/2026-11-06-growth-drawdown-recovery-gate-brief.md` | The Growth Drawdown Recovery Gate brief (Task 15), verbatim |
 | `brief/2026-11-06-daily-ohlc-candlesticks-brief.md` | The daily OHLC candlestick chart brief (Task 16), verbatim |
 | `brief/2026-11-11-pooled-candidate-viewing-brief.md` | The pooled-candidate viewing brief (Priority 6, Task 17), verbatim |
+| `brief/2026-11-18-drag-to-measure-bugfix-brief.md` | The drag-to-measure regression bugfix brief (Task 18), verbatim; report in `reports/2026-11-18-drag-measure/` |

@@ -351,12 +351,14 @@ test('after repeated swaps the chart still hovers, links, zooms, measures and pa
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   for (let i = 0; i < 5; i++) await page.mouse.wheel(0, 120);
   await expect.poll(() => at('from')).toBeGreaterThan(from0);
-  // drag to measure (the read-out exists only while the button is held)
+  // drag to measure (the read-out stays after the release until Escape or a click on the chart)
   await page.mouse.move(box.x + box.width * 0.3, box.y + box.height * 0.6);
   await page.mouse.down();
   await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.6, { steps: 5 });
   await expect(page.getByTestId('measure-percent')).toBeVisible();
   await page.mouse.up();
+  await expect(page.getByTestId('measure-percent')).toBeVisible();
+  await page.keyboard.press('Escape');
   await expect(page.getByTestId('measure-percent')).toHaveCount(0);
   // Shift-drag pans without changing the zoom span
   const span = async () => (await at('to')) - (await at('from'));

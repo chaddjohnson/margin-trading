@@ -330,7 +330,7 @@ test.describe('daily OHLC candles on real data', () => {
     const bar = page.getByTestId('measure-bar');
     await expect(bar).toHaveAttribute('data-basis', 'daily-close');
     await expect(page.getByTestId('measure-kind')).toHaveText('Daily close → daily close');
-    await expect(page.getByTestId('measure-range')).toHaveText(/^\d{4}-\d{2}-\d{2} close → \d{4}-\d{2}-\d{2} close$/);
+    await expect(page.getByTestId('measure-range')).toHaveText(/^\d{4}-\d{2}-\d{2} close \$\d+\.\d{2} → \d{4}-\d{2}-\d{2} close \$\d+\.\d{2}$/);
     const [s, e, sp, ep] = await Promise.all(['data-start-ms', 'data-end-ms', 'data-start-price', 'data-end-price'].map((a) => bar.getAttribute(a)));
     const si = c.x.indexOf(Number(s));
     const ei = c.x.indexOf(Number(e));
@@ -339,8 +339,10 @@ test.describe('daily OHLC candles on real data', () => {
     expect(Number(sp)).toBe(c.c[si]);
     expect(Number(ep)).toBe(c.c[ei]);
     await page.mouse.up();
-    await expect(bar).not.toHaveAttribute('data-start-ms', /.*/);
+    await expect(bar).toHaveAttribute('data-start-ms', s!); // kept after the release
     expect(await view(page)).toEqual(before); // measuring never zooms or pans
+    await page.keyboard.press('Escape');
+    await expect(bar).not.toHaveAttribute('data-start-ms', /.*/);
 
     // Ctrl-drag left pans to later dates, same span, no measurement
     await page.mouse.move(...at(0.6));

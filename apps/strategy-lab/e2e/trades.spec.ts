@@ -306,11 +306,13 @@ test.describe('trading backtest (real data)', () => {
     // Crosshair.
     await page.mouse.move(at(0.5).x, at(0.5).y);
     await expect(page.getByTestId('crosshair')).toBeVisible();
-    // Drag-to-measure, cleared on release.
+    // Drag-to-measure, kept after the release, cleared by Escape.
     await page.mouse.down();
     await page.mouse.move(at(0.8).x, at(0.8).y, { steps: 6 });
     await expect(page.getByTestId('measure-percent')).toBeVisible();
     await page.mouse.up();
+    await expect(page.getByTestId('measure-percent')).toBeVisible();
+    await page.keyboard.press('Escape');
     await expect(page.getByTestId('measure-percent')).toHaveCount(0);
     // Ctrl-drag pans across the markers without tooltips or links.
     const before = await view(page);

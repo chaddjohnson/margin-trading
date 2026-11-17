@@ -35,7 +35,7 @@ import {
 import { etTicks } from './etTicker.ts';
 import { type ChartLink, type Placement, placementOf } from './link.ts';
 import { FRAMED_SIZE, type Frame, MARKER_SIZE, type MarkerTone, PRICE_COLOR, type Role, eventKindLabel, glyphUri, isPartialExit, markerOffset } from './markers.ts';
-import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure } from './measure.ts';
+import { type MeasurePoint, type Measurement, formatChange, formatPercentChange, measure, nearestRow } from './measure.ts';
 import { isMacPlatform, panModifierFor, panWindow, startsPan } from './pan.ts';
 import { wheelZoomOutPx, wheelZoomWindow } from './wheelZoom.ts';
 
@@ -397,35 +397,43 @@ export function PriceChart(props: Props) {
     // The narrowest wheel-zoom window: 30 minutes of minute data, 20 sessions of the synthetic demo, a week of candles.
     const minSpan = candles ? MIN_SPAN_CANDLES : propsRef.current.synthetic ? MIN_SPAN_DAILY_DATA : MIN_SPAN_MINUTE_DATA;
 
-    // Measurement updates: the overlay immediately, the read-out once per animation frame while dragging. Clearing
-    // is synchronous for both (and drops a pending frame), so nothing of a measurement outlives the release.
+    // Measurement updates: the overlay immediately, the read-out once per animation frame while dragging (`now` sets
+    // it at once: the release). Clearing is synchronous for both and drops a pending frame.
     let measureFrame = 0;
-    const setMeasure = (m: { a: MeasurePoint; b: MeasurePoint } | null) => {
+    const setMeasure = (m: { a: MeasurePoint; b: MeasurePoint } | null, now = false) => {
       measureRef.current = m;
       placeMeasure();
       cancelAnimationFrame(measureFrame);
-      if (m) measureFrame = requestAnimationFrame(() => setMeasurement(measure(m.a, m.b)));
-      else setMeasurement(null);
+      if (!m) setMeasurement(null);
+      else if (now) setMeasurement(measure(m.a, m.b));
+      else measureFrame = requestAnimationFrame(() => setMeasurement(measure(m.a, m.b)));
     };
     // The gesture in progress (measure or pan): ending it removes its listeners and runs its end handler once.
     let endGesture: (() => void) | null = null;
-    // Snap to the closest PLOTTED point: its time and its own price (never an interpolated screen position). On candles
-    // that is the closest session and its daily CLOSE (column 4), so a measurement is close → close.
+    // Snap to the nearest PLOTTED point inside the visible window: its time and its own price (never an interpolated
+    // screen position). On candles that is a session and its daily CLOSE (column 4), so a measurement is close → close;
+    // on the line a plotted minute close (or closing print). The x comes from clientX, not eventToDomCoords: during a
+    // drag the moves come from the document, and offsetX is relative to whatever is under the pointer (a marker, the
+    // bar above, the range selector). The graph's canvas sits at the host's top-left corner.
     const snap = (e: MouseEvent, g: Dygraph): MeasurePoint | null => {
-      const [x] = g.eventToDomCoords(e);
-      // findClosestRow is part of the Dygraphs API but missing from @types/dygraphs.
-      const row = (g as Dygraph & { findClosestRow(domX: number): number }).findClosestRow(x);
-      if (row === null || row === undefined || row < 0) return null;
-      const t = g.getValue(row, 0);
-      const price = g.getValue(row, candles ? 4 : 1);
-      return t === null || price === null ? null : { t, price };
+      const [x0, x1] = g.xAxisRange();
+      const col = candles ? 4 : 1;
+      const row = nearestRow(
+        g.numRows(),
+        (i) => g.getValue(i, 0) ?? NaN,
+        (i) => Number.isFinite(g.getValue(i, col)),
+        g.toDataXCoord(e.clientX - host.getBoundingClientRect().left),
+        x0,
+        x1
+      );
+      return row < 0 ? null : { t: g.getValue(row, 0)!, price: g.getValue(row, col)! };
     };
-    // Primary-button drag measures (no zoom, no pan) and the measurement exists ONLY while the button is held: the
-    // release — on the chart or anywhere else — clears it, and so does every cancellation (Escape, the window losing
-    // focus, a context menu, a move that reports the button no longer held because the release was missed, or the
-    // chart unmounting). ⌘-drag (macOS) or Ctrl-drag (elsewhere), and Shift/Alt-drag, pan the time axis instead; the mode
-    // is read at the mouse-down and locked until the release. Double-click resets the zoom; touch keeps the Dygraphs
-    // defaults. Zoom is otherwise available through the wheel, the zoom buttons and the range selector.
+    // Primary-button drag measures (no zoom, no pan). The measurement stays after the release (on the chart or
+    // anywhere else, or a release the chart never saw: the window losing focus, a context menu, a move reporting the
+    // button no longer held) until a plain click on the chart, Escape, the next drag (which replaces it) or the chart
+    // unmounting. ⌘-drag (macOS) or Ctrl-drag (elsewhere), and Shift/Alt-drag, pan the time axis instead and keep the
+    // measurement; the mode is read at the mouse-down and locked until the release. Double-click resets the zoom; touch
+    // keeps the Dygraphs defaults. Zoom is otherwise available through the wheel, the zoom buttons and the range selector.
     const interactionModel = {
       mousedown: (event: MouseEvent, g: Dygraph, context: DragContext) => {
         if (event.button !== 0) return;
@@ -505,7 +513,8 @@ export function PriceChart(props: Props) {
             const end = snap(e, g);
             if (end) setMeasure({ a: start, b: end });
           },
-          () => setMeasure(null) // released or cancelled: the whole measurement goes
+          // Released: a drag keeps its measurement (the read-out set now, not a frame later); a click clears it.
+          () => setMeasure(moved ? measureRef.current : null, true)
         );
       },
       willDestroyContextMyself: true,
@@ -534,9 +543,11 @@ export function PriceChart(props: Props) {
       touchmove: D.defaultInteractionModel.touchmove,
       touchend: D.defaultInteractionModel.touchend
     };
-    // Escape cancels a drag in progress (later moves of the same press no longer measure).
+    // Escape ends a drag in progress (later moves of the same press no longer measure) and clears the measurement.
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') endGesture?.();
+      if (e.key !== 'Escape') return;
+      endGesture?.();
+      setMeasure(null);
     };
     window.addEventListener('keydown', onKey);
     // Markers sit above the canvas: a wheel over one zooms like a wheel over the chart.
@@ -786,6 +797,14 @@ export function PriceChart(props: Props) {
       : props.synthetic
         ? `${etParts(ms).date} (synthetic)`
         : formatEt(new Date(ms).toISOString());
+  // What the two endpoints are (the line plots minute closes and closing prints at the minute's start; long windows
+  // a decimated subset of them).
+  const basis = candles ? 'Daily close → daily close' : props.synthetic ? 'Synthetic close → close' : 'Minute close → minute close';
+  const endpoint = (p: MeasurePoint, testId: string) => (
+    <span className="measure-point" data-testid={testId}>
+      {when(p.t)} <b>${formatPrice(p.price)}</b>
+    </span>
+  );
 
   const target = (e: { target: EventTarget | null }) =>
     e.target instanceof HTMLElement ? e.target.closest<HTMLButtonElement>('button.marker') : null;
@@ -825,16 +844,11 @@ export function PriceChart(props: Props) {
       >
         {measurement ? (
           <>
-            {candles && (
-              <span className="measure-kind" data-testid="measure-kind">
-                Daily close → daily close
-              </span>
-            )}
-            <span className="measure-range" data-testid="measure-range">
-              {when(measurement.start.t)} → {when(measurement.end.t)}
+            <span className="measure-kind" data-testid="measure-kind">
+              {basis}
             </span>
-            <span className="measure-prices">
-              {formatPrice(measurement.start.price)} → {formatPrice(measurement.end.price)}
+            <span className="measure-range" data-testid="measure-range">
+              {endpoint(measurement.start, 'measure-start')} → {endpoint(measurement.end, 'measure-end')}
             </span>
             <b className="measure-change" data-testid="measure-change">
               {formatChange(measurement.change)}
@@ -842,64 +856,68 @@ export function PriceChart(props: Props) {
             <b className="measure-percent" data-testid="measure-percent">
               {formatPercentChange(measurement.percent)}
             </b>
-            <span className="muted small">release to clear · Esc cancels</span>
+            <span className="muted small">click the chart or Esc to clear</span>
           </>
         ) : (
           <span className="muted small">
             {candles
-              ? 'Hold the mouse button and drag across the candles to measure the change from one session’s daily CLOSE to another’s (earlier → later); it clears when you release.'
-              : 'Hold the mouse button and drag across the chart to measure a price change (earlier → later point); it clears when you release.'}{' '}
+              ? 'Drag across the candles to measure the change from one session’s daily CLOSE to another’s (earlier → later); it stays until you click the chart or press Esc.'
+              : 'Drag across the chart to measure a price change (earlier → later point); it stays until you click the chart or press Esc.'}{' '}
             {PAN_MODIFIER === 'meta' ? '⌘' : 'Ctrl'}-drag pans.
           </span>
         )}
       </div>
-      <div ref={hostRef} className="chart-host" />
-      <div
-        ref={layerRef}
-        className="marker-layer"
-        data-testid="marker-layer"
-        onClick={(e) => {
-          const b = target(e);
-          if (b) propsRef.current.onActivate(overlapping(b));
-        }}
-        onMouseOver={(e) => {
-          const b = target(e);
-          if (b && !gestureRef.current) hover(b, overlapping(b));
-        }}
-        onMouseOut={(e) => {
-          if (target(e)) unhover();
-        }}
-        onFocus={(e) => {
-          const b = target(e);
-          if (b) hover(b, [b.dataset.key!]);
-        }}
-        onBlur={(e) => {
-          if (target(e)) unhover();
-        }}
-      >
-        <div ref={crossRef} className="crosshair" data-testid="crosshair" hidden />
-        <div ref={shadeRef} className="measure-shade" data-testid="measure-shade" hidden />
-        <div ref={lineARef} className="measure-line" data-testid="measure-line" hidden />
-        <div ref={lineBRef} className="measure-line" data-testid="measure-line" hidden />
-        <div ref={dotARef} className="measure-dot" data-testid="measure-dot" hidden />
-        <div ref={dotBRef} className="measure-dot" data-testid="measure-dot" hidden />
-        <svg
-          ref={linkSvgRef}
-          className="trade-link"
-          data-testid="trade-link"
-          style={{ display: 'none' }}
-          aria-hidden="true"
-        >
-          <defs>
-            <clipPath id={clipId}>
-              <rect ref={linkClipRef} />
-            </clipPath>
-          </defs>
-          <line ref={linkLineRef} clipPath={`url(#${clipId})`} />
-        </svg>
-      </div>
+      {/* The hovered point or candle: its own row under the measurement, so it never covers or replaces it. */}
       <div ref={readoutRef} className="chart-readout" data-testid="chart-readout" aria-live="off" />
-      {candles && <div ref={densityRef} className="candle-density" data-testid="candle-density" role="note" hidden />}
+      {/* The overlay layer covers exactly the graph's canvas: every overlay is placed in canvas coordinates. */}
+      <div className="chart-plot">
+        <div ref={hostRef} className="chart-host" />
+        <div
+          ref={layerRef}
+          className="marker-layer"
+          data-testid="marker-layer"
+          onClick={(e) => {
+            const b = target(e);
+            if (b) propsRef.current.onActivate(overlapping(b));
+          }}
+          onMouseOver={(e) => {
+            const b = target(e);
+            if (b && !gestureRef.current) hover(b, overlapping(b));
+          }}
+          onMouseOut={(e) => {
+            if (target(e)) unhover();
+          }}
+          onFocus={(e) => {
+            const b = target(e);
+            if (b) hover(b, [b.dataset.key!]);
+          }}
+          onBlur={(e) => {
+            if (target(e)) unhover();
+          }}
+        >
+          <div ref={crossRef} className="crosshair" data-testid="crosshair" hidden />
+          <div ref={shadeRef} className="measure-shade" data-testid="measure-shade" hidden />
+          <div ref={lineARef} className="measure-line" data-testid="measure-line" hidden />
+          <div ref={lineBRef} className="measure-line" data-testid="measure-line" hidden />
+          <div ref={dotARef} className="measure-dot" data-testid="measure-dot" hidden />
+          <div ref={dotBRef} className="measure-dot" data-testid="measure-dot" hidden />
+          <svg
+            ref={linkSvgRef}
+            className="trade-link"
+            data-testid="trade-link"
+            style={{ display: 'none' }}
+            aria-hidden="true"
+          >
+            <defs>
+              <clipPath id={clipId}>
+                <rect ref={linkClipRef} />
+              </clipPath>
+            </defs>
+            <line ref={linkLineRef} clipPath={`url(#${clipId})`} />
+          </svg>
+        </div>
+        {candles && <div ref={densityRef} className="candle-density" data-testid="candle-density" role="note" hidden />}
+      </div>
     </div>
   );
 }

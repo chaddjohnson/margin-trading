@@ -1,7 +1,7 @@
 // ⌘/Ctrl + drag pans the time axis: dragging left shows later times and right earlier ones, smoothly, at the same zoom,
 // clamped to the data, with the overview navigator in step and no measurement overlay. The mode is read at the
 // mouse-down and locked until the release; release outside the chart, cancellation and focus loss end the pan; no text
-// is selected. A plain drag still measures (and clears on release); wheel zoom, crosshair, markers, tooltips, the zoom
+// is selected. A plain drag still measures (kept after the release until Escape); wheel zoom, crosshair, markers, tooltips, the zoom
 // buttons and the overview keep working. The browser here runs on Linux (Ctrl); macOS (⌘) is emulated in one test.
 
 import { type Page, expect, test } from '@playwright/test';
@@ -141,7 +141,7 @@ test('the mode is locked at the mouse-down: releasing Ctrl keeps panning; pressi
   expect(a2).toBeGreaterThan(a0);
   expect(Math.abs(b2 - a2 - (b0 - a0))).toBeLessThanOrEqual(1);
 
-  // A plain drag measures; Ctrl pressed during it changes nothing; the release clears the measurement.
+  // A plain drag measures; Ctrl pressed during it changes nothing; the release keeps the measurement, Escape clears it.
   const before = await view(page);
   await page.mouse.move(r.x, r.y);
   await page.mouse.down();
@@ -153,6 +153,8 @@ test('the mode is locked at the mouse-down: releasing Ctrl keeps panning; pressi
   expect(await view(page)).toEqual(before); // measuring never pans
   await page.mouse.up();
   await page.keyboard.up('Control');
+  await expect(page.getByTestId('measure-percent')).toBeVisible();
+  await page.keyboard.press('Escape');
   await noMeasurement(page);
 });
 
@@ -267,7 +269,7 @@ test.describe('macOS', () => {
     expect(a1).toBeGreaterThan(a0);
     expect(Math.abs(b1 - a1 - (b0 - a0))).toBeLessThanOrEqual(1);
     await noMeasurement(page);
-    // With Ctrl on "macOS" the drag is a measurement, not a pan.
+    // With Ctrl on "macOS" the drag is a measurement, not a pan (kept after the release; Escape clears it).
     const s = await point(page, 0.3);
     const e = await point(page, 0.6);
     await page.keyboard.down('Control');
@@ -277,6 +279,8 @@ test.describe('macOS', () => {
     expect(await view(page)).toEqual([a1, b1]);
     await page.mouse.up();
     await page.keyboard.up('Control');
+    await expect(page.getByTestId('measure-percent')).toBeVisible();
+    await page.keyboard.press('Escape');
     await noMeasurement(page);
   });
 });

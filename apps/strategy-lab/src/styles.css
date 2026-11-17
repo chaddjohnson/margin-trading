@@ -768,6 +768,11 @@ textarea {
   position: relative;
 }
 
+/* The graph's canvas and the overlay layer above it: the same box, so overlays placed in canvas coordinates line up. */
+.chart-plot {
+  position: relative;
+}
+
 .chart-host {
   width: 100%;
   height: clamp(320px, 52vh, 560px);
@@ -845,8 +850,8 @@ textarea {
   color: var(--text-1);
 }
 
-.measure-prices {
-  color: var(--text-2);
+.measure-point b {
+  font-weight: 600;
 }
 
 .measure-bar.dir-up .measure-change,
@@ -902,21 +907,25 @@ textarea {
   background: var(--danger);
 }
 
+/* The hovered point or candle: its own row between the measurement bar and the plot, never over either. One line of
+   fixed height (a long candle read-out ends in an ellipsis), so hovering never moves the chart. */
 .chart-readout {
-  position: absolute;
-  top: 2px;
-  right: 14px;
+  height: 18px;
+  margin-bottom: 2px;
+  padding-right: 14px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: right;
   font-size: 12px;
-  color: var(--text-1);
-  background: rgba(11, 18, 32, 0.85);
-  padding: 0 6px;
-  border-radius: 4px;
+  line-height: 18px;
+  color: var(--text-2);
   pointer-events: none;
   font-variant-numeric: tabular-nums;
 }
 
 .chart-readout:empty {
-  display: none;
+  visibility: hidden;
 }
 
 .chart-host .dygraph-axis-label {
@@ -2403,7 +2412,7 @@ a.view-tab:not(.is-active):hover {
 .candle-density {
   position: absolute;
   left: 72px;
-  top: 34px;
+  top: 6px;
   max-width: min(560px, calc(100% - 100px));
   padding: 2px 8px;
   border-radius: 4px;
@@ -2427,12 +2436,6 @@ a.view-tab:not(.is-active):hover {
   margin-top: 4px;
   color: var(--text-2);
   font-size: 11.5px;
-}
-
-/* The candle read-out can be long: it wraps inside the chart instead of running off its left edge. */
-.chart-frame[data-chart-mode='candles'] .chart-readout {
-  max-width: calc(100% - 90px);
-  text-align: right;
 }
 
 /* ---------- pooled portfolio candidates (Priority 6, src/components/PortfolioView.tsx) ---------- */

@@ -146,7 +146,7 @@ that is its session's candle. **Line · intraday** restores exact minute placeme
 
 | Gesture | On candles |
 | --- | --- |
-| Drag | Measures from one session's daily **close** to another's (earlier → later, whichever way you drag). The bar reads "Daily close → daily close", e.g. `2023-05-18 close → 2023-06-01 close`, $ and % (`data-basis="daily-close"`). It never zooms or pans, and it clears on release, Escape, blur or a missed release, as on the line |
+| Drag | Measures from one session's daily **close** to another's (earlier → later, whichever way you drag), snapped to the sessions in view under the pointer. The bar reads "Daily close → daily close", then each endpoint with its close, e.g. `2020-09-30 close $311.45 → 2021-12-13 close $453.29`, then `+$141.84` and `+45.54%` (VGT, Study 8 import) (`data-basis="daily-close"`). The hovered candle's O/H/L/C has its own row below and never covers it. It never zooms or pans. Since 2026-11-18 it stays after the release until a click on the chart, Escape, the next drag or a chart change. At full-history density one pixel spans two to three sessions, so zoom in to pick an exact session |
 | ⌘-drag (macOS) / Ctrl-drag (Windows, Linux), Shift- or Alt-drag | Pans: same span, clamped, no measurement |
 | Two-finger swipe up / down, mouse wheel | Zooms in / out around the cursor; the narrowest window is one week (about five sessions) |
 | Buttons 1W … 3Y, All; the overview; double-click | As on the line |

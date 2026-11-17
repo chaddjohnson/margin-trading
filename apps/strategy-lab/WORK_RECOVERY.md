@@ -1,6 +1,98 @@
 # Work recovery checkpoint — Strategy Lab (real-data workbench on the UI feature branch)
 
-## Top screen (read this first) — Task 17 (Priority 6): pooled-candidate viewing — COMPLETE
+## Top screen (read this first) — Task 18: drag-to-measure regression (bugfix) — COMPLETE
+
+- **Updated:** 2026-11-17T23:55Z (UTC, from the clock). **Status: COMPLETE: implemented, verified, documented,
+  committed to `fix/strategy-lab-drag-measure` and pushed (push record below once written). No merge to `main`, no
+  deploy, no service restarted.**
+- **Follow-up gate (the user's):** review the fix in the UI. `npm --prefix apps/strategy-lab run start` serves the
+  rebuilt `dist` and would rebuild it anyway, since the sources are newer. Then decide on merging the branch. Note the
+  deliberate reversal of Task 6 (the measurement now persists after release, per the brief) and that markers now sit
+  28 px lower, at their real prices (report §6).
+- **Final check-2** (23:47:45Z → 23:54:28Z, `logs/task18/check-2.log`, exit 0): typecheck, lint, Vitest **327/327**
+  (34 files), build → `dist` (`index-yT7eze-g.js`, `index-JqdA3OGs.css`, identical to check-1's build, which the
+  browser verification used), Playwright **84/84**.
+- **Preservation (23:55Z):** live state `state/strategy-lab/` byte-identical to the baseline (2,665 files,
+  `logs/task18/live-state-after.sha256` = before); tracked `research/` content hash `75dd165b038891d0` (unchanged);
+  VGT data `2ee06310f2fa8926…` (unchanged); no `src/`, `research/`, `data/` or `config/` change. No server running.
+- **Deliverables (sha256 prefixes at 23:55Z):** see the commit; report
+  `docs/strategy-lab/reports/2026-11-18-drag-measure/REPORT.md`, `browser-verification.json` `45b9f423e628…`,
+  `scripts/verify-measure-browser.mjs` `767914740455…`.
+- **Fix:** `src/chart/PriceChart.tsx`, `src/chart/measure.ts`, `src/styles.css`.
+- **check-1** (23:39:4xZ → 23:46:27Z, `logs/task18/check-1.log`): typecheck, lint, Vitest 327/327 (34 files), build
+  (→ `dist`, asset `index-JqdA3OGs.css`), Playwright 83/84. The one failure was `pan.spec.ts:262` (macOS: a Ctrl-drag
+  is a measurement there, and it expected it to vanish on release). The new lifetime explains it: the test was updated
+  (kept, then Escape clears it), and `pan.spec` reran 5/5 (`e2e-pan-rerun.log`).
+- **Browser verification (final `dist`, temp-state server, PID 1210277 now stopped):**
+  `docs/strategy-lab/reports/2026-11-18-drag-measure/browser-verification.json` (sha256 `45b9f423e628…`), 14
+  scenarios, ok, no console problems. The raw-CSV cross-check of all 9 endpoint pairs matched
+  (`logs/task18/raw-csv-crosscheck.txt`). Script `scripts/verify-measure-browser.mjs` (sha256 `767914740455…`).
+- **Stage 3 (fix) verified in Chrome** against a scratch build (`logs/task18/repro-after-*.json`, `align-after.json`,
+  `marker-align-after.json`): nothing covers the measurement at 1600/1100/800 px; it persists after release; pointer
+  over a marker / the bar / the range selector → the end = the session under the pointer; overlay layer = canvas box
+  (shade/lines/crosshair at the plot top, dot within 0.01 px of its close, markers within 0.44 px of their prices).
+- **Stage 4 (tests) complete:** `tests/measure.test.ts` 17/17 (Vitest); `e2e/measure.spec.ts` rewritten, 6/6
+  (`logs/task18/e2e-measure-2.log`); existing specs edited for persistence (candles, pan, preview, trades, wheel:
+  release now keeps it, Escape clears it; candles' range regex includes the prices). Negative controls (each part of
+  the fix reverted alone, scratch builds, sources restored + hash-verified): A old snap → 1 fail (over a marker);
+  B old read-out CSS → 2 fail (measure-end under the read-out); C layer over the frame → 4 fail (layer y, density
+  note, marker off its price); D clear on release → 6 fail; the unfixed build → 6/6 fail. Logs `e2e-nc-*.log`.
+- **Running:** none (scratch servers stopped: PIDs 1180649, 1186487).
+- **Reproduction (stage 1, complete; Playwright + Chrome 157 against the unfixed build = live `dist` asset hashes
+  `index-BO0n9G6s.js`/`index-B-IyjivH.css`; R-000014 = Study 8 import VGT+GDX, 2,722 VGT sessions; JSON in
+  `logs/task18/repro-before-*.json`):**
+  - VGT · Candles · 1D · All, drag 2020-10-01 → 2021-12-13 at 1600×1000: the bar holds the right numbers
+    (`2020-09-30 close → 2021-12-13 close`, 311.45 → 453.29, +$141.84, +45.54%) but the hover read-out
+    (`2021-12-13 Mon · daily OHLC · … −$8.38 (−1.82%) close vs open`, rect x 801–1551, y 393–410, absolutely
+    positioned, 85 % opaque) is painted OVER the prices, $ and % (x 799–1029). At 1100 and 800 px wide the bar wraps
+    and the two-line read-out covers every part, including "Daily close → daily close" = the user's screenshot.
+  - The whole overlay layer is 28 px too high: plot top 419.2, but shade / measure lines / crosshair start at 391.2
+    (the bar's top) and the start dot sits 28.0 px above its close; trade markers are 28.0–28.4 px above their prices.
+  - Pointer mapping: on a 3Y window, the pointer over an exit marker (session 2021-02-23) gave a measurement
+    2019-11-29 → 2020-07-07 (the end snapped to a session BEFORE the window start 2019-12-02); over the bar the same;
+    over the range selector 2021-02-19 instead of 2021-04-26. Over plain canvas it was correct.
+  - Release clears everything (Task 6 design, 2026-11-04, commit 29113795).
+- **Root causes (stage 2, complete):**
+  1. `PriceChart.tsx` renders `.measure-bar` IN FLOW at the top of `.chart-frame`, while `.marker-layer` is
+     `position:absolute; inset:0` of the same frame and every overlay is placed in canvas coordinates
+     (`toDomCoords`, `getArea`) → all overlays shifted up by the bar's height (28 px; more when it wraps), so the shade,
+     lines and crosshair cross the measurement text and the dots/markers miss their prices. Since e4a812b3 (Task 3,
+     2026-11-04, the first drag-to-measure commit).
+  2. `.chart-readout` is `position:absolute; top:2px; right:14px` of `.chart-frame` = inside the bar's row, with an
+     opaque background; on candles `max-width: calc(100% - 90px)` (aaaa8d86, Task 16) makes it cover the bar.
+     Dygraphs keeps updating it during a drag (canvas mousemove), so the hovered candle's OHLC sits on the result.
+  3. `snap()` uses `g.eventToDomCoords(e)` = `offsetX` of whatever element is under the pointer (the moves come
+     from `document` during a drag): a marker button, the bar, the range selector or anything off the chart gives a
+     wrong x; `findClosestRow` can also return the off-window neighbour row Dygraphs keeps for line continuity.
+  4. Lifetime: the brief requires persistence after release (click or Escape clears), reversing Task 6.
+- **Fix design:** (a) wrap host + marker layer + density note in `.chart-plot` (position: relative) so the layer is
+  exactly the canvas box; (b) the read-out becomes its own in-flow row under the measurement row (fixed one-line
+  height, ellipsis, never over the measurement); (c) snap from `clientX` − canvas left, clamped to the plot area,
+  nearest row INSIDE the visible window (pure helper in `measure.ts`); (d) keep the measurement after release; a
+  click on the chart (press without drag) or Escape clears it; a new drag replaces it; unmount clears it; (e) the
+  bar pairs each endpoint with its price ("2020-09-30 close $311.45 → 2021-12-13 close $453.29").
+- **Brief:** `docs/strategy-lab/brief/2026-11-18-drag-to-measure-bugfix-brief.md` (verbatim copy of upload
+  `5f1621c0-Claude_Strategy_Lab_Drag_to_Measure_Bugfix.md`, 86 lines / 8,524 bytes, read in full through "Acceptance
+  criterion"; sha256 `e02a2713600564ad972d19780fe859f22384eb729e8f5e21209de0f1304fa5cc`). Authorizes: UI fix, tests,
+  real-browser verification, commit + push of a dedicated branch. Forbids: strategy/engine/data/research changes,
+  merge to `main`, deploy.
+- **Branch:** `fix/strategy-lab-drag-measure`, created 2026-11-17T23:18Z from `67b4ae71` (`research/vg-l0-full-joint`,
+  clean; its `apps/strategy-lab/` is identical to `feature/strategy-lab-pooled-candidates` 6f0ccce2; `main` has no
+  Strategy Lab). Main checkout (no extra worktree). Node 24.21.0; Chrome 157 (Playwright `channel: 'chrome'`).
+- **Baselines:** live state `state/strategy-lab/` hashed (2,665 files, `*-shm` excluded) to
+  `apps/strategy-lab/logs/task18/live-state-before.sha256` (list sha256 prefix `8ed0f10073992d2e`); read-only for this
+  task. Tracked `research/` files content hash prefix `75dd165b038891d0`. VGT data `2ee06310f2fa8926…`. `dist/` built
+  2026-11-11 20:24 (+01:00) = current code. No Strategy Lab server running at 23:1xZ.
+- **Stages:** 1 reproduce (scratch build + `e2e/serve.ts` temp state, Playwright Chrome) → 2 root cause → 3 fix →
+  4 tests (Vitest + e2e) → 5 checks (typecheck, lint, Vitest, build, Playwright; root tsc) + browser verification →
+  6 docs, report, commit, push.
+- **Rules in force:** never touch `state/strategy-lab/` (servers use temp state), build to a scratch outDir until the
+  final check, no screenshots/visual artefacts in the report (DOM-based checks), no `research/`/`src/`/`data/` edits.
+- **Do not rerun:** nothing here is sealed research, but the reproduction relies on the UNFIXED build. Rebuild it from
+  `67b4ae71` into a scratch directory if it is ever needed again; never build it into `dist/`.
+- **Next step:** none in this task. The user decides on review and merge.
+
+## Previous top screen — Task 17 (Priority 6): pooled-candidate viewing — COMPLETE
 
 - **Updated:** 2026-11-11T19:31Z (UTC, from the clock). **Status: COMPLETE — implemented, verified, documented, committed and
   PUSHED (see Push). No merge to `main`. Stop for the user's review; Priority 7 does
