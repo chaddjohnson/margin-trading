@@ -79,4 +79,6 @@ qualification; chain wall time 44 h 24 min (2026-11-15T13:27:08Z → 2026-11-17T
 
 ## Delivery
 
-- Push pending at the time of this update; the push record follows.
+- `git push -u origin research/vg-l0-full-joint` (new remote branch, no force; outside the sandbox). `git ls-remote` at
+  2026-11-17T10:20:51Z: `refs/heads/research/vg-l0-full-joint` = `47d30b8d82a605fe26c2cab455b525db6d13f953` = local. This
+  push record follows as its own commit, pushed the same way. `main` was not touched; nothing was merged.
