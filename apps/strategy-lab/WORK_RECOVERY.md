@@ -2,9 +2,12 @@
 
 ## Top screen (read this first) — Task 18: drag-to-measure regression (bugfix) — COMPLETE
 
-- **Updated:** 2026-11-17T23:55Z (UTC, from the clock). **Status: COMPLETE: implemented, verified, documented,
-  committed to `fix/strategy-lab-drag-measure` and pushed (push record below once written). No merge to `main`, no
-  deploy, no service restarted.**
+- **Updated:** 2026-11-17T23:56Z (UTC, from the clock). **Status: COMPLETE: implemented, verified, documented,
+  committed and PUSHED. No merge to `main`, no deploy, no service restarted.**
+- **Push:** `git push -u origin fix/strategy-lab-drag-measure` (new branch, no force; outside the sandbox, first
+  attempt, 2026-11-17T23:56:14Z). `git ls-remote` at 23:56:19Z: branch = `c96381c3fa0d…` (= local; the fix, tests,
+  docs and report commit), `main` = `108c241b…` (unchanged, = local `main`). This push record follows as its own
+  commit, pushed the same way.
 - **Follow-up gate (the user's):** review the fix in the UI. `npm --prefix apps/strategy-lab run start` serves the
   rebuilt `dist` and would rebuild it anyway, since the sources are newer. Then decide on merging the branch. Note the
   deliberate reversal of Task 6 (the measurement now persists after release, per the brief) and that markers now sit
