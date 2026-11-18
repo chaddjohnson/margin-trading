@@ -2,22 +2,27 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-18T06:40Z (UTC, from the clock). **Status: INCOMPLETE — all stages sealed and all deliverables
-  written; final QA running (full `npm test` in unit `vgl0rm-npm-test`, log `results/logs/npm-test.log`); then commit,
-  push, `git ls-remote` check, push record.**
-- **Task:** the user's brief `brief/BRIEF.md` (sha256 `c2eaa0e8…2657`, read in full). No search, no new phenotype, no
-  adoption, no broker, no main merge, no standard/NL0 edit.
-- **Authority:** `PROTOCOL.md` FROZEN (sha256 `0cfa32385edd7beb68a47284f9b2298d047b6a6e0022b4ce0edbcb21cbe0fb14`,
-  freeze record `331c9f54…7137`, committed `cdb87439`). `AMENDMENTS.md`: A1 (S3 gate rounding), A2 (budget ≈ 6,184 of
-  6,200), A3 (per-trade window defect; corrected record `results/audit/centres-windows-v2.json` `525a83e5…d5cb2`), A4
-  (erratum 51 → 50). Standard 2.2.0, scope diagnostic; preflight PASS (06:38Z).
-- **Branch:** `research/vg-l0-risk-metrics` (main checkout) from `67b4ae71`; commits `cdb87439`, `1768334d`, `7aeefe7a`;
-  uncommitted (intended): the deliverable documents, A3/A4, centres-windows-v2, tests and tool fixes, tables.
-- **Running:** `vgl0rm-npm-test` (started 06:34:16Z). Check: `systemctl --user is-active vgl0rm-npm-test`; the log's
-  "npm test exit N" line. Expected: only the 7 known pre-existing failures (memory `known-npm-test-failures`).
-- **Next step:** when the suite ends, record its counts in IMPLEMENTATION_AND_TESTS.md §2 and REPORT.md §6; commit;
-  `git push -u origin research/vg-l0-risk-metrics` (unsandboxed, retry); verify with `git ls-remote origin
-  research/vg-l0-risk-metrics`; record the push here; commit and push that record.
+- **Updated:** 2026-11-18T06:40Z (UTC, from the clock). **Status: COMPLETE** — all stages sealed, deliverables written,
+  QA passed, committed and **pushed**.
+- **Push:** `git push -u origin research/vg-l0-risk-metrics` (new remote branch, no force, outside the sandbox, first
+  attempt, 2026-11-18T06:39:00Z). `git ls-remote` at 06:39:05Z: `research/vg-l0-risk-metrics` = `bc08cb194cca7adc01f3525cd1381426d575e0cf`
+  (= local; the deliverables commit), `main` = `108c241b` (unchanged). This record follows as its own commit, pushed the same way.
+- **Task:** the user's brief `brief/BRIEF.md` (sha256 `c2eaa0e8…2657`). No search, no new phenotype, no adoption, no
+  broker, no main merge, no standard/NL0 edit, nothing scheduled.
+- **Authority:** `PROTOCOL.md` FROZEN (`0cfa32385edd7beb…`), freeze record `331c9f54…7137`; `AMENDMENTS.md` A1–A4
+  (`34595960b957c011…`). Standard 2.2.0, scope diagnostic; preflight PASS.
+- **QA (final):** this study's tests 23/23; full `npm test` 1,677 tests / 1,666 pass / 4 skipped / the 7 known pre-existing
+  failures; repository `tsc` clean and the study's tools typecheck; this study's 25 seals verify; Assignment 3's 47,
+  Assignment 2's 47 and 5B's 28 seals verify.
+- **Audited deliverables (sha256 prefix):** REPORT `9cd1bf9e81f62c01`, BASELINE_AND_PROVENANCE `ebec466c76e54b34`,
+  METRIC_SPECIFICATION `2ace94b8c5030583`, IMPLEMENTATION_AND_TESTS `42d7576fd101ff53`, CANDIDATE_RISK_AUDIT
+  `9a73312029c240c7`, SELECTION_PIPELINE_AUDIT `92122fdee5a38543`, SELECTOR_COMPARISON `44f667cdb177934e`,
+  PROPOSED_METHOD `77ab5dfcd137335b`; sealed records in `results/seals.jsonl` (25); tables `results/tables/` (+ MANIFEST).
+- **Running:** nothing.
+- **Follow-up gate (the user's):** the eight decision points of `PROPOSED_METHOD.md` §8 (the marked-DD role and cap; the
+  trade principal-loss limit; the banked-capital limit; open-ended Growth exits; margin scenarios / actual account terms;
+  any new selection arm; large search vs bounded envelope pilot vs prospective monitoring; any merge). Recommendation:
+  **no-go** for a large successor search now (REPORT §4).
 
 ## Stage table (sealed records: `results/seals.jsonl`, 25 records, all verify)
 
@@ -32,7 +37,7 @@
 | 5 Selectors | complete, G5a/G5b/G5c PASS | `results/selection/members-C19…C24.json`, `selectors.json` `46cfd342…c9e3`, `folds.json` `f57968da…1094` |
 | Tables | regenerated (rerunnable) | `results/tables/*.csv`, `MANIFEST.json` |
 | 6–7 Docs | written | REPORT, BASELINE_AND_PROVENANCE, METRIC_SPECIFICATION, IMPLEMENTATION_AND_TESTS, CANDIDATE_RISK_AUDIT, SELECTION_PIPELINE_AUDIT, SELECTOR_COMPARISON, PROPOSED_METHOD, README, RUN_COMMANDS |
-| QA, commit, push | running | |
+| QA, commit, push | complete | pushed `bc08cb19`; verified by `git ls-remote` |
 
 Resume: every sealed record refuses a rerun; tables.ts is rerunnable; docs are written from the sealed records.
 
