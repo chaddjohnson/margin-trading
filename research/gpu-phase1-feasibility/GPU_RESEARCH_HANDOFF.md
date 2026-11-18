@@ -96,4 +96,16 @@ ledgers were reproduced exactly through the hybrid path (GPU D1 + pool, CPU Grow
 
 ## 7. State of the project and identifiers
 
-HANDOFF_STATE_PLACEHOLDER
+| Item | Value |
+|---|---|
+| Repository / branch | `margin-trading`, branch **`research/gpu-phase1-feasibility`** (pushed to `origin`; **not merged into `main`**) |
+| Base | `6afbfe67af63ced8b93958c5130d00d7a65aebc2` (tip of `research/vg-l0-risk-metrics`) |
+| Commits | `dcc70df7` brief, frozen protocol, standard adoption · **`9eb921ae92c5ab294eee2509d3b6e37a6119d616`** code, records, reports · a final commit adds this section and the report bundle (its ID is printed in the session's final summary and recorded in `RESEARCH_RECOVERY.md`) |
+| Study directory | `research/gpu-phase1-feasibility/` (reports, protocol, records `results/`, tables `results/tables/`) |
+| Code | `src/gpu-phase1/` (Node client, dataset export, comparator, CPU reference pool, tests), `src/gpu-phase1/cuda/` (CUDA evaluator, interface v1), `tools/gpu-phase1/` (profiling, parity, fixtures, negative tests, benchmarks, tables, containment launcher, toolchain installer) |
+| Evaluator build | `research/gpu-phase1-feasibility/build/gp1`, sha256 `b3bcccdbc87bd1a31f3a708e6f9870a7e23ea78a4305a7847f96e3d78a3d7051` (git-ignored; rebuild with `RUN_COMMANDS.md`) |
+| Report bundle | `research/gpu-phase1-feasibility/bundle/gpu-phase1-report-bundle.zip` (+ `MANIFEST.json` inside and beside it) |
+| Apollo changes | user-space CUDA 13.2 toolchain at `/home/chad/.local/share/margin-trading-gpu/` (464 MB; remove that directory to roll back); nothing else (driver, apt, display, Docker, vLLM, boot unchanged); no process left running |
+| Test suite | `npm test`: 1,680 tests, 1,669 pass, the 7 known pre-existing failures, 4 skipped |
+| Optimization standard / method | standard 2.2.0 adopted with scope `diagnostic` (preflight PASS); no reference method reproduced |
+| Not done | no optimization, no runner integration, no Strategy Lab change, no risk-envelope pilot, no merge, no deployment |
