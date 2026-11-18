@@ -2,37 +2,35 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-18T05:55Z (UTC, from the clock). **Status: INCOMPLETE — Stage 3 neighbourhood replays running;
-  Stages 4–7 not started.**
-- **Task:** the user's brief `brief/BRIEF.md` (258 lines, 27,831 bytes, sha256 `c2eaa0e8…2657`, read in full). Analysis,
-  research-only metric code, retrospective selector comparison and a proposed (unadopted) method. **No search, no new
-  phenotype, no adoption, no broker, no main merge, no standard/NL0 edit.**
-- **Authority:** `PROTOCOL.md` FROZEN — sha256 `0cfa32385edd7beb68a47284f9b2298d047b6a6e0022b4ce0edbcb21cbe0fb14` in
-  `results/protocol-freeze.json` (sealed `331c9f54…7137`, committed `cdb87439`). Amendments: none. Standard 2.2.0
-  (`0085cff2…5e24`), scope diagnostic; preflight PASS (2026-11-18T05:40Z).
-- **Branch:** `research/vg-l0-risk-metrics` (main checkout, no worktree) from `67b4ae71`; commit `cdb87439` = freeze.
-  Uncommitted: Stage 0 record, bundle/stops/margin/subjects/tests code, Stage 3 centres record (all intended).
-- **Running:** systemd units `vgl0rm-nbhd-a` (New L0, N/original, N/RA1, L/RA1 on D24; New L0 on FULL) and
-  `vgl0rm-nbhd-b` (L/original, F/original, F/RA1, B/RA1 on D24; N/original on FULL) in `vgl0rm.slice` (runtime
-  MemoryHigh 44G / MemoryMax 48G / swap 0), started 05:53Z; logs `results/logs/nbhd-{a,b}.log`; each step ends with
-  "end [<key> <door>] status N"; outputs sealed `results/audit/nbhd-<key>-<door>.json`. Check: `systemctl --user
-  list-units 'vgl0rm-*'`, the log tails. A finished unit disappears (--collect).
-- **Next step:** when both units end cleanly, Stage 4 tooling (archive exclusion analysis), then Stage 5 member replays.
+- **Updated:** 2026-11-18T06:21Z (UTC, from the clock). **Status: INCOMPLETE — every computation stage is sealed;
+  writing the deliverable documents (Stage 6–7), then QA, commit and push.**
+- **Task:** the user's brief `brief/BRIEF.md` (sha256 `c2eaa0e8…2657`, read in full). No search, no new phenotype, no
+  adoption, no broker, no main merge, no standard/NL0 edit.
+- **Authority:** `PROTOCOL.md` FROZEN (sha256 `0cfa32385edd7beb68a47284f9b2298d047b6a6e0022b4ce0edbcb21cbe0fb14`,
+  `results/protocol-freeze.json` sealed `331c9f54…7137`, committed `cdb87439`). `AMENDMENTS.md`: A1 (S3 gate rounding),
+  A2 (budget disclosure). Standard 2.2.0, scope diagnostic; preflight PASS.
+- **Branch:** `research/vg-l0-risk-metrics` (main checkout) from `67b4ae71`; last commit `1768334d` (sealed stages through
+  S5). Uncommitted (intended): margin records, tables, docs, amendments, code tidy-ups.
+- **Running:** nothing (all `vgl0rm-*` units finished; `systemctl --user list-units 'vgl0rm-*'` is empty).
+- **Next step:** write BASELINE_AND_PROVENANCE, IMPLEMENTATION_AND_TESTS, CANDIDATE_RISK_AUDIT, SELECTION_PIPELINE_AUDIT,
+  SELECTOR_COMPARISON, PROPOSED_METHOD, REPORT, README, RUN_COMMANDS from the sealed records; final QA (tests, seals,
+  tsc, preflight); commit; push (unsandboxed, retry); `git ls-remote` check; record the push.
 
-## Stage table
+## Stage table (all sealed records: `results/seals.jsonl`, 24 records)
 
-| Stage | Status | Command (repo root) | Output / hash | Resume |
-|---|---|---|---|---|
-| 0 Provenance and parity | **complete, G0 PASS** | `node --experimental-transform-types --disable-warning=ExperimentalWarning tools/vg-l0-risk-metrics/baseline.ts` | `results/baseline/parity.json` sha256 `83e610b9e1b9168a3070d3f96bfa6738fcb9730d639c2a77abddc49158bf69f8` | sealed; refuses rerun |
-| 1 Metrics + tests | complete (G1: 20/20 tests) | `node --experimental-transform-types --disable-warning=ExperimentalWarning --test src/vg-l0-risk-metrics/tests/*.test.ts` | — | rerunnable |
-| 1 G-S stop gate | complete on the 51 audit subjects (1,532 price-stop exits, 0 failures; inside the centres record) | — | — | — |
-| 2 Margin model | code + tests done; scenario/overlay runner not written | | | |
-| 3 Candidate audit centres | **complete** (51/51 parity) | `node --max-old-space-size=16384 --experimental-transform-types --disable-warning=ExperimentalWarning tools/vg-l0-risk-metrics/audit.ts centres` | `results/audit/centres.json` sha256 `7a62da0e6350b63610b3856b4e4cf12cea9f22f7126a69366079cc328a8a538b` | sealed |
-| 3 Neighbourhoods | **running** | `research/vg-l0-risk-metrics/chains/stage3-nbhd.sh <keys…>` in units above | `results/audit/nbhd-*.json` | a sealed file refuses rerun: rerun only the missing keys |
-| 4 Pipeline audit | not started | notes: `notes/stage4-code-trace.md` (subagent trace, to be spot-checked) | | |
-| 5 Selector comparison | not started | | | |
-| 6 Proposed method | not started | | | |
-| 7 Deliverables, QA, commit/push | not started | | | |
+| Stage | Status | Output (sha256) |
+|---|---|---|
+| Freeze | complete | `results/protocol-freeze.json` `331c9f54…7137` |
+| 0 Provenance and parity | complete, G0 PASS | `results/baseline/parity.json` `83e610b9…69f8` |
+| 1 Metrics, tests, G-S | complete: 20/20 tests; G-S 0 failures (1,532 audit exits; every member replay's exits) | code `src/vg-l0-risk-metrics/` |
+| 2 Margin | complete | `results/margin/grid.json` `09df7915…80cb5`, `results/margin/overlay.json` `579c3feb…62ba` |
+| 3 Audit | complete (51/51 parity) | `results/audit/centres.json` `7a62da0e…a538b`; 10 `results/audit/nbhd-*.json` |
+| 4 Pipeline | complete (records) | `results/pipeline/exclusions-scan.json` `49124e0d…3268`, `-compare.json` `cd79ce3d…60ff`, `-replays.json` `7010fb4a…7d83`; code trace `notes/stage4-code-trace.md` (spot-checked) |
+| 5 Selectors | complete, G5a/G5b/G5c PASS | `results/selection/members-C19…C24.json`, `selectors.json` `46cfd342…c9e3`, `folds.json` `f57968da…1094` |
+| Tables | regenerated | `results/tables/*.csv` + `MANIFEST.json` (`tools/vg-l0-risk-metrics/tables.ts`, rerunnable) |
+| 6–7 Docs, QA, push | running | |
+
+Resume: every sealed record refuses a rerun; tables.ts is rerunnable; docs are written from the sealed records.
 
 ## Constants
 
