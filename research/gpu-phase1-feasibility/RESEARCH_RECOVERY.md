@@ -95,4 +95,7 @@
 
 ## Push
 
-(recorded after the push)
+- 2026-11-18T20:03:15Z: `git push -u origin research/gpu-phase1-feasibility` (new branch); verified with
+  `git ls-remote origin research/gpu-phase1-feasibility` = `a4dfbe286e1b336da713b43bf95de1aa135d11e0` = local HEAD
+  (commits `dcc70df7`, `9eb921ae`, `a4dfbe28`). Not merged into `main`; nothing deployed or published elsewhere.
+- This push record is committed on top of `a4dfbe28` and pushed the same way.
