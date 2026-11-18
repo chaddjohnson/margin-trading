@@ -1,0 +1,175 @@
+{
+ "kind": "gpu-phase1 S4 negative tests (G6)",
+ "door": "W-CRASH",
+ "pass": true,
+ "cases": [
+  {
+   "case": "EVAL before any dataset is loaded",
+   "expected": "GpuError status 104",
+   "outcome": "GPU evaluator: no dataset: no dataset loaded",
+   "pass": true
+  },
+  {
+   "case": "LOAD of a missing file",
+   "expected": "GpuError status 107",
+   "outcome": "GPU evaluator: dataset check failed: cannot open dataset /home/chad/projects/margin-trading/research/gpu-phase1-feasibility/cache/does-not-exist.gp1ds",
+   "pass": true
+  },
+  {
+   "case": "LOAD of a dataset with one flipped bit",
+   "expected": "GpuError status 107",
+   "outcome": "GPU evaluator: dataset check failed: dataset checksum mismatch",
+   "pass": true
+  },
+  {
+   "case": "LOAD of a truncated dataset",
+   "expected": "GpuError status 102",
+   "outcome": "GPU evaluator: bad size: dataset size mismatch",
+   "pass": true
+  },
+  {
+   "case": "unknown request type",
+   "expected": "GpuError status 100",
+   "outcome": "GPU evaluator: bad frame: unknown request type",
+   "pass": true
+  },
+  {
+   "case": "batch with a bad magic",
+   "expected": "GpuError status 100",
+   "outcome": "GPU evaluator: bad frame: bad batch magic",
+   "pass": true
+  },
+  {
+   "case": "batch with protocol version 2",
+   "expected": "GpuError status 101",
+   "outcome": "GPU evaluator: bad version: unsupported batch version 2",
+   "pass": true
+  },
+  {
+   "case": "truncated batch",
+   "expected": "GpuError status 102",
+   "outcome": "GPU evaluator: bad size: batch size 1231 != 1232",
+   "pass": true
+  },
+  {
+   "case": "batch declaring 0 candidates",
+   "expected": "GpuError status 102",
+   "outcome": "GPU evaluator: bad size: batch size 64 != 624",
+   "pass": true
+  },
+  {
+   "case": "batch evaluating to another end session",
+   "expected": "GpuError status 103",
+   "outcome": "GPU evaluator: unsupported feature: v1 evaluates through the dataset's last session only",
+   "pass": true
+  },
+  {
+   "case": "external book range out of bounds",
+   "expected": "GpuError status 102",
+   "outcome": "GPU evaluator: bad size: external book range out of bounds",
+   "pass": true
+  },
+  {
+   "case": "pool option wholeShares",
+   "expected": "GpuError status 103",
+   "outcome": "GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x800 (supported 0xff)",
+   "pass": true
+  },
+  {
+   "case": "pool option blackouts",
+   "expected": "GpuError status 103",
+   "outcome": "GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x200 (supported 0xff)",
+   "pass": true
+  },
+  {
+   "case": "pool option period boundaries",
+   "expected": "GpuError status 103",
+   "outcome": "GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x400 (supported 0xff)",
+   "pass": true
+  },
+  {
+   "case": "pool option explicit tie order",
+   "expected": "GpuError status 103",
+   "outcome": "GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x1000 (supported 0xff)",
+   "pass": true
+  },
+  {
+   "case": "pool option later funding start",
+   "expected": "GpuError status 103",
+   "outcome": "GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x2000 (supported 0xff)",
+   "pass": true
+  },
+  {
+   "case": "Growth evaluated on the GPU (not in the slice)",
+   "expected": "GpuError status 103",
+   "outcome": "GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x100 (supported 0xff)",
+   "pass": true
+  },
+  {
+   "case": "an unknown feature bit",
+   "expected": "GpuError status 103",
+   "outcome": "GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x40000000 (supported 0xff)",
+   "pass": true
+  },
+  {
+   "case": "batch above the VRAM budget",
+   "expected": "GpuError status 105",
+   "outcome": "GPU evaluator: GPU memory: batch needs 6720 MiB > VRAM budget 2048 MiB",
+   "pass": true
+  },
+  {
+   "case": "batch above the free device memory (budget lifted)",
+   "expected": "GpuError status 105",
+   "outcome": "GPU evaluator: GPU memory: batch needs 6720 MiB; free 2849 MiB",
+   "pass": true
+  },
+  {
+   "case": "D1 trade capacity 3",
+   "expected": "9 candidates 'trade capacity' with no outputs; the other 3 bit-exact",
+   "outcome": "9 failed, 3 bit-exact, 0 wrong",
+   "pass": true
+  },
+  {
+   "case": "pool lot capacity 2",
+   "expected": "8 candidates 'lot capacity' with no outputs; the other 4 bit-exact",
+   "outcome": "8 failed, 4 bit-exact, 0 wrong",
+   "pass": true
+  },
+  {
+   "case": "external Growth book with a duplicated (unordered) decision",
+   "expected": "candidate 0 'external book unordered'; candidate 1 ok",
+   "outcome": "external book unordered / ok",
+   "pass": true
+  },
+  {
+   "case": "fault injection without the opt-in flag",
+   "expected": "GpuError status 108",
+   "outcome": "GPU evaluator: fault injection refused: fault injection is disabled",
+   "pass": true
+  },
+  {
+   "case": "a device trap (__trap) during a kernel",
+   "expected": "GpuError status 106",
+   "outcome": "GPU evaluator: CUDA error: CUDA error cudaErrorLaunchFailure: unspecified launch failure at cudaDeviceSynchronize()",
+   "pass": true
+  },
+  {
+   "case": "a request after the sticky device error",
+   "expected": "the client refuses (server exited)",
+   "outcome": "GPU evaluator exited (3): gp1: sticky CUDA error, exiting",
+   "pass": true
+  },
+  {
+   "case": "server killed during a batch",
+   "expected": "the pending batch rejects",
+   "outcome": "GPU evaluator exited (SIGKILL)",
+   "pass": true
+  },
+  {
+   "case": "garbage on the request pipe",
+   "expected": "status 100 (bad frame), then the server exits",
+   "outcome": "status 100, exit 0",
+   "pass": true
+  }
+ ]
+}

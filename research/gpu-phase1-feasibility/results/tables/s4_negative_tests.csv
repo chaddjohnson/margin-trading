@@ -1,0 +1,29 @@
+case,expected,outcome,pass
+EVAL before any dataset is loaded,GpuError status 104,GPU evaluator: no dataset: no dataset loaded,true
+LOAD of a missing file,GpuError status 107,GPU evaluator: dataset check failed: cannot open dataset /home/chad/projects/margin-trading/research/gpu-phase1-feasibility/cache/does-not-exist.gp1ds,true
+LOAD of a dataset with one flipped bit,GpuError status 107,GPU evaluator: dataset check failed: dataset checksum mismatch,true
+LOAD of a truncated dataset,GpuError status 102,GPU evaluator: bad size: dataset size mismatch,true
+unknown request type,GpuError status 100,GPU evaluator: bad frame: unknown request type,true
+batch with a bad magic,GpuError status 100,GPU evaluator: bad frame: bad batch magic,true
+batch with protocol version 2,GpuError status 101,GPU evaluator: bad version: unsupported batch version 2,true
+truncated batch,GpuError status 102,GPU evaluator: bad size: batch size 1231 != 1232,true
+batch declaring 0 candidates,GpuError status 102,GPU evaluator: bad size: batch size 64 != 624,true
+batch evaluating to another end session,GpuError status 103,GPU evaluator: unsupported feature: v1 evaluates through the dataset's last session only,true
+external book range out of bounds,GpuError status 102,GPU evaluator: bad size: external book range out of bounds,true
+pool option wholeShares,GpuError status 103,GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x800 (supported 0xff),true
+pool option blackouts,GpuError status 103,GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x200 (supported 0xff),true
+pool option period boundaries,GpuError status 103,GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x400 (supported 0xff),true
+pool option explicit tie order,GpuError status 103,GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x1000 (supported 0xff),true
+pool option later funding start,GpuError status 103,GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x2000 (supported 0xff),true
+Growth evaluated on the GPU (not in the slice),GpuError status 103,GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x100 (supported 0xff),true
+an unknown feature bit,GpuError status 103,GPU evaluator: unsupported feature: candidate 0 requests unsupported features 0x40000000 (supported 0xff),true
+batch above the VRAM budget,GpuError status 105,GPU evaluator: GPU memory: batch needs 6720 MiB > VRAM budget 2048 MiB,true
+batch above the free device memory (budget lifted),GpuError status 105,GPU evaluator: GPU memory: batch needs 6720 MiB; free 2849 MiB,true
+D1 trade capacity 3,9 candidates 'trade capacity' with no outputs; the other 3 bit-exact,"9 failed, 3 bit-exact, 0 wrong",true
+pool lot capacity 2,8 candidates 'lot capacity' with no outputs; the other 4 bit-exact,"8 failed, 4 bit-exact, 0 wrong",true
+external Growth book with a duplicated (unordered) decision,candidate 0 'external book unordered'; candidate 1 ok,external book unordered / ok,true
+fault injection without the opt-in flag,GpuError status 108,GPU evaluator: fault injection refused: fault injection is disabled,true
+a device trap (__trap) during a kernel,GpuError status 106,GPU evaluator: CUDA error: CUDA error cudaErrorLaunchFailure: unspecified launch failure at cudaDeviceSynchronize(),true
+a request after the sticky device error,the client refuses (server exited),"GPU evaluator exited (3): gp1: sticky CUDA error, exiting",true
+server killed during a batch,the pending batch rejects,GPU evaluator exited (SIGKILL),true
+garbage on the request pipe,"status 100 (bad frame), then the server exits","status 100, exit 0",true

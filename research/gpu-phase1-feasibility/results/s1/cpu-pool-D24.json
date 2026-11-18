@@ -1,0 +1,1344 @@
+{
+ "kind": "gpu-phase1 S1 CPU pool benchmark",
+ "door": "D24",
+ "host": {
+  "cpus": "AMD Ryzen 7 9800X3D 8-Core Processor",
+  "threads": 16,
+  "node": "v24.21.0",
+  "loadavg": [
+   14.22,
+   6.23,
+   2.52
+  ]
+ },
+ "method": {
+  "workload": "130 centres (2 reference + 128 seeded A3 genomes 'BENCH') x (1 + 16 joint neighbours) = 2210 evaluations; 1-worker run times the first 256",
+  "warmup": "4 tasks per worker from a separate seeded set, excluded",
+  "caches": "A3 production defaults (Growth 48 / D1 64 entries per worker)",
+  "gc": "every 64 evaluations or > 256 MiB ArrayBuffers (A3 cadence)",
+  "inflightPerWorker": 2
+ },
+ "candidateGenerationMs": 333.72588199999996,
+ "deterministicAcrossWorkerCounts": true,
+ "runs": [
+  {
+   "workers": 1,
+   "tasks": 256,
+   "startSeconds": 4.5670260250000005,
+   "wallSeconds": 21.245830030999997,
+   "evalsPerSecond": 12.049423328082165,
+   "inWorkerMs": {
+    "mean": 82.78272583593746,
+    "median": 86.60327199999983
+   },
+   "workerBusyShare": 0.997484107849775,
+   "hostCpuUtilization": 0.07733294083014419,
+   "cgroup": {
+    "memoryPeak": "780492800",
+    "memoryCurrent": "112242688"
+   },
+   "workerStats": [
+    {
+     "pid": 1642188,
+     "loadMs": 4396,
+     "t": "mem",
+     "mem": {
+      "rss": 695201792,
+      "heapUsed": 57344856,
+      "heapTotal": 161525760,
+      "external": 11422928,
+      "arrayBuffers": 65323352
+     },
+     "count": 260,
+     "gcs": 4,
+     "gcMs": 13.982754999999088,
+     "cpuUserMs": 30844.062,
+     "cpuSystemMs": 237.292,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    }
+   ]
+  },
+  {
+   "workers": 8,
+   "tasks": 2210,
+   "startSeconds": 9.733873038000002,
+   "wallSeconds": 25.069787957,
+   "evalsPerSecond": 88.15391672999462,
+   "inWorkerMs": {
+    "mean": 90.25689795972842,
+    "median": 90.76550049999969
+   },
+   "workerBusyShare": 0.9945623833811909,
+   "hostCpuUtilization": 0.6015650391259781,
+   "cgroup": {
+    "memoryPeak": "5568311296",
+    "memoryCurrent": "119717888"
+   },
+   "workerStats": [
+    {
+     "pid": 1642350,
+     "loadMs": 4611,
+     "t": "mem",
+     "mem": {
+      "rss": 717312000,
+      "heapUsed": 52598880,
+      "heapTotal": 167817216,
+      "external": 11375269,
+      "arrayBuffers": 65275688
+     },
+     "count": 285,
+     "gcs": 4,
+     "gcMs": 18.165720999997575,
+     "cpuUserMs": 36561.046,
+     "cpuSystemMs": 282.188,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642351,
+     "loadMs": 4617,
+     "t": "mem",
+     "mem": {
+      "rss": 698642432,
+      "heapUsed": 52248256,
+      "heapTotal": 166768640,
+      "external": 11433922,
+      "arrayBuffers": 65334341
+     },
+     "count": 284,
+     "gcs": 4,
+     "gcMs": 19.386461999998573,
+     "cpuUserMs": 36687.135,
+     "cpuSystemMs": 282.47,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642352,
+     "loadMs": 4629,
+     "t": "mem",
+     "mem": {
+      "rss": 719925248,
+      "heapUsed": 21271392,
+      "heapTotal": 167555072,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 270,
+     "gcs": 4,
+     "gcMs": 19.25785100000212,
+     "cpuUserMs": 37104.085,
+     "cpuSystemMs": 294.162,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642353,
+     "loadMs": 4646,
+     "t": "mem",
+     "mem": {
+      "rss": 750518272,
+      "heapUsed": 21208064,
+      "heapTotal": 170176512,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 280,
+     "gcs": 4,
+     "gcMs": 16.47118099999716,
+     "cpuUserMs": 36763.251,
+     "cpuSystemMs": 298.795,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642442,
+     "loadMs": 4591,
+     "t": "mem",
+     "mem": {
+      "rss": 732299264,
+      "heapUsed": 28024280,
+      "heapTotal": 167817216,
+      "external": 11377251,
+      "arrayBuffers": 65277743
+     },
+     "count": 293,
+     "gcs": 4,
+     "gcMs": 17.813381999998455,
+     "cpuUserMs": 36606.438,
+     "cpuSystemMs": 308.782,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642444,
+     "loadMs": 4596,
+     "t": "mem",
+     "mem": {
+      "rss": 706789376,
+      "heapUsed": 61180240,
+      "heapTotal": 169127936,
+      "external": 11274763,
+      "arrayBuffers": 65175182
+     },
+     "count": 280,
+     "gcs": 4,
+     "gcMs": 17.87028100000134,
+     "cpuUserMs": 36742.278,
+     "cpuSystemMs": 307.864,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642443,
+     "loadMs": 4649,
+     "t": "mem",
+     "mem": {
+      "rss": 715350016,
+      "heapUsed": 58563336,
+      "heapTotal": 167030784,
+      "external": 11375372,
+      "arrayBuffers": 65275792
+     },
+     "count": 266,
+     "gcs": 4,
+     "gcMs": 22.045979000000443,
+     "cpuUserMs": 36840.643,
+     "cpuSystemMs": 297.207,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642441,
+     "loadMs": 4686,
+     "t": "mem",
+     "mem": {
+      "rss": 718008320,
+      "heapUsed": 58784544,
+      "heapTotal": 167817216,
+      "external": 11474304,
+      "arrayBuffers": 65374723
+     },
+     "count": 284,
+     "gcs": 4,
+     "gcMs": 18.118422999998074,
+     "cpuUserMs": 36941.87,
+     "cpuSystemMs": 284.097,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    }
+   ]
+  },
+  {
+   "workers": 12,
+   "tasks": 2210,
+   "startSeconds": 14.66280070600001,
+   "wallSeconds": 24.021701512,
+   "evalsPerSecond": 92.00014407372427,
+   "inWorkerMs": {
+    "mean": 129.59162414796413,
+    "median": 119.37568899999951
+   },
+   "workerBusyShare": 0.9935373410300528,
+   "hostCpuUtilization": 0.8333811598361724,
+   "cgroup": {
+    "memoryPeak": "8171204608",
+    "memoryCurrent": "131117056"
+   },
+   "workerStats": [
+    {
+     "pid": 1642698,
+     "loadMs": 4608,
+     "t": "mem",
+     "mem": {
+      "rss": 706220032,
+      "heapUsed": 44684920,
+      "heapTotal": 169914368,
+      "external": 11274759,
+      "arrayBuffers": 65175179
+     },
+     "count": 183,
+     "gcs": 2,
+     "gcMs": 13.61785200000304,
+     "cpuUserMs": 33339.991,
+     "cpuSystemMs": 292.798,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642699,
+     "loadMs": 4619,
+     "t": "mem",
+     "mem": {
+      "rss": 708952064,
+      "heapUsed": 28416448,
+      "heapTotal": 171749376,
+      "external": 11353422,
+      "arrayBuffers": 65253842
+     },
+     "count": 191,
+     "gcs": 2,
+     "gcMs": 16.197629999998753,
+     "cpuUserMs": 33546.94,
+     "cpuSystemMs": 277.372,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642700,
+     "loadMs": 4630,
+     "t": "mem",
+     "mem": {
+      "rss": 699527168,
+      "heapUsed": 20794976,
+      "heapTotal": 169127936,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 181,
+     "gcs": 2,
+     "gcMs": 31.663014999998268,
+     "cpuUserMs": 33235.253,
+     "cpuSystemMs": 249.289,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642701,
+     "loadMs": 4721,
+     "t": "mem",
+     "mem": {
+      "rss": 692359168,
+      "heapUsed": 78050312,
+      "heapTotal": 171487232,
+      "external": 11454826,
+      "arrayBuffers": 65355246
+     },
+     "count": 189,
+     "gcs": 2,
+     "gcMs": 16.208910999997897,
+     "cpuUserMs": 33588.093,
+     "cpuSystemMs": 275.592,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642779,
+     "loadMs": 4631,
+     "t": "mem",
+     "mem": {
+      "rss": 712740864,
+      "heapUsed": 59694776,
+      "heapTotal": 170176512,
+      "external": 11452526,
+      "arrayBuffers": 65352945
+     },
+     "count": 188,
+     "gcs": 2,
+     "gcMs": 21.840338000001793,
+     "cpuUserMs": 33477.484,
+     "cpuSystemMs": 292.323,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642778,
+     "loadMs": 4639,
+     "t": "mem",
+     "mem": {
+      "rss": 725893120,
+      "heapUsed": 20833640,
+      "heapTotal": 171487232,
+      "external": 11190920,
+      "arrayBuffers": 65091412
+     },
+     "count": 192,
+     "gcs": 3,
+     "gcMs": 20.1475970000065,
+     "cpuUserMs": 33484.98,
+     "cpuSystemMs": 300.757,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642776,
+     "loadMs": 4674,
+     "t": "mem",
+     "mem": {
+      "rss": 698753024,
+      "heapUsed": 62651640,
+      "heapTotal": 170176512,
+      "external": 11585806,
+      "arrayBuffers": 65486225
+     },
+     "count": 188,
+     "gcs": 2,
+     "gcMs": 17.09879600000204,
+     "cpuUserMs": 33845.802,
+     "cpuSystemMs": 286.542,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642777,
+     "loadMs": 4676,
+     "t": "mem",
+     "mem": {
+      "rss": 717856768,
+      "heapUsed": 68815992,
+      "heapTotal": 163098624,
+      "external": 11345943,
+      "arrayBuffers": 65246362
+     },
+     "count": 196,
+     "gcs": 3,
+     "gcMs": 22.302410999996937,
+     "cpuUserMs": 34081.658,
+     "cpuSystemMs": 280.263,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642830,
+     "loadMs": 4586,
+     "t": "mem",
+     "mem": {
+      "rss": 718266368,
+      "heapUsed": 20830608,
+      "heapTotal": 169914368,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 191,
+     "gcs": 2,
+     "gcMs": 26.791252000000895,
+     "cpuUserMs": 33393.797,
+     "cpuSystemMs": 274.17,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642831,
+     "loadMs": 4618,
+     "t": "mem",
+     "mem": {
+      "rss": 720596992,
+      "heapUsed": 76988368,
+      "heapTotal": 168341504,
+      "external": 11325940,
+      "arrayBuffers": 65226360
+     },
+     "count": 194,
+     "gcs": 3,
+     "gcMs": 16.437191000002713,
+     "cpuUserMs": 33936.639,
+     "cpuSystemMs": 300.959,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642832,
+     "loadMs": 4630,
+     "t": "mem",
+     "mem": {
+      "rss": 716095488,
+      "heapUsed": 68082184,
+      "heapTotal": 167030784,
+      "external": 11351310,
+      "arrayBuffers": 65251729
+     },
+     "count": 185,
+     "gcs": 2,
+     "gcMs": 26.18599699999868,
+     "cpuUserMs": 33334.496,
+     "cpuSystemMs": 275.585,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1642829,
+     "loadMs": 4660,
+     "t": "mem",
+     "mem": {
+      "rss": 704638976,
+      "heapUsed": 80801296,
+      "heapTotal": 168079360,
+      "external": 11648652,
+      "arrayBuffers": 65549071
+     },
+     "count": 180,
+     "gcs": 2,
+     "gcMs": 35.077298000001974,
+     "cpuUserMs": 33261.651,
+     "cpuSystemMs": 260.43,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    }
+   ]
+  },
+  {
+   "workers": 14,
+   "tasks": 2210,
+   "startSeconds": 19.250391512,
+   "wallSeconds": 24.47257005899999,
+   "evalsPerSecond": 90.30518636465213,
+   "inWorkerMs": {
+    "mean": 153.65944531176464,
+    "median": 146.69183449999946
+   },
+   "workerBusyShare": 0.9911603461119991,
+   "hostCpuUtilization": 0.9267986900010234,
+   "cgroup": {
+    "memoryPeak": "9611505664",
+    "memoryCurrent": "88461312"
+   },
+   "workerStats": [
+    {
+     "pid": 1643076,
+     "loadMs": 4634,
+     "t": "mem",
+     "mem": {
+      "rss": 723779584,
+      "heapUsed": 86761008,
+      "heapTotal": 176467968,
+      "external": 11497178,
+      "arrayBuffers": 65397598
+     },
+     "count": 165,
+     "gcs": 2,
+     "gcMs": 38.19646799999464,
+     "cpuUserMs": 32747.504,
+     "cpuSystemMs": 330.044,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643077,
+     "loadMs": 4653,
+     "t": "mem",
+     "mem": {
+      "rss": 722595840,
+      "heapUsed": 66287080,
+      "heapTotal": 168865792,
+      "external": 11413931,
+      "arrayBuffers": 65314350
+     },
+     "count": 163,
+     "gcs": 2,
+     "gcMs": 34.575495000000956,
+     "cpuUserMs": 32531.811,
+     "cpuSystemMs": 305.406,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643075,
+     "loadMs": 4656,
+     "t": "mem",
+     "mem": {
+      "rss": 712110080,
+      "heapUsed": 68671480,
+      "heapTotal": 170962944,
+      "external": 11511281,
+      "arrayBuffers": 65411701
+     },
+     "count": 161,
+     "gcs": 2,
+     "gcMs": 34.346872000001895,
+     "cpuUserMs": 33074.075,
+     "cpuSystemMs": 295.198,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643083,
+     "loadMs": 4677,
+     "t": "mem",
+     "mem": {
+      "rss": 745115648,
+      "heapUsed": 53753648,
+      "heapTotal": 169127936,
+      "external": 11470533,
+      "arrayBuffers": 65370952
+     },
+     "count": 167,
+     "gcs": 2,
+     "gcMs": 27.24766499999896,
+     "cpuUserMs": 32889.782,
+     "cpuSystemMs": 326.002,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643168,
+     "loadMs": 4617,
+     "t": "mem",
+     "mem": {
+      "rss": 736063488,
+      "heapUsed": 62075864,
+      "heapTotal": 170700800,
+      "external": 11586004,
+      "arrayBuffers": 65486426
+     },
+     "count": 162,
+     "gcs": 2,
+     "gcMs": 26.980171999995946,
+     "cpuUserMs": 32727.213,
+     "cpuSystemMs": 314.309,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643169,
+     "loadMs": 4637,
+     "t": "mem",
+     "mem": {
+      "rss": 716836864,
+      "heapUsed": 50116816,
+      "heapTotal": 166506496,
+      "external": 11337383,
+      "arrayBuffers": 65237803
+     },
+     "count": 172,
+     "gcs": 2,
+     "gcMs": 29.231417999999394,
+     "cpuUserMs": 32751.989,
+     "cpuSystemMs": 315.803,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643166,
+     "loadMs": 4662,
+     "t": "mem",
+     "mem": {
+      "rss": 694706176,
+      "heapUsed": 55963944,
+      "heapTotal": 173060096,
+      "external": 11357335,
+      "arrayBuffers": 65257754
+     },
+     "count": 165,
+     "gcs": 2,
+     "gcMs": 22.651583999999275,
+     "cpuUserMs": 33069.99,
+     "cpuSystemMs": 283.309,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643167,
+     "loadMs": 4691,
+     "t": "mem",
+     "mem": {
+      "rss": 745672704,
+      "heapUsed": 55480104,
+      "heapTotal": 167555072,
+      "external": 11339207,
+      "arrayBuffers": 65239627
+     },
+     "count": 161,
+     "gcs": 2,
+     "gcMs": 34.78087600000072,
+     "cpuUserMs": 32843.563,
+     "cpuSystemMs": 294.452,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643238,
+     "loadMs": 4605,
+     "t": "mem",
+     "mem": {
+      "rss": 727752704,
+      "heapUsed": 20939224,
+      "heapTotal": 166244352,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 160,
+     "gcs": 2,
+     "gcMs": 33.62573799999882,
+     "cpuUserMs": 32956.484,
+     "cpuSystemMs": 290.046,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643237,
+     "loadMs": 4632,
+     "t": "mem",
+     "mem": {
+      "rss": 694890496,
+      "heapUsed": 48826200,
+      "heapTotal": 170176512,
+      "external": 11353425,
+      "arrayBuffers": 65253844
+     },
+     "count": 163,
+     "gcs": 2,
+     "gcMs": 35.78507199999876,
+     "cpuUserMs": 33110.658,
+     "cpuSystemMs": 287.44,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643236,
+     "loadMs": 4653,
+     "t": "mem",
+     "mem": {
+      "rss": 700837888,
+      "heapUsed": 24576752,
+      "heapTotal": 170438656,
+      "external": 11240101,
+      "arrayBuffers": 65140593
+     },
+     "count": 160,
+     "gcs": 2,
+     "gcMs": 34.582275000000664,
+     "cpuUserMs": 32450.347,
+     "cpuSystemMs": 306.205,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643239,
+     "loadMs": 4659,
+     "t": "mem",
+     "mem": {
+      "rss": 720736256,
+      "heapUsed": 20508576,
+      "heapTotal": 168079360,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 154,
+     "gcs": 2,
+     "gcMs": 25.78061499999967,
+     "cpuUserMs": 33058.486,
+     "cpuSystemMs": 273.594,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643291,
+     "loadMs": 4418,
+     "t": "mem",
+     "mem": {
+      "rss": 713695232,
+      "heapUsed": 20791648,
+      "heapTotal": 166506496,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 153,
+     "gcs": 2,
+     "gcMs": 33.96803,
+     "cpuUserMs": 32493.446,
+     "cpuSystemMs": 277.488,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643290,
+     "loadMs": 4441,
+     "t": "mem",
+     "mem": {
+      "rss": 710057984,
+      "heapUsed": 61189496,
+      "heapTotal": 169127936,
+      "external": 11472275,
+      "arrayBuffers": 65372695
+     },
+     "count": 160,
+     "gcs": 2,
+     "gcMs": 22.816063999996913,
+     "cpuUserMs": 32377.477,
+     "cpuSystemMs": 223.382,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    }
+   ]
+  },
+  {
+   "workers": 16,
+   "tasks": 2210,
+   "startSeconds": 19.431627490000015,
+   "wallSeconds": 24.443244960000012,
+   "evalsPerSecond": 90.41352748444571,
+   "inWorkerMs": {
+    "mean": 175.39808582986453,
+    "median": 173.7962934999996
+   },
+   "workerBusyShare": 0.9911474783686006,
+   "hostCpuUtilization": 0.9971355498721227,
+   "cgroup": {
+    "memoryPeak": "10913079296",
+    "memoryCurrent": "90165248"
+   },
+   "workerStats": [
+    {
+     "pid": 1643503,
+     "loadMs": 4573,
+     "t": "mem",
+     "mem": {
+      "rss": 722505728,
+      "heapUsed": 25156928,
+      "heapTotal": 166506496,
+      "external": 11240149,
+      "arrayBuffers": 65140641
+     },
+     "count": 144,
+     "gcs": 2,
+     "gcMs": 39.51087800000096,
+     "cpuUserMs": 31264.048,
+     "cpuSystemMs": 315.272,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643500,
+     "loadMs": 4614,
+     "t": "mem",
+     "mem": {
+      "rss": 738992128,
+      "heapUsed": 34737712,
+      "heapTotal": 168603648,
+      "external": 11436036,
+      "arrayBuffers": 65336455
+     },
+     "count": 144,
+     "gcs": 2,
+     "gcMs": 34.924526999999216,
+     "cpuUserMs": 31146.63,
+     "cpuSystemMs": 338.317,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643502,
+     "loadMs": 4663,
+     "t": "mem",
+     "mem": {
+      "rss": 727719936,
+      "heapUsed": 29796712,
+      "heapTotal": 166244352,
+      "external": 11513680,
+      "arrayBuffers": 65414099
+     },
+     "count": 140,
+     "gcs": 2,
+     "gcMs": 36.56763800000044,
+     "cpuUserMs": 31141.925,
+     "cpuSystemMs": 291.348,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643501,
+     "loadMs": 4683,
+     "t": "mem",
+     "mem": {
+      "rss": 734281728,
+      "heapUsed": 50816784,
+      "heapTotal": 169127936,
+      "external": 11606139,
+      "arrayBuffers": 65506558
+     },
+     "count": 143,
+     "gcs": 2,
+     "gcMs": 40.7916769999938,
+     "cpuUserMs": 31442.009,
+     "cpuSystemMs": 286.231,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643591,
+     "loadMs": 4554,
+     "t": "mem",
+     "mem": {
+      "rss": 709832704,
+      "heapUsed": 73253560,
+      "heapTotal": 169127936,
+      "external": 11394106,
+      "arrayBuffers": 65294526
+     },
+     "count": 141,
+     "gcs": 2,
+     "gcMs": 26.4116090000025,
+     "cpuUserMs": 31179.083,
+     "cpuSystemMs": 283.123,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643592,
+     "loadMs": 4565,
+     "t": "mem",
+     "mem": {
+      "rss": 706359296,
+      "heapUsed": 43846008,
+      "heapTotal": 168079360,
+      "external": 11265704,
+      "arrayBuffers": 65166124
+     },
+     "count": 146,
+     "gcs": 2,
+     "gcMs": 36.46458800000255,
+     "cpuUserMs": 31453.996,
+     "cpuSystemMs": 294.636,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643594,
+     "loadMs": 4569,
+     "t": "mem",
+     "mem": {
+      "rss": 696348672,
+      "heapUsed": 45387672,
+      "heapTotal": 169914368,
+      "external": 11531126,
+      "arrayBuffers": 65431546
+     },
+     "count": 143,
+     "gcs": 2,
+     "gcMs": 38.65764100000524,
+     "cpuUserMs": 31424.025,
+     "cpuSystemMs": 243.588,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643593,
+     "loadMs": 4623,
+     "t": "mem",
+     "mem": {
+      "rss": 701337600,
+      "heapUsed": 29269072,
+      "heapTotal": 169127936,
+      "external": 11322786,
+      "arrayBuffers": 65223278
+     },
+     "count": 143,
+     "gcs": 2,
+     "gcMs": 31.783525999995618,
+     "cpuUserMs": 31701.882,
+     "cpuSystemMs": 275.365,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643670,
+     "loadMs": 4544,
+     "t": "mem",
+     "mem": {
+      "rss": 713564160,
+      "heapUsed": 24995952,
+      "heapTotal": 169127936,
+      "external": 11296752,
+      "arrayBuffers": 65197244
+     },
+     "count": 139,
+     "gcs": 2,
+     "gcMs": 30.755308999996487,
+     "cpuUserMs": 30775.582,
+     "cpuSystemMs": 280.51,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643671,
+     "loadMs": 4570,
+     "t": "mem",
+     "mem": {
+      "rss": 729403392,
+      "heapUsed": 69157976,
+      "heapTotal": 167292928,
+      "external": 11463758,
+      "arrayBuffers": 65364177
+     },
+     "count": 139,
+     "gcs": 2,
+     "gcMs": 38.36069000000134,
+     "cpuUserMs": 30995.192,
+     "cpuSystemMs": 273.271,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643668,
+     "loadMs": 4600,
+     "t": "mem",
+     "mem": {
+      "rss": 739954688,
+      "heapUsed": 54846536,
+      "heapTotal": 169390080,
+      "external": 11396107,
+      "arrayBuffers": 65296527
+     },
+     "count": 141,
+     "gcs": 2,
+     "gcMs": 40.61585500000365,
+     "cpuUserMs": 30708.911,
+     "cpuSystemMs": 270.04,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643669,
+     "loadMs": 4656,
+     "t": "mem",
+     "mem": {
+      "rss": 698372096,
+      "heapUsed": 20477328,
+      "heapTotal": 167817216,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 143,
+     "gcs": 2,
+     "gcMs": 36.2861269999994,
+     "cpuUserMs": 31204.074,
+     "cpuSystemMs": 289.547,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643723,
+     "loadMs": 4590,
+     "t": "mem",
+     "mem": {
+      "rss": 735748096,
+      "heapUsed": 42627552,
+      "heapTotal": 166506496,
+      "external": 11511433,
+      "arrayBuffers": 65411853
+     },
+     "count": 139,
+     "gcs": 2,
+     "gcMs": 39.763810000004014,
+     "cpuUserMs": 31266.632,
+     "cpuSystemMs": 282.153,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643721,
+     "loadMs": 4597,
+     "t": "mem",
+     "mem": {
+      "rss": 692711424,
+      "heapUsed": 20265216,
+      "heapTotal": 165720064,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 143,
+     "gcs": 2,
+     "gcMs": 35.06667700000253,
+     "cpuUserMs": 31288.206,
+     "cpuSystemMs": 273.865,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643724,
+     "loadMs": 4614,
+     "t": "mem",
+     "mem": {
+      "rss": 715919360,
+      "heapUsed": 20810328,
+      "heapTotal": 165195776,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 142,
+     "gcs": 2,
+     "gcMs": 36.60092800000348,
+     "cpuUserMs": 31233.695,
+     "cpuSystemMs": 278.848,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    },
+    {
+     "pid": 1643722,
+     "loadMs": 4680,
+     "t": "mem",
+     "mem": {
+      "rss": 722505728,
+      "heapUsed": 20769136,
+      "heapTotal": 171225088,
+      "external": 11189084,
+      "arrayBuffers": 65089576
+     },
+     "count": 144,
+     "gcs": 2,
+     "gcMs": 35.69556100000045,
+     "cpuUserMs": 31297.591,
+     "cpuSystemMs": 291.706,
+     "cache": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 48,
+      "d1": 64
+     }
+    }
+   ]
+  }
+ ]
+}
