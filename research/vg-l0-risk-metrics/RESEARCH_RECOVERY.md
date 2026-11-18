@@ -2,33 +2,37 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-18T06:21Z (UTC, from the clock). **Status: INCOMPLETE — every computation stage is sealed;
-  writing the deliverable documents (Stage 6–7), then QA, commit and push.**
+- **Updated:** 2026-11-18T06:40Z (UTC, from the clock). **Status: INCOMPLETE — all stages sealed and all deliverables
+  written; final QA running (full `npm test` in unit `vgl0rm-npm-test`, log `results/logs/npm-test.log`); then commit,
+  push, `git ls-remote` check, push record.**
 - **Task:** the user's brief `brief/BRIEF.md` (sha256 `c2eaa0e8…2657`, read in full). No search, no new phenotype, no
   adoption, no broker, no main merge, no standard/NL0 edit.
 - **Authority:** `PROTOCOL.md` FROZEN (sha256 `0cfa32385edd7beb68a47284f9b2298d047b6a6e0022b4ce0edbcb21cbe0fb14`,
-  `results/protocol-freeze.json` sealed `331c9f54…7137`, committed `cdb87439`). `AMENDMENTS.md`: A1 (S3 gate rounding),
-  A2 (budget disclosure). Standard 2.2.0, scope diagnostic; preflight PASS.
-- **Branch:** `research/vg-l0-risk-metrics` (main checkout) from `67b4ae71`; last commit `1768334d` (sealed stages through
-  S5). Uncommitted (intended): margin records, tables, docs, amendments, code tidy-ups.
-- **Running:** nothing (all `vgl0rm-*` units finished; `systemctl --user list-units 'vgl0rm-*'` is empty).
-- **Next step:** write BASELINE_AND_PROVENANCE, IMPLEMENTATION_AND_TESTS, CANDIDATE_RISK_AUDIT, SELECTION_PIPELINE_AUDIT,
-  SELECTOR_COMPARISON, PROPOSED_METHOD, REPORT, README, RUN_COMMANDS from the sealed records; final QA (tests, seals,
-  tsc, preflight); commit; push (unsandboxed, retry); `git ls-remote` check; record the push.
+  freeze record `331c9f54…7137`, committed `cdb87439`). `AMENDMENTS.md`: A1 (S3 gate rounding), A2 (budget ≈ 6,184 of
+  6,200), A3 (per-trade window defect; corrected record `results/audit/centres-windows-v2.json` `525a83e5…d5cb2`), A4
+  (erratum 51 → 50). Standard 2.2.0, scope diagnostic; preflight PASS (06:38Z).
+- **Branch:** `research/vg-l0-risk-metrics` (main checkout) from `67b4ae71`; commits `cdb87439`, `1768334d`, `7aeefe7a`;
+  uncommitted (intended): the deliverable documents, A3/A4, centres-windows-v2, tests and tool fixes, tables.
+- **Running:** `vgl0rm-npm-test` (started 06:34:16Z). Check: `systemctl --user is-active vgl0rm-npm-test`; the log's
+  "npm test exit N" line. Expected: only the 7 known pre-existing failures (memory `known-npm-test-failures`).
+- **Next step:** when the suite ends, record its counts in IMPLEMENTATION_AND_TESTS.md §2 and REPORT.md §6; commit;
+  `git push -u origin research/vg-l0-risk-metrics` (unsandboxed, retry); verify with `git ls-remote origin
+  research/vg-l0-risk-metrics`; record the push here; commit and push that record.
 
-## Stage table (all sealed records: `results/seals.jsonl`, 24 records)
+## Stage table (sealed records: `results/seals.jsonl`, 25 records, all verify)
 
 | Stage | Status | Output (sha256) |
 |---|---|---|
 | Freeze | complete | `results/protocol-freeze.json` `331c9f54…7137` |
 | 0 Provenance and parity | complete, G0 PASS | `results/baseline/parity.json` `83e610b9…69f8` |
-| 1 Metrics, tests, G-S | complete: 20/20 tests; G-S 0 failures (1,532 audit exits; every member replay's exits) | code `src/vg-l0-risk-metrics/` |
-| 2 Margin | complete | `results/margin/grid.json` `09df7915…80cb5`, `results/margin/overlay.json` `579c3feb…62ba` |
-| 3 Audit | complete (51/51 parity) | `results/audit/centres.json` `7a62da0e…a538b`; 10 `results/audit/nbhd-*.json` |
-| 4 Pipeline | complete (records) | `results/pipeline/exclusions-scan.json` `49124e0d…3268`, `-compare.json` `cd79ce3d…60ff`, `-replays.json` `7010fb4a…7d83`; code trace `notes/stage4-code-trace.md` (spot-checked) |
+| 1 Metrics, tests, G-S | complete: 23/23 study tests; G-S 0 failures on 36,821 exits | code `src/vg-l0-risk-metrics/` |
+| 2 Margin | complete | `results/margin/grid.json` `09df7915…80cb5`, `overlay.json` `579c3feb…62ba` |
+| 3 Audit | complete (51/51 parity; A3 correction sealed) | `results/audit/centres.json` `7a62da0e…a538b`, `centres-windows-v2.json` `525a83e5…d5cb2`, 10 `nbhd-*.json` |
+| 4 Pipeline | complete | `results/pipeline/exclusions-scan.json` `49124e0d…3268`, `-compare.json` `cd79ce3d…60ff`, `-replays.json` `7010fb4a…7d83` |
 | 5 Selectors | complete, G5a/G5b/G5c PASS | `results/selection/members-C19…C24.json`, `selectors.json` `46cfd342…c9e3`, `folds.json` `f57968da…1094` |
-| Tables | regenerated | `results/tables/*.csv` + `MANIFEST.json` (`tools/vg-l0-risk-metrics/tables.ts`, rerunnable) |
-| 6–7 Docs, QA, push | running | |
+| Tables | regenerated (rerunnable) | `results/tables/*.csv`, `MANIFEST.json` |
+| 6–7 Docs | written | REPORT, BASELINE_AND_PROVENANCE, METRIC_SPECIFICATION, IMPLEMENTATION_AND_TESTS, CANDIDATE_RISK_AUDIT, SELECTION_PIPELINE_AUDIT, SELECTOR_COMPARISON, PROPOSED_METHOD, README, RUN_COMMANDS |
+| QA, commit, push | running | |
 
 Resume: every sealed record refuses a rerun; tables.ts is rerunnable; docs are written from the sealed records.
 

@@ -83,7 +83,7 @@ const grid = () => {
           for (const ts of [0, 0.1, 0.2, 0.3, 0.5]) {
             const a = scenarioAccount({ core: 500_000, voogShare: 0.6, tradedSymbol: traded, slotValue: v, slotLoan: 100_000, slotInterest: 0, realized: 0, otherDebt: 100_000, maintenance: m });
             // GDX slot: the core's VOOG and VGT fall by cs, GDX by ts; VGT slot: VOOG by cs, VGT (core and slot) by max(cs, ts)
-            const shocks = traded === 'GDX' ? { VOOG: cs, VGT: cs, GDX: ts } : { VOOG: cs, VGT: Math.max(cs, ts) };
+            const shocks: Record<string, number> = traded === 'GDX' ? { VOOG: cs, VGT: cs, GDX: ts } : { VOOG: cs, VGT: Math.max(cs, ts) };
             const e = evaluateAccount(a, shocks);
 
             joint.push({ traded, slot: sk, maintenance: mk, coreShock: cs, tradedShock: ts, excess: r2(e.excess), deficient: e.deficient, equityRatio: e.equityRatio });

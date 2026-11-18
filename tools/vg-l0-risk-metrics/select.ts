@@ -303,7 +303,7 @@ const foldsStage = async () => {
       stage: 'S5c fold paths of every selector (retrospective)',
       freeze: freeze.protocol.sha256,
       code: codeDigest(),
-      gates: { G5c: 'PASS', labelCheck: labels.filter((l) => l.comparison.startsWith('RA1 vs original')).map((l) => `${l.population}: ${l.label}`) },
+      gates: { G5c: 'PASS', labelCheck: labels.filter((l) => l.comparison!.startsWith('RA1 vs original')).map((l) => `${l.population}: ${l.label}`) },
       slices: Object.fromEntries(Object.entries(slices).map(([c, m]) => [c, Object.fromEntries(Object.entries(m).map(([l, x]) => [l, { sliceNet: r2(x.sliceNet), sliceDd: r2(x.sliceDd), openAtBoundary: x.openAtBoundary, openAtEnd: x.openAtEnd, giveBack: x.giveBack, nextSlice: x.nextSlice, principal: x.principal }]))])),
       paths: Object.fromEntries(Object.entries(paths).map(([p, m]) => [p, Object.fromEntries(Object.entries(m).map(([s, x]) => [s, { ...x, peakT: undefined, troughT: undefined }]))])),
       labels,

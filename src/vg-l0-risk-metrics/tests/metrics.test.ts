@@ -19,6 +19,7 @@ import {
   tradeRisk
 } from '../metrics.ts';
 import { evaluateAccount, firstDeficiencyShock, linearDeficiencyShock, scenarioAccount } from '../margin.ts';
+import { windowMetrics } from '../bundle.ts';
 
 const DAY = 86_400;
 const T0 = Date.parse('2020-01-06T00:00:00Z') / 1000; // a Monday
@@ -330,4 +331,18 @@ test('margin: a concentration rule raises the requirement of the dominant positi
 
   close(e.requirement, 80_000 * 0.5 + 20_000 * 0.35);
   close(evaluateAccount({ ...a, positions: [...a.positions, { symbol: 'C', quantity: 10, price: 100, marginable: false }] }).requirement, 80_000 * 0.5 + 20_000 * 0.35 + 1000);
+});
+
+test('a window ending while a lot is open never reads that lot\'s later marks (amendment A3)', () => {
+  // open at the window end (day 2, +20,000), later falls to −30,000 (day 4) and exits there
+  const l = lotOf({ id: 1, entryDay: 0, raw: 100, path: [[0, 100], [1, 110], [2, 120], [3, 90], [4, 70]], exit: [4, 70] });
+  const L = ledgerOf([l]);
+  const pts = portfolioPath(L);
+  const w = windowMetrics(L, pts, -Infinity, T(2));
+  const all = windowMetrics(L, pts, -Infinity, L.endT);
+
+  close(w.trades.principalLossMax, 0); // nothing below principal up to day 2
+  close(w.trades.maxPeakProfit, 20000);
+  assert.equal(w.trades.closed, 0);
+  close(all.trades.principalLossMax, 30000);
 });

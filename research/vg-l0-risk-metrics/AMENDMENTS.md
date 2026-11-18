@@ -25,3 +25,31 @@ amendment once results they govern exist.
 - **Per-use lines exceeded:** S0 + S3 candidates 177 against 160 (dry runs); the margin overlay 12 against 0 (it needs the
   candidates' daily ledgers, which §10 had wrongly listed as "prices only"). Every other line is within its cap.
 - **Effect.** None on any result; no search, no new vector. Recorded so that the budget table is not read as exact.
+
+## A3 — 2026-11-18T06:36Z — per-trade window metrics truncated at the window end (defect fix; re-sealed as a new record)
+
+- **Defect.** In `bundle.ts windowMetrics`, the per-trade block (`trades`: trade principal loss maximum and its lot, lots
+  over $10k/$25k/$35k, worst realized lot, worst canonical MAE, largest lot giveback, peak profit) measured a lot that was
+  still open at the window's END over its whole life, including marks after the window. PROTOCOL §6.2 measures a lot
+  "with its whole life to the window end". Affected: windows that end before the ledger end — the development window and
+  the 2020/2022/2025 episode windows of `results/audit/centres.json` (FULL replays). Example: L/RA1's development "trade
+  PL max" showed $30,366.47 — the April 2025 loss of the Growth·VGT lot opened on 2024-10-30.
+- **Not affected.** Every drawdown, its exact attribution, the floor, realized and banked drawdowns (all computed on the
+  path up to the window end), the full-history and 2025–2026 windows (they end at the ledger end), the neighbourhood
+  records, the Stage 4 replays and the Stage 5 member, selector and fold records (their doors end at the window end), and
+  therefore every P2 input and result.
+- **Fix.** `truncateLot` (the lot as it stood at the window end); a synthetic test; the corrected windows and episodes of
+  all 51 subjects re-sealed as `results/audit/centres-windows-v2.json`, which supersedes only the `trades` blocks of the
+  windows and episodes of `centres.json` (the sealed original is kept unchanged). 51 further FULL replays (budget total
+  ≈ 6,184 of 6,200).
+- **Addendum (06:40Z).** The re-sealed v2 record still carries, for a lot open at a window end, the engine's whole-life
+  canonical MAE in `worstCanonicalMae` (five development rows: L/original, L/RA1, `GA0.VA0/R1#2`, `GA0.VD0/R2#1`,
+  `GA0.VD0/R2#4`; and episode rows). The tables take the development value from the sealed D24 evidence (Assignment 3's
+  `risk.mae.worst`, carried in `members-C24.json`; the corrected development PL maximum equals the D24 replays' for all 48
+  matched subjects) and leave the episode value blank. `truncateLot` now also truncates the MAE (code only; no re-seal).
+
+## A4 — 2026-11-18T06:50Z — erratum (no rule change)
+
+PROTOCOL §9.4 says P2b could admit "51 such members"; the archives hold **50** members that failed qualification by
+drawdown alone (48 at Q3, 2 at Q5; `selectors.json` `p2bAdmittedBeyondQ1Q6` summed over C19 F, C21 F, C23 F, C24 U). The
+rule itself is unchanged.

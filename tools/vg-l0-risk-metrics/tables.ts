@@ -26,6 +26,28 @@ fs.mkdirSync(out, { recursive: true });
 type W = { net: number; dd: { max: number; peak: string; trough: string }; ddAttribution: { profitGiveback: number; principalLoss: number; residual: number } | null; floor: { liquidation: { shortfall: number; date: string | null } }; realizedDd: { max: number; peak: string; trough: string }; bankedDd: { marked: { max: number; highDate: string; troughDate: string } }; trades: { lots: number; principalLossMax: number; principalLossMaxLot: { book: string; entry: string } | null; lotsOver10k: number; lotsOver25k: number; lotsOver35k: number; worstRealized: number | null; worstCanonicalMae: number | null; maxGiveback: { amount: number; book: string; entry: string } | null } };
 type C = { rows: { key: string; label: string; provenance: string; cell: string | null; boundedLossExit: boolean; record: Record<string, number>; windows: Record<string, W>; episodes: Record<string, W>; exposures: { date: string; net: number; openShareOfNet: number | null; open: Record<string, unknown> | null; after: Record<string, unknown> }[]; trades: Record<string, unknown>[]; gapsThroughStop: Record<string, unknown>[]; realizedEpisodes: Record<string, unknown>[] }[] };
 const centres = J<C>('audit/centres.json');
+// amendment A3: the windows' and episodes' per-trade blocks come from the corrected record
+const v2 = new Map(J<{ rows: { key: string; windows: Record<string, W>; episodes: Record<string, W> }[] }>('audit/centres-windows-v2.json').rows.map((r) => [r.key, r]));
+
+for (const r of centres.rows) {
+  const c = v2.get(r.key)!;
+
+  for (const w of Object.keys(r.windows)) r.windows[w]!.trades = c.windows[w]!.trades;
+  for (const e of Object.keys(r.episodes)) r.episodes[e]!.trades = { ...c.episodes[e]!.trades, worstCanonicalMae: null }; // see A3
+}
+// the development window's canonical MAE of a lot open at 2024-12-31: the sealed D24 evidence (Assignment 3's
+// risk.mae.worst, carried in members-C24), causal by construction; its PL maximum equals the corrected one (checked)
+{
+  const m = new Map(J<{ rows: { label: string; ra1: { worstMae: number }; p2: { principalLossMax: number } }[] }>('selection/members-C24.json').rows.map((x) => [x.label, x]));
+
+  for (const r of centres.rows) {
+    const x = m.get(r.key === 'New L0' ? 'incumbent: New L0' : r.label);
+
+    if (!x) continue;
+    if (Math.abs(x.p2.principalLossMax - r.windows.development!.trades.principalLossMax) > 0.01) throw new Error(`${r.key}: development PL differs from D24`);
+    r.windows.development!.trades.worstCanonicalMae = x.ra1.worstMae;
+  }
+}
 const files: { name: string; rows: number }[] = [];
 const winRow = (prefix: string, w: W) => ({
   [`${prefix}Net`]: w.net,
@@ -60,7 +82,8 @@ files.push(
       costs: r.record.costs,
       ...winRow('dev', r.windows.development!),
       ...winRow('val', r.windows['2025–2026 (reset)']!),
-      ...winRow('full', r.windows.full!)
+      ...winRow('full', r.windows.full!),
+      ...Object.fromEntries(Object.entries((r.record as unknown as { years: Record<string, number> }).years ?? {}).map(([y, v]) => [`net ${y}`, v]))
     }))
   )
 );

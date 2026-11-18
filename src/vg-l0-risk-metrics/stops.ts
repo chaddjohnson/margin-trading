@@ -232,7 +232,7 @@ export const verifyExit = (door: Door, lot: Lot, p: BookParams, rate: number, co
   const isOpenPrint = f.k < ds.sBarCount[f.s]! && f.raw === ds.bOpen[ds.sBarStart[f.s]! + f.k]!;
 
   if (r === 'trailing stop' || r === 'trailing stop gap') {
-    if (f.s <= lot.entryS) return { reason: r, ok: false, why: 'a trailing stop on the entry session' };
+    if (f.s <= lot.entryS) return { reason: r, ok: false, why: 'a trailing stop on the entry session', level: NaN, raw: f.raw, armedByRule: false };
 
     const st = stopStateAt(door, lot, f.s - 1, p, rate, costBps);
     const level = st.trailingLevel;

@@ -3,7 +3,7 @@
 // open-lot stop state at each requested close. Pure given the replay; rounded to cents only at the output.
 import type { Door } from '../vg-d1-growth-joint/data.ts';
 import type { Replay } from './engine.ts';
-import type { Ledger, PathPoint } from './ledger.ts';
+import type { Ledger, LotLedger, PathPoint } from './ledger.ts';
 import {
   attributeDrawdown,
   bankedDrawdown,
@@ -28,6 +28,20 @@ export const closeT = (door: Door, date: string) => {
   return door.sym.VGT.ds.sCloseTime[s]!;
 };
 
+// The lot as it stood at instant toT: marks after toT dropped; an exit after toT undone (the lot is open at toT with its
+// last mark as its net). A lot that exited by toT is unchanged.
+export const truncateLot = (l: LotLedger, toT: number): LotLedger => {
+  if (!l.open && l.fills.at(-1)!.t <= toT) return l;
+
+  const marks = l.marks.filter((m) => m.t <= toT);
+  const fills = l.fills.filter((f) => f.t <= toT);
+
+  // the canonical MAE as a run ending at toT would publish it (min of the marks; the final net is the last mark)
+  const canonicalMae = marks.length ? marks.reduce((a, m) => Math.min(a, m.pnl), Infinity) : null;
+
+  return { ...l, marks, fills, open: true, net: marks.at(-1)?.pnl ?? 0, canonicalMae };
+};
+
 // One window (fromT, toT]: fromT = −∞ for a whole-run window (peak 0 at the start), else a boundary close (reset).
 export const windowMetrics = (L: Ledger, pts: readonly PathPoint[], fromT: number, toT: number) => {
   const w = windowOf(pts, fromT, toT);
@@ -42,7 +56,8 @@ export const windowMetrics = (L: Ledger, pts: readonly PathPoint[], fromT: numbe
 
     return a <= toT && z > (fromT === -Infinity ? -Infinity : fromT);
   });
-  const trades = lotsIn.map((l) => tradeRisk(l, L.endT));
+  // a lot still open at the window end is measured on its life up to the window end only (no later mark; amendment A3)
+  const trades = lotsIn.map((l) => tradeRisk(truncateLot(l, toT), Math.min(toT, L.endT)));
   const pl = trades.map((t) => t.principalLossLiq).sort((a, b) => a - b);
   const worstPl = trades.reduce<(typeof trades)[number] | null>((a, t) => (!a || t.principalLossLiq > a.principalLossLiq ? t : a), null);
   const worstGb = trades.reduce<(typeof trades)[number] | null>((a, t) => (!a || t.maxGivebackAboveBreakeven > a.maxGivebackAboveBreakeven ? t : a), null);

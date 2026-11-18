@@ -17,7 +17,7 @@ import { type DoorKey, openDoor } from '../../src/vg-l0-risk-metrics/doors.ts';
 import { reconcile, replay, subjectOfCfg, toLedger } from '../../src/vg-l0-risk-metrics/engine.ts';
 import { bundleOf } from '../../src/vg-l0-risk-metrics/bundle.ts';
 import { attributeDrawdown, bankedDrawdown, floorShortfall, markedDrawdown, portfolioPath, realizedDrawdown, tail, tradeRisk } from '../../src/vg-l0-risk-metrics/metrics.ts';
-import { sealJson } from '../../src/vg-l0-risk-metrics/records.ts';
+import { readJson, sealJson } from '../../src/vg-l0-risk-metrics/records.ts';
 import { auditSubjects } from '../../src/vg-l0-risk-metrics/subjects.ts';
 import { codeDigest, studyGuard } from './common.ts';
 import { auditOptions } from './audit-options.ts';
@@ -144,6 +144,38 @@ const nbhd = async (key: string, doorKey: DoorKey) => {
   emit(`audit/nbhd-${key.replace(/[^A-Za-z0-9]+/g, '_')}-${doorKey}.json`, record, `S3 neighbourhood ${key} ${doorKey}`);
 };
 
+
+// Amendment A3: the development and episode windows recomputed with per-trade metrics truncated at each window end (the
+// sealed centres record measured a lot open at a window end over its whole life). Everything else of centres.json stands.
+const windowsV2 = async () => {
+  const full = await openDoor('FULL', 'Stage 3 (A3): window re-computation of the fixed sealed candidates on FULL');
+  const old = readJson<{ rows: { key: string; windows: Record<string, { trades: Record<string, unknown> }>; episodes: Record<string, { trades: Record<string, unknown> }> }[] }>(path.join(resultsDir, 'audit', 'centres.json'));
+  const rows: Record<string, unknown>[] = [];
+  const changed: Record<string, unknown>[] = [];
+
+  for (const s of auditSubjects()) {
+    const r = replay(full, s.subject, undefined, ['2024-12-31']);
+    const L = toLedger(r);
+
+    reconcile(r, L);
+    if (r2(r.rec.net) !== s.target.net || r2(r.rec.dd) !== s.target.dd) throw new Error(`${s.key}: parity`);
+
+    const b = bundleOf(full, r, L, portfolioPath(L), auditOptions);
+    const o = old.rows.find((x) => x.key === s.key)!;
+
+    for (const [kind, now, was] of [['window', b.windows, o.windows], ['episode', b.episodes, o.episodes]] as const)
+      for (const [w, m] of Object.entries(now)) {
+        const a = JSON.stringify(m.trades);
+        const z = JSON.stringify((was as Record<string, { trades: unknown }>)[w]!.trades);
+
+        if (a !== z) changed.push({ key: s.key, [kind]: w, before: (was as Record<string, { trades: unknown }>)[w]!.trades, after: m.trades });
+      }
+    rows.push({ key: s.key, label: s.label, windows: b.windows, episodes: b.episodes });
+  }
+  emit('audit/centres-windows-v2.json', { stage: 'S3 windows and episodes, per-trade metrics truncated at the window end (amendment A3)', freeze: freeze.protocol.sha256, code: codeDigest(), supersedes: 'the windows[*].trades and episodes[*].trades blocks of audit/centres.json', changed, rows, seconds: (Date.now() - t0) / 1000 }, 'S3 windows v2 (A3)');
+};
+
 if (args[0] === 'centres') await centres();
+else if (args[0] === 'windows-v2') await windowsV2();
 else if (args[0] === 'nbhd') await nbhd(args[1]!, args[2] as DoorKey);
 else console.error('usage: audit.ts centres | nbhd <key> <D24|FULL> [--dry]');
