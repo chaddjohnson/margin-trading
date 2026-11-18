@@ -8,8 +8,9 @@ import { readJson, sha256File, sha256Text } from '../../src/vg-l0-risk-metrics/r
 
 export const freezeFile = path.join(resultsDir, 'protocol-freeze.json');
 
-// sha256 over the sorted (path, sha256) list of the study's code (src and tools)
-export const codeDigest = () => {
+// sha256 over the sorted (path, sha256) list of the study's code (src and tools), computed ONCE at process start so that a
+// record carries the digest of the code its process started with
+const digestAt = () => {
   const files: string[] = [];
   const walk = (d: string) => {
     for (const e of fs.readdirSync(d, { withFileTypes: true })) {
@@ -23,8 +24,11 @@ export const codeDigest = () => {
   walk(path.join(repoRoot, 'src', STUDY));
   walk(path.join(repoRoot, 'tools', STUDY));
   files.sort();
-  return { digest: sha256Text(files.map((f) => `${path.relative(repoRoot, f)} ${sha256File(f)}`).join('\n')), files: files.length };
+  return { digest: sha256Text(files.map((f) => `${path.relative(repoRoot, f)} ${sha256File(f)}`).join('\n')), files: files.length, at: new Date().toISOString() };
 };
+const startDigest = digestAt();
+
+export const codeDigest = () => startDigest;
 
 // every stage: the adoption preflight in code and the frozen protocol unchanged
 export const studyGuard = () => {

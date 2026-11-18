@@ -41,8 +41,9 @@ export const portfolioPath = (L: Ledger): PathPoint[] => {
   return out;
 };
 
-// ----- drawdowns (the engine's strict tracker semantics: a new peak only when strictly higher; the first time the
-// maximum is reached is the trough; recovery = the first later value ≥ the peak value) -----
+// ----- drawdowns (the engine's strict tracker semantics, src/multi-etf-allocator/engine.ts Tracker.updateStrict: a new
+// peak only when strictly higher; the first time the maximum is reached is the trough; recovery = the first later
+// strictly higher value, i.e. a new peak above the drawdown's peak) -----
 
 export interface Drawdown {
   max: number;
@@ -86,13 +87,6 @@ export const strictDrawdown = (values: readonly { t: number; v: number }[], star
       recovering = true;
     }
   }
-  // a recovery at exactly the peak value on a later equal (not strictly higher) value
-  if (recovering) {
-    const after = values.find((x) => x.t > troughT && x.v >= peakValue);
-
-    if (after) recoveryT = after.t;
-  }
-
   return { max, peakT: ddPeakT, troughT, recoveryT, peakValue, troughValue, peakDate: dateOf(ddPeakT), troughDate: dateOf(troughT), recoveryDate: dateOf(recoveryT) };
 };
 
@@ -113,7 +107,7 @@ export const windowOf = (pts: readonly PathPoint[], fromT: number, toT: number) 
 export const markedDrawdown = (pts: readonly PathPoint[], basis: Basis = 'marked', fromT = -Infinity, toT = Infinity) => {
   const w = windowOf(pts, fromT, toT);
   const f = valueOf(basis);
-  const series = (fromT === -Infinity ? pts : [w.start, ...w.points]).map((p) => ({ t: p.t, v: f(p) }));
+  const series = (fromT === -Infinity ? pts.filter((p) => p.t <= toT) : [w.start, ...w.points]).map((p) => ({ t: p.t, v: f(p) }));
 
   return strictDrawdown(series, series[0]?.v ?? 0, series[0]?.t ?? 0);
 };
@@ -122,7 +116,7 @@ export const markedDrawdown = (pts: readonly PathPoint[], basis: Basis = 'marked
 // high-water mark starting at the window's starting R. Carried open lots contribute nothing until they fill.
 export const realizedDrawdown = (pts: readonly PathPoint[], fromT = -Infinity, toT = Infinity) => {
   const w = windowOf(pts, fromT, toT);
-  const all = fromT === -Infinity ? pts : [w.start, ...w.points];
+  const all = fromT === -Infinity ? pts.filter((p) => p.t <= toT) : [w.start, ...w.points];
   const series: { t: number; v: number }[] = [];
 
   for (const p of all) if (!series.length || series.at(-1)!.v !== p.r) series.push({ t: p.t, v: p.r });
@@ -135,7 +129,7 @@ export const realizedDrawdown = (pts: readonly PathPoint[], fromT = -Infinity, t
 // was never banked.
 export const bankedDrawdown = (pts: readonly PathPoint[], basis: Basis = 'marked', fromT = -Infinity, toT = Infinity) => {
   const w = windowOf(pts, fromT, toT);
-  const all = fromT === -Infinity ? pts : [w.start, ...w.points];
+  const all = fromT === -Infinity ? pts.filter((p) => p.t <= toT) : [w.start, ...w.points];
   const f = valueOf(basis);
   let h = fromT === -Infinity ? 0 : all[0]!.r;
   let hT = all[0]?.t ?? 0;

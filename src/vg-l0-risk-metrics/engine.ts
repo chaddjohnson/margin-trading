@@ -18,26 +18,38 @@ import { runWithControls2 } from '../d1-risk-controls-rc2/run.ts';
 import type { VBook } from '../vg-d1-growth-joint/books.ts';
 import { vOptions } from '../vg-l0-full-joint/nl0.ts';
 import { type Cfg, canonicalCfg, quadOf } from '../vg-l0-full-joint/space.ts';
+import type { Quad } from '../vg-d1-growth-joint/space.ts';
+import type { RiskConfig2 } from '../d1-risk-controls-rc2/config.ts';
 import { economics } from './context.ts';
 import type { Fill, Ledger, LotLedger, LotMark } from './ledger.ts';
 import { portfolioPath, strictDrawdown } from './metrics.ts';
 
+export interface Subject {
+  quad: Quad; // D1 pair, Growth·GDX placeholder, Growth·VGT, D1 first
+  controls: RiskConfig2 | null; // RC 1 / RC 2 controls (null: legacy)
+}
+
 export interface Replay {
   door: Door;
-  cfg: Cfg;
+  subject: Subject;
   options: EvalOptions;
   books: VBook[];
   result: PoolResult;
   rec: Rec;
 }
 
-export const replay = (door: Door, cfg: Cfg, options: EvalOptions = vOptions, boundaries: string[] = []): Replay => {
+export const subjectOfCfg = (cfg: Cfg): Subject => {
   const c = canonicalCfg(cfg);
+
+  return { quad: quadOf(c), controls: c.controls };
+};
+
+export const replay = (door: Door, subject: Subject, options: EvalOptions = vOptions, boundaries: string[] = []): Replay => {
   const o = { ...options, ...(boundaries.length ? { boundaries } : {}) };
   // detail (lots' marks, funding log) and every minute-mark change; the RC 2 D1 book cache is bypassed (cache: false)
-  const x = runWithControls2(door, quadOf(c), c.controls, o, true, true, { cache: false });
+  const x = runWithControls2(door, subject.quad, subject.controls, o, true, true, { cache: false });
 
-  return { door, cfg: c, options: o, books: x.books, result: x.result, rec: recordOf(door, quadOf(c), x, o) };
+  return { door, subject, options: o, books: x.books, result: x.result, rec: recordOf(door, subject.quad, x, o) };
 };
 
 const iso = (t: number) => new Date(t * 1000).toISOString().slice(0, 10);
@@ -175,8 +187,13 @@ export const reconcile = (r: Replay, L: Ledger, tol = 1e-6) => {
   for (const [i, l] of L.lots.entries()) {
     const e = res.lots[i]!;
     const last = l.marks.at(-1);
-    const worst = Math.min(...l.marks.map((k) => k.pnl));
-    const best = Math.max(...l.marks.map((k) => k.pnl));
+    let worst = Infinity;
+    let best = -Infinity;
+
+    for (const k of l.marks) {
+      if (k.pnl < worst) worst = k.pnl;
+      if (k.pnl > best) best = k.pnl;
+    }
 
     if (l.open && last && Math.abs(last.pnl - e.net) > tol * Math.max(1, Math.abs(e.net))) throw new Error(`open lot ${l.id}: end mark ${last.pnl} vs engine ${e.net}`);
     if (Math.abs(Math.min(worst, l.net) - l.canonicalMae!) > tol * Math.max(1, Math.abs(l.canonicalMae!))) throw new Error(`lot ${l.id}: rebuilt MAE ${Math.min(worst, l.net)} vs engine ${l.canonicalMae}`);
