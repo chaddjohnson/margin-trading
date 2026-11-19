@@ -59,3 +59,33 @@ GPU_POLICY_PURPOSE=parity-test $NODE --expose-gc tools/gpu-phase3/sustained.ts -
 tools/gpu-phase3/launch.sh gpup3-final $PWD/research/gpu-phase3/results/logs/final-chain.txt -- /usr/bin/env START=1 HW=8 /bin/bash research/gpu-phase3/chains/final.sh
 tools/gpu-phase3/launch.sh gpup3-post-final $PWD/research/gpu-phase3/results/logs/post-final-chain.txt -- /usr/bin/env START=1 /bin/bash research/gpu-phase3/chains/post-final.sh
 ```
+
+## Amendment A1 reruns, acceptance (22:55–23:03)
+
+```bash
+tools/gpu-phase3/launch.sh gpup3-reruns $PWD/research/gpu-phase3/results/logs/reruns-chain.txt -- /usr/bin/env START=1 /bin/bash research/gpu-phase3/chains/acceptance-reruns.sh
+GPU_POLICY_PURPOSE=parity-test $NODE tools/gpu-phase3/accept.ts                 # ACCEPTED 23:02:38Z; commit ce24a977
+sha256sum config/gpu-backend/acceptance.json                                    # b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214
+GPU_POLICY_PURPOSE=parity-test $NODE --test src/gpu-backend/tests/{policy,enforcement,hostPipeline,layout}.test.ts   # 19/19
+tools/gpu-backend/verify-acceptance.sh --device --expect-record-sha256 b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214   # VERIFIED
+```
+
+## Stage 7 — integration (23:03–23:07)
+
+```bash
+$NODE tools/gpu-phase3/merge-audit.ts research/gpu-phase3                       # results/integration/merge-audit.json; commit fc8923b0
+git ls-remote origin refs/heads/main                                            # 10ca3422 (unchanged)
+git push -u origin research/gpu-phase3                                          # fc8923b0 (unsandboxed)
+git switch main && git merge --no-ff research/gpu-phase3                        # 30801fd4; tree d0341679 = the branch's
+tools/gpu-phase3/launch.sh gpup3-post-merge $PWD/research/gpu-phase3/results/logs/post-merge-chain.txt --wait -- /usr/bin/env RECORD_SHA=b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214 /bin/bash research/gpu-phase3/chains/post-merge.sh   # pass; commit 6ceb76aa
+```
+
+## Stage 8 — manifest, bundle, fast-forwards, pushes, restoration
+
+```bash
+GPU_POLICY_PURPOSE=benchmark $NODE tools/gpu-phase3/manifest.ts                # research/gpu-phase3/MANIFEST.json
+tools/gpu-phase3/bundle.sh <scratchpad>/bundle                                  # research/gpu-phase3/bundle/gpu-phase3-final-handoff.zip
+git fetch . main:research/gpu-phase3 main:research/gpu-phase2                   # fast-forward only
+git push origin main research/gpu-phase3 research/gpu-phase2                    # unsandboxed; then git ls-remote origin
+git switch research/gpu-phase2                                                  # the branch active at the start
+```

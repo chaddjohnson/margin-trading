@@ -20,7 +20,8 @@
 - **Next:** on `main`: `$NODE tools/gpu-phase3/manifest.ts`; `tools/gpu-phase3/bundle.sh <scratchpad>/bundle`; commit;
   `git fetch . main:research/gpu-phase3 main:research/gpu-phase2` (ff only); push main, research/gpu-phase3,
   research/gpu-phase2 (unsandboxed, retries); `git ls-remote origin` = local; `git switch research/gpu-phase2`;
-  final checkpoint COMPLETE (commit on research/gpu-phase2 = main? no: commit on main, ff, push again).
+  then the final checkpoint (COMPLETE, bundle hash, push verification) committed on `main`, both branches fast-forwarded
+  again and pushed again; verify with `git ls-remote`.
 - **Never:** start/implement/run the risk-envelope pilot; change strategies, fitness, genome, budgets, seeds or
   selection; touch sealed studies' records; CPU fallback; a new 8 h/24 h endurance run (only one 30–60 min sustained run).
 

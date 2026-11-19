@@ -27,6 +27,20 @@ done
 # machine-readable evidence (no raw-large/, logs/, ledger/; receipts/telemetry JSONL are small)
 find research/gpu-phase3/results -type f \( -path '*/raw-large/*' -o -path '*/logs/*' -o -path '*/ledger/*' \) -prune -o -type f -print \
   | sort | while read -r f; do copy "$f"; done
+# the deliverables also at the top level, for a reviewer opening the ZIP (the copies under research/gpu-phase3/ sit next to
+# the evidence their relative paths name)
+for f in GPU_ENGINE_FINAL_HANDOFF.md GPU_PERFORMANCE_BEFORE_AFTER.md GPU_FINAL_PARITY_AND_ACCEPTANCE.md GPU_ENFORCEMENT_INTEGRITY.md \
+         GPU_INTEGRATION_AND_OPERATIONS.md GPU_PILOT_READINESS.md MANIFEST.json; do
+  cp "research/gpu-phase3/$f" "$STAGE/$f"
+done
+cat > "$STAGE/README.md" <<'TXT'
+# GPU Phase 3 — final handoff bundle
+
+Start with `GPU_ENGINE_FINAL_HANDOFF.md`. The six reports and `MANIFEST.json` at this level are copies of the files in
+`research/gpu-phase3/`; paths such as `results/…` inside the reports are relative to that directory, where the
+machine-readable evidence lies. `CHECKSUMS.sha256` lists the sha256 of every file (`sha256sum -c CHECKSUMS.sha256`).
+Risk-envelope pilot NOT STARTED.
+TXT
 ( cd "$STAGE" && find . -type f ! -name CHECKSUMS.sha256 | sort | sed 's#^\./##' | xargs -d '\n' sha256sum > CHECKSUMS.sha256 )
 rm -f "$OUT"
 ( cd "$SCRATCH" && zip -q -r -X "$OLDPWD/$OUT" "$NAME" )
