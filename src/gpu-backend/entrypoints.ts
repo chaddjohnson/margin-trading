@@ -20,7 +20,9 @@ export const library = ['optimizer'];
 export const nonOfficial: Record<string, string> = {
   'gpu-phase1': 'GPU Phase 1 feasibility (completed): CPU baselines and parity references only; never searched',
   'gpu-phase2':
-    'GPU Phase 2 acceptance study: CPU parity references and the non-official CPU arm of the parity-only mini-optimization'
+    'GPU Phase 2 acceptance study: CPU parity references and the non-official CPU arm of the parity-only mini-optimization',
+  'gpu-phase3':
+    'GPU Phase 3 acceptance study (host-pipeline acceleration): CPU parity references, the CPU benchmark baseline and the non-official CPU arm of the parity-only mini-optimization'
 };
 
 const tsFiles = (dir: string) =>

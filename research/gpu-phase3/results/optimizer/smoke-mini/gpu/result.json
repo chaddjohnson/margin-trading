@@ -1,0 +1,3542 @@
+{
+ "kind": "gpu-phase3 optimizer-job replay",
+ "job": "mini",
+ "backend": "gpu",
+ "backendId": "gpu:GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4:3fe09e6791ff9996:f67dcb3bcc3ba896",
+ "server": {
+  "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+  "compatDigest": "f67dcb3bcc3ba89647610e7cce548c97ea288df920e71b777fd94478d83adaea",
+  "binarySha256": "3fe09e6791ff9996bc4f463c43e7d8dff46600ca3bcbf0d7777be155301e13fc",
+  "binary": "research/gpu-phase2/build/gb2"
+ },
+ "run": "smoke-mini",
+ "door": "D19",
+ "cutoff": "C19",
+ "lanesCount": 2,
+ "budget": {
+  "r1": 8,
+  "generations": 40,
+  "patience": 4,
+  "tolerance": 0.001,
+  "extension": 0.05,
+  "r2": 16,
+  "r2Distinct": 0.02,
+  "r3": 24,
+  "r3Distinct": 0.03,
+  "refinePasses": 1,
+  "focusPasses": 2,
+  "refineN": 6,
+  "refineMinGain": 2000,
+  "refineDistinct": 0.05,
+  "distinct": 0.1,
+  "near": 0,
+  "broad": 0,
+  "focusSmall": 0,
+  "focusMid": 0,
+  "screen": 96,
+  "promote": 12,
+  "islands": 2,
+  "islandsMax": 3,
+  "population": 8,
+  "newPerIsland": 24,
+  "r2Keep": 4,
+  "r3Keep": 2,
+  "shortlist": 2
+ },
+ "cap": 2000000,
+ "extensionRounds": [
+  {
+   "round": 1,
+   "positions": [
+    {
+     "position": "C19/broad/GA0.VA0/R1",
+     "fired": true,
+     "extended": true,
+     "atCap": false
+    },
+    {
+     "position": "C19/broad/GB1.VD0/R1",
+     "fired": true,
+     "extended": true,
+     "atCap": false
+    }
+   ],
+   "requestedBefore": 1000,
+   "worstCase": 432,
+   "decision": "extend 2 lane(s)"
+  },
+  {
+   "round": 2,
+   "positions": [
+    {
+     "position": "C19/broad/GA0.VA0/R1",
+     "fired": true,
+     "extended": false,
+     "atCap": true
+    },
+    {
+     "position": "C19/broad/GB1.VD0/R1",
+     "fired": true,
+     "extended": false,
+     "atCap": true
+    }
+   ],
+   "requestedBefore": 1356,
+   "worstCase": 0,
+   "decision": "no lane extends"
+  }
+ ],
+ "lanes": [
+  {
+   "key": "C19/broad/GA0.VA0/R1",
+   "seedKey": "C19/broad/GA0.VA0/R1",
+   "position": "C19/broad/GA0.VA0/R1",
+   "stage": "broad",
+   "structure": "GA0.VA0",
+   "replicate": 1,
+   "kind": "indep",
+   "res": "coarse",
+   "triggerLog": [
+    {
+     "island": 1,
+     "fired": true,
+     "reason": "island 1: hypervolume 72.1%, best robust 0.0%, best centre net 0.0%, 1 new feasible behaviour class(es)",
+     "positionExtended": true
+    },
+    {
+     "island": 2,
+     "fired": true,
+     "reason": "island 2: hypervolume 8.0%, best robust 0.0%, best centre net 0.0%, 0 new feasible behaviour class(es)"
+    }
+   ],
+   "counts": {
+    "screened": 96,
+    "screenUnique": 96,
+    "plausible": 26,
+    "promoted:net": 3,
+    "promoted:rank": 3,
+    "promoted:Growth entry pattern": 2,
+    "promoted:diversity": 4,
+    "promoted": 12,
+    "fillers": 6,
+    "islandConfigs": 72,
+    "islandsRun": 3,
+    "refineMoves": 208,
+    "r1Centres": 90,
+    "r1Measured": 64,
+    "r1Feasible": 50,
+    "frontier": 13,
+    "centres Growth rise·gate off·elig off": 18,
+    "centres Growth rise·gate on·elig on": 5,
+    "centres Growth breakout·gate off": 24,
+    "centres Growth breakout·gate on": 15,
+    "centres Growth rise·gate off·elig on": 23,
+    "centres Growth rise·gate on·elig off": 5
+   },
+   "byClass": {
+    "GA0.VA0|-|G rise·gate off·elig off": {
+     "screened": 16,
+     "plausible": 5,
+     "promoted": 4,
+     "centres": 18,
+     "feasible": 6
+    },
+    "GA0.VA0|-|G rise·gate off·elig on": {
+     "screened": 16,
+     "plausible": 4,
+     "promoted": 2,
+     "centres": 23,
+     "feasible": 14
+    },
+    "GA0.VA0|-|G rise·gate on·elig off": {
+     "screened": 16,
+     "plausible": 2,
+     "promoted": 0,
+     "centres": 5,
+     "feasible": 2
+    },
+    "GA0.VA0|-|G rise·gate on·elig on": {
+     "screened": 16,
+     "plausible": 2,
+     "promoted": 2,
+     "centres": 5,
+     "feasible": 2
+    },
+    "GA0.VA0|-|G breakout·gate off": {
+     "screened": 16,
+     "plausible": 4,
+     "promoted": 1,
+     "centres": 24,
+     "feasible": 16
+    },
+    "GA0.VA0|-|G breakout·gate on": {
+     "screened": 16,
+     "plausible": 9,
+     "promoted": 3,
+     "centres": 15,
+     "feasible": 10
+    }
+   },
+   "ledgers": {
+    "centres": 77,
+    "feasible": 38
+   },
+   "requested": 1616,
+   "islands": [
+    {
+     "index": 0,
+     "generations": 3,
+     "newConfigs": 24,
+     "measured": 18,
+     "duplicates": 4,
+     "invalid": 0,
+     "evaluations": 170,
+     "stop": "budget",
+     "hvTrajectory": [
+      312080513,
+      312550051,
+      349447699
+     ],
+     "bestRobustTrajectory": [
+      50911,
+      51797,
+      51797
+     ],
+     "bestNetTrajectory": [
+      68025,
+      68025,
+      68025
+     ],
+     "before": {
+      "hv": 288437737.2132001,
+      "robust": 50910.54,
+      "net": 68025.32,
+      "classes": 2
+     },
+     "after": {
+      "hv": 349447698.7909001,
+      "robust": 51796.51,
+      "net": 68025.32,
+      "classes": 2
+     },
+     "hvGainPer10k": 3588821269.28
+    },
+    {
+     "index": 1,
+     "generations": 3,
+     "newConfigs": 24,
+     "measured": 14,
+     "duplicates": 1,
+     "invalid": 0,
+     "evaluations": 138,
+     "stop": "budget",
+     "hvTrajectory": [
+      88819954,
+      248509368,
+      420901366
+     ],
+     "bestRobustTrajectory": [
+      51797,
+      51797,
+      51797
+     ],
+     "bestNetTrajectory": [
+      68025,
+      68025,
+      68025
+     ],
+     "before": {
+      "hv": 349447698.7909001,
+      "robust": 51796.51,
+      "net": 68025.32,
+      "classes": 2
+     },
+     "after": {
+      "hv": 601538250.0669,
+      "robust": 51796.51,
+      "net": 68025.32,
+      "classes": 3
+     },
+     "hvGainPer10k": 18267431251.88
+    },
+    {
+     "index": 2,
+     "generations": 3,
+     "newConfigs": 24,
+     "measured": 22,
+     "duplicates": 3,
+     "invalid": 0,
+     "evaluations": 210,
+     "stop": "budget",
+     "hvTrajectory": [
+      377618389,
+      379526239,
+      425963912
+     ],
+     "bestRobustTrajectory": [
+      51797,
+      51797,
+      51797
+     ],
+     "bestNetTrajectory": [
+      68025,
+      68025,
+      68025
+     ],
+     "before": {
+      "hv": 601538250.0669,
+      "robust": 51796.51,
+      "net": 68025.32,
+      "classes": 3
+     },
+     "after": {
+      "hv": 649469846.3772,
+      "robust": 51796.51,
+      "net": 68025.32,
+      "classes": 3
+     },
+     "hvGainPer10k": 2282456967.16
+    }
+   ],
+   "extension": {
+    "islands": 3,
+    "reason": "island 2: hypervolume 8.0%, best robust 0.0%, best centre net 0.0%, 0 new feasible behaviour class(es)",
+    "stop": "extension cap reached (a trigger still fired: budget-bound, not converged)"
+   },
+   "r2": [
+    {
+     "id": "23bf8a8952056b55",
+     "feasible": true,
+     "net": 68025.32,
+     "robust": 37105.31,
+     "p90": 29536.52,
+     "why": "centre net"
+    },
+    {
+     "id": "dd44a699150a4a46",
+     "feasible": true,
+     "net": 63975.91,
+     "robust": 54196.66,
+     "p90": 31644.3,
+     "why": "robust net"
+    },
+    {
+     "id": "80575067a27084c7",
+     "feasible": false,
+     "net": 53432.07,
+     "robust": 26956.8,
+     "p90": 35353.94,
+     "why": "Growth entry pattern"
+    },
+    {
+     "id": "1e4db52d3ce0625d",
+     "feasible": true,
+     "net": 30637.97,
+     "robust": 14005.35,
+     "p90": 17455.03,
+     "why": "rank"
+    }
+   ],
+   "r3": [
+    {
+     "id": "23bf8a8952056b55",
+     "feasible": true,
+     "net": 68025.32,
+     "robust": 41612.92,
+     "p90": 29871.86
+    },
+    {
+     "id": "dd44a699150a4a46",
+     "feasible": true,
+     "net": 63975.91,
+     "robust": 55466.07,
+     "p90": 31747.34
+    }
+   ],
+   "refinements": [
+    {
+     "kind": "robust",
+     "start": "dd44a699150a4a46",
+     "endpoint": "61ed530bce5f2b7b",
+     "path": [
+      {
+       "pass": 0,
+       "moved": null,
+       "net": 63975.91,
+       "robust": 55023.86,
+       "violation": 0.074852
+      },
+      {
+       "pass": 1,
+       "moved": "61ed530bce5f2b7b",
+       "net": 62392.88,
+       "robust": 54479.93,
+       "violation": 0
+      }
+     ]
+    },
+    {
+     "kind": "profit",
+     "start": "23bf8a8952056b55",
+     "endpoint": "5f246b1330c6e902",
+     "path": [
+      {
+       "pass": 0,
+       "moved": null,
+       "net": 68025.32,
+       "robust": 49098.41,
+       "violation": 0
+      },
+      {
+       "pass": 1,
+       "moved": "5f246b1330c6e902",
+       "net": 86158.44,
+       "robust": 51071.12,
+       "violation": 0
+      }
+     ]
+    }
+   ],
+   "shortlist": [
+    {
+     "id": "5f246b1330c6e902",
+     "rung": "r3",
+     "centre": {
+      "id": "5f246b1330c6e902",
+      "net": 86158.44,
+      "realized": 78886.52,
+      "unrealized": 7271.93,
+      "dd": 25330.04,
+      "ddPeakT": 1538586780,
+      "ddTroughT": 1542727200,
+      "ddRecoveryT": 1553176620,
+      "ddDaily": 23917.13,
+      "lots": 6,
+      "wins": 4,
+      "losses": 1,
+      "partials": 0,
+      "lossSum": -2119.41,
+      "worstLoss": -2119.41,
+      "largestWin": 36381.14,
+      "interest": 33512.33,
+      "costs": 605.25,
+      "books": {
+       "D1:GDX": {
+        "lots": 3,
+        "wins": 2,
+        "losses": 1,
+        "booked": 19013.53,
+        "principalDays": 8200000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 17,
+        "granted": 3,
+        "refused": 14
+       },
+       "D1:VGT": {
+        "lots": 1,
+        "wins": 1,
+        "losses": 0,
+        "booked": 23491.85,
+        "principalDays": 13400000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 1,
+        "granted": 1,
+        "refused": 0
+       },
+       "G:GDX": {
+        "lots": 0,
+        "wins": 0,
+        "losses": 0,
+        "booked": 0,
+        "principalDays": 0,
+        "partials": 0,
+        "open": 0,
+        "decisions": 0,
+        "granted": 0,
+        "refused": 0
+       },
+       "G:VGT": {
+        "lots": 2,
+        "wins": 1,
+        "losses": 0,
+        "booked": 43653.06,
+        "principalDays": 89600000,
+        "partials": 0,
+        "open": 1,
+        "decisions": 4,
+        "granted": 2,
+        "refused": 2
+       }
+      },
+      "fam": {
+       "D1": {
+        "lots": 4,
+        "wins": 3,
+        "losses": 1,
+        "booked": 42505.38,
+        "principalDays": 21600000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 18,
+        "granted": 4,
+        "refused": 14
+       },
+       "G": {
+        "lots": 2,
+        "wins": 1,
+        "losses": 0,
+        "booked": 43653.06,
+        "principalDays": 89600000,
+        "partials": 0,
+        "open": 1,
+        "decisions": 4,
+        "granted": 2,
+        "refused": 2
+       }
+      },
+      "mixed": true,
+      "funded": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:VGT"
+      ],
+      "sessionsHeld": 773,
+      "peakPrincipal": 100000,
+      "peakValue": 183797.64,
+      "years": {
+       "2016": 4114.17,
+       "2017": 27897.09,
+       "2018": 8230.77,
+       "2019": 45916.41
+      },
+      "periods": [],
+      "topEpisode": 36381.14,
+      "topEpisodeShare": 0.4223,
+      "episodes": 6,
+      "signature": "3ea228fd6a60e011",
+      "virtual": {
+       "D1:GDX": {
+        "trades": 17,
+        "net": 5051.26,
+        "dd": 29220.34,
+        "first": "2016-11-09"
+       },
+       "D1:VGT": {
+        "trades": 1,
+        "net": 23491.85,
+        "dd": 7021.35,
+        "first": "2018-12-26"
+       },
+       "G:VGT": {
+        "trades": 4,
+        "net": 42149.34,
+        "dd": 26493.87,
+        "first": "2016-07-12"
+       }
+      },
+      "sessions": 1006,
+      "rc": {
+       "D1:GDX": {
+        "virtualTrades": 17,
+        "protective": 0,
+        "protectiveGap": 0,
+        "entryDay": 0,
+        "maximumHold": 14,
+        "adaptive": 0,
+        "episodes": 0,
+        "blocks": 0,
+        "blockedSessions": 0
+       },
+       "D1:VGT": {
+        "virtualTrades": 1,
+        "protective": 0,
+        "protectiveGap": 0,
+        "entryDay": 0,
+        "maximumHold": 0,
+        "adaptive": 0,
+        "episodes": 0,
+        "blocks": 0,
+        "blockedSessions": 0
+       }
+      }
+     },
+     "nb": {
+      "n": 24,
+      "failed": 0,
+      "median": 50827.78,
+      "p10": 36352.87,
+      "p90Net": 69580.78,
+      "mean": 52034.86,
+      "robust": 43590.32,
+      "medianDd": 26688.59,
+      "p90Dd": 29407.09,
+      "worstDd": 35630.56,
+      "breaches": 1,
+      "breachShare": 0.0417,
+      "meanExcess": 630.56,
+      "mixedShare": 1,
+      "allFourShare": 0,
+      "distinct": 24,
+      "sameAsCentre": 0,
+      "clipped": 16
+     },
+     "violation": 0,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0,
+      "structure": 0
+     },
+     "objectives": [
+      -86158.44,
+      -43590.32,
+      29407.09
+     ],
+     "pick": "profit",
+     "cfg": {
+      "cell": "GA0.VA0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 252,
+        "trailingBuyPercentage": 48,
+        "trailingStopPercentage": 77,
+        "maximumHoldDays": 4,
+        "tickWindowSize": 215,
+        "intradayLossBuffer": 47,
+        "pullback": 102,
+        "continuationWindow": 170
+       },
+       "VGT": {
+        "targetPercentChange": 176,
+        "trailingBuyPercentage": 37,
+        "trailingStopPercentage": 48,
+        "maximumHoldDays": 6,
+        "tickWindowSize": 83,
+        "intradayLossBuffer": 43,
+        "pullback": 166,
+        "continuationWindow": 47
+       }
+      },
+      "controls": null,
+      "g": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 60,
+       "breakoutSlopeComparisonSessions": 45,
+       "breakoutPriorHighSessions": 110,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 40,
+       "trendChangeMinimumReturnPercent": 3.5,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 12.1,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 16,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.5,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 130,
+       "uptrendSmaBars": 170,
+       "uptrendSlopeBars": 24,
+       "uptrendMinimumRisePercent": 0.25,
+       "pullbackMinimumPercent": 4,
+       "pullbackMaximumPercent": 12,
+       "recoveryPercent": 0.75,
+       "costBpsPerSide": 5
+      }
+     }
+    },
+    {
+     "id": "dd44a699150a4a46",
+     "rung": "r3",
+     "centre": {
+      "id": "dd44a699150a4a46",
+      "net": 63975.91,
+      "realized": 63975.91,
+      "unrealized": 0,
+      "dd": 30063.6,
+      "ddPeakT": 1538586780,
+      "ddTroughT": 1546549200,
+      "ddRecoveryT": 1556027880,
+      "ddDaily": 29656.04,
+      "lots": 3,
+      "wins": 2,
+      "losses": 1,
+      "partials": 0,
+      "lossSum": -2319.49,
+      "worstLoss": -2319.49,
+      "largestWin": 42803.55,
+      "interest": 31643.84,
+      "costs": 347.83,
+      "books": {
+       "D1:GDX": {
+        "lots": 1,
+        "wins": 0,
+        "losses": 1,
+        "booked": -2319.49,
+        "principalDays": 1300000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 12,
+        "granted": 1,
+        "refused": 11
+       },
+       "D1:VGT": {
+        "lots": 1,
+        "wins": 1,
+        "losses": 0,
+        "booked": 23491.85,
+        "principalDays": 13400000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 1,
+        "granted": 1,
+        "refused": 0
+       },
+       "G:GDX": {
+        "lots": 0,
+        "wins": 0,
+        "losses": 0,
+        "booked": 0,
+        "principalDays": 0,
+        "partials": 0,
+        "open": 0,
+        "decisions": 0,
+        "granted": 0,
+        "refused": 0
+       },
+       "G:VGT": {
+        "lots": 1,
+        "wins": 1,
+        "losses": 0,
+        "booked": 42803.55,
+        "principalDays": 90300000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 2,
+        "granted": 1,
+        "refused": 1
+       }
+      },
+      "fam": {
+       "D1": {
+        "lots": 2,
+        "wins": 1,
+        "losses": 1,
+        "booked": 21172.36,
+        "principalDays": 14700000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 13,
+        "granted": 2,
+        "refused": 11
+       },
+       "G": {
+        "lots": 1,
+        "wins": 1,
+        "losses": 0,
+        "booked": 42803.55,
+        "principalDays": 90300000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 2,
+        "granted": 1,
+        "refused": 1
+       }
+      },
+      "mixed": true,
+      "funded": [
+       "D1:GDX",
+       "D1:VGT",
+       "G:VGT"
+      ],
+      "sessionsHeld": 727,
+      "peakPrincipal": 100000,
+      "peakValue": 195510.32,
+      "years": {
+       "2016": 9116.53,
+       "2017": 30373.93,
+       "2018": 4689.67,
+       "2019": 19795.78
+      },
+      "periods": [],
+      "topEpisode": 42803.55,
+      "topEpisodeShare": 0.6691,
+      "episodes": 3,
+      "signature": "80dbf6a106438955",
+      "virtual": {
+       "D1:GDX": {
+        "trades": 12,
+        "net": -920.3,
+        "dd": 26634.86,
+        "first": "2016-11-09"
+       },
+       "D1:VGT": {
+        "trades": 1,
+        "net": 23491.85,
+        "dd": 7021.35,
+        "first": "2018-12-26"
+       },
+       "G:VGT": {
+        "trades": 2,
+        "net": 82654.06,
+        "dd": 28658.35,
+        "first": "2016-05-06"
+       }
+      },
+      "sessions": 1006,
+      "rc": {
+       "D1:GDX": {
+        "virtualTrades": 12,
+        "protective": 0,
+        "protectiveGap": 0,
+        "entryDay": 0,
+        "maximumHold": 8,
+        "adaptive": 0,
+        "episodes": 0,
+        "blocks": 0,
+        "blockedSessions": 0
+       },
+       "D1:VGT": {
+        "virtualTrades": 1,
+        "protective": 0,
+        "protectiveGap": 0,
+        "entryDay": 0,
+        "maximumHold": 0,
+        "adaptive": 0,
+        "episodes": 0,
+        "blocks": 0,
+        "blockedSessions": 0
+       }
+      }
+     },
+     "nb": {
+      "n": 24,
+      "failed": 0,
+      "median": 61271.87,
+      "p10": 49660.27,
+      "p90Net": 67777.36,
+      "mean": 59803.82,
+      "robust": 55466.07,
+      "medianDd": 28406.97,
+      "p90Dd": 31747.34,
+      "worstDd": 45569.05,
+      "breaches": 2,
+      "breachShare": 0.0833,
+      "meanExcess": 10056.13,
+      "mixedShare": 1,
+      "allFourShare": 0,
+      "distinct": 24,
+      "sameAsCentre": 0,
+      "clipped": 12
+     },
+     "violation": 0,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0,
+      "structure": 0
+     },
+     "objectives": [
+      -63975.91,
+      -55466.07,
+      31747.34
+     ],
+     "pick": "robust",
+     "cfg": {
+      "cell": "GA0.VA0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 251,
+        "trailingBuyPercentage": 47,
+        "trailingStopPercentage": 77,
+        "maximumHoldDays": 5,
+        "tickWindowSize": 215,
+        "intradayLossBuffer": 47,
+        "pullback": 102,
+        "continuationWindow": 170
+       },
+       "VGT": {
+        "targetPercentChange": 183,
+        "trailingBuyPercentage": 37,
+        "trailingStopPercentage": 48,
+        "maximumHoldDays": 6,
+        "tickWindowSize": 83,
+        "intradayLossBuffer": 60,
+        "pullback": 165,
+        "continuationWindow": 47
+       }
+      },
+      "controls": null,
+      "g": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 11.5,
+       "recentLowLookbackBars": 70,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": false,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 13,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "classic_d1",
+       "continuationWindowSessions": 120,
+       "classicPullbackPercent": 16,
+       "classicReboundPercent": 4.6,
+       "costBpsPerSide": 5
+      }
+     }
+    }
+   ],
+   "visibleInfeasible": [
+    {
+     "id": "1e7d099f97b5ee90",
+     "cfg": {
+      "cell": "GA0.VA0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 109,
+        "trailingBuyPercentage": 6,
+        "trailingStopPercentage": 32,
+        "maximumHoldDays": 22,
+        "tickWindowSize": 227,
+        "intradayLossBuffer": 20,
+        "pullback": 147,
+        "continuationWindow": 160
+       },
+       "VGT": {
+        "targetPercentChange": 276,
+        "trailingBuyPercentage": 1,
+        "trailingStopPercentage": 107,
+        "maximumHoldDays": 3,
+        "tickWindowSize": 157,
+        "intradayLossBuffer": 48,
+        "pullback": 198,
+        "continuationWindow": 24
+       }
+      },
+      "controls": null,
+      "g": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 10.5,
+       "recentLowLookbackBars": 90,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": false,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 13.5,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 26,
+       "intradayLossBufferEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 200,
+       "crossSmaBars": 150,
+       "crossRisingBars": 11,
+       "crossMinimumSlopePercent": 1.5,
+       "crossMarginPercent": 2.75,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 73484.78,
+     "centreDd": 32030.25,
+     "p90": 49120.57,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0.40344485714285716,
+      "structure": 0
+     }
+    },
+    {
+     "id": "6045c66914f693fe",
+     "cfg": {
+      "cell": "GA0.VA0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 208,
+        "trailingBuyPercentage": 20,
+        "trailingStopPercentage": 64,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 77,
+        "intradayLossBuffer": 59,
+        "pullback": 114,
+        "continuationWindow": 67
+       },
+       "VGT": {
+        "targetPercentChange": 175,
+        "trailingBuyPercentage": 40,
+        "trailingStopPercentage": 105,
+        "maximumHoldDays": 14,
+        "tickWindowSize": 134,
+        "intradayLossBuffer": 10,
+        "pullback": 100,
+        "continuationWindow": 170
+       }
+      },
+      "controls": null,
+      "g": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 3.5,
+       "recentLowLookbackBars": 80,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 19,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 20,
+       "dipThresholdPercent": 12,
+       "recoveryRetracementPercent": 90,
+       "recoveryConfirmationSessions": 7,
+       "trailingStopPercent": 14,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": true,
+       "retentionSellPercent": 40,
+       "retentionSmaSessions": 200,
+       "retentionClosesBelow": 2,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 140,
+       "uptrendSmaBars": 150,
+       "uptrendSlopeBars": 14,
+       "uptrendMinimumRisePercent": 2.25,
+       "pullbackMinimumPercent": 1,
+       "pullbackMaximumPercent": 6,
+       "recoveryPercent": 2.75,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 71176.87,
+     "centreDd": 28110.15,
+     "p90": 42995.68,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0.228448,
+      "structure": 0
+     }
+    },
+    {
+     "id": "8b44e9af9f32b2ba",
+     "cfg": {
+      "cell": "GA0.VA0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 251,
+        "trailingBuyPercentage": 46,
+        "trailingStopPercentage": 77,
+        "maximumHoldDays": 5,
+        "tickWindowSize": 215,
+        "intradayLossBuffer": 47,
+        "pullback": 102,
+        "continuationWindow": 170
+       },
+       "VGT": {
+        "targetPercentChange": 183,
+        "trailingBuyPercentage": 37,
+        "trailingStopPercentage": 48,
+        "maximumHoldDays": 6,
+        "tickWindowSize": 83,
+        "intradayLossBuffer": 60,
+        "pullback": 160,
+        "continuationWindow": 47
+       }
+      },
+      "controls": null,
+      "g": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 11.5,
+       "recentLowLookbackBars": 70,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": false,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 13,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "classic_d1",
+       "continuationWindowSessions": 120,
+       "classicPullbackPercent": 16,
+       "classicReboundPercent": 4.6,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 64027.2,
+     "centreDd": 30012.31,
+     "p90": 35262.96,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0.007513142857142832,
+      "structure": 0
+     }
+    },
+    {
+     "id": "a697a332f27e0c23",
+     "cfg": {
+      "cell": "GA0.VA0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 107,
+        "trailingBuyPercentage": 5,
+        "trailingStopPercentage": 144,
+        "maximumHoldDays": 14,
+        "tickWindowSize": 191,
+        "intradayLossBuffer": 28,
+        "pullback": 189,
+        "continuationWindow": 185
+       },
+       "VGT": {
+        "targetPercentChange": 147,
+        "trailingBuyPercentage": 50,
+        "trailingStopPercentage": 96,
+        "maximumHoldDays": 6,
+        "tickWindowSize": 80,
+        "intradayLossBuffer": 60,
+        "pullback": 76,
+        "continuationWindow": 87
+       }
+      },
+      "controls": null,
+      "g": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 13,
+       "recentLowLookbackBars": 50,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "minimum_strength",
+       "eligibilityMaxAgeSessions": 14,
+       "eligibilityMinimumAdvancePercent": 4,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 13,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "classic_d1",
+       "continuationWindowSessions": 30,
+       "classicPullbackPercent": 17,
+       "classicReboundPercent": 1.8,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 60929.91,
+     "centreDd": 27814.88,
+     "p90": 36256.29,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0.03589400000000002,
+      "structure": 0
+     }
+    },
+    {
+     "id": "cc0154cac82e03c3",
+     "cfg": {
+      "cell": "GA0.VA0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 204,
+        "trailingBuyPercentage": 20,
+        "trailingStopPercentage": 50,
+        "maximumHoldDays": 12,
+        "tickWindowSize": 189,
+        "intradayLossBuffer": 59,
+        "pullback": 64,
+        "continuationWindow": 17
+       },
+       "VGT": {
+        "targetPercentChange": 175,
+        "trailingBuyPercentage": 18,
+        "trailingStopPercentage": 105,
+        "maximumHoldDays": 14,
+        "tickWindowSize": 134,
+        "intradayLossBuffer": 10,
+        "pullback": 46,
+        "continuationWindow": 170
+       }
+      },
+      "controls": null,
+      "g": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 1.5,
+       "recentLowLookbackBars": 80,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": false,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 14,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": true,
+       "retentionSellPercent": 40,
+       "retentionSmaSessions": 200,
+       "retentionClosesBelow": 2,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 140,
+       "uptrendSmaBars": 60,
+       "uptrendSlopeBars": 14,
+       "uptrendMinimumRisePercent": 2.25,
+       "pullbackMinimumPercent": 1,
+       "pullbackMaximumPercent": 6,
+       "recoveryPercent": 0.75,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 56842.04,
+     "centreDd": 32544.54,
+     "p90": 43608.73,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0.24596371428571437,
+      "structure": 0
+     }
+    }
+   ],
+   "frontier": [
+    {
+     "id": "6dd57592330fb3de",
+     "net": 68025.32,
+     "robust": 51159.69,
+     "p90": 29334.42,
+     "dd": 28304.79
+    },
+    {
+     "id": "ae3a86a6b713bb2c",
+     "net": 68025.32,
+     "robust": 51159.69,
+     "p90": 29334.42,
+     "dd": 28304.79
+    },
+    {
+     "id": "dd44a699150a4a46",
+     "net": 63975.91,
+     "robust": 51796.51,
+     "p90": 34470.03,
+     "dd": 30063.6
+    },
+    {
+     "id": "7f6e57d1d0f16296",
+     "net": 62392.88,
+     "robust": 48070.36,
+     "p90": 29074.66,
+     "dd": 29817.2
+    },
+    {
+     "id": "5d28fc1e0fa4c3ec",
+     "net": 48603.96,
+     "robust": 30145.7,
+     "p90": 28704.59,
+     "dd": 19025.64
+    },
+    {
+     "id": "2b20635c76a8aca1",
+     "net": 46655.88,
+     "robust": 42889.26,
+     "p90": 28522.1,
+     "dd": 27708.01
+    },
+    {
+     "id": "ebf6eaf93d23b5fc",
+     "net": 46655.88,
+     "robust": 42889.26,
+     "p90": 28522.1,
+     "dd": 27708.01
+    },
+    {
+     "id": "80fcada8280d1cfc",
+     "net": 45730.18,
+     "robust": 35877.48,
+     "p90": 26848.72,
+     "dd": 18434.8
+    },
+    {
+     "id": "0271b4079d6ac879",
+     "net": 38245.72,
+     "robust": 37149.3,
+     "p90": 26611.18,
+     "dd": 22013.64
+    },
+    {
+     "id": "8c0f926646775931",
+     "net": 37301.66,
+     "robust": 37498.27,
+     "p90": 25704.53,
+     "dd": 25163.9
+    },
+    {
+     "id": "76c093f84ed62853",
+     "net": 33200.42,
+     "robust": 12359.27,
+     "p90": 13603.78,
+     "dd": 10048.82
+    },
+    {
+     "id": "1e4db52d3ce0625d",
+     "net": 30637.97,
+     "robust": 10087.44,
+     "p90": 13449.83,
+     "dd": 11701.15
+    },
+    {
+     "id": "87ee4871113ccef4",
+     "net": 20996.49,
+     "robust": 20306.03,
+     "p90": 17357.23,
+     "dd": 17459.04
+    }
+   ],
+   "topByNet": [
+    {
+     "id": "1e7d099f97b5ee90",
+     "net": 73484.78,
+     "robust": 39360.95,
+     "p90": 49120.57,
+     "dd": 32030.25,
+     "feasible": false
+    },
+    {
+     "id": "6045c66914f693fe",
+     "net": 71176.87,
+     "robust": 27540.01,
+     "p90": 42995.68,
+     "dd": 28110.15,
+     "feasible": false
+    },
+    {
+     "id": "23bf8a8952056b55",
+     "net": 68025.32,
+     "robust": 37189.4,
+     "p90": 32572.5,
+     "dd": 28304.79,
+     "feasible": true
+    },
+    {
+     "id": "34d3aea803e4f374",
+     "net": 68025.32,
+     "robust": 50910.54,
+     "p90": 29334.42,
+     "dd": 28304.79,
+     "feasible": true
+    },
+    {
+     "id": "381cf27ac1b9a698",
+     "net": 68025.32,
+     "robust": 50910.54,
+     "p90": 29334.42,
+     "dd": 28304.79,
+     "feasible": true
+    },
+    {
+     "id": "421e65c607331038",
+     "net": 68025.32,
+     "robust": 50910.54,
+     "p90": 29334.42,
+     "dd": 28304.79,
+     "feasible": true
+    },
+    {
+     "id": "611eff09788e6d44",
+     "net": 68025.32,
+     "robust": 51044.65,
+     "p90": 29334.42,
+     "dd": 28304.79,
+     "feasible": true
+    },
+    {
+     "id": "6dd57592330fb3de",
+     "net": 68025.32,
+     "robust": 51159.69,
+     "p90": 29334.42,
+     "dd": 28304.79,
+     "feasible": true
+    },
+    {
+     "id": "991feea14896d908",
+     "net": 68025.32,
+     "robust": 50910.54,
+     "p90": 29334.42,
+     "dd": 28304.79,
+     "feasible": true
+    },
+    {
+     "id": "ae3a86a6b713bb2c",
+     "net": 68025.32,
+     "robust": 51159.69,
+     "p90": 29334.42,
+     "dd": 28304.79,
+     "feasible": true
+    }
+   ],
+   "failure": {
+    "screenPlausible": 26,
+    "screenReasons": {
+     "plausible": 26,
+     "a family unfunded": 47,
+     "net ≤ 0": 14,
+     "DD > ceiling": 9
+    }
+   }
+  },
+  {
+   "key": "C19/broad/GB1.VD0/R1",
+   "seedKey": "C19/broad/GB1.VD0/R1",
+   "position": "C19/broad/GB1.VD0/R1",
+   "stage": "broad",
+   "structure": "GB1.VD0",
+   "replicate": 1,
+   "kind": "indep",
+   "res": "coarse",
+   "triggerLog": [
+    {
+     "island": 1,
+     "fired": true,
+     "reason": "island 1: hypervolume 29.4%, best robust 19.2%, best centre net 5.2%, 5 new feasible behaviour class(es)",
+     "positionExtended": true
+    },
+    {
+     "island": 2,
+     "fired": true,
+     "reason": "island 2: hypervolume 0.0%, best robust 0.0%, best centre net 0.0%, 2 new feasible behaviour class(es)"
+    }
+   ],
+   "counts": {
+    "screened": 96,
+    "screenUnique": 96,
+    "plausible": 26,
+    "promoted:net": 3,
+    "promoted:rank": 3,
+    "promoted:Growth entry pattern": 2,
+    "promoted:control pattern": 2,
+    "promoted:diversity": 2,
+    "promoted": 12,
+    "fillers": 6,
+    "islandConfigs": 72,
+    "islandsRun": 3,
+    "refineMoves": 286,
+    "r1Centres": 90,
+    "r1Measured": 59,
+    "r1Feasible": 40,
+    "frontier": 5,
+    "centres Growth breakout·gate on": 16,
+    "centres Growth rise·gate on·elig on": 11,
+    "centres Growth breakout·gate off": 40,
+    "centres Growth rise·gate off·elig on": 9,
+    "centres Growth rise·gate on·elig off": 4,
+    "centres Growth rise·gate off·elig off": 10
+   },
+   "byClass": {
+    "GB1.VD0|GDXK1|GDXn/VGTn|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 4,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTn|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTe|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTe|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTn|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTn|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTe|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTe|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTn|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTn|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTe|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTe|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 4,
+     "feasible": 2
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTn|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTn|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTe|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTe|G rise·gate off·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTn|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTn|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTe|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTe|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTn|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTn|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 3,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTe|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTe|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 4,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTn|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTn|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTe|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTe|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTn|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTn|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTe|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTe|G rise·gate off·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTn|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTn|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTe|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTe|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTn|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 1,
+     "centres": 1,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTn|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTe|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTe|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTn|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTn|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTe|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTe|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTn|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTn|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTe|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTe|G rise·gate on·elig off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTn|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTn|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTe|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTe|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTn|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTn|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 2,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTe|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTe|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 4,
+     "feasible": 3
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTn|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTn|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTe|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTe|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 1,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTn|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTn|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTe|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTe|G rise·gate on·elig on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTn|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTn|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 2,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTe|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 6,
+     "feasible": 4
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTe|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 2,
+     "feasible": 2
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTn|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTn|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 2,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTe|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTe|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTn|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 2,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTn|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 7,
+     "feasible": 3
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTe|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTe|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 3,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTn|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTn|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 12,
+     "feasible": 9
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTe|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTe|G breakout·gate off": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 4,
+     "feasible": 2
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTn|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTn|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 2,
+     "feasible": 2
+    },
+    "GB1.VD0|GDXK1|GDXn/VGTe|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 2,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK1|GDXe/VGTe|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 3,
+     "feasible": 2
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTn|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 1,
+     "centres": 1,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTn|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 3,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXn/VGTe|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK2|GDXe/VGTe|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 2,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTn|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTn|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK3|GDXn/VGTe|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 1,
+     "promoted": 1,
+     "centres": 2,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK3|GDXe/VGTe|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 1,
+     "feasible": 1
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTn|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTn|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXn/VGTe|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    },
+    "GB1.VD0|GDXK4|GDXe/VGTe|G breakout·gate on": {
+     "screened": 1,
+     "plausible": 0,
+     "promoted": 0,
+     "centres": 0,
+     "feasible": 0
+    }
+   },
+   "ledgers": {
+    "centres": 82,
+    "feasible": 33
+   },
+   "requested": 1966,
+   "islands": [
+    {
+     "index": 0,
+     "generations": 3,
+     "newConfigs": 24,
+     "measured": 15,
+     "duplicates": 0,
+     "invalid": 0,
+     "evaluations": 154,
+     "stop": "budget",
+     "hvTrajectory": [
+      227482220,
+      232496137,
+      238371604
+     ],
+     "bestRobustTrajectory": [
+      52058,
+      54089,
+      54089
+     ],
+     "bestNetTrajectory": [
+      73796,
+      73796,
+      73796
+     ],
+     "before": {
+      "hv": 542566753.9711,
+      "robust": 52058.38,
+      "net": 73796.03,
+      "classes": 8
+     },
+     "after": {
+      "hv": 548671283.794,
+      "robust": 54089.12,
+      "net": 73796.03,
+      "classes": 9
+     },
+     "hvGainPer10k": 396398040.45
+    },
+    {
+     "index": 1,
+     "generations": 3,
+     "newConfigs": 24,
+     "measured": 17,
+     "duplicates": 0,
+     "invalid": 0,
+     "evaluations": 170,
+     "stop": "budget",
+     "hvTrajectory": [
+      495785558,
+      666898835,
+      710227486
+     ],
+     "bestRobustTrajectory": [
+      54089,
+      64465,
+      64465
+     ],
+     "bestNetTrajectory": [
+      73796,
+      77650,
+      77650
+     ],
+     "before": {
+      "hv": 548671283.794,
+      "robust": 54089.12,
+      "net": 73796.03,
+      "classes": 9
+     },
+     "after": {
+      "hv": 710227486.4246,
+      "robust": 64465.24,
+      "net": 77649.58,
+      "classes": 14
+     },
+     "hvGainPer10k": 9503306037.09
+    },
+    {
+     "index": 2,
+     "generations": 3,
+     "newConfigs": 24,
+     "measured": 15,
+     "duplicates": 1,
+     "invalid": 0,
+     "evaluations": 146,
+     "stop": "budget",
+     "hvTrajectory": [
+      227482220,
+      381312942,
+      387070447
+     ],
+     "bestRobustTrajectory": [
+      64465,
+      64465,
+      64465
+     ],
+     "bestNetTrajectory": [
+      77650,
+      77650,
+      77650
+     ],
+     "before": {
+      "hv": 710227486.4246,
+      "robust": 64465.24,
+      "net": 77649.58,
+      "classes": 14
+     },
+     "after": {
+      "hv": 710227486.4246,
+      "robust": 64465.24,
+      "net": 77649.58,
+      "classes": 16
+     },
+     "hvGainPer10k": 0
+    }
+   ],
+   "extension": {
+    "islands": 3,
+    "reason": "island 2: hypervolume 0.0%, best robust 0.0%, best centre net 0.0%, 2 new feasible behaviour class(es)",
+    "stop": "extension cap reached (a trigger still fired: budget-bound, not converged)"
+   },
+   "r2": [
+    {
+     "id": "rc2-e24adcb3bfa14c87",
+     "feasible": true,
+     "net": 77649.58,
+     "robust": 58685.38,
+     "p90": 28500.23,
+     "why": "centre net"
+    },
+    {
+     "id": "rc2-79b9146fa90aae06",
+     "feasible": true,
+     "net": 59890.14,
+     "robust": 58425.18,
+     "p90": 32935.96,
+     "why": "robust net"
+    },
+    {
+     "id": "rc2-1c9037f6c1a070b3",
+     "feasible": true,
+     "net": 69784.28,
+     "robust": 46043.58,
+     "p90": 27212.63,
+     "why": "Growth entry pattern"
+    },
+    {
+     "id": "rc2-73728cbf65f9b0cc",
+     "feasible": true,
+     "net": 50937.05,
+     "robust": 48053.1,
+     "p90": 26563.02,
+     "why": "control pattern"
+    }
+   ],
+   "r3": [
+    {
+     "id": "rc2-e24adcb3bfa14c87",
+     "feasible": true,
+     "net": 77649.58,
+     "robust": 67928.78,
+     "p90": 28624.61
+    },
+    {
+     "id": "rc2-79b9146fa90aae06",
+     "feasible": true,
+     "net": 59890.14,
+     "robust": 58478.78,
+     "p90": 32649.64
+    }
+   ],
+   "refinements": [
+    {
+     "kind": "robust",
+     "start": "rc2-e24adcb3bfa14c87",
+     "endpoint": "rc2-69a59bf44e3a556f",
+     "path": [
+      {
+       "pass": 0,
+       "moved": null,
+       "net": 77649.58,
+       "robust": 69708.87,
+       "violation": 0
+      },
+      {
+       "pass": 1,
+       "moved": "rc2-69a59bf44e3a556f",
+       "net": 86142.69,
+       "robust": 73368.27,
+       "violation": 0
+      }
+     ]
+    },
+    {
+     "kind": "profit",
+     "start": "rc2-79b9146fa90aae06",
+     "endpoint": "rc2-4d6ee6caa07df31f",
+     "path": [
+      {
+       "pass": 0,
+       "moved": null,
+       "net": 59890.14,
+       "robust": 57674.28,
+       "violation": 0
+      },
+      {
+       "pass": 1,
+       "moved": "rc2-4d6ee6caa07df31f",
+       "net": 64001.95,
+       "robust": 58048.57,
+       "violation": 0
+      }
+     ]
+    }
+   ],
+   "shortlist": [
+    {
+     "id": "rc2-69a59bf44e3a556f",
+     "rung": "r3",
+     "centre": {
+      "id": "rc2-69a59bf44e3a556f",
+      "net": 86142.69,
+      "realized": 46719.55,
+      "unrealized": 39423.14,
+      "dd": 28265.32,
+      "ddPeakT": 1538586780,
+      "ddTroughT": 1540842180,
+      "ddRecoveryT": 1552657440,
+      "ddDaily": 24937.2,
+      "lots": 3,
+      "wins": 1,
+      "losses": 1,
+      "partials": 1,
+      "lossSum": -3879.07,
+      "worstLoss": -3879.07,
+      "largestWin": 50598.62,
+      "interest": 38325.21,
+      "costs": 286.94,
+      "books": {
+       "D1:GDX": {
+        "lots": 0,
+        "wins": 0,
+        "losses": 0,
+        "booked": 0,
+        "principalDays": 0,
+        "partials": 0,
+        "open": 0,
+        "decisions": 6,
+        "granted": 0,
+        "refused": 6
+       },
+       "D1:VGT": {
+        "lots": 1,
+        "wins": 0,
+        "losses": 0,
+        "booked": 39423.14,
+        "principalDays": 37000000,
+        "partials": 0,
+        "open": 1,
+        "decisions": 1,
+        "granted": 1,
+        "refused": 0
+       },
+       "G:GDX": {
+        "lots": 0,
+        "wins": 0,
+        "losses": 0,
+        "booked": 0,
+        "principalDays": 0,
+        "partials": 0,
+        "open": 0,
+        "decisions": 0,
+        "granted": 0,
+        "refused": 0
+       },
+       "G:VGT": {
+        "lots": 2,
+        "wins": 1,
+        "losses": 1,
+        "booked": 46719.55,
+        "principalDays": 90170000,
+        "partials": 1,
+        "open": 0,
+        "decisions": 5,
+        "granted": 2,
+        "refused": 3
+       }
+      },
+      "fam": {
+       "D1": {
+        "lots": 1,
+        "wins": 0,
+        "losses": 0,
+        "booked": 39423.14,
+        "principalDays": 37000000,
+        "partials": 0,
+        "open": 1,
+        "decisions": 7,
+        "granted": 1,
+        "refused": 6
+       },
+       "G": {
+        "lots": 2,
+        "wins": 1,
+        "losses": 1,
+        "booked": 46719.55,
+        "principalDays": 90170000,
+        "partials": 1,
+        "open": 0,
+        "decisions": 5,
+        "granted": 2,
+        "refused": 3
+       }
+      },
+      "mixed": true,
+      "funded": [
+       "D1:VGT",
+       "G:VGT"
+      ],
+      "sessionsHeld": 881,
+      "peakPrincipal": 100000,
+      "peakValue": 194876.33,
+      "years": {
+       "2016": 6397.64,
+       "2017": 30239.86,
+       "2018": 12525.73,
+       "2019": 36979.46
+      },
+      "periods": [],
+      "topEpisode": 46719.55,
+      "topEpisodeShare": 0.5424,
+      "episodes": 2,
+      "signature": "01b941511816419f",
+      "virtual": {
+       "D1:GDX": {
+        "trades": 6,
+        "net": -164.53,
+        "dd": 21858.32,
+        "first": "2016-10-07"
+       },
+       "D1:VGT": {
+        "trades": 1,
+        "net": 39423.14,
+        "dd": 16953.93,
+        "first": "2018-12-26"
+       },
+       "G:VGT": {
+        "trades": 5,
+        "net": 56252,
+        "dd": 28265.32,
+        "first": "2016-05-10"
+       }
+      },
+      "sessions": 1006,
+      "rc": {
+       "D1:GDX": {
+        "virtualTrades": 6,
+        "protective": 0,
+        "protectiveGap": 0,
+        "entryDay": 0,
+        "maximumHold": 5,
+        "adaptive": 0,
+        "episodes": 2,
+        "blocks": 1,
+        "blockedSessions": 39
+       },
+       "D1:VGT": {
+        "virtualTrades": 1,
+        "protective": 0,
+        "protectiveGap": 0,
+        "entryDay": 0,
+        "maximumHold": 0,
+        "adaptive": 0,
+        "episodes": 0,
+        "blocks": 0,
+        "blockedSessions": 0
+       }
+      }
+     },
+     "nb": {
+      "n": 24,
+      "failed": 0,
+      "median": 84338.33,
+      "p10": 54150.68,
+      "p90Net": 89034.09,
+      "mean": 73603.98,
+      "robust": 69244.5,
+      "medianDd": 27614.4,
+      "p90Dd": 28439.36,
+      "worstDd": 28716.88,
+      "breaches": 0,
+      "breachShare": 0,
+      "meanExcess": 0,
+      "mixedShare": 1,
+      "allFourShare": 0,
+      "distinct": 24,
+      "sameAsCentre": 0,
+      "clipped": 22
+     },
+     "violation": 0,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0,
+      "structure": 0
+     },
+     "objectives": [
+      -86142.69,
+      -69244.5,
+      28439.36
+     ],
+     "pick": "profit",
+     "cfg": {
+      "cell": "GB1.VD0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 232,
+        "trailingBuyPercentage": 36,
+        "trailingStopPercentage": 149,
+        "maximumHoldDays": 8,
+        "tickWindowSize": 104,
+        "intradayLossBuffer": 31,
+        "pullback": 180,
+        "continuationWindow": 29
+       },
+       "VGT": {
+        "targetPercentChange": 183,
+        "trailingBuyPercentage": 50,
+        "trailingStopPercentage": 132,
+        "maximumHoldDays": 19,
+        "tickWindowSize": 110,
+        "intradayLossBuffer": 42,
+        "pullback": 52,
+        "continuationWindow": 13
+       }
+      },
+      "controls": {
+       "version": 2,
+       "books": {
+        "D1:GDX": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 238,
+          "activation": "entry-day"
+         },
+         "declineGate": {
+          "mode": "on",
+          "losses": 3,
+          "recoveryTenths": 260,
+          "maxBlockSessions": 161
+         }
+        },
+        "D1:VGT": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 51,
+          "activation": "entry-day"
+         },
+         "hold": {
+          "mode": "adaptive",
+          "extendedHoldDays": 22,
+          "progressTenths": 13
+         }
+        }
+       }
+      },
+      "g": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 1.5,
+       "recentLowLookbackBars": 20,
+       "trendFilterEnabled": true,
+       "trendMethod": "regression_slope",
+       "trendSlopeLookbackSessions": 80,
+       "trendSlopeMinimumPercent": 0.5,
+       "eligibilityEnabled": false,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 12.6,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 20,
+       "initialStopAtrMultiple": 2,
+       "retentionEnabled": true,
+       "retentionSellPercent": 10,
+       "retentionSmaSessions": 100,
+       "retentionClosesBelow": 3,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 80,
+       "crossSmaBars": 170,
+       "crossRisingBars": 20,
+       "crossMinimumSlopePercent": 1.3,
+       "crossMarginPercent": 1.75,
+       "costBpsPerSide": 5
+      }
+     }
+    },
+    {
+     "id": "rc2-4d6ee6caa07df31f",
+     "rung": "r3",
+     "centre": {
+      "id": "rc2-4d6ee6caa07df31f",
+      "net": 64001.95,
+      "realized": 19721.68,
+      "unrealized": 44280.26,
+      "dd": 26179.2,
+      "ddPeakT": 1517000400,
+      "ddTroughT": 1545674340,
+      "ddRecoveryT": 1552917480,
+      "ddDaily": 26134.74,
+      "lots": 9,
+      "wins": 1,
+      "losses": 7,
+      "partials": 0,
+      "lossSum": -11987.59,
+      "worstLoss": -5255.13,
+      "largestWin": 44280.26,
+      "interest": 30649.32,
+      "costs": 869.57,
+      "books": {
+       "D1:GDX": {
+        "lots": 0,
+        "wins": 0,
+        "losses": 0,
+        "booked": 0,
+        "principalDays": 0,
+        "partials": 0,
+        "open": 0,
+        "decisions": 6,
+        "granted": 0,
+        "refused": 6
+       },
+       "D1:VGT": {
+        "lots": 2,
+        "wins": 0,
+        "losses": 1,
+        "booked": 39025.14,
+        "principalDays": 37400000,
+        "partials": 0,
+        "open": 1,
+        "decisions": 2,
+        "granted": 2,
+        "refused": 0
+       },
+       "G:GDX": {
+        "lots": 0,
+        "wins": 0,
+        "losses": 0,
+        "booked": 0,
+        "principalDays": 0,
+        "partials": 0,
+        "open": 0,
+        "decisions": 0,
+        "granted": 0,
+        "refused": 0
+       },
+       "G:VGT": {
+        "lots": 7,
+        "wins": 1,
+        "losses": 6,
+        "booked": 24976.81,
+        "principalDays": 64300000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 12,
+        "granted": 7,
+        "refused": 5
+       }
+      },
+      "fam": {
+       "D1": {
+        "lots": 2,
+        "wins": 0,
+        "losses": 1,
+        "booked": 39025.14,
+        "principalDays": 37400000,
+        "partials": 0,
+        "open": 1,
+        "decisions": 8,
+        "granted": 2,
+        "refused": 6
+       },
+       "G": {
+        "lots": 7,
+        "wins": 1,
+        "losses": 6,
+        "booked": 24976.81,
+        "principalDays": 64300000,
+        "partials": 0,
+        "open": 0,
+        "decisions": 12,
+        "granted": 7,
+        "refused": 5
+       }
+      },
+      "mixed": true,
+      "funded": [
+       "D1:VGT",
+       "G:VGT"
+      ],
+      "sessionsHeld": 711,
+      "peakPrincipal": 100000,
+      "peakValue": 161105.02,
+      "years": {
+       "2016": 4114.17,
+       "2017": 27897.09,
+       "2018": -6555.67,
+       "2019": 38546.36
+      },
+      "periods": [],
+      "topEpisode": 39025.14,
+      "topEpisodeShare": 0.6097,
+      "episodes": 6,
+      "signature": "926d8d9b14eacfe9",
+      "virtual": {
+       "D1:GDX": {
+        "trades": 6,
+        "net": -2567.08,
+        "dd": 26641.13,
+        "first": "2016-10-07"
+       },
+       "D1:VGT": {
+        "trades": 2,
+        "net": 39025.14,
+        "dd": 17475.13,
+        "first": "2018-12-19"
+       },
+       "G:VGT": {
+        "trades": 12,
+        "net": 29598,
+        "dd": 22894.07,
+        "first": "2016-07-12"
+       }
+      },
+      "sessions": 1006,
+      "rc": {
+       "D1:GDX": {
+        "virtualTrades": 6,
+        "protective": 0,
+        "protectiveGap": 0,
+        "entryDay": 0,
+        "maximumHold": 3,
+        "adaptive": 0,
+        "episodes": 3,
+        "blocks": 0,
+        "blockedSessions": 0
+       },
+       "D1:VGT": {
+        "virtualTrades": 2,
+        "protective": 1,
+        "protectiveGap": 0,
+        "entryDay": 0,
+        "maximumHold": 0,
+        "adaptive": 0,
+        "episodes": 0,
+        "blocks": 0,
+        "blockedSessions": 0
+       }
+      }
+     },
+     "nb": {
+      "n": 24,
+      "failed": 0,
+      "median": 59931.43,
+      "p10": 56194.75,
+      "p90Net": 63604.36,
+      "mean": 59977.71,
+      "robust": 58063.09,
+      "medianDd": 29322.57,
+      "p90Dd": 32965.02,
+      "worstDd": 35201.79,
+      "breaches": 1,
+      "breachShare": 0.0417,
+      "meanExcess": 201.79,
+      "mixedShare": 1,
+      "allFourShare": 0,
+      "distinct": 24,
+      "sameAsCentre": 0,
+      "clipped": 24
+     },
+     "violation": 0,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0,
+      "structure": 0
+     },
+     "objectives": [
+      -64001.95,
+      -58063.09,
+      32965.02
+     ],
+     "pick": "Growth entry alternative",
+     "cfg": {
+      "cell": "GB1.VD0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 232,
+        "trailingBuyPercentage": 36,
+        "trailingStopPercentage": 148,
+        "maximumHoldDays": 26,
+        "tickWindowSize": 104,
+        "intradayLossBuffer": 31,
+        "pullback": 127,
+        "continuationWindow": 108
+       },
+       "VGT": {
+        "targetPercentChange": 183,
+        "trailingBuyPercentage": 13,
+        "trailingStopPercentage": 131,
+        "maximumHoldDays": 30,
+        "tickWindowSize": 109,
+        "intradayLossBuffer": 42,
+        "pullback": 52,
+        "continuationWindow": 194
+       }
+      },
+      "controls": {
+       "version": 2,
+       "books": {
+        "D1:GDX": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 235,
+          "activation": "entry-day"
+         },
+         "declineGate": {
+          "mode": "on",
+          "losses": 3,
+          "recoveryTenths": 270,
+          "maxBlockSessions": 161
+         }
+        },
+        "D1:VGT": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 51,
+          "activation": "entry-day"
+         },
+         "hold": {
+          "mode": "adaptive",
+          "extendedHoldDays": 55,
+          "progressTenths": 12
+         }
+        }
+       }
+      },
+      "g": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 10,
+       "breakoutSlopeComparisonSessions": 85,
+       "breakoutPriorHighSessions": 80,
+       "trendFilterEnabled": true,
+       "trendMethod": "regression_slope",
+       "trendSlopeLookbackSessions": 80,
+       "trendSlopeMinimumPercent": -5,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 40,
+       "dipThresholdPercent": 5.5,
+       "recoveryRetracementPercent": 40,
+       "recoveryConfirmationSessions": 2,
+       "trailingStopPercent": 7.5,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 7,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 0.5,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 14,
+       "initialStopAtrMultiple": 2,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "breakout",
+       "continuationWindowSessions": 80,
+       "breakoutBufferPercent": 0.75,
+       "breakoutFormationBars": 19,
+       "costBpsPerSide": 5
+      }
+     }
+    }
+   ],
+   "visibleInfeasible": [
+    {
+     "id": "rc1-1399abcd3f2e7211",
+     "cfg": {
+      "cell": "GB1.VD0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 144,
+        "trailingBuyPercentage": 46,
+        "trailingStopPercentage": 112,
+        "maximumHoldDays": 27,
+        "tickWindowSize": 235,
+        "intradayLossBuffer": 57,
+        "pullback": 186,
+        "continuationWindow": 165
+       },
+       "VGT": {
+        "targetPercentChange": 127,
+        "trailingBuyPercentage": 11,
+        "trailingStopPercentage": 141,
+        "maximumHoldDays": 28,
+        "tickWindowSize": 23,
+        "intradayLossBuffer": 34,
+        "pullback": 79,
+        "continuationWindow": 96
+       }
+      },
+      "controls": {
+       "version": 1,
+       "books": {
+        "D1:GDX": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 229
+         },
+         "declineGate": {
+          "mode": "on",
+          "losses": 2,
+          "recoveryTenths": 980,
+          "maxBlockSessions": 117
+         }
+        },
+        "D1:VGT": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 64
+         },
+         "hold": {
+          "mode": "adaptive",
+          "extendedHoldDays": 34,
+          "progressTenths": 90
+         }
+        }
+       }
+      },
+      "g": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 150,
+       "breakoutSlopeComparisonSessions": 75,
+       "breakoutPriorHighSessions": 70,
+       "trendFilterEnabled": true,
+       "trendMethod": "higher_highs_lows",
+       "trendStructureLookbackSessions": 78,
+       "trendStructureMinimumIncreasePercent": 3.25,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 13,
+       "recoveryRetracementPercent": 100,
+       "recoveryConfirmationSessions": 7,
+       "trailingStopPercent": 12.5,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 29,
+       "intradayLossBufferEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": false,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 89920.52,
+     "centreDd": 41185.11,
+     "p90": "__Inf",
+     "parts": {
+      "net": 0,
+      "dd": 0.17671742857142858,
+      "p90": 1,
+      "structure": 0.5
+     }
+    },
+    {
+     "id": "rc2-360c74778706be9c",
+     "cfg": {
+      "cell": "GB1.VD0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 103,
+        "trailingBuyPercentage": 25,
+        "trailingStopPercentage": 53,
+        "maximumHoldDays": 29,
+        "tickWindowSize": 50,
+        "intradayLossBuffer": 18,
+        "pullback": 194,
+        "continuationWindow": 43
+       },
+       "VGT": {
+        "targetPercentChange": 90,
+        "trailingBuyPercentage": 24,
+        "trailingStopPercentage": 124,
+        "maximumHoldDays": 25,
+        "tickWindowSize": 241,
+        "intradayLossBuffer": 28,
+        "pullback": 129,
+        "continuationWindow": 149
+       }
+      },
+      "controls": {
+       "version": 2,
+       "books": {
+        "D1:GDX": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 90,
+          "activation": "entry-day"
+         },
+         "declineGate": {
+          "mode": "on",
+          "losses": 2,
+          "recoveryTenths": 960,
+          "maxBlockSessions": 238
+         }
+        },
+        "D1:VGT": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 45
+         },
+         "hold": {
+          "mode": "adaptive",
+          "extendedHoldDays": 54,
+          "progressTenths": 74
+         }
+        }
+       }
+      },
+      "g": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 40,
+       "breakoutSlopeComparisonSessions": 85,
+       "breakoutPriorHighSessions": 10,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 80,
+       "trendChangeMinimumReturnPercent": -1.5,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 120,
+       "dipThresholdPercent": 13,
+       "recoveryRetracementPercent": 80,
+       "recoveryConfirmationSessions": 1,
+       "trailingStopPercent": 13,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 14,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 1,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 30,
+       "initialStopAtrMultiple": 3.5,
+       "retentionEnabled": true,
+       "retentionSellPercent": 20,
+       "retentionSmaSessions": 20,
+       "retentionClosesBelow": 2,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 140,
+       "crossSmaBars": 200,
+       "crossRisingBars": 17,
+       "crossMinimumSlopePercent": 1.5,
+       "crossMarginPercent": 1.25,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 87676.35,
+     "centreDd": 37195.24,
+     "p90": "__Inf",
+     "parts": {
+      "net": 0,
+      "dd": 0.0627211428571428,
+      "p90": 1,
+      "structure": 0
+     }
+    },
+    {
+     "id": "rc2-b17a5f4a11d3e49e",
+     "cfg": {
+      "cell": "GB1.VD0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 211,
+        "trailingBuyPercentage": 30,
+        "trailingStopPercentage": 106,
+        "maximumHoldDays": 6,
+        "tickWindowSize": 229,
+        "intradayLossBuffer": 12,
+        "pullback": 137,
+        "continuationWindow": 104
+       },
+       "VGT": {
+        "targetPercentChange": 103,
+        "trailingBuyPercentage": 44,
+        "trailingStopPercentage": 121,
+        "maximumHoldDays": 11,
+        "tickWindowSize": 28,
+        "intradayLossBuffer": 50,
+        "pullback": 179,
+        "continuationWindow": 160
+       }
+      },
+      "controls": {
+       "version": 2,
+       "books": {
+        "D1:GDX": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 138,
+          "activation": "entry-day"
+         },
+         "declineGate": {
+          "mode": "on",
+          "losses": 2,
+          "recoveryTenths": 630,
+          "maxBlockSessions": 219
+         }
+        },
+        "D1:VGT": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 118
+         },
+         "hold": {
+          "mode": "adaptive",
+          "extendedHoldDays": 44,
+          "progressTenths": 105
+         }
+        }
+       }
+      },
+      "g": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 90,
+       "breakoutSlopeComparisonSessions": 10,
+       "breakoutPriorHighSessions": 10,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 85,
+       "trendChangeMinimumReturnPercent": -3.5,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 11,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 10,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 4.5,
+       "initialStopEnabled": false,
+       "retentionEnabled": true,
+       "retentionSellPercent": 50,
+       "retentionSmaSessions": 80,
+       "retentionClosesBelow": 3,
+       "continuationEnabled": true,
+       "continuationMethod": "classic_d1",
+       "continuationWindowSessions": 180,
+       "classicPullbackPercent": 3,
+       "classicReboundPercent": 2.4,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 87496.67,
+     "centreDd": 32876.35,
+     "p90": "__Inf",
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 1,
+      "structure": 0.5
+     }
+    },
+    {
+     "id": "rc1-08a5ac76f33db70d",
+     "cfg": {
+      "cell": "GB1.VD0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 141,
+        "trailingBuyPercentage": 46,
+        "trailingStopPercentage": 52,
+        "maximumHoldDays": 27,
+        "tickWindowSize": 240,
+        "intradayLossBuffer": 56,
+        "pullback": 194,
+        "continuationWindow": 164
+       },
+       "VGT": {
+        "targetPercentChange": 125,
+        "trailingBuyPercentage": 11,
+        "trailingStopPercentage": 141,
+        "maximumHoldDays": 16,
+        "tickWindowSize": 24,
+        "intradayLossBuffer": 55,
+        "pullback": 79,
+        "continuationWindow": 96
+       }
+      },
+      "controls": {
+       "version": 1,
+       "books": {
+        "D1:GDX": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 203
+         },
+         "declineGate": {
+          "mode": "on",
+          "losses": 2,
+          "recoveryTenths": 980,
+          "maxBlockSessions": 19
+         }
+        },
+        "D1:VGT": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 64
+         },
+         "hold": {
+          "mode": "adaptive",
+          "extendedHoldDays": 32,
+          "progressTenths": 90
+         }
+        }
+       }
+      },
+      "g": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 9,
+       "recentLowLookbackBars": 230,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "reset_renew",
+       "eligibilityMaxAgeSessions": 29,
+       "eligibilityResetDropPercent": 8.5,
+       "eligibilityRenewalReboundPercent": 9.5,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 12.5,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": false,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 85193.77,
+     "centreDd": 43507.04,
+     "p90": "__Inf",
+     "parts": {
+      "net": 0,
+      "dd": 0.24305828571428573,
+      "p90": 1,
+      "structure": 0
+     }
+    },
+    {
+     "id": "rc2-7dd3b683b06496d1",
+     "cfg": {
+      "cell": "GB1.VD0",
+      "d1": {
+       "GDX": {
+        "targetPercentChange": 100,
+        "trailingBuyPercentage": 34,
+        "trailingStopPercentage": 55,
+        "maximumHoldDays": 16,
+        "tickWindowSize": 37,
+        "intradayLossBuffer": 49,
+        "pullback": 58,
+        "continuationWindow": 134
+       },
+       "VGT": {
+        "targetPercentChange": 134,
+        "trailingBuyPercentage": 18,
+        "trailingStopPercentage": 42,
+        "maximumHoldDays": 15,
+        "tickWindowSize": 188,
+        "intradayLossBuffer": 11,
+        "pullback": 105,
+        "continuationWindow": 75
+       }
+      },
+      "controls": {
+       "version": 2,
+       "books": {
+        "D1:GDX": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 68
+         },
+         "declineGate": {
+          "mode": "on",
+          "losses": 3,
+          "recoveryTenths": 140,
+          "maxBlockSessions": 241
+         }
+        },
+        "D1:VGT": {
+         "protectiveStop": {
+          "mode": "on",
+          "stopDistanceTenths": 193,
+          "activation": "entry-day"
+         },
+         "hold": {
+          "mode": "adaptive",
+          "extendedHoldDays": 18,
+          "progressTenths": 42
+         }
+        }
+       }
+      },
+      "g": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 110,
+       "breakoutSlopeComparisonSessions": 90,
+       "breakoutPriorHighSessions": 100,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 110,
+       "trendChangeMinimumReturnPercent": 0,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 110,
+       "dipThresholdPercent": 14,
+       "recoveryRetracementPercent": 40,
+       "recoveryConfirmationSessions": 10,
+       "trailingStopPercent": 9.5,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 55,
+       "initialStopAtrMultiple": 4,
+       "retentionEnabled": true,
+       "retentionSellPercent": 50,
+       "retentionSmaSessions": 160,
+       "retentionClosesBelow": 5,
+       "continuationEnabled": false,
+       "costBpsPerSide": 5
+      }
+     },
+     "centreNet": 75800.78,
+     "centreDd": 28854.96,
+     "p90": 54280.87,
+     "parts": {
+      "net": 0,
+      "dd": 0,
+      "p90": 0.5508820000000001,
+      "structure": 0
+     }
+    }
+   ],
+   "frontier": [
+    {
+     "id": "rc2-e24adcb3bfa14c87",
+     "net": 77649.58,
+     "robust": 64465.24,
+     "p90": 28279.42,
+     "dd": 30536.35
+    },
+    {
+     "id": "rc2-7951f2a0a27577b8",
+     "net": 58246.25,
+     "robust": 38391.15,
+     "p90": 24577.8,
+     "dd": 17050.74
+    },
+    {
+     "id": "rc2-b142e02f12a1c635",
+     "net": 56331.22,
+     "robust": 39570.41,
+     "p90": 22632.74,
+     "dd": 17050.74
+    },
+    {
+     "id": "rc2-12701f3193e0088a",
+     "net": 51622.12,
+     "robust": 22652.78,
+     "p90": 20720.01,
+     "dd": 17050.74
+    },
+    {
+     "id": "rc2-73728cbf65f9b0cc",
+     "net": 50937.05,
+     "robust": 45415.23,
+     "p90": 26531.96,
+     "dd": 26300.61
+    }
+   ],
+   "topByNet": [
+    {
+     "id": "rc1-1399abcd3f2e7211",
+     "net": 89920.52,
+     "robust": "__-Inf",
+     "p90": "__Inf",
+     "dd": 41185.11,
+     "feasible": false
+    },
+    {
+     "id": "rc2-360c74778706be9c",
+     "net": 87676.35,
+     "robust": "__-Inf",
+     "p90": "__Inf",
+     "dd": 37195.24,
+     "feasible": false
+    },
+    {
+     "id": "rc2-b17a5f4a11d3e49e",
+     "net": 87496.67,
+     "robust": "__-Inf",
+     "p90": "__Inf",
+     "dd": 32876.35,
+     "feasible": false
+    },
+    {
+     "id": "rc1-08a5ac76f33db70d",
+     "net": 85193.77,
+     "robust": "__-Inf",
+     "p90": "__Inf",
+     "dd": 43507.04,
+     "feasible": false
+    },
+    {
+     "id": "rc2-e24adcb3bfa14c87",
+     "net": 77649.58,
+     "robust": 64465.24,
+     "p90": 28279.42,
+     "dd": 30536.35,
+     "feasible": true
+    },
+    {
+     "id": "rc2-7dd3b683b06496d1",
+     "net": 75800.78,
+     "robust": 34159.04,
+     "p90": 54280.87,
+     "dd": 28854.96,
+     "feasible": false
+    },
+    {
+     "id": "rc2-1baf16ed08418125",
+     "net": 73796.03,
+     "robust": 52058.38,
+     "p90": 31125.84,
+     "dd": 26940.17,
+     "feasible": true
+    },
+    {
+     "id": "rc2-a5541ab36a9bd481",
+     "net": 73796.03,
+     "robust": 52058.38,
+     "p90": 31125.84,
+     "dd": 26940.17,
+     "feasible": true
+    },
+    {
+     "id": "rc2-d7c4035e86d48b64",
+     "net": 73796.03,
+     "robust": 52058.38,
+     "p90": 31125.84,
+     "dd": 26940.17,
+     "feasible": true
+    },
+    {
+     "id": "rc2-840895c70e9b6286",
+     "net": 72955.01,
+     "robust": "__-Inf",
+     "p90": "__Inf",
+     "dd": 39204.75,
+     "feasible": false
+    }
+   ],
+   "failure": {
+    "screenPlausible": 26,
+    "screenReasons": {
+     "plausible": 26,
+     "a family unfunded": 44,
+     "DD > ceiling": 13,
+     "net ≤ 0": 13
+    }
+   }
+  }
+ ],
+ "compute": {
+  "unique": 3515,
+  "freshAllRuns": 3515,
+  "priorRuns": [],
+  "fresh": 3515,
+  "archiveHits": 62,
+  "workerSeconds": 40,
+  "wallSeconds": 43,
+  "tallies": {
+   "screen": {
+    "fresh": 192,
+    "hits": 0,
+    "ms": 2290.1000350000013
+   },
+   "r1:centre": {
+    "fresh": 156,
+    "hits": 24,
+    "ms": 9220.703767566267
+   },
+   "r1:neighbours": {
+    "fresh": 984,
+    "hits": 0,
+    "ms": 20722.125029433886
+   },
+   "r2:centre": {
+    "fresh": 0,
+    "hits": 8,
+    "ms": 0
+   },
+   "r2:neighbours": {
+    "fresh": 128,
+    "hits": 0,
+    "ms": 1082.0397470000019
+   },
+   "r3:centre": {
+    "fresh": 0,
+    "hits": 8,
+    "ms": 0
+   },
+   "r3:neighbours": {
+    "fresh": 192,
+    "hits": 0,
+    "ms": 2054.41783300001
+   },
+   "refine:centre": {
+    "fresh": 494,
+    "hits": 4,
+    "ms": 1423.3460320000129
+   },
+   "refine:neighbours": {
+    "fresh": 1369,
+    "hits": 18,
+    "ms": 3194.2678679999776
+   }
+  }
+ },
+ "minutes": 0.72,
+ "finished": "2026-11-19T14:05:54.638Z"
+}
