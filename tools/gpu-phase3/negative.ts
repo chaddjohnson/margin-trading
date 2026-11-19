@@ -536,6 +536,7 @@ const pass = rows.every((r) => r.pass);
 writeJson(out, {
   kind: 'gpu-phase3 negative tests (Phase 2 cases + host path)',
   t: new Date().toISOString(),
+  head: headCommit(),
   hostWorkers,
   binaries: { dev: sha(dev), perturbed: sha(perturbed), stale: sha(stale) },
   door: 'W-QUIET',

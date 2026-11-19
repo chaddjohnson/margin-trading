@@ -15,9 +15,19 @@ threads unless a row says otherwise), RTX 5090 `GPU-ae5f222c-8bf8-6bf0-db01-db53
 | Host path: request encoding, response verification and decoding, record reductions, pool | **yes**: one batch codec (`batch.ts`) for both paths; worker threads (`hostPipeline.ts`, `hostWorker.ts`, `hostDoor.ts`); in-order release in `GpuPool` | §2–§6 |
 | Enforcement and acceptance | **yes**: manifest v2, schema 2, gate checks (pins, source, host path), official runner, verifier | `GPU_ENFORCEMENT_INTEGRITY.md`; §7 |
 
-## 2. Gate results (the final campaign, `chains/final.sh`, commit `d113e6c5`)
+## 2. Gate results (the final campaign `chains/final.sh`, commit `d113e6c5`, 2026-11-19 17:22:05 → 21:05:34Z, all 31 steps status 0; then `chains/post-final.sh`)
 
-FILL.
+| Gate | Requirement (PROTOCOL.md §9) | Result | Evidence |
+|---|---|---|---|
+| H1 | offline codec and pipeline equivalence on every captured Phase 2 batch | **pass** — 7/7 captures, serial codec and 1/2/3/8/12 workers: request bytes and every result hash identical; every refusal correct | `results/final/offline-check.json` |
+| H2 | live parity through the final host path, zero mismatches, determinism | **pass** — 144,795/144,795 identical, 176 determinism runs 0; Assignment 3's 48 sealed finalists D24 96/96 (sealed figures 48/48 to the cent) and FULL 96/96 | `results/parity/final/SUMMARY.json`, `results/parity/final-finalists.json` |
+| H3 | sealed-job replays identical; CPU = GPU = GPU resumed; worker counts | **pass** — §4 | `results/optimizer/compare-final-*.json` |
+| H4 | sanitizer 0 errors under 4 tools, results identical | **pass** — §5 | `results/sanitizer-final/sanitizer.json` |
+| H5 | negative tests all refused, CPU-scored 0 | **pass** — 45/45 | `results/policy/negative-final.json` |
+| P5 | enforcement coverage and tamper tests | **pass** — 14/14 + baseline; policy, enforcement, host-pipeline and layout tests at acceptance | `results/policy/tamper-final.json`, `results/policy/policy-tests.txt` |
+| H6 | bounded 30–60 min sustained run: 0 errors, 0 parity mismatches, stable memory and throughput | **pass** — §5 | `results/sustained/summary.json` |
+| H7 | `npm test` = baseline + new; Strategy Lab suites; `state/strategy-lab/` untouched | **pass** — §6 (one type-check regression disclosed) | `results/tests/` |
+| H8 | benchmarks, every run reported | **done** — `GPU_PERFORMANCE_BEFORE_AFTER.md` | `results/bench/before-after.json` |
 
 ## 3. The parity campaign through the final host path (H2)
 
@@ -152,7 +162,17 @@ for the byte-identical kernels and server; faults of the new host path rarer tha
 
 ## 6. Repository and Strategy Lab (H7)
 
-FILL.
+`chains/tests.sh` (2026-11-19 21:05–21:16Z, GPU free, in a contained unit with PATH):
+
+| Suite | Result |
+|---|---|
+| `npm test` (all `src/**/*.test.ts`, incl. the GPU merge gate and Phase 1's live GPU test) | 1,699 tests: 1,688 pass, **7 fail — exactly the 7 known pre-existing failures** (six open the lowercase `src/app/allin-original.ts`; the Study 7 runner's data end), 4 skipped. Phase 2's baseline 1,690 / 1,679 / 7 / 4 + **9 new tests, all passing** (host pipeline 6, enforcement 2, official runner 1) |
+| ESLint on the GPU code (`src/gpu-backend`, `src/gpu-phase3`, `tools/gpu-phase3`, the preflight tool) | 0 problems (Phase 2's one error and 130 warnings in pinned files fixed in this change cycle) |
+| Root TypeScript (`tsc --noEmit`) | **regression, type-only: 1 error** — `src/gpu-backend/hostPipeline.ts:196` names the DOM type `Transferable`, absent from Node's typings (`TransferListItem` from `node:worker_threads` is the fix). No runtime effect (Node strips types; every test and campaign above ran this code). Not fixed now: the file is in the binary's evaluation digest, so even a type annotation means a new binary and a new full campaign; queued for the next acceptance cycle. A second type error (`policy.test.ts` env typing) was fixed before the acceptance (enforcement group only; negative and tamper suites rerun on that tree). `results/tests/root-tsc.txt`, `root-tsc-after-policy-fix.txt` |
+| Strategy Lab typecheck / lint / vitest / UI build / Playwright e2e | 0 / 0 / **314 of 314** / built into a scratch directory / **81 of 81** (no rerun needed) |
+| Strategy Lab's CPU engine | unchanged (no file under `apps/` changed by the GPU program; `results/integration/merge-audit.json`) |
+| `state/strategy-lab/` | fingerprint before = after (sha256 of every file's path, size, mtime) |
+| Live `apps/strategy-lab/dist` | no file newer than the protocol freeze |
 
 ## 7. The acceptance record
 

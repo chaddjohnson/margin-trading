@@ -179,7 +179,32 @@ const policy = policySources([generator]);
     s ? JSON.stringify(s.rows.map((r) => [r.tool, r.errors, r.identical, r.subjects])) : 'missing'
   );
 }
-// H5 negative tests and P5 tamper tests
+// H5 negative tests and P5 tamper tests: the final campaign's runs, and reruns on a commit whose pinned files equal the
+// accepted ones (an enforcement-group file changed after the campaign; the evaluation digest did not)
+const pinnedPaths = [...m.cpu.files, ...m.cuda.files, ...m.host.files, ...policy.files].map((f) => f.path);
+const samePins = (commit: string | undefined) =>
+  !!commit &&
+  spawnSync('git', ['diff', '--quiet', commit, 'HEAD', '--', ...pinnedPaths], { cwd: repoRoot }).status === 0;
+{
+  const f = R('policy/negative-acceptance.json');
+  const s = read<{ pass: boolean; total: number; passed: number; head: string; binaries: { dev: string } }>(f);
+
+  gate(
+    'H5 negative tests rerun on the accepted pinned files',
+    f,
+    !!s && s.pass && s.binaries.dev === binarySha && samePins(s.head),
+    s ? `${s.passed}/${s.total} at ${s.head?.slice(0, 12)}, pinned files equal ${samePins(s.head)}` : 'missing'
+  );
+  const g = R('policy/tamper-acceptance.json');
+  const t = read<{ pass: boolean; cases: number; passed: number; baselineOk: boolean; head: string }>(g);
+
+  gate(
+    'P5 source-tamper tests rerun on the accepted pinned files',
+    g,
+    !!t && t.pass && t.baselineOk && samePins(t.head),
+    t ? `${t.passed}/${t.cases} at ${t.head.slice(0, 12)}, pinned files equal ${samePins(t.head)}` : 'missing'
+  );
+}
 {
   const f = R('policy/negative-final.json');
   const s = read<{ pass: boolean; total: number; passed: number; binaries: { dev: string } }>(f);
