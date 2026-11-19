@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T21:07Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T21:31Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — Stage 5 final campaign **COMPLETE** (unit `gpup3-final`, 17:22:05 → 21:05:34Z, all 31
   steps status 0, Result=success). Post-final chain RUNNING. Final binary `research/gpu-phase3/build/gb3` sha256
   `06a4a04a83265616ab363632c02bf5d7737f34ec12156655cf95e135dde0dc23` (compat `30824182…2998`; `results/final-binary.json`
@@ -10,7 +10,7 @@
 - **Authority:** `brief/BRIEF.md` sha256 `925e97e80dd8bca0bbc470fe07ef31388efcbae8ca26f9153efb10d02933f6be` (the user's
   handoff, read in full, 267 lines, final section "Final success criterion" present). `PROTOCOL.md` FROZEN
   2026-11-19T14:21:42Z (`results/protocol-freeze.json` sha256 `42d41b249a83aa3e1cc9794afe94ca401e519880bc7e830d5c1956a94f944475`,
-  protocol `952da32c…1a1b`); no amendments. Standard 3.0.0 adopted (scope diagnostic); preflight PASS.
+  protocol `952da32c…1a1b`); amendments A1–A2 (`AMENDMENTS.md`, 21:25Z: enforcement-only reruns; a root type-check finding disclosed). Standard 3.0.0 adopted (scope diagnostic); preflight PASS.
 - **Running:** unit `gpup3-post-final` (`chains/post-final.sh`, START=1), log `results/logs/post-final-chain.txt`,
   started 21:05:51Z: 1 tests (`chains/tests.sh`: npm test, root tsc, ESLint, Strategy Lab; `results/tests/`), 2 CPU
   baseline A3 C19 broad1 on 12 workers (`results/optimizer/final-a3-cpu/cpu`, ≈ 98 min), 3 its sealed compare, 4 bench
@@ -20,13 +20,13 @@
   identical (377/385 qualified); A2 base 724.8 / 726.5 s identical (6.5×); mini CPU = GPU = resumed = w1 = w0 = Phase 2
   path; sanitizer 0 errors ×4 (97/97); negative 45/45; tamper 14/14; sustained 45.3 min, 3.77 M evaluations, 0 failures,
   parity 5,520/0, repeat 15/0.
-- **Next:** after `gpup3-final` ends cleanly: `tools/gpu-phase3/launch.sh gpup3-post-final <abs log> --
-  /bin/bash research/gpu-phase3/chains/post-final.sh` (H7 suites; the protocol §2 CPU baseline of the A3 job, 12
-  workers, ≈ 98 min, alone on the machine; bench summary), then `tools/gpu-phase3/accept.ts`, commit the record,
-  `tools/gpu-backend/verify-acceptance.sh --rebuild --device`, reports, CLAUDE.md/roadmap, merge into `main`
-  (`chains/post-merge.sh` with RECORD_SHA), fast-forward `research/gpu-phase3` and `research/gpu-phase2` to `main`, push,
-  bundle (`tools/gpu-phase3/manifest.ts`, `tools/gpu-phase3/bundle.sh`).
-- **Parity campaign progress at 18:46Z:** 21 of 54 runs complete, 0 mismatches (`results/parity/final/*.json`).
+- **Next:** (1) wait for `gpup3-post-final` ("chain complete"; tests step done 21:16:48Z, pass; CPU A3 baseline running
+  from 21:16:48Z). (2) amendment A1: `tools/gpu-phase3/launch.sh gpup3-reruns
+  /home/chad/projects/margin-trading/research/gpu-phase3/results/logs/reruns-chain.txt -- /usr/bin/env START=1 /bin/bash
+  research/gpu-phase3/chains/acceptance-reruns.sh` (negative, tamper, npm test, root tsc on the committed tree; ≈ 8 min).
+  (3) `GPU_POLICY_PURPOSE=parity-test $NODE tools/gpu-phase3/accept.ts` → commit record + evidence; record sha256 kept
+  out of band. (4) Stage 7 (merge-audit, `git switch main; git merge --no-ff research/gpu-phase3`, post-merge.sh with
+  RECORD_SHA, ff branches, bundle, push, restore research/gpu-phase2).
 - **Never:** start/implement/run the risk-envelope pilot; change strategies, fitness, genome, budgets, seeds or
   selection; touch sealed studies' records; CPU fallback; a new 8 h/24 h endurance run (only one 30–60 min sustained run).
 
