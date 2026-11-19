@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T05:00Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T05:08Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
@@ -43,10 +43,20 @@
 - **Step 8 stress RUNNING** since 04:55:53Z (unit `gpup2-stress`, 24.05 h → ends ≈ 2026-11-20T04:59Z; log
   `results/logs/stress.txt`; records `results/stress/{summary.json,rounds.jsonl,telemetry.jsonl,ledger/}`). Do not
   start any other GPU job while it runs (one GPU job at a time).
-- **Strategy Lab regression** (CPU only) running in unit `gpup2-strategy-lab` (`chains/strategy-lab-regression.sh`;
-  outputs `results/tests/strategy-lab-*.txt`; UI built to the scratchpad, live dist untouched).
-- **After the stress:** `npm test` (contains Phase 1's GPU test → after the stress), finalists parity
-  (`parity-finalists.ts`), copy run logs, `accept.ts`, MANIFEST, bundle, commit/push, main docs integration. Branch pushed (backup) at
+- **Strategy Lab regression PASSED (05:04Z):** typecheck, lint, vitest 34 files / 314 tests, e2e 81/81; live dist and
+  state/strategy-lab unchanged (`results/tests/strategy-lab.json`). Root `tsc --noEmit` 0 errors. ESLint on new code:
+  1 style error (`client.ts:443`, a ternary as a statement — in the compat manifest, left unchanged) + 130 prettier
+  warnings, all in manifest files (non-manifest files formatted; digest unchanged).
+- **Armed:** unit `gpup2-post-stress` (`chains/post-stress.sh`, log `results/logs/post-stress.txt`): waits for
+  `gpup2-stress`, checks its summary, then `npm test` (unit `gpup2-npm-test` → `results/tests/npm-test.txt`), the
+  finalists parity (unit `gpup2-finalists` → `results/parity/final-finalists.json`), copies run logs to
+  `results/runlogs/final/`, and runs `accept.ts --dry-run`.
+- **Then by hand:** write `results/tests/npm-test.json` (compare with the known 7 failures; baseline after gpu-phase1:
+  1,680 tests / 1,669 pass / 7 fail / 4 skipped; this branch adds 10 tests), `accept.ts` (writes
+  `config/gpu-backend/acceptance.json`), fill report placeholders (VERDICT_SECTION, STRESS_GATE, G9_GATE,
+  FINALISTS_GATE/SECTION, ACCEPTANCE_STATUS, MAIN_STATUS, OPEN_ITEMS, COMMITS_SECTION, FINAL_STEPS), HANDOFF, ROADMAP,
+  MANIFEST (`tools/gpu-phase2/manifest.ts`), bundle (`tools/gpu-phase2/bundle.sh <scratch>`), commit, push, docs-only
+  `main` integration (scratch `main-docs/CLAUDE.md` prepared; procedure in memory docs-only-main-integration). Branch pushed (backup) at
   `a9ae79ec` (ls-remote verified).
 - **Replay run 1** (01:43–02:03Z): 5.21× (1,132.5 s vs 5,900.8 s), counts identical, but its record wrote ±Inf/NaN as
   null (91 fields, all encoding-only) → kept as a timing sample (`results/optimizer/a3-C19-broad1-run1/NOTE.md`); fixed
