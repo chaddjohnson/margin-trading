@@ -77,3 +77,64 @@ fatal: not a git repository (or any parent up to mount point /)
 Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 fatal: not a git repository (or any parent up to mount point /)
 Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+ [32m✓[39m tests/preview.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 50644[2mms[22m[39m
+   [32m✓[39m implementation fingerprint [2m(3)[22m
+     [33m[2m✓[22m[39m a traced rise-from-recent-low-trading run loads and reads nothing outside its identity[33m 8530[2mms[22m[39m
+     [33m[2m✓[22m[39m a traced rise-from-recent-low run loads and reads nothing outside its identity[33m 3108[2mms[22m[39m
+   [32m✓[39m identity: distinct for every result-changing input, equal for inactive values [2m(3)[22m
+     [33m[2m✓[22m[39m dates, bars, effective parameters, costs, symbols and order, strategy versions differ[33m 942[2mms[22m[39m
+     [33m[2m✓[22m[39m inactive values (disabled or hidden) never change the identity; number spellings do not either[33m 454[2mms[22m[39m
+   [32m✓[39m identity of a repository copy: code, data and package edits invalidate; failures fail closed [2m(2)[22m
+     [33m[2m✓[22m[39m a code edit with the version unchanged, a data edit, an input edit and a package edit each change the key[33m 387[2mms[22m[39m
+   [32m✓[39m Interactive Preview on real data [2m(11)[22m
+     [33m[2m✓[22m[39m C1 → C2 → C1: two cold executions, the return is a validated cache hit; nothing is saved[33m 5352[2mms[22m[39m
+     [33m[2m✓[22m[39m coalesces identical concurrent requests; cancels work nobody waits for; never caches it[33m 5200[2mms[22m[39m
+     [33m[2m✓[22m[39m rapid sequential submissions: superseded tickets are released, only the latest completes[33m 2320[2mms[22m[39m
+     [33m[2m✓[22m[39m a preview equals a normal single run of the same configuration (events, ledger, marks, metrics, decisions)[33m 2435[2mms[22m[39m
+     [33m[2m✓[22m[39m Save as run from a fresh and from a cached preview: exactly one immutable run each; the source unchanged[33m 2623[2mms[22m[39m
+   [32m✓[39m cache invalidation in a repository copy: code edit (same version), data edit, tampered payload [2m(1)[22m
+     [33m[2m✓[22m[39m each forces a fresh execution; the version alone never keeps a stale result[33m 9361[2mms[22m[39m
+   [32m✓[39m preview HTTP routes [2m(1)[22m
+     [33m[2m✓[22m[39m capability, submit, poll, detail, events, prices, export, save, cancel and errors[33m 6844[2mms[22m[39m
+ [32m✓[39m tests/growth-parity.test.ts [2m([22m[2m30 tests[22m[2m)[22m[33m 118480[2mms[22m[39m
+   [32m✓[39m runner-level reproducibility of Growth 1.0.0 (real data) [2m(2)[22m
+     [33m[2m✓[22m[39m R-900001: the current runner reproduces the 1.0.0 artifacts captured before the change[33m 9613[2mms[22m[39m
+     [33m[2m✓[22m[39m R-900002: the current runner reproduces the 1.0.0 artifacts captured before the change[33m 3430[2mms[22m[39m
+   [32m✓[39m runner-level OFF/OFF parity with Growth 1.1.0 (real data) [2m(6)[22m
+     [33m[2m✓[22m[39m R-910001 as 1.1.0 (replay): identical to the 1.1.0 artifacts captured before the change[33m 7278[2mms[22m[39m
+     [33m[2m✓[22m[39m R-910001 as 1.2.0 with both gates OFF: identical to the 1.1.0 artifacts captured before the change[33m 6988[2mms[22m[39m
+     [33m[2m✓[22m[39m R-910002 as 1.1.0 (replay): identical to the 1.1.0 artifacts captured before the change[33m 2768[2mms[22m[39m
+     [33m[2m✓[22m[39m R-910002 as 1.2.0 with both gates OFF: identical to the 1.1.0 artifacts captured before the change[33m 2743[2mms[22m[39m
+     [33m[2m✓[22m[39m R-910003 as 1.1.0 (replay): identical to the 1.1.0 artifacts captured before the change[33m 3264[2mms[22m[39m
+     [33m[2m✓[22m[39m R-910003 as 1.2.0 with both gates OFF: identical to the 1.1.0 artifacts captured before the change[33m 3273[2mms[22m[39m
+   [32m✓[39m runner-level OFF parity with Growth 1.2.0 (real data) [2m(13)[22m
+     [33m[2m✓[22m[39m R-920001 as 1.2.0 (replay): identical to the 1.2.0 artifacts captured before the change[33m 2651[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920001 as 1.3.0 with the three OFF: identical to the 1.2.0 artifacts captured before the change[33m 2595[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920002 as 1.2.0 (replay): identical to the 1.2.0 artifacts captured before the change[33m 6262[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920002 as 1.3.0 with the three OFF: identical to the 1.2.0 artifacts captured before the change[33m 6192[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920003 as 1.2.0 (replay): identical to the 1.2.0 artifacts captured before the change[33m 3189[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920003 as 1.3.0 with the three OFF: identical to the 1.2.0 artifacts captured before the change[33m 3064[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920005 as 1.2.0 (replay): identical to the 1.2.0 artifacts captured before the change[33m 2628[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920005 as 1.3.0 with the three OFF: identical to the 1.2.0 artifacts captured before the change[33m 2586[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920007 as 1.2.0 (replay): identical to the 1.2.0 artifacts captured before the change[33m 2704[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920007 as 1.3.0 with the three OFF: identical to the 1.2.0 artifacts captured before the change[33m 2905[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920005 as 1.2.0 effective values only (R-920004): identical to the 1.2.0 artifacts captured before the change[33m 2573[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920007 as 1.2.0 effective values only (R-920006): identical to the 1.2.0 artifacts captured before the change[33m 2788[2mms[22m[39m
+     [33m[2m✓[22m[39m R-920007 as 1.3.0 effective values only: identical to the 1.2.0 artifacts captured before the change[33m 2664[2mms[22m[39m
+   [32m✓[39m runner-level OFF parity with Growth 1.3.0 (real data) [2m(8)[22m
+     [33m[2m✓[22m[39m R-930001 as 1.3.0 (replay): identical to the 1.3.0 artifacts captured before the change[33m 5912[2mms[22m[39m
+     [33m[2m✓[22m[39m R-930001 as 1.4.0 with the gate OFF: identical to the 1.3.0 artifacts captured before the change[33m 5885[2mms[22m[39m
+     [33m[2m✓[22m[39m R-930002 as 1.3.0 (replay): identical to the 1.3.0 artifacts captured before the change[33m 2477[2mms[22m[39m
+     [33m[2m✓[22m[39m R-930002 as 1.4.0 with the gate OFF: identical to the 1.3.0 artifacts captured before the change[33m 2427[2mms[22m[39m
+     [33m[2m✓[22m[39m R-930003 as 1.3.0 (replay): identical to the 1.3.0 artifacts captured before the change[33m 3126[2mms[22m[39m
+     [33m[2m✓[22m[39m R-930003 as 1.4.0 with the gate OFF: identical to the 1.3.0 artifacts captured before the change[33m 3146[2mms[22m[39m
+     [33m[2m✓[22m[39m R-930004 as 1.3.0 (replay): identical to the 1.3.0 artifacts captured before the change[33m 3079[2mms[22m[39m
+     [33m[2m✓[22m[39m R-930004 as 1.4.0 with the gate OFF: identical to the 1.3.0 artifacts captured before the change[33m 3066[2mms[22m[39m
+   [32m✓[39m shared-slot pool rerun = the importer on the same Study 8 output (real data) [2m(1)[22m
+     [33m[2m✓[22m[39m s8-vg-balanced to 2026-10-29: reconciled, the importer’s events exactly[33m 7196[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m34 passed[39m[22m[90m (34)[39m
+[2m      Tests [22m [1m[32m314 passed[39m[22m[90m (314)[39m
+[2m   Start at [22m 05:57:40
+[2m   Duration [22m 118.71s[2m (tests 98%, transform 1%)[22m
+
