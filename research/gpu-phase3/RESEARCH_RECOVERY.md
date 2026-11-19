@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T17:23Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T18:48Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — Stages 1–4 complete (Priority A done, B rejected, C deferred; 8 host workers, batch
   8,192; enforcement v2 with dry runs negative 45/45, tamper 14/14); final binary `research/gpu-phase3/build/gb3` sha256
   `06a4a04a83265616ab363632c02bf5d7737f34ec12156655cf95e135dde0dc23` (compat `30824182…2998`, reproducible, kernels =
@@ -20,9 +20,13 @@
   **Resume:** inspect the failure, fix (only tooling may change without a new build; any src/tools/config change must be
   committed), then relaunch with `START=<n>` (passed steps are not rerun; each step rewrites only its own outputs).
   **Never edit chains/final.sh or chains/parity.sh while they run.**
-- **Next:** after the chain: `chains/tests.sh` (npm test, Strategy Lab; GPU free), then `tools/gpu-phase3/accept.ts`,
-  commit, `tools/gpu-backend/verify-acceptance.sh --rebuild --device`, live official preflight; reports; merge (Stage 7);
-  bundle (Stage 8).
+- **Next:** after `gpup3-final` ends cleanly: `tools/gpu-phase3/launch.sh gpup3-post-final <abs log> --
+  /bin/bash research/gpu-phase3/chains/post-final.sh` (H7 suites; the protocol §2 CPU baseline of the A3 job, 12
+  workers, ≈ 98 min, alone on the machine; bench summary), then `tools/gpu-phase3/accept.ts`, commit the record,
+  `tools/gpu-backend/verify-acceptance.sh --rebuild --device`, reports, CLAUDE.md/roadmap, merge into `main`
+  (`chains/post-merge.sh` with RECORD_SHA), fast-forward `research/gpu-phase3` and `research/gpu-phase2` to `main`, push,
+  bundle (`tools/gpu-phase3/manifest.ts`, `tools/gpu-phase3/bundle.sh`).
+- **Parity campaign progress at 18:46Z:** 21 of 54 runs complete, 0 mismatches (`results/parity/final/*.json`).
 - **Never:** start/implement/run the risk-envelope pilot; change strategies, fitness, genome, budgets, seeds or
   selection; touch sealed studies' records; CPU fallback; a new 8 h/24 h endurance run (only one 30–60 min sustained run).
 
