@@ -1,0 +1,89 @@
+{
+ "kind": "gpu-phase3 post-merge verification of main",
+ "t": "2026-11-19T23:05:37Z",
+ "head": "30801fd409a8e2c6774a7fc895dcd6df3ca634af",
+ "branch": "main",
+ "treeEqualToAcceptedBranch": true,
+ "mergeGateTests": {
+  "pass": true,
+  "summary": [
+   "# Subtest: every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)",
+   "# Subtest: the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+   "# Subtest: host pipeline: the request bytes and every result equal the serial codec, in candidate order, for 1\u20134 workers",
+   "# Subtest: host pipeline: a corrupted response, a stale nonce, another device and a missing candidate are refused; nothing is returned",
+   "# Subtest: host pipeline: a worker that throws, exits or hangs fails closed; every later call is refused",
+   "# Subtest: host pipeline: an encoding error is the serial path's error; the worker door equals the main door",
+   "# Subtest: GpuPool on the host pipeline: callers that run while the pool starts, every worker count, the same records as the serial path",
+   "# Subtest: GpuPool on the host pipeline: a worker that fails mid-job fails every caller; nothing of that batch is released",
+   "# Subtest: protocol v2 layout: TypeScript offsets equal the C++ offsetof of gb.h",
+   "# Subtest: purpose: explicit, never defaulted; unknown refused",
+   "# Subtest: a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose",
+   "# Subtest: the legacy runner wrapper refuses before importing the runner",
+   "# Subtest: every npm script that can start a CPU research runner or optimizer goes through the purpose gate",
+   "# Subtest: the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate",
+   "# Subtest: entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged",
+   "# Subtest: acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed",
+   "# Subtest: preflight \u00a79: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin",
+   "# Subtest: the deferred pilot domain reaches only capabilities the evaluator implements",
+   "# Subtest: MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)",
+   "# tests 19",
+   "# suites 0",
+   "# pass 19",
+   "# fail 0",
+   "# cancelled 0",
+   "# skipped 0",
+   "# todo 0",
+   "# duration_ms 7741.947169"
+  ]
+ },
+ "verifyAcceptance": {
+  "pass": true,
+  "lines": [
+   "PASS record sha256 equals the out-of-band pin",
+   "PASS kind and schema 2",
+   "PASS status ACCEPTED",
+   "PASS cpu files (94) hash to their pins",
+   "PASS cpu group digest",
+   "PASS cuda files (7) hash to their pins",
+   "PASS cuda group digest",
+   "PASS host files (12) hash to their pins",
+   "PASS host group digest",
+   "PASS policy files (21) hash to their pins",
+   "PASS policy group digest",
+   "PASS evaluation digest recomputed from the pins",
+   "PASS evidence files (21) intact and passed",
+   "PASS source revision e33da74f41a8 is an ancestor of HEAD",
+   "PASS pinned files committed and unmodified",
+   "PASS pinned files unchanged since the source revision",
+   "PASS binary research/gpu-phase3/build/gb3 sha256",
+   "PASS reproducible rebuild from the pinned sources",
+   "PASS device GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+   "VERIFIED"
+  ]
+ },
+ "researchPreflightAll": {
+  "pass": true,
+  "studies": 20
+ },
+ "officialPreflight": {
+  "pass": true,
+  "lines": [
+   "ok   purpose: official-optimization",
+   "ok   acceptance: ACCEPTED (research/gpu-phase3, 2026-11-19T23:02:38.195Z)",
+   "ok   pins: 134 pinned files re-hashed independently",
+   "ok   source: HEAD 30801fd409a8, accepted revision e33da74f41a8",
+   "ok   binary: /home/chad/projects/margin-trading/research/gpu-phase3/build/gb3",
+   "ok   compat: server and working tree 30824182b111fa12",
+   "ok   device: GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 (= nvidia-smi)",
+   "ok   no-test-hooks: none enabled",
+   "ok   accepted-device: the accepted device",
+   "ok   capability: 35 reachable features, all implemented",
+   "ok   smoke: 1635.3944173366574/4842b073ba50f7fd = the CPU's expectation",
+   "ok   memory: free VRAM 32335659008 \u2265 planned batch 5530583040 + 1 GiB headroom",
+   "ok   host-path: 8 worker threads, door digest db55d40f102b6cd6",
+   "ok   parity: 18 of 18 precommitted parity subjects identical to the canonical CPU engine",
+   "GATE OPEN \u2014 attestation research/gpu-phase3/results/gpu-attestations/preflight-2026-11-19T23-05-37-523Z.json"
+  ]
+ },
+ "pass": true
+}
