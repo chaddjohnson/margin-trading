@@ -1,0 +1,63 @@
+{
+ "kind": "gpu-phase3 H7 npm test",
+ "t": "2026-11-19T21:16:48.908Z",
+ "command": "npm test (node --test --test-concurrency=4 src/**/*.test.ts)",
+ "totals": {
+  "tests": 1699,
+  "pass": 1688,
+  "fail": 7,
+  "cancelled": 0,
+  "skipped": 4
+ },
+ "baseline": {
+  "tests": 1690,
+  "pass": 1679,
+  "fail": 7,
+  "skipped": 4,
+  "source": "research/gpu-phase2/results/tests/npm-test.json (after Phase 2)"
+ },
+ "failures": [
+  {
+   "file": "src/intraday-study/tests/study.test.ts",
+   "test": "match the hashes recorded when the study started, except the recorded post-study changes",
+   "known": true
+  },
+  {
+   "file": "src/minute-optimizer/tests/goldenMaster.test.ts",
+   "test": "src/app/allIn.ts and src/app/allin-original.ts are byte-for-byte unchanged",
+   "known": true
+  },
+  {
+   "file": "src/study7-runners/tests/runners.test.ts",
+   "test": "parity with the sealed Study 7 final door, and determinism",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "the original is untouched",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "checked-in settings",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "brief settings",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "volatile synthetic walks with gaps exercise every exit path, restrictions and resets",
+   "known": true
+  }
+ ],
+ "unexpected": [],
+ "rootTsc": "src/gpu-backend/hostPipeline.ts(196,15): error TS2304: Cannot find name 'Transferable'.\nsrc/gpu-backend/tests/policy.test.ts(111,85): error TS2345: Argument of type '{ GPU_POLICY_PURPOSE?: undefined; } | { GPU_POLICY_PURPOSE: string; }' is not assignable to parameter of type 'Record<string, string>'.\n  Type '{ GPU_POLICY_PURPOSE?: undefined; }' is not assignable to type 'Record<string, string>'.\n    Property 'GPU_POLICY_PURPOSE' is incompatible with index signature.\n      Type 'undefined' is not assignable to type 'string'.\nexit=2\n",
+ "eslintGpu": [
+  "exit=0"
+ ],
+ "summary": "1699 tests, 1688 pass, 7 fail (7 known pre-existing, 0 unexpected), 4 skipped",
+ "pass": true
+}
