@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T03:06Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T05:00Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
@@ -37,8 +37,16 @@
 - **Step 5 negative-final PASSED (03:00:39Z):** 35/35 (`results/policy/negative-final.json`).
 - **Step 6 mini-opt g7f PASSED (03:05:25Z):** CPU = GPU and GPU = interrupted + resumed GPU (16 lanes, 30,749 archived,
   5,746 configs, 0 differences; `results/optimizer/compare-g7f-*.json`).
-- **Step 7 FINAL parity campaign** running since 03:05:25Z (sub-units `gpup2-par-<n>-<name>`, chain log
-  `results/logs/parity-final-chain.txt`, run logs `results/logs/parity-final/`, records `results/parity/final/`). Branch pushed (backup) at
+- **Step 7 FINAL parity campaign PASSED (03:05–04:56Z):** 54 runs, 144,795 candidates, 0 mismatches, 141,600 random
+  genomes, 64,063 envelopes, 121 determinism runs 0; SUMMARY all checks true (`results/parity/final/SUMMARY.json`,
+  sha256 fe847858f4255949…).
+- **Step 8 stress RUNNING** since 04:55:53Z (unit `gpup2-stress`, 24.05 h → ends ≈ 2026-11-20T04:59Z; log
+  `results/logs/stress.txt`; records `results/stress/{summary.json,rounds.jsonl,telemetry.jsonl,ledger/}`). Do not
+  start any other GPU job while it runs (one GPU job at a time).
+- **Strategy Lab regression** (CPU only) running in unit `gpup2-strategy-lab` (`chains/strategy-lab-regression.sh`;
+  outputs `results/tests/strategy-lab-*.txt`; UI built to the scratchpad, live dist untouched).
+- **After the stress:** `npm test` (contains Phase 1's GPU test → after the stress), finalists parity
+  (`parity-finalists.ts`), copy run logs, `accept.ts`, MANIFEST, bundle, commit/push, main docs integration. Branch pushed (backup) at
   `a9ae79ec` (ls-remote verified).
 - **Replay run 1** (01:43–02:03Z): 5.21× (1,132.5 s vs 5,900.8 s), counts identical, but its record wrote ±Inf/NaN as
   null (91 fields, all encoding-only) → kept as a timing sample (`results/optimizer/a3-C19-broad1-run1/NOTE.md`); fixed
