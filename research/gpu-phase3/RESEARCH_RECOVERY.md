@@ -136,3 +136,7 @@
 
 - Pushes run unsandboxed (the sandbox has no DNS for github.com). Verified with `git ls-remote origin` equal to the
   local refs:
+  - 2026-11-19T23:08:54Z: `git push origin main research/gpu-phase3 research/gpu-phase2` (fast-forwards: main `10ca3422..ac8a4f4c`,
+    research/gpu-phase2 `a1836407..ac8a4f4c`, research/gpu-phase3 `fc8923b0..ac8a4f4c`); `git ls-remote origin`: all three
+    = `ac8a4f4c3600ffb874d9d7f37ebae1e794cb21c0` = local. This record itself is the next commit, pushed the same way to all
+    three branches (its SHA is in the final answer, verified by `git ls-remote`).
