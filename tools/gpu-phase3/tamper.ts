@@ -21,6 +21,8 @@ fs.rmSync(box, { recursive: true, force: true });
 if (git('clone', '--quiet', '--shared', '--no-checkout', repoRoot, box).status !== 0) throw new Error('clone failed');
 spawnSync('git', ['checkout', '--quiet', '--detach', head], { cwd: box });
 fs.symlinkSync(path.join(repoRoot, 'node_modules'), path.join(box, 'node_modules'));
+// the checkout's local excludes (.git/info/exclude: they hide the generated sources below; a clone does not copy them)
+fs.copyFileSync(path.join(repoRoot, '.git', 'info', 'exclude'), path.join(box, '.git', 'info', 'exclude'));
 // git-ignored generated sources a full checkout has (src/four-family/generated/*.ts: the entrypoint audit's digest of
 // a registered legacy runner covers them), copied so that the clone is the same source tree
 for (const f of git('ls-files', '--others', '--ignored', '--exclude-standard', 'src')
