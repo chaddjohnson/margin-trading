@@ -1,0 +1,200 @@
+
+> test
+> node --experimental-transform-types --disable-warning=ExperimentalWarning --test --test-concurrency=4 'src/**/*.test.ts'
+
+▶ the audit runner on a synthetic stop exit
+  ✔ one lot, filled at 90, exited at the 98.8 stop (0.367823ms)
+  ✔ per-side friction lowers the net by the friction dollars on the same trade (0.449964ms)
+  ✔ interest scales linearly with the rate (0.324022ms)
+  ✔ stop overshoot lowers a stop exit by exactly the overshoot (0.266542ms)
+  ✔ stop overshoot does not touch a non-stop exit (0.574414ms)
+  ✔ a book that never arms changes nothing (leave-one-book-out identity) (1.564762ms)
+  ✔ ledger identities and the yearly attribution (0.607155ms)
+  ✔ MAE/MFE use the bars from the fill to the bar before the exit, then the exit price (0.147781ms)
+✔ the audit runner on a synthetic stop exit (4.974548ms)
+﹣ frozen baselines through the audit runner (0.256812ms) # the pinned canonical data are absent or changed
+▶ distance rules (PROTOCOL.md §3)
+  ✔ percentages ≥ 2.0% use ±0.5/±1.0 pp (0.861587ms)
+  ✔ percentages < 2.0% use the relative rule, half-up to the 0.1-pp grid (0.113611ms)
+  ✔ integers use ±max(1, 10%) and ±max(s + 1, 20%) (0.085771ms)
+  ✔ the legal grid is the engine grid (0.108711ms)
+✔ distance rules (PROTOCOL.md §3) (1.753543ms)
+▶ OAT points and neighbourhoods on the frozen pools
+  ✔ infeasible points are recorded, not replaced; XBI/KRE X upward points are boundary probes (0.333162ms)
+  ✔ the Latin hypercube is deterministic, inside each legal range and spread over it (2.854922ms)
+  ✔ variants never change the frozen pools or their files (7.340915ms)
+  ✔ the run list: unique keys and the protocol counts (4.809296ms)
+✔ OAT points and neighbourhoods on the frozen pools (15.553906ms)
+▶ cost layers (PROTOCOL.md §6)
+  ✔ costBps = fee + slippage, never double-counted; combined scenarios as declared (0.173311ms)
+  ✔ re-costing the same trade at the base reproduces its net; costs and rates scale with the right sign (0.159842ms)
+✔ cost layers (PROTOCOL.md §6) (0.421813ms)
+▶ result tables
+  ✔ CSV round trip keeps fields with commas, quotes and newlines intact (0.403543ms)
+✔ result tables (0.448723ms)
+▶ statistics helpers
+  ✔ running-peak percentage and dollar drawdowns (0.139081ms)
+  ✔ drawdown episodes: peak, trough, recovery and an unrecovered tail (0.105561ms)
+  ✔ break-even interpolates a sign change between tested points and never extrapolates (0.07816ms)
+  ✔ quantiles and percentile ranks (0.061541ms)
+  ✔ the stationary bootstrap is deterministic, paired, and preserves a constant series (2.256517ms)
+✔ statistics helpers (2.74236ms)
+✔ the anchors and controls hash to their published identities (56.757156ms)
+✔ a partner carries its arm anchors exactly; inactive GDX genes never change the identity (3.120584ms)
+✔ seeds are on the fine grid; earlier cutoffs never see Appendix A or C24 sources (170.004937ms)
+✔ the budgets are exact at base and cap for any number of seeded designs (0.377653ms)
+✔ the screen strata cover every gate × trend × eligibility × hold combination round-robin (6.097986ms)
+✔ the GDX genome round-trips on the fine grid; moves and toggles change Growth·GDX only (14.147926ms)
+✔ paired draws: identical anchor moves; the GDX-only scope keeps the anchors; a baseline has no GDX-only draws (86.471979ms)
+✔ removing Growth·GDX is one of the causal reruns of a partner (0.250472ms)
+✔ paired increments and the baseline labels (0.559005ms)
+▶ the training view
+  ✔ XOP: the training partition only, the reverse split adjusted once, eligibility at session 365 (8549.712691ms)
+  ✔ every other partition is refused before reading (0.975598ms)
+✔ the training view (8551.344443ms)
+▶ the data gate
+  ✔ passes a verified file whose splits leave a small adjusted move at the registry factor (0.134951ms)
+  ✔ fails a missing file, an integrity fault, or a split left unadjusted (0.07993ms)
+✔ the data gate (0.386333ms)
+▶ the reference high
+  ✔ is the highest high of the previous sessions only (0.611565ms)
+✔ the reference high (1.223369ms)
+▶ episodes
+  ✔ open at a 10% low, freeze the reference, close within 5% of it (0.319762ms)
+✔ episodes (0.417993ms)
+▶ the proxy trade
+  ✔ arms at 15%, buys a 2% rebound from the lowest close, sells on the hold or the stop, re-arms after (0.388573ms)
+  ✔ a proxy open at the window end is marked at the last close (0.1096ms)
+✔ the proxy trade (0.619175ms)
+▶ timing against the baseline pool
+  ✔ idle at entry, blocking a later decision, and clean (0.709026ms)
+✔ timing against the baseline pool (0.807046ms)
+▶ rank scores
+  ✔ best 1, worst 0, linear, ties averaged (0.169531ms)
+✔ rank scores (0.291153ms)
+[diverse-d1] fold-a J-u: stage A 1865 configurations
+[diverse-d1] fold-a J-u: stage B done, 2745 in archive
+[diverse-d1] fold-a J-u: stage C done, 3705 in archive
+[diverse-d1] fold-a J-u: stage A 6632 configurations
+[diverse-d1] fold-a J-u: stage B done, 9987 in archive
+[diverse-d1] fold-a J-u: stage C done, 10947 in archive
+[diverse-d1] fold-a J-u: stage A 8126 configurations
+[diverse-d1] fold-a J-u: stage B done, 12251 in archive
+[diverse-d1] fold-a J-u: stage C done, 13211 in archive
+[diverse-d1] fold-a J-u: stage A 6632 configurations
+[diverse-d1] fold-a J-u: stage B done, 19442 in archive
+[diverse-d1] fold-a J-u: stage C done, 19442 in archive
+[diverse-d1] final J-s: stage A 6632 configurations
+[diverse-d1] final J-s: stage B done, 19442 in archive
+[diverse-d1] final J-s: stage C done, 19762 in archive
+▶ (1) coverage contracts hold by construction
+  ✔ 16 symbols, skewed profitability, forced convergence on GDX, fold budgets (700.340079ms)
+  ✔ 61 symbols, skewed profitability, forced convergence on GDX, fold budgets (2052.257801ms)
+  ✔ 75 symbols, skewed profitability, forced convergence on GDX, fold budgets (2403.68382ms)
+  ✔ 61 symbols, an exhausted stage-C budget, final-arm contract (3758.768415ms)
+  ✔ a failed contract blocks nominations (0.467703ms)
+✔ (1) coverage contracts hold by construction (8916.262233ms)
+▶ the stage-A schedule
+  ✔ is deterministic, unique and balanced (72.534125ms)
+✔ the stage-A schedule (72.640796ms)
+▶ (3) families cannot chain
+  ✔ A~B, B~C, A≁C never share a family, in any ranking order (0.636375ms)
+  ✔ a long chain splits into many families, and every family is pairwise close (0.241152ms)
+  ✔ a converged archive of near-duplicates plus distinct configurations yields several families (6.766351ms)
+  ✔ the cached closeness equals the reference definitions (6.177876ms)
+✔ (3) families cannot chain (14.058695ms)
+▶ (2) an arm cannot be suppressed by another arm
+  ✔ the seeded arm owns the global top 300, yet every distinct unseeded family is promoted from its own archive (1.28088ms)
+✔ (2) an arm cannot be suppressed by another arm (1.34263ms)
+▶ (4) the pruning pass removes what G3 would reject, before assessment
+  ✔ a member with a small negative marginal (below δ = $5,000) is pruned (0.301813ms)
+  ✔ an uncertain small positive contribution (lower bound ≤ 0) is pruned; a clearly positive one is kept (0.130231ms)
+  ✔ cascading removals, and a one-book pool pruned to empty (0.172851ms)
+  ✔ a removal that would breach F1 is not made (0.063441ms)
+✔ (4) the pruning pass removes what G3 would reject, before assessment (0.758186ms)
+▶ (5) the score decides; ties are exact
+  ✔ a $6,493 score gap is not overridden by the key (0.138601ms)
+  ✔ equal to the cent: Q25, then fewer books, then the key (0.068261ms)
+✔ (5) the score decides; ties are exact (0.249532ms)
+▶ the temporal score
+  ✔ block boundaries: K = max(3, floor(sessions ÷ 252)) (0.06627ms)
+  ✔ net_T replaces the best block by the median block (0.07704ms)
+  ✔ the paired difference of identical draws is exactly zero (0.838606ms)
+✔ the temporal score (1.061828ms)
+▶ (6) a near-copy of R1, R4 or the October 25 finalist is barred from nomination
+  ✔ exact and near copies are detected; a distant pool is not (0.271992ms)
+  ✔ the final nominations skip a labelled finalist; a fold pick does not (0.180492ms)
+✔ (6) a near-copy of R1, R4 or the October 25 finalist is barred from nomination (0.521064ms)
+▶ seeded arms
+  ✔ benchmarks seed stage B and island 8, coverage still holds, and only seeded libraries hold control vectors (3769.780998ms)
+✔ seeded arms (3769.957189ms)
+▶ leakage barriers
+  ✔ the fold door loads nothing after the search end (233.333283ms)
+  ✔ the validation door refuses before the picks exist; the evaluation door refuses without a nominee (0.504224ms)
+[diverse-d1] fold-a J-u: stage A 40/40 (rss 0.3 GB)
+[diverse-d1] fold-a J-u: stage A 40 configurations
+[diverse-d1] fold-a J-u: stage B done, 64 in archive
+[diverse-d1] fold-a J-u: stage C done, 128 in archive
+[diverse-d1] fold-a J-u: 128 configurations, coverage FAILED (34), 61 credible
+[diverse-d1] fold-a T-u: stage A 40/40 (rss 0.3 GB)
+[diverse-d1] fold-a T-u: stage A 40 configurations
+[diverse-d1] fold-a T-u: stage B done, 64 in archive
+[diverse-d1] fold-a T-u: stage C done, 128 in archive
+[diverse-d1] fold-a T-u: 128 configurations, coverage FAILED (34), 58 credible
+[diverse-d1] fold-a Q-u: stage A 40/40 (rss 0.3 GB)
+[diverse-d1] fold-a Q-u: stage A 40 configurations
+[diverse-d1] fold-a Q-u: stage B done, 58 in archive
+[diverse-d1] fold-a Q-u: stage C done, 106 in archive
+[diverse-d1] fold-a Q-u: 106 configurations, coverage FAILED (41), 49 credible
+[diverse-d1] fold-a J-u: 61 credible, 54 families, 6 promoted
+[diverse-d1] fold-a J-u refine J-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f3 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a T-u: 58 credible, 52 families, 6 promoted
+[diverse-d1] fold-a T-u refine T-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f3 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a Q-u: 49 credible, 42 families, 4 promoted
+[diverse-d1] fold-a Q-u refine Q-u-f1 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f2 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f3 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f4 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a J-u: stage A 40/40 (rss 0.6 GB)
+[diverse-d1] fold-a J-u: stage A 40 configurations
+[diverse-d1] fold-a J-u: stage B done, 64 in archive
+[diverse-d1] fold-a J-u: stage C done, 128 in archive
+[diverse-d1] fold-a J-u: 128 configurations, coverage FAILED (34), 61 credible
+[diverse-d1] fold-a T-u: stage A 40/40 (rss 0.6 GB)
+[diverse-d1] fold-a T-u: stage A 40 configurations
+[diverse-d1] fold-a T-u: stage B done, 64 in archive
+[diverse-d1] fold-a T-u: stage C done, 128 in archive
+[diverse-d1] fold-a T-u: 128 configurations, coverage FAILED (34), 58 credible
+[diverse-d1] fold-a Q-u: stage A 40/40 (rss 0.6 GB)
+[diverse-d1] fold-a Q-u: stage A 40 configurations
+[diverse-d1] fold-a Q-u: stage B done, 58 in archive
+[diverse-d1] fold-a Q-u: stage C done, 106 in archive
+[diverse-d1] fold-a Q-u: 106 configurations, coverage FAILED (41), 49 credible
+[diverse-d1] fold-a J-u: 61 credible, 54 families, 6 promoted
+[diverse-d1] fold-a J-u refine J-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f3 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a T-u: 58 credible, 52 families, 6 promoted
+[diverse-d1] fold-a T-u refine T-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f3 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a Q-u: 49 credible, 42 families, 4 promoted
+[diverse-d1] fold-a Q-u refine Q-u-f1 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f2 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f3 cycle 1: 0 accepted, 6 evaluated

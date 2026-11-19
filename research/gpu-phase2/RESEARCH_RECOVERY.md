@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T09:30Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T12:58Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
@@ -47,7 +47,9 @@
   `results/stress/stop.json` and `closure.json` (`tools/gpu-phase2/stress-close.ts`), then runs npm test, the
   finalists parity, run-log copies and `accept.ts --dry-run`. The old `gpup2-post-stress` chain was stopped (it only
   polled). `accept.ts` G8 now reads `closure.json` (≥ 8 h). DO NOT start another GPU job before the stress has exited.
-- **Step 8 stress RUNNING** since 04:55:53Z (unit `gpup2-stress`, originally 24.05 h; ends at ≈ 12:56Z per A1; log
+- **Step 8 stress COMPLETE (A1, 8 h):** stopped by SIGTERM 12:56:27.908Z right after round 730 was saved; 8.009 h, 731
+  rounds, 23,953,408 evaluations, 0 failures/restarts, parity 35,040/0, repeat 117 checks/0, VRAM peak 7,454 MiB,
+  host RSS slope +1.9 MiB/h; closure.json pass true (sha256 73d9ad47408ffb97…); gb2 exited, GPU back to 774 MiB. Original log
   `results/logs/stress.txt`; records `results/stress/{summary.json,rounds.jsonl,telemetry.jsonl,ledger/}`). Do not
   start any other GPU job while it runs (one GPU job at a time).
 - **Strategy Lab regression PASSED (05:04Z):** typecheck, lint, vitest 34 files / 314 tests, e2e 81/81; live dist and
