@@ -25,6 +25,10 @@ import {
 } from './batch.ts';
 import { doorDigest, workerDoorOf } from './hostDoor.ts';
 
+// the host-path worker threads of an official session's pool unless the run declares otherwise (measured in
+// research/gpu-phase3: GPU_PERFORMANCE_BEFORE_AFTER.md)
+export const DEFAULT_HOST_WORKERS = 8;
+
 export interface HostPipelineOptions {
   door: Door;
   workers: number; // ≥ 1
@@ -69,6 +73,7 @@ export class HostPipeline {
   private failure: Error | null = null;
   private closing = false;
   private seq = 0;
+  private nextFault: { shard: number; kind: 'throw' | 'exit' | 'hang' } | null = null;
   readonly digest: string;
   readonly stats = { batches: 0, encodeShards: 0, decodeShards: 0, workerFailures: 0 };
 
@@ -233,6 +238,12 @@ export class HostPipeline {
     return { seq, door, tasks, o, enc, encodeMs: performance.now() - t0, shardWorker };
   }
 
+  // TESTS ONLY (allowFaultInjection): the next decoded batch fails in one worker (negative tests of the pool)
+  injectNextDecodeFault(kind: 'throw' | 'exit' | 'hang', shard = 0) {
+    if (!this.o.allowFaultInjection) throw new Error('host pipeline: fault injection is not enabled');
+    this.nextFault = { shard, kind };
+  }
+
   // forget a batch's encoded shards (a batch that will never be decoded)
   drop(seq: number) {
     if (this.failure) return;
@@ -244,10 +255,14 @@ export class HostPipeline {
     raw: { payload: Buffer; roundTripMs: number },
     expectUuid: string | undefined,
     mode: 'lean' | 'full' = 'lean',
-    testCrash?: { shard: number; kind: 'throw' | 'exit' }
+    testCrash?: { shard: number; kind: 'throw' | 'exit' | 'hang' }
   ): Promise<{ results: TaskResult[]; receipt: BatchReceipt; timing: { encodeMs: number; roundTripMs: number; decodeMs: number; requestBytes: number; responseBytes: number } }> {
     if (this.failure) throw this.failure;
     if (testCrash && !this.o.allowFaultInjection) throw new Error('host pipeline: fault injection is not enabled');
+    if (!testCrash && this.nextFault) {
+      testCrash = this.nextFault;
+      this.nextFault = null;
+    }
 
     const t0 = performance.now();
     const sab = new SharedArrayBuffer(raw.payload.length);

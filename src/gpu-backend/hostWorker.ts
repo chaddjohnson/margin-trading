@@ -55,6 +55,7 @@ port.on('message', (m: { t: string; seq: number; shard: number; c0: number; task
 
       if (m.crash === 'throw') throw new Error('host worker: injected decode failure (test)');
       if (m.crash === 'exit') process.exit(7);
+      if (m.crash === 'hang') for (;;); // never answers (test): the pipeline's operation timeout fails it
       port.postMessage({ t: 'decoded', seq: m.seq, shard: m.shard, hashes, results: m.mode === 'lean' ? results.map(leanResult) : results }, [hashes.buffer as ArrayBuffer]);
     } catch (error) {
       port.postMessage({ t: 'decoded', seq: m.seq, shard: m.shard, hashes, error: errorOf(error) });

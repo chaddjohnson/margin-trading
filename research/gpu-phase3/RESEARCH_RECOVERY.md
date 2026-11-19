@@ -2,10 +2,14 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T14:10Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — Stage 1 (profiling of the accepted Phase 2 path) running.
+- **Updated:** 2026-11-19T14:42Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — Stage 1 (profiling of the accepted Phase 2 path) running; Stage 2/4 code written and
+  staged (new files committed in `b4424384`; edits of existing backend files staged in the scratchpad, applied after the
+  chain — see "On disk versus in memory").
 - **Authority:** `brief/BRIEF.md` sha256 `925e97e80dd8bca0bbc470fe07ef31388efcbae8ca26f9153efb10d02933f6be` (the user's
-  handoff, read in full, 267 lines, final section "Final success criterion" present). PROTOCOL.md: not yet frozen.
+  handoff, read in full, 267 lines, final section "Final success criterion" present). `PROTOCOL.md` FROZEN
+  2026-11-19T14:21:42Z (`results/protocol-freeze.json` sha256 `42d41b249a83aa3e1cc9794afe94ca401e519880bc7e830d5c1956a94f944475`,
+  protocol `952da32c…1a1b`); no amendments. Standard 3.0.0 adopted (scope diagnostic); preflight PASS.
 - **Running:** systemd unit `gpup3-baseline` (slice `gpup3.slice`), chain `research/gpu-phase3/chains/baseline.sh`,
   log `research/gpu-phase3/results/logs/baseline-chain.txt`, started 2026-11-19T14:09:07Z. Steps: p2-a3-r1, p2-a3-r2
   (A3 C19 broad1), p2-a2-r1 (A2 C19 base), p2-mini-r1..3, comparisons. Finished cleanly iff the log ends with
@@ -58,8 +62,8 @@
 | Stage | Status | Command / output | Result |
 |---|---|---|---|
 | S0 state, inventory | complete | this file | see Stage 0 |
-| S1 profile Phase 2 path | running | `chains/baseline.sh` (unit gpup3-baseline) → `results/optimizer/p2-*` | — |
-| S1 plan + benchmark protocol | not started | `PROTOCOL.md` | — |
+| S1 profile Phase 2 path | running | `chains/baseline.sh` (unit gpup3-baseline) → `results/optimizer/p2-*` | p2-a3-r1: 1,131.1 s, identical to sealed (5.22×), main-thread ELU 0.70 (active 791 s: encode 161, decode 292, archive 70, rest ≈ 268), GPU server 347 s |
+| S1 plan + benchmark protocol | complete | `PROTOCOL.md` frozen 14:21:42Z | — |
 | S2 Priority A host workers | not started | — | — |
 | S3 optional orchestration | not started | — | — |
 | S4 enforcement hardening | not started | — | — |
@@ -67,6 +71,21 @@
 | S6 verdict | not started | — | — |
 | S7 merge into main, branch restoration | not started | — | — |
 | S8 bundle | not started | — | — |
+
+## On disk versus in memory
+
+- Staged edits (copies in `research/gpu-phase3/cache/staged/`, git-ignored, and the session scratchpad):
+  `client.ts.new` (delegates to batch.ts), `pool.ts.new` (host pipeline, in-order release), `official.ts.new` (host-path
+  step, parity mini-set through the pipeline, independent pin re-hash, source check), `compat.ts.new` (manifest v2: host
+  group + policy group), `acceptance.ts.new` (schema 2), `policy.test.ts.new`. They are applied only after the baseline
+  chain ends (the chain imports those files). If the scratchpad is lost, they must be rewritten from this description.
+- New files (committed or written in place, not imported by the chain): `src/gpu-backend/{batch,hostDoor,hostWorker,
+  hostPipeline,doors,officialRunner}.ts`, `src/gpu-backend/tests/{hostPipeline,enforcement}.test.ts`,
+  `tools/gpu-backend/verify-acceptance.sh`, `tools/gpu-phase3/*` (replay, compare, capture, offline-check, parity,
+  parity-summary, parity-finalists, a3-qualify-replay, sanitize, negative, tamper*, sustained, accept),
+  `chains/{baseline,devcheck,parity}.sh`.
+- Plan at the swap: move `config/gpu-backend/acceptance.json` (Phase 2, schema 1, sha256 b7df366a…) to
+  `results/superseded/acceptance-gpu-phase2.json` (official runs blocked during development, as they must be).
 
 ## Disclosures
 
