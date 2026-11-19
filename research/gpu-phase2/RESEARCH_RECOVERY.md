@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T05:08Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T09:30Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
@@ -40,14 +40,21 @@
 - **Step 7 FINAL parity campaign PASSED (03:05–04:56Z):** 54 runs, 144,795 candidates, 0 mismatches, 141,600 random
   genomes, 64,063 envelopes, 121 determinism runs 0; SUMMARY all checks true (`results/parity/final/SUMMARY.json`,
   sha256 fe847858f4255949…).
-- **Step 8 stress RUNNING** since 04:55:53Z (unit `gpup2-stress`, 24.05 h → ends ≈ 2026-11-20T04:59Z; log
+- **AMENDMENTS A1 (09:2xZ, user directive):** G8 shortened to **8 h total from the original start** → deadline
+  2026-11-19T12:55:53.744Z. The running tool cannot change its deadline (a `const` from `--hours 24.05`, no runtime
+  control), so unit **`gpup2-stress-stop`** (`chains/stress-stop.sh`, log `results/logs/stress-stop.txt`; tested on a
+  stand-in unit) sends SIGTERM to the stress main process right after the first round saved after the deadline, writes
+  `results/stress/stop.json` and `closure.json` (`tools/gpu-phase2/stress-close.ts`), then runs npm test, the
+  finalists parity, run-log copies and `accept.ts --dry-run`. The old `gpup2-post-stress` chain was stopped (it only
+  polled). `accept.ts` G8 now reads `closure.json` (≥ 8 h). DO NOT start another GPU job before the stress has exited.
+- **Step 8 stress RUNNING** since 04:55:53Z (unit `gpup2-stress`, originally 24.05 h; ends at ≈ 12:56Z per A1; log
   `results/logs/stress.txt`; records `results/stress/{summary.json,rounds.jsonl,telemetry.jsonl,ledger/}`). Do not
   start any other GPU job while it runs (one GPU job at a time).
 - **Strategy Lab regression PASSED (05:04Z):** typecheck, lint, vitest 34 files / 314 tests, e2e 81/81; live dist and
   state/strategy-lab unchanged (`results/tests/strategy-lab.json`). Root `tsc --noEmit` 0 errors. ESLint on new code:
   1 style error (`client.ts:443`, a ternary as a statement — in the compat manifest, left unchanged) + 130 prettier
   warnings, all in manifest files (non-manifest files formatted; digest unchanged).
-- **Armed:** unit `gpup2-post-stress` (`chains/post-stress.sh`, log `results/logs/post-stress.txt`): waits for
+- **Superseded (stopped 09:2xZ):** unit `gpup2-post-stress` (`chains/post-stress.sh`, log `results/logs/post-stress.txt`): waits for
   `gpup2-stress`, checks its summary, then `npm test` (unit `gpup2-npm-test` → `results/tests/npm-test.txt`), the
   finalists parity (unit `gpup2-finalists` → `results/parity/final-finalists.json`), copies run logs to
   `results/runlogs/final/`, and runs `accept.ts --dry-run`.

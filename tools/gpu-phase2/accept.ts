@@ -98,13 +98,14 @@ gate('final binary', R('final-binary.json'), !!finalRec && finalRec.binary.sha25
   gate('G7 mini-optimization CPU = GPU (final binary)', a, !!A && A.identical && A.b.backend.includes(final16), A ? `identical ${A.identical} backend ${A.b.backend}` : 'missing');
   gate('G7 mini-optimization GPU = interrupted + resumed GPU (final binary)', b, !!B && B.identical && B.b.backend.includes(final16), B ? `identical ${B.identical} backend ${B.b.backend}` : 'missing');
 }
-// G8 24 h stress
+// G8 stress — 8 h from the original start (AMENDMENTS.md A1, the user's directive; the protocol said ≥ 24 h), judged
+// from the closure record derived from the run's own files
 {
-  const f = R('stress/summary.json');
-  const s = read<{ pass: boolean; finished: string | null; started: string; elapsedHours: number; binary: { sha256: string }; failures: unknown[]; parity: { samples: number; mismatches: number }; repeat: { mismatches: number; checks: number }; cpuScored: number }>(f);
-  const ok = !!s && s.pass && !!s.finished && s.elapsedHours >= 24 && s.binary.sha256 === binarySha && s.failures.length === 0 && s.parity.samples > 0 && s.parity.mismatches === 0 && s.repeat.checks > 0 && s.cpuScored === 0;
+  const f = R('stress/closure.json');
+  const s = read<{ pass: boolean; elapsedHoursToLastSavedRound: number; binary: { sha256: string }; gpuErrors: { failures: number; restarts: number }; counts: { parity: { samples: number; mismatches: number }; repeat: { checks: number; mismatches: number }; cpuScored: number; consistent: boolean } }>(f);
+  const ok = !!s && s.pass && s.elapsedHoursToLastSavedRound >= 8 && s.binary.sha256 === binarySha && s.gpuErrors.failures === 0 && s.gpuErrors.restarts === 0 && s.counts.parity.samples > 0 && s.counts.parity.mismatches === 0 && s.counts.repeat.checks > 0 && s.counts.repeat.mismatches === 0 && s.counts.cpuScored === 0 && s.counts.consistent;
 
-  gate('G8 ≥ 24 h stress (parity samples, repeatability, no error)', f, ok, s ? `hours ${s.elapsedHours} finished ${s.finished} failures ${s.failures.length} parity ${s.parity.samples}/${s.parity.mismatches} repeat ${s.repeat.checks}/${s.repeat.mismatches}` : 'missing');
+  gate('G8 stress, 8 h from the original start (A1; parity samples, repeatability, no error)', f, ok, s ? `hours ${s.elapsedHoursToLastSavedRound} failures ${s.gpuErrors.failures} parity ${s.counts.parity.samples}/${s.counts.parity.mismatches} repeat ${s.counts.repeat.checks}/${s.counts.repeat.mismatches}` : 'missing');
 }
 // G9 repository suite and Strategy Lab
 {
