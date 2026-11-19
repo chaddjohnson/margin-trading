@@ -48,6 +48,12 @@
 - **The "hang" (resolved, no defect):** batch-size-1 determinism = 256 single-candidate kernels of 3–5 s each; the
   earlier units were stopped before that ~13-minute stage finished. Kept as defence: kernel watchdog, loop guards,
   pool batch timeout.
+- **Gap found and planned (03:10Z):** the campaign's `--refs` = New L0, N/original, IJ1, C4, C4-refined; PROTOCOL §5
+  set R also names Assignment 3's sealed finalists (48 in FROZEN_SELECTION.json). Tool `tools/gpu-phase2/parity-finalists.ts`
+  (CPU reference vs GPU on D24 + FULL, compact + detailed + risk; D24 compact vs the sealed centre figures; CPU dry run
+  reproduced 3 sealed figures to the cent). Run it AFTER the stress (the running chain is never edited):
+  `node --expose-gc --max-old-space-size=14000 --experimental-transform-types tools/gpu-phase2/parity-finalists.ts --out research/gpu-phase2/results/parity/final-finalists.json`
+  in a contained unit.
 - **Next (while the chain runs):** reports and docs; during the stress (step 7): `npm test` in a capped unit with PATH,
   Strategy Lab regression; after the chain: `tools/gpu-phase2/accept.ts`, final reports, MANIFEST, bundle ZIP,
   commit/push, docs-only main integration.
