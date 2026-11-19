@@ -24,3 +24,14 @@ why, which results existed, effect.
   of the final round, still running when the process stopped.
 - **Effect:** G8 is judged against 8 h (`tools/gpu-phase2/accept.ts`); the reports state the shorter duration and its
   limitations. No result, threshold or code path of any other gate changes.
+
+### A1 — clarification (2026-11-19T09:40:36Z, user)
+
+- The user confirmed: continue the original run to the first safe round boundary at or after ≈ 12:55 UTC, stop it
+  gracefully preserving all telemetry, results and logs from its original start, compute the endurance statistics over
+  the entire continuous run (04:55:53.744Z → termination), and **do not start, restart or schedule another
+  endurance/stress test: this run is the completed endurance test (G8)**. The remaining Phase 2 work (functional parity,
+  integration and acceptance checks) continues with these results; no other prolonged run is started.
+- Consequence for the chains: the final-gates chain (unit `gpup2-final-gates-4`) waits on the stress unit with
+  `--wait` and will log its stress step as "FAILED [stress]" when the directed SIGTERM ends the run; that line marks
+  the A1 stop, not a test failure (the verdict is `results/stress/closure.json`). Nothing in any chain restarts it.
