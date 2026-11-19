@@ -52,7 +52,12 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
   `tools/gpu-phase2/launch.sh <unit> <absolute log> [--wait] -- <command…>`. The GPU server is a child of the job and
   lives in the same unit.
 
-## 4. Sizing and performance (measured in research/gpu-phase2/GPU_PHASE2_BENCHMARKS.md)
+## 4. Sizing and performance (measured: research/gpu-phase3/GPU_PERFORMANCE_BEFORE_AFTER.md; Phase 2's figures in research/gpu-phase2/GPU_PHASE2_BENCHMARKS.md)
+
+- Host path: 8 worker threads (`DEFAULT_HOST_WORKERS`) encode and decode the batches; the main thread keeps the lanes,
+  the archive and the request assembly. On Assignment 3's C19 broad1 job: 583.9 s with 8 workers vs 1,128.9 s on the
+  serial (Phase 2) path vs 5,900.8 s on 12 CPU workers; 12 workers gain nothing more; batch 16,384 is slower in the wall
+  (fewer but longer optimizer rounds). Peak RSS ≈ 4.8 GiB (each worker has its own heap; the door's arrays are shared).
 
 - One GPU thread evaluates one (candidate, book) sequentially over the whole door: a batch costs about as long as its
   slowest candidate (≈ 3–5 s on D24 even for ONE candidate). Throughput therefore comes only from large batches; the
