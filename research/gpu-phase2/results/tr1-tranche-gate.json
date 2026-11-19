@@ -1,0 +1,48 @@
+{
+ "kind": "gpu-phase2 TR1 tranche gate (PROTOCOL.md \u00a79)",
+ "t": "2026-11-19T03:05Z",
+ "decision": "CONTINUE (taken during development after tranche 1 on the development throughput probe: \u2248 1,092 ev/s at batch 16,384 on D24 vs the 12-worker CPU \u2248 85\u2013107 ev/s on D24 in Assignment 3; recorded here with the final binary's measurements)",
+ "growthKernelCost": {
+  "D19": {
+   "batch8192GrowthMs": 1298,
+   "perCandidateAmortizedMs": 0.158,
+   "singleCandidateGrowthMs": 233,
+   "growthShareOfServerTime": 0.64
+  },
+  "D24": {
+   "batch8192GrowthMs": 2973,
+   "perCandidateAmortizedMs": 0.363,
+   "singleCandidateGrowthMs": 632,
+   "growthShareOfServerTime": 0.62
+  },
+  "FULL": {
+   "batch8192GrowthMs": 3682,
+   "perCandidateAmortizedMs": 0.449,
+   "singleCandidateGrowthMs": 1617,
+   "growthShareOfServerTime": 0.62
+  }
+ },
+ "endToEndMeasured": {
+  "a3C19Broad1Search": 5.22,
+  "a3C19BroadQualification": 5.24,
+  "source": [
+   "results/optimizer/compare-a3-C19-broad1.json",
+   "results/optimizer/compare-a3-C19-broad-qualification.json"
+  ]
+ },
+ "projectedA3Scale": {
+  "cpuHours": 44.34,
+  "gpuHours": [
+   8.28,
+   9.56
+  ],
+  "speedup": [
+   4.64,
+   5.36
+  ],
+  "source": "results/bench/projections.json"
+ },
+ "threshold": "\u2265 3\u00d7 end-to-end on an Assignment 3-shaped workload (brief \u00a73.2; ideally \u2265 5\u00d7)",
+ "pass": true,
+ "note": "Growth kernel time is overlapped with the D1 kernel on a separate stream; the pool kernel runs after both. Server time is latency-bound up to ~8k candidates; end-to-end is bound by the Node main thread (encode, decode, optimizer logic)."
+}

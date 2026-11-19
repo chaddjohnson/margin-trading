@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T02:38Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T03:04Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
@@ -30,7 +30,12 @@
   (`results/optimizer/compare-a3-C19-broad-qualification.json`).
 - **Step 3 (bench)** failed once (02:30Z, tool bug: double close of a pool's server) → fixed with a keep-open proxy in
   bench.ts and stress.ts (the stress tool had the same flaw), both dry-run clean (scratch outputs); chain relaunched as
-  unit **`gpup2-final-gates-4`** with START=3 at 02:37:59Z (bench running in `gpup2-bench`). Branch pushed (backup) at
+  unit **`gpup2-final-gates-4`** with START=3 at 02:37:59Z.
+- **Step 3 bench complete (02:59Z):** `results/bench/bench.json`; projections `results/bench/projections.json`; TR1
+  `results/tr1-tranche-gate.json`; report `GPU_PHASE2_BENCHMARKS.md`.
+- **Step 4 sanitizer-final PASSED (03:00Z):** 4 tools 0 errors, 97/97 identical (`results/sanitizer-final/`).
+- **Step 5 negative-final PASSED (03:00:39Z):** 35/35 (`results/policy/negative-final.json`).
+- **Step 6 mini-opt g7f** running since 03:00:39Z (unit `gpup2-mini-opt-f`, log `results/logs/mini-opt-g7f.txt`). Branch pushed (backup) at
   `a9ae79ec` (ls-remote verified).
 - **Replay run 1** (01:43–02:03Z): 5.21× (1,132.5 s vs 5,900.8 s), counts identical, but its record wrote ±Inf/NaN as
   null (91 fields, all encoding-only) → kept as a timing sample (`results/optimizer/a3-C19-broad1-run1/NOTE.md`); fixed

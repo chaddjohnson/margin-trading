@@ -1,0 +1,156 @@
+{
+ "kind": "gpu-backend official attestation",
+ "study": "research/gpu-phase2",
+ "runId": "negative",
+ "purpose": "official-optimization",
+ "t": "2026-11-19T03:00:30.861Z",
+ "host": "apollo",
+ "device": {
+  "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+  "name": "NVIDIA GeForce RTX 5090",
+  "driver": 13020,
+  "runtime": 13020,
+  "cc": "12.0",
+  "smiUuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4"
+ },
+ "binary": {
+  "path": "research/gpu-phase2/build/gb2-dev",
+  "sha256": "3fe09e6791ff9996bc4f463c43e7d8dff46600ca3bcbf0d7777be155301e13fc"
+ },
+ "compat": {
+  "digest": "f67dcb3bcc3ba89647610e7cce548c97ea288df920e71b777fd94478d83adaea",
+  "serverDigest": "f67dcb3bcc3ba89647610e7cce548c97ea288df920e71b777fd94478d83adaea"
+ },
+ "acceptance": {
+  "status": "MISSING",
+  "file": "config/gpu-backend/acceptance.json",
+  "sha256": null,
+  "skippedForTest": true
+ },
+ "domain": {
+  "name": "assignment-3 (src/vg-l0-full-joint): D1·GDX + D1·VGT with RC 2 families A–D × gate × activation, Growth·VGT 1.4.0 (8 + 50 genes), L0 pool",
+  "features": [
+   "D1_BOOK",
+   "RC_CONTROLS",
+   "NEXT_OPEN",
+   "SLIPPAGE",
+   "ARM_START",
+   "G_RISE",
+   "G_BREAKOUT",
+   "G_TREND_PRICE_CHANGE",
+   "G_TREND_REGRESSION",
+   "G_TREND_RISING_SMA",
+   "G_TREND_HHL",
+   "G_TREND_MOMENTUM",
+   "G_ELIG_TIME_LIMITED",
+   "G_ELIG_MIN_STRENGTH",
+   "G_ELIG_MAX_EXTENSION",
+   "G_ELIG_DETERIORATION",
+   "G_ELIG_RESET_RENEW",
+   "G_DRAWDOWN_GATE",
+   "G_MAX_HOLD",
+   "G_BUFFER",
+   "G_INITIAL_STOP",
+   "G_RETENTION",
+   "G_CONT_CLASSIC",
+   "G_CONT_BREAKOUT",
+   "G_CONT_SHALLOW",
+   "G_CONT_MA_CROSS",
+   "POOL",
+   "POOL_FUND_FROM",
+   "POOL_ENABLED",
+   "POOL_WHOLE_SHARES",
+   "POOL_BLACKOUTS",
+   "POOL_PERIODS",
+   "POOL_TIE_ORDER",
+   "POOL_DETAIL"
+  ],
+  "growthStructures": 8640,
+  "d1Structures": 14
+ },
+ "supported": "fffffffff",
+ "smoke": {
+  "ok": true,
+  "sum": 1635.3944173366574,
+  "mix": "4842b073ba50f7fd"
+ },
+ "memory": {
+  "freeBytes": 31670140928,
+  "plannedBytes": 674832384
+ },
+ "dataset": {
+  "door": "fixture:W-QUIET",
+  "sessions": 251,
+  "sha256": "0d965236309cf2b9e4c984457d35f6cb7148b03d18e006ff7834a4250e71ac73",
+  "dataSha256": {
+   "GDX": "fixture",
+   "VGT": "fixture"
+  }
+ },
+ "parity": {
+  "subjects": 8,
+  "identical": 8,
+  "keys": [
+   "R:NL0",
+   "R:IJ1",
+   "R:C4",
+   "R:C4R",
+   "P:0",
+   "P:1",
+   "P:2",
+   "P:3"
+  ]
+ },
+ "checks": [
+  {
+   "name": "purpose",
+   "ok": true,
+   "detail": "purpose official-optimization is not official optimization; a non-official run must not open the official gate"
+  },
+  {
+   "name": "acceptance",
+   "ok": true,
+   "detail": "SKIPPED FOR A TEST RUN (status MISSING: no GPU acceptance record (config/gpu-backend/acceptance.json): official GPU optimization is blocked until an acceptance study passes every gate) — never official evidence"
+  },
+  {
+   "name": "binary",
+   "ok": true,
+   "detail": "GPU binary /home/chad/projects/margin-trading/research/gpu-phase2/build/gb2-dev"
+  },
+  {
+   "name": "compat",
+   "ok": true,
+   "detail": "server built from compatibility digest f67dcb3bcc3ba896, working tree f67dcb3bcc3ba896 (stale build or changed sources)"
+  },
+  {
+   "name": "device",
+   "ok": true,
+   "detail": "server device GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 ≠ nvidia-smi GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4"
+  },
+  {
+   "name": "no-test-hooks",
+   "ok": true,
+   "detail": "the server runs with fault injection / test hooks enabled: never an official evaluator"
+  },
+  {
+   "name": "capability",
+   "ok": true,
+   "detail": "ok"
+  },
+  {
+   "name": "smoke",
+   "ok": true,
+   "detail": "smoke kernel result 1635.3944173366574/4842b073ba50f7fd ≠ expected 1635.3944173366574/4842b073ba50f7fd"
+  },
+  {
+   "name": "memory",
+   "ok": true,
+   "detail": "free VRAM 31670140928 < planned batch 674832384 + 1 GiB headroom"
+  },
+  {
+   "name": "parity",
+   "ok": true,
+   "detail": "0 of 8 precommitted parity subjects differ from the canonical CPU engine"
+  }
+ ]
+}
