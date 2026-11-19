@@ -23,11 +23,11 @@ spawnSync('git', ['checkout', '--quiet', '--detach', head], { cwd: box });
 fs.symlinkSync(path.join(repoRoot, 'node_modules'), path.join(box, 'node_modules'));
 // the checkout's local excludes (.git/info/exclude: they hide the generated sources below; a clone does not copy them)
 fs.copyFileSync(path.join(repoRoot, '.git', 'info', 'exclude'), path.join(box, '.git', 'info', 'exclude'));
-// git-ignored generated sources a full checkout has (src/four-family/generated/*.ts: the entrypoint audit's digest of
-// a registered legacy runner covers them), copied so that the clone is the same source tree
+// git-ignored generated sources a full checkout has (src/four-family/generated/: *.ts and the self-ignoring .gitignore;
+// the entrypoint audit's digest of a registered legacy runner covers them), copied so the clone is the same source tree
 for (const f of git('ls-files', '--others', '--ignored', '--exclude-standard', 'src')
   .stdout.split('\n')
-  .filter((x) => x.endsWith('.ts'))) {
+  .filter(Boolean)) {
   fs.mkdirSync(path.dirname(path.join(box, f)), { recursive: true });
   fs.copyFileSync(path.join(repoRoot, f), path.join(box, f));
 }
