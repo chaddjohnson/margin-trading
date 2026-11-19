@@ -305,7 +305,9 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       workers === 0 ||
         (pipeline !== null && pipeline.size === workers && !pipeline.faultInjection && pipeline.failed === null),
       `host path: ${pipeline?.size ?? 0} of ${workers} workers ready`,
-      workers === 0 ? 'serial (main thread)' : `${workers} worker threads, door digest ${pipeline!.digest.slice(0, 16)}`
+      workers === 0
+        ? 'serial (main thread)'
+        : `${workers} worker threads, door digest ${pipeline?.digest.slice(0, 16) ?? '?'}`
     );
 
     // 8. parity mini-set against the canonical CPU engine, through the run's host path

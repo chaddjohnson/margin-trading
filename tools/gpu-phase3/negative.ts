@@ -29,6 +29,9 @@ import { checkGpuPolicy } from '../../src/research-standard/gpuPolicy.ts';
 import { buildDir, toolkitLib } from '../../src/gpu-backend/toolchain.ts';
 import { canonHash } from '../../src/gpu-backend/canon.ts';
 
+// every case declares its own purpose (or none): a purpose in the caller's environment would mask the "no purpose" case
+delete process.env.GPU_POLICY_PURPOSE;
+
 const args = process.argv.slice(2);
 const out = args[args.indexOf('--out') + 1]!;
 const dev = path.join(buildDir, 'gb3-dev');
@@ -225,6 +228,8 @@ await gate(
   const a = await openOfficialGpuSession(spec());
   const b = await openOfficialGpuSession(spec());
 
+  await a.pipeline?.close();
+  await b.pipeline?.close();
   await a.server.close();
   await b.server.close();
   record(
