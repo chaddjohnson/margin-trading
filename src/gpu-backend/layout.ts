@@ -149,7 +149,8 @@ export const CAND_STATUS: Record<number, string> = {
   36: 'continuation evaluated while not flat', 37: 'an exit while a continuation episode is open',
   38: 'D1 window opening disagrees with the qualifying-exit rule', 39: 'a drawdown release outside its session',
   40: 'unexpected D1 arming', 41: 'filled without its decision-time initial-stop check', 42: 'a partial sale outside stage full',
-  43: 'D1 window expiry disagrees with the episode state', 44: 'no completed bar'
+  43: 'D1 window expiry disagrees with the episode state', 44: 'no completed bar',
+  45: 'a device loop exceeded its bound'
 };
 // capacity statuses: re-evaluated on the GPU with larger capacities (never on the CPU)
 export const CAPACITY_STATUSES = new Set([1, 2, 3, 5]);

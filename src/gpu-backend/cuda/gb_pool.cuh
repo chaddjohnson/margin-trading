@@ -103,6 +103,7 @@ __global__ void poolKernel(DevData data, const GbCandIn* __restrict__ cands, int
       if (nFunding >= fundCap) { if (status == C_OK) { status = C_FUNDING_CAPACITY; errInfo = nFunding; } }
       else {
         GbFunding& f = funding[nFunding++];
+        memset(&f, 0, sizeof f);
         f.book = b; f.trade = tr.id; f.kind = tr.kind; f.s = tr.dS; f.t = tr.dT; f.price = tr.dPrice;
         f.granted = reason == R_GRANTED ? 1 : 0; f.reason = reason;
         f.occupantBook = openLot >= 0 ? lots[openLot].book : resBook;
@@ -139,6 +140,7 @@ __global__ void poolKernel(DevData data, const GbCandIn* __restrict__ cands, int
     if (!(shares > 0)) return;
     if (nLots >= lotCap) { if (status == C_OK) { status = C_LOT_CAPACITY; errInfo = nLots; } return; }
     GbLot& L = lots[nLots];
+    memset(&L, 0, sizeof L);  // every byte defined (unused fill slots included: initcheck)
     L.id = nLots + 1; L.book = b; L.tradeIdx = i;
     L.principal0 = principal; L.shares0 = shares; L.shares = shares; L.principal = principal;
     L.entryS = tr.eS; L.entryT = tr.eT; L.entryRaw = tr.eRaw; L.entryPrice = tr.ePrice; L.entryTs = LD(data.sym[bk[b].sym].sTime + tr.eS);
@@ -211,7 +213,7 @@ __global__ void poolKernel(DevData data, const GbCandIn* __restrict__ cands, int
   trackerInit(sessionT, 0, LD(ref.sTime + 0));
   Tracker ptrack[GB_MAX_PERIODS];
   bool pOn[GB_MAX_PERIODS];
-  for (int i = 0; i < nPeriods; i++) { pOn[i] = false; periods[i].boundary = boundaries[i]; periods[i].equity = NAN; }
+  for (int i = 0; i < nPeriods; i++) { pOn[i] = false; periods[i].boundary = boundaries[i]; periods[i].equity = NAN; periods[i].pad = 0; }
   double peakPrincipal = 0, peakValue = 0;
   int sessionsHeld = 0;
   const int exitOrder[2] = {1, 0};  // VGT, then GDX

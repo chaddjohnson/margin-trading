@@ -28,6 +28,10 @@
 
 static int g_budgetMb = 0, g_maxL = 300, g_tpb = 64;
 static bool g_allowFault = false;
+static bool g_debug = getenv("GB_DEBUG") != nullptr;
+static double g_watchdogS = 300;  // a batch whose kernels run longer fails closed (the server reports and exits)
+static std::chrono::steady_clock::time_point g_t0 = std::chrono::steady_clock::now();
+#define DBG(...) do { if (g_debug) { fprintf(stderr, "[gb2 %.3f s] ", std::chrono::duration<double>(std::chrono::steady_clock::now() - g_t0).count()); fprintf(stderr, __VA_ARGS__); fputc('\n', stderr); fflush(stderr); } } while (0)
 static unsigned char g_uuid[16];
 static char g_uuidText[64];
 
@@ -61,6 +65,26 @@ static bool isSticky(cudaError_t e) {
       return;                                                                                                    \
     }                                                                                                            \
   } while (0)
+
+// Waits for an event with a deadline (1 ms polls: no busy spin). A batch that exceeds the watchdog is reported as a CUDA
+// error and the server exits: a running kernel cannot be cancelled inside the context, and a silent multi-hour stall is
+// never acceptable (the client fails the job; nothing falls back to the CPU).
+static cudaError_t waitEvent(cudaEvent_t e, const char* what, std::chrono::steady_clock::time_point start) {
+  for (;;) {
+    cudaError_t q = cudaEventQuery(e);
+    if (q != cudaErrorNotReady) return q;
+    const double s = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
+    if (s > g_watchdogS) {
+      char m[256];
+      snprintf(m, sizeof m, "kernel watchdog: %s still running after %.0f s (limit %.0f s); the server exits", what, s, g_watchdogS);
+      fprintf(stderr, "gb2: %s\n", m);
+      respondText(GB_E_CUDA, m);
+      fflush(stdout);
+      _exit(6);
+    }
+    usleep(1000);
+  }
+}
 
 // ----- the dataset on the device -----
 struct DeviceDataset {
@@ -349,13 +373,16 @@ static void handleEval(const std::vector<unsigned char>& req) {
   CK(cudaMemcpy(b_cands.p, cin, n * sizeof(GbCandIn), cudaMemcpyHostToDevice));
   if (h.nRanges) CK(cudaMemcpy(b_ranges.p, rin, (size_t)h.nRanges * sizeof(GbRange), cudaMemcpyHostToDevice));
   CK(cudaMemset(b_counters.p, 0, 64));
+  if (h.nRanges) CK(cudaMemset(b_periods.p, 0, (size_t)h.nRanges * sizeof(GbPeriod)));  // blackout slots stay defined
   cudaEventRecord(e1);
   const int tpb = g_tpb;
   const unsigned blocks = (unsigned)((n + tpb - 1) / tpb);
   unsigned* counters = (unsigned*)b_counters.p;  // [0] D1 books, [1] Growth books, [2] pool, [3] kernels launched
+  DBG("eval n=%zu flags=%u launching", n, h.flags);
   initKernel<<<blocks, tpb>>>((const GbCandIn*)b_cands.p, (int)n, (GbCandOut*)b_outs.p);
   CK(cudaGetLastError());
   CK(cudaDeviceSynchronize());
+  const auto tLaunch = std::chrono::steady_clock::now();
   d1Kernel<<<dim3(blocks, 2), tpb, 0, sD1>>>(g_ds.dev, (const GbCandIn*)b_cands.p, (int)n, (GbTrade*)b_d1t.p, (int)h.tradeCapD1,
                                              (GbCandOut*)b_outs.p, (int)h.endIndex, counters + 0);
   CK(cudaGetLastError());
@@ -364,8 +391,10 @@ static void handleEval(const std::vector<unsigned char>& req) {
                                                 (GbCandOut*)b_outs.p, (int)h.endIndex, counters + 1);
   CK(cudaGetLastError());
   cudaEventRecord(eG, sG);
-  CK(cudaStreamSynchronize(sD1));
-  CK(cudaStreamSynchronize(sG));
+  CK(waitEvent(eD1, "the D1 kernel", tLaunch));
+  DBG("D1 done");
+  CK(waitEvent(eG, "the Growth kernel", tLaunch));
+  DBG("Growth done");
   unsigned kernels = 3;
   if (runPool) {
     poolKernel<<<blocks, tpb>>>(g_ds.dev, (const GbCandIn*)b_cands.p, (int)n, (const GbTrade*)b_d1t.p, (int)h.tradeCapD1,
@@ -380,7 +409,8 @@ static void handleEval(const std::vector<unsigned char>& req) {
   CK(cudaGetLastError());
   kernels += 2;
   cudaEventRecord(e3);
-  CK(cudaEventSynchronize(e3));
+  CK(waitEvent(e3, "the pool kernel", tLaunch));
+  DBG("pool + hash done");
 
   std::vector<GbCandOut> outs(n);
   std::vector<uint64_t> hashes(n);
@@ -555,6 +585,14 @@ static void handleFault() {
   respondText(GB_OK, "no fault occurred");
 }
 
+// every device allocation is released before the process ends (a clean leak check under compute-sanitizer)
+static void releaseAll() {
+  freeDataset();
+  Buf* all[] = {&b_cands, &b_ranges, &b_d1t, &b_gt, &b_outs, &b_lots, &b_fund, &b_periods, &b_daily, &b_prin, &b_val, &b_held, &b_pack, &b_off, &b_counters, &b_hash};
+  for (Buf* b : all) { if (b->p) cudaFree(b->p); b->p = nullptr; b->n = 0; }
+  cudaDeviceSynchronize();
+}
+
 int main(int argc, char** argv) {
   for (int i = 1; i < argc; i++) {
     std::string a = argv[i];
@@ -562,6 +600,7 @@ int main(int argc, char** argv) {
     else if (a == "--max-l" && i + 1 < argc) g_maxL = atoi(argv[++i]);
     else if (a == "--tpb" && i + 1 < argc) g_tpb = atoi(argv[++i]);
     else if (a == "--allow-fault-injection") g_allowFault = true;
+    else if (a == "--watchdog-s" && i + 1 < argc) g_watchdogS = atof(argv[++i]);
     else { fprintf(stderr, "gb2: unknown argument %s\n", a.c_str()); return 2; }
   }
   if (cudaSetDevice(0) != cudaSuccess || cudaFree(0) != cudaSuccess) { fprintf(stderr, "gb2: no CUDA device\n"); return 4; }
@@ -582,11 +621,12 @@ int main(int argc, char** argv) {
       case GB_LOAD: handleLoad(std::string(payload.begin(), payload.end())); break;
       case GB_EVAL: handleEval(payload); break;
       case GB_INFO: handleInfo(); break;
-      case GB_QUIT: respondText(GB_OK, "bye"); return 0;
+      case GB_QUIT: releaseAll(); respondText(GB_OK, "bye"); return 0;
       case GB_FAULT: handleFault(); break;
       case GB_SMOKE: handleSmoke(); break;
       default: respondText(GB_E_BAD_FRAME, "unknown request type"); break;
     }
   }
+  releaseAll();
   return 0;
 }

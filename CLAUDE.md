@@ -1,5 +1,29 @@
 # Margin trading — project instructions for Claude Code
 
+## GPU-only official optimization and CPU/GPU parity (MANDATORY — standard 3.0.0 §9)
+
+> Every historical strategy evaluation that affects an official optimization — fitness, qualification, promotion,
+> refinement, robustness/perturbation tests, optimization validation — MUST run on the attested NVIDIA GPU evaluator.
+> **There is no CPU fallback, ever**: no GPU, an unsupported reachable feature, a stale build or source digest, a failed
+> smoke kernel or parity mini-set, lost device/server, bad receipts or exhausted VRAM stop the run (checkpointed) with an
+> explicit error. Every change to D1, Growth, the allocator, entries/exits/risk controls, fills, costs/interest or any
+> evaluation dependency needs its CUDA counterpart and fresh Apollo parity evidence BEFORE it is merged or used for
+> official research. The TypeScript/CPU engine stays the authoritative reference and Strategy Lab's evaluator.
+
+- Normative text: [docs/research/OPTIMIZATION_STANDARD.md](docs/research/OPTIMIZATION_STANDARD.md) §9 (3.0.0). Engineering
+  procedure and merge gate: [docs/gpu/PARITY_CHECKLIST.md](docs/gpu/PARITY_CHECKLIST.md); feature matrix:
+  [docs/gpu/FEATURE_MATRIX.md](docs/gpu/FEATURE_MATRIX.md); operations: [docs/gpu/README.md](docs/gpu/README.md).
+- Official runs go only through `openOfficialGpuSession` (src/gpu-backend/official.ts) → `GpuPool` → `EvalLab`
+  (src/gpu-backend/); the preflight (`npm run research-preflight`) refuses an official study until
+  `config/gpu-backend/acceptance.json` is ACCEPTED and matches the tree. Status: **official GPU optimization is blocked
+  until an acceptance study passes every gate** (research/gpu-phase2/ reports the current verdict).
+- CPU evaluation is allowed only under an explicit non-official purpose (`GPU_POLICY_PURPOSE=cpu-reference | diagnostic |
+  parity-test | benchmark | strategy-lab`); every legacy CPU runner's npm script enforces this. Never present CPU
+  results, or a CPU/GPU hybrid, as official optimization. Any real exception needs the user's explicit approval first.
+- `npm test` includes the merge gate (src/gpu-backend/tests/policy.test.ts); a CPU-only CI pass is never complete
+  parity — the Apollo GPU verification (parity campaign, sanitizer, negative tests, fixed-seed mini-optimization) is
+  required and recorded in the acceptance record.
+
 ## Delivery: commit and push at completion (standing preference)
 
 > At completion, commit task-related work and push the task's branch to its configured remote without asking for routine confirmation. This applies to research, documentation and negative results. Stage only task-related changes, preserve unrelated work, and exclude secrets and inappropriate large data artifacts. Verify the push and report branch and commit. If a concrete problem prevents a safe push, preserve the work and explain the blocker. Do not force-push, merge into main, deploy, or publish outside the repository without separate authorization.

@@ -162,6 +162,8 @@ export interface StartOptions {
   tpb?: number;
   allowFault?: boolean;
   env?: NodeJS.ProcessEnv;
+  wrapper?: string[]; // e.g. compute-sanitizer and its arguments (memory-safety runs): the server runs under it
+  watchdogS?: number; // the server's kernel watchdog (default 300 s; a sanitizer run needs more)
 }
 
 export class GpuServer {
@@ -181,7 +183,10 @@ export class GpuServer {
       this.have += chunk.length;
       this.drain();
     });
-    child.stderr!.on('data', (c: Buffer) => (this.stderr += c.toString()));
+    child.stderr?.on('data', (c: Buffer) => {
+      this.stderr += c.toString();
+      if (this.stderr.length > 65536) this.stderr = this.stderr.slice(-32768);
+    });
     child.on('error', (e) => this.die(new Error(`GPU evaluator could not start: ${e.message}`)));
     child.on('exit', (code, signal) => this.die(new Error(`GPU evaluator exited (${code ?? signal})${this.stderr ? `: ${this.stderr.trim()}` : ''}`)));
   }
@@ -199,11 +204,14 @@ export class GpuServer {
       ...(o.vramBudgetMb ? ['--vram-budget-mb', String(o.vramBudgetMb)] : []),
       ...(o.maxL ? ['--max-l', String(o.maxL)] : []),
       ...(o.tpb ? ['--tpb', String(o.tpb)] : []),
-      ...(o.allowFault ? ['--allow-fault-injection'] : [])
+      ...(o.allowFault ? ['--allow-fault-injection'] : []),
+      ...(o.watchdogS ? ['--watchdog-s', String(o.watchdogS)] : [])
     ];
-    const child = spawn(o.binary, args, {
-      stdio: ['pipe', 'pipe', 'pipe'],
-      env: { ...(o.env ?? process.env), LD_LIBRARY_PATH: `${o.libDir}:${process.env.LD_LIBRARY_PATH ?? ''}` }
+    const cmd = o.wrapper?.length ? o.wrapper[0]! : o.binary;
+    const argv = o.wrapper?.length ? [...o.wrapper.slice(1), o.binary, ...args] : args;
+    const child = spawn(cmd, argv, {
+      stdio: ['pipe', 'pipe', process.env.GPU_BACKEND_SERVER_STDERR === 'inherit' ? 'inherit' : 'pipe'],
+      env: { ...(o.env ?? process.env), GB_DEBUG: process.env.GB_DEBUG ?? '1', LD_LIBRARY_PATH: `${o.libDir}:${process.env.LD_LIBRARY_PATH ?? ''}` }
     });
 
     return new GpuServer(child);
@@ -215,6 +223,11 @@ export class GpuServer {
 
   get alive() {
     return !this.dead;
+  }
+
+  // the server's recent stderr (per-batch phase timestamps; the watchdog's report)
+  get stderrTail() {
+    return this.stderr.slice(-4000);
   }
 
   private drain() {

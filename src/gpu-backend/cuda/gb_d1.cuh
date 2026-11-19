@@ -513,6 +513,7 @@ __global__ void d1Kernel(DevData data, const GbCandIn* __restrict__ cands, int n
         if (!(dt > lastDT)) fail(st, C_D1_ORDER, ti);
         lastDT = dt;
         GbTrade& v = o.trades[ti];
+        memset(&v, 0, sizeof v);  // every byte defined (unused fill slots included: initcheck)
         v.id = ti + 1; v.kind = st.setupKind == 1 ? 0 : 1; v.dS = s; v.dT = dt; v.dPrice = dp;
         v.eS = -1; v.eK = -1; v.eT = NAN; v.eRaw = NAN; v.ePrice = NAN; v.nFills = 0; v.open = 0; v.vNet = 0; v.vInterest = 0; v.pad = 0;
         st.pending = true;

@@ -67,7 +67,8 @@ enum GbCandStatus : int32_t {
   C_G_FILL_BEFORE_ATR = 41,
   C_G_PARTIAL_STATE = 42,
   C_G_EXPIRY_STATE = 43,
-  C_G_NO_BAR = 44
+  C_G_NO_BAR = 44,
+  C_G_LOOP = 45  // a device loop exceeded its bound (never expected: fail closed instead of hanging)
 };
 
 // capability bits (a candidate's features; the server's supported set is GB_SUPPORTED). Bits outside the supported

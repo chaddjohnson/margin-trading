@@ -13,7 +13,7 @@ set -euo pipefail
 TK=/home/chad/.local/share/margin-trading-gpu/cuda-13.2-toolkit
 DL=${1:-/home/chad/.local/share/margin-trading-gpu/downloads-13.2.2}
 BASE=https://developer.download.nvidia.com/compute/cuda/redist
-COMPONENTS="cuda_nvcc cuda_cudart cuda_crt cuda_cccl libnvvm cuda_nvrtc cuda_sanitizer_api cuda_cupti cuda_nvdisasm cuda_cuobjdump cuda_profiler_api cuda_nvml_dev nsight_compute"
+COMPONENTS="cuda_nvcc cuda_cudart cuda_crt cuda_cccl libnvvm cuda_nvrtc cuda_sanitizer_api cuda_cupti cuda_nvdisasm cuda_cuobjdump cuda_profiler_api cuda_nvml_dev nsight_compute cuda_gdb"
 mkdir -p "$TK" "$DL"
 curl -fsS -m 60 "$BASE/redistrib_13.2.2.json" -o "$DL/redistrib_13.2.2.json"
 python3 - "$DL" "$TK" $COMPONENTS <<'EOF'

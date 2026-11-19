@@ -9,13 +9,17 @@
 // - the protocol itself records the standard's version and sha256;
 // - the declared date split and risk budget agree with the standard, unless a departure for that section cites the
 //   user's agreement; every departure cites one;
-// - from 2.2.0, an optimization or continuation declares the consequence of its chronological verdict (§1.8).
+// - from 2.2.0, an optimization or continuation declares the consequence of its chronological verdict (§1.8);
+// - from 3.0.0, an optimization or continuation declares the GPU-required evaluation backend and is refused while no
+//   ACCEPTED GPU evaluator matches the working tree; a new optimization may not pin an earlier version (§9,
+//   ./gpuPolicy.ts).
 //
 // It verifies a declaration and its hashes. It cannot verify that an agent read or understood the standard, or that a
 // study's code obeys it (§7.6).
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { type EvaluationBackend, checkGpuPolicy } from './gpuPolicy.ts';
 
 export const standardPath = 'docs/research/OPTIMIZATION_STANDARD.md';
 export const registryPath = 'docs/research/optimization-standard.versions.json';
@@ -78,6 +82,7 @@ export interface Adoption {
   deviations: Deviation[];
   referenceMethod?: { id: string; path: string; version: string; sha256: string }; // optional (§4.8, from 2.1.0)
   chronologicalConsequence?: string; // §1.8 [S], from 2.2.0: required for optimization and continuation scopes
+  evaluationBackend?: EvaluationBackend; // §9 [M], from 3.0.0: required for optimization and continuation scopes
 }
 
 export interface MethodRegistry {
@@ -391,6 +396,14 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
       errors.push(...r.errors);
       notices.push(...r.notices);
     }
+  }
+
+  // the GPU-required evaluation backend (§9, from 3.0.0) and the no-evasion rule
+  {
+    const g = checkGpuPolicy(a, pinned?.version ?? null, reg.registry);
+
+    errors.push(...g.errors);
+    notices.push(...g.notices);
   }
 
   // deviations (§7.3)

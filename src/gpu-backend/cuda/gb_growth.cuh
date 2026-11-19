@@ -134,6 +134,7 @@ __device__ int gCommit(G& g, int s, double decisionTime, double decisionPrice, i
   if (ti >= g.o.cap) { gfail(g, C_TRADE_CAPACITY, ti); return -1; }
   GbTrade& v = g.o.trades[ti];
   if (ti > 0 && !(decisionTime > g.o.trades[ti - 1].dT)) gfail(g, C_BOOK_ORDER, ti);
+  memset(&v, 0, sizeof v);  // every byte defined (unused fill slots included: initcheck)
   v.id = ti + 1; v.kind = kind; v.dS = s; v.dT = decisionTime; v.dPrice = decisionPrice;
   v.eS = -1; v.eK = -1; v.eT = NAN; v.eRaw = NAN; v.ePrice = NAN; v.nFills = 0; v.open = 0; v.vNet = 0; v.vInterest = 0; v.pad = 0;
   g.orderActive = true; g.orderTrade = ti; g.orderDecisionTime = decisionTime;
@@ -1146,6 +1147,7 @@ __device__ void gDecide(G& g, int s) {
 // baseUntil(time): base decisions, latched steps and drawdown observations due at or before `time`, in time order
 __device__ void gBaseUntil(G& g, int s, double time) {
   for (int guard = 0; g.status == C_OK; guard++) {
+    if (guard > 400000) { gfail(g, C_G_LOOP, s); return; }
     const double tb = g.decPending ? g.decTime : INFINITY;
     const double tg = g.gated ? gGatesNextTime(g, s, time) : INFINITY;
     if (g.ddOn) {
@@ -1264,11 +1266,14 @@ __global__ void growthKernel(DevData data, const GbCandIn* __restrict__ cands, i
 
     for (int k = 0; k <= count && g.status == C_OK; k++) {
       const double t = k < count ? LD(d.bTime + start + k) : LD(d.sCloseTime + s);
-      if (g.p.cont != CM_OFF)
+      if (g.p.cont != CM_OFF) {
+        int guard = 0;
         for (double ct = gContNextTime(g, s, k, t); ct <= t && g.status == C_OK; ct = gContNextTime(g, s, k, t)) {
+          if (++guard > 1000) { gfail(g, C_G_LOOP, s); break; }
           gBaseUntil(g, s, ct);
           gContEvaluate(g, s, k);
         }
+      }
       gBaseUntil(g, s, t);
       if (g.status != C_OK) break;
 

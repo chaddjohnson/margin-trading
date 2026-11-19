@@ -1,0 +1,165 @@
+// gpu-phase2 gate G7 (PROTOCOL.md §7, AD8): the fixed-seed, NON-OFFICIAL, parity-only mini-optimization. Assignment 3's
+// search code (src/vg-l0-full-joint/search.ts Lane — screen, promotion, rung fitting, NSGA-II islands with extension
+// triggers, rungs 2–3, refinement, shortlist — UNCHANGED) runs a bounded broad job with a reduced, declared schedule on
+// one door, once with a CPU worker pool and once with the GPU pool, from the same seeds. The job body (base islands,
+// then extension rounds at barriers with the resource guard, then finish) is Assignment 3's stages.ts broad job,
+// carried over line for line. Outputs: the lane results, every archived record (hash per row), the proposal and config
+// tables, the progress checkpoint and the extension rounds; tools/gpu-phase2/mini-opt-compare.ts compares the arms.
+//
+//   node --expose-gc --experimental-transform-types tools/gpu-phase2/mini-opt.ts --backend gpu|cpu --run <name> \
+//     [--door D19] [--cells GA0.VA0,GB1.VD0,...] [--replicates 1] [--stop-after N] [--workers 12]
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { Lane, type LaneSpec } from '../../src/vg-l0-full-joint/search.ts';
+import { type Budget } from '../../src/vg-l0-full-joint/search.ts';
+import { budgets, finishReserve } from '../../src/vg-l0-full-joint/budgets.ts';
+import { cellOf } from '../../src/vg-l0-full-joint/space.ts';
+import { codeDigest as a3CodeDigest } from '../../src/vg-l0-full-joint/lab.ts';
+import { doorSpecs } from '../../src/vg-d1-growth-joint/context.ts';
+import { cacheDir, openDoor, resultsDir, writeJson } from '../../src/gpu-phase2/context.ts';
+import { CpuEvalPool } from '../../src/gpu-phase2/cpuEvalPool.ts';
+import { EvalLab, StopRequested } from '../../src/gpu-backend/lab.ts';
+import { GpuPool } from '../../src/gpu-backend/pool.ts';
+import { GpuServer } from '../../src/gpu-backend/client.ts';
+import { exportDataset } from '../../src/gpu-backend/dataset.ts';
+import { compatManifest } from '../../src/gpu-backend/compat.ts';
+import { serverBinary, toolkitLib } from '../../src/gpu-backend/toolchain.ts';
+
+const args = process.argv.slice(2);
+const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.indexOf(`--${k}`) + 1]! : d);
+const backend = opt('backend', 'gpu') as 'gpu' | 'cpu';
+const run = opt('run', 'mini');
+const doorName = opt('door', 'D19') as 'D19' | 'D21' | 'D23' | 'D24';
+const cells = opt('cells', 'GA0.VA0,GB1.VD0,GC0.VB1,GD1.VC0').split(',');
+const replicates = Number(opt('replicates', '1'));
+const stopAfter = args.includes('--stop-after') ? Number(opt('stop-after', '0')) : undefined;
+const outDir = path.join(resultsDir, 'optimizer', run, backend);
+const cacheRoot = path.join(cacheDir, 'mini-opt', run, backend);
+const log = (s: string) => console.log(`[mini-opt ${backend} ${new Date().toISOString().slice(11, 19)}Z] ${s}`);
+
+// the declared mini schedule: Assignment 3's broad lane structure at reduced counts (every stage path exercised)
+const mini: Budget = {
+  ...budgets.study.broad,
+  screen: Number(opt('screen', '96')),
+  promote: 12,
+  islands: 2,
+  islandsMax: 3,
+  population: 8,
+  newPerIsland: 24,
+  r1: 8,
+  r2: 16,
+  r2Keep: 4,
+  r3: 24,
+  r3Keep: 2,
+  refineN: 6,
+  shortlist: 2,
+  generations: 40,
+  patience: 4
+};
+const cutoff = doorName === 'D19' ? 'C19' : doorName === 'D21' ? 'C21' : doorName === 'D23' ? 'C23' : 'C24';
+const specs: LaneSpec[] = cells.flatMap((id) =>
+  Array.from({ length: replicates }, (_v, i) => {
+    const key = `${cutoff}/broad/${id}/R${i + 1}`;
+
+    return { key, seedKey: key, position: key, stage: 'broad' as const, replicate: i + 1, cutoff, kind: 'indep' as const, res: 'coarse' as const, cell: cellOf(id) };
+  })
+);
+const door = await openDoor(doorName, `mini-optimization (${backend}, parity-only)`);
+const doorPin = `GDX:${doorSpecs[doorName].pins.GDX.sha256},VGT:${doorSpecs[doorName].pins.VGT.sha256}`;
+const codeDigest = a3CodeDigest();
+let pool;
+let backendId: string;
+
+if (backend === 'gpu') {
+  const ds = exportDataset(door, cacheDir);
+  const server = GpuServer.start({ binary: serverBinary, libDir: toolkitLib });
+  const info = await server.info();
+
+  if (!(await server.smoke()).ok) throw new Error('smoke failed');
+  await server.load(ds.file);
+  backendId = `gpu:${info.uuid}:${createHash('sha256').update(fs.readFileSync(serverBinary)).digest('hex').slice(0, 16)}:${compatManifest().digest.slice(0, 16)}`;
+  pool = new GpuPool({ door, session: null, server, uuid: info.uuid, ledgerFile: path.join(outDir, 'receipts.jsonl'), telemetryFile: path.join(outDir, 'telemetry.jsonl'), batchSize: 8192, lingerMs: 30, log });
+} else {
+  backendId = `cpu:${opt('workers', '12')} workers`;
+  pool = new CpuEvalPool(Number(opt('workers', '12')), { kind: 'market', name: doorName });
+}
+
+const lab = new EvalLab({ study: 'research/gpu-phase2', job: `mini-${run}`, door: doorName, doorPin, purpose: 'parity-test mini-optimization', pool, backend: backendId, codeDigest, cacheRoot, stopAfterFresh: stopAfter, log });
+
+await lab.open();
+fs.mkdirSync(outDir, { recursive: true });
+
+const t0 = Date.now();
+let record: Record<string, unknown>;
+
+try {
+  // ----- Assignment 3's broad job body (stages.ts), unchanged in its rules -----
+  const lanes = specs.map((spec) => new Lane(lab as never, spec, mini));
+  const requested = () => lanes.reduce((a, l) => a + l.requested, 0);
+  const rounds: unknown[] = [];
+  const cap = specs.length * 1_000_000;
+
+  lab.stage = `mini ${run}: base (${lanes.length} lanes)`;
+  await Promise.all(lanes.map((l) => l.base()));
+
+  const stops = new Map<string, string>();
+
+  for (let round = 1; ; round++) {
+    const live = lanes.filter((l) => !stops.has(l.spec.position));
+
+    if (!live.length) break;
+
+    const row = { round, positions: [] as { position: string; fired: boolean; extended: boolean; atCap: boolean }[], requestedBefore: requested(), worstCase: 0, decision: '' };
+    const go: Lane[] = [];
+
+    for (const l of live) {
+      const fired = l.lastTrigger?.fired ?? false;
+      const atCap = l.atCap;
+
+      row.positions.push({ position: l.spec.position, fired, extended: fired && !atCap, atCap });
+      if (!fired) stops.set(l.spec.position, 'triggers not met');
+      else if (atCap) stops.set(l.spec.position, 'extension cap reached (a trigger still fired: budget-bound, not converged)');
+      else go.push(l);
+    }
+    row.worstCase = go.reduce((a, l) => a + l.islandWorstCase, 0);
+    if (go.length && requested() + row.worstCase + finishReserve.broad * lanes.length > cap) {
+      for (const l of go) stops.set(l.spec.position, 'resource guard (the job cap on fresh simulations)');
+      row.decision = 'resource guard';
+      rounds.push(row);
+      break;
+    }
+    row.decision = go.length ? `extend ${go.length} lane(s)` : 'no lane extends';
+    rounds.push(row);
+    if (!go.length) break;
+    lab.stage = `mini ${run}: extension round ${round}`;
+    lab.checkpoint({ extensionRound: round, extending: go.map((l) => l.spec.key) });
+    await Promise.all(go.map((l) => l.extend()));
+  }
+
+  lab.stage = `mini ${run}: finishing`;
+
+  const results = await Promise.all(lanes.map((lane) => lane.finish(stops.get(lane.spec.position) ?? 'triggers not met')));
+
+  record = { kind: 'gpu-phase2 mini-optimization', backend, backendId, run, door: doorName, cells, replicates, budget: mini, extensionRounds: rounds, lanes: results, compute: lab.compute, minutes: Math.round((Date.now() - t0) / 600) / 100, finished: new Date().toISOString() };
+} catch (error) {
+  if (error instanceof StopRequested) {
+    await lab.close(`stopped: ${error.reason}`);
+    log(`stopped (${error.reason}); resume with the same command`);
+    process.exit(75);
+  }
+  await lab.close(`failed: ${(error as Error).message.split('\n')[0]}`);
+  throw error;
+}
+
+// the archive's rows (key → record hash) and configs, for the comparison
+const rows: Record<string, string> = {};
+const configs: Record<string, string> = {};
+
+lab.store.commit();
+for (const [k, v] of lab.store.iterate('points')) rows[k] = createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 20);
+for (const [k, v] of lab.store.iterate('configs')) configs[k] = createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 20);
+await lab.close('job-end');
+writeJson(path.join(outDir, 'result.json'), record);
+writeJson(path.join(outDir, 'archive.json'), { rows, configs });
+log(`done: ${Object.keys(rows).length} archived evaluations, ${record.minutes} min`);
