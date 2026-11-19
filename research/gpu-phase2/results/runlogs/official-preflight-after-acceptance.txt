@@ -1,0 +1,30 @@
+# 2026-11-19T13:03:02Z official preflight CLI after the acceptance record was written (binary 3fe09e67…; no search evaluation)
+$ GPU_POLICY_PURPOSE=official-optimization node --experimental-transform-types tools/gpu-backend/official-preflight.ts --study research/gpu-phase2 --door D24 --domain pilot --batch 8192
+ok   purpose: purpose official-optimization is not official optimization; a non-official run must not open the official gate
+ok   acceptance: 
+ok   binary: GPU binary /home/chad/projects/margin-trading/research/gpu-phase2/build/gb2
+ok   compat: server built from compatibility digest f67dcb3bcc3ba896, working tree f67dcb3bcc3ba896 (stale build or changed sources)
+ok   device: server device GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 ≠ nvidia-smi GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4
+ok   no-test-hooks: the server runs with fault injection / test hooks enabled: never an official evaluator
+ok   accepted-device: device GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 ≠ the accepted GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4
+ok   capability: ok
+ok   smoke: smoke kernel result 1635.3944173366574/4842b073ba50f7fd ≠ expected 1635.3944173366574/4842b073ba50f7fd
+ok   memory: free VRAM 32328908800 < planned batch 5530583040 + 1 GiB headroom
+ok   parity: 0 of 18 precommitted parity subjects differ from the canonical CPU engine
+GATE OPEN — attestation research/gpu-phase2/results/gpu-attestations/preflight-2026-11-19T13-03-17-155Z.json
+exit 0
+
+# 2026-11-19T13:04:10Z rerun after correcting the attestation wording of passed checks (official.ts, outside the compatibility manifest; the first attestation above recorded each passed check with its refusal template)
+ok   purpose: official-optimization
+ok   acceptance: ACCEPTED (research/gpu-phase2, 2026-11-19T13:02:54.147Z)
+ok   binary: /home/chad/projects/margin-trading/research/gpu-phase2/build/gb2
+ok   compat: server and working tree f67dcb3bcc3ba896
+ok   device: GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 (= nvidia-smi)
+ok   no-test-hooks: none enabled
+ok   accepted-device: the accepted device
+ok   capability: 35 reachable features, all implemented
+ok   smoke: 1635.3944173366574/4842b073ba50f7fd = the CPU's expectation
+ok   memory: free VRAM 32328908800 ≥ planned batch 5530583040 + 1 GiB headroom
+ok   parity: 18 of 18 precommitted parity subjects identical to the canonical CPU engine
+GATE OPEN — attestation research/gpu-phase2/results/gpu-attestations/preflight-2026-11-19T13-04-25-800Z.json
+exit 0

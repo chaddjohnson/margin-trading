@@ -140,8 +140,9 @@ export const parityMiniSet = (n: number): Task[] => {
 
 export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<OfficialGpuSession> => {
   const checks: Attestation['checks'] = [];
-  const check = (name: string, ok: boolean, detail: string) => {
-    checks.push({ name, ok, detail });
+  // `detail` explains a refusal; `okDetail` is what the attestation records when the check passes
+  const check = (name: string, ok: boolean, detail: string, okDetail = 'ok') => {
+    checks.push({ name, ok, detail: ok ? okDetail : detail });
     if (!ok) throw new PolicyError(`preflight-${name}`, detail);
   };
 
@@ -153,7 +154,8 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     purpose === 'official-optimization',
     purpose === null
       ? 'no execution purpose declared (official optimization must declare it explicitly)'
-      : `purpose ${purpose} is not official optimization; a non-official run must not open the official gate`
+      : `purpose ${purpose} is not official optimization; a non-official run must not open the official gate`,
+    'official-optimization'
   );
 
   // 2. acceptance (static: record, sources, evidence, binary)
@@ -166,10 +168,11 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       ok: true,
       detail: `SKIPPED FOR A TEST RUN (status ${acc.status}: ${acc.reasons.join('; ')}) — never official evidence`
     });
-  else check('acceptance', acc.ok, acc.reasons.join('; '));
+  else
+    check('acceptance', acc.ok, acc.reasons.join('; '), `ACCEPTED (${acc.record?.study}, ${acc.record?.acceptedAt})`);
 
   // 3. server identity
-  check('binary', fs.existsSync(binary), `GPU binary ${binary}`);
+  check('binary', fs.existsSync(binary), `GPU binary ${binary} missing`, binary);
 
   const server = GpuServer.start({
     binary,
@@ -193,19 +196,22 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     check(
       'compat',
       info.compatDigest === compat.digest,
-      `server built from compatibility digest ${info.compatDigest.slice(0, 16)}, working tree ${compat.digest.slice(0, 16)} (stale build or changed sources)`
+      `server built from compatibility digest ${info.compatDigest.slice(0, 16)}, working tree ${compat.digest.slice(0, 16)} (stale build or changed sources)`,
+      `server and working tree ${compat.digest.slice(0, 16)}`
     );
-    check('device', info.uuid === smi, `server device ${info.uuid} ≠ nvidia-smi ${smi}`);
+    check('device', info.uuid === smi, `server device ${info.uuid} ≠ nvidia-smi ${smi}`, `${info.uuid} (= nvidia-smi)`);
     check(
       'no-test-hooks',
       info.faultInjection === false,
-      'the server runs with fault injection / test hooks enabled: never an official evaluator'
+      'the server runs with fault injection / test hooks enabled: never an official evaluator',
+      'none enabled'
     );
     if (!spec.allowUnaccepted)
       check(
         'accepted-device',
         info.uuid === (acc.record as AcceptanceRecord).device.uuid,
-        `device ${info.uuid} ≠ the accepted ${(acc.record as AcceptanceRecord).device.uuid}`
+        `device ${info.uuid} ≠ the accepted ${(acc.record as AcceptanceRecord).device.uuid}`,
+        'the accepted device'
       );
 
     // 4. capability coverage of the whole reachable domain
@@ -217,7 +223,8 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       missing === 0n && (spec.domain.features & ~SUPPORTED) === 0n,
       missing
         ? `the search domain reaches features the GPU does not implement: ${featureNames(missing).join(', ')}`
-        : 'ok'
+        : 'ok',
+      `${featureNames(spec.domain.features).length} reachable features, all implemented`
     );
 
     // 5. live kernel execution
@@ -226,7 +233,8 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     check(
       'smoke',
       smoke.ok && smoke.uuid === info.uuid,
-      `smoke kernel result ${smoke.sum}/${smoke.mix} ≠ expected ${smoke.expected.sum}/${smoke.expected.mix}`
+      `smoke kernel result ${smoke.sum}/${smoke.mix} ≠ expected ${smoke.expected.sum}/${smoke.expected.mix}`,
+      `${smoke.sum}/${smoke.mix} = the CPU's expectation`
     );
 
     // 6. memory
@@ -235,7 +243,8 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     check(
       'memory',
       info.freeBytes > planned + (1 << 30),
-      `free VRAM ${info.freeBytes} < planned batch ${planned} + 1 GiB headroom`
+      `free VRAM ${info.freeBytes} < planned batch ${planned} + 1 GiB headroom`,
+      `free VRAM ${info.freeBytes} ≥ planned batch ${planned} + 1 GiB headroom`
     );
 
     // 7. parity mini-set against the canonical CPU engine
@@ -264,7 +273,8 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     check(
       'parity',
       identical === tasks.length,
-      `${tasks.length - identical} of ${tasks.length} precommitted parity subjects differ from the canonical CPU engine`
+      `${tasks.length - identical} of ${tasks.length} precommitted parity subjects differ from the canonical CPU engine`,
+      `${identical} of ${tasks.length} precommitted parity subjects identical to the canonical CPU engine`
     );
 
     // 8. attestation

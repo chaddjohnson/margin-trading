@@ -1,0 +1,172 @@
+{
+ "kind": "gpu-backend official attestation",
+ "study": "research/gpu-phase2",
+ "runId": "preflight",
+ "purpose": "official-optimization",
+ "t": "2026-11-19T13:04:25.800Z",
+ "host": "apollo",
+ "device": {
+  "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+  "name": "NVIDIA GeForce RTX 5090",
+  "driver": 13020,
+  "runtime": 13020,
+  "cc": "12.0",
+  "smiUuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4"
+ },
+ "binary": {
+  "path": "research/gpu-phase2/build/gb2",
+  "sha256": "3fe09e6791ff9996bc4f463c43e7d8dff46600ca3bcbf0d7777be155301e13fc"
+ },
+ "compat": {
+  "digest": "f67dcb3bcc3ba89647610e7cce548c97ea288df920e71b777fd94478d83adaea",
+  "serverDigest": "f67dcb3bcc3ba89647610e7cce548c97ea288df920e71b777fd94478d83adaea"
+ },
+ "acceptance": {
+  "status": "ACCEPTED",
+  "file": "config/gpu-backend/acceptance.json",
+  "sha256": "b7df366a847a4655a1a40a060c4242144e2da150065bd09c3bb1090c4649dd0f",
+  "skippedForTest": false
+ },
+ "domain": {
+  "name": "risk-envelope pilot (NL0-R 0.1.0): assignment-3 (src/vg-l0-full-joint): D1·GDX + D1·VGT with RC 2 families A–D × gate × activation, Growth·VGT 1.4.0 (8 + 50 genes), L0 pool + risk-envelope inputs",
+  "features": [
+   "D1_BOOK",
+   "RC_CONTROLS",
+   "NEXT_OPEN",
+   "SLIPPAGE",
+   "ARM_START",
+   "G_RISE",
+   "G_BREAKOUT",
+   "G_TREND_PRICE_CHANGE",
+   "G_TREND_REGRESSION",
+   "G_TREND_RISING_SMA",
+   "G_TREND_HHL",
+   "G_TREND_MOMENTUM",
+   "G_ELIG_TIME_LIMITED",
+   "G_ELIG_MIN_STRENGTH",
+   "G_ELIG_MAX_EXTENSION",
+   "G_ELIG_DETERIORATION",
+   "G_ELIG_RESET_RENEW",
+   "G_DRAWDOWN_GATE",
+   "G_MAX_HOLD",
+   "G_BUFFER",
+   "G_INITIAL_STOP",
+   "G_RETENTION",
+   "G_CONT_CLASSIC",
+   "G_CONT_BREAKOUT",
+   "G_CONT_SHALLOW",
+   "G_CONT_MA_CROSS",
+   "POOL",
+   "POOL_FUND_FROM",
+   "POOL_ENABLED",
+   "POOL_WHOLE_SHARES",
+   "POOL_BLACKOUTS",
+   "POOL_PERIODS",
+   "POOL_TIE_ORDER",
+   "POOL_DETAIL",
+   "RISK_METRICS"
+  ],
+  "growthStructures": 8640,
+  "d1Structures": 14
+ },
+ "supported": "fffffffff",
+ "smoke": {
+  "ok": true,
+  "sum": 1635.3944173366574,
+  "mix": "4842b073ba50f7fd"
+ },
+ "memory": {
+  "freeBytes": 32328908800,
+  "plannedBytes": 5530583040
+ },
+ "dataset": {
+  "door": "D24",
+  "sessions": 2264,
+  "sha256": "4112a7bc2ce3b7a38fa3830b9f46126e198fa189898136b9aafdaee17b7ac588",
+  "dataSha256": {
+   "GDX": "f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c",
+   "VGT": "c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb"
+  }
+ },
+ "parity": {
+  "subjects": 18,
+  "identical": 18,
+  "keys": [
+   "R:NL0",
+   "R:IJ1",
+   "R:C4",
+   "R:C4R",
+   "P:0",
+   "P:1",
+   "P:2",
+   "P:3",
+   "P:4",
+   "P:5",
+   "P:6",
+   "P:7",
+   "P:8",
+   "P:9",
+   "P:10",
+   "P:11",
+   "P:12",
+   "P:13"
+  ]
+ },
+ "checks": [
+  {
+   "name": "purpose",
+   "ok": true,
+   "detail": "official-optimization"
+  },
+  {
+   "name": "acceptance",
+   "ok": true,
+   "detail": "ACCEPTED (research/gpu-phase2, 2026-11-19T13:02:54.147Z)"
+  },
+  {
+   "name": "binary",
+   "ok": true,
+   "detail": "/home/chad/projects/margin-trading/research/gpu-phase2/build/gb2"
+  },
+  {
+   "name": "compat",
+   "ok": true,
+   "detail": "server and working tree f67dcb3bcc3ba896"
+  },
+  {
+   "name": "device",
+   "ok": true,
+   "detail": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 (= nvidia-smi)"
+  },
+  {
+   "name": "no-test-hooks",
+   "ok": true,
+   "detail": "none enabled"
+  },
+  {
+   "name": "accepted-device",
+   "ok": true,
+   "detail": "the accepted device"
+  },
+  {
+   "name": "capability",
+   "ok": true,
+   "detail": "35 reachable features, all implemented"
+  },
+  {
+   "name": "smoke",
+   "ok": true,
+   "detail": "1635.3944173366574/4842b073ba50f7fd = the CPU's expectation"
+  },
+  {
+   "name": "memory",
+   "ok": true,
+   "detail": "free VRAM 32328908800 ≥ planned batch 5530583040 + 1 GiB headroom"
+  },
+  {
+   "name": "parity",
+   "ok": true,
+   "detail": "18 of 18 precommitted parity subjects identical to the canonical CPU engine"
+  }
+ ]
+}

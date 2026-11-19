@@ -1,0 +1,79 @@
+2026-11-19T01:49:18Z start [replay-compare]
+2026-11-19T01:58:20Z chain stopped by the operator in step 1 (waiting; nothing started) to insert the qualification replay step; relaunched
+2026-11-19T01:58:31Z start [replay-compare]
+{"identical":false,"lanes":64,"diffs":40,"fresh":[1242714,1242714],"wall":[5900.8,1132.5],"speedup":5.21}
+2026-11-19T02:03:02Z FAILED [replay-compare] rc=2
+2026-11-19T02:05:05Z step 1 FAILED on the non-finite encoding of the replay record (91 fields, all ±Inf/NaN vs null); encoding fixed; run 1 kept as a timing sample; chain relaunched from step 1 with a fresh replay (run 2)
+2026-11-19T02:05:05Z start [replay-compare]
+Running as unit: gpup2-a3-c19b1-r2.service; invocation ID: ab27eb3a42d446bca975ce89b47ffbf3
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 19min 49.199s
+             CPU time consumed: 20min 41.158s
+                   Memory peak: 10.5G (swap: 0B)
+{"identical":true,"lanes":64,"diffs":0,"fresh":[1242714,1242714],"wall":[5900.8,1130.6],"speedup":5.22}
+2026-11-19T02:24:55Z end [replay-compare]
+2026-11-19T02:24:55Z start [qualify-replay]
+Running as unit: gpup2-a3-qualify.service; invocation ID: 47f708d9ef0747eb8e5f47eb783e0f3c
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 4min 1.341s
+             CPU time consumed: 4min 28.598s
+                   Memory peak: 3.7G (swap: 0B)
+2026-11-19T02:28:56Z end [qualify-replay]
+2026-11-19T02:28:56Z start [bench]
+Running as unit: gpup2-bench.service
+          Finished with result: exit-code
+Main processes terminated with: code=exited, status=1/FAILURE
+               Service runtime: 2min 1.173s
+             CPU time consumed: 1min 32.571s
+                   Memory peak: 3.4G (swap: 0B)
+2026-11-19T02:30:57Z FAILED [bench] rc=1
+2026-11-19T02:37:59Z step 3 (bench) FAILED on a tool bug (GpuPool.close closes its server; bench then closed it again → write after end). Fixed with a keep-open proxy for shared servers in bench.ts and stress.ts (the stress tool had the same flaw); both dry-run clean; chain relaunched with START=3
+2026-11-19T02:37:59Z start [bench]
+Running as unit: gpup2-bench.service
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 21min 27.105s
+             CPU time consumed: 1h 26min 53.244s
+                   Memory peak: 20G (swap: 0B)
+2026-11-19T02:59:27Z end [bench]
+2026-11-19T02:59:27Z start [sanitizer]
+Running as unit: gpup2-sanitizer.service; invocation ID: 3e40bb2c2af64118a1e5f345e08dfb25
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 53.568s
+             CPU time consumed: 42.089s
+                   Memory peak: 10.2G (swap: 0B)
+sanitizer rows [('memcheck', 0, 97, 97), ('racecheck', 0, 97, 97), ('initcheck', 0, 97, 97), ('synccheck', 0, 97, 97)]
+2026-11-19T03:00:20Z end [sanitizer]
+2026-11-19T03:00:20Z start [negative]
+Running as unit: gpup2-negative.service
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 19.062s
+             CPU time consumed: 14.009s
+                   Memory peak: 799.8M (swap: 0B)
+2026-11-19T03:00:39Z end [negative]
+2026-11-19T03:00:39Z start [mini-opt]
+Running as unit: gpup2-mini-opt-f.service; invocation ID: 4fbeed1906634b238d5365ee20403da2
+          Finished with result: success
+Main processes terminated with: code=exited, status=0/SUCCESS
+               Service runtime: 4min 45.651s
+             CPU time consumed: 28min 24.708s
+                   Memory peak: 6G (swap: 0B)
+2026-11-19T03:05:25Z end [mini-opt]
+2026-11-19T03:05:25Z start [parity]
+{"runs":54,"subjects":144795,"mismatches":0,"random":141600,"doors":20,"checks":{"everyRunPassed":true,"oneBinary":true,"randomGenomesAtLeast100k":true,"everyDoorAndWindow":true,"fixtures":true,"determinismBatchSizes":true,"determinismZero":true},"pass":true}
+2026-11-19T04:55:53Z end [parity]
+2026-11-19T04:55:53Z start [stress]
+Running as unit: gpup2-stress.service; invocation ID: 8970bf46e40845cca347773f70e4a08a
+2026-11-19T09:40:36Z NOTE (AMENDMENTS A1): the stress step will end with a directed SIGTERM at the first round boundary after 12:55:53.744Z (8 h from its start, user directive); a 'FAILED [stress]' line below marks that stop, not a test failure; verdict in results/stress/closure.json; no stress is restarted
+          Finished with result: success
+Main processes terminated with: code=killed, status=15/TERM
+               Service runtime: 8h 34.681s
+             CPU time consumed: 10h 53min 3.002s
+                   Memory peak: 14.8G (swap: 0B)
+2026-11-19T12:56:28Z end [stress]
+2026-11-19T12:56:28Z chain complete
+2026-11-19T12:57:00Z NOTE: the directed A1 stop ended the stress step normally (exit after SIGTERM counted as success: 'end [stress]'); closure.json pass true, 8.009 h

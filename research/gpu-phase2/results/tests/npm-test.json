@@ -1,0 +1,65 @@
+{
+ "kind": "gpu-phase2 G9 npm test",
+ "t": "2026-11-19T13:00Z",
+ "command": "npm test (node --test --test-concurrency=4 src/**/*.test.ts) in unit gpup2-npm-test with PATH",
+ "totals": {
+  "tests": 1690,
+  "pass": 1679,
+  "fail": 7,
+  "cancelled": 0,
+  "skipped": 4
+ },
+ "baseline": {
+  "tests": 1680,
+  "pass": 1669,
+  "fail": 7,
+  "skipped": 4,
+  "source": "memory known-npm-test-failures: re-checked 2026-11-18 after gpu-phase1-feasibility (1,680 / 1,669 / 7 / 4)"
+ },
+ "newTests": 10,
+ "newTestsAllPass": true,
+ "failures": [
+  {
+   "file": "src/intraday-study/tests/study.test.ts",
+   "test": "match the hashes recorded when the study started, except the recorded post-study changes"
+  },
+  {
+   "file": "src/minute-optimizer/tests/goldenMaster.test.ts",
+   "test": "src/app/allIn.ts and src/app/allin-original.ts are byte-for-byte unchanged"
+  },
+  {
+   "file": "src/study7-runners/tests/runners.test.ts",
+   "test": "parity with the sealed Study 7 final door, and determinism"
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "the original is untouched"
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "checked-in settings (0.5% / 3%) on the repository default file"
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "brief settings (1% / 2%) on the research file, whole and from 2014"
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "volatile synthetic walks with gaps exercise every exit path, restrictions and resets"
+  }
+ ],
+ "knownFailuresOnly": true,
+ "unknownFailures": [],
+ "knownFailureCauses": [
+  "six tests open src/app/allin-original.ts (lowercase), which does not exist on this case-sensitive filesystem (the file is allIn-original.ts) \u2014 pre-existing",
+  "study7-runners parity reconciles only when the data ends on the sealed end 2026-10-29; data/VGT was extended to 2026-10-30 \u2014 pre-existing"
+ ],
+ "gpuPhase1LiveTest": "ran (the research binary and the GPU were available after the stress): reproduces the CPU engine bit for bit \u2014 pass",
+ "newTestFiles": [
+  "src/gpu-backend/tests/policy.test.ts (9)",
+  "src/gpu-backend/tests/layout.test.ts (1)"
+ ],
+ "log": "results/tests/npm-test.txt",
+ "pass": true,
+ "summary": "1690 tests, 1679 pass, 7 fail (the 7 known pre-existing), 4 skipped; baseline 1,680/1,669/7/4 + 10 new passing tests"
+}
