@@ -4,7 +4,7 @@
 `952da32c89dadbb39733953983e4cbb4c2206ea9b53161bc255784a68fe11a1b`). It is not edited; departures are recorded here.
 No gate, tolerance or decision rule was changed.
 
-## A1 — 2026-11-19T21:25Z: the negative and tamper suites rerun after an enforcement-only change
+## A1 — 2026-11-19T21:21Z: the negative and tamper suites rerun after an enforcement-only change
 
 - **What changed after the final campaign:** the repository suites (H7, 21:05–21:16Z) found a root TypeScript error in
   a test this study added (`src/gpu-backend/tests/policy.test.ts`, the type of an env-object array). It was fixed in
@@ -21,7 +21,7 @@ No gate, tolerance or decision rule was changed.
 - **Not rerun:** the GPU parity campaign, replays, sanitizer and sustained run (the evaluation digest and the binary are
   unchanged) and the Strategy Lab suites (no file of `apps/` or its dependencies changed).
 
-## A2 — 2026-11-19T21:25Z: a root type-check finding kept as a disclosed limitation
+## A2 — 2026-11-19T21:21Z: a root type-check finding kept as a disclosed limitation
 
 The same check found a type-only error in `src/gpu-backend/hostPipeline.ts:196` (`Transferable`, a DOM type name absent
 from Node's typings). The root type check is not one of §9's gates; the file is in the binary's evaluation digest, so a
