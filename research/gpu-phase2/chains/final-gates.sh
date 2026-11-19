@@ -2,12 +2,13 @@
 # gpu-phase2 FINAL gates on the frozen final binary (results/final-binary.json), one GPU job at a time (PROTOCOL.md §8),
 # fail-fast. START=<n> skips steps before n on a relaunch (completed steps' records stay; never rerun a passed gate).
 #   1 replay-compare  A3 C19 broad1 GPU replay vs the sealed record (waits for unit gpup2-a3-c19b1)
-#   2 bench           B1 benchmarks (exclusive)
-#   3 sanitizer       T0 on the final binary (W-CRASH, every Growth structural value, references, 64 random)
-#   4 negative        P3 negative tests on the final binary
-#   5 mini-opt        G7 (CPU arm, GPU arm, interrupted + resumed GPU arm, comparisons), RUN=g7f
-#   6 parity          G1-G6 FINAL campaign (chains/parity.sh) + SUMMARY.json
-#   7 stress          G8 ≥ 24 h
+#   2 qualify-replay  A3 C19 broad qualification replayed on the GPU vs its sealed record (benchmark + identity)
+#   3 bench           B1 benchmarks (exclusive)
+#   4 sanitizer       T0 on the final binary (W-CRASH, every Growth structural value, references, 64 random)
+#   5 negative        P3 negative tests on the final binary
+#   6 mini-opt        G7 (CPU arm, GPU arm, interrupted + resumed GPU arm, comparisons), RUN=g7f
+#   7 parity          G1-G6 FINAL campaign (chains/parity.sh) + SUMMARY.json
+#   8 stress          G8 ≥ 24 h
 cd /home/chad/projects/margin-trading
 NODE=/home/chad/.local/share/fnm/node-versions/v24.21.0/installation/bin/node
 L=/home/chad/projects/margin-trading/research/gpu-phase2/results/logs
@@ -32,12 +33,19 @@ if [ "$START" -le 1 ]; then
   ok replay-compare
 fi
 if [ "$START" -le 2 ]; then
+  step qualify-replay
+  rm -rf research/gpu-phase2/cache/a3-qualify
+  U gpup2-a3-qualify "$L/a3-qualify-replay-C19.txt" "$NODE" --expose-gc --max-old-space-size=20000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase2/a3-qualify-replay.ts --cutoff C19 --out research/gpu-phase2/results/optimizer/compare-a3-C19-broad-qualification.json; rc=$?
+  [ $rc -eq 0 ] || die qualify-replay $rc
+  ok qualify-replay
+fi
+if [ "$START" -le 3 ]; then
   step bench
   U gpup2-bench "$L/bench.txt" "$NODE" --expose-gc --max-old-space-size=16000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase2/bench.ts --out research/gpu-phase2/results/bench/bench.json; rc=$?
   [ $rc -eq 0 ] || die bench $rc
   ok bench
 fi
-if [ "$START" -le 3 ]; then
+if [ "$START" -le 4 ]; then
   step sanitizer
   U gpup2-sanitizer "$L/sanitizer-final.txt" "$NODE" --max-old-space-size=8000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase2/sanitize.ts --door W-CRASH --per 1 --random 64 --out-dir sanitizer-final; rc=$?
   [ $rc -eq 0 ] || die sanitizer $rc
@@ -47,13 +55,13 @@ bad=[r for r in d['rows'] if r['errors']!=0 or r['identical']!=r['subjects'] or 
 print('sanitizer rows', [(r['tool'],r['errors'],r['identical'],r['subjects']) for r in d['rows']]); sys.exit(1 if bad else 0)" || die sanitizer-result 2
   ok sanitizer
 fi
-if [ "$START" -le 4 ]; then
+if [ "$START" -le 5 ]; then
   step negative
   U gpup2-negative "$L/negative-final.txt" "$NODE" --max-old-space-size=8000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase2/negative.ts --out research/gpu-phase2/results/policy/negative-final.json; rc=$?
   [ $rc -eq 0 ] || die negative $rc
   ok negative
 fi
-if [ "$START" -le 5 ]; then
+if [ "$START" -le 6 ]; then
   step mini-opt
   rm -rf research/gpu-phase2/cache/mini-opt/g7f research/gpu-phase2/cache/mini-opt/g7f-resume
   U gpup2-mini-opt-f "$L/mini-opt-g7f.txt" /usr/bin/env RUN=g7f /bin/bash research/gpu-phase2/chains/mini-opt.sh; rc=$?
@@ -61,7 +69,7 @@ if [ "$START" -le 5 ]; then
   grep -q "chain complete" "$L/mini-opt-g7f.txt" || die mini-opt-incomplete 3
   ok mini-opt
 fi
-if [ "$START" -le 6 ]; then
+if [ "$START" -le 7 ]; then
   step parity
   PARITY_OUT=research/gpu-phase2/results/parity/final PARITY_LOG=$L/parity-final /bin/bash research/gpu-phase2/chains/parity.sh >> "$L/parity-final-chain.txt" 2>&1; rc=$?
   [ $rc -eq 0 ] || die parity $rc
@@ -69,7 +77,7 @@ if [ "$START" -le 6 ]; then
   [ $rc -eq 0 ] || die parity-summary $rc
   ok parity
 fi
-if [ "$START" -le 7 ]; then
+if [ "$START" -le 8 ]; then
   step stress
   U gpup2-stress "$L/stress.txt" "$NODE" --expose-gc --max-old-space-size=16000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase2/stress.ts --hours 24.05 --out-dir research/gpu-phase2/results/stress; rc=$?
   [ $rc -eq 0 ] || die stress $rc

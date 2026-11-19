@@ -17,9 +17,9 @@
   binary and every final gate.
 - **Running:** (1) unit `gpup2-a3-c19b1`: GPU replay of A3's sealed C19 broad1 (mini-opt.ts --a3-job C19:broad1; log
   `results/logs/a3-replay-C19-broad1.txt`; out `results/optimizer/a3-C19-broad1/gpu/`), started 01:43:12Z, ≈1,110 ev/s.
-  (2) unit `gpup2-final-gates` = `chains/final-gates.sh` (log `results/logs/final-gates-chain.txt`): waits for (1), then
-  1 replay-compare → 2 bench → 3 sanitizer-final → 4 negative-final → 5 mini-opt g7f → 6 parity FINAL (+SUMMARY) →
-  7 stress 24.05 h; sub-units `gpup2-bench|sanitizer|negative|mini-opt-f|par-<n>-<name>|stress`. Fail-fast; relaunch a
+  (2) unit `gpup2-final-gates-2` (relaunched 01:58Z after inserting the qualification replay as step 2; the first unit was stopped while waiting in step 1) = `chains/final-gates.sh` (log `results/logs/final-gates-chain.txt`): waits for (1), then
+  1 replay-compare → 2 qualify-replay (A3 C19 broad qualification on the GPU vs sealed) → 3 bench → 4 sanitizer-final →
+  5 negative-final → 6 mini-opt g7f → 7 parity FINAL (+SUMMARY) → 8 stress 24.05 h; sub-units `gpup2-bench|sanitizer|negative|mini-opt-f|par-<n>-<name>|stress`. Fail-fast; relaunch a
   failed chain with `START=<step>` (never rerun a passed step). Check: `systemctl --user list-units 'gpup2*'`;
   `grep -E "start|end|FAILED" results/logs/final-gates-chain.txt`.
 - **Done (dev evidence):** pre-final D24-core 2,325/2,325 + determinism (batch 1…128, shuffled, repeat, restart) 0;

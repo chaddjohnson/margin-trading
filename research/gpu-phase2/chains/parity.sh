@@ -37,7 +37,7 @@ for w in W-QUIET W-CRASH W-BEAR W-TREND E-2020 E-2022 E-2025; do
   P "$w" --door "$w" --options base --refs --random 3000 --strata 2 --label "A7-$w" --detail --risk
 done
 # every option set (D24), alone and all at once
-for o in cost10 cost20 rate14 slip25 nextopen native fund whole blackout periods tie ggdx d1only gonly vgtonly all; do
+for o in cost0 cost10 cost20 rate14 slip25 nextopen native fund whole blackout periods tie ggdx d1only gonly vgtonly all; do
   P "D24-$o" --door D24 --options "$o" --refs --random 1500 --strata 2 --label "O-$o" --detail --risk
 done
 P D24-growth-first --door D24 --options base --growth-first --refs --random 1500 --strata 2 --label O-gfirst --detail --risk

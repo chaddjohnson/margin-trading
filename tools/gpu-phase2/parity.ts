@@ -48,6 +48,7 @@ const optionSet = opt('options', 'base');
 // the option sets (O): every EvalOptions field the optimization domain uses, alone and all together
 const optionSets: Record<string, EvalOptions> = {
   base: vOptions,
+  cost0: { ...vOptions, friction: { costBps: 0 } }, // Assignment 3's qualification stress 'cost 0 bps'
   cost10: { ...vOptions, friction: { costBps: 10 } },
   cost20: { ...vOptions, friction: { costBps: 20 } },
   rate14: { ...vOptions, friction: { rate: 0.14 } },
