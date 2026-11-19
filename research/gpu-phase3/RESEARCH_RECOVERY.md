@@ -2,26 +2,37 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T23:07Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — Stage 5 final campaign **COMPLETE** (unit `gpup3-final`, 17:22:05 → 21:05:34Z, all 31
-  steps status 0, Result=success). Post-final chain COMPLETE (21:05:51 → 22:54:30Z: H7 pass; CPU A3 baseline 5,803.6 s identical; bench). A1 reruns COMPLETE (22:55–23:02Z, all pass). **ACCEPTED** 2026-11-19T23:02:38Z: `config/gpu-backend/acceptance.json` (commit `ce24a977`, source `e33da74f`), record sha256 `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214`; merge gate 19/19, verifier VERIFIED. Merge audit `fc8923b0`; `research/gpu-phase3` pushed (= origin, `fc8923b0`). **Merged into `main`** (`30801fd4`, verified on main, `6ceb76aa`; checkout currently `main`). Bundle, fast-forwards, pushes and branch restoration NEXT. Final binary `research/gpu-phase3/build/gb3` sha256
-  `06a4a04a83265616ab363632c02bf5d7737f34ec12156655cf95e135dde0dc23` (compat `30824182…2998`; `results/final-binary.json`
-  sealed `e60e91e2…a583`).
+- **Updated:** 2026-11-19T23:08Z (UTC, from `date -u`)
+- **Status:** **COMPLETE** — every stage done; **ACCEPTED** 2026-11-19T23:02:38Z (`config/gpu-backend/acceptance.json`,
+  schema 2, commit `ce24a977`, source `e33da74f`, binary `06a4a04a…`, record sha256
+  `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214`); **merged into `main`** (`30801fd4`, tree =
+  accepted branch; verified on main `6ceb76aa`); bundle committed `c59f0006`; `research/gpu-phase3` and
+  `research/gpu-phase2` fast-forwarded to `main` and pushed (verification below); checkout restored to
+  `research/gpu-phase2`. **Risk-envelope pilot NOT STARTED.**
+- **Audited deliverables (sha256):**
+  - `research/gpu-phase3/bundle/gpu-phase3-final-handoff.zip` `7024269dc29d393ff22bfd0d69c544f9a7e6100381e331cf61b167cf18d4004e`
+  - `research/gpu-phase3/GPU_ENFORCEMENT_INTEGRITY.md` `fa59535cd3425de91763d84bb76e4c37539d9939dfc60305a00d12d0c23a6de9`
+  - `research/gpu-phase3/GPU_ENGINE_FINAL_HANDOFF.md` `1295fe461915cde04bb150283c998631b9fb92b6194acd6ae78b1fce3867852a`
+  - `research/gpu-phase3/GPU_FINAL_PARITY_AND_ACCEPTANCE.md` `1026d453707623ab8a83581f8fdef9a0e9728f0f787d00cd0d3425213345f2cd`
+  - `research/gpu-phase3/GPU_INTEGRATION_AND_OPERATIONS.md` `f89c64aa97ee6fb1b637b6f6ab93f9261efc2b6b78984f8c7fb2e8563af5c675`
+  - `research/gpu-phase3/GPU_PERFORMANCE_BEFORE_AFTER.md` `094cabd1430e2b8ea5e349814f6daca44aaee6bfdef9ad7075baec2ed7a31aac`
+  - `research/gpu-phase3/GPU_PILOT_READINESS.md` `9cfc07dd1689c5493cb292379b3ad04c234259cc1b5a636c4d51a1da82e63669`
+  - `research/gpu-phase3/MANIFEST.json` `4e5c40bce5423e6151c2809aaae0fc9596509eb508dcd7291e6db807624c96cd`
+  - `config/gpu-backend/acceptance.json` `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214`
+- **Follow-up gate (the user / the original conversation):** whether and how to run the risk-envelope pilot; before it
+  can gate a search on the envelope, the official pool must deliver the envelope inputs (host-path change → fresh
+  acceptance, `GPU_PILOT_READINESS.md`); the type-only `hostPipeline.ts` finding (A2) is fixed in that next cycle.
 - **Authority:** `brief/BRIEF.md` sha256 `925e97e80dd8bca0bbc470fe07ef31388efcbae8ca26f9153efb10d02933f6be` (the user's
   handoff, read in full, 267 lines, final section "Final success criterion" present). `PROTOCOL.md` FROZEN
   2026-11-19T14:21:42Z (`results/protocol-freeze.json` sha256 `42d41b249a83aa3e1cc9794afe94ca401e519880bc7e830d5c1956a94f944475`,
   protocol `952da32c…1a1b`); amendments A1–A2 (`AMENDMENTS.md`, 21:21Z: enforcement-only reruns; a root type-check finding disclosed). Standard 3.0.0 adopted (scope diagnostic); preflight PASS.
-- **Running:** nothing.
+- **Running:** nothing (no unit of `gpup3.slice` active).
 - **Final campaign results (all pass):** offline 7/7; parity 54 runs, 144,795/144,795 identical, 176 determinism runs 0;
   finalists D24 96/96 (sealed 48/48), FULL 96/96; A3 broad1 583.9 / 581.8 s identical (10.1×); A3 qualification 163.7 s
   identical (377/385 qualified); A2 base 724.8 / 726.5 s identical (6.5×); mini CPU = GPU = resumed = w1 = w0 = Phase 2
   path; sanitizer 0 errors ×4 (97/97); negative 45/45; tamper 14/14; sustained 45.3 min, 3.77 M evaluations, 0 failures,
   parity 5,520/0, repeat 15/0.
-- **Next:** on `main`: `$NODE tools/gpu-phase3/manifest.ts`; `tools/gpu-phase3/bundle.sh <scratchpad>/bundle`; commit;
-  `git fetch . main:research/gpu-phase3 main:research/gpu-phase2` (ff only); push main, research/gpu-phase3,
-  research/gpu-phase2 (unsandboxed, retries); `git ls-remote origin` = local; `git switch research/gpu-phase2`;
-  then the final checkpoint (COMPLETE, bundle hash, push verification) committed on `main`, both branches fast-forwarded
-  again and pushed again; verify with `git ls-remote`.
+- **Next:** nothing authorised in this study; it is closed.
 - **Never:** start/implement/run the risk-envelope pilot; change strategies, fitness, genome, budgets, seeds or
   selection; touch sealed studies' records; CPU fallback; a new 8 h/24 h endurance run (only one 30–60 min sustained run).
 
@@ -77,8 +88,8 @@
 | S4 enforcement hardening | complete | manifest v2, acceptance schema 2, gate re-hash + committed-source checks, `officialRunner.ts`, `verify-acceptance.sh`, classification rule, tamper suite; dry runs `results/dev/negative-dry.json` 45/45, `tamper-dry.json` 14/14 | `GPU_ENFORCEMENT_INTEGRITY.md` |
 | S5 final acceptance campaign | complete | `chains/final.sh` (gpup3-final, 17:22:05–21:05:34Z, commit `d113e6c5`, 31/31); `chains/post-final.sh` (gpup3-post-final, 21:05:51–22:54:30Z: H7, CPU A3 baseline 5,803.6 s identical, bench); A1 `chains/acceptance-reruns.sh` (gpup3-reruns, 22:55:15–23:02:03Z, all pass); `tools/gpu-phase3/accept.ts` 23:02:38Z → ACCEPTED (`ce24a977`) | record sha256 `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214` |
 | S6 verdict | complete | `GPU_PERFORMANCE_BEFORE_AFTER.md` §5 | ≈ 10× (Growth-searched), 6.45× (Growth-fixed), 1.89× (small batches); pipeline kept as default; performance work stopped |
-| S7 merge into main, branch restoration | merge + verification complete; fast-forwards, pushes, restoration pending | `results/integration/merge-audit.json` (`fc8923b0`); `git merge --no-ff research/gpu-phase3` on main → `30801fd4` (tree `d0341679` = branch); `chains/post-merge.sh` (gpup3-post-merge, 23:05:06–23:05:37Z) → `post-merge-verification.json` pass, commit `6ceb76aa` on main | `GPU_INTEGRATION_AND_OPERATIONS.md` |
-| S8 bundle | running | `tools/gpu-phase3/manifest.ts`; `tools/gpu-phase3/bundle.sh <scratchpad dir>` → `research/gpu-phase3/bundle/gpu-phase3-final-handoff.zip` | — |
+| S7 merge into main, branch restoration | complete | `results/integration/merge-audit.json` (`fc8923b0`); `git merge --no-ff research/gpu-phase3` on main → `30801fd4` (tree `d0341679` = branch); `chains/post-merge.sh` (gpup3-post-merge, 23:05:06–23:05:37Z) → `post-merge-verification.json` pass, commit `6ceb76aa` on main | `GPU_INTEGRATION_AND_OPERATIONS.md` |
+| S8 bundle | complete | `tools/gpu-phase3/manifest.ts`; `tools/gpu-phase3/bundle.sh <scratchpad dir>` → `/home/chad/projects/margin-trading/research/gpu-phase3/bundle/gpu-phase3-final-handoff.zip` (commit `c59f0006`) | 303 files, 8,655,132 bytes, sha256 `7024269d…004e`; `zip -T` OK; extracted copy `sha256sum -c` OK; no forbidden content |
 
 ## On disk versus in memory
 
@@ -120,3 +131,8 @@
   files are git-ignored; no record changed. `tools/gpu-phase3/build-final.sh` now runs objcopy only on temporary copies.
   Method validated: gb2 and gb2-stale (different compiled-in digests) have identical .nv_fatbin and SASS; gb2-perturbed
   differs.
+
+## Push record
+
+- Pushes run unsandboxed (the sandbox has no DNS for github.com). Verified with `git ls-remote origin` equal to the
+  local refs:
