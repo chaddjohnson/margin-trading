@@ -8,8 +8,10 @@ export const toolkitHome =
 export const toolkitLib = path.join(toolkitHome, 'lib');
 export const nvcc = path.join(toolkitHome, 'bin', 'nvcc');
 export const computeSanitizer = path.join(toolkitHome, 'compute-sanitizer', 'compute-sanitizer');
-export const buildDir = process.env.GPU_BACKEND_BUILD_DIR ?? path.join(repoRoot, 'research', 'gpu-phase2', 'build');
-export const serverBinary = process.env.GPU_BACKEND_BINARY ?? path.join(buildDir, 'gb2');
+// the accepted binary's path (config/gpu-backend/acceptance.json names it; rebuild it reproducibly with
+// tools/gpu-backend/build.sh from the pinned sources)
+export const buildDir = process.env.GPU_BACKEND_BUILD_DIR ?? path.join(repoRoot, 'research', 'gpu-phase3', 'build');
+export const serverBinary = process.env.GPU_BACKEND_BINARY ?? path.join(buildDir, 'gb3');
 // the compilation flags the parity evidence was produced with (binary64, no FMA contraction, IEEE division/sqrt)
 export const nvccFlags = [
   '-O3',

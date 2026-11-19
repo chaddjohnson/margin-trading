@@ -26,13 +26,15 @@ import { serverBinary, toolkitLib } from '../../src/gpu-backend/toolchain.ts';
 const args = process.argv.slice(2);
 const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.indexOf(`--${k}`) + 1]! : d);
 const minutes = Number(opt('minutes', '45'));
+const dir = opt('out-dir', 'research/gpu-phase3/results/sustained');
+// --smoke: a 1–5 minute tool check (never the H6 evidence), only into results/dev/
+const smoke = args.includes('--smoke');
 
-if (!(minutes >= 30 && minutes <= 60))
+if (smoke ? !(minutes >= 1 && minutes <= 5 && dir.includes('/dev/')) : !(minutes >= 30 && minutes <= 60))
   throw new Error(`a bounded run lasts 30–60 minutes (got ${minutes}); longer endurance needs the user's approval`);
 
 const hours = minutes / 60;
 const hostWorkers = Number(opt('host-workers', '8'));
-const dir = opt('out-dir', 'research/gpu-phase3/results/sustained');
 const parityN = Number(opt('parity-n', '48'));
 const repeatEvery = Number(opt('repeat-every', '6'));
 const roundTasks = Number(opt('round', '32768'));
@@ -82,6 +84,7 @@ const S = {
   kind: 'gpu-phase3 H6 bounded sustained run (non-official)',
   started: new Date(t0).toISOString(),
   plannedMinutes: minutes,
+  smoke,
   hostWorkers,
   binary: { path: serverBinary, sha256: binarySha },
   rounds: 0,
