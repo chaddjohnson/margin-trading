@@ -80,6 +80,7 @@ const errorFrom = (e: { status: number | null; message: string; stack: string | 
 
 export class HostPipeline {
   private readonly workers: Worker[] = [];
+  private readonly spawned: Worker[] = []; // every worker ever started (close terminates them, ready or not)
   private readonly pending = new Map<string, Pending>();
   private failure: Error | null = null;
   private closing = false;
@@ -128,6 +129,8 @@ export class HostPipeline {
         name: `gpu-host-${i}`
       });
       let ready = false;
+
+      this.spawned.push(w);
 
       w.on('message', (m: Record<string, unknown>) => {
         if (m.t === 'ready') {
@@ -369,6 +372,6 @@ export class HostPipeline {
       clearTimeout(p.timer);
       p.reject(this.failure ?? new Error('host pipeline closed'));
     }
-    await Promise.all(this.workers.filter(Boolean).map((w) => w.terminate()));
+    await Promise.all(this.spawned.map((w) => w.terminate()));
   }
 }

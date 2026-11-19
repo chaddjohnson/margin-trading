@@ -80,8 +80,15 @@ const tasks: Task[] = (() => {
 const UUID = 'GPU-01234567-89ab-cdef-0123-456789abcdef';
 const uuidBytes = Buffer.from(UUID.slice(4).replaceAll('-', ''), 'hex');
 
-// a response consistent with the request: the device's shape, receipt and checksum, distinct values per candidate
-const responseOf = (enc: EncodedBatch, S: number) => {
+// a response consistent with the request: the device's shape, receipt and checksum, and values that are a function of
+// each task (its key), never of its position in the batch — as a real evaluator's are
+const keyValue = (k: string) => {
+  let h = 2166136261;
+
+  for (let i = 0; i < k.length; i++) h = Math.imul(h ^ k.charCodeAt(i), 16777619) >>> 0;
+  return h % 9973;
+};
+const responseOf = (enc: EncodedBatch, S: number, keys: string[] = tasks.map((t) => t.k)) => {
   const n = enc.n;
   const runPool = (enc.flags & FLAGS.RUN_POOL) !== 0;
   const daily = enc.flags & FLAGS.RETURN_DAILY ? n * S * 8 : 0;
@@ -101,13 +108,14 @@ const responseOf = (enc: EncodedBatch, S: number) => {
 
     buf.writeUInt32LE(c, a + CO.id!);
     buf.writeInt32LE(runPool ? 1 : 0, a + CO.executed!);
-    buf.writeDoubleLE(c + 0.25, a + CO.net!);
+    buf.writeDoubleLE(keyValue(keys[c]!) + 0.25, a + CO.net!);
     for (let b = 0; b < 4; b++) buf.writeInt32LE(-1, a + CO.book! + b * BookOut.size + BookOut.offsets.firstDS!);
   }
   const dailyAt = candAt + n * CandOut.size + (runPool ? enc.nRanges * Period.size : 0);
 
   for (let c = 0; c < n; c++)
-    for (let s = 0; s < S; s++) if (daily) buf.writeDoubleLE((c % 13) * 10 + s * 0.5, dailyAt + (c * S + s) * 8);
+    for (let s = 0; s < S; s++)
+      if (daily) buf.writeDoubleLE((keyValue(keys[c]!) % 13) * 10 + s * 0.5, dailyAt + (c * S + s) * 8);
   buf.writeBigUInt64LE(enc.nonce, ResultHeader.size + RC.batchNonce!);
   uuidBytes.copy(buf, ResultHeader.size + RC.uuid!);
   buf.writeUInt32LE(n, ResultHeader.size + RC.nCand!);
@@ -283,4 +291,122 @@ test("host pipeline: an encoding error is the serial path's error; the worker do
   }
   assert.equal(doorDigest(workerDoorOf(door)), doorDigest(door));
   assert.notEqual(doorDigest({ ...door, dates: [...door.dates.slice(0, -1), '2099-01-01'] }), doorDigest(door));
+});
+
+// the GpuPool on the parallel host path, without a GPU: a stand-in server answers each request with a response
+// consistent with it (the same as above), after a short delay
+class StandInServer {
+  pid = -1;
+  calls = 0;
+  stderrTail = '';
+  prepare(d: typeof door, t: Task[], o: Parameters<typeof encodeBatch>[2]) {
+    return { door: d, tasks: t, o, enc: encodeBatch(d, t, o), encodeMs: 0 };
+  }
+  async submit(p: { enc: EncodedBatch; tasks: Task[] }) {
+    this.calls++;
+    await new Promise((r) => setTimeout(r, 5));
+    return {
+      payload: responseOf(
+        p.enc,
+        door.sessions,
+        p.tasks.map((t) => t.k)
+      ),
+      roundTripMs: 5
+    };
+  }
+  complete(p: { tasks: Task[]; enc: EncodedBatch; o: Parameters<typeof encodeBatch>[2] }, raw: { payload: Buffer }) {
+    const d = decodeBatch(door, p.tasks, p.enc, raw.payload, p.o);
+
+    return { ...d, timing: { encodeMs: 0, roundTripMs: 0, decodeMs: 0, requestBytes: 0, responseBytes: 0 } };
+  }
+  kill() {}
+  async close() {}
+}
+
+test('GpuPool on the host pipeline: callers that run while the pool starts, every worker count, the same records as the serial path', async () => {
+  const { GpuPool } = await import('../pool.ts');
+  const os = await import('node:os');
+  const fs = await import('node:fs');
+  const path = await import('node:path');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'gpu-pool-'));
+  const recordsOf = async (hostWorkers: number) => {
+    const pool = new GpuPool({
+      door,
+      session: null,
+      server: new StandInServer() as never,
+      uuid: UUID,
+      ledgerFile: path.join(dir, `l${hostWorkers}.jsonl`),
+      batchSize: 64,
+      lingerMs: 2,
+      hostWorkers
+    });
+    const got = new Map<string, string>();
+    // three callers at once, without awaiting start(): the Lab's lanes do exactly this on their first evaluations
+    const parts = [tasks.slice(0, 100), tasks.slice(100, 220), tasks.slice(220)];
+
+    void pool.start();
+    try {
+      await Promise.all(parts.map((p) => pool.run(p, (t, v) => got.set(t.k, canonHash(v)))));
+      assert.equal(pool.counters.cpuScored, 0);
+      assert.equal(pool.hostWorkers, hostWorkers);
+    } finally {
+      await pool.close().catch(() => undefined);
+    }
+    return got;
+  };
+
+  try {
+    const serialRecords = await recordsOf(0);
+
+    assert.equal(serialRecords.size, tasks.length);
+    assert.deepEqual([...serialRecords.keys()].sort(), tasks.map((t) => t.k).sort());
+    for (const w of [1, 3]) {
+      const r = await recordsOf(w);
+
+      assert.deepEqual([...r.entries()].sort(), [...serialRecords.entries()].sort(), `${w} host workers`);
+    }
+    assert.deepEqual(
+      [...serialRecords.entries()].sort(),
+      serial.results.map((r) => [r.key, canonHash(r.record)]).sort()
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('GpuPool on the host pipeline: a worker that fails mid-job fails every caller; nothing of that batch is released', async () => {
+  const { GpuPool } = await import('../pool.ts');
+  const os = await import('node:os');
+  const fs = await import('node:fs');
+  const path = await import('node:path');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'gpu-pool-'));
+  const pipe = await HostPipeline.start({ door, workers: 3, minShard: 8, allowFaultInjection: true });
+  const pool = new GpuPool({
+    door,
+    session: null,
+    server: new StandInServer() as never,
+    uuid: UUID,
+    ledgerFile: path.join(dir, 'l.jsonl'),
+    batchSize: 64,
+    lingerMs: 2,
+    pipeline: pipe
+  });
+  let returned = 0;
+
+  try {
+    await assert.rejects(
+      pool.run(tasks, () => {
+        returned++;
+        if (returned === 64) pipe.injectNextDecodeFault('throw', 1);
+      }),
+      /injected decode failure/
+    );
+    assert.equal(returned % 64, 0, 'whole batches only');
+    assert.ok(returned < tasks.length);
+    assert.equal(pool.counters.cpuScored, 0);
+  } finally {
+    await pool.close().catch(() => undefined);
+    await pipe.close();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });

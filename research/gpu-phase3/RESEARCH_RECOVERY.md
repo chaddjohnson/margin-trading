@@ -2,21 +2,19 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T14:42Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — Stage 1 (profiling of the accepted Phase 2 path) running; Stage 2/4 code written and
-  staged (new files committed in `b4424384`; edits of existing backend files staged in the scratchpad, applied after the
-  chain — see "On disk versus in memory").
+- **Updated:** 2026-11-19T15:27Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — Stage 1 complete; Stage 2/4 code wired and committed (`37f67004`); Stage 2 targeted GPU
+  checks running (unit `gpup3-devcheck-a`, `chains/devcheck.sh`, log `results/logs/devcheck-a.txt`).
 - **Authority:** `brief/BRIEF.md` sha256 `925e97e80dd8bca0bbc470fe07ef31388efcbae8ca26f9153efb10d02933f6be` (the user's
   handoff, read in full, 267 lines, final section "Final success criterion" present). `PROTOCOL.md` FROZEN
   2026-11-19T14:21:42Z (`results/protocol-freeze.json` sha256 `42d41b249a83aa3e1cc9794afe94ca401e519880bc7e830d5c1956a94f944475`,
   protocol `952da32c…1a1b`); no amendments. Standard 3.0.0 adopted (scope diagnostic); preflight PASS.
-- **Running:** systemd unit `gpup3-baseline` (slice `gpup3.slice`), chain `research/gpu-phase3/chains/baseline.sh`,
-  log `research/gpu-phase3/results/logs/baseline-chain.txt`, started 2026-11-19T14:09:07Z. Steps: p2-a3-r1, p2-a3-r2
-  (A3 C19 broad1), p2-a2-r1 (A2 C19 base), p2-mini-r1..3, comparisons. Finished cleanly iff the log ends with
-  "chain complete"; a "FAILED [step]" line marks a failure. **Do not edit any file the chain imports while it runs**
-  (tools/gpu-phase3/{replay,compare,a2lab}.ts, src/gpu-phase3/*, src/gpu-backend/*).
-- **Next:** when the chain completes: record the Stage 1 profile tables, then implement Priority A (new files) and switch
-  GpuPool only after the baseline chain is finished.
+- **Running:** unit `gpup3-devcheck-a` (offline, unit tests, parity D24 all-options + fixture through the pipeline with
+  determinism over batch sizes and host workers 1/3/12, mini replay w8 vs p2-mini). Finished iff its log ends with
+  "chain complete".
+- **Next:** if devcheck passes: `chains/sweep.sh` (A3 job with host workers 4/8/12 and batch 16,384), then decide
+  Priority B; then Stage 4 checks; then build the final binary (`tools/gpu-phase3/build-final.sh`) and the final campaign
+  (`chains/final.sh`, then `chains/tests.sh`, then `tools/gpu-phase3/accept.ts`).
 - **Never:** start/implement/run the risk-envelope pilot; change strategies, fitness, genome, budgets, seeds or
   selection; touch sealed studies' records; CPU fallback; a new 8 h/24 h endurance run (only one 30–60 min sustained run).
 
@@ -62,9 +60,10 @@
 | Stage | Status | Command / output | Result |
 |---|---|---|---|
 | S0 state, inventory | complete | this file | see Stage 0 |
-| S1 profile Phase 2 path | running | `chains/baseline.sh` (unit gpup3-baseline) → `results/optimizer/p2-*` | p2-a3-r1: 1,131.1 s, identical to sealed (5.22×), main-thread ELU 0.70 (active 791 s: encode 161, decode 292, archive 70, rest ≈ 268), GPU server 347 s |
+| S1 profile Phase 2 path | complete | `chains/baseline.sh` (unit gpup3-baseline, 14:09–15:17Z; the A2 step's final dump failed after its job-end, recovered by `tools/gpu-phase3/archive-digest.ts`, minis run by hand 15:20–15:24Z) → `results/optimizer/p2-*`, compares `compare-p2-*` | A3 r1 1,131.1 s / r2 1,126.8 s, identical to sealed (5.22×/5.24× vs 5,900.8 s), ELU 0.70 (active 791: encode 161, decode 292, archive 70, rest ≈ 268), GPU server 347; A2 C19 base 1,641.0 s identical to sealed (2.85× vs 4,681.1 s on 14 CPU workers), ELU 0.80 (active 1,306: encode 278, decode 505, archive 126), server 353; mini 72.8 s ×3 identical, ELU 0.27, server 53.5 (GPU-latency-bound, median batch 376) |
+| S2 Priority A wiring | complete | commit `37f67004`; offline check `results/dev/offline-check-a.json` | 7/7 captures identical (serial codec and 1/2/3/8 workers), refusals correct; 17/17 backend tests |
 | S1 plan + benchmark protocol | complete | `PROTOCOL.md` frozen 14:21:42Z | — |
-| S2 Priority A host workers | not started | — | — |
+| S2 targeted GPU checks | running | `chains/devcheck.sh` (unit gpup3-devcheck-a) | — |
 | S3 optional orchestration | not started | — | — |
 | S4 enforcement hardening | not started | — | — |
 | S5 final acceptance campaign | not started | — | — |
@@ -84,10 +83,17 @@
   `tools/gpu-backend/verify-acceptance.sh`, `tools/gpu-phase3/*` (replay, compare, capture, offline-check, parity,
   parity-summary, parity-finalists, a3-qualify-replay, sanitize, negative, tamper*, sustained, accept),
   `chains/{baseline,devcheck,parity}.sh`.
-- Plan at the swap: move `config/gpu-backend/acceptance.json` (Phase 2, schema 1, sha256 b7df366a…) to
-  `results/superseded/acceptance-gpu-phase2.json` (official runs blocked during development, as they must be).
+- Done at the swap (commit `37f67004`): `config/gpu-backend/acceptance.json` (Phase 2, schema 1, sha256 b7df366a…)
+  moved to `results/superseded/acceptance-gpu-phase2.json` — official runs are blocked until the new acceptance.
 
 ## Disclosures
+
+- 2026-11-19T15:17:39Z: the Phase 2-path A2 baseline replay (`p2-a2-r1`) completed its job (runs.jsonl "job-end",
+  2,196,920 fresh) but the replay tool's final dump of the 2.2 M-row key → hash map as one JSON string exceeded V8's string
+  limit (RangeError), so its archive digest and the chain's remaining steps did not run. Recovery: the digest and the raw
+  map were recomputed from the job's own archive (`tools/gpu-phase3/archive-digest.ts`, read-only) and the sealed
+  comparison run by hand (identical); the replay tool now streams the map (JSONL) and digests incrementally (the same
+  bytes: sorted "key=hash" lines joined by newlines); the three Phase 2-path minis ran by hand before the code swap.
 
 - 2026-11-19T14:51:50Z (incident, no content change): while validating the kernel-identity method, `objcopy
   --dump-section` (which rewrites its input in place when no output file is given) was run directly on Phase 2's local

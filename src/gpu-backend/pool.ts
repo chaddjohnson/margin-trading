@@ -127,11 +127,22 @@ export class GpuPool {
     return this.pipe?.size ?? 0;
   }
 
-  async start() {
-    if (!this.pipe && (this.o.hostWorkers ?? 0) > 0) {
-      this.pipe = await HostPipeline.start({ door: this.o.door, workers: this.o.hostWorkers! });
+  // the pool's own host pipeline (hostWorkers ≥ 1), started once; every run() waits for it before queueing a task, so a
+  // caller that runs while another is still starting the pool (the Lab starts it from its first evalMany) can never see
+  // a batch prepared on one host path and completed on another
+  private pipeReady: Promise<void> | null = null;
+
+  private ensurePipe() {
+    if (this.pipe || (this.o.hostWorkers ?? 0) <= 0) return this.pipeReady;
+    this.pipeReady ??= HostPipeline.start({ door: this.o.door, workers: this.o.hostWorkers! }).then((p) => {
+      this.pipe = p;
       this.ownPipe = true;
-    }
+    });
+    return this.pipeReady;
+  }
+
+  async start() {
+    await this.ensurePipe();
     if (this.o.telemetryFile) {
       fs.mkdirSync(path.dirname(this.o.telemetryFile), { recursive: true });
       this.telemetryTimer = setInterval(() => this.sample(), 30000);
@@ -274,11 +285,13 @@ export class GpuPool {
     const before = this.released;
     let releaseDone = () => {};
 
-    if (this.pipe) this.released = new Promise<void>((r) => (releaseDone = r));
+    const pipe = this.pipe; // one host path for the whole batch (prepare and complete)
+
+    if (pipe) this.released = new Promise<void>((r) => (releaseDone = r));
 
     try {
-      const prepared: PreparedBatch | PreparedParallel = this.pipe
-        ? await this.pipe.prepare(
+      const prepared: PreparedBatch | PreparedParallel = pipe
+        ? await pipe.prepare(
             this.o.door,
             batch.map((p) => p.task),
             opts
@@ -309,11 +322,11 @@ export class GpuPool {
       if (!this.failure && this.queue.length >= (this.o.pipelineMin ?? Math.floor((this.o.batchSize ?? 8192) / 4)))
         void this.dispatch();
 
-      const r = this.pipe
-        ? await this.pipe.complete(prepared as PreparedParallel, raw, this.uuid, 'lean')
+      const r = pipe
+        ? await pipe.complete(prepared as PreparedParallel, raw, this.uuid, 'lean')
         : this.server.complete(prepared as PreparedBatch, raw, this.uuid);
 
-      if (this.pipe) {
+      if (pipe) {
         await before;
         if (this.failure) throw this.failure; // an earlier batch failed: nothing of this one is released
       }
@@ -434,6 +447,10 @@ export class GpuPool {
     let left = tasks.length;
 
     if (left === 0) return;
+
+    const starting = this.ensurePipe();
+
+    if (starting) await starting; // the host pipeline exists before any task is queued (a no-op on the serial path)
     if (this.failure) throw this.failure;
     if (this.stopReason) throw new StopRequested(this.stopReason);
 
@@ -481,6 +498,7 @@ export class GpuPool {
       this.o.ledgerFile,
       `${JSON.stringify({ t: new Date().toISOString(), event: 'close', ...this.counters, hostWorkers: this.hostWorkers, failure: this.failure?.message ?? null })}\n`
     );
+    if (this.pipeReady) await this.pipeReady.catch(() => undefined); // a pipeline still starting is closed too
     if (this.pipe && this.ownPipe) await this.pipe.close();
     await this.server.close();
   }
