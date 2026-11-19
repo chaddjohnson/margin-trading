@@ -162,3 +162,20 @@ the server time; overlapped with the D1 kernel). Measured end-to-end on the comp
 (search) and **5.24×** (qualification); projected at Assignment 3 scale 4.6–5.4×. The gate (≥ 3× end-to-end, ideally
 ≥ 5×) **passes**; the decision to continue the Growth port was taken during development on the throughput probe and is
 recorded in `results/tr1-tranche-gate.json`.
+
+## 10. Sustained throughput over the 8-hour endurance run (production pool, 32,768 tasks per round)
+
+Measured over the whole run (`results/stress/closure.json`; 731 rounds, 23,953,408 evaluations, ≈ 29–30 rounds per cell): mean ev/s per door and workload; round-to-round coefficient of variation in brackets. The per-round GPU pool here keeps the server warm across rounds and overlaps CPU parity sampling on 4 workers.
+
+| Door | joint | detail+risk | all-options | d1-only | growth-only |
+|---|---:|---:|---:|---:|---:|
+| D19 | 1,445 (0.6 %) | 1,170 (0.7 %) | 1,314 (0.3 %) | 2,204 (1.2 %) | 1,684 (2.0 %) |
+| D21 | 1,088 (0.4 %) | 872 (0.4 %) | 991 (0.5 %) | 1,637 (0.8 %) | 1,294 (0.5 %) |
+| D23 | 901 (0.4 %) | 698 (0.4 %) | 822 (1.0 %) | 1,354 (0.5 %) | 1,123 (0.4 %) |
+| D24 | 825 (0.5 %) | 632 (0.4 %) | 748 (0.3 %) | 1,239 (0.5 %) | 1,021 (0.5 %) |
+| FULL | 687 (0.6 %) | 542 (0.3 %) | 653 (0.3 %) | 1,036 (0.5 %) | 877 (0.5 %) |
+
+No drift: first-third versus last-third means differ by −0.6 % to +0.7 % in every cell; hourly volume 2,916,352–3,047,424 evaluations; host RSS flat after the first hour (+1.9 MiB/h); VRAM peak 7,454 MiB; ≤ 59 °C, ≤ 228.39 W, no throttling.
+
+These steady-state figures exceed the single pooled benchmark run of §4 (e.g. D24 joint 825 vs 597 ev/s; FULL 687 vs
+419): the projections of §8 use the lower §4 figures and are therefore conservative.

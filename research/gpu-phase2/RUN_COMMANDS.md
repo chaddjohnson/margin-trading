@@ -90,4 +90,23 @@ W-CRASH --per 1 --random 64 --out-dir sanitizer-final`; 5 `negative.ts --out res
 `RUN=g7f chains/mini-opt.sh`; 7 `chains/parity.sh` (PARITY_OUT=results/parity/final) + `parity-summary.ts`; 8
 `stress.ts --hours 24.05 --out-dir results/stress`.
 
-FINAL_STEPS
+## Endurance shortened to 8 h (amendment A1) and the closing steps
+
+```bash
+systemctl --user stop gpup2-post-stress                 # the superseded post-stress chain (it only polled)
+systemd-run --user --unit=gpup2-stress-stop --collect -p KillMode=process -E PATH="$PATH" -E HOME="$HOME" \
+  -p StandardOutput=append:$PWD/research/gpu-phase2/results/logs/stress-stop.txt \
+  -p StandardError=append:$PWD/research/gpu-phase2/results/logs/stress-stop.txt \
+  --working-directory=$PWD /bin/bash research/gpu-phase2/chains/stress-stop.sh
+#   → SIGTERM 12:56:27.908Z after round 730 was saved; tools/gpu-phase2/stress-close.ts → results/stress/closure.json;
+#     npm test (unit gpup2-npm-test); parity-finalists.ts (unit gpup2-finalists); run-log copies; accept.ts --dry-run
+$NODE tools/gpu-phase2/accept.ts                         # ACCEPTED → config/gpu-backend/acceptance.json
+GPU_POLICY_PURPOSE=official-optimization $NODE tools/gpu-backend/official-preflight.ts --study research/gpu-phase2 --door D24 --domain pilot --batch 8192
+$NODE tools/gpu-phase2/manifest.ts                       # MANIFEST.json
+tools/gpu-phase2/bundle.sh <scratch dir>                 # bundle/gpu-phase2-report-bundle.zip (zip -T, sha256sum -c)
+```
+
+Documentation-only `main` integration: temporary index from `main`'s tree + the files listed in
+`main-integration/README.md` → `git commit-tree` → `main` `10ca3422` (from `108c241b`); `git merge --no-ff main` into
+the branch (`ee13a497`, keeping the branch's `CLAUDE.md` and roadmap); pushes of both refs verified with
+`git ls-remote` (recorded in `RESEARCH_RECOVERY.md`).

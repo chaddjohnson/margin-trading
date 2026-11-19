@@ -12,7 +12,7 @@ change; (d) verification (parity, determinism, sanitizer, negative tests, a fixe
 stress test, the repository and Strategy Lab suites); and (e) real benchmarks and projections. All of it was built and
 run on Apollo's RTX 5090 (vLLM absent, ≈ 31 GB free), on branch `research/gpu-phase2`.
 
-**Verdict:** VERDICT_LINE
+**Verdict:** **ACCEPTED.** Every gate of the frozen protocol passed on the final binary (the endurance gate at 8 h by the user's amendment A1). The evaluator is complete for the reachable domain, bit-exact, ≈ 5× faster end to end on real optimizer jobs, and official optimization is GPU-only with no CPU fallback. No official optimization was started.
 
 ## 2. Decisions made (and why)
 
@@ -32,14 +32,14 @@ run on Apollo's RTX 5090 (vLLM absent, ≈ 31 GB free), on branch `research/gpu-
 | Requirement | Status |
 |---|---|
 | Every reachable D1, RC, Growth (all 8,640 structures and conditional genes), pool, option, record and risk-envelope feature on the GPU | **satisfied** — no reachable official feature is unported; out-of-domain features are refused by capability bit |
-| Bit-exact parity | **satisfied** — 0 mismatches in 144,795 campaign candidates (141,600 random genomes, every door, window, episode, fixture and option set), two complete sealed Assignment 3 jobs replayed identically, FINALISTS_SHORT |
+| Bit-exact parity | **satisfied** — 0 mismatches in 144,795 campaign candidates (141,600 random genomes, every door, window, episode, fixture and option set), two complete sealed Assignment 3 jobs replayed identically, Assignment 3's 48 sealed finalists identical (and equal to their sealed figures to the cent) |
 | Determinism | **satisfied** — 121 runs (batch 1 … 128, large, shuffled, repeat, restart): 0 differences |
 | Fixed-seed optimizer identity (incl. resume) | **satisfied** — CPU = GPU = interrupted/resumed GPU |
 | No CPU fallback, fail closed, refusal before expensive work | **satisfied** — 35/35 negative tests on the final binary; the gate refuses today (no acceptance record yet existed during the tests) |
 | Working compute-sanitizer on the real kernels | **satisfied** — memcheck, racecheck, initcheck, synccheck: 0 errors |
-| ≥ 24 h stress with CPU parity samples | STRESS_SHORT |
-| `npm test` and Strategy Lab regression | NPM_SHORT; Strategy Lab: typecheck, lint, 314/314 unit tests, 81/81 e2e, live UI build and `state/strategy-lab/` untouched |
-| Policy in `CLAUDE.md` and the standard, templates, PR/contribution checklists, executable enforcement and tests | **satisfied** on the research branch; documentation also on `main` (MAIN_SHORT) |
+| ≥ 24 h stress with CPU parity samples | **satisfied at 8 h** (shortened from 24 h by the user, amendment A1): 8.009 h, 23,953,408 evaluations, 0 GPU errors, 35,040 CPU parity samples and 117 repeatability checks with 0 mismatches, peak VRAM 7,454 MiB, host memory flat (+1.9 MiB/h), throughput variation ≤ 2 %, ≤ 59 °C, no throttling |
+| `npm test` and Strategy Lab regression | **satisfied** — `npm test` 1,690 tests, 1,679 pass, only the 7 known pre-existing failures, 4 skipped (= baseline + 10 new passing tests); Strategy Lab: typecheck, lint, 314/314 unit tests, 81/81 e2e, live UI build and `state/strategy-lab/` untouched |
+| Policy in `CLAUDE.md` and the standard, templates, PR/contribution checklists, executable enforcement and tests | **satisfied** on the research branch; documentation also on `main` (`main` commit `10ca3422`, documentation only) |
 | Benchmarks and projections | **satisfied** — see §4 |
 
 ## 4. Measured speed and memory
@@ -69,8 +69,8 @@ run on Apollo's RTX 5090 (vLLM absent, ≈ 31 GB free), on branch `research/gpu-
 
 - Root `CLAUDE.md` (read by every new session) opens with the mandatory GPU-only / parity section; standard
   **3.0.0** §9 is the normative text; `docs/gpu/` holds the checklist, the feature matrix and the operations guide.
-- ACCEPTANCE_LINE
-- Merges and approvals still needed: MERGES_LINE
+- **ACCEPTED** (2026-11-19T13:02Z): `config/gpu-backend/acceptance.json` on `research/gpu-phase2` pins binary `3fe09e67…`, the RTX 5090 `GPU-ae5f222c…`, the compatibility digest of the 94 CPU sources + CUDA + host path, and 11 evidence files; the official gate opens on it (its parity mini-set 18/18 identical). Any change to an evaluation dependency makes it STALE until the parity checklist is repeated (the merge-gate test enforces this).
+- Merges and approvals still needed: (1) merging the GPU engine and enforcement code into `main` (only documentation is there now; until then official GPU optimization runs from `research/gpu-phase2`); (2) authorizing each official study (none was started).
 
 ## 7. Concerns
 
@@ -81,11 +81,15 @@ run on Apollo's RTX 5090 (vLLM absent, ≈ 31 GB free), on branch `research/gpu-
 - Complete jobs were measured on D19; longer doors are projected from measured throughput.
 - The entrypoint audit is marker-based; a deliberately disguised CPU optimizer could evade it (review remains
   necessary).
-CONCERNS_EXTRA
+- The endurance test ran 8 h, not 24 h (your amendment): faults rarer than about once per 8 h are not excluded.
+- One lint style error and 130 formatting warnings remain in host-path files of the compatibility manifest (fixing them needs a re-acceptance).
 
 ## 8. Next actions (the user's decisions)
 
-NEXT_ACTIONS
+1. Review this handoff and `GPU_PHASE2_REPORT.md`.
+2. Decide whether to merge the GPU engine and enforcement code into `main` (recommended before the next official study; otherwise run it from `research/gpu-phase2`).
+3. **The deferred risk-envelope pilot can now be authorized** — acceptance is not blocked. It needs a study that adopts standard 3.0.0 (`evaluationBackend: gpu-required`), passes `npm run research-preflight`, and runs through `openOfficialGpuSession` → `GpuPool` → `EvalLab` (Assignment 3's search and qualification code already run unchanged on them). Projected ≈ 20–30 min of GPU time for 0.3–0.5 M evaluations. It was **not** started.
+4. Optional engineering (needs the parity checklist and a new acceptance): worker-thread encode/decode for ≈ 1.5–2× more end-to-end speed.
 
 ## 9. Where everything is
 

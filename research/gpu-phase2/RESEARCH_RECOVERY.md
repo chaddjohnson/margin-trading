@@ -2,88 +2,26 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T12:58Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
-- **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
-  2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
-  Standard 2.2.0 adopted (scope diagnostic; retained pinned standard 2.2.0 after 3.0.0 was registered), preflight PASS.
-  `AMENDMENTS.md`: none.
-- **FINAL binary:** `build/gb2` sha256 `3fe09e6791ff9996bc4f463c43e7d8dff46600ca3bcbf0d7777be155301e13fc`, compat digest
-  `f67dcb3bcc3ba89647610e7cce548c97ea288df920e71b777fd94478d83adaea` (sources at `42a0694f`; build.sh strips symbols →
-  reproducible: three builds gave the same sha). Sealed identity: `results/final-binary.json` (seals.jsonl,
-  sha256 `eec62aec…cafaa`). Test builds: gb2-dev = same sha; gb2-perturbed `dcd18c6e…`; gb2-stale `a120ab2a…`.
-  **DO NOT edit any file in the compat closure** (`compat.ts --manifest`: 94 CPU files, CUDA sources, host
-  client/encode/dataset/layout/canon/compat/toolchain/pool) until the acceptance is written — it would invalidate the
-  binary and every final gate.
-- **Running:** unit `gpup2-final-gates-4` (02:37:59Z, START=3; earlier: `-3` from 02:05Z) = `chains/final-gates.sh` (log
-  `results/logs/final-gates-chain.txt`): 1 A3 C19 broad1 GPU replay **run 2** (sub-unit `gpup2-a3-c19b1-r2`, out
-  `results/optimizer/a3-C19-broad1/gpu/`) + compare vs the sealed record → 2 qualify-replay (A3 C19 broad qualification
-  on the GPU vs sealed) → 3 bench → 4 sanitizer-final → 5 negative-final → 6 mini-opt g7f → 7 parity FINAL (+SUMMARY) →
-  8 stress 24.05 h; sub-units `gpup2-a3-qualify|bench|sanitizer|negative|mini-opt-f|par-<n>-<name>|stress`. Fail-fast;
-  relaunch a failed chain with `START=<step>` under a NEW unit name (never rerun a passed step). Check:
-  `systemctl --user list-units 'gpup2*'`; `grep -E "start|end|FAILED" results/logs/final-gates-chain.txt`.
-- **Step 1 PASSED (02:24:55Z):** replay run 2 identical to the sealed A3 C19 broad1 (64 lanes, 0 differences, fresh
-  1,242,714 and archive hits 7,607 equal); 1,130.6 s vs 5,900.8 s = 5.22×; peak 10.5 GB
-  (`results/optimizer/compare-a3-C19-broad1.json`).
-- **Step 2 PASSED (02:28:56Z):** A3 C19 broad qualification replayed on the GPU identical (385 members, 377 qualified,
-  251,405 fresh, 0 evidence differences); 238.5 s vs 1,249.5 s = 5.24×
-  (`results/optimizer/compare-a3-C19-broad-qualification.json`).
-- **Step 3 (bench)** failed once (02:30Z, tool bug: double close of a pool's server) → fixed with a keep-open proxy in
-  bench.ts and stress.ts (the stress tool had the same flaw), both dry-run clean (scratch outputs); chain relaunched as
-  unit **`gpup2-final-gates-4`** with START=3 at 02:37:59Z.
-- **Step 3 bench complete (02:59Z):** `results/bench/bench.json`; projections `results/bench/projections.json`; TR1
-  `results/tr1-tranche-gate.json`; report `GPU_PHASE2_BENCHMARKS.md`.
-- **Step 4 sanitizer-final PASSED (03:00Z):** 4 tools 0 errors, 97/97 identical (`results/sanitizer-final/`).
-- **Step 5 negative-final PASSED (03:00:39Z):** 35/35 (`results/policy/negative-final.json`).
-- **Step 6 mini-opt g7f PASSED (03:05:25Z):** CPU = GPU and GPU = interrupted + resumed GPU (16 lanes, 30,749 archived,
-  5,746 configs, 0 differences; `results/optimizer/compare-g7f-*.json`).
-- **Step 7 FINAL parity campaign PASSED (03:05–04:56Z):** 54 runs, 144,795 candidates, 0 mismatches, 141,600 random
-  genomes, 64,063 envelopes, 121 determinism runs 0; SUMMARY all checks true (`results/parity/final/SUMMARY.json`,
-  sha256 fe847858f4255949…).
-- **AMENDMENTS A1 (09:2xZ, user directive):** G8 shortened to **8 h total from the original start** → deadline
-  2026-11-19T12:55:53.744Z. The running tool cannot change its deadline (a `const` from `--hours 24.05`, no runtime
-  control), so unit **`gpup2-stress-stop`** (`chains/stress-stop.sh`, log `results/logs/stress-stop.txt`; tested on a
-  stand-in unit) sends SIGTERM to the stress main process right after the first round saved after the deadline, writes
-  `results/stress/stop.json` and `closure.json` (`tools/gpu-phase2/stress-close.ts`), then runs npm test, the
-  finalists parity, run-log copies and `accept.ts --dry-run`. The old `gpup2-post-stress` chain was stopped (it only
-  polled). `accept.ts` G8 now reads `closure.json` (≥ 8 h). DO NOT start another GPU job before the stress has exited.
-- **Step 8 stress COMPLETE (A1, 8 h):** stopped by SIGTERM 12:56:27.908Z right after round 730 was saved; 8.009 h, 731
-  rounds, 23,953,408 evaluations, 0 failures/restarts, parity 35,040/0, repeat 117 checks/0, VRAM peak 7,454 MiB,
-  host RSS slope +1.9 MiB/h; closure.json pass true (sha256 73d9ad47408ffb97…); gb2 exited, GPU back to 774 MiB. Original log
-  `results/logs/stress.txt`; records `results/stress/{summary.json,rounds.jsonl,telemetry.jsonl,ledger/}`). Do not
-  start any other GPU job while it runs (one GPU job at a time).
-- **Strategy Lab regression PASSED (05:04Z):** typecheck, lint, vitest 34 files / 314 tests, e2e 81/81; live dist and
-  state/strategy-lab unchanged (`results/tests/strategy-lab.json`). Root `tsc --noEmit` 0 errors. ESLint on new code:
-  1 style error (`client.ts:443`, a ternary as a statement — in the compat manifest, left unchanged) + 130 prettier
-  warnings, all in manifest files (non-manifest files formatted; digest unchanged).
-- **Superseded (stopped 09:2xZ):** unit `gpup2-post-stress` (`chains/post-stress.sh`, log `results/logs/post-stress.txt`): waits for
-  `gpup2-stress`, checks its summary, then `npm test` (unit `gpup2-npm-test` → `results/tests/npm-test.txt`), the
-  finalists parity (unit `gpup2-finalists` → `results/parity/final-finalists.json`), copies run logs to
-  `results/runlogs/final/`, and runs `accept.ts --dry-run`.
-- **Then by hand:** write `results/tests/npm-test.json` (compare with the known 7 failures; baseline after gpu-phase1:
-  1,680 tests / 1,669 pass / 7 fail / 4 skipped; this branch adds 10 tests), `accept.ts` (writes
-  `config/gpu-backend/acceptance.json`), fill report placeholders (VERDICT_SECTION, STRESS_GATE, G9_GATE,
-  FINALISTS_GATE/SECTION, ACCEPTANCE_STATUS, MAIN_STATUS, OPEN_ITEMS, COMMITS_SECTION, FINAL_STEPS), HANDOFF, ROADMAP,
-  MANIFEST (`tools/gpu-phase2/manifest.ts`), bundle (`tools/gpu-phase2/bundle.sh <scratch>`), commit, push, docs-only
-  `main` integration (scratch `main-docs/CLAUDE.md` prepared; procedure in memory docs-only-main-integration). Branch pushed (backup) at
-  `a9ae79ec` (ls-remote verified).
-- **Replay run 1** (01:43–02:03Z): 5.21× (1,132.5 s vs 5,900.8 s), counts identical, but its record wrote ±Inf/NaN as
-  null (91 fields, all encoding-only) → kept as a timing sample (`results/optimizer/a3-C19-broad1-run1/NOTE.md`); fixed
-  `src/gpu-phase2/context.ts` writeJson + mini-opt row hashes to the store's encoding (compat digest unchanged).
-- **Done (dev evidence):** pre-final D24-core 2,325/2,325 + determinism (batch 1…128, shuffled, repeat, restart) 0;
-  G7 CPU = GPU = interrupted+resumed (g7, g7p); negative tests 34/35 dev (defect fixed); standard 3.0.0 registered.
-- **The "hang" (resolved, no defect):** batch-size-1 determinism = 256 single-candidate kernels of 3–5 s each; the
-  earlier units were stopped before that ~13-minute stage finished. Kept as defence: kernel watchdog, loop guards,
-  pool batch timeout.
-- **Gap found and planned (03:10Z):** the campaign's `--refs` = New L0, N/original, IJ1, C4, C4-refined; PROTOCOL §5
-  set R also names Assignment 3's sealed finalists (48 in FROZEN_SELECTION.json). Tool `tools/gpu-phase2/parity-finalists.ts`
-  (CPU reference vs GPU on D24 + FULL, compact + detailed + risk; D24 compact vs the sealed centre figures; CPU dry run
-  reproduced 3 sealed figures to the cent). Run it AFTER the stress (the running chain is never edited):
-  `node --expose-gc --max-old-space-size=14000 --experimental-transform-types tools/gpu-phase2/parity-finalists.ts --out research/gpu-phase2/results/parity/final-finalists.json`
-  in a contained unit.
-- **Next (while the chain runs):** reports and docs; during the stress (step 7): `npm test` in a capped unit with PATH,
-  Strategy Lab regression; after the chain: `tools/gpu-phase2/accept.ts`, final reports, MANIFEST, bundle ZIP,
-  commit/push, docs-only main integration.
+- **Updated:** 2026-11-19T13:15Z (UTC, from `date -u`)
+- **Status:** **COMPLETE** — verdict **ACCEPTED** (`config/gpu-backend/acceptance.json`, 2026-11-19T13:02:54Z, written
+  by `tools/gpu-phase2/accept.ts` after T0, P1–P4, G1–G9 all passed; G8 at 8 h by amendment A1, user directive).
+- **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d`; `PROTOCOL.md` frozen 2026-11-19T00:25Z
+  (`results/protocol-freeze.json` `b274caab…f999`); `AMENDMENTS.md` A1 (+ clarification): G8 = 8 h from the original
+  start, the existing run is the completed endurance test, no other stress run. Standard: retained pinned standard
+  2.2.0 (this study created 3.0.0).
+- **Final binary:** `build/gb2` sha256 `3fe09e67…13fc`, compat `f67dcb3b…daea` (reproducible stripped build).
+- **Gates (records):** T0 `results/sanitizer-final/`; P3 `results/policy/negative-final.json` 35/35; G1–G6
+  `results/parity/final/SUMMARY.json` (54 runs, 144,795 candidates, 0 mismatches); G4 finalists
+  `results/parity/final-finalists.json` (48; D24 96/96, FULL 96/96, sealed 48/48); G7 `results/optimizer/compare-g7f-*`
+  + A3 replays `compare-a3-C19-broad1.json` (5.22×), `compare-a3-C19-broad-qualification.json` (5.24×); G8
+  `results/stress/closure.json` (8.009 h, 731 rounds, 23,953,408 evaluations, 0 errors, parity 35,040/0, repeat 117/0);
+  G9 `results/tests/npm-test.json` (1,690/1,679/7 known/4) and `strategy-lab.json`; B1 `results/bench/`; TR1
+  `results/tr1-tranche-gate.json`.
+- **Running:** nothing (no gpup2 unit active; GPU idle). **Do not rerun any gate; do not start an endurance run (A1).**
+- **Delivery:** research branch commits through the final push (see "Push record" below); `main` documentation-only
+  commit `10ca3422` (from `108c241b`), merged back into the branch (`ee13a497`).
+- **Follow-up gate (user):** review the handoff; decide on merging the GPU engine/enforcement code into `main`;
+  authorize (or not) the deferred risk-envelope pilot as a new 3.0.0 study (not started).
 
 ## Environment
 

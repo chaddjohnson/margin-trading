@@ -125,10 +125,13 @@ Final binary `3fe09e6791ff9996…` (the dev role is the same binary with test ho
 | 34 | cli | a CPU evaluation worker started for official optimization (non-GPU evaluation from an optimizer worker) | exit 1: src/gpu-backend/purpose.ts:43     throw new PolicyError('cpu-official-refused', `${runner} is a CPU evaluator: official optimization must use … |
 | 35 | cli | the standard preflight of an official 3.0.0 study without an accepted GPU evaluator | official GPU optimization is BLOCKED (§9.9): no GPU acceptance record (research/gpu-phase2/cache/<tmp>/none.json): official GPU optimization is blocke… |
 
-### 3.3 The gate before acceptance
+### 3.3 The gate before and after acceptance
 
 `results/runlogs/official-preflight-before-acceptance.txt`: without a purpose → `preflight-purpose` (exit 3); with
 `official-optimization` → `preflight-acceptance: no GPU acceptance record` (exit 3). No GPU process was started.
+After `accept.ts` wrote the ACCEPTED record (2026-11-19T13:02:54Z), the same command opened the gate (every check
+passed; parity mini-set 18/18 identical) and wrote an attestation
+(`results/runlogs/official-preflight-after-acceptance.txt`, `results/gpu-attestations/preflight-*.json`).
 
 ## 4. Merge gate and the Apollo GPU step
 
@@ -145,6 +148,6 @@ Final binary `3fe09e6791ff9996…` (the dev role is the same binary with test ho
   runtime comparison suites (campaign, mini-set, stress samples).
 - The entrypoint audit recognizes search machinery by markers; a deliberately disguised CPU optimizer could evade it.
   Code review and the user's oversight remain necessary (standard §9.12).
-- The documentation-only integration on `main` carries the rules (CLAUDE.md, standard 3.0.0, docs); the enforcement
+- The documentation-only integration on `main` (commit `10ca3422`) carries the rules (CLAUDE.md, standard 3.0.0, docs); the enforcement
   code lives on `research/gpu-phase2` until the user approves merging it. On `main`, official optimization is therefore
   blocked by rule (no gate exists to open), not yet by mechanism.

@@ -92,7 +92,11 @@ members, 251,405 evaluations), the fixed-seed mini-optimization, 26,400 benchmar
   compat `f67dcb3bcc3ba896…`, 11 evidence files pinned); the gate opened on it
   (`results/gpu-attestations/preflight-2026-11-19T13-04-25-800Z.json`). Any change to a file of the compatibility
   manifest makes it STALE (official runs refused, `npm test`'s MERGE GATE fails) until the checklist is repeated.
-- On `main`: MAIN_STATUS
+- On `main`: **documentation only**, commit `10ca3422` (fast-forward from `108c241b`): standard 3.0.0 with its registry
+  and templates, the `CLAUDE.md` GPU section (worded for a branch without the enforcement code), `docs/gpu/`, the PR
+  template, CONTRIBUTING and the roadmap row; `main` was then merged back into `research/gpu-phase2` (`ee13a497`). No
+  GPU or enforcement code is on `main`: there, official optimization is blocked by rule (no gate exists), and merging
+  the engine needs the user's approval.
 
 ## 7. No change to strategies, optimizer methods or frozen research
 
