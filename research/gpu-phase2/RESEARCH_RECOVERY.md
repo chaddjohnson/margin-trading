@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T03:04Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T03:06Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
@@ -35,7 +35,10 @@
   `results/tr1-tranche-gate.json`; report `GPU_PHASE2_BENCHMARKS.md`.
 - **Step 4 sanitizer-final PASSED (03:00Z):** 4 tools 0 errors, 97/97 identical (`results/sanitizer-final/`).
 - **Step 5 negative-final PASSED (03:00:39Z):** 35/35 (`results/policy/negative-final.json`).
-- **Step 6 mini-opt g7f** running since 03:00:39Z (unit `gpup2-mini-opt-f`, log `results/logs/mini-opt-g7f.txt`). Branch pushed (backup) at
+- **Step 6 mini-opt g7f PASSED (03:05:25Z):** CPU = GPU and GPU = interrupted + resumed GPU (16 lanes, 30,749 archived,
+  5,746 configs, 0 differences; `results/optimizer/compare-g7f-*.json`).
+- **Step 7 FINAL parity campaign** running since 03:05:25Z (sub-units `gpup2-par-<n>-<name>`, chain log
+  `results/logs/parity-final-chain.txt`, run logs `results/logs/parity-final/`, records `results/parity/final/`). Branch pushed (backup) at
   `a9ae79ec` (ls-remote verified).
 - **Replay run 1** (01:43–02:03Z): 5.21× (1,132.5 s vs 5,900.8 s), counts identical, but its record wrote ±Inf/NaN as
   null (91 fields, all encoding-only) → kept as a timing sample (`results/optimizer/a3-C19-broad1-run1/NOTE.md`); fixed
