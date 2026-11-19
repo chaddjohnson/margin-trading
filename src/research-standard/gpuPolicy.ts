@@ -38,7 +38,14 @@ export const checkGpuPolicy = (
   const official = a.scope === 'optimization' || a.scope === 'continuation';
 
   // no evasion by pinning an earlier standard once §9 is in force
-  if (official && v3 && pinnedVersion && cmp(pinnedVersion, gpuRequiredSince) < 0 && typeof a.adoptedAt === 'string' && a.adoptedAt.slice(0, 10) >= v3.effective)
+  if (
+    official &&
+    v3 &&
+    pinnedVersion &&
+    cmp(pinnedVersion, gpuRequiredSince) < 0 &&
+    typeof a.adoptedAt === 'string' &&
+    a.adoptedAt.slice(0, 10) >= v3.effective
+  )
     errors.push(
       `a ${a.scope} adopted on ${a.adoptedAt.slice(0, 10)} pins standard ${pinnedVersion}: from ${v3.effective} new optimization ` +
         `and continuation manifests adopt ${gpuRequiredSince} or later, whose §9 makes official optimization GPU-only`
@@ -57,16 +64,24 @@ export const checkGpuPolicy = (
     const acc = checkAcceptance({ file: o.acceptanceFile });
 
     if (!acc.ok) errors.push(`official GPU optimization is BLOCKED (§9.9): ${acc.reasons.join('; ')}`);
-    else notices.push(`GPU acceptance ${acc.status}: ${acc.record!.binary.sha256.slice(0, 12)}… on ${acc.record!.device.uuid}; the run must still pass the live gate (openOfficialGpuSession)`);
+    else
+      notices.push(
+        `GPU acceptance ${acc.status}: ${acc.record!.binary.sha256.slice(0, 12)}… on ${acc.record!.device.uuid}; the run must still pass the live gate (openOfficialGpuSession)`
+      );
   } else if (b) {
-    if (b.policy === 'gpu-required' && b.purpose !== 'official-optimization') errors.push('a gpu-required backend declares purpose official-optimization');
+    if (b.policy === 'gpu-required' && b.purpose !== 'official-optimization')
+      errors.push('a gpu-required backend declares purpose official-optimization');
     if (b.policy === 'non-official-cpu') {
       if (!isPurpose(b.purpose) || !(NON_OFFICIAL as readonly string[]).includes(b.purpose))
         errors.push(`a non-official CPU backend declares a non-official purpose (${NON_OFFICIAL.join(', ')})`);
-      if (!b.justification || !b.justification.trim()) errors.push('a non-official CPU backend needs its justification');
+      if (!b.justification || !b.justification.trim())
+        errors.push('a non-official CPU backend needs its justification');
       notices.push(`non-official CPU evaluation (${b.purpose}): never official optimization evidence (§9.8)`);
     }
-  } else notices.push(`a ${a.scope} under ${pinnedVersion} without evaluationBackend: it must not search or score candidates officially (§9)`);
+  } else
+    notices.push(
+      `a ${a.scope} under ${pinnedVersion} without evaluationBackend: it must not search or score candidates officially (§9)`
+    );
 
   return { errors, notices };
 };

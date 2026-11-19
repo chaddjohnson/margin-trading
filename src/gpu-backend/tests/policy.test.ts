@@ -40,26 +40,57 @@ test('a CPU runner refuses a missing purpose and official optimization; accepts 
 test('the legacy runner wrapper refuses before importing the runner', () => {
   const runner = path.join(repoRoot, 'src/gpu-backend/legacyRunner.ts');
   const run = (env: Record<string, string>) =>
-    spawnSync(node, ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', runner, 'test-runner', 'src/does-not-exist.ts'], {
-      cwd: repoRoot,
-      env: { PATH: process.env.PATH!, ...env },
-      encoding: 'utf8'
-    });
+    spawnSync(
+      node,
+      [
+        '--experimental-transform-types',
+        '--disable-warning=ExperimentalWarning',
+        runner,
+        'test-runner',
+        'src/does-not-exist.ts'
+      ],
+      {
+        cwd: repoRoot,
+        env: { PATH: process.env.PATH!, ...env },
+        encoding: 'utf8'
+      }
+    );
 
   assert.equal(run({}).status, 3);
   assert.match(run({}).stderr, /purpose-required/);
   assert.equal(run({ GPU_POLICY_PURPOSE: 'official-optimization' }).status, 3);
   assert.match(run({ GPU_POLICY_PURPOSE: 'official-optimization' }).stderr, /cpu-official-refused/);
   // with a non-official purpose it proceeds to import the (missing) module: past the gate
-  assert.match(run({ GPU_POLICY_PURPOSE: 'cpu-reference' }).stderr, /non-official CPU run|Cannot find module|ERR_MODULE_NOT_FOUND/);
+  assert.match(
+    run({ GPU_POLICY_PURPOSE: 'cpu-reference' }).stderr,
+    /non-official CPU run|Cannot find module|ERR_MODULE_NOT_FOUND/
+  );
 });
 
 test('every npm script that can start a CPU research runner or optimizer goes through the purpose gate', () => {
-  const scripts = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8')).scripts as Record<string, string>;
-  const utilities = new Set(['format', 'preapp', 'app', 'legacy-archive', 'market-events', 'datasets', 'test', 'research-preflight']);
-  const ungated = Object.entries(scripts).filter(([k, v]) => !utilities.has(k) && !v.includes('src/gpu-backend/legacyRunner.ts'));
+  const scripts = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8')).scripts as Record<
+    string,
+    string
+  >;
+  const utilities = new Set([
+    'format',
+    'preapp',
+    'app',
+    'legacy-archive',
+    'market-events',
+    'datasets',
+    'test',
+    'research-preflight'
+  ]);
+  const ungated = Object.entries(scripts).filter(
+    ([k, v]) => !utilities.has(k) && !v.includes('src/gpu-backend/legacyRunner.ts')
+  );
 
-  assert.deepEqual(ungated.map(([k]) => k), [], `ungated scripts: ${ungated.map(([k, v]) => `${k} → ${v}`).join('; ')}`);
+  assert.deepEqual(
+    ungated.map(([k]) => k),
+    [],
+    `ungated scripts: ${ungated.map(([k, v]) => `${k} → ${v}`).join('; ')}`
+  );
   // the utilities evaluate no strategy: formatting, lint/type checks, the app shell, data maintenance, tests, the preflight
   assert.ok(!scripts['research-preflight']!.includes('src/app.ts'));
 });
@@ -73,10 +104,19 @@ test('entrypoint audit: no search machinery outside the official GPU gate, legac
 
   fs.mkdirSync(dir, { recursive: true });
   try {
-    fs.writeFileSync(path.join(dir, 'search.ts'), "import { Nsga2 } from '../optimizer/nsga2.ts';\nexport const x = Nsga2;\n");
-    assert.match(audit(r).join('\n'), /zz-policy-test-optimizer contains search machinery but neither uses the official GPU gate/);
+    fs.writeFileSync(
+      path.join(dir, 'search.ts'),
+      "import { Nsga2 } from '../optimizer/nsga2.ts';\nexport const x = Nsga2;\n"
+    );
+    assert.match(
+      audit(r).join('\n'),
+      /zz-policy-test-optimizer contains search machinery but neither uses the official GPU gate/
+    );
     // the same directory routed through the official gate is accepted
-    fs.writeFileSync(path.join(dir, 'run.ts'), "import { openOfficialGpuSession } from '../gpu-backend/official.ts';\nexport const y = openOfficialGpuSession;\n");
+    fs.writeFileSync(
+      path.join(dir, 'run.ts'),
+      "import { openOfficialGpuSession } from '../gpu-backend/official.ts';\nexport const y = openOfficialGpuSession;\n"
+    );
     assert.deepEqual(audit(r), []);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
@@ -118,44 +158,103 @@ test('acceptance record: missing, forged, stale, changed evidence and wrong bina
 
     assert.equal(checkAcceptance({ file: write('ok.json', base) }).ok, true);
     // a forged / stale compatibility manifest: one mirrored CPU source with another hash
-    const stale = { ...base, compat: { ...m, cpu: { ...m.cpu, files: m.cpu.files.map((f, i) => (i === 0 ? { ...f, sha256: 'f'.repeat(64) } : f)) } } };
+    const stale = {
+      ...base,
+      compat: {
+        ...m,
+        cpu: { ...m.cpu, files: m.cpu.files.map((f, i) => (i === 0 ? { ...f, sha256: 'f'.repeat(64) } : f)) }
+      }
+    };
     const s = checkAcceptance({ file: write('stale.json', stale) });
 
     assert.equal(s.ok, false);
     assert.match(s.reasons.join(' '), /changed since acceptance/);
     // a digest that does not match the working tree (a source added to the closure)
-    assert.equal(checkAcceptance({ file: write('digest.json', { ...base, compat: { ...m, digest: 'a'.repeat(64) } }) }).ok, false);
+    assert.equal(
+      checkAcceptance({ file: write('digest.json', { ...base, compat: { ...m, digest: 'a'.repeat(64) } }) }).ok,
+      false
+    );
     // not accepted
-    assert.equal(checkAcceptance({ file: write('na.json', { ...base, status: 'NOT_ACCEPTED', blockers: ['parity'] }) }).status, 'NOT_ACCEPTED');
+    assert.equal(
+      checkAcceptance({ file: write('na.json', { ...base, status: 'NOT_ACCEPTED', blockers: ['parity'] }) }).status,
+      'NOT_ACCEPTED'
+    );
     // changed evidence
     fs.writeFileSync(evidence, '{"pass":false}\n');
     assert.match(checkAcceptance({ file: path.join(d, 'ok.json') }).reasons.join(' '), /evidence e changed/);
     fs.writeFileSync(evidence, '{"pass":true}\n');
     // wrong binary, wrong device
-    assert.match(checkAcceptance({ file: path.join(d, 'ok.json'), binary: evidence }).reasons.join(' '), /binary sha256/);
-    assert.match(checkAcceptance({ file: path.join(d, 'ok.json'), uuid: 'GPU-other' }).reasons.join(' '), /device GPU-other/);
+    assert.match(
+      checkAcceptance({ file: path.join(d, 'ok.json'), binary: evidence }).reasons.join(' '),
+      /binary sha256/
+    );
+    assert.match(
+      checkAcceptance({ file: path.join(d, 'ok.json'), uuid: 'GPU-other' }).reasons.join(' '),
+      /device GPU-other/
+    );
   } finally {
     fs.rmSync(d, { recursive: true, force: true });
   }
 });
 
 test('preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin', () => {
-  const reg = { versions: [{ version: '2.2.0', effective: '2026-11-13' }, { version: '3.0.0', effective: '2026-11-19' }] };
+  const reg = {
+    versions: [
+      { version: '2.2.0', effective: '2026-11-13' },
+      { version: '3.0.0', effective: '2026-11-19' }
+    ]
+  };
   const none = path.join(os.tmpdir(), 'gpu-policy-no-acceptance.json');
 
-  assert.match(checkGpuPolicy({ scope: 'optimization', adoptedAt: '2026-11-20T00:00:00Z' }, '3.0.0', reg, { acceptanceFile: none }).errors.join(' '), /evaluationBackend must be/);
   assert.match(
-    checkGpuPolicy({ scope: 'optimization', adoptedAt: '2026-11-20T00:00:00Z', evaluationBackend: { policy: 'gpu-required', purpose: 'official-optimization' } }, '3.0.0', reg, { acceptanceFile: none }).errors.join(' '),
+    checkGpuPolicy({ scope: 'optimization', adoptedAt: '2026-11-20T00:00:00Z' }, '3.0.0', reg, {
+      acceptanceFile: none
+    }).errors.join(' '),
+    /evaluationBackend must be/
+  );
+  assert.match(
+    checkGpuPolicy(
+      {
+        scope: 'optimization',
+        adoptedAt: '2026-11-20T00:00:00Z',
+        evaluationBackend: { policy: 'gpu-required', purpose: 'official-optimization' }
+      },
+      '3.0.0',
+      reg,
+      { acceptanceFile: none }
+    ).errors.join(' '),
     /BLOCKED/
   );
-  assert.match(checkGpuPolicy({ scope: 'optimization', adoptedAt: '2026-11-20T00:00:00Z' }, '2.2.0', reg).errors.join(' '), /pins standard 2.2.0/);
-  assert.deepEqual(checkGpuPolicy({ scope: 'optimization', adoptedAt: '2026-11-10T00:00:00Z' }, '2.2.0', reg).errors, []); // a frozen earlier study keeps its pin
+  assert.match(
+    checkGpuPolicy({ scope: 'optimization', adoptedAt: '2026-11-20T00:00:00Z' }, '2.2.0', reg).errors.join(' '),
+    /pins standard 2.2.0/
+  );
   assert.deepEqual(
-    checkGpuPolicy({ scope: 'diagnostic', adoptedAt: '2026-11-20T00:00:00Z', evaluationBackend: { policy: 'non-official-cpu', purpose: 'diagnostic', justification: 'replay' } }, '3.0.0', reg).errors,
+    checkGpuPolicy({ scope: 'optimization', adoptedAt: '2026-11-10T00:00:00Z' }, '2.2.0', reg).errors,
+    []
+  ); // a frozen earlier study keeps its pin
+  assert.deepEqual(
+    checkGpuPolicy(
+      {
+        scope: 'diagnostic',
+        adoptedAt: '2026-11-20T00:00:00Z',
+        evaluationBackend: { policy: 'non-official-cpu', purpose: 'diagnostic', justification: 'replay' }
+      },
+      '3.0.0',
+      reg
+    ).errors,
     []
   );
   assert.match(
-    checkGpuPolicy({ scope: 'diagnostic', adoptedAt: '2026-11-20T00:00:00Z', evaluationBackend: { policy: 'non-official-cpu', purpose: 'official-optimization', justification: 'x' } }, '3.0.0', reg).errors.join(' '),
+    checkGpuPolicy(
+      {
+        scope: 'diagnostic',
+        adoptedAt: '2026-11-20T00:00:00Z',
+        evaluationBackend: { policy: 'non-official-cpu', purpose: 'official-optimization', justification: 'x' }
+      },
+      '3.0.0',
+      reg
+    ).errors.join(' '),
     /non-official purpose/
   );
 });

@@ -41,7 +41,11 @@ export const growthStructureFeatures = () => {
       }
       const quad = { g: { VGT: c, GDX: c } } as unknown as Quad;
 
-      for (const o of [vOptions, { ...vOptions, friction: { stopFill: 'next-open' as const } }, { ...vOptions, friction: { stopSlippageBps: 25 } }])
+      for (const o of [
+        vOptions,
+        { ...vOptions, friction: { stopFill: 'next-open' as const } },
+        { ...vOptions, friction: { stopSlippageBps: 25 } }
+      ])
         f |= encodeGrowth(window, quad, 'G:VGT', o).features;
       n++;
       return;
@@ -54,11 +58,20 @@ export const growthStructureFeatures = () => {
 };
 
 // every D1 book structure of Assignment 3: families A–D × decline gate × activation, both symbols
-const controlsOf = (fam: Family, gate: boolean, entryDay: boolean): RiskConfig2['books']['D1:VGT'] => ({
-  protectiveStop: fam === 'A' ? { mode: 'off' } : { mode: 'on', stopDistanceTenths: 80, activation: entryDay ? 'entry-day' : 'next-session' },
-  hold: fam === 'C' ? { mode: 'disabled' } : fam === 'D' ? { mode: 'adaptive', extendedHoldDays: 30, progressTenths: 40 } : { mode: 'legacy' },
-  declineGate: gate ? { mode: 'on', losses: 2, recoveryTenths: 500, maxBlockSessions: 60 } : { mode: 'off' }
-}) as never;
+const controlsOf = (fam: Family, gate: boolean, entryDay: boolean): RiskConfig2['books']['D1:VGT'] =>
+  ({
+    protectiveStop:
+      fam === 'A'
+        ? { mode: 'off' }
+        : { mode: 'on', stopDistanceTenths: 80, activation: entryDay ? 'entry-day' : 'next-session' },
+    hold:
+      fam === 'C'
+        ? { mode: 'disabled' }
+        : fam === 'D'
+          ? { mode: 'adaptive', extendedHoldDays: 30, progressTenths: 40 }
+          : { mode: 'legacy' },
+    declineGate: gate ? { mode: 'on', losses: 2, recoveryTenths: 500, maxBlockSessions: 60 } : { mode: 'off' }
+  }) as never;
 
 export const d1StructureFeatures = (grid: Quad['d1']['VGT']) => {
   let f = 0n;
@@ -67,11 +80,18 @@ export const d1StructureFeatures = (grid: Quad['d1']['VGT']) => {
   for (const fam of families)
     for (const gate of [false, true])
       for (const entryDay of fam === 'A' ? [false] : [false, true]) {
-        const controls = { books: { 'D1:GDX': controlsOf(fam, gate, entryDay), 'D1:VGT': controlsOf(fam, gate, entryDay) } } as unknown as RiskConfig2;
+        const controls = {
+          books: { 'D1:GDX': controlsOf(fam, gate, entryDay), 'D1:VGT': controlsOf(fam, gate, entryDay) }
+        } as unknown as RiskConfig2;
         const quad = { d1: { GDX: grid, VGT: grid } } as unknown as Quad;
 
-        for (const o of [vOptions, { ...vOptions, d1Arm: 'native' as const }, { ...vOptions, friction: { stopFill: 'next-open' as const, stopSlippageBps: 25 } }])
-          for (const b of ['D1:GDX', 'D1:VGT'] as const) f |= encodeD1({ ...window, dates: [] } as unknown as Door, quad, controls, b, o).features;
+        for (const o of [
+          vOptions,
+          { ...vOptions, d1Arm: 'native' as const },
+          { ...vOptions, friction: { stopFill: 'next-open' as const, stopSlippageBps: 25 } }
+        ])
+          for (const b of ['D1:GDX', 'D1:VGT'] as const)
+            f |= encodeD1({ ...window, dates: [] } as unknown as Door, quad, controls, b, o).features;
         n++;
       }
   return { features: f, structures: n };
@@ -80,7 +100,15 @@ export const d1StructureFeatures = (grid: Quad['d1']['VGT']) => {
 // the pool options the optimizer's stages use: the V structure, removal reruns, stresses, fold/validation boundaries,
 // detailed records; plus the stress and report options of standard §2.6 / §5.1 (blackouts, whole shares, funding start,
 // explicit tie order)
-const POOL_OPTIONS = FEATURE.POOL | FEATURE.POOL_ENABLED | FEATURE.POOL_PERIODS | FEATURE.POOL_DETAIL | FEATURE.POOL_BLACKOUTS | FEATURE.POOL_WHOLE_SHARES | FEATURE.POOL_FUND_FROM | FEATURE.POOL_TIE_ORDER;
+const POOL_OPTIONS =
+  FEATURE.POOL |
+  FEATURE.POOL_ENABLED |
+  FEATURE.POOL_PERIODS |
+  FEATURE.POOL_DETAIL |
+  FEATURE.POOL_BLACKOUTS |
+  FEATURE.POOL_WHOLE_SHARES |
+  FEATURE.POOL_FUND_FROM |
+  FEATURE.POOL_TIE_ORDER;
 
 export const assignment3Domain = (grid: Quad['d1']['VGT']): DomainFeatures => {
   const g = growthStructureFeatures();
@@ -91,7 +119,17 @@ export const assignment3Domain = (grid: Quad['d1']['VGT']): DomainFeatures => {
     features: g.features | d.features | POOL_OPTIONS,
     growthStructures: g.structures,
     d1Structures: d.structures,
-    optionSets: ['V structure (Growth·GDX disabled)', ...Object.keys(stresses).map((s) => `stress: ${s}`), 'removal reruns', 'fold/validation boundaries', 'detailed record', 'blackouts', 'whole shares', 'funding start', 'tie order']
+    optionSets: [
+      'V structure (Growth·GDX disabled)',
+      ...Object.keys(stresses).map((s) => `stress: ${s}`),
+      'removal reruns',
+      'fold/validation boundaries',
+      'detailed record',
+      'blackouts',
+      'whole shares',
+      'funding start',
+      'tie order'
+    ]
   };
 };
 
@@ -99,7 +137,12 @@ export const assignment3Domain = (grid: Quad['d1']['VGT']): DomainFeatures => {
 export const riskEnvelopePilotDomain = (grid: Quad['d1']['VGT']): DomainFeatures => {
   const a = assignment3Domain(grid);
 
-  return { ...a, name: `risk-envelope pilot (NL0-R 0.1.0): ${a.name} + risk-envelope inputs`, features: a.features | FEATURE.RISK_METRICS, optionSets: [...a.optionSets, 'risk-envelope inputs'] };
+  return {
+    ...a,
+    name: `risk-envelope pilot (NL0-R 0.1.0): ${a.name} + risk-envelope inputs`,
+    features: a.features | FEATURE.RISK_METRICS,
+    optionSets: [...a.optionSets, 'risk-envelope inputs']
+  };
 };
 
 export const describeFeatures = (f: bigint) => featureNames(f);

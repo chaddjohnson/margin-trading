@@ -19,7 +19,9 @@ if (!name || !target) {
 try {
   const purpose = assertNonOfficialCpuRun(`the legacy CPU runner '${name}'`);
 
-  console.error(`[GPU policy] ${name}: non-official CPU run (purpose ${purpose}); never official optimization evidence`);
+  console.error(
+    `[GPU policy] ${name}: non-official CPU run (purpose ${purpose}); never official optimization evidence`
+  );
 } catch (e) {
   console.error(`❌ ${(e as Error).message}`);
   process.exit(3);

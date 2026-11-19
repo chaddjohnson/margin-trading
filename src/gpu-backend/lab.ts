@@ -72,7 +72,14 @@ export class EvalLab {
     this.digest = o.codeDigest;
     this.pool = o.pool;
     this.store = new Store(path.join(dir, 'archive.sqlite'), {
-      binding: { study: o.study, job: o.job, door: o.door, doorPin: o.doorPin, codeDigest: o.codeDigest, backend: o.backend },
+      binding: {
+        study: o.study,
+        job: o.job,
+        door: o.door,
+        doorPin: o.doorPin,
+        codeDigest: o.codeDigest,
+        backend: o.backend
+      },
       lruCapacity: 200000,
       commitRows: 2000,
       commitMs: 5000
@@ -100,11 +107,27 @@ export class EvalLab {
     this.store.commit();
     this.peakRss = Math.max(this.peakRss, process.memoryUsage().rss);
 
-    const body = JSON.stringify({ stage: this.stage, fresh: this.fresh, hits: this.hits, evalMs: Math.round(this.evalMs), tallies: this.tallies, ...this.progress });
+    const body = JSON.stringify({
+      stage: this.stage,
+      fresh: this.fresh,
+      hits: this.hits,
+      evalMs: Math.round(this.evalMs),
+      tallies: this.tallies,
+      ...this.progress
+    });
 
     writeAtomic(
       this.checkpointFile,
-      JSON.stringify({ kind: 'eval-lab progress', job: this.o.job, door: this.o.door, backend: this.o.backend, codeDigest: this.digest, written: new Date().toISOString(), body: JSON.parse(body), bodySha256: sha256(body) })
+      JSON.stringify({
+        kind: 'eval-lab progress',
+        job: this.o.job,
+        door: this.o.door,
+        backend: this.o.backend,
+        codeDigest: this.digest,
+        written: new Date().toISOString(),
+        body: JSON.parse(body),
+        bodySha256: sha256(body)
+      })
     );
   }
 
@@ -113,7 +136,10 @@ export class EvalLab {
   }
 
   // Assignment 3's evalMany, unchanged in its semantics (keys, dedupe, archive reads, input order, the fresh cap).
-  async evalMany<R extends SRec = SRec>(items: readonly { cfg: Cfg; options: EvalOptions; detail?: boolean }[], tag = 'other'): Promise<R[]> {
+  async evalMany<R extends SRec = SRec>(
+    items: readonly { cfg: Cfg; options: EvalOptions; detail?: boolean }[],
+    tag = 'other'
+  ): Promise<R[]> {
     const keys = items.map((x) => `${evalKeyOf(this.o.door as never, x.cfg, x.options)}${x.detail ? '|detail' : ''}`);
     const missing = new Map<string, Task>();
     const waits: Promise<void>[] = [];
@@ -138,7 +164,13 @@ export class EvalLab {
 
       const x = items[i]!;
 
-      missing.set(k, { k, quad: quadOf(x.cfg), controls: x.cfg.controls, options: x.options, detail: Boolean(x.detail) });
+      missing.set(k, {
+        k,
+        quad: quadOf(x.cfg),
+        controls: x.cfg.controls,
+        options: x.options,
+        detail: Boolean(x.detail)
+      });
     });
 
     if (missing.size) {
@@ -169,7 +201,8 @@ export class EvalLab {
             t.ms += ms;
             this.inflight.delete(task.k);
             settle.get(task.k)!.resolve();
-            if (this.o.stopAfterFresh !== undefined && this.fresh >= this.o.stopAfterFresh) this.pool.requestStop(`stop-after ${this.o.stopAfterFresh} fresh evaluations (resume test)`);
+            if (this.o.stopAfterFresh !== undefined && this.fresh >= this.o.stopAfterFresh)
+              this.pool.requestStop(`stop-after ${this.o.stopAfterFresh} fresh evaluations (resume test)`);
           });
       } catch (error) {
         for (const [k, x] of settle)
@@ -184,7 +217,9 @@ export class EvalLab {
     await Promise.all(waits);
 
     if (this.o.maxFresh !== undefined && this.archivedAtOpen + this.fresh > this.o.maxFresh)
-      throw new Error(`job ${this.o.job}: ${this.archivedAtOpen + this.fresh} unique fresh evaluations exceed its frozen cap ${this.o.maxFresh}`);
+      throw new Error(
+        `job ${this.o.job}: ${this.archivedAtOpen + this.fresh} unique fresh evaluations exceed its frozen cap ${this.o.maxFresh}`
+      );
 
     return keys.map((k) => {
       const r = this.store.read<R>('points', k);
@@ -212,7 +247,14 @@ export class EvalLab {
   runs() {
     const f = path.join(path.dirname(this.checkpointFile), 'runs.jsonl');
 
-    return fs.existsSync(f) ? fs.readFileSync(f, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l) as { fresh: number; hits: number; event: string }) : [];
+    return fs.existsSync(f)
+      ? fs
+          .readFileSync(f, 'utf8')
+          .trim()
+          .split('\n')
+          .filter(Boolean)
+          .map((l) => JSON.parse(l) as { fresh: number; hits: number; event: string })
+      : [];
   }
 
   get compute() {

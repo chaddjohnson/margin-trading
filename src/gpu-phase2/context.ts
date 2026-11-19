@@ -40,7 +40,10 @@ export const sha256File = (file: string) => createHash('sha256').update(fs.readF
 
 export const logDoor = (door: string, purpose: string, extra: Record<string, unknown> = {}) => {
   fs.mkdirSync(path.dirname(doorLog), { recursive: true });
-  fs.appendFileSync(doorLog, `${JSON.stringify({ t: new Date().toISOString(), door, purpose, pid: process.pid, ...extra })}\n`);
+  fs.appendFileSync(
+    doorLog,
+    `${JSON.stringify({ t: new Date().toISOString(), door, purpose, pid: process.pid, ...extra })}\n`
+  );
 };
 
 const cache = new Map<string, Door>();
@@ -52,7 +55,8 @@ export const openDoor = async (name: DoorKey, purpose: string): Promise<Door> =>
 
   let door: Door;
 
-  if (name === 'FULL') door = await openFullDoor(purpose, { file: p3FrozenSelectionFile, sha256: p3.frozenSelectionSha256 }, true);
+  if (name === 'FULL')
+    door = await openFullDoor(purpose, { file: p3FrozenSelectionFile, sha256: p3.frozenSelectionSha256 }, true);
   else if (isWindow(name)) {
     const w = windows[name];
     const base = await openDoor(w.base, `${purpose} (window base)`);
@@ -80,7 +84,15 @@ export const writeJson = (file: string, value: unknown) => {
     `${JSON.stringify(
       value,
       (_k, v) =>
-        typeof v === 'bigint' ? `0x${v.toString(16)}` : typeof v === 'number' && !Number.isFinite(v) ? (Number.isNaN(v) ? '__NaN' : v > 0 ? '__Inf' : '__-Inf') : v,
+        typeof v === 'bigint'
+          ? `0x${v.toString(16)}`
+          : typeof v === 'number' && !Number.isFinite(v)
+            ? Number.isNaN(v)
+              ? '__NaN'
+              : v > 0
+                ? '__Inf'
+                : '__-Inf'
+            : v,
       1
     )}\n`
   );

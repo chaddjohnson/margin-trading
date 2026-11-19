@@ -41,7 +41,12 @@ export const envelopeOf = (door: Door, x: ReturnType<typeof runWithControls2>, o
   const trades = L.lots.map((l) => tradeRisk(l, L.endT));
   const max = (xs: number[]) => (xs.length ? [...xs].sort((a, b) => a - b).at(-1)! : 0);
 
-  return [bankedDrawdown(pts, 'marked').max, bankedDrawdown(pts, 'liquidation').max, max(trades.map((t) => t.principalLossMarked)), max(trades.map((t) => t.principalLossLiq))];
+  return [
+    bankedDrawdown(pts, 'marked').max,
+    bankedDrawdown(pts, 'liquidation').max,
+    max(trades.map((t) => t.principalLossMarked)),
+    max(trades.map((t) => t.principalLossLiq))
+  ];
 };
 
 export const reference = (door: Door, t: RefTask): RefResult => {
@@ -49,7 +54,9 @@ export const reference = (door: Door, t: RefTask): RefResult => {
 
   try {
     const x = runWithControls2(door, t.quad, t.controls, t.options, t.detail, false, { cache: false });
-    const rec = t.detail ? evaluateDetail(door, t.quad, t.controls, t.options) : evaluate(door, t.quad, t.controls, t.options);
+    const rec = t.detail
+      ? evaluateDetail(door, t.quad, t.controls, t.options)
+      : evaluate(door, t.quad, t.controls, t.options);
 
     return {
       k: t.k,

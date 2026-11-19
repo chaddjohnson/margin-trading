@@ -19,19 +19,30 @@ export const officialGate = /gpu-backend\/official\.ts/;
 export const library = ['optimizer'];
 export const nonOfficial: Record<string, string> = {
   'gpu-phase1': 'GPU Phase 1 feasibility (completed): CPU baselines and parity references only; never searched',
-  'gpu-phase2': 'GPU Phase 2 acceptance study: CPU parity references and the non-official CPU arm of the parity-only mini-optimization'
+  'gpu-phase2':
+    'GPU Phase 2 acceptance study: CPU parity references and the non-official CPU arm of the parity-only mini-optimization'
 };
 
 const tsFiles = (dir: string) =>
   fs
     .readdirSync(dir, { recursive: true, withFileTypes: true })
-    .filter((e) => e.isFile() && e.name.endsWith('.ts') && !e.name.endsWith('.test.ts') && !path.join(e.parentPath, e.name).includes('/tests/'))
+    .filter(
+      (e) =>
+        e.isFile() &&
+        e.name.endsWith('.ts') &&
+        !e.name.endsWith('.test.ts') &&
+        !path.join(e.parentPath, e.name).includes('/tests/')
+    )
     .map((e) => path.join(e.parentPath, e.name))
     .sort();
 
 export const dirDigest = (dir: string) =>
   createHash('sha256')
-    .update(tsFiles(dir).map((f) => `${path.relative(repoRoot, f)}:${createHash('sha256').update(fs.readFileSync(f)).digest('hex')}`).join('\n'))
+    .update(
+      tsFiles(dir)
+        .map((f) => `${path.relative(repoRoot, f)}:${createHash('sha256').update(fs.readFileSync(f)).digest('hex')}`)
+        .join('\n')
+    )
     .digest('hex');
 
 export const scan = () =>
@@ -68,11 +79,17 @@ export const audit = (r: Registry) => {
       const now = dirDigest(path.join(repoRoot, 'src', d.name));
 
       if (now !== reg)
-        problems.push(`src/${d.name} is a frozen legacy CPU runner and changed since registration (digest ${now.slice(0, 12)} ≠ ${reg.slice(0, 12)}): legacy runners only reproduce frozen results; a new optimizer belongs in a new directory behind src/gpu-backend/official.ts`);
+        problems.push(
+          `src/${d.name} is a frozen legacy CPU runner and changed since registration (digest ${now.slice(0, 12)} ≠ ${reg.slice(0, 12)}): legacy runners only reproduce frozen results; a new optimizer belongs in a new directory behind src/gpu-backend/official.ts`
+        );
     } else if (!d.usesGate)
-      problems.push(`src/${d.name} contains search machinery but neither uses the official GPU gate (src/gpu-backend/official.ts) nor is registered: official optimization is GPU-only (standard 3.0.0 §9); declare it non-official in config/gpu-backend/entrypoints.json with a justification, or route its evaluations through the gate`);
+      problems.push(
+        `src/${d.name} contains search machinery but neither uses the official GPU gate (src/gpu-backend/official.ts) nor is registered: official optimization is GPU-only (standard 3.0.0 §9); declare it non-official in config/gpu-backend/entrypoints.json with a justification, or route its evaluations through the gate`
+      );
   }
-  for (const name of Object.keys(r.legacy)) if (!fs.existsSync(path.join(repoRoot, 'src', name))) problems.push(`registered legacy runner src/${name} is missing`);
+  for (const name of Object.keys(r.legacy))
+    if (!fs.existsSync(path.join(repoRoot, 'src', name)))
+      problems.push(`registered legacy runner src/${name} is missing`);
   return problems;
 };
 
@@ -80,11 +97,21 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.met
   if (process.argv[2] === '--write') {
     const legacy: Record<string, string> = {};
 
-    for (const d of scan()) if (d.name !== 'gpu-backend' && !library.includes(d.name) && !(d.name in nonOfficial) && !d.usesGate) legacy[d.name] = dirDigest(path.join(repoRoot, 'src', d.name));
-    const r: Registry = { kind: 'gpu-backend entrypoint registry', generated: new Date().toISOString(), legacy, library, nonOfficial };
+    for (const d of scan())
+      if (d.name !== 'gpu-backend' && !library.includes(d.name) && !(d.name in nonOfficial) && !d.usesGate)
+        legacy[d.name] = dirDigest(path.join(repoRoot, 'src', d.name));
+    const r: Registry = {
+      kind: 'gpu-backend entrypoint registry',
+      generated: new Date().toISOString(),
+      legacy,
+      library,
+      nonOfficial
+    };
 
     fs.mkdirSync(path.dirname(registryFile), { recursive: true });
     fs.writeFileSync(registryFile, `${JSON.stringify(r, null, 1)}\n`);
-    console.log(`legacy ${Object.keys(legacy).length}, library ${library.length}, non-official ${Object.keys(nonOfficial).length}`);
+    console.log(
+      `legacy ${Object.keys(legacy).length}, library ${library.length}, non-official ${Object.keys(nonOfficial).length}`
+    );
   } else console.log(JSON.stringify(audit(JSON.parse(fs.readFileSync(registryFile, 'utf8')) as Registry), null, 1));
 }

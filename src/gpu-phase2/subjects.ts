@@ -11,7 +11,11 @@ import type { RiskConfig2 } from '../d1-risk-controls-rc2/config.ts';
 import { type Cfg, decode, gStructOffset, levelsOf, structuralGenes } from '../vg-l0-full-joint/space.ts';
 import { subjectOfCfg } from '../vg-l0-risk-metrics/engine.ts';
 import { incumbents } from '../vg-l0-full-joint/nl0.ts';
-import { branchHeavySubjects as p1Branch, neighbourSubjects as p1Neighbours, referenceSubjects as p1Refs } from '../gpu-phase1/subjects.ts';
+import {
+  branchHeavySubjects as p1Branch,
+  neighbourSubjects as p1Neighbours,
+  referenceSubjects as p1Refs
+} from '../gpu-phase1/subjects.ts';
 import { seedOf } from './context.ts';
 
 export interface Subject {
@@ -25,7 +29,12 @@ export interface Subject {
 export const referenceSubjects = (): Subject[] => {
   const p1 = p1Refs().map((s) => ({ ...s, set: 'R' as const }));
   const inc = incumbents();
-  const more = (['IJ1', 'C4', 'C4R'] as const).map((k) => ({ key: `R:${k}`, set: 'R' as const, quad: inc[k].quad, controls: null }));
+  const more = (['IJ1', 'C4', 'C4R'] as const).map((k) => ({
+    key: `R:${k}`,
+    set: 'R' as const,
+    quad: inc[k].quad,
+    controls: null
+  }));
 
   return [...p1, ...more];
 };
@@ -44,7 +53,14 @@ export const randomSubjects = (n: number, label = 'A', res: 'coarse' | 'fine' = 
   for (let i = from; i < from + n; i++) {
     const rng = new Rng(seedOf(label, res, i));
 
-    out.push(genomeSubject(levels.map((l) => rng.int(l)), res, `${label}:${res}:${i}`, 'A'));
+    out.push(
+      genomeSubject(
+        levels.map((l) => rng.int(l)),
+        res,
+        `${label}:${res}:${i}`,
+        'A'
+      )
+    );
   }
   return out;
 };
@@ -70,6 +86,10 @@ export const growthStrata = (per: number, label = 'G', res: 'coarse' | 'fine' = 
   return out;
 };
 
-export const branchHeavySubjects = (refQuad: Quad): Subject[] => p1Branch(refQuad).map((s) => ({ ...s, set: 'B' as const }));
+export const branchHeavySubjects = (refQuad: Quad): Subject[] =>
+  p1Branch(refQuad).map((s) => ({ ...s, set: 'B' as const }));
 export const neighbourSubjects = (refs: Subject[], n: number): Subject[] =>
-  p1Neighbours(refs.filter((r) => r.cfg).map((r) => ({ ...r, set: 'R' as const })) as never, n).map((s) => ({ ...s, set: 'N' as const }));
+  p1Neighbours(refs.filter((r) => r.cfg).map((r) => ({ ...r, set: 'R' as const })) as never, n).map((s) => ({
+    ...s,
+    set: 'N' as const
+  }));

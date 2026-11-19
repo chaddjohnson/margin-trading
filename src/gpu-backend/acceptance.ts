@@ -20,7 +20,10 @@ export interface AcceptanceRecord {
   study: string; // the acceptance study (its report states the evidence)
   acceptedAt: string;
   standard: { version: string; sha256: string };
-  compat: Pick<CompatManifest, 'digest' | 'cpu' | 'cuda' | 'host' | 'nvcc' | 'nvccFlags' | 'protocolVersion' | 'datasetVersion'>;
+  compat: Pick<
+    CompatManifest,
+    'digest' | 'cpu' | 'cuda' | 'host' | 'nvcc' | 'nvccFlags' | 'protocolVersion' | 'datasetVersion'
+  >;
   binary: { path: string; sha256: string };
   device: { uuid: string; name: string; driver: string; cc: string };
   capabilities: string; // the supported capability mask (hex)
@@ -44,25 +47,45 @@ export const checkAcceptance = (o: { file?: string; binary?: string; uuid?: stri
   const file = o.file ?? acceptanceFile;
 
   if (!fs.existsSync(file))
-    return { ok: false, status: 'MISSING', reasons: [`no GPU acceptance record (${path.relative(repoRoot, file)}): official GPU optimization is blocked until an acceptance study passes every gate`], record: null };
+    return {
+      ok: false,
+      status: 'MISSING',
+      reasons: [
+        `no GPU acceptance record (${path.relative(repoRoot, file)}): official GPU optimization is blocked until an acceptance study passes every gate`
+      ],
+      record: null
+    };
 
   let r: AcceptanceRecord;
 
   try {
     r = JSON.parse(fs.readFileSync(file, 'utf8')) as AcceptanceRecord;
   } catch (e) {
-    return { ok: false, status: 'INVALID', reasons: [`unreadable acceptance record: ${(e as Error).message}`], record: null };
+    return {
+      ok: false,
+      status: 'INVALID',
+      reasons: [`unreadable acceptance record: ${(e as Error).message}`],
+      record: null
+    };
   }
   const reasons: string[] = [];
 
-  if (r.kind !== 'gpu-backend acceptance' || r.schema !== 1) return { ok: false, status: 'INVALID', reasons: ['not a gpu-backend acceptance record (schema 1)'], record: r };
-  if (r.status !== 'ACCEPTED') reasons.push(`status ${r.status}: ${(r.blockers ?? []).join('; ') || 'no reason recorded'}`);
+  if (r.kind !== 'gpu-backend acceptance' || r.schema !== 1)
+    return { ok: false, status: 'INVALID', reasons: ['not a gpu-backend acceptance record (schema 1)'], record: r };
+  if (r.status !== 'ACCEPTED')
+    reasons.push(`status ${r.status}: ${(r.blockers ?? []).join('; ') || 'no reason recorded'}`);
 
   const stale = staleFiles(r.compat);
   const now = compatManifest();
 
-  if (stale.length) reasons.push(`the GPU evaluator was verified against other sources; changed since acceptance: ${stale.slice(0, 12).join(', ')}${stale.length > 12 ? ` (+${stale.length - 12})` : ''}. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptance record`);
-  else if (now.digest !== r.compat.digest) reasons.push(`compatibility digest ${now.digest.slice(0, 16)} ≠ accepted ${r.compat.digest.slice(0, 16)} (a source was added to the mirrored closure)`);
+  if (stale.length)
+    reasons.push(
+      `the GPU evaluator was verified against other sources; changed since acceptance: ${stale.slice(0, 12).join(', ')}${stale.length > 12 ? ` (+${stale.length - 12})` : ''}. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptance record`
+    );
+  else if (now.digest !== r.compat.digest)
+    reasons.push(
+      `compatibility digest ${now.digest.slice(0, 16)} ≠ accepted ${r.compat.digest.slice(0, 16)} (a source was added to the mirrored closure)`
+    );
   for (const e of r.evidence ?? []) {
     const f = path.join(repoRoot, e.path);
 
@@ -72,9 +95,18 @@ export const checkAcceptance = (o: { file?: string; binary?: string; uuid?: stri
   }
   if (o.binary) {
     if (!fs.existsSync(o.binary)) reasons.push(`GPU binary ${o.binary} missing`);
-    else if (sha256File(o.binary) !== r.binary.sha256) reasons.push(`GPU binary sha256 ${sha256File(o.binary).slice(0, 16)} ≠ accepted ${r.binary.sha256.slice(0, 16)} (a stale or different build)`);
+    else if (sha256File(o.binary) !== r.binary.sha256)
+      reasons.push(
+        `GPU binary sha256 ${sha256File(o.binary).slice(0, 16)} ≠ accepted ${r.binary.sha256.slice(0, 16)} (a stale or different build)`
+      );
   }
-  if (o.uuid && o.uuid !== r.device.uuid) reasons.push(`device ${o.uuid} ≠ the accepted device ${r.device.uuid} (rerun the parity suite on this GPU)`);
+  if (o.uuid && o.uuid !== r.device.uuid)
+    reasons.push(`device ${o.uuid} ≠ the accepted device ${r.device.uuid} (rerun the parity suite on this GPU)`);
 
-  return { ok: reasons.length === 0, status: reasons.length === 0 ? 'ACCEPTED' : r.status !== 'ACCEPTED' ? 'NOT_ACCEPTED' : 'STALE', reasons, record: r };
+  return {
+    ok: reasons.length === 0,
+    status: reasons.length === 0 ? 'ACCEPTED' : r.status !== 'ACCEPTED' ? 'NOT_ACCEPTED' : 'STALE',
+    reasons,
+    record: r
+  };
 };

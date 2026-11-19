@@ -10,21 +10,31 @@ export class CpuRefPool {
   private ws: { child: ChildProcess; busy: boolean }[] = [];
   private failure: Error | null = null;
 
-  constructor(readonly workers: number, readonly door: DoorSpec, readonly oldSpaceMb = 3072) {}
+  constructor(
+    readonly workers: number,
+    readonly door: DoorSpec,
+    readonly oldSpaceMb = 3072
+  ) {}
 
   async start() {
     for (let i = 0; i < this.workers; i += 4)
       await Promise.all(
         Array.from({ length: Math.min(4, this.workers - i) }, () => {
           const child = fork(path.join(import.meta.dirname, 'cpuRefWorker.ts'), [], {
-            execArgv: ['--expose-gc', `--max-old-space-size=${this.oldSpaceMb}`, '--experimental-transform-types', '--disable-warning=ExperimentalWarning'],
+            execArgv: [
+              '--expose-gc',
+              `--max-old-space-size=${this.oldSpaceMb}`,
+              '--experimental-transform-types',
+              '--disable-warning=ExperimentalWarning'
+            ],
             serialization: 'advanced',
             stdio: ['ignore', 'inherit', 'inherit', 'ipc']
           });
           const w = { child, busy: false };
 
           child.once('exit', (code, signal) => {
-            if (!this.closing) this.failure ??= new Error(`CPU reference worker ${child.pid} exited (${code ?? signal})`);
+            if (!this.closing)
+              this.failure ??= new Error(`CPU reference worker ${child.pid} exited (${code ?? signal})`);
           });
           this.ws.push(w);
           return new Promise<void>((resolve) => {
@@ -72,10 +82,15 @@ export class CpuRefPool {
 
   async close() {
     this.closing = true;
-    await Promise.all(this.ws.map((w) => new Promise<void>((resolve) => {
-      if (w.child.exitCode !== null || w.child.signalCode !== null) return resolve();
-      w.child.once('exit', () => resolve());
-      w.child.send({ t: 'exit' });
-    })));
+    await Promise.all(
+      this.ws.map(
+        (w) =>
+          new Promise<void>((resolve) => {
+            if (w.child.exitCode !== null || w.child.signalCode !== null) return resolve();
+            w.child.once('exit', () => resolve());
+            w.child.send({ t: 'exit' });
+          })
+      )
+    );
   }
 }

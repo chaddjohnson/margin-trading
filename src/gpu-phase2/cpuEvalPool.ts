@@ -18,7 +18,11 @@ export class CpuEvalPool implements PoolLike {
   completed = 0;
   computeMs = 0;
 
-  constructor(readonly workers: number, readonly door: DoorSpec, readonly inflightPerWorker = 4) {}
+  constructor(
+    readonly workers: number,
+    readonly door: DoorSpec,
+    readonly inflightPerWorker = 4
+  ) {}
 
   async start() {
     for (let i = 0; i < this.workers; i += 4)
@@ -27,7 +31,12 @@ export class CpuEvalPool implements PoolLike {
 
   private spawn() {
     const child = fork(path.join(import.meta.dirname, 'cpuEvalWorker.ts'), [], {
-      execArgv: ['--expose-gc', '--max-old-space-size=3072', '--experimental-transform-types', '--disable-warning=ExperimentalWarning'],
+      execArgv: [
+        '--expose-gc',
+        '--max-old-space-size=3072',
+        '--experimental-transform-types',
+        '--disable-warning=ExperimentalWarning'
+      ],
       serialization: 'advanced',
       env: { ...process.env, GPU_POLICY_PURPOSE: 'parity-test' },
       stdio: ['ignore', 'inherit', 'inherit', 'ipc']
@@ -128,11 +137,16 @@ export class CpuEvalPool implements PoolLike {
 
   async close() {
     this.closing = true;
-    await Promise.all(this.ws.map((w) => new Promise<void>((resolve) => {
-      if (w.child.exitCode !== null || w.child.signalCode !== null) return resolve();
-      w.child.once('exit', () => resolve());
-      if (w.child.connected) w.child.send({ t: 'exit' });
-      setTimeout(() => w.child.kill('SIGKILL'), 10000).unref();
-    })));
+    await Promise.all(
+      this.ws.map(
+        (w) =>
+          new Promise<void>((resolve) => {
+            if (w.child.exitCode !== null || w.child.signalCode !== null) return resolve();
+            w.child.once('exit', () => resolve());
+            if (w.child.connected) w.child.send({ t: 'exit' });
+            setTimeout(() => w.child.kill('SIGKILL'), 10000).unref();
+          })
+      )
+    );
   }
 }

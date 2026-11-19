@@ -56,7 +56,7 @@ gate('final binary', R('final-binary.json'), !!finalRec && finalRec.binary.sha25
 }
 // P2 + P4 + the merge gate: the policy tests
 {
-  const r = spawnSync(process.execPath, ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', '--test', 'src/gpu-backend/tests/policy.test.ts', 'src/gpu-backend/tests/layout.test.ts'], { cwd: repoRoot, encoding: 'utf8', timeout: 600_000 });
+  const r = spawnSync(process.execPath, ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', '--test', '--test-reporter=tap', 'src/gpu-backend/tests/policy.test.ts', 'src/gpu-backend/tests/layout.test.ts'], { cwd: repoRoot, encoding: 'utf8', timeout: 600_000 });
   const f = R('policy/policy-tests.txt');
 
   if (!dry) fs.writeFileSync(f, `${r.stdout}\n${r.stderr}`);
@@ -78,6 +78,14 @@ gate('final binary', R('final-binary.json'), !!finalRec && finalRec.binary.sha25
   const ok = !!s && s.pass && s.build.binaries.length === 1 && s.build.binaries[0] === binarySha;
 
   gate('G1-G6 parity campaign (zero mismatches, coverage, determinism)', f, ok, s ? `${JSON.stringify(s.checks)} subjects ${s.totals.subjects} mismatches ${s.totals.mismatches} binaries ${s.build.binaries.map((b) => b.slice(0, 12))}` : 'missing');
+}
+// G4 reference identities: Assignment 3's sealed finalists (the campaign's --refs covers the five incumbents)
+{
+  const f = R('parity/final-finalists.json');
+  const s = read<{ pass: boolean; binarySha256: string; finalists: number; runs: { door: string; tasks: number; identical: number; sealedChecked: number; sealedEqual: number }[] }>(f);
+  const ok = !!s && s.pass && s.binarySha256 === binarySha && s.runs.length === 2 && s.runs.every((r) => r.identical === r.tasks && r.sealedEqual === r.sealedChecked);
+
+  gate('G4 Assignment 3 sealed finalists (GPU = CPU reference; D24 = sealed figures)', f, ok, s ? JSON.stringify(s.runs.map((r) => [r.door, r.identical, r.tasks, r.sealedEqual, r.sealedChecked])) : 'missing');
 }
 // G7 fixed-seed mini-optimization on the final binary (CPU = GPU, GPU = interrupted + resumed)
 {

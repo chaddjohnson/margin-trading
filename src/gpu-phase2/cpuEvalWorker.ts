@@ -17,23 +17,34 @@ const gc = (globalThis as { gc?: () => void }).gc;
 let door: Awaited<ReturnType<typeof resolveDoor>> | null = null;
 let count = 0;
 
-process.on('message', async (m: { t: string; door?: DoorSpec; k?: string; quad?: Quad; controls?: RiskConfig2 | null; options?: EvalOptions; detail?: boolean }) => {
-  if (m.t === 'door') {
-    door = await resolveDoor(m.door!, 'mini-optimization CPU worker');
-    for (const s of ['GDX', 'VGT'] as const) door.sym[s].history = new Array(door.sym[s].history.length);
-    process.send!({ t: 'ready' });
-    return;
-  }
-  if (m.t === 'exit') process.exit(0);
-  const t0 = performance.now();
+process.on(
+  'message',
+  async (m: {
+    t: string;
+    door?: DoorSpec;
+    k?: string;
+    quad?: Quad;
+    controls?: RiskConfig2 | null;
+    options?: EvalOptions;
+    detail?: boolean;
+  }) => {
+    if (m.t === 'door') {
+      door = await resolveDoor(m.door!, 'mini-optimization CPU worker');
+      for (const s of ['GDX', 'VGT'] as const) door.sym[s].history = new Array(door.sym[s].history.length);
+      process.send!({ t: 'ready' });
+      return;
+    }
+    if (m.t === 'exit') process.exit(0);
+    const t0 = performance.now();
 
-  try {
-    const record = (m.detail ? evaluateDetail : evaluate)(door!, m.quad!, m.controls ?? null, m.options ?? {});
+    try {
+      const record = (m.detail ? evaluateDetail : evaluate)(door!, m.quad!, m.controls ?? null, m.options ?? {});
 
-    process.send!({ t: 'res', k: m.k, r: record, ms: performance.now() - t0 });
-  } catch (error) {
-    process.send!({ t: 'err', k: m.k, e: String((error as Error).stack ?? error) });
+      process.send!({ t: 'res', k: m.k, r: record, ms: performance.now() - t0 });
+    } catch (error) {
+      process.send!({ t: 'err', k: m.k, e: String((error as Error).stack ?? error) });
+    }
+    if (++count % 64 === 0) gc?.();
   }
-  if (++count % 64 === 0) gc?.();
-});
+);
 process.on('disconnect', () => process.exit(0));

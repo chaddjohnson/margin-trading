@@ -85,30 +85,53 @@ export interface OfficialGpuSession {
 }
 
 const sha256File = (f: string) => createHash('sha256').update(fs.readFileSync(f)).digest('hex');
-export const smiUuid = () => execFileSync('nvidia-smi', ['--query-gpu=uuid', '--format=csv,noheader']).toString().trim().split('\n')[0]!;
+export const smiUuid = () =>
+  execFileSync('nvidia-smi', ['--query-gpu=uuid', '--format=csv,noheader']).toString().trim().split('\n')[0]!;
 export const smiTelemetry = () => {
-  const q = execFileSync('nvidia-smi', ['--query-gpu=uuid,utilization.gpu,memory.used,memory.free,power.draw,temperature.gpu', '--format=csv,noheader,nounits'])
+  const q = execFileSync('nvidia-smi', [
+    '--query-gpu=uuid,utilization.gpu,memory.used,memory.free,power.draw,temperature.gpu',
+    '--format=csv,noheader,nounits'
+  ])
     .toString()
     .trim()
     .split('\n')[0]!
     .split(',')
     .map((x) => x.trim());
 
-  return { uuid: q[0]!, utilizationPct: Number(q[1]), memoryUsedMiB: Number(q[2]), memoryFreeMiB: Number(q[3]), powerW: Number(q[4]), temperatureC: Number(q[5]) };
+  return {
+    uuid: q[0]!,
+    utilizationPct: Number(q[1]),
+    memoryUsedMiB: Number(q[2]),
+    memoryFreeMiB: Number(q[3]),
+    powerW: Number(q[4]),
+    temperatureC: Number(q[5])
+  };
 };
 
 // approximate device bytes of one batch (gb_server.cu's own budget formula with the default capacities)
-export const plannedBytes = (n: number, sessions: number) => n * (1016 + 2 * (512 + 512) * 184 + 624 + 8 + 512 * 320 + 2048 * 56 + sessions * 8);
+export const plannedBytes = (n: number, sessions: number) =>
+  n * (1016 + 2 * (512 + 512) * 184 + 624 + 8 + 512 * 320 + 2048 * 56 + sessions * 8);
 
 // the precommitted parity mini-set: the reference identities and seeded Assignment 3 genomes (never chosen by outcome)
 export const parityMiniSet = (n: number): Task[] => {
   const inc = incumbents();
-  const tasks: Task[] = (['NL0', 'IJ1', 'C4', 'C4R'] as const).map((k) => ({ k: `R:${k}`, quad: inc[k].quad, controls: null, options: vOptions, detail: false }));
+  const tasks: Task[] = (['NL0', 'IJ1', 'C4', 'C4R'] as const).map((k) => ({
+    k: `R:${k}`,
+    quad: inc[k].quad,
+    controls: null,
+    options: vOptions,
+    detail: false
+  }));
   const levels = levelsOf('coarse');
 
   for (let i = 0; i < n; i++) {
     const rng = new Rng(deriveSeed('gpu-backend', 'preflight-parity', i));
-    const s = subjectOfCfg(decode(levels.map((l) => rng.int(l)), 'coarse'));
+    const s = subjectOfCfg(
+      decode(
+        levels.map((l) => rng.int(l)),
+        'coarse'
+      )
+    );
 
     tasks.push({ k: `P:${i}`, quad: s.quad, controls: s.controls, options: vOptions, detail: false });
   }
@@ -125,19 +148,35 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
   // 1. purpose
   const purpose = declaredPurpose(spec.purpose);
 
-  check('purpose', purpose === 'official-optimization', purpose === null ? 'no execution purpose declared (official optimization must declare it explicitly)' : `purpose ${purpose} is not official optimization; a non-official run must not open the official gate`);
+  check(
+    'purpose',
+    purpose === 'official-optimization',
+    purpose === null
+      ? 'no execution purpose declared (official optimization must declare it explicitly)'
+      : `purpose ${purpose} is not official optimization; a non-official run must not open the official gate`
+  );
 
   // 2. acceptance (static: record, sources, evidence, binary)
   const binary = spec.binary ?? serverBinary;
   const acc = checkAcceptance({ file: spec.acceptanceFile, binary });
 
-  if (spec.allowUnaccepted) checks.push({ name: 'acceptance', ok: true, detail: `SKIPPED FOR A TEST RUN (status ${acc.status}: ${acc.reasons.join('; ')}) — never official evidence` });
+  if (spec.allowUnaccepted)
+    checks.push({
+      name: 'acceptance',
+      ok: true,
+      detail: `SKIPPED FOR A TEST RUN (status ${acc.status}: ${acc.reasons.join('; ')}) — never official evidence`
+    });
   else check('acceptance', acc.ok, acc.reasons.join('; '));
 
   // 3. server identity
   check('binary', fs.existsSync(binary), `GPU binary ${binary}`);
 
-  const server = GpuServer.start({ binary, libDir: toolkitLib, env: spec.serverEnv, ...(spec.testHooks ? { allowFault: true, testHooks: spec.testHooks } : {}) });
+  const server = GpuServer.start({
+    binary,
+    libDir: toolkitLib,
+    env: spec.serverEnv,
+    ...(spec.testHooks ? { allowFault: true, testHooks: spec.testHooks } : {})
+  });
   let info: ServerInfo;
 
   try {
@@ -151,26 +190,53 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     const compat = compatManifest();
     const smi = smiUuid();
 
-    check('compat', info.compatDigest === compat.digest, `server built from compatibility digest ${info.compatDigest.slice(0, 16)}, working tree ${compat.digest.slice(0, 16)} (stale build or changed sources)`);
+    check(
+      'compat',
+      info.compatDigest === compat.digest,
+      `server built from compatibility digest ${info.compatDigest.slice(0, 16)}, working tree ${compat.digest.slice(0, 16)} (stale build or changed sources)`
+    );
     check('device', info.uuid === smi, `server device ${info.uuid} ≠ nvidia-smi ${smi}`);
-    check('no-test-hooks', info.faultInjection === false, 'the server runs with fault injection / test hooks enabled: never an official evaluator');
-    if (!spec.allowUnaccepted) check('accepted-device', info.uuid === (acc.record as AcceptanceRecord).device.uuid, `device ${info.uuid} ≠ the accepted ${(acc.record as AcceptanceRecord).device.uuid}`);
+    check(
+      'no-test-hooks',
+      info.faultInjection === false,
+      'the server runs with fault injection / test hooks enabled: never an official evaluator'
+    );
+    if (!spec.allowUnaccepted)
+      check(
+        'accepted-device',
+        info.uuid === (acc.record as AcceptanceRecord).device.uuid,
+        `device ${info.uuid} ≠ the accepted ${(acc.record as AcceptanceRecord).device.uuid}`
+      );
 
     // 4. capability coverage of the whole reachable domain
     const supported = BigInt(`0x${info.supportedFeatures}`);
     const missing = spec.domain.features & ~supported;
 
-    check('capability', missing === 0n && (spec.domain.features & ~SUPPORTED) === 0n, missing ? `the search domain reaches features the GPU does not implement: ${featureNames(missing).join(', ')}` : 'ok');
+    check(
+      'capability',
+      missing === 0n && (spec.domain.features & ~SUPPORTED) === 0n,
+      missing
+        ? `the search domain reaches features the GPU does not implement: ${featureNames(missing).join(', ')}`
+        : 'ok'
+    );
 
     // 5. live kernel execution
     const smoke = await server.smoke();
 
-    check('smoke', smoke.ok && smoke.uuid === info.uuid, `smoke kernel result ${smoke.sum}/${smoke.mix} ≠ expected ${smoke.expected.sum}/${smoke.expected.mix}`);
+    check(
+      'smoke',
+      smoke.ok && smoke.uuid === info.uuid,
+      `smoke kernel result ${smoke.sum}/${smoke.mix} ≠ expected ${smoke.expected.sum}/${smoke.expected.mix}`
+    );
 
     // 6. memory
     const planned = plannedBytes(spec.plannedBatch, spec.door.sessions);
 
-    check('memory', info.freeBytes > planned + (1 << 30), `free VRAM ${info.freeBytes} < planned batch ${planned} + 1 GiB headroom`);
+    check(
+      'memory',
+      info.freeBytes > planned + (1 << 30),
+      `free VRAM ${info.freeBytes} < planned batch ${planned} + 1 GiB headroom`
+    );
 
     // 7. parity mini-set against the canonical CPU engine
     const ds = exportDataset(spec.door, spec.cacheDir);
@@ -189,12 +255,17 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       if (
         g.status === 0 &&
         canonHash(x.books.map(bookView)) === canonHash(g.books.map(bookView)) &&
-        canonHash({ ...poolView(x.result), principalAtClose: 0, valueAtClose: 0, heldAtClose: 0 }) === canonHash({ ...poolView(g.pool!), principalAtClose: 0, valueAtClose: 0, heldAtClose: 0 }) &&
+        canonHash({ ...poolView(x.result), principalAtClose: 0, valueAtClose: 0, heldAtClose: 0 }) ===
+          canonHash({ ...poolView(g.pool!), principalAtClose: 0, valueAtClose: 0, heldAtClose: 0 }) &&
         canonHash(rec) === canonHash(g.record)
       )
         identical++;
     }
-    check('parity', identical === tasks.length, `${tasks.length - identical} of ${tasks.length} precommitted parity subjects differ from the canonical CPU engine`);
+    check(
+      'parity',
+      identical === tasks.length,
+      `${tasks.length - identical} of ${tasks.length} precommitted parity subjects differ from the canonical CPU engine`
+    );
 
     // 8. attestation
     const t = new Date().toISOString();
@@ -205,11 +276,30 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       purpose: 'official-optimization',
       t,
       host: execFileSync('hostname').toString().trim(),
-      device: { uuid: info.uuid, name: info.device, driver: info.driver, runtime: info.runtime, cc: info.cc, smiUuid: smi },
+      device: {
+        uuid: info.uuid,
+        name: info.device,
+        driver: info.driver,
+        runtime: info.runtime,
+        cc: info.cc,
+        smiUuid: smi
+      },
       binary: { path: path.relative(repoRoot, binary), sha256: sha256File(binary) },
       compat: { digest: compat.digest, serverDigest: info.compatDigest },
-      acceptance: { status: acc.status, file: path.relative(repoRoot, spec.acceptanceFile ?? path.join(repoRoot, 'config/gpu-backend/acceptance.json')), sha256: acc.record ? sha256File(spec.acceptanceFile ?? path.join(repoRoot, 'config/gpu-backend/acceptance.json')) : null, skippedForTest: Boolean(spec.allowUnaccepted) },
-      domain: { name: spec.domain.name, features: featureNames(spec.domain.features), growthStructures: spec.domain.growthStructures, d1Structures: spec.domain.d1Structures },
+      acceptance: {
+        status: acc.status,
+        file: path.relative(repoRoot, spec.acceptanceFile ?? path.join(repoRoot, 'config/gpu-backend/acceptance.json')),
+        sha256: acc.record
+          ? sha256File(spec.acceptanceFile ?? path.join(repoRoot, 'config/gpu-backend/acceptance.json'))
+          : null,
+        skippedForTest: Boolean(spec.allowUnaccepted)
+      },
+      domain: {
+        name: spec.domain.name,
+        features: featureNames(spec.domain.features),
+        growthStructures: spec.domain.growthStructures,
+        d1Structures: spec.domain.d1Structures
+      },
       supported: info.supportedFeatures,
       smoke: { ok: smoke.ok, sum: smoke.sum, mix: smoke.mix },
       memory: { freeBytes: info.freeBytes, plannedBytes: planned },
