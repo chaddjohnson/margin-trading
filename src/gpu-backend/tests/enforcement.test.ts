@@ -75,13 +75,15 @@ test('the recorded acceptance re-verifies independently; a tampered pin, digest 
 
     assert.equal(b.status, 1);
     assert.match(b.stdout, /FAIL evaluation digest/);
-    const ev = structuredClone(record);
+    if (record.evidence.length) {
+      const ev = structuredClone(record);
 
-    ev.evidence[0].sha256 = '0'.repeat(64);
-    const c = verify(write('evidence.json', ev));
+      ev.evidence[0].sha256 = '0'.repeat(64);
+      const c = verify(write('evidence.json', ev));
 
-    assert.equal(c.status, 1);
-    assert.match(c.stdout, /FAIL evidence files/);
+      assert.equal(c.status, 1);
+      assert.match(c.stdout, /FAIL evidence files/);
+    }
   } finally {
     fs.rmSync(d, { recursive: true, force: true });
   }

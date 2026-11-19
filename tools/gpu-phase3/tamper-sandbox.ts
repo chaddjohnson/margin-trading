@@ -176,8 +176,8 @@ const cases: Case[] = [
     id: 'T5',
     name: 'the manifest generator altered (a host-path file dropped from the evaluation digest)',
     file: 'src/gpu-backend/compat.ts',
-    find: "'hostPipeline.ts', 'hostWorker.ts', 'hostDoor.ts'",
-    replace: "'hostPipeline.ts', 'hostDoor.ts'",
+    find: "  'hostWorker.ts',\n  'hostDoor.ts'\n].map",
+    replace: "  'hostDoor.ts'\n].map",
     expect: R
   },
   {
@@ -224,8 +224,8 @@ const cases: Case[] = [
     id: 'T11',
     name: 'forced mixed CPU scoring in the pool (a CPU-scored counter bypass)',
     file: 'src/gpu-backend/pool.ts',
-    find: 'if (c.cpuScored !== 0) this.fail(',
-    replace: 'if (c.cpuScored < 0) this.fail(',
+    find: '    if (c.cpuScored !== 0)\n',
+    replace: '    if (c.cpuScored < 0)\n',
     expect: R
   },
   {
@@ -246,10 +246,10 @@ const cases: Case[] = [
   },
   {
     id: 'T14',
-    name: 'a tamper committed with a regenerated record (the malicious-committer case): only the out-of-band record pin detects it',
-    file: 'src/gpu-backend/purpose.ts',
-    find: "  if (p === 'official-optimization')\n    throw",
-    replace: "  if (p === 'never')\n    throw",
+    name: 'a weakened gate committed with a regenerated record (the malicious-committer case: the parity mini-set shrunk to one seeded genome); only the out-of-band record pin detects it',
+    file: 'src/gpu-backend/official.ts',
+    find: 'parityMiniSet(spec.parityMiniSet ?? 14)',
+    replace: 'parityMiniSet(spec.parityMiniSet ?? 1)',
     regenerate: true,
     expect: { static: 'ACCEPTED', gate: 'any', runner: 'ran', verify: true, mergeGate: true }
   }

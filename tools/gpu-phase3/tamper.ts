@@ -21,6 +21,14 @@ fs.rmSync(box, { recursive: true, force: true });
 if (git('clone', '--quiet', '--shared', '--no-checkout', repoRoot, box).status !== 0) throw new Error('clone failed');
 spawnSync('git', ['checkout', '--quiet', '--detach', head], { cwd: box });
 fs.symlinkSync(path.join(repoRoot, 'node_modules'), path.join(box, 'node_modules'));
+// git-ignored generated sources a full checkout has (src/four-family/generated/*.ts: the entrypoint audit's digest of
+// a registered legacy runner covers them), copied so that the clone is the same source tree
+for (const f of git('ls-files', '--others', '--ignored', '--exclude-standard', 'src')
+  .stdout.split('\n')
+  .filter((x) => x.endsWith('.ts'))) {
+  fs.mkdirSync(path.dirname(path.join(box, f)), { recursive: true });
+  fs.copyFileSync(path.join(repoRoot, f), path.join(box, f));
+}
 
 let result: Record<string, unknown>;
 
