@@ -15,7 +15,8 @@ const root = process.cwd();
 const binary = process.env.GPU_BACKEND_BINARY!;
 const node = process.execPath;
 const ts = ['--experimental-transform-types', '--disable-warning=ExperimentalWarning'];
-const sh = (cmd: string, args: string[], env: Record<string, string> = {}) => spawnSync(cmd, args, { cwd: root, env: { ...process.env, ...env }, encoding: 'utf8', timeout: 900_000 });
+const sh = (cmd: string, args: string[], env: Record<string, string> = {}) =>
+  spawnSync(cmd, args, { cwd: root, env: { ...process.env, ...env }, encoding: 'utf8', timeout: 900_000 });
 const probe = (mode: string) => {
   const r = sh(node, [...ts, 'tools/gpu-phase3/tamper-probe.ts', mode]);
 
@@ -28,14 +29,36 @@ const probe = (mode: string) => {
 const verify = (extra: string[] = []) => {
   const r = sh('tools/gpu-backend/verify-acceptance.sh', extra);
 
-  return { status: r.status, verified: /^VERIFIED$/m.test(r.stdout), fails: r.stdout.split('\n').filter((l) => l.startsWith('FAIL')).map((l) => l.slice(0, 160)) };
+  return {
+    status: r.status,
+    verified: /^VERIFIED$/m.test(r.stdout),
+    fails: r.stdout
+      .split('\n')
+      .filter((l) => l.startsWith('FAIL'))
+      .map((l) => l.slice(0, 160))
+  };
 };
 const mergeGate = () => {
-  const r = sh(node, [...ts, '--test', '--test-reporter=tap', 'src/gpu-backend/tests/policy.test.ts', 'src/gpu-backend/tests/enforcement.test.ts']);
+  const r = sh(node, [
+    ...ts,
+    '--test',
+    '--test-reporter=tap',
+    'src/gpu-backend/tests/policy.test.ts',
+    'src/gpu-backend/tests/enforcement.test.ts'
+  ]);
 
-  return { pass: /# fail 0/.test(r.stdout), failing: r.stdout.split('\n').filter((l) => /^not ok/.test(l)).map((l) => l.slice(0, 160)) };
+  return {
+    pass: /# fail 0/.test(r.stdout),
+    failing: r.stdout
+      .split('\n')
+      .filter((l) => /^not ok/.test(l))
+      .map((l) => l.slice(0, 160))
+  };
 };
-const sha = (f: string) => createHash('sha256').update(fs.readFileSync(path.join(root, f))).digest('hex');
+const sha = (f: string) =>
+  createHash('sha256')
+    .update(fs.readFileSync(path.join(root, f)))
+    .digest('hex');
 
 // ----- the provisional record for the clone's committed tree (fixture) and the fixture official study -----
 const { compatManifest, policySources } = await import(path.join(root, 'src/gpu-backend/compat.ts'));
@@ -58,8 +81,14 @@ const std = reg.versions.find((v: { version: string }) => v.version === '3.0.0')
 const study = path.join(root, 'research/zz-tamper');
 
 fs.mkdirSync(study, { recursive: true });
-fs.writeFileSync(path.join(study, 'PROTOCOL.md'), `# zz-tamper (sandbox fixture, not a study)\n\nStandard 3.0.0 ${std.sha256}\n`);
-fs.writeFileSync(path.join(study, 'run.ts'), "import { openOfficialGpuSession } from '../../src/gpu-backend/official.ts';\nvoid openOfficialGpuSession;\nconsole.log('RAN');\n");
+fs.writeFileSync(
+  path.join(study, 'PROTOCOL.md'),
+  `# zz-tamper (sandbox fixture, not a study)\n\nStandard 3.0.0 ${std.sha256}\n`
+);
+fs.writeFileSync(
+  path.join(study, 'run.ts'),
+  "import { openOfficialGpuSession } from '../../src/gpu-backend/official.ts';\nvoid openOfficialGpuSession;\nconsole.log('RAN');\n"
+);
 fs.writeFileSync(
   path.join(study, 'STANDARD_ADOPTION.json'),
   JSON.stringify({
@@ -71,11 +100,23 @@ fs.writeFileSync(
     readAt: new Date(Date.now() - 60000).toISOString().replace(/\.\d+Z$/, 'Z'),
     adoptedAt: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
     protocol: { path: 'research/zz-tamper/PROTOCOL.md', sha256: sha('research/zz-tamper/PROTOCOL.md') },
-    dateSplit: { development: { from: '2016-01-04', to: '2024-12-31' }, validation: { from: '2025-01-01', to: '2026-10-30' }, commonCompleteEndpoint: '2026-10-30' },
-    objective: { prioritizes: 'robust-profit', primaryRule: 'sandbox fixture', roles: ['actual-profit', 'robust-profit', 'balanced'] },
+    dateSplit: {
+      development: { from: '2016-01-04', to: '2024-12-31' },
+      validation: { from: '2025-01-01', to: '2026-10-30' },
+      commonCompleteEndpoint: '2026-10-30'
+    },
+    objective: {
+      prioritizes: 'robust-profit',
+      primaryRule: 'sandbox fixture',
+      roles: ['actual-profit', 'robust-profit', 'balanced']
+    },
     risk: { maximumMinuteDrawdown: 35000, principalBudget: 100000, denominator: 'one fixed $100,000 principal budget' },
     budget: { distinctProposals: 1, backendEvaluations: 1, notes: 'sandbox fixture' },
-    evaluationBackend: { policy: 'gpu-required', purpose: 'official-optimization', acceptance: 'config/gpu-backend/acceptance.json' },
+    evaluationBackend: {
+      policy: 'gpu-required',
+      purpose: 'official-optimization',
+      acceptance: 'config/gpu-backend/acceptance.json'
+    },
     chronologicalConsequence: 'sandbox fixture',
     deviations: []
   })
@@ -88,29 +129,145 @@ interface Case {
   file: string;
   find: string | RegExp;
   replace: string;
-  expect: { static: 'STALE' | 'ACCEPTED' | 'any'; gate: 'refused' | 'opened' | 'any'; runner: 'refused' | 'ran' | 'any'; verify: boolean; mergeGate: boolean };
+  expect: {
+    static: 'STALE' | 'ACCEPTED' | 'any';
+    gate: 'refused' | 'opened' | 'any';
+    runner: 'refused' | 'ran' | 'any';
+    verify: boolean;
+    mergeGate: boolean;
+  };
   regenerate?: boolean; // the tamper is committed together with a regenerated record (the malicious-committer case)
 }
 const R = { static: 'STALE', gate: 'refused', runner: 'refused', verify: false, mergeGate: false } as const;
 const cases: Case[] = [
-  { id: 'T1', name: 'a modified host-worker decoder (results returned in another order)', file: 'src/gpu-backend/hostWorker.ts', find: "results: m.mode === 'lean' ? results.map(leanResult) : results", replace: "results: (m.mode === 'lean' ? results.map(leanResult) : results).reverse()", expect: R },
-  { id: 'T2', name: 'a modified batch encoder (the request assembly)', file: 'src/gpu-backend/batch.ts', find: "buf.writeUInt32LE(o.lotCap ?? 512, h.lotCap!);", replace: "buf.writeUInt32LE(o.lotCap ?? 511, h.lotCap!);", expect: R },
-  { id: 'T3', name: 'the CPU-official refusal removed (a CPU runner accepts official optimization)', file: 'src/gpu-backend/purpose.ts', find: "  if (p === 'official-optimization')\n    throw", replace: "  if (p === 'never')\n    throw", expect: R },
-  { id: 'T4', name: 'acceptance verification disabled (the validator always says ACCEPTED)', file: 'src/gpu-backend/acceptance.ts', find: '  return {\n    ok: reasons.length === 0,', replace: '  reasons.length = 0;\n  return {\n    ok: reasons.length === 0,', expect: { static: 'ACCEPTED', gate: 'refused', runner: 'any', verify: false, mergeGate: false } },
-  { id: 'T5', name: 'the manifest generator altered (a host-path file dropped from the evaluation digest)', file: 'src/gpu-backend/compat.ts', find: "'hostPipeline.ts', 'hostWorker.ts', 'hostDoor.ts'", replace: "'hostPipeline.ts', 'hostDoor.ts'", expect: R },
-  { id: 'T6', name: 'the official entrypoint altered (the parity mini-set check removed)', file: 'src/gpu-backend/official.ts', find: "    check(\n      'parity',", replace: "    if (false) check(\n      'parity',", expect: { static: 'STALE', gate: 'any', runner: 'refused', verify: false, mergeGate: false } },
-  { id: 'T7', name: 'the entrypoint registry altered (an unregistered optimizer declared non-official)', file: 'config/gpu-backend/entrypoints.json', find: '"nonOfficial": {', replace: '"nonOfficial": {\n  "zz-new-optimizer": "tamper",', expect: R },
-  { id: 'T8', name: 'the legacy-runner purpose gate disabled', file: 'src/gpu-backend/legacyRunner.ts', find: "  const purpose = assertNonOfficialCpuRun(`the legacy CPU runner '${name}'`);", replace: "  const purpose = 'cpu-reference';", expect: R },
-  { id: 'T9', name: 'the preflight §9 rule weakened (no GPU backend or acceptance required)', file: 'src/research-standard/gpuPolicy.ts', find: "  if (official) {\n    if (!b ||", replace: "  if (false) {\n    if (!b ||", expect: { ...R, runner: 'any' } },
-  { id: 'T10', name: 'the independent verifier altered (it always says VERIFIED)', file: 'tools/gpu-backend/verify-acceptance.sh', find: "print('VERIFIED' if not fails else f\"NOT VERIFIED ({len(fails)} failure(s))\")\nsys.exit(1 if fails else 0)", replace: "print('VERIFIED')\nsys.exit(0)", expect: { static: 'STALE', gate: 'refused', runner: 'refused', verify: true, mergeGate: false } },
-  { id: 'T11', name: 'forced mixed CPU scoring in the pool (a CPU-scored counter bypass)', file: 'src/gpu-backend/pool.ts', find: "if (c.cpuScored !== 0) this.fail(", replace: "if (c.cpuScored < 0) this.fail(", expect: R },
-  { id: 'T12', name: 'a CUDA source changed without a new build and acceptance', file: 'src/gpu-backend/cuda/gb_pool.cuh', find: /^/, replace: '// tamper\n', expect: R },
-  { id: 'T13', name: 'a new, unclassified GPU-backend file (a loader outside the manifest)', file: 'src/gpu-backend/sneakyLoader.ts', find: /^/, replace: 'export const x = 1;\n', expect: { static: 'ACCEPTED', gate: 'any', runner: 'any', verify: true, mergeGate: false } },
-  { id: 'T14', name: 'a tamper committed with a regenerated record (the malicious-committer case): only the out-of-band record pin detects it', file: 'src/gpu-backend/purpose.ts', find: "  if (p === 'official-optimization')\n    throw", replace: "  if (p === 'never')\n    throw", regenerate: true, expect: { static: 'ACCEPTED', gate: 'any', runner: 'ran', verify: true, mergeGate: true } }
+  {
+    id: 'T1',
+    name: 'a modified host-worker decoder (results returned in another order)',
+    file: 'src/gpu-backend/hostWorker.ts',
+    find: "results: m.mode === 'lean' ? results.map(leanResult) : results",
+    replace: "results: (m.mode === 'lean' ? results.map(leanResult) : results).reverse()",
+    expect: R
+  },
+  {
+    id: 'T2',
+    name: 'a modified batch encoder (the request assembly)',
+    file: 'src/gpu-backend/batch.ts',
+    find: 'buf.writeUInt32LE(o.lotCap ?? 512, h.lotCap!);',
+    replace: 'buf.writeUInt32LE(o.lotCap ?? 511, h.lotCap!);',
+    expect: R
+  },
+  {
+    id: 'T3',
+    name: 'the CPU-official refusal removed (a CPU runner accepts official optimization)',
+    file: 'src/gpu-backend/purpose.ts',
+    find: "  if (p === 'official-optimization')\n    throw",
+    replace: "  if (p === 'never')\n    throw",
+    expect: R
+  },
+  {
+    id: 'T4',
+    name: 'acceptance verification disabled (the validator always says ACCEPTED)',
+    file: 'src/gpu-backend/acceptance.ts',
+    find: '  return {\n    ok: reasons.length === 0,',
+    replace: '  reasons.length = 0;\n  return {\n    ok: reasons.length === 0,',
+    expect: { static: 'ACCEPTED', gate: 'refused', runner: 'any', verify: false, mergeGate: false }
+  },
+  {
+    id: 'T5',
+    name: 'the manifest generator altered (a host-path file dropped from the evaluation digest)',
+    file: 'src/gpu-backend/compat.ts',
+    find: "'hostPipeline.ts', 'hostWorker.ts', 'hostDoor.ts'",
+    replace: "'hostPipeline.ts', 'hostDoor.ts'",
+    expect: R
+  },
+  {
+    id: 'T6',
+    name: 'the official entrypoint altered (the parity mini-set check removed)',
+    file: 'src/gpu-backend/official.ts',
+    find: "    check(\n      'parity',",
+    replace: "    if (false) check(\n      'parity',",
+    expect: { static: 'STALE', gate: 'any', runner: 'refused', verify: false, mergeGate: false }
+  },
+  {
+    id: 'T7',
+    name: 'the entrypoint registry altered (an unregistered optimizer declared non-official)',
+    file: 'config/gpu-backend/entrypoints.json',
+    find: '"nonOfficial": {',
+    replace: '"nonOfficial": {\n  "zz-new-optimizer": "tamper",',
+    expect: R
+  },
+  {
+    id: 'T8',
+    name: 'the legacy-runner purpose gate disabled',
+    file: 'src/gpu-backend/legacyRunner.ts',
+    find: "  const purpose = assertNonOfficialCpuRun(`the legacy CPU runner '${name}'`);",
+    replace: "  const purpose = 'cpu-reference';",
+    expect: R
+  },
+  {
+    id: 'T9',
+    name: 'the preflight §9 rule weakened (no GPU backend or acceptance required)',
+    file: 'src/research-standard/gpuPolicy.ts',
+    find: '  if (official) {\n    if (!b ||',
+    replace: '  if (false) {\n    if (!b ||',
+    expect: { ...R, runner: 'any' }
+  },
+  {
+    id: 'T10',
+    name: 'the independent verifier altered (it always says VERIFIED)',
+    file: 'tools/gpu-backend/verify-acceptance.sh',
+    find: 'print(\'VERIFIED\' if not fails else f"NOT VERIFIED ({len(fails)} failure(s))")\nsys.exit(1 if fails else 0)',
+    replace: "print('VERIFIED')\nsys.exit(0)",
+    expect: { static: 'STALE', gate: 'refused', runner: 'refused', verify: true, mergeGate: false }
+  },
+  {
+    id: 'T11',
+    name: 'forced mixed CPU scoring in the pool (a CPU-scored counter bypass)',
+    file: 'src/gpu-backend/pool.ts',
+    find: 'if (c.cpuScored !== 0) this.fail(',
+    replace: 'if (c.cpuScored < 0) this.fail(',
+    expect: R
+  },
+  {
+    id: 'T12',
+    name: 'a CUDA source changed without a new build and acceptance',
+    file: 'src/gpu-backend/cuda/gb_pool.cuh',
+    find: /^/,
+    replace: '// tamper\n',
+    expect: R
+  },
+  {
+    id: 'T13',
+    name: 'a new, unclassified GPU-backend file (a loader outside the manifest)',
+    file: 'src/gpu-backend/sneakyLoader.ts',
+    find: /^/,
+    replace: 'export const x = 1;\n',
+    expect: { static: 'ACCEPTED', gate: 'any', runner: 'any', verify: true, mergeGate: false }
+  },
+  {
+    id: 'T14',
+    name: 'a tamper committed with a regenerated record (the malicious-committer case): only the out-of-band record pin detects it',
+    file: 'src/gpu-backend/purpose.ts',
+    find: "  if (p === 'official-optimization')\n    throw",
+    replace: "  if (p === 'never')\n    throw",
+    regenerate: true,
+    expect: { static: 'ACCEPTED', gate: 'any', runner: 'ran', verify: true, mergeGate: true }
+  }
 ];
 
-const baseline = { static: probe('static'), gate: probe('gate'), runner: probe('runner'), verify: verify(), mergeGate: mergeGate() };
-const baselineOk = baseline.static.status === 'ACCEPTED' && baseline.gate.outcome === 'opened' && baseline.runner.outcome === 'ran' && baseline.verify.verified && baseline.mergeGate.pass;
+const baseline = {
+  static: probe('static'),
+  gate: probe('gate'),
+  runner: probe('runner'),
+  verify: verify(),
+  mergeGate: mergeGate()
+};
+const baselineOk =
+  baseline.static.status === 'ACCEPTED' &&
+  baseline.gate.outcome === 'opened' &&
+  baseline.runner.outcome === 'ran' &&
+  baseline.verify.verified &&
+  baseline.mergeGate.pass;
 const recordSha = sha('config/gpu-backend/acceptance.json');
 const rows: Record<string, unknown>[] = [];
 
@@ -127,7 +284,14 @@ for (const c of cases) {
     writeRecord(sh('git', ['rev-parse', 'HEAD']).stdout.trim()); // a competent forger names the new revision
   }
 
-  const got = { static: probe('static'), gate: c.id === 'T13' || c.id === 'T14' ? { outcome: 'not run' } : probe('gate'), runner: probe('runner'), verify: verify(), verifyPinned: verify(['--expect-record-sha256', recordSha]), mergeGate: mergeGate() };
+  const got = {
+    static: probe('static'),
+    gate: c.id === 'T13' || c.id === 'T14' ? { outcome: 'not run' } : probe('gate'),
+    runner: probe('runner'),
+    verify: verify(),
+    verifyPinned: verify(['--expect-record-sha256', recordSha]),
+    mergeGate: mergeGate()
+  };
   const e = c.expect;
   const checks = {
     applied,
@@ -139,7 +303,13 @@ for (const c of cases) {
     outOfBandPin: got.verifyPinned.verified === false || (!c.regenerate && got.verifyPinned.verified === e.verify)
   };
   // detected: at least one mechanism that is not the modified file itself refuses it
-  const detected = got.static.status !== 'ACCEPTED' || got.gate.outcome === 'refused' || got.runner.outcome === 'refused' || !got.verify.verified || !got.mergeGate.pass || !got.verifyPinned.verified;
+  const detected =
+    got.static.status !== 'ACCEPTED' ||
+    got.gate.outcome === 'refused' ||
+    got.runner.outcome === 'refused' ||
+    !got.verify.verified ||
+    !got.mergeGate.pass ||
+    !got.verifyPinned.verified;
 
   // restore
   if (c.regenerate) {
@@ -149,11 +319,48 @@ for (const c of cases) {
   else fs.rmSync(full);
   applied = applied && true;
 
-  const clean = sh('git', ['status', '--porcelain', '--', 'src', 'tools', 'config/gpu-backend/entrypoints.json']).stdout.trim() === '';
+  const clean =
+    sh('git', ['status', '--porcelain', '--', 'src', 'tools', 'config/gpu-backend/entrypoints.json']).stdout.trim() ===
+    '';
   const pass = Object.values(checks).every(Boolean) && detected && clean;
 
-  rows.push({ id: c.id, name: c.name, file: c.file, expect: c.expect, observed: { static: got.static.status, staticReason: String((got.static.reasons as string[] | undefined)?.[0] ?? '').slice(0, 200), gate: got.gate.outcome, gateMessage: String(got.gate.message ?? '').slice(0, 200), runner: got.runner.outcome, runnerMessage: String(got.runner.message ?? '').slice(0, 200), verify: got.verify.verified, verifyFails: got.verify.fails.slice(0, 3), verifyWithOutOfBandPin: got.verifyPinned.verified, mergeGate: got.mergeGate.pass, mergeGateFailing: got.mergeGate.failing.slice(0, 3) }, checks, detected, restoredClean: clean, pass });
+  rows.push({
+    id: c.id,
+    name: c.name,
+    file: c.file,
+    expect: c.expect,
+    observed: {
+      static: got.static.status,
+      staticReason: String((got.static.reasons as string[] | undefined)?.[0] ?? '').slice(0, 200),
+      gate: got.gate.outcome,
+      gateMessage: String(got.gate.message ?? '').slice(0, 200),
+      runner: got.runner.outcome,
+      runnerMessage: String(got.runner.message ?? '').slice(0, 200),
+      verify: got.verify.verified,
+      verifyFails: got.verify.fails.slice(0, 3),
+      verifyWithOutOfBandPin: got.verifyPinned.verified,
+      mergeGate: got.mergeGate.pass,
+      mergeGateFailing: got.mergeGate.failing.slice(0, 3)
+    },
+    checks,
+    detected,
+    restoredClean: clean,
+    pass
+  });
   console.error(`${pass ? 'PASS' : 'FAIL'} ${c.id} ${c.name}`);
 }
 
-console.log(JSON.stringify({ kind: 'gpu-phase3 tamper suite (sandbox)', t: new Date().toISOString(), head, baseline, baselineOk, recordSha256: recordSha, cases: rows.length, passed: rows.filter((r) => r.pass).length, pass: baselineOk && rows.every((r) => r.pass), rows }));
+console.log(
+  JSON.stringify({
+    kind: 'gpu-phase3 tamper suite (sandbox)',
+    t: new Date().toISOString(),
+    head,
+    baseline,
+    baselineOk,
+    recordSha256: recordSha,
+    cases: rows.length,
+    passed: rows.filter((r) => r.pass).length,
+    pass: baselineOk && rows.every((r) => r.pass),
+    rows
+  })
+);

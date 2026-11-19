@@ -20,14 +20,34 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { PerformanceObserver, performance } from 'node:perf_hooks';
-import { Lane as A3Lane, type Budget as A3Budget, type LaneSpec as A3LaneSpec } from '../../src/vg-l0-full-joint/search.ts';
-import { budgets as a3Budgets, finishReserve as a3Finish, perLaneCap as a3Cap } from '../../src/vg-l0-full-joint/budgets.ts';
+import {
+  Lane as A3Lane,
+  type Budget as A3Budget,
+  type LaneSpec as A3LaneSpec
+} from '../../src/vg-l0-full-joint/search.ts';
+import {
+  budgets as a3Budgets,
+  finishReserve as a3Finish,
+  perLaneCap as a3Cap
+} from '../../src/vg-l0-full-joint/budgets.ts';
 import { cellOf as a3CellOf } from '../../src/vg-l0-full-joint/space.ts';
-import { cellsOfPart as a3CellsOfPart, cutoffs as a3Cutoffs, type Part as A3Part } from '../../src/vg-l0-full-joint/stages.ts';
+import {
+  cellsOfPart as a3CellsOfPart,
+  cutoffs as a3Cutoffs,
+  type Part as A3Part
+} from '../../src/vg-l0-full-joint/stages.ts';
 import { codeDigest as a3CodeDigest } from '../../src/vg-l0-full-joint/lab.ts';
 import { Lane as A2Lane } from '../../src/vg-l0-risk-families/search.ts';
-import { budgets as a2Budgets, finishReserve as a2Finish, perLaneCap as a2Cap } from '../../src/vg-l0-risk-families/budgets.ts';
-import { cellsOfPart as a2CellsOfPart, cutoffs as a2Cutoffs, type Part as A2Part } from '../../src/vg-l0-risk-families/stages.ts';
+import {
+  budgets as a2Budgets,
+  finishReserve as a2Finish,
+  perLaneCap as a2Cap
+} from '../../src/vg-l0-risk-families/budgets.ts';
+import {
+  cellsOfPart as a2CellsOfPart,
+  cutoffs as a2Cutoffs,
+  type Part as A2Part
+} from '../../src/vg-l0-risk-families/stages.ts';
 import { codeDigest as a2CodeDigest } from '../../src/vg-l0-risk-families/lab.ts';
 import { doorSpecs } from '../../src/vg-d1-growth-joint/context.ts';
 import { cacheDir, openDoor, resultsDir, writeJson } from '../../src/gpu-phase3/context.ts';
@@ -80,7 +100,18 @@ interface Plan {
   cap: number;
   reserve: number;
   codeDigest: string;
-  lanes: (lab: never) => { spec: { position: string; key: string }; base(): Promise<unknown>; extend(): Promise<unknown>; finish(reason: string): Promise<unknown>; requested: number; lastTrigger?: { fired: boolean } | null; atCap: boolean; islandWorstCase: number }[];
+  lanes: (
+    lab: never
+  ) => {
+    spec: { position: string; key: string };
+    base(): Promise<unknown>;
+    extend(): Promise<unknown>;
+    finish(reason: string): Promise<unknown>;
+    requested: number;
+    lastTrigger?: { fired: boolean } | null;
+    atCap: boolean;
+    islandWorstCase: number;
+  }[];
 }
 
 const plan = ((): Plan => {
@@ -90,11 +121,30 @@ const plan = ((): Plan => {
       Array.from({ length: 2 }, (_v, i) => {
         const key = `${cut}/broad/${c.id}/R${i + 1}`;
 
-        return { key, seedKey: key, position: key, stage: 'broad' as const, replicate: i + 1, cutoff: cut, kind: 'indep' as const, res: 'coarse' as const, cell: c };
+        return {
+          key,
+          seedKey: key,
+          position: key,
+          stage: 'broad' as const,
+          replicate: i + 1,
+          cutoff: cut,
+          kind: 'indep' as const,
+          res: 'coarse' as const,
+          cell: c
+        };
       })
     );
 
-    return { door: a3Cutoffs[cut]!.door as Plan['door'], cutoff: cut, specs, budget: a3Budgets.study.broad, cap: specs.length * a3Cap.broad, reserve: a3Finish.broad, codeDigest: a3CodeDigest(), lanes: (lab) => specs.map((s) => new A3Lane(lab, s, a3Budgets.study.broad)) as never };
+    return {
+      door: a3Cutoffs[cut]!.door as Plan['door'],
+      cutoff: cut,
+      specs,
+      budget: a3Budgets.study.broad,
+      cap: specs.length * a3Cap.broad,
+      reserve: a3Finish.broad,
+      codeDigest: a3CodeDigest(),
+      lanes: (lab) => specs.map((s) => new A3Lane(lab, s, a3Budgets.study.broad)) as never
+    };
   }
   if (family === 'a2') {
     const [cut, part] = [job[1]!, job[2]! as A2Part];
@@ -102,11 +152,29 @@ const plan = ((): Plan => {
       Array.from({ length: 2 }, (_v, i) => {
         const key = `${cut}/broad/${cell.id}/R${i + 1}`;
 
-        return { key, seedKey: key, position: key, stage: 'broad' as const, replicate: i + 1, cutoff: cut, kind: 'indep' as const, cell };
+        return {
+          key,
+          seedKey: key,
+          position: key,
+          stage: 'broad' as const,
+          replicate: i + 1,
+          cutoff: cut,
+          kind: 'indep' as const,
+          cell
+        };
       })
     );
 
-    return { door: a2Cutoffs[cut]!.door as Plan['door'], cutoff: cut, specs, budget: a2Budgets.study.broad, cap: specs.length * a2Cap.broad, reserve: a2Finish.broad, codeDigest: a2CodeDigest(), lanes: (lab) => specs.map((s) => new A2Lane(lab, s, a2Budgets.study.broad)) as never };
+    return {
+      door: a2Cutoffs[cut]!.door as Plan['door'],
+      cutoff: cut,
+      specs,
+      budget: a2Budgets.study.broad,
+      cap: specs.length * a2Cap.broad,
+      reserve: a2Finish.broad,
+      codeDigest: a2CodeDigest(),
+      lanes: (lab) => specs.map((s) => new A2Lane(lab, s, a2Budgets.study.broad)) as never
+    };
   }
   const door = opt('door', 'D19') as Plan['door'];
   const cut = door === 'D19' ? 'C19' : door === 'D21' ? 'C21' : door === 'D23' ? 'C23' : 'C24';
@@ -116,11 +184,30 @@ const plan = ((): Plan => {
     Array.from({ length: replicates }, (_v, i) => {
       const key = `${cut}/broad/${id}/R${i + 1}`;
 
-      return { key, seedKey: key, position: key, stage: 'broad' as const, replicate: i + 1, cutoff: cut, kind: 'indep' as const, res: 'coarse' as const, cell: a3CellOf(id) };
+      return {
+        key,
+        seedKey: key,
+        position: key,
+        stage: 'broad' as const,
+        replicate: i + 1,
+        cutoff: cut,
+        kind: 'indep' as const,
+        res: 'coarse' as const,
+        cell: a3CellOf(id)
+      };
     })
   );
 
-  return { door, cutoff: cut, specs, budget: miniBudget, cap: specs.length * 1_000_000, reserve: a3Finish.broad, codeDigest: a3CodeDigest(), lanes: (lab) => specs.map((s) => new A3Lane(lab, s, miniBudget)) as never };
+  return {
+    door,
+    cutoff: cut,
+    specs,
+    budget: miniBudget,
+    cap: specs.length * 1_000_000,
+    reserve: a3Finish.broad,
+    codeDigest: a3CodeDigest(),
+    lanes: (lab) => specs.map((s) => new A3Lane(lab, s, miniBudget)) as never
+  };
 })();
 
 // ----- profiling: main-thread event-loop utilization, GC, CPU and memory (sampled; never a decision input) -----
@@ -148,7 +235,15 @@ const sampler = setInterval(() => {
   const now = performance.now();
   const m = process.memoryUsage();
 
-  samples.push({ t: new Date().toISOString(), elu: Math.round(elu.utilization * 1000) / 1000, cpuCores: Math.round(((cpu.user + cpu.system) / 1000 / (now - lastT)) * 100) / 100, rssMiB: Math.round(m.rss / 2 ** 20), heapMiB: Math.round(m.heapUsed / 2 ** 20), externalMiB: Math.round(m.external / 2 ** 20), arrayBuffersMiB: Math.round(m.arrayBuffers / 2 ** 20) });
+  samples.push({
+    t: new Date().toISOString(),
+    elu: Math.round(elu.utilization * 1000) / 1000,
+    cpuCores: Math.round(((cpu.user + cpu.system) / 1000 / (now - lastT)) * 100) / 100,
+    rssMiB: Math.round(m.rss / 2 ** 20),
+    heapMiB: Math.round(m.heapUsed / 2 ** 20),
+    externalMiB: Math.round(m.external / 2 ** 20),
+    arrayBuffersMiB: Math.round(m.arrayBuffers / 2 ** 20)
+  });
   lastElu = performance.eventLoopUtilization();
   lastCpu = process.cpuUsage();
   lastT = now;
@@ -169,7 +264,12 @@ if (backend === 'gpu') {
 
   if (!(await server.smoke()).ok) throw new Error('smoke failed');
   await server.load(ds.file);
-  serverInfo = { uuid: info.uuid, compatDigest: info.compatDigest, binarySha256: createHash('sha256').update(fs.readFileSync(serverBinary)).digest('hex'), binary: path.relative(process.cwd(), serverBinary) };
+  serverInfo = {
+    uuid: info.uuid,
+    compatDigest: info.compatDigest,
+    binarySha256: createHash('sha256').update(fs.readFileSync(serverBinary)).digest('hex'),
+    binary: path.relative(process.cwd(), serverBinary)
+  };
   backendId = `gpu:${info.uuid}:${(serverInfo.binarySha256 as string).slice(0, 16)}:${compatManifest().digest.slice(0, 16)}`;
   pool = new GpuPool({
     door,
@@ -240,7 +340,13 @@ try {
 
     if (!live.length) break;
 
-    const row = { round, positions: [] as { position: string; fired: boolean; extended: boolean; atCap: boolean }[], requestedBefore: requested(), worstCase: 0, decision: '' };
+    const row = {
+      round,
+      positions: [] as { position: string; fired: boolean; extended: boolean; atCap: boolean }[],
+      requestedBefore: requested(),
+      worstCase: 0,
+      decision: ''
+    };
     const go: typeof lanes = [];
 
     for (const l of live) {
@@ -249,13 +355,17 @@ try {
 
       row.positions.push({ position: l.spec.position, fired, extended: fired && !atCap, atCap });
       if (!fired) stops.set(l.spec.position, 'triggers not met');
-      else if (atCap) stops.set(l.spec.position, 'extension cap reached (a trigger still fired: budget-bound, not converged)');
+      else if (atCap)
+        stops.set(l.spec.position, 'extension cap reached (a trigger still fired: budget-bound, not converged)');
       else go.push(l);
     }
     row.worstCase = go.reduce((a, l) => a + l.islandWorstCase, 0);
     if (go.length && requested() + row.worstCase + plan.reserve * lanes.length > cap) {
       for (const l of go) stops.set(l.spec.position, 'resource guard (the job cap on fresh simulations)');
-      row.decision = family === 'a2' ? `resource guard: ${requested()} requested + worst case ${row.worstCase} + finishing reserve ${plan.reserve * lanes.length} > cap ${cap}` : 'resource guard';
+      row.decision =
+        family === 'a2'
+          ? `resource guard: ${requested()} requested + worst case ${row.worstCase} + finishing reserve ${plan.reserve * lanes.length} > cap ${cap}`
+          : 'resource guard';
       rounds.push(row);
       break;
     }
@@ -269,9 +379,28 @@ try {
 
   lab.stage = `replay ${run}: finishing`;
 
-  const results = await Promise.all(lanes.map((lane) => lane.finish(stops.get(lane.spec.position) ?? 'triggers not met')));
+  const results = await Promise.all(
+    lanes.map((lane) => lane.finish(stops.get(lane.spec.position) ?? 'triggers not met'))
+  );
 
-  record = { kind: 'gpu-phase3 optimizer-job replay', job: job.join(':'), backend, backendId, server: serverInfo, run, door: plan.door, cutoff: plan.cutoff, lanesCount: plan.specs.length, budget: plan.budget, cap: plan.cap, extensionRounds: rounds, lanes: results, compute: lab.compute, minutes: Math.round((Date.now() - t0) / 600) / 100, finished: new Date().toISOString() };
+  record = {
+    kind: 'gpu-phase3 optimizer-job replay',
+    job: job.join(':'),
+    backend,
+    backendId,
+    server: serverInfo,
+    run,
+    door: plan.door,
+    cutoff: plan.cutoff,
+    lanesCount: plan.specs.length,
+    budget: plan.budget,
+    cap: plan.cap,
+    extensionRounds: rounds,
+    lanes: results,
+    compute: lab.compute,
+    minutes: Math.round((Date.now() - t0) / 600) / 100,
+    finished: new Date().toISOString()
+  };
 } catch (error) {
   if (error instanceof StopRequested) {
     await lab.close(`stopped: ${error.reason}`);
@@ -285,19 +414,46 @@ try {
 const wallMs = Date.now() - t0;
 const elu = performance.eventLoopUtilization(eluAtStart);
 const cpu = process.cpuUsage(cpuAtStart);
-const rows: Record<string, string> = {};
-const configs: Record<string, string> = {};
+// the archive's rows and configs (key → record hash in the store's encoding: ±Infinity and NaN kept distinct), streamed to
+// results/raw-large/ as JSONL (git-ignored; a 2-million-row job does not fit in one string) and digested incrementally
+const rawDir = path.join(resultsDir, 'raw-large', 'optimizer', run, backend);
+const archived = { rows: 0, configs: 0, rowsSha256: '', configsSha256: '' };
 
 lab.store.commit();
-// rows hashed in the store's encoding (±Infinity and NaN kept distinct)
-for (const [k, v] of lab.store.iterate('points')) rows[k] = createHash('sha256').update(encode(v)).digest('hex').slice(0, 20);
-for (const [k, v] of lab.store.iterate('configs')) configs[k] = createHash('sha256').update(encode(v)).digest('hex').slice(0, 20);
+fs.mkdirSync(rawDir, { recursive: true });
+for (const table of ['points', 'configs'] as const) {
+  const file = path.join(rawDir, `${table === 'points' ? 'rows' : 'configs'}.jsonl`);
+  const fd = fs.openSync(file, 'w');
+  const hashes = new Map<string, string>();
+
+  for (const [k, v] of lab.store.iterate(table)) {
+    const h = createHash('sha256').update(encode(v)).digest('hex').slice(0, 20);
+
+    hashes.set(k, h);
+    fs.writeSync(fd, `${JSON.stringify([k, h])}\n`);
+  }
+  fs.closeSync(fd);
+  const keys = [...hashes.keys()].sort();
+  const d = createHash('sha256');
+
+  keys.forEach((k, i) => d.update(`${i ? '\n' : ''}${k}=${hashes.get(k)}`));
+  if (table === 'points') [archived.rows, archived.rowsSha256] = [keys.length, d.digest('hex')];
+  else [archived.configs, archived.configsSha256] = [keys.length, d.digest('hex')];
+}
 await lab.close('job-end');
 clearInterval(sampler);
 gcObs.disconnect();
 
 // the pool's per-batch phase sums (GPU receipts ledger)
-const ledger = backend === 'gpu' && fs.existsSync(path.join(outDir, 'receipts.jsonl')) ? fs.readFileSync(path.join(outDir, 'receipts.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l) as Record<string, number>).filter((r) => 'nonce' in r) : [];
+const ledger =
+  backend === 'gpu' && fs.existsSync(path.join(outDir, 'receipts.jsonl'))
+    ? fs
+        .readFileSync(path.join(outDir, 'receipts.jsonl'), 'utf8')
+        .trim()
+        .split('\n')
+        .map((l) => JSON.parse(l) as Record<string, number>)
+        .filter((r) => 'nonce' in r)
+    : [];
 const sum = (k: string) => Math.round(ledger.reduce((a, r) => a + (r[k] ?? 0), 0));
 const sizes = ledger.map((r) => r.n!).sort((a, b) => a - b);
 const profile = {
@@ -311,12 +467,29 @@ const profile = {
   wallSeconds: Math.round(wallMs / 100) / 10,
   fresh: lab.compute.fresh,
   evaluationsPerSecond: Math.round((lab.compute.fresh / wallMs) * 1000 * 10) / 10,
-  mainThread: { eventLoopUtilization: Math.round(elu.utilization * 1000) / 1000, activeSeconds: Math.round(elu.active / 100) / 10, idleSeconds: Math.round(elu.idle / 100) / 10 },
+  mainThread: {
+    eventLoopUtilization: Math.round(elu.utilization * 1000) / 1000,
+    activeSeconds: Math.round(elu.active / 100) / 10,
+    idleSeconds: Math.round(elu.idle / 100) / 10
+  },
   processCpuSeconds: { user: Math.round(cpu.user / 1e5) / 10, system: Math.round(cpu.system / 1e5) / 10 },
   archive: { writes: storeWrites, writeSeconds: Math.round(storeWriteMs / 100) / 10 },
-  gc: Object.fromEntries(Object.entries(gcByKind).map(([k, v]) => [k, { n: v.n, seconds: Math.round(v.ms / 100) / 10 }])),
+  gc: Object.fromEntries(
+    Object.entries(gcByKind).map(([k, v]) => [k, { n: v.n, seconds: Math.round(v.ms / 100) / 10 }])
+  ),
   batches: ledger.length
-    ? { n: ledger.length, candidates: sizes.reduce((a, b) => a + b, 0), median: sizes[Math.floor(sizes.length / 2)], min: sizes[0], max: sizes.at(-1), under1024: sizes.filter((x) => x < 1024).length, serverSeconds: sum('serverMs') / 1000, encodeSeconds: sum('encodeMs') / 1000, decodeSeconds: sum('decodeMs') / 1000, batchWallSeconds: sum('wallMs') / 1000 }
+    ? {
+        n: ledger.length,
+        candidates: sizes.reduce((a, b) => a + b, 0),
+        median: sizes[Math.floor(sizes.length / 2)],
+        min: sizes[0],
+        max: sizes.at(-1),
+        under1024: sizes.filter((x) => x < 1024).length,
+        serverSeconds: sum('serverMs') / 1000,
+        encodeSeconds: sum('encodeMs') / 1000,
+        decodeSeconds: sum('decodeMs') / 1000,
+        batchWallSeconds: sum('wallMs') / 1000
+      }
     : null,
   peakRssMiB: Math.max(0, ...samples.map((s) => Number(s.rssMiB))),
   samples
@@ -324,9 +497,7 @@ const profile = {
 
 writeJson(path.join(outDir, 'result.json'), record);
 writeJson(path.join(outDir, 'profile.json'), profile);
-// the full key → hash dump is large: kept under results/raw-large/ (git-ignored); the committed evidence is its digest
-const digestOf = (m: Record<string, string>) => createHash('sha256').update(Object.keys(m).sort().map((k) => `${k}=${m[k]}`).join('\n')).digest('hex');
-
-writeJson(path.join(resultsDir, 'raw-large', 'optimizer', run, backend, 'archive.json'), { rows, configs });
-writeJson(path.join(outDir, 'archive-digest.json'), { rows: Object.keys(rows).length, rowsSha256: digestOf(rows), configs: Object.keys(configs).length, configsSha256: digestOf(configs) });
-log(`done: ${Object.keys(rows).length} archived evaluations, ${record.minutes} min, ${profile.evaluationsPerSecond} ev/s, main-thread ELU ${profile.mainThread.eventLoopUtilization}`);
+writeJson(path.join(outDir, 'archive-digest.json'), archived);
+log(
+  `done: ${archived.rows} archived evaluations, ${record.minutes} min, ${profile.evaluationsPerSecond} ev/s, main-thread ELU ${profile.mainThread.eventLoopUtilization}`
+);

@@ -47,7 +47,14 @@ export const canonHash = (x: unknown) => {
 
 // the compared view of a virtual book: its outputs (the parameter key and RC 2's detailed log are not outputs; RC 2's
 // counters are compared through the record's rc field)
-export const bookView = (b: VBook) => ({ book: b.book, trades: b.trades, signals: b.signals, firstDecision: b.firstDecision, endIndex: b.endIndex, standalone: b.standalone });
+export const bookView = (b: VBook) => ({
+  book: b.book,
+  trades: b.trades,
+  signals: b.signals,
+  firstDecision: b.firstDecision,
+  endIndex: b.endIndex,
+  standalone: b.standalone
+});
 
 // the compared view of a pooled result: everything, with a lot's link to its VTrade object dropped (the trade is
 // compared in its book) and the refusal counts in a fixed key order (a count map; its insertion order is not an output)

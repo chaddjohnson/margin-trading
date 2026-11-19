@@ -17,12 +17,28 @@
 //     job (the CPU engine would have thrown for that configuration too); a dead or hung server fails the job;
 //   - telemetry (utilization, VRAM, power, temperature) and a progress line are logged; low utilization alone is never
 //     treated as proof of anything — receipts are the evidence.
+//
+// HOST PATH. With hostWorkers = 0 every batch is encoded and decoded on the calling (main) thread — Phase 2's serial
+// path. With hostWorkers ≥ 1 (or an attested pipeline from the official session) the batch codec runs on worker threads
+// (hostPipeline.ts): the next batch is encoded while the device runs, and a returned batch is decoded while the next one
+// runs, so the main thread keeps only the lanes, the archive and the request assembly. Results are the same objects
+// computed by the same code; they are released per batch, in dispatch order, only after the receipt verified. A worker
+// failure fails the pool like a server failure (no CPU fallback).
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import type { Door } from '../vg-d1-growth-joint/data.ts';
 import { StopRequested } from '../growth140-vgt-s8m/pool.ts';
-import { type BatchOptions, type BatchReceipt, GpuError, GpuServer, type Task, type TaskResult } from './client.ts';
+import {
+  type BatchOptions,
+  type BatchReceipt,
+  GpuError,
+  GpuServer,
+  type PreparedBatch,
+  type Task,
+  type TaskResult
+} from './client.ts';
+import { HostPipeline, type PreparedParallel } from './hostPipeline.ts';
 import { CAPACITY_STATUSES, featureNames } from './layout.ts';
 import { PolicyError } from './purpose.ts';
 import { type OfficialGpuSession, smiTelemetry } from './official.ts';
@@ -44,6 +60,8 @@ export interface GpuPoolOptions {
   capBase?: number; // the first capacity level (default 512; tests use a small one to exercise the GPU retry)
   pipelineMin?: number; // when a batch returns and at least this many tasks wait, the next batch goes to the device before
   //                       this one is decoded (default batchSize / 4; a smaller batch waits for the linger as usual)
+  hostWorkers?: number; // host-path worker threads (default 0: Phase 2's serial path); ignored when `pipeline` is given
+  pipeline?: HostPipeline; // an already started (official: attested) pipeline on the same door; the pool does not close it
 }
 
 interface Pending {
@@ -63,7 +81,19 @@ export class GpuPool {
   private telemetryTimer: NodeJS.Timeout | null = null;
   private readonly server: GpuServer;
   private readonly uuid: string;
-  readonly counters = { submitted: 0, gpuReturned: 0, failed: 0, cpuScored: 0, batches: 0, capacityRetries: 0, kernelMs: 0, wallMs: 0 };
+  private pipe: HostPipeline | null = null;
+  private ownPipe = false;
+  private released: Promise<void> = Promise.resolve(); // the previous batch's release (in-order release)
+  readonly counters = {
+    submitted: 0,
+    gpuReturned: 0,
+    failed: 0,
+    cpuScored: 0,
+    batches: 0,
+    capacityRetries: 0,
+    kernelMs: 0,
+    wallMs: 0
+  };
   completed = 0;
   failed = 0;
   computeMs = 0;
@@ -74,10 +104,13 @@ export class GpuPool {
     if (o.session) {
       this.server = o.session.server;
       this.uuid = o.session.info.uuid;
+      this.pipe = o.pipeline ?? o.session.pipeline ?? null;
+      this.ownPipe = !o.pipeline && this.pipe !== null; // the session's attested host path ends with the pool, like its server
     } else {
       if (!o.server || !o.uuid) throw new Error('a non-official GpuPool needs its server and the device uuid');
       this.server = o.server;
       this.uuid = o.uuid;
+      this.pipe = o.pipeline ?? null;
     }
     fs.mkdirSync(path.dirname(o.ledgerFile), { recursive: true });
   }
@@ -90,7 +123,15 @@ export class GpuPool {
     return 1;
   }
 
+  get hostWorkers() {
+    return this.pipe?.size ?? 0;
+  }
+
   async start() {
+    if (!this.pipe && (this.o.hostWorkers ?? 0) > 0) {
+      this.pipe = await HostPipeline.start({ door: this.o.door, workers: this.o.hostWorkers! });
+      this.ownPipe = true;
+    }
     if (this.o.telemetryFile) {
       fs.mkdirSync(path.dirname(this.o.telemetryFile), { recursive: true });
       this.telemetryTimer = setInterval(() => this.sample(), 30000);
@@ -111,8 +152,13 @@ export class GpuPool {
       };
 
       fs.appendFileSync(this.o.telemetryFile!, `${JSON.stringify(line)}\n`);
-      this.o.log?.(`GPU ${this.uuid.slice(0, 12)}: ${this.counters.gpuReturned} GPU evaluations (${line.evPerS}/s), CPU-scored ${this.counters.cpuScored}, util ${t.utilizationPct}%, VRAM ${t.memoryUsedMiB} MiB, ${t.powerW} W, ${t.temperatureC} °C, failed ${this.counters.failed}`);
-      if (!line.uuidMatches) this.fail(new PolicyError('device-changed', `nvidia-smi reports ${t.uuid}, the attested device is ${this.uuid}`));
+      this.o.log?.(
+        `GPU ${this.uuid.slice(0, 12)}: ${this.counters.gpuReturned} GPU evaluations (${line.evPerS}/s), CPU-scored ${this.counters.cpuScored}, util ${t.utilizationPct}%, VRAM ${t.memoryUsedMiB} MiB, ${t.powerW} W, ${t.temperatureC} °C, failed ${this.counters.failed}`
+      );
+      if (!line.uuidMatches)
+        this.fail(
+          new PolicyError('device-changed', `nvidia-smi reports ${t.uuid}, the attested device is ${this.uuid}`)
+        );
     } catch (e) {
       this.fail(new PolicyError('telemetry-lost', `GPU telemetry unavailable: ${(e as Error).message}`));
     }
@@ -156,7 +202,17 @@ export class GpuPool {
   async refreshMemory() {}
 
   workerStats() {
-    return [{ pid: this.server.pid ?? -1, mem: null, count: this.completed, gcs: 0, loadMs: 0, busy: this.inFlightCount }];
+    return [
+      {
+        pid: this.server.pid ?? -1,
+        mem: null,
+        count: this.completed,
+        gcs: 0,
+        loadMs: 0,
+        busy: this.inFlightCount,
+        hostWorkers: this.hostWorkers
+      }
+    ];
   }
 
   get size() {
@@ -166,9 +222,15 @@ export class GpuPool {
   private conservation(where: string) {
     const c = this.counters;
 
-    if (c.cpuScored !== 0) this.fail(new PolicyError('cpu-scored', `${c.cpuScored} evaluation(s) scored on the CPU (${where})`));
+    if (c.cpuScored !== 0)
+      this.fail(new PolicyError('cpu-scored', `${c.cpuScored} evaluation(s) scored on the CPU (${where})`));
     if (c.submitted !== c.gpuReturned + c.failed + this.inFlightCount + this.queue.length)
-      this.fail(new PolicyError('conservation', `submitted ${c.submitted} ≠ GPU-returned ${c.gpuReturned} + failed ${c.failed} + in flight ${this.inFlightCount} + queued ${this.queue.length} (${where})`));
+      this.fail(
+        new PolicyError(
+          'conservation',
+          `submitted ${c.submitted} ≠ GPU-returned ${c.gpuReturned} + failed ${c.failed} + in flight ${this.inFlightCount} + queued ${this.queue.length} (${where})`
+        )
+      );
   }
 
   private schedule() {
@@ -177,10 +239,11 @@ export class GpuPool {
       void this.dispatch();
       return;
     }
-    if (!this.flushTimer) this.flushTimer = setTimeout(() => {
-      this.flushTimer = null;
-      void this.dispatch();
-    }, this.o.lingerMs ?? 25);
+    if (!this.flushTimer)
+      this.flushTimer = setTimeout(() => {
+        this.flushTimer = null;
+        void this.dispatch();
+      }, this.o.lingerMs ?? 25);
   }
 
   private async dispatch() {
@@ -207,11 +270,35 @@ export class GpuPool {
     let timer: NodeJS.Timeout | null = null;
     let landed = false; // the batch left the in-flight count
     let deviceFree = false;
+    // parallel host path: results are released in dispatch order (a later batch decoded sooner waits for this one)
+    const before = this.released;
+    let releaseDone = () => {};
+
+    if (this.pipe) this.released = new Promise<void>((r) => (releaseDone = r));
 
     try {
-      const prepared = this.server.prepare(this.o.door, batch.map((p) => p.task), opts);
+      const prepared: PreparedBatch | PreparedParallel = this.pipe
+        ? await this.pipe.prepare(
+            this.o.door,
+            batch.map((p) => p.task),
+            opts
+          )
+        : this.server.prepare(
+            this.o.door,
+            batch.map((p) => p.task),
+            opts
+          );
       const timeout = new Promise<never>((_r, reject) => {
-        timer = setTimeout(() => reject(new PolicyError('gpu-hang', `a batch of ${batch.length} did not return within ${this.o.batchTimeoutMs ?? 1200000} ms`)), this.o.batchTimeoutMs ?? 1200000);
+        timer = setTimeout(
+          () =>
+            reject(
+              new PolicyError(
+                'gpu-hang',
+                `a batch of ${batch.length} did not return within ${this.o.batchTimeoutMs ?? 1200000} ms`
+              )
+            ),
+          this.o.batchTimeoutMs ?? 1200000
+        );
       });
       const raw = await Promise.race([this.server.submit(prepared), timeout]);
 
@@ -219,9 +306,17 @@ export class GpuPool {
       // pipelining: the device is free — the next batch goes out before this one is decoded
       this.busy = false;
       deviceFree = true;
-      if (!this.failure && this.queue.length >= (this.o.pipelineMin ?? Math.floor((this.o.batchSize ?? 8192) / 4))) void this.dispatch();
+      if (!this.failure && this.queue.length >= (this.o.pipelineMin ?? Math.floor((this.o.batchSize ?? 8192) / 4)))
+        void this.dispatch();
 
-      const r = this.server.complete(prepared, raw, this.uuid);
+      const r = this.pipe
+        ? await this.pipe.complete(prepared as PreparedParallel, raw, this.uuid, 'lean')
+        : this.server.complete(prepared as PreparedBatch, raw, this.uuid);
+
+      if (this.pipe) {
+        await before;
+        if (this.failure) throw this.failure; // an earlier batch failed: nothing of this one is released
+      }
 
       this.ledger(r.receipt, batch, performance.now() - t0, r.timing);
       this.counters.batches++;
@@ -232,11 +327,19 @@ export class GpuPool {
       const retry: Pending[] = [];
       // the batch's integrity BEFORE any of its results is released: no CPU-scored evaluation, every task inside the
       // attested domain (a violation fails the job and releases nothing)
-      if (this.counters.cpuScored !== 0) throw new PolicyError('cpu-scored', `${this.counters.cpuScored} evaluation(s) scored on the CPU; the batch's results are withheld`);
+      if (this.counters.cpuScored !== 0)
+        throw new PolicyError(
+          'cpu-scored',
+          `${this.counters.cpuScored} evaluation(s) scored on the CPU; the batch's results are withheld`
+        );
       if (this.o.domainFeatures !== undefined) {
         const bad = r.results.find((x) => (x.features & ~this.o.domainFeatures!) !== 0n);
 
-        if (bad) throw new PolicyError('capability-outside-domain', `task ${bad.key} needs ${featureNames(bad.features & ~this.o.domainFeatures).join(', ')} outside the attested domain; the batch's results are withheld`);
+        if (bad)
+          throw new PolicyError(
+            'capability-outside-domain',
+            `task ${bad.key} needs ${featureNames(bad.features & ~this.o.domainFeatures).join(', ')} outside the attested domain; the batch's results are withheld`
+          );
       }
       const msPer = r.receipt.server.totalMs / batch.length; // each task's share of the device batch
 
@@ -254,7 +357,12 @@ export class GpuPool {
         } else {
           this.counters.failed++;
           this.failed++;
-          this.fail(new GpuError(0, `evaluation ${p.task.k} failed on the GPU: ${res.statusText} (${res.errInfo}) — the canonical engine refuses this configuration too; the job stops`));
+          this.fail(
+            new GpuError(
+              0,
+              `evaluation ${p.task.k} failed on the GPU: ${res.statusText} (${res.errInfo}) — the canonical engine refuses this configuration too; the job stops`
+            )
+          );
         }
       });
       // a capacity retry goes back to the queue (still a GPU task: it is re-submitted to the device)
@@ -272,6 +380,7 @@ export class GpuPool {
       }
       this.fail(e instanceof Error ? e : new Error(String(e)));
     } finally {
+      releaseDone();
       this.counters.wallMs = Date.now() - this.t0;
       if (!deviceFree) this.busy = false;
       this.wake();
@@ -279,8 +388,16 @@ export class GpuPool {
     }
   }
 
-  private ledger(rc: BatchReceipt, batch: Pending[], ms: number, timing: { encodeMs: number; decodeMs: number; roundTripMs: number }) {
-    const keys = createHash('sha256').update(batch.map((p) => p.task.k).join('\n')).digest('hex').slice(0, 16);
+  private ledger(
+    rc: BatchReceipt,
+    batch: Pending[],
+    ms: number,
+    timing: { encodeMs: number; decodeMs: number; roundTripMs: number }
+  ) {
+    const keys = createHash('sha256')
+      .update(batch.map((p) => p.task.k).join('\n'))
+      .digest('hex')
+      .slice(0, 16);
 
     fs.appendFileSync(
       this.o.ledgerFile,
@@ -310,7 +427,10 @@ export class GpuPool {
   }
 
   // The optimizer's contract: runs tasks; `onResult` sees each record as it arrives (the caller archives it at once).
-  async run<T>(tasks: { k: string; quad: Task['quad']; controls: Task['controls']; options: Task['options']; detail: boolean }[], onResult: (task: (typeof tasks)[number], value: T, ms: number) => void): Promise<void> {
+  async run<T>(
+    tasks: { k: string; quad: Task['quad']; controls: Task['controls']; options: Task['options']; detail: boolean }[],
+    onResult: (task: (typeof tasks)[number], value: T, ms: number) => void
+  ): Promise<void> {
     let left = tasks.length;
 
     if (left === 0) return;
@@ -357,7 +477,11 @@ export class GpuPool {
     if (this.telemetryTimer) clearInterval(this.telemetryTimer);
     this.conservation('close');
     if (this.o.telemetryFile) this.sample();
-    fs.appendFileSync(this.o.ledgerFile, `${JSON.stringify({ t: new Date().toISOString(), event: 'close', ...this.counters, failure: this.failure?.message ?? null })}\n`);
+    fs.appendFileSync(
+      this.o.ledgerFile,
+      `${JSON.stringify({ t: new Date().toISOString(), event: 'close', ...this.counters, hostWorkers: this.hostWorkers, failure: this.failure?.message ?? null })}\n`
+    );
+    if (this.pipe && this.ownPipe) await this.pipe.close();
     await this.server.close();
   }
 }

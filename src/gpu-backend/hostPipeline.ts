@@ -20,8 +20,19 @@
 import { Worker } from 'node:worker_threads';
 import type { Door } from '../vg-d1-growth-joint/data.ts';
 import {
-  type BatchOptions, type BatchReceipt, type CandMeta, type EncodedBatch, type EncodedShard, type Task, type TaskResult, GpuError,
-  assembleBatch, verifyCandidates, verifyChecksum, verifyResponse, viewOf
+  type BatchOptions,
+  type BatchReceipt,
+  type CandMeta,
+  type EncodedBatch,
+  type EncodedShard,
+  type Task,
+  type TaskResult,
+  GpuError,
+  assembleBatch,
+  verifyCandidates,
+  verifyChecksum,
+  verifyResponse,
+  viewOf
 } from './batch.ts';
 import { doorDigest, workerDoorOf } from './hostDoor.ts';
 
@@ -94,7 +105,8 @@ export class HostPipeline {
   }
 
   static async start(o: HostPipelineOptions): Promise<HostPipeline> {
-    if (!Number.isInteger(o.workers) || o.workers < 1) throw new Error(`a host pipeline needs at least one worker (got ${o.workers})`);
+    if (!Number.isInteger(o.workers) || o.workers < 1)
+      throw new Error(`a host pipeline needs at least one worker (got ${o.workers})`);
 
     const p = new HostPipeline(o);
     const door = workerDoorOf(o.door);
@@ -120,7 +132,9 @@ export class HostPipeline {
       w.on('message', (m: Record<string, unknown>) => {
         if (m.t === 'ready') {
           if (m.digest !== this.digest) {
-            const e = new Error(`host worker ${i} holds another door (digest ${String(m.digest).slice(0, 16)} ≠ ${this.digest.slice(0, 16)})`);
+            const e = new Error(
+              `host worker ${i} holds another door (digest ${String(m.digest).slice(0, 16)} ≠ ${this.digest.slice(0, 16)})`
+            );
 
             this.fail(e);
             reject(e);
@@ -170,7 +184,14 @@ export class HostPipeline {
     }
   }
 
-  private call(worker: number, kind: 'encoded' | 'decoded', seq: number, shard: number, msg: Record<string, unknown>, transfer: Transferable[] = []) {
+  private call(
+    worker: number,
+    kind: 'encoded' | 'decoded',
+    seq: number,
+    shard: number,
+    msg: Record<string, unknown>,
+    transfer: Transferable[] = []
+  ) {
     if (this.failure) return Promise.reject(this.failure);
 
     const key = `${kind}:${seq}:${shard}`;
@@ -178,7 +199,11 @@ export class HostPipeline {
     return new Promise<Record<string, unknown>>((resolve, reject) => {
       const timer = setTimeout(() => {
         this.pending.delete(key);
-        this.fail(new Error(`host worker ${worker} did not answer ${kind === 'encoded' ? 'encode' : 'decode'} ${seq}:${shard} within ${this.o.opTimeoutMs ?? 600000} ms`));
+        this.fail(
+          new Error(
+            `host worker ${worker} did not answer ${kind === 'encoded' ? 'encode' : 'decode'} ${seq}:${shard} within ${this.o.opTimeoutMs ?? 600000} ms`
+          )
+        );
         reject(this.failure!);
       }, this.o.opTimeoutMs ?? 600000);
 
@@ -210,7 +235,9 @@ export class HostPipeline {
     const cuts = this.cut(tasks.length);
     const shardWorker = cuts.map((_c, s) => s % this.workers.length);
     const replies = await Promise.all(
-      cuts.map(({ c0, c1 }, s) => this.call(shardWorker[s]!, 'encoded', seq, s, { t: 'encode', seq, shard: s, c0, tasks: tasks.slice(c0, c1), o }))
+      cuts.map(({ c0, c1 }, s) =>
+        this.call(shardWorker[s]!, 'encoded', seq, s, { t: 'encode', seq, shard: s, c0, tasks: tasks.slice(c0, c1), o })
+      )
     ).catch((e) => {
       this.drop(seq);
       throw e;
@@ -256,7 +283,11 @@ export class HostPipeline {
     expectUuid: string | undefined,
     mode: 'lean' | 'full' = 'lean',
     testCrash?: { shard: number; kind: 'throw' | 'exit' | 'hang' }
-  ): Promise<{ results: TaskResult[]; receipt: BatchReceipt; timing: { encodeMs: number; roundTripMs: number; decodeMs: number; requestBytes: number; responseBytes: number } }> {
+  ): Promise<{
+    results: TaskResult[];
+    receipt: BatchReceipt;
+    timing: { encodeMs: number; roundTripMs: number; decodeMs: number; requestBytes: number; responseBytes: number };
+  }> {
     if (this.failure) throw this.failure;
     if (testCrash && !this.o.allowFaultInjection) throw new Error('host pipeline: fault injection is not enabled');
     if (!testCrash && this.nextFault) {
@@ -312,7 +343,8 @@ export class HostPipeline {
     const failed = replies.find((m) => m.error);
 
     if (failed) throw errorFrom(failed.error as never);
-    if (expectUuid && receipt.uuid !== expectUuid) throw new GpuError(109, `receipt from ${receipt.uuid}, expected ${expectUuid}`);
+    if (expectUuid && receipt.uuid !== expectUuid)
+      throw new GpuError(109, `receipt from ${receipt.uuid}, expected ${expectUuid}`);
 
     const results = replies.flatMap((m) => m.results as TaskResult[]);
 
@@ -320,7 +352,13 @@ export class HostPipeline {
     return {
       results,
       receipt,
-      timing: { encodeMs: p.encodeMs, roundTripMs: raw.roundTripMs, decodeMs: performance.now() - t0, requestBytes: p.enc.buffer.length, responseBytes: raw.payload.length }
+      timing: {
+        encodeMs: p.encodeMs,
+        roundTripMs: raw.roundTripMs,
+        decodeMs: performance.now() - t0,
+        requestBytes: p.enc.buffer.length,
+        responseBytes: raw.payload.length
+      }
     };
   }
 

@@ -12,7 +12,9 @@ import { decode } from '../../src/growth140-vgt-s8m/store.ts';
 const name = process.argv[2]!;
 const reps = Number(process.argv[3] ?? '3');
 const dir = path.join(cacheDir, 'captures');
-const meta = decode<{ door: never; o: BatchOptions; uuid: string; nonce: string; tasks: Task[] }>(fs.readFileSync(path.join(dir, `${name}.json`), 'utf8'));
+const meta = decode<{ door: never; o: BatchOptions; uuid: string; nonce: string; tasks: Task[] }>(
+  fs.readFileSync(path.join(dir, `${name}.json`), 'utf8')
+);
 const payload = fs.readFileSync(path.join(dir, `${name}.res.bin`));
 const door = await resolveDoor(meta.door, 'gpu-phase3 offline decode (development)');
 const P = GpuServer.prototype as unknown as { prepare: GpuServer['prepare']; complete: GpuServer['complete'] };
@@ -31,5 +33,15 @@ for (let r = 0; r < reps; r++) {
   const res = P.complete.call(null, p, { payload, roundTripMs: 0 }, meta.uuid);
   const t4 = performance.now();
 
-  console.log(JSON.stringify({ name, n, candOutBytes: CandOut.size, encodeMs: Math.round(t1 - t0), checksumMs: Math.round(t3 - t2), decodeMs: Math.round(t4 - t3), results: res.results.length }));
+  console.log(
+    JSON.stringify({
+      name,
+      n,
+      candOutBytes: CandOut.size,
+      encodeMs: Math.round(t1 - t0),
+      checksumMs: Math.round(t3 - t2),
+      decodeMs: Math.round(t4 - t3),
+      results: res.results.length
+    })
+  );
 }

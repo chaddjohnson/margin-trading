@@ -20,7 +20,9 @@ const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.index
 const study = opt('study', '');
 
 if (!study) {
-  console.error('usage: GPU_POLICY_PURPOSE=official-optimization official-preflight.ts --study research/<study> --door D24 [--domain pilot|assignment3] [--batch 8192]');
+  console.error(
+    'usage: GPU_POLICY_PURPOSE=official-optimization official-preflight.ts --study research/<study> --door D24 [--domain pilot|assignment3] [--batch 8192]'
+  );
   process.exit(2);
 }
 const grid = incumbents().NL0.quad.d1.VGT;

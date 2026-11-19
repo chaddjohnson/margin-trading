@@ -38,19 +38,38 @@ if (mode === 'static') {
 
     await s.pipeline?.close();
     await s.server.close();
-    console.log(JSON.stringify({ mode, outcome: 'opened', checks: s.attestation.checks.map((c: { name: string }) => c.name) }));
+    console.log(
+      JSON.stringify({ mode, outcome: 'opened', checks: s.attestation.checks.map((c: { name: string }) => c.name) })
+    );
   } catch (e) {
     console.log(JSON.stringify({ mode, outcome: 'refused', message: (e as Error).message.slice(0, 400) }));
   }
 } else if (mode === 'runner') {
-  const r = spawnSync(process.execPath, ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', 'src/gpu-backend/officialRunner.ts', 'research/zz-tamper', 'research/zz-tamper/run.ts'], {
-    cwd: root,
-    env: { ...process.env, GPU_POLICY_PURPOSE: 'official-optimization' },
-    encoding: 'utf8',
-    timeout: 120000
-  });
+  const r = spawnSync(
+    process.execPath,
+    [
+      '--experimental-transform-types',
+      '--disable-warning=ExperimentalWarning',
+      'src/gpu-backend/officialRunner.ts',
+      'research/zz-tamper',
+      'research/zz-tamper/run.ts'
+    ],
+    {
+      cwd: root,
+      env: { ...process.env, GPU_POLICY_PURPOSE: 'official-optimization' },
+      encoding: 'utf8',
+      timeout: 120000
+    }
+  );
 
-  console.log(JSON.stringify({ mode, outcome: r.status === 0 && /RAN/.test(r.stdout) ? 'ran' : 'refused', status: r.status, message: (r.stderr || r.stdout).trim().slice(0, 400) }));
+  console.log(
+    JSON.stringify({
+      mode,
+      outcome: r.status === 0 && /RAN/.test(r.stdout) ? 'ran' : 'refused',
+      status: r.status,
+      message: (r.stderr || r.stdout).trim().slice(0, 400)
+    })
+  );
 } else {
   console.error('usage: tamper-probe.ts static|gate|runner');
   process.exit(2);

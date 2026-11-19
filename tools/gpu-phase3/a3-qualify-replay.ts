@@ -37,7 +37,18 @@ type Member = Parameters<typeof qualifyMembers>[1][number];
 // the stage's members, as runQualify builds them for the broad stage
 const fromSearch = (part: string): Member[] =>
   read<{ lanes: LaneResult[] }>(path.join(a3, 'search', cut, `${part}.json`)).lanes.flatMap((l) =>
-    l.shortlist.map((p, i) => ({ label: `${l.key}#${i + 1} ${p.pick}`, lane: l.key, stage: l.stage, track: l.stage === 'informed' ? ('N' as const) : ('I' as const), replicate: l.replicate, cfg: canonicalCfg(p.cfg), pick: p.pick }) as Member)
+    l.shortlist.map(
+      (p, i) =>
+        ({
+          label: `${l.key}#${i + 1} ${p.pick}`,
+          lane: l.key,
+          stage: l.stage,
+          track: l.stage === 'informed' ? ('N' as const) : ('I' as const),
+          replicate: l.replicate,
+          cfg: canonicalCfg(p.cfg),
+          pick: p.pick
+        }) as Member
+    )
   );
 let members: Member[] = [...fromSearch('broad1'), ...fromSearch('broad2'), ...controlMembers()];
 const seen = new Map<string, string>();
@@ -65,7 +76,18 @@ const hostWorkers = Number(opt('host-workers', '8'));
 const outDir = path.join(resultsDir, 'optimizer', run, 'gpu');
 
 fs.mkdirSync(outDir, { recursive: true });
-const pool = new GpuPool({ door, session: null, server, uuid: info.uuid, ledgerFile: path.join(outDir, 'receipts.jsonl'), telemetryFile: path.join(outDir, 'telemetry.jsonl'), batchSize: 8192, lingerMs: 30, log, hostWorkers });
+const pool = new GpuPool({
+  door,
+  session: null,
+  server,
+  uuid: info.uuid,
+  ledgerFile: path.join(outDir, 'receipts.jsonl'),
+  telemetryFile: path.join(outDir, 'telemetry.jsonl'),
+  batchSize: 8192,
+  lingerMs: 30,
+  log,
+  hostWorkers
+});
 const lab = new EvalLab({
   study: 'research/gpu-phase3',
   job: `qualify-replay-${run}`,
@@ -88,9 +110,15 @@ const compute = lab.compute;
 
 await lab.close('job-end');
 
-const sealedForm = (e: Evidence) => (e.risk.rows ? { ...e, risk: { ...e.risk, rows: undefined, rowsKept: e.risk.rows.length } } : e);
+const sealedForm = (e: Evidence) =>
+  e.risk.rows ? { ...e, risk: { ...e.risk, rows: undefined, rowsKept: e.risk.rows.length } } : e;
 const mine = JSON.parse(encode(evidence.map(sealedForm))); // the sealed records' encoding (±Infinity / NaN as strings)
-const sealed = read<{ members: number; qualified: number; evidence: unknown[]; compute: { fresh: number; unique: number; wallSeconds: number; workerSeconds: number } }>(path.join(a3, 'folds', cut, 'broad-qualification.json'));
+const sealed = read<{
+  members: number;
+  qualified: number;
+  evidence: unknown[];
+  compute: { fresh: number; unique: number; wallSeconds: number; workerSeconds: number };
+}>(path.join(a3, 'folds', cut, 'broad-qualification.json'));
 const diffs = deepDiff(sealed.evidence, mine, '$', [], 40);
 const rec = {
   kind: 'gpu-phase3 replay of a sealed Assignment 3 qualification stage',
@@ -110,5 +138,15 @@ const rec = {
 };
 
 writeJson(out, rec);
-log(JSON.stringify({ identical: rec.identical, members: rec.members, qualified: rec.qualified, evaluations: rec.evaluations, wall: rec.wallSeconds, speedup: rec.speedup, diffs: diffs.length }));
+log(
+  JSON.stringify({
+    identical: rec.identical,
+    members: rec.members,
+    qualified: rec.qualified,
+    evaluations: rec.evaluations,
+    wall: rec.wallSeconds,
+    speedup: rec.speedup,
+    diffs: diffs.length
+  })
+);
 process.exitCode = rec.identical ? 0 : 2;

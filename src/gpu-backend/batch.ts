@@ -15,7 +15,16 @@
 // FNV-1a-64 output checksum — the per-candidate hashes may be computed in shards, their combination is sequential and
 // identical to the device's. Nothing here evaluates a strategy: every number of a result is the GPU's.
 import { randomBytes } from 'node:crypto';
-import { type BookId, type VBook, type VFill, type VTrade, familyOf, growthKeyOf, symbolOf, d1KeyOf } from '../vg-d1-growth-joint/books.ts';
+import {
+  type BookId,
+  type VBook,
+  type VFill,
+  type VTrade,
+  familyOf,
+  growthKeyOf,
+  symbolOf,
+  d1KeyOf
+} from '../vg-d1-growth-joint/books.ts';
 import type { Door } from '../vg-d1-growth-joint/data.ts';
 import { type Rec, recordOf } from '../vg-d1-growth-joint/evaluate.ts';
 import type { FundingRecord, Lot, LotFill, PoolResult } from '../vg-d1-growth-joint/pool.ts';
@@ -23,15 +32,37 @@ import { economics } from '../vg-d1-growth-joint/context.ts';
 import { isLegacy2, riskId2 } from '../d1-risk-controls-rc2/config.ts';
 import { type DRec, type RcLite, type SRec, riskInputsOf } from '../vg-l0-risk-families/evaluate.ts';
 import {
-  BOOKS, BatchHeader, BookOut, CAND_STATUS, CandIn, CandOut, FLAGS, Fill, Funding, KINDS, Lot as LotL, LotFill as LotFillL,
-  PROTOCOL_VERSION, Period, REASONS, REFUSALS, Range, Receipt, ResultHeader, STATUS, Trade
+  BOOKS,
+  BatchHeader,
+  BookOut,
+  CAND_STATUS,
+  CandIn,
+  CandOut,
+  FLAGS,
+  Fill,
+  Funding,
+  KINDS,
+  Lot as LotL,
+  LotFill as LotFillL,
+  PROTOCOL_VERSION,
+  Period,
+  REASONS,
+  REFUSALS,
+  Range,
+  Receipt,
+  ResultHeader,
+  STATUS,
+  Trade
 } from './layout.ts';
 import { type Task, encodeTask } from './encode.ts';
 
 export type { Task };
 
 export class GpuError extends Error {
-  constructor(readonly status: number, message: string) {
+  constructor(
+    readonly status: number,
+    message: string
+  ) {
     super(`GPU evaluator: ${STATUS[status] ?? status}: ${message}`);
   }
 }
@@ -78,7 +109,15 @@ export interface BatchReceipt {
   poolExecuted: number;
   kernels: number;
   outChecksum: string;
-  server: { h2dMs: number; d1Ms: number; gMs: number; poolMs: number; d2hMs: number; totalMs: number; deviceBytes: number };
+  server: {
+    h2dMs: number;
+    d1Ms: number;
+    gMs: number;
+    poolMs: number;
+    d2hMs: number;
+    totalMs: number;
+    deviceBytes: number;
+  };
 }
 
 export const uuidText = (b: Uint8Array) => {
@@ -156,7 +195,9 @@ export const encodeShard = (door: Door, tasks: readonly Task[], c0: number, o: B
 
     bytes.set(e.bytes, i * CandIn.size);
     for (const r of e.ranges) ranges.push(r.first, r.last);
-    for (const b of e.books) b.startsWith('D1') ? d1++ : g++;
+    for (const b of e.books)
+      if (b.startsWith('D1')) d1++;
+      else g++;
     for (const [b, x] of Object.entries(e.growth)) growthCostBps[b as 'G:GDX'] = x!.friction.costBps;
     metas.push({
       books: e.books,
@@ -235,7 +276,8 @@ export const assembleBatch = (door: Door, shards: readonly EncodedShard[], o: Ba
     for (let i = 0; i < s.n; i++) {
       const c = at + i * CandIn.size;
 
-      if (buf.readUInt32LE(c + off.id!) !== s.c0 + i) throw new Error(`candidate ${s.c0 + i} encoded with id ${buf.readUInt32LE(c + off.id!)}`);
+      if (buf.readUInt32LE(c + off.id!) !== s.c0 + i)
+        throw new Error(`candidate ${s.c0 + i} encoded with id ${buf.readUInt32LE(c + off.id!)}`);
       buf.writeInt32LE(buf.readInt32LE(c + off.blackoutOff!) + rangeBase, c + off.blackoutOff!);
       buf.writeInt32LE(buf.readInt32LE(c + off.periodOff!) + rangeBase, c + off.periodOff!);
       metas.push({ ...s.metas[i]!, periodOff: s.metas[i]!.periodOff + rangeBase });
@@ -256,7 +298,8 @@ export const assembleBatch = (door: Door, shards: readonly EncodedShard[], o: Ba
 };
 
 // the one-shard request (the serial path)
-export const encodeBatch = (door: Door, tasks: readonly Task[], o: BatchOptions) => assembleBatch(door, [encodeShard(door, tasks, 0, o)], o);
+export const encodeBatch = (door: Door, tasks: readonly Task[], o: BatchOptions) =>
+  assembleBatch(door, [encodeShard(door, tasks, 0, o)], o);
 
 // ----- decoding -----
 
@@ -274,7 +317,14 @@ interface View {
 export const viewOf = (ab: ArrayBufferLike): View => {
   const dv = new DataView(ab);
 
-  return { [DECODER]: true, ab, dv, f64: (p) => dv.getFloat64(p, true), i32: (p) => dv.getInt32(p, true), u32: (p) => dv.getUint32(p, true) };
+  return {
+    [DECODER]: true,
+    ab,
+    dv,
+    f64: (p) => dv.getFloat64(p, true),
+    i32: (p) => dv.getInt32(p, true),
+    u32: (p) => dv.getUint32(p, true)
+  };
 };
 
 // a copy of [a, b) in a plain (non-shared) ArrayBuffer — the arrays a result keeps are always its own
@@ -289,16 +339,25 @@ const candAtOf = () => ResultHeader.size + Receipt.size;
 
 // header, shape and receipt — verified on the calling thread before any result is decoded or used (the checksum is
 // verified separately: see verifyChecksum)
-export const verifyResponse = (v: View, enc: Pick<EncodedBatch, 'n' | 'flags' | 'nonce' | 'expectD1' | 'expectG'>, sessions: number) => {
+export const verifyResponse = (
+  v: View,
+  enc: Pick<EncodedBatch, 'n' | 'flags' | 'nonce' | 'expectD1' | 'expectG'>,
+  sessions: number
+) => {
   const RH = ResultHeader.offsets;
 
-  if (Buffer.from(v.ab as ArrayBuffer, 0, 8).toString('latin1') !== 'GB2OUT01' || v.u32(RH.version!) !== PROTOCOL_VERSION) throw new GpuError(101, 'bad result header');
+  if (
+    Buffer.from(v.ab as ArrayBuffer, 0, 8).toString('latin1') !== 'GB2OUT01' ||
+    v.u32(RH.version!) !== PROTOCOL_VERSION
+  )
+    throw new GpuError(101, 'bad result header');
 
   const n = v.u32(RH.nCand!);
   const flags = v.u32(RH.flags!);
   const S = v.u32(RH.sessions!);
 
-  if (n !== enc.n || S !== sessions || flags !== enc.flags) throw new GpuError(102, `result shape ${n}×${S} ≠ ${enc.n}×${sessions}`);
+  if (n !== enc.n || S !== sessions || flags !== enc.flags)
+    throw new GpuError(102, `result shape ${n}×${S} ≠ ${enc.n}×${sessions}`);
 
   const rcAt = ResultHeader.size;
   const RC = Receipt.offsets;
@@ -323,9 +382,18 @@ export const verifyResponse = (v: View, enc: Pick<EncodedBatch, 'n' | 'flags' | 
   };
   const runPool = (flags & FLAGS.RUN_POOL) !== 0;
 
-  if (v.dv.getBigUint64(rcAt + RC.batchNonce!, true) !== enc.nonce) throw new GpuError(109, 'receipt nonce differs from the batch');
-  if (receipt.nCand !== n || receipt.d1Executed !== enc.expectD1 || receipt.gExecuted !== enc.expectG || receipt.poolExecuted !== (runPool ? n : 0))
-    throw new GpuError(109, `device counters ${JSON.stringify(receipt)} disagree with the batch (D1 ${enc.expectD1}, Growth ${enc.expectG})`);
+  if (v.dv.getBigUint64(rcAt + RC.batchNonce!, true) !== enc.nonce)
+    throw new GpuError(109, 'receipt nonce differs from the batch');
+  if (
+    receipt.nCand !== n ||
+    receipt.d1Executed !== enc.expectD1 ||
+    receipt.gExecuted !== enc.expectG ||
+    receipt.poolExecuted !== (runPool ? n : 0)
+  )
+    throw new GpuError(
+      109,
+      `device counters ${JSON.stringify(receipt)} disagree with the batch (D1 ${enc.expectD1}, Growth ${enc.expectG})`
+    );
 
   return { receipt, n, flags, S };
 };
@@ -333,7 +401,8 @@ export const verifyResponse = (v: View, enc: Pick<EncodedBatch, 'n' | 'flags' | 
 export const candidateBytes = (v: View, n: number) => new Uint8Array(v.ab, candAtOf(), n * CandOut.size);
 
 export const verifyChecksum = (receipt: BatchReceipt, hashes: BigUint64Array) => {
-  if (combineChecksum(hashes).toString(16) !== receipt.outChecksum) throw new GpuError(109, 'the results differ from the device checksum (corrupted transfer)');
+  if (combineChecksum(hashes).toString(16) !== receipt.outChecksum)
+    throw new GpuError(109, 'the results differ from the device checksum (corrupted transfer)');
 };
 
 // every candidate's id and device execution mark (before any result is used)
@@ -346,7 +415,8 @@ export const verifyCandidates = (v: View, n: number, flags: number) => {
     const a = candAt + c * CandOut.size;
 
     if (v.u32(a + CO.id!) !== c) throw new GpuError(102, `candidate id ${v.u32(a)} at slot ${c}`);
-    if (runPool && v.i32(a + CO.executed!) !== 1) throw new GpuError(109, `candidate ${c} carries no device execution mark`);
+    if (runPool && v.i32(a + CO.executed!) !== 1)
+      throw new GpuError(109, `candidate ${c} carries no device execution mark`);
   }
 };
 
@@ -494,7 +564,9 @@ export const decodeRange = (
     for (let b = 0; b < 4; b++) {
       const count = i32(bookAt(c, b) + BO.nTrades!);
 
-      if (flags & FLAGS.RETURN_TRADES) for (let k = 0, p = L.trades[c * 4 + b]!; k < count; k++, p += Trade.size) trades[b]!.push(readTrade(v, p, BOOKS[b]!));
+      if (flags & FLAGS.RETURN_TRADES)
+        for (let k = 0, p = L.trades[c * 4 + b]!; k < count; k++, p += Trade.size)
+          trades[b]!.push(readTrade(v, p, BOOKS[b]!));
       else trades[b] = new Array<VTrade>(count); // the records read only each book's trade count
     }
 
@@ -505,12 +577,19 @@ export const decodeRange = (
       const isD1 = b < 2;
       const vb: VBook = {
         book,
-        key: isD1 ? d1KeyOf(t.quad.d1[symbolOf(book)]) : growthKeyOf({ ...t.quad.g[symbolOf(book)], costBpsPerSide: e.growthCostBps[book as 'G:GDX']! }),
+        key: isD1
+          ? d1KeyOf(t.quad.d1[symbolOf(book)])
+          : growthKeyOf({ ...t.quad.g[symbolOf(book)], costBpsPerSide: e.growthCostBps[book as 'G:GDX']! }),
         trades: trades[b]!,
         signals: i32(bo + BO.signals!),
         firstDecision: firstDS >= 0 ? door.dates[firstDS]! : null,
         endIndex: S - 1,
-        standalone: { net: f64(bo + BO.net!), realized: f64(bo + BO.realized!), minuteDd: f64(bo + BO.minuteDd!), dailyDd: f64(bo + BO.dailyDd!) }
+        standalone: {
+          net: f64(bo + BO.net!),
+          realized: f64(bo + BO.realized!),
+          minuteDd: f64(bo + BO.minuteDd!),
+          dailyDd: f64(bo + BO.dailyDd!)
+        }
       };
 
       res.books.push(vb);
@@ -610,7 +689,12 @@ export const decodeRange = (
         grant: granted ? budget : 0,
         outcome: granted ? 'granted' : 'refused',
         reason: REFUSALS[i32(fa + FO.reason!)]!,
-        occupant: ol > 0 ? `${BOOKS[ob]} lot ${ol} ($${f64(fa + FO.occupantPrincipal!).toFixed(2)})` : ol === 0 ? `${BOOKS[ob]} order ($${budget.toFixed(2)})` : '',
+        occupant:
+          ol > 0
+            ? `${BOOKS[ob]} lot ${ol} ($${f64(fa + FO.occupantPrincipal!).toFixed(2)})`
+            : ol === 0
+              ? `${BOOKS[ob]} order ($${budget.toFixed(2)})`
+              : '',
         occupantBook: ob >= 0 ? BOOKS[ob]! : null
       });
     }
@@ -624,12 +708,24 @@ export const decodeRange = (
       periods.push({
         boundary: i32(pa + PO.boundary!),
         equity: f64(pa + PO.equity!),
-        dd: { max: f64(pa + PO.dd!), peakT: f64(pa + PO.dd! + 8), troughT: f64(pa + PO.dd! + 16), recoveryT: f64(pa + PO.dd! + 24) }
+        dd: {
+          max: f64(pa + PO.dd!),
+          peakT: f64(pa + PO.dd! + 8),
+          troughT: f64(pa + PO.dd! + 16),
+          recoveryT: f64(pa + PO.dd! + 24)
+        }
       });
     }
 
     const decisions = Object.fromEntries(
-      BOOKS.map((b, j) => [b, { total: i32(a + CO.decisions! + j * 12), granted: i32(a + CO.decisions! + j * 12 + 4), refused: i32(a + CO.decisions! + j * 12 + 8) }])
+      BOOKS.map((b, j) => [
+        b,
+        {
+          total: i32(a + CO.decisions! + j * 12),
+          granted: i32(a + CO.decisions! + j * 12 + 4),
+          refused: i32(a + CO.decisions! + j * 12 + 8)
+        }
+      ])
     ) as PoolResult['decisions'];
     const refusals: Record<string, number> = {};
 
@@ -639,21 +735,35 @@ export const decodeRange = (
       if (x > 0) refusals[REFUSALS[j]!] = x;
     }
 
-    const series = (k: number) => new Float64Array(copyBytes(v.ab, L.seriesAt + (k * n + c) * S * 8, L.seriesAt + (k * n + c + 1) * S * 8));
+    const series = (k: number) =>
+      new Float64Array(copyBytes(v.ab, L.seriesAt + (k * n + c) * S * 8, L.seriesAt + (k * n + c + 1) * S * 8));
     const pool: PoolResult = {
       endIndex: S - 1,
       net: f64(a + CO.net!),
       realized: f64(a + CO.realized!),
       unrealized: f64(a + CO.unrealized!),
-      dd: { max: f64(a + CO.dd!), peakT: f64(a + CO.dd! + 8), troughT: f64(a + CO.dd! + 16), recoveryT: f64(a + CO.dd! + 24) },
-      ddDaily: { max: f64(a + CO.ddDaily!), peakT: f64(a + CO.ddDaily! + 8), troughT: f64(a + CO.ddDaily! + 16), recoveryT: f64(a + CO.ddDaily! + 24) },
+      dd: {
+        max: f64(a + CO.dd!),
+        peakT: f64(a + CO.dd! + 8),
+        troughT: f64(a + CO.dd! + 16),
+        recoveryT: f64(a + CO.dd! + 24)
+      },
+      ddDaily: {
+        max: f64(a + CO.ddDaily!),
+        peakT: f64(a + CO.ddDaily! + 8),
+        troughT: f64(a + CO.ddDaily! + 16),
+        recoveryT: f64(a + CO.ddDaily! + 24)
+      },
       periods,
       lots,
       funding,
       daily: new Float64Array(copyBytes(v.ab, L.dailyAt + c * S * 8, L.dailyAt + (c + 1) * S * 8)),
       principalAtClose: flags & FLAGS.RETURN_SERIES ? series(0) : new Float64Array(0),
       valueAtClose: flags & FLAGS.RETURN_SERIES ? series(1) : new Float64Array(0),
-      heldAtClose: flags & FLAGS.RETURN_SERIES ? new Int8Array(copyBytes(v.ab, L.seriesAt + 2 * n * S * 8 + c * S, L.seriesAt + 2 * n * S * 8 + (c + 1) * S)) : new Int8Array(0),
+      heldAtClose:
+        flags & FLAGS.RETURN_SERIES
+          ? new Int8Array(copyBytes(v.ab, L.seriesAt + 2 * n * S * 8 + c * S, L.seriesAt + 2 * n * S * 8 + (c + 1) * S))
+          : new Int8Array(0),
       peakPrincipal: f64(a + CO.peakPrincipal!),
       peakValue: f64(a + CO.peakValue!),
       sessionsHeld: i32(a + CO.sessionsHeld!),
@@ -685,7 +795,13 @@ export const decodeRange = (
 };
 
 // the one-shard decode (the serial path): verify the receipt, then decode every candidate on the calling thread
-export const decodeBatch = (door: Door, tasks: readonly Task[], enc: EncodedBatch, payload: Buffer, o: BatchOptions) => {
+export const decodeBatch = (
+  door: Door,
+  tasks: readonly Task[],
+  enc: EncodedBatch,
+  payload: Buffer,
+  o: BatchOptions
+) => {
   const ab = new ArrayBuffer(payload.length);
 
   new Uint8Array(ab).set(payload);
@@ -695,7 +811,10 @@ export const decodeBatch = (door: Door, tasks: readonly Task[], enc: EncodedBatc
 
   verifyChecksum(receipt, candHashes(candidateBytes(v, n), 0, n));
   verifyCandidates(v, n, flags);
-  return { results: decodeRange(door, tasks, enc.metas, v, n, flags, S, layoutOf(v, n, flags, S, enc.nRanges), 0, n, o), receipt };
+  return {
+    results: decodeRange(door, tasks, enc.metas, v, n, flags, S, layoutOf(v, n, flags, S, enc.nRanges), 0, n, o),
+    receipt
+  };
 };
 
 // the record-only view a search pool consumes (the books and the pooled replay stay in the decoder's thread)

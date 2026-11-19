@@ -6,13 +6,26 @@
 // (Number(`${p}e-2`), falling back to p / 100). Nothing is approximated: a configuration the GPU does not implement
 // raises a capability bit outside GB_SUPPORTED, which makes the server refuse the batch.
 import { type Door, indexOnOrAfter } from '../vg-d1-growth-joint/data.ts';
-import { type BookId, type Friction, baseFriction, bookIds, d1StrategyParams, growthParamsOf, symbolOf } from '../vg-d1-growth-joint/books.ts';
+import {
+  type BookId,
+  type Friction,
+  baseFriction,
+  bookIds,
+  d1StrategyParams,
+  growthParamsOf,
+  symbolOf
+} from '../vg-d1-growth-joint/books.ts';
 import { type EvalOptions, growthNextOpenSupported, isEnabled, poolOptionsOf } from '../vg-d1-growth-joint/evaluate.ts';
 import { tieOrderOf } from '../vg-d1-growth-joint/pool.ts';
 import type { Quad } from '../vg-d1-growth-joint/space.ts';
 import { economics, resolution } from '../vg-d1-growth-joint/context.ts';
 import { type RiskConfig2, canonicalConfig2, validateAgainstGrids2 } from '../d1-risk-controls-rc2/config.ts';
-import { assertTradingParams, entryMethodOf, exitParamsOf, type RiseTradingParams } from '../growth-trading/riseTrading.ts';
+import {
+  assertTradingParams,
+  entryMethodOf,
+  exitParamsOf,
+  type RiseTradingParams
+} from '../growth-trading/riseTrading.ts';
 import { fraction as gateFraction } from '../growth-trading/entryGates.ts';
 import { fractionOf as rulesFraction } from '../growth-trading/optionalRules.ts';
 import { CandIn, D1In, FEATURE, GrowthIn } from './layout.ts';
@@ -38,9 +51,29 @@ const frictionOf = (o: EvalOptions): Friction => ({ ...baseFriction, ...(o.frict
 const TREND = { price_change: 1, regression_slope: 2, rising_sma: 3, higher_highs_lows: 4, momentum: 5 } as const;
 const ELIG = { time_limited: 1, minimum_strength: 2, maximum_extension: 3, deterioration: 4, reset_renew: 5 } as const;
 const CONT = { classic_d1: 1, breakout: 2, shallow_pullback: 3, ma_cross: 4 } as const;
-const TREND_FEATURE = [0n, FEATURE.G_TREND_PRICE_CHANGE, FEATURE.G_TREND_REGRESSION, FEATURE.G_TREND_RISING_SMA, FEATURE.G_TREND_HHL, FEATURE.G_TREND_MOMENTUM];
-const ELIG_FEATURE = [0n, FEATURE.G_ELIG_TIME_LIMITED, FEATURE.G_ELIG_MIN_STRENGTH, FEATURE.G_ELIG_MAX_EXTENSION, FEATURE.G_ELIG_DETERIORATION, FEATURE.G_ELIG_RESET_RENEW];
-const CONT_FEATURE = [0n, FEATURE.G_CONT_CLASSIC, FEATURE.G_CONT_BREAKOUT, FEATURE.G_CONT_SHALLOW, FEATURE.G_CONT_MA_CROSS];
+const TREND_FEATURE = [
+  0n,
+  FEATURE.G_TREND_PRICE_CHANGE,
+  FEATURE.G_TREND_REGRESSION,
+  FEATURE.G_TREND_RISING_SMA,
+  FEATURE.G_TREND_HHL,
+  FEATURE.G_TREND_MOMENTUM
+];
+const ELIG_FEATURE = [
+  0n,
+  FEATURE.G_ELIG_TIME_LIMITED,
+  FEATURE.G_ELIG_MIN_STRENGTH,
+  FEATURE.G_ELIG_MAX_EXTENSION,
+  FEATURE.G_ELIG_DETERIORATION,
+  FEATURE.G_ELIG_RESET_RENEW
+];
+const CONT_FEATURE = [
+  0n,
+  FEATURE.G_CONT_CLASSIC,
+  FEATURE.G_CONT_BREAKOUT,
+  FEATURE.G_CONT_SHALLOW,
+  FEATURE.G_CONT_MA_CROSS
+];
 
 export interface GrowthEncoding {
   values: Record<string, number>;
@@ -191,7 +224,13 @@ export interface D1Encoding {
   features: bigint;
 }
 
-export const encodeD1 = (door: Door, quad: Quad, controls: RiskConfig2 | null, b: 'D1:GDX' | 'D1:VGT', o: EvalOptions): D1Encoding => {
+export const encodeD1 = (
+  door: Door,
+  quad: Quad,
+  controls: RiskConfig2 | null,
+  b: 'D1:GDX' | 'D1:VGT',
+  o: EvalOptions
+): D1Encoding => {
   const s = symbolOf(b) as 'GDX' | 'VGT';
   const fr = frictionOf(o);
   const c = canonicalConfig2(controls);

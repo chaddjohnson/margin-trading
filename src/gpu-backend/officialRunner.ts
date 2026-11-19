@@ -36,7 +36,10 @@ try {
   const r = requireStandardAdoption(path.resolve(repoRoot, study), { repoRoot });
 
   if (r.scope !== 'optimization' && r.scope !== 'continuation')
-    throw new PolicyError('official-scope', `${study} has scope ${r.scope}: only an optimization or continuation runs officially`);
+    throw new PolicyError(
+      'official-scope',
+      `${study} has scope ${r.scope}: only an optimization or continuation runs officially`
+    );
   if (!fs.existsSync(file) || !officialGate.test(fs.readFileSync(file, 'utf8')))
     throw new PolicyError(
       'official-gate-missing',

@@ -89,4 +89,11 @@
 
 ## Disclosures
 
-- (none yet)
+- 2026-11-19T14:51:50Z (incident, no content change): while validating the kernel-identity method, `objcopy
+  --dump-section` (which rewrites its input in place when no output file is given) was run directly on Phase 2's local
+  build artifacts. `research/gpu-phase2/build/gb2-stale` and `gb2-perturbed` were rewritten with byte-identical content
+  (sha256 still `a120ab2a…dd0b26b4` and `dcd18c6e…cef78e8a3`, = Phase 2's negative-final.json record); only their mtimes
+  changed (15:51:50/51 CET). `gb2` (busy: the baseline was running it) was not touched (sha256 `3fe09e67…13fc`). These
+  files are git-ignored; no record changed. `tools/gpu-phase3/build-final.sh` now runs objcopy only on temporary copies.
+  Method validated: gb2 and gb2-stale (different compiled-in digests) have identical .nv_fatbin and SASS; gb2-perturbed
+  differs.

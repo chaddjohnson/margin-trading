@@ -27,7 +27,8 @@ const args = process.argv.slice(2);
 const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.indexOf(`--${k}`) + 1]! : d);
 const minutes = Number(opt('minutes', '45'));
 
-if (!(minutes >= 30 && minutes <= 60)) throw new Error(`a bounded run lasts 30–60 minutes (got ${minutes}); longer endurance needs the user's approval`);
+if (!(minutes >= 30 && minutes <= 60))
+  throw new Error(`a bounded run lasts 30–60 minutes (got ${minutes}); longer endurance needs the user's approval`);
 
 const hours = minutes / 60;
 const hostWorkers = Number(opt('host-workers', '8'));
@@ -39,7 +40,15 @@ const doors: DoorKey[] = ['D19', 'D21', 'D23', 'D24', 'FULL'];
 const mixes: Record<string, { options: EvalOptions; detail: boolean; risk?: boolean }> = {
   joint: { options: vOptions, detail: false },
   'detail+risk': { options: vOptions, detail: true, risk: true },
-  'all-options': { options: { enabled: {}, friction: { costBps: 20, rate: 0.14, stopSlippageBps: 25, stopFill: 'next-open' }, d1Arm: 'native', wholeShares: true }, detail: false },
+  'all-options': {
+    options: {
+      enabled: {},
+      friction: { costBps: 20, rate: 0.14, stopSlippageBps: 25, stopFill: 'next-open' },
+      d1Arm: 'native',
+      wholeShares: true
+    },
+    detail: false
+  },
   'd1-only': { options: { enabled: { 'G:GDX': false, 'G:VGT': false } }, detail: false },
   'growth-only': { options: { enabled: { 'D1:GDX': false, 'D1:VGT': false, 'G:GDX': false } }, detail: false }
 };
@@ -59,7 +68,11 @@ const binarySha = createHash('sha256').update(fs.readFileSync(serverBinary)).dig
 const t0 = Date.now();
 const deadline = t0 + hours * 3600_000;
 const log = (s: string) => console.log(`[sustained ${new Date().toISOString().slice(11, 19)}Z] ${s}`);
-const smi = (q: string) => execFileSync('nvidia-smi', [`--query-gpu=${q}`, '--format=csv,noheader,nounits']).toString().trim().split(', ');
+const smi = (q: string) =>
+  execFileSync('nvidia-smi', [`--query-gpu=${q}`, '--format=csv,noheader,nounits'])
+    .toString()
+    .trim()
+    .split(', ');
 
 fs.mkdirSync(dir, { recursive: true });
 const telemetryFile = path.join(dir, 'telemetry.jsonl');
@@ -96,9 +109,21 @@ const save = () => {
 let counters = () => ({});
 const telemetry = setInterval(() => {
   try {
-    const [u, m, p, t, c, thr] = smi('utilization.gpu,memory.used,power.draw,temperature.gpu,clocks.sm,clocks_event_reasons.active');
+    const [u, m, p, t, c, thr] = smi(
+      'utilization.gpu,memory.used,power.draw,temperature.gpu,clocks.sm,clocks_event_reasons.active'
+    );
     const rss = Math.round(process.memoryUsage().rss / 2 ** 20);
-    const row = { t: new Date().toISOString(), util: Number(u), vramMiB: Number(m), powerW: Number(p), tempC: Number(t), smClockMHz: Number(c), throttle: thr, hostRssMiB: rss, ...counters() };
+    const row = {
+      t: new Date().toISOString(),
+      util: Number(u),
+      vramMiB: Number(m),
+      powerW: Number(p),
+      tempC: Number(t),
+      smClockMHz: Number(c),
+      throttle: thr,
+      hostRssMiB: rss,
+      ...counters()
+    };
 
     fs.appendFileSync(telemetryFile, `${JSON.stringify(row)}\n`);
     S.peaks.tempC = Math.max(S.peaks.tempC, row.tempC);
@@ -112,8 +137,18 @@ const telemetry = setInterval(() => {
 }, 30_000);
 
 const tasksOf = (round: number, mix: string, n: number): Task[] =>
-  randomSubjects(n, `STRESS-${round}`).map((s) => ({ k: s.key, quad: s.quad, controls: s.controls, options: mixes[mix]!.options, detail: mixes[mix]!.detail, risk: mixes[mix]!.risk }));
-const fixedTasks = (d: string) => randomSubjects(2048, `STRESS-FIXED-${d}`).map((s) => ({ k: s.key, quad: s.quad, controls: s.controls, options: vOptions, detail: false }) as Task);
+  randomSubjects(n, `STRESS-${round}`).map((s) => ({
+    k: s.key,
+    quad: s.quad,
+    controls: s.controls,
+    options: mixes[mix]!.options,
+    detail: mixes[mix]!.detail,
+    risk: mixes[mix]!.risk
+  }));
+const fixedTasks = (d: string) =>
+  randomSubjects(2048, `STRESS-FIXED-${d}`).map(
+    (s) => ({ k: s.key, quad: s.quad, controls: s.controls, options: vOptions, detail: false }) as Task
+  );
 const firstOutputs = new Map<string, Map<string, string>>(); // door → task → record hash
 
 let round = 0;
@@ -141,7 +176,16 @@ while (Date.now() < deadline) {
     let ok = false;
 
     for (let attempt = 0; !ok; attempt++) {
-      const pool = new GpuPool({ door, session: null, server: keepOpen(server), uuid: info.uuid, ledgerFile: ledger, batchSize: 8192, lingerMs: 25, pipeline: pipe });
+      const pool = new GpuPool({
+        door,
+        session: null,
+        server: keepOpen(server),
+        uuid: info.uuid,
+        ledgerFile: ledger,
+        batchSize: 8192,
+        lingerMs: 25,
+        pipeline: pipe
+      });
 
       counters = () => ({ round, door: d, mix, ...pool.counters });
       try {
@@ -151,7 +195,11 @@ while (Date.now() < deadline) {
         await pool.close();
         ok = true;
       } catch (e) {
-        S.failures.push({ t: new Date().toISOString(), round, error: `${(e as Error).message.slice(0, 400)} | server: ${server.stderrTail.slice(-400)}` });
+        S.failures.push({
+          t: new Date().toISOString(),
+          round,
+          error: `${(e as Error).message.slice(0, 400)} | server: ${server.stderrTail.slice(-400)}`
+        });
         log(`round ${round} failed: ${(e as Error).message.slice(0, 200)}`);
         try {
           await pool.close();
@@ -181,7 +229,10 @@ while (Date.now() < deadline) {
     b.rounds++;
     b.evaluations += tasks.length;
     b.seconds = Math.round((b.seconds + secs) * 10) / 10;
-    fs.appendFileSync(roundsFile, `${JSON.stringify({ t: new Date().toISOString(), round, door: d, mix, tasks: tasks.length, seconds: Math.round(secs * 10) / 10, evPerS: Math.round(tasks.length / secs), ledger: path.basename(ledger) })}\n`);
+    fs.appendFileSync(
+      roundsFile,
+      `${JSON.stringify({ t: new Date().toISOString(), round, door: d, mix, tasks: tasks.length, seconds: Math.round(secs * 10) / 10, evPerS: Math.round(tasks.length / secs), ledger: path.basename(ledger) })}\n`
+    );
     // the ledger of a passed round is summarized (the file itself is large over 24 h): keep every 10th
     if (round % 10 !== 0) fs.rmSync(ledger, { force: true });
 
@@ -190,22 +241,43 @@ while (Date.now() < deadline) {
     const sample = tasks.filter((_t, i) => i % step === 0).slice(0, parityN);
 
     parityJobs.push(
-      ref.run(sample.map((t) => ({ k: t.k, quad: t.quad, controls: t.controls, options: t.options, detail: t.detail, risk: t.risk })), 2).then((res) => {
-        for (const c of res) {
-          S.parity.samples++;
-          if (!c.ok) S.parity.cpuErrors++;
-          else if (c.record !== hashes.get(c.k)) {
-            S.parity.mismatches++;
-            S.pass = false;
-            if (S.parity.examples.length < 20) S.parity.examples.push({ round, door: d, mix, k: c.k });
+      ref
+        .run(
+          sample.map((t) => ({
+            k: t.k,
+            quad: t.quad,
+            controls: t.controls,
+            options: t.options,
+            detail: t.detail,
+            risk: t.risk
+          })),
+          2
+        )
+        .then((res) => {
+          for (const c of res) {
+            S.parity.samples++;
+            if (!c.ok) S.parity.cpuErrors++;
+            else if (c.record !== hashes.get(c.k)) {
+              S.parity.mismatches++;
+              S.pass = false;
+              if (S.parity.examples.length < 20) S.parity.examples.push({ round, door: d, mix, k: c.k });
+            }
           }
-        }
-      })
+        })
     );
     // repeatability
     if (round % repeatEvery === 0) {
       const fixed = fixedTasks(d);
-      const pool = new GpuPool({ door, session: null, server: keepOpen(server), uuid: info.uuid, ledgerFile: path.join(cacheDir, 'sustained-repeat-ledger.jsonl'), batchSize: 8192, lingerMs: 25, pipeline: pipe });
+      const pool = new GpuPool({
+        door,
+        session: null,
+        server: keepOpen(server),
+        uuid: info.uuid,
+        ledgerFile: path.join(cacheDir, 'sustained-repeat-ledger.jsonl'),
+        batchSize: 8192,
+        lingerMs: 25,
+        pipeline: pipe
+      });
       const now = new Map<string, string>();
 
       await pool.run(fixed, (t, v) => now.set(t.k, canonHash(v)));
@@ -225,7 +297,9 @@ while (Date.now() < deadline) {
       }
     }
     save();
-    log(`round ${round} ${d} ${mix}: ${tasks.length} in ${secs.toFixed(1)} s (${Math.round(tasks.length / secs)}/s); parity ${S.parity.samples} sampled, ${S.parity.mismatches} mismatches; repeat ${S.repeat.mismatches}`);
+    log(
+      `round ${round} ${d} ${mix}: ${tasks.length} in ${secs.toFixed(1)} s (${Math.round(tasks.length / secs)}/s); parity ${S.parity.samples} sampled, ${S.parity.mismatches} mismatches; repeat ${S.repeat.mismatches}`
+    );
   }
   await Promise.all(parityJobs.splice(0));
   await ref.close();
@@ -238,5 +312,7 @@ await Promise.all(parityJobs);
 S.finished = new Date().toISOString();
 if (S.cpuScored !== 0 || S.failures.length) S.pass = false;
 save();
-log(`finished: ${S.rounds} rounds, ${S.evaluations} evaluations, parity ${S.parity.samples}/${S.parity.mismatches}, repeat ${S.repeat.tasks}/${S.repeat.mismatches}, failures ${S.failures.length}, pass ${S.pass}`);
+log(
+  `finished: ${S.rounds} rounds, ${S.evaluations} evaluations, parity ${S.parity.samples}/${S.parity.mismatches}, repeat ${S.repeat.tasks}/${S.repeat.mismatches}, failures ${S.failures.length}, pass ${S.pass}`
+);
 process.exitCode = S.pass ? 0 : 2;

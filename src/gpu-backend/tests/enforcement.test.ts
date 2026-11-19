@@ -15,7 +15,11 @@ import { acceptanceFile } from '../acceptance.ts';
 import { repoRoot } from '../toolchain.ts';
 
 // development tools of the backend that neither run in an official job nor judge acceptance
-const devTools = new Set(['tools/gpu-backend/check-v8math.ts', 'tools/gpu-backend/layout-dump.cpp', 'tools/gpu-backend/v8math-check.cu']);
+const devTools = new Set([
+  'tools/gpu-backend/check-v8math.ts',
+  'tools/gpu-backend/layout-dump.cpp',
+  'tools/gpu-backend/v8math-check.cu'
+]);
 
 test('every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)', () => {
   const classified = new Set([...hostFiles, ...policyFiles]);
@@ -26,8 +30,13 @@ test('every GPU-backend file is classified: evaluation (in the binary digest) or
   const tools = fs.readdirSync(path.join(repoRoot, 'tools/gpu-backend')).map((f) => `tools/gpu-backend/${f}`);
   const loose = [...backend, ...tools].filter((f) => !classified.has(f) && !devTools.has(f));
 
-  assert.deepEqual(loose, [], `unclassified GPU-backend files: ${loose.join(', ')} — add each to hostFiles or policyFiles (src/gpu-backend/compat.ts)`);
-  for (const f of [...hostFiles, ...policyFiles]) assert.ok(fs.existsSync(path.join(repoRoot, f)), `${f} is listed but missing`);
+  assert.deepEqual(
+    loose,
+    [],
+    `unclassified GPU-backend files: ${loose.join(', ')} — add each to hostFiles or policyFiles (src/gpu-backend/compat.ts)`
+  );
+  for (const f of [...hostFiles, ...policyFiles])
+    assert.ok(fs.existsSync(path.join(repoRoot, f)), `${f} is listed but missing`);
   assert.equal(new Set(hostFiles.filter((f) => policyFiles.includes(f))).size, 0, 'a file is in both groups');
 });
 
@@ -36,7 +45,8 @@ test('the recorded acceptance re-verifies independently; a tampered pin, digest 
   const record = JSON.parse(fs.readFileSync(acceptanceFile, 'utf8'));
 
   if (record.schema !== 2) return; // the MERGE GATE (policy.test.ts) refuses a schema-1 record
-  const verify = (file: string) => spawnSync('tools/gpu-backend/verify-acceptance.sh', ['--record', file], { cwd: repoRoot, encoding: 'utf8' });
+  const verify = (file: string) =>
+    spawnSync('tools/gpu-backend/verify-acceptance.sh', ['--record', file], { cwd: repoRoot, encoding: 'utf8' });
   const ok = verify(path.relative(repoRoot, acceptanceFile));
 
   assert.equal(ok.status, 0, ok.stdout + ok.stderr);
@@ -51,7 +61,9 @@ test('the recorded acceptance re-verifies independently; a tampered pin, digest 
     };
     const pin = structuredClone(record);
 
-    pin.policy.files = pin.policy.files.map((f: { path: string; sha256: string }) => (f.path === 'src/gpu-backend/purpose.ts' ? { ...f, sha256: '0'.repeat(64) } : f));
+    pin.policy.files = pin.policy.files.map((f: { path: string; sha256: string }) =>
+      f.path === 'src/gpu-backend/purpose.ts' ? { ...f, sha256: '0'.repeat(64) } : f
+    );
     const a = verify(write('pin.json', pin));
 
     assert.equal(a.status, 1);

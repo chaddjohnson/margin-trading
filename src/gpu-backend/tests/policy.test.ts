@@ -14,7 +14,7 @@ import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
 import { PolicyError, assertNonOfficialCpuRun, declaredPurpose } from '../purpose.ts';
 import { acceptanceFile, checkAcceptance } from '../acceptance.ts';
-import { compatManifest } from '../compat.ts';
+import { compatManifest, policySources } from '../compat.ts';
 import { audit, registryFile, type Registry } from '../entrypoints.ts';
 import { checkGpuPolicy } from '../../research-standard/gpuPolicy.ts';
 import { SUPPORTED } from '../layout.ts';
@@ -83,7 +83,10 @@ test('every npm script that can start a CPU research runner or optimizer goes th
     'research-preflight'
   ]);
   const ungated = Object.entries(scripts).filter(
-    ([k, v]) => !utilities.has(k) && !v.includes('src/gpu-backend/legacyRunner.ts')
+    ([k, v]) =>
+      !utilities.has(k) &&
+      !v.includes('src/gpu-backend/legacyRunner.ts') &&
+      !v.includes('src/gpu-backend/officialRunner.ts')
   );
 
   assert.deepEqual(
@@ -93,6 +96,30 @@ test('every npm script that can start a CPU research runner or optimizer goes th
   );
   // the utilities evaluate no strategy: formatting, lint/type checks, the app shell, data maintenance, tests, the preflight
   assert.ok(!scripts['research-preflight']!.includes('src/app.ts'));
+});
+
+test('the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate', () => {
+  const runner = path.join(repoRoot, 'src/gpu-backend/officialRunner.ts');
+  const run = (study: string, mod: string, env: Record<string, string>) =>
+    spawnSync(node, ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', runner, study, mod], {
+      cwd: repoRoot,
+      env: { PATH: process.env.PATH!, ...env },
+      encoding: 'utf8'
+    });
+
+  for (const env of [{}, { GPU_POLICY_PURPOSE: 'cpu-reference' }, { GPU_POLICY_PURPOSE: 'diagnostic' }]) {
+    const r = run('research/gpu-phase3', 'tools/gpu-backend/official-preflight.ts', env);
+
+    assert.equal(r.status, 3);
+    assert.match(r.stderr, /official-purpose-required/);
+  }
+  // a diagnostic study is not an official optimization (the preflight passes, the scope does not)
+  const d = run('research/gpu-phase3', 'tools/gpu-backend/official-preflight.ts', {
+    GPU_POLICY_PURPOSE: 'official-optimization'
+  });
+
+  assert.equal(d.status, 3);
+  assert.match(d.stderr, /official-scope/);
 });
 
 test('entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged', () => {
@@ -132,24 +159,30 @@ test('acceptance record: missing, forged, stale, changed evidence and wrong bina
     assert.equal(checkAcceptance({ file: path.join(d, 'bad.json') }).status, 'INVALID');
 
     const m = compatManifest();
+    const pol = policySources(['src/gpu-backend/tests/policy.test.ts']);
+    const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repoRoot }).toString().trim();
     const evidence = path.join(d, 'evidence.json');
 
     fs.writeFileSync(evidence, '{"pass":true}\n');
     const ev = execFileSync('sha256sum', [evidence]).toString().split(' ')[0]!;
     const base = {
       kind: 'gpu-backend acceptance',
-      schema: 1,
+      schema: 2,
       status: 'ACCEPTED',
       study: 'research/x',
       acceptedAt: '2026-11-19T00:00:00Z',
       standard: { version: '3.0.0', sha256: '0'.repeat(64) },
       compat: m,
+      policy: { ...pol, generator: 'src/gpu-backend/tests/policy.test.ts' },
+      source: { commit: head, tree: '', branch: '' },
+      hostPath: { defaultWorkers: 8, modes: ['serial', 'parallel'] },
       binary: { path: 'x', sha256: '1'.repeat(64) },
       device: { uuid: 'GPU-test', name: 'test', driver: '0', cc: '0' },
       capabilities: SUPPORTED.toString(16),
       domain: { name: 'test', features: '0' },
       evidence: [{ name: 'e', path: path.relative(repoRoot, evidence), sha256: ev, pass: true }],
-      blockers: []
+      blockers: [],
+      supersedes: null
     };
     const write = (name: string, x: unknown) => {
       fs.writeFileSync(path.join(d, name), JSON.stringify(x));
@@ -174,6 +207,37 @@ test('acceptance record: missing, forged, stale, changed evidence and wrong bina
       checkAcceptance({ file: write('digest.json', { ...base, compat: { ...m, digest: 'a'.repeat(64) } }) }).ok,
       false
     );
+    // a changed enforcement file (the CPU-official refusal), an unpinned enforcement file, a forged history, schema 1
+    const pTampered = {
+      ...base,
+      policy: {
+        ...base.policy,
+        files: base.policy.files.map((f) =>
+          f.path === 'src/gpu-backend/purpose.ts' ? { ...f, sha256: '0'.repeat(64) } : f
+        )
+      }
+    };
+
+    assert.match(
+      checkAcceptance({ file: write('policy.json', pTampered) }).reasons.join(' '),
+      /enforcement code changed since acceptance: src\/gpu-backend\/purpose\.ts/
+    );
+    const pMissing = {
+      ...base,
+      policy: { ...base.policy, files: base.policy.files.filter((f) => f.path !== 'src/gpu-backend/official.ts') }
+    };
+
+    assert.match(
+      checkAcceptance({ file: write('unpinned.json', pMissing) }).reasons.join(' '),
+      /does not pin enforcement file\(s\) this tree requires: src\/gpu-backend\/official\.ts/
+    );
+    assert.match(
+      checkAcceptance({
+        file: write('history.json', { ...base, source: { ...base.source, commit: 'f'.repeat(40) } })
+      }).reasons.join(' '),
+      /not an ancestor of HEAD/
+    );
+    assert.equal(checkAcceptance({ file: write('schema1.json', { ...base, schema: 1 }) }).status, 'INVALID');
     // not accepted
     assert.equal(
       checkAcceptance({ file: write('na.json', { ...base, status: 'NOT_ACCEPTED', blockers: ['parity'] }) }).status,

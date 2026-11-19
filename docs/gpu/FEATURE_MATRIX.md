@@ -92,3 +92,15 @@ counterpart, its capability bit and its parity evidence. Update it with every ch
 | Precision | binary64 only; `--fmad=false`, IEEE division/sqrt, `-ffp-contract=off`; JavaScript operation order; `Math.max/min` NaN/±0 semantics; V8 `log/exp` |
 | Capacity | fixed per-candidate capacities raise explicit statuses; the pool re-evaluates such a candidate on the GPU with larger capacities |
 | Errors | each CPU throw has a per-candidate status; loops have device-side bounds (`C_G_LOOP`) |
+
+## Host path (GPU Phase 3)
+
+Not a trading feature: where the request is built and the response is turned into the CPU engine's objects. It changes
+no number of any result (bit-identical by construction and by the parity suite through it); every file is in the
+evaluation digest compiled into the binary.
+
+| Item | TypeScript | Role | Evidence |
+|---|---|---|---|
+| Batch codec | `batch.ts` (`encodeShard`, `assembleBatch`, `verifyResponse`, `candHashes`/`combineChecksum`, `layoutOf`, `decodeRange`) | one implementation of the request and the response for both paths | captured Phase 2 batches: request bytes and every result hash identical (`research/gpu-phase3/results/final/offline-check.json`) |
+| Serial path | `client.ts` `prepare` / `complete` (`hostWorkers` 0) | one shard on the calling thread (Phase 2's path) | parity determinism "host workers 0"; mini-optimization w0 = w8 |
+| Parallel path | `hostPipeline.ts`, `hostWorker.ts`, `hostDoor.ts` | contiguous shards on worker threads; receipt verified on the main thread; results in candidate order; fail closed | the parity campaign through it, determinism across 0/1/3/12 workers and reversed order, sealed-job replays, negative tests |

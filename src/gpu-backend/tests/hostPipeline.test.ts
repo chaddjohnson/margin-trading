@@ -13,7 +13,15 @@ import { vOptions, incumbents } from '../../vg-l0-full-joint/nl0.ts';
 import { decode, levelsOf } from '../../vg-l0-full-joint/space.ts';
 import { subjectOfCfg } from '../../vg-l0-risk-metrics/engine.ts';
 import { Rng, deriveSeed } from '../../optimizer/rng.ts';
-import { type EncodedBatch, type Task, type TaskResult, candHashes, combineChecksum, decodeBatch, encodeBatch } from '../batch.ts';
+import {
+  type EncodedBatch,
+  type Task,
+  type TaskResult,
+  candHashes,
+  combineChecksum,
+  decodeBatch,
+  encodeBatch
+} from '../batch.ts';
 import { HostPipeline } from '../hostPipeline.ts';
 import { doorDigest, workerDoorOf } from '../hostDoor.ts';
 import { BatchHeader, BookOut, CandOut, FLAGS, PROTOCOL_VERSION, Period, Receipt, ResultHeader } from '../layout.ts';
@@ -39,14 +47,33 @@ const make = (p0: number) => {
 const door = fixtureDoorOf('host-pipeline-test', { GDX: make(40), VGT: make(100) });
 const tasks: Task[] = (() => {
   const inc = incumbents();
-  const out: Task[] = (['NL0', 'IJ1', 'C4', 'C4R'] as const).map((k) => ({ k: `R:${k}`, quad: inc[k].quad, controls: null, options: vOptions, detail: k === 'C4', risk: k === 'IJ1' }));
+  const out: Task[] = (['NL0', 'IJ1', 'C4', 'C4R'] as const).map((k) => ({
+    k: `R:${k}`,
+    quad: inc[k].quad,
+    controls: null,
+    options: vOptions,
+    detail: k === 'C4',
+    risk: k === 'IJ1'
+  }));
   const levels = levelsOf('coarse');
 
   for (let i = 0; i < 300; i++) {
     const r = new Rng(deriveSeed('gpu-backend', 'host-pipeline-test', i));
-    const s = subjectOfCfg(decode(levels.map((l) => r.int(l)), 'coarse'));
+    const s = subjectOfCfg(
+      decode(
+        levels.map((l) => r.int(l)),
+        'coarse'
+      )
+    );
 
-    out.push({ k: `P:${i}`, quad: s.quad, controls: s.controls, options: i % 7 === 0 ? { ...vOptions, boundaries: [dates[100]!, dates[200]!] } : vOptions, detail: i % 5 === 0, risk: i % 3 === 0 });
+    out.push({
+      k: `P:${i}`,
+      quad: s.quad,
+      controls: s.controls,
+      options: i % 7 === 0 ? { ...vOptions, boundaries: [dates[100]!, dates[200]!] } : vOptions,
+      detail: i % 5 === 0,
+      risk: i % 3 === 0
+    });
   }
   return out;
 })();
@@ -79,19 +106,36 @@ const responseOf = (enc: EncodedBatch, S: number) => {
   }
   const dailyAt = candAt + n * CandOut.size + (runPool ? enc.nRanges * Period.size : 0);
 
-  for (let c = 0; c < n; c++) for (let s = 0; s < S; s++) if (daily) buf.writeDoubleLE((c % 13) * 10 + s * 0.5, dailyAt + (c * S + s) * 8);
+  for (let c = 0; c < n; c++)
+    for (let s = 0; s < S; s++) if (daily) buf.writeDoubleLE((c % 13) * 10 + s * 0.5, dailyAt + (c * S + s) * 8);
   buf.writeBigUInt64LE(enc.nonce, ResultHeader.size + RC.batchNonce!);
   uuidBytes.copy(buf, ResultHeader.size + RC.uuid!);
   buf.writeUInt32LE(n, ResultHeader.size + RC.nCand!);
   buf.writeUInt32LE(enc.expectD1, ResultHeader.size + RC.d1Executed!);
   buf.writeUInt32LE(enc.expectG, ResultHeader.size + RC.gExecuted!);
   buf.writeUInt32LE(runPool ? n : 0, ResultHeader.size + RC.poolExecuted!);
-  buf.writeBigUInt64LE(combineChecksum(candHashes(new Uint8Array(buf.buffer, buf.byteOffset + candAt, n * CandOut.size), 0, n)), ResultHeader.size + RC.outChecksum!);
+  buf.writeBigUInt64LE(
+    combineChecksum(candHashes(new Uint8Array(buf.buffer, buf.byteOffset + candAt, n * CandOut.size), 0, n)),
+    ResultHeader.size + RC.outChecksum!
+  );
   return buf;
 };
-const hashOf = (r: TaskResult) => canonHash({ key: r.key, id: r.id, status: r.status, features: r.features, record: r.record, books: r.books.map(bookView), rc: r.rc, pool: r.pool ? poolView(r.pool) : null, envelope: r.envelope });
+const hashOf = (r: TaskResult) =>
+  canonHash({
+    key: r.key,
+    id: r.id,
+    status: r.status,
+    features: r.features,
+    record: r.record,
+    books: r.books.map(bookView),
+    rc: r.rc,
+    pool: r.pool ? poolView(r.pool) : null,
+    envelope: r.envelope
+  });
 const nonceAt = BatchHeader.offsets.batchNonce!;
-const sameRequest = (a: Buffer, b: Buffer) => Buffer.compare(a.subarray(0, nonceAt), b.subarray(0, nonceAt)) === 0 && Buffer.compare(a.subarray(nonceAt + 8), b.subarray(nonceAt + 8)) === 0;
+const sameRequest = (a: Buffer, b: Buffer) =>
+  Buffer.compare(a.subarray(0, nonceAt), b.subarray(0, nonceAt)) === 0 &&
+  Buffer.compare(a.subarray(nonceAt + 8), b.subarray(nonceAt + 8)) === 0;
 const serial = (() => {
   const enc = encodeBatch(door, tasks, {});
 
@@ -111,13 +155,24 @@ test('host pipeline: the request bytes and every result equal the serial codec, 
 
       const full = await pipe.complete(p, { payload: responseOf(p.enc, door.sessions), roundTripMs: 0 }, UUID, 'full');
 
-      assert.deepEqual(full.results.map((r) => r.key), tasks.map((t) => t.k));
+      assert.deepEqual(
+        full.results.map((r) => r.key),
+        tasks.map((t) => t.k)
+      );
       assert.deepEqual(full.results.map(hashOf), serial.results.map(hashOf), `results (${workers} workers)`);
 
       const p2 = await pipe.prepare(door, tasks, {});
-      const lean = await pipe.complete(p2, { payload: responseOf(p2.enc, door.sessions), roundTripMs: 0 }, UUID, 'lean');
+      const lean = await pipe.complete(
+        p2,
+        { payload: responseOf(p2.enc, door.sessions), roundTripMs: 0 },
+        UUID,
+        'lean'
+      );
 
-      assert.deepEqual(lean.results.map((r) => canonHash(r.record)), serial.results.map((r) => canonHash(r.record)));
+      assert.deepEqual(
+        lean.results.map((r) => canonHash(r.record)),
+        serial.results.map((r) => canonHash(r.record))
+      );
       assert.ok(lean.results.every((r) => r.books.length === 0 && r.pool === null));
     } finally {
       await pipe.close();
@@ -136,10 +191,20 @@ test('host pipeline: a corrupted response, a stale nonce, another device and a m
     await assert.rejects(pipe.complete(p, { payload: bad, roundTripMs: 0 }, UUID), /differ from the device checksum/);
     const p2 = await pipe.prepare(door, tasks, {});
 
-    await assert.rejects(pipe.complete(p2, { payload: responseOf(serial.enc, door.sessions), roundTripMs: 0 }, UUID), /receipt nonce differs/);
+    await assert.rejects(
+      pipe.complete(p2, { payload: responseOf(serial.enc, door.sessions), roundTripMs: 0 }, UUID),
+      /receipt nonce differs/
+    );
     const p3 = await pipe.prepare(door, tasks, {});
 
-    await assert.rejects(pipe.complete(p3, { payload: responseOf(p3.enc, door.sessions), roundTripMs: 0 }, 'GPU-00000000-0000-0000-0000-000000000000'), /receipt from GPU-01234567/);
+    await assert.rejects(
+      pipe.complete(
+        p3,
+        { payload: responseOf(p3.enc, door.sessions), roundTripMs: 0 },
+        'GPU-00000000-0000-0000-0000-000000000000'
+      ),
+      /receipt from GPU-01234567/
+    );
     // a response that lacks a candidate (a missing or truncated result)
     const p5 = await pipe.prepare(door, tasks, {});
     const short = responseOf(p5.enc, door.sessions);
@@ -149,7 +214,10 @@ test('host pipeline: a corrupted response, a stale nonce, another device and a m
     // still healthy: a verification failure is the batch's, not the pipeline's
     const p4 = await pipe.prepare(door, tasks, {});
 
-    assert.equal((await pipe.complete(p4, { payload: responseOf(p4.enc, door.sessions), roundTripMs: 0 }, UUID)).results.length, tasks.length);
+    assert.equal(
+      (await pipe.complete(p4, { payload: responseOf(p4.enc, door.sessions), roundTripMs: 0 }, UUID)).results.length,
+      tasks.length
+    );
   } finally {
     await pipe.close();
   }
@@ -157,13 +225,22 @@ test('host pipeline: a corrupted response, a stale nonce, another device and a m
 
 test('host pipeline: a worker that throws, exits or hangs fails closed; every later call is refused', async () => {
   for (const kind of ['throw', 'exit', 'hang'] as const) {
-    const pipe = await HostPipeline.start({ door, workers: 3, minShard: 16, allowFaultInjection: true, opTimeoutMs: 4000 });
+    const pipe = await HostPipeline.start({
+      door,
+      workers: 3,
+      minShard: 16,
+      allowFaultInjection: true,
+      opTimeoutMs: 4000
+    });
 
     try {
       const p = await pipe.prepare(door, tasks, {});
 
       await assert.rejects(
-        pipe.complete(p, { payload: responseOf(p.enc, door.sessions), roundTripMs: 0 }, UUID, 'lean', { shard: 1, kind }),
+        pipe.complete(p, { payload: responseOf(p.enc, door.sessions), roundTripMs: 0 }, UUID, 'lean', {
+          shard: 1,
+          kind
+        }),
         kind === 'throw' ? /injected decode failure/ : kind === 'exit' ? /exited \(7\)/ : /did not answer decode/
       );
       if (kind !== 'throw') {
@@ -180,13 +257,19 @@ test('host pipeline: a worker that throws, exits or hangs fails closed; every la
   try {
     const p = await pipe.prepare(door, tasks.slice(0, 8), {});
 
-    await assert.rejects(pipe.complete(p, { payload: responseOf(p.enc, door.sessions), roundTripMs: 0 }, UUID, 'lean', { shard: 0, kind: 'throw' }), /fault injection is not enabled/);
+    await assert.rejects(
+      pipe.complete(p, { payload: responseOf(p.enc, door.sessions), roundTripMs: 0 }, UUID, 'lean', {
+        shard: 0,
+        kind: 'throw'
+      }),
+      /fault injection is not enabled/
+    );
   } finally {
     await pipe.close();
   }
 });
 
-test('host pipeline: an encoding error is the serial path\'s error; the worker door equals the main door', async () => {
+test("host pipeline: an encoding error is the serial path's error; the worker door equals the main door", async () => {
   const bad: Task = { ...tasks[5]!, options: { ...vOptions, boundaries: ['1999-01-04'] } };
 
   assert.throws(() => encodeBatch(door, [bad], {}), /is not a session/);

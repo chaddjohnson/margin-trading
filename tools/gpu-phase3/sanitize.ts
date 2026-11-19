@@ -23,20 +23,51 @@ const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.index
 const doorName = opt('door', 'W-QUIET') as DoorKey;
 const door = await openDoor(doorName, 'T0 sanitizer');
 const ds = exportDataset(door, cacheDir);
-const subjects = [...referenceSubjects(), ...growthStrata(Number(opt('per', '1')), 'SAN'), ...randomSubjects(Number(opt('random', '0')), 'SAN-R')];
-const options: EvalOptions = { ...vOptions, blackouts: [{ first: door.dates[40]!, last: door.dates[60]! }], boundaries: [door.dates[100]!, door.dates[150]!] };
-const tasks = subjects.map((s, i) => ({ k: s.key, quad: s.quad, controls: s.controls, options: i % 2 ? options : vOptions, detail: true, risk: true }));
+const subjects = [
+  ...referenceSubjects(),
+  ...growthStrata(Number(opt('per', '1')), 'SAN'),
+  ...randomSubjects(Number(opt('random', '0')), 'SAN-R')
+];
+const options: EvalOptions = {
+  ...vOptions,
+  blackouts: [{ first: door.dates[40]!, last: door.dates[60]! }],
+  boundaries: [door.dates[100]!, door.dates[150]!]
+};
+const tasks = subjects.map((s, i) => ({
+  k: s.key,
+  quad: s.quad,
+  controls: s.controls,
+  options: i % 2 ? options : vOptions,
+  detail: true,
+  risk: true
+}));
 const outDir = path.join(resultsDir, opt('out-dir', 'sanitizer'));
 
 fs.mkdirSync(outDir, { recursive: true });
-const tools = (opt('tools', 'memcheck,racecheck,initcheck,synccheck')).split(',');
+const tools = opt('tools', 'memcheck,racecheck,initcheck,synccheck').split(',');
 const version = execFileSync(computeSanitizer, ['--version']).toString().trim();
 const rows: unknown[] = [];
 
 for (const tool of tools) {
   const log = path.join(outDir, `${tool}.txt`);
   const extra = tool === 'memcheck' ? ['--leak-check', 'full'] : [];
-  const server = GpuServer.start({ binary: serverBinary, libDir: toolkitLib, wrapper: [computeSanitizer, '--tool', tool, ...extra, '--error-exitcode', '17', '--log-file', log, '--print-limit', '50'], watchdogS: 7200 });
+  const server = GpuServer.start({
+    binary: serverBinary,
+    libDir: toolkitLib,
+    wrapper: [
+      computeSanitizer,
+      '--tool',
+      tool,
+      ...extra,
+      '--error-exitcode',
+      '17',
+      '--log-file',
+      log,
+      '--print-limit',
+      '50'
+    ],
+    watchdogS: 7200
+  });
   const t0 = Date.now();
   const smoke = await server.smoke();
   await server.load(ds.file);
@@ -50,7 +81,23 @@ for (const tool of tools) {
   r.results.forEach((g, i) => {
     const s = subjects[i]!;
     const x = runWithControls2(door, s.quad, s.controls, tasks[i]!.options, true, false, { cache: false });
-    const d = g.status === 0 ? deepDiff(x.books.map((b) => b.trades), g.books.map((b) => b.trades), '$', [], 1).length + deepDiff({ ...x.result, refusals: 0 }, { ...g.pool!, refusals: 0, lots: g.pool!.lots.map((l, j) => ({ ...l, trade: x.result.lots[j]?.trade })) }, '$', [], 1).length : 1;
+    const d =
+      g.status === 0
+        ? deepDiff(
+            x.books.map((b) => b.trades),
+            g.books.map((b) => b.trades),
+            '$',
+            [],
+            1
+          ).length +
+          deepDiff(
+            { ...x.result, refusals: 0 },
+            { ...g.pool!, refusals: 0, lots: g.pool!.lots.map((l, j) => ({ ...l, trade: x.result.lots[j]?.trade })) },
+            '$',
+            [],
+            1
+          ).length
+        : 1;
 
     if (d === 0) identical++;
   });
@@ -58,11 +105,31 @@ for (const tool of tools) {
   await new Promise((res) => setTimeout(res, 2000));
   const text = fs.existsSync(log) ? fs.readFileSync(log, 'utf8') : '';
   // memcheck / initcheck / synccheck: "ERROR SUMMARY: n errors"; racecheck: "RACECHECK SUMMARY: h hazards displayed (n errors, w warnings)"
-  const summary = /ERROR SUMMARY: (\d+) error/.exec(text) ?? /RACECHECK SUMMARY: \d+ hazards? displayed \((\d+) errors?/.exec(text);
+  const summary =
+    /ERROR SUMMARY: (\d+) error/.exec(text) ?? /RACECHECK SUMMARY: \d+ hazards? displayed \((\d+) errors?/.exec(text);
   const warnings = /RACECHECK SUMMARY: \d+ hazards? displayed \(\d+ errors?, (\d+) warnings?\)/.exec(text);
-  const row = { tool, extra, subjects: tasks.length, smoke: smoke.ok, identical, errors: summary ? Number(summary[1]) : null, warnings: warnings ? Number(warnings[1]) : null, seconds: Math.round((Date.now() - t0) / 1000), log: path.relative(process.cwd(), log), summaryLines: text.trim().split('\n').slice(-3) };
+  const row = {
+    tool,
+    extra,
+    subjects: tasks.length,
+    smoke: smoke.ok,
+    identical,
+    errors: summary ? Number(summary[1]) : null,
+    warnings: warnings ? Number(warnings[1]) : null,
+    seconds: Math.round((Date.now() - t0) / 1000),
+    log: path.relative(process.cwd(), log),
+    summaryLines: text.trim().split('\n').slice(-3)
+  };
 
   rows.push(row);
   console.log(JSON.stringify(row));
 }
-writeJson(path.join(outDir, 'sanitizer.json'), { kind: 'gpu-phase3 compute-sanitizer (requests from the host pipeline)', t: new Date().toISOString(), door: doorName, version, binary: serverBinary, binarySha256: createHash('sha256').update(fs.readFileSync(serverBinary)).digest('hex'), rows });
+writeJson(path.join(outDir, 'sanitizer.json'), {
+  kind: 'gpu-phase3 compute-sanitizer (requests from the host pipeline)',
+  t: new Date().toISOString(),
+  door: doorName,
+  version,
+  binary: serverBinary,
+  binarySha256: createHash('sha256').update(fs.readFileSync(serverBinary)).digest('hex'),
+  rows
+});

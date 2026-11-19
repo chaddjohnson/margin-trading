@@ -23,7 +23,13 @@ const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.index
 const out = opt('out', 'research/gpu-phase3/results/parity/final-finalists.json');
 const workers = Number(opt('workers', '12'));
 const frozen = JSON.parse(fs.readFileSync(`${repoRoot}/research/vg-l0-full-joint/FROZEN_SELECTION.json`, 'utf8')) as {
-  finalists: { label: string; id: string; cfg: Parameters<typeof subjectOfCfg>[0]; centreNet: number; centreDd: number }[];
+  finalists: {
+    label: string;
+    id: string;
+    cfg: Parameters<typeof subjectOfCfg>[0];
+    centreNet: number;
+    centreDd: number;
+  }[];
   newL0: { label: string; id: string; cfg?: Parameters<typeof subjectOfCfg>[0]; centreNet: number; centreDd: number };
 };
 const finalists = frozen.finalists;
@@ -32,7 +38,20 @@ const r2 = (x: number) => Math.round(x * 100) / 100;
 const gpuHashes = (r: TaskResult) =>
   r.status !== 0
     ? { status: r.status }
-    : { status: 0, books: canonHash(r.books.map(bookView)), pool: canonHash(poolView(r.pool!)), record: canonHash(r.record), envelope: r.envelope ? [r.envelope.bankedDdMarked, r.envelope.bankedDdLiquidation, r.envelope.principalLossMarked, r.envelope.principalLossLiquidation] : null };
+    : {
+        status: 0,
+        books: canonHash(r.books.map(bookView)),
+        pool: canonHash(poolView(r.pool!)),
+        record: canonHash(r.record),
+        envelope: r.envelope
+          ? [
+              r.envelope.bankedDdMarked,
+              r.envelope.bankedDdLiquidation,
+              r.envelope.principalLossMarked,
+              r.envelope.principalLossLiquidation
+            ]
+          : null
+      };
 const runs: unknown[] = [];
 let pass = true;
 
@@ -57,7 +76,14 @@ for (const doorName of ['D24', 'FULL'] as DoorKey[]) {
   if (!(await server.smoke()).ok) throw new Error('smoke failed');
   await server.load(ds.file);
   const pipe = await HostPipeline.start({ door, workers: Number(opt('host-workers', '8')) });
-  const prepared = await pipe.prepare(door, tasks, { returnTrades: true, returnSeries: true, tradeCapD1: 1024, tradeCapG: 1024, lotCap: 1024, fundCap: 4096 });
+  const prepared = await pipe.prepare(door, tasks, {
+    returnTrades: true,
+    returnSeries: true,
+    tradeCapD1: 1024,
+    tradeCapG: 1024,
+    lotCap: 1024,
+    fundCap: 4096
+  });
   const r = await pipe.complete(prepared, await server.submit(prepared), info.uuid, 'full');
 
   await pipe.close();
@@ -68,18 +94,58 @@ for (const doorName of ['D24', 'FULL'] as DoorKey[]) {
     const c = cpu.find((x) => x.k === t.k)!;
     const g = byKey.get(t.k)!;
     const h = gpuHashes(g);
-    const same = c.ok && h.status === 0 && c.books === h.books && c.pool === h.pool && c.record === h.record && JSON.stringify(c.envelope ?? null) === JSON.stringify(h.envelope ?? null);
+    const same =
+      c.ok &&
+      h.status === 0 &&
+      c.books === h.books &&
+      c.pool === h.pool &&
+      c.record === h.record &&
+      JSON.stringify(c.envelope ?? null) === JSON.stringify(h.envelope ?? null);
     const f = subjects.find((x) => t.k.startsWith(`${x.f.label}|`))!.f;
     const rec = g.record as { net: number; dd: number };
-    const sealed = doorName === 'D24' && t.k.endsWith('|compact') ? { net: f.centreNet, dd: f.centreDd, gpuNet: r2(rec.net), gpuDd: r2(rec.dd), equal: r2(rec.net) === f.centreNet && r2(rec.dd) === f.centreDd } : null;
+    const sealed =
+      doorName === 'D24' && t.k.endsWith('|compact')
+        ? {
+            net: f.centreNet,
+            dd: f.centreDd,
+            gpuNet: r2(rec.net),
+            gpuDd: r2(rec.dd),
+            equal: r2(rec.net) === f.centreNet && r2(rec.dd) === f.centreDd
+          }
+        : null;
 
     if (!same || (sealed && !sealed.equal)) pass = false;
     return { k: t.k, identicalToCpu: same, sealed, trades: c.counts?.trades, lots: c.counts?.lots };
   });
 
-  runs.push({ door: doorName, sessions: door.sessions, dataSha256: { GDX: door.sym.GDX.dataSha256, VGT: door.sym.VGT.dataSha256 }, tasks: tasks.length, identical: rows.filter((x) => x.identicalToCpu).length, sealedChecked: rows.filter((x) => x.sealed).length, sealedEqual: rows.filter((x) => x.sealed?.equal).length, rows });
-  console.log(JSON.stringify({ door: doorName, tasks: tasks.length, identical: rows.filter((x) => x.identicalToCpu).length, sealedEqual: rows.filter((x) => x.sealed?.equal).length, sealedChecked: rows.filter((x) => x.sealed).length }));
+  runs.push({
+    door: doorName,
+    sessions: door.sessions,
+    dataSha256: { GDX: door.sym.GDX.dataSha256, VGT: door.sym.VGT.dataSha256 },
+    tasks: tasks.length,
+    identical: rows.filter((x) => x.identicalToCpu).length,
+    sealedChecked: rows.filter((x) => x.sealed).length,
+    sealedEqual: rows.filter((x) => x.sealed?.equal).length,
+    rows
+  });
+  console.log(
+    JSON.stringify({
+      door: doorName,
+      tasks: tasks.length,
+      identical: rows.filter((x) => x.identicalToCpu).length,
+      sealedEqual: rows.filter((x) => x.sealed?.equal).length,
+      sealedChecked: rows.filter((x) => x.sealed).length
+    })
+  );
 }
 
-writeJson(out, { kind: 'gpu-phase3 Assignment 3 finalists parity (host pipeline)', t: new Date().toISOString(), finalists: finalists.length, binarySha256: binarySha, source: 'research/vg-l0-full-joint/FROZEN_SELECTION.json', runs, pass });
+writeJson(out, {
+  kind: 'gpu-phase3 Assignment 3 finalists parity (host pipeline)',
+  t: new Date().toISOString(),
+  finalists: finalists.length,
+  binarySha256: binarySha,
+  source: 'research/vg-l0-full-joint/FROZEN_SELECTION.json',
+  runs,
+  pass
+});
 process.exitCode = pass ? 0 : 2;

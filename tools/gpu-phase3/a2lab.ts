@@ -45,7 +45,13 @@ export class A2Lab extends EvalLab {
 
       const x = items[i]!;
 
-      missing.set(k, { k, quad: quadOf(x.cfg), controls: x.cfg.controls, options: x.options, detail: Boolean(x.detail) });
+      missing.set(k, {
+        k,
+        quad: quadOf(x.cfg),
+        controls: x.cfg.controls,
+        options: x.options,
+        detail: Boolean(x.detail)
+      });
     });
 
     if (missing.size) {
@@ -92,7 +98,9 @@ export class A2Lab extends EvalLab {
     await Promise.all(waits);
 
     if (this.o.maxFresh !== undefined && this.archivedAtOpen + this.fresh > this.o.maxFresh)
-      throw new Error(`job ${this.o.job}: ${this.archivedAtOpen + this.fresh} unique fresh evaluations exceed its frozen cap ${this.o.maxFresh}`);
+      throw new Error(
+        `job ${this.o.job}: ${this.archivedAtOpen + this.fresh} unique fresh evaluations exceed its frozen cap ${this.o.maxFresh}`
+      );
 
     return keys.map((k) => {
       const r = this.store.read<R>('points', k);

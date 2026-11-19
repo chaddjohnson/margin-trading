@@ -10,7 +10,10 @@ import path from 'node:path';
 import { writeJson } from '../../src/gpu-phase3/context.ts';
 
 const dir = process.argv[2]!;
-const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'SUMMARY.json').sort();
+const files = fs
+  .readdirSync(dir)
+  .filter((f) => f.endsWith('.json') && f !== 'SUMMARY.json')
+  .sort();
 type Run = {
   door: string;
   options: string;
@@ -21,7 +24,16 @@ type Run = {
   subjects: { total: number; R: number; bySet: Record<string, number> };
   result: { identical: number; mismatches: number; envelopesCompared: number; pass: boolean };
   determinism: { subset: number; runs: { run: string; mismatches: number }[] };
-  coverage: { growthStructures: Record<string, number>; features: Record<string, number>; reasons: Record<string, number>; kinds: Record<string, number>; trades: number; lots: number; fundingRecords: number; partialFills: number };
+  coverage: {
+    growthStructures: Record<string, number>;
+    features: Record<string, number>;
+    reasons: Record<string, number>;
+    kinds: Record<string, number>;
+    trades: number;
+    lots: number;
+    fundingRecords: number;
+    partialFills: number;
+  };
   build: { binarySha256: string; compatDigest: string; uuid: string };
   hostPath: { workers: number; mode: string };
   seconds: { cpu: number; gpu: number; total: number };
@@ -38,8 +50,38 @@ const binaries = [...new Set(runs.map((x) => x.r.build.binarySha256))];
 const compat = [...new Set(runs.map((x) => x.r.build.compatDigest))];
 const doors = [...new Set(runs.map((x) => x.r.door))].sort();
 const detRuns = runs.flatMap((x) => x.r.determinism.runs.map((d) => d.run));
-const requiredDoors = ['D19', 'D21', 'D23', 'D24', 'FULL', 'W-QUIET', 'W-CRASH', 'W-BEAR', 'W-TREND', 'E-2020', 'E-2022', 'E-2025'];
-const requiredDet = ['batch 1', 'batch 7', 'batch 13', 'batch 16', 'batch 32', 'batch 50', 'batch 64', 'batch 128', 'shuffled order', 'reversed order', 'repeat (same process)', 'server and host-path restart', 'host workers 0', 'host workers 1', 'host workers 3', 'host workers 12'];
+const requiredDoors = [
+  'D19',
+  'D21',
+  'D23',
+  'D24',
+  'FULL',
+  'W-QUIET',
+  'W-CRASH',
+  'W-BEAR',
+  'W-TREND',
+  'E-2020',
+  'E-2022',
+  'E-2025'
+];
+const requiredDet = [
+  'batch 1',
+  'batch 7',
+  'batch 13',
+  'batch 16',
+  'batch 32',
+  'batch 50',
+  'batch 64',
+  'batch 128',
+  'shuffled order',
+  'reversed order',
+  'repeat (same process)',
+  'server and host-path restart',
+  'host workers 0',
+  'host workers 1',
+  'host workers 3',
+  'host workers 12'
+];
 const random = sum((r) => r.subjects.bySet.A ?? 0);
 const checks = {
   everyRunPassed: runs.every((x) => x.r.result.pass),
@@ -55,7 +97,22 @@ const rec = {
   kind: 'gpu-phase3 parity campaign summary (H2, through the host pipeline)',
   t: new Date().toISOString(),
   campaign: dir,
-  runs: runs.map(({ file, r }) => ({ file, door: r.door, options: r.options, detail: r.detail, risk: r.risk, growthFirst: r.growthFirst, sessions: r.sessions, subjects: r.subjects.total, bySet: r.subjects.bySet, identical: r.result.identical, mismatches: r.result.mismatches, envelopes: r.result.envelopesCompared, determinism: r.determinism.runs.map((d) => `${d.run}:${d.mismatches}`), seconds: r.seconds })),
+  runs: runs.map(({ file, r }) => ({
+    file,
+    door: r.door,
+    options: r.options,
+    detail: r.detail,
+    risk: r.risk,
+    growthFirst: r.growthFirst,
+    sessions: r.sessions,
+    subjects: r.subjects.total,
+    bySet: r.subjects.bySet,
+    identical: r.result.identical,
+    mismatches: r.result.mismatches,
+    envelopes: r.result.envelopesCompared,
+    determinism: r.determinism.runs.map((d) => `${d.run}:${d.mismatches}`),
+    seconds: r.seconds
+  })),
   totals: {
     runs: runs.length,
     subjects: sum((r) => r.subjects.total),
@@ -78,11 +135,26 @@ const rec = {
     cpuSeconds: sum((r) => r.seconds.cpu),
     gpuSeconds: sum((r) => r.seconds.gpu)
   },
-  build: { binaries, compat, uuid: [...new Set(runs.map((x) => x.r.build.uuid))], hostWorkers: [...new Set(runs.map((x) => x.r.hostPath?.workers))] },
+  build: {
+    binaries,
+    compat,
+    uuid: [...new Set(runs.map((x) => x.r.build.uuid))],
+    hostWorkers: [...new Set(runs.map((x) => x.r.hostPath?.workers))]
+  },
   checks,
   pass: Object.values(checks).every(Boolean)
 };
 
 writeJson(path.join(dir, 'SUMMARY.json'), rec);
-console.log(JSON.stringify({ runs: runs.length, subjects: rec.totals.subjects, mismatches: rec.totals.mismatches, random, doors: doors.length, checks, pass: rec.pass }));
+console.log(
+  JSON.stringify({
+    runs: runs.length,
+    subjects: rec.totals.subjects,
+    mismatches: rec.totals.mismatches,
+    random,
+    doors: doors.length,
+    checks,
+    pass: rec.pass
+  })
+);
 process.exitCode = rec.pass ? 0 : 2;

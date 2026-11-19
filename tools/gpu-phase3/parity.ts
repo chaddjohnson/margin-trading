@@ -5,7 +5,6 @@
 // serial path. Determinism adds the host-worker counts (--worker-counts, e.g. 1,3,12) and a reversed input order to
 // Phase 2's batch sizes, shuffled order, repeat and server restart. This study's own seeds (src/gpu-phase3/subjects.ts).
 import fs from 'node:fs';
-import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { runWithControls2 } from '../../src/d1-risk-controls-rc2/run.ts';
@@ -16,7 +15,14 @@ import { structureKey, structureOf } from '../../src/growth140-vgt-s8m/space.ts'
 import { deepDiff } from '../../src/gpu-phase1/compare.ts';
 import { cacheDir, writeJson } from '../../src/gpu-phase3/context.ts';
 import { type DoorSpec, doorLabel, resolveDoor } from '../../src/gpu-phase3/doorSpec.ts';
-import { type Subject, branchHeavySubjects, growthStrata, neighbourSubjects, randomSubjects, referenceSubjects } from '../../src/gpu-phase3/subjects.ts';
+import {
+  type Subject,
+  branchHeavySubjects,
+  growthStrata,
+  neighbourSubjects,
+  randomSubjects,
+  referenceSubjects
+} from '../../src/gpu-phase3/subjects.ts';
 import { bookView, canonHash, poolView } from '../../src/gpu-phase3/canon.ts';
 import { CpuRefPool } from '../../src/gpu-phase3/cpuRefPool.ts';
 import { type RefTask, envelopeOf } from '../../src/gpu-phase3/cpuRefWorker.ts';
@@ -34,7 +40,9 @@ const out = opt('out', '');
 
 if (!out) throw new Error('--out <json> is required');
 
-const spec: DoorSpec = args.includes('--fixture') ? { kind: 'fixture', seed: Number(opt('fixture', '0')), sessions: Number(opt('sessions', '420')) } : { kind: 'market', name: opt('door', 'D24') as never };
+const spec: DoorSpec = args.includes('--fixture')
+  ? { kind: 'fixture', seed: Number(opt('fixture', '0')), sessions: Number(opt('sessions', '420')) }
+  : { kind: 'market', name: opt('door', 'D24') as never };
 const t0 = Date.now();
 const door = await resolveDoor(spec, 'G1-G6 parity');
 const label = doorLabel(spec);
@@ -52,7 +60,13 @@ const optionSets: Record<string, EvalOptions> = {
   native: { ...vOptions, d1Arm: 'native' },
   fund: { ...vOptions, fundFrom: at(0.3) },
   whole: { ...vOptions, wholeShares: true },
-  blackout: { ...vOptions, blackouts: [{ first: at(0.2), last: at(0.27) }, { first: at(0.6), last: at(0.64) }] },
+  blackout: {
+    ...vOptions,
+    blackouts: [
+      { first: at(0.2), last: at(0.27) },
+      { first: at(0.6), last: at(0.64) }
+    ]
+  },
   periods: { ...vOptions, boundaries: [at(0.75), at(0.25), at(0.5)] },
   tie: { ...vOptions, tieOrder: ['G:VGT', 'D1:VGT', 'G:GDX', 'D1:GDX'] },
   ggdx: { enabled: {} }, // all four books, Growth·GDX given its own Growth vector (below)
@@ -107,12 +121,14 @@ if (!flag('skip-cpu')) await pool.start();
 
 let lastLog = Date.now();
 const cpuLimit = Number(opt('cpu-limit', '0'));
-const cpu = flag('skip-cpu') ? tasks.map((t) => ({ k: t.k, ok: true, ms: 0 }) as Awaited<ReturnType<typeof pool.run>>[number]) : await pool.run(cpuLimit ? tasks.slice(0, cpuLimit) : tasks, 4, (d) => {
-  if (Date.now() - lastLog > 30000) {
-    lastLog = Date.now();
-    console.error(`${label}/${optionSet}: CPU ${d}/${tasks.length}`);
-  }
-});
+const cpu = flag('skip-cpu')
+  ? tasks.map((t) => ({ k: t.k, ok: true, ms: 0 }) as Awaited<ReturnType<typeof pool.run>>[number])
+  : await pool.run(cpuLimit ? tasks.slice(0, cpuLimit) : tasks, 4, (d) => {
+      if (Date.now() - lastLog > 30000) {
+        lastLog = Date.now();
+        console.error(`${label}/${optionSet}: CPU ${d}/${tasks.length}`);
+      }
+    });
 
 if (!flag('skip-cpu')) await pool.close();
 const cpuSeconds = (Date.now() - t0) / 1000;
@@ -139,8 +155,28 @@ const evaluateGpu = async (list: RefTask[], p: HostPipeline | null = pipe) => {
 const gpuHashes = (r: TaskResult) =>
   r.status !== 0
     ? { status: r.status }
-    : { status: 0, books: canonHash(r.books.map(bookView)), pool: canonHash(poolView(r.pool!)), record: canonHash(r.record), envelope: r.envelope ? [r.envelope.bankedDdMarked, r.envelope.bankedDdLiquidation, r.envelope.principalLossMarked, r.envelope.principalLossLiquidation] : null };
-const batchOpts = { returnTrades: true, returnSeries: true, tradeCapD1: 1024, tradeCapG: 1024, lotCap: 1024, fundCap: 4096 };
+    : {
+        status: 0,
+        books: canonHash(r.books.map(bookView)),
+        pool: canonHash(poolView(r.pool!)),
+        record: canonHash(r.record),
+        envelope: r.envelope
+          ? [
+              r.envelope.bankedDdMarked,
+              r.envelope.bankedDdLiquidation,
+              r.envelope.principalLossMarked,
+              r.envelope.principalLossLiquidation
+            ]
+          : null
+      };
+const batchOpts = {
+  returnTrades: true,
+  returnSeries: true,
+  tradeCapD1: 1024,
+  tradeCapG: 1024,
+  lotCap: 1024,
+  fundCap: 4096
+};
 const coverage = {
   status: {} as Record<string, number>,
   features: {} as Record<string, number>,
@@ -219,11 +255,16 @@ tasks.forEach((t, i) => {
     else mismatches.push({ k: t.k, cpu: c.ok ? 'ok' : c.error, gpu: g.status });
     return;
   }
-  const same = c.books === g.books && c.pool === g.pool && c.record === g.record && JSON.stringify(c.envelope ?? null) === JSON.stringify(g.envelope ?? null);
+  const same =
+    c.books === g.books &&
+    c.pool === g.pool &&
+    c.record === g.record &&
+    JSON.stringify(c.envelope ?? null) === JSON.stringify(g.envelope ?? null);
 
   if (c.envelope) {
     envelopes++;
-    if (!c.envelope.every((x, j) => Object.is(x, g.envelope![j]))) mismatches.push({ k: t.k, envelope: isRef(t.k) ? { cpu: c.envelope, gpu: g.envelope } : 'differs' });
+    if (!c.envelope.every((x, j) => Object.is(x, g.envelope![j])))
+      mismatches.push({ k: t.k, envelope: isRef(t.k) ? { cpu: c.envelope, gpu: g.envelope } : 'differs' });
   }
   if (same) identical++;
   else mismatches.push({ k: t.k, books: c.books === g.books, pool: c.pool === g.pool, record: c.record === g.record });
@@ -236,14 +277,34 @@ for (const m of mismatches.slice(0, 6) as { k: string }[]) {
   const i = tasks.findIndex((t) => t.k === m.k);
   const t = tasks[i]!;
   const x = runWithControls2(door, t.quad, t.controls, t.options, t.detail, false, { cache: false });
-  const rec = t.detail ? evaluateDetail(door, t.quad, t.controls, t.options) : evaluate(door, t.quad, t.controls, t.options);
+  const rec = t.detail
+    ? evaluateDetail(door, t.quad, t.controls, t.options)
+    : evaluate(door, t.quad, t.controls, t.options);
   const g = (await evaluateGpu([t])).results[0]!;
-  const d = g.status !== 0 ? [{ path: '$', cpu: 'ok', gpu: g.statusText }] : [
-    ...deepDiff(x.books.map(bookView), g.books.map(bookView), '$.books', [], 8),
-    ...deepDiff(poolView(x.result), poolView(g.pool!), '$.pool', [], 8),
-    ...deepDiff(rec, g.record, '$.record', [], 8),
-    ...(t.risk ? deepDiff(envelopeOf(door, x, t.options), g.envelope ? [g.envelope.bankedDdMarked, g.envelope.bankedDdLiquidation, g.envelope.principalLossMarked, g.envelope.principalLossLiquidation] : null, '$.envelope', [], 4) : [])
-  ];
+  const d =
+    g.status !== 0
+      ? [{ path: '$', cpu: 'ok', gpu: g.statusText }]
+      : [
+          ...deepDiff(x.books.map(bookView), g.books.map(bookView), '$.books', [], 8),
+          ...deepDiff(poolView(x.result), poolView(g.pool!), '$.pool', [], 8),
+          ...deepDiff(rec, g.record, '$.record', [], 8),
+          ...(t.risk
+            ? deepDiff(
+                envelopeOf(door, x, t.options),
+                g.envelope
+                  ? [
+                      g.envelope.bankedDdMarked,
+                      g.envelope.bankedDdLiquidation,
+                      g.envelope.principalLossMarked,
+                      g.envelope.principalLossLiquidation
+                    ]
+                  : null,
+                '$.envelope',
+                [],
+                4
+              )
+            : [])
+        ];
 
   details.push({ k: t.k, diffs: isRef(t.k) ? d : d.map((x) => ({ path: x.path, ulps: x.ulps ?? null })) });
 }
@@ -252,7 +313,8 @@ for (const m of mismatches.slice(0, 6) as { k: string }[]) {
 const batches = opt('batches', '').split(',').filter(Boolean).map(Number);
 const subset = tasks.slice(0, Math.min(tasks.length, Number(opt('determinism-subset', '256'))));
 const runs: { run: string; mismatches: number }[] = [];
-const sameAsPrimary = (res: Map<string, ReturnType<typeof gpuHashes>>) => subset.filter((t) => JSON.stringify(res.get(t.k)) !== JSON.stringify(primary.res.get(t.k))).length;
+const sameAsPrimary = (res: Map<string, ReturnType<typeof gpuHashes>>) =>
+  subset.filter((t) => JSON.stringify(res.get(t.k)) !== JSON.stringify(primary.res.get(t.k))).length;
 
 for (const b of batches) runs.push({ run: `batch ${b}`, mismatches: sameAsPrimary((await runGpu(subset, b)).res) });
 if (batches.length) {
@@ -300,13 +362,32 @@ const rec = {
   detail,
   risk,
   growthFirst,
-  subjects: { total: tasks.length, R: refs.length, bySet: Object.fromEntries(['R', 'A', 'G', 'B', 'N'].map((s) => [s, subjects.filter((x) => x.set === s).length])) },
-  result: { identical, mismatches: mismatches.length, envelopesCompared: envelopes, pass: mismatches.length === 0 && runs.every((r) => r.mismatches === 0) },
+  subjects: {
+    total: tasks.length,
+    R: refs.length,
+    bySet: Object.fromEntries(['R', 'A', 'G', 'B', 'N'].map((s) => [s, subjects.filter((x) => x.set === s).length]))
+  },
+  result: {
+    identical,
+    mismatches: mismatches.length,
+    envelopesCompared: envelopes,
+    pass: mismatches.length === 0 && runs.every((r) => r.mismatches === 0)
+  },
   mismatchList: mismatches.slice(0, 50).map((m) => (isRef((m as { k: string }).k) ? m : { ...(m as object) })),
   details,
   determinism: { subset: subset.length, runs },
   coverage,
-  build: { binary: serverBinary, binarySha256: binarySha, device: info.device, uuid: info.uuid, driver: info.driver, runtime: info.runtime, buildFlags: info.buildFlags, compatDigest: info.compatDigest, dataset: ds.sha256 },
+  build: {
+    binary: serverBinary,
+    binarySha256: binarySha,
+    device: info.device,
+    uuid: info.uuid,
+    driver: info.driver,
+    runtime: info.runtime,
+    buildFlags: info.buildFlags,
+    compatDigest: info.compatDigest,
+    dataset: ds.sha256
+  },
   seconds: { cpu: Math.round(cpuSeconds), gpu: Math.round(gpuSeconds), total: Math.round((Date.now() - t0) / 1000) },
   cpuWorkers: workers,
   hostPath: { workers: hostWorkers, mode: hostWorkers > 0 ? 'parallel' : 'serial' },
@@ -314,5 +395,15 @@ const rec = {
 };
 
 writeJson(out, rec);
-console.log(JSON.stringify({ door: label, options: optionSet, n: tasks.length, identical, mismatches: mismatches.length, determinism: runs.map((r) => r.mismatches), seconds: rec.seconds }));
+console.log(
+  JSON.stringify({
+    door: label,
+    options: optionSet,
+    n: tasks.length,
+    identical,
+    mismatches: mismatches.length,
+    determinism: runs.map((r) => r.mismatches),
+    seconds: rec.seconds
+  })
+);
 if (!rec.result.pass) process.exitCode = 2;

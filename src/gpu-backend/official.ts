@@ -3,16 +3,22 @@
 //
 //   1. purpose      the run declares purpose 'official-optimization' explicitly; anything else is refused here
 //                   (a non-official run never needs this gate and never counts as official evidence);
-//   2. acceptance   config/gpu-backend/acceptance.json exists, is ACCEPTED, and still matches the working tree's
-//                   compatibility digest (a changed mirrored CPU source → refused), the binary's sha256 and the device;
+//   2. acceptance   config/gpu-backend/acceptance.json exists (schema 2), is ACCEPTED, and still matches the working
+//                   tree's compatibility digest (a changed mirrored CPU source or host-path file → refused), every pinned
+//                   enforcement file, the Git history (its source revision is an ancestor of HEAD), the binary's sha256
+//                   and the device; then, independently of the validator, every pinned file is re-hashed here and must be
+//                   committed and unmodified (an official run starts from a commit, which the attestation names);
 //   3. server       the accepted binary starts; INFO reports the same compatibility digest (a stale build → refused), the
 //                   protocol, and the device UUID that nvidia-smi and the acceptance record name (wrong GPU → refused);
 //   4. capability   every feature the WHOLE reachable search domain can generate is in the server's supported set;
 //   5. smoke        a live kernel computes a value JavaScript verifies exactly (configuration is not proof of execution);
 //   6. memory       free VRAM covers the planned batch with headroom;
-//   7. parity       a precommitted mini-set (the reference identities and seeded genomes) evaluated on the GPU equals the
-//                   canonical CPU engine bit for bit (CPU replay as independent verification, never a score);
-//   8. attestation  all of the above is written to research/<study>/results/gpu-attestations/<run>-<time>.json.
+//   7. host path    the parallel host path (hostPipeline.ts) starts with the requested number of worker threads, every
+//                   worker holding the attested door (digest);
+//   8. parity       a precommitted mini-set (the reference identities and seeded genomes) evaluated on the GPU — through
+//                   the same host path the run's pool will use — equals the canonical CPU engine bit for bit (CPU replay
+//                   as independent verification, never a score);
+//   9. attestation  all of the above is written to research/<study>/results/gpu-attestations/<run>-<time>.json.
 //
 // Any failure throws PolicyError before a single search evaluation; nothing falls back to the CPU. A resumed or
 // restarted run passes the whole gate again and records a new attestation (a different binary, source, device or
@@ -30,11 +36,12 @@ import { incumbents } from '../vg-l0-full-joint/nl0.ts';
 import { decode, levelsOf } from '../vg-l0-full-joint/space.ts';
 import { subjectOfCfg } from '../vg-l0-risk-metrics/engine.ts';
 import { Rng, deriveSeed } from '../optimizer/rng.ts';
-import { checkAcceptance, type AcceptanceRecord } from './acceptance.ts';
+import { checkAcceptance, headCommit, uncommittedPinnedFiles, type AcceptanceRecord } from './acceptance.ts';
 import { compatManifest } from './compat.ts';
 import { type DomainFeatures } from './domain.ts';
 import { exportDataset } from './dataset.ts';
 import { GpuServer, type ServerInfo, type Task } from './client.ts';
+import { DEFAULT_HOST_WORKERS, HostPipeline } from './hostPipeline.ts';
 import { SUPPORTED, featureNames } from './layout.ts';
 import { PolicyError, declaredPurpose } from './purpose.ts';
 import { bookView, canonHash, poolView } from './canon.ts';
@@ -51,6 +58,7 @@ export interface OfficialRunSpec {
   acceptanceFile?: string;
   cacheDir: string; // where the GB2 dataset of the door is exported
   parityMiniSet?: number; // seeded genomes beside the reference identities (default 14)
+  hostWorkers?: number; // host-path worker threads for the run's pool (default DEFAULT_HOST_WORKERS; 0 = the serial path)
   allowUnaccepted?: boolean; // TESTS ONLY (negative tests and Phase 2's own engineering runs): skip step 2 and record it
   serverEnv?: NodeJS.ProcessEnv; // TESTS ONLY: e.g. CUDA_VISIBLE_DEVICES='' (no GPU)
   testHooks?: string[]; // TESTS ONLY: server fault hooks (the gate then refuses: no-test-hooks)
@@ -67,17 +75,20 @@ export interface Attestation {
   binary: { path: string; sha256: string };
   compat: { digest: string; serverDigest: string };
   acceptance: { status: string; file: string; sha256: string | null; skippedForTest: boolean };
+  source: { head: string; acceptedRevision: string | null; pinnedFiles: number; clean: boolean };
   domain: { name: string; features: string[]; growthStructures: number; d1Structures: number };
   supported: string;
   smoke: { ok: boolean; sum: number; mix: string };
   memory: { freeBytes: number; plannedBytes: number };
   dataset: { door: string; sessions: number; sha256: string; dataSha256: { GDX: string; VGT: string } };
-  parity: { subjects: number; identical: number; keys: string[] };
+  hostPath: { mode: 'parallel' | 'serial'; workers: number; doorDigest: string | null };
+  parity: { subjects: number; identical: number; keys: string[]; hostPath: 'parallel' | 'serial' };
   checks: { name: string; ok: boolean; detail: string }[];
 }
 
 export interface OfficialGpuSession {
   server: GpuServer;
+  pipeline: HostPipeline | null; // the attested host path (the pool uses it and closes it with the server)
   info: ServerInfo;
   attestation: Attestation;
   attestationFile: string;
@@ -168,8 +179,34 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       ok: true,
       detail: `SKIPPED FOR A TEST RUN (status ${acc.status}: ${acc.reasons.join('; ')}) — never official evidence`
     });
-  else
+  else {
     check('acceptance', acc.ok, acc.reasons.join('; '), `ACCEPTED (${acc.record?.study}, ${acc.record?.acceptedAt})`);
+
+    // an independent re-hash of every pinned file (not through the validator) and the commit the run starts from
+    const rec = acc.record as AcceptanceRecord;
+    const pinnedFiles = [rec.compat.cpu, rec.compat.cuda, rec.compat.host, rec.policy].flatMap((g) => g.files);
+    const differ = pinnedFiles
+      .filter(
+        (f) => !fs.existsSync(path.join(repoRoot, f.path)) || sha256File(path.join(repoRoot, f.path)) !== f.sha256
+      )
+      .map((f) => f.path);
+
+    check(
+      'pins',
+      differ.length === 0,
+      `pinned files differ from the acceptance record (independent re-hash): ${differ.slice(0, 8).join(', ')}`,
+      `${pinnedFiles.length} pinned files re-hashed independently`
+    );
+
+    const dirty = uncommittedPinnedFiles(rec);
+
+    check(
+      'source',
+      dirty.length === 0,
+      `pinned files are not committed unmodified (an official run starts from a commit): ${dirty.slice(0, 8).join('; ')}`,
+      `HEAD ${headCommit().slice(0, 12)}, accepted revision ${rec.source.commit.slice(0, 12)}`
+    );
+  }
 
   // 3. server identity
   check('binary', fs.existsSync(binary), `GPU binary ${binary} missing`, binary);
@@ -189,6 +226,8 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     throw new PolicyError('preflight-server', `the GPU evaluator did not start or answer: ${(e as Error).message}`);
   }
 
+  let pipeline: HostPipeline | null = null;
+
   try {
     const compat = compatManifest();
     const smi = smiUuid();
@@ -202,7 +241,7 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     check('device', info.uuid === smi, `server device ${info.uuid} ≠ nvidia-smi ${smi}`, `${info.uuid} (= nvidia-smi)`);
     check(
       'no-test-hooks',
-      info.faultInjection === false,
+      info.faultInjection === false && !spec.testHooks?.length,
       'the server runs with fault injection / test hooks enabled: never an official evaluator',
       'none enabled'
     );
@@ -247,13 +286,37 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       `free VRAM ${info.freeBytes} ≥ planned batch ${planned} + 1 GiB headroom`
     );
 
-    // 7. parity mini-set against the canonical CPU engine
+    // 7. the host path (worker threads holding the attested door)
     const ds = exportDataset(spec.door, spec.cacheDir);
 
     await server.load(ds.file);
 
+    const workers = spec.hostWorkers ?? DEFAULT_HOST_WORKERS;
+
+    if (workers > 0) {
+      try {
+        pipeline = await HostPipeline.start({ door: spec.door, workers });
+      } catch (e) {
+        check('host-path', false, `the host workers did not start with the attested door: ${(e as Error).message}`);
+      }
+    }
+    check(
+      'host-path',
+      workers === 0 ||
+        (pipeline !== null && pipeline.size === workers && !pipeline.faultInjection && pipeline.failed === null),
+      `host path: ${pipeline?.size ?? 0} of ${workers} workers ready`,
+      workers === 0 ? 'serial (main thread)' : `${workers} worker threads, door digest ${pipeline!.digest.slice(0, 16)}`
+    );
+
+    // 8. parity mini-set against the canonical CPU engine, through the run's host path
     const tasks = parityMiniSet(spec.parityMiniSet ?? 14);
-    const gpu = await server.evaluate(spec.door, tasks, { returnTrades: true }, info.uuid);
+    const gpu = pipeline
+      ? await (async () => {
+          const p = await pipeline!.prepare(spec.door, tasks, { returnTrades: true });
+
+          return pipeline!.complete(p, await server.submit(p), info.uuid, 'full');
+        })()
+      : await server.evaluate(spec.door, tasks, { returnTrades: true }, info.uuid);
     let identical = 0;
 
     for (const [i, t] of tasks.entries()) {
@@ -277,7 +340,7 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       `${identical} of ${tasks.length} precommitted parity subjects identical to the canonical CPU engine`
     );
 
-    // 8. attestation
+    // 9. attestation
     const t = new Date().toISOString();
     const att: Attestation = {
       kind: 'gpu-backend official attestation',
@@ -296,6 +359,17 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       },
       binary: { path: path.relative(repoRoot, binary), sha256: sha256File(binary) },
       compat: { digest: compat.digest, serverDigest: info.compatDigest },
+      source: {
+        head: headCommit(),
+        acceptedRevision: acc.record?.source?.commit ?? null,
+        pinnedFiles: acc.record?.policy
+          ? [acc.record.compat.cpu, acc.record.compat.cuda, acc.record.compat.host, acc.record.policy].reduce(
+              (a, g) => a + g.files.length,
+              0
+            )
+          : 0,
+        clean: acc.record?.policy ? uncommittedPinnedFiles(acc.record).length === 0 : false
+      },
       acceptance: {
         status: acc.status,
         file: path.relative(repoRoot, spec.acceptanceFile ?? path.join(repoRoot, 'config/gpu-backend/acceptance.json')),
@@ -314,7 +388,17 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       smoke: { ok: smoke.ok, sum: smoke.sum, mix: smoke.mix },
       memory: { freeBytes: info.freeBytes, plannedBytes: planned },
       dataset: { door: spec.door.name, sessions: spec.door.sessions, sha256: ds.sha256, dataSha256: ds.dataSha256 },
-      parity: { subjects: tasks.length, identical, keys: tasks.map((x) => x.k) },
+      hostPath: {
+        mode: pipeline ? 'parallel' : 'serial',
+        workers: pipeline?.size ?? 0,
+        doorDigest: pipeline?.digest ?? null
+      },
+      parity: {
+        subjects: tasks.length,
+        identical,
+        keys: tasks.map((x) => x.k),
+        hostPath: pipeline ? 'parallel' : 'serial'
+      },
       checks
     };
     const dir = path.join(repoRoot, spec.study, 'results', 'gpu-attestations');
@@ -322,9 +406,10 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
 
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(file, `${JSON.stringify(att, null, 1)}\n`);
-    return { server, info, attestation: att, attestationFile: file, datasetFile: ds.file };
+    return { server, pipeline, info, attestation: att, attestationFile: file, datasetFile: ds.file };
   } catch (e) {
     server.kill();
+    await pipeline?.close();
     throw e;
   }
 };

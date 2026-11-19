@@ -25,16 +25,25 @@ fs.symlinkSync(path.join(repoRoot, 'node_modules'), path.join(box, 'node_modules
 let result: Record<string, unknown>;
 
 try {
-  const r = spawnSync(process.execPath, ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', 'tools/gpu-phase3/tamper-sandbox.ts'], {
-    cwd: box,
-    env: { ...process.env, GPU_BACKEND_BINARY: serverBinary, GPU_POLICY_PURPOSE: '' },
-    encoding: 'utf8',
-    timeout: 3_600_000,
-    maxBuffer: 64 * 2 ** 20
-  });
+  const r = spawnSync(
+    process.execPath,
+    ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', 'tools/gpu-phase3/tamper-sandbox.ts'],
+    {
+      cwd: box,
+      env: { ...process.env, GPU_BACKEND_BINARY: serverBinary, GPU_POLICY_PURPOSE: '' },
+      encoding: 'utf8',
+      timeout: 3_600_000,
+      maxBuffer: 64 * 2 ** 20
+    }
+  );
 
   process.stderr.write(r.stderr);
-  result = { ...JSON.parse(r.stdout.trim().split('\n').at(-1)!), sandbox: path.relative(repoRoot, box), mainHead: head, binary: path.relative(repoRoot, serverBinary) };
+  result = {
+    ...JSON.parse(r.stdout.trim().split('\n').at(-1)!),
+    sandbox: path.relative(repoRoot, box),
+    mainHead: head,
+    binary: path.relative(repoRoot, serverBinary)
+  };
 } finally {
   fs.unlinkSync(path.join(box, 'node_modules'));
   fs.rmSync(box, { recursive: true, force: true });

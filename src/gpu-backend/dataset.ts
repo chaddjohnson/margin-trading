@@ -41,7 +41,10 @@ const derive = (sd: SymDoor, S: number) => {
   const bars = sd.bars;
 
   if (ds.sessionCount !== S) throw new Error(`${sd.symbol}: ${ds.sessionCount} sessions ≠ ${S}`);
-  if (bars.length !== S) throw new Error(`${sd.symbol}: ${bars.length} daily bars ≠ ${S} sessions (the evaluator needs one bar per session)`);
+  if (bars.length !== S)
+    throw new Error(
+      `${sd.symbol}: ${bars.length} daily bars ≠ ${S} sessions (the evaluator needs one bar per session)`
+    );
 
   const barEnd = new Float64Array(S);
   const barOpen = new Float64Array(S);
@@ -65,7 +68,8 @@ const derive = (sd: SymDoor, S: number) => {
       if (!valid(x)) throw new Error(`${sd.symbol} ${ds.dates[s]}: a non-positive or non-finite session price`);
     if (!Number.isInteger(b.end) || !Number.isInteger(ds.sTime[s]!) || !Number.isInteger(ds.sCloseTime[s]!))
       throw new Error(`${sd.symbol} ${ds.dates[s]}: non-integer session times`);
-    if (b.end !== ds.sCloseTime[s]) throw new Error(`${sd.symbol} ${ds.dates[s]}: the daily bar does not end at the session close`);
+    if (b.end !== ds.sCloseTime[s])
+      throw new Error(`${sd.symbol} ${ds.dates[s]}: the daily bar does not end at the session close`);
 
     const off = newYorkOffset(ds.sCloseTime[s]!);
 
@@ -84,7 +88,8 @@ const derive = (sd: SymDoor, S: number) => {
       for (const x of [ds.bOpen[start + k]!, ds.bHigh[start + k]!, ds.bLow[start + k]!, ds.bClose[start + k]!])
         if (!valid(x)) throw new Error(`${sd.symbol} ${ds.dates[s]}: a non-positive or non-finite minute price`);
     }
-    if (s + 1 < S && ds.sBarStart[s + 1] !== start + count) throw new Error(`${sd.symbol}: minute bars are not contiguous`);
+    if (s + 1 < S && ds.sBarStart[s + 1] !== start + count)
+      throw new Error(`${sd.symbol}: minute bars are not contiguous`);
     fullStart[s] = F;
     F += count + (Number.isFinite(ds.sClosingPrint[s]!) ? 1 : 0);
   }
@@ -120,7 +125,20 @@ export const exportDataset = (door: Door, dir: string, label: string = door.name
   for (const p of parts) {
     const ds = p.ds;
 
-    for (const a of [ds.sTime, ds.sCloseTime, ds.sOpen, ds.sHigh, ds.sLow, ds.sClose, ds.sClosingPrint, p.barEnd, p.barOpen, p.barHigh, p.barLow, p.barClose])
+    for (const a of [
+      ds.sTime,
+      ds.sCloseTime,
+      ds.sOpen,
+      ds.sHigh,
+      ds.sLow,
+      ds.sClose,
+      ds.sClosingPrint,
+      p.barEnd,
+      p.barOpen,
+      p.barHigh,
+      p.barLow,
+      p.barClose
+    ])
       put(a, S);
     for (const a of [ds.sBarStart, ds.sBarCount, p.nyOffset, p.fullStart]) put(a, S);
     for (const a of [ds.bTime, ds.bOpen, ds.bHigh, ds.bLow, ds.bClose]) put(a, ds.barCount);
