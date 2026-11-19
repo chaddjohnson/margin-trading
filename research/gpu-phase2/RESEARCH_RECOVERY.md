@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T01:50Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T02:29Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
@@ -22,6 +22,12 @@
   8 stress 24.05 h; sub-units `gpup2-a3-qualify|bench|sanitizer|negative|mini-opt-f|par-<n>-<name>|stress`. Fail-fast;
   relaunch a failed chain with `START=<step>` under a NEW unit name (never rerun a passed step). Check:
   `systemctl --user list-units 'gpup2*'`; `grep -E "start|end|FAILED" results/logs/final-gates-chain.txt`.
+- **Step 1 PASSED (02:24:55Z):** replay run 2 identical to the sealed A3 C19 broad1 (64 lanes, 0 differences, fresh
+  1,242,714 and archive hits 7,607 equal); 1,130.6 s vs 5,900.8 s = 5.22×; peak 10.5 GB
+  (`results/optimizer/compare-a3-C19-broad1.json`).
+- **Step 2 PASSED (02:28:56Z):** A3 C19 broad qualification replayed on the GPU identical (385 members, 377 qualified,
+  251,405 fresh, 0 evidence differences); 238.5 s vs 1,249.5 s = 5.24×
+  (`results/optimizer/compare-a3-C19-broad-qualification.json`). Step 3 (bench, unit `gpup2-bench`) started 02:28:56Z.
 - **Replay run 1** (01:43–02:03Z): 5.21× (1,132.5 s vs 5,900.8 s), counts identical, but its record wrote ±Inf/NaN as
   null (91 fields, all encoding-only) → kept as a timing sample (`results/optimizer/a3-C19-broad1-run1/NOTE.md`); fixed
   `src/gpu-phase2/context.ts` writeJson + mini-opt row hashes to the store's encoding (compat digest unchanged).
