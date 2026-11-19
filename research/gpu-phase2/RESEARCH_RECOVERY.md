@@ -2,29 +2,34 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T01:41Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — evaluator complete (D1/RC, Growth 1.4.0, pool, risk envelope); policy + enforcement
-  committed (`60553b27`); standard 3.0.0 §9 written and registered (uncommitted); G7 mini-optimization CPU = GPU
-  identical (`results/optimizer/compare-g7-cpu-vs-gpu.json`); negative tests 34/35 on the dev build (the one failure
-  fixed in `pool.ts`: integrity violations now fail every caller); GpuPool pipelining added (uncommitted).
+- **Updated:** 2026-11-19T01:50Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
   Standard 2.2.0 adopted (scope diagnostic; retained pinned standard 2.2.0 after 3.0.0 was registered), preflight PASS.
   `AMENDMENTS.md`: none.
-- **Running:** unit `gpup2-mini-opt-p` (chain `chains/mini-opt-gpu.sh`, RUN=g7p: pipelined GPU arm done, interrupted +
-  resumed arm, comparisons; log `results/logs/mini-opt-g7p.txt`). DO NOT edit host sources (compat closure) while it
-  runs: the resume refuses a changed backend digest (that happened once, 01:30Z — correct behaviour).
-- **Pre-final campaign:** stopped by the operator after D24-core (host code changed). `results/parity/prefinal/
-  D24-core.json`: 2,325/2,325 identical, determinism 0 at batch 1/7/13/16/32/50/64/128 + shuffled + repeat + restart
-  (862 s; binary `0e0f0489…`).
-- **The "hang" (resolved, no defect):** the D24-core determinism runs at batch size 1 launch 256 single-candidate
-  kernels of 3–5 s each (one GPU thread walks the whole door; measured 3.3–4.8 s); the earlier units were stopped after
-  a few minutes, before that ~13-minute stage could finish. Kept as defence: server kernel watchdog (300 s/batch,
-  exits), device loop guards (`C_G_LOOP`), pool batch timeout.
-- **Next:** after g7p passes → build the FINAL binary (`build/gb2`, current compat digest) → FINAL sanitizer, negative
-  tests (rebuild gb2-dev/perturbed/stale), G7 on the final binary, A3 C19 broad1 replay benchmark (exclusive GPU,
-  `mini-opt.ts --a3-job C19:broad1` + `a3-replay-compare.ts`), CPU benchmark, FINAL parity campaign, 24 h stress,
-  accept.ts, reports, bundle, commit/push, docs-only main integration.
+- **FINAL binary:** `build/gb2` sha256 `3fe09e6791ff9996bc4f463c43e7d8dff46600ca3bcbf0d7777be155301e13fc`, compat digest
+  `f67dcb3bcc3ba89647610e7cce548c97ea288df920e71b777fd94478d83adaea` (sources at `42a0694f`; build.sh strips symbols →
+  reproducible: three builds gave the same sha). Sealed identity: `results/final-binary.json` (seals.jsonl,
+  sha256 `eec62aec…cafaa`). Test builds: gb2-dev = same sha; gb2-perturbed `dcd18c6e…`; gb2-stale `a120ab2a…`.
+  **DO NOT edit any file in the compat closure** (`compat.ts --manifest`: 94 CPU files, CUDA sources, host
+  client/encode/dataset/layout/canon/compat/toolchain/pool) until the acceptance is written — it would invalidate the
+  binary and every final gate.
+- **Running:** (1) unit `gpup2-a3-c19b1`: GPU replay of A3's sealed C19 broad1 (mini-opt.ts --a3-job C19:broad1; log
+  `results/logs/a3-replay-C19-broad1.txt`; out `results/optimizer/a3-C19-broad1/gpu/`), started 01:43:12Z, ≈1,110 ev/s.
+  (2) unit `gpup2-final-gates` = `chains/final-gates.sh` (log `results/logs/final-gates-chain.txt`): waits for (1), then
+  1 replay-compare → 2 bench → 3 sanitizer-final → 4 negative-final → 5 mini-opt g7f → 6 parity FINAL (+SUMMARY) →
+  7 stress 24.05 h; sub-units `gpup2-bench|sanitizer|negative|mini-opt-f|par-<n>-<name>|stress`. Fail-fast; relaunch a
+  failed chain with `START=<step>` (never rerun a passed step). Check: `systemctl --user list-units 'gpup2*'`;
+  `grep -E "start|end|FAILED" results/logs/final-gates-chain.txt`.
+- **Done (dev evidence):** pre-final D24-core 2,325/2,325 + determinism (batch 1…128, shuffled, repeat, restart) 0;
+  G7 CPU = GPU = interrupted+resumed (g7, g7p); negative tests 34/35 dev (defect fixed); standard 3.0.0 registered.
+- **The "hang" (resolved, no defect):** batch-size-1 determinism = 256 single-candidate kernels of 3–5 s each; the
+  earlier units were stopped before that ~13-minute stage finished. Kept as defence: kernel watchdog, loop guards,
+  pool batch timeout.
+- **Next (while the chain runs):** reports and docs; during the stress (step 7): `npm test` in a capped unit with PATH,
+  Strategy Lab regression; after the chain: `tools/gpu-phase2/accept.ts`, final reports, MANIFEST, bundle ZIP,
+  commit/push, docs-only main integration.
 
 ## Environment
 
@@ -77,6 +82,9 @@
 
 ## Disclosures
 
+- One GPU job at a time (PROTOCOL §8) was not kept during development: the g7 mini-opt GPU arm and the dev negative
+  tests overlapped the pre-final D24-core GPU stage (01:25–01:40Z). Effect: timing only (all of them passed; results do
+  not depend on co-scheduling). The final gates run strictly sequentially.
 - Investigated as a possible hang (00:5xZ–01:36Z): see the top screen; units stopped: gpup2-par-1-D24-core (first
   pre-final run), gpup2-repro-d24core; no record was sealed from them.
 - G7 resume attempt 1 (01:30Z) refused by the archive binding because host code (`pool.ts`) was edited between the

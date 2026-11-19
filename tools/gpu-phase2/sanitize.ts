@@ -2,7 +2,7 @@
 // initcheck, synccheck). A batch covering every Growth structural value, both D1 books with RC 2 controls and the pool
 // in detail and risk modes (with blackouts and period boundaries) runs on a short window; the GPU results must still
 // equal the CPU's and every tool must report zero errors. Logs: results/sanitizer/<tool>.txt; record: results/sanitizer/sanitizer.json.
-//   node --experimental-transform-types tools/gpu-phase2/sanitize.ts [--door W-QUIET] [--per 1]
+//   node --experimental-transform-types tools/gpu-phase2/sanitize.ts [--door W-QUIET] [--per 1] [--random N] [--out-dir sanitizer]
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -11,7 +11,8 @@ import { vOptions } from '../../src/vg-l0-full-joint/nl0.ts';
 import type { EvalOptions } from '../../src/vg-d1-growth-joint/evaluate.ts';
 import { deepDiff } from '../../src/gpu-phase1/compare.ts';
 import { type DoorKey, cacheDir, openDoor, resultsDir, writeJson } from '../../src/gpu-phase2/context.ts';
-import { growthStrata, referenceSubjects } from '../../src/gpu-phase2/subjects.ts';
+import { growthStrata, randomSubjects, referenceSubjects } from '../../src/gpu-phase2/subjects.ts';
+import { createHash } from 'node:crypto';
 import { exportDataset } from '../../src/gpu-backend/dataset.ts';
 import { GpuServer } from '../../src/gpu-backend/client.ts';
 import { computeSanitizer, serverBinary, toolkitLib } from '../../src/gpu-backend/toolchain.ts';
@@ -21,10 +22,12 @@ const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.index
 const doorName = opt('door', 'W-QUIET') as DoorKey;
 const door = await openDoor(doorName, 'T0 sanitizer');
 const ds = exportDataset(door, cacheDir);
-const subjects = [...referenceSubjects(), ...growthStrata(Number(opt('per', '1')), 'SAN')];
+const subjects = [...referenceSubjects(), ...growthStrata(Number(opt('per', '1')), 'SAN'), ...randomSubjects(Number(opt('random', '0')), 'SAN-R')];
 const options: EvalOptions = { ...vOptions, blackouts: [{ first: door.dates[40]!, last: door.dates[60]! }], boundaries: [door.dates[100]!, door.dates[150]!] };
 const tasks = subjects.map((s, i) => ({ k: s.key, quad: s.quad, controls: s.controls, options: i % 2 ? options : vOptions, detail: true, risk: true }));
-const outDir = path.join(resultsDir, 'sanitizer');
+const outDir = path.join(resultsDir, opt('out-dir', 'sanitizer'));
+
+fs.mkdirSync(outDir, { recursive: true });
 const tools = (opt('tools', 'memcheck,racecheck,initcheck,synccheck')).split(',');
 const version = execFileSync(computeSanitizer, ['--version']).toString().trim();
 const rows: unknown[] = [];
@@ -49,10 +52,12 @@ for (const tool of tools) {
   await server.close();
   await new Promise((res) => setTimeout(res, 2000));
   const text = fs.existsSync(log) ? fs.readFileSync(log, 'utf8') : '';
-  const summary = /ERROR SUMMARY: (\d+) error/.exec(text);
-  const row = { tool, extra, subjects: tasks.length, smoke: smoke.ok, identical, errors: summary ? Number(summary[1]) : null, seconds: Math.round((Date.now() - t0) / 1000), log: path.relative(process.cwd(), log), summaryLines: text.trim().split('\n').slice(-3) };
+  // memcheck / initcheck / synccheck: "ERROR SUMMARY: n errors"; racecheck: "RACECHECK SUMMARY: h hazards displayed (n errors, w warnings)"
+  const summary = /ERROR SUMMARY: (\d+) error/.exec(text) ?? /RACECHECK SUMMARY: \d+ hazards? displayed \((\d+) errors?/.exec(text);
+  const warnings = /RACECHECK SUMMARY: \d+ hazards? displayed \(\d+ errors?, (\d+) warnings?\)/.exec(text);
+  const row = { tool, extra, subjects: tasks.length, smoke: smoke.ok, identical, errors: summary ? Number(summary[1]) : null, warnings: warnings ? Number(warnings[1]) : null, seconds: Math.round((Date.now() - t0) / 1000), log: path.relative(process.cwd(), log), summaryLines: text.trim().split('\n').slice(-3) };
 
   rows.push(row);
   console.log(JSON.stringify(row));
 }
-writeJson(path.join(outDir, 'sanitizer.json'), { kind: 'gpu-phase2 T0 compute-sanitizer', t: new Date().toISOString(), door: doorName, version, binary: serverBinary, rows });
+writeJson(path.join(outDir, 'sanitizer.json'), { kind: 'gpu-phase2 T0 compute-sanitizer', t: new Date().toISOString(), door: doorName, version, binary: serverBinary, binarySha256: createHash('sha256').update(fs.readFileSync(serverBinary)).digest('hex'), rows });

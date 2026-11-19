@@ -12,5 +12,8 @@ FLAGS="-O3 -std=c++17 -arch=sm_120 --fmad=false -prec-div=true -prec-sqrt=true -
 mkdir -p "$(dirname "$OUT")"
 "$TK/bin/nvcc" $FLAGS -diag-suppress 39,222 -I"$TK/include" -L"$TK/lib" \
   ${GB_EXTRA_DEFINES:-} -DGB_COMPAT_DIGEST="\"$DIGEST\"" -DGB_BUILD_FLAGS="\"$FLAGS nvcc-13.2.86\"" -o "$OUT.tmp.$$" "$SRC/gb_server.cu"
+# nvcc names a static initializer after its PID-numbered temp file (tmpxft_<pid>_…) in the symbol table: strip it so
+# the same sources, flags and digest always give the same sha256 (a reproducible, re-verifiable acceptance binary)
+strip "$OUT.tmp.$$"
 mv -f "$OUT.tmp.$$" "$OUT"  # an atomic replace: a running server keeps its own (old) file
 sha256sum "$OUT"
