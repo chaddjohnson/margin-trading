@@ -42,3 +42,20 @@ tools/gpu-phase3/launch.sh gpup3-devcheck-a $PWD/research/gpu-phase3/results/log
 tools/gpu-phase3/launch.sh gpup3-devcheck-b $PWD/research/gpu-phase3/results/logs/devcheck-b.txt -- /usr/bin/env HW=8 TAG=b /bin/bash research/gpu-phase3/chains/devcheck.sh   # pass
 tools/gpu-phase3/launch.sh gpup3-sweep $PWD/research/gpu-phase3/results/logs/sweep-s2.txt -- /usr/bin/env TAG=s2 VARIANTS="w8-b8192 w4-b8192 w12-b8192 w8-b16384" /bin/bash research/gpu-phase3/chains/sweep.sh
 ```
+
+## Stage 2 measurement, Stage 4 dry runs, final binary (16:02–17:22)
+
+```bash
+tools/gpu-phase3/launch.sh gpup3-sweep $PWD/research/gpu-phase3/results/logs/sweep-s2.txt -- /usr/bin/env TAG=s2 VARIANTS="w8-b8192 w4-b8192 w12-b8192 w8-b16384" /bin/bash research/gpu-phase3/chains/sweep.sh
+tools/gpu-phase3/build-final.sh                         # gb3 06a4a04a… (twice: reproducible), gb3-dev/-perturbed/-stale; kernels = Phase 2's
+GPU_POLICY_PURPOSE=parity-test $NODE tools/gpu-phase3/negative.ts --out research/gpu-phase3/results/dev/negative-dry.json --host-workers 3
+GPU_POLICY_PURPOSE=parity-test $NODE tools/gpu-phase3/tamper.ts --out research/gpu-phase3/results/dev/tamper-dry.json
+GPU_POLICY_PURPOSE=parity-test $NODE --expose-gc tools/gpu-phase3/sustained.ts --minutes 2 --smoke --out-dir research/gpu-phase3/results/dev/sustained-smoke --host-workers 8
+```
+
+## Stage 5 — the final acceptance campaign (17:22–21:05) and the post-final chain (from 21:05)
+
+```bash
+tools/gpu-phase3/launch.sh gpup3-final $PWD/research/gpu-phase3/results/logs/final-chain.txt -- /usr/bin/env START=1 HW=8 /bin/bash research/gpu-phase3/chains/final.sh
+tools/gpu-phase3/launch.sh gpup3-post-final $PWD/research/gpu-phase3/results/logs/post-final-chain.txt -- /usr/bin/env START=1 /bin/bash research/gpu-phase3/chains/post-final.sh
+```

@@ -1,0 +1,1471 @@
+
+> test
+> node --experimental-transform-types --disable-warning=ExperimentalWarning --test --test-concurrency=4 'src/**/*.test.ts'
+
+▶ the audit runner on a synthetic stop exit
+  ✔ one lot, filled at 90, exited at the 98.8 stop (0.373093ms)
+  ✔ per-side friction lowers the net by the friction dollars on the same trade (0.434694ms)
+  ✔ interest scales linearly with the rate (0.325952ms)
+  ✔ stop overshoot lowers a stop exit by exactly the overshoot (0.267422ms)
+  ✔ stop overshoot does not touch a non-stop exit (0.553394ms)
+  ✔ a book that never arms changes nothing (leave-one-book-out identity) (1.537142ms)
+  ✔ ledger identities and the yearly attribution (0.608995ms)
+  ✔ MAE/MFE use the bars from the fill to the bar before the exit, then the exit price (0.144461ms)
+✔ the audit runner on a synthetic stop exit (4.894437ms)
+﹣ frozen baselines through the audit runner (0.254962ms) # the pinned canonical data are absent or changed
+▶ distance rules (PROTOCOL.md §3)
+  ✔ percentages ≥ 2.0% use ±0.5/±1.0 pp (0.900307ms)
+  ✔ percentages < 2.0% use the relative rule, half-up to the 0.1-pp grid (0.127471ms)
+  ✔ integers use ±max(1, 10%) and ±max(s + 1, 20%) (0.101941ms)
+  ✔ the legal grid is the engine grid (0.091871ms)
+✔ distance rules (PROTOCOL.md §3) (1.832614ms)
+▶ OAT points and neighbourhoods on the frozen pools
+  ✔ infeasible points are recorded, not replaced; XBI/KRE X upward points are boundary probes (0.361993ms)
+  ✔ the Latin hypercube is deterministic, inside each legal range and spread over it (3.063973ms)
+  ✔ variants never change the frozen pools or their files (7.389266ms)
+  ✔ the run list: unique keys and the protocol counts (4.111052ms)
+✔ OAT points and neighbourhoods on the frozen pools (15.145696ms)
+▶ cost layers (PROTOCOL.md §6)
+  ✔ costBps = fee + slippage, never double-counted; combined scenarios as declared (0.206182ms)
+  ✔ re-costing the same trade at the base reproduces its net; costs and rates scale with the right sign (0.177621ms)
+✔ cost layers (PROTOCOL.md §6) (0.485183ms)
+▶ result tables
+  ✔ CSV round trip keeps fields with commas, quotes and newlines intact (0.408003ms)
+✔ result tables (0.455913ms)
+▶ statistics helpers
+  ✔ running-peak percentage and dollar drawdowns (0.155762ms)
+  ✔ drawdown episodes: peak, trough, recovery and an unrecovered tail (0.110131ms)
+  ✔ break-even interpolates a sign change between tested points and never extrapolates (0.07886ms)
+  ✔ quantiles and percentile ranks (0.064501ms)
+  ✔ the stationary bootstrap is deterministic, paired, and preserves a constant series (2.66029ms)
+✔ statistics helpers (3.185124ms)
+✔ the anchors and controls hash to their published identities (47.794325ms)
+✔ a partner carries its arm anchors exactly; inactive GDX genes never change the identity (3.505986ms)
+✔ seeds are on the fine grid; earlier cutoffs never see Appendix A or C24 sources (167.347788ms)
+✔ the budgets are exact at base and cap for any number of seeded designs (0.469983ms)
+✔ the screen strata cover every gate × trend × eligibility × hold combination round-robin (6.277478ms)
+✔ the GDX genome round-trips on the fine grid; moves and toggles change Growth·GDX only (15.652959ms)
+✔ paired draws: identical anchor moves; the GDX-only scope keeps the anchors; a baseline has no GDX-only draws (84.818258ms)
+✔ removing Growth·GDX is one of the causal reruns of a partner (0.257162ms)
+✔ paired increments and the baseline labels (0.470524ms)
+▶ the training view
+  ✔ XOP: the training partition only, the reverse split adjusted once, eligibility at session 365 (8520.829697ms)
+  ✔ every other partition is refused before reading (0.769696ms)
+✔ the training view (8522.246858ms)
+▶ the data gate
+  ✔ passes a verified file whose splits leave a small adjusted move at the registry factor (0.141881ms)
+  ✔ fails a missing file, an integrity fault, or a split left unadjusted (0.080131ms)
+✔ the data gate (0.332663ms)
+▶ the reference high
+  ✔ is the highest high of the previous sessions only (0.481844ms)
+✔ the reference high (0.925647ms)
+▶ episodes
+  ✔ open at a 10% low, freeze the reference, close within 5% of it (0.252832ms)
+✔ episodes (0.325992ms)
+▶ the proxy trade
+  ✔ arms at 15%, buys a 2% rebound from the lowest close, sells on the hold or the stop, re-arms after (0.295563ms)
+  ✔ a proxy open at the window end is marked at the last close (0.081161ms)
+✔ the proxy trade (0.466624ms)
+▶ timing against the baseline pool
+  ✔ idle at entry, blocking a later decision, and clean (0.724856ms)
+✔ timing against the baseline pool (0.832016ms)
+▶ rank scores
+  ✔ best 1, worst 0, linear, ties averaged (0.208902ms)
+✔ rank scores (0.355302ms)
+[diverse-d1] fold-a J-u: stage A 1865 configurations
+[diverse-d1] fold-a J-u: stage B done, 2745 in archive
+[diverse-d1] fold-a J-u: stage C done, 3705 in archive
+[diverse-d1] fold-a J-u: stage A 6632 configurations
+[diverse-d1] fold-a J-u: stage B done, 9987 in archive
+[diverse-d1] fold-a J-u: stage C done, 10947 in archive
+[diverse-d1] fold-a J-u: stage A 8126 configurations
+[diverse-d1] fold-a J-u: stage B done, 12251 in archive
+[diverse-d1] fold-a J-u: stage C done, 13211 in archive
+[diverse-d1] fold-a J-u: stage A 6632 configurations
+[diverse-d1] fold-a J-u: stage B done, 19442 in archive
+[diverse-d1] fold-a J-u: stage C done, 19442 in archive
+[diverse-d1] final J-s: stage A 6632 configurations
+[diverse-d1] final J-s: stage B done, 19442 in archive
+[diverse-d1] final J-s: stage C done, 19762 in archive
+▶ (1) coverage contracts hold by construction
+  ✔ 16 symbols, skewed profitability, forced convergence on GDX, fold budgets (678.315692ms)
+  ✔ 61 symbols, skewed profitability, forced convergence on GDX, fold budgets (2026.747494ms)
+  ✔ 75 symbols, skewed profitability, forced convergence on GDX, fold budgets (2393.835949ms)
+  ✔ 61 symbols, an exhausted stage-C budget, final-arm contract (3757.135024ms)
+  ✔ a failed contract blocks nominations (0.477904ms)
+✔ (1) coverage contracts hold by construction (8857.271968ms)
+▶ the stage-A schedule
+  ✔ is deterministic, unique and balanced (73.22987ms)
+✔ the stage-A schedule (73.33728ms)
+▶ (3) families cannot chain
+  ✔ A~B, B~C, A≁C never share a family, in any ranking order (0.598624ms)
+  ✔ a long chain splits into many families, and every family is pairwise close (0.200941ms)
+  ✔ a converged archive of near-duplicates plus distinct configurations yields several families (4.526634ms)
+  ✔ the cached closeness equals the reference definitions (4.948978ms)
+✔ (3) families cannot chain (10.46561ms)
+▶ (2) an arm cannot be suppressed by another arm
+  ✔ the seeded arm owns the global top 300, yet every distinct unseeded family is promoted from its own archive (1.624352ms)
+✔ (2) an arm cannot be suppressed by another arm (1.688903ms)
+▶ (4) the pruning pass removes what G3 would reject, before assessment
+  ✔ a member with a small negative marginal (below δ = $5,000) is pruned (0.299112ms)
+  ✔ an uncertain small positive contribution (lower bound ≤ 0) is pruned; a clearly positive one is kept (0.11075ms)
+  ✔ cascading removals, and a one-book pool pruned to empty (0.164372ms)
+  ✔ a removal that would breach F1 is not made (0.05928ms)
+✔ (4) the pruning pass removes what G3 would reject, before assessment (0.716575ms)
+▶ (5) the score decides; ties are exact
+  ✔ a $6,493 score gap is not overridden by the key (0.123061ms)
+  ✔ equal to the cent: Q25, then fewer books, then the key (0.06937ms)
+✔ (5) the score decides; ties are exact (0.237391ms)
+▶ the temporal score
+  ✔ block boundaries: K = max(3, floor(sessions ÷ 252)) (0.08666ms)
+  ✔ net_T replaces the best block by the median block (0.070001ms)
+  ✔ the paired difference of identical draws is exactly zero (0.759256ms)
+✔ the temporal score (0.979668ms)
+▶ (6) a near-copy of R1, R4 or the October 25 finalist is barred from nomination
+  ✔ exact and near copies are detected; a distant pool is not (0.223662ms)
+  ✔ the final nominations skip a labelled finalist; a fold pick does not (0.170801ms)
+✔ (6) a near-copy of R1, R4 or the October 25 finalist is barred from nomination (0.444843ms)
+▶ seeded arms
+  ✔ benchmarks seed stage B and island 8, coverage still holds, and only seeded libraries hold control vectors (3903.759843ms)
+✔ seeded arms (3903.932455ms)
+▶ leakage barriers
+  ✔ the fold door loads nothing after the search end (229.782855ms)
+  ✔ the validation door refuses before the picks exist; the evaluation door refuses without a nominee (0.505794ms)
+[diverse-d1] fold-a J-u: stage A 40/40 (rss 0.2 GB)
+[diverse-d1] fold-a J-u: stage A 40 configurations
+[diverse-d1] fold-a J-u: stage B done, 64 in archive
+[diverse-d1] fold-a J-u: stage C done, 128 in archive
+[diverse-d1] fold-a J-u: 128 configurations, coverage FAILED (34), 61 credible
+[diverse-d1] fold-a T-u: stage A 40/40 (rss 0.2 GB)
+[diverse-d1] fold-a T-u: stage A 40 configurations
+[diverse-d1] fold-a T-u: stage B done, 64 in archive
+[diverse-d1] fold-a T-u: stage C done, 128 in archive
+[diverse-d1] fold-a T-u: 128 configurations, coverage FAILED (34), 58 credible
+[diverse-d1] fold-a Q-u: stage A 40/40 (rss 0.2 GB)
+[diverse-d1] fold-a Q-u: stage A 40 configurations
+[diverse-d1] fold-a Q-u: stage B done, 58 in archive
+[diverse-d1] fold-a Q-u: stage C done, 106 in archive
+[diverse-d1] fold-a Q-u: 106 configurations, coverage FAILED (41), 49 credible
+[diverse-d1] fold-a J-u: 61 credible, 54 families, 6 promoted
+[diverse-d1] fold-a J-u refine J-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f3 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a T-u: 58 credible, 52 families, 6 promoted
+[diverse-d1] fold-a T-u refine T-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f3 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a Q-u: 49 credible, 42 families, 4 promoted
+[diverse-d1] fold-a Q-u refine Q-u-f1 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f2 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f3 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f4 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a J-u: stage A 40/40 (rss 0.6 GB)
+[diverse-d1] fold-a J-u: stage A 40 configurations
+[diverse-d1] fold-a J-u: stage B done, 64 in archive
+[diverse-d1] fold-a J-u: stage C done, 128 in archive
+[diverse-d1] fold-a J-u: 128 configurations, coverage FAILED (34), 61 credible
+[diverse-d1] fold-a T-u: stage A 40/40 (rss 0.6 GB)
+[diverse-d1] fold-a T-u: stage A 40 configurations
+[diverse-d1] fold-a T-u: stage B done, 64 in archive
+[diverse-d1] fold-a T-u: stage C done, 128 in archive
+[diverse-d1] fold-a T-u: 128 configurations, coverage FAILED (34), 58 credible
+[diverse-d1] fold-a Q-u: stage A 40/40 (rss 0.6 GB)
+[diverse-d1] fold-a Q-u: stage A 40 configurations
+[diverse-d1] fold-a Q-u: stage B done, 58 in archive
+[diverse-d1] fold-a Q-u: stage C done, 106 in archive
+[diverse-d1] fold-a Q-u: 106 configurations, coverage FAILED (41), 49 credible
+[diverse-d1] fold-a J-u: 61 credible, 54 families, 6 promoted
+[diverse-d1] fold-a J-u refine J-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f3 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a T-u: 58 credible, 52 families, 6 promoted
+[diverse-d1] fold-a T-u refine T-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f3 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a Q-u: 49 credible, 42 families, 4 promoted
+[diverse-d1] fold-a Q-u refine Q-u-f1 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f2 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f3 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f4 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a J-u: stage A 40/40 (rss 0.6 GB)
+[diverse-d1] fold-a J-u: stage A 40 configurations
+[diverse-d1] fold-a J-u: stage B done, 64 in archive
+[diverse-d1] fold-a J-u: stage C done, 128 in archive
+[diverse-d1] fold-a J-u: 128 configurations, coverage FAILED (34), 62 credible
+[diverse-d1] fold-a T-u: stage A 40/40 (rss 0.6 GB)
+[diverse-d1] fold-a T-u: stage A 40 configurations
+[diverse-d1] fold-a T-u: stage B done, 64 in archive
+[diverse-d1] fold-a T-u: stage C done, 128 in archive
+[diverse-d1] fold-a T-u: 128 configurations, coverage FAILED (34), 58 credible
+[diverse-d1] fold-a Q-u: stage A 40/40 (rss 0.6 GB)
+[diverse-d1] fold-a Q-u: stage A 40 configurations
+[diverse-d1] fold-a Q-u: stage B done, 58 in archive
+[diverse-d1] fold-a Q-u: stage C done, 106 in archive
+[diverse-d1] fold-a Q-u: 106 configurations, coverage FAILED (41), 48 credible
+[diverse-d1] fold-a J-u: 62 credible, 55 families, 6 promoted
+[diverse-d1] fold-a J-u refine J-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f3 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a J-u refine J-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a T-u: 58 credible, 52 families, 6 promoted
+[diverse-d1] fold-a T-u refine T-u-f1 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f2 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f3 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f4 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f5 cycle 1: 0 accepted, 10 evaluated
+[diverse-d1] fold-a T-u refine T-u-f6 cycle 1: 1 accepted, 10 evaluated
+[diverse-d1] fold-a Q-u: 48 credible, 41 families, 4 promoted
+[diverse-d1] fold-a Q-u refine Q-u-f1 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f2 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f3 cycle 1: 0 accepted, 6 evaluated
+[diverse-d1] fold-a Q-u refine Q-u-f4 cycle 1: 0 accepted, 6 evaluated
+  ✔ mutation: post-cutoff prices +3% change no archive, promotion, refinement, pruning, assessment or pick (39057.919871ms)
+✔ leakage barriers (39336.673251ms)
+▶ P0 is the frozen policy
+  ✔ the derived engine equals the frozen engine (fixed and portfolio, several costs) (22.650283ms)
+  ✔ the derived replay equals the frozen replay under P0 (6.658981ms)
+✔ P0 is the frozen policy (29.839988ms)
+▶ P1 net-breakeven boundary
+  ✔ switches at exactly $0 and at +$0.01, not at −$0.01 (2.696071ms)
+  ✔ a gross gain that interest and friction turn into a net loss does not switch (0.864867ms)
+  ✔ weekend interest: a Friday-close decision is tested again at Monday’s open (1.894875ms)
+✔ P1 net-breakeven boundary (5.619623ms)
+▶ P1 refusals
+  ✔ lower or equal priority never preempts (1.474271ms)
+  ✔ a pending reservation is never preempted (0.768876ms)
+  ✔ no executable trade of the incumbent before the replacement fills: abort, nothing sold (0.601335ms)
+  ✔ every book must hold a frozen rank (0.462574ms)
+✔ P1 refusals (3.519637ms)
+▶ P1 competition, ordering and divergence
+  ✔ three fresh higher-priority signals in one minute: the highest preempts, the others wait; deterministic (2.322467ms)
+  ✔ an own exit at the sale bar supersedes the switch; the replacement is bought at its later fill (1.428811ms)
+  ✔ an own stop inside the sale bar does not pre-empt the sale at the bar open (1.29014ms)
+  ✔ shadow divergence: the incumbent book keeps its virtual position and re-enters only after its virtual exit (1.036538ms)
+  ✔ a mutation of later bars never changes an earlier switch (0.827626ms)
+✔ P1 competition, ordering and divergence (7.098965ms)
+▶ P1 accounting
+  ✔ one lot at a time, nets reconcile, interest interval and both frictions (0.968738ms)
+  ✔ a preemption pending at the end of the data aborts; the incumbent is marked open (0.452533ms)
+  ✔ portfolio mode funds the same lots as the fixed pool when margin does not bind; no dividend after the sale (1.692313ms)
+  ✔ prices in other units (a split-adjusted history) give the same switches and dollars (0.569295ms)
+✔ P1 accounting (3.804959ms)
+▶ the training door
+  ✔ bars after the search end cannot change what a window reads or computes (77.395101ms)
+  ✔ the validation door refuses before the fold’s picks are sealed (0.542284ms)
+✔ the training door (99.434109ms)
+[ranked-preemption] Stage A fold-a: 8 symbols, last 2020-06-30, min trades 4, tier T3
+[ranked-preemption] Stage A fold-a: Sobol done (192 evaluations)
+[ranked-preemption] Stage A fold-a: local search done (885 evaluations)
+[ranked-preemption] Stage A fold-a: neighbourhoods done (1141 evaluations)
+[ranked-preemption] Stage A fold-a: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/standalone/fold-a/STAGE_A.json (d6ed79542ad9)
+[ranked-preemption] ranking fold-a/R1: KRE VOOG XLK GDX XRT XBI VGT XLE … sealed 3e62e490d95e
+[ranked-preemption] ranking fold-a/R2: KRE VOOG XLK GDX XRT XBI VGT XLE … sealed 9e20cd1733f1
+[ranked-preemption] ranking recheck fold-a: 8/8 reproduced by the engine → /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/rankings-check/fold-a.json
+[ranked-preemption] diagnostic fold-a/R1: B4 0, B5 0, C_R1 73 → material
+[ranked-preemption] diagnostic fold-a/R2: B4 0, B5 0, C_R2 73 → material
+[ranked-preemption] diagnostic fold-a: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/diagnostic/fold-a/DIAGNOSTIC.json (c38a4dde012c)
+[ranked-preemption] joint fold-a: search done (480 evaluations, 352 traces)
+[ranked-preemption] joint fold-a: promotion done (672 evaluations)
+[ranked-preemption] joint fold-a: assessment done (1407 evaluations)
+[ranked-preemption] joint fold-a/R1: pick S GDX KRE VGT XBI XLE XRT; sealed 3f6edf2a7057
+[ranked-preemption] joint fold-a/R2: pick S KRE VOOG XBI XLE; sealed c42d571485d9
+[ranked-preemption] controls fold-a A: engine = replay; portfolio done
+[ranked-preemption] controls fold-a B4: engine = replay; portfolio done
+[ranked-preemption] controls fold-a B1: engine = replay; portfolio done
+[ranked-preemption] controls fold-a B-R1: engine = replay; portfolio done
+[ranked-preemption] controls fold-a C-R1: engine = replay; portfolio done
+[ranked-preemption] controls fold-a D-R1: engine = replay; portfolio done
+[ranked-preemption] controls fold-a B-R2: engine = replay; portfolio done
+[ranked-preemption] controls fold-a C-R2: engine = replay; portfolio done
+[ranked-preemption] controls fold-a D-R2: engine = replay; portfolio done
+[ranked-preemption] controls fold-a: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/controls/fold-a/CONTROLS.json (46e3ec377224)
+[ranked-preemption] picks fold-a: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/walkforward/fold-a/PICKS.json (fb6a5ee31aab) — the validation door may now open
+[ranked-preemption] validation fold-a B-R1: F1 true F2 false F3 true → fail
+[ranked-preemption] validation fold-a B-R2: F1 true F2 false F3 true → fail
+[ranked-preemption] validation fold-a D-R1: F1 true F2 true F3 true → success
+[ranked-preemption] validation fold-a D-R2: F1 true F2 true F3 true → success
+[ranked-preemption] validation fold-a: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/walkforward/fold-a/VALIDATION.json (6c8fa94fcde9)
+[ranked-preemption] export-pools fold-a: 6 research pools → /tmp/ranked-preemption-pipeline-4cYz5L/tree/pools/fold-a
+[ranked-preemption] Stage A fold-b: 8 symbols, last 2021-12-31, min trades 5, tier T3
+[ranked-preemption] Stage A fold-b: Sobol done (192 evaluations)
+[ranked-preemption] Stage A fold-b: local search done (893 evaluations)
+[ranked-preemption] Stage A fold-b: neighbourhoods done (1149 evaluations)
+[ranked-preemption] Stage A fold-b: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/standalone/fold-b/STAGE_A.json (2c2c67c2dea8)
+[ranked-preemption] ranking fold-b/R1: XLK VOOG XRT GDX KRE XBI XLE VGT … sealed 923d42fae74f
+[ranked-preemption] ranking fold-b/R2: XLK VOOG GDX XRT XBI KRE XLE VGT … sealed c7e4bd042aa7
+[ranked-preemption] ranking recheck fold-b: 8/8 reproduced by the engine → /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/rankings-check/fold-b.json
+[ranked-preemption] diagnostic fold-b/R1: B4 0, B5 0, C_R1 148 → material
+[ranked-preemption] diagnostic fold-b/R2: B4 0, B5 0, C_R2 74 → material
+[ranked-preemption] diagnostic fold-b: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/diagnostic/fold-b/DIAGNOSTIC.json (69dacdfd1d95)
+[ranked-preemption] joint fold-b: search done (480 evaluations, 418 traces)
+[ranked-preemption] joint fold-b: promotion done (672 evaluations)
+[ranked-preemption] joint fold-b: assessment done (1380 evaluations)
+[ranked-preemption] joint fold-b/R1: pick I GDX KRE VGT VOOG XLE XLK XRT; sealed 55ffd224e128
+[ranked-preemption] joint fold-b/R2: pick I GDX KRE VGT XBI XRT; sealed 1168ebd57006
+[ranked-preemption] controls fold-b A: engine = replay; portfolio done
+[ranked-preemption] controls fold-b B4: engine = replay; portfolio done
+[ranked-preemption] controls fold-b B1: engine = replay; portfolio done
+[ranked-preemption] controls fold-b B-R1: engine = replay; portfolio done
+[ranked-preemption] controls fold-b C-R1: engine = replay; portfolio done
+[ranked-preemption] controls fold-b D-R1: engine = replay; portfolio done
+[ranked-preemption] controls fold-b B-R2: engine = replay; portfolio done
+[ranked-preemption] controls fold-b C-R2: engine = replay; portfolio done
+[ranked-preemption] controls fold-b D-R2: engine = replay; portfolio done
+[ranked-preemption] controls fold-b: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/controls/fold-b/CONTROLS.json (ef7a073910fc)
+[ranked-preemption] picks fold-b: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/walkforward/fold-b/PICKS.json (0afd722fee68) — the validation door may now open
+[ranked-preemption] validation fold-b B-R1: F1 true F2 false F3 true → fail
+[ranked-preemption] validation fold-b B-R2: F1 true F2 false F3 true → fail
+[ranked-preemption] validation fold-b D-R1: F1 true F2 true F3 true → success
+[ranked-preemption] validation fold-b D-R2: F1 true F2 true F3 true → success
+[ranked-preemption] validation fold-b: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/walkforward/fold-b/VALIDATION.json (0affd3159643)
+[ranked-preemption] procedure gate B-R1: fail ({"fold-a":false,"fold-b":false})
+[ranked-preemption] procedure gate B-R2: fail ({"fold-a":false,"fold-b":false})
+[ranked-preemption] procedure gate D-R1: PASS ({"fold-a":true,"fold-b":true})
+[ranked-preemption] procedure gate D-R2: PASS ({"fold-a":true,"fold-b":true})
+[ranked-preemption] export-pools fold-b: 6 research pools → /tmp/ranked-preemption-pipeline-4cYz5L/tree/pools/fold-b
+[ranked-preemption] Stage A final: 8 symbols, last 2022-12-30, min trades 6, tier T3
+[ranked-preemption] Stage A final: Sobol done (192 evaluations)
+[ranked-preemption] Stage A final: local search done (889 evaluations)
+[ranked-preemption] Stage A final: neighbourhoods done (1145 evaluations)
+[ranked-preemption] Stage A final: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/standalone/final/STAGE_A.json (3a5c0fd253d0)
+[ranked-preemption] ranking final/R1: VOOG XLK GDX XRT XBI KRE XLE VGT … sealed 0fdfc96a0184
+[ranked-preemption] ranking final/R2: VOOG XLK GDX XRT XBI KRE XLE VGT … sealed 7ff455a11c18
+[ranked-preemption] ranking recheck final: 8/8 reproduced by the engine → /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/rankings-check/final.json
+[ranked-preemption] diagnostic final/R1: B4 0, B5 0, C_R1 89 → material
+[ranked-preemption] diagnostic final/R2: B4 0, B5 0, C_R2 89 → material
+[ranked-preemption] diagnostic final: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/diagnostic/final/DIAGNOSTIC.json (eee2bb246ba7)
+[ranked-preemption] joint final: search done (960 evaluations, 466 traces)
+[ranked-preemption] joint final: promotion done (1248 evaluations)
+[ranked-preemption] joint final: assessment done (2355 evaluations)
+[ranked-preemption] joint final/R1: pick S KRE VOOG XLE XLK XRT; sealed a6ecb796540f
+[ranked-preemption] joint final/R2: pick I GDX KRE VGT VOOG XLE XRT; sealed 5f4b4c4f5e85
+[ranked-preemption] controls final A: engine = replay; portfolio done
+[ranked-preemption] controls final B4: engine = replay; portfolio done
+[ranked-preemption] controls final B1: engine = replay; portfolio done
+[ranked-preemption] controls final B-R1: engine = replay; portfolio done
+[ranked-preemption] controls final C-R1: engine = replay; portfolio done
+[ranked-preemption] controls final D-R1: engine = replay; portfolio done
+[ranked-preemption] controls final B-R2: engine = replay; portfolio done
+[ranked-preemption] controls final C-R2: engine = replay; portfolio done
+[ranked-preemption] controls final D-R2: engine = replay; portfolio done
+[ranked-preemption] controls final: sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/controls/final/CONTROLS.json (952d7d72a636)
+[ranked-preemption] selection: nominee D-R2; sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/FROZEN_SELECTION.json (8b35911f8176)
+[ranked-preemption] export-pools final: 8 research pools → /tmp/ranked-preemption-pipeline-4cYz5L/tree/pools/final
+Frozen comparators (unchanged; npm run pools -- fixed B4|B5):
+  B4  default: VGT XBI XRT KRE
+  B5  leading incumbent forward-test candidate: VGT XBI XRT KRE GDX
+Standalone fold-a: 8 profiles (/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/standalone/fold-a/<SYMBOL>.json), phenotypes in /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/standalone/fold-a/phenotypes/
+  ranking fold-a/R1 (3e62e490d95e): KRE VOOG XLK GDX XRT XBI VGT XLE …
+  ranking fold-a/R2 (9e20cd1733f1): KRE VOOG XLK GDX XRT XBI VGT XLE …
+Standalone fold-b: 8 profiles (/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/standalone/fold-b/<SYMBOL>.json), phenotypes in /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/standalone/fold-b/phenotypes/
+  ranking fold-b/R1 (923d42fae74f): XLK VOOG XRT GDX KRE XBI XLE VGT …
+  ranking fold-b/R2 (c7e4bd042aa7): XLK VOOG GDX XRT XBI KRE XLE VGT …
+Standalone final: 8 profiles (/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/standalone/final/<SYMBOL>.json), phenotypes in /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/standalone/final/phenotypes/
+  ranking final/R1 (0fdfc96a0184): VOOG XLK GDX XRT XBI KRE XLE VGT …
+  ranking final/R2 (7ff455a11c18): VOOG XLK GDX XRT XBI KRE XLE VGT …
+Research pools (20; config/research-pools/d1-ranked-preemption/):
+  RP-fold-a-B-R1         research-only  P1   VGT XBI XRT KRE GDX
+  RP-fold-a-B-R2         research-only  P1   VGT XBI XRT KRE GDX
+  RP-fold-a-C-R1         research-only  P1   KRE VOOG XLK GDX XRT
+  RP-fold-a-C-R2         research-only  P1   KRE VOOG XLK GDX XRT
+  RP-fold-a-D-R1         research-only  P1   GDX KRE VGT XBI XLE XRT
+  RP-fold-a-D-R2         research-only  P1   KRE VOOG XBI XLE
+  RP-fold-b-B-R1         research-only  P1   VGT XBI XRT KRE GDX
+  RP-fold-b-B-R2         research-only  P1   VGT XBI XRT KRE GDX
+  RP-fold-b-C-R1         research-only  P1   XLK VOOG XRT GDX KRE
+  RP-fold-b-C-R2         research-only  P1   XLK VOOG GDX XRT XBI
+  RP-fold-b-D-R1         research-only  P1   GDX KRE VGT VOOG XLE XLK XRT
+  RP-fold-b-D-R2         research-only  P1   GDX KRE VGT XBI XRT
+  RP-final-B-R1          research-only  P1   VGT XBI XRT KRE GDX
+  RP-final-B-R2          research-only  P1   VGT XBI XRT KRE GDX
+  RP-final-C-R1          research-only  P1   VOOG XLK GDX XRT XBI
+  RP-final-C-R2          research-only  P1   VOOG XLK GDX XRT XBI
+  RP-final-D-R1          research-only  P1   KRE VOOG XLE XLK XRT
+  RP-final-D-R2          research-only  P1   GDX KRE VGT VOOG XLE XRT
+  RP-final-DB-R1         research-only  P1   KRE VGT VOOG XLE XLK
+  RP-final-DB-R2         research-only  P1   KRE VGT VOOG XLE XLK
+Prospective registration: none (no eligible frozen candidate)
+
+fold-a — training 2016-01-04 → 2020-06-30 (E0, fixed $100k, 5 bps); validation 2020-07-01 → 2021-12-31 (E2)
+  id            net     minute DD  lots  preempt(ex/sup/ab/dec)  0bps net   10bps net  portfolio end / daily DD   | V net   V minute DD  V lots
+  A              $132,508    $14,223    25         0/0/0/0    $135,175   $129,845  $346,733 / 19.18%   |   $48,175    $14,253    12
+  B4             $132,508    $14,223    25         0/0/0/0    $135,175   $129,845  $346,733 / 19.18%   |   $48,175    $14,253    12
+  B1             $132,508    $14,223    25         0/0/0/0    $135,175   $129,845  $346,733 / 19.18%   |   $48,175    $14,253    12
+  B-R1           $132,508    $14,223    25         0/0/0/0    $135,175   $129,845  $346,733 / 19.18%   |   $48,175    $14,253    12
+  B-R1-P0R       $132,508    $14,223    25         0/0/0/0         n/a        n/a     |   $48,175    $14,253    12
+  B-R1-B250      $132,508    $14,223    25         0/0/0/0         n/a        n/a     |   $48,175    $14,253    12
+  B-R1-B500      $132,508    $14,223    25         0/0/0/0         n/a        n/a     |   $48,175    $14,253    12
+  C-R1           $609,811     $3,800    49        24/0/0/0    $615,349   $604,278  $822,324 / 19.18%   |  $303,614     $3,759    25
+  C-R1-P0        $199,730    $12,167    26         0/0/0/0         n/a        n/a     |   $85,773    $12,167    12
+  D-R1           $811,680     $3,739    58        32/0/0/0    $818,326   $805,041  $1,300,713 / 19.18%   |  $406,778     $3,723    28
+  D-R1-P0        $158,328    $13,339    25         0/0/0/0         n/a        n/a     |   $60,347    $13,369    12
+  D-R1-B250      $811,680     $3,739    58        32/0/0/0         n/a        n/a     |  $406,778     $3,723    28
+  D-R1-B500      $811,680     $3,739    58        32/0/0/0         n/a        n/a     |  $406,778     $3,723    28
+  B-R2           $132,508    $14,223    25         0/0/0/0    $135,175   $129,845  $346,733 / 19.18%   |   $48,175    $14,253    12
+  B-R2-P0R       $132,508    $14,223    25         0/0/0/0         n/a        n/a     |   $48,175    $14,253    12
+  B-R2-B250      $132,508    $14,223    25         0/0/0/0         n/a        n/a     |   $48,175    $14,253    12
+  B-R2-B500      $132,508    $14,223    25         0/0/0/0         n/a        n/a     |   $48,175    $14,253    12
+  C-R2           $609,811     $3,800    49        24/0/0/0    $615,349   $604,278  $822,324 / 19.18%   |  $303,614     $3,759    25
+  C-R2-P0        $199,730    $12,167    26         0/0/0/0         n/a        n/a     |   $85,773    $12,167    12
+  D-R2           $790,618     $3,800    77        51/0/0/0    $799,144   $782,101  $1,209,191 / 19.18%   |  $397,397     $3,731    39
+  D-R2-P0        $153,658    $13,369    26         0/0/0/0         n/a        n/a     |   $83,143    $13,279    12
+  D-R2-B250      $790,618     $3,800    77        51/0/0/0         n/a        n/a     |  $397,397     $3,731    39
+  D-R2-B500      $790,618     $3,800    77        51/0/0/0         n/a        n/a     |  $397,397     $3,731    39
+
+fold-b — training 2016-01-04 → 2021-12-31 (E0, fixed $100k, 5 bps); validation 2022-01-01 → 2023-12-29 (E2)
+  id            net     minute DD  lots  preempt(ex/sup/ab/dec)  0bps net   10bps net  portfolio end / daily DD   | V net   V minute DD  V lots
+  A              $180,684    $14,253    37         0/0/0/0    $184,615   $176,757  $339,902 / 19.18%   |   $41,046    $14,162     9
+  B4             $180,684    $14,253    37         0/0/0/0    $184,615   $176,757  $339,902 / 19.18%   |   $41,046    $14,162     9
+  B1             $180,684    $14,253    37         0/0/0/0    $184,615   $176,757  $339,902 / 19.18%   |   $41,046    $14,162     9
+  B-R1           $180,684    $14,253    37         0/0/0/0    $184,615   $176,757  $339,902 / 19.18%   |   $41,046    $14,162     9
+  B-R1-P0R       $180,684    $14,253    37         0/0/0/0         n/a        n/a     |   $41,046    $14,162     9
+  B-R1-B250      $180,684    $14,253    37         0/0/0/0         n/a        n/a     |   $41,046    $14,162     9
+  B-R1-B500      $180,684    $14,253    37         0/0/0/0         n/a        n/a     |   $41,046    $14,162     9
+  C-R1         $1,075,367     $3,815   142       105/0/0/0  $1,090,696 $1,060,054  $2,033,005 / 19.18%   |  $230,565     $3,784    31
+  C-R1-P0        $246,652    $12,885    37         0/0/0/0         n/a        n/a     |   $50,597    $12,855     8
+  D-R1           $453,918    $20,791    56        37/0/0/0    $460,021   $447,822  $545,000 / 19.18%   |   $94,485    $20,586    12
+  D-R1-P0       −$210,868   $231,917    37         0/0/0/0         n/a        n/a     |  −$57,135    $64,964     9
+  D-R1-B250      $453,918    $20,791    56        37/0/0/0         n/a        n/a     |   $94,485    $20,586    12
+  D-R1-B500      $453,918    $20,791    56        37/0/0/0         n/a        n/a     |   $94,485    $20,586    12
+  B-R2           $180,684    $14,253    37         0/0/0/0    $184,615   $176,757  $339,902 / 19.18%   |   $41,046    $14,162     9
+  B-R2-P0R       $180,684    $14,253    37         0/0/0/0         n/a        n/a     |   $41,046    $14,162     9
+  B-R2-B250      $180,684    $14,253    37         0/0/0/0         n/a        n/a     |   $41,046    $14,162     9
+  B-R2-B500      $180,684    $14,253    37         0/0/0/0         n/a        n/a     |   $41,046    $14,162     9
+  C-R2           $928,300     $3,660    74        37/0/0/0    $936,671   $919,937  $1,538,806 / 19.18%   |  $197,233     $3,638    16
+  C-R2-P0        $274,177    $12,167    37         0/0/0/0         n/a        n/a     |   $56,517    $12,167     8
+  D-R2         $1,031,930     $4,565    76        38/0/0/0  $1,040,612 $1,023,256  $1,746,625 / 19.18%   |  $217,658     $4,535    16
+  D-R2-P0       −$216,562   $237,610    37         0/0/0/0         n/a        n/a     |  −$58,274    $66,102     9
+  D-R2-B250    $1,031,930     $4,565    76        38/0/0/0         n/a        n/a     |  $217,658     $4,535    16
+  D-R2-B500    $1,031,930     $4,565    76        38/0/0/0         n/a        n/a     |  $217,658     $4,535    16
+
+final — training 2016-01-04 → 2023-12-29 (E0, fixed $100k, 5 bps)
+  id            net     minute DD  lots  preempt(ex/sup/ab/dec)  0bps net   10bps net  portfolio end / daily DD
+  A              $221,730    $14,253    46         0/0/0/0    $226,613   $216,852  $376,768 / 19.18%
+  B4             $221,730    $14,253    46         0/0/0/0    $226,613   $216,852  $376,768 / 19.18%
+  B1             $221,730    $14,253    46         0/0/0/0    $226,613   $216,852  $376,768 / 19.18%
+  B-R1           $221,730    $14,253    46         0/0/0/0    $226,613   $216,852  $376,768 / 19.18%
+  B-R1-P0R       $221,730    $14,253    46         0/0/0/0         n/a        n/a  
+  B-R1-B250      $221,730    $14,253    46         0/0/0/0         n/a        n/a  
+  B-R1-B500      $221,730    $14,253    46         0/0/0/0         n/a        n/a  
+  C-R1         $1,378,421     $3,775   104        58/0/0/0  $1,390,262 $1,366,591  $3,497,924 / 19.18%
+  C-R1-P0        $368,015    $12,233    46         0/0/0/0         n/a        n/a  
+  D-R1         $1,457,444     $3,737   104        58/0/0/0  $1,469,365 $1,445,535  $4,105,106 / 19.18%
+  D-R1-P0        $337,140    $12,167    46         0/0/0/0         n/a        n/a  
+  D-R1-B250    $1,457,444     $3,737   104        58/0/0/0         n/a        n/a  
+  D-R1-B500    $1,457,444     $3,737   104        58/0/0/0         n/a        n/a  
+  DB-R1        $1,372,713     $3,742    92        46/0/0/0         n/a        n/a  
+  B-R2           $221,730    $14,253    46         0/0/0/0    $226,613   $216,852  $376,768 / 19.18%
+  B-R2-P0R       $221,730    $14,253    46         0/0/0/0         n/a        n/a  
+  B-R2-B250      $221,730    $14,253    46         0/0/0/0         n/a        n/a  
+  B-R2-B500      $221,730    $14,253    46         0/0/0/0         n/a        n/a  
+  C-R2         $1,378,421     $3,775   104        58/0/0/0  $1,390,262 $1,366,591  $3,497,924 / 19.18%
+  C-R2-P0        $368,015    $12,233    46         0/0/0/0         n/a        n/a  
+  D-R2           $535,461    $21,908    69        46/0/0/0    $542,952   $527,978  $662,373 / 19.18%
+  D-R2-P0       −$228,433   $247,010    46         0/0/0/0         n/a        n/a  
+  D-R2-B250      $535,461    $21,908    69        46/0/0/0         n/a        n/a  
+  D-R2-B500      $535,461    $21,908    69        46/0/0/0         n/a        n/a  
+  DB-R2        $1,372,713     $3,742    92        46/0/0/0         n/a        n/a  
+RP-fold-a-B-R1 (/tmp/ranked-preemption-pipeline-4cYz5L/tree/pools/fold-a/RP-fold-a-B-R1.json) — research-only
+  B5 vectors, P1 R1
+  allocation priority-preemption-P1 (threshold $0)
+  ranking fold-a/R1 KRE > GDX > XRT > XBI > VGT (3e62e490d95e)
+  VGT d1-ebc9f639b3: X 21.6% Y 0.3% L 74 stop 7.3% hold 8 buffer 2.9% P 9.0% W 60
+  XBI d1-0aabdaab89: X 30.0% Y 1.2% L 49 stop 3.1% hold 5 buffer 0.1% P 8.2% W 54
+  XRT d1-15c387627c: X 24.4% Y 4.7% L 48 stop 8.0% hold 17 buffer 3.6% P 6.2% W 120
+  KRE d1-a389037400: X 29.9% Y 2.7% L 230 stop 3.1% hold 4 buffer 2.3% P 9.4% W 60
+  GDX d1-51ea8d4bd6: X 27.4% Y 0.4% L 100 stop 7.1% hold 18 buffer 3.6% P 19.1% W 81
+B5 vectors, P1 R1 — RP-fold-a-B-R1
+  books: VGT d1-ebc9f639b3, XBI d1-0aabdaab89, XRT d1-15c387627c, KRE d1-a389037400, GDX d1-51ea8d4bd6
+  allocation: P1 (priority KRE > GDX > XRT > XBI > VGT; fold-a/R1#3e62e490d95edb13)
+  data: training 2016-01-04 → 2020-06-30 (1131 sessions); fixed; 5 bps per side; 11% simple interest
+
+Fixed $100,000 pool: net $132,567 (liquidation-equivalent $132,508); max minute drawdown $14,223 (14.22% of $100,000); max daily drawdown $13,082 (13.08%)
+
+FUNDED TRADES (25; only lots the shared allocator funded — refused shadow signals are in signals.csv; $100,000.00 per trade, never compounded)
+  fills: the engine's raw execution prices; friction = 5 bps per side on each fill (commission $0); interest = 11% simple on $100,000.00 for the session-date days held (interestDays in the CSV);
+  gross P&L = shares × (exit fill − entry fill) before costs; net = gross − friction − interest (the engine's net);
+  MAE = the engine's worst minute mark while held (shares × last price − principal − accrued interest).
+   #  ETF  entry (New York)  exit (New York)         entry fill     exit fill      size   shares  days  exit reason         gross P&L   interest  friction     net P&L  cumulative net         MAE
+  --  ---  ----------------  ----------------------  ----------  ------------  --------  -------  ----  -----------------  ----------  ---------  --------  ----------  --------------  ----------
+   1  VGT  2017-06-15 14:00  2017-07-27 09:30           71.7647       74.9073  $100,000  1392.75  41.8  trailing stop gap   $4,376.88  $1,265.75   $102.14   $3,008.98       $3,008.98    −$986.48
+   2  VGT  2017-07-28 14:00  2017-09-11 09:30           68.9154       73.4676  $100,000  1450.33  44.8  trailing stop gap   $6,602.18  $1,356.16   $103.25   $5,142.76       $8,151.75  −$1,046.76
+   3  VGT  2017-09-12 14:00  2017-10-24 09:30           67.5910       71.7676  $100,000  1478.75  41.8  trailing stop gap   $6,176.24  $1,265.75   $103.04   $4,807.45      $12,959.20    −$986.48
+   4  VGT  2017-10-25 14:00  2017-12-07 09:30           66.0269       70.2197  $100,000  1513.78  42.9  trailing stop gap   $6,346.86  $1,295.89   $103.12   $4,947.85      $17,907.04    −$986.48
+   5  VGT  2017-12-08 14:00  2018-01-24 09:30           64.6028       68.8147  $100,000  1547.15  46.8  trailing stop gap   $6,516.39  $1,416.44   $103.21   $4,996.74      $22,903.79  −$1,046.76
+   6  VGT  2018-01-25 14:00  2018-03-09 09:30           63.3102       67.1689  $100,000  1578.74  42.8  trailing stop gap   $6,091.95  $1,295.89   $103.00   $4,693.07      $27,596.86    −$986.48
+   7  VGT  2018-03-12 14:00  2018-04-24 09:30           61.7961       66.0361  $100,000  1617.42  42.8  trailing stop gap   $6,857.90  $1,295.89   $103.38   $5,458.63      $33,055.49    −$986.48
+   8  VGT  2018-04-25 14:00  2018-06-07 09:30           60.7539       64.3022  $100,000  1645.16  42.8  trailing stop gap   $5,837.45  $1,295.89   $102.87   $4,438.69      $37,494.18    −$986.48
+   9  VGT  2018-06-08 14:00  2018-07-23 09:30           59.1586       63.0663  $100,000  1689.53  44.8  trailing stop gap   $6,602.18  $1,356.16   $103.25   $5,142.76      $42,636.95  −$1,046.76
+  10  VGT  2018-07-24 14:00  2018-09-05 09:30           58.0217       61.6070  $100,000  1722.63  42.8  trailing stop gap   $6,176.24  $1,295.89   $103.04   $4,777.31      $47,414.26    −$986.48
+  11  VGT  2018-09-06 14:00  2018-10-18 09:30           56.6791       60.2782  $100,000  1763.44  41.8  trailing stop gap   $6,346.86  $1,265.75   $103.12   $4,977.98      $52,392.24    −$986.48
+  12  VGT  2018-10-19 14:00  2018-12-03 09:30           55.4566       59.0721  $100,000  1802.31  44.9  trailing stop gap   $6,516.39  $1,356.16   $103.21   $5,057.02      $57,449.26  −$1,046.76
+  13  VGT  2018-12-04 14:00  2019-01-18 09:30           54.3469       57.6594  $100,000  1839.11  44.8  trailing stop gap   $6,091.95  $1,356.16   $103.00   $4,632.79      $62,082.06  −$1,016.62
+  14  VGT  2019-01-22 14:00  2019-03-06 09:30           53.0472       56.6870  $100,000  1884.17  42.8  trailing stop gap   $6,857.90  $1,295.89   $103.38   $5,458.63      $67,540.69    −$986.48
+  15  VGT  2019-03-07 14:00  2019-04-18 09:30           52.1526       55.1985  $100,000  1916.49  41.8  trailing stop gap   $5,837.45  $1,265.75   $102.87   $4,468.83      $72,009.52    −$986.48
+  16  VGT  2019-04-22 14:00  2019-06-04 09:30           50.7832       54.1376  $100,000  1968.17  42.8  trailing stop gap   $6,602.18  $1,295.89   $103.25   $5,203.04      $77,212.56    −$986.48
+  17  VGT  2019-06-05 14:00  2019-07-18 09:30           49.8072       52.8849  $100,000  2006.74  42.8  trailing stop gap   $6,176.24  $1,295.89   $103.04   $4,777.31      $81,989.87    −$986.48
+  18  VGT  2019-07-19 14:00  2019-08-30 09:30           48.6546       51.7442  $100,000  2054.28  41.8  trailing stop gap   $6,346.86  $1,265.75   $103.12   $4,977.98      $86,967.85  −$1,046.76
+  19  VGT  2019-09-03 14:00  2019-10-15 09:30           47.6052       50.7089  $100,000  2099.56  41.8  trailing stop gap   $6,516.39  $1,265.75   $103.21   $5,147.43      $92,115.28    −$986.48
+  20  VGT  2019-10-16 14:00  2019-11-27 09:30           46.6527       49.4962  $100,000  2142.43  41.9  trailing stop gap   $6,091.95  $1,265.75   $103.00   $4,723.20      $96,838.49    −$986.48
+  21  VGT  2019-12-02 09:30  2020-01-14 09:30           45.6721       48.6614  $100,000  2188.43  43.0  trailing stop gap   $6,541.90  $1,295.89   $103.22   $5,142.79     $101,981.28  −$1,249.38
+  22  VGT  2020-01-15 14:00  2020-02-28 09:30           44.7690       47.3837  $100,000  2232.57  43.8  trailing stop gap   $5,837.45  $1,326.03   $102.87   $4,408.56     $106,389.84    −$986.48
+  23  VGT  2020-03-02 14:00  2020-04-14 09:30           43.5934       46.4730  $100,000  2292.78  42.8  trailing stop gap   $6,602.18  $1,295.89   $103.25   $5,203.04     $111,592.87    −$986.48
+  24  VGT  2020-04-15 14:00  2020-05-28 09:30           42.7556       45.3976  $100,000  2337.70  42.8  trailing stop gap   $6,176.24  $1,295.89   $103.04   $4,777.31     $116,370.19    −$986.48
+  25  VGT  2020-05-29 14:00  OPEN, 2020-06-30 close     41.7663  48.9584 mark  $100,000  2393.08  32.1  open               $17,211.22    $964.38    $49.98  $16,196.86     $132,567.05  −$1,046.76
+
+BY ETF:
+  ETF  trades  profitable  losing  open    gross P&L    interest   friction      net P&L
+  ---  ------  ----------  ------  ----  -----------  ----------  ---------  -----------
+  VGT      25          24       0     1  $167,337.46  $32,246.58  $2,523.84  $132,567.05
+  all      25          24       0     1  $167,337.46  $32,246.58  $2,523.84  $132,567.05
+
+TOTALS:
+  gross P&L before costs        $167,337.46
+  margin interest               −$32,246.58
+  execution friction             −$2,523.84
+  net realized P&L              $116,370.19   (24 closed trades)
+  unrealized (open) P&L          $16,196.86   (1 open)
+  total net P&L                 $132,567.05
+  largest closed win / loss $5,458.63 / $0.00; worst MAE −$1,249.38 (profitable/losing count closed trades only)
+
+DRAWDOWNS (the engine's existing definitions; % of the $100,000.00 notional):
+  max MINUTE-sampled drawdown $14,222.74 = 14.22%: the largest fall of the pool's marked P&L (realized + open position at each regular minute's price − accrued interest) from its running peak (peak 2018-05-11 14:00, trough 2018-06-11 10:30 New York)
+  max DAILY drawdown          $13,082.36 = 13.08%: the same mark sampled at session closes only
+
+OPEN POSITION AT THE ENDPOINT (unrealized; marked at the last close, no exit friction):
+  VGT: entered 2020-05-29 14:00 at 41.7663, 2393.08 shares; 2020-06-30 close mark 48.9584; accrued interest $964.38; marked net $16,196.86
+
+RECONCILIATION: all checks pass
+  PASS ledger total net = run summary net (exact)
+  PASS ledger interest = run summary interest (exact)
+  PASS funded trades = run summary lots
+  PASS realized + unrealized = total net (±$0.000001)
+  PASS gross − friction − interest = total net (±$0.000001)
+  PASS per-ETF nets sum to the total net (±$0.000001)
+  PASS every trade: gross − friction − interest = engine net (±$0.000001)
+
+
+Preemptions: none
+
+Signals per book (granted = funded or switch started; refused = blocked):
+  VGT: granted 25, refused 0
+
+files: /tmp/ranked-preemption-pipeline-4cYz5L/tree/evaluations/RP-fold-a-B-R1-fixed-5bps-to-2020-06-30/{report.txt,trades.csv,trades.json,preemptions.json}
+B5 vectors, P1 R1 — RP-fold-a-B-R1
+  books: VGT d1-ebc9f639b3, XBI d1-0aabdaab89, XRT d1-15c387627c, KRE d1-a389037400, GDX d1-51ea8d4bd6
+  allocation: P1 (priority KRE > GDX > XRT > XBI > VGT; fold-a/R1#3e62e490d95edb13)
+  data: training 2016-01-04 → 2020-06-30 (1131 sessions); portfolio; 5 bps per side; 11% simple interest
+
+Portfolio: $300,000 core (60/40 VOOG/VGT), 20% of marked equity per funded trade, frozen dividends
+  end equity $346,733; max daily % drawdown 19.18%
+  strategy net $71,399; borrowing dollar-days 57060220; productivity 1251.29 per $1M dollar-days
+
+FUNDED TRADES (25; only lots the shared allocator funded — refused shadow signals are in signals.csv;  per trade, never compounded)
+  fills: the engine's raw execution prices; friction = 5 bps per side on each fill (commission $0); interest = 11% simple on  for the session-date days held (interestDays in the CSV);
+  gross P&L = shares × (exit fill − entry fill) before costs; net = gross − friction − interest (the engine's net);
+  MAE = the engine's worst minute mark while held (shares × last price − principal − accrued interest).
+   #  ETF  entry (New York)  exit (New York)         entry fill     exit fill        size   shares  days  exit reason         gross P&L  interest  friction    net P&L  cumulative net       MAE
+  --  ---  ----------------  ----------------------  ----------  ------------  ----------  -------  ----  -----------------  ----------  --------  --------  ---------  --------------  --------
+   1  VGT  2017-06-15 14:00  2017-07-27 09:30           71.7647       74.9073  $50,112.90   697.95  41.8  trailing stop gap   $2,193.38   $634.31    $51.18  $1,507.89       $1,507.89  −$494.36
+   2  VGT  2017-07-28 14:00  2017-09-11 09:30           68.9154       73.4676  $49,636.47   719.89  44.8  trailing stop gap   $3,277.09   $673.15    $51.25  $2,552.69       $4,060.58  −$519.57
+   3  VGT  2017-09-12 14:00  2017-10-24 09:30           67.5910       71.7676  $49,765.80   735.91  41.8  trailing stop gap   $3,073.66   $629.91    $51.28  $2,392.47       $6,453.04  −$490.93
+   4  VGT  2017-10-25 14:00  2017-12-07 09:30           66.0269       70.2197  $50,151.75   759.19  42.9  trailing stop gap   $3,183.06   $649.91    $51.72  $2,481.43       $8,934.47  −$494.74
+   5  VGT  2017-12-08 14:00  2018-01-24 09:30           64.6028       68.8147  $50,339.12   778.82  46.8  trailing stop gap   $3,280.29   $713.02    $51.95  $2,515.32      $11,449.79  −$526.93
+   6  VGT  2018-01-25 14:00  2018-03-09 09:30           63.3102       67.1689  $50,757.94   801.33  42.8  trailing stop gap   $3,092.15   $657.77    $52.28  $2,382.10      $13,831.89  −$500.72
+   7  VGT  2018-03-12 14:00  2018-04-24 09:30           61.7961       66.0361  $51,002.96   824.93  42.8  trailing stop gap   $3,497.73   $660.94    $52.73  $2,784.06      $16,615.96  −$503.14
+   8  VGT  2018-04-25 14:00  2018-06-07 09:30           60.7539       64.3022  $51,376.70   845.23  42.8  trailing stop gap   $2,999.09   $665.79    $52.85  $2,280.45      $18,896.41  −$506.82
+   9  VGT  2018-06-08 14:00  2018-07-23 09:30           59.1586       63.0663  $51,486.27   869.87  44.8  trailing stop gap   $3,399.22   $698.24    $53.16  $2,647.82      $21,544.23  −$538.94
+  10  VGT  2018-07-24 14:00  2018-09-05 09:30           58.0217       61.6070  $51,968.38   895.22  42.8  trailing stop gap   $3,209.69   $673.45    $53.55  $2,482.69      $24,026.92  −$512.66
+  11  VGT  2018-09-06 14:00  2018-10-18 09:30           56.6791       60.2782  $52,087.49   918.53  41.8  trailing stop gap   $3,305.92   $659.30    $53.71  $2,592.91      $26,619.83  −$513.83
+  12  VGT  2018-10-19 14:00  2018-12-03 09:30           55.4566       59.0721  $52,796.44   951.56  44.9  trailing stop gap   $3,440.42   $716.01    $54.49  $2,669.93      $29,289.76  −$552.65
+  13  VGT  2018-12-04 14:00  2019-01-18 09:30           54.3469       57.6594  $52,915.53   973.17  44.8  trailing stop gap   $3,223.59   $717.62    $54.50  $2,451.47      $31,741.22  −$537.95
+  14  VGT  2019-01-22 14:00  2019-03-06 09:30           53.0472       56.6870  $53,610.38  1010.11  42.8  trailing stop gap   $3,676.55   $694.73    $55.42  $2,926.39      $34,667.62  −$528.86
+  15  VGT  2019-03-07 14:00  2019-04-18 09:30           52.1526       55.1985  $53,737.95  1029.88  41.8  trailing stop gap   $3,136.93   $680.19    $55.28  $2,401.46      $37,069.07  −$530.12
+  16  VGT  2019-04-22 14:00  2019-06-04 09:30           50.7832       54.1376  $54,302.03  1068.76  42.8  trailing stop gap   $3,585.12   $703.69    $56.07  $2,825.35      $39,894.43  −$535.68
+  17  VGT  2019-06-05 14:00  2019-07-18 09:30           49.8072       52.8849  $54,492.61  1093.53  42.8  trailing stop gap   $3,365.60   $706.16    $56.15  $2,603.28      $42,497.71  −$537.56
+  18  VGT  2019-07-19 14:00  2019-08-30 09:30           48.6546       51.7442  $55,150.57  1132.94  41.8  trailing stop gap   $3,500.33   $698.07    $56.87  $2,745.39      $45,243.10  −$577.29
+  19  VGT  2019-09-03 14:00  2019-10-15 09:30           47.6052       50.7089  $55,412.66  1163.42  41.8  trailing stop gap   $3,610.91   $701.39    $57.19  $2,852.33      $48,095.43  −$546.64
+  20  VGT  2019-10-16 14:00  2019-11-27 09:30           46.6527       49.4962  $56,183.11  1203.68  41.9  trailing stop gap   $3,422.65   $711.14    $57.87  $2,653.64      $50,749.07  −$554.24
+  21  VGT  2019-12-02 09:30  2020-01-14 09:30           45.6721       48.6614  $56,517.49  1236.84  43.0  trailing stop gap   $3,697.32   $732.40    $58.34  $2,906.58      $53,655.65  −$706.12
+  22  VGT  2020-01-15 14:00  2020-02-28 09:30           44.7690       47.3837  $57,183.67  1276.67  43.8  trailing stop gap   $3,338.07   $758.27    $58.82  $2,520.97      $56,176.62  −$564.11
+  23  VGT  2020-03-02 14:00  2020-04-14 09:30           43.5934       46.4730  $57,358.04  1315.09  42.8  trailing stop gap   $3,786.88   $743.30    $59.22  $2,984.36      $59,160.98  −$565.83
+  24  VGT  2020-04-15 14:00  2020-05-28 09:30           42.7556       45.3976  $58,213.72  1360.86  42.8  trailing stop gap   $3,595.42   $754.39    $59.98  $2,781.05      $61,942.03  −$574.27
+  25  VGT  2020-05-29 14:00  OPEN, 2020-06-30 close     41.7663  48.9584 mark  $58,386.96  1397.25  32.1  open               $10,049.11   $563.07    $29.18  $9,456.85      $71,398.89  −$611.17
+
+BY ETF:
+  ETF  trades  profitable  losing  open   gross P&L    interest   friction     net P&L
+  ---  ------  ----------  ------  ----  ----------  ----------  ---------  ----------
+  VGT      25          24       0     1  $89,940.16  $17,196.23  $1,345.05  $71,398.89
+  all      25          24       0     1  $89,940.16  $17,196.23  $1,345.05  $71,398.89
+
+TOTALS:
+  gross P&L before costs         $89,940.16
+  margin interest               −$17,196.23
+  execution friction             −$1,345.05
+  net realized P&L               $61,942.03   (24 closed trades)
+  unrealized (open) P&L           $9,456.85   (1 open)
+  total net P&L                  $71,398.89
+  largest closed win / loss $2,984.36 / $0.00; worst MAE −$706.12 (profitable/losing count closed trades only)
+
+DRAWDOWNS (the engine's existing definitions; % of the  notional):
+  max MINUTE-sampled drawdown $65,222.95 = n/a: the largest fall of the pool's marked P&L (realized + open position at each regular minute's price − accrued interest) from its running peak (peak 2016-01-11 14:00, trough 2017-06-14 10:30 New York)
+  max DAILY drawdown          $59,045.75 = n/a: the same mark sampled at session closes only
+
+OPEN POSITION AT THE ENDPOINT (unrealized; marked at the last close, no exit friction):
+  VGT: entered 2020-05-29 14:00 at 41.7663, 1397.25 shares; 2020-06-30 close mark 48.9584; accrued interest $563.07; marked net $9,456.85
+
+RECONCILIATION: all checks pass
+  PASS ledger total net = run summary net (exact)
+  PASS ledger interest = run summary interest (exact)
+  PASS funded trades = run summary lots
+  PASS realized + unrealized = total net (±$0.000001)
+  PASS gross − friction − interest = total net (±$0.000001)
+  PASS per-ETF nets sum to the total net (±$0.000001)
+  PASS every trade: gross − friction − interest = engine net (±$0.000001)
+
+
+Preemptions: none
+
+Signals per book (granted = funded or switch started; refused = blocked):
+  VGT: granted 25, refused 0
+
+files: /tmp/ranked-preemption-pipeline-4cYz5L/tree/evaluations/RP-fold-a-B-R1-portfolio-5bps-to-2020-06-30/{report.txt,trades.csv,trades.json,preemptions.json}
+No new-study prospective registration (one nominee (D-R2) for the single blocking-only historical check).
+Prospective observation count = 0. The B4/B5 prospective comparison is separate: npm run pools -- forward status
+Verification:
+  ok   protocol freeze and its bound files
+  ok   code freeze (or the latest amendment)
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/FROZEN_SELECTION.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/PROTOCOL_FREEZE.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/rankings/final/R1.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/rankings/final/R2.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/rankings/fold-a/R1.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/rankings/fold-a/R2.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/rankings/fold-b/R1.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/rankings/fold-b/R2.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/code_freeze.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/controls/final/CONTROLS.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/controls/fold-a/CONTROLS.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/controls/fold-b/CONTROLS.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/diagnostic/final/DIAGNOSTIC.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/diagnostic/fold-a/DIAGNOSTIC.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/diagnostic/fold-b/DIAGNOSTIC.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/joint/final/R1/JOINT.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/joint/final/R2/JOINT.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/joint/fold-a/R1/JOINT.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/joint/fold-a/R2/JOINT.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/joint/fold-b/R1/JOINT.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/joint/fold-b/R2/JOINT.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/walkforward/PROCEDURE_GATE.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/walkforward/fold-a/PICKS.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/walkforward/fold-a/VALIDATION.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/walkforward/fold-b/PICKS.json
+  ok   sealed /tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/walkforward/fold-b/VALIDATION.json
+  ok   Stage A fold-a files
+  ok   Stage A fold-b files
+  ok   Stage A final files
+  ok   research pool RP-fold-a-B-R1
+  ok   research pool RP-fold-a-B-R2
+  ok   research pool RP-fold-a-C-R1
+  ok   research pool RP-fold-a-C-R2
+  ok   research pool RP-fold-a-D-R1
+  ok   research pool RP-fold-a-D-R2
+  ok   research pool RP-fold-b-B-R1
+  ok   research pool RP-fold-b-B-R2
+  ok   research pool RP-fold-b-C-R1
+  ok   research pool RP-fold-b-C-R2
+  ok   research pool RP-fold-b-D-R1
+  ok   research pool RP-fold-b-D-R2
+  ok   research pool RP-final-B-R1
+  ok   research pool RP-final-B-R2
+  ok   research pool RP-final-C-R1
+  ok   research pool RP-final-C-R2
+  ok   research pool RP-final-D-R1
+  ok   research pool RP-final-D-R2
+  ok   research pool RP-final-DB-R1
+  ok   research pool RP-final-DB-R2
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/standalone-fold-a.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/rankings-fold-a.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/diagnostic-fold-a.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/joint-fold-a-R1.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/joint-fold-a-R2.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/controls-fold-a.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/validation-fold-a.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/standalone-fold-b.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/rankings-fold-b.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/diagnostic-fold-b.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/joint-fold-b-R1.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/joint-fold-b-R2.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/controls-fold-b.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/validation-fold-b.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/standalone-final.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/rankings-final.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/diagnostic-final.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/joint-final-R1.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/joint-final-R2.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/controls-final.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/procedure-gate.md
+/tmp/ranked-preemption-pipeline-4cYz5L/tree/research/results/tables/selection.md
+▶ the study pipeline on synthetic data
+  ✔ every stage runs once, in order, and refuses a rerun; the CLI reads the sealed records (15451.939718ms)
+✔ the study pipeline on synthetic data (15574.703597ms)
+▶ randomized equivalence
+  ✔ engine = replay under every policy, with accounting, arming and end offsets (307.446359ms)
+  ✔ the P0 diagnostic is actionable exactly when P1 executes its first preemption (95.806892ms)
+✔ randomized equivalence (403.881816ms)
+▶ P1 scenarios
+  ✔ a sale due after the last event executes; the replacement is still reserved at the end (0.841406ms)
+  ✔ a maximum-hold exit supersedes the switch; the replacement fills minutes later (0.456164ms)
+  ✔ a replacement can be preempted from the bar after its purchase (a two-minute chain) (0.519624ms)
+  ✔ portfolio mode: margin that binds only with the incumbent open means no preemption (2.486349ms)
+  ✔ a closing-print sale executes when the replacement fills at the next session’s open (0.634785ms)
+  ✔ an own exit in the decision minute frees the pool: a plain grant, not a preemption (0.582894ms)
+  ✔ a friction-driven abort at the same-session next trade (0.477254ms)
+  ✔ the $250 buffer: exactly $250 switches, $249.99 does not (0.876277ms)
+  ✔ windowed figures equal the engine’s daily marks after the boundary (18.032588ms)
+  ✔ a refused signal is never reconsidered: the book is funded only on a later fresh signal (0.552414ms)
+  ✔ P0 equals the frozen engine with a fifth, candidate book (2.823401ms)
+  ✔ auction prints at the close and at a later session’s opening trade (confirmatory review cases) (2.219538ms)
+  ✔ a mutation of every array after the switch leaves the switch unchanged (0.631684ms)
+✔ P1 scenarios (31.622162ms)
+▶ equivalence with the recovery-eligibility engine
+  ✔ Set 2 and D1 on the real data reproduce the shipped figures (62.924851ms)
+  ✔ arming from session 74 (as the files do) gives the same D1 trades as the common eligibility session (13.19186ms)
+  ✔ 24 random vectors on the real data, both fills and three rates (293.762084ms)
+  ✔ 120 random synthetic scenarios (1258.416393ms)
+✔ equivalence with the recovery-eligibility engine (1629.122896ms)
+▶ stop policies
+  ✔ net: inactive while a fill at the stop would lose after interest, active once above it, exits at the stop level (1.693443ms)
+  ✔ gross breakeven (B-B) latches when the stop level reaches the entry price and holds through a loss-making sale (0.483703ms)
+  ✔ gross threshold (B-A) activates at the configured appreciation, not before, and is a latch (0.560194ms)
+  ✔ always (B-D) is active from the session after the entry, and a gap through it fills at the open (0.345303ms)
+  ✔ two-stage (B-C): the protective stop acts in the EARLY stage, the trailing stop after the breakeven latch (0.348963ms)
+  ✔ netLatched never switches off; net can (3.057543ms)
+  ✔ replayPosition reproduces the engine exit of a given fill (0.192151ms)
+  ✔ the maximum hold still sells a losing position whatever the policy, and the buffer only acts after it applies (0.434364ms)
+✔ stop policies (7.803999ms)
+▶ entry modes
+  ✔ always: arms on the first eligible minute, buys on the rebound from the lowest later low, re-arms after an exit, never on the exit session (0.730055ms)
+  ✔ swing: the rolling low excludes the current session, a close at or below it arms, the rebound buys (0.440203ms)
+  ✔ C3 arbitration: an armed swing setup yields to the deep path on the minute D1 would arm, and the window stays open (0.341513ms)
+  ✔ path causality: nothing arms before the eligibility session, and the rolling low never sees the current session (0.218102ms)
+✔ entry modes (1.887444ms)
+▶ compatibility: next-session activation is RC 1, legacy controls are Priority 3
+  ✔ crash: RC 2 = RC 1 for next-session controls (absent and explicit), and = Priority 3 for legacy (4.648666ms)
+  ✔ recovery: RC 2 = RC 1 for next-session controls (absent and explicit), and = Priority 3 for legacy (0.790586ms)
+  ✔ whipsaw: RC 2 = RC 1 for next-session controls (absent and explicit), and = Priority 3 for legacy (0.590775ms)
+  ✔ identical to RC 1 on 150 random paths × grids × random next-session controls (every family, the gate), both stop fills, stresses (29.067612ms)
+✔ compatibility: next-session activation is RC 1, legacy controls are Priority 3 (35.720713ms)
+▶ entry-day activation in a book
+  ✔ a same-session adverse move after the fill exits at L that session (next-session waits for the next open) (0.517254ms)
+  ✔ a fill-minute low through L exits in the fill minute itself (stop fill) or at the next minute’s open (next-open) (0.280112ms)
+  ✔ is not a loss cap: a minute opening through L on the entry day loses more than the 8% distance (0.201232ms)
+  ✔ is not a loss cap: a position the entry day did not stop gaps far through L the next morning (0.168601ms)
+  ✔ a closing-print fill has nothing to observe: identical to next-session (0.238192ms)
+  ✔ an order carried overnight fills at the opening trade and is protected from that trade on (0.223301ms)
+  ✔ counts as a failed attempt for the decline gate (K = 1 blocks the next arming) (0.181631ms)
+  ✔ applies the stop-slippage stress to an entry-day fill (0.124431ms)
+  ✔ repeated runs are byte-identical; the book key carries the rc2 controls (0.257882ms)
+✔ entry-day activation in a book (2.509939ms)
+▶ RC 1 configurations are unchanged under RC 2
+  ✔ 300 random RC 1 configurations: canonical form, identity and evaluation key equal RC 1 byte for byte (68.799276ms)
+  ✔ an explicit next-session activation is the default: dropped, version 1, RC 1 identity and key (0.509584ms)
+  ✔ legacy forms keep Priority 3’s identity (0.395293ms)
+✔ RC 1 configurations are unchanged under RC 2 (70.260376ms)
+▶ entry-day activation
+  ✔ is versioned: canonical version 2, an rc2 identity distinct from next-session, an |rc2: key (0.448353ms)
+  ✔ is refused on a stop that is OFF, in a version-1 configuration, and with an unknown value (0.167961ms)
+  ✔ masks the genes a disabled hold makes inactive (one identity for behaviourally identical configurations) (0.443873ms)
+  ✔ round-trips exactly through serialization and parsing (1.992215ms)
+✔ entry-day activation (3.218974ms)
+▶ eligible observations after the fill
+  ✔ a fill at a minute’s opening print: that minute’s low (a later trade) triggers at L (0.908887ms)
+  ✔ minutes before the fill minute are never read, whatever their lows (0.134851ms)
+  ✔ a later minute opening at or below L fills at that open (below L: not a loss cap) (0.135151ms)
+  ✔ the first minute of the session (an order carried overnight fills at the opening trade) (0.078461ms)
+  ✔ a fill in the last minute: only that minute’s low; under next-open it fills at the closing print (0.173381ms)
+  ✔ a delayed fill after missing minutes: observations start at the fill minute, the gap is not read (0.112281ms)
+  ✔ a closing-print fill: no observation follows in its session (0.05998ms)
+  ✔ is inclusive at L and silent a hair above it (0.109521ms)
+✔ eligible observations after the fill (2.318368ms)
+▶ causality
+  ✔ minutes after the trigger minute never change the decision (stop fill) (0.139081ms)
+  ✔ a session with no post-fill observation at or below L gives no trigger (0.09211ms)
+✔ causality (0.327632ms)
+▶ compatibility in the pool
+  ✔ legacy controls = Priority 3 (books, funding, lots, marks, drawdowns, record) (9.1792ms)
+  ✔ next-session controls = RC 1 (books with their logs, the result, the record, identity and key) (4.115431ms)
+✔ compatibility in the pool (13.835686ms)
+▶ entry-day exits through the pool
+  ✔ a funded lot enters and exits in one session; one slot; funded = virtual; Σ lots = net; the slot is freed (1.510311ms)
+  ✔ a fill-minute exit (entry and exit in one minute) is handled by the unchanged pool (0.766896ms)
+  ✔ is deterministic; the record carries the rc2 identity and key (2.063396ms)
+✔ entry-day exits through the pool (4.494705ms)
+▶ legacy parity: every control at its default equals Priority 3’s runD1Book exactly
+  ✔ crash: identical VBook for absent, empty and explicit-default controls (3.385006ms)
+  ✔ recovery: identical VBook for absent, empty and explicit-default controls (0.566794ms)
+  ✔ whipsaw: identical VBook for absent, empty and explicit-default controls (0.405943ms)
+  ✔ identical on 150 random paths × random grids, both stop fills, cost/interest/slippage stresses (16.599997ms)
+✔ legacy parity: every control at its default equals Priority 3’s runD1Book exactly (21.490134ms)
+▶ the protective stop in a book
+  ✔ on the crash path: a gap exit below the stop level, with an exact net (not a loss cap) (0.604465ms)
+  ✔ on the crash path: smaller first-lot loss than the legacy maximum-hold exit (this modelled path only) (0.252212ms)
+  ✔ intraday stop-level fill at exactly L (a minute trading through it), logged apart from trailing and hold exits (0.209222ms)
+  ✔ applies the stop-slippage stress to protective fills (as to trailing-stop fills) (0.175711ms)
+  ✔ never opens a continuation window (a protective exit always loses) (0.183752ms)
+✔ the protective stop in a book (1.621132ms)
+▶ the decline gate
+  ✔ K = 1: blocks arming after a failed attempt, logs each refused session, and ends at the cooldown (0.703875ms)
+  ✔ K = 2: the second attempt is "within allowance", the second failure blocks, and the block expires after its sessions (0.403333ms)
+  ✔ a recovery of r of the decline ends the episode at a session close (0.187211ms)
+  ✔ a profitable exit ends an unblocked episode, and the continuation re-entry is untouched (0.240752ms)
+  ✔ never blocks a book without failures (the recovery path is unchanged) (0.196122ms)
+✔ the decline gate (1.884394ms)
+▶ the hold policies in a book
+  ✔ disabled (with the stop): no maximum-hold exit; the stop decides (0.361863ms)
+  ✔ refuses the disabled hold without the stop, at the runner boundary (0.427984ms)
+  ✔ adaptive: logs the latched extension; the exits are the legacy ones on this path (0.336002ms)
+  ✔ adaptive: refuses an extended bound not above the book’s hold (0.1015ms)
+  ✔ adaptive without progress exits at the base hold (a shorter base than legacy cuts the failed lot earlier) (0.127581ms)
+✔ the hold policies in a book (1.487781ms)
+▶ determinism and replay
+  ✔ repeated runs give byte-identical books and logs (0.253432ms)
+✔ determinism and replay (0.293512ms)
+▶ validation
+  ✔ accepts every family A–D on either book, independently (0.931817ms)
+  ✔ refuses an unlimited hold without the protective stop, at parse and at the runner boundary (0.337412ms)
+  ✔ refuses wrong units, non-integers, out-of-range values, unknown keys, Growth books and other versions (0.165661ms)
+  ✔ checks an adaptive hold’s extended bound against the book’s own maximumHoldDays (0.097261ms)
+✔ validation (2.115166ms)
+▶ canonical form, identity and serialization
+  ✔ treats absent, null, empty and explicit defaults as legacy, with the frozen identity and key unchanged (2.933482ms)
+  ✔ gives a non-legacy configuration a versioned identity and key, distinct per book and per value (0.904317ms)
+  ✔ masks the genes a disabled hold makes inactive (hold and loss buffer): behaviourally equal configurations share one identity (1.007667ms)
+  ✔ round-trips through JSON exactly (canonical form; key order and defaults do not matter) (0.498833ms)
+  ✔ validates on parse (a hand-edited file cannot slip an invalid value through) (0.170781ms)
+✔ canonical form, identity and serialization (5.774135ms)
+▶ RiskExitManager with every control off equals the frozen ExitManager
+  ✔ decides the same exit, session by session, on 400 random paths (both stop fills, both stop policies) (20.449477ms)
+✔ RiskExitManager with every control off equals the frozen ExitManager (20.909759ms)
+▶ the protective trigger uses the frozen trailing stop’s fill conventions
+  ✔ gap at the open (0.323343ms)
+  ✔ a minute opening through the level (0.07189ms)
+  ✔ a minute trading down to the level (stop fill) (0.07808ms)
+  ✔ the same with the next-open fill (0.073971ms)
+  ✔ next-open on the last minute: the closing print (0.054141ms)
+  ✔ next-open on the last minute without a closing print: the trigger minute’s close (0.0517ms)
+✔ the protective trigger uses the frozen trailing stop’s fill conventions (0.859456ms)
+▶ the protective stop on an underwater position
+  ✔ protects a position that was never profitable (the legacy stop is inactive) (0.312322ms)
+  ✔ triggers at equality (inclusive) and not a hair above (0.137231ms)
+  ✔ fills a minute opening through the level at that open, below the level (0.204372ms)
+  ✔ fills a gap at the opening trade, below the level: not a loss cap (0.123591ms)
+  ✔ uses the next minute’s open under the next-open fill (0.099581ms)
+  ✔ is not evaluated on the entry session (the D1 convention): a fall there is realized at the next open (0.05592ms)
+  ✔ is skipped when the session has no minute reaching it (missing minutes are not traded) (0.058071ms)
+✔ the protective stop on an underwater position (1.217529ms)
+▶ precedence inside one session (SPECIFICATION.md §4.1)
+  ✔ an active trailing stop gapped through keeps the opening trade (legacy reason) (0.088721ms)
+  ✔ an active trailing stop is reached first intraday (its level is above L) (0.068081ms)
+  ✔ a maximum hold due at the open loses to a protective stop reached in an earlier minute (0.0606ms)
+  ✔ a maximum hold due at the open wins a tie at its own fill minute (decided at the open) (0.043391ms)
+  ✔ a protective gap takes the opening trade ahead of a maximum hold due (0.04493ms)
+  ✔ a carried buffered sale fills at the opening trade before a later protective trigger (0.074131ms)
+  ✔ a protective gap takes the opening trade from a carried buffered sale (0.051ms)
+  ✔ the buffered loss wins when the stop is only reached by a low in the minute after its signal (0.125881ms)
+  ✔ the stop wins when the next minute opens through it (0.078331ms)
+  ✔ the stop wins when reached in the signal minute (0.102531ms)
+  ✔ a stop reached by the signal minute voids the overnight carry of a last-minute buffered signal (0.07834ms)
+✔ precedence inside one session (SPECIFICATION.md §4.1) (0.965908ms)
+▶ shortened sessions and boundary timestamps
+  ✔ an early close (13:00): a buffered signal in its last minute is carried; a protective gap takes the next open (0.092711ms)
+  ✔ the same early-close session without the gap: the carried sale fills at the next opening trade (0.07301ms)
+✔ shortened sessions and boundary timestamps (0.216201ms)
+▶ the adaptive (progress-extended) hold
+  ✔ keeps the base hold without progress: a loss at the open on day 3 exits (0.159691ms)
+  ✔ extends from the next session once the post-entry high reaches entry × (1 + g), inclusive, and latches (0.133741ms)
+  ✔ uses only the post-entry high through the previous session (no lookahead) (0.059771ms)
+  ✔ keeps a profitable position at the extended expiry (the loss-only condition is preserved) (0.06151ms)
+  ✔ applies the loss buffer only from the effective age (0.075721ms)
+✔ the adaptive (progress-extended) hold (0.565784ms)
+▶ the disabled hold
+  ✔ never exits by the maximum hold or the loss buffer, however long; the protective stop still acts (0.658875ms)
+  ✔ the legacy manager on the same path exits at the first losing open after 3 days (0.133431ms)
+✔ the disabled hold (0.840976ms)
+▶ construction guards
+  ✔ refuses a legacy hold that differs from the book’s own maximumHoldDays (0.164822ms)
+  ✔ does not mutate the book’s params (the effective hold is written into a private copy) (0.06058ms)
+  ✔ keeps LotState untouched (0.052341ms)
+✔ construction guards (0.339193ms)
+▶ decline gate boundaries
+  ✔ resets at a close exactly at the recovery level (inclusive), not a hair below (1.36219ms)
+  ✔ ends a block exactly maxBlockSessions sessions after it engaged (at that session’s close) (0.156302ms)
+  ✔ keeps the first attempt’s reference high (no re-anchoring) and counts every failure once (0.135571ms)
+  ✔ a profitable exit ends an unblocked episode; it is an error while blocked (0.319732ms)
+  ✔ logs one refusal event per session, with the minutes counted (0.217041ms)
+✔ decline gate boundaries (2.790901ms)
+▶ legacy controls reproduce Priority 3’s pooled evaluation exactly
+  ✔ absent: books, funding log, lots, marks, drawdowns and the record (9.842885ms)
+  ✔ empty: books, funding log, lots, marks, drawdowns and the record (3.224935ms)
+  ✔ explicit defaults: books, funding log, lots, marks, drawdowns and the record (3.446806ms)
+✔ legacy controls reproduce Priority 3’s pooled evaluation exactly (17.165551ms)
+▶ two independently configured D1 books and Growth in one funded slot
+  ✔ controls on one book leave the other book’s virtual trades exactly as in legacy (1.449981ms)
+  ✔ Growth books are Priority 3’s canonical books, unchanged (0.666825ms)
+  ✔ never funds two lots at once; every funded lot exits exactly with its virtual trade; Σ lots = net (0.802266ms)
+  ✔ keeps the frozen same-instant order (D1·GDX before D1·VGT) and logs the refusal with its occupant (0.723665ms)
+  ✔ the decline gate counts a failed virtual trade the pool refused (shadow lifecycle: funding never feeds back) (0.713076ms)
+  ✔ is deterministic across repeated runs and a serialization round trip of the configuration (2.471049ms)
+  ✔ identifies the evaluation by its controls (rc1 identity and key), and legacy by Priority 3’s (2.145787ms)
+✔ two independently configured D1 books and Growth in one funded slot (9.265391ms)
+[robust-d1] final J/unseeded I1: 12 initial genomes, 12 new
+[robust-d1] final J/unseeded I2: 12 initial genomes, 12 new
+[robust-d1] final J/unseeded I3: 12 initial genomes, 12 new
+[robust-d1] final J/unseeded I4: 12 initial genomes, 12 new
+[robust-d1] final J/unseeded I5: 12 initial genomes, 12 new
+[robust-d1] final J/unseeded I6: 12 initial genomes, 12 new
+[robust-d1] final J/unseeded I7: 12 initial genomes, 12 new
+[robust-d1] final J/unseeded I8: 12 initial genomes, 12 new
+[robust-d1] final unseeded: discovery 96 configurations in 0 s
+[robust-d1] final J/seeded I1: 12 initial genomes, 12 new
+[robust-d1] final J/seeded I2: 12 initial genomes, 12 new
+[robust-d1] final J/seeded I3: 12 initial genomes, 12 new
+[robust-d1] final J/seeded I4: 12 initial genomes, 12 new
+[robust-d1] final J/seeded I5: 12 initial genomes, 12 new
+[robust-d1] final J/seeded I6: 12 initial genomes, 12 new
+[robust-d1] final J/seeded I7: 12 initial genomes, 12 new
+[robust-d1] final J/seeded I8: 12 initial genomes, 12 new
+[robust-d1] final seeded: discovery 96 configurations in 0 s
+[robust-d1] final J refine pooled-f1 cycle 1: 0 accepted, 12 evaluated
+[robust-d1] final J refine pooled-f2 cycle 1: 0 accepted, 12 evaluated
+▶ the final round on a synthetic universe
+  ✔ two J arms, the seeded population, pooled promotion, the final gates and §14 nominations (3055.432932ms)
+  ✔ a configuration within two step units of a benchmark on half its membership is its neighbour (0.732455ms)
+✔ the final round on a synthetic universe (3057.417248ms)
+▶ ingestion safety rules
+  ✔ only the symbol’s own staging file is an acceptable deletion path (2.727391ms)
+  ✔ deletion requires the attempt log’s authorization (0.730596ms)
+  ✔ failures are classified retryable or terminal (1.34447ms)
+  ✔ redaction and the child environment (0.821626ms)
+✔ ingestion safety rules (6.276848ms)
+▶ the orchestrator on a temporary data directory
+  ✔ a clean ingestion verifies, cleans the staging file and leaks no credential (279.490775ms)
+[robust-d1] XLV: download attempt 1 failed (retryable): using key [REDACTED:ALPACA_API_KEY] and secret [REDACTED:ALPACA_SECRET_KEY] | curl: (22) The requested URL returned error: 429
+  ✔ a retryable failure deletes only its own partial file, and the retry does not duplicate rows (275.556715ms)
+[robust-d1] XLV: download attempt 1 failed (terminal): using key [REDACTED:ALPACA_API_KEY] and secret [REDACTED:ALPACA_SECRET_KEY] | curl: (22) The requested URL returned error: 403
+  ✔ a terminal failure stops and keeps the partial file for diagnosis (6.776282ms)
+  ✔ an unexplained staging file and an existing canonical file are never touched (0.749626ms)
+  ✔ a failed import is quarantined, not deleted, and its staging file is kept (96.916161ms)
+  ✔ a download reaching past the study end fails (9.042469ms)
+✔ the orchestrator on a temporary data directory (668.983531ms)
+▶ leakage barriers
+  ✔ the fold door loads nothing after the search end; other partitions are refused to the optimizer (160.152393ms)
+  ✔ the validation door refuses before the picks exist (0.592605ms)
+  ✔ trace keys differ across windows (210.401537ms)
+[robust-d1] pilot fold-a: 9 of 9 controls (1 s)
+[robust-d1] pilot fold-a: frozen (n_D = 4; references 1:35k/45k 2:35k/45k 3:35k/45k 4:35k/45k 5:35k/45k 6:35k/45k 8:35k/45k 12:35k/45k 16:35k/45k)
+[robust-d1] fold-a J/fold I1: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I2: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I3: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I4: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I5: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I6: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I7: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I8: 8 initial genomes, 8 new
+[robust-d1] fold-a J: discovery 64 configurations in 0 s
+[robust-d1] fold-a Q/fold I1: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I2: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I3: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I4: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I5: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I6: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I7: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I8: 8 initial genomes, 8 new
+[robust-d1] fold-a Q: discovery 64 configurations in 0 s
+[robust-d1] fold-a J refine J-f1 cycle 1: 1 accepted, 8 evaluated
+[robust-d1] fold-a Q refine Q-f1 cycle 1: 0 accepted, 8 evaluated
+[robust-d1] pilot fold-a: 9 of 9 controls (1 s)
+[robust-d1] pilot fold-a: frozen (n_D = 4; references 1:35k/45k 2:35k/45k 3:35k/45k 4:35k/45k 5:35k/45k 6:35k/45k 8:35k/45k 12:35k/45k 16:35k/45k)
+[robust-d1] fold-a J/fold I1: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I2: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I3: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I4: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I5: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I6: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I7: 8 initial genomes, 8 new
+[robust-d1] fold-a J/fold I8: 8 initial genomes, 8 new
+[robust-d1] fold-a J: discovery 64 configurations in 0 s
+[robust-d1] fold-a Q/fold I1: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I2: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I3: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I4: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I5: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I6: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I7: 8 initial genomes, 8 new
+[robust-d1] fold-a Q/fold I8: 8 initial genomes, 8 new
+[robust-d1] fold-a Q: discovery 64 configurations in 0 s
+[robust-d1] fold-a J refine J-f1 cycle 1: 1 accepted, 8 evaluated
+[robust-d1] fold-a Q refine Q-f1 cycle 1: 0 accepted, 8 evaluated
+  ✔ mutation: post-cutoff prices +3% change no pilot record, archive or pick (6936.299621ms)
+✔ leakage barriers (7327.816523ms)
+▶ reflection and step patterns
+  ✔ reflect moves inward at a bound and never leaves the box (9.985056ms)
+  ✔ boundary coordinates move with frequency 2/3, like interior ones (64.703894ms)
+  ✔ common random numbers: a shared symbol gets identical steps; labels and windows are independent (3.086693ms)
+  ✔ a zero step pattern reproduces the centre; N2 moves exactly three coordinates; N3 one member (1.668013ms)
+✔ reflection and step patterns (80.112842ms)
+▶ statistics, score and calibration
+  ✔ the summary and the score (0.462863ms)
+  ✔ the calibration rule: floors, caps, pooling of sparse strata, the uncalibrated fallback (0.446574ms)
+  ✔ the discovery sample size and the subsampled standard error (7.88914ms)
+  ✔ the paired bootstrap narrows a difference that common draws share (43.108919ms)
+✔ statistics, score and calibration (52.160199ms)
+▶ PBO by combinatorially symmetric cross-validation
+  ✔ blocks cover the periods contiguously (0.970078ms)
+  ✔ noise is near one half, a dominant configuration is zero (6.445639ms)
+✔ PBO by combinatorially symmetric cross-validation (8.143692ms)
+▶ the study pipeline on a synthetic universe
+  ✔ the worker pool equals the in-process runner, result for result (251.25177ms)
+  ✔ the J ranking is the risk-aware score: a higher centre net with a lower score ranks below (0.222711ms)
+[robust-d1] pilot fold-a: 9 of 9 controls (1 s)
+[robust-d1] pilot fold-a: frozen (n_D = 4; references 1:35k/45k 2:35k/45k 3:35k/45k 4:35k/45k 5:35k/45k 6:35k/45k 8:35k/45k 12:35k/45k 16:35k/45k)
+[robust-d1] fold-a J/fold I1: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I2: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I3: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I4: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I5: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I6: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I7: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I8: 12 initial genomes, 12 new
+[robust-d1] fold-a J: discovery 96 configurations in 0 s
+[robust-d1] fold-a Q/fold I1: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I2: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I3: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I4: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I5: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I6: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I7: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I8: 12 initial genomes, 12 new
+[robust-d1] fold-a Q: discovery 96 configurations in 0 s
+[robust-d1] fold-a J refine J-f1 cycle 1: 1 accepted, 12 evaluated
+[robust-d1] fold-a J refine J-f2 cycle 1: 1 accepted, 12 evaluated
+[robust-d1] fold-a Q refine Q-f1 cycle 1: 0 accepted, 12 evaluated
+[robust-d1] fold-a Q refine Q-f2 cycle 1: 1 accepted, 12 evaluated
+[robust-d1] fold-a J/fold I1: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I2: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I3: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I4: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I5: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I6: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I7: 12 initial genomes, 12 new
+[robust-d1] fold-a J/fold I8: 12 initial genomes, 12 new
+[robust-d1] fold-a J: discovery 96 configurations in 0 s
+[robust-d1] fold-a Q/fold I1: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I2: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I3: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I4: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I5: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I6: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I7: 12 initial genomes, 12 new
+[robust-d1] fold-a Q/fold I8: 12 initial genomes, 12 new
+[robust-d1] fold-a Q: discovery 96 configurations in 0 s
+[robust-d1] fold-a J refine J-f1 cycle 1: 1 accepted, 12 evaluated
+[robust-d1] fold-a J refine J-f2 cycle 1: 1 accepted, 12 evaluated
+[robust-d1] fold-a Q refine Q-f1 cycle 1: 0 accepted, 12 evaluated
+[robust-d1] fold-a Q refine Q-f2 cycle 1: 1 accepted, 12 evaluated
+[robust-d1] fold-a Q/fold I1: 10 initial genomes, 10 new
+[robust-d1] fold-a Q/fold I2: 10 initial genomes, 10 new
+[robust-d1] fold-a Q/fold I3: 10 initial genomes, 10 new
+[robust-d1] fold-a Q/fold I4: 10 initial genomes, 10 new
+[robust-d1] fold-a Q/fold I5: 10 initial genomes, 10 new
+[robust-d1] fold-a Q/fold I6: 10 initial genomes, 10 new
+[robust-d1] fold-a Q/fold I7: 10 initial genomes, 10 new
+[robust-d1] fold-a Q/fold I8: 10 initial genomes, 10 new
+  ✔ pilot, a fold round, and PICKS.json, deterministic across two runs (7904.998572ms)
+  ✔ a discovery budget is respected and coverage top-up islands contain their symbol (45.195105ms)
+✔ the study pipeline on a synthetic universe (8203.089039ms)
+▶ write-once records
+  ✔ a sealed record refuses a second write and detects tampering (2.202087ms)
+  ✔ amendments are anchored to the frozen head, refused after a stage outcome, and hash-chained (39.198369ms)
+✔ write-once records (42.884258ms)
+▶ validation drawdown and lookahead
+  ✔ the windowed drawdown from the whole run equals the replay’s own, on many random pools (68.884706ms)
+  ✔ a later exit price or time changes no earlier funding decision in a six-book pool (27.014056ms)
+✔ validation drawdown and lookahead (96.095234ms)
+▶ the retrospective runner is isolated
+  ✔ no search, pilot, promotion, refinement, assessment or selection module imports it (12.810998ms)
+RETROSPECTIVE — INSPECTED HISTORY — NOT AN INDEPENDENT HOLDOUT — NOT ACCEPTED.
+This configuration was the leading training result of research/joint-16-etf-d1 (frozen "no advancement", 2026-10-25),
+failed its preregistered gates and was never nominated. Post-2023 figures below are a historical inspection of a
+training-optimized peak on data examined repeatedly by this research programme; they validate nothing and must not
+inform any training fitness, ranking or shortlist.
+
+Pass --acknowledge-retrospective to run this inspection.
+  ✔ it refuses without the flag and outside `all`; its provenance verifies (4.136512ms)
+✔ the retrospective runner is isolated (17.169861ms)
+▶ the shared slot and the gate replay
+  ✔ same-minute decisions are answered alphabetically, never double funded, and the replay agrees (5.507352ms)
+  ✔ a refused decision never fills, stays logged, and its book still trades virtually (0.891597ms)
+  ✔ a baseline lot open at the end, or a reservation pending at the end, holds the slot (+∞ conventions) (1.163919ms)
+  ✔ replayGate equals the engine on a multi-book fixture, and the attribution identity holds (3.269295ms)
+✔ the shared slot and the gate replay (11.533108ms)
+▶ the observer, marks and drawdowns
+  ✔ the observer equals the engine field for field and records setups (0.973437ms)
+  ✔ the minute-drawdown re-derivation equals the engine, and window shares sum to V with a lot open at the boundary (0.973428ms)
+  ✔ friction changes stop activation: a full rerun differs from subtracting costs (0.701595ms)
+  ✔ a fill waits for the next existing minute (no imputed fill), and the grid measures regular minutes (0.708885ms)
+✔ the observer, marks and drawdowns (3.585518ms)
+▶ replayGate
+  ✔ grants iff the decision is later than the last granted exit (0.131281ms)
+✔ replayGate (0.204622ms)
+▶ pair metrics
+  ✔ one-to-one matching: no decision is used twice, and (i, j) and (j, i) share one count (0.645035ms)
+  ✔ NA for zero denominators and zero-signal partners; the diagonal is computed (0.271943ms)
+  ✔ asymmetric shares by denominator (0.122161ms)
+✔ pair metrics (1.537362ms)
+▶ clusters and intervals
+  ✔ anchor windows are inclusive, never chain, and count a family once (0.482653ms)
+  ✔ interval measures (0.153222ms)
+✔ clusters and intervals (0.729496ms)
+▶ the screen
+  ✔ average ranks for ties (0.130961ms)
+  ✔ gates, score, roles: members and VOOG excluded, SRC skips S1, NC only ex-ante uneconomic (0.366243ms)
+✔ the screen (0.595565ms)
+▶ on the canonical data
+  ﹣ first-order Δ and the full-path Δ differ in sign (View U XOP added to B4, training era, 5 bps) (0.564554ms) # SKIP
+  ✔ the doors refuse post-cap ends before reading (0.494893ms)
+  ﹣ the protected inputs are unchanged (0.05002ms) # SKIP
+✔ on the canonical data (1.670653ms)
+▶ the rubric (correction C1)
+  ✔ a reshuffle gain is a positive ΔV failing only the complement test (0.503954ms)
+  ✔ a negative-control replay informs its ETF label; only the verdict excludes it (0.458264ms)
+  ✔ Level D labels without a replay keep their qualifiers only when they are complement labels (0.142171ms)
+✔ the rubric (correction C1) (1.596843ms)
+▶ episode catalog
+  ✔ one crash crossing every depth band is one episode (no multiplication by threshold) (0.522664ms)
+  ✔ a 12.5% bear-market rally splits a decline into two episodes of one family (0.149392ms)
+  ✔ families: episodes whose troughs are within 126 sessions of the family’s first trough share it (0.368083ms)
+  ✔ a decline in progress at the cutoff has an unconfirmed trough and an open rebound (0.07275ms)
+  ✔ a dip shallower than the 10% reversal is no episode (0.08078ms)
+  ✔ a trough before arming is ineligible, never a miss (0.216072ms)
+  ✔ the catalog is deterministic (0.438824ms)
+✔ episode catalog (2.457339ms)
+▶ attribution and outcomes
+  ✔ phases: (peak, trough] is the decline, (trough, end] the rebound, elsewhere outside (0.127941ms)
+  ✔ captured, entered with a loss, in position and armed without entry are distinct outcomes (0.197851ms)
+  ✔ dip entry: the decline phase, or at least 50% of the episode’s depth below its peak (0.099751ms)
+  ✔ dip capture needs a dip entry with net > 0; a profitable high re-entry is captured but not dip-captured (0.072781ms)
+  ✔ family nets count eligible episodes only (0.137661ms)
+  ✔ coverage: the share of eligible sessions inside an episode span (0.070131ms)
+  ✔ independent events: anchor troughs at least 252 sessions apart, greedily (0.06476ms)
+  ✔ the deep condition uses the prior L sessions’ highs and the session’s lowest minute close (0.123121ms)
+✔ attribution and outcomes (1.088878ms)
+▶ perturbation designs
+  ✔ OAT points are whole grid units inside the legal grid, or recorded as truncated (0.272062ms)
+  ✔ joint samples are deterministic and inside [v − m, v + m] ∩ the legal grid (1.31956ms)
+  ✔ common random numbers: every phenotype’s samples sit at the same relative strata as VGT primary’s (0.433174ms)
+  ✔ VGT primary’s joint design is the completed VGT audit’s (same vectors) (0.681065ms)
+✔ perturbation designs (2.813301ms)
+▶ accounting
+  ✔ liquidation: proceeds less the per-side cost, interest from the entry session’s midnight (0.08547ms)
+✔ accounting (0.140671ms)
+▶ shortlist rule
+  ✔ top-trade concentration changes nothing (it enters no gate and no grade) (0.912567ms)
+  ✔ the control instrument and semiconductors are scored but never placed; merit slots ignore clusters (0.316912ms)
+✔ shortlist rule (1.30398ms)
+▶ doors refuse before reading
+  ✔ a research phenotype may not be read after 2023-12-29 (0.312172ms)
+  ✔ a fold representative may not be read after its validation end (0.08549ms)
+  ✔ the full-history door opens the unchanged incumbents’ symbols only (0.081511ms)
+  ✔ a research phenotype whose symbol the full-history door would accept is still refused after 2023-12-29 (5.26152ms)
+✔ doors refuse before reading (5.928855ms)
+▶ flags
+  ✔ a clean summary raises nothing (0.609435ms)
+  ✔ each flag fires at its predeclared threshold (0.189711ms)
+  ✔ F4 is "insufficient" when the base dip-captured fewer than two major families (0.06263ms)
+  ✔ F8 separates negative evidence, no evidence and hindsight (0.079941ms)
+✔ flags (1.458861ms)
+▶ standing
+  ✔ (iii) when the base or C1 loses, the neighbourhood median loses or < 50% profit, or the DD ceiling is breached (0.226382ms)
+  ✔ (i) needs no blocking flag and two of three axes; F7 and F8 "no evidence" do not block (0.223831ms)
+  ✔ an axis must hold on the pooled samples and on each seed; ties count as met but not as strictly better (0.409013ms)
+  ✔ "stronger" needs all three axes, one strictly better, the procedure-matched control on two, and no F7 (0.134121ms)
+  ✔ "stronger" also needs period-correct support: a fold with V > 0 and none negative (0.089211ms)
+  ✔ a control is never "stronger" than itself (0.091281ms)
+✔ standing (1.38001ms)
+▶ ETF level
+  ✔ the representative decides; an unsupported alternative demotes (i) to (ii) (0.09394ms)
+  ✔ a better alternative never promotes the ETF (0.05536ms)
+✔ ETF level (0.203972ms)
+▶ the calendar door
+  ✔ fold A’s training door refuses before S18’s and S19’s selections are sealed (126.085163ms)
+  ✔ fold B’s training door refuses before fold A’s and S20’s selections; a selection of the wrong fold is refused (3.395526ms)
+✔ the calendar door (167.975633ms)
+▶ the training door and the training-only stages
+  ✔ bars after the cutoff cannot change the loaded bars, the metrics, the families, the libraries or the nominees (485.197316ms)
+[d1-library-study] search A: 2 symbols through 2020-06-30, min trades 4
+[d1-library-study] search A: Sobol done (2048 evaluations)
+[d1-library-study] search A: refinement round 1 done (2120 evaluations)
+[d1-library-study] search A: refinement round 2 done (2192 evaluations)
+[d1-library-study] search A: 2 symbols through 2020-06-30, min trades 4
+[d1-library-study] search A: Sobol done (2048 evaluations)
+[d1-library-study] search A: refinement round 1 done (2120 evaluations)
+[d1-library-study] search A: refinement round 2 done (2192 evaluations)
+  ✔ the new search (Sobol, refinement starts and moves, candidate ids) is byte-identical when bars after the cutoff change (2238.821684ms)
+  ✔ libraries are K-nested and every nominee belongs to its K-library (148.474974ms)
+✔ the training door and the training-only stages (2873.04987ms)
+▶ the evaluation door and the source caps
+  ✔ refuses after the cutoff before the sealed selection, after T1’s selection end before the nested selection, and after 2023-12-29 (87.231686ms)
+  ✔ the door refuses an archived row beyond its source door and a non-T1 pool in T1’s later window (6.843182ms)
+  ✔ the calendar door: B-sel’s window needs T1; a 2023 load needs T2 and S22 (99.602411ms)
+  ✔ the phases’ prerequisites follow PROTOCOL.md §8.2 (0.666575ms)
+  ✔ source vectors: fold-a never after 2021-12-31, final never (0.207441ms)
+  ✔ every stage refuses the test overrides (0.146261ms)
+✔ the evaluation door and the source caps (195.110551ms)
+▶ fold accounting at the boundary
+  ✔ a lot open at the cutoff is carried: mark(cutoff) = training net and V = mark(end) − mark(cutoff), fast = engine (287.480006ms)
+✔ fold accounting at the boundary (287.684578ms)
+▶ trade-path distance
+  ✔ identical paths are at distance 0; disjoint paths at 1 (0.489754ms)
+  ✔ entries match within ±3 sessions only (0.084251ms)
+  ✔ the distance is the larger of the held-session and entry distances (0.131391ms)
+✔ trade-path distance (1.20732ms)
+▶ bounded-diameter families
+  ✔ a chain A–B–C with d(A,C) above the diameter is never one family (no single-linkage chaining) (0.225622ms)
+  ✔ the partition is visited by net (desc) then key, independent of input order (0.413123ms)
+  ✔ the medoid minimizes the summed distance (ties: higher net) (0.150931ms)
+✔ bounded-diameter families (0.918797ms)
+▶ paired comparison and verdicts
+  ✔ favourable needs mean ΔV > 0 at 5 and 10 bps, more ETF wins than losses and more cluster wins than losses (0.652195ms)
+  ✔ one flagship winner and many small losses is not favourable (0.245731ms)
+  ✔ breaches: +3 over the baseline is risk-incompatible; +2 blocks favourable (0.287702ms)
+  ✔ fewer than 10 differing ETFs is insufficient however large the mean (the tie problem) (0.248362ms)
+  ✔ fewer than 10 active ETFs is insufficient evidence, never favourable or unfavourable (0.186692ms)
+  ✔ improves needs both folds at K = 8 and K = 16 and at K = 32 or 64 (0.237082ms)
+  ✔ an insufficient K = 16 cell in either fold is insufficient evidence, not "no evidence" (0.04904ms)
+  ✔ worse: unfavourable in both folds at 8, 16 and 32 or 64, or risk-incompatible at 16 (0.070331ms)
+  ✔ K = 32 in one fold and K = 64 in the other is not the 32-or-64 condition (0.04532ms)
+  ✔ precedence: risk-incompatible at K = 16 makes "worse" even beside an insufficient K = 16 cell (0.031531ms)
+  ✔ nested cell and nested verdict: T1/NEW decides; T1/NEW-S worse blocks an advantage (0.125771ms)
+  ✔ "worse" on NEW (or ALL) blocks outcome 1 even when ARCH improves (0.109951ms)
+  ✔ the study outcome is exactly one of four (0.11367ms)
+✔ paired comparison and verdicts (2.712401ms)
+▶ statistics
+  ✔ type-7 quantiles and Spearman with ties (0.163141ms)
+✔ statistics (0.205281ms)
+▶ data/partitions.json
+  ✔ the shipped boundaries: inclusive New York dates, consecutive, all unbounded (2.472739ms)
+  ✔ strict validation: gaps, overlaps, bad dates, other zones, unknown keys and a bounded all are refused (1.649603ms)
+  ✔ migrate writes the default metadata only when there is none (1.559962ms)
+✔ data/partitions.json (6.305528ms)
+▶ migrating the former four files
+  ✔ all becomes data/<SYMBOL>/data.csv byte for byte; the four files go; other files stay (20.485997ms)
+  ✔ a dry run checks everything and changes nothing (3.045304ms)
+  ✔ an all that is not the ordered union stops the symbol (1.730843ms)
+  ✔ physical files that disagree with partitions.json stop the symbol (3.647818ms)
+  ✔ duplicates, disorder, rows outside the partitions and malformed rows stop the symbol (11.211265ms)
+  ✔ an incomplete former layout, or a different existing canonical file, is refused (4.159261ms)
+  ✔ an interrupted migration (canonical file written, former files still there) resumes (2.58261ms)
+✔ migrating the former four files (47.245111ms)
+▶ verify and import
+  ✔ verify catches a damaged canonical file and reports left-over former files (5.593062ms)
+  ✔ a new download becomes the canonical file without any partition files; a header is left out (8.457464ms)
+  ✔ an invalid download is refused and nothing is written (1.309919ms)
+✔ verify and import (15.537158ms)
+▶ appending new sessions
+  ✔ rows after the last bar are appended; overlapping identical rows are skipped; history is untouched (5.663243ms)
+  ✔ a download that revises existing rows, or holds rows the file lacks, is refused and nothing changes (3.9344ms)
+✔ appending new sessions (9.713355ms)
+▶ rise from recent low: rolling window and threshold
+  ✔ fires on the first bar at or above X% over the rolling low of the last N bars (current bar included) (0.753605ms)
+  ✔ threshold equality counts as reached, including values with binary rounding (107 vs 100 × 1.07) (0.139521ms)
+  ✔ the low of the current bar is part of the window (0.06527ms)
+  ✔ equal lows: the earliest bar is reported as the recent low (0.053991ms)
+✔ rise from recent low: rolling window and threshold (1.495741ms)
+▶ rise from recent low: edge trigger and rearming
+  ✔ staying above the threshold with repeated new highs signals once (0.112981ms)
+  ✔ rearms only after the advance falls back below X, then fires again on the next crossing (0.05242ms)
+  ✔ a rising rolling low (flat price after a rally) rearms the rule (0.050481ms)
+  ✔ the first evaluable bar only sets the state: no crossing is observed there (0.05936ms)
+✔ rise from recent low: edge trigger and rearming (0.403234ms)
+▶ rise from recent low: warm-up, gaps, missing bars, validation
+  ✔ warm-up bars provide the low and the previous state, but never signals (0.094911ms)
+  ✔ the lookback counts bars present in the data: a time gap neither resets nor stretches it (0.127911ms)
+  ✔ refuses invalid parameters and unordered bars (0.247592ms)
+  ✔ no lookahead: the signals of every prefix equal the full run’s signals up to that bar (0.591454ms)
+✔ rise from recent low: warm-up, gaps, missing bars, validation (1.34805ms)
+▶ bars from sessions
+  ✔ daily bars end at the scheduled close; intraday buckets start at the open and the last one is short (0.229651ms)
+  ✔ early-close sessions end at 13:00 and missing minutes produce no bar (0.105471ms)
+✔ bars from sessions (0.392173ms)
+▶ forward outcomes
+  ✔ measures later sessions only, censors horizons past the window, and keeps unknown targets null (0.180101ms)
+  ✔ summaries count hit rates over complete windows only (0.226042ms)
+✔ forward outcomes (0.459263ms)
+▶ no lookahead through the data
+  ✔ a run ending at the fold end equals the same run on data physically truncated there (84.098673ms)
+✔ no lookahead through the data (3307.469028ms)
+▶ worker threads
+  ✔ results do not depend on the worker count (449.803686ms)
+✔ worker threads (452.447906ms)
+▶ quantization
+  ✔ every lattice percentage reaches the engine as the double of its decimal literal (0.436664ms)
+  ✔ genomes and parameters round-trip, and the defaults sit on the lattice (0.582035ms)
+✔ quantization (1.176629ms)
+▶ targeted scenarios
+  ✔ the early-close rebound fills at the next opening trade (1.27545ms)
+  ✔ a gap through an active stop exits at the opening trade (0.362733ms)
+  ✔ the engine equals every family copy on this scenario (40.338028ms)
+  ✔ the maximum hold sells on the first session at least 15 calendar days after entry (0.406353ms)
+  ✔ the buffered exit decided on the last minute fills at the next opening trade (8.571676ms)
+✔ targeted scenarios (53.870252ms)
+{
+ "trades": 3382,
+ "overnight orders": 5,
+ "recovery resets": 110,
+ "suppressed rebounds": 1553,
+ "restrictions": 847,
+ "buffered exits": 45,
+ "early-close sessions": 294,
+ "sessions without closing print": 1331,
+ "entry first trade after decision": 3359,
+ "exit maximum hold / first trade after decision": 1560,
+ "exit trailing stop gap / opening trade": 790,
+ "exit trailing stop / first trade after decision": 328,
+ "exit open": 154,
+ "exit buffered intraday loss / first trade after decision": 45,
+ "exit trailing stop / stop level": 331,
+ "exit trailing stop / minute open through stop": 171,
+ "entry opening trade": 5,
+ "entry closing print": 18,
+ "exit maximum hold / closing print": 1,
+ "exit trailing stop / closing print": 2
+}
+▶ random synthetic scenarios against the copies
+  ✔ engine = copy on 240 random scenarios x 4 families (4782.548898ms)
+✔ random synthetic scenarios against the copies (4782.966991ms)
+▶ reference highs
+  ✔ the sliding maximum equals the previous L sessions, excluding the current one (17.110451ms)
+  ✔ the engine never arms before armStart (16.504706ms)
+✔ reference highs (33.929079ms)
+✔ a standalone configuration enables Growth·GDX only; cash enables nothing (20.680618ms)
+✔ the controls: Appendix A, the predeclared prior set by its rule, cash; all exactly representable (31.633361ms)
+✔ the protected strata: 64 Rise and 32 breakout cells, round-robin pinning (97.935628ms)
+✔ budgets: independent 16,384 / 32,768 per cutoff; informed 8,192 / 16,384 (0.306613ms)
+✔ neighbourhood rows move only active GDX inputs and keep the other books disabled (28.875891ms)
+✔ roles: actual-profit by centre net; robust, balanced and lower-drawdown on the selection families (0.304162ms)
+✔ labels against a reference are descriptive: dominance, trade-off, stability, finite-draw overlap (0.149192ms)
+✔ every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance) (1.148649ms)
+✔ the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not (0.130721ms)
+✔ host pipeline: the request bytes and every result equal the serial codec, in candidate order, for 1–4 workers (1510.113277ms)
+✔ host pipeline: a corrupted response, a stale nonce, another device and a missing candidate are refused; nothing is returned (392.414658ms)
+✔ host pipeline: a worker that throws, exits or hangs fails closed; every later call is refused (4739.852851ms)
+✔ host pipeline: an encoding error is the serial path's error; the worker door equals the main door (138.885151ms)
+✔ GpuPool on the host pipeline: callers that run while the pool starts, every worker count, the same records as the serial path (687.599053ms)
+✔ GpuPool on the host pipeline: a worker that fails mid-job fails every caller; nothing of that batch is released (197.989353ms)
+✔ protocol v2 layout: TypeScript offsets equal the C++ offsetof of gb.h (51.454893ms)
+✔ purpose: explicit, never defaulted; unknown refused (0.598785ms)
+✔ a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose (0.119191ms)
+✔ the legacy runner wrapper refuses before importing the runner (207.165633ms)
+✔ every npm script that can start a CPU research runner or optimizer goes through the purpose gate (0.622345ms)
+✔ the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate (301.425793ms)
+✔ entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged (151.165265ms)
+✔ acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed (95.478569ms)
+✔ preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin (0.520064ms)
+✔ the deferred pilot domain reaches only capabilities the evaluator implements (3362.121756ms)
+✔ MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path) (0.198642ms)
+▶ gpu-phase1 interface (v1)
+  ✔ the TypeScript struct sizes equal the header static_asserts (0.657355ms)
+  ✔ the dataset file carries the exact Dataset arrays and a verifiable checksum (1.574932ms)
+✔ gpu-phase1 interface (v1) (2.709271ms)
+▶ gpu-phase1 GPU parity (skipped without the research binary and a CUDA device)
+  ✔ reproduces the CPU engine bit for bit on synthetic paths and refuses an unsupported option (116.323869ms)
+✔ gpu-phase1 GPU parity (skipped without the research binary and a CUDA device) (116.553231ms)
+▶ budgets
+  ✔ 1,024 proposals per ETF per cutoff and the exact worst-case caps (0.345152ms)
+✔ budgets (0.771756ms)
+▶ space
+  ✔ cash and identities; inactive inputs never change the identity (13.749766ms)
+  ✔ 64 Rise and 32 breakout strata (0.08781ms)
+  ✔ neighbourhood rows: common random numbers, duplicates flagged, clipping counted, deterministic (11.633168ms)
+✔ space (25.625026ms)
+▶ the ETF shortlist from the lanes
+  ✔ profit, robust, balanced, then a seed alternative when one seed is represented; one per ledger (26.724765ms)
+✔ the ETF shortlist from the lanes (26.814695ms)
+▶ confirmation picks
+  ✔ ranks on the selection family among passing members; one attempt when none passes (0.234021ms)
+✔ confirmation picks (0.328803ms)
+▶ the ETF-shortlisting rule
+  ✔ Tier 1 by rank sum, one per cluster, at most three; near misses then Tier 2; controls never count (0.290473ms)
+  ✔ no Tier-1 ETF: no shortlist (0.086181ms)
+✔ the ETF-shortlisting rule (0.464124ms)
+▶ sequential policies
+  ✔ charges 5 bps of $100,000 per lot closed or adopted at a switch; none for the same configuration (0.510914ms)
+  ✔ a drawdown over the ceiling makes the policy unsupported (0.283252ms)
+✔ sequential policies (0.854406ms)
+▶ the compute ledger guard
+  ✔ refuses a job whose worst case would pass the ceiling (0.443843ms)
+✔ the compute ledger guard (0.491873ms)
+▶ forward split adjustment is causal
+  ✔ a later split never changes earlier prices; the effective session onwards is × ratio (0.210242ms)
+✔ forward split adjustment is causal (0.248102ms)
+▶ the qualifying exit and the window
+  ✔ the base path: one base trade, a stop exit at 114, net > 0 after interest; OFF opens nothing (3.826489ms)
+  ✔ a profitable exit opens one episode anchored at the exit session: eligible s0+1 … s0+W (0.958297ms)
+  ✔ a losing exit never opens a window (0.370773ms)
+✔ the qualifying exit and the window (5.664383ms)
+▶ classic_d1 (D1 pullback + trailing rebound, minute-native)
+  ✔ arms on the completed minute closing ≤ H(1−P), buys on the Y rebound at the next minute open (0.844027ms)
+  ✔ equality boundaries: a close exactly at H(1−P) arms; a close exactly at trailingLow(1+Y) fires (0.477734ms)
+  ✔ the same states as D1’s own EntryMachine driven directly (onExit, processBar per minute, afterSession) (0.563254ms)
+  ✔ the window expires after session s0+W; a pullback on s0+W+1 does not arm (1.399051ms)
+  ✔ H rises with later session highs (not the exit session), never with the current session (0.402143ms)
+  ✔ base priority: a base entry at the arming instant takes the entry and closes the window (0.490783ms)
+  ✔ a base entry while a setup is armed cancels the setup (Growth adaptation) and is the only entry (0.371403ms)
+  ✔ an armed setup persists past the window (D1) and fires on a later session (0.290862ms)
+✔ classic_d1 (D1 pullback + trailing rebound, minute-native) (5.146959ms)
+▶ breakout above the post-exit high (run-resolution bars)
+  ✔ formation first; then a close strictly above H(1+b); fills at the next session’s opening trade (0.341262ms)
+  ✔ the first eligible bar is formation only, even when it closes above the threshold (0.259401ms)
+  ✔ renewed highs only: a later higher high raises the reference, a recovery below it does not trigger (0.220931ms)
+  ✔ a candidate never sees its own high; equality (close = H(1+b)) does not trigger (0.260912ms)
+  ✔ a pending continuation order blocks a base decision before its fill (order_pending) (0.315472ms)
+✔ breakout above the post-exit high (run-resolution bars) (1.527091ms)
+▶ shallow pullback + recovery in an uptrend
+  ✔ arms inside [pmin, pmax] in an uptrend, triggers on the recovery from the trough (0.398814ms)
+  ✔ the uptrend filter is necessary: the same path after a falling history never arms (0.280362ms)
+  ✔ a pullback deeper than pmax ends the episode (pullback_too_deep); no later re-arming (0.793226ms)
+  ✔ equality: a pullback exactly pmin arms; a close exactly trough(1+R) triggers (0.546984ms)
+  ✔ an armed setup expires with the window (0.366282ms)
+✔ shallow pullback + recovery in an uptrend (2.51488ms)
+▶ cross above a rising moving average
+  ✔ a genuine cross from below while the SMA rises triggers; fills next session (0.401873ms)
+  ✔ no trigger while the SMA is not rising, nor from a bar already above it (continuously above) (0.282182ms)
+  ✔ equality: a prior close equal to its SMA counts as below; a close equal to its SMA does not cross (1.428741ms)
+  ✔ base priority at the same instant: the base entry is taken, the continuation trigger is suppressed (0.310732ms)
+  ✔ warm-up: no SMA without enough completed bars; the warm-up extends only when continuation is ON (0.110981ms)
+✔ cross above a rising moving average (2.65782ms)
+▶ intraday resolution, attribution and validation
+  ✔ 5-minute bars: decisions at bar ends, fills strictly after the decision (0.380793ms)
+  ✔ attribution by origin is descriptive and sums to the run totals (0.331883ms)
+  ✔ configuration errors are reported by the engine (0.084481ms)
+✔ intraday resolution, attribution and validation (0.865167ms)
+▶ continuation on real data: one illustrative configuration per method (diagnostics only)
+  ✔ VGT 1d classic_d1: causal, attributed, reconciled, base signals unchanged (6733.155689ms)
+  ✔ VGT 1d breakout: causal, attributed, reconciled, base signals unchanged (7063.384082ms)
+  ✔ VGT 1d shallow_pullback: causal, attributed, reconciled, base signals unchanged (6906.152241ms)
+  ✔ VGT 1d ma_cross: causal, attributed, reconciled, base signals unchanged (6839.769687ms)

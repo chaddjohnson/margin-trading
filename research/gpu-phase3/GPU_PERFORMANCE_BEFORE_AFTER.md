@@ -18,13 +18,21 @@ is reported**; none was dropped. Machine-readable: `results/bench/before-after.j
 | Identity | every replay compared with its sealed record (lanes, extension rounds, fresh counts) or, for W-S, every archived record hash with the other arm: **all identical** (§5) |
 | Profile | wall (from the Lab's open to the job's end), main-thread event-loop utilization, process CPU, GC, peak RSS, archive-write time, per-batch server / encode / decode times from the receipt ledger; GPU telemetry every 30 s |
 
-## 2. Headline
+## 2. Headline (wall time of complete optimizer jobs; every run listed)
 
-| Job | CPU (sealed) | Phase 2 path (before) | Phase 3 host pipeline (after) | after vs before | after vs CPU |
+| Job | CPU, original sealed run | Phase 2 path (before) | Phase 3 host pipeline (after, final binary) | after vs before | after vs CPU |
 |---|---:|---:|---:|---:|---:|
-| W-A3 Growth searched, 64 lanes, 1.24 M | 5,900.8 s (12 workers) | **1,128.9 s** (1,131.1; 1,126.8) | FILL | FILL | FILL |
-| W-A2 Growth fixed, 128 lanes, 2.20 M | 4,681.1 s (14 workers) | **1,641.0 s** | FILL | FILL | FILL |
-| W-S small batches, 16 lanes, 30,749 | — (CPU arm: §4) | **72.8 s** (×3) | FILL | FILL | — |
+| **W-A3** Growth searched, 64 lanes, 1.24 M evaluations | 5,900.8 s (12 workers) | 1,131.1 / 1,126.8 s | **583.8 / 581.7 s** | **1.94×** | **10.1×** |
+| **W-Q** A3 C19 broad qualification, 385 members, 251 k | 1,249.5 s (12 workers) | 238.5 s (Phase 2's run) | **163.7 s** | 1.46× | **7.6×** |
+| **W-A2** Growth fixed, 128 lanes, 2.20 M evaluations | 4,681.1 s (14 workers) | 1,641.0 s | **724.8 / 726.4 s** | **2.26×** | **6.45×** |
+| **W-S** small batches, 16 lanes, 30,749 (median batch 376) | 123.2 s (12 workers, this study's CPU arm) | 72.8 / 72.8 / 72.8 s | **65.2 / 65.3 / 65.2 s** | 1.12× | 1.89× |
+| W-S on 1 host worker / on the serial path (0) | | | 73.8 s / 72.6 s | 0.99× / 1.00× | |
+| W-A3, the protocol's CPU re-measurement on this machine (12 workers, this study) | FILL | | | | |
+
+Interpretation (brief §6): the Growth-searched job reaches **≈ 10× the original 12-worker CPU job** (the lower edge of
+the brief's 10–15× hypothesis) at **≈ 1.9× the accepted Phase 2 design**; the Growth-fixed job reaches ≈ 6.5× (it is
+now bound by the main thread's lane logic and archive, utilization 0.77); the small-batch control is GPU-latency-bound
+and gains little (1.12×). Every figure is measured; nothing is extrapolated in this table.
 
 ## 3. Where the time went (W-A3, before → after)
 
@@ -60,7 +68,18 @@ remains is the optimizer's own round-trip dependency — lanes wait for their ba
 - Larger batches cut GPU time (the kernels are latency-bound: one thread walks a candidate's whole door) but lengthen
   every round the lanes wait for, so the wall grew; 8,192 stays the default.
 
-FILL: final-campaign repetitions (W-A3 ×2, W-A2 ×2, W-S ×3 + w1, w0, CPU arm), and the sustained run's throughput by door.
+### Sustained production-pool throughput (H6 run, 45 min, 8 host workers; mean ev/s per round, rounds in brackets) vs Phase 2's 8 h run
+
+| Door | joint | detail + risk | all options | D1-only | Growth-only |
+|---|---|---|---|---|---|
+| D19 | 3,012 (5) vs 1,445 = 2.08× | 2,167 (5) vs 1,170 = 1.85× | 3,140 (5) vs 1,314 = 2.39× | 5,333 (5) vs 2,204 = 2.42× | 4,046 (5) vs 1,684 = 2.40× |
+| D21 | 2,030 (5) vs 1,088 = 1.87× | 1,509 (5) vs 872 = 1.73× | 2,106 (5) vs 991 = 2.13× | 3,519 (5) vs 1,637 = 2.15× | 2,739 (5) vs 1,294 = 2.12× |
+| D23 | 1,559 (5) vs 901 = 1.73× | 1,146 (5) vs 698 = 1.64× | 1,574 (5) vs 822 = 1.91× | 2,606 (5) vs 1,354 = 1.92× | 2,155 (5) vs 1,123 = 1.92× |
+| D24 | 1,399 (4) vs 825 = 1.70× | 1,020 (4) vs 632 = 1.61× | 1,404 (4) vs 748 = 1.88× | 2,372 (4) vs 1,239 = 1.91× | 1,912 (4) vs 1,021 = 1.87× |
+| FULL | 1,137 (4) vs 687 = 1.65× | 851 (4) vs 542 = 1.57× | 1,156 (4) vs 653 = 1.77× | 1,957 (4) vs 1,036 = 1.89× | 1,574 (4) vs 877 = 1.79× |
+
+(Phase 2's figures: `research/gpu-phase2/GPU_PHASE2_BENCHMARKS.md` §10. Longer doors gain less: their kernels take longer
+per batch, so the host share was smaller to begin with; detail + risk gains least: its decode is heavier per candidate.)
 
 ## 5. Decisions (complexity budget, brief §6)
 

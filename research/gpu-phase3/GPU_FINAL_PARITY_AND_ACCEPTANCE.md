@@ -124,7 +124,31 @@ optimization decision.
 
 ## 5. Sanitizer (H4), negative and tamper tests (H5, P5), sustained run (H6)
 
-FILL.
+**Sanitizer** (`tools/gpu-phase3/sanitize.ts` → `results/sanitizer-final/sanitizer.json`; compute-sanitizer
+Version 2026.1.1.0 (build 38000597) (public-release)) on the final binary, door W-CRASH, 97 subjects (references, every Growth structural
+value, 64 random; detail + risk, blackouts and period boundaries), the request built and the response decoded by the
+host pipeline (4 workers) — the host workers change host buffers that become device inputs, so the full device-side
+scope ran even though the kernels are byte-identical:
+
+| Tool | Errors | Identical to the CPU | Smoke | Time |
+|---|---:|---:|---|---:|
+| memcheck (leak check) | 0 | 97/97 | ok | 25 s |
+| racecheck | 0 | 97/97 | ok | 5 s |
+| initcheck | 0 | 97/97 | ok | 14 s |
+| synccheck | 0 | 97/97 | ok | 4 s |
+
+**Negative tests** 45/45 and **source-tamper suite** 14/14 (baseline ok): every case refused,
+terminated or detected with no CPU-scored evaluation and no result released; details in `GPU_ENFORCEMENT_INTEGRITY.md` §6.
+
+**Sustained run (H6, one bounded run, `tools/gpu-phase3/sustained.ts --minutes 45` → `results/sustained/summary.json`):**
+2026-11-19 20:20:15 → 21:05:33Z (45.3 min), the production pool on 8 host workers, rounds of 32,768 fresh seeded
+Assignment 3 genomes rotating doors D19, D21, D23, D24, FULL and five mixes (joint, detail + risk, all options, D1-only,
+Growth-only), the whole round queued at once (backpressure): **115 rounds, 3,768,320 GPU evaluations, 0 GPU or host-path
+failures, 0 restarts, 0 CPU-scored; 5,520 CPU parity samples (canonical record hashes) and 15 repeatability checks of
+fixed batches — 0 mismatches**. Peaks: 58 °C, 221 W (of 600), VRAM 7,394 MiB, host RSS 8,977 MiB (transient, FULL
+rounds); mean host RSS by third of the run 5.6 / 6.6 / 6.5 GiB (no growth after warm-up); no clock throttling. This is
+45 minutes of operation, not a long-run guarantee: Phase 2's 8 h run (23.95 M evaluations, 0 errors) is reused only
+for the byte-identical kernels and server; faults of the new host path rarer than about once an hour are not excluded.
 
 ## 6. Repository and Strategy Lab (H7)
 
