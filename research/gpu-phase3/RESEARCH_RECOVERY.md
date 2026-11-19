@@ -2,16 +2,27 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T16:52Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — Stages 1–3 complete (Priority A done, B rejected, C deferred; 8 host workers, batch
-  8,192); Stage 4 code in place; next: the final binary and the final campaign.
+- **Updated:** 2026-11-19T17:23Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — Stages 1–4 complete (Priority A done, B rejected, C deferred; 8 host workers, batch
+  8,192; enforcement v2 with dry runs negative 45/45, tamper 14/14); final binary `research/gpu-phase3/build/gb3` sha256
+  `06a4a04a83265616ab363632c02bf5d7737f34ec12156655cf95e135dde0dc23` (compat `30824182…2998`, reproducible, kernels =
+  Phase 2's; `results/final-binary.json` sealed `e60e91e2…a583`). Stage 5 final campaign RUNNING.
 - **Authority:** `brief/BRIEF.md` sha256 `925e97e80dd8bca0bbc470fe07ef31388efcbae8ca26f9153efb10d02933f6be` (the user's
   handoff, read in full, 267 lines, final section "Final success criterion" present). `PROTOCOL.md` FROZEN
   2026-11-19T14:21:42Z (`results/protocol-freeze.json` sha256 `42d41b249a83aa3e1cc9794afe94ca401e519880bc7e830d5c1956a94f944475`,
   protocol `952da32c…1a1b`); no amendments. Standard 3.0.0 adopted (scope diagnostic); preflight PASS.
-- **Running:** nothing.
-- **Next:** build the final binary (`tools/gpu-phase3/build-final.sh`), dry-run negative / tamper / sustained (smoke)
-  into `results/dev/`, then the final campaign (`chains/final.sh`), `chains/tests.sh`, `tools/gpu-phase3/accept.ts`.
+- **Running:** unit `gpup3-final` (`chains/final.sh`, START=1 HW=8), log `results/logs/final-chain.txt`, started
+  2026-11-19T17:22:05Z on commit `d113e6c5` (source tree clean). Steps (numbered in the log): 1 offline-check, 2
+  parity-campaign (`chains/parity.sh`, sub-units `gpup3-par-*`, logs `results/logs/parity-final/`), 3 parity-summary, 4
+  finalists, 5–8 A3 r1/r2 + compares, 9 A3 qualification, 10–13 A2 r1/r2 + compares, 14 mini CPU arm, 15–17 mini w8
+  r1–r3, 18 w1, 19 w0, 20–21 interrupted/resumed, 22–26 compares, 27 sanitizer, 28 negative, 29 tamper, 30 sustained
+  45 min, 31 bench summary. Finished iff the log ends with "chain complete"; "FAILED <n> [step]" marks a failure.
+  **Resume:** inspect the failure, fix (only tooling may change without a new build; any src/tools/config change must be
+  committed), then relaunch with `START=<n>` (passed steps are not rerun; each step rewrites only its own outputs).
+  **Never edit chains/final.sh or chains/parity.sh while they run.**
+- **Next:** after the chain: `chains/tests.sh` (npm test, Strategy Lab; GPU free), then `tools/gpu-phase3/accept.ts`,
+  commit, `tools/gpu-backend/verify-acceptance.sh --rebuild --device`, live official preflight; reports; merge (Stage 7);
+  bundle (Stage 8).
 - **Never:** start/implement/run the risk-envelope pilot; change strategies, fitness, genome, budgets, seeds or
   selection; touch sealed studies' records; CPU fallback; a new 8 h/24 h endurance run (only one 30–60 min sustained run).
 
