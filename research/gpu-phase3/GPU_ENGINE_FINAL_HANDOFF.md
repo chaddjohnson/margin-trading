@@ -17,14 +17,14 @@ FILL (verdict, acceptance record, merge status).
 | 3 | Priority B measured and rejected; Priority C deferred | archive JSON 1.5 % of the wall; kernels latency-bound, unchanged |
 | 4 | Enforcement hardened: manifest v2 (host path + pinned enforcement group), acceptance schema 2 (source revision), independent re-hash and committed-source checks in the gate, official npm-runner wrapper, independent verifier, file-classification rule, tamper suite | `GPU_ENFORCEMENT_INTEGRITY.md` |
 | 5 | One final acceptance campaign on the final binary `06a4a04a…` (2026-11-19 17:22–21:05Z; tests 21:05–21:16Z) | all gates pass: parity 144,795 / 0 mismatches, sealed replays identical, sanitizer clean, 45/45 negative, 14/14 tamper, 45-min sustained run, npm test = known failures only, Strategy Lab 314 + 81 |
-| 6 | Performance verdict | Growth-searched job 10.1× the original CPU job (the brief's "≈ 10–15×, excellent if exact" band; parity exact); Growth-fixed 6.45×; small batches 1.89×. The pipeline is the default; performance work stopped (no chase of 20–30×) |
+| 6 | Performance verdict | Growth-searched job ≈ 10× the 12-worker CPU job (10.1× the sealed run; 9.94–9.98× this machine's re-measurement) (the brief's "≈ 10–15×, excellent if exact" band; parity exact); Growth-fixed 6.45×; small batches 1.89×. The pipeline is the default; performance work stopped (no chase of 20–30×) |
 | 7 | Merge into `main`, branch restoration | FILL |
 
 ## 3. Measured speed (wall time of complete optimizer jobs)
 
 | Job | CPU (original sealed run) | Phase 2 path (before) | Final (after) | after vs Phase 2 | after vs CPU |
 |---|---:|---:|---:|---:|---:|
-| Assignment 3 C19 broad1 search — Growth searched, 64 lanes, 1.24 M evaluations | 5,900.8 s (12 workers) | 1,131.1 / 1,126.8 s | 583.8 / 581.7 s | **1.94×** | **10.1×** |
+| Assignment 3 C19 broad1 search — Growth searched, 64 lanes, 1.24 M evaluations | 5,900.8 s (12 workers); re-measured on this machine: 5,803.6 s | 1,131.1 / 1,126.8 s | 583.8 / 581.7 s | **1.94×** | **10.1×** (9.94–9.98× vs the re-measurement) |
 | Assignment 3 C19 broad qualification — 385 members, 251 k evaluations | 1,249.5 s (12 workers) | 238.5 s | 163.7 s | 1.46× | **7.6×** |
 | Assignment 2 C19 base search — Growth fixed, 128 lanes, 2.20 M evaluations | 4,681.1 s (14 workers) | 1,641.0 s | 724.8 / 726.4 s | **2.26×** | **6.45×** |
 | Small-batch control — 16 lanes, 30,749 evaluations, median batch 376 | 123.2 s (12 workers) | 72.8 s (×3) | 65.2 s (×3) | 1.12× | 1.89× |

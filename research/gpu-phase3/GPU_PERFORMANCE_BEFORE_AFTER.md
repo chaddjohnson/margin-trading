@@ -14,7 +14,7 @@ is reported**; none was dropped. Machine-readable: `results/bench/before-after.j
 | Code | each job's own frozen search code, seeds, cells, budgets, caps and doors (`tools/gpu-phase3/replay.ts`, the job body of its `stages.ts` line for line); identical command line for every version |
 | "Before" | the **accepted Phase 2 host path**: the unmodified code of `a1836407` and the Phase 2 binary `3fe09e67…`, measured in this study before any change (Stage 1) |
 | "After" | the Phase 3 host pipeline (8 host worker threads, batch 8,192, linger 30 ms) on the final binary `06a4a04a…` (kernels byte-identical to `3fe09e67…`; Stage 2 sweeps ran on `3fe09e67…`) |
-| CPU baseline | the **original** CPU runs recorded in the sealed records: W-A3 5,900.8 s on 12 workers (Assignment 3's production pool); W-A2 4,681.1 s on 14 workers (Assignment 2's). The canonical CPU engine is unchanged since (its 94-file digest `c8a9f416…` is identical), and Phase 2 re-measured the 12-worker CPU throughput on this machine one day earlier (D19 joint 200.0 ev/s ⇒ ≈ 6,214 s implied for W-A3), so the sealed figure is a fair baseline; it was not re-run here (98 min) |
+| CPU baseline | the **original** CPU runs recorded in the sealed records: W-A3 5,900.8 s on 12 workers (Assignment 3's production pool); W-A2 4,681.1 s on 14 workers (Assignment 2's); and, as PROTOCOL.md §2 committed, **W-A3 re-measured once on 12 CPU workers on this machine** after the final campaign (5,803.6 s, identical to the sealed record, nothing else running). The canonical CPU engine is unchanged (its 94-file digest `c8a9f416…` is identical). W-A2 and the qualification were not re-run on the CPU (their sealed figures are used) |
 | Identity | every replay compared with its sealed record (lanes, extension rounds, fresh counts) or, for W-S, every archived record hash with the other arm: **all identical** (§5) |
 | Profile | wall (from the Lab's open to the job's end), main-thread event-loop utilization, process CPU, GC, peak RSS, archive-write time, per-batch server / encode / decode times from the receipt ledger; GPU telemetry every 30 s |
 
@@ -27,10 +27,11 @@ is reported**; none was dropped. Machine-readable: `results/bench/before-after.j
 | **W-A2** Growth fixed, 128 lanes, 2.20 M evaluations | 4,681.1 s (14 workers) | 1,641.0 s | **724.8 / 726.4 s** | **2.26×** | **6.45×** |
 | **W-S** small batches, 16 lanes, 30,749 (median batch 376) | 123.2 s (12 workers, this study's CPU arm) | 72.8 / 72.8 / 72.8 s | **65.2 / 65.3 / 65.2 s** | 1.12× | 1.89× |
 | W-S on 1 host worker / on the serial path (0) | | | 73.8 s / 72.6 s | 0.99× / 1.00× | |
-| W-A3, the protocol's CPU re-measurement on this machine (12 workers, this study) | FILL | | | | |
+| W-A3, the protocol's CPU re-measurement on this machine (12 workers, this study, 2026-11-19 21:16–22:54Z; identical to the sealed record) | **5,803.6 s** | 1,131.1 / 1,126.8 s | 583.8 / 581.7 s | 1.94× | **9.94× / 9.98×** |
 
-Interpretation (brief §6): the Growth-searched job reaches **≈ 10× the original 12-worker CPU job** (the lower edge of
-the brief's 10–15× hypothesis) at **≈ 1.9× the accepted Phase 2 design**; the Growth-fixed job reaches ≈ 6.5× (it is
+Interpretation (brief §6): the Growth-searched job reaches **≈ 10× the 12-worker CPU job** — 10.1× against the
+original sealed run, 9.94–9.98× against this study's re-measurement on the same machine (1.6 % faster than the sealed
+run; the same 1,242,714 evaluations and an identical result) — the lower edge of the brief's 10–15× hypothesis, at **≈ 1.9× the accepted Phase 2 design**; the Growth-fixed job reaches ≈ 6.5× (it is
 now bound by the main thread's lane logic and archive, utilization 0.77); the small-batch control is GPU-latency-bound
 and gains little (1.12×). Every figure is measured; nothing is extrapolated in this table.
 
@@ -90,7 +91,8 @@ per batch, so the host share was smaller to begin with; detail + risk gains leas
   most ≈ 5–8 %; the main thread is not saturated (ELU 0.62). Not worth its complexity.
 - **Priority C — deferred:** the kernels are now ≈ 60 % of the W-A3 wall and are latency-bound; any kernel change needs a
   new GPU-level parity and sanitizer burden; the measured remaining potential (§3) does not justify it now.
-- The brief's 10–15× hypothesis: **≈ 10× measured** on the Growth-searched job (10.1×, the lower edge of the range);
+- The brief's 10–15× hypothesis: **≈ 10× measured** on the Growth-searched job (10.1× vs the sealed CPU run, 9.94–9.98×
+  vs this machine's re-measurement: the lower edge of the range);
   the Growth-fixed job measures **6.45×** against its original 14-worker CPU run (2.26× over Phase 2: its decode share
   was larger, so it gained more from the workers, but its main thread is now 77 % busy with lane logic and the archive);
   the small-batch control 1.89× against this study's 12-worker CPU arm.

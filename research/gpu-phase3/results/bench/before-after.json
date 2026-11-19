@@ -1,6 +1,6 @@
 {
  "kind": "gpu-phase3 end-to-end benchmarks (every recorded run)",
- "t": "2026-11-19T21:05:34.266Z",
+ "t": "2026-11-19T22:54:30.048Z",
  "runs": [
   {
    "run": "final-a2-r1",
@@ -151,6 +151,45 @@
    },
    "peakRssMiB": 3583,
    "profile": "research/gpu-phase3/results/optimizer/p2-a2-r1/gpu/profile.json"
+  },
+  {
+   "run": "final-a3-cpu",
+   "job": "a3:C19:broad1",
+   "config": "cpu|b8192",
+   "backendId": "cpu:12 workers",
+   "wallSeconds": 5803.6,
+   "fresh": 1242714,
+   "evaluationsPerSecond": 214.1,
+   "mainThread": {
+    "eventLoopUtilization": 0.134,
+    "activeSeconds": 778.6,
+    "idleSeconds": 5025
+   },
+   "processCpuSeconds": {
+    "user": 699.1,
+    "system": 46.6
+   },
+   "archive": {
+    "writes": 1334275,
+    "writeSeconds": 112
+   },
+   "gc": {
+    "1": {
+     "n": 10041,
+     "seconds": 27.7
+    },
+    "4": {
+     "n": 83,
+     "seconds": 1.9
+    },
+    "8": {
+     "n": 83,
+     "seconds": 0.3
+    }
+   },
+   "batches": null,
+   "peakRssMiB": 2357,
+   "profile": "research/gpu-phase3/results/optimizer/final-a3-cpu/cpu/profile.json"
   },
   {
    "run": "s2-a3-w12-b8192",
@@ -1147,6 +1186,23 @@
    },
    "configs": [
     {
+     "config": "cpu|b8192",
+     "runs": [
+      "final-a3-cpu"
+     ],
+     "wallSeconds": {
+      "median": 5803.6,
+      "min": 5803.6,
+      "max": 5803.6
+     },
+     "evaluationsPerSecond": 214.1,
+     "mainThreadUtilization": 0.1,
+     "peakRssMiB": 2357,
+     "speedupVsPhase2": 0.19,
+     "speedupVsMeasuredCpu": 1,
+     "speedupVsSealedCpu": 1.02
+    },
+    {
      "config": "parallel-12w|b8192",
      "runs": [
       "s2-a3-w12-b8192"
@@ -1160,7 +1216,7 @@
      "mainThreadUtilization": 0.6,
      "peakRssMiB": 5463,
      "speedupVsPhase2": 1.94,
-     "speedupVsMeasuredCpu": null,
+     "speedupVsMeasuredCpu": 9.97,
      "speedupVsSealedCpu": 10.14
     },
     {
@@ -1177,7 +1233,7 @@
      "mainThreadUtilization": 0.6,
      "peakRssMiB": 3826,
      "speedupVsPhase2": 1.85,
-     "speedupVsMeasuredCpu": null,
+     "speedupVsMeasuredCpu": 9.49,
      "speedupVsSealedCpu": 9.65
     },
     {
@@ -1194,7 +1250,7 @@
      "mainThreadUtilization": 0.6,
      "peakRssMiB": 5019,
      "speedupVsPhase2": 1.85,
-     "speedupVsMeasuredCpu": null,
+     "speedupVsMeasuredCpu": 9.54,
      "speedupVsSealedCpu": 9.7
     },
     {
@@ -1213,7 +1269,7 @@
      "mainThreadUtilization": 0.6,
      "peakRssMiB": 4803,
      "speedupVsPhase2": 1.93,
-     "speedupVsMeasuredCpu": null,
+     "speedupVsMeasuredCpu": 9.94,
      "speedupVsSealedCpu": 10.11
     },
     {
@@ -1231,7 +1287,7 @@
      "mainThreadUtilization": 0.7,
      "peakRssMiB": 3188,
      "speedupVsPhase2": 1,
-     "speedupVsMeasuredCpu": null,
+     "speedupVsMeasuredCpu": 5.14,
      "speedupVsSealedCpu": 5.23
     }
    ]
