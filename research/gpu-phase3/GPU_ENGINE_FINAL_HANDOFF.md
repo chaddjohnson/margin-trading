@@ -17,7 +17,7 @@ FILL (verdict, acceptance record, merge status).
 | 3 | Priority B measured and rejected; Priority C deferred | archive JSON 1.5 % of the wall; kernels latency-bound, unchanged |
 | 4 | Enforcement hardened: manifest v2 (host path + pinned enforcement group), acceptance schema 2 (source revision), independent re-hash and committed-source checks in the gate, official npm-runner wrapper, independent verifier, file-classification rule, tamper suite | `GPU_ENFORCEMENT_INTEGRITY.md` |
 | 5 | One final acceptance campaign on the final binary `06a4a04a…` (2026-11-19 17:22–21:05Z; tests 21:05–21:16Z) | all gates pass: parity 144,795 / 0 mismatches, sealed replays identical, sanitizer clean, 45/45 negative, 14/14 tamper, 45-min sustained run, npm test = known failures only, Strategy Lab 314 + 81 |
-| 6 | Performance verdict | FILL |
+| 6 | Performance verdict | Growth-searched job 10.1× the original CPU job (the brief's "≈ 10–15×, excellent if exact" band; parity exact); Growth-fixed 6.45×; small batches 1.89×. The pipeline is the default; performance work stopped (no chase of 20–30×) |
 | 7 | Merge into `main`, branch restoration | FILL |
 
 ## 3. Measured speed (wall time of complete optimizer jobs)

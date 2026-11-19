@@ -90,8 +90,16 @@ per batch, so the host share was smaller to begin with; detail + risk gains leas
   most ≈ 5–8 %; the main thread is not saturated (ELU 0.62). Not worth its complexity.
 - **Priority C — deferred:** the kernels are now ≈ 60 % of the W-A3 wall and are latency-bound; any kernel change needs a
   new GPU-level parity and sanitizer burden; the measured remaining potential (§3) does not justify it now.
-- The brief's 10–15× hypothesis: **≈ 10× measured** on the Growth-searched job (the 10× lower bound of the range);
-  FILL the Growth-fixed job.
+- The brief's 10–15× hypothesis: **≈ 10× measured** on the Growth-searched job (10.1×, the lower edge of the range);
+  the Growth-fixed job measures **6.45×** against its original 14-worker CPU run (2.26× over Phase 2: its decode share
+  was larger, so it gained more from the workers, but its main thread is now 77 % busy with lane logic and the archive);
+  the small-batch control 1.89× against this study's 12-worker CPU arm.
+- **Verdict (brief §6 table):** the Growth-searched workload is in the "≈ 10–15×: excellent if exact parity and
+  maintainability remain satisfactory" band — parity is exact (H1–H3, 0 differences anywhere) and the added code is one
+  codec shared by both host paths plus a worker pool with a serial fallback *on the GPU* (`hostWorkers` 0). The
+  Growth-fixed and small-batch workloads gain less but never lose (the slowest case, 1 host worker, equals the Phase 2
+  path within 1 %). The pipeline is kept as the default; further performance work is stopped here (brief §6: no chase of
+  20–30×).
 
 ## 6. Remaining bottlenecks (measured) and what would move them
 
