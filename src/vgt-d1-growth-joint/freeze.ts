@@ -1,0 +1,121 @@
+// The protocol freeze (PROTOCOL.md §11): the protocol's, the amendment log's and the brief's sha256, the code closure
+// (every repository .ts file transitively imported by the study's modules, tests excluded), the door pins, the
+// canonical data, git HEAD, the budgets and the resource contract. Written once (read-only); a second freeze is refused.
+import { execSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import { budgets } from './budgets.ts';
+import {
+  canonical,
+  codeDir,
+  doorSpecs,
+  economics,
+  log,
+  repoRoot,
+  researchDir,
+  resources,
+  resultsDir
+} from './context.ts';
+import { sha256File } from './data.ts';
+import { codeDigest } from './lab.ts';
+import { sealJson } from './records.ts';
+
+export const freezeFile = path.join(resultsDir, 'protocol-freeze.json');
+
+// The transitive closure of relative imports from the study's entry modules.
+export const codeClosure = () => {
+  const seen = new Set<string>();
+  const stack = fs
+    .readdirSync(codeDir)
+    .filter((f) => f.endsWith('.ts'))
+    .map((f) => path.join(codeDir, f));
+
+  while (stack.length) {
+    const file = stack.pop()!;
+
+    if (seen.has(file)) continue;
+    seen.add(file);
+
+    const text = fs.readFileSync(file, 'utf8');
+
+    for (const m of text.matchAll(
+      /(?:import|export)[^'"]*?from\s+['"]([^'"]+)['"]|import\(\s*['"]([^'"]+)['"]\s*\)/g
+    )) {
+      const spec = m[1] ?? m[2]!;
+
+      if (spec === '#lib') stack.push(path.join(repoRoot, 'src/lib/index.ts'));
+      else if (spec === '#types') stack.push(path.join(repoRoot, 'src/types/index.ts'));
+      else if (spec.startsWith('.')) {
+        const target = path.resolve(path.dirname(file), spec);
+
+        if (fs.existsSync(target) && fs.statSync(target).isFile()) stack.push(target);
+      }
+    }
+  }
+
+  return [...seen]
+    .map((f) => path.relative(repoRoot, f))
+    .filter((f) => !f.includes('/tests/'))
+    .sort()
+    .map((f) => ({
+      file: f,
+      sha256: createHash('sha256')
+        .update(fs.readFileSync(path.join(repoRoot, f)))
+        .digest('hex')
+    }));
+};
+
+export const closureDigest = (closure = codeClosure()) =>
+  createHash('sha256')
+    .update(closure.map((x) => `${x.file}:${x.sha256}`).join('\n'))
+    .digest('hex');
+
+export const freezeProtocol = () => {
+  const closure = codeClosure();
+  const record = {
+    kind: 'vgt-d1-growth-joint protocol freeze',
+    frozenAt: new Date().toISOString(),
+    gitHead: execSync('git rev-parse HEAD', { cwd: repoRoot }).toString().trim(),
+    protocolSha256: sha256File(path.join(researchDir, 'PROTOCOL.md')),
+    amendmentsSha256: sha256File(path.join(researchDir, 'AMENDMENTS.md')),
+    briefSha256: sha256File(path.join(researchDir, 'brief', 'BRIEF.md')),
+    fixturesSha256: sha256File(path.join(researchDir, 'fixtures', 'controls.json')),
+    evaluationDigest: codeDigest(),
+    closureDigest: closureDigest(closure),
+    closure,
+    canonicalData: canonical,
+    doors: doorSpecs,
+    economics,
+    budgets,
+    resources
+  };
+
+  sealJson(freezeFile, record, 'protocol freeze');
+  log(
+    `protocol frozen: ${record.protocolSha256.slice(0, 12)}…, closure ${closure.length} files, digest ${record.closureDigest.slice(0, 12)}…`
+  );
+};
+
+// Every later stage checks that the evaluation code is the frozen one (or an acknowledged amendment).
+export const assertFrozenCode = () => {
+  if (!fs.existsSync(freezeFile)) return null;
+
+  const f = JSON.parse(fs.readFileSync(freezeFile, 'utf8')) as { evaluationDigest: string };
+  const now = codeDigest();
+  const ackFile = path.join(resultsDir, 'code-acknowledgements.jsonl');
+  const acks = fs.existsSync(ackFile)
+    ? fs
+        .readFileSync(ackFile, 'utf8')
+        .trim()
+        .split('\n')
+        .filter(Boolean)
+        .map((l) => JSON.parse(l) as { digest: string })
+    : [];
+
+  if (now !== f.evaluationDigest && !acks.some((a) => a.digest === now))
+    throw new Error(
+      `the evaluation code changed after the freeze (${now.slice(0, 12)}… ≠ ${f.evaluationDigest.slice(0, 12)}…) without an acknowledged amendment`
+    );
+  return now;
+};

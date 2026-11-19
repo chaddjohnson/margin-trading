@@ -1,0 +1,152 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-shadow-eligibility",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.1.0",
+  "sha256": "ac5c2c69987faa8d2b0dba7dfd452e278658167fa172ab210a8a2e8de7696f9b"
+ },
+ "readAt": "2026-11-12T11:30:00Z",
+ "adoptedAt": "2026-11-12T12:20:49Z",
+ "protocol": {
+  "path": "research/vg-l0-shadow-eligibility/PROTOCOL.md",
+  "sha256": "fc6dbdcc4f8b933b522b5e62b23e5d5881ef7c18b5748140f20d678b3d05b0e5"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "reference method NL0: each track's primary = the actual-profit role of its qualified C24 members; the study's nominee = the actual-profit role of the C24 final selectable set (every track's qualified members and the controls New L0 under the 8 toggle combinations, C4, C4-refined, C85): the highest development centre net among qualified members (gates Q1-Q6; the fresh confirmation decides qualification), ties by the higher selection robust net, the lower centre DD, then the label; fold primaries (C19, C21, C23) = each fresh track's actual-profit role (PROTOCOL.md §9).",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 2301152,
+  "backendEvaluations": 23850000,
+  "notes": "Distinct candidate proposals (centres; refinement moves apart): B1 and B2 each 131,072 base / 262,144 maximum per cutoff x 4 cutoffs; A1 about 60,000 base / 103,000 maximum; A2 about 56,500 / 101,000 (C24); <= 1,165,076 base / <= 2,301,152 maximum. Backend evaluations: the per-job caps (NL0's per-lane contract scaled by lanes: 23,056 per independent lane, 61,667 per informed lane; 700 per qualified member; phase 2 60,000; ablation 120,000; diagnostics 40,000; validation neighbourhoods 30,000; engineering 400,000) sum to about 23.85 M (worst case); expected about 17 M. Against Priority 3B: 131,072 independent base per cutoff and 4,869,671 independent search + 285,368 qualification evaluations (5,834,395 whole study); B1 and B2 each target about 5.9 M search + 0.8 M qualification evaluations. Counted separately: screen, rung-1/2/3 and refinement centres and neighbours, qualification, folds, sequential, ablation, diagnostics, validation, retries (runs.jsonl) and archive hits."
+ },
+ "referenceMethod": {
+  "id": "NL0",
+  "path": "docs/research/methods/NEW_L0_METHOD.md",
+  "version": "1.0.0",
+  "sha256": "9b387bb47ce02178ee27bb8379a11e4940c9c6c5a44c3e7ab5fcc3c2cc0411e4"
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3, §2.5, §3.2",
+   "kind": "adaptation",
+   "description": "NL0's primary rule applied twice: each track's primary = the actual-profit role of its own qualified C24 members; the study's nominee = the actual-profit role of the final selectable set (every track's qualified C24 members + New L0 under all 8 toggle combinations, C4, C4-refined, C85: the qualifying-incumbent fallback)",
+   "justification": "reference method NL0 §3.5; brief Phase 5.3",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4.1, §3.4",
+   "kind": "adaptation",
+   "description": "architecture A only; lifecycle L0; the frozen same-instant order; the shadow-eligibility tie rules fixed before any search (fresh signals first; live shadows in the frozen order); no priority or allocation search",
+   "justification": "brief §1.6",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§4.1, §4.8",
+   "kind": "adaptation",
+   "description": "fixed structure V; 5B's V/G/B cells omitted and reassigned through their schedules to three sub-cells; the sequential first step uses the D structure (the D1 pair alone, Growth disabled), the second step V with the D1 books pinned",
+   "justification": "brief: keep the active combination VGT D1, GDX D1, VGT Growth; Phase 3.3, 3.5",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§4.7",
+   "kind": "adaptation",
+   "description": "both-Growth protections inapplicable: shares fall through, protected island ordinary, both-Growth refinement start reassigned to profit-2",
+   "justification": "as the trading-session study",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§4.2, §4.8",
+   "kind": "adaptation",
+   "description": "effort by replicates of NL0's unchanged per-lane schedules: B1 32 x 3 sub-cells per cutoff (base 131,072 proposals = 3B's), B2 16 (d1) + 2 x 8 (g) x 3, A1 28 informed, A2 14 (d1) + 2 x 7 (g); job caps = lanes x NL0's per-lane share",
+   "justification": "brief Phase 4.2",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§4.5",
+   "kind": "adaptation",
+   "description": "extension per lane; NL0's triggers, caps and resource guard",
+   "justification": "NL0 §3.3",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§3.3, §1.9, §4.4",
+   "kind": "adaptation",
+   "description": "informed seeds: A1 the trading-session study's set (toggles OFF); A2 d1 the 5 distinct D1 pairs; A2 g the 7 distinct Growth vectors on each frozen finalist; every seed under every combination of the lane's free toggles",
+   "justification": "brief Phase 3.2-3.3",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§2.3, §4.3, §5.3",
+   "kind": "adaptation",
+   "description": "the three toggles are categorical structural genes: equal protected screen coverage of every combination; every informed seed under every combination; islands' categorical operators; one refinement switch per free toggle; fixed in numeric neighbourhoods; a D lane's inert Growth genes pinned",
+   "justification": "brief Phase 1.5, 4.3",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "§1.8, §3.3",
+   "kind": "departure",
+   "description": "the earlier-cutoff repetition covers the fresh tracks (B1, B2) only; the informed tracks (A1, A2) run at C24 with no chronological test or claim (as NL0 / 5B AD9)",
+   "justification": "informed seeds were chosen with data through 2024",
+   "userAgreement": "Brief Phase 5.1 'Use chronological development folds within training according to the established methodology' and Phase 3.1 'Preserve the original methodology wherever applicable' (NL0 §3.6 records 5B's departure AD9, agreed in 5B's brief)"
+  },
+  {
+   "id": "AD10",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "NL0's qualification evidence: centre, selection 2x128, confirmation 3x128, stresses, removals; common random numbers across every member of a cutoff",
+   "justification": "NL0 §3.5",
+   "userAgreement": null
+  },
+  {
+   "id": "AD11",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "stricter: FULL never opened before the committed frozen selection, not even for New L0's known figures (verified from sealed artifacts; reproduced at the validation); no futility stop",
+   "justification": "NL0 §3.6; brief Phase 5.1",
+   "userAgreement": null
+  },
+  {
+   "id": "AD12",
+   "section": "§3.4",
+   "kind": "adaptation",
+   "description": "the brief's method comparisons (joint vs sequential; informed vs fresh) with matched replicate-scaled budgets and identical gates; only B1 vs B2 has repeated chronologically separated evidence",
+   "justification": "brief Phase 3, 6.2",
+   "userAgreement": null
+  }
+ ]
+}

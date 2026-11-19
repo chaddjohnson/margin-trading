@@ -1,0 +1,387 @@
+{
+ "kind": "gpu-phase2 measured-derived projections",
+ "method": {
+  "perEvaluationGpuMs": "pooled(door) + optimizer host overhead; pooled = 1000 / measured pipelined-pool ev/s on random A3 genomes (D19, D24, FULL; D21/D23 interpolated by sessions); host overhead calibrated on the measured A3 C19 broad1 replay (search) and C19 broad qualification replay",
+  "conservative": "the measured D19 job speedup scaled by the door's measured pooled GPU/CPU speedup ratio",
+  "caveat": "measured on D19 jobs only end to end; other doors and workloads are model estimates; the CPU baselines are the recorded runs of each study on this machine"
+ },
+ "pooledMsPerEval": {
+  "D19": 0.658,
+  "D24": 1.674,
+  "FULL": 2.385,
+  "D21": 1.066,
+  "D23": 1.471
+ },
+ "searchHostOverheadMs": 0.251,
+ "qualifyHostOverheadMs": 0.29,
+ "mixCostVsJoint": {
+  "joint": 1.0,
+  "d1-only": 0.85,
+  "growth-only": 0.94,
+  "growth-fixed": 0.91,
+  "detail+risk": 1.41,
+  "all-options": 1.37
+ },
+ "pooledSpeedupByDoor": {
+  "D19": 7.59,
+  "D24": 6.47,
+  "FULL": 5.45
+ },
+ "a3": {
+  "cpuHours": 44.34,
+  "gpuModelHours": 8.28,
+  "gpuConservativeHours": 9.56,
+  "speedupModel": 5.36,
+  "speedupConservative": 4.64,
+  "jobs": [
+   {
+    "kind": "search",
+    "cutoff": "C19",
+    "part": "broad1",
+    "door": "D19",
+    "fresh": 1242714,
+    "wallSeconds": 5900.8,
+    "n": 64,
+    "gpuModelSeconds": 1131,
+    "gpuConservativeSeconds": 1131,
+    "speedupModel": 5.22,
+    "speedupConservative": 5.22
+   },
+   {
+    "kind": "search",
+    "cutoff": "C19",
+    "part": "broad2",
+    "door": "D19",
+    "fresh": 1296144,
+    "wallSeconds": 6156,
+    "n": 64,
+    "gpuModelSeconds": 1179,
+    "gpuConservativeSeconds": 1179,
+    "speedupModel": 5.22,
+    "speedupConservative": 5.22
+   },
+   {
+    "kind": "search",
+    "cutoff": "C19",
+    "part": "refine",
+    "door": "D19",
+    "fresh": 1031921,
+    "wallSeconds": 5172.5,
+    "n": 26,
+    "gpuModelSeconds": 939,
+    "gpuConservativeSeconds": 991,
+    "speedupModel": 5.51,
+    "speedupConservative": 5.22
+   },
+   {
+    "kind": "search",
+    "cutoff": "C21",
+    "part": "broad1",
+    "door": "D21",
+    "fresh": 1276425,
+    "wallSeconds": 8757.6,
+    "n": 64,
+    "gpuModelSeconds": 1682,
+    "gpuConservativeSeconds": 1784,
+    "speedupModel": 5.21,
+    "speedupConservative": 4.91
+   },
+   {
+    "kind": "search",
+    "cutoff": "C21",
+    "part": "broad2",
+    "door": "D21",
+    "fresh": 1327433,
+    "wallSeconds": 8992.6,
+    "n": 64,
+    "gpuModelSeconds": 1749,
+    "gpuConservativeSeconds": 1832,
+    "speedupModel": 5.14,
+    "speedupConservative": 4.91
+   },
+   {
+    "kind": "search",
+    "cutoff": "C21",
+    "part": "refine",
+    "door": "D21",
+    "fresh": 1164781,
+    "wallSeconds": 8300.8,
+    "n": 26,
+    "gpuModelSeconds": 1535,
+    "gpuConservativeSeconds": 1691,
+    "speedupModel": 5.41,
+    "speedupConservative": 4.91
+   },
+   {
+    "kind": "search",
+    "cutoff": "C23",
+    "part": "broad1",
+    "door": "D23",
+    "fresh": 1051745,
+    "wallSeconds": 8878.3,
+    "n": 64,
+    "gpuModelSeconds": 1811,
+    "gpuConservativeSeconds": 1929,
+    "speedupModel": 4.9,
+    "speedupConservative": 4.6
+   },
+   {
+    "kind": "search",
+    "cutoff": "C23",
+    "part": "broad2",
+    "door": "D23",
+    "fresh": 1016064,
+    "wallSeconds": 8626.8,
+    "n": 64,
+    "gpuModelSeconds": 1750,
+    "gpuConservativeSeconds": 1875,
+    "speedupModel": 4.93,
+    "speedupConservative": 4.6
+   },
+   {
+    "kind": "search",
+    "cutoff": "C23",
+    "part": "refine",
+    "door": "D23",
+    "fresh": 1079049,
+    "wallSeconds": 9319.4,
+    "n": 26,
+    "gpuModelSeconds": 1858,
+    "gpuConservativeSeconds": 2025,
+    "speedupModel": 5.02,
+    "speedupConservative": 4.6
+   },
+   {
+    "kind": "search",
+    "cutoff": "C24",
+    "part": "broad1",
+    "door": "D24",
+    "fresh": 1013181,
+    "wallSeconds": 9495.6,
+    "n": 64,
+    "gpuModelSeconds": 1951,
+    "gpuConservativeSeconds": 2135,
+    "speedupModel": 4.87,
+    "speedupConservative": 4.45
+   },
+   {
+    "kind": "search",
+    "cutoff": "C24",
+    "part": "broad2",
+    "door": "D24",
+    "fresh": 954009,
+    "wallSeconds": 8922.3,
+    "n": 64,
+    "gpuModelSeconds": 1837,
+    "gpuConservativeSeconds": 2006,
+    "speedupModel": 4.86,
+    "speedupConservative": 4.45
+   },
+   {
+    "kind": "search",
+    "cutoff": "C24",
+    "part": "informed1",
+    "door": "D24",
+    "fresh": 1957274,
+    "wallSeconds": 22983.1,
+    "n": 32,
+    "gpuModelSeconds": 3769,
+    "gpuConservativeSeconds": 5168,
+    "speedupModel": 6.1,
+    "speedupConservative": 4.45
+   },
+   {
+    "kind": "search",
+    "cutoff": "C24",
+    "part": "informed2",
+    "door": "D24",
+    "fresh": 2047548,
+    "wallSeconds": 23684.8,
+    "n": 32,
+    "gpuModelSeconds": 3943,
+    "gpuConservativeSeconds": 5326,
+    "speedupModel": 6.01,
+    "speedupConservative": 4.45
+   },
+   {
+    "kind": "search",
+    "cutoff": "C24",
+    "part": "refine",
+    "door": "D24",
+    "fresh": 1075181,
+    "wallSeconds": 10221.5,
+    "n": 26,
+    "gpuModelSeconds": 2070,
+    "gpuConservativeSeconds": 2299,
+    "speedupModel": 4.94,
+    "speedupConservative": 4.45
+   },
+   {
+    "kind": "qualify",
+    "cutoff": "C19",
+    "part": "broad-qualification",
+    "door": "D19",
+    "fresh": 251405,
+    "wallSeconds": 1249.5,
+    "n": 385,
+    "gpuModelSeconds": 238,
+    "gpuConservativeSeconds": 238,
+    "speedupModel": 5.24,
+    "speedupConservative": 5.24
+   },
+   {
+    "kind": "qualify",
+    "cutoff": "C19",
+    "part": "refine-qualification",
+    "door": "D19",
+    "fresh": 98603,
+    "wallSeconds": 514.1,
+    "n": 151,
+    "gpuModelSeconds": 94,
+    "gpuConservativeSeconds": 98,
+    "speedupModel": 5.5,
+    "speedupConservative": 5.24
+   },
+   {
+    "kind": "qualify",
+    "cutoff": "C21",
+    "part": "broad-qualification",
+    "door": "D21",
+    "fresh": 251405,
+    "wallSeconds": 1845.4,
+    "n": 385,
+    "gpuModelSeconds": 341,
+    "gpuConservativeSeconds": 374,
+    "speedupModel": 5.41,
+    "speedupConservative": 4.93
+   },
+   {
+    "kind": "qualify",
+    "cutoff": "C21",
+    "part": "refine-qualification",
+    "door": "D21",
+    "fresh": 97289,
+    "wallSeconds": 720.7,
+    "n": 149,
+    "gpuModelSeconds": 132,
+    "gpuConservativeSeconds": 146,
+    "speedupModel": 5.46,
+    "speedupConservative": 4.93
+   },
+   {
+    "kind": "qualify",
+    "cutoff": "C23",
+    "part": "broad-qualification",
+    "door": "D23",
+    "fresh": 250099,
+    "wallSeconds": 2313.2,
+    "n": 383,
+    "gpuModelSeconds": 440,
+    "gpuConservativeSeconds": 501,
+    "speedupModel": 5.25,
+    "speedupConservative": 4.62
+   },
+   {
+    "kind": "qualify",
+    "cutoff": "C23",
+    "part": "refine-qualification",
+    "door": "D23",
+    "fresh": 96644,
+    "wallSeconds": 871.3,
+    "n": 148,
+    "gpuModelSeconds": 170,
+    "gpuConservativeSeconds": 189,
+    "speedupModel": 5.12,
+    "speedupConservative": 4.62
+   },
+   {
+    "kind": "qualify",
+    "cutoff": "C24",
+    "part": "broad-qualification",
+    "door": "D24",
+    "fresh": 251405,
+    "wallSeconds": 2529.9,
+    "n": 385,
+    "gpuModelSeconds": 494,
+    "gpuConservativeSeconds": 567,
+    "speedupModel": 5.12,
+    "speedupConservative": 4.46
+   },
+   {
+    "kind": "qualify",
+    "cutoff": "C24",
+    "part": "informed-qualification",
+    "door": "D24",
+    "fresh": 250752,
+    "wallSeconds": 3214.5,
+    "n": 385,
+    "gpuModelSeconds": 493,
+    "gpuConservativeSeconds": 720,
+    "speedupModel": 6.53,
+    "speedupConservative": 4.46
+   },
+   {
+    "kind": "qualify",
+    "cutoff": "C24",
+    "part": "refine-qualification",
+    "door": "D24",
+    "fresh": 97297,
+    "wallSeconds": 971.1,
+    "n": 149,
+    "gpuModelSeconds": 191,
+    "gpuConservativeSeconds": 218,
+    "speedupModel": 5.08,
+    "speedupConservative": 4.46
+   }
+  ]
+ },
+ "p3b": {
+  "evaluations": 5834395,
+  "cpuHours": 16.0,
+  "gpuHoursRange": [
+   2.47,
+   3.08
+  ],
+  "speedupRange": [
+   5.2,
+   6.5
+  ],
+  "note": "four books (Growth\u00b7GDX funded); the fourth book costs 0-30% more GPU time (estimate; ggdx parity runs exist but no ggdx throughput benchmark)"
+ },
+ "a2": {
+  "evaluations": 34210000.0,
+  "cpuHours": 31.0,
+  "gpuHoursRange": [
+   12.9,
+   14.0
+  ],
+  "speedupRange": [
+   2.2,
+   2.4
+  ],
+  "note": "Growth fixed: the CPU reuses the fixed Growth book (cache) while the GPU recomputes it, so the gain is lower than for joint searches"
+ },
+ "pilot": {
+  "scenarios": [
+   {
+    "evaluations": 300000,
+    "gpuMinutes": 18.0,
+    "cpuMinutes12Workers": 57.1,
+    "speedup": 3.2
+   },
+   {
+    "evaluations": 500000,
+    "gpuMinutes": 26.0,
+    "cpuMinutes12Workers": 95.2,
+    "speedup": 3.7
+   }
+  ],
+  "note": "total including the 35% control and the 40/25/25 arms; if each arm is a separate 0.3-0.5 M search, multiply by the number of arms. GPU includes two gate preflights (\u22483 min each, conservative). CPU baseline: the measured detail+risk 12-worker rate on D24, D21 scaled by the GPU door ratio (estimate)"
+ },
+ "a3Scale17_5M": {
+  "evaluations": 19170000.0,
+  "cpuHours": 44.34,
+  "gpuHoursModel": 8.3,
+  "gpuHoursConservative": 9.6
+ }
+}

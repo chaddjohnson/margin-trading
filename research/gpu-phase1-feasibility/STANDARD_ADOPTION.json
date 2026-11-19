@@ -1,0 +1,102 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/gpu-phase1-feasibility",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.2.0",
+  "sha256": "0085cff292161e15f59e122d45793200fee01c610306ed37a3a0fab195dd5e24"
+ },
+ "readAt": "2026-11-18T18:19:46Z",
+ "adoptedAt": "2026-11-18T18:19:55Z",
+ "protocol": {
+  "path": "research/gpu-phase1-feasibility/PROTOCOL.md",
+  "sha256": "171761164313efad976edbefd12e4be4e43553b047e133ff39b4b09eabb31189"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched, ranked or selected (adaptation AD1). The study measures CPU/GPU parity and speed of a declared evaluation slice; its outcomes are engineering gates G0-G7 and a GO / CONDITIONAL GO / NO-GO verdict (PROTOCOL.md section 12).",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 400000,
+  "notes": "No search proposals. backendEvaluations caps fresh CPU pooled simulations on real data for profiling, parity references and the CPU side of benchmarks (seeded test configurations, the two reference identities and their neighbourhoods). GPU evaluations of the same configurations are counted separately in the records; synthetic fixture runs are not counted."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search and no chronological verdict (AD2)",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3",
+   "kind": "adaptation",
+   "description": "no roles and no primary; nothing is selected",
+   "justification": "brief section 0 and 9: Phase 1 is feasibility only; no official optimization",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4",
+   "kind": "adaptation",
+   "description": "no search, no earlier-cutoff repeat, no chronological verdict",
+   "justification": "brief: 'Do not ... run official optimizations during Phase 1'",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "FULL opened for the frozen reference identities and, for parity and timing only, seeded test configurations; quiet loader, own door log",
+   "justification": "brief section 1: 'Include the full dataset where feasible'; section 5: New L0 and N/original as frozen reference identities",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "the CPU engine is the unmodified canonical reference; the GPU slice must match it bit for bit (gates G2-G5)",
+   "justification": "brief section 5",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.9",
+   "kind": "adaptation",
+   "description": "not applicable: no fold primary or final candidate",
+   "justification": "no search (AD2)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "no worker tuning for a search; the CPU baseline is measured at Assignment 3's production 12 workers and at 1, 8, 14, 16 for context; contained systemd units",
+   "justification": "brief section 6: compare against the current production worker count, never an under-threaded baseline",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§1.5",
+   "kind": "adaptation",
+   "description": "stricter: no money figure of any non-reference configuration is recorded; only parity booleans, counts, hashes and timings; timings never select parameters",
+   "justification": "brief section 1: 'Do not tune or select trading parameters based on performance results'",
+   "userAgreement": null
+  }
+ ]
+}

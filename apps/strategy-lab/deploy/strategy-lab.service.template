@@ -1,0 +1,24 @@
+# Strategy Lab as a systemd USER service on apollo (written by scripts/install-service.mjs; edit the template, not the
+# installed copy). Binds 127.0.0.1 and the Tailscale address only — never the LAN or 0.0.0.0 — and requires the API
+# token from state/strategy-lab/api-token for every API request over the VPN. See docs/strategy-lab/OPERATIONS.md.
+[Unit]
+Description=Strategy Lab (margin-trading research workbench)
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=@APP_DIR@
+Environment=STRATEGY_LAB_HOSTS=127.0.0.1,tailscale
+Environment=STRATEGY_LAB_PORT=4317
+EnvironmentFile=-%h/.config/strategy-lab/env
+ExecStart=@NODE@ --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=4096 @APP_DIR@/server/main.ts
+# Tailscale may come up after the user session: retry until its address exists.
+Restart=on-failure
+RestartSec=10
+# Runs are child processes; stop them with the server.
+KillMode=control-group
+TimeoutStopSec=20
+
+[Install]
+WantedBy=default.target

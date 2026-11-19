@@ -1,0 +1,280 @@
+{
+  "schema": "strategy-lab.phenotype-export",
+  "schemaVersion": 1,
+  "study": {
+    "id": "growth-demo-2026-11",
+    "title": "Growth phenotype catalogue demonstration (not an optimisation)",
+    "kind": "demonstration",
+    "methodology": "docs/strategy-lab/PHENOTYPES.md",
+    "dataExposure": "No data was used to choose these configurations (illustrative schema defaults). VGT 2016–2026 had been inspected in earlier exploratory runs; any rerun is exploratory, never a holdout."
+  },
+  "generatedAt": "2026-11-04T00:00:00.000Z",
+  "generator": {
+    "tool": "apps/strategy-lab/scripts/make-growth-demo-phenotypes.ts",
+    "commit": null
+  },
+  "phenotypes": [
+    {
+      "id": "growth-demo-2026-11/off-vgt-1d",
+      "version": 1,
+      "name": "Growth, continuation OFF (VGT, daily) — demonstration",
+      "role": "demonstration",
+      "rank": 1,
+      "strategy": {
+        "key": "rise-from-recent-low-trading",
+        "version": "1.1.0"
+      },
+      "executionKind": "standalone",
+      "symbols": [
+        "VGT"
+      ],
+      "params": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 20,
+        "trailingStopPercent": 7.3,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 8,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "continuationEnabled": false,
+        "costBpsPerSide": 5
+      },
+      "resolution": "1d",
+      "engine": {
+        "version": "1.1.0",
+        "commit": null
+      },
+      "execution": {
+        "notionalUsd": 100000,
+        "annualInterestRate": 0.11,
+        "costBpsPerSide": 5,
+        "stopFill": "the stop price, or the gapped opening trade",
+        "capital": "standalone: one $100,000 fixed-notional backtest per symbol"
+      },
+      "data": {
+        "selectionWindow": null,
+        "testWindows": [],
+        "exposure": "not selected on data (illustrative defaults)"
+      },
+      "selection": {
+        "method": "none — illustrative schema defaults, exported only to demonstrate the catalogue workflow"
+      },
+      "notes": "Demonstration only: not optimised, not ranked by performance (rank = list order), not a recommendation.",
+      "recordSha256": "7319666b738c8b2f6575b4390114eb2de551e7d5d2f8483e851f1061d5d1593e"
+    },
+    {
+      "id": "growth-demo-2026-11/classic-d1-vgt-1d",
+      "version": 1,
+      "name": "Growth + Classic D1 continuation (VGT, daily) — demonstration",
+      "role": "demonstration",
+      "rank": 2,
+      "strategy": {
+        "key": "rise-from-recent-low-trading",
+        "version": "1.1.0"
+      },
+      "executionKind": "standalone",
+      "symbols": [
+        "VGT"
+      ],
+      "params": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 20,
+        "trailingStopPercent": 7.3,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 8,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "continuationEnabled": true,
+        "continuationMethod": "classic_d1",
+        "continuationWindowSessions": 60,
+        "classicPullbackPercent": 9,
+        "classicReboundPercent": 0.3,
+        "costBpsPerSide": 5
+      },
+      "resolution": "1d",
+      "engine": {
+        "version": "1.1.0",
+        "commit": null
+      },
+      "execution": {
+        "notionalUsd": 100000,
+        "annualInterestRate": 0.11,
+        "costBpsPerSide": 5,
+        "stopFill": "the stop price, or the gapped opening trade",
+        "capital": "standalone: one $100,000 fixed-notional backtest per symbol"
+      },
+      "data": {
+        "selectionWindow": null,
+        "testWindows": [],
+        "exposure": "not selected on data (illustrative defaults)"
+      },
+      "selection": {
+        "method": "none — illustrative schema defaults, exported only to demonstrate the catalogue workflow"
+      },
+      "notes": "Demonstration only: not optimised, not ranked by performance (rank = list order), not a recommendation.",
+      "recordSha256": "0497ff713298b5ba56e2164a9252dd3c653853a78babf8f2d6111615ee44e738"
+    },
+    {
+      "id": "growth-demo-2026-11/breakout-vgt-1d",
+      "version": 1,
+      "name": "Growth + breakout continuation (VGT, daily) — demonstration",
+      "role": "demonstration",
+      "rank": 3,
+      "strategy": {
+        "key": "rise-from-recent-low-trading",
+        "version": "1.1.0"
+      },
+      "executionKind": "standalone",
+      "symbols": [
+        "VGT"
+      ],
+      "params": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 20,
+        "trailingStopPercent": 7.3,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 8,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "continuationEnabled": true,
+        "continuationMethod": "breakout",
+        "continuationWindowSessions": 60,
+        "breakoutBufferPercent": 1,
+        "breakoutFormationBars": 1,
+        "costBpsPerSide": 5
+      },
+      "resolution": "1d",
+      "engine": {
+        "version": "1.1.0",
+        "commit": null
+      },
+      "execution": {
+        "notionalUsd": 100000,
+        "annualInterestRate": 0.11,
+        "costBpsPerSide": 5,
+        "stopFill": "the stop price, or the gapped opening trade",
+        "capital": "standalone: one $100,000 fixed-notional backtest per symbol"
+      },
+      "data": {
+        "selectionWindow": null,
+        "testWindows": [],
+        "exposure": "not selected on data (illustrative defaults)"
+      },
+      "selection": {
+        "method": "none — illustrative schema defaults, exported only to demonstrate the catalogue workflow"
+      },
+      "notes": "Demonstration only: not optimised, not ranked by performance (rank = list order), not a recommendation.",
+      "recordSha256": "f46b31158c2935fc2d9fb7cdf391eee8a39b0ae6c508e2874fee0c5766c26f74"
+    },
+    {
+      "id": "growth-demo-2026-11/shallow-pullback-vgt-1d",
+      "version": 1,
+      "name": "Growth + shallow-pullback continuation (VGT, daily) — demonstration",
+      "role": "demonstration",
+      "rank": 4,
+      "strategy": {
+        "key": "rise-from-recent-low-trading",
+        "version": "1.1.0"
+      },
+      "executionKind": "standalone",
+      "symbols": [
+        "VGT"
+      ],
+      "params": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 20,
+        "trailingStopPercent": 7.3,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 8,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "continuationEnabled": true,
+        "continuationMethod": "shallow_pullback",
+        "continuationWindowSessions": 60,
+        "uptrendSmaBars": 50,
+        "uptrendSlopeBars": 10,
+        "uptrendMinimumRisePercent": 0,
+        "pullbackMinimumPercent": 2,
+        "pullbackMaximumPercent": 8,
+        "recoveryPercent": 1,
+        "costBpsPerSide": 5
+      },
+      "resolution": "1d",
+      "engine": {
+        "version": "1.1.0",
+        "commit": null
+      },
+      "execution": {
+        "notionalUsd": 100000,
+        "annualInterestRate": 0.11,
+        "costBpsPerSide": 5,
+        "stopFill": "the stop price, or the gapped opening trade",
+        "capital": "standalone: one $100,000 fixed-notional backtest per symbol"
+      },
+      "data": {
+        "selectionWindow": null,
+        "testWindows": [],
+        "exposure": "not selected on data (illustrative defaults)"
+      },
+      "selection": {
+        "method": "none — illustrative schema defaults, exported only to demonstrate the catalogue workflow"
+      },
+      "notes": "Demonstration only: not optimised, not ranked by performance (rank = list order), not a recommendation.",
+      "recordSha256": "079d5059091c23da5402104741c310f42a93c8d3bdd0eb19ae6b23d6b701a5d8"
+    },
+    {
+      "id": "growth-demo-2026-11/ma-cross-vgt-1d",
+      "version": 1,
+      "name": "Growth + rising-MA-cross continuation (VGT, daily) — demonstration",
+      "role": "demonstration",
+      "rank": 5,
+      "strategy": {
+        "key": "rise-from-recent-low-trading",
+        "version": "1.1.0"
+      },
+      "executionKind": "standalone",
+      "symbols": [
+        "VGT"
+      ],
+      "params": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 20,
+        "trailingStopPercent": 7.3,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 8,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "continuationEnabled": true,
+        "continuationMethod": "ma_cross",
+        "continuationWindowSessions": 60,
+        "crossSmaBars": 20,
+        "crossRisingBars": 5,
+        "crossMinimumSlopePercent": 0,
+        "crossMarginPercent": 0,
+        "costBpsPerSide": 5
+      },
+      "resolution": "1d",
+      "engine": {
+        "version": "1.1.0",
+        "commit": null
+      },
+      "execution": {
+        "notionalUsd": 100000,
+        "annualInterestRate": 0.11,
+        "costBpsPerSide": 5,
+        "stopFill": "the stop price, or the gapped opening trade",
+        "capital": "standalone: one $100,000 fixed-notional backtest per symbol"
+      },
+      "data": {
+        "selectionWindow": null,
+        "testWindows": [],
+        "exposure": "not selected on data (illustrative defaults)"
+      },
+      "selection": {
+        "method": "none — illustrative schema defaults, exported only to demonstrate the catalogue workflow"
+      },
+      "notes": "Demonstration only: not optimised, not ranked by performance (rank = list order), not a recommendation.",
+      "recordSha256": "36c29ea3813cf9f6fbc7b621bdc56dfd0e6c993b73eaf643b635d28b2551e2a0"
+    }
+  ]
+}

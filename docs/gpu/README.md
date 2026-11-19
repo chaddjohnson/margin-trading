@@ -1,50 +1,63 @@
 # GPU evaluator — operations guide
 
-How to build, verify, run and troubleshoot the CUDA evaluator on Apollo (RTX 5090). The evaluator, the enforcement code
-and the tools named here live on branch `research/gpu-phase2` (not merged into `main`; merging needs the user's
-approval); acceptance status: ACCEPTED 2026-11-19 (`config/gpu-backend/acceptance.json` on that branch). Normative rules:
+How to build, verify, run and troubleshoot the CUDA evaluator on Apollo (RTX 5090). Acceptance status: see
+`config/gpu-backend/acceptance.json` (schema 2; written by the acceptance study `research/gpu-phase3/`, which added the
+parallel host path and the enforcement pins; the first acceptance was `research/gpu-phase2/`). Normative rules:
 [OPTIMIZATION_STANDARD.md](../research/OPTIMIZATION_STANDARD.md) §9 (from 3.0.0). Change procedure:
-[PARITY_CHECKLIST.md](PARITY_CHECKLIST.md). Feature map: [FEATURE_MATRIX.md](FEATURE_MATRIX.md). The first acceptance
-study and its evidence: `research/gpu-phase2/` (start with `GPU_PHASE2_HANDOFF.md`).
+[PARITY_CHECKLIST.md](PARITY_CHECKLIST.md). Feature map: [FEATURE_MATRIX.md](FEATURE_MATRIX.md). Evidence and handoffs:
+`research/gpu-phase3/GPU_ENGINE_FINAL_HANDOFF.md` (current), `research/gpu-phase2/GPU_PHASE2_HANDOFF.md` (first).
 
 ## 1. Components
 
 | Component | Path | Role |
 |---|---|---|
 | CUDA server | `src/gpu-backend/cuda/gb_server.cu` (+ `gb_d1.cuh`, `gb_growth.cuh`, `gb_pool.cuh`, `gb_common.cuh`, `v8math.cuh`, `gb.h`) | a separate process; framed binary IPC on stdin/stdout (protocol v2); LOAD, EVAL, INFO, SMOKE, QUIT |
-| Host client | `src/gpu-backend/client.ts`, `encode.ts`, `dataset.ts`, `layout.ts` | encodes tasks, decodes and verifies results (receipt, nonce, counters, checksum), rebuilds the canonical records with the UNCHANGED CPU reductions |
-| Official gate | `src/gpu-backend/official.ts` `openOfficialGpuSession` | purpose, acceptance, server/build/device, reachable-domain capabilities, smoke, memory, parity mini-set, attestation |
+| Batch codec | `src/gpu-backend/batch.ts` (+ `encode.ts`, `layout.ts`) | the one implementation of request encoding (contiguous shards, assembly) and response verification and decoding (receipt, nonce, counters, checksum, ids; the canonical records by the UNCHANGED CPU reductions) |
+| Host client (serial path) | `src/gpu-backend/client.ts`, `dataset.ts` | the server process and its IPC; `prepare` / `submit` / `complete` on the calling thread (`hostWorkers` 0) |
+| Parallel host path | `src/gpu-backend/hostPipeline.ts`, `hostWorker.ts`, `hostDoor.ts` | worker threads that encode and decode the shards of each batch (the door shared, its digest checked per worker); the receipt verified on the main thread in the serial path's order; results in candidate order; any worker failure fails closed |
+| Official gate | `src/gpu-backend/official.ts` `openOfficialGpuSession`; `officialRunner.ts` (an official study's npm-script wrapper) | purpose, acceptance (schema 2), an independent re-hash of every pinned file, committed source, server/build/device, reachable-domain capabilities, smoke, memory, the host path, parity mini-set through it, attestation |
 | Pool and Lab | `src/gpu-backend/pool.ts` `GpuPool`, `lab.ts` `EvalLab` | the A3 `Pool` contract on the GPU (batching, pipelining, receipts ledger, conservation, telemetry, GPU-only capacity retries); the A3 Lab semantics with the backend in the archive binding |
-| Policy | `purpose.ts`, `acceptance.ts`, `compat.ts`, `domain.ts`, `legacyRunner.ts`, `entrypoints.ts`; `src/research-standard/gpuPolicy.ts` | purposes, the acceptance record, the compatibility manifest, capability domains, the legacy CPU runner gate, the entrypoint registry, the preflight rules |
+| Policy | `purpose.ts`, `acceptance.ts`, `compat.ts`, `domain.ts`, `legacyRunner.ts`, `entrypoints.ts`, `doors.ts`; `src/research-standard/gpuPolicy.ts`; `tools/gpu-backend/verify-acceptance.sh` | purposes, the acceptance record and its independent verifier, the compatibility manifest (evaluation digest + enforcement group), capability domains, the legacy CPU runner gate, the entrypoint registry, the study door opener, the preflight rules |
 | Toolchain | `/home/chad/.local/share/margin-trading-gpu/cuda-13.2-toolkit` (user space; `tools/gpu-phase2/install-toolkit.sh`) | nvcc 13.2, cudart, compute-sanitizer, cuda-gdb; nothing system-wide, no driver change |
 
 ## 2. Build
 
 ```bash
 D=$(node --experimental-transform-types --disable-warning=ExperimentalWarning src/gpu-backend/compat.ts --digest)
-tools/gpu-backend/build.sh research/gpu-phase2/build/gb2 "$D"   # prints the binary's sha256
+tools/gpu-backend/build.sh research/gpu-phase3/build/gb3 "$D"   # prints the binary's sha256 (the accepted path)
+tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, the tree, a reproducible rebuild, the GPU
 ```
 
 - Flags (never change them without a full parity campaign): `-O3 -std=c++17 -arch=sm_120 --fmad=false -prec-div=true
   -prec-sqrt=true -Xcompiler -ffp-contract=off`.
 - The compatibility digest is compiled in; the official gate refuses a binary whose digest differs from the working
   tree's (`preflight-compat`). Rebuild after ANY change in the manifest (`compat.ts --manifest` lists the files).
-- The build replaces the binary atomically (a running server keeps its file).
+- The build replaces the binary atomically (a running server keeps its file). The build is reproducible (stripped): the
+  same sources, flags and toolkit give the same sha256 — a fresh checkout rebuilds the accepted binary and verifies it.
+- `GPU_BACKEND_BINARY` overrides the default path (`src/gpu-backend/toolchain.ts`).
 
 ## 3. Running
 
 - **Official optimization:** only through `openOfficialGpuSession` (blocked until `config/gpu-backend/acceptance.json`
-  is ACCEPTED and matches the tree, binary and device). The study's adoption manifest declares `evaluationBackend`
-  (standard §9.11) and `npm run research-preflight -- --study research/<study>` passes.
-- **Non-official GPU tools** (no acceptance needed; never official evidence): `tools/gpu-phase2/parity.ts`,
-  `gpu-only.ts`, `throughput-probe.ts`, `mini-opt.ts`, `negative.ts`, `sanitize.ts`, `bench.ts`, `stress.ts`.
+  is ACCEPTED and matches the tree, binary and device, its source revision is in the history and every pinned file is
+  committed unmodified). The study's adoption manifest declares `evaluationBackend` (standard §9.11) and
+  `npm run research-preflight -- --study research/<study>` passes. Its npm script goes through
+  `src/gpu-backend/officialRunner.ts research/<study> <runner module>`; the session's `hostWorkers` (default
+  `DEFAULT_HOST_WORKERS` in `hostPipeline.ts`) selects the host path, and the pool uses the session's attested pipeline.
+- **Non-official GPU tools** (no acceptance needed; never official evidence): `tools/gpu-phase3/` (`replay.ts`,
+  `parity.ts`, `negative.ts`, `tamper.ts`, `sanitize.ts`, `sustained.ts`, …) and Phase 2's `tools/gpu-phase2/`.
 - **CPU runs:** only with `GPU_POLICY_PURPOSE=<cpu-reference|diagnostic|parity-test|benchmark|strategy-lab>`; legacy npm
   research scripts refuse to start without it and refuse `official-optimization`.
 - **Containment:** long jobs run as transient systemd user units in one slice (MemoryHigh 44G, MemoryMax 48G, swap 0):
   `tools/gpu-phase2/launch.sh <unit> <absolute log> [--wait] -- <command…>`. The GPU server is a child of the job and
   lives in the same unit.
 
-## 4. Sizing and performance (measured in research/gpu-phase2/GPU_PHASE2_BENCHMARKS.md)
+## 4. Sizing and performance (measured: research/gpu-phase3/GPU_PERFORMANCE_BEFORE_AFTER.md; Phase 2's figures in research/gpu-phase2/GPU_PHASE2_BENCHMARKS.md)
+
+- Host path: 8 worker threads (`DEFAULT_HOST_WORKERS`) encode and decode the batches; the main thread keeps the lanes,
+  the archive and the request assembly. On Assignment 3's C19 broad1 job: 583.9 s with 8 workers vs 1,128.9 s on the
+  serial (Phase 2) path vs 5,900.8 s on 12 CPU workers; 12 workers gain nothing more; batch 16,384 is slower in the wall
+  (fewer but longer optimizer rounds). Peak RSS ≈ 4.8 GiB (each worker has its own heap; the door's arrays are shared).
 
 - One GPU thread evaluates one (candidate, book) sequentially over the whole door: a batch costs about as long as its
   slowest candidate (≈ 3–5 s on D24 even for ONE candidate). Throughput therefore comes only from large batches; the
@@ -88,4 +101,7 @@ tools/gpu-backend/build.sh research/gpu-phase2/build/gb2 "$D"   # prints the bin
 | `gpu-hang` / `kernel watchdog` | a batch exceeded its time limit; the job stopped (checkpointed). Check `nvidia-smi`, the server's stderr tail in the error, then resume (the gate runs again) |
 | `GPU memory` | lower the batch size or VRAM use by other processes (vLLM, if running, holds ≈ 28 GB) |
 | `receipt mismatch` | the results are not trusted; the job stopped. Rerun the sanitizer and the parity campaign before resuming |
+| `host worker … exited / failed / did not answer` | a host-path worker failed: the job stopped (checkpointed), nothing of the batch was released; check memory (each worker has a 3 GiB heap limit) and the error, then resume |
+| `preflight-pins` / `preflight-source` | a pinned file differs from the record, or is not committed: commit (or revert) and, if it is a real change, follow the checklist |
+| `preflight-host-path` | the host workers did not start or hold another door: an environment or code fault, never fall back |
 | Debug timing | `GB_DEBUG=1` (the default from the client) makes the server log per-batch phase times to its stderr, kept in the client (`server.stderrTail`) |

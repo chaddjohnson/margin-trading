@@ -1,0 +1,330 @@
+{
+ "kind": "gpu-phase2 P3 negative tests",
+ "t": "2026-11-19T03:00:39.721Z",
+ "binaries": {
+  "dev": "3fe09e6791ff9996bc4f463c43e7d8dff46600ca3bcbf0d7777be155301e13fc",
+  "perturbed": "dcd18c6e227a71ab46043df1f98e92eca1d86b86a4d9eb61d28bf4fca359e8a3",
+  "stale": "a120ab2a71e9094be6ed11ba4e58923c0fbbb39833c8675bf6f3d0e6b0dc26b4"
+ },
+ "door": "W-QUIET",
+ "total": 35,
+ "passed": 35,
+ "pass": true,
+ "rows": [
+  {
+   "group": "gate",
+   "name": "no execution purpose declared",
+   "expect": "preflight-purpose",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-purpose: no execution purpose declared (official optimization must declare it explicitly)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a non-official purpose opening the official gate",
+   "expect": "preflight-purpose",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-purpose: purpose cpu-reference is not official optimization; a non-official run must not open the official gate",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "no GPU acceptance record (the activation gate)",
+   "expect": "preflight-acceptance.*no GPU acceptance record",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: no GPU acceptance record (research/gpu-phase2/cache/negative-m4zVFE/none.json): official GPU optimization is blocked until an acceptance study passes every gate",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a forged acceptance with a stale CPU source digest (source-hash mismatch)",
+   "expect": "preflight-acceptance.*changed since acceptance",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the GPU evaluator was verified against other sources; changed since acceptance: apps/strategy-lab/shared/strategies.ts. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptance record",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "an acceptance for another binary (resume with the wrong binary)",
+   "expect": "preflight-acceptance.*binary sha256",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: GPU binary sha256 3fe09e6791ff9996 ≠ accepted 1111111111111111 (a stale or different build)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "an acceptance for another GPU (wrong GPU)",
+   "expect": "preflight-accepted-device",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-accepted-device: device GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 ≠ the accepted GPU-00000000-0000-0000-0000-000000000000",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "CUDA disabled (no GPU visible)",
+   "expect": "preflight-server",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-server: the GPU evaluator did not start or answer: GPU evaluator exited (4): gb2: no CUDA device",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a stale build (compiled from other sources)",
+   "expect": "preflight-compat",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-compat: server built from compatibility digest stale-digest-for, working tree f67dcb3bcc3ba896 (stale build or changed sources)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a server with test hooks / fault injection",
+   "expect": "preflight-no-test-hooks",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-no-test-hooks: the server runs with fault injection / test hooks enabled: never an official evaluator",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a reachable feature the GPU does not implement (unsupported Growth structure in the domain)",
+   "expect": "preflight-capability.*LIFECYCLE_L1_L2",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-capability: the search domain reaches features the GPU does not implement: LIFECYCLE_L1_L2",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "insufficient VRAM for the planned batch",
+   "expect": "preflight-memory",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-memory: free VRAM 32336314368 < planned batch 32950800000000 + 1 GiB headroom",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a wrong kernel (deliberately perturbed build): the parity mini-set refuses",
+   "expect": "preflight-parity",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-parity: 2 of 8 precommitted parity subjects differ from the canonical CPU engine",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a failed smoke kernel (wrong live result)",
+   "expect": "smoke ok=false",
+   "observed": "smoke ok=false (sum 1636.3944173366574 vs 1635.3944173366574)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "resume/restart repeats the preflight and records a new attestation",
+   "expect": "two attestations",
+   "observed": "two attestations, each before any evaluation",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "GPU out of memory (VRAM budget exceeded)",
+   "expect": "GPU memory",
+   "observed": "GPU evaluator: GPU memory: batch needs 33 MiB > VRAM budget 1 MiB",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "the GPU server killed during a search",
+   "expect": "exited|died|SIGKILL",
+   "observed": "GPU evaluator exited (SIGKILL): [gb2 0.101 s] eval n=64 flags=22 launching\n[gb2 0.200 s] D1 done\n[gb2 0.417 s] Growth done\n[gb2 0.532 s] pool + hash done\n[gb2 0.541 s] eval n=64 flags=22 launching",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 64
+  },
+  {
+   "group": "runtime",
+   "name": "a corrupted batch response (a bit flipped after the device checksum)",
+   "expect": "corrupted transfer",
+   "observed": "GPU evaluator: receipt mismatch: the results differ from the device checksum (corrupted transfer)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "device execution counters that disagree (untrustworthy receipt)",
+   "expect": "device counters",
+   "observed": "GPU evaluator: receipt mismatch: device counters {\"nonce\":\"aa1f6abf7a1d2041\",\"uuid\":\"GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4\",\"nCand\":64,\"d1Executed\":128,\"gExecuted\":65,\"poolExecuted\":64,\"kernels\":5,\"outChecksum\":\"cc2ff133d7f0b852\",\"server\":{\"h2dMs\":0.019071999937295914,\"d1Ms\":98.55465698242188,\"gMs\":315.8576965332031,\"poolMs\":114.914306640625,\"d2hMs\":0.40112000703811646,\"totalMs\":431.394067,\"dev",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a receipt from another GPU",
+   "expect": "receipt from GPU-",
+   "observed": "GPU evaluator: receipt mismatch: receipt from GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4, expected GPU-00000000-0000-0000-0000-000000000000",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a stalled server (heartbeat lost)",
+   "expect": "gpu-hang",
+   "observed": "GPU policy (standard 3.0.0 §9): gpu-hang: a batch of 64 did not return within 3000 ms",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a device fault (trap) during the run",
+   "expect": "CUDA error|exited|died",
+   "observed": "fault: GPU evaluator: CUDA error: CUDA error cudaErrorLaunchFailure: unspecified launch failure at cudaDeviceSynchronize() | GPU evaluator exited (3): gb2: sticky CUDA error, exiting",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a task outside the attested domain (mid-run capability re-check)",
+   "expect": "capability-outside-domain",
+   "observed": "GPU policy (standard 3.0.0 §9): capability-outside-domain: task NEG-RET:retain=on:0 needs G_RETENTION outside the attested domain; the batch's results are withheld",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a CPU-scored evaluation in the official counters (mid-run routing to the CPU)",
+   "expect": "cpu-scored",
+   "observed": "GPU policy (standard 3.0.0 §9): cpu-scored: 1 evaluation(s) scored on the CPU; the batch's results are withheld",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a capacity overflow re-evaluated on the GPU (positive control)",
+   "expect": "completed .* capacity retries [1-9]",
+   "observed": "completed 57/57; capacity retries 3; CPU-scored 0",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 57
+  },
+  {
+   "group": "runtime",
+   "name": "the same tasks at normal capacities (reference for the retry)",
+   "expect": "completed",
+   "observed": "completed 57/57; capacity retries 0; CPU-scored 0",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 57
+  },
+  {
+   "group": "runtime",
+   "name": "records after the GPU capacity retry equal the normal run",
+   "expect": "identical",
+   "observed": "identical",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a corrupted dataset file",
+   "expect": "checksum",
+   "observed": "GPU evaluator: dataset check failed: dataset checksum mismatch",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "invalid (non-integer) timestamps in a door",
+   "expect": "non-integer|strictly increasing",
+   "observed": "VGT 2017-01-02: minute times not strictly increasing integers",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a resume under another GPU binary/backend",
+   "expect": "refused",
+   "observed": "/home/chad/projects/margin-trading/research/gpu-phase2/cache/negative-m4zVFE/jobs/negative-binding/archive.sqlite: bound to backend = gpu:A, refused for gpu:B",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a resume under changed evaluation code",
+   "expect": "refused",
+   "observed": "/home/chad/projects/margin-trading/research/gpu-phase2/cache/negative-m4zVFE/jobs/negative-binding/archive.sqlite: bound to codeDigest = code-1, refused for code-2",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "a legacy CPU optimizer started without a purpose",
+   "expect": "purpose-required",
+   "observed": "exit 3: ❌ GPU policy (standard 3.0.0 §9): purpose-required: the legacy CPU runner 'vg-l0fj' evaluates strategies on the CPU. Official optimization is GPU-only (no CPU fallback); this runner may only reproduce frozen results or run diagnostics. Declare an explicit non-official purpose, e.g. GPU_POLICY_PURPOSE=cpu-reference (parity-test, cpu-reference, diagnostic, benchmark, strategy-lab).\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "a legacy CPU optimizer started as official optimization (forced CPU backend)",
+   "expect": "cpu-official-refused",
+   "observed": "exit 3: ❌ GPU policy (standard 3.0.0 §9): cpu-official-refused: the legacy CPU runner 'vg-l0fj' is a CPU evaluator: official optimization must use the attested GPU path (src/gpu-backend/official.ts); CPU substitution is prohibited.\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "the generic CPU optimizer (app.ts) without a purpose",
+   "expect": "purpose-required",
+   "observed": "exit 3: ❌ GPU policy (standard 3.0.0 §9): purpose-required: the legacy CPU runner 'optimizer' evaluates strategies on the CPU. Official optimization is GPU-only (no CPU fallback); this runner may only reproduce frozen results or run diagnostics. Declare an explicit non-official purpose, e.g. GPU_POLICY_PURPOSE=cpu-reference (parity-test, cpu-reference, diagnostic, benchmark, strategy-lab).\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "a CPU evaluation worker started for official optimization (non-GPU evaluation from an optimizer worker)",
+   "expect": "cpu-official-refused",
+   "observed": "exit 1: /home/chad/projects/margin-trading/src/gpu-backend/purpose.ts:43\n    throw new PolicyError('cpu-official-refused', `${runner} is a CPU evaluator: official optimization must use the attested GPU path (src/gpu-backend/official.ts); CPU substitution is prohibited.`);\n          ^\n\nPolicyError: GPU policy (standard 3.0.0 §9): cpu-official-refused: gpu-phase2 CPU evaluation worker is a CPU evalu",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "the standard preflight of an official 3.0.0 study without an accepted GPU evaluator",
+   "expect": "BLOCKED",
+   "observed": "official GPU optimization is BLOCKED (§9.9): no GPU acceptance record (research/gpu-phase2/cache/negative-m4zVFE/none.json): official GPU optimization is blocked until an acceptance study passes every gate",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  }
+ ]
+}

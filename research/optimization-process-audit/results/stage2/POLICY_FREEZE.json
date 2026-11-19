@@ -1,0 +1,198 @@
+{
+ "stage": "stage2 policy freeze (before any non-published next-slice outcome)",
+ "policies": [
+  {
+   "key": "P0",
+   "family": "reference (unchanged original rule)",
+   "name": "actual profit",
+   "formula": "the highest centre net among E(s, c); ties by the higher selection robust net, the lower centre DD, then the label"
+  },
+  {
+   "key": "P1",
+   "family": "severity-aware",
+   "name": "tail-mean-constrained actual profit",
+   "formula": "admissible iff the selection family’s worst-10% mean DD (mean of the ⌈0.1 n⌉ largest of the pooled, de-duplicated 2 × 128 selection draws’ maximum minute DDs) ≤ $35,000; the admissible member with the highest centre net (profit order); none admissible → no selection"
+  },
+  {
+   "key": "P2",
+   "family": "subperiod consistency",
+   "name": "best-year-excluded neighbourhood profit",
+   "formula": "the highest median over the pooled selection draws of (draw net − the draw’s best calendar-year marked P&L); ties by profit order"
+  },
+  {
+   "key": "P3",
+   "family": "episode sensitivity",
+   "name": "profit without new funding in the leading episode",
+   "formula": "the highest causal centre net from a rerun refusing every new decision inside the largest winning pool-level episode (first decision session → last exit; no winning episode → the centre net); ties by profit order"
+  }
+ ],
+ "document": {
+  "file": "research/optimization-process-audit/POLICIES.md",
+  "sha256": "218335ec75ceda9c2dd3850745abc4023aa8a45c2ce43e81432c45e16cf7e9bd"
+ },
+ "developmentChoices": {
+  "3B C19": {
+   "eligible": 39,
+   "picks": {
+    "P0": "C19/indep/B_GDX-breakout_VGT-breakout#1 profit",
+    "P1": "C19/indep/B_GDX-breakout_VGT-breakout#4 both Growth funded",
+    "P2": "C19/indep/B_GDX-breakout_VGT-breakout#2 robust",
+    "P3": "C19/indep/V_VGT-breakout#1 profit"
+   }
+  },
+  "3B C21": {
+   "eligible": 40,
+   "picks": {
+    "P0": "C21/indep/G_GDX-rise#1 profit",
+    "P1": "C21/indep/G_GDX-rise#1 profit",
+    "P2": "C21/indep/B_GDX-breakout_VGT-breakout#4 profit order",
+    "P3": "C21/indep/V_VGT-rise#1 profit"
+   }
+  },
+  "3B C23": {
+   "eligible": 39,
+   "picks": {
+    "P0": "C23/indep/B_GDX-rise_VGT-rise#1 profit",
+    "P1": "C23/indep/B_GDX-rise_VGT-rise#1 profit",
+    "P2": "C23/indep/B_GDX-rise_VGT-rise#1 profit",
+    "P3": "C23/indep/B_GDX-rise_VGT-rise#1 profit"
+   }
+  },
+  "3B C24": {
+   "eligible": 38,
+   "picks": {
+    "P0": "C24/indep/B_GDX-rise_VGT-rise#1 profit",
+    "P1": "C24/indep/B_GDX-rise_VGT-rise#1 profit",
+    "P2": "C24/indep/V_VGT-breakout#2 robust",
+    "P3": "C24/indep/B_GDX-rise_VGT-rise#5 profit order"
+   }
+  },
+  "4A C19": {
+   "eligible": 9,
+   "picks": {
+    "P0": "C19/indep-rise#1 profit",
+    "P1": "C19/indep-rise#4 exits-alternative",
+    "P2": "C19/indep-rise#2 robust",
+    "P3": "C19/indep-rise#4 exits-alternative"
+   }
+  },
+  "4A C21": {
+   "eligible": 5,
+   "picks": {
+    "P0": "C21/indep-rise#4 profit order",
+    "P1": "C21/indep-rise#2 robust",
+    "P2": "C21/indep-rise#4 profit order",
+    "P3": "C21/indep-rise#4 profit order"
+   }
+  },
+  "4A C23": {
+   "eligible": 6,
+   "picks": {
+    "P0": "C23/indep-rise#1 profit",
+    "P1": "C23/indep-rise#1 profit",
+    "P2": "C23/indep-rise#1 profit",
+    "P3": "C23/indep-rise#1 profit"
+   }
+  },
+  "4A C24": {
+   "eligible": 9,
+   "picks": {
+    "P0": "C24/indep-rise#1 profit",
+    "P1": "C24/indep-rise#1 profit",
+    "P2": "C24/indep-rise#2 robust",
+    "P3": "C24/indep-rise#1 profit"
+   }
+  }
+ },
+ "note": "developmentChoices are the policies’ choices from training-only features (C24 included); no next-period outcome exists for any non-published choice at this point",
+ "codeClosure": {
+  "files": [
+   {
+    "file": "src/optimization-process-audit/cohort.ts",
+    "sha256": "474501d3c9daaa0007a39eba43606ba299cb0bbdef97738a428976b0e3890f26"
+   },
+   {
+    "file": "src/optimization-process-audit/compute.ts",
+    "sha256": "bbe5793ddda419dc3b4bdc29ebddeeaf89b39169bb4727db618f1171b82b9f1a"
+   },
+   {
+    "file": "src/optimization-process-audit/context.ts",
+    "sha256": "43b2084e2bfe44ad256c79162d9c2e54991f2db7ae37fec0529818f4ad2b686f"
+   },
+   {
+    "file": "src/optimization-process-audit/decision.ts",
+    "sha256": "ee2b99e9d46a70c05aeb2f43bba3c3c5194ff0e543556985a1ae8a77744e71a7"
+   },
+   {
+    "file": "src/optimization-process-audit/freeze.ts",
+    "sha256": "7eb081f61b73764a267aafc079520658036dad747ce728b5c34d53184beaed9e"
+   },
+   {
+    "file": "src/optimization-process-audit/inventory.ts",
+    "sha256": "186d6d5c100fc2c669153289a32fa1a85c18aea5b021148ac54ff615294de3e5"
+   },
+   {
+    "file": "src/optimization-process-audit/main.ts",
+    "sha256": "5f18ddec05b9c3aae4943ed2c82079df040325ffa1ff4a859bd206964290ce63"
+   },
+   {
+    "file": "src/optimization-process-audit/mechanism.ts",
+    "sha256": "019f9dab507fddf9d0e165ca860fee3676ed8eb5d58e2efd94eb4e506364dfa3"
+   },
+   {
+    "file": "src/optimization-process-audit/pilot.ts",
+    "sha256": "d46d362fd7b3136bae5d3628c245bcd3d383c189e56802beff78a5b37f6a5c7d"
+   },
+   {
+    "file": "src/optimization-process-audit/policies.ts",
+    "sha256": "e4adfdd08bf04b43f87f71a3c1cffb091c9d656ea845218eb22295fd94866553"
+   },
+   {
+    "file": "src/optimization-process-audit/records.ts",
+    "sha256": "3f3d448d95e17260d22a918040b38d8a6a2b6645ee1deab47ecd8015b5c3beb2"
+   },
+   {
+    "file": "src/optimization-process-audit/reproduce.ts",
+    "sha256": "fbddb703c30b8b96fa15c05c092497985195bc0503f08cfbc55bc2191c85f338"
+   },
+   {
+    "file": "src/optimization-process-audit/runner.ts",
+    "sha256": "924b74505ddb285ea1e07aaa37ab3e169ceb17a4dfd764292e666e6fc4eba98c"
+   },
+   {
+    "file": "src/optimization-process-audit/scan.ts",
+    "sha256": "f75f4b7995fd9be63e465d07000ef0adf83d4adc4409545dcc702627c3aef7be"
+   },
+   {
+    "file": "src/optimization-process-audit/sources.ts",
+    "sha256": "4456f5d29fb460fb0faed40866662f12055e2602e54510c61808974aeebb5c10"
+   },
+   {
+    "file": "src/optimization-process-audit/stage1.ts",
+    "sha256": "79c567dd2327be6a4d1a1a6085b7d902953c1a0b11466fbaf17b209a53888d4f"
+   },
+   {
+    "file": "src/optimization-process-audit/stage2.ts",
+    "sha256": "b0c715a1327f38ceaa7713a6aa142fcd84fb5cd08550838580fc73cdece3b493"
+   },
+   {
+    "file": "src/optimization-process-audit/stage3.ts",
+    "sha256": "15ba418c57d6a8cf392f9f52220078049b2b7c95c315ae7271343717769ee800"
+   },
+   {
+    "file": "src/optimization-process-audit/stage4.ts",
+    "sha256": "848fa7ad152c253d6c7879d4ad8cc977a641e7fbeb555cebe8986387e77bfd78"
+   },
+   {
+    "file": "src/optimization-process-audit/subjects.ts",
+    "sha256": "b91c491e5fdb9b95c467e4cd559fecc7066d20ebd680ecf7b6ef65c1bf7d518d"
+   }
+  ],
+  "digest": "304d4922ac208125d55971af10d4992e0d6047d8767851987ff42290a4c91c15"
+ },
+ "subjectDigests": {
+  "3B": "41bf69bf26f1db66cabbd7051e34e612258f74807bde3e2f8d460040df37daeb",
+  "4A": "74173d3340b103cd78940e921cbe5453d1f6dba5c445bf32bec03992bef6990a"
+ },
+ "finished": "2026-11-10T23:11:45.423Z"
+}

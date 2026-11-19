@@ -1,0 +1,14 @@
+{"unit":"vgtpair-pilot-p1a","status":1,"stderr":"Running as unit: vgtpair-pilot-p1a.service; invocation ID: 50687c6294174ec595aa57c6162b1839\n          Finished with result: exit-code\nMain processes terminated with: code=exited, status=1/FAILURE\n               Service runtime: 17.851s\n             CPU time consumed: 46.344s\n                   Memory peak: 893.3M (swap: 0B)","log":"research/vgt-d1-growth-separate-pooled/results/logs/vgtpair-pilot-p1a.log","slice":"MemoryHigh=47244640256\nMemoryMax=51539607552\nMemorySwapMax=0"}
+21:49:48 p1a ended after 18 s
+21:49:48 ok: p1a worker kill failed the job (status 1)
+{"unit":"vgtpair-pilot-p1b","status":0,"stderr":"Running as unit: vgtpair-pilot-p1b.service; invocation ID: e68b263f81ee411f96b4ab802f59c29c\n          Finished with result: success\nMain processes terminated with: code=exited, status=0/SUCCESS\n               Service runtime: 29.128s\n             CPU time consumed: 2min 58.510s\n                   Memory peak: 3.1G (swap: 0B)","log":"research/vgt-d1-growth-separate-pooled/results/logs/vgtpair-pilot-p1b.log","slice":"MemoryHigh=47244640256\nMemoryMax=51539607552\nMemorySwapMax=0"}
+21:50:17 ok: p1b resume (status 0)
+21:50:40 p2a: 561 completed, sending SIGTERM to the coordinator
+{"unit":"vgtpair-pilot-p2a","status":75,"stderr":"Running as unit: vgtpair-pilot-p2a.service; invocation ID: 2ad23c5516dd4491a9378f13059fc448\n          Finished with result: exit-code\nMain processes terminated with: code=exited, status=75/TEMPFAIL\n               Service runtime: 22.248s\n             CPU time consumed: 1min 37.057s\n                   Memory peak: 3.1G (swap: 0B)","log":"research/vgt-d1-growth-separate-pooled/results/logs/vgtpair-pilot-p2a.log","slice":"MemoryHigh=47244640256\nMemoryMax=51539607552\nMemorySwapMax=0"}
+21:50:40 ok: p2a graceful stop (status 75)
+{"unit":"vgtpair-pilot-p2b","status":0,"stderr":"Running as unit: vgtpair-pilot-p2b.service; invocation ID: 9997f513fff74e21807f886ae5280dd9\n          Finished with result: success\nMain processes terminated with: code=exited, status=0/SUCCESS\n               Service runtime: 27.581s\n             CPU time consumed: 2min 40.699s\n                   Memory peak: 3.1G (swap: 0B)","log":"research/vgt-d1-growth-separate-pooled/results/logs/vgtpair-pilot-p2b.log","slice":"MemoryHigh=47244640256\nMemoryMax=51539607552\nMemorySwapMax=0"}
+21:51:07 ok: p2b resume (status 0)
+p1 == p2 (pair evidence, reproduction): True
+compute p1 {'fresh': 1722, 'archiveHits': 606, 'peakCgroupBytes': 3401596928, 'peakRssBytes': 3693645824, 'workers': 8} p2 {'fresh': 1474, 'archiveHits': 854, 'peakCgroupBytes': 3391393792, 'peakRssBytes': 3708252160, 'workers': 8}
+21:51:07 ok: p1 and p2 records equal (status 0)
+21:51:07 PILOT-DONE

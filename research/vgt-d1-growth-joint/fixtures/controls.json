@@ -1,0 +1,263 @@
+{
+ "kind": "vgt-d1-growth-joint control fixtures",
+ "economics": {
+  "budget": 100000,
+  "notional": 100000,
+  "costBps": 5,
+  "rate": 0.11,
+  "stopFill": "stop",
+  "stopSlippageBps": 0,
+  "ceiling": 35000
+ },
+ "d1": {
+  "primary": {
+   "name": "VGT D1 shipped primary",
+   "grid": {
+    "targetPercentChange": 216,
+    "trailingBuyPercentage": 3,
+    "trailingStopPercentage": 73,
+    "maximumHoldDays": 8,
+    "tickWindowSize": 74,
+    "intradayLossBuffer": 29,
+    "pullback": 90,
+    "continuationWindow": 60
+   },
+   "strategyParams": {
+    "key": "d1",
+    "label": "VGT d1-216,3,73,8,74,29,90,60",
+    "entryMode": "deep",
+    "postExit": true,
+    "stopPolicy": "net",
+    "targetPercentChange": 0.216,
+    "tickWindowSize": 74,
+    "trailingBuyPercentage": 0.003,
+    "trailingStopPercentage": 0.073,
+    "maximumHoldDays": 8,
+    "intradayLossBuffer": 0.029,
+    "pullback": 0.09,
+    "continuationWindow": 60,
+    "swingLookback": "NaN",
+    "swingProximity": "NaN"
+   }
+  },
+  "vg2": {
+   "name": "VG #2's VGT component (d1-bd80e32ee4)",
+   "grid": {
+    "targetPercentChange": 235,
+    "trailingBuyPercentage": 9,
+    "trailingStopPercentage": 74,
+    "maximumHoldDays": 15,
+    "tickWindowSize": 78,
+    "intradayLossBuffer": 44,
+    "pullback": 110,
+    "continuationWindow": 55
+   },
+   "strategyParams": {
+    "key": "d1",
+    "label": "VGT d1-235,9,74,15,78,44,110,55",
+    "entryMode": "deep",
+    "postExit": true,
+    "stopPolicy": "net",
+    "targetPercentChange": 0.235,
+    "tickWindowSize": 78,
+    "trailingBuyPercentage": 0.009,
+    "trailingStopPercentage": 0.074,
+    "maximumHoldDays": 15,
+    "intradayLossBuffer": 0.044,
+    "pullback": 0.11,
+    "continuationWindow": 55,
+    "swingLookback": "NaN",
+    "swingProximity": "NaN"
+   }
+  }
+ },
+ "growth": {
+  "g085": {
+   "name": "Growth 08500a60ec56cfae",
+   "id": "08500a60ec56cfae",
+   "effective": {
+    "entryMethod": "rise_from_recent_low",
+    "advanceFromRecentLowPercent": 1,
+    "recentLowLookbackBars": 80,
+    "trendFilterEnabled": true,
+    "trendMethod": "price_change",
+    "trendChangeLookbackSessions": 10,
+    "trendChangeMinimumReturnPercent": -5,
+    "eligibilityEnabled": true,
+    "eligibilityPolicy": "reset_renew",
+    "eligibilityMaxAgeSessions": 24,
+    "eligibilityResetDropPercent": 5.5,
+    "eligibilityRenewalReboundPercent": 5,
+    "drawdownRecoveryGateEnabled": true,
+    "dipLookbackSessions": 90,
+    "dipThresholdPercent": 2,
+    "recoveryRetracementPercent": 30,
+    "recoveryConfirmationSessions": 4,
+    "trailingStopPercent": 9,
+    "maximumHoldEnabled": false,
+    "initialStopEnabled": true,
+    "initialStopAtrSessions": 55,
+    "initialStopAtrMultiple": 1,
+    "retentionEnabled": true,
+    "retentionSellPercent": 50,
+    "retentionSmaSessions": 160,
+    "retentionClosesBelow": 1,
+    "continuationEnabled": true,
+    "continuationMethod": "ma_cross",
+    "continuationWindowSessions": 50,
+    "crossSmaBars": 110,
+    "crossRisingBars": 19,
+    "crossMinimumSlopePercent": 0.4,
+    "crossMarginPercent": 2.75,
+    "costBpsPerSide": 5
+   },
+   "engineParams": {
+    "advanceFromRecentLowPercent": 1,
+    "recentLowLookbackBars": 80,
+    "resolution": "1d",
+    "trailingStopPercent": 9,
+    "maximumHoldEnabled": false,
+    "maximumHoldDays": "NaN",
+    "intradayLossBufferEnabled": false,
+    "intradayLossBufferPercent": "NaN",
+    "costBpsPerSide": 5,
+    "continuation": {
+     "method": "ma_cross",
+     "windowSessions": 50,
+     "smaBars": 110,
+     "risingBars": 19,
+     "minimumSlopePercent": 0.4,
+     "marginPercent": 2.75
+    },
+    "trendFilter": {
+     "method": "price_change",
+     "lookbackSessions": 10,
+     "minimumReturnPercent": -5
+    },
+    "eligibility": {
+     "policy": "reset_renew",
+     "maxAgeSessions": 24,
+     "resetDropPercent": 5.5,
+     "renewalReboundPercent": 5
+    },
+    "initialStop": {
+     "atrSessions": 55,
+     "atrMultiple": 1
+    },
+    "retention": {
+     "sellPercent": 50,
+     "smaSessions": 160,
+     "closesBelow": 1
+    },
+    "drawdownGate": {
+     "lookbackSessions": 90,
+     "dipThresholdPercent": 2,
+     "recoveryRetracementPercent": 30,
+     "confirmationSessions": 4
+    }
+   }
+  },
+  "g4": {
+   "name": "Growth #4 420cd989e4fa7749",
+   "id": "420cd989e4fa7749",
+   "effective": {
+    "entryMethod": "rise_from_recent_low",
+    "advanceFromRecentLowPercent": 5,
+    "recentLowLookbackBars": 90,
+    "trendFilterEnabled": true,
+    "trendMethod": "price_change",
+    "trendChangeLookbackSessions": 30,
+    "trendChangeMinimumReturnPercent": -2,
+    "eligibilityEnabled": true,
+    "eligibilityPolicy": "time_limited",
+    "eligibilityMaxAgeSessions": 20,
+    "drawdownRecoveryGateEnabled": true,
+    "dipLookbackSessions": 60,
+    "dipThresholdPercent": 10,
+    "recoveryRetracementPercent": 45,
+    "recoveryConfirmationSessions": 2,
+    "trailingStopPercent": 6,
+    "maximumHoldEnabled": true,
+    "maximumHoldDays": 21,
+    "intradayLossBufferEnabled": true,
+    "intradayLossBufferPercent": 2.9,
+    "initialStopEnabled": true,
+    "initialStopAtrSessions": 20,
+    "initialStopAtrMultiple": 1.5,
+    "retentionEnabled": false,
+    "continuationEnabled": true,
+    "continuationMethod": "shallow_pullback",
+    "continuationWindowSessions": 60,
+    "uptrendSmaBars": 50,
+    "uptrendSlopeBars": 10,
+    "uptrendMinimumRisePercent": 0,
+    "pullbackMinimumPercent": 1.5,
+    "pullbackMaximumPercent": 8,
+    "recoveryPercent": 1,
+    "costBpsPerSide": 5
+   },
+   "engineParams": {
+    "advanceFromRecentLowPercent": 5,
+    "recentLowLookbackBars": 90,
+    "resolution": "1d",
+    "trailingStopPercent": 6,
+    "maximumHoldEnabled": true,
+    "maximumHoldDays": 21,
+    "intradayLossBufferEnabled": true,
+    "intradayLossBufferPercent": 2.9,
+    "costBpsPerSide": 5,
+    "continuation": {
+     "method": "shallow_pullback",
+     "windowSessions": 60,
+     "smaBars": 50,
+     "slopeBars": 10,
+     "minimumRisePercent": 0,
+     "pullbackMinimumPercent": 1.5,
+     "pullbackMaximumPercent": 8,
+     "recoveryPercent": 1
+    },
+    "trendFilter": {
+     "method": "price_change",
+     "lookbackSessions": 30,
+     "minimumReturnPercent": -2
+    },
+    "eligibility": {
+     "policy": "time_limited",
+     "maxAgeSessions": 20
+    },
+    "initialStop": {
+     "atrSessions": 20,
+     "atrMultiple": 1.5
+    },
+    "drawdownGate": {
+     "lookbackSessions": 60,
+     "dipThresholdPercent": 10,
+     "recoveryRetracementPercent": 45,
+     "confirmationSessions": 2
+    }
+   }
+  }
+ },
+ "provenance": {
+  "primary": {
+   "file": "config/phenotypes/D1/VGT.json",
+   "fileSha256": "3e77a419943b6a066c5467494947dfd4e1212a436ea79f6777c99764ca6c5f70",
+   "candidateId": "d1-ebc9f639b3",
+   "checkedAgainst": "D1 shipped constants"
+  },
+  "vg2": {
+   "alias": "s8-vg-balanced",
+   "configuration": "S8-VG-F24-3",
+   "candidateId": "d1-bd80e32ee4",
+   "note": "the VGT book of the VG #2 pool, run alone"
+  },
+  "g085": {
+   "source": "research/growth140-vgt-stable/FROZEN_SELECTION.json finalists",
+   "id": "08500a60ec56cfae"
+  },
+  "g4": {
+   "source": "src/growth140-vgt-s8m/space.ts control4",
+   "id": "420cd989e4fa7749"
+  }
+ }
+}

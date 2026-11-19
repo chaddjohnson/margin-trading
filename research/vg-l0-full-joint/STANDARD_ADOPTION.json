@@ -1,0 +1,153 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-full-joint",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.2.0",
+  "sha256": "0085cff292161e15f59e122d45793200fee01c610306ed37a3a0fab195dd5e24"
+ },
+ "readAt": "2026-11-15T11:53:00Z",
+ "adoptedAt": "2026-11-15T13:26:20Z",
+ "protocol": {
+  "path": "research/vg-l0-full-joint/PROTOCOL.md",
+  "sha256": "ec9de0d623e3c623c65512c5f013c8da6900104e25d1fa28c5b982c8202b3fa3"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "two frozen procedures on identical populations (PROTOCOL.md §10), neither ordering an extra simulation: the ORIGINAL NL0 rule = the actual-profit role of the Q1-Q6 qualified members (highest centre net; ties: selection robust, lower centre DD, label) - the canonical reference method - and the experimental RA1, Assignment 2's code unchanged (screens S1 open-lot multiple <= 1.50, S2 open-lot share <= 25%, S3 worst per-lot MAE >= -$17,500, S4 selection worst-10% mean DD <= $35,000; then fewest failed screens, then the lowest occupancy within 5% of the best conservative training net, then ties), a co-equal experimental arm; RA2 (conservative net) a secondary ablation. Applied to Track I populations L (legacy cell), B (no entry-day book) and F (all 64 cells) at every cutoff, and at C24 also to N (Track N + the four incumbents) and U (F + N). Fold primaries = each Track I procedure's selection at C19, C21, C23.",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 1760176,
+  "backendEvaluations": 46000000,
+  "notes": "Distinct candidate proposals (centres; refinement moves apart), configured base / maximum: Track I broad 64 cells x 2 replicates x (512 screen + 2-6 islands x 256) = 131,072 / 262,144 per cutoff (524,288 / 1,048,576 over C19-C24); Track I stage-2 refinement <= 34 lanes x (<= 406 designs + 4-8 islands x 384) <= 66,028 / 118,252 per cutoff; Track N (C24) 16 family pairs x R_N (>= 4) replicates x (<= 656 designs + 4-8 x 384) = 140,288 / 238,592 at R_N = 4. Backend evaluations: job caps = the sum of the lanes' worst cases (41,000 per broad lane, 110,000 per refinement lane, 114,000 per informed lane), 700 per qualified member, 60,000 per fold evaluation, 60,000 for the validation: worst case about 46 M at R_N = 4, expected about 20-30 M (measured by the pilot, PROTOCOL.md section 8.4). Counted separately: screen, rung-1/2/3 and refinement centres and neighbours, qualification, folds, retries (runs.jsonl) and archive hits."
+ },
+ "referenceMethod": {
+  "id": "NL0",
+  "path": "docs/research/methods/NEW_L0_METHOD.md",
+  "version": "1.0.0",
+  "sha256": "9b387bb47ce02178ee27bb8379a11e4940c9c6c5a44c3e7ab5fcc3c2cc0411e4"
+ },
+ "chronologicalConsequence": "Standard 2.2.0 default: a Track I population x selector procedure whose sequential verdict fails or cannot be computed gives 'no chronological support: not a deployment-qualified candidate without the user's explicit decision'. Track N and U selections (C24 only) are labelled 'incumbent-informed; no independent chronological test' with the same consequence. Every Track I verdict is an independent chronological test (all three phenotypes searched fresh at every cutoff). 'No qualifying successor' is a valid outcome. Governance only: never a fitness term, ranking input or gate.",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§4.1, §4.3, §4.8",
+   "kind": "adaptation",
+   "description": "64 structural cells (D1 family x gate per book) pinned per Track I lane; the protective-stop activation a per-book categorical gene protected by screen strata; Growth.VGT's full Growth 1.4.0 genome searched with NL0's V-cell protections; Assignment 2's K protections extended to the activation (control pattern)",
+   "justification": "brief §2.1-§2.2, §3",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4.2, §4.8",
+   "kind": "adaptation",
+   "description": "effort by replicates of NL0's unchanged per-lane schedules: Track I broad V-cell x 2 per cell per cutoff; stage-2 refinement informed schedule x 2 per refined cell; Track N informed schedule x R_N per family pair",
+   "justification": "brief §3.1-§3.2",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§1.2, §1.4",
+   "kind": "adaptation",
+   "description": "FULL opens before the frozen selection only in stage V for New L0 under legacy defaults (published figures), refused once a search exists; nothing else before FROZEN_SELECTION.json",
+   "justification": "brief §0.2 baseline reproduction; Assignment 2's AD3",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.9, §5.8, §0.2",
+   "kind": "departure",
+   "description": "study-specific use of §5.9/§5.8-type quantities (open-lot multiple and share, worst per-lot MAE, selection worst-10% mean DD) and occupancy as ranking inputs of the experimental selector RA1 (and its ablation RA2) only, Assignment 2's code unchanged; standard 2.2.0 unchanged; no other study bound",
+   "justification": "the brief's selection-method comparison",
+   "userAgreement": "brief §4: 'Register a study-scoped, precommitted departure permitting RA1 to use them for selection, as Assignment 2 did. Do not change the standard globally during this search.'"
+  },
+  {
+   "id": "AD6",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "neighbourhoods perturb every active numeric input of the joint genome (D1 N1 radii; control radii; Growth 10% of the box, fine step); K and categorical inputs fixed",
+   "justification": "the whole genome is searched",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§4.5, §4.6, §6",
+   "kind": "adaptation",
+   "description": "per-lane extension with NL0's triggers and caps; job cap = the sum of the lanes' worst cases so the resource guard cannot stop an extending lane before NL0's island cap",
+   "justification": "brief §3.3 (Assignment 2's 117-155 resource-bound lanes per cutoff)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§4.4, §3.2, §3.3, §1.9",
+   "kind": "adaptation",
+   "description": "Track N: incumbent-informed lanes at C24 only, one per D1 family pair x R_N replicates, gates free, seeds = New L0, IJ1, C4, C4-refined projected through a precommitted control grid; the incumbents are selectable members of N and U; own budget; labelled 'incumbent-informed; no independent chronological test'",
+   "justification": "brief §3.2",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "§2.3, §2.5",
+   "kind": "adaptation",
+   "description": "two frozen procedures (original, RA1) + RA2 ablation on identical populations L, B, F (Track I) and N, U (C24)",
+   "justification": "brief §4",
+   "userAgreement": null
+  },
+  {
+   "id": "AD10",
+   "section": "§4.1, §4.3",
+   "kind": "adaptation",
+   "description": "Track I stage-2 refinement of up to 16 cells + the legacy cell by a frozen rule with structural and Growth coverage, seeded only from the same cutoff's qualified broad members",
+   "justification": "brief §3.1",
+   "userAgreement": null
+  },
+  {
+   "id": "AD11",
+   "section": "§5.9",
+   "kind": "adaptation",
+   "description": "no disjoint pre-2016 data on the machine and none acquired; tail stress = in-sample 2016-2024 stress, XLK/GDXJ same-period proxies and synthetic gaps, each labelled",
+   "justification": "brief §0.3, §5.3",
+   "userAgreement": null
+  },
+  {
+   "id": "AD12",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "engineering gates = stage V V0-V8 of the full joint genome",
+   "justification": "brief §1",
+   "userAgreement": null
+  },
+  {
+   "id": "AD13",
+   "section": "§1.8, §2.5",
+   "kind": "adaptation",
+   "description": "the qualifying-successor rule adds a precommitted condition of materially stronger downside risk than New L0 on the C24 evidence ($2,500 band)",
+   "justification": "brief Mission, §5.2",
+   "userAgreement": null
+  }
+ ]
+}

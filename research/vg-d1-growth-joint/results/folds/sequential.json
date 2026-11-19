@@ -1,0 +1,496 @@
+{
+ "stage": "sequential",
+ "folds": [
+  {
+   "fold": "C19",
+   "slice": [
+    "2020-01-02",
+    "2021-12-31"
+   ],
+   "primary": "C19/indep/GDX-rise_VGT-breakout#1 profit"
+  },
+  {
+   "fold": "C21",
+   "slice": [
+    "2022-01-03",
+    "2023-12-29"
+   ],
+   "primary": "C21/indep/GDX-breakout_VGT-breakout#1 profit"
+  },
+  {
+   "fold": "C23",
+   "slice": [
+    "2024-01-02",
+    "2024-12-31"
+   ],
+   "primary": "C23/indep/GDX-rise_VGT-rise#1 profit"
+  }
+ ],
+ "switchCharge": "5 bps on $100000 per open lot closed or adopted at a boundary",
+ "policies": [
+  {
+   "name": "independent joint procedure (each fold primary; flat without one)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/indep/GDX-rise_VGT-breakout#1 profit",
+     "sliceNet": -29722.57,
+     "sliceDd": 48287.11,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "C21/indep/GDX-breakout_VGT-breakout#1 profit",
+     "sliceNet": -33880.48,
+     "sliceDd": 69053.76,
+     "charge": 100
+    },
+    {
+     "fold": "C23",
+     "label": "C23/indep/GDX-rise_VGT-rise#1 profit",
+     "sliceNet": 2258.44,
+     "sliceDd": 15618.35,
+     "charge": 100
+    }
+   ],
+   "netBeforeCharges": -61344.61,
+   "charges": 200,
+   "net": -61544.61,
+   "sequentialDd": 102257.9,
+   "ddPeak": "2020-03-03 18:04Z",
+   "ddTrough": "2023-01-06 14:45Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "role robust-profit",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/indep/GDX-rise_VGT-breakout#2 robust",
+     "sliceNet": -26717.34,
+     "sliceDd": 48123.16,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "C21/indep/GDX-breakout_VGT-breakout#2 robust",
+     "sliceNet": -24341.01,
+     "sliceDd": 50745.65,
+     "charge": 100
+    },
+    {
+     "fold": "C23",
+     "label": "C23/indep/GDX-rise_VGT-rise#2 robust",
+     "sliceNet": 742.85,
+     "sliceDd": 8175.42,
+     "charge": 100
+    }
+   ],
+   "netBeforeCharges": -50315.5,
+   "charges": 200,
+   "net": -50515.5,
+   "sequentialDd": 85955.79,
+   "ddPeak": "2020-09-10 14:02Z",
+   "ddTrough": "2023-02-24 14:30Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "role balanced",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/indep/GDX-rise_VGT-breakout#2 robust",
+     "sliceNet": -26717.34,
+     "sliceDd": 48123.16,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "C21/indep/GDX-breakout_VGT-breakout#2 robust",
+     "sliceNet": -24341.01,
+     "sliceDd": 50745.65,
+     "charge": 100
+    },
+    {
+     "fold": "C23",
+     "label": "C23/indep/GDX-rise_VGT-rise#3 balanced",
+     "sliceNet": -6071.7,
+     "sliceDd": 8366.06,
+     "charge": 100
+    }
+   ],
+   "netBeforeCharges": -57130.05,
+   "charges": 200,
+   "net": -57330.05,
+   "sequentialDd": 85955.79,
+   "ddPeak": "2020-09-10 14:02Z",
+   "ddTrough": "2023-02-24 14:30Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "role lower-drawdown",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/indep/GDX-rise_VGT-breakout#1 profit",
+     "sliceNet": -29722.57,
+     "sliceDd": 48287.11,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "C21/indep/GDX-breakout_VGT-breakout#3 gate-alternative",
+     "sliceNet": -3818.7,
+     "sliceDd": 35122.63,
+     "charge": 100
+    },
+    {
+     "fold": "C23",
+     "label": "C23/indep/GDX-rise_VGT-rise#3 balanced",
+     "sliceNet": -6071.7,
+     "sliceDd": 8366.06,
+     "charge": 100
+    }
+   ],
+   "netBeforeCharges": -39612.97,
+   "charges": 200,
+   "net": -39812.97,
+   "sequentialDd": 68610.87,
+   "ddPeak": "2020-03-03 18:04Z",
+   "ddTrough": "2022-10-13 13:32Z",
+   "withinCeiling": false
+  },
+  {
+   "name": "fixed control: VG #2 Balanced (D1·GDX + D1·VGT) (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: VG #2 Balanced (D1·GDX + D1·VGT)",
+     "sliceNet": 132702.13,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: VG #2 Balanced (D1·GDX + D1·VGT)",
+     "sliceNet": 63208.84,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: VG #2 Balanced (D1·GDX + D1·VGT)",
+     "sliceNet": 28624.54,
+     "sliceDd": 8839.65,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 224535.51,
+   "charges": 0,
+   "net": 224535.51,
+   "sequentialDd": 17280.74,
+   "ddPeak": "2020-03-19 19:26Z",
+   "ddTrough": "2020-03-19 20:00Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: Growth pair: #4 (VGT) + Appendix A (GDX) (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: Growth pair: #4 (VGT) + Appendix A (GDX)",
+     "sliceNet": 25220.63,
+     "sliceDd": 17430.56,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: Growth pair: #4 (VGT) + Appendix A (GDX)",
+     "sliceNet": 209.98,
+     "sliceDd": 15642.8,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: Growth pair: #4 (VGT) + Appendix A (GDX)",
+     "sliceNet": 17293.89,
+     "sliceDd": 10047.41,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 42724.5,
+   "charges": 0,
+   "net": 42724.5,
+   "sequentialDd": 21972.42,
+   "ddPeak": "2021-08-30 17:50Z",
+   "ddTrough": "2023-10-03 19:33Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: Growth pair: 08500a60 (VGT) + Appendix A (GDX) (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: Growth pair: 08500a60 (VGT) + Appendix A (GDX)",
+     "sliceNet": 17732.64,
+     "sliceDd": 16670.22,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: Growth pair: 08500a60 (VGT) + Appendix A (GDX)",
+     "sliceNet": 556.14,
+     "sliceDd": 21466.41,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: Growth pair: 08500a60 (VGT) + Appendix A (GDX)",
+     "sliceNet": 7269.86,
+     "sliceDd": 14322.77,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 25558.64,
+   "charges": 0,
+   "net": 25558.64,
+   "sequentialDd": 25102.33,
+   "ddPeak": "2020-07-27 14:46Z",
+   "ddTrough": "2023-10-26 15:23Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: Appendix A GDX Growth alone (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: Appendix A GDX Growth alone",
+     "sliceNet": 16718.19,
+     "sliceDd": 17430.56,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: Appendix A GDX Growth alone",
+     "sliceNet": -7394.32,
+     "sliceDd": 13292.07,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: Appendix A GDX Growth alone",
+     "sliceNet": 13445.91,
+     "sliceDd": 11334.86,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 22769.78,
+   "charges": 0,
+   "net": 22769.78,
+   "sequentialDd": 17709.96,
+   "ddPeak": "2020-07-27 14:46Z",
+   "ddTrough": "2024-06-26 13:33Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: VGT only: D1 primary + Growth #4 · A (Priority 2) (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: VGT only: D1 primary + Growth #4 · A (Priority 2)",
+     "sliceNet": 85323.16,
+     "sliceDd": 19534.41,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: VGT only: D1 primary + Growth #4 · A (Priority 2)",
+     "sliceNet": 33977.17,
+     "sliceDd": 17420.75,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: VGT only: D1 primary + Growth #4 · A (Priority 2)",
+     "sliceNet": 9852.77,
+     "sliceDd": 10047.41,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 129153.1,
+   "charges": 0,
+   "net": 129153.1,
+   "sequentialDd": 19534.41,
+   "ddPeak": "2020-02-19 17:49Z",
+   "ddTrough": "2020-03-18 18:27Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: VGT only: D1 primary + Growth 08500a60 · A (Priority 2) (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: VGT only: D1 primary + Growth 08500a60 · A (Priority 2)",
+     "sliceNet": 77252.82,
+     "sliceDd": 19534.41,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: VGT only: D1 primary + Growth 08500a60 · A (Priority 2)",
+     "sliceNet": 34308.92,
+     "sliceDd": 17420.75,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: VGT only: D1 primary + Growth 08500a60 · A (Priority 2)",
+     "sliceNet": -171.27,
+     "sliceDd": 14322.77,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 111390.47,
+   "charges": 0,
+   "net": 111390.47,
+   "sequentialDd": 19534.41,
+   "ddPeak": "2020-02-19 17:49Z",
+   "ddTrough": "2020-03-18 18:27Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: VG #2 + Growth #4 (VGT) — three components (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: VG #2 + Growth #4 (VGT) — three components",
+     "sliceNet": 162640.68,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: VG #2 + Growth #4 (VGT) — three components",
+     "sliceNet": 63195.33,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: VG #2 + Growth #4 (VGT) — three components",
+     "sliceNet": 9852.77,
+     "sliceDd": 10047.41,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 235688.78,
+   "charges": 0,
+   "net": 235688.78,
+   "sequentialDd": 17280.74,
+   "ddPeak": "2020-03-19 19:26Z",
+   "ddTrough": "2020-03-19 20:00Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: VG #2 + Growth 08500a60 (VGT) — three components (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: VG #2 + Growth 08500a60 (VGT) — three components",
+     "sliceNet": 132702.13,
+     "sliceDd": 17280.74,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: VG #2 + Growth 08500a60 (VGT) — three components",
+     "sliceNet": 63541.49,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: VG #2 + Growth 08500a60 (VGT) — three components",
+     "sliceNet": -171.27,
+     "sliceDd": 14322.77,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 196072.35,
+   "charges": 0,
+   "net": 196072.35,
+   "sequentialDd": 17280.74,
+   "ddPeak": "2020-03-19 19:26Z",
+   "ddTrough": "2020-03-19 20:00Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: VG #2 + Growth #4 (VGT) + Appendix A (GDX) (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: VG #2 + Growth #4 (VGT) + Appendix A (GDX)",
+     "sliceNet": 157896.17,
+     "sliceDd": 18556.54,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: VG #2 + Growth #4 (VGT) + Appendix A (GDX)",
+     "sliceNet": 63195.33,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: VG #2 + Growth #4 (VGT) + Appendix A (GDX)",
+     "sliceNet": 17293.89,
+     "sliceDd": 10047.41,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 238385.39,
+   "charges": 0,
+   "net": 238385.39,
+   "sequentialDd": 18556.54,
+   "ddPeak": "2020-02-24 14:30Z",
+   "ddTrough": "2020-03-12 13:51Z",
+   "withinCeiling": true
+  },
+  {
+   "name": "fixed control: VG #2 + Growth 08500a60 (VGT) + Appendix A (GDX) (descriptive: chosen with later data)",
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: VG #2 + Growth 08500a60 (VGT) + Appendix A (GDX)",
+     "sliceNet": 146058.76,
+     "sliceDd": 18556.54,
+     "charge": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: VG #2 + Growth 08500a60 (VGT) + Appendix A (GDX)",
+     "sliceNet": 63541.49,
+     "sliceDd": 17027.86,
+     "charge": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: VG #2 + Growth 08500a60 (VGT) + Appendix A (GDX)",
+     "sliceNet": 7269.86,
+     "sliceDd": 14322.77,
+     "charge": 0
+    }
+   ],
+   "netBeforeCharges": 216870.11,
+   "charges": 0,
+   "net": 216870.11,
+   "sequentialDd": 18556.54,
+   "ddPeak": "2020-02-24 14:30Z",
+   "ddTrough": "2020-03-12 13:51Z",
+   "withinCeiling": true
+  }
+ ],
+ "verdict": "chronologically unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+ "scope": "the independent lane (arm D) only; the staged path (VG #2 + Growth pair) and the informed refinement inherit later-selected settings and have no chronological test"
+}

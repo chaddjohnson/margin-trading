@@ -1,0 +1,41 @@
+PASS [gate] no execution purpose declared: GPU policy (standard 3.0.0 §9): preflight-purpose: no execution purpose declared (official optimization must declare it explicitly)
+PASS [gate] a non-official purpose opening the official gate: GPU policy (standard 3.0.0 §9): preflight-purpose: purpose cpu-reference is not official optimization; a non-official run must not open the official gate
+PASS [gate] no GPU acceptance record (the activation gate): GPU policy (standard 3.0.0 §9): preflight-acceptance: no GPU acceptance record (research/gpu-phase2/cache/negative-m4zVFE/none.json): official GPU optimization 
+PASS [gate] a forged acceptance with a stale CPU source digest (source-hash mismatch): GPU policy (standard 3.0.0 §9): preflight-acceptance: the GPU evaluator was verified against other sources; changed since acceptance: apps/strategy-lab/shared/s
+PASS [gate] an acceptance for another binary (resume with the wrong binary): GPU policy (standard 3.0.0 §9): preflight-acceptance: GPU binary sha256 3fe09e6791ff9996 ≠ accepted 1111111111111111 (a stale or different build)
+PASS [gate] an acceptance for another GPU (wrong GPU): GPU policy (standard 3.0.0 §9): preflight-accepted-device: device GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 ≠ the accepted GPU-00000000-0000-0000-0000-0000000000
+PASS [gate] CUDA disabled (no GPU visible): GPU policy (standard 3.0.0 §9): preflight-server: the GPU evaluator did not start or answer: GPU evaluator exited (4): gb2: no CUDA device
+PASS [gate] a stale build (compiled from other sources): GPU policy (standard 3.0.0 §9): preflight-compat: server built from compatibility digest stale-digest-for, working tree f67dcb3bcc3ba896 (stale build or changed
+PASS [gate] a server with test hooks / fault injection: GPU policy (standard 3.0.0 §9): preflight-no-test-hooks: the server runs with fault injection / test hooks enabled: never an official evaluator
+PASS [gate] a reachable feature the GPU does not implement (unsupported Growth structure in the domain): GPU policy (standard 3.0.0 §9): preflight-capability: the search domain reaches features the GPU does not implement: LIFECYCLE_L1_L2
+PASS [gate] insufficient VRAM for the planned batch: GPU policy (standard 3.0.0 §9): preflight-memory: free VRAM 32336314368 < planned batch 32950800000000 + 1 GiB headroom
+PASS [gate] a wrong kernel (deliberately perturbed build): the parity mini-set refuses: GPU policy (standard 3.0.0 §9): preflight-parity: 2 of 8 precommitted parity subjects differ from the canonical CPU engine
+PASS [gate] a failed smoke kernel (wrong live result): smoke ok=false (sum 1636.3944173366574 vs 1635.3944173366574)
+PASS [gate] resume/restart repeats the preflight and records a new attestation: two attestations, each before any evaluation
+PASS [runtime] GPU out of memory (VRAM budget exceeded): GPU evaluator: GPU memory: batch needs 33 MiB > VRAM budget 1 MiB
+PASS [runtime] the GPU server killed during a search: GPU evaluator exited (SIGKILL): [gb2 0.101 s] eval n=64 flags=22 launching
+[gb2 0.200 s] D1 done
+[gb2 0.417 s] Growth done
+[gb2 0.532 s] pool + hash done
+[gb2 0
+PASS [runtime] a corrupted batch response (a bit flipped after the device checksum): GPU evaluator: receipt mismatch: the results differ from the device checksum (corrupted transfer)
+PASS [runtime] device execution counters that disagree (untrustworthy receipt): GPU evaluator: receipt mismatch: device counters {"nonce":"aa1f6abf7a1d2041","uuid":"GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4","nCand":64,"d1Executed":128,"gExe
+PASS [runtime] a receipt from another GPU: GPU evaluator: receipt mismatch: receipt from GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4, expected GPU-00000000-0000-0000-0000-000000000000
+PASS [runtime] a stalled server (heartbeat lost): GPU policy (standard 3.0.0 §9): gpu-hang: a batch of 64 did not return within 3000 ms
+PASS [runtime] a device fault (trap) during the run: fault: GPU evaluator: CUDA error: CUDA error cudaErrorLaunchFailure: unspecified launch failure at cudaDeviceSynchronize() | GPU evaluator exited (3): gb2: stic
+PASS [runtime] a task outside the attested domain (mid-run capability re-check): GPU policy (standard 3.0.0 §9): capability-outside-domain: task NEG-RET:retain=on:0 needs G_RETENTION outside the attested domain; the batch's results are withh
+PASS [runtime] a CPU-scored evaluation in the official counters (mid-run routing to the CPU): GPU policy (standard 3.0.0 §9): cpu-scored: 1 evaluation(s) scored on the CPU; the batch's results are withheld
+PASS [runtime] a capacity overflow re-evaluated on the GPU (positive control): completed 57/57; capacity retries 3; CPU-scored 0
+PASS [runtime] the same tasks at normal capacities (reference for the retry): completed 57/57; capacity retries 0; CPU-scored 0
+PASS [runtime] records after the GPU capacity retry equal the normal run: identical
+PASS [runtime] a corrupted dataset file: GPU evaluator: dataset check failed: dataset checksum mismatch
+PASS [runtime] invalid (non-integer) timestamps in a door: VGT 2017-01-02: minute times not strictly increasing integers
+PASS [runtime] a resume under another GPU binary/backend: /home/chad/projects/margin-trading/research/gpu-phase2/cache/negative-m4zVFE/jobs/negative-binding/archive.sqlite: bound to backend = gpu:A, refused for gpu:B
+PASS [runtime] a resume under changed evaluation code: /home/chad/projects/margin-trading/research/gpu-phase2/cache/negative-m4zVFE/jobs/negative-binding/archive.sqlite: bound to codeDigest = code-1, refused for cod
+PASS [cli] a legacy CPU optimizer started without a purpose: exit 3: ❌ GPU policy (standard 3.0.0 §9): purpose-required: the legacy CPU runner 'vg-l0fj' evaluates strategies on the CPU. Official optimization is GPU-only (
+PASS [cli] a legacy CPU optimizer started as official optimization (forced CPU backend): exit 3: ❌ GPU policy (standard 3.0.0 §9): cpu-official-refused: the legacy CPU runner 'vg-l0fj' is a CPU evaluator: official optimization must use the attested 
+PASS [cli] the generic CPU optimizer (app.ts) without a purpose: exit 3: ❌ GPU policy (standard 3.0.0 §9): purpose-required: the legacy CPU runner 'optimizer' evaluates strategies on the CPU. Official optimization is GPU-only
+PASS [cli] a CPU evaluation worker started for official optimization (non-GPU evaluation from an optimizer worker): exit 1: /home/chad/projects/margin-trading/src/gpu-backend/purpose.ts:43
+    throw new PolicyError('cpu-official-refused', `${runner} is a CPU evaluator: offici
+PASS [cli] the standard preflight of an official 3.0.0 study without an accepted GPU evaluator: official GPU optimization is BLOCKED (§9.9): no GPU acceptance record (research/gpu-phase2/cache/negative-m4zVFE/none.json): official GPU optimization is blocke
+35/35 negative tests pass

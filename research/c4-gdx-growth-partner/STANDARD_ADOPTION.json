@@ -1,0 +1,122 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/c4-gdx-growth-partner",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.0.0",
+  "sha256": "2005a88c2e24f5e2ab4e461b0425f97d006781a45518f78d9f10fd9320f40105"
+ },
+ "readAt": "2026-11-10T12:16:30Z",
+ "adoptedAt": "2026-11-10T13:23:08Z",
+ "protocol": {
+  "path": "research/c4-gdx-growth-partner/PROTOCOL.md",
+  "sha256": "1307e46a2f1b1b212d0dd7e9a85133130f0ec9208c1fc86d344c41884c1fbcf1"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "three separate arms (R: C4-refined, O: C4, G: VGT Growth #4 alone), Growth·GDX searched alone beside each arm's frozen anchors; each arm's primary is the actual-profit role of its selectable set (its baseline with GDX Growth OFF, its Appendix A control and its searched partners): the highest development centre net among qualified members (gates Q1-Q7), ties by the higher selection robust net, the lower centre DD, then the label. The baseline is each arm's no-improvement fallback; a frozen prudent-recommendation rule adds GDX Growth only if a partner dominating the baseline on development passes V1-V3 and is supported across later periods (PROTOCOL.md §9.4).",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 196608,
+  "backendEvaluations": 5000000,
+  "notes": "Distinct new GDX centre proposals per cutoff: R 16,384 base / 32,768 cap, O 4,096 / 8,192, G 4,096 / 8,192 (24,576 base / 49,152 cap per cutoff) at C19, C21, C23 and C24 = 98,304 base / 196,608 cap in all, plus refinement moves. Backend evaluations (fresh; archive hits apart): search <= 1,000,000 per cutoff, qualification <= 160,000 per cutoff, transfers <= 160,000, validation neighbourhoods <= 5,000; total cap 5,000,000 (expected 1.5-3 M). Counted separately: screen centres, rung-1/2/3 and refinement centres and neighbours, qualification, transfers, folds, validation, retries, archive hits and worker compute time, per arm and per proposal origin (PROTOCOL.md §7.4)."
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3, §2.5, §3.2",
+   "kind": "adaptation",
+   "description": "three arms, each with its own selectable set including its GDX-OFF baseline; per-arm actual-profit primary; baseline = no-improvement fallback with a frozen prudent-recommendation rule",
+   "justification": "brief: Exact experiments and controls",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4.1, §3.4",
+   "kind": "adaptation",
+   "description": "architecture A only; same-instant order fixed D1-first, GDX before VGT",
+   "justification": "brief: preserve the single exclusive slot and deterministic ordering",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§4.1, §2.4",
+   "kind": "adaptation",
+   "description": "Study 8 pipeline on the Growth·GDX genome only; promotion 1/4 centre net, 1/4 robust net, rest rank/diversity",
+   "justification": "brief: Bounded search (profit-based promotion kept beside robust promotion)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "two neighbourhood scopes (whole-portfolio and GDX-only) with common random numbers across members and arms; rung neighbourhoods whole-portfolio; gates on both scopes (Q3/Q4, Q7); paired rows",
+   "justification": "brief: Qualification and measuring improvement",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§4.2, §4.5",
+   "kind": "adaptation",
+   "description": "unequal budgets by arm (16,384 / 4,096 / 4,096 base, <= 2x by development-only extensions); extension triggers in dollars and hypervolume",
+   "justification": "brief: Bounded search (weighted toward C4-refined)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§4.1, §5.3",
+   "kind": "adaptation",
+   "description": "centre-first fidelity; an unfunded GDX book is behaviourally the baseline and never a partner",
+   "justification": "brief: Bounded search",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "Priority 3's pooled engine reused unchanged; gates E1-E8 through the 3C configuration path",
+   "justification": "brief: Verification and resources",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§1.4, §1.6",
+   "kind": "adaptation",
+   "description": "stricter: FULL never opened before FROZEN_SELECTION.json is sealed and committed, even for known targets",
+   "justification": "brief: reproduce full targets only at the final frozen stage",
+   "userAgreement": null
+  },
+  {
+   "id": "D1",
+   "section": "§4.4, §1.9, §0.3",
+   "kind": "departure",
+   "description": "no independent discovery lane: every configuration carries anchors chosen with later data in view; broad GDX lanes are anchor-conditional (informed); the earlier-cutoff repeats are descriptive fixed-anchor repeats, never chronological evidence of a procedure; anchors are not regenerated or retuned to make an independence claim",
+   "justification": "the assignment fixes the anchors (VG #2, VGT Growth #4, C4-refined) by design",
+   "userAgreement": "research/c4-gdx-growth-partner/brief/BRIEF.md, 'Funding, dates and economics': 'This is incumbent-informed research on previously examined history ... Even a broadly initialized GDX search conditional on these anchors is not a fully independent chronological discovery procedure ... label fixed-anchor repeats as descriptive; they cannot erase anchor provenance. Do not regenerate or retune the anchors merely to make an independence claim.'"
+  }
+ ]
+}

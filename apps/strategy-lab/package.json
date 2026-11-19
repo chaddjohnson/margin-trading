@@ -1,0 +1,54 @@
+{
+  "name": "strategy-lab",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Strategy Lab: local strategy research workbench (runs, entries/exits, SQLite, single manual tests)",
+  "type": "module",
+  "engines": {
+    "node": ">=24.21.0"
+  },
+  "scripts": {
+    "start": "node scripts/ensure-deps.mjs && node scripts/ensure-build.mjs && npm run serve",
+    "start:vpn": "node scripts/ensure-deps.mjs && node scripts/ensure-build.mjs && STRATEGY_LAB_HOSTS=127.0.0.1,tailscale npm run serve",
+    "serve": "node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=4096 server/main.ts",
+    "dev": "node scripts/dev.mjs",
+    "build": "npm run typecheck && vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.e2e.json",
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:e2e": "vite build && playwright test",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run test:e2e",
+    "import:study8": "node --experimental-transform-types --disable-warning=ExperimentalWarning importers/study8.ts",
+    "generate:fixture": "node --experimental-transform-types --disable-warning=ExperimentalWarning scripts/generate-fixture.ts",
+    "token": "node scripts/show-token.mjs",
+    "service:install": "node scripts/install-service.mjs",
+    "import:phenotypes": "node --experimental-transform-types --disable-warning=ExperimentalWarning importers/phenotypes.ts",
+    "export": "node --experimental-transform-types --disable-warning=ExperimentalWarning scripts/export-run.ts",
+    "replay": "cd ../.. && node --experimental-transform-types --disable-warning=ExperimentalWarning apps/strategy-lab/scripts/replay-run.ts",
+    "audit:state": "node --experimental-transform-types --disable-warning=ExperimentalWarning scripts/audit-state.ts",
+    "preview-cache": "node --experimental-transform-types --disable-warning=ExperimentalWarning scripts/preview-cache.ts",
+    "export-requests": "cd ../.. && node --experimental-transform-types --disable-warning=ExperimentalWarning apps/strategy-lab/scripts/export-requests.ts",
+    "portfolio-catalog": "cd ../.. && node --experimental-transform-types --disable-warning=ExperimentalWarning apps/strategy-lab/scripts/build-candidate-catalog.ts",
+    "portfolio-parity": "cd ../.. && node --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=6144 apps/strategy-lab/scripts/portfolio-parity.ts"
+  },
+  "dependencies": {
+    "dygraphs": "2.2.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "@playwright/test": "1.64.1",
+    "@types/dygraphs": "2.2.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.2.1",
+    "eslint": "10.14.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.1",
+    "vite": "8.3.5",
+    "vitest": "5.1.0"
+  }
+}

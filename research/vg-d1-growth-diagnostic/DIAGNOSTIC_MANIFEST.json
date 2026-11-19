@@ -1,0 +1,766 @@
+{
+ "study": "vg-d1-growth-diagnostic",
+ "kind": "DIAGNOSTIC MANIFEST — frozen before any substantive stage; never edited (changes go to AMENDMENTS.md)",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "1.1.0",
+  "sha256": "e86b0160e0d757948da46194481aeb961b59afa841c3e4d6428f266b978beff8"
+ },
+ "brief": {
+  "file": "research/vg-d1-growth-diagnostic/brief/BRIEF.md",
+  "sha256": "e5e420bdd023e4112147af7b24c65436541be074ef89ada7d7d2d57eab8ce509"
+ },
+ "priority3": {
+  "study": "research/vg-d1-growth-joint",
+  "evaluationDigest": "147cad7c17eff3fa50442d2cb0ffb9c22cb7ba5091a46d1e14d3351d5cff4e88",
+  "closureDigest": "f7fc49aae5d35e6aef67096ddf211572779712796a1ab1e58a5c206b2923e69b",
+  "records": {
+   "CONTROL_MANIFEST.json": "0f40efd76aec8ec10a504fb2cf508891a572061df51db065363a910fb68adaa1",
+   "FROZEN_SELECTION.json": "e29e35e290c1f9a424410b02c048889021fa818f16c324085bae8bf5bdcebfe2",
+   "results/protocol-freeze.json": "69d30c4183850698b138b1d9f168d7704c0ef83a6709f205b8829867090eb704",
+   "results/search/C24/indep.json": "813fb96a2d95be0a9fb55a864545f74e766e12d467a7d0ea7b6b0fcaf8e77e94",
+   "results/search/C24/gpair.json": "ffe03d0e60ead0fbadc49b7ea1cbd71c90302d6daddbddea26d28432ced2cdd9",
+   "results/search/C24/informed.json": "b30fd648af06f4ca0d11c812d7b1585da5fa21fa4e21800f1a0dd54a810ba06e",
+   "results/gpair/C24/selection.json": "c833c85dcecd6cd678d23ecbd81f6e11d45e294de3f9995e8c1dec281f2c47fb",
+   "results/folds/C24/selection.json": "32953b919363002a1b7a87a7e5643941068685782948e80a44064c20b76f76b1",
+   "results/diagnostics/D24/diagnostics.json": "3e18a20fb022dc42557e0dcb5df846645b2fd1d09ad14c87151eb8347f585252",
+   "results/validation/validation.json": "77328e9cb7154939d9b455c2d62b48de5bfdb8e051a31ad790c3ade40bc4dad1"
+  },
+  "archives": [
+   "search-C24-indep",
+   "search-C24-gpair",
+   "search-C24-informed",
+   "qualify-C24",
+   "qualify-gpair-C24"
+  ]
+ },
+ "subjects": [
+  {
+   "key": "A",
+   "label": "control: VG #2 + Growth #4 (VGT) + Appendix A (GDX)",
+   "group": "unchanged four-component",
+   "id": "d4cde31356e2306a",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": true
+  },
+  {
+   "key": "B",
+   "label": "control: VG #2 + Growth 08500a60 (VGT) + Appendix A (GDX)",
+   "group": "unchanged four-component",
+   "id": "676731bfd4ec280f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": true
+  },
+  {
+   "key": "C",
+   "label": "control: VG #2 + Growth #4 (VGT) — three components",
+   "group": "three-component control",
+   "id": "f324035d15f69610",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": true
+  },
+  {
+   "key": "D",
+   "label": "control: VG #2 Balanced (D1·GDX + D1·VGT)",
+   "group": "D1-only control",
+   "id": "7a377d49c2b9aa55",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": true
+  },
+  {
+   "key": "GP4",
+   "label": "control: Growth pair: #4 (VGT) + Appendix A (GDX)",
+   "group": "Growth-only control",
+   "id": "0f17bddbd7f63a56",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": true
+  },
+  {
+   "key": "GP085",
+   "label": "control: Growth pair: 08500a60 (VGT) + Appendix A (GDX)",
+   "group": "Growth-only control",
+   "id": "008233e872d69f92",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": true
+  },
+  {
+   "key": "IP",
+   "label": "C24/informed#1 profit",
+   "group": "informed primary (final primary)",
+   "id": "575545f4d6438577",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": true
+  },
+  {
+   "key": "XP",
+   "label": "C24/indep/GDX-rise_VGT-rise#1 profit",
+   "group": "independent primary",
+   "id": "86d25530b9e9141d",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": true
+  },
+  {
+   "key": "SP",
+   "label": "staged: VG #2 + C24/gpair/GDX-breakout_VGT-rise#3 profit order",
+   "group": "staged primary",
+   "id": "d3bc148449ea59e6",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": true
+  },
+  {
+   "key": "G01",
+   "label": "C24/gpair/GDX-rise_VGT-rise#1 profit",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "006c6c14d45fbbf0",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G02",
+   "label": "C24/gpair/GDX-rise_VGT-rise#2 gate-alternative",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "063ace2424d19e1d",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G03",
+   "label": "C24/gpair/GDX-rise_VGT-rise#3 profit order",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "8544e2510cbe84b9",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G04",
+   "label": "C24/gpair/GDX-rise_VGT-breakout#1 profit",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "5fc9b979be93841d",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G05",
+   "label": "C24/gpair/GDX-rise_VGT-breakout#2 robust",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "b271aa2b05ae6f37",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G06",
+   "label": "C24/gpair/GDX-rise_VGT-breakout#3 gate-alternative",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "9e8ca5cbe0a5656d",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G07",
+   "label": "C24/gpair/GDX-breakout_VGT-rise#1 profit",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "1b9fef084a67daad",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G08",
+   "label": "C24/gpair/GDX-breakout_VGT-rise#2 robust",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "0e0f79e48d1d2726",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G09",
+   "label": "C24/gpair/GDX-breakout_VGT-rise#3 profit order",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "f22e7ba4f7d81f70",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G10",
+   "label": "C24/gpair/GDX-breakout_VGT-breakout#1 profit",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "1cf27c0d50c4a6d2",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G11",
+   "label": "C24/gpair/GDX-breakout_VGT-breakout#2 gate-alternative",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "ee2f29fb336b1122",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "G12",
+   "label": "C24/gpair/GDX-breakout_VGT-breakout#3 profit order",
+   "group": "Growth-pair shortlist (arm B)",
+   "id": "da50c24706526883",
+   "enabled": [
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/gpair/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I01",
+   "label": "C24/indep/GDX-rise_VGT-rise#1 profit",
+   "group": "independent C24 finalist (arm D)",
+   "id": "86d25530b9e9141d",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I02",
+   "label": "C24/indep/GDX-rise_VGT-rise#2 robust",
+   "group": "independent C24 finalist (arm D)",
+   "id": "239aae85f9e0532c",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I03",
+   "label": "C24/indep/GDX-rise_VGT-rise#3 balanced",
+   "group": "independent C24 finalist (arm D)",
+   "id": "337064efda9e0d56",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I04",
+   "label": "C24/indep/GDX-rise_VGT-rise#4 profit order",
+   "group": "independent C24 finalist (arm D)",
+   "id": "90a863305ef3a865",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I05",
+   "label": "C24/indep/GDX-rise_VGT-breakout#1 profit",
+   "group": "independent C24 finalist (arm D)",
+   "id": "0ad7e7e2d739d3e1",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I06",
+   "label": "C24/indep/GDX-rise_VGT-breakout#2 robust",
+   "group": "independent C24 finalist (arm D)",
+   "id": "359b9593c19eedeb",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I07",
+   "label": "C24/indep/GDX-rise_VGT-breakout#3 balanced",
+   "group": "independent C24 finalist (arm D)",
+   "id": "0fc65c09c2312d7f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I08",
+   "label": "C24/indep/GDX-rise_VGT-breakout#4 profit order",
+   "group": "independent C24 finalist (arm D)",
+   "id": "66535437cab87071",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I09",
+   "label": "C24/indep/GDX-breakout_VGT-rise#1 profit",
+   "group": "independent C24 finalist (arm D)",
+   "id": "8ff9ae9c5f22e42f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I10",
+   "label": "C24/indep/GDX-breakout_VGT-rise#2 robust",
+   "group": "independent C24 finalist (arm D)",
+   "id": "011ccea1f10a4468",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I11",
+   "label": "C24/indep/GDX-breakout_VGT-rise#3 balanced",
+   "group": "independent C24 finalist (arm D)",
+   "id": "bdfc464b30cbc78e",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I12",
+   "label": "C24/indep/GDX-breakout_VGT-rise#4 gate-alternative",
+   "group": "independent C24 finalist (arm D)",
+   "id": "2497ffd8394f287a",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I13",
+   "label": "C24/indep/GDX-breakout_VGT-breakout#1 profit",
+   "group": "independent C24 finalist (arm D)",
+   "id": "250fe74a17ab98d9",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I14",
+   "label": "C24/indep/GDX-breakout_VGT-breakout#2 robust",
+   "group": "independent C24 finalist (arm D)",
+   "id": "bbd2634acbe3954f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I15",
+   "label": "C24/indep/GDX-breakout_VGT-breakout#3 gate-alternative",
+   "group": "independent C24 finalist (arm D)",
+   "id": "88d919ac78c4ad8f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "I16",
+   "label": "C24/indep/GDX-breakout_VGT-breakout#4 profit order",
+   "group": "independent C24 finalist (arm D)",
+   "id": "8ce92fb2d143104e",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "O01",
+   "label": "C24/informed#2 robust",
+   "group": "other C24 member (informed)",
+   "id": "eb5bca1e559ad79e",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "O02",
+   "label": "C24/informed#3 balanced",
+   "group": "other C24 member (informed)",
+   "id": "fa3bd4f824d3e46b",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "O03",
+   "label": "C24/informed#4 gate-alternative",
+   "group": "other C24 member (informed)",
+   "id": "e59f0f37a7422e9a",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "O04",
+   "label": "staged: VG #2 + C24/gpair/GDX-rise_VGT-rise#1 profit",
+   "group": "other C24 member (staged)",
+   "id": "012b7b738b2505fd",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "O05",
+   "label": "staged: VG #2 + C24/gpair/GDX-rise_VGT-breakout#2 robust",
+   "group": "other C24 member (staged)",
+   "id": "2d4de976f3cad4a9",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "O06",
+   "label": "control: VGT only: D1 primary + Growth #4 · A (Priority 2)",
+   "group": "other C24 member (control)",
+   "id": "dbe7be81867b739a",
+   "enabled": [
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "O07",
+   "label": "control: VGT only: D1 primary + Growth 08500a60 · A (Priority 2)",
+   "group": "other C24 member (control)",
+   "id": "51da785f9a3b5f26",
+   "enabled": [
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  },
+  {
+   "key": "O08",
+   "label": "control: VG #2 + Growth 08500a60 (VGT) — three components",
+   "group": "other C24 member (control)",
+   "id": "3688e97b90639d60",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "source": "results/folds/C24/selection.json",
+   "full": false
+  }
+ ],
+ "counts": {
+  "subjects": 45,
+  "growthPairShortlist": 12,
+  "independentFinalists": 16,
+  "fullSubjects": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "GP4",
+   "GP085",
+   "IP",
+   "XP",
+   "SP"
+  ]
+ },
+ "stages": {
+  "R": {
+   "door": "D24",
+   "what": "every subject reproduced to its sealed centre record (field for field), plus VG #2 native (Study 8: $260,223.13 / $17,280.74 / 36 lots / 14 refusals); funnels, pool time, refusal timelines (every refused decision, the gate check of every Growth crossing inside an idle overlap), drawdown episodes",
+   "development": 46
+  },
+  "S": {
+   "what": "Priority 3's C24 gpair (4 lanes), indep (4 lanes) and informed (1 lane) archives, read-only: screen regenerated and matched, stage counts verified against the sealed search records, participation class of every centre at every stage, failed criteria, ranks, promotion reasons, Appendix A's Growth·GDX structure, the whole archived volume by class",
+   "development": 0
+  },
+  "N": {
+   "what": "the confirmation (3 × 128), small, wide and scope families of A, B, C, D, IP, XP, SP, GP4, GP085 reconstructed and checked against the sealed statistics; the report-only tail statistics; per-input association; replays",
+   "replays": {
+    "every_confirmation_draw": [
+     "A",
+     "B"
+    ],
+    "worst_ceil_10pct_draws": [
+     "C",
+     "D",
+     "IP"
+    ]
+   },
+   "development": 890
+  },
+  "P": {
+   "design": {
+    "P1": {
+     "subject": "A",
+     "book": "G:GDX",
+     "us": [
+      -1,
+      -0.5,
+      -0.25,
+      0.25,
+      0.5,
+      1
+     ]
+    },
+    "P2": {
+     "subject": "B",
+     "book": "G:GDX",
+     "us": [
+      -1,
+      -0.5,
+      0.5,
+      1
+     ]
+    },
+    "P3": {
+     "subject": "A",
+     "book": "D1:GDX",
+     "us": [
+      -1,
+      -0.5,
+      0.5,
+      1
+     ]
+    },
+    "P4": {
+     "subject": "A",
+     "from": "P1",
+     "us": [
+      -1,
+      -0.5,
+      0.5,
+      1
+     ]
+    }
+   },
+   "planned": 238,
+   "development": 240,
+   "probes": 238
+  },
+  "F": {
+   "door": "FULL (2016-01-04 → 2026-10-30, under the frozen selection guard of Priority 3)",
+   "subjects": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "GP4",
+    "GP085",
+    "IP",
+    "XP",
+    "SP"
+   ],
+   "plusNative": "VG #2 native (the known $334,911.93 / $21,303.61)",
+   "full": 10,
+   "questions": [
+    "Q-F1: in 2025-01-02 → 2026-10-30, at which stage did each subject's Growth·GDX participation stop or occur (signals, filters/eligibility, capital competition, virtual-state waiting)?",
+    "Q-F2: which refusals, occupants and idle overlaps occurred after the boundary?",
+    "Q-F3: which components booked each subject's validation P&L, and which lots crossed the boundary?",
+    "Q-F4: does every subject reproduce its sealed FULL record exactly?"
+   ],
+   "boundary": "2024-12-31",
+   "rule": "retrospective explanation only: nothing is selected, ranked, tuned or relabelled from this window"
+  }
+ },
+ "planned": {
+  "development": 1176,
+  "full": 10,
+  "probes": 238
+ },
+ "ceilings": {
+  "development": 4000,
+  "full": 64,
+  "probes": 256,
+  "observerBooks": 4000
+ },
+ "definitions": {
+  "episodeGap": 10,
+  "idleOverlap": "a session close inside a refused virtual trade's own hold (decision → final virtual exit) at which no funded lot is open and no order is reserved",
+  "worst10Mean": "the mean of the ⌈0.1 × n⌉ largest drawdowns of the family (standard 1.1.0 §0.3)",
+  "p90Interval": "distribution-free 95% interval of the 0.9 quantile: order statistics at ranks ⌊n·0.9 − 1.96·√(n·0.9·0.1)⌋ and ⌈n·0.9 + 1.96·√(…)⌉ + 1",
+  "breachInterval": "Wilson 95% interval of the breach share"
+ }
+}

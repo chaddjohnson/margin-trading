@@ -1,0 +1,5737 @@
+{
+ "stage": "stage4 C24 freeze (before any new 2025–2026 evaluation)",
+ "analysis": {
+  "file": "research/optimization-process-audit/results/stage3/analysis.json",
+  "sha256": "1e06826f4f3587299b5496230711a95f1d2ef49b3dc85e0413707fc67162c630",
+  "classifications": {
+   "P1": "no demonstrated improvement",
+   "P2": "no demonstrated improvement",
+   "P3": "no demonstrated improvement"
+  }
+ },
+ "futile": true,
+ "futilityRule": "PROTOCOL.md §7.6: FULL opens only if at least one experimental policy merits further confirmation",
+ "validationPlan": {
+  "door": "FULL 2016-01-04 → 2026-10-30, one continuous run per distinct frozen choice (every policy, both universes)",
+  "boundary": "2024-12-31",
+  "labels": "V1 validation P&L > 0; V2 reset validation DD ≤ $35,000; V3 whole-run DD ≤ $35,000",
+  "consistency": "a policy that merits further confirmation is consistent in 2025–2026 iff in both subjects its primary-universe choice passes V1–V3 and in at least one subject its validation P&L ≥ P0’s",
+  "noFeedback": "no policy revision, tuning, extra hypothesis, broadened budget or replacement after validation"
+ },
+ "subjects": {
+  "3B": {
+   "primaryUniverse": {
+    "set": "E(s, C24): the qualified independent set",
+    "size": 38,
+    "choices": {
+     "P0": {
+      "label": "C24/indep/B_GDX-rise_VGT-rise#1 profit",
+      "id": "026d3e63a0a57b6a",
+      "reason": "highest centre net",
+      "knownOutcome": {
+       "validationPnl": 55329.36,
+       "resetDd": 17960.59,
+       "wholeDd": 20820.26,
+       "fullNet": 361836.94,
+       "source": "research/vg-d1-growth-expanded/results/validation/validation.json"
+      }
+     },
+     "P1": {
+      "label": "C24/indep/B_GDX-rise_VGT-rise#1 profit",
+      "id": "026d3e63a0a57b6a",
+      "reason": "highest centre net with worst-10% mean DD ≤ $35,000",
+      "knownOutcome": {
+       "validationPnl": 55329.36,
+       "resetDd": 17960.59,
+       "wholeDd": 20820.26,
+       "fullNet": 361836.94,
+       "source": "research/vg-d1-growth-expanded/results/validation/validation.json"
+      }
+     },
+     "P2": {
+      "label": "C24/indep/V_VGT-breakout#2 robust",
+      "id": "70c97a1367991f11",
+      "reason": "highest best-year-excluded neighbourhood median",
+      "knownOutcome": null
+     },
+     "P3": {
+      "label": "C24/indep/B_GDX-rise_VGT-rise#5 profit order",
+      "id": "af270ad7ba6c4386",
+      "reason": "highest causal net without the leading episode",
+      "knownOutcome": null
+     }
+    }
+   },
+   "secondaryUniverse": {
+    "set": "the final selectable set (informed lanes and controls included; report-only, never chronological evidence)",
+    "size": 53,
+    "choices": {
+     "P0": {
+      "label": "C24/informed-joint#1 profit",
+      "id": "940fdaf770eedc9d",
+      "reason": "highest centre net",
+      "knownOutcome": {
+       "validationPnl": 95627.06,
+       "resetDd": 20385.99,
+       "wholeDd": 20385.99,
+       "fullNet": 477790.85,
+       "source": "research/vg-d1-growth-expanded/results/validation/validation.json"
+      }
+     },
+     "P1": {
+      "label": "C24/informed-fixed#1 profit",
+      "id": "0f017f0ab9b26f24",
+      "reason": "highest centre net with worst-10% mean DD ≤ $35,000",
+      "knownOutcome": {
+       "validationPnl": 91512.65,
+       "resetDd": 19477.66,
+       "wholeDd": 19477.66,
+       "fullNet": 452082.36,
+       "source": "research/vg-d1-growth-expanded/results/validation/validation.json"
+      }
+     },
+     "P2": {
+      "label": "C24/informed-joint#2 robust",
+      "id": "1051848294655d6e",
+      "reason": "highest best-year-excluded neighbourhood median",
+      "knownOutcome": {
+       "validationPnl": 63831.09,
+       "resetDd": 24172.22,
+       "wholeDd": 24172.22,
+       "fullNet": 381637.18,
+       "source": "research/vg-d1-growth-expanded/results/validation/validation.json"
+      }
+     },
+     "P3": {
+      "label": "C24/informed-fixed#1 profit",
+      "id": "0f017f0ab9b26f24",
+      "reason": "highest causal net without the leading episode",
+      "knownOutcome": {
+       "validationPnl": 91512.65,
+       "resetDd": 19477.66,
+       "wholeDd": 19477.66,
+       "fullNet": 452082.36,
+       "source": "research/vg-d1-growth-expanded/results/validation/validation.json"
+      }
+     }
+    },
+    "features": [
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-rise#1 profit",
+      "id": "08fa88ced764ba99",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 280434.73,
+       "dd": 26775.26,
+       "lots": 21,
+       "episodes": 9,
+       "topEpisode": 89886.84,
+       "topEpisodeShare": 0.3205,
+       "years": {
+        "2016": 8508.58,
+        "2017": 32162.66,
+        "2018": 5935.57,
+        "2019": 24762.67,
+        "2020": 112955.29,
+        "2021": 27347.02,
+        "2022": 18624.26,
+        "2023": 33229.44,
+        "2024": 16909.24
+       },
+       "exBestYear": 167479.44,
+       "worstYear": 5935.57,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1608
+      },
+      "select": {
+       "n": 256,
+       "robust": 141748.78,
+       "median": 161220.35,
+       "p10": 122277.22,
+       "p90Dd": 30620.76,
+       "p95Dd": 31802.97,
+       "worst10Mean": 32401.77,
+       "worstDd": 38675.07,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 246,
+       "exBestYearMedian": 69353.58,
+       "exBestYearP10": 30155,
+       "topEpisodeShareMedian": 0.58,
+       "lotsMedian": 19,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-10-17",
+        "firstEntry": "2019-10-17",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 89886.84,
+       "lots": 6,
+       "netWithout": 190547.89,
+       "ddWithout": 26775.26,
+       "arithmetic": 190547.89
+      },
+      "confirmQualificationOnly": {
+       "p10": 123202.94,
+       "p90Dd": 30323.31
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-rise#2 robust",
+      "id": "d7d0a06dc40f2543",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 234111.08,
+       "dd": 17744.39,
+       "lots": 27,
+       "episodes": 14,
+       "topEpisode": 96729.86,
+       "topEpisodeShare": 0.4132,
+       "years": {
+        "2016": 5709.76,
+        "2017": 28486.26,
+        "2018": 3916.06,
+        "2019": 32450.57,
+        "2020": 104709.08,
+        "2021": 13012.78,
+        "2022": 21109.84,
+        "2023": 11168.89,
+        "2024": 13547.84
+       },
+       "exBestYear": 129402,
+       "worstYear": 3916.06,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1121
+      },
+      "select": {
+       "n": 256,
+       "robust": 183601.51,
+       "median": 199280.58,
+       "p10": 167922.44,
+       "p90Dd": 21902.95,
+       "p95Dd": 23406.49,
+       "worst10Mean": 26575.1,
+       "worstDd": 36892.21,
+       "breachShare": 0.0273,
+       "breachInterval": [
+        0.0133,
+        0.0554
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 240,
+       "exBestYearMedian": 95211.73,
+       "exBestYearP10": 67202.23,
+       "topEpisodeShareMedian": 0.48,
+       "lotsMedian": 26,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 96729.86,
+       "lots": 5,
+       "netWithout": 137381.22,
+       "ddWithout": 17238.31,
+       "arithmetic": 137381.22
+      },
+      "confirmQualificationOnly": {
+       "p10": 172262.06,
+       "p90Dd": 21678.54
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-rise#3 balanced",
+      "id": "9f7826fef7c18902",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 242768.06,
+       "dd": 17744.39,
+       "lots": 25,
+       "episodes": 15,
+       "topEpisode": 96729.86,
+       "topEpisodeShare": 0.3984,
+       "years": {
+        "2016": 8041.55,
+        "2017": 29423.14,
+        "2018": 6975.67,
+        "2019": 32405.65,
+        "2020": 104709.08,
+        "2021": 15297.58,
+        "2022": 23095.43,
+        "2023": 6988.96,
+        "2024": 15831
+       },
+       "exBestYear": 138058.98,
+       "worstYear": 6975.67,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1076
+      },
+      "select": {
+       "n": 256,
+       "robust": 169774.32,
+       "median": 187844.88,
+       "p10": 151703.77,
+       "p90Dd": 20158.17,
+       "p95Dd": 21313.64,
+       "worst10Mean": 21911.98,
+       "worstDd": 24879.59,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 237,
+       "exBestYearMedian": 85763.02,
+       "exBestYearP10": 49066.18,
+       "topEpisodeShareMedian": 0.51,
+       "lotsMedian": 27,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 96729.86,
+       "lots": 5,
+       "netWithout": 146038.2,
+       "ddWithout": 12310.57,
+       "arithmetic": 146038.2
+      },
+      "confirmQualificationOnly": {
+       "p10": 149384.41,
+       "p90Dd": 19386.07
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-rise#4 profit order",
+      "id": "0f73e707e28ab26f",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 267963,
+       "dd": 24867.59,
+       "lots": 18,
+       "episodes": 8,
+       "topEpisode": 90885.68,
+       "topEpisodeShare": 0.3392,
+       "years": {
+        "2016": 4547.82,
+        "2017": 24942.13,
+        "2018": 8893.46,
+        "2019": 24762.67,
+        "2020": 111570.85,
+        "2021": 24860.93,
+        "2022": 20260.37,
+        "2023": 33229.44,
+        "2024": 14895.33
+       },
+       "exBestYear": 156392.15,
+       "worstYear": 4547.82,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1783
+      },
+      "select": {
+       "n": 256,
+       "robust": 154386.14,
+       "median": 170091.57,
+       "p10": 138680.71,
+       "p90Dd": 29621.5,
+       "p95Dd": 31173.79,
+       "worst10Mean": 31549.6,
+       "worstDd": 37041.74,
+       "breachShare": 0.0039,
+       "breachInterval": [
+        0.0007,
+        0.0218
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 241,
+       "exBestYearMedian": 76973.17,
+       "exBestYearP10": 48606.74,
+       "topEpisodeShareMedian": 0.55,
+       "lotsMedian": 19,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-10-17",
+        "firstEntry": "2019-10-17",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 90885.68,
+       "lots": 6,
+       "netWithout": 177077.32,
+       "ddWithout": 24867.59,
+       "arithmetic": 177077.32
+      },
+      "confirmQualificationOnly": {
+       "p10": 137376.24,
+       "p90Dd": 29742.57
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-rise#5 profit order",
+      "id": "0f68e4e7f7212e3c",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 264242.65,
+       "dd": 24867.59,
+       "lots": 19,
+       "episodes": 9,
+       "topEpisode": 90885.68,
+       "topEpisodeShare": 0.3439,
+       "years": {
+        "2016": 4547.82,
+        "2017": 24942.13,
+        "2018": 8893.46,
+        "2019": 24762.67,
+        "2020": 111570.85,
+        "2021": 24860.93,
+        "2022": 20260.37,
+        "2023": 41187.96,
+        "2024": 3216.46
+       },
+       "exBestYear": 152671.8,
+       "worstYear": 3216.46,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1638
+      },
+      "select": {
+       "n": 256,
+       "robust": 155744.1,
+       "median": 172138.27,
+       "p10": 139349.92,
+       "p90Dd": 29596.65,
+       "p95Dd": 31173.79,
+       "worst10Mean": 31466.31,
+       "worstDd": 35906.51,
+       "breachShare": 0.0039,
+       "breachInterval": [
+        0.0007,
+        0.0218
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 241,
+       "exBestYearMedian": 75921.34,
+       "exBestYearP10": 48426.28,
+       "topEpisodeShareMedian": 0.55,
+       "lotsMedian": 20,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-10-17",
+        "firstEntry": "2019-10-17",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 90885.68,
+       "lots": 6,
+       "netWithout": 173356.97,
+       "ddWithout": 24867.59,
+       "arithmetic": 173356.97
+      },
+      "confirmQualificationOnly": {
+       "p10": 139020.38,
+       "p90Dd": 29514.32
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-breakout#1 profit",
+      "id": "e9d5b7caba3698de",
+      "cell": "V_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 261679.34,
+       "dd": 17280.74,
+       "lots": 31,
+       "episodes": 12,
+       "topEpisode": 104045.19,
+       "topEpisodeShare": 0.3976,
+       "years": {
+        "2016": -2014.78,
+        "2017": 24944.36,
+        "2018": 2331.45,
+        "2019": 20398.27,
+        "2020": 141479.22,
+        "2021": 0,
+        "2022": 45070.66,
+        "2023": 26927.32,
+        "2024": 2542.85
+       },
+       "exBestYear": 120200.12,
+       "worstYear": -2014.78,
+       "positiveYears": 7,
+       "years_n": 9,
+       "sessionsHeld": 1413
+      },
+      "select": {
+       "n": 256,
+       "robust": 158076,
+       "median": 185393.64,
+       "p10": 130758.37,
+       "p90Dd": 29687.02,
+       "p95Dd": 30103.36,
+       "worst10Mean": 30330.32,
+       "worstDd": 31483.21,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 227,
+       "exBestYearMedian": 86287.46,
+       "exBestYearP10": 68101.31,
+       "topEpisodeShareMedian": 0.47,
+       "lotsMedian": 27,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-07-03",
+        "firstEntry": "2019-07-05",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 104045.19,
+       "lots": 6,
+       "netWithout": 157634.16,
+       "ddWithout": 16028.23,
+       "arithmetic": 157634.15
+      },
+      "confirmQualificationOnly": {
+       "p10": 133347.51,
+       "p90Dd": 29866.53
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-breakout#2 robust",
+      "id": "70c97a1367991f11",
+      "cell": "V_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 219505.73,
+       "dd": 24972.95,
+       "lots": 64,
+       "episodes": 27,
+       "topEpisode": 87539.32,
+       "topEpisodeShare": 0.3988,
+       "years": {
+        "2016": -1957.36,
+        "2017": 14299.37,
+        "2018": 266.83,
+        "2019": 20855.43,
+        "2020": 92209.5,
+        "2021": 10894.75,
+        "2022": 16221.52,
+        "2023": 53374.35,
+        "2024": 13341.35
+       },
+       "exBestYear": 127296.23,
+       "worstYear": -1957.36,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 1232
+      },
+      "select": {
+       "n": 256,
+       "robust": 199556.23,
+       "median": 213514.6,
+       "p10": 185597.87,
+       "p90Dd": 25505.22,
+       "p95Dd": 29527.38,
+       "worst10Mean": 28962.46,
+       "worstDd": 34577.53,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 154,
+       "exBestYearMedian": 117731.31,
+       "exBestYearP10": 92490.45,
+       "topEpisodeShareMedian": 0.4,
+       "lotsMedian": 60,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 87539.32,
+       "lots": 5,
+       "netWithout": 131966.41,
+       "ddWithout": 24972.95,
+       "arithmetic": 131966.41
+      },
+      "confirmQualificationOnly": {
+       "p10": 180916.06,
+       "p90Dd": 25762.16
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-breakout#3 balanced",
+      "id": "510a35d0bfbe601b",
+      "cell": "V_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 216914.73,
+       "dd": 17280.74,
+       "lots": 26,
+       "episodes": 10,
+       "topEpisode": 104045.19,
+       "topEpisodeShare": 0.4797,
+       "years": {
+        "2016": 4114.17,
+        "2017": 27897.09,
+        "2018": 3269.25,
+        "2019": 13871.47,
+        "2020": 121070.53,
+        "2021": 2755.14,
+        "2022": 33557.29,
+        "2023": 8827.49,
+        "2024": 1552.3
+       },
+       "exBestYear": 95844.2,
+       "worstYear": 1552.3,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1811
+      },
+      "select": {
+       "n": 256,
+       "robust": 186825.18,
+       "median": 199568.1,
+       "p10": 174082.27,
+       "p90Dd": 22061.72,
+       "p95Dd": 22900.14,
+       "worst10Mean": 23670.55,
+       "worstDd": 28559.9,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 253,
+       "exBestYearMedian": 87152.81,
+       "exBestYearP10": 75580.9,
+       "topEpisodeShareMedian": 0.5,
+       "lotsMedian": 26,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-07-03",
+        "firstEntry": "2019-07-05",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 104045.19,
+       "lots": 6,
+       "netWithout": 112869.54,
+       "ddWithout": 16090.94,
+       "arithmetic": 112869.54
+      },
+      "confirmQualificationOnly": {
+       "p10": 171447.91,
+       "p90Dd": 21577.64
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-breakout#4 gate-alternative",
+      "id": "b9bbaa71f84411c9",
+      "cell": "V_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 251386.09,
+       "dd": 17280.74,
+       "lots": 31,
+       "episodes": 12,
+       "topEpisode": 104045.19,
+       "topEpisodeShare": 0.4139,
+       "years": {
+        "2016": -2014.78,
+        "2017": 24944.36,
+        "2018": 2331.45,
+        "2019": 20398.27,
+        "2020": 143410.2,
+        "2021": 0,
+        "2022": 44526.48,
+        "2023": 15699.33,
+        "2024": 2090.79
+       },
+       "exBestYear": 107975.89,
+       "worstYear": -2014.78,
+       "positiveYears": 7,
+       "years_n": 9,
+       "sessionsHeld": 1425
+      },
+      "select": {
+       "n": 256,
+       "robust": 158777.5,
+       "median": 187268.06,
+       "p10": 130286.94,
+       "p90Dd": 22251.76,
+       "p95Dd": 23365.1,
+       "worst10Mean": 23706.42,
+       "worstDd": 26220.16,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 227,
+       "exBestYearMedian": 88398.78,
+       "exBestYearP10": 68559.55,
+       "topEpisodeShareMedian": 0.47,
+       "lotsMedian": 27,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-07-03",
+        "firstEntry": "2019-07-05",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 104045.19,
+       "lots": 6,
+       "netWithout": 147340.91,
+       "ddWithout": 16028.23,
+       "arithmetic": 147340.9
+      },
+      "confirmQualificationOnly": {
+       "p10": 139903.96,
+       "p90Dd": 22418.36
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/V_VGT-breakout#5 profit order",
+      "id": "45b4fc938338a59b",
+      "cell": "V_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 249240.45,
+       "dd": 17280.74,
+       "lots": 28,
+       "episodes": 10,
+       "topEpisode": 101565.22,
+       "topEpisodeShare": 0.4075,
+       "years": {
+        "2016": -2014.78,
+        "2017": 24944.36,
+        "2018": 3689.24,
+        "2019": 20422.17,
+        "2020": 140930.23,
+        "2021": 0,
+        "2022": 35546.74,
+        "2023": 21198.27,
+        "2024": 4524.23
+       },
+       "exBestYear": 108310.22,
+       "worstYear": -2014.78,
+       "positiveYears": 7,
+       "years_n": 9,
+       "sessionsHeld": 1418
+      },
+      "select": {
+       "n": 256,
+       "robust": 179085.62,
+       "median": 192406.91,
+       "p10": 165764.33,
+       "p90Dd": 23819.94,
+       "p95Dd": 25952.08,
+       "worst10Mean": 27093.09,
+       "worstDd": 35164.92,
+       "breachShare": 0.0039,
+       "breachInterval": [
+        0.0007,
+        0.0218
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 229,
+       "exBestYearMedian": 86898.83,
+       "exBestYearP10": 71262.27,
+       "topEpisodeShareMedian": 0.5,
+       "lotsMedian": 26,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-07-03",
+        "firstEntry": "2019-07-05",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 101565.22,
+       "lots": 6,
+       "netWithout": 147675.23,
+       "ddWithout": 14683.29,
+       "arithmetic": 147675.23
+      },
+      "confirmQualificationOnly": {
+       "p10": 164978.55,
+       "p90Dd": 23772.71
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-rise#1 profit",
+      "id": "2a8a11bc70ff5e00",
+      "cell": "G_GDX-rise",
+      "roles": [],
+      "centre": {
+       "net": 251685.36,
+       "dd": 20450.88,
+       "lots": 33,
+       "episodes": 16,
+       "topEpisode": 108013.89,
+       "topEpisodeShare": 0.4292,
+       "years": {
+        "2016": 9941.23,
+        "2017": 12665.98,
+        "2018": 3265.52,
+        "2019": 16895.49,
+        "2020": 127720.85,
+        "2021": 260.3,
+        "2022": 19649.8,
+        "2023": 34056.53,
+        "2024": 27229.66
+       },
+       "exBestYear": 123964.51,
+       "worstYear": 260.3,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 710
+      },
+      "select": {
+       "n": 256,
+       "robust": 115481.93,
+       "median": 139994.34,
+       "p10": 90969.53,
+       "p90Dd": 29837.15,
+       "p95Dd": 30904.44,
+       "worst10Mean": 31300.46,
+       "worstDd": 34968.89,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 249,
+       "exBestYearMedian": 48685.31,
+       "exBestYearP10": 8798.59,
+       "topEpisodeShareMedian": 0.58,
+       "lotsMedian": 27,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-09",
+        "firstEntry": "2020-03-09",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 108013.89,
+       "lots": 5,
+       "netWithout": 143671.47,
+       "ddWithout": 18640.34,
+       "arithmetic": 143671.47
+      },
+      "confirmQualificationOnly": {
+       "p10": 89684.01,
+       "p90Dd": 30976.98
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-rise#2 robust",
+      "id": "ce1145e645d3f1c1",
+      "cell": "G_GDX-rise",
+      "roles": [],
+      "centre": {
+       "net": 208117.49,
+       "dd": 20221.1,
+       "lots": 23,
+       "episodes": 13,
+       "topEpisode": 91243.1,
+       "topEpisodeShare": 0.4384,
+       "years": {
+        "2016": 8993.35,
+        "2017": 23502.31,
+        "2018": -3387.54,
+        "2019": 35807.61,
+        "2020": 117576.06,
+        "2021": 0,
+        "2022": 10878,
+        "2023": 5095.78,
+        "2024": 9651.93
+       },
+       "exBestYear": 90541.43,
+       "worstYear": -3387.54,
+       "positiveYears": 7,
+       "years_n": 9,
+       "sessionsHeld": 572
+      },
+      "select": {
+       "n": 256,
+       "robust": 155203.26,
+       "median": 168723.1,
+       "p10": 141683.41,
+       "p90Dd": 29035.03,
+       "p95Dd": 30188.59,
+       "worst10Mean": 30884.58,
+       "worstDd": 34248.52,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 233,
+       "exBestYearMedian": 60841.88,
+       "exBestYearP10": 41250.42,
+       "topEpisodeShareMedian": 0.55,
+       "lotsMedian": 18,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 91243.1,
+       "lots": 5,
+       "netWithout": 116874.39,
+       "ddWithout": 20221.1,
+       "arithmetic": 116874.39
+      },
+      "confirmQualificationOnly": {
+       "p10": 141690.48,
+       "p90Dd": 28634.73
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-rise#3 gate-alternative",
+      "id": "b4c1c32a82827445",
+      "cell": "G_GDX-rise",
+      "roles": [],
+      "centre": {
+       "net": 220148.31,
+       "dd": 20221.1,
+       "lots": 23,
+       "episodes": 14,
+       "topEpisode": 90369.2,
+       "topEpisodeShare": 0.4105,
+       "years": {
+        "2016": -328.79,
+        "2017": 4695.03,
+        "2018": 2608.07,
+        "2019": 49681.25,
+        "2020": 114769.13,
+        "2021": 0,
+        "2022": 27722.43,
+        "2023": 14438.46,
+        "2024": 6562.73
+       },
+       "exBestYear": 105379.18,
+       "worstYear": -328.79,
+       "positiveYears": 7,
+       "years_n": 9,
+       "sessionsHeld": 534
+      },
+      "select": {
+       "n": 256,
+       "robust": 151314.64,
+       "median": 164429.46,
+       "p10": 138199.83,
+       "p90Dd": 34048.94,
+       "p95Dd": 39103.3,
+       "worst10Mean": 40528.73,
+       "worstDd": 51845.08,
+       "breachShare": 0.0977,
+       "breachInterval": [
+        0.067,
+        0.1402
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 239,
+       "exBestYearMedian": 63450.77,
+       "exBestYearP10": 37233.41,
+       "topEpisodeShareMedian": 0.53,
+       "lotsMedian": 23,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 90369.2,
+       "lots": 5,
+       "netWithout": 129779.11,
+       "ddWithout": 20221.1,
+       "arithmetic": 129779.11
+      },
+      "confirmQualificationOnly": {
+       "p10": 139939.62,
+       "p90Dd": 32005.49
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-rise#4 profit order",
+      "id": "65d04d378346b475",
+      "cell": "G_GDX-rise",
+      "roles": [],
+      "centre": {
+       "net": 245509.43,
+       "dd": 20450.88,
+       "lots": 34,
+       "episodes": 16,
+       "topEpisode": 108013.89,
+       "topEpisodeShare": 0.44,
+       "years": {
+        "2016": 3765.3,
+        "2017": 12665.98,
+        "2018": 3265.52,
+        "2019": 16895.49,
+        "2020": 127720.85,
+        "2021": 260.3,
+        "2022": 19649.8,
+        "2023": 34056.53,
+        "2024": 27229.66
+       },
+       "exBestYear": 117788.58,
+       "worstYear": 260.3,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 733
+      },
+      "select": {
+       "n": 256,
+       "robust": 114421.55,
+       "median": 137323.89,
+       "p10": 91519.21,
+       "p90Dd": 31423.34,
+       "p95Dd": 32982.07,
+       "worst10Mean": 33913.05,
+       "worstDd": 40709.29,
+       "breachShare": 0.0234,
+       "breachInterval": [
+        0.0108,
+        0.0502
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 234,
+       "exBestYearMedian": 47152.14,
+       "exBestYearP10": 9318.93,
+       "topEpisodeShareMedian": 0.58,
+       "lotsMedian": 27,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-09",
+        "firstEntry": "2020-03-09",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 108013.89,
+       "lots": 5,
+       "netWithout": 137495.54,
+       "ddWithout": 18640.34,
+       "arithmetic": 137495.54
+      },
+      "confirmQualificationOnly": {
+       "p10": 88332.03,
+       "p90Dd": 33183.95
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-rise#5 profit order",
+      "id": "be6f886d85795f65",
+      "cell": "G_GDX-rise",
+      "roles": [],
+      "centre": {
+       "net": 214389.54,
+       "dd": 20221.1,
+       "lots": 24,
+       "episodes": 14,
+       "topEpisode": 91243.1,
+       "topEpisodeShare": 0.4256,
+       "years": {
+        "2016": 8993.35,
+        "2017": 23502.31,
+        "2018": -746.89,
+        "2019": 34802.85,
+        "2020": 114760.79,
+        "2021": 0,
+        "2022": 10988.46,
+        "2023": 9044.93,
+        "2024": 13043.75
+       },
+       "exBestYear": 99628.75,
+       "worstYear": -746.89,
+       "positiveYears": 7,
+       "years_n": 9,
+       "sessionsHeld": 597
+      },
+      "select": {
+       "n": 256,
+       "robust": 151338.65,
+       "median": 164996.03,
+       "p10": 137681.26,
+       "p90Dd": 30395.92,
+       "p95Dd": 33290.27,
+       "worst10Mean": 33939.15,
+       "worstDd": 43274.27,
+       "breachShare": 0.0234,
+       "breachInterval": [
+        0.0108,
+        0.0502
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 233,
+       "exBestYearMedian": 59427.51,
+       "exBestYearP10": 38805.87,
+       "topEpisodeShareMedian": 0.56,
+       "lotsMedian": 19,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 91243.1,
+       "lots": 5,
+       "netWithout": 123146.44,
+       "ddWithout": 20221.1,
+       "arithmetic": 123146.44
+      },
+      "confirmQualificationOnly": {
+       "p10": 139087.05,
+       "p90Dd": 31110.73
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-breakout#1 profit",
+      "id": "043d1cab196c7f78",
+      "cell": "G_GDX-breakout",
+      "roles": [],
+      "centre": {
+       "net": 260326.41,
+       "dd": 25041.69,
+       "lots": 34,
+       "episodes": 14,
+       "topEpisode": 97742.99,
+       "topEpisodeShare": 0.3755,
+       "years": {
+        "2016": -5418.05,
+        "2017": 10811.72,
+        "2018": 17286.09,
+        "2019": 3381.23,
+        "2020": 124555.36,
+        "2021": 20002.38,
+        "2022": 26928.54,
+        "2023": 36203.97,
+        "2024": 26575.17
+       },
+       "exBestYear": 135771.05,
+       "worstYear": -5418.05,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 837
+      },
+      "select": {
+       "n": 256,
+       "robust": 169859.58,
+       "median": 191558.89,
+       "p10": 148160.27,
+       "p90Dd": 32960.98,
+       "p95Dd": 49851.83,
+       "worst10Mean": 47504.14,
+       "worstDd": 55643.82,
+       "breachShare": 0.0898,
+       "breachInterval": [
+        0.0606,
+        0.1312
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 253,
+       "exBestYearMedian": 84499.14,
+       "exBestYearP10": 51303.13,
+       "topEpisodeShareMedian": 0.49,
+       "lotsMedian": 35,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 97742.99,
+       "lots": 5,
+       "netWithout": 162583.42,
+       "ddWithout": 25041.69,
+       "arithmetic": 162583.42
+      },
+      "confirmQualificationOnly": {
+       "p10": 155225.87,
+       "p90Dd": 33409.91
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-breakout#2 balanced",
+      "id": "4f13dc46b51567b0",
+      "cell": "G_GDX-breakout",
+      "roles": [],
+      "centre": {
+       "net": 238294.44,
+       "dd": 17869.2,
+       "lots": 36,
+       "episodes": 13,
+       "topEpisode": 102723.67,
+       "topEpisodeShare": 0.4311,
+       "years": {
+        "2016": 11394.92,
+        "2017": 15189.47,
+        "2018": 3088.12,
+        "2019": 0,
+        "2020": 106716.26,
+        "2021": 14657,
+        "2022": 27502.03,
+        "2023": 31273.17,
+        "2024": 28473.46
+       },
+       "exBestYear": 131578.18,
+       "worstYear": 0,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 762
+      },
+      "select": {
+       "n": 256,
+       "robust": 158939.07,
+       "median": 176848.97,
+       "p10": 141029.16,
+       "p90Dd": 26251.08,
+       "p95Dd": 30165.28,
+       "worst10Mean": 30793.85,
+       "worstDd": 39927.18,
+       "breachShare": 0.0156,
+       "breachInterval": [
+        0.0061,
+        0.0395
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 207,
+       "exBestYearMedian": 98110.3,
+       "exBestYearP10": 66351.14,
+       "topEpisodeShareMedian": 0.41,
+       "lotsMedian": 34,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-06-11"
+       },
+       "episodeNet": 102723.67,
+       "lots": 7,
+       "netWithout": 135570.77,
+       "ddWithout": 17869.2,
+       "arithmetic": 135570.77
+      },
+      "confirmQualificationOnly": {
+       "p10": 138945.97,
+       "p90Dd": 26864.52
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-breakout#3 profit order",
+      "id": "b2900465ef311580",
+      "cell": "G_GDX-breakout",
+      "roles": [],
+      "centre": {
+       "net": 254512.29,
+       "dd": 25041.69,
+       "lots": 34,
+       "episodes": 13,
+       "topEpisode": 118741.24,
+       "topEpisodeShare": 0.4665,
+       "years": {
+        "2016": -5418.05,
+        "2017": 10811.72,
+        "2018": 17286.09,
+        "2019": 3381.23,
+        "2020": 118741.24,
+        "2021": 20002.38,
+        "2022": 26928.54,
+        "2023": 36203.97,
+        "2024": 26575.17
+       },
+       "exBestYear": 135771.05,
+       "worstYear": -5418.05,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 843
+      },
+      "select": {
+       "n": 256,
+       "robust": 170527.44,
+       "median": 192373.99,
+       "p10": 148680.89,
+       "p90Dd": 33147.66,
+       "p95Dd": 49851.83,
+       "worst10Mean": 47610.39,
+       "worstDd": 55643.82,
+       "breachShare": 0.0938,
+       "breachInterval": [
+        0.0638,
+        0.1357
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 252,
+       "exBestYearMedian": 84499.14,
+       "exBestYearP10": 51303.13,
+       "topEpisodeShareMedian": 0.51,
+       "lotsMedian": 35,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 118741.24,
+       "lots": 8,
+       "netWithout": 135771.06,
+       "ddWithout": 25041.69,
+       "arithmetic": 135771.05
+      },
+      "confirmQualificationOnly": {
+       "p10": 154559.17,
+       "p90Dd": 33103.5
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-breakout#4 profit order",
+      "id": "78760de2e913831a",
+      "cell": "G_GDX-breakout",
+      "roles": [],
+      "centre": {
+       "net": 236724.98,
+       "dd": 25377.87,
+       "lots": 35,
+       "episodes": 14,
+       "topEpisode": 96964.61,
+       "topEpisodeShare": 0.4096,
+       "years": {
+        "2016": -5418.05,
+        "2017": 10442.34,
+        "2018": 16945.26,
+        "2019": 3381.23,
+        "2020": 123021.82,
+        "2021": 25370.36,
+        "2022": 25348.42,
+        "2023": 11470.9,
+        "2024": 26162.71
+       },
+       "exBestYear": 113703.16,
+       "worstYear": -5418.05,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 869
+      },
+      "select": {
+       "n": 256,
+       "robust": 174924.09,
+       "median": 192144.07,
+       "p10": 157704.12,
+       "p90Dd": 33068.88,
+       "p95Dd": 50734.21,
+       "worst10Mean": 48270,
+       "worstDd": 56300.1,
+       "breachShare": 0.0898,
+       "breachInterval": [
+        0.0606,
+        0.1312
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 249,
+       "exBestYearMedian": 85004.25,
+       "exBestYearP10": 57850.61,
+       "topEpisodeShareMedian": 0.49,
+       "lotsMedian": 35,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 96964.61,
+       "lots": 5,
+       "netWithout": 139760.37,
+       "ddWithout": 25377.87,
+       "arithmetic": 139760.37
+      },
+      "confirmQualificationOnly": {
+       "p10": 157104.26,
+       "p90Dd": 32268.44
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/G_GDX-breakout#5 profit order",
+      "id": "5e06802f8346792f",
+      "cell": "G_GDX-breakout",
+      "roles": [],
+      "centre": {
+       "net": 226976.67,
+       "dd": 25041.69,
+       "lots": 34,
+       "episodes": 14,
+       "topEpisode": 97924.08,
+       "topEpisodeShare": 0.4314,
+       "years": {
+        "2016": -5418.05,
+        "2017": 9581.71,
+        "2018": 4604.56,
+        "2019": 0,
+        "2020": 131277.48,
+        "2021": 6976.42,
+        "2022": 40727.57,
+        "2023": 12651.8,
+        "2024": 26575.17
+       },
+       "exBestYear": 95699.19,
+       "worstYear": -5418.05,
+       "positiveYears": 7,
+       "years_n": 9,
+       "sessionsHeld": 739
+      },
+      "select": {
+       "n": 256,
+       "robust": 177491.45,
+       "median": 191487.57,
+       "p10": 163495.34,
+       "p90Dd": 32420.52,
+       "p95Dd": 41246.92,
+       "worst10Mean": 41443.77,
+       "worstDd": 54119.33,
+       "breachShare": 0.082,
+       "breachInterval": [
+        0.0543,
+        0.1221
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 251,
+       "exBestYearMedian": 82718.37,
+       "exBestYearP10": 57737.8,
+       "topEpisodeShareMedian": 0.5,
+       "lotsMedian": 35,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 97924.08,
+       "lots": 5,
+       "netWithout": 129052.59,
+       "ddWithout": 25041.69,
+       "arithmetic": 129052.59
+      },
+      "confirmQualificationOnly": {
+       "p10": 159078.29,
+       "p90Dd": 33270.63
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-rise#1 profit",
+      "id": "026d3e63a0a57b6a",
+      "cell": "B_GDX-rise_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 306507.59,
+       "dd": 20820.26,
+       "lots": 29,
+       "episodes": 8,
+       "topEpisode": 127056.98,
+       "topEpisodeShare": 0.4145,
+       "years": {
+        "2016": 9071.91,
+        "2017": 29800.47,
+        "2018": 9351.54,
+        "2019": 32816.84,
+        "2020": 145861.98,
+        "2021": 13342.19,
+        "2022": 26569.48,
+        "2023": 30955.54,
+        "2024": 8737.64
+       },
+       "exBestYear": 160645.61,
+       "worstYear": 8737.64,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1861
+      },
+      "select": {
+       "n": 256,
+       "robust": 170335.05,
+       "median": 193533.37,
+       "p10": 147136.73,
+       "p90Dd": 28646.5,
+       "p95Dd": 31112.08,
+       "worst10Mean": 33097.1,
+       "worstDd": 63006.63,
+       "breachShare": 0.0156,
+       "breachInterval": [
+        0.0061,
+        0.0395
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 247,
+       "exBestYearMedian": 74844.25,
+       "exBestYearP10": 40981.22,
+       "topEpisodeShareMedian": 0.53,
+       "lotsMedian": 29,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2018-12-26",
+        "firstEntry": "2018-12-26",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 127056.98,
+       "lots": 8,
+       "netWithout": 179450.6,
+       "ddWithout": 19384.97,
+       "arithmetic": 179450.61
+      },
+      "confirmQualificationOnly": {
+       "p10": 149854.9,
+       "p90Dd": 29995.4
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-rise#2 robust",
+      "id": "62f270e0ed8e659a",
+      "cell": "B_GDX-rise_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 292982.83,
+       "dd": 19551.15,
+       "lots": 32,
+       "episodes": 9,
+       "topEpisode": 97946.18,
+       "topEpisodeShare": 0.3343,
+       "years": {
+        "2016": 9071.91,
+        "2017": 29800.47,
+        "2018": 9351.54,
+        "2019": 24407.1,
+        "2020": 136752.71,
+        "2021": 14395.83,
+        "2022": 27850.62,
+        "2023": 32615.02,
+        "2024": 8737.64
+       },
+       "exBestYear": 156230.12,
+       "worstYear": 8737.64,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1800
+      },
+      "select": {
+       "n": 256,
+       "robust": 178252.8,
+       "median": 200046.35,
+       "p10": 156459.25,
+       "p90Dd": 29778.29,
+       "p95Dd": 31519.61,
+       "worst10Mean": 34218.07,
+       "worstDd": 57562.86,
+       "breachShare": 0.0313,
+       "breachInterval": [
+        0.0159,
+        0.0604
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 233,
+       "exBestYearMedian": 81596.42,
+       "exBestYearP10": 45209.62,
+       "topEpisodeShareMedian": 0.5,
+       "lotsMedian": 30,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-10-30",
+        "firstEntry": "2019-10-31",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 97946.18,
+       "lots": 6,
+       "netWithout": 195036.65,
+       "ddWithout": 19551.15,
+       "arithmetic": 195036.65
+      },
+      "confirmQualificationOnly": {
+       "p10": 152001.52,
+       "p90Dd": 30534.77
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-rise#3 balanced",
+      "id": "51f81e5ec7bcbe0c",
+      "cell": "B_GDX-rise_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 235290.85,
+       "dd": 18044.45,
+       "lots": 25,
+       "episodes": 8,
+       "topEpisode": 126234.63,
+       "topEpisodeShare": 0.5365,
+       "years": {
+        "2016": 10276.71,
+        "2017": 14478.24,
+        "2018": 6844.49,
+        "2019": 30314.43,
+        "2020": 129245.76,
+        "2021": 4790.33,
+        "2022": 3466.64,
+        "2023": 38891.85,
+        "2024": -3017.61
+       },
+       "exBestYear": 106045.09,
+       "worstYear": -3017.61,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 1840
+      },
+      "select": {
+       "n": 256,
+       "robust": 171614.95,
+       "median": 190397.7,
+       "p10": 152832.2,
+       "p90Dd": 20885.63,
+       "p95Dd": 22737.81,
+       "worst10Mean": 24640.86,
+       "worstDd": 45845.08,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 254,
+       "exBestYearMedian": 71052.41,
+       "exBestYearP10": 39305.5,
+       "topEpisodeShareMedian": 0.55,
+       "lotsMedian": 23,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2018-12-26",
+        "firstEntry": "2018-12-26",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 126234.63,
+       "lots": 7,
+       "netWithout": 109056.22,
+       "ddWithout": 14676.42,
+       "arithmetic": 109056.22
+      },
+      "confirmQualificationOnly": {
+       "p10": 150673.47,
+       "p90Dd": 20995
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-rise#4 both Growth funded",
+      "id": "88257355fc75ecbe",
+      "cell": "B_GDX-rise_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 254873.29,
+       "dd": 25642.02,
+       "lots": 25,
+       "episodes": 8,
+       "topEpisode": 92418.78,
+       "topEpisodeShare": 0.3626,
+       "years": {
+        "2016": 10276.71,
+        "2017": 30239.86,
+        "2018": 1596.35,
+        "2019": 10615.24,
+        "2020": 110661.08,
+        "2021": 16342.07,
+        "2022": 25937.66,
+        "2023": 39025.09,
+        "2024": 10179.21
+       },
+       "exBestYear": 144212.21,
+       "worstYear": 1596.35,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1636
+      },
+      "select": {
+       "n": 256,
+       "robust": 176527.17,
+       "median": 195617.22,
+       "p10": 157437.13,
+       "p90Dd": 32821.61,
+       "p95Dd": 36666.6,
+       "worst10Mean": 38241.02,
+       "worstDd": 46259.49,
+       "breachShare": 0.0742,
+       "breachInterval": [
+        0.048,
+        0.113
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 232,
+       "exBestYearMedian": 88691.41,
+       "exBestYearP10": 56871.09,
+       "topEpisodeShareMedian": 0.5,
+       "lotsMedian": 26,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-08-08",
+        "firstEntry": "2019-08-09",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 92418.78,
+       "lots": 5,
+       "netWithout": 162454.5,
+       "ddWithout": 23528.13,
+       "arithmetic": 162454.51
+      },
+      "confirmQualificationOnly": {
+       "p10": 148445.53,
+       "p90Dd": 33843.28
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-rise#5 profit order",
+      "id": "af270ad7ba6c4386",
+      "cell": "B_GDX-rise_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 294391.23,
+       "dd": 19789.04,
+       "lots": 31,
+       "episodes": 9,
+       "topEpisode": 94983.79,
+       "topEpisodeShare": 0.3226,
+       "years": {
+        "2016": 8041.55,
+        "2017": 29423.14,
+        "2018": 8340.48,
+        "2019": 22071.49,
+        "2020": 144957.47,
+        "2021": 14094.52,
+        "2022": 27635.61,
+        "2023": 30823.07,
+        "2024": 9003.9
+       },
+       "exBestYear": 149433.76,
+       "worstYear": 8041.55,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1820
+      },
+      "select": {
+       "n": 256,
+       "robust": 181704.26,
+       "median": 202133.31,
+       "p10": 161275.22,
+       "p90Dd": 27393.19,
+       "p95Dd": 31150.96,
+       "worst10Mean": 32664.75,
+       "worstDd": 62918.99,
+       "breachShare": 0.0195,
+       "breachInterval": [
+        0.0084,
+        0.0449
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 225,
+       "exBestYearMedian": 79464.74,
+       "exBestYearP10": 50803,
+       "topEpisodeShareMedian": 0.5,
+       "lotsMedian": 29,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-10-30",
+        "firstEntry": "2019-10-31",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 94983.79,
+       "lots": 6,
+       "netWithout": 199407.44,
+       "ddWithout": 19013.51,
+       "arithmetic": 199407.44
+      },
+      "confirmQualificationOnly": {
+       "p10": 160501.9,
+       "p90Dd": 26776.63
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-breakout#1 profit",
+      "id": "90f25bea381bfa78",
+      "cell": "B_GDX-rise_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 268455.86,
+       "dd": 27230.1,
+       "lots": 24,
+       "episodes": 10,
+       "topEpisode": 134001.62,
+       "topEpisodeShare": 0.4992,
+       "years": {
+        "2016": 12496.72,
+        "2017": 21129.52,
+        "2018": 7148.87,
+        "2019": 32895.38,
+        "2020": 119989.2,
+        "2021": 20324.47,
+        "2022": 10954.58,
+        "2023": 32194.95,
+        "2024": 11322.19
+       },
+       "exBestYear": 148466.66,
+       "worstYear": 7148.87,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1737
+      },
+      "select": {
+       "n": 256,
+       "robust": 150529.68,
+       "median": 177375.74,
+       "p10": 123683.62,
+       "p90Dd": 29324.95,
+       "p95Dd": 31653.69,
+       "worst10Mean": 32089.73,
+       "worstDd": 35808.39,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 209,
+       "exBestYearMedian": 87550.28,
+       "exBestYearP10": 63601.91,
+       "topEpisodeShareMedian": 0.46,
+       "lotsMedian": 24.5,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-10-25",
+        "firstEntry": "2019-10-28",
+        "last": "2022-01-26"
+       },
+       "episodeNet": 134001.62,
+       "lots": 7,
+       "netWithout": 134454.24,
+       "ddWithout": 16009.34,
+       "arithmetic": 134454.24
+      },
+      "confirmQualificationOnly": {
+       "p10": 120613.53,
+       "p90Dd": 29930.89
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-breakout#2 robust",
+      "id": "3ef19366bf41a3b3",
+      "cell": "B_GDX-rise_VGT-breakout",
+      "roles": [
+       "lower-drawdown"
+      ],
+      "centre": {
+       "net": 209003.83,
+       "dd": 17280.74,
+       "lots": 21,
+       "episodes": 9,
+       "topEpisode": 127274.92,
+       "topEpisodeShare": 0.609,
+       "years": {
+        "2016": -728.23,
+        "2017": 15856.73,
+        "2018": 7519.26,
+        "2019": 28652.36,
+        "2020": 125226.28,
+        "2021": 5626.7,
+        "2022": 7090.62,
+        "2023": 19816.15,
+        "2024": -56.06
+       },
+       "exBestYear": 83777.55,
+       "worstYear": -728.23,
+       "positiveYears": 7,
+       "years_n": 9,
+       "sessionsHeld": 1661
+      },
+      "select": {
+       "n": 256,
+       "robust": 190076.69,
+       "median": 198079.05,
+       "p10": 182074.34,
+       "p90Dd": 19779.25,
+       "p95Dd": 20464.2,
+       "worst10Mean": 21168.52,
+       "worstDd": 24218.95,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 245,
+       "exBestYearMedian": 78792.84,
+       "exBestYearP10": 66782.58,
+       "topEpisodeShareMedian": 0.62,
+       "lotsMedian": 20,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-08-21",
+        "firstEntry": "2019-08-22",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 127274.92,
+       "lots": 6,
+       "netWithout": 81728.91,
+       "ddWithout": 14158.98,
+       "arithmetic": 81728.91
+      },
+      "confirmQualificationOnly": {
+       "p10": 182228.91,
+       "p90Dd": 19882.3
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-breakout#3 gate-alternative",
+      "id": "3a3bce34fae798a0",
+      "cell": "B_GDX-rise_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 258986.68,
+       "dd": 23555.2,
+       "lots": 35,
+       "episodes": 10,
+       "topEpisode": 127952.08,
+       "topEpisodeShare": 0.494,
+       "years": {
+        "2016": -728.23,
+        "2017": 20608.72,
+        "2018": 9107.38,
+        "2019": 30184.89,
+        "2020": 124914.27,
+        "2021": 14789.99,
+        "2022": 52030.45,
+        "2023": 4954.34,
+        "2024": 3124.88
+       },
+       "exBestYear": 134072.41,
+       "worstYear": -728.23,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 1640
+      },
+      "select": {
+       "n": 256,
+       "robust": 171115.84,
+       "median": 190410.27,
+       "p10": 151821.42,
+       "p90Dd": 23924.06,
+       "p95Dd": 50599.91,
+       "worst10Mean": 43378.18,
+       "worstDd": 52221.91,
+       "breachShare": 0.0703,
+       "breachInterval": [
+        0.0449,
+        0.1084
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 248,
+       "exBestYearMedian": 91453.74,
+       "exBestYearP10": 63694.43,
+       "topEpisodeShareMedian": 0.54,
+       "lotsMedian": 33,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2018-12-24",
+        "firstEntry": "2018-12-24",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 127952.08,
+       "lots": 9,
+       "netWithout": 131034.61,
+       "ddWithout": 23555.2,
+       "arithmetic": 131034.6
+      },
+      "confirmQualificationOnly": {
+       "p10": 150480.75,
+       "p90Dd": 24187.23
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-breakout#4 profit order",
+      "id": "379bc0f97fa83f86",
+      "cell": "B_GDX-rise_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 268060.89,
+       "dd": 28992.02,
+       "lots": 30,
+       "episodes": 9,
+       "topEpisode": 131601.95,
+       "topEpisodeShare": 0.4909,
+       "years": {
+        "2016": 13434.9,
+        "2017": 21129.52,
+        "2018": 341.26,
+        "2019": 28865.26,
+        "2020": 115920.63,
+        "2021": 20324.47,
+        "2022": 24022.54,
+        "2023": 32949.24,
+        "2024": 11073.08
+       },
+       "exBestYear": 152140.26,
+       "worstYear": 341.26,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1703
+      },
+      "select": {
+       "n": 256,
+       "robust": 143818.7,
+       "median": 163788.6,
+       "p10": 123848.8,
+       "p90Dd": 29740.48,
+       "p95Dd": 30686.02,
+       "worst10Mean": 31284.36,
+       "worstDd": 34772.54,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 251,
+       "exBestYearMedian": 81488.87,
+       "exBestYearP10": 57148.9,
+       "topEpisodeShareMedian": 0.48,
+       "lotsMedian": 28,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-10-15",
+        "firstEntry": "2019-10-16",
+        "last": "2022-01-26"
+       },
+       "episodeNet": 131601.95,
+       "lots": 7,
+       "netWithout": 136458.94,
+       "ddWithout": 17402.13,
+       "arithmetic": 136458.94
+      },
+      "confirmQualificationOnly": {
+       "p10": 125343.23,
+       "p90Dd": 29755.37
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-rise_VGT-breakout#5 profit order",
+      "id": "1dee676c12c313db",
+      "cell": "B_GDX-rise_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 231369.81,
+       "dd": 20015.8,
+       "lots": 30,
+       "episodes": 12,
+       "topEpisode": 96518.59,
+       "topEpisodeShare": 0.4172,
+       "years": {
+        "2016": -728.23,
+        "2017": 20635.77,
+        "2018": 6044.71,
+        "2019": 29400.06,
+        "2020": 98198.51,
+        "2021": 11579.79,
+        "2022": 33730.67,
+        "2023": 29645.62,
+        "2024": 2862.91
+       },
+       "exBestYear": 133171.3,
+       "worstYear": -728.23,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 1706
+      },
+      "select": {
+       "n": 256,
+       "robust": 155188.58,
+       "median": 170250.41,
+       "p10": 140126.76,
+       "p90Dd": 24122.41,
+       "p95Dd": 25615.39,
+       "worst10Mean": 25770.21,
+       "worstDd": 29229.3,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 249,
+       "exBestYearMedian": 74993.91,
+       "exBestYearP10": 45977.61,
+       "topEpisodeShareMedian": 0.55,
+       "lotsMedian": 29,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-09-05",
+        "firstEntry": "2019-09-06",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 96518.59,
+       "lots": 6,
+       "netWithout": 134851.23,
+       "ddWithout": 20015.8,
+       "arithmetic": 134851.22
+      },
+      "confirmQualificationOnly": {
+       "p10": 139492.52,
+       "p90Dd": 23161.3
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-breakout_VGT-rise#1 profit",
+      "id": "e908a773a4ef8698",
+      "cell": "B_GDX-breakout_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 284038.77,
+       "dd": 22767.8,
+       "lots": 33,
+       "episodes": 13,
+       "topEpisode": 143000.2,
+       "topEpisodeShare": 0.5035,
+       "years": {
+        "2016": 2414.51,
+        "2017": 17852.36,
+        "2018": 8586.09,
+        "2019": 28325.91,
+        "2020": 129145.55,
+        "2021": 10644.26,
+        "2022": 20697.25,
+        "2023": 28979.1,
+        "2024": 37393.74
+       },
+       "exBestYear": 154893.22,
+       "worstYear": 2414.51,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1192
+      },
+      "select": {
+       "n": 256,
+       "robust": 138118.54,
+       "median": 181447.5,
+       "p10": 94789.6,
+       "p90Dd": 32644.42,
+       "p95Dd": 34527.16,
+       "worst10Mean": 35179.51,
+       "worstDd": 43707.42,
+       "breachShare": 0.043,
+       "breachInterval": [
+        0.0242,
+        0.0753
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 237,
+       "exBestYearMedian": 95620.19,
+       "exBestYearP10": 58093.52,
+       "topEpisodeShareMedian": 0.58,
+       "lotsMedian": 33,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-01-28",
+        "firstEntry": "2019-01-29",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 143000.2,
+       "lots": 6,
+       "netWithout": 141038.57,
+       "ddWithout": 22767.8,
+       "arithmetic": 141038.57
+      },
+      "confirmQualificationOnly": {
+       "p10": 103000.62,
+       "p90Dd": 32611.34
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-breakout_VGT-rise#2 robust",
+      "id": "8549e8f63e117b82",
+      "cell": "B_GDX-breakout_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 252296.14,
+       "dd": 27234.06,
+       "lots": 21,
+       "episodes": 10,
+       "topEpisode": 98650.15,
+       "topEpisodeShare": 0.391,
+       "years": {
+        "2016": 8041.55,
+        "2017": 29423.14,
+        "2018": -7619.44,
+        "2019": 31912.61,
+        "2020": 108276.47,
+        "2021": 15551.55,
+        "2022": 17647.5,
+        "2023": 33194.96,
+        "2024": 15867.79
+       },
+       "exBestYear": 144019.67,
+       "worstYear": -7619.44,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 1436
+      },
+      "select": {
+       "n": 256,
+       "robust": 183573.02,
+       "median": 204962.96,
+       "p10": 162183.08,
+       "p90Dd": 31636.16,
+       "p95Dd": 47720.77,
+       "worst10Mean": 42814.4,
+       "worstDd": 51513.94,
+       "breachShare": 0.0625,
+       "breachInterval": [
+        0.0388,
+        0.0991
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 238,
+       "exBestYearMedian": 98166.13,
+       "exBestYearP10": 57163.23,
+       "topEpisodeShareMedian": 0.48,
+       "lotsMedian": 22,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-05-27"
+       },
+       "episodeNet": 98650.15,
+       "lots": 6,
+       "netWithout": 153645.99,
+       "ddWithout": 27234.06,
+       "arithmetic": 153645.99
+      },
+      "confirmQualificationOnly": {
+       "p10": 163025.66,
+       "p90Dd": 31679.4
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-breakout_VGT-rise#3 balanced",
+      "id": "1ac70229b976233f",
+      "cell": "B_GDX-breakout_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 218017.3,
+       "dd": 18305.02,
+       "lots": 26,
+       "episodes": 14,
+       "topEpisode": 73327.64,
+       "topEpisodeShare": 0.3363,
+       "years": {
+        "2016": -2075.7,
+        "2017": 13766.72,
+        "2018": 6058,
+        "2019": 18975.4,
+        "2020": 85833.42,
+        "2021": 702.84,
+        "2022": 32314.77,
+        "2023": 36153.68,
+        "2024": 26288.16
+       },
+       "exBestYear": 132183.88,
+       "worstYear": -2075.7,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 601
+      },
+      "select": {
+       "n": 256,
+       "robust": 166388.42,
+       "median": 185843.06,
+       "p10": 146933.79,
+       "p90Dd": 23998.48,
+       "p95Dd": 26219.54,
+       "worst10Mean": 26383.31,
+       "worstDd": 29938.1,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 247,
+       "exBestYearMedian": 97963.4,
+       "exBestYearP10": 56894.78,
+       "topEpisodeShareMedian": 0.41,
+       "lotsMedian": 25,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-05-27"
+       },
+       "episodeNet": 73327.64,
+       "lots": 6,
+       "netWithout": 144689.66,
+       "ddWithout": 15145.65,
+       "arithmetic": 144689.66
+      },
+      "confirmQualificationOnly": {
+       "p10": 137917.07,
+       "p90Dd": 24092.76
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-breakout_VGT-rise#4 gate-alternative",
+      "id": "0cb577d91f66d081",
+      "cell": "B_GDX-breakout_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 279741.25,
+       "dd": 23055.13,
+       "lots": 34,
+       "episodes": 15,
+       "topEpisode": 145917.64,
+       "topEpisodeShare": 0.5216,
+       "years": {
+        "2016": 4858.92,
+        "2017": 19423.86,
+        "2018": 4252.99,
+        "2019": 29164.6,
+        "2020": 131224.3,
+        "2021": 12554.03,
+        "2022": 20997.47,
+        "2023": 30340.72,
+        "2024": 26924.35
+       },
+       "exBestYear": 148516.95,
+       "worstYear": 4252.99,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1101
+      },
+      "select": {
+       "n": 256,
+       "robust": 145260.5,
+       "median": 177702.85,
+       "p10": 112818.16,
+       "p90Dd": 33089.46,
+       "p95Dd": 33997.63,
+       "worst10Mean": 37074.73,
+       "worstDd": 54597.98,
+       "breachShare": 0.0352,
+       "breachInterval": [
+        0.0186,
+        0.0655
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 250,
+       "exBestYearMedian": 92426.29,
+       "exBestYearP10": 57097.46,
+       "topEpisodeShareMedian": 0.61,
+       "lotsMedian": 33.5,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-01-22",
+        "firstEntry": "2019-01-22",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 145917.64,
+       "lots": 6,
+       "netWithout": 133823.61,
+       "ddWithout": 23055.13,
+       "arithmetic": 133823.61
+      },
+      "confirmQualificationOnly": {
+       "p10": 111937.84,
+       "p90Dd": 32885.72
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-breakout_VGT-rise#5 profit order",
+      "id": "bc913f68a110af28",
+      "cell": "B_GDX-breakout_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 268603.57,
+       "dd": 22767.8,
+       "lots": 35,
+       "episodes": 13,
+       "topEpisode": 141777.19,
+       "topEpisodeShare": 0.5278,
+       "years": {
+        "2016": 2414.51,
+        "2017": 11550.41,
+        "2018": 3280.86,
+        "2019": 28325.91,
+        "2020": 127922.55,
+        "2021": 14393.2,
+        "2022": 17241.86,
+        "2023": 34830.97,
+        "2024": 28643.31
+       },
+       "exBestYear": 140681.02,
+       "worstYear": 2414.51,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1067
+      },
+      "select": {
+       "n": 256,
+       "robust": 116618.67,
+       "median": 165668.6,
+       "p10": 67568.73,
+       "p90Dd": 34369.95,
+       "p95Dd": 36010.91,
+       "worst10Mean": 37392.16,
+       "worstDd": 48025.39,
+       "breachShare": 0.0742,
+       "breachInterval": [
+        0.048,
+        0.113
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 237,
+       "exBestYearMedian": 75962.28,
+       "exBestYearP10": 38748.07,
+       "topEpisodeShareMedian": 0.59,
+       "lotsMedian": 33,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-01-28",
+        "firstEntry": "2019-01-29",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 141777.19,
+       "lots": 6,
+       "netWithout": 126826.38,
+       "ddWithout": 22767.8,
+       "arithmetic": 126826.38
+      },
+      "confirmQualificationOnly": {
+       "p10": 67978.43,
+       "p90Dd": 33999.86
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-breakout_VGT-breakout#2 balanced",
+      "id": "6fb31fa52c5ebf85",
+      "cell": "B_GDX-breakout_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 220317.75,
+       "dd": 20603.36,
+       "lots": 16,
+       "episodes": 8,
+       "topEpisode": 87971.47,
+       "topEpisodeShare": 0.3993,
+       "years": {
+        "2016": 558,
+        "2017": 26417.34,
+        "2018": 9037.49,
+        "2019": 19652.1,
+        "2020": 119694.55,
+        "2021": 19044.93,
+        "2022": 5272.25,
+        "2023": 16054.99,
+        "2024": 4586.11
+       },
+       "exBestYear": 100623.2,
+       "worstYear": 558,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1633
+      },
+      "select": {
+       "n": 256,
+       "robust": 192352.48,
+       "median": 205348.76,
+       "p10": 179356.21,
+       "p90Dd": 23882.94,
+       "p95Dd": 24888.8,
+       "worst10Mean": 25289.35,
+       "worstDd": 28641.14,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 240,
+       "exBestYearMedian": 91161.93,
+       "exBestYearP10": 73705.58,
+       "topEpisodeShareMedian": 0.45,
+       "lotsMedian": 17,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 87971.47,
+       "lots": 5,
+       "netWithout": 132346.28,
+       "ddWithout": 20603.36,
+       "arithmetic": 132346.28
+      },
+      "confirmQualificationOnly": {
+       "p10": 177416.88,
+       "p90Dd": 23647.58
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-breakout_VGT-breakout#3 both Growth funded",
+      "id": "ec5347e2e5ec1a95",
+      "cell": "B_GDX-breakout_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 288460.64,
+       "dd": 19568.04,
+       "lots": 49,
+       "episodes": 19,
+       "topEpisode": 101339.72,
+       "topEpisodeShare": 0.3513,
+       "years": {
+        "2016": 4114.17,
+        "2017": 27897.09,
+        "2018": 2987.88,
+        "2019": 7373.59,
+        "2020": 118636.42,
+        "2021": 25540.18,
+        "2022": 28305.11,
+        "2023": 49062.57,
+        "2024": 24543.64
+       },
+       "exBestYear": 169824.22,
+       "worstYear": 2987.88,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1435
+      },
+      "select": {
+       "n": 256,
+       "robust": 176130.41,
+       "median": 199169.95,
+       "p10": 153090.88,
+       "p90Dd": 32800.34,
+       "p95Dd": 38360.83,
+       "worst10Mean": 41103.27,
+       "worstDd": 60344.19,
+       "breachShare": 0.0742,
+       "breachInterval": [
+        0.048,
+        0.113
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 249,
+       "exBestYearMedian": 107953.5,
+       "exBestYearP10": 75369.04,
+       "topEpisodeShareMedian": 0.41,
+       "lotsMedian": 55.5,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-05-21"
+       },
+       "episodeNet": 101339.72,
+       "lots": 7,
+       "netWithout": 187120.92,
+       "ddWithout": 19568.04,
+       "arithmetic": 187120.92
+      },
+      "confirmQualificationOnly": {
+       "p10": 149928.39,
+       "p90Dd": 31285.95
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/indep/B_GDX-breakout_VGT-breakout#4 profit order",
+      "id": "203bf200366ec2e2",
+      "cell": "B_GDX-breakout_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 285144.82,
+       "dd": 23307.12,
+       "lots": 52,
+       "episodes": 19,
+       "topEpisode": 129191.07,
+       "topEpisodeShare": 0.4531,
+       "years": {
+        "2016": 4114.17,
+        "2017": 27897.09,
+        "2018": -3003.12,
+        "2019": 7792.06,
+        "2020": 133469.32,
+        "2021": 19803.88,
+        "2022": 22411.08,
+        "2023": 46061.28,
+        "2024": 26599.04
+       },
+       "exBestYear": 151675.5,
+       "worstYear": -3003.12,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 1407
+      },
+      "select": {
+       "n": 256,
+       "robust": 199595.3,
+       "median": 219401.95,
+       "p10": 179788.66,
+       "p90Dd": 31062.25,
+       "p95Dd": 34145.29,
+       "worst10Mean": 36541.65,
+       "worstDd": 60092.37,
+       "breachShare": 0.0469,
+       "breachInterval": [
+        0.027,
+        0.0801
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 248,
+       "exBestYearMedian": 113663.14,
+       "exBestYearP10": 81122.57,
+       "topEpisodeShareMedian": 0.44,
+       "lotsMedian": 57,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-09-14"
+       },
+       "episodeNet": 129191.07,
+       "lots": 7,
+       "netWithout": 155953.75,
+       "ddWithout": 23307.12,
+       "arithmetic": 155953.75
+      },
+      "confirmQualificationOnly": {
+       "p10": 178514.81,
+       "p90Dd": 31214.88
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-fixed#1 profit",
+      "id": "0f017f0ab9b26f24",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 360569.71,
+       "dd": 17280.74,
+       "lots": 41,
+       "episodes": 14,
+       "topEpisode": 97744.92,
+       "topEpisodeShare": 0.2711,
+       "years": {
+        "2016": 5709.76,
+        "2017": 23392.89,
+        "2018": 17662.57,
+        "2019": 30111.24,
+        "2020": 130550.03,
+        "2021": 34639.94,
+        "2022": 30086.81,
+        "2023": 46109.75,
+        "2024": 42306.71
+       },
+       "exBestYear": 230019.68,
+       "worstYear": 5709.76,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1494
+      },
+      "select": {
+       "n": 256,
+       "robust": 243142.66,
+       "median": 263104.42,
+       "p10": 223180.9,
+       "p90Dd": 24573.57,
+       "p95Dd": 26176.36,
+       "worst10Mean": 28700.48,
+       "worstDd": 51531.03,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 181,
+       "exBestYearMedian": 152562.08,
+       "exBestYearP10": 116088.43,
+       "topEpisodeShareMedian": 0.38,
+       "lotsMedian": 43,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-05-13"
+       },
+       "episodeNet": 97744.92,
+       "lots": 6,
+       "netWithout": 262824.79,
+       "ddWithout": 17027.86,
+       "arithmetic": 262824.79
+      },
+      "confirmQualificationOnly": {
+       "p10": 222241.29,
+       "p90Dd": 24708.71
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-fixed#3 balanced",
+      "id": "ee1cf4e42c0b2236",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 291844.42,
+       "dd": 17280.74,
+       "lots": 36,
+       "episodes": 11,
+       "topEpisode": 93264.29,
+       "topEpisodeShare": 0.3196,
+       "years": {
+        "2016": 10276.71,
+        "2017": 21156.61,
+        "2018": 12341.88,
+        "2019": 16958.34,
+        "2020": 110085.82,
+        "2021": 22616.31,
+        "2022": 30086.81,
+        "2023": 33122.03,
+        "2024": 35199.91
+       },
+       "exBestYear": 181758.6,
+       "worstYear": 10276.71,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1195
+      },
+      "select": {
+       "n": 256,
+       "robust": 232556.53,
+       "median": 252110.67,
+       "p10": 213002.39,
+       "p90Dd": 24314.12,
+       "p95Dd": 25729.4,
+       "worst10Mean": 27501.96,
+       "worstDd": 46398.24,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 211,
+       "exBestYearMedian": 147684.97,
+       "exBestYearP10": 114200.1,
+       "topEpisodeShareMedian": 0.4,
+       "lotsMedian": 36,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 93264.29,
+       "lots": 5,
+       "netWithout": 198580.13,
+       "ddWithout": 17027.86,
+       "arithmetic": 198580.13
+      },
+      "confirmQualificationOnly": {
+       "p10": 208528.78,
+       "p90Dd": 23899.86
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-fixed#4 both Growth funded",
+      "id": "ccbdc02ff8ef1ab6",
+      "cell": "B_GDX-rise_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 330686.39,
+       "dd": 17280.74,
+       "lots": 43,
+       "episodes": 16,
+       "topEpisode": 93264.29,
+       "topEpisodeShare": 0.282,
+       "years": {
+        "2016": 4114.17,
+        "2017": 21122.77,
+        "2018": 12281.47,
+        "2019": 36011.21,
+        "2020": 120979.61,
+        "2021": 34111.4,
+        "2022": 30086.81,
+        "2023": 42526.02,
+        "2024": 29452.95
+       },
+       "exBestYear": 209706.78,
+       "worstYear": 4114.17,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1405
+      },
+      "select": {
+       "n": 256,
+       "robust": 223730.08,
+       "median": 244292.4,
+       "p10": 203167.77,
+       "p90Dd": 34869.88,
+       "p95Dd": 39016.99,
+       "worst10Mean": 39880.09,
+       "worstDd": 51801.23,
+       "breachShare": 0.1016,
+       "breachInterval": [
+        0.0703,
+        0.1447
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 190,
+       "exBestYearMedian": 140026.46,
+       "exBestYearP10": 98890.6,
+       "topEpisodeShareMedian": 0.39,
+       "lotsMedian": 48,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 93264.29,
+       "lots": 5,
+       "netWithout": 237422.1,
+       "ddWithout": 17027.86,
+       "arithmetic": 237422.1
+      },
+      "confirmQualificationOnly": {
+       "p10": 196769.17,
+       "p90Dd": 33111.06
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-fixed#5 profit order",
+      "id": "cf8bdba166e3b1c3",
+      "cell": "B_GDX-rise_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 329333.46,
+       "dd": 23190.18,
+       "lots": 43,
+       "episodes": 18,
+       "topEpisode": 95978.34,
+       "topEpisodeShare": 0.2914,
+       "years": {
+        "2016": 8041.55,
+        "2017": 21633.4,
+        "2018": 14783.49,
+        "2019": 25038.06,
+        "2020": 128783.46,
+        "2021": 34639.94,
+        "2022": 20131.54,
+        "2023": 46109.75,
+        "2024": 30172.27
+       },
+       "exBestYear": 200550,
+       "worstYear": 8041.55,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1414
+      },
+      "select": {
+       "n": 256,
+       "robust": 216227.42,
+       "median": 235450.5,
+       "p10": 197004.34,
+       "p90Dd": 32161.03,
+       "p95Dd": 36214.98,
+       "worst10Mean": 38186.83,
+       "worstDd": 55741.37,
+       "breachShare": 0.0703,
+       "breachInterval": [
+        0.0449,
+        0.1084
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 201,
+       "exBestYearMedian": 130038.07,
+       "exBestYearP10": 96810.17,
+       "topEpisodeShareMedian": 0.41,
+       "lotsMedian": 47,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-05-13"
+       },
+       "episodeNet": 95978.34,
+       "lots": 6,
+       "netWithout": 233355.12,
+       "ddWithout": 23190.18,
+       "arithmetic": 233355.12
+      },
+      "confirmQualificationOnly": {
+       "p10": 192711.08,
+       "p90Dd": 32481.82
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-fixed#6 profit order",
+      "id": "1edf88f9d9d067ef",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 321825.62,
+       "dd": 18222.83,
+       "lots": 40,
+       "episodes": 13,
+       "topEpisode": 118866.04,
+       "topEpisodeShare": 0.3693,
+       "years": {
+        "2016": 8041.55,
+        "2017": 29423.14,
+        "2018": 11003.58,
+        "2019": 22564.89,
+        "2020": 137376.37,
+        "2021": 33275.12,
+        "2022": 25859.14,
+        "2023": 46109.75,
+        "2024": 8172.07
+       },
+       "exBestYear": 184449.25,
+       "worstYear": 8041.55,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1513
+      },
+      "select": {
+       "n": 256,
+       "robust": 233846.57,
+       "median": 250496.8,
+       "p10": 217196.34,
+       "p90Dd": 24916.43,
+       "p95Dd": 26278.08,
+       "worst10Mean": 28774.32,
+       "worstDd": 50762.25,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 217,
+       "exBestYearMedian": 137240.26,
+       "exBestYearP10": 109922.54,
+       "topEpisodeShareMedian": 0.4,
+       "lotsMedian": 43,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-09-03"
+       },
+       "episodeNet": 118866.04,
+       "lots": 7,
+       "netWithout": 202959.58,
+       "ddWithout": 18222.83,
+       "arithmetic": 202959.58
+      },
+      "confirmQualificationOnly": {
+       "p10": 212910.74,
+       "p90Dd": 25334.01
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-joint#1 profit",
+      "id": "940fdaf770eedc9d",
+      "cell": "V_VGT-rise",
+      "roles": [
+       "actual-profit"
+      ],
+      "centre": {
+       "net": 382163.79,
+       "dd": 19459.83,
+       "lots": 34,
+       "episodes": 12,
+       "topEpisode": 120179.7,
+       "topEpisodeShare": 0.3145,
+       "years": {
+        "2016": 8588.21,
+        "2017": 23852.14,
+        "2018": 18525.08,
+        "2019": 28867.19,
+        "2020": 138708.96,
+        "2021": 32396.7,
+        "2022": 43351.35,
+        "2023": 43764.07,
+        "2024": 44110.1
+       },
+       "exBestYear": 243454.83,
+       "worstYear": 8588.21,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1452
+      },
+      "select": {
+       "n": 256,
+       "robust": 230981.79,
+       "median": 254399.4,
+       "p10": 207564.18,
+       "p90Dd": 32098.81,
+       "p95Dd": 34743.53,
+       "worst10Mean": 35384.07,
+       "worstDd": 43121.72,
+       "breachShare": 0.043,
+       "breachInterval": [
+        0.0242,
+        0.0753
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 189,
+       "exBestYearMedian": 143662.5,
+       "exBestYearP10": 103682.44,
+       "topEpisodeShareMedian": 0.39,
+       "lotsMedian": 42,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 120179.7,
+       "lots": 5,
+       "netWithout": 261984.1,
+       "ddWithout": 19459.83,
+       "arithmetic": 261984.09
+      },
+      "confirmQualificationOnly": {
+       "p10": 205124.54,
+       "p90Dd": 31814.77
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-joint#2 robust",
+      "id": "1051848294655d6e",
+      "cell": "V_VGT-rise",
+      "roles": [
+       "robust-profit"
+      ],
+      "centre": {
+       "net": 317806.08,
+       "dd": 22690.19,
+       "lots": 35,
+       "episodes": 13,
+       "topEpisode": 96031,
+       "topEpisodeShare": 0.3022,
+       "years": {
+        "2016": 9620.11,
+        "2017": 24056.81,
+        "2018": 9521.02,
+        "2019": 15249.14,
+        "2020": 112733.14,
+        "2021": 32893.72,
+        "2022": 33942.95,
+        "2023": 43053.1,
+        "2024": 36736.1
+       },
+       "exBestYear": 205072.94,
+       "worstYear": 9521.02,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1327
+      },
+      "select": {
+       "n": 256,
+       "robust": 253788.16,
+       "median": 270276.89,
+       "p10": 237299.43,
+       "p90Dd": 24279.88,
+       "p95Dd": 29697.55,
+       "worst10Mean": 32216.48,
+       "worstDd": 47983.86,
+       "breachShare": 0.0391,
+       "breachInterval": [
+        0.0214,
+        0.0704
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 172,
+       "exBestYearMedian": 161304.22,
+       "exBestYearP10": 132548.96,
+       "topEpisodeShareMedian": 0.36,
+       "lotsMedian": 40,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 96031,
+       "lots": 5,
+       "netWithout": 221775.08,
+       "ddWithout": 22690.19,
+       "arithmetic": 221775.08
+      },
+      "confirmQualificationOnly": {
+       "p10": 239243.62,
+       "p90Dd": 24099.1
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-joint#3 both Growth funded",
+      "id": "f6b797363d32ec8b",
+      "cell": "B_GDX-rise_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 346078.06,
+       "dd": 19459.83,
+       "lots": 35,
+       "episodes": 9,
+       "topEpisode": 158937.5,
+       "topEpisodeShare": 0.4593,
+       "years": {
+        "2016": 9091.57,
+        "2017": 30429.39,
+        "2018": 7736.58,
+        "2019": 32097.68,
+        "2020": 139450.58,
+        "2021": 26581.32,
+        "2022": 40488.7,
+        "2023": 28332.21,
+        "2024": 31870.01
+       },
+       "exBestYear": 206627.48,
+       "worstYear": 7736.58,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1714
+      },
+      "select": {
+       "n": 256,
+       "robust": 240393.19,
+       "median": 255219.95,
+       "p10": 225566.43,
+       "p90Dd": 23161.46,
+       "p95Dd": 24305.98,
+       "worst10Mean": 27711.17,
+       "worstDd": 49176.07,
+       "breachShare": 0.0156,
+       "breachInterval": [
+        0.0061,
+        0.0395
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 226,
+       "exBestYearMedian": 144296.32,
+       "exBestYearP10": 123811.31,
+       "topEpisodeShareMedian": 0.44,
+       "lotsMedian": 26,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2018-12-24",
+        "firstEntry": "2018-12-24",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 158937.5,
+       "lots": 7,
+       "netWithout": 187140.56,
+       "ddWithout": 19459.83,
+       "arithmetic": 187140.56
+      },
+      "confirmQualificationOnly": {
+       "p10": 222514.49,
+       "p90Dd": 23475.41
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-joint#4 profit order",
+      "id": "adee768dd095ae01",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 368862.51,
+       "dd": 19459.83,
+       "lots": 35,
+       "episodes": 14,
+       "topEpisode": 120179.7,
+       "topEpisodeShare": 0.3258,
+       "years": {
+        "2016": 8588.21,
+        "2017": 23852.14,
+        "2018": 10791.83,
+        "2019": 28867.19,
+        "2020": 138708.96,
+        "2021": 32396.7,
+        "2022": 43351.35,
+        "2023": 43764.07,
+        "2024": 38542.06
+       },
+       "exBestYear": 230153.55,
+       "worstYear": 8588.21,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1448
+      },
+      "select": {
+       "n": 256,
+       "robust": 232839.39,
+       "median": 254396.8,
+       "p10": 211281.98,
+       "p90Dd": 32098.81,
+       "p95Dd": 34743.53,
+       "worst10Mean": 35384.07,
+       "worstDd": 43121.72,
+       "breachShare": 0.043,
+       "breachInterval": [
+        0.0242,
+        0.0753
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 193,
+       "exBestYearMedian": 142764.27,
+       "exBestYearP10": 107322.2,
+       "topEpisodeShareMedian": 0.4,
+       "lotsMedian": 41,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 120179.7,
+       "lots": 5,
+       "netWithout": 248682.81,
+       "ddWithout": 19459.83,
+       "arithmetic": 248682.81
+      },
+      "confirmQualificationOnly": {
+       "p10": 206553.19,
+       "p90Dd": 31512.6
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-joint#5 profit order",
+      "id": "3bb1f205c7b15d06",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 368660.92,
+       "dd": 19459.83,
+       "lots": 34,
+       "episodes": 13,
+       "topEpisode": 119731.74,
+       "topEpisodeShare": 0.3248,
+       "years": {
+        "2016": 8588.21,
+        "2017": 23852.14,
+        "2018": 12354.73,
+        "2019": 28840.47,
+        "2020": 138141.6,
+        "2021": 32396.55,
+        "2022": 43083.71,
+        "2023": 43805.26,
+        "2024": 37598.26
+       },
+       "exBestYear": 230519.32,
+       "worstYear": 8588.21,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1433
+      },
+      "select": {
+       "n": 256,
+       "robust": 231110.91,
+       "median": 252936.96,
+       "p10": 209284.86,
+       "p90Dd": 31936.45,
+       "p95Dd": 35022.18,
+       "worst10Mean": 35828.49,
+       "worstDd": 49507.01,
+       "breachShare": 0.0508,
+       "breachInterval": [
+        0.0299,
+        0.0849
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 202,
+       "exBestYearMedian": 139108.13,
+       "exBestYearP10": 99710.88,
+       "topEpisodeShareMedian": 0.41,
+       "lotsMedian": 39,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 119731.74,
+       "lots": 5,
+       "netWithout": 248929.19,
+       "ddWithout": 19459.83,
+       "arithmetic": 248929.18
+      },
+      "confirmQualificationOnly": {
+       "p10": 206508.56,
+       "p90Dd": 31300.99
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-joint#6 profit order",
+      "id": "9c73084ede067137",
+      "cell": "V_VGT-rise",
+      "roles": [
+       "balanced"
+      ],
+      "centre": {
+       "net": 344950.91,
+       "dd": 19244.74,
+       "lots": 35,
+       "episodes": 12,
+       "topEpisode": 119290.77,
+       "topEpisodeShare": 0.3458,
+       "years": {
+        "2016": 9620.11,
+        "2017": 24056.81,
+        "2018": 11466.35,
+        "2019": 14991.58,
+        "2020": 135992.91,
+        "2021": 21399.96,
+        "2022": 44655.76,
+        "2023": 43772.18,
+        "2024": 38995.26
+       },
+       "exBestYear": 208958,
+       "worstYear": 9620.11,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1426
+      },
+      "select": {
+       "n": 256,
+       "robust": 250351.07,
+       "median": 268500.34,
+       "p10": 232201.81,
+       "p90Dd": 23497.4,
+       "p95Dd": 24448.28,
+       "worst10Mean": 27879.99,
+       "worstDd": 46918.96,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 135,
+       "exBestYearMedian": 155594.35,
+       "exBestYearP10": 127082.48,
+       "topEpisodeShareMedian": 0.38,
+       "lotsMedian": 39,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 119290.77,
+       "lots": 5,
+       "netWithout": 225660.14,
+       "ddWithout": 19244.74,
+       "arithmetic": 225660.14
+      },
+      "confirmQualificationOnly": {
+       "p10": 235319.91,
+       "p90Dd": 23699.22
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-joint#7 profit order",
+      "id": "74d53fd4e0ba46aa",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 341685.87,
+       "dd": 19695.11,
+       "lots": 34,
+       "episodes": 11,
+       "topEpisode": 122695.68,
+       "topEpisodeShare": 0.3591,
+       "years": {
+        "2016": 9620.11,
+        "2017": 24056.81,
+        "2018": 10788.24,
+        "2019": 15249.14,
+        "2020": 137056.44,
+        "2021": 21133.29,
+        "2022": 43773.29,
+        "2023": 43272.46,
+        "2024": 36736.1
+       },
+       "exBestYear": 204629.43,
+       "worstYear": 9620.11,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1392
+      },
+      "select": {
+       "n": 256,
+       "robust": 252149.75,
+       "median": 269283.36,
+       "p10": 235016.15,
+       "p90Dd": 23672.25,
+       "p95Dd": 27069.11,
+       "worst10Mean": 28116.48,
+       "worstDd": 46585.74,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 116,
+       "exBestYearMedian": 156247.43,
+       "exBestYearP10": 129103.87,
+       "topEpisodeShareMedian": 0.39,
+       "lotsMedian": 39,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-09-04"
+       },
+       "episodeNet": 122695.68,
+       "lots": 5,
+       "netWithout": 218990.19,
+       "ddWithout": 19695.11,
+       "arithmetic": 218990.19
+      },
+      "confirmQualificationOnly": {
+       "p10": 239542.12,
+       "p90Dd": 24725.7
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "C24/informed-joint#8 profit order",
+      "id": "d7e6e9243a0ffe86",
+      "cell": "B_GDX-breakout_VGT-breakout",
+      "roles": [],
+      "centre": {
+       "net": 338642.84,
+       "dd": 20393.61,
+       "lots": 39,
+       "episodes": 12,
+       "topEpisode": 130398.83,
+       "topEpisodeShare": 0.3851,
+       "years": {
+        "2016": 9620.11,
+        "2017": 30059.85,
+        "2018": 9045.81,
+        "2019": 32252.43,
+        "2020": 129603.33,
+        "2021": 32643.05,
+        "2022": 34798.38,
+        "2023": 29086.6,
+        "2024": 31533.27
+       },
+       "exBestYear": 209039.51,
+       "worstYear": 9045.81,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1578
+      },
+      "select": {
+       "n": 256,
+       "robust": 237117.96,
+       "median": 255528.93,
+       "p10": 218707,
+       "p90Dd": 26806.3,
+       "p95Dd": 29603.53,
+       "worst10Mean": 39814.43,
+       "worstDd": 105960.65,
+       "breachShare": 0.0234,
+       "breachInterval": [
+        0.0108,
+        0.0502
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 212,
+       "exBestYearMedian": 136022.3,
+       "exBestYearP10": 109153.32,
+       "topEpisodeShareMedian": 0.43,
+       "lotsMedian": 35,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-08-05",
+        "firstEntry": "2019-08-05",
+        "last": "2020-08-11"
+       },
+       "episodeNet": 130398.83,
+       "lots": 8,
+       "netWithout": 208244.01,
+       "ddWithout": 17727.38,
+       "arithmetic": 208244.01
+      },
+      "confirmQualificationOnly": {
+       "p10": 219545.89,
+       "p90Dd": 27177.32
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "control: C4",
+      "id": "2f49a1cc226b4ece",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 302785.91,
+       "dd": 17332.09,
+       "lots": 38,
+       "episodes": 14,
+       "topEpisode": 97337.76,
+       "topEpisodeShare": 0.3215,
+       "years": {
+        "2016": 10276.71,
+        "2017": 30239.86,
+        "2018": 12622.49,
+        "2019": 13958.07,
+        "2020": 128619.07,
+        "2021": 34021.61,
+        "2022": 25859.14,
+        "2023": 37336.19,
+        "2024": 9852.77
+       },
+       "exBestYear": 174166.84,
+       "worstYear": 9852.77,
+       "positiveYears": 9,
+       "years_n": 9,
+       "sessionsHeld": 1340
+      },
+      "select": {
+       "n": 256,
+       "robust": 223112.16,
+       "median": 244594.23,
+       "p10": 201630.09,
+       "p90Dd": 25674.28,
+       "p95Dd": 26723.31,
+       "worst10Mean": 29006.72,
+       "worstDd": 50762.25,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 217,
+       "exBestYearMedian": 133392.06,
+       "exBestYearP10": 99628.6,
+       "topEpisodeShareMedian": 0.41,
+       "lotsMedian": 44,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-05-14"
+       },
+       "episodeNet": 97337.76,
+       "lots": 6,
+       "netWithout": 205448.15,
+       "ddWithout": 17027.86,
+       "arithmetic": 205448.15
+      },
+      "confirmQualificationOnly": {
+       "p10": 204977.07,
+       "p90Dd": 24519.07
+      }
+     },
+     {
+      "subject": "3B",
+      "cut": "C24",
+      "label": "control: C85",
+      "id": "38be30d42d55ec7f",
+      "cell": "V_VGT-rise",
+      "roles": [],
+      "centre": {
+       "net": 263681.27,
+       "dd": 18119.12,
+       "lots": 34,
+       "episodes": 10,
+       "topEpisode": 93264.29,
+       "topEpisodeShare": 0.3537,
+       "years": {
+        "2016": 9296,
+        "2017": 29815.86,
+        "2018": 11538.73,
+        "2019": 16958.34,
+        "2020": 110085.82,
+        "2021": 22616.31,
+        "2022": 25873.55,
+        "2023": 37667.94,
+        "2024": -171.27
+       },
+       "exBestYear": 153595.45,
+       "worstYear": -171.27,
+       "positiveYears": 8,
+       "years_n": 9,
+       "sessionsHeld": 1366
+      },
+      "select": {
+       "n": 256,
+       "robust": 220462.04,
+       "median": 236506.92,
+       "p10": 204417.16,
+       "p90Dd": 24481.87,
+       "p95Dd": 26157.58,
+       "worst10Mean": 28337,
+       "worstDd": 49835.25,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 256,
+       "exBestYearMedian": 130254.64,
+       "exBestYearP10": 104933.44,
+       "topEpisodeShareMedian": 0.41,
+       "lotsMedian": 37,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-12",
+        "firstEntry": "2020-03-12",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 93264.29,
+       "lots": 5,
+       "netWithout": 170416.98,
+       "ddWithout": 18119.12,
+       "arithmetic": 170416.98
+      },
+      "confirmQualificationOnly": {
+       "p10": 202546.47,
+       "p90Dd": 24406.05
+      }
+     }
+    ]
+   }
+  },
+  "4A": {
+   "primaryUniverse": {
+    "set": "E(s, C24): the qualified independent set",
+    "size": 9,
+    "choices": {
+     "P0": {
+      "label": "C24/indep-rise#1 profit",
+      "id": "e7814bdec9854b7b",
+      "reason": "highest centre net",
+      "knownOutcome": {
+       "validationPnl": 0,
+       "resetDd": 0,
+       "wholeDd": 17483.62,
+       "fullNet": 139668.45,
+       "source": "research/gdx-growth-standalone/results/validation/validation.json"
+      }
+     },
+     "P1": {
+      "label": "C24/indep-rise#1 profit",
+      "id": "e7814bdec9854b7b",
+      "reason": "highest centre net with worst-10% mean DD ≤ $35,000",
+      "knownOutcome": {
+       "validationPnl": 0,
+       "resetDd": 0,
+       "wholeDd": 17483.62,
+       "fullNet": 139668.45,
+       "source": "research/gdx-growth-standalone/results/validation/validation.json"
+      }
+     },
+     "P2": {
+      "label": "C24/indep-rise#2 robust",
+      "id": "d2b5761bcf965531",
+      "reason": "highest best-year-excluded neighbourhood median",
+      "knownOutcome": {
+       "validationPnl": 0,
+       "resetDd": 0,
+       "wholeDd": 22981.65,
+       "fullNet": 123836.44,
+       "source": "research/gdx-growth-standalone/results/validation/validation.json"
+      }
+     },
+     "P3": {
+      "label": "C24/indep-rise#1 profit",
+      "id": "e7814bdec9854b7b",
+      "reason": "highest causal net without the leading episode",
+      "knownOutcome": {
+       "validationPnl": 0,
+       "resetDd": 0,
+       "wholeDd": 17483.62,
+       "fullNet": 139668.45,
+       "source": "research/gdx-growth-standalone/results/validation/validation.json"
+      }
+     }
+    }
+   },
+   "secondaryUniverse": {
+    "set": "the final selectable set (informed lanes and controls included; report-only, never chronological evidence)",
+    "size": 24,
+    "choices": {
+     "P0": {
+      "label": "C24/indep-rise#1 profit",
+      "id": "e7814bdec9854b7b",
+      "reason": "highest centre net",
+      "knownOutcome": {
+       "validationPnl": 0,
+       "resetDd": 0,
+       "wholeDd": 17483.62,
+       "fullNet": 139668.45,
+       "source": "research/gdx-growth-standalone/results/validation/validation.json"
+      }
+     },
+     "P1": {
+      "label": "C24/indep-rise#1 profit",
+      "id": "e7814bdec9854b7b",
+      "reason": "highest centre net with worst-10% mean DD ≤ $35,000",
+      "knownOutcome": {
+       "validationPnl": 0,
+       "resetDd": 0,
+       "wholeDd": 17483.62,
+       "fullNet": 139668.45,
+       "source": "research/gdx-growth-standalone/results/validation/validation.json"
+      }
+     },
+     "P2": {
+      "label": "C24/informed#1 profit",
+      "id": "3b098c9add20d484",
+      "reason": "highest best-year-excluded neighbourhood median",
+      "knownOutcome": {
+       "validationPnl": 0,
+       "resetDd": 0,
+       "wholeDd": 19094.64,
+       "fullNet": 137675.75,
+       "source": "research/gdx-growth-standalone/results/validation/validation.json"
+      }
+     },
+     "P3": {
+      "label": "C24/informed#1 profit",
+      "id": "3b098c9add20d484",
+      "reason": "highest causal net without the leading episode",
+      "knownOutcome": {
+       "validationPnl": 0,
+       "resetDd": 0,
+       "wholeDd": 19094.64,
+       "fullNet": 137675.75,
+       "source": "research/gdx-growth-standalone/results/validation/validation.json"
+      }
+     }
+    },
+    "features": [
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/indep-rise#1 profit",
+      "id": "e7814bdec9854b7b",
+      "cell": "rise",
+      "roles": [
+       "actual-profit"
+      ],
+      "centre": {
+       "net": 139668.45,
+       "dd": 17483.62,
+       "lots": 11,
+       "episodes": 7,
+       "topEpisode": 93560.96,
+       "topEpisodeShare": 0.6699,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 91706.09,
+        "2021": 0,
+        "2022": 23907.13,
+        "2023": 31332.12,
+        "2024": -7276.89
+       },
+       "exBestYear": 47962.36,
+       "worstYear": -7276.89,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 375
+      },
+      "select": {
+       "n": 256,
+       "robust": 79324.25,
+       "median": 95160.17,
+       "p10": 63488.33,
+       "p90Dd": 23807.14,
+       "p95Dd": 28574.55,
+       "worst10Mean": 31901.4,
+       "worstDd": 58239.8,
+       "breachShare": 0.0234,
+       "breachInterval": [
+        0.0108,
+        0.0502
+       ],
+       "distinct": 246,
+       "sameAsCentre": 0,
+       "clipped": 79,
+       "exBestYearMedian": 20845.93,
+       "exBestYearP10": -1541.3,
+       "topEpisodeShareMedian": 0.76,
+       "lotsMedian": 8,
+       "zeroLotDraws": 10
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-13",
+        "firstEntry": "2020-03-16",
+        "last": "2020-08-26"
+       },
+       "episodeNet": 93560.96,
+       "lots": 3,
+       "netWithout": 46107.49,
+       "ddWithout": 17097.2,
+       "arithmetic": 46107.49
+      },
+      "confirmQualificationOnly": {
+       "p10": 63711.46,
+       "p90Dd": 24504.45
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/indep-rise#2 robust",
+      "id": "d2b5761bcf965531",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 123836.44,
+       "dd": 22981.65,
+       "lots": 7,
+       "episodes": 3,
+       "topEpisode": 85656.02,
+       "topEpisodeShare": 0.6917,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 85656.02,
+        "2021": 0,
+        "2022": 23755.66,
+        "2023": 14424.77,
+        "2024": 0
+       },
+       "exBestYear": 38180.42,
+       "worstYear": 0,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 280
+      },
+      "select": {
+       "n": 256,
+       "robust": 88642.71,
+       "median": 105124.17,
+       "p10": 72161.24,
+       "p90Dd": 25440.09,
+       "p95Dd": 30069.09,
+       "worst10Mean": 32710.39,
+       "worstDd": 58668.38,
+       "breachShare": 0.0273,
+       "breachInterval": [
+        0.0133,
+        0.0554
+       ],
+       "distinct": 246,
+       "sameAsCentre": 0,
+       "clipped": 157,
+       "exBestYearMedian": 22938.59,
+       "exBestYearP10": 0,
+       "topEpisodeShareMedian": 0.78,
+       "lotsMedian": 7,
+       "zeroLotDraws": 10
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-13",
+        "firstEntry": "2020-03-16",
+        "last": "2020-09-24"
+       },
+       "episodeNet": 85656.02,
+       "lots": 3,
+       "netWithout": 38180.42,
+       "ddWithout": 18150.42,
+       "arithmetic": 38180.42
+      },
+      "confirmQualificationOnly": {
+       "p10": 73590.61,
+       "p90Dd": 25257.26
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/indep-rise#3 balanced",
+      "id": "6001a13fe92faf79",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 92656.7,
+       "dd": 17744.39,
+       "lots": 7,
+       "episodes": 5,
+       "topEpisode": 75817.04,
+       "topEpisodeShare": 0.8183,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 71134.48,
+        "2021": 0,
+        "2022": 25097.36,
+        "2023": -3575.15,
+        "2024": 0
+       },
+       "exBestYear": 21522.22,
+       "worstYear": -3575.15,
+       "positiveYears": 2,
+       "years_n": 9,
+       "sessionsHeld": 68
+      },
+      "select": {
+       "n": 256,
+       "robust": 72733.97,
+       "median": 76568.93,
+       "p10": 68899.01,
+       "p90Dd": 18575.97,
+       "p95Dd": 20065.68,
+       "worst10Mean": 21203.27,
+       "worstDd": 27515.99,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 229,
+       "sameAsCentre": 0,
+       "clipped": 140,
+       "exBestYearMedian": 2132.27,
+       "exBestYearP10": 0,
+       "topEpisodeShareMedian": 1,
+       "lotsMedian": 5,
+       "zeroLotDraws": 3
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-13",
+        "firstEntry": "2020-03-16",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 75817.04,
+       "lots": 3,
+       "netWithout": 16839.65,
+       "ddWithout": 12490.95,
+       "arithmetic": 16839.66
+      },
+      "confirmQualificationOnly": {
+       "p10": 68649.75,
+       "p90Dd": 18361.83
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/indep-rise#5 profit order",
+      "id": "42251753fbb07995",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 84441.98,
+       "dd": 17655.84,
+       "lots": 8,
+       "episodes": 6,
+       "topEpisode": 78650.43,
+       "topEpisodeShare": 0.9314,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 82309.7,
+        "2021": 0,
+        "2022": 2132.27,
+        "2023": 0,
+        "2024": 0
+       },
+       "exBestYear": 2132.28,
+       "worstYear": 0,
+       "positiveYears": 2,
+       "years_n": 9,
+       "sessionsHeld": 90
+      },
+      "select": {
+       "n": 256,
+       "robust": 71665.66,
+       "median": 84975.8,
+       "p10": 58355.52,
+       "p90Dd": 20850.67,
+       "p95Dd": 25501,
+       "worst10Mean": 26046.74,
+       "worstDd": 42184.05,
+       "breachShare": 0.0078,
+       "breachInterval": [
+        0.0021,
+        0.028
+       ],
+       "distinct": 250,
+       "sameAsCentre": 0,
+       "clipped": 138,
+       "exBestYearMedian": 1385.66,
+       "exBestYearP10": 0,
+       "topEpisodeShareMedian": 0.95,
+       "lotsMedian": 7,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-13",
+        "firstEntry": "2020-03-16",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 78650.43,
+       "lots": 3,
+       "netWithout": 5791.55,
+       "ddWithout": 15097.28,
+       "arithmetic": 5791.55
+      },
+      "confirmQualificationOnly": {
+       "p10": 57977.73,
+       "p90Dd": 20912.03
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/indep-breakout#1 profit",
+      "id": "0de0381a79c13190",
+      "cell": "breakout",
+      "roles": [],
+      "centre": {
+       "net": 28054.78,
+       "dd": 9547.12,
+       "lots": 4,
+       "episodes": 4,
+       "topEpisode": 9406.49,
+       "topEpisodeShare": 0.3353,
+       "years": {
+        "2016": 14956.27,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 13098.51,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0
+       },
+       "exBestYear": 13098.51,
+       "worstYear": 0,
+       "positiveYears": 2,
+       "years_n": 9,
+       "sessionsHeld": 114
+      },
+      "select": {
+       "n": 256,
+       "robust": 4849.48,
+       "median": 7057.65,
+       "p10": 2641.31,
+       "p90Dd": 14461.28,
+       "p95Dd": 16125.08,
+       "worst10Mean": 16822.21,
+       "worstDd": 23315.26,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 241,
+       "sameAsCentre": 0,
+       "clipped": 200,
+       "exBestYearMedian": -1349.9,
+       "exBestYearP10": -4447.25,
+       "topEpisodeShareMedian": 1.03,
+       "lotsMedian": 5,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-07-07",
+        "firstEntry": "2020-07-08",
+        "last": "2020-08-26"
+       },
+       "episodeNet": 9406.49,
+       "lots": 1,
+       "netWithout": 18648.28,
+       "ddWithout": 7549,
+       "arithmetic": 18648.29
+      },
+      "confirmQualificationOnly": {
+       "p10": 2595.05,
+       "p90Dd": 14724.55
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/indep-breakout#2 robust",
+      "id": "21702cf741fb0431",
+      "cell": "breakout",
+      "roles": [],
+      "centre": {
+       "net": 22335.51,
+       "dd": 20205.55,
+       "lots": 1,
+       "episodes": 1,
+       "topEpisode": 22335.51,
+       "topEpisodeShare": 1,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 22335.51,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0
+       },
+       "exBestYear": 0,
+       "worstYear": 0,
+       "positiveYears": 1,
+       "years_n": 9,
+       "sessionsHeld": 81
+      },
+      "select": {
+       "n": 256,
+       "robust": 18871.59,
+       "median": 22226.62,
+       "p10": 15516.56,
+       "p90Dd": 20447.03,
+       "p95Dd": 20504.94,
+       "worst10Mean": 21257.8,
+       "worstDd": 26151.53,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 6,
+       "sameAsCentre": 209,
+       "clipped": 247,
+       "exBestYearMedian": 0,
+       "exBestYearP10": 0,
+       "topEpisodeShareMedian": 1,
+       "lotsMedian": 1,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-04-22",
+        "firstEntry": "2020-04-23",
+        "last": "2020-08-17"
+       },
+       "episodeNet": 22335.51,
+       "lots": 1,
+       "netWithout": 0,
+       "ddWithout": 0,
+       "arithmetic": 0
+      },
+      "confirmQualificationOnly": {
+       "p10": 15472.23,
+       "p90Dd": 20447.03
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/indep-breakout#3 balanced",
+      "id": "357aea4724be088a",
+      "cell": "breakout",
+      "roles": [],
+      "centre": {
+       "net": 10189.84,
+       "dd": 11439.45,
+       "lots": 3,
+       "episodes": 3,
+       "topEpisode": 9050.92,
+       "topEpisodeShare": 0.8882,
+       "years": {
+        "2016": 9050.92,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 1138.92,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0
+       },
+       "exBestYear": 1138.92,
+       "worstYear": 0,
+       "positiveYears": 2,
+       "years_n": 9,
+       "sessionsHeld": 181
+      },
+      "select": {
+       "n": 256,
+       "robust": 11522.48,
+       "median": 14077.36,
+       "p10": 8967.59,
+       "p90Dd": 13224.2,
+       "p95Dd": 14086.14,
+       "worst10Mean": 26087.1,
+       "worstDd": 65820.59,
+       "breachShare": 0.0234,
+       "breachInterval": [
+        0.0108,
+        0.0502
+       ],
+       "distinct": 246,
+       "sameAsCentre": 0,
+       "clipped": 175,
+       "exBestYearMedian": 4379.22,
+       "exBestYearP10": 1979.9,
+       "topEpisodeShareMedian": 0.63,
+       "lotsMedian": 3,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2016-03-16",
+        "firstEntry": "2016-03-17",
+        "last": "2016-08-26"
+       },
+       "episodeNet": 9050.92,
+       "lots": 1,
+       "netWithout": 1138.92,
+       "ddWithout": 10741.17,
+       "arithmetic": 1138.92
+      },
+      "confirmQualificationOnly": {
+       "p10": 7978.91,
+       "p90Dd": 12815.12
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/indep-breakout#4 exits-alternative",
+      "id": "473053801f123549",
+      "cell": "breakout",
+      "roles": [],
+      "centre": {
+       "net": 27408.2,
+       "dd": 9805.34,
+       "lots": 4,
+       "episodes": 4,
+       "topEpisode": 9247.67,
+       "topEpisodeShare": 0.3374,
+       "years": {
+        "2016": 14726.74,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 12681.46,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0
+       },
+       "exBestYear": 12681.46,
+       "worstYear": 0,
+       "positiveYears": 2,
+       "years_n": 9,
+       "sessionsHeld": 135
+      },
+      "select": {
+       "n": 256,
+       "robust": 5406.61,
+       "median": 9857.16,
+       "p10": 956.05,
+       "p90Dd": 17605.88,
+       "p95Dd": 19822.66,
+       "worst10Mean": 20225.7,
+       "worstDd": 25079.17,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 248,
+       "sameAsCentre": 0,
+       "clipped": 200,
+       "exBestYearMedian": 768.62,
+       "exBestYearP10": -6160.75,
+       "topEpisodeShareMedian": 0.71,
+       "lotsMedian": 4,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-07-07",
+        "firstEntry": "2020-07-08",
+        "last": "2020-09-08"
+       },
+       "episodeNet": 9247.67,
+       "lots": 1,
+       "netWithout": 18160.53,
+       "ddWithout": 7543.91,
+       "arithmetic": 18160.53
+      },
+      "confirmQualificationOnly": {
+       "p10": 747.58,
+       "p90Dd": 17777.2
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/indep-breakout#5 profit order",
+      "id": "2355deeb35a541bf",
+      "cell": "breakout",
+      "roles": [],
+      "centre": {
+       "net": 18216.92,
+       "dd": 20205.55,
+       "lots": 1,
+       "episodes": 1,
+       "topEpisode": 18216.92,
+       "topEpisodeShare": 1,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 18216.92,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0
+       },
+       "exBestYear": 0,
+       "worstYear": 0,
+       "positiveYears": 1,
+       "years_n": 9,
+       "sessionsHeld": 80
+      },
+      "select": {
+       "n": 256,
+       "robust": 17539.96,
+       "median": 18195.27,
+       "p10": 16884.65,
+       "p90Dd": 20447.03,
+       "p95Dd": 20480.83,
+       "worst10Mean": 20482.98,
+       "worstDd": 20546.25,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 6,
+       "sameAsCentre": 209,
+       "clipped": 238,
+       "exBestYearMedian": 0,
+       "exBestYearP10": 0,
+       "topEpisodeShareMedian": 1,
+       "lotsMedian": 1,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-04-22",
+        "firstEntry": "2020-04-23",
+        "last": "2020-08-14"
+       },
+       "episodeNet": 18216.92,
+       "lots": 1,
+       "netWithout": 0,
+       "ddWithout": 0,
+       "arithmetic": 0
+      },
+      "confirmQualificationOnly": {
+       "p10": 16887.93,
+       "p90Dd": 20447.03
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/informed#1 profit",
+      "id": "3b098c9add20d484",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 137675.75,
+       "dd": 19094.64,
+       "lots": 17,
+       "episodes": 13,
+       "topEpisode": 71756.49,
+       "topEpisodeShare": 0.5212,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 96626.45,
+        "2021": -2034.87,
+        "2022": 14513.55,
+        "2023": 28570.61,
+        "2024": 0
+       },
+       "exBestYear": 41049.3,
+       "worstYear": -2034.87,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 213
+      },
+      "select": {
+       "n": 256,
+       "robust": 93420.14,
+       "median": 103608.19,
+       "p10": 83232.1,
+       "p90Dd": 22361.07,
+       "p95Dd": 24162.98,
+       "worst10Mean": 25917.12,
+       "worstDd": 36971.59,
+       "breachShare": 0.0078,
+       "breachInterval": [
+        0.0021,
+        0.028
+       ],
+       "distinct": 254,
+       "sameAsCentre": 0,
+       "clipped": 0,
+       "exBestYearMedian": 32238.46,
+       "exBestYearP10": 12264.32,
+       "topEpisodeShareMedian": 0.69,
+       "lotsMedian": 12,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-13",
+        "firstEntry": "2020-03-16",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 71756.49,
+       "lots": 3,
+       "netWithout": 65919.25,
+       "ddWithout": 15065.11,
+       "arithmetic": 65919.26
+      },
+      "confirmQualificationOnly": {
+       "p10": 84901.94,
+       "p90Dd": 22300.52
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/informed#2 robust",
+      "id": "1c56e58b8746a947",
+      "cell": "rise",
+      "roles": [
+       "robust-profit"
+      ],
+      "centre": {
+       "net": 110158.59,
+       "dd": 18840.58,
+       "lots": 16,
+       "episodes": 10,
+       "topEpisode": 74063.18,
+       "topEpisodeShare": 0.6723,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 75024.06,
+        "2021": -601.53,
+        "2022": 4946.96,
+        "2023": 30789.1,
+        "2024": 0
+       },
+       "exBestYear": 35134.53,
+       "worstYear": -601.53,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 192
+      },
+      "select": {
+       "n": 256,
+       "robust": 96585.45,
+       "median": 107598.89,
+       "p10": 85572.02,
+       "p90Dd": 25603.01,
+       "p95Dd": 29695.94,
+       "worst10Mean": 30338.29,
+       "worstDd": 47419.64,
+       "breachShare": 0.0078,
+       "breachInterval": [
+        0.0021,
+        0.028
+       ],
+       "distinct": 256,
+       "sameAsCentre": 0,
+       "clipped": 0,
+       "exBestYearMedian": 30480.14,
+       "exBestYearP10": 4700.96,
+       "topEpisodeShareMedian": 0.7,
+       "lotsMedian": 13,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-02",
+        "firstEntry": "2020-03-03",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 74063.18,
+       "lots": 5,
+       "netWithout": 36095.41,
+       "ddWithout": 13793.68,
+       "arithmetic": 36095.41
+      },
+      "confirmQualificationOnly": {
+       "p10": 87325.89,
+       "p90Dd": 24404.7
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/informed#5 profit order",
+      "id": "9b4d8fb0ed2a8a38",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 118338.29,
+       "dd": 18840.58,
+       "lots": 13,
+       "episodes": 10,
+       "topEpisode": 71629.48,
+       "topEpisodeShare": 0.6053,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 71815.47,
+        "2021": -332.4,
+        "2022": 16198.03,
+        "2023": 30657.19,
+        "2024": 0
+       },
+       "exBestYear": 46522.82,
+       "worstYear": -332.4,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 169
+      },
+      "select": {
+       "n": 256,
+       "robust": 93899.69,
+       "median": 105451.21,
+       "p10": 82348.18,
+       "p90Dd": 22826.69,
+       "p95Dd": 27004.86,
+       "worst10Mean": 28821.85,
+       "worstDd": 46316.36,
+       "breachShare": 0.0117,
+       "breachInterval": [
+        0.004,
+        0.0339
+       ],
+       "distinct": 255,
+       "sameAsCentre": 0,
+       "clipped": 0,
+       "exBestYearMedian": 31867.67,
+       "exBestYearP10": 9025.21,
+       "topEpisodeShareMedian": 0.69,
+       "lotsMedian": 13,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-13",
+        "firstEntry": "2020-03-16",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 71629.48,
+       "lots": 3,
+       "netWithout": 46708.81,
+       "ddWithout": 13550.74,
+       "arithmetic": 46708.81
+      },
+      "confirmQualificationOnly": {
+       "p10": 85552.43,
+       "p90Dd": 23066.07
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "C24/informed#6 profit order",
+      "id": "9d4d6655aa255d09",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 94848.31,
+       "dd": 18840.58,
+       "lots": 10,
+       "episodes": 7,
+       "topEpisode": 72385.74,
+       "topEpisodeShare": 0.7632,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 73551.99,
+        "2021": 0,
+        "2022": 7362.59,
+        "2023": 13933.73,
+        "2024": 0
+       },
+       "exBestYear": 21296.32,
+       "worstYear": 0,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 114
+      },
+      "select": {
+       "n": 256,
+       "robust": 89023.17,
+       "median": 103863.24,
+       "p10": 74183.11,
+       "p90Dd": 19955.16,
+       "p95Dd": 20802.04,
+       "worst10Mean": 21420.9,
+       "worstDd": 26274.74,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 253,
+       "sameAsCentre": 0,
+       "clipped": 0,
+       "exBestYearMedian": 31160.27,
+       "exBestYearP10": 0,
+       "topEpisodeShareMedian": 0.7,
+       "lotsMedian": 10,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-13",
+        "firstEntry": "2020-03-16",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 72385.74,
+       "lots": 3,
+       "netWithout": 22462.57,
+       "ddWithout": 13195.69,
+       "arithmetic": 22462.57
+      },
+      "confirmQualificationOnly": {
+       "p10": 76400.3,
+       "p90Dd": 19731.26
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P02 3C R robust-profit",
+      "id": "03e7661f5535c450",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 17327.01,
+       "dd": 15699.66,
+       "lots": 7,
+       "episodes": 6,
+       "topEpisode": 25508.15,
+       "topEpisodeShare": 1.4722,
+       "years": {
+        "2016": 0,
+        "2017": -9525.99,
+        "2018": 0,
+        "2019": 25508.15,
+        "2020": 0,
+        "2021": 0,
+        "2022": -2206.14,
+        "2023": 0,
+        "2024": 3550.99
+       },
+       "exBestYear": -8181.14,
+       "worstYear": -9525.99,
+       "positiveYears": 2,
+       "years_n": 9,
+       "sessionsHeld": 105
+      },
+      "select": {
+       "n": 256,
+       "robust": 15474.52,
+       "median": 19873.54,
+       "p10": 11075.5,
+       "p90Dd": 20371.91,
+       "p95Dd": 21283.08,
+       "worst10Mean": 22351.22,
+       "worstDd": 28120.81,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 249,
+       "sameAsCentre": 0,
+       "clipped": 222,
+       "exBestYearMedian": -2155.35,
+       "exBestYearP10": -9159.77,
+       "topEpisodeShareMedian": 1.1,
+       "lotsMedian": 5,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-05-31",
+        "firstEntry": "2019-06-03",
+        "last": "2019-09-09"
+       },
+       "episodeNet": 25508.15,
+       "lots": 1,
+       "netWithout": -8181.14,
+       "ddWithout": 15699.66,
+       "arithmetic": -8181.14
+      },
+      "confirmQualificationOnly": {
+       "p10": 11389.98,
+       "p90Dd": 19537.78
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P04 3C O actual-profit",
+      "id": "2877497d4f370a06",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 33223.29,
+       "dd": 9681.73,
+       "lots": 10,
+       "episodes": 10,
+       "topEpisode": 10302.85,
+       "topEpisodeShare": 0.3101,
+       "years": {
+        "2016": 0,
+        "2017": -2343.13,
+        "2018": 5716.13,
+        "2019": 13651.14,
+        "2020": -1587,
+        "2021": 8709.27,
+        "2022": -1368.52,
+        "2023": 142.55,
+        "2024": 10302.85
+       },
+       "exBestYear": 19572.15,
+       "worstYear": -2343.13,
+       "positiveYears": 5,
+       "years_n": 9,
+       "sessionsHeld": 93
+      },
+      "select": {
+       "n": 256,
+       "robust": 7175.69,
+       "median": 14986.75,
+       "p10": -635.36,
+       "p90Dd": 35969.28,
+       "p95Dd": 39277.52,
+       "worst10Mean": 39859.59,
+       "worstDd": 46718.23,
+       "breachShare": 0.1133,
+       "breachInterval": [
+        0.08,
+        0.158
+       ],
+       "distinct": 255,
+       "sameAsCentre": 0,
+       "clipped": 208,
+       "exBestYearMedian": 3456.25,
+       "exBestYearP10": -8100.52,
+       "topEpisodeShareMedian": 0.63,
+       "lotsMedian": 11,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2024-03-26",
+        "firstEntry": "2024-03-27",
+        "last": "2024-04-10"
+       },
+       "episodeNet": 10302.85,
+       "lots": 1,
+       "netWithout": 22920.43,
+       "ddWithout": 9681.73,
+       "arithmetic": 22920.44
+      },
+      "confirmQualificationOnly": {
+       "p10": 196.44,
+       "p90Dd": 34776.6
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P05 3C O robust-profit",
+      "id": "53e0c3f74f770693",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 15362.24,
+       "dd": 20603.29,
+       "lots": 9,
+       "episodes": 7,
+       "topEpisode": 20732.44,
+       "topEpisodeShare": 1.3496,
+       "years": {
+        "2016": 0,
+        "2017": -1483.49,
+        "2018": 0,
+        "2019": 20331.86,
+        "2020": 0,
+        "2021": -3878.1,
+        "2022": 752.84,
+        "2023": 0,
+        "2024": -360.87
+       },
+       "exBestYear": -4969.62,
+       "worstYear": -3878.1,
+       "positiveYears": 2,
+       "years_n": 9,
+       "sessionsHeld": 122
+      },
+      "select": {
+       "n": 256,
+       "robust": 8922.49,
+       "median": 12618.77,
+       "p10": 5226.21,
+       "p90Dd": 30779.63,
+       "p95Dd": 32876.41,
+       "worst10Mean": 34538.55,
+       "worstDd": 42153.79,
+       "breachShare": 0.0352,
+       "breachInterval": [
+        0.0186,
+        0.0655
+       ],
+       "distinct": 255,
+       "sameAsCentre": 0,
+       "clipped": 189,
+       "exBestYearMedian": -7102.85,
+       "exBestYearP10": -14176.28,
+       "topEpisodeShareMedian": 1.62,
+       "lotsMedian": 10,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-05-13",
+        "firstEntry": "2019-05-14",
+        "last": "2019-09-10"
+       },
+       "episodeNet": 20732.44,
+       "lots": 2,
+       "netWithout": -5370.2,
+       "ddWithout": 13788.98,
+       "arithmetic": -5370.2
+      },
+      "confirmQualificationOnly": {
+       "p10": 5638.6,
+       "p90Dd": 30179.05
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P06 3C O balanced",
+      "id": "308bc4ed66df4e91",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 34872.8,
+       "dd": 10761.77,
+       "lots": 4,
+       "episodes": 4,
+       "topEpisode": 16106.72,
+       "topEpisodeShare": 0.4619,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": -2950.82,
+        "2019": 16106.72,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 8877.37,
+        "2024": 12839.53
+       },
+       "exBestYear": 18766.08,
+       "worstYear": -2950.82,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 141
+      },
+      "select": {
+       "n": 256,
+       "robust": 27528.71,
+       "median": 32432.87,
+       "p10": 22624.55,
+       "p90Dd": 17441.07,
+       "p95Dd": 18506.35,
+       "worst10Mean": 18915.63,
+       "worstDd": 22992.29,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 244,
+       "sameAsCentre": 0,
+       "clipped": 234,
+       "exBestYearMedian": 15747.75,
+       "exBestYearP10": 7148.92,
+       "topEpisodeShareMedian": 0.52,
+       "lotsMedian": 4,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2019-06-05",
+        "firstEntry": "2019-06-06",
+        "last": "2019-09-11"
+       },
+       "episodeNet": 16106.72,
+       "lots": 1,
+       "netWithout": 18766.08,
+       "ddWithout": 9733.94,
+       "arithmetic": 18766.08
+      },
+      "confirmQualificationOnly": {
+       "p10": 18963.76,
+       "p90Dd": 17512.21
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P07 3C G actual-profit",
+      "id": "637d3c4dc6275550",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 126406.73,
+       "dd": 18500.58,
+       "lots": 12,
+       "episodes": 9,
+       "topEpisode": 74624.62,
+       "topEpisodeShare": 0.5904,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 76780.63,
+        "2021": 0,
+        "2022": 24502.29,
+        "2023": 25123.81,
+        "2024": 0
+       },
+       "exBestYear": 49626.1,
+       "worstYear": 0,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 139
+      },
+      "select": {
+       "n": 256,
+       "robust": 72832.73,
+       "median": 88286.26,
+       "p10": 57379.2,
+       "p90Dd": 33605.92,
+       "p95Dd": 39139.25,
+       "worst10Mean": 40970.68,
+       "worstDd": 66455.77,
+       "breachShare": 0.0859,
+       "breachInterval": [
+        0.0574,
+        0.1267
+       ],
+       "distinct": 255,
+       "sameAsCentre": 0,
+       "clipped": 0,
+       "exBestYearMedian": 12922.61,
+       "exBestYearP10": -16566.72,
+       "topEpisodeShareMedian": 0.85,
+       "lotsMedian": 12,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-13",
+        "firstEntry": "2020-03-16",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 74624.62,
+       "lots": 3,
+       "netWithout": 51782.11,
+       "ddWithout": 14762.11,
+       "arithmetic": 51782.11
+      },
+      "confirmQualificationOnly": {
+       "p10": 59419.54,
+       "p90Dd": 32584.1
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P08 3C G robust-profit",
+      "id": "0e077cbd6f1a7ad7",
+      "cell": "rise",
+      "roles": [
+       "balanced"
+      ],
+      "centre": {
+       "net": 121008.75,
+       "dd": 18840.58,
+       "lots": 11,
+       "episodes": 9,
+       "topEpisode": 72083.24,
+       "topEpisodeShare": 0.5957,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 73431,
+        "2021": 0,
+        "2022": 16903.22,
+        "2023": 30674.53,
+        "2024": 0
+       },
+       "exBestYear": 47577.75,
+       "worstYear": 0,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 138
+      },
+      "select": {
+       "n": 256,
+       "robust": 88514.4,
+       "median": 102641.87,
+       "p10": 74386.94,
+       "p90Dd": 19486.53,
+       "p95Dd": 20317.67,
+       "worst10Mean": 21024.85,
+       "worstDd": 25190.59,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 255,
+       "sameAsCentre": 0,
+       "clipped": 0,
+       "exBestYearMedian": 30051.25,
+       "exBestYearP10": 0,
+       "topEpisodeShareMedian": 0.71,
+       "lotsMedian": 10,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-13",
+        "firstEntry": "2020-03-16",
+        "last": "2020-04-15"
+       },
+       "episodeNet": 72083.24,
+       "lots": 3,
+       "netWithout": 48925.51,
+       "ddWithout": 13234.39,
+       "arithmetic": 48925.51
+      },
+      "confirmQualificationOnly": {
+       "p10": 73706.4,
+       "p90Dd": 19486.53
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P09 3C G lower-drawdown",
+      "id": "6c2acbd872bec28d",
+      "cell": "rise",
+      "roles": [
+       "lower-drawdown"
+      ],
+      "centre": {
+       "net": 100056.17,
+       "dd": 17744.39,
+       "lots": 15,
+       "episodes": 7,
+       "topEpisode": 59365.26,
+       "topEpisodeShare": 0.5933,
+       "years": {
+        "2016": 0,
+        "2017": 7145.92,
+        "2018": -3010.02,
+        "2019": 0,
+        "2020": 59365.26,
+        "2021": -1204.89,
+        "2022": 13305.02,
+        "2023": 0,
+        "2024": 24454.87
+       },
+       "exBestYear": 40690.91,
+       "worstYear": -3010.02,
+       "positiveYears": 4,
+       "years_n": 9,
+       "sessionsHeld": 146
+      },
+      "select": {
+       "n": 256,
+       "robust": 57766.45,
+       "median": 64547.45,
+       "p10": 50985.46,
+       "p90Dd": 18154.23,
+       "p95Dd": 19766.04,
+       "worst10Mean": 19898.05,
+       "worstDd": 22954.2,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 246,
+       "sameAsCentre": 0,
+       "clipped": 112,
+       "exBestYearMedian": 6910.35,
+       "exBestYearP10": -4897.52,
+       "topEpisodeShareMedian": 0.89,
+       "lotsMedian": 12,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-02",
+        "firstEntry": "2020-03-03",
+        "last": "2020-03-20"
+       },
+       "episodeNet": 59365.26,
+       "lots": 4,
+       "netWithout": 40690.91,
+       "ddWithout": 14295.91,
+       "arithmetic": 40690.91
+      },
+      "confirmQualificationOnly": {
+       "p10": 51566.47,
+       "p90Dd": 18467.59
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P10 3B inclusion G actual-profit",
+      "id": "9833f2a7b836f55e",
+      "cell": "breakout",
+      "roles": [],
+      "centre": {
+       "net": 6772.78,
+       "dd": 11697.21,
+       "lots": 3,
+       "episodes": 3,
+       "topEpisode": 6879.04,
+       "topEpisodeShare": 1.0157,
+       "years": {
+        "2016": -1648.19,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 8420.97,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0
+       },
+       "exBestYear": -1648.19,
+       "worstYear": -1648.19,
+       "positiveYears": 1,
+       "years_n": 9,
+       "sessionsHeld": 64
+      },
+      "select": {
+       "n": 256,
+       "robust": 2774.93,
+       "median": 5495.56,
+       "p10": 54.3,
+       "p90Dd": 14571.65,
+       "p95Dd": 22368.62,
+       "worst10Mean": 20675.2,
+       "worstDd": 28143.18,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 84,
+       "sameAsCentre": 15,
+       "clipped": 234,
+       "exBestYearMedian": -1648.19,
+       "exBestYearP10": -1648.19,
+       "topEpisodeShareMedian": 1.02,
+       "lotsMedian": 3,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-07-07",
+        "firstEntry": "2020-07-08",
+        "last": "2020-07-30"
+       },
+       "episodeNet": 6879.04,
+       "lots": 1,
+       "netWithout": -106.26,
+       "ddWithout": 11474.4,
+       "arithmetic": -106.26
+      },
+      "confirmQualificationOnly": {
+       "p10": 104.32,
+       "p90Dd": 14623.42
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P11 3B inclusion G robust-profit",
+      "id": "0cfd9f38868930d9",
+      "cell": "breakout",
+      "roles": [],
+      "centre": {
+       "net": 6772.78,
+       "dd": 11697.21,
+       "lots": 3,
+       "episodes": 3,
+       "topEpisode": 6879.04,
+       "topEpisodeShare": 1.0157,
+       "years": {
+        "2016": -1648.19,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 8420.97,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0
+       },
+       "exBestYear": -1648.19,
+       "worstYear": -1648.19,
+       "positiveYears": 1,
+       "years_n": 9,
+       "sessionsHeld": 64
+      },
+      "select": {
+       "n": 256,
+       "robust": 3453.16,
+       "median": 5720.86,
+       "p10": 1185.46,
+       "p90Dd": 14571.65,
+       "p95Dd": 14571.65,
+       "worst10Mean": 16009.34,
+       "worstDd": 22906.77,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 71,
+       "sameAsCentre": 18,
+       "clipped": 235,
+       "exBestYearMedian": -1648.19,
+       "exBestYearP10": -1648.19,
+       "topEpisodeShareMedian": 1,
+       "lotsMedian": 3,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-07-07",
+        "firstEntry": "2020-07-08",
+        "last": "2020-07-30"
+       },
+       "episodeNet": 6879.04,
+       "lots": 1,
+       "netWithout": -106.26,
+       "ddWithout": 11474.4,
+       "arithmetic": -106.26
+      },
+      "confirmQualificationOnly": {
+       "p10": 1207.5,
+       "p90Dd": 14571.65
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P12 3B inclusion G balanced",
+      "id": "0b3f43cc522ffc6a",
+      "cell": "breakout",
+      "roles": [],
+      "centre": {
+       "net": 6927.65,
+       "dd": 13016.39,
+       "lots": 2,
+       "episodes": 2,
+       "topEpisode": 3992.59,
+       "topEpisodeShare": 0.5763,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 6927.65,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0
+       },
+       "exBestYear": 0,
+       "worstYear": 0,
+       "positiveYears": 1,
+       "years_n": 9,
+       "sessionsHeld": 80
+      },
+      "select": {
+       "n": 256,
+       "robust": 4125.72,
+       "median": 4968.81,
+       "p10": 3282.64,
+       "p90Dd": 13791.05,
+       "p95Dd": 14106.77,
+       "worst10Mean": 14098.29,
+       "worstDd": 14328.46,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 17,
+       "sameAsCentre": 11,
+       "clipped": 128,
+       "exBestYearMedian": 0,
+       "exBestYearP10": 0,
+       "topEpisodeShareMedian": 0.61,
+       "lotsMedian": 2,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-07-07",
+        "firstEntry": "2020-07-08",
+        "last": "2020-09-24"
+       },
+       "episodeNet": 3992.59,
+       "lots": 1,
+       "netWithout": 2935.06,
+       "ddWithout": 9917.08,
+       "arithmetic": 2935.06
+      },
+      "confirmQualificationOnly": {
+       "p10": 3367.07,
+       "p90Dd": 13851.81
+      }
+     },
+     {
+      "subject": "4A",
+      "cut": "C24",
+      "label": "control: P13 3B inclusion B actual-profit",
+      "id": "ffa6da0b165cef27",
+      "cell": "rise",
+      "roles": [],
+      "centre": {
+       "net": 55345.4,
+       "dd": 16310.49,
+       "lots": 14,
+       "episodes": 9,
+       "topEpisode": 45358.96,
+       "topEpisodeShare": 0.8196,
+       "years": {
+        "2016": 0,
+        "2017": 0,
+        "2018": -4587.34,
+        "2019": 0,
+        "2020": 40523.69,
+        "2021": -1718.2,
+        "2022": 14061.46,
+        "2023": 0,
+        "2024": 7065.8
+       },
+       "exBestYear": 14821.71,
+       "worstYear": -4587.34,
+       "positiveYears": 3,
+       "years_n": 9,
+       "sessionsHeld": 108
+      },
+      "select": {
+       "n": 256,
+       "robust": 35811.44,
+       "median": 43053.33,
+       "p10": 28569.55,
+       "p90Dd": 19059.31,
+       "p95Dd": 20663.44,
+       "worst10Mean": 21003.59,
+       "worstDd": 25535.8,
+       "breachShare": 0,
+       "breachInterval": [
+        0,
+        0.0148
+       ],
+       "distinct": 248,
+       "sameAsCentre": 0,
+       "clipped": 87,
+       "exBestYearMedian": 1085.81,
+       "exBestYearP10": -10954.79,
+       "topEpisodeShareMedian": 1.02,
+       "lotsMedian": 11,
+       "zeroLotDraws": 0
+      },
+      "causal": {
+       "window": {
+        "first": "2020-03-02",
+        "firstEntry": "2020-03-03",
+        "last": "2020-03-18"
+       },
+       "episodeNet": 45358.96,
+       "lots": 2,
+       "netWithout": 9986.44,
+       "ddWithout": 18504.33,
+       "arithmetic": 9986.44
+      },
+      "confirmQualificationOnly": {
+       "p10": 28573.87,
+       "p90Dd": 20072.17
+      }
+     }
+    ]
+   }
+  }
+ },
+ "compute": {
+  "stage": "stage4 C24 freeze (secondary-universe features, training door D24)",
+  "fresh": {
+   "training centre detailed (causal window)": 30,
+   "training causal blackout rerun": 30
+  },
+  "nextPeriod": {},
+  "hits": {},
+  "freshTotal": 60,
+  "nextPeriodTotal": 0,
+  "wallSeconds": 8.2,
+  "finished": "2026-11-10T23:13:41.460Z",
+  "cumulative": {
+   "fresh": 4866,
+   "nextPeriod": 618
+  }
+ },
+ "code": "304d4922ac208125d55971af10d4992e0d6047d8767851987ff42290a4c91c15",
+ "finished": "2026-11-10T23:13:41.461Z"
+}

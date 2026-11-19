@@ -1,0 +1,45 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-risk-metrics",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.2.0",
+  "sha256": "0085cff292161e15f59e122d45793200fee01c610306ed37a3a0fab195dd5e24"
+ },
+ "readAt": "2026-11-18T05:30:00Z",
+ "adoptedAt": "2026-11-18T05:40:45Z",
+ "protocol": {
+  "path": "research/vg-l0-risk-metrics/PROTOCOL.md",
+  "sha256": "0cfa32385edd7beb68a47284f9b2298d047b6a6e0022b4ce0edbcb21cbe0fb14"
+ },
+ "dateSplit": {
+  "development": { "from": "2016-01-04", "to": "2024-12-31" },
+  "validation": { "from": "2025-01-01", "to": "2026-10-30" },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles are selected for any use (diagnostic; adaptation AD1). The unchanged NL0 original rule (P0) and RA1 (P1) are re-applied to Assignment 3's archived populations as controls; the experimental selectors P2 (capital-and-stop-aware, MDD-hard) and P2b (alternative constraint) are frozen in PROTOCOL.md §9 before any P2 result and compared retrospectively; nothing is nominated, adopted or deployed.",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 6200,
+  "notes": "No search proposals (diagnostic). backendEvaluations caps all fresh simulations: bounded deterministic replays of fixed, already-sealed configurations (PROTOCOL.md §10: S0+S3 candidates <= 160, S3 regenerated selection families <= 3,100, S4 DD-infeasible centres <= 120, S5 member, fold, item-9 and C24 rows <= 2,800). Record and search-archive reads are counted apart and are not simulations."
+ },
+ "deviations": [
+  { "id": "AD1", "section": "§2.3, §2.5", "kind": "adaptation", "description": "no primary or role is selected for any use; selectors are compared retrospectively on archived populations", "justification": "brief Stage 5 and success criterion: do not optimize new phenotypes, promote N/original or replace New L0", "userAgreement": null },
+  { "id": "AD2", "section": "§0.2, §5.8, §5.9", "kind": "departure", "description": "the experimental selectors P2/P2b use trade principal loss, banked-capital drawdown, the stop-aware conservative value of the open lot and a bounded-loss-exit tier as gates and ranking inputs (study-scoped; P0, P1, Q1-Q6 and the standard unchanged)", "justification": "the brief's Stage 5 asks for exactly such a capital-and-stop-aware selector to be designed and compared", "userAgreement": "brief/BRIEF.md Stage 5: 'Prepare explicit, versioned experimental alternatives ... P2 / capital-and-stop-aware: a proposed selector that distinguishes losses below trade principal from profitable-trade giveback, accounts for actual stop state and exposure, and preserves portfolio MDD/margin headroom as material risks.'" },
+  { "id": "AD3", "section": "§1.2, §1.4, §1.6", "kind": "adaptation", "description": "FULL (previously examined) is opened only to replay fixed configurations already sealed by completed studies with sealed FULL guards, and for descriptive C24 rows of the frozen P2 primaries; no choice uses it", "justification": "brief Stage 0 and Stage 3 require full-history parity and metrics of the sealed candidates", "userAgreement": null },
+  { "id": "AD4", "section": "§4, §0.1", "kind": "adaptation", "description": "no search and no new vector; bounded deterministic replays of sealed configurations and of sealed neighbourhood families regenerated with the audited study's code and seeds (cap 6,200)", "justification": "brief: 'NOT another multimillion-evaluation optimization'; Stage 3 and Stage 5.8 allow the narrowest read-only replays", "userAgreement": null },
+  { "id": "AD5", "section": "§6.3", "kind": "adaptation", "description": "no tuning benchmark; in-process replays in one contained systemd unit at a time; observed memory reported", "justification": "standard §6.3: diagnostics report observed use instead of benchmarking", "userAgreement": null },
+  { "id": "AD6", "section": "§1.8, §1.9", "kind": "adaptation", "description": "P2/P2b fold paths are retrospective (designed after the slices and P0/P1 outcomes were examined); reported with Assignment 3's frozen labels but never as independent chronological evidence", "justification": "brief Stage 5.6 and 5.10", "userAgreement": null }
+ ]
+}

@@ -1,0 +1,278 @@
+// The frozen selection and the one-time validation (PROTOCOL.md §11–§12; Assignment 2's final.ts on this study's
+// populations and successor rule).
+//
+// FROZEN_SELECTION.json (sealed and COMMITTED before FULL opens): the C24 primary of every population × selector
+// procedure (Track I: L, B, F — each with its sealed INDEPENDENT chronological verdict; Track N: N, U — "incumbent-informed;
+// no independent chronological test"), the populations' NL0 roles, the structurally distinct finalists (the best
+// qualified member of every GDX × VGT family pair, per track), New L0's C24 evidence (a control) and the three other
+// incumbents (Track N members), every procedure's frozen successor status, and the validation plan.
+// VALIDATION (FULL, once, under the guard): every finalist, the incumbents and New L0 in one continuous run 2016-01-04 →
+// 2026-10-30 with the 2024-12-31 boundary (state and marks preserved): V1 validation P&L > 0; V2 reset validation DD ≤
+// $35,000; V3 whole-run DD ≤ $35,000; the stresses report-only. First check: New L0 reproduces its known full-history
+// figures exactly. A failed validation is a result: no new winner, no rescue search, no retuning, no relabelling.
+// 2025–2026 is previously examined history, not an untouched holdout.
+import fs from 'node:fs';
+import path from 'node:path';
+import { recordOf } from '../vg-d1-growth-joint/evaluate.ts';
+import type { EvalOptions } from '../vg-d1-growth-joint/evaluate.ts';
+import { runWithControls2 } from '../d1-risk-controls-rc2/run.ts';
+import { chronology, economics, frozenSelectionFile, log, r2, repoRoot, STUDY } from './context.ts';
+import { checkFullGuard, openStudyDoor } from './doors.ts';
+import { vOptions } from './nl0.ts';
+import { type Evidence, stresses } from './qualify.ts';
+import { isSealed, readJson, sha256File } from './records.ts';
+import { type Cfg, canonicalCfg, cellOf, families, quadOf } from './space.ts';
+import { type PopulationName, type SelectorName, c24Populations, independentPopulation, populationLabel, selectionSummary, selectorNames } from './select.ts';
+import { sequentialFile } from './folds.ts';
+import { type Env, assertCommitted, evidenceOf, seal, selectionFile, studyGuards } from './stages.ts';
+
+export const knownNewL0 = {
+  full: { net: 479605.18, dd: 20385.99, lots: 46 },
+  validation: { pnl: 96883.72, resetDd: 20385.99 },
+  development: { net: 382721.46, dd: 19459.83, lots: 34 }
+};
+
+// the frozen comparison band of the successor rule's risk condition (Assignment 2's §11.3 band)
+export const riskBand = 2_500;
+// the selectors eligible to nominate a successor: NL0's original rule and RA1 (RA2 is a secondary ablation)
+export const nominatingSelectors: SelectorName[] = ['original', 'RA1'];
+
+const finalCut = (env: Env) => (env.schedule === 'study' ? 'C24' : 'P18');
+export const frozenFileOf = (env: Env) => (env.schedule === 'study' ? frozenSelectionFile : path.join(env.outDir, 'FROZEN_SELECTION.json'));
+export const validationFileOf = (env: Env) => path.join(env.outDir, 'validation', 'validation.json');
+
+// New L0's frontier comparison (development, C24 evidence, the same instrument): X is dominated by New L0 iff New L0 is at
+// least as good on both coordinates of a pair and strictly better on one.
+const dominatedOn = (x: [number, number], y: [number, number]) => y[0] >= x[0] && y[1] <= x[1] && (y[0] > x[0] || y[1] < x[1]);
+export const frontierVsNewL0 = (x: Evidence, nl0: Evidence) => ({
+  dNet: r2(x.centre.net - nl0.centre.net),
+  dDd: r2(x.centre.dd - nl0.centre.dd),
+  dConfirmP10: r2(x.confirm.p10 - nl0.confirm.p10),
+  dConfirmP90Dd: r2(x.confirm.p90Dd - nl0.confirm.p90Dd),
+  dConfirmWorst10Mean: r2(x.confirmTail.worst10Mean - nl0.confirmTail.worst10Mean),
+  dWorstLotMae: r2(x.risk.mae.worst - nl0.risk.mae.worst),
+  dominatedOnCentre: dominatedOn([x.centre.net, x.centre.dd], [nl0.centre.net, nl0.centre.dd]),
+  dominatedOnNeighbourhood: dominatedOn([x.confirm.p10, x.confirm.p90Dd], [nl0.confirm.p10, nl0.confirm.p90Dd])
+});
+
+// The successor rule's condition (d), "materially stronger downside risk than New L0" on the C24 evidence: the
+// confirmation family's worst-10% mean DD at least $2,500 lower, AND the centre DD not more than $2,500 higher, AND the
+// worst per-lot adverse excursion not more than $2,500 worse.
+export const strongerRisk = (x: Evidence, nl0: Evidence) => ({
+  tail: x.confirmTail.worst10Mean <= nl0.confirmTail.worst10Mean - riskBand,
+  centreDd: x.centre.dd <= nl0.centre.dd + riskBand,
+  worstLot: x.risk.mae.worst >= nl0.risk.mae.worst - riskBand
+});
+
+export const freezeSelection = async (env: Env) => {
+  const file = frozenFileOf(env);
+  const cut = finalCut(env);
+
+  studyGuards(env);
+  if (fs.existsSync(file)) throw new Error('FROZEN_SELECTION.json exists');
+
+  const selFile = selectionFile(env, cut);
+
+  if (!isSealed(selFile)) throw new Error(`the ${cut} selection is not sealed`);
+  if (env.schedule === 'study') assertCommitted(selFile);
+
+  const seqFile = sequentialFile(env);
+  const sequential =
+    env.schedule === 'study' || fs.existsSync(seqFile)
+      ? readJson<{ procedures: { population: PopulationName; selector: SelectorName; verdict: string; supported: boolean; path: { net: number; sequentialDd: number } }[] }>(seqFile)
+      : null;
+  const sel = readJson<{ primaries: Record<PopulationName, Record<SelectorName, string | null>>; roles: Record<PopulationName, { roles: Record<string, string | null> }>; control: Evidence | null }>(selFile);
+  const all = evidenceOf(env, cut).filter((e) => e.stage !== 'control');
+  const byLabel = new Map(all.map((e) => [e.label, e]));
+  const nl0 = sel.control;
+
+  if (!nl0) throw new Error('New L0’s C24 evidence is missing');
+
+  const finalists = new Map<string, { evidence: Evidence; why: string[] }>();
+  const add = (label: string | null | undefined, why: string) => {
+    if (!label) return;
+
+    const f = finalists.get(label);
+
+    if (f) f.why.push(why);
+    else finalists.set(label, { evidence: byLabel.get(label)!, why: [why] });
+  };
+
+  for (const p of c24Populations) {
+    for (const s of selectorNames) add(sel.primaries[p][s], `C24 primary ${p}/${s}`);
+    for (const [r, l] of Object.entries(sel.roles[p].roles)) add(l, `C24 role ${p}/${r}`);
+  }
+  for (const track of ['I', 'N'] as const)
+    for (const g of families)
+      for (const v of families) {
+        const best = all
+          .filter((e) => e.track === track && e.stage !== 'incumbent' && e.qualified && cellOf(e.cell).GDX.family === g && cellOf(e.cell).VGT.family === v)
+          .sort((a, b) => b.centre.net - a.centre.net || (a.label < b.label ? -1 : 1))[0];
+
+        add(best?.label, `structurally distinct finalist: Track ${track}'s best qualified centre net with D1·GDX family ${g} and D1·VGT family ${v}`);
+      }
+  for (const e of all.filter((x) => x.stage === 'incumbent')) add(e.label, 'incumbent (Track N member; informed; chosen with later data)');
+
+  const verdict = (p: PopulationName, s: SelectorName) => sequential?.procedures.find((x) => x.population === p && x.selector === s) ?? null;
+  const procedures = c24Populations.flatMap((p) =>
+    selectorNames.map((s) => {
+      const label = sel.primaries[p][s];
+      const e = label ? byLabel.get(label)! : null;
+      const v = independentPopulation(p) ? verdict(p, s) : null;
+      const frontier = e ? frontierVsNewL0(e, nl0) : null;
+      const risk = e ? strongerRisk(e, nl0) : null;
+      const nominating = independentPopulation(p) && nominatingSelectors.includes(s);
+      const status = !e
+        ? 'no C24 primary'
+        : !independentPopulation(p)
+          ? 'incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)'
+          : !nominating
+            ? 'secondary ablation (RA2): reported, never a successor nomination'
+            : !v?.supported
+              ? 'no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)'
+              : frontier!.dominatedOnCentre || frontier!.dominatedOnNeighbourhood
+                ? 'chronologically supported but dominated by New L0 on development: not a qualifying successor'
+                : !(risk!.tail && risk!.centreDd && risk!.worstLot)
+                  ? 'chronologically supported and not dominated, but without materially stronger downside risk than New L0 (condition d): not a qualifying successor'
+                  : 'candidate qualifying successor pending the one-time validation (V1–V3)';
+
+      return {
+        population: p,
+        populationLabel: populationLabel[p],
+        selector: s,
+        primary: label,
+        independence: independentPopulation(p) ? 'independent chronological procedure (Track I)' : 'incumbent-informed; no independent chronological test',
+        verdict: independentPopulation(p) ? (v?.verdict ?? 'no sequential record (pilot)') : 'not applicable (C24 only)',
+        frontierVsNewL0: frontier,
+        strongerRisk: risk,
+        status
+      };
+    })
+  );
+  const record = {
+    kind: `${STUDY} frozen selection`,
+    frozenAt: new Date().toISOString(),
+    cutoff: cut,
+    pins: {
+      selection: { file: path.relative(repoRoot, selFile), sha256: sha256File(selFile) },
+      sequential: sequential ? { file: path.relative(repoRoot, seqFile), sha256: sha256File(seqFile) } : null
+    },
+    primaries: sel.primaries,
+    roles: sel.roles,
+    procedures,
+    finalists: [...finalists.values()].map((f) => ({
+      ...selectionSummary(f.evidence),
+      why: f.why,
+      cfg: f.evidence.cfg,
+      confirm: f.evidence.confirm,
+      confirmTail: f.evidence.confirmTail,
+      gates: f.evidence.gates,
+      qualified: f.evidence.qualified
+    })),
+    newL0: { ...selectionSummary(nl0), cfg: nl0.cfg, confirm: nl0.confirm, confirmTail: nl0.confirmTail, worstLotMae: nl0.risk.mae.worst },
+    qualifyingSuccessorRule:
+      'a C24 primary of a Track I procedure (population L, B or F × selector original or RA1) is a qualifying successor iff (a) it passed Q1–Q6 at C24; (b) its procedure’s sequential chronological verdict is supported; (c) it is not dominated by New L0 (C24 evidence, same instrument) on (centre net, centre DD) nor on (confirmation p10, confirmation p90 DD); (d) it has materially stronger downside risk than New L0 on the C24 evidence: confirmation worst-10% mean DD ≤ New L0’s − $2,500, centre DD ≤ New L0’s + $2,500, worst per-lot MAE ≥ New L0’s − $2,500; (e) it passes V1–V3 once on FULL. Track N and U primaries are incumbent-informed with no independent chronological test and are never qualifying successors; RA2 is a secondary ablation. Otherwise: research-only (with the reason). "No qualifying successor" is a valid outcome. Deployment would still need the user’s decision.',
+    validationPlan: {
+      door: 'FULL',
+      window: [chronology.firstSession, chronology.validationEnd],
+      boundary: chronology.developmentEnd,
+      subjects: [...[...finalists.keys()], 'control: New L0'],
+      tests: { V1: 'validation P&L > 0', V2: 'reset validation DD ≤ $35,000', V3: 'whole-run DD ≤ $35,000' },
+      reportOnly: Object.keys(stresses),
+      firstCheck: `New L0 reproduces ${JSON.stringify(knownNewL0.full)} exactly`,
+      evidenceLabel: 'validation on previously examined history (2025-01-02 → 2026-10-30), not an untouched holdout'
+    }
+  };
+
+  seal(env, file, record, 'frozen selection');
+  log(`frozen selection: ${record.finalists.length} finalists; ${procedures.map((p) => `${p.population}/${p.selector}: ${p.status.split(':')[0]}`).join('; ')}`);
+  return record;
+};
+
+// ----- validation (FULL, once) -----
+
+// the boundary is the development end on FULL (the pilot's stand-in door D19 uses its pseudo-fold's cutoff)
+const fullRun = (door: Awaited<ReturnType<typeof openStudyDoor>>, cfg: Cfg, friction?: EvalOptions['friction'], boundary: string = chronology.developmentEnd) => {
+  const o: EvalOptions = { ...vOptions, boundaries: [boundary], ...(friction ? { friction } : {}) };
+  const x = runWithControls2(door, quadOf(cfg), cfg.controls, o, false, false);
+  const rec = recordOf(door, quadOf(cfg), x, o);
+  const p = rec.periods[0]!;
+
+  return {
+    net: rec.net,
+    dd: rec.dd,
+    lots: rec.lots,
+    developmentNet: r2(p.equity),
+    validationPnl: r2(p.after),
+    resetValidationDd: r2(p.dd),
+    years: rec.years,
+    open: x.result.lots.filter((l) => l.open).map((l) => ({ book: l.book, entry: door.dates[l.entryS] })),
+    V1: p.after > 0,
+    V2: p.dd <= economics.ceiling,
+    V3: rec.dd <= economics.ceiling
+  };
+};
+
+export const runValidation = async (env: Env) => {
+  const file = validationFileOf(env);
+  const frozen = frozenFileOf(env);
+
+  studyGuards(env);
+  if (fs.existsSync(file)) throw new Error('the validation record exists: FULL is evaluated once');
+  if (!isSealed(frozen)) throw new Error('FROZEN_SELECTION.json is not sealed');
+  if (env.schedule === 'study') checkFullGuard();
+
+  const f = readJson<{ finalists: { label: string; cfg: Cfg }[]; newL0: { cfg: Cfg }; procedures: { population: PopulationName; selector: SelectorName; primary: string | null; status: string }[] }>(frozen);
+  const door = env.schedule === 'study' ? await openStudyDoor('FULL', 'validation (once) of the frozen selection') : await openStudyDoor('D19', 'pilot validation stand-in');
+  const boundary = env.schedule === 'study' ? chronology.developmentEnd : '2018-12-31';
+  const nl0 = fullRun(door, canonicalCfg(f.newL0.cfg), undefined, boundary);
+
+  if (env.schedule === 'study' && (r2(nl0.net) !== knownNewL0.full.net || r2(nl0.dd) !== knownNewL0.full.dd || nl0.lots !== knownNewL0.full.lots))
+    throw new Error(`New L0 does not reproduce on FULL: ${JSON.stringify({ net: nl0.net, dd: nl0.dd, lots: nl0.lots })}`);
+
+  const rows = f.finalists.map((x) => {
+    const cfg = canonicalCfg(x.cfg);
+
+    return {
+      label: x.label,
+      cell: cfg.cell,
+      ...fullRun(door, cfg, undefined, boundary),
+      stresses: Object.fromEntries(
+        Object.entries(stresses).map(([k, fr]) => {
+          const s = fullRun(door, cfg, fr, boundary);
+
+          return [k, { net: r2(s.net), dd: r2(s.dd), validationPnl: s.validationPnl, resetValidationDd: s.resetValidationDd }];
+        })
+      )
+    };
+  });
+  const successor = f.procedures.map((p) => {
+    const row = rows.find((r) => r.label === p.primary);
+    const passes = row ? row.V1 && row.V2 && row.V3 : false;
+
+    return {
+      ...p,
+      validation: row ? { V1: row.V1, V2: row.V2, V3: row.V3 } : null,
+      finalStatus: p.status.startsWith('candidate qualifying successor')
+        ? passes
+          ? 'QUALIFYING SUCCESSOR (all frozen criteria met; a research nomination only: deployment still needs the user’s decision)'
+          : 'not a qualifying successor: failed the one-time validation'
+        : p.status
+    };
+  });
+  const record = {
+    stage: 'validation',
+    door: env.schedule === 'study' ? 'FULL' : 'D19 (pilot stand-in)',
+    frozenSelectionSha256: sha256File(frozen),
+    evidenceLabel: 'validation on previously examined history, not an untouched holdout',
+    newL0: { ...nl0, reproduced: env.schedule === 'study' },
+    rows,
+    successor,
+    qualifyingSuccessors: successor.filter((s) => s.finalStatus.startsWith('QUALIFYING')).map((s) => s.primary),
+    finished: new Date().toISOString()
+  };
+
+  seal(env, file, record, 'validation');
+  log(`validation: ${rows.length} finalists; qualifying successors: ${record.qualifyingSuccessors.length ? record.qualifyingSuccessors.join(', ') : 'none'}`);
+  return record;
+};

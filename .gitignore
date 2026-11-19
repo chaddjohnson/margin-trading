@@ -93,3 +93,32 @@ research/study5-gdx-d1-b5-three-etf-2026-10/results/studyA/*/screen.jsonl
 research/study5-gdx-d1-b5-three-etf-2026-10/results/studyA/*/ga-r*.jsonl
 research/study5-gdx-d1-b5-three-etf-2026-10/results/track1/*/*.jsonl
 research/study5-gdx-d1-b5-three-etf-2026-10/results/track2/archive.jsonl
+
+# Strategy Lab runtime state: SQLite database, run artifacts, imports, API token (apps/strategy-lab, docs/strategy-lab)
+/state/
+
+# growth140-vgt-s8m: the search's per-evaluation point archive (≈ 81 MB gzip; regenerable from the frozen code, seeds and
+# data; its sha256 is in research/growth140-vgt-s8m/results/archive/MANIFEST.json; the SQLite original is in .cache/)
+research/growth140-vgt-s8m/results/archive/search/points-*.jsonl.gz
+# growth140-vgt-stable: the four searches' per-evaluation point and configuration shards (65–81 MB and ≈ 19 MB gzip
+# each; regenerable from the frozen code, seeds and doors; sha256 in research/growth140-vgt-stable/results/archive/
+# MANIFEST.json; the SQLite originals are in .cache/). The fits shards (every centre with its neighbourhood) are kept.
+research/growth140-vgt-stable/results/archive/search-*/points-*.jsonl.gz
+research/growth140-vgt-stable/results/archive/search-*/configs-*.jsonl.gz
+
+# GPU Phase 1 feasibility (research/gpu-phase1-feasibility): compiled CUDA binaries, exported binary bar caches and raw
+# profiler/benchmark scratch are local build artifacts (rebuild with the commands in RUN_COMMANDS.md); only sources,
+# reports and small CSV/JSON metrics are versioned
+research/gpu-phase1-feasibility/build/
+research/gpu-phase1-feasibility/cache/
+research/gpu-phase1-feasibility/results/raw-large/
+# GPU Phase 2 (research/gpu-phase2) and the GPU backend: compiled CUDA binaries, exported binary datasets, job caches
+# and large raw outputs (local build artifacts; their sha256 are recorded in the study's records)
+research/gpu-phase2/build/
+research/gpu-phase2/cache/
+research/gpu-phase2/results/raw-large/
+# GPU Phase 3 (research/gpu-phase3): compiled CUDA binaries, exported binary datasets, job caches and large raw outputs
+# (local build artifacts; their sha256 are recorded in the study's records)
+research/gpu-phase3/build/
+research/gpu-phase3/cache/
+research/gpu-phase3/results/raw-large/

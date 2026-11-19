@@ -1,0 +1,138 @@
+{
+  "study": "vg-balanced-entry-eligibility",
+  "frozenAt": "2026-11-07T23:38:17.598Z",
+  "protocol": {
+    "file": "research/vg-balanced-entry-eligibility/PROTOCOL.md",
+    "sha256": "9636fc1f2ffef03aa579c68a4be6671345de04e3f837f41a28046470736213b4"
+  },
+  "protocolFreeze": {
+    "file": "results/protocol-freeze.json",
+    "sha256": "0532f2a67254138eb00e3d57957dfe24b8ac48e5edb2802a7aa7e6a07b505075"
+  },
+  "evaluationCodeDigest": "03bbcafa02e12b683c9c4cf218e3bd50f7d5f916d0f95aa74c923d303b434bce",
+  "amendmentHead": "E2",
+  "c24": {
+    "selection": {
+      "file": "results/folds/C24/selection.json",
+      "sha256": "350c5107ebff476e543d8053e7fd0e62a1dab4964a5aa5d37200fd993226271d"
+    },
+    "selected": {
+      "key": "{\"eligibility\":{}}",
+      "label": "OFF",
+      "spec": {
+        "eligibility": {}
+      },
+      "reason": "no qualifying improvement"
+    },
+    "roleHolders": [],
+    "outcome": "no qualifying improvement: OFF (the control) retained"
+  },
+  "folds": [
+    {
+      "fold": "C19",
+      "selection": {
+        "file": "results/folds/C19/selection.json",
+        "sha256": "3d2e6a3569f29344395ae5779a9e1efc6ab9d30552cbc414b53d06d098d1900b"
+      },
+      "evaluation": {
+        "file": "results/folds/C19/evaluation.json",
+        "sha256": "82054f66e46c0f2510241fe05810856796566eeb19694c6abbd88f2eefbdea00"
+      },
+      "selected": "OFF"
+    },
+    {
+      "fold": "C21",
+      "selection": {
+        "file": "results/folds/C21/selection.json",
+        "sha256": "882cee53f8bd4a7d54bb7693b85f0be838f2d49ecdaffe30cfe567e60f9e9e7a"
+      },
+      "evaluation": {
+        "file": "results/folds/C21/evaluation.json",
+        "sha256": "eeb71e9fcc692b4635e2edb1469a30ce4107f3e9778b685ac9e0aaa7d9483b7f"
+      },
+      "selected": "OFF"
+    },
+    {
+      "fold": "C23",
+      "selection": {
+        "file": "results/folds/C23/selection.json",
+        "sha256": "efe5f317e11265d2ab6eb94e4b8d07eca708d9152cad0d21b9be1b1f5093db0b"
+      },
+      "evaluation": {
+        "file": "results/folds/C23/evaluation.json",
+        "sha256": "b4024abb8e908d6d52199ce282422b4506a927e1eac0bc4ed81a6f95cd5372db"
+      },
+      "selected": "OFF"
+    },
+    {
+      "fold": "C24",
+      "selection": {
+        "file": "results/folds/C24/selection.json",
+        "sha256": "350c5107ebff476e543d8053e7fd0e62a1dab4964a5aa5d37200fd993226271d"
+      },
+      "evaluation": null,
+      "selected": "OFF"
+    }
+  ],
+  "reference": {
+    "label": "VGT+GDX A20 E5.0%",
+    "spec": {
+      "eligibility": {
+        "VGT": {
+          "A": 20,
+          "e": 50
+        },
+        "GDX": {
+          "A": 20,
+          "e": 50
+        }
+      }
+    },
+    "note": "report-only upper bound of activity (PROTOCOL.md §9); never a candidate"
+  },
+  "developmentDiagnostics": {
+    "file": "results/diagnostics/D24/diagnostics.json",
+    "sha256": "72d4e928c6f472c873cd20cd7dc42c38a808c9898588edf9fd697ebdcdc2c474"
+  },
+  "validation": {
+    "door": "FULL",
+    "window": {
+      "first": "2025-01-02",
+      "last": "2026-10-30",
+      "label": "2025–2026 validation on previously examined history"
+    },
+    "runs": [
+      "OFF",
+      "VGT+GDX A20 E5.0%"
+    ],
+    "tests": "not applicable: no role holder (V1–V3 apply to role holders only)",
+    "reportOnly": {
+      "neighbourhood": {
+        "subject": "VGT+GDX A20 E5.0%",
+        "draws": 32,
+        "seedLabels": [
+          "confirm",
+          "C24",
+          "VGT+GDX",
+          20,
+          50
+        ]
+      },
+      "d1Stress": {
+        "subject": "VGT+GDX A20 E5.0%",
+        "family": "confirm",
+        "n": 128,
+        "paired": "OFF at the same D1 point"
+      },
+      "friction": [
+        "10 bps per side",
+        "20 bps per side",
+        "14% interest",
+        "next-open stop fills",
+        "+25 bps stop slippage",
+        "delayed entries at the fill minute high"
+      ]
+    },
+    "rule": "one opening; no retuning; a failure is reported, never repaired; no winner by validation profit"
+  }
+}

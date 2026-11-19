@@ -1,0 +1,14 @@
+[vgt-d1-growth-separate-pooled 21:49:31Z] job pilot-p1-neighbourhood: 2 worker(s), cgroup /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/vgtpair.slice/vgtpair-pilot-p1a.service (memory.high 47244640256, memory.max 51539607552, swap.max 0)
+[vgt-d1-growth-separate-pooled 21:49:48Z] pool failure: worker 1010820 exited (SIGKILL)
+[vgt-d1-growth-separate-pooled 21:49:48Z] job pilot-p1-neighbourhood: failed: worker 1010820 exited (SIGKILL) (606 fresh, 0 archive hits); peak cgroup 928808960, peak RSS 1062281216
+/home/chad/projects/margin-trading/src/vgt-d1-growth-separate-pooled/pool.ts:126
+        const error = new Error(`worker ${child.pid} exited (${code ?? signal})`);
+                      ^
+
+Error: worker 1010820 exited (SIGKILL)
+    at ChildProcess.<anonymous> (/home/chad/projects/margin-trading/src/vgt-d1-growth-separate-pooled/pool.ts:126:23)
+    at ChildProcess.wrapper (node:events:639:12)
+    at ChildProcess.emit (node:events:514:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:295:12)
+
+Node.js v24.21.0

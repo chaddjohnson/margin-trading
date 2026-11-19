@@ -252,6 +252,9 @@ exactly (every summary field and daily row).
   makes them part of the tuning data, so they no longer measure out-of-sample performance; keep final-period results
   out of optimization reports and strategy selection.
 - VGT's 2024–2025 period was inspected by earlier VGT programs, so it is not a sealed holdout for VGT.
+- New optimization studies follow [docs/research/OPTIMIZATION_STANDARD.md](docs/research/OPTIMIZATION_STANDARD.md)
+  (development 2016–2024, validation 2025–2026 of frozen selections only; adoption preflight
+  `npm run research-preflight`). Research priorities: [docs/research/ROADMAP.md](docs/research/ROADMAP.md).
 
 ### Legacy research inputs and reproducibility
 
@@ -323,3 +326,23 @@ Strategies can run named, symbol-specific parameter sets kept as JSON under `con
 Named multi-book **pools** bundle D1 phenotypes with one shared $100,000 funded slot: B4 (default) and B5 (leading
 incumbent) in `config/pools/`, run with `npm run pools -- fixed B4` (or `portfolio`, `compare B4 B5`, `verify`), and
 their prospective comparison after 2026-10-13. See [docs/pools/README.md](docs/pools/README.md).
+
+## Strategy Lab (research workbench)
+
+A local browser workbench for strategy research. It shows saved runs in SQLite and entry and exit markers per symbol
+on real minute data — on daily OHLC candles or the intraday minute line — with Eastern timestamps, bookmarks, notes
+and two-run comparison. It can start **one** manual test
+of an entry strategy on real data from the browser. It never optimises: sweeps and selection stay Claude/CLI
+workflows. The app is self-contained in `apps/strategy-lab/`. Its signal-only strategy lives in `src/entry-signals/`;
+**Growth**, the trading backtest built on it (`rise-from-recent-low-trading`: the same signals with the D1 exits,
+optional continuation entries, an optional entry trend filter, optional persistent entry eligibility, the optional
+trend-breakout entry, initial risk stop and trend retention, and the optional Drawdown Recovery Gate, standalone per
+symbol), lives in `src/growth-trading/`. Selected phenotypes of finished
+studies can be imported and rerun one at a time, and every run downloads as a research bundle.
+
+```sh
+npm --prefix apps/strategy-lab start   # http://127.0.0.1:4317 (over the tailnet: see docs/strategy-lab/OPERATIONS.md)
+```
+
+Documentation: `docs/strategy-lab/README.md` (Interactive Preview: `docs/strategy-lab/INTERACTIVE_PREVIEW.md`). Research
+direction: `docs/research/growth-entry-discovery/PLAN.md`.

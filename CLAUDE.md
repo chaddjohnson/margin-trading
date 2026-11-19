@@ -13,25 +13,55 @@
 - Normative text: [docs/research/OPTIMIZATION_STANDARD.md](docs/research/OPTIMIZATION_STANDARD.md) §9 (3.0.0). Engineering
   procedure and merge gate: [docs/gpu/PARITY_CHECKLIST.md](docs/gpu/PARITY_CHECKLIST.md); feature matrix:
   [docs/gpu/FEATURE_MATRIX.md](docs/gpu/FEATURE_MATRIX.md); operations: [docs/gpu/README.md](docs/gpu/README.md).
-- **Status on `main` (documentation only):** the CUDA evaluator and the enforcement code — the official gate
-  `openOfficialGpuSession` → `GpuPool` → `EvalLab` (`src/gpu-backend/`), the preflight's §9 rules, the purpose gate on
-  every legacy CPU research script and the policy/merge-gate tests — live on branch `research/gpu-phase2` and are NOT
-  merged into `main` (merging them needs the user's separate approval). Until they are, no official optimization can
-  run from `main`: there is no gate to open, and a CPU run must never stand in for one.
-- On `research/gpu-phase2` the evaluator is ACCEPTED (2026-11-19; `config/gpu-backend/acceptance.json` there): official
-  GPU optimization can run only from that branch's gate, only after the user authorizes a study, and only while the
-  acceptance matches the tree (`research/gpu-phase2/GPU_PHASE2_HANDOFF.md`).
+- Official runs go only through `openOfficialGpuSession` (src/gpu-backend/official.ts) → `GpuPool` (the parallel host
+  path: 8 worker threads by default) → `EvalLab` (src/gpu-backend/); an official study's npm script starts its runner
+  through `src/gpu-backend/officialRunner.ts`. The preflight (`npm run research-preflight`) refuses an official study
+  until `config/gpu-backend/acceptance.json` (schema 2) is ACCEPTED and matches the tree. Status: **ACCEPTED
+  2026-11-19 by research/gpu-phase3/** (binary `06a4a04a…`, RTX 5090 `GPU-ae5f222c…`, record sha256
+  `b08738bea6f40aa2…`); any change to a file of the evaluation manifest (CPU closure, CUDA, host path) or of the pinned
+  enforcement group makes it STALE and blocks official runs until the parity checklist is repeated (§2, or §2a for an
+  enforcement-only change). `tools/gpu-backend/verify-acceptance.sh` re-verifies the record without the TypeScript
+  validator. Official optimization still needs the user's authorization of each study.
 - CPU evaluation is allowed only under an explicit non-official purpose (`GPU_POLICY_PURPOSE=cpu-reference | diagnostic |
-  parity-test | benchmark | strategy-lab`). Never present CPU results, or a CPU/GPU hybrid, as official optimization.
-  Any real exception needs the user's explicit approval first.
-- A CPU-only CI pass is never complete parity — the Apollo GPU verification (parity campaign, sanitizer, negative
-  tests, fixed-seed mini-optimization) is required and recorded in the acceptance record.
+  parity-test | benchmark | strategy-lab`); every legacy CPU runner's npm script enforces this. Never present CPU
+  results, or a CPU/GPU hybrid, as official optimization. Any real exception needs the user's explicit approval first.
+- `npm test` includes the merge gate (src/gpu-backend/tests/policy.test.ts); a CPU-only CI pass is never complete
+  parity — the Apollo GPU verification (parity campaign, sanitizer, negative tests, fixed-seed mini-optimization) is
+  required and recorded in the acceptance record.
+
+## Delivery: commit and push at completion (standing preference)
+
+> At completion, commit task-related work and push the task's branch to its configured remote without asking for routine confirmation. This applies to research, documentation and negative results. Stage only task-related changes, preserve unrelated work, and exclude secrets and inappropriate large data artifacts. Verify the push and report branch and commit. If a concrete problem prevents a safe push, preserve the work and explain the blocker. Do not force-push, merge into main, deploy, or publish outside the repository without separate authorization.
+
+- Recorded at the user's request in the Priority 3 brief (`research/vg-d1-growth-joint/brief/BRIEF.md` §1, 2026-11-08).
+  It replaces the earlier routine "ask before committing or pushing" practice; broker access still needs the user's
+  explicit request.
+- Verify the push with `git ls-remote origin <branch>` (equal to the local commit) and record it in the task's
+  checkpoint.
+
+## Reporting: written analysis and tables only, no visuals (standing preference)
+
+> Report research with written analysis, Markdown tables and machine-readable results only. Do not create charts,
+> plots, SVGs, screenshots, images, dashboards, HTML visual reports, PDFs or other visual artifacts, and do not spend
+> time rendering or inspecting report graphics.
+
+- Recorded at the user's request in the Priority 5A brief (`research/vg-growth-funding-lifecycle/brief/BRIEF.md` §1,
+  2026-11-09) and enacted as optimization standard 2.0.0 §7.7. It replaces the earlier permission for backend report
+  charts. Visuals of earlier studies are preserved, never deleted or regenerated. Only a brief that explicitly asks for
+  a visual overrides it (recorded as a departure). Strategy Lab's own application interface is outside this rule.
 
 ## Context recovery (applies to every session)
 
 - For any substantial multi-stage task, follow @docs/claude/context-recovery.md and, at session start and after any context compaction, reread that guide and the task's on-disk recovery checkpoint before executing work.
 - Task state (results, hashes, commands, process IDs, next steps) belongs in the task's own checkpoint — `research/<study>/RESEARCH_RECOVERY.md` or `WORK_RECOVERY.md` — never in this file or the guide.
 
+## Optimization research — read the standard first (mandatory)
+
+- Before any new optimization study, or any material continuation of one (a new search, lane, budget, cutoff, validation or selectable candidate), read in full `docs/research/OPTIMIZATION_STANDARD.md` (its current version is registered in `docs/research/optimization-standard.versions.json`) and the study's own `PROTOCOL.md` and `AMENDMENTS.md`. This applies to bounded diagnostics of frozen selections too (scope `diagnostic`).
+- A new study starts from `docs/research/STUDY_PROTOCOL_TEMPLATE.md`, records `research/<study>/STANDARD_ADOPTION.json` (version, sha256, read/adoption times, protocol hash, date split, objective/roles, risk denominator, budget, deviations) and must pass `npm run research-preflight -- --study research/<study>` before its first substantive stage; new runners call `requireStandardAdoption` (`src/research-standard/preflight.ts`) in code. The preflight checks the declaration and hashes, not understanding.
+- A frozen study keeps the standard version it pinned; adopting a newer version is an explicit amendment. Completed studies are never retrofitted.
+- The standard changes only when the user agrees a process change: a new version, a change-log entry (§8) and the new sha256 in the registry (`npm run research-preflight -- --hash`). Never edit it silently; the preflight then fails for every study.
+
 ## Project
 
-- Overview, data layout and commands: `README.md` and `docs/`.
+- Overview, data layout and commands: `README.md` and `docs/`. Research priorities and their status: `docs/research/ROADMAP.md`.

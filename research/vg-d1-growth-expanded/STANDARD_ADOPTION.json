@@ -1,0 +1,130 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-d1-growth-expanded",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.0.0",
+  "sha256": "2005a88c2e24f5e2ab4e461b0425f97d006781a45518f78d9f10fd9320f40105"
+ },
+ "readAt": "2026-11-09T17:32:44Z",
+ "adoptedAt": "2026-11-09T18:33:20Z",
+ "protocol": {
+  "path": "research/vg-d1-growth-expanded/PROTOCOL.md",
+  "sha256": "79494d1e67d77649ff21ef15002559674439659dd47fb921cd2e6b0b0de5e9e2"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "the formal primary is the actual-profit role of the final selectable set at C24 (C4, E, A, B, C85, the independent shortlist and both informed shortlists): the highest development centre net among qualified members (gates Q1-Q6; fresh confirmation decides qualification), ties by the higher selection robust net, the lower centre DD, then the label. C4 is the user's preferred no-improvement fallback; a frozen prudent-recommendation rule replaces C4 only if the development replacement candidate (the highest-net qualified member dominating C4) passes V1-V3 and is supported across later periods (PROTOCOL.md §9.4).",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 830000,
+  "backendEvaluations": 8000000,
+  "notes": "Distinct candidate proposals (centres): independent 131,072 base / 196,608 cap per cutoff × 4 cutoffs (C19, C21, C23, C24) = 524,288 base / 786,432 cap; informed fixed-D1 and joint lanes at C24 ≈ 21,800 base / ≈ 38,200 cap each; plus refinement moves (≈ 3,000-6,000 per cutoff). The figure above is the cap order of magnitude (≈ 830,000). Backend evaluations (centres + neighbours): ≈ 0.9-1.1 M per independent cutoff at base, ≤ ≈ 1.9 M at the cap (C24 door; earlier doors cheaper), informed ≈ 0.6-1.0 M, qualification ≈ 0.3 M; the order-of-magnitude cap is 8 M. Counted separately: screen centres, rung-1/2/3 and refinement centres and neighbours, qualification, folds, sequential, validation, retries, archive hits and worker compute time (PROTOCOL.md §7.4)."
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3, §2.5",
+   "kind": "adaptation",
+   "description": "formal primary = actual-profit role of the final selectable set; C4 kept as the user's preferred fallback with a frozen prudent-recommendation rule",
+   "justification": "brief §7",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4.1, §3.4",
+   "kind": "adaptation",
+   "description": "architecture A only (one exclusive slot); the same-instant order fixed D1-first, GDX before VGT (not searched; report-only toggle)",
+   "justification": "brief §2: preserve deterministic ordering; no allocation searches",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§4.1, §2.4",
+   "kind": "adaptation",
+   "description": "Study 8 pipeline, three NSGA-II objectives; promotion ¼ centre net, ¼ robust net, ⅛ both-Growth funded (protected strata), rest rank/diversity",
+   "justification": "brief §5: preserve profit-ranked promotion beside robustness-ranked promotion",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§4.7",
+   "kind": "adaptation",
+   "description": "protected both-Growth stratum: every fourth island of B cells and informed lanes requires a B configuration funding D1 and both Growth books; reserved promotion share, refinement start and shortlist slot; same gates and primary rule",
+   "justification": "brief §5",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "Priority 3's engine reused unchanged (its sealed 495-check parity, digest 147cad7c…); this study's gates E1-E7 re-verify it through the 3B configuration path",
+   "justification": "brief §9: reuse tested engines",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§1.4, §1.6",
+   "kind": "adaptation",
+   "description": "FULL never opened before FROZEN_SELECTION.json is sealed and committed; known full-history targets compared in the final stage only",
+   "justification": "brief §4",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§5.3, §4.1",
+   "kind": "adaptation",
+   "description": "centre-first fidelity at rung 1 and refinement: an implausible centre gets no neighbours and is infeasible; rungs 2/3 and qualification evaluate every neighbour",
+   "justification": "brief §5: successive neighborhood fidelity",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "neighbourhoods move only enabled books (disabled books canonicalized); Priority 3's archived instrument reproduced exactly as a report-only instrument",
+   "justification": "brief §5: canonicalize inactive dimensions; brief §8: preserve the archived instrument",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "§4.2, §4.6",
+   "kind": "adaptation",
+   "description": "independent base 131,072 per cutoff (4.57x Priority 3); extension cap 196,608 per cutoff instead of the brief's approximate 262,144",
+   "justification": "brief §6: a measured, explained reduction; at the measured 78.7 evaluations/s the brief's cap could take about 35 hours in all",
+   "userAgreement": null
+  },
+  {
+   "id": "D1",
+   "section": "§1.8",
+   "kind": "departure",
+   "description": "the earlier-cutoff repetition covers the independent procedure only; the informed lanes (seeded with later-selected settings) run at C24 only with no chronological claim",
+   "justification": "the informed seeds were chosen with later data; regenerating them per cutoff is the method contest the brief does not require",
+   "userAgreement": "Brief §8 (research/vg-d1-growth-expanded/brief/BRIEF.md): 'Only the independent procedure supplies chronological procedure evidence. … That extra method contest is not required here; limit claims instead.'"
+  }
+ ]
+}

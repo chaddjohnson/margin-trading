@@ -1,0 +1,3339 @@
+{
+ "kind": "vg-d1-growth-expanded control manifest",
+ "source": "Priority 5A's verified loader (src/vg-growth-funding-lifecycle/subjects.ts) over Priority 3's sha256-pinned records (src/vg-d1-growth-diagnostic/context.ts p3.records) and CONTROL_MANIFEST.json",
+ "growthIdentities": {
+  "g4": "420cd989e4fa7749",
+  "g085": "08500a60ec56cfae",
+  "appA": "07cac3329fc7a520"
+ },
+ "controls": [
+  {
+   "key": "C4",
+   "label": "C4: VG #2 + VGT Growth #4; GDX Growth OFF (preferred benchmark)",
+   "role": "benchmark",
+   "selectable": true,
+   "priority3Id": "f324035d15f69610",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "settings": {
+    "id": "2f49a1cc226b4ece",
+    "priority3QuadId": "f324035d15f69610",
+    "inclusion": "V",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,57,12,243,29,152,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 243,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.057,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.152,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,55",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 55,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "420cd989e4fa7749",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 90,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 30,
+       "trendChangeMinimumReturnPercent": -2,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 20,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 10,
+       "recoveryRetracementPercent": 45,
+       "recoveryConfirmationSessions": 2,
+       "trailingStopPercent": 6,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 21,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 20,
+       "initialStopAtrMultiple": 1.5,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 60,
+       "uptrendSmaBars": 50,
+       "uptrendSlopeBars": 10,
+       "uptrendMinimumRisePercent": 0,
+       "pullbackMinimumPercent": 1.5,
+       "pullbackMaximumPercent": 8,
+       "recoveryPercent": 1,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 90,
+       "resolution": "1d",
+       "trailingStopPercent": 6,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 21,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "shallow_pullback",
+        "windowSessions": 60,
+        "smaBars": 50,
+        "slopeBars": 10,
+        "minimumRisePercent": 0,
+        "pullbackMinimumPercent": 1.5,
+        "pullbackMaximumPercent": 8,
+        "recoveryPercent": 1
+       },
+       "trendFilter": {
+        "method": "price_change",
+        "lookbackSessions": 30,
+        "minimumReturnPercent": -2
+       },
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 20
+       },
+       "initialStop": {
+        "atrSessions": 20,
+        "atrMultiple": 1.5
+       },
+       "drawdownGate": {
+        "lookbackSessions": 60,
+        "dipThresholdPercent": 10,
+        "recoveryRetracementPercent": 45,
+        "confirmationSessions": 2
+       }
+      }
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 302785.91,
+    "dd": 17332.09,
+    "lots": 38
+   }
+  },
+  {
+   "key": "E",
+   "label": "E: VG #2 + existing GDX Growth (Appendix A); VGT Growth OFF",
+   "role": "control",
+   "selectable": true,
+   "priority3Id": "c45f4efa028203e9",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX"
+   ],
+   "settings": {
+    "id": "d7f95a68a63e638f",
+    "priority3QuadId": "c45f4efa028203e9",
+    "inclusion": "G",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,57,12,243,29,152,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 243,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.057,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.152,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,55",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 55,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": true,
+      "identity": "07cac3329fc7a520",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 3,
+       "recentLowLookbackBars": 22,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 30,
+       "trendChangeMinimumReturnPercent": -2,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 20,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 10,
+       "recoveryRetracementPercent": 49,
+       "recoveryConfirmationSessions": 2,
+       "trailingStopPercent": 7,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 20,
+       "initialStopAtrMultiple": 2,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 60,
+       "uptrendSmaBars": 50,
+       "uptrendSlopeBars": 10,
+       "uptrendMinimumRisePercent": 0,
+       "pullbackMinimumPercent": 1.5,
+       "pullbackMaximumPercent": 8,
+       "recoveryPercent": 2,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 3,
+       "recentLowLookbackBars": 22,
+       "resolution": "1d",
+       "trailingStopPercent": 7,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "shallow_pullback",
+        "windowSessions": 60,
+        "smaBars": 50,
+        "slopeBars": 10,
+        "minimumRisePercent": 0,
+        "pullbackMinimumPercent": 1.5,
+        "pullbackMaximumPercent": 8,
+        "recoveryPercent": 2
+       },
+       "trendFilter": {
+        "method": "price_change",
+        "lookbackSessions": 30,
+        "minimumReturnPercent": -2
+       },
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 20
+       },
+       "initialStop": {
+        "atrSessions": 20,
+        "atrMultiple": 2
+       },
+       "drawdownGate": {
+        "lookbackSessions": 60,
+        "dipThresholdPercent": 10,
+        "recoveryRetracementPercent": 49,
+        "confirmationSessions": 2
+       }
+      }
+     },
+     "VGT": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": null
+  },
+  {
+   "key": "A",
+   "label": "A: VG #2 + VGT Growth #4 + existing GDX Growth",
+   "role": "control",
+   "selectable": true,
+   "priority3Id": "d4cde31356e2306a",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "settings": {
+    "id": "66f3dca63091dfa6",
+    "priority3QuadId": "d4cde31356e2306a",
+    "inclusion": "B",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,57,12,243,29,152,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 243,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.057,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.152,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,55",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 55,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": true,
+      "identity": "07cac3329fc7a520",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 3,
+       "recentLowLookbackBars": 22,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 30,
+       "trendChangeMinimumReturnPercent": -2,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 20,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 10,
+       "recoveryRetracementPercent": 49,
+       "recoveryConfirmationSessions": 2,
+       "trailingStopPercent": 7,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 20,
+       "initialStopAtrMultiple": 2,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 60,
+       "uptrendSmaBars": 50,
+       "uptrendSlopeBars": 10,
+       "uptrendMinimumRisePercent": 0,
+       "pullbackMinimumPercent": 1.5,
+       "pullbackMaximumPercent": 8,
+       "recoveryPercent": 2,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 3,
+       "recentLowLookbackBars": 22,
+       "resolution": "1d",
+       "trailingStopPercent": 7,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "shallow_pullback",
+        "windowSessions": 60,
+        "smaBars": 50,
+        "slopeBars": 10,
+        "minimumRisePercent": 0,
+        "pullbackMinimumPercent": 1.5,
+        "pullbackMaximumPercent": 8,
+        "recoveryPercent": 2
+       },
+       "trendFilter": {
+        "method": "price_change",
+        "lookbackSessions": 30,
+        "minimumReturnPercent": -2
+       },
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 20
+       },
+       "initialStop": {
+        "atrSessions": 20,
+        "atrMultiple": 2
+       },
+       "drawdownGate": {
+        "lookbackSessions": 60,
+        "dipThresholdPercent": 10,
+        "recoveryRetracementPercent": 49,
+        "confirmationSessions": 2
+       }
+      }
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "420cd989e4fa7749",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 90,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 30,
+       "trendChangeMinimumReturnPercent": -2,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 20,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 10,
+       "recoveryRetracementPercent": 45,
+       "recoveryConfirmationSessions": 2,
+       "trailingStopPercent": 6,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 21,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 20,
+       "initialStopAtrMultiple": 1.5,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 60,
+       "uptrendSmaBars": 50,
+       "uptrendSlopeBars": 10,
+       "uptrendMinimumRisePercent": 0,
+       "pullbackMinimumPercent": 1.5,
+       "pullbackMaximumPercent": 8,
+       "recoveryPercent": 1,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 90,
+       "resolution": "1d",
+       "trailingStopPercent": 6,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 21,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "shallow_pullback",
+        "windowSessions": 60,
+        "smaBars": 50,
+        "slopeBars": 10,
+        "minimumRisePercent": 0,
+        "pullbackMinimumPercent": 1.5,
+        "pullbackMaximumPercent": 8,
+        "recoveryPercent": 1
+       },
+       "trendFilter": {
+        "method": "price_change",
+        "lookbackSessions": 30,
+        "minimumReturnPercent": -2
+       },
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 20
+       },
+       "initialStop": {
+        "atrSessions": 20,
+        "atrMultiple": 1.5
+       },
+       "drawdownGate": {
+        "lookbackSessions": 60,
+        "dipThresholdPercent": 10,
+        "recoveryRetracementPercent": 45,
+        "confirmationSessions": 2
+       }
+      }
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 310383.36,
+    "dd": 20801.07,
+    "lots": 56
+   }
+  },
+  {
+   "key": "B",
+   "label": "B: VG #2 + VGT Growth 08500a60 + existing GDX Growth",
+   "role": "control",
+   "selectable": true,
+   "priority3Id": "676731bfd4ec280f",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "settings": {
+    "id": "b661a930ae9dd7f3",
+    "priority3QuadId": "676731bfd4ec280f",
+    "inclusion": "B",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,57,12,243,29,152,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 243,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.057,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.152,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,55",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 55,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": true,
+      "identity": "07cac3329fc7a520",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 3,
+       "recentLowLookbackBars": 22,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 30,
+       "trendChangeMinimumReturnPercent": -2,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 20,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 10,
+       "recoveryRetracementPercent": 49,
+       "recoveryConfirmationSessions": 2,
+       "trailingStopPercent": 7,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 20,
+       "initialStopAtrMultiple": 2,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 60,
+       "uptrendSmaBars": 50,
+       "uptrendSlopeBars": 10,
+       "uptrendMinimumRisePercent": 0,
+       "pullbackMinimumPercent": 1.5,
+       "pullbackMaximumPercent": 8,
+       "recoveryPercent": 2,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 3,
+       "recentLowLookbackBars": 22,
+       "resolution": "1d",
+       "trailingStopPercent": 7,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "shallow_pullback",
+        "windowSessions": 60,
+        "smaBars": 50,
+        "slopeBars": 10,
+        "minimumRisePercent": 0,
+        "pullbackMinimumPercent": 1.5,
+        "pullbackMaximumPercent": 8,
+        "recoveryPercent": 2
+       },
+       "trendFilter": {
+        "method": "price_change",
+        "lookbackSessions": 30,
+        "minimumReturnPercent": -2
+       },
+       "eligibility": {
+        "policy": "time_limited",
+        "maxAgeSessions": 20
+       },
+       "initialStop": {
+        "atrSessions": 20,
+        "atrMultiple": 2
+       },
+       "drawdownGate": {
+        "lookbackSessions": 60,
+        "dipThresholdPercent": 10,
+        "recoveryRetracementPercent": 49,
+        "confirmationSessions": 2
+       }
+      }
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "08500a60ec56cfae",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 1,
+       "recentLowLookbackBars": 80,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 10,
+       "trendChangeMinimumReturnPercent": -5,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "reset_renew",
+       "eligibilityMaxAgeSessions": 24,
+       "eligibilityResetDropPercent": 5.5,
+       "eligibilityRenewalReboundPercent": 5,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 90,
+       "dipThresholdPercent": 2,
+       "recoveryRetracementPercent": 30,
+       "recoveryConfirmationSessions": 4,
+       "trailingStopPercent": 9,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 55,
+       "initialStopAtrMultiple": 1,
+       "retentionEnabled": true,
+       "retentionSellPercent": 50,
+       "retentionSmaSessions": 160,
+       "retentionClosesBelow": 1,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 50,
+       "crossSmaBars": 110,
+       "crossRisingBars": 19,
+       "crossMinimumSlopePercent": 0.4,
+       "crossMarginPercent": 2.75,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 1,
+       "recentLowLookbackBars": 80,
+       "resolution": "1d",
+       "trailingStopPercent": 9,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "ma_cross",
+        "windowSessions": 50,
+        "smaBars": 110,
+        "risingBars": 19,
+        "minimumSlopePercent": 0.4,
+        "marginPercent": 2.75
+       },
+       "trendFilter": {
+        "method": "price_change",
+        "lookbackSessions": 10,
+        "minimumReturnPercent": -5
+       },
+       "eligibility": {
+        "policy": "reset_renew",
+        "maxAgeSessions": 24,
+        "resetDropPercent": 5.5,
+        "renewalReboundPercent": 5
+       },
+       "initialStop": {
+        "atrSessions": 55,
+        "atrMultiple": 1
+       },
+       "retention": {
+        "sellPercent": 50,
+        "smaSessions": 160,
+        "closesBelow": 1
+       },
+       "drawdownGate": {
+        "lookbackSessions": 90,
+        "dipThresholdPercent": 2,
+        "recoveryRetracementPercent": 30,
+        "confirmationSessions": 4
+       }
+      }
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 291868.34,
+    "dd": 20801.07,
+    "lots": 56
+   }
+  },
+  {
+   "key": "C85",
+   "label": "C85: VG #2 + VGT Growth 08500a60; GDX Growth OFF",
+   "role": "control",
+   "selectable": true,
+   "priority3Id": "3688e97b90639d60",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "settings": {
+    "id": "38be30d42d55ec7f",
+    "priority3QuadId": "3688e97b90639d60",
+    "inclusion": "V",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,57,12,243,29,152,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 243,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.057,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.152,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,55",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 55,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": false,
+      "placeholderIdentity": "1af5b55987a56e2f",
+      "note": "disabled: never run or funded (placeholder vector)"
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "08500a60ec56cfae",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 1,
+       "recentLowLookbackBars": 80,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 10,
+       "trendChangeMinimumReturnPercent": -5,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "reset_renew",
+       "eligibilityMaxAgeSessions": 24,
+       "eligibilityResetDropPercent": 5.5,
+       "eligibilityRenewalReboundPercent": 5,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 90,
+       "dipThresholdPercent": 2,
+       "recoveryRetracementPercent": 30,
+       "recoveryConfirmationSessions": 4,
+       "trailingStopPercent": 9,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 55,
+       "initialStopAtrMultiple": 1,
+       "retentionEnabled": true,
+       "retentionSellPercent": 50,
+       "retentionSmaSessions": 160,
+       "retentionClosesBelow": 1,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 50,
+       "crossSmaBars": 110,
+       "crossRisingBars": 19,
+       "crossMinimumSlopePercent": 0.4,
+       "crossMarginPercent": 2.75,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 1,
+       "recentLowLookbackBars": 80,
+       "resolution": "1d",
+       "trailingStopPercent": 9,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "ma_cross",
+        "windowSessions": 50,
+        "smaBars": 110,
+        "risingBars": 19,
+        "minimumSlopePercent": 0.4,
+        "marginPercent": 2.75
+       },
+       "trendFilter": {
+        "method": "price_change",
+        "lookbackSessions": 10,
+        "minimumReturnPercent": -5
+       },
+       "eligibility": {
+        "policy": "reset_renew",
+        "maxAgeSessions": 24,
+        "resetDropPercent": 5.5,
+        "renewalReboundPercent": 5
+       },
+       "initialStop": {
+        "atrSessions": 55,
+        "atrMultiple": 1
+       },
+       "retention": {
+        "sellPercent": 50,
+        "smaSessions": 160,
+        "closesBelow": 1
+       },
+       "drawdownGate": {
+        "lookbackSessions": 90,
+        "dipThresholdPercent": 2,
+        "recoveryRetracementPercent": 30,
+        "confirmationSessions": 4
+       }
+      }
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 263681.27,
+    "dd": 18119.12,
+    "lots": 34
+   }
+  },
+  {
+   "key": "D",
+   "label": "D: VG #2 D1 only",
+   "role": "d1-only",
+   "selectable": false,
+   "priority3Id": "7a377d49c2b9aa55",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT"
+   ],
+   "settings": {
+    "quad": {
+     "d1": {
+      "GDX": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "VGT": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      }
+     },
+     "g": {
+      "GDX": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 20,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": false,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 7.3,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 8,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": false,
+       "costBpsPerSide": 5
+      },
+      "VGT": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 20,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": false,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 7.3,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 8,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": false,
+       "costBpsPerSide": 5
+      }
+     },
+     "first": "D1"
+    },
+    "options": {
+     "enabled": {
+      "G:GDX": false,
+      "G:VGT": false
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 268487.02,
+    "dd": 20801.07,
+    "lots": 45
+   }
+  },
+  {
+   "key": "IP",
+   "label": "Priority 3 informed primary (575545f4)",
+   "role": "historical",
+   "selectable": false,
+   "priority3Id": "575545f4d6438577",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "settings": {
+    "id": "d7e6e9243a0ffe86",
+    "priority3QuadId": "575545f4d6438577",
+    "inclusion": "B",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 53,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 249,
+       "intradayLossBuffer": 29,
+       "pullback": 154,
+       "continuationWindow": 30
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,53,12,249,29,154,30",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 249,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.053,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.154,
+       "continuationWindow": 30,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 72,
+       "intradayLossBuffer": 47,
+       "pullback": 93,
+       "continuationWindow": 65
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,72,47,93,65",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 72,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.047,
+       "pullback": 0.093,
+       "continuationWindow": 65,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": true,
+      "identity": "f81f02bc2db755d9",
+      "effective": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 95,
+       "breakoutSlopeComparisonSessions": 62,
+       "breakoutPriorHighSessions": 62,
+       "trendFilterEnabled": false,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 8.7,
+       "recoveryRetracementPercent": 86.8,
+       "recoveryConfirmationSessions": 10,
+       "trailingStopPercent": 12.5,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "classic_d1",
+       "continuationWindowSessions": 105,
+       "classicPullbackPercent": 11.5,
+       "classicReboundPercent": 2.6,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": "__NaN",
+       "recentLowLookbackBars": "__NaN",
+       "resolution": "1d",
+       "trailingStopPercent": 12.5,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "classic_d1",
+        "windowSessions": 105,
+        "pullbackPercent": 11.5,
+        "reboundPercent": 2.6
+       },
+       "trendFilter": null,
+       "eligibility": null,
+       "entryMethod": "trend_breakout",
+       "breakout": {
+        "smaSessions": 95,
+        "slopeComparisonSessions": 62,
+        "priorHighSessions": 62
+       },
+       "drawdownGate": {
+        "lookbackSessions": 60,
+        "dipThresholdPercent": 8.7,
+        "recoveryRetracementPercent": 86.8,
+        "confirmationSessions": 10
+       }
+      }
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "5d5b05b0b932c4fd",
+      "effective": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 100,
+       "breakoutSlopeComparisonSessions": 20,
+       "breakoutPriorHighSessions": 5,
+       "trendFilterEnabled": false,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 65,
+       "dipThresholdPercent": 8.5,
+       "recoveryRetracementPercent": 65,
+       "recoveryConfirmationSessions": 5,
+       "trailingStopPercent": 7.5,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": true,
+       "retentionSellPercent": 52,
+       "retentionSmaSessions": 137,
+       "retentionClosesBelow": 3,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 100,
+       "crossSmaBars": 105,
+       "crossRisingBars": 15,
+       "crossMinimumSlopePercent": 1,
+       "crossMarginPercent": 1.5,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": "__NaN",
+       "recentLowLookbackBars": "__NaN",
+       "resolution": "1d",
+       "trailingStopPercent": 7.5,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "ma_cross",
+        "windowSessions": 100,
+        "smaBars": 105,
+        "risingBars": 15,
+        "minimumSlopePercent": 1,
+        "marginPercent": 1.5
+       },
+       "trendFilter": null,
+       "eligibility": null,
+       "entryMethod": "trend_breakout",
+       "breakout": {
+        "smaSessions": 100,
+        "slopeComparisonSessions": 20,
+        "priorHighSessions": 5
+       },
+       "retention": {
+        "sellPercent": 52,
+        "smaSessions": 137,
+        "closesBelow": 3
+       },
+       "drawdownGate": {
+        "lookbackSessions": 65,
+        "dipThresholdPercent": 8.5,
+        "recoveryRetracementPercent": 65,
+        "confirmationSessions": 5
+       }
+      }
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 338642.84,
+    "dd": 20393.61,
+    "lots": 39
+   }
+  },
+  {
+   "key": "XP",
+   "label": "Priority 3 independent primary (86d25530)",
+   "role": "historical",
+   "selectable": false,
+   "priority3Id": "86d25530b9e9141d",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "settings": {
+    "id": "cb30e5fc00efc705",
+    "priority3QuadId": "86d25530b9e9141d",
+    "inclusion": "B",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 260,
+       "trailingBuyPercentage": 8,
+       "trailingStopPercentage": 61,
+       "maximumHoldDays": 23,
+       "tickWindowSize": 38,
+       "intradayLossBuffer": 28,
+       "pullback": 192,
+       "continuationWindow": 178
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-260,8,61,23,38,28,192,178",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.26,
+       "tickWindowSize": 38,
+       "trailingBuyPercentage": 0.008,
+       "trailingStopPercentage": 0.061,
+       "maximumHoldDays": 23,
+       "intradayLossBuffer": 0.028,
+       "pullback": 0.192,
+       "continuationWindow": 178,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 240,
+       "trailingBuyPercentage": 15,
+       "trailingStopPercentage": 69,
+       "maximumHoldDays": 9,
+       "tickWindowSize": 100,
+       "intradayLossBuffer": 44,
+       "pullback": 112,
+       "continuationWindow": 155
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-240,15,69,9,100,44,112,155",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.24,
+       "tickWindowSize": 100,
+       "trailingBuyPercentage": 0.015,
+       "trailingStopPercentage": 0.069,
+       "maximumHoldDays": 9,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.112,
+       "continuationWindow": 155,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": true,
+      "identity": "ed20222010d9269d",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5.5,
+       "recentLowLookbackBars": 230,
+       "trendFilterEnabled": true,
+       "trendMethod": "rising_sma",
+       "trendSmaSessions": 100,
+       "trendSmaComparisonSessions": 15,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "reset_renew",
+       "eligibilityMaxAgeSessions": 15,
+       "eligibilityResetDropPercent": 5.5,
+       "eligibilityRenewalReboundPercent": 5,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 8.5,
+       "recoveryRetracementPercent": 60,
+       "recoveryConfirmationSessions": 5,
+       "trailingStopPercent": 4.5,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 3,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 0.5,
+       "initialStopEnabled": false,
+       "retentionEnabled": true,
+       "retentionSellPercent": 50,
+       "retentionSmaSessions": 100,
+       "retentionClosesBelow": 3,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 100,
+       "crossSmaBars": 100,
+       "crossRisingBars": 15,
+       "crossMinimumSlopePercent": 1,
+       "crossMarginPercent": 1.5,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 5.5,
+       "recentLowLookbackBars": 230,
+       "resolution": "1d",
+       "trailingStopPercent": 4.5,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 3,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 0.5,
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "ma_cross",
+        "windowSessions": 100,
+        "smaBars": 100,
+        "risingBars": 15,
+        "minimumSlopePercent": 1,
+        "marginPercent": 1.5
+       },
+       "trendFilter": {
+        "method": "rising_sma",
+        "movingAverageSessions": 100,
+        "slopeComparisonSessions": 15
+       },
+       "eligibility": {
+        "policy": "reset_renew",
+        "maxAgeSessions": 15,
+        "resetDropPercent": 5.5,
+        "renewalReboundPercent": 5
+       },
+       "retention": {
+        "sellPercent": 50,
+        "smaSessions": 100,
+        "closesBelow": 3
+       },
+       "drawdownGate": {
+        "lookbackSessions": 60,
+        "dipThresholdPercent": 8.5,
+        "recoveryRetracementPercent": 60,
+        "confirmationSessions": 5
+       }
+      }
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "15678af77df4d65a",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 14.5,
+       "recentLowLookbackBars": 140,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "maximum_extension",
+       "eligibilityMaxAgeSessions": 15,
+       "eligibilityMaximumExtensionPercent": 5,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 8.5,
+       "recoveryRetracementPercent": 60,
+       "recoveryConfirmationSessions": 5,
+       "trailingStopPercent": 3,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 17,
+       "intradayLossBufferEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 30,
+       "initialStopAtrMultiple": 4.5,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "breakout",
+       "continuationWindowSessions": 60,
+       "breakoutBufferPercent": 2.5,
+       "breakoutFormationBars": 10,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 14.5,
+       "recentLowLookbackBars": 140,
+       "resolution": "1d",
+       "trailingStopPercent": 3,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 17,
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "breakout",
+        "windowSessions": 60,
+        "bufferPercent": 2.5,
+        "formationBars": 10
+       },
+       "trendFilter": null,
+       "eligibility": {
+        "policy": "maximum_extension",
+        "maxAgeSessions": 15,
+        "maximumExtensionPercent": 5
+       },
+       "initialStop": {
+        "atrSessions": 30,
+        "atrMultiple": 4.5
+       },
+       "drawdownGate": {
+        "lookbackSessions": 60,
+        "dipThresholdPercent": 8.5,
+        "recoveryRetracementPercent": 60,
+        "confirmationSessions": 5
+       }
+      }
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 245220.78,
+    "dd": 17280.74,
+    "lots": 36
+   }
+  },
+  {
+   "key": "SP",
+   "label": "Priority 3 staged primary (d3bc1484)",
+   "role": "historical",
+   "selectable": false,
+   "priority3Id": "d3bc148449ea59e6",
+   "enabled": [
+    "D1:GDX",
+    "D1:VGT",
+    "G:GDX",
+    "G:VGT"
+   ],
+   "settings": {
+    "id": "786661591facc5ea",
+    "priority3QuadId": "d3bc148449ea59e6",
+    "inclusion": "B",
+    "enabled": [
+     "D1:GDX",
+     "D1:VGT",
+     "G:GDX",
+     "G:VGT"
+    ],
+    "d1": {
+     "GDX": {
+      "grid": {
+       "targetPercentChange": 276,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 57,
+       "maximumHoldDays": 12,
+       "tickWindowSize": 243,
+       "intradayLossBuffer": 29,
+       "pullback": 152,
+       "continuationWindow": 12
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "GDX d1-276,1,57,12,243,29,152,12",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.276,
+       "tickWindowSize": 243,
+       "trailingBuyPercentage": 0.001,
+       "trailingStopPercentage": 0.057,
+       "maximumHoldDays": 12,
+       "intradayLossBuffer": 0.029,
+       "pullback": 0.152,
+       "continuationWindow": 12,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     },
+     "VGT": {
+      "grid": {
+       "targetPercentChange": 235,
+       "trailingBuyPercentage": 9,
+       "trailingStopPercentage": 74,
+       "maximumHoldDays": 15,
+       "tickWindowSize": 78,
+       "intradayLossBuffer": 44,
+       "pullback": 110,
+       "continuationWindow": 55
+      },
+      "unit": "tenths of a percentage point / days / sessions",
+      "strategyParams": {
+       "key": "d1",
+       "label": "VGT d1-235,9,74,15,78,44,110,55",
+       "entryMode": "deep",
+       "postExit": true,
+       "stopPolicy": "net",
+       "targetPercentChange": 0.235,
+       "tickWindowSize": 78,
+       "trailingBuyPercentage": 0.009,
+       "trailingStopPercentage": 0.074,
+       "maximumHoldDays": 15,
+       "intradayLossBuffer": 0.044,
+       "pullback": 0.11,
+       "continuationWindow": 55,
+       "swingLookback": "__NaN",
+       "swingProximity": "__NaN"
+      }
+     }
+    },
+    "growth": {
+     "GDX": {
+      "enabled": true,
+      "identity": "ce7007da1907dcc9",
+      "effective": {
+       "entryMethod": "trend_breakout",
+       "breakoutSmaSessions": 120,
+       "breakoutSlopeComparisonSessions": 60,
+       "breakoutPriorHighSessions": 40,
+       "trendFilterEnabled": true,
+       "trendMethod": "momentum",
+       "trendMomentumShortSessions": 7,
+       "trendMomentumLongSessions": 220,
+       "trendMomentumMinimumShortReturnPercent": 10,
+       "trendMomentumMinimumLongReturnPercent": 8.5,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 100,
+       "dipThresholdPercent": 9.5,
+       "recoveryRetracementPercent": 70,
+       "recoveryConfirmationSessions": 6,
+       "trailingStopPercent": 3,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 12,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 4.5,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": false,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": "__NaN",
+       "recentLowLookbackBars": "__NaN",
+       "resolution": "1d",
+       "trailingStopPercent": 3,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 12,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 4.5,
+       "costBpsPerSide": 5,
+       "continuation": null,
+       "trendFilter": {
+        "method": "momentum",
+        "shortLookbackSessions": 7,
+        "longLookbackSessions": 220,
+        "minimumShortReturnPercent": 10,
+        "minimumLongReturnPercent": 8.5
+       },
+       "eligibility": null,
+       "entryMethod": "trend_breakout",
+       "breakout": {
+        "smaSessions": 120,
+        "slopeComparisonSessions": 60,
+        "priorHighSessions": 40
+       },
+       "drawdownGate": {
+        "lookbackSessions": 100,
+        "dipThresholdPercent": 9.5,
+        "recoveryRetracementPercent": 70,
+        "confirmationSessions": 6
+       }
+      }
+     },
+     "VGT": {
+      "enabled": true,
+      "identity": "eeab2daccb4da946",
+      "effective": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 17.5,
+       "recentLowLookbackBars": 150,
+       "trendFilterEnabled": true,
+       "trendMethod": "rising_sma",
+       "trendSmaSessions": 100,
+       "trendSmaComparisonSessions": 17,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "minimum_strength",
+       "eligibilityMaxAgeSessions": 28,
+       "eligibilityMinimumAdvancePercent": 2,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 7.5,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": false,
+       "retentionEnabled": true,
+       "retentionSellPercent": 90,
+       "retentionSmaSessions": 170,
+       "retentionClosesBelow": 5,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 180,
+       "uptrendSmaBars": 20,
+       "uptrendSlopeBars": 15,
+       "uptrendMinimumRisePercent": 0,
+       "pullbackMinimumPercent": 2.5,
+       "pullbackMaximumPercent": 10,
+       "recoveryPercent": 4,
+       "costBpsPerSide": 5
+      },
+      "engineParams": {
+       "advanceFromRecentLowPercent": 17.5,
+       "recentLowLookbackBars": 150,
+       "resolution": "1d",
+       "trailingStopPercent": 7.5,
+       "maximumHoldEnabled": false,
+       "maximumHoldDays": "__NaN",
+       "intradayLossBufferEnabled": false,
+       "intradayLossBufferPercent": "__NaN",
+       "costBpsPerSide": 5,
+       "continuation": {
+        "method": "shallow_pullback",
+        "windowSessions": 180,
+        "smaBars": 20,
+        "slopeBars": 15,
+        "minimumRisePercent": 0,
+        "pullbackMinimumPercent": 2.5,
+        "pullbackMaximumPercent": 10,
+        "recoveryPercent": 4
+       },
+       "trendFilter": {
+        "method": "rising_sma",
+        "movingAverageSessions": 100,
+        "slopeComparisonSessions": 17
+       },
+       "eligibility": {
+        "policy": "minimum_strength",
+        "maxAgeSessions": 28,
+        "minimumAdvancePercent": 2
+       },
+       "retention": {
+        "sellPercent": 90,
+        "smaSessions": 170,
+        "closesBelow": 5
+       }
+      }
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 249574.17,
+    "dd": 17393.58,
+    "lots": 25
+   }
+  },
+  {
+   "key": "V4",
+   "label": "VGT only: shipped D1 primary + Growth #4 (Priority 2)",
+   "role": "smaller-universe",
+   "selectable": false,
+   "priority3Id": "dbe7be81867b739a",
+   "enabled": [
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "settings": {
+    "quad": {
+     "d1": {
+      "GDX": {
+       "targetPercentChange": 80,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 30,
+       "maximumHoldDays": 3,
+       "tickWindowSize": 20,
+       "intradayLossBuffer": 0,
+       "pullback": 30,
+       "continuationWindow": 10
+      },
+      "VGT": {
+       "targetPercentChange": 216,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 8,
+       "tickWindowSize": 74,
+       "intradayLossBuffer": 29,
+       "pullback": 90,
+       "continuationWindow": 60
+      }
+     },
+     "g": {
+      "GDX": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 20,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": false,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 7.3,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 8,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": false,
+       "costBpsPerSide": 5
+      },
+      "VGT": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 90,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 30,
+       "trendChangeMinimumReturnPercent": -2,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "time_limited",
+       "eligibilityMaxAgeSessions": 20,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 60,
+       "dipThresholdPercent": 10,
+       "recoveryRetracementPercent": 45,
+       "recoveryConfirmationSessions": 2,
+       "trailingStopPercent": 6,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 21,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 20,
+       "initialStopAtrMultiple": 1.5,
+       "retentionEnabled": false,
+       "continuationEnabled": true,
+       "continuationMethod": "shallow_pullback",
+       "continuationWindowSessions": 60,
+       "uptrendSmaBars": 50,
+       "uptrendSlopeBars": 10,
+       "uptrendMinimumRisePercent": 0,
+       "pullbackMinimumPercent": 1.5,
+       "pullbackMaximumPercent": 8,
+       "recoveryPercent": 1,
+       "costBpsPerSide": 5
+      }
+     },
+     "first": "D1"
+    },
+    "options": {
+     "enabled": {
+      "D1:GDX": false,
+      "G:GDX": false
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 204940.21,
+    "dd": 19534.41,
+    "lots": 23
+   }
+  },
+  {
+   "key": "V85",
+   "label": "VGT only: shipped D1 primary + Growth 08500a60 (Priority 2)",
+   "role": "smaller-universe",
+   "selectable": false,
+   "priority3Id": "51da785f9a3b5f26",
+   "enabled": [
+    "D1:VGT",
+    "G:VGT"
+   ],
+   "settings": {
+    "quad": {
+     "d1": {
+      "GDX": {
+       "targetPercentChange": 80,
+       "trailingBuyPercentage": 1,
+       "trailingStopPercentage": 30,
+       "maximumHoldDays": 3,
+       "tickWindowSize": 20,
+       "intradayLossBuffer": 0,
+       "pullback": 30,
+       "continuationWindow": 10
+      },
+      "VGT": {
+       "targetPercentChange": 216,
+       "trailingBuyPercentage": 3,
+       "trailingStopPercentage": 73,
+       "maximumHoldDays": 8,
+       "tickWindowSize": 74,
+       "intradayLossBuffer": 29,
+       "pullback": 90,
+       "continuationWindow": 60
+      }
+     },
+     "g": {
+      "GDX": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 5,
+       "recentLowLookbackBars": 20,
+       "trendFilterEnabled": false,
+       "eligibilityEnabled": false,
+       "drawdownRecoveryGateEnabled": false,
+       "trailingStopPercent": 7.3,
+       "maximumHoldEnabled": true,
+       "maximumHoldDays": 8,
+       "intradayLossBufferEnabled": true,
+       "intradayLossBufferPercent": 2.9,
+       "initialStopEnabled": false,
+       "retentionEnabled": false,
+       "continuationEnabled": false,
+       "costBpsPerSide": 5
+      },
+      "VGT": {
+       "entryMethod": "rise_from_recent_low",
+       "advanceFromRecentLowPercent": 1,
+       "recentLowLookbackBars": 80,
+       "trendFilterEnabled": true,
+       "trendMethod": "price_change",
+       "trendChangeLookbackSessions": 10,
+       "trendChangeMinimumReturnPercent": -5,
+       "eligibilityEnabled": true,
+       "eligibilityPolicy": "reset_renew",
+       "eligibilityMaxAgeSessions": 24,
+       "eligibilityResetDropPercent": 5.5,
+       "eligibilityRenewalReboundPercent": 5,
+       "drawdownRecoveryGateEnabled": true,
+       "dipLookbackSessions": 90,
+       "dipThresholdPercent": 2,
+       "recoveryRetracementPercent": 30,
+       "recoveryConfirmationSessions": 4,
+       "trailingStopPercent": 9,
+       "maximumHoldEnabled": false,
+       "initialStopEnabled": true,
+       "initialStopAtrSessions": 55,
+       "initialStopAtrMultiple": 1,
+       "retentionEnabled": true,
+       "retentionSellPercent": 50,
+       "retentionSmaSessions": 160,
+       "retentionClosesBelow": 1,
+       "continuationEnabled": true,
+       "continuationMethod": "ma_cross",
+       "continuationWindowSessions": 50,
+       "crossSmaBars": 110,
+       "crossRisingBars": 19,
+       "crossMinimumSlopePercent": 0.4,
+       "crossMarginPercent": 2.75,
+       "costBpsPerSide": 5
+      }
+     },
+     "first": "D1"
+    },
+    "options": {
+     "enabled": {
+      "D1:GDX": false,
+      "G:GDX": false
+     }
+    },
+    "allocator": {
+     "lifecycle": "L0 (current virtual-book model: a refused entry keeps its virtual trade; funding never feeds back)",
+     "architecture": "A: one exclusive funded slot",
+     "principalBudget": 100000,
+     "compounding": false,
+     "preemption": false,
+     "simultaneousFundedPositions": false,
+     "partialExitReleasesSlot": false,
+     "sameInstantOrder": [
+      "D1:GDX",
+      "D1:VGT",
+      "G:GDX",
+      "G:VGT"
+     ],
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple annual on outstanding principal, calendar days / 365",
+     "stopFill": "at the stop or the gapped open; no extra slippage",
+     "shares": "fractional",
+     "fundingFrom": "2016-01-04",
+     "d1Arming": "harmonized: from the first session (each D1 machine arms once its reference high exists)",
+     "d1DelayedEligibility": false
+    }
+   },
+   "sealedDevelopmentCentre": {
+    "net": 191808.45,
+    "dd": 19534.41,
+    "lots": 21
+   }
+  }
+ ],
+ "informedSeeds": {
+  "fixed": [
+   {
+    "label": "C4",
+    "id": "2f49a1cc226b4ece",
+    "inclusion": "V",
+    "focus": true
+   },
+   {
+    "label": "C85",
+    "id": "38be30d42d55ec7f",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "E",
+    "id": "d7f95a68a63e638f",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "A",
+    "id": "66f3dca63091dfa6",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "B",
+    "id": "b661a930ae9dd7f3",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "IP (VG #2 D1)",
+    "id": "5c5dcc5588f49717",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "IP as V (VG #2 D1)",
+    "id": "e2da75396048bbd9",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "IP as G (VG #2 D1)",
+    "id": "ed026e1f59ab02e4",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "XP (VG #2 D1)",
+    "id": "0c7deaa15b37b1f0",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "XP as V (VG #2 D1)",
+    "id": "c1be685afdcaef99",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "XP as G (VG #2 D1)",
+    "id": "b5f1b6cd26532132",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "SP",
+    "id": "786661591facc5ea",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "SP as V",
+    "id": "35bd569ef9388424",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "SP as G",
+    "id": "d850812944269d79",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G01 (+ VG #2 D1)",
+    "id": "b801d0e364f76795",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G01 as V (+ VG #2 D1)",
+    "id": "b338825fecc48d4f",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G01 as G (+ VG #2 D1)",
+    "id": "9c7e6a84a1e363bb",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G02 (+ VG #2 D1)",
+    "id": "bbfac5786135bc9a",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G02 as V (+ VG #2 D1)",
+    "id": "bfe060eec4e20e8f",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G02 as G (+ VG #2 D1)",
+    "id": "bba20dd10173af8c",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G03 (+ VG #2 D1)",
+    "id": "11b2bd9bd8ccca93",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G03 as V (+ VG #2 D1)",
+    "id": "26904c78cd3887e6",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G04 (+ VG #2 D1)",
+    "id": "0521d5fb1efb5910",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G04 as V (+ VG #2 D1)",
+    "id": "c0d32870f59aa5a8",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G04 as G (+ VG #2 D1)",
+    "id": "8c61bcdac7aeb697",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G05 (+ VG #2 D1)",
+    "id": "cddddc8becb0f3e8",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G05 as V (+ VG #2 D1)",
+    "id": "ed4702b435c08dd3",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G06 (+ VG #2 D1)",
+    "id": "972d9ab7e4f64121",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G06 as V (+ VG #2 D1)",
+    "id": "3716575de092c22b",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G06 as G (+ VG #2 D1)",
+    "id": "5ac9eff8681e7786",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G07 (+ VG #2 D1)",
+    "id": "66213f0d351f836a",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G07 as V (+ VG #2 D1)",
+    "id": "0a2a8416d2541020",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G08 (+ VG #2 D1)",
+    "id": "804798a50fcfb2ea",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G08 as V (+ VG #2 D1)",
+    "id": "e30291ce577a3ad7",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G08 as G (+ VG #2 D1)",
+    "id": "b221fdc8246821c5",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G10 (+ VG #2 D1)",
+    "id": "260095ab52aac3b5",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G10 as V (+ VG #2 D1)",
+    "id": "6b0770a5c50ed57f",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G10 as G (+ VG #2 D1)",
+    "id": "e2432b23c9b45cfa",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G11 (+ VG #2 D1)",
+    "id": "7b20b2b58d0ba9ea",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G11 as V (+ VG #2 D1)",
+    "id": "4e122d21214ca270",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G11 as G (+ VG #2 D1)",
+    "id": "fe92c7d1f43dc1b3",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G12 (+ VG #2 D1)",
+    "id": "bd7531537865dd87",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G12 as V (+ VG #2 D1)",
+    "id": "f6bd233aa487b19d",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I02 (VG #2 D1)",
+    "id": "c342cd2ec74f6506",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I02 as V (VG #2 D1)",
+    "id": "a440545ab56c726b",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I02 as G (VG #2 D1)",
+    "id": "50f3dc931db5fdab",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I03 (VG #2 D1)",
+    "id": "2f3bc4e57d80b8db",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I03 as V (VG #2 D1)",
+    "id": "ee30f1018dda23db",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I03 as G (VG #2 D1)",
+    "id": "5bfabc46fafe5826",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I04 (VG #2 D1)",
+    "id": "9428659429ed3aee",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I04 as V (VG #2 D1)",
+    "id": "b13b7c86024f5b2e",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I05 (VG #2 D1)",
+    "id": "eeaae06e4bbbd864",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I05 as V (VG #2 D1)",
+    "id": "9b9d8dd494e097e3",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I05 as G (VG #2 D1)",
+    "id": "d644a17e4cf69790",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I06 (VG #2 D1)",
+    "id": "2d71d1df968a272b",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I06 as V (VG #2 D1)",
+    "id": "75549cb6563983a1",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I06 as G (VG #2 D1)",
+    "id": "86b0d00cb5efdbc5",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I07 (VG #2 D1)",
+    "id": "f126cf22a188320f",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I07 as V (VG #2 D1)",
+    "id": "1baa87b879da7221",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I07 as G (VG #2 D1)",
+    "id": "01da6ebf783ffc8b",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I08 (VG #2 D1)",
+    "id": "010310521f8f73a6",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I08 as V (VG #2 D1)",
+    "id": "3a7f25866275c003",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I08 as G (VG #2 D1)",
+    "id": "ffb42bb8a505f41d",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I09 (VG #2 D1)",
+    "id": "ee2cecdeef3f8a72",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I09 as V (VG #2 D1)",
+    "id": "0dd7c5a675e378d6",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I09 as G (VG #2 D1)",
+    "id": "ecbab0fea73a23d1",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I10 (VG #2 D1)",
+    "id": "170d3e96036a2f63",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I10 as V (VG #2 D1)",
+    "id": "16ccca9651ec1adb",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I10 as G (VG #2 D1)",
+    "id": "ad0e6666b844dcd4",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I11 (VG #2 D1)",
+    "id": "5c2c7532628fdd6f",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I11 as V (VG #2 D1)",
+    "id": "48d412191936f502",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I11 as G (VG #2 D1)",
+    "id": "f8ffb431c7c0f20c",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I12 (VG #2 D1)",
+    "id": "526d8bd3577340d3",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I12 as V (VG #2 D1)",
+    "id": "4766d5a2857116bd",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I12 as G (VG #2 D1)",
+    "id": "16c2d98a8ce11ec7",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I13 (VG #2 D1)",
+    "id": "779400e251c079eb",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I13 as V (VG #2 D1)",
+    "id": "631f2bd7b77cef1f",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I13 as G (VG #2 D1)",
+    "id": "39ec0667e91f1f42",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I14 (VG #2 D1)",
+    "id": "a4b59f4df67821ff",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I14 as V (VG #2 D1)",
+    "id": "36516f66730d3ab8",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I14 as G (VG #2 D1)",
+    "id": "e9b3ae30db020ab3",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I15 (VG #2 D1)",
+    "id": "ac9a865f19cb2088",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I15 as V (VG #2 D1)",
+    "id": "d575248edc423dd7",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I15 as G (VG #2 D1)",
+    "id": "9fff5e08151403fb",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I16 (VG #2 D1)",
+    "id": "1679698b84912d12",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I16 as V (VG #2 D1)",
+    "id": "fbd5ac578513ae80",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I16 as G (VG #2 D1)",
+    "id": "256ff93f7738cedc",
+    "inclusion": "G",
+    "focus": false
+   }
+  ],
+  "joint": [
+   {
+    "label": "C4",
+    "id": "2f49a1cc226b4ece",
+    "inclusion": "V",
+    "focus": true
+   },
+   {
+    "label": "C85",
+    "id": "38be30d42d55ec7f",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "E",
+    "id": "d7f95a68a63e638f",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "A",
+    "id": "66f3dca63091dfa6",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "B",
+    "id": "b661a930ae9dd7f3",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "IP",
+    "id": "d7e6e9243a0ffe86",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "IP as V",
+    "id": "0ade26709b497ca7",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "IP as G",
+    "id": "4e6bac63ebc87e73",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "XP",
+    "id": "cb30e5fc00efc705",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "XP as V",
+    "id": "6daef2bf3ff24146",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "XP as G",
+    "id": "d5f41f957c12bc71",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "SP",
+    "id": "786661591facc5ea",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "SP as V",
+    "id": "35bd569ef9388424",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "SP as G",
+    "id": "d850812944269d79",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G01 (+ VG #2 D1)",
+    "id": "b801d0e364f76795",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G01 as V (+ VG #2 D1)",
+    "id": "b338825fecc48d4f",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G01 as G (+ VG #2 D1)",
+    "id": "9c7e6a84a1e363bb",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G02 (+ VG #2 D1)",
+    "id": "bbfac5786135bc9a",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G02 as V (+ VG #2 D1)",
+    "id": "bfe060eec4e20e8f",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G02 as G (+ VG #2 D1)",
+    "id": "bba20dd10173af8c",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G03 (+ VG #2 D1)",
+    "id": "11b2bd9bd8ccca93",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G03 as V (+ VG #2 D1)",
+    "id": "26904c78cd3887e6",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G04 (+ VG #2 D1)",
+    "id": "0521d5fb1efb5910",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G04 as V (+ VG #2 D1)",
+    "id": "c0d32870f59aa5a8",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G04 as G (+ VG #2 D1)",
+    "id": "8c61bcdac7aeb697",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G05 (+ VG #2 D1)",
+    "id": "cddddc8becb0f3e8",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G05 as V (+ VG #2 D1)",
+    "id": "ed4702b435c08dd3",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G06 (+ VG #2 D1)",
+    "id": "972d9ab7e4f64121",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G06 as V (+ VG #2 D1)",
+    "id": "3716575de092c22b",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G06 as G (+ VG #2 D1)",
+    "id": "5ac9eff8681e7786",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G07 (+ VG #2 D1)",
+    "id": "66213f0d351f836a",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G07 as V (+ VG #2 D1)",
+    "id": "0a2a8416d2541020",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G08 (+ VG #2 D1)",
+    "id": "804798a50fcfb2ea",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G08 as V (+ VG #2 D1)",
+    "id": "e30291ce577a3ad7",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G08 as G (+ VG #2 D1)",
+    "id": "b221fdc8246821c5",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G10 (+ VG #2 D1)",
+    "id": "260095ab52aac3b5",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G10 as V (+ VG #2 D1)",
+    "id": "6b0770a5c50ed57f",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G10 as G (+ VG #2 D1)",
+    "id": "e2432b23c9b45cfa",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G11 (+ VG #2 D1)",
+    "id": "7b20b2b58d0ba9ea",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G11 as V (+ VG #2 D1)",
+    "id": "4e122d21214ca270",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "G11 as G (+ VG #2 D1)",
+    "id": "fe92c7d1f43dc1b3",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "G12 (+ VG #2 D1)",
+    "id": "bd7531537865dd87",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "G12 as V (+ VG #2 D1)",
+    "id": "f6bd233aa487b19d",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I02",
+    "id": "baa98cc662f55609",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I02 as V",
+    "id": "fa7db17713e2ed40",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I02 as G",
+    "id": "32ae8f8e5473c9bb",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I03",
+    "id": "3d5414bda64c1e93",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I03 as V",
+    "id": "ac481b104c98733e",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I03 as G",
+    "id": "ed8f42ca8bdcadc0",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I04",
+    "id": "64ea75bf6e8815ae",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I04 as V",
+    "id": "2a2bee3830551bea",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I04 as G",
+    "id": "0a2537d6e1e66054",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I05",
+    "id": "87de98de75377ad3",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I05 as V",
+    "id": "ae2f19d1a837d91e",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I05 as G",
+    "id": "de989bc065a6fbd5",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I06",
+    "id": "c8e71a2cb9f068a4",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I06 as V",
+    "id": "0adf672771fa59e1",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I06 as G",
+    "id": "abb5455a0e3546b1",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I07",
+    "id": "56d647004cd3ab51",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I07 as V",
+    "id": "8b0c4cb2110876d1",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I07 as G",
+    "id": "c81174fcdd7f63d5",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I08",
+    "id": "324bac60a10846e7",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I08 as V",
+    "id": "c8204870b8549a77",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I08 as G",
+    "id": "47c173211c3af49f",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I09",
+    "id": "6fc2713f164b2170",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I09 as V",
+    "id": "9cf839f4db17d6e7",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I09 as G",
+    "id": "685a65799730c27a",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I10",
+    "id": "9416b18514ae5ea9",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I10 as V",
+    "id": "f8634a39b32ee0c4",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I10 as G",
+    "id": "bb9a89a96a69e15e",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I11",
+    "id": "fd8e0fd3ae5f534e",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I11 as V",
+    "id": "7406587b8110fe1c",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I11 as G",
+    "id": "03c4f363aa65485c",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I12",
+    "id": "37a8a9e311859b67",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I12 as V",
+    "id": "66dc2ef874d31cc4",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I12 as G",
+    "id": "922032bd86210f20",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I13",
+    "id": "e586eff7a3c863ce",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I13 as V",
+    "id": "b0cbb680e75dd30b",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I13 as G",
+    "id": "e13e43aa407de05a",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I14",
+    "id": "894d6a421224d96e",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I14 as V",
+    "id": "a62d1ae6217366ad",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I14 as G",
+    "id": "1f5e85a09762c7ab",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I15",
+    "id": "6966570967a0e2ca",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I15 as V",
+    "id": "9e1ed9270276270d",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I15 as G",
+    "id": "fd901d37b2208707",
+    "inclusion": "G",
+    "focus": false
+   },
+   {
+    "label": "I16",
+    "id": "91ac1f785f6952a1",
+    "inclusion": "B",
+    "focus": false
+   },
+   {
+    "label": "I16 as V",
+    "id": "a0793e5458e60118",
+    "inclusion": "V",
+    "focus": false
+   },
+   {
+    "label": "I16 as G",
+    "id": "ece6b99353869209",
+    "inclusion": "G",
+    "focus": false
+   }
+  ]
+ },
+ "partners": {
+  "GDX": [
+   "07cac3329fc7a520"
+  ],
+  "VGT": [
+   "420cd989e4fa7749",
+   "08500a60ec56cfae"
+  ]
+ }
+}

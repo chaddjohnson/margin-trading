@@ -1,0 +1,1497 @@
+{
+ "kind": "gdx-growth-standalone control manifest",
+ "writtenAt": "2026-11-10T17:07:19.681Z",
+ "sources": {
+  "p3ControlManifest": {
+   "file": "research/vg-d1-growth-joint/CONTROL_MANIFEST.json",
+   "sha256": "0f40efd76aec8ec10a504fb2cf508891a572061df51db065363a910fb68adaa1"
+  },
+  "p3cFrozenSelection": {
+   "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+   "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e"
+  },
+  "p3bFrozenSelection": {
+   "file": "research/vg-d1-growth-expanded/FROZEN_SELECTION.json",
+   "sha256": "f76299683bcb92a9175864daaf3b46f1aab62879a14aeda49a7f9ad3f5bf422e"
+  },
+  "p5aCentres": {
+   "file": "research/vg-growth-funding-lifecycle/results/development/centres.json",
+   "sha256": "09afda78f6fa40fb18a43557e4e24a3bf7fe159c148cc6858b72b2c31785feb8"
+  },
+  "p5aStandalone": {
+   "file": "research/vg-growth-funding-lifecycle/results/development/standalone.json",
+   "sha256": "35f28d1851c1cec5872d414c3283423ebb513056324c32b48c69648ba05e7154"
+  }
+ },
+ "appendixA": {
+  "id": "07cac3329fc7a520",
+  "developmentTarget": {
+   "net": 53816.5,
+   "dd": 17709.96,
+   "lots": 13
+  },
+  "nativeFullHistoryTarget": {
+   "window": [
+    "2016-01-04",
+    "2026-10-30"
+   ],
+   "net": 141157.37,
+   "minuteDd": 17709.96,
+   "closedTrades": 19,
+   "wins": 17,
+   "losses": 2,
+   "open": 0
+  }
+ },
+ "priorRule": "(a) Priority 3C: every distinct GDX vector holding a formal role (actual-profit, robust-profit, balanced, lower-drawdown) in the sealed C24 role sets of arms R, O, G; (b) Priority 3B: every distinct GDX vector holding a formal role in the sealed C24 inclusion-G and inclusion-B role sets whose GDX book was funded at its development centre. Development roles only; no validation figure read; Appendix A excluded (it is the exact control).",
+ "controls": [
+  {
+   "key": "A",
+   "label": "control: Appendix A",
+   "role": "exact control",
+   "selectable": true,
+   "gdxId": "07cac3329fc7a520",
+   "class": "rise|gate on|trend price_change|elig time_limited|hold_off|istop on|retain off|cont shallow_pullback",
+   "provenance": "browser-selected (Priority 3 brief Appendix A, the user's GDX Growth trial ledger, preview PV-3a29…/R-000040) with 2016-01-04 → 2026-10-30 in view: informed; never an independent seed",
+   "source": {
+    "file": "research/vg-d1-growth-joint/CONTROL_MANIFEST.json",
+    "sha256": "0f40efd76aec8ec10a504fb2cf508891a572061df51db065363a910fb68adaa1",
+    "path": "incumbents.appendixA.effective"
+   },
+   "settings": {
+    "id": "2cfe25b384f8d02a",
+    "priority3QuadId": "b5c47cb035a78a99",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "07cac3329fc7a520",
+     "entry": "rise",
+     "class": "rise|gate on|trend price_change|elig time_limited|hold_off|istop on|retain off|cont shallow_pullback",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 30,
+      "trendChangeMinimumReturnPercent": -2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 60,
+      "dipThresholdPercent": 10,
+      "recoveryRetracementPercent": 49,
+      "recoveryConfirmationSessions": 2,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 20,
+      "initialStopAtrMultiple": 2,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "shallow_pullback",
+      "continuationWindowSessions": 60,
+      "uptrendSmaBars": 50,
+      "uptrendSlopeBars": 10,
+      "uptrendMinimumRisePercent": 0,
+      "pullbackMinimumPercent": 1.5,
+      "pullbackMaximumPercent": 8,
+      "recoveryPercent": 2,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 3,
+      "recentLowLookbackBars": 22,
+      "resolution": "1d",
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": false,
+      "maximumHoldDays": "__NaN",
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "shallow_pullback",
+       "windowSessions": 60,
+       "smaBars": 50,
+       "slopeBars": 10,
+       "minimumRisePercent": 0,
+       "pullbackMinimumPercent": 1.5,
+       "pullbackMaximumPercent": 8,
+       "recoveryPercent": 2
+      },
+      "trendFilter": {
+       "method": "price_change",
+       "lookbackSessions": 30,
+       "minimumReturnPercent": -2
+      },
+      "eligibility": {
+       "policy": "time_limited",
+       "maxAgeSessions": 20
+      },
+      "initialStop": {
+       "atrSessions": 20,
+       "atrMultiple": 2
+      },
+      "drawdownGate": {
+       "lookbackSessions": 60,
+       "dipThresholdPercent": 10,
+       "recoveryRetracementPercent": 49,
+       "confirmationSessions": 2
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=3, recentLowLookbackBars=22, trendFilterEnabled=true, trendMethod=price_change, trendChangeLookbackSessions=30, trendChangeMinimumReturnPercent=-2, eligibilityEnabled=true, eligibilityPolicy=time_limited, eligibilityMaxAgeSessions=20, drawdownRecoveryGateEnabled=true, dipLookbackSessions=60, dipThresholdPercent=10, recoveryRetracementPercent=49, recoveryConfirmationSessions=2, trailingStopPercent=7, maximumHoldEnabled=false, initialStopEnabled=true, initialStopAtrSessions=20, initialStopAtrMultiple=2, retentionEnabled=false, continuationEnabled=true, continuationMethod=shallow_pullback, continuationWindowSessions=60, uptrendSmaBars=50, uptrendSlopeBars=10, uptrendMinimumRisePercent=0, pullbackMinimumPercent=1.5, pullbackMaximumPercent=8, recoveryPercent=2"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P01",
+   "label": "control: P01 3C R actual-profit",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "80007f4b8ab7dca0",
+   "class": "rise|gate off|trend price_change|elig maximum_extension|hold_off|istop on|retain on|cont classic_d1",
+   "provenance": "3C R actual-profit — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+    "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e",
+    "path": "frozenMembers[label=C24/R/broad-rise#1 profit].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "9f73dee3e8cf482c",
+    "priority3QuadId": "c4d3aa755d14a0f0",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "80007f4b8ab7dca0",
+     "entry": "rise",
+     "class": "rise|gate off|trend price_change|elig maximum_extension|hold_off|istop on|retain on|cont classic_d1",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 18,
+      "recentLowLookbackBars": 198,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 115,
+      "trendChangeMinimumReturnPercent": 9.8,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "maximum_extension",
+      "eligibilityMaxAgeSessions": 2,
+      "eligibilityMaximumExtensionPercent": 3.4,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 11.1,
+      "maximumHoldEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 15,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 60,
+      "retentionSmaSessions": 11,
+      "retentionClosesBelow": 2,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 106,
+      "classicPullbackPercent": 10.7,
+      "classicReboundPercent": 1.11,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 18,
+      "recentLowLookbackBars": 198,
+      "resolution": "1d",
+      "trailingStopPercent": 11.1,
+      "maximumHoldEnabled": false,
+      "maximumHoldDays": "__NaN",
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "classic_d1",
+       "windowSessions": 106,
+       "pullbackPercent": 10.7,
+       "reboundPercent": 1.11
+      },
+      "trendFilter": {
+       "method": "price_change",
+       "lookbackSessions": 115,
+       "minimumReturnPercent": 9.8
+      },
+      "eligibility": {
+       "policy": "maximum_extension",
+       "maxAgeSessions": 2,
+       "maximumExtensionPercent": 3.4
+      },
+      "initialStop": {
+       "atrSessions": 15,
+       "atrMultiple": 1
+      },
+      "retention": {
+       "sellPercent": 60,
+       "smaSessions": 11,
+       "closesBelow": 2
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=18, recentLowLookbackBars=198, trendFilterEnabled=true, trendMethod=price_change, trendChangeLookbackSessions=115, trendChangeMinimumReturnPercent=9.8, eligibilityEnabled=true, eligibilityPolicy=maximum_extension, eligibilityMaxAgeSessions=2, eligibilityMaximumExtensionPercent=3.4, drawdownRecoveryGateEnabled=false, trailingStopPercent=11.1, maximumHoldEnabled=false, initialStopEnabled=true, initialStopAtrSessions=15, initialStopAtrMultiple=1, retentionEnabled=true, retentionSellPercent=60, retentionSmaSessions=11, retentionClosesBelow=2, continuationEnabled=true, continuationMethod=classic_d1, continuationWindowSessions=106, classicPullbackPercent=10.7, classicReboundPercent=1.11"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P02",
+   "label": "control: P02 3C R robust-profit",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "c572efb8efbc4016",
+   "class": "rise|gate off|trend rising_sma|elig reset_renew|hold_on_buffer_off|istop on|retain off|cont ma_cross",
+   "provenance": "3C R robust-profit — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+    "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e",
+    "path": "frozenMembers[label=C24/R/broad-rise#2 robust].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "03e7661f5535c450",
+    "priority3QuadId": "e01ad967078e27ef",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "c572efb8efbc4016",
+     "entry": "rise",
+     "class": "rise|gate off|trend rising_sma|elig reset_renew|hold_on_buffer_off|istop on|retain off|cont ma_cross",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 20,
+      "recentLowLookbackBars": 208,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 143,
+      "trendSmaComparisonSessions": 12,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 2,
+      "eligibilityResetDropPercent": 1.3,
+      "eligibilityRenewalReboundPercent": 7.8,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 8.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 23,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 26,
+      "initialStopAtrMultiple": 1.3,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 88,
+      "crossSmaBars": 168,
+      "crossRisingBars": 28,
+      "crossMinimumSlopePercent": 0.9,
+      "crossMarginPercent": 2.95,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 20,
+      "recentLowLookbackBars": 208,
+      "resolution": "1d",
+      "trailingStopPercent": 8.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 23,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "ma_cross",
+       "windowSessions": 88,
+       "smaBars": 168,
+       "risingBars": 28,
+       "minimumSlopePercent": 0.9,
+       "marginPercent": 2.95
+      },
+      "trendFilter": {
+       "method": "rising_sma",
+       "movingAverageSessions": 143,
+       "slopeComparisonSessions": 12
+      },
+      "eligibility": {
+       "policy": "reset_renew",
+       "maxAgeSessions": 2,
+       "resetDropPercent": 1.3,
+       "renewalReboundPercent": 7.8
+      },
+      "initialStop": {
+       "atrSessions": 26,
+       "atrMultiple": 1.3
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=20, recentLowLookbackBars=208, trendFilterEnabled=true, trendMethod=rising_sma, trendSmaSessions=143, trendSmaComparisonSessions=12, eligibilityEnabled=true, eligibilityPolicy=reset_renew, eligibilityMaxAgeSessions=2, eligibilityResetDropPercent=1.3, eligibilityRenewalReboundPercent=7.8, drawdownRecoveryGateEnabled=false, trailingStopPercent=8.5, maximumHoldEnabled=true, maximumHoldDays=23, intradayLossBufferEnabled=false, initialStopEnabled=true, initialStopAtrSessions=26, initialStopAtrMultiple=1.3, retentionEnabled=false, continuationEnabled=true, continuationMethod=ma_cross, continuationWindowSessions=88, crossSmaBars=168, crossRisingBars=28, crossMinimumSlopePercent=0.9, crossMarginPercent=2.95"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P03",
+   "label": "control: P03 3C R balanced",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "837b09fe07281a2f",
+   "class": "rise|gate off|trend price_change|elig maximum_extension|hold_on_buffer_off|istop on|retain on|cont classic_d1",
+   "provenance": "3C R balanced; 3C R lower-drawdown — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+    "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e",
+    "path": "frozenMembers[label=C24/R/broad-rise#3 balanced].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "0806dd88b3e6c05c",
+    "priority3QuadId": "c4fdd81defe5ddfe",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "837b09fe07281a2f",
+     "entry": "rise",
+     "class": "rise|gate off|trend price_change|elig maximum_extension|hold_on_buffer_off|istop on|retain on|cont classic_d1",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 18.4,
+      "recentLowLookbackBars": 195,
+      "trendFilterEnabled": true,
+      "trendMethod": "price_change",
+      "trendChangeLookbackSessions": 120,
+      "trendChangeMinimumReturnPercent": 6.7,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "maximum_extension",
+      "eligibilityMaxAgeSessions": 2,
+      "eligibilityMaximumExtensionPercent": 4.7,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 10.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 17,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 17,
+      "initialStopAtrMultiple": 1,
+      "retentionEnabled": true,
+      "retentionSellPercent": 61,
+      "retentionSmaSessions": 40,
+      "retentionClosesBelow": 2,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 127,
+      "classicPullbackPercent": 12.1,
+      "classicReboundPercent": 1.11,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 18.4,
+      "recentLowLookbackBars": 195,
+      "resolution": "1d",
+      "trailingStopPercent": 10.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 17,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "classic_d1",
+       "windowSessions": 127,
+       "pullbackPercent": 12.1,
+       "reboundPercent": 1.11
+      },
+      "trendFilter": {
+       "method": "price_change",
+       "lookbackSessions": 120,
+       "minimumReturnPercent": 6.7
+      },
+      "eligibility": {
+       "policy": "maximum_extension",
+       "maxAgeSessions": 2,
+       "maximumExtensionPercent": 4.7
+      },
+      "initialStop": {
+       "atrSessions": 17,
+       "atrMultiple": 1
+      },
+      "retention": {
+       "sellPercent": 61,
+       "smaSessions": 40,
+       "closesBelow": 2
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=18.4, recentLowLookbackBars=195, trendFilterEnabled=true, trendMethod=price_change, trendChangeLookbackSessions=120, trendChangeMinimumReturnPercent=6.7, eligibilityEnabled=true, eligibilityPolicy=maximum_extension, eligibilityMaxAgeSessions=2, eligibilityMaximumExtensionPercent=4.7, drawdownRecoveryGateEnabled=false, trailingStopPercent=10.5, maximumHoldEnabled=true, maximumHoldDays=17, intradayLossBufferEnabled=false, initialStopEnabled=true, initialStopAtrSessions=17, initialStopAtrMultiple=1, retentionEnabled=true, retentionSellPercent=61, retentionSmaSessions=40, retentionClosesBelow=2, continuationEnabled=true, continuationMethod=classic_d1, continuationWindowSessions=127, classicPullbackPercent=12.1, classicReboundPercent=1.11"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P04",
+   "label": "control: P04 3C O actual-profit",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "cbeba5d05202d951",
+   "class": "rise|gate off|trend regression_slope|elig time_limited|hold_on_buffer_off|istop off|retain off|cont breakout",
+   "provenance": "3C O actual-profit — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+    "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e",
+    "path": "frozenMembers[label=C24/O/seeded#1 profit].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "2877497d4f370a06",
+    "priority3QuadId": "1f75e70011b33495",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "cbeba5d05202d951",
+     "entry": "rise",
+     "class": "rise|gate off|trend regression_slope|elig time_limited|hold_on_buffer_off|istop off|retain off|cont breakout",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 2,
+      "recentLowLookbackBars": 86,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 62,
+      "trendSlopeMinimumPercent": -2.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 25,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 3.1,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 19,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 122,
+      "breakoutBufferPercent": 4.85,
+      "breakoutFormationBars": 20,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 2,
+      "recentLowLookbackBars": 86,
+      "resolution": "1d",
+      "trailingStopPercent": 3.1,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 19,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "breakout",
+       "windowSessions": 122,
+       "bufferPercent": 4.85,
+       "formationBars": 20
+      },
+      "trendFilter": {
+       "method": "regression_slope",
+       "lookbackSessions": 62,
+       "minimumSlopePercent": -2.5
+      },
+      "eligibility": {
+       "policy": "time_limited",
+       "maxAgeSessions": 25
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=2, recentLowLookbackBars=86, trendFilterEnabled=true, trendMethod=regression_slope, trendSlopeLookbackSessions=62, trendSlopeMinimumPercent=-2.5, eligibilityEnabled=true, eligibilityPolicy=time_limited, eligibilityMaxAgeSessions=25, drawdownRecoveryGateEnabled=false, trailingStopPercent=3.1, maximumHoldEnabled=true, maximumHoldDays=19, intradayLossBufferEnabled=false, initialStopEnabled=false, retentionEnabled=false, continuationEnabled=true, continuationMethod=breakout, continuationWindowSessions=122, breakoutBufferPercent=4.85, breakoutFormationBars=20"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P05",
+   "label": "control: P05 3C O robust-profit",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "a265778def8fcad5",
+   "class": "rise|gate off|trend rising_sma|elig deterioration|hold_on_buffer_off|istop on|retain off|cont off",
+   "provenance": "3C O robust-profit — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+    "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e",
+    "path": "frozenMembers[label=C24/O/broad-rise#2 robust].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "53e0c3f74f770693",
+    "priority3QuadId": "213c2c7317d63e26",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "a265778def8fcad5",
+     "entry": "rise",
+     "class": "rise|gate off|trend rising_sma|elig deterioration|hold_on_buffer_off|istop on|retain off|cont off",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 19.9,
+      "recentLowLookbackBars": 205,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 171,
+      "trendSmaComparisonSessions": 2,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "deterioration",
+      "eligibilityMaxAgeSessions": 19,
+      "eligibilityDeteriorationDropPercent": 2.8,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 11.1,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 4,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 57,
+      "initialStopAtrMultiple": 4.5,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 19.9,
+      "recentLowLookbackBars": 205,
+      "resolution": "1d",
+      "trailingStopPercent": 11.1,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 4,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": null,
+      "trendFilter": {
+       "method": "rising_sma",
+       "movingAverageSessions": 171,
+       "slopeComparisonSessions": 2
+      },
+      "eligibility": {
+       "policy": "deterioration",
+       "maxAgeSessions": 19,
+       "deteriorationDropPercent": 2.8
+      },
+      "initialStop": {
+       "atrSessions": 57,
+       "atrMultiple": 4.5
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=19.9, recentLowLookbackBars=205, trendFilterEnabled=true, trendMethod=rising_sma, trendSmaSessions=171, trendSmaComparisonSessions=2, eligibilityEnabled=true, eligibilityPolicy=deterioration, eligibilityMaxAgeSessions=19, eligibilityDeteriorationDropPercent=2.8, drawdownRecoveryGateEnabled=false, trailingStopPercent=11.1, maximumHoldEnabled=true, maximumHoldDays=4, intradayLossBufferEnabled=false, initialStopEnabled=true, initialStopAtrSessions=57, initialStopAtrMultiple=4.5, retentionEnabled=false, continuationEnabled=false"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P06",
+   "label": "control: P06 3C O balanced",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "847f8e9112b09070",
+   "class": "rise|gate off|trend momentum|elig time_limited|hold_on_buffer_off|istop off|retain on|cont breakout",
+   "provenance": "3C O balanced; 3C O lower-drawdown — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+    "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e",
+    "path": "frozenMembers[label=C24/O/seeded#2 robust].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "308bc4ed66df4e91",
+    "priority3QuadId": "e4a53d16eb8f0180",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "847f8e9112b09070",
+     "entry": "rise",
+     "class": "rise|gate off|trend momentum|elig time_limited|hold_on_buffer_off|istop off|retain on|cont breakout",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "trendFilterEnabled": true,
+      "trendMethod": "momentum",
+      "trendMomentumShortSessions": 24,
+      "trendMomentumLongSessions": 120,
+      "trendMomentumMinimumShortReturnPercent": 10,
+      "trendMomentumMinimumLongReturnPercent": -1.5,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "time_limited",
+      "eligibilityMaxAgeSessions": 20,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 4.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": true,
+      "retentionSellPercent": 31,
+      "retentionSmaSessions": 11,
+      "retentionClosesBelow": 4,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 140,
+      "breakoutBufferPercent": 4.85,
+      "breakoutFormationBars": 18,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 1,
+      "recentLowLookbackBars": 80,
+      "resolution": "1d",
+      "trailingStopPercent": 4.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 16,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "breakout",
+       "windowSessions": 140,
+       "bufferPercent": 4.85,
+       "formationBars": 18
+      },
+      "trendFilter": {
+       "method": "momentum",
+       "shortLookbackSessions": 24,
+       "longLookbackSessions": 120,
+       "minimumShortReturnPercent": 10,
+       "minimumLongReturnPercent": -1.5
+      },
+      "eligibility": {
+       "policy": "time_limited",
+       "maxAgeSessions": 20
+      },
+      "retention": {
+       "sellPercent": 31,
+       "smaSessions": 11,
+       "closesBelow": 4
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=1, recentLowLookbackBars=80, trendFilterEnabled=true, trendMethod=momentum, trendMomentumShortSessions=24, trendMomentumLongSessions=120, trendMomentumMinimumShortReturnPercent=10, trendMomentumMinimumLongReturnPercent=-1.5, eligibilityEnabled=true, eligibilityPolicy=time_limited, eligibilityMaxAgeSessions=20, drawdownRecoveryGateEnabled=false, trailingStopPercent=4.5, maximumHoldEnabled=true, maximumHoldDays=16, intradayLossBufferEnabled=false, initialStopEnabled=false, retentionEnabled=true, retentionSellPercent=31, retentionSmaSessions=11, retentionClosesBelow=4, continuationEnabled=true, continuationMethod=breakout, continuationWindowSessions=140, breakoutBufferPercent=4.85, breakoutFormationBars=18"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P07",
+   "label": "control: P07 3C G actual-profit",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "705123ffa52af905",
+   "class": "rise|gate off|trend off|elig minimum_strength|hold_on_buffer_on|istop off|retain off|cont classic_d1",
+   "provenance": "3C G actual-profit — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+    "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e",
+    "path": "frozenMembers[label=C24/G/broad-rise#1 profit].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "637d3c4dc6275550",
+    "priority3QuadId": "6814edea1d9566b5",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "705123ffa52af905",
+     "entry": "rise",
+     "class": "rise|gate off|trend off|elig minimum_strength|hold_on_buffer_on|istop off|retain off|cont classic_d1",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 4.8,
+      "recentLowLookbackBars": 104,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityMinimumAdvancePercent": 8.2,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 5.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 11,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.8,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 104,
+      "classicPullbackPercent": 9,
+      "classicReboundPercent": 3.02,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 4.8,
+      "recentLowLookbackBars": 104,
+      "resolution": "1d",
+      "trailingStopPercent": 5.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 11,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.8,
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "classic_d1",
+       "windowSessions": 104,
+       "pullbackPercent": 9,
+       "reboundPercent": 3.02
+      },
+      "trendFilter": null,
+      "eligibility": {
+       "policy": "minimum_strength",
+       "maxAgeSessions": 24,
+       "minimumAdvancePercent": 8.2
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=4.8, recentLowLookbackBars=104, trendFilterEnabled=false, eligibilityEnabled=true, eligibilityPolicy=minimum_strength, eligibilityMaxAgeSessions=24, eligibilityMinimumAdvancePercent=8.2, drawdownRecoveryGateEnabled=false, trailingStopPercent=5.5, maximumHoldEnabled=true, maximumHoldDays=11, intradayLossBufferEnabled=true, intradayLossBufferPercent=2.8, initialStopEnabled=false, retentionEnabled=false, continuationEnabled=true, continuationMethod=classic_d1, continuationWindowSessions=104, classicPullbackPercent=9, classicReboundPercent=3.02"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P08",
+   "label": "control: P08 3C G robust-profit",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "97c5f01b151f7e1c",
+   "class": "rise|gate off|trend off|elig minimum_strength|hold_on_buffer_on|istop on|retain off|cont classic_d1",
+   "provenance": "3C G robust-profit; 3C G balanced — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+    "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e",
+    "path": "frozenMembers[label=C24/G/broad-rise#2 robust].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "0e077cbd6f1a7ad7",
+    "priority3QuadId": "164560aa061c7ce0",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "97c5f01b151f7e1c",
+     "entry": "rise",
+     "class": "rise|gate off|trend off|elig minimum_strength|hold_on_buffer_on|istop on|retain off|cont classic_d1",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3.6,
+      "recentLowLookbackBars": 138,
+      "trendFilterEnabled": false,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "minimum_strength",
+      "eligibilityMaxAgeSessions": 24,
+      "eligibilityMinimumAdvancePercent": 8.2,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 5.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 14,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.8,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 48,
+      "initialStopAtrMultiple": 3.8,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 104,
+      "classicPullbackPercent": 9.1,
+      "classicReboundPercent": 3.5,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 3.6,
+      "recentLowLookbackBars": 138,
+      "resolution": "1d",
+      "trailingStopPercent": 5.5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 14,
+      "intradayLossBufferEnabled": true,
+      "intradayLossBufferPercent": 2.8,
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "classic_d1",
+       "windowSessions": 104,
+       "pullbackPercent": 9.1,
+       "reboundPercent": 3.5
+      },
+      "trendFilter": null,
+      "eligibility": {
+       "policy": "minimum_strength",
+       "maxAgeSessions": 24,
+       "minimumAdvancePercent": 8.2
+      },
+      "initialStop": {
+       "atrSessions": 48,
+       "atrMultiple": 3.8
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=3.6, recentLowLookbackBars=138, trendFilterEnabled=false, eligibilityEnabled=true, eligibilityPolicy=minimum_strength, eligibilityMaxAgeSessions=24, eligibilityMinimumAdvancePercent=8.2, drawdownRecoveryGateEnabled=false, trailingStopPercent=5.5, maximumHoldEnabled=true, maximumHoldDays=14, intradayLossBufferEnabled=true, intradayLossBufferPercent=2.8, initialStopEnabled=true, initialStopAtrSessions=48, initialStopAtrMultiple=3.8, retentionEnabled=false, continuationEnabled=true, continuationMethod=classic_d1, continuationWindowSessions=104, classicPullbackPercent=9.1, classicReboundPercent=3.5"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P09",
+   "label": "control: P09 3C G lower-drawdown",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "64f0d3125db3228e",
+   "class": "rise|gate off|trend regression_slope|elig reset_renew|hold_on_buffer_off|istop on|retain off|cont classic_d1",
+   "provenance": "3C G lower-drawdown — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/c4-gdx-growth-partner/FROZEN_SELECTION.json",
+    "sha256": "ef1da770c0f15d8c81f4d7fe24cd7886d729b4f6c597e6ea75ae65247820031e",
+    "path": "frozenMembers[label=C24/G/seeded#2 robust].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "6c2acbd872bec28d",
+    "priority3QuadId": "7b84f2cfe2ca7329",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "64f0d3125db3228e",
+     "entry": "rise",
+     "class": "rise|gate off|trend regression_slope|elig reset_renew|hold_on_buffer_off|istop on|retain off|cont classic_d1",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3.5,
+      "recentLowLookbackBars": 155,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 100,
+      "trendSlopeMinimumPercent": -4.1,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "reset_renew",
+      "eligibilityMaxAgeSessions": 10,
+      "eligibilityResetDropPercent": 5.5,
+      "eligibilityRenewalReboundPercent": 5.2,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 5.6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 6,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 32,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 17,
+      "classicPullbackPercent": 11.7,
+      "classicReboundPercent": 2.82,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 3.5,
+      "recentLowLookbackBars": 155,
+      "resolution": "1d",
+      "trailingStopPercent": 5.6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 6,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "classic_d1",
+       "windowSessions": 17,
+       "pullbackPercent": 11.7,
+       "reboundPercent": 2.82
+      },
+      "trendFilter": {
+       "method": "regression_slope",
+       "lookbackSessions": 100,
+       "minimumSlopePercent": -4.1
+      },
+      "eligibility": {
+       "policy": "reset_renew",
+       "maxAgeSessions": 10,
+       "resetDropPercent": 5.5,
+       "renewalReboundPercent": 5.2
+      },
+      "initialStop": {
+       "atrSessions": 32,
+       "atrMultiple": 3
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=3.5, recentLowLookbackBars=155, trendFilterEnabled=true, trendMethod=regression_slope, trendSlopeLookbackSessions=100, trendSlopeMinimumPercent=-4.1, eligibilityEnabled=true, eligibilityPolicy=reset_renew, eligibilityMaxAgeSessions=10, eligibilityResetDropPercent=5.5, eligibilityRenewalReboundPercent=5.2, drawdownRecoveryGateEnabled=false, trailingStopPercent=5.6, maximumHoldEnabled=true, maximumHoldDays=6, intradayLossBufferEnabled=false, initialStopEnabled=true, initialStopAtrSessions=32, initialStopAtrMultiple=3, retentionEnabled=false, continuationEnabled=true, continuationMethod=classic_d1, continuationWindowSessions=17, classicPullbackPercent=11.7, classicReboundPercent=2.82"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P10",
+   "label": "control: P10 3B inclusion G actual-profit",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "34c322d265a19412",
+   "class": "breakout|gate on|trend rising_sma|elig off|hold_on_buffer_off|istop on|retain off|cont classic_d1",
+   "provenance": "3B inclusion G actual-profit — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/vg-d1-growth-expanded/FROZEN_SELECTION.json",
+    "sha256": "f76299683bcb92a9175864daaf3b46f1aab62879a14aeda49a7f9ad3f5bf422e",
+    "path": "finalSet[label=C24/indep/G_GDX-breakout#1 profit].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "9833f2a7b836f55e",
+    "priority3QuadId": "a25acc72507dd295",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "34c322d265a19412",
+     "entry": "breakout",
+     "class": "breakout|gate on|trend rising_sma|elig off|hold_on_buffer_off|istop on|retain off|cont classic_d1",
+     "effective": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 10,
+      "breakoutSlopeComparisonSessions": 40,
+      "breakoutPriorHighSessions": 115,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 30,
+      "trendSmaComparisonSessions": 27,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 100,
+      "dipThresholdPercent": 2.5,
+      "recoveryRetracementPercent": 90,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 26,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 5,
+      "initialStopAtrMultiple": 5,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "classic_d1",
+      "continuationWindowSessions": 90,
+      "classicPullbackPercent": 12,
+      "classicReboundPercent": 4.2,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": "__NaN",
+      "recentLowLookbackBars": "__NaN",
+      "resolution": "1d",
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 26,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "classic_d1",
+       "windowSessions": 90,
+       "pullbackPercent": 12,
+       "reboundPercent": 4.2
+      },
+      "trendFilter": {
+       "method": "rising_sma",
+       "movingAverageSessions": 30,
+       "slopeComparisonSessions": 27
+      },
+      "eligibility": null,
+      "entryMethod": "trend_breakout",
+      "breakout": {
+       "smaSessions": 10,
+       "slopeComparisonSessions": 40,
+       "priorHighSessions": 115
+      },
+      "initialStop": {
+       "atrSessions": 5,
+       "atrMultiple": 5
+      },
+      "drawdownGate": {
+       "lookbackSessions": 100,
+       "dipThresholdPercent": 2.5,
+       "recoveryRetracementPercent": 90,
+       "confirmationSessions": 5
+      }
+     },
+     "text": "entryMethod=trend_breakout, breakoutSmaSessions=10, breakoutSlopeComparisonSessions=40, breakoutPriorHighSessions=115, trendFilterEnabled=true, trendMethod=rising_sma, trendSmaSessions=30, trendSmaComparisonSessions=27, drawdownRecoveryGateEnabled=true, dipLookbackSessions=100, dipThresholdPercent=2.5, recoveryRetracementPercent=90, recoveryConfirmationSessions=5, trailingStopPercent=7, maximumHoldEnabled=true, maximumHoldDays=26, intradayLossBufferEnabled=false, initialStopEnabled=true, initialStopAtrSessions=5, initialStopAtrMultiple=5, retentionEnabled=false, continuationEnabled=true, continuationMethod=classic_d1, continuationWindowSessions=90, classicPullbackPercent=12, classicReboundPercent=4.2"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P11",
+   "label": "control: P11 3B inclusion G robust-profit",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "b37103a1a532b6b3",
+   "class": "breakout|gate on|trend rising_sma|elig off|hold_on_buffer_off|istop on|retain off|cont off",
+   "provenance": "3B inclusion G robust-profit — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/vg-d1-growth-expanded/FROZEN_SELECTION.json",
+    "sha256": "f76299683bcb92a9175864daaf3b46f1aab62879a14aeda49a7f9ad3f5bf422e",
+    "path": "finalSet[label=C24/indep/G_GDX-breakout#5 profit order].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "0cfd9f38868930d9",
+    "priority3QuadId": "1d451c6f742ac3a1",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "b37103a1a532b6b3",
+     "entry": "breakout",
+     "class": "breakout|gate on|trend rising_sma|elig off|hold_on_buffer_off|istop on|retain off|cont off",
+     "effective": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 10,
+      "breakoutSlopeComparisonSessions": 40,
+      "breakoutPriorHighSessions": 55,
+      "trendFilterEnabled": true,
+      "trendMethod": "rising_sma",
+      "trendSmaSessions": 30,
+      "trendSmaComparisonSessions": 28,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 100,
+      "dipThresholdPercent": 2.5,
+      "recoveryRetracementPercent": 100,
+      "recoveryConfirmationSessions": 5,
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 26,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 5,
+      "initialStopAtrMultiple": 4.5,
+      "retentionEnabled": false,
+      "continuationEnabled": false,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": "__NaN",
+      "recentLowLookbackBars": "__NaN",
+      "resolution": "1d",
+      "trailingStopPercent": 7,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 26,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": null,
+      "trendFilter": {
+       "method": "rising_sma",
+       "movingAverageSessions": 30,
+       "slopeComparisonSessions": 28
+      },
+      "eligibility": null,
+      "entryMethod": "trend_breakout",
+      "breakout": {
+       "smaSessions": 10,
+       "slopeComparisonSessions": 40,
+       "priorHighSessions": 55
+      },
+      "initialStop": {
+       "atrSessions": 5,
+       "atrMultiple": 4.5
+      },
+      "drawdownGate": {
+       "lookbackSessions": 100,
+       "dipThresholdPercent": 2.5,
+       "recoveryRetracementPercent": 100,
+       "confirmationSessions": 5
+      }
+     },
+     "text": "entryMethod=trend_breakout, breakoutSmaSessions=10, breakoutSlopeComparisonSessions=40, breakoutPriorHighSessions=55, trendFilterEnabled=true, trendMethod=rising_sma, trendSmaSessions=30, trendSmaComparisonSessions=28, drawdownRecoveryGateEnabled=true, dipLookbackSessions=100, dipThresholdPercent=2.5, recoveryRetracementPercent=100, recoveryConfirmationSessions=5, trailingStopPercent=7, maximumHoldEnabled=true, maximumHoldDays=26, intradayLossBufferEnabled=false, initialStopEnabled=true, initialStopAtrSessions=5, initialStopAtrMultiple=4.5, retentionEnabled=false, continuationEnabled=false"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P12",
+   "label": "control: P12 3B inclusion G balanced",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "b57db6b8f70b41dd",
+   "class": "breakout|gate on|trend off|elig off|hold_on_buffer_off|istop on|retain on|cont breakout",
+   "provenance": "3B inclusion G balanced; 3B inclusion G lower-drawdown — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/vg-d1-growth-expanded/FROZEN_SELECTION.json",
+    "sha256": "f76299683bcb92a9175864daaf3b46f1aab62879a14aeda49a7f9ad3f5bf422e",
+    "path": "finalSet[label=C24/indep/G_GDX-breakout#2 balanced].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "0b3f43cc522ffc6a",
+    "priority3QuadId": "6e062b81be68fb17",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "b57db6b8f70b41dd",
+     "entry": "breakout",
+     "class": "breakout|gate on|trend off|elig off|hold_on_buffer_off|istop on|retain on|cont breakout",
+     "effective": {
+      "entryMethod": "trend_breakout",
+      "breakoutSmaSessions": 180,
+      "breakoutSlopeComparisonSessions": 105,
+      "breakoutPriorHighSessions": 20,
+      "trendFilterEnabled": false,
+      "drawdownRecoveryGateEnabled": true,
+      "dipLookbackSessions": 110,
+      "dipThresholdPercent": 4,
+      "recoveryRetracementPercent": 100,
+      "recoveryConfirmationSessions": 4,
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 23,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": true,
+      "initialStopAtrSessions": 15,
+      "initialStopAtrMultiple": 3,
+      "retentionEnabled": true,
+      "retentionSellPercent": 70,
+      "retentionSmaSessions": 170,
+      "retentionClosesBelow": 4,
+      "continuationEnabled": true,
+      "continuationMethod": "breakout",
+      "continuationWindowSessions": 120,
+      "breakoutBufferPercent": 1.25,
+      "breakoutFormationBars": 18,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": "__NaN",
+      "recentLowLookbackBars": "__NaN",
+      "resolution": "1d",
+      "trailingStopPercent": 6,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 23,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "breakout",
+       "windowSessions": 120,
+       "bufferPercent": 1.25,
+       "formationBars": 18
+      },
+      "trendFilter": null,
+      "eligibility": null,
+      "entryMethod": "trend_breakout",
+      "breakout": {
+       "smaSessions": 180,
+       "slopeComparisonSessions": 105,
+       "priorHighSessions": 20
+      },
+      "initialStop": {
+       "atrSessions": 15,
+       "atrMultiple": 3
+      },
+      "retention": {
+       "sellPercent": 70,
+       "smaSessions": 170,
+       "closesBelow": 4
+      },
+      "drawdownGate": {
+       "lookbackSessions": 110,
+       "dipThresholdPercent": 4,
+       "recoveryRetracementPercent": 100,
+       "confirmationSessions": 4
+      }
+     },
+     "text": "entryMethod=trend_breakout, breakoutSmaSessions=180, breakoutSlopeComparisonSessions=105, breakoutPriorHighSessions=20, trendFilterEnabled=false, drawdownRecoveryGateEnabled=true, dipLookbackSessions=110, dipThresholdPercent=4, recoveryRetracementPercent=100, recoveryConfirmationSessions=4, trailingStopPercent=6, maximumHoldEnabled=true, maximumHoldDays=23, intradayLossBufferEnabled=false, initialStopEnabled=true, initialStopAtrSessions=15, initialStopAtrMultiple=3, retentionEnabled=true, retentionSellPercent=70, retentionSmaSessions=170, retentionClosesBelow=4, continuationEnabled=true, continuationMethod=breakout, continuationWindowSessions=120, breakoutBufferPercent=1.25, breakoutFormationBars=18"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "P13",
+   "label": "control: P13 3B inclusion B actual-profit",
+   "role": "prior control",
+   "selectable": true,
+   "gdxId": "721d632c8042d699",
+   "class": "rise|gate off|trend regression_slope|elig deterioration|hold_on_buffer_off|istop off|retain off|cont ma_cross",
+   "provenance": "3B inclusion B actual-profit; 3B inclusion B robust-profit; 3B inclusion B balanced — a GDX book selected in a pooled study on 2016–2024 beside anchors chosen with later data in view: informed; never an independent seed",
+   "source": {
+    "file": "research/vg-d1-growth-expanded/FROZEN_SELECTION.json",
+    "sha256": "f76299683bcb92a9175864daaf3b46f1aab62879a14aeda49a7f9ad3f5bf422e",
+    "path": "finalSet[label=C24/informed-joint#3 both Growth funded].settings.growth.GDX.effective"
+   },
+   "settings": {
+    "id": "ffa6da0b165cef27",
+    "priority3QuadId": "e596813ded39dc2d",
+    "enabled": [
+     "G:GDX"
+    ],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": {
+     "identity": "721d632c8042d699",
+     "entry": "rise",
+     "class": "rise|gate off|trend regression_slope|elig deterioration|hold_on_buffer_off|istop off|retain off|cont ma_cross",
+     "effective": {
+      "entryMethod": "rise_from_recent_low",
+      "advanceFromRecentLowPercent": 3.5,
+      "recentLowLookbackBars": 150,
+      "trendFilterEnabled": true,
+      "trendMethod": "regression_slope",
+      "trendSlopeLookbackSessions": 100,
+      "trendSlopeMinimumPercent": -4,
+      "eligibilityEnabled": true,
+      "eligibilityPolicy": "deterioration",
+      "eligibilityMaxAgeSessions": 15,
+      "eligibilityDeteriorationDropPercent": 1.4,
+      "drawdownRecoveryGateEnabled": false,
+      "trailingStopPercent": 5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 4,
+      "intradayLossBufferEnabled": false,
+      "initialStopEnabled": false,
+      "retentionEnabled": false,
+      "continuationEnabled": true,
+      "continuationMethod": "ma_cross",
+      "continuationWindowSessions": 140,
+      "crossSmaBars": 105,
+      "crossRisingBars": 15,
+      "crossMinimumSlopePercent": 1,
+      "crossMarginPercent": 1.3,
+      "costBpsPerSide": 5
+     },
+     "inactive": "every Growth 1.4.0 input absent from `effective` is inactive under this structure (the browser effectiveParams); its value cannot change behaviour or identity",
+     "engineParams": {
+      "advanceFromRecentLowPercent": 3.5,
+      "recentLowLookbackBars": 150,
+      "resolution": "1d",
+      "trailingStopPercent": 5,
+      "maximumHoldEnabled": true,
+      "maximumHoldDays": 4,
+      "intradayLossBufferEnabled": false,
+      "intradayLossBufferPercent": "__NaN",
+      "costBpsPerSide": 5,
+      "continuation": {
+       "method": "ma_cross",
+       "windowSessions": 140,
+       "smaBars": 105,
+       "risingBars": 15,
+       "minimumSlopePercent": 1,
+       "marginPercent": 1.3
+      },
+      "trendFilter": {
+       "method": "regression_slope",
+       "lookbackSessions": 100,
+       "minimumSlopePercent": -4
+      },
+      "eligibility": {
+       "policy": "deterioration",
+       "maxAgeSessions": 15,
+       "deteriorationDropPercent": 1.4
+      }
+     },
+     "text": "entryMethod=rise_from_recent_low, advanceFromRecentLowPercent=3.5, recentLowLookbackBars=150, trendFilterEnabled=true, trendMethod=regression_slope, trendSlopeLookbackSessions=100, trendSlopeMinimumPercent=-4, eligibilityEnabled=true, eligibilityPolicy=deterioration, eligibilityMaxAgeSessions=15, eligibilityDeteriorationDropPercent=1.4, drawdownRecoveryGateEnabled=false, trailingStopPercent=5, maximumHoldEnabled=true, maximumHoldDays=4, intradayLossBufferEnabled=false, initialStopEnabled=false, retentionEnabled=false, continuationEnabled=true, continuationMethod=ma_cross, continuationWindowSessions=140, crossSmaBars=105, crossRisingBars=15, crossMinimumSlopePercent=1, crossMarginPercent=1.3"
+    },
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  },
+  {
+   "key": "CASH",
+   "label": "reference: cash (no position)",
+   "role": "cash reference",
+   "selectable": false,
+   "gdxId": null,
+   "class": "GDX OFF",
+   "provenance": "the zero-profit, zero-drawdown reference (brief \"Exact scope, controls and accounting\")",
+   "source": null,
+   "settings": {
+    "id": "9724462e631513aa",
+    "priority3QuadId": "ec926f03aa0ecf09",
+    "enabled": [],
+    "disabled": "D1·GDX, D1·VGT and Growth·VGT disabled (Priority 3 placeholders, never run or funded)",
+    "growthGdx": null,
+    "economics": {
+     "budget": 100000,
+     "costBpsPerSide": 5,
+     "commission": 0,
+     "interest": "11% simple, 365-day",
+     "compounding": false
+    }
+   }
+  }
+ ],
+ "informedSeeds": [
+  {
+   "label": "Appendix A",
+   "id": "07cac3329fc7a520",
+   "provenance": "browser, 2016–2026 in view"
+  },
+  {
+   "label": "P01 3C R actual-profit",
+   "id": "80007f4b8ab7dca0",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P02 3C R robust-profit",
+   "id": "c572efb8efbc4016",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P03 3C R balanced",
+   "id": "837b09fe07281a2f",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P04 3C O actual-profit",
+   "id": "cbeba5d05202d951",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P05 3C O robust-profit",
+   "id": "a265778def8fcad5",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P06 3C O balanced",
+   "id": "847f8e9112b09070",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P07 3C G actual-profit",
+   "id": "705123ffa52af905",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P08 3C G robust-profit",
+   "id": "97c5f01b151f7e1c",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P09 3C G lower-drawdown",
+   "id": "64f0d3125db3228e",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P10 3B inclusion G actual-profit",
+   "id": "34c322d265a19412",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P11 3B inclusion G robust-profit",
+   "id": "b37103a1a532b6b3",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P12 3B inclusion G balanced",
+   "id": "b57db6b8f70b41dd",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  },
+  {
+   "label": "P13 3B inclusion B actual-profit",
+   "id": "721d632c8042d699",
+   "provenance": "C24 pooled selection (2016–2024; anchors chosen with later data)"
+  }
+ ]
+}

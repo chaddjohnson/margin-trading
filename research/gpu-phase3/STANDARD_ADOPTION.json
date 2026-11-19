@@ -1,0 +1,115 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/gpu-phase3",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "3.0.0",
+  "sha256": "4e8244e65bf1dd7c54ad46a1c941321d68b0c144344fd0c464dcc047eea5fef1"
+ },
+ "readAt": "2026-11-19T14:05:11Z",
+ "adoptedAt": "2026-11-19T14:21:16Z",
+ "protocol": {
+  "path": "research/gpu-phase3/PROTOCOL.md",
+  "sha256": "952da32c89dadbb39733953983e4cbb4c2206ea9b53161bc255784a68fe11a1b"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched for selection, ranked or selected (AD1). The study accelerates the GPU evaluator's host pipeline, proves bit-identical results, hardens enforcement and regenerates the acceptance; its outcomes are engineering gates (PROTOCOL.md section 9) and a verdict (section 10).",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 3000000,
+  "notes": "No search proposals for selection. backendEvaluations caps fresh CPU reference pooled simulations on real data (parity references, the CPU baseline of the Assignment 3 job replay, the CPU arm of the parity-only mini-optimization, the sustained run's CPU samples). GPU evaluations (non-official benchmarks, parity runs, sealed-job replays) are counted separately in the records; synthetic fixtures are not counted."
+ },
+ "evaluationBackend": {
+  "policy": "non-official-cpu",
+  "purpose": "parity-test",
+  "justification": "Engineering acceptance study (GPU Phase 3): CPU evaluations are parity references and benchmark baselines; GPU evaluations are non-official benchmarks, parity runs and replays of sealed jobs compared by identity. Nothing is official optimization evidence (standard 3.0.0 section 9.8); the study's output is a new acceptance record (section 9.9)."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search for selection and no chronological verdict (AD2)",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3",
+   "kind": "adaptation",
+   "description": "no roles and no primary; nothing is selected",
+   "justification": "brief: engineering assignment, not trading research; no strategy, fitness or selection change",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4",
+   "kind": "adaptation",
+   "description": "no official search, no chronological verdict; sealed jobs of Assignments 3 and 2 replayed with their own frozen code and seeds and a parity-only fixed-seed mini-optimization, compared by identity only",
+   "justification": "brief §1, §5.2: real production-style optimizer jobs, fixed-seed comparisons",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "D19-D24 and FULL opened quietly (own door log) for reference identities, sealed-job replays and seeded parity/timing configurations",
+   "justification": "brief §5: representative 2016-2026 parity, short and long doors",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "the CPU engine is the unmodified canonical reference; the GPU result and the new host path must be bit-identical",
+   "justification": "brief: same strategy, optimizer, candidates, results; only faster",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.9",
+   "kind": "adaptation",
+   "description": "not applicable: no fold primary or final candidate",
+   "justification": "no search (AD2)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "host-worker and batch-size measurements are host-path engineering, not a search's tuning benchmark; CPU reference = the 12-worker pool",
+   "justification": "brief §1, §2: explicit controls for worker count grounded in measured data",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§1.5",
+   "kind": "adaptation",
+   "description": "stricter: no money figure of any non-reference configuration; identity booleans, counts, hashes and timings only",
+   "justification": "brief: do not use strategy performance as an engineering decision input",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§6.4",
+   "kind": "adaptation",
+   "description": "one bounded 30-60 min sustained run on the final code instead of a new long endurance test; Phase 2's 8 h run reused only for byte-identical components",
+   "justification": "brief §5: the user does not authorize additional 8-hour or 24-hour endurance tests",
+   "userAgreement": null
+  }
+ ]
+}

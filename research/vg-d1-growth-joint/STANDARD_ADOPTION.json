@@ -1,0 +1,114 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-d1-growth-joint",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "1.0.0",
+  "sha256": "8c38ac15285753240be52c1a55739b2d1f4bed0e49531821c19e7437d3ae639d"
+ },
+ "readAt": "2026-11-08T22:45:00Z",
+ "adoptedAt": "2026-11-09T00:16:16Z",
+ "protocol": {
+  "path": "research/vg-d1-growth-joint/PROTOCOL.md",
+  "sha256": "f9f8b79a49f833263d898126c7c27f82d43af05731686b81abbc3b8a1edcbfc8"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "the actual-profit role of the informed selectable set at C24 (qualified four-component members: unchanged combined controls, staged combinations, the informed refinement's and the independent lane's shortlists): the highest development centre net; ties by the higher selection robust net, the lower centre drawdown, then the label (PROTOCOL.md §12.3); no qualified member: no qualified combined result",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 150000,
+  "backendEvaluations": 1600000,
+  "notes": "planned base schedule (PROTOCOL.md §11.5, §13.4): arm D per cutoff 4 cells × (4,096 screened + 3 × 1,024 island proposals + ≈ 1,000 refinement moves) ≈ 32,800 distinct centres, ≈ 313,000 evaluations (≈ 383,000 with every extension island), identical at C19/C21/C23/C24; arm B (C24) ≈ 14,800 centres / 130,000 evaluations; arm C (C24) ≈ 4,700 centres / 82,000 evaluations; qualification ≈ 1,500 evaluations per member. Reports count centres, neighbours per rung, earlier-fold work, retries and archive hits separately; the actual counts come from the sealed search records."
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.5",
+   "kind": "adaptation",
+   "description": "the primary rule is actual profit (the actual-profit role) with a frozen deterministic tie-break; robust-profit, balanced and lower-drawdown roles reported beside it",
+   "justification": "brief §5 requires actual marked net profit as the primary rank among qualifying combined candidates",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§3.4",
+   "kind": "adaptation",
+   "description": "one allocation architecture (A, one exclusive funded slot); the family priority at a same-instant tie is the only allocation gene; symbols tie alphabetically",
+   "justification": "brief §2: architecture A is the primary combined architecture; capacity-sharing schemes belong to Priority 5",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§4.1",
+   "kind": "adaptation",
+   "description": "Study 8's pipeline with three NSGA-II objectives (−centre net, −robust net, p90 DD) and rung promotion reserving ¼ for centre net and ¼ for robust net",
+   "justification": "brief §5: preserve actual-profit promotion alongside robust ranking (standard §2.4)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "neighbourhood scopes: whole pool, each family, each symbol (128 draws each); the Growth pair: each Growth book",
+   "justification": "brief §5 asks for whole-pool and family/symbol perturbation scopes",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "zero-tolerance parity against the canonical engines where they exist (D1 pair: runNAllocator; Growth: runRiseTrading; one-symbol pools: Priority 2's frozen engine); cross-symbol D1 + Growth pools against an independent reference implementation within $1e-6",
+   "justification": "no canonical engine exists for a cross-symbol D1 + Growth pool",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "stricter door: FULL never opens before the committed frozen selection, not even for the controls' known full-history targets, which are compared at the validation stage",
+   "justification": "brief §3: compare known full-history targets at the final validation stage",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§3.4",
+   "kind": "adaptation",
+   "description": "the four arms are not budget-matched against one another (arm D is matched across cutoffs); inherited search effort is disclosed; no method-superiority claim",
+   "justification": "the arms answer different questions (brief §4); the limitation is stated",
+   "userAgreement": null
+  },
+  {
+   "id": "D1",
+   "section": "§1.8",
+   "kind": "departure",
+   "description": "the earlier-cutoff repetition covers the independent four-component procedure (arm D) only; the Growth-pair search (arm B) runs at C24 only; the staged path and the informed refinement are informed (VG #2) and get no chronological test; no chronological staged-versus-joint method claim",
+   "justification": "regenerating VG #2's two-book D1 pool at every cutoff is outside the frozen budget",
+   "userAgreement": "brief §6: 'if this extra procedure comparison is outside the frozen budget, limit the claim instead'"
+  }
+ ]
+}

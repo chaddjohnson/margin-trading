@@ -1,0 +1,146 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-lifecycle-matched-optimization",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.0.0",
+  "sha256": "2005a88c2e24f5e2ab4e461b0425f97d006781a45518f78d9f10fd9320f40105"
+ },
+ "readAt": "2026-11-11T08:56:00Z",
+ "adoptedAt": "2026-11-11T10:13:54Z",
+ "protocol": {
+  "path": "research/vg-lifecycle-matched-optimization/PROTOCOL.md",
+  "sha256": "7e8260647c9ec4406609f41863fe81c4106206abcf4b0027229aaaec1af0e993"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "per lifecycle arm (L0, L1, L2): the actual-profit role of the arm's final selectable set at C24 (its independent and informed shortlists and the controls C4, C4-refined, C85, E, A, B under that lifecycle): the highest development centre net among qualified members (gates Q1-Q6; fresh confirmation decides qualification), ties by the higher selection robust net, the lower centre DD, then the label; the controls are the qualifying-incumbent fallback. The independent primary and every role are kept; at C19/C21/C23 the fold primary is the independent actual-profit role (PROTOCOL.md §9).",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 217926,
+  "backendEvaluations": 3000000,
+  "notes": "Distinct candidate proposals (centres), per arm: independent 8,192 base / 16,384 maximum per cutoff x 4 cutoffs; informed <= 4,034 base / <= 7,106 maximum at C24; x 3 arms = <= 110,406 base / <= 217,926 maximum (refinement moves counted apart). Backend evaluations: the brief's hard ceiling of 3,000,000 fresh simulations, enforced by frozen per-job caps summing to 2,965,000 (PROTOCOL.md §7.4; resource guard on extension rounds). Counted separately: screen, rung-1/2/3 and refinement centres and neighbours, qualification, cross-tests, folds, sequential, diagnostics, validation, retries (runs.jsonl) and archive hits."
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3, §2.5, §3.2",
+   "kind": "adaptation",
+   "description": "per arm: primary = actual-profit role of the final selectable set; controls C4, C4-refined, C85, E, A, B compete under the same gates and rule (qualifying-incumbent fallback); independent primary and roles kept",
+   "justification": "brief: Selection, confirmation and cross-testing",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4.1, §3.4",
+   "kind": "adaptation",
+   "description": "architecture A only; fixed same-instant order D1 first, GDX before VGT, in every arm; no allocation search",
+   "justification": "brief: freeze deterministic same-instant priority; no allocation optimization",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§4.1, §2.4",
+   "kind": "adaptation",
+   "description": "3B pipeline; promotion 1/4 centre net, 1/4 robust net, 1/8 both-Growth funded, 1/8 per entry pattern, rest rank/diversity",
+   "justification": "brief: protect Rise/breakout and both-symbol exploration; profit-based promotion beside robustness",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§4.7",
+   "kind": "adaptation",
+   "description": "protected both-Growth exploration in B and the informed lane (every fourth island, reserved promotion, refinement start, shortlist slot); same gates and rule",
+   "justification": "brief: Portfolio scope and controls",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "Priority 3's engine unchanged (L0) and Priority 5A's lifecycle adapter unchanged (L1/L2) through a study-local copy of runCoupled with stresses, blackouts and marks; stage V verifies the path",
+   "justification": "brief: reuse 5A; verify the fixed point",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§5.3, §4.1",
+   "kind": "adaptation",
+   "description": "centre-first fidelity; profit-type refinement measures neighbours only for moves whose centre can be chosen (identical selection)",
+   "justification": "bounded effort under the 3,000,000 ceiling",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "neighbourhoods move only enabled books' active inputs; D's move its D1 books",
+   "justification": "a disabled book is inert",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§4.2, §4.6",
+   "kind": "adaptation",
+   "description": "the brief's planning budgets per arm; frozen per-job simulation caps under 3,000,000; a symmetric resource guard may stop extensions before the nominal maximum (coverage implication stated)",
+   "justification": "brief: hard ceiling of 3 million fresh simulations; reduce symmetrically before the freeze",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "§1.8, §3.3",
+   "kind": "departure",
+   "description": "earlier-cutoff repetition for the independent lanes only; the informed lane runs at C24 only with no chronological claim",
+   "justification": "the informed seeds were chosen with later data",
+   "userAgreement": "brief: 'Incumbent-informed discovery/refinement at C24 ... Clearly label provenance; do not mix these results into an independent chronological claim.'"
+  },
+  {
+   "id": "AD10",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "qualification evidence: centre, selection 2x128, fresh confirmation 3x128 (identical draws in every arm), stresses, causal removals; small/wide families for export rows only; no scopes or toggles",
+   "justification": "bounded effort; matched instruments",
+   "userAgreement": null
+  },
+  {
+   "id": "AD11",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "two search seeds (replicates) per lane and arm with equal budgets; the arm's selection pools both; seed-level roles reported only",
+   "justification": "brief: at least two search seeds within each arm",
+   "userAgreement": null
+  },
+  {
+   "id": "AD12",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "FULL opens only after FROZEN_SELECTION.json (selections, cross-test subjects, frozen labels, validation tests and perturbations) is sealed and committed; no futility stop",
+   "justification": "brief: Final evaluation and delivery",
+   "userAgreement": null
+  }
+ ]
+}

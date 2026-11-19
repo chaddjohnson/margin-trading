@@ -1,0 +1,895 @@
+{
+ "stage": "G6 demonstrations",
+ "at": "2026-11-13T23:10:06Z",
+ "head": "92f37734a09487d1e2824afb919d3d515d56c245",
+ "note": "Synthetic paths (src/d1-risk-controls/tests/scenarios.ts): grid X 10%, Y 1%, trailing stop 5%, hold 5 calendar days, L 3 sessions, buffer 2%, P 5%, W 5. One $100,000 virtual book; 5 bps per side; 11% interest. Correctness demonstrations of the mechanics, not performance claims.",
+ "families": [
+  {
+   "name": "A legacy D1 on the crash path",
+   "note": "two maximum-hold losses, then an open lot",
+   "controls": null,
+   "grid": {
+    "targetPercentChange": 100,
+    "trailingBuyPercentage": 10,
+    "trailingStopPercentage": 50,
+    "maximumHoldDays": 5,
+    "tickWindowSize": 3,
+    "intradayLossBuffer": 20,
+    "pullback": 50,
+    "continuationWindow": 5
+   },
+   "trades": [
+    {
+     "trade": 1,
+     "kind": "deep",
+     "decision": "2021-03-05",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-05",
+     "entryRaw": 90,
+     "protectiveLevel": null,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": {
+      "date": "2021-03-10",
+      "bar": 1,
+      "raw": 77,
+      "reason": "maximum hold",
+      "control": "maximum hold"
+     },
+     "open": false,
+     "net": -14680.64
+    },
+    {
+     "trade": 2,
+     "kind": "deep",
+     "decision": "2021-03-11",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-11",
+     "entryRaw": 78,
+     "protectiveLevel": null,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": {
+      "date": "2021-03-16",
+      "bar": 1,
+      "raw": 68,
+      "reason": "maximum hold",
+      "control": "maximum hold"
+     },
+     "open": false,
+     "net": -13058.33
+    },
+    {
+     "trade": 3,
+     "kind": "deep",
+     "decision": "2021-03-18",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-18",
+     "entryRaw": 55,
+     "protectiveLevel": null,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": null,
+     "open": true,
+     "net": 5160.75
+    }
+   ],
+   "events": [],
+   "summary": {
+    "protectiveExits": 0,
+    "protectiveGapExits": 0,
+    "maximumHoldExits": 2,
+    "adaptiveExtensions": 0,
+    "episodes": 0,
+    "blocks": 0,
+    "blockedSessions": 0,
+    "blockedMinutes": 0
+   }
+  },
+  {
+   "name": "B protected D1 (8% stop) on the crash path",
+   "note": "a gap through the stop at 80 (level 82.8): loss −11.3%, larger than the 8% distance — not a loss cap",
+   "controls": {
+    "protectiveStop": {
+     "mode": "on",
+     "stopDistanceTenths": 80
+    }
+   },
+   "grid": {
+    "targetPercentChange": 100,
+    "trailingBuyPercentage": 10,
+    "trailingStopPercentage": 50,
+    "maximumHoldDays": 5,
+    "tickWindowSize": 3,
+    "intradayLossBuffer": 20,
+    "pullback": 50,
+    "continuationWindow": 5
+   },
+   "trades": [
+    {
+     "trade": 1,
+     "kind": "deep",
+     "decision": "2021-03-05",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-05",
+     "entryRaw": 90,
+     "protectiveLevel": 82.8,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": {
+      "date": "2021-03-09",
+      "bar": 0,
+      "raw": 80,
+      "reason": "protective stop gap",
+      "control": "protective stop"
+     },
+     "open": false,
+     "net": -11320.5
+    },
+    {
+     "trade": 2,
+     "kind": "deep",
+     "decision": "2021-03-11",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-11",
+     "entryRaw": 77,
+     "protectiveLevel": 70.84,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": {
+      "date": "2021-03-12",
+      "bar": 0,
+      "raw": 70,
+      "reason": "protective stop gap",
+      "control": "protective stop"
+     },
+     "open": false,
+     "net": -9211.91
+    },
+    {
+     "trade": 3,
+     "kind": "deep",
+     "decision": "2021-03-16",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-16",
+     "entryRaw": 62,
+     "protectiveLevel": 57.04,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": {
+      "date": "2021-03-18",
+      "bar": 1,
+      "raw": 57.04,
+      "reason": "protective stop",
+      "control": "protective stop"
+     },
+     "open": false,
+     "net": -8152.23
+    },
+    {
+     "trade": 4,
+     "kind": "deep",
+     "decision": "2021-03-23",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-23",
+     "entryRaw": 56,
+     "protectiveLevel": 51.52,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": null,
+     "open": true,
+     "net": 3429.26
+    }
+   ],
+   "events": [],
+   "summary": {
+    "protectiveExits": 3,
+    "protectiveGapExits": 2,
+    "maximumHoldExits": 0,
+    "adaptiveExtensions": 0,
+    "episodes": 0,
+    "blocks": 0,
+    "blockedSessions": 0,
+    "blockedMinutes": 0
+   }
+  },
+  {
+   "name": "C stop-protected unlimited hold (15% stop, hold disabled) on the crash path",
+   "note": "no maximum-hold exit; stop-level fills at 76.5 and 66.3",
+   "controls": {
+    "protectiveStop": {
+     "mode": "on",
+     "stopDistanceTenths": 150
+    },
+    "hold": {
+     "mode": "disabled"
+    }
+   },
+   "grid": {
+    "targetPercentChange": 100,
+    "trailingBuyPercentage": 10,
+    "trailingStopPercentage": 50,
+    "maximumHoldDays": 5,
+    "tickWindowSize": 3,
+    "intradayLossBuffer": 20,
+    "pullback": 50,
+    "continuationWindow": 5
+   },
+   "trades": [
+    {
+     "trade": 1,
+     "kind": "deep",
+     "decision": "2021-03-05",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-05",
+     "entryRaw": 90,
+     "protectiveLevel": 76.5,
+     "hold": {
+      "mode": "disabled",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": "__Inf"
+     },
+     "exit": {
+      "date": "2021-03-10",
+      "bar": 1,
+      "raw": 76.5,
+      "reason": "protective stop",
+      "control": "protective stop"
+     },
+     "open": false,
+     "net": -15235.64
+    },
+    {
+     "trade": 2,
+     "kind": "deep",
+     "decision": "2021-03-11",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-11",
+     "entryRaw": 78,
+     "protectiveLevel": 66.3,
+     "hold": {
+      "mode": "disabled",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": "__Inf"
+     },
+     "exit": {
+      "date": "2021-03-16",
+      "bar": 1,
+      "raw": 66.3,
+      "reason": "protective stop",
+      "control": "protective stop"
+     },
+     "open": false,
+     "net": -15235.64
+    },
+    {
+     "trade": 3,
+     "kind": "deep",
+     "decision": "2021-03-18",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-18",
+     "entryRaw": 55,
+     "protectiveLevel": 46.75,
+     "hold": {
+      "mode": "disabled",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": "__Inf"
+     },
+     "exit": null,
+     "open": true,
+     "net": 5160.75
+    }
+   ],
+   "events": [],
+   "summary": {
+    "protectiveExits": 2,
+    "protectiveGapExits": 0,
+    "maximumHoldExits": 0,
+    "adaptiveExtensions": 0,
+    "episodes": 0,
+    "blocks": 0,
+    "blockedSessions": 0,
+    "blockedMinutes": 0
+   }
+  },
+  {
+   "name": "D bounded adaptive hold (base 3, extended 20 days, progress 10%) + 8% stop on the crash path",
+   "note": "no progress: the base hold (3 calendar days) applies with a loss at the open",
+   "controls": {
+    "protectiveStop": {
+     "mode": "on",
+     "stopDistanceTenths": 80
+    },
+    "hold": {
+     "mode": "adaptive",
+     "extendedHoldDays": 20,
+     "progressTenths": 100
+    }
+   },
+   "grid": {
+    "targetPercentChange": 100,
+    "trailingBuyPercentage": 10,
+    "trailingStopPercentage": 50,
+    "maximumHoldDays": 3,
+    "tickWindowSize": 3,
+    "intradayLossBuffer": 20,
+    "pullback": 50,
+    "continuationWindow": 5
+   },
+   "trades": [
+    {
+     "trade": 1,
+     "kind": "deep",
+     "decision": "2021-03-05",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-05",
+     "entryRaw": 90,
+     "protectiveLevel": 82.8,
+     "hold": {
+      "mode": "adaptive",
+      "baseDays": 3,
+      "extendedDays": 20,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 3
+     },
+     "exit": {
+      "date": "2021-03-08",
+      "bar": 1,
+      "raw": 88,
+      "reason": "maximum hold",
+      "control": "maximum hold"
+     },
+     "open": false,
+     "net": -2410.36
+    },
+    {
+     "trade": 2,
+     "kind": "deep",
+     "decision": "2021-03-11",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-11",
+     "entryRaw": 77,
+     "protectiveLevel": 70.84,
+     "hold": {
+      "mode": "adaptive",
+      "baseDays": 3,
+      "extendedDays": 20,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 3
+     },
+     "exit": {
+      "date": "2021-03-12",
+      "bar": 0,
+      "raw": 70,
+      "reason": "protective stop gap",
+      "control": "protective stop"
+     },
+     "open": false,
+     "net": -9211.91
+    },
+    {
+     "trade": 3,
+     "kind": "deep",
+     "decision": "2021-03-16",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-16",
+     "entryRaw": 62,
+     "protectiveLevel": 57.04,
+     "hold": {
+      "mode": "adaptive",
+      "baseDays": 3,
+      "extendedDays": 20,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 3
+     },
+     "exit": {
+      "date": "2021-03-18",
+      "bar": 1,
+      "raw": 57.04,
+      "reason": "protective stop",
+      "control": "protective stop"
+     },
+     "open": false,
+     "net": -8152.23
+    },
+    {
+     "trade": 4,
+     "kind": "deep",
+     "decision": "2021-03-23",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-23",
+     "entryRaw": 56,
+     "protectiveLevel": 51.52,
+     "hold": {
+      "mode": "adaptive",
+      "baseDays": 3,
+      "extendedDays": 20,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 3
+     },
+     "exit": null,
+     "open": true,
+     "net": 3429.26
+    }
+   ],
+   "events": [],
+   "summary": {
+    "protectiveExits": 2,
+    "protectiveGapExits": 1,
+    "maximumHoldExits": 1,
+    "adaptiveExtensions": 0,
+    "episodes": 0,
+    "blocks": 0,
+    "blockedSessions": 0,
+    "blockedMinutes": 0
+   }
+  },
+  {
+   "name": "D adaptive hold on the recovery path (base 3, extended 10, progress 5%)",
+   "note": "progress reached on 2021-03-08 (high 95 ≥ 94.5): extended from 2021-03-09; the trailing stop exits in profit",
+   "controls": {
+    "hold": {
+     "mode": "adaptive",
+     "extendedHoldDays": 10,
+     "progressTenths": 50
+    }
+   },
+   "grid": {
+    "targetPercentChange": 100,
+    "trailingBuyPercentage": 10,
+    "trailingStopPercentage": 50,
+    "maximumHoldDays": 3,
+    "tickWindowSize": 3,
+    "intradayLossBuffer": 20,
+    "pullback": 50,
+    "continuationWindow": 5
+   },
+   "trades": [
+    {
+     "trade": 1,
+     "kind": "deep",
+     "decision": "2021-03-05",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-05",
+     "entryRaw": 90,
+     "protectiveLevel": null,
+     "hold": {
+      "mode": "adaptive",
+      "baseDays": 3,
+      "extendedDays": 10,
+      "extendedFrom": "2021-03-09",
+      "effectiveDaysAtExit": 10
+     },
+     "exit": {
+      "date": "2021-03-12",
+      "bar": 2,
+      "raw": 100.69999999999999,
+      "reason": "trailing stop",
+      "control": "trailing stop"
+     },
+     "open": false,
+     "net": 11566.1
+    },
+    {
+     "trade": 2,
+     "kind": "continuation",
+     "decision": "2021-03-16",
+     "gate": "off",
+     "lossesBefore": 0,
+     "entry": "2021-03-16",
+     "entryRaw": 96.5,
+     "protectiveLevel": null,
+     "hold": {
+      "mode": "adaptive",
+      "baseDays": 3,
+      "extendedDays": 10,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 3
+     },
+     "exit": null,
+     "open": true,
+     "net": 3484.74
+    }
+   ],
+   "events": [],
+   "summary": {
+    "protectiveExits": 0,
+    "protectiveGapExits": 0,
+    "maximumHoldExits": 0,
+    "adaptiveExtensions": 1,
+    "episodes": 0,
+    "blocks": 0,
+    "blockedSessions": 0,
+    "blockedMinutes": 0
+   }
+  },
+  {
+   "name": "Decline gate K = 1, recovery 50%, cooldown 3 sessions + 8% stop on the crash path",
+   "note": "arming refused 2021-03-10 to 2021-03-12; the block expires at the 2021-03-12 close",
+   "controls": {
+    "protectiveStop": {
+     "mode": "on",
+     "stopDistanceTenths": 80
+    },
+    "declineGate": {
+     "mode": "on",
+     "losses": 1,
+     "recoveryTenths": 500,
+     "maxBlockSessions": 3
+    }
+   },
+   "grid": {
+    "targetPercentChange": 100,
+    "trailingBuyPercentage": 10,
+    "trailingStopPercentage": 50,
+    "maximumHoldDays": 5,
+    "tickWindowSize": 3,
+    "intradayLossBuffer": 20,
+    "pullback": 50,
+    "continuationWindow": 5
+   },
+   "trades": [
+    {
+     "trade": 1,
+     "kind": "deep",
+     "decision": "2021-03-05",
+     "gate": "no episode",
+     "lossesBefore": 0,
+     "entry": "2021-03-05",
+     "entryRaw": 90,
+     "protectiveLevel": 82.8,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": {
+      "date": "2021-03-09",
+      "bar": 0,
+      "raw": 80,
+      "reason": "protective stop gap",
+      "control": "protective stop"
+     },
+     "open": false,
+     "net": -11320.5
+    },
+    {
+     "trade": 2,
+     "kind": "deep",
+     "decision": "2021-03-16",
+     "gate": "no episode",
+     "lossesBefore": 0,
+     "entry": "2021-03-16",
+     "entryRaw": 62,
+     "protectiveLevel": 57.04,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": {
+      "date": "2021-03-18",
+      "bar": 1,
+      "raw": 57.04,
+      "reason": "protective stop",
+      "control": "protective stop"
+     },
+     "open": false,
+     "net": -8152.23
+    }
+   ],
+   "events": [
+    {
+     "type": "episode start",
+     "date": "2021-03-09",
+     "episode": 1,
+     "trade": 1,
+     "refHigh": 100,
+     "net": -11320.503522972147
+    },
+    {
+     "type": "block engaged",
+     "date": "2021-03-09",
+     "episode": 1,
+     "losses": 1,
+     "maxBlockSessions": 3
+    },
+    {
+     "type": "arming refused",
+     "date": "2021-03-10",
+     "episode": 1,
+     "kind": "deep",
+     "close": 77,
+     "minutes": 2,
+     "losses": 1,
+     "refHigh": 100,
+     "low": 76,
+     "resetLevel": 88
+    },
+    {
+     "type": "arming refused",
+     "date": "2021-03-11",
+     "episode": 1,
+     "kind": "deep",
+     "close": 77,
+     "minutes": 2,
+     "losses": 1,
+     "refHigh": 100,
+     "low": 76,
+     "resetLevel": 88
+    },
+    {
+     "type": "arming refused",
+     "date": "2021-03-12",
+     "episode": 1,
+     "kind": "deep",
+     "close": 70,
+     "minutes": 2,
+     "losses": 1,
+     "refHigh": 100,
+     "low": 69,
+     "resetLevel": 84.5
+    },
+    {
+     "type": "episode end",
+     "date": "2021-03-12",
+     "episode": 1,
+     "reason": "block expired",
+     "losses": 1,
+     "refHigh": 100,
+     "low": 69,
+     "close": 69,
+     "resetLevel": 84.5,
+     "blockedFrom": "2021-03-09"
+    },
+    {
+     "type": "episode start",
+     "date": "2021-03-18",
+     "episode": 2,
+     "trade": 2,
+     "refHigh": 78,
+     "net": -8152.227995591242
+    },
+    {
+     "type": "block engaged",
+     "date": "2021-03-18",
+     "episode": 2,
+     "losses": 1,
+     "maxBlockSessions": 3
+    },
+    {
+     "type": "arming refused",
+     "date": "2021-03-19",
+     "episode": 2,
+     "kind": "deep",
+     "close": 55,
+     "minutes": 3,
+     "losses": 1,
+     "refHigh": 78,
+     "low": 55,
+     "resetLevel": 66.5
+    },
+    {
+     "type": "arming refused",
+     "date": "2021-03-22",
+     "episode": 2,
+     "kind": "deep",
+     "close": 55,
+     "minutes": 3,
+     "losses": 1,
+     "refHigh": 78,
+     "low": 55,
+     "resetLevel": 66.5
+    },
+    {
+     "type": "episode end",
+     "date": "2021-03-23",
+     "episode": 2,
+     "reason": "block expired",
+     "losses": 1,
+     "refHigh": 78,
+     "low": 55,
+     "close": 56,
+     "resetLevel": 66.5,
+     "blockedFrom": "2021-03-18"
+    }
+   ],
+   "summary": {
+    "protectiveExits": 2,
+    "protectiveGapExits": 1,
+    "maximumHoldExits": 0,
+    "adaptiveExtensions": 0,
+    "episodes": 2,
+    "blocks": 2,
+    "blockedSessions": 5,
+    "blockedMinutes": 12
+   }
+  },
+  {
+   "name": "Decline gate K = 2, recovery 100%, cooldown 10 on the whipsaw path",
+   "note": "one failure, then a profitable exit ends the episode; the continuation re-entry is untouched",
+   "controls": {
+    "declineGate": {
+     "mode": "on",
+     "losses": 2,
+     "recoveryTenths": 1000,
+     "maxBlockSessions": 10
+    }
+   },
+   "grid": {
+    "targetPercentChange": 100,
+    "trailingBuyPercentage": 10,
+    "trailingStopPercentage": 50,
+    "maximumHoldDays": 5,
+    "tickWindowSize": 3,
+    "intradayLossBuffer": 20,
+    "pullback": 50,
+    "continuationWindow": 5
+   },
+   "trades": [
+    {
+     "trade": 1,
+     "kind": "deep",
+     "decision": "2021-03-05",
+     "gate": "no episode",
+     "lossesBefore": 0,
+     "entry": "2021-03-05",
+     "entryRaw": 90,
+     "protectiveLevel": null,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": {
+      "date": "2021-03-10",
+      "bar": 1,
+      "raw": 77,
+      "reason": "maximum hold",
+      "control": "maximum hold"
+     },
+     "open": false,
+     "net": -14680.64
+    },
+    {
+     "trade": 2,
+     "kind": "deep",
+     "decision": "2021-03-11",
+     "gate": "within allowance",
+     "lossesBefore": 1,
+     "entry": "2021-03-11",
+     "entryRaw": 78,
+     "protectiveLevel": null,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": {
+      "date": "2021-03-17",
+      "bar": 1,
+      "raw": 90.25,
+      "reason": "trailing stop",
+      "control": "trailing stop"
+     },
+     "open": false,
+     "net": 15408.66
+    },
+    {
+     "trade": 3,
+     "kind": "continuation",
+     "decision": "2021-03-19",
+     "gate": "no episode",
+     "lossesBefore": 0,
+     "entry": "2021-03-19",
+     "entryRaw": 86.5,
+     "protectiveLevel": null,
+     "hold": {
+      "mode": "legacy",
+      "baseDays": 5,
+      "extendedDays": null,
+      "extendedFrom": null,
+      "effectiveDaysAtExit": 5
+     },
+     "exit": null,
+     "open": true,
+     "net": 2718.21
+    }
+   ],
+   "events": [
+    {
+     "type": "episode start",
+     "date": "2021-03-10",
+     "episode": 1,
+     "trade": 1,
+     "refHigh": 100,
+     "net": -14680.642175107272
+    },
+    {
+     "type": "episode end",
+     "date": "2021-03-17",
+     "episode": 1,
+     "reason": "profitable exit",
+     "losses": 1,
+     "refHigh": 100,
+     "low": 76,
+     "trade": 2
+    }
+   ],
+   "summary": {
+    "protectiveExits": 0,
+    "protectiveGapExits": 0,
+    "maximumHoldExits": 1,
+    "adaptiveExtensions": 0,
+    "episodes": 1,
+    "blocks": 0,
+    "blockedSessions": 0,
+    "blockedMinutes": 0
+   }
+  }
+ ]
+}

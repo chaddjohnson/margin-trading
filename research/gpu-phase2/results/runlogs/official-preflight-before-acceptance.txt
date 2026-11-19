@@ -1,0 +1,7 @@
+# 2026-11-19T01:54:21Z official preflight CLI before any acceptance record exists (binary 3fe09e67…)
+$ node --experimental-transform-types tools/gpu-backend/official-preflight.ts --study research/gpu-phase2 --door D19
+REFUSED — GPU policy (standard 3.0.0 §9): preflight-purpose: no execution purpose declared (official optimization must declare it explicitly)
+exit 3
+$ GPU_POLICY_PURPOSE=official-optimization node --experimental-transform-types tools/gpu-backend/official-preflight.ts --study research/gpu-phase2 --door D19
+REFUSED — GPU policy (standard 3.0.0 §9): preflight-acceptance: no GPU acceptance record (config/gpu-backend/acceptance.json): official GPU optimization is blocked until an acceptance study passes every gate
+exit 3

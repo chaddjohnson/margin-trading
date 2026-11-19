@@ -1,0 +1,720 @@
+{
+ "totals": {
+  "proposals": 1303708,
+  "requested": 18265213,
+  "uniqueFresh": 17533469,
+  "archiveHits": 722891,
+  "qualificationFresh": 1644899,
+  "lanes": 680,
+  "islands": 3302,
+  "refinementStarts": 2152,
+  "refinementMoves": 366927
+ },
+ "replicateNoise": {
+  "C19": {
+   "cells": 64,
+   "medianAbsDiff": 5952.98,
+   "p90AbsDiff": 18962.25,
+   "maxAbsDiff": 47963.7
+  },
+  "C21": {
+   "cells": 64,
+   "medianAbsDiff": 13083.29,
+   "p90AbsDiff": 28309.28,
+   "maxAbsDiff": 31379.05
+  },
+  "C23": {
+   "cells": 64,
+   "medianAbsDiff": 16761.75,
+   "p90AbsDiff": 42999.47,
+   "maxAbsDiff": 128612.72
+  },
+  "C24": {
+   "cells": 64,
+   "medianAbsDiff": 23857.7,
+   "p90AbsDiff": 46538.27,
+   "maxAbsDiff": 96815.38
+  }
+ },
+ "sequential": [
+  {
+   "procedure": "L/original",
+   "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+   "net": 16649.15,
+   "dd": 52530.3
+  },
+  {
+   "procedure": "L/RA1",
+   "verdict": "supported (every fold produced a primary; sequential net > 0 and sequential minute drawdown ≤ $35,000)",
+   "net": 40600.52,
+   "dd": 31318.53
+  },
+  {
+   "procedure": "L/RA2",
+   "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+   "net": 26928.52,
+   "dd": 60311.75
+  },
+  {
+   "procedure": "B/original",
+   "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+   "net": -29331.84,
+   "dd": 114794.33
+  },
+  {
+   "procedure": "B/RA1",
+   "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+   "net": 99323.64,
+   "dd": 42647.6
+  },
+  {
+   "procedure": "B/RA2",
+   "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+   "net": 61451.19,
+   "dd": 45371.19
+  },
+  {
+   "procedure": "F/original",
+   "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+   "net": -50121.09,
+   "dd": 117684.72
+  },
+  {
+   "procedure": "F/RA1",
+   "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+   "net": 74206.21,
+   "dd": 46435.28
+  },
+  {
+   "procedure": "F/RA2",
+   "verdict": "supported (every fold produced a primary; sequential net > 0 and sequential minute drawdown ≤ $35,000)",
+   "net": 93717.1,
+   "dd": 22835.97
+  }
+ ],
+ "labels": [
+  {
+   "comparison": "RA1 vs original, L",
+   "label": "risk improvement",
+   "dNet": 23951.37,
+   "dDd": -21211.77,
+   "a": {
+    "net": 40600.52,
+    "dd": 31318.53
+   },
+   "b": {
+    "net": 16649.15,
+    "dd": 52530.3
+   }
+  },
+  {
+   "comparison": "RA1 vs original, B",
+   "label": "risk improvement",
+   "dNet": 128655.48,
+   "dDd": -72146.73,
+   "a": {
+    "net": 99323.64,
+    "dd": 42647.6
+   },
+   "b": {
+    "net": -29331.84,
+    "dd": 114794.33
+   }
+  },
+  {
+   "comparison": "RA1 vs original, F",
+   "label": "risk improvement",
+   "dNet": 124327.3,
+   "dDd": -71249.44,
+   "a": {
+    "net": 74206.21,
+    "dd": 46435.28
+   },
+   "b": {
+    "net": -50121.09,
+    "dd": 117684.72
+   }
+  },
+  {
+   "comparison": "F vs L, original",
+   "label": "profit sacrifice without clear benefit",
+   "dNet": -66770.24,
+   "dDd": 65154.42,
+   "a": {
+    "net": -50121.09,
+    "dd": 117684.72
+   },
+   "b": {
+    "net": 16649.15,
+    "dd": 52530.3
+   }
+  },
+  {
+   "comparison": "F vs L, RA1",
+   "label": "mixed",
+   "dNet": 33605.69,
+   "dDd": 15116.75,
+   "a": {
+    "net": 74206.21,
+    "dd": 46435.28
+   },
+   "b": {
+    "net": 40600.52,
+    "dd": 31318.53
+   }
+  },
+  {
+   "comparison": "F/RA1 vs L/original",
+   "label": "mixed",
+   "dNet": 57557.06,
+   "dDd": -6095.02,
+   "a": {
+    "net": 74206.21,
+    "dd": 46435.28
+   },
+   "b": {
+    "net": 16649.15,
+    "dd": 52530.3
+   }
+  },
+  {
+   "comparison": "RA2 vs RA1, F",
+   "label": "mixed",
+   "dNet": 19510.89,
+   "dDd": -23599.31,
+   "a": {
+    "net": 93717.1,
+    "dd": 22835.97
+   },
+   "b": {
+    "net": 74206.21,
+    "dd": 46435.28
+   }
+  }
+ ],
+ "tracks": {
+  "effort": {
+   "I": {
+    "jobs": [
+     "broad1",
+     "broad2",
+     "refine"
+    ],
+    "lanes": 154,
+    "proposals": 282612,
+    "islands": 747,
+    "refinementStarts": 414,
+    "refinementMoves": 66922,
+    "requested": 3183402,
+    "uniqueFresh": 3042371,
+    "archiveHits": 139142,
+    "minutes": 477.32
+   },
+   "N": {
+    "jobs": [
+     "informed1",
+     "informed2"
+    ],
+    "lanes": 64,
+    "proposals": 196640,
+    "islands": 403,
+    "refinementStarts": 448,
+    "refinementMoves": 92677,
+    "requested": 4142217,
+    "uniqueFresh": 4004822,
+    "archiveHits": 135916,
+    "minutes": 777.8
+   }
+  },
+  "h2": {
+   "dNet": 75290.93,
+   "informedAdvantage": true
+  }
+ },
+ "validation": {
+  "newL0": {
+   "net": 479605.18,
+   "dd": 20385.99,
+   "lots": 46,
+   "developmentNet": 382721.46,
+   "validationPnl": 96883.72,
+   "resetValidationDd": 20385.99,
+   "years": {
+    "2016": 8588.21,
+    "2017": 23852.14,
+    "2018": 18525.08,
+    "2019": 29004.74,
+    "2020": 138877.67,
+    "2021": 32525.03,
+    "2022": 43474.42,
+    "2023": 43764.07,
+    "2024": 44110.1,
+    "2025": 47530.51,
+    "2026": 49353.21
+   },
+   "open": [
+    {
+     "book": "D1:GDX",
+     "entry": "2026-10-23"
+    }
+   ],
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "reproduced": true
+  },
+  "qualifyingSuccessors": [],
+  "successor": [
+   {
+    "population": "L",
+    "populationLabel": "Track I, the legacy cell GA0.VA0 (independent)",
+    "selector": "original",
+    "primary": "C24/refine/GA0.VA0/R2#1 profit",
+    "independence": "independent chronological procedure (Track I)",
+    "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+    "frontierVsNewL0": {
+     "dNet": -148319.8,
+     "dDd": 5857.06,
+     "dConfirmP10": -78142.71,
+     "dConfirmP90Dd": 106.11,
+     "dConfirmWorst10Mean": -2993.2,
+     "dWorstLotMae": 530.41,
+     "dominatedOnCentre": true,
+     "dominatedOnNeighbourhood": true
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": false,
+     "worstLot": true
+    },
+    "status": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": false,
+     "V3": false
+    },
+    "finalStatus": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "L",
+    "populationLabel": "Track I, the legacy cell GA0.VA0 (independent)",
+    "selector": "RA1",
+    "primary": "C24/refine/GA0.VA0/R2#6 profit order",
+    "independence": "independent chronological procedure (Track I)",
+    "verdict": "supported (every fold produced a primary; sequential net > 0 and sequential minute drawdown ≤ $35,000)",
+    "frontierVsNewL0": {
+     "dNet": -149826.28,
+     "dDd": 7760.12,
+     "dConfirmP10": -61280.39,
+     "dConfirmP90Dd": 390.13,
+     "dConfirmWorst10Mean": -2551.04,
+     "dWorstLotMae": -1053.18,
+     "dominatedOnCentre": true,
+     "dominatedOnNeighbourhood": true
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": false,
+     "worstLot": true
+    },
+    "status": "chronologically supported but dominated by New L0 on development: not a qualifying successor",
+    "validation": {
+     "V1": true,
+     "V2": false,
+     "V3": false
+    },
+    "finalStatus": "chronologically supported but dominated by New L0 on development: not a qualifying successor"
+   },
+   {
+    "population": "L",
+    "populationLabel": "Track I, the legacy cell GA0.VA0 (independent)",
+    "selector": "RA2",
+    "primary": "C24/refine/GA0.VA0/R2#1 profit",
+    "independence": "independent chronological procedure (Track I)",
+    "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+    "frontierVsNewL0": {
+     "dNet": -148319.8,
+     "dDd": 5857.06,
+     "dConfirmP10": -78142.71,
+     "dConfirmP90Dd": 106.11,
+     "dConfirmWorst10Mean": -2993.2,
+     "dWorstLotMae": 530.41,
+     "dominatedOnCentre": true,
+     "dominatedOnNeighbourhood": true
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": false,
+     "worstLot": true
+    },
+    "status": "secondary ablation (RA2): reported, never a successor nomination",
+    "validation": {
+     "V1": true,
+     "V2": false,
+     "V3": false
+    },
+    "finalStatus": "secondary ablation (RA2): reported, never a successor nomination"
+   },
+   {
+    "population": "B",
+    "populationLabel": "Track I, no entry-day book (RC 1 mechanics; independent)",
+    "selector": "original",
+    "primary": "C24/refine/GD1.VC1/R2#1 profit",
+    "independence": "independent chronological procedure (Track I)",
+    "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+    "frontierVsNewL0": {
+     "dNet": -69981.37,
+     "dDd": 1030.79,
+     "dConfirmP10": -45215.26,
+     "dConfirmP90Dd": -553.78,
+     "dConfirmWorst10Mean": -1232.09,
+     "dWorstLotMae": 760.06,
+     "dominatedOnCentre": true,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": false,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "B",
+    "populationLabel": "Track I, no entry-day book (RC 1 mechanics; independent)",
+    "selector": "RA1",
+    "primary": "C24/refine/GB0.VB1/R2#3 control alternative",
+    "independence": "independent chronological procedure (Track I)",
+    "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+    "frontierVsNewL0": {
+     "dNet": -82009.51,
+     "dDd": -1337.75,
+     "dConfirmP10": -24061.1,
+     "dConfirmP90Dd": -6154.66,
+     "dConfirmWorst10Mean": -7474.59,
+     "dWorstLotMae": -1466.35,
+     "dominatedOnCentre": false,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "B",
+    "populationLabel": "Track I, no entry-day book (RC 1 mechanics; independent)",
+    "selector": "RA2",
+    "primary": "C24/refine/GD1.VC1/R2#1 profit",
+    "independence": "independent chronological procedure (Track I)",
+    "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+    "frontierVsNewL0": {
+     "dNet": -69981.37,
+     "dDd": 1030.79,
+     "dConfirmP10": -45215.26,
+     "dConfirmP90Dd": -553.78,
+     "dConfirmWorst10Mean": -1232.09,
+     "dWorstLotMae": 760.06,
+     "dominatedOnCentre": true,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": false,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "secondary ablation (RA2): reported, never a successor nomination",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "secondary ablation (RA2): reported, never a successor nomination"
+   },
+   {
+    "population": "F",
+    "populationLabel": "Track I, all 64 cells (independent)",
+    "selector": "original",
+    "primary": "C24/refine/GD1.VC1/R2#1 profit",
+    "independence": "independent chronological procedure (Track I)",
+    "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+    "frontierVsNewL0": {
+     "dNet": -69981.37,
+     "dDd": 1030.79,
+     "dConfirmP10": -45215.26,
+     "dConfirmP90Dd": -553.78,
+     "dConfirmWorst10Mean": -1232.09,
+     "dWorstLotMae": 760.06,
+     "dominatedOnCentre": true,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": false,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "F",
+    "populationLabel": "Track I, all 64 cells (independent)",
+    "selector": "RA1",
+    "primary": "C24/refine/GB0.VB1/R2#1 profit",
+    "independence": "independent chronological procedure (Track I)",
+    "verdict": "unsupported (sequential net ≤ 0 or sequential minute drawdown > $35,000)",
+    "frontierVsNewL0": {
+     "dNet": -80282.98,
+     "dDd": -2179.09,
+     "dConfirmP10": -38765.76,
+     "dConfirmP90Dd": -6364.62,
+     "dConfirmWorst10Mean": -8467.33,
+     "dWorstLotMae": 407.66,
+     "dominatedOnCentre": false,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "no chronological support: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "F",
+    "populationLabel": "Track I, all 64 cells (independent)",
+    "selector": "RA2",
+    "primary": "C24/refine/GD1.VC1/R2#1 profit",
+    "independence": "independent chronological procedure (Track I)",
+    "verdict": "supported (every fold produced a primary; sequential net > 0 and sequential minute drawdown ≤ $35,000)",
+    "frontierVsNewL0": {
+     "dNet": -69981.37,
+     "dDd": 1030.79,
+     "dConfirmP10": -45215.26,
+     "dConfirmP90Dd": -553.78,
+     "dConfirmWorst10Mean": -1232.09,
+     "dWorstLotMae": 760.06,
+     "dominatedOnCentre": true,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": false,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "secondary ablation (RA2): reported, never a successor nomination",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "secondary ablation (RA2): reported, never a successor nomination"
+   },
+   {
+    "population": "N",
+    "populationLabel": "Track N, informed lanes and the four incumbents (incumbent-informed; no independent chronological test)",
+    "selector": "original",
+    "primary": "C24/informed/GD.VB/R2#1 profit",
+    "independence": "incumbent-informed; no independent chronological test",
+    "verdict": "not applicable (C24 only)",
+    "frontierVsNewL0": {
+     "dNet": 5309.56,
+     "dDd": 0,
+     "dConfirmP10": -45885.48,
+     "dConfirmP90Dd": -2646.22,
+     "dConfirmWorst10Mean": -3203.21,
+     "dWorstLotMae": 0,
+     "dominatedOnCentre": false,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "N",
+    "populationLabel": "Track N, informed lanes and the four incumbents (incumbent-informed; no independent chronological test)",
+    "selector": "RA1",
+    "primary": "C24/informed/GB.VD/R2#4 best GB0.VD1",
+    "independence": "incumbent-informed; no independent chronological test",
+    "verdict": "not applicable (C24 only)",
+    "frontierVsNewL0": {
+     "dNet": -6569.18,
+     "dDd": 0,
+     "dConfirmP10": 4412.89,
+     "dConfirmP90Dd": -7470.73,
+     "dConfirmWorst10Mean": -9087.06,
+     "dWorstLotMae": 0,
+     "dominatedOnCentre": true,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "N",
+    "populationLabel": "Track N, informed lanes and the four incumbents (incumbent-informed; no independent chronological test)",
+    "selector": "RA2",
+    "primary": "C24/informed/GD.VB/R2#1 profit",
+    "independence": "incumbent-informed; no independent chronological test",
+    "verdict": "not applicable (C24 only)",
+    "frontierVsNewL0": {
+     "dNet": 5309.56,
+     "dDd": 0,
+     "dConfirmP10": -45885.48,
+     "dConfirmP90Dd": -2646.22,
+     "dConfirmWorst10Mean": -3203.21,
+     "dWorstLotMae": 0,
+     "dominatedOnCentre": false,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "U",
+    "populationLabel": "Track I ∪ Track N ∪ incumbents (NL0’s final selectable set; incumbent-informed; no independent chronological test)",
+    "selector": "original",
+    "primary": "C24/informed/GD.VB/R2#1 profit",
+    "independence": "incumbent-informed; no independent chronological test",
+    "verdict": "not applicable (C24 only)",
+    "frontierVsNewL0": {
+     "dNet": 5309.56,
+     "dDd": 0,
+     "dConfirmP10": -45885.48,
+     "dConfirmP90Dd": -2646.22,
+     "dConfirmWorst10Mean": -3203.21,
+     "dWorstLotMae": 0,
+     "dominatedOnCentre": false,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "U",
+    "populationLabel": "Track I ∪ Track N ∪ incumbents (NL0’s final selectable set; incumbent-informed; no independent chronological test)",
+    "selector": "RA1",
+    "primary": "C24/informed/GB.VD/R2#4 best GB0.VD1",
+    "independence": "incumbent-informed; no independent chronological test",
+    "verdict": "not applicable (C24 only)",
+    "frontierVsNewL0": {
+     "dNet": -6569.18,
+     "dDd": 0,
+     "dConfirmP10": 4412.89,
+     "dConfirmP90Dd": -7470.73,
+     "dConfirmWorst10Mean": -9087.06,
+     "dWorstLotMae": 0,
+     "dominatedOnCentre": true,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   },
+   {
+    "population": "U",
+    "populationLabel": "Track I ∪ Track N ∪ incumbents (NL0’s final selectable set; incumbent-informed; no independent chronological test)",
+    "selector": "RA2",
+    "primary": "C24/informed/GD.VB/R2#1 profit",
+    "independence": "incumbent-informed; no independent chronological test",
+    "verdict": "not applicable (C24 only)",
+    "frontierVsNewL0": {
+     "dNet": 5309.56,
+     "dDd": 0,
+     "dConfirmP10": -45885.48,
+     "dConfirmP90Dd": -2646.22,
+     "dConfirmWorst10Mean": -3203.21,
+     "dWorstLotMae": 0,
+     "dominatedOnCentre": false,
+     "dominatedOnNeighbourhood": false
+    },
+    "strongerRisk": {
+     "tail": true,
+     "centreDd": true,
+     "worstLot": true
+    },
+    "status": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)",
+    "validation": {
+     "V1": true,
+     "V2": true,
+     "V3": true
+    },
+    "finalStatus": "incumbent-informed; no independent chronological test: not a deployment-qualified candidate without the user’s explicit decision (research-only)"
+   }
+  ]
+ }
+}

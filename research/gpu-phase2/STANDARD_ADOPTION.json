@@ -1,0 +1,110 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/gpu-phase2",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.2.0",
+  "sha256": "0085cff292161e15f59e122d45793200fee01c610306ed37a3a0fab195dd5e24"
+ },
+ "readAt": "2026-11-19T00:10:00Z",
+ "adoptedAt": "2026-11-19T00:16:28Z",
+ "protocol": {
+  "path": "research/gpu-phase2/PROTOCOL.md",
+  "sha256": "e0ac28943a8e8e0c76f54a8b60a08d82beee95738ae3372315bc039a1da8c1f7"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched for selection, ranked or selected (AD1). The study completes and verifies the GPU evaluator, institutes the GPU-only policy and measures performance; its outcomes are engineering gates (PROTOCOL.md section 9) and an ACCEPTED / NOT ACCEPTED verdict (section 10).",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 3000000,
+  "notes": "No search proposals for selection. backendEvaluations caps fresh CPU reference pooled simulations on real data (parity references, the CPU side of benchmarks, the CPU arm of the parity-only mini-optimization AD8, the stress test's periodic CPU samples). GPU evaluations are counted separately in the records; synthetic fixtures are not counted."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search for selection and no chronological verdict (AD2)",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3",
+   "kind": "adaptation",
+   "description": "no roles and no primary; nothing is selected",
+   "justification": "brief §7: no strategy, fitness, selection or ranking change; engineering study",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4",
+   "kind": "adaptation",
+   "description": "no official search, no earlier-cutoff repeat, no chronological verdict",
+   "justification": "brief §0, §7: no official optimization in this assignment",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "FULL opened for the frozen reference identities and, for parity and timing only, seeded test configurations; quiet loader, own door log",
+   "justification": "brief §4.1: C19/C21/C23/C24/FULL doors and 2020/2022/2025 episodes; reference ledgers on FULL",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "the CPU engine is the unmodified canonical reference; the CUDA evaluator must match it bit for bit",
+   "justification": "brief §0 item 3, §2.2",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.9",
+   "kind": "adaptation",
+   "description": "not applicable: no fold primary or final candidate; the detailed-record inputs are gated for parity",
+   "justification": "no search (AD2)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "no worker tuning for a search; the CPU baseline is Assignment 3's production 12 workers (8 and 16 for context); contained systemd units",
+   "justification": "brief §5.1: compare against the actual 12-worker production CPU setup",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§1.5",
+   "kind": "adaptation",
+   "description": "stricter: no money figure of any non-reference configuration; parity booleans, counts, hashes and timings only; timings never select parameters",
+   "justification": "brief §7: no change to selection; Phase 1 AD7 precedent",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§4",
+   "kind": "adaptation",
+   "description": "a bounded, non-official, parity-only fixed-seed mini-optimization with Assignment 3's unchanged search code on both backends; outcomes compared by identity and hash only, never selected or reused",
+   "justification": "brief §4.2",
+   "userAgreement": null
+  }
+ ]
+}

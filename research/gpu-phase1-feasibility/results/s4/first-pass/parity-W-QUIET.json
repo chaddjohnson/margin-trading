@@ -1,0 +1,3256 @@
+{
+ "kind": "gpu-phase1 S4 parity",
+ "door": "W-QUIET",
+ "options": {
+  "set": "base",
+  "value": {
+   "enabled": {
+    "G:GDX": false
+   }
+  }
+ },
+ "dataset": {
+  "file": "research/gpu-phase1-feasibility/cache/fixture_W-QUIET.gp1ds",
+  "sha256": "8993ba95cc014865d61f009690d49cc1d8c91072612cefd37a942402c6f661c2",
+  "sessions": 251,
+  "bars": {
+   "GDX": 97517,
+   "VGT": 78041
+  }
+ },
+ "server": {
+  "info": {
+   "protocol": 1,
+   "device": "NVIDIA GeForce RTX 5090",
+   "cc": "12.0",
+   "sms": 170,
+   "totalBytes": 33667612672,
+   "freeBytes": 1129316352,
+   "driver": 13020,
+   "runtime": 13020,
+   "supportedFeatures": 255,
+   "vramBudgetMb": 2400,
+   "maxL": 300,
+   "tpb": 64,
+   "datasetLoaded": false,
+   "sessions": 0,
+   "build": "-O3 --fmad=false -prec-div=true -prec-sqrt=true sm_120",
+   "faultInjection": false
+  },
+  "load": {
+   "sessions": 251,
+   "bars": [
+    97517,
+    78041
+   ],
+   "uploadMs": 0.621,
+   "refHighMs": 0.218,
+   "deviceBytes": 8259248,
+   "maxL": 300
+  }
+ },
+ "tolerance": "zero: bit-exact doubles (Object.is), identical integers, strings and key order",
+ "subjects": {
+  "R": 2,
+  "A": 128,
+  "B": 32,
+  "N": 32
+ },
+ "pass": true,
+ "summary": {
+  "all": {
+   "n": 194,
+   "g2": 194,
+   "g3": 194,
+   "failed": []
+  },
+  "R": {
+   "n": 2,
+   "g2": 2,
+   "g3": 2,
+   "failed": []
+  },
+  "A": {
+   "n": 128,
+   "g2": 128,
+   "g3": 128,
+   "failed": []
+  },
+  "B": {
+   "n": 32,
+   "g2": 32,
+   "g3": 32,
+   "failed": []
+  },
+  "N": {
+   "n": 32,
+   "g2": 32,
+   "g3": 32,
+   "failed": []
+  }
+ },
+ "g4": {
+  "applicable": false
+ },
+ "determinism": [
+  {
+   "run": "batch 50",
+   "mismatches": 0,
+   "kernelMs": 814.2255630493164
+  },
+  {
+   "run": "repeat (same process)",
+   "mismatches": 0,
+   "kernelMs": 223.28297424316406
+  },
+  {
+   "run": "server restart",
+   "mismatches": 0,
+   "kernelMs": 223.3065948486328
+  },
+  {
+   "run": "shuffled order",
+   "mismatches": 0,
+   "kernelMs": 257.15000915527344
+  }
+ ],
+ "maxCounts": {
+  "d1GDX": 24,
+  "d1VGT": 0,
+  "lots": 24
+ },
+ "cpuSeconds": 7.705,
+ "wallSeconds": 13.799,
+ "rows": [
+  {
+   "key": "R:New L0",
+   "set": "R",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "bb353865d35ec001",
+   "diffs": [],
+   "reference": {
+    "net": 12200.66,
+    "dd": 6087.2,
+    "ddUnrounded": 6087.1957785356335,
+    "lots": 1,
+    "signature": "8d7c9de062260bcc",
+    "gpuSignature": "8d7c9de062260bcc",
+    "realized": 0,
+    "unrealized": 12200.66,
+    "years": {
+     "2017": 12200.66
+    }
+   }
+  },
+  {
+   "key": "R:N/original",
+   "set": "R",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "637b059d91ce7e60",
+   "diffs": [],
+   "reference": {
+    "net": 12200.66,
+    "dd": 6087.2,
+    "ddUnrounded": 6087.1957785356335,
+    "lots": 1,
+    "signature": "8d7c9de062260bcc",
+    "gpuSignature": "8d7c9de062260bcc",
+    "realized": 0,
+    "unrealized": 12200.66,
+    "years": {
+     "2017": 12200.66
+    }
+   }
+  },
+  {
+   "key": "PARITY:0",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 18810
+   },
+   "gpuHash": "b0d21953ec234309",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:1",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 4593
+   },
+   "gpuHash": "11b725c8f4d1ef91",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:2",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "0ec92cbb00a994ed",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:3",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 6,
+    "d1VGT": 0,
+    "lots": 6,
+    "decisions": 6,
+    "marks": 36975
+   },
+   "gpuHash": "3fde3d91517a0341",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:4",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 1765
+   },
+   "gpuHash": "b54ca65b37fc8192",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:5",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 2141
+   },
+   "gpuHash": "298e574ec5670163",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:6",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 4840
+   },
+   "gpuHash": "5a3326c01490bf7d",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:7",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 21474
+   },
+   "gpuHash": "b6ef5c73a096dbdb",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:8",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "8ac885bf1e68f891",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:9",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 21534
+   },
+   "gpuHash": "b08a32b9b3d61a5d",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:10",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "c4a95cda7945f076",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:11",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 15726
+   },
+   "gpuHash": "d74d643d8a1251f5",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:12",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 3,
+    "marks": 35419
+   },
+   "gpuHash": "9b79439554114d1e",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:13",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 16265
+   },
+   "gpuHash": "39f784bda2c2761d",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:14",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 18810
+   },
+   "gpuHash": "6fd5bdc26e5e9c06",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:15",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "30bff78770234a85",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:16",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "f9c8d7ac057d0db7",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:17",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "337761b712ed3132",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:18",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 51091
+   },
+   "gpuHash": "3f659242ab236c06",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:19",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 6,
+    "decisions": 7,
+    "marks": 28971
+   },
+   "gpuHash": "6c8f22f6f7332f25",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:20",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "5f515c8065556ad7",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:21",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 4,
+    "d1VGT": 0,
+    "lots": 4,
+    "decisions": 4,
+    "marks": 14934
+   },
+   "gpuHash": "77f38bdcf246530f",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:22",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "74373b85d48a4776",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:23",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 4,
+    "marks": 43642
+   },
+   "gpuHash": "0586a9153a68c64a",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:24",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "a74cbb82e1b7aa53",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:25",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 4,
+    "decisions": 4,
+    "marks": 24862
+   },
+   "gpuHash": "52956a3b26a2b32f",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:26",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 12,
+    "d1VGT": 0,
+    "lots": 11,
+    "decisions": 15,
+    "marks": 58890
+   },
+   "gpuHash": "348c24083206cab6",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:27",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 8322
+   },
+   "gpuHash": "0be1c5d5efab493c",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:28",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "c99f4e1fbf2ff487",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:29",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 3,
+    "marks": 18842
+   },
+   "gpuHash": "22e6409cb5df28d5",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:30",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 5,
+    "marks": 20588
+   },
+   "gpuHash": "866bea33606f996a",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:31",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "1a851861188ecfef",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:32",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 55319
+   },
+   "gpuHash": "9993172581d099d8",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:33",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 6757
+   },
+   "gpuHash": "834c52c9945ced6f",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:34",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "ee99648a951b4523",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:35",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "ba9a7b9c13d2df5b",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:36",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 4,
+    "marks": 51674
+   },
+   "gpuHash": "d0ecf21dc29e7637",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:37",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 78119
+   },
+   "gpuHash": "1d74b5ddfdd5e16f",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:38",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 3,
+    "marks": 35835
+   },
+   "gpuHash": "1e0ab3826960c085",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:39",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "682b171c99e94e9d",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:40",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 1136
+   },
+   "gpuHash": "73cc48ecf78f57d2",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:41",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 22830
+   },
+   "gpuHash": "90e0b8584dfc96c7",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:42",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "244ec2ed699bff5f",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:43",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 3476
+   },
+   "gpuHash": "28b825e51279c1b8",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:44",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 18810
+   },
+   "gpuHash": "20d51eab74c896dc",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:45",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 17085
+   },
+   "gpuHash": "2983fa87c20b9e21",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:46",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "89ce830241979112",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:47",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 5749
+   },
+   "gpuHash": "856db6d77743f0f7",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:48",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 4,
+    "decisions": 4,
+    "marks": 31174
+   },
+   "gpuHash": "58542e7f485e1cd0",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:49",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "70ac85532a3b67e9",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:50",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "b1694317941ea64d",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:51",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "e6ee13b2b3f2a44d",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:52",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 5,
+    "marks": 43967
+   },
+   "gpuHash": "8bcd59a8d507649a",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:53",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "af6164a7814678b1",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:54",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "5761f6c07d24feb2",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:55",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 12818
+   },
+   "gpuHash": "89e69936994d838c",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:56",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "1f353602b193372c",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:57",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "0a6f6918abe7992a",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:58",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 2,
+    "marks": 35419
+   },
+   "gpuHash": "5dee8e4577fd2582",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:59",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 7207
+   },
+   "gpuHash": "0339d9c33ffd5220",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:60",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 11,
+    "d1VGT": 0,
+    "lots": 11,
+    "decisions": 11,
+    "marks": 52743
+   },
+   "gpuHash": "2afb5ab2e2e8b3da",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:61",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 7,
+    "d1VGT": 0,
+    "lots": 7,
+    "decisions": 7,
+    "marks": 42991
+   },
+   "gpuHash": "5194cdec9b09b650",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:62",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "54ca66ef5d8fd443",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:63",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 22385
+   },
+   "gpuHash": "4802b51bd74cc65d",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:64",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 6,
+    "d1VGT": 0,
+    "lots": 7,
+    "decisions": 11,
+    "marks": 40022
+   },
+   "gpuHash": "731c8cb9c87c3fd0",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:65",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "df8da7e16f84c584",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:66",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 5574
+   },
+   "gpuHash": "77539992e74e98dd",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:67",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 14065
+   },
+   "gpuHash": "d5ba04ed3d23f482",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:68",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 8562
+   },
+   "gpuHash": "238961f2e6c6dfbd",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:69",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 4648
+   },
+   "gpuHash": "d80b8e5b9a5ce795",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:70",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 26365
+   },
+   "gpuHash": "8d32d80fba370c77",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:71",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "aa02f372bc3a438e",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:72",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "6902ca345a519a62",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:73",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 13635
+   },
+   "gpuHash": "c67d19e5719bb97f",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:74",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "397be1d5118fac52",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:75",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "b07ecf1f5581ff34",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:76",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "c2339e3ef8646212",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:77",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 2411
+   },
+   "gpuHash": "539d264dbfd062f3",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:78",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 5644
+   },
+   "gpuHash": "8a8bc316f112e422",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:79",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "aceb5d54a43c81a8",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:80",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 3,
+    "marks": 48143
+   },
+   "gpuHash": "63cf2a88188457fc",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:81",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "576ee625d63b0b5b",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:82",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 5,
+    "d1VGT": 0,
+    "lots": 6,
+    "decisions": 10,
+    "marks": 45435
+   },
+   "gpuHash": "68443d210f6dd3a8",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:83",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 6,
+    "decisions": 6,
+    "marks": 30655
+   },
+   "gpuHash": "a79b352428dc45fb",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:84",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 3,
+    "marks": 6309
+   },
+   "gpuHash": "033b29cd29fb4dc4",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:85",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 4,
+    "d1VGT": 0,
+    "lots": 4,
+    "decisions": 5,
+    "marks": 55477
+   },
+   "gpuHash": "ab83060cf7b28d1a",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:86",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 36926
+   },
+   "gpuHash": "1f2fc3c599dc107f",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:87",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 26365
+   },
+   "gpuHash": "10b43f4d84bf290a",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:88",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 4,
+    "decisions": 4,
+    "marks": 24955
+   },
+   "gpuHash": "7fbc517a55609a76",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:89",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "16f3bf678b2880de",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:90",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 5,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 6,
+    "marks": 35419
+   },
+   "gpuHash": "ca4261304044bf69",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:91",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 5,
+    "decisions": 5,
+    "marks": 30932
+   },
+   "gpuHash": "d8b47050730713fb",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:92",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 4,
+    "marks": 29353
+   },
+   "gpuHash": "eb1d77341955919c",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:93",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "b73cc4483b3272b7",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:94",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "508f36e6ea0499d4",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:95",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "a3c971f753241852",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:96",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "b56b6ab0240fa932",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:97",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "8a5976da1f30b38c",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:98",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 8954
+   },
+   "gpuHash": "503fca51c6158b67",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:99",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 17085
+   },
+   "gpuHash": "2c4dac3c91fbdd3b",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:100",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 19441
+   },
+   "gpuHash": "974ff5fc787b2928",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:101",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 12913
+   },
+   "gpuHash": "94534c71f1f7c835",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:102",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 7,
+    "d1VGT": 0,
+    "lots": 7,
+    "decisions": 7,
+    "marks": 51891
+   },
+   "gpuHash": "32f21b09a0e8053c",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:103",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 4,
+    "d1VGT": 0,
+    "lots": 4,
+    "decisions": 4,
+    "marks": 42684
+   },
+   "gpuHash": "4bbe7e00de9d24ff",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:104",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 2,
+    "marks": 62667
+   },
+   "gpuHash": "401b9e41ac423ff0",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:105",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 8562
+   },
+   "gpuHash": "b47d0761eb864d37",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:106",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 5,
+    "d1VGT": 0,
+    "lots": 5,
+    "decisions": 5,
+    "marks": 23640
+   },
+   "gpuHash": "2b2bf266e789adc1",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:107",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "1be6c77c93541947",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:108",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "37b4a231803d65cf",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:109",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "269fe01232780619",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:110",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 3,
+    "marks": 30052
+   },
+   "gpuHash": "d659802563e6813d",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:111",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "688a4995a5d2e7e5",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:112",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "c89e3a29ee5389c9",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:113",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "b009b11109d4f842",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:114",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "33f84df0dcda4d14",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:115",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 4,
+    "d1VGT": 0,
+    "lots": 4,
+    "decisions": 4,
+    "marks": 17875
+   },
+   "gpuHash": "ec29762b08be6471",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:116",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 11,
+    "d1VGT": 0,
+    "lots": 7,
+    "decisions": 12,
+    "marks": 54159
+   },
+   "gpuHash": "f2770c896c6239f8",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:117",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 24214
+   },
+   "gpuHash": "2af1a2a10bbead7b",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:118",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 22975
+   },
+   "gpuHash": "66ed630600ce1516",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:119",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 2,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 60776
+   },
+   "gpuHash": "d6db2f463921e9be",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:120",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 54702
+   },
+   "gpuHash": "4ef4af968cb3b345",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:121",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 1,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 17186
+   },
+   "gpuHash": "b2d9e20facd0afbf",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:122",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 5,
+    "d1VGT": 0,
+    "lots": 5,
+    "decisions": 5,
+    "marks": 27523
+   },
+   "gpuHash": "0899e4639f8ac8d9",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:123",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 4,
+    "decisions": 4,
+    "marks": 25432
+   },
+   "gpuHash": "7654ff1efccfe9d2",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:124",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "9155fc696f7f568e",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:125",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "9ae53b4c34b3bf1f",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:126",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 6,
+    "d1VGT": 0,
+    "lots": 6,
+    "decisions": 6,
+    "marks": 54762
+   },
+   "gpuHash": "65836bca475af3b7",
+   "diffs": []
+  },
+  {
+   "key": "PARITY:127",
+   "set": "A",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 26365
+   },
+   "gpuHash": "bc9a502c5504d74a",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-legacy",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "0df8343c64266686",
+   "diffs": []
+  },
+  {
+   "key": "B:long-legacy",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 5,
+    "d1VGT": 0,
+    "lots": 5,
+    "decisions": 6,
+    "marks": 37767
+   },
+   "gpuHash": "ecc051e95e09a497",
+   "diffs": []
+  },
+  {
+   "key": "B:rare-legacy",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "b65d063892701c73",
+   "diffs": []
+  },
+  {
+   "key": "B:mid-legacy",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 9,
+    "d1VGT": 0,
+    "lots": 9,
+    "decisions": 10,
+    "marks": 51090
+   },
+   "gpuHash": "6d80c33044ccda0b",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-A0nt",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "0df8343c64266686",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-A0nw",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "0df8343c64266686",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-A1nt",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 13,
+    "d1VGT": 0,
+    "lots": 10,
+    "decisions": 14,
+    "marks": 48837
+   },
+   "gpuHash": "e8d85d66a70d1a7d",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-A1nw",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "653912d998df48aa",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-B0nt",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 23,
+    "d1VGT": 0,
+    "lots": 23,
+    "decisions": 24,
+    "marks": 44267
+   },
+   "gpuHash": "ccb5ee2790de5a5c",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-B0nw",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "2055e14a93ab8a35",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-B0et",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 24,
+    "d1VGT": 0,
+    "lots": 24,
+    "decisions": 25,
+    "marks": 44051
+   },
+   "gpuHash": "8f1baf08f28bdad7",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-B0ew",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "ebcc96b8741b635b",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-B1nt",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 14,
+    "d1VGT": 0,
+    "lots": 11,
+    "decisions": 15,
+    "marks": 49527
+   },
+   "gpuHash": "cd9db876c272690d",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-B1nw",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "a28e2ba1a00733da",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-B1et",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 14,
+    "d1VGT": 0,
+    "lots": 11,
+    "decisions": 15,
+    "marks": 47881
+   },
+   "gpuHash": "798dcfaf472af31c",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-B1ew",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "15f2916bc9d11f8e",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-C0nt",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 17,
+    "d1VGT": 0,
+    "lots": 17,
+    "decisions": 18,
+    "marks": 56682
+   },
+   "gpuHash": "c6e43b517516b073",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-C0nw",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 4,
+    "marks": 80455
+   },
+   "gpuHash": "cbdd3f2b6b731281",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-C0et",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 18,
+    "d1VGT": 0,
+    "lots": 18,
+    "decisions": 19,
+    "marks": 56786
+   },
+   "gpuHash": "22bae334c53fbb65",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-C0ew",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 4,
+    "marks": 80455
+   },
+   "gpuHash": "b93cb7ae50db20ee",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-C1nt",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 14,
+    "d1VGT": 0,
+    "lots": 11,
+    "decisions": 15,
+    "marks": 61519
+   },
+   "gpuHash": "dbda344c9abdc649",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-C1nw",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 4,
+    "marks": 80455
+   },
+   "gpuHash": "39c1c74e3f081f7a",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-C1et",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 14,
+    "d1VGT": 0,
+    "lots": 11,
+    "decisions": 15,
+    "marks": 61329
+   },
+   "gpuHash": "413cdfff4e822d48",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-C1ew",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 3,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 4,
+    "marks": 80455
+   },
+   "gpuHash": "eef9a12e3c84dadc",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-D0nt",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 22,
+    "d1VGT": 0,
+    "lots": 22,
+    "decisions": 23,
+    "marks": 45340
+   },
+   "gpuHash": "2ffe0d2ffdbb9796",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-D0nw",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "2348ba4370dc1afe",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-D0et",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 24,
+    "d1VGT": 0,
+    "lots": 24,
+    "decisions": 25,
+    "marks": 45062
+   },
+   "gpuHash": "92e4d7b0c2ae64b8",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-D0ew",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "feffe928b98d28d0",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-D1nt",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 15,
+    "d1VGT": 0,
+    "lots": 11,
+    "decisions": 16,
+    "marks": 50767
+   },
+   "gpuHash": "034419de41225ac3",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-D1nw",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "6f74db8b00acccfa",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-D1et",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 15,
+    "d1VGT": 0,
+    "lots": 11,
+    "decisions": 16,
+    "marks": 50577
+   },
+   "gpuHash": "7c3c29e7f9f956ca",
+   "diffs": []
+  },
+  {
+   "key": "B:agg-D1ew",
+   "set": "B",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 21,
+    "d1VGT": 0,
+    "lots": 21,
+    "decisions": 22,
+    "marks": 44373
+   },
+   "gpuHash": "cb098b8ab6155108",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#0",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "16e27c33c64353c2",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#1",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 50131
+   },
+   "gpuHash": "e2b1ba8d9757bb6c",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#2",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 31814
+   },
+   "gpuHash": "f348823808ca20f6",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#3",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 37866
+   },
+   "gpuHash": "3171993a9877cd9e",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#4",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "bfe931be3f39111c",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#5",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "974fc29f8c652a19",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#6",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "5b382fa6086473dc",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#7",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "252625a350abcd78",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#8",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 32722
+   },
+   "gpuHash": "85417f8bc94f53ac",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#9",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "129787c07474a4e7",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#10",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "5dc43d5f81b696f2",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#11",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 42666
+   },
+   "gpuHash": "0196ed1610e151e6",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#12",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "31e0357bcf254970",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#13",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "4c52d7b14498bd01",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#14",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "b301418cb6f5c927",
+   "diffs": []
+  },
+  {
+   "key": "N:New L0#15",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 3,
+    "decisions": 3,
+    "marks": 39533
+   },
+   "gpuHash": "3ed0f03f1cbb2482",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#0",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "29aad6d158da8381",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#1",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "ae41f3fac12f6051",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#2",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 2,
+    "decisions": 2,
+    "marks": 28811
+   },
+   "gpuHash": "42afeb4bac2d3297",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#3",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "74c698ea21cfd4a1",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#4",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 37558
+   },
+   "gpuHash": "c2464004ff05b0d1",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#5",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 37558
+   },
+   "gpuHash": "b71768943ccaa7a8",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#6",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 37558
+   },
+   "gpuHash": "d30a9c5e6a7d4e6b",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#7",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 37866
+   },
+   "gpuHash": "8062bba7c327253a",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#8",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 32722
+   },
+   "gpuHash": "756ac6f1f69b03ba",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#9",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "ab4bf066e2a8522c",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#10",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 38466
+   },
+   "gpuHash": "3128a29a420f3b39",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#11",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "dcfae0652a1ea2bd",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#12",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "b14d21e5e38fe3a3",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#13",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "1e13708da1313d71",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#14",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 0,
+    "decisions": 0,
+    "marks": 251
+   },
+   "gpuHash": "5c90c07f5256c3d4",
+   "diffs": []
+  },
+  {
+   "key": "N:N/original#15",
+   "set": "N",
+   "status": "ok",
+   "g2": true,
+   "g3": true,
+   "counts": {
+    "d1GDX": 0,
+    "d1VGT": 0,
+    "lots": 1,
+    "decisions": 1,
+    "marks": 31814
+   },
+   "gpuHash": "bf0859f24a2c3b12",
+   "diffs": []
+  }
+ ]
+}

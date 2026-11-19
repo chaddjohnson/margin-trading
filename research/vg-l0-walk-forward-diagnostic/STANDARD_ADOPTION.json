@@ -1,0 +1,79 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-walk-forward-diagnostic",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "2.1.0",
+  "sha256": "ac5c2c69987faa8d2b0dba7dfd452e278658167fa172ab210a8a2e8de7696f9b"
+ },
+ "readAt": "2026-11-13T18:31:53Z",
+ "adoptedAt": "2026-11-13T18:37:00Z",
+ "protocol": {
+  "path": "research/vg-l0-walk-forward-diagnostic/PROTOCOL.md",
+  "sha256": "e88b3ef5dc101009f74efc989aa08471434b6961afbbd7ebb9e1536183d29bb3"
+ },
+ "dateSplit": {
+  "development": { "from": "2016-01-04", "to": "2024-12-31" },
+  "validation": { "from": "2025-01-01", "to": "2026-10-30" },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles are selected (diagnostic; adaptation AD1). The objects of study are the sealed earlier-cutoff procedures of 5B (L0 arm), the trading-session study and the shadow-eligibility study (B1, B2) and their sealed fold selections; their own frozen rules (NL0: the actual-profit role of each fold's qualified independent set) are reported, not re-applied.",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 4200,
+  "notes": "No search proposals (diagnostic). backendEvaluations caps all fresh simulations: bounded replays of already-sealed configurations on development doors D19/D21/D23/D24 only (PROTOCOL.md §6: D3 <= 40, D4 <= 120, D6 <= 400, D7 <= 3,500, D8 <= 60). Record and cache reads are counted apart. FULL (2025-2026) is never opened."
+ },
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3",
+   "kind": "adaptation",
+   "description": "no roles and no primary; nothing is selected; the audited studies' sealed roles and primaries are the objects of study",
+   "justification": "diagnostic scope; brief: 'This is a diagnostic, root-cause investigation, not another optimization study'",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "stricter doors: FULL never opened; only development prefix doors, only to replay sealed selections on slices the audited studies already opened",
+   "justification": "brief: 'No tuning against 2025-2026 ... not a pristine holdout'; a diagnosis of 2020-2024 walk-forward failures needs no 2025-2026 data",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§4.2",
+   "kind": "adaptation",
+   "description": "no search and no cutoff repeat; fresh simulations are bounded replays of sealed configurations (cap 4,200)",
+   "justification": "standard §0.1: a diagnostic never searches; brief: 'Do not launch broad searches or parameter optimizations'",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "no new engine; each subject replayed with its own study's code and accepted only after reproducing its sealed fold record to the cent (gate G3)",
+   "justification": "brief: 'Use the source version appropriate to each completed study'",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "no tuning benchmark; in-process replays in one contained systemd unit at a time; observed memory reported",
+   "justification": "standard §6.3: diagnostics report observed use instead of benchmarking",
+   "userAgreement": null
+  }
+ ]
+}

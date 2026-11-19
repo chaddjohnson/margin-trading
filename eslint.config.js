@@ -5,7 +5,8 @@ import tseslint from 'typescript-eslint';
 
 export default [
   {
-    ignores: ['dist/**', 'src/startTradingServer.js', 'research/**/tmp/**', 'research/**/freeze/source/**', 'src/d1-refinement/generated/**', '.cache/**']
+    // apps/* are self-contained front-end apps with their own package.json and ESLint config (npm --prefix apps/<name> run lint)
+    ignores: ['dist/**', 'src/startTradingServer.js', 'research/**/tmp/**', 'research/**/freeze/source/**', 'src/d1-refinement/generated/**', '.cache/**', 'apps/**']
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

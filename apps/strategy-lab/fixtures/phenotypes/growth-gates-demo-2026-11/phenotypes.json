@@ -1,0 +1,185 @@
+{
+  "schema": "strategy-lab.phenotype-export",
+  "schemaVersion": 1,
+  "study": {
+    "id": "growth-gates-demo-2026-11",
+    "title": "Growth entry-gate phenotype demonstration (not an optimisation)",
+    "kind": "demonstration",
+    "methodology": "docs/strategy-lab/PHENOTYPES.md",
+    "dataExposure": "No data was used to choose these configurations (illustrative schema defaults). VGT and GDX 2016–2023 had been inspected in earlier exploratory runs; any rerun is exploratory, never a holdout."
+  },
+  "generatedAt": "2026-11-05T00:00:00.000Z",
+  "generator": {
+    "tool": "apps/strategy-lab/scripts/make-growth-gates-demo-phenotypes.ts",
+    "commit": null
+  },
+  "phenotypes": [
+    {
+      "id": "growth-gates-demo-2026-11/trend-a-latch-time-limited-vgt-1d",
+      "version": 1,
+      "name": "Growth + trend A (price change) + time-limited eligibility (VGT, daily) — demonstration",
+      "role": "demonstration",
+      "rank": 1,
+      "strategy": {
+        "key": "rise-from-recent-low-trading",
+        "version": "1.2.0"
+      },
+      "executionKind": "standalone",
+      "symbols": [
+        "VGT"
+      ],
+      "params": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 20,
+        "trendFilterEnabled": true,
+        "trendMethod": "price_change",
+        "trendChangeLookbackSessions": 20,
+        "trendChangeMinimumReturnPercent": 0,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "time_limited",
+        "eligibilityMaxAgeSessions": 10,
+        "trailingStopPercent": 7.3,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 8,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "continuationEnabled": false,
+        "costBpsPerSide": 5
+      },
+      "resolution": "1d",
+      "engine": {
+        "version": "1.2.0",
+        "commit": null
+      },
+      "execution": {
+        "notionalUsd": 100000,
+        "annualInterestRate": 0.11,
+        "costBpsPerSide": 5,
+        "stopFill": "the stop price, or the gapped opening trade",
+        "capital": "standalone: one $100,000 fixed-notional backtest per symbol"
+      },
+      "data": {
+        "selectionWindow": null,
+        "testWindows": [],
+        "exposure": "not selected on data (illustrative defaults)"
+      },
+      "selection": {
+        "method": "none — illustrative schema defaults, exported only to demonstrate the catalogue workflow"
+      },
+      "notes": "Demonstration only: not optimised, not ranked by performance (rank = list order), not a recommendation.",
+      "recordSha256": "7e469c6d768a3511d7079b0c6487c9493ab73c795cbc4c766f9cb52a995b73f1"
+    },
+    {
+      "id": "growth-gates-demo-2026-11/trend-e-reset-renew-vgt-1d",
+      "version": 1,
+      "name": "Growth + trend E (momentum) + reset-and-renew eligibility (VGT, daily) — demonstration",
+      "role": "demonstration",
+      "rank": 2,
+      "strategy": {
+        "key": "rise-from-recent-low-trading",
+        "version": "1.2.0"
+      },
+      "executionKind": "standalone",
+      "symbols": [
+        "VGT"
+      ],
+      "params": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 20,
+        "trendFilterEnabled": true,
+        "trendMethod": "momentum",
+        "trendMomentumShortSessions": 5,
+        "trendMomentumLongSessions": 60,
+        "trendMomentumMinimumShortReturnPercent": 0,
+        "trendMomentumMinimumLongReturnPercent": 0,
+        "eligibilityEnabled": true,
+        "eligibilityPolicy": "reset_renew",
+        "eligibilityMaxAgeSessions": 10,
+        "eligibilityResetDropPercent": 3,
+        "eligibilityRenewalReboundPercent": 2,
+        "trailingStopPercent": 7.3,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 8,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "continuationEnabled": false,
+        "costBpsPerSide": 5
+      },
+      "resolution": "1d",
+      "engine": {
+        "version": "1.2.0",
+        "commit": null
+      },
+      "execution": {
+        "notionalUsd": 100000,
+        "annualInterestRate": 0.11,
+        "costBpsPerSide": 5,
+        "stopFill": "the stop price, or the gapped opening trade",
+        "capital": "standalone: one $100,000 fixed-notional backtest per symbol"
+      },
+      "data": {
+        "selectionWindow": null,
+        "testWindows": [],
+        "exposure": "not selected on data (illustrative defaults)"
+      },
+      "selection": {
+        "method": "none — illustrative schema defaults, exported only to demonstrate the catalogue workflow"
+      },
+      "notes": "Demonstration only: not optimised, not ranked by performance (rank = list order), not a recommendation.",
+      "recordSha256": "c622668e68a30df80782d60e0e1c9338de80608a5e5f0782b2a4b0bc3456abf3"
+    },
+    {
+      "id": "growth-gates-demo-2026-11/trend-c-gdx-1d",
+      "version": 1,
+      "name": "Growth + trend C (rising moving average), eligibility OFF (GDX, daily) — demonstration",
+      "role": "demonstration",
+      "rank": 3,
+      "strategy": {
+        "key": "rise-from-recent-low-trading",
+        "version": "1.2.0"
+      },
+      "executionKind": "standalone",
+      "symbols": [
+        "GDX"
+      ],
+      "params": {
+        "advanceFromRecentLowPercent": 5,
+        "recentLowLookbackBars": 20,
+        "trendFilterEnabled": true,
+        "trendMethod": "rising_sma",
+        "trendSmaSessions": 50,
+        "trendSmaComparisonSessions": 5,
+        "eligibilityEnabled": false,
+        "trailingStopPercent": 7.3,
+        "maximumHoldEnabled": true,
+        "maximumHoldDays": 8,
+        "intradayLossBufferEnabled": true,
+        "intradayLossBufferPercent": 2.9,
+        "continuationEnabled": false,
+        "costBpsPerSide": 5
+      },
+      "resolution": "1d",
+      "engine": {
+        "version": "1.2.0",
+        "commit": null
+      },
+      "execution": {
+        "notionalUsd": 100000,
+        "annualInterestRate": 0.11,
+        "costBpsPerSide": 5,
+        "stopFill": "the stop price, or the gapped opening trade",
+        "capital": "standalone: one $100,000 fixed-notional backtest per symbol"
+      },
+      "data": {
+        "selectionWindow": null,
+        "testWindows": [],
+        "exposure": "not selected on data (illustrative defaults)"
+      },
+      "selection": {
+        "method": "none — illustrative schema defaults, exported only to demonstrate the catalogue workflow"
+      },
+      "notes": "Demonstration only: not optimised, not ranked by performance (rank = list order), not a recommendation.",
+      "recordSha256": "90c66193991b0892252a921bd1523b9d0be2922bb0183ce490454909ef0d8847"
+    }
+  ]
+}
