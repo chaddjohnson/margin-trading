@@ -3,6 +3,9 @@
 Read [CLAUDE.md](CLAUDE.md) first: it holds the repository's standing rules (GPU-only official optimization and
 CPU/GPU parity, delivery, reporting, context recovery, the optimization standard).
 
+The CUDA evaluator, the enforcement code (official gate, purpose gate, preflight §9 rules, policy tests) and the GPU
+tools named below live on branch `research/gpu-phase2` until the user approves merging them into `main`.
+
 ## Changing strategy or evaluation code
 
 The TypeScript/CPU engine is the **authoritative reference** and Strategy Lab's evaluator; the CUDA C++ evaluator

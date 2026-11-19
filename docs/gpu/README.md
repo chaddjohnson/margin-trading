@@ -1,6 +1,8 @@
 # GPU evaluator — operations guide
 
-How to build, verify, run and troubleshoot the CUDA evaluator on Apollo (RTX 5090). Normative rules:
+How to build, verify, run and troubleshoot the CUDA evaluator on Apollo (RTX 5090). The evaluator, the enforcement code
+and the tools named here live on branch `research/gpu-phase2` (not merged into `main`; merging needs the user's
+approval); acceptance status: ACCEPTED 2026-11-19 (`config/gpu-backend/acceptance.json` on that branch). Normative rules:
 [OPTIMIZATION_STANDARD.md](../research/OPTIMIZATION_STANDARD.md) §9 (from 3.0.0). Change procedure:
 [PARITY_CHECKLIST.md](PARITY_CHECKLIST.md). Feature map: [FEATURE_MATRIX.md](FEATURE_MATRIX.md). The first acceptance
 study and its evidence: `research/gpu-phase2/` (start with `GPU_PHASE2_HANDOFF.md`).

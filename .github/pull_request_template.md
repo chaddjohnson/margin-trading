@@ -4,6 +4,8 @@
 
 ## Evaluation dependencies (standard 3.0.0 §9 — mandatory)
 
+<!-- The GPU tools named here (src/gpu-backend/, tools/gpu-phase2/) live on research/gpu-phase2 until merged into main. -->
+
 Does this change touch D1, Growth, the allocator/pool, entries, exits, risk controls, fills, costs, interest, the
 records, the data loaders or any other file in the compatibility manifest
 (`node --experimental-transform-types src/gpu-backend/compat.ts --manifest`)?

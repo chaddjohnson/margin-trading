@@ -18,8 +18,9 @@
   every legacy CPU research script and the policy/merge-gate tests — live on branch `research/gpu-phase2` and are NOT
   merged into `main` (merging them needs the user's separate approval). Until they are, no official optimization can
   run from `main`: there is no gate to open, and a CPU run must never stand in for one.
-- Official GPU optimization is additionally blocked until `config/gpu-backend/acceptance.json` is ACCEPTED and matches
-  the tree (research/gpu-phase2/ reports the current verdict).
+- On `research/gpu-phase2` the evaluator is ACCEPTED (2026-11-19; `config/gpu-backend/acceptance.json` there): official
+  GPU optimization can run only from that branch's gate, only after the user authorizes a study, and only while the
+  acceptance matches the tree (`research/gpu-phase2/GPU_PHASE2_HANDOFF.md`).
 - CPU evaluation is allowed only under an explicit non-official purpose (`GPU_POLICY_PURPOSE=cpu-reference | diagnostic |
   parity-test | benchmark | strategy-lab`). Never present CPU results, or a CPU/GPU hybrid, as official optimization.
   Any real exception needs the user's explicit approval first.

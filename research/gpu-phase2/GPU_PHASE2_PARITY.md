@@ -102,7 +102,13 @@ Eleven candidates (S2-all 1, S6-all 10) are configurations that **both** engines
 - New L0, N/original, IJ1, C4 and C4-refined are in every campaign run's reference set (`--refs`), on every door,
   window and option set, with detailed records and risk inputs where the run has them.
 
-FINALISTS_SECTION
+- **Assignment 3's 48 sealed finalists** (`research/vg-l0-full-joint/FROZEN_SELECTION.json`, including the New L0
+  control), run after the endurance test (`results/parity/final-finalists.json`): each finalist's compact record and
+  detailed record with risk inputs on D24 and on FULL — **D24 96/96 and FULL 96/96 identical to the
+  independent CPU reference** (books, pooled replay, records, envelopes), and on D24 the GPU's compact record equals the
+  **sealed C24 centre figures to the cent for 48 of 48** finalists (net and minute drawdown).
+- The official gate's parity mini-set (references + seeded genomes, 18 subjects on D24) passed on the accepted build
+  (`results/runlogs/official-preflight-after-acceptance.txt`).
 
 ## 4. Complete optimizer jobs of Assignment 3, replayed on the GPU
 
@@ -149,14 +155,21 @@ record hash (`results/bench/bench.json`).
 | Capacity retry | records after a GPU capacity overflow and retry equal the normal-capacity run (negative tests) |
 | Pre-final D24-core (development) | 2,325 / 2,325 identical; determinism 0 at all batch sizes |
 
-## 8. Edge cases
+## 8. Endurance (G8, 8 h per AMENDMENTS A1)
+
+During the 8.009 h endurance run (731 rounds, 23,953,408 GPU evaluations at batch 8,192 over D19,
+D21, D23, D24 and FULL and five workloads), **35,040 CPU parity samples** (canonical record
+hashes) and **117 repeatability re-runs** (239,616 tasks, the same fixed batches across hours,
+temperatures and server restarts) showed **0 mismatches** (`results/stress/closure.json`).
+
+## 9. Edge cases
 
 The synthetic fixtures S0–S7 (seeded regime phases with gaps, holidays, missing minutes, sessions without a closing
 print, threshold equalities) run with the base options and with all options at once (§2). Data refusals (empty
 session, invalid prices, non-integer or non-increasing times, corrupted dataset file) are negative tests
 (`GPU_PHASE2_POLICY_AND_ENFORCEMENT.md` §3.2).
 
-## 9. Differences
+## 10. Differences
 
 **None.** No CPU/GPU difference of any size was found in any final record. No tolerance was introduced, and no
 comparison was loosened.
