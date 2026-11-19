@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T02:29Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T02:38Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — FINAL binary frozen; final gates RUNNING (chain `gpup2-final-gates`).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
@@ -15,7 +15,7 @@
   **DO NOT edit any file in the compat closure** (`compat.ts --manifest`: 94 CPU files, CUDA sources, host
   client/encode/dataset/layout/canon/compat/toolchain/pool) until the acceptance is written — it would invalidate the
   binary and every final gate.
-- **Running:** unit `gpup2-final-gates-3` (relaunched 02:05Z) = `chains/final-gates.sh` (log
+- **Running:** unit `gpup2-final-gates-4` (02:37:59Z, START=3; earlier: `-3` from 02:05Z) = `chains/final-gates.sh` (log
   `results/logs/final-gates-chain.txt`): 1 A3 C19 broad1 GPU replay **run 2** (sub-unit `gpup2-a3-c19b1-r2`, out
   `results/optimizer/a3-C19-broad1/gpu/`) + compare vs the sealed record → 2 qualify-replay (A3 C19 broad qualification
   on the GPU vs sealed) → 3 bench → 4 sanitizer-final → 5 negative-final → 6 mini-opt g7f → 7 parity FINAL (+SUMMARY) →
@@ -27,7 +27,11 @@
   (`results/optimizer/compare-a3-C19-broad1.json`).
 - **Step 2 PASSED (02:28:56Z):** A3 C19 broad qualification replayed on the GPU identical (385 members, 377 qualified,
   251,405 fresh, 0 evidence differences); 238.5 s vs 1,249.5 s = 5.24×
-  (`results/optimizer/compare-a3-C19-broad-qualification.json`). Step 3 (bench, unit `gpup2-bench`) started 02:28:56Z.
+  (`results/optimizer/compare-a3-C19-broad-qualification.json`).
+- **Step 3 (bench)** failed once (02:30Z, tool bug: double close of a pool's server) → fixed with a keep-open proxy in
+  bench.ts and stress.ts (the stress tool had the same flaw), both dry-run clean (scratch outputs); chain relaunched as
+  unit **`gpup2-final-gates-4`** with START=3 at 02:37:59Z (bench running in `gpup2-bench`). Branch pushed (backup) at
+  `a9ae79ec` (ls-remote verified).
 - **Replay run 1** (01:43–02:03Z): 5.21× (1,132.5 s vs 5,900.8 s), counts identical, but its record wrote ±Inf/NaN as
   null (91 fields, all encoding-only) → kept as a timing sample (`results/optimizer/a3-C19-broad1-run1/NOTE.md`); fixed
   `src/gpu-phase2/context.ts` writeJson + mini-opt row hashes to the store's encoding (compat digest unchanged).

@@ -53,6 +53,17 @@ class Sampler {
     return { samples: r.length, utilMeanPct: mean((x) => x.util), vramPeakMiB: max((x) => x.memMiB), powerMeanW: mean((x) => x.powerW), powerPeakW: max((x) => x.powerW), tempPeakC: max((x) => x.tempC), smClockMeanMHz: mean((x) => x.smClockMHz) };
   }
 }
+// GpuPool.close() closes its server; a server shared by several pools (one per round) is wrapped so that only its owner
+// closes it (every other member — evaluate, prepare/submit/complete, kill, getters — goes to the real server)
+const keepOpen = (s: GpuServer): GpuServer =>
+  new Proxy(s, {
+    get: (t, k) => {
+      if (k === 'close') return async () => {};
+      const v = Reflect.get(t, k, t);
+
+      return typeof v === 'function' ? v.bind(t) : v;
+    }
+  });
 const sampler = new Sampler();
 const rssMiB = () => Math.round(process.memoryUsage().rss / 2 ** 20);
 const treeRssMiB = () => {
@@ -200,7 +211,7 @@ for (const d of doors) {
     const n = quick ? 8192 : 32768;
     const tasks = tasksOf(n, `BP-${d}`);
     const ledger = path.join(cacheDir, `bench-ledger-${d}.jsonl`);
-    const pool = new GpuPool({ door, session: null, server, uuid: info.uuid, ledgerFile: ledger, batchSize: 8192, lingerMs: 25 });
+    const pool = new GpuPool({ door, session: null, server: keepOpen(server), uuid: info.uuid, ledgerFile: ledger, batchSize: 8192, lingerMs: 25 });
 
     sampler.start();
     const t0 = performance.now();

@@ -42,6 +42,17 @@ const mixes: Record<string, { options: EvalOptions; detail: boolean; risk?: bool
   'growth-only': { options: { enabled: { 'D1:GDX': false, 'D1:VGT': false, 'G:GDX': false } }, detail: false }
 };
 const mixNames = Object.keys(mixes);
+// GpuPool.close() closes its server; a server shared by several pools (one per round) is wrapped so that only its owner
+// closes it (every other member — evaluate, prepare/submit/complete, kill, getters — goes to the real server)
+const keepOpen = (s: GpuServer): GpuServer =>
+  new Proxy(s, {
+    get: (t, k) => {
+      if (k === 'close') return async () => {};
+      const v = Reflect.get(t, k, t);
+
+      return typeof v === 'function' ? v.bind(t) : v;
+    }
+  });
 const binarySha = createHash('sha256').update(fs.readFileSync(serverBinary)).digest('hex');
 const t0 = Date.now();
 const deadline = t0 + hours * 3600_000;
@@ -126,7 +137,7 @@ while (Date.now() < deadline) {
     let ok = false;
 
     for (let attempt = 0; !ok; attempt++) {
-      const pool = new GpuPool({ door, session: null, server, uuid: info.uuid, ledgerFile: ledger, batchSize: 8192, lingerMs: 25 });
+      const pool = new GpuPool({ door, session: null, server: keepOpen(server), uuid: info.uuid, ledgerFile: ledger, batchSize: 8192, lingerMs: 25 });
 
       counters = () => ({ round, door: d, mix, ...pool.counters });
       try {
@@ -189,7 +200,7 @@ while (Date.now() < deadline) {
     // repeatability
     if (round % repeatEvery === 0) {
       const fixed = fixedTasks(d);
-      const pool = new GpuPool({ door, session: null, server, uuid: info.uuid, ledgerFile: path.join(cacheDir, 'stress-repeat-ledger.jsonl'), batchSize: 8192, lingerMs: 25 });
+      const pool = new GpuPool({ door, session: null, server: keepOpen(server), uuid: info.uuid, ledgerFile: path.join(cacheDir, 'stress-repeat-ledger.jsonl'), batchSize: 8192, lingerMs: 25 });
       const now = new Map<string, string>();
 
       await pool.run(fixed, (t, v) => now.set(t.k, canonHash(v)));
