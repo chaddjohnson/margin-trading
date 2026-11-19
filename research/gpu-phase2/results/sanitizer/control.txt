@@ -1,0 +1,21 @@
+# compute-sanitizer positive/negative control, 2026-11-19T00:16:09Z
+NVIDIA (R) Compute Sanitizer
+Copyright (c) 2020-2026 NVIDIA Corporation
+Version 2026.1.1.0 (build 38000597) (public-release)
+## clean run
+========= COMPUTE-SANITIZER
+sync: no error
+========= ERROR SUMMARY: 0 errors
+## injected out-of-bounds write (32 threads past a 1,024-byte allocation)
+========= 
+========= Invalid __global__ write of size 4 bytes
+=========     at k(int *, int, int)+0xc0
+=========     by thread (258,0,0) in block (0,0,0)
+=========     Access to 0x754432e00408 is out of bounds
+=========     and is 9 bytes after the nearest allocation at 0x754432e00000 of size 1,024 bytes
+=========     Saved host backtrace up to driver entry point at kernel launch time
+=========         Host Frame: main [0x8d2b] in oob
+========= 
+sync: unspecified launch failure
+========= ERROR SUMMARY: 35 errors
+========= ERROR SUMMARY: 32 errors were not printed. Use --print-limit option to adjust the number of printed errors
