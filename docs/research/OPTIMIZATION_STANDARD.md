@@ -1,7 +1,8 @@
 # Optimization research standard
 
-- **Version:** 2.2.0 — **effective** 2026-11-13 — **status:** current (2.1.0, effective 2026-11-12, 2.0.0 and 1.1.0,
-  effective 2026-11-09, and 1.0.0, effective 2026-11-08, remain registered for the studies that pinned them).
+- **Version:** 3.0.0 — **effective** 2026-11-19 — **status:** current (2.2.0, effective 2026-11-13, 2.1.0, effective
+  2026-11-12, 2.0.0 and 1.1.0, effective 2026-11-09, and 1.0.0, effective 2026-11-08, remain registered for the
+  studies that pinned them).
 - **Authoritative path:** `docs/research/OPTIMIZATION_STANDARD.md` (this file). There is no other copy; earlier versions
   are read from git history (`git log -p -- docs/research/OPTIMIZATION_STANDARD.md`).
 - **Version registry:** `docs/research/optimization-standard.versions.json` (version → sha256 of this file).
@@ -11,7 +12,8 @@
   - The preflight `npm run research-preflight -- --study research/<study>` (`src/research-standard/`).
   - [methods/](methods/) — versioned **reference methods** (registry `methods/methods.versions.json`), e.g.
     [NEW_L0_METHOD.md](methods/NEW_L0_METHOD.md), the recovered procedure that produced New L0 (§4.8, from 2.1.0).
-- **Change log:** at the end of this file (§8).
+- **Change log:** §8. **GPU-only official optimization and CPU/GPU parity:** §9 (from 3.0.0), after the change log so
+  that the earlier section numbers stay unchanged; its companions are [docs/gpu/](../gpu/).
 
 This standard sets how optimization research is done in this repository: what is mandatory, what each study must
 specify, what is report-only, and what can change only through a documented amendment. It does not replace a study's
@@ -34,7 +36,9 @@ own protocol; every new study writes one from the template and pins the version 
 All research is backend work: canonical data, headless runners and CLI commands. Strategy Lab, its HTTP endpoints,
 Interactive Preview and browser automation are never part of an optimization (see
 [RESEARCH_WORKFLOW.md](../strategy-lab/RESEARCH_WORKFLOW.md) §1, §5). Research is reported in written analysis,
-Markdown tables and machine-readable results only, with no visual artifacts (§7.7, from 2.0.0).
+Markdown tables and machine-readable results only, with no visual artifacts (§7.7, from 2.0.0). From 3.0.0, every
+official evaluation of an optimization runs on the attested GPU evaluator with no CPU fallback, and every change to an
+evaluation dependency keeps CPU/GPU parity (§9).
 
 ### 0.2 Requirement levels
 
@@ -556,7 +560,8 @@ consequence (from 2.2.0).
    - Node's old-space limit does not cap typed arrays or aggregate memory. Child-process workers call `gc()` on a
      schedule and when ArrayBuffers grow.
 5. **[S]** The resource contract (slice, worker count, caches, pressure threshold, gc cadence) is written into the
-   protocol and recorded in the freeze.
+   protocol and recorded in the freeze. From 3.0.0 the GPU server process runs inside the same slice; the contract adds
+   the GPU batch size, the VRAM budget and the batch timeout (§9; the pilot's benchmark measures them on the GPU).
 
 **Amendment items:** worker counts and caches after the freeze (these are operational amendments, `O*`), the pressure
 threshold, and any change of the cap (with the user's approval).
@@ -582,6 +587,7 @@ threshold, and any change of the cap (with the user's approval).
    - the risk ceiling and its denominator;
    - the budget (proposals, evaluations);
    - the scope (`optimization`, `continuation` or `diagnostic`);
+   - from 3.0.0, the evaluation backend (`evaluationBackend`, §9.11);
    - every deviation.
 
    The protocol carries the same adoption entry, including the standard's version and sha256.
@@ -618,6 +624,7 @@ threshold, and any change of the cap (with the user's approval).
    - **What it cannot verify:** that an agent read or understood the document, or that the study's code obeys it.
    - **Who checks those:** protocol reviews, the study's own guards (doors, seals, freezes) and the user's review.
    - The `CLAUDE.md` instruction is an instruction, not a mechanism.
+   - From 3.0.0 the GPU policy has executable mechanisms of its own (§9.3, §9.10, §9.11) with their own limits (§9.12).
 7. **[M] Reporting format: no visuals** (added in 2.0.0; the user's standing preference).
    - **What a study delivers:** written analysis, Markdown tables and machine-readable results (JSON, JSONL, CSV).
    - **What it never creates:** charts, plots, SVGs, screenshots, images, dashboards, HTML visual reports, PDFs or other
@@ -632,8 +639,99 @@ threshold, and any change of the cap (with the user's approval).
 
 | Version | Effective | Change | Rationale and evidence | Implications |
 |---|---|---|---|---|
+| 3.0.0 | 2026-11-19 | **Major** (§7.4: mandatory rules added). Adds §9 [M] *GPU-only official optimization and CPU/GPU parity*: official evaluations (defined in §9.1) run only on the attested NVIDIA GPU evaluator, with no CPU fallback, `auto` backend or hybrid, failing closed (§9.2); the single official gate with its live preflight and attestation (§9.3); capability coverage of the whole reachable domain (§9.4); per-batch device receipts, the conservation invariant (CPU-scored = 0) and archive provenance (§9.5); permanent bit-identical CPU/GPU parity for every evaluation-dependency change, with the TypeScript engine authoritative and CUDA C++ the accelerator (§9.6); stale-port protection by the compatibility manifest (§9.7); explicit non-official purposes for CPU evaluation (§9.8); activation only by an ACCEPTED acceptance record (§9.9); the merge gate (policy tests plus the Apollo GPU verification step; a CPU-only CI pass is never parity) and the entrypoint audit (§9.10); the adoption manifest's `evaluationBackend` and the no-evasion rule (§9.11); enforcement limits (§9.12). One-line pointers in §0.1, §6.5 and §7.6. The companions follow: `CLAUDE.md` (a mandatory section), `docs/gpu/` (checklist, feature matrix, operations), the protocol template, the adoption template (`evaluationBackend`), the preflight (`src/research-standard/gpuPolicy.ts`), the PR template and contribution guide, the roadmap. | The user's GPU Acceleration Phase 2 brief (`research/gpu-phase2/brief/BRIEF.md`, 2026-11-19): official optimization becomes GPU-only and parity a permanent policy, implemented as a new major version of this standard. Evidence: `research/gpu-phase2/` (the complete CUDA port of D1/RC, Growth 1.4.0, the pool and the risk-envelope inputs; its parity campaign, determinism, sanitizer, negative tests and fixed-seed mini-optimization; the policy tests) and Phase 1 (`research/gpu-phase1-feasibility/`). | Applies to studies adopting it from 2026-11-19; from that date new optimization and continuation manifests adopt 3.0.0 or later. Studies pinned to 2.2.0 or earlier keep their pins, engines and sealed records (never re-hashed or rerun); a continuation of one either retains its pin as a CPU-era study whose new official stages need the user's decision, or migrates by amendment. **Official GPU optimization stays blocked until `config/gpu-backend/acceptance.json` is ACCEPTED** (§9.9). No gate, window, budget, instrument, objective weight, fitness rule or the $35,000 ceiling changes. |
 | 2.2.0 | 2026-11-13 | **Minor** (§7.4: a new [S] item and a new [R] item; no [M] rule added, removed or changed; existing item numbers kept). Adds §1.8 [S] *Consequence*: before searching, the protocol states what a failed or uncomputable independent chronological verdict means for the final selection (default: "no chronological support: not a deployment-qualified candidate without an explicit user decision"). It is governance, not a fitness term, ranking input or gate. "No qualifying candidate" is a valid outcome. An informed lane's selection is labelled "no independent chronological test". Adds §5.9 [R] *Chronological exposure disclosure* for every fold primary and final candidate: the open-lot share of training net (denominator and ≤ 0 handling fixed), the largest open lot's market-value multiple and its give-back on the next slice, the per-lot MAE distribution and loss severity, a D1 maximum-hold-window tail stress on a declared reference history (disjoint data, or a labelled proxy), and the training neighbourhood replayed on the next slice; with the evidence limits stated. One-line pointers in §5.4 and the amendment items. The companions follow: the protocol template (§10, §15), the adoption template (`chronologicalConsequence`), the preflight (it requires `chronologicalConsequence` from optimization and continuation studies adopting 2.2.0 or later), the roadmap. | The user's approval in the Assignment 1 brief (`research/vg-l0-risk-controls-foundation/brief/BRIEF.md` §1: "the user has approved these diagnostic/governance safeguards"). Evidence: the walk-forward diagnostic (`research/vg-l0-walk-forward-diagnostic/REPORT.md` §3–§4, recommendations 1–4 and its "Proposed narrowly scoped amendment"): 4 of 4 anchor procedures and 6 earlier ones failed chronologically; carried open lots were 33–53% of the C21 training nets of 5B, B1 and B2, at 1.5–2.5× exposure (ρ +0.72 with the 2022–2023 DD); training neighbourhoods breached in 0–8% of draws against 54–100% on the next slice; D1 dip-buys had no loss exit before their maximum hold. | Applies to studies adopting it from 2026-11-13. Studies pinned to 2.1.0, 2.0.0, 1.1.0 or 1.0.0 keep their pin, labels and sealed verdicts (the preflight passes with a notice; a continuation records "retained pinned standard x.y.z" or migrates by amendment, §7.5). No gate, window, budget, instrument, objective weight or the $35,000 ceiling changes. No numeric threshold is attached to any §5.9 item. NL0 1.0.0 (`methods/NEW_L0_METHOD.md`) is unchanged: it records what was executed, before these items existed. The first adopter is `research/vg-l0-risk-controls-foundation/` (scope `diagnostic`). |
 | 2.1.0 | 2026-11-12 | **Minor** (§7.4: new [S] items; no [M] rule added, removed or changed). Adds §3.5 [S] *Convention changes* (A frozen incumbent / B direct conversion / C re-optimized selection, with the decomposition; the new convention an explicit option, the original the default) and §4.8 [S] *Reproducing a reference method* (pin, stage map, omitted-stage reassignment through the original schedules, proportional scaling by replicates, side-by-side budget equivalence against the effective original budget). Adds the companion directory `docs/research/methods/` with its registry and the first reference method, NL0 1.0.0 (`methods/NEW_L0_METHOD.md`). The preflight gains an optional check of a declared `referenceMethod` pin; the protocol template gains the matching rows. | The user's brief for the New L0 trading-session study (`research/vg-l0-session-hold/brief/BRIEF.md`, 2026-11-12, Phase 2: "Update the appropriate documentation … Where the original methodology contains reusable practices, incorporate them appropriately into the optimization documentation … Where something is specific to New L0, preserve it in a dedicated, versioned reference protocol"). Evidence: Priority 5B (`research/vg-lifecycle-matched-optimization/`), whose L0 arm produced New L0; its executed budget and stage allocation recovered in `methods/NEW_L0_METHOD.md` §4; Priorities 5A/5B's lifecycle-on-fixed-phenotype versus matched-optimization designs (the precedent for §3.5). | Applies to studies adopting it from 2026-11-12. Studies pinned to 2.0.0, 1.1.0 or 1.0.0 keep their pin (the preflight passes with a notice). No gate, window, budget, instrument or the $35,000 ceiling changes. The first adopter is `research/vg-l0-session-hold/` (scope `optimization`). |
 | 2.0.0 | 2026-11-09 | **Major** (§7.4: a mandatory rule added). Adds §7.7 [M] *Reporting format: no visuals*: research is reported in written analysis, Markdown tables and machine-readable results only; no charts, plots, SVGs, screenshots, images, dashboards, HTML visual reports, PDFs or other visual artifacts; earlier visuals are preserved; a brief that explicitly asks for a visual is a recorded departure. §0.1's sentence allowing backend-generated report charts is replaced by a pointer to §7.7. No other rule changes. The companions follow: the protocol template (§15), `CLAUDE.md` (the standing reporting preference) and the roadmap. | The user's explicit reporting preference for future work, recorded in the Priority 5A brief (`research/vg-growth-funding-lifecycle/brief/BRIEF.md` §1, 2026-11-09), authorized there without a further approval question. It reconciles the earlier permission (§0.1 of 1.0.0 and 1.1.0) and the charts produced by Priority 3A (`research/vg-d1-growth-diagnostic/results/charts/`, preserved). | Applies to studies adopting it from 2026-11-09. Studies pinned to 1.0.0 or 1.1.0 keep their pin (the preflight passes with a notice; a continuation records "retained pinned standard x.y.z" or migrates by amendment, §7.5); their existing charts stay as they are. No research-method rule, gate, window, budget or the $35,000 ceiling changes. The first adopter is `research/vg-growth-funding-lifecycle/` (scope `diagnostic`). |
 | 1.1.0 | 2026-11-09 | **Minor** (§7.4: new guidance and [S]/[R] items; no [M] rule added, removed or changed; existing item numbers kept). Adds: §0.3 tail-severity statistics (p95, the worst-10% mean DD), the three consideration fields and the participation stages; §2.8 [R] candidate consideration is not qualification; §2.9 [R] participation attribution; §4.7 [S] protected investigation of multi-component participation; §5.8 [R] tail severity beside frequency. The companions follow: the protocol template (§4, §6, §9, §15) and the roadmap's sequencing note. The preflight's checks are unchanged (these items are protocol and report content it cannot verify, §7.6); its tests now also cover a study that retains 1.0.0 under a current 1.1.0. | The user's agreed process decisions in the Priority 3A brief (`research/vg-d1-growth-diagnostic/brief/BRIEF.md` §7, 2026-11-09). Evidence: Priority 3 (`research/vg-d1-growth-joint/REPORT.md`): (1) the unchanged VG #2 + Growth #4 / 08500a60 + Appendix A combinations failed Q3 (p90 DD $36,277.63 / $35,131.47) yet are kept by the user as candidates to investigate → §2.8; (2) the frozen primary passed Q3 with rare but severe breaches (2.6%, worst $103,278.13) while those combinations failed it with more frequent, milder breaches (13.3% / 10.9%, mean excess ≈ $4,000) → §5.8; (3) searched Growth·GDX books were mostly unfunded, without a stage-by-stage explanation → §2.9, §4.7. | Applies to studies adopting it from 2026-11-09. It does not change any frozen study's rules or results: studies pinned to 1.0.0 keep their pin (the preflight passes with a notice; a continuation records "retained pinned standard 1.0.0" or migrates by amendment, §7.5). The $35,000 budget and every gate are unchanged; no numeric tolerance is introduced. The first adopter is `research/vg-d1-growth-diagnostic/` (scope `diagnostic`). |
 | 1.0.0 | 2026-11-08 | First version. Consolidates the practice of Study 8, growth140-vgt-stable, Priority 1 (`research/vg-balanced-entry-eligibility/`) and Priority 2 (`research/vgt-d1-growth-joint/`). Adds the adoption manifest, the preflight and the `CLAUDE.md` read instruction. | The user's Priority 2 follow-up brief (`research/vgt-d1-growth-separate-pooled/brief/BRIEF.md`). Evidence: Priority 2's fixed D1 primary + Growth #4 combination beat its joint primary, but was not selectable (→ §3.2); its folds failed chronologically while the final neighbourhood looked stable (→ §1.10, §5.4); the stable Growth study's promotion excluded Rise and gate structures (→ §2.4, §4.3); Priority 1's capital-displacement finding (→ §5.2); the 2026-11-07 OOM and the dead-worker hang (→ §6.2, §6.4). | Applies to new studies from 2026-11-08. Completed studies are not retrofitted. The first adopter is `research/vgt-d1-growth-separate-pooled/` (scope `diagnostic`). |
+
+## 9. GPU-only official optimization and CPU/GPU parity (from 3.0.0)
+
+This section follows the change log so that the numbers of §0–§8 stay unchanged. It is mandatory for every study that
+adopts 3.0.0 or later. The engineering procedure is [docs/gpu/PARITY_CHECKLIST.md](../gpu/PARITY_CHECKLIST.md), the
+maintained feature map [docs/gpu/FEATURE_MATRIX.md](../gpu/FEATURE_MATRIX.md) and the operations guide
+[docs/gpu/README.md](../gpu/README.md). The first acceptance study is `research/gpu-phase2/`.
+
+1. **[M] Official evaluation and execution purposes.**
+   - An **official evaluation** is any historical strategy evaluation whose result can affect an official
+     optimization: fitness, screening, promotion, rung fitting, refinement, robustness and perturbation tests,
+     qualification, selection and optimization validation (folds, holdouts, stresses, removals).
+   - Every run declares its **execution purpose**: `official-optimization`, or one of the non-official purposes
+     `parity-test`, `cpu-reference`, `diagnostic`, `benchmark`, `strategy-lab` (`src/gpu-backend/purpose.ts`, the
+     environment variable `GPU_POLICY_PURPOSE`). A run without a declared purpose does not start.
+2. **[M] GPU only, no CPU fallback, fail closed.**
+   - Official evaluations run on the **attested NVIDIA GPU evaluator** only. There is no CPU fallback, no `auto`
+     backend and no CPU/GPU hybrid, for any candidate, batch, retry or stage.
+   - The run **refuses or stops** (checkpointed, with an explicit error, never a hang) when: no GPU or CUDA is
+     available; the device is not the accepted one; the binary or a source digest is stale; the smoke kernel or the
+     parity mini-set fails; a reachable feature is unsupported; VRAM is insufficient; the server dies, hangs or loses
+     its heartbeat; a receipt, counter or output checksum is wrong; a batch is incomplete or corrupt; or any candidate
+     would be scored on the CPU.
+   - A per-candidate capacity overflow is re-evaluated **on the GPU** with larger capacities; any other per-candidate
+     error stops the job (the canonical engine refuses that configuration too).
+3. **[M] The single official gate.** Official evaluations enter only through `openOfficialGpuSession`
+   (`src/gpu-backend/official.ts`) → the attested `GpuPool` (`src/gpu-backend/pool.ts`) → `EvalLab`
+   (`src/gpu-backend/lab.ts`). Before any search evaluation the gate checks, in order: the purpose; the acceptance
+   record (§9.9); the server, its build digest and the device (UUID against `nvidia-smi`, no test hooks); the
+   capability coverage of the whole reachable domain (§9.4); the smoke kernel (verified by the CPU); memory for the
+   planned batch; and a parity mini-set against the canonical CPU engine on the study's own door. It writes an
+   **attestation** (`research/<study>/results/gpu-attestations/<run>-<time>.json`). A resumed or restarted run passes
+   the whole gate again and records a new attestation.
+4. **[M] Capability coverage of the reachable domain.** The preflight covers every feature the optimizer **can reach**
+   (structural genes, options, controls), not only the incumbents or a sample. A reachable feature without a CUDA
+   implementation and parity evidence blocks official optimization. A study never removes a feature from its genome
+   silently to pass the gate; a deliberately reduced domain is declared in the protocol.
+5. **[M] Receipts, conservation and provenance.**
+   - Every batch has a device receipt (device UUID, request nonce, device-side execution counters, output checksum)
+     appended to the run's ledger, with progress telemetry (GPU utilization, VRAM, power, temperature).
+   - The **conservation invariant** holds per batch and at the end: submitted = GPU-returned + failed + in flight +
+     queued, and **CPU-scored = 0**. A violation withholds the batch's results and fails the job.
+   - Every official archive row is bound to `(study, job, door, door pin, evaluation-code digest, backend)` with
+     backend = `gpu:<device uuid>:<binary sha256>:<compatibility digest>`; an archive never resumes under another
+     backend or code digest.
+6. **[M] Permanent CPU/GPU parity.**
+   - The TypeScript/CPU engine stays the **authoritative reference** (and Strategy Lab's evaluator); the CUDA C++
+     evaluator is the accelerator. There is no migration to Python or to a shared generated source.
+   - **Every change** to D1, Growth, the allocator/pool, entries, exits, risk controls, fills, costs, interest, the
+     records, the data loaders or any other evaluation dependency needs its CUDA counterpart and fresh **Apollo
+     parity evidence before it is merged or used for official research** (the checklist's steps).
+   - The parity standard is **bit-identical canonical records** (zero tolerance, IEEE-754 binary64, the JavaScript
+     operation order). A difference is a defect. It can be accepted only as a documented departure the user approved
+     (§7.3), naming the fields, the bound and the cause — never silently and never by loosening a comparison.
+   - A new CPU feature may exist before its port (Strategy Lab, diagnostics); official optimization that can reach it
+     is blocked until the port and its evidence exist (§9.4).
+7. **[M] Stale-port protection.** The **compatibility manifest** (`src/gpu-backend/compat.ts`) hashes the import
+   closure of the canonical evaluation path, the CUDA sources and the host code. Its digest is compiled into the
+   server; the acceptance record pins it. Any change to a file in it invalidates the acceptance until a new acceptance
+   (§9.9) passes.
+8. **[M] Non-official CPU evaluation.**
+   - CPU evaluation is allowed only under an explicit non-official purpose (§9.1); every legacy CPU research runner
+     starts through the purpose gate (`src/gpu-backend/legacyRunner.ts`, used by every research npm script) and
+     refuses `official-optimization`.
+   - Non-official CPU results are **never official optimization evidence** and are never presented as such.
+   - Real exceptions (an official CPU run) need the user's explicit approval first, recorded as a departure (§7.3).
+9. **[M] Activation: the acceptance record.** Official GPU optimization is **blocked** until
+   `config/gpu-backend/acceptance.json` exists with status `ACCEPTED`, its compatibility digests match the working
+   tree, its binary sha256 matches the server and its device matches the GPU. It is written only by an acceptance
+   study whose gates all pass (parity campaign, determinism, sanitizer, negative tests, fixed-seed mini-optimization,
+   stress test; `research/gpu-phase2/PROTOCOL.md` is the first). The preflight reports a missing, invalid or stale
+   record as BLOCKED.
+10. **[M] Merge gate and entrypoints.**
+    - `npm test` includes the policy tests (`src/gpu-backend/tests/policy.test.ts`): purposes, the legacy-runner gate on
+      every research npm script, the entrypoint audit, fail-closed acceptance, this section's preflight rules and the
+      domain coverage. A **CPU-only CI pass is never parity**: a change to an evaluation dependency also needs the
+      **Apollo GPU verification step** (the checklist's parity campaign, sanitizer, negative tests and fixed-seed
+      mini-optimization) recorded in a new acceptance record.
+    - Every directory of `src/` with search machinery is either an official GPU entrypoint, a library, or a registered
+      legacy CPU runner (`config/gpu-backend/entrypoints.json`); an unregistered one fails the audit.
+11. **[M] The adoption manifest and the preflight.** A study adopting 3.0.0 or later with scope `optimization` or
+    `continuation` declares `evaluationBackend: { policy: "gpu-required", purpose: "official-optimization",
+    acceptance: "config/gpu-backend/acceptance.json" }`; the preflight refuses it while the acceptance is not valid. A
+    diagnostic may declare `{ policy: "non-official-cpu", purpose, justification }`. From 3.0.0's effective date a new
+    optimization or continuation manifest may not pin an earlier version (the GPU rule cannot be evaded by pinning an
+    old standard); frozen studies keep their pins (§7.5).
+12. **Enforcement limits (stated honestly).** The mechanisms verify declarations, digests, receipts, counters and live
+    parity samples. They cannot prove that an unregistered script never evaluates on the CPU, or that the parity suite
+    exercised every rare path; the policy tests, the entrypoint audit, code review and the acceptance study's
+    campaign cover those. The `CLAUDE.md` instruction is an instruction, not a mechanism.

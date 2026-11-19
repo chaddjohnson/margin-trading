@@ -28,6 +28,9 @@
 
 static int g_budgetMb = 0, g_maxL = 300, g_tpb = 64;
 static bool g_allowFault = false;
+// TEST-ONLY fault hooks (accepted only with --allow-fault-injection; an official gate refuses such a server)
+static bool g_corruptSmoke = false, g_corruptOutput = false, g_badReceipt = false;
+static int g_stallMs = 0;
 static bool g_debug = getenv("GB_DEBUG") != nullptr;
 static double g_watchdogS = 300;  // a batch whose kernels run longer fails closed (the server reports and exits)
 static std::chrono::steady_clock::time_point g_t0 = std::chrono::steady_clock::now();
@@ -491,6 +494,9 @@ static void handleEval(const std::vector<unsigned char>& req) {
   uint64_t x = 14695981039346656037ull;
   for (size_t c = 0; c < n; c++) x = fnv64(&hashes[c], 8, x);
   rc.outChecksum = x;
+  if (g_corruptOutput && n) { unsigned char* b = (unsigned char*)outs.data(); b[(n - 1) * sizeof(GbCandOut) + 64] ^= 0x01; }  // TEST: a flipped bit after hashing
+  if (g_badReceipt) rc.gExecuted += 1;  // TEST: device counters that disagree with the batch
+  if (g_stallMs) usleep((useconds_t)g_stallMs * 1000);  // TEST: a stalled server (heartbeat loss)
   rc.h2dMs = h2d; rc.d1Ms = d1ms; rc.gMs = gms; rc.poolMs = poolms; rc.d2hMs = d2h; rc.deviceBytes = (double)bytes;
 
   GbResultHeader rh;
@@ -548,6 +554,7 @@ static void handleSmoke() {
   unsigned long long x = 0;
   for (int i = 0; i < 256; i++) { sum += v[i]; x ^= w[i] + 0x9e3779b97f4a7c15ull + (x << 6) + (x >> 2); }
   char msg[256];
+  if (g_corruptSmoke) sum += 1.0;
   snprintf(msg, sizeof msg, "{\"sum\":\"%a\",\"mix\":\"%016llx\",\"uuid\":\"%s\"}", sum, x, g_uuidText);
   respondText(GB_OK, msg);
 }
@@ -601,8 +608,13 @@ int main(int argc, char** argv) {
     else if (a == "--tpb" && i + 1 < argc) g_tpb = atoi(argv[++i]);
     else if (a == "--allow-fault-injection") g_allowFault = true;
     else if (a == "--watchdog-s" && i + 1 < argc) g_watchdogS = atof(argv[++i]);
+    else if (a == "--test-corrupt-smoke") g_corruptSmoke = true;
+    else if (a == "--test-corrupt-output") g_corruptOutput = true;
+    else if (a == "--test-bad-receipt") g_badReceipt = true;
+    else if (a == "--test-stall-ms" && i + 1 < argc) g_stallMs = atoi(argv[++i]);
     else { fprintf(stderr, "gb2: unknown argument %s\n", a.c_str()); return 2; }
   }
+  if ((g_corruptSmoke || g_corruptOutput || g_badReceipt || g_stallMs) && !g_allowFault) { fprintf(stderr, "gb2: test hooks need --allow-fault-injection\n"); return 2; }
   if (cudaSetDevice(0) != cudaSuccess || cudaFree(0) != cudaSuccess) { fprintf(stderr, "gb2: no CUDA device\n"); return 4; }
   cudaDeviceProp p;
   cudaGetDeviceProperties(&p, 0);

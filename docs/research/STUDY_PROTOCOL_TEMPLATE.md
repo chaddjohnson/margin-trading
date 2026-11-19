@@ -19,6 +19,7 @@ governed work). Afterwards it is never edited; changes go to `AMENDMENTS.md` (ap
 | Scope | `optimization` \| `continuation` \| `diagnostic` |
 | Brief | `research/<study>/brief/BRIEF.md`, sha256 `<…>` |
 | Branch / base commit | `<branch>` from `<sha>` |
+| Evaluation backend (standard §9, from 3.0.0) | official optimization: the attested GPU evaluator through `openOfficialGpuSession` (`evaluationBackend` in the adoption manifest; acceptance `config/gpu-backend/acceptance.json`, binary sha256 `<…>`, compatibility digest `<…>`, device `<GPU UUID>`); no CPU fallback — or, for a diagnostic, the non-official CPU purpose and its justification |
 | Reference method (standard §4.8, if the study reproduces one) | `docs/research/methods/<METHOD>.md` id `<id>` version `<x.y.z>`, sha256 `<64 hex>` (also `referenceMethod` in the adoption manifest), with the stage map, omissions and budget equivalence in §7 — or "none" |
 
 ### Adaptations and departures
@@ -154,6 +155,10 @@ Consideration never relabels a gate, changes a sealed outcome, approves deployme
 - **Gates:** parity, causality, accounting identities, single-family identities and synthetic tests (standard §5.1,
   §5.6).
 - A parity failure stops dependent stages.
+- **GPU (standard §9, from 3.0.0):** the official gate's live preflight and attestation before each search stage (and
+  on every resume); the reachable domain's capability coverage; the receipt ledger and conservation (CPU-scored = 0);
+  any change to an evaluation dependency during the study needs its CUDA counterpart, fresh Apollo parity evidence
+  and a new acceptance record before official use (docs/gpu/PARITY_CHECKLIST.md).
 
 ## 13. Resources and recoverability
 
@@ -161,6 +166,8 @@ Consideration never relabels a gate, changes a sealed outcome, approves deployme
   cap.
 - **Execution settings:** workers, caches, the pressure threshold and the gc cadence.
 - **Pilot:** the benchmark (optimization studies) and the interruption tests (graceful, unit kill, worker kill).
+- **GPU (from 3.0.0):** batch size, VRAM budget, batch timeout and the server inside the slice; the benchmark measures
+  end-to-end GPU throughput of the study's own jobs; the interruption tests include a killed GPU server.
 
 ## 14. Integrity
 

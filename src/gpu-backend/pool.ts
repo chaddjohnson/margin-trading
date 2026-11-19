@@ -41,6 +41,9 @@ export interface GpuPoolOptions {
   batchTimeoutMs?: number; // a batch that does not return in time fails the job (default 20 min)
   log?: (s: string) => void;
   domainFeatures?: bigint; // official mode: the attested domain (each task must lie inside it)
+  capBase?: number; // the first capacity level (default 512; tests use a small one to exercise the GPU retry)
+  pipelineMin?: number; // when a batch returns and at least this many tasks wait, the next batch goes to the device before
+  //                       this one is decoded (default batchSize / 4; a smaller batch waits for the linger as usual)
 }
 
 interface Pending {
@@ -198,36 +201,48 @@ export class GpuPool {
     this.queue = rest;
     this.inFlightCount += batch.length;
 
-    const caps = 512 * 2 ** level;
+    const caps = (this.o.capBase ?? 512) * 2 ** level;
     const opts: BatchOptions = { tradeCapD1: caps, tradeCapG: caps, lotCap: caps, fundCap: caps * 4, record: true };
     const t0 = performance.now();
     let timer: NodeJS.Timeout | null = null;
+    let landed = false; // the batch left the in-flight count
+    let deviceFree = false;
 
     try {
+      const prepared = this.server.prepare(this.o.door, batch.map((p) => p.task), opts);
       const timeout = new Promise<never>((_r, reject) => {
         timer = setTimeout(() => reject(new PolicyError('gpu-hang', `a batch of ${batch.length} did not return within ${this.o.batchTimeoutMs ?? 1200000} ms`)), this.o.batchTimeoutMs ?? 1200000);
       });
-      const r = await Promise.race([this.server.evaluate(this.o.door, batch.map((p) => p.task), opts, this.uuid), timeout]);
+      const raw = await Promise.race([this.server.submit(prepared), timeout]);
 
       if (timer) clearTimeout(timer);
+      // pipelining: the device is free — the next batch goes out before this one is decoded
+      this.busy = false;
+      deviceFree = true;
+      if (!this.failure && this.queue.length >= (this.o.pipelineMin ?? Math.floor((this.o.batchSize ?? 8192) / 4))) void this.dispatch();
+
+      const r = this.server.complete(prepared, raw, this.uuid);
+
       this.ledger(r.receipt, batch, performance.now() - t0, r.timing);
       this.counters.batches++;
       this.counters.kernelMs += r.receipt.server.totalMs;
       this.inFlightCount -= batch.length;
+      landed = true;
 
       const retry: Pending[] = [];
+      // the batch's integrity BEFORE any of its results is released: no CPU-scored evaluation, every task inside the
+      // attested domain (a violation fails the job and releases nothing)
+      if (this.counters.cpuScored !== 0) throw new PolicyError('cpu-scored', `${this.counters.cpuScored} evaluation(s) scored on the CPU; the batch's results are withheld`);
+      if (this.o.domainFeatures !== undefined) {
+        const bad = r.results.find((x) => (x.features & ~this.o.domainFeatures!) !== 0n);
 
+        if (bad) throw new PolicyError('capability-outside-domain', `task ${bad.key} needs ${featureNames(bad.features & ~this.o.domainFeatures).join(', ')} outside the attested domain; the batch's results are withheld`);
+      }
       const msPer = r.receipt.server.totalMs / batch.length; // each task's share of the device batch
 
       r.results.forEach((res, i) => {
         const p = batch[i]!;
 
-        if (this.o.domainFeatures !== undefined && (res.features & ~this.o.domainFeatures) !== 0n) {
-          this.counters.failed++;
-          this.failed++;
-          this.fail(new PolicyError('capability-outside-domain', `task ${p.task.k} needs ${featureNames(res.features & ~this.o.domainFeatures).join(', ')} outside the attested domain`));
-          return;
-        }
         if (res.status === 0) {
           this.counters.gpuReturned++;
           this.completed++;
@@ -247,7 +262,7 @@ export class GpuPool {
       this.conservation(`batch ${this.counters.batches}`);
     } catch (e) {
       if (timer) clearTimeout(timer);
-      this.inFlightCount -= batch.length;
+      if (!landed) this.inFlightCount -= batch.length;
       this.counters.failed += batch.length;
       this.failed += batch.length;
       try {
@@ -258,7 +273,7 @@ export class GpuPool {
       this.fail(e instanceof Error ? e : new Error(String(e)));
     } finally {
       this.counters.wallMs = Date.now() - this.t0;
-      this.busy = false;
+      if (!deviceFree) this.busy = false;
       this.wake();
       this.schedule();
     }
@@ -318,12 +333,13 @@ export class GpuPool {
     this.schedule();
 
     for (;;) {
+      if (this.failure) break; // a failed pool fails every caller, even one whose own tasks all returned
       if (left === 0) break;
-      if ((this.stopReason || this.failure) && this.inFlightCount === 0) break;
+      if (this.stopReason && this.inFlightCount === 0) break;
       await new Promise<void>((resolve) => this.waiters.push(resolve));
     }
 
-    if (left > 0) {
+    if (left > 0 || this.failure) {
       // the queued, never-dispatched tasks are dropped (the job checkpoints; a resume replays them)
       const before = this.queue.length;
 

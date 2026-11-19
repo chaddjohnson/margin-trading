@@ -2,19 +2,29 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T00:57Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — S3/S5/S6 (evaluator v2 with the full Growth port) built and probing bit-exact; S7a
-  pre-final parity campaign RUNNING; S2 (policy + enforcement) next.
+- **Updated:** 2026-11-19T01:41Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — evaluator complete (D1/RC, Growth 1.4.0, pool, risk envelope); policy + enforcement
+  committed (`60553b27`); standard 3.0.0 §9 written and registered (uncommitted); G7 mini-optimization CPU = GPU
+  identical (`results/optimizer/compare-g7-cpu-vs-gpu.json`); negative tests 34/35 on the dev build (the one failure
+  fixed in `pool.ts`: integrity violations now fail every caller); GpuPool pipelining added (uncommitted).
 - **Authority:** `brief/BRIEF.md` sha256 `25c1fa47…459d` (283 lines, read in full). `PROTOCOL.md` FROZEN
   2026-11-19T00:25Z (`results/protocol-freeze.json` sha256 `b274caab…f999`, sealed 0444; protocol commit `8dad359e`).
-  Standard 2.2.0 adopted (scope diagnostic), preflight PASS. `AMENDMENTS.md`: none.
-- **Running:** unit `gpup2-parity-prefinal` (chain `research/gpu-phase2/chains/parity.sh`, env PARITY_OUT=
-  `results/parity/prefinal`, log `results/logs/parity-prefinal-chain.txt`; sub-units `gpup2-par-<n>-<name>`, logs
-  `results/logs/parity-prefinal/<name>.txt`). Binary `build/gb2` sha256 `29607e4d…9606` (compat digest `206b9b64…d691`).
-  It is the PRE-FINAL campaign (early detection); the FINAL campaign reruns the same chain on the frozen final binary
-  (PARITY_OUT default `results/parity/final`). Check: `systemctl --user list-units 'gpup2*'`; chain log "end [" / "FAILED".
-- **Next:** S2 policy/enforcement code (`src/gpu-backend/policy.ts`, GpuPool, official gate, preflight 3.0.0), then
-  parallel decode, mini-optimization, negative tests, benchmarks, 24 h stress, docs.
+  Standard 2.2.0 adopted (scope diagnostic; retained pinned standard 2.2.0 after 3.0.0 was registered), preflight PASS.
+  `AMENDMENTS.md`: none.
+- **Running:** unit `gpup2-mini-opt-p` (chain `chains/mini-opt-gpu.sh`, RUN=g7p: pipelined GPU arm done, interrupted +
+  resumed arm, comparisons; log `results/logs/mini-opt-g7p.txt`). DO NOT edit host sources (compat closure) while it
+  runs: the resume refuses a changed backend digest (that happened once, 01:30Z — correct behaviour).
+- **Pre-final campaign:** stopped by the operator after D24-core (host code changed). `results/parity/prefinal/
+  D24-core.json`: 2,325/2,325 identical, determinism 0 at batch 1/7/13/16/32/50/64/128 + shuffled + repeat + restart
+  (862 s; binary `0e0f0489…`).
+- **The "hang" (resolved, no defect):** the D24-core determinism runs at batch size 1 launch 256 single-candidate
+  kernels of 3–5 s each (one GPU thread walks the whole door; measured 3.3–4.8 s); the earlier units were stopped after
+  a few minutes, before that ~13-minute stage could finish. Kept as defence: server kernel watchdog (300 s/batch,
+  exits), device loop guards (`C_G_LOOP`), pool batch timeout.
+- **Next:** after g7p passes → build the FINAL binary (`build/gb2`, current compat digest) → FINAL sanitizer, negative
+  tests (rebuild gb2-dev/perturbed/stale), G7 on the final binary, A3 C19 broad1 replay benchmark (exclusive GPU,
+  `mini-opt.ts --a3-job C19:broad1` + `a3-replay-compare.ts`), CPU benchmark, FINAL parity campaign, 24 h stress,
+  accept.ts, reports, bundle, commit/push, docs-only main integration.
 
 ## Environment
 
@@ -67,6 +77,10 @@
 
 ## Disclosures
 
+- Investigated as a possible hang (00:5xZ–01:36Z): see the top screen; units stopped: gpup2-par-1-D24-core (first
+  pre-final run), gpup2-repro-d24core; no record was sealed from them.
+- G7 resume attempt 1 (01:30Z) refused by the archive binding because host code (`pool.ts`) was edited between the
+  interrupt and the resume (backend digest changed): the guard works; the resume test was rerun (g7p).
 - Development fixes before any gate record: FNV-64 offset-basis typo in the server (smoke/receipt checks caught it);
   sanitizer findings (leaks at exit; uninitialized padding copied by pack kernels; unwritten period slots) — none
   changed a result (all sanitized results were bit-identical), all fixed.

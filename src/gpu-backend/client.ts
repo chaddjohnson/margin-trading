@@ -164,6 +164,7 @@ export interface StartOptions {
   env?: NodeJS.ProcessEnv;
   wrapper?: string[]; // e.g. compute-sanitizer and its arguments (memory-safety runs): the server runs under it
   watchdogS?: number; // the server's kernel watchdog (default 300 s; a sanitizer run needs more)
+  testHooks?: string[]; // TEST ONLY (negative tests): --test-corrupt-smoke, --test-corrupt-output, --test-bad-receipt, --test-stall-ms N
 }
 
 export class GpuServer {
@@ -205,7 +206,8 @@ export class GpuServer {
       ...(o.maxL ? ['--max-l', String(o.maxL)] : []),
       ...(o.tpb ? ['--tpb', String(o.tpb)] : []),
       ...(o.allowFault ? ['--allow-fault-injection'] : []),
-      ...(o.watchdogS ? ['--watchdog-s', String(o.watchdogS)] : [])
+      ...(o.watchdogS ? ['--watchdog-s', String(o.watchdogS)] : []),
+      ...(o.testHooks ?? [])
     ];
     const cmd = o.wrapper?.length ? o.wrapper[0]! : o.binary;
     const argv = o.wrapper?.length ? [...o.wrapper.slice(1), o.binary, ...args] : args;
@@ -337,26 +339,48 @@ export class GpuServer {
     o: BatchOptions = {},
     expectUuid?: string
   ): Promise<{ results: TaskResult[]; receipt: BatchReceipt; timing: BatchTiming }> {
+    const p = this.prepare(door, tasks, o);
+    const raw = await this.submit(p);
+
+    return this.complete(p, raw, expectUuid);
+  }
+
+  // the three phases of a batch, for pipelining (GpuPool submits the next batch before it decodes this one):
+  // prepare (encode, main thread) → submit (the device; one request at a time) → complete (decode and verify)
+  prepare(door: Door, tasks: Task[], o: BatchOptions = {}): PreparedBatch {
     const t0 = performance.now();
     const enc = encodeBatch(door, tasks, o);
-    const t1 = performance.now();
-    const r = await this.request(TYPE.EVAL, enc.buffer);
-    const t2 = performance.now();
+
+    return { door, tasks, o, enc, encodeMs: performance.now() - t0 };
+  }
+
+  async submit(p: PreparedBatch): Promise<{ payload: Buffer; roundTripMs: number }> {
+    const t0 = performance.now();
+    const r = await this.request(TYPE.EVAL, p.enc.buffer);
 
     if (r.status) throw new GpuError(r.status, r.payload.toString());
+    return { payload: r.payload, roundTripMs: performance.now() - t0 };
+  }
 
-    const dec = decodeBatch(door, tasks, enc, r.payload, o);
+  complete(p: PreparedBatch, raw: { payload: Buffer; roundTripMs: number }, expectUuid?: string): { results: TaskResult[]; receipt: BatchReceipt; timing: BatchTiming } {
+    const t0 = performance.now();
+    const dec = decodeBatch(p.door, p.tasks, p.enc, raw.payload, p.o);
 
     if (expectUuid && dec.receipt.uuid !== expectUuid) throw new GpuError(109, `receipt from ${dec.receipt.uuid}, expected ${expectUuid}`);
-
-    const t3 = performance.now();
-
     return {
       results: dec.results,
       receipt: dec.receipt,
-      timing: { encodeMs: t1 - t0, roundTripMs: t2 - t1, decodeMs: t3 - t2, requestBytes: enc.buffer.length, responseBytes: r.payload.length }
+      timing: { encodeMs: p.encodeMs, roundTripMs: raw.roundTripMs, decodeMs: performance.now() - t0, requestBytes: p.enc.buffer.length, responseBytes: raw.payload.length }
     };
   }
+}
+
+export interface PreparedBatch {
+  door: Door;
+  tasks: Task[];
+  o: BatchOptions;
+  enc: EncodedBatch;
+  encodeMs: number;
 }
 
 // ----- the batch -----

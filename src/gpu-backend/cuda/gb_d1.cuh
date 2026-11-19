@@ -359,7 +359,11 @@ __device__ bool d1Fill(const DevSym& d, D1State& st, const D1Params& p, D1Out& o
   if (!(st.orderActive && st.orderFillBar == k)) return false;
 
   const double raw = priceAt(d, s, k);
+#ifdef GB_TEST_PERTURB
+  const double price = raw * (1 + p.costBps / 10000) * (1 + 1e-12);  // TEST BUILD ONLY: a deliberately wrong kernel (the parity mini-set must refuse it)
+#else
   const double price = raw * (1 + p.costBps / 10000);
+#endif
   const double shares = 100000.0 / price;
   const double sTimeS = LD(d.sTime + s);
 

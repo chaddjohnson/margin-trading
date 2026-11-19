@@ -52,6 +52,8 @@ export interface OfficialRunSpec {
   cacheDir: string; // where the GB2 dataset of the door is exported
   parityMiniSet?: number; // seeded genomes beside the reference identities (default 14)
   allowUnaccepted?: boolean; // TESTS ONLY (negative tests and Phase 2's own engineering runs): skip step 2 and record it
+  serverEnv?: NodeJS.ProcessEnv; // TESTS ONLY: e.g. CUDA_VISIBLE_DEVICES='' (no GPU)
+  testHooks?: string[]; // TESTS ONLY: server fault hooks (the gate then refuses: no-test-hooks)
 }
 
 export interface Attestation {
@@ -135,7 +137,7 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
   // 3. server identity
   check('binary', fs.existsSync(binary), `GPU binary ${binary}`);
 
-  const server = GpuServer.start({ binary, libDir: toolkitLib });
+  const server = GpuServer.start({ binary, libDir: toolkitLib, env: spec.serverEnv, ...(spec.testHooks ? { allowFault: true, testHooks: spec.testHooks } : {}) });
   let info: ServerInfo;
 
   try {
@@ -151,6 +153,7 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
 
     check('compat', info.compatDigest === compat.digest, `server built from compatibility digest ${info.compatDigest.slice(0, 16)}, working tree ${compat.digest.slice(0, 16)} (stale build or changed sources)`);
     check('device', info.uuid === smi, `server device ${info.uuid} ≠ nvidia-smi ${smi}`);
+    check('no-test-hooks', info.faultInjection === false, 'the server runs with fault injection / test hooks enabled: never an official evaluator');
     if (!spec.allowUnaccepted) check('accepted-device', info.uuid === (acc.record as AcceptanceRecord).device.uuid, `device ${info.uuid} ≠ the accepted ${(acc.record as AcceptanceRecord).device.uuid}`);
 
     // 4. capability coverage of the whole reachable domain
