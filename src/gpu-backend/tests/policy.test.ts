@@ -107,7 +107,13 @@ test('the official runner wrapper refuses a missing or non-official purpose, a n
       encoding: 'utf8'
     });
 
-  for (const env of [{}, { GPU_POLICY_PURPOSE: 'cpu-reference' }, { GPU_POLICY_PURPOSE: 'diagnostic' }]) {
+  const envs: Record<string, string>[] = [
+    {},
+    { GPU_POLICY_PURPOSE: 'cpu-reference' },
+    { GPU_POLICY_PURPOSE: 'diagnostic' }
+  ];
+
+  for (const env of envs) {
     const r = run('research/gpu-phase3', 'tools/gpu-backend/official-preflight.ts', env);
 
     assert.equal(r.status, 3);
