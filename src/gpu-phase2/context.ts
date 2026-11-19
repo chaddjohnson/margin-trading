@@ -71,7 +71,17 @@ export const openDoor = async (name: DoorKey, purpose: string): Promise<Door> =>
   return door;
 };
 
+// bigint → hex; ±Infinity / NaN → "__Inf" / "__-Inf" / "__NaN" (the store's encoding, as every sealed study record
+// writes them — plain JSON.stringify would turn them into null and lose the sign)
 export const writeJson = (file: string, value: unknown) => {
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, `${JSON.stringify(value, (_k, v) => (typeof v === 'bigint' ? `0x${v.toString(16)}` : v), 1)}\n`);
+  fs.writeFileSync(
+    file,
+    `${JSON.stringify(
+      value,
+      (_k, v) =>
+        typeof v === 'bigint' ? `0x${v.toString(16)}` : typeof v === 'number' && !Number.isFinite(v) ? (Number.isNaN(v) ? '__NaN' : v > 0 ? '__Inf' : '__-Inf') : v,
+      1
+    )}\n`
+  );
 };

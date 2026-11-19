@@ -15,13 +15,16 @@
   **DO NOT edit any file in the compat closure** (`compat.ts --manifest`: 94 CPU files, CUDA sources, host
   client/encode/dataset/layout/canon/compat/toolchain/pool) until the acceptance is written — it would invalidate the
   binary and every final gate.
-- **Running:** (1) unit `gpup2-a3-c19b1`: GPU replay of A3's sealed C19 broad1 (mini-opt.ts --a3-job C19:broad1; log
-  `results/logs/a3-replay-C19-broad1.txt`; out `results/optimizer/a3-C19-broad1/gpu/`), started 01:43:12Z, ≈1,110 ev/s.
-  (2) unit `gpup2-final-gates-2` (relaunched 01:58Z after inserting the qualification replay as step 2; the first unit was stopped while waiting in step 1) = `chains/final-gates.sh` (log `results/logs/final-gates-chain.txt`): waits for (1), then
-  1 replay-compare → 2 qualify-replay (A3 C19 broad qualification on the GPU vs sealed) → 3 bench → 4 sanitizer-final →
-  5 negative-final → 6 mini-opt g7f → 7 parity FINAL (+SUMMARY) → 8 stress 24.05 h; sub-units `gpup2-bench|sanitizer|negative|mini-opt-f|par-<n>-<name>|stress`. Fail-fast; relaunch a
-  failed chain with `START=<step>` (never rerun a passed step). Check: `systemctl --user list-units 'gpup2*'`;
-  `grep -E "start|end|FAILED" results/logs/final-gates-chain.txt`.
+- **Running:** unit `gpup2-final-gates-3` (relaunched 02:05Z) = `chains/final-gates.sh` (log
+  `results/logs/final-gates-chain.txt`): 1 A3 C19 broad1 GPU replay **run 2** (sub-unit `gpup2-a3-c19b1-r2`, out
+  `results/optimizer/a3-C19-broad1/gpu/`) + compare vs the sealed record → 2 qualify-replay (A3 C19 broad qualification
+  on the GPU vs sealed) → 3 bench → 4 sanitizer-final → 5 negative-final → 6 mini-opt g7f → 7 parity FINAL (+SUMMARY) →
+  8 stress 24.05 h; sub-units `gpup2-a3-qualify|bench|sanitizer|negative|mini-opt-f|par-<n>-<name>|stress`. Fail-fast;
+  relaunch a failed chain with `START=<step>` under a NEW unit name (never rerun a passed step). Check:
+  `systemctl --user list-units 'gpup2*'`; `grep -E "start|end|FAILED" results/logs/final-gates-chain.txt`.
+- **Replay run 1** (01:43–02:03Z): 5.21× (1,132.5 s vs 5,900.8 s), counts identical, but its record wrote ±Inf/NaN as
+  null (91 fields, all encoding-only) → kept as a timing sample (`results/optimizer/a3-C19-broad1-run1/NOTE.md`); fixed
+  `src/gpu-phase2/context.ts` writeJson + mini-opt row hashes to the store's encoding (compat digest unchanged).
 - **Done (dev evidence):** pre-final D24-core 2,325/2,325 + determinism (batch 1…128, shuffled, repeat, restart) 0;
   G7 CPU = GPU = interrupted+resumed (g7, g7p); negative tests 34/35 dev (defect fixed); standard 3.0.0 registered.
 - **The "hang" (resolved, no defect):** batch-size-1 determinism = 256 single-candidate kernels of 3–5 s each; the
@@ -87,6 +90,10 @@
   not depend on co-scheduling). The final gates run strictly sequentially.
 - Investigated as a possible hang (00:5xZ–01:36Z): see the top screen; units stopped: gpup2-par-1-D24-core (first
   pre-final run), gpup2-repro-d24core; no record was sealed from them.
+- Chain units: `gpup2-final-gates` (stopped in step 1 to insert the qualification replay), `gpup2-final-gates-2`
+  (step 1 FAILED on the replay record's lossy ±Inf encoding), `gpup2-final-gates-3` (current).
+- G7 runs g7 and g7p hashed archive rows with plain JSON.stringify (±Inf/NaN → null): their identity holds for finite
+  values; the final G7 (g7f) hashes in the store's encoding.
 - G7 resume attempt 1 (01:30Z) refused by the archive binding because host code (`pool.ts`) was edited between the
   interrupt and the resume (backend digest changed): the guard works; the resume test was rerun (g7p).
 - Development fixes before any gate record: FNV-64 offset-basis typo in the server (smoke/receipt checks caught it);

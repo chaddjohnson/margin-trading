@@ -1,7 +1,7 @@
 #!/bin/bash
 # gpu-phase2 FINAL gates on the frozen final binary (results/final-binary.json), one GPU job at a time (PROTOCOL.md §8),
 # fail-fast. START=<n> skips steps before n on a relaunch (completed steps' records stay; never rerun a passed gate).
-#   1 replay-compare  A3 C19 broad1 GPU replay vs the sealed record (waits for unit gpup2-a3-c19b1)
+#   1 replay-compare  A3 C19 broad1 GPU replay (run 2) vs the sealed record
 #   2 qualify-replay  A3 C19 broad qualification replayed on the GPU vs its sealed record (benchmark + identity)
 #   3 bench           B1 benchmarks (exclusive)
 #   4 sanitizer       T0 on the final binary (W-CRASH, every Growth structural value, references, 64 random)
@@ -27,6 +27,10 @@ EXPECT=$(python3 -c "import json;print(json.load(open('research/gpu-phase2/resul
 if [ "$START" -le 1 ]; then
   step replay-compare
   while systemctl --user is-active --quiet gpup2-a3-c19b1; do sleep 30; done
+  # run 2 (run 1 is kept as a timing sample: its record lost the sign of non-finite values)
+  rm -rf research/gpu-phase2/cache/mini-opt/a3-C19-broad1
+  U gpup2-a3-c19b1-r2 "$L/a3-replay-C19-broad1.txt" "$NODE" --expose-gc --max-old-space-size=20000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase2/mini-opt.ts --backend gpu --run a3-C19-broad1 --a3-job C19:broad1; rc=$?
+  [ $rc -eq 0 ] || die replay $rc
   [ -f research/gpu-phase2/results/optimizer/a3-C19-broad1/gpu/result.json ] || die replay-missing 8
   N tools/gpu-phase2/a3-replay-compare.ts a3-C19-broad1/gpu C19 broad1 --out research/gpu-phase2/results/optimizer/compare-a3-C19-broad1.json; rc=$?
   [ $rc -eq 0 ] || die replay-compare $rc

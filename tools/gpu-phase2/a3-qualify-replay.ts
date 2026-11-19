@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { qualifyMembers, type Evidence } from '../../src/vg-l0-full-joint/qualify.ts';
+import { encode } from '../../src/growth140-vgt-s8m/store.ts';
 import type { LaneResult } from '../../src/vg-l0-full-joint/search.ts';
 import { controlMembers, cutoffs } from '../../src/vg-l0-full-joint/stages.ts';
 import { perMemberCap } from '../../src/vg-l0-full-joint/budgets.ts';
@@ -86,7 +87,7 @@ const compute = lab.compute;
 await lab.close('job-end');
 
 const sealedForm = (e: Evidence) => (e.risk.rows ? { ...e, risk: { ...e.risk, rows: undefined, rowsKept: e.risk.rows.length } } : e);
-const mine = JSON.parse(JSON.stringify(evidence.map(sealedForm)));
+const mine = JSON.parse(encode(evidence.map(sealedForm))); // the sealed records' encoding (±Infinity / NaN as strings)
 const sealed = read<{ members: number; qualified: number; evidence: unknown[]; compute: { fresh: number; unique: number; wallSeconds: number; workerSeconds: number } }>(path.join(a3, 'folds', cut, 'broad-qualification.json'));
 const diffs = deepDiff(sealed.evidence, mine, '$', [], 40);
 const rec = {

@@ -29,6 +29,7 @@ import { GpuPool } from '../../src/gpu-backend/pool.ts';
 import { GpuServer } from '../../src/gpu-backend/client.ts';
 import { exportDataset } from '../../src/gpu-backend/dataset.ts';
 import { compatManifest } from '../../src/gpu-backend/compat.ts';
+import { encode } from '../../src/growth140-vgt-s8m/store.ts';
 import { serverBinary, toolkitLib } from '../../src/gpu-backend/toolchain.ts';
 
 const args = process.argv.slice(2);
@@ -165,8 +166,9 @@ const rows: Record<string, string> = {};
 const configs: Record<string, string> = {};
 
 lab.store.commit();
-for (const [k, v] of lab.store.iterate('points')) rows[k] = createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 20);
-for (const [k, v] of lab.store.iterate('configs')) configs[k] = createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 20);
+// rows hashed in the store's encoding (±Infinity and NaN kept distinct)
+for (const [k, v] of lab.store.iterate('points')) rows[k] = createHash('sha256').update(encode(v)).digest('hex').slice(0, 20);
+for (const [k, v] of lab.store.iterate('configs')) configs[k] = createHash('sha256').update(encode(v)).digest('hex').slice(0, 20);
 await lab.close('job-end');
 writeJson(path.join(outDir, 'result.json'), record);
 // the full key → hash dump is large (≈ 14 MB per 30k rows): kept under results/raw-large/ (git-ignored); the committed
