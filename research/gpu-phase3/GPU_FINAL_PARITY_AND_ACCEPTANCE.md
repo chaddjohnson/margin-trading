@@ -23,10 +23,10 @@ threads unless a row says otherwise), RTX 5090 `GPU-ae5f222c-8bf8-6bf0-db01-db53
 | H2 | live parity through the final host path, zero mismatches, determinism | **pass** — 144,795/144,795 identical, 176 determinism runs 0; Assignment 3's 48 sealed finalists D24 96/96 (sealed figures 48/48 to the cent) and FULL 96/96 | `results/parity/final/SUMMARY.json`, `results/parity/final-finalists.json` |
 | H3 | sealed-job replays identical; CPU = GPU = GPU resumed; worker counts | **pass** — §4 | `results/optimizer/compare-final-*.json` |
 | H4 | sanitizer 0 errors under 4 tools, results identical | **pass** — §5 | `results/sanitizer-final/sanitizer.json` |
-| H5 | negative tests all refused, CPU-scored 0 | **pass** — 45/45 | `results/policy/negative-final.json` |
-| P5 | enforcement coverage and tamper tests | **pass** — 14/14 + baseline; policy, enforcement, host-pipeline and layout tests at acceptance | `results/policy/tamper-final.json`, `results/policy/policy-tests.txt` |
+| H5 | negative tests all refused, CPU-scored 0 | **pass** — 45/45; rerun after the enforcement-only change (amendment A1) 45/45 | `results/policy/negative-final.json`, `negative-acceptance.json` |
+| P5 | enforcement coverage and tamper tests | **pass** — 14/14 + baseline, rerun (A1) 14/14 + baseline; policy, enforcement, host-pipeline and layout tests at acceptance 19/19 | `results/policy/tamper-final.json`, `tamper-acceptance.json`, `policy-tests.txt` |
 | H6 | bounded 30–60 min sustained run: 0 errors, 0 parity mismatches, stable memory and throughput | **pass** — §5 | `results/sustained/summary.json` |
-| H7 | `npm test` = baseline + new; Strategy Lab suites; `state/strategy-lab/` untouched | **pass** — §6 (one type-check regression disclosed) | `results/tests/` |
+| H7 | `npm test` = baseline + new; Strategy Lab suites; `state/strategy-lab/` untouched | **pass** — §6, `npm test` rerun (A1) identical; one type-check regression disclosed (A2) | `results/tests/` |
 | H8 | benchmarks, every run reported | **done** — `GPU_PERFORMANCE_BEFORE_AFTER.md` | `results/bench/before-after.json` |
 
 ## 3. The parity campaign through the final host path (H2)
@@ -176,7 +176,53 @@ for the byte-identical kernels and server; faults of the new host path rarer tha
 
 ## 7. The acceptance record
 
-FILL.
+`config/gpu-backend/acceptance.json` — **ACCEPTED**, schema 2, written 2026-11-19T23:02:38.195Z by
+`tools/gpu-phase3/accept.ts` (every gate passed, no blocker); committed in `ce24a977`. **Record sha256
+`b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214`** — keep this value outside the repository; it is the
+out-of-band pin (`tools/gpu-backend/verify-acceptance.sh --expect-record-sha256 <it>`), the one check a malicious
+committer who regenerates the record cannot pass (`GPU_ENFORCEMENT_INTEGRITY.md`).
+
+| Field | Value |
+|---|---|
+| Binary | `research/gpu-phase3/build/gb3` sha256 `06a4a04a83265616ab363632c02bf5d7737f34ec12156655cf95e135dde0dc23` (git-ignored; rebuilt reproducibly from the pinned sources by `tools/gpu-backend/build.sh`) |
+| Device | NVIDIA GeForce RTX 5090 `GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4`, driver 595.91.07, compute capability 12.0 |
+| Evaluation digest (compiled into the binary) | `30824182b111fa12fadc23502ee08c8e60d10ed881767c9c64ab480c5f5c2998` — CPU closure 94 files, CUDA 7, host path 12; nvcc 13.2.86, protocol v2 |
+| Enforcement group (pinned in the record only) | digest `2bb80f072807e3aa99bab8151ec951d5aecd74b0ff843e659cd870b8ddff0065`, 21 files incl. the generator `tools/gpu-phase3/accept.ts` |
+| Source revision | commit `e33da74f41a87c75d6aee0d5747065412f9bf9a7` (tree `0da3d4b2a85a2ea004472041d43d8c349762be7f`, branch `research/gpu-phase3`); must be an ancestor of HEAD, and every pinned file committed and unchanged since |
+| Host path | default 8 worker threads; modes serial (hostWorkers 0), parallel (worker threads) |
+| Domain | Assignment 3 genome ∪ risk-envelope pilot domain (NL0 controls grid); features `dffffffff` ⊆ capabilities `fffffffff` |
+| Standard | 3.0.0 (sha256 `4e8244e65bf1dd7c…`) |
+| Supersedes | `research/gpu-phase2` record of 2026-11-19T13:02:54.147Z (sha256 `b7df366a847a4655…`, kept at `research/gpu-phase3/results/superseded/acceptance-gpu-phase2.json`) |
+
+Evidence (each file's sha256 is in the record; `verify-acceptance.sh` re-hashes them):
+
+| Gate | Evidence | sha256 |
+|---|---|---|
+| final binary (reproducible; built from this tree; kernels identical to Phase 2) | `research/gpu-phase3/results/final-binary.json` | `e60e91e237e532d3…` |
+| H1 offline codec and host-pipeline equivalence (captured Phase 2 batches) | `research/gpu-phase3/results/final/offline-check.json` | `2dc0bbc93b31b17f…` |
+| H2 parity campaign through the final host path (zero mismatches, coverage, determinism) | `research/gpu-phase3/results/parity/final/SUMMARY.json` | `45d77a1c2f0fa7e5…` |
+| H2 Assignment 3 sealed finalists (GPU = CPU reference; D24 = sealed figures) | `research/gpu-phase3/results/parity/final-finalists.json` | `b61025b372578de1…` |
+| H3 Assignment 3 C19 broad1 search replay = sealed record (final binary, host path) | `research/gpu-phase3/results/optimizer/compare-final-a3-r1-vs-sealed.json` | `ef48ad06f4911119…` |
+| H3 Assignment 2 C19 base search replay = sealed record (Growth fixed; final binary, host path) | `research/gpu-phase3/results/optimizer/compare-final-a2-r1-vs-sealed.json` | `86a2e7186841b9cd…` |
+| H3 Assignment 3 C19 broad qualification replay = sealed evidence (final binary, host path) | `research/gpu-phase3/results/optimizer/compare-final-a3q.json` | `12781b02cd790f2a…` |
+| H3 fixed-seed mini-optimization CPU = GPU (final binary, host path) | `research/gpu-phase3/results/optimizer/compare-final-mini-cpu-vs-gpu.json` | `19da8b5bdbc3395b…` |
+| H3 fixed-seed mini-optimization GPU = interrupted + resumed GPU | `research/gpu-phase3/results/optimizer/compare-final-mini-gpu-vs-resumed.json` | `1e8fcbb106a208b8…` |
+| H3 fixed-seed mini-optimization host workers 1 = serial path = 8 workers | `research/gpu-phase3/results/optimizer/compare-final-mini-w1-vs-w8.json` | `f606cba6f8fcde3b…` |
+| H3 fixed-seed mini-optimization serial path (host workers 0) = 8 workers | `research/gpu-phase3/results/optimizer/compare-final-mini-w0-vs-w8.json` | `306dd0436ad020d0…` |
+| H4 compute-sanitizer (memcheck, racecheck, initcheck, synccheck) on the final binary, requests from the host path | `research/gpu-phase3/results/sanitizer-final/sanitizer.json` | `3761dee5f543de1d…` |
+| H5 negative tests rerun on the accepted pinned files | `research/gpu-phase3/results/policy/negative-acceptance.json` | `69ee26cb39e1cf3d…` |
+| P5 source-tamper tests rerun on the accepted pinned files | `research/gpu-phase3/results/policy/tamper-acceptance.json` | `b039113c20ad635e…` |
+| H5 negative tests (Phase 2 cases + host path; final binary) | `research/gpu-phase3/results/policy/negative-final.json` | `97540dbc3b3e0c21…` |
+| P5 source-tamper tests in a sandbox clone (every mechanism; out-of-band pin) | `research/gpu-phase3/results/policy/tamper-final.json` | `8348d22fe2c37373…` |
+| H6 bounded 30–60 min sustained run (no failure, parity samples, repeatability) | `research/gpu-phase3/results/sustained/summary.json` | `283e94fb0143e534…` |
+| H7 npm test (= baseline + new tests; known failures only) | `research/gpu-phase3/results/tests/npm-test.json` | `3656db6a4b5442f4…` |
+| H7 Strategy Lab regression (CPU engine, suites, state untouched) | `research/gpu-phase3/results/tests/strategy-lab.json` | `28a2c24f22bba17c…` |
+| H8 end-to-end benchmarks recorded (every run reported) | `research/gpu-phase3/results/bench/before-after.json` | `8d27e491633921a4…` |
+| P5 policy, enforcement and host-pipeline tests | `research/gpu-phase3/results/policy/policy-tests.txt` | `b4dd17b3fc5ffa3d…` |
+
+Verified on `research/gpu-phase3` right after the commit: the merge-gate tests 19/19 and `verify-acceptance.sh --device
+--expect-record-sha256 b08738be…` → **VERIFIED** (every group re-hashed, evidence intact, source ancestor, pinned files
+committed and unchanged, binary, device). On `main` after the merge: `GPU_INTEGRATION_AND_OPERATIONS.md` §2.
 
 ## 8. CPU fallback policy (unchanged in substance, tightened in enforcement)
 

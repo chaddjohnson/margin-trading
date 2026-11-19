@@ -13,12 +13,15 @@
 - Normative text: [docs/research/OPTIMIZATION_STANDARD.md](docs/research/OPTIMIZATION_STANDARD.md) §9 (3.0.0). Engineering
   procedure and merge gate: [docs/gpu/PARITY_CHECKLIST.md](docs/gpu/PARITY_CHECKLIST.md); feature matrix:
   [docs/gpu/FEATURE_MATRIX.md](docs/gpu/FEATURE_MATRIX.md); operations: [docs/gpu/README.md](docs/gpu/README.md).
-- Official runs go only through `openOfficialGpuSession` (src/gpu-backend/official.ts) → `GpuPool` → `EvalLab`
-  (src/gpu-backend/); the preflight (`npm run research-preflight`) refuses an official study until
-  `config/gpu-backend/acceptance.json` is ACCEPTED and matches the tree. Status: **ACCEPTED 2026-11-19 by
-  research/gpu-phase2/** (binary `3fe09e67…`, RTX 5090 `GPU-ae5f222c…`); any change to a file of the compatibility
-  manifest makes it STALE and blocks official runs until the parity checklist is repeated. Official optimization still
-  needs the user's authorization of each study.
+- Official runs go only through `openOfficialGpuSession` (src/gpu-backend/official.ts) → `GpuPool` (the parallel host
+  path: 8 worker threads by default) → `EvalLab` (src/gpu-backend/); an official study's npm script starts its runner
+  through `src/gpu-backend/officialRunner.ts`. The preflight (`npm run research-preflight`) refuses an official study
+  until `config/gpu-backend/acceptance.json` (schema 2) is ACCEPTED and matches the tree. Status: **ACCEPTED
+  2026-11-19 by research/gpu-phase3/** (binary `06a4a04a…`, RTX 5090 `GPU-ae5f222c…`, record sha256
+  `b08738bea6f40aa2…`); any change to a file of the evaluation manifest (CPU closure, CUDA, host path) or of the pinned
+  enforcement group makes it STALE and blocks official runs until the parity checklist is repeated (§2, or §2a for an
+  enforcement-only change). `tools/gpu-backend/verify-acceptance.sh` re-verifies the record without the TypeScript
+  validator. Official optimization still needs the user's authorization of each study.
 - CPU evaluation is allowed only under an explicit non-official purpose (`GPU_POLICY_PURPOSE=cpu-reference | diagnostic |
   parity-test | benchmark | strategy-lab`); every legacy CPU runner's npm script enforces this. Never present CPU
   results, or a CPU/GPU hybrid, as official optimization. Any real exception needs the user's explicit approval first.
