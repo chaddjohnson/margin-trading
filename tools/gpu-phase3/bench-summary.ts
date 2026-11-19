@@ -63,7 +63,7 @@ runs.sort((a, b) => a.job.localeCompare(b.job) || a.config.localeCompare(b.confi
 const median = (x: number[]) => {
   const s = [...x].sort((a, b) => a - b);
 
-  return s.length % 2 ? s[(s.length - 1) / 2]! : (s[s.length / 2 - 1]! + s[s.length / 2]!) / 2;
+  return Math.round((s.length % 2 ? s[(s.length - 1) / 2]! : (s[s.length / 2 - 1]! + s[s.length / 2]!) / 2) * 10) / 10;
 };
 const sealedCpu: Record<string, { wallSeconds: number; workers: number; file: string }> = {
   'a3:C19:broad1': {
