@@ -2,27 +2,25 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T22:55Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T23:04Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — Stage 5 final campaign **COMPLETE** (unit `gpup3-final`, 17:22:05 → 21:05:34Z, all 31
-  steps status 0, Result=success). Post-final chain COMPLETE (21:05:51 → 22:54:30Z: H7 pass; CPU A3 baseline 5,803.6 s identical; bench). A1 reruns RUNNING. Final binary `research/gpu-phase3/build/gb3` sha256
+  steps status 0, Result=success). Post-final chain COMPLETE (21:05:51 → 22:54:30Z: H7 pass; CPU A3 baseline 5,803.6 s identical; bench). A1 reruns COMPLETE (22:55–23:02Z, all pass). **ACCEPTED** 2026-11-19T23:02:38Z: `config/gpu-backend/acceptance.json` (commit `ce24a977`, source `e33da74f`), record sha256 `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214`; merge gate 19/19, verifier VERIFIED. Merge audit `fc8923b0`; `research/gpu-phase3` pushed (= origin, `fc8923b0`). Stage 7 merge NEXT. Final binary `research/gpu-phase3/build/gb3` sha256
   `06a4a04a83265616ab363632c02bf5d7737f34ec12156655cf95e135dde0dc23` (compat `30824182…2998`; `results/final-binary.json`
   sealed `e60e91e2…a583`).
 - **Authority:** `brief/BRIEF.md` sha256 `925e97e80dd8bca0bbc470fe07ef31388efcbae8ca26f9153efb10d02933f6be` (the user's
   handoff, read in full, 267 lines, final section "Final success criterion" present). `PROTOCOL.md` FROZEN
   2026-11-19T14:21:42Z (`results/protocol-freeze.json` sha256 `42d41b249a83aa3e1cc9794afe94ca401e519880bc7e830d5c1956a94f944475`,
   protocol `952da32c…1a1b`); amendments A1–A2 (`AMENDMENTS.md`, 21:21Z: enforcement-only reruns; a root type-check finding disclosed). Standard 3.0.0 adopted (scope diagnostic); preflight PASS.
-- **Running:** unit `gpup3-reruns` (`chains/acceptance-reruns.sh`, START=1, at `b509e4f6`), log
-  `results/logs/reruns-chain.txt`, started 22:55:15Z: 1 negative → `results/policy/negative-acceptance.json`, 2 tamper →
-  `tamper-acceptance.json`, 3 npm test → `results/tests/npm-test-acceptance-tree.txt`, 4 root tsc. Finished iff "chain
-  complete". Resume: `START=<n>`.
+- **Running:** nothing.
 - **Final campaign results (all pass):** offline 7/7; parity 54 runs, 144,795/144,795 identical, 176 determinism runs 0;
   finalists D24 96/96 (sealed 48/48), FULL 96/96; A3 broad1 583.9 / 581.8 s identical (10.1×); A3 qualification 163.7 s
   identical (377/385 qualified); A2 base 724.8 / 726.5 s identical (6.5×); mini CPU = GPU = resumed = w1 = w0 = Phase 2
   path; sanitizer 0 errors ×4 (97/97); negative 45/45; tamper 14/14; sustained 45.3 min, 3.77 M evaluations, 0 failures,
   parity 5,520/0, repeat 15/0.
-- **Next:** (1) wait for `gpup3-reruns` ("chain complete"); (2) commit its results; (3) `GPU_POLICY_PURPOSE=parity-test $NODE tools/gpu-phase3/accept.ts` → commit record + evidence; record sha256 kept
-  out of band. (4) Stage 7 (merge-audit, `git switch main; git merge --no-ff research/gpu-phase3`, post-merge.sh with
-  RECORD_SHA, ff branches, bundle, push, restore research/gpu-phase2).
+- **Next:** Stage 7: `git switch main && git merge --no-ff research/gpu-phase3` (origin/main = `10ca3422`, checked by ls-remote before the merge); `git diff research/gpu-phase3 main` must be empty; then on main `RECORD_SHA=b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214
+  /bin/bash research/gpu-phase3/chains/post-merge.sh`; commit; reports + bundle (`tools/gpu-phase3/manifest.ts`,
+  `tools/gpu-phase3/bundle.sh <scratch>`); `git fetch . main:research/gpu-phase3 main:research/gpu-phase2` (ff only);
+  push main, research/gpu-phase3, research/gpu-phase2 (unsandboxed); ls-remote; `git switch research/gpu-phase2`.
 - **Never:** start/implement/run the risk-envelope pilot; change strategies, fitness, genome, budgets, seeds or
   selection; touch sealed studies' records; CPU fallback; a new 8 h/24 h endurance run (only one 30–60 min sustained run).
 
