@@ -5,7 +5,22 @@ listed in §9. **Risk-envelope pilot NOT STARTED.**
 
 ## 1. Outcome
 
-FILL (verdict, acceptance record, merge status).
+- **The GPU engine is ≈ 2× faster again with identical results, ACCEPTED, and merged into `main`.** The Phase 3 host
+  pipeline (worker threads encode and decode every batch; results released in dispatch order; fail-closed) runs the
+  sealed Assignment 3 search in 582 s instead of Phase 2's 1,129 s and the original 12-worker CPU job's 5,901 s
+  (**≈ 10×**; 9.94–9.98× against a same-machine CPU re-measurement), and Assignment 2's Growth-fixed search 6.45× faster
+  than its CPU run — every lane, promotion, refinement, qualification verdict and archived record identical.
+- **Same strategy, same optimizer, same candidates, same fitness and qualification decisions, same historical results —
+  only faster.** No genome, rule, precision, risk metric, Growth or allocator change; no CPU fallback; Strategy Lab and the
+  CPU engine untouched.
+- **Acceptance:** `config/gpu-backend/acceptance.json`, schema 2, ACCEPTED 2026-11-19T23:02:38Z by this study (every
+  gate H1–H8, P1, P5 passed), binary `06a4a04a…`, RTX 5090 `GPU-ae5f222c…`, source revision `e33da74f`, **record sha256
+  `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214`** (keep it outside the repository: it is the
+  out-of-band pin).
+- **Merge:** `main` merge commit `30801fd4` (tree = the accepted branch tree); verified on `main`: the independent
+  verifier (with a reproducible rebuild), the merge gate, all 20 research preflights and the live official gate. The
+  original branch `research/gpu-phase2` is restored and fast-forwarded to `main`, so it contains the accepted engine.
+- **Risk-envelope pilot NOT STARTED.**
 
 ## 2. What was done
 
@@ -18,7 +33,7 @@ FILL (verdict, acceptance record, merge status).
 | 4 | Enforcement hardened: manifest v2 (host path + pinned enforcement group), acceptance schema 2 (source revision), independent re-hash and committed-source checks in the gate, official npm-runner wrapper, independent verifier, file-classification rule, tamper suite | `GPU_ENFORCEMENT_INTEGRITY.md` |
 | 5 | One final acceptance campaign on the final binary `06a4a04a…` (2026-11-19 17:22–21:05Z; tests 21:05–21:16Z) | all gates pass: parity 144,795 / 0 mismatches, sealed replays identical, sanitizer clean, 45/45 negative, 14/14 tamper, 45-min sustained run, npm test = known failures only, Strategy Lab 314 + 81 |
 | 6 | Performance verdict | Growth-searched job ≈ 10× the 12-worker CPU job (10.1× the sealed run; 9.94–9.98× this machine's re-measurement) (the brief's "≈ 10–15×, excellent if exact" band; parity exact); Growth-fixed 6.45×; small batches 1.89×. The pipeline is the default; performance work stopped (no chase of 20–30×) |
-| 7 | Merge into `main`, branch restoration | FILL |
+| 7 | Merge into `main`, branch restoration | `--no-ff` merge `30801fd4` (main was an ancestor; tree = the accepted tree); post-merge verification passed on `main`; `research/gpu-phase3` and `research/gpu-phase2` fast-forwarded; `research/gpu-phase2` checked out again |
 
 ## 3. Measured speed (wall time of complete optimizer jobs)
 
@@ -61,7 +76,14 @@ is the optimizer's own round-trip (lanes wait for their batch) and kernel latenc
 
 ## 6. Merge and branch status
 
-FILL.
+| Item | State |
+|---|---|
+| `main` | merge commit `30801fd409a8e2c6774a7fc895dcd6df3ca634af` (parents `10ca3422`, `8fe54146`); then the post-merge verification `6ceb76aa` and the report/bundle commits; pushed (final SHA verified by `git ls-remote`: `RESEARCH_RECOVERY.md`, final answer) |
+| Acceptance binds to `main` | **yes** — same pinned bytes, source revision `e33da74f` an ancestor, verifier VERIFIED and gate OPEN on `main` (`results/integration/post-merge-verification.json`) |
+| Restored branch | `research/gpu-phase2` (active at the start) checked out, fast-forwarded to the final `main`: it **contains the GPU code**; `a1836407` stays in its history |
+| `research/gpu-phase3` | = the final `main`, pushed |
+| Phase 1/2 branches and reports | preserved (no deletion, no rewrite, no force-push); Phase 2's frozen `research/gpu-phase2/` untouched |
+| Where the pilot starts | a new branch from `main`; procedure `GPU_INTEGRATION_AND_OPERATIONS.md` §3–§4 |
 
 ## 7. Limitations (stated plainly)
 

@@ -116,6 +116,13 @@ classification rule. **T14** — a weakening (the parity mini-set shrunk) commit
 — passes every in-repository mechanism, exactly as §5 states; only the record's sha256 kept outside the repository
 detects it.
 
+### 6.1a Rerun after the enforcement-only change (amendment A1)
+
+After the final campaign, a test's type annotation in the pinned enforcement group changed (`0f1bab17`). Both suites
+were rerun on the changed, committed tree (`f7ca47ef`, pinned files = the accepted ones): **tamper 14/14 + baseline**
+(`results/policy/tamper-acceptance.json`) and **negative 45/45** (`results/policy/negative-acceptance.json`), and the
+acceptance generator requires these reruns (their commit's pinned files must equal the accepted ones).
+
 ### 6.2 Negative tests (`tools/gpu-phase3/negative.ts` → `results/policy/negative-final.json`): {n['passed']}/{n['total']}
 
 Phase 2's 35 cases on the final binary (gate, runtime, CLI; the runtime cases through the GpuPool on 3 host workers) plus

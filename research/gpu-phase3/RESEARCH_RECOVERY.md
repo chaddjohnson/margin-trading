@@ -2,9 +2,9 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-19T23:04Z (UTC, from `date -u`)
+- **Updated:** 2026-11-19T23:07Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — Stage 5 final campaign **COMPLETE** (unit `gpup3-final`, 17:22:05 → 21:05:34Z, all 31
-  steps status 0, Result=success). Post-final chain COMPLETE (21:05:51 → 22:54:30Z: H7 pass; CPU A3 baseline 5,803.6 s identical; bench). A1 reruns COMPLETE (22:55–23:02Z, all pass). **ACCEPTED** 2026-11-19T23:02:38Z: `config/gpu-backend/acceptance.json` (commit `ce24a977`, source `e33da74f`), record sha256 `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214`; merge gate 19/19, verifier VERIFIED. Merge audit `fc8923b0`; `research/gpu-phase3` pushed (= origin, `fc8923b0`). Stage 7 merge NEXT. Final binary `research/gpu-phase3/build/gb3` sha256
+  steps status 0, Result=success). Post-final chain COMPLETE (21:05:51 → 22:54:30Z: H7 pass; CPU A3 baseline 5,803.6 s identical; bench). A1 reruns COMPLETE (22:55–23:02Z, all pass). **ACCEPTED** 2026-11-19T23:02:38Z: `config/gpu-backend/acceptance.json` (commit `ce24a977`, source `e33da74f`), record sha256 `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214`; merge gate 19/19, verifier VERIFIED. Merge audit `fc8923b0`; `research/gpu-phase3` pushed (= origin, `fc8923b0`). **Merged into `main`** (`30801fd4`, verified on main, `6ceb76aa`; checkout currently `main`). Bundle, fast-forwards, pushes and branch restoration NEXT. Final binary `research/gpu-phase3/build/gb3` sha256
   `06a4a04a83265616ab363632c02bf5d7737f34ec12156655cf95e135dde0dc23` (compat `30824182…2998`; `results/final-binary.json`
   sealed `e60e91e2…a583`).
 - **Authority:** `brief/BRIEF.md` sha256 `925e97e80dd8bca0bbc470fe07ef31388efcbae8ca26f9153efb10d02933f6be` (the user's
@@ -17,10 +17,10 @@
   identical (377/385 qualified); A2 base 724.8 / 726.5 s identical (6.5×); mini CPU = GPU = resumed = w1 = w0 = Phase 2
   path; sanitizer 0 errors ×4 (97/97); negative 45/45; tamper 14/14; sustained 45.3 min, 3.77 M evaluations, 0 failures,
   parity 5,520/0, repeat 15/0.
-- **Next:** Stage 7: `git switch main && git merge --no-ff research/gpu-phase3` (origin/main = `10ca3422`, checked by ls-remote before the merge); `git diff research/gpu-phase3 main` must be empty; then on main `RECORD_SHA=b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214
-  /bin/bash research/gpu-phase3/chains/post-merge.sh`; commit; reports + bundle (`tools/gpu-phase3/manifest.ts`,
-  `tools/gpu-phase3/bundle.sh <scratch>`); `git fetch . main:research/gpu-phase3 main:research/gpu-phase2` (ff only);
-  push main, research/gpu-phase3, research/gpu-phase2 (unsandboxed); ls-remote; `git switch research/gpu-phase2`.
+- **Next:** on `main`: `$NODE tools/gpu-phase3/manifest.ts`; `tools/gpu-phase3/bundle.sh <scratchpad>/bundle`; commit;
+  `git fetch . main:research/gpu-phase3 main:research/gpu-phase2` (ff only); push main, research/gpu-phase3,
+  research/gpu-phase2 (unsandboxed, retries); `git ls-remote origin` = local; `git switch research/gpu-phase2`;
+  final checkpoint COMPLETE (commit on research/gpu-phase2 = main? no: commit on main, ff, push again).
 - **Never:** start/implement/run the risk-envelope pilot; change strategies, fitness, genome, budgets, seeds or
   selection; touch sealed studies' records; CPU fallback; a new 8 h/24 h endurance run (only one 30–60 min sustained run).
 
@@ -72,12 +72,12 @@
 | S2 targeted GPU checks | complete | `chains/devcheck.sh` TAG=a (15:25Z: mini FAILED closed — start race) and TAG=b (15:54–16:02Z, after `cb7d129c`) → `results/dev/`, `results/optimizer/dev-b-mini`, `compare-dev-b-mini-vs-p2.json` | b: offline 7/7; unit 17/17; parity D24 all-options 633/633 + fixture S0 305/305, determinism 0 (batches 1/7/64, shuffled, reversed, repeat, host workers 1/3/12, restart); mini w8 identical to the Phase 2 path (30,749 records, configs, lanes), 65.4 s vs 72.8 s |
 | S2 measurement sweep | complete | `chains/sweep.sh` TAG=s2 (16:02–16:46Z) → `results/optimizer/s2-a3-*`, `compare-s2-a3-*-vs-sealed.json` | all four identical to the sealed record; wall w4 611.7 s, **w8 583.9 s (10.1× sealed CPU, 1.93× Phase 2 path)**, w12 582.1 s, w8 b16384 608.6 s (fewer, longer rounds). GPU idle 775 → 228 s. Chosen: 8 host workers, batch 8,192 |
 | S3 Priority B / C decision | complete | measured: archive JSON encode 7.1 µs/record ≈ 8.8 s/job (1.5 %); SQLite commits ≈ 58 s inside the pinned legacy Store; main-thread ELU 0.62 | **stop after Priority A**: B rejected (no separable overhead worth its complexity), C deferred (GPU kernels ≈ 60 % of the wall, latency-bound; a kernel change needs new kernel parity + sanitizer burden) |
-| S3 optional orchestration | not started | — | — |
-| S4 enforcement hardening | not started | — | — |
-| S5 final acceptance campaign | not started | — | — |
-| S6 verdict | not started | — | — |
-| S7 merge into main, branch restoration | not started | — | — |
-| S8 bundle | not started | — | — |
+| S3 optional orchestration | not pursued (decision) | measured remaining bottleneck: the optimizer's own round trip (lanes wait for their batch; GPU idle 228 s of 584 s) — more concurrency is a study-design choice, not an engine change | no orchestration change (brief §3 optional) |
+| S4 enforcement hardening | complete | manifest v2, acceptance schema 2, gate re-hash + committed-source checks, `officialRunner.ts`, `verify-acceptance.sh`, classification rule, tamper suite; dry runs `results/dev/negative-dry.json` 45/45, `tamper-dry.json` 14/14 | `GPU_ENFORCEMENT_INTEGRITY.md` |
+| S5 final acceptance campaign | complete | `chains/final.sh` (gpup3-final, 17:22:05–21:05:34Z, commit `d113e6c5`, 31/31); `chains/post-final.sh` (gpup3-post-final, 21:05:51–22:54:30Z: H7, CPU A3 baseline 5,803.6 s identical, bench); A1 `chains/acceptance-reruns.sh` (gpup3-reruns, 22:55:15–23:02:03Z, all pass); `tools/gpu-phase3/accept.ts` 23:02:38Z → ACCEPTED (`ce24a977`) | record sha256 `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214` |
+| S6 verdict | complete | `GPU_PERFORMANCE_BEFORE_AFTER.md` §5 | ≈ 10× (Growth-searched), 6.45× (Growth-fixed), 1.89× (small batches); pipeline kept as default; performance work stopped |
+| S7 merge into main, branch restoration | merge + verification complete; fast-forwards, pushes, restoration pending | `results/integration/merge-audit.json` (`fc8923b0`); `git merge --no-ff research/gpu-phase3` on main → `30801fd4` (tree `d0341679` = branch); `chains/post-merge.sh` (gpup3-post-merge, 23:05:06–23:05:37Z) → `post-merge-verification.json` pass, commit `6ceb76aa` on main | `GPU_INTEGRATION_AND_OPERATIONS.md` |
+| S8 bundle | running | `tools/gpu-phase3/manifest.ts`; `tools/gpu-phase3/bundle.sh <scratchpad dir>` → `research/gpu-phase3/bundle/gpu-phase3-final-handoff.zip` | — |
 
 ## On disk versus in memory
 
