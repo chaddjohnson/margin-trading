@@ -88,3 +88,11 @@
 - Development fixes before any gate record: FNV-64 offset-basis typo in the server (smoke/receipt checks caught it);
   sanitizer findings (leaks at exit; uninitialized padding copied by pack kernels; unwritten period slots) — none
   changed a result (all sanitized results were bit-identical), all fixed.
+
+## Push record
+
+- 2026-11-19T13:08Z: `git push origin research/gpu-phase2 main` → `research/gpu-phase2` a9ae79ec..**3a3a27b7**, `main`
+  108c241b..**10ca3422** (fast-forward, documentation only); `git ls-remote` equal to the local refs for both.
+- Bundle: `research/gpu-phase2/bundle/gpu-phase2-report-bundle.zip` sha256
+  `42c24d077d6aa9a1334e8658c39546ee744ce57915fae2a6a4aaf96c79b7dde2` (251 files, 2,662,780 bytes; zip -T OK; every
+  checksum verified after extraction). This record is committed and pushed in the following commit.
