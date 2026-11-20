@@ -1,6 +1,6 @@
-// gpu-phase5: the ACCEPTANCE GENERATOR (PROTOCOL.md §10; standard 3.0.0 §9.9; adapted from tools/gpu-phase3/accept.ts).
-// It reads the final campaign's evidence, checks every gate (A1–A9, P1, P5) against the FINAL binary, the working tree
-// and its Git revision, and
+// gpu-phase5: the ACCEPTANCE GENERATOR (PROTOCOL.md §7; standard 3.0.0 §9.9; adapted from tools/gpu-phase4/accept.ts).
+// It reads the final campaign's evidence, checks every gate (R1–R3 the root cause's regression evidence, A0 the engine
+// runtime, A1–A11, P1, P5) against the FINAL binary, the working tree and its Git revision, and
 // writes config/gpu-backend/acceptance.json in schema 2 — ACCEPTED only if every gate passed, otherwise NOT_ACCEPTED
 // with the blockers (official optimization stays blocked either way until ACCEPTED). The record pins the evaluation
 // manifest (CPU closure, CUDA, host path — the digest compiled into the binary), the enforcement group (every file, and
@@ -27,6 +27,7 @@ import { SUPPORTED, featureNames } from '../../src/gpu-backend/layout.ts';
 import { incumbents } from '../../src/vg-l0-full-joint/nl0.ts';
 import { repoRoot, serverBinary } from '../../src/gpu-backend/toolchain.ts';
 import { smiUuid } from '../../src/gpu-backend/official.ts';
+import { ENGINE_FLAG, engineRuntime } from '../../src/gpu-backend/runtime.ts';
 
 const dry = process.argv.includes('--dry-run');
 const study = 'research/gpu-phase5';
@@ -49,6 +50,81 @@ const gate = (name: string, file: string | null, pass: boolean, why: string) => 
 const m = compatManifest();
 const policy = policySources([generator]);
 
+// R1–R3 the root cause (PARITY_ROOT_CAUSE.md): the regression evidence that fails on the original defect and passes
+// with the fix; and the reproduction budget on the FINAL candidate in the fixed configuration
+{
+  const fd = R('rootcause/record-stress-truth-default.json');
+  const ff = R('rootcause/record-stress-truth-no-maglev.json');
+  type S = { processes: number; processesWithAWrongEvaluation: number; wrongEvaluationsByDifferingPart: { recordOnly: number }; truth: { originalCandidateEqualsPhase4Diagnostics: boolean | null }; v8Flags: string[] };
+  const d = read<S>(fd);
+  const f = read<S>(ff);
+
+  gate(
+    'R1 the defect reproduces with the default engine (the record stress: wrong evaluations, record-only ones among them, against a ground truth equal to Phase 4\'s diagnostics)',
+    fd,
+    !!d && d.v8Flags.length === 0 && d.processesWithAWrongEvaluation >= 1 && d.wrongEvaluationsByDifferingPart.recordOnly >= 1 && d.truth.originalCandidateEqualsPhase4Diagnostics === true,
+    d ? `processes ${d.processes}, with a wrong evaluation ${d.processesWithAWrongEvaluation}, record-only ${d.wrongEvaluationsByDifferingPart.recordOnly}` : 'missing'
+  );
+  gate(
+    'R1 the same stress without Maglev: zero wrong evaluations',
+    ff,
+    !!f && f.v8Flags.includes(ENGINE_FLAG) && f.processes >= 200 && f.processesWithAWrongEvaluation === 0,
+    f ? `processes ${f.processes}, with a wrong evaluation ${f.processesWithAWrongEvaluation}` : 'missing'
+  );
+  const fl = R('rootcause/fresh-loop-final/summary.json');
+  const fc = R('rootcause/fresh-loop-final/config.json');
+  const l = read<{ pass: boolean; freshCpuWorkers: number; freshGpuContexts: number; parityComparisons: number; parityMismatches: number; cpuVsFirstCycleMismatches: number; gpuVsFirstCycleMismatches: number; payloadDigestChanges: number; knownCandidate: { equalsPhase4Diagnostics: boolean } | null }>(fl);
+  const c = read<{ binarySha256: string; execArgv: string[]; testInject: string | null }>(fc);
+
+  gate(
+    'R2 the fresh-context loop on the final candidate, fixed configuration (≥ 2,000 fresh CPU workers on the original first chunks, ≥ 150 fresh GPU contexts on the original batch; zero mismatches; the device response identical in every cycle)',
+    fl,
+    !!l && !!c && l.pass && l.freshCpuWorkers >= 2000 && l.freshGpuContexts >= 150 && l.parityMismatches === 0 && l.payloadDigestChanges === 0 && l.knownCandidate?.equalsPhase4Diagnostics === true && c.binarySha256 === binarySha && c.execArgv.includes(ENGINE_FLAG) && !c.testInject,
+    l && c ? `workers ${l.freshCpuWorkers}, GPU contexts ${l.freshGpuContexts}, comparisons ${l.parityComparisons}, mismatches ${l.parityMismatches}/${l.cpuVsFirstCycleMismatches}/${l.gpuVsFirstCycleMismatches}, binary ${c.binarySha256.slice(0, 12)}` : 'missing'
+  );
+  gate('R2 the fresh-context loop\'s configuration record', fc, !!c && c.binarySha256 === binarySha, c ? c.binarySha256.slice(0, 12) : 'missing');
+  const fh = R('rootcause/host-soak-final.json');
+  const h = read<{ pass: boolean; cycles: number; coldWorkerThreads: number; resultsCompared: number; mismatches: number; binarySha256: string; execArgv: string[]; knownCandidate: { equalsPhase4Diagnostics: boolean } }>(fh);
+
+  gate(
+    'R3 the host-path cold soak on the final candidate, fixed configuration (fresh host pipelines decoding one real device response of the original batch; zero mismatches)',
+    fh,
+    !!h && h.pass && h.cycles >= 100 && h.mismatches === 0 && h.binarySha256 === binarySha && h.execArgv.includes(ENGINE_FLAG) && h.knownCandidate.equalsPhase4Diagnostics,
+    h ? `cycles ${h.cycles}, cold worker threads ${h.coldWorkerThreads}, results ${h.resultsCompared}, mismatches ${h.mismatches}` : 'missing'
+  );
+}
+// A0 the engine runtime of the campaign's evidence: every parity run, replay and suite ran without Maglev
+{
+  const dir = R('parity/final');
+  const runs = fs.existsSync(dir) ? fs.readdirSync(dir).filter((x) => x.endsWith('.json') && x !== 'SUMMARY.json') : [];
+  const bad: string[] = [];
+  let n = 0;
+
+  for (const x of runs) {
+    const r = read<{ runtime?: { maglev: string } }>(path.join(dir, x));
+
+    n++;
+    if (r?.runtime?.maglev !== 'disabled') bad.push(`parity/${x}`);
+  }
+  for (const run of ['final-a3-r1', 'final-a3-r2', 'final-a2-r1', 'final-mini-w8', 'final-mini-w1', 'final-mini-w0', 'final-mini-resume']) {
+    const r = read<{ runtime?: { maglev: string } }>(R(`optimizer/${run}/gpu/profile.json`));
+
+    n++;
+    if (r?.runtime?.maglev !== 'disabled') bad.push(`optimizer/${run}`);
+  }
+  {
+    const r = read<{ runtime?: { maglev: string } }>(R('policy/negative-final.json'));
+
+    n++;
+    if (r?.runtime?.maglev !== 'disabled') bad.push('policy/negative-final.json');
+  }
+  gate(
+    `A0 engine runtime: every parity run, optimizer replay and the negative suite of the campaign ran under ${ENGINE_FLAG}; this generator too`,
+    null,
+    n >= 50 && bad.length === 0 && engineRuntime().maglev === 'disabled',
+    `${n} records, not disabled: ${bad.slice(0, 6).join(', ') || 'none'}; generator ${engineRuntime().maglev}`
+  );
+}
 // A1 identity: the final binary is the server binary, built from this tree, reproducible, with the accepted kernels
 // (Phase 3's gb3 = Phase 2's gb2 device code) byte for byte
 {
@@ -288,7 +364,7 @@ const samePins = (commit: string | undefined) =>
 
   gate('A8 npm test (= baseline + new tests; known failures only)', f, !!s && s.pass, s ? s.summary : 'missing');
   gate(
-    'A8 root TypeScript check: 0 errors (the hostPipeline.ts Transferable finding fixed)',
+    'A8 root TypeScript check: 0 errors',
     f,
     !!s && s.rootTsc === 'exit 0',
     s ? s.rootTsc.slice(0, 200) : 'missing'
@@ -298,27 +374,62 @@ const samePins = (commit: string | undefined) =>
 
   gate('A8 Strategy Lab regression (CPU engine, suites, state untouched)', g, !!t && t.pass, t ? t.summary : 'missing');
 }
-// A9 the benchmarks recorded (every group verified) and the regression check of the final binary
+// A9 end-to-end performance against the accepted Phase 3 engine: the baseline groups (each verified identical) and the
+// regression check of the final candidate (within ±3 % of the accepted configuration measured in this study)
 {
-  const f = R('bench/SUMMARY.json');
-  const s = read<{ groups: { group: string; identical: boolean }[] }>(f);
+  const groups = fs.existsSync(R('bench'))
+    ? fs
+        .readdirSync(R('bench'))
+        .filter((g) => fs.existsSync(R(`bench/${g}/verify.json`)))
+        .map((g) => ({ group: g, identical: read<{ identical: boolean }>(R(`bench/${g}/verify.json`))?.identical === true }))
+    : [];
 
   gate(
-    'A9 concurrency and batching benchmarks recorded (every group verified identical)',
-    f,
-    !!s && s.groups.length > 0 && s.groups.every((g) => g.identical),
-    s ? `${s.groups.length} groups` : 'missing'
+    'A9 performance baseline groups recorded (every group verified identical)',
+    null,
+    groups.length > 0 && groups.every((g) => g.identical),
+    `${groups.length} groups: ${groups.filter((g) => !g.identical).map((g) => g.group).join(', ') || 'all identical'}`
   );
   const g = R('optimizer/regression.json');
   const t = read<{ pass: boolean; summary: string }>(g);
 
   gate(
-    'A9 final binary regression benchmark (Assignment 3 replay within ±3 % of the accepted engine)',
+    'A9 final candidate regression benchmark (Assignment 3 replay within ±3 % of the accepted engine)',
     g,
     !!t && t.pass,
     t ? t.summary : 'missing'
   );
 }
+// A10 the atomic dataset export and job isolation under concurrency
+{
+  for (const [name, file, ok] of [
+    ['A10 atomic dataset export: the 4 × 25 shared-directory race on the final binary (100 of 100 loads verified, no partial read)', 'final/race-d19-atomic.json', (x: Record<string, unknown>) => x.pass === true && x.mode === 'atomic' && x.verified === 100 && x.refused === 0 && x.readerPartialReads === 0],
+    ['A10 atomic dataset export: writers killed at random instants (no partial target; every directory complete after a restart)', 'cache/kill-d19.json', (x: Record<string, unknown>) => x.pass === true && x.targetsPartialOrWrong === 0],
+    ['A10 atomic dataset export: two datasets under one name at the same instant (one published, explicit conflicts)', 'final/conflict.json', (x: Record<string, unknown>) => x.pass === true],
+    ['A10 atomic dataset export: byte identity with the previous exporter on every door, window, episode and fixture', 'cache/dataset-identity.json', (x: Record<string, unknown>) => x.pass === true && (x.datasets as number) >= 28]
+  ] as const) {
+    const f = R(file);
+    const x = read<Record<string, unknown>>(f);
+
+    gate(name, f, !!x && ok(x), x ? JSON.stringify({ pass: x.pass, verified: x.verified, refused: x.refused, datasets: x.datasets }) : 'missing');
+  }
+  const iso = ['i3', 'i4', 'i5', 'i6'].map((i) => ({ i, x: read<{ pass: boolean }>(R(`isolation/${i}.json`)) }));
+  const groupsOk = ['i1', 'i2'].map((g) => ({ g, v: read<{ identical: boolean }>(R(`bench/${g}/verify.json`)) }));
+
+  gate(
+    'A10 isolation and failure tests under concurrency on the final candidate (I1 kill + resume, I2 stop + resume, I3 server killed, I4 host-worker fault, I5 VRAM refusal, I6 namespace guards — each neighbour identical)',
+    R('isolation/i6.json'),
+    iso.every((r) => r.x?.pass === true) && groupsOk.every((r) => r.v?.identical === true),
+    `${iso.map((r) => `${r.i}:${r.x?.pass ?? 'missing'}`).join(' ')} ${groupsOk.map((r) => `${r.g}:${r.v?.identical ?? 'missing'}`).join(' ')}`
+  );
+}
+// A11 nothing of the canonical CPU engine or of the CUDA sources changed (the accepted Phase 3 digests)
+gate(
+  'A11 the canonical CPU closure and the CUDA sources are those of the accepted Phase 3 engine',
+  null,
+  m.cpu.digest === 'c8a9f416e25b393a92018544322cc6ade272cb237e50d6557cc4333cf9024e6a' && m.cuda.digest === 'd88990612c5cd6d7f274821cd8b49ba4a29710419dd6a5f872fc8582b6592e46',
+  `cpu ${m.cpu.digest.slice(0, 16)} (${m.cpu.files.length} files), cuda ${m.cuda.digest.slice(0, 16)}`
+);
 // P1 policy text and P5 enforcement tests (the merge gate, the enforcement coverage, the host pipeline's own tests)
 {
   const reg = read<{ current: string; versions: { version: string; sha256: string }[] }>(
@@ -338,6 +449,7 @@ const samePins = (commit: string | undefined) =>
   const r = spawnSync(
     process.execPath,
     [
+      ENGINE_FLAG,
       '--experimental-transform-types',
       '--disable-warning=ExperimentalWarning',
       '--test',
@@ -345,7 +457,8 @@ const samePins = (commit: string | undefined) =>
       'src/gpu-backend/tests/policy.test.ts',
       'src/gpu-backend/tests/layout.test.ts',
       'src/gpu-backend/tests/hostPipeline.test.ts',
-      'src/gpu-backend/tests/enforcement.test.ts'
+      'src/gpu-backend/tests/enforcement.test.ts',
+      'src/gpu-backend/tests/dataset.test.ts'
     ],
     { cwd: repoRoot, encoding: 'utf8', timeout: 900_000 }
   );
@@ -353,7 +466,7 @@ const samePins = (commit: string | undefined) =>
 
   if (!dry) fs.writeFileSync(f, `${r.stdout}\n${r.stderr}`);
   gate(
-    'P5 policy, enforcement and host-pipeline tests',
+    'P5 policy, enforcement, host-pipeline and dataset-export tests',
     dry ? null : f,
     /# fail 0/.test(r.stdout) && /# pass [1-9]/.test(r.stdout),
     r.stdout
@@ -388,8 +501,8 @@ const stdReg = read<{ versions: { version: string; sha256: string }[] }>(
   path.join(repoRoot, 'docs/research/optimization-standard.versions.json')
 )!;
 const git = (...a: string[]) => spawnSync('git', a, { cwd: repoRoot, encoding: 'utf8' }).stdout.trim();
-// the superseded record: Phase 3's, moved out of config/ when the pinned files changed (CC1–CC3: stale from that commit on,
-// so official optimization was blocked during the campaign)
+// the superseded record: Phase 3's (the record in force on main, sha256 b08738be…; absent from this branch's config/
+// since Phase 4's corrective commit, a copy kept in this study's results/superseded/)
 const supersededFile = R('superseded/acceptance-gpu-phase3.json');
 const previousFile = fs.existsSync(acceptanceFile) ? acceptanceFile : supersededFile;
 const previous = fs.existsSync(previousFile)
@@ -427,6 +540,7 @@ const record: AcceptanceRecord = {
     name: 'Assignment 3 genome ∪ risk-envelope pilot domain (NL0 controls grid)',
     features: (domain.features | a3.features).toString(16)
   },
+  runtime: { ...engineRuntime(), requiredOptions: [ENGINE_FLAG], enforcedBy: 'src/gpu-backend/runtime.ts (official gate and official runner)' },
   evidence,
   blockers,
   supersedes: previous ? { study: previous.study, acceptedAt: previous.acceptedAt, sha256: sha(previousFile) } : null

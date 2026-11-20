@@ -40,6 +40,16 @@ export interface AcceptanceRecord {
   device: { uuid: string; name: string; driver: string; cc: string };
   capabilities: string; // the supported capability mask (hex)
   domain: { name: string; features: string }; // the official optimization domain the evidence covers
+  // the JavaScript engine configuration the evidence was produced under and official runs must use (runtime.ts; from
+  // GPU Phase 5 — absent in earlier records)
+  runtime?: {
+    node: string;
+    v8: string;
+    maglev: string;
+    execArgv: string[];
+    requiredOptions: string[];
+    enforcedBy: string;
+  };
   evidence: { name: string; path: string; sha256: string; pass: boolean }[];
   blockers: string[]; // empty when ACCEPTED
   supersedes: { study: string; acceptedAt: string; sha256: string } | null;

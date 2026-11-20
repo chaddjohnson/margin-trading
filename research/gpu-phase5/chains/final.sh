@@ -1,20 +1,22 @@
 #!/bin/bash
-# gpu-phase5 stage C (PROTOCOL.md §10): the FINAL acceptance campaign, ONCE, on the committed final tree (CC1–CC3
-# applied) and the final binary research/gpu-phase5/build/gb5 — docs/gpu/PARITY_CHECKLIST.md §2 (adapted from
-# research/gpu-phase3/chains/final.sh). Strictly sequential (one GPU job at a time), fail-fast; START=<n> resumes from
-# step n without rerunning passed steps (each step writes its own record). Never edit this file while it runs.
-#   MODEA_K=<k> MODEA_W=<host workers per process> tools/gpu-phase5/launch.sh p5chain-final <abs log> -- /usr/bin/env START=1 /bin/bash research/gpu-phase5/chains/final.sh
+# gpu-phase5 stage A (PROTOCOL.md §7): the FINAL acceptance campaign, ONCE, on the committed final tree and the final
+# binary research/gpu-phase5/build/gb5 — docs/gpu/PARITY_CHECKLIST.md §2 (adapted from research/gpu-phase4/chains/
+# final.sh). Every Node process runs under --no-maglev (src/gpu-backend/runtime.ts). Strictly sequential (one GPU job at
+# a time, except the declared concurrency tests), fail-fast; START=<n> resumes from step n without rerunning passed
+# steps (each step writes its own record). Never edit this file while it runs.
+#   tools/gpu-phase5/launch.sh p5chain-final <abs log> -- /usr/bin/env START=1 MODEA_K=2 MODEA_W=8 /bin/bash research/gpu-phase5/chains/final.sh
 cd /home/chad/projects/margin-trading
 NODE=/home/chad/.local/share/fnm/node-versions/v24.21.0/installation/bin/node
 export GPU_POLICY_PURPOSE=parity-test
 START=${START:-1}
 HW=${HW:-8}
-MODEA_K=${MODEA_K:?the Mode A job count (PROTOCOL.md §10.7)}
+MODEA_K=${MODEA_K:?the Mode A job count}
 MODEA_W=${MODEA_W:?the Mode A host workers per process}
 L=/home/chad/projects/margin-trading/research/gpu-phase5/results/logs/final
 O=research/gpu-phase5/results/optimizer
 R=research/gpu-phase5/results
-mkdir -p "$L"
+GB3=/home/chad/projects/margin-trading/research/gpu-phase3/build/gb3
+mkdir -p "$L" "$R/final" "$R/rootcause"
 N() { "$NODE" --no-maglev --expose-gc --max-old-space-size=20000 --experimental-transform-types --disable-warning=ExperimentalWarning "$@"; }
 k=0
 step() { # step <name> <command...>   (skipped below START)
@@ -37,10 +39,6 @@ RP() { # a replay in a contained sub-unit: RP <unit> <args…>
 }
 SUST() { # the bounded reliability run in the Mode A configuration: MODEA_K concurrent processes, 32 minutes each
   local i pids=()
-  if [ "$MODEA_K" -eq 1 ]; then
-    U gpup5-final-sustained sustained "$NODE" --no-maglev --expose-gc --max-old-space-size=20000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/sustained.ts --minutes 32 --out-dir $R/sustained --host-workers "$MODEA_W"
-    return $?
-  fi
   for ((i = 0; i < MODEA_K; i++)); do
     U "gpup5-final-sustained-p$i" "sustained-p$i" "$NODE" --no-maglev --expose-gc --max-old-space-size=20000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/sustained.ts --minutes 32 --out-dir $R/sustained/p$i --host-workers "$MODEA_W" --proc "$i" --ref-workers 2 &
     pids+=($!)
@@ -49,10 +47,14 @@ SUST() { # the bounded reliability run in the Mode A configuration: MODEA_K conc
   for p in "${pids[@]}"; do wait "$p" || rc=1; done
   return $rc
 }
+BENCH() { # one benchmark group through lib.sh's bench (group → verify → summarize → gate) in a subshell
+  ( source /home/chad/projects/margin-trading/research/gpu-phase5/chains/lib.sh; bench "$@" )
+}
 [ -z "$(git status --porcelain -- src tools config)" ] || { echo "FAILED: the source is not committed"; exit 1; }
 
 step build-final         tools/gpu-phase5/build-final.sh
 step offline-check       N tools/gpu-phase5/offline-check.ts --workers 1,2,3,8,12 --out $R/final/offline-check.json
+step host-soak           U gpup5-final-host-soak host-soak "$NODE" --no-maglev --expose-gc --max-old-space-size=14000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/host-soak.ts --cycles 150 --max-minutes 25 --mode full --load 12 --out $R/rootcause/host-soak-final.json
 step parity-campaign     /usr/bin/env HW=$HW PARITY_OUT=$R/parity/final PARITY_LOG=$L/parity /bin/bash research/gpu-phase5/chains/parity.sh
 step parity-summary      N tools/gpu-phase5/parity-summary.ts $R/parity/final
 step finalists           U gpup5-final-finalists finalists "$NODE" --no-maglev --expose-gc --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/parity-finalists.ts --host-workers $HW --out $R/parity/final-finalists.json
@@ -76,7 +78,12 @@ step cmp-mini-w0         N tools/gpu-phase5/compare.ts arms final-mini-w0/gpu fi
 step sanitizer           U gpup5-final-sanitizer sanitizer-final "$NODE" --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/sanitize.ts --door W-CRASH --per 1 --random 64 --out-dir sanitizer-final --host-workers 4
 step negative            N tools/gpu-phase5/negative.ts --out $R/policy/negative-final.json --host-workers 3
 step tamper              N tools/gpu-phase5/tamper.ts --out $R/policy/tamper-final.json
+step isolation           /bin/bash research/gpu-phase5/chains/isolation.sh
 step sustained           SUST
+step fresh-loop          U gpup5-final-fresh-loop fresh-loop "$NODE" --no-maglev --expose-gc --max-old-space-size=14000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/fresh-loop.ts --out $R/rootcause/fresh-loop-final --cycles 170 --max-minutes 150
+step base-p3-a3-r2       BENCH p3-a3-r2 K=1 MODE=ftw JOB=a3:C19:broad1 HW=8 B=8192 VRAM=7000 RSS=7168 ENGINE= GPU_BACKEND_BINARY=$GB3
+step base-p3-s-r1        BENCH p3-s-r1 K=1 MODE=ftw JOB=mini HW=8 B=8192 VRAM=7000 RSS=7168 ENGINE= GPU_BACKEND_BINARY=$GB3
+step base-p3-a2-r1       BENCH p3-a2-r1 K=1 MODE=ftw JOB=a2:C19:base HW=8 B=8192 VRAM=7000 RSS=7168 ENGINE= GPU_BACKEND_BINARY=$GB3
 step regression          N tools/gpu-phase5/regression.ts
 step tests               /bin/bash research/gpu-phase5/chains/tests.sh
 echo "$(date -u +%FT%TZ) chain final complete"

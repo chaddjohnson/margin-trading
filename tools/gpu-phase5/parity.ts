@@ -122,7 +122,7 @@ const pool = new CpuRefPool(workers, spec);
 
 // gpu-phase5 (PROTOCOL.md §4.4): every CPU reference worker keeps the ORIGINAL objects of its tasks until this process has
 // compared the run, so that one mismatch can be attributed to its first differing field from original evidence
-pool.keep = true;
+pool.keep = detail || tasks.length <= 4000 ? 'full' : 'record'; // large record-only runs keep the records only
 
 if (!flag('skip-cpu')) await pool.start();
 
@@ -247,6 +247,16 @@ process.on('uncaughtException', (e) => {
 });
 const primary = await runGpu(tasks, Number(opt('primary-batch', '4096')), true);
 const gpuSeconds = (Date.now() - t0) / 1000 - cpuSeconds;
+
+// TEST ONLY (--test-inject <key>): alter that task's CPU record hash as received, to exercise the original-evidence
+// capture below. Such a run records the mismatch and can never pass (it is not evidence).
+const testInject = opt('test-inject', '');
+
+if (testInject) {
+  const i = tasks.findIndex((t) => t.k === testInject);
+
+  if (i >= 0 && cpu[i]?.ok) cpu[i] = { ...cpu[i]!, record: `${cpu[i]!.record}-injected` };
+}
 
 // ----- compare -----
 const isRef = (k: string) => k.startsWith('R:');
@@ -441,6 +451,7 @@ const rec = {
   kind: 'gpu-phase5 parity (host pipeline)',
   t: new Date().toISOString(),
   runtime: engineRuntime(), // the JavaScript engine configuration of this process, its host workers and its CPU reference workers
+  ...(testInject ? { testInject } : {}),
   door: label,
   doorSpec: spec,
   sessions: door.sessions,

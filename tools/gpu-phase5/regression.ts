@@ -1,14 +1,14 @@
 // gpu-phase5 (PROTOCOL.md §10.4): the regression benchmark of the final binary — the campaign's two Assignment 3 C19
 // broad1 replays (final binary gb5, 8 host workers, batch 8,192) against this study's runs of the same job on the
-// accepted Phase 3 binary (B1 ftw1-r1, B3 ftw1-r2). Pass iff both final replays are identical to the sealed record and
-// their mean wall is within ±3 % of the accepted engine's mean (CC1 is type-only: no change is expected).
+// accepted Phase 3 configuration (the binary gb3 with V8's Maglev enabled: groups p3-a3-r1, p3-a3-r2). Pass iff both final replays are identical to the sealed record and
+// their mean wall is within ±3 % of the accepted configuration's mean.
 //   node --experimental-transform-types tools/gpu-phase5/regression.ts
 import fs from 'node:fs';
 import path from 'node:path';
 import { resultsDir, writeJson } from '../../src/gpu-phase5/context.ts';
 
 const j = (f: string) => JSON.parse(fs.readFileSync(path.join(resultsDir, f), 'utf8'));
-const before = ['ftw1-r1', 'ftw1-r2'].map((g) => ({
+const before = ['p3-a3-r1', 'p3-a3-r2'].map((g) => ({
   group: g,
   wall: j(`bench/${g}/summary.json`).makespanSeconds as number,
   binary: j(`optimizer/${g}-j0/gpu/result.json`).server.binarySha256 as string,

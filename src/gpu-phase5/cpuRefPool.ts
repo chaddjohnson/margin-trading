@@ -5,13 +5,13 @@ import { type ChildProcess, fork } from 'node:child_process';
 import path from 'node:path';
 import { engineExecArgv, maglevDisabled } from '../gpu-backend/runtime.ts';
 import type { DoorSpec } from './doorSpec.ts';
-import type { Explanation, RefResult, RefTask } from './cpuRefWorker.ts';
+import type { Explanation, Keep, RefResult, RefTask } from './cpuRefWorker.ts';
 
 export class CpuRefPool {
   private ws: { child: ChildProcess; busy: boolean }[] = [];
   // gpu-phase5 (PROTOCOL.md §4.4): which worker evaluated each task, and whether workers keep their original objects
   readonly owner = new Map<string, number>();
-  keep = false;
+  keep: Keep | boolean = false;
   private failure: Error | null = null;
 
   constructor(

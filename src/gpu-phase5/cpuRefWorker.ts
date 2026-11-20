@@ -59,6 +59,11 @@ export interface Original {
   pool: ReturnType<typeof runWithControls2>['result'];
 }
 
+// what a worker keeps of each task: 'full' = the record, the books and the pooled replay; 'record' = the record only
+// (large runs: the books and the replay of tens of thousands of tasks would not fit; a books or pool mismatch is then
+// attributed by the labelled re-evaluations)
+export type Keep = false | 'record' | 'full';
+
 // Phase 4's `reference`, unchanged statement for statement, also returning the objects it hashed
 export const referenceFull = (door: Door, t: RefTask): { result: RefResult; original: Original | null } => {
   const t0 = performance.now();
@@ -109,12 +114,22 @@ export interface Explanation {
 if (process.send) {
   let door: Door | null = null;
   let gcCount = 0;
-  const kept = new Map<string, { task: RefTask; result: RefResult; original: Original | null; ordinal: number }>();
+  const kept = new Map<
+    string,
+    { task: RefTask; result: RefResult; original: (Pick<Original, 'rec'> & Partial<Original>) | null; ordinal: number }
+  >();
   const sequence: string[] = [];
 
   process.on(
     'message',
-    async (m: { t: string; door?: DoorSpec; tasks?: RefTask[]; keep?: boolean; k?: string; which?: string[] }) => {
+    async (m: {
+      t: string;
+      door?: DoorSpec;
+      tasks?: RefTask[];
+      keep?: Keep | boolean;
+      k?: string;
+      which?: string[];
+    }) => {
       if (m.t === 'door') {
         door = await resolveDoor(m.door!, 'CPU reference worker');
         process.send!({ t: 'ready', pid: process.pid });
@@ -123,7 +138,13 @@ if (process.send) {
           const r = referenceFull(door!, t);
 
           sequence.push(t.k);
-          if (m.keep) kept.set(t.k, { task: t, result: r.result, original: r.original, ordinal: sequence.length - 1 });
+          if (m.keep)
+            kept.set(t.k, {
+              task: t,
+              result: r.result,
+              original: !r.original ? null : m.keep === 'record' ? { rec: r.original.rec } : r.original,
+              ordinal: sequence.length - 1
+            });
           return r.result;
         });
 
@@ -141,12 +162,18 @@ if (process.send) {
           sequence: [...sequence],
           originalHashes: e ? { books: e.result.books, pool: e.result.pool, record: e.result.record } : {},
           rehashOfKeptObjects: o
-            ? { books: canonHash(o.books.map(bookView)), pool: canonHash(poolView(o.pool)), record: canonHash(o.rec) }
+            ? {
+                books: o.books ? canonHash(o.books.map(bookView)) : 'not kept',
+                pool: o.pool ? canonHash(poolView(o.pool)) : 'not kept',
+                record: canonHash(o.rec)
+              }
             : null,
           original: o
             ? {
                 record: leavesOf(o.rec),
-                ...(wantAll ? { books: leavesOf(o.books.map(bookView)), pool: leavesOf(poolView(o.pool)) } : {})
+                ...(wantAll && o.books && o.pool
+                  ? { books: leavesOf(o.books.map(bookView)), pool: leavesOf(poolView(o.pool)) }
+                  : {})
               }
             : null,
           reEvaluationSameWorker: again?.original

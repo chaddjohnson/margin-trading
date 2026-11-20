@@ -41,9 +41,13 @@ and a digest is not a signature (see `research/gpu-phase3/GPU_ENFORCEMENT_INTEGR
 5. **Parity fixtures.** Extend the subject sets (`src/gpu-phase2/subjects.ts` strata, `fixtures.ts` adversarial doors)
    so the new feature and its edge cases occur many times.
 6. **Run the Apollo GPU verification (required; CPU-only CI is never complete parity):**
+   - every Node process of the verification runs under **`--no-maglev`** (`src/gpu-backend/runtime.ts`; the acceptance
+     generator refuses evidence produced otherwise — `research/gpu-phase5/PARITY_ROOT_CAUSE.md`);
    - `tools/gpu-backend/build.sh <binary> $(node --experimental-transform-types src/gpu-backend/compat.ts --digest)`;
-   - the parity campaign `research/gpu-phase3/chains/parity.sh` (or a successor acceptance study's chain; Phase 2's
-     `research/gpu-phase2/chains/parity.sh` is the original): every door, ≥ 100,000 seeded random genomes, every
+   - the parity campaign `research/gpu-phase5/chains/parity.sh` (the current acceptance study's chain; Phase 3's
+     `research/gpu-phase3/chains/parity.sh` and Phase 2's are its predecessors; the whole campaign is
+     `research/gpu-phase5/chains/final.sh`), whose parity tool keeps both sides' original records so that one mismatch
+     identifies its first differing field: every door, ≥ 100,000 seeded random genomes, every
      structural value, every option set, adversarial fixtures, determinism across batch sizes, input order and
      host-worker counts — through the host path the official pool uses — **zero tolerance**;
    - `tools/gpu-phase3/sanitize.ts` (memcheck with leak check, racecheck, initcheck, synccheck: 0 errors);
