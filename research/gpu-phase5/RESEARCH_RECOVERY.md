@@ -2,14 +2,14 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-20T22:26Z (UTC, from `date -u`)
+- **Updated:** 2026-11-20T22:57Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — stage R (root cause): a CPU-reference V8 transient reproduced and dissected (see Findings); tier A/B running; stage C implemented (uncommitted).
 - **Authority:** `brief/BRIEF.md` sha256 `bff746987861bd2837864af4c86ad2f2d980b386e465f0b6dfd0f12a6d221476` (224 lines,
   read in full). `PROTOCOL.md` FROZEN 2026-11-20T21:12:21Z (`results/protocol-freeze.json`, protocol sha256
-  `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: none. Standard 3.0.0 (scope
+  `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: A1. Standard 3.0.0 (scope
   diagnostic); preflight PASS.
-- **Running:** background task `b7u1kqu0d` (envelope-stress A/B, ends ≈ 22:41Z; plain child processes, no unit).
-- **Next command:** read the A/B outputs; then the record-focused cold stress and the host-path cold soak; then decide the fix (run engine JavaScript without Maglev, enforced by the official gate) — do NOT edit files that fresh workers load while a stress runs.
+- **Running:** background task `bxevgzkp8` (record-stress with ground truth, ends ≈ 23:09Z; plain child processes).
+- **Next command:** read `record-stress-truth-*.json`; run `node --no-maglev … --test src/gpu-backend/tests/*.test.ts`; commit the fix; `dataset-race.ts race|conflict` (GPU); then stage P baselines. Do NOT edit files that fresh workers load while a stress runs.
 - **Never:** start/implement/preflight/run the risk-envelope pilot; write under `research/gpu-phase4/` or any other
   study; merge into `main` unless Q1 is RESOLVED and Q4 ACCEPTED (PROTOCOL §8); reboot or change driver/display/clock.
 
@@ -38,6 +38,27 @@
 | I integration or fallback | not started | | | |
 | S sealed-file protection | not started | | | |
 | E bundle | not started | | | |
+
+## ROOT CAUSE STATUS (2026-11-20T22:57Z) — the original signature is reproduced on the original candidate
+
+- `results/rootcause/record-stress-default.json` (10 cold processes at a time, default V8, 358 processes; concurrently
+  the `--no-maglev` arm and the host soak): in TWO processes `O-fund:coarse:28`, as the SECOND task of its chunk (its
+  position in Phase 4's worker 8), had books hash = truth `d35779dd…`, pool hash = truth `da74e7df…`, envelope = Phase
+  4's values, and a WRONG record hash; first differing leaves `$.virtual.D1:GDX.net` = 53,994.45 and `.dd` = 67,422.29
+  — the numbers of `$.virtual.D1:VGT` (truth for D1:GDX: −48,558.44 and 103,786.91). The literal site is
+  `virtual[b.book] = { trades, net, dd, first }` in `recordOf` (src/vg-d1-growth-joint/evaluate.ts). Other tasks in
+  those processes: record-only and books (the `standalone` literal of the D1 books) differences of the same kind.
+- `--no-maglev`: 0 of 357 processes (same time, same load). Pooled A/B (identical concurrent load): default 8/946
+  processes with a wrong evaluation, `--no-maglev` 0/939.
+- Host path: `host-soak-default-full.json` — 161 fresh pipelines, 1,288 cold worker threads, 251,321 results, 0
+  mismatches (Maglev enabled).
+- **Fix being implemented (uncommitted, tests not yet run):** `src/gpu-backend/runtime.ts` (`--no-maglev` required);
+  checked by the official gate (`official.ts` check `runtime`, attestation `runtime`) and `officialRunner.ts`; the
+  Phase 5 reference pools inherit the parent's setting; `tests/policy.test.ts` (new test + the runner test);
+  `compat.ts` (runtime.ts in the policy group); `tools/gpu-phase5/parity.ts` (original-evidence capture, `runtime`).
+- **Running:** `bxevgzkp8` — `record-stress` against ground truth, default vs `--no-maglev`, 10 processes each, 12 min
+  (`record-stress-truth-{default,no-maglev}.json`).
+- Amendment A1 written (loop stopped at 36 cycles; instruments; the loop's full budget moves to the fixed configuration).
 
 ## Findings so far (root cause; written before they are relied on)
 
