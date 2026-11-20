@@ -27,3 +27,32 @@ rule is loosened after results it governs exist.
   processes with wrong evaluations the last pass was wrong too, so its per-part counts are relative. The tool now
   compares every pass with a fixed ground truth (one `--no-maglev` child, self-consistent, equal to Phase 4's own
   diagnostics for the original candidate); the rerun is `record-stress-truth-*.json`. The first pair's files are kept.
+
+## A2 — 2026-11-20T23:25Z: the acceptance campaign's composition (additions only; no gate, tolerance or rule loosened)
+
+Written before the final campaign starts and before any of its results exists.
+
+- **Root-cause gates added to §7** (`tools/gpu-phase5/accept.ts` R1–R3, A0): R1 the record stress with the default
+  engine (must show the defect: at least one record-only wrong evaluation against a ground truth equal to Phase 4's
+  diagnostics) and without Maglev (zero in ≥ 200 processes) — existing files of 2026-11-20T23:06Z, CPU-only, independent
+  of the GPU binary; R2 the fresh-context loop at its full budget on the FINAL binary in the fixed configuration (A1);
+  R3 the host-path cold soak on the final binary under CPU load (≥ 100 fresh pipelines, zero mismatches); A0 every
+  parity run, optimizer replay and the negative suite of the campaign must record `runtime.maglev = disabled`.
+- **The engine configuration of the campaign:** every Node process runs under `--no-maglev` (the fix). The
+  accepted-configuration baselines (`p3-*`: binary gb3, Maglev enabled) are the only exception and are benchmarks, not
+  acceptance evidence.
+- **§7 A10** is run as `chains/isolation.sh` (Phase 4's I1–I6 on the final candidate; I7 replaced by the atomic race and
+  the conflicting-writers test on the final binary) plus the existing kill and byte-identity records.
+- **§7 A9 and stage P baselines:** the baseline chain `chains/p-baseline.sh` is stopped after its first two groups
+  (`p3-a3-r1` the accepted configuration, `nm-a3-r1` the same under `--no-maglev`): the fixed configuration's remaining
+  measurements are the campaign's own `final-*` replays (the same host path; a binary that differs from gb3 only in
+  its compiled-in digest string), and the accepted configuration's second Assignment 3 run, its mini run and its
+  Assignment 2 run are steps of `chains/final.sh` (`p3-a3-r2`, `p3-s-r1`, `p3-a2-r1`). The CPU-profiled prefix runs
+  separately (`chains/p-profile.sh`; never a timing). `tools/gpu-phase5/regression.ts` compares `final-a3-r1/r2` with
+  `p3-a3-r1/r2` (±3 %).
+- **Parity tool:** `tools/gpu-phase5/parity.ts` keeps the CPU reference pool alive until the comparison is done and
+  captures original evidence on a mismatch (§4.4); in record-only runs of more than 4,000 tasks the workers keep the
+  records only (the books and replays of tens of thousands of tasks would not fit in memory) — a books or pool mismatch
+  there is attributed by the labelled re-evaluations, as in Phase 4's amended tool. A `--test-inject` option exists to
+  exercise the capture; a run using it records the mismatch and can never pass.
+- **Results that existed:** stages R, C and S complete; `p3-a3-r1` running. **Effect on them:** none.
