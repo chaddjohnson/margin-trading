@@ -3,6 +3,7 @@
 // that dies fails the run (no restart, no silent loss).
 import { type ChildProcess, fork } from 'node:child_process';
 import path from 'node:path';
+import { engineExecArgv, maglevDisabled } from '../gpu-backend/runtime.ts';
 import type { DoorSpec } from './doorSpec.ts';
 import type { Explanation, RefResult, RefTask } from './cpuRefWorker.ts';
 
@@ -25,6 +26,9 @@ export class CpuRefPool {
         Array.from({ length: Math.min(4, this.workers - i) }, () => {
           const child = fork(path.join(import.meta.dirname, 'cpuRefWorker.ts'), [], {
             execArgv: [
+              // the workers run under the parent's engine configuration: without V8's Maglev when the parent was started
+              // with --no-maglev (src/gpu-backend/runtime.ts; every acceptance run is), with it otherwise (reproductions)
+              ...(maglevDisabled() ? engineExecArgv : []),
               '--expose-gc',
               `--max-old-space-size=${this.oldSpaceMb}`,
               '--experimental-transform-types',

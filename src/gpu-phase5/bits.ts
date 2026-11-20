@@ -63,7 +63,11 @@ export const firstDiffs = (a: unknown, b: unknown, max = 8, root = '$') => {
     const y = lb[i] ?? null;
 
     if (!x || !y || x.path !== y.path || x.kind !== y.kind || x.value !== y.value) {
-      out.push({ path: (x ?? y)!.path, a: x && { ...x, value: x.value.slice(0, 96) }, b: y && { ...y, value: y.value.slice(0, 96) } });
+      out.push({
+        path: (x ?? y)!.path,
+        a: x && { ...x, value: x.value.slice(0, 96) },
+        b: y && { ...y, value: y.value.slice(0, 96) }
+      });
       if (!x || !y || x.path !== y.path || x.kind !== y.kind) break; // the structures diverge: later leaves do not align
     }
   }

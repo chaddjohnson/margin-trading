@@ -13,6 +13,7 @@ import path from 'node:path';
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
 import { PolicyError, assertNonOfficialCpuRun, declaredPurpose } from '../purpose.ts';
+import { ENGINE_FLAG, engineExecArgv, maglevDisabled, runtimeProblem } from '../runtime.ts';
 import { acceptanceFile, checkAcceptance } from '../acceptance.ts';
 import { compatManifest, policySources } from '../compat.ts';
 import { audit, registryFile, type Registry } from '../entrypoints.ts';
@@ -100,12 +101,16 @@ test('every npm script that can start a CPU research runner or optimizer goes th
 
 test('the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate', () => {
   const runner = path.join(repoRoot, 'src/gpu-backend/officialRunner.ts');
-  const run = (study: string, mod: string, env: Record<string, string>) =>
-    spawnSync(node, ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', runner, study, mod], {
-      cwd: repoRoot,
-      env: { PATH: process.env.PATH!, ...env },
-      encoding: 'utf8'
-    });
+  const run = (study: string, mod: string, env: Record<string, string>, engine: string[] = [ENGINE_FLAG]) =>
+    spawnSync(
+      node,
+      [...engine, '--experimental-transform-types', '--disable-warning=ExperimentalWarning', runner, study, mod],
+      {
+        cwd: repoRoot,
+        env: { PATH: process.env.PATH!, ...env },
+        encoding: 'utf8'
+      }
+    );
 
   const envs: Record<string, string>[] = [
     {},
@@ -126,6 +131,56 @@ test('the official runner wrapper refuses a missing or non-official purpose, a n
 
   assert.equal(d.status, 3);
   assert.match(d.stderr, /official-scope/);
+  // an official runner never starts under V8's Maglev compiler: without --no-maglev, or with Maglev re-enabled after it
+  for (const engine of [[], [ENGINE_FLAG, '--maglev'], ['--no-turbofan']]) {
+    const m = run(
+      'research/gpu-phase3',
+      'tools/gpu-backend/official-preflight.ts',
+      { GPU_POLICY_PURPOSE: 'official-optimization' },
+      engine
+    );
+
+    assert.equal(m.status, 3, `engine options ${engine.join(' ') || 'none'}`);
+    assert.match(m.stderr, /runtime-maglev/);
+  }
+});
+
+test('engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it', () => {
+  assert.equal(ENGINE_FLAG, '--no-maglev');
+  assert.equal(maglevDisabled(['--no-maglev', '--expose-gc', '--experimental-transform-types']), true);
+  assert.equal(maglevDisabled([]), false);
+  assert.equal(maglevDisabled(['--expose-gc']), false);
+  assert.equal(maglevDisabled(['--no-maglev', '--maglev']), false);
+  assert.equal(maglevDisabled(['--maglev', '--no-maglev']), false);
+  assert.equal(maglevDisabled(['--no-maglev', '--stress-maglev']), false);
+  assert.equal(maglevDisabled(['--no-maglev', '--maglev-future']), false);
+  assert.equal(maglevDisabled(['--jitless']), false);
+  assert.equal(maglevDisabled(['--no-turbofan']), false);
+  assert.equal(runtimeProblem(['--no-maglev']), null);
+  assert.match(runtimeProblem(['--expose-gc'])!, /was not started with --no-maglev/);
+  assert.deepEqual([...engineExecArgv], ['--no-maglev']);
+
+  const src = (f: string) => fs.readFileSync(path.join(repoRoot, f), 'utf8');
+
+  // the official gate checks the runtime before the acceptance and records it in the attestation
+  assert.match(src('src/gpu-backend/official.ts'), /check\(\s*'runtime',\s*runtime === null/);
+  assert.match(src('src/gpu-backend/official.ts'), /runtime: engineRuntime\(\)/);
+  assert.ok(
+    src('src/gpu-backend/official.ts').indexOf("'runtime',") <
+      src('src/gpu-backend/official.ts').indexOf("check('acceptance'"),
+    'the runtime check precedes the acceptance check'
+  );
+  assert.match(src('src/gpu-backend/officialRunner.ts'), /requireEngineRuntime\('official GPU runner'\)/);
+  // every npm script that starts an official runner passes the engine flag to node
+  const pkg = JSON.parse(src('package.json')) as { scripts: Record<string, string> };
+
+  for (const [name, cmd] of Object.entries(pkg.scripts))
+    if (/gpu-backend\/officialRunner\.ts/.test(cmd))
+      assert.match(
+        cmd,
+        /\bnode\b[^|&;]*--no-maglev[^|&;]*officialRunner\.ts/,
+        `npm script ${name} starts an official runner without --no-maglev`
+      );
 });
 
 test('entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged', () => {

@@ -15,7 +15,8 @@
 //   policy  the ENFORCEMENT and ACCEPTANCE machinery (manifest v2, GPU Phase 3): the official gate, the acceptance
 //           validator, purposes and the legacy-runner gate, the official-runner wrapper, the reachable-domain
 //           derivation, the entrypoint audit and its registry, the evaluation Lab (archive binding), the backend's door
-//           opener, the research preflight's §9 rules, the live preflight and build tools, and the merge-gate tests.
+//           opener, the engine-runtime requirement (no Maglev), the research preflight's §9 rules, the live preflight and
+//           build tools, and the merge-gate tests.
 //           It is NOT compiled into the binary (a policy change needs no new kernel evidence); the acceptance record pins
 //           every file's sha256 (plus the generator that wrote the record), so any change to it makes the acceptance
 //           STALE until it is re-verified and regenerated (docs/gpu/PARITY_CHECKLIST.md §2a).
@@ -96,7 +97,8 @@ export const policyFiles = [
     'domain.ts',
     'entrypoints.ts',
     'lab.ts',
-    'doors.ts'
+    'doors.ts',
+    'runtime.ts'
   ].map((f) => `src/gpu-backend/${f}`),
   ...[
     'policy.test.ts',

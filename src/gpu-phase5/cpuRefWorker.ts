@@ -154,7 +154,10 @@ if (process.send) {
                 hashes: again.result,
                 record: leavesOf(again.original.rec),
                 ...(wantAll
-                  ? { books: leavesOf(again.original.books.map(bookView)), pool: leavesOf(poolView(again.original.pool)) }
+                  ? {
+                      books: leavesOf(again.original.books.map(bookView)),
+                      pool: leavesOf(poolView(again.original.pool))
+                    }
                   : {})
               }
             : null

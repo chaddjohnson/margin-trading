@@ -97,14 +97,12 @@ const procs = Number(opt('procs', '24'));
 const until = Date.now() + Number(opt('seconds', '60')) * 1000;
 const v8 = opt('v8', '').split(' ').filter(Boolean);
 const out = opt('out', '');
-let started = 0;
 let finished = 0;
 let bad = 0;
 let crashed = 0;
 const samples: unknown[] = [];
 const one = () =>
   new Promise<void>((resolve) => {
-    started++;
     const c = spawn(
       process.execPath,
       [...v8, '--experimental-transform-types', '--disable-warning=ExperimentalWarning', import.meta.filename, '--child', '--lots', opt('lots', '35'), '--marks', opt('marks', '8500'), '--calls', opt('calls', '8')],

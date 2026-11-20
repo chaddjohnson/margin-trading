@@ -3,6 +3,7 @@
 // finish) over src/gpu-phase5/cpuEvalWorker.ts.
 import { type ChildProcess, fork } from 'node:child_process';
 import path from 'node:path';
+import { engineExecArgv, maglevDisabled } from '../gpu-backend/runtime.ts';
 import { StopRequested } from '../growth140-vgt-s8m/pool.ts';
 import type { Task } from '../gpu-backend/client.ts';
 import type { PoolLike } from '../gpu-backend/lab.ts';
@@ -32,6 +33,8 @@ export class CpuEvalPool implements PoolLike {
   private spawn() {
     const child = fork(path.join(import.meta.dirname, 'cpuEvalWorker.ts'), [], {
       execArgv: [
+        // under the parent's engine configuration (src/gpu-backend/runtime.ts): no Maglev when the parent has none
+        ...(maglevDisabled() ? engineExecArgv : []),
         '--expose-gc',
         '--max-old-space-size=3072',
         '--experimental-transform-types',
