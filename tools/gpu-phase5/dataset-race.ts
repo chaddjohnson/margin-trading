@@ -69,7 +69,7 @@ if (cmd === 'child-race') {
 
   await server.info();
 
-  const rows: { loop: number; outcome: string; detail: string; published?: string }[] = [];
+  const rows: { loop: number; outcome: string; detail: string; published?: string; fileAfterLoad?: string }[] = [];
 
   for (let n = 0; n < loops; n++) {
     let published = 'legacy';
@@ -86,7 +86,10 @@ if (cmd === 'child-race') {
       const now = sha(fs.readFileSync(path.join(dir, name)));
       const same = r.sessions === own.sessions && JSON.stringify(r.bars) === JSON.stringify([own.bars.GDX, own.bars.VGT]);
 
-      rows.push({ loop: n, outcome: same && now === own.sha256 ? 'verified' : 'wrong', detail: `${r.sessions} sessions; file ${now === own.sha256 ? 'equal' : 'different'}`, published });
+      // 'wrong' = the server ACCEPTED a dataset whose shape is not the expected one (a silent corruption). The file's
+      // sha256 read back right AFTER the load is recorded apart: under the legacy in-place writer another process may be
+      // rewriting the file at that instant (the server's own load already verified size and checksum)
+      rows.push({ loop: n, outcome: same ? 'verified' : 'wrong', detail: `${r.sessions} sessions; file ${now === own.sha256 ? 'equal' : 'different'}`, fileAfterLoad: now === own.sha256 ? 'equal' : 'different', published });
     } catch (e) {
       rows.push({ loop: n, outcome: 'refused', detail: (e as Error).message.split('\n')[0]!.slice(0, 160), published });
     }
@@ -184,7 +187,7 @@ if (cmd === 'race') {
   fs.writeFileSync(stop, '');
 
   const readRes = await Promise.all(readerRuns);
-  const all = results.flatMap((r) => (r.json?.rows as { outcome: string; detail: string; published?: string }[]) ?? []);
+  const all = results.flatMap((r) => (r.json?.rows as { outcome: string; detail: string; published?: string; fileAfterLoad?: string }[]) ?? []);
   const count = (o: string) => all.filter((r) => r.outcome === o).length;
   const leftovers = fs.readdirSync(shared).filter((f) => f.includes('.tmp-'));
 
@@ -202,6 +205,7 @@ if (cmd === 'race') {
     verified: count('verified'),
     refused: count('refused'),
     wrong: count('wrong'),
+    verifiedLoadsWhoseFileDifferedWhenReadBackAfterwards: all.filter((r) => r.outcome === 'verified' && r.fileAfterLoad === 'different').length,
     exportErrors: count('export-error'),
     created: all.filter((r) => r.published === 'created').length,
     reused: all.filter((r) => r.published === 'reused').length,
@@ -217,7 +221,7 @@ if (cmd === 'race') {
   };
   rec.pass =
     mode === 'atomic'
-      ? rec.verified === procs * loops && rec.refused === 0 && rec.wrong === 0 && rec.exportErrors === 0 && rec.created === 1 && rec.readerPartialReads === 0 && rec.readerOtherContent === 0 && rec.temporaryFilesLeft === 0 && rec.finalFileSha256Equal === true
+      ? rec.verified === procs * loops && rec.refused === 0 && rec.wrong === 0 && rec.verifiedLoadsWhoseFileDifferedWhenReadBackAfterwards === 0 && rec.exportErrors === 0 && rec.created === 1 && rec.readerPartialReads === 0 && rec.readerOtherContent === 0 && rec.temporaryFilesLeft === 0 && rec.finalFileSha256Equal === true
       : rec.wrong === 0; // the legacy baseline: fail closed (refusals expected), never a wrong dataset accepted
 } else if (cmd === 'kill') {
   const kills = Number(opt('kills', '40'));
