@@ -14,6 +14,9 @@
 //   node --expose-gc --experimental-transform-types tools/gpu-phase4/poolbench.ts --run <name> --door FULL|D19|…
 //     --mix detail+risk|joint --tasks 16384 --rounds 4 --batch 8192 --host-workers 8 [--parity-n 24]
 //     [--barrier <dir> --group <k>] [--vram-budget-mb N] [--tag <label>]
+//   isolation tests only (PROTOCOL.md §9.3, B9; never in a benchmark): --inject exit|throw|hang --inject-round r (a
+//   host-worker fault through the pipeline's test hook), --kill-server-round r [--kill-after-ms 1500] (this job's own GPU
+//   server SIGKILLed during round r). The job must then fail closed: profile.json records the failure, exit 3.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
@@ -50,6 +53,10 @@ const hostWorkers = Number(opt('host-workers', '8'));
 const parityN = Number(opt('parity-n', '24'));
 const tag = opt('tag', '');
 const vramBudgetMb = args.includes('--vram-budget-mb') ? Number(opt('vram-budget-mb', '0')) : undefined;
+const inject = args.includes('--inject') ? (opt('inject', 'exit') as 'exit' | 'throw' | 'hang') : null;
+const injectRound = Number(opt('inject-round', '2'));
+const killRound = args.includes('--kill-server-round') ? Number(opt('kill-server-round', '2')) : null;
+const killAfterMs = Number(opt('kill-after-ms', '1500'));
 const mixes: Record<string, { options: EvalOptions; detail: boolean; risk?: boolean }> = {
   joint: { options: vOptions, detail: false },
   'detail+risk': { options: vOptions, detail: true, risk: true }
@@ -112,7 +119,10 @@ const info = await server.info();
 if (!(await server.smoke()).ok) throw new Error('smoke failed');
 await server.load(ds.file);
 
-const pipe = hostWorkers > 0 ? await HostPipeline.start({ door, workers: hostWorkers }) : null;
+const pipe =
+  hostWorkers > 0
+    ? await HostPipeline.start({ door, workers: hostWorkers, ...(inject ? { allowFaultInjection: true } : {}) })
+    : null;
 const tReady = new Date().toISOString();
 let barrierWaitMs = 0;
 
@@ -142,7 +152,9 @@ let peakRss = 0;
 const rssTimer = setInterval(() => (peakRss = Math.max(peakRss, process.memoryUsage().rss)), 1000);
 
 rssTimer.unref();
-for (let r = 1; r <= rounds; r++) {
+let failure: { round: number; error: string; released: number; cpuScored: number; counters: unknown } | null = null;
+
+for (let r = 1; r <= rounds && !failure; r++) {
   const tasks = tasksOf(r);
   const ledger = path.join(outDir, `receipts-r${r}.jsonl`);
   const hashes = new Map<string, string>();
@@ -158,7 +170,26 @@ for (let r = 1; r <= rounds; r++) {
   });
   const t0 = performance.now();
 
-  await pool.run(tasks, (t, v) => hashes.set(t.k.slice(t.k.indexOf('|') + 1), canonHash(v)));
+  if (inject && r === injectRound) pipe!.injectNextDecodeFault(inject);
+  const killer =
+    killRound === r ? setTimeout(() => server.pid && process.kill(server.pid, 'SIGKILL'), killAfterMs) : null;
+
+  try {
+    await pool.run(tasks, (t, v) => hashes.set(t.k.slice(t.k.indexOf('|') + 1), canonHash(v)));
+  } catch (e) {
+    if (killer) clearTimeout(killer);
+    failure = {
+      round: r,
+      error: (e as Error).message.split('\n')[0]!.slice(0, 400),
+      released: hashes.size,
+      cpuScored: pool.counters.cpuScored,
+      counters: { ...pool.counters }
+    };
+    await pool.close().catch(() => undefined);
+    log(`round ${r} FAILED CLOSED: ${failure.error}`);
+    break;
+  }
+  if (killer) clearTimeout(killer);
   const secs = (performance.now() - t0) / 1000;
 
   cpuScored += pool.counters.cpuScored;
@@ -189,6 +220,30 @@ for (let r = 1; r <= rounds; r++) {
   log(`round ${r}: ${tasks.length} in ${secs.toFixed(2)} s (${Math.round(tasks.length / secs)}/s), ${led.length} batches`);
 }
 const tEnd = new Date().toISOString();
+
+if (failure) {
+  if (pipe) await pipe.close().catch(() => undefined);
+  server.kill();
+  writeJson(path.join(outDir, 'profile.json'), {
+    kind: 'gpu-phase4 poolbench profile (failed closed)',
+    run,
+    tag,
+    purpose,
+    door: doorKey,
+    mix: mixName,
+    tasks: nTasks,
+    batchSize,
+    hostWorkers,
+    vramBudgetMb: vramBudgetMb ?? null,
+    test: { inject, injectRound: inject ? injectRound : null, killRound, killAfterMs },
+    times: { start: tStart, ready: tReady, go: tGo, end: tEnd },
+    roundRows,
+    failure,
+    pass: false
+  });
+  process.exit(3);
+}
+
 const serverStatus = server.pid ? status(server.pid) : null;
 
 clearInterval(rssTimer);
