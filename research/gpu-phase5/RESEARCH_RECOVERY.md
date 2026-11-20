@@ -2,16 +2,36 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-20T22:57Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — stage R (root cause): a CPU-reference V8 transient reproduced and dissected (see Findings); tier A/B running; stage C implemented (uncommitted).
+- **Updated:** 2026-11-20T23:23Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — Q1 root cause **RESOLVED by rule §4.7** (`PARITY_ROOT_CAUSE.md`: a V8 Maglev defect,
+  reproduced with the Phase 4 signature on the Phase 4 candidate; fix = engine runs under `--no-maglev`, enforced by the
+  official gate); stage C (atomic dataset export) complete and tested; sealed-file protection restored (988 files);
+  stage P (performance audit) baselines running; stage A (final campaign) prepared, NOT started.
 - **Authority:** `brief/BRIEF.md` sha256 `bff746987861bd2837864af4c86ad2f2d980b386e465f0b6dfd0f12a6d221476` (224 lines,
   read in full). `PROTOCOL.md` FROZEN 2026-11-20T21:12:21Z (`results/protocol-freeze.json`, protocol sha256
   `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: A1. Standard 3.0.0 (scope
   diagnostic); preflight PASS.
-- **Running:** background task `bxevgzkp8` (record-stress with ground truth, ends ≈ 23:09Z; plain child processes).
-- **Next command:** read `record-stress-truth-*.json`; run `node --no-maglev … --test src/gpu-backend/tests/*.test.ts`; commit the fix; `dataset-race.ts race|conflict` (GPU); then stage P baselines. Do NOT edit files that fresh workers load while a stress runs.
+- **Running:** unit `p5chain-pbase` (`chains/p-baseline.sh`, log `results/logs/chain-pbase.txt`, started 23:10:02Z):
+  groups `p3-a3-r1` (accepted configuration: gb3, Maglev on) then `nm-a3-r1` (the same under `--no-maglev`), …;
+  background waiter `b7usfivrn` fires when `nm-a3-r1` is verified. **Plan: stop the chain after `nm-a3-r1`** (the
+  campaign's own `final-*` runs measure the fixed configuration; the remaining baselines are steps of `chains/final.sh`)
+  — stop the unit `p5chain-pbase` AND any `gpup5-nm-a3-r2-*` / `gpup5-mon-*` unit it started; a partly run group keeps
+  its directory and is not reused under its name.
+- **Next commands (in order):**
+  1. `tools/gpu-phase5/launch.sh p5chain-pprof <abs log> --wait -- /bin/bash research/gpu-phase5/chains/p-profile.sh`
+     then `node --no-maglev --experimental-transform-types tools/gpu-phase5/cpuprof-summary.ts
+     research/gpu-phase5/results/raw-large/cpuprof --out research/gpu-phase5/results/perf/cpuprof-summary.json`;
+  2. smoke-test `tools/gpu-phase5/parity.ts` (small W-QUIET run, once with `--test-inject R:C4`) into
+     `results/raw-large/` (not evidence); bounded diagnostics `build/vram-test 20 2`, `build/hostmem-test 16 1 8`;
+  3. amendment A2 (stage P decision; campaign composition); `src/gpu-backend/toolchain.ts` default binary →
+     `research/gpu-phase5/build/gb5`; commit every pinned-file change (ONE commit; nothing pinned changes afterwards);
+  4. `tools/gpu-phase5/launch.sh p5chain-final <abs log> -- /usr/bin/env START=1 MODEA_K=2 MODEA_W=8 /bin/bash
+     research/gpu-phase5/chains/final.sh` (≈ 5.5 h; fail-fast; `START=<n>` resumes);
+  5. `node --no-maglev --experimental-transform-types tools/gpu-phase5/accept.ts --dry-run`, then without `--dry-run`
+     on a committed tree; out-of-band pin; merge per PROTOCOL §8 only if ACCEPTED.
 - **Never:** start/implement/preflight/run the risk-envelope pilot; write under `research/gpu-phase4/` or any other
-  study; merge into `main` unless Q1 is RESOLVED and Q4 ACCEPTED (PROTOCOL §8); reboot or change driver/display/clock.
+  study; merge into `main` unless Q1 is RESOLVED and Q4 ACCEPTED (PROTOCOL §8); reboot or change driver/display/clock;
+  edit a file that a running chain's jobs load, or a chain script while it runs.
 
 ## Environment
 
@@ -31,13 +51,17 @@
 | Stage | Status | Command (repo root) | Output | Result |
 |---|---|---|---|---|
 | S0 provenance, reading, protocol freeze | complete | — | `results/preflight/provenance.json`, `results/protocol-freeze.json` | frozen 21:12:21Z |
-| R root cause | running | see below | `results/rootcause/` | — |
-| C atomic dataset export | not started | | | |
-| P performance audit | not started | | | |
-| A acceptance campaign | not started | | | |
+| R root cause | complete (RESOLVED by §4.7) | `tools/gpu-phase5/{fresh-loop,envelope-stress,record-stress,host-soak,diag-envelope,diag-bits}.ts` (commands in each file's header; plain processes; fresh-loop in unit `gpup5-fresh-loop-p4`) | `results/rootcause/` | see ROOT CAUSE STATUS and `PARITY_ROOT_CAUSE.md`; pooled A/B default 9/1,180 vs `--no-maglev` 0/1,170 |
+| R fix | complete, committed (`2541b610`, `30f8b97e`); pinned files still to be finalized with toolchain.ts | — | `src/gpu-backend/runtime.ts`, `official.ts`, `officialRunner.ts`, `compat.ts`, `acceptance.ts`, tests | policy + enforcement tests 13/13, dataset 9/9, host pipeline and layout pass |
+| C atomic dataset export | complete | `tools/gpu-phase5/dataset-race.ts race|kill|conflict`, `dataset-identity.ts` | `results/cache/` | race 100/100 verified (legacy today: 23 verified, 77 refused); kill 0 partial targets; conflict 20 explicit; identity 28 datasets / 40 comparisons equal |
+| S sealed-file protection | complete | `tools/gpu-phase5/seal-protect.ts --apply` (re-check: `--check`) | `results/seals/{check-before,apply,check-after}.json` | 988 restored to 0444, 10 already protected, 43 git-ignored cache files already 0444, 11 absent, 0 content differences |
+| P performance audit | running | `chains/p-baseline.sh` (unit `p5chain-pbase`), then `chains/p-profile.sh` | `results/bench/`, `results/optimizer/`, `results/perf/` | Phase 4's own profile of this job: wall 583 s, device 347 s, main thread active 366 s, archive writes 66.7 s (frozen legacy store), response copies ≈ 85 ms per 172 MB batch by microbenchmark (≤ 1.7 % of the wall: below the 2 % rule) |
+| A acceptance campaign | not started | `chains/final.sh` (see Next commands) | `results/{final,parity,optimizer,sanitizer-final,policy,isolation,sustained,rootcause/fresh-loop-final,tests}` | — |
 | I integration or fallback | not started | | | |
-| S sealed-file protection | not started | | | |
 | E bundle | not started | | | |
+
+Resume semantics: benchmark groups are write-once (`group.sh` refuses an existing `results/bench/<G>/group.json`); the
+campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwrite its `--out`.
 
 ## ROOT CAUSE STATUS (2026-11-20T22:57Z) — the original signature is reproduced on the original candidate
 
