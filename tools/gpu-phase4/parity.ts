@@ -1,4 +1,5 @@
-// gpu-phase4 (copy of tools/gpu-phase3/parity.ts, this study's namespace) parity (PROTOCOL.md §6.3, §7.1): Phase 2's parity run (tools/gpu-phase2/parity.ts — the canonical CPU
+// gpu-phase4 (copy of tools/gpu-phase3/parity.ts, this study's namespace; amendment A4 adds the attribution of a
+// mismatch to its side) parity (PROTOCOL.md §6.3, §7.1): Phase 2's parity run (tools/gpu-phase2/parity.ts — the canonical CPU
 // engine fresh per subject in child processes vs the GPU: every book trade by trade, the pooled replay, the compact or
 // detailed record, the risk-envelope inputs; zero tolerance) with the GPU side going through the FINAL HOST PATH: the
 // parallel host pipeline (worker threads encode and decode; --host-workers N, default 8) or, with --host-workers 0, the
@@ -267,7 +268,18 @@ tasks.forEach((t, i) => {
       mismatches.push({ k: t.k, envelope: isRef(t.k) ? { cpu: c.envelope, gpu: g.envelope } : 'differs' });
   }
   if (same) identical++;
-  else mismatches.push({ k: t.k, books: c.books === g.books, pool: c.pool === g.pool, record: c.record === g.record });
+  else
+    mismatches.push({
+      k: t.k,
+      books: c.books === g.books,
+      pool: c.pool === g.pool,
+      record: c.record === g.record,
+      // amendment A4: both sides' original hashes, for the attribution below
+      original: {
+        cpu: { books: c.books, pool: c.pool, record: c.record, envelope: c.envelope ?? null },
+        gpu: { books: g.books, pool: g.pool, record: g.record, envelope: g.envelope ?? null }
+      }
+    });
 });
 
 // detailed diffs of the first mismatching subjects (in process; values only for reference identities)
@@ -306,7 +318,49 @@ for (const m of mismatches.slice(0, 6) as { k: string }[]) {
             : [])
         ];
 
-  details.push({ k: t.k, diffs: isRef(t.k) ? d : d.map((x) => ({ path: x.path, ulps: x.ulps ?? null })) });
+  // amendment A4 — attribution: recompute both sides now (the CPU in this process, the GPU alone and in the whole
+  // batch again) and compare with the original hashes: a reproducible difference is a defect; otherwise the side whose
+  // original hash differs from its own recomputation had a transient error
+  const orig = (m as { original?: { cpu: Record<string, unknown>; gpu: Record<string, unknown> } }).original;
+  const cpuNow =
+    g.status === 0
+      ? {
+          books: canonHash(x.books.map(bookView)),
+          pool: canonHash(poolView(x.result)),
+          record: canonHash(rec),
+          envelope: t.risk ? envelopeOf(door, x, t.options) : null
+        }
+      : null;
+  const gpuSingleNow = gpuHashes(g);
+  const again = (await evaluateGpu(tasks)).results[i]!;
+  const gpuBatchNow = gpuHashes(again);
+  const j = (o: unknown) => JSON.stringify(o ?? null);
+  const pick = (o: Record<string, unknown> | null | undefined) =>
+    o ? { books: o.books, pool: o.pool, record: o.record, envelope: o.envelope ?? null } : null;
+  const attribution =
+    orig && cpuNow
+      ? {
+          cpuNowEqualsGpuSingleNow: j(pick(cpuNow)) === j(pick(gpuSingleNow)),
+          cpuNowEqualsGpuBatchNow: j(pick(cpuNow)) === j(pick(gpuBatchNow)),
+          originalCpuEqualsCpuNow: j(pick(orig.cpu)) === j(pick(cpuNow)),
+          originalGpuEqualsGpuBatchNow: j(pick(orig.gpu)) === j(pick(gpuBatchNow)),
+          verdict:
+            j(pick(cpuNow)) !== j(pick(gpuBatchNow)) || j(pick(cpuNow)) !== j(pick(gpuSingleNow))
+              ? 'REPRODUCIBLE difference (a defect)'
+              : j(pick(orig.cpu)) !== j(pick(cpuNow)) && j(pick(orig.gpu)) === j(pick(gpuBatchNow))
+                ? 'not reproducible: the original CPU reference hash was the odd one (CPU-side transient)'
+                : j(pick(orig.gpu)) !== j(pick(gpuBatchNow)) && j(pick(orig.cpu)) === j(pick(cpuNow))
+                  ? 'not reproducible: the original GPU hash was the odd one (GPU-side transient)'
+                  : 'not reproducible: both original hashes differ from their recomputations',
+          now: { cpu: cpuNow, gpuSingle: gpuSingleNow, gpuBatch: gpuBatchNow }
+        }
+      : null;
+
+  details.push({
+    k: t.k,
+    diffs: isRef(t.k) ? d : d.map((x) => ({ path: x.path, ulps: x.ulps ?? null })),
+    attribution
+  });
 }
 
 // ----- G5 determinism -----
