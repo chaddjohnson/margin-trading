@@ -49,7 +49,7 @@ export const leavesOf = (x: unknown, root = '$') => {
 // every NaN of a value with its bit pattern (path → bits)
 export const nansOf = (x: unknown, root = '$') =>
   leavesOf(x, root)
-    .filter((l) => l.kind === 'n' && Number.isNaN(Number.parseFloat('NaN')) && /^[7f]ff[0-9a-f]{13}$/.test(l.value) && !/^[7f]ff0{13}$/.test(l.value))
+    .filter((l) => l.kind === 'n' && /^[7f]ff[0-9a-f]{13}$/.test(l.value) && !/^[7f]ff0{13}$/.test(l.value))
     .map((l) => ({ path: l.path, bits: l.value }));
 
 // the first leaves at which two values differ (path, kind and value of each side); [] when they hash identically

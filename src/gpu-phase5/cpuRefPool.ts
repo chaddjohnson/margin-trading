@@ -4,10 +4,13 @@
 import { type ChildProcess, fork } from 'node:child_process';
 import path from 'node:path';
 import type { DoorSpec } from './doorSpec.ts';
-import type { RefResult, RefTask } from './cpuRefWorker.ts';
+import type { Explanation, RefResult, RefTask } from './cpuRefWorker.ts';
 
 export class CpuRefPool {
   private ws: { child: ChildProcess; busy: boolean }[] = [];
+  // gpu-phase5 (PROTOCOL.md §4.4): which worker evaluated each task, and whether workers keep their original objects
+  readonly owner = new Map<string, number>();
+  keep = false;
   private failure: Error | null = null;
 
   constructor(
@@ -63,14 +66,19 @@ export class CpuRefPool {
 
           next += slice.length;
           w.busy = true;
+          const wi = this.ws.indexOf(w);
+
           w.child.once('message', (m: { out: RefResult[] }) => {
-            for (const r of m.out) out.set(r.k, r);
+            for (const r of m.out) {
+              out.set(r.k, r);
+              this.owner.set(r.k, wi);
+            }
             done += m.out.length;
             w.busy = false;
             onProgress?.(done);
             pump();
           });
-          w.child.send({ t: 'tasks', tasks: slice });
+          w.child.send({ t: 'tasks', tasks: slice, keep: this.keep });
         }
       };
 
@@ -78,6 +86,39 @@ export class CpuRefPool {
       pump();
     });
     return tasks.map((t) => out.get(t.k)!);
+  }
+
+  get pids() {
+    return this.ws.map((w) => w.child.pid ?? -1);
+  }
+
+  // the ORIGINAL evidence of one task from the worker that evaluated it (it must have run with keep = true), followed
+  // by that worker's labelled re-evaluation; `which` adds the books and pool leaves to the record's
+  explain(k: string, which: string[] = ['record']): Promise<Explanation & { worker: number }> {
+    const wi = this.owner.get(k);
+
+    if (wi === undefined) return Promise.reject(new Error(`no CPU reference worker evaluated ${k}`));
+    const w = this.ws[wi]!;
+
+    return new Promise((resolve, reject) => {
+      if (this.failure) return reject(this.failure);
+      w.child.once('message', (m: { x: Explanation }) => resolve({ ...m.x, worker: wi }));
+      w.child.send({ t: 'explain', k, which });
+    });
+  }
+
+  async release() {
+    await Promise.all(
+      this.ws.map(
+        (w) =>
+          new Promise<void>((resolve) => {
+            if (w.child.exitCode !== null || w.child.signalCode !== null) return resolve();
+            w.child.once('message', () => resolve());
+            w.child.send({ t: 'release' });
+          })
+      )
+    );
+    this.owner.clear();
   }
 
   async close() {

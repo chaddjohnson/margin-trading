@@ -2,14 +2,14 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-20T21:14Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — stage R (root cause) running. Protocol frozen; no measured result yet.
+- **Updated:** 2026-11-20T22:26Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — stage R (root cause): a CPU-reference V8 transient reproduced and dissected (see Findings); tier A/B running; stage C implemented (uncommitted).
 - **Authority:** `brief/BRIEF.md` sha256 `bff746987861bd2837864af4c86ad2f2d980b386e465f0b6dfd0f12a6d221476` (224 lines,
   read in full). `PROTOCOL.md` FROZEN 2026-11-20T21:12:21Z (`results/protocol-freeze.json`, protocol sha256
   `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: none. Standard 3.0.0 (scope
   diagnostic); preflight PASS.
-- **Running:** nothing.
-- **Next command:** build `tools/gpu-phase5/fresh-loop.ts` (PROTOCOL §4.4–§4.5), then launch it in `gpup5.slice`.
+- **Running:** background task `b7u1kqu0d` (envelope-stress A/B, ends ≈ 22:41Z; plain child processes, no unit).
+- **Next command:** read the A/B outputs; then the record-focused cold stress and the host-path cold soak; then decide the fix (run engine JavaScript without Maglev, enforced by the official gate) — do NOT edit files that fresh workers load while a stress runs.
 - **Never:** start/implement/preflight/run the risk-envelope pilot; write under `research/gpu-phase4/` or any other
   study; merge into `main` unless Q1 is RESOLVED and Q4 ACCEPTED (PROTOCOL §8); reboot or change driver/display/clock.
 
@@ -41,20 +41,49 @@
 
 ## Findings so far (root cause; written before they are relied on)
 
-- The record hash covers, beyond the books and pool hashes: the RC counters (`rc`), and the reductions `recordOf` /
-  `riskInputsOf`. CPU side: the record comes from `evaluateDetail`, i.e. a SECOND execution of both D1 books (through
-  `d1Cache2`) and two more pool runs — not from the `cache: false` execution whose books and pool are hashed. GPU side:
-  the record is computed in a host worker thread from the one decoded pool, then structured-cloned to the main thread.
-- Task 33 was the second task of CPU worker 8 (first chunk, tasks 32–35: deterministic assignment) and the 34th
-  candidate of host worker 0's first shard: early in a fresh JavaScript context on both sides.
-- `canonHash` hashes a number's raw bits; the record of task 33 has two NaN fields (`ddRecoveryT`, `topEpisodeShare`),
-  both from NaN literals. V8 13.6 produces different NaN bits by source and tier for COMPUTED NaNs
-  (`Math.max(0, ...[NaN])`: `fff8…` unoptimized, `7ff8…` optimized), but literal NaNs are stable; a worker-thread
-  structured clone canonicalizes every NaN to `7ff8000000000000`. The CPU record hash of task 33 is `f17d66f4…` under
-  seven V8 tier configurations. So NaN bits alone do not explain the event (exploratory, pre-freeze).
-- Device side: `initKernel` zeroes every `GbCandOut`; the D1 state is zeroed; the RC counters are copied from it.
+- **2026-11-20T22:25Z — a CPU-reference transient is REPRODUCED and dissected (the leading root cause).**
+  - Capture in the original configuration: `results/rootcause/fresh-loop-p4/` (stopped by me after 36 cycles: 432 fresh
+    CPU workers, 36 fresh GPU contexts, 56,196 GPU evaluations, device response sha256 identical in every cycle).
+    Cycle 16, task 3 `R:C4`, CPU worker 0 (its 4th task): CPU envelope `[101060.43759030467, 101108.57625063331, …]`
+    vs GPU = CPU first cycle = same-worker re-evaluation = fresh process = `[10335.726877955836, 10383.816891783063, …]`;
+    books, pool and record hashes equal (`mismatch-c16-i3.json`). Other tools of mine (dataset identity) were loading the
+    CPU at that moment (21:25:18–21:25:36Z) — disclosed.
+  - Exact arithmetic: 101060.43759030467 = 117489.45321713819 (the realized net after lot 7 closes, 2020-05-14) −
+    16429.01562683351 (the marked net at point 35271, 2020-03-12) (`tools/gpu-phase5/diag-envelope.ts --search`): an
+    EARLY path point held a LATER value.
+  - Dissection (`tools/gpu-phase5/envelope-stress.ts`: cold processes, the worker's four reference tasks, the path
+    kept): in `results/rootcause/envelope-stress-default.json` (2 of 160 processes) and `-default2.json` (2 of 145) the
+    cold path of `portfolioPath` (src/vg-l0-risk-metrics/metrics.ts, unchanged canonical code) has exactly ONE wrong
+    point: the lot-0 exit point `{ t, date, m: before, liq: before, r: before, lot: null }` holds the NUMBERS (t, m, liq,
+    r) of the lot-1 exit point while keeping its own date string; the same ledger rebuilt gives the right path. Two
+    object literals of one site share their number storage: a V8 engine defect (Node v24.21.0, V8 13.6.233.17), not a
+    logic error. It also occurs in the warm (second) pass, and once without moving the envelope (direct check only).
+  - Not triggered by a synthetic ledger called back-to-back (`v8-alias-repro.ts`: 0 of 855) nor on a synthetic door
+    (`alias-hunt.ts`: 0 of 765 processes, 30,600 paths): it needs the real flow's tiering (long mark loops, busy compile
+    queue, CPU contention).
+  - Tier bisect so far (7 min, concurrent): default 2/145, `--no-maglev` 0/144, `--no-turbofan` 0/93 — not yet
+    conclusive. **Running: A/B default vs `--no-maglev`, 12 processes each, 15 min** (task `b7u1kqu0d`,
+    outputs `results/rootcause/envelope-stress-ab-{default,no-maglev}.json`).
+  - The independent review (agent, read-only, unanchored) reached the same map of the record path and the same ranking
+    (V8 tiering transient in a cold CPU isolate first; hardware second; CUDA last); its report is summarized in
+    `PARITY_ROOT_CAUSE.md` (to write).
+- Why this explains a RECORD-only mismatch: the record reductions create the same construct — object literals with
+  number fields in a loop after a hot loop (`recordOf`: `virtual[b.book] = { trades, net, dd, first }` after the sessions
+  loop; `riskInputsOf`: `rows`) — and they run in cold isolates on BOTH sides (CPU reference child; GPU host worker
+  thread). NOT YET DEMONSTRATED on the record path: rule §4.7(1) needs a captured record-hash-only mismatch. Next: a
+  record-focused cold stress (CPU side) and a host-path cold soak (captured response, no GPU).
+- Earlier (pre-freeze, exploratory): `canonHash` hashes raw NaN bits and V8 NaN bits are tier-dependent for COMPUTED
+  NaNs, but task 33's two NaNs are literals (stable); a worker-thread clone canonicalizes NaNs; the CPU record hash of
+  task 33 is `f17d66f4…` under seven tier configurations. Device side: `initKernel` zeroes every `GbCandOut`.
 - Kernel log: 12 Xid 43 entries since 2026-11-18, all from test binaries during negative suites; none near the mismatch.
+- Stage C (atomic dataset export) is IMPLEMENTED, uncommitted: `src/gpu-backend/dataset.ts` (write-once, exclusive
+  temporary file, fsync, verify, link(2) publish-if-absent, explicit CONFLICT / INVALID errors, stale-temporary cleanup),
+  `src/gpu-backend/tests/dataset.test.ts` (9/9 pass) + `datasetChild.ts`, `compat.ts` (the two test files classified),
+  `tools/gpu-phase5/dataset-identity.ts` (28 datasets, 40 comparisons with the old exporter's sidecars: all equal —
+  `results/cache/dataset-identity.json`), `tools/gpu-phase5/dataset-race.ts` (`kill` done: 40 SIGKILLs, 78 directories,
+  0 partial targets, 78 restarted complete — `results/cache/kill-d19.json`; `race` and `conflict` need the GPU: TODO).
 
 ## Disclosures
 
-- (none yet)
+- D1 (2026-11-20T21:18–21:35Z): while the fresh-context loop ran I edited `src/gpu-backend/dataset.ts` and ran other CPU work (unit tests, dataset identity 21:25Z, kill test 21:27–21:29Z). No file that the loop's fresh workers load was edited (they load the engine closure, `canon.ts`, `batch.ts`, `hostWorker.ts`, `src/gpu-phase5/*`); the loop's main process had imported `dataset.ts` before the edit. The extra CPU load coincides with the captured event (cycle 16) and is part of the finding (contention raises the transient's rate).
+- D2: `tools/gpu-phase5/envelope-stress.ts --trace` first run (21:53–22:01Z, 465 processes) is VOID: V8's trace lines followed each child's report and my parser counted every child as failed; rerun 22:03–22:13Z (528 processes, 1 transient, in a verification call).

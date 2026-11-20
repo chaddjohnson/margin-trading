@@ -98,9 +98,14 @@ export const policyFiles = [
     'lab.ts',
     'doors.ts'
   ].map((f) => `src/gpu-backend/${f}`),
-  ...['policy.test.ts', 'hostPipeline.test.ts', 'layout.test.ts', 'enforcement.test.ts'].map(
-    (f) => `src/gpu-backend/tests/${f}`
-  ),
+  ...[
+    'policy.test.ts',
+    'hostPipeline.test.ts',
+    'layout.test.ts',
+    'enforcement.test.ts',
+    'dataset.test.ts',
+    'datasetChild.ts'
+  ].map((f) => `src/gpu-backend/tests/${f}`),
   ...['gpuPolicy.ts', 'preflight.ts', 'main.ts'].map((f) => `src/research-standard/${f}`),
   'tools/gpu-backend/official-preflight.ts',
   'tools/gpu-backend/build.sh',
