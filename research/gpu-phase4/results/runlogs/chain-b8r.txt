@@ -1,0 +1,43 @@
+2026-11-20T09:50:02Z ==== group r1b-w8: TOOL=poolbench K=1 MODE=pool JOB=pool:FULL:detail+risk HW=8 B=8192 VRAM=9216 RSS=10240 MEMMAX=14 EXTRA=--door FULL --mix detail+risk --tasks 16384 --rounds 3 --parity-n 24
+2026-11-20T09:50:02.248Z group r1b-w8: TOOL=poolbench K=1 MODE=pool JOB=pool:FULL:detail+risk HW=8 B=8192 STOP=complete VB=none MEMMAX=14G EXTRA=--door FULL --mix detail+risk --tasks 16384 --rounds 3 --parity-n 24
+{"admitted":true,"reasons":[],"memFree":31342,"avail":54067,"temp":40,"load1":0.11}
+2026-11-20T09:50:05.375Z group r1b-w8: 1 unit(s) started
+2026-11-20T09:51:25.614Z group r1b-w8 done: statuses 0 
+{"group":"r1b-w8","identical":true,"digests":["ef242b2d7938f871b52953ce31c110b3a9f87c4a0bf5478ba12a161043a25376"],"reference":null}
+{"group":"r1b-w8","status":[0],"makespan":60.7,"aggMakespan":809.2,"window":null,"sm":85.2,"vramPeak":7296,"cpu":7.2}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:51:25.841Z","group":"r1b-w8","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":0,"hostMiB":486},"admissionNext":{"vramMiB":0,"rssMiB":768},"throttle":["0x0000000000000000"]}
+2026-11-20T09:51:25Z ==== group r1b-w8 passed
+2026-11-20T09:51:25Z ==== group r2b-w8: TOOL=poolbench K=2 MODE=pool JOB=pool:FULL:detail+risk HW=8 B=8192 VRAM=9216 RSS=10240 MEMMAX=14 EXTRA=--door FULL --mix detail+risk --tasks 16384 --rounds 3 --parity-n 24
+2026-11-20T09:51:25.850Z group r2b-w8: TOOL=poolbench K=2 MODE=pool JOB=pool:FULL:detail+risk HW=8 B=8192 STOP=complete VB=14000 MEMMAX=14G EXTRA=--door FULL --mix detail+risk --tasks 16384 --rounds 3 --parity-n 24
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53636,"temp":44,"load1":1.31}
+2026-11-20T09:51:28.955Z group r2b-w8: 2 unit(s) started
+2026-11-20T09:53:47.498Z group r2b-w8 done: statuses 0 0 
+{"group":"r2b-w8","identical":true,"digests":["ef242b2d7938f871b52953ce31c110b3a9f87c4a0bf5478ba12a161043a25376"],"reference":"ef242b2d7938f871b52953ce31c110b3a9f87c4a0bf5478ba12a161043a25376"}
+{"group":"r2b-w8","status":[0,0],"makespan":118.7,"aggMakespan":828.5,"window":{"s":86,"agg":762.2,"perJob":[381.1,381.1],"overlap":1.629},"sm":93.8,"vramPeak":13825,"cpu":8.1}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:53:47.726Z","group":"r2b-w8","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":0,"hostMiB":486},"admissionNext":{"vramMiB":0,"rssMiB":768},"throttle":["0x0000000000000000"]}
+2026-11-20T09:53:47Z ==== group r2b-w8 passed
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53254,"temp":49,"load1":1.59}
+2026-11-20T09:53:47Z i-ref
+2026-11-20T09:54:02Z I3 GPU server killed
+{"test":"i3","pass":true,"checks":{"failingExit3":true,"failingRecorded":true,"failingReason":true,"failingCpuScored0":true,"failedRoundNotAllReleased":true,"neighbourExit0":true,"neighbourPassed":true,"neighbourIdenticalToReference":true},"error":"GPU evaluator exited (SIGKILL): [gb2 0.709 s] eval n=8192 flags=22 launching"}
+2026-11-20T09:54:21Z [i3] rc=0
+2026-11-20T09:54:21Z I4 host-worker fault
+{"test":"i4","pass":true,"checks":{"failingExit3":true,"failingRecorded":true,"failingReason":true,"failingCpuScored0":true,"failedRoundNotAllReleased":true,"neighbourExit0":true,"neighbourPassed":true,"neighbourIdenticalToReference":true},"error":"host worker 0 exited (7)"}
+2026-11-20T09:54:41Z [i4] rc=0
+2026-11-20T09:54:41Z I5 VRAM refusal
+{"test":"i5","pass":true,"checks":{"failingExit3":true,"failingRecorded":true,"failingReason":true,"failingCpuScored0":true,"failedRoundNotAllReleased":true,"neighbourExit0":true,"neighbourPassed":true,"neighbourIdenticalToReference":true},"error":"GPU evaluator: GPU memory: batch needs 4300 MiB > VRAM budget 256 MiB"}
+2026-11-20T09:54:56Z [i5] rc=0
+2026-11-20T09:54:56Z I1 abrupt kill (SIGKILL of the unit) and resume while the neighbour runs
+2026-11-20T09:55:29Z i1-a killed after 8 batches
+{"group":"i1","identical":true,"jobs":[["i1-a",0,30749,true],["i1-b",0,30749,true]],"union":null}
+2026-11-20T09:57:19Z [i1] rc=0
+2026-11-20T09:57:19Z I2 graceful stop (stop-after) and resume under concurrency
+{"group":"i2","identical":true,"jobs":[["i2-a",0,30749,true],["i2-b",0,30749,true]],"union":null}
+2026-11-20T09:59:25Z [i2] rc=0
+2026-11-20T09:59:25Z I6 namespace guards
+{"kind":"gpu-phase4 isolation test I6 (namespace guards)","t":"2026-11-20T10:00:36.513Z","checks":{"liveLockRefused":true,"reuseRefused":true,"officialPurposeRefused":true,"firstRunCompleted":true},"pass":true}
+2026-11-20T10:00:36Z I7 concurrent dataset export into one shared directory
+{"kind":"gpu-phase4 isolation test I7: concurrent dataset export into one shared directory","t0":"2026-11-20T10:00:36.679Z","t1":"2026-11-20T10:00:42.013Z","door":"D19","procs":4,"loops":25,"loads":100,"verified":66,"refused":34,"wrong":0,"refusalReasons":["GPU evaluator: dataset check failed: short dataset file","GPU evaluator: bad size: dataset size mismatch"],"pass":true,"interpretation":"pass = no load was ever accepted with other content (every load verified or was refused: fail closed); refusals show the collision is reachable when concurrent jobs share a cache directory"}
+2026-11-20T10:00:42Z [i7] rc=0 (pass = no silently wrong load)
+2026-11-20T10:00:42Z chain b9 complete
+2026-11-20T10:00:42Z chain b8-b9-resume complete

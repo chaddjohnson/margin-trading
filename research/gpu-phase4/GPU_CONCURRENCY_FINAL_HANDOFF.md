@@ -19,11 +19,16 @@ For the original Margin Trading conversation. Self-contained; details in the fou
 - **The device's real compute is mostly idle** (GPM SM activity 34 % at one job, ≈ 46 % at most; SM occupancy ≈ 1 %).
   Merging two jobs' batches into one launch would deliver **1.22×** what two time-sliced processes do (measured on the
   production pool) — a shared GPU queue or CUDA MPS is the next lever; neither is built (needs authorization).
-- **Every benchmark result is bit-identical** to the canonical CPU engine or the accepted sealed records: 84 jobs,
-  24,934,726 archived evaluations and 704 lane results compared, 0 mismatches; failures in one job (GPU server killed,
+- **Every benchmark result is bit-identical** to the canonical CPU engine or the accepted sealed records: 86 jobs,
+  27,420,154 archived evaluations and 832 lane results compared, 0 mismatches; failures in one job (GPU server killed,
   host worker died, VRAM refusal, abrupt kill) never affected its neighbour, and every failure failed closed.
 - **The root TypeScript error is fixed** (`hostPipeline.ts`: Node's own `Transferable` type; type-only, byte-identical
-  emitted JavaScript; root `tsc` 0 errors) and the acceptance renewed once on the final code: PENDING.
+  emitted JavaScript; root `tsc` 0 errors), **but the acceptance was NOT renewed**: the one campaign on the final code
+  passed 24 of 25 gates, and the parity gate found **one unattributed, non-reproducible mismatch** in 146,356 candidates
+  (one candidate's detailed-record hash; 25 reproductions on both sides identical; no hardware error logged). Zero
+  tolerance is not loosened here: the renewal is the user's decision (§5). **The Phase 3 acceptance stays in force on
+  `main`; nothing was merged.** The final code is runtime-identical to the accepted engine, so the event concerns the
+  accepted engine (or its CPU reference, or the machine) equally.
 
 ## 2. The two recommendations
 
@@ -33,7 +38,7 @@ For the original Margin Trading conversation. Self-contained; details in the fou
 | Batch / host workers | 8,192 / 8 | 8,192 / 8 per job |
 | GPU memory | 5,138 MiB per A3-shaped job's server (6,524 MiB FULL detail + risk); plan ≤ 8 GiB | 11,053 MiB in use for two A3 jobs (≥ 21,055 MiB free) |
 | Throughput (measured) | A3 job 583–584 s (2,130 ev/s), steady 2,683 ev/s; A2 steady 3,101 ev/s | A3 3,345 ev/s (1.25×); A2 4,821 ev/s (1.55×) |
-| Each job's completion | baseline | ≈ 1.6× longer (A3); complete-job confirmation: PENDING |
+| Each job's completion | baseline | measured with two complete A3 jobs: 887 s each instead of 584 s (1.52× longer); both together in 888 s instead of 1,167 s (1.31×) |
 | When | one study's turnaround matters; small-batch or device-saturated jobs | several independent studies / jobs queued |
 
 Details, admission rules, fail-closed conditions and the shared-queue design: `GPU_OPERATING_RECOMMENDATIONS.md`.
@@ -47,8 +52,8 @@ Details, admission rules, fail-closed conditions and the shared-queue design: `G
 | 2 Concurrency (B1, B2, B2r, B4, B5, B6) | k = 1–4, 3 worker allocations per k, repeats; fixed-total-work splits; the Growth-fixed job; the small-batch mini — on the ACCEPTED Phase 3 engine (re-verified afterwards) |
 | 3 Batching (B3, B7) | 4,096 / 8,192 / 16,384 single and at k = 2; the kernel curve 2,048–32,768 and the shared-queue comparison |
 | 4 Stress, isolation (B8, B9) | FULL detail + risk at k = 1, 2; seven isolation/failure/restart tests — all pass |
-| 5 Corrective work + acceptance | CC1 the type fix, CC2 the new binary path (`research/gpu-phase4/build/gb4`; gb3 untouched), CC3 the campaign harness registered; one full acceptance campaign: PENDING |
-| 6 Integration | PENDING |
+| 5 Corrective work + acceptance | CC1 the type fix, CC2 the new binary path (`research/gpu-phase4/build/gb4`, `b01f4362…`, kernels = gb3; gb3 untouched), CC3 the campaign harness registered; one full campaign: every gate passes (sealed replays identical, sanitizer 0, negative 45/45, tamper 14/14, a 32.6-min reliability run in Mode A with 4,704 CPU samples 0 mismatches, `npm test` = baseline, root `tsc` 0, Strategy Lab all green, no regression) **except parity: 1 mismatch in 146,356** → NOT_ACCEPTED (1 blocker) |
+| 6 Integration | **no merge** (the change is not accepted; merging would make `main`'s acceptance stale); `research/gpu-phase4` pushed with everything; `research/gpu-phase2` checked out again (unchanged = `main`, contains the accepted Phase 3 engine) |
 
 Amendments (append-only, none changed a rule or result): A1 the verifier streams its maps (a 2.2 M-row map exceeded V8's
 string limit); A2 the FULL door's guard file made read-only again (Phase 3's branch switches had dropped the read-only bit
@@ -56,18 +61,33 @@ of every sealed file; content verified); A3 one declared confirmation run of Mod
 
 ## 4. Acceptance and merge
 
-PENDING (see `GPU_ACCEPTANCE_AND_MERGE.md`).
+| Item | State |
+|---|---|
+| Acceptance in force | Phase 3's record on `main`, sha256 **`b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214`** (unchanged; verified VERIFIED with this out-of-band value), binary `06a4a04a…` |
+| New acceptance | **not issued** — `tools/gpu-phase4/accept.ts --dry-run`: NOT_ACCEPTED, 1 blocker (parity), every other gate PASS (`results/acceptance-dry-run.txt`) |
+| Final candidate (awaiting the decision) | `research/gpu-phase4`, binary `research/gpu-phase4/build/gb4` sha256 `b01f4362383526c78d0621d1573dc9937bb1a85711e23cfd375670d19fa7441e`, evaluation digest `3594f002…`; its tree holds no acceptance record (official runs blocked there by design) |
+| Merge | none (`main` = `research/gpu-phase2` = `research/gpu-phase3` = `3a52cc63` on origin, unchanged) |
+| Restored branch | `research/gpu-phase2`, clean |
+
+Details, digests, the campaign table and the merge procedure for later: `GPU_ACCEPTANCE_AND_MERGE.md`.
 
 ## 5. Outstanding decisions for the user
 
+0. **The acceptance renewal (the main open decision).** One unattributed, non-reproducible parity mismatch blocks it
+   under zero tolerance. Options: (a) approve a documented departure for this one event (standard §7.3) — then the
+   generator issues the record on the final tree and the change is merged by the documented procedure; (b) ask for more
+   evidence first (a second parity campaign with the new automatic attribution, ≈ 2 h; a GPU memory test; a host memory
+   test, which needs a reboot); (c) keep the Phase 3 acceptance and defer the TypeScript fix. Independently: whether to
+   add in-run CPU parity sampling to official runs, and (a future CUDA change) a device checksum over the
+   variable-length output sections.
 1. **Whether to run two optimizations at once in practice** (Mode A), or keep one at a time (Mode S). Both are measured;
-   the trade-off is 1.25× total throughput (A3-shaped; 1.55× for A2-shaped) against each job taking ≈ 1.6× longer.
+   the trade-off is 1.25–1.31× total throughput (A3-shaped; 1.55× for A2-shaped) against each job taking ≈ 1.5–1.6× longer.
 2. **Whether to investigate concurrent-kernel execution** (a shared GPU queue merging jobs' batches, ≈ 1.22× measured on
    the device; or CUDA MPS) — each needs separate authorization, a design, and a full acceptance campaign.
 3. **Sealed files' read-only bits:** GPU Phase 3's branch switches (2026-11-19T23:04Z) recreated every file under
    `research/` with mode 664 (Git does not track the read-only bit; contents unchanged). This study restored 0444 only on
-   the FULL door's guard file (`research/vg-d1-growth-joint/FROZEN_SELECTION.json`). Restoring the seals' read-only mode
-   repository-wide (e.g. from each study's `seals.jsonl`) is a housekeeping decision — and any future full checkout
+   Priority 3's ten pinned records (`research/vg-d1-growth-joint/`; contents verified against their pins; amendments A2,
+   A5), which the FULL door's guard and 23 repository tests require. Restoring the seals' read-only mode repository-wide (e.g. from each study's `seals.jsonl`) is a housekeeping decision — and any future full checkout
    switch will clear them again.
 4. **Optional hardening for a future acceptance cycle:** an atomic dataset export (temporary file + rename) would remove
    the fail-closed start-up collision of jobs that share a cache directory (today: give each job its own cache
@@ -78,7 +98,7 @@ PENDING (see `GPU_ACCEPTANCE_AND_MERGE.md`).
 ## 6. Limits (stated plainly)
 
 - Steady-state concurrency figures come from 300,000-evaluation prefixes of the Assignment 3 job (its dominant phase);
-  complete-job concurrency was measured for the fixed-total-work splits and (amendment A3) the Mode A pair.
+  complete-job concurrency was measured for the fixed-total-work splits and the Mode A pair (1.31×, one run).
 - A2's three-job gain and the batch alternatives at k = 2 are single runs; k = 2 and k = 4 repeats agree within 0.3 %,
   k = 3 within 3.3 %.
 - GPM counters were read as the driver reports them without enabling the GPM stream; SM occupancy and DRAM read

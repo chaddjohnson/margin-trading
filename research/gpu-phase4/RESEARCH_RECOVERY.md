@@ -2,27 +2,29 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-20T10:16Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — benchmarks B1–B9 complete (commit `d46604c2`); stage C corrective changes committed (`eaa65dae`); the final acceptance campaign RUNNING (unit `p4chain-final`).
-- **Authority:** `brief/BRIEF.md` sha256 `ffcb79abacd9b8a0c3deeed28ba7e394f926891f49ebe84043e242e99c4a353e` (the user's
-  handoff, read in full, 147 lines, final section "Success criterion" present). `PROTOCOL.md` FROZEN 2026-11-20T06:04:19Z
-  (`results/protocol-freeze.json`; protocol sha256 `b698b929978305e7ca5d37923a34e4115b0d4de5c63fbda99eb736ce3ae578d2`).
-  Amendments: A1 (09:19Z, verifier streams its maps), A2 (09:50Z, FULL guard file read-only again; B8 rerun as r1b/r2b); no result change. Standard 3.0.0 adopted (scope diagnostic, `evaluationBackend` non-official-cpu / benchmark);
-  preflight PASS.
-- **Accepted baseline (valid through B1–B9, re-verified at `d46604c2`; STALE since `eaa65dae`, record moved to
-  `results/superseded/acceptance-gpu-phase3.json`, official optimization blocked until the new acceptance):** `config/gpu-backend/acceptance.json` sha256
-  `b08738bea6f40aa2fb04f92e8601d035ec3dd11a33dcaf924d73d33777805214` (= the brief's out-of-band value; copy outside Git
-  `~/.local/share/margin-trading-gpu/acceptance-pins/`), binary `research/gpu-phase3/build/gb3` `06a4a04a…dc23`,
-  compat digest `30824182…2998`; verifier VERIFIED 2026-11-20T05:38Z.
-- **Running:** `p4chain-final.service` IN `gpup4.slice` (`MODEA_K=2 MODEA_W=8 START=1 chains/final.sh`, from 10:13:21Z, log
-  `results/logs/final-chain.txt`); its sub-units `gpup4-par-*`, `gpup4-final-*`. Resume after an interruption: inspect
-  the log for the last `end N … status 0`, then relaunch with `START=<N+1>` (each step writes its own record).
-- **Next (after the campaign):** `GPU_POLICY_PURPOSE=parity-test node --experimental-transform-types tools/gpu-phase4/tables.ts`,
-  then `tools/gpu-phase4/accept.ts` (writes `config/gpu-backend/acceptance.json` only if every gate passes), commit, keep
-  its sha256 outside the repository, verifier, merge (stage D), bundle (stage E).
-- **Never:** start/implement/preflight/run the risk-envelope pilot; change strategies, fitness, genome, budgets, seeds,
-  selection, kernels, the optimizer; start MPS, change clocks/power/GPM/driver/display, stop services; touch
-  `research/gpu-phase3/` or other studies' records; edit a pinned file before B1–B9 are complete; a long endurance run.
+- **Updated:** 2026-11-20T14:45Z (UTC, from `date -u`)
+- **Status:** **COMPLETE** — every stage done. Benchmarks B1–B9 + the A3 confirmation verified bit-identical; Mode S
+  (1 job, 8,192, 8 workers) and Mode A (2 jobs; 1.25× steady, 1.31× complete jobs) recommended; the TypeScript fix
+  implemented (type-only; root `tsc` 0); the ONE acceptance campaign passed 24 of 25 gates — **the parity gate FAILED on
+  one unattributed, non-reproducible mismatch** (A4, D4) → **NO new acceptance** (`results/acceptance-dry-run.txt`:
+  NOT_ACCEPTED, 1 blocker); **no merge**; `main` keeps the Phase 3 acceptance (`b08738be…`, VERIFIED); checkout restored
+  to `research/gpu-phase2`. **Risk-envelope pilot NOT STARTED.**
+- **Follow-up gate (the user / the original conversation):** the acceptance renewal — (a) a documented departure for the
+  one event, then `tools/gpu-phase4/accept.ts` on this tree and the merge (procedure in `GPU_ACCEPTANCE_AND_MERGE.md` §6);
+  (b) more evidence first; (c) keep Phase 3 and defer the fix. Also: Mode A in practice, a shared queue / MPS study, the
+  sealed files' read-only bits repository-wide, an atomic dataset export, in-run CPU parity sampling.
+- **Authority:** `brief/BRIEF.md` sha256 `ffcb79abacd9b8a0c3deeed28ba7e394f926891f49ebe84043e242e99c4a353e` (147 lines,
+  read in full). `PROTOCOL.md` FROZEN 2026-11-20T06:04:19Z (`results/protocol-freeze.json`, protocol sha256
+  `b698b929978305e7ca5d37923a34e4115b0d4de5c63fbda99eb736ce3ae578d2`); amendments A1–A5 (`AMENDMENTS.md`). Standard
+  3.0.0 (scope diagnostic); preflight PASS.
+- **Running:** nothing (no `gpup4-*` / `p4chain-*` unit).
+- **Deliverables:** the five reports, `results/bench/{SUMMARY.json,groups.csv,jobs.csv}`, `results/decisions/*.json`,
+  `MANIFEST.json`, the bundle `bundle/gpu-phase4-concurrency-final-handoff.zip` (sha256 in the push record below and the
+  final answer).
+- **Never:** start/implement/preflight/run the risk-envelope pilot; regenerate or edit a record of this study; re-run a
+  benchmark group under its name; issue an acceptance record without every gate passing (or a user-approved departure);
+  merge `research/gpu-phase4` into `main` before an acceptance; touch other studies' records (A2/A5 restored only
+  permissions of Priority 3's pin-verified files).
 
 ## Environment
 
@@ -48,14 +50,16 @@
 | B2r repeats | complete | `chains/after-chain.sh p4chain-b2 … b2 chains/b2r.sh` (unit p4chain-b2r, 07:07:15–07:23:32Z) | `results/bench/ss{2-w8,3-w3,4-w2}-r2/`, `results/decisions/b2r.json` | identical; r2 aggregate k2 3,351, k3 3,429, k4 3,466; means k1 2,683, k2 3,345 (1.25×), k3 3,487 (1.30×), k4 3,471; R3 → k*=2 w8 (smallest k within 5 % of the max, ≥ 10 % above k=1 in every run) |
 | B3 batching | complete | in `chains/b3-b9.sh` (unit p4chain-b3, 07:23:36–08:08:11Z) | `results/bench/{b4096-r1,b16384-r1,ftw1-r2,ss2-b4096,ss2-b16384}/` | identical; single job wall b4096 673.8 s, b8192 583.1/584.0 s, b16384 609.6 s → R1 keeps 8,192 (no second run triggered); k=2: b4096 2,169, b8192 3,345, b16384 3,423 ev/s → R4 keeps 8,192 (+2.3 % < 3 %) |
 | B4 FTW | complete | same chain (08:08–08:53:54Z) | `results/bench/ftw{2,3,4,2-r2}/` | identical (unions = reference, lanes exact, 0 duplicate fresh); makespan k2 543.8/549.2 s, k3 638.5 s, k4 780.1 s vs single 583.6 s |
-| B5 W-A2 SS | running | a2-ss1-w8 in `chains/b3-b9.sh` (08:53:54–08:57:13Z; STOP: the verifier's string limit → A1; verified 09:18Z); a2-ss2, a2-ss3 in `chains/b5-b9-resume.sh` (unit p4chain-b5r, from 09:19:07Z) | `results/bench/a2-ss*/` | a2-ss1-w8 identical, 3,101 ev/s |
+| B5 W-A2 SS | complete | a2-ss1-w8 in `chains/b3-b9.sh` (08:53:54–08:57:13Z; STOP: the verifier's string limit → A1; verified 09:18Z); a2-ss2, a2-ss3 in `chains/b5-b9-resume.sh` (unit p4chain-b5r, from 09:19:07Z) | `results/bench/a2-ss*/` | a2-ss1-w8 identical, 3,101 ev/s |
 | B5 (rest), B6, B7 | complete | `chains/b5-b9-resume.sh` (unit p4chain-b5r, 09:19–09:45:22Z) | `results/bench/{a2-ss2-w8,a2-ss3-w3,s1-w8,s2-w4,s4-w2,sf2-w4,k-b*,k2-b8192}/` | identical; A2 k1 3,101, k2 4,821 (1.55×), k3 5,339 (1.72×); mini k1 65.1 s 472 ev/s, k2 487 (1.03×), k4 553 (1.15×), split ×2 107.3 s; W-K device ms/1k cand. 934/477/249/151/104 at 2k–32k, one process 1,023–4,980 ev/s, two × 8,192 3,766 vs one × 16,384 4,580 (shared queue +22 %) |
 | B8 W-R | complete | first `r1-w8` refused (FULL guard writable → A2); `chains/b8-b9-resume.sh` (unit p4chain-b8r, 09:50–09:53:47Z) as `r1b-w8`, `r2b-w8` | `results/bench/r{1b,2b}-w8/`, `results/pool/r*` | identical (CPU samples 24/24 per job, repeat 0); k1 829 ev/s, k2 ≈ 860 (1.04×); VRAM 6,524 MiB/server, host 6.1 GiB/job |
 | B9 isolation | complete | `chains/b9.sh` (09:53–10:00:42Z) | `results/isolation/i*.json`, `results/bench/i1`, `i2` | I1 kill+resume, I2 stop+resume, I3 server kill, I4 host-worker exit, I5 VRAM refusal (each with an identical neighbour), I6 guards, I7 shared export: 66 verified / 34 refused / 0 wrong — all pass |
 | C corrective changes | complete | `research/gpu-phase4/cache/staged/apply.sh`; tsc 0, ESLint 0, merge-gate tests 19/19 | commit `eaa65dae` | CC1 emitted JS identical (`results/final/cc1-transform-identity.json`) |
-| C acceptance campaign | running | `tools/gpu-phase4/launch-slice.sh p4chain-final <abs log> -- /usr/bin/env START=1 MODEA_K=2 MODEA_W=8 /bin/bash research/gpu-phase4/chains/final.sh` (from 10:13:21Z) | `results/{final-binary.json,final,parity,optimizer,sanitizer-final,policy,sustained,tests}` | step 1 build: gb4 `b01f4362…`, reproducible, kernels = gb3 = gb2 |
-| D integration | not started | | | |
-| E bundle | not started | | | |
+| C acceptance campaign | complete for evidence (parity gate FAILED: D24-fund, A4) — final.sh 10:13–11:43Z, final-resume.sh 11:58–14:01Z, tests rerun 14:01–14:12Z (A5) | `tools/gpu-phase4/launch-slice.sh p4chain-final <abs log> -- /usr/bin/env START=1 MODEA_K=2 MODEA_W=8 /bin/bash research/gpu-phase4/chains/final.sh` (from 10:13:21Z) | `results/{final-binary.json,final,parity,optimizer,sanitizer-final,policy,sustained,tests}` | step 1 build: gb4 `b01f4362…`, reproducible, kernels = gb3 = gb2 |
+| D integration | complete (no merge) | — | — | acceptance not renewed → no source merge; no report-only integration; `research/gpu-phase4` pushed; `research/gpu-phase2` checked out (unchanged) |
+| A3 Mode A confirmation | complete | `chains/modea.sh` (unit p4chain-modea, 14:13–14:29Z) | `results/bench/modeA-complete/` | identical; 887.4 / 887.6 s each, 1.31× vs sequential |
+| acceptance dry run | complete | `tools/gpu-phase4/accept.ts --dry-run` | `results/acceptance-dry-run.txt` | NOT_ACCEPTED, 1 blocker (A3 parity), 24 PASS |
+| E bundle | complete | `tools/gpu-phase4/manifest.ts`; `tools/gpu-phase4/bundle.sh <scratch>` | `bundle/gpu-phase4-concurrency-final-handoff.zip` | see the push record |
 
 Resume semantics: every benchmark group is write-once (`group.sh` refuses an existing `results/bench/<G>/group.json`);
 an interrupted group is rerun under a NEW name (labelled as a rerun), never overwritten.

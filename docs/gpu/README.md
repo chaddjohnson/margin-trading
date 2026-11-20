@@ -70,6 +70,26 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
   does not fit with 1 GiB headroom. Capacity overflows are re-evaluated on the GPU with doubled capacities (up to 4
   levels).
 
+## 4a. Several jobs on one GPU, and batch size (measured: research/gpu-phase4/GPU_CONCURRENCY_BENCHMARKS.md, GPU_OPERATING_RECOMMENDATIONS.md)
+
+- **Separate GPU processes time-slice the device; their kernels never run at the same time.** A second job only fills
+  the idle gaps one optimizer job leaves (its lanes compute their next proposals while the device waits). Assignment
+  3-shaped jobs: aggregate 1.25× at two jobs, 1.30× at three, 1.29× at four (each job 1.6×, 2.3×, 3.1× slower);
+  Assignment 2-shaped (main-thread-bound) jobs: 1.55× at two, 1.72× at three; small-batch or device-saturated work ≈ 1.0×.
+- **Mode S (fastest single optimization):** one job, batch 8,192, 8 host workers (4,096: 15.5 % slower; 16,384: 4.5 %
+  slower on the complete Assignment 3 job). **Mode A (most total throughput):** two independent jobs at once, batch
+  8,192, 8 host workers each (≈ 11 GB of VRAM in use incl. the desktop; CPU < 20 %).
+- **Never split one study into parallel jobs to speed it up** (+6–7 % at two parts, slower at three or four: each part's
+  batches are smaller and the kernels are latency-bound).
+- **Concurrent jobs:** one parent slice with the aggregate cap, a per-job MemoryMax, each job its own job name (the archive
+  store has no inter-process lock) and **its own dataset cache directory** (concurrent exports of one door into one
+  directory make some loads fail closed); admit a job only if free VRAM ≥ its need (≈ 6 GiB at 8,192 on D19) + 3 GiB.
+  A failing job (GPU server killed, host-worker fault, VRAM refusal, abrupt kill) stops alone; its neighbour is unaffected
+  (tested). `tools/gpu-phase4/admit.ts` is a ready admission check.
+- **The device's compute is mostly idle** (GPM SM activity 34–46 %, SM occupancy ≈ 1 %): merging jobs' batches into one
+  launch would give 1.22× over time-slicing (measured on the pool); a shared GPU queue or CUDA MPS would need their own
+  authorization and acceptance (not built).
+
 ## 5. Telemetry and records
 
 - Receipt ledger (JSONL, one line per batch): nonce, device UUID, device execution counters, output checksum, kernel

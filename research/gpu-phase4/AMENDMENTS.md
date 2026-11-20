@@ -72,3 +72,19 @@ tolerance or decision rule is loosened after results it governs exist.
   the failed run. No comparison, tolerance or gate changes.
 - **Results that existed:** B1–B9 (unaffected: their identity checks used the accepted engine and passed), the
   campaign's steps 1–2 and 18 parity runs (0 mismatches) and `D24-fund` (1 mismatch).
+
+## A5 — 2026-11-20T14:01:56Z: Priority 3's pinned records made read-only again; the repository suite (gate A8) rerun
+
+- **What happened:** the campaign's test step (14:01Z) found `npm test` with 1,696 tests, 29 failures: the 7 known
+  pre-existing ones and **23 failures with one cause** — Priority 3's sealed-record guard (`src/vg-d1-growth-diagnostic/
+  records.ts` `readP3`) refuses its pinned records because they are writable ("Priority 3's results/folds/C24/
+  selection.json is writable", 22; and `instrument.test.ts` failing at load for the same reason, which is why 3 tests
+  were not collected). The same cause as A2 (D3): GPU Phase 3's branch switches (2026-11-19T23:04:57Z) recreated the files
+  with mode 664 after Phase 3's own test run. Not a regression of this study (no file of those studies changed).
+  Strategy Lab passed (typecheck, lint, 314/314, e2e 81/81 on the one allowed rerun of a layout-timing test).
+- **Change:** `chmod 0444` of the 9 writable records of Priority 3's pin list (`p3.records`,
+  `src/vg-d1-growth-diagnostic/context.ts`), each verified equal to its pinned sha256 first (the tenth,
+  `FROZEN_SELECTION.json`, was restored under A2). Contents and Git state unchanged. Other studies' sealed files stay
+  as they are (outstanding decision in the handoff).
+- **Rerun:** the test step (`chains/tests.sh`) once more, labelled; the first run's records are kept in
+  `results/tests-run1/`. No test, comparison or gate changes.

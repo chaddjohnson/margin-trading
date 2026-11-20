@@ -185,10 +185,28 @@ processes 13,825 MiB in use, 18,283 MiB free).
 
 ## 10. Measured versus projected
 
-Measured: every table above. Projected (labelled where used): the complete-job completion time of Mode A from the
-steady-state ratio (confirmed or corrected by the A3 confirmation run, §11), the shared-queue gain for optimizer jobs
-(§7). No figure was extrapolated from memory size or SM counts.
+Measured: every table above, including Mode A's complete-job completion (§11: 1.31×, each job 1.52× longer). Projected
+(labelled where used): the shared-queue gain for optimizer jobs (§7). No figure was extrapolated from memory size or SM
+counts.
 
 ## 11. Mode A confirmation with complete jobs (amendment A3) and the final binary's regression
 
-(Filled after the acceptance campaign: `results/bench/modeA-complete/`, `results/optimizer/regression.json`.)
+**`modeA-complete`** (14:13–14:29Z): two identical complete Assignment 3 C19 broad1 jobs at once, 8 host workers each,
+batch 8,192, on the ACCEPTED Phase 3 binary `06a4a04a…` (the final binary is not accepted, A4; the device code is
+byte-identical), per-job MemoryMax 14 G.
+
+| Measure | Value |
+|---|---|
+| Each job's wall | **887.4 s / 887.6 s** (alone: 583.1 / 584.0 s → each job **1.52×** longer) |
+| Both jobs' work, run together vs one after the other | **887.6 s vs 1,167.1 s** (2 × 583.55) → **1.31× aggregate** (2,800 ev/s vs 2,130) |
+| Steady window (855 s) | 2,828 ev/s aggregate, 1,414 per job; server overlap 1.51; kernel-active 82 %; GPM SM activity 33 % |
+| Resources | VRAM 11,053 MiB in use; host 5,016 MiB per job; slice ≤ 36,469 MiB (incl. the two archives' page cache); no `memory.high`/`max`/OOM event; no throttling |
+| Identity | both jobs = the sealed record and the canonical CPU archive (`9c2d7108…`), lanes and extension histories exact |
+
+The complete-job gain (1.31×) exceeds the steady-state projection (1.25×): the job's later phases (refinement, smaller
+batches) leave the device idle more often, and the second job fills those gaps too. A2-shaped jobs gained 1.55× already
+in their dominant phase.
+
+**Final-binary regression** (`results/optimizer/regression.json`): the campaign's two Assignment 3 replays on the final
+binary gb4 took 582.3 / 583.2 s (mean 582.8 s) against 583.1 / 584.0 s (583.5 s) on the accepted binary: ×0.9986, identical
+results — no performance change from the type-only fix (as expected: the emitted JavaScript is byte-identical).

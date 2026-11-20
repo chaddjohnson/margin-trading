@@ -9,7 +9,7 @@ official run still needs the user's authorization of its study, its own protocol
 Separate GPU processes on this card **time-slice** the device: their kernels never run at the same time (two small-batch
 mini jobs gain 3 %; a job's per-batch kernel time doubles when a second job runs). A second job therefore only fills the
 idle gaps one optimizer job leaves while its lanes compute their next proposals. For an Assignment 3-shaped job that is
-worth **1.25×** aggregate throughput at two jobs, **1.30×** at three, nothing more at four; for the main-thread-bound
+worth **1.25×** aggregate throughput at two jobs in the dominant phase (**1.31×** measured with two complete jobs), **1.30×** at three, nothing more at four; for the main-thread-bound
 Assignment 2-shaped job **1.55×** at two and **1.72×** at three; for small-batch or device-saturated work ≈ 1.0×. Every
 added job slows each job down (A3: 1.6× at two, 2.3× at three). Splitting one study into parallel jobs does **not**
 make it faster beyond 7 % (k = 2) and makes it slower at k ≥ 3.
@@ -35,8 +35,8 @@ make it faster beyond 7 % (k = 2) and makes it slower at k ≥ 3.
 | Batch | **8,192** each (16,384: +2.3 %, below the 3 % rule; 4,096: −35 %) |
 | Host workers | **8** per job (4 per job: −2.3 %); CPU stays < 20 % of 16 threads |
 | GPU memory | 11,053 MiB in use for two Assignment 3 jobs incl. the desktop (≥ 21,055 MiB free); two FULL detail + risk pools 13,825 MiB (18,283 MiB free); per-server refusal budget ⌊28,000 / k⌋ MiB is a safe cap (14,000 MiB at k = 2) |
-| Aggregate throughput (measured, steady state) | Assignment 3: **3,345 ev/s vs 2,683 (1.25×)**; Assignment 2: **4,821 vs 3,101 (1.55×)**; small-batch mini: 1.03×; device-saturated FULL stress: 1.04× |
-| Effect on each job | each job runs **1.6× slower** (A3: 1,670 ev/s instead of 2,683); a complete A3 job takes ≈ 930 s instead of 584 s (*projection*; the measured complete-job confirmation is in `GPU_CONCURRENCY_BENCHMARKS.md` §11) — two jobs finish together in ≈ 0.8 of the time of running them one after the other |
+| Aggregate throughput (measured) | Assignment 3: **3,345 ev/s vs 2,683 (1.25×)** steady state, **1.31×** for two complete jobs; Assignment 2: **4,821 vs 3,101 (1.55×)**; small-batch mini: 1.03×; device-saturated FULL stress: 1.04× |
+| Effect on each job (measured with complete jobs) | two complete Assignment 3 jobs at once: **887.4 / 887.6 s each** instead of 583.6 s alone (**1.52× longer**); both together in **887.6 s instead of 1,167 s** one after the other (**1.31×**, 0.76 of the time); in the dominant phase each job runs 1.6× slower (1,670 vs 2,683 ev/s) |
 | Capacity limits | at most two Assignment 3-shaped jobs; a third adds ≈ 4 % (not recommended); a fourth adds nothing (3,471 ev/s) with 21,340 MiB of VRAM in use. For **main-thread-bound** jobs (Assignment 2-shaped: GPU busy < 50 % alone) a third job measured +11 % (5,339 ev/s, one run) — an option for the user, not the default |
 | Use when | several independent studies (or independent jobs/folds of one study, each with its own job name) queue up and total throughput matters more than any one job's turnaround |
 
@@ -79,6 +79,15 @@ gain); while another GPU client (e.g. a vLLM server, ≈ 28 GB) holds the memory
 | concurrent dataset exports into one directory (I7) | 34/100 loads refused (short file, size mismatch), 0 accepted wrongly | — |
 | anything the official gate checks (stale binary/sources, other device, missing acceptance, capability, smoke, parity mini-set) | refused before any evaluation (Phase 3's 45 negative cases, rerun in this study's acceptance campaign) | — |
 
+## 5a. One open integrity finding (affects how much to trust any single run)
+
+The final acceptance campaign found **one unattributed, non-reproducible parity mismatch** in 146,356 candidates (one
+candidate's detailed-record hash; `GPU_CONCURRENCY_CORRECTNESS.md` §5). It concerns the accepted engine's runtime code
+as much as the final tree. Until the user decides how to treat it, the prudent operating practice for official runs is
+unchanged (one attested session per job, the gate's parity mini-set at every start) plus, optionally, **in-run CPU parity
+sampling** (e.g. one candidate per 1,000 re-evaluated by the canonical CPU engine, a mismatch stopping the job) — a design
+choice for the user, not implemented here.
+
 ## 6. Could a shared GPU queue (or concurrent kernels) do better? — quantified, not built
 
 The kernels are latency-bound: an 8,192-candidate batch occupies ≈ 1 % of the SMs' warp capacity (GPM SM occupancy) and
@@ -109,6 +118,6 @@ Minimal architectures (none implemented; each needs the user's separate authoriz
 | Goal | Run | Expected (measured) |
 |---|---|---|
 | one study, fastest | Mode S: 1 job, batch 8,192, 8 workers | A3-shaped 584 s; A2-shaped 725 s |
-| two or more independent studies, most total work per hour | Mode A: 2 jobs at once, batch 8,192, 8 workers each | A3-shaped 1.25×, A2-shaped 1.55× aggregate; each job 1.6× slower |
+| two or more independent studies, most total work per hour | Mode A: 2 jobs at once, batch 8,192, 8 workers each | A3-shaped 1.25× (steady) / 1.31× (complete jobs), A2-shaped 1.55× aggregate; each A3 job 1.52× longer (887 s) |
 | main-thread-bound jobs only, maximum total | 3 jobs at once (3 workers each) | A2-shaped 1.72× (one run) |
 | small-batch jobs | one at a time | concurrency ≈ 1.0× |

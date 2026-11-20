@@ -43,3 +43,45 @@ $NODE --max-old-space-size=12000 tools/gpu-phase4/verify.ts --group ss2-w8
 $NODE tools/gpu-phase4/summarize.ts --group ss2-w8
 $NODE tools/gpu-phase4/gate.ts --group ss2-w8
 ```
+
+## B5–B9 resumes (amendments A1, A2)
+
+```bash
+tools/gpu-phase4/launch.sh p4chain-b5r $L/chain-b5r.txt -- /bin/bash research/gpu-phase4/chains/b5-b9-resume.sh   # after A1 (09:19)
+chmod 0444 research/vg-d1-growth-joint/FROZEN_SELECTION.json                                                     # A2, sha256 verified = pin
+tools/gpu-phase4/launch.sh p4chain-b8r $L/chain-b8r.txt -- /bin/bash research/gpu-phase4/chains/b8-b9-resume.sh   # B8 as r1b/r2b, then B9
+$NODE tools/gpu-phase4/tables.ts                                                                                 # results/bench/SUMMARY.json, groups.csv, jobs.csv
+```
+
+## Stage C — corrective changes and the acceptance campaign (10:01–14:12)
+
+```bash
+bash research/gpu-phase4/cache/staged/apply.sh       # CC1–CC3 + registry --write + git mv of the stale Phase 3 record
+npx tsc --noEmit -p tsconfig.json                    # 0 errors
+npx eslint src/gpu-backend src/gpu-phase4 tools/gpu-phase4 tools/gpu-backend/official-preflight.ts   # 0
+GPU_POLICY_PURPOSE=parity-test $NODE --test src/gpu-backend/tests/{policy,enforcement,hostPipeline,layout}.test.ts   # 19/19
+# commit eaa65dae, then (inside gpup4.slice):
+tools/gpu-phase4/launch-slice.sh p4chain-final $L/final-chain.txt -- /usr/bin/env START=1 MODEA_K=2 MODEA_W=8 /bin/bash research/gpu-phase4/chains/final.sh
+#   → step 3 stopped at 11:43:40Z: parity run D24-fund, 1 mismatch (A4)
+GPU_POLICY_PURPOSE=parity-test $NODE tools/gpu-phase4/diag-mismatch.ts --out research/gpu-phase4/results/diagnostics/d24-fund-gb4.json
+GPU_POLICY_PURPOSE=parity-test $NODE tools/gpu-phase4/diag-mismatch.ts --out research/gpu-phase4/results/diagnostics/d24-fund-gb4-smoke.json --repeat 20
+GPU_POLICY_PURPOSE=parity-test $NODE tools/gpu-phase4/diag-cache.ts --out research/gpu-phase4/results/diagnostics/d24-fund-cache-pairs.json
+#   (each in a launch-slice.sh unit with --wait)
+tools/gpu-phase4/launch-slice.sh p4chain-final-resume $L/final-resume-chain.txt -- /usr/bin/env MODEA_K=2 MODEA_W=8 /bin/bash research/gpu-phase4/chains/final-resume.sh
+#   → parity resumed (D24-fund-r2 + the rest), summary, final.sh START=5 … tests
+# A5: chmod 0444 of Priority 3's 9 writable pinned records (each sha256 verified = pin); results/tests copied to results/tests-run1
+tools/gpu-phase4/launch-slice.sh p4chain-tests-r2 $L/tests-r2-chain.txt -- /usr/bin/env GPU_POLICY_PURPOSE=parity-test /bin/bash research/gpu-phase4/chains/tests.sh
+```
+
+## A3 confirmation, acceptance dry run, summaries, bundle (14:13–)
+
+```bash
+tools/gpu-phase4/launch.sh p4chain-modea $L/chain-modea.txt -- /bin/bash research/gpu-phase4/chains/modea.sh   # on the accepted gb3
+GPU_POLICY_PURPOSE=parity-test $NODE tools/gpu-phase4/accept.ts --dry-run > research/gpu-phase4/results/acceptance-dry-run.txt   # NOT_ACCEPTED, 1 blocker
+$NODE tools/gpu-phase4/tables.ts
+cp -r research/gpu-phase4/results/logs research/gpu-phase4/results/runlogs
+GPU_POLICY_PURPOSE=benchmark $NODE tools/gpu-phase4/manifest.ts
+tools/gpu-phase4/bundle.sh <scratchpad>/bundle      # research/gpu-phase4/bundle/gpu-phase4-concurrency-final-handoff.zip
+git push -u origin research/gpu-phase4              # unsandboxed; git ls-remote origin refs/heads/research/gpu-phase4
+git switch research/gpu-phase2                      # the branch active at the start (unchanged = main)
+```
