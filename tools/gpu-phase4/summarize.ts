@@ -282,7 +282,18 @@ const summary = {
     load1Max: sys.length ? Math.max(...sys.map((s) => Number(s.load1))) : null,
     memAvailableMinMiB: allSys.length ? Math.min(...allSys.map((s) => Number(s.memAvailableMiB))) : null,
     swapUsedMaxMiB: allSys.length ? Math.max(...allSys.map((s) => Number(s.swapUsedMiB))) : null,
-    slice: lastCg ? { peakMiB: lastCg.peakMiB, events: lastCg.events } : null,
+    // memory.peak and memory.events are cumulative over the slice's life; per group: the maximum of memory.current
+    // sampled during this group's run, and the events counted during it (last − first)
+    slice: lastCg
+      ? {
+          peakMiB: lastCg.peakMiB,
+          groupMaxCurrentMiB: Math.max(...allSys.filter((x) => x.cgroup).map((x) => x.cgroup!.currentMiB)),
+          events: lastCg.events,
+          groupEvents: Object.fromEntries(
+            Object.entries(lastCg.events).map(([k, v]) => [k, v - (allSys.find((x) => x.cgroup)?.cgroup!.events[k] ?? 0)])
+          )
+        }
+      : null,
     computeAppsPeak: Object.entries(appsPeak).map(([pid, e]) => ({
       pid: Number(pid),
       name: e.name,

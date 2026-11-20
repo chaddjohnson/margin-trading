@@ -76,8 +76,8 @@ const rows = groups.map((g) => {
     busiestCorePctMean: s.monitor.cpuBusyMaxCorePct?.mean ?? null,
     load1Max: s.monitor.load1Max,
     memAvailableMinMiB: s.monitor.memAvailableMinMiB,
-    slicePeakMiB: s.monitor.slice?.peakMiB ?? null,
-    sliceEvents: s.monitor.slice ? JSON.stringify(s.monitor.slice.events) : null,
+    sliceMaxCurrentMiB: s.monitor.slice?.groupMaxCurrentMiB ?? null,
+    sliceEventsDuringGroup: s.monitor.slice?.groupEvents ? JSON.stringify(s.monitor.slice.groupEvents) : null,
     jobMainThreadEluMean: elu.length ? Math.round((elu.reduce((a: number, b: number) => a + b, 0) / elu.length) * 1000) / 1000 : null,
     jobPeakHostMiBMax: Math.max(
       0,

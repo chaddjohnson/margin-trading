@@ -13,6 +13,7 @@
 //   node --experimental-transform-types tools/gpu-phase4/verify.ts --group <G>
 import fs from 'node:fs';
 import path from 'node:path';
+import readline from 'node:readline';
 import { createHash } from 'node:crypto';
 import { deepDiff } from '../../src/gpu-phase1/compare.ts';
 import { repoRoot, resultsDir, writeJson } from '../../src/gpu-phase4/context.ts';
@@ -57,10 +58,14 @@ const ref = references[group.job];
 
 if (!ref) throw new Error(`verify: no reference for job ${group.job}`);
 
-const readMap = (dir: string, name: 'rows' | 'configs') => {
+// streamed line by line: a 2.2-million-row map (Assignment 2) exceeds V8's maximum string length as one string
+const readMap = async (dir: string, name: 'rows' | 'configs') => {
   const m = new Map<string, string>();
 
-  for (const line of fs.readFileSync(path.join(dir, `${name}.jsonl`), 'utf8').split('\n'))
+  for await (const line of readline.createInterface({
+    input: fs.createReadStream(path.join(dir, `${name}.jsonl`)),
+    crlfDelay: Infinity
+  }))
     if (line) {
       const [k, h] = JSON.parse(line) as [string, string];
 
@@ -74,8 +79,8 @@ const digestOf = (m: Map<string, string>) => {
   [...m.keys()].sort().forEach((k, i) => d.update(`${i ? '\n' : ''}${k}=${m.get(k)}`));
   return d.digest('hex');
 };
-const refRows = readMap(ref.map, 'rows');
-const refConfigs = readMap(ref.map, 'configs');
+const refRows = await readMap(ref.map, 'rows');
+const refConfigs = await readMap(ref.map, 'configs');
 const refResult = JSON.parse(
   fs.readFileSync(ref.sealed ?? path.join(ref.result, 'result.json'), 'utf8')
 ) as {
@@ -86,7 +91,9 @@ const refLane = new Map(refResult.lanes.map((l) => [l.position, l]));
 const history = (rounds: typeof refResult.extensionRounds, pos: string) =>
   rounds.flatMap((r) => r.positions.filter((p) => p.position === pos).map((p) => [p.fired, p.extended, p.atCap]));
 
-const jobs = group.runs.map((run, i) => {
+const jobs = [];
+
+for (const [i, run] of group.runs.entries()) jobs.push(await (async () => {
   const out = path.join(resultsDir, 'optimizer', run, 'gpu');
   const raw = path.join(resultsDir, 'raw-large', 'optimizer', run, 'gpu');
   const status = group.exitStatus[i];
@@ -101,8 +108,8 @@ const jobs = group.runs.map((run, i) => {
     compute: { fresh: number; archiveHits: number };
     lanesCount: number;
   };
-  const rows = readMap(raw, 'rows');
-  const configs = readMap(raw, 'configs');
+  const rows = await readMap(raw, 'rows');
+  const configs = await readMap(raw, 'configs');
   let rowMismatch = 0;
   let rowUnknown = 0;
   let cfgMismatch = 0;
@@ -182,7 +189,7 @@ const jobs = group.runs.map((run, i) => {
     keys: [...rows.keys()],
     positions: complete ? result.lanes!.map((l) => l.position) : []
   };
-});
+})());
 
 // fixed-total-work: the parts together are exactly the job
 let union: Record<string, unknown> | null = null;
