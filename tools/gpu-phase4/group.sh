@@ -9,6 +9,7 @@
 #   [STOP=<fresh per job>] [VRAM=<MiB per job, admission>] [RSS=<MiB per job, admission>] [MEMMAX=<GiB per job>]
 #   [VB=<per-server VRAM budget MiB; default 28000/K for K ≥ 2, none for K = 1>] [EXTRA="<tool args>"] [TAG=<label>]
 #   [TOOL=replay|poolbench (poolbench: JOB is a label, EXTRA gives --door --mix --tasks --rounds)]
+#   [GPU_BACKEND_BINARY=<binary> (passed into the job units; default: src/gpu-backend/toolchain.ts)]
 #   /bin/bash tools/gpu-phase4/group.sh
 set -uo pipefail
 cd /home/chad/projects/margin-trading
@@ -61,8 +62,8 @@ for ((i = 0; i < K; i++)); do
   systemd-run --user --unit="gpup4-$G-j$i" --slice=gpup4.slice --collect \
     -p MemoryHigh=$((MEMMAX - 1))G -p MemoryMax="${MEMMAX}G" -p MemorySwapMax=0 -p KillMode=mixed -p TimeoutStopSec=120 \
     -p Restart=no -p StandardOutput=append:"$L/j$i.log" -p StandardError=append:"$L/j$i.log" \
-    -E PATH="$PATH" -E HOME="$HOME" -E GPU_POLICY_PURPOSE=benchmark --working-directory="$REPO" \
-    /bin/bash "$REPO/tools/gpu-phase4/job.sh" "$R/j$i.status" "$NODE" --expose-gc --max-old-space-size=20000 \
+    -E PATH="$PATH" -E HOME="$HOME" -E GPU_POLICY_PURPOSE=benchmark ${GPU_BACKEND_BINARY:+-E GPU_BACKEND_BINARY="$GPU_BACKEND_BINARY"} \
+    --working-directory="$REPO" /bin/bash "$REPO/tools/gpu-phase4/job.sh" "$R/j$i.status" "$NODE" --expose-gc --max-old-space-size=20000 \
     --experimental-transform-types --disable-warning=ExperimentalWarning "tools/gpu-phase4/$TOOL.ts" "${args[@]}" >/dev/null \
     || { echo "unit gpup4-$G-j$i did not start"; touch "$R/.stop-monitor"; write_group; exit 6; }
 done
