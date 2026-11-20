@@ -93,3 +93,16 @@ an interrupted group is rerun under a NEW name (labelled as a rerun), never over
   44G per-unit MemoryHigh, so no material throttling. The steady-state prefixes (B2) had none (the counter stayed 803
   from B1 on). Complete single-job runs in B3 share the condition (comparable among themselves); reported in the
   benchmarks.
+
+## Push record
+
+- Pushes run unsandboxed (the sandbox has no DNS for github.com).
+- 2026-11-20T18:19:19Z: `git push -u origin research/gpu-phase4` (new branch) → `git ls-remote origin`: `research/gpu-phase4` =
+  `51f53060a6d48f5d4da715e4343c27cf029db79c` = local; `main`, `research/gpu-phase2`, `research/gpu-phase3` =
+  `3a52cc635c95f74fc6cf3c22aa30bf4507293fa3` (unchanged; no merge). This record is the next commit, pushed the same
+  way (its SHA is in the final answer, verified by `git ls-remote`).
+- Bundle: `research/gpu-phase4/bundle/gpu-phase4-concurrency-final-handoff.zip`, sha256
+  `1c431f988edf59310569019f2fbd68d3ae809f6b6264a25d1fc86263af6040b0` (1,250 files, 11,591,696 bytes; committed in
+  `51f53060`).
+- Out-of-band copy (outside Git): `~/.local/share/margin-trading-gpu/acceptance-pins/` — the Phase 3 record
+  `b08738be…` (still the accepted record on `main`) and a note of this study's outcome (no new record).
