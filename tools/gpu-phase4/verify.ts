@@ -52,7 +52,8 @@ const references: Record<string, { map: string; result: string; sealed: string |
   }
 };
 
-if (group.job === 'mini' && group.extra.trim()) throw new Error('verify: the mini reference covers the default schedule only');
+if (group.job === 'mini' && group.extra.trim())
+  throw new Error('verify: the mini reference covers the default schedule only');
 
 const ref = references[group.job];
 
@@ -81,9 +82,7 @@ const digestOf = (m: Map<string, string>) => {
 };
 const refRows = await readMap(ref.map, 'rows');
 const refConfigs = await readMap(ref.map, 'configs');
-const refResult = JSON.parse(
-  fs.readFileSync(ref.sealed ?? path.join(ref.result, 'result.json'), 'utf8')
-) as {
+const refResult = JSON.parse(fs.readFileSync(ref.sealed ?? path.join(ref.result, 'result.json'), 'utf8')) as {
   lanes: { position: string }[];
   extensionRounds: { positions: { position: string; fired: boolean; extended: boolean; atCap: boolean }[] }[];
 };
@@ -93,103 +92,106 @@ const history = (rounds: typeof refResult.extensionRounds, pos: string) =>
 
 const jobs = [];
 
-for (const [i, run] of group.runs.entries()) jobs.push(await (async () => {
-  const out = path.join(resultsDir, 'optimizer', run, 'gpu');
-  const raw = path.join(resultsDir, 'raw-large', 'optimizer', run, 'gpu');
-  const status = group.exitStatus[i];
+for (const [i, run] of group.runs.entries())
+  jobs.push(
+    await (async () => {
+      const out = path.join(resultsDir, 'optimizer', run, 'gpu');
+      const raw = path.join(resultsDir, 'raw-large', 'optimizer', run, 'gpu');
+      const status = group.exitStatus[i];
 
-  if (!fs.existsSync(path.join(out, 'result.json')) || !fs.existsSync(path.join(raw, 'rows.jsonl')))
-    return { run, status, present: false, identical: false };
+      if (!fs.existsSync(path.join(out, 'result.json')) || !fs.existsSync(path.join(raw, 'rows.jsonl')))
+        return { run, status, present: false, identical: false };
 
-  const result = JSON.parse(fs.readFileSync(path.join(out, 'result.json'), 'utf8')) as {
-    stopped?: string;
-    lanes?: { position: string }[];
-    extensionRounds?: typeof refResult.extensionRounds;
-    compute: { fresh: number; archiveHits: number };
-    lanesCount: number;
-  };
-  const rows = await readMap(raw, 'rows');
-  const configs = await readMap(raw, 'configs');
-  let rowMismatch = 0;
-  let rowUnknown = 0;
-  let cfgMismatch = 0;
-  let cfgUnknown = 0;
-  const examples: string[] = [];
+      const result = JSON.parse(fs.readFileSync(path.join(out, 'result.json'), 'utf8')) as {
+        stopped?: string;
+        lanes?: { position: string }[];
+        extensionRounds?: typeof refResult.extensionRounds;
+        compute: { fresh: number; archiveHits: number };
+        lanesCount: number;
+      };
+      const rows = await readMap(raw, 'rows');
+      const configs = await readMap(raw, 'configs');
+      let rowMismatch = 0;
+      let rowUnknown = 0;
+      let cfgMismatch = 0;
+      let cfgUnknown = 0;
+      const examples: string[] = [];
 
-  for (const [k, h] of rows) {
-    const r = refRows.get(k);
+      for (const [k, h] of rows) {
+        const r = refRows.get(k);
 
-    if (r === undefined) rowUnknown++;
-    else if (r !== h) rowMismatch++;
-    else continue;
-    if (examples.length < 5) examples.push(k.slice(0, 160));
-  }
-  for (const [k, h] of configs) {
-    const r = refConfigs.get(k);
+        if (r === undefined) rowUnknown++;
+        else if (r !== h) rowMismatch++;
+        else continue;
+        if (examples.length < 5) examples.push(k.slice(0, 160));
+      }
+      for (const [k, h] of configs) {
+        const r = refConfigs.get(k);
 
-    if (r === undefined) cfgUnknown++;
-    else if (r !== h) cfgMismatch++;
-  }
+        if (r === undefined) cfgUnknown++;
+        else if (r !== h) cfgMismatch++;
+      }
 
-  const complete = !result.stopped && Array.isArray(result.lanes);
-  let laneDiffs: { position: string; path: string }[] = [];
-  let historyDiffs: string[] = [];
+      const complete = !result.stopped && Array.isArray(result.lanes);
+      let laneDiffs: { position: string; path: string }[] = [];
+      let historyDiffs: string[] = [];
 
-  if (complete) {
-    for (const l of result.lanes!) {
-      const s = refLane.get(l.position);
+      if (complete) {
+        for (const l of result.lanes!) {
+          const s = refLane.get(l.position);
 
-      if (!s) laneDiffs.push({ position: l.position, path: '<no sealed lane>' });
-      else for (const d of deepDiff(s, l, '$', [], 10)) laneDiffs.push({ position: l.position, path: d.path });
-      if (
-        JSON.stringify(history(refResult.extensionRounds, l.position)) !==
-        JSON.stringify(history(result.extensionRounds!, l.position))
-      )
-        historyDiffs.push(l.position);
-    }
-    laneDiffs = laneDiffs.slice(0, 40);
-    historyDiffs = historyDiffs.slice(0, 40);
-  }
+          if (!s) laneDiffs.push({ position: l.position, path: '<no sealed lane>' });
+          else for (const d of deepDiff(s, l, '$', [], 10)) laneDiffs.push({ position: l.position, path: d.path });
+          if (
+            JSON.stringify(history(refResult.extensionRounds, l.position)) !==
+            JSON.stringify(history(result.extensionRounds!, l.position))
+          )
+            historyDiffs.push(l.position);
+        }
+        laneDiffs = laneDiffs.slice(0, 40);
+        historyDiffs = historyDiffs.slice(0, 40);
+      }
 
-  const fullJob = complete && result.lanesCount === refResult.lanes.length;
-  const digest = fullJob ? digestOf(rows) : null;
-  const identical =
-    status !== null &&
-    (status === 0 || (status === 75 && Boolean(result.stopped))) &&
-    rowMismatch === 0 &&
-    rowUnknown === 0 &&
-    cfgMismatch === 0 &&
-    cfgUnknown === 0 &&
-    laneDiffs.length === 0 &&
-    historyDiffs.length === 0 &&
-    (!fullJob || digest === ref.digest);
+      const fullJob = complete && result.lanesCount === refResult.lanes.length;
+      const digest = fullJob ? digestOf(rows) : null;
+      const identical =
+        status !== null &&
+        (status === 0 || (status === 75 && Boolean(result.stopped))) &&
+        rowMismatch === 0 &&
+        rowUnknown === 0 &&
+        cfgMismatch === 0 &&
+        cfgUnknown === 0 &&
+        laneDiffs.length === 0 &&
+        historyDiffs.length === 0 &&
+        (!fullJob || digest === ref.digest);
 
-  return {
-    run,
-    status,
-    present: true,
-    complete,
-    stopped: result.stopped ?? null,
-    lanes: result.lanesCount,
-    fresh: result.compute.fresh,
-    archiveHits: result.compute.archiveHits,
-    rows: rows.size,
-    configs: configs.size,
-    rowMismatch,
-    rowUnknown,
-    cfgMismatch,
-    cfgUnknown,
-    examples,
-    lanesCompared: complete ? result.lanes!.length : 0,
-    laneDiffs,
-    extensionHistoryDiffs: historyDiffs,
-    archiveDigest: digest,
-    archiveDigestEqualsReference: fullJob ? digest === ref.digest : null,
-    identical,
-    keys: [...rows.keys()],
-    positions: complete ? result.lanes!.map((l) => l.position) : []
-  };
-})());
+      return {
+        run,
+        status,
+        present: true,
+        complete,
+        stopped: result.stopped ?? null,
+        lanes: result.lanesCount,
+        fresh: result.compute.fresh,
+        archiveHits: result.compute.archiveHits,
+        rows: rows.size,
+        configs: configs.size,
+        rowMismatch,
+        rowUnknown,
+        cfgMismatch,
+        cfgUnknown,
+        examples,
+        lanesCompared: complete ? result.lanes!.length : 0,
+        laneDiffs,
+        extensionHistoryDiffs: historyDiffs,
+        archiveDigest: digest,
+        archiveDigestEqualsReference: fullJob ? digest === ref.digest : null,
+        identical,
+        keys: [...rows.keys()],
+        positions: complete ? result.lanes!.map((l) => l.position) : []
+      };
+    })()
+  );
 
 // fixed-total-work: the parts together are exactly the job
 let union: Record<string, unknown> | null = null;
@@ -232,7 +234,7 @@ const rec = {
     rows: refRows.size,
     digest: ref.digest
   },
-  jobs: jobs.map(({ keys: _k, positions: _p, ...j }) => j),
+  jobs: jobs.map((j) => Object.fromEntries(Object.entries(j).filter(([k]) => k !== 'keys' && k !== 'positions'))),
   union,
   identical: jobs.every((j) => j.identical) && (union === null || union.identical === true)
 };

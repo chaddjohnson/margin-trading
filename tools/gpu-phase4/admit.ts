@@ -72,7 +72,8 @@ const needVram = k * vram + reserve;
 const needRss = k * rss + 8192;
 const reasons: string[] = [];
 
-if (foreign.length) reasons.push(`foreign GPU compute process(es): ${foreign.map((a) => `${a.pid} ${a.name}`).join(', ')}`);
+if (foreign.length)
+  reasons.push(`foreign GPU compute process(es): ${foreign.map((a) => `${a.pid} ${a.name}`).join(', ')}`);
 if (units.length) reasons.push(`gpup4 unit(s) still running: ${units.join(', ')}`);
 if (memFree < needVram) reasons.push(`free VRAM ${memFree} MiB < ${k} × ${vram} + ${reserve} = ${needVram} MiB`);
 if (avail < needRss) reasons.push(`MemAvailable ${avail} MiB < ${k} × ${rss} + 8192 = ${needRss} MiB`);

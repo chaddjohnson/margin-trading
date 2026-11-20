@@ -17,7 +17,7 @@
 // operation timeout fails the pipeline; every pending and later call rejects (the GPU pool then fails the job, which
 // checkpoints; there is no CPU fallback and no silent retry). Test hooks (an injected decode failure or worker exit)
 // exist only with allowFaultInjection, which an official session refuses.
-import { Worker } from 'node:worker_threads';
+import { type Transferable, Worker } from 'node:worker_threads';
 import type { Door } from '../vg-d1-growth-joint/data.ts';
 import {
   type BatchOptions,
@@ -211,7 +211,7 @@ export class HostPipeline {
       }, this.o.opTimeoutMs ?? 600000);
 
       this.pending.set(key, { resolve, reject, timer });
-      this.workers[worker]!.postMessage(msg, transfer as never);
+      this.workers[worker]!.postMessage(msg, transfer);
     });
   }
 

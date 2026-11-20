@@ -38,7 +38,9 @@ const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.index
 const purpose = process.env.GPU_POLICY_PURPOSE ?? '';
 
 if (!['benchmark', 'parity-test', 'diagnostic'].includes(purpose))
-  throw new Error(`gpu-phase4 poolbench: declare a non-official purpose (GPU_POLICY_PURPOSE=benchmark), got "${purpose}"`);
+  throw new Error(
+    `gpu-phase4 poolbench: declare a non-official purpose (GPU_POLICY_PURPOSE=benchmark), got "${purpose}"`
+  );
 
 const run = opt('run', '');
 
@@ -217,7 +219,9 @@ for (let r = 1; r <= rounds && !failure; r++) {
     encodeSeconds: Math.round(led.reduce((a, x) => a + x.encodeMs!, 0)) / 1000,
     decodeSeconds: Math.round(led.reduce((a, x) => a + x.decodeMs!, 0)) / 1000
   });
-  log(`round ${r}: ${tasks.length} in ${secs.toFixed(2)} s (${Math.round(tasks.length / secs)}/s), ${led.length} batches`);
+  log(
+    `round ${r}: ${tasks.length} in ${secs.toFixed(2)} s (${Math.round(tasks.length / secs)}/s), ${led.length} batches`
+  );
 }
 const tEnd = new Date().toISOString();
 
@@ -281,7 +285,10 @@ const keys = [...first!.keys()].sort();
 const dg = createHash('sha256');
 
 fs.mkdirSync(rawDir, { recursive: true });
-fs.writeFileSync(path.join(rawDir, 'hashes.jsonl'), keys.map((k) => JSON.stringify([k, first!.get(k)])).join('\n') + '\n');
+fs.writeFileSync(
+  path.join(rawDir, 'hashes.jsonl'),
+  keys.map((k) => JSON.stringify([k, first!.get(k)])).join('\n') + '\n'
+);
 keys.forEach((k, i) => dg.update(`${i ? '\n' : ''}${k}=${first!.get(k)}`));
 
 const profile = {

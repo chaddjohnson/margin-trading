@@ -78,4 +78,9 @@ if (k1) {
 const rec = { kind: 'gpu-phase4 decision (R2, R3)', t: new Date().toISOString(), groups: rows, perK, modeA };
 
 if (out) writeJson(out, rec);
-console.log(JSON.stringify({ perK: perK.map((p) => ({ k: p.k, best: p.best, all: p.allocations.map((a) => [a.w, Math.round(a.mean)]) })), modeA }));
+console.log(
+  JSON.stringify({
+    perK: perK.map((p) => ({ k: p.k, best: p.best, all: p.allocations.map((a) => [a.w, Math.round(a.mean)]) })),
+    modeA
+  })
+);

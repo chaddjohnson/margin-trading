@@ -187,7 +187,10 @@ const perJob = jobs.map((j) => {
     archive: prof.archive ?? null,
     gc: prof.gc ?? null,
     barrierWaitSeconds: (prof.times as Record<string, number>).barrierWaitSeconds ?? null,
-    rounds: tool === 'poolbench' ? (prof.roundRows as Record<string, number>[]).map((r) => [r.round, r.seconds, r.evPerS]) : null
+    rounds:
+      tool === 'poolbench'
+        ? (prof.roundRows as Record<string, number>[]).map((r) => [r.round, r.seconds, r.evPerS])
+        : null
   };
 });
 
@@ -203,10 +206,13 @@ const sys = mw.filter((m) => m.src === 'sys') as (Record<string, unknown> & {
   computeApps?: { pid: number; name: string; usedMiB: number }[];
 })[];
 const col = (k: string) => dmon.map((d) => d[k]).filter((x): x is number => typeof x === 'number');
-const stat = (xs: number[]) => (xs.length ? { mean: r1(mean(xs)), p95: r1(q(xs, 0.95)), max: r1(Math.max(...xs)), min: r1(Math.min(...xs)) } : null);
+const stat = (xs: number[]) =>
+  xs.length ? { mean: r1(mean(xs)), p95: r1(q(xs, 0.95)), max: r1(Math.max(...xs)), min: r1(Math.min(...xs)) } : null;
 const appsPeak: Record<string, { name: string; maxUsedMiB: number }> = {};
 
-for (const s of mon.filter((m) => m.src === 'sys') as { computeApps?: { pid: number; name: string; usedMiB: number }[] }[])
+for (const s of mon.filter((m) => m.src === 'sys') as {
+  computeApps?: { pid: number; name: string; usedMiB: number }[];
+}[])
   for (const a of s.computeApps ?? []) {
     const e = (appsPeak[a.pid] ??= { name: a.name, maxUsedMiB: 0 });
 
@@ -217,7 +223,9 @@ const serverPids = new Map<number, string>();
 
 if (tool !== 'poolbench')
   for (const j of jobs) {
-    const res = JSON.parse(fs.readFileSync(path.join(resultsDir, 'optimizer', j.run, 'gpu', 'result.json'), 'utf8')) as {
+    const res = JSON.parse(
+      fs.readFileSync(path.join(resultsDir, 'optimizer', j.run, 'gpu', 'result.json'), 'utf8')
+    ) as {
       server?: { pid?: number };
     };
 
@@ -290,7 +298,10 @@ const summary = {
           groupMaxCurrentMiB: Math.max(...allSys.filter((x) => x.cgroup).map((x) => x.cgroup!.currentMiB)),
           events: lastCg.events,
           groupEvents: Object.fromEntries(
-            Object.entries(lastCg.events).map(([k, v]) => [k, v - (allSys.find((x) => x.cgroup)?.cgroup!.events[k] ?? 0)])
+            Object.entries(lastCg.events).map(([k, v]) => [
+              k,
+              v - (allSys.find((x) => x.cgroup)?.cgroup!.events[k] ?? 0)
+            ])
           )
         }
       : null,

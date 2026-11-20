@@ -81,7 +81,11 @@ const meminfo = () => {
 const cgroup = () => {
   try {
     const rd = (f: string) => fs.readFileSync(path.join(cg, f), 'utf8').trim();
-    const ev = Object.fromEntries(rd('memory.events').split('\n').map((l) => l.split(' '))) as Record<string, string>;
+    const ev = Object.fromEntries(
+      rd('memory.events')
+        .split('\n')
+        .map((l) => l.split(' '))
+    ) as Record<string, string>;
 
     return {
       currentMiB: Math.round(Number(rd('memory.current')) / 2 ** 20),

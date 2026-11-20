@@ -150,9 +150,7 @@ interface Plan {
   cap: number;
   reserve: number;
   codeDigest: string;
-  lanes: (
-    lab: never
-  ) => {
+  lanes: (lab: never) => {
     spec: { position: string; key: string };
     base(): Promise<unknown>;
     extend(): Promise<unknown>;

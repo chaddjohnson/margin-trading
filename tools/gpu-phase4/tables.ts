@@ -8,24 +8,29 @@ import path from 'node:path';
 import { resultsDir, writeJson } from '../../src/gpu-phase4/context.ts';
 
 const B = path.join(resultsDir, 'bench');
+// the groups' own JSON records, read loosely (their shapes are written by summarize.ts, verify.ts and gate.ts)
+type Rec = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 const read = (g: string, f: string) => {
   const p = path.join(B, g, f);
 
-  return fs.existsSync(p) ? (JSON.parse(fs.readFileSync(p, 'utf8')) as Record<string, any>) : null; // eslint-disable-line @typescript-eslint/no-explicit-any
+  return fs.existsSync(p) ? (JSON.parse(fs.readFileSync(p, 'utf8')) as Rec) : null;
 };
 const groups = fs
   .readdirSync(B)
   .filter((g) => !g.startsWith('smoke-') && fs.existsSync(path.join(B, g, 'summary.json')))
   .sort();
-const r1 = (x: number | null | undefined) => (x === null || x === undefined || Number.isNaN(x) ? null : Math.round(x * 10) / 10);
+const r1 = (x: number | null | undefined) =>
+  x === null || x === undefined || Number.isNaN(x) ? null : Math.round(x * 10) / 10;
 const rows = groups.map((g) => {
   const s = read(g, 'summary.json')!;
   const v = read(g, 'verify.json');
   const gt = read(g, 'gate.json');
   const c = s.config;
-  const jobs = s.jobs as Record<string, any>[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const jobs = s.jobs as Rec[];
   const perJob = s.window?.perJobEvPerS as number[] | undefined;
-  const elu = jobs.map((j) => j.window?.mainThreadEluMean ?? j.mainThread?.eventLoopUtilization).filter((x) => x != null);
+  const elu = jobs
+    .map((j) => j.window?.mainThreadEluMean ?? j.mainThread?.eventLoopUtilization)
+    .filter((x) => x != null);
 
   return {
     group: g,
@@ -78,7 +83,9 @@ const rows = groups.map((g) => {
     memAvailableMinMiB: s.monitor.memAvailableMinMiB,
     sliceMaxCurrentMiB: s.monitor.slice?.groupMaxCurrentMiB ?? null,
     sliceEventsDuringGroup: s.monitor.slice?.groupEvents ? JSON.stringify(s.monitor.slice.groupEvents) : null,
-    jobMainThreadEluMean: elu.length ? Math.round((elu.reduce((a: number, b: number) => a + b, 0) / elu.length) * 1000) / 1000 : null,
+    jobMainThreadEluMean: elu.length
+      ? Math.round((elu.reduce((a: number, b: number) => a + b, 0) / elu.length) * 1000) / 1000
+      : null,
     jobPeakHostMiBMax: Math.max(
       0,
       ...jobs.map((j) => (j.process?.status?.vmHwmMiB ?? j.peakRssMiB ?? 0) + (j.serverProcess?.vmHwmMiB ?? 0))
@@ -89,7 +96,7 @@ const rows = groups.map((g) => {
 const jobs = groups.flatMap((g) => {
   const s = read(g, 'summary.json')!;
 
-  return (s.jobs as Record<string, any>[]).map((j) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
+  return (s.jobs as Rec[]).map((j) => ({
     group: g,
     run: j.run,
     status: j.status,
@@ -110,7 +117,9 @@ const jobs = groups.flatMap((g) => {
     processCpuSeconds: j.processCpuSeconds ? r1(j.processCpuSeconds.user + j.processCpuSeconds.system) : null,
     jobVmHwmMiB: j.process?.status?.vmHwmMiB ?? j.peakRssMiB ?? null,
     serverVmHwmMiB: j.serverProcess?.vmHwmMiB ?? null,
-    serverCpuSeconds: j.serverProcess?.cpuSeconds ? r1(j.serverProcess.cpuSeconds.user + j.serverProcess.cpuSeconds.system) : null,
+    serverCpuSeconds: j.serverProcess?.cpuSeconds
+      ? r1(j.serverProcess.cpuSeconds.user + j.serverProcess.cpuSeconds.system)
+      : null,
     archiveWriteSeconds: j.archive?.writeSeconds ?? null,
     ioWriteMiB:
       j.process?.io?.end && j.process?.io?.start

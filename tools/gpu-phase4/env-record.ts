@@ -90,14 +90,19 @@ const rec = {
   compatDigest: compatManifest().digest,
   doors: {
     ...Object.fromEntries(
-      (['D19', 'D21', 'D23', 'D24'] as const).map((d) => [d, { GDX: doorSpecs[d].pins.GDX, VGT: doorSpecs[d].pins.VGT }])
+      (['D19', 'D21', 'D23', 'D24'] as const).map((d) => [
+        d,
+        { GDX: doorSpecs[d].pins.GDX, VGT: doorSpecs[d].pins.VGT }
+      ])
     ),
     FULL: 'the full canonical files (each opening verified by its own guard; the data sha256 are in the door log and the dataset sidecars)'
   },
   hostPath: { defaultHostWorkers: 8, defaultBatch: 8192, lingerMs: 30 },
   thermal: {
     gpuTempC: sh('nvidia-smi', ['--query-gpu=temperature.gpu', '--format=csv,noheader']),
-    cpuSensors: bash('command -v sensors >/dev/null && sensors 2>/dev/null | grep -E "Tctl|Tccd" || echo "lm-sensors not installed"')
+    cpuSensors: bash(
+      'command -v sensors >/dev/null && sensors 2>/dev/null | grep -E "Tctl|Tccd" || echo "lm-sensors not installed"'
+    )
   },
   disk: sh('df', ['-h', '/home']).split('\n')[1]
 };

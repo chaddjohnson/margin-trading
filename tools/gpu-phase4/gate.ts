@@ -21,7 +21,11 @@ const s = read('summary.json') as {
     computeAppsPeak: { job: string | null; maxUsedMiB: number }[];
     clockEventReasons: string[];
   };
-  jobs: { run: string; process: { status: { vmHwmMiB: number } | null } | null; serverProcess: { vmHwmMiB: number } | null }[];
+  jobs: {
+    run: string;
+    process: { status: { vmHwmMiB: number } | null } | null;
+    serverProcess: { vmHwmMiB: number } | null;
+  }[];
 };
 const reasons: string[] = [];
 const okStatus = (x: number | null) => x === 0 || (group.stopAfter !== null && x === 75);

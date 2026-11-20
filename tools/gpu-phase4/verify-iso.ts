@@ -16,7 +16,9 @@ const prof = (run: string) => {
 
   return fs.existsSync(f) ? (JSON.parse(fs.readFileSync(f, 'utf8')) as Record<string, unknown>) : null;
 };
-const [sf, sn] = opt('status', ',').split(',').map((x) => (x === '' ? null : Number(x)));
+const [sf, sn] = opt('status', ',')
+  .split(',')
+  .map((x) => (x === '' ? null : Number(x)));
 const failing = prof(opt('failing', ''));
 const neighbour = prof(opt('neighbour', ''));
 const reference = prof(opt('reference', ''));

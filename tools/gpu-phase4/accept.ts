@@ -218,9 +218,14 @@ const samePins = (commit: string | undefined) =>
   const g = fs.existsSync(R('policy/tamper-acceptance.json'))
     ? R('policy/tamper-acceptance.json')
     : R('policy/tamper-final.json');
-  const t = read<{ pass: boolean; cases: number; passed: number; baselineOk: boolean; head?: string; mainHead?: string }>(
-    g
-  );
+  const t = read<{
+    pass: boolean;
+    cases: number;
+    passed: number;
+    baselineOk: boolean;
+    head?: string;
+    mainHead?: string;
+  }>(g);
   const th = t?.head ?? t?.mainHead;
 
   gate(

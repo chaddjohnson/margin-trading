@@ -40,7 +40,8 @@ if (args.includes('--child')) {
     try {
       const r = (await server.load(file)) as { sessions?: number; bars?: number[] };
       const now = createHash('sha256').update(fs.readFileSync(file)).digest('hex');
-      const same = r.sessions === own.sessions && JSON.stringify(r.bars) === JSON.stringify([own.bars.GDX, own.bars.VGT]);
+      const same =
+        r.sessions === own.sessions && JSON.stringify(r.bars) === JSON.stringify([own.bars.GDX, own.bars.VGT]);
 
       rows.push({
         loop: n,
