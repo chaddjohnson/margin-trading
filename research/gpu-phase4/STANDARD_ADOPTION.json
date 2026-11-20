@@ -1,0 +1,123 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/gpu-phase4",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "3.0.0",
+  "sha256": "4e8244e65bf1dd7c54ad46a1c941321d68b0c144344fd0c464dcc047eea5fef1"
+ },
+ "readAt": "2026-11-20T05:40:00Z",
+ "adoptedAt": "2026-11-20T06:03:58Z",
+ "protocol": {
+  "path": "research/gpu-phase4/PROTOCOL.md",
+  "sha256": "b698b929978305e7ca5d37923a34e4115b0d4de5c63fbda99eb736ce3ae578d2"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched for selection, ranked or selected (AD1). The study measures concurrency and batching of the accepted GPU evaluator, verifies bit-identical results and isolation, fixes one type-only error and renews the acceptance; its outcomes are measured figures, the frozen decision rules R1-R5 (PROTOCOL.md section 8) and engineering gates (sections 9-10).",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 1000000,
+  "notes": "No search proposals for selection. backendEvaluations caps fresh CPU reference pooled simulations on real data (the parity campaign's CPU references, the CPU arm of the parity-only mini-optimization, the CPU samples of the pool benchmarks and of the reliability run). GPU evaluations (non-official benchmarks, replays of sealed jobs, parity runs) are counted separately in the records; synthetic fixtures are not counted."
+ },
+ "evaluationBackend": {
+  "policy": "non-official-cpu",
+  "purpose": "benchmark",
+  "justification": "Engineering benchmark and acceptance study (GPU Phase 4): GPU runs are non-official benchmarks and identity checks of replays of sealed jobs and seeded configurations on the accepted binary; the acceptance campaign runs non-official parity tests whose CPU evaluations are parity references. Nothing is official optimization evidence (standard 3.0.0 section 9.8); the study's engineering output is a new acceptance record (section 9.9) for the final code."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search for selection and no chronological verdict (AD2)",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§2.3",
+   "kind": "adaptation",
+   "description": "no roles and no primary; nothing is selected",
+   "justification": "brief: engineering assignment; no trading rule, candidate, risk gate, objective, genome, optimizer or finding changes",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4",
+   "kind": "adaptation",
+   "description": "no search for selection, no chronological verdict; sealed jobs of Assignments 3 and 2 replayed with their own frozen code and seeds, and the parity-only mini schedule, compared by identity only",
+   "justification": "brief §1: representative, fixed and reproducible workloads drawn from sealed evaluation/search behaviour",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§1.4",
+   "kind": "adaptation",
+   "description": "D19 and FULL (and in the acceptance campaign every door and fixture of Phase 3's campaign) opened quietly through the study's own door log for replays and seeded timing/parity configurations",
+   "justification": "brief §1, §4: benchmark replays and parity on short and long doors",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "the CPU engine is the unmodified canonical reference; every concurrent, split or re-batched run must reproduce the canonical or sealed records bit for bit",
+   "justification": "brief §4: performance-only",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§5.9",
+   "kind": "adaptation",
+   "description": "not applicable: no fold primary or final candidate",
+   "justification": "no search (AD2)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "concurrency, worker-count and batch-size measurements are the study's subject (engineering of the evaluator's use), not a search's tuning pilot",
+   "justification": "brief §1-§3",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§1.5",
+   "kind": "adaptation",
+   "description": "stricter: no money figure of any configuration; identity booleans, counts, hashes and timings only",
+   "justification": "brief: no new strategy research findings",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§6.4",
+   "kind": "adaptation",
+   "description": "benchmarks of minutes and one bounded 30-35 min reliability run on the final code instead of an endurance test",
+   "justification": "brief §1, §4: minutes, not multi-hour endurance runs; one bounded 30-60 minute reliability check",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "§0.4",
+   "kind": "adaptation",
+   "description": "the risk-envelope pilot is out of scope: nothing of it is created, implemented, preflighted or run",
+   "justification": "brief: non-negotiable scope boundary (the user's instructions take precedence, §0.4)",
+   "userAgreement": null
+  }
+ ]
+}
