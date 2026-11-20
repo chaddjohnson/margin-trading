@@ -98,11 +98,12 @@ since Phase 3).
 | `main` (= origin) | `3a52cc635c95f74fc6cf3c22aa30bf4507293fa3` | unchanged |
 | `research/gpu-phase2` (= origin; the branch active at the start) | `3a52cc63…` | unchanged; checked out again at the end |
 | `research/gpu-phase3` (= origin) | `3a52cc63…` | unchanged |
-| `research/gpu-phase4` (new) | — | PENDING (pushed; `git ls-remote` verified) |
+| `research/gpu-phase4` (new) | — | pushed to origin (new branch); its final SHA (the push record's commit) is in `RESEARCH_RECOVERY.md` §Push record and the final answer, verified with `git ls-remote` |
 
 Commits on `research/gpu-phase4` (from `3a52cc63`): `44417328` brief, frozen protocol, harness · `2f40c201` chains and
 campaign tooling · `d46604c2` B1–B9 results · `eaa65dae` stage C corrective changes · `6d5efa4e` the mismatch, A4 ·
-`83140031` launcher option · PENDING (campaign evidence, reports, bundle).
+`83140031` launcher option · `8ba491ef` campaign evidence, tests rerun, Mode A confirmation, dry run, reports, manifest ·
+then the bundle commit and the push record (`RESEARCH_RECOVERY.md`).
 
 If option 1 is chosen later, the merge procedure is the one Phase 3 used (`research/gpu-phase3/GPU_INTEGRATION_AND_OPERATIONS.md`):
 the acceptance commit on `research/gpu-phase4`, `git merge --no-ff research/gpu-phase4` on `main` (no force, no rewrite),
