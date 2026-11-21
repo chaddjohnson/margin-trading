@@ -1,0 +1,101 @@
+{
+ "kind": "gpu-phase5 post-merge verification of main",
+ "t": "2026-11-21T06:04:26Z",
+ "head": "dc926536f32416ee856896aa28f417102dc61dec",
+ "branch": "main",
+ "treeEqualToAcceptedBranch": true,
+ "mergeGateTests": {
+  "pass": true,
+  "summary": [
+   "# Subtest: every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)",
+   "# Subtest: the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+   "# Subtest: host pipeline: the request bytes and every result equal the serial codec, in candidate order, for 1\u20134 workers",
+   "# Subtest: host pipeline: a corrupted response, a stale nonce, another device and a missing candidate are refused; nothing is returned",
+   "# Subtest: host pipeline: a worker that throws, exits or hangs fails closed; every later call is refused",
+   "# Subtest: host pipeline: a prepare or complete after close is refused at once, not after the operation timeout",
+   "# Subtest: host pipeline: an encoding error is the serial path's error; the worker door equals the main door",
+   "# Subtest: GpuPool on the host pipeline: callers that run while the pool starts, every worker count, the same records as the serial path",
+   "# Subtest: GpuPool on the host pipeline: a worker that fails mid-job fails every caller; nothing of that batch is released",
+   "# Subtest: protocol v2 layout: TypeScript offsets equal the C++ offsetof of gb.h",
+   "# Subtest: purpose: explicit, never defaulted; unknown refused",
+   "# Subtest: a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose",
+   "# Subtest: the legacy runner wrapper refuses before importing the runner",
+   "# Subtest: every npm script that can start a CPU research runner or optimizer goes through the purpose gate",
+   "# Subtest: the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate",
+   "# Subtest: engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it",
+   "# Subtest: entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged",
+   "# Subtest: acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed",
+   "# Subtest: preflight \u00a79: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin",
+   "# Subtest: the deferred pilot domain reaches only capabilities the evaluator implements",
+   "# Subtest: MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)",
+   "# tests 21",
+   "# suites 0",
+   "# pass 21",
+   "# fail 0",
+   "# cancelled 0",
+   "# skipped 0",
+   "# todo 0",
+   "# duration_ms 7941.756976"
+  ]
+ },
+ "verifyAcceptance": {
+  "pass": true,
+  "lines": [
+   "PASS record sha256 equals the out-of-band pin",
+   "PASS kind and schema 2",
+   "PASS status ACCEPTED",
+   "PASS cpu files (94) hash to their pins",
+   "PASS cpu group digest",
+   "PASS cuda files (7) hash to their pins",
+   "PASS cuda group digest",
+   "PASS host files (12) hash to their pins",
+   "PASS host group digest",
+   "PASS policy files (24) hash to their pins",
+   "PASS policy group digest",
+   "PASS evaluation digest recomputed from the pins",
+   "PASS evidence files (34) intact and passed",
+   "PASS source revision 0ab04601d64c is an ancestor of HEAD",
+   "PASS pinned files committed and unmodified",
+   "PASS pinned files unchanged since the source revision",
+   "PASS binary research/gpu-phase5/build/gb5 sha256",
+   "PASS reproducible rebuild from the pinned sources",
+   "PASS device GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+   "VERIFIED"
+  ]
+ },
+ "researchPreflightAll": {
+  "pass": true,
+  "studies": 22
+ },
+ "officialPreflight": {
+  "pass": true,
+  "lines": [
+   "ok   purpose: official-optimization",
+   "ok   runtime: Node v24.21.0, V8 13.6.233.17-node.53, Maglev disabled (--no-maglev)",
+   "ok   acceptance: ACCEPTED (research/gpu-phase5, 2026-11-21T06:00:58.509Z)",
+   "ok   pins: 137 pinned files re-hashed independently",
+   "ok   source: HEAD dc926536f324, accepted revision 0ab04601d64c",
+   "ok   binary: /home/chad/projects/margin-trading/research/gpu-phase5/build/gb5",
+   "ok   compat: server and working tree 3a6eacdecc4f0a24",
+   "ok   device: GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 (= nvidia-smi)",
+   "ok   no-test-hooks: none enabled",
+   "ok   accepted-device: the accepted device",
+   "ok   capability: 34 reachable features, all implemented",
+   "ok   smoke: 1635.3944173366574/4842b073ba50f7fd = the CPU's expectation",
+   "ok   memory: free VRAM 32336314368 \u2265 planned batch 5530583040 + 1 GiB headroom",
+   "ok   host-path: 8 worker threads, door digest db55d40f102b6cd6",
+   "ok   parity: 18 of 18 precommitted parity subjects identical to the canonical CPU engine",
+   "GATE OPEN \u2014 attestation research/gpu-phase5/results/gpu-attestations/preflight-2026-11-21T06-04-26-436Z.json"
+  ]
+ },
+ "strategyLabUnchanged": {
+  "pass": true,
+  "diff": "exit=0"
+ },
+ "canonicalCpuClosureUnchanged": {
+  "pass": true,
+  "digest": "c8a9f416e25b393a92018544322cc6ade272cb237e50d6557cc4333cf9024e6a",
+  "files": 94
+ },
+ "pass": true
+}
