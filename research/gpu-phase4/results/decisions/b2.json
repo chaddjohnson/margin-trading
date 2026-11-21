@@ -1,0 +1,209 @@
+{
+ "kind": "gpu-phase4 decision (R2, R3)",
+ "t": "2026-11-20T07:07:12.336Z",
+ "groups": [
+  {
+   "g": "ss1-w8",
+   "k": 1,
+   "w": 8,
+   "b": 8192,
+   "rate": 2687.2
+  },
+  {
+   "g": "ss2-w8",
+   "k": 2,
+   "w": 8,
+   "b": 8192,
+   "rate": 3339.2
+  },
+  {
+   "g": "ss2-w4",
+   "k": 2,
+   "w": 4,
+   "b": 8192,
+   "rate": 3263.2
+  },
+  {
+   "g": "ss3-w8",
+   "k": 3,
+   "w": 8,
+   "b": 8192,
+   "rate": 3488.6
+  },
+  {
+   "g": "ss3-w5",
+   "k": 3,
+   "w": 5,
+   "b": 8192,
+   "rate": 3535.3
+  },
+  {
+   "g": "ss3-w3",
+   "k": 3,
+   "w": 3,
+   "b": 8192,
+   "rate": 3545.6
+  },
+  {
+   "g": "ss4-w8",
+   "k": 4,
+   "w": 8,
+   "b": 8192,
+   "rate": 3489.4
+  },
+  {
+   "g": "ss4-w4",
+   "k": 4,
+   "w": 4,
+   "b": 8192,
+   "rate": 3492
+  },
+  {
+   "g": "ss4-w2",
+   "k": 4,
+   "w": 2,
+   "b": 8192,
+   "rate": 3475.8
+  },
+  {
+   "g": "ss1-w8-r2",
+   "k": 1,
+   "w": 8,
+   "b": 8192,
+   "rate": 2679.4
+  }
+ ],
+ "perK": [
+  {
+   "k": 1,
+   "allocations": [
+    {
+     "w": 8,
+     "totalWorkers": 8,
+     "runs": [
+      2687.2,
+      2679.4
+     ],
+     "mean": 2683.3
+    }
+   ],
+   "best": {
+    "w": 8,
+    "mean": 2683.3,
+    "runs": [
+     2687.2,
+     2679.4
+    ]
+   }
+  },
+  {
+   "k": 2,
+   "allocations": [
+    {
+     "w": 8,
+     "totalWorkers": 16,
+     "runs": [
+      3339.2
+     ],
+     "mean": 3339.2
+    },
+    {
+     "w": 4,
+     "totalWorkers": 8,
+     "runs": [
+      3263.2
+     ],
+     "mean": 3263.2
+    }
+   ],
+   "best": {
+    "w": 8,
+    "mean": 3339.2,
+    "runs": [
+     3339.2
+    ]
+   }
+  },
+  {
+   "k": 3,
+   "allocations": [
+    {
+     "w": 8,
+     "totalWorkers": 24,
+     "runs": [
+      3488.6
+     ],
+     "mean": 3488.6
+    },
+    {
+     "w": 5,
+     "totalWorkers": 15,
+     "runs": [
+      3535.3
+     ],
+     "mean": 3535.3
+    },
+    {
+     "w": 3,
+     "totalWorkers": 9,
+     "runs": [
+      3545.6
+     ],
+     "mean": 3545.6
+    }
+   ],
+   "best": {
+    "w": 3,
+    "mean": 3545.6,
+    "runs": [
+     3545.6
+    ]
+   }
+  },
+  {
+   "k": 4,
+   "allocations": [
+    {
+     "w": 8,
+     "totalWorkers": 32,
+     "runs": [
+      3489.4
+     ],
+     "mean": 3489.4
+    },
+    {
+     "w": 4,
+     "totalWorkers": 16,
+     "runs": [
+      3492
+     ],
+     "mean": 3492
+    },
+    {
+     "w": 2,
+     "totalWorkers": 8,
+     "runs": [
+      3475.8
+     ],
+     "mean": 3475.8
+    }
+   ],
+   "best": {
+    "w": 2,
+    "mean": 3475.8,
+    "runs": [
+     3475.8
+    ]
+   }
+  }
+ ],
+ "modeA": {
+  "decided": true,
+  "k": 3,
+  "hostWorkersPerJob": 3,
+  "aggregate": 3545.6,
+  "speedupVsK1": 1.3213580292922893,
+  "maxOverK": 3545.6,
+  "rule": "R3: smallest k within 5 % of the maximum, ≥ 10 % above k = 1 in every run"
+ }
+}

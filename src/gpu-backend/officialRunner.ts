@@ -5,7 +5,8 @@
 //   1. the run declares GPU_POLICY_PURPOSE=official-optimization (explicit; never a default);
 //   2. the study's adoption manifest passes the research preflight — which, for an optimization or continuation adopting
 //      3.0.0 or later, requires evaluationBackend gpu-required and an ACCEPTED acceptance record matching the tree;
-//   3. the runner module imports the official gate (src/gpu-backend/official.ts) — the only way it may evaluate.
+//   3. the runner module imports the official gate (src/gpu-backend/official.ts) — the only way it may evaluate;
+//   4. the process was started with `--no-maglev` (runtime.ts: the engine's JavaScript never runs under V8's Maglev).
 // The wrapper does not replace the gate: the runner itself opens openOfficialGpuSession, which performs the live checks
 // (server, device, binary, capabilities, smoke kernel, memory, host path, parity mini-set) and writes the attestation.
 import fs from 'node:fs';
@@ -13,6 +14,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { requireStandardAdoption } from '../research-standard/preflight.ts';
 import { PolicyError, declaredPurpose } from './purpose.ts';
+import { requireEngineRuntime } from './runtime.ts';
 import { officialGate } from './entrypoints.ts';
 
 const [, , study, target, ...rest] = process.argv;
@@ -33,6 +35,8 @@ try {
       'official-purpose-required',
       `an official GPU runner starts only with GPU_POLICY_PURPOSE=official-optimization (declared: ${purpose ?? 'none'}); non-official work uses a non-official runner`
     );
+  requireEngineRuntime('official GPU runner');
+
   const r = requireStandardAdoption(path.resolve(repoRoot, study), { repoRoot });
 
   if (r.scope !== 'optimization' && r.scope !== 'continuation')

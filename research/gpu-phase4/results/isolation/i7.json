@@ -1,0 +1,18 @@
+{
+ "kind": "gpu-phase4 isolation test I7: concurrent dataset export into one shared directory",
+ "t0": "2026-11-20T10:00:36.679Z",
+ "t1": "2026-11-20T10:00:42.013Z",
+ "door": "D19",
+ "procs": 4,
+ "loops": 25,
+ "loads": 100,
+ "verified": 66,
+ "refused": 34,
+ "wrong": 0,
+ "refusalReasons": [
+  "GPU evaluator: dataset check failed: short dataset file",
+  "GPU evaluator: bad size: dataset size mismatch"
+ ],
+ "pass": true,
+ "interpretation": "pass = no load was ever accepted with other content (every load verified or was refused: fail closed); refusals show the collision is reachable when concurrent jobs share a cache directory"
+}

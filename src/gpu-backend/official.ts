@@ -45,6 +45,7 @@ import { DEFAULT_HOST_WORKERS, HostPipeline } from './hostPipeline.ts';
 import { SUPPORTED, featureNames } from './layout.ts';
 import { PolicyError, declaredPurpose } from './purpose.ts';
 import { bookView, canonHash, poolView } from './canon.ts';
+import { ENGINE_FLAG, type EngineRuntime, engineRuntime, runtimeProblem } from './runtime.ts';
 import { repoRoot, serverBinary, toolkitLib } from './toolchain.ts';
 
 export interface OfficialRunSpec {
@@ -71,6 +72,7 @@ export interface Attestation {
   purpose: 'official-optimization';
   t: string;
   host: string;
+  runtime: EngineRuntime; // the JavaScript engine configuration of this process and its host workers (runtime.ts)
   device: { uuid: string; name: string; driver: number; runtime: number; cc: string; smiUuid: string };
   binary: { path: string; sha256: string };
   compat: { digest: string; serverDigest: string };
@@ -167,6 +169,17 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       ? 'no execution purpose declared (official optimization must declare it explicitly)'
       : `purpose ${purpose} is not official optimization; a non-official run must not open the official gate`,
     'official-optimization'
+  );
+
+  // 1b. the JavaScript engine configuration: the canonical reductions never run under V8's Maglev compiler (runtime.ts;
+  // V8 options are process-wide, so the host pipeline's worker threads share this process's)
+  const runtime = runtimeProblem();
+
+  check(
+    'runtime',
+    runtime === null,
+    runtime ?? '',
+    `Node ${process.version}, V8 ${process.versions.v8}, Maglev disabled (${ENGINE_FLAG})`
   );
 
   // 2. acceptance (static: record, sources, evidence, binary)
@@ -351,6 +364,7 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
       purpose: 'official-optimization',
       t,
       host: execFileSync('hostname').toString().trim(),
+      runtime: engineRuntime(),
       device: {
         uuid: info.uuid,
         name: info.device,

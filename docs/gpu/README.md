@@ -1,11 +1,14 @@
 # GPU evaluator — operations guide
 
 How to build, verify, run and troubleshoot the CUDA evaluator on Apollo (RTX 5090). Acceptance status: see
-`config/gpu-backend/acceptance.json` (schema 2; written by the acceptance study `research/gpu-phase3/`, which added the
-parallel host path and the enforcement pins; the first acceptance was `research/gpu-phase2/`). Normative rules:
+`config/gpu-backend/acceptance.json` (schema 2; written by the current acceptance study `research/gpu-phase5/`, which
+resolved Phase 4's parity mismatch — a JavaScript-engine defect, hence the `--no-maglev` requirement of §3a — and made
+the dataset export atomic; `research/gpu-phase3/` added the parallel host path and the enforcement pins; the first
+acceptance was `research/gpu-phase2/`). Normative rules:
 [OPTIMIZATION_STANDARD.md](../research/OPTIMIZATION_STANDARD.md) §9 (from 3.0.0). Change procedure:
 [PARITY_CHECKLIST.md](PARITY_CHECKLIST.md). Feature map: [FEATURE_MATRIX.md](FEATURE_MATRIX.md). Evidence and handoffs:
-`research/gpu-phase3/GPU_ENGINE_FINAL_HANDOFF.md` (current), `research/gpu-phase2/GPU_PHASE2_HANDOFF.md` (first).
+`research/gpu-phase5/GPU_FINAL_HANDOFF.md` (current), `research/gpu-phase4/GPU_CONCURRENCY_FINAL_HANDOFF.md`
+(concurrency), `research/gpu-phase3/GPU_ENGINE_FINAL_HANDOFF.md`, `research/gpu-phase2/GPU_PHASE2_HANDOFF.md` (first).
 
 ## 1. Components
 
@@ -17,14 +20,14 @@ parallel host path and the enforcement pins; the first acceptance was `research/
 | Parallel host path | `src/gpu-backend/hostPipeline.ts`, `hostWorker.ts`, `hostDoor.ts` | worker threads that encode and decode the shards of each batch (the door shared, its digest checked per worker); the receipt verified on the main thread in the serial path's order; results in candidate order; any worker failure fails closed |
 | Official gate | `src/gpu-backend/official.ts` `openOfficialGpuSession`; `officialRunner.ts` (an official study's npm-script wrapper) | purpose, acceptance (schema 2), an independent re-hash of every pinned file, committed source, server/build/device, reachable-domain capabilities, smoke, memory, the host path, parity mini-set through it, attestation |
 | Pool and Lab | `src/gpu-backend/pool.ts` `GpuPool`, `lab.ts` `EvalLab` | the A3 `Pool` contract on the GPU (batching, pipelining, receipts ledger, conservation, telemetry, GPU-only capacity retries); the A3 Lab semantics with the backend in the archive binding |
-| Policy | `purpose.ts`, `acceptance.ts`, `compat.ts`, `domain.ts`, `legacyRunner.ts`, `entrypoints.ts`, `doors.ts`; `src/research-standard/gpuPolicy.ts`; `tools/gpu-backend/verify-acceptance.sh` | purposes, the acceptance record and its independent verifier, the compatibility manifest (evaluation digest + enforcement group), capability domains, the legacy CPU runner gate, the entrypoint registry, the study door opener, the preflight rules |
+| Policy | `purpose.ts`, `acceptance.ts`, `compat.ts`, `domain.ts`, `legacyRunner.ts`, `entrypoints.ts`, `doors.ts`, `runtime.ts`; `src/research-standard/gpuPolicy.ts`; `tools/gpu-backend/verify-acceptance.sh` | purposes, the acceptance record and its independent verifier, the compatibility manifest (evaluation digest + enforcement group), capability domains, the legacy CPU runner gate, the entrypoint registry, the study door opener, the engine-runtime requirement (`--no-maglev`, §3a), the preflight rules |
 | Toolchain | `/home/chad/.local/share/margin-trading-gpu/cuda-13.2-toolkit` (user space; `tools/gpu-phase2/install-toolkit.sh`) | nvcc 13.2, cudart, compute-sanitizer, cuda-gdb; nothing system-wide, no driver change |
 
 ## 2. Build
 
 ```bash
 D=$(node --experimental-transform-types --disable-warning=ExperimentalWarning src/gpu-backend/compat.ts --digest)
-tools/gpu-backend/build.sh research/gpu-phase3/build/gb3 "$D"   # prints the binary's sha256 (the accepted path)
+tools/gpu-backend/build.sh research/gpu-phase5/build/gb5 "$D"   # prints the binary's sha256 (the accepted path)
 tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, the tree, a reproducible rebuild, the GPU
 ```
 
@@ -48,9 +51,26 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
   `parity.ts`, `negative.ts`, `tamper.ts`, `sanitize.ts`, `sustained.ts`, …) and Phase 2's `tools/gpu-phase2/`.
 - **CPU runs:** only with `GPU_POLICY_PURPOSE=<cpu-reference|diagnostic|parity-test|benchmark|strategy-lab>`; legacy npm
   research scripts refuse to start without it and refuse `official-optimization`.
+- **Every official process starts as `node --no-maglev …`** (§3a): the gate and the official runner refuse otherwise.
 - **Containment:** long jobs run as transient systemd user units in one slice (MemoryHigh 44G, MemoryMax 48G, swap 0):
   `tools/gpu-phase2/launch.sh <unit> <absolute log> [--wait] -- <command…>`. The GPU server is a child of the job and
   lives in the same unit.
+
+## 3a. The JavaScript engine: no Maglev (GPU Phase 5)
+
+- Node 24's V8 can, with its mid-tier compiler **Maglev** enabled, silently give a freshly created object the number
+  fields of the next object created by the same literal (reproduced in the unchanged canonical code on a loaded machine:
+  `research/gpu-phase5/PARITY_ROOT_CAUSE.md`). It produced the one parity mismatch of GPU Phase 4. Without Maglev it did
+  not occur.
+- Therefore `src/gpu-backend/runtime.ts` requires **`--no-maglev`** as a Node option of every official process: the gate
+  (`preflight-runtime`) and `officialRunner.ts` (`runtime-maglev`) refuse a process started without it, or with another
+  Maglev option; the attestation records the engine configuration. V8 options are process-wide, so the host pipeline's
+  worker threads inherit it. `NODE_OPTIONS` cannot carry the flag: put it on the `node` command line (npm scripts too).
+- Parity references and acceptance evidence are produced the same way (the acceptance generator requires it of every
+  evidence record). Diagnostics, legacy CPU runners and Strategy Lab's server are not covered by the enforcement: start
+  them with `--no-maglev` whenever their numbers matter.
+- Cost: one optimizing tier less (Sparkplug and TurboFan remain); measured in
+  `research/gpu-phase5/PERFORMANCE_AUDIT.md`.
 
 ## 4. Sizing and performance (measured: research/gpu-phase3/GPU_PERFORMANCE_BEFORE_AFTER.md; Phase 2's figures in research/gpu-phase2/GPU_PHASE2_BENCHMARKS.md)
 
@@ -69,6 +89,39 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
 - VRAM: about 0.55 MB per candidate at the default capacities plus the dataset; the gate refuses a planned batch that
   does not fit with 1 GiB headroom. Capacity overflows are re-evaluated on the GPU with doubled capacities (up to 4
   levels).
+
+## 4a. Several jobs on one GPU, and batch size (measured: research/gpu-phase4/GPU_CONCURRENCY_BENCHMARKS.md, GPU_OPERATING_RECOMMENDATIONS.md)
+
+- **Separate GPU processes time-slice the device; their kernels never run at the same time.** A second job only fills
+  the idle gaps one optimizer job leaves (its lanes compute their next proposals while the device waits). Assignment
+  3-shaped jobs: aggregate 1.25× at two jobs, 1.30× at three, 1.29× at four (each job 1.6×, 2.3×, 3.1× slower);
+  Assignment 2-shaped (main-thread-bound) jobs: 1.55× at two, 1.72× at three; small-batch or device-saturated work ≈ 1.0×.
+- **Mode S (fastest single optimization):** one job, batch 8,192, 8 host workers (4,096: 15.5 % slower; 16,384: 4.5 %
+  slower on the complete Assignment 3 job). **Mode A (most total throughput):** two independent jobs at once, batch
+  8,192, 8 host workers each (≈ 11 GB of VRAM in use incl. the desktop; CPU < 20 %).
+- **Never split one study into parallel jobs to speed it up** (+6–7 % at two parts, slower at three or four: each part's
+  batches are smaller and the kernels are latency-bound).
+- **Concurrent jobs:** one parent slice with the aggregate cap, a per-job MemoryMax, each job its own job name (the archive
+  store has no inter-process lock) and **its own dataset cache directory** (still the recommended practice; since GPU
+  Phase 5 the export is write-once and atomic, so jobs that do share a directory no longer fail at start-up — see
+  §4b); admit a job only if free VRAM ≥ its need (≈ 6 GiB at 8,192 on D19) + 3 GiB.
+  A failing job (GPU server killed, host-worker fault, VRAM refusal, abrupt kill) stops alone; its neighbour is unaffected
+  (tested). `tools/gpu-phase4/admit.ts` is a ready admission check.
+- **The device's compute is mostly idle** (GPM SM activity 34–46 %, SM occupancy ≈ 1 %): merging jobs' batches into one
+  launch would give 1.22× over time-slicing (measured on the pool); a shared GPU queue or CUDA MPS would need their own
+  authorization and acceptance (not built).
+
+## 4b. The dataset cache (GPU Phase 5: `research/gpu-phase5/ATOMIC_CACHE_AND_CONCURRENCY.md`)
+
+- `exportDataset` publishes `<cacheDir>/<door>.gb2ds` **once**: an identical published file is reused untouched; a new
+  one is written to a unique temporary file in the same directory, flushed, verified and published with `link(2)`
+  (only if the target does not exist). A reader sees no file or the complete file, never a partial one.
+- A complete dataset with other content under the same name (another data revision of `FULL`, another door given the
+  same label, another dataset version) is refused with `DATASET_CACHE_CONFLICT`; a truncated, corrupt or foreign file,
+  a symbolic link or a directory at the target with `DATASET_CACHE_INVALID`. Nothing is overwritten: remove the stale
+  file or use a fresh cache directory.
+- A writer killed mid-export leaves at most a `.…​.tmp-<pid>-…` file, removed by a later export once it is 15 minutes
+  old and its writer is gone.
 
 ## 5. Telemetry and records
 
@@ -103,5 +156,7 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
 | `receipt mismatch` | the results are not trusted; the job stopped. Rerun the sanitizer and the parity campaign before resuming |
 | `host worker … exited / failed / did not answer` | a host-path worker failed: the job stopped (checkpointed), nothing of the batch was released; check memory (each worker has a 3 GiB heap limit) and the error, then resume |
 | `preflight-pins` / `preflight-source` | a pinned file differs from the record, or is not committed: commit (or revert) and, if it is a real change, follow the checklist |
+| `preflight-runtime` / `runtime-maglev` | the process was not started with `node --no-maglev …` (or carries another Maglev option): restart it with the flag on the command line (§3a) |
+| `DATASET_CACHE_CONFLICT` / `DATASET_CACHE_INVALID` | the cache directory holds another dataset under this door's name, or a damaged file: remove it or use a fresh cache directory (§4b); never overwritten automatically |
 | `preflight-host-path` | the host workers did not start or hold another door: an environment or code fault, never fall back |
 | Debug timing | `GB_DEBUG=1` (the default from the client) makes the server log per-batch phase times to its stderr, kept in the client (`server.stderrTail`) |

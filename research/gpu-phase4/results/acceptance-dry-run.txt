@@ -1,0 +1,26 @@
+PASS A1 final binary (reproducible; built from this tree; kernels identical to the accepted Phase 3 and Phase 2 binaries)
+PASS A2 offline codec and host-pipeline equivalence (Phase 3 captures of real Phase 2 batches)
+FAIL A3 parity campaign through the final host path (zero mismatches, coverage, determinism) — subjects 146356, mismatches 1, binaries b01f43623835
+PASS A3 Assignment 3 sealed finalists (GPU = CPU reference; D24 = sealed figures)
+PASS A4 Assignment 3 C19 broad1 search replay = sealed record (final binary, host path; run 1)
+PASS A4 Assignment 3 C19 broad1 search replay = sealed record (final binary, host path; run 2)
+PASS A4 Assignment 2 C19 base search replay = sealed record (Growth fixed; final binary, host path)
+PASS A4 Assignment 3 C19 broad qualification replay = sealed evidence (final binary, host path)
+PASS A4 fixed-seed mini-optimization CPU = GPU (final binary, host path)
+PASS A4 fixed-seed mini-optimization GPU = interrupted + resumed GPU
+PASS A4 fixed-seed mini-optimization host workers 1 = 8 workers
+PASS A4 fixed-seed mini-optimization serial path (host workers 0) = 8 workers
+PASS A5 compute-sanitizer (memcheck, racecheck, initcheck, synccheck) on the final binary, requests from the host path
+PASS A6 negative tests on the accepted pinned files (final binary)
+PASS A6 source-tamper tests in a sandbox clone on the accepted pinned files (every mechanism; out-of-band pin)
+PASS A7 bounded 30–35 min reliability run (p0: no failure, parity samples, repeatability)
+PASS A7 bounded 30–35 min reliability run (p1: no failure, parity samples, repeatability)
+PASS A8 npm test (= baseline + new tests; known failures only)
+PASS A8 root TypeScript check: 0 errors (the hostPipeline.ts Transferable finding fixed)
+PASS A8 Strategy Lab regression (CPU engine, suites, state untouched)
+PASS A9 concurrency and batching benchmarks recorded (every group verified identical)
+PASS A9 final binary regression benchmark (Assignment 3 replay within ±3 % of the accepted engine)
+PASS P1 policy text (CLAUDE.md, standard 3.0.0 registered)
+PASS P5 policy, enforcement and host-pipeline tests
+NOT_ACCEPTED: 1 blocker(s)
+exit=2

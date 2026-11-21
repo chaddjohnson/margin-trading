@@ -1,0 +1,191 @@
+{
+ "kind": "gpu-phase4 benchmark group summary",
+ "t": "2026-11-20T10:01:06.487Z",
+ "group": "k-b8192",
+ "config": {
+  "tool": "poolbench",
+  "jobs": 1,
+  "mode": "pool",
+  "job": "pool:D19:joint",
+  "hostWorkersPerJob": 8,
+  "batch": 8192,
+  "stopAfter": null,
+  "vramBudgetMbPerJob": null,
+  "extra": "--door D19 --mix joint --tasks 32768 --rounds 3"
+ },
+ "exitStatus": [
+  0
+ ],
+ "startSpreadSeconds": 0,
+ "makespanSeconds": 30.4,
+ "freshTotal": 98304,
+ "aggregateEvPerSMakespan": 3231,
+ "window": null,
+ "jobs": [
+  {
+   "run": "k-b8192-j0",
+   "status": 0,
+   "wallSeconds": 30.4,
+   "fresh": 98304,
+   "evPerS": 3231,
+   "startOffsetSeconds": 0,
+   "window": null,
+   "whole": {
+    "batches": 12,
+    "medianBatch": 8192,
+    "serverSeconds": 25,
+    "encodeSeconds": 2.7,
+    "decodeSeconds": 5.7,
+    "serverMsPerBatchMean": 2083.8
+   },
+   "mainThread": null,
+   "processCpuSeconds": null,
+   "peakRssMiB": 3574,
+   "process": {
+    "vmRssMiB": 3172,
+    "vmHwmMiB": 3669
+   },
+   "serverProcess": {
+    "vmRssMiB": 122,
+    "vmHwmMiB": 221
+   },
+   "archive": null,
+   "gc": null,
+   "barrierWaitSeconds": 0,
+   "rounds": [
+    [
+     1,
+     10.465,
+     3131
+    ],
+    [
+     2,
+     9.954,
+     3292
+    ],
+    [
+     3,
+     9.983,
+     3282
+    ]
+   ]
+  }
+ ],
+ "monitor": {
+  "span": "whole run",
+  "dmonSamples": 31,
+  "kernelActiveSharePct": {
+   "mean": 78,
+   "p95": 100,
+   "max": 100,
+   "min": 0
+  },
+  "memoryBusySharePct": {
+   "mean": 0,
+   "p95": 0,
+   "max": 0,
+   "min": 0
+  },
+  "powerW": {
+   "mean": 153.7,
+   "p95": 190,
+   "max": 192,
+   "min": 21
+  },
+  "gpuTempC": {
+   "mean": 53.6,
+   "p95": 55.5,
+   "max": 56,
+   "min": 50
+  },
+  "smClockMHz": {
+   "mean": 2784.2,
+   "p95": 2880,
+   "max": 2880,
+   "min": 195
+  },
+  "memClockMHz": {
+   "mean": 14001,
+   "p95": 14001,
+   "max": 14001,
+   "min": 14001
+  },
+  "gpm": {
+   "smActivityPct": {
+    "mean": 56.8,
+    "p95": 75,
+    "max": 85,
+    "min": 0
+   },
+   "smOccupancyPct": {
+    "mean": 1.8,
+    "p95": 3,
+    "max": 4,
+    "min": 0
+   },
+   "dramBandwidthPct": {
+    "mean": 0,
+    "p95": 0,
+    "max": 0,
+    "min": 0
+   },
+   "available": true
+  },
+  "vramUsedMiB": {
+   "mean": 5749.3,
+   "p95": 5900,
+   "max": 5900,
+   "min": 1472
+  },
+  "vramFreeMinMiB": 26209,
+  "vramUsedPeakWholeRunMiB": 5900,
+  "clockEventReasons": [
+   "0x0000000000000000"
+  ],
+  "cpuBusyShare": {
+   "mean": 13.8,
+   "p95": 35,
+   "max": 36.3,
+   "min": 0.2
+  },
+  "cpuBusyMaxCorePct": {
+   "mean": 27.6,
+   "p95": 59.5,
+   "max": 67,
+   "min": 1
+  },
+  "load1Max": 3.05,
+  "memAvailableMinMiB": 49832,
+  "swapUsedMaxMiB": 1013,
+  "slice": {
+   "peakMiB": 19906,
+   "groupMaxCurrentMiB": 3716,
+   "events": {
+    "high": 3788,
+    "max": 0,
+    "oom": 0,
+    "oomKill": 0
+   },
+   "groupEvents": {
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oomKill": 0
+   }
+  },
+  "computeAppsPeak": [
+   {
+    "pid": 2517197,
+    "name": "/home/chad/projects/margin-trading/research/gpu-phase3/build/gb3",
+    "job": null,
+    "maxUsedMiB": 5128
+   },
+   {
+    "pid": 2711456,
+    "name": "/usr/libexec/gnome-remote-desktop-daemon",
+    "job": null,
+    "maxUsedMiB": 504
+   }
+  ]
+ }
+}

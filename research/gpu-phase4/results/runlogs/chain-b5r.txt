@@ -1,0 +1,136 @@
+2026-11-20T09:19:07Z allocations: k=2 w8, k=3 w3, k=4 w2; Mode A candidate k*=2; admission V=6144 R=5888
+2026-11-20T09:19:07Z ==== group a2-ss2-w8: K=2 HW=8 MODE=ss JOB=a2:C19:base B=8192 STOP=400000 VRAM=6144 RSS=5888
+2026-11-20T09:19:07.468Z group a2-ss2-w8: TOOL=replay K=2 MODE=ss JOB=a2:C19:base HW=8 B=8192 STOP=400000 VB=14000 MEMMAX=11G EXTRA=
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53962,"temp":34,"load1":0.21}
+2026-11-20T09:19:10.602Z group a2-ss2-w8: 2 unit(s) started
+2026-11-20T09:22:42.532Z group a2-ss2-w8 done: statuses 75 75 
+{"group":"a2-ss2-w8","identical":true,"jobs":[["a2-ss2-w8-j0",75,405681,true],["a2-ss2-w8-j1",75,405681,true]],"union":null}
+{"group":"a2-ss2-w8","status":[75,75],"makespan":187.3,"aggMakespan":4332.6,"window":{"s":151.3,"agg":4820.6,"perJob":[2356.2,2464.4],"overlap":1.258},"sm":75.4,"vramPeak":11021,"cpu":25.1}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:22:46.754Z","group":"a2-ss2-w8","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":5122,"hostMiB":4463},"admissionNext":{"vramMiB":6144,"rssMiB":5376},"throttle":["0x0000000000000000"]}
+2026-11-20T09:22:47Z ==== group a2-ss2-w8 passed
+2026-11-20T09:22:47Z ==== group a2-ss3-w3: K=3 HW=3 MODE=ss JOB=a2:C19:base B=8192 STOP=400000 VRAM=6144 RSS=5888
+2026-11-20T09:22:47.859Z group a2-ss3-w3: TOOL=replay K=3 MODE=ss JOB=a2:C19:base HW=3 B=8192 STOP=400000 VB=9333 MEMMAX=11G EXTRA=
+{"admitted":true,"reasons":[],"memFree":31342,"avail":54144,"temp":45,"load1":1.9}
+2026-11-20T09:23:20.233Z group a2-ss3-w3: 3 unit(s) started
+2026-11-20T09:27:49.602Z group a2-ss3-w3 done: statuses 75 75 75 
+{"group":"a2-ss3-w3","identical":true,"jobs":[["a2-ss3-w3-j0",75,405681,true],["a2-ss3-w3-j1",75,405681,true],["a2-ss3-w3-j2",75,405681,true]],"union":null}
+{"group":"a2-ss3-w3","status":[75,75,75],"makespan":243.2,"aggMakespan":5003.9,"window":{"s":206.5,"agg":5339,"perJob":[1806.1,1806.1,1726.8],"overlap":2.141},"sm":85.6,"vramPeak":16149,"cpu":25.3}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:27:54.411Z","group":"a2-ss3-w3","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":5122,"hostMiB":3555},"admissionNext":{"vramMiB":6144,"rssMiB":4096},"throttle":["0x0000000000000000"]}
+2026-11-20T09:27:54Z ==== group a2-ss3-w3 passed
+2026-11-20T09:27:54Z ==== group s1-w8: K=1 MODE=ss HW=8 JOB=mini B=8192 VRAM=3072 RSS=4096
+2026-11-20T09:27:54.881Z group s1-w8: TOOL=replay K=1 MODE=ss JOB=mini HW=8 B=8192 STOP=complete VB=none MEMMAX=11G EXTRA=
+{"admitted":true,"reasons":[],"memFree":31342,"avail":54125,"temp":50,"load1":1.78}
+2026-11-20T09:28:28.403Z group s1-w8: 1 unit(s) started
+2026-11-20T09:29:42.263Z group s1-w8 done: statuses 0 
+{"group":"s1-w8","identical":true,"jobs":[["s1-w8-j0",0,30749,true]],"union":null}
+{"group":"s1-w8","status":[0],"makespan":65.1,"aggMakespan":472.2,"window":null,"sm":79.5,"vramPeak":5880,"cpu":3.2}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:29:42.601Z","group":"s1-w8","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":5108,"hostMiB":2396},"admissionNext":{"vramMiB":5888,"rssMiB":2816},"throttle":["0x0000000000000000"]}
+2026-11-20T09:29:42Z ==== group s1-w8 passed
+2026-11-20T09:29:42Z ==== group s2-w4: K=2 MODE=ss HW=4 JOB=mini B=8192 VRAM=3072 RSS=4096
+2026-11-20T09:29:42.637Z group s2-w4: TOOL=replay K=2 MODE=ss JOB=mini HW=4 B=8192 STOP=complete VB=14000 MEMMAX=11G EXTRA=
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53966,"temp":48,"load1":1.78}
+2026-11-20T09:29:45.744Z group s2-w4: 2 unit(s) started
+2026-11-20T09:32:02.242Z group s2-w4 done: statuses 0 0 
+{"group":"s2-w4","identical":true,"jobs":[["s2-w4-j0",0,30749,true],["s2-w4-j1",0,30749,true]],"union":null}
+{"group":"s2-w4","status":[0,0],"makespan":126.2,"aggMakespan":487.3,"window":{"s":94.2,"agg":543.4,"perJob":[271.7,271.7],"overlap":1.745},"sm":87.7,"vramPeak":10993,"cpu":3.3}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:32:02.637Z","group":"s2-w4","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":5108,"hostMiB":2009},"admissionNext":{"vramMiB":5888,"rssMiB":2560},"throttle":["0x0000000000000000"]}
+2026-11-20T09:32:02Z ==== group s2-w4 passed
+2026-11-20T09:32:02Z ==== group s4-w2: K=4 MODE=ss HW=2 JOB=mini B=8192 VRAM=3072 RSS=4096
+2026-11-20T09:32:02.689Z group s4-w2: TOOL=replay K=4 MODE=ss JOB=mini HW=2 B=8192 STOP=complete VB=7000 MEMMAX=11G EXTRA=
+{"admitted":true,"reasons":[],"memFree":31342,"avail":54041,"temp":49,"load1":0.24}
+2026-11-20T09:32:05.833Z group s4-w2: 4 unit(s) started
+2026-11-20T09:36:03.859Z group s4-w2 done: statuses 0 0 0 0 
+{"group":"s4-w2","identical":true,"jobs":[["s4-w2-j0",0,30749,true],["s4-w2-j1",0,30749,true],["s4-w2-j2",0,30749,true],["s4-w2-j3",0,30749,true]],"union":null}
+{"group":"s4-w2","status":[0,0,0,0],"makespan":226.9,"aggMakespan":542.1,"window":{"s":191.6,"agg":552.6,"perJob":[141.3,141.3,135,135],"overlap":3.693},"sm":100,"vramPeak":21220,"cpu":3.2}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:36:03.594Z","group":"s4-w2","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":5108,"hostMiB":1709},"admissionNext":{"vramMiB":5888,"rssMiB":2048},"throttle":["0x0000000000000000"]}
+2026-11-20T09:36:03Z ==== group s4-w2 passed
+2026-11-20T09:36:03Z ==== group sf2-w4: K=2 MODE=ftw HW=4 JOB=mini B=8192 VRAM=3072 RSS=4096
+2026-11-20T09:36:03.673Z group sf2-w4: TOOL=replay K=2 MODE=ftw JOB=mini HW=4 B=8192 STOP=complete VB=14000 MEMMAX=11G EXTRA=
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53831,"temp":50,"load1":1.15}
+2026-11-20T09:36:06.777Z group sf2-w4: 2 unit(s) started
+2026-11-20T09:38:03.213Z group sf2-w4 done: statuses 0 0 
+{"group":"sf2-w4","identical":true,"jobs":[["sf2-w4-j0",0,14963,true],["sf2-w4-j1",0,15786,true]],"union":{"keys":30749,"referenceKeys":30749,"missing":0,"extra":0,"lanesExact":true,"freshSum":30749,"duplicateFreshAcrossParts":0,"identical":true}}
+{"group":"sf2-w4","status":[0,0],"makespan":107.3,"aggMakespan":286.6,"window":{"s":74,"agg":331.7,"perJob":[166.6,165.1],"overlap":1.885},"sm":97.2,"vramPeak":9015,"cpu":2}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:38:03.545Z","group":"sf2-w4","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":4180,"hostMiB":1659},"admissionNext":{"vramMiB":4864,"rssMiB":2048},"throttle":["0x0000000000000000"]}
+2026-11-20T09:38:03Z ==== group sf2-w4 passed
+2026-11-20T09:38:03Z ==== group k-b8192: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=8192 VRAM=7168 RSS=8192 EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+2026-11-20T09:38:03.583Z group k-b8192: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=8192 STOP=complete VB=none MEMMAX=11G EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53987,"temp":50,"load1":0.94}
+2026-11-20T09:38:06.677Z group k-b8192: 1 unit(s) started
+2026-11-20T09:38:48.824Z group k-b8192 done: statuses 0 
+{"group":"k-b8192","identical":true,"digests":["bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"],"reference":null}
+{"group":"k-b8192","status":[0],"makespan":30.4,"aggMakespan":3231,"window":null,"sm":78,"vramPeak":5900,"cpu":13.8}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:38:49.050Z","group":"k-b8192","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":0,"hostMiB":221},"admissionNext":{"vramMiB":0,"rssMiB":256},"throttle":["0x0000000000000000"]}
+2026-11-20T09:38:49Z ==== group k-b8192 passed
+2026-11-20T09:38:49Z ==== group k-b2048: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=2048 VRAM=7168 RSS=8192 EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+2026-11-20T09:38:49.610Z group k-b2048: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=2048 STOP=complete VB=none MEMMAX=11G EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+{"admitted":true,"reasons":[],"memFree":31342,"avail":54057,"temp":50,"load1":1.8}
+2026-11-20T09:39:32.196Z group k-b2048: 1 unit(s) started
+2026-11-20T09:41:20.503Z group k-b2048 done: statuses 0 
+{"group":"k-b2048","identical":true,"digests":["bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"],"reference":"bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"}
+{"group":"k-b2048","status":[0],"makespan":96.8,"aggMakespan":1015.9,"window":{"s":64.8,"agg":1011.9,"perJob":[1011.9],"overlap":0.945},"sm":100,"vramPeak":2644,"cpu":5.2}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:41:20.726Z","group":"k-b2048","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":0,"hostMiB":140},"admissionNext":{"vramMiB":0,"rssMiB":256},"throttle":["0x0000000000000000"]}
+2026-11-20T09:41:20Z ==== group k-b2048 passed
+2026-11-20T09:41:20Z ==== group k-b4096: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=4096 VRAM=7168 RSS=8192 EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+2026-11-20T09:41:20.736Z group k-b4096: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=4096 STOP=complete VB=none MEMMAX=11G EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+{"admitted":true,"reasons":[],"memFree":31342,"avail":54098,"temp":48,"load1":1.84}
+2026-11-20T09:41:53.848Z group k-b4096: 1 unit(s) started
+2026-11-20T09:42:58.465Z group k-b4096 done: statuses 0 
+{"group":"k-b4096","identical":true,"digests":["bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"],"reference":"bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"}
+{"group":"k-b4096","status":[0],"makespan":52,"aggMakespan":1890.4,"window":null,"sm":90.5,"vramPeak":3732,"cpu":9.2}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:42:58.270Z","group":"k-b4096","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":0,"hostMiB":165},"admissionNext":{"vramMiB":0,"rssMiB":256},"throttle":["0x0000000000000000"]}
+2026-11-20T09:42:58Z ==== group k-b4096 passed
+2026-11-20T09:42:58Z ==== group k-b16384: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=16384 VRAM=12288 RSS=8192 EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+2026-11-20T09:42:58.280Z group k-b16384: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=16384 STOP=complete VB=none MEMMAX=11G EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53899,"temp":47,"load1":0.67}
+2026-11-20T09:43:01.377Z group k-b16384: 1 unit(s) started
+2026-11-20T09:43:35.499Z group k-b16384 done: statuses 0 
+{"group":"k-b16384","identical":true,"digests":["bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"],"reference":"bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"}
+{"group":"k-b16384","status":[0],"makespan":21.8,"aggMakespan":4504.2,"window":null,"sm":60,"vramPeak":10232,"cpu":17.7}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:43:35.720Z","group":"k-b16384","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":0,"hostMiB":332},"admissionNext":{"vramMiB":0,"rssMiB":512},"throttle":["0x0000000000000000"]}
+2026-11-20T09:43:35Z ==== group k-b16384 passed
+2026-11-20T09:43:35Z ==== group k-b32768: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=32768 VRAM=21504 RSS=8192 EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+2026-11-20T09:43:35.729Z group k-b32768: TOOL=poolbench K=1 MODE=pool JOB=pool:D19:joint HW=8 B=32768 STOP=complete VB=none MEMMAX=11G EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53583,"temp":47,"load1":0.49}
+2026-11-20T09:43:38.825Z group k-b32768: 1 unit(s) started
+2026-11-20T09:44:10.939Z group k-b32768 done: statuses 0 
+{"group":"k-b32768","identical":true,"digests":["bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"],"reference":"bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"}
+{"group":"k-b32768","status":[0],"makespan":20.2,"aggMakespan":4873,"window":null,"sm":50.8,"vramPeak":18906,"cpu":18.7}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:44:11.161Z","group":"k-b32768","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":0,"hostMiB":556},"admissionNext":{"vramMiB":0,"rssMiB":768},"throttle":["0x0000000000000000"]}
+2026-11-20T09:44:11Z ==== group k-b32768 passed
+2026-11-20T09:44:11Z ==== group k2-b8192: TOOL=poolbench K=2 MODE=pool JOB=pool:D19:joint HW=8 B=8192 VRAM=7168 RSS=8192 EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+2026-11-20T09:44:11.170Z group k2-b8192: TOOL=poolbench K=2 MODE=pool JOB=pool:D19:joint HW=8 B=8192 STOP=complete VB=14000 MEMMAX=11G EXTRA=--door D19 --mix joint --tasks 32768 --rounds 3
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53464,"temp":47,"load1":1.01}
+2026-11-20T09:44:14.275Z group k2-b8192: 2 unit(s) started
+2026-11-20T09:45:22.583Z group k2-b8192 done: statuses 0 0 
+{"group":"k2-b8192","identical":true,"digests":["bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"],"reference":"bb89f0c3988433fb515a657d03074359cd8e36c19ff5143fd12ceb83a6a05b70"}
+{"group":"k2-b8192","status":[0,0],"makespan":55.3,"aggMakespan":3555.9,"window":null,"sm":95.6,"vramPeak":11033,"cpu":17.3}
+{"kind":"gpu-phase4 group gate","t":"2026-11-20T09:45:22.809Z","group":"k2-b8192","pass":true,"reasons":[],"measuredPerJob":{"vramMiB":0,"hostMiB":221},"admissionNext":{"vramMiB":0,"rssMiB":256},"throttle":["0x0000000000000000"]}
+2026-11-20T09:45:22Z ==== group k2-b8192 passed
+2026-11-20T09:45:22Z ==== group r1-w8: TOOL=poolbench K=1 MODE=pool JOB=pool:FULL:detail+risk HW=8 B=8192 VRAM=9216 RSS=10240 MEMMAX=14 EXTRA=--door FULL --mix detail+risk --tasks 16384 --rounds 3 --parity-n 24
+2026-11-20T09:45:22.818Z group r1-w8: TOOL=poolbench K=1 MODE=pool JOB=pool:FULL:detail+risk HW=8 B=8192 STOP=complete VB=none MEMMAX=14G EXTRA=--door FULL --mix detail+risk --tasks 16384 --rounds 3 --parity-n 24
+{"admitted":true,"reasons":[],"memFree":31342,"avail":53940,"temp":49,"load1":1.79}
+2026-11-20T09:45:35.920Z group r1-w8: 1 unit(s) started
+2026-11-20T09:45:40.953Z group r1-w8 done: statuses 1 
+{"group":"r1-w8","identical":false,"digests":[null],"reference":null}
+node:fs:483
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open '/home/chad/projects/margin-trading/research/gpu-phase4/results/pool/r1-w8-j0/profile.json'
+    at Object.readFileSync (node:fs:483:20)
+    at <anonymous> (/home/chad/projects/margin-trading/tools/gpu-phase4/summarize.ts:69:29)
+    at Array.map (<anonymous>)
+    at <anonymous> (/home/chad/projects/margin-trading/tools/gpu-phase4/summarize.ts:67:25)
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/chad/projects/margin-trading/research/gpu-phase4/results/pool/r1-w8-j0/profile.json'
+}
+
+Node.js v24.21.0
+2026-11-20T09:45:41Z FAILED summary r1-w8

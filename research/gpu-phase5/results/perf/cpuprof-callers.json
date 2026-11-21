@@ -1,0 +1,602 @@
+{
+ "kind": "gpu-phase5 CPU profile: parameter-schema time by callers (profiled prefix prof-a3-nm; estimates, never a timing)",
+ "profiles": [
+  {
+   "file": "CPU.20261121.003305.2774440.0.001.cpuprofile",
+   "activeSeconds": 104.16,
+   "parameterSchemaSelfSeconds": 49.74,
+   "parameterSchemaShareOfActive": 0.4775,
+   "parameterSchemaByCallers": [
+    {
+     "seconds": 38.18,
+     "callers": "canonicalOf@src/growth140-vgt-s8m/space.ts:224 <- (anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52"
+    },
+    {
+     "seconds": 6.63,
+     "callers": "canonicalGrowth@src/vg-l0-full-joint/space.ts:286 <- cfgOf@src/vg-l0-full-joint/space.ts:291 <- neighbourhood@src/vg-l0-full-joint/space.ts:744"
+    },
+    {
+     "seconds": 2.37,
+     "callers": "configOfGenome@src/growth140-vgt-s8m/space.ts:215 <- gOfGenome@src/vg-l0-full-joint/space.ts:353 <- decode@src/vg-l0-full-joint/space.ts:355"
+    },
+    {
+     "seconds": 1.91,
+     "callers": "canonicalGrowth@src/vg-l0-full-joint/space.ts:286 <- cfgOf@src/vg-l0-full-joint/space.ts:291 <- decode@src/vg-l0-full-joint/space.ts:355"
+    },
+    {
+     "seconds": 0.28,
+     "callers": "(anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52 <- quadId@src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 0.17,
+     "callers": "(anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52 <- riskId2@src/d1-risk-controls-rc2/config.ts:127"
+    },
+    {
+     "seconds": 0.16,
+     "callers": "(anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52 <- riskId@src/d1-risk-controls/config.ts:224"
+    }
+   ],
+   "inclusiveSeconds": [
+    {
+     "seconds": 39.88,
+     "function": "configId",
+     "source": "src/growth140-vgt-s8m/space.ts:225"
+    },
+    {
+     "seconds": 24.38,
+     "function": "cfgId",
+     "source": "src/vg-l0-full-joint/space.ts:436"
+    },
+    {
+     "seconds": 24.36,
+     "function": "riskId2",
+     "source": "src/d1-risk-controls-rc2/config.ts:127"
+    },
+    {
+     "seconds": 24.01,
+     "function": "neighbourhood",
+     "source": "src/vg-l0-full-joint/space.ts:744"
+    },
+    {
+     "seconds": 19.86,
+     "function": "evalMany",
+     "source": "src/gpu-backend/lab.ts:103"
+    },
+    {
+     "seconds": 18.42,
+     "function": "quadId",
+     "source": "src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 18.28,
+     "function": "evalKeyOf",
+     "source": "src/vg-l0-full-joint/space.ts:437"
+    },
+    {
+     "seconds": 18.25,
+     "function": "riskEvalKey2",
+     "source": "src/d1-risk-controls-rc2/config.ts:129"
+    },
+    {
+     "seconds": 17.86,
+     "function": "evalKey",
+     "source": "src/vg-d1-growth-joint/evaluate.ts:32"
+    },
+    {
+     "seconds": 12.67,
+     "function": "dispatch",
+     "source": "src/gpu-backend/pool.ts:196"
+    },
+    {
+     "seconds": 9.79,
+     "function": "iterate",
+     "source": "src/growth140-vgt-s8m/store.ts:156"
+    },
+    {
+     "seconds": 9.23,
+     "function": "decode",
+     "source": "src/growth140-vgt-s8m/store.ts:10"
+    },
+    {
+     "seconds": 9.05,
+     "function": "write",
+     "source": "src/growth140-vgt-s8m/store.ts:121"
+    },
+    {
+     "seconds": 7.01,
+     "function": "commit",
+     "source": "src/growth140-vgt-s8m/store.ts:132"
+    },
+    {
+     "seconds": 4.88,
+     "function": "decode",
+     "source": "src/vg-l0-full-joint/space.ts:355"
+    },
+    {
+     "seconds": 4.46,
+     "function": "encode",
+     "source": "src/growth140-vgt-s8m/store.ts:9"
+    },
+    {
+     "seconds": 1.16,
+     "function": "read",
+     "source": "src/growth140-vgt-s8m/store.ts:108"
+    },
+    {
+     "seconds": 1.1,
+     "function": "complete",
+     "source": "src/gpu-backend/hostPipeline.ts:230"
+    },
+    {
+     "seconds": 0.87,
+     "function": "prepare",
+     "source": "src/gpu-backend/hostPipeline.ts:169"
+    }
+   ]
+  },
+  {
+   "file": "CPU.20261121.003308.2774440.1.002.cpuprofile",
+   "activeSeconds": 16.84,
+   "parameterSchemaSelfSeconds": 9.8,
+   "parameterSchemaShareOfActive": 0.5819,
+   "parameterSchemaByCallers": [
+    {
+     "seconds": 5.4,
+     "callers": "growthParamsOf@src/vg-d1-growth-joint/books.ts:166 <- encodeGrowth@src/gpu-backend/encode.ts:71 <- encodeTask@src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 4.33,
+     "callers": "canonicalOf@src/growth140-vgt-s8m/space.ts:224 <- (anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52"
+    }
+   ],
+   "inclusiveSeconds": [
+    {
+     "seconds": 8.87,
+     "function": "decodeRange",
+     "source": "src/gpu-backend/batch.ts:328"
+    },
+    {
+     "seconds": 6.11,
+     "function": "encodeShard",
+     "source": "src/gpu-backend/batch.ts:61"
+    },
+    {
+     "seconds": 6.07,
+     "function": "encodeTask",
+     "source": "src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 5.77,
+     "function": "recordOf",
+     "source": "src/vg-d1-growth-joint/evaluate.ts:167"
+    },
+    {
+     "seconds": 5.41,
+     "function": "growthParamsOf",
+     "source": "src/vg-d1-growth-joint/books.ts:166"
+    },
+    {
+     "seconds": 4.57,
+     "function": "configId",
+     "source": "src/growth140-vgt-s8m/space.ts:225"
+    },
+    {
+     "seconds": 2.56,
+     "function": "quadId",
+     "source": "src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 2.31,
+     "function": "riskId2",
+     "source": "src/d1-risk-controls-rc2/config.ts:127"
+    }
+   ]
+  },
+  {
+   "file": "CPU.20261121.003308.2774440.2.003.cpuprofile",
+   "activeSeconds": 17.02,
+   "parameterSchemaSelfSeconds": 10.14,
+   "parameterSchemaShareOfActive": 0.5957,
+   "parameterSchemaByCallers": [
+    {
+     "seconds": 5.61,
+     "callers": "growthParamsOf@src/vg-d1-growth-joint/books.ts:166 <- encodeGrowth@src/gpu-backend/encode.ts:71 <- encodeTask@src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 4.47,
+     "callers": "canonicalOf@src/growth140-vgt-s8m/space.ts:224 <- (anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52"
+    }
+   ],
+   "inclusiveSeconds": [
+    {
+     "seconds": 8.83,
+     "function": "decodeRange",
+     "source": "src/gpu-backend/batch.ts:328"
+    },
+    {
+     "seconds": 6.28,
+     "function": "encodeShard",
+     "source": "src/gpu-backend/batch.ts:61"
+    },
+    {
+     "seconds": 6.23,
+     "function": "encodeTask",
+     "source": "src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 5.79,
+     "function": "recordOf",
+     "source": "src/vg-d1-growth-joint/evaluate.ts:167"
+    },
+    {
+     "seconds": 5.62,
+     "function": "growthParamsOf",
+     "source": "src/vg-d1-growth-joint/books.ts:166"
+    },
+    {
+     "seconds": 4.69,
+     "function": "configId",
+     "source": "src/growth140-vgt-s8m/space.ts:225"
+    },
+    {
+     "seconds": 2.58,
+     "function": "quadId",
+     "source": "src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 2.33,
+     "function": "riskId2",
+     "source": "src/d1-risk-controls-rc2/config.ts:127"
+    }
+   ]
+  },
+  {
+   "file": "CPU.20261121.003308.2774440.3.004.cpuprofile",
+   "activeSeconds": 16.52,
+   "parameterSchemaSelfSeconds": 9.76,
+   "parameterSchemaShareOfActive": 0.5907,
+   "parameterSchemaByCallers": [
+    {
+     "seconds": 5.38,
+     "callers": "growthParamsOf@src/vg-d1-growth-joint/books.ts:166 <- encodeGrowth@src/gpu-backend/encode.ts:71 <- encodeTask@src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 4.3,
+     "callers": "canonicalOf@src/growth140-vgt-s8m/space.ts:224 <- (anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52"
+    }
+   ],
+   "inclusiveSeconds": [
+    {
+     "seconds": 8.6,
+     "function": "decodeRange",
+     "source": "src/gpu-backend/batch.ts:328"
+    },
+    {
+     "seconds": 6.03,
+     "function": "encodeShard",
+     "source": "src/gpu-backend/batch.ts:61"
+    },
+    {
+     "seconds": 5.97,
+     "function": "encodeTask",
+     "source": "src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 5.58,
+     "function": "recordOf",
+     "source": "src/vg-d1-growth-joint/evaluate.ts:167"
+    },
+    {
+     "seconds": 5.39,
+     "function": "growthParamsOf",
+     "source": "src/vg-d1-growth-joint/books.ts:166"
+    },
+    {
+     "seconds": 4.53,
+     "function": "configId",
+     "source": "src/growth140-vgt-s8m/space.ts:225"
+    },
+    {
+     "seconds": 2.54,
+     "function": "quadId",
+     "source": "src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 2.27,
+     "function": "riskId2",
+     "source": "src/d1-risk-controls-rc2/config.ts:127"
+    }
+   ]
+  },
+  {
+   "file": "CPU.20261121.003308.2774440.4.005.cpuprofile",
+   "activeSeconds": 17.05,
+   "parameterSchemaSelfSeconds": 10.13,
+   "parameterSchemaShareOfActive": 0.594,
+   "parameterSchemaByCallers": [
+    {
+     "seconds": 5.62,
+     "callers": "growthParamsOf@src/vg-d1-growth-joint/books.ts:166 <- encodeGrowth@src/gpu-backend/encode.ts:71 <- encodeTask@src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 4.5,
+     "callers": "canonicalOf@src/growth140-vgt-s8m/space.ts:224 <- (anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52"
+    }
+   ],
+   "inclusiveSeconds": [
+    {
+     "seconds": 8.77,
+     "function": "decodeRange",
+     "source": "src/gpu-backend/batch.ts:328"
+    },
+    {
+     "seconds": 6.34,
+     "function": "encodeShard",
+     "source": "src/gpu-backend/batch.ts:61"
+    },
+    {
+     "seconds": 6.3,
+     "function": "encodeTask",
+     "source": "src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 5.64,
+     "function": "growthParamsOf",
+     "source": "src/vg-d1-growth-joint/books.ts:166"
+    },
+    {
+     "seconds": 5.57,
+     "function": "recordOf",
+     "source": "src/vg-d1-growth-joint/evaluate.ts:167"
+    },
+    {
+     "seconds": 4.67,
+     "function": "configId",
+     "source": "src/growth140-vgt-s8m/space.ts:225"
+    },
+    {
+     "seconds": 2.52,
+     "function": "quadId",
+     "source": "src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 2.48,
+     "function": "riskId2",
+     "source": "src/d1-risk-controls-rc2/config.ts:127"
+    }
+   ]
+  },
+  {
+   "file": "CPU.20261121.003308.2774440.5.006.cpuprofile",
+   "activeSeconds": 16.73,
+   "parameterSchemaSelfSeconds": 9.91,
+   "parameterSchemaShareOfActive": 0.5927,
+   "parameterSchemaByCallers": [
+    {
+     "seconds": 5.41,
+     "callers": "growthParamsOf@src/vg-d1-growth-joint/books.ts:166 <- encodeGrowth@src/gpu-backend/encode.ts:71 <- encodeTask@src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 4.44,
+     "callers": "canonicalOf@src/growth140-vgt-s8m/space.ts:224 <- (anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52"
+    }
+   ],
+   "inclusiveSeconds": [
+    {
+     "seconds": 8.73,
+     "function": "decodeRange",
+     "source": "src/gpu-backend/batch.ts:328"
+    },
+    {
+     "seconds": 6.04,
+     "function": "encodeShard",
+     "source": "src/gpu-backend/batch.ts:61"
+    },
+    {
+     "seconds": 6.0,
+     "function": "encodeTask",
+     "source": "src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 5.52,
+     "function": "recordOf",
+     "source": "src/vg-d1-growth-joint/evaluate.ts:167"
+    },
+    {
+     "seconds": 5.43,
+     "function": "growthParamsOf",
+     "source": "src/vg-d1-growth-joint/books.ts:166"
+    },
+    {
+     "seconds": 4.66,
+     "function": "configId",
+     "source": "src/growth140-vgt-s8m/space.ts:225"
+    },
+    {
+     "seconds": 2.48,
+     "function": "quadId",
+     "source": "src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 2.44,
+     "function": "riskId2",
+     "source": "src/d1-risk-controls-rc2/config.ts:127"
+    }
+   ]
+  },
+  {
+   "file": "CPU.20261121.003308.2774440.6.008.cpuprofile",
+   "activeSeconds": 17.02,
+   "parameterSchemaSelfSeconds": 10.02,
+   "parameterSchemaShareOfActive": 0.5885,
+   "parameterSchemaByCallers": [
+    {
+     "seconds": 5.49,
+     "callers": "growthParamsOf@src/vg-d1-growth-joint/books.ts:166 <- encodeGrowth@src/gpu-backend/encode.ts:71 <- encodeTask@src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 4.45,
+     "callers": "canonicalOf@src/growth140-vgt-s8m/space.ts:224 <- (anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52"
+    }
+   ],
+   "inclusiveSeconds": [
+    {
+     "seconds": 8.9,
+     "function": "decodeRange",
+     "source": "src/gpu-backend/batch.ts:328"
+    },
+    {
+     "seconds": 6.12,
+     "function": "encodeShard",
+     "source": "src/gpu-backend/batch.ts:61"
+    },
+    {
+     "seconds": 6.08,
+     "function": "encodeTask",
+     "source": "src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 5.79,
+     "function": "recordOf",
+     "source": "src/vg-d1-growth-joint/evaluate.ts:167"
+    },
+    {
+     "seconds": 5.51,
+     "function": "growthParamsOf",
+     "source": "src/vg-d1-growth-joint/books.ts:166"
+    },
+    {
+     "seconds": 4.68,
+     "function": "configId",
+     "source": "src/growth140-vgt-s8m/space.ts:225"
+    },
+    {
+     "seconds": 2.58,
+     "function": "quadId",
+     "source": "src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 2.41,
+     "function": "riskId2",
+     "source": "src/d1-risk-controls-rc2/config.ts:127"
+    }
+   ]
+  },
+  {
+   "file": "CPU.20261121.003308.2774440.7.007.cpuprofile",
+   "activeSeconds": 17.28,
+   "parameterSchemaSelfSeconds": 10.22,
+   "parameterSchemaShareOfActive": 0.5911,
+   "parameterSchemaByCallers": [
+    {
+     "seconds": 5.7,
+     "callers": "growthParamsOf@src/vg-d1-growth-joint/books.ts:166 <- encodeGrowth@src/gpu-backend/encode.ts:71 <- encodeTask@src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 4.45,
+     "callers": "canonicalOf@src/growth140-vgt-s8m/space.ts:224 <- (anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52"
+    }
+   ],
+   "inclusiveSeconds": [
+    {
+     "seconds": 8.84,
+     "function": "decodeRange",
+     "source": "src/gpu-backend/batch.ts:328"
+    },
+    {
+     "seconds": 6.45,
+     "function": "encodeShard",
+     "source": "src/gpu-backend/batch.ts:61"
+    },
+    {
+     "seconds": 6.4,
+     "function": "encodeTask",
+     "source": "src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 5.71,
+     "function": "growthParamsOf",
+     "source": "src/vg-d1-growth-joint/books.ts:166"
+    },
+    {
+     "seconds": 5.68,
+     "function": "recordOf",
+     "source": "src/vg-d1-growth-joint/evaluate.ts:167"
+    },
+    {
+     "seconds": 4.68,
+     "function": "configId",
+     "source": "src/growth140-vgt-s8m/space.ts:225"
+    },
+    {
+     "seconds": 2.51,
+     "function": "quadId",
+     "source": "src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 2.46,
+     "function": "riskId2",
+     "source": "src/d1-risk-controls-rc2/config.ts:127"
+    }
+   ]
+  },
+  {
+   "file": "CPU.20261121.003308.2774440.8.009.cpuprofile",
+   "activeSeconds": 17.13,
+   "parameterSchemaSelfSeconds": 10.01,
+   "parameterSchemaShareOfActive": 0.5842,
+   "parameterSchemaByCallers": [
+    {
+     "seconds": 5.44,
+     "callers": "growthParamsOf@src/vg-d1-growth-joint/books.ts:166 <- encodeGrowth@src/gpu-backend/encode.ts:71 <- encodeTask@src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 4.5,
+     "callers": "canonicalOf@src/growth140-vgt-s8m/space.ts:224 <- (anon)@src/vg-d1-growth-joint/space.ts:54 <- quadCanonical@src/vg-d1-growth-joint/space.ts:52"
+    }
+   ],
+   "inclusiveSeconds": [
+    {
+     "seconds": 8.92,
+     "function": "decodeRange",
+     "source": "src/gpu-backend/batch.ts:328"
+    },
+    {
+     "seconds": 6.25,
+     "function": "encodeShard",
+     "source": "src/gpu-backend/batch.ts:61"
+    },
+    {
+     "seconds": 6.21,
+     "function": "encodeTask",
+     "source": "src/gpu-backend/encode.ts:260"
+    },
+    {
+     "seconds": 5.77,
+     "function": "recordOf",
+     "source": "src/vg-d1-growth-joint/evaluate.ts:167"
+    },
+    {
+     "seconds": 5.45,
+     "function": "growthParamsOf",
+     "source": "src/vg-d1-growth-joint/books.ts:166"
+    },
+    {
+     "seconds": 4.73,
+     "function": "configId",
+     "source": "src/growth140-vgt-s8m/space.ts:225"
+    },
+    {
+     "seconds": 2.63,
+     "function": "quadId",
+     "source": "src/vg-d1-growth-joint/space.ts:57"
+    },
+    {
+     "seconds": 2.38,
+     "function": "riskId2",
+     "source": "src/d1-risk-controls-rc2/config.ts:127"
+    }
+   ]
+  }
+ ]
+}

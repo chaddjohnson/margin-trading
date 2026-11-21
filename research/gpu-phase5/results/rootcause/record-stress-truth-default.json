@@ -1,0 +1,1212 @@
+{
+ "kind": "gpu-phase5 record stress: CPU reference chunks of Phase 4 D24-fund in cold isolates (three passes each)",
+ "t": "2026-11-20T23:06:48.874Z",
+ "node": "v24.21.0",
+ "v8": "13.6.233.17-node.53",
+ "v8Flags": [],
+ "concurrentProcesses": 10,
+ "seconds": 720,
+ "tasks": [
+  32,
+  40
+ ],
+ "processes": 234,
+ "evaluations": 5616,
+ "processesWithAWrongEvaluation": 1,
+ "wrongEvaluations": 13,
+ "wrongEvaluationsByDifferingPart": {
+  "record": 13,
+  "books": 2,
+  "pool": 0,
+  "envelope": 0,
+  "recordOnly": 11
+ },
+ "wrongEvaluationsByPass": {
+  "cold": 3,
+  "second": 5,
+  "third": 5
+ },
+ "wrongEvaluationsByTask": {
+  "O-fund:coarse:28": 3,
+  "O-fund:coarse:32": 3,
+  "O-fund:coarse:34": 3,
+  "O-fund:coarse:30": 2,
+  "O-fund:coarse:33": 2
+ },
+ "truth": {
+  "source": "one child with --no-maglev, two passes, self-consistent",
+  "file": "research/gpu-phase5/results/rootcause/record-stress-truth-default.json.truth.json",
+  "originalCandidateEqualsPhase4Diagnostics": true
+ },
+ "crashed": 0,
+ "samples": [
+  [
+   {
+    "pass": 0,
+    "ordinalInPass": 1,
+    "k": "O-fund:coarse:28",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "d35779dd11801eed1c933e9f",
+      "pool": "da74e7dfc43950fa6d7c910d",
+      "record": "0db6de56ffa7b8d7380f7d3a"
+     },
+     "truth": {
+      "books": "d35779dd11801eed1c933e9f",
+      "pool": "da74e7dfc43950fa6d7c910d",
+      "record": "f17d66f45b4fa8806c67d4f4"
+     }
+    },
+    "envelope": {
+     "observed": [
+      65087.932596687824,
+      65133.09263631536,
+      23889.158361995476,
+      23927.213782814477
+     ],
+     "truth": [
+      65087.932596687824,
+      65133.09263631536,
+      23889.158361995476,
+      23927.213782814477
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40ea5d4e66666666"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "c0e7b5ce147ae148"
+      },
+      "aliasOf": "$.virtual.D1:VGT.net"
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f075e4a3d70a3d"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f956ae8f5c28f6"
+      },
+      "aliasOf": "$.virtual.D1:VGT.dd"
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 0,
+    "ordinalInPass": 5,
+    "k": "O-fund:coarse:32",
+    "differsFromTruth": {
+     "books": true,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "496ab99e4f81e363a23806e5",
+      "pool": "5de1988b2ec76901c32bca57",
+      "record": "4b5dc2872fc99ede4676a4f7"
+     },
+     "truth": {
+      "books": "81808a04cdc6a4166587f6f0",
+      "pool": "5de1988b2ec76901c32bca57",
+      "record": "c3df281163fb7f0d8dbb4a73"
+     }
+    },
+    "envelope": {
+     "observed": [
+      66055.53756799897,
+      66098.6177398969,
+      19278.478568934683,
+      19278.478568934683
+     ],
+     "truth": [
+      66055.53756799897,
+      66098.6177398969,
+      19278.478568934683,
+      19278.478568934683
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "c094c028f5c28f5c"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40e1048428f5c28f"
+      },
+      "aliasOf": "$.virtual.D1:VGT.net"
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40d653a000000000"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f1ac251eb851ec"
+      },
+      "aliasOf": "$.virtual.D1:VGT.dd"
+     }
+    ],
+    "booksLeaves": [
+     {
+      "path": "$[0].standalone.net",
+      "got": {
+       "path": "$[0].standalone.net",
+       "kind": "n",
+       "value": "40f856148419b97a"
+      },
+      "expected": {
+       "path": "$[0].standalone.net",
+       "kind": "n",
+       "value": "40e1048442151cc5"
+      },
+      "aliasOf": "$[1].standalone.net"
+     },
+     {
+      "path": "$[0].standalone.realized",
+      "got": {
+       "path": "$[0].standalone.realized",
+       "kind": "n",
+       "value": "40f3690b160a53e2"
+      },
+      "expected": {
+       "path": "$[0].standalone.realized",
+       "kind": "n",
+       "value": "40e7ffbe4cb68bd4"
+      },
+      "aliasOf": "$[1].standalone.realized"
+     },
+     {
+      "path": "$[0].standalone.minuteDd",
+      "got": {
+       "path": "$[0].standalone.minuteDd",
+       "kind": "n",
+       "value": "40eaacd4c95abb90"
+      },
+      "expected": {
+       "path": "$[0].standalone.minuteDd",
+       "kind": "n",
+       "value": "40f1ac25155cce28"
+      },
+      "aliasOf": "$[1].standalone.minuteDd"
+     },
+     {
+      "path": "$[0].standalone.dailyDd",
+      "got": {
+       "path": "$[0].standalone.dailyDd",
+       "kind": "n",
+       "value": "40e93f9471e1041e"
+      },
+      "expected": {
+       "path": "$[0].standalone.dailyDd",
+       "kind": "n",
+       "value": "40f16644ddebfbfc"
+      },
+      "aliasOf": "$[1].standalone.dailyDd"
+     },
+     {
+      "path": "$[1].standalone.net",
+      "got": {
+       "path": "$[1].standalone.net",
+       "kind": "n",
+       "value": "40f856148419b97a"
+      },
+      "expected": {
+       "path": "$[1].standalone.net",
+       "kind": "n",
+       "value": "c094c029d2ee3890"
+      },
+      "aliasOf": "$[0].standalone.net"
+     },
+     {
+      "path": "$[1].standalone.realized",
+      "got": {
+       "path": "$[1].standalone.realized",
+       "kind": "n",
+       "value": "40f3690b160a53e2"
+      },
+      "expected": {
+       "path": "$[1].standalone.realized",
+       "kind": "n",
+       "value": "c0d25e6cc98b9600"
+      },
+      "aliasOf": "$[0].standalone.realized"
+     },
+     {
+      "path": "$[1].standalone.minuteDd",
+      "got": {
+       "path": "$[1].standalone.minuteDd",
+       "kind": "n",
+       "value": "40eaacd4c95abb90"
+      },
+      "expected": {
+       "path": "$[1].standalone.minuteDd",
+       "kind": "n",
+       "value": "40d653a03f64c7b0"
+      },
+      "aliasOf": "$[0].standalone.minuteDd"
+     },
+     {
+      "path": "$[1].standalone.dailyDd",
+      "got": {
+       "path": "$[1].standalone.dailyDd",
+       "kind": "n",
+       "value": "40e93f9471e1041e"
+      },
+      "expected": {
+       "path": "$[1].standalone.dailyDd",
+       "kind": "n",
+       "value": "40d54e8fb0c5a920"
+      },
+      "aliasOf": "$[0].standalone.dailyDd"
+     }
+    ]
+   },
+   {
+    "pass": 0,
+    "ordinalInPass": 7,
+    "k": "O-fund:coarse:34",
+    "differsFromTruth": {
+     "books": true,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "9270604cf54e87d5dda64475",
+      "pool": "bc0165e2c9efd48f55583121",
+      "record": "ef56d8ba0f6947dbd17ce403"
+     },
+     "truth": {
+      "books": "89922f45e671880729b4ff8c",
+      "pool": "bc0165e2c9efd48f55583121",
+      "record": "f09ef0a84bd537d89fe4be21"
+     }
+    },
+    "envelope": {
+     "observed": [
+      68220.31362919422,
+      68263.93470784287,
+      19977.008914154838,
+      19977.008914154838
+     ],
+     "truth": [
+      68220.31362919422,
+      68263.93470784287,
+      19977.008914154838,
+      19977.008914154838
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40c45cb70a3d70a4"
+      },
+      "aliasOf": "$.virtual.D1:VGT.net"
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f37257ae147ae1"
+      },
+      "aliasOf": "$.virtual.D1:VGT.dd"
+     }
+    ],
+    "booksLeaves": [
+     {
+      "path": "$[0].standalone.net",
+      "got": {
+       "path": "$[0].standalone.net",
+       "kind": "n",
+       "value": "40f856148419b97a"
+      },
+      "expected": {
+       "path": "$[0].standalone.net",
+       "kind": "n",
+       "value": "40c45cb6eb266ebe"
+      },
+      "aliasOf": "$[1].standalone.net"
+     },
+     {
+      "path": "$[0].standalone.realized",
+      "got": {
+       "path": "$[0].standalone.realized",
+       "kind": "n",
+       "value": "40f3690b160a53e2"
+      },
+      "expected": {
+       "path": "$[0].standalone.realized",
+       "kind": "n",
+       "value": "40c4fb830d9a51c2"
+      },
+      "aliasOf": "$[1].standalone.realized"
+     },
+     {
+      "path": "$[0].standalone.minuteDd",
+      "got": {
+       "path": "$[0].standalone.minuteDd",
+       "kind": "n",
+       "value": "40eaacd4c95abb90"
+      },
+      "expected": {
+       "path": "$[0].standalone.minuteDd",
+       "kind": "n",
+       "value": "40f37257b4fe753d"
+      },
+      "aliasOf": "$[1].standalone.minuteDd"
+     },
+     {
+      "path": "$[0].standalone.dailyDd",
+      "got": {
+       "path": "$[0].standalone.dailyDd",
+       "kind": "n",
+       "value": "40e93f9471e1041e"
+      },
+      "expected": {
+       "path": "$[0].standalone.dailyDd",
+       "kind": "n",
+       "value": "40f2e3c3d1b56103"
+      },
+      "aliasOf": "$[1].standalone.dailyDd"
+     }
+    ]
+   },
+   {
+    "pass": 1,
+    "ordinalInPass": 1,
+    "k": "O-fund:coarse:28",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "d35779dd11801eed1c933e9f",
+      "pool": "da74e7dfc43950fa6d7c910d",
+      "record": "450133623ad475789d04333d"
+     },
+     "truth": {
+      "books": "d35779dd11801eed1c933e9f",
+      "pool": "da74e7dfc43950fa6d7c910d",
+      "record": "f17d66f45b4fa8806c67d4f4"
+     }
+    },
+    "envelope": {
+     "observed": [
+      65087.932596687824,
+      65133.09263631536,
+      23889.158361995476,
+      23927.213782814477
+     ],
+     "truth": [
+      65087.932596687824,
+      65133.09263631536,
+      23889.158361995476,
+      23927.213782814477
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "c0e7b5ce147ae148"
+      },
+      "aliasOf": "$.virtual.D1:VGT.net"
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f956ae8f5c28f6"
+      },
+      "aliasOf": "$.virtual.D1:VGT.dd"
+     },
+     {
+      "path": "$.virtual.D1:VGT.net",
+      "got": {
+       "path": "$.virtual.D1:VGT.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:VGT.net",
+       "kind": "n",
+       "value": "40ea5d4e66666666"
+      },
+      "aliasOf": "$.virtual.D1:GDX.net"
+     },
+     {
+      "path": "$.virtual.D1:VGT.dd",
+      "got": {
+       "path": "$.virtual.D1:VGT.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:VGT.dd",
+       "kind": "n",
+       "value": "40f075e4a3d70a3d"
+      },
+      "aliasOf": "$.virtual.D1:GDX.dd"
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 1,
+    "ordinalInPass": 3,
+    "k": "O-fund:coarse:30",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "12b485539617a0b189e85b56",
+      "pool": "03747f3bf3068b613bf46371",
+      "record": "b3315cc225b75cc5477e03dc"
+     },
+     "truth": {
+      "books": "12b485539617a0b189e85b56",
+      "pool": "03747f3bf3068b613bf46371",
+      "record": "d4c11641ec098718896ba6c6"
+     }
+    },
+    "envelope": {
+     "observed": [
+      81699.5759731576,
+      81745.74387633048,
+      13979.101058030968,
+      13979.101058030968
+     ],
+     "truth": [
+      81699.5759731576,
+      81745.74387633048,
+      13979.101058030968,
+      13979.101058030968
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "c0c6e7d0a3d70a3d"
+      },
+      "aliasOf": null
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f44f67d70a3d71"
+      },
+      "aliasOf": null
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 1,
+    "ordinalInPass": 5,
+    "k": "O-fund:coarse:32",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "81808a04cdc6a4166587f6f0",
+      "pool": "5de1988b2ec76901c32bca57",
+      "record": "19eb5c00e4acae8c4030b66b"
+     },
+     "truth": {
+      "books": "81808a04cdc6a4166587f6f0",
+      "pool": "5de1988b2ec76901c32bca57",
+      "record": "c3df281163fb7f0d8dbb4a73"
+     }
+    },
+    "envelope": {
+     "observed": [
+      66055.53756799897,
+      66098.6177398969,
+      19278.478568934683,
+      19278.478568934683
+     ],
+     "truth": [
+      66055.53756799897,
+      66098.6177398969,
+      19278.478568934683,
+      19278.478568934683
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40e1048428f5c28f"
+      },
+      "aliasOf": "$.virtual.D1:VGT.net"
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f1ac251eb851ec"
+      },
+      "aliasOf": "$.virtual.D1:VGT.dd"
+     },
+     {
+      "path": "$.virtual.D1:VGT.net",
+      "got": {
+       "path": "$.virtual.D1:VGT.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:VGT.net",
+       "kind": "n",
+       "value": "c094c028f5c28f5c"
+      },
+      "aliasOf": "$.virtual.D1:GDX.net"
+     },
+     {
+      "path": "$.virtual.D1:VGT.dd",
+      "got": {
+       "path": "$.virtual.D1:VGT.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:VGT.dd",
+       "kind": "n",
+       "value": "40d653a000000000"
+      },
+      "aliasOf": "$.virtual.D1:GDX.dd"
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 1,
+    "ordinalInPass": 6,
+    "k": "O-fund:coarse:33",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "b3d2c2233f8a0ed97cc2c44a",
+      "pool": "ecd49ef042430b2389ca79d9",
+      "record": "d38327ea528d09410bc5e2d6"
+     },
+     "truth": {
+      "books": "b3d2c2233f8a0ed97cc2c44a",
+      "pool": "ecd49ef042430b2389ca79d9",
+      "record": "4a2fd927165cc1db59324601"
+     }
+    },
+    "envelope": {
+     "observed": [
+      65305.977618204306,
+      65351.47890921623,
+      27788.44935500421,
+      27824.55513032671
+     ],
+     "truth": [
+      65305.977618204306,
+      65351.47890921623,
+      27788.44935500421,
+      27824.55513032671
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "c0df6b2333333333"
+      },
+      "aliasOf": null
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f61661eb851eb8"
+      },
+      "aliasOf": null
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 1,
+    "ordinalInPass": 7,
+    "k": "O-fund:coarse:34",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "89922f45e671880729b4ff8c",
+      "pool": "bc0165e2c9efd48f55583121",
+      "record": "ef56d8ba0f6947dbd17ce403"
+     },
+     "truth": {
+      "books": "89922f45e671880729b4ff8c",
+      "pool": "bc0165e2c9efd48f55583121",
+      "record": "f09ef0a84bd537d89fe4be21"
+     }
+    },
+    "envelope": {
+     "observed": [
+      68220.31362919422,
+      68263.93470784287,
+      19977.008914154838,
+      19977.008914154838
+     ],
+     "truth": [
+      68220.31362919422,
+      68263.93470784287,
+      19977.008914154838,
+      19977.008914154838
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40c45cb70a3d70a4"
+      },
+      "aliasOf": "$.virtual.D1:VGT.net"
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f37257ae147ae1"
+      },
+      "aliasOf": "$.virtual.D1:VGT.dd"
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 2,
+    "ordinalInPass": 1,
+    "k": "O-fund:coarse:28",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "d35779dd11801eed1c933e9f",
+      "pool": "da74e7dfc43950fa6d7c910d",
+      "record": "450133623ad475789d04333d"
+     },
+     "truth": {
+      "books": "d35779dd11801eed1c933e9f",
+      "pool": "da74e7dfc43950fa6d7c910d",
+      "record": "f17d66f45b4fa8806c67d4f4"
+     }
+    },
+    "envelope": {
+     "observed": [
+      65087.932596687824,
+      65133.09263631536,
+      23889.158361995476,
+      23927.213782814477
+     ],
+     "truth": [
+      65087.932596687824,
+      65133.09263631536,
+      23889.158361995476,
+      23927.213782814477
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "c0e7b5ce147ae148"
+      },
+      "aliasOf": "$.virtual.D1:VGT.net"
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f956ae8f5c28f6"
+      },
+      "aliasOf": "$.virtual.D1:VGT.dd"
+     },
+     {
+      "path": "$.virtual.D1:VGT.net",
+      "got": {
+       "path": "$.virtual.D1:VGT.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:VGT.net",
+       "kind": "n",
+       "value": "40ea5d4e66666666"
+      },
+      "aliasOf": "$.virtual.D1:GDX.net"
+     },
+     {
+      "path": "$.virtual.D1:VGT.dd",
+      "got": {
+       "path": "$.virtual.D1:VGT.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:VGT.dd",
+       "kind": "n",
+       "value": "40f075e4a3d70a3d"
+      },
+      "aliasOf": "$.virtual.D1:GDX.dd"
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 2,
+    "ordinalInPass": 3,
+    "k": "O-fund:coarse:30",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "12b485539617a0b189e85b56",
+      "pool": "03747f3bf3068b613bf46371",
+      "record": "b3315cc225b75cc5477e03dc"
+     },
+     "truth": {
+      "books": "12b485539617a0b189e85b56",
+      "pool": "03747f3bf3068b613bf46371",
+      "record": "d4c11641ec098718896ba6c6"
+     }
+    },
+    "envelope": {
+     "observed": [
+      81699.5759731576,
+      81745.74387633048,
+      13979.101058030968,
+      13979.101058030968
+     ],
+     "truth": [
+      81699.5759731576,
+      81745.74387633048,
+      13979.101058030968,
+      13979.101058030968
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "c0c6e7d0a3d70a3d"
+      },
+      "aliasOf": null
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f44f67d70a3d71"
+      },
+      "aliasOf": null
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 2,
+    "ordinalInPass": 5,
+    "k": "O-fund:coarse:32",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "81808a04cdc6a4166587f6f0",
+      "pool": "5de1988b2ec76901c32bca57",
+      "record": "19eb5c00e4acae8c4030b66b"
+     },
+     "truth": {
+      "books": "81808a04cdc6a4166587f6f0",
+      "pool": "5de1988b2ec76901c32bca57",
+      "record": "c3df281163fb7f0d8dbb4a73"
+     }
+    },
+    "envelope": {
+     "observed": [
+      66055.53756799897,
+      66098.6177398969,
+      19278.478568934683,
+      19278.478568934683
+     ],
+     "truth": [
+      66055.53756799897,
+      66098.6177398969,
+      19278.478568934683,
+      19278.478568934683
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40e1048428f5c28f"
+      },
+      "aliasOf": "$.virtual.D1:VGT.net"
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f1ac251eb851ec"
+      },
+      "aliasOf": "$.virtual.D1:VGT.dd"
+     },
+     {
+      "path": "$.virtual.D1:VGT.net",
+      "got": {
+       "path": "$.virtual.D1:VGT.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:VGT.net",
+       "kind": "n",
+       "value": "c094c028f5c28f5c"
+      },
+      "aliasOf": "$.virtual.D1:GDX.net"
+     },
+     {
+      "path": "$.virtual.D1:VGT.dd",
+      "got": {
+       "path": "$.virtual.D1:VGT.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:VGT.dd",
+       "kind": "n",
+       "value": "40d653a000000000"
+      },
+      "aliasOf": "$.virtual.D1:GDX.dd"
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 2,
+    "ordinalInPass": 6,
+    "k": "O-fund:coarse:33",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "b3d2c2233f8a0ed97cc2c44a",
+      "pool": "ecd49ef042430b2389ca79d9",
+      "record": "d38327ea528d09410bc5e2d6"
+     },
+     "truth": {
+      "books": "b3d2c2233f8a0ed97cc2c44a",
+      "pool": "ecd49ef042430b2389ca79d9",
+      "record": "4a2fd927165cc1db59324601"
+     }
+    },
+    "envelope": {
+     "observed": [
+      65305.977618204306,
+      65351.47890921623,
+      27788.44935500421,
+      27824.55513032671
+     ],
+     "truth": [
+      65305.977618204306,
+      65351.47890921623,
+      27788.44935500421,
+      27824.55513032671
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "c0df6b2333333333"
+      },
+      "aliasOf": null
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f61661eb851eb8"
+      },
+      "aliasOf": null
+     }
+    ],
+    "booksLeaves": []
+   },
+   {
+    "pass": 2,
+    "ordinalInPass": 7,
+    "k": "O-fund:coarse:34",
+    "differsFromTruth": {
+     "books": false,
+     "pool": false,
+     "record": true,
+     "envelope": false
+    },
+    "hashes": {
+     "observed": {
+      "books": "89922f45e671880729b4ff8c",
+      "pool": "bc0165e2c9efd48f55583121",
+      "record": "ef56d8ba0f6947dbd17ce403"
+     },
+     "truth": {
+      "books": "89922f45e671880729b4ff8c",
+      "pool": "bc0165e2c9efd48f55583121",
+      "record": "f09ef0a84bd537d89fe4be21"
+     }
+    },
+    "envelope": {
+     "observed": [
+      68220.31362919422,
+      68263.93470784287,
+      19977.008914154838,
+      19977.008914154838
+     ],
+     "truth": [
+      68220.31362919422,
+      68263.93470784287,
+      19977.008914154838,
+      19977.008914154838
+     ]
+    },
+    "recordLeaves": [
+     {
+      "path": "$.virtual.D1:GDX.net",
+      "got": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40f856147ae147ae"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.net",
+       "kind": "n",
+       "value": "40c45cb70a3d70a4"
+      },
+      "aliasOf": "$.virtual.D1:VGT.net"
+     },
+     {
+      "path": "$.virtual.D1:GDX.dd",
+      "got": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40eaacd4cccccccd"
+      },
+      "expected": {
+       "path": "$.virtual.D1:GDX.dd",
+       "kind": "n",
+       "value": "40f37257ae147ae1"
+      },
+      "aliasOf": "$.virtual.D1:VGT.dd"
+     }
+    ],
+    "booksLeaves": []
+   }
+  ]
+ ]
+}

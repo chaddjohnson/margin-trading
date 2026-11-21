@@ -17,7 +17,7 @@
 // operation timeout fails the pipeline; every pending and later call rejects (the GPU pool then fails the job, which
 // checkpoints; there is no CPU fallback and no silent retry). Test hooks (an injected decode failure or worker exit)
 // exist only with allowFaultInjection, which an official session refuses.
-import { Worker } from 'node:worker_threads';
+import { type Transferable, Worker } from 'node:worker_threads';
 import type { Door } from '../vg-d1-growth-joint/data.ts';
 import {
   type BatchOptions,
@@ -196,6 +196,10 @@ export class HostPipeline {
     transfer: Transferable[] = []
   ) {
     if (this.failure) return Promise.reject(this.failure);
+    // a closed pipeline has no workers left: refuse at once. (Before GPU Phase 5 a prepare/complete that reached this
+    // point after close() — a batch whose device round trip returned during the shutdown that follows a failed batch —
+    // posted to a terminated worker and kept the process alive until the operation timeout, 10 minutes by default.)
+    if (this.closing) return Promise.reject(new Error('host pipeline closed'));
 
     const key = `${kind}:${seq}:${shard}`;
 
@@ -211,7 +215,7 @@ export class HostPipeline {
       }, this.o.opTimeoutMs ?? 600000);
 
       this.pending.set(key, { resolve, reject, timer });
-      this.workers[worker]!.postMessage(msg, transfer as never);
+      this.workers[worker]!.postMessage(msg, transfer);
     });
   }
 

@@ -22,7 +22,11 @@ export const nonOfficial: Record<string, string> = {
   'gpu-phase2':
     'GPU Phase 2 acceptance study: CPU parity references and the non-official CPU arm of the parity-only mini-optimization',
   'gpu-phase3':
-    'GPU Phase 3 acceptance study (host-pipeline acceleration): CPU parity references, the CPU benchmark baseline and the non-official CPU arm of the parity-only mini-optimization'
+    'GPU Phase 3 acceptance study (host-pipeline acceleration): CPU parity references, the CPU benchmark baseline and the non-official CPU arm of the parity-only mini-optimization',
+  'gpu-phase4':
+    'GPU Phase 4 acceptance study (concurrency and batching benchmarks): CPU parity references and the non-official CPU arm of the parity-only mini-optimization',
+  'gpu-phase5':
+    'GPU Phase 5 acceptance study (parity root cause, atomic dataset export, performance audit): CPU parity references, root-cause diagnostics and the non-official CPU arm of the parity-only mini-optimization'
 };
 
 const tsFiles = (dir: string) =>
