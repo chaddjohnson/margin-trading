@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-21T00:12Z (UTC, from `date -u`)
+- **Updated:** 2026-11-21T00:10:23Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — Q1 root cause **RESOLVED by rule §4.7** (`PARITY_ROOT_CAUSE.md`: a V8 Maglev defect; fix =
   the engine runs under `--no-maglev`, enforced by the official gate); stage C (atomic dataset export) complete; sealed
   files protected (988 restored); **stage P complete: no host-path performance change retained** (amendment A3;
@@ -142,5 +142,11 @@ campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwr
 
 ## Campaign log (stage A)
 
-(appended as the campaign proceeds)
+- 2026-11-21T00:07:05Z — launched on commit `bc428d8b` (final tree; evaluation digest `3a6eacde…`): unit
+  `p5chain-final`, `START=1 MODEA_K=2 MODEA_W=8`; background waiter `b2ca323lb` (this session) fires on `FAILED` or
+  `chain final complete`.
+- 00:07:38Z step 1 build-final ok (`results/final-binary.json`); 00:08:46Z step 2 offline-check ok; step 3 host-soak
+  running (≤ 25 min).
+- Written meanwhile (not committed until a quiet moment): `PERFORMANCE_AUDIT.md` (its §6 waits for the campaign's
+  timings), `results/perf/{copy-bench.json,copy-bench.mjs,cpuprof-callers.json,cpuprof-callers.py}`.
 
