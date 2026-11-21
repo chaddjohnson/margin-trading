@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-21T00:10:23Z (UTC, from `date -u`)
+- **Updated:** 2026-11-21T03:12:23Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — Q1 root cause **RESOLVED by rule §4.7** (`PARITY_ROOT_CAUSE.md`: a V8 Maglev defect; fix =
   the engine runs under `--no-maglev`, enforced by the official gate); stage C (atomic dataset export) complete; sealed
   files protected (988 restored); **stage P complete: no host-path performance change retained** (amendment A3;
@@ -10,11 +10,12 @@
   see "Running"**.
 - **Authority:** `brief/BRIEF.md` sha256 `bff746987861bd2837864af4c86ad2f2d980b386e465f0b6dfd0f12a6d221476` (224 lines,
   read in full). `PROTOCOL.md` FROZEN 2026-11-20T21:12:21Z (`results/protocol-freeze.json`, protocol sha256
-  `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: A1, A2, A3 (head). Standard 3.0.0
+  `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: A1, A2, A3, A4 (head). Standard 3.0.0
   (scope diagnostic); preflight PASS.
 - **Final tree digests** (`node --no-maglev … src/gpu-backend/compat.ts`): evaluation `3a6eacdecc4f0a24…`, CPU closure
   `c8a9f416…` (unchanged), CUDA `d8899061…` (unchanged), host `53671a6c…`, policy `a2560e85…`.
-- **Running:** the final campaign — unit `p5chain-final`, log
+- **Running:** the final campaign, RESUMED 03:10:44Z as unit `p5chain-final-r1` (`chains/final-resume-30.sh`,
+  amendment A4; steps 1–29 done, see "Campaign log"; waiter `bht53w5dr`) — first launch was unit `p5chain-final`, log
   `/home/chad/projects/margin-trading/research/gpu-phase5/results/logs/chain-final.txt` (start time and commit: see
   "Campaign log" below). 36 steps, fail-fast; a step's sub-units are named `gpup5-final-*` / `gpup5-par-*`. Check with
   `systemctl --user list-units 'p5chain-*' 'gpup5-*'` and `grep -E "start|end|FAILED|complete" <log> | tail`.
@@ -147,6 +148,24 @@ campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwr
   `chain final complete`.
 - 00:07:38Z step 1 build-final ok (`results/final-binary.json`); 00:08:46Z step 2 offline-check ok; step 3 host-soak
   running (≤ 25 min).
+- 00:18:18Z step 3 host-soak ok: final binary gb5 `f444c52139ebd8b2…` (reproducible; device code and SASS identical to
+  gb3), 150 fresh pipelines, 1,200 cold worker threads under 12 CPU burners, 234,150 results, **0 mismatches**
+  (`results/rootcause/host-soak-final.json`). Step 4 parity-campaign started 00:18:18Z (54 runs, `chains/parity.sh`,
+  outputs `results/parity/final/`, logs `results/logs/final/parity/`).
 - Written meanwhile (not committed until a quiet moment): `PERFORMANCE_AUDIT.md` (its §6 waits for the campaign's
   timings), `results/perf/{copy-bench.json,copy-bench.mjs,cpuprof-callers.json,cpuprof-callers.py}`.
+- 02:10:00Z step 5 parity-summary ok: **54 runs, 144,795 candidates, 144,795 identical, 0 mismatches**, 64,050 envelopes,
+  176 determinism runs, one binary, every run through the parallel host path (`results/parity/final/SUMMARY.json`).
+  Steps 6–7 the ORIGINAL run D24-fund with Phase 4's seeds: **1,561 of 1,561 identical, twice**
+  (`results/parity/original/`). Step 8 finalists 48 ok.
+- Steps 9–25 ok: `final-a3-r1` 585.1 s, `final-a3-r2` 584.0 s (identical to the sealed record), qualification replay
+  identical, `final-a2-r1` 721.9 s identical, mini CPU = GPU 8/1/0 workers = interrupted + resumed.
+- Steps 26–28 ok: sanitizer, negative 49/49 (one expected `Xid 43` from the faulted test binary `gb5-dev` at
+  03:00:05Z), tamper 15/15.
+- 03:09:29Z step 29 isolation STOPPED on a shell error of `chains/isolation.sh` at I7 (rc 127; I-ref, I3, I4, I5, I1,
+  I2, I6 had passed). Amendment A4, commit `9b5b9d98`: `chains/isolation-i7.sh` + `chains/final-resume-30.sh`.
+- 03:10:44Z resumed (unit `p5chain-final-r1`): I7 race **100 of 100 loads verified, 0 refused, 0 partial reads**
+  (`results/final/race-d19-atomic.json`), conflict 20 explicit conflicts in 10 rounds (`results/final/conflict.json`);
+  03:11:19Z step 30 sustained started (2 processes × 32 min); then 31 fresh-loop (170 cycles, ≤ 150 min), 32–34 the
+  accepted-configuration baselines (TIMED: keep the machine quiet), 35 regression, 36 tests.
 
