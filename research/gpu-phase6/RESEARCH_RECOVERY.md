@@ -3,20 +3,28 @@
 ## Top screen
 
 - **Updated:** 2026-11-21T11:20Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — campaign C1–C8 COMPLETE (11/11 comparisons identical; isolation audit 210/210 after A2;
-  parity 5,038/5,038; finalists 96/96 and 48/48 sealed); negative 67/67 (after A3); tamper 20/20; **suites chain RUNNING**
-  (unit `p6chain-tests`, log `results/logs/chain-tests.txt`, ends `tests complete`). **RISK-ENVELOPE PILOT NOT STARTED.**
-- **Authority:** `brief/BRIEF.md` (verbatim copy of the user's assignment, 2026-11-21). `PROTOCOL.md` FROZEN
-  2026-11-21T10:08:41Z sha256 `0737314415ee5c034fef6e4ecc03d850c3e06112971005e24ce08b48310dc474`
-  (`results/protocol-freeze.json`); amendments: A1 (portfolio parity reads FULL), A2 (process-audit sampler defect, re-run), A3 (negative-case file-name expectation, rerun). Standard 3.0.0 (scope diagnostic); preflight PASS.
-- **Baseline:** `main` = `research/gpu-phase2` = `830a1221029c0569be647e0af3d335c6c9b3df5a`; accepted record
-  `config/gpu-backend/acceptance.json` sha256 `49e95d7a78fe5823273e9df3d2edc37500a58bad37bf0867b7c4a19f718666b4`
-  (verified 09:4xZ with `verify-acceptance.sh --device --expect-record-sha256 …`: VERIFIED); binary
-  `research/gpu-phase5/build/gb5` sha256 `f444c52139ebd8b2481fcde8a69cf8564c91dc426c6e74f366c70be5c714041e`.
-- **Running:** `p6chain-tests` (npm test, tsc, ESLint, portfolio parity, Strategy Lab suites, integrity). Check
-  `systemctl --user is-active p6chain-tests`; never start a second one.
-- **Next:** when `tests complete`: check `results/tests/*.json`, `results/integrity/integrity.json`; commit;
-  `tools/gpu-phase6/accept.ts --dry-run`, then for real; commit the record; out-of-repo pin; merge (PROTOCOL.md §7).
+- **Status:** **COMPLETE.** Maglev protection extended (legacy runner gate + child-process guard, every npm script,
+  Strategy Lab server/runners/tests); automatic job isolation (`src/gpu-jobs/`); **ACCEPTED** 2026-11-21T11:10:46Z
+  (enforcement-only, checklist §2a; record sha256 `3610caaf0bfc14ecd5ea75981a69f9316ff9ff6b610d4913b949d36950c884d3`,
+  supersedes `49e95d7a…`); **merged into `main`** (merge commit `dbb5aabaff4906bf3716a9bf64fe2ec297620a05`), verified
+  after the merge (merge gate 27/27, verifier with rebuild VERIFIED, live gate OPEN, integrity 5/5, npm test = the 7
+  known failures). **RISK-ENVELOPE PILOT NOT STARTED.**
+- **Authority:** `brief/BRIEF.md`; `PROTOCOL.md` FROZEN 2026-11-21T10:08:41Z sha256
+  `0737314415ee5c034fef6e4ecc03d850c3e06112971005e24ce08b48310dc474`; amendments A1–A4 (head A4). Standard 3.0.0
+  (scope diagnostic); preflight PASS.
+- **Accepted:** binary `research/gpu-phase5/build/gb5` `f444c521…` (unchanged), evaluation digest `3a6eacde…`
+  (unchanged), source revision `065919ef`, acceptance commit `85622fb0`; out-of-repository copy
+  `~/.local/share/margin-trading-gpu/acceptance-pins/acceptance-gpu-phase6-3610caaf.json` (0444) + `pins.jsonl` line.
+- **Git:** the handoff commit (this checkpoint's, a documentation successor of the merge) is the tip of `main`,
+  `research/gpu-phase6` and `research/gpu-phase2`; its hash and the remote verification are in `pins.jsonl` (outside the
+  repository) and in the session's final message. `research/gpu-phase3`, `-phase4`, `-phase5` untouched.
+- **Running:** nothing.
+- **Deliverables:** `GPU_INFRASTRUCTURE_HARDENING_REPORT.md` (read first), `JOB_ISOLATION.md`, `MERGE_AND_RESTORE.md`,
+  `MANIFEST.json` (sha256 of every file), the bundle `bundle/gpu-phase6-infrastructure-hardening-handoff.zip` (copy and
+  `.sha256` in `~/.local/share/margin-trading-gpu/handoffs/`).
+- **Next (the user's decision):** none pending here. The pilot and any official study need their own authorization.
+- **Never:** rerun campaign steps into the evidence paths the record binds (50 entries); edit a pinned file (incl.
+  `src/gpu-jobs/`) without a new acceptance; force-push.
 
 ## Environment
 
@@ -42,7 +50,7 @@
 | S1 Maglev protection | complete (`73b9ebf2`) | runtime.ts guard + helpers, legacyRunner gate, 57 root + 16 Strategy Lab npm scripts, Strategy Lab server/runners/NODE_FLAGS/replay/vitest/playwright/service template; tier-probe regression tests pass |
 | S2 job isolation | complete (`73b9ebf2`) | src/gpu-jobs (jobs.ts, lock.ts, cli.ts, tests 10/10), lab.ts ownership, official.ts preflight-job, acceptance.ts ENFORCEMENT_EXTRAS, official-preflight job |
 | S3 unit tests | complete | GPU-backend + jobs tests pass except the 2 expected stale-acceptance tests (merge gate, independent verifier) until the new record |
-| S4 GPU campaign C1–C8 | complete (chain complete 10:52:54Z); negative 67/67 (run 2, A3); tamper 20/20 | `chains/campaign.sh`; C1 10:09–10:10, C2 –10:12, C3 –10:23 (585 s), C4 10:23–10:42, C5 9/9 identical, C6 run1 FAIL (A2) → `chains/process-audit.sh` 10:43–10:46 → C6 210/210; resumed `START=6` |
-| S5 acceptance record | not started | |
-| S6 merge, push, restore | not started | |
-| S7 report, bundle | not started | |
+| S4 GPU campaign C1–C8 | complete (chain complete 10:52:54Z); negative 67/67 (run 2, A3); tamper 20/20; suites 11:03–11:09Z (A4) | `chains/campaign.sh`; C1 10:09–10:10, C2 –10:12, C3 –10:23 (585 s), C4 10:23–10:42, C5 9/9 identical, C6 run1 FAIL (A2) → `chains/process-audit.sh` 10:43–10:46 → C6 210/210; resumed `START=6` |
+| S5 acceptance record | complete | ACCEPTED 11:10:46Z, `3610caaf…`; record-in-force tests after 26/26; verifier VERIFIED; live gate OPEN |
+| S6 merge, push, restore | complete | merge `dbb5aaba`; post-merge `chains/post-merge.sh` all pass; push + restore in `MERGE_AND_RESTORE.md` |
+| S7 report, bundle | complete | `tools/gpu-phase6/bundle.sh` (verified) |
