@@ -2,17 +2,22 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-21T09:50Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — stage S0 (baseline, brief, protocol) in progress. **RISK-ENVELOPE PILOT NOT STARTED**
-  (out of scope; nothing of it is created, configured, preflighted or run).
-- **Authority:** `brief/BRIEF.md` (verbatim copy of the user's assignment, 2026-11-21). `PROTOCOL.md` (to be frozen
-  before the acceptance campaign). Standard 3.0.0 (scope diagnostic).
+- **Updated:** 2026-11-21T10:10Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — S1, S2 implemented and committed (`73b9ebf2`, `e473293d`); **S4 campaign RUNNING**
+  (unit `p6chain-campaign`, started 10:09:09Z, log `results/logs/chain-campaign.txt`). **RISK-ENVELOPE PILOT NOT
+  STARTED** (out of scope; nothing of it is created, configured, preflighted or run).
+- **Authority:** `brief/BRIEF.md` (verbatim copy of the user's assignment, 2026-11-21). `PROTOCOL.md` FROZEN
+  2026-11-21T10:08:41Z sha256 `0737314415ee5c034fef6e4ecc03d850c3e06112971005e24ce08b48310dc474`
+  (`results/protocol-freeze.json`); amendments: none. Standard 3.0.0 (scope diagnostic); preflight PASS.
 - **Baseline:** `main` = `research/gpu-phase2` = `830a1221029c0569be647e0af3d335c6c9b3df5a`; accepted record
   `config/gpu-backend/acceptance.json` sha256 `49e95d7a78fe5823273e9df3d2edc37500a58bad37bf0867b7c4a19f718666b4`
   (verified 09:4xZ with `verify-acceptance.sh --device --expect-record-sha256 …`: VERIFIED); binary
   `research/gpu-phase5/build/gb5` sha256 `f444c52139ebd8b2481fcde8a69cf8564c91dc426c6e74f366c70be5c714041e`.
-- **Running:** nothing.
-- **Next:** capture integrity baselines (results/baseline/), then implement (S1, S2).
+- **Running:** `p6chain-campaign` (systemd user unit in `gpup6.slice`; sub-units `gpup6-*`). Check:
+  `systemctl --user list-units 'gpup6-*' 'p6chain-*'`; `tail research/gpu-phase6/results/logs/chain-campaign.txt`
+  (ends with `chain complete` or `FAILED: …`). Never launch a second chain while it is active.
+- **Next:** when the chain completes: commit results; negative + tamper suites on the committed tree; npm test, tsc,
+  Strategy Lab suites + portfolio parity; integrity re-check; `tools/gpu-phase6/accept.ts`.
 
 ## Environment
 
@@ -34,11 +39,11 @@
 
 | Stage | Status | Notes |
 |---|---|---|
-| S0 baseline, brief, protocol | running | |
-| S1 Maglev protection | not started | |
-| S2 job isolation | not started | |
-| S3 tests (unit, suites) | not started | |
-| S4 GPU campaign (concurrency, parity, negative, tamper) | not started | |
+| S0 baseline, brief, protocol | complete | `results/baseline/` (research blobs, 22 preflights PASS, seals 999 protected, forward-freeze failures, compat digests); protocol frozen 10:08:41Z |
+| S1 Maglev protection | complete (`73b9ebf2`) | runtime.ts guard + helpers, legacyRunner gate, 57 root + 16 Strategy Lab npm scripts, Strategy Lab server/runners/NODE_FLAGS/replay/vitest/playwright/service template; tier-probe regression tests pass |
+| S2 job isolation | complete (`73b9ebf2`) | src/gpu-jobs (jobs.ts, lock.ts, cli.ts, tests 10/10), lab.ts ownership, official.ts preflight-job, acceptance.ts ENFORCEMENT_EXTRAS, official-preflight job |
+| S3 unit tests | complete | GPU-backend + jobs tests pass except the 2 expected stale-acceptance tests (merge gate, independent verifier) until the new record |
+| S4 GPU campaign C1–C8 | running | `chains/campaign.sh` (START=<step> resumes; jobs refuse recreation) |
 | S5 acceptance record | not started | |
 | S6 merge, push, restore | not started | |
 | S7 report, bundle | not started | |

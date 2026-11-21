@@ -1,0 +1,33 @@
+#!/bin/bash
+# gpu-phase6 gates E7 (Strategy Lab part), E8, E9, E10 on the final committed tree (a copy of research/gpu-phase5/chains/tests.sh with
+# this study's paths, plus Strategy Lab's portfolio parity and the integrity check). The UI is built into a scratch
+# directory (the live apps/strategy-lab/dist is never replaced); the e2e server uses its own temporary state, so
+# state/strategy-lab/ is never touched (fingerprinted before and after). The GPU must be free (Phase 1's live GPU test).
+#   tools/gpu-phase6/launch-slice.sh p6chain-tests <abs log> -- /bin/bash research/gpu-phase6/chains/tests.sh
+cd /home/chad/projects/margin-trading
+NODE=/home/chad/.local/share/fnm/node-versions/v24.21.0/installation/bin/node
+OUT=research/gpu-phase6/results/tests
+SCRATCH=/home/chad/projects/margin-trading/research/gpu-phase6/cache/strategy-lab-scratch
+mkdir -p "$OUT" "$SCRATCH"
+fp() { find state/strategy-lab -type f -printf '%p %s %T@\n' | sort | sha256sum | cut -d' ' -f1; }
+fp > "$OUT/strategy-lab-state-before.txt"
+find apps/strategy-lab/dist -type f -newer research/gpu-phase6/results/protocol-freeze.json | wc -l > "$OUT/strategy-lab-dist-newer-before.txt"
+r() { local name=$1; shift; echo "$(date -u +%FT%TZ) start [$name]"; "$@" > "$OUT/$name.txt" 2>&1; local rc=$?; echo "exit=$rc" >> "$OUT/$name.txt"; echo "$(date -u +%FT%TZ) end [$name] rc=$rc"; return 0; }
+r npm-test npm test
+r root-tsc npx tsc --noEmit -p tsconfig.json
+r eslint-gpu npx eslint src/gpu-backend src/gpu-jobs src/gpu-phase6 tools/gpu-phase6 tools/gpu-backend/official-preflight.ts
+r portfolio-parity npm --prefix apps/strategy-lab run portfolio-parity -- --out research/gpu-phase6/results/tests/portfolio-parity.json
+cd apps/strategy-lab
+r() { local name=$1; shift; echo "$(date -u +%FT%TZ) start [$name]"; "$@" > "../../$OUT/strategy-lab-$name.txt" 2>&1; local rc=$?; echo "exit=$rc" >> "../../$OUT/strategy-lab-$name.txt"; echo "$(date -u +%FT%TZ) end [$name] rc=$rc"; return $rc; }
+r typecheck npm run typecheck
+r lint npm run lint
+r vitest npm run test
+r build npx vite build --outDir "$SCRATCH/dist" --emptyOutDir
+STRATEGY_LAB_STATIC_DIR="$SCRATCH/dist" r e2e npx playwright test; E=$?
+if [ $E -ne 0 ]; then STRATEGY_LAB_STATIC_DIR="$SCRATCH/dist" r e2e-rerun npx playwright test; fi
+cd ../..
+fp > "$OUT/strategy-lab-state-after.txt"
+find apps/strategy-lab/dist -type f -newer research/gpu-phase6/results/protocol-freeze.json | wc -l > "$OUT/strategy-lab-dist-newer-after.txt"
+"$NODE" --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase6/tests-record.ts
+"$NODE" --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase6/integrity.ts --out research/gpu-phase6/results/integrity/integrity.json
+echo "$(date -u +%FT%TZ) tests complete"
