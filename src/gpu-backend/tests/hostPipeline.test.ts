@@ -389,9 +389,13 @@ test('GpuPool on the host pipeline: callers that run while the pool starts, ever
 
       assert.deepEqual([...r.entries()].sort(), [...serialRecords.entries()].sort(), `${w} host workers`);
     }
+    // the pool's value contract (GPU Phase 7, the risk-envelope delivery): the canonical record, and for a task that
+    // requested `risk` the record with its envelope ({ ...record, envelope }) — the serial codec's own results
     assert.deepEqual(
       [...serialRecords.entries()].sort(),
-      serial.results.map((r) => [r.key, canonHash(r.record)]).sort()
+      serial.results
+        .map((r, i) => [r.key, canonHash(tasks[i]!.risk ? { ...r.record, envelope: r.envelope } : r.record)])
+        .sort()
     );
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });

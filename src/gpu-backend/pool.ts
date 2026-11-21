@@ -356,6 +356,19 @@ export class GpuPool {
       }
       const msPer = r.receipt.server.totalMs / batch.length; // each task's share of the device batch
 
+      // the risk-envelope delivery (GPU Phase 7): a task that requested `risk` must come back with its envelope, and a
+      // task that did not must come back without one — anything else is a decoder/request mismatch; the batch's results
+      // are withheld and the job fails (never a silent record without the requested risk data)
+      const mismatch = r.results.find(
+        (res, i) => res.status === 0 && Boolean(batch[i]!.task.risk) !== (res.envelope !== null)
+      );
+
+      if (mismatch)
+        throw new PolicyError(
+          'risk-envelope-mismatch',
+          `task ${mismatch.key} ${mismatch.envelope === null ? 'requested the risk envelope but none was returned' : 'returned a risk envelope it did not request'}; the batch's results are withheld`
+        );
+
       r.results.forEach((res, i) => {
         const p = batch[i]!;
 
@@ -440,8 +453,19 @@ export class GpuPool {
   }
 
   // The optimizer's contract: runs tasks; `onResult` sees each record as it arrives (the caller archives it at once).
+  // The value is the canonical record, the same object as before GPU Phase 7. Only a task with `risk: true` (the
+  // optional risk-envelope delivery) gets `{ ...record, envelope }` instead: the record's own fields unchanged, plus the
+  // four envelope inputs computed on the device (TaskResult.envelope: banked-capital drawdown and trade principal loss,
+  // marked and liquidation bases, in dollars).
   async run<T>(
-    tasks: { k: string; quad: Task['quad']; controls: Task['controls']; options: Task['options']; detail: boolean }[],
+    tasks: {
+      k: string;
+      quad: Task['quad'];
+      controls: Task['controls'];
+      options: Task['options'];
+      detail: boolean;
+      risk?: boolean;
+    }[],
     onResult: (task: (typeof tasks)[number], value: T, ms: number) => void
   ): Promise<void> {
     let left = tasks.length;
@@ -457,11 +481,11 @@ export class GpuPool {
     for (const task of tasks) {
       this.counters.submitted++;
       this.queue.push({
-        task: { ...task, risk: (task as Task).risk },
+        task: { ...task, risk: task.risk },
         orig: task,
         caps: 0,
         resolve: (r, ms) => {
-          onResult(task, r.record as T, ms);
+          onResult(task, (task.risk ? { ...r.record, envelope: r.envelope } : r.record) as T, ms);
           left--;
           this.wake();
         }
