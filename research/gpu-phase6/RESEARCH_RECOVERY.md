@@ -2,13 +2,15 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-21T10:10Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — S1, S2 implemented and committed (`73b9ebf2`, `e473293d`); **S4 campaign RUNNING**
-  (unit `p6chain-campaign`, started 10:09:09Z, log `results/logs/chain-campaign.txt`). **RISK-ENVELOPE PILOT NOT
+- **Updated:** 2026-11-21T10:48Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — S1, S2 committed. Campaign C1–C5 complete (all 9 comparisons identical); C6 first run
+  failed 156/157 on a sampler defect (amendment A2: `ps unit` vs `uunit`), bounded re-run `chains/process-audit.sh`
+  done (14 node processes, all `--no-maglev`; 2 more identical comparisons), C6 re-run 210/210 PASS; **C7–C8 RUNNING**
+  (unit `p6chain-campaign-r1`, `START=6`, started 10:46Z). **RISK-ENVELOPE PILOT NOT
   STARTED** (out of scope; nothing of it is created, configured, preflighted or run).
 - **Authority:** `brief/BRIEF.md` (verbatim copy of the user's assignment, 2026-11-21). `PROTOCOL.md` FROZEN
   2026-11-21T10:08:41Z sha256 `0737314415ee5c034fef6e4ecc03d850c3e06112971005e24ce08b48310dc474`
-  (`results/protocol-freeze.json`); amendments: none. Standard 3.0.0 (scope diagnostic); preflight PASS.
+  (`results/protocol-freeze.json`); amendments: A1 (portfolio parity reads FULL), A2 (process-audit sampler defect, re-run). Standard 3.0.0 (scope diagnostic); preflight PASS.
 - **Baseline:** `main` = `research/gpu-phase2` = `830a1221029c0569be647e0af3d335c6c9b3df5a`; accepted record
   `config/gpu-backend/acceptance.json` sha256 `49e95d7a78fe5823273e9df3d2edc37500a58bad37bf0867b7c4a19f718666b4`
   (verified 09:4xZ with `verify-acceptance.sh --device --expect-record-sha256 …`: VERIFIED); binary
@@ -43,7 +45,7 @@
 | S1 Maglev protection | complete (`73b9ebf2`) | runtime.ts guard + helpers, legacyRunner gate, 57 root + 16 Strategy Lab npm scripts, Strategy Lab server/runners/NODE_FLAGS/replay/vitest/playwright/service template; tier-probe regression tests pass |
 | S2 job isolation | complete (`73b9ebf2`) | src/gpu-jobs (jobs.ts, lock.ts, cli.ts, tests 10/10), lab.ts ownership, official.ts preflight-job, acceptance.ts ENFORCEMENT_EXTRAS, official-preflight job |
 | S3 unit tests | complete | GPU-backend + jobs tests pass except the 2 expected stale-acceptance tests (merge gate, independent verifier) until the new record |
-| S4 GPU campaign C1–C8 | running | `chains/campaign.sh` (START=<step> resumes; jobs refuse recreation) |
+| S4 GPU campaign C1–C8 | C1–C6 complete; C7–C8 running | `chains/campaign.sh`; C1 10:09–10:10, C2 –10:12, C3 –10:23 (585 s), C4 10:23–10:42, C5 9/9 identical, C6 run1 FAIL (A2) → `chains/process-audit.sh` 10:43–10:46 → C6 210/210; resumed `START=6` |
 | S5 acceptance record | not started | |
 | S6 merge, push, restore | not started | |
 | S7 report, bundle | not started | |
