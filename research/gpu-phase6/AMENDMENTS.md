@@ -32,3 +32,14 @@ Each entry: ID, UTC time, the change, why, which results existed, its effect. No
   The criterion is unchanged (every sampled Node process of the units runs with `--no-maglev`; ≥ 12 forked CPU workers).
   Then the chain resumes at C6 (`START=6`: the audit, C7, C8).
 - **Results existing.** C1–C5 complete (all identical); C6's first run failed only on this check.
+
+## A3 — 2026-11-21T10:54:22Z — a negative case expected the wrong dataset file name (a test defect); whole-suite rerun
+
+- **What happened.** The first negative-suite run passed 66/67. The failing case ("the attestation names the job and the
+  job logs the attestation; the dataset was exported into the job's own cache") looked for `W-QUIET.gb2ds`; the
+  unchanged exporter (`src/gpu-backend/dataset.ts`) names a window door's file `fixture_W-QUIET.gb2ds`. The gate had
+  opened with the job and the attestation named it correctly (the recorded observation shows the job and its dataset
+  directory); the defect was in the expectation only.
+- **Change.** The case finds the dataset in the job's own cache by content: a `.gb2ds` file whose sha256 equals the
+  attestation's dataset sha256 (stricter than a file name). The whole suite is rerun on the committed tree.
+- **Kept.** `results/policy/negative-run1-A3-expectation-defect.json` and its log `negative-run1-A3.log`.

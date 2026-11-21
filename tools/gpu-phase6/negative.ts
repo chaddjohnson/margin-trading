@@ -317,7 +317,12 @@ await gate(
       'job',
       'the attestation names the job and the job logs the attestation; the dataset was exported into the job\'s own cache',
       /^job recorded$/,
-      s?.attestation.job?.id === j.id && /"event":"attestation"/.test(ev) && fs.existsSync(path.join(j.dirs.dataset, 'W-QUIET.gb2ds'))
+      // the dataset in the job's own cache is the one attested (by content; the exporter names a window door fixture_<name>)
+      s?.attestation.job?.id === j.id &&
+      /"event":"attestation"/.test(ev) &&
+      fs
+        .readdirSync(j.dirs.dataset)
+        .some((f) => f.endsWith('.gb2ds') && sha(path.join(j.dirs.dataset, f)) === s.attestation.dataset.sha256)
         ? 'job recorded'
         : `attestation job ${JSON.stringify(s?.attestation.job)}; events ${ev.slice(0, 200)}`
     );
