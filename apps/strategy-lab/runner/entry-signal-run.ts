@@ -1,7 +1,7 @@
 // The Strategy Lab entry-signal runner: ONE manual test of one configuration, started by the server as a child process
 // with a fixed argument vector:
 //
-//   node --experimental-transform-types runner/entry-signal-run.ts <absolute run directory>
+//   node --no-maglev --experimental-transform-types runner/entry-signal-run.ts <absolute run directory>
 //
 // cwd must be the repository root (data/, config/ paths). It reads <run dir>/request.json (written by the server after
 // validation), loads each symbol through the repository's dataset pipeline (src/lib/evaluation.ts: the evaluation
@@ -23,6 +23,10 @@ import { loadDatasetSessions } from '../../../src/lib/evaluation.ts';
 import { atomicWrite, writeEvents } from '../server/artifacts.ts';
 import type { LabEvent, LabValue, RunRequest } from '../shared/contract.ts';
 import { RISE_FROM_RECENT_LOW } from '../shared/strategies.ts';
+import { requireEngineRuntime } from '../../../src/gpu-backend/runtime.ts';
+
+// never under V8's Maglev compiler (GPU Phase 6; the server starts runners with NODE_FLAGS, server/jobs.ts)
+requireEngineRuntime('the Strategy Lab runner entry-signal-run');
 
 const emit = (o: Record<string, unknown>) => process.stdout.write(`${JSON.stringify(o)}\n`);
 const progress = (message: string, fraction: number | null = null) => emit({ type: 'progress', message, fraction });

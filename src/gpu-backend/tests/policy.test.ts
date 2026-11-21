@@ -14,7 +14,7 @@ import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
 import { PolicyError, assertNonOfficialCpuRun, declaredPurpose } from '../purpose.ts';
 import { ENGINE_FLAG, engineExecArgv, maglevDisabled, runtimeProblem } from '../runtime.ts';
-import { acceptanceFile, checkAcceptance } from '../acceptance.ts';
+import { ENFORCEMENT_EXTRAS, acceptanceFile, checkAcceptance } from '../acceptance.ts';
 import { compatManifest, policySources } from '../compat.ts';
 import { audit, registryFile, type Registry } from '../entrypoints.ts';
 import { checkGpuPolicy } from '../../research-standard/gpuPolicy.ts';
@@ -40,10 +40,11 @@ test('a CPU runner refuses a missing purpose and official optimization; accepts 
 
 test('the legacy runner wrapper refuses before importing the runner', () => {
   const runner = path.join(repoRoot, 'src/gpu-backend/legacyRunner.ts');
-  const run = (env: Record<string, string>) =>
+  const run = (env: Record<string, string>, engine: string[] = [ENGINE_FLAG]) =>
     spawnSync(
       node,
       [
+        ...engine,
         '--experimental-transform-types',
         '--disable-warning=ExperimentalWarning',
         runner,
@@ -66,6 +67,14 @@ test('the legacy runner wrapper refuses before importing the runner', () => {
     run({ GPU_POLICY_PURPOSE: 'cpu-reference' }).stderr,
     /non-official CPU run|Cannot find module|ERR_MODULE_NOT_FOUND/
   );
+  // GPU Phase 6: never under V8's Maglev — without --no-maglev, or with Maglev re-enabled after it (before the import)
+  for (const engine of [[], [ENGINE_FLAG, '--maglev'], ['--no-turbofan']]) {
+    const r = run({ GPU_POLICY_PURPOSE: 'cpu-reference' }, engine);
+
+    assert.equal(r.status, 3, `engine options ${engine.join(' ') || 'none'}`);
+    assert.match(r.stderr, /runtime-maglev/);
+    assert.doesNotMatch(r.stderr, /Cannot find module|ERR_MODULE_NOT_FOUND/);
+  }
 });
 
 test('every npm script that can start a CPU research runner or optimizer goes through the purpose gate', () => {
@@ -181,6 +190,22 @@ test('engine runtime: Maglev is off only with --no-maglev and no other Maglev op
         /\bnode\b[^|&;]*--no-maglev[^|&;]*officialRunner\.ts/,
         `npm script ${name} starts an official runner without --no-maglev`
       );
+  // GPU Phase 6: EVERY npm script that starts Node (the repository's and Strategy Lab's) passes the flag on the command
+  // line, before the script — legacy runners, the app shell, tests, the Strategy Lab server and its tools
+  for (const file of ['package.json', 'apps/strategy-lab/package.json']) {
+    const scripts = (JSON.parse(src(file)) as { scripts: Record<string, string> }).scripts;
+
+    for (const [name, cmd] of Object.entries(scripts))
+      for (const part of cmd.split(/&&|\|\||;/))
+        if (/(^|\s)node\s/.test(part))
+          assert.match(
+            part,
+            /(^|\s)node --no-maglev\s/,
+            `${file} script ${name} starts node without --no-maglev: ${part.trim()}`
+          );
+  }
+  assert.match(src('src/gpu-backend/legacyRunner.ts'), /requireEngineRuntime\(`the legacy CPU runner/);
+  assert.match(src('src/gpu-backend/legacyRunner.ts'), /installChildEngineGuard\(\);/);
 });
 
 test('entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged', () => {
@@ -220,7 +245,7 @@ test('acceptance record: missing, forged, stale, changed evidence and wrong bina
     assert.equal(checkAcceptance({ file: path.join(d, 'bad.json') }).status, 'INVALID');
 
     const m = compatManifest();
-    const pol = policySources(['src/gpu-backend/tests/policy.test.ts']);
+    const pol = policySources([...ENFORCEMENT_EXTRAS, 'src/gpu-backend/tests/policy.test.ts']);
     const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repoRoot }).toString().trim();
     const evidence = path.join(d, 'evidence.json');
 
@@ -291,6 +316,28 @@ test('acceptance record: missing, forged, stale, changed evidence and wrong bina
     assert.match(
       checkAcceptance({ file: write('unpinned.json', pMissing) }).reasons.join(' '),
       /does not pin enforcement file\(s\) this tree requires: src\/gpu-backend\/official\.ts/
+    );
+    // GPU Phase 6: the job isolation module outside src/gpu-backend/ is a required pin too, and a change to it is seen
+    const pNoJobs = {
+      ...base,
+      policy: { ...base.policy, files: base.policy.files.filter((f) => f.path !== 'src/gpu-jobs/jobs.ts') }
+    };
+
+    assert.match(
+      checkAcceptance({ file: write('unpinned-jobs.json', pNoJobs) }).reasons.join(' '),
+      /does not pin enforcement file\(s\) this tree requires: src\/gpu-jobs\/jobs\.ts/
+    );
+    const pJobs = {
+      ...base,
+      policy: {
+        ...base.policy,
+        files: base.policy.files.map((f) => (f.path === 'src/gpu-jobs/lock.ts' ? { ...f, sha256: '0'.repeat(64) } : f))
+      }
+    };
+
+    assert.match(
+      checkAcceptance({ file: write('jobs-changed.json', pJobs) }).reasons.join(' '),
+      /enforcement code changed since acceptance: src\/gpu-jobs\/lock\.ts/
     );
     assert.match(
       checkAcceptance({

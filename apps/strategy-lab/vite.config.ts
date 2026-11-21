@@ -12,6 +12,8 @@ export default defineConfig({
   test: {
     include: ['tests/**/*.test.ts'],
     environment: 'node',
-    testTimeout: 60_000
+    testTimeout: 60_000,
+    // the test workers evaluate with the canonical CPU engine: never under V8's Maglev (src/gpu-backend/runtime.ts)
+    execArgv: ['--no-maglev']
   }
 });

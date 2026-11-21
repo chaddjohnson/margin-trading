@@ -4,7 +4,7 @@
 // single rerun with full provenance — for records that carry the new switches, methods and policies. NOT selected by
 // any search, ranking or optimisation, not candidates, not a recommendation.
 //
-//   node --experimental-transform-types apps/strategy-lab/scripts/make-growth-gates-demo-phenotypes.ts <new directory>
+//   node --no-maglev --experimental-transform-types apps/strategy-lab/scripts/make-growth-gates-demo-phenotypes.ts <new directory>
 // (from the repository root: the engine's data module resolves repository-relative paths when it loads)
 
 import { resolve } from 'node:path';

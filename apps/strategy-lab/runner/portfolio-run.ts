@@ -1,7 +1,7 @@
 // The Strategy Lab pooled-candidate runner (Priority 6): ONE replay of ONE frozen catalog candidate, started by the
 // server as a child process with a fixed argument vector:
 //
-//   node --experimental-transform-types runner/portfolio-run.ts <absolute work directory>
+//   node --no-maglev --experimental-transform-types runner/portfolio-run.ts <absolute work directory>
 //
 // cwd must be the repository root. It reads <work>/request.json (written by the server: the replay id, the candidate id
 // and the catalog entry's sha256), checks the entry against the committed catalog, opens Priority 3's FULL door
@@ -20,6 +20,10 @@ import { PORTFOLIO_REPLAY_FORMAT, REPLAY_ID_RE } from '../shared/portfolio.ts';
 import { atomicWrite, writeEvents } from '../server/artifacts.ts';
 import { replayCandidate } from './portfolio-bridge.ts';
 import { readCatalog } from './portfolio-catalog-read.ts';
+import { requireEngineRuntime } from '../../../src/gpu-backend/runtime.ts';
+
+// never under V8's Maglev compiler (GPU Phase 6; the server starts runners with NODE_FLAGS, server/jobs.ts)
+requireEngineRuntime('the Strategy Lab runner portfolio-run');
 
 const emit = (o: Record<string, unknown>) => process.stdout.write(`${JSON.stringify(o)}\n`);
 const progress = (message: string, fraction: number | null = null) => emit({ type: 'progress', message, fraction });

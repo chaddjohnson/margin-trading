@@ -1,7 +1,7 @@
 // The Strategy Lab shared-slot pool runner: ONE rerun of ONE sealed Study 8 phenotype (a catalogue phenotype of
 // execution kind `shared-slot pool`), started by the server as a child process with a fixed argument vector:
 //
-//   node --experimental-transform-types runner/pool-run.ts <absolute run directory>
+//   node --no-maglev --experimental-transform-types runner/pool-run.ts <absolute run directory>
 //
 // cwd must be the repository root. It reads <run dir>/request.json (built and validated by the server from the frozen
 // phenotype: the sealed alias and id, the end date, the sealed 5 bps), and runs the UNCHANGED Study 8 local runner
@@ -21,6 +21,10 @@ import { resolveAlias } from '../../../src/study8-runners/resolve.ts';
 import { runFor } from '../../../src/study8-runners/run.ts';
 import { type Lot, parseCsv, study8Events } from '../importers/study8.ts';
 import { atomicWrite, writeEvents } from '../server/artifacts.ts';
+import { requireEngineRuntime } from '../../../src/gpu-backend/runtime.ts';
+
+// never under V8's Maglev compiler (GPU Phase 6; the server starts runners with NODE_FLAGS, server/jobs.ts)
+requireEngineRuntime('the Strategy Lab runner pool-run');
 
 const emit = (o: Record<string, unknown>) => process.stdout.write(`${JSON.stringify(o)}\n`);
 const progress = (message: string, fraction: number | null = null) => emit({ type: 'progress', message, fraction });

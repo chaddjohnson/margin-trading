@@ -16,8 +16,24 @@
 //   - the official gate (official.ts) and the official runner (officialRunner.ts) refuse a process that was not started
 //     with `--no-maglev` (V8 options are process-wide: the host pipeline's worker threads inherit them);
 //   - the CPU parity-reference workers are forked with it (the acceptance study's harness);
-//   - the acceptance campaign's tools run with it and record the engine configuration in their evidence.
+//   - the acceptance campaign's tools run with it and record the engine configuration in their evidence;
+//   - (GPU Phase 6, research/gpu-phase6/) every legacy CPU research runner (legacyRunner.ts) and Strategy Lab's server
+//     and runners refuse a process started without it, and the legacy runner gate installs the CHILD-PROCESS GUARD below,
+//     so that the Node children of frozen runner code — which fork their workers with an explicit execArgv that would
+//     otherwise drop the flag — start with it too.
 // `--no-maglev` only removes one optimizing tier (Sparkplug and TurboFan remain); it changes no JavaScript semantics.
+//
+// How the flag travels (the one place that knows it; nothing else duplicates this logic):
+//   - the first process: `node --no-maglev …` on the command line (npm scripts, systemd units, launchers). NODE_OPTIONS
+//     cannot carry it (Node refuses V8 options there) and is never relied on;
+//   - worker threads: V8 options are process-wide, a worker cannot opt out (its own `execArgv` holds Node options only);
+//   - child processes: `fork()` without an explicit execArgv inherits process.execArgv; one with an explicit execArgv,
+//     or a `spawn(process.execPath, …)`, gets the flag only if the caller adds it — `engineExecArgv` / `withEngineFlag`
+//     for code that can be edited, `installChildEngineGuard()` for frozen code that cannot.
+import childProcess from 'node:child_process';
+import { syncBuiltinESMExports } from 'node:module';
+import path from 'node:path';
+import { promisify } from 'node:util';
 import { PolicyError } from './purpose.ts';
 
 export const ENGINE_FLAG = '--no-maglev';
@@ -56,3 +72,95 @@ export const requireEngineRuntime = (what: string) => {
 
   if (p) throw new PolicyError('runtime-maglev', `${what}: ${p}`);
 };
+
+// ----- launching Node children with the engine configuration -----
+
+const isMaglevOption = (a: string) => /maglev/i.test(a) && a !== ENGINE_FLAG;
+
+// the Node options of a child process: `--no-maglev` first, never twice; another Maglev option is refused (fail closed)
+export const withEngineFlag = (execArgv: readonly string[] = []): string[] => {
+  const bad = execArgv.filter(isMaglevOption);
+
+  if (bad.length)
+    throw new PolicyError(
+      'runtime-maglev',
+      `a Node child process was to start with ${bad.join(' ')}: the engine runs only without V8's Maglev (${ENGINE_FLAG}; research/gpu-phase5/PARITY_ROOT_CAUSE.md)`
+    );
+  return [ENGINE_FLAG, ...execArgv.filter((a) => a !== ENGINE_FLAG)];
+};
+
+// the argument vector of `spawn(process.execPath, args)`: the Node options before the script (or `-e`/`-p` code) get
+// the flag; the script's own arguments are never inspected or changed
+export const withEngineFlagArgs = (args: readonly string[]): string[] => {
+  let i = 0;
+
+  while (i < args.length && args[i]!.startsWith('-') && !['-e', '--eval', '-p', '--print', '-', '--'].includes(args[i]!))
+    i++;
+  return [...withEngineFlag(args.slice(0, i)), ...args.slice(i)];
+};
+
+// a command that starts this Node binary (or a `node` from PATH)
+const isNodeCommand = (file: unknown) =>
+  typeof file === 'string' &&
+  (file === process.execPath || path.basename(file) === 'node' || path.basename(file) === path.basename(process.execPath));
+
+const GUARD = Symbol.for('margin-trading.childEngineGuard');
+
+// THE CHILD-PROCESS GUARD. Installed by a process that runs code it cannot edit (the frozen legacy runners, behind
+// legacyRunner.ts): from then on every Node child process this process starts — `fork()` (always a Node child), and
+// `spawn` / `spawnSync` / `execFile` / `execFileSync` of this Node binary or of `node` — starts with `--no-maglev`
+// added to its Node options, whatever execArgv or arguments the caller passed. The ESM bindings of `node:child_process`
+// are refreshed (module.syncBuiltinESMExports), so `import { fork } from 'node:child_process'` sees the guarded
+// function as well. Nothing else is changed: the child's script, its arguments, environment, stdio, IPC and
+// serialization are the caller's. Non-Node commands (the GPU server, git, nvidia-smi, shells) are untouched. Idempotent;
+// the process itself must already run without Maglev (requireEngineRuntime) — the guard only carries the flag on.
+export const installChildEngineGuard = () => {
+  const cp = childProcess as unknown as Record<string | symbol, unknown>;
+
+  if (cp[GUARD]) return false;
+
+  const original = {
+    fork: childProcess.fork,
+    spawn: childProcess.spawn,
+    spawnSync: childProcess.spawnSync,
+    execFile: childProcess.execFile,
+    execFileSync: childProcess.execFileSync
+  };
+  // fork(module, args?, options?): the options' execArgv (default: process.execArgv, which already carries the flag)
+  const fork = function (this: unknown, modulePath: string, ...rest: unknown[]) {
+    const argsGiven = Array.isArray(rest[0]);
+    const args = argsGiven ? (rest[0] as string[]) : [];
+    const optIndex = argsGiven ? 1 : 0;
+    const options = (rest[optIndex] && typeof rest[optIndex] === 'object' ? rest[optIndex] : {}) as {
+      execArgv?: string[];
+    };
+    const next = { ...options, execArgv: withEngineFlag(options.execArgv ?? process.execArgv) };
+
+    return (original.fork as (...a: unknown[]) => unknown).call(this, modulePath, args, next);
+  };
+  // spawn-like(file, args?, …): a Node command gets the flag before its script
+  const nodeArgs =
+    (fn: (...a: unknown[]) => unknown) =>
+    function (this: unknown, file: unknown, ...rest: unknown[]) {
+      if (!isNodeCommand(file)) return fn.call(this, file, ...rest);
+      if (Array.isArray(rest[0])) rest[0] = withEngineFlagArgs(rest[0] as string[]);
+      else rest.unshift([ENGINE_FLAG]);
+      return fn.call(this, file, ...rest);
+    };
+
+  const execFile = nodeArgs(original.execFile as never) as ((...a: unknown[]) => unknown) & Record<symbol, unknown>;
+  const promisified = (original.execFile as unknown as Record<symbol, (...a: unknown[]) => unknown>)[promisify.custom];
+
+  // util.promisify(execFile) keeps resolving { stdout, stderr }, with the same argument handling
+  if (promisified) execFile[promisify.custom] = nodeArgs(promisified);
+  cp.fork = fork;
+  cp.spawn = nodeArgs(original.spawn as never);
+  cp.spawnSync = nodeArgs(original.spawnSync as never);
+  cp.execFile = execFile;
+  cp.execFileSync = nodeArgs(original.execFileSync as never);
+  cp[GUARD] = true;
+  syncBuiltinESMExports();
+  return true;
+};
+
+export const childEngineGuardInstalled = () => Boolean((childProcess as unknown as Record<symbol, unknown>)[GUARD]);

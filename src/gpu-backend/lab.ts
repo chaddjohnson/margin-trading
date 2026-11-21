@@ -6,6 +6,12 @@
 // (Assignment 3's Lane, unchanged) takes it in place of its own Lab: it reads evalMany, store, checkpoint, stage,
 // writeProgress, compute, digest and peaks, all provided here. The archive binding records the backend, so a CPU and a
 // GPU archive can never be mixed or resumed into one another.
+//
+// OWNERSHIP (GPU Phase 6, research/gpu-phase6/): one process at a time writes a job's archive and checkpoint. A Lab is
+// either opened for a job this process owns (`owner`: src/gpu-jobs/jobs.ts openJob — the normal case; the job's
+// directory, study and name must be the Lab's), or it takes its directory's ownership lock itself (src/gpu-jobs/lock.ts;
+// a kernel lock released by any exit) and releases it at close. A second writer — another process, or a second Lab on the
+// same job in this process — is refused (JOB_ACTIVE) before the archive is opened. Nothing of evalMany changes.
 import fs from 'node:fs';
 import path from 'node:path';
 import { sha256, writeAtomic } from '../growth140-vgt-s8m/checkpoint.ts';
@@ -15,6 +21,8 @@ import type { EvalOptions } from '../vg-d1-growth-joint/evaluate.ts';
 import type { DRec, SRec } from '../vg-l0-risk-families/evaluate.ts';
 import { type Cfg, evalKeyOf, quadOf } from '../vg-l0-full-joint/space.ts';
 import type { Task } from './client.ts';
+import { type JobContext, claimJobDirectory } from '../gpu-jobs/jobs.ts';
+import type { OwnershipLock } from '../gpu-jobs/lock.ts';
 
 export { StopRequested };
 
@@ -36,6 +44,7 @@ export interface EvalLabOptions {
   backend: string; // e.g. "gpu:<uuid>:<binary sha256>:<compat digest>" or "cpu:<n> workers"
   codeDigest: string;
   cacheRoot: string; // the job archives live in <cacheRoot>/jobs/<job>
+  owner?: JobContext; // the job (openJob) that owns <cacheRoot>/jobs/<job> in this process; otherwise the Lab locks it
   queueChunk?: number;
   stopAfterFresh?: number; // tests: request a stop after this many fresh evaluations (the resume test)
   maxFresh?: number;
@@ -65,13 +74,26 @@ export class EvalLab {
   private started = false;
   private readonly inflight = new Map<string, Promise<void>>();
   private peakRss = 0;
+  private readonly ownLock: OwnershipLock | null; // the directory's lock when no job context owns it
 
   constructor(readonly o: EvalLabOptions) {
     const dir = path.join(o.cacheRoot, 'jobs', o.job);
 
+    // one writer per job: the owning job of this process, or this Lab's own lock (refused while another holds it)
+    this.ownLock = claimJobDirectory({ study: o.study, cacheRoot: o.cacheRoot, job: o.job, owner: o.owner });
     this.digest = o.codeDigest;
     this.pool = o.pool;
-    this.store = new Store(path.join(dir, 'archive.sqlite'), {
+    try {
+      this.store = this.openStore(dir, o);
+    } catch (e) {
+      this.ownLock?.release();
+      throw e;
+    }
+    this.checkpointFile = path.join(dir, 'progress.json');
+  }
+
+  private openStore(dir: string, o: EvalLabOptions) {
+    return new Store(path.join(dir, 'archive.sqlite'), {
       binding: {
         study: o.study,
         job: o.job,
@@ -84,7 +106,6 @@ export class EvalLab {
       commitRows: 2000,
       commitMs: 5000
     });
-    this.checkpointFile = path.join(dir, 'progress.json');
   }
 
   async open() {
@@ -236,8 +257,12 @@ export class EvalLab {
       `${JSON.stringify({ t: new Date().toISOString(), event, fresh: this.fresh, hits: this.hits, archivedAtOpen: this.archivedAtOpen, archived: this.store.count('points'), wallSeconds: Math.round((Date.now() - this.t0) / 1000) })}\n`
     );
     this.writeProgress();
-    await this.pool.close();
-    this.store.close();
+    try {
+      await this.pool.close();
+      this.store.close();
+    } finally {
+      this.ownLock?.release();
+    }
   }
 
   get peaks() {

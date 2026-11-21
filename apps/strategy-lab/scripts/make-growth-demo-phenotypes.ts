@@ -5,7 +5,7 @@
 // The checked-in export was written on 2026-11-04 by Growth 1.1.0 and is frozen as a 1.1.0 export (its phenotypes rerun
 // as 1.1.0 configurations). The 1.2.0 entry-gate demonstration is make-growth-gates-demo-phenotypes.ts.
 //
-//   node --experimental-transform-types apps/strategy-lab/scripts/make-growth-demo-phenotypes.ts <new directory>
+//   node --no-maglev --experimental-transform-types apps/strategy-lab/scripts/make-growth-demo-phenotypes.ts <new directory>
 // (from the repository root: the engine's data module resolves repository-relative paths when it loads)
 
 import { resolve } from 'node:path';

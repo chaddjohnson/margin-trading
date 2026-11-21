@@ -4,7 +4,7 @@
 // and persistent eligibility OFF; @1.0.0 = also continuation OFF),
 // started by the server as a child process with a fixed argument vector:
 //
-//   node --experimental-transform-types runner/trading-run.ts <absolute run directory>
+//   node --no-maglev --experimental-transform-types runner/trading-run.ts <absolute run directory>
 //
 // cwd must be the repository root. It reads <run dir>/request.json (validated by the server), loads each symbol through
 // the repository's dataset pipeline (src/lib/evaluation.ts: the window, warm-up sessions read for the scanner's lookback
@@ -59,6 +59,10 @@ import type { ExecutionPrice, ExitReason } from '../../../src/shared-margin-port
 import { atomicWrite, writeEvents } from '../server/artifacts.ts';
 import type { LabEvent, LabRunRequest, LabValue, TimePrecision } from '../shared/contract.ts';
 import { paramsOf } from './growth-params.ts';
+import { requireEngineRuntime } from '../../../src/gpu-backend/runtime.ts';
+
+// never under V8's Maglev compiler (GPU Phase 6; the server starts runners with NODE_FLAGS, server/jobs.ts)
+requireEngineRuntime('the Strategy Lab runner trading-run');
 
 const emit = (o: Record<string, unknown>) => process.stdout.write(`${JSON.stringify(o)}\n`);
 const progress = (message: string, fraction: number | null = null) => emit({ type: 'progress', message, fraction });

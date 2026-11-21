@@ -1,6 +1,6 @@
 // Build (or check) the pooled-candidate catalog from the authoritative research records.
 //
-//   node --experimental-transform-types apps/strategy-lab/scripts/build-candidate-catalog.ts [--check]
+//   node --no-maglev --experimental-transform-types apps/strategy-lab/scripts/build-candidate-catalog.ts [--check]
 //   npm --prefix apps/strategy-lab run portfolio-catalog -- [--check]
 //
 // Run from the repository root. --check rebuilds in memory and fails unless the committed file is byte-identical.

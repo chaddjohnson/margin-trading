@@ -12,7 +12,7 @@ WorkingDirectory=@APP_DIR@
 Environment=STRATEGY_LAB_HOSTS=127.0.0.1,tailscale
 Environment=STRATEGY_LAB_PORT=4317
 EnvironmentFile=-%h/.config/strategy-lab/env
-ExecStart=@NODE@ --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=4096 @APP_DIR@/server/main.ts
+ExecStart=@NODE@ --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=4096 @APP_DIR@/server/main.ts
 # Tailscale may come up after the user session: retry until its address exists.
 Restart=on-failure
 RestartSec=10

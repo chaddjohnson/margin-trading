@@ -4,7 +4,7 @@
 // cache hit, then the same three reads), in a temporary state directory (never the live one). Run from the repository
 // root:
 //
-//   node --experimental-transform-types --disable-warning=ExperimentalWarning apps/strategy-lab/scripts/benchmark-preview.ts [out.json]
+//   node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning apps/strategy-lab/scripts/benchmark-preview.ts [out.json]
 
 import { mkdtempSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';

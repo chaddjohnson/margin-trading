@@ -7,6 +7,7 @@ import { type ChildProcess, spawn } from 'node:child_process';
 import { createWriteStream, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { engineExecArgv } from '../../../src/gpu-backend/runtime.ts';
 import { basisDateOf, type PriceSource } from '../shared/contract.ts';
 import { validateEvents } from '../shared/validate-events.ts';
 import { readEvents, sha256, writeManifest } from './artifacts.ts';
@@ -24,8 +25,11 @@ export const RUNNER_SCRIPTS: Readonly<Record<string, string>> = {
 };
 /** Optional artifact files a runner may write besides the four every run has; all are covered by manifest.json. */
 export const OPTIONAL_ARTIFACTS = ['trades.json', 'daily.json', 'decisions.json', 'minute-marks.csv.gz', 'study8-output.json'];
-/** The runner's Node flags (shared by saved runs and Interactive Preview executions, server/previews.ts). */
+/** The runner's Node flags (shared by saved runs and Interactive Preview executions, server/previews.ts). The engine
+ * flag comes first (`--no-maglev`, src/gpu-backend/runtime.ts): the runners evaluate with the canonical CPU engine and
+ * refuse to start without it. */
 export const NODE_FLAGS = [
+  ...engineExecArgv,
   '--experimental-transform-types',
   '--disable-warning=ExperimentalWarning',
   '--max-old-space-size=6144'

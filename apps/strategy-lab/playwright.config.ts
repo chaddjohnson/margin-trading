@@ -19,7 +19,7 @@ export default defineConfig({
     actionTimeout: 15_000
   },
   webServer: {
-    command: 'node --experimental-transform-types --disable-warning=ExperimentalWarning e2e/serve.ts',
+    command: 'node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning e2e/serve.ts',
     url: `http://127.0.0.1:${port}/api/health`,
     reuseExistingServer: false,
     timeout: 120_000
