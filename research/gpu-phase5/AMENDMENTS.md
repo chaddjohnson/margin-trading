@@ -122,3 +122,30 @@ Written before the final campaign starts and before any of its results exists.
   the tree are the campaign's.
 - **Not rerun:** steps 1–28 and the isolation tests I1–I6 (their records exist and are the evidence).
 - **Results that existed:** every record of steps 1–28 and I1–I6. **Effect on them:** none.
+
+## A5 — 2026-11-21T05:48:04Z: the campaign's step 36 (tests): Strategy Lab's e2e suite had one failing test in each of its two runs; the step is rerun once, whole, under its unchanged rule (no gate, tolerance or rule changes)
+
+- **What happened:** steps 30–35 passed (sustained, fresh-context loop, the three accepted-configuration baselines,
+  regression). Step 36 (`chains/tests.sh`, 2026-11-21T05:29:42Z–05:45:12Z) recorded: `npm test` 1,710 tests, 1,699
+  pass, the 7 known failures, 0 unexpected — pass; root `tsc` 0 errors; ESLint clean; Strategy Lab typecheck, lint,
+  314 unit tests and the scratch build pass; **Strategy Lab e2e 80 passed / 1 failed, and its one allowed rerun 80
+  passed / 1 failed — a different test each time** (each of the 81 tests passed in at least one of the two runs).
+  `results/tests/strategy-lab.json` therefore says `pass: false`; gate A8 is **not met** by this attempt.
+- **Diagnosis** (the logs; no application assertion failed):
+  - run 1, `e2e/preview.spec.ts:375`: `route.fetch: socket hang up (ECONNRESET)` — the test's own proxied request
+    to the e2e server was reset; the assertion that follows ("element not found") is its consequence;
+  - run 2, `e2e/candles.spec.ts:439`: `Expected: < 58, Received: 698` — the test read the chart width (258, the
+    390-pixel layout) right after widening the viewport to 1,600 pixels, before the layout followed, and compared the
+    panel-open width with that stale number minus 200.
+  Both are timing races inside the tests. **Nothing the suite executes differs from the accepted tree:**
+  `git diff 3a52cc63 HEAD -- apps` is empty, Strategy Lab imports no file of `src/gpu-backend`, `src/gpu-phase4`
+  or `src/gpu-phase5` (the only source directories this branch changes), and the canonical CPU closure digest is
+  unchanged. The same suite passed 81 of 81 in Phase 3 (once) and Phase 4 (twice).
+- **What is done:** attempt 1's files are moved, unchanged, to `results/tests/attempt1/` and stay part of the
+  evidence. Step 36 is rerun **once, whole** (`START=36 chains/final.sh`: `npm test`, `tsc`, ESLint, every
+  Strategy Lab suite), on an idle machine, with the unchanged script and the unchanged rule of
+  `tools/gpu-phase5/tests-record.ts` (e2e passes only if its first run or its one rerun passes completely). No test,
+  application file or tool is edited.
+- **If attempt 2 does not pass under that rule:** no further rerun; A8 stays failed and the outcome is NOT ACCEPTED
+  (§7, §8 fallback) unless the same suite is first shown to fail in the same way on the accepted tree.
+- **Results that existed:** every record of steps 1–35 and attempt 1 of step 36. **Effect on them:** none.
