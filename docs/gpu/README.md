@@ -1,7 +1,9 @@
 # GPU evaluator — operations guide
 
 How to build, verify, run and troubleshoot the CUDA evaluator on Apollo (RTX 5090). Acceptance status: see
-`config/gpu-backend/acceptance.json` (schema 2; written by the current acceptance study `research/gpu-phase6/` — the
+`config/gpu-backend/acceptance.json` (schema 2; on the branch `research/gpu-phase7-risk-envelope-readiness` written by
+`research/gpu-phase7/` — the risk-envelope delivery, a full checklist §2 cycle on its own binary `research/gpu-phase7/build/gb7`;
+on `main` by `research/gpu-phase6/` — the
 enforcement-only re-acceptance for the Maglev protection beyond the official path and the automatic job isolation, which
 carries the evaluation evidence of `research/gpu-phase5/`, which
 resolved Phase 4's parity mismatch — a JavaScript-engine defect, hence the `--no-maglev` requirement of §3a — and made
@@ -57,6 +59,14 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
 - **Containment:** long jobs run as transient systemd user units in one slice (MemoryHigh 44G, MemoryMax 48G, swap 0):
   `tools/gpu-phase2/launch.sh <unit> <absolute log> [--wait] -- <command…>`. The GPU server is a child of the job and
   lives in the same unit.
+
+- **Risk-envelope delivery (GPU Phase 7, `research/gpu-phase7/RISK_METRIC_INTEGRATION_SPEC.md`):** an `EvalLab.evalMany`
+  item with `risk: true` is evaluated with the device's risk-envelope inputs and archived under its own key (`…|risk`)
+  as `{ ...record, envelope }` (`principalLossMarked/Liquidation`, `bankedDdMarked/Liquidation`, dollars); plain items are
+  unchanged. The pool fails the job if an envelope does not match its request; the Lab validates every envelope on write
+  and read (`checkEnvelope`). Interpret envelopes only through `src/risk-envelope/policy.ts` (limits in whole percent of
+  named denominators, value ≤ limit, the normalized violation). Non-official tools: `tools/gpu-phase7/job.ts --risk`,
+  `tools/gpu-phase7/risk-parity.ts`, `tools/gpu-phase7/qualify-archives.ts`.
 
 ## 3a. The JavaScript engine: no Maglev (GPU Phase 5)
 

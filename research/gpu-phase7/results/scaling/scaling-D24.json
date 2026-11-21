@@ -1,0 +1,7786 @@
+{
+ "kind": "gpu-phase7 Phase E position-size normalization check (non-official CPU diagnostic)",
+ "t": "2026-11-21T20:27:14.845Z",
+ "runtime": {
+  "node": "v24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "maglev": "disabled",
+  "execArgv": [
+   "--no-maglev",
+   "--expose-gc",
+   "--max-old-space-size=8000",
+   "--experimental-transform-types",
+   "--disable-warning=ExperimentalWarning"
+  ]
+ },
+ "door": "D24",
+ "doorSha256": {
+  "GDX": "f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c",
+  "VGT": "c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb"
+ },
+ "sizes": [
+  100000,
+  250000,
+  500000
+ ],
+ "subjects": 148,
+ "limits": {
+  "100000": {
+   "markedDd40": 40000,
+   "principalLoss25": 25000,
+   "bankedDd25": 25000,
+   "markedDd35": 35000
+  },
+  "250000": {
+   "markedDd40": 100000,
+   "principalLoss25": 62500,
+   "bankedDd25": 62500,
+   "markedDd35": 87500
+  },
+  "500000": {
+   "markedDd40": 200000,
+   "principalLoss25": 125000,
+   "bankedDd25": 125000,
+   "markedDd35": 175000
+  }
+ },
+ "chronologyDiffers": 0,
+ "decisionDiffers": 0,
+ "nearLimitDecisionDiffers": 0,
+ "worstDeviationRelativeToC0": {
+  "net": 2.7939677238464356e-15,
+  "realized": 2.7939677238464356e-15,
+  "unrealized": 2.328306436538696e-16,
+  "dd": 1.0477378964424134e-15,
+  "bankedDdMarked": 1.2223608791828155e-15,
+  "bankedDdLiquidation": 1.1059455573558808e-15,
+  "principalLossMarked": 2.6193447411060334e-16,
+  "principalLossLiquidation": 2.6193447411060334e-16,
+  "lotNets": 4.0745362639427184e-16,
+  "lotInterest": 2.91038304567337e-17,
+  "lotCosts": 4.547473508864641e-19,
+  "lotPrincipal0": 0,
+  "fillShares": 7.275957614183426e-18,
+  "fillProceeds": 4.656612873077392e-16,
+  "shares": 2.2188571347214744e-16
+ },
+ "worstDeviationRelativeToValue": {
+  "net": 7.655695320110902e-14,
+  "realized": 9.419234825691297e-14,
+  "unrealized": 1.1241843756139876e-13,
+  "dd": 3.851927066536591e-15,
+  "bankedDdMarked": 6.8488589498024385e-15,
+  "bankedDdLiquidation": 6.795246367121282e-15,
+  "principalLossMarked": 2.590637677538975e-15,
+  "principalLossLiquidation": 2.4405754443636404e-15,
+  "lotNets": 2.0128577537064757e-10,
+  "lotInterest": 3.0502779867650035e-16,
+  "lotCosts": 4.393505810418012e-16,
+  "lotPrincipal0": 0,
+  "fillShares": 1.1941039133489535e-15,
+  "fillProceeds": 1.252909343917092e-15,
+  "shares": 2.2188571347214744e-16
+ },
+ "criterion": "identical trade chronology and drawdown instants; identical decisions of both policies; every dollar amount within 1e-12 × C0 of k × its $100,000 value (shares within 1e-12 relative)",
+ "note": "The official GPU path evaluates at the fixed $100,000 budget only (EvalOptions has no budget; encode.ts uses poolOptionsOf, which sets none): sizes other than $100,000 are a CPU-only diagnostic.",
+ "rows": [
+  {
+   "key": "F:C24/refine/GA0.VA0/R2#1 profit",
+   "lots": 23,
+   "base": {
+    "net": 234401.656965175,
+    "dd": 25316.885272101914,
+    "envelope": {
+     "bankedDdMarked": 7516.258510478248,
+     "bankedDdLiquidation": 7562.696271633962,
+     "principalLossMarked": 7516.258510478245,
+     "principalLossLiquidation": 7562.696271633965
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GA0.VA0/R2#6 profit order",
+   "lots": 23,
+   "base": {
+    "net": 232895.1826275773,
+    "dd": 27219.95115447673,
+    "envelope": {
+     "bankedDdMarked": 16331.771008690557,
+     "bankedDdLiquidation": 16377.579409356986,
+     "principalLossMarked": 9099.845216805508,
+     "principalLossLiquidation": 9145.626801046421
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GA0.VA0/R1#2 robust",
+   "lots": 23,
+   "base": {
+    "net": 211495.9143971134,
+    "dd": 25227.125701486337,
+    "envelope": {
+     "bankedDdMarked": 7876.376213504409,
+     "bankedDdLiquidation": 7922.573641836003,
+     "principalLossMarked": 7876.376213504398,
+     "principalLossLiquidation": 7922.573641836002
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GA0.VA0/R1#3 balanced",
+   "lots": 14,
+   "base": {
+    "net": 145822.16584522795,
+    "dd": 17280.736920916825,
+    "envelope": {
+     "bankedDdMarked": 8371.715117862637,
+     "bankedDdLiquidation": 8417.698758624814,
+     "principalLossMarked": 8213.54039344673,
+     "principalLossLiquidation": 8259.524034208911
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.94765117764473e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.85722573273506e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.85722573273506e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.94765117764473e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.85722573273506e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.85722573273506e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GA0.VA0/R1#4 Growth entry alternative",
+   "lots": 20,
+   "base": {
+    "net": 127793.47316524872,
+    "dd": 12902.427291027387,
+    "envelope": {
+     "bankedDdMarked": 5617.117111564083,
+     "bankedDdLiquidation": 5664.368826980906,
+     "principalLossMarked": 5617.117111564084,
+     "principalLossLiquidation": 5664.3688269809045
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.8735013540549517e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.8735013540549517e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.8735013540549517e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.8735013540549517e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GD1.VC1/R2#1 profit",
+   "lots": 51,
+   "base": {
+    "net": 312740.09433261404,
+    "dd": 20490.616167333494,
+    "envelope": {
+     "bankedDdMarked": 11020.45364771683,
+     "bankedDdLiquidation": 11070.088911647392,
+     "principalLossMarked": 7286.6039582948015,
+     "principalLossLiquidation": 7286.6039582948015
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.249000902703301e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.249000902703301e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.249000902703301e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.249000902703301e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GB0.VB1/R2#3 control alternative",
+   "lots": 28,
+   "base": {
+    "net": 300711.9452122593,
+    "dd": 18122.077700590504,
+    "envelope": {
+     "bankedDdMarked": 9513.016393905047,
+     "bankedDdLiquidation": 9558.440707625905,
+     "principalLossMarked": 9513.016393905049,
+     "principalLossLiquidation": 9558.440707625905
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GA0.VD0/R2#1 profit",
+   "lots": 35,
+   "base": {
+    "net": 297083.7544501944,
+    "dd": 20708.880189043964,
+    "envelope": {
+     "bankedDdMarked": 11584.776546156121,
+     "bankedDdLiquidation": 11633.820646131586,
+     "principalLossMarked": 10762.803156455353,
+     "principalLossLiquidation": 10807.647782274385
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GA0.VD0/R2#4 profit order",
+   "lots": 25,
+   "base": {
+    "net": 278686.6701295639,
+    "dd": 20827.94096710265,
+    "envelope": {
+     "bankedDdMarked": 11722.61329614729,
+     "bankedDdLiquidation": 11771.657396122755,
+     "principalLossMarked": 10898.444773787327,
+     "principalLossLiquidation": 10943.221578797693
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.718447854656915e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.718447854656915e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.718447854656915e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.718447854656915e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/broad/GA1.VD1/R1#2 robust",
+   "lots": 25,
+   "base": {
+    "net": 161455.42670820106,
+    "dd": 17280.736920916825,
+    "envelope": {
+     "bankedDdMarked": 6161.691235221146,
+     "bankedDdLiquidation": 6210.305246098282,
+     "principalLossMarked": 5590.550268211431,
+     "principalLossLiquidation": 5637.754993077326
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.163336342344337e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.163336342344337e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.163336342344337e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.163336342344337e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GB0.VB1/R2#1 profit",
+   "lots": 24,
+   "base": {
+    "net": 302438.4806424672,
+    "dd": 17280.736920916825,
+    "envelope": {
+     "bankedDdMarked": 7639.009966551865,
+     "bankedDdLiquidation": 7685.401420472699,
+     "principalLossMarked": 7639.009966551864,
+     "principalLossLiquidation": 7685.401420472697
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GA0.VD0/R2#2 balanced",
+   "lots": 15,
+   "base": {
+    "net": 205892.34222738835,
+    "dd": 17280.736920916825,
+    "envelope": {
+     "bankedDdMarked": 6979.034343358006,
+     "bankedDdLiquidation": 7028.669607288568,
+     "principalLossMarked": 6189.2882318820375,
+     "principalLossLiquidation": 6189.2882318820375
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GD.VB/R2#1 profit",
+   "lots": 32,
+   "base": {
+    "net": 388031.0235558682,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GB.VD/R2#4 best GB0.VD1",
+   "lots": 33,
+   "base": {
+    "net": 376152.28285159287,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GD.VB/R2#2 robust",
+   "lots": 33,
+   "base": {
+    "net": 331423.64352758176,
+    "dd": 21398.273595998762,
+    "envelope": {
+     "bankedDdMarked": 12040.24489598826,
+     "bankedDdLiquidation": 12089.303960555204,
+     "principalLossMarked": 10246.715928567737,
+     "principalLossLiquidation": 10291.954214439069
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.862645149230957e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.914335439641036e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.914335439641036e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.862645149230957e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.914335439641036e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.914335439641036e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GC.VB/R1#2 robust",
+   "lots": 28,
+   "base": {
+    "net": 307703.5965403782,
+    "dd": 20225.330846070137,
+    "envelope": {
+     "bankedDdMarked": 12762.93504668842,
+     "bankedDdLiquidation": 12806.734401082882,
+     "principalLossMarked": 12762.935046688415,
+     "principalLossLiquidation": 12806.73440108288
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GB.VD/R3#4 best GB1.VD0",
+   "lots": 19,
+   "base": {
+    "net": 198226.66174551233,
+    "dd": 17280.736920916825,
+    "envelope": {
+     "bankedDdMarked": 9116.301848551415,
+     "bankedDdLiquidation": 9166.048599497952,
+     "principalLossMarked": 8609.803741624299,
+     "principalLossLiquidation": 8633.680426608757
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/broad/GA0.VB0/R2#1 profit",
+   "lots": 24,
+   "base": {
+    "net": 220740.3907033103,
+    "dd": 25478.13005377035,
+    "envelope": {
+     "bankedDdMarked": 14665.466123257502,
+     "bankedDdLiquidation": 14712.285011162749,
+     "principalLossMarked": 8017.3627412724445,
+     "principalLossLiquidation": 8017.3627412724445
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/broad/GA1.VC1/R1#1 profit",
+   "lots": 29,
+   "base": {
+    "net": 197634.0118920055,
+    "dd": 22716.671284914744,
+    "envelope": {
+     "bankedDdMarked": 17013.169067152543,
+     "bankedDdLiquidation": 17058.781063094735,
+     "principalLossMarked": 8836.28208818923,
+     "principalLossLiquidation": 8881.894084131436
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/broad/GB1.VA1/R1#1 profit",
+   "lots": 30,
+   "base": {
+    "net": 219921.96276761236,
+    "dd": 22719.835214333594,
+    "envelope": {
+     "bankedDdMarked": 9218.8471908788,
+     "bankedDdLiquidation": 9267.223296542532,
+     "principalLossMarked": 7865.016780280546,
+     "principalLossLiquidation": 7911.265093808214
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GB0.VB1/R1#1 profit",
+   "lots": 29,
+   "base": {
+    "net": 308231.85716790456,
+    "dd": 17280.736920916825,
+    "envelope": {
+     "bankedDdMarked": 8043.692008185259,
+     "bankedDdLiquidation": 8089.715367660567,
+     "principalLossMarked": 8043.692008185236,
+     "principalLossLiquidation": 8089.715367660595
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.249000902703301e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.249000902703301e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.249000902703301e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.249000902703301e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GB0.VC0/R1#1 profit",
+   "lots": 16,
+   "base": {
+    "net": 247866.85872411332,
+    "dd": 27568.883780184085,
+    "envelope": {
+     "bankedDdMarked": 6153.002574071521,
+     "bankedDdLiquidation": 6200.498675524228,
+     "principalLossMarked": 6153.002574071524,
+     "principalLossLiquidation": 6200.498675524214
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/broad/GB0.VD1/R2#1 profit",
+   "lots": 50,
+   "base": {
+    "net": 218842.0464071258,
+    "dd": 25817.59535910902,
+    "envelope": {
+     "bankedDdMarked": 15580.098322284903,
+     "bankedDdLiquidation": 15625.73197642967,
+     "principalLossMarked": 12708.297534680756,
+     "principalLossLiquidation": 12752.320098242182
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.862645149230957e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.163336342344337e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.163336342344337e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.862645149230957e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.163336342344337e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.163336342344337e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/broad/GC0.VA0/R1#1 profit",
+   "lots": 25,
+   "base": {
+    "net": 200796.0764254683,
+    "dd": 30358.42210017389,
+    "envelope": {
+     "bankedDdMarked": 20474.979107976164,
+     "bankedDdLiquidation": 20522.88106102959,
+     "principalLossMarked": 11460.810296769427,
+     "principalLossLiquidation": 11505.29085052515
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GC0.VB0/R2#1 profit",
+   "lots": 21,
+   "base": {
+    "net": 257709.9939029896,
+    "dd": 18133.57103849959,
+    "envelope": {
+     "bankedDdMarked": 9697.878374560503,
+     "bankedDdLiquidation": 9743.240394277353,
+     "principalLossMarked": 9697.878374560516,
+     "principalLossLiquidation": 9743.240394277345
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.938893903907228e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.938893903907228e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.938893903907228e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.938893903907228e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/broad/GC0.VC1/R1#1 profit",
+   "lots": 17,
+   "base": {
+    "net": 176790.46700027803,
+    "dd": 22317.658972373378,
+    "envelope": {
+     "bankedDdMarked": 9607.893176392114,
+     "bankedDdLiquidation": 9653.34539418749,
+     "principalLossMarked": 9607.89317639212,
+     "principalLossLiquidation": 9653.345394187485
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.3592239273284576e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.3592239273284576e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.3592239273284576e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.3592239273284576e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/broad/GC0.VD0/R2#1 profit",
+   "lots": 32,
+   "base": {
+    "net": 190415.074707916,
+    "dd": 20486.182518576366,
+    "envelope": {
+     "bankedDdMarked": 15080.235174707244,
+     "bankedDdLiquidation": 15123.282728352768,
+     "principalLossMarked": 15080.235174707244,
+     "principalLossLiquidation": 15123.282728352768
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GD1.VA0/R2#1 profit",
+   "lots": 19,
+   "base": {
+    "net": 228877.6812740158,
+    "dd": 23067.39918109344,
+    "envelope": {
+     "bankedDdMarked": 9002.57124045919,
+     "bankedDdLiquidation": 9048.130228811555,
+     "principalLossMarked": 9002.571240459183,
+     "principalLossLiquidation": 9048.130228811557
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/broad/GD1.VB1/R2#1 profit",
+   "lots": 30,
+   "base": {
+    "net": 186215.64658022573,
+    "dd": 17744.387585545235,
+    "envelope": {
+     "bankedDdMarked": 10788.043390974752,
+     "bankedDdLiquidation": 10833.120527881489,
+     "principalLossMarked": 10116.959063225007,
+     "principalLossLiquidation": 10162.036200131752
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.6921043172478674e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.6921043172478674e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/refine/GD1.VD1/R1#1 profit",
+   "lots": 35,
+   "base": {
+    "net": 283268.7589487134,
+    "dd": 20615.301025787194,
+    "envelope": {
+     "bankedDdMarked": 13062.260783469508,
+     "bankedDdLiquidation": 13106.106365406536,
+     "principalLossMarked": 13062.260783469499,
+     "principalLossLiquidation": 13106.106365406531
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GA.VA/R1#1 profit",
+   "lots": 34,
+   "base": {
+    "net": 382806.14409452723,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GA.VB/R1#1 profit",
+   "lots": 34,
+   "base": {
+    "net": 383682.07505477406,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GA.VC/R1#1 profit",
+   "lots": 34,
+   "base": {
+    "net": 384105.30294352,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GA.VD/R1#1 profit",
+   "lots": 34,
+   "base": {
+    "net": 384105.30294352,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GB.VA/R3#1 profit",
+   "lots": 35,
+   "base": {
+    "net": 383946.58411299414,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GB.VB/R2#1 profit",
+   "lots": 34,
+   "base": {
+    "net": 382806.14409452723,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GB.VC/R2#1 profit",
+   "lots": 33,
+   "base": {
+    "net": 383087.5967953652,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GB.VD/R3#1 profit",
+   "lots": 35,
+   "base": {
+    "net": 384143.8580037138,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.4924596548080445e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.4924596548080445e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GC.VA/R1#3 best GC0.VA1",
+   "lots": 33,
+   "base": {
+    "net": 355524.8007843289,
+    "dd": 22464.10043610871,
+    "envelope": {
+     "bankedDdMarked": 13339.99679322081,
+     "bankedDdLiquidation": 13389.031847807171,
+     "principalLossMarked": 11108.73610284325,
+     "principalLossLiquidation": 11108.73610284325
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.828670879282072e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.828670879282072e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.828670879282072e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.828670879282072e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GC.VB/R1#5 profit order",
+   "lots": 30,
+   "base": {
+    "net": 359599.968616017,
+    "dd": 18625.31564618647,
+    "envelope": {
+     "bankedDdMarked": 12043.546382297878,
+     "bankedDdLiquidation": 12087.946526914951,
+     "principalLossMarked": 12043.546382297905,
+     "principalLossLiquidation": 12087.946526914975
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.718447854656915e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.718447854656915e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.718447854656915e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.718447854656915e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GC.VC/R3#1 profit",
+   "lots": 28,
+   "base": {
+    "net": 368027.362150286,
+    "dd": 21229.472660523723,
+    "envelope": {
+     "bankedDdMarked": 12105.369017635821,
+     "bankedDdLiquidation": 12153.814364933001,
+     "principalLossMarked": 8574.145803810407,
+     "principalLossLiquidation": 8574.145803810407
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.7939677238464356e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.7939677238464356e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GC.VD/R1#1 profit",
+   "lots": 30,
+   "base": {
+    "net": 370660.2947307997,
+    "dd": 21229.472660523723,
+    "envelope": {
+     "bankedDdMarked": 12105.369017635821,
+     "bankedDdLiquidation": 12153.814364933001,
+     "principalLossMarked": 8574.145803810407,
+     "principalLossLiquidation": 8574.145803810407
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GD.VA/R4#1 profit",
+   "lots": 33,
+   "base": {
+    "net": 384436.87958624546,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GD.VC/R2#1 profit",
+   "lots": 32,
+   "base": {
+    "net": 384510.9099639619,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:C24/informed/GD.VD/R4#1 profit",
+   "lots": 33,
+   "base": {
+    "net": 385246.48961531615,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:incumbent: C4",
+   "lots": 38,
+   "base": {
+    "net": 302785.90678025887,
+    "dd": 17332.088959813176,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955836,
+     "bankedDdLiquidation": 10383.816891783063,
+     "principalLossMarked": 8833.157795183097,
+     "principalLossLiquidation": 8878.83162724441
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.3592239273284576e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.3592239273284576e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.3592239273284576e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.3592239273284576e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:incumbent: C4R",
+   "lots": 41,
+   "base": {
+    "net": 360569.71005058,
+    "dd": 17280.736920916825,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8833.157795183097,
+     "principalLossLiquidation": 8878.83162724441
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.862645149230957e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.862645149230957e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "F:incumbent: New L0",
+   "lots": 34,
+   "base": {
+    "net": 382721.4556417178,
+    "dd": 19459.83052084368,
+    "envelope": {
+     "bankedDdMarked": 10335.726877955778,
+     "bankedDdLiquidation": 10383.816891783033,
+     "principalLossMarked": 8046.665435414332,
+     "principalLossLiquidation": 8092.807856121282
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 9.313225746154785e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.469446951953614e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-7dffbfdc7c9698eb",
+   "lots": 85,
+   "base": {
+    "net": 127704.40980426577,
+    "dd": 34999.35019361568,
+    "envelope": {
+     "bankedDdMarked": 24819.406179526268,
+     "bankedDdLiquidation": 24867.055610550495,
+     "principalLossMarked": 9700.665570811385,
+     "principalLossLiquidation": 9700.665570811385
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc1-b37d594854afeb7f",
+   "lots": 40,
+   "base": {
+    "net": 75585.91584716401,
+    "dd": 35001.625744617064,
+    "envelope": {
+     "bankedDdMarked": 25812.622695939644,
+     "bankedDdLiquidation": 25859.829557395176,
+     "principalLossMarked": 7227.693344130386,
+     "principalLossLiquidation": 7227.693344130386
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.2014213502407073e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.2014213502407073e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-f264165aeb91d746",
+   "lots": 10,
+   "base": {
+    "net": 80342.00614530632,
+    "dd": 35001.75700608684,
+    "envelope": {
+     "bankedDdMarked": 12835.054315422174,
+     "bankedDdLiquidation": 12878.802541689121,
+     "principalLossMarked": 12835.054315422174,
+     "principalLossLiquidation": 12878.802541689121
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.1336494683055203e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.1336494683055203e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-87261159289c8a57",
+   "lots": 44,
+   "base": {
+    "net": 97155.34348105692,
+    "dd": 35001.99777433271,
+    "envelope": {
+     "bankedDdMarked": 28769.19611393116,
+     "bankedDdLiquidation": 28814.41930666268,
+     "principalLossMarked": 13120.489904327767,
+     "principalLossLiquidation": 13120.489904327767
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-bfe81720aa15dafe",
+   "lots": 26,
+   "base": {
+    "net": 111070.0609667962,
+    "dd": 35002.058625364734,
+    "envelope": {
+     "bankedDdMarked": 23274.629597688065,
+     "bankedDdLiquidation": 23317.512830834425,
+     "principalLossMarked": 23274.629597688065,
+     "principalLossLiquidation": 23317.512830834425
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-ed6c7e395bcd56d3",
+   "lots": 23,
+   "base": {
+    "net": 112904.39601952292,
+    "dd": 35002.11063503679,
+    "envelope": {
+     "bankedDdMarked": 23159.774341236698,
+     "bankedDdLiquidation": 23206.110147692438,
+     "principalLossMarked": 14148.102858520673,
+     "principalLossLiquidation": 14148.102858520673
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-2372f423950f53f6",
+   "lots": 14,
+   "base": {
+    "net": 107151.6671702606,
+    "dd": 34997.59889245046,
+    "envelope": {
+     "bankedDdMarked": 24638.94961133857,
+     "bankedDdLiquidation": 24687.014584087796,
+     "principalLossMarked": 19434.429949696656,
+     "principalLossLiquidation": 19434.429949696656
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.0372681319713592e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.0372681319713592e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-9b8638a783d86102",
+   "lots": 25,
+   "base": {
+    "net": 72004.9909456858,
+    "dd": 35002.721678722846,
+    "envelope": {
+     "bankedDdMarked": 18446.662701618763,
+     "bankedDdLiquidation": 18494.69157032676,
+     "principalLossMarked": 10842.585053334462,
+     "principalLossLiquidation": 10887.254171766699
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.0477378964424134e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.106226635438361e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.106226635438361e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.0477378964424134e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.106226635438361e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.106226635438361e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-1ef28a209f78e2d1",
+   "lots": 45,
+   "base": {
+    "net": 92595.5271893366,
+    "dd": 34996.25130987605,
+    "envelope": {
+     "bankedDdMarked": 30683.665375864104,
+     "bankedDdLiquidation": 30732.79895127095,
+     "principalLossMarked": 9391.22962156273,
+     "principalLossLiquidation": 9436.654554697154
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:ec5838870a577245",
+   "lots": 52,
+   "base": {
+    "net": 41339.21774923396,
+    "dd": 34996.06879125217,
+    "envelope": {
+     "bankedDdMarked": 30429.94274701518,
+     "bankedDdLiquidation": 30474.9531091612,
+     "principalLossMarked": 20121.29623939177,
+     "principalLossLiquidation": 20161.446550176184
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.0477378964424134e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.0477378964424134e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc1-7e1276080c6983dc",
+   "lots": 38,
+   "base": {
+    "net": 24697.164425136416,
+    "dd": 34995.37150696572,
+    "envelope": {
+     "bankedDdMarked": 30054.98520606931,
+     "bankedDdLiquidation": 30101.53584213401,
+     "principalLossMarked": 7703.512627248011,
+     "principalLossLiquidation": 7703.512627248011
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc1-c8b4da4bff9050db",
+   "lots": 38,
+   "base": {
+    "net": 90896.44229250046,
+    "dd": 35004.66516581032,
+    "envelope": {
+     "bankedDdMarked": 29684.46188787186,
+     "bankedDdLiquidation": 29728.985829765734,
+     "principalLossMarked": 13167.87838957233,
+     "principalLossLiquidation": 13167.87838957233
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-879fa6ff5db0d4c8",
+   "lots": 24,
+   "base": {
+    "net": 8055.014410794801,
+    "dd": 34995.21519221325,
+    "envelope": {
+     "bankedDdMarked": 29990.908486038083,
+     "bankedDdLiquidation": 30038.821236896536,
+     "principalLossMarked": 18511.696206691155,
+     "principalLossLiquidation": 18511.696206691155
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.039044819772243e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.039044819772243e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-3ffb64cf795b4db7",
+   "lots": 33,
+   "base": {
+    "net": 98397.00092682481,
+    "dd": 34994.684379928505,
+    "envelope": {
+     "bankedDdMarked": 18538.026537354788,
+     "bankedDdLiquidation": 18584.95320991648,
+     "principalLossMarked": 8035.019476563065,
+     "principalLossLiquidation": 8035.019476563065
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-ee5e9cc889332e4f",
+   "lots": 27,
+   "base": {
+    "net": 58402.97270078343,
+    "dd": 35005.43102304844,
+    "envelope": {
+     "bankedDdMarked": 33375.11872802231,
+     "bankedDdLiquidation": 33418.38343336685,
+     "principalLossMarked": 23536.342735574417,
+     "principalLossLiquidation": 23579.607440918957
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-9d04bd4854caf394",
+   "lots": 45,
+   "base": {
+    "net": 113701.27110498161,
+    "dd": 35006.36289895518,
+    "envelope": {
+     "bankedDdMarked": 31331.461943946342,
+     "bankedDdLiquidation": 31379.86159847716,
+     "principalLossMarked": 8670.753505442644,
+     "principalLossLiquidation": 8716.55374512828
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc1-716efd9d2235108f",
+   "lots": 17,
+   "base": {
+    "net": 65357.43090211348,
+    "dd": 35006.65478649581,
+    "envelope": {
+     "bankedDdMarked": 27407.683757320716,
+     "bankedDdLiquidation": 27451.908408196156,
+     "principalLossMarked": 14091.174973710802,
+     "principalLossLiquidation": 14134.44582458011
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:3308fe9cb59c4f54",
+   "lots": 23,
+   "base": {
+    "net": 60702.76652706989,
+    "dd": 34993.26185561371,
+    "envelope": {
+     "bankedDdMarked": 26316.21062001369,
+     "bankedDdLiquidation": 26364.44358414165,
+     "principalLossMarked": 18735.681379080197,
+     "principalLossLiquidation": 18776.750524692026
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-a54c0154904ec35c",
+   "lots": 26,
+   "base": {
+    "net": 89045.75084117061,
+    "dd": 35007.013533613295,
+    "envelope": {
+     "bankedDdMarked": 28132.389791024645,
+     "bankedDdLiquidation": 28181.330747898028,
+     "principalLossMarked": 12446.022923009376,
+     "principalLossLiquidation": 12490.402651273898
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.149072527885437e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.149072527885437e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-e05cc2caf25117cd",
+   "lots": 26,
+   "base": {
+    "net": 89045.75084117061,
+    "dd": 35007.013533613295,
+    "envelope": {
+     "bankedDdMarked": 28132.389791024645,
+     "bankedDdLiquidation": 28181.330747898028,
+     "principalLossMarked": 12446.022923009376,
+     "principalLossLiquidation": 12490.402651273898
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.149072527885437e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.149072527885437e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc1-9382c8c9596846e2",
+   "lots": 21,
+   "base": {
+    "net": 66354.3350342657,
+    "dd": 34992.69347621696,
+    "envelope": {
+     "bankedDdMarked": 22661.878775068435,
+     "bankedDdLiquidation": 22709.72772809946,
+     "principalLossMarked": 18911.296406591213,
+     "principalLossLiquidation": 18911.296406591213
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.4924596548080445e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.4924596548080445e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc1-40494dcc1a65c02f",
+   "lots": 19,
+   "base": {
+    "net": 106680.45008977666,
+    "dd": 35007.746080875164,
+    "envelope": {
+     "bankedDdMarked": 22820.994936186788,
+     "bankedDdLiquidation": 22868.547094686975,
+     "principalLossMarked": 17334.86780274932,
+     "principalLossLiquidation": 17334.86780274932
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-35fb6035da87fb1d",
+   "lots": 30,
+   "base": {
+    "net": 94369.47824759757,
+    "dd": 35007.82910543319,
+    "envelope": {
+     "bankedDdMarked": 30020.960027291214,
+     "bankedDdLiquidation": 30063.84326043757,
+     "principalLossMarked": 23274.629597688065,
+     "principalLossLiquidation": 23317.512830834425
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-80f32e0dea033e41",
+   "lots": 50,
+   "base": {
+    "net": 104981.94081100464,
+    "dd": 34991.53772309864,
+    "envelope": {
+     "bankedDdMarked": 24686.315011158433,
+     "bankedDdLiquidation": 24731.841833255523,
+     "principalLossMarked": 8976.492792125808,
+     "principalLossLiquidation": 9022.019614222896
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.106226635438361e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.106226635438361e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.106226635438361e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 6.106226635438361e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near35:rc2-943787483ffa058a",
+   "lots": 21,
+   "base": {
+    "net": 82970.4103476076,
+    "dd": 34991.331758805114,
+    "envelope": {
+     "bankedDdMarked": 23142.71957649535,
+     "bankedDdLiquidation": 23191.25604306825,
+     "principalLossMarked": 13361.296813310302,
+     "principalLossLiquidation": 13404.857260794059
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-3a6959e4b9850409",
+   "lots": 13,
+   "base": {
+    "net": 49407.47714464952,
+    "dd": 40000.09613257343,
+    "envelope": {
+     "bankedDdMarked": 27199.101455049728,
+     "bankedDdLiquidation": 27248.134822726446,
+     "principalLossMarked": 24002.777378434053,
+     "principalLossLiquidation": 24002.777378434053
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-c0d6af91f31251e5",
+   "lots": 15,
+   "base": {
+    "net": 27369.47298009549,
+    "dd": 39999.57898579467,
+    "envelope": {
+     "bankedDdMarked": 24763.463869558153,
+     "bankedDdLiquidation": 24812.22544867801,
+     "principalLossMarked": 16591.34999741041,
+     "principalLossLiquidation": 16633.18993885006
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.731149137020111e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.731149137020111e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-bf8d602f45441c27",
+   "lots": 17,
+   "base": {
+    "net": 48332.425927950855,
+    "dd": 40001.08498224047,
+    "envelope": {
+     "bankedDdMarked": 31772.7744922907,
+     "bankedDdLiquidation": 31808.24695213921,
+     "principalLossMarked": 29175.628248191228,
+     "principalLossLiquidation": 29211.100708039736
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.238689482212067e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.238689482212067e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc1-02164e130f6178a3",
+   "lots": 28,
+   "base": {
+    "net": 74866.18621651694,
+    "dd": 40001.09167945685,
+    "envelope": {
+     "bankedDdMarked": 26843.73409309669,
+     "bankedDdLiquidation": 26892.059351317002,
+     "principalLossMarked": 7123.248862299223,
+     "principalLossLiquidation": 7123.248862299223
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-0734a144301e37bf",
+   "lots": 29,
+   "base": {
+    "net": 104224.80363253341,
+    "dd": 40001.49469339187,
+    "envelope": {
+     "bankedDdMarked": 29281.640047421097,
+     "bankedDdLiquidation": 29326.71718432785,
+     "principalLossMarked": 20582.070959913402,
+     "principalLossLiquidation": 20582.070959913402
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3969838619232178e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.885780586188048e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc1-2959a155fd912cb9",
+   "lots": 28,
+   "base": {
+    "net": 44175.30742532333,
+    "dd": 40001.60111930617,
+    "envelope": {
+     "bankedDdMarked": 24970.054263732833,
+     "bankedDdLiquidation": 25013.08334662464,
+     "principalLossMarked": 19620.615034948267,
+     "principalLossLiquidation": 19620.615034948267
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.402842700481415e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.402842700481415e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc1-ab44db0c0fc99de1",
+   "lots": 36,
+   "base": {
+    "net": 29937.418065129954,
+    "dd": 39998.14155279564,
+    "envelope": {
+     "bankedDdMarked": 32572.45530411448,
+     "bankedDdLiquidation": 32617.23009210172,
+     "principalLossMarked": 15248.66405288936,
+     "principalLossLiquidation": 15248.66405288936
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-aaa92b6b29574ec2",
+   "lots": 34,
+   "base": {
+    "net": 12412.557778105522,
+    "dd": 40001.88671121599,
+    "envelope": {
+     "bankedDdMarked": 29827.47683222909,
+     "bankedDdLiquidation": 29877.305019937456,
+     "principalLossMarked": 7373.675491021609,
+     "principalLossLiquidation": 7373.675491021609
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.966285243630409e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.966285243630409e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc1-426915d2b63fd680",
+   "lots": 44,
+   "base": {
+    "net": 73052.33384851216,
+    "dd": 39998.005755222104,
+    "envelope": {
+     "bankedDdMarked": 31176.201570669356,
+     "bankedDdLiquidation": 31223.37837043056,
+     "principalLossMarked": 17761.0426941859,
+     "principalLossLiquidation": 17802.358063249765
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-f1a111257fc9a608",
+   "lots": 25,
+   "base": {
+    "net": 88276.12520277718,
+    "dd": 39997.995971511096,
+    "envelope": {
+     "bankedDdMarked": 29160.352817164654,
+     "bankedDdLiquidation": 29209.817618699308,
+     "principalLossMarked": 9393.914755118678,
+     "principalLossLiquidation": 9439.23286623427
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-01a7bd04f11a66cd",
+   "lots": 32,
+   "base": {
+    "net": 42113.82086245502,
+    "dd": 39997.29873062365,
+    "envelope": {
+     "bankedDdMarked": 31002.50788504118,
+     "bankedDdLiquidation": 31045.95007567409,
+     "principalLossMarked": 13778.632432809769,
+     "principalLossLiquidation": 13822.074623442679
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.238689482212067e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.238689482212067e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:6f70ce4b9351c699",
+   "lots": 26,
+   "base": {
+    "net": 16622.79088229427,
+    "dd": 40002.760083136745,
+    "envelope": {
+     "bankedDdMarked": 33917.03366916607,
+     "bankedDdLiquidation": 33917.03366916607,
+     "principalLossMarked": 18109.54587245907,
+     "principalLossLiquidation": 18109.54587245907
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.473825588822365e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.473825588822365e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-856c542ec4dc3106",
+   "lots": 19,
+   "base": {
+    "net": 93301.47127881902,
+    "dd": 40002.88017867159,
+    "envelope": {
+     "bankedDdMarked": 18242.20748565573,
+     "bankedDdLiquidation": 18289.984572424757,
+     "principalLossMarked": 14761.787482182686,
+     "principalLossLiquidation": 14804.421656934746
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.6193447411060334e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.6193447411060334e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc1-67f33e216b5b024a",
+   "lots": 20,
+   "base": {
+    "net": 84107.68876303225,
+    "dd": 40003.24357987444,
+    "envelope": {
+     "bankedDdMarked": 27749.10296764068,
+     "bankedDdLiquidation": 27796.02964020237,
+     "principalLossMarked": 21421.626173214747,
+     "principalLossLiquidation": 21421.626173214747
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-af88b3295f8a7338",
+   "lots": 46,
+   "base": {
+    "net": 79333.8595442515,
+    "dd": 40003.80309840954,
+    "envelope": {
+     "bankedDdMarked": 29872.09896352049,
+     "bankedDdLiquidation": 29872.09896352049,
+     "principalLossMarked": 5068.497434249355,
+     "principalLossLiquidation": 5115.993322518531
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc1-f1fe5f9f0997ae47",
+   "lots": 59,
+   "base": {
+    "net": 65842.78292511548,
+    "dd": 40004.00304550407,
+    "envelope": {
+     "bankedDdMarked": 34955.151535867335,
+     "bankedDdLiquidation": 35004.75868310224,
+     "principalLossMarked": 12217.993058265363,
+     "principalLossLiquidation": 12217.993058265363
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.4924596548080445e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.4924596548080445e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc1-5621b0ebf6fcf249",
+   "lots": 33,
+   "base": {
+    "net": 47647.36864438327,
+    "dd": 40004.17828287811,
+    "envelope": {
+     "bankedDdMarked": 29591.615516529208,
+     "bankedDdLiquidation": 29636.0613787045,
+     "principalLossMarked": 19263.471141396985,
+     "principalLossLiquidation": 19304.110638702998
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-511c39d945efcbeb",
+   "lots": 10,
+   "base": {
+    "net": 37529.71105583341,
+    "dd": 40004.61557804403,
+    "envelope": {
+     "bankedDdMarked": 21541.012427818117,
+     "bankedDdLiquidation": 21588.003785379016,
+     "principalLossMarked": 11600.639411736942,
+     "principalLossLiquidation": 11645.00484545573
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-2816f0e41ac555b2",
+   "lots": 22,
+   "base": {
+    "net": 57127.39799183412,
+    "dd": 39995.353933445935,
+    "envelope": {
+     "bankedDdMarked": 29673.929102178372,
+     "bankedDdLiquidation": 29717.18099183032,
+     "principalLossMarked": 16448.38053890325,
+     "principalLossLiquidation": 16448.38053890325
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-6db49e57a10611d0",
+   "lots": 45,
+   "base": {
+    "net": 81675.47099271131,
+    "dd": 40004.74468904744,
+    "envelope": {
+     "bankedDdMarked": 28538.91367352214,
+     "bankedDdLiquidation": 28586.63643727007,
+     "principalLossMarked": 5590.550268211431,
+     "principalLossLiquidation": 5637.754993077326
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc1-75c9107a452a9447",
+   "lots": 178,
+   "base": {
+    "net": 79653.35158664033,
+    "dd": 39995.17697343009,
+    "envelope": {
+     "bankedDdMarked": 32172.754436266106,
+     "bankedDdLiquidation": 32222.529339171047,
+     "principalLossMarked": 19520.641983661102,
+     "principalLossLiquidation": 19561.09262157338
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.0477378964424134e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.0547118733938987e-15
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.0547118733938987e-15
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.0477378964424134e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.0547118733938987e-15
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.0547118733938987e-15
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-43a6f215fc5deba7",
+   "lots": 41,
+   "base": {
+    "net": 60979.02943160161,
+    "dd": 39994.93727431276,
+    "envelope": {
+     "bankedDdMarked": 26462.205960010142,
+     "bankedDdLiquidation": 26512.003546424035,
+     "principalLossMarked": 15143.845811319057,
+     "principalLossLiquidation": 15143.845811319057
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc1-2857800702a87d12",
+   "lots": 15,
+   "base": {
+    "net": 102328.50802972204,
+    "dd": 40005.314285463144,
+    "envelope": {
+     "bankedDdMarked": 25600.427557012183,
+     "bankedDdLiquidation": 25649.46758788322,
+     "principalLossMarked": 23680.489299086606,
+     "principalLossLiquidation": 23680.489299086606
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-3f8c9b85c39d394d",
+   "lots": 25,
+   "base": {
+    "net": 138930.72256647787,
+    "dd": 39994.61153440125,
+    "envelope": {
+     "bankedDdMarked": 31512.23436981463,
+     "bankedDdLiquidation": 31560.51043142953,
+     "principalLossMarked": 13348.824619968887,
+     "principalLossLiquidation": 13392.376235056163
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:near40:rc2-3677c1025abd23e8",
+   "lots": 30,
+   "base": {
+    "net": 63936.10410478228,
+    "dd": 39994.00882192141,
+    "envelope": {
+     "bankedDdMarked": 32333.170341691584,
+     "bankedDdLiquidation": 32382.970075618723,
+     "principalLossMarked": 15385.781080329292,
+     "principalLossLiquidation": 15428.284080200086
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:310e520dd7b510c9",
+   "lots": 57,
+   "base": {
+    "net": 33113.05073194537,
+    "dd": 38075.834829179264,
+    "envelope": {
+     "bankedDdMarked": 28871.48594615098,
+     "bankedDdLiquidation": 28919.03810465117,
+     "principalLossMarked": 11195.744982046894,
+     "principalLossLiquidation": 11240.17724654217
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.7462298274040223e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.7462298274040223e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 7.216449660063518e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-72c43c6b18420041",
+   "lots": 30,
+   "base": {
+    "net": 34328.33890045388,
+    "dd": 23723.719773634588,
+    "envelope": {
+     "bankedDdMarked": 18358.65248691008,
+     "bankedDdLiquidation": 18407.07291352992,
+     "principalLossMarked": 5975.074791371441,
+     "principalLossLiquidation": 5975.074791371441
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-1c373a6f521fc4b8",
+   "lots": 26,
+   "base": {
+    "net": 30276.152834522192,
+    "dd": 24473.54876742434,
+    "envelope": {
+     "bankedDdMarked": 19933.191025327433,
+     "bankedDdLiquidation": 19933.191025327433,
+     "principalLossMarked": 4627.861087298039,
+     "principalLossLiquidation": 4627.861087298039
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-c0e9a64fc3cb18dd",
+   "lots": 24,
+   "base": {
+    "net": 168134.62110002883,
+    "dd": 27066.239965632685,
+    "envelope": {
+     "bankedDdMarked": 12826.605350758991,
+     "bankedDdLiquidation": 12874.332594687221,
+     "principalLossMarked": 8883.473080916025,
+     "principalLossLiquidation": 8929.13682382762
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.0531133177191805e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-539b76ee7317b9e8",
+   "lots": 11,
+   "base": {
+    "net": 158266.41709858528,
+    "dd": 32406.986972880375,
+    "envelope": {
+     "bankedDdMarked": 17962.79474679957,
+     "bankedDdLiquidation": 18006.133897371357,
+     "principalLossMarked": 17962.794746799555,
+     "principalLossLiquidation": 18006.13389737136
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-0e31cb9664ba5791",
+   "lots": 18,
+   "base": {
+    "net": 41031.61949831645,
+    "dd": 49438.156698993305,
+    "envelope": {
+     "bankedDdMarked": 31046.0991147081,
+     "bankedDdLiquidation": 31094.054517819073,
+     "principalLossMarked": 20304.47682413355,
+     "principalLossLiquidation": 20344.50540763929
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-67684c937c11817f",
+   "lots": 11,
+   "base": {
+    "net": 13266.738556598813,
+    "dd": 31686.19067406888,
+    "envelope": {
+     "bankedDdMarked": 18392.07718190174,
+     "bankedDdLiquidation": 18438.41530316369,
+     "principalLossMarked": 10219.992058765116,
+     "principalLossLiquidation": 10219.992058765116
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-ad1af82b4f281d78",
+   "lots": 30,
+   "base": {
+    "net": 106429.68050949133,
+    "dd": 29017.196462328386,
+    "envelope": {
+     "bankedDdMarked": 22792.6510443024,
+     "bankedDdLiquidation": 22836.620640063265,
+     "principalLossMarked": 20797.856839723332,
+     "principalLossLiquidation": 20837.66887020758
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-e58c9732a629f6a6",
+   "lots": 22,
+   "base": {
+    "net": 99821.2444300617,
+    "dd": 25111.213535044946,
+    "envelope": {
+     "bankedDdMarked": 21198.075291831046,
+     "bankedDdLiquidation": 21245.323867195133,
+     "principalLossMarked": 10738.369480425948,
+     "principalLossLiquidation": 10738.369480425948
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-db7fe7a363412a3d",
+   "lots": 28,
+   "base": {
+    "net": 100653.02139401798,
+    "dd": 24542.65434007268,
+    "envelope": {
+     "bankedDdMarked": 11432.903252403834,
+     "bankedDdLiquidation": 11480.27590793639,
+     "principalLossMarked": 5767.017702028349,
+     "principalLossLiquidation": 5814.3903575608965
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-d93b48fda34d4469",
+   "lots": 30,
+   "base": {
+    "net": 202771.1041962045,
+    "dd": 22719.835214333594,
+    "envelope": {
+     "bankedDdMarked": 9218.8471908788,
+     "bankedDdLiquidation": 9267.223296542532,
+     "principalLossMarked": 7865.016780280546,
+     "principalLossLiquidation": 7911.265093808214
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.942890293094024e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-1721cf9a724d4c95",
+   "lots": 42,
+   "base": {
+    "net": 15681.73070778134,
+    "dd": 38675.87540223448,
+    "envelope": {
+     "bankedDdMarked": 33292.637023829266,
+     "bankedDdLiquidation": 33333.276521135274,
+     "principalLossMarked": 19263.471141396985,
+     "principalLossLiquidation": 19304.110638702998
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.280568540096283e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1657341758564144e-15
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1657341758564144e-15
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.280568540096283e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1657341758564144e-15
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1657341758564144e-15
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-6d7055913c2c10bd",
+   "lots": 22,
+   "base": {
+    "net": 156150.2109441625,
+    "dd": 22489.74410832161,
+    "envelope": {
+     "bankedDdMarked": 8618.646603178815,
+     "bankedDdLiquidation": 8664.487964808708,
+     "principalLossMarked": 8618.646603178806,
+     "principalLossLiquidation": 8664.487964808723
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:3308d102bb04b3a1",
+   "lots": 49,
+   "base": {
+    "net": 129950.37612006911,
+    "dd": 38214.33877280803,
+    "envelope": {
+     "bankedDdMarked": 30505.095386813842,
+     "bankedDdLiquidation": 30552.64754531403,
+     "principalLossMarked": 23945.82911828243,
+     "principalLossLiquidation": 23945.82911828243
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.996003610813204e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.996003610813204e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.996003610813204e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.996003610813204e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-f1d53c1fc4432f41",
+   "lots": 67,
+   "base": {
+    "net": 34651.64853243426,
+    "dd": 56643.71817791697,
+    "envelope": {
+     "bankedDdMarked": 51602.88952735339,
+     "bankedDdLiquidation": 51651.13356176077,
+     "principalLossMarked": 20645.63010905959,
+     "principalLossLiquidation": 20685.608663868075
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-6846ad379535c7a2",
+   "lots": 119,
+   "base": {
+    "net": 15561.978908023071,
+    "dd": 52208.486141150235,
+    "envelope": {
+     "bankedDdMarked": 49736.416207529546,
+     "bankedDdLiquidation": 49768.410428536554,
+     "principalLossMarked": 36162.24291749715,
+     "principalLossLiquidation": 36194.237138504155
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.402842700481415e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.402842700481415e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-0e10124d33b21417",
+   "lots": 47,
+   "base": {
+    "net": 54264.26083747247,
+    "dd": 53454.546318907705,
+    "envelope": {
+     "bankedDdMarked": 45259.38073422983,
+     "bankedDdLiquidation": 45308.84778305742,
+     "principalLossMarked": 10029.304312103317,
+     "principalLossLiquidation": 10029.304312103317
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-5c34dc7905191b72",
+   "lots": 42,
+   "base": {
+    "net": 159016.36802732438,
+    "dd": 26323.686543882985,
+    "envelope": {
+     "bankedDdMarked": 19966.157863870816,
+     "bankedDdLiquidation": 20011.772396378467,
+     "principalLossMarked": 13733.205182374293,
+     "principalLossLiquidation": 13733.205182374293
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.1641532182693482e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-aed32d06446a5d57",
+   "lots": 32,
+   "base": {
+    "net": 77875.91085301778,
+    "dd": 35719.79393958479,
+    "envelope": {
+     "bankedDdMarked": 29949.52602003909,
+     "bankedDdLiquidation": 29995.341646060668,
+     "principalLossMarked": 13772.507211273669,
+     "principalLossLiquidation": 13815.636026161183
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-f90998edeef1d31e",
+   "lots": 31,
+   "base": {
+    "net": 67815.60027980879,
+    "dd": 35873.293926700826,
+    "envelope": {
+     "bankedDdMarked": 25272.59975046012,
+     "bankedDdLiquidation": 25321.724695597215,
+     "principalLossMarked": 12558.66448670652,
+     "principalLossLiquidation": 12602.400222956318
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.9103830456733706e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.7755575615628914e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-48191163260bf063",
+   "lots": 28,
+   "base": {
+    "net": 123216.59218853545,
+    "dd": 29532.30493106255,
+    "envelope": {
+     "bankedDdMarked": 19552.89873158095,
+     "bankedDdLiquidation": 19597.497522420323,
+     "principalLossMarked": 11254.473115779052,
+     "principalLossLiquidation": 11299.071906618423
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.3877787807814457e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-9d7e2b6f35022a1f",
+   "lots": 22,
+   "base": {
+    "net": 148881.41635485154,
+    "dd": 31911.344572353977,
+    "envelope": {
+     "bankedDdMarked": 23255.878658455113,
+     "bankedDdLiquidation": 23304.91202613183,
+     "principalLossMarked": 15492.906286582727,
+     "principalLossLiquidation": 15492.906286582727
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-697f1f1e707893ab",
+   "lots": 26,
+   "base": {
+    "net": 66021.23192495322,
+    "dd": 58000.00722904682,
+    "envelope": {
+     "bankedDdMarked": 37563.16893311894,
+     "bankedDdLiquidation": 37610.95720225599,
+     "principalLossMarked": 23274.629597688065,
+     "principalLossLiquidation": 23317.512830834425
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc1-3a75dbbf71d6e307",
+   "lots": 36,
+   "base": {
+    "net": 98448.47298506943,
+    "dd": 27674.815711097894,
+    "envelope": {
+     "bankedDdMarked": 17865.49487026286,
+     "bankedDdLiquidation": 17906.773081731837,
+     "principalLossMarked": 17865.49487026286,
+     "principalLossLiquidation": 17906.77308173184
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-17
+     }
+    }
+   }
+  },
+  {
+   "key": "E:band:rc2-fba7e8de74b19e3a",
+   "lots": 45,
+   "base": {
+    "net": 60580.21190966393,
+    "dd": 57282.39821413745,
+    "envelope": {
+     "bankedDdMarked": 42453.567041898605,
+     "bankedDdLiquidation": 42499.66347897418,
+     "principalLossMarked": 26424.89508670322,
+     "principalLossLiquidation": 26424.89508670322
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.149072527885437e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.149072527885437e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:0",
+   "lots": 32,
+   "base": {
+    "net": 54959.08591423921,
+    "dd": 55007.5287198509,
+    "envelope": {
+     "bankedDdMarked": 39676.173932601785,
+     "bankedDdLiquidation": 39723.00801400539,
+     "principalLossMarked": 18271.370161786694,
+     "principalLossLiquidation": 18312.490641089364
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.402842700481415e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.402842700481415e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 6.661338147750939e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:1",
+   "lots": 9,
+   "base": {
+    "net": 28330.52120747038,
+    "dd": 52037.67913347418,
+    "envelope": {
+     "bankedDdMarked": 26681.629733078655,
+     "bankedDdLiquidation": 26681.629733078655,
+     "principalLossMarked": 26681.629733078655,
+     "principalLossLiquidation": 26681.629733078655
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.402842700481415e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.402842700481415e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:2",
+   "lots": 55,
+   "base": {
+    "net": -33995.32777097295,
+    "dd": 79946.62671941884,
+    "envelope": {
+     "bankedDdMarked": 70828.33668099338,
+     "bankedDdLiquidation": 70878.12614679884,
+     "principalLossMarked": 28858.15958866585,
+     "principalLossLiquidation": 28893.74557736467
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3387762010097504e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 9.992007221626409e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 9.992007221626409e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.3387762010097504e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 9.992007221626409e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 9.992007221626409e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:3",
+   "lots": 35,
+   "base": {
+    "net": -16620.657121453143,
+    "dd": 87273.07990755702,
+    "envelope": {
+     "bankedDdMarked": 68026.03225012794,
+     "bankedDdLiquidation": 68072.3153481642,
+     "principalLossMarked": 27021.14531205115,
+     "principalLossLiquidation": 27058.01145172389
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:4",
+   "lots": 38,
+   "base": {
+    "net": 101496.90418834522,
+    "dd": 57334.51790615877,
+    "envelope": {
+     "bankedDdMarked": 36613.323138017295,
+     "bankedDdLiquidation": 36659.31339641525,
+     "principalLossMarked": 16014.19495731585,
+     "principalLossLiquidation": 16014.19495731585
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:5",
+   "lots": 36,
+   "base": {
+    "net": 20122.135635815765,
+    "dd": 71668.62322659683,
+    "envelope": {
+     "bankedDdMarked": 63286.32944833577,
+     "bankedDdLiquidation": 63325.06232536293,
+     "principalLossMarked": 31797.05057855115,
+     "principalLossLiquidation": 31797.05057855115
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.820766091346741e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:6",
+   "lots": 30,
+   "base": {
+    "net": -28195.881997658933,
+    "dd": 66111.56569878351,
+    "envelope": {
+     "bankedDdMarked": 45881.871577107784,
+     "bankedDdLiquidation": 45923.14978857676,
+     "principalLossMarked": 29559.0595113402,
+     "principalLossLiquidation": 29559.0595113402
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:7",
+   "lots": 30,
+   "base": {
+    "net": 67025.77353069834,
+    "dd": 56190.43803750578,
+    "envelope": {
+     "bankedDdMarked": 46321.61975798571,
+     "bankedDdLiquidation": 46363.87364649094,
+     "principalLossMarked": 29383.94022166996,
+     "principalLossLiquidation": 29383.94022166996
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:8",
+   "lots": 107,
+   "base": {
+    "net": 34984.40012613997,
+    "dd": 65337.61503185566,
+    "envelope": {
+     "bankedDdMarked": 52517.43931421958,
+     "bankedDdLiquidation": 52566.498378786535,
+     "principalLossMarked": 20121.29623939177,
+     "principalLossLiquidation": 20161.446550176184
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.57160684466362e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 1.57160684466362e-15,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:9",
+   "lots": 95,
+   "base": {
+    "net": -68526.45503950343,
+    "dd": 124273.57711102976,
+    "envelope": {
+     "bankedDdMarked": 109294.90848525274,
+     "bankedDdLiquidation": 109344.42076614933,
+     "principalLossMarked": 26392.35937586763,
+     "principalLossLiquidation": 26429.163196179696
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 6.984919309616089e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:10",
+   "lots": 49,
+   "base": {
+    "net": 9992.090123888454,
+    "dd": 74614.32141539235,
+    "envelope": {
+     "bankedDdMarked": 70449.96786528842,
+     "bankedDdLiquidation": 70498.84122420014,
+     "principalLossMarked": 41090.53076201625,
+     "principalLossLiquidation": 41090.53076201625
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.656612873077392e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:11",
+   "lots": 56,
+   "base": {
+    "net": -10595.103895178177,
+    "dd": 78349.09947461255,
+    "envelope": {
+     "bankedDdMarked": 59258.629644925895,
+     "bankedDdLiquidation": 59304.0926243653,
+     "principalLossMarked": 16598.069692654986,
+     "principalLossLiquidation": 16598.069692654986
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.3655745685100557e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.3655745685100557e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:12",
+   "lots": 29,
+   "base": {
+    "net": 77257.16832240904,
+    "dd": 62775.09309472759,
+    "envelope": {
+     "bankedDdMarked": 56633.77361619496,
+     "bankedDdLiquidation": 56683.748628688714,
+     "principalLossMarked": 18870.866190179047,
+     "principalLossLiquidation": 18911.867743385326
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:13",
+   "lots": 95,
+   "base": {
+    "net": -26692.10151994379,
+    "dd": 97217.52638162178,
+    "envelope": {
+     "bankedDdMarked": 80482.46286643314,
+     "bankedDdLiquidation": 80532.03303236752,
+     "principalLossMarked": 14241.475961446922,
+     "principalLossLiquidation": 14241.475961446922
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:14",
+   "lots": 31,
+   "base": {
+    "net": -34669.672447804835,
+    "dd": 80687.02419603617,
+    "envelope": {
+     "bankedDdMarked": 67833.98501724949,
+     "bankedDdLiquidation": 67883.76184916878,
+     "principalLossMarked": 23714.071731257645,
+     "principalLossLiquidation": 23714.071731257645
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:15",
+   "lots": 20,
+   "base": {
+    "net": 94728.93618271254,
+    "dd": 30185.36408591879,
+    "envelope": {
+     "bankedDdMarked": 23842.220712781433,
+     "bankedDdLiquidation": 23889.46928814552,
+     "principalLossMarked": 11064.95397973607,
+     "principalLossLiquidation": 11064.95397973607
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.4924596548080445e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 3.4924596548080445e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     },
+     "re-40-25-25": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 1.6653345369377348e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:16",
+   "lots": 42,
+   "base": {
+    "net": 579.7427874373134,
+    "dd": 91875.51822000399,
+    "envelope": {
+     "bankedDdMarked": 72330.17844020776,
+     "bankedDdLiquidation": 72374.88800562455,
+     "principalLossMarked": 38225.18618692143,
+     "principalLossLiquidation": 38256.329758211534
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.529727786779404e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.529727786779404e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:17",
+   "lots": 54,
+   "base": {
+    "net": 22915.388646176896,
+    "dd": 96194.35727270052,
+    "envelope": {
+     "bankedDdMarked": 85495.72859980866,
+     "bankedDdLiquidation": 85542.95920279992,
+     "principalLossMarked": 23606.598755416784,
+     "principalLossLiquidation": 23606.598755416784
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 4.0745362639427184e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:18",
+   "lots": 15,
+   "base": {
+    "net": 66025.57111301449,
+    "dd": 56139.81622940756,
+    "envelope": {
+     "bankedDdMarked": 39820.39872395125,
+     "bankedDdLiquidation": 39867.95088245144,
+     "principalLossMarked": 24604.82361558944,
+     "principalLossLiquidation": 24604.82361558944
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:19",
+   "lots": 49,
+   "base": {
+    "net": 50455.47439493528,
+    "dd": 55310.77751130366,
+    "envelope": {
+     "bankedDdMarked": 41526.03243815211,
+     "bankedDdLiquidation": 41573.73103833377,
+     "principalLossMarked": 15986.432475682752,
+     "principalLossLiquidation": 15986.432475682761
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.731149137020111e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.731149137020111e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 5.551115123125783e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:20",
+   "lots": 25,
+   "base": {
+    "net": 54721.039196987906,
+    "dd": 54566.82065069121,
+    "envelope": {
+     "bankedDdMarked": 41097.9295699044,
+     "bankedDdLiquidation": 41142.95660718691,
+     "principalLossMarked": 30880.7712582065,
+     "principalLossLiquidation": 30880.7712582065
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.238689482212067e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 5.238689482212067e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 1.1102230246251565e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:21",
+   "lots": 48,
+   "base": {
+    "net": -16125.058234713564,
+    "dd": 74832.47087274163,
+    "envelope": {
+     "bankedDdMarked": 71117.99655340964,
+     "bankedDdLiquidation": 71166.826421012,
+     "principalLossMarked": 22025.25997275333,
+     "principalLossLiquidation": 22025.25997275333
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 7.8580342233181e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.498001805406602e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.498001805406602e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 7.8580342233181e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.498001805406602e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.498001805406602e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:22",
+   "lots": 27,
+   "base": {
+    "net": -48461.69772205141,
+    "dd": 113036.60777753987,
+    "envelope": {
+     "bankedDdMarked": 90663.3575677335,
+     "bankedDdLiquidation": 90709.75519321578,
+     "principalLossMarked": 29670.200516180237,
+     "principalLossLiquidation": 29670.200516180237
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 2.220446049250313e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:23",
+   "lots": 46,
+   "base": {
+    "net": 47308.679040087445,
+    "dd": 80136.11808526515,
+    "envelope": {
+     "bankedDdMarked": 62067.131559737434,
+     "bankedDdLiquidation": 62114.900937744336,
+     "principalLossMarked": 13905.015879023647,
+     "principalLossLiquidation": 13948.183919029341
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 2.328306436538696e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 3.3306690738754696e-16
+     }
+    }
+   }
+  },
+  {
+   "key": "A:scaling-D24:coarse:24",
+   "lots": 18,
+   "base": {
+    "net": 61275.848159848,
+    "dd": 34231.516408012845,
+    "envelope": {
+     "bankedDdMarked": 26193.115432818813,
+     "bankedDdLiquidation": 26240.599423201944,
+     "principalLossMarked": 14338.21171605977,
+     "principalLossLiquidation": 14338.21171605977
+    }
+   },
+   "c0_250000": {
+    "k": 2.5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.149072527885437e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   },
+   "c0_500000": {
+    "k": 5,
+    "sameChronology": true,
+    "maxRelativeDeviation": 8.149072527885437e-16,
+    "decisions": {
+     "nl0-control": {
+      "pass100k": true,
+      "pass": true,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     },
+     "re-40-25-25": {
+      "pass100k": false,
+      "pass": false,
+      "same": true,
+      "maxRatioDeviation": 4.440892098500626e-16
+     }
+    }
+   }
+  }
+ ],
+ "seconds": 36.2,
+ "pass": true
+}

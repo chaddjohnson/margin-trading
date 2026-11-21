@@ -2,16 +2,18 @@
 
 **Top screen (update at every milestone; times from `date -u`)**
 
-- Updated: 2026-11-21T20:19:24Z (clock). (The previous entry's "20:30Z approx." was an estimate written at ≈ 20:05Z; corrected here.)
-- Status: **INCOMPLETE** — Phase A verified; Phase B code + tests done; archives restored (2, verified); edge subjects
-  selected; acceptance tooling, chains, protocol (frozen `results/protocol-freeze.json`) written; commit of the integration
-  in progress; the campaign `chains/final.sh` NOT yet launched.
+- Updated: 2026-11-21T20:37:50Z (clock).
+- Status: **INCOMPLETE** — integration committed (`3715e97f`); campaign `chains/final.sh` RUNNING since 2026-11-21T20:23:21Z
+  (unit `p7chain-final`, log `results/logs/final-chain.txt`; waiter task b6hcipe2o in the session). Written meanwhile (not
+  yet committed): RISK_METRIC_INTEGRATION_SPEC.md, INTEGRATION_PLAN.md, RESTORATION_REPORT.md, the pilot proposal
+  (`research/vg-l0-risk-envelope-pilot/`), scaling checks (results/scaling, PASS), diagnostics illustration, docs/gpu updates.
 - Brief: `research/gpu-phase7/brief/BRIEF.md` (verbatim, 633 lines, sha256 `dfc11ac0…aecbff90f2`).
 - Branch `research/gpu-phase7-risk-envelope-readiness` from `cleanup/storage-2026-11-21` `d89b9dec` (= main `3606f4b3`
   + 2 docs-only cleanup commits). Main checkout `/home/chad/projects/margin-trading` (no extra worktree).
-- Running processes: none.
+- Running: systemd user unit `p7chain-final` (+ its `gpup7-*` sub-units) in `gpup7.slice`. Check: `systemctl --user list-units 'gpup7*' 'p7chain*'`; never start a second chain.
 - **PILOT NOT STARTED** and never to be started by this task (brief §12). No official optimization job may be launched.
-- Next step: commit, then launch the campaign:
+- Next step: wait for `chain final complete` (or `FAILED` → inspect, fix, resume with START=<step>); then run
+  `tools/gpu-phase7/accept.ts`; then post-record checks; then the readiness package. Launch command (already done):
   `tools/gpu-phase7/launch-slice.sh p7chain-final /home/chad/projects/margin-trading/research/gpu-phase7/results/logs/final-chain.txt -- /usr/bin/env START=1 /bin/bash research/gpu-phase7/chains/final.sh`
   (resume a failed/interrupted chain with START=<step>; steps print `step <n>` in the log).
 
