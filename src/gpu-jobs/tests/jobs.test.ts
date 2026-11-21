@@ -10,7 +10,16 @@ import path from 'node:path';
 import { strict as assert } from 'node:assert';
 import { after, test } from 'node:test';
 import { EvalLab } from '../../gpu-backend/lab.ts';
-import { JobError, allocateJobName, jobLayout, jobStatus, labOptionsOf, listJobs, openJob, poolFilesOf } from '../jobs.ts';
+import {
+  JobError,
+  allocateJobName,
+  jobLayout,
+  jobStatus,
+  labOptionsOf,
+  listJobs,
+  openJob,
+  poolFilesOf
+} from '../jobs.ts';
 import { OwnershipLock } from '../lock.ts';
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'gpu-jobs-test-'));
@@ -58,7 +67,13 @@ const child = (args: string[]) => {
     exited: new Promise<number | null>((resolve) => c.on('exit', (x) => resolve(x)))
   };
 };
-const pool = { start: async () => {}, run: async () => {}, requestStop: () => {}, stopping: null, close: async () => {} };
+const pool = {
+  start: async () => {},
+  run: async () => {},
+  requestStop: () => {},
+  stopping: null,
+  close: async () => {}
+};
 const lab = (o: { cacheRoot: string; job: string; owner?: ReturnType<typeof openJob>; study?: string }) =>
   new EvalLab({
     study: o.study ?? study,
@@ -98,9 +113,19 @@ test('a new job: its own records, state and dataset directories, identity writte
   assert.deepEqual(poolFilesOf(j), { ledgerFile: j.files.receipts, telemetryFile: j.files.telemetry });
   j.release('test');
   for (const bad of ['', '../x', 'a/b', '.hidden', 'x'.repeat(97), 'a b'])
-    assert.equal(code(() => jobLayout({ study, job: bad, ...r })), 'JOB_INVALID', bad);
-  assert.equal(code(() => jobLayout({ study: 'elsewhere/x', job: 'a', ...r })), 'JOB_INVALID');
-  assert.equal(code(() => openJob({ study, identity: def, purpose: 'x', resume: true, ...r })), 'JOB_INVALID');
+    assert.equal(
+      code(() => jobLayout({ study, job: bad, ...r })),
+      'JOB_INVALID',
+      bad
+    );
+  assert.equal(
+    code(() => jobLayout({ study: 'elsewhere/x', job: 'a', ...r })),
+    'JOB_INVALID'
+  );
+  assert.equal(
+    code(() => openJob({ study, identity: def, purpose: 'x', resume: true, ...r })),
+    'JOB_INVALID'
+  );
 });
 
 test('allocation: a job without a name gets a fresh unique one', () => {
@@ -123,15 +148,23 @@ test('refusals: active, existing, identity conflict, not found, foreign state; r
   const j = openJob({ study, job: 'j1', identity: def, purpose: 'parity-test', ...r });
 
   // the same job again while it is held (this process): refused
-  assert.equal(code(() => openJob({ study, job: 'j1', identity: def, purpose: 'parity-test', resume: true, ...r })), 'JOB_ACTIVE');
+  assert.equal(
+    code(() => openJob({ study, job: 'j1', identity: def, purpose: 'parity-test', resume: true, ...r })),
+    'JOB_ACTIVE'
+  );
   j.event('progress', { fresh: 10 });
   j.release('stopped');
   assert.equal(j.holds(), false);
   // an existing job is never reused without resume
-  assert.equal(code(() => openJob({ study, job: 'j1', identity: def, purpose: 'parity-test', ...r })), 'JOB_EXISTS');
+  assert.equal(
+    code(() => openJob({ study, job: 'j1', identity: def, purpose: 'parity-test', ...r })),
+    'JOB_EXISTS'
+  );
   // a resume with another definition is another job
   assert.equal(
-    code(() => openJob({ study, job: 'j1', identity: { ...def, budget: 'other' }, purpose: 'parity-test', resume: true, ...r })),
+    code(() =>
+      openJob({ study, job: 'j1', identity: { ...def, budget: 'other' }, purpose: 'parity-test', resume: true, ...r })
+    ),
     'JOB_IDENTITY_CONFLICT'
   );
   // key order is not identity
@@ -147,17 +180,27 @@ test('refusals: active, existing, identity conflict, not found, foreign state; r
   assert.equal(k.resumed, true);
   k.complete({ rows: 1 });
   k.release('complete');
-  const events = fs.readFileSync(k.files.events, 'utf8').trim().split('\n').map((l) => JSON.parse(l).event);
+  const events = fs
+    .readFileSync(k.files.events, 'utf8')
+    .trim()
+    .split('\n')
+    .map((l) => JSON.parse(l).event);
 
   assert.deepEqual(events, ['open', 'progress', 'release', 'resume', 'complete', 'release']);
   assert.equal(jobStatus({ study, job: 'j1', ...r }).state, 'complete');
-  assert.equal(code(() => openJob({ study, job: 'nope', identity: def, purpose: 'x', resume: true, ...r })), 'JOB_NOT_FOUND');
+  assert.equal(
+    code(() => openJob({ study, job: 'nope', identity: def, purpose: 'x', resume: true, ...r })),
+    'JOB_NOT_FOUND'
+  );
   // a directory with an archive but no identity (an unmanaged run): never adopted
   const L = jobLayout({ study, job: 'orphan', ...r });
 
   fs.mkdirSync(L.cache, { recursive: true });
   fs.writeFileSync(path.join(L.cache, 'archive.sqlite'), 'x');
-  assert.equal(code(() => openJob({ study, job: 'orphan', identity: def, purpose: 'x', ...r })), 'JOB_FOREIGN_STATE');
+  assert.equal(
+    code(() => openJob({ study, job: 'orphan', identity: def, purpose: 'x', ...r })),
+    'JOB_FOREIGN_STATE'
+  );
   assert.equal(jobStatus({ study, job: 'orphan', ...r }).state, 'foreign');
   assert.equal(fs.readFileSync(path.join(L.cache, 'archive.sqlite'), 'utf8'), 'x', 'nothing overwritten');
   // a refused resume of an absent job leaves at most its empty lock: status absent, the name usable
@@ -173,13 +216,29 @@ test('a declared shared dataset cache: recorded in the identity, the same on res
   assert.equal(j.datasetShared, true);
   assert.equal(j.dirs.dataset, shared);
   j.release();
-  assert.equal(code(() => openJob({ study, job: 's1', identity: def, purpose: 'x', resume: true, ...r })), 'JOB_IDENTITY_CONFLICT');
   assert.equal(
-    code(() => openJob({ study, job: 's1', identity: def, purpose: 'x', resume: true, datasetCache: { shared: `${shared}2` }, ...r })),
+    code(() => openJob({ study, job: 's1', identity: def, purpose: 'x', resume: true, ...r })),
+    'JOB_IDENTITY_CONFLICT'
+  );
+  assert.equal(
+    code(() =>
+      openJob({
+        study,
+        job: 's1',
+        identity: def,
+        purpose: 'x',
+        resume: true,
+        datasetCache: { shared: `${shared}2` },
+        ...r
+      })
+    ),
     'JOB_IDENTITY_CONFLICT'
   );
   openJob({ study, job: 's1', identity: def, purpose: 'x', resume: true, datasetCache: { shared }, ...r }).release();
-  assert.equal(code(() => openJob({ study, job: 's2', identity: def, purpose: 'x', datasetCache: { shared: 'rel' }, ...r })), 'JOB_INVALID');
+  assert.equal(
+    code(() => openJob({ study, job: 's2', identity: def, purpose: 'x', datasetCache: { shared: 'rel' }, ...r })),
+    'JOB_INVALID'
+  );
 });
 
 test('across processes: a live owner refuses another; a SIGKILLed owner frees the job, which resumes', async () => {
@@ -188,7 +247,20 @@ test('across processes: a live owner refuses another; a SIGKILLed owner frees th
   const got = await h.first;
 
   assert.equal(got.ok, true);
-  assert.equal(code(() => openJob({ study, job: 'x1', identity: { test: 'jobChild', door: 'none' }, purpose: 'x', resume: true, lockWaitMs: 100, ...r })), 'JOB_ACTIVE');
+  assert.equal(
+    code(() =>
+      openJob({
+        study,
+        job: 'x1',
+        identity: { test: 'jobChild', door: 'none' },
+        purpose: 'x',
+        resume: true,
+        lockWaitMs: 100,
+        ...r
+      })
+    ),
+    'JOB_ACTIVE'
+  );
   const s = jobStatus({ study, job: 'x1', ...r });
 
   assert.equal(s.state, 'active');
@@ -196,7 +268,14 @@ test('across processes: a live owner refuses another; a SIGKILLed owner frees th
   h.c.kill('SIGKILL');
   await h.exited;
   assert.equal(jobStatus({ study, job: 'x1', ...r }).state, 'interrupted');
-  const j = openJob({ study, job: 'x1', identity: { test: 'jobChild', door: 'none' }, purpose: 'x', resume: true, ...r });
+  const j = openJob({
+    study,
+    job: 'x1',
+    identity: { test: 'jobChild', door: 'none' },
+    purpose: 'x',
+    resume: true,
+    ...r
+  });
 
   assert.equal(j.resumed, true);
   j.release();
@@ -242,7 +321,10 @@ test('the EvalLab: its own lock without a job, the job owner with one; a second 
   const r = roots();
   const l1 = lab({ cacheRoot: r.cacheRoot, job: 'lab1' });
 
-  assert.equal(code(() => lab({ cacheRoot: r.cacheRoot, job: 'lab1' })), 'JOB_ACTIVE');
+  assert.equal(
+    code(() => lab({ cacheRoot: r.cacheRoot, job: 'lab1' })),
+    'JOB_ACTIVE'
+  );
   const other = child(['lab', study, 'lab1', r.cacheRoot, r.resultsRoot, '1000']);
 
   assert.equal((await other.first).code, 'JOB_ACTIVE');
@@ -253,16 +335,36 @@ test('the EvalLab: its own lock without a job, the job owner with one; a second 
   await l2.close('test');
   // with a job context: the job's directory and name, no second lock
   const j = openJob({ study, job: 'owned', identity: def, purpose: 'parity-test', ...r });
-  const l3 = new EvalLab({ ...labOptionsOf(j), door: 'none', doorPin: 'none', purpose: 'parity-test', pool, backend: 'test', codeDigest: 'test' });
+  const l3 = new EvalLab({
+    ...labOptionsOf(j),
+    door: 'none',
+    doorPin: 'none',
+    purpose: 'parity-test',
+    pool,
+    backend: 'test',
+    codeDigest: 'test'
+  });
 
   assert.ok(fs.existsSync(path.join(j.dirs.cache, 'archive.sqlite')));
-  assert.equal(code(() => lab({ cacheRoot: r.cacheRoot, job: 'owned' })), 'JOB_ACTIVE');
-  assert.equal(code(() => lab({ cacheRoot: r.cacheRoot, job: 'other', owner: j })), 'JOB_NOT_OWNER');
-  assert.equal(code(() => lab({ cacheRoot: r.cacheRoot, job: 'owned', owner: j, study: 'research/another' })), 'JOB_NOT_OWNER');
+  assert.equal(
+    code(() => lab({ cacheRoot: r.cacheRoot, job: 'owned' })),
+    'JOB_ACTIVE'
+  );
+  assert.equal(
+    code(() => lab({ cacheRoot: r.cacheRoot, job: 'other', owner: j })),
+    'JOB_NOT_OWNER'
+  );
+  assert.equal(
+    code(() => lab({ cacheRoot: r.cacheRoot, job: 'owned', owner: j, study: 'research/another' })),
+    'JOB_NOT_OWNER'
+  );
   await l3.close('test');
   assert.equal(j.holds(), true, 'the Lab does not release the job it does not own');
   j.release();
-  assert.equal(code(() => lab({ cacheRoot: r.cacheRoot, job: 'owned', owner: j })), 'JOB_NOT_OWNER');
+  assert.equal(
+    code(() => lab({ cacheRoot: r.cacheRoot, job: 'owned', owner: j })),
+    'JOB_NOT_OWNER'
+  );
   assert.equal(OwnershipLock.probe(j.dirs.cache), 'free');
 });
 
@@ -293,7 +395,10 @@ test('the official gate refuses an official run without a held job of its study 
   const k = openJob({ study, job: 'g2', identity: def, purpose: 'official-optimization', ...r });
 
   assert.match(await refusal({ job: k, runId: 'another' }), /preflight-job: run id another is not the job's name/);
-  assert.match(await refusal({ job: k, cacheDir: '/tmp/elsewhere' }), /preflight-job: dataset cache \/tmp\/elsewhere is not the job's/);
+  assert.match(
+    await refusal({ job: k, cacheDir: '/tmp/elsewhere' }),
+    /preflight-job: dataset cache \/tmp\/elsewhere is not the job's/
+  );
   // a valid job passes the job check: the next refusal is the (missing) binary
   assert.match(await refusal({ job: k }), /preflight-binary/);
   k.release();

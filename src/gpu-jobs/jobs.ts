@@ -131,7 +131,8 @@ const writeAtomic = (file: string, body: string) => {
   fs.writeFileSync(tmp, body);
   fs.renameSync(tmp, file);
 };
-const readJson = <T>(file: string): T | null => (fs.existsSync(file) ? (JSON.parse(fs.readFileSync(file, 'utf8')) as T) : null);
+const readJson = <T>(file: string): T | null =>
+  fs.existsSync(file) ? (JSON.parse(fs.readFileSync(file, 'utf8')) as T) : null;
 
 export const studyName = (study: string) => study.slice('research/'.length);
 
@@ -139,7 +140,10 @@ export const studyName = (study: string) => study.slice('research/'.length);
 export const jobLayout = (o: { study: string; job: string; cacheRoot?: string; resultsRoot?: string }) => {
   if (!STUDY_ID.test(o.study)) throw new JobError('JOB_INVALID', `study "${o.study}" is not research/<name>`);
   if (!JOB_NAME.test(o.job))
-    throw new JobError('JOB_INVALID', `job name "${o.job}": letters, digits, '_', '.', '-' (≤ 96, starting alphanumeric)`);
+    throw new JobError(
+      'JOB_INVALID',
+      `job name "${o.job}": letters, digits, '_', '.', '-' (≤ 96, starting alphanumeric)`
+    );
 
   const envRoot = process.env[CACHE_ROOT_ENV];
   const cacheBase = path.resolve(
@@ -167,7 +171,10 @@ export const jobLayout = (o: { study: string; job: string; cacheRoot?: string; r
 
 export const allocateJobName = (label = 'job') => {
   if (!JOB_NAME.test(label) || label.length > 60) throw new JobError('JOB_INVALID', `label "${label}"`);
-  return `${label}-${new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}-${randomBytes(3).toString('hex')}`;
+  return `${label}-${new Date()
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d+Z$/, 'Z')}-${randomBytes(3).toString('hex')}`;
 };
 
 // files a fresh job's directories may already hold (left by an earlier attempt that never got its identity written)
@@ -221,7 +228,12 @@ export const openJob = (o: JobOptions): JobContext => {
         );
       const mode = o.datasetCache ? 'shared' : 'job';
 
-      if (existing.datasetCache.mode !== mode || (mode === 'shared' && existing.datasetCache.mode === 'shared' && path.resolve(existing.datasetCache.dir) !== path.resolve(o.datasetCache!.shared)))
+      if (
+        existing.datasetCache.mode !== mode ||
+        (mode === 'shared' &&
+          existing.datasetCache.mode === 'shared' &&
+          path.resolve(existing.datasetCache.dir) !== path.resolve(o.datasetCache!.shared))
+      )
         throw new JobError(
           'JOB_IDENTITY_CONFLICT',
           `job ${id} was created with dataset cache ${JSON.stringify(existing.datasetCache)}; this run declares ${JSON.stringify(o.datasetCache ?? { mode: 'job' })}`
@@ -372,7 +384,8 @@ export const claimJobDirectory = (o: {
 // why `job` is not a valid owner of (study, job, dir) in this process (null: it is)
 export const ownerProblem = (job: JobContext, want: { study?: string; job?: string; dir?: string }) => {
   if (!job.holds()) return `job ${job.id} is not held by this process (released, or never opened here)`;
-  if (want.study !== undefined && want.study !== job.study) return `job ${job.id} belongs to ${job.study}, not ${want.study}`;
+  if (want.study !== undefined && want.study !== job.study)
+    return `job ${job.id} belongs to ${job.study}, not ${want.study}`;
   if (want.job !== undefined && want.job !== job.name) return `job ${job.id} is not "${want.job}"`;
   if (want.dir !== undefined && path.resolve(want.dir) !== path.resolve(job.dirs.cache))
     return `job ${job.id} owns ${job.dirs.cache}, not ${want.dir}`;
@@ -387,7 +400,10 @@ export const labOptionsOf = (job: JobContext) => ({
   owner: job,
   cacheRoot: job.labCacheRoot
 });
-export const poolFilesOf = (job: JobContext) => ({ ledgerFile: job.files.receipts, telemetryFile: job.files.telemetry });
+export const poolFilesOf = (job: JobContext) => ({
+  ledgerFile: job.files.receipts,
+  telemetryFile: job.files.telemetry
+});
 
 // ----- status (read-only: never takes a job's lock for longer than a probe) -----
 

@@ -211,7 +211,15 @@ test('engine runtime helpers: the flag first and once, script arguments untouche
 test('engine runtime (regression): behind the legacy runner gate, no thread or child process runs Maglev code', () => {
   const p = runProbe(['--no-maglev'], true);
 
-  for (const k of ['main', 'workerInherited', 'workerExplicit', 'forkExplicit', 'forkInherited', 'spawn', 'execFilePromisified'])
+  for (const k of [
+    'main',
+    'workerInherited',
+    'workerExplicit',
+    'forkExplicit',
+    'forkInherited',
+    'spawn',
+    'execFilePromisified'
+  ])
     assert.equal(p[k]!.maglev, false, `${k} ran Maglev code: ${JSON.stringify(p[k])}`);
   assert.equal(p.main!.turbo, true, 'the probe function reached the optimizing tier (the probe is live)');
   for (const k of ['forkExplicit', 'forkInherited', 'spawn', 'execFilePromisified']) {
@@ -238,7 +246,13 @@ test('engine runtime (controls): the probe detects Maglev; without the guard an 
   // the legacy runner gate itself refuses an unprotected process before importing anything
   const r = spawnSync(
     process.execPath,
-    ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', 'src/gpu-backend/legacyRunner.ts', 'x', 'nothing.ts'],
+    [
+      '--experimental-transform-types',
+      '--disable-warning=ExperimentalWarning',
+      'src/gpu-backend/legacyRunner.ts',
+      'x',
+      'nothing.ts'
+    ],
     { cwd: repoRoot, env: { PATH: process.env.PATH!, GPU_POLICY_PURPOSE: 'diagnostic' }, encoding: 'utf8' }
   );
 

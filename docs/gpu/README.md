@@ -1,7 +1,9 @@
 # GPU evaluator — operations guide
 
 How to build, verify, run and troubleshoot the CUDA evaluator on Apollo (RTX 5090). Acceptance status: see
-`config/gpu-backend/acceptance.json` (schema 2; written by the current acceptance study `research/gpu-phase5/`, which
+`config/gpu-backend/acceptance.json` (schema 2; written by the current acceptance study `research/gpu-phase6/` — the
+enforcement-only re-acceptance for the Maglev protection beyond the official path and the automatic job isolation, which
+carries the evaluation evidence of `research/gpu-phase5/`, which
 resolved Phase 4's parity mismatch — a JavaScript-engine defect, hence the `--no-maglev` requirement of §3a — and made
 the dataset export atomic; `research/gpu-phase3/` added the parallel host path and the enforcement pins; the first
 acceptance was `research/gpu-phase2/`). Normative rules:
@@ -67,8 +69,20 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
   Maglev option; the attestation records the engine configuration. V8 options are process-wide, so the host pipeline's
   worker threads inherit it. `NODE_OPTIONS` cannot carry the flag: put it on the `node` command line (npm scripts too).
 - Parity references and acceptance evidence are produced the same way (the acceptance generator requires it of every
-  evidence record). Diagnostics, legacy CPU runners and Strategy Lab's server are not covered by the enforcement: start
-  them with `--no-maglev` whenever their numbers matter.
+  evidence record).
+- **Beyond the official path (GPU Phase 6, `research/gpu-phase6/`).** Every Node npm script of the repository and of
+  Strategy Lab starts `node --no-maglev …` (a merge-gate test refuses a script without it). The legacy CPU runner gate
+  (`legacyRunner.ts`, used by every research npm script) refuses a process without the flag (`runtime-maglev`) and
+  installs the **child-process guard** (`runtime.ts installChildEngineGuard`) before importing the frozen runner: frozen
+  runners fork their workers with an explicit `execArgv`, which would drop the flag; the guard adds it to every Node child
+  (`fork`, and `spawn`/`spawnSync`/`execFile`/`execFileSync` of `node`) without editing frozen code. Strategy Lab's
+  server (`start()`), its four runners and its test workers (Vitest `execArgv`, the Playwright web server) refuse or carry
+  it; the runners get it through `NODE_FLAGS` (`server/jobs.ts`). Worker threads share their process's V8 options.
+  Regression tests observe V8's own tiers (`%ActiveTierIsMaglev`) in the main thread, worker threads and forked/spawned
+  children (`src/gpu-backend/tests/enforcement.test.ts`). Not covered: a frozen study's `main.ts` started by hand with
+  plain `node` (bypassing its npm script and the gate) — use the npm scripts.
+- Code that starts an engine child itself: `engineExecArgv` / `withEngineFlag(execArgv)` for `fork`,
+  `withEngineFlagArgs(args)` for `spawn(process.execPath, args)` — never a hand-written flag list, never `NODE_OPTIONS`.
 - Cost: one optimizing tier less (Sparkplug and TurboFan remain); measured in
   `research/gpu-phase5/PERFORMANCE_AUDIT.md`.
 
@@ -101,10 +115,9 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
   8,192, 8 host workers each (≈ 11 GB of VRAM in use incl. the desktop; CPU < 20 %).
 - **Never split one study into parallel jobs to speed it up** (+6–7 % at two parts, slower at three or four: each part's
   batches are smaller and the kernels are latency-bound).
-- **Concurrent jobs:** one parent slice with the aggregate cap, a per-job MemoryMax, each job its own job name (the archive
-  store has no inter-process lock) and **its own dataset cache directory** (still the recommended practice; since GPU
-  Phase 5 the export is write-once and atomic, so jobs that do share a directory no longer fail at start-up — see
-  §4b); admit a job only if free VRAM ≥ its need (≈ 6 GiB at 8,192 on D19) + 3 GiB.
+- **Concurrent jobs:** one parent slice with the aggregate cap, a per-job MemoryMax; since GPU Phase 6 each job's
+  identity, ownership, records, state and dataset cache are isolated **automatically** (§4c); admit a job only if free
+  VRAM ≥ its need (≈ 6 GiB at 8,192 on D19) + 3 GiB.
   A failing job (GPU server killed, host-worker fault, VRAM refusal, abrupt kill) stops alone; its neighbour is unaffected
   (tested). `tools/gpu-phase4/admit.ts` is a ready admission check.
 - **The device's compute is mostly idle** (GPM SM activity 34–46 %, SM occupancy ≈ 1 %): merging jobs' batches into one
@@ -122,6 +135,58 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
   file or use a fresh cache directory.
 - A writer killed mid-export leaves at most a `.…​.tmp-<pid>-…` file, removed by a later export once it is 15 minutes
   old and its writer is gone.
+
+## 4c. Job namespaces (GPU Phase 6: `src/gpu-jobs/`, `research/gpu-phase6/JOB_ISOLATION.md`)
+
+Every optimization job opens itself with `openJob` (`src/gpu-jobs/jobs.ts`); an official run must (the gate refuses
+otherwise: `preflight-job`). Nothing has to be configured:
+
+| What | Where (default) |
+|---|---|
+| identity (study, name, the job's definition and its sha256; written once) | `research/<study>/results/jobs/<job>/job.json` |
+| records: `events.jsonl`, `receipts.jsonl`, `telemetry.jsonl`, the runner's results, `complete.json` | `research/<study>/results/jobs/<job>/` |
+| log | `research/<study>/results/jobs/<job>/logs/` (git-ignored) |
+| state: EvalLab archive + checkpoint (`archive.sqlite`, `progress.json`, `runs.jsonl`), the ownership lock `job.lock`, `owner.json` | `research/<study>/cache/jobs/<job>/` (git-ignored) |
+| dataset cache (the job's own; the unchanged atomic export) | `research/<study>/cache/jobs/<job>/dataset/` |
+| attestations (standard §9.3) | `research/<study>/results/gpu-attestations/<job>-<time>.json`, logged in the job's events |
+
+- **Ownership.** One live process per job: a kernel lock (an exclusive SQLite transaction on `job.lock`), released by
+  any exit including SIGKILL — no stale lock, no PID check. A second process, or a second Lab on the job in one process,
+  is refused (`JOB_ACTIVE`). The EvalLab takes the same lock when it is opened without a job (non-official tools).
+- **New, resume, allocate.** A new name that exists → `JOB_EXISTS` (results are never overwritten); `resume: true`
+  continues the job only with the identical definition (`JOB_IDENTITY_CONFLICT` otherwise; `JOB_NOT_FOUND` if absent),
+  reads its own archive back and records a `resume` event; no name → a fresh `<label>-<UTC>-<random>` is allocated.
+  State without an identity is never adopted (`JOB_FOREIGN_STATE`).
+- **Determinism.** Names, instance ids and directories never reach a seed or the search order (seeds derive from the
+  lane keys); concurrent, killed+resumed and shared-cache jobs reproduce the isolated reference bit for bit
+  (`research/gpu-phase6/` gate E6).
+- **Market data** are read in place by every job (`data/<SYMBOL>/`, never copied); only the derived ≈ 34 MB GPU dataset
+  is exported per job. A shared dataset cache is allowed only when declared (`datasetCache: { shared: <absolute dir> }`;
+  recorded in the identity, the same on every resume) — safe because the export is write-once and atomic (§4b).
+- **Overrides:** `cacheRoot` / `resultsRoot` options; `GPU_JOBS_CACHE_ROOT=<dir>` moves every job's state to
+  `<dir>/<study name>/jobs/<job>/` (e.g. a faster disk).
+
+```ts
+// one official optimization (inside a runner started by src/gpu-backend/officialRunner.ts with node --no-maglev)
+const job = openJob({ study: 'research/<study>', job: 'C19-broad1', identity: { door: 'D19', stage: 'broad1', budget: 'v1' },
+  purpose: 'official-optimization', resume: process.argv.includes('--resume') });
+const session = await openOfficialGpuSession({ study: job.study, job, door, domain, plannedBatch: 8192 });
+const pool = new GpuPool({ door, session, ...poolFilesOf(job), batchSize: 8192 });
+const lab = new EvalLab({ ...labOptionsOf(job), door: 'D19', doorPin, purpose: 'official-optimization', pool, backend, codeDigest });
+// … search …
+await lab.close(); job.complete({ … }); job.release('complete');
+```
+
+- **Two concurrent optimizations (Mode A):** start the two runners as two units in one slice, each with its own job
+  name (or none: allocated). Nothing else differs; a second start of a running job's name is refused, so a mistyped
+  name can never write into the other job. Non-official example (the Phase 6 campaign tool):
+  `tools/gpu-phase6/launch-slice.sh u-a <log> -- env GPU_POLICY_PURPOSE=benchmark node --no-maglev … tools/gpu-phase6/job.ts --job a3:C19:broad1 --job-name A`
+  and the same with `--job a2:C19:base --job-name B`.
+- **Recovery:** an interrupted job (killed, crashed, stopped) has state `interrupted`; rerun its command with `--resume`
+  (`resume: true`). **Status:** `node --no-maglev --experimental-transform-types src/gpu-jobs/cli.ts list --study research/<study>`
+  (or `status --job <job>`). **Cleanup:** `… cli.ts remove-cache --study research/<study> --job <job> --yes` deletes the
+  git-ignored state of a job that is not active (its archive: it can then only be rerun, deterministically); its records
+  under `results/jobs/<job>/` are research records — commit them, or delete them by hand when the job was a scratch run.
 
 ## 5. Telemetry and records
 
@@ -157,6 +222,11 @@ tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, th
 | `host worker … exited / failed / did not answer` | a host-path worker failed: the job stopped (checkpointed), nothing of the batch was released; check memory (each worker has a 3 GiB heap limit) and the error, then resume |
 | `preflight-pins` / `preflight-source` | a pinned file differs from the record, or is not committed: commit (or revert) and, if it is a real change, follow the checklist |
 | `preflight-runtime` / `runtime-maglev` | the process was not started with `node --no-maglev …` (or carries another Maglev option): restart it with the flag on the command line (§3a) |
+| `JOB_ACTIVE` | another live process owns the job (owner pid and host in the message): wait, stop it, or use another job name |
+| `JOB_EXISTS` / `JOB_IDENTITY_CONFLICT` / `JOB_NOT_FOUND` | a new start of an existing job (resume it), a resume with another definition (a different job needs its own name), a resume of a job that never existed (§4c) |
+| `JOB_FOREIGN_STATE` | the job's directories hold state without a job identity (an unmanaged earlier run): inspect and remove it, or use another name — never adopted |
+| `preflight-job` | an official run without a held job of its study, or with a run id / dataset cache that is not its job's (§4c) |
+| `runtime-maglev` from a legacy runner or Strategy Lab | the process was started without `node --no-maglev` (use the npm scripts; §3a) |
 | `DATASET_CACHE_CONFLICT` / `DATASET_CACHE_INVALID` | the cache directory holds another dataset under this door's name, or a damaged file: remove it or use a fresh cache directory (§4b); never overwritten automatically |
 | `preflight-host-path` | the host workers did not start or hold another door: an environment or code fault, never fall back |
 | Debug timing | `GB_DEBUG=1` (the default from the client) makes the server log per-batch phase times to its stderr, kept in the client (`server.stderrTail`) |

@@ -30,7 +30,8 @@ try {
     const L = jobLayout({ study, job, ...roots });
     const s = jobStatus({ study, job, ...roots });
 
-    if (s.state === 'active') throw new JobError('JOB_ACTIVE', `${s.id} is running (pid ${s.owner?.pid}): stop it first`);
+    if (s.state === 'active')
+      throw new JobError('JOB_ACTIVE', `${s.id} is running (pid ${s.owner?.pid}): stop it first`);
     if (!fs.existsSync(L.cache)) {
       console.log(`${s.id}: no state directory`);
     } else if (!args.includes('--yes')) {
@@ -40,12 +41,16 @@ try {
       const lock = OwnershipLock.acquire(L.cache, 0);
 
       try {
-        for (const f of fs.readdirSync(L.cache)) if (f !== 'job.lock') fs.rmSync(`${L.cache}/${f}`, { recursive: true, force: true });
+        for (const f of fs.readdirSync(L.cache))
+          if (f !== 'job.lock') fs.rmSync(`${L.cache}/${f}`, { recursive: true, force: true });
       } finally {
         lock.release(); // the empty lock file stays (a process waiting on it must not be left holding a deleted file)
       }
       if (fs.existsSync(L.events))
-        fs.appendFileSync(L.events, `${JSON.stringify({ t: new Date().toISOString(), event: 'cache-removed', by: 'src/gpu-jobs/cli.ts', pid: process.pid })}\n`);
+        fs.appendFileSync(
+          L.events,
+          `${JSON.stringify({ t: new Date().toISOString(), event: 'cache-removed', by: 'src/gpu-jobs/cli.ts', pid: process.pid })}\n`
+        );
       console.log(`removed ${L.cache}`);
     }
   } else {

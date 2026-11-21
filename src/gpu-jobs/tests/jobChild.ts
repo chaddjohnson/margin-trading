@@ -25,7 +25,13 @@ try {
     release = () => j.release('child done');
     console.log(JSON.stringify({ ok: true, pid: process.pid, resumed: j.resumed, instance: j.instance }));
   } else {
-    const pool = { start: async () => {}, run: async () => {}, requestStop: () => {}, stopping: null, close: async () => {} };
+    const pool = {
+      start: async () => {},
+      run: async () => {},
+      requestStop: () => {},
+      stopping: null,
+      close: async () => {}
+    };
     const lab = new EvalLab({
       study: study!,
       job: job!,
@@ -42,7 +48,9 @@ try {
     console.log(JSON.stringify({ ok: true, pid: process.pid }));
   }
 } catch (e) {
-  console.log(JSON.stringify({ ok: false, code: e instanceof JobError ? e.code : 'ERROR', message: (e as Error).message }));
+  console.log(
+    JSON.stringify({ ok: false, code: e instanceof JobError ? e.code : 'ERROR', message: (e as Error).message })
+  );
   process.exit(0);
 }
 

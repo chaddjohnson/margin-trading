@@ -94,7 +94,11 @@ export const withEngineFlag = (execArgv: readonly string[] = []): string[] => {
 export const withEngineFlagArgs = (args: readonly string[]): string[] => {
   let i = 0;
 
-  while (i < args.length && args[i]!.startsWith('-') && !['-e', '--eval', '-p', '--print', '-', '--'].includes(args[i]!))
+  while (
+    i < args.length &&
+    args[i]!.startsWith('-') &&
+    !['-e', '--eval', '-p', '--print', '-', '--'].includes(args[i]!)
+  )
     i++;
   return [...withEngineFlag(args.slice(0, i)), ...args.slice(i)];
 };
@@ -102,7 +106,9 @@ export const withEngineFlagArgs = (args: readonly string[]): string[] => {
 // a command that starts this Node binary (or a `node` from PATH)
 const isNodeCommand = (file: unknown) =>
   typeof file === 'string' &&
-  (file === process.execPath || path.basename(file) === 'node' || path.basename(file) === path.basename(process.execPath));
+  (file === process.execPath ||
+    path.basename(file) === 'node' ||
+    path.basename(file) === path.basename(process.execPath));
 
 const GUARD = Symbol.for('margin-trading.childEngineGuard');
 
@@ -139,8 +145,7 @@ export const installChildEngineGuard = () => {
     return (original.fork as (...a: unknown[]) => unknown).call(this, modulePath, args, next);
   };
   // spawn-like(file, args?, …): a Node command gets the flag before its script
-  const nodeArgs =
-    (fn: (...a: unknown[]) => unknown) =>
+  const nodeArgs = (fn: (...a: unknown[]) => unknown) =>
     function (this: unknown, file: unknown, ...rest: unknown[]) {
       if (!isNodeCommand(file)) return fn.call(this, file, ...rest);
       if (Array.isArray(rest[0])) rest[0] = withEngineFlagArgs(rest[0] as string[]);
