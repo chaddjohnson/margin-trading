@@ -18,7 +18,14 @@ const known = (f: { file: string; test: string }) =>
     f.file
   ) ||
   (f.file === 'src/study7-runners/tests/runners.test.ts' && /parity with the sealed Study 7 final door/.test(f.test));
-const unexpected = failures.filter((f) => !known(f));
+// amendment A4: the two tests of the record IN FORCE fail until the new record exists — accepted here only with the
+// stale-enforcement reason; they must pass in the rerun after the record (results/tests/record-in-force-after.txt)
+const recordInForce = (f: { file: string; test: string }) =>
+  (f.file === 'src/gpu-backend/tests/policy.test.ts' && /^MERGE GATE: a recorded GPU acceptance still matches/.test(f.test)) ||
+  (f.file === 'src/gpu-backend/tests/enforcement.test.ts' && /^the recorded acceptance re-verifies independently/.test(f.test));
+const staleReason = /the enforcement code changed since acceptance/.test(npm);
+const beforeRecord = failures.filter((f) => !known(f) && recordInForce(f));
+const unexpected = failures.filter((f) => !known(f) && !(recordInForce(f) && staleReason));
 const totals = {
   tests: n(npm, 'tests'),
   pass: n(npm, 'pass'),
@@ -27,7 +34,12 @@ const totals = {
   skipped: n(npm, 'skipped')
 };
 const npmPass =
-  unexpected.length === 0 && failures.length === totals.fail && totals.fail === 7 && totals.cancelled === 0 && totals.tests > 1710;
+  unexpected.length === 0 &&
+  failures.length === totals.fail &&
+  totals.fail === 7 + beforeRecord.length &&
+  beforeRecord.length <= 2 &&
+  totals.cancelled === 0 &&
+  totals.tests > 1710;
 
 writeJson(path.join(D, 'npm-test.json'), {
   kind: 'gpu-phase6 E8 npm test',
@@ -43,11 +55,16 @@ writeJson(path.join(D, 'npm-test.json'), {
   },
   failures: failures.map((f) => ({ ...f, known: known(f) })),
   unexpected,
+  recordInForceBeforeRecord: {
+    tests: beforeRecord,
+    staleReason,
+    rule: 'amendment A4: accepted only with the stale-enforcement reason; rerun after the new record must pass (results/tests/record-in-force-after.txt)'
+  },
   rootTsc: /exit=0/.test(txt('root-tsc.txt')) ? 'exit 0' : txt('root-tsc.txt').slice(-600),
   eslintGpu: txt('eslint-gpu.txt')
     .split('\n')
     .filter((l) => /problem|exit=/.test(l)),
-  summary: `${totals.tests} tests, ${totals.pass} pass, ${totals.fail} fail (${failures.length - unexpected.length} known pre-existing, ${unexpected.length} unexpected), ${totals.skipped} skipped`,
+  summary: `${totals.tests} tests, ${totals.pass} pass, ${totals.fail} fail (${failures.filter(known).length} known pre-existing, ${beforeRecord.length} record-in-force before the new record (A4), ${unexpected.length} unexpected), ${totals.skipped} skipped`,
   pass: npmPass
 });
 

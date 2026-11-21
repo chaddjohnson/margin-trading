@@ -43,3 +43,19 @@ Each entry: ID, UTC time, the change, why, which results existed, its effect. No
 - **Change.** The case finds the dataset in the job's own cache by content: a `.gb2ds` file whose sha256 equals the
   attestation's dataset sha256 (stricter than a file name). The whole suite is rerun on the committed tree.
 - **Kept.** `results/policy/negative-run1-A3-expectation-defect.json` and its log `negative-run1-A3.log`.
+
+## A4 — 2026-11-21T11:03:42Z — gate E8: the two record-in-force tests before and after the new record
+
+- **What happened.** `npm test` on the final tree (chains/tests.sh, 11:03Z): 1,723 tests, 1,710 pass, 9 fail, 4 skipped.
+  Seven are the known pre-existing failures (allin-original ×6, Study 7 data end). The other two are the tests that
+  check the acceptance record IN FORCE against the tree — "MERGE GATE: a recorded GPU acceptance still matches the
+  working tree" (policy.test.ts) and "the recorded acceptance re-verifies independently" (enforcement.test.ts). They fail
+  because the Phase 5 record no longer pins this tree's enforcement files — exactly the STALE state §2a describes, which
+  only the new record can end. (Phase 5 did not meet this: its branch had no record in force at its test step, so the
+  merge-gate test returned early.)
+- **Change.** E8 reads: `npm test` has exactly the 7 known failures plus, before the new record exists, at most these two
+  record-in-force tests, each failing only with the stale-enforcement reason ("the enforcement code changed since
+  acceptance"); after the generator writes the record they are rerun (policy.test.ts and enforcement.test.ts in full)
+  and must pass — recorded in `results/tests/record-in-force-after.txt` — and the full suite is repeated after the
+  merge (PROTOCOL.md §7). No other failure is tolerated; no criterion is loosened.
+- **Results existing.** The npm-test log of 11:03Z (this attempt); nothing recorded as passed.
