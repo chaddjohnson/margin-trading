@@ -55,6 +55,7 @@ overwriting. That is the intended behaviour (one name, one dataset); the remedy 
 | the original 4 × 25 reproduction on D19 with the GPU server's load and two reader processes (`tools/gpu-phase5/dataset-race.ts race --mode atomic`, `results/cache/race-d19-atomic.json`) | **100 of 100 loads verified, 0 refused**, 1 created + 99 reused, 0 partial reads of 230, no temporary file left |
 | forced termination on the real 34 MB dataset (`… kill`, `results/cache/kill-d19.json`): 40 writer processes SIGKILLed 45–398 ms into their export loops | 78 directories: 59 complete targets, 19 with only a temporary file, **0 partial targets**; all 78 complete after a restart |
 | conflicting identities on real doors (`… conflict`, `results/cache/conflict.json`): 2 writers of D19 and 2 of D21 under one name, 10 rounds, then the GPU server loads the published file | one dataset published per round, 20 explicit conflicts, the server's load verifies, sidecar consistent |
+| **the same two tests repeated on the final binary in the acceptance campaign** (gate A10; `results/final/race-d19-atomic.json`, `results/final/conflict.json`) | race: **100 of 100 loads verified, 0 refused**, 1 created + 99 reused, 0 partial reads of 241; conflict: 10 rounds, 20 explicit conflicts, one dataset published per round |
 | a first run of the race tool counted one verified legacy load as "wrong" because it re-read the file after the load while another process was rewriting it; the classification was corrected (a "wrong" load is one the server accepted with another shape) and both first outputs are kept, labelled (`race-d19-legacy-inplace-run1-misclassified.json`, `race-d19-atomic-run1.json`) | disclosed |
 
 ## 4. A cache change is not a market-data change
@@ -83,6 +84,20 @@ recommended practice:
 - every job passes its own official gate (which now also requires the engine to run without Maglev,
   `PARITY_ROOT_CAUSE.md` §7) and exports its own dataset.
 
-The isolation and failure tests of Phase 4 (a job killed and resumed, a GPU server killed, a host-worker fault, a VRAM
-refusal, namespace guards — each beside a neighbour that must finish identical) are repeated on the final candidate in
-the acceptance campaign (`GPU_ACCEPTANCE_REPORT.md`, gate A10).
+The isolation and failure tests of Phase 4 were repeated on the final candidate in the acceptance campaign
+(`GPU_ACCEPTANCE_REPORT.md`, gate A10; `results/isolation/`, `results/bench/{i1,i2}`), each beside a neighbour job that
+had to finish identical to its reference:
+
+| Test | What happens | Result |
+|---|---|---|
+| I1 | a job's whole unit is killed (SIGKILL) mid-run and the job resumed while a neighbour runs | resumed job (5,002 rows reused from its archive) and neighbour identical to the reference |
+| I2 | a job stops gracefully at a set point (exit 75) and is resumed beside a neighbour | both identical |
+| I3, I4, I5 | a failure in one job (its GPU server killed; a host-worker fault; a VRAM refusal) | the failing job exits 3, records the failure and its reason, scores nothing on the CPU, releases no unfinished round; the neighbour completes identical |
+| I6 | namespace guards | a live job's name is refused, a finished job's name is refused for reuse without `--resume`, the test tool refuses an official purpose |
+| I7 | four processes exporting one dataset into one shared directory, 25 loads each, with two readers | the table of §3: 100 of 100 verified |
+
+**Are separate namespaces still required?** Yes for job names (mandatory: the archive store has no inter-process lock,
+and the guards of I6 refuse a shared or reused name). For dataset cache directories they are no longer needed for
+correctness — a shared directory now converges on one verified file and refuses a different revision explicitly — and
+remain the recommended practice, because a per-job directory keeps a job's inputs independent of any other job's
+data revision and of its cleanup.

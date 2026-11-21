@@ -2,26 +2,23 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-21T03:12:23Z (UTC, from `date -u`)
+- **Updated:** 2026-11-21T05:59:58Z (UTC, from `date -u`)
 - **Status:** **INCOMPLETE** — Q1 root cause **RESOLVED by rule §4.7** (`PARITY_ROOT_CAUSE.md`: a V8 Maglev defect; fix =
   the engine runs under `--no-maglev`, enforced by the official gate); stage C (atomic dataset export) complete; sealed
-  files protected (988 restored); **stage P complete: no host-path performance change retained** (amendment A3;
-  `PERFORMANCE_AUDIT.md` still to write); a host-pipeline shutdown guard added (A3); **stage A (final campaign):
-  see "Running"**.
+  files protected (988 restored); stage P complete: no performance change retained (`PERFORMANCE_AUDIT.md`); **stage A:
+  the campaign's 36 steps are complete and pass** (see "Campaign log"; step 36 passed on its second attempt, amendment
+  A5); **next: the acceptance generator** (Next commands, item 2).
 - **Authority:** `brief/BRIEF.md` sha256 `bff746987861bd2837864af4c86ad2f2d980b386e465f0b6dfd0f12a6d221476` (224 lines,
   read in full). `PROTOCOL.md` FROZEN 2026-11-20T21:12:21Z (`results/protocol-freeze.json`, protocol sha256
-  `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: A1, A2, A3, A4 (head). Standard 3.0.0
+  `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: A1, A2, A3, A4, A5 (head). Standard 3.0.0
   (scope diagnostic); preflight PASS.
 - **Final tree digests** (`node --no-maglev … src/gpu-backend/compat.ts`): evaluation `3a6eacdecc4f0a24…`, CPU closure
   `c8a9f416…` (unchanged), CUDA `d8899061…` (unchanged), host `53671a6c…`, policy `a2560e85…`.
-- **Running:** the final campaign, RESUMED 03:10:44Z as unit `p5chain-final-r1` (`chains/final-resume-30.sh`,
-  amendment A4; steps 1–29 done, see "Campaign log"; waiter `bht53w5dr`) — first launch was unit `p5chain-final`, log
-  `/home/chad/projects/margin-trading/research/gpu-phase5/results/logs/chain-final.txt` (start time and commit: see
-  "Campaign log" below). 36 steps, fail-fast; a step's sub-units are named `gpup5-final-*` / `gpup5-par-*`. Check with
-  `systemctl --user list-units 'p5chain-*' 'gpup5-*'` and `grep -E "start|end|FAILED|complete" <log> | tail`.
-  **While it runs: no CPU-heavy tool, no edit of any file under `src/`, `tools/`, `config/` or `research/gpu-phase5/chains/`.**
+- **Running:** nothing (no `p5chain-*` or `gpup5-*` unit; checked with `systemctl --user list-units`). The campaign's
+  log is `/home/chad/projects/margin-trading/research/gpu-phase5/results/logs/chain-final.txt` (units `p5chain-final`,
+  `-r1` from step 29b, `-r2` step 36 attempt 2).
 - **Next commands (in order):**
-  1. wait for `chain final complete` in the log; on `FAILED <k> [<name>]` read `results/logs/final/<step>.txt`, fix the
+  1. (done) the campaign: `chain final complete`; for the record, the rule was: on `FAILED <k> [<name>]` read `results/logs/final/<step>.txt`, fix the
      cause (a tool or chain fix is a new commit; an engine or host-path fix invalidates the earlier steps), resume with
      `tools/gpu-phase5/launch.sh p5chain-final-r<n> <abs log> -- /usr/bin/env START=<k> MODEA_K=2 MODEA_W=8 /bin/bash
      research/gpu-phase5/chains/final.sh` (a COPY of the script if it had to change: never edit the running one);
@@ -60,8 +57,8 @@
 | R fix | complete, committed (`2541b610`, `30f8b97e`; toolchain default binary → gb5 in the final-tree commit) | — | `src/gpu-backend/runtime.ts`, `official.ts`, `officialRunner.ts`, `compat.ts`, `acceptance.ts`, tests | GPU backend tests 30/30 under `--no-maglev` (policy + enforcement 13, dataset 9, host pipeline 7, layout 1) |
 | C atomic dataset export | complete | `tools/gpu-phase5/dataset-race.ts race|kill|conflict`, `dataset-identity.ts` | `results/cache/` | race 100/100 verified (legacy today: 23 verified, 77 refused); kill 0 partial targets; conflict 20 explicit; identity 28 datasets / 40 comparisons equal |
 | S sealed-file protection | complete | `tools/gpu-phase5/seal-protect.ts --apply` (re-check: `--check`) | `results/seals/{check-before,apply,check-after}.json` | 988 restored to 0444, 10 already protected, 43 git-ignored cache files already 0444, 11 absent, 0 content differences |
-| P performance audit | complete (decision in A3; report to write) | `chains/p-baseline.sh` (stopped after `nm-a3-r1`), `chains/p-profile.sh`, `tools/gpu-phase5/cpuprof-summary.ts` | `results/bench/{p3-a3-r1,nm-a3-r1,prof-a3-nm}`, `results/optimizer/<run>-j0`, `results/perf/cpuprof-summary.json` | accepted configuration 586.6 s; the same under `--no-maglev` 587.8 s (+0.2 %), both verified identical; main thread active 370 s of 587 s, ≈ 48 % of it (profiled prefix) in the parameter-schema canonicalization of the pinned CPU closure (not changed here); response copies ≤ 1.7 %; **no change retained** |
-| A acceptance campaign | running (see Top screen) | `chains/final.sh` | `results/{final,parity/final,parity/original,optimizer,sanitizer-final,policy,isolation,sustained,rootcause/fresh-loop-final,rootcause/host-soak-final.json,tests}`, logs `results/logs/final/` | — |
+| P performance audit | complete (decision in A3; `PERFORMANCE_AUDIT.md`) | `chains/p-baseline.sh` (stopped after `nm-a3-r1`), `chains/p-profile.sh`, `tools/gpu-phase5/cpuprof-summary.ts` | `results/bench/{p3-a3-r1,nm-a3-r1,prof-a3-nm}`, `results/optimizer/<run>-j0`, `results/perf/cpuprof-summary.json` | accepted configuration 586.6 s; the same under `--no-maglev` 587.8 s (+0.2 %), both verified identical; main thread active 370 s of 587 s, ≈ 48 % of it (profiled prefix) in the parameter-schema canonicalization of the pinned CPU closure (not changed here); response copies ≤ 1.7 %; **no change retained** |
+| A acceptance campaign | campaign complete (36 steps pass; see Campaign log); acceptance generator next | `chains/final.sh` | `results/{final,parity/final,parity/original,optimizer,sanitizer-final,policy,isolation,sustained,rootcause/fresh-loop-final,rootcause/host-soak-final.json,tests}`, logs `results/logs/final/` | — |
 | I integration or fallback | not started | | | |
 | E bundle | not started | | | |
 
@@ -168,4 +165,22 @@ campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwr
   (`results/final/race-d19-atomic.json`), conflict 20 explicit conflicts in 10 rounds (`results/final/conflict.json`);
   03:11:19Z step 30 sustained started (2 processes × 32 min); then 31 fresh-loop (170 cycles, ≤ 150 min), 32–34 the
   accepted-configuration baselines (TIMED: keep the machine quiet), 35 regression, 36 tests.
-
+- 03:43:29Z step 30 sustained ok: 2 processes × 32.1 min, 3,276,800 GPU evaluations, 4,800 CPU parity samples, 0
+  mismatches, 8 repeat checks 0 mismatches, 0 failures, 0 restarts, peaks 58 °C / 222 W / 14,021 MiB VRAM
+  (`results/sustained/p0`, `p1`).
+- 05:01:30Z step 31 fresh-context loop ok at its full budget: 170 cycles, 2,040 fresh CPU workers, 170 fresh GPU
+  contexts, 265,370 GPU evaluations, 8,160 parity comparisons, **0 mismatches**, response digest unchanged
+  (`results/rootcause/fresh-loop-final/summary.json`).
+- Steps 32–34 the accepted-configuration baselines (binary gb3, Maglev enabled), all identical to their references:
+  `p3-a3-r2` 583.2 s, `p3-s-r1` 65.1 s, `p3-a2-r1` 727.1 s. Step 35 regression ok: final 585.1 / 584.0 s against
+  accepted 586.6 / 583.2 s, ratio 0.9994 (`results/optimizer/regression.json`).
+- 05:45:12Z step 36 tests, ATTEMPT 1: `npm test` 1,710 / 1,699 pass / 7 known / 0 unexpected, `tsc` 0, ESLint clean,
+  Strategy Lab typecheck / lint / 314 unit tests / build ok, **e2e 80 + 1 failed, rerun 80 + 1 failed (a different
+  test each time)** → `strategy-lab.json` pass false. Diagnosis and decision: amendment A5 (commit `f2d4fc42`); files
+  moved to `results/tests/attempt1/`.
+- 05:48:09Z–05:59:09Z step 36 ATTEMPT 2 (unit `p5chain-final-r2`, `START=36`, unchanged script and rule): `npm test`
+  1,710 / 1,699 / 7 known / 0 unexpected; `tsc` 0; ESLint clean; Strategy Lab all suites ok, **e2e 81 of 81 on the
+  first run**; state and live dist untouched → pass.
+- `python3 research/gpu-phase5/results/perf/performance.py` → `results/perf/performance.{json,csv}`;
+  `PERFORMANCE_AUDIT.md` §6 filled; `PARITY_ROOT_CAUSE.md` §11, `ATOMIC_CACHE_AND_CONCURRENCY.md` §3/§5 and
+  `PILOT_HANDOFF_ONLY.md` §3/§4 extended with the campaign's results.

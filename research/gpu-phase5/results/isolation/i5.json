@@ -1,0 +1,56 @@
+{
+ "kind": "gpu-phase5 isolation test (failure under concurrency)",
+ "t": "2026-11-21T03:03:49.538Z",
+ "test": "i5",
+ "failing": {
+  "run": "i5-a",
+  "status": 3,
+  "failure": {
+   "round": 1,
+   "error": "GPU evaluator: GPU memory: batch needs 4300 MiB > VRAM budget 256 MiB",
+   "released": 0,
+   "cpuScored": 0,
+   "counters": {
+    "submitted": 8192,
+    "gpuReturned": 0,
+    "failed": 8192,
+    "cpuScored": 0,
+    "batches": 0,
+    "capacityRetries": 0,
+    "kernelMs": 0,
+    "wallMs": 437
+   }
+  }
+ },
+ "neighbour": {
+  "run": "i5-b",
+  "status": 0,
+  "digest": "e3a586ef112ec5938676fdb012efa1c8e8622280bb72bdd3f43df899fc1dd3a6",
+  "parity": {
+   "samples": 8,
+   "mismatches": 0,
+   "cpuErrors": 0,
+   "examples": [],
+   "cpuSeconds": 0.6215416929999992
+  },
+  "repeat": {
+   "rounds": 2,
+   "mismatches": 0
+  }
+ },
+ "reference": {
+  "run": "i-ref",
+  "digest": "e3a586ef112ec5938676fdb012efa1c8e8622280bb72bdd3f43df899fc1dd3a6"
+ },
+ "checks": {
+  "failingExit3": true,
+  "failingRecorded": true,
+  "failingReason": true,
+  "failingCpuScored0": true,
+  "failedRoundNotAllReleased": true,
+  "neighbourExit0": true,
+  "neighbourPassed": true,
+  "neighbourIdenticalToReference": true
+ },
+ "pass": true
+}

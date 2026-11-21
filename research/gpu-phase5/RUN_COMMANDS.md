@@ -101,6 +101,19 @@ tools/gpu-phase5/launch.sh p5chain-final /home/chad/projects/margin-trading/rese
 # resume after a failed step k (never rerunning passed steps): … -- /usr/bin/env START=<k> MODEA_K=2 MODEA_W=8 /bin/bash research/gpu-phase5/chains/final.sh
 ```
 
+As run (amendments A4 and A5; the log is `research/gpu-phase5/results/logs/chain-final.txt` throughout):
+
+```bash
+# 2026-11-21T00:07:05Z  steps 1-29 (stopped in step 29 at I7 on a shell error of chains/isolation.sh)
+tools/gpu-phase5/launch.sh p5chain-final /home/chad/projects/margin-trading/research/gpu-phase5/results/logs/chain-final.txt -- /usr/bin/env START=1 MODEA_K=2 MODEA_W=8 /bin/bash research/gpu-phase5/chains/final.sh
+# 2026-11-21T03:10:44Z  I7 from the corrected script, then steps 30-36
+tools/gpu-phase5/launch.sh p5chain-final-r1 /home/chad/projects/margin-trading/research/gpu-phase5/results/logs/chain-final.txt -- /bin/bash research/gpu-phase5/chains/final-resume-30.sh
+# 2026-11-21T05:48:09Z  step 36 again, whole (attempt 1's records moved to results/tests/attempt1/ first)
+tools/gpu-phase5/launch.sh p5chain-final-r2 /home/chad/projects/margin-trading/research/gpu-phase5/results/logs/chain-final.txt -- /usr/bin/env START=36 MODEA_K=2 MODEA_W=8 /bin/bash research/gpu-phase5/chains/final.sh
+# the performance table from the job profiles
+python3 research/gpu-phase5/results/perf/performance.py
+```
+
 The steps and their exact commands are the `step` lines of `research/gpu-phase5/chains/final.sh` (build-final,
 offline-check, host-soak, parity-campaign = `chains/parity.sh`, parity-summary, orig-d24-fund-r1/-r2, finalists, a3-r1,
 a3-r2, a3-qualify, a2-r1, the mini arms and their comparisons, sanitizer, negative, tamper, isolation =

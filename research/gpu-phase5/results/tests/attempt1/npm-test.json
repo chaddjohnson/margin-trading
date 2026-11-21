@@ -1,0 +1,63 @@
+{
+ "kind": "gpu-phase5 H7 npm test",
+ "t": "2026-11-21T05:45:12.467Z",
+ "command": "npm test (node --test --test-concurrency=4 src/**/*.test.ts)",
+ "totals": {
+  "tests": 1710,
+  "pass": 1699,
+  "fail": 7,
+  "cancelled": 0,
+  "skipped": 4
+ },
+ "baseline": {
+  "tests": 1699,
+  "pass": 1688,
+  "fail": 7,
+  "skipped": 4,
+  "source": "research/gpu-phase3/results/tests/npm-test.json (after Phase 3)"
+ },
+ "failures": [
+  {
+   "file": "src/intraday-study/tests/study.test.ts",
+   "test": "match the hashes recorded when the study started, except the recorded post-study changes",
+   "known": true
+  },
+  {
+   "file": "src/minute-optimizer/tests/goldenMaster.test.ts",
+   "test": "src/app/allIn.ts and src/app/allin-original.ts are byte-for-byte unchanged",
+   "known": true
+  },
+  {
+   "file": "src/study7-runners/tests/runners.test.ts",
+   "test": "parity with the sealed Study 7 final door, and determinism",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "the original is untouched",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "checked-in settings",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "brief settings",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "volatile synthetic walks with gaps exercise every exit path, restrictions and resets",
+   "known": true
+  }
+ ],
+ "unexpected": [],
+ "rootTsc": "exit 0",
+ "eslintGpu": [
+  "exit=0"
+ ],
+ "summary": "1710 tests, 1699 pass, 7 fail (7 known pre-existing, 0 unexpected), 4 skipped",
+ "pass": true
+}

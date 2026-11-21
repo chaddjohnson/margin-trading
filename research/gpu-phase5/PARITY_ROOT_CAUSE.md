@@ -200,3 +200,22 @@ Results and limits are in `GPU_ACCEPTANCE_REPORT.md` §"Diagnostics": compute-sa
 and synccheck on the final binary; the VRAM and host-memory pattern tests; the kernel log; the transfer and
 serialization evidence (the response digest identical across fresh servers; the host soak). On a non-ECC GeForce RTX 5090
 and non-ECC host RAM no test can prove the absence of a one-off bit error; none is needed to explain this event.
+
+## 11. Confirmation on the final candidate (the acceptance campaign, 2026-11-21)
+
+Everything below ran on the final tree (commit `bc428d8b`, evaluation digest `3a6eacde…`) with the final binary gb5
+(`f444c521…`; device code byte-identical to the accepted gb3), every process under `--no-maglev`, through the parallel
+host path. Evidence paths are relative to `research/gpu-phase5/`.
+
+| Check | Result | Evidence |
+|---|---|---|
+| The original failing run, Phase 4's `D24-fund` with Phase 4's own subject seeds and arguments, twice | **1,561 of 1,561 identical, twice**; `O-fund:coarse:28` identical | `results/parity/original/D24-fund-p4seeds-r1.json`, `-r2.json` |
+| The fresh-context loop at its full budget (amendment A1): each cycle 12 fresh CPU reference workers on the original first chunks (task 33 the second task of worker 8) and a fresh GPU server and 8-worker pipeline on the original 1,561-task batch | 170 cycles, **2,040 fresh CPU workers, 170 fresh GPU contexts, 265,370 GPU evaluations, 8,160 parity comparisons: 0 mismatches**; every CPU and GPU result equal to the first cycle's; the device response digest `1047014f…` unchanged in all 170 cycles; candidate 33's books, pool, record and envelope equal Phase 4's diagnostics on both sides | `results/rootcause/fresh-loop-final/summary.json` |
+| The host path cold, under CPU load (12 burner processes): fresh pipelines decoding the original batch's device response | 150 pipelines, 1,200 cold worker threads, 234,150 results: 0 mismatches | `results/rootcause/host-soak-final.json` |
+| The full parity campaign with this study's seeds | 54 runs, **144,795 of 144,795 candidates identical**, 64,050 risk envelopes, 176 determinism runs | `results/parity/final/SUMMARY.json` |
+| The reliability run (two jobs at once, 32 minutes) | 3,276,800 GPU evaluations, 4,800 CPU parity samples: 0 mismatches | `results/sustained/p0`, `p1` |
+
+No mismatch of any kind was captured on the fixed configuration. The unfixed configuration's defect evidence (§5) and
+this table together are the regression pair of §4.7 item 3: the defect present with the default engine, absent with the
+fix, in the original run configuration.
+

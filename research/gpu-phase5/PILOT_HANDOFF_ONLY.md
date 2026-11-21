@@ -54,6 +54,12 @@ What the backend is, independent of that status:
 4. **A fresh acceptance is hardware-, driver-, toolkit- and Node-specific** (RTX 5090 `GPU-ae5f222c…`, driver
    595.91.07, CUDA 13.2, Node v24.21.0 / V8 13.6.233.17). A Node upgrade changes the JavaScript engine both sides of the
    parity run under and should be treated like any other evaluation-dependency change.
+5. **Where a GPU job's time goes.** A complete Assignment 3 replay takes ≈ 585 s; the device is busy ≈ 59 % of it and
+   waits for the host the rest. About half of the host's main-thread time is the canonicalization of each
+   configuration through Strategy Lab's parameter schema, in files of the canonical CPU engine that this study must
+   keep unchanged (`PERFORMANCE_AUDIT.md` §5). Making that cheaper is estimated — not measured — at 15–30 % of a job;
+   it needs the user's authorization of a change to the canonical engine and a full acceptance cycle. No performance
+   change was made here.
 
 ## 4. What the original conversation decides before a pilot
 
@@ -63,4 +69,7 @@ What the backend is, independent of that status:
   gates on quantities the official path already delivers;
 - whether to extend `--no-maglev` to the repository's other engine entry points (legacy CPU runners, Strategy Lab's
   server) — recommended by this study, outside its assignment;
+- whether to authorize the parameter-canonicalization speed-up of `PERFORMANCE_AUDIT.md` §5 (a change to the canonical
+  CPU engine's parameter code, then a fresh acceptance cycle) before or after a pilot — it changes run time only, and
+  could share one acceptance cycle with the envelope-delivery change;
 - everything about thresholds, fitness, budgets, folds and the go / no-go.
