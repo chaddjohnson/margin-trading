@@ -1,0 +1,500 @@
+{
+ "kind": "storage-audit inventory",
+ "generated_utc": "2026-11-21",
+ "repo_head": "3606f4b3bcf5bf4a03a3e829b5234081be36f959",
+ "units": "allocated MiB (du -x --block-size=1M); compression ratios measured on samples: sqlite 0.055-0.068, jsonl 0.218",
+ "totals_gib": {
+  "repo": 561,
+  "dotcache": 345,
+  "research": 204,
+  "data": 10.7,
+  "state": 1.1,
+  "git": 1.1,
+  "tracked": 3.0,
+  "ignored": 557,
+  "untracked_not_ignored": 0
+ },
+ "estimated_recovery_gib": {
+  "phase1": 60.4,
+  "phase2a": 80.2,
+  "phase2b_compression": "340-355 (estimate)",
+  "cumulative": "480-495"
+ },
+ "candidates": [
+  {
+   "id": "H1",
+   "classification": "high-confidence cleanup",
+   "phase": "1",
+   "proposed_action": "quarantine(tar --zstd)+delete",
+   "paths": [
+    "research/gpu-phase3/cache/replay/s2-*",
+    "research/gpu-phase3/cache/replay/p2-*",
+    "research/gpu-phase3/cache/replay/dev-*",
+    "research/gpu-phase3/cache/replay/smoke-*"
+   ],
+   "allocated_mib": 43410,
+   "contents": "Phase 3 benchmark-sweep and pre-final GPU replay SQLite archives",
+   "evidence": "results+rowsSha256 committed; not in acceptance evidence; no code reader; Phase 3 record superseded",
+   "regeneration": "~10-18 min per run on current GPU",
+   "confidence": "high",
+   "verify_before": "grep reader; lsof; committed compare JSON per run"
+  },
+  {
+   "id": "H2",
+   "classification": "high-confidence cleanup",
+   "phase": "1",
+   "proposed_action": "quarantine+delete",
+   "paths": [
+    ".cache/*/jobs/pilot-*"
+   ],
+   "allocated_mib": 7807,
+   "contents": "pre-freeze pilot/calibration archives",
+   "evidence": "no seals.jsonl lists jobs/pilot-*; studies COMPLETE; only own pilot commands open them",
+   "regeneration": "minutes each",
+   "confidence": "high",
+   "verify_before": "re-grep seals.jsonl",
+   "exclude": [
+    ".cache/vg-d1-growth-joint/pilot/",
+    ".cache/vgt-d1-growth-joint/pilot/"
+   ]
+  },
+  {
+   "id": "H3",
+   "classification": "high-confidence cleanup",
+   "phase": "1",
+   "proposed_action": "delete",
+   "paths": [
+    ".cache/growth-etf-screening/doors"
+   ],
+   "allocated_mib": 8287,
+   "contents": "byte-prefix copies of data/<SYM>/data.csv (61 ETFs x 4 doors)",
+   "evidence": "cmp -n prefix; DOORS.json pins verify; builder recreates missing doors",
+   "regeneration": "seconds",
+   "confidence": "high",
+   "verify_before": "sha256 of 61 data.csv vs DOORS.json"
+  },
+  {
+   "id": "H4",
+   "classification": "high-confidence cleanup",
+   "phase": "1",
+   "proposed_action": "delete",
+   "paths": [
+    ".cache/vg-balanced-entry-eligibility/doors",
+    ".cache/growth140-vgt-stable/doors"
+   ],
+   "allocated_mib": 424,
+   "contents": "prefix doors",
+   "evidence": "rebuildable by builders",
+   "regeneration": "seconds",
+   "confidence": "high",
+   "verify_before": "none beyond H3-style hash check",
+   "exclude": [
+    ".cache/vg-d1-growth-joint/doors",
+    ".cache/vgt-d1-growth-joint/doors"
+   ]
+  },
+  {
+   "id": "H5",
+   "classification": "high-confidence cleanup",
+   "phase": "1",
+   "proposed_action": "delete",
+   "paths": [
+    "research/gpu-phase4/cache/pool",
+    "research/gpu-phase4/cache/sustained",
+    "research/gpu-phase4/cache/barrier",
+    "research/gpu-phase4/cache/staged",
+    "research/gpu-phase4/cache/strategy-lab-scratch",
+    "research/gpu-phase1-feasibility/cache",
+    "research/gpu-phase3/cache/strategy-lab-scratch",
+    "research/gpu-phase3/cache/staged",
+    "research/gpu-phase6/cache/strategy-lab-scratch",
+    "research/gpu-phase6/cache/barriers"
+   ],
+   "allocated_mib": 1751,
+   "contents": "gb4-era dataset copies/minis, obsolete gp1ds exports, build scratch",
+   "evidence": "gb4 never accepted; Phase 1 never searched",
+   "regeneration": "seconds-minutes",
+   "confidence": "high",
+   "verify_before": "keep research/gpu-phase{3,4}/cache/*.gb2ds(.json)",
+   "exclude": [
+    "research/gpu-phase3/cache/*.gb2ds*",
+    "research/gpu-phase4/cache/*.gb2ds*"
+   ]
+  },
+  {
+   "id": "H6",
+   "classification": "high-confidence cleanup",
+   "phase": "1",
+   "proposed_action": "delete",
+   "paths": [
+    ".cache/growth-vgt-study8"
+   ],
+   "allocated_mib": 144,
+   "contents": "output of reverted attempt (7c7bcab0)",
+   "evidence": "no reader; failure documented in growth140-vgt-s8m PROTOCOL.md:90",
+   "regeneration": "n/a",
+   "confidence": "high",
+   "verify_before": "none"
+  },
+  {
+   "id": "C1",
+   "classification": "conditional cleanup",
+   "phase": "2a",
+   "proposed_action": "quarantine+delete",
+   "paths": [
+    "research/gpu-phase3/cache/replay/final-a3-r1",
+    "research/gpu-phase3/cache/replay/final-a3-r2",
+    "research/gpu-phase3/cache/replay/final-a2-r1",
+    "research/gpu-phase3/cache/replay/final-a2-r2",
+    "research/gpu-phase3/cache/replay/final-mini*"
+   ],
+   "allocated_mib": 31296,
+   "contents": "raw state of superseded Phase 3 acceptance",
+   "evidence": "digests committed; record superseded by Phase 5 and 6",
+   "regeneration": "~10-18 min per run",
+   "confidence": "medium-high",
+   "verify_before": "user accepts replay-only re-verification of Phase 3",
+   "exclude": [
+    "research/gpu-phase3/cache/replay/final-a3-cpu"
+   ]
+  },
+  {
+   "id": "C2",
+   "classification": "conditional cleanup",
+   "phase": "2a",
+   "proposed_action": "quarantine+delete",
+   "paths": [
+    "research/gpu-phase4/cache/replay"
+   ],
+   "allocated_mib": 21750,
+   "contents": "replays on never-accepted gb4",
+   "evidence": "ROADMAP G4 no merge; Phase 5 re-accepted",
+   "regeneration": "~10-18 min per run (gb4 build kept)",
+   "confidence": "medium-high",
+   "verify_before": "confirm no open Phase 4 review item"
+  },
+  {
+   "id": "C3",
+   "classification": "conditional cleanup",
+   "phase": "2a",
+   "proposed_action": "quarantine+delete",
+   "paths": [
+    "research/gpu-phase2/cache/mini-opt"
+   ],
+   "allocated_mib": 12039,
+   "contents": "Phase 2 mini-optimization archives (gb2)",
+   "evidence": "results committed",
+   "regeneration": "~10 min per A3 archive (gb2 build kept)",
+   "confidence": "medium-high",
+   "verify_before": "committed digests present"
+  },
+  {
+   "id": "C4",
+   "classification": "conditional cleanup",
+   "phase": "2a",
+   "proposed_action": "delete after hash compare",
+   "paths": [
+    "research/gpu-phase2/cache/a3-qualify",
+    "research/gpu-phase3/cache/a3-qualify",
+    "research/gpu-phase4/cache/a3-qualify"
+   ],
+   "allocated_mib": 3270,
+   "contents": "duplicate A3 qualification archives",
+   "evidence": "equal sizes and committed digests across phases",
+   "regeneration": "~3 min",
+   "confidence": "medium-high",
+   "verify_before": "sha256 equal to phase-5 copy",
+   "exclude": [
+    "research/gpu-phase5/cache/a3-qualify"
+   ]
+  },
+  {
+   "id": "C5",
+   "classification": "conditional cleanup",
+   "phase": "2a",
+   "proposed_action": "quarantine+delete",
+   "paths": [
+    "research/gpu-phase2/results/raw-large",
+    "research/gpu-phase3/results/raw-large/optimizer/{s2-*,p2-*,final-a3-r*,final-a2-r2,dev-b-mini,final-mini-*}",
+    "research/gpu-phase4/results/raw-large"
+   ],
+   "allocated_mib": 8584,
+   "contents": "raw record dumps",
+   "evidence": "outputs committed; not named as verify.json map references",
+   "regeneration": "replay",
+   "confidence": "medium",
+   "verify_before": "grep committed verify.json/compare tools for raw-large refs",
+   "exclude": [
+    "research/gpu-phase3/results/raw-large/optimizer/final-a3-cpu",
+    "research/gpu-phase3/results/raw-large/optimizer/final-mini",
+    "research/gpu-phase3/results/raw-large/optimizer/final-a2-r1"
+   ]
+  },
+  {
+   "id": "C6",
+   "classification": "conditional cleanup",
+   "phase": "2a",
+   "proposed_action": "delete or compress",
+   "paths": [
+    ".cache/growth140-vgt-stable/jobs/<non-pilot>",
+    ".cache/growth140-vgt-s8m/jobs/search"
+   ],
+   "allocated_mib": 4084,
+   "contents": "SQLite jobs exported losslessly to tracked gzip JSONL",
+   "evidence": "MANIFEST.json sqliteSha256; audit.ts checks s8m sqlite only if present",
+   "regeneration": "hours (CPU)",
+   "confidence": "medium-high",
+   "verify_before": "row counts export vs points"
+  },
+  {
+   "id": "C7",
+   "classification": "conditional cleanup",
+   "phase": "2a",
+   "proposed_action": "delete",
+   "paths": [
+    "research/study9-etf-pool-discovery/results/cache"
+   ],
+   "allocated_mib": 1126,
+   "contents": "point cache",
+   "evidence": "PROTOCOL.md:684 kept until Phase B decision; deleting changes no sealed result",
+   "regeneration": "CPU hours",
+   "confidence": "medium",
+   "verify_before": "user confirms Phase B closed"
+  },
+  {
+   "id": "Z1",
+   "classification": "conditional cleanup",
+   "phase": "2b",
+   "proposed_action": "zstd compress (lossless)",
+   "paths": [
+    ".cache/vg-l0-risk-families/jobs/search-*",
+    ".cache/vg-l0-risk-families/jobs/qualify-*"
+   ],
+   "allocated_mib": 151545,
+   "contents": "Assignment 2 evaluation archives",
+   "evidence": "no seal pins; measured ratio 0.055",
+   "regeneration": "~31 CPU-h if deleted",
+   "confidence": "high (reversible)",
+   "verify_before": "sha256(zstd -dc)==sha256(original)"
+  },
+  {
+   "id": "Z2",
+   "classification": "conditional cleanup",
+   "phase": "2b",
+   "proposed_action": "zstd compress",
+   "paths": [
+    ".cache/vg-l0-full-joint/jobs/search-*",
+    ".cache/vg-l0-full-joint/jobs/qualify-*"
+   ],
+   "allocated_mib": 85965,
+   "contents": "Assignment 3 archives; read by tools/vg-l0-risk-metrics/exclusions.ts",
+   "evidence": "PROPOSED_METHOD.md:47 ambiguity -> do not delete",
+   "regeneration": "~44 CPU-h if deleted",
+   "confidence": "high (reversible)",
+   "verify_before": "as Z1"
+  },
+  {
+   "id": "Z3",
+   "classification": "conditional cleanup",
+   "phase": "2b",
+   "proposed_action": "zstd compress",
+   "paths": [
+    ".cache/vg-l0-shadow-eligibility/jobs/search-*",
+    ".cache/vg-l0-shadow-eligibility/jobs/qualify-*"
+   ],
+   "allocated_mib": 57221,
+   "contents": "shadow-eligibility archives (CPU-only feature)",
+   "evidence": "no seal pins",
+   "regeneration": "~28 CPU-h if deleted",
+   "confidence": "high (reversible)",
+   "verify_before": "as Z1",
+   "exclude": [
+    ".cache/vg-l0-shadow-eligibility/folds"
+   ]
+  },
+  {
+   "id": "Z4",
+   "classification": "conditional cleanup",
+   "phase": "2b",
+   "proposed_action": "zstd compress",
+   "paths": [
+    "research/gpu-phase6/cache/jobs/*/archive.sqlite"
+   ],
+   "allocated_mib": 21956,
+   "contents": "Phase 6 campaign job archives",
+   "evidence": "campaign-verify reads dataset/ not archives (uncertain); never use remove-cache",
+   "regeneration": "~10-18 min per job",
+   "confidence": "medium-high",
+   "verify_before": "keep dataset/, shared-datasets/, locks, owner/complete json"
+  },
+  {
+   "id": "Z5",
+   "classification": "conditional cleanup",
+   "phase": "2b",
+   "proposed_action": "zstd compress",
+   "paths": [
+    "research/gpu-phase5/cache/replay"
+   ],
+   "allocated_mib": 21607,
+   "contents": "raw state behind accepted Phase 5 evidence",
+   "evidence": "evidence committed",
+   "regeneration": "~10-18 min per run",
+   "confidence": "high (reversible)",
+   "verify_before": "as Z1"
+  },
+  {
+   "id": "Z6",
+   "classification": "conditional cleanup",
+   "phase": "2b",
+   "proposed_action": "zstd compress",
+   "paths": [
+    ".cache/vg-d1-growth-expanded/jobs/<non-pilot>"
+   ],
+   "allocated_mib": 12833,
+   "contents": "3B archives; 8 byte-pinned by optimization-process-audit",
+   "evidence": "compression preserves byte pins",
+   "regeneration": "16 h wall if deleted",
+   "confidence": "high (reversible)",
+   "verify_before": "as Z1"
+  },
+  {
+   "id": "Z7",
+   "classification": "conditional cleanup",
+   "phase": "2b",
+   "proposed_action": "zstd compress (needs explicit approval)",
+   "paths": [
+    "research/study9-phase-b/results/cache"
+   ],
+   "allocated_mib": 16000,
+   "contents": "JSONL point caches; sha256 sealed in cache-manifest.json",
+   "evidence": "context.ts:58 'retained, never deleted as cleanup'; ratio 0.218",
+   "regeneration": "60.9 CPU-h if deleted",
+   "confidence": "high (reversible)",
+   "verify_before": "user approval; as Z1"
+  },
+  {
+   "id": "Z8",
+   "classification": "conditional cleanup",
+   "phase": "2b",
+   "proposed_action": "zstd compress",
+   "paths": [
+    "research/study7-stability-first-d1/results/cache",
+    ".cache/vg-l0-session-hold/jobs/{search,qualify}-*",
+    ".cache/c4-gdx-growth-partner/jobs/<non-pilot>",
+    ".cache/vgt-d1-growth-joint/jobs/<non-pilot>",
+    ".cache/growth-etf-screening/jobs/<non-pilot>",
+    "research/gpu-phase3/cache/replay/final-a3-cpu",
+    "research/study4-two-tier-d1-allocator/results/archive"
+   ],
+   "allocated_mib": 24000,
+   "contents": "smaller completed-study archives",
+   "evidence": "various; see REPORT \u00a7C.3",
+   "regeneration": "hours each",
+   "confidence": "high (reversible)",
+   "verify_before": "as Z1"
+  }
+ ],
+ "retain": [
+  {
+   "path": "config/gpu-backend/acceptance.json + 50 tracked evidence files",
+   "classification": "do not remove"
+  },
+  {
+   "path": "research/gpu-phase5/build/gb5",
+   "classification": "do not remove"
+  },
+  {
+   "path": "research/gpu-phase{2,3,4}/build",
+   "classification": "do not remove"
+  },
+  {
+   "path": "~/.local/share/margin-trading-gpu",
+   "classification": "do not remove (outside repo)"
+  },
+  {
+   "path": ".cache/gpu-backend/datasets",
+   "classification": "do not remove"
+  },
+  {
+   "path": "research/gpu-phase6/cache/{shared-datasets,jobs/*/dataset,jobs/*/job.lock,jobs/*/owner.json,jobs/*/complete.json}",
+   "classification": "do not remove"
+  },
+  {
+   "path": "research/gpu-phase3/cache/captures",
+   "classification": "do not remove"
+  },
+  {
+   "path": "research/gpu-phase{3,4}/cache/*.gb2ds(.json)",
+   "classification": "do not remove"
+  },
+  {
+   "path": "research/gpu-phase3/results/raw-large/optimizer/{final-a3-cpu,final-mini,final-a2-r1}",
+   "classification": "do not remove"
+  },
+  {
+   "path": "research/gpu-phase5/results/raw-large, research/gpu-phase6/results/raw-large",
+   "classification": "retain for now"
+  },
+  {
+   "path": "research/gpu-phase5/cache/{a3-qualify,identity,sustained,pool}",
+   "classification": "retain for now"
+  },
+  {
+   "path": ".cache/vg-d1-growth-joint/{doors,folds,pilot,C24 archives}",
+   "classification": "do not remove"
+  },
+  {
+   "path": ".cache/vgt-d1-growth-joint/{pilot,doors}",
+   "classification": "do not remove"
+  },
+  {
+   "path": ".cache/vg-l0-*/folds, lot-rows, fold-* jobs",
+   "classification": "do not remove"
+  },
+  {
+   "path": ".cache/vg-lifecycle-matched-optimization/jobs/search-*",
+   "classification": "do not remove"
+  },
+  {
+   "path": ".cache/vg-d1-growth-expanded pinned jobs + folds/study; .cache/gdx-growth-standalone pinned jobs; .cache/optimization-process-audit/scan",
+   "classification": "do not remove"
+  },
+  {
+   "path": ".cache/phenotype, .cache/frozen-sources",
+   "classification": "do not remove"
+  },
+  {
+   "path": "data/<SYM>/data.csv, data/archive/legacy-research-inputs, data/stooq, data/trailing-buy-entry, data/vintages/study9-refresh-2026-11-02",
+   "classification": "do not remove"
+  },
+  {
+   "path": "data/vintages/{pre-study9-2026-11-02,study9-train-2024}",
+   "classification": "retain for now"
+  },
+  {
+   "path": "state/strategy-lab",
+   "classification": "do not remove"
+  },
+  {
+   "path": "apps/strategy-lab/{node_modules,dist}, node_modules",
+   "classification": "do not remove"
+  },
+  {
+   "path": "evaluations/",
+   "classification": "retain for now"
+  },
+  {
+   "path": ".git",
+   "classification": "do not remove / no gc"
+  },
+  {
+   "path": "data/BTCUSDT",
+   "classification": "needs investigation"
+  },
+  {
+   "path": ".cache/vg-l0-full-joint/jobs/search-* (deletion)",
+   "classification": "needs investigation (PROPOSED_METHOD.md:47)"
+  }
+ ],
+ "note": "Proposal only. Nothing was modified. Every action needs separate authorization."
+}
