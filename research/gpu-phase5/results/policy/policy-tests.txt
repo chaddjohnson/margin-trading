@@ -1,0 +1,191 @@
+TAP version 13
+# Subtest: the exported bytes are the previous exporter's (golden sha256); the file is published once with its sidecar
+ok 1 - the exported bytes are the previous exporter's (golden sha256); the file is published once with its sidecar
+  ---
+  duration_ms: 9.211055
+  type: 'test'
+  ...
+# Subtest: an identical published dataset is reused untouched (the same inode, times and sidecar)
+ok 2 - an identical published dataset is reused untouched (the same inode, times and sidecar)
+  ---
+  duration_ms: 0.682574
+  type: 'test'
+  ...
+# Subtest: another dataset under the same name is an explicit conflict; the published file is never overwritten
+ok 3 - another dataset under the same name is an explicit conflict; the published file is never overwritten
+  ---
+  duration_ms: 2.771249
+  type: 'test'
+  ...
+# Subtest: a truncated, empty or foreign target is an explicit invalid-cache error and is left as it is
+ok 4 - a truncated, empty or foreign target is an explicit invalid-cache error and is left as it is
+  ---
+  duration_ms: 5.254937
+  type: 'test'
+  ...
+# Subtest: a symbolic link or directory at the target is never followed or replaced; exclusive creation never opens an existing path
+ok 5 - a symbolic link or directory at the target is never followed or replaced; exclusive creation never opens an existing path
+  ---
+  duration_ms: 0.736145
+  type: 'test'
+  ...
+# Subtest: a writer that died before publication leaves only a temporary file: a restart publishes; stale temporaries of dead writers are removed, recent or live ones kept
+ok 6 - a writer that died before publication leaves only a temporary file: a restart publishes; stale temporaries of dead writers are removed, recent or live ones kept
+  ---
+  duration_ms: 11.810034
+  type: 'test'
+  ...
+# Subtest: writers killed at arbitrary instants never leave a partial target; every directory is publishable afterwards
+ok 7 - writers killed at arbitrary instants never leave a partial target; every directory is publishable afterwards
+  ---
+  duration_ms: 724.216665
+  type: 'test'
+  ...
+# Subtest: concurrent writers and readers of one directory: every export succeeds, one creates and the rest reuse, no reader ever sees a partial file
+ok 8 - concurrent writers and readers of one directory: every export succeeds, one creates and the rest reuse, no reader ever sees a partial file
+  ---
+  duration_ms: 3109.916836
+  type: 'test'
+  ...
+# Subtest: concurrent writers of two different datasets under one name: one dataset is published, the others get the explicit conflict
+ok 9 - concurrent writers of two different datasets under one name: one dataset is published, the others get the explicit conflict
+  ---
+  duration_ms: 2630.023566
+  type: 'test'
+  ...
+# Subtest: every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)
+ok 10 - every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)
+  ---
+  duration_ms: 1.3968
+  type: 'test'
+  ...
+# Subtest: the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not
+ok 11 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not
+  ---
+  duration_ms: 0.119871
+  type: 'test'
+  ...
+# Subtest: host pipeline: the request bytes and every result equal the serial codec, in candidate order, for 1–4 workers
+ok 12 - host pipeline: the request bytes and every result equal the serial codec, in candidate order, for 1–4 workers
+  ---
+  duration_ms: 1713.425094
+  type: 'test'
+  ...
+# Subtest: host pipeline: a corrupted response, a stale nonce, another device and a missing candidate are refused; nothing is returned
+ok 13 - host pipeline: a corrupted response, a stale nonce, another device and a missing candidate are refused; nothing is returned
+  ---
+  duration_ms: 501.621864
+  type: 'test'
+  ...
+# Subtest: host pipeline: a worker that throws, exits or hangs fails closed; every later call is refused
+ok 14 - host pipeline: a worker that throws, exits or hangs fails closed; every later call is refused
+  ---
+  duration_ms: 4898.933226
+  type: 'test'
+  ...
+# Subtest: host pipeline: a prepare or complete after close is refused at once, not after the operation timeout
+ok 15 - host pipeline: a prepare or complete after close is refused at once, not after the operation timeout
+  ---
+  duration_ms: 166.328821
+  type: 'test'
+  ...
+# Subtest: host pipeline: an encoding error is the serial path's error; the worker door equals the main door
+ok 16 - host pipeline: an encoding error is the serial path's error; the worker door equals the main door
+  ---
+  duration_ms: 138.282642
+  type: 'test'
+  ...
+# Subtest: GpuPool on the host pipeline: callers that run while the pool starts, every worker count, the same records as the serial path
+ok 17 - GpuPool on the host pipeline: callers that run while the pool starts, every worker count, the same records as the serial path
+  ---
+  duration_ms: 658.247786
+  type: 'test'
+  ...
+# Subtest: GpuPool on the host pipeline: a worker that fails mid-job fails every caller; nothing of that batch is released
+ok 18 - GpuPool on the host pipeline: a worker that fails mid-job fails every caller; nothing of that batch is released
+  ---
+  duration_ms: 174.691371
+  type: 'test'
+  ...
+# Subtest: protocol v2 layout: TypeScript offsets equal the C++ offsetof of gb.h
+ok 19 - protocol v2 layout: TypeScript offsets equal the C++ offsetof of gb.h
+  ---
+  duration_ms: 40.571189
+  type: 'test'
+  ...
+# Subtest: purpose: explicit, never defaulted; unknown refused
+ok 20 - purpose: explicit, never defaulted; unknown refused
+  ---
+  duration_ms: 0.610555
+  type: 'test'
+  ...
+# Subtest: a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+ok 21 - a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+  ---
+  duration_ms: 0.112381
+  type: 'test'
+  ...
+# Subtest: the legacy runner wrapper refuses before importing the runner
+ok 22 - the legacy runner wrapper refuses before importing the runner
+  ---
+  duration_ms: 190.172361
+  type: 'test'
+  ...
+# Subtest: every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+ok 23 - every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+  ---
+  duration_ms: 0.944607
+  type: 'test'
+  ...
+# Subtest: the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+ok 24 - the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+  ---
+  duration_ms: 523.098257
+  type: 'test'
+  ...
+# Subtest: engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+ok 25 - engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+  ---
+  duration_ms: 0.582455
+  type: 'test'
+  ...
+# Subtest: entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+ok 26 - entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+  ---
+  duration_ms: 169.979027
+  type: 'test'
+  ...
+# Subtest: acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+ok 27 - acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+  ---
+  duration_ms: 107.615455
+  type: 'test'
+  ...
+# Subtest: preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+ok 28 - preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+  ---
+  duration_ms: 0.514424
+  type: 'test'
+  ...
+# Subtest: the deferred pilot domain reaches only capabilities the evaluator implements
+ok 29 - the deferred pilot domain reaches only capabilities the evaluator implements
+  ---
+  duration_ms: 3955.361112
+  type: 'test'
+  ...
+# Subtest: MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+ok 30 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+  ---
+  duration_ms: 0.142591
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8680.251252
+

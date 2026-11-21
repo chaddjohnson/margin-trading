@@ -1,0 +1,40 @@
+PASS R1 the defect reproduces with the default engine (the record stress: wrong evaluations, record-only ones among them, against a ground truth equal to Phase 4's diagnostics)
+PASS R1 the same stress without Maglev: zero wrong evaluations
+PASS R2 the fresh-context loop on the final candidate, fixed configuration (≥ 2,000 fresh CPU workers on the original first chunks, ≥ 150 fresh GPU contexts on the original batch; zero mismatches; the device response identical in every cycle)
+PASS R2 the fresh-context loop's configuration record
+PASS R3 the host-path cold soak on the final candidate, fixed configuration (fresh host pipelines decoding one real device response of the original batch; zero mismatches)
+PASS A0 engine runtime: every parity run, optimizer replay and the negative suite of the campaign ran under --no-maglev; this generator too
+PASS A1 final binary (reproducible; built from this tree; kernels identical to the accepted Phase 3 and Phase 2 binaries)
+PASS A2 offline codec and host-pipeline equivalence (Phase 3 captures of real Phase 2 batches)
+PASS A3 parity campaign through the final host path (zero mismatches, coverage, determinism)
+PASS A3 the original failing run D24-fund with Phase 4's own seeds on the final candidate (r1: 1,561 of 1,561 identical)
+PASS A3 the original failing run D24-fund with Phase 4's own seeds on the final candidate (r2: 1,561 of 1,561 identical)
+PASS A3 Assignment 3 sealed finalists (GPU = CPU reference; D24 = sealed figures)
+PASS A4 Assignment 3 C19 broad1 search replay = sealed record (final binary, host path; run 1)
+PASS A4 Assignment 3 C19 broad1 search replay = sealed record (final binary, host path; run 2)
+PASS A4 Assignment 2 C19 base search replay = sealed record (Growth fixed; final binary, host path)
+PASS A4 Assignment 3 C19 broad qualification replay = sealed evidence (final binary, host path)
+PASS A4 fixed-seed mini-optimization CPU = GPU (final binary, host path)
+PASS A4 fixed-seed mini-optimization GPU = interrupted + resumed GPU
+PASS A4 fixed-seed mini-optimization host workers 1 = 8 workers
+PASS A4 fixed-seed mini-optimization serial path (host workers 0) = 8 workers
+PASS A5 compute-sanitizer (memcheck, racecheck, initcheck, synccheck) on the final binary, requests from the host path
+PASS A6 negative tests on the accepted pinned files (final binary)
+PASS A6 source-tamper tests in a sandbox clone on the accepted pinned files (every mechanism; out-of-band pin)
+PASS A7 bounded 30–35 min reliability run (p0: no failure, parity samples, repeatability)
+PASS A7 bounded 30–35 min reliability run (p1: no failure, parity samples, repeatability)
+PASS A8 npm test (= baseline + new tests; known failures only)
+PASS A8 root TypeScript check: 0 errors
+PASS A8 Strategy Lab regression (CPU engine, suites, state untouched)
+PASS A9 performance baseline groups recorded (every group verified identical)
+PASS A9 final candidate regression benchmark (Assignment 3 replay within ±3 % of the accepted engine)
+PASS A10 atomic dataset export: the 4 × 25 shared-directory race on the final binary (100 of 100 loads verified, no partial read)
+PASS A10 atomic dataset export: writers killed at random instants (no partial target; every directory complete after a restart)
+PASS A10 atomic dataset export: two datasets under one name at the same instant (one published, explicit conflicts)
+PASS A10 atomic dataset export: byte identity with the previous exporter on every door, window, episode and fixture
+PASS A10 isolation and failure tests under concurrency on the final candidate (I1 kill + resume, I2 stop + resume, I3 server killed, I4 host-worker fault, I5 VRAM refusal, I6 namespace guards — each neighbour identical)
+PASS A11 the canonical CPU closure and the CUDA sources are those of the accepted Phase 3 engine
+PASS P1 policy text (CLAUDE.md, standard 3.0.0 registered)
+PASS P5 policy, enforcement, host-pipeline and dataset-export tests
+ACCEPTED
+written config/gpu-backend/acceptance.json; static check: ACCEPTED 
