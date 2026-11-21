@@ -45,8 +45,10 @@ try {
   secretHits = []; // git grep exits 1 when nothing matches
 }
 // the GPU program's footprint: since the parent of GPU Phase 1's first commit
-const phase1First = lines(git('log', '--reverse', '--format=%H', `main..${branch}`, '--', 'src/gpu-phase1'))[0]!;
-const programBase = git('rev-parse', `${phase1First}^`).trim();
+// (GPU Phases 1–3 are already in `main` for this study: the footprint to audit is then everything since `main`, the
+// accepted Phase 3 tree.)
+const phase1First = lines(git('log', '--reverse', '--format=%H', `main..${branch}`, '--', 'src/gpu-phase1'))[0] ?? null;
+const programBase = phase1First ? git('rev-parse', `${phase1First}^`).trim() : main;
 const changedSinceBase = lines(git('diff', '--name-only', programBase, branch, '--'));
 const gpuPath = /^(src\/gpu-|tools\/gpu-|research\/gpu-|config\/gpu-backend\/|docs\/gpu\/)/;
 const outsideGpu = changedSinceBase.filter((f) => !gpuPath.test(f));
