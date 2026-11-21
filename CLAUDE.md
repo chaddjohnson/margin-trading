@@ -17,8 +17,9 @@
   path: 8 worker threads by default) → `EvalLab` (src/gpu-backend/); an official study's npm script starts its runner
   through `src/gpu-backend/officialRunner.ts`. The preflight (`npm run research-preflight`) refuses an official study
   until `config/gpu-backend/acceptance.json` (schema 2) is ACCEPTED and matches the tree. Status: **ACCEPTED
-  2026-11-19 by research/gpu-phase3/** (binary `06a4a04a…`, RTX 5090 `GPU-ae5f222c…`, record sha256
-  `b08738bea6f40aa2…`); any change to a file of the evaluation manifest (CPU closure, CUDA, host path) or of the pinned
+  2026-11-21 by research/gpu-phase5/** (binary `f444c521…`, RTX 5090 `GPU-ae5f222c…`, record sha256
+  `49e95d7a78fe5823…`; every official process must start as `node --no-maglev …` — the gate and the official runner
+  refuse otherwise, docs/gpu/README.md §3a); any change to a file of the evaluation manifest (CPU closure, CUDA, host path) or of the pinned
   enforcement group makes it STALE and blocks official runs until the parity checklist is repeated (§2, or §2a for an
   enforcement-only change). `tools/gpu-backend/verify-acceptance.sh` re-verifies the record without the TypeScript
   validator. Official optimization still needs the user's authorization of each study.

@@ -1,11 +1,14 @@
 # GPU evaluator — operations guide
 
 How to build, verify, run and troubleshoot the CUDA evaluator on Apollo (RTX 5090). Acceptance status: see
-`config/gpu-backend/acceptance.json` (schema 2; written by the acceptance study `research/gpu-phase3/`, which added the
-parallel host path and the enforcement pins; the first acceptance was `research/gpu-phase2/`). Normative rules:
+`config/gpu-backend/acceptance.json` (schema 2; written by the current acceptance study `research/gpu-phase5/`, which
+resolved Phase 4's parity mismatch — a JavaScript-engine defect, hence the `--no-maglev` requirement of §3a — and made
+the dataset export atomic; `research/gpu-phase3/` added the parallel host path and the enforcement pins; the first
+acceptance was `research/gpu-phase2/`). Normative rules:
 [OPTIMIZATION_STANDARD.md](../research/OPTIMIZATION_STANDARD.md) §9 (from 3.0.0). Change procedure:
 [PARITY_CHECKLIST.md](PARITY_CHECKLIST.md). Feature map: [FEATURE_MATRIX.md](FEATURE_MATRIX.md). Evidence and handoffs:
-`research/gpu-phase3/GPU_ENGINE_FINAL_HANDOFF.md` (current), `research/gpu-phase2/GPU_PHASE2_HANDOFF.md` (first).
+`research/gpu-phase5/GPU_FINAL_HANDOFF.md` (current), `research/gpu-phase4/GPU_CONCURRENCY_FINAL_HANDOFF.md`
+(concurrency), `research/gpu-phase3/GPU_ENGINE_FINAL_HANDOFF.md`, `research/gpu-phase2/GPU_PHASE2_HANDOFF.md` (first).
 
 ## 1. Components
 
@@ -24,7 +27,7 @@ parallel host path and the enforcement pins; the first acceptance was `research/
 
 ```bash
 D=$(node --experimental-transform-types --disable-warning=ExperimentalWarning src/gpu-backend/compat.ts --digest)
-tools/gpu-backend/build.sh research/gpu-phase3/build/gb3 "$D"   # prints the binary's sha256 (the accepted path)
+tools/gpu-backend/build.sh research/gpu-phase5/build/gb5 "$D"   # prints the binary's sha256 (the accepted path)
 tools/gpu-backend/verify-acceptance.sh --rebuild --device       # the record, the tree, a reproducible rebuild, the GPU
 ```
 
