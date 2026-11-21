@@ -2,33 +2,37 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-20T23:23Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — Q1 root cause **RESOLVED by rule §4.7** (`PARITY_ROOT_CAUSE.md`: a V8 Maglev defect,
-  reproduced with the Phase 4 signature on the Phase 4 candidate; fix = engine runs under `--no-maglev`, enforced by the
-  official gate); stage C (atomic dataset export) complete and tested; sealed-file protection restored (988 files);
-  stage P (performance audit) baselines running; stage A (final campaign) prepared, NOT started.
+- **Updated:** 2026-11-21T00:12Z (UTC, from `date -u`)
+- **Status:** **INCOMPLETE** — Q1 root cause **RESOLVED by rule §4.7** (`PARITY_ROOT_CAUSE.md`: a V8 Maglev defect; fix =
+  the engine runs under `--no-maglev`, enforced by the official gate); stage C (atomic dataset export) complete; sealed
+  files protected (988 restored); **stage P complete: no host-path performance change retained** (amendment A3;
+  `PERFORMANCE_AUDIT.md` still to write); a host-pipeline shutdown guard added (A3); **stage A (final campaign):
+  see "Running"**.
 - **Authority:** `brief/BRIEF.md` sha256 `bff746987861bd2837864af4c86ad2f2d980b386e465f0b6dfd0f12a6d221476` (224 lines,
   read in full). `PROTOCOL.md` FROZEN 2026-11-20T21:12:21Z (`results/protocol-freeze.json`, protocol sha256
-  `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: A1. Standard 3.0.0 (scope
-  diagnostic); preflight PASS.
-- **Running:** unit `p5chain-pbase` (`chains/p-baseline.sh`, log `results/logs/chain-pbase.txt`, started 23:10:02Z):
-  groups `p3-a3-r1` (accepted configuration: gb3, Maglev on) then `nm-a3-r1` (the same under `--no-maglev`), …;
-  background waiter `b7usfivrn` fires when `nm-a3-r1` is verified. **Plan: stop the chain after `nm-a3-r1`** (the
-  campaign's own `final-*` runs measure the fixed configuration; the remaining baselines are steps of `chains/final.sh`)
-  — stop the unit `p5chain-pbase` AND any `gpup5-nm-a3-r2-*` / `gpup5-mon-*` unit it started; a partly run group keeps
-  its directory and is not reused under its name.
+  `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: A1, A2, A3 (head). Standard 3.0.0
+  (scope diagnostic); preflight PASS.
+- **Final tree digests** (`node --no-maglev … src/gpu-backend/compat.ts`): evaluation `3a6eacdecc4f0a24…`, CPU closure
+  `c8a9f416…` (unchanged), CUDA `d8899061…` (unchanged), host `53671a6c…`, policy `a2560e85…`.
+- **Running:** the final campaign — unit `p5chain-final`, log
+  `/home/chad/projects/margin-trading/research/gpu-phase5/results/logs/chain-final.txt` (start time and commit: see
+  "Campaign log" below). 36 steps, fail-fast; a step's sub-units are named `gpup5-final-*` / `gpup5-par-*`. Check with
+  `systemctl --user list-units 'p5chain-*' 'gpup5-*'` and `grep -E "start|end|FAILED|complete" <log> | tail`.
+  **While it runs: no CPU-heavy tool, no edit of any file under `src/`, `tools/`, `config/` or `research/gpu-phase5/chains/`.**
 - **Next commands (in order):**
-  1. `tools/gpu-phase5/launch.sh p5chain-pprof <abs log> --wait -- /bin/bash research/gpu-phase5/chains/p-profile.sh`
-     then `node --no-maglev --experimental-transform-types tools/gpu-phase5/cpuprof-summary.ts
-     research/gpu-phase5/results/raw-large/cpuprof --out research/gpu-phase5/results/perf/cpuprof-summary.json`;
-  2. smoke-test `tools/gpu-phase5/parity.ts` (small W-QUIET run, once with `--test-inject R:C4`) into
-     `results/raw-large/` (not evidence); bounded diagnostics `build/vram-test 20 2`, `build/hostmem-test 16 1 8`;
-  3. amendment A2 (stage P decision; campaign composition); `src/gpu-backend/toolchain.ts` default binary →
-     `research/gpu-phase5/build/gb5`; commit every pinned-file change (ONE commit; nothing pinned changes afterwards);
-  4. `tools/gpu-phase5/launch.sh p5chain-final <abs log> -- /usr/bin/env START=1 MODEA_K=2 MODEA_W=8 /bin/bash
-     research/gpu-phase5/chains/final.sh` (≈ 5.5 h; fail-fast; `START=<n>` resumes);
-  5. `node --no-maglev --experimental-transform-types tools/gpu-phase5/accept.ts --dry-run`, then without `--dry-run`
-     on a committed tree; out-of-band pin; merge per PROTOCOL §8 only if ACCEPTED.
+  1. wait for `chain final complete` in the log; on `FAILED <k> [<name>]` read `results/logs/final/<step>.txt`, fix the
+     cause (a tool or chain fix is a new commit; an engine or host-path fix invalidates the earlier steps), resume with
+     `tools/gpu-phase5/launch.sh p5chain-final-r<n> <abs log> -- /usr/bin/env START=<k> MODEA_K=2 MODEA_W=8 /bin/bash
+     research/gpu-phase5/chains/final.sh` (a COPY of the script if it had to change: never edit the running one);
+  2. `node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/accept.ts
+     --dry-run`, then without `--dry-run` on a committed tree; record the new record's sha256 out-of-band
+     (`~/.local/share/margin-trading-gpu/acceptance-pins/`, keeping Phase 3's pin);
+  3. only if ACCEPTED (PROTOCOL §8): push the branch, `tools/gpu-phase5/merge-audit.ts`, `git merge --no-ff` into
+     `main`, `chains/post-merge.sh`, push `main`, fast-forward and check out `research/gpu-phase2`, re-run
+     `tools/gpu-phase5/seal-protect.ts --apply` / `--check`; otherwise the fallback (no merge);
+  4. reports (`PERFORMANCE_AUDIT.md`, `GPU_ACCEPTANCE_REPORT.md`, `MERGE_AND_RESTORE.md`, `GPU_FINAL_HANDOFF.md`),
+     `MANIFEST.json`, `tools/gpu-phase5/bundle.sh <scratch>`, copy the ZIP to
+     `~/.local/share/margin-trading-gpu/handoffs/`, final checkpoint, commit, push.
 - **Never:** start/implement/preflight/run the risk-envelope pilot; write under `research/gpu-phase4/` or any other
   study; merge into `main` unless Q1 is RESOLVED and Q4 ACCEPTED (PROTOCOL §8); reboot or change driver/display/clock;
   edit a file that a running chain's jobs load, or a chain script while it runs.
@@ -52,11 +56,11 @@
 |---|---|---|---|---|
 | S0 provenance, reading, protocol freeze | complete | — | `results/preflight/provenance.json`, `results/protocol-freeze.json` | frozen 21:12:21Z |
 | R root cause | complete (RESOLVED by §4.7) | `tools/gpu-phase5/{fresh-loop,envelope-stress,record-stress,host-soak,diag-envelope,diag-bits}.ts` (commands in each file's header; plain processes; fresh-loop in unit `gpup5-fresh-loop-p4`) | `results/rootcause/` | see ROOT CAUSE STATUS and `PARITY_ROOT_CAUSE.md`; pooled A/B default 9/1,180 vs `--no-maglev` 0/1,170 |
-| R fix | complete, committed (`2541b610`, `30f8b97e`); pinned files still to be finalized with toolchain.ts | — | `src/gpu-backend/runtime.ts`, `official.ts`, `officialRunner.ts`, `compat.ts`, `acceptance.ts`, tests | policy + enforcement tests 13/13, dataset 9/9, host pipeline and layout pass |
+| R fix | complete, committed (`2541b610`, `30f8b97e`; toolchain default binary → gb5 in the final-tree commit) | — | `src/gpu-backend/runtime.ts`, `official.ts`, `officialRunner.ts`, `compat.ts`, `acceptance.ts`, tests | GPU backend tests 30/30 under `--no-maglev` (policy + enforcement 13, dataset 9, host pipeline 7, layout 1) |
 | C atomic dataset export | complete | `tools/gpu-phase5/dataset-race.ts race|kill|conflict`, `dataset-identity.ts` | `results/cache/` | race 100/100 verified (legacy today: 23 verified, 77 refused); kill 0 partial targets; conflict 20 explicit; identity 28 datasets / 40 comparisons equal |
 | S sealed-file protection | complete | `tools/gpu-phase5/seal-protect.ts --apply` (re-check: `--check`) | `results/seals/{check-before,apply,check-after}.json` | 988 restored to 0444, 10 already protected, 43 git-ignored cache files already 0444, 11 absent, 0 content differences |
-| P performance audit | running | `chains/p-baseline.sh` (unit `p5chain-pbase`), then `chains/p-profile.sh` | `results/bench/`, `results/optimizer/`, `results/perf/` | Phase 4's own profile of this job: wall 583 s, device 347 s, main thread active 366 s, archive writes 66.7 s (frozen legacy store), response copies ≈ 85 ms per 172 MB batch by microbenchmark (≤ 1.7 % of the wall: below the 2 % rule) |
-| A acceptance campaign | not started | `chains/final.sh` (see Next commands) | `results/{final,parity,optimizer,sanitizer-final,policy,isolation,sustained,rootcause/fresh-loop-final,tests}` | — |
+| P performance audit | complete (decision in A3; report to write) | `chains/p-baseline.sh` (stopped after `nm-a3-r1`), `chains/p-profile.sh`, `tools/gpu-phase5/cpuprof-summary.ts` | `results/bench/{p3-a3-r1,nm-a3-r1,prof-a3-nm}`, `results/optimizer/<run>-j0`, `results/perf/cpuprof-summary.json` | accepted configuration 586.6 s; the same under `--no-maglev` 587.8 s (+0.2 %), both verified identical; main thread active 370 s of 587 s, ≈ 48 % of it (profiled prefix) in the parameter-schema canonicalization of the pinned CPU closure (not changed here); response copies ≤ 1.7 %; **no change retained** |
+| A acceptance campaign | running (see Top screen) | `chains/final.sh` | `results/{final,parity/final,parity/original,optimizer,sanitizer-final,policy,isolation,sustained,rootcause/fresh-loop-final,rootcause/host-soak-final.json,tests}`, logs `results/logs/final/` | — |
 | I integration or fallback | not started | | | |
 | E bundle | not started | | | |
 
@@ -76,12 +80,12 @@ campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwr
   processes with a wrong evaluation, `--no-maglev` 0/939.
 - Host path: `host-soak-default-full.json` — 161 fresh pipelines, 1,288 cold worker threads, 251,321 results, 0
   mismatches (Maglev enabled).
-- **Fix being implemented (uncommitted, tests not yet run):** `src/gpu-backend/runtime.ts` (`--no-maglev` required);
+- (history, 22:57Z — since committed and tested:) **Fix:** `src/gpu-backend/runtime.ts` (`--no-maglev` required);
   checked by the official gate (`official.ts` check `runtime`, attestation `runtime`) and `officialRunner.ts`; the
   Phase 5 reference pools inherit the parent's setting; `tests/policy.test.ts` (new test + the runner test);
   `compat.ts` (runtime.ts in the policy group); `tools/gpu-phase5/parity.ts` (original-evidence capture, `runtime`).
-- **Running:** `bxevgzkp8` — `record-stress` against ground truth, default vs `--no-maglev`, 10 processes each, 12 min
-  (`record-stress-truth-{default,no-maglev}.json`).
+- (history) `record-stress` against ground truth finished 23:06Z: `record-stress-truth-{default,no-maglev}.json`
+  (default: wrong evaluations present, incl. record-only; `--no-maglev`: 0).
 - Amendment A1 written (loop stopped at 36 cycles; instruments; the loop's full budget moves to the fixed configuration).
 
 ## Findings so far (root cause; written before they are relied on)
@@ -107,8 +111,8 @@ campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwr
     (`alias-hunt.ts`: 0 of 765 processes, 30,600 paths): it needs the real flow's tiering (long mark loops, busy compile
     queue, CPU contention).
   - Tier bisect so far (7 min, concurrent): default 2/145, `--no-maglev` 0/144, `--no-turbofan` 0/93 — not yet
-    conclusive. **Running: A/B default vs `--no-maglev`, 12 processes each, 15 min** (task `b7u1kqu0d`,
-    outputs `results/rootcause/envelope-stress-ab-{default,no-maglev}.json`).
+    conclusive; the A/B that followed (12 processes each, 15 min) is
+    `results/rootcause/envelope-stress-ab-{default,no-maglev}.json` (finished).
   - The independent review (agent, read-only, unanchored) reached the same map of the record path and the same ranking
     (V8 tiering transient in a cold CPU isolate first; hardware second; CUDA last); its report is summarized in
     `PARITY_ROOT_CAUSE.md` (to write).
@@ -121,14 +125,22 @@ campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwr
   NaNs, but task 33's two NaNs are literals (stable); a worker-thread clone canonicalizes NaNs; the CPU record hash of
   task 33 is `f17d66f4…` under seven tier configurations. Device side: `initKernel` zeroes every `GbCandOut`.
 - Kernel log: 12 Xid 43 entries since 2026-11-18, all from test binaries during negative suites; none near the mismatch.
-- Stage C (atomic dataset export) is IMPLEMENTED, uncommitted: `src/gpu-backend/dataset.ts` (write-once, exclusive
+- Stage C (atomic dataset export), committed (`4ac89606`): `src/gpu-backend/dataset.ts` (write-once, exclusive
   temporary file, fsync, verify, link(2) publish-if-absent, explicit CONFLICT / INVALID errors, stale-temporary cleanup),
   `src/gpu-backend/tests/dataset.test.ts` (9/9 pass) + `datasetChild.ts`, `compat.ts` (the two test files classified),
   `tools/gpu-phase5/dataset-identity.ts` (28 datasets, 40 comparisons with the old exporter's sidecars: all equal —
   `results/cache/dataset-identity.json`), `tools/gpu-phase5/dataset-race.ts` (`kill` done: 40 SIGKILLs, 78 directories,
-  0 partial targets, 78 restarted complete — `results/cache/kill-d19.json`; `race` and `conflict` need the GPU: TODO).
+  0 partial targets, 78 restarted complete — `results/cache/kill-d19.json`; `race` and `conflict` done, see the stage table).
 
 ## Disclosures
 
 - D1 (2026-11-20T21:18–21:35Z): while the fresh-context loop ran I edited `src/gpu-backend/dataset.ts` and ran other CPU work (unit tests, dataset identity 21:25Z, kill test 21:27–21:29Z). No file that the loop's fresh workers load was edited (they load the engine closure, `canon.ts`, `batch.ts`, `hostWorker.ts`, `src/gpu-phase5/*`); the loop's main process had imported `dataset.ts` before the edit. The extra CPU load coincides with the captured event (cycle 16) and is part of the finding (contention raises the transient's rate).
 - D2: `tools/gpu-phase5/envelope-stress.ts --trace` first run (21:53–22:01Z, 465 processes) is VOID: V8's trace lines followed each child's report and my parser counted every child as failed; rerun 22:03–22:13Z (528 processes, 1 transient, in a verification call).
+- D3 (2026-11-20T23:10–23:21Z): `tsc`/`eslint` ran beside the timed baseline `p3-a3-r1` (586.6 s; Phase 4 measured 583–584 s for the same configuration). The comparison of the final replays with it allows ±3 %; later timed runs had a quiet machine.
+- D4: benchmark group `nm-a3-r2` was interrupted on purpose when the baseline chain was stopped (A2); its directory is kept with `INTERRUPTED.txt` and is not reused.
+- D5 (2026-11-20T23:40Z–00:03Z): a host-pipeline shutdown defect (a call after `close()` waited for the 10-minute operation timeout) was found by running the tests under `--no-maglev`, fixed with a 4-line guard and a regression test, before the campaign (amendment A3). The host group digest changed; every acceptance gate runs on the final tree.
+
+## Campaign log (stage A)
+
+(appended as the campaign proceeds)
+

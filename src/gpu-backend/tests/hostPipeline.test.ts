@@ -277,6 +277,30 @@ test('host pipeline: a worker that throws, exits or hangs fails closed; every la
   }
 });
 
+test('host pipeline: a prepare or complete after close is refused at once, not after the operation timeout', async () => {
+  // the operation timeout is far beyond the test's own bound: a call that waits for it fails the test
+  const pipe = await HostPipeline.start({ door, workers: 2, minShard: 16, opTimeoutMs: 20000 });
+  const p = await pipe.prepare(door, tasks, {});
+
+  await pipe.close();
+
+  const t0 = performance.now();
+  const bounded = <T>(what: string, x: Promise<T>) =>
+    Promise.race([
+      x,
+      new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error(`${what} after close did not settle within 5 s`)), 5000).unref();
+      })
+    ]);
+
+  await assert.rejects(
+    bounded('complete', pipe.complete(p, { payload: responseOf(p.enc, door.sessions), roundTripMs: 0 }, UUID, 'lean')),
+    /host pipeline closed/
+  );
+  await assert.rejects(bounded('prepare', pipe.prepare(door, tasks, {})), /host pipeline closed/);
+  assert.ok(performance.now() - t0 < 4000);
+});
+
 test("host pipeline: an encoding error is the serial path's error; the worker door equals the main door", async () => {
   const bad: Task = { ...tasks[5]!, options: { ...vOptions, boundaries: ['1999-01-04'] } };
 

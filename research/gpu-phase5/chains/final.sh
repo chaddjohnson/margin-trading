@@ -57,6 +57,12 @@ step offline-check       N tools/gpu-phase5/offline-check.ts --workers 1,2,3,8,1
 step host-soak           U gpup5-final-host-soak host-soak "$NODE" --no-maglev --expose-gc --max-old-space-size=14000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/host-soak.ts --cycles 150 --max-minutes 25 --mode full --load 12 --out $R/rootcause/host-soak-final.json
 step parity-campaign     /usr/bin/env HW=$HW PARITY_OUT=$R/parity/final PARITY_LOG=$L/parity /bin/bash research/gpu-phase5/chains/parity.sh
 step parity-summary      N tools/gpu-phase5/parity-summary.ts $R/parity/final
+ORIG() { # the ORIGINAL failing run of Phase 4 (its seeds: the same 1,561 tasks), as that campaign ran it
+  mkdir -p "$R/parity/original"
+  U "gpup5-final-orig-$1" "orig-D24-fund-$1" "$NODE" --no-maglev --expose-gc --max-old-space-size=14000 --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/parity.ts --host-workers $HW --seeds p4 --door D24 --options fund --refs --random 1500 --strata 2 --label O-fund --detail --risk --out $R/parity/original/D24-fund-p4seeds-$1.json
+}
+step orig-d24-fund-r1    ORIG r1
+step orig-d24-fund-r2    ORIG r2
 step finalists           U gpup5-final-finalists finalists "$NODE" --no-maglev --expose-gc --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/parity-finalists.ts --host-workers $HW --out $R/parity/final-finalists.json
 step a3-r1               RP gpup5-final-a3-r1 --backend gpu --run final-a3-r1 --job a3:C19:broad1 --batch 8192 --linger 30 --host-workers $HW
 step cmp-a3-r1           N tools/gpu-phase5/compare.ts sealed final-a3-r1/gpu a3 C19 broad1 --out $O/compare-final-a3-r1-vs-sealed.json

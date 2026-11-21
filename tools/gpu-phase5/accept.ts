@@ -182,6 +182,17 @@ const policy = policySources([generator]);
       ? `subjects ${s.totals.subjects}, mismatches ${s.totals.mismatches}, binaries ${s.build.binaries.map((b) => b.slice(0, 12))}`
       : 'missing'
   );
+  for (const r of ['r1', 'r2']) {
+    const o = R(`parity/original/D24-fund-p4seeds-${r}.json`);
+    const x = read<{ result: { pass: boolean; identical: number; mismatches: number }; subjects: { total: number }; build: { binarySha256: string }; runtime?: { maglev: string }; seeds?: string; testInject?: string }>(o);
+
+    gate(
+      `A3 the original failing run D24-fund with Phase 4's own seeds on the final candidate (${r}: 1,561 of 1,561 identical)`,
+      o,
+      !!x && x.result.pass && x.subjects.total === 1561 && x.result.identical === 1561 && x.result.mismatches === 0 && x.build.binarySha256 === binarySha && x.runtime?.maglev === 'disabled' && /Phase 4/.test(x.seeds ?? '') && !x.testInject,
+      x ? `identical ${x.result.identical}/${x.subjects.total}, mismatches ${x.result.mismatches}` : 'missing'
+    );
+  }
   const g = R('parity/final-finalists.json');
   const t = read<{
     pass: boolean;

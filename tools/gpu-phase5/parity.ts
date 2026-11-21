@@ -16,14 +16,9 @@ import { structureKey, structureOf } from '../../src/growth140-vgt-s8m/space.ts'
 import { deepDiff } from '../../src/gpu-phase1/compare.ts';
 import { cacheDir, writeJson } from '../../src/gpu-phase5/context.ts';
 import { type DoorSpec, doorLabel, resolveDoor } from '../../src/gpu-phase5/doorSpec.ts';
-import {
-  type Subject,
-  branchHeavySubjects,
-  growthStrata,
-  neighbourSubjects,
-  randomSubjects,
-  referenceSubjects
-} from '../../src/gpu-phase5/subjects.ts';
+import * as ownSubjects from '../../src/gpu-phase5/subjects.ts';
+import * as phase4Subjects from '../../src/gpu-phase4/subjects.ts';
+import type { Subject } from '../../src/gpu-phase5/subjects.ts';
 import { bookView, canonHash, poolView } from '../../src/gpu-phase5/canon.ts';
 import { CpuRefPool } from '../../src/gpu-phase5/cpuRefPool.ts';
 import { type RefTask, envelopeOf } from '../../src/gpu-phase5/cpuRefWorker.ts';
@@ -96,6 +91,11 @@ const risk = flag('risk');
 const growthFirst = flag('growth-first') || optionSet === 'all';
 
 // ----- subjects -----
+// --seeds p4: Phase 4's own seeds (src/gpu-phase4/subjects.ts, read only) — the ORIGINAL tasks of a Phase 4 run, for the
+// targeted coverage of its one failing run (PROTOCOL.md §7 gate A3); default: this study's seeds
+const seeds = opt('seeds', 'own');
+const { branchHeavySubjects, growthStrata, neighbourSubjects, randomSubjects, referenceSubjects } =
+  seeds === 'p4' ? phase4Subjects : ownSubjects;
 const refs = flag('refs') ? referenceSubjects() : [];
 let subjects: Subject[] = [
   ...refs,
@@ -452,6 +452,7 @@ const rec = {
   t: new Date().toISOString(),
   runtime: engineRuntime(), // the JavaScript engine configuration of this process, its host workers and its CPU reference workers
   ...(testInject ? { testInject } : {}),
+  seeds: seeds === 'p4' ? "Phase 4's (src/gpu-phase4/subjects.ts)" : "this study's (src/gpu-phase5/subjects.ts)",
   door: label,
   doorSpec: spec,
   sessions: door.sessions,

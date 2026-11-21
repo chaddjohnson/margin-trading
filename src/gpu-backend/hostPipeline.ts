@@ -196,6 +196,10 @@ export class HostPipeline {
     transfer: Transferable[] = []
   ) {
     if (this.failure) return Promise.reject(this.failure);
+    // a closed pipeline has no workers left: refuse at once. (Before GPU Phase 5 a prepare/complete that reached this
+    // point after close() — a batch whose device round trip returned during the shutdown that follows a failed batch —
+    // posted to a terminated worker and kept the process alive until the operation timeout, 10 minutes by default.)
+    if (this.closing) return Promise.reject(new Error('host pipeline closed'));
 
     const key = `${kind}:${seq}:${shard}`;
 
