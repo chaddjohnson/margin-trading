@@ -1,0 +1,89 @@
+TAP version 13
+# Subtest: every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)
+ok 1 - every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)
+  ---
+  duration_ms: 1.38241
+  type: 'test'
+  ...
+# Subtest: the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not
+ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not
+  ---
+  duration_ms: 224.973359
+  type: 'test'
+  ...
+# Subtest: purpose: explicit, never defaulted; unknown refused
+ok 3 - purpose: explicit, never defaulted; unknown refused
+  ---
+  duration_ms: 0.582504
+  type: 'test'
+  ...
+# Subtest: a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+ok 4 - a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+  ---
+  duration_ms: 0.108611
+  type: 'test'
+  ...
+# Subtest: the legacy runner wrapper refuses before importing the runner
+ok 5 - the legacy runner wrapper refuses before importing the runner
+  ---
+  duration_ms: 186.615036
+  type: 'test'
+  ...
+# Subtest: every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+ok 6 - every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+  ---
+  duration_ms: 1.089737
+  type: 'test'
+  ...
+# Subtest: the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+ok 7 - the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+  ---
+  duration_ms: 472.208614
+  type: 'test'
+  ...
+# Subtest: engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+ok 8 - engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+  ---
+  duration_ms: 0.523234
+  type: 'test'
+  ...
+# Subtest: entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+ok 9 - entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+  ---
+  duration_ms: 136.950693
+  type: 'test'
+  ...
+# Subtest: acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+ok 10 - acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+  ---
+  duration_ms: 81.114767
+  type: 'test'
+  ...
+# Subtest: preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+ok 11 - preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+  ---
+  duration_ms: 0.319102
+  type: 'test'
+  ...
+# Subtest: the deferred pilot domain reaches only capabilities the evaluator implements
+ok 12 - the deferred pilot domain reaches only capabilities the evaluator implements
+  ---
+  duration_ms: 3253.878848
+  type: 'test'
+  ...
+# Subtest: MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+ok 13 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+  ---
+  duration_ms: 9.328577
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4243.795812
+exit=0

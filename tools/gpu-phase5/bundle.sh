@@ -3,7 +3,8 @@
 # bundle research/gpu-phase5/bundle/gpu-phase5-final-handoff.zip — the seven reports (start with GPU_FINAL_HANDOFF.md),
 # the study's brief/protocol/amendments/adoption/commands/checkpoint, the policy documents and the acceptance record
 # (when one exists), the machine-readable evidence (results/ without raw-large/, logs/, ledger/ and the device
-# responses), the unit logs of the campaign's steps (results/runlogs/), MANIFEST.json and CHECKSUMS.sha256 over every
+# responses), the unit logs of the campaign's steps (results/runlogs/, a copy of the git-ignored results/logs/ made
+# before bundling), MANIFEST.json and CHECKSUMS.sha256 over every
 # file. No market data, secrets, CUDA toolchain, binaries, caches or raw archives. Verification: zip -T, extraction
 # into a scratch directory, sha256sum -c of every file, a forbidden-content scan.
 #   tools/gpu-phase5/bundle.sh <scratch dir>
@@ -32,7 +33,8 @@ find research/gpu-phase5/results -type f \( -path '*/raw-large/*' -o -path '*/lo
 for f in $REPORTS MANIFEST.json; do cp "research/gpu-phase5/$f" "$STAGE/$f"; done
 mkdir -p "$STAGE/summaries"
 for f in results/perf/performance.json results/perf/performance.csv results/perf/cpuprof-summary.json results/parity/final/SUMMARY.json \
-         results/acceptance-gates.json results/rootcause/experiments.csv results/seals/check-after.json; do
+         results/acceptance-gates.txt results/integration/post-merge-verification.json results/integration/merge-audit.json \
+         results/integration/tests/post-merge-tests.json results/optimizer/regression.json results/seals/check-after.json; do
   [ -f "research/gpu-phase5/$f" ] && cp "research/gpu-phase5/$f" "$STAGE/summaries/$(basename "$f")"
 done
 cat > "$STAGE/README.md" <<'TXT'

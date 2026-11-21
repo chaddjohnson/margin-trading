@@ -2,38 +2,42 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-21T05:59:58Z (UTC, from `date -u`)
-- **Status:** **INCOMPLETE** — Q1 root cause **RESOLVED by rule §4.7** (`PARITY_ROOT_CAUSE.md`: a V8 Maglev defect; fix =
-  the engine runs under `--no-maglev`, enforced by the official gate); stage C (atomic dataset export) complete; sealed
-  files protected (988 restored); stage P complete: no performance change retained (`PERFORMANCE_AUDIT.md`); **stage A:
-  the campaign's 36 steps are complete and pass** (see "Campaign log"; step 36 passed on its second attempt, amendment
-  A5); **next: the acceptance generator** (Next commands, item 2).
+- **Updated:** 2026-11-21T06:26:21Z (UTC, from `date -u`)
+- **Status:** **COMPLETE.** Q1 root cause **RESOLVED** (a V8 Maglev defect; `PARITY_ROOT_CAUSE.md`); atomic dataset
+  export implemented and proven; performance audit done, **no change retained** (×1.00 against Phase 3); **ACCEPTED**
+  2026-11-21T06:00:58Z (38 of 38 checks); **merged into `main`** (merge commit `dc926536`), verified after the merge,
+  pushed; `research/gpu-phase2` fast-forwarded and checked out. **RISK-ENVELOPE PILOT NOT STARTED.**
 - **Authority:** `brief/BRIEF.md` sha256 `bff746987861bd2837864af4c86ad2f2d980b386e465f0b6dfd0f12a6d221476` (224 lines,
   read in full). `PROTOCOL.md` FROZEN 2026-11-20T21:12:21Z (`results/protocol-freeze.json`, protocol sha256
   `c9ddb605181cda43b804119e3ebe0931e7494423e4ea56fd7c76beae76aa2819`); amendments: A1, A2, A3, A4, A5 (head). Standard 3.0.0
   (scope diagnostic); preflight PASS.
-- **Final tree digests** (`node --no-maglev … src/gpu-backend/compat.ts`): evaluation `3a6eacdecc4f0a24…`, CPU closure
-  `c8a9f416…` (unchanged), CUDA `d8899061…` (unchanged), host `53671a6c…`, policy `a2560e85…`.
-- **Running:** nothing (no `p5chain-*` or `gpup5-*` unit; checked with `systemctl --user list-units`). The campaign's
-  log is `/home/chad/projects/margin-trading/research/gpu-phase5/results/logs/chain-final.txt` (units `p5chain-final`,
-  `-r1` from step 29b, `-r2` step 36 attempt 2).
-- **Next commands (in order):**
-  1. (done) the campaign: `chain final complete`; for the record, the rule was: on `FAILED <k> [<name>]` read `results/logs/final/<step>.txt`, fix the
-     cause (a tool or chain fix is a new commit; an engine or host-path fix invalidates the earlier steps), resume with
-     `tools/gpu-phase5/launch.sh p5chain-final-r<n> <abs log> -- /usr/bin/env START=<k> MODEA_K=2 MODEA_W=8 /bin/bash
-     research/gpu-phase5/chains/final.sh` (a COPY of the script if it had to change: never edit the running one);
-  2. `node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase5/accept.ts
-     --dry-run`, then without `--dry-run` on a committed tree; record the new record's sha256 out-of-band
-     (`~/.local/share/margin-trading-gpu/acceptance-pins/`, keeping Phase 3's pin);
-  3. only if ACCEPTED (PROTOCOL §8): push the branch, `tools/gpu-phase5/merge-audit.ts`, `git merge --no-ff` into
-     `main`, `chains/post-merge.sh`, push `main`, fast-forward and check out `research/gpu-phase2`, re-run
-     `tools/gpu-phase5/seal-protect.ts --apply` / `--check`; otherwise the fallback (no merge);
-  4. reports (`PERFORMANCE_AUDIT.md`, `GPU_ACCEPTANCE_REPORT.md`, `MERGE_AND_RESTORE.md`, `GPU_FINAL_HANDOFF.md`),
-     `MANIFEST.json`, `tools/gpu-phase5/bundle.sh <scratch>`, copy the ZIP to
-     `~/.local/share/margin-trading-gpu/handoffs/`, final checkpoint, commit, push.
-- **Never:** start/implement/preflight/run the risk-envelope pilot; write under `research/gpu-phase4/` or any other
-  study; merge into `main` unless Q1 is RESOLVED and Q4 ACCEPTED (PROTOCOL §8); reboot or change driver/display/clock;
-  edit a file that a running chain's jobs load, or a chain script while it runs.
+- **Accepted:** record `config/gpu-backend/acceptance.json` sha256
+  `49e95d7a78fe5823273e9df3d2edc37500a58bad37bf0867b7c4a19f718666b4` (out-of-repository copy and line in
+  `~/.local/share/margin-trading-gpu/acceptance-pins/`; the Phase 3 pin kept); binary `research/gpu-phase5/build/gb5`
+  sha256 `f444c52139ebd8b2481fcde8a69cf8564c91dc426c6e74f366c70be5c714041e`; evaluation digest `3a6eacdecc4f0a24…`, CPU
+  closure `c8a9f416…` (unchanged), CUDA `d8899061…` (unchanged), host `53671a6c…`, enforcement group (24 files)
+  `c4832e88…`; accepted source revision `0ab04601`; acceptance commit `9192e697`.
+- **Git:** merge commit on `main` `dc926536f32416ee856896aa28f417102dc61dec` (parents `3a52cc63`, `bcd14f59`);
+  post-merge evidence `3e58785d`; the handoff commit (this checkpoint's) is the tip of `main`, `research/gpu-phase5`
+  and `research/gpu-phase2` — its hash is in `pins.jsonl` (outside the repository) and in the session's final message.
+  `research/gpu-phase3` (`3a52cc63`) and `research/gpu-phase4` (`0ac3e4e2`) untouched.
+- **Running:** nothing (no `p5chain-*`, `p5-*` or `gpup5-*` unit).
+- **Deliverables** (hashes of every file: `MANIFEST.json`; of the bundle's files: its `CHECKSUMS.sha256`):
+  `GPU_FINAL_HANDOFF.md` (read first), `PARITY_ROOT_CAUSE.md`, `ATOMIC_CACHE_AND_CONCURRENCY.md`,
+  `PERFORMANCE_AUDIT.md`, `GPU_ACCEPTANCE_REPORT.md`, `MERGE_AND_RESTORE.md`, `PILOT_HANDOFF_ONLY.md`; the bundle
+  `bundle/gpu-phase5-final-handoff.zip` (copy and `.sha256` in `~/.local/share/margin-trading-gpu/handoffs/`).
+- **Next (needs the user's decision; nothing is pending in this study):** the four decisions of
+  `GPU_FINAL_HANDOFF.md` §7 — the pilot and its protocol; the envelope-delivery change and its acceptance cycle;
+  extending `--no-maglev` to Strategy Lab's server and the legacy CPU runners; the parameter-canonicalization
+  speed-up in the canonical CPU engine.
+- **Never:** start/implement/preflight/run the risk-envelope pilot from this study; rerun a campaign tool into
+  `results/` paths that the acceptance record binds by sha256 (`results/tests/*.json`, `results/parity/`,
+  `results/optimizer/compare-*`, …: 34 evidence files) — post-acceptance checks write to `results/integration/`;
+  edit a pinned file without a new acceptance cycle; force-push or rewrite history.
+- **Recovery performed 2026-11-21T05:45Z** (after a context compaction, while the campaign's last steps ran): reread
+  `CLAUDE.md`, `docs/claude/context-recovery.md`, this checkpoint, `PROTOCOL.md` §4.5–§8 and `AMENDMENTS.md`; checked
+  `systemctl --user list-units 'gpup5-*' 'p5chain-*'` (none active) and the chain log (`chain final complete`) before
+  launching anything.
 
 ## Environment
 
@@ -58,9 +62,9 @@
 | C atomic dataset export | complete | `tools/gpu-phase5/dataset-race.ts race|kill|conflict`, `dataset-identity.ts` | `results/cache/` | race 100/100 verified (legacy today: 23 verified, 77 refused); kill 0 partial targets; conflict 20 explicit; identity 28 datasets / 40 comparisons equal |
 | S sealed-file protection | complete | `tools/gpu-phase5/seal-protect.ts --apply` (re-check: `--check`) | `results/seals/{check-before,apply,check-after}.json` | 988 restored to 0444, 10 already protected, 43 git-ignored cache files already 0444, 11 absent, 0 content differences |
 | P performance audit | complete (decision in A3; `PERFORMANCE_AUDIT.md`) | `chains/p-baseline.sh` (stopped after `nm-a3-r1`), `chains/p-profile.sh`, `tools/gpu-phase5/cpuprof-summary.ts` | `results/bench/{p3-a3-r1,nm-a3-r1,prof-a3-nm}`, `results/optimizer/<run>-j0`, `results/perf/cpuprof-summary.json` | accepted configuration 586.6 s; the same under `--no-maglev` 587.8 s (+0.2 %), both verified identical; main thread active 370 s of 587 s, ≈ 48 % of it (profiled prefix) in the parameter-schema canonicalization of the pinned CPU closure (not changed here); response copies ≤ 1.7 %; **no change retained** |
-| A acceptance campaign | campaign complete (36 steps pass; see Campaign log); acceptance generator next | `chains/final.sh` | `results/{final,parity/final,parity/original,optimizer,sanitizer-final,policy,isolation,sustained,rootcause/fresh-loop-final,rootcause/host-soak-final.json,tests}`, logs `results/logs/final/` | — |
-| I integration or fallback | not started | | | |
-| E bundle | not started | | | |
+| A acceptance campaign and record | complete — **ACCEPTED** (38 of 38; `results/acceptance-gates.txt`) | `chains/final.sh` | `results/{final,parity/final,parity/original,optimizer,sanitizer-final,policy,isolation,sustained,rootcause/fresh-loop-final,rootcause/host-soak-final.json,tests}`, logs `results/logs/final/` | — |
+| I integration | complete | `tools/gpu-phase5/merge-audit.ts`, `git merge --no-ff`, `chains/post-merge.sh`, `chains/post-merge-tests.sh`, `tools/gpu-phase5/seal-protect.ts` | `results/integration/` | merged (`dc926536`), post-merge verification pass, suites pass on the merged tree (browser suite on its allowed rerun), `research/gpu-phase2` restored and verified, 999 sealed files protected |
+| E bundle | complete | `tools/gpu-phase5/manifest.ts`, `tools/gpu-phase5/bundle.sh <scratch>` | `MANIFEST.json`, `bundle/gpu-phase5-final-handoff.zip` | verified (`zip -T`, every checksum after extraction, forbidden-content scan) |
 
 Resume semantics: benchmark groups are write-once (`group.sh` refuses an existing `results/bench/<G>/group.json`); the
 campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwrite its `--out`.
@@ -113,7 +117,7 @@ campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwr
     `results/rootcause/envelope-stress-ab-{default,no-maglev}.json` (finished).
   - The independent review (agent, read-only, unanchored) reached the same map of the record path and the same ranking
     (V8 tiering transient in a cold CPU isolate first; hardware second; CUDA last); its report is summarized in
-    `PARITY_ROOT_CAUSE.md` (to write).
+    `PARITY_ROOT_CAUSE.md` §6.
 - Why this explains a RECORD-only mismatch: the record reductions create the same construct — object literals with
   number fields in a loop after a hot loop (`recordOf`: `virtual[b.book] = { trades, net, dd, first }` after the sessions
   loop; `riskInputsOf`: `rows`) — and they run in cold isolates on BOTH sides (CPU reference child; GPU host worker
@@ -184,3 +188,13 @@ campaign chain resumes with `START=<n>`; every root-cause tool refuses to overwr
 - `python3 research/gpu-phase5/results/perf/performance.py` → `results/perf/performance.{json,csv}`;
   `PERFORMANCE_AUDIT.md` §6 filled; `PARITY_ROOT_CAUSE.md` §11, `ATOMIC_CACHE_AND_CONCURRENCY.md` §3/§5 and
   `PILOT_HANDOFF_ONLY.md` §3/§4 extended with the campaign's results.
+- 06:00:43Z–06:00:58Z the acceptance generator on commit `0ab04601`: 38 PASS, 0 FAIL → **ACCEPTED**; record sha256
+  `49e95d7a…`; commit `9192e697`; out-of-repository pin added; independent verifier with rebuild and device VERIFIED.
+- 06:02Z branch pushed (`bcd14f59`); merge audit; `git merge --no-ff` into `main` → `dc926536`; 06:03:55Z–06:04:26Z
+  post-merge verification pass; `main` pushed (`3a52cc63..dc926536`).
+- 06:05Z `research/gpu-phase2` fast-forwarded to `dc926536`, checked out, verified (VERIFIED; 13 of 13 tests; clean);
+  two sealed files re-created writable by the switches, restored twice (see `MERGE_AND_RESTORE.md` §5).
+- 06:09:06Z–06:24:33Z the repository and Strategy Lab suites on the merged tree (`results/integration/tests/`): pass
+  (browser suite 80 + 1, then 81 of 81 on the allowed rerun — the `candles.spec.ts:439` timing race again).
+- D6 (disclosure): gate A8 passed on the second attempt of step 36 (amendment A5); three of the day's five complete
+  browser-suite runs had exactly one failing test (timing races in tests of the unchanged application).

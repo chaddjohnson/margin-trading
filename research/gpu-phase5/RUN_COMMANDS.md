@@ -120,6 +120,39 @@ a3-r2, a3-qualify, a2-r1, the mini arms and their comparisons, sanitizer, negati
 `chains/isolation.sh`, sustained, fresh-loop, the three accepted-configuration baselines, regression, tests =
 `chains/tests.sh`).
 
-## 7. Acceptance, integration, bundle
+## 7. Acceptance, integration, bundle (2026-11-21T06:00Z onward; as run)
 
-Appended below as they run.
+```bash
+# acceptance: dry run, then the record (on the committed tree 0ab04601); the gate list is the generator's output
+$N --no-maglev $TS tools/gpu-phase5/accept.ts --dry-run
+$N --no-maglev $TS tools/gpu-phase5/accept.ts > research/gpu-phase5/results/acceptance-gates.txt 2>&1      # ACCEPTED; writes config/gpu-backend/acceptance.json
+sha256sum config/gpu-backend/acceptance.json                                                                # 49e95d7a78fe5823273e9df3d2edc37500a58bad37bf0867b7c4a19f718666b4
+git add config/gpu-backend/acceptance.json research/gpu-phase5/results/acceptance-gates.txt research/gpu-phase5/results/policy/policy-tests.txt && git commit   # 9192e697
+# the out-of-repository reference (added beside the Phase 3 pin, which is kept)
+cp --update=none config/gpu-backend/acceptance.json ~/.local/share/margin-trading-gpu/acceptance-pins/acceptance-gpu-phase5-49e95d7a.json
+#   + one JSON line appended to ~/.local/share/margin-trading-gpu/acceptance-pins/pins.jsonl (t, study, sha256, binarySha256, sourceRevision, acceptanceCommit, supersedes)
+tools/gpu-backend/verify-acceptance.sh --rebuild --device --expect-record-sha256 49e95d7a78fe5823273e9df3d2edc37500a58bad37bf0867b7c4a19f718666b4   # VERIFIED
+
+# integration (PROTOCOL.md §8)
+git push -u origin research/gpu-phase5 && git ls-remote origin research/gpu-phase5 main
+$N --no-maglev $TS tools/gpu-phase5/merge-audit.ts research/gpu-phase5        # results/integration/merge-audit.json
+git switch main && git merge --no-ff research/gpu-phase5                     # dc926536; no conflict
+RECORD_SHA=49e95d7a78fe5823273e9df3d2edc37500a58bad37bf0867b7c4a19f718666b4 /bin/bash research/gpu-phase5/chains/post-merge.sh   # pass
+git push origin main && git ls-remote origin main                            # 3a52cc63..dc926536
+$N --no-maglev $TS tools/gpu-phase5/seal-protect.ts --check --out research/gpu-phase5/results/integration/restore/seal-check-after-merge.json
+git switch research/gpu-phase5 && git merge --ff-only main
+$N --no-maglev $TS tools/gpu-phase5/seal-protect.ts --apply --out research/gpu-phase5/results/integration/restore/seal-apply-after-merge.json   # 2 restored
+git switch research/gpu-phase2 && git merge --ff-only main                   # 3a52cc63 -> dc926536, clean
+tools/gpu-backend/verify-acceptance.sh --rebuild --device --expect-record-sha256 49e95d7a78fe5823273e9df3d2edc37500a58bad37bf0867b7c4a19f718666b4   # VERIFIED on research/gpu-phase2
+GPU_POLICY_PURPOSE=parity-test $N --no-maglev $TS --test --test-reporter=tap src/gpu-backend/tests/policy.test.ts src/gpu-backend/tests/enforcement.test.ts   # 13 of 13
+git switch research/gpu-phase5
+# the repository and Strategy Lab suites on the merged tree (outputs in results/integration/tests/, never in results/tests/)
+tools/gpu-phase5/launch.sh p5-postmerge-tests /home/chad/projects/margin-trading/research/gpu-phase5/results/logs/post-merge-tests.txt -- /bin/bash research/gpu-phase5/chains/post-merge-tests.sh
+
+# bundle
+cp -r research/gpu-phase5/results/logs research/gpu-phase5/results/runlogs
+$N --no-maglev $TS tools/gpu-phase5/manifest.ts
+tools/gpu-phase5/bundle.sh <scratch directory>                               # research/gpu-phase5/bundle/gpu-phase5-final-handoff.zip
+cp research/gpu-phase5/bundle/gpu-phase5-final-handoff.zip ~/.local/share/margin-trading-gpu/handoffs/
+# then: commit, push research/gpu-phase5; fast-forward and push main and research/gpu-phase2; check out research/gpu-phase2; verify again
+```
