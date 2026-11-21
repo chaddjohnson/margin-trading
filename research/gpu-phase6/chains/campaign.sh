@@ -32,7 +32,7 @@ attempt() { # attempt <name> <job.ts args...>: a start that must be REFUSED (exi
 units_active() { systemctl --user is-active "$@" 2>/dev/null | grep -c '^active$'; }
 
 # the process audit: every Node process of this campaign's units, sampled every 2 s (unit, pid, ppid, command line)
-( while :; do ps -eo pid=,ppid=,unit:60=,args= | awk '$3 ~ /^gpup6-/ && $4 ~ /node$/' | sed "s/^/$(date -u +%FT%TZ) /"; sleep 2; done ) >> "$R/runtime/process-samples.txt" &
+( while :; do ps -eo pid=,ppid=,uunit:60=,args= | awk '$3 ~ /^gpup6-/ && $4 ~ /node$/' | sed "s/^/$(date -u +%FT%TZ) /"; sleep 2; done ) >> "$R/runtime/process-samples.txt" &
 SAMPLER=$!
 trap 'kill $SAMPLER 2>/dev/null' EXIT
 

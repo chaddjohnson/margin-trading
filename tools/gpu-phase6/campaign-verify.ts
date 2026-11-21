@@ -42,7 +42,10 @@ const jobs = {
   'c4-mini-kill': { gpu: true, shared: false, events: ['open', 'resume', 'complete', 'release'] },
   'c4-mini-stop': { gpu: true, shared: false, events: ['open', 'release', 'resume', 'complete', 'release'] },
   'c4-shared-a': { gpu: true, shared: true, events: ['open', 'barrier', 'complete', 'release'] },
-  'c4-shared-b': { gpu: true, shared: true, events: ['open', 'barrier', 'complete', 'release'] }
+  'c4-shared-b': { gpu: true, shared: true, events: ['open', 'barrier', 'complete', 'release'] },
+  // amendment A2: the bounded re-run of the process audit (GPU and CPU arm at the same time)
+  'a2-audit-mini-gpu': { gpu: true, shared: false, events: ['open', 'complete', 'release'] },
+  'a2-audit-mini-cpu': { gpu: false, shared: false, events: ['open', 'complete', 'release'] }
 } as const;
 type Name = keyof typeof jobs;
 const names = Object.keys(jobs) as Name[];
@@ -121,11 +124,15 @@ for (const [name, code, job] of [
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json'));
   const bad = files.filter((f) => read<{ identical: boolean }>(path.join(dir, f)).identical !== true);
 
-  check(`every comparison identical (${files.length}: sealed A3 ×2, sealed A2, concurrent = isolated, CPU = GPU, killed+resumed, stopped+resumed, shared ×2 = reference)`, files.length === 9 && bad.length === 0, bad);
+  check(`every comparison identical (${files.length}: sealed A3 ×2, sealed A2, concurrent = isolated, CPU = GPU, killed+resumed, stopped+resumed, shared ×2 = reference; A2's re-run GPU and CPU = reference)`, files.length === 11 && bad.length === 0, bad);
 }
-// the process audit
+// the process audit — from amendment A2's re-run (the campaign's own sample file is empty: its sampler read the system
+// unit column instead of the user unit; AMENDMENTS.md A2)
 {
-  const f = path.join(resultsDir, 'runtime', 'process-samples.txt');
+  const original = path.join(resultsDir, 'runtime', 'process-samples.txt');
+
+  check('the campaign sampler\'s file is the empty one of amendment A2 (kept as it is)', fs.existsSync(original) && fs.readFileSync(original, 'utf8') === '', fs.existsSync(original) ? fs.statSync(original).size : 'missing');
+  const f = path.join(resultsDir, 'runtime', 'process-samples-a2.txt');
   const rows = fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean) : [];
   const procs = new Map<string, { unit: string; args: string; ppid: string }>();
 
@@ -135,10 +142,10 @@ for (const [name, code, job] of [
     procs.set(pid!, { unit: unit!, args: rest.join(' '), ppid: ppid! });
   }
   const without = [...procs.entries()].filter(([, p]) => !/ --no-maglev /.test(` ${p.args} `));
-  const cpuWorkers = [...procs.values()].filter((p) => p.unit.startsWith('gpup6-c2') && p.args.includes('cpuEvalWorker.ts'));
+  const cpuWorkers = [...procs.values()].filter((p) => p.unit.startsWith('gpup6-a2-cpu') && p.args.includes('cpuEvalWorker.ts'));
   const units = new Set([...procs.values()].map((p) => p.unit));
 
-  check(`process audit: every Node process of the campaign units ran with --no-maglev (${procs.size} processes, ${units.size} units, ${cpuWorkers.length} forked CPU workers)`, procs.size >= 12 && without.length === 0 && cpuWorkers.length >= 12, { without: without.slice(0, 5), units: [...units] });
+  check(`process audit: every Node process of the campaign units ran with --no-maglev (${procs.size} processes, ${units.size} units, ${cpuWorkers.length} forked CPU workers)`, procs.size >= 14 && without.length === 0 && cpuWorkers.length >= 12 && [...units].some((u) => u.startsWith('gpup6-a2-gpu')), { without: without.slice(0, 5), units: [...units] });
 }
 // nothing tracked outside this study changed
 {
