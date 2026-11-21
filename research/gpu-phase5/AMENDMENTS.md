@@ -108,3 +108,17 @@ Written before the final campaign starts and before any of its results exists.
 - **`src/gpu-backend/toolchain.ts`:** the default binary is `research/gpu-phase5/build/gb5` (built by the campaign's
   first step).
 - **Results that existed:** stages R, C and S; the stage P measurements named above. **Effect on them:** none.
+
+## A4 — 2026-11-21T03:10:39Z: the campaign's step 29 stopped on a shell error of the chain script; the two dataset tests run from a corrected script, the rest resumes unchanged (no gate, tolerance or rule changes)
+
+- **What happened:** steps 1–28 of `chains/final.sh` passed (2026-11-21T00:07:05Z–03:02:40Z). In step 29
+  (`chains/isolation.sh`) the tests I-ref, I3, I4, I5, I1, I2 and I6 passed; the first I7 line then ended with
+  `GPU_POLICY_PURPOSE=benchmark: command not found`, rc 127 (03:09:29Z): I had written
+  `check i7-race GPU_POLICY_PURPOSE=benchmark T …`, which hands the environment assignment to the `check` helper as
+  a command name. **The dataset race and conflict tests never ran; no test failed.** The chain stopped (fail-fast).
+- **Correction:** `chains/isolation-i7.sh` runs the same two tests with the same arguments (the purpose exported) and
+  the cleanup; `chains/final-resume-30.sh` runs it and then `chains/final.sh` from step 30. `chains/final.sh` and
+  `chains/isolation.sh` are left as they ran. Nothing under `src/`, `tools/` or `config/` changes; the binary and
+  the tree are the campaign's.
+- **Not rerun:** steps 1–28 and the isolation tests I1–I6 (their records exist and are the evidence).
+- **Results that existed:** every record of steps 1–28 and I1–I6. **Effect on them:** none.
