@@ -1,0 +1,632 @@
+{
+ "kind": "gpu-phase6 negative tests (Phase 2 cases + host path + engine runtime + jobs + runtime beyond the official path)",
+ "runtime": {
+  "node": "v24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "maglev": "disabled",
+  "execArgv": [
+   "--no-maglev",
+   "--expose-gc",
+   "--max-old-space-size=12000",
+   "--experimental-transform-types",
+   "--disable-warning=ExperimentalWarning"
+  ]
+ },
+ "t": "2026-11-21T10:53:55.984Z",
+ "head": "86a8796ac5ecc528be6c13464a5f50e848c760d0",
+ "hostWorkers": 3,
+ "binaries": {
+  "dev": "f444c52139ebd8b2481fcde8a69cf8564c91dc426c6e74f366c70be5c714041e",
+  "perturbed": "6e841561c1ce655b48df50a39c264edc2020591c282b54533875cf1c8f3f655d",
+  "stale": "a120ab2a71e9094be6ed11ba4e58923c0fbbb39833c8675bf6f3d0e6b0dc26b4"
+ },
+ "door": "W-QUIET",
+ "total": 67,
+ "passed": 66,
+ "pass": false,
+ "rows": [
+  {
+   "group": "gate",
+   "name": "no execution purpose declared",
+   "expect": "preflight-purpose",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-purpose: no execution purpose declared (official optimization must declare it explicitly)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a non-official purpose opening the official gate",
+   "expect": "preflight-purpose",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-purpose: purpose cpu-reference is not official optimization; a non-official run must not open the official gate",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "no GPU acceptance record (the activation gate)",
+   "expect": "preflight-acceptance.*no GPU acceptance record",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: no GPU acceptance record (research/gpu-phase6/cache/negative-kaNDnI/none.json): official GPU optimization is blocked until an acceptance study passes every gate",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a forged acceptance with a stale CPU source digest (source-hash mismatch)",
+   "expect": "preflight-acceptance.*changed since acceptance",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the GPU evaluator was verified against other sources; changed since acceptance: apps/strategy-lab/shared/strategies.ts. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptance record",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "an acceptance for another binary (resume with the wrong binary)",
+   "expect": "preflight-acceptance.*binary sha256",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: GPU binary sha256 f444c52139ebd8b2 ≠ accepted 1111111111111111 (a stale or different build)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "an acceptance for another GPU (wrong GPU)",
+   "expect": "preflight-accepted-device",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-accepted-device: device GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 ≠ the accepted GPU-00000000-0000-0000-0000-000000000000",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "CUDA disabled (no GPU visible)",
+   "expect": "preflight-server",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-server: the GPU evaluator did not start or answer: GPU evaluator exited (4): gb2: no CUDA device",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a stale build (compiled from other sources)",
+   "expect": "preflight-compat",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-compat: server built from compatibility digest stale-digest-for, working tree 3a6eacdecc4f0a24 (stale build or changed sources)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a server with test hooks / fault injection",
+   "expect": "preflight-no-test-hooks",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-no-test-hooks: the server runs with fault injection / test hooks enabled: never an official evaluator",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a reachable feature the GPU does not implement (unsupported Growth structure in the domain)",
+   "expect": "preflight-capability.*LIFECYCLE_L1_L2",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-capability: the search domain reaches features the GPU does not implement: LIFECYCLE_L1_L2",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "insufficient VRAM for the planned batch",
+   "expect": "preflight-memory",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-memory: free VRAM 32336314368 < planned batch 32950800000000 + 1 GiB headroom",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a wrong kernel (deliberately perturbed build): the parity mini-set refuses",
+   "expect": "preflight-parity",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-parity: 2 of 8 precommitted parity subjects differ from the canonical CPU engine",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a wrong kernel through the serial host path (host workers 0): the parity mini-set refuses",
+   "expect": "preflight-parity",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-parity: 2 of 8 precommitted parity subjects differ from the canonical CPU engine",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a host path that cannot start (an invalid worker count)",
+   "expect": "preflight-host-path",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-host-path: host path: 0 of -1 workers ready",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a schema-1 acceptance record (it pins no enforcement code)",
+   "expect": "preflight-acceptance.*schema 1",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: acceptance schema 1 does not pin the enforcement code and the source revision (schema 2 required): regenerate it with an acceptance study",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a forged acceptance whose enforcement pin differs (the CPU-official refusal changed)",
+   "expect": "preflight-acceptance.*enforcement code changed.*purpose\\.ts",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/gpu-backend/purpose.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record; the policy group digest does not match its own file list",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a forged acceptance from another history (its source revision is not an ancestor of HEAD)",
+   "expect": "preflight-acceptance.*not an ancestor",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the accepted source revision ffffffffffff is not an ancestor of HEAD (fatal: Not a valid commit name ffffffffffffffffffffffffffffffffffffffff)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "a failed smoke kernel (wrong live result)",
+   "expect": "smoke ok=false",
+   "observed": "smoke ok=false (sum 1636.3944173366574 vs 1635.3944173366574)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "gate",
+   "name": "resume/restart repeats the preflight and records a new attestation",
+   "expect": "two attestations",
+   "observed": "two attestations, each before any evaluation",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "an official run (accepted record) without a job",
+   "expect": "preflight-job: an official run owns an isolated job",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-job: an official run owns an isolated job: open it with openJob (src/gpu-jobs/jobs.ts) and pass it as spec.job",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "an official run with a job of another study",
+   "expect": "preflight-job: .*belongs to research\\/zz-elsewhere",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-job: job research/zz-elsewhere/neg-1 belongs to research/zz-elsewhere, not research/gpu-phase6",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "an official run with a job this process released",
+   "expect": "preflight-job: .*not held by this process",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-job: job research/gpu-phase6/neg-2 is not held by this process (released, or never opened here)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "an official run whose run id is not its job",
+   "expect": "preflight-job: run id other is not the job's name",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-job: run id other is not the job's name neg-3",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "an official run with another dataset cache than its job",
+   "expect": "preflight-job: dataset cache .* is not the job's",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-job: dataset cache /home/chad/projects/margin-trading/research/gpu-phase6/cache is not the job's (/home/chad/projects/margin-trading/research/gpu-phase6/cache/negative-kaNDnI/jobs/cache/jobs/neg-4/dataset)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "an official run with a job opened for a non-official purpose",
+   "expect": "preflight-job: .*opened for purpose parity-test",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-job: job research/gpu-phase6/neg-5 was opened for purpose parity-test",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "an official run with its held job opens the gate and records the job",
+   "expect": "^OPENED job research\\/gpu-phase6\\/neg-",
+   "observed": "OPENED job research/gpu-phase6/neg-6 (attestation neg-6-2026-11-21T10-53-19-787Z.json)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "the attestation names the job and the job logs the attestation; the dataset was exported into the job's own cache",
+   "expect": "^job recorded$",
+   "observed": "attestation job {\"id\":\"research/gpu-phase6/neg-6\",\"name\":\"neg-6\",\"instance\":\"be00ec82a83bd7e0\",\"resumed\":false,\"definitionSha256\":\"317ab54840883114573b22a11d4a0f22ce725e200d2d87f575c53bc2548ef3c0\",\"datasetCache\":\"job\",\"cacheDir\":\"research/gpu-phase6/cache/negative-kaNDnI/jobs/cache/jobs/neg-6/dataset\"}; events {\"t\":\"2026-11-21T10:53:19.108Z\",\"event\":\"open\",\"instance\":\"be00ec82a83bd7e0\",\"pid\":29980",
+   "pass": false,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "a second writer of a held job's archive (an EvalLab without the job)",
+   "expect": "JOB_ACTIVE",
+   "observed": "JOB_ACTIVE: the job directory /home/chad/projects/margin-trading/research/gpu-phase6/cache/negative-kaNDnI/jobs/cache/jobs/neg-6 is already open in this process: one writer per job",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "the held job opened by another process (resume)",
+   "expect": "JOB_ACTIVE",
+   "observed": "{\"ok\":false,\"code\":\"JOB_ACTIVE\",\"message\":\"JOB_ACTIVE: job research/gpu-phase6/neg-6 is running in another process (owner: pid 2998085 on apollo, instance be00ec82a83bd7e0, since 2026-11-21T10:53:19.108Z); a job has one owner at a time — wait for it, stop it, or use another job name\"}",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "job",
+   "name": "an existing job reopened as a new job (no resume)",
+   "expect": "JOB_EXISTS",
+   "observed": "JOB_EXISTS: job research/gpu-phase6/neg-7 already exists (created 2026-11-21T10:53:20.221Z, not complete): resume it with its own definition, or choose a new job name — results are never overwritten",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "GPU out of memory (VRAM budget exceeded)",
+   "expect": "GPU memory",
+   "observed": "GPU evaluator: GPU memory: batch needs 33 MiB > VRAM budget 1 MiB",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "the GPU server killed during a search",
+   "expect": "exited|died|SIGKILL",
+   "observed": "GPU evaluator exited (SIGKILL): [gb2 0.237 s] eval n=64 flags=22 launching\n[gb2 0.339 s] D1 done\n[gb2 0.546 s] Growth done\n[gb2 0.647 s] pool + hash done\n[gb2 0.653 s] eval n=64 flags=22 launching",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 64
+  },
+  {
+   "group": "runtime",
+   "name": "a corrupted batch response (a bit flipped after the device checksum)",
+   "expect": "corrupted transfer",
+   "observed": "GPU evaluator: receipt mismatch: the results differ from the device checksum (corrupted transfer)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "device execution counters that disagree (untrustworthy receipt)",
+   "expect": "device counters",
+   "observed": "GPU evaluator: receipt mismatch: device counters {\"nonce\":\"51dbe525e48fa6e2\",\"uuid\":\"GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4\",\"nCand\":64,\"d1Executed\":128,\"gExecuted\":65,\"poolExecuted\":64,\"kernels\":5,\"outChecksum\":\"2bd0e8308ffe3515\",\"server\":{\"h2dMs\":0.02630399912595749,\"d1Ms\":100.92620849609375,\"gMs\":307.2683410644531,\"poolMs\":101.8634262084961,\"d2hMs\":0.9768959879875183,\"totalMs\":410.480906,\"dev",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a receipt from another GPU",
+   "expect": "receipt from GPU-",
+   "observed": "GPU evaluator: receipt mismatch: receipt from GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4, expected GPU-00000000-0000-0000-0000-000000000000",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a stalled server (heartbeat lost)",
+   "expect": "gpu-hang",
+   "observed": "GPU policy (standard 3.0.0 §9): gpu-hang: a batch of 64 did not return within 3000 ms",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a device fault (trap) during the run",
+   "expect": "CUDA error|exited|died",
+   "observed": "fault: GPU evaluator: CUDA error: CUDA error cudaErrorLaunchFailure: unspecified launch failure at cudaDeviceSynchronize() | GPU evaluator exited (3): gb2: sticky CUDA error, exiting",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a task outside the attested domain (mid-run capability re-check)",
+   "expect": "capability-outside-domain",
+   "observed": "GPU policy (standard 3.0.0 §9): capability-outside-domain: task NEG-RET:retain=on:0 needs G_RETENTION outside the attested domain; the batch's results are withheld",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a CPU-scored evaluation in the official counters (mid-run routing to the CPU)",
+   "expect": "cpu-scored",
+   "observed": "GPU policy (standard 3.0.0 §9): cpu-scored: 1 evaluation(s) scored on the CPU; the batch's results are withheld",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a host worker that throws while decoding a batch (mid-job)",
+   "expect": "injected decode failure",
+   "observed": "host worker: injected decode failure (test)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 64
+  },
+  {
+   "group": "runtime",
+   "name": "a host worker that exits while decoding a batch (mid-job)",
+   "expect": "host worker \\d+ exited \\(7\\)",
+   "observed": "host worker 1 exited (7)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 64
+  },
+  {
+   "group": "runtime",
+   "name": "a host worker that stops answering (mid-job)",
+   "expect": "did not answer decode",
+   "observed": "host worker 1 did not answer decode 2:1 within 5000 ms",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 64
+  },
+  {
+   "group": "runtime",
+   "name": "a host pipeline holding another door",
+   "expect": "another door",
+   "observed": "host pipeline: a batch for another door",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "the serial host path still fails closed on a corrupted response (host workers 0)",
+   "expect": "corrupted transfer",
+   "observed": "GPU evaluator: receipt mismatch: the results differ from the device checksum (corrupted transfer)",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a capacity overflow re-evaluated on the GPU (positive control)",
+   "expect": "completed .* capacity retries [1-9]",
+   "observed": "completed 57/57; capacity retries 5; CPU-scored 0",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 57
+  },
+  {
+   "group": "runtime",
+   "name": "the same tasks at normal capacities (reference for the retry)",
+   "expect": "completed",
+   "observed": "completed 57/57; capacity retries 0; CPU-scored 0",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 57
+  },
+  {
+   "group": "runtime",
+   "name": "records after the GPU capacity retry equal the normal run",
+   "expect": "identical",
+   "observed": "identical",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a corrupted dataset file",
+   "expect": "checksum",
+   "observed": "GPU evaluator: dataset check failed: dataset checksum mismatch",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "invalid (non-integer) timestamps in a door",
+   "expect": "non-integer|strictly increasing",
+   "observed": "VGT 2017-01-02: minute times not strictly increasing integers",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a resume under another GPU binary/backend",
+   "expect": "refused",
+   "observed": "/home/chad/projects/margin-trading/research/gpu-phase6/cache/negative-kaNDnI/jobs/negative-binding/archive.sqlite: bound to backend = gpu:A, refused for gpu:B",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "runtime",
+   "name": "a resume under changed evaluation code",
+   "expect": "refused",
+   "observed": "/home/chad/projects/margin-trading/research/gpu-phase6/cache/negative-kaNDnI/jobs/negative-binding/archive.sqlite: bound to codeDigest = code-1, refused for code-2",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "a legacy CPU optimizer started without a purpose",
+   "expect": "purpose-required",
+   "observed": "exit 3: ❌ GPU policy (standard 3.0.0 §9): purpose-required: the legacy CPU runner 'vg-l0fj' evaluates strategies on the CPU. Official optimization is GPU-only (no CPU fallback); this runner may only reproduce frozen results or run diagnostics. Declare an explicit non-official purpose, e.g. GPU_POLICY_PURPOSE=cpu-reference (parity-test, cpu-reference, diagnostic, benchmark, strategy-lab).\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "a legacy CPU optimizer started as official optimization (forced CPU backend)",
+   "expect": "cpu-official-refused",
+   "observed": "exit 3: ❌ GPU policy (standard 3.0.0 §9): cpu-official-refused: the legacy CPU runner 'vg-l0fj' is a CPU evaluator: official optimization must use the attested GPU path (src/gpu-backend/official.ts); CPU substitution is prohibited.\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "the generic CPU optimizer (app.ts) without a purpose",
+   "expect": "purpose-required",
+   "observed": "exit 3: ❌ GPU policy (standard 3.0.0 §9): purpose-required: the legacy CPU runner 'optimizer' evaluates strategies on the CPU. Official optimization is GPU-only (no CPU fallback); this runner may only reproduce frozen results or run diagnostics. Declare an explicit non-official purpose, e.g. GPU_POLICY_PURPOSE=cpu-reference (parity-test, cpu-reference, diagnostic, benchmark, strategy-lab).\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "a CPU evaluation worker started for official optimization (non-GPU evaluation from an optimizer worker)",
+   "expect": "cpu-official-refused",
+   "observed": "exit 1: /home/chad/projects/margin-trading/src/gpu-backend/purpose.ts:68\n    throw new PolicyError(\n          ^\n\nPolicyError: GPU policy (standard 3.0.0 §9): cpu-official-refused: gpu-phase6 CPU evaluation worker is a CPU evaluator: official optimization must use the attested GPU path (src/gpu-backend/official.ts); CPU substitution is prohibited.\n    at assertNonOfficialCpuRun (/home/chad/projects",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "cli",
+   "name": "the standard preflight of an official 3.0.0 study without an accepted GPU evaluator",
+   "expect": "BLOCKED",
+   "observed": "official GPU optimization is BLOCKED (§9.9): no GPU acceptance record (research/gpu-phase6/cache/negative-kaNDnI/none.json): official GPU optimization is blocked until an acceptance study passes every gate",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "the live official gate opened by a process started without --no-maglev",
+   "expect": "preflight-runtime.*was not started with --no-maglev",
+   "observed": "exit 3: REFUSED — GPU policy (standard 3.0.0 §9): preflight-runtime: this Node process was not started with --no-maglev (its options: --experimental-transform-types --disable-warning=ExperimentalWarning): V8's Maglev compiler can silently corrupt number fields of freshly created objects (research/gpu-phase5/PARITY_ROOT_CAUSE.md); start it as `node --no-maglev …`\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "the live official gate opened by a process that re-enables Maglev after --no-maglev",
+   "expect": "preflight-runtime",
+   "observed": "exit 3: REFUSED — GPU policy (standard 3.0.0 §9): preflight-runtime: this Node process was not started with --no-maglev (its options: --no-maglev --maglev --experimental-transform-types --disable-warning=ExperimentalWarning): V8's Maglev compiler can silently corrupt number fields of freshly created objects (research/gpu-phase5/PARITY_ROOT_CAUSE.md); start it as `node --no-maglev …`\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "the official runner wrapper started without --no-maglev",
+   "expect": "runtime-maglev",
+   "observed": "exit 3: ❌ GPU policy (standard 3.0.0 §9): runtime-maglev: official GPU runner: this Node process was not started with --no-maglev (its options: --experimental-transform-types --disable-warning=ExperimentalWarning): V8's Maglev compiler can silently corrupt number fields of freshly created objects (research/gpu-phase5/PARITY_ROOT_CAUSE.md); start it as `node --no-maglev …`\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "a legacy CPU runner started without --no-maglev (by hand, bypassing its npm script)",
+   "expect": "runtime-maglev",
+   "observed": "exit 3: ❌ GPU policy (standard 3.0.0 §9): runtime-maglev: the legacy CPU runner 'vg-l0fj': this Node process was not started with --no-maglev (its options: --experimental-transform-types --disable-warning=ExperimentalWarning): V8's Maglev compiler can silently corrupt number fields of freshly created objects (research/gpu-phase5/PARITY_ROOT_CAUSE.md); start it as `node --no-maglev …`\n",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "a legacy CPU runner that re-enables Maglev after --no-maglev",
+   "expect": "runtime-maglev",
+   "observed": "exit 3: ❌ GPU policy (standard 3.0.0 §9): runtime-maglev: the legacy CPU runner 'vg-l0fj': this Node process was not started with --no-maglev (its options: --no-maglev --maglev --experimental-transform-types --disable-warning=ExperimentalWarning): V8's Maglev compiler can silently corrupt number fields of freshly created objects (research/gpu-phase5/PARITY_ROOT_CAUSE.md); start it as `node --no-ma",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "Strategy Lab's server started without --no-maglev",
+   "expect": "runtime-maglev.*Strategy Lab server",
+   "observed": "exit 1: /home/chad/projects/margin-trading/src/gpu-backend/runtime.ts:73\n  if (p) throw new PolicyError('runtime-maglev', `${what}: ${p}`);\n               ^\n\nPolicyError: GPU policy (standard 3.0.0 §9): runtime-maglev: the Strategy Lab server: this Node process was not started with --no-maglev (its options: --experimental-transform-types --disable-warning=ExperimentalWarning): V8's Maglev compiler",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "Strategy Lab's runner trading-run started without --no-maglev",
+   "expect": "runtime-maglev",
+   "observed": "exit 1: ects/margin-trading/apps/strategy-lab/runner/trading-run.ts:65:1)\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  code: 'runtime-maglev'\n}\n\nNode.js v",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "Strategy Lab's runner entry-signal-run started without --no-maglev",
+   "expect": "runtime-maglev",
+   "observed": "exit 1: margin-trading/apps/strategy-lab/runner/entry-signal-run.ts:29:1)\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  code: 'runtime-maglev'\n}\n\nNode.js v",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "Strategy Lab's runner pool-run started without --no-maglev",
+   "expect": "runtime-maglev",
+   "observed": "exit 1: rojects/margin-trading/apps/strategy-lab/runner/pool-run.ts:27:1)\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  code: 'runtime-maglev'\n}\n\nNode.js v",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "Strategy Lab's runner portfolio-run started without --no-maglev",
+   "expect": "runtime-maglev",
+   "observed": "exit 1: ts/margin-trading/apps/strategy-lab/runner/portfolio-run.ts:26:1)\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  code: 'runtime-maglev'\n}\n\nNode.js v",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  },
+  {
+   "group": "engine",
+   "name": "this negative suite itself runs without Maglev (its gate cases would otherwise all be refused for the runtime)",
+   "expect": "^disabled$",
+   "observed": "disabled",
+   "pass": true,
+   "cpuScored": 0,
+   "resultsReturned": 0
+  }
+ ]
+}

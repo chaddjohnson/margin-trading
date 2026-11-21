@@ -2,6 +2,13 @@
 
 All commands run from the repository root (`/home/chad/projects/margin-trading`) with Node 24.21 (`.node-version`).
 
+**Engine flag (GPU Phase 6).** The server and every runner evaluate with the canonical CPU engine and therefore run
+without V8's Maglev compiler (`node --no-maglev …`, see `docs/gpu/README.md` §3a): the npm scripts, the systemd template,
+the Playwright web server and the Vitest workers pass it; the server refuses to start without it, and so do the runners
+(`runtime-maglev`). A service installed before 2026-11-21 must be reinstalled (`run service:install`) to pick up the new
+command line. Saved previews computed before the change report "runner flags" as an identity difference and are
+recomputed on demand (nothing stored is modified).
+
 ## Start
 
 | Purpose | Command | Serves |
@@ -232,7 +239,7 @@ From `apps/strategy-lab/`:
 - `npm test` runs Vitest only. Its real-data cases are skipped without `data/`.
 - `npm run test:e2e` builds, then runs the browser tests against a fresh temporary state on port 5299, using the
   system Chrome.
-- `node --experimental-transform-types apps/strategy-lab/scripts/benchmark-preview.ts [out.json]` (from the repository
+- `node --no-maglev --experimental-transform-types apps/strategy-lab/scripts/benchmark-preview.ts [out.json]` (from the repository
   root) measures Interactive Preview cold and warm latency on real data in a temporary state.
 
 The strategy's own tests are part of the root `npm test` (`src/entry-signals/tests/`).

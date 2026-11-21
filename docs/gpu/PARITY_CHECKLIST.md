@@ -22,7 +22,11 @@ src/gpu-backend/compat.ts --manifest`: the import closure of the canonical evalu
 host path — the batch codec, the client, the encoder, the parallel host path and its worker, the pool; their combined
 *evaluation digest* is compiled into the binary) or of the **enforcement group** (`compat.ts --policy`: the official
 gate, the acceptance validator and generator, purposes and runner gates, the domain derivation, the entrypoint audit and
-registry, the Lab, the preflight rules, the tools and the merge-gate tests; pinned by the acceptance record, see §2a).
+registry, the Lab, the preflight rules, the tools and the merge-gate tests; pinned by the acceptance record, see §2a),
+and the enforcement files outside the backend that the record must pin as well (`src/gpu-backend/acceptance.ts`
+`ENFORCEMENT_EXTRAS`: the job isolation module `src/gpu-jobs/`, GPU Phase 6). `compat.ts` itself belongs to the
+evaluation digest: a NEW backend file needs a `compat.ts` change and therefore a full §2 cycle, so enforcement code that
+must stay §2a-only is added outside `src/gpu-backend/` and listed in `ENFORCEMENT_EXTRAS`.
 `npm test` (`src/gpu-backend/tests/policy.test.ts`, "MERGE GATE"; `enforcement.test.ts`) fails while
 `config/gpu-backend/acceptance.json` no longer matches the tree, and every GPU-backend file must belong to one of the two
 groups. A source digest is necessary, not sufficient: the runtime comparison suites below are what prove semantic parity;

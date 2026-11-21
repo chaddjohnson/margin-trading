@@ -22,6 +22,7 @@ import { join } from 'node:path';
 import { gunzipSync } from 'node:zlib';
 
 import type { LabEvent } from '../shared/contract.ts';
+import { NODE_FLAGS } from './jobs.ts';
 
 /** Event values and meta keys added by rise-from-recent-low-trading@1.1.0. */
 export const ADDED_EVENT_VALUE_KEYS = ['origin', 'method', 'episode', 'opensContinuationWindow'];
@@ -126,7 +127,7 @@ export function replayStoredRun(
   writeFileSync(join(scratchDir, 'request.json'), `${JSON.stringify(request, null, 2)}\n`);
   const r = spawnSync(
     process.execPath,
-    ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', '--max-old-space-size=6144', join(repoRoot, runner), scratchDir],
+    [...NODE_FLAGS, join(repoRoot, runner), scratchDir],
     { cwd: repoRoot, encoding: 'utf8', timeout: 1_800_000, env: { PATH: process.env.PATH ?? '/usr/bin:/bin', TZ: 'UTC', LANG: 'C.UTF-8' } }
   );
   writeFileSync(join(scratchDir, 'run.log'), `${r.stdout ?? ''}${r.stderr ?? ''}`);

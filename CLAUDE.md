@@ -17,10 +17,12 @@
   path: 8 worker threads by default) → `EvalLab` (src/gpu-backend/); an official study's npm script starts its runner
   through `src/gpu-backend/officialRunner.ts`. The preflight (`npm run research-preflight`) refuses an official study
   until `config/gpu-backend/acceptance.json` (schema 2) is ACCEPTED and matches the tree. Status: **ACCEPTED
-  2026-11-21 by research/gpu-phase5/** (binary `f444c521…`, RTX 5090 `GPU-ae5f222c…`, record sha256
-  `49e95d7a78fe5823…`; every official process must start as `node --no-maglev …` — the gate and the official runner
-  refuse otherwise, docs/gpu/README.md §3a); any change to a file of the evaluation manifest (CPU closure, CUDA, host path) or of the pinned
-  enforcement group makes it STALE and blocks official runs until the parity checklist is repeated (§2, or §2a for an
+  2026-11-21 by research/gpu-phase6/** (enforcement-only re-acceptance carrying Phase 5's evaluation evidence; binary
+  `f444c521…`, RTX 5090 `GPU-ae5f222c…`, record sha256 `3610caaf0bfc14ec…`; every Node process that evaluates — official
+  runs, legacy CPU runners, Strategy Lab's server and runners, every npm script — starts as `node --no-maglev …` and
+  refuses otherwise, docs/gpu/README.md §3a; every official run owns an isolated job, `src/gpu-jobs/jobs.ts` `openJob`,
+  docs/gpu/README.md §4c); any change to a file of the evaluation manifest (CPU closure, CUDA, host path), of the pinned
+  enforcement group or of the job module (`ENFORCEMENT_EXTRAS`) makes it STALE and blocks official runs until the parity checklist is repeated (§2, or §2a for an
   enforcement-only change). `tools/gpu-backend/verify-acceptance.sh` re-verifies the record without the TypeScript
   validator. Official optimization still needs the user's authorization of each study.
 - CPU evaluation is allowed only under an explicit non-official purpose (`GPU_POLICY_PURPOSE=cpu-reference | diagnostic |

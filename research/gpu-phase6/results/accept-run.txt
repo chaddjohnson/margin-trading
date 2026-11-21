@@ -1,0 +1,57 @@
+PASS E1 the superseded record is the accepted Phase 5 record (out-of-repository sha256)
+PASS E1 evaluation unchanged since the Phase 5 acceptance (evaluation digest, CPU closure, CUDA, host path, binary)
+PASS [carried from research/gpu-phase5] R1 the defect reproduces with the default engine (the record stress: wrong evaluations, record-only ones among them, against a ground truth equal to Phase 4's diagnostics)
+PASS [carried from research/gpu-phase5] R1 the same stress without Maglev: zero wrong evaluations
+PASS [carried from research/gpu-phase5] R2 the fresh-context loop on the final candidate, fixed configuration (≥ 2,000 fresh CPU workers on the original first chunks, ≥ 150 fresh GPU contexts on the original batch; zero mismatches; the device response identical in every cycle)
+PASS [carried from research/gpu-phase5] R2 the fresh-context loop's configuration record
+PASS [carried from research/gpu-phase5] R3 the host-path cold soak on the final candidate, fixed configuration (fresh host pipelines decoding one real device response of the original batch; zero mismatches)
+PASS [carried from research/gpu-phase5] A1 final binary (reproducible; built from this tree; kernels identical to the accepted Phase 3 and Phase 2 binaries)
+PASS [carried from research/gpu-phase5] A2 offline codec and host-pipeline equivalence (Phase 3 captures of real Phase 2 batches)
+PASS [carried from research/gpu-phase5] A3 parity campaign through the final host path (zero mismatches, coverage, determinism)
+PASS [carried from research/gpu-phase5] A3 the original failing run D24-fund with Phase 4's own seeds on the final candidate (r1: 1,561 of 1,561 identical)
+PASS [carried from research/gpu-phase5] A3 the original failing run D24-fund with Phase 4's own seeds on the final candidate (r2: 1,561 of 1,561 identical)
+PASS [carried from research/gpu-phase5] A3 Assignment 3 sealed finalists (GPU = CPU reference; D24 = sealed figures)
+PASS [carried from research/gpu-phase5] A4 Assignment 3 C19 broad1 search replay = sealed record (final binary, host path; run 1)
+PASS [carried from research/gpu-phase5] A4 Assignment 3 C19 broad1 search replay = sealed record (final binary, host path; run 2)
+PASS [carried from research/gpu-phase5] A4 Assignment 2 C19 base search replay = sealed record (Growth fixed; final binary, host path)
+PASS [carried from research/gpu-phase5] A4 Assignment 3 C19 broad qualification replay = sealed evidence (final binary, host path)
+PASS [carried from research/gpu-phase5] A4 fixed-seed mini-optimization CPU = GPU (final binary, host path)
+PASS [carried from research/gpu-phase5] A4 fixed-seed mini-optimization GPU = interrupted + resumed GPU
+PASS [carried from research/gpu-phase5] A4 fixed-seed mini-optimization host workers 1 = 8 workers
+PASS [carried from research/gpu-phase5] A4 fixed-seed mini-optimization serial path (host workers 0) = 8 workers
+PASS [carried from research/gpu-phase5] A5 compute-sanitizer (memcheck, racecheck, initcheck, synccheck) on the final binary, requests from the host path
+PASS [carried from research/gpu-phase5] A7 bounded 30–35 min reliability run (p0: no failure, parity samples, repeatability)
+PASS [carried from research/gpu-phase5] A7 bounded 30–35 min reliability run (p1: no failure, parity samples, repeatability)
+PASS [carried from research/gpu-phase5] A9 final candidate regression benchmark (Assignment 3 replay within ±3 % of the accepted engine)
+PASS [carried from research/gpu-phase5] A10 atomic dataset export: the 4 × 25 shared-directory race on the final binary (100 of 100 loads verified, no partial read)
+PASS [carried from research/gpu-phase5] A10 atomic dataset export: writers killed at random instants (no partial target; every directory complete after a restart)
+PASS [carried from research/gpu-phase5] A10 atomic dataset export: two datasets under one name at the same instant (one published, explicit conflicts)
+PASS [carried from research/gpu-phase5] A10 atomic dataset export: byte identity with the previous exporter on every door, window, episode and fixture
+PASS [carried from research/gpu-phase5] A10 isolation and failure tests under concurrency on the final candidate (I1 kill + resume, I2 stop + resume, I3 server killed, I4 host-worker fault, I5 VRAM refusal, I6 namespace guards — each neighbour identical)
+PASS E1 the carried set: every Phase 5 evaluation-evidence entry (R1–R3, A1–A5, A7, A9, A10)
+PASS E0 engine runtime: every job, parity run, the finalists and the negative suite ran under --no-maglev; this generator too
+PASS E2 job isolation under concurrency: identities, ownership, namespaces, ledgers, datasets, refusals, kill/stop + resume, process audit
+PASS E3 negative tests on the final pinned files (accepted binary; job and runtime cases included)
+PASS E4 source-tamper tests in a sandbox clone (T1–T20; out-of-band pin)
+PASS E5 confirmation parity D24-core (zero mismatches, accepted binary, host path)
+PASS E5 confirmation parity D19-fund (zero mismatches, accepted binary, host path)
+PASS E5 confirmation parity S3-all (zero mismatches, accepted binary, host path)
+PASS E6 optimizer identity: c3-a3-vs-sealed
+PASS E6 optimizer identity: c4-a3-vs-sealed
+PASS E6 optimizer identity: c4-a2-vs-sealed
+PASS E6 optimizer identity: c4-a3-vs-c3-a3
+PASS E6 optimizer identity: mini-gpu-vs-cpu
+PASS E6 optimizer identity: mini-killed-resumed-vs-ref
+PASS E6 optimizer identity: mini-stopped-resumed-vs-ref
+PASS E6 optimizer identity: mini-shared-a-vs-ref
+PASS E6 optimizer identity: mini-shared-b-vs-ref
+PASS E7 Assignment 3 sealed finalists on D24: CPU reference (no Maglev) = GPU = sealed C24 figures
+PASS E7 Strategy Lab portfolio parity: the five frozen pooled candidates = their sealed records (runners under --no-maglev)
+PASS E8 npm test (known failures only; new tests pass)
+PASS E8 root TypeScript check: 0 errors
+PASS E9 Strategy Lab (typecheck, lint, Vitest, build, Playwright)
+PASS E10 historical research files, study preflights, sealed-file modes and the B4/B5 freeze status unchanged
+PASS P1 policy text (CLAUDE.md, standard 3.0.0 registered)
+PASS P5 policy, enforcement, layout, host-pipeline, dataset and jobs tests (before the record: only the two record-in-force tests may fail)
+ACCEPTED
+written config/gpu-backend/acceptance.json; static check: ACCEPTED 

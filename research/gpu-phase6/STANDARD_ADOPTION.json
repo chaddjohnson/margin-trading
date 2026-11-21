@@ -1,0 +1,123 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/gpu-phase6",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "3.0.0",
+  "sha256": "4e8244e65bf1dd7c54ad46a1c941321d68b0c144344fd0c464dcc047eea5fef1"
+ },
+ "readAt": "2026-11-21T09:42:00Z",
+ "adoptedAt": "2026-11-21T10:08:27Z",
+ "protocol": {
+  "path": "research/gpu-phase6/PROTOCOL.md",
+  "sha256": "0737314415ee5c034fef6e4ecc03d850c3e06112971005e24ce08b48310dc474"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched for selection, ranked or selected (AD1). The study extends the --no-maglev engine protection to Strategy Lab and the legacy CPU runners, adds automatic isolation of concurrent optimization jobs and, only if every gate passes (PROTOCOL.md section 6), renews the GPU acceptance for the enforcement-only change (docs/gpu/PARITY_CHECKLIST.md section 2a).",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 200000,
+  "notes": "No search proposals for selection. backendEvaluations caps fresh CPU evaluations on real data (the CPU arm of the parity-only mini schedule, the CPU references of the confirmation parity and of the sealed finalists). GPU evaluations (replays of sealed jobs, the mini schedule, parity) are counted separately in the records; synthetic fixtures are not counted."
+ },
+ "evaluationBackend": {
+  "policy": "non-official-cpu",
+  "purpose": "diagnostic",
+  "justification": "Engineering acceptance study (GPU Phase 6): CPU evaluations are parity references and the non-official CPU arm of the mini schedule; GPU runs are non-official replays of sealed jobs, the mini schedule and parity tests. Nothing is official optimization evidence (standard 3.0.0 section 9.8); the engineering output, if every gate passes, is a new acceptance record (section 9.9) for the final code."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search for selection and no chronological verdict (AD2)",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "\u00a72.3",
+   "kind": "adaptation",
+   "description": "no roles and no primary; nothing is selected",
+   "justification": "brief: engineering assignment; no trading-rule, fitness, search or selection change",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "\u00a74",
+   "kind": "adaptation",
+   "description": "no search for selection, no chronological verdict; sealed jobs of Assignments 3 and 2 replayed with their own frozen code and seeds, and the parity-only mini schedule, compared by identity only",
+   "justification": "brief section 3: representative real optimization workloads, compared with isolated reference runs and sealed records",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "\u00a71.4",
+   "kind": "adaptation",
+   "description": "D19, D24 and one seeded synthetic fixture opened quietly through the study's own door log for replays, parity references and the sealed finalists; FULL and the validation window are not opened",
+   "justification": "brief sections 3, 4: concurrency tests on real workloads; targeted parity and sealed-result reproduction",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "\u00a75.1",
+   "kind": "adaptation",
+   "description": "the CPU engine is the unmodified canonical reference (no file of the CPU closure is edited); every result of the final path must reproduce the canonical or sealed records bit for bit",
+   "justification": "brief: no change of trading algorithms, numerical formulas, the CPU engine or the CUDA algorithms; every result must reproduce the canonical or sealed records bit for bit",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "\u00a75.9",
+   "kind": "adaptation",
+   "description": "not applicable: no fold primary or final candidate",
+   "justification": "no search (AD2)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "\u00a76.3",
+   "kind": "adaptation",
+   "description": "no tuning benchmark: batch size and host workers stay Phase 4 decisions; timings are reported, never decision inputs",
+   "justification": "brief: no unnecessary performance refactoring",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "\u00a71.5",
+   "kind": "adaptation",
+   "description": "stricter: no money figure of a searched configuration is reported as a finding; the one failing parity candidate's record appears only as diagnostic evidence of field identity",
+   "justification": "brief: no new trading candidate is optimized here",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "\u00a76.4",
+   "kind": "adaptation",
+   "description": "bounded crash, interruption and concurrency tests (one campaign of about an hour) instead of an endurance test",
+   "justification": "brief section 3: bounded reliability testing; no eight-hour endurance run",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "\u00a70.4",
+   "kind": "adaptation",
+   "description": "the risk-envelope pilot is out of scope: nothing of it is created, implemented, preflighted or run",
+   "justification": "brief: strict boundary (the user's instructions take precedence, section 0.4)",
+   "userAgreement": null
+  }
+ ]
+}

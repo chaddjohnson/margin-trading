@@ -1,8 +1,15 @@
 // Strategy Lab server entry point:
-//   node --experimental-transform-types apps/strategy-lab/server/main.ts      (or: npm --prefix apps/strategy-lab run serve)
+//   node --no-maglev --experimental-transform-types apps/strategy-lab/server/main.ts   (or: npm --prefix apps/strategy-lab run serve)
 // Configuration comes from the environment (server/config.ts, docs/strategy-lab/OPERATIONS.md).
+//
+// The engine runtime (GPU Phase 6): the server and every runner it starts evaluate with the canonical CPU engine, which
+// V8's Maglev compiler can silently corrupt (research/gpu-phase5/PARITY_ROOT_CAUSE.md). start() refuses a process that
+// was not started with `--no-maglev` (src/gpu-backend/runtime.ts); the runners get the flag through NODE_FLAGS
+// (server/jobs.ts) and refuse without it as well.
 
 import { createServer, type Server } from 'node:http';
+
+import { requireEngineRuntime } from '../../../src/gpu-backend/runtime.ts';
 
 import { loadConfig } from './config.ts';
 import { openDb } from './db.ts';
@@ -19,6 +26,7 @@ import { LabService } from './service.ts';
 const log = (m: string) => console.log(`${new Date().toISOString()} ${m}`);
 
 export function start(env: NodeJS.ProcessEnv = process.env) {
+  requireEngineRuntime('the Strategy Lab server');
   const cfg = loadConfig(env);
   const db = openDb(cfg.dbFile);
   const repo = new Repo(db);

@@ -3,7 +3,7 @@
 // Study 8 resolver (src/study8-runners/resolve.ts, which verifies the sealed records and the local hash chain) and
 // records the sealed facts — nothing is re-ranked, re-selected or modified.
 //
-//   node --experimental-transform-types apps/strategy-lab/importers/export-study8-phenotypes.ts \
+//   node --no-maglev --experimental-transform-types apps/strategy-lab/importers/export-study8-phenotypes.ts \
 //     --out <new directory> s8-vg-balanced [more aliases…]
 //
 // Run from the repository root. Then: npm --prefix apps/strategy-lab run import:phenotypes -- <that directory>

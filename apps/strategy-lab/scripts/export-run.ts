@@ -1,6 +1,6 @@
 // Writes the research bundle of a completed run to a file (the same bundle as the UI's "Export research bundle"):
 //
-//   node --experimental-transform-types apps/strategy-lab/scripts/export-run.ts R-000042 [--minute] [--out file.zip] [--state DIR]
+//   node --no-maglev --experimental-transform-types apps/strategy-lab/scripts/export-run.ts R-000042 [--minute] [--out file.zip] [--state DIR]
 //
 // Read-only towards the state directory (it opens the database without migrating it). Default output:
 // ./strategy-lab-R-000042.zip; an existing file is refused.

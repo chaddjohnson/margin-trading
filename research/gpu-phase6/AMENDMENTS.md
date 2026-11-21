@@ -1,0 +1,61 @@
+# AMENDMENTS — gpu-phase6 (append-only)
+
+Each entry: ID, UTC time, the change, why, which results existed, its effect. None so far.
+
+## A1 — 2026-11-21T10:11:25Z — Strategy Lab's portfolio parity reads the FULL canonical files
+
+- **Change.** PROTOCOL.md §4 says FULL and the validation window are not opened; gate E7 also names Strategy Lab's
+  portfolio parity (`apps/strategy-lab/scripts/portfolio-parity.ts`), which replays the five frozen pooled candidates of
+  its catalog on ONE FULL door (Priority 3's FULL loader, quiet, read-only) and compares every figure, lot and funding
+  decision with their archived records. §4 is amended: that one script, and only it, reads FULL.
+- **Why.** It is Strategy Lab's own established regression procedure for its runner path (Priority 6), the strongest
+  available check that Strategy Lab's CPU results under `--no-maglev` equal sealed records (brief §1.8, §3 "Strategy
+  Lab continues operating normally"). It makes no decision: the candidates are frozen, their 2025–2026 outcomes are
+  archived and were examined long ago; nothing is selected, ranked or tuned.
+- **Results existing.** None of E7's Strategy Lab part (the campaign was at step C2/C3; no portfolio parity has run).
+- **Effect.** One extra read of FULL by a non-research script; no gate or criterion changes.
+
+## A2 — 2026-11-21T10:43:36Z — the process audit's sampler selected nothing (a tool defect); bounded labelled re-run
+
+- **What happened.** Campaign step C6 (the isolation audit) failed 156/157: its process audit found **0** sampled
+  processes. The chain's sampler filtered `ps -eo …,unit,…` for units `gpup6-*`, but for a process of a systemd *user*
+  unit `ps`'s `unit` column shows the system unit `user@1000.service`; the user unit is the `uunit` column. The file
+  `results/runtime/process-samples.txt` is empty (kept as it is). The fail-fast chain stopped; C7 and C8 had not run.
+- **What it does not affect.** Every other check of C6 passed (156), including each job's own engine record (all nine
+  campaign jobs: `execArgv` with `--no-maglev` exactly once, Maglev disabled) and every C5 comparison (9/9 identical).
+  Only the observation of the CHILD processes (the CPU arm's forked workers) is missing.
+- **Change.** The sampler uses `uunit` (`chains/campaign.sh`, the chain is not running). A bounded re-run of the
+  process audit (`chains/process-audit.sh`): the mini schedule on the GPU (job `a2-audit-mini-gpu`) and on the CPU arm
+  with 12 forked workers (job `a2-audit-mini-cpu`) at the same time, sampled every second with the corrected field into
+  `results/runtime/process-samples-a2.txt`; both must equal the C1 reference (two more identity comparisons). The
+  audit's check reads the re-run's samples and states that the original sample file is empty because of this defect.
+  The criterion is unchanged (every sampled Node process of the units runs with `--no-maglev`; ≥ 12 forked CPU workers).
+  Then the chain resumes at C6 (`START=6`: the audit, C7, C8).
+- **Results existing.** C1–C5 complete (all identical); C6's first run failed only on this check.
+
+## A3 — 2026-11-21T10:54:22Z — a negative case expected the wrong dataset file name (a test defect); whole-suite rerun
+
+- **What happened.** The first negative-suite run passed 66/67. The failing case ("the attestation names the job and the
+  job logs the attestation; the dataset was exported into the job's own cache") looked for `W-QUIET.gb2ds`; the
+  unchanged exporter (`src/gpu-backend/dataset.ts`) names a window door's file `fixture_W-QUIET.gb2ds`. The gate had
+  opened with the job and the attestation named it correctly (the recorded observation shows the job and its dataset
+  directory); the defect was in the expectation only.
+- **Change.** The case finds the dataset in the job's own cache by content: a `.gb2ds` file whose sha256 equals the
+  attestation's dataset sha256 (stricter than a file name). The whole suite is rerun on the committed tree.
+- **Kept.** `results/policy/negative-run1-A3-expectation-defect.json` and its log `negative-run1-A3.log`.
+
+## A4 — 2026-11-21T11:03:42Z — gate E8: the two record-in-force tests before and after the new record
+
+- **What happened.** `npm test` on the final tree (chains/tests.sh, 11:03Z): 1,723 tests, 1,710 pass, 9 fail, 4 skipped.
+  Seven are the known pre-existing failures (allin-original ×6, Study 7 data end). The other two are the tests that
+  check the acceptance record IN FORCE against the tree — "MERGE GATE: a recorded GPU acceptance still matches the
+  working tree" (policy.test.ts) and "the recorded acceptance re-verifies independently" (enforcement.test.ts). They fail
+  because the Phase 5 record no longer pins this tree's enforcement files — exactly the STALE state §2a describes, which
+  only the new record can end. (Phase 5 did not meet this: its branch had no record in force at its test step, so the
+  merge-gate test returned early.)
+- **Change.** E8 reads: `npm test` has exactly the 7 known failures plus, before the new record exists, at most these two
+  record-in-force tests, each failing only with the stale-enforcement reason ("the enforcement code changed since
+  acceptance"); after the generator writes the record they are rerun (policy.test.ts and enforcement.test.ts in full)
+  and must pass — recorded in `results/tests/record-in-force-after.txt` — and the full suite is repeated after the
+  merge (PROTOCOL.md §7). No other failure is tolerated; no criterion is loosened.
+- **Results existing.** The npm-test log of 11:03Z (this attempt); nothing recorded as passed.

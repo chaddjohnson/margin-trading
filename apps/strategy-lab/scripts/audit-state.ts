@@ -1,6 +1,6 @@
 // Read-only audit of a Strategy Lab state directory, for before/after checks of a migration:
 //
-//   node --experimental-transform-types apps/strategy-lab/scripts/audit-state.ts <state dir> [--json]
+//   node --no-maglev --experimental-transform-types apps/strategy-lab/scripts/audit-state.ts <state dir> [--json]
 //
 // Prints (or writes as JSON) the row counts, every run's and variation's IMMUTABLE columns hashed per row (and their
 // editable annotations: title, bookmark), the strategy rows, notes, migrations, PRAGMA foreign_key_check and

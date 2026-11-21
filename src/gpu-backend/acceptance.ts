@@ -19,6 +19,21 @@ import { spawnSync } from 'node:child_process';
 import { type CompatManifest, type Group, compatManifest, groupDigest, policyFiles, staleFiles } from './compat.ts';
 import { repoRoot } from './toolchain.ts';
 
+// ENFORCEMENT FILES OUTSIDE src/gpu-backend/ (GPU Phase 6): the job isolation module that the official gate and the
+// Lab rely on (src/gpu-jobs/: who may own a job, its dataset cache). It is enforcement, not evaluation — it never
+// changes a request or a result — and it is pinned by the acceptance record like policyFiles: a record that does not pin
+// these files is refused, and any change to them makes the acceptance STALE (docs/gpu/PARITY_CHECKLIST.md §2a). They are
+// listed here rather than in compat.ts because compat.ts belongs to the evaluation digest compiled into the binary.
+export const ENFORCEMENT_EXTRAS = [
+  'src/gpu-jobs/jobs.ts',
+  'src/gpu-jobs/lock.ts',
+  'src/gpu-jobs/cli.ts',
+  'src/gpu-jobs/tests/jobs.test.ts',
+  'src/gpu-jobs/tests/jobChild.ts'
+];
+// every enforcement file an acceptance record of this tree must pin
+export const requiredPolicyFiles = () => [...policyFiles, ...ENFORCEMENT_EXTRAS];
+
 export const acceptanceFile = path.join(repoRoot, 'config', 'gpu-backend', 'acceptance.json');
 export const ACCEPTANCE_SCHEMA = 2;
 
@@ -133,7 +148,7 @@ export const checkAcceptance = (o: { file?: string; binary?: string; uuid?: stri
     );
 
   const pinned = new Set(r.policy.files.map((f) => f.path));
-  const unpinned = policyFiles.filter((f) => !pinned.has(f));
+  const unpinned = requiredPolicyFiles().filter((f) => !pinned.has(f));
 
   if (unpinned.length)
     reasons.push(`the acceptance does not pin enforcement file(s) this tree requires: ${list(unpinned)}`);

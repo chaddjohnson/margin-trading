@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)
+ok 1 - every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)
+  ---
+  duration_ms: 2.214449
+  type: 'test'
+  ...
+# Subtest: the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not
+ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not
+  ---
+  duration_ms: 241.250489
+  type: 'test'
+  ...
+# Subtest: engine runtime helpers: the flag first and once, script arguments untouched, another Maglev option refused
+ok 3 - engine runtime helpers: the flag first and once, script arguments untouched, another Maglev option refused
+  ---
+  duration_ms: 0.444533
+  type: 'test'
+  ...
+# Subtest: engine runtime (regression): behind the legacy runner gate, no thread or child process runs Maglev code
+ok 4 - engine runtime (regression): behind the legacy runner gate, no thread or child process runs Maglev code
+  ---
+  duration_ms: 440.66702
+  type: 'test'
+  ...
+# Subtest: engine runtime (controls): the probe detects Maglev; without the guard an explicitly forked child runs it
+ok 5 - engine runtime (controls): the probe detects Maglev; without the guard an explicitly forked child runs it
+  ---
+  duration_ms: 667.153363
+  type: 'test'
+  ...
+# Subtest: purpose: explicit, never defaulted; unknown refused
+ok 6 - purpose: explicit, never defaulted; unknown refused
+  ---
+  duration_ms: 0.583935
+  type: 'test'
+  ...
+# Subtest: a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+ok 7 - a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+  ---
+  duration_ms: 0.117231
+  type: 'test'
+  ...
+# Subtest: the legacy runner wrapper refuses before importing the runner
+ok 8 - the legacy runner wrapper refuses before importing the runner
+  ---
+  duration_ms: 468.462207
+  type: 'test'
+  ...
+# Subtest: every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+ok 9 - every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+  ---
+  duration_ms: 3.715481
+  type: 'test'
+  ...
+# Subtest: the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+ok 10 - the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+  ---
+  duration_ms: 593.732186
+  type: 'test'
+  ...
+# Subtest: engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+ok 11 - engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+  ---
+  duration_ms: 1.341141
+  type: 'test'
+  ...
+# Subtest: entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+ok 12 - entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+  ---
+  duration_ms: 132.35277
+  type: 'test'
+  ...
+# Subtest: acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+ok 13 - acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+  ---
+  duration_ms: 96.873377
+  type: 'test'
+  ...
+# Subtest: preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+ok 14 - preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+  ---
+  duration_ms: 0.372673
+  type: 'test'
+  ...
+# Subtest: the deferred pilot domain reaches only capabilities the evaluator implements
+ok 15 - the deferred pilot domain reaches only capabilities the evaluator implements
+  ---
+  duration_ms: 3227.789492
+  type: 'test'
+  ...
+# Subtest: MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+  ---
+  duration_ms: 9.301509
+  type: 'test'
+  ...
+# Subtest: a new job: its own records, state and dataset directories, identity written once; names validated
+ok 17 - a new job: its own records, state and dataset directories, identity written once; names validated
+  ---
+  duration_ms: 2.404691
+  type: 'test'
+  ...
+# Subtest: allocation: a job without a name gets a fresh unique one
+ok 18 - allocation: a job without a name gets a fresh unique one
+  ---
+  duration_ms: 1.066099
+  type: 'test'
+  ...
+# Subtest: refusals: active, existing, identity conflict, not found, foreign state; resume reads its own job
+ok 19 - refusals: active, existing, identity conflict, not found, foreign state; resume reads its own job
+  ---
+  duration_ms: 1.811065
+  type: 'test'
+  ...
+# Subtest: a declared shared dataset cache: recorded in the identity, the same on resume
+ok 20 - a declared shared dataset cache: recorded in the identity, the same on resume
+  ---
+  duration_ms: 0.770617
+  type: 'test'
+  ...
+# Subtest: across processes: a live owner refuses another; a SIGKILLed owner frees the job, which resumes
+ok 21 - across processes: a live owner refuses another; a SIGKILLed owner frees the job, which resumes
+  ---
+  duration_ms: 286.955319
+  type: 'test'
+  ...
+# Subtest: across processes: six processes creating one new job at once — exactly one owns it
+ok 22 - across processes: six processes creating one new job at once — exactly one owns it
+  ---
+  duration_ms: 3264.522196
+  type: 'test'
+  ...
+# Subtest: across processes: two different jobs at once own disjoint directories
+ok 23 - across processes: two different jobs at once own disjoint directories
+  ---
+  duration_ms: 194.4577
+  type: 'test'
+  ...
+# Subtest: the EvalLab: its own lock without a job, the job owner with one; a second writer is refused
+ok 24 - the EvalLab: its own lock without a job, the job owner with one; a second writer is refused
+  ---
+  duration_ms: 1686.083625
+  type: 'test'
+  ...
+# Subtest: the official gate refuses an official run without a held job of its study (before any server starts)
+ok 25 - the official gate refuses an official run without a held job of its study (before any server starts)
+  ---
+  duration_ms: 106.548471
+  type: 'test'
+  ...
+# Subtest: the status command lists jobs and their states
+ok 26 - the status command lists jobs and their states
+  ---
+  duration_ms: 62.620385
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5816.545113

@@ -20,6 +20,12 @@
 //                   as independent verification, never a score);
 //   9. attestation  all of the above is written to research/<study>/results/gpu-attestations/<run>-<time>.json.
 //
+// THE JOB (GPU Phase 6, research/gpu-phase6/): an official run owns an isolated job (src/gpu-jobs/jobs.ts openJob — its
+// identity, ownership lock, records, checkpoint and dataset cache). After the acceptance, the gate refuses an official
+// run without a job this process holds, or with a job of another study, or a run id / dataset cache that is not the
+// job's (preflight-job); the dataset is exported into the job's own cache unless the job explicitly declared a shared
+// one. The attestation records the job and is logged in the job's events.
+//
 // Any failure throws PolicyError before a single search evaluation; nothing falls back to the CPU. A resumed or
 // restarted run passes the whole gate again and records a new attestation (a different binary, source, device or
 // configuration is refused by the same checks). At runtime the attested GpuPool (pool.ts) verifies every batch receipt,
@@ -47,17 +53,19 @@ import { PolicyError, declaredPurpose } from './purpose.ts';
 import { bookView, canonHash, poolView } from './canon.ts';
 import { ENGINE_FLAG, type EngineRuntime, engineRuntime, runtimeProblem } from './runtime.ts';
 import { repoRoot, serverBinary, toolkitLib } from './toolchain.ts';
+import { type JobContext, ownerProblem } from '../gpu-jobs/jobs.ts';
 
 export interface OfficialRunSpec {
   study: string; // research/<study>
-  runId: string; // the job / run identifier (archive binding)
+  job?: JobContext; // the job this process owns (src/gpu-jobs/jobs.ts openJob); REQUIRED for an official run
+  runId?: string; // the job / run identifier (archive binding); default and required value with a job: its name
   purpose?: string; // must be 'official-optimization' (explicit; or GPU_POLICY_PURPOSE)
   door: Door;
   domain: DomainFeatures;
   plannedBatch: number; // candidates per GPU batch the run will submit
   binary?: string;
   acceptanceFile?: string;
-  cacheDir: string; // where the GB2 dataset of the door is exported
+  cacheDir?: string; // where the GB2 dataset of the door is exported (default and required value with a job: its own)
   parityMiniSet?: number; // seeded genomes beside the reference identities (default 14)
   hostWorkers?: number; // host-path worker threads for the run's pool (default DEFAULT_HOST_WORKERS; 0 = the serial path)
   allowUnaccepted?: boolean; // TESTS ONLY (negative tests and Phase 2's own engineering runs): skip step 2 and record it
@@ -84,6 +92,15 @@ export interface Attestation {
   memory: { freeBytes: number; plannedBytes: number };
   dataset: { door: string; sessions: number; sha256: string; dataSha256: { GDX: string; VGT: string } };
   hostPath: { mode: 'parallel' | 'serial'; workers: number; doorDigest: string | null };
+  job: {
+    id: string;
+    name: string;
+    instance: string;
+    resumed: boolean;
+    definitionSha256: string;
+    datasetCache: 'job' | 'shared';
+    cacheDir: string;
+  } | null;
   parity: { subjects: number; identical: number; keys: string[]; hostPath: 'parallel' | 'serial' };
   checks: { name: string; ok: boolean; detail: string }[];
 }
@@ -221,6 +238,34 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     );
   }
 
+  // 2b. the job: an official run owns an isolated job namespace (src/gpu-jobs/jobs.ts); tests may run without one
+  const job = spec.job ?? null;
+  const runId = spec.runId ?? job?.name;
+  const cacheDir = spec.cacheDir ?? job?.dirs.dataset;
+  const jobProblem = job
+    ? (ownerProblem(job, { study: spec.study }) ??
+      (spec.runId !== undefined && spec.runId !== job.name
+        ? `run id ${spec.runId} is not the job's name ${job.name}`
+        : spec.cacheDir !== undefined && path.resolve(spec.cacheDir) !== path.resolve(job.dirs.dataset)
+          ? `dataset cache ${spec.cacheDir} is not the job's (${job.dirs.dataset}${job.datasetShared ? ', declared shared' : ''})`
+          : job.purpose !== 'official-optimization' && !spec.allowUnaccepted
+            ? `job ${job.id} was opened for purpose ${job.purpose}`
+            : null))
+    : spec.allowUnaccepted
+      ? !runId || !cacheDir
+        ? 'a run without a job needs a run id and a dataset cache directory'
+        : null
+      : `an official run owns an isolated job: open it with openJob (src/gpu-jobs/jobs.ts) and pass it as spec.job`;
+
+  check(
+    'job',
+    jobProblem === null,
+    jobProblem ?? '',
+    job
+      ? `${job.id} (${job.resumed ? 'resumed' : 'new'}, instance ${job.instance}, dataset cache ${job.datasetShared ? 'shared' : 'its own'})`
+      : `no job (a test run: ${runId})`
+  );
+
   // 3. server identity
   check('binary', fs.existsSync(binary), `GPU binary ${binary} missing`, binary);
 
@@ -300,7 +345,7 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     );
 
     // 7. the host path (worker threads holding the attested door)
-    const ds = exportDataset(spec.door, spec.cacheDir);
+    const ds = exportDataset(spec.door, cacheDir!);
 
     await server.load(ds.file);
 
@@ -360,7 +405,7 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
     const att: Attestation = {
       kind: 'gpu-backend official attestation',
       study: spec.study,
-      runId: spec.runId,
+      runId: runId!,
       purpose: 'official-optimization',
       t,
       host: execFileSync('hostname').toString().trim(),
@@ -415,13 +460,25 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
         keys: tasks.map((x) => x.k),
         hostPath: pipeline ? 'parallel' : 'serial'
       },
+      job: job
+        ? {
+            id: job.id,
+            name: job.name,
+            instance: job.instance,
+            resumed: job.resumed,
+            definitionSha256: job.identity.definitionSha256,
+            datasetCache: job.datasetShared ? 'shared' : 'job',
+            cacheDir: path.relative(repoRoot, job.dirs.dataset)
+          }
+        : null,
       checks
     };
     const dir = path.join(repoRoot, spec.study, 'results', 'gpu-attestations');
-    const file = path.join(dir, `${spec.runId}-${t.replace(/[:.]/g, '-')}.json`);
+    const file = path.join(dir, `${runId}-${t.replace(/[:.]/g, '-')}.json`);
 
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(file, `${JSON.stringify(att, null, 1)}\n`);
+    job?.event('attestation', { file: path.relative(repoRoot, file), datasetSha256: ds.sha256 });
     return { server, pipeline, info, attestation: att, attestationFile: file, datasetFile: ds.file };
   } catch (e) {
     server.kill();

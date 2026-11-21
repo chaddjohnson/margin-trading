@@ -1,6 +1,6 @@
 // Reproducibility check of a stored Growth run (read-only towards the state directory):
 //
-//   node --experimental-transform-types apps/strategy-lab/scripts/replay-run.ts R-000017 [--state DIR] [--out DIR]
+//   node --no-maglev --experimental-transform-types apps/strategy-lab/scripts/replay-run.ts R-000017 [--state DIR] [--out DIR]
 //
 // Re-executes the run's stored request.json with the CURRENT trading runner in a new scratch directory (default: a
 // fresh directory under the OS temp dir) and compares the execution facts with the stored artifacts

@@ -37,6 +37,7 @@ import { importStudy8 } from '../importers/study8.ts';
 import { readEvents, sha256 } from '../server/artifacts.ts';
 import { loadConfig, REPO_ROOT } from '../server/config.ts';
 import { openDb } from '../server/db.ts';
+import { NODE_FLAGS } from '../server/jobs.ts';
 import { compareRunOutputs } from '../server/replay.ts';
 import { Repo } from '../server/repo.ts';
 
@@ -44,7 +45,7 @@ const hasData = ['VGT', 'GDX'].every((s) => existsSync(join(REPO_ROOT, 'data', s
 const hasStudy8 = existsSync(join(REPO_ROOT, 'research/study8-expanded-regime-d1/FROZEN_SELECTION.json'));
 const FIXTURES = join(import.meta.dirname, 'fixtures/growth-runner-baseline-1.0.0');
 const runner = (script: string, dir: string) =>
-  spawnSync(process.execPath, ['--experimental-transform-types', '--disable-warning=ExperimentalWarning', '--max-old-space-size=6144', join(REPO_ROOT, script), dir], {
+  spawnSync(process.execPath, [...NODE_FLAGS, join(REPO_ROOT, script), dir], {
     cwd: REPO_ROOT,
     encoding: 'utf8',
     timeout: 600_000

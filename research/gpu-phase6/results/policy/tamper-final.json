@@ -1,0 +1,913 @@
+{
+ "kind": "gpu-phase6 tamper suite (sandbox)",
+ "t": "2026-11-21T10:58:35.256Z",
+ "head": "8d519f69a8231e55360ba755766931e31036a201",
+ "baseline": {
+  "static": {
+   "mode": "static",
+   "status": "ACCEPTED",
+   "reasons": []
+  },
+  "gate": {
+   "mode": "gate",
+   "outcome": "opened",
+   "checks": [
+    "purpose",
+    "runtime",
+    "acceptance",
+    "pins",
+    "source",
+    "job",
+    "binary",
+    "compat",
+    "device",
+    "no-test-hooks",
+    "accepted-device",
+    "capability",
+    "smoke",
+    "memory",
+    "host-path",
+    "parity"
+   ]
+  },
+  "runner": {
+   "mode": "runner",
+   "outcome": "ran",
+   "status": 0,
+   "message": "[GPU policy] official GPU run of research/zz-tamper (research/zz-tamper/run.ts); the runner must open the official gate"
+  },
+  "verify": {
+   "status": 0,
+   "verified": true,
+   "fails": []
+  },
+  "mergeGate": {
+   "pass": true,
+   "failing": []
+  }
+ },
+ "baselineOk": true,
+ "recordSha256": "cf861d5eaff4ab49175090cd4ad22efc37dcfc5623899605a474185ec2aa981e",
+ "cases": 20,
+ "passed": 20,
+ "pass": true,
+ "rows": [
+  {
+   "id": "T1",
+   "name": "a modified host-worker decoder (results returned in another order)",
+   "file": "src/gpu-backend/hostWorker.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/hostWorker.ts. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptance r",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/hostWorker.ts. Port the change to CUDA, rerun the ",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the GPU evaluator was verified against other sources; changed since acceptance: src/gp",
+    "verify": false,
+    "verifyFails": [
+     "FAIL host files (12) hash to their pins — src/gpu-backend/hostWorker.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/hostWorker.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T2",
+   "name": "a modified batch encoder (the request assembly)",
+   "file": "src/gpu-backend/batch.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/batch.ts. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/batch.ts. Port the change to CUDA, rerun the parit",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the GPU evaluator was verified against other sources; changed since acceptance: src/gp",
+    "verify": false,
+    "verifyFails": [
+     "FAIL host files (12) hash to their pins — src/gpu-backend/batch.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/batch.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T3",
+   "name": "the CPU-official refusal removed (a CPU runner accepts official optimization)",
+   "file": "src/gpu-backend/purpose.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: src/gpu-backend/purpose.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/gpu-backend/purpose.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regene",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: src/gpu-backend/purpose.ts. Re-verify t",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/gpu-backend/purpose.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/purpose.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 7 - a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose",
+     "not ok 8 - the legacy runner wrapper refuses before importing the runner"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T4",
+   "name": "acceptance verification disabled (the validator always says ACCEPTED)",
+   "file": "src/gpu-backend/acceptance.ts",
+   "expect": {
+    "static": "ACCEPTED",
+    "gate": "refused",
+    "runner": "any",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "ACCEPTED",
+    "staticReason": "",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-pins: pinned files differ from the acceptance record (independent re-hash): src/gpu-backend/acceptance.ts",
+    "runner": "ran",
+    "runnerMessage": "[GPU policy] official GPU run of research/zz-tamper (research/zz-tamper/run.ts); the runner must open the official gate",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/gpu-backend/acceptance.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/acceptance.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 13 - acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T5",
+   "name": "the manifest generator altered (a host-path file dropped from the evaluation digest)",
+   "file": "src/gpu-backend/compat.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/compat.ts. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptance recor",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/compat.ts. Port the change to CUDA, rerun the pari",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the GPU evaluator was verified against other sources; changed since acceptance: src/gp",
+    "verify": false,
+    "verifyFails": [
+     "FAIL host files (12) hash to their pins — src/gpu-backend/compat.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/compat.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 1 - every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)",
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T6",
+   "name": "the official entrypoint altered (the parity mini-set check removed)",
+   "file": "src/gpu-backend/official.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "any",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: src/gpu-backend/official.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/gpu-backend/official.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regen",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: src/gpu-backend/official.ts. Re-verify ",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/gpu-backend/official.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/official.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T7",
+   "name": "the entrypoint registry altered (an unregistered optimizer declared non-official)",
+   "file": "config/gpu-backend/entrypoints.json",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: config/gpu-backend/entrypoints.json. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: config/gpu-backend/entrypoints.json. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) a",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: config/gpu-backend/entrypoints.json. Re",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — config/gpu-backend/entrypoints.json",
+     "FAIL pinned files committed and unmodified — M config/gpu-backend/entrypoints.json"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T8",
+   "name": "the legacy-runner purpose gate disabled",
+   "file": "src/gpu-backend/legacyRunner.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: src/gpu-backend/legacyRunner.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/gpu-backend/legacyRunner.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and r",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: src/gpu-backend/legacyRunner.ts. Re-ver",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/gpu-backend/legacyRunner.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/legacyRunner.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 8 - the legacy runner wrapper refuses before importing the runner",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T9",
+   "name": "the preflight §9 rule weakened (no GPU backend or acceptance required)",
+   "file": "src/research-standard/gpuPolicy.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "any",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: src/research-standard/gpuPolicy.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/research-standard/gpuPolicy.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) an",
+    "runner": "ran",
+    "runnerMessage": "[GPU policy] official GPU run of research/zz-tamper (research/zz-tamper/run.ts); the runner must open the official gate",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/research-standard/gpuPolicy.ts",
+     "FAIL pinned files committed and unmodified — M src/research-standard/gpuPolicy.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 14 - preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T10",
+   "name": "the independent verifier altered (it always says VERIFIED)",
+   "file": "tools/gpu-backend/verify-acceptance.sh",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": true,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: tools/gpu-backend/verify-acceptance.sh. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: tools/gpu-backend/verify-acceptance.sh. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: tools/gpu-backend/verify-acceptance.sh.",
+    "verify": true,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — tools/gpu-backend/verify-acceptance.sh",
+     "FAIL pinned files committed and unmodified — M tools/gpu-backend/verify-acceptance.sh"
+    ],
+    "verifyWithOutOfBandPin": true,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T11",
+   "name": "forced mixed CPU scoring in the pool (a CPU-scored counter bypass)",
+   "file": "src/gpu-backend/pool.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/pool.ts. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/pool.ts. Port the change to CUDA, rerun the parity",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the GPU evaluator was verified against other sources; changed since acceptance: src/gp",
+    "verify": false,
+    "verifyFails": [
+     "FAIL host files (12) hash to their pins — src/gpu-backend/pool.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/pool.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T12",
+   "name": "a CUDA source changed without a new build and acceptance",
+   "file": "src/gpu-backend/cuda/gb_pool.cuh",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/cuda/gb_pool.cuh. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptanc",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the GPU evaluator was verified against other sources; changed since acceptance: src/gpu-backend/cuda/gb_pool.cuh. Port the change to CUDA, rerun t",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the GPU evaluator was verified against other sources; changed since acceptance: src/gp",
+    "verify": false,
+    "verifyFails": [
+     "FAIL cuda files (7) hash to their pins — src/gpu-backend/cuda/gb_pool.cuh",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/cuda/gb_pool.cuh"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T13",
+   "name": "a new, unclassified GPU-backend file (a loader outside the manifest)",
+   "file": "src/gpu-backend/sneakyLoader.ts",
+   "expect": {
+    "static": "ACCEPTED",
+    "gate": "any",
+    "runner": "any",
+    "verify": true,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "ACCEPTED",
+    "staticReason": "",
+    "gate": "not run",
+    "gateMessage": "",
+    "runner": "ran",
+    "runnerMessage": "[GPU policy] official GPU run of research/zz-tamper (research/zz-tamper/run.ts); the runner must open the official gate",
+    "verify": true,
+    "verifyFails": [],
+    "verifyWithOutOfBandPin": true,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 1 - every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T15",
+   "name": "the engine-runtime requirement removed (a process running under V8's Maglev is accepted)",
+   "file": "src/gpu-backend/runtime.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: src/gpu-backend/runtime.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/gpu-backend/runtime.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regene",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: src/gpu-backend/runtime.ts. Re-verify t",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/gpu-backend/runtime.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/runtime.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 5 - engine runtime (controls): the probe detects Maglev; without the guard an explicitly forked child runs it",
+     "not ok 8 - the legacy runner wrapper refuses before importing the runner"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T16",
+   "name": "the job ownership lock disabled (a second process could write a job)",
+   "file": "src/gpu-jobs/lock.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: src/gpu-jobs/lock.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/gpu-jobs/lock.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate t",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: src/gpu-jobs/lock.ts. Re-verify the enf",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/gpu-jobs/lock.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-jobs/lock.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)",
+     "not ok 21 - across processes: a live owner refuses another; a SIGKILLed owner frees the job, which resumes"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T17",
+   "name": "the official gate's job requirement removed (an official run without an isolated job)",
+   "file": "src/gpu-backend/official.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: src/gpu-backend/official.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/gpu-backend/official.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regen",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: src/gpu-backend/official.ts. Re-verify ",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/gpu-backend/official.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/official.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 16 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T18",
+   "name": "the legacy runner's engine check and child guard removed (a CPU runner under V8's Maglev)",
+   "file": "src/gpu-backend/legacyRunner.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: src/gpu-backend/legacyRunner.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/gpu-backend/legacyRunner.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and r",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: src/gpu-backend/legacyRunner.ts. Re-ver",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/gpu-backend/legacyRunner.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/legacyRunner.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 4 - engine runtime (regression): behind the legacy runner gate, no thread or child process runs Maglev code",
+     "not ok 5 - engine runtime (controls): the probe detects Maglev; without the guard an explicitly forked child runs it"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T19",
+   "name": "the job module dropped from the required pins of an acceptance record",
+   "file": "src/gpu-backend/acceptance.ts",
+   "expect": {
+    "static": "STALE",
+    "gate": "refused",
+    "runner": "refused",
+    "verify": false,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "STALE",
+    "staticReason": "the enforcement code changed since acceptance: src/gpu-backend/acceptance.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record",
+    "gate": "refused",
+    "gateMessage": "GPU policy (standard 3.0.0 §9): preflight-acceptance: the enforcement code changed since acceptance: src/gpu-backend/acceptance.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and reg",
+    "runner": "refused",
+    "runnerMessage": "❌ optimization-standard preflight failed for research/zz-tamper:\n  - official GPU optimization is BLOCKED (§9.9): the enforcement code changed since acceptance: src/gpu-backend/acceptance.ts. Re-verif",
+    "verify": false,
+    "verifyFails": [
+     "FAIL policy files (29) hash to their pins — src/gpu-backend/acceptance.ts",
+     "FAIL pinned files committed and unmodified — M src/gpu-backend/acceptance.ts"
+    ],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 1 - every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)",
+     "not ok 2 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "not ok 13 - acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T20",
+   "name": "a new, unclassified file in the job module (an ownership bypass outside the pins)",
+   "file": "src/gpu-jobs/bypass.ts",
+   "expect": {
+    "static": "ACCEPTED",
+    "gate": "any",
+    "runner": "any",
+    "verify": true,
+    "mergeGate": false
+   },
+   "observed": {
+    "static": "ACCEPTED",
+    "staticReason": "",
+    "gate": "not run",
+    "gateMessage": "",
+    "runner": "ran",
+    "runnerMessage": "[GPU policy] official GPU run of research/zz-tamper (research/zz-tamper/run.ts); the runner must open the official gate",
+    "verify": true,
+    "verifyFails": [],
+    "verifyWithOutOfBandPin": true,
+    "mergeGate": false,
+    "mergeGateFailing": [
+     "not ok 1 - every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)"
+    ]
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  },
+  {
+   "id": "T14",
+   "name": "a weakened gate committed with a regenerated record (the malicious-committer case: the parity mini-set shrunk to one seeded genome); only the out-of-band record pin detects it",
+   "file": "src/gpu-backend/official.ts",
+   "expect": {
+    "static": "ACCEPTED",
+    "gate": "any",
+    "runner": "ran",
+    "verify": true,
+    "mergeGate": true
+   },
+   "observed": {
+    "static": "ACCEPTED",
+    "staticReason": "",
+    "gate": "not run",
+    "gateMessage": "",
+    "runner": "ran",
+    "runnerMessage": "[GPU policy] official GPU run of research/zz-tamper (research/zz-tamper/run.ts); the runner must open the official gate",
+    "verify": true,
+    "verifyFails": [],
+    "verifyWithOutOfBandPin": false,
+    "mergeGate": true,
+    "mergeGateFailing": []
+   },
+   "checks": {
+    "applied": true,
+    "static": true,
+    "gate": true,
+    "runner": true,
+    "verify": true,
+    "mergeGate": true,
+    "outOfBandPin": true
+   },
+   "detected": true,
+   "restoredClean": true,
+   "pass": true
+  }
+ ],
+ "sandbox": "research/gpu-phase6/cache/tamper-sandbox",
+ "mainHead": "8d519f69a8231e55360ba755766931e31036a201",
+ "binary": "research/gpu-phase5/build/gb5"
+}
