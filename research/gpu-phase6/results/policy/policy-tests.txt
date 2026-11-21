@@ -1,0 +1,337 @@
+TAP version 13
+# Subtest: the exported bytes are the previous exporter's (golden sha256); the file is published once with its sidecar
+ok 1 - the exported bytes are the previous exporter's (golden sha256); the file is published once with its sidecar
+  ---
+  duration_ms: 9.40061
+  type: 'test'
+  ...
+# Subtest: an identical published dataset is reused untouched (the same inode, times and sidecar)
+ok 2 - an identical published dataset is reused untouched (the same inode, times and sidecar)
+  ---
+  duration_ms: 0.687895
+  type: 'test'
+  ...
+# Subtest: another dataset under the same name is an explicit conflict; the published file is never overwritten
+ok 3 - another dataset under the same name is an explicit conflict; the published file is never overwritten
+  ---
+  duration_ms: 4.344987
+  type: 'test'
+  ...
+# Subtest: a truncated, empty or foreign target is an explicit invalid-cache error and is left as it is
+ok 4 - a truncated, empty or foreign target is an explicit invalid-cache error and is left as it is
+  ---
+  duration_ms: 4.465248
+  type: 'test'
+  ...
+# Subtest: a symbolic link or directory at the target is never followed or replaced; exclusive creation never opens an existing path
+ok 5 - a symbolic link or directory at the target is never followed or replaced; exclusive creation never opens an existing path
+  ---
+  duration_ms: 1.058949
+  type: 'test'
+  ...
+# Subtest: a writer that died before publication leaves only a temporary file: a restart publishes; stale temporaries of dead writers are removed, recent or live ones kept
+ok 6 - a writer that died before publication leaves only a temporary file: a restart publishes; stale temporaries of dead writers are removed, recent or live ones kept
+  ---
+  duration_ms: 15.330331
+  type: 'test'
+  ...
+# Subtest: writers killed at arbitrary instants never leave a partial target; every directory is publishable afterwards
+ok 7 - writers killed at arbitrary instants never leave a partial target; every directory is publishable afterwards
+  ---
+  duration_ms: 889.868133
+  type: 'test'
+  ...
+# Subtest: concurrent writers and readers of one directory: every export succeeds, one creates and the rest reuse, no reader ever sees a partial file
+ok 8 - concurrent writers and readers of one directory: every export succeeds, one creates and the rest reuse, no reader ever sees a partial file
+  ---
+  duration_ms: 3110.709014
+  type: 'test'
+  ...
+# Subtest: concurrent writers of two different datasets under one name: one dataset is published, the others get the explicit conflict
+ok 9 - concurrent writers of two different datasets under one name: one dataset is published, the others get the explicit conflict
+  ---
+  duration_ms: 2629.167315
+  type: 'test'
+  ...
+# Subtest: every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)
+ok 10 - every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance)
+  ---
+  duration_ms: 2.289839
+  type: 'test'
+  ...
+# Subtest: the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not
+not ok 11 - the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not
+  ---
+  duration_ms: 75.958068
+  type: 'test'
+  location: '/home/chad/projects/margin-trading/src/gpu-backend/tests/enforcement.test.ts:58:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    PASS kind and schema 2
+    PASS status ACCEPTED
+    PASS cpu files (94) hash to their pins
+    PASS cpu group digest
+    PASS cuda files (7) hash to their pins
+    PASS cuda group digest
+    PASS host files (12) hash to their pins
+    PASS host group digest
+    FAIL policy files (24) hash to their pins — config/gpu-backend/entrypoints.json, src/gpu-backend/acceptance.ts, src/gpu-backend/entrypoints.ts, src/gpu-backend/lab.ts, src/gpu-backend/legacyRunner.ts, src/gpu-backend/official.ts, src/gpu-backend/runtime.ts, src/gpu-backend/tests/enforcement.test.ts
+    PASS policy group digest
+    PASS evaluation digest recomputed from the pins
+    PASS evidence files (34) intact and passed
+    PASS source revision 0ab04601d64c is an ancestor of HEAD
+    PASS pinned files committed and unmodified
+    FAIL pinned files unchanged since the source revision — config/gpu-backend/entrypoints.json
+    src/gpu-backend/acceptance.ts
+    src/gpu-backend/entrypoints.ts
+    src/gpu-backend/lab.ts
+    src/gpu-backend/legacyRunner.ts
+    src/gpu-backend/official.ts
+    src/gpu-backend/runtime.ts
+    src/gpu-backend/tests/enforcement.test.ts
+    src/gpu-backend/tests/policy.test.ts
+    tools/gpu-back
+    PASS binary research/gpu-phase5/build/gb5 sha256
+    NOT VERIFIED (2 failure(s))
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/chad/projects/margin-trading/src/gpu-backend/tests/enforcement.test.ts:67:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: engine runtime helpers: the flag first and once, script arguments untouched, another Maglev option refused
+ok 12 - engine runtime helpers: the flag first and once, script arguments untouched, another Maglev option refused
+  ---
+  duration_ms: 0.403814
+  type: 'test'
+  ...
+# Subtest: engine runtime (regression): behind the legacy runner gate, no thread or child process runs Maglev code
+ok 13 - engine runtime (regression): behind the legacy runner gate, no thread or child process runs Maglev code
+  ---
+  duration_ms: 390.099269
+  type: 'test'
+  ...
+# Subtest: engine runtime (controls): the probe detects Maglev; without the guard an explicitly forked child runs it
+ok 14 - engine runtime (controls): the probe detects Maglev; without the guard an explicitly forked child runs it
+  ---
+  duration_ms: 957.736082
+  type: 'test'
+  ...
+# Subtest: host pipeline: the request bytes and every result equal the serial codec, in candidate order, for 1–4 workers
+ok 15 - host pipeline: the request bytes and every result equal the serial codec, in candidate order, for 1–4 workers
+  ---
+  duration_ms: 1866.100913
+  type: 'test'
+  ...
+# Subtest: host pipeline: a corrupted response, a stale nonce, another device and a missing candidate are refused; nothing is returned
+ok 16 - host pipeline: a corrupted response, a stale nonce, another device and a missing candidate are refused; nothing is returned
+  ---
+  duration_ms: 483.147613
+  type: 'test'
+  ...
+# Subtest: host pipeline: a worker that throws, exits or hangs fails closed; every later call is refused
+ok 17 - host pipeline: a worker that throws, exits or hangs fails closed; every later call is refused
+  ---
+  duration_ms: 4870.675491
+  type: 'test'
+  ...
+# Subtest: host pipeline: a prepare or complete after close is refused at once, not after the operation timeout
+ok 18 - host pipeline: a prepare or complete after close is refused at once, not after the operation timeout
+  ---
+  duration_ms: 160.707731
+  type: 'test'
+  ...
+# Subtest: host pipeline: an encoding error is the serial path's error; the worker door equals the main door
+ok 19 - host pipeline: an encoding error is the serial path's error; the worker door equals the main door
+  ---
+  duration_ms: 135.352125
+  type: 'test'
+  ...
+# Subtest: GpuPool on the host pipeline: callers that run while the pool starts, every worker count, the same records as the serial path
+ok 20 - GpuPool on the host pipeline: callers that run while the pool starts, every worker count, the same records as the serial path
+  ---
+  duration_ms: 657.241398
+  type: 'test'
+  ...
+# Subtest: GpuPool on the host pipeline: a worker that fails mid-job fails every caller; nothing of that batch is released
+ok 21 - GpuPool on the host pipeline: a worker that fails mid-job fails every caller; nothing of that batch is released
+  ---
+  duration_ms: 179.30987
+  type: 'test'
+  ...
+# Subtest: protocol v2 layout: TypeScript offsets equal the C++ offsetof of gb.h
+ok 22 - protocol v2 layout: TypeScript offsets equal the C++ offsetof of gb.h
+  ---
+  duration_ms: 44.59738
+  type: 'test'
+  ...
+# Subtest: purpose: explicit, never defaulted; unknown refused
+ok 23 - purpose: explicit, never defaulted; unknown refused
+  ---
+  duration_ms: 0.811657
+  type: 'test'
+  ...
+# Subtest: a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+ok 24 - a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+  ---
+  duration_ms: 0.175252
+  type: 'test'
+  ...
+# Subtest: the legacy runner wrapper refuses before importing the runner
+ok 25 - the legacy runner wrapper refuses before importing the runner
+  ---
+  duration_ms: 486.35148
+  type: 'test'
+  ...
+# Subtest: every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+ok 26 - every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+  ---
+  duration_ms: 1.031329
+  type: 'test'
+  ...
+# Subtest: the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+ok 27 - the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+  ---
+  duration_ms: 820.584603
+  type: 'test'
+  ...
+# Subtest: engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+ok 28 - engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+  ---
+  duration_ms: 1.823096
+  type: 'test'
+  ...
+# Subtest: entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+ok 29 - entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+  ---
+  duration_ms: 190.175463
+  type: 'test'
+  ...
+# Subtest: acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+ok 30 - acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+  ---
+  duration_ms: 138.900736
+  type: 'test'
+  ...
+# Subtest: preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+ok 31 - preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+  ---
+  duration_ms: 0.424434
+  type: 'test'
+  ...
+# Subtest: the deferred pilot domain reaches only capabilities the evaluator implements
+ok 32 - the deferred pilot domain reaches only capabilities the evaluator implements
+  ---
+  duration_ms: 3643.636061
+  type: 'test'
+  ...
+# Subtest: MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+not ok 33 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+  ---
+  duration_ms: 10.271958
+  type: 'test'
+  location: '/home/chad/projects/margin-trading/src/gpu-backend/tests/policy.test.ts:443:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    the GPU acceptance no longer matches this tree — the enforcement code changed since acceptance: config/gpu-backend/entrypoints.json, src/gpu-backend/acceptance.ts, src/gpu-backend/entrypoints.ts, src/gpu-backend/lab.ts, src/gpu-backend/legacyRunner.ts, src/gpu-backend/official.ts, src/gpu-backend/runtime.ts, src/gpu-backend/tests/enforcement.test.ts, src/gpu-backend/tests/policy.test.ts, tools/gpu-backend/official-preflight.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record; the acceptance does not pin enforcement file(s) this tree requires: src/gpu-jobs/jobs.ts, src/gpu-jobs/lock.ts, src/gpu-jobs/cli.ts, src/gpu-jobs/tests/jobs.test.ts, src/gpu-jobs/tests/jobChild.ts. Every change to D1, Growth, the allocator, exits/entries/risk controls or any evaluation dependency needs its CUDA counterpart and fresh Apollo parity evidence (docs/gpu/PARITY_CHECKLIST.md) before it is merged or used for official research.
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/chad/projects/margin-trading/src/gpu-backend/tests/policy.test.ts:451:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: a new job: its own records, state and dataset directories, identity written once; names validated
+ok 34 - a new job: its own records, state and dataset directories, identity written once; names validated
+  ---
+  duration_ms: 2.38164
+  type: 'test'
+  ...
+# Subtest: allocation: a job without a name gets a fresh unique one
+ok 35 - allocation: a job without a name gets a fresh unique one
+  ---
+  duration_ms: 0.943218
+  type: 'test'
+  ...
+# Subtest: refusals: active, existing, identity conflict, not found, foreign state; resume reads its own job
+ok 36 - refusals: active, existing, identity conflict, not found, foreign state; resume reads its own job
+  ---
+  duration_ms: 1.781645
+  type: 'test'
+  ...
+# Subtest: a declared shared dataset cache: recorded in the identity, the same on resume
+ok 37 - a declared shared dataset cache: recorded in the identity, the same on resume
+  ---
+  duration_ms: 0.775196
+  type: 'test'
+  ...
+# Subtest: across processes: a live owner refuses another; a SIGKILLed owner frees the job, which resumes
+ok 38 - across processes: a live owner refuses another; a SIGKILLed owner frees the job, which resumes
+  ---
+  duration_ms: 321.724515
+  type: 'test'
+  ...
+# Subtest: across processes: six processes creating one new job at once — exactly one owns it
+ok 39 - across processes: six processes creating one new job at once — exactly one owns it
+  ---
+  duration_ms: 3306.340293
+  type: 'test'
+  ...
+# Subtest: across processes: two different jobs at once own disjoint directories
+ok 40 - across processes: two different jobs at once own disjoint directories
+  ---
+  duration_ms: 207.545071
+  type: 'test'
+  ...
+# Subtest: the EvalLab: its own lock without a job, the job owner with one; a second writer is refused
+ok 41 - the EvalLab: its own lock without a job, the job owner with one; a second writer is refused
+  ---
+  duration_ms: 1741.752833
+  type: 'test'
+  ...
+# Subtest: the official gate refuses an official run without a held job of its study (before any server starts)
+ok 42 - the official gate refuses an official run without a held job of its study (before any server starts)
+  ---
+  duration_ms: 114.452627
+  type: 'test'
+  ...
+# Subtest: the status command lists jobs and their states
+ok 43 - the status command lists jobs and their states
+  ---
+  duration_ms: 65.128826
+  type: 'test'
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 41
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8870.726734
+
