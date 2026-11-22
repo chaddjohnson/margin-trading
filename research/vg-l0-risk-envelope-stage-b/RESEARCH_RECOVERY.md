@@ -2,7 +2,7 @@
 
 **Top screen** (times are UTC, from `date -u`)
 
-- Updated: 2026-11-22T22:13Z. **Stage: C19 fold COMPLETE (21:56:09Z → 22:12:08Z, all steps exit 0); C21 fold launching.** The engineering gates are sealed (all PASS) and
+- Updated: 2026-11-22T22:37Z. **Stage: C19 and C21 folds COMPLETE (C21 22:13Z → 22:36:13Z, all steps exit 0); C24 fold launching.** The engineering gates are sealed (all PASS) and
   the protocol freeze is sealed, committed and pushed:
   - `results/engineering/gates.json`, sha256 `2aa130b310ebadf7d51d21aeefc1620f83795cf5ecd6d2334022d00775070ea6`,
     commit `b5636559`;
@@ -54,7 +54,7 @@
 | E5, E6 | complete 21:47–21:48Z (preflight PASS; gate OPEN on D19/D21/D24, 18/18 parity) | `results/engineering/E5/`, `E6/` | rerun |
 | gates, freeze | complete: gates.json `2aa130b3…` (`b5636559`); protocol-freeze.json `614a63d8…` (`2922e04d`, pushed) | `npm run vg-l0reb -- gates`, `… freeze` | never rerun |
 | C19 fold | complete 22:12:08Z: E2 IDENTICAL 4/4 (`71a2e1ba`), search 64 lanes 10.8 min ≈ 1,808 evaluations/s (`0120c686`), qualification (`233ee626`), selection (`f9520f59`), interval on D21 (`263030ce`, pushed) | `chains/fold.sh` with `CUT=C19` | `START=<step> RESUME=1` |
-| C21 fold | not started | `CUT=C21` | |
+| C21 fold | complete 22:36:13Z: E2 IDENTICAL 4/4 (`af19c746`), search (`0df7075a`), qualification (`19f1b1eb`), selection (`44f2c52f`), interval on D23 (`68cdab93`) | `CUT=C21` | |
 | C24 fold | not started | `CUT=C24` | |
 | analysis, regression, reports, ZIP | not started | | |
 
