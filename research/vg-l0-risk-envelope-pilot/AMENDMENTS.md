@@ -56,3 +56,12 @@ they were written (only the engineering gates' non-official checks).
   (`tests/static.test.ts`). No selection rule, gate, threshold, seed, schedule, budget or door changed; the selection
   functions (`select.ts`) are byte-identical. Tests after the fix: 27/27 (`results/engineering/E4/tests-after-A1.txt`).
   Effect: the chain resumes at step 9 (`START=9`); steps 1–8 are not rerun.
+- **D2 (disclosure, 2026-11-22T11:26:42Z, after every official stage; a test defect, no decision affected).** The final full
+  `npm test` (`results/regression/npm-test.txt`: 1,764 tests, 1,752 pass, 8 fail) showed the 7 known pre-existing
+  failures and one new one: the pilot's own static test "the door guards: D23 and FULL refuse without their sealed and
+  committed records" had been written for the pre-selection state (it passed at E4); after the C21 selection was sealed
+  and committed the D23 guard correctly opened, so the test's expectation was stale. The test now checks the guards
+  against the actual stage state (D23 opens iff the C21 selection is sealed and committed; FULL for the validation iff
+  its records are committed and the validation is not sealed; FULL for diagnostics only after the sealed validation).
+  Tests are outside the code digest (unchanged, `32166079…`). The pilot tests then pass 27/27
+  (`results/regression/pilot-tests-after-D2.txt`); the original failing run is kept.

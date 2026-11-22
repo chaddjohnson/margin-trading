@@ -1,21 +1,19 @@
-# RESEARCH_RECOVERY — risk-envelope pilot (NL0-REP 1.0.0) — INCOMPLETE
+# RESEARCH_RECOVERY — risk-envelope pilot (NL0-REP 1.0.0) — COMPLETE
 
 **Top screen (times from `date -u`)**
 
-- Updated: 2026-11-22T10:41:10Z. **INCOMPLETE.** Stage: **S2 — official stages running** (chain `chains/official.sh`, unit
-  `vgl0rep-official`, log `results/logs/official-chain.log`; each stage its own unit `vgl0rep-<stage>`, log
-  `results/logs/<stage>.log`). Started 2026-11-22T10:38:52Z with stage 1 (C21 CTRL search, job `C21-search`).
-- Authority: `brief/BRIEF.md` sha256 `5a9dfe8f…723dd`; protocol `PROTOCOL.md` NL0-REP 1.0.0 sha256
-  `723eea5d96fb986bb3d285b62201895052d573b2e6154a6fe94e8302c5ef2e78`, FROZEN by `results/protocol-freeze.json` (sealed,
-  sha256 `627017dc69d758a4ded1ee52be7e86e97eba3625dff8f77d3ce3a62d0f1b2e4d`, code digest `b61f771d195c…`); engineering
-  gates `results/engineering/gates.json` sealed (`57204e77…`, E1, E3–E6 pass); amendments head D1 (pre-freeze).
-- Branch `research/vg-l0-risk-envelope-pilot`: freeze commit `8b06986e` pushed (= origin at 10:38Z); chain commit
-  `1e533ad6`; the chain commits each sealed block itself. `main` untouched (`3606f4b3`).
-- If the chain stops: read `results/logs/official-chain.log` (last "begin"/"FAILED"), then resume with
-  `tools/vg-l0-risk-envelope-pilot/launch.sh vgl0rep-official2 <log> -- /usr/bin/env START=<step> [RESUME=1] /bin/bash
-  research/vg-l0-risk-envelope-pilot/chains/official.sh` (RESUME=1 only if the failed step's job was interrupted).
-- Next after the chain: census (C21, C24) → diagnostics → tables → REPORT.md → READ_FIRST.md → npm test / Strategy Lab
-  regression → bundle → commit → push.
+- Updated: 2026-11-22T11:38:00Z. **COMPLETE.** Every stage done: engineering gates (E1, E3–E6 sealed; E2 from the official CTRL
+  phases: 8/8 lanes, 27/27 qualification records), protocol freeze, official searches (16 lanes), union qualifications,
+  C21 selection → D23 interval, C24 selection → frozen selection → FULL authorization → FULL validation once; census,
+  CPU diagnostics, tables, report, regression; handoff ZIP (see Delivery).
+- **Outcome (precommitted rule): worse** — Δ21 −$4,456.27, Δ24 −$21,830.38 (H1/H1′ fail); H2 holds (1 member); H3
+  holds ($32,168 vs $45,820). Requested pilot evaluations 291,392 (bound 693,652; ceiling 700,000).
+- Authority: `brief/BRIEF.md` `5a9dfe8f…`; `PROTOCOL.md` `723eea5d96fb986b…` frozen by `results/protocol-freeze.json`
+  (`627017dc…`); amendments head **D2** (P1–P9, D1 pre-freeze; A1 code fix with `results/amendments/A1.json`; D2 test
+  fix); code digest frozen `b61f771d…` → A1 `32166079…`.
+- Running: nothing (`systemctl --user list-units 'vgl0rep*'`).
+- Follow-up gate: the user's review in the original conversation (REPORT.md §13: keep the original method; no successor
+  search recommended). Do not rerun any sealed stage; do not merge into `main`.
 
 ## Environment (verified 2026-11-22T09:52Z)
 
@@ -59,3 +57,28 @@
 - D23 opens only after the sealed and committed C21 selection; FULL once, only after the sealed and committed C24
   selection and the door authorization record.
 - Budget: ≤ 700,000 requested pilot research evaluations (deterministic bound verified before the first search).
+
+## Stage table (all complete; sealed records in `results/seals.jsonl`)
+
+| Stage | Unit / command | UTC | Record | Resume / guard |
+|---|---|---|---|---|
+| E4 + E3 | `chains/engineering.sh` (vgl0rep-eng, vgl0rep-eng2 START=7) | 10:22–10:37 | `results/engineering/E3/summary.json`, `E4/tests.txt` | non-official; D1 |
+| E1, E5, E6 | verifier, preflight, official-preflight D21/D24 | 10:24–10:37 | `results/engineering/E1/`, `E5/`, `E6/` | — |
+| gates, freeze | `$OFF gates`, `$OFF freeze` | 10:37:49, 10:37:59 | `gates.json` `57204e77…`, `protocol-freeze.json` `627017dc…` | sealed; commit 8b06986e pushed |
+| search C21 CTRL | vgl0rep-C21-search-CTRL | 10:38:53–10:44:43 | `search/C21/CTRL.json` | sealed |
+| search C24 CTRL | vgl0rep-C24-search-CTRL | 10:44:44–10:52:59 | `search/C24/CTRL.json` | sealed |
+| E2 | `$OFF e2` | 10:53:00 | `engineering/E2-ctrl-equals-assignment3.json` (8/8) | sealed; ce91c2c7 |
+| search C21 EXP | vgl0rep-C21-search-EXP (resumed job) | 10:53–10:58:41 | `search/C21/EXP.json` | sealed |
+| search C24 EXP | vgl0rep-C24-search-EXP (resumed job) | 10:58–11:06:41 | `search/C24/EXP.json` | sealed; 92fd04bb |
+| qualify C21, C24 + E2-q | vgl0rep-C2x-qualify | 11:06–11:07:52 | `qualification/C2x.json`, `engineering/E2-qualification-C2x.json` | sealed; 3be30d10 |
+| select C21 | failed 11:07:53 (A1), resumed 11:10:11 | 11:10:11 | `selection/C21.json` | sealed; 124d7248 |
+| interval C21 (D23) | vgl0rep-C21-interval | 11:10:31 | `slices/C21-slice.json` | sealed; 4ad7098f |
+| select C24, freeze-selection, authorize-full | — | 11:10:31–32 | `selection/C24.json`, `FROZEN_SELECTION.json`, `doors/FULL-authorization.json` | sealed; b0ae2c0f, df827761, 37406602 |
+| validate (FULL once) | vgl0rep-C24-validate | 11:10:56 | `slices/C24-validation.json` | sealed; 556de8b3 (pushed) |
+| census C21, C24 | vgl0rep-census-C2x | 10:59–11:09 | `analysis/census-C2x.json` | report-only; archive replay identical |
+| diagnostics | vgl0rep-diag | 11:12–11:20 | `diagnostics/*.json` | report-only (CPU) |
+| regression | vgl0rep-regression | 11:21–11:37 | `results/regression/` | D2 |
+
+## Do-not-rerun
+
+Every sealed stage above (they refuse to rerun); the FULL door (opened once by the validation; diagnostics afterwards).

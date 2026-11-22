@@ -10,7 +10,8 @@ import { allCells, legacyCellId } from '../../vg-l0-full-joint/space.ts';
 import { cellSelectionPrefix, cells, codeDir, hashedCell } from '../context.ts';
 import { deriveSearchFromDisk, derivedSearchFile, substitutions } from '../derive.ts';
 import { bound } from '../budget.ts';
-import { doorGuard } from '../doors.ts';
+import { doorGuard, fullAuthorizationFile, frozenSelectionFile, selectionFile, validationFile } from '../doors.ts';
+import { assertCommitted, isSealed } from '../records.ts';
 
 const sources = fs
   .readdirSync(codeDir)
@@ -89,9 +90,32 @@ test('the deterministic budget bound ≤ 700,000 requested evaluations', () => {
   assert.ok(b.fits);
 });
 
-test('the door guards: D23 and FULL refuse without their sealed and committed records', () => {
-  assert.throws(() => doorGuard('D23', 'test'), /selection|sealed/);
-  assert.throws(() => doorGuard('FULL', 'test'), /selection|sealed/);
+// (amendment D2: the first version of this test assumed the pre-selection state and failed in the final `npm test`,
+// after the C21 selection had been sealed and committed — the guard was right, the expectation stale)
+test('the door guards follow the stage state: D23 behind the committed C21 selection; FULL behind the committed C24 selection, manifest and authorization, once for the validation, for diagnostics only after it', () => {
+  const committed = (f: string) => {
+    try {
+      assertCommitted(f);
+      return isSealed(f);
+    } catch {
+      return false;
+    }
+  };
+  const c21 = committed(selectionFile('C21'));
+  const fullReady = committed(selectionFile('C24')) && committed(frozenSelectionFile) && committed(fullAuthorizationFile);
+  const validated = isSealed(validationFile);
+  const opens = (f: () => void) => {
+    try {
+      f();
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  assert.equal(opens(() => doorGuard('D23', 'test')), c21);
+  assert.equal(opens(() => doorGuard('FULL', 'test', { validation: true })), fullReady && !validated);
+  assert.equal(opens(() => doorGuard('FULL', 'test')), fullReady && validated);
   assert.doesNotThrow(() => doorGuard('D21', 'test'));
   assert.doesNotThrow(() => doorGuard('D24', 'test'));
 });
