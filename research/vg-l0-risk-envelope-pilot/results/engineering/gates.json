@@ -1,0 +1,71 @@
+{
+ "kind": "risk-envelope pilot engineering gates",
+ "head": "4cabc0ff22ffa37aa78c9d467c4f22b3b5103d73",
+ "codeDigest": "b61f771d195c06f5abd40b9dbf542542deaa62556ad63e7e86cec1ff23711639",
+ "gates": {
+  "E1": {
+   "what": "the live Phase 7 ACCEPTED record, the independent verifier (rebuild, device, out-of-band pin) on the pilot branch; node --no-maglev enforced",
+   "pass": true,
+   "evidence": [
+    {
+     "file": "research/vg-l0-risk-envelope-pilot/results/engineering/E1/verify-acceptance.txt",
+     "sha256": "fe280cf922c31d2c2d8315d3c5fab69744876f3dae379f95b9b1264fc2906df9"
+    },
+    {
+     "file": "research/vg-l0-risk-envelope-pilot/results/engineering/E1/runtime.txt",
+     "sha256": "9bf6f05cfcf2faba7efca934ee93988919ae01f0c3d086969cf4ae98ad8f5379"
+    }
+   ]
+  },
+  "E3": {
+   "what": "fixed-seed mini-pilot of both arms, CPU = GPU (records, envelopes, decisions, rankings, archives), threshold-edge records, interruption/resume — engineering only (D19 / engineering subjects)",
+   "pass": true,
+   "evidence": [
+    {
+     "file": "research/vg-l0-risk-envelope-pilot/results/engineering/E3/summary.json",
+     "sha256": "e8e2ca9b0b808b46d6ec26222856e01b41524ec352b118bd50306db7592bbacc"
+    }
+   ]
+  },
+  "E4": {
+   "what": "stage-wiring, boundary and static tests (tests/*.test.ts): DD 38k flips CTRL fail → EXP pass, PL/BD 26k flip CTRL pass → EXP fail, exact boundaries, Q5 and p90 on all three metrics, no hidden 35k rule",
+   "pass": true,
+   "evidence": [
+    {
+     "file": "research/vg-l0-risk-envelope-pilot/results/engineering/E4/tests.txt",
+     "sha256": "f6394d6a3fd0b56306ff29ffcd1f06c0aaafcc92e694d0c8d5b291fab7e6b783"
+    }
+   ]
+  },
+  "E5": {
+   "what": "the study preflight (standard 3.0.0, scope optimization, evaluationBackend gpu-required, NL0 1.0.0 pinned) passes",
+   "pass": true,
+   "evidence": [
+    {
+     "file": "research/vg-l0-risk-envelope-pilot/results/engineering/E5/preflight.txt",
+     "sha256": "c1971bebeda9b0f86e8d5c03f9eea0fc95c6fb16ed5a163ffc27311ebab4b065"
+    }
+   ]
+  },
+  "E6": {
+   "what": "the live official gate opens on D21 and D24 for this study on the committed pilot lineage (attestations)",
+   "pass": true,
+   "evidence": [
+    {
+     "file": "research/vg-l0-risk-envelope-pilot/results/engineering/E6/official-preflight-D21.txt",
+     "sha256": "0ef1e2fd95da8e21da66cc9d6527d0d9a41ddee5096c9e0f4ba2afe7d3617bdd"
+    },
+    {
+     "file": "research/vg-l0-risk-envelope-pilot/results/engineering/E6/official-preflight-D24.txt",
+     "sha256": "c5fa42b7a65535ac5ed8eb494cb8b4317acffd028015f0f187c1d85252aece27"
+    }
+   ]
+  },
+  "E2": {
+   "what": "CTRL = Assignment 3: verified by the official CTRL phases themselves (results/engineering/E2-*.json) before any EXP evaluation",
+   "pass": null
+  }
+ },
+ "pass": true,
+ "sealedAt": "2026-11-22T10:37:49.549Z"
+}
