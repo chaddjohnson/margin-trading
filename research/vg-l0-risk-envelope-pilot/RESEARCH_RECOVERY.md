@@ -82,3 +82,12 @@
 ## Do-not-rerun
 
 Every sealed stage above (they refuse to rerun); the FULL door (opened once by the validation; diagnostics afterwards).
+
+## Delivery
+
+- Handoff ZIP `research/vg-l0-risk-envelope-pilot/bundle/vg-l0-risk-envelope-pilot-results.zip` (built 2026-11-22T11:38:44Z by
+  `tools/vg-l0-risk-envelope-pilot/bundle.sh` from the tree at `9e8624bb`): sha256
+  `906558fa9298670a4782661ccac5677a9dcf4582378e78e5d88bc1864eb0c421`, 2,942,804 B, 186 files covered by
+  `MANIFEST.sha256` (zip -T OK; every checksum verified after extraction; secret scan clean); identical copy in
+  `~/.local/share/margin-trading-gpu/handoffs/`. The ZIP holds this checkpoint as of `9e8624bb` (before this section).
+- Push: see the final response (`git ls-remote origin research/vg-l0-risk-envelope-pilot` = local HEAD); `main` untouched.
