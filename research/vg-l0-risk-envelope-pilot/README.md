@@ -1,16 +1,23 @@
-# Risk-envelope pilot (NL0-R pilot) — PROPOSAL FOR REVIEW ONLY
+# Risk-envelope pilot (NL0-REP 1.0.0) — authorized bounded pilot
 
-**PILOT NOT STARTED.** This namespace holds the reviewable pilot protocol prepared by the readiness assignment
-(`research/gpu-phase7/`). It has no adoption manifest, no code, no job, no attestation and no result. It does not change
-the optimization standard, NL0 1.0.0, New L0's status or any optimizer default.
+Research only. A fair, reproducible, GPU-accelerated test of whether replacing the NL0 marked-DD gate (≤ 35 % of the
+fixed $100,000 allocation) by the envelope (marked DD ≤ 40 %, funded-trade principal loss ≤ 25 %, banked-capital DD ≤ 25 %)
+changes what the NL0 / Assignment 3 broad search discovers and qualifies — on two cells, two seeds, two cutoffs (C21,
+C24), with identical seeds, schedules, costs and execution in both arms. It does not change the optimization standard,
+NL0 1.0.0, New L0's status or any optimizer default; nothing is deployed; `main` is untouched.
 
 | Document | Content |
 |---|---|
-| [PROTOCOL_PROPOSED.md](PROTOCOL_PROPOSED.md) | the proposed protocol (questions, metrics, arms, stages, budget, gates, windows, reporting, go / no-go) |
-| [DECISION_REGISTER.md](DECISION_REGISTER.md) | every open decision before authorization |
-| [EXECUTION_PLAN.md](EXECUTION_PLAN.md) | proposed official commands, job identities, paths, budgets and measured compute estimates — **do not run** |
-| [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | how the pilot code would wire the envelope into every stage |
-| [DIAGNOSTICS_SPEC.md](DIAGNOSTICS_SPEC.md) | the nonbinding D1–D3 drawdown-policy diagnostics |
-| [SCALING_CHECKS.md](SCALING_CHECKS.md) | the $100k / $250k / $500k normalization checks (performed as a diagnostic) |
+| [PROTOCOL.md](PROTOCOL.md) | the frozen protocol (decisions applied, metrics, arms, stages, budget, gates, chronology, outcome rule) |
+| [DECISION_REGISTER.md](DECISION_REGISTER.md) | D-0 … D-15 resolved, with provenance |
+| [AMENDMENTS.md](AMENDMENTS.md) | append-only amendment log (P1–P9 before the freeze) |
+| [STANDARD_ADOPTION.json](STANDARD_ADOPTION.json) | standard 3.0.0 adoption (scope optimization, gpu-required, NL0 1.0.0) |
+| [EXECUTION_PLAN.md](EXECUTION_PLAN.md) | the exact commands, jobs, doors and records |
+| [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md), [DIAGNOSTICS_SPEC.md](DIAGNOSTICS_SPEC.md), [SCALING_CHECKS.md](SCALING_CHECKS.md) | the readiness specifications the protocol pins (unchanged) |
+| [RESEARCH_RECOVERY.md](RESEARCH_RECOVERY.md) | the checkpoint |
+| `history/` | the readiness proposal, byte-identical, and the transition note |
+| `brief/BRIEF.md` | the user's authorization, verbatim |
+| `results/` | sealed records (`seals.jsonl`), engineering gates, job records, attestations |
 
-Next gate: the user's review in the original Margin Trading conversation and a separate authorization.
+Code: `src/vg-l0-risk-envelope-pilot/` (official GPU entrypoint; `npm run vg-l0rep -- <command>`), tools
+`tools/vg-l0-risk-envelope-pilot/` (non-official engineering and diagnostics).
