@@ -95,3 +95,14 @@ test('the door guards: D23 and FULL refuse without their sealed and committed re
   assert.doesNotThrow(() => doorGuard('D21', 'test'));
   assert.doesNotThrow(() => doorGuard('D24', 'test'));
 });
+
+test('amendment A1: the sealed form of an evidence row is idempotent (a row read back from a sealed record keeps rowsKept)', async () => {
+  const { sealedEvidence } = await import('../stages.ts');
+  const e = { label: 'x', risk: { net: 1, rows: [{ book: 'D1:VGT' }, { book: 'G:VGT' }] } } as never;
+  const once = JSON.parse(JSON.stringify(sealedEvidence(e)));
+  const twice = JSON.parse(JSON.stringify(sealedEvidence(once)));
+
+  assert.deepEqual(twice, once);
+  assert.equal(once.risk.rowsKept, 2);
+  assert.equal('rows' in once.risk, false);
+});

@@ -142,6 +142,31 @@ interface Freeze {
   acceptanceSha256: string;
 }
 
+// code amendments (sealed, committed records results/amendments/<id>.json, each {from, to} chained from the frozen digest)
+export const amendmentsDir = path.join(resultsDir, 'amendments');
+export const codeAmendments = () =>
+  fs.existsSync(amendmentsDir)
+    ? fs
+        .readdirSync(amendmentsDir)
+        .filter((f) => f.endsWith('.json'))
+        .sort()
+        .map((f) => path.join(amendmentsDir, f))
+    : [];
+export const allowedCodeDigests = (frozen: string) => {
+  const out = [frozen];
+
+  for (const f of codeAmendments()) {
+    if (!isSealed(f)) throw new Error(`${rel(f)} is not sealed`);
+    assertCommitted(f);
+
+    const a = readJson<{ from: string; to: string }>(f);
+
+    if (a.from !== out.at(-1)) throw new Error(`${rel(f)}: an amendment from ${a.from.slice(0, 12)} does not chain from ${out.at(-1)!.slice(0, 12)}`);
+    out.push(a.to);
+  }
+  return out;
+};
+
 export const officialGuards = (stage: string) => {
   requireStandardAdoption(researchDir, { repoRoot });
   if (!isSealed(freezeFile)) throw new Error(`${stage}: the protocol is not frozen (results/protocol-freeze.json)`);
@@ -151,7 +176,12 @@ export const officialGuards = (stage: string) => {
   const protocolSha = sha256File(path.join(researchDir, 'PROTOCOL.md'));
 
   if (fz.protocol.sha256 !== protocolSha) throw new Error(`${stage}: PROTOCOL.md (${protocolSha.slice(0, 12)}) ≠ the frozen ${fz.protocol.sha256.slice(0, 12)}`);
-  if (fz.codeDigest !== codeDigest()) throw new Error(`${stage}: the code closure changed since the freeze (digest ${codeDigest().slice(0, 12)} ≠ ${fz.codeDigest.slice(0, 12)})`);
+  // the code closure must be the frozen one, or the target of a sealed, committed code amendment chained from it
+  // (AMENDMENTS.md; results/amendments/<id>.json — `code-amendment`)
+  const allowed = allowedCodeDigests(fz.codeDigest);
+
+  if (!allowed.includes(codeDigest()))
+    throw new Error(`${stage}: the code closure changed since the freeze (digest ${codeDigest().slice(0, 12)} ∉ {${allowed.map((d) => d.slice(0, 12)).join(', ')}}): record a code amendment`);
   if (fz.acceptanceSha256 !== sha256File(path.join(repoRoot, 'config/gpu-backend/acceptance.json')))
     throw new Error(`${stage}: the acceptance record differs from the one the freeze pinned`);
   if (!isSealed(engineeringFile)) throw new Error(`${stage}: the engineering gates are not sealed (results/engineering/gates.json)`);
@@ -173,7 +203,8 @@ const definitionOf = (stage: string, extra: Record<string, unknown>) => ({
   study: STUDY_ID,
   protocol: `${PROTOCOL_ID} ${PROTOCOL_VERSION}`,
   protocolSha256: readJson<Freeze>(freezeFile).protocol.sha256,
-  codeDigest: readJson<Freeze>(freezeFile).codeDigest,
+  frozenCodeDigest: readJson<Freeze>(freezeFile).codeDigest,
+  codeDigest: codeDigest(),
   stage,
   risk: true,
   ...extra
@@ -453,7 +484,13 @@ export const runE2 = () => {
 
 // ----- qualification (the union of both arms' shortlists + the two benchmarks) -----
 
-const sealedEvidence = (e: Evidence) => ({ ...e, risk: { ...e.risk, rows: undefined, rowsKept: e.risk.rows.length } });
+// the sealed form of an evidence row: the per-lot rows stay in the cache; idempotent (amendment A1: a row read back from a
+// sealed qualification record has no rows any more and keeps its rowsKept)
+export const sealedEvidence = (e: Evidence) => {
+  const risk = e.risk as Evidence['risk'] & { rowsKept?: number };
+
+  return { ...e, risk: { ...risk, rows: undefined, rowsKept: risk.rows ? risk.rows.length : risk.rowsKept } };
+};
 
 export const membersOf = (cut: CutoffKey) => {
   type M = Member & { shortlistedBy: Evidence['shortlistedBy'] };

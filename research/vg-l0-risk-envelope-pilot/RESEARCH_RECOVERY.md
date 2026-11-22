@@ -2,15 +2,20 @@
 
 **Top screen (times from `date -u`)**
 
-- Updated: 2026-11-22T10:33Z. **INCOMPLETE.** Stage: **S1 — engineering gates** (E4 PASS 26/26, E5 PASS, E1 VERIFIED;
-  E3 chain running; E6, gates seal, freeze not yet). No official pilot evaluation has run.
-- Authority: `brief/BRIEF.md` sha256 `5a9dfe8f…723dd`; protocol `PROTOCOL.md` NL0-REP 1.0.0 (not yet frozen; sha256 at
-  commit `1f5093d6`: `723eea5d96fb986bb3d285b62201895052d573b2e6154a6fe94e8302c5ef2e78`); amendments head P9 (pre-freeze).
-- Branch `research/vg-l0-risk-envelope-pilot`, HEAD `1f5093d6` (code + documents committed; not pushed yet). Main checkout.
-- Running: unit `vgl0rep-eng` (`chains/engineering.sh`, log `results/logs/engineering-chain.log`): E3 steps 4–16
-  (stopped/killed resume, compares, a3check, edge D21/D24, identity, summary). Resume after a failure: `START=<step>`.
-- Next: E6 official preflight D21/D24 → `npm run vg-l0rep -- gates` → `freeze` → commit → push → official stage 1
-  (EXECUTION_PLAN §2).
+- Updated: 2026-11-22T10:41:10Z. **INCOMPLETE.** Stage: **S2 — official stages running** (chain `chains/official.sh`, unit
+  `vgl0rep-official`, log `results/logs/official-chain.log`; each stage its own unit `vgl0rep-<stage>`, log
+  `results/logs/<stage>.log`). Started 2026-11-22T10:38:52Z with stage 1 (C21 CTRL search, job `C21-search`).
+- Authority: `brief/BRIEF.md` sha256 `5a9dfe8f…723dd`; protocol `PROTOCOL.md` NL0-REP 1.0.0 sha256
+  `723eea5d96fb986bb3d285b62201895052d573b2e6154a6fe94e8302c5ef2e78`, FROZEN by `results/protocol-freeze.json` (sealed,
+  sha256 `627017dc69d758a4ded1ee52be7e86e97eba3625dff8f77d3ce3a62d0f1b2e4d`, code digest `b61f771d195c…`); engineering
+  gates `results/engineering/gates.json` sealed (`57204e77…`, E1, E3–E6 pass); amendments head D1 (pre-freeze).
+- Branch `research/vg-l0-risk-envelope-pilot`: freeze commit `8b06986e` pushed (= origin at 10:38Z); chain commit
+  `1e533ad6`; the chain commits each sealed block itself. `main` untouched (`3606f4b3`).
+- If the chain stops: read `results/logs/official-chain.log` (last "begin"/"FAILED"), then resume with
+  `tools/vg-l0-risk-envelope-pilot/launch.sh vgl0rep-official2 <log> -- /usr/bin/env START=<step> [RESUME=1] /bin/bash
+  research/vg-l0-risk-envelope-pilot/chains/official.sh` (RESUME=1 only if the failed step's job was interrupted).
+- Next after the chain: census (C21, C24) → diagnostics → tables → REPORT.md → READ_FIRST.md → npm test / Strategy Lab
+  regression → bundle → commit → push.
 
 ## Environment (verified 2026-11-22T09:52Z)
 

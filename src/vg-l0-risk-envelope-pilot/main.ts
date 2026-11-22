@@ -39,6 +39,7 @@ import {
 import { assertBound } from './budget.ts';
 import { branchName, codeDigest, codeFiles, dirtyCode, headCommit, readJson, rel, seal, sha256File } from './records.ts';
 import {
+  allowedCodeDigests,
   a3FrozenSelection,
   a3QualificationFiles,
   a3SearchFile,
@@ -176,7 +177,49 @@ const gates = () => {
   if (!record.pass) process.exitCode = 2;
 };
 
+// a code amendment (AMENDMENTS.md): the changed files of the code closure against the frozen (or last amended) closure,
+// the new digest; sealed; the official guards accept the digest only once this record is committed
+const codeAmendment = () => {
+  const id = opt('id');
+
+  if (!id || !/^A\d+$/.test(id)) throw new Error('--id A<n>');
+
+  const file = path.join(resultsDir, 'amendments', `${id}.json`);
+
+  if (fs.existsSync(file)) throw new Error(`${rel(file)} exists`);
+
+  const fz = readJson<{ codeDigest: string; codeFiles: { file: string; sha256: string }[] }>(freezeFile);
+  const allowed = allowedCodeDigests(fz.codeDigest);
+  const before = new Map(fz.codeFiles.map((f) => [f.file, f.sha256]));
+  const now = codeFiles().map((f) => ({ file: f, sha256: sha256File(path.join(repoRoot, f)) }));
+  const changed = now.filter((f) => before.get(f.file) !== f.sha256).map((f) => ({ file: f.file, frozenSha256: before.get(f.file) ?? null, sha256: f.sha256 }));
+  const removed = [...before.keys()].filter((f) => !now.some((x) => x.file === f));
+  const dirty = dirtyCode(studyDocs);
+
+  if (dirty.length) throw new Error(`commit the amended code and AMENDMENTS.md first: ${dirty.slice(0, 5).join('; ')}`);
+  if (!fs.readFileSync(path.join(researchDir, 'AMENDMENTS.md'), 'utf8').includes(`**${id} `)) throw new Error(`AMENDMENTS.md has no entry ${id}`);
+
+  const record = {
+    kind: 'risk-envelope pilot code amendment',
+    id,
+    t: new Date().toISOString(),
+    head: headCommit(),
+    from: allowed.at(-1)!,
+    to: codeDigest(),
+    changed,
+    removed,
+    amendmentsSha256: sha256File(path.join(researchDir, 'AMENDMENTS.md'))
+  };
+
+  if (record.from === record.to) throw new Error('the code closure is unchanged: nothing to amend');
+  seal(file, record, `code amendment ${id}`);
+  console.log(JSON.stringify({ id, from: record.from.slice(0, 12), to: record.to.slice(0, 12), changed: changed.map((c) => c.file) }));
+};
+
 switch (cmd) {
+  case 'code-amendment':
+    codeAmendment();
+    break;
   case 'bound':
     console.log(JSON.stringify(assertBound(), null, 1));
     break;

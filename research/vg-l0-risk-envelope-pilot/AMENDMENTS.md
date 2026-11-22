@@ -42,3 +42,17 @@ they were written (only the engineering gates' non-official checks).
   corrected to accept 124 or 137, the original FAILED line is kept in `results/logs/engineering-chain.log`, and the chain
   resumed at step 7 (unit `vgl0rep-eng2`); steps 1–5 were not rerun. The killed-and-resumed run then equalled the
   uninterrupted run exactly (`results/engineering/E3/compare-killed-resumed-vs-gpu.json`). No pilot evaluation existed.
+- **A1 (2026-11-22T11:10:01Z, after the freeze; a defect fix, no criterion or rule changed).** The chain's step 9 (`select --cutoff
+  C21`, a non-evaluating stage) crashed in `stages.ts` `sealedEvidence`: the helper that drops per-lot rows from an
+  evidence row assumed the rows were present, but the evidence it was given had been read back from the SEALED
+  qualification record, where the rows had already been dropped (`risk.rows` absent, `rowsKept` present). The crash
+  happened after the selection rule had been computed in memory and before anything was printed, written or sealed: no
+  selection record, no selection outcome and no door opening exists. Results existing at the time: the sealed searches
+  (CTRL, EXP at C21 and C24), the sealed qualifications and the sealed E2 / E2-qualification records (all unaffected: they
+  were produced by the frozen code `b61f771d…` and are not re-run). Change: `sealedEvidence` is idempotent (keeps an
+  existing `rowsKept`); the official guards accept the code closure's digest when it is the frozen one or the target of a
+  sealed, committed code-amendment record chained from it (`results/amendments/A1.json`, written by `code-amendment`,
+  listing every changed file); job identities record the frozen and the current digest; a regression test
+  (`tests/static.test.ts`). No selection rule, gate, threshold, seed, schedule, budget or door changed; the selection
+  functions (`select.ts`) are byte-identical. Tests after the fix: 27/27 (`results/engineering/E4/tests-after-A1.txt`).
+  Effect: the chain resumes at step 9 (`START=9`); steps 1–8 are not rerun.
