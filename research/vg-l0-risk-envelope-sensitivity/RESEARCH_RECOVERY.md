@@ -81,3 +81,14 @@ Assignment 3's `.sqlite.zst` archives were not needed and not touched.
 - AMENDMENTS N4: replay volumes, 37,868 CPU engine passes against the 70,000 cap; the PL / BD tie label.
 - One tool command (a heredoc text edit) was refused by the harness's deletion safety check. It deleted nothing; the
   same edit was then made with the editor.
+
+## Delivery
+
+- Handoff ZIP `research/vg-l0-risk-envelope-sensitivity/bundle/vg-l0-risk-envelope-sensitivity-stage-a.zip`, built
+  2026-11-22T16:45:46Z by `tools/vg-l0-risk-envelope-sensitivity/bundle.sh` from the tree at `6d3390e4`: sha256
+  `7aeb99b2a4802e5010bc0d9de73e42aeb57075c891e51d279ff526706f8b7ae6`, 4,272,170 B, 61 files covered by its
+  `MANIFEST.sha256`. Checks passed: `zip -T` OK; every checksum verified after extraction; secret / personal-data scan
+  clean; no database or market-data file. The ZIP holds this checkpoint as of `6d3390e4`, before this section. An
+  identical copy is in `~/.local/share/margin-trading-gpu/handoffs/`.
+- Push: `git ls-remote origin research/vg-l0-risk-envelope-sensitivity` = local HEAD (see the final response); `main`
+  untouched; nothing merged.
