@@ -1,0 +1,86 @@
+{
+ "kind": "gpu-phase7 E8 npm test",
+ "t": "2026-11-22T00:13:27.088Z",
+ "command": "npm test (node --test --test-concurrency=4 src/**/*.test.ts)",
+ "totals": {
+  "tests": 1737,
+  "pass": 1724,
+  "fail": 9,
+  "cancelled": 0,
+  "skipped": 4
+ },
+ "baseline": {
+  "tests": 1723,
+  "fail": 7,
+  "source": "research/gpu-phase6/results/tests/npm-test.json (after Phase 6: 1,723 tests, 7 known failures); GPU Phase 7 adds 14 risk-envelope tests"
+ },
+ "failures": [
+  {
+   "file": "src/gpu-backend/tests/enforcement.test.ts",
+   "test": "the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+   "known": false
+  },
+  {
+   "file": "src/gpu-backend/tests/policy.test.ts",
+   "test": "MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)",
+   "known": false
+  },
+  {
+   "file": "src/intraday-study/tests/study.test.ts",
+   "test": "match the hashes recorded when the study started, except the recorded post-study changes",
+   "known": true
+  },
+  {
+   "file": "src/minute-optimizer/tests/goldenMaster.test.ts",
+   "test": "src/app/allIn.ts and src/app/allin-original.ts are byte-for-byte unchanged",
+   "known": true
+  },
+  {
+   "file": "src/study7-runners/tests/runners.test.ts",
+   "test": "parity with the sealed Study 7 final door, and determinism",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "the original is untouched",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "checked-in settings",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "brief settings",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "volatile synthetic walks with gaps exercise every exit path, restrictions and resets",
+   "known": true
+  }
+ ],
+ "unexpected": [],
+ "recordInForceBeforeRecord": {
+  "tests": [
+   {
+    "file": "src/gpu-backend/tests/enforcement.test.ts",
+    "test": "the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not"
+   },
+   {
+    "file": "src/gpu-backend/tests/policy.test.ts",
+    "test": "MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+   }
+  ],
+  "staleReason": true,
+  "rule": "amendment A4: accepted only with the stale-enforcement reason; rerun after the new record must pass (results/tests/record-in-force-after.txt)"
+ },
+ "rootTsc": "exit 0",
+ "eslintGpu": [
+  "✖ 2 problems (1 error, 1 warning)",
+  "exit=1"
+ ],
+ "summary": "1737 tests, 1724 pass, 9 fail (7 known pre-existing, 2 record-in-force before the new record (A4), 0 unexpected), 4 skipped",
+ "pass": true
+}

@@ -50,7 +50,7 @@ primary research):
   experimental envelope the 25 % gates bind **inside** the 40 % DD cap. **The experimental envelope is not a pure
   relaxation:** a member with DD $30k and trade PL $28k passes the control and fails the experimental arm. On the 1,000
   near-threshold engineering configurations per door of GPU Phase 7's risk-delivery parity (archived DD near $35k/$40k),
-  about a quarter passed exactly one of the two policies, and banked DD > $25k was the most frequent experimental failure
+  20.5 % (D21) and 23.7 % (D24) passed exactly one of the two policies, and banked DD > $25k was the most frequent experimental failure
   (figures: `research/gpu-phase7/PARITY_REPORT.md` §4; engineering subjects, not candidates).
 
 ## 3. Arms

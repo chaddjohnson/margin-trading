@@ -2,11 +2,12 @@
 
 **Top screen (update at every milestone; times from `date -u`)**
 
-- Updated: 2026-11-21T20:37:50Z (clock).
-- Status: **INCOMPLETE** — integration committed (`3715e97f`); campaign `chains/final.sh` RUNNING since 2026-11-21T20:23:21Z
-  (unit `p7chain-final`, log `results/logs/final-chain.txt`; waiter task b6hcipe2o in the session). Written meanwhile (not
-  yet committed): RISK_METRIC_INTEGRATION_SPEC.md, INTEGRATION_PLAN.md, RESTORATION_REPORT.md, the pilot proposal
-  (`research/vg-l0-risk-envelope-pilot/`), scaling checks (results/scaling, PASS), diagnostics illustration, docs/gpu updates.
+- Updated: 2026-11-21T23:26:30Z (clock). Steps 1–25 of `chains/final.sh` complete (parity campaign 54/54, replays, compares, mini-optimizations, Q1, sanitizer rc 0, negative 73/73).
+- Status: **INCOMPLETE** — integration committed (`3715e97f`); campaign `chains/final.sh` started 2026-11-21T20:23:21Z; step 26 (tamper) FAILED at 23:25:28Z only because an untracked
+  helper (`tools/gpu-phase7/summarize.ts`, written during the run) made the tree dirty — `tamper.ts` refuses a dirty tree. The helper was moved
+  to the session scratchpad (re-added after the campaign) and the chain RESUMED with START=26 at 23:26:09Z (unit `p7chain-final`, same log,
+  waiter task bpiw92vwn). HEAD unchanged `ed3cf5c5`. Disclosure: AMENDMENTS D1. Committed in `ed3cf5c5`: RISK_METRIC_INTEGRATION_SPEC.md, INTEGRATION_PLAN.md,
+  RESTORATION_REPORT.md, the pilot proposal (`research/vg-l0-risk-envelope-pilot/`), scaling checks (PASS), diagnostics illustration, docs/gpu.
 - Brief: `research/gpu-phase7/brief/BRIEF.md` (verbatim, 633 lines, sha256 `dfc11ac0…aecbff90f2`).
 - Branch `research/gpu-phase7-risk-envelope-readiness` from `cleanup/storage-2026-11-21` `d89b9dec` (= main `3606f4b3`
   + 2 docs-only cleanup commits). Main checkout `/home/chad/projects/margin-trading` (no extra worktree).

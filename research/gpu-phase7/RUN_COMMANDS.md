@@ -10,6 +10,8 @@ python3 -I tools/gpu-phase7/edge-subjects.py research/gpu-phase7/cache/restore/s
 
 # the campaign (one chain, contained; resume with START=<step>)
 tools/gpu-phase7/launch-slice.sh p7chain-final /home/chad/projects/margin-trading/research/gpu-phase7/results/logs/final-chain.txt -- /usr/bin/env START=1 /bin/bash research/gpu-phase7/chains/final.sh
+# executed resume after the step-26 refusal (AMENDMENTS D1), 2026-11-21T23:26:09Z
+tools/gpu-phase7/launch-slice.sh p7chain-final /home/chad/projects/margin-trading/research/gpu-phase7/results/logs/final-chain.txt -- /usr/bin/env START=26 /bin/bash research/gpu-phase7/chains/final.sh
 
 # the acceptance record (only after the chain completed; ACCEPTED only if every gate passes)
 node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase7/accept.ts
