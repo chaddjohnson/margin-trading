@@ -2,18 +2,15 @@
 
 **Top screen (times from `date -u`)**
 
-- Updated: 2026-11-22T09:53Z. **INCOMPLETE.** Stage: **S0 — pre-freeze engineering** (reading done; brief saved;
-  branch created; E1 verifier running). No pilot search, qualification, slice or validation has run.
-- Authority: the user's authorization `brief/BRIEF.md` (sha256 `5a9dfe8f68d227be2dd429508691bf65574df6a975fa104e5d05c27e747723dd`,
-  215 newline-terminated lines + a final line without newline = 216 lines, 29,340 bytes; read in full to "Final instructions").
-  The frozen protocol does not exist yet (`PROTOCOL.md` to be written from the proposal + the approved decisions).
-- Branch `research/vg-l0-risk-envelope-pilot` created 2026-11-22T09:52Z from `research/gpu-phase7-risk-envelope-readiness`
-  `fc027eed1efb7e7b8b67022d8f9553f5bf27c394` (the accepted Phase 7 lineage, D-14). Main checkout, no extra worktree.
-  `main` untouched.
-- Running: E1 verifier `tools/gpu-backend/verify-acceptance.sh --rebuild --device --expect-record-sha256 bb0e3fcf…`
-  (harness background task; output `results/engineering/E1/verify-acceptance-pre.txt`).
-- Next step: write PROTOCOL.md / DECISION_REGISTER.md / EXECUTION_PLAN.md / AMENDMENTS.md / STANDARD_ADOPTION.json,
-  implement `src/vg-l0-risk-envelope-pilot/`, pass E1–E6, freeze, commit, push, then the official runs.
+- Updated: 2026-11-22T10:33Z. **INCOMPLETE.** Stage: **S1 — engineering gates** (E4 PASS 26/26, E5 PASS, E1 VERIFIED;
+  E3 chain running; E6, gates seal, freeze not yet). No official pilot evaluation has run.
+- Authority: `brief/BRIEF.md` sha256 `5a9dfe8f…723dd`; protocol `PROTOCOL.md` NL0-REP 1.0.0 (not yet frozen; sha256 at
+  commit `1f5093d6`: `723eea5d96fb986bb3d285b62201895052d573b2e6154a6fe94e8302c5ef2e78`); amendments head P9 (pre-freeze).
+- Branch `research/vg-l0-risk-envelope-pilot`, HEAD `1f5093d6` (code + documents committed; not pushed yet). Main checkout.
+- Running: unit `vgl0rep-eng` (`chains/engineering.sh`, log `results/logs/engineering-chain.log`): E3 steps 4–16
+  (stopped/killed resume, compares, a3check, edge D21/D24, identity, summary). Resume after a failure: `START=<step>`.
+- Next: E6 official preflight D21/D24 → `npm run vg-l0rep -- gates` → `freeze` → commit → push → official stage 1
+  (EXECUTION_PLAN §2).
 
 ## Environment (verified 2026-11-22T09:52Z)
 

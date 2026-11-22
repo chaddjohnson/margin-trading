@@ -9,7 +9,7 @@ E=research/vg-l0-risk-envelope-pilot/results/engineering
 cd $R || exit 1
 step() { echo "=== $(date -u +%FT%TZ) begin: $*"; "$@"; local s=$?; echo "=== $(date -u +%FT%TZ) end [$s]: $*"; return $s; }
 must() { step "$@" || { echo "FAILED: $*"; exit 1; }; }
-expect() { local want=$1; shift; step "$@"; local s=$?; [ "$s" = "$want" ] || { echo "FAILED (exit $s, expected $want): $*"; exit 1; }; }
+expect() { local want=$1; shift; step "$@"; local s=$?; [[ " $want " == *" $s "* ]] || { echo "FAILED (exit $s, expected $want): $*"; exit 1; }; }
 
 START=${START:-1}
 # E4: the pilot's tests, with the code digest they ran on
@@ -25,7 +25,9 @@ export GPU_POLICY_PURPOSE=parity-test
 [ "$START" -le 3 ] && must $ENG mini --backend cpu --name cpu --a3
 [ "$START" -le 4 ] && expect 75 $ENG mini --backend gpu --name gpu-stopped --a3 --stop-after 4000
 [ "$START" -le 5 ] && must $ENG mini --backend gpu --name gpu-stopped --a3 --resume
-[ "$START" -le 6 ] && expect 137 timeout -s KILL 25 $ENG mini --backend gpu --name gpu-killed --a3
+# GNU timeout reports 124 when it had to kill the command (137 only when timeout itself is killed): either proves the
+# SIGKILL (the first run of 2026-11-22 expected 137 and stopped there; the kill had happened: 615 rows, no result)
+[ "$START" -le 6 ] && expect "124 137" timeout -s KILL 25 $ENG mini --backend gpu --name gpu-killed --a3
 [ "$START" -le 7 ] && must $ENG mini --backend gpu --name gpu-killed --a3 --resume
 [ "$START" -le 8 ] && must $ENG compare gpu cpu --out $E/E3/compare-gpu-vs-cpu.json
 [ "$START" -le 9 ] && must $ENG compare gpu-stopped gpu --out $E/E3/compare-stopped-resumed-vs-gpu.json

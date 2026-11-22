@@ -299,7 +299,7 @@ const identity = () => {
   ];
   const rows = tries.map((x) => {
     try {
-      const s = new Store(file, { binding: { study: 'research/vg-l0-risk-envelope-pilot', job: name, door: 'D19', doorPin: 'x', codeDigest: 'x', backend: r.backend, ...x.binding } as never });
+      const s = new Store(file, { binding: { study: 'research/vg-l0-risk-envelope-pilot', job: name, door: 'D19', doorPin: 'x', codeDigest: 'x', backend: r.backend, ...x.binding } as never, lruCapacity: 100, commitRows: 100, commitMs: 1000, readOnly: true });
 
       s.close();
       return { what: x.what, refused: false, error: null };

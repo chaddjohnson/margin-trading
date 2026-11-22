@@ -36,3 +36,9 @@ they were written (only the engineering gates' non-official checks).
   EXP); the C24 EXP phase, the qualifications and the selections follow; D23 and FULL open behind their sealed, committed
   selections; FULL once for the official validation.
 - **P9 (pre-freeze) — the outcome label (PROTOCOL §15)** and the exact H1/H1′/H2/H3 definitions are precommitted.
+- **D1 (disclosure, 2026-11-22T10:37:02Z, engineering only, pre-freeze).** The E3 chain (`chains/engineering.sh`) step 6
+  (the SIGKILL interruption test) expected exit 137, but GNU `timeout -s KILL` reports 124 when it kills the command. The
+  kill had happened (job `gpu-killed`: 615 archived rows, no result, no clean close). The script's expectation was
+  corrected to accept 124 or 137, the original FAILED line is kept in `results/logs/engineering-chain.log`, and the chain
+  resumed at step 7 (unit `vgl0rep-eng2`); steps 1–5 were not rerun. The killed-and-resumed run then equalled the
+  uninterrupted run exactly (`results/engineering/E3/compare-killed-resumed-vs-gpu.json`). No pilot evaluation existed.
