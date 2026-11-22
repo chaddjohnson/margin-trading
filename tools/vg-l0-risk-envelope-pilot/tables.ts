@@ -259,6 +259,51 @@ for (const c of cuts) {
   ]);
 }
 
+// ----- CPU / GPU cross-checks of the diagnostics (the CPU replays against the official GPU records) -----
+{
+  const r2c = (x: number) => Math.round(x * 100) / 100;
+  const rows: (string | number)[][] = [];
+  const out: J = {};
+
+  for (const c of cuts) {
+    const pop = rd(`diagnostics/population-${c}.json`);
+    const pri = rd(`diagnostics/primaries-${c}.json`);
+    const q = qual[c];
+
+    if (!pop || !q) continue;
+
+    let compared = 0;
+    let differing = 0;
+
+    for (const e of q.evidence as J[]) {
+      const r = (pop.rows as J[]).find((x) => x.id === e.id);
+
+      if (!r) continue;
+      compared++;
+
+      const g = e.envelope.centre;
+      const same = r.net === r2c(e.centre.net) && r.dd === r2c(e.centre.dd) && ['principalLossMarked', 'principalLossLiquidation', 'bankedDdMarked', 'bankedDdLiquidation'].every((f) => r.envelope[f] === r2c(g[f]));
+
+      if (!same) differing++;
+    }
+
+    let icompared = 0;
+    let idiffering = 0;
+
+    for (const r of (pri?.rows as J[]) ?? []) {
+      const g = (slices[c]?.rows as J[] | undefined)?.find((x) => x.id === r.id);
+
+      if (!g) continue;
+      icompared++;
+      if (!(Object.is(r.foldRun.sliceNet, g.sliceNet) && Object.is(r.foldRun.sliceDd, g.sliceDd))) idiffering++;
+    }
+    out[c] = { qualificationCentres: { compared, differing }, intervals: { compared: icompared, differing: idiffering } };
+    rows.push([c, `${compared - differing}/${compared}`, `${icompared - idiffering}/${icompared}`]);
+  }
+  summary.cpuGpuCrossChecks = out;
+  table('CPU diagnostic replays against the official GPU records (net, DD and the four envelope values to the cent; interval net and reset DD exactly)', ['Cutoff', 'Qualification centres identical', 'Interval subjects identical (net, DD)'], rows);
+}
+
 fs.mkdirSync(path.join(resultsDir, 'tables'), { recursive: true });
 fs.writeFileSync(path.join(resultsDir, 'tables', 'TABLES.md'), `${md.join('\n')}\n`);
 writeJson(path.join(resultsDir, 'tables', 'summary.json'), summary);
