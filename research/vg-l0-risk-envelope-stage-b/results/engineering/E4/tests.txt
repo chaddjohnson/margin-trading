@@ -1,0 +1,52 @@
+codeDigest fcc20138b64c8e05e7bc24044fa4d6d6af237a213837690f76347be802e690e4
+head 59493083d3aa0eeeb28cf52f31f319148749c9fe
+t 2026-11-22T21:42:47Z
+✔ the bound from the frozen schedules = the preregistered bound (PROTOCOL.md §6) (0.704165ms)
+✔ training doors follow the fold order (0.762875ms)
+✔ interval doors only behind the sealed and committed selection of their fold (0.226402ms)
+✔ FULL once: the C24 selection, the frozen selection and the authorization; never after the sealed validation (0.220882ms)
+✔ engineering reads D19 always, D21 / D24 only before the freeze, never D23 or FULL; a purpose is required (0.147101ms)
+✔ the limits come from the policies on named denominators: CTRL 35 % of C0; EXP30 40 % / 25 % / 30 % (1.4615ms)
+✔ plausibility flips: DD $38k with PL/BD inside — CTRL fails, EXP30 passes (0.544934ms)
+✔ BD in ($25k, $30k]: fails the pilot 40/25/25, passes P3; BD > $30k fails P3; PL > $25k fails P3 (0.361683ms)
+✔ exact boundaries: equal to the limit passes, one ulp above fails (unrounded) (0.575034ms)
+✔ the marked twins are reported, never gated; the envelope validation keeps liquidation ≥ marked (fail closed) (0.393592ms)
+✔ the rung violation under EXP30: one part per gated centre metric and per gated neighbourhood p90 (unrounded) (1.710091ms)
+✔ invalid states fail closed: an error record is never plausible; a missing or invalid envelope throws under EXP30 (0.224572ms)
+✔ stage wiring (giveback): feasibility follows the arm; every request carries the envelope (260.335881ms)
+✔ stage wiring (banked28): feasibility follows the arm; every request carries the envelope (278.648614ms)
+✔ stage wiring (banked31): feasibility follows the arm; every request carries the envelope (224.455911ms)
+✔ stage wiring (principal): feasibility follows the arm; every request carries the envelope (221.961874ms)
+✔ seed pairing: both arms of one seed key request the identical screen; the arm never enters a seed (455.453686ms)
+✔ grouping invariance: a lane run together with its paired lane and others equals the lane run alone (765.834531ms)
+✔ a baseline member qualifies under both arms (1.289798ms)
+✔ Q2: DD $38k → CTRL fails, EXP30 passes; BD $28k → both pass; BD $31k or PL $26k → CTRL passes, EXP30 fails (1.672741ms)
+✔ Q3 gates the confirmation p90 of each metric under EXP30; the marked p90 DD only under CTRL (1.315989ms)
+✔ Q5 at 10 bps: EXP30 needs net > 0 and the full P3 envelope (1.020557ms)
+✔ exact boundaries in qualification at the P3 limits (3.112491ms)
+✔ Q4: the unrounded confirmation p10 under EXP30; a failed draw counts as −C0 (fail closed) (0.363942ms)
+✔ V = the best centre net among the lane’s OWN members qualified under the lane’s OWN arm (0.769705ms)
+✔ a lane with no qualified member has V = $0 and no representative; a count mismatch fails closed (0.182191ms)
+✔ ties in V follow the P0 order (selection robust, then lower centre DD, then label) (0.132121ms)
+✔ populations: an arm sees only its own members, with its own verdicts; the adapted RA1 is EXP30-only (0.711685ms)
+✔ P3 deep-equals Stage A’s predeclared P3; P0 is NL0_CONTROL itself (0.570804ms)
+✔ the pilot modules Stage B reuses are byte-identical to the pilot’s sealed code (0.422283ms)
+✔ no hidden limit: no Stage B module hard-codes a dollar limit or reads economics.ceiling (0.496603ms)
+✔ every evaluation Stage B requests carries the risk envelope (0.478243ms)
+✔ the cells: the legacy cell and the pilot’s hash-selected cell (0.921436ms)
+✔ 16 new replicates R3–R18; R1/R2 only as reproduction lanes; never used by any earlier sealed search (142.334912ms)
+✔ SEED_BUDGET_MATRIX.json equals the code’s matrix (0.494133ms)
+✔ pairs match by (cell, replicate); D = EXP30 − CTRL; an unpaired design fails closed (1.155197ms)
+✔ the bootstrap is deterministic, labelled and stratified (a constant per cell keeps the mean exactly) (4.181128ms)
+✔ non-inferiority: L90 > −$5,000; superiority: mean > +$2,500 and L90 > 0 (1026.568994ms)
+✔ V = $0 lanes stay in the statistic and are counted; the sensitivity drops their pairs (169.568794ms)
+✔ the outcome label (0.270552ms)
+✔ T2: the paired interval DD uses the UPPER one-sided 90 % bound against +$5,000 (527.233815ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2661.113873

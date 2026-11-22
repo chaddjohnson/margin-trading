@@ -13,4 +13,24 @@ The rules are in PROTOCOL.md §17.
 - **What may never change.** Criteria are never loosened. No arm, cell, cutoff, replicate, policy, statistic, margin or
   threshold is added, removed or changed once a result it governs exists.
 
-(No entries yet. The protocol was preregistered with this file at the commit recorded in `RESEARCH_RECOVERY.md`.)
+The protocol was preregistered with this file at commit `59493083` (2026-11-22T21:26:55Z, pushed).
+
+- **P1 (2026-11-22T21:45Z, pre-freeze; a disclosure, no change).** The standard's read time is wrong in two places:
+  `PROTOCOL.md` §0 ("read in full 2026-11-22T21:25Z") and `STANDARD_ADOPTION.json` `readAt` (`2026-11-22T21:25:00Z`).
+  Both were estimated, not taken from the clock. The standard was read in full before the first clock reading after
+  it, 2026-11-22T21:21:18Z (`date -u`), and the brief at 21:14Z. Likewise, the first `RESEARCH_RECOVERY.md` top screen
+  ("Updated 22:10Z") was an estimate, corrected there. The adoption time `2026-11-22T21:26:35Z` was taken from the
+  clock. No criterion, design element or result is affected. No Stage B evaluation existed.
+- **P2 (2026-11-22T21:45Z, pre-freeze; implementation refinements within PROTOCOL.md, no design change).**
+  - (a) The door guard takes an injectable record state, so the fold-order and FULL-once rules are unit-tested on a
+    synthetic state (`tests/doors.test.ts`). The guard semantics are as in PROTOCOL.md §9.
+  - (b) The selection record seals the lane values, the 32 pairs and the paired statistic of §1 (`stats.ts
+    primaryOf`) at selection time, before the cutoff's next door opens. The analysis tool only reads it.
+  - (c) The launch rule of §13 is enforced in code (`stages.ts launchGuard`). The forecast is the expected requested
+    evaluations at Phase 7's 8-lane rate scaled by door sessions; after the first fold, the previous search's measured
+    rate scaled by door sessions, ÷ 1.5; plus the qualification and interval at the pilot's measured qualification
+    rate, plus 10 minutes. A resumed search is not re-gated.
+  - (d) E3's threshold-edge subjects are written by `tools/vg-l0-risk-envelope-stage-b/edge-subjects.py`: 500 per
+    door, nearest to BD $30k (150), PL $25k (150), DD $40k (100) and DD $35k (100). They are drawn from Stage A's
+    replayed pilot populations, sha256 `230ee6c7…` (C21) and `71078c00…` (C24), and added to Phase 7's 1,000 edge
+    subjects per door.
