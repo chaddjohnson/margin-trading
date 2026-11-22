@@ -81,4 +81,15 @@ checkpoint, the chain log and units were inspected before the resume; no process
 
 ## Delivery
 
-(filled after the push)
+- Commits on the branch (after the base `d89b9dec`): `3715e97f` integration + tools + protocol freeze; `ed3cf5c5` documents,
+  scaling, diagnostics; `999f299e` campaign evidence + A2 + parity report (the record's source revision); `1f2b9700` the
+  ACCEPTED record; `269128fb` readiness package + benchmark + final checkpoint; `d5fddf26` manifest (H) + ZIP (I); and the
+  commit that adds this section.
+- Push 2026-11-22T00:49Z (no force): `git ls-remote origin research/gpu-phase7-risk-envelope-readiness` =
+  `d5fddf26dc56395a0b2d38344551fcabf6a91647` = local HEAD at that time; `origin/main` = `3606f4b3` (unchanged);
+  `origin/cleanup/storage-2026-11-21` = `d89b9dec` (unchanged). The commit adding this section is pushed and verified the
+  same way (its hash is reported in the final response; a file cannot quote its own commit).
+- READINESS_MANIFEST.json sha256 `e2238ed3ede591cb…` (records HEAD `269128fb`, clean tree); ZIP sha256
+  `f1a348a95773d0cf91f0926dd1541fcaa336993b6942914fe0db177b163843a0` (2,320,497 B, 193 entries), identical copy in
+  `~/.local/share/margin-trading-gpu/handoffs/gpu-phase7-risk-envelope-readiness.zip`. The ZIP holds this checkpoint as of
+  `269128fb` (before this Delivery section).
