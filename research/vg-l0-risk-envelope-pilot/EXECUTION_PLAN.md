@@ -36,7 +36,7 @@ attestations `results/gpu-attestations/<job>-<time>.json`; sealed stage records 
 ```bash
 # Unit containment: transient units in vgl0rep.slice (MemoryHigh 44G, MemoryMax 48G, MemorySwapMax 0)
 npm run vg-l0rep -- launch --unit vgl0rep-C21-search --wait -- search --cutoff C21
-npm run vg-l0rep -- launch --unit vgl0rep-C24-search --wait -- search --cutoff C24     # may run concurrently with C21 (Mode A)
+npm run vg-l0rep -- launch --unit vgl0rep-C24-search --wait -- search --cutoff C24     # may run concurrently with C21 (Mode A; measured gain only 5 %)
 npm run vg-l0rep -- launch --unit vgl0rep-C21-qualify --wait -- qualify --cutoff C21
 npm run vg-l0rep -- launch --unit vgl0rep-C24-qualify --wait -- qualify --cutoff C24
 npm run vg-l0rep -- select --cutoff C21 && git commit …                                # sealed C21 selection BEFORE its slice opens
@@ -64,10 +64,38 @@ npm run vg-l0rep -- report
 
 ### 4.2 Compute time (measured on the accepted GPU path in GPU Phase 7)
 
-MEASURED_THROUGHPUT_SECTION
+Measured, non-official (purpose `benchmark`), on the accepted binary gb7 after the record, GPU otherwise idle; every
+evaluation with the risk envelope requested; batch 8,192, 8 host workers (records: `research/gpu-phase7/results/bench/
+benchmark.json`, the jobs' `profile.json`; the campaign's `a3-plain`/`a3-risk` and mini jobs).
+
+| Job (shape) | Lanes | Fresh evaluations | Wall | Rate | Median batch |
+|---|---:|---:|---:|---:|---:|
+| Assignment 3 C19 broad1, plain (campaign A3) | 64 | 1,242,714 | 583.9 s | 2,128 /s | 7,980 |
+| the same with the envelope requested (campaign A3) | 64 | 1,242,714 | 681.6 s | 1,823 /s (+16.7 % wall) | 7,980 |
+| **C21 broad1 lanes 0/8, risk** (pilot shape) | 8 | 138,316 | 377.2 s | 367 /s | 384 |
+| **C24 broad1 lanes 0/8, risk** (pilot shape) | 8 | 104,431 | 459.7 s | 227 /s | 368 |
+| both at once (Mode A) | 8 + 8 | 242,747 | 796.4 s (pair) | 305 /s combined | 384 / 368 |
+
+- An 8-lane job is **latency-bound**: its lanes submit small batches (median ≈ 380 of 8,192), so the rate is 5–8× below
+  the 64-lane replay. Running the two cutoff jobs concurrently saved only 5 % (796 s vs 837 s sequential).
+- Each slice's 8 lanes were identical to the same lanes of the sealed Assignment 3 job (envelopes stripped), alone and
+  concurrently; alone = concurrent (`results/bench/compare-*`).
+- **Pilot estimate** (rates above; C24's longer door is slower):
+
+| Block | Evaluations expected (worst) | Wall expected (worst) |
+|---|---:|---:|
+| C21 search job (CTRL + EXP) | 121,000–181,000 (328,000) | 5.5–8.2 min (15 min) |
+| C24 search job (CTRL + EXP) | 107,000–157,000 (328,000) | 7.9–11.6 min (24 min) |
+| qualification (both cutoffs), slices and validation | ≤ 41,300 | ≤ 3 min at the 8-lane rate (larger batches are faster) |
+| **Total GPU wall, sequential** | ≈ 0.27–0.38 M (0.70 M) | **≈ 16–23 min (≈ 42 min)** |
+
+  Plus preflights (≈ 10 s each), dataset export and the CPU diagnostics (minutes). The budget, not the compute, is the
+  constraint: the worst case is under an hour. Timings select nothing (standard §6.3).
 
 ### 4.3 Resources
 
-RTX 5090 (≈ 6–8 GB VRAM per job at batch 8,192 incl. the dataset); host RAM per job ≈ 5–8 GB (8 host workers);
-both jobs inside one slice (44G/48G caps); CPU diagnostics ≈ 12 workers for minutes. Disk: job archives ≈ 0.6–0.9 GB per
-search job with envelopes (≈ 150,000 rows × ≈ 4.7 kB/row, Assignment 3's measured row size: 4.6–9.7 GB for 1.0–2.0 M rows).
+RTX 5090 (measured in the benchmark: ≈ 4.8 GB device memory used with one job, 9.2 GB with two, at batch 8,192 incl. the
+dataset); host memory per job measured 3.3–4.2 GB RSS, unit peak 3.9–4.7 GB (8 host workers);
+both jobs inside one slice (44G/48G caps); CPU diagnostics ≈ 12 workers for minutes. Disk: job archives with envelopes measured
+4.5–4.6 kB/row (benchmark: 627.6 MB for 138,316 rows, 478.3 MB for 104,431) → ≈ 0.5–0.8 GB per search job expected,
+≈ 1.5 GB worst case; filesystem free 572 GB (`df -h /home`, 2026-11-22, after the benchmark).

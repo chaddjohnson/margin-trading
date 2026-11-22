@@ -1,6 +1,6 @@
 {
  "kind": "gpu-phase7 readiness summary",
- "t": "2026-11-21T23:27:02.252Z",
+ "t": "2026-11-22T00:47:52.263Z",
  "parity": {
   "pass": true,
   "runs": 54,
@@ -452,6 +452,50 @@
    "hostWorkers": 8,
    "batches": 211,
    "medianBatch": 7980
+  },
+  "bench-C21-risk-l8": {
+   "backend": "gpu",
+   "risk": true,
+   "lanes": 8,
+   "fresh": 138316,
+   "wallSeconds": 377.2,
+   "evaluationsPerSecond": 366.7,
+   "hostWorkers": 8,
+   "batches": 108,
+   "medianBatch": 384
+  },
+  "bench-C21-risk-l8-conc": {
+   "backend": "gpu",
+   "risk": true,
+   "lanes": 8,
+   "fresh": 138316,
+   "wallSeconds": 714.8,
+   "evaluationsPerSecond": 193.5,
+   "hostWorkers": 8,
+   "batches": 108,
+   "medianBatch": 384
+  },
+  "bench-C24-risk-l8": {
+   "backend": "gpu",
+   "risk": true,
+   "lanes": 8,
+   "fresh": 104431,
+   "wallSeconds": 459.7,
+   "evaluationsPerSecond": 227.2,
+   "hostWorkers": 8,
+   "batches": 92,
+   "medianBatch": 368
+  },
+  "bench-C24-risk-l8-conc": {
+   "backend": "gpu",
+   "risk": true,
+   "lanes": 8,
+   "fresh": 104431,
+   "wallSeconds": 796.4,
+   "evaluationsPerSecond": 131.1,
+   "hostWorkers": 8,
+   "batches": 92,
+   "medianBatch": 368
   },
   "mini-conc-plain": {
    "backend": "gpu",
@@ -2081,15 +2125,296 @@
     "engine": "11/11"
    }
   },
-  "tamper": null,
+  "tamper": {
+   "pass": true,
+   "passed": 23,
+   "cases": 23,
+   "baselineOk": true
+  },
   "sustained": [
-   null,
-   null
+   {
+    "pass": true,
+    "minutes": 32.3,
+    "failures": 0,
+    "parity": {
+     "samples": 2304,
+     "mismatches": 0,
+     "cpuErrors": 0,
+     "examples": []
+    },
+    "repeat": {
+     "checks": 3,
+     "tasks": 6144,
+     "mismatches": 0,
+     "examples": []
+    }
+   },
+   {
+    "pass": true,
+    "minutes": 32.27,
+    "failures": 0,
+    "parity": {
+     "samples": 2304,
+     "mismatches": 0,
+     "cpuErrors": 0,
+     "examples": []
+    },
+    "repeat": {
+     "checks": 3,
+     "tasks": 6144,
+     "mismatches": 0,
+     "examples": []
+    }
+   }
   ],
-  "npmTest": null,
-  "strategyLab": null,
-  "portfolioParity": null,
-  "integrity": null,
+  "npmTest": {
+   "kind": "gpu-phase7 E8 npm test",
+   "t": "2026-11-22T00:13:27.088Z",
+   "command": "npm test (node --test --test-concurrency=4 src/**/*.test.ts)",
+   "totals": {
+    "tests": 1737,
+    "pass": 1724,
+    "fail": 9,
+    "cancelled": 0,
+    "skipped": 4
+   },
+   "baseline": {
+    "tests": 1723,
+    "fail": 7,
+    "source": "research/gpu-phase6/results/tests/npm-test.json (after Phase 6: 1,723 tests, 7 known failures); GPU Phase 7 adds 14 risk-envelope tests"
+   },
+   "failures": [
+    {
+     "file": "src/gpu-backend/tests/enforcement.test.ts",
+     "test": "the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+     "known": false
+    },
+    {
+     "file": "src/gpu-backend/tests/policy.test.ts",
+     "test": "MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)",
+     "known": false
+    },
+    {
+     "file": "src/intraday-study/tests/study.test.ts",
+     "test": "match the hashes recorded when the study started, except the recorded post-study changes",
+     "known": true
+    },
+    {
+     "file": "src/minute-optimizer/tests/goldenMaster.test.ts",
+     "test": "src/app/allIn.ts and src/app/allin-original.ts are byte-for-byte unchanged",
+     "known": true
+    },
+    {
+     "file": "src/study7-runners/tests/runners.test.ts",
+     "test": "parity with the sealed Study 7 final door, and determinism",
+     "known": true
+    },
+    {
+     "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+     "test": "the original is untouched",
+     "known": true
+    },
+    {
+     "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+     "test": "checked-in settings",
+     "known": true
+    },
+    {
+     "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+     "test": "brief settings",
+     "known": true
+    },
+    {
+     "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+     "test": "volatile synthetic walks with gaps exercise every exit path, restrictions and resets",
+     "known": true
+    }
+   ],
+   "unexpected": [],
+   "recordInForceBeforeRecord": {
+    "tests": [
+     {
+      "file": "src/gpu-backend/tests/enforcement.test.ts",
+      "test": "the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not"
+     },
+     {
+      "file": "src/gpu-backend/tests/policy.test.ts",
+      "test": "MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+     }
+    ],
+    "staleReason": true,
+    "rule": "amendment A4: accepted only with the stale-enforcement reason; rerun after the new record must pass (results/tests/record-in-force-after.txt)"
+   },
+   "rootTsc": "exit 0",
+   "eslintGpu": [
+    "✖ 2 problems (1 error, 1 warning)",
+    "exit=1"
+   ],
+   "summary": "1737 tests, 1724 pass, 9 fail (7 known pre-existing, 2 record-in-force before the new record (A4), 0 unexpected), 4 skipped",
+   "pass": true
+  },
+  "strategyLab": {
+   "kind": "gpu-phase7 E9 Strategy Lab regression",
+   "t": "2026-11-22T00:13:27.089Z",
+   "typecheck": 0,
+   "lint": 0,
+   "vitest": {
+    "summary": "Tests \u001b[22m \u001b[1m\u001b[32m314 passed\u001b[39m\u001b[22m\u001b[90m (314)\u001b[39m",
+    "exit": 0
+   },
+   "e2e": {
+    "passed": 81,
+    "failed": 0,
+    "rerun": "not needed"
+   },
+   "evaluator": "Strategy Lab evaluates on its unchanged CPU engine, now under --no-maglev (server start, runners, NODE_FLAGS, Vitest execArgv, Playwright web server); no canonical evaluation file changed",
+   "liveDistUntouched": {
+    "filesNewerThanProtocolFreeze": 0,
+    "method": "UI built into a scratch directory"
+   },
+   "stateStrategyLab": {
+    "before": "719ecb1a3d0e8d352faa6d5893d8f5f7f08bde282aec1ddd26dc9f5618189f30",
+    "after": "719ecb1a3d0e8d352faa6d5893d8f5f7f08bde282aec1ddd26dc9f5618189f30",
+    "unchanged": true,
+    "method": "sha256 of sorted (path, size, mtime) of every file under state/strategy-lab/"
+   },
+   "summary": "typecheck ok, lint ok, vitest Tests \u001b[22m \u001b[1m\u001b[32m314 passed\u001b[39m\u001b[22m\u001b[90m (314)\u001b[39m, e2e 81 passed / 0 failed, state unchanged, live dist untouched",
+   "pass": true
+  },
+  "portfolioParity": {
+   "kind": "gpu-phase7 E7 Strategy Lab portfolio parity",
+   "t": "2026-11-22T00:13:27.089Z",
+   "command": "npm --prefix apps/strategy-lab run portfolio-parity (node --no-maglev …)",
+   "output": "research/gpu-phase7/results/tests/portfolio-parity.json",
+   "outputSha256": "e95a914aa674a13126a0760f73f66ab46669ade35e8677911dcd594270e60026",
+   "logTail": [
+    "",
+    "1. New L0 primary: verified — net 479605.18 (target 479605.18), minute DD 20385.99 (20385.99), 2025–2026 96883.72 (96883.72); 46 positions, 0 partial exits, 33 refusals; 43/43 record checks; ledgers research/vg-lifecycle-matched-optimization/results/diagnostics/ledgers/C24_L0_informed_R1#1_profit/L0/lots.csv: pass (34 lots entered by 2024-12-31) [249 ms]",
+    "2. C4-refined: verified — net 452082.36 (target 452082.36), minute DD 19477.66 (19477.66), 2025–2026 91512.65 (91512.65); 53 positions, 0 partial exits, 37 refusals; 43/43 record checks; ledgers research/vg-lifecycle-matched-optimization/results/diagnostics/ledgers/control_C4R/L0/lots.csv: pass (41 lots entered by 2024-12-31) [204 ms]",
+    "3. Original C4: verified — net 401867.24 (target 401867.24), minute DD 21536.85 (21536.85), 2025–2026 99081.34 (99081.34); 49 positions, 0 partial exits, 35 refusals; 43/43 record checks; ledgers research/vg-d1-growth-joint/results/validation/ledgers/18-*.csv: pass (49 lots, 84 funding decisions, 2723 daily marks); research/vg-lifecycle-matched-optimization/results/diagnostics/ledgers/control_C4/L0/lots.csv: pass (38 lots entered by 2024-12-31) [132 ms]",
+    "4. VGT-only: D1 primary + Growth #4: verified — net 271525.33 (target 271525.33), minute DD 19534.41 (19534.41), 2025–2026 66585.12 (66585.12); 28 positions, 0 partial exits, 6 refusals; 43/43 record checks; ledgers research/vg-d1-growth-joint/results/validation/ledgers/16-*.csv: pass (28 lots, 34 funding decisions, 2723 daily marks); research/vgt-d1-growth-joint/results/validation/ledgers/14-*.csv: pass (28 lots, 34 funding decisions, 2723 daily marks) [33 ms]",
+    "5. VGT-only: D1 primary + Growth 08500a60: verified — net 252359.65 (target 252359.65), minute DD 19556.63 (19556.63), 2025–2026 60551.2 (60551.2); 26 positions, 3 partial exits, 4 refusals; 43/43 record checks; ledgers research/vg-d1-growth-joint/results/validation/ledgers/17-*.csv: pass (26 lots, 30 funding decisions, 2723 daily marks); research/vgt-d1-growth-joint/results/validation/ledgers/11-*.csv: pass (26 lots, 30 funding decisions, 2723 daily marks) [225 ms]",
+    "ALL VERIFIED — door 5468 ms, rss 847 MB",
+    "exit=0"
+   ],
+   "summary": "ALL VERIFIED — door 5468 ms, rss 847 MB",
+   "pass": true
+  },
+  "integrity": {
+   "kind": "gpu-phase7 integrity of historical research",
+   "t": "2026-11-22T00:15:31.884Z",
+   "head": "ed3cf5c55c44340c8e72c007e683cf56d3b2963a",
+   "checks": [
+    {
+     "name": "tracked research files outside gpu-phase7 and the pilot proposal unchanged (21092)",
+     "pass": true,
+     "detail": {
+      "changed": [],
+      "added": [],
+      "dirty": []
+     }
+    },
+    {
+     "name": "study preflights as at baseline (22, all PASS)",
+     "pass": true,
+     "detail": {
+      "differ": [],
+      "now": [
+       "research/c4-gdx-growth-partner exit=0 PASS research/c4-gdx-growth-partner (standard 2.0.0, scope optimization)",
+       "research/gdx-growth-standalone exit=0 PASS research/gdx-growth-standalone (standard 2.0.0, scope optimization)",
+       "research/gpu-phase1-feasibility exit=0 PASS research/gpu-phase1-feasibility (standard 2.2.0, scope diagnostic)"
+      ]
+     }
+    },
+    {
+     "name": "sealed-file protection as at baseline (read-only check; other studies = baseline, own seals verified 0444)",
+     "pass": true,
+     "detail": {
+      "others": {
+       "sealedFiles": [
+        1053,
+        1053
+       ],
+       "protected": [
+        999,
+        999
+       ],
+       "writableVerified": [
+        0,
+        0
+       ],
+       "contentDiffers": [
+        0,
+        0
+       ],
+       "matchesAnEarlierSealOnly": [
+        0,
+        0
+       ],
+       "absent": [
+        11,
+        11
+       ],
+       "notARegularFile": [
+        0,
+        0
+       ],
+       "untrackedOrModified": [
+        43,
+        43
+       ],
+       "restored": [
+        0,
+        0
+       ]
+      },
+      "own": [
+       {
+        "file": "research/gpu-phase7/results/final-binary.json",
+        "status": "untracked or modified in Git",
+        "mode": "444"
+       },
+       {
+        "file": "research/gpu-phase7/results/protocol-freeze.json",
+        "status": "protected",
+        "mode": "444"
+       }
+      ]
+     }
+    },
+    {
+     "name": "the B4/B5 forward freeze: the pre-existing failure list exactly, nothing new (its code closure verifies)",
+     "pass": true,
+     "detail": {
+      "baseline": 9,
+      "now": 9,
+      "new": []
+     }
+    },
+    {
+     "name": "GPU evaluation: CPU closure and CUDA sources as at baseline; host group changed only in pool.ts and toolchain.ts",
+     "pass": true,
+     "detail": {
+      "digest": "d1a2e490788fa5fa76a277719dfb623c2cc896de85cf95f739c3e3af184e233b",
+      "baseDigest": "3a6eacdecc4f0a24fbf008c0ef852644969e72dc8ea0af95bd5dc373ebb6033d",
+      "cpu": [
+       "c8a9f416e25b393a92018544322cc6ade272cb237e50d6557cc4333cf9024e6a",
+       "c8a9f416e25b393a92018544322cc6ade272cb237e50d6557cc4333cf9024e6a"
+      ],
+      "cuda": [
+       "d88990612c5cd6d7f274821cd8b49ba4a29710419dd6a5f872fc8582b6592e46",
+       "d88990612c5cd6d7f274821cd8b49ba4a29710419dd6a5f872fc8582b6592e46"
+      ],
+      "hostChanged": [
+       "src/gpu-backend/pool.ts",
+       "src/gpu-backend/toolchain.ts"
+      ]
+     }
+    }
+   ],
+   "summary": "5/5 integrity checks pass",
+   "pass": true
+  },
   "scaling": [
    {
     "door": "D24",

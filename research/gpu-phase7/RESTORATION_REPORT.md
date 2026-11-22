@@ -67,9 +67,14 @@ exact and that today's engine reproduces Assignment 3's evaluations.
 - Scratch restores: 10,712,588,288 B (9.98 GiB) in `research/gpu-phase7/cache/restore/` (git-ignored); filesystem free
   ≈ 609 GiB at the start. Build artefacts (`research/gpu-phase7/build/`, git-ignored): ≈ 15 MB. Job archives of the
   campaign (`research/gpu-phase7/cache/jobs/`, git-ignored): see the final checkpoint.
-- Disposal: at the end of this task the two scratch copies are deleted (they are copies; the `.zst` originals are the
-  archives; re-creatable with `python3 -I tools/gpu-phase7/restore-archives.py search-C21-broad1 search-C24-broad1`). The
-  final status is recorded in `RESEARCH_RECOVERY.md` and `READINESS_MANIFEST.json`.
+- Disposal: **done 2026-11-22T00:47:30Z** — both scratch copies deleted (they were copies; the `.zst` originals are the
+  archives and were re-verified immediately before: sha256 `495a0bcf…` / `020d0b50…`, size, mode 0644 and mtime equal to
+  the restore record). `research/gpu-phase7/cache/restore/` no longer exists. Re-creatable with
+  `python3 -I tools/gpu-phase7/restore-archives.py search-C21-broad1 search-C24-broad1`.
+- Disk after the task: filesystem free 624,348,323,840 B (≈ 581 GiB); this study's git-ignored state:
+  `research/gpu-phase7/cache/` 27.6 GB (the campaign's and benchmark's job archives and dataset caches — kept as the
+  evidence's backing state, never historical artefacts of other studies), `results/raw-large/` 2.2 GB (key maps), `build/`
+  26 MB.
 
 ## 7. Preservation
 
@@ -79,4 +84,6 @@ location. No historical artifact was deleted or overwritten.
 
 ## 8. Final Git / working-tree status
 
-Recorded at completion in `RESEARCH_RECOVERY.md` (branch, HEAD, `git status --short`, push verification).
+Branch `research/gpu-phase7-risk-envelope-readiness`, working tree clean after the final commit, pushed to `origin`
+(no force, `main` untouched); the final HEAD and the `git ls-remote` verification are in `RESEARCH_RECOVERY.md`'s final top
+screen (they postdate this file's last commit).

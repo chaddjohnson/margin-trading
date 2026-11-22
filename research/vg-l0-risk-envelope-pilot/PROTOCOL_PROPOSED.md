@@ -133,7 +133,7 @@ reproduces Assignment 3) — identical for EXP.
   construction until a lane's extension triggers differ; evaluations differ only because plausibility differs (centre-first
   fitting). Both are reported per arm and lane (proposals, islands, refinement moves, requested, fresh, archive hits). No
   arm is stopped by a budget the other did not face; a lane that reaches its 41,000 cap is labelled budget-bound.
-- **Total budget rule [D-2]:** proposed — the expected total (≈ 0.27–0.38 M) lies in the approved 0.3–0.5 M band; the
+- **Total budget rule [D-2]:** proposed — the expected total (≈ 0.27–0.38 M) mostly lies in the approved 0.3–0.5 M band (its low end, 0.27 M, is just below it); the
   worst case (0.70 M) does not. Proposed safeguard: a study-level guard that stops **before qualification** (never
   mid-search, never one arm only) if the four search blocks together requested more than 450,000, and reports the pilot
   as budget-exceeded; the user then decides. Alternative: K = 1 cell (≈ 0.14–0.2 M) or K = 3 (≈ 0.4–0.57 M).
@@ -227,6 +227,8 @@ per door: identical trade chronology and decisions; dollar amounts proportional 
 Measured in GPU Phase 7 on the accepted binary (`EXECUTION_PLAN.md` §4, from the campaign's sealed-replay and mini
 timings and the pilot-shaped benchmark): see that section for the figures and their derivation. One official job per
 cutoff (the two arms of a cutoff share one door and one job: 8 lanes) — or the two cutoff jobs concurrently (Mode A).
+Measured summary: a pilot-shaped 8-lane job with the envelope requested ran at 367 evaluations/s (C21) and 227/s (C24);
+the whole pilot is ≈ 16–23 min of GPU wall time expected, ≈ 42 min in the worst case; concurrency gained 5 %.
 
 ## 18. Proposed official execution commands and job identities
 

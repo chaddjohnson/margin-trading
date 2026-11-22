@@ -17,8 +17,9 @@
   path: 8 worker threads by default) → `EvalLab` (src/gpu-backend/); an official study's npm script starts its runner
   through `src/gpu-backend/officialRunner.ts`. The preflight (`npm run research-preflight`) refuses an official study
   until `config/gpu-backend/acceptance.json` (schema 2) is ACCEPTED and matches the tree. Status: **ACCEPTED
-  2026-11-21 by research/gpu-phase6/** (enforcement-only re-acceptance carrying Phase 5's evaluation evidence; binary
-  `f444c521…`, RTX 5090 `GPU-ae5f222c…`, record sha256 `3610caaf0bfc14ec…`; every Node process that evaluates — official
+  2026-11-22 by research/gpu-phase7/** on branch research/gpu-phase7-risk-envelope-readiness (full re-acceptance for the
+  risk-envelope delivery through GpuPool/EvalLab; binary `cb2ff30b…`, RTX 5090 `GPU-ae5f222c…`, record sha256
+  `bb0e3fcf6bde45cc…`; `main` keeps research/gpu-phase6's record `3610caaf0bfc14ec…` until a reviewed merge; every Node process that evaluates — official
   runs, legacy CPU runners, Strategy Lab's server and runners, every npm script — starts as `node --no-maglev …` and
   refuses otherwise, docs/gpu/README.md §3a; every official run owns an isolated job, `src/gpu-jobs/jobs.ts` `openJob`,
   docs/gpu/README.md §4c); any change to a file of the evaluation manifest (CPU closure, CUDA, host path), of the pinned

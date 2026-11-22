@@ -20,7 +20,7 @@ departure from an [M] rule needs the user's agreement; NL0 1.0.0 stays the refer
 | **D-12** | Whether C21 → 2022–2023 and C24 → 2025–2026 slices are computed for both selectors of both arms | yes / primaries of P0 only | yes (8 slice runs) | Q3; costs ≈ 300 replays each incl. neighbourhoods |
 | **D-13** | Diagnostics D1–D3 coefficients for reporting | D1 at 40 % of peak equity; D2 40/30/60 (illustrative); D3 limits 25 % / 25 % | report the values; no pass/fail beyond illustration | they are nonbinding; coefficients are not approved thresholds |
 | **D-14** | Merge of the reusable backend change (risk delivery, `src/risk-envelope/`) into `main` | merge after review (with its acceptance record) / keep on the branch | the user's (no merge done) | `main`'s acceptance record is Phase 6's; merging requires the Phase 7 record to travel with it (`research/gpu-phase7/INTEGRATION_PLAN.md`) |
-| **D-15** | Retention of the two restored Assignment 3 archives | delete the scratch copies (the `.zst` originals remain) / keep until the pilot | delete after this review | 10.7 GB scratch |
+| **D-15** | Retention of the two restored Assignment 3 archives | delete the scratch copies (the `.zst` originals remain) / keep until the pilot | **done by the readiness task: scratch copies deleted 2026-11-22T00:47:30Z** after verifying the `.zst` originals unchanged; re-creatable with `python3 -I tools/gpu-phase7/restore-archives.py search-C21-broad1 search-C24-broad1` | no decision left; the pilot reads no archive |
 
 Items the pilot must **not** decide on its own: adopting the experimental envelope into the standard, nominating a New L0
 replacement, deployment, any change of NL0 1.0.0.
