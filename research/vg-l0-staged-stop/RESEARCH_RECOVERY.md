@@ -139,4 +139,10 @@
 
 ## Delivery
 
-- Commit and push of `research/vg-l0-staged-trailing-stop`: pending at this update (recorded below after the push).
+- 2026-11-23T21:56:51Z: pushed `research/vg-l0-staged-trailing-stop` to `origin` (new remote branch; not forced; unsandboxed for DNS).
+  `git ls-remote origin research/vg-l0-staged-trailing-stop` = `5e1f5f39c830f21c56fc0f5031d6c35363bef2a8` = local HEAD
+  (the ZIP + COMPLETE checkpoint commit). Remote `main` = `3606f4b3` (untouched). This delivery note is the next
+  commit, pushed the same way and verified (its hash is in `git log`; nothing else changes).
+- Nothing is uncommitted except git-ignored data: market data `data/`, the GPU job archives and caches
+  `research/vg-l0-staged-stop/cache/` (≈ 66 GB; hashes in `reports/diagnostics/job-archives.sha256`), the CUDA build
+  `research/gpu-phase8/build/` (gb8 `86b30753…`, reproducible).
