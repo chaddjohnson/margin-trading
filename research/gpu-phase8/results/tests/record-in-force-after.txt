@@ -1,0 +1,55 @@
+t 2026-11-23T18:04:04Z head 0d61e71bdb85faaec1d6407a22704d526f66c8a7 record c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126
+--- policy, enforcement and preflight tests
+✔ every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance) (1.492252ms)
+✔ the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not (237.979019ms)
+✔ engine runtime helpers: the flag first and once, script arguments untouched, another Maglev option refused (0.458654ms)
+✔ engine runtime (regression): behind the legacy runner gate, no thread or child process runs Maglev code (346.495841ms)
+✔ engine runtime (controls): the probe detects Maglev; without the guard an explicitly forked child runs it (673.870092ms)
+✔ purpose: explicit, never defaulted; unknown refused (0.590725ms)
+✔ a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose (0.111071ms)
+✔ the legacy runner wrapper refuses before importing the runner (433.807977ms)
+✔ every npm script that can start a CPU research runner or optimizer goes through the purpose gate (0.937817ms)
+✔ the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate (509.790764ms)
+✔ engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it (1.25293ms)
+✔ entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged (133.570099ms)
+✔ acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed (101.580438ms)
+✔ preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin (0.349062ms)
+✔ the deferred pilot domain reaches only capabilities the evaluator implements (3258.146257ms)
+✔ MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path) (9.876998ms)
+✔ optimization-standard preflight (7.64985ms)
+✔ the chronological-verdict consequence (standard 2.2.0 §1.8) (1.32046ms)
+✔ the repository (39.637551ms)
+ℹ tests 42
+ℹ pass 42
+ℹ fail 0
+--- every study preflight
+research/c4-gdx-growth-partner: PASS research/c4-gdx-growth-partner (standard 2.0.0, scope optimization)   notice: pinned to standard 2.0.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/gdx-growth-standalone: PASS research/gdx-growth-standalone (standard 2.0.0, scope optimization)   notice: pinned to standard 2.0.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/gpu-phase1-feasibility: PASS research/gpu-phase1-feasibility (standard 2.2.0, scope diagnostic)   notice: pinned to standard 2.2.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/gpu-phase2: PASS research/gpu-phase2 (standard 2.2.0, scope diagnostic)   notice: pinned to standard 2.2.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/gpu-phase3: PASS research/gpu-phase3 (standard 3.0.0, scope diagnostic)   notice: non-official CPU evaluation (parity-test): never official optimization evidence (§9.8) 
+research/gpu-phase4: PASS research/gpu-phase4 (standard 3.0.0, scope diagnostic)   notice: non-official CPU evaluation (benchmark): never official optimization evidence (§9.8) 
+research/gpu-phase5: PASS research/gpu-phase5 (standard 3.0.0, scope diagnostic)   notice: non-official CPU evaluation (diagnostic): never official optimization evidence (§9.8) 
+research/gpu-phase6: PASS research/gpu-phase6 (standard 3.0.0, scope diagnostic)   notice: non-official CPU evaluation (diagnostic): never official optimization evidence (§9.8) 
+research/gpu-phase7: PASS research/gpu-phase7 (standard 3.0.0, scope diagnostic)   notice: non-official CPU evaluation (diagnostic): never official optimization evidence (§9.8) 
+research/gpu-phase8: PASS research/gpu-phase8 (standard 3.0.0, scope diagnostic)   notice: non-official CPU evaluation (diagnostic): never official optimization evidence (§9.8) 
+research/growth-etf-screening: PASS research/growth-etf-screening (standard 2.0.0, scope optimization)   notice: pinned to standard 2.0.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/optimization-process-audit: PASS research/optimization-process-audit (standard 2.0.0, scope optimization)   notice: pinned to standard 2.0.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5)   notice: the date split is covered by a recorded departure for §1 
+research/vg-d1-growth-diagnostic: PASS research/vg-d1-growth-diagnostic (standard 1.1.0, scope diagnostic)   notice: pinned to standard 1.1.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/vg-d1-growth-expanded: PASS research/vg-d1-growth-expanded (standard 2.0.0, scope optimization)   notice: pinned to standard 2.0.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5)   notice: the date split is covered by a recorded departure for §1 
+research/vg-d1-growth-joint: PASS research/vg-d1-growth-joint (standard 1.0.0, scope optimization)   notice: pinned to standard 1.0.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5)   notice: the date split is covered by a recorded departure for §1 
+research/vg-growth-funding-lifecycle: PASS research/vg-growth-funding-lifecycle (standard 2.0.0, scope diagnostic)   notice: pinned to standard 2.0.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/vg-l0-full-joint: PASS research/vg-l0-full-joint (standard 2.2.0, scope optimization)   notice: pinned to standard 2.2.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/vg-l0-risk-controls-foundation: PASS research/vg-l0-risk-controls-foundation (standard 2.2.0, scope diagnostic)   notice: pinned to standard 2.2.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/vg-l0-risk-envelope-pilot: PASS research/vg-l0-risk-envelope-pilot (standard 3.0.0, scope optimization)   notice: the date split is covered by a recorded departure for §1   notice: GPU acceptance ACCEPTED: 86b30753813b… on GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4; the run must still pass the live gate (openOfficialGpuSession) 
+research/vg-l0-risk-envelope-sensitivity: PASS research/vg-l0-risk-envelope-sensitivity (standard 3.0.0, scope diagnostic)   notice: non-official CPU evaluation (diagnostic): never official optimization evidence (§9.8) 
+research/vg-l0-risk-envelope-stage-b-diagnostics: PASS research/vg-l0-risk-envelope-stage-b-diagnostics (standard 3.0.0, scope diagnostic)   notice: non-official CPU evaluation (diagnostic): never official optimization evidence (§9.8) 
+research/vg-l0-risk-envelope-stage-b: PASS research/vg-l0-risk-envelope-stage-b (standard 3.0.0, scope optimization)   notice: the date split is covered by a recorded departure for §1   notice: GPU acceptance ACCEPTED: 86b30753813b… on GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4; the run must still pass the live gate (openOfficialGpuSession) 
+research/vg-l0-risk-families: PASS research/vg-l0-risk-families (standard 2.2.0, scope optimization)   notice: pinned to standard 2.2.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5)   notice: the date split is covered by a recorded departure for §1 
+research/vg-l0-risk-metrics: PASS research/vg-l0-risk-metrics (standard 2.2.0, scope diagnostic)   notice: pinned to standard 2.2.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/vg-l0-session-hold: PASS research/vg-l0-session-hold (standard 2.1.0, scope optimization)   notice: pinned to standard 2.1.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5)   notice: the date split is covered by a recorded departure for §1 
+research/vg-l0-shadow-eligibility: PASS research/vg-l0-shadow-eligibility (standard 2.1.0, scope optimization)   notice: pinned to standard 2.1.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5)   notice: the date split is covered by a recorded departure for §1 
+research/vg-l0-staged-stop: PASS research/vg-l0-staged-stop (standard 3.0.0, scope optimization)   notice: the date split is covered by a recorded departure for §1   notice: GPU acceptance ACCEPTED: 86b30753813b… on GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4; the run must still pass the live gate (openOfficialGpuSession) 
+research/vg-l0-walk-forward-diagnostic: PASS research/vg-l0-walk-forward-diagnostic (standard 2.1.0, scope diagnostic)   notice: pinned to standard 2.1.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
+research/vg-lifecycle-matched-optimization: PASS research/vg-lifecycle-matched-optimization (standard 2.0.0, scope optimization)   notice: pinned to standard 2.0.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5)   notice: the date split is covered by a recorded departure for §1 
+research/vgt-d1-growth-separate-pooled: PASS research/vgt-d1-growth-separate-pooled (standard 1.0.0, scope diagnostic)   notice: pinned to standard 1.0.0; the current version is 3.0.0. A frozen study keeps its pin (record "retained pinned standard" in its checkpoint) or migrates by an explicit amendment (§7.5) 
