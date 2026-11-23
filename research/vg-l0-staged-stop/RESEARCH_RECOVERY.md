@@ -2,10 +2,10 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-23T18:18Z (clock). **Status: INCOMPLETE — E0–E5 sealed (`results/engineering/gates.json` sha256
+- **Updated:** 2026-11-23T19:58Z (clock). **Status: INCOMPLETE — E0–E5 sealed (`results/engineering/gates.json` sha256
   `c38cacbe…`, commit `234f05c9`); PROTOCOL P4-S1 1.0.0 FROZEN 18:17:12Z (`results/protocol-freeze.json` sha256
   `ea75d7ed…`, protocol sha256 `bd57ea2a476be9735e3f199749e511d184f247b9c903dd5853e847899de8b6f7`, code digest
-  `431493de…`, acceptance `c02a8a92…`; commit `5ff3bc0a`). Stage A COMPLETE (`11a12b26`, A0 PASS); fold C19 RUNNING (outer unit `vgl0ss-fold-C19`, log `results/logs/fold-C19.txt`). Earlier Stage A units:
+  `431493de…`, acceptance `c02a8a92…`; commit `5ff3bc0a`). Stage A COMPLETE (`11a12b26`, A0 PASS); fold C19 COMPLETE 18:18–18:58Z (`d57146c3` … `142a1a4f`); fold C21 COMPLETE 18:58:53–19:54:41Z (`e26011bd` … `63d49e9c`); fold C24 (with informed lanes, decomposition and the single FULL validation) is next (outer unit `vgl0ss-fold-C24`, log `results/logs/fold-C24.txt`). Earlier Stage A units:
   `vgl0ss-fold-ABLATE` (log `results/logs/fold-ABLATE.txt`), inner unit `vgl0ss-ablation` (log `results/logs/ablation.log`),
   started 18:17:27Z.** GPU Phase 8 ACCEPTED (record sha256 `c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126`,
   verified and pinned out of band).
@@ -15,17 +15,17 @@
 - **Authorized:** E0–E5 engineering, ablations, paired CTRL/EXP search, informed lanes, qualification, chronological
   checks, reports, ZIP, commit and push of the research branch. **Not authorized:** adoption, merging into `main`,
   deployment, broker access, editing frozen New L0 / N/original research.
-- **Running processes:** `research/vg-l0-staged-stop/chains/fold.sh` (CUT=C19) in unit `vgl0ss-fold-C19`; it runs
+- **Running processes:** `research/vg-l0-staged-stop/chains/fold.sh` (CUT=C24) in unit `vgl0ss-fold-C24` once launched; it runs
   each official stage as its own unit (`vgl0ss-<step>`) and commits each sealed block itself (only `results/`). Check
-  `systemctl --user is-active vgl0ss-fold-C19` and the log for "FOLD C19 COMPLETE" / "FAILED". Do NOT launch another
+  `systemctl --user is-active vgl0ss-fold-C24` and the log for "FOLD C24 COMPLETE" / "FAILED". Do NOT launch another
   GPU job, edit any pinned file (the chain, tools, docs, code) or commit while a chain runs (index lock).
 - **Priority 4 code (committed, not frozen):** `src/vg-l0-staged-stop/{budget,qualify,select,stats,stages,main}.ts`,
   tests `tests/study.test.ts` (18 pass) + `tests/space.test.ts`; tools `tools/vg-l0-staged-stop/{common,bench}.ts`,
   `engineering.sh`, `launch.sh`; chain `research/vg-l0-staged-stop/chains/fold.sh`; DRAFT `PROTOCOL.md` (§6 budget
   numbers to fill from the E5 benchmark), `STANDARD_ADOPTION.json` (preflight blocked only by the stale record).
-- **Next steps (in order):** (5) running: `CUT=ABLATE`; then, each as its own unit after the previous completes:
-  `tools/vg-l0-staged-stop/launch.sh vgl0ss-fold-C19 /home/chad/projects/margin-trading/research/vg-l0-staged-stop/results/logs/fold-C19.txt -- /usr/bin/env CUT=C19 /bin/bash research/vg-l0-staged-stop/chains/fold.sh`
-  (then C21, then C24 likewise); resume after a failure with `START=<step>` (+ `RESUME=1` for an interrupted job), never
+- **Next steps (in order):** (5) Stage A, C19 and C21 complete; fold C24 (run from the repository root):
+  `tools/vg-l0-staged-stop/launch.sh vgl0ss-fold-C24 /home/chad/projects/margin-trading/research/vg-l0-staged-stop/results/logs/fold-C24.txt -- /usr/bin/env CUT=C24 /bin/bash research/vg-l0-staged-stop/chains/fold.sh`
+  (search, gate-r, extend, informed, qualify, select, decompose, freeze-selection, authorize-full, validate, outcome); resume after a failure with `START=<step>` (+ `RESUME=1` for an interrupted job), never
   rerunning a sealed stage; (6) report-only analyses (RUN_COMMANDS.md §4: `analyze`, `pairs`, `diagnose`), reports
   (REPORT, IMPLEMENTATION_VERIFICATION §5, ablation, search, risk, final comparison, DECISION_REGISTER, READ_FIRST),
   regression, ZIP with SHA256SUMS (+ copy to `~/.local/share/margin-trading-gpu/handoffs/`), final checkpoint, push
@@ -61,7 +61,9 @@
 | E4 (P4 evidence) | complete 18:04–18:06Z | `results/engineering/E4/` verify-acceptance VERIFIED; runtime refusals; official gate open D19/D21/D24 |
 | E5 benchmark + protocol freeze | complete 18:06–18:17Z | `E5/bench.json` (125,108 requested, 539 s, 232/s at 8 lanes); gates sealed `234f05c9`; protocol frozen `5ff3bc0a` |
 | Ablations | complete 18:17:25–18:17:45Z (`11a12b26`) | `results/ablation/`: 146 subjects × 4 frictions = 584 GPU evaluations; A0 PASS (incumbents OFF = sealed figures) |
-| Paired search C19/C21/C24 + informed | not started | — |
+| Fold C19 (secondary) | complete 18:18:01–18:58:22Z | search 2,456,999 requested / 1,118 s (`d57146c3`); gate R identical (`ddacfd64`); extension TRIGGERED (EXP 32/64 = 50 % budget-bound, all GB0.VD1; CTRL 2) 1,182,219 requested, EXP GB0.VD1 still 32/32 budget-bound (`918a2fd1`); qualification 469,572 (`486fc5a0`); selection (`7e231a96`): D̄ $2,340 [L90 $560, U90 $4,168], not material; mechanism confirmed (78 % ON, advantage $8,411, L90 $6,089); risk non-inferior; interval D21 47,700 (`142a1a4f`) |
+| Fold C21 (primary) | complete 18:58:53–19:54:41Z | search 2,600,440 requested (`e26011bd`); gate R identical 32/32 (`53d9da91`); extension TRIGGERED (EXP 34/64 = 53.1 %, CTRL 4/64) 1,303,677 requested, after it EXP 31/64 = 48.4 % still budget-bound (all GB0.VD1 but R5), CTRL 0 (`f0fcea6d`); qualification 499,656 (`740a9645`); selection (`a1c189dc`): D̄ $6,684 [L90 $3,809, U90 $9,605], not material (mean < $10k); mechanism confirmed (52/64 = 81 % ON, advantage $10,655, L90 $7,032); risk non-inferior on all five (principalLossLiq +$887, L90 $376; bankedDdLiq +$871, L90 $114); pooled P0: CTRL R34#1 $236,003 / DD $28,004, EXP R24#1 D1:GDX A 47.0 % τ₂ 6.4 % $252,819 / DD $17,744; interval D24 48,230 (`63d49e9c`). Records sha256 (first 16): search `735b7112…`, gate-r `2ca1a225…`, extend `fac36c51…`, qualification `2d18e555…`, selection `5d35a12e…`, intervals `70c09d58…` |
+| Fold C24 (primary) + informed | not started | — |
 | Qualification / selection / intervals / validation | not started | — |
 | Reports, ZIP, push | not started | — |
 

@@ -1,0 +1,167 @@
+// Priority 4 report-only MECHANISM TABLES (PROTOCOL.md §11, §13) from a diagnose.ts output (non-official CPU replays of
+// declared pairs). Written after the freeze, reads only the diagnostics file it is given (no door, no evaluation) and
+// writes Markdown tables: one row per pair (Δ net and marked DD in the complete shared-capital pool; funded lots whose
+// exit changed; displacement: lots no longer / newly funded; forfeited trends; staged arms / exits / placement exits;
+// Δ interest, costs, turnover, sessions held; giveback and the retained share of the ex-post peak, which is NOT
+// realizable) and one aggregate row per group. It selects nothing.
+//   node --no-maglev --experimental-transform-types tools/vg-l0-staged-stop/mechanism.ts --in <diagnose.json> --out <md> [--group books|none]
+import fs from 'node:fs';
+
+type Side = {
+  portfolio: {
+    net: number;
+    markedDd: number;
+    interest: number;
+    costs: number;
+    turnover: number;
+    sessionsHeld: number;
+    lots: number;
+  };
+  giveback: {
+    exPostPeakProfit: number;
+    netOfThoseLots: number;
+    giveback: number;
+    retainedShare: number;
+    winningLots: number;
+  };
+  stagedCounters?: Record<string, { arms: number; stagedExits: number; placementExits: number }>;
+};
+type Pair = {
+  label: string;
+  a: Side;
+  b: Side;
+  delta: { net: number; markedDd: number; interest: number; costs: number; turnover: number; sessionsHeld: number };
+  trades: {
+    fundedInBoth: number;
+    exitChanges: number;
+    exitChangeNet: number;
+    noLongerFunded: unknown[];
+    newlyFunded: unknown[];
+    noLongerFundedNet: number;
+    newlyFundedNet: number;
+  };
+  forfeited: { count: number; total: number };
+};
+
+const args = process.argv.slice(2);
+const opt = (k: string) => {
+  const i = args.indexOf(`--${k}`);
+
+  return i >= 0 ? args[i + 1] : undefined;
+};
+const input = opt('in');
+const output = opt('out');
+
+if (!input || !output) throw new Error('--in <diagnose.json> --out <md>');
+
+const d = JSON.parse(fs.readFileSync(input, 'utf8')) as {
+  door: string;
+  head: string;
+  codeDigest: string;
+  pairs: Pair[];
+};
+const usd = (x: number) => `${x < 0 ? '−' : x > 0 ? '+' : ''}$${Math.abs(Math.round(x)).toLocaleString('en-US')}`;
+const plain = (x: number) => `$${Math.round(x).toLocaleString('en-US')}`;
+const pct = (x: number) => `${(100 * x).toFixed(1)} %`;
+const counters = (p: Pair) => {
+  const c = Object.values(p.b.stagedCounters ?? {});
+
+  return {
+    arms: c.reduce((s, x) => s + x.arms, 0),
+    exits: c.reduce((s, x) => s + x.stagedExits, 0),
+    placement: c.reduce((s, x) => s + x.placementExits, 0)
+  };
+};
+const row = (p: Pair) => {
+  const c = counters(p);
+
+  return [
+    p.label,
+    usd(p.delta.net),
+    usd(p.delta.markedDd),
+    `${p.trades.exitChanges} (${usd(p.trades.exitChangeNet)})`,
+    `${p.trades.noLongerFunded.length} (${plain(p.trades.noLongerFundedNet)})`,
+    `${p.trades.newlyFunded.length} (${plain(p.trades.newlyFundedNet)})`,
+    `${p.forfeited.count} (${plain(p.forfeited.total)})`,
+    `${c.arms} / ${c.exits} / ${c.placement}`,
+    usd(p.delta.interest),
+    usd(p.delta.costs),
+    usd(p.delta.turnover),
+    `${p.delta.sessionsHeld > 0 ? '+' : ''}${p.delta.sessionsHeld}`,
+    `${pct(p.a.giveback.retainedShare)} → ${pct(p.b.giveback.retainedShare)}`
+  ];
+};
+const cell = (x: string) => x.replaceAll(' | ', ' · ').replaceAll('|', '/');
+const table = (head: string[], rows: string[][]) =>
+  [
+    `| ${head.join(' | ')} |`,
+    `|${head.map(() => '---').join('|')}|`,
+    ...rows.map((r) => `| ${r.map(cell).join(' | ')} |`)
+  ].join('\n');
+const head = [
+  'Pair (A → B)',
+  'Δ net',
+  'Δ marked DD',
+  'exit changed (Σ Δ net)',
+  'no longer funded (Σ net)',
+  'newly funded (Σ net)',
+  'forfeited trends (Σ)',
+  'arms / staged exits / placement',
+  'Δ interest',
+  'Δ costs',
+  'Δ turnover',
+  'Δ sessions held',
+  'retained share of ex-post peak (A → B)'
+];
+// group: the part of the label before the activation (incumbent | books), or none
+const groupOf = (label: string) => (opt('group') === 'none' ? 'all' : label.split(' | A ')[0]!);
+const groups = [...new Set(d.pairs.map((p) => groupOf(p.label)))];
+const agg = groups.map((g) => {
+  const ps = d.pairs.filter((p) => groupOf(p.label) === g);
+  const sum = (f: (p: Pair) => number) => ps.reduce((s, p) => s + f(p), 0);
+  const mean = (f: (p: Pair) => number) => sum(f) / ps.length;
+
+  return [
+    g,
+    String(ps.length),
+    `${ps.filter((p) => p.delta.net > 0).length} / ${ps.filter((p) => p.delta.net === 0).length} / ${ps.filter((p) => p.delta.net < 0).length}`,
+    usd(mean((p) => p.delta.net)),
+    usd(mean((p) => p.delta.markedDd)),
+    usd(mean((p) => p.trades.exitChangeNet)),
+    usd(mean((p) => p.trades.newlyFundedNet - p.trades.noLongerFundedNet)),
+    usd(-mean((p) => p.forfeited.total)),
+    usd(mean((p) => p.delta.interest)),
+    usd(mean((p) => p.delta.costs)),
+    mean((p) => counters(p).exits).toFixed(1)
+  ];
+});
+const md = [
+  `<!-- generated by tools/vg-l0-staged-stop/mechanism.ts from ${input} (door ${d.door}, head ${d.head.slice(0, 8)}, code ${d.codeDigest.slice(0, 12)}); non-official CPU diagnostics, report-only -->`,
+  '',
+  "### Aggregate by group (means over the group's pairs)",
+  '',
+  table(
+    [
+      'Group',
+      'pairs',
+      'Δ net > 0 / = 0 / < 0',
+      'mean Δ net',
+      'mean Δ marked DD',
+      'mean Σ Δ of changed exits',
+      'mean displacement (newly − no longer funded)',
+      'mean forfeited',
+      'mean Δ interest',
+      'mean Δ costs',
+      'mean staged exits'
+    ],
+    agg
+  ),
+  '',
+  '### Every pair',
+  '',
+  table(head, d.pairs.map(row)),
+  ''
+].join('\n');
+
+fs.writeFileSync(output, md);
+console.log(`mechanism: ${d.pairs.length} pairs, ${groups.length} groups → ${output}`);
