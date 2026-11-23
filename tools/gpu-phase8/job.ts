@@ -68,6 +68,12 @@ import { serverBinary, toolkitLib } from '../../src/gpu-backend/toolchain.ts';
 import { engineRuntime } from '../../src/gpu-backend/runtime.ts';
 import { A2Lab } from '../gpu-phase5/a2lab.ts';
 import { JobError, labOptionsOf, openJob, poolFilesOf } from '../../src/gpu-jobs/jobs.ts';
+// gpu-phase8: Priority 4's derived lane (both arms) and its spaces — the staged mini-optimization and the Stage B CTRL lane
+// replays (OFF parity at the search level)
+import { Lane as P4Lane } from '../../src/vg-l0-staged-stop/search.ts';
+import { armOf } from '../../src/vg-l0-staged-stop/context.ts';
+import { ctrlSpace, expSpace } from '../../src/vg-l0-staged-stop/space.ts';
+import { importClosure } from '../../src/vg-l0-full-joint/records.ts';
 
 const args = process.argv.slice(2);
 const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.indexOf(`--${k}`) + 1]! : d);
@@ -81,7 +87,7 @@ if (!['benchmark', 'parity-test', 'diagnostic'].includes(purpose))
 const backend = opt('backend', 'gpu') as 'gpu' | 'cpu';
 const jobSpec = opt('job', 'mini');
 const job = jobSpec.split(':');
-const family = job[0] as 'a3' | 'a2' | 'mini';
+const family = job[0] as 'a3' | 'a2' | 'mini' | 'p4' | 'sb';
 const stopAfter = args.includes('--stop-after') ? Number(opt('stop-after', '0')) : undefined;
 const [laneI, laneK] = opt('lanes', '0/1').split('/').map(Number) as [number, number];
 const tag = opt('tag', '');
@@ -101,7 +107,7 @@ const definition = {
   lanes: `${laneI}/${laneK}`,
   backend,
   ...(riskMode ? { risk: true } : {}),
-  ...(family === 'mini'
+  ...(family === 'mini' || family === 'p4'
     ? {
         door: opt('door', 'D19'),
         cells: opt('cells', 'GA0.VA0,GB1.VD0,GC0.VB1,GD1.VC0,GA1.VD1,GB0.VC1,GC1.VA1,GD0.VB0'),
@@ -176,10 +182,66 @@ interface Plan {
   }[];
 }
 
+// gpu-phase8: the digest of Priority 4's lane closure (the p4 and sb families)
+const p4CodeDigest = () => {
+  const files = importClosure([path.join(process.cwd(), 'src/vg-l0-staged-stop/search.ts'), path.join(process.cwd(), 'src/vg-l0-staged-stop/space.ts')]);
+
+  return createHash('sha256')
+    .update(files.map((f) => `${f}:${createHash('sha256').update(fs.readFileSync(f)).digest('hex')}`).join('\n'))
+    .digest('hex');
+};
+
 // the fixed-total-work partition: lane index i of the full job belongs to part i mod k
 const part = <T>(xs: T[]) => xs.filter((_x, i) => i % laneK === laneI);
 
 const plan = ((): Plan => {
+  // gpu-phase8: one Stage B CTRL lane (sb:<C>:<cell>:R<r>), replayed by Priority 4's derived lane with the CTRL arm
+  // (Assignment 3's space, P0) on Stage B's schedule and lane cap; its result must equal Stage B's sealed lane
+  if (family === 'sb') {
+    const [cut, cellId, rep] = [job[1]!, job[2]!, job[3]!];
+    const r = Number(rep.replace(/^R/, ''));
+    const key = `${cut}/broad/${cellId}/R${r}`;
+    const spec = { key, seedKey: key, position: key, stage: 'broad' as const, replicate: r, cutoff: cut, kind: 'indep' as const, res: 'coarse' as const, cell: a3CellOf(cellId) };
+    const door = ({ C19: 'D19', C21: 'D21', C24: 'D24' } as Record<string, Plan['door']>)[cut]!;
+
+    return {
+      door,
+      cutoff: cut,
+      specs: [spec],
+      budget: a3Budgets.study.broad,
+      cap: 41_000,
+      reserve: a3Finish.broad,
+      codeDigest: p4CodeDigest(),
+      lanes: (lab) => [new P4Lane(lab, spec, a3Budgets.study.broad, armOf('CTRL', ctrlSpace), 41_000)] as never
+    };
+  }
+  // gpu-phase8: the staged fixed-seed mini-optimization — Priority 4's two arms (CTRL: Assignment 3's space; EXP: + the
+  // staged genes) on the declared mini schedule, each lane's position qualified by its arm
+  if (family === 'p4') {
+    const door = opt('door', 'D19') as Plan['door'];
+    const cut = door === 'D19' ? 'C19' : door === 'D21' ? 'C21' : door === 'D23' ? 'C23' : 'C24';
+    const cells = opt('cells', 'GA0.VA0,GB0.VD1,GC0.VB1,GD1.VC0').split(',');
+    const replicates = Number(opt('replicates', '2'));
+    const base = cells.flatMap((id) =>
+      Array.from({ length: replicates }, (_v, i) => {
+        const key = `${cut}/broad/${id}/R${i + 1}`;
+
+        return { key, seedKey: key, stage: 'broad' as const, replicate: i + 1, cutoff: cut, kind: 'indep' as const, res: 'coarse' as const, cell: a3CellOf(id) };
+      })
+    );
+    const specs = part(base.flatMap((x) => (['CTRL', 'EXP'] as const).map((a) => ({ ...x, position: `${a}:${x.key}`, arm: a }))));
+
+    return {
+      door,
+      cutoff: cut,
+      specs,
+      budget: miniBudget,
+      cap: specs.length * 1_000_000,
+      reserve: a3Finish.broad,
+      codeDigest: p4CodeDigest(),
+      lanes: (lab) => specs.map((s) => new P4Lane(lab, s, miniBudget, armOf(s.arm, s.arm === 'CTRL' ? ctrlSpace : expSpace), 1_000_000)) as never
+    };
+  }
   if (family === 'a3') {
     const [cut, jobPart] = [job[1]!, job[2]! as A3Part];
     const specs: A3LaneSpec[] = part(
@@ -419,12 +481,12 @@ const labOptions = {
   ...labOptionsOf(J), // study, job, owner, cacheRoot: the Lab writes only this job's archive and checkpoint
   door: plan.door,
   doorPin,
-  purpose: family === 'mini' ? `${purpose}: mini-optimization` : `${purpose}: replay of ${job.join(':')}`,
+  purpose: family === 'mini' || family === 'p4' ? `${purpose}: mini-optimization` : `${purpose}: replay of ${job.join(':')}`,
   pool,
   backend: backendId,
   codeDigest: plan.codeDigest,
   stopAfterFresh: stopAfter,
-  ...(family === 'mini' ? {} : { maxFresh: plan.cap }),
+  ...(family === 'mini' || family === 'p4' ? {} : { maxFresh: plan.cap }),
   log
 };
 const lab = family === 'a2' ? new A2Lab(labOptions as never) : new EvalLab(labOptions as never);

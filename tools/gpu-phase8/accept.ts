@@ -1,21 +1,21 @@
-// gpu-phase8: the ACCEPTANCE GENERATOR for the risk-envelope delivery (PROTOCOL.md §6; docs/gpu/PARITY_CHECKLIST.md §2 —
-// a FULL cycle: src/gpu-backend/pool.ts and toolchain.ts are in the host group of the evaluation digest, lab.ts in the
-// enforcement group; standard 3.0.0 §9.9; adapted from tools/gpu-phase5/accept.ts and tools/gpu-phase6/accept.ts).
+// gpu-phase8: the ACCEPTANCE GENERATOR for the staged-stop delivery (research/gpu-phase8/PROTOCOL.md; docs/gpu/
+// PARITY_CHECKLIST.md §2 — a FULL cycle: the CPU closure (src/staged-stop, src/d1-risk-controls-rc3, Growth engine
+// revision 1.5.0), the CUDA sources (protocol v3: gb.h, gb_common.cuh, gb_d1.cuh, gb_growth.cuh) and the host group
+// (batch, encode, layout, compat, toolchain) changed; standard 3.0.0 §9.9; adapted from tools/gpu-phase7/accept.ts).
 //
-// FRESH evidence on this study's final binary research/gpu-phase8/build/gb8 (every gate below that names a file of
-// research/gpu-phase8/): the final binary (reproducible, kernels byte-identical to the accepted gb5), the parity campaign
-// (≥ 100,000 seeded random genomes through the host path, zero tolerance), the sealed finalists, the risk-delivery parity
-// R1–R3 (records, envelopes, qualification and rankings, threshold edges, Assignment 3's archived records), the sealed
-// optimizer replays (plain, and with the envelope requested), the fixed-seed mini-optimization (CPU = GPU, worker counts,
-// stopped and killed + resumed; with the envelope requested CPU = GPU; risk = plain decisions), the qualification and
-// ranking parity of the risk mini archives (Q1), the sanitizer, the bounded reliability run, the negative and tamper
-// suites on the final pinned files, the repository and Strategy Lab suites, the integrity of historical research.
-// CARRIED (valid only because the files they depend on are unchanged, each checked here): Phase 5's root-cause evidence
-// of the V8 defect (R1–R3: properties of the JavaScript engine, Node unchanged), the offline codec equivalence (A2: batch,
-// encode, client, layout, hostPipeline, hostWorker unchanged), the atomic dataset export (A10: dataset.ts unchanged) and
-// Phase 6's job-isolation campaign (E2: src/gpu-jobs/ unchanged) — every file re-hashed against the record in force.
+// FRESH evidence on this study's final binary research/gpu-phase8/build/gb8: the final binary (reproducible), the parity
+// campaign (≥ 100,000 seeded random genomes through the host path with staged ON/OFF strata, the exact-threshold fixtures
+// T, zero tolerance), the sealed finalists, the risk-delivery parity, the sealed optimizer replays (Assignment 3 plain
+// and with the envelope requested, Assignment 2, and one Stage B CTRL lane per cutoff replayed by Priority 4's derived
+// lane), the fixed-seed mini-optimization (Assignment 3's and Priority 4's with the staged genes: CPU = GPU, worker
+// counts, stopped and killed + resumed, concurrency), the qualification parity of the staged mini archives, the
+// sanitizer, the bounded reliability run, the negative (staged group included) and tamper suites, the repository and
+// Strategy Lab suites and the integrity of historical research.
+// CARRIED (valid only because the files they depend on are unchanged, each checked here): Phase 5's atomic dataset export
+// (A10: dataset.ts unchanged) and Phase 6's job-isolation campaign (E2: src/gpu-jobs/ unchanged). NOT carried: Phase 5's
+// R1–R3 and A2 (the codec files batch.ts, encode.ts and layout.ts changed).
 // It writes config/gpu-backend/acceptance.json in schema 2 — ACCEPTED only if every gate passed — and names the
-// superseded Phase 6 record (sha256 3610caaf…).
+// superseded Phase 7 record (sha256 bb0e3fcf…).
 //   node --no-maglev --experimental-transform-types tools/gpu-phase8/accept.ts [--dry-run]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -31,7 +31,7 @@ import {
   uncommittedPinnedFiles,
   type AcceptanceRecord
 } from '../../src/gpu-backend/acceptance.ts';
-import { riskEnvelopePilotDomain, assignment3Domain } from '../../src/gpu-backend/domain.ts';
+import { stagedStopDomain, assignment3Domain } from '../../src/gpu-backend/domain.ts';
 import { DEFAULT_HOST_WORKERS } from '../../src/gpu-backend/hostPipeline.ts';
 import { SUPPORTED, featureNames } from '../../src/gpu-backend/layout.ts';
 import { incumbents } from '../../src/vg-l0-full-joint/nl0.ts';
@@ -58,32 +58,50 @@ const gate = (name: string, file: string | null, pass: boolean, why: string) => 
 const m = compatManifest();
 const policy = policySources([...ENFORCEMENT_EXTRAS, generator]);
 
-// ----- the superseded record (Phase 6's, in force at baseline; a copy kept in this study before it is replaced) -----
-const supersededFile = R('superseded/acceptance-gpu-phase6.json');
+// ----- the superseded record (Phase 7's, in force at baseline; a copy kept in this study before it is replaced) -----
+const supersededFile = R('superseded/acceptance-gpu-phase7.json');
 
 if (!fs.existsSync(supersededFile)) {
   const cur = read<AcceptanceRecord>(acceptanceFile);
 
-  if (cur?.study !== 'research/gpu-phase6') throw new Error(`the record in force is not Phase 6's (${cur?.study})`);
+  if (cur?.study !== 'research/gpu-phase7') throw new Error(`the record in force is not Phase 7's (${cur?.study})`);
   fs.mkdirSync(path.dirname(supersededFile), { recursive: true });
   fs.copyFileSync(acceptanceFile, supersededFile);
 }
-const p6 = read<AcceptanceRecord>(supersededFile)!;
-const P6_SHA = '3610caaf0bfc14ecd5ea75981a69f9316ff9ff6b610d4913b949d36950c884d3';
+const p6 = read<AcceptanceRecord>(supersededFile)!; // (the name of the previous record's variable is kept from Phase 7's generator)
+const P7_SHA = 'bb0e3fcf6bde45cc654dc2d8d166153353918dfe3aa18d826dd8deda5cabf7b7';
 
-gate('S0 the superseded record is the accepted Phase 6 record (out-of-repository sha256)', null, sha(supersededFile) === P6_SHA && p6.status === 'ACCEPTED', sha(supersededFile).slice(0, 16));
+gate('S0 the superseded record is the accepted Phase 7 record (out-of-repository sha256)', null, sha(supersededFile) === P7_SHA && p6.status === 'ACCEPTED', sha(supersededFile).slice(0, 16));
 
-// ----- S1 the change is exactly the declared one: CPU closure and CUDA unchanged; host group: pool.ts, toolchain.ts -----
+// ----- S1 the change is exactly the declared one (RULE_SPECIFICATION.md §5 of research/vg-l0-staged-stop) -----
 {
   const pinOf = (g: { files: { path: string; sha256: string }[] }) => new Map(g.files.map((f) => [f.path, f.sha256]));
-  const was = pinOf(p6.compat.host);
-  const hostChanged = m.host.files.filter((f) => was.get(f.path) !== f.sha256).map((f) => f.path).sort();
+  const changed = (was: { files: { path: string; sha256: string }[] }, now: { files: { path: string; sha256: string }[] }) => {
+    const w = pinOf(was);
+    const n = pinOf(now);
+
+    return [...new Set([...w.keys(), ...n.keys()])].filter((f) => w.get(f) !== n.get(f)).sort();
+  };
+  const cpu = changed(p6.compat.cpu, m.cpu);
+  const cuda = changed(p6.compat.cuda, m.cuda);
+  const host = changed(p6.compat.host, m.host);
+  const wantCpu = [
+    'src/d1-risk-controls-rc3/book.ts',
+    'src/d1-risk-controls-rc3/growth.ts',
+    'src/d1-risk-controls-rc3/run.ts',
+    'src/growth-trading/optionalRules.ts',
+    'src/growth-trading/riseTrading.ts',
+    'src/staged-stop/config.ts',
+    'src/staged-stop/tracker.ts'
+  ];
+  const wantCuda = ['src/gpu-backend/cuda/gb.h', 'src/gpu-backend/cuda/gb_common.cuh', 'src/gpu-backend/cuda/gb_d1.cuh', 'src/gpu-backend/cuda/gb_growth.cuh'];
+  const wantHost = ['src/gpu-backend/batch.ts', 'src/gpu-backend/compat.ts', 'src/gpu-backend/encode.ts', 'src/gpu-backend/layout.ts', 'src/gpu-backend/toolchain.ts'];
 
   gate(
-    'S1 the evaluation change is exactly the declared one (CPU closure and CUDA sources unchanged; host group: pool.ts and toolchain.ts only)',
+    'S1 the evaluation change is exactly the declared one (CPU closure: the staged modules, RC 3, Growth revision 1.5.0, the book pass-through; CUDA: protocol v3 and the staged rule; host: codec, layout, manifest, toolchain)',
     null,
-    m.cpu.digest === p6.compat.cpu.digest && m.cuda.digest === p6.compat.cuda.digest && m.host.files.length === p6.compat.host.files.length && JSON.stringify(hostChanged) === JSON.stringify(['src/gpu-backend/pool.ts', 'src/gpu-backend/toolchain.ts']),
-    `cpu ${m.cpu.digest === p6.compat.cpu.digest}, cuda ${m.cuda.digest === p6.compat.cuda.digest}, host changed ${hostChanged.join(', ')}`
+    JSON.stringify(cpu) === JSON.stringify(wantCpu) && JSON.stringify(cuda) === JSON.stringify(wantCuda) && JSON.stringify(host) === JSON.stringify(wantHost) && m.protocolVersion === 3,
+    `cpu ${cpu.join(', ')} | cuda ${cuda.join(', ')} | host ${host.join(', ')} | protocol ${m.protocolVersion}`
   );
 }
 
@@ -91,31 +109,25 @@ gate('S0 the superseded record is the accepted Phase 6 record (out-of-repository
 {
   const p6pins = new Map([...p6.compat.cpu.files, ...p6.compat.cuda.files, ...p6.compat.host.files, ...p6.policy.files].map((f) => [f.path, f.sha256]));
   const unchanged = (files: string[]) => files.every((f) => fs.existsSync(path.join(repoRoot, f)) && p6pins.get(f) === sha(path.join(repoRoot, f)));
-  const codec = ['src/gpu-backend/batch.ts', 'src/gpu-backend/encode.ts', 'src/gpu-backend/client.ts', 'src/gpu-backend/layout.ts', 'src/gpu-backend/hostPipeline.ts', 'src/gpu-backend/hostWorker.ts', 'src/gpu-backend/hostDoor.ts'];
-  const sameEngine = engineRuntime().node === p6.runtime?.node && engineRuntime().v8 === p6.runtime?.v8;
-  // NOT carried: Phase 5's A10 isolation-under-concurrency run (i6) and every kernel, parity, optimizer, sanitizer and
-  // reliability entry — they ran on the earlier pool.ts / binary and are replaced by this study's fresh evidence
-  const groups: { re: RegExp; files: string[]; extra: boolean; why: string }[] = [
-    { re: /^\[carried from research\/gpu-phase5\] R[123] /, files: codec, extra: sameEngine, why: 'the JavaScript engine (Node v24.21.0 / V8 13.6.233.17) and the codec / host-path files unchanged' },
-    { re: /^\[carried from research\/gpu-phase5\] A2 /, files: codec, extra: true, why: 'the codec and host-path files unchanged' },
-    { re: /^\[carried from research\/gpu-phase5\] A10 atomic dataset export/, files: ['src/gpu-backend/dataset.ts'], extra: true, why: 'the dataset export unchanged' },
-    { re: /^E2 job isolation/, files: ['src/gpu-jobs/jobs.ts', 'src/gpu-jobs/lock.ts', 'src/gpu-jobs/cli.ts'], extra: true, why: 'the job module unchanged' }
+  const groups: { re: RegExp; files: string[]; why: string }[] = [
+    { re: /^\[carried from research\/gpu-phase5 via gpu-phase6\] A10 atomic dataset export/, files: ['src/gpu-backend/dataset.ts'], why: 'the dataset export unchanged' },
+    { re: /^\[carried from research\/gpu-phase6\] E2 job isolation/, files: ['src/gpu-jobs/jobs.ts', 'src/gpu-jobs/lock.ts', 'src/gpu-jobs/cli.ts'], why: 'the job module unchanged' }
   ];
   let n = 0;
 
   for (const g of groups) {
-    const cond = unchanged(g.files) && g.extra;
+    const cond = unchanged(g.files);
 
     for (const e of p6.evidence.filter((x) => g.re.test(x.name))) {
       const f = path.join(repoRoot, e.path);
       const ok = e.pass && cond && fs.existsSync(f) && sha(f) === e.sha256;
-      const name = e.name.startsWith('[carried') ? e.name.replace('[carried from research/gpu-phase5]', '[carried from research/gpu-phase5 via gpu-phase6]') : `[carried from research/gpu-phase6] ${e.name}`;
+      const name = `${e.name.replace(/^\[carried from ([^\]]+)\]/, '[carried from $1 via gpu-phase7]')}`;
 
       n++;
       gate(name, f, ok, ok ? '' : `${e.path} changed or missing, or ${g.why} does not hold`);
     }
   }
-  gate('S2 the carried set: Phase 5 R1–R3 (5), A2 (1), A10 atomic export (4) and Phase 6 E2 (1) — 11 entries, each with its unchanged-file condition', null, n === 11, `${n} entries`);
+  gate('S2 the carried set: Phase 5 A10 atomic export (4) and Phase 6 E2 (1) — 5 entries, each with its unchanged-file condition', null, n === 5, `${n} entries`);
 }
 
 // ----- A0 the engine runtime of this study's evidence -----
@@ -131,7 +143,7 @@ gate('S0 the superseded record is the accepted Phase 6 record (out-of-repository
   const pdir = R('parity/final');
 
   for (const x of fs.existsSync(pdir) ? fs.readdirSync(pdir).filter((x) => x.endsWith('.json') && x !== 'SUMMARY.json') : []) check(path.join(pdir, x));
-  for (const j of fs.existsSync(R('jobs')) ? fs.readdirSync(R('jobs')).filter((j) => /^(a3|a2|mini)-/.test(j)) : [])
+  for (const j of fs.existsSync(R('jobs')) ? fs.readdirSync(R('jobs')).filter((j) => /^(a3|a2|mini|p4|sb)-/.test(j)) : [])
     if (fs.existsSync(R(`jobs/${j}/profile.json`))) check(R(`jobs/${j}/profile.json`));
   for (const f of ['parity/finalists.json', 'policy/negative-final.json', 'qualify/mini-risk.json', 'risk-parity/edge-D21.json', 'risk-parity/edge-D24.json', 'risk-parity/finalists-D24.json', 'risk-parity/random-D19.json']) check(R(f));
   gate(`A0 engine runtime: every parity run, job, the finalists, the risk parity, Q1 and the negative suite ran under ${ENGINE_FLAG}; this generator too`, null, n >= 60 && bad.length === 0 && engineRuntime().maglev === 'disabled', `${n} records; not disabled: ${bad.slice(0, 6).join(', ') || 'none'}`);
@@ -140,12 +152,12 @@ gate('S0 the superseded record is the accepted Phase 6 record (out-of-repository
 // ----- B1 the final binary -----
 {
   const f = R('final-binary.json');
-  const s = read<{ binary: { sha256: string }; compat: { digest: string }; reproducible: boolean; kernels: { fatbinIdenticalToPhase5: boolean; sassIdenticalToPhase5: boolean } }>(f);
+  const s = read<{ binary: { sha256: string }; compat: { digest: string }; reproducible: boolean; protocolVersion: number }>(f);
 
   gate(
-    'B1 final binary gb7 (reproducible; built from this tree; device code and SASS byte-identical to the accepted gb5)',
+    'B1 final binary gb8 (protocol v3; reproducible; built from this tree with its evaluation digest)',
     f,
-    !!s && s.binary.sha256 === binarySha && s.compat.digest === m.digest && s.reproducible && s.kernels.fatbinIdenticalToPhase5 && s.kernels.sassIdenticalToPhase5,
+    !!s && s.binary.sha256 === binarySha && s.compat.digest === m.digest && s.reproducible && s.protocolVersion === 3,
     s ? `binary ${s.binary.sha256.slice(0, 12)} vs server ${binarySha.slice(0, 12)}, digest ${s.compat.digest.slice(0, 12)} vs ${m.digest.slice(0, 12)}, reproducible ${s.reproducible}` : 'missing'
   );
 }
@@ -153,13 +165,14 @@ gate('S0 the superseded record is the accepted Phase 6 record (out-of-repository
 // ----- A1 the parity campaign; A2 the sealed finalists -----
 {
   const f = R('parity/final/SUMMARY.json');
-  const s = read<{ pass: boolean; build: { binaries: string[] }; totals: { subjects: number; mismatches: number; random?: number; envelopes?: number } }>(f);
+  const s = read<{ pass: boolean; build: { binaries: string[] }; totals: { subjects: number; mismatches: number; random?: number; envelopes?: number; stagedOn?: number; stagedArms?: number; stagedExits?: number; placementExits?: number; stagedFixtureRuns?: number } }>(f);
+  const t = s?.totals;
 
   gate(
-    'A1 parity campaign through the final host path (every door and option set, ≥ 100,000 seeded random genomes, fixtures, determinism; zero mismatches)',
+    'A1 parity campaign through the final host path (every door and option set, ≥ 100,000 seeded random genomes with staged ON/OFF strata, the exact-threshold fixtures T, determinism; zero mismatches)',
     f,
-    !!s && s.pass && s.build.binaries.length === 1 && s.build.binaries[0] === binarySha && s.totals.mismatches === 0 && s.totals.subjects >= 100_000,
-    s ? `subjects ${s.totals.subjects}, mismatches ${s.totals.mismatches}, binaries ${s.build.binaries.map((b) => b.slice(0, 12))}` : 'missing'
+    !!s && s.pass && s.build.binaries.length === 1 && s.build.binaries[0] === binarySha && t!.mismatches === 0 && t!.subjects >= 100_000 && (t!.stagedOn ?? 0) >= 50_000 && (t!.subjects - (t!.stagedOn ?? 0)) >= 20_000 && (t!.stagedExits ?? 0) > 0 && (t!.placementExits ?? 0) > 0 && (t!.stagedFixtureRuns ?? 0) >= 6,
+    s ? `subjects ${t!.subjects}, staged ON ${t!.stagedOn}, arms ${t!.stagedArms}, staged exits ${t!.stagedExits}, placement ${t!.placementExits}, fixtures ${t!.stagedFixtureRuns}, mismatches ${t!.mismatches}, binaries ${s.build.binaries.map((b) => b.slice(0, 12))}` : 'missing'
   );
   const g = R('parity/finalists.json');
   const t = read<{ pass: boolean; binarySha256: string; runtime?: { maglev: string }; runs: { door: string; tasks: number; identical: number; sealedChecked: number; sealedEqual: number }[] }>(g);
@@ -214,6 +227,13 @@ for (const [name, file, strip] of [
 
   gate(name, f, !!s && s.identical && s.replay.backend.includes(final16) && (strip ? (s.envelopesStripped ?? 0) > 0 : s.envelopesStripped === null), s ? `identical ${s.identical}, stripped ${s.envelopesStripped}, backend ${s.replay.backend}` : 'missing');
 }
+// gpu-phase8: Stage B's sealed CTRL lanes replayed by Priority 4's derived lane (CTRL arm) — OFF parity at the search level
+for (const cut of ['C19', 'C21', 'C24'] as const) {
+  const f = R(`compare/sb-${cut}-vs-sealed.json`);
+  const s = read<{ identical: boolean; differences: number; replay: { backend: string }; sealed: { lane: string } }>(f);
+
+  gate(`A3 Stage B CTRL lane ${s?.sealed.lane ?? cut} replayed by Priority 4's derived lane (CTRL arm, staged OFF) = Stage B's sealed lane, envelopes included`, f, !!s && s.identical && s.differences === 0 && s.replay.backend.includes(final16), s ? `identical ${s.identical}, differences ${s.differences}, backend ${s.replay.backend}` : 'missing');
+}
 
 // ----- A4 the fixed-seed mini-optimization -----
 for (const [name, file, strip] of [
@@ -225,7 +245,14 @@ for (const [name, file, strip] of [
   ['A4 mini-optimization with the risk envelope requested: CPU = GPU (every record and envelope)', 'compare/mini-risk-gpu-vs-cpu.json', false],
   ['A4 mini-optimization with the risk envelope requested = without it (every decision; envelopes stripped)', 'compare/mini-risk-vs-plain.json', true],
   ['A4 two jobs at once on one GPU (plain + risk): the plain job = its isolated reference', 'compare/mini-concurrent-plain-vs-ref.json', false],
-  ['A4 two jobs at once on one GPU (plain + risk): the risk job = its isolated reference', 'compare/mini-concurrent-risk-vs-ref.json', false]
+  ['A4 two jobs at once on one GPU (plain + risk): the risk job = its isolated reference', 'compare/mini-concurrent-risk-vs-ref.json', false],
+  // gpu-phase8: Priority 4's two arms (CTRL and EXP with the staged genes) on the mini schedule
+  ['A4 staged mini-optimization (Priority 4, both arms): CPU = GPU (every record, envelope, lane and configuration)', 'compare/p4-gpu-vs-cpu.json', false],
+  ['A4 staged mini-optimization host workers 1 = 8', 'compare/p4-w1-vs-w8.json', false],
+  ['A4 staged mini-optimization stopped (exit 75) + resumed = uninterrupted', 'compare/p4-stopped-resumed-vs-ref.json', false],
+  ['A4 staged mini-optimization SIGKILLed + resumed = uninterrupted', 'compare/p4-killed-resumed-vs-ref.json', false],
+  ['A4 two staged jobs at once on one GPU: the first = its isolated reference', 'compare/p4-concurrent-vs-ref.json', false],
+  ['A4 two staged jobs at once on one GPU: the second = its isolated reference', 'compare/p4-concurrent-b-vs-ref.json', false]
 ] as const) {
   const f = R(file);
   const s = read<{ identical: boolean; envelopesStripped: number | null; a: { backend: string }; b: { backend: string } }>(f);
@@ -234,10 +261,10 @@ for (const [name, file, strip] of [
   gate(name, f, !!s && s.identical && gpuSide.includes(final16) && (strip ? (s.envelopesStripped ?? 0) > 0 : s.envelopesStripped === null), s ? `identical ${s.identical}, stripped ${s.envelopesStripped}, backends ${gpuSide}` : 'missing');
 }
 {
-  const f = R('qualify/mini-risk.json');
+  const f = R('qualify/p4-mini.json');
   const q = read<{ pass: boolean; assessmentsCompared: number; assessmentsDiffering: number; evaluationsWithoutRisk: number }>(f);
 
-  gate('Q1 qualification and ranking parity on the risk mini archives (both policies, every evaluation; CPU = GPU)', f, !!q && q.pass && q.assessmentsCompared >= 20_000 && q.assessmentsDiffering === 0 && q.evaluationsWithoutRisk === 0, q ? JSON.stringify(q) .slice(0, 200) : 'missing');
+  gate('Q1 qualification and ranking parity on the staged mini archives (Priority 4 both arms; every evaluation; CPU = GPU)', f, !!q && q.pass && q.assessmentsCompared >= 20_000 && q.assessmentsDiffering === 0 && q.evaluationsWithoutRisk === 0, q ? JSON.stringify(q) .slice(0, 200) : 'missing');
 }
 
 // ----- A5 sanitizer; A6 bounded reliability -----
@@ -246,7 +273,7 @@ for (const [name, file, strip] of [
   const s = read<{ binarySha256?: string; rows: { tool: string; errors: number | null; subjects: number; identical: number; smoke: boolean }[] }>(f);
   const ok = !!s && s.binarySha256 === binarySha && ['memcheck', 'racecheck', 'initcheck', 'synccheck'].every((t) => s.rows.some((r) => r.tool === t)) && s.rows.every((r) => r.errors === 0 && r.smoke && r.identical === r.subjects);
 
-  gate('A5 compute-sanitizer (memcheck, racecheck, initcheck, synccheck) on the final binary, requests from the host path (risk mode included)', f, ok, s ? JSON.stringify(s.rows.map((r) => [r.tool, r.errors, r.identical, r.subjects])) : 'missing');
+  gate('A5 compute-sanitizer (memcheck, racecheck, initcheck, synccheck) on the final binary, requests from the host path (risk mode and staged ON included)', f, ok, s ? JSON.stringify(s.rows.map((r) => [r.tool, r.errors, r.identical, r.subjects])) : 'missing');
 }
 for (const p of ['p0', 'p1']) {
   const f = R(`sustained/${p}/summary.json`);
@@ -268,7 +295,7 @@ const samePins = (commit: string | undefined) => !!commit && spawnSync('git', ['
   const f = R('policy/negative-final.json');
   const s = read<{ pass: boolean; total: number; passed: number; head: string; binaries: { dev: string }; rows: { group: string }[] }>(f);
 
-  gate('E3 negative tests on the final pinned files (final binary; job, runtime and risk-delivery cases included)', f, !!s && s.pass && s.binaries.dev === binarySha && samePins(s.head) && s.rows.filter((r) => r.group === 'job').length >= 10 && s.rows.filter((r) => r.group === 'risk').length >= 6, s ? `${s.passed}/${s.total} at ${s.head.slice(0, 12)}, pins equal ${samePins(s.head)}` : 'missing');
+  gate('E3 negative tests on the final pinned files (final binary; job, runtime, risk-delivery and staged-stop cases included)', f, !!s && s.pass && s.binaries.dev === binarySha && samePins(s.head) && s.rows.filter((r) => r.group === 'job').length >= 10 && s.rows.filter((r) => r.group === 'risk').length >= 6 && s.rows.filter((r) => r.group === 'staged').length >= 8, s ? `${s.passed}/${s.total} at ${s.head.slice(0, 12)}, pins equal ${samePins(s.head)}` : 'missing');
   const g = R('policy/tamper-final.json');
   const t = read<{ pass: boolean; cases: number; passed: number; baselineOk: boolean; head?: string; mainHead?: string; rows: { id: string }[] }>(g);
   const th = t?.head ?? t?.mainHead;
@@ -320,7 +347,12 @@ const samePins = (commit: string | undefined) => !!commit && spawnSync('git', ['
       'src/gpu-jobs/tests/jobs.test.ts',
       'src/risk-envelope/tests/policy.test.ts',
       'src/risk-envelope/tests/labRisk.test.ts',
-      'src/risk-envelope/tests/diagnostics.test.ts'
+      'src/risk-envelope/tests/diagnostics.test.ts',
+      // gpu-phase8: the staged-stop rule, RC 3, Growth revision 1.5.0 and Priority 4's spaces
+      'src/staged-stop/tests/config.test.ts',
+      'src/d1-risk-controls-rc3/tests/book.test.ts',
+      'src/growth-trading/tests/stagedStop.test.ts',
+      'src/vg-l0-staged-stop/tests/space.test.ts'
     ],
     { cwd: repoRoot, encoding: 'utf8', timeout: 900_000 }
   );
@@ -333,7 +365,7 @@ const samePins = (commit: string | undefined) => !!commit && spawnSync('git', ['
     fs.mkdirSync(path.dirname(f), { recursive: true });
     fs.writeFileSync(f, `${r.stdout}\n${r.stderr}`);
   }
-  gate('P5 policy, enforcement, layout, host-pipeline, dataset, jobs and risk-envelope tests (before the record: only the record-in-force tests may fail)', dry ? null : f, /# pass [1-9]/.test(r.stdout) && expectedStale && failing.length <= 2, failing.join(' | ') || 'all pass');
+  gate('P5 policy, enforcement, layout, host-pipeline, dataset, jobs, risk-envelope and staged-stop tests (before the record: only the record-in-force tests may fail)', dry ? null : f, /# pass [1-9]/.test(r.stdout) && expectedStale && failing.length <= 2, failing.join(' | ') || 'all pass');
 }
 
 const draft = { compat: { cpu: m.cpu, cuda: m.cuda, host: m.host }, policy } as unknown as AcceptanceRecord;
@@ -343,7 +375,7 @@ if (dirty.length) blockers.push(`pinned files are not committed unmodified: ${di
 
 const uuid = smiUuid();
 const grid = incumbents().NL0.quad.d1.VGT;
-const domain = riskEnvelopePilotDomain(grid);
+const domain = stagedStopDomain(grid); // gpu-phase8: Priority 4's domain (the risk-envelope domain + staged-stop@1)
 const a3 = assignment3Domain(grid);
 
 if ((domain.features & ~SUPPORTED) !== 0n || (a3.features & ~SUPPORTED) !== 0n)
@@ -377,7 +409,7 @@ const record: AcceptanceRecord = {
   device: p6.device,
   capabilities: SUPPORTED.toString(16),
   domain: {
-    name: 'Assignment 3 genome ∪ risk-envelope pilot domain (NL0 controls grid); the risk-envelope inputs delivered to the search through EvalLab items with risk: true (GPU Phase 7)',
+    name: 'Assignment 3 genome ∪ risk-envelope pilot domain ∪ staged-stop@1 on D1·GDX, D1·VGT and Growth·VGT (GPU Phase 8, protocol v3)',
     features: (domain.features | a3.features).toString(16)
   },
   runtime: {

@@ -228,20 +228,38 @@ export interface LaneResult {
     path: { pass: number; moved: string | null; net: number; robust: number; violation: number }[];
   }[];
   shortlist: Pick[];
-  visibleInfeasible: { id: string; cfg: Cfg; centreNet: number; centreDd: number; p90: number; parts: Record<string, number> }[];
+  visibleInfeasible: {
+    id: string;
+    cfg: Cfg;
+    centreNet: number;
+    centreDd: number;
+    p90: number;
+    parts: Record<string, number>;
+  }[];
   frontier: { id: string; net: number; robust: number; p90: number; dd: number }[];
   topByNet: { id: string; net: number; robust: number; p90: number; dd: number; feasible: boolean }[];
   failure: { screenPlausible: number; screenReasons: Record<string, number> };
 }
 
 const hvPoints = (ms: readonly Member[]): Scored[] =>
-  ms.map((m) => ({ id: m.id, genome: m.genome, violation: m.violation, objectives: [m.objectives[1]!, m.objectives[2]!] }));
+  ms.map((m) => ({
+    id: m.id,
+    genome: m.genome,
+    violation: m.violation,
+    objectives: [m.objectives[1]!, m.objectives[2]!]
+  }));
 
 // why a screened centre was implausible (coverage: intrinsic validity versus poor metrics)
 const reasonOf = (r: Rec, arm: Arm) => screenReason(r, arm);
 
 // the round-robin ⅛ share over the patterns present in a list (each round: the best of each pattern not yet taken)
-const roundRobin = <T>(list: readonly T[], patternOf: (x: T) => string, cap: number, take: (x: T) => boolean, room: () => boolean) => {
+const roundRobin = <T>(
+  list: readonly T[],
+  patternOf: (x: T) => string,
+  cap: number,
+  take: (x: T) => boolean,
+  room: () => boolean
+) => {
   const patterns = [...new Set(list.map(patternOf))].sort();
 
   if (patterns.length < 2) return 0;
@@ -249,7 +267,7 @@ const roundRobin = <T>(list: readonly T[], patternOf: (x: T) => string, cap: num
   const lists = patterns.map((p) => list.filter((x) => patternOf(x) === p));
   let taken = 0;
 
-  for (let more = true; more && taken < cap && room(); ) {
+  for (let more = true; more && taken < cap && room();) {
     more = false;
     for (const l of lists) {
       if (taken >= cap || !room()) break;
@@ -302,7 +320,9 @@ export class Lane {
 
   private reserve(n: number) {
     if (this.requested + n > this.laneCap)
-      throw new Error(`${this.spec.key} (${this.arm.key}): ${this.requested} + ${n} requested evaluations exceed the lane's deterministic bound ${this.laneCap}`);
+      throw new Error(
+        `${this.spec.key} (${this.arm.key}): ${this.requested} + ${n} requested evaluations exceed the lane's deterministic bound ${this.laneCap}`
+      );
   }
 
   private count(k: string, n = 1) {
@@ -310,7 +330,13 @@ export class Lane {
   }
 
   private classRow(c: Cfg) {
-    return (this.byClass[this.sp.classKeyOf(c)] ??= { screened: 0, plausible: 0, promoted: 0, centres: 0, feasible: 0 });
+    return (this.byClass[this.sp.classKeyOf(c)] ??= {
+      screened: 0,
+      plausible: 0,
+      promoted: 0,
+      centres: 0,
+      feasible: 0
+    });
   }
 
   private labels = (...parts: (string | number)[]) => [...parts, this.spec.seedKey];
@@ -338,7 +364,13 @@ export class Lane {
   // ----- fits: the centre first; the unique neighbours under the rung's common seed family only for a plausible centre
   // (centre-first fidelity) unless `full`; `gate` withholds neighbours from a move whose centre cannot be chosen -----
 
-  async fitMany(cfgs: readonly Cfg[], rung: string, n: number, full = false, gate?: (centre: Rec) => boolean): Promise<Fit[]> {
+  async fitMany(
+    cfgs: readonly Cfg[],
+    rung: string,
+    n: number,
+    full = false,
+    gate?: (centre: Rec) => boolean
+  ): Promise<Fit[]> {
     this.reserve(cfgs.length);
     const centres = await this.lab.evalMany(
       cfgs.map((c) => ({ cfg: c, options: vOptions, risk: true })),
@@ -349,7 +381,9 @@ export class Lane {
 
     const fam = { name: rung, n, labels: this.crn(rung), scope: 'joint' as const };
     const plans = cfgs.map((c, i) =>
-      !full && (!plausibleArm(centres[i]!, this.arm) || (gate && !gate(centres[i]!))) ? { c, nb: null } : { c, nb: this.sp.neighbourhood(c, fam) }
+      !full && (!plausibleArm(centres[i]!, this.arm) || (gate && !gate(centres[i]!)))
+        ? { c, nb: null }
+        : { c, nb: this.sp.neighbourhood(c, fam) }
     );
     const items = plans.flatMap((p) => (p.nb ?? []).map((x) => ({ cfg: x.cfg, options: vOptions, risk: true })));
     this.reserve(items.length);
@@ -406,7 +440,9 @@ export class Lane {
   private async screen() {
     const cell = this.spec.cell!;
     const n = this.b.screen;
-    const genomes = this.sp.screenGenomes(n, this.spec.res, ...this.labels('screen')).map((g, i) => this.sp.pinStratum(g, cell, i, n));
+    const genomes = this.sp
+      .screenGenomes(n, this.spec.res, ...this.labels('screen'))
+      .map((g, i) => this.sp.pinStratum(g, cell, i, n));
     const seen = new Set<string>();
     const cfgs: Cfg[] = [];
     const gs: number[][] = [];
@@ -457,7 +493,16 @@ export class Lane {
       }
       this.genomes.set(this.sp.cfgId(c), gs[i]!);
 
-      return { id: this.sp.cfgId(c), genome: gs[i]!, objectives: [-r.net, r.dd], violation, cfg: c, plausible: ok, net: r.net, signature: r.signature };
+      return {
+        id: this.sp.cfgId(c),
+        genome: gs[i]!,
+        objectives: [-r.net, r.dd],
+        violation,
+        cfg: c,
+        plausible: ok,
+        net: r.net,
+        signature: r.signature
+      };
     });
 
     this.count('plausible', items.filter((x) => x.plausible).length);
@@ -487,10 +532,24 @@ export class Lane {
 
     takeFrom(byNet, Math.ceil(k / 4), 'net');
     takeFrom(rankOrder(items), Math.ceil(k / 4), 'rank');
-    roundRobin(byNet, (x) => gEntryOf(x.cfg), Math.ceil(k / 8), (x) => tryTake(x, 'Growth entry pattern'), () => chosen.size < k);
-    roundRobin(byNet, (x) => this.sp.controlPatternOf(x.cfg), Math.ceil(k / 8), (x) => tryTake(x, 'control pattern'), () => chosen.size < k);
+    roundRobin(
+      byNet,
+      (x) => gEntryOf(x.cfg),
+      Math.ceil(k / 8),
+      (x) => tryTake(x, 'Growth entry pattern'),
+      () => chosen.size < k
+    );
+    roundRobin(
+      byNet,
+      (x) => this.sp.controlPatternOf(x.cfg),
+      Math.ceil(k / 8),
+      (x) => tryTake(x, 'control pattern'),
+      () => chosen.size < k
+    );
 
-    const pool = [...items.filter((x) => x.plausible), ...items.filter((x) => !x.plausible)].filter((x) => !chosen.has(x.id));
+    const pool = [...items.filter((x) => x.plausible), ...items.filter((x) => !x.plausible)].filter(
+      (x) => !chosen.has(x.id)
+    );
 
     while (chosen.size < k && pool.length) {
       let best = 0;
@@ -586,7 +645,9 @@ export class Lane {
     return new Set(
       [...this.archive.values()]
         .filter((m) => m.violation === 0)
-        .map((m) => `${m.cfg.cell}|${this.sp.controlPatternOf(m.cfg)}|funded ${fundedOf(m.fit.centre).sort().join('+')}`)
+        .map(
+          (m) => `${m.cfg.cell}|${this.sp.controlPatternOf(m.cfg)}|funded ${fundedOf(m.fit.centre).sort().join('+')}`
+        )
     );
   }
 
@@ -609,9 +670,9 @@ export class Lane {
 
     if (pop.length < this.b.population) {
       const nf = this.b.population * 4;
-      const fillers = this.sp.screenGenomes(nf, this.spec.res, ...this.labels('fill', index)).map((g, i) =>
-        this.spec.kind === 'indep' ? this.sp.pinStratum(g, this.spec.cell!, i, nf) : this.pin(g)
-      );
+      const fillers = this.sp
+        .screenGenomes(nf, this.spec.res, ...this.labels('fill', index))
+        .map((g, i) => (this.spec.kind === 'indep' ? this.sp.pinStratum(g, this.spec.cell!, i, nf) : this.pin(g)));
       const add: { c: Cfg; g: number[] }[] = [];
 
       for (const g of fillers) {
@@ -733,7 +794,8 @@ export class Lane {
 
       // stagnation: neither the island's hypervolume of (−robust, p90) nor the lane's best feasible centre net rose by
       // more than the tolerance for `patience` generations
-      const gained = hv > bestHv * (1 + this.b.tolerance) + 1e-9 || net > bestNet + Math.abs(bestNet) * this.b.tolerance + 1e-9;
+      const gained =
+        hv > bestHv * (1 + this.b.tolerance) + 1e-9 || net > bestNet + Math.abs(bestNet) * this.b.tolerance + 1e-9;
 
       if (hv > bestHv) bestHv = hv;
       if (net > bestNet) bestNet = net;
@@ -760,10 +822,13 @@ export class Lane {
     lg.invalid = invalid;
     lg.after = this.state();
     lg.evaluations = this.requested - req0;
-    lg.hvGainPer10k = lg.evaluations > 0 ? Math.round(((lg.after.hv - lg.before.hv) / lg.evaluations) * 1e4 * 100) / 100 : 0;
+    lg.hvGainPer10k =
+      lg.evaluations > 0 ? Math.round(((lg.after.hv - lg.before.hv) / lg.evaluations) * 1e4 * 100) / 100 : 0;
     this.islands.push(lg);
     this.count('islandConfigs', lg.newConfigs);
-    log(`${this.arm.key} ${this.spec.key} island ${index}: ${lg.newConfigs} new (${lg.measured} measured), ${lg.generations} generations, stop ${lg.stop}`);
+    log(
+      `${this.arm.key} ${this.spec.key} island ${index}: ${lg.newConfigs} new (${lg.measured} measured), ${lg.generations} generations, stop ${lg.stop}`
+    );
   }
 
   // ----- rungs: ¼ centre net (feasible), ¼ robust net (feasible), ⅛ per Growth entry pattern, ⅛ per control pattern,
@@ -777,7 +842,14 @@ export class Lane {
     const out: { m: Member; why: string }[] = [];
     const tryTake = (m: Member, why: string) => {
       if (out.length >= k) return false;
-      if (out.some((o) => o.m.id === m.id || o.m.fit.centre.signature === m.fit.centre.signature || this.sp.cfgDistance(o.m.cfg, m.cfg) < distinct))
+      if (
+        out.some(
+          (o) =>
+            o.m.id === m.id ||
+            o.m.fit.centre.signature === m.fit.centre.signature ||
+            this.sp.cfgDistance(o.m.cfg, m.cfg) < distinct
+        )
+      )
         return false;
       out.push({ m, why });
       return true;
@@ -793,8 +865,20 @@ export class Lane {
 
     take(byNet, 'centre net', Math.ceil(k / 4));
     take(byRobust, 'robust net', Math.ceil(k / 4));
-    roundRobin(byNet, (m) => gEntryOf(m.cfg), Math.ceil(k / 8), (m) => tryTake(m, 'Growth entry pattern'), () => out.length < k);
-    roundRobin(byNet, (m) => this.sp.controlPatternOf(m.cfg), Math.ceil(k / 8), (m) => tryTake(m, 'control pattern'), () => out.length < k);
+    roundRobin(
+      byNet,
+      (m) => gEntryOf(m.cfg),
+      Math.ceil(k / 8),
+      (m) => tryTake(m, 'Growth entry pattern'),
+      () => out.length < k
+    );
+    roundRobin(
+      byNet,
+      (m) => this.sp.controlPatternOf(m.cfg),
+      Math.ceil(k / 8),
+      (m) => tryTake(m, 'control pattern'),
+      () => out.length < k
+    );
     take(ranked, 'rank', k);
     take(byNet, 'centre net', k);
     return out;
@@ -818,7 +902,8 @@ export class Lane {
       for (let pass = 1; pass <= passes; pass++) {
         const moves = this.sp.movesOf(cur, { gateSwitches });
 
-        if (moves.length > this.sp.maxMoves) throw new Error(`${this.spec.key}: ${moves.length} refinement moves exceed the bound ${this.sp.maxMoves}`);
+        if (moves.length > this.sp.maxMoves)
+          throw new Error(`${this.spec.key}: ${moves.length} refinement moves exceed the bound ${this.sp.maxMoves}`);
         const profitLike = !(start.kind === 'robust' || start.kind === 'focus-robust');
         const floor = curFit!.centre.net + this.b.refineMinGain;
         const fits = await this.fitMany(
@@ -835,9 +920,12 @@ export class Lane {
 
         if (curFit!.violation === 0) {
           if (!profitLike) {
-            const better = scored.filter((x) => x.f.violation === 0 && robustOf(x.f) >= robustOf(curFit!) + this.b.refineMinGain);
+            const better = scored.filter(
+              (x) => x.f.violation === 0 && robustOf(x.f) >= robustOf(curFit!) + this.b.refineMinGain
+            );
 
-            if (better.length) next = bandedOrder(better.map((x) => ({ id: x.f.id, robust: robustOf(x.f), p90: p90Of(x.f), x })))[0]!.x;
+            if (better.length)
+              next = bandedOrder(better.map((x) => ({ id: x.f.id, robust: robustOf(x.f), p90: p90Of(x.f), x })))[0]!.x;
           } else {
             const better = scored
               .filter((x) => x.f.violation === 0 && x.f.centre.net >= curFit!.centre.net + this.b.refineMinGain)
@@ -856,7 +944,13 @@ export class Lane {
         if (!next) break;
         cur = next.c;
         curFit = next.f;
-        path.push({ pass, moved: next.f.id, net: next.f.centre.net, robust: robustOf(next.f), violation: next.f.violation });
+        path.push({
+          pass,
+          moved: next.f.id,
+          net: next.f.centre.net,
+          robust: robustOf(next.f),
+          violation: next.f.violation
+        });
       }
 
       results.push({ kind: start.kind, start: start.fit.id, endpoint: this.sp.cfgId(cur), path });
@@ -878,7 +972,8 @@ export class Lane {
       const k = f.centre.signature;
       const prev = best.get(k);
 
-      if (!prev || f.centre.net > prev.centre.net || (f.centre.net === prev.centre.net && f.id < prev.id)) best.set(k, f);
+      if (!prev || f.centre.net > prev.centre.net || (f.centre.net === prev.centre.net && f.id < prev.id))
+        best.set(k, f);
     }
 
     const feasible = [...best.values()];
@@ -898,7 +993,9 @@ export class Lane {
     take(byNet[0], 'profit');
     take([...feasible].sort((a, b) => robustOf(b) - robustOf(a) || byId(a, b))[0], 'robust');
     take(
-      [...feasible].sort((a, b) => robustOf(b) / Math.max(1, p90Of(b)) - robustOf(a) / Math.max(1, p90Of(a)) || byId(a, b))[0],
+      [...feasible].sort(
+        (a, b) => robustOf(b) / Math.max(1, p90Of(b)) - robustOf(a) / Math.max(1, p90Of(a)) || byId(a, b)
+      )[0],
       'balanced'
     );
     if (this.spec.kind === 'informed')
@@ -962,12 +1059,34 @@ export class Lane {
         const dormant = seed.genome;
 
         push(seed.cfg, dormant);
-        for (const p of this.sp.neighbourhood(seed.cfg, { name: 'near', n: b.near, labels: this.labels('near', i), scale: 1.5 })) push(p.cfg, dormant);
-        for (const p of this.sp.neighbourhood(seed.cfg, { name: 'broad', n: b.broad, labels: this.labels('broad', i), scale: 3 })) push(p.cfg, dormant);
+        for (const p of this.sp.neighbourhood(seed.cfg, {
+          name: 'near',
+          n: b.near,
+          labels: this.labels('near', i),
+          scale: 1.5
+        }))
+          push(p.cfg, dormant);
+        for (const p of this.sp.neighbourhood(seed.cfg, {
+          name: 'broad',
+          n: b.broad,
+          labels: this.labels('broad', i),
+          scale: 3
+        }))
+          push(p.cfg, dormant);
         if (seed.focus) {
-          for (const p of this.sp.neighbourhood(seed.cfg, { name: 'focus-small', n: b.focusSmall, labels: this.labels('focus', 'small', i), scale: 0.5 }))
+          for (const p of this.sp.neighbourhood(seed.cfg, {
+            name: 'focus-small',
+            n: b.focusSmall,
+            labels: this.labels('focus', 'small', i),
+            scale: 0.5
+          }))
             push(p.cfg, dormant);
-          for (const p of this.sp.neighbourhood(seed.cfg, { name: 'focus-mid', n: b.focusMid, labels: this.labels('focus', 'mid', i), scale: 1 }))
+          for (const p of this.sp.neighbourhood(seed.cfg, {
+            name: 'focus-mid',
+            n: b.focusMid,
+            labels: this.labels('focus', 'mid', i),
+            scale: 1
+          }))
             push(p.cfg, dormant);
         }
       }
@@ -1028,7 +1147,11 @@ export class Lane {
       net: gain(prior.net, after.net),
       newClasses: after.classes - prior.classes
     };
-    const fired = triggers.hypervolume > b.extension || triggers.robust > b.extension || triggers.net > b.extension || triggers.newClasses > 0;
+    const fired =
+      triggers.hypervolume > b.extension ||
+      triggers.robust > b.extension ||
+      triggers.net > b.extension ||
+      triggers.newClasses > 0;
     const reason = `island ${i}: hypervolume ${(100 * triggers.hypervolume).toFixed(1)}%, best robust ${(100 * triggers.robust).toFixed(1)}%, best centre net ${(100 * triggers.net).toFixed(1)}%, ${triggers.newClasses} new feasible behaviour class(es)`;
 
     this.lastTrigger = { island: i, fired, reason };
@@ -1092,7 +1215,14 @@ export class Lane {
     for (const f of infeasible) {
       if (vis.length >= 5) break;
       if (vis.some((v) => v.id === f.id)) continue;
-      vis.push({ id: f.id, cfg: this.configs.get(f.id)!, centreNet: f.centre.net, centreDd: f.centre.dd, p90: p90Of(f), parts: f.parts });
+      vis.push({
+        id: f.id,
+        cfg: this.configs.get(f.id)!,
+        centreNet: f.centre.net,
+        centreDd: f.centre.dd,
+        p90: p90Of(f),
+        parts: f.parts
+      });
     }
 
     const members = [...this.archive.values()];
@@ -1100,7 +1230,10 @@ export class Lane {
     const nd = front.filter(
       (a) =>
         !front.some(
-          (b2) => b2 !== a && b2.objectives.every((v, i) => v <= a.objectives[i]!) && b2.objectives.some((v, i) => v < a.objectives[i]!)
+          (b2) =>
+            b2 !== a &&
+            b2.objectives.every((v, i) => v <= a.objectives[i]!) &&
+            b2.objectives.some((v, i) => v < a.objectives[i]!)
         )
     );
 
@@ -1126,8 +1259,21 @@ export class Lane {
       requested: this.requested,
       islands: this.islands,
       extension: this.extension,
-      r2: r2.map((x) => ({ id: x.m.id, feasible: x.m.violation === 0, net: x.m.fit.centre.net, robust: robustOf(x.m.fit), p90: p90Of(x.m.fit), why: x.why })),
-      r3: r3Fits.map((f) => ({ id: f.id, feasible: f.violation === 0, net: f.centre.net, robust: robustOf(f), p90: p90Of(f) })),
+      r2: r2.map((x) => ({
+        id: x.m.id,
+        feasible: x.m.violation === 0,
+        net: x.m.fit.centre.net,
+        robust: robustOf(x.m.fit),
+        p90: p90Of(x.m.fit),
+        why: x.why
+      })),
+      r3: r3Fits.map((f) => ({
+        id: f.id,
+        feasible: f.violation === 0,
+        net: f.centre.net,
+        robust: robustOf(f),
+        p90: p90Of(f)
+      })),
       refinements: ref.results,
       shortlist: list,
       visibleInfeasible: vis,
@@ -1135,11 +1281,24 @@ export class Lane {
       frontier: nd
         .sort((a, c) => c.fit.centre.net - a.fit.centre.net || byId(a, c))
         .slice(0, 20)
-        .map((m) => ({ id: m.id, net: m.fit.centre.net, robust: robustOf(m.fit), p90: p90Of(m.fit), dd: m.fit.centre.dd })),
+        .map((m) => ({
+          id: m.id,
+          net: m.fit.centre.net,
+          robust: robustOf(m.fit),
+          p90: p90Of(m.fit),
+          dd: m.fit.centre.dd
+        })),
       topByNet: [...members]
         .sort((a, c) => c.fit.centre.net - a.fit.centre.net || byId(a, c))
         .slice(0, 10)
-        .map((m) => ({ id: m.id, net: m.fit.centre.net, robust: robustOf(m.fit), p90: p90Of(m.fit), dd: m.fit.centre.dd, feasible: m.violation === 0 })),
+        .map((m) => ({
+          id: m.id,
+          net: m.fit.centre.net,
+          robust: robustOf(m.fit),
+          p90: p90Of(m.fit),
+          dd: m.fit.centre.dd,
+          feasible: m.violation === 0
+        })),
       failure: { screenPlausible: this.screenPlausible, screenReasons: this.screenReasons }
     };
   }

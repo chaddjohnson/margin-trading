@@ -21,7 +21,8 @@ type Run = {
   risk: boolean;
   growthFirst: boolean;
   sessions: number;
-  subjects: { total: number; R: number; bySet: Record<string, number> };
+  subjects: { total: number; R: number; bySet: Record<string, number>; stagedOn?: number };
+  staged?: string; // gpu-phase8: none | mixed | all | edges | fixture
   result: { identical: number; mismatches: number; envelopesCompared: number; pass: boolean };
   determinism: { subset: number; runs: { run: string; mismatches: number }[] };
   coverage: {
@@ -33,6 +34,7 @@ type Run = {
     lots: number;
     fundingRecords: number;
     partialFills: number;
+    staged?: { tasksOn: number; booksOn: Record<string, number>; arms: number; stagedExits: number; placementExits: number };
   };
   build: { binarySha256: string; compatDigest: string; uuid: string };
   hostPath: { workers: number; mode: string };
@@ -89,6 +91,10 @@ const checks = {
   randomGenomesAtLeast100k: random >= 100_000,
   everyDoorAndWindow: requiredDoors.every((d) => doors.includes(d)),
   fixtures: doors.filter((d) => /^S\d$/.test(d)).length >= 8,
+  // gpu-phase8: the staged strata and the exact-threshold fixtures T
+  stagedFixtures: doors.filter((d) => /^T-/.test(d)).length >= 6,
+  stagedOnAtLeast50k: sum((r) => r.subjects.stagedOn ?? 0) >= 50_000,
+  offAtLeast20k: sum((r) => r.subjects.total - (r.subjects.stagedOn ?? 0)) >= 20_000,
   determinismBatchSizes: requiredDet.every((d) => detRuns.includes(d)),
   determinismZero: runs.every((x) => x.r.determinism.runs.every((d) => d.mismatches === 0)),
   everyRunThroughTheParallelHostPath: runs.every((x) => x.r.hostPath?.mode === 'parallel')
@@ -107,6 +113,8 @@ const rec = {
     sessions: r.sessions,
     subjects: r.subjects.total,
     bySet: r.subjects.bySet,
+    staged: r.staged ?? 'none',
+    stagedOn: r.subjects.stagedOn ?? 0,
     identical: r.result.identical,
     mismatches: r.result.mismatches,
     envelopes: r.result.envelopesCompared,
@@ -128,6 +136,12 @@ const rec = {
     lots: sum((r) => r.coverage.lots),
     fundingRecords: sum((r) => r.coverage.fundingRecords),
     partialFills: sum((r) => r.coverage.partialFills),
+    stagedOn: sum((r) => r.subjects.stagedOn ?? 0),
+    stagedArms: sum((r) => r.coverage.staged?.arms ?? 0),
+    stagedExits: sum((r) => r.coverage.staged?.stagedExits ?? 0),
+    placementExits: sum((r) => r.coverage.staged?.placementExits ?? 0),
+    stagedBooksOn: union((r) => r.coverage.staged?.booksOn ?? {}),
+    stagedFixtureRuns: doors.filter((d) => /^T-/.test(d)).length,
     growthStructuresCovered: Object.keys(union((r) => r.coverage.growthStructures)).length,
     features: union((r) => r.coverage.features),
     exitReasons: union((r) => r.coverage.reasons),

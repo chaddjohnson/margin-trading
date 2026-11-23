@@ -563,6 +563,8 @@ export const decodeRange = (
     if (status !== 0) continue;
 
     const st = canonicalStaged(t.staged); // the task's staged stop (null: OFF, the earlier decode exactly)
+    // the books whose stage ran (ON and given to the pool: src/d1-risk-controls-rc3/run.ts effectiveStaged)
+    const ran = new Set<string>(e.books);
 
     // trades: books 0–3
     const trades: VTrade[][] = [[], [], [], []];
@@ -627,7 +629,7 @@ export const decodeRange = (
       const ordered: TaskResult['staged'] = {};
 
       for (const b of stagedBooks) {
-        if (!st.books[b]) continue;
+        if (!st.books[b] || !ran.has(b)) continue;
         if (!res.staged[b]) throw new Error(`${t.k}: the staged book ${b} was not run`);
         ordered[b] = res.staged[b];
       }

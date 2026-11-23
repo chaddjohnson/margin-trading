@@ -2,16 +2,21 @@
 
 ## Top screen
 
-- **Updated:** see the stage table (UTC, `date -u`). **Status: INCOMPLETE — E1 CPU reference committed; next E2 (CUDA).**
+- **Updated:** see the stage table (UTC, `date -u`). **Status: INCOMPLETE — E2 done; E3/E4 GPU Phase 8 acceptance
+  campaign launched (unit `p8chain-final`, log `research/gpu-phase8/results/logs/final-chain.txt`).**
 - **Brief:** `brief/BRIEF.md` (verbatim copy of the user's upload), sha256
   `720e0b36e815b111a5deac41c7454bd497224dd78c10adaa01fa8017d78998ae`, 295 lines / 30,788 bytes; final line
   "**PRIORITY 4 COMPLETE — NO STRATEGY ADOPTED OR DEPLOYED — AWAITING REVIEW**" present (not truncated).
 - **Authorized:** E0–E5 engineering, ablations, paired CTRL/EXP search, informed lanes, qualification, chronological
   checks, reports, ZIP, commit and push of the research branch. **Not authorized:** adoption, merging into `main`,
   deployment, broker access, editing frozen New L0 / N/original research.
-- **Running processes:** none.
-- **Next step:** E2 — port staged-stop@1 to CUDA (gb.h v3 layouts, gb_common/gb_d1/gb_growth, server supported set),
-  host encode/decode/layout/lab/domain; then the gpu-phase8 acceptance study (E3/E4).
+- **Running processes:** the GPU Phase 8 campaign `research/gpu-phase8/chains/final.sh` in systemd user unit
+  `p8chain-final` (slice `gpup8.slice`); check `systemctl --user is-active p8chain-final` and the log tail. Do NOT
+  launch another GPU job while it runs. Do NOT edit `src/vg-l0-staged-stop/{search,space,context,derive}.ts`,
+  `src/gpu-phase8/`, `tools/gpu-phase8/`, the CPU closure or `src/gpu-backend/` while it runs (the p4/sb jobs import them).
+- **Next step:** while the campaign runs, write the rest of Priority 4's study code (stages, qualify, select, stats,
+  main, protocol). After it: commit, `research/gpu-phase8/chains/tests.sh` (E7–E10), `tools/gpu-phase8/accept.ts`,
+  verify-acceptance, record-in-force tests, live preflight, commit + out-of-band pin.
 
 ## Environment
 
@@ -36,7 +41,8 @@
 |---|---|---|
 | E0 read + spec freeze | complete 2026-11-23T12:00Z | `RULE_SPECIFICATION.md` (commit `3aa51963`; later wording-only edits none) |
 | E1 CPU reference + OFF parity | complete (CPU side) 2026-11-23 | Growth 1.4.0 baseline fixture `62574e98` (captured on the unedited engine, sha256 `f7b50992…`); `src/staged-stop/`, `src/d1-risk-controls-rc3/`, Growth engine revision 1.5.0 (`riseTrading.ts`, `optionalRules.ts`), `books.ts` pass-through. Tests: config 12/12, RC 3 book 13/13, Growth staged 7/7, Growth OFF parity 9/9 (fixture), pooled D24 3/3 (New L0 $382,721.46 / $19,459.83 and N/original $388,031.02 / $19,459.83 reproduced), existing D1/RC/Growth/pool suites 420/420 |
-| E2 CUDA port | not started | — |
+| E2 CUDA port | complete 2026-11-23 (dev binary) | protocol v3 (`gb.h` 144/344/1080/104/656 bytes, bits 36/37), `gb_common.cuh` Staged rule, `gb_d1.cuh`/`gb_growth.cuh` hooks; host `encode/batch/lab/layout/domain/official/compat/toolchain`; entrypoint `gpu-phase8`. Dev checks: staged smoke 64/64 (D24), 112/112 (D21); T fixtures 6×20 identical (threshold arms at = and not one ulp below); mixed staged S3 456, D19 edges 361, book-disabling option sets 5×233 identical; Stage B lane C19/GA0.VA0/R3 replayed by the derived lane = sealed (0 differences); staged mini GPU = CPU (6,869 archived). The staged Growth runner lives in `src/d1-risk-controls-rc3/growth.ts` (a copy of Priority 3's runGrowthBook: `src/vg-d1-growth-joint/` is a frozen legacy-runner directory, its `books.ts` edit was reverted) |
+| E3/E4 Phase 8 acceptance campaign | running | `research/gpu-phase8/` (PROTOCOL.md frozen; preflight PASS); chain `chains/final.sh` (B1, E3, E4, A1 parity ≈155,600 random genomes, A2, R1–R3, A3 incl. Stage B lanes sb-C19/C21/C24, A4 incl. p4 mini set, Q1, A5, A6); then `chains/tests.sh`, `tools/gpu-phase8/accept.ts` |
 | E3 parity campaign | not started | — |
 | E4 acceptance + regression | not started | — |
 | E5 benchmark + protocol freeze | not started | — |
@@ -58,3 +64,7 @@
   `research/vg-d1-growth-joint/results/doors.jsonl`. Detected at 12:4xZ, restored with `git checkout` (only those two
   lines differed; never committed); the tool now uses `src/gpu-phase8/context.ts openDoor` (Phase 8's own log).
 
+- 2026-11-23T12:40Z: an engineering check of the staged mini-optimization (job `dev-p4-gpu`, Phase 8 mini schedule, 4 lanes
+  on D19 = the C19 training door) printed the mini lanes' shortlist centre nets and staged settings to the terminal. This
+  is engineering output of a non-study schedule, viewed after the E0 freeze of the rule and domains and before the
+  protocol freeze; no protocol choice depends on it. Engineering checks print equality/coverage only from here on.

@@ -2,7 +2,8 @@
 // research/vg-l0-staged-stop/RULE_SPECIFICATION.md). With the stage OFF on every book the evaluation IS the existing one:
 // evaluateStaged calls Assignment 2's evaluate (RC 2's pooled runner, Priority 3's pool and compact record) itself, and
 // booksWithStaged returns RC 2's books. With some book ON, only that book is built differently — a D1 book by RC 3's
-// runD1BookRc3, Growth·VGT by Priority 3's runGrowthBook with the Growth engine revision 1.5.0 option — and every other
+// runD1BookRc3, Growth·VGT by runGrowthBookStaged (growth.ts: Priority 3's runGrowthBook with the Growth engine revision
+// 1.5.0 option) — and every other
 // book, the pool (unchanged code) and the compact record (unchanged code) are the existing ones. The record of an ON
 // configuration carries the staged identity ("st1-…") and the per-book counters `staged`.
 import {
@@ -11,9 +12,9 @@ import {
   type VBook,
   baseFriction,
   bookIds,
-  runGrowthBook,
   symbolOf
 } from '../vg-d1-growth-joint/books.ts';
+import { runGrowthBookStaged } from './growth.ts';
 import type { Door } from '../vg-d1-growth-joint/data.ts';
 import { indexOnOrAfter } from '../vg-d1-growth-joint/data.ts';
 import {
@@ -73,14 +74,27 @@ export const liteOf = (l: RcLog2): RcLite => ({
   blockedSessions: l.summary.blockedSessions
 });
 
-// Each enabled book's stage-1 distance in tenths (the staged validation's reference).
-export const tau1Of = (q: Quad, o: EvalOptions = {}): Partial<Record<StagedBook, number>> => {
-  const out: Partial<Record<StagedBook, number>> = {};
+// Every book's stage-1 distance in tenths (the staged validation's reference: a configuration property, independent of
+// which books an evaluation option enables; Growth·VGT only when its configuration has a trailing stop).
+export const tau1Of = (q: Quad, _o: EvalOptions = {}): Partial<Record<StagedBook, number>> => {
+  const out: Partial<Record<StagedBook, number>> = {
+    'D1:GDX': tau1TenthsOfD1(q.d1.GDX.trailingStopPercentage),
+    'D1:VGT': tau1TenthsOfD1(q.d1.VGT.trailingStopPercentage)
+  };
 
-  if (isEnabled(o, 'D1:GDX')) out['D1:GDX'] = tau1TenthsOfD1(q.d1.GDX.trailingStopPercentage);
-  if (isEnabled(o, 'D1:VGT')) out['D1:VGT'] = tau1TenthsOfD1(q.d1.VGT.trailingStopPercentage);
-  if (isEnabled(o, 'G:VGT')) out['G:VGT'] = tau1TenthsOfGrowth(q.g.VGT.trailingStopPercent as number);
+  if (typeof q.g.VGT?.trailingStopPercent === 'number') out['G:VGT'] = tau1TenthsOfGrowth(q.g.VGT.trailingStopPercent);
   return out;
+};
+
+// The books whose stage actually runs in an evaluation: ON and enabled by the options (an option that disables a book —
+// a causal-removal rerun, a one-family scope — leaves its stage inert). The record's identity stays the configuration's.
+export const effectiveStaged = (st: StagedConfig | null, o: EvalOptions = {}): StagedConfig | null => {
+  if (!st) return null;
+
+  const books: StagedConfig['books'] = {};
+
+  for (const [b, c] of Object.entries(st.books)) if (c && isEnabled(o, b as BookId)) books[b as StagedBook] = c;
+  return canonicalStaged({ version: 1, books });
 };
 
 export const validateStagedFor = (q: Quad, staged: StagedConfig | null | undefined, o: EvalOptions = {}) => {
@@ -132,7 +146,7 @@ export const booksWithStaged = (
   o: EvalOptions = {},
   ro: StagedRunOptions = {}
 ): VBook[] => {
-  const st = validateStagedFor(q, staged, o);
+  const st = effectiveStaged(validateStagedFor(q, staged, o), o);
 
   if (!st) return booksWithControls2(door, q, cfg, o, { cache: ro.cache });
 
@@ -179,7 +193,7 @@ export const booksWithStaged = (
         fr.stopFill === 'next-open' && !growthNextOpenSupported(g) ? { ...fr, stopFill: 'stop' } : fr;
 
       make = () =>
-        runGrowthBook(sd, door, g, { friction: gfr, costBps: gfr.costBps, staged: book, stagedDetail: detail });
+        runGrowthBookStaged(sd, door, g, { friction: gfr, costBps: gfr.costBps, staged: book, stagedDetail: detail });
       key = `G|${door.name}|${gfr.costBps}|${gfr.rate}|${gfr.stopFill}|${gfr.stopSlippageBps}|${JSON.stringify(Object.entries(g).sort(([x], [y]) => (x < y ? -1 : 1)))}${bookKeySuffix(book)}`;
     }
     byBook.set(b, ro.cache === false || detail ? make() : stagedBookCache.get(key, make));
@@ -208,12 +222,15 @@ export const runWithStaged = (
   return { books, result };
 };
 
-// The staged counters of a run's books (ON books only, in the canonical book order).
-export const stagedLitesOf = (books: readonly VBook[], st: StagedConfig): Partial<Record<StagedBook, StagedLite>> => {
+// The staged counters of a run's books (the books whose stage ran: ON and enabled; canonical book order).
+export const stagedLitesOf = (
+  books: readonly VBook[],
+  st: StagedConfig | null
+): Partial<Record<StagedBook, StagedLite>> => {
   const out: Partial<Record<StagedBook, StagedLite>> = {};
 
   for (const b of ['D1:GDX', 'D1:VGT', 'G:VGT'] as const) {
-    if (!st.books[b]) continue;
+    if (!st?.books[b]) continue;
 
     const vb = books.find((x) => x.book === b) as (VBook & { staged?: StagedLite }) | undefined;
 
@@ -256,7 +273,7 @@ export const stagedRecordOf = (
 
   for (const b of x.books)
     if ((b as unknown as RiskVBook3).rc) rc[b.book as D1BookId] = liteOf((b as unknown as RiskVBook3).rc as RcLog2);
-  return { ...rec, id: stagedCfgId(q, cfg, st), rc, staged: stagedLitesOf(x.books, st) };
+  return { ...rec, id: stagedCfgId(q, cfg, st), rc, staged: stagedLitesOf(x.books, effectiveStaged(st, o)) };
 };
 
 export const evaluateStaged = (

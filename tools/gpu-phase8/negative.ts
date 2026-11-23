@@ -34,7 +34,7 @@ import { evalKeyOf, quadOf } from '../../src/vg-l0-full-joint/space.ts';
 import { incumbentCfg } from '../../src/vg-l0-full-joint/stages.ts';
 import { openOfficialGpuSession, smiUuid } from '../../src/gpu-backend/official.ts';
 import { engineRuntime } from '../../src/gpu-backend/runtime.ts';
-import { assignment3Domain } from '../../src/gpu-backend/domain.ts';
+import { assignment3Domain, riskEnvelopePilotDomain, stagedStopDomain } from '../../src/gpu-backend/domain.ts';
 import { FEATURE } from '../../src/gpu-backend/layout.ts';
 import { compatManifest, policySources } from '../../src/gpu-backend/compat.ts';
 import { headCommit } from '../../src/gpu-backend/acceptance.ts';
@@ -49,12 +49,12 @@ delete process.env.GPU_POLICY_PURPOSE;
 
 const args = process.argv.slice(2);
 const out = args[args.indexOf('--out') + 1]!;
-// GPU Phase 7: this study's final builds (tools/gpu-phase8/build-final.sh): gb7-dev = the final gb7, gb7-perturbed,
-// gb7-stale (GPU_PHASE7_BUILD overrides the directory for development runs only)
-const p7build = process.env.GPU_PHASE7_BUILD ?? path.join(repoRoot, 'research', 'gpu-phase8', 'build');
-const dev = path.join(p7build, 'gb7-dev');
-const perturbed = path.join(p7build, 'gb7-perturbed');
-const stale = path.join(p7build, 'gb7-stale');
+// GPU Phase 8: this study's final builds (tools/gpu-phase8/build-final.sh): gb8-dev = the final gb8, gb8-perturbed,
+// gb8-stale (GPU_PHASE8_BUILD overrides the directory for development runs only)
+const p7build = process.env.GPU_PHASE8_BUILD ?? path.join(repoRoot, 'research', 'gpu-phase8', 'build');
+const dev = path.join(p7build, 'gb8-dev');
+const perturbed = path.join(p7build, 'gb8-perturbed');
+const stale = path.join(p7build, 'gb8-stale');
 const hostWorkers = Number(args.includes('--host-workers') ? args[args.indexOf('--host-workers') + 1] : '3');
 const door = await openDoor('W-QUIET', 'P6 negative tests');
 const ds = exportDataset(door, cacheDir);
@@ -876,11 +876,65 @@ const npm = (script: string, env: Record<string, string>) =>
   );
 }
 
+// ----- gpu-phase8: the staged-stop delivery (protocol v3, capability bits 36/37, the staged validation) -----
+{
+  const stagedTasks = (n: number, label: string, staged: Task['staged']): Task[] =>
+    tasksOf(n, label)
+      .filter((t) => t.k.startsWith('R:') === false)
+      .map((t) => ({ ...t, staged }));
+  const ok: Task['staged'] = { version: 1, books: { 'G:VGT': { activationTenths: 300, stage2Tenths: 25 } } };
+
+  // 1. the previous accepted server (Phase 7's gb7, protocol v2) refuses a v3 batch
+  {
+    const old = path.join(repoRoot, 'research/gpu-phase7/build/gb7');
+    const srv = GpuServer.start({ binary: old, libDir: toolkitLib });
+    let observed = '';
+
+    try {
+      const info = await srv.info();
+
+      await srv.load(ds.file);
+      await srv.evaluate(door, tasksOf(4, 'NEG-V2'), { returnTrades: true }, info.uuid);
+      observed = 'EVALUATED';
+    } catch (e) {
+      observed = (e as Error).message;
+    }
+    await srv.close().catch(() => undefined);
+    record('staged', "the previous accepted server (gb7, protocol v2) refuses a protocol v3 batch", /version|bad version|unsupported batch version 3/i, observed);
+  }
+  // 2. the official gate refuses the staged domain on the previous server (its supported set lacks bits 36/37)
+  await gate(
+    'the staged domain on the previous accepted server (gb7 lacks D1_STAGED_STOP / G_STAGED_STOP)',
+    /preflight-(capability|build|protocol|version)/,
+    { binary: path.join(repoRoot, 'research/gpu-phase7/build/gb7'), domain: stagedStopDomain(incumbents().NL0.quad.d1.VGT) }
+  );
+  // 3. a staged task outside the attested (risk-envelope) domain: the pool withholds the batch
+  await runPool('a staged task outside the attested domain (no staged bits in the domain)', /capability-outside-domain.*STAGED_STOP/, {
+    domainFeatures: riskEnvelopePilotDomain(incumbents().NL0.quad.d1.VGT).features,
+    tasks: stagedTasks(8, 'NEG-S1', ok)
+  });
+  // 4. invalid staged configurations are refused by the encoder (the CPU's own validation; nothing reaches the device)
+  for (const [name, bad, re] of [
+    ['an activation below the no-early-lock minimum (D7)', { version: 1 as const, books: { 'G:VGT': { activationTenths: 50, stage2Tenths: 25 } } }, /early-lock/],
+    ['a stage-2 distance not 0.5 point tighter than stage 1', { version: 1 as const, books: { 'G:VGT': { activationTenths: 300, stage2Tenths: 60 } } }, /tighter/],
+    ['a staged stop on Growth·GDX (out of scope)', { version: 1 as const, books: { 'G:GDX': { activationTenths: 300, stage2Tenths: 25 } } } as never, /out of scope/],
+    ['a non-integer activation', { version: 1 as const, books: { 'G:VGT': { activationTenths: 300.5, stage2Tenths: 25 } } }, /integer/],
+    ['an empty staged configuration carried by a task', { version: 1 as const, books: {} }, /empty staged configuration/]
+  ] as const)
+    await runPool(`an invalid staged task: ${name}`, re, { tasks: stagedTasks(4, 'NEG-S2', bad as Task['staged']) });
+  // 5. positive control: valid staged tasks complete through the same runtime path
+  await runPool('valid staged tasks complete (positive control)', /completed \d+\/\d+/, {
+    domainFeatures: stagedStopDomain(incumbents().NL0.quad.d1.VGT).features,
+    tasks: stagedTasks(16, 'NEG-S3', ok),
+    positive: true
+  });
+}
+
 fs.rmSync(tmp, { recursive: true, force: true });
 const pass = rows.every((r) => r.pass);
 
 writeJson(out, {
-  kind: 'gpu-phase8 negative tests (Phase 2 cases + host path + engine runtime + jobs + runtime beyond the official path)',
+  kind: 'gpu-phase8 negative tests (Phase 2 cases + host path + engine runtime + jobs + runtime beyond the official path + the staged-stop delivery)',
   runtime: engineRuntime(),
   t: new Date().toISOString(),
   head: headCommit(),

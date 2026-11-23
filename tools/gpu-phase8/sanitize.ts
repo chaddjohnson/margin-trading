@@ -6,12 +6,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { runWithControls2 } from '../../src/d1-risk-controls-rc2/run.ts';
 import { vOptions } from '../../src/vg-l0-full-joint/nl0.ts';
 import type { EvalOptions } from '../../src/vg-d1-growth-joint/evaluate.ts';
 import { deepDiff } from '../../src/gpu-phase1/compare.ts';
 import { type DoorKey, cacheDir, openDoor, resultsDir, writeJson } from '../../src/gpu-phase8/context.ts';
-import { growthStrata, randomSubjects, referenceSubjects } from '../../src/gpu-phase8/subjects.ts';
+import { growthStrata, randomSubjects, referenceSubjects, withStagedMode } from '../../src/gpu-phase8/subjects.ts';
+import { runWithStaged } from '../../src/d1-risk-controls-rc3/run.ts';
 import { createHash } from 'node:crypto';
 import { exportDataset } from '../../src/gpu-backend/dataset.ts';
 import { GpuServer } from '../../src/gpu-backend/client.ts';
@@ -23,11 +23,13 @@ const opt = (k: string, d: string) => (args.includes(`--${k}`) ? args[args.index
 const doorName = opt('door', 'W-QUIET') as DoorKey;
 const door = await openDoor(doorName, 'T0 sanitizer');
 const ds = exportDataset(door, cacheDir);
-const subjects = [
-  ...referenceSubjects(),
-  ...growthStrata(Number(opt('per', '1')), 'SAN'),
-  ...randomSubjects(Number(opt('random', '0')), 'SAN-R')
-];
+// gpu-phase8: every subject set with the staged strata (the 8 ON/OFF patterns in turn; references included on this
+// development window)
+const subjects = withStagedMode(
+  [...referenceSubjects(), ...growthStrata(Number(opt('per', '1')), 'SAN'), ...randomSubjects(Number(opt('random', '0')), 'SAN-R')],
+  'mixed',
+  'SAN-S'
+);
 const options: EvalOptions = {
   ...vOptions,
   blackouts: [{ first: door.dates[40]!, last: door.dates[60]! }],
@@ -39,7 +41,8 @@ const tasks = subjects.map((s, i) => ({
   controls: s.controls,
   options: i % 2 ? options : vOptions,
   detail: true,
-  risk: true
+  risk: true,
+  ...(s.staged ? { staged: s.staged } : {})
 }));
 const outDir = path.join(resultsDir, opt('out-dir', 'sanitizer'));
 
@@ -80,7 +83,7 @@ for (const tool of tools) {
 
   r.results.forEach((g, i) => {
     const s = subjects[i]!;
-    const x = runWithControls2(door, s.quad, s.controls, tasks[i]!.options, true, false, { cache: false });
+    const x = runWithStaged(door, s.quad, s.controls, s.staged, tasks[i]!.options, true, false, { cache: false });
     const d =
       g.status === 0
         ? deepDiff(

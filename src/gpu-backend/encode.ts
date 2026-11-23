@@ -30,7 +30,7 @@ import { fraction as gateFraction } from '../growth-trading/entryGates.ts';
 import { fractionOf as rulesFraction } from '../growth-trading/optionalRules.ts';
 import { CandIn, D1In, FEATURE, GrowthIn } from './layout.ts';
 import { type StagedBook, type StagedConfig, canonicalStaged } from '../staged-stop/config.ts';
-import { validateStagedFor } from '../d1-risk-controls-rc3/run.ts';
+import { effectiveStaged, validateStagedFor } from '../d1-risk-controls-rc3/run.ts';
 
 // the percentage → fraction expression of continuation.ts and drawdownGate.ts (module-private there; identical text)
 const fraction = (percent: number) => {
@@ -376,7 +376,7 @@ export const encodeTask = (door: Door, t: Task, id: number, rangeBase: number, e
   if ((po.periods ?? []).length) features |= FEATURE.POOL_PERIODS;
   if (t.detail) features |= FEATURE.POOL_DETAIL;
   if (t.risk) features |= FEATURE.RISK_METRICS;
-  features |= stagedFeaturesOf(st); // GPU Phase 8: only the books the pool is given carry a staged stop (validated)
+  features |= stagedFeaturesOf(effectiveStaged(st, o)); // GPU Phase 8: only the books given to the pool run a stage
 
   const blackouts = (po.blackouts ?? []).map((x) => ({ first: x.first, last: x.last }));
   const periods = (po.periods ?? []).map((p) => ({ first: p, last: p }));

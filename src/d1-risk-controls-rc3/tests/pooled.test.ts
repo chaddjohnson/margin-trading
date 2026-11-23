@@ -8,7 +8,8 @@ import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { openPrefixDoor } from '../../vg-d1-growth-joint/data.ts';
-import { runGrowthBook } from '../../vg-d1-growth-joint/books.ts';
+import { baseFriction, runGrowthBook } from '../../vg-d1-growth-joint/books.ts';
+import { runGrowthBookStaged } from '../growth.ts';
 import { evaluate } from '../../vg-l0-risk-families/evaluate.ts';
 import { type Cfg, cfgId, evalKeyOf, quadOf } from '../../vg-l0-full-joint/space.ts';
 import { vOptions } from '../../vg-l0-full-joint/nl0.ts';
@@ -56,11 +57,25 @@ describe('pooled staged evaluation on D24', { skip: !hasDoors && 'no local doors
     }
   });
 
-  it('Growth: runGrowthBook with staged null equals the call without it', async () => {
+  it('Growth: runGrowthBookStaged (absent or null stage) equals Priority 3’s runGrowthBook, for both comparators and stresses', async () => {
     const door = await openPrefixDoor('D24', 'test: staged OFF parity (Growth)', true);
-    const g = quadOf(newL0).g.VGT;
+    for (const cfg of [newL0, nOriginal]) {
+      const g = quadOf(cfg).g.VGT;
 
-    assert.deepEqual(runGrowthBook(door.sym.VGT, door, g, { staged: null }), runGrowthBook(door.sym.VGT, door, g));
+      for (const friction of [
+        undefined,
+        { ...baseFriction, stopSlippageBps: 25 },
+        { ...baseFriction, rate: 0.14, costBps: 10 }
+      ]) {
+        const want = runGrowthBook(door.sym.VGT, door, g, { friction, costBps: friction?.costBps });
+
+        assert.deepEqual(runGrowthBookStaged(door.sym.VGT, door, g, { friction, costBps: friction?.costBps }), want);
+        assert.deepEqual(
+          runGrowthBookStaged(door.sym.VGT, door, g, { friction, costBps: friction?.costBps, staged: null }),
+          want
+        );
+      }
+    }
   });
 
   it('ON: the staged identity, counters, RC summaries, a consistent detailed replay, determinism, key separation', async () => {

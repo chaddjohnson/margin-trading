@@ -1,0 +1,99 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/gpu-phase8",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "3.0.0",
+  "sha256": "4e8244e65bf1dd7c54ad46a1c941321d68b0c144344fd0c464dcc047eea5fef1"
+ },
+ "readAt": "2026-11-23T11:52:00Z",
+ "adoptedAt": "2026-11-23T12:50:57Z",
+ "protocol": {
+  "path": "research/gpu-phase8/PROTOCOL.md",
+  "sha256": "6ab107b30c270e21676c2361d5cd9a811c326deb33767100704e21e143749477"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched for selection, ranked for a decision or selected. The study verifies the staged-stop delivery (staged-stop@1, protocol v3: CPU reference, CUDA port, host codec, domain) against the authoritative CPU engine and, only if every gate passes (PROTOCOL.md section 2), renews the GPU acceptance with a full checklist section 2 cycle for Priority 4 (research/vg-l0-staged-stop).",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 400000,
+  "notes": "No search proposals for selection. backendEvaluations caps fresh CPU evaluations on real data (the CPU references of the parity campaign, the finalists and the risk-delivery parity; the CPU arms of the Assignment 3 and staged mini schedules; the reliability run's samples). GPU evaluations are counted in the records; synthetic fixtures are not counted."
+ },
+ "evaluationBackend": {
+  "policy": "non-official-cpu",
+  "purpose": "diagnostic",
+  "justification": "Engineering acceptance study (GPU Phase 8, the staged-stop delivery): CPU evaluations are parity references (records, staged counters and risk envelopes) and the non-official CPU arms of the mini schedules; GPU runs are non-official replays of sealed jobs, mini schedules, parity, sanitizer and reliability tests. Nothing is official optimization evidence (standard 3.0.0 section 9.8); the engineering output, if every gate passes, is a new acceptance record (section 9.9) for the final code."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search for selection and no chronological verdict",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "\u00a72.3",
+   "kind": "adaptation",
+   "description": "no roles and no primary; nothing is selected",
+   "justification": "brief: engineering assignment; no trading-rule, fitness, search or selection change",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "\u00a74",
+   "kind": "adaptation",
+   "description": "no search for selection, no chronological verdict; sealed jobs of Assignments 3 and 2 replayed with their own frozen code and seeds (Assignment 3 C19 broad1 also with the risk envelope requested), and the parity-only mini schedule, compared by identity only",
+   "justification": "brief Phase F: sealed historical candidate reproduction, fixed-seed mini-optimizer parity as engineering verification only",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "\u00a75.1",
+   "kind": "adaptation",
+   "description": "the CPU engine stays the authoritative canonical reference; its closure changes ONLY by the declared staged-stop additions (src/staged-stop, src/d1-risk-controls-rc3, the Growth engine revision 1.5.0 option, the books.ts pass-through), with the stage OFF identical to the previous engine (the Growth 1.4.0 OFF-parity fixture, the sealed replays of Assignments 3/2 and Stage B, the finalists); every result of the final path must reproduce the canonical CPU engine or a sealed record",
+   "justification": "Priority 4 (research/vg-l0-staged-stop/brief/BRIEF.md section 3) requires the S1 CPU reference with exact OFF parity before its CUDA port; standard 3.0.0 section 9.6 (the TypeScript engine authoritative).",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "\u00a75.9",
+   "kind": "adaptation",
+   "description": "not applicable: no fold primary or final candidate",
+   "justification": "no search (AD2)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "\u00a76.3",
+   "kind": "adaptation",
+   "description": "no tuning benchmark: batch size and host workers stay Phase 4 decisions; timings are reported (the pilot compute estimate), never decision inputs",
+   "justification": "brief: no unnecessary performance refactoring",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "\u00a76.4",
+   "kind": "adaptation",
+   "description": "bounded reliability (two concurrent processes x 32 minutes) instead of an endurance test",
+   "justification": "brief Phase F: bounded reliability testing",
+   "userAgreement": null
+  }
+ ]
+}

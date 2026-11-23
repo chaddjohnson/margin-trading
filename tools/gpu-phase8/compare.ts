@@ -47,7 +47,32 @@ const load = (x: string) => {
   return strip ? (dropEnvelopes(r) as typeof r) : r;
 };
 
-if (mode === 'sealed') {
+// gpu-phase8: stageb <job> <C> <lane key> — one Stage B CTRL lane replayed by Priority 4's derived lane against the lane
+// sealed in research/vg-l0-risk-envelope-stage-b/results/search/<C>.json (risk envelopes included: both requested them)
+if (mode === 'stageb') {
+  const [arm, cut, laneKey] = rest;
+  const sealedFile = path.join(repoRoot, 'research/vg-l0-risk-envelope-stage-b/results/search', `${cut}.json`);
+  const sealed = JSON.parse(fs.readFileSync(sealedFile, 'utf8'));
+  const want = (sealed.lanes.CTRL as { key: string }[]).find((l) => l.key === laneKey);
+  const replay = load(arm!);
+
+  if (!want) throw new Error(`no sealed CTRL lane ${laneKey} in ${sealedFile}`);
+
+  const diffs = deepDiff(want, replay.lanes[0], '$', [], 40);
+  const rec = {
+    kind: 'gpu-phase8 job against a sealed Stage B CTRL lane',
+    t: new Date().toISOString(),
+    sealed: { file: path.relative(repoRoot, sealedFile), lane: laneKey, budget: sealed.budget, laneCap: sealed.laneCap },
+    replay: { job: arm, backend: replay.backendId, lanes: replay.lanes.length, budget: replay.budget, cap: replay.cap },
+    differences: diffs.length,
+    firstDifferences: diffs.slice(0, 20),
+    identical: diffs.length === 0 && replay.lanes.length === 1 && JSON.stringify(replay.budget) === JSON.stringify(sealed.budget) && replay.cap === sealed.laneCap
+  };
+
+  fs.writeFileSync(out, `${JSON.stringify(rec, null, 1)}\n`);
+  console.log(JSON.stringify({ identical: rec.identical, differences: rec.differences }));
+  if (!rec.identical) process.exitCode = 2;
+} else if (mode === 'sealed') {
   const [arm, fam, cut, part] = rest;
   const studyDir = fam === 'a2' ? 'research/vg-l0-risk-families' : 'research/vg-l0-full-joint';
   const sealedFile = path.join(repoRoot, studyDir, 'results/search', cut!, `${part}.json`);

@@ -30,7 +30,9 @@ export const nonOfficial: Record<string, string> = {
   'gpu-phase6':
     'GPU Phase 6 acceptance study (Maglev protection beyond the official path, concurrent-job isolation): CPU parity references and the non-official CPU arm of the parity-only mini-optimization',
   'gpu-phase7':
-    'GPU Phase 7 acceptance study (the risk-envelope delivery of GpuPool/EvalLab): CPU parity references of records and envelopes and the non-official CPU arm of the parity-only mini-optimization'
+    'GPU Phase 7 acceptance study (the risk-envelope delivery of GpuPool/EvalLab): CPU parity references of records and envelopes and the non-official CPU arm of the parity-only mini-optimization',
+  'gpu-phase8':
+    'GPU Phase 8 acceptance study (the staged-stop delivery, protocol v3): CPU parity references of staged records and envelopes, the exact-threshold fixtures and the non-official CPU arm of the parity-only staged mini-optimization'
 };
 
 const tsFiles = (dir: string) =>

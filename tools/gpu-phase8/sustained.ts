@@ -14,7 +14,7 @@ import { execFileSync } from 'node:child_process';
 import { vOptions } from '../../src/vg-l0-full-joint/nl0.ts';
 import type { EvalOptions } from '../../src/vg-d1-growth-joint/evaluate.ts';
 import { type DoorKey, cacheDir, openDoor, writeJson } from '../../src/gpu-phase8/context.ts';
-import { randomSubjects } from '../../src/gpu-phase8/subjects.ts';
+import { randomSubjects, withStagedMode } from '../../src/gpu-phase8/subjects.ts';
 import { CpuRefPool } from '../../src/gpu-phase8/cpuRefPool.ts';
 import { canonHash } from '../../src/gpu-backend/canon.ts';
 import { exportDataset } from '../../src/gpu-backend/dataset.ts';
@@ -147,18 +147,20 @@ const telemetry = setInterval(() => {
   }
 }, 30_000);
 
+// gpu-phase8: every round's subjects carry the staged strata (the 8 ON/OFF patterns in turn)
 const tasksOf = (round: number, mix: string, n: number): Task[] =>
-  randomSubjects(n, `STRESS-${procTag}${round}`).map((s) => ({
+  withStagedMode(randomSubjects(n, `STRESS-${procTag}${round}`), 'mixed', `STRESS-S-${procTag}${round}`).map((s) => ({
     k: s.key,
     quad: s.quad,
     controls: s.controls,
     options: mixes[mix]!.options,
     detail: mixes[mix]!.detail,
-    risk: mixes[mix]!.risk
+    risk: mixes[mix]!.risk,
+    ...(s.staged ? { staged: s.staged } : {})
   }));
 const fixedTasks = (d: string) =>
-  randomSubjects(2048, `STRESS-FIXED-${procTag}${d}`).map(
-    (s) => ({ k: s.key, quad: s.quad, controls: s.controls, options: vOptions, detail: false }) as Task
+  withStagedMode(randomSubjects(2048, `STRESS-FIXED-${procTag}${d}`), 'mixed', `STRESS-FIXED-S-${procTag}${d}`).map(
+    (s) => ({ k: s.key, quad: s.quad, controls: s.controls, options: vOptions, detail: false, ...(s.staged ? { staged: s.staged } : {}) }) as Task
   );
 const firstOutputs = new Map<string, Map<string, string>>(); // door → task → record hash
 
@@ -267,7 +269,8 @@ while (Date.now() < deadline) {
             controls: t.controls,
             options: t.options,
             detail: t.detail,
-            risk: t.risk
+            risk: t.risk,
+            ...(t.staged ? { staged: t.staged } : {})
           })),
           2
         )
