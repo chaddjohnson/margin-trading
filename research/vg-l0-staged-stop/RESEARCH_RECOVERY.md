@@ -2,33 +2,33 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-23T17:42Z (clock). **Status: INCOMPLETE — E0–E2 done; GPU Phase 8 campaign attempt 2 COMPLETE
-  (13:02:15Z → 17:38:36Z, every step at its wanted rc; A1 parity 63 runs / 159,240 subjects / 0 mismatches / 155,600
-  random genomes; results committed `aac6c0e1`). Phase 8 tests chain RUNNING (unit `p8chain-tests`, started 17:40:20Z,
-  log `research/gpu-phase8/results/logs/tests-chain.txt`). Priority 4 study code written and tested (not frozen).**
+- **Updated:** 2026-11-23T18:05Z (clock). **Status: INCOMPLETE — E0–E3 done; GPU Phase 8 ACCEPTED** (record
+  `config/gpu-backend/acceptance.json` sha256 `c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126`, binary
+  gb8 `86b30753…`, source revision `6d2cd141`, committed `0d61e71b`; `verify-acceptance.sh --rebuild --device` VERIFIED;
+  out-of-band pin `~/.local/share/margin-trading-gpu/acceptance-pins/acceptance-gpu-phase8-c02a8a92.json` + `pins.jsonl`;
+  record-in-force rerun 42/42 tests, 30/30 study preflights PASS, `ec1aa238`). Phase 8 amendments E3 (two declared
+  consequences in Priority 5A's byte pin of riseTrading.ts; live-dist check), E4 (generator fixes; negative 82/82 and
+  tamper 23/23 rerun), E5 (one rerun after a positive-control flake). **Priority 4 engineering chain RUNNING** (unit
+  `vgl0ss-eng`, started 18:04:22Z, log `research/vg-l0-staged-stop/results/logs/engineering.log`). Protocol not frozen.**
 - **Brief:** `brief/BRIEF.md` (verbatim copy of the user's upload), sha256
   `720e0b36e815b111a5deac41c7454bd497224dd78c10adaa01fa8017d78998ae`, 295 lines / 30,788 bytes; final line
   "**PRIORITY 4 COMPLETE — NO STRATEGY ADOPTED OR DEPLOYED — AWAITING REVIEW**" present (not truncated).
 - **Authorized:** E0–E5 engineering, ablations, paired CTRL/EXP search, informed lanes, qualification, chronological
   checks, reports, ZIP, commit and push of the research branch. **Not authorized:** adoption, merging into `main`,
   deployment, broker access, editing frozen New L0 / N/original research.
-- **Running processes:** `research/gpu-phase8/chains/tests.sh` in systemd user unit `p8chain-tests` (slice
-  `gpup8.slice`); check `systemctl --user is-active p8chain-tests` and the log tail ("tests complete"). Do NOT launch
-  another GPU job while it runs (Phase 1's live GPU test). Do NOT edit
-  `src/vg-l0-staged-stop/{search,space,context,derive}.ts`, `src/gpu-phase8/`, the CPU closure or `src/gpu-backend/`
-  while it runs (the p4/sb jobs import them). Do NOT commit `research/gpu-phase8/results/` mid-campaign. Keep the tree
-  otherwise clean (campaign-verify audits `git status` outside research/gpu-phase8/).
+- **Running processes:** `tools/vg-l0-staged-stop/engineering.sh` in unit `vgl0ss-eng` (slice `vgl0ss.slice`); done when
+  the log ends "ENGINEERING EVIDENCE COMPLETE" (or "FAILED: …"). Do NOT launch another GPU job while it runs (E5 bench).
+  Do NOT edit any pinned file (record: CPU closure, CUDA, host, policy incl. `tools/gpu-phase8/accept.ts`) — the record
+  would go stale.
 - **Priority 4 code (committed, not frozen):** `src/vg-l0-staged-stop/{budget,qualify,select,stats,stages,main}.ts`,
   tests `tests/study.test.ts` (18 pass) + `tests/space.test.ts`; tools `tools/vg-l0-staged-stop/{common,bench}.ts`,
   `engineering.sh`, `launch.sh`; chain `research/vg-l0-staged-stop/chains/fold.sh`; DRAFT `PROTOCOL.md` (§6 budget
   numbers to fill from the E5 benchmark), `STANDARD_ADOPTION.json` (preflight blocked only by the stale record).
-- **Next steps (in order):** (1) done (`aac6c0e1`); (2) running:
-  `research/gpu-phase8/chains/tests.sh` (E7–E10; integrity dry run 5/5 PASS with amendment E2) → `tools/gpu-phase8/accept.ts`
-  → commit record → out-of-band pin → `results/tests/record-in-force-after.txt` (policy, enforcement, preflight tests and
-  every study preflight PASS); (3) `REC=<sha> tools/vg-l0-staged-stop/launch.sh vgl0ss-eng <log> -- /bin/bash
-  tools/vg-l0-staged-stop/engineering.sh`; (4) fill PROTOCOL §6 from `E5/bench.json`, re-record the adoption, commit,
-  `npm run vg-l0ss -- gates`, commit, `npm run vg-l0ss -- freeze`, commit; (5) `CUT=ABLATE`, then `CUT=C19|C21|C24`
-  `research/vg-l0-staged-stop/chains/fold.sh` in launch units; (6) analysis, reports, ZIP, push.
+- **Next steps (in order):** (1)–(2) done; (3) running: `REC=c02a8a92… engineering.sh`; (4) fill PROTOCOL §6.1–6.2 from
+  `results/engineering/E5/bench.json`, re-record the adoption's protocol sha256 (and adoptedAt), commit;
+  `GPU_POLICY_PURPOSE=official-optimization npm run vg-l0ss -- gates`, commit; `… npm run vg-l0ss -- freeze`, commit;
+  (5) `CUT=ABLATE`, then `CUT=C19|C21|C24` `research/vg-l0-staged-stop/chains/fold.sh` in launch units (RUN_COMMANDS.md
+  §3); (6) analysis, reports, ZIP, push.
 
 ## Environment
 
@@ -54,9 +54,9 @@
 | E0 read + spec freeze | complete 2026-11-23T12:00Z | `RULE_SPECIFICATION.md` (commit `3aa51963`; later wording-only edits none) |
 | E1 CPU reference + OFF parity | complete (CPU side) 2026-11-23 | Growth 1.4.0 baseline fixture `62574e98` (captured on the unedited engine, sha256 `f7b50992…`); `src/staged-stop/`, `src/d1-risk-controls-rc3/`, Growth engine revision 1.5.0 (`riseTrading.ts`, `optionalRules.ts`), `books.ts` pass-through. Tests: config 12/12, RC 3 book 13/13, Growth staged 7/7, Growth OFF parity 9/9 (fixture), pooled D24 3/3 (New L0 $382,721.46 / $19,459.83 and N/original $388,031.02 / $19,459.83 reproduced), existing D1/RC/Growth/pool suites 420/420 |
 | E2 CUDA port | complete 2026-11-23 (dev binary) | protocol v3 (`gb.h` 144/344/1080/104/656 bytes, bits 36/37), `gb_common.cuh` Staged rule, `gb_d1.cuh`/`gb_growth.cuh` hooks; host `encode/batch/lab/layout/domain/official/compat/toolchain`; entrypoint `gpu-phase8`. Dev checks: staged smoke 64/64 (D24), 112/112 (D21); T fixtures 6×20 identical (threshold arms at = and not one ulp below); mixed staged S3 456, D19 edges 361, book-disabling option sets 5×233 identical; Stage B lane C19/GA0.VA0/R3 replayed by the derived lane = sealed (0 differences); staged mini GPU = CPU (6,869 archived). The staged Growth runner lives in `src/d1-risk-controls-rc3/growth.ts` (a copy of Priority 3's runGrowthBook: `src/vg-d1-growth-joint/` is a frozen legacy-runner directory, its `books.ts` edit was reverted) |
-| E3/E4 Phase 8 acceptance campaign | running | `research/gpu-phase8/` (PROTOCOL.md frozen; preflight PASS); chain `chains/final.sh` (B1, E3, E4, A1 parity ≈155,600 random genomes, A2, R1–R3, A3 incl. Stage B lanes sb-C19/C21/C24, A4 incl. p4 mini set, Q1, A5, A6); then `chains/tests.sh`, `tools/gpu-phase8/accept.ts` |
-| E3 parity campaign | not started | — |
-| E4 acceptance + regression | not started | — |
+| E3/E4 Phase 8 acceptance campaign | complete 13:02:15Z → 17:38:36Z (`aac6c0e1`); tests chain 17:40–17:52Z (`8c464ac6`); record ACCEPTED 18:03Z (`0d61e71b`, sha256 `c02a8a92…`), verified + pinned (`ec1aa238`) | `research/gpu-phase8/` (PROTOCOL.md frozen; preflight PASS); chain `chains/final.sh` (B1, E3, E4, A1 parity ≈155,600 random genomes, A2, R1–R3, A3 incl. Stage B lanes sb-C19/C21/C24, A4 incl. p4 mini set, Q1, A5, A6); then `chains/tests.sh`, `tools/gpu-phase8/accept.ts` |
+| E3 parity campaign | complete | A1 63 runs / 159,240 subjects / 0 mismatches (155,600 random genomes); staged mini GPU = CPU; Q1; sanitizer; sustained |
+| E4 acceptance + regression | record done; P4 E4 evidence running | npm test 1,875 / 1,859 pass / 12 fail = 7 known + 3 record-in-force (pass after the record) + 2 declared consequences (Priority 5A byte pin; Phase 8 E3); Strategy Lab 314 Vitest, 81/81 e2e; portfolio parity; integrity 5/5 |
 | E5 benchmark + protocol freeze | not started | — |
 | Ablations | not started | — |
 | Paired search C19/C21/C24 + informed | not started | — |
@@ -88,3 +88,17 @@
   test, viewed before the protocol freeze; the rule, domains, search spaces and decision criteria were frozen earlier
   (E0) or are written independently of it; no protocol choice depends on it. It is one of the ablation's predeclared
   points (on D19 instead of D24).
+
+- GPU Phase 8 (the acceptance study for this delivery) read every door including FULL (2016–2026-10-30) for CPU/GPU
+  equality (A1 parity, the T fixtures, R1–R3, the sustained run) and the repository's npm test reads whole data files.
+  These are engineering equality/regression checks required by standard 3.0.0 §9 before any official evaluation; their
+  outputs are equality counts and pass/fail. They are not study evaluations, never opened a study door through
+  `src/vg-l0-staged-stop/doors.ts`, and no staged/CTRL comparison on FULL or on an interval was viewed.
+- npm test at HEAD has two failures of the completed Priority 5A study (`src/vg-growth-funding-lifecycle/tests/parity.test.ts`:
+  its byte pin of `riseTrading.ts` v1.4.0 and the line-range diff against it) — a consequence by construction of the
+  declared Growth engine revision 1.5.0. Not relaxed; verified at its own commit (Phase 8 amendment E3: base pin and
+  orchestrator diff hold at `5d587bb2`; its D24 behavioural test and the 1.5.0 OFF-parity fixture pass at HEAD). A merge
+  into `main` would inherit the two failures: a review decision (follow-up).
+- GPU Phase 8 incidents: the acceptance generator had two copy defects found by its first dry run (E4: negative and
+  tamper rerun on the final pinned files); one acceptance attempt failed on a timing-dependent positive control of the
+  Maglev probe and passed on an unchanged rerun (E5).
