@@ -5,7 +5,7 @@ refine the E0 specification before the protocol freeze; after the freeze, disclo
 `A*` amendments follow the protocol's rules.
 
 
-## E1 — 2026-11-23T14:30:20Z (recorded; changes made 2026-11-23T12:50Z–13:00Z, before any official evaluation) — the Growth staged runner and disabled-book semantics
+## E1 — 2026-11-23T14:30:20Z (recorded; the changes are in commit 5d3ddccc, committed 2026-11-23T12:55:39Z, before any official evaluation) — the Growth staged runner and disabled-book semantics
 
 - **Change.** RULE_SPECIFICATION §5 listed `src/vg-d1-growth-joint/books.ts` (`simulateGrowth` / `runGrowthBook` passing
   an optional `staged`). That directory is a frozen legacy-runner directory pinned by the GPU entrypoint audit, so the
