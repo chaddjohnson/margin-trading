@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-23T13:50Z. **Status: INCOMPLETE — E0–E2 done; GPU Phase 8 acceptance campaign attempt 2 RUNNING
+- **Updated:** 2026-11-23T13:27Z (clock). **Status: INCOMPLETE — E0–E2 done; GPU Phase 8 acceptance campaign attempt 2 RUNNING
   (unit `p8chain-final`, started 13:02:15Z at `54261ea0`, log `research/gpu-phase8/results/logs/final-chain.txt`;
   attempt 1 failed at the negative suite, Phase 8 amendment E1). Priority 4 study code written and tested (not frozen).**
 - **Brief:** `brief/BRIEF.md` (verbatim copy of the user's upload), sha256

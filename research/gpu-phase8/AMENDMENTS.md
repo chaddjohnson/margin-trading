@@ -1,6 +1,6 @@
 # AMENDMENTS — GPU Phase 8 (append-only)
 
-## E1 — 2026-11-23T13:10Z — campaign attempt 1 stopped at the negative suite; two fixes, the campaign restarts from step 1
+## E1 — 2026-11-23T13:02Z (commit 54261ea0) — campaign attempt 1 stopped at the negative suite; two fixes, the campaign restarts from step 1
 
 - **What happened.** `chains/final.sh` (started 12:55:43Z at `5d3ddccc`) built gb8 (`b156b88d…`, reproducible) and
   stopped at step 2: the negative suite's inherited Phase 7 case "the Lab refuses a delivered envelope with a liquidation
@@ -15,7 +15,7 @@
   `tools/gpu-phase8/negative.ts`: the old-server gate case accepts `preflight-compat`. The generator's declared host change
   set adds `client.ts`. No evidence of attempt 1 is used: the campaign reruns from step 1 on the new commit.
 
-## E2 — 2026-11-23T13:45Z — E8/E10 adapted to studies that require the GPU backend; the integrity baseline (before the tests chain)
+## E2 — 2026-11-23T13:27Z (commit 0ca36f68) — E8/E10 adapted to studies that require the GPU backend; the integrity baseline (before the tests chain)
 
 - **Why.** The E8/E10 tools were copied from Phase 7, whose tree had no study requiring the GPU backend. On this branch
   three studies declare `gpu-required` (`vg-l0-risk-envelope-pilot`, `vg-l0-risk-envelope-stage-b`, and Priority 4's own
