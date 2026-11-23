@@ -50,3 +50,11 @@
 - Do not edit any completed study's files (`research/vg-l0-full-joint/`, Stage B, audit, …).
 - Do not open FULL or any next-interval door before the corresponding sealed, committed selection.
 - No official evaluation before a new ACCEPTED acceptance record and a frozen, committed protocol.
+
+## Disclosures (for the final report)
+
+- 2026-11-23T12:20–12:21Z: the development smoke tool `tools/gpu-phase8/smoke-staged.ts` first opened D24 and D21
+  through Priority 3's logging `openDoor`, appending two lines to the completed study's
+  `research/vg-d1-growth-joint/results/doors.jsonl`. Detected at 12:4xZ, restored with `git checkout` (only those two
+  lines differed; never committed); the tool now uses `src/gpu-phase8/context.ts openDoor` (Phase 8's own log).
+

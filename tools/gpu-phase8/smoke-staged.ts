@@ -6,7 +6,7 @@
 //   GPU_POLICY_PURPOSE=parity-test GPU_BACKEND_BINARY=<binary> node --no-maglev --experimental-transform-types \
 //     tools/gpu-phase8/smoke-staged.ts --door D24 --random 64
 import path from 'node:path';
-import { openDoor } from '../../src/vg-d1-growth-joint/data.ts';
+import { openDoor } from '../../src/gpu-phase8/context.ts'; // this study's quiet door access, logged in its own doors.jsonl
 import { vOptions } from '../../src/vg-l0-full-joint/nl0.ts';
 import { decode, levelsOf } from '../../src/vg-l0-full-joint/space.ts';
 import { readJson } from '../../src/vg-l0-full-joint/records.ts';
