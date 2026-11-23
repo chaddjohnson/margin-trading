@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-23T21:58Z (clock). **Status: INCOMPLETE — every official stage COMPLETE and sealed; reports and
-  regression COMPLETE; ZIP and push remain.** E0–E5 sealed (`results/engineering/gates.json` sha256 `c38cacbe…`, commit
+- **Updated:** 2026-11-23T21:56:05Z (clock). **Status: COMPLETE — research only; no strategy adopted, deployed or merged; awaiting review.**
+  Every official stage sealed; reports, regression and the verified handoff ZIP complete; push recorded in §Delivery. E0–E5 sealed (`results/engineering/gates.json` sha256 `c38cacbe…`, commit
   `234f05c9`); PROTOCOL P4-S1 1.0.0 FROZEN 18:17:12Z (`results/protocol-freeze.json` sha256 `ea75d7ed…`, protocol sha256
   `bd57ea2a476be9735e3f199749e511d184f247b9c903dd5853e847899de8b6f7`, code digest `431493de…`, acceptance `c02a8a92…`;
   commit `5ff3bc0a`). Stage A COMPLETE (`11a12b26`, A0 PASS); fold C19 COMPLETE (`d57146c3` … `142a1a4f`); fold C21
@@ -44,10 +44,19 @@
 - **Regression (21:49–21:55Z):** npm test 1,875 / 1,862 pass / 9 fail (7 known + 2 declared P5A) / 4 skipped; research
   preflight PASS; verify-acceptance VERIFIED; logs `reports/diagnostics/regression/`. Job archives hashed
   (`reports/diagnostics/job-archives.sha256`, 18 files ≈ 66 GB).
-- **Next steps (in order):** (1) commit the reports; (2) `tools/vg-l0-staged-stop/bundle.sh /tmp/claude-1000/vgl0ss-bundle`
-  (trial build OK: 690 files, checksums OK); copy the ZIP to `research/vg-l0-staged-stop/bundle/` (committed, the
-  repository convention) and to `~/.local/share/margin-trading-gpu/handoffs/` (+ `.sha256`); (3) final checkpoint COMPLETE,
-  commit, push unsandboxed (`git push origin research/vg-l0-staged-trailing-stop`), verify with `git ls-remote`.
+- **Audited deliverables (sha256, first 16):** `REPORT.md` `1c0ee281b55c033d…`, `DECISION_REGISTER.md` `2a0165d6e03b145e…`,
+  `READ_FIRST.md` `209cc47b2860cb1a…`, `reports/FINAL_COMPARISON.md` `8cd1e18e3046e383…`, `reports/SEARCH_REPORT.md`
+  `a08e57ba1fd4bfd7…`, `reports/RISK_REPORT.md` `7428909bd1a346d5…`, `reports/ABLATION_REPORT.md` `66110e2193e96737…`,
+  `reports/IMPLEMENTATION_VERIFICATION.md` `0199c5681aee4d19…`, `reports/REPRODUCIBILITY.md` `28c096b8bb38a51f…`,
+  `results/outcome.json` `949756c9d4a62418…`.
+- **Handoff ZIP:** `bundle/vg-l0-staged-trailing-stop-priority4.zip` (committed) and
+  `~/.local/share/margin-trading-gpu/handoffs/vg-l0-staged-trailing-stop-priority4.zip` (+ `.sha256`), sha256
+  `09ed72da2645d8db19c7b705c861f5875a48245826cb99f0ba8acabb5a95600a`, 19,682,039 bytes, 705 files, built 2026-11-23T21:55:31Z
+  from commit `aeff0c63`; zip -T OK, READ_FIRST.md first, 705/705 checksums after extraction (twice: in the build and an
+  independent re-extraction of the handoffs copy), secrets scan clean, no database / archive / market data / binary.
+- **Follow-up gate (the user's decisions; `DECISION_REGISTER.md` F1, F2):** close S1 as OFF (recommended) or authorize a
+  budget-only re-run; whether ever to merge the staged-stop implementation and the Phase 8 record into `main`.
+- **Do not rerun:** every sealed stage (`results/seals.jsonl`); FULL must not be reopened for any new selection.
 
 ## Environment
 
@@ -84,8 +93,9 @@
 | Fold C24 (primary) + informed | complete 19:56:32–21:30:31Z | search 2,029,277 requested (`d52157d2`, sha `dff693ef…`); gate R identical 32/32 (`1d5e04a2`); extension TRIGGERED (EXP 41/64 = 64.1 %, CTRL 8/64) 1,219,867 requested, after it EXP 31/64 = 48.4 % still budget-bound, CTRL 0 (`743027f0`, `c69d6695…`); informed I1–I4 1,588,312 requested, every lane "triggers not met" (`6e53f91e`, `85097475…`); qualification 808,998 (1,237 members; `aa115493`, `643fd676…`); selection (`1eefbf18`, `52660d03…`): D̄ $8,761 [L90 $4,059, U90 $13,475] not material; mechanism confirmed (45/64 ON, $7,174, L90 $4,654); risk non-inferior; pooled P0 CTRL R29#1 $241,225 / DD $23,468, EXP R4#1 GDX+VGT $238,352 / DD $26,301 (all-OFF $232,478); decomposition D24 9,156 (`fbc52ddd`, `eb1e5dc8…`) |
 | Freeze, FULL validation, outcome | complete 21:28:46–21:30:31Z | FROZEN_SELECTION (`9184d683`, `4210775b…`); FULL authorization (`1556eefa`, `8baa3540…`); validation 2025-01-02…2026-10-30 on FULL once, 51,675 requested (`498ef801`, `284dc1d5…`); outcome (`490325a3`, `949756c9…`): **inconclusive (budget)** |
 | Report-only post-fold analyses | complete 21:31:36–21:32:11Z | `tools/vg-l0-staged-stop/post.sh` → `reports/diagnostics/`, `reports/tables/` (log `reports/diagnostics/post.log`) |
-| Reports, regression | complete 21:33–21:58Z | reports listed in the top screen; regression logs `reports/diagnostics/regression/` |
-| ZIP, push | running | see Next steps |
+| Reports, regression | complete 21:33–21:55Z | reports listed in the top screen; regression logs `reports/diagnostics/regression/` |
+| ZIP | complete 21:55:31Z | `bundle/vg-l0-staged-trailing-stop-priority4.zip` sha256 `09ed72da…` (verified) |
+| Push | see Delivery | `git push origin research/vg-l0-staged-trailing-stop` (unsandboxed) |
 
 ## Guards
 
@@ -126,3 +136,7 @@
 - GPU Phase 8 incidents: the acceptance generator had two copy defects found by its first dry run (E4: negative and
   tamper rerun on the final pinned files); one acceptance attempt failed on a timing-dependent positive control of the
   Maglev probe and passed on an unchanged rerun (E5).
+
+## Delivery
+
+- Commit and push of `research/vg-l0-staged-trailing-stop`: pending at this update (recorded below after the push).
