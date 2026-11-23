@@ -1,0 +1,236 @@
+{
+ "kind": "gpu-backend official attestation",
+ "study": "research/vg-l0-staged-stop",
+ "runId": "preflight-D21-20261123T180546Z",
+ "purpose": "official-optimization",
+ "t": "2026-11-23T18:05:58.385Z",
+ "host": "apollo",
+ "runtime": {
+  "node": "v24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "maglev": "disabled",
+  "execArgv": [
+   "--no-maglev",
+   "--expose-gc",
+   "--experimental-transform-types",
+   "--disable-warning=ExperimentalWarning",
+   "--max-old-space-size=12288"
+  ]
+ },
+ "device": {
+  "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+  "name": "NVIDIA GeForce RTX 5090",
+  "driver": 13020,
+  "runtime": 13020,
+  "cc": "12.0",
+  "smiUuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4"
+ },
+ "binary": {
+  "path": "research/gpu-phase8/build/gb8",
+  "sha256": "86b30753813ba1cfbf53acb917405fadacfb4915b7c64357329bff28cf8428d3"
+ },
+ "compat": {
+  "digest": "a54b98b13f780fe283b15e6324e88f6e0a03232e6bd881f23d0a3a39cf804baf",
+  "serverDigest": "a54b98b13f780fe283b15e6324e88f6e0a03232e6bd881f23d0a3a39cf804baf"
+ },
+ "source": {
+  "head": "536c2561173b40836f6f02c59d7d68971828e3b1",
+  "acceptedRevision": "6d2cd1417f3fdbf7a5068434d94e9ee02923d5c7",
+  "pinnedFiles": 147,
+  "clean": true
+ },
+ "acceptance": {
+  "status": "ACCEPTED",
+  "file": "config/gpu-backend/acceptance.json",
+  "sha256": "c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126",
+  "skippedForTest": false
+ },
+ "domain": {
+  "name": "staged trailing stop (Priority 4, staged-stop@1): risk-envelope pilot (NL0-R 0.1.0): assignment-3 (src/vg-l0-full-joint): D1·GDX + D1·VGT with RC 2 families A–D × gate × activation, Growth·VGT 1.4.0 (8 + 50 genes), L0 pool + risk-envelope inputs + S1 on D1·GDX, D1·VGT, Growth·VGT",
+  "features": [
+   "D1_BOOK",
+   "RC_CONTROLS",
+   "NEXT_OPEN",
+   "SLIPPAGE",
+   "ARM_START",
+   "G_RISE",
+   "G_BREAKOUT",
+   "G_TREND_PRICE_CHANGE",
+   "G_TREND_REGRESSION",
+   "G_TREND_RISING_SMA",
+   "G_TREND_HHL",
+   "G_TREND_MOMENTUM",
+   "G_ELIG_TIME_LIMITED",
+   "G_ELIG_MIN_STRENGTH",
+   "G_ELIG_MAX_EXTENSION",
+   "G_ELIG_DETERIORATION",
+   "G_ELIG_RESET_RENEW",
+   "G_DRAWDOWN_GATE",
+   "G_MAX_HOLD",
+   "G_BUFFER",
+   "G_INITIAL_STOP",
+   "G_RETENTION",
+   "G_CONT_CLASSIC",
+   "G_CONT_BREAKOUT",
+   "G_CONT_SHALLOW",
+   "G_CONT_MA_CROSS",
+   "POOL",
+   "POOL_FUND_FROM",
+   "POOL_ENABLED",
+   "POOL_WHOLE_SHARES",
+   "POOL_BLACKOUTS",
+   "POOL_PERIODS",
+   "POOL_TIE_ORDER",
+   "POOL_DETAIL",
+   "RISK_METRICS",
+   "D1_STAGED_STOP",
+   "G_STAGED_STOP"
+  ],
+  "growthStructures": 8640,
+  "d1Structures": 14
+ },
+ "supported": "3fffffffff",
+ "smoke": {
+  "ok": true,
+  "sum": 1635.3944173366574,
+  "mix": "4842b073ba50f7fd"
+ },
+ "memory": {
+  "freeBytes": 32339984384,
+  "plannedBytes": 5482020864
+ },
+ "dataset": {
+  "door": "D21",
+  "sessions": 1511,
+  "sha256": "49fa4d68066f849c82da395c698954dccaa891ef7f191c71ba1ebf09b46a7ca9",
+  "dataSha256": {
+   "GDX": "3f98c79b4f8d20b50a15e7d6951936b47cb00872dd27484f6dff9299a5402e84",
+   "VGT": "681742034cde1b9d52580b50b8f0c7f02d3c6bc54b9428f3f427a788f9a2a60e"
+  }
+ },
+ "hostPath": {
+  "mode": "parallel",
+  "workers": 8,
+  "doorDigest": "429a915e238d42f4869a757514258a5ca09b78cb4e510a61d61c3f3452534587"
+ },
+ "parity": {
+  "subjects": 22,
+  "identical": 22,
+  "keys": [
+   "R:NL0",
+   "R:IJ1",
+   "R:C4",
+   "R:C4R",
+   "P:0",
+   "P:1",
+   "P:2",
+   "P:3",
+   "P:4",
+   "P:5",
+   "P:6",
+   "P:7",
+   "P:8",
+   "P:9",
+   "P:10",
+   "P:11",
+   "P:12",
+   "P:13",
+   "S:NL0:all",
+   "S:IJ1:D1:GDX",
+   "S:IJ1:D1:VGT",
+   "S:IJ1:G:VGT"
+  ],
+  "hostPath": "parallel"
+ },
+ "job": {
+  "id": "research/vg-l0-staged-stop/preflight-D21-20261123T180546Z",
+  "name": "preflight-D21-20261123T180546Z",
+  "instance": "f675c997a9ce314c",
+  "resumed": false,
+  "definitionSha256": "9ebcac9bec8a1505fe65db74f5cae6fba1c389e515028fdc429e19ebac435b4e",
+  "datasetCache": "job",
+  "cacheDir": "research/vg-l0-staged-stop/cache/jobs/preflight-D21-20261123T180546Z/dataset"
+ },
+ "checks": [
+  {
+   "name": "purpose",
+   "ok": true,
+   "detail": "official-optimization"
+  },
+  {
+   "name": "runtime",
+   "ok": true,
+   "detail": "Node v24.21.0, V8 13.6.233.17-node.53, Maglev disabled (--no-maglev)"
+  },
+  {
+   "name": "acceptance",
+   "ok": true,
+   "detail": "ACCEPTED (research/gpu-phase8, 2026-11-23T18:03:20.927Z)"
+  },
+  {
+   "name": "pins",
+   "ok": true,
+   "detail": "147 pinned files re-hashed independently"
+  },
+  {
+   "name": "source",
+   "ok": true,
+   "detail": "HEAD 536c2561173b, accepted revision 6d2cd1417f3f"
+  },
+  {
+   "name": "job",
+   "ok": true,
+   "detail": "research/vg-l0-staged-stop/preflight-D21-20261123T180546Z (new, instance f675c997a9ce314c, dataset cache its own)"
+  },
+  {
+   "name": "binary",
+   "ok": true,
+   "detail": "/home/chad/projects/margin-trading/research/gpu-phase8/build/gb8"
+  },
+  {
+   "name": "compat",
+   "ok": true,
+   "detail": "server and working tree a54b98b13f780fe2"
+  },
+  {
+   "name": "device",
+   "ok": true,
+   "detail": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 (= nvidia-smi)"
+  },
+  {
+   "name": "no-test-hooks",
+   "ok": true,
+   "detail": "none enabled"
+  },
+  {
+   "name": "accepted-device",
+   "ok": true,
+   "detail": "the accepted device"
+  },
+  {
+   "name": "capability",
+   "ok": true,
+   "detail": "37 reachable features, all implemented"
+  },
+  {
+   "name": "smoke",
+   "ok": true,
+   "detail": "1635.3944173366574/4842b073ba50f7fd = the CPU's expectation"
+  },
+  {
+   "name": "memory",
+   "ok": true,
+   "detail": "free VRAM 32339984384 ≥ planned batch 5482020864 + 1 GiB headroom"
+  },
+  {
+   "name": "host-path",
+   "ok": true,
+   "detail": "8 worker threads, door digest 429a915e238d42f4"
+  },
+  {
+   "name": "parity",
+   "ok": true,
+   "detail": "22 of 22 precommitted parity subjects identical to the canonical CPU engine"
+  }
+ ]
+}

@@ -136,9 +136,49 @@ repaired (RULE_SPECIFICATION §2).
 
 ## 6. Budgets, bounds and the extension block
 
-[§6.1–§6.2 are completed at E5 from the benchmark of the accepted binary: per-lane caps (CTRL = Stage B's 41,000; EXP =
-the same construction with the EXP move bound), the per-stage bounds, the expected requested evaluations, the time
-forecast, and the hard bound ≤ 25,000,000.]
+Requested evaluations count every evaluation a stage asks for (archive hits included; fresh and cached are reported
+separately). Computed by `src/vg-l0-staged-stop/budget.ts` (Assignment 3's deterministic lane worst case with the arm's
+refinement move bound, rounded up to 1,000; `consistency()`: the CTRL worst case equals Assignment 3's own and the CTRL
+cap equals Stage B's 41,000 — both true, E4 `runtime.txt`).
+
+### 6.1 Per-lane caps and per-stage bounds (requested evaluations; a request beyond a bound fails closed)
+
+| Stage | Lanes / units | Cap per unit (worst case) | Bound |
+|---|---|---|---|
+| Broad search, per cutoff | 64 CTRL + 64 EXP lanes | CTRL 41,000 (40,642; moves 230) · EXP 42,000 (41,560; moves 257) | 5,312,000 |
+| Extension block (§6.3), per cutoff | only the re-run budget-bound lanes of both arms | CTRL 56,000 (55,330) · EXP 57,000 (56,248); island cap 6 → 9 | ≤ 7,232,000 (every lane) |
+| Informed lanes (C24, §10) | 32 EXP (I1–I4 × 8) + 16 CTRL (I3, I4 × 8) | EXP 93,000 (92,562) · CTRL 90,000 (89,349); 153 designs, one focus seed | 4,416,000 |
+| Qualification, per cutoff | union of members (≤ 3 per lane, ≤ 4 all-OFF projections per EXP member, 2 benchmarks; C24 + informed) | 654 per member (2 centres, 7 stresses, 5 removals, 2 × 128 + 3 × 128) | C19/C21 ≤ 1,154 members (754,716); C24 ≤ 2,604 (1,703,016) |
+| Interval / FULL validation | de-duplicated subjects (§9) | 265 per subject (2 centres, 7 stresses, 2 × 128) | the subjects × 265 |
+| Ablations (§11) | 2 OFF incumbents + the valid, non-duplicate points | 4 frictions (base, +10 bps, +25 bps, next-open) | 4 × subjects (≤ 648) |
+| Decomposition (§12) | ≤ 6 rows | 1 detailed centre each | ≤ 6 |
+
+**Hard ceiling 25,000,000** requested official evaluations over the whole study: a running ledger over the sealed stage
+records (`budget.ts ledger`); every official stage's Lab gets `maxFresh` = the remaining ceiling, and a stage is
+launched only if the remaining ceiling exceeds its bound × 1.25 (otherwise the study stops at a paired checkpoint and
+reports what was not run). The worst cases summed exceed the ceiling (they assume every lane at its cap and every lane
+extended); the ledger, not the sum, is the bound.
+
+### 6.2 E5 benchmark and the forecast (non-official; `results/engineering/E5/bench.json`)
+
+Accepted binary gb8 (`86b30753…`), D24, 8 benchmark lanes (`BENCH/…/R9001–9002`, both cells × both arms; never
+candidates) run concurrently as the official search runs them: 125,108 requested in 539 s (232 per s at 8 concurrent
+lanes); requested per lane CTRL mean 14,800 (11,067–19,614), EXP mean 16,477 (9,272–21,121); every lane within its
+cap. Stage B's sealed searches (64 concurrent lanes on the same evaluator generation) give the throughput reference
+for full-width stages: 1,808 / 1,339 / 884 requested per s on D19 / D21 / D24, with 17,868 / 18,840 / 14,329 requested
+per CTRL lane.
+
+| Item | Expected requested | Expected time |
+|---|---|---|
+| Ablations | ≈ 600 | minutes |
+| Search, per cutoff (128 lanes) | ≈ 2.0–2.4 M (64 × the per-lane means above) | C19 ≈ 20–25 min, C21 ≈ 25–35 min, C24 ≈ 40–50 min |
+| Extension block, per cutoff (if triggered) | ≈ 25,000 per re-run lane (the bench's budget-bound share was 5 of 8 lanes: the block is likely) | ≤ the search's time |
+| Informed lanes (C24) | ≈ 2–3 M | ≈ 1 h |
+| Qualification | ≈ 0.38 M per cutoff (576 members × 654); C24 ≈ 0.6–1.2 M with the informed members | ≈ 10–30 min each |
+| Intervals and FULL | ≈ 0.05–0.08 M each | minutes |
+| **Study** | **≈ 10–15 M** (≤ 25 M by the ledger) | **≈ 5–8 h of GPU time** |
+
+Timings and stop reasons are operational: they never select, rank or change a definition.
 
 ### 6.3 The single symmetric extension block
 

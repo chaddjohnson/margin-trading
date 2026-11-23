@@ -1,0 +1,32 @@
+t 2026-11-23T18:05:31Z head 536c2561173b40836f6f02c59d7d68971828e3b1 record c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126
+--- 1. the official runner refuses a process without --no-maglev (expected exit 3)
+❌ GPU policy (standard 3.0.0 §9): runtime-maglev: official GPU runner: this Node process was not started with --no-maglev (its options: --experimental-transform-types --disable-warning=ExperimentalWarning): V8's Maglev compiler can silently corrupt number fields of freshly created objects (research/gpu-phase5/PARITY_ROOT_CAUSE.md); start it as `node --no-maglev …`
+PASS refused without --no-maglev (exit 3)
+--- 2. the official runner refuses a non-official purpose (expected exit 3)
+❌ GPU policy (standard 3.0.0 §9): official-purpose-required: an official GPU runner starts only with GPU_POLICY_PURPOSE=official-optimization (declared: diagnostic); non-official work uses a non-official runner
+PASS refused purpose diagnostic (exit 3)
+--- 3. the official runner with --no-maglev and the official purpose (bound, no evaluation)
+  "ctrlWorstIsA3": true,
+  "ctrlCapIsStageB": true
+PASS bound (exit 0)
+--- 4. the GPU policy, enforcement and record-in-force tests
+✔ every GPU-backend file is classified: evaluation (in the binary digest) or enforcement (pinned by the acceptance) (1.475492ms)
+✔ the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not (240.68304ms)
+✔ engine runtime helpers: the flag first and once, script arguments untouched, another Maglev option refused (0.470964ms)
+✔ engine runtime (regression): behind the legacy runner gate, no thread or child process runs Maglev code (340.563094ms)
+✔ engine runtime (controls): the probe detects Maglev; without the guard an explicitly forked child runs it (660.699789ms)
+✔ protocol v3 layout: TypeScript offsets equal the C++ offsetof of gb.h (35.58488ms)
+✔ purpose: explicit, never defaulted; unknown refused (0.593364ms)
+✔ a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose (0.107651ms)
+✔ the legacy runner wrapper refuses before importing the runner (434.711344ms)
+✔ every npm script that can start a CPU research runner or optimizer goes through the purpose gate (0.904647ms)
+✔ the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate (498.533605ms)
+✔ engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it (1.2703ms)
+✔ entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged (132.811393ms)
+✔ acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed (99.33383ms)
+✔ preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin (0.335313ms)
+✔ the deferred pilot domain reaches only capabilities the evaluator implements (3223.733816ms)
+✔ MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path) (9.121841ms)
+ℹ pass 17
+ℹ fail 0
+PASS E4 runtime
