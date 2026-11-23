@@ -12,8 +12,8 @@
    "--max-old-space-size=14000"
   ]
  },
- "t": "2026-11-23T13:03:46.178Z",
- "head": "54261ea0386f98e661d0acc7f91ca49653a3460a",
+ "t": "2026-11-23T17:58:15.109Z",
+ "head": "fd2e3b4c1ba2e8ec5790f5c03d8acdcbd5ae5320",
  "hostWorkers": 3,
  "binaries": {
   "dev": "86b30753813ba1cfbf53acb917405fadacfb4915b7c64357329bff28cf8428d3",
@@ -47,7 +47,7 @@
    "group": "gate",
    "name": "no GPU acceptance record (the activation gate)",
    "expect": "preflight-acceptance.*no GPU acceptance record",
-   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: no GPU acceptance record (research/gpu-phase8/cache/negative-zUyrsl/none.json): official GPU optimization is blocked until an acceptance study passes every gate",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-acceptance: no GPU acceptance record (research/gpu-phase8/cache/negative-EBkp2w/none.json): official GPU optimization is blocked until an acceptance study passes every gate",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
@@ -236,7 +236,7 @@
    "group": "job",
    "name": "an official run with another dataset cache than its job",
    "expect": "preflight-job: dataset cache .* is not the job's",
-   "observed": "GPU policy (standard 3.0.0 §9): preflight-job: dataset cache /home/chad/projects/margin-trading/research/gpu-phase8/cache is not the job's (/home/chad/projects/margin-trading/research/gpu-phase8/cache/negative-zUyrsl/jobs/cache/jobs/neg-4/dataset)",
+   "observed": "GPU policy (standard 3.0.0 §9): preflight-job: dataset cache /home/chad/projects/margin-trading/research/gpu-phase8/cache is not the job's (/home/chad/projects/margin-trading/research/gpu-phase8/cache/negative-EBkp2w/jobs/cache/jobs/neg-4/dataset)",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
@@ -254,7 +254,7 @@
    "group": "job",
    "name": "an official run with its held job opens the gate and records the job",
    "expect": "^OPENED job research\\/gpu-phase8\\/neg-",
-   "observed": "OPENED job research/gpu-phase8/neg-6 (attestation neg-6-2026-11-23T13-02-53-296Z.json)",
+   "observed": "OPENED job research/gpu-phase8/neg-6 (attestation neg-6-2026-11-23T17-57-22-123Z.json)",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
@@ -272,7 +272,7 @@
    "group": "job",
    "name": "a second writer of a held job's archive (an EvalLab without the job)",
    "expect": "JOB_ACTIVE",
-   "observed": "JOB_ACTIVE: the job directory /home/chad/projects/margin-trading/research/gpu-phase8/cache/negative-zUyrsl/jobs/cache/jobs/neg-6 is already open in this process: one writer per job",
+   "observed": "JOB_ACTIVE: the job directory /home/chad/projects/margin-trading/research/gpu-phase8/cache/negative-EBkp2w/jobs/cache/jobs/neg-6 is already open in this process: one writer per job",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
@@ -281,7 +281,7 @@
    "group": "job",
    "name": "the held job opened by another process (resume)",
    "expect": "JOB_ACTIVE",
-   "observed": "{\"ok\":false,\"code\":\"JOB_ACTIVE\",\"message\":\"JOB_ACTIVE: job research/gpu-phase8/neg-6 is running in another process (owner: pid 913631 on apollo, instance 094eac405ee15803, since 2026-11-23T13:02:52.527Z); a job has one owner at a time — wait for it, stop it, or use another job name\"}",
+   "observed": "{\"ok\":false,\"code\":\"JOB_ACTIVE\",\"message\":\"JOB_ACTIVE: job research/gpu-phase8/neg-6 is running in another process (owner: pid 1037237 on apollo, instance 520393f7bfb3426e, since 2026-11-23T17:57:21.349Z); a job has one owner at a time — wait for it, stop it, or use another job name\"}",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
@@ -290,7 +290,7 @@
    "group": "job",
    "name": "an existing job reopened as a new job (no resume)",
    "expect": "JOB_EXISTS",
-   "observed": "JOB_EXISTS: job research/gpu-phase8/neg-7 already exists (created 2026-11-23T13:02:53.738Z, not complete): resume it with its own definition, or choose a new job name — results are never overwritten",
+   "observed": "JOB_EXISTS: job research/gpu-phase8/neg-7 already exists (created 2026-11-23T17:57:22.565Z, not complete): resume it with its own definition, or choose a new job name — results are never overwritten",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
@@ -308,7 +308,7 @@
    "group": "runtime",
    "name": "the GPU server killed during a search",
    "expect": "exited|died|SIGKILL",
-   "observed": "GPU evaluator exited (SIGKILL): [gb2 0.247 s] eval n=64 flags=22 launching\n[gb2 0.363 s] D1 done\n[gb2 0.579 s] Growth done\n[gb2 0.687 s] pool + hash done\n[gb2 0.692 s] eval n=64 flags=22 launching",
+   "observed": "GPU evaluator exited (SIGKILL): [gb2 0.238 s] eval n=64 flags=22 launching\n[gb2 0.353 s] D1 done\n[gb2 0.569 s] Growth done\n[gb2 0.677 s] pool + hash done\n[gb2 0.683 s] eval n=64 flags=22 launching",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 64
@@ -326,7 +326,7 @@
    "group": "runtime",
    "name": "device execution counters that disagree (untrustworthy receipt)",
    "expect": "device counters",
-   "observed": "GPU evaluator: receipt mismatch: device counters {\"nonce\":\"275ddb10f9f71d6c\",\"uuid\":\"GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4\",\"nCand\":64,\"d1Executed\":128,\"gExecuted\":65,\"poolExecuted\":64,\"kernels\":5,\"outChecksum\":\"3717195c37aaadf6\",\"server\":{\"h2dMs\":0.032575998455286026,\"d1Ms\":115.25433349609375,\"gMs\":331.6122131347656,\"poolMs\":108.53068542480469,\"d2hMs\":0.48342400789260864,\"totalMs\":441.012927,\"",
+   "observed": "GPU evaluator: receipt mismatch: device counters {\"nonce\":\"4ffb705c1942f2a8\",\"uuid\":\"GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4\",\"nCand\":64,\"d1Executed\":128,\"gExecuted\":65,\"poolExecuted\":64,\"kernels\":5,\"outChecksum\":\"3717195c37aaadf6\",\"server\":{\"h2dMs\":0.030239999294281006,\"d1Ms\":114.81993865966797,\"gMs\":330.274658203125,\"poolMs\":108.30745697021484,\"d2hMs\":1.0945279598236084,\"totalMs\":440.034025,\"de",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
@@ -470,7 +470,7 @@
    "group": "runtime",
    "name": "a resume under another GPU binary/backend",
    "expect": "refused",
-   "observed": "/home/chad/projects/margin-trading/research/gpu-phase8/cache/negative-zUyrsl/jobs/negative-binding/archive.sqlite: bound to backend = gpu:A, refused for gpu:B",
+   "observed": "/home/chad/projects/margin-trading/research/gpu-phase8/cache/negative-EBkp2w/jobs/negative-binding/archive.sqlite: bound to backend = gpu:A, refused for gpu:B",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
@@ -479,7 +479,7 @@
    "group": "runtime",
    "name": "a resume under changed evaluation code",
    "expect": "refused",
-   "observed": "/home/chad/projects/margin-trading/research/gpu-phase8/cache/negative-zUyrsl/jobs/negative-binding/archive.sqlite: bound to codeDigest = code-1, refused for code-2",
+   "observed": "/home/chad/projects/margin-trading/research/gpu-phase8/cache/negative-EBkp2w/jobs/negative-binding/archive.sqlite: bound to codeDigest = code-1, refused for code-2",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
@@ -578,7 +578,7 @@
    "group": "cli",
    "name": "the standard preflight of an official 3.0.0 study without an accepted GPU evaluator",
    "expect": "BLOCKED",
-   "observed": "official GPU optimization is BLOCKED (§9.9): no GPU acceptance record (research/gpu-phase8/cache/negative-zUyrsl/none.json): official GPU optimization is blocked until an acceptance study passes every gate",
+   "observed": "official GPU optimization is BLOCKED (§9.9): no GPU acceptance record (research/gpu-phase8/cache/negative-EBkp2w/none.json): official GPU optimization is blocked until an acceptance study passes every gate",
    "pass": true,
    "cpuScored": 0,
    "resultsReturned": 0
