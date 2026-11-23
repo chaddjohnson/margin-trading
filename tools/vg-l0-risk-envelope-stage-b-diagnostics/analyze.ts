@@ -263,7 +263,15 @@ const censusOf = (cut: CutoffKey) => {
       p3OnlyPlausible: netDist(ok.filter((r) => r.p3 && !r.p0)),
       postScreenCTRL_p0: netDist(postRows('CTRL').filter((r) => r.p0)),
       postScreenEXP30_p3: netDist(postRows('EXP30').filter((r) => r.p3)),
-      postScreenEXP30_p0: netDist(postRows('EXP30').filter((r) => r.p0))
+      postScreenEXP30_p0: netDist(postRows('EXP30').filter((r) => r.p0)),
+      bandAdmittedByP3: netDist(ok.filter((r) => r.ddBand && r.p3)),
+      bandOffsetByPlOrBd: netDist(ok.filter((r) => r.ddBand && !r.p3)),
+      p0PassP3Fail: netDist(ok.filter((r) => r.p0 && !r.p3))
+    },
+    highestStageOf: {
+      p3Only: Object.fromEntries(stageName.map((x, i) => [x, count(ok, (r) => r.p3 && !r.p0 && r.highest === i)])),
+      p0PassP3Fail: Object.fromEntries(stageName.map((x, i) => [x, count(ok, (r) => r.p0 && !r.p3 && r.highest === i)])),
+      bandOffsetByPlOrBd: Object.fromEntries(stageName.map((x, i) => [x, count(ok, (r) => r.ddBand && !r.p3 && r.highest === i)]))
     },
     ddDistribution: { postScreenCTRL: dist(postRows('CTRL').map((r) => r.dd)), postScreenEXP30: dist(postRows('EXP30').map((r) => r.dd)), p3OnlyPlausible: dist(ok.filter((r) => r.p3 && !r.p0).map((r) => r.dd)) },
     givebackLowerBoundShare: {
@@ -361,7 +369,37 @@ const drawsOf = (cut: CutoffKey) => {
       ];
     })
   ) as unknown as Record<ArmKey, Record<string, unknown> & { perRepresentative: { id: string; p90Dd: number; p90GivebackLowerBound: number; p90BdMarked: number; over35: number }[] }>;
-  const out = { cutoff: cut, archive: qrep.archive, reproduction: qrep.reproduction, zeroEvaluations: qrep.zeroEvaluations, members: qrep.members.length, perArm };
+  // paired, per (cell, replicate): the representatives' confirmation-family quantiles (zero evaluations)
+  const selP = readSealed<{ pairs: Pair[] }>(selectionFile(cut)).pairs.filter((p) => !p.zeroLane);
+  const repStat = (a: ArmKey, cell: string, r: number) => {
+    const v = sel.laneValues[a].find((x) => x.cell === cell && x.replicate === r)!;
+    const m = byId.get(v.representative!.id)!;
+    const ds = m.confirm.draws.filter((d) => !d.error);
+    const lb = (d: Draw) => Math.max(0, d.dd - d.bdM);
+
+    return {
+      p90Dd: quantile(sortN(ds.map((d) => d.dd)), 0.9),
+      p90GivebackLowerBound: quantile(sortN(ds.map(lb)), 0.9),
+      p90BdMarked: quantile(sortN(ds.map((d) => d.bdM)), 0.9),
+      p90PlLiq: quantile(sortN(ds.map((d) => d.plL)), 0.9),
+      over35: ds.filter((d) => d.dd > K35).length,
+      over35Bound: ds.filter((d) => d.dd > K35).reduce((s2, d) => s2 + lb(d), 0),
+      over35BdMarked: ds.filter((d) => d.dd > K35).reduce((s2, d) => s2 + d.bdM, 0)
+    };
+  };
+  const pairedDraws = Object.fromEntries(
+    (['p90Dd', 'p90GivebackLowerBound', 'p90BdMarked', 'p90PlLiq', 'over35'] as const).map((k) => {
+      const ps = selP.map((p) => {
+        const c = repStat('CTRL', p.cell, p.replicate)[k];
+        const e = repStat('EXP30', p.cell, p.replicate)[k];
+
+        return { ...p, ctrl: c, exp: e, d: e - c };
+      });
+
+      return [k, { ...summarize(ps, (p) => p.d, 0.1, ['giveback-draws', k, cut]), meanCtrl: mean(ps.map((p) => p.ctrl)), meanExp30: mean(ps.map((p) => p.exp)) }];
+    })
+  );
+  const out = { cutoff: cut, archive: qrep.archive, reproduction: qrep.reproduction, zeroEvaluations: qrep.zeroEvaluations, members: qrep.members.length, perArm, pairedDraws };
 
   writeJson(path.join(resultsDir, 'qualification', `draws-${cut}.json`), out);
   return out;
@@ -408,7 +446,7 @@ const givebackOf = (cut: CutoffKey) => {
   if (!fs.existsSync(file)) return null;
 
   const g = readJson<{ subjects: GRow[]; pairs: Pair[]; lanes: Record<ArmKey, { lane: string; cell: string; replicate: number; value: number; representative: { id: string; label: string } | null }[]>; pooledPrimaries: Record<ArmKey, Record<string, string>>; cpuEqualsGpu: Record<string, unknown> }>(file);
-  const full = readJsonGz<{ rows: { key: string; ext: { window: { peakDate: string; troughDate: string; rows: { lot: number; book: string; entry: string; exit: string | null; role: string; atPeak: number; atTrough: number; contribution: number; profitGiveback: number; principalLoss: number; lotNet: number | null }[] } | null; d3: { marked: { window: { peakValue: number; troughValue: number; bankedHigh: number } | null } } } }[] }>(path.join(cacheRoot, `giveback-${cut}.json.gz`));
+  const full = readJsonGz<{ rows: { key: string; ext: { trades: { id: number; reason: string; net: number; open: boolean }[]; window: { peakDate: string; troughDate: string; rows: { lot: number; book: string; entry: string; exit: string | null; role: string; atPeak: number; atTrough: number; contribution: number; profitGiveback: number; principalLoss: number; lotNet: number | null }[] } | null; d3: { marked: { window: { peakValue: number; troughValue: number; bankedHigh: number } | null } } } }[] }>(path.join(cacheRoot, `giveback-${cut}.json.gz`));
   const fullById = new Map(full.rows.map((r) => [r.key, r]));
   const q = readSealed<{ evidence: Evidence[] }>(qualificationFile(cut));
   const ev = new Map(q.evidence.map((e) => [e.id, e]));
@@ -455,7 +493,9 @@ const givebackOf = (cut: CutoffKey) => {
           componentSharesOfSummedDd: componentShares(xs),
           passesP0: xs.filter((r) => r.passesP0).length,
           passesP3: xs.filter((r) => r.passesP3).length,
-          boundHolds: xs.filter((r) => r.unbankedGiveback >= r.givebackLowerBound - 1e-6).length
+          // diag-core's row values are cent-rounded separately (U, DD, BD): the bound is checked to two cents
+          boundHolds: xs.filter((r) => r.unbankedGiveback >= r.givebackLowerBound - 0.02).length,
+          boundGapMax: Math.max(0, ...xs.map((r) => r.givebackLowerBound - r.unbankedGiveback))
         }
       ];
     })
@@ -489,9 +529,32 @@ const givebackOf = (cut: CutoffKey) => {
   };
   const primaries = Object.fromEntries(armKeys.map((a) => [a, g.subjects.find((s) => s.label === g.pooledPrimaries[a].P0)!]));
   const maxDelta = [...pairs].sort((a, b) => b.e.dd - b.c.dd - (a.e.dd - a.c.dd))[0]!;
+  // the lots of each representative's maximum-DD window, by their recorded exit reason and outcome (lot lens)
+  const byReason = (a: ArmKey) => {
+    const o: Record<string, { lots: number; giveback: number; principalLoss: number; givebackLotsClosedProfitable: number; principalLossLotsClosedLoss: number }> = {};
+
+    for (const r of armRows(a)) {
+      const f = fullById.get(r.id)!;
+      const reason = new Map(f.ext.trades.map((t) => [t.id, t.reason]));
+
+      for (const w of f.ext.window?.rows ?? []) {
+        const k = reason.get(w.lot) ?? 'unknown';
+        const x = (o[k] ??= { lots: 0, giveback: 0, principalLoss: 0, givebackLotsClosedProfitable: 0, principalLossLotsClosedLoss: 0 });
+
+        x.lots++;
+        x.giveback += Math.max(0, w.profitGiveback);
+        x.principalLoss += Math.max(0, w.principalLoss);
+        if (w.profitGiveback > 0 && w.exit !== null && (w.lotNet ?? 0) > 0) x.givebackLotsClosedProfitable++;
+        if (w.principalLoss > 0 && w.exit !== null && (w.lotNet ?? 0) <= 0) x.principalLossLotsClosedLoss++;
+      }
+    }
+    return o;
+  };
+  const windowByExitReason = Object.fromEntries(armKeys.map((a) => [a, byReason(a)]));
   const out = {
     cutoff: cut,
     cpuEqualsGpu: g.cpuEqualsGpu,
+    windowByExitReason,
     pairs: pairs.length,
     paired,
     identity,
@@ -609,7 +672,7 @@ T(
   cuts.flatMap((c) => {
     const d = census[c]!.netDistribution as Record<string, ReturnType<typeof dist>>;
 
-    return (['p0Plausible', 'p3Plausible', 'bothPlausible', 'p3OnlyPlausible', 'postScreenCTRL_p0', 'postScreenEXP30_p0', 'postScreenEXP30_p3'] as const).map((k) => {
+    return (['p0Plausible', 'p3Plausible', 'bothPlausible', 'p3OnlyPlausible', 'p0PassP3Fail', 'bandAdmittedByP3', 'bandOffsetByPlOrBd', 'postScreenCTRL_p0', 'postScreenEXP30_p0', 'postScreenEXP30_p3'] as const).map((k) => {
       const x = d[k] as { n: number; median?: number; p90?: number; p99?: number; max?: number; top10Mean?: number };
 
       return [c, k, n0(x.n), fmt$(x.median), fmt$(x.p90), fmt$(x.p99), fmt$(x.max), fmt$(x.top10Mean)];
@@ -663,6 +726,22 @@ if (Object.keys(draws).length) {
   );
 }
 
+if (Object.keys(draws).length) {
+  L.push('## A9. Paired representatives’ confirmation families (EXP-30 − CTRL; 32 pairs; zero evaluations; stratified paired bootstrap, 80 % interval)', '', 'Quantiles do not add: the p90 of the bound and the p90 of BD are reported beside the p90 DD, not as its parts.', '');
+  T(
+    ['Cutoff', 'Statistic', 'CTRL mean', 'EXP-30 mean', 'Mean diff', '80 % interval', 'Diff > 0 / < 0'],
+    Object.keys(draws).flatMap((c) =>
+      Object.entries((draws[c] as unknown as { pairedDraws: Record<string, { meanCtrl: number; meanExp30: number; mean: number; ci80: [number, number]; signs: { positive: number; negative: number } }> }).pairedDraws).map(([k, p]) => {
+        const money = k !== 'over35';
+        const f = (x: number) => (money ? fmt$(x) : x.toFixed(1));
+        const g = (x: number) => (money ? fmtS(x) : `${x > 0 ? '+' : ''}${x.toFixed(1)}`);
+
+        return [c, k, f(p.meanCtrl), f(p.meanExp30), g(p.mean), `${g(p.ci80[0])} … ${g(p.ci80[1])}`, `${p.signs.positive} / ${p.signs.negative}`];
+      })
+    )
+  );
+}
+
 if (Object.keys(giveback).length) {
   L.push('## B1. Parity of the CPU replays', '');
   T(['Cutoff', 'Subjects', 'To the cent (net, DD, 4 envelope values)', 'Bit for bit (canonical record + envelope)'], Object.keys(giveback).map((c) => [c, String(giveback[c]!.cpuEqualsGpu.subjects), String(giveback[c]!.cpuEqualsGpu.toTheCent), String(giveback[c]!.cpuEqualsGpu.bitForBit)]));
@@ -682,7 +761,7 @@ if (Object.keys(giveback).length) {
   );
   L.push('## B3. Arm-level decomposition of the representatives’ maximum drawdowns (shares of the summed DD; giveback-dominated = U ≥ ½ DD)', '');
   T(
-    ['Cutoff', 'Arm', 'Summed DD', 'U share', 'E share', 'F share', 'Giveback-dominated', 'F > 0', 'Bound U ≥ DD − BD holds'],
+    ['Cutoff', 'Arm', 'Summed DD', 'U share', 'E share', 'F share', 'Giveback-dominated', 'F > 0', 'Bound U ≥ DD − BD_marked holds (to 2 cents)'],
     Object.keys(giveback).flatMap((c) =>
       armKeys.map((a) => {
         const x = giveback[c]!.arm[a] as { representatives: number; givebackDominated: number; capitalLossPositive: number; componentSharesOfSummedDd: { sumDd: number; U: number; E: number; F: number }; boundHolds: number };
@@ -691,7 +770,7 @@ if (Object.keys(giveback).length) {
       })
     )
   );
-  L.push('## B4. Identity of the mean paired DD increase (arm-level magnitudes of different episodes, not one shared episode)', '');
+  L.push('## B4. Identity of the mean paired DD increase (arm-level magnitudes of different episodes, not one shared episode)', '', 'The residual is cent rounding: diag-core rounds DD, U, E and F to cents separately.', '');
   T(['Cutoff', 'Mean ΔDD', 'Mean ΔU', 'Mean ΔE', 'Mean ΔF', 'Residual'], Object.keys(giveback).map((c) => {
     const i = giveback[c]!.identity;
 
@@ -718,6 +797,17 @@ if (Object.keys(giveback).length) {
 
         return [c, a, fmt$(w.windowGivebackClosedProfitable), fmt$(w.windowGivebackClosedLoss), fmt$(w.windowGivebackOpenAtEnd), fmt$(w.windowPrincipalLossClosedLoss), `${n0(w.tradesGivebackEndedProfitable!)} / ${n0(w.tradesGivebackEndedLoss!)}`, n0(w.tradesLosing!), n0(w.lots!)];
       })
+    )
+  );
+  L.push('## B6b. Lots of the maximum-DD windows by their recorded exit reason (gross giveback above break-even / gross deepening below principal; sums over the 32 representatives)', '', '“open” = still held at the training door’s end; “… gap” = filled at a gapped open below the stop level (recorded by the engine).', '');
+  T(
+    ['Cutoff', 'Arm', 'Exit reason', 'Window lots', 'Gross giveback', 'Gross below-principal', 'Giveback lots that closed profitable', 'Below-principal lots that closed at a loss'],
+    Object.keys(giveback).flatMap((c) =>
+      armKeys.flatMap((a) =>
+        Object.entries((giveback[c] as unknown as { windowByExitReason: Record<ArmKey, Record<string, { lots: number; giveback: number; principalLoss: number; givebackLotsClosedProfitable: number; principalLossLotsClosedLoss: number }>> }).windowByExitReason[a])
+          .sort((x, y) => y[1].giveback + y[1].principalLoss - (x[1].giveback + x[1].principalLoss))
+          .map(([k, v]) => [c, a, k, n0(v.lots), fmt$(v.giveback), fmt$(v.principalLoss), n0(v.givebackLotsClosedProfitable), n0(v.principalLossLotsClosedLoss)])
+      )
     )
   );
   L.push('## B7. Benchmarks (descriptive frozen references; never selectable)', '');

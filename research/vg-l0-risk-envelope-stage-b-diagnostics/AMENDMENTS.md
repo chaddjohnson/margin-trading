@@ -70,3 +70,10 @@ The plan was committed before any diagnostic tool ran on a real Stage B record (
     Stage A). The reported `dd` is the engine's, equal to the GPU's bit for bit. Any float-level gap between the two is
     reported, never hidden. The run was repeated with the same subjects and code otherwise unchanged (unit
     `vgl0rebd-giveback-C19-r2`).
+- **O2 (2026-11-23T07:54:59Z; operational, selects nothing).** The C24 census chain was started at 07:54:45Z, while the C21 chain was
+  still running, to save wall time. Two search-archive copies then coexisted in scratch: C21's 5.24 GB and C24's
+  4.39 GB. C19's copy had been removed at 07:50Z after its census was verified, so all three never existed at once.
+  There was 554 GB free. The two replays are independent processes with their own copies and Labs, in the common
+  `vgl0rebd.slice` (44G / 48G). PROTOCOL §2 said "one cutoff's search archive is copied at a time"; this is the
+  disclosed deviation. It has no effect on any result, because each replay is deterministic and verified against its
+  own sealed record.
