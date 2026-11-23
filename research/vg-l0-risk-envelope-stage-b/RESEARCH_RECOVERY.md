@@ -2,34 +2,27 @@
 
 **Top screen** (times are UTC, from `date -u`)
 
-- Updated: 2026-11-22T22:37Z. **Stage: C19 and C21 folds COMPLETE (C21 22:13Z → 22:36:13Z, all steps exit 0); C24 fold launching.** The engineering gates are sealed (all PASS) and
-  the protocol freeze is sealed, committed and pushed:
-  - `results/engineering/gates.json`, sha256 `2aa130b310ebadf7d51d21aeefc1620f83795cf5ecd6d2334022d00775070ea6`,
-    commit `b5636559`;
-  - `results/protocol-freeze.json`, sha256 `614a63d862d162291a66ca8b1c3b535011bf93eee93895c866459ff37197c6c8`, commit
-    `2922e04d`, pushed 21:56Z;
-  - the frozen code digest is `fcc20138b64c8e05e7bc24044fa4d6d6af237a213837690f76347be802e690e4` (190 files).
+- Updated: 2026-11-23T06:45Z. **Every official stage is COMPLETE and sealed** (2026-11-22T21:56:09Z → 23:06:57Z).
+  - C19, C21 and C24 folds: E2 IDENTICAL 4/4 each; searches of 64 lanes each; union qualifications; selections; C19
+    and C21 intervals; FROZEN_SELECTION; FULL authorization; the FULL validation, once.
+  - 22 sealed files verify. 3,962,772 requested official evaluations, against the bound 8,800,278.
+  - The analysis is committed at `a64197fd`. Outcome label: **P3 non-inferior and superior** (C21 and C24). T1 and T2
+    fail at C21 and C24. See REPORT.md.
+- **Recovery performed** 2026-11-23T06:37Z, after the session stood idle from 22:57Z.
+  - Checked: units (none running), fold logs, git log, the 22 seals and the order of the 61 door openings (FULL once).
+  - The window's hard end (06:14Z) had passed; AMENDMENTS D1 discloses it. The census and giveback replays were not
+    performed (§10).
 - Authority:
-  - `brief/BRIEF.md`, sha256 `801f8c57…`;
-  - `PROTOCOL.md`, sha256 `603f25159bf63da5dcb6f924d3caa6ba30b8f69273abf9725ccfcb3c4f3c603a` (preregistered `59493083`,
-    frozen `2922e04d`);
-  - `AMENDMENTS.md` head **P2**.
-- Execution window: 2026-11-22T21:14Z → **2026-11-23T06:14Z (hard)**; the latest search launch is 04:30Z
-  (`launchGuard`).
-- Running:
-  - systemd unit `vgl0reb-fold-C19.service`, which runs `chains/fold.sh` with `CUT=C19`, log
-    `results/logs/fold-C19.log`;
-  - each stage runs as its own unit `vgl0reb-C19-<stage>`, with its own log `results/logs/C19-<stage>.log`.
-  - The fold has finished cleanly when the log ends with `FOLD C19 COMPLETE`; otherwise look for `FAILED:` lines.
-  - Check: `systemctl --user list-units 'vgl0reb*'`. **Do not stage or commit by hand while a fold chain runs.**
-- **Next step after C19:**
-  1. Push.
-  2. Launch the C21 fold: `tools/vg-l0-risk-envelope-stage-b/launch.sh vgl0reb-fold-C21
-     /home/chad/projects/margin-trading/research/vg-l0-risk-envelope-stage-b/results/logs/fold-C21.log -- /usr/bin/env
-     CUT=C21 /bin/bash /home/chad/projects/margin-trading/research/vg-l0-risk-envelope-stage-b/chains/fold.sh`.
-  3. Then run C24 the same way.
-- **Resume after a failure:** check the logs first, then relaunch the fold with `START=<step> RESUME=1` (steps:
-  1 repro, 2 e2, 3 search, 4 qualify, 5 select, 6 interval; for C24, 6 freeze-selection, 7 authorize-full, 8 validate).
+  - `PROTOCOL.md`, sha256 `603f25159bf6…` (preregistered `59493083`, frozen `2922e04d`);
+  - `AMENDMENTS.md` head **D2**.
+- Running: unit `vgl0reb-regression` (`chains/regression.sh`, log `results/logs/regression.log`). It has finished
+  when the log shows `REGRESSION COMPLETE`.
+- **Next step:**
+  1. When the regression completes, add its results to REPORT §13 and READ_FIRST.
+  2. Commit.
+  3. Build the ZIP: `tools/vg-l0-risk-envelope-stage-b/bundle.sh
+     /home/chad/projects/margin-trading/research/vg-l0-risk-envelope-stage-b/bundle`.
+  4. Record its sha256 here, commit and push; verify with `git ls-remote`.
 
 ## Environment
 
@@ -55,8 +48,10 @@
 | gates, freeze | complete: gates.json `2aa130b3…` (`b5636559`); protocol-freeze.json `614a63d8…` (`2922e04d`, pushed) | `npm run vg-l0reb -- gates`, `… freeze` | never rerun |
 | C19 fold | complete 22:12:08Z: E2 IDENTICAL 4/4 (`71a2e1ba`), search 64 lanes 10.8 min ≈ 1,808 evaluations/s (`0120c686`), qualification (`233ee626`), selection (`f9520f59`), interval on D21 (`263030ce`, pushed) | `chains/fold.sh` with `CUT=C19` | `START=<step> RESUME=1` |
 | C21 fold | complete 22:36:13Z: E2 IDENTICAL 4/4 (`af19c746`), search (`0df7075a`), qualification (`19f1b1eb`), selection (`44f2c52f`), interval on D23 (`68cdab93`) | `CUT=C21` | |
-| C24 fold | not started | `CUT=C24` | |
-| analysis, regression, reports, ZIP | not started | | |
+| C24 fold | complete 23:06:57Z: E2 IDENTICAL 4/4 (`2027c0a6`), search (`3a746d1d`), qualification (`5ff1cb06`), selection (`43f81039`), FROZEN_SELECTION (`c963338e`), FULL authorization (`d171435e`), validation on FULL once (`5a661477`) | `CUT=C24` | never rerun |
+| analysis | complete (`a64197fd`): `results/analysis/` (TABLES.md, SUPPLEMENT.md, summary.json, supplement.json, CSVs) | `npm run vg-l0reb-tools -- all`; `python3 -I tools/vg-l0-risk-envelope-stage-b/supplement.py` | deterministic rerun |
+| regression | running (unit `vgl0reb-regression`, started 06:41Z) | `chains/regression.sh` | rerun |
+| reports, ZIP | reports written; ZIP pending | REPORT.md, READ_FIRST.md, DECISION_REGISTER.md; `bundle.sh` | rebuild |
 
 ## Constants
 
@@ -75,6 +70,9 @@ These are fixed in PROTOCOL.md §1–§6 and `SEED_BUDGET_MATRIX.json`:
 - While a fold chain runs, do not stage or commit anything by hand (the chain commits its own results paths).
 
 ## Disclosures
+
+- AMENDMENTS D1: the window end passed during an idle session after every official stage; census and giveback
+  diagnostics were not performed. D2: the Strategy Lab nonregression check ran in the final regression.
 
 - AMENDMENTS P1: the estimated read time of the standard, and this file's first top-screen time, were not taken from
   the clock.
