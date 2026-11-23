@@ -1,0 +1,123 @@
+{
+ "kind": "gpu-phase8 parity (host pipeline)",
+ "t": "2026-11-23T13:07:35.716Z",
+ "runtime": {
+  "node": "v24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "maglev": "disabled",
+  "execArgv": [
+   "--no-maglev",
+   "--expose-gc",
+   "--max-old-space-size=14000",
+   "--experimental-transform-types",
+   "--disable-warning=ExperimentalWarning"
+  ]
+ },
+ "seeds": "this study's (src/gpu-phase8/subjects.ts)",
+ "door": "T-threshold-below",
+ "doorSpec": {
+  "kind": "staged",
+  "name": "T-threshold-below"
+ },
+ "sessions": 11,
+ "first": "2021-03-01",
+ "last": "2021-03-15",
+ "dataSha256": {
+  "GDX": "fixture",
+  "VGT": "fixture"
+ },
+ "options": "base",
+ "optionsValue": {
+  "enabled": {
+   "G:GDX": false
+  }
+ },
+ "detail": true,
+ "risk": true,
+ "growthFirst": false,
+ "staged": "fixture",
+ "subjects": {
+  "total": 20,
+  "stagedOn": 16,
+  "R": 0,
+  "bySet": {
+   "R": 0,
+   "A": 0,
+   "G": 0,
+   "B": 0,
+   "N": 0
+  }
+ },
+ "result": {
+  "identical": 20,
+  "mismatches": 0,
+  "envelopesCompared": 20,
+  "pass": true
+ },
+ "mismatchList": [],
+ "details": [],
+ "determinism": {
+  "subset": 20,
+  "runs": []
+ },
+ "coverage": {
+  "status": {
+   "ok": 20
+  },
+  "features": {
+   "D1_BOOK": 20,
+   "POOL": 20,
+   "POOL_ENABLED": 20,
+   "POOL_DETAIL": 20,
+   "RISK_METRICS": 20,
+   "D1_STAGED_STOP": 16,
+   "NEXT_OPEN": 5,
+   "SLIPPAGE": 5
+  },
+  "growthStructures": {},
+  "reasons": {
+   "D1:trailing stop gap": 4
+  },
+  "kinds": {
+   "D1:deep": 20
+  },
+  "partialFills": 0,
+  "staged": {
+   "tasksOn": 16,
+   "booksOn": {
+    "D1:VGT": 16
+   },
+   "arms": 4,
+   "stagedExits": 4,
+   "placementExits": 0
+  },
+  "openAtEnd": 16,
+  "unfilledAtEnd": 0,
+  "trades": 20,
+  "lots": 20,
+  "fundingRecords": 20,
+  "candidatesWithLots": 20
+ },
+ "build": {
+  "binary": "/home/chad/projects/margin-trading/research/gpu-phase8/build/gb8",
+  "binarySha256": "86b30753813ba1cfbf53acb917405fadacfb4915b7c64357329bff28cf8428d3",
+  "device": "NVIDIA GeForce RTX 5090",
+  "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+  "driver": 13020,
+  "runtime": 13020,
+  "buildFlags": "-O3 -std=c++17 -arch=sm_120 --fmad=false -prec-div=true -prec-sqrt=true -Xcompiler -ffp-contract=off nvcc-13.2.86",
+  "compatDigest": "a54b98b13f780fe283b15e6324e88f6e0a03232e6bd881f23d0a3a39cf804baf",
+  "dataset": "09f9b79d1068aeb7df9467b9238d79ffa0a414c0dc28248dbb2ec01b8b2e942b"
+ },
+ "seconds": {
+  "cpu": 1,
+  "gpu": 0,
+  "total": 1
+ },
+ "cpuWorkers": 12,
+ "hostPath": {
+  "workers": 8,
+  "mode": "parallel"
+ },
+ "host": "apollo"
+}
