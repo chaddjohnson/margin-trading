@@ -328,7 +328,7 @@ export const encodeTask = (door: Door, t: Task, id: number, rangeBase: number, e
   validateAgainstGrids2(canonicalConfig2(t.controls), t.quad.d1);
 
   // the CPU's own staged validation (every rule of RULE_SPECIFICATION.md §2, against the enabled books' τ₁)
-  const st = t.staged ? validateStagedFor(t.quad, canonicalStaged(t.staged), t.options) : null;
+  const st = t.staged ? validateStagedFor(t.quad, t.staged, t.options) : null; // the raw value: every refusal is named
 
   if (t.staged && !st) throw new Error('a task carries an empty staged configuration (an OFF task carries none)');
 

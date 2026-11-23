@@ -1,0 +1,200 @@
+{
+ "kind": "gpu-backend official attestation",
+ "study": "research/gpu-phase8",
+ "runId": "negative",
+ "purpose": "official-optimization",
+ "t": "2026-11-23T12:58:35.707Z",
+ "host": "apollo",
+ "runtime": {
+  "node": "v24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "maglev": "disabled",
+  "execArgv": [
+   "--no-maglev",
+   "--expose-gc",
+   "--max-old-space-size=14000",
+   "--experimental-transform-types",
+   "--disable-warning=ExperimentalWarning"
+  ]
+ },
+ "device": {
+  "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+  "name": "NVIDIA GeForce RTX 5090",
+  "driver": 13020,
+  "runtime": 13020,
+  "cc": "12.0",
+  "smiUuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4"
+ },
+ "binary": {
+  "path": "research/gpu-phase8/build/gb8-dev",
+  "sha256": "b156b88d27904caa183c50d492eb941d015d9fd29693e8988a6057afc4179793"
+ },
+ "compat": {
+  "digest": "d539c1da24dc56ede01f780fa3c1d42cdf6eb774f1c5bc3db39e1a20b4729c15",
+  "serverDigest": "d539c1da24dc56ede01f780fa3c1d42cdf6eb774f1c5bc3db39e1a20b4729c15"
+ },
+ "source": {
+  "head": "5d3ddccc2bb3fd210a1a9727f5aa87539a2375d6",
+  "acceptedRevision": "999f299e50696953006dfc6ea0c06ffa410ca303",
+  "pinnedFiles": 142,
+  "clean": true
+ },
+ "acceptance": {
+  "status": "STALE",
+  "file": "config/gpu-backend/acceptance.json",
+  "sha256": "bb0e3fcf6bde45cc654dc2d8d166153353918dfe3aa18d826dd8deda5cabf7b7",
+  "skippedForTest": true
+ },
+ "domain": {
+  "name": "assignment-3 (src/vg-l0-full-joint): D1·GDX + D1·VGT with RC 2 families A–D × gate × activation, Growth·VGT 1.4.0 (8 + 50 genes), L0 pool",
+  "features": [
+   "D1_BOOK",
+   "RC_CONTROLS",
+   "NEXT_OPEN",
+   "SLIPPAGE",
+   "ARM_START",
+   "G_RISE",
+   "G_BREAKOUT",
+   "G_TREND_PRICE_CHANGE",
+   "G_TREND_REGRESSION",
+   "G_TREND_RISING_SMA",
+   "G_TREND_HHL",
+   "G_TREND_MOMENTUM",
+   "G_ELIG_TIME_LIMITED",
+   "G_ELIG_MIN_STRENGTH",
+   "G_ELIG_MAX_EXTENSION",
+   "G_ELIG_DETERIORATION",
+   "G_ELIG_RESET_RENEW",
+   "G_DRAWDOWN_GATE",
+   "G_MAX_HOLD",
+   "G_BUFFER",
+   "G_INITIAL_STOP",
+   "G_RETENTION",
+   "G_CONT_CLASSIC",
+   "G_CONT_BREAKOUT",
+   "G_CONT_SHALLOW",
+   "G_CONT_MA_CROSS",
+   "POOL",
+   "POOL_FUND_FROM",
+   "POOL_ENABLED",
+   "POOL_WHOLE_SHARES",
+   "POOL_BLACKOUTS",
+   "POOL_PERIODS",
+   "POOL_TIE_ORDER",
+   "POOL_DETAIL"
+  ],
+  "growthStructures": 8640,
+  "d1Structures": 14
+ },
+ "supported": "3fffffffff",
+ "smoke": {
+  "ok": true,
+  "sum": 1635.3944173366574,
+  "mix": "4842b073ba50f7fd"
+ },
+ "memory": {
+  "freeBytes": 31669616640,
+  "plannedBytes": 674930688
+ },
+ "dataset": {
+  "door": "fixture:W-QUIET",
+  "sessions": 251,
+  "sha256": "0d965236309cf2b9e4c984457d35f6cb7148b03d18e006ff7834a4250e71ac73",
+  "dataSha256": {
+   "GDX": "fixture",
+   "VGT": "fixture"
+  }
+ },
+ "hostPath": {
+  "mode": "parallel",
+  "workers": 3,
+  "doorDigest": "29ffb25a0e16e902b32f237f82e4b2e1d4a922688b41233c6b21528536ef9c41"
+ },
+ "parity": {
+  "subjects": 12,
+  "identical": 12,
+  "keys": [
+   "R:NL0",
+   "R:IJ1",
+   "R:C4",
+   "R:C4R",
+   "P:0",
+   "P:1",
+   "P:2",
+   "P:3",
+   "S:NL0:all",
+   "S:IJ1:D1:GDX",
+   "S:IJ1:D1:VGT",
+   "S:IJ1:G:VGT"
+  ],
+  "hostPath": "parallel"
+ },
+ "job": null,
+ "checks": [
+  {
+   "name": "purpose",
+   "ok": true,
+   "detail": "official-optimization"
+  },
+  {
+   "name": "runtime",
+   "ok": true,
+   "detail": "Node v24.21.0, V8 13.6.233.17-node.53, Maglev disabled (--no-maglev)"
+  },
+  {
+   "name": "acceptance",
+   "ok": true,
+   "detail": "SKIPPED FOR A TEST RUN (status STALE: the GPU evaluator was verified against other sources; changed since acceptance: src/growth-trading/optionalRules.ts, src/growth-trading/riseTrading.ts, src/gpu-backend/cuda/gb.h, src/gpu-backend/cuda/gb_common.cuh, src/gpu-backend/cuda/gb_d1.cuh, src/gpu-backend/cuda/gb_growth.cuh, src/gpu-backend/batch.ts, src/gpu-backend/compat.ts, src/gpu-backend/encode.ts, src/gpu-backend/layout.ts, src/gpu-backend/toolchain.ts. Port the change to CUDA, rerun the parity suite on Apollo and regenerate the acceptance record; the enforcement code changed since acceptance: config/gpu-backend/entrypoints.json, src/gpu-backend/domain.ts, src/gpu-backend/entrypoints.ts, src/gpu-backend/lab.ts, src/gpu-backend/official.ts, src/gpu-backend/tests/layout.test.ts. Re-verify the enforcement (docs/gpu/PARITY_CHECKLIST.md §2a) and regenerate the acceptance record; GPU binary sha256 b156b88d27904caa ≠ accepted cb2ff30b9cb720c0 (a stale or different build)) — never official evidence"
+  },
+  {
+   "name": "job",
+   "ok": true,
+   "detail": "no job (a test run: negative)"
+  },
+  {
+   "name": "binary",
+   "ok": true,
+   "detail": "/home/chad/projects/margin-trading/research/gpu-phase8/build/gb8-dev"
+  },
+  {
+   "name": "compat",
+   "ok": true,
+   "detail": "server and working tree d539c1da24dc56ed"
+  },
+  {
+   "name": "device",
+   "ok": true,
+   "detail": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 (= nvidia-smi)"
+  },
+  {
+   "name": "no-test-hooks",
+   "ok": true,
+   "detail": "none enabled"
+  },
+  {
+   "name": "capability",
+   "ok": true,
+   "detail": "34 reachable features, all implemented"
+  },
+  {
+   "name": "smoke",
+   "ok": true,
+   "detail": "1635.3944173366574/4842b073ba50f7fd = the CPU's expectation"
+  },
+  {
+   "name": "memory",
+   "ok": true,
+   "detail": "free VRAM 31669616640 ≥ planned batch 674930688 + 1 GiB headroom"
+  },
+  {
+   "name": "host-path",
+   "ok": true,
+   "detail": "3 worker threads, door digest 29ffb25a0e16e902"
+  },
+  {
+   "name": "parity",
+   "ok": true,
+   "detail": "12 of 12 precommitted parity subjects identical to the canonical CPU engine"
+  }
+ ]
+}

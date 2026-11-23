@@ -905,7 +905,7 @@ const npm = (script: string, env: Record<string, string>) =>
   // 2. the official gate refuses the staged domain on the previous server (its supported set lacks bits 36/37)
   await gate(
     'the staged domain on the previous accepted server (gb7 lacks D1_STAGED_STOP / G_STAGED_STOP)',
-    /preflight-(capability|build|protocol|version)/,
+    /preflight-(compat|capability|build|protocol|version)/,
     { binary: path.join(repoRoot, 'research/gpu-phase7/build/gb7'), domain: stagedStopDomain(incumbents().NL0.quad.d1.VGT) }
   );
   // 3. a staged task outside the attested (risk-envelope) domain: the pool withholds the batch

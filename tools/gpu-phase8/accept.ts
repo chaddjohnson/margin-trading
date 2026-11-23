@@ -95,7 +95,7 @@ gate('S0 the superseded record is the accepted Phase 7 record (out-of-repository
     'src/staged-stop/tracker.ts'
   ];
   const wantCuda = ['src/gpu-backend/cuda/gb.h', 'src/gpu-backend/cuda/gb_common.cuh', 'src/gpu-backend/cuda/gb_d1.cuh', 'src/gpu-backend/cuda/gb_growth.cuh'];
-  const wantHost = ['src/gpu-backend/batch.ts', 'src/gpu-backend/compat.ts', 'src/gpu-backend/encode.ts', 'src/gpu-backend/layout.ts', 'src/gpu-backend/toolchain.ts'];
+  const wantHost = ['src/gpu-backend/batch.ts', 'src/gpu-backend/client.ts', 'src/gpu-backend/compat.ts', 'src/gpu-backend/encode.ts', 'src/gpu-backend/layout.ts', 'src/gpu-backend/toolchain.ts'];
 
   gate(
     'S1 the evaluation change is exactly the declared one (CPU closure: the staged modules, RC 3, Growth revision 1.5.0, the book pass-through; CUDA: protocol v3 and the staged rule; host: codec, layout, manifest, toolchain)',
@@ -293,9 +293,9 @@ const pinnedPaths = [...m.cpu.files, ...m.cuda.files, ...m.host.files, ...policy
 const samePins = (commit: string | undefined) => !!commit && spawnSync('git', ['diff', '--quiet', commit, 'HEAD', '--', ...pinnedPaths], { cwd: repoRoot }).status === 0;
 {
   const f = R('policy/negative-final.json');
-  const s = read<{ pass: boolean; total: number; passed: number; head: string; binaries: { dev: string }; rows: { group: string }[] }>(f);
+  const s = read<{ pass: boolean; total: number; passed: number; head: string; binaries: { dev: string }; rows: { group: string; name: string }[] }>(f);
 
-  gate('E3 negative tests on the final pinned files (final binary; job, runtime, risk-delivery and staged-stop cases included)', f, !!s && s.pass && s.binaries.dev === binarySha && samePins(s.head) && s.rows.filter((r) => r.group === 'job').length >= 10 && s.rows.filter((r) => r.group === 'risk').length >= 6 && s.rows.filter((r) => r.group === 'staged').length >= 8, s ? `${s.passed}/${s.total} at ${s.head.slice(0, 12)}, pins equal ${samePins(s.head)}` : 'missing');
+  gate('E3 negative tests on the final pinned files (final binary; job, runtime, risk-delivery and staged-stop cases included)', f, !!s && s.pass && s.binaries.dev === binarySha && samePins(s.head) && s.rows.filter((r) => r.group === 'job').length >= 10 && s.rows.filter((r) => r.group === 'risk').length >= 6 && s.rows.filter((r) => /staged/.test(r.name)).length >= 8, s ? `${s.passed}/${s.total} at ${s.head.slice(0, 12)}, pins equal ${samePins(s.head)}` : 'missing');
   const g = R('policy/tamper-final.json');
   const t = read<{ pass: boolean; cases: number; passed: number; baselineOk: boolean; head?: string; mainHead?: string; rows: { id: string }[] }>(g);
   const th = t?.head ?? t?.mainHead;

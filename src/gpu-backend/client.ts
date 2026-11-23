@@ -118,6 +118,9 @@ export class GpuServer {
       if (this.stderr.length > 65536) this.stderr = this.stderr.slice(-32768);
     });
     child.on('error', (e) => this.die(new Error(`GPU evaluator could not start: ${e.message}`)));
+    // GPU Phase 8: a write to a server that has just exited (EPIPE on its input pipe) is the server's death — the pending
+    // request fails closed — never an unhandled stream error that would end the host process
+    child.stdin!.on('error', (e) => this.die(new Error(`GPU evaluator input pipe: ${e.message}`)));
     child.on('exit', (code, signal) =>
       this.die(new Error(`GPU evaluator exited (${code ?? signal})${this.stderr ? `: ${this.stderr.trim()}` : ''}`))
     );
