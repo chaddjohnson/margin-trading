@@ -962,7 +962,10 @@ export const projectionsOf = (c: PCfg) => {
   return out;
 };
 
-export const membersOf = (cut: CutoffKey) => {
+export const membersFromLanes = (
+  lanes: Record<ArmKey, readonly LaneResult[]>,
+  informed: Record<ArmKey, readonly LaneResult[]> | null
+) => {
   type M = Member & { origins: Origin[] };
   const byId = new Map<string, M>();
   const duplicates: { label: string; sameAs: string }[] = [];
@@ -1009,15 +1012,11 @@ export const membersOf = (cut: CutoffKey) => {
     });
 
   for (const arm of armKeys)
-    for (const l of effectiveLanes(cut, arm))
-      addLane(arm, l, { member: 'member', projection: 'projection' }, 'broad', 'I');
-  if (cut === 'C24') {
-    const inf = readSealed<{ lanes: Record<ArmKey, LaneResult[]> }>(informedFile);
-
+    for (const l of lanes[arm]) addLane(arm, l, { member: 'member', projection: 'projection' }, 'broad', 'I');
+  if (informed)
     for (const arm of armKeys)
-      for (const l of inf.lanes[arm])
+      for (const l of informed[arm])
         addLane(arm, l, { member: 'informed', projection: 'informed-projection' }, 'informed', 'N');
-  }
   for (const b of benchmarks())
     add(
       b.cfg,
@@ -1027,6 +1026,12 @@ export const membersOf = (cut: CutoffKey) => {
 
   return { members: [...byId.values()], duplicates };
 };
+
+export const lanesOfCutoff = (cut: CutoffKey) =>
+  Object.fromEntries(armKeys.map((a) => [a, effectiveLanes(cut, a)])) as Record<ArmKey, LaneResult[]>;
+export const informedLanesOf = (cut: CutoffKey) =>
+  cut === 'C24' ? readSealed<{ lanes: Record<ArmKey, LaneResult[]> }>(informedFile).lanes : null;
+export const membersOf = (cut: CutoffKey) => membersFromLanes(lanesOfCutoff(cut), informedLanesOf(cut));
 
 export const runQualify = async (cut: CutoffKey, resume = false) => {
   const file = qualificationFile(cut);
@@ -1114,19 +1119,17 @@ const riskRowOf = (e: Evidence | undefined): Record<RiskMetric, number> | null =
       }
     : null;
 
-export const runSelect = (cut: CutoffKey) => {
-  const file = selectionFile(cut);
-
-  requireStandardAdoption(researchDir, { repoRoot });
-  if (fs.existsSync(file)) throw new Error(`${rel(file)} exists`);
-
-  const q = readSealed<{ evidence: Evidence[] }>(qualificationFile(cut));
-
-  assertCommitted(qualificationFile(cut));
-
+// the selection's content (pure: evidence and lane results in, statistics out; PROTOCOL.md §1, §8)
+export const selectionOf = (
+  cut: string,
+  evidence: readonly Evidence[],
+  lanes: Record<ArmKey, readonly LaneResult[]>,
+  informedLanes: Record<ArmKey, readonly LaneResult[]> | null
+) => {
+  const q = { evidence };
   const byId = new Map(q.evidence.map((e) => [e.id, e]));
   const lanesOf = (a: ArmKey) =>
-    effectiveLanes(cut, a).map((l) => ({
+    lanes[a].map((l) => ({
       key: l.key,
       cell: l.structure,
       replicate: l.replicate,
@@ -1164,7 +1167,6 @@ export const runSelect = (cut: CutoffKey) => {
     ArmKey,
     ReturnType<typeof selectArm>
   >;
-  const budget = budgetBoundAfterExtension(cut);
 
   // the interval subjects (de-duplicated): every lane representative of both arms, the all-OFF projection of every ON EXP
   // representative, both arms' pooled primaries, the benchmarks; at C24 the informed primaries and their all-OFF projections
@@ -1200,8 +1202,8 @@ export const runSelect = (cut: CutoffKey) => {
 
   let informed: unknown = null;
 
-  if (cut === 'C24') {
-    const inf = readSealed<{ lanes: Record<ArmKey, LaneResult[]> }>(informedFile);
+  if (informedLanes) {
+    const inf = { lanes: informedLanes };
     const rows = informedTypes.map((t) => {
       const lanes = (a: ArmKey) =>
         inf.lanes[a]
@@ -1257,6 +1259,23 @@ export const runSelect = (cut: CutoffKey) => {
     informed = rows;
   }
 
+  return { laneValues: values, pairs, primary, risk, mechanism, pooled, informed, subjects: [...subjects.values()] };
+};
+
+export const runSelect = (cut: CutoffKey) => {
+  const file = selectionFile(cut);
+
+  requireStandardAdoption(researchDir, { repoRoot });
+  if (fs.existsSync(file)) throw new Error(`${rel(file)} exists`);
+
+  const q = readSealed<{ evidence: Evidence[] }>(qualificationFile(cut));
+
+  assertCommitted(qualificationFile(cut));
+
+  const x = selectionOf(cut, q.evidence, lanesOfCutoff(cut), informedLanesOf(cut));
+  const { laneValues: values, pairs, primary, risk, mechanism, pooled, informed, subjects } = x;
+  const budget = budgetBoundAfterExtension(cut);
+
   const record = {
     stage: 'selection',
     protocol: `${PROTOCOL_ID} ${PROTOCOL_VERSION}`,
@@ -1273,31 +1292,34 @@ export const runSelect = (cut: CutoffKey) => {
     budgetBoundAfterExtension: budget,
     pooled,
     informed,
-    subjects: [...subjects.values()],
+    subjects,
     finished: new Date().toISOString()
   };
 
   seal(file, record, `selection ${cut}`);
   log(
-    `selection ${cut}: sealed (${pairs.length} pairs, D̄ ${r2(primary.mean)}, L90 ${r2(primary.l90)}; ${subjects.size} interval subjects)`
+    `selection ${cut}: sealed (${pairs.length} pairs, D̄ ${r2(primary.mean)}, L90 ${r2(primary.l90)}; ${subjects.length} interval subjects)`
   );
   return record;
 };
 
 // ----- the decomposition (C24, report-only, after the C24 selection; PROTOCOL.md §12) -----
 
-export const decompositionRows = () => {
-  const sel = readSealed<{
-    pooled: Record<ArmKey, { primary: { label: string; id: string; staged: StagedConfig | null } | null }>;
-    informed: {
-      type: string;
-      pooled: { EXP: { primary: { label: string; id: string; staged: StagedConfig | null } | null } };
-    }[];
-  }>(selectionFile('C24'));
-  const q = readSealed<{ evidence: Evidence[] }>(qualificationFile('C24'));
+type DecompositionSel = {
+  pooled: Record<ArmKey, { primary: { label: string; id: string; staged: StagedConfig | null } | null }>;
+  informed:
+    | {
+        type: string;
+        pooled: { EXP: { primary: { label: string; id: string; staged: StagedConfig | null } | null } | null };
+      }[]
+    | null;
+};
+
+export const decompositionRowsOf = (sel: DecompositionSel, evidence: readonly Evidence[]) => {
+  const q = { evidence };
   const finalists = [
     { key: 'EXP pooled primary', p: sel.pooled.EXP.primary },
-    ...sel.informed.map((r) => ({ key: `informed ${r.type} EXP primary`, p: r.pooled.EXP.primary }))
+    ...(sel.informed ?? []).map((r) => ({ key: `informed ${r.type} EXP primary`, p: r.pooled.EXP?.primary ?? null }))
   ].filter((f) => f.p && f.p.staged);
   const rows: {
     label: string;
@@ -1360,6 +1382,12 @@ export const decompositionRows = () => {
   }
   return rows;
 };
+
+export const decompositionRows = () =>
+  decompositionRowsOf(
+    readSealed<DecompositionSel>(selectionFile('C24')),
+    readSealed<{ evidence: Evidence[] }>(qualificationFile('C24')).evidence
+  );
 
 export const runDecompose = async (resume = false) => {
   const file = decompositionFile;
@@ -1546,6 +1574,128 @@ export const intervalSubjectsOf = (cut: CutoffKey) => {
   return out;
 };
 
+// the interval's evaluation plan per subject (PROTOCOL.md §9): the detailed centre and the centre with the boundary, the
+// seven stresses, the training selection family 2 × 128 regenerated (de-duplicated); every item with the envelope
+export type IntervalSubject = {
+  label: string;
+  id: string;
+  roles: unknown[];
+  cfg: PCfg;
+  selectTail: Evidence['selectTail'];
+};
+export const intervalPlansOf = (subjects: readonly IntervalSubject[], cut: string, end: string) => {
+  const opts = { ...vOptions, boundaries: [end] };
+  type It = { cfg: PCfg; options: typeof opts; detail?: boolean; risk: true };
+  const plans = subjects.map((s) => {
+    const draws = [1, 2].flatMap((rep) =>
+      drawsOf(s.cfg, famOf('select', ['select', rep, cut], 'joint', 1, fidelity.n))
+    );
+    const seen = new Set<string>();
+    const unique = draws.filter((d) => (seen.has(d.id) ? false : (seen.add(d.id), true)));
+    const items: It[] = [
+      { cfg: s.cfg, options: opts, detail: true, risk: true },
+      { cfg: s.cfg, options: opts, risk: true },
+      ...Object.values(stresses).map((f) => ({
+        cfg: s.cfg,
+        options: { ...opts, friction: { ...f } },
+        risk: true as const
+      })),
+      ...unique.map((d) => ({ cfg: d.cfg, options: opts, risk: true as const }))
+    ];
+
+    return { s, unique, items };
+  });
+  return plans;
+};
+
+// the interval rows from the plans' records (in plan order)
+export const intervalRowsOf = (plans: ReturnType<typeof intervalPlansOf>, recs: readonly SRec[], end: string) => {
+  const spec = { end };
+  let at = 0;
+  const rows = plans.map((p) => {
+    const detail = recs[at++]! as DRec;
+    const centre = recs[at++]!;
+    const st: Record<string, { sliceNet: number; sliceDd: number; wholeNet: number; wholeDd: number }> = {};
+
+    for (const name of Object.keys(stresses)) {
+      const r = recs[at++]!;
+
+      st[name] = { sliceNet: r.periods[0]!.after, sliceDd: r.periods[0]!.dd, wholeNet: r.net, wholeDd: r.dd };
+    }
+
+    const nb = p.unique.map(() => recs[at++]!);
+
+    if (centre.net !== detail.net || centre.signature !== detail.signature)
+      throw new Error(`${p.s.label}: detailed centre differs`);
+
+    const period = centre.periods[0]!;
+    const rows0 = detail.risk.rows;
+    const after = (d: string) => d > spec.end;
+    const nextLots = rows0.filter((x) => after(x.entry));
+    const carried = rows0.filter((x) => !after(x.entry) && (x.exit === null || after(x.exit)));
+    const maes = nextLots.map((x) => x.mae).sort((a, c) => a - c);
+    const env = checkEnvelope((centre as SRec & { envelope?: unknown }).envelope, `${p.s.label} centre`);
+    const sliceDds = nb.map((r) => r.periods[0]!.dd).sort((a, c) => a - c);
+    const sliceNets = nb.map((r) => r.periods[0]!.after).sort((a, c) => a - c);
+    const k = sliceDds.filter((d) => d > 35_000).length;
+
+    return {
+      label: p.s.label,
+      id: p.s.id,
+      roles: p.s.roles,
+      cell: p.s.cfg.cell,
+      stagedPattern: stagedOf(p.s.cfg)
+        ? stagedSlots
+            .filter((x) => stagedOf(p.s.cfg)!.books[x.book])
+            .map((x) => x.sym)
+            .join('+')
+        : 'off',
+      sliceNet: period.after,
+      sliceDd: period.dd,
+      boundaryEquity: period.equity,
+      wholeNet: centre.net,
+      wholeDd: centre.dd,
+      wholeEnvelope: env,
+      wholeAssessment: assessArm(centre, p0).pass,
+      staged: (centre as SRec & { staged?: unknown }).staged ?? null,
+      years: centre.years,
+      lots: centre.lots,
+      openAtBoundary: carried.map((x) => ({
+        book: x.book,
+        entry: x.entry,
+        exit: x.exit,
+        reason: x.reason,
+        net: x.net,
+        mae: x.mae
+      })),
+      nextInterval: {
+        lots: nextLots.length,
+        byBook: Object.fromEntries(
+          ['D1:GDX', 'D1:VGT', 'G:VGT'].map((bk) => [bk, nextLots.filter((x) => x.book === bk).length])
+        ),
+        worstLotMae: maes.length ? maes[0]! : null,
+        worstRealized: nextLots
+          .filter((x) => x.exit !== null)
+          .reduce<number | null>((a, x) => (a === null || x.net < a ? x.net : a), null),
+        losing: nextLots.filter((x) => x.exit !== null && x.net < 0).length,
+        exitReasons: nextLots.reduce<Record<string, number>>((a, x) => ((a[x.reason] = (a[x.reason] ?? 0) + 1), a), {})
+      },
+      stresses: st,
+      neighbourhood: {
+        draws: p.unique.length,
+        medianSliceDd: r2(quantile(sliceDds, 0.5)),
+        p90SliceDd: r2(quantile(sliceDds, 0.9)),
+        worstSliceDd: r2(sliceDds.at(-1) ?? 0),
+        medianSliceNet: r2(quantile(sliceNets, 0.5)),
+        p10SliceNet: r2(quantile(sliceNets, 0.1)),
+        above35k: { breaches: k, share: k / Math.max(1, sliceDds.length), wilson95: wilson(k, sliceDds.length) },
+        trainingBreachShare: p.s.selectTail.breachShare
+      }
+    };
+  });
+  return rows;
+};
+
 export const runInterval = async (cut: CutoffKey, resume = false) => {
   const file = intervalFile(cut);
   const spec = cutoffs[cut];
@@ -1557,7 +1707,6 @@ export const runInterval = async (cut: CutoffKey, resume = false) => {
   const subjects = intervalSubjectsOf(cut);
   const forecast = subjects.length * perSubject();
   const allowance = stageAllowance(`${spec.sliceStage} ${cut}`, forecast);
-  const opts = { ...vOptions, boundaries: [spec.end] };
   const t0 = Date.now();
 
   return withOfficialJob({
@@ -1577,116 +1726,13 @@ export const runInterval = async (cut: CutoffKey, resume = false) => {
     body: async (lab, ctx) => {
       const fresh0 = lab.fresh;
       const hits0 = lab.hits;
-      type It = { cfg: PCfg; options: typeof opts; detail?: boolean; risk: true };
-      const plans = subjects.map((s) => {
-        const draws = [1, 2].flatMap((rep) =>
-          drawsOf(s.cfg, famOf('select', ['select', rep, cut], 'joint', 1, fidelity.n))
-        );
-        const seen = new Set<string>();
-        const unique = draws.filter((d) => (seen.has(d.id) ? false : (seen.add(d.id), true)));
-        const items: It[] = [
-          { cfg: s.cfg, options: opts, detail: true, risk: true },
-          { cfg: s.cfg, options: opts, risk: true },
-          ...Object.values(stresses).map((f) => ({
-            cfg: s.cfg,
-            options: { ...opts, friction: { ...f } },
-            risk: true as const
-          })),
-          ...unique.map((d) => ({ cfg: d.cfg, options: opts, risk: true as const }))
-        ];
-
-        return { s, unique, items };
-      });
+      const plans = intervalPlansOf(subjects, cut, spec.end);
       const items = plans.flatMap((p) => p.items);
 
       if (items.length > forecast) throw new Error(`${cut}: ${items.length} requested > the bound ${forecast}`);
 
       const recs = await lab.evalMany<SRec>(items, `${spec.sliceStage} ${cut}`);
-      let at = 0;
-      const rows = plans.map((p) => {
-        const detail = recs[at++]! as DRec;
-        const centre = recs[at++]!;
-        const st: Record<string, { sliceNet: number; sliceDd: number; wholeNet: number; wholeDd: number }> = {};
-
-        for (const name of Object.keys(stresses)) {
-          const r = recs[at++]!;
-
-          st[name] = { sliceNet: r.periods[0]!.after, sliceDd: r.periods[0]!.dd, wholeNet: r.net, wholeDd: r.dd };
-        }
-
-        const nb = p.unique.map(() => recs[at++]!);
-
-        if (centre.net !== detail.net || centre.signature !== detail.signature)
-          throw new Error(`${p.s.label}: detailed centre differs`);
-
-        const period = centre.periods[0]!;
-        const rows0 = detail.risk.rows;
-        const after = (d: string) => d > spec.end;
-        const nextLots = rows0.filter((x) => after(x.entry));
-        const carried = rows0.filter((x) => !after(x.entry) && (x.exit === null || after(x.exit)));
-        const maes = nextLots.map((x) => x.mae).sort((a, c) => a - c);
-        const env = checkEnvelope((centre as SRec & { envelope?: unknown }).envelope, `${p.s.label} centre`);
-        const sliceDds = nb.map((r) => r.periods[0]!.dd).sort((a, c) => a - c);
-        const sliceNets = nb.map((r) => r.periods[0]!.after).sort((a, c) => a - c);
-        const k = sliceDds.filter((d) => d > 35_000).length;
-
-        return {
-          label: p.s.label,
-          id: p.s.id,
-          roles: p.s.roles,
-          cell: p.s.cfg.cell,
-          stagedPattern: stagedOf(p.s.cfg)
-            ? stagedSlots
-                .filter((x) => stagedOf(p.s.cfg)!.books[x.book])
-                .map((x) => x.sym)
-                .join('+')
-            : 'off',
-          sliceNet: period.after,
-          sliceDd: period.dd,
-          boundaryEquity: period.equity,
-          wholeNet: centre.net,
-          wholeDd: centre.dd,
-          wholeEnvelope: env,
-          wholeAssessment: assessArm(centre, p0).pass,
-          staged: (centre as SRec & { staged?: unknown }).staged ?? null,
-          years: centre.years,
-          lots: centre.lots,
-          openAtBoundary: carried.map((x) => ({
-            book: x.book,
-            entry: x.entry,
-            exit: x.exit,
-            reason: x.reason,
-            net: x.net,
-            mae: x.mae
-          })),
-          nextInterval: {
-            lots: nextLots.length,
-            byBook: Object.fromEntries(
-              ['D1:GDX', 'D1:VGT', 'G:VGT'].map((bk) => [bk, nextLots.filter((x) => x.book === bk).length])
-            ),
-            worstLotMae: maes.length ? maes[0]! : null,
-            worstRealized: nextLots
-              .filter((x) => x.exit !== null)
-              .reduce<number | null>((a, x) => (a === null || x.net < a ? x.net : a), null),
-            losing: nextLots.filter((x) => x.exit !== null && x.net < 0).length,
-            exitReasons: nextLots.reduce<Record<string, number>>(
-              (a, x) => ((a[x.reason] = (a[x.reason] ?? 0) + 1), a),
-              {}
-            )
-          },
-          stresses: st,
-          neighbourhood: {
-            draws: p.unique.length,
-            medianSliceDd: r2(quantile(sliceDds, 0.5)),
-            p90SliceDd: r2(quantile(sliceDds, 0.9)),
-            worstSliceDd: r2(sliceDds.at(-1) ?? 0),
-            medianSliceNet: r2(quantile(sliceNets, 0.5)),
-            p10SliceNet: r2(quantile(sliceNets, 0.1)),
-            above35k: { breaches: k, share: k / Math.max(1, sliceDds.length), wilson95: wilson(k, sliceDds.length) },
-            trainingBreachShare: p.s.selectTail.breachShare
-          }
-        };
-      });
+      const rows = intervalRowsOf(plans, recs, spec.end);
       const record = {
         stage: spec.sliceStage,
         protocol: `${PROTOCOL_ID} ${PROTOCOL_VERSION}`,

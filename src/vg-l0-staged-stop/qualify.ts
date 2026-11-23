@@ -178,6 +178,7 @@ export const qualifyMembers = async (
 
     out.push({
       ...describeEvidence(p.m as unknown as A3Member, p.m.cfg as never),
+      id: expSpace.cfgId(p.m.cfg), // the staged-aware identity (Assignment 3's describeEvidence ignores the staged genes)
       lane: p.m.lane,
       stage: p.m.stage,
       track: p.m.track,
