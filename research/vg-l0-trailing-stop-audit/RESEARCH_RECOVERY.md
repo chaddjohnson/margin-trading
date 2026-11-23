@@ -66,4 +66,17 @@
 
 ## Delivery
 
-(Filled in after the commit and push.)
+- **Documentation commit:** `d5006b743c6ad6173db14c2435bc3f72ff1ac7ed` (12 files + SHA256SUMS.txt, all verified OK by
+  `sha256sum -c`).
+- **Handoff ZIP:** `bundle/vg-l0-trailing-stop-audit.zip`, sha256
+  `9a666fe86dd269035ec409fbd45f6e95d845366c6b27b7cd561406e058dda85c`, 14 files (the 13 committed files + IDENTITY.txt).
+  - Built 2026-11-23T10:05Z with `git archive` from `d5006b74`.
+  - `zip -T` OK. After extraction into an empty scratch directory: `sha256sum -c` 12 / 12 OK, and `diff -r` against
+    the committed tree is empty.
+  - The secret and personal-data scan of the namespace is clean.
+  - Copy outside the repository: `~/.local/share/margin-trading-gpu/handoffs/vg-l0-trailing-stop-audit.zip` (same
+    sha256). The ZIP's own SHA256SUMS.txt covers the files it lists, not this checkpoint's later delivery section.
+- **Push:** `git push -u origin research/vg-l0-trailing-stop-audit` (new remote branch, no force). Verification with
+  `git ls-remote` is recorded in the follow-up commit.
+- **Scratch:** the ZIP build and extraction directories in the session scratchpad are temporary. Nothing was restored
+  from any archive.
