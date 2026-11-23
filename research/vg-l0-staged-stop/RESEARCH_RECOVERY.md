@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-23T11:50Z (UTC, `date -u`). **Status: INCOMPLETE — stage E0 (reading and specification).**
+- **Updated:** see the stage table (UTC, `date -u`). **Status: INCOMPLETE — E1 CPU reference committed; next E2 (CUDA).**
 - **Brief:** `brief/BRIEF.md` (verbatim copy of the user's upload), sha256
   `720e0b36e815b111a5deac41c7454bd497224dd78c10adaa01fa8017d78998ae`, 295 lines / 30,788 bytes; final line
   "**PRIORITY 4 COMPLETE — NO STRATEGY ADOPTED OR DEPLOYED — AWAITING REVIEW**" present (not truncated).
@@ -10,8 +10,8 @@
   checks, reports, ZIP, commit and push of the research branch. **Not authorized:** adoption, merging into `main`,
   deployment, broker access, editing frozen New L0 / N/original research.
 - **Running processes:** none.
-- **Next step:** finish E0 reading of the live code paths; write `RULE_SPECIFICATION.md` (E0 freeze of the engineering
-  spec) before writing engine code.
+- **Next step:** E2 — port staged-stop@1 to CUDA (gb.h v3 layouts, gb_common/gb_d1/gb_growth, server supported set),
+  host encode/decode/layout/lab/domain; then the gpu-phase8 acceptance study (E3/E4).
 
 ## Environment
 
@@ -34,8 +34,8 @@
 
 | Stage | Status | Output |
 |---|---|---|
-| E0 read + spec freeze | running | — |
-| E1 CPU reference + OFF parity | not started | — |
+| E0 read + spec freeze | complete 2026-11-23T12:00Z | `RULE_SPECIFICATION.md` (commit `3aa51963`; later wording-only edits none) |
+| E1 CPU reference + OFF parity | complete (CPU side) 2026-11-23 | Growth 1.4.0 baseline fixture `62574e98` (captured on the unedited engine, sha256 `f7b50992…`); `src/staged-stop/`, `src/d1-risk-controls-rc3/`, Growth engine revision 1.5.0 (`riseTrading.ts`, `optionalRules.ts`), `books.ts` pass-through. Tests: config 12/12, RC 3 book 13/13, Growth staged 7/7, Growth OFF parity 9/9 (fixture), pooled D24 3/3 (New L0 $382,721.46 / $19,459.83 and N/original $388,031.02 / $19,459.83 reproduced), existing D1/RC/Growth/pool suites 420/420 |
 | E2 CUDA port | not started | — |
 | E3 parity campaign | not started | — |
 | E4 acceptance + regression | not started | — |

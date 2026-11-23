@@ -331,6 +331,10 @@ export type ExitRule = 'trailing_stop' | 'initial_stop' | 'maximum_hold' | 'buff
 export interface PositionRulesRuntime {
   initialStop: InitialStopConfig | null;
   retention: RetentionConfig | null;
+  // Growth engine revision 1.5.0 (research/vg-l0-staged-stop/RULE_SPECIFICATION.md §1.1): an optional callback run
+  // immediately after the position manager's onEntry, before the entry session is evaluated (the staged trailing stop's
+  // onEntry hook). Absent or null: the 1.4.0 path, byte for byte.
+  afterEntry?: ((mgr: ExitManager, lot: LotState, trade: VirtualTrade, s: number) => void) | null;
 }
 
 // The decision-time check of the initial risk stop: is ATR available for the fill this decision will get?
@@ -611,6 +615,7 @@ export class PositionRules {
 
     // The same entry-session state as the book's own ExitManager (the trailing-stop level from the fill on).
     mgr.onEntry(position.lot, s, k, trade.entryRawPrice);
+    this.runtime.afterEntry?.(mgr, position.lot, trade, s); // revision 1.5.0: absent = the 1.4.0 path
     position.exit = mgr;
     this.positions.set(trade, pos);
 

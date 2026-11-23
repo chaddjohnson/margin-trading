@@ -1,5 +1,11 @@
 // rise-from-recent-low-trading v1.4.0 ("Growth"): a growth-following trading backtest of ONE symbol (see README.md).
 //
+// Engine revision 1.5.0 (research/vg-l0-staged-stop/RULE_SPECIFICATION.md) adds ONE optional research option of the
+// engine, the S1 staged trailing stop (SimulationOptions.staged; src/staged-stop/). It is NOT a Strategy Lab parameter:
+// the strategy schema and version stay 1.4.0 (STRATEGY_VERSION), so no request, catalogue, UI or identity of Strategy
+// Lab changes. With it absent or null none of its code runs: every decision, fill, exit, mark and log entry is the 1.4.0
+// one (tests/offParity-1.4.0.test.ts, against the fixture captured from the unedited 1.4.0 engine).
+//
 // v1.4.0 adds the OPTIONAL Drawdown Recovery Gate (drawdownGate.ts), OFF by default: a filter on every Growth-owned
 // entry decision, never an entry signal. Maintained on completed one-minute observations independently of the signal
 // resolution, it blocks entries while a significant chronological peak-to-trough dip is unresolved, until the price has
@@ -73,6 +79,8 @@ import type { PhenotypeName, Sym } from '../multi-etf-allocator/context.ts';
 import { type DrawdownStats, Tracker } from '../multi-etf-allocator/engine.ts';
 import { FixedLedger } from '../multi-etf-allocator/ledger.ts';
 import { type BookSettings, type VirtualTrade, ShadowBook } from '../multi-etf-allocator/shadow.ts';
+import { type StagedBookConfig, bookErrors as stagedBookErrors, tau1TenthsOfFraction } from '../staged-stop/config.ts';
+import { StagedTracker } from '../staged-stop/tracker.ts';
 import {
   CONTINUATION_METHODS,
   type ContinuationConfig,
@@ -414,6 +422,10 @@ export interface SimulationOptions {
   // v1.4.0: the Drawdown Recovery Gate (absent or null = OFF). The simulation creates it on this dataset (its detector
   // starts at the first loaded session) and adds it to the entry gates.
   drawdown?: DrawdownGateConfig | null;
+  // engine revision 1.5.0: the S1 staged trailing stop of this book (absent or null = OFF: the 1.4.0 path) and its
+  // CPU-only detail rows (diagnostics)
+  staged?: StagedBookConfig | null;
+  stagedDetail?: boolean;
 }
 
 export interface Excursion {
@@ -455,6 +467,7 @@ export interface Simulation {
   markChanges: { t: number[]; marked: number[] } | null; // minute-marked net at each change (recordMinuteMarks)
   entryMethod: EntryMethod; // v1.3.0
   rules: PositionRules | null; // v1.3.0: the initial risk stop / trend retention (null with both OFF)
+  staged?: StagedTracker; // engine revision 1.5.0: present only with the staged trailing stop ON
 }
 
 // The origin of a trade: the base Growth entry (the Rise entry, or v1.3.0's trend breakout), or a continuation method.
@@ -535,10 +548,34 @@ export const simulateTrading = (
   );
   const log = new DecisionLog();
   const entryMethod: EntryMethod = options.entryMethod ?? 'rise_from_recent_low';
+  // engine revision 1.5.0: the staged trailing stop (null when OFF: none of its code runs, the 1.4.0 path)
+  const staged = options.staged
+    ? new StagedTracker(options.staged, options.exit.trailingStopPercentage, options.stagedDetail === true)
+    : null;
+
+  if (staged) {
+    const errors = stagedBookErrors('G', options.staged, tau1TenthsOfFraction(options.exit.trailingStopPercentage));
+
+    if (errors.length) throw new Error(`staged trailing stop: ${errors.join('; ')}`);
+  }
+
   // v1.3.0: the initial risk stop / trend retention. Null with both OFF: none of their code runs (the v1.2.0 paths).
+  // Revision 1.5.0: with the staged stop ON the rules' manager gets the stage's onEntry hook (RULE_SPECIFICATION §1.1).
   const rules =
     options.rules && (options.rules.initialStop || options.rules.retention)
-      ? new PositionRules(ds, options.rules, book, options.exit, options.book, log)
+      ? new PositionRules(
+          ds,
+          staged
+            ? {
+                ...options.rules,
+                afterEntry: (mgr, _lot, trade, s) => staged.onEntry(mgr, trade.entryRawPrice, s, ds.sClose[s]!)
+              }
+            : options.rules,
+          book,
+          options.exit,
+          options.book,
+          log
+        )
       : null;
   // The initial risk stop's decision-time availability, wherever an entry is decided (a failure is noted once per
   // check; the caller records the blocked decision).
@@ -857,6 +894,8 @@ export const simulateTrading = (
       const instruction = rules!.instructionOf(exit);
 
       if (instruction?.partial) {
+        staged?.onExitEvent(exit.reason, s, exit.price, book.position!.exit, false);
+
         const fill = rules!.partialSale(s, exit);
 
         realized += fill.net;
@@ -873,6 +912,8 @@ export const simulateTrading = (
       const machine = partials
         ? { a: m.continuationActive, h: m.continuationHigh, st: m.continuationStart, w: m.continuationWindows }
         : null;
+      staged?.onExitEvent(exit.reason, s, exit.price, position.exit, true);
+
       const trade = book.close(s, exit);
       const fill = rules!.finalize(trade, s, exit, sharesSold, principalRepaid);
 
@@ -949,6 +990,8 @@ export const simulateTrading = (
         const exit = book.exitAt(k);
 
         if (exit) {
+          staged?.onExitEvent(exit.reason, s, exit.price, book.position!.exit, true);
+
           const trade = book.close(s, exit);
 
           realized += trade.net;
@@ -959,6 +1002,10 @@ export const simulateTrading = (
 
       if (book.fillAt(k)) {
         const trade = book.open(s, k);
+
+        // revision 1.5.0: the stage's onEntry hook (with the optional rules it runs inside onFill, on their manager)
+        if (staged && !rules) staged.onEntry(book.position!.exit, trade.entryRawPrice, s, ds.sClose[s]!);
+
         const base = byTrade.get(trade);
         const gatedFill = gates ? gates.afterFill(trade) : false;
 
@@ -1014,6 +1061,9 @@ export const simulateTrading = (
       throw new Error(`an eligibility bar of ${ds.dates[s]} ends after its close`);
 
     book.afterSession(s);
+    // revision 1.5.0: the stage's afterSession hook (ShadowBook.afterSession's condition: open, not its entry session)
+    if (staged && book.position && book.position.trade.entryIndex !== s)
+      staged.afterSession(book.position.exit, s, ds.sClose[s]!);
     rules?.afterSession(s); // v1.3.0: the trend-retention count at the completed close
     continuation?.afterSession(s);
     gates?.afterSession(s);
@@ -1057,7 +1107,8 @@ export const simulateTrading = (
     gates,
     markChanges,
     entryMethod,
-    rules
+    rules,
+    ...(staged ? { staged } : {})
   };
 };
 

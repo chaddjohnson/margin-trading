@@ -40,6 +40,8 @@ import type { GateRuntime } from '../growth-trading/entryGates.ts';
 import type { StopFill, StrategyParams } from '../shared-margin-portfolio/strategy.ts';
 import { type Sym, economics, growthKey, growthVersion, resolution, symbols } from './context.ts';
 import type { SymDoor } from './data.ts';
+import { type StagedBookConfig, bookKeySuffix } from '../staged-stop/config.ts';
+import type { StagedLite, StagedRow } from '../staged-stop/tracker.ts';
 
 export type Family = 'D1' | 'G';
 export type BookId = 'D1:GDX' | 'D1:VGT' | 'G:GDX' | 'G:VGT';
@@ -294,7 +296,13 @@ const EMPTY_SCAN = { signals: [], evaluableBars: 0, barsAtOrAboveThreshold: 0 };
 export const simulateGrowth = (
   sd: SymDoor,
   params: RiseTradingParams,
-  options: { friction?: Friction; recordMinuteMarks?: boolean } = {}
+  // staged: the Growth engine revision 1.5.0 option (absent or null = OFF: the unchanged 1.4.0 path)
+  options: {
+    friction?: Friction;
+    recordMinuteMarks?: boolean;
+    staged?: StagedBookConfig | null;
+    stagedDetail?: boolean;
+  } = {}
 ): { simulation: Simulation; decisions: number } => {
   assertTradingParams(params);
 
@@ -339,7 +347,8 @@ export const simulateGrowth = (
       params.initialStop || params.retention
         ? { initialStop: params.initialStop ?? null, retention: params.retention ?? null }
         : null,
-    drawdown: params.drawdownGate ?? null
+    drawdown: params.drawdownGate ?? null,
+    ...(options.staged ? { staged: options.staged, stagedDetail: options.stagedDetail === true } : {})
   });
 
   return { simulation, decisions: decisions.length };
@@ -351,11 +360,15 @@ export const runGrowthBook = (
   sd: SymDoor,
   window: { from: string; to: string },
   config: GrowthConfig,
-  options: { friction?: Friction; costBps?: number } = {}
-): VBook => {
+  // staged: the Growth engine revision 1.5.0 option (absent or null = OFF: this function's 1.4.0 result, unchanged)
+  options: { friction?: Friction; costBps?: number; staged?: StagedBookConfig | null; stagedDetail?: boolean } = {}
+): VBook & { staged?: StagedLite; stagedRows?: StagedRow[] } => {
   const c = options.costBps === undefined ? config : { ...config, costBpsPerSide: options.costBps };
   const params = growthParamsOf(c, sd.symbol, window);
-  const { simulation: sim } = simulateGrowth(sd, params, { friction: options.friction });
+  const { simulation: sim } = simulateGrowth(sd, params, {
+    friction: options.friction,
+    ...(options.staged ? { staged: options.staged, stagedDetail: options.stagedDetail === true } : {})
+  });
   const ds = sd.ds;
   const id = bookId('G', sd.symbol);
   const sellFraction = params.retention ? fractionOf(params.retention.sellPercent) : 1;
@@ -429,7 +442,7 @@ export const runGrowthBook = (
 
   return {
     book: id,
-    key: growthKeyOf(c),
+    key: `${growthKeyOf(c)}${bookKeySuffix(options.staged)}`,
     trades,
     signals: trades.length,
     firstDecision: trades[0] ? ds.dates[trades[0].dS]! : null,
@@ -439,6 +452,7 @@ export const runGrowthBook = (
       realized: sim.realized,
       minuteDd: sim.minuteDrawdown.maximum,
       dailyDd: sim.dailyDrawdown.maximum
-    }
+    },
+    ...(sim.staged ? { staged: sim.staged.lite(), ...(sim.staged.rows ? { stagedRows: sim.staged.rows } : {}) } : {})
   };
 };
