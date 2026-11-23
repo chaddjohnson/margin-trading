@@ -2,33 +2,34 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-23T18:05Z (clock). **Status: INCOMPLETE — E0–E3 done; GPU Phase 8 ACCEPTED** (record
-  `config/gpu-backend/acceptance.json` sha256 `c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126`, binary
-  gb8 `86b30753…`, source revision `6d2cd141`, committed `0d61e71b`; `verify-acceptance.sh --rebuild --device` VERIFIED;
-  out-of-band pin `~/.local/share/margin-trading-gpu/acceptance-pins/acceptance-gpu-phase8-c02a8a92.json` + `pins.jsonl`;
-  record-in-force rerun 42/42 tests, 30/30 study preflights PASS, `ec1aa238`). Phase 8 amendments E3 (two declared
-  consequences in Priority 5A's byte pin of riseTrading.ts; live-dist check), E4 (generator fixes; negative 82/82 and
-  tamper 23/23 rerun), E5 (one rerun after a positive-control flake). **Priority 4 engineering chain RUNNING** (unit
-  `vgl0ss-eng`, started 18:04:22Z, log `research/vg-l0-staged-stop/results/logs/engineering.log`). Protocol not frozen.**
+- **Updated:** 2026-11-23T18:18Z (clock). **Status: INCOMPLETE — E0–E5 sealed (`results/engineering/gates.json` sha256
+  `c38cacbe…`, commit `234f05c9`); PROTOCOL P4-S1 1.0.0 FROZEN 18:17:12Z (`results/protocol-freeze.json` sha256
+  `ea75d7ed…`, protocol sha256 `bd57ea2a476be9735e3f199749e511d184f247b9c903dd5853e847899de8b6f7`, code digest
+  `431493de…`, acceptance `c02a8a92…`; commit `5ff3bc0a`). Stage A COMPLETE (`11a12b26`, A0 PASS); fold C19 RUNNING (outer unit `vgl0ss-fold-C19`, log `results/logs/fold-C19.txt`). Earlier Stage A units:
+  `vgl0ss-fold-ABLATE` (log `results/logs/fold-ABLATE.txt`), inner unit `vgl0ss-ablation` (log `results/logs/ablation.log`),
+  started 18:17:27Z.** GPU Phase 8 ACCEPTED (record sha256 `c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126`,
+  verified and pinned out of band).
 - **Brief:** `brief/BRIEF.md` (verbatim copy of the user's upload), sha256
   `720e0b36e815b111a5deac41c7454bd497224dd78c10adaa01fa8017d78998ae`, 295 lines / 30,788 bytes; final line
   "**PRIORITY 4 COMPLETE — NO STRATEGY ADOPTED OR DEPLOYED — AWAITING REVIEW**" present (not truncated).
 - **Authorized:** E0–E5 engineering, ablations, paired CTRL/EXP search, informed lanes, qualification, chronological
   checks, reports, ZIP, commit and push of the research branch. **Not authorized:** adoption, merging into `main`,
   deployment, broker access, editing frozen New L0 / N/original research.
-- **Running processes:** `tools/vg-l0-staged-stop/engineering.sh` in unit `vgl0ss-eng` (slice `vgl0ss.slice`); done when
-  the log ends "ENGINEERING EVIDENCE COMPLETE" (or "FAILED: …"). Do NOT launch another GPU job while it runs (E5 bench).
-  Do NOT edit any pinned file (record: CPU closure, CUDA, host, policy incl. `tools/gpu-phase8/accept.ts`) — the record
-  would go stale.
+- **Running processes:** `research/vg-l0-staged-stop/chains/fold.sh` (CUT=C19) in unit `vgl0ss-fold-C19`; it runs
+  each official stage as its own unit (`vgl0ss-<step>`) and commits each sealed block itself (only `results/`). Check
+  `systemctl --user is-active vgl0ss-fold-C19` and the log for "FOLD C19 COMPLETE" / "FAILED". Do NOT launch another
+  GPU job, edit any pinned file (the chain, tools, docs, code) or commit while a chain runs (index lock).
 - **Priority 4 code (committed, not frozen):** `src/vg-l0-staged-stop/{budget,qualify,select,stats,stages,main}.ts`,
   tests `tests/study.test.ts` (18 pass) + `tests/space.test.ts`; tools `tools/vg-l0-staged-stop/{common,bench}.ts`,
   `engineering.sh`, `launch.sh`; chain `research/vg-l0-staged-stop/chains/fold.sh`; DRAFT `PROTOCOL.md` (§6 budget
   numbers to fill from the E5 benchmark), `STANDARD_ADOPTION.json` (preflight blocked only by the stale record).
-- **Next steps (in order):** (1)–(2) done; (3) running: `REC=c02a8a92… engineering.sh`; (4) fill PROTOCOL §6.1–6.2 from
-  `results/engineering/E5/bench.json`, re-record the adoption's protocol sha256 (and adoptedAt), commit;
-  `GPU_POLICY_PURPOSE=official-optimization npm run vg-l0ss -- gates`, commit; `… npm run vg-l0ss -- freeze`, commit;
-  (5) `CUT=ABLATE`, then `CUT=C19|C21|C24` `research/vg-l0-staged-stop/chains/fold.sh` in launch units (RUN_COMMANDS.md
-  §3); (6) analysis, reports, ZIP, push.
+- **Next steps (in order):** (5) running: `CUT=ABLATE`; then, each as its own unit after the previous completes:
+  `tools/vg-l0-staged-stop/launch.sh vgl0ss-fold-C19 /home/chad/projects/margin-trading/research/vg-l0-staged-stop/results/logs/fold-C19.txt -- /usr/bin/env CUT=C19 /bin/bash research/vg-l0-staged-stop/chains/fold.sh`
+  (then C21, then C24 likewise); resume after a failure with `START=<step>` (+ `RESUME=1` for an interrupted job), never
+  rerunning a sealed stage; (6) report-only analyses (RUN_COMMANDS.md §4: `analyze`, `pairs`, `diagnose`), reports
+  (REPORT, IMPLEMENTATION_VERIFICATION §5, ablation, search, risk, final comparison, DECISION_REGISTER, READ_FIRST),
+  regression, ZIP with SHA256SUMS (+ copy to `~/.local/share/margin-trading-gpu/handoffs/`), final checkpoint, push
+  (unsandboxed; verify `git ls-remote origin research/vg-l0-staged-trailing-stop`).
 
 ## Environment
 
@@ -57,8 +58,9 @@
 | E3/E4 Phase 8 acceptance campaign | complete 13:02:15Z → 17:38:36Z (`aac6c0e1`); tests chain 17:40–17:52Z (`8c464ac6`); record ACCEPTED 18:03Z (`0d61e71b`, sha256 `c02a8a92…`), verified + pinned (`ec1aa238`) | `research/gpu-phase8/` (PROTOCOL.md frozen; preflight PASS); chain `chains/final.sh` (B1, E3, E4, A1 parity ≈155,600 random genomes, A2, R1–R3, A3 incl. Stage B lanes sb-C19/C21/C24, A4 incl. p4 mini set, Q1, A5, A6); then `chains/tests.sh`, `tools/gpu-phase8/accept.ts` |
 | E3 parity campaign | complete | A1 63 runs / 159,240 subjects / 0 mismatches (155,600 random genomes); staged mini GPU = CPU; Q1; sanitizer; sustained |
 | E4 acceptance + regression | record done; P4 E4 evidence running | npm test 1,875 / 1,859 pass / 12 fail = 7 known + 3 record-in-force (pass after the record) + 2 declared consequences (Priority 5A byte pin; Phase 8 E3); Strategy Lab 314 Vitest, 81/81 e2e; portfolio parity; integrity 5/5 |
-| E5 benchmark + protocol freeze | not started | — |
-| Ablations | not started | — |
+| E4 (P4 evidence) | complete 18:04–18:06Z | `results/engineering/E4/` verify-acceptance VERIFIED; runtime refusals; official gate open D19/D21/D24 |
+| E5 benchmark + protocol freeze | complete 18:06–18:17Z | `E5/bench.json` (125,108 requested, 539 s, 232/s at 8 lanes); gates sealed `234f05c9`; protocol frozen `5ff3bc0a` |
+| Ablations | complete 18:17:25–18:17:45Z (`11a12b26`) | `results/ablation/`: 146 subjects × 4 frictions = 584 GPU evaluations; A0 PASS (incumbents OFF = sealed figures) |
 | Paired search C19/C21/C24 + informed | not started | — |
 | Qualification / selection / intervals / validation | not started | — |
 | Reports, ZIP, push | not started | — |
