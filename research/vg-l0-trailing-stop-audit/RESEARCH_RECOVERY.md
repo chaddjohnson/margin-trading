@@ -76,7 +76,14 @@
   - The secret and personal-data scan of the namespace is clean.
   - Copy outside the repository: `~/.local/share/margin-trading-gpu/handoffs/vg-l0-trailing-stop-audit.zip` (same
     sha256). The ZIP's own SHA256SUMS.txt covers the files it lists, not this checkpoint's later delivery section.
-- **Push:** `git push -u origin research/vg-l0-trailing-stop-audit` (new remote branch, no force). Verification with
-  `git ls-remote` is recorded in the follow-up commit.
+- **Push:** `git push -u origin research/vg-l0-trailing-stop-audit` (new remote branch, no force; run outside the Bash
+  sandbox, which has no DNS for github.com).
+  - At 2026-11-23T10:05:26Z, `git ls-remote origin research/vg-l0-trailing-stop-audit` =
+    `39513efd82d0c6f6ceb9b8d0c2157f09873ca4c6` = the local HEAD (the ZIP commit).
+  - This checkpoint update is the next commit on the same branch, pushed the same way.
+  - `main` / `origin/main` unchanged (`3606f4b3`). No merge, no pull request, no deployment.
+- **The repository copy of SHA256SUMS.txt** is the one inside the ZIP. It covers the documentation commit `d5006b74`.
+  This checkpoint changed afterwards (the delivery section), so in the repository `sha256sum -c` reports
+  RESEARCH_RECOVERY.md as modified; every other listed file verifies.
 - **Scratch:** the ZIP build and extraction directories in the session scratchpad are temporary. Nothing was restored
   from any archive.
