@@ -75,3 +75,18 @@
   the same commands as `chains/final.sh` steps 2–3 (`chains/policy-rerun.sh`); the outputs of 13:03/13:07Z are kept
   in `results/policy/superseded-54261ea0/` (also in Git at `aac6c0e1`).
 - **Effect.** No gate, threshold, rule or campaign evidence changes.
+
+## E5 — 2026-11-23T18:03:31Z — the record: one rerun after a positive-control flake in P5 (no change)
+
+- **Attempt 1 (18:02Z).** `accept.ts` ended NOT_ACCEPTED with one blocker, P5: besides the two record-in-force tests
+  (expected before the record), `enforcement.test.ts` "engine runtime (controls): the probe detects Maglev; without the
+  guard an explicitly forked child runs it" failed at its **positive control** — `noGuard.forkExplicit.maglev` was
+  `false` (the probe, sampling the active tier every 500 iterations, did not observe Maglev in a deliberately
+  unprotected child that dropped the flag; tiering is timing-dependent and can pass from baseline to Turbofan between
+  samples). Every protection assertion of the test passed (protected main, workers, inherited fork: no Maglev), as did
+  the guard tests. The same test passed in the npm test of the tests chain (17:40–17:45Z) and in the three dry runs. No
+  record was written (the record in force stayed Phase 7's `bb0e3fcf…`); the attempt's draft, policy-test output and
+  log are kept in `results/policy/superseded-accept-1/`.
+- **Attempt 2 (immediately after, unchanged tree, load average 2.2):** ACCEPTED; `config/gpu-backend/acceptance.json`
+  sha256 `c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126`. Disclosed as a flaky positive control of the
+  enforcement suite (a sensitivity check of the probe, not of the guard); no code, gate or threshold changed.
