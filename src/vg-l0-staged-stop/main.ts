@@ -113,6 +113,10 @@ const pinnedFiles = [
   'tools/vg-l0-staged-stop/engineering.sh',
   'tools/vg-l0-staged-stop/bench.ts',
   'tools/vg-l0-staged-stop/analyze.ts',
+  'tools/vg-l0-staged-stop/diagnose.ts',
+  'tools/vg-l0-staged-stop/tools.ts',
+  'tools/vg-l0-staged-stop/common.ts',
+  'research/vg-l0-staged-stop/RUN_COMMANDS.md',
   'tools/vg-l0-staged-stop/launch.sh',
   'research/vg-l0-staged-stop/chains/fold.sh'
 ];
