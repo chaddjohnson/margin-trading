@@ -79,3 +79,11 @@
   on D19 = the C19 training door) printed the mini lanes' shortlist centre nets and staged settings to the terminal. This
   is engineering output of a non-study schedule, viewed after the E0 freeze of the rule and domains and before the
   protocol freeze; no protocol choice depends on it. Engineering checks print equality/coverage only from here on.
+
+- 2026-11-23T13:30Z: a smoke test of the report-only CPU diagnostic tool (`tools/vg-l0-staged-stop/diagnose.ts`, door D19
+  opened with use `engineering`, logged in `results/doors.jsonl`) printed one comparison: New L0 versus New L0 with all
+  three books staged at A 30 % and τ₂ = round(0.5 τ₁), on D19 (the C19 training door): Δ net −$14,482, Δ marked DD
+  +$5,385, 2 staged exits, 1 forfeited trend, 4 newly funded / 1 no longer funded lot. Engineering output of a tool
+  test, viewed before the protocol freeze; the rule, domains, search spaces and decision criteria were frozen earlier
+  (E0) or are written independently of it; no protocol choice depends on it. It is one of the ablation's predeclared
+  points (on D19 instead of D24).
