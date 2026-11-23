@@ -1,0 +1,126 @@
+{
+ "kind": "gpu-phase8 E8 npm test",
+ "t": "2026-11-23T17:55:00.827Z",
+ "command": "npm test (node --test --test-concurrency=4 src/**/*.test.ts)",
+ "totals": {
+  "tests": 1875,
+  "pass": 1859,
+  "fail": 12,
+  "cancelled": 0,
+  "skipped": 4
+ },
+ "baseline": {
+  "tests": 1723,
+  "fail": 7,
+  "source": "research/gpu-phase6/results/tests/npm-test.json (after Phase 6: 1,723 tests, 7 known failures); GPU Phase 7 adds 14 risk-envelope tests"
+ },
+ "failures": [
+  {
+   "file": "src/gpu-backend/tests/enforcement.test.ts",
+   "test": "the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+   "known": false
+  },
+  {
+   "file": "src/gpu-backend/tests/policy.test.ts",
+   "test": "MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)",
+   "known": false
+  },
+  {
+   "file": "src/intraday-study/tests/study.test.ts",
+   "test": "match the hashes recorded when the study started, except the recorded post-study changes",
+   "known": true
+  },
+  {
+   "file": "src/minute-optimizer/tests/goldenMaster.test.ts",
+   "test": "src/app/allIn.ts and src/app/allin-original.ts are byte-for-byte unchanged",
+   "known": true
+  },
+  {
+   "file": "src/research-standard/tests/preflight.test.ts",
+   "test": "every study that declares an adoption passes the preflight",
+   "known": false
+  },
+  {
+   "file": "src/study7-runners/tests/runners.test.ts",
+   "test": "parity with the sealed Study 7 final door, and determinism",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "the original is untouched",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "checked-in settings",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "brief settings",
+   "known": true
+  },
+  {
+   "file": "src/trailing-buy/tests/goldenMaster.test.ts",
+   "test": "volatile synthetic walks with gaps exercise every exit path, restrictions and resets",
+   "known": true
+  },
+  {
+   "file": "src/vg-growth-funding-lifecycle/tests/parity.test.ts",
+   "test": "the canonical source is the pinned riseTrading.ts v1.4.0",
+   "known": false
+  },
+  {
+   "file": "src/vg-growth-funding-lifecycle/tests/parity.test.ts",
+   "test": "it differs from simulateTrading only by the recorded LIFECYCLE insertions",
+   "known": false
+  }
+ ],
+ "unexpected": [],
+ "declaredConsequences": {
+  "tests": [
+   {
+    "file": "src/vg-growth-funding-lifecycle/tests/parity.test.ts",
+    "test": "the canonical source is the pinned riseTrading.ts v1.4.0"
+   },
+   {
+    "file": "src/vg-growth-funding-lifecycle/tests/parity.test.ts",
+    "test": "it differs from simulateTrading only by the recorded LIFECYCLE insertions"
+   }
+  ],
+  "checks": {
+   "basePinned": true,
+   "baseOrchestratorDiff": true,
+   "p5aUnchangedSinceBase": true,
+   "p5aBehaviourPasses": true,
+   "offParity150Passes": true
+  },
+  "accepted": true,
+  "rule": "amendment E3: the completed Priority 5A study pins the bytes of riseTrading.ts v1.4.0; the declared Growth engine revision 1.5.0 edits it. Accepted only with the computed checks (the study verifies at its own commit 5d587bb2; its behaviour test and the OFF-parity fixture pass at HEAD). Not relaxed or edited; they remain failing at HEAD and must be disclosed (a merge into main inherits them)"
+ },
+ "recordInForceBeforeRecord": {
+  "tests": [
+   {
+    "file": "src/gpu-backend/tests/enforcement.test.ts",
+    "test": "the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not"
+   },
+   {
+    "file": "src/gpu-backend/tests/policy.test.ts",
+    "test": "MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+   },
+   {
+    "file": "src/research-standard/tests/preflight.test.ts",
+    "test": "every study that declares an adoption passes the preflight"
+   }
+  ],
+  "staleReason": true,
+  "rule": "amendment A4: accepted only with the stale-enforcement reason; rerun after the new record must pass (results/tests/record-in-force-after.txt)"
+ },
+ "rootTsc": "exit 0",
+ "eslintGpu": [
+  "✖ 1 problem (0 errors, 1 warning)",
+  "exit=0"
+ ],
+ "summary": "1875 tests, 1859 pass, 12 fail (7 known pre-existing, 3 record-in-force before the new record (A4), 2 declared consequences of the engine revision (E3), 0 unexpected), 4 skipped",
+ "pass": true
+}

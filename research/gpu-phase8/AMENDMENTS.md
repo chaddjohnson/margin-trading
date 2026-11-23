@@ -35,3 +35,31 @@
     reason; at most 3).
   - After the record: `results/tests/record-in-force-after.txt` reruns the policy, enforcement and preflight tests and
     every study preflight; all must pass.
+
+## E3 — 2026-11-23T17:54:54Z — E8: two declared consequences of the Growth engine revision; E9: the live-dist check computed (after the tests chain, before the record)
+
+- **What the tests chain showed** (`results/logs/tests-chain.txt`, 17:40:20Z → 17:52:07Z). npm test: 1,875 tests, 1,859
+  pass, 12 fail = the 7 known pre-existing + the 3 record-in-force tests (A4, E2) + **two failures of the completed
+  Priority 5A study** (`src/vg-growth-funding-lifecycle/tests/parity.test.ts`: "the canonical source is the pinned
+  riseTrading.ts v1.4.0" and "it differs from simulateTrading only by the recorded LIFECYCLE insertions"). Root tsc,
+  ESLint, Strategy Lab (typecheck, lint, Vitest 314, build, Playwright 81/81) and the portfolio parity passed; integrity
+  5/5.
+- **Why they fail.** That study pins the **bytes** of `src/growth-trading/riseTrading.ts` v1.4.0 (sha256 `78b3423c…`) and
+  diffs its copied orchestrator against a fixed line range of it. The Growth engine revision 1.5.0 — declared in Priority
+  4's RULE_SPECIFICATION §5 and in this record's CPU closure (`accept.ts`'s declared set; the integrity check confirms
+  the changed files are exactly the declared ones) — inserts the option-gated staged hooks into that file, so both fail by
+  construction. The same situation is recorded for the 2026-11-12 hold-unit change (completed studies' byte or digest
+  guards cannot hold after a required engine edit; they are verified at their own commit, never relaxed).
+- **Change (tools only).** `tools/gpu-phase8/tests-record.ts` accepts exactly these two tests as *declared consequences*,
+  and only if checks computed in the tool hold: (a) at the base commit `5d587bb2` the file is the pinned v1.4.0 and 5A's
+  diff equals its recorded `orchestrator.diff` (the study verifies at its own commit); (b) 5A's code and research are
+  unchanged since the base; (c) in the same npm run, 5A's behavioural test ("real data (D24): L0 lifecycle books equal
+  the canonical books", on the current engine) and the revision 1.5.0 OFF-parity fixture test pass. All five hold
+  (`results/tests/npm-test.json` `declaredConsequences`). The 5A tests are not edited; they remain failing at HEAD of
+  this branch and are disclosed (a merge into `main` would inherit them; resolving that is a review decision).
+- **E9.** `chains/tests.sh` (copied from Phase 7) counted live-dist files newer than `results/protocol-freeze.json`, which
+  this study does not have: `find` failed and its count 0 was vacuous. The tool now counts files of
+  `apps/strategy-lab/dist` newer than this study's protocol commit time (2026-11-23T12:55:39Z): 0 (the newest is from
+  2026-11-17T23:49:54Z).
+- **Effect.** No rule, threshold or campaign evidence changes; the classification is narrower than "known failure" (two
+  named tests, conditional on computed checks).
