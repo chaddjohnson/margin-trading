@@ -2,34 +2,46 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-23T19:58Z (clock). **Status: INCOMPLETE — E0–E5 sealed (`results/engineering/gates.json` sha256
-  `c38cacbe…`, commit `234f05c9`); PROTOCOL P4-S1 1.0.0 FROZEN 18:17:12Z (`results/protocol-freeze.json` sha256
-  `ea75d7ed…`, protocol sha256 `bd57ea2a476be9735e3f199749e511d184f247b9c903dd5853e847899de8b6f7`, code digest
-  `431493de…`, acceptance `c02a8a92…`; commit `5ff3bc0a`). Stage A COMPLETE (`11a12b26`, A0 PASS); fold C19 COMPLETE 18:18–18:58Z (`d57146c3` … `142a1a4f`); fold C21 COMPLETE 18:58:53–19:54:41Z (`e26011bd` … `63d49e9c`); fold C24 (with informed lanes, decomposition and the single FULL validation) is next (outer unit `vgl0ss-fold-C24`, log `results/logs/fold-C24.txt`). Earlier Stage A units:
-  `vgl0ss-fold-ABLATE` (log `results/logs/fold-ABLATE.txt`), inner unit `vgl0ss-ablation` (log `results/logs/ablation.log`),
-  started 18:17:27Z.** GPU Phase 8 ACCEPTED (record sha256 `c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126`,
-  verified and pinned out of band).
+- **Updated:** 2026-11-23T21:45Z (clock). **Status: INCOMPLETE — every official stage is COMPLETE and sealed; reports,
+  regression, ZIP and push remain.** E0–E5 sealed (`results/engineering/gates.json` sha256 `c38cacbe…`, commit
+  `234f05c9`); PROTOCOL P4-S1 1.0.0 FROZEN 18:17:12Z (`results/protocol-freeze.json` sha256 `ea75d7ed…`, protocol sha256
+  `bd57ea2a476be9735e3f199749e511d184f247b9c903dd5853e847899de8b6f7`, code digest `431493de…`, acceptance `c02a8a92…`;
+  commit `5ff3bc0a`). Stage A COMPLETE (`11a12b26`, A0 PASS); fold C19 COMPLETE (`d57146c3` … `142a1a4f`); fold C21
+  COMPLETE (`e26011bd` … `63d49e9c`); fold C24 COMPLETE 19:56:32–21:30:31Z (`d52157d2` … `490325a3`: search, gate R
+  IDENTICAL, extension, informed I1–I4, qualification, selection, decomposition D24, FROZEN_SELECTION `4210775b…`, FULL
+  authorization, validation on FULL once, outcome). **Sealed outcome (`results/outcome.json` sha256 `949756c9…`): label
+  INCONCLUSIVE — more than 25 % of an arm's lanes budget-bound after the extension block (EXP C21 48.4 %, C24 48.4 %);
+  never to be changed.** 26/26 seals verify (21:33Z). GPU Phase 8 ACCEPTED (record sha256
+  `c02a8a928946b5acc4df61a7fceb3e5656bf6d12ee33749d615edc7c54fad126`, verified and pinned out of band).
 - **Brief:** `brief/BRIEF.md` (verbatim copy of the user's upload), sha256
   `720e0b36e815b111a5deac41c7454bd497224dd78c10adaa01fa8017d78998ae`, 295 lines / 30,788 bytes; final line
   "**PRIORITY 4 COMPLETE — NO STRATEGY ADOPTED OR DEPLOYED — AWAITING REVIEW**" present (not truncated).
 - **Authorized:** E0–E5 engineering, ablations, paired CTRL/EXP search, informed lanes, qualification, chronological
   checks, reports, ZIP, commit and push of the research branch. **Not authorized:** adoption, merging into `main`,
   deployment, broker access, editing frozen New L0 / N/original research.
-- **Running processes:** `research/vg-l0-staged-stop/chains/fold.sh` (CUT=C24) in unit `vgl0ss-fold-C24` once launched; it runs
-  each official stage as its own unit (`vgl0ss-<step>`) and commits each sealed block itself (only `results/`). Check
-  `systemctl --user is-active vgl0ss-fold-C24` and the log for "FOLD C24 COMPLETE" / "FAILED". Do NOT launch another
-  GPU job, edit any pinned file (the chain, tools, docs, code) or commit while a chain runs (index lock).
+- **Running processes:** none (fold C24's unit `vgl0ss-fold-C24` inactive since 21:30:31Z; post.sh finished 21:32:11Z).
+  No further official GPU stage is authorized or planned.
 - **Priority 4 code (committed, not frozen):** `src/vg-l0-staged-stop/{budget,qualify,select,stats,stages,main}.ts`,
   tests `tests/study.test.ts` (18 pass) + `tests/space.test.ts`; tools `tools/vg-l0-staged-stop/{common,bench}.ts`,
   `engineering.sh`, `launch.sh`; chain `research/vg-l0-staged-stop/chains/fold.sh`; DRAFT `PROTOCOL.md` (§6 budget
   numbers to fill from the E5 benchmark), `STANDARD_ADOPTION.json` (preflight blocked only by the stale record).
-- **Next steps (in order):** (5) Stage A, C19 and C21 complete; fold C24 (run from the repository root):
-  `tools/vg-l0-staged-stop/launch.sh vgl0ss-fold-C24 /home/chad/projects/margin-trading/research/vg-l0-staged-stop/results/logs/fold-C24.txt -- /usr/bin/env CUT=C24 /bin/bash research/vg-l0-staged-stop/chains/fold.sh`
-  (search, gate-r, extend, informed, qualify, select, decompose, freeze-selection, authorize-full, validate, outcome); resume after a failure with `START=<step>` (+ `RESUME=1` for an interrupted job), never
-  rerunning a sealed stage; (6) report-only analyses (RUN_COMMANDS.md §4: `analyze`, `pairs`, `diagnose`), reports
-  (REPORT, IMPLEMENTATION_VERIFICATION §5, ablation, search, risk, final comparison, DECISION_REGISTER, READ_FIRST),
-  regression, ZIP with SHA256SUMS (+ copy to `~/.local/share/margin-trading-gpu/handoffs/`), final checkpoint, push
-  (unsandboxed; verify `git ls-remote origin research/vg-l0-staged-trailing-stop`).
+- **Post-freeze report-only work:** `post.sh` ran 21:31:36–21:32:11Z (log `reports/diagnostics/post.log`): analyze
+  tables, `pairs`/`diagnose` selection C24 (D24) and decomposition (D24, FULL), mechanism tables, lots C24 FULL (CPU =
+  sealed GPU whole-run net and DD 24/24; re-run 21:40Z after de-duplicating role names), tails (re-run after naming the
+  benchmarks by their benchmark origin), census. Tools `tools/vg-l0-staged-stop/{lots,tails,census}.ts`, `post.sh`,
+  `bundle.sh`. Committed in the "post-fold diagnostics" commit after this update.
+- **Key C24 facts (sealed; for the reports):** primary D̄ C24 +$8,761 [L90 $4,059, U90 $13,475] not material; risk
+  non-inferior (none clearly worse); mechanism confirmed (45/64 ON, advantage +$7,174, L90 $4,654); EXP 64.1 % budget-bound
+  → extension → 48.4 % still. Validation 2025-01-02…2026-10-30 (FULL, once): CTRL primary +$55,308 (DD $25,430); EXP
+  primary +$60,162 (DD $20,373) vs its all-OFF projection +$75,051 (S1 cost −$14,889 on validation); New L0 +$96,884,
+  N/original +$94,670; informed EXP primaries I1 +$102,353, I2 +$82,820, I3 +$98,298, I4 = OFF +$94,670. ON reps vs own
+  all-OFF on validation: mean −$1,398 (17+/20=/8−). T3 C24 −$5,156 [−$10,505, +$101]. Chronological check: not passed for
+  either arm. Ledger 14,307,206 / 25,000,000 (+ decomposition 9,156).
+- **Next steps (in order):** (1) commit the post-fold diagnostics; (2) reports: SEARCH_REPORT §4–§5, RISK_REPORT,
+  FINAL_COMPARISON, REPORT (executive), DECISION_REGISTER, READ_FIRST, IMPLEMENTATION_VERIFICATION §7, REPRODUCIBILITY
+  hashes; (3) regression (npm test, preflight, verify-acceptance); (4) ZIP `tools/vg-l0-staged-stop/bundle.sh
+  /tmp/claude-1000/vgl0ss-bundle` + copy to `~/.local/share/margin-trading-gpu/handoffs/`; (5) final checkpoint COMPLETE,
+  commit, push unsandboxed, verify `git ls-remote origin research/vg-l0-staged-trailing-stop`.
 
 ## Environment
 
@@ -62,10 +74,11 @@
 | E5 benchmark + protocol freeze | complete 18:06–18:17Z | `E5/bench.json` (125,108 requested, 539 s, 232/s at 8 lanes); gates sealed `234f05c9`; protocol frozen `5ff3bc0a` |
 | Ablations | complete 18:17:25–18:17:45Z (`11a12b26`) | `results/ablation/`: 146 subjects × 4 frictions = 584 GPU evaluations; A0 PASS (incumbents OFF = sealed figures) |
 | Fold C19 (secondary) | complete 18:18:01–18:58:22Z | search 2,456,999 requested / 1,118 s (`d57146c3`); gate R identical (`ddacfd64`); extension TRIGGERED (EXP 32/64 = 50 % budget-bound, all GB0.VD1; CTRL 2) 1,182,219 requested, EXP GB0.VD1 still 32/32 budget-bound (`918a2fd1`); qualification 469,572 (`486fc5a0`); selection (`7e231a96`): D̄ $2,340 [L90 $560, U90 $4,168], not material; mechanism confirmed (78 % ON, advantage $8,411, L90 $6,089); risk non-inferior; interval D21 47,700 (`142a1a4f`) |
-| Fold C21 (primary) | complete 18:58:53–19:54:41Z | search 2,600,440 requested (`e26011bd`); gate R identical 32/32 (`53d9da91`); extension TRIGGERED (EXP 34/64 = 53.1 %, CTRL 4/64) 1,303,677 requested, after it EXP 31/64 = 48.4 % still budget-bound (all GB0.VD1 but R5), CTRL 0 (`f0fcea6d`); qualification 499,656 (`740a9645`); selection (`a1c189dc`): D̄ $6,684 [L90 $3,809, U90 $9,605], not material (mean < $10k); mechanism confirmed (52/64 = 81 % ON, advantage $10,655, L90 $7,032); risk non-inferior on all five (principalLossLiq +$887, L90 $376; bankedDdLiq +$871, L90 $114); pooled P0: CTRL R34#1 $236,003 / DD $28,004, EXP R24#1 D1:GDX A 47.0 % τ₂ 6.4 % $252,819 / DD $17,744; interval D24 48,230 (`63d49e9c`). Records sha256 (first 16): search `735b7112…`, gate-r `2ca1a225…`, extend `fac36c51…`, qualification `2d18e555…`, selection `5d35a12e…`, intervals `70c09d58…` |
-| Fold C24 (primary) + informed | not started | — |
-| Qualification / selection / intervals / validation | not started | — |
-| Reports, ZIP, push | not started | — |
+| Fold C21 (primary) | complete 18:58:53–19:54:41Z | search 2,600,440 requested (`e26011bd`); gate R identical 32/32 (`53d9da91`); extension TRIGGERED (EXP 34/64 = 53.1 %, CTRL 4/64) 1,303,677 requested, after it EXP 31/64 = 48.4 % still budget-bound (all GB0.VD1 but R5), CTRL 0 (`f0fcea6d`); qualification 499,656 (`740a9645`); selection (`a1c189dc`): D̄ $6,684 [L90 $3,809, U90 $9,605], not material (mean < $10k); mechanism confirmed (52/64 = 81 % ON, advantage $10,655, L90 $7,032); risk non-inferior on all five (principalLossLiq +$887, L90 $376; bankedDdLiq +$871, L90 $114); pooled P0: CTRL R34#1 $236,003 / DD $28,004, EXP R24#1 D1:GDX A 47.0 % τ₂ 6.4 % $252,819 / DD $17,744; interval D23 (2022–2023) 48,230 (`63d49e9c`). Records sha256 (first 16): search `735b7112…`, gate-r `2ca1a225…`, extend `fac36c51…`, qualification `2d18e555…`, selection `5d35a12e…`, intervals `70c09d58…` |
+| Fold C24 (primary) + informed | complete 19:56:32–21:30:31Z | search 2,029,277 requested (`d52157d2`, sha `dff693ef…`); gate R identical 32/32 (`1d5e04a2`); extension TRIGGERED (EXP 41/64 = 64.1 %, CTRL 8/64) 1,219,867 requested, after it EXP 31/64 = 48.4 % still budget-bound, CTRL 0 (`743027f0`, `c69d6695…`); informed I1–I4 1,588,312 requested, every lane "triggers not met" (`6e53f91e`, `85097475…`); qualification 808,998 (1,237 members; `aa115493`, `643fd676…`); selection (`1eefbf18`, `52660d03…`): D̄ $8,761 [L90 $4,059, U90 $13,475] not material; mechanism confirmed (45/64 ON, $7,174, L90 $4,654); risk non-inferior; pooled P0 CTRL R29#1 $241,225 / DD $23,468, EXP R4#1 GDX+VGT $238,352 / DD $26,301 (all-OFF $232,478); decomposition D24 9,156 (`fbc52ddd`, `eb1e5dc8…`) |
+| Freeze, FULL validation, outcome | complete 21:28:46–21:30:31Z | FROZEN_SELECTION (`9184d683`, `4210775b…`); FULL authorization (`1556eefa`, `8baa3540…`); validation 2025-01-02…2026-10-30 on FULL once, 51,675 requested (`498ef801`, `284dc1d5…`); outcome (`490325a3`, `949756c9…`): **inconclusive (budget)** |
+| Report-only post-fold analyses | complete 21:31:36–21:32:11Z | `tools/vg-l0-staged-stop/post.sh` → `reports/diagnostics/`, `reports/tables/` (log `reports/diagnostics/post.log`) |
+| Reports, regression, ZIP, push | running (reports) | see Next steps |
 
 ## Guards
 
