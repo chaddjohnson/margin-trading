@@ -22,7 +22,10 @@ const known = (f: { file: string; test: string }) =>
 // stale-enforcement reason; they must pass in the rerun after the record (results/tests/record-in-force-after.txt)
 const recordInForce = (f: { file: string; test: string }) =>
   (f.file === 'src/gpu-backend/tests/policy.test.ts' && /^MERGE GATE: a recorded GPU acceptance still matches/.test(f.test)) ||
-  (f.file === 'src/gpu-backend/tests/enforcement.test.ts' && /^the recorded acceptance re-verifies independently/.test(f.test));
+  (f.file === 'src/gpu-backend/tests/enforcement.test.ts' && /^the recorded acceptance re-verifies independently/.test(f.test)) ||
+  // amendment E2 (GPU Phase 8): the repository test running every study's preflight fails while the record in force is
+  // stale (studies requiring the GPU backend are blocked by §9.9); it must pass in the rerun after the record
+  (f.file === 'src/research-standard/tests/preflight.test.ts' && /^every study that declares an adoption passes the preflight/.test(f.test));
 // GPU Phase 7: the record in force is stale for the evaluation change (pool.ts, toolchain.ts) and the enforcement change
 // (lab.ts, entrypoints) alike
 const staleReason = /the enforcement code changed since acceptance|the GPU evaluator was verified against other sources/.test(npm);
@@ -39,7 +42,7 @@ const npmPass =
   unexpected.length === 0 &&
   failures.length === totals.fail &&
   totals.fail === 7 + beforeRecord.length &&
-  beforeRecord.length <= 2 &&
+  beforeRecord.length <= 3 &&
   totals.cancelled === 0 &&
   totals.tests > 1710;
 

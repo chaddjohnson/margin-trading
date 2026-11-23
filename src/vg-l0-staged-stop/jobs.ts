@@ -146,12 +146,12 @@ export const runLanes = async (
   lab: EvalLab,
   plan: readonly { spec: LaneSpec; arm: Arm }[],
   budget: Budget,
-  laneBound: number,
+  laneBound: (arm: ArmKey) => number, // the arm's per-lane bound (its own move bound: budget.ts laneCaps)
   cap: number,
   reserve: number,
   stageName: string
 ) => {
-  const lanes = plan.map((p) => ({ arm: p.arm, lane: new Lane(lab, p.spec, budget, p.arm, laneBound) }));
+  const lanes = plan.map((p) => ({ arm: p.arm, lane: new Lane(lab, p.spec, budget, p.arm, laneBound(p.arm.key)) }));
   const id = (x: (typeof lanes)[number]) => `${x.arm.key} ${x.lane.spec.position}`;
   const requested = () => lanes.reduce((a, l) => a + l.lane.requested, 0);
   const rounds: RoundRow[] = [];

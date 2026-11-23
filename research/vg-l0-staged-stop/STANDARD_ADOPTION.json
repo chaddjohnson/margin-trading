@@ -1,0 +1,119 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-staged-stop",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "3.0.0",
+  "sha256": "4e8244e65bf1dd7c54ad46a1c941321d68b0c144344fd0c464dcc047eea5fef1"
+ },
+ "readAt": "2026-11-23T11:55:00Z",
+ "adoptedAt": "2026-11-23T13:26:48Z",
+ "protocol": {
+  "path": "research/vg-l0-staged-stop/PROTOCOL.md",
+  "sha256": "aeebec991b6930fa5c39ae6bfcd812d7efbd3d50134aa2f62120ebdf4bfaace2"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "Primary decision statistic (PROTOCOL.md §1.1): per (cutoff, cell, replicate R3-R34) pair, D = V(EXP lane) - V(CTRL lane), V = the best qualified (P0, Q1-Q6) centre net among the lane's selectable members (CTRL: its shortlist; EXP: its shortlist and the OFF projections of its ON members), V = $0 without a qualified member; material improvement at a cutoff iff mean D >= $10,000 and the 0.10 quantile of the cell-stratified paired bootstrap (B = 100,000) > 0; the precommitted outcome label (§1.4) uses C21 and C24 (primary), the risk non-inferiority margins (+$2,500; +2 points of breach share) and the mechanism requirement. Pooled selection per (cutoff, arm): P0 = NL0 1.0.0's actual-profit rule (highest centre net; ties selection robust, lower centre DD, label) over the arm's qualified population. No selector launches an evaluation.",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (C0, not peak account equity); both arms keep P0 (nl0-control@1.0.0: marked DD <= $35,000) exactly; trade principal loss and banked-capital DD (liquidation basis) are reported, never gated"
+ },
+ "budget": {
+  "distinctProposals": 786432,
+  "backendEvaluations": 25000000,
+  "notes": "Distinct candidate proposals (centres; refinement moves apart): 384 independent lanes x (512 screen + 2-6 islands x 256) = 393,216 configured base / 786,432 maximum (the extension block's islands 7-9 and the 48 informed lanes come out of the same ceiling). Backend evaluations: the HARD CEILING of 25,000,000 REQUESTED official evaluations (archive hits included) over every official stage (ablation, search, extension block, informed lanes, qualification, decomposition, intervals), enforced by a running ledger over the sealed stage records: each stage's Lab gets maxFresh = min(its own deterministic worst case, the remaining ceiling) and is launched only if the remaining ceiling >= its worst case x 1.25. Per-lane deterministic caps (Assignment 3's laneWorstCase with the arm's move bound): broad CTRL 41,000 (= Stage B) / EXP 42,000; extended (islands x 1.5) 56,000 / 57,000; informed 90,000 / 93,000. Per qualification member 654, per interval subject 265. Expected about 10 M (Stage B's measured lanes: ~16,000 requested per broad lane). Counted separately per job, arm, lane, rung tag, cutoff and stage: requested, fresh, archive hits; the E5 benchmark and report-only CPU diagnostics are not research evaluations."
+ },
+ "referenceMethod": {
+  "id": "NL0",
+  "path": "docs/research/methods/NEW_L0_METHOD.md",
+  "version": "1.0.0",
+  "sha256": "9b387bb47ce02178ee27bb8379a11e4940c9c6c5a44c3e7ab5fcc3c2cc0411e4"
+ },
+ "evaluationBackend": {
+  "policy": "gpu-required",
+  "purpose": "official-optimization",
+  "acceptance": "config/gpu-backend/acceptance.json",
+  "notes": "Every official evaluation runs only through openOfficialGpuSession -> GpuPool -> EvalLab on the accepted GPU Phase 8 evaluator (staged-stop delivery, protocol v3, capability bits D1_STAGED_STOP / G_STAGED_STOP; record pinned in the freeze), with the risk envelope requested on every evaluation; no CPU fallback, auto backend or hybrid. CPU runs only under non-official purposes: parity-test (Phase 8), benchmark (E5) and diagnostic (report-only replays of frozen subjects)."
+ },
+ "chronologicalConsequence": "Standard 3.0.0 §1.8 default, adopted: the study runs three cutoffs (C19 secondary; C21, C24 primary) each with one next interval and no sequential fold path (departure PD1), so every selection is labelled 'no chronological support: not a deployment-qualified candidate without an explicit user decision'. The study's own chronological check (PROTOCOL.md §9.3: the three fold primaries' interval P&L sum > 0 and every reset interval DD <= $35,000) is descriptive and enters only the study's outcome label, never this consequence. The next intervals (C19 -> 2020-2021, C21 -> 2022-2023, C24 -> 2025-2026) are retrospective, previously inspected history, never a pristine holdout. 'No qualifying candidate' in a lane or an arm is a valid outcome (V = $0); keeping S1 OFF is a valid result. Governance only: never a fitness term, ranking input or gate.",
+ "deviations": [
+  {
+   "id": "PD1",
+   "section": "§1.8, §1.9",
+   "kind": "departure",
+   "description": "Three cutoffs (C19 secondary; C21, C24 primary) with one next interval each instead of the C19/C21/C23 repeat with a sequential verdict; consequence: no chronological support for any selection under the standard (the study's descriptive chronological check of PROTOCOL.md §9.3 does not change that).",
+   "justification": "the brief's design",
+   "userAgreement": "brief/BRIEF.md §6 (cutoffs C19, C21, C24; C21 and C24 primary; chronological folds C19 -> 2020-21, C21 -> 2022-23, C24 -> 2025-26)"
+  },
+  {
+   "id": "PD2",
+   "section": "§3.2, §4.4",
+   "kind": "departure",
+   "description": "Incumbent-informed lanes I1-I4 (8 paired replicates at C24) are separately labelled diagnostics with no chronological claim; New L0 and N/original are frozen benchmarks and informed centres, never members of the independent populations, never nominated.",
+   "justification": "the brief's informed lanes",
+   "userAgreement": "brief/BRIEF.md §6 (informed lanes I1-I4, 8 paired replicates, C24, not independent chronological evidence)"
+  },
+  {
+   "id": "PA1",
+   "section": "§4.3, §4.8",
+   "kind": "adaptation",
+   "description": "Reduced structural scope: Stage B's two cells (GA0.VA0, GB0.VD1) x 32 replicates (R3-R18 = Stage B's seeds, R19-R34 new) per arm; effort scaled only by replicates; no claim of equal effort with Assignment 3 or NL0.",
+   "justification": "brief §6 (64 pairs per cutoff, 32 per cell)",
+   "userAgreement": null
+  },
+  {
+   "id": "PA2",
+   "section": "§4.5",
+   "kind": "adaptation",
+   "description": "Both arms' 128 lanes of a cutoff run concurrently in one official job; lane results do not depend on the grouping (lane-key seeds, lane-local extension decisions at barriers, deterministic records, a per-lane resource guard that cannot bind); gate R verifies reproduction of Stage B's sealed CTRL lanes.",
+   "justification": "Stage B BA4; brief §6 (paired CTRL/EXP)",
+   "userAgreement": null
+  },
+  {
+   "id": "PA3",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "Qualification and intervals add one report-only stress, stop slippage +10 bps, beside Assignment 3's six.",
+   "justification": "brief §6 (10/25 bp slippage)",
+   "userAgreement": null
+  },
+  {
+   "id": "PA4",
+   "section": "§4.5",
+   "kind": "adaptation",
+   "description": "A single symmetric extension block re-runs every budget-bound lane of both arms with the island cap x 1.5 when more than 25 % of either arm's lanes of a cutoff end budget-bound; decided from stop reasons only.",
+   "justification": "the audit's proposed protocol §6; brief §6 (budget-bound lanes reported, extension symmetric)",
+   "userAgreement": null
+  },
+  {
+   "id": "PA5",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "The execution shape (8 host workers, batch 8,192, linger 30 ms) is the accepted evaluator's measured Mode S; the E5 benchmark measures throughput for forecasts only; timings select nothing.",
+   "justification": "docs/gpu/README.md §4-§4a",
+   "userAgreement": null
+  }
+ ]
+}

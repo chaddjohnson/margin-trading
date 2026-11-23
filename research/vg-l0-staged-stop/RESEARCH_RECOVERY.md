@@ -2,21 +2,32 @@
 
 ## Top screen
 
-- **Updated:** see the stage table (UTC, `date -u`). **Status: INCOMPLETE — E2 done; E3/E4 GPU Phase 8 acceptance
-  campaign launched (unit `p8chain-final`, log `research/gpu-phase8/results/logs/final-chain.txt`).**
+- **Updated:** 2026-11-23T13:50Z. **Status: INCOMPLETE — E0–E2 done; GPU Phase 8 acceptance campaign attempt 2 RUNNING
+  (unit `p8chain-final`, started 13:02:15Z at `54261ea0`, log `research/gpu-phase8/results/logs/final-chain.txt`;
+  attempt 1 failed at the negative suite, Phase 8 amendment E1). Priority 4 study code written and tested (not frozen).**
 - **Brief:** `brief/BRIEF.md` (verbatim copy of the user's upload), sha256
   `720e0b36e815b111a5deac41c7454bd497224dd78c10adaa01fa8017d78998ae`, 295 lines / 30,788 bytes; final line
   "**PRIORITY 4 COMPLETE — NO STRATEGY ADOPTED OR DEPLOYED — AWAITING REVIEW**" present (not truncated).
 - **Authorized:** E0–E5 engineering, ablations, paired CTRL/EXP search, informed lanes, qualification, chronological
   checks, reports, ZIP, commit and push of the research branch. **Not authorized:** adoption, merging into `main`,
   deployment, broker access, editing frozen New L0 / N/original research.
-- **Running processes:** the GPU Phase 8 campaign `research/gpu-phase8/chains/final.sh` in systemd user unit
-  `p8chain-final` (slice `gpup8.slice`); check `systemctl --user is-active p8chain-final` and the log tail. Do NOT
-  launch another GPU job while it runs. Do NOT edit `src/vg-l0-staged-stop/{search,space,context,derive}.ts`,
-  `src/gpu-phase8/`, `tools/gpu-phase8/`, the CPU closure or `src/gpu-backend/` while it runs (the p4/sb jobs import them).
-- **Next step:** while the campaign runs, write the rest of Priority 4's study code (stages, qualify, select, stats,
-  main, protocol). After it: commit, `research/gpu-phase8/chains/tests.sh` (E7–E10), `tools/gpu-phase8/accept.ts`,
-  verify-acceptance, record-in-force tests, live preflight, commit + out-of-band pin.
+- **Running processes:** `research/gpu-phase8/chains/final.sh` in systemd user unit `p8chain-final` (slice
+  `gpup8.slice`); check `systemctl --user is-active p8chain-final` and the log tail; a harness watcher waits for
+  "chain final complete|FAILED". Do NOT launch another GPU job while it runs. Do NOT edit
+  `src/vg-l0-staged-stop/{search,space,context,derive}.ts`, `src/gpu-phase8/`, the CPU closure or `src/gpu-backend/`
+  while it runs (the p4/sb jobs import them). Do NOT commit `research/gpu-phase8/results/` mid-campaign. Keep the tree
+  otherwise clean (campaign-verify audits `git status` outside research/gpu-phase8/).
+- **Priority 4 code (committed, not frozen):** `src/vg-l0-staged-stop/{budget,qualify,select,stats,stages,main}.ts`,
+  tests `tests/study.test.ts` (18 pass) + `tests/space.test.ts`; tools `tools/vg-l0-staged-stop/{common,bench}.ts`,
+  `engineering.sh`, `launch.sh`; chain `research/vg-l0-staged-stop/chains/fold.sh`; DRAFT `PROTOCOL.md` (§6 budget
+  numbers to fill from the E5 benchmark), `STANDARD_ADOPTION.json` (preflight blocked only by the stale record).
+- **Next steps (in order):** (1) campaign completes → commit `research/gpu-phase8/results`; (2) run
+  `research/gpu-phase8/chains/tests.sh` (E7–E10; integrity dry run 5/5 PASS with amendment E2) → `tools/gpu-phase8/accept.ts`
+  → commit record → out-of-band pin → `results/tests/record-in-force-after.txt` (policy, enforcement, preflight tests and
+  every study preflight PASS); (3) `REC=<sha> tools/vg-l0-staged-stop/launch.sh vgl0ss-eng <log> -- /bin/bash
+  tools/vg-l0-staged-stop/engineering.sh`; (4) fill PROTOCOL §6 from `E5/bench.json`, re-record the adoption, commit,
+  `npm run vg-l0ss -- gates`, commit, `npm run vg-l0ss -- freeze`, commit; (5) `CUT=ABLATE`, then `CUT=C19|C21|C24`
+  `research/vg-l0-staged-stop/chains/fold.sh` in launch units; (6) analysis, reports, ZIP, push.
 
 ## Environment
 

@@ -1,6 +1,10 @@
-// gpu-phase8 (copy of tools/gpu-phase6/integrity.ts against this study's own baselines, research/gpu-phase8/results/
-// baseline/, captured on the post-cleanup tree before any change; the evaluation check allows exactly the two declared
-// host-path files). Phase 6's header follows.
+// gpu-phase8 (copy of tools/gpu-phase6/integrity.ts; AMENDMENT E2): the baseline research/gpu-phase8/results/baseline/ is
+// taken from the last commit before any staged-stop change, 5d587bb2 (tools/gpu-phase8/baseline.ts); the excluded
+// directories are this study's and Priority 4's own (research/vg-l0-staged-stop/, the task's study under construction on
+// this branch); a study preflight may fail BEFORE the new record only with the §9.9 stale-acceptance block naming only
+// files pinned by the record in force (the rerun after the record must pass every preflight); the evaluation check
+// requires the changed manifest files (against the base commit) to be exactly the declared staged-stop sets. Phase 6's
+// header follows.
 // gpu-phase6 (PROTOCOL.md §6 gate E10): historical research files and their integrity checks unchanged, against the
 // baselines captured before any change (research/gpu-phase8/results/baseline/):
 //   - every tracked file under research/ outside research/gpu-phase8/: the same blob (git ls-files -s) as at baseline;
@@ -43,7 +47,7 @@ const check = (name: string, pass: boolean, detail: unknown) => {
           const [blob, file] = l.split('  ');
           return [file!, blob!] as const;
         })
-        .filter(([f]) => !f.startsWith('research/gpu-phase8/') && !f.startsWith('research/vg-l0-risk-envelope-pilot/'))
+        .filter(([f]) => !f.startsWith('research/gpu-phase8/') && !f.startsWith('research/vg-l0-staged-stop/'))
     );
   const before = parse(fs.readFileSync(path.join(B, 'research-tracked-blobs.txt'), 'utf8'));
   const now = parse(
@@ -64,32 +68,49 @@ const check = (name: string, pass: boolean, detail: unknown) => {
     '--',
     'research',
     ':!research/gpu-phase8',
-    ':!research/vg-l0-risk-envelope-pilot'
+    ':!research/vg-l0-staged-stop'
   ])
     .stdout.split('\n')
     .filter(Boolean);
 
   check(
-    `tracked research files outside gpu-phase8 and the pilot proposal unchanged (${before.size})`,
+    `tracked research files outside gpu-phase8 and vg-l0-staged-stop as at the base commit 5d587bb2 (${before.size})`,
     changed.length === 0 && added.length === 0 && dirty.length === 0,
     { changed: changed.slice(0, 10), added: added.slice(0, 10), dirty: dirty.slice(0, 10) }
   );
 }
-// study preflights
+// study preflights (amendment E2): every study of the base commit; PASS, or — before the new record only — FAIL whose
+// only error is the §9.9 stale-acceptance block naming only files pinned by the record in force
 {
   const base = fs.readFileSync(path.join(B, 'preflights.txt'), 'utf8').trim().split('\n');
-  const now = base.map((l) => {
+  const pinned = new Set(
+    (JSON.parse(fs.readFileSync(path.join(repoRoot, 'config/gpu-backend/acceptance.json'), 'utf8')) as { pins?: { path: string }[] }).pins?.map((x) => x.path) ??
+      []
+  );
+  const accText = fs.readFileSync(path.join(repoRoot, 'config/gpu-backend/acceptance.json'), 'utf8');
+  const isPinned = (f: string) => pinned.has(f) || accText.includes(`"${f}"`);
+  const rows = base.map((l) => {
     const d = l.split(' ')[0]!;
     const r = sh(node, [...ts, 'src/research-standard/main.ts', '--study', d]);
+    const text = `${r.stdout}${r.stderr}`;
+    const head = text.split('\n').find((x) => /^(PASS|FAIL)/.test(x)) ?? '';
+    const errors = text.split('\n').filter((x) => /^\s*error:/.test(x));
+    const files = errors.flatMap((e) => [...e.matchAll(/(?:src|config|tools)\/[\w./-]+?\.(?:ts|cuh|cu|h|json|sh|cpp)\b/g)].map((m) => m[0]));
+    const stale =
+      /^FAIL/.test(head) &&
+      errors.length === 1 &&
+      /official GPU optimization is BLOCKED \(§9\.9\)/.test(errors[0]!) &&
+      /changed since acceptance/.test(errors[0]!) &&
+      files.length > 0 &&
+      files.every(isPinned);
 
-    return `${d} exit=${r.status} ${(`${r.stdout}${r.stderr}`.split('\n').find((x) => /PASS|FAIL|BLOCK|REFUS/.test(x)) ?? '').slice(0, 80)}`;
+    return { study: d, exit: r.status, head: head.slice(0, 100), pass: r.status === 0 && /^PASS/.test(head), stale, unpinned: files.filter((f) => !isPinned(f)) };
   });
-  const differ = base.filter((l, i) => l !== now[i]);
 
   check(
-    `study preflights as at baseline (${base.length}, all PASS)`,
-    differ.length === 0 && base.length === 22 && now.every((l) => / exit=0 PASS /.test(l)),
-    { differ, now: now.slice(0, 3) }
+    `study preflights of the base commit (${base.length}): PASS, or (before the new record) only the §9.9 stale-acceptance block on pinned files — ${rows.filter((x) => x.pass).length} PASS, ${rows.filter((x) => x.stale).length} stale-blocked`,
+    base.length === 28 && rows.every((x) => x.pass || x.stale),
+    { rows: rows.filter((x) => !x.pass) }
   );
 }
 // sealed-file protection
@@ -110,8 +131,9 @@ const check = (name: string, pass: boolean, detail: unknown) => {
     untrackedOrModified: 'untracked or modified in Git',
     restored: 'restored'
   };
-  const own = all.rows.filter((x) => x.file.startsWith('research/gpu-phase8/'));
-  const others = all.rows.filter((x) => !x.file.startsWith('research/gpu-phase8/'));
+  const ownDir = (f: string) => f.startsWith('research/gpu-phase8/') || f.startsWith('research/vg-l0-staged-stop/');
+  const own = all.rows.filter((x) => ownDir(x.file));
+  const others = all.rows.filter((x) => !ownDir(x.file));
   const line: Record<string, number> = {
     sealedFiles: others.length,
     ...Object.fromEntries(Object.entries(status).map(([k, s]) => [k, others.filter((x) => x.status === s).length]))
@@ -147,33 +169,35 @@ const check = (name: string, pass: boolean, detail: unknown) => {
     }
   );
 }
-// compatibility digests
+// compatibility (amendment E2): against the base commit, the changed files of the evaluation manifest are exactly the
+// declared staged-stop sets (the same lists as tools/gpu-phase8/accept.ts)
 {
-  const base = JSON.parse(fs.readFileSync(path.join(B, 'compat.json'), 'utf8')) as Record<string, string>;
+  const base = JSON.parse(fs.readFileSync(path.join(B, 'compat-base.json'), 'utf8')) as Record<'cpu' | 'cuda' | 'host', Record<string, string | null>>;
   const m = compatManifest();
-
-  // GPU Phase 7: the CPU closure and the CUDA sources exactly as at baseline; in the host group ONLY the two declared
-  // files changed (pool.ts: the risk-envelope delivery; toolchain.ts: the default binary path)
-  const hostBase = (base as unknown as { hostFiles: Record<string, string> }).hostFiles;
-  const hostChanged = m.host.files
-    .filter((f) => hostBase[f.path] !== f.sha256)
-    .map((f) => f.path)
-    .sort();
-  const hostAddedOrRemoved = m.host.files.length !== Object.keys(hostBase).length;
+  const changed = (g: 'cpu' | 'cuda' | 'host') =>
+    m[g].files
+      .filter((f) => base[g][f.path] !== f.sha256)
+      .map((f) => f.path)
+      .sort();
+  const want = {
+    cpu: [
+      'src/d1-risk-controls-rc3/book.ts',
+      'src/d1-risk-controls-rc3/growth.ts',
+      'src/d1-risk-controls-rc3/run.ts',
+      'src/growth-trading/optionalRules.ts',
+      'src/growth-trading/riseTrading.ts',
+      'src/staged-stop/config.ts',
+      'src/staged-stop/tracker.ts'
+    ],
+    cuda: ['src/gpu-backend/cuda/gb.h', 'src/gpu-backend/cuda/gb_common.cuh', 'src/gpu-backend/cuda/gb_d1.cuh', 'src/gpu-backend/cuda/gb_growth.cuh'],
+    host: ['src/gpu-backend/batch.ts', 'src/gpu-backend/client.ts', 'src/gpu-backend/compat.ts', 'src/gpu-backend/encode.ts', 'src/gpu-backend/layout.ts', 'src/gpu-backend/toolchain.ts']
+  };
+  const got = { cpu: changed('cpu'), cuda: changed('cuda'), host: changed('host') };
 
   check(
-    'GPU evaluation: CPU closure and CUDA sources as at baseline; host group changed only in pool.ts and toolchain.ts',
-    m.cpu.digest === base.cpu &&
-      m.cuda.digest === base.cuda &&
-      !hostAddedOrRemoved &&
-      JSON.stringify(hostChanged) === JSON.stringify(['src/gpu-backend/pool.ts', 'src/gpu-backend/toolchain.ts']),
-    {
-      digest: m.digest,
-      baseDigest: base.digest,
-      cpu: [base.cpu, m.cpu.digest],
-      cuda: [base.cuda, m.cuda.digest],
-      hostChanged
-    }
+    'GPU evaluation: against the base commit, the CPU closure, CUDA and host groups changed exactly in the declared staged-stop files',
+    (['cpu', 'cuda', 'host'] as const).every((g) => JSON.stringify(got[g]) === JSON.stringify(want[g])),
+    { digest: m.digest, changed: got, declared: want }
   );
 }
 
