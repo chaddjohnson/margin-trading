@@ -30,6 +30,8 @@ struct D1State {
   int episodes, blocks, blockedSessions, blockedMinutes;
   // counters
   int protectiveExits, protectiveGapExits, maximumHoldExits, adaptiveExtensions, entryDayExits;
+  // staged-stop@1 (v3; RiskShadowBook3's tracker)
+  Staged stg;
   int nTrades;
   double realized;
   int status, errInfo;
@@ -312,6 +314,8 @@ __device__ void d1Close(const DevSym& d, D1State& st, const D1Params& p, D1Out& 
 
   const Decision dec = st.posDecision;
   const bool entryDay = st.entryDayDecisionLive;
+  // RiskShadowBook3.close: the staged exit event (counters), then the frozen close
+  stagedOnExit(st.stg, dec.reason, s);
   // ShadowBook.close
   const bool isStop = dec.reason == RS_TSTOP || dec.reason == RS_TSTOP_GAP;
   double price = dec.price * (1 - p.costBps / 10000) * (1 - (isStop ? p.slipBps / 10000 : 0));
@@ -406,6 +410,8 @@ __device__ bool d1Fill(const DevSym& d, D1State& st, const D1Params& p, D1Out& o
       st.entryDayDecisionLive = true;
     }
   }
+  // RiskShadowBook3.open: the staged onEntry hook after RC 2's open (the entry-day trigger reads only the protective level)
+  stagedOnEntry(st.stg, st.postEntryHigh, st.stopPrice, raw, s, LD(d.sClose + s));
   return true;
 }
 
@@ -457,7 +463,11 @@ __global__ void d1Kernel(DevData data, const GbCandIn* __restrict__ cands, int n
   const GbD1In in = cands[c].d1[b];
   GbBookOut& bo = outs[c].book[b];
 
-  if (!in.enabled) { bo.nTrades = 0; bo.signals = 0; bo.firstDS = -1; bo.status = C_OK; bo.errInfo = 0; return; }
+  if (!in.enabled) {
+    bo.nTrades = 0; bo.signals = 0; bo.firstDS = -1; bo.status = C_OK; bo.errInfo = 0;
+    bo.stagedArms = 0; bo.stagedExits = 0; bo.placementExits = 0; bo.pad = 0;
+    return;
+  }
 
   const DevSym& d = data.sym[b];
   D1Params p;
@@ -472,8 +482,10 @@ __global__ void d1Kernel(DevData data, const GbCandIn* __restrict__ cands, int n
   st.pendingSignalTime = NAN; st.pendingSignalPrice = NAN;
   st.epRefusalS = -1;
   st.status = C_OK;
+  stagedInit(st.stg, in.stagedOn, in.actTenths, in.st2Tenths);
 
   if (p.L < 1 || p.L > d.maxL || p.W < 0 || endIndex >= d.S || endIndex < 1) fail(st, C_INVALID, p.L);
+  if (!stagedDomainOk(in.stagedOn, in.actTenths, in.st2Tenths)) fail(st, C_INVALID, in.actTenths);
 
   D1Out o;
   o.trades = tradesAll + ((size_t)c * 2 + b) * tradeCap;
@@ -543,6 +555,9 @@ __global__ void d1Kernel(DevData data, const GbCandIn* __restrict__ cands, int n
       st.postEntryHigh = jsmax(st.postEntryHigh, LD(d.sHigh + s));
       st.postEntryLow = jsmin(st.postEntryLow, LD(d.sLow + s));
       st.stopPrice = jsmax(st.stopPrice, st.postEntryHigh * (1 - p.tsp));
+      // RiskShadowBook3.afterSession: the staged hook after the manager's ratchet (order-equivalent to the CPU's, which
+      // runs after the continuation window and the gate: neither reads the level)
+      stagedStep(st.stg, st.postEntryHigh, st.stopPrice, s, LD(d.sClose + s));
     }
     if (st.contActive) {
       if (s > st.contStart) st.contHigh = jsmax(st.contHigh, LD(d.sHigh + s));
@@ -579,6 +594,7 @@ __global__ void d1Kernel(DevData data, const GbCandIn* __restrict__ cands, int n
   bo.protectiveExits = st.protectiveExits; bo.protectiveGapExits = st.protectiveGapExits; bo.maximumHoldExits = st.maximumHoldExits;
   bo.adaptiveExtensions = st.adaptiveExtensions; bo.episodes = st.episodes; bo.blocks = st.blocks;
   bo.blockedSessions = st.blockedSessions; bo.blockedMinutes = st.blockedMinutes; bo.entryDayExits = st.entryDayExits;
+  bo.stagedArms = st.stg.arms; bo.stagedExits = st.stg.stagedExits; bo.placementExits = st.stg.placementExits; bo.pad = 0;
   bo.firstDS = st.nTrades > 0 ? o.trades[0].dS : -1;
   bo.status = st.status;
   bo.errInfo = st.errInfo;

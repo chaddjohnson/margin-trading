@@ -1,4 +1,4 @@
-// gpu-backend: the binary layout of protocol v2 (src/gpu-backend/cuda/gb.h), declared once as ordered field lists with
+// gpu-backend: the binary layout of protocol v3 (src/gpu-backend/cuda/gb.h; v3 = GPU Phase 8's staged-stop@1 fields), declared once as ordered field lists with
 // natural alignment (#pragma pack(8)). Every offset is checked against the C++ compiler's own offsetof by
 // src/gpu-backend/tests/layout.test.ts (tools/gpu-backend/layout-dump.cpp), so the two sides cannot drift silently.
 export type FieldType = 'f64' | 'i32' | 'u32' | 'i64' | 'u64' | 'u8' | 'i8';
@@ -92,7 +92,11 @@ export const D1In = layout('GbD1In', [
   i('gateR'),
   i('gateC'),
   i('armStart'),
-  i('stopFill')
+  i('stopFill'),
+  i('stagedOn'),
+  i('actTenths'),
+  i('st2Tenths'),
+  i('pad')
 ]);
 export const GrowthIn = layout('GbGrowthIn', [
   f('riseFactor'),
@@ -148,7 +152,11 @@ export const GrowthIn = layout('GbGrowthIn', [
   i('coF'),
   i('coL'),
   i('coM'),
-  i('pad')
+  i('stagedOn'),
+  i('actTenths'),
+  i('st2Tenths'),
+  i('pad'),
+  i('pad2')
 ]);
 export const CandIn = layout('GbCandIn', [
   u('id'),
@@ -209,7 +217,10 @@ export const BookOut = layout('GbBookOut', [
   i('firstDS'),
   i('status'),
   i('errInfo'),
-  i('pad', 2)
+  i('stagedArms'),
+  i('stagedExits'),
+  i('placementExits'),
+  i('pad')
 ]);
 export const DD = layout('GbDD', [f('max'), f('peakT'), f('troughT'), f('recoveryT')]);
 export const CandOut = layout('GbCandOut', [
@@ -345,7 +356,7 @@ export const LAYOUTS = [
   ResultHeader
 ];
 
-export const PROTOCOL_VERSION = 2;
+export const PROTOCOL_VERSION = 3;
 export const DATASET_VERSION = 2;
 export const REQ_MAGIC = 0x51324247;
 export const RES_MAGIC = 0x52324247;
@@ -391,6 +402,8 @@ export const FEATURE = {
   POOL_GROWTH_FIRST: bit(33),
   POOL_DETAIL: bit(34),
   RISK_METRICS: bit(35),
+  D1_STAGED_STOP: bit(36),
+  G_STAGED_STOP: bit(37),
   RECORD_MARKS: bit(48),
   D1_SWING: bit(49),
   D1_BREAKEVEN: bit(50),
@@ -400,7 +413,7 @@ export const FEATURE = {
   SESSION_HOLD_UNIT: bit(54)
 } as const;
 export type FeatureName = keyof typeof FEATURE;
-export const SUPPORTED = (1n << 36n) - 1n; // GB_SUPPORTED
+export const SUPPORTED = (1n << 38n) - 1n; // GB_SUPPORTED
 export const featureNames = (mask: bigint): FeatureName[] =>
   (Object.keys(FEATURE) as FeatureName[]).filter((k) => (mask & FEATURE[k]) !== 0n);
 

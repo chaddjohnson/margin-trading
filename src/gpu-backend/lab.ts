@@ -23,6 +23,12 @@ import { type Cfg, evalKeyOf, quadOf } from '../vg-l0-full-joint/space.ts';
 import type { Task } from './client.ts';
 import type { Envelope } from './batch.ts';
 import { type JobContext, claimJobDirectory } from '../gpu-jobs/jobs.ts';
+import { type StagedConfig, canonicalStaged, stagedKeySuffix } from '../staged-stop/config.ts';
+
+// GPU Phase 8 (staged-stop@1): a configuration may carry the S1 staged trailing stop (Priority 4's Cfg). OFF (absent,
+// null or no book) keeps the key and the task of every earlier version, byte for byte; ON appends "|st1:<canonical>".
+export type StagedCfg = Cfg & { staged?: StagedConfig | null };
+const stagedOfCfg = (c: Cfg) => canonicalStaged((c as StagedCfg).staged);
 import type { OwnershipLock } from '../gpu-jobs/lock.ts';
 
 export { StopRequested };
@@ -213,7 +219,7 @@ export class EvalLab {
   ): Promise<R[]> {
     const keys = items.map(
       (x) =>
-        `${evalKeyOf(this.o.door as never, x.cfg, x.options)}${x.detail ? '|detail' : ''}${x.risk ? RISK_KEY_SUFFIX : ''}`
+        `${evalKeyOf(this.o.door as never, x.cfg, x.options)}${stagedKeySuffix(stagedOfCfg(x.cfg))}${x.detail ? '|detail' : ''}${x.risk ? RISK_KEY_SUFFIX : ''}`
     );
     const missing = new Map<string, Task>();
     const waits: Promise<void>[] = [];
@@ -237,6 +243,7 @@ export class EvalLab {
       }
 
       const x = items[i]!;
+      const st = stagedOfCfg(x.cfg);
 
       missing.set(k, {
         k,
@@ -244,7 +251,8 @@ export class EvalLab {
         controls: x.cfg.controls,
         options: x.options,
         detail: Boolean(x.detail),
-        ...(x.risk ? { risk: true } : {}) // a plain item's task is exactly the earlier task object
+        ...(x.risk ? { risk: true } : {}), // a plain item's task is exactly the earlier task object
+        ...(st ? { staged: st } : {}) // GPU Phase 8: only an ON configuration's task carries the staged stop
       });
     });
 

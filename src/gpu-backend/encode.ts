@@ -29,6 +29,8 @@ import {
 import { fraction as gateFraction } from '../growth-trading/entryGates.ts';
 import { fractionOf as rulesFraction } from '../growth-trading/optionalRules.ts';
 import { CandIn, D1In, FEATURE, GrowthIn } from './layout.ts';
+import { type StagedBook, type StagedConfig, canonicalStaged } from '../staged-stop/config.ts';
+import { validateStagedFor } from '../d1-risk-controls-rc3/run.ts';
 
 // the percentage → fraction expression of continuation.ts and drawdownGate.ts (module-private there; identical text)
 const fraction = (percent: number) => {
@@ -44,6 +46,9 @@ export interface Task {
   options: EvalOptions;
   detail: boolean;
   risk?: boolean; // the risk-envelope inputs (trade principal loss, banked-capital drawdown)
+  // GPU Phase 8 (protocol v3): the S1 staged trailing stop (staged-stop@1). Present only when some book is ON, so an
+  // OFF task is the earlier task object, byte for byte.
+  staged?: StagedConfig;
 }
 
 const frictionOf = (o: EvalOptions): Friction => ({ ...baseFriction, ...(o.friction ?? {}) });
@@ -299,9 +304,33 @@ const writeStruct = (buf: Buffer, at: number, l: typeof D1In, values: Record<str
   }
 };
 
+// staged-stop@1 of one book (the CPU's validated canonical values): stagedOn, actTenths, st2Tenths and its feature bit
+const stagedValues = (st: StagedConfig | null, b: StagedBook | 'G:GDX'): Record<string, number> => {
+  const c = st && b !== 'G:GDX' ? st.books[b] : undefined;
+
+  return c
+    ? { stagedOn: 1, actTenths: c.activationTenths, st2Tenths: c.stage2Tenths }
+    : { stagedOn: 0, actTenths: 0, st2Tenths: 0 };
+};
+
+// the capability bits of a staged configuration (the encoder's and the domain derivation's single source)
+export const stagedFeaturesOf = (st: StagedConfig | null | undefined): bigint => {
+  const c = canonicalStaged(st);
+  let f = 0n;
+
+  if (c?.books['D1:GDX'] || c?.books['D1:VGT']) f |= FEATURE.D1_STAGED_STOP;
+  if (c?.books['G:VGT']) f |= FEATURE.G_STAGED_STOP;
+  return f;
+};
+
 // one task → GbCandIn (id = its index in the batch; range offsets relative to the batch's range block)
 export const encodeTask = (door: Door, t: Task, id: number, rangeBase: number, extraFeatures = 0n): Encoded => {
   validateAgainstGrids2(canonicalConfig2(t.controls), t.quad.d1);
+
+  // the CPU's own staged validation (every rule of RULE_SPECIFICATION.md §2, against the enabled books' τ₁)
+  const st = t.staged ? validateStagedFor(t.quad, canonicalStaged(t.staged), t.options) : null;
+
+  if (t.staged && !st) throw new Error('a task carries an empty staged configuration (an OFF task carries none)');
 
   const o = t.options;
   const fr = frictionOf(o);
@@ -315,15 +344,17 @@ export const encodeTask = (door: Door, t: Task, id: number, rangeBase: number, e
   for (const b of bookIds) {
     if (!isEnabled(o, b)) continue;
     books.push(b);
+    const sv = stagedValues(st, b as StagedBook);
+
     if (b.startsWith('D1')) {
       const e = encodeD1(door, t.quad, t.controls, b as 'D1:GDX', o);
 
-      writeStruct(buf, off.d1! + (b === 'D1:GDX' ? 0 : D1In.size), D1In, e.values);
+      writeStruct(buf, off.d1! + (b === 'D1:GDX' ? 0 : D1In.size), D1In, { ...e.values, ...sv });
       features |= e.features;
     } else {
       const e = encodeGrowth(door, t.quad, b as 'G:GDX', o);
 
-      writeStruct(buf, off.g! + (b === 'G:GDX' ? 0 : GrowthIn.size), GrowthIn as typeof D1In, e.values);
+      writeStruct(buf, off.g! + (b === 'G:GDX' ? 0 : GrowthIn.size), GrowthIn as typeof D1In, { ...e.values, ...sv });
       features |= e.features;
       growth[b as 'G:GDX'] = e;
     }
@@ -345,6 +376,7 @@ export const encodeTask = (door: Door, t: Task, id: number, rangeBase: number, e
   if ((po.periods ?? []).length) features |= FEATURE.POOL_PERIODS;
   if (t.detail) features |= FEATURE.POOL_DETAIL;
   if (t.risk) features |= FEATURE.RISK_METRICS;
+  features |= stagedFeaturesOf(st); // GPU Phase 8: only the books the pool is given carry a staged stop (validated)
 
   const blackouts = (po.blackouts ?? []).map((x) => ({ first: x.first, last: x.last }));
   const periods = (po.periods ?? []).map((p) => ({ first: p, last: p }));

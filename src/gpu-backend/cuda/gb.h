@@ -1,6 +1,7 @@
-// gpu-backend: the versioned binary interface (v2) between the Node client (src/gpu-backend/client.ts) and the CUDA
+// gpu-backend: the versioned binary interface (v3) between the Node client (src/gpu-backend/client.ts) and the CUDA
 // evaluator server (gb_server.cu). Little-endian, natural alignment, every struct size asserted on both sides
-// (src/gpu-backend/layout.ts mirrors these definitions).
+// (src/gpu-backend/layout.ts mirrors these definitions). v3 (GPU Phase 8, research/gpu-phase8/): the S1 staged trailing
+// stop (staged-stop@1) — GbD1In / GbGrowthIn carry stagedOn, actTenths, st2Tenths; GbBookOut carries its counters.
 //
 // Frames on the server's stdin/stdout:  u32 magic | u32 type-or-status | u64 payload bytes | payload
 //   request magic 0x51324247 ("GB2Q"), response magic 0x52324247 ("GB2R").
@@ -11,7 +12,7 @@
 #pragma once
 #include <stdint.h>
 
-#define GB_PROTOCOL_VERSION 2u
+#define GB_PROTOCOL_VERSION 3u
 #define GB_REQ_MAGIC 0x51324247u
 #define GB_RES_MAGIC 0x52324247u
 #define GB_DATASET_VERSION 2u
@@ -110,7 +111,9 @@ enum GbFeature : uint64_t {
   F_POOL_GROWTH_FIRST = 1ull << 33,
   F_POOL_DETAIL = 1ull << 34,
   F_RISK_METRICS = 1ull << 35,
-  GB_SUPPORTED = (1ull << 36) - 1,
+  F_D1_STAGED_STOP = 1ull << 36,  // staged-stop@1 on a D1 book (v3)
+  F_G_STAGED_STOP = 1ull << 37,   // staged-stop@1 on a Growth book (v3)
+  GB_SUPPORTED = (1ull << 38) - 1,
   // never supported by this evaluator (explicit refusal; outside the official optimization domain)
   F_RECORD_MARKS = 1ull << 48,
   F_D1_SWING = 1ull << 49,
@@ -165,13 +168,14 @@ struct GbBatchHeader {  // 64 bytes
   uint64_t reserved2;
 };
 
-struct GbD1In {  // 128 bytes: one D1 book (the CPU's exact doubles for every fraction)
+struct GbD1In {  // 144 bytes: one D1 book (the CPU's exact doubles for every fraction)
   double X, Y, tsp, hold, buffer, pullback;
   double costBps, rate, slipBps;
   int32_t L, W, enabled, stopTenths, entryDay, holdMode, extHold, progTenths, gateOn, gateK, gateR, gateC, armStart, stopFill;
+  int32_t stagedOn, actTenths, st2Tenths, pad;  // v3: staged-stop@1 (activation and stage-2 distance in tenths of a point)
 };
 
-struct GbGrowthIn {  // 328 bytes: one Growth 1.4.0 book (host-computed doubles by the CPU's own expressions)
+struct GbGrowthIn {  // 344 bytes: one Growth book, engine revision 1.5.0 (host-computed doubles by the CPU's own expressions)
   double riseFactor;              // 1 + X / 100 (the scanner's and the eligibility predicate's factor)
   double tsp, hold, buffer;       // exitParamsOf: trailing stop fraction; hold days (Infinity = OFF); buffer (Infinity = OFF)
   double costBps, rate, slipBps;  // book settings
@@ -183,10 +187,11 @@ struct GbGrowthIn {  // 328 bytes: one Growth 1.4.0 book (host-computed doubles 
   double retF;                    // retention sell fraction
   double coY, coP, coB, coRise, coPmin, coPmax, coRec, coSlope, coMargin;  // continuation fractions
   int32_t enabled, entry, riseN, boL, boK, boN, stopFill, trend, trN, trK, elig, elW, ddOn, ddN, ddY, istopOn, atrL,
-      retOn, retL, retK, cont, coW, coF, coL, coM, pad;
+      retOn, retL, retK, cont, coW, coF, coL, coM, stagedOn;
+  int32_t actTenths, st2Tenths, pad, pad2;  // v3: staged-stop@1 (with stagedOn above)
 };
 
-struct GbCandIn {  // 1,016 bytes
+struct GbCandIn {  // 1,080 bytes
   uint32_t id, pad0;
   uint64_t features;
   int32_t first;       // 0 = D1 first, 1 = Growth first
@@ -211,17 +216,18 @@ struct GbTrade {  // 184 bytes: a virtual trade
   GbFill fills[GB_MAX_FILLS];
 };
 
-struct GbBookOut {  // 96 bytes
+struct GbBookOut {  // 104 bytes
   double net, realized, minuteDd, dailyDd;
   int32_t nTrades, signals, protectiveExits, protectiveGapExits, maximumHoldExits, adaptiveExtensions, episodes, blocks,
-      blockedSessions, blockedMinutes, entryDayExits, firstDS, status, errInfo, pad[2];
+      blockedSessions, blockedMinutes, entryDayExits, firstDS, status, errInfo;
+  int32_t stagedArms, stagedExits, placementExits, pad;  // v3: staged-stop@1 counters (0 with the stage OFF)
 };
 
 struct GbDD {  // 32 bytes
   double max, peakT, troughT, recoveryT;
 };
 
-struct GbCandOut {  // 624 bytes
+struct GbCandOut {  // 656 bytes
   uint32_t id;
   int32_t status, errInfo, nLots;
   GbBookOut book[4];
@@ -280,13 +286,13 @@ struct GbResultHeader {  // 64 bytes
 
 static_assert(sizeof(GbDatasetHeader) == 64, "dataset header");
 static_assert(sizeof(GbBatchHeader) == 64, "batch header");
-static_assert(sizeof(GbD1In) == 128, "d1 in");
-static_assert(sizeof(GbGrowthIn) == 328, "growth in");
-static_assert(sizeof(GbCandIn) == 1016, "cand in");
+static_assert(sizeof(GbD1In) == 144, "d1 in");
+static_assert(sizeof(GbGrowthIn) == 344, "growth in");
+static_assert(sizeof(GbCandIn) == 1080, "cand in");
 static_assert(sizeof(GbFill) == 48, "fill");
 static_assert(sizeof(GbTrade) == 184, "trade");
-static_assert(sizeof(GbBookOut) == 96, "book out");
-static_assert(sizeof(GbCandOut) == 624, "cand out");
+static_assert(sizeof(GbBookOut) == 104, "book out");
+static_assert(sizeof(GbCandOut) == 656, "cand out");
 static_assert(sizeof(GbLotFill) == 80, "lot fill");
 static_assert(sizeof(GbLot) == 320, "lot");
 static_assert(sizeof(GbFunding) == 56, "funding");

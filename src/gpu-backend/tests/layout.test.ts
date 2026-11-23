@@ -10,7 +10,7 @@ import { LAYOUTS } from '../layout.ts';
 
 const repo = path.resolve(import.meta.dirname, '../../..');
 
-test('protocol v2 layout: TypeScript offsets equal the C++ offsetof of gb.h', () => {
+test('protocol v3 layout: TypeScript offsets equal the C++ offsetof of gb.h', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'gb-layout-'));
   const bin = path.join(dir, 'layout-dump');
 

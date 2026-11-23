@@ -123,3 +123,50 @@ __device__ __forceinline__ Decision mkDecision(int reason, int k, double price, 
 __device__ __forceinline__ void failInto(int& status, int& info, int code, int detail) {
   if (status == C_OK) { status = code; info = detail; }
 }
+
+// ----- staged-stop@1 (GPU Phase 8; src/staged-stop/tracker.ts StagedTracker, expression for expression) -----
+// One position's staged state of one book with the stage ON. stagedOnEntry runs immediately after the book's onEntry
+// (the fill); stagedStep immediately after the book's after-session ratchet (a later session close). The manager's own
+// post-entry high H and level L are read and L is raised:
+//   actPrice = raw * (1 + (double)actTenths / 1000)      armed = armed || H >= actPrice
+//   if armed: L = jsmax(L, H * (1 - (double)st2Tenths / 1000))
+// The counters are exact: arms (positions armed), stagedExits (trailing-stop events executed while armed; Growth
+// retention's partial sale included), placementExits (a staged exit in the session right after the arming session whose
+// close was at or below the level placed at arming).
+struct Staged {
+  bool on, armed, placed;
+  int actTenths, st2Tenths, armedS;
+  double actPrice;
+  int arms, stagedExits, placementExits;
+};
+__device__ __forceinline__ void stagedInit(Staged& z, int on, int actTenths, int st2Tenths) {
+  z.on = on != 0; z.armed = false; z.placed = false; z.actTenths = actTenths; z.st2Tenths = st2Tenths; z.armedS = -1;
+  z.actPrice = NAN; z.arms = 0; z.stagedExits = 0; z.placementExits = 0;
+}
+__device__ __forceinline__ void stagedStep(Staged& z, double H, double& stopPrice, int s, double close) {
+  if (!z.on) return;
+  bool armedNow = false;
+  if (!z.armed && H >= z.actPrice) { z.armed = true; z.armedS = s; z.arms++; armedNow = true; }
+  if (!z.armed) return;
+  stopPrice = jsmax(stopPrice, H * (1 - (double)z.st2Tenths / 1000));
+  if (armedNow) z.placed = close <= stopPrice;
+}
+__device__ __forceinline__ void stagedOnEntry(Staged& z, double H, double& stopPrice, double raw, int s, double close) {
+  if (!z.on) return;
+  z.actPrice = raw * (1 + (double)z.actTenths / 1000);
+  z.armed = false; z.armedS = -1; z.placed = false;
+  stagedStep(z, H, stopPrice, s, close);
+}
+// an executed exit event at session s with reason code `reason` (RS_TSTOP / RS_TSTOP_GAP are trailing-stop events)
+__device__ __forceinline__ void stagedOnExit(Staged& z, int reason, int s) {
+  if (!z.on) return;
+  if ((reason == RS_TSTOP || reason == RS_TSTOP_GAP) && z.armed) {
+    z.stagedExits++;
+    if (s == z.armedS + 1 && z.placed) z.placementExits++;
+  }
+}
+// the device's own domain check of a staged book (the host validates first; a violation is a CPU throw: C_INVALID)
+__device__ __forceinline__ bool stagedDomainOk(int on, int actTenths, int st2Tenths) {
+  if (on == 0) return actTenths == 0 && st2Tenths == 0;
+  return on == 1 && actTenths >= 50 && actTenths <= 500 && st2Tenths >= 15 && st2Tenths <= 145;
+}

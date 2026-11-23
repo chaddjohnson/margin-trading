@@ -91,6 +91,8 @@ struct G {
   int ddEpochStart;
   bool ddHasLastFull; int ddLastFullSession; double ddLastFullPrice;
   bool ddLastPermissive;
+  // ----- staged-stop@1 (v3; Growth engine revision 1.5.0's tracker) -----
+  Staged stg;
 };
 
 __device__ __forceinline__ void gfail(G& g, int code, int info) { failInto(g.status, g.errInfo, code, info); }
@@ -154,6 +156,9 @@ __device__ void gOnEntry(G& g, int s, int fillBar, double raw) {
   g.stopPrice = high * (1 - g.p.tsp);
   g.pendingSignalTime = NAN; g.pendingSignalPrice = NAN;
   g.stopActiveSessions = 0; g.stopFirstActiveIndex = -1;
+  // revision 1.5.0: the staged onEntry hook (the CPU runs it after the book's open, or with the optional rules inside
+  // onFill right after their manager's onEntry: the same entry state, the same instant)
+  stagedOnEntry(g.stg, g.postEntryHigh, g.stopPrice, raw, s, LD(d.sClose + s));
 }
 
 // ShadowBook.open
@@ -1166,6 +1171,7 @@ __device__ void gExitsAtRules(G& g, int s, int k) {
   for (int guard = 0; guard < 3; guard++) {
     if (!(g.posActive && g.posDecision.valid && g.posDecision.barIndex == k)) return;
     const Decision exit = g.posDecision;
+    stagedOnExit(g.stg, exit.reason, s);  // revision 1.5.0: the executed event (a partial sale included)
     if (exit.partial) {
       g.realized += gPartialSale(g, s, exit);
       continue;
@@ -1210,7 +1216,11 @@ __global__ void growthKernel(DevData data, const GbCandIn* __restrict__ cands, i
 
   GbBookOut& bo = outs[c].book[2 + b];
   const GbGrowthIn& in = cands[c].g[b];
-  if (!in.enabled) { bo.nTrades = 0; bo.signals = 0; bo.firstDS = -1; bo.status = C_OK; bo.errInfo = 0; return; }
+  if (!in.enabled) {
+    bo.nTrades = 0; bo.signals = 0; bo.firstDS = -1; bo.status = C_OK; bo.errInfo = 0;
+    bo.stagedArms = 0; bo.stagedExits = 0; bo.placementExits = 0; bo.pad = 0;
+    return;
+  }
 
   G g;
   memset(&g, 0, sizeof(g));
@@ -1230,6 +1240,8 @@ __global__ void growthKernel(DevData data, const GbCandIn* __restrict__ cands, i
   g.gated = in.trend != TM_OFF || in.elig != EP_OFF || g.ddOn;
   g.protectedOnly = in.istopOn && !g.gated;
   g.cProcessedMinute = -1;
+  stagedInit(g.stg, in.stagedOn, in.actTenths, in.st2Tenths);
+  if (!stagedDomainOk(in.stagedOn, in.actTenths, in.st2Tenths)) gfail(g, C_INVALID, in.actTenths);
   const DevSym& d = *g.d;
   if (endIndex != g.S - 1 || endIndex < 1 || (in.entry == 0 && in.riseN < 2) || (in.retOn && in.stopFill != 0) ||
       (in.istopOn && in.stopFill != 0))
@@ -1282,6 +1294,7 @@ __global__ void growthKernel(DevData data, const GbCandIn* __restrict__ cands, i
         const Decision exit = g.posDecision;
         const int ti = g.posTrade;
         double interest, price;
+        stagedOnExit(g.stg, exit.reason, s);  // revision 1.5.0
         const double net = gClose(g, s, exit, interest, price);
         GbTrade& v = g.o.trades[ti];
         GbFill& x = v.fills[0];
@@ -1317,6 +1330,9 @@ __global__ void growthKernel(DevData data, const GbCandIn* __restrict__ cands, i
       g.postEntryHigh = jsmax(g.postEntryHigh, LD(d.sHigh + s));
       g.postEntryLow = jsmin(g.postEntryLow, LD(d.sLow + s));
       g.stopPrice = jsmax(g.stopPrice, g.postEntryHigh * (1 - g.p.tsp));
+      // revision 1.5.0: the staged hook right after the manager's ratchet (the CPU runs it after book.afterSession,
+      // whose classic window does not read the level)
+      stagedStep(g.stg, g.postEntryHigh, g.stopPrice, s, LD(d.sClose + s));
     }
     if (g.p.cont == CM_CLASSIC && g.mContActive) {
       if (s > g.mContStart) g.mContHigh = jsmax(g.mContHigh, LD(d.sHigh + s));
@@ -1356,5 +1372,6 @@ __global__ void growthKernel(DevData data, const GbCandIn* __restrict__ cands, i
   bo.firstDS = bo.nTrades > 0 ? g.o.trades[0].dS : -1;
   bo.status = g.status;
   bo.errInfo = g.errInfo;
+  bo.stagedArms = g.stg.arms; bo.stagedExits = g.stg.stagedExits; bo.placementExits = g.stg.placementExits; bo.pad = 0;
   atomicAdd(executed, 1u);
 }

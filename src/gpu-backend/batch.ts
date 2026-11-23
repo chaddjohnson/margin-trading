@@ -30,6 +30,8 @@ import { type Rec, recordOf } from '../vg-d1-growth-joint/evaluate.ts';
 import type { FundingRecord, Lot, LotFill, PoolResult } from '../vg-d1-growth-joint/pool.ts';
 import { economics } from '../vg-d1-growth-joint/context.ts';
 import { isLegacy2, riskId2 } from '../d1-risk-controls-rc2/config.ts';
+import { type StagedBook, canonicalStaged, stagedBooks, stagedId } from '../staged-stop/config.ts';
+import type { StagedLite } from '../staged-stop/tracker.ts';
 import { type DRec, type RcLite, type SRec, riskInputsOf } from '../vg-l0-risk-families/evaluate.ts';
 import {
   BOOKS,
@@ -95,6 +97,7 @@ export interface TaskResult {
   features: bigint;
   books: VBook[]; // in bookIds order, as booksWithControls2 returns them
   rc: Partial<Record<'D1:GDX' | 'D1:VGT', RcLite>>;
+  staged: Partial<Record<StagedBook, StagedLite>>; // GPU Phase 8: the ON books' counters (empty when OFF)
   pool: PoolResult | null;
   record: SRec | DRec | null;
   envelope: Envelope | null;
@@ -550,6 +553,7 @@ export const decodeRange = (
       features: e.features,
       books: [],
       rc: {},
+      staged: {},
       pool: null,
       record: null,
       envelope: null
@@ -557,6 +561,8 @@ export const decodeRange = (
 
     results.push(res);
     if (status !== 0) continue;
+
+    const st = canonicalStaged(t.staged); // the task's staged stop (null: OFF, the earlier decode exactly)
 
     // trades: books 0–3
     const trades: VTrade[][] = [[], [], [], []];
@@ -605,6 +611,27 @@ export const decodeRange = (
           blocks: i32(bo + BO.blocks!),
           blockedSessions: i32(bo + BO.blockedSessions!)
         };
+      if (st?.books[book as StagedBook]) {
+        const lite: StagedLite = {
+          arms: i32(bo + BO.stagedArms!),
+          stagedExits: i32(bo + BO.stagedExits!),
+          placementExits: i32(bo + BO.placementExits!)
+        };
+
+        (vb as VBook & { staged?: StagedLite }).staged = lite;
+        res.staged[book as StagedBook] = lite;
+      }
+    }
+    // the canonical book order of the record's counters (src/d1-risk-controls-rc3/run.ts stagedLitesOf)
+    if (st) {
+      const ordered: TaskResult['staged'] = {};
+
+      for (const b of stagedBooks) {
+        if (!st.books[b]) continue;
+        if (!res.staged[b]) throw new Error(`${t.k}: the staged book ${b} was not run`);
+        ordered[b] = res.staged[b];
+      }
+      res.staged = ordered;
     }
 
     if (!runPool || !(flags & FLAGS.RETURN_LOTS)) continue;
@@ -785,7 +812,12 @@ export const decodeRange = (
     if (o.record ?? true) {
       const rec: Rec = recordOf(door, t.quad, { books: res.books, result: pool }, t.options);
       const legacy = isLegacy2(t.controls);
-      const srec = { ...(legacy ? rec : { ...rec, id: riskId2(t.quad, t.controls) }), rc: res.rc } as SRec;
+      // staged ON: src/d1-risk-controls-rc3/run.ts stagedRecordOf (the staged identity, the RC summaries, the counters)
+      const srec = (
+        st
+          ? { ...rec, id: stagedId(riskId2(t.quad, t.controls), st), rc: res.rc, staged: res.staged }
+          : { ...(legacy ? rec : { ...rec, id: riskId2(t.quad, t.controls) }), rc: res.rc }
+      ) as SRec;
 
       res.record = t.detail ? ({ ...srec, risk: riskInputsOf(door, { result: pool }, rec) } as DRec) : srec;
     }
@@ -818,4 +850,4 @@ export const decodeBatch = (
 };
 
 // the record-only view a search pool consumes (the books and the pooled replay stay in the decoder's thread)
-export const leanResult = (r: TaskResult): TaskResult => ({ ...r, books: [], rc: {}, pool: null });
+export const leanResult = (r: TaskResult): TaskResult => ({ ...r, books: [], rc: {}, staged: {}, pool: null });

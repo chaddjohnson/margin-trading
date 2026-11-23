@@ -35,8 +35,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import type { Door } from '../vg-d1-growth-joint/data.ts';
-import { runWithControls2 } from '../d1-risk-controls-rc2/run.ts';
-import { evaluate } from '../vg-l0-risk-families/evaluate.ts';
+import { evaluateStaged, runWithStaged } from '../d1-risk-controls-rc3/run.ts';
 import { vOptions } from '../vg-l0-full-joint/nl0.ts';
 import { incumbents } from '../vg-l0-full-joint/nl0.ts';
 import { decode, levelsOf } from '../vg-l0-full-joint/space.ts';
@@ -140,7 +139,7 @@ export const smiTelemetry = () => {
 
 // approximate device bytes of one batch (gb_server.cu's own budget formula with the default capacities)
 export const plannedBytes = (n: number, sessions: number) =>
-  n * (1016 + 2 * (512 + 512) * 184 + 624 + 8 + 512 * 320 + 2048 * 56 + sessions * 8);
+  n * (1080 + 2 * (512 + 512) * 184 + 656 + 8 + 512 * 320 + 2048 * 56 + sessions * 8);
 
 // the precommitted parity mini-set: the reference identities and seeded Assignment 3 genomes (never chosen by outcome)
 export const parityMiniSet = (n: number): Task[] => {
@@ -165,6 +164,31 @@ export const parityMiniSet = (n: number): Task[] => {
 
     tasks.push({ k: `P:${i}`, quad: s.quad, controls: s.controls, options: vOptions, detail: false });
   }
+  // GPU Phase 8: the staged trailing stop (staged-stop@1) on the reference identities — every book ON, each book alone
+  // (fixed, outcome-independent settings inside every rule of the specification)
+  const on = {
+    'D1:GDX': { activationTenths: 120, stage2Tenths: 30 },
+    'D1:VGT': { activationTenths: 150, stage2Tenths: 40 },
+    'G:VGT': { activationTenths: 150, stage2Tenths: 30 }
+  };
+
+  tasks.push({
+    k: 'S:NL0:all',
+    quad: inc.NL0.quad,
+    controls: null,
+    options: vOptions,
+    detail: false,
+    staged: { version: 1, books: on }
+  });
+  for (const b of ['D1:GDX', 'D1:VGT', 'G:VGT'] as const)
+    tasks.push({
+      k: `S:IJ1:${b}`,
+      quad: inc.IJ1.quad,
+      controls: null,
+      options: vOptions,
+      detail: false,
+      staged: { version: 1, books: { [b]: on[b] } }
+    });
   return tasks;
 };
 
@@ -381,8 +405,9 @@ export const openOfficialGpuSession = async (spec: OfficialRunSpec): Promise<Off
 
     for (const [i, t] of tasks.entries()) {
       const g = gpu.results[i]!;
-      const x = runWithControls2(spec.door, t.quad, t.controls, t.options, false, false, { cache: false });
-      const rec = evaluate(spec.door, t.quad, t.controls, t.options);
+      // the canonical CPU engine (with the stage OFF these are RC 2's runWithControls2 and Assignment 2's evaluate)
+      const x = runWithStaged(spec.door, t.quad, t.controls, t.staged, t.options, false, false, { cache: false });
+      const rec = evaluateStaged(spec.door, t.quad, t.controls, t.staged, t.options, { cache: false });
 
       if (
         g.status === 0 &&

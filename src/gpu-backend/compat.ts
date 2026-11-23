@@ -41,6 +41,7 @@ export const NVCC_VERSION = '13.2.86';
 // the canonical evaluation entry points whose import closure the CUDA port mirrors
 export const cpuEntries = [
   'src/vg-l0-risk-families/evaluate.ts', // evaluate / evaluateDetail (RC 2 books, Priority 3's Growth books, pool, records)
+  'src/d1-risk-controls-rc3/run.ts', // GPU Phase 8: evaluateStaged (staged-stop@1: RC 3 D1 books, Growth revision 1.5.0)
   'src/vg-l0-risk-metrics/engine.ts', // the risk-envelope reference (toLedger)
   'src/vg-l0-risk-metrics/metrics.ts', // banked-capital drawdown, trade principal loss
   'src/vg-d1-growth-joint/data.ts', // the door loader (the exact arrays the GPU reads)

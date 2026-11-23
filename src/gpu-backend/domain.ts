@@ -10,7 +10,8 @@ import { type Family, families } from '../vg-l0-full-joint/space.ts';
 import { vOptions } from '../vg-l0-full-joint/nl0.ts';
 import { stresses } from '../vg-l0-full-joint/qualify.ts';
 import type { RiskConfig2 } from '../d1-risk-controls-rc2/config.ts';
-import { encodeD1, encodeGrowth } from './encode.ts';
+import { encodeD1, encodeGrowth, stagedFeaturesOf } from './encode.ts';
+import type { StagedConfig } from '../staged-stop/config.ts';
 import { FEATURE, featureNames } from './layout.ts';
 import type { Quad } from '../vg-d1-growth-joint/space.ts';
 
@@ -142,6 +143,30 @@ export const riskEnvelopePilotDomain = (grid: Quad['d1']['VGT']): DomainFeatures
     name: `risk-envelope pilot (NL0-R 0.1.0): ${a.name} + risk-envelope inputs`,
     features: a.features | FEATURE.RISK_METRICS,
     optionSets: [...a.optionSets, 'risk-envelope inputs']
+  };
+};
+
+// Priority 4 (research/vg-l0-staged-stop/): the risk-envelope domain plus the S1 staged trailing stop on D1·GDX, D1·VGT
+// and Growth·VGT, each independently ON or OFF (GPU Phase 8, protocol v3). The bits come from the encoder's own
+// stagedFeaturesOf over every ON/OFF combination of the three books.
+export const stagedStopDomain = (grid: Quad['d1']['VGT']): DomainFeatures => {
+  const a = riskEnvelopePilotDomain(grid);
+  let f = 0n;
+
+  for (let m = 0; m < 8; m++) {
+    const books: StagedConfig['books'] = {};
+
+    if (m & 1) books['D1:GDX'] = { activationTenths: 100, stage2Tenths: 30 };
+    if (m & 2) books['D1:VGT'] = { activationTenths: 100, stage2Tenths: 30 };
+    if (m & 4) books['G:VGT'] = { activationTenths: 100, stage2Tenths: 30 };
+    f |= stagedFeaturesOf({ version: 1, books });
+  }
+
+  return {
+    ...a,
+    name: `staged trailing stop (Priority 4, staged-stop@1): ${a.name} + S1 on D1·GDX, D1·VGT, Growth·VGT`,
+    features: a.features | f,
+    optionSets: [...a.optionSets, 'staged-stop@1 ON/OFF per book (8 combinations)']
   };
 };
 
