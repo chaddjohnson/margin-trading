@@ -63,3 +63,15 @@
   2026-11-17T23:49:54Z).
 - **Effect.** No rule, threshold or campaign evidence changes; the classification is narrower than "known failure" (two
   named tests, conditional on computed checks).
+
+## E4 — 2026-11-23T17:57:05Z — the acceptance generator fixed before its first run; E3/E4 suites rerun on the final pinned files
+
+- **What happened.** The first (dry) run of `tools/gpu-phase8/accept.ts` stopped with a SyntaxError (a `const t` declared
+  twice in the A1/A2 block — the generator had never run end to end), and after that fix its A0 runtime list named Phase
+  7's Q1 file `qualify/mini-risk.json`, which this study does not produce (its Q1 output is `qualify/p4-mini.json`,
+  `runtime.maglev = disabled`). The dry run also prints its blockers now. Every other gate passed in the dry run.
+- **Consequence.** The generator is a pinned policy file of the record, and gates E3/E4 require the negative and tamper
+  suites to have run on the final pinned files. They are rerun on the committed tree with the fixed generator, with
+  the same commands as `chains/final.sh` steps 2–3 (`chains/policy-rerun.sh`); the outputs of 13:03/13:07Z are kept
+  in `results/policy/superseded-54261ea0/` (also in Git at `aac6c0e1`).
+- **Effect.** No gate, threshold, rule or campaign evidence changes.

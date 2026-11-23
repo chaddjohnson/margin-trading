@@ -145,7 +145,7 @@ gate('S0 the superseded record is the accepted Phase 7 record (out-of-repository
   for (const x of fs.existsSync(pdir) ? fs.readdirSync(pdir).filter((x) => x.endsWith('.json') && x !== 'SUMMARY.json') : []) check(path.join(pdir, x));
   for (const j of fs.existsSync(R('jobs')) ? fs.readdirSync(R('jobs')).filter((j) => /^(a3|a2|mini|p4|sb)-/.test(j)) : [])
     if (fs.existsSync(R(`jobs/${j}/profile.json`))) check(R(`jobs/${j}/profile.json`));
-  for (const f of ['parity/finalists.json', 'policy/negative-final.json', 'qualify/mini-risk.json', 'risk-parity/edge-D21.json', 'risk-parity/edge-D24.json', 'risk-parity/finalists-D24.json', 'risk-parity/random-D19.json']) check(R(f));
+  for (const f of ['parity/finalists.json', 'policy/negative-final.json', 'qualify/p4-mini.json', 'risk-parity/edge-D21.json', 'risk-parity/edge-D24.json', 'risk-parity/finalists-D24.json', 'risk-parity/random-D19.json']) check(R(f));
   gate(`A0 engine runtime: every parity run, job, the finalists, the risk parity, Q1 and the negative suite ran under ${ENGINE_FLAG}; this generator too`, null, n >= 60 && bad.length === 0 && engineRuntime().maglev === 'disabled', `${n} records; not disabled: ${bad.slice(0, 6).join(', ') || 'none'}`);
 }
 
@@ -175,9 +175,9 @@ gate('S0 the superseded record is the accepted Phase 7 record (out-of-repository
     s ? `subjects ${t!.subjects}, staged ON ${t!.stagedOn}, arms ${t!.stagedArms}, staged exits ${t!.stagedExits}, placement ${t!.placementExits}, fixtures ${t!.stagedFixtureRuns}, mismatches ${t!.mismatches}, binaries ${s.build.binaries.map((b) => b.slice(0, 12))}` : 'missing'
   );
   const g = R('parity/finalists.json');
-  const t = read<{ pass: boolean; binarySha256: string; runtime?: { maglev: string }; runs: { door: string; tasks: number; identical: number; sealedChecked: number; sealedEqual: number }[] }>(g);
+  const fz = read<{ pass: boolean; binarySha256: string; runtime?: { maglev: string }; runs: { door: string; tasks: number; identical: number; sealedChecked: number; sealedEqual: number }[] }>(g);
 
-  gate('A2 Assignment 3 sealed finalists on D24: CPU reference (no Maglev) = GPU = sealed C24 figures', g, !!t && t.pass && t.binarySha256 === binarySha && t.runs.length >= 1 && t.runs.every((r) => r.identical === r.tasks && r.sealedChecked > 0 && r.sealedEqual === r.sealedChecked), t ? JSON.stringify(t.runs.map((r) => [r.door, r.identical, r.tasks, r.sealedEqual, r.sealedChecked])) : 'missing');
+  gate('A2 Assignment 3 sealed finalists on D24: CPU reference (no Maglev) = GPU = sealed C24 figures', g, !!fz && fz.pass && fz.binarySha256 === binarySha && fz.runs.length >= 1 && fz.runs.every((r) => r.identical === r.tasks && r.sealedChecked > 0 && r.sealedEqual === r.sealedChecked), fz ? JSON.stringify(fz.runs.map((r) => [r.door, r.identical, r.tasks, r.sealedEqual, r.sealedChecked])) : 'missing');
 }
 
 // ----- R1–R3 the risk-envelope delivery parity through the EvalLab (records, envelopes, qualification, rankings) -----
@@ -424,6 +424,7 @@ const record: AcceptanceRecord = {
 } as AcceptanceRecord;
 
 console.log(`${record.status}${blockers.length ? `: ${blockers.length} blocker(s)` : ''}`);
+if (dry && blockers.length) console.log(`blockers (dry run): ${blockers.join(' | ')}`);
 if (!dry) {
   if (blockers.length) {
     // never replace the record in force with a NOT_ACCEPTED one: the failed draft is kept in this study only
