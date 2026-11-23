@@ -77,3 +77,14 @@ The plan was committed before any diagnostic tool ran on a real Stage B record (
   `vgl0rebd.slice` (44G / 48G). PROTOCOL §2 said "one cutoff's search archive is copied at a time"; this is the
   disclosed deviation. It has no effect on any result, because each replay is deterministic and verified against its
   own sealed record.
+- **O3 (2026-11-23T08:12:13Z; disclosure of the CPU replay count).** `STANDARD_ADOPTION.json` planned at most 630 CPU engine runs:
+  ≤ 210 subjects × 3. The executed total is **798**: 597 in the three successful runs (199 subjects × 3), plus 201 in
+  the stopped first C19 attempt (67 × 3; AMENDMENTS D3). That attempt completed its replays and was stopped by the
+  over-strict path check before writing any result.
+  - Nothing else was evaluated: zero GPU evaluations, and zero evaluations in the census and qualification replays.
+  - The overrun is that repeated attempt only. It is a non-official, report-only CPU count. It selects nothing and
+    loosens no criterion.
+- **D4 (2026-11-23T08:12:13Z; an analysis-tool correction, no result affected).** The analysis checks the bound U ≥ DD − BD_marked on
+  every replayed subject. One C21 CTRL representative missed it by $0.01 (U $9,837.86, DD − BD $9,837.87). Its E
+  equals BD exactly, and `diag-core` rounds U, DD and BD to cents separately. The check is therefore made to two cents.
+  It holds for 199 / 199 subjects; the largest gap is $0.01.

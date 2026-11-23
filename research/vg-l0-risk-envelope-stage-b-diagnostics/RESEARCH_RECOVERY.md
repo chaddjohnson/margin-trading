@@ -1,16 +1,18 @@
-# RESEARCH_RECOVERY — RES-BD 1.0.0: Stage B census and profit-giveback diagnostics — INCOMPLETE
+# RESEARCH_RECOVERY — RES-BD 1.0.0: Stage B census and profit-giveback diagnostics — COMPLETE
 
 **Top screen** (times UTC from `date -u`; `ls` listings on Apollo show CET = UTC+1)
 
-- Updated: 2026-11-23T07:53Z. **INCOMPLETE.**
-- Current stage: **S2/S3 by cutoff.** C19 complete (census, qualification replay, giveback); C21 census running.
-- Authority: `PROTOCOL.md` (sha256 `90341d41…`, in `STANDARD_ADOPTION.json`), `brief/BRIEF.md` sha256 `b15e9746…`,
-  `AMENDMENTS.md` head **D3**.
-- Running: units `vgl0rebd-census-C21` (started 07:50:02Z) and `vgl0rebd-census-C24` (started 07:54:45Z), chain
-  `chains/census.sh`, logs `results/logs/census-C2x.log`. Finished cleanly when the log ends with `chain census C2x done`
-  and `systemctl --user show vgl0rebd-census-C2x -p Result` = success. Two search copies exist at once (C21, C24; C19's
-  removed), never all three (O2).
-- Next: `CUT=C21 chains/giveback.sh` after the C21 census; then remove the C21 search copy; then C24 the same way.
+- Updated: 2026-11-23T08:14Z. **COMPLETE.** Both deferred Stage B diagnostics are done for C19, C21 and C24, and verified. The
+  reports, regression and handoff ZIP are done.
+  - **Census:** zero evaluations, 64/64 lanes = sealed at every cutoff.
+  - **Giveback:** 199 CPU replays, 199/199 parity to the cent and bit for bit.
+  - **Originals:** 12/12 unchanged.
+- Authority: `PROTOCOL.md` sha256 `90341d417dcbce6da31ad6d9358ddb6b11ededb2d306e9518a003974c3c61aab` (committed
+  `9e5c4767`, unchanged); `brief/BRIEF.md` `b15e9746…`; `AMENDMENTS.md` head **D4 / O3**.
+- Running: nothing (`systemctl --user list-units 'vgl0rebd*'` shows only the slice).
+- **Follow-up gate:** the user's review of the ZIP and of `DECISION_REGISTER.md` R1–R7: keep P0; close the envelope
+  work; proceed to Priority 3; the archives. **Do not rerun anything merely because a session is new.** Every result
+  is deterministic and recorded. A rerun needs fresh verified copies (`archive.ts copy`).
 
 ## Environment
 
@@ -31,19 +33,25 @@
 
 | Stage | Status | Command / output | Resume |
 |---|---|---|---|
-| S0 plan | written | PROTOCOL.md, STANDARD_ADOPTION.json (preflight PASS 07:34Z), AMENDMENTS.md, brief/BRIEF.md | — |
+| S0 plan | complete (`9e5c4767`, before any tool ran on a real record) | PROTOCOL.md, STANDARD_ADOPTION.json (preflight PASS 07:34Z), AMENDMENTS.md, brief/BRIEF.md | — |
 | S1 tools + tests | complete (`60b42db2`; tests 7/7) | `tools/vg-l0-risk-envelope-stage-b-diagnostics/` | rerun |
 | S2 C19 | complete 07:39:41–07:49:32Z: 64/64 lanes = sealed, 98,339 centres, 58,545 neighbourhoods, fresh 0, refusals 0; qualification = sealed (194 members); population sha256 `d99957ad…`, qualification `4e72e7e3…`; C19 search copy removed 07:50Z | `launch.sh vgl0rebd-census-C19 … CUT=C19 chains/census.sh` | deterministic rerun from a fresh copy |
 | S3 C19 | complete 07:51:27–07:51:41Z (rerun r2 after D3): parity 67/67 to the cent and bit for bit; `results/giveback/giveback-C19.json` `7b91084d…` | `launch.sh vgl0rebd-giveback-C19-r2 … CUT=C19 chains/giveback.sh` | deterministic rerun |
-| S2 C21 | running | `CUT=C21 chains/census.sh` | rerun from a fresh copy |
-| S2/S3 C24, S3 C21 | not started | — | — |
-| S4 analysis, reports | not started | — | deterministic rerun |
-| S5 regression, ZIP, push | not started | — | — |
+| S2 C21 | complete 07:50:02–08:00:13Z: 64/64 = sealed, 97,779 centres, 59,569 neighbourhoods, fresh 0; qualification = sealed; population `68b508d5…`, qualification `e27778b6…`; C21 search copy removed 08:00:28Z | `CUT=C21 chains/census.sh` | rerun from a fresh copy |
+| S3 C21 | complete 08:00:28–08:00:47Z: parity 66/66; `giveback-C21.json` `177980dd…` | unit `vgl0rebd-giveback-C21` | deterministic rerun |
+| S2 C24 | complete 07:54:45–08:03:39Z (concurrent with C21, O2): 64/64 = sealed, 106,318 centres, 46,974 neighbourhoods, fresh 0; qualification = sealed; population `9fb37c62…`, qualification `97961c2a…`; C24 search copy removed 08:03:51Z | `CUT=C24 chains/census.sh` | rerun from a fresh copy |
+| S3 C24 | complete 08:03:51–08:04:12Z: parity 66/66; `giveback-C24.json` `40035f9f…` | unit `vgl0rebd-giveback-C24` | deterministic rerun |
+| originals | `archive.ts verify-all` 08:04:39Z: 12/12 unchanged (`archives-after.sha256`); qualify copies removed 08:04:40–41Z | — | — |
+| S4 analysis, reports | complete: `results/analysis/TABLES.md`, census / qualification / giveback records; REPORT, READ_FIRST, CENSUS_REPORT, GIVEBACK_REPORT, VERIFICATION, DECISION_REGISTER, DATA_SCHEMAS | `analyze.ts` | deterministic rerun |
+| S5 regression | complete 08:07:16–08:11:56Z on `d7f24591`: tool tests 7/7; Stage B tests 41/41; npm test = the 7 known failures (identical set); preflights 28/28; seals 0 differences; integrity diff empty; acceptance VERIFIED; Strategy Lab portfolio parity ALL VERIFIED, state fingerprint unchanged | `chains/regression.sh` | rerun |
+| S5 ZIP, push | see Delivery | `bundle.sh` | rebuild |
 
 ## Guards
 
 - Never write into `research/vg-l0-risk-envelope-stage-b/` or `tools/vg-l0-risk-envelope-stage-b/`. Never open an
-  original archive except to hash it. Never delete a Stage B archive.
+  original archive except to hash it. Never delete a Stage B archive (≈ 18 GB, kept for review; DECISION_REGISTER R5).
+- Git-ignored, kept: `.cache/vg-l0-risk-envelope-stage-b-diagnostics/` (the nine intermediates, ≈ 78 MB, sha256 in
+  `VERIFICATION.md` §1). The scratch archive copies were all removed (`results/verification/archive-actions.jsonl`).
 - No GPU job, no search, no D23 or FULL door.
 
 ## Exact commands (repository root `/home/chad/projects/margin-trading`)
@@ -72,3 +80,12 @@ Determinism: the census and qualification replays are pure functions of the arch
 CPU replays are deterministic (bit-for-bit equal to the GPU records); the paired bootstrap uses Stage B's seeded
 `Rng.from('vg-l0-risk-envelope-stage-b', 'bootstrap', 'giveback', <metric>, <cutoff>)`. A rerun from a fresh verified
 copy reproduces every number.
+
+## Disclosures (AMENDMENTS.md)
+
+- D1 / D2: two defects of Stage B's never-run `census.ts`, both fixed in this namespace's tools with regression tests:
+  a hash limited to 2 GiB, and a lane comparison that turns `"__Inf"` into `null`.
+- D3: an over-strict path check of mine stopped the first C19 giveback run; it was aligned with the established 1e-6
+  rule and rerun. D4: the bound check is made to two cents (cent rounding).
+- O1: output locations and the added capture. O2: the C21 and C24 census copies coexisted. O3: 798 CPU engine runs
+  against 630 planned (the D3 rerun).
