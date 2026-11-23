@@ -17,7 +17,7 @@ BASE=5d587bb28860967327a9f1b1263154b26f144e8c
 rm -rf "$S/$NAME" "$S/$NAME.zip" "$S/x"; mkdir -p "$S/$NAME"
 copy() { mkdir -p "$S/$NAME/$(dirname "$2")"; cp "$1" "$S/$NAME/$2"; }
 git ls-files $P src/vg-l0-staged-stop src/staged-stop tools/vg-l0-staged-stop research/gpu-phase8 tools/gpu-phase8 src/gpu-phase8 \
-  | grep -vE '\.(sqlite|zst|bin|cubin|fatbin|so)$' | while read -r f; do copy "$f" "$f"; done
+  | grep -vE '\.(sqlite|zst|bin|cubin|fatbin|so|zip)$' | while read -r f; do copy "$f" "$f"; done
 for f in config/gpu-backend/acceptance.json CLAUDE.md docs/gpu/FEATURE_MATRIX.md docs/gpu/PARITY_CHECKLIST.md docs/gpu/README.md \
   docs/research/OPTIMIZATION_STANDARD.md research/vg-l0-trailing-stop-audit/DECISION_REGISTER.md \
   research/vg-l0-trailing-stop-audit/PRIORITY4_RESEARCH_PROTOCOL_PROPOSED.md research/vg-l0-trailing-stop-audit/STAGED_STOP_DESIGN_OPTIONS.md; do

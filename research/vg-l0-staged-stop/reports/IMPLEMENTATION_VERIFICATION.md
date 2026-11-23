@@ -121,3 +121,39 @@ D19 / D21, `DRY` seeds, the in-process CPU reference) of exactly the official po
 projections, the full qualification instrument, the selection (lane values, pairs, statistics, mechanism, pooled P0,
 interval subjects), the decomposition rows and the interval rows — 11/11 invariant checks. It found no defect beyond the
 evidence-identity issue fixed before it (amendment E2).
+
+## 7. In-study verification after the freeze, and the final regression
+
+### 7.1 Checks inside the official stages (sealed records)
+
+| Check | Evidence | Result |
+|---|---|---|
+| A0: incumbents with S1 OFF on the new engine equal their sealed D24 figures | `results/ablation/` | PASS (New L0 $382,721.46 / $19,459.83; N/original $388,031.02 / $19,459.83) |
+| Gate R: CTRL lanes R3–R18 = Stage B's sealed CTRL lanes, envelopes included (determinism and the unchanged OFF path) | `results/gate-r/C19.json`, `C21.json`, `C24.json` | **IDENTICAL** 32/32 at every fold |
+| Every official job attested on the accepted GPU path | `results/gpu-attestations/` (18 files) | all 18: acceptance ACCEPTED `c02a8a92…`, binary `86b30753…`, RTX 5090 `GPU-ae5f222c…`, `maglev: disabled`, clean source, never `skippedForTest` |
+| Every sealed record against the seal log | `results/seals.jsonl` | 26/26 sha256 equal (21:33Z) |
+| Doors | `results/doors.jsonl` | each training door opened only by its fold's stages; each next interval only after its committed selection; FULL opened once for the official validation (21:28:53Z, after the committed FROZEN_SELECTION and the FULL authorization), then only by report-only diagnostics of the same frozen subjects |
+| CPU fallback | job logs, attestations | none: every evaluation of every official stage ran on the GPU (14,001,785 fresh, 307,823 archive hits) |
+
+### 7.2 CPU reference = official GPU on the frozen subjects (report-only diagnostics, purpose `diagnostic`)
+
+| Replay | Subjects | CPU = sealed GPU whole-run net and marked DD |
+|---|---|---|
+| `lots.ts` C19 record on D21 | 4 | 4/4, to the cent |
+| `lots.ts` C21 record on D23 | 4 | 4/4 |
+| `lots.ts` C24 record on FULL (frozen subjects) | 24 | 24/24 |
+| `lots.ts` C24 record on FULL, every validation row (`--all`) | 195 | **195/195** |
+
+### 7.3 Final regression (at the study's last commit before the bundle)
+
+Run after every official stage and the report-only analyses, on the final code (no change to the code closure, the
+pinned files or the acceptance since the protocol freeze; `git diff 5ff3bc0a HEAD` touches only new report-only tools
+in `tools/vg-l0-staged-stop/` and study documents and records). Logs: `reports/diagnostics/regression/`.
+
+| Check | Time (UTC) | Result |
+|---|---|---|
+| `npm test` (`npm-test.txt`) | 21:49:02–21:53:58Z | **1,875 tests: 1,862 pass, 9 fail, 4 skipped.** The 9 failures are the **7 known pre-existing ones** (`allin-original.ts` / `allIn.ts` byte checks ×6 incl. the protected-files hash list; Study 7 data end) **plus the 2 declared failures of the completed Priority 5A study** (its byte pin of `riseTrading.ts` 1.4.0 and the LIFECYCLE line-range diff; §5, Phase 8 amendment E3). No new failure. The 3 record-in-force tests that failed before the Phase 8 record now pass |
+| `npm run research-preflight -- --study research/vg-l0-staged-stop` (`research-preflight.txt`) | 21:53:03Z | **PASS** (standard 3.0.0, scope optimization; acceptance ACCEPTED `86b30753…` on `GPU-ae5f222c…`) |
+| `tools/gpu-backend/verify-acceptance.sh --rebuild --device --expect-record-sha256 c02a8a92…` (`verify-acceptance.txt`) | 21:54:29–21:54:36Z | **VERIFIED**: pinned files committed and unmodified, unchanged since the source revision, binary sha256, reproducible rebuild, device |
+| Sealed records (`results/seals.jsonl`) | 21:33Z | 26/26 |
+| GPU job archives (`reports/diagnostics/job-archives.sha256`, 18 files, ≈ 66 GB, not versioned) | 21:51:34Z | hashed for the recovery path |

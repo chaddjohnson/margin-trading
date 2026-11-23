@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-23T21:45Z (clock). **Status: INCOMPLETE — every official stage is COMPLETE and sealed; reports,
-  regression, ZIP and push remain.** E0–E5 sealed (`results/engineering/gates.json` sha256 `c38cacbe…`, commit
+- **Updated:** 2026-11-23T21:58Z (clock). **Status: INCOMPLETE — every official stage COMPLETE and sealed; reports and
+  regression COMPLETE; ZIP and push remain.** E0–E5 sealed (`results/engineering/gates.json` sha256 `c38cacbe…`, commit
   `234f05c9`); PROTOCOL P4-S1 1.0.0 FROZEN 18:17:12Z (`results/protocol-freeze.json` sha256 `ea75d7ed…`, protocol sha256
   `bd57ea2a476be9735e3f199749e511d184f247b9c903dd5853e847899de8b6f7`, code digest `431493de…`, acceptance `c02a8a92…`;
   commit `5ff3bc0a`). Stage A COMPLETE (`11a12b26`, A0 PASS); fold C19 COMPLETE (`d57146c3` … `142a1a4f`); fold C21
@@ -37,11 +37,17 @@
   N/original +$94,670; informed EXP primaries I1 +$102,353, I2 +$82,820, I3 +$98,298, I4 = OFF +$94,670. ON reps vs own
   all-OFF on validation: mean −$1,398 (17+/20=/8−). T3 C24 −$5,156 [−$10,505, +$101]. Chronological check: not passed for
   either arm. Ledger 14,307,206 / 25,000,000 (+ decomposition 9,156).
-- **Next steps (in order):** (1) commit the post-fold diagnostics; (2) reports: SEARCH_REPORT §4–§5, RISK_REPORT,
-  FINAL_COMPARISON, REPORT (executive), DECISION_REGISTER, READ_FIRST, IMPLEMENTATION_VERIFICATION §7, REPRODUCIBILITY
-  hashes; (3) regression (npm test, preflight, verify-acceptance); (4) ZIP `tools/vg-l0-staged-stop/bundle.sh
-  /tmp/claude-1000/vgl0ss-bundle` + copy to `~/.local/share/margin-trading-gpu/handoffs/`; (5) final checkpoint COMPLETE,
-  commit, push unsandboxed, verify `git ls-remote origin research/vg-l0-staged-trailing-stop`.
+- **Reports (written):** `REPORT.md` (executive), `DECISION_REGISTER.md`, `READ_FIRST.md`, `reports/FINAL_COMPARISON.md`,
+  `reports/SEARCH_REPORT.md` (§1–§5), `reports/RISK_REPORT.md`, `reports/ABLATION_REPORT.md`,
+  `reports/IMPLEMENTATION_VERIFICATION.md` (§1–§7), `reports/REPRODUCIBILITY.md`; tables incl. `abc-decomposition.md`,
+  `annual-train-validate.md`; tools `annual.ts`, `abc.ts`. Recommendation: S1 OFF; no Priority 5 successor; incumbents preserved.
+- **Regression (21:49–21:55Z):** npm test 1,875 / 1,862 pass / 9 fail (7 known + 2 declared P5A) / 4 skipped; research
+  preflight PASS; verify-acceptance VERIFIED; logs `reports/diagnostics/regression/`. Job archives hashed
+  (`reports/diagnostics/job-archives.sha256`, 18 files ≈ 66 GB).
+- **Next steps (in order):** (1) commit the reports; (2) `tools/vg-l0-staged-stop/bundle.sh /tmp/claude-1000/vgl0ss-bundle`
+  (trial build OK: 690 files, checksums OK); copy the ZIP to `research/vg-l0-staged-stop/bundle/` (committed, the
+  repository convention) and to `~/.local/share/margin-trading-gpu/handoffs/` (+ `.sha256`); (3) final checkpoint COMPLETE,
+  commit, push unsandboxed (`git push origin research/vg-l0-staged-trailing-stop`), verify with `git ls-remote`.
 
 ## Environment
 
@@ -78,7 +84,8 @@
 | Fold C24 (primary) + informed | complete 19:56:32–21:30:31Z | search 2,029,277 requested (`d52157d2`, sha `dff693ef…`); gate R identical 32/32 (`1d5e04a2`); extension TRIGGERED (EXP 41/64 = 64.1 %, CTRL 8/64) 1,219,867 requested, after it EXP 31/64 = 48.4 % still budget-bound, CTRL 0 (`743027f0`, `c69d6695…`); informed I1–I4 1,588,312 requested, every lane "triggers not met" (`6e53f91e`, `85097475…`); qualification 808,998 (1,237 members; `aa115493`, `643fd676…`); selection (`1eefbf18`, `52660d03…`): D̄ $8,761 [L90 $4,059, U90 $13,475] not material; mechanism confirmed (45/64 ON, $7,174, L90 $4,654); risk non-inferior; pooled P0 CTRL R29#1 $241,225 / DD $23,468, EXP R4#1 GDX+VGT $238,352 / DD $26,301 (all-OFF $232,478); decomposition D24 9,156 (`fbc52ddd`, `eb1e5dc8…`) |
 | Freeze, FULL validation, outcome | complete 21:28:46–21:30:31Z | FROZEN_SELECTION (`9184d683`, `4210775b…`); FULL authorization (`1556eefa`, `8baa3540…`); validation 2025-01-02…2026-10-30 on FULL once, 51,675 requested (`498ef801`, `284dc1d5…`); outcome (`490325a3`, `949756c9…`): **inconclusive (budget)** |
 | Report-only post-fold analyses | complete 21:31:36–21:32:11Z | `tools/vg-l0-staged-stop/post.sh` → `reports/diagnostics/`, `reports/tables/` (log `reports/diagnostics/post.log`) |
-| Reports, regression, ZIP, push | running (reports) | see Next steps |
+| Reports, regression | complete 21:33–21:58Z | reports listed in the top screen; regression logs `reports/diagnostics/regression/` |
+| ZIP, push | running | see Next steps |
 
 ## Guards
 

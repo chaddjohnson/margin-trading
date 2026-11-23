@@ -74,12 +74,33 @@ $N --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarn
 # lot-level risk diagnostics of the frozen subjects of an interval / validation record
 for R in C19:D21 C21:D23 C24:FULL; do GPU_POLICY_PURPOSE=diagnostic $N --no-maglev --expose-gc --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=12288 \
   src/gpu-backend/legacyRunner.ts vg-l0ss-lots tools/vg-l0-staged-stop/lots.ts --record ${R%:*} --door ${R#*:} --out $D/lots-${R%:*}-${R#*:}.json --md $T/lots-${R%:*}-${R#*:}.md; done
+# every row of the validation record replayed on FULL (feeds the A/B/C table)
+GPU_POLICY_PURPOSE=diagnostic $N --no-maglev --expose-gc --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=12288 \
+  src/gpu-backend/legacyRunner.ts vg-l0ss-lots tools/vg-l0-staged-stop/lots.ts --record C24 --door FULL --all --out $D/lots-C24-FULL-all.json
+# zero-evaluation tables from the sealed records: risk tails, population census, annual / train / interval, A/B/C decomposition
+$N --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/vg-l0-staged-stop/tails.ts --out $T/tails.md --json $D/tails.json
+$N --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/vg-l0-staged-stop/census.ts --out $T/census-population.md
+( cd research/vg-l0-staged-stop && $N --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning ../../tools/vg-l0-staged-stop/annual.ts | grep -v "informed I3 representative" > reports/tables/annual-train-validate.md )
+$N --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/vg-l0-staged-stop/abc.ts --out $T/abc-decomposition.md
+# all of the post-fold analyses in one fail-fast run (log: reports/diagnostics/post.log)
+/bin/bash tools/vg-l0-staged-stop/post.sh > $D/post.log 2>&1
 # the handoff ZIP (verified: zip -T, every checksum after extraction, a secrets scan, no data / archive / binary)
 tools/vg-l0-staged-stop/bundle.sh /tmp/claude-1000/vgl0ss-bundle && cp /tmp/claude-1000/vgl0ss-bundle/vg-l0-staged-trailing-stop-priority4.zip ~/.local/share/margin-trading-gpu/handoffs/
 ```
 
 The CPU diagnostics reproduce the sealed official GPU figures where they overlap (`lots.ts` checks each subject's
 whole-run net and marked DD against the sealed record: every subject matched to the cent).
+
+### 4.1 Final identities
+
+| Item | sha256 |
+|---|---|
+| `results/outcome.json` (label inconclusive) | `949756c9d4a62418640857c0d1e20389f2d98e1ce35598d9ce91262c65d98845` |
+| `FROZEN_SELECTION.json` | `4210775bbd61b71b6f820a1dbc014d4f0532a248b4c9615b9282814656a24875` |
+| `results/intervals/C24.json` (validation) | `284dc1d576a97a6817df2f1f0daa75c68ee6e6bd3bc1963a08e90d2312e68b9b` |
+| `results/selection/C19.json`, `C21.json`, `C24.json` | `8cc6606b…`, `5d35a12e…`, `52660d03…` |
+| `results/decomposition/D24.json` | `eb1e5dc89b3576c8d30ee89fbcefee3d059ab52c3772c38b50ce3288d786a3bf` |
+| GPU job archives (18, ≈ 66 GB, not versioned) | `reports/diagnostics/job-archives.sha256` (verify from the study directory with `sha256sum -c`), sizes in `job-archives.sizes.txt` |
 
 ## 5. Recovery
 

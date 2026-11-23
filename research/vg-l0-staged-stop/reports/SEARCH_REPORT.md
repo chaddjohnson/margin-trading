@@ -90,8 +90,84 @@ generated tables are in `reports/tables/`: `search-budget.md`, `search-compute.m
 
 ## 4. Fold C24 (primary) and the informed lanes
 
-*(filled after the C24 fold — see §4 below once written)*
+| Item | CTRL | EXP |
+|---|---|---|
+| Search requested (official GPU) | 922,165 | 1,107,112 |
+| Lanes budget-bound after the search | 8 / 64 (all `GB0.VD1`) | **41 / 64 (64.1 %)** — 9 `GA0.VA0`, all 32 `GB0.VD1` |
+| Extension block (triggered: EXP 64.1 % > 25 %) | 8 lanes re-run | 41 lanes re-run; 1,219,867 requested (both arms) |
+| Budget-bound after the extension | 0 | **31 / 64 (48.4 %)** — 30 `GB0.VD1` + `GA0.VA0/R8` |
+| Qualification union (with the informed lanes) | 192 members + 91 informed | 192 members + 362 OFF projections + 188 informed + 326 informed projections (+ 2 benchmarks; 1,237 members, 808,998 requested) |
+| Mean V (median; min–max) | $180,345 ($180,119; $114,671–$241,225) | $189,106 ($187,508; $141,928–$238,352) |
+
+- **Gate R: identical** (32/32).
+- **Primary statistic: D̄ = +$8,761, 80 % interval [L90 +$4,059, U90 +$13,475]; not material** (mean below $10,000).
+  Per cell `GA0.VA0` +$8,684, `GB0.VD1` +$8,838; 42 positive / 22 negative; **R3–R18 +$16,191 vs R19–R34 +$1,332** —
+  the two halves of the replicates disagree by $14,859, so the C24 mean is driven by the Stage B seeds; D p10 / median
+  / p90 −$31,975 / +$9,160 / +$51,471.
+- **Mechanism: confirmed at C24** — 45/64 representatives use S1 (70 %, Wilson 95 % 58–80 %); mean advantage over their
+  own all-OFF projection on D24 **+$7,174** (L90 +$4,654, U90 +$9,982). 19 representatives are OFF (14 of them OFF
+  projections of ON members). The CPU replays of the 46 ON/OFF pairs (`tables/selection-C24-mechanism.md`): 41 better, 3
+  identical, 2 worse; mean Δ net +$6,955 = changed exits +$3,258 + displacement (newly − no longer funded) +$3,697;
+  mean forfeited trends −$2,237; mean Δ interest −$1,775 (less time funded); mean Δ marked DD −$2,139.
+- **Risk: non-inferior on all five metrics, none clearly worse.** Means (EXP − CTRL; 80 % interval): centre marked DD
+  +$205 [−$501, +$905]; confirmation p90 DD +$646 [−$36, +$1,331]; breach share +0.35 pp [−0.18, +0.90]; trade principal
+  loss (liq.) −$497 [−$1,024, +$29]; banked-capital DD (liq.) −$41 [−$793, +$710].
+- **Pooled P0 primaries (D24):** CTRL `C24/broad/GB0.VD1/R29#1` **$241,225** (DD $23,468); EXP
+  `C24/broad/GB0.VD1/R4#1` with **D1·GDX (A 39.5 %, τ₂ 3.7 %) and D1·VGT (A 37.0 %, τ₂ 2.0 %) staged** **$238,352**
+  (DD $26,301) — the EXP primary is **below** the CTRL primary; its all-OFF projection $232,478 (S1 adds $5,874 on D24,
+  all in 2019). Both primaries are far below the frozen incumbents on the same door (New L0 $382,721, N/original
+  $388,031; DD $19,460).
+- **Validation (2025-01-02 → 2026-10-30, FULL, opened once after the committed frozen selection; retrospective,
+  previously inspected history):** CTRL primary +$55,308 (reset DD $25,430); **EXP primary +$60,162 (DD $20,373) vs its
+  own all-OFF projection +$75,051 (DD $21,701): S1 cost $14,889 in 2025** (a staged exit that forfeited the rest of a
+  trend; see `RISK_REPORT.md` §4); New L0 +$96,884, N/original +$94,670 (DD $20,386 each). Lane representatives: mean
+  validation P&L CTRL $41,938 vs EXP $36,782 — **T3 paired mean Δ −$5,156 [L90 −$10,505, U90 +$101]**; T2 interval-DD Δ
+  U90 +$2,224 (non-inferior). **The 45 ON representatives vs their own all-OFF projections on the validation window:
+  mean −$1,398** (17 better, 20 identical, 8 worse; worst −$64,128, best +$23,148).
+
+### 4.1 Informed lanes I1–I4 (C24; separately labelled diagnostics, no chronological claim; PROTOCOL.md §10)
+
+Every informed lane stopped on "triggers not met" (none budget-bound); 1,588,312 requested (EXP 1,046,127 over 32 lanes,
+CTRL 542,185 over 16).
+
+| Type | Centre | Free genes (EXP) | Mean V CTRL | Mean V EXP | Mean D_I (L90 / U90) | EXP reps ON | EXP primary (D24) | its all-OFF | Validation: EXP primary vs incumbent |
+|---|---|---|---|---|---|---|---|---|---|
+| I1 | New L0 | 9 staged genes | $382,721 (New L0) | $390,489 | +$7,767 ($7,249 / $8,259) | 8/8 | GDX (A 30.6 %, τ₂ 4.7 %) + VGT (A 48.8 %, τ₂ 5.2 %): $392,021 | $382,721 | **+$102,353 vs +$96,884 (+$5,469)** |
+| I2 | N/original | 9 staged genes | $388,031 (N/original) | $395,564 | +$7,533 ($7,259 / $7,809) | 8/8 | GDX (A 23.9 %, τ₂ 4.8 %) + VGT (A 46.8 %, τ₂ 5.8 %) [a single-book OFF projection of a 3-book member]: $396,648 | $388,031 | **+$82,820 vs +$94,670 (−$11,850)** |
+| I3 | New L0 | staged + D1 / Growth exit genes | $383,403 | $386,978 | +$3,576 ($3,436 / $3,716) | 8/8 | GDX (A 27.5 %, τ₂ 5.1 %): $386,978 | $382,721 | +$98,298 vs +$96,884 (+$1,414); CTRL I3 primary +$96,884 |
+| I4 | N/original | as I3 + 12 RC genes | $389,296 | $389,139 | −$157 (−$307 / −$55) | 0/8 | OFF: $390,638 | — | +$94,670 (= N/original) |
+
+- Around the incumbents the staged genes add +$3.6k to +$7.8k on D24 (≈ 1–2 %), every time below the $10,000
+  materiality line that the independent arms use, with tight intervals (the 8 replicates share one centre). With the
+  exit genes also free (I4), the EXP lanes chose S1 OFF in all 8 replicates.
+- On the 2025–2026 validation window the informed EXP primaries split: I1 +$5,469 and I3 +$1,414 over New L0, I2
+  −$11,850 under N/original (2026: $35,185 vs $49,501). There is no consistent out-of-sample gain.
 
 ## 5. Synthesis across the folds
 
-*(filled after the C24 fold)*
+| Fold | D̄ (L90 / U90) | Material | EXP budget-bound after the extension | Mechanism (ON share; advantage) | Risk | Next interval: EXP primary vs its all-OFF | ON reps vs own all-OFF on the interval (mean; + / = / −) | T3 paired interval Δ (L90 / U90) |
+|---|---|---|---|---|---|---|---|---|
+| C19 (secondary) | +$2,340 ($560 / $4,168) | no | 50.0 % | 78 %; +$8,411 | non-inferior | +$76,321 vs +$73,962 (+$2,359) | −$1,864; 11 / 27 / 12 | +$2,490 (−$4,700 / +$9,748) |
+| C21 | +$6,684 ($3,809 / $9,605) | no | 48.4 % | 81 %; +$10,655 | non-inferior | −$12,168 vs −$12,168 ($0) | +$3,099; 12 / 38 / 2 | +$4,030 (−$108 / +$8,165) |
+| C24 | +$8,761 ($4,059 / $13,475) | no | 48.4 % | 70 %; +$7,174 | non-inferior | +$60,162 vs +$75,051 (−$14,889) | −$1,398; 17 / 20 / 8 | −$5,156 (−$10,505 / +$101) |
+
+1. **Precommitted label: INCONCLUSIVE (budget)** — the second rule of PROTOCOL.md §1.4 fires: after the extension block
+   more than 25 % of EXP's lanes were still budget-bound at C21 (48.4 %) and at C24 (48.4 %). The first rule (harmful)
+   does not fire: neither C21 nor C24 has U90 < 0 and no risk metric is clearly worse. The label is sealed in
+   `results/outcome.json` and is not reinterpreted here.
+2. **Independently of the budget caveat, no fold reached materiality.** The mean gap grew with the training window
+   ($2.3k → $6.7k → $8.8k) but stayed below $10,000 each time, and at C21 and C24 the replicate halves disagree by $7k
+   and $15k.
+3. **The training-door advantage is genuinely S1's** (mechanism confirmed at every fold: ON representatives beat their
+   own all-OFF projections by $7–11k on the training door, through changed exits and the capital they free).
+4. **It does not carry into the following periods.** On the three next intervals the ON representatives gained −$1,864,
+   +$3,099 and −$1,398 on average over their own all-OFF projections, and in many lanes S1 never armed. The EXP
+   primaries' leads over the CTRL primaries on the intervals come from their base genes, not from S1 (C19 +$2,359 of
+   +$99,905; C21 $0; C24 −$14,889 against a +$4,854 lead).
+5. **Search economics:** allowing S1 makes the search harder — EXP lanes were budget-bound 5–16 times as often as CTRL
+   lanes and needed 16–23 % more evaluations, and the `GB0.VD1` cell stayed budget-bound even with the island cap at 9.
+   A larger budget is the only route to a definite primary verdict; the interval evidence (point 4) gives no reason to
+   expect a material out-of-sample effect.
+6. **Chronological check (§9.3):** passed by neither arm (largest fold-primary interval DD CTRL $63,636, EXP $55,987
+   > $35,000; Σ interval P&L CTRL $19,622, EXP $124,315). Every selection is "no chronological support: not a
+   deployment-qualified candidate without an explicit user decision".
