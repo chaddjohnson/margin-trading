@@ -89,3 +89,16 @@ copy reproduces every number.
   rule and rerun. D4: the bound check is made to two cents (cent rounding).
 - O1: output locations and the added capture. O2: the C21 and C24 census copies coexisted. O3: 798 CPU engine runs
   against 630 planned (the D3 rerun).
+
+## Delivery
+
+- **Handoff ZIP:** `research/vg-l0-risk-envelope-stage-b-diagnostics/bundle/vg-l0-risk-envelope-stage-b-diagnostics.zip`.
+  - Built 2026-11-23T08:14:56Z by `tools/vg-l0-risk-envelope-stage-b-diagnostics/bundle.sh` from the tree at `88cad016`.
+  - sha256 `611b8ccd2beb3b013980a0a2aed992989d8ec9cad552aaa4d323d8f005014126`; 24,629,041 B; 108 files covered by its
+    `MANIFEST.sha256`.
+  - Checks passed: `zip -T` OK; every checksum verified after extraction; the secret and personal-data scan is clean;
+    there is no database, `.zst` or market-data file.
+  - The ZIP holds this checkpoint as of `88cad016`, before this section.
+  - An identical copy is in `~/.local/share/margin-trading-gpu/handoffs/`.
+- **Push:** `git ls-remote origin research/vg-l0-risk-envelope-stage-b-diagnostics` = local HEAD (see the final response).
+  `main` (`3606f4b3`) and `research/vg-l0-risk-envelope-stage-b` (`1c1f9e72`) are untouched; nothing was merged.
