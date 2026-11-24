@@ -25,7 +25,7 @@ attestations, 6,883 receipt batches, **CPU-scored 0**).
 | **Study** | 1,496 lanes | 2,963,404 | 7,462 | 4,648 / 767,723 | **44,569,440** | ≈ 41.6 M | ≈ 2.9 M | chain 9 h 10 min |
 
 The chain ran 2026-11-24T13:46:22Z → 22:56:27Z with no failure, no resume, no resource-guard decision and no ceiling
-stop; the ledger used 44.6 M of the 80 M ceiling; job archives 185 GB (4,741 bytes per fresh evaluation, as the pilot
+stop; the ledger used 44.6 M of the 80 M ceiling; job archives 196.0 GB (≈ 4,700 bytes per fresh evaluation, as the pilot
 measured). Track N received **1.25×** Track F's C24 search in requested evaluations (8.53 M vs 6.84 M), as the frozen
 matching rule (R_N = 8) intended.
 

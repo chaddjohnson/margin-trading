@@ -41,7 +41,7 @@ Machine-readable: `results/` (sealed records; `results/seals.jsonl` lists each w
 
 - `sha256sum -c SHA256SUMS.txt` inside the extracted folder (every file but the checksum file itself).
 - `IDENTITY.txt`: branch, commit, remote and its verified head at packaging; how to check out the exact tree.
-- `OMITTED_ARTIFACTS.md`: what is not in the ZIP (job archives ≈ 204 GB, market data, the GPU binary, caches) with
+- `OMITTED_ARTIFACTS.md`: what is not in the ZIP (job archives 196.0 GB, other caches 22.6 GB, market data, the GPU binary, caches) with
   paths, sizes, sha256 and how to restore or reproduce them.
 - Source code is not copied: it is in the repository at the commit in `IDENTITY.txt` (`src/vg-l0-n-successor/`,
   `tools/vg-l0-n-successor/`, the study's chains), reproducible with `RUN_COMMANDS.md`.

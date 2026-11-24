@@ -190,5 +190,5 @@ gating), judged first on its chronological procedure test.
 - Engineering disclosures: E5's first resume refused by the archive's code-digest binding (rerun on the final code); the
   pilot and E3 shared the GPU (throughput figures are planning figures); the regression chain's first preflight call had a
   usage error (rerun 29/29 PASS); early checkpoint times were estimates, corrected to clock times.
-- Job archives (≈ 204 GB under `research/vg-l0-n-successor/cache/`, hashed in `reports/diagnostics/job-archives.sha256`)
+- Job archives (196.0 GB of the 218.6 GB under `research/vg-l0-n-successor/cache/`, hashed in `reports/diagnostics/job-archives.sha256`)
   are kept uncompressed on Apollo for your review.

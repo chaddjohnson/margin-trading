@@ -63,7 +63,7 @@ report-only diagnostics (after the outcome).
 
 - **Do not rerun anything.** Every stage is sealed; FULL has been opened once for the validation. Do not edit the
   protocol, the sealed records or any other study's files.
-- Job archives `cache/jobs/*` (≈ 204 GB; hashes in `reports/diagnostics/job-archives.sha256`) stay uncompressed until the
+- Job archives `cache/jobs/*` (196.0 GB; the whole `cache/` 218.6 GB; hashes in `reports/diagnostics/job-archives.sha256`) stay uncompressed until the
   user decides (F3).
 
 ## Disclosures
