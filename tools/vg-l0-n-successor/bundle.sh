@@ -118,7 +118,7 @@ for f in config/gpu-backend/acceptance.json docs/research/OPTIMIZATION_STANDARD.
 ( cd "$B" && find . -type f ! -name SHA256SUMS.txt | sort | xargs sha256sum > SHA256SUMS.txt )
 ( cd "$S" && zip -qr -X "$NAME.zip" "$NAME" && zip -T "$NAME.zip" )
 mkdir -p "$S/x" && ( cd "$S/x" && unzip -q "../$NAME.zip" && cd "$NAME" && sha256sum -c --quiet SHA256SUMS.txt && echo "checksums OK after extraction: $(wc -l < SHA256SUMS.txt) files" )
-if grep -rIlE 'BEGIN [A-Z ]*PRIVATE KEY|ALPACA_(API|SECRET)_KEY=[A-Za-z0-9]|APCA_API_(KEY_ID|SECRET_KEY)=[A-Za-z0-9]|ghp_[A-Za-z0-9]{20}|github_pat_|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{24}|@gmail\.com|[Pp]assword *[:=] *[^ ]' "$S/x/$NAME"; then echo "FORBIDDEN CONTENT"; exit 1; fi
+if grep -rIlE 'BEGIN [A-Z ]*PRIVATE KEY|ALPACA_(API|SECRET)_KEY=[A-Za-z0-9]|APCA_API_(KEY_ID|SECRET_KEY)=[A-Za-z0-9]|ghp_[A-Za-z0-9]{20}|github_pat_[A-Za-z0-9_]{20}|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{24}|@gmail\.com|[Pp]assword *[:=] *[^ ]' "$S/x/$NAME"; then echo "FORBIDDEN CONTENT"; exit 1; fi
 if find "$S/x/$NAME" \( -name '*.sqlite*' -o -name '*.zst' -o -name 'data.csv' -o -name '*.parquet' -o -name 'api-token' \) | grep -q .; then echo "A DATABASE, ARCHIVE OR MARKET-DATA FILE IS IN THE BUNDLE"; exit 1; fi
 echo "secrets / personal-data scan: clean; no database or market-data file"
 sha256sum "$S/$NAME.zip"; stat -c '%s bytes' "$S/$NAME.zip"; unzip -l "$S/$NAME.zip" | tail -1
