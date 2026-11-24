@@ -4,6 +4,8 @@
 //                         sequentialDrawdown) beside the sealed GPU statistic: the one-directional qualifier of §11.2
 //   lots --door D24|FULL  the funded-lot ledgers of the C24 finalists and the references (CPU reference, detailed records:
 //                         per-lot net, MAE, peak, giveback, holding days, exit reasons; risk decomposition inputs)
+//   families              the report-only half-radius (0.5×) and wide (1.5×) neighbourhood families (2 × 128 each) of
+//                         every C24 finalist and reference on D24 (non-official GPU, purpose diagnostic): plateau breadth
 //   tail                  the D1 maximum-hold-window tail stress (standard §5.9; AD11): Assignment 3's tools/vg-l0-full-joint/
 //                         tail.ts logic, copied (that module runs on import and logs into Assignment 3's door log)
 import fs from 'node:fs';
@@ -16,7 +18,9 @@ import { type Cfg, canonicalCfg, cfgId, quadOf } from '../../src/vg-l0-full-join
 import { cutoffs, foldKeys, resultsDir, researchDir } from '../../src/vg-l0-n-successor/context.ts';
 import { openP5Door, selectionFile, sequentialFile, sliceFile } from '../../src/vg-l0-n-successor/doors.ts';
 import { charge } from '../../src/vg-l0-n-successor/sequential.ts';
-import { purposeOf, writeJson } from './common.ts';
+import { openToolLab, purposeOf, writeJson } from './common.ts';
+import { drawsOf, famOf } from '../../src/vg-l0-full-joint/qualify.ts';
+import type { SRec } from '../../src/vg-l0-full-joint/evaluate.ts';
 import { loadSessions } from '../../src/four-family/data.ts';
 import { quantile } from '../../src/vg-l0-full-joint/fitness.ts';
 import { controlValuesOf } from '../../src/vg-l0-full-joint/space.ts';
@@ -255,8 +259,53 @@ const tailStress = async () => {
   console.log(`${rows.length} tail-stress rows written`);
 };
 
+// ----- report-only neighbourhood families of other radii (plateau breadth) -----
+
+const families = async () => {
+  purposeOf(['diagnostic']);
+
+  const fz = rd<{ finalists: { label: string }[] }>(path.join(researchDir, 'FROZEN_SELECTION.json'));
+  const sel = rd<{ subjects: { label: string; cfg: Cfg }[]; controls: { label: string; cfg: Cfg }[] }>(selectionFile('C24'));
+  const subjects = [...fz.finalists.map((f) => sel.subjects.find((s) => s.label === f.label)!), ...sel.controls];
+  const t = await openToolLab({ backend: 'gpu', door: 'D24', use: 'diagnostic', area: 'diagnostics', job: 'families-D24', purpose: 'diagnostic: report-only 0.5x / 1.5x neighbourhood families of the C24 finalists', ledger: path.join(diagDir, 'families-receipts.jsonl') });
+  const q = (xs: number[], p: number) => {
+    const s = [...xs].sort((a, b) => a - b);
+    const i = (s.length - 1) * p;
+    const lo = Math.floor(i);
+
+    return s.length ? s[lo]! + (s[Math.min(s.length - 1, lo + 1)]! - s[lo]!) * (i - lo) : NaN;
+  };
+
+  try {
+    const rows = [];
+
+    for (const s of subjects) {
+      const cfg = canonicalCfg(s.cfg);
+      const out: Record<string, unknown> = { label: s.label, id: cfgId(cfg) };
+
+      for (const [name, scale] of [['small', 0.5], ['wide', 1.5]] as const) {
+        const draws = [1, 2].flatMap((rep) => drawsOf(cfg, famOf(name, [name, rep, 'C24'], 'joint', scale)));
+        const seen = new Set<string>();
+        const unique = draws.filter((d) => (seen.has(d.id) ? false : (seen.add(d.id), true)));
+        const recs = await t.lab.evalMany<SRec>(unique.map((d) => ({ cfg: d.cfg, options: vOptions })), `families ${name}`);
+        const nets = recs.map((r) => (r.error ? -100_000 : r.net));
+        const dds = recs.map((r) => (r.error ? Infinity : r.dd));
+        const k = dds.filter((d) => d > 35_000).length;
+
+        out[name] = { scale, draws: unique.length, medianNet: r2(q(nets, 0.5)), p10Net: r2(q(nets, 0.1)), robust: r2(0.5 * q(nets, 0.5) + 0.5 * q(nets, 0.1)), p90Dd: r2(q(dds, 0.9)), p95Dd: r2(q(dds, 0.95)), worstDd: r2(Math.max(...dds)), breaches: k, breachShare: r2(k / Math.max(1, unique.length)), positiveShare: r2(nets.filter((x) => x > 0).length / Math.max(1, nets.length)) };
+      }
+      rows.push(out);
+    }
+    writeJson(path.join(diagDir, 'families.json'), { kind: 'report-only neighbourhood families 0.5x and 1.5x of the instrument radius (Assignment 3 instrument, labels (small|wide, rep, C24)); non-official GPU (purpose diagnostic); never a gate, role or ranking input', rows, finished: new Date().toISOString() });
+    console.log(`${rows.length} family rows written`);
+  } finally {
+    await t.close();
+  }
+};
+
 if (cmd === 'chain') await chainCpu();
 else if (cmd === 'lots') await lots();
 else if (cmd === 'tail') await tailStress();
-else throw new Error('chain | lots --door D24|FULL | tail');
+else if (cmd === 'families') await families();
+else throw new Error('chain | lots --door D24|FULL | tail | families');
 void resultsDir;

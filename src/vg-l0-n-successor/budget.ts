@@ -37,7 +37,7 @@ export const firstReplicate = 101;
 export const replicates = {
   broadBase: 4, // per cell and cutoff (Assignment 3: 2)
   refine: 4, // per refined cell (Assignment 3: 2)
-  informedBase: 10, // per family pair at C24 (Assignment 3: 4; PROTOCOL.md §7.6's matching rule, from the pilot)
+  informedBase: 8, // per family pair at C24 (Assignment 3: 4; PROTOCOL.md §7.6 matching rule: the pilot gives 8)
   maxRounds: 4, // replicate rounds per track and cutoff (one replicate of every structure each)
   roundThreshold: 0.02
 };

@@ -234,16 +234,24 @@ share; they are not budget-bound by performance and not converged in class cover
   2 × 128, ≤ 40 session-close evaluations of 16 boundaries).
 - **R_N (Assignment 3 §8.3's rule):** the smallest integer ≥ 4 such that 16 × R_N × (the pilot's expected informed lane at
   C24) ≥ the expected Track F C24 search (256 broad lanes + 17 refined cells × 4 lanes). Computed by the pilot (§13, E9)
-  and frozen in code (`replicates.informedBase`); the pilot record shows the computation. Track N thereby gets at least
-  the independent track's C24 search effort in requested evaluations — it is not starved to subsidize Track F.
+  and frozen in code (`replicates.informedBase`); the pilot record shows the computation. **The pilot gives R_N = 8**
+  (expected Track F C24 search 7,424,752 requested; 16 × 8 × 65,211 = 8,347,008 ≥ it, 16 × 7 × 65,211 = 7,303,632 < it):
+  **128 Track N lanes** (16 pairs × R101–R108). Track N thereby gets at least the independent track's C24 search effort
+  in requested evaluations — it is not starved to subsidize Track F.
 - **Hard ceiling (resource safeguard, never convergence): 80,000,000 requested official evaluations** over the whole
   study (ledger over the sealed stage records). A stage launches only if the remaining ceiling covers **1.5 ×** its
   expected cost and the disk keeps **60 GiB** free after its archive (≈ 4,800 bytes per fresh evaluation); each stage's Lab
   gets maxFresh = min(its bound, the remaining ceiling). If the safeguard stops a stage, the study stops at that
   checkpoint, labels the stop **resource/operational**, reports what was not run and never selects from partial results.
-- **Expected effort** (planning figures from the pilot and Assignment 3's sealed lanes; the pilot record): see the freeze's
-  `expected`. Planning order of magnitude: Track F ≈ 9–13 M requested per cutoff, Track N ≈ Track F's C24 search, the whole
-  study ≈ 50–70 M requested, ≈ 10–16 h of GPU time at 1,100–2,200 requested/s.
+- **Expected effort** (planning figures, never a decision input; `results/engineering/pilot.json`, recorded in the freeze's
+  `expected`): requested per lane = Assignment 3's sealed mean at the cutoff × the pilot's ratio under the two-tier rule
+  (broad 1.031, measured on D21; informed 1.008, measured on D24; refinement as informed + 2,550 for the larger seed set):
+  broad 20,581 / 21,103 / 16,789 / 15,982 (D19 / D21 / D23 / D24); refinement 46,586 / 53,307 / 50,352 / 49,020; informed
+  65,211 (D24). Planning totals: Track F ≈ 8–10 M requested per cutoff (256 broad + ≤ 68 refinement lanes + qualification),
+  Track N ≈ 8.7 M, the whole study ≈ 44 M without replicate rounds and ≤ ≈ 70 M with every round, ≈ 8–13 h of GPU time at
+  1,100–2,200 requested/s and ≈ 210–330 GB of archives (4,741 bytes per fresh evaluation, measured). The pilot's 144 lanes
+  under the frozen rule ended 106 *triggers not met*, 38 *coverage-limited* and **0 budget-bound**; peak memory 20.3 GB
+  (128 lanes, page cache included).
 
 ### 7.7 Stage map against NL0 1.0.0 (§4.8) and budget equivalence
 
