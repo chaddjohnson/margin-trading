@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-24T12:25Z (clock). **Status: INCOMPLETE — Phase C engineering gates in progress; protocol DRAFT
+- **Updated:** 2026-11-24T12:57Z (clock; earlier entries before 12:23Z were estimates). **Status: INCOMPLETE — Phase C engineering gates in progress; protocol DRAFT
   (not frozen); no official evaluation run.**
 - **Done:** setup; Phase A (`METHOD_AND_BUDGET_RECONSTRUCTION.md` + `reports/phase-a/*`); code `src/vg-l0-n-successor/`,
   tools `tools/vg-l0-n-successor/`; draft `PROTOCOL.md`, `AMENDMENTS.md`, `STANDARD_ADOPTION.json` (preflight PASS);
@@ -39,9 +39,13 @@
 | Code + tests | written; unit tests 19/19 | `src/vg-l0-n-successor/*`, `tools/vg-l0-n-successor/*` |
 | E1 | PASS 12:0xZ | `results/engineering/E1-acceptance.json` |
 | E2 | PASS 12:13Z | `results/engineering/E2-references.json` |
-| E3 | running | `results/engineering/E3-a3-lanes.json` |
+| E3 | PASS 12:55Z (10/10 A3 lanes identical incl. N/original's lane) | `results/engineering/E3-a3-lanes.json` |
 | E4 | PASS 12:2xZ | `results/engineering/E4-parity.json` |
-| E5, E6, pilot (E9), E7, E8 | not started | — |
+| E5 | first attempt refused on resume (archive bound to the earlier code digest — by design); rerun on final code | — |
+| E6 | PASS 12:2xZ (lower bound; gaps 0 for references, ≤ $3,762 random) | `results/engineering/E6-chain.json` |
+| Pilot (E9) | running (units vgl0ns-pilot-broad, vgl0ns-pilot-informed, started 12:24/12:28Z) | `results/engineering/pilot/{broad,informed}.json` |
+| E7, E8 | not started (chains/tests.sh after the pilot; GPU must be free) | — |
+| Final-code reruns of E2–E6 | not started (P5_ENG_TAG=final; the gates command requires the final code digest) | — |
 | Protocol freeze | not started | `results/protocol-freeze.json` |
 
 ## Commands (repository root)

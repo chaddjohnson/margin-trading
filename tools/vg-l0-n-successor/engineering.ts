@@ -36,7 +36,11 @@ import { type Evidence, qualifyMembers, stresses } from '../../src/vg-l0-n-succe
 import { runLanes, stopReasons } from '../../src/vg-l0-n-successor/lanes.ts';
 import { laneCaps, nl0Caps, perMemberCap, perSubject, replicates, schedules } from '../../src/vg-l0-n-successor/budget.ts';
 import { type SliceRow, chain } from '../../src/vg-l0-n-successor/sequential.ts';
-import { openToolLab, purposeOf, writeJson } from './common.ts';
+import { codeDigest } from '../../src/vg-l0-n-successor/records.ts';
+import { openToolLab, purposeOf, writeJson as writeJson0 } from './common.ts';
+
+// every engineering record carries the study code digest it ran under and the rerun tag
+const writeJson = (file: string, value: Record<string, unknown>) => writeJson0(file, { ...value, codeDigest: codeDigest(), tag: process.env.P5_ENG_TAG ?? null });
 
 const args = process.argv.slice(2);
 const cmd = args[0];
@@ -45,6 +49,9 @@ const engDir = path.join(resultsDir, 'engineering');
 const outFile = (name: string) => path.join(engDir, name);
 const now = () => new Date().toISOString();
 const a3Dir = path.join(repoRoot, 'research', 'vg-l0-full-joint');
+// reruns of the gates on the final committed code use fresh job names (an archive is bound to the code digest)
+const TAG = process.env.P5_ENG_TAG ? `-${process.env.P5_ENG_TAG}` : '';
+const J = (name: string) => `${name}${TAG}`;
 const readJ = <T>(f: string) => JSON.parse(fs.readFileSync(f, 'utf8')) as T;
 
 // ----- E1: the acceptance, independently verified, and the entrypoint audit -----
@@ -97,7 +104,7 @@ const e2 = async () => {
     const recs: Record<string, (SRec | DRec)[]> = {};
 
     for (const backend of ['gpu', 'cpu'] as const) {
-      const t = await openToolLab({ backend, door, area: 'engineering', job: `E2-${door}-${backend}`, purpose: p, cpuWorkers: 4, ledger: path.join(engDir, 'E2', `${door}-${backend}-receipts.jsonl`) });
+      const t = await openToolLab({ backend, door, area: 'engineering', job: J(`E2-${door}-${backend}`), purpose: p, cpuWorkers: 4, ledger: path.join(engDir, 'E2', `${door}-${backend}${TAG}-receipts.jsonl`) });
 
       try {
         recs[backend] = await t.lab.evalMany<SRec>(
@@ -129,7 +136,7 @@ const e2 = async () => {
   // the C24 qualification evidence of the two references on the GPU = Assignment 3's sealed evidence (same instrument)
   const a3c24 = readJ<{ evidence: (Evidence & { label: string })[] }>(path.join(a3Dir, 'results/folds/C24/broad-qualification.json')).evidence;
   const a3inf = readJ<{ evidence: (Evidence & { label: string })[] }>(path.join(a3Dir, 'results/folds/C24/informed-qualification.json')).evidence;
-  const t = await openToolLab({ backend: 'gpu', door: 'D24', area: 'engineering', job: 'E2-qualify-D24-gpu', purpose: `${purpose}: E2 reference qualification`, ledger: path.join(engDir, 'E2', 'qualify-receipts.jsonl') });
+  const t = await openToolLab({ backend: 'gpu', door: 'D24', area: 'engineering', job: J('E2-qualify-D24-gpu'), purpose: `${purpose}: E2 reference qualification`, ledger: path.join(engDir, 'E2', 'qualify' + `${TAG}-receipts.jsonl`) });
   let evid: Evidence[];
 
   try {
@@ -217,7 +224,7 @@ const e3 = async () => {
   const ikey = 'C24/informed/GD.VB/R2';
   const informedSpec: LaneSpec = { key: ikey, seedKey: ikey, position: ikey, stage: 'informed', replicate: 2, cutoff: 'C24', kind: 'informed', res: 'fine', pair: 'GD.VB', seeds: a3ProjectedSeeds('GD.VB', 2) };
   const d19 = async () => {
-    const t = await openToolLab({ backend: 'gpu', door: 'D19', area: 'engineering', job: 'E3-C19', purpose: `${purpose}: E3 Assignment 3 broad and refinement lanes`, ledger: path.join(engDir, 'E3', 'C19-receipts.jsonl') });
+    const t = await openToolLab({ backend: 'gpu', door: 'D19', area: 'engineering', job: J('E3-C19'), purpose: `${purpose}: E3 Assignment 3 broad and refinement lanes`, ledger: path.join(engDir, 'E3', 'C19' + `${TAG}-receipts.jsonl`) });
 
     try {
       const [a, b] = await Promise.all([
@@ -236,7 +243,7 @@ const e3 = async () => {
     }
   };
   const d24 = async () => {
-    const t = await openToolLab({ backend: 'gpu', door: 'D24', area: 'engineering', job: 'E3-C24', purpose: `${purpose}: E3 Assignment 3 informed lane (N/original's)`, ledger: path.join(engDir, 'E3', 'C24-receipts.jsonl') });
+    const t = await openToolLab({ backend: 'gpu', door: 'D24', area: 'engineering', job: J('E3-C24'), purpose: `${purpose}: E3 Assignment 3 informed lane (N/original's)`, ledger: path.join(engDir, 'E3', 'C24' + `${TAG}-receipts.jsonl`) });
 
     try {
       const { results } = await runLanes(t.lab, [informedSpec], 'informed', 'E3 informed', a3Override('informed', 16 * 25 + 2 * 128, 2));
@@ -321,7 +328,7 @@ const e4 = async () => {
     let dates: string[] = [];
 
     for (const backend of ['gpu', 'cpu'] as const) {
-      const t = await openToolLab({ backend, door, area: 'engineering', job: `E4-${door}-${backend}`, purpose: `${purpose}: E4 parity`, cpuWorkers: 12, ledger: path.join(engDir, 'E4', `${door}-${backend}-receipts.jsonl`) });
+      const t = await openToolLab({ backend, door, area: 'engineering', job: J(`E4-${door}-${backend}`), purpose: `${purpose}: E4 parity`, cpuWorkers: 12, ledger: path.join(engDir, 'E4', `${door}-${backend}${TAG}-receipts.jsonl`) });
 
       try {
         if (!dates.length) dates = t.door.dates.filter((d) => d > boundaryOf[door]!).slice(0, 16);
@@ -367,7 +374,7 @@ const miniSeeded = { ...budgets.study.informed, islands: 2, islandsMax: 5, popul
 
 const e5Run = async (name: string, backend: 'gpu' | 'cpu', stopAfterFresh?: number) => {
   const purpose = purposeOf(['parity-test']);
-  const t = await openToolLab({ backend, door: 'D19', area: 'engineering', job: name, purpose: `${purpose}: E5 determinism`, cpuWorkers: 12, stopAfterFresh, ledger: path.join(engDir, 'E5', `${name}-receipts.jsonl`) });
+  const t = await openToolLab({ backend, door: 'D19', area: 'engineering', job: J(name), purpose: `${purpose}: E5 determinism`, cpuWorkers: 12, stopAfterFresh, ledger: path.join(engDir, 'E5', `${name}${TAG}-receipts.jsonl`) });
 
   try {
     const broad: LaneSpec[] = ['GA0.VA0', 'GD1.VB0', 'GC1.VD1'].map((c) => {
@@ -444,7 +451,7 @@ const e6 = async () => {
 
   for (const f of folds) {
     const spec = cutoffs[f];
-    const t = await openToolLab({ backend: 'gpu', door: spec.sliceDoor as never, area: 'engineering', job: `E6-${f}-gpu`, purpose: `${purpose}: E6 sequential statistic`, ledger: path.join(engDir, 'E6', `${f}-receipts.jsonl`) });
+    const t = await openToolLab({ backend: 'gpu', door: spec.sliceDoor as never, area: 'engineering', job: J(`E6-${f}-gpu`), purpose: `${purpose}: E6 sequential statistic`, ledger: path.join(engDir, 'E6', `${f}${TAG}-receipts.jsonl`) });
 
     try {
       const dates = t.door.dates.filter((d) => d > spec.end);
@@ -536,7 +543,7 @@ const dirBytes = (d: string): number =>
 const pilotPart = async (name: string, door: 'D21' | 'D24', kind: 'broad' | 'informed', specs: LaneSpec[]) => {
   const purpose = purposeOf(['benchmark']);
   const t0 = Date.now();
-  const t = await openToolLab({ backend: 'gpu', door, area: 'pilot', job: name, purpose: `${purpose}: pilot ${name}`, ledger: path.join(engDir, 'pilot', `${name}-receipts.jsonl`) });
+  const t = await openToolLab({ backend: 'gpu', door, area: 'pilot', job: name, purpose: `${purpose}: pilot ${name}`, ledger: path.join(engDir, 'pilot', `${name}${TAG}-receipts.jsonl`) });
 
   try {
     const { results, rounds } = await runLanes(t.lab, specs, kind, `pilot ${name}`);

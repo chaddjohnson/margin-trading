@@ -322,7 +322,12 @@ close or lot minimum shows (gate E6 measures the gap on engineering configuratio
 fold produced a primary, the sequential net > 0 and D ≤ $35,000; otherwise *unsupported* or *incomplete*. F/original's
 verdict is the study's independent chronological test; L and B are secondary; roles and the controls' fixed paths are
 descriptive. The CPU reference value of the exact minute chain of the same paths is computed afterwards (non-official,
-purpose cpu-reference) and reported beside it; it never replaces the verdict.
+purpose cpu-reference) and reported beside it; it never replaces the verdict and **can never grant support**. Precommitted
+qualifier (one-directional): if the GPU statistic gives *supported* but the CPU reference exact chain exceeds $35,000, every
+report and the successor's support label state "supported by the GPU statistic; the exact minute chain (CPU reference)
+breaches by $X — the support is not robust to intraday cross-boundary marks", and no report calls the procedure supported
+without that qualifier. (Gate E6 measured gaps of $0 for both references and up to $3,762.36 on random engineering
+configurations.)
 
 ### 11.3 Consequence (standard §1.8, default adopted)
 

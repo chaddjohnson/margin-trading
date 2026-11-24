@@ -106,9 +106,12 @@ const gates = () => {
 
     if (!fs.existsSync(file)) return { id, file: f, exists: false, pass: false, sha256: null };
 
-    const j = readJson<{ pass?: boolean }>(file);
+    const j = readJson<{ pass?: boolean; codeDigest?: string }>(file);
+    // the code-dependent gates must have run under the final (frozen) code closure
+    const digestRequired = ['E2', 'E3', 'E4', 'E5', 'E6'].includes(id);
+    const digestOk = !digestRequired || j.codeDigest === codeDigest();
 
-    return { id, file: f, exists: true, pass: j.pass === true, sha256: sha256File(file) };
+    return { id, file: f, exists: true, pass: j.pass === true && digestOk, digestRequired, codeDigest: j.codeDigest ?? null, digestOk, sha256: sha256File(file) };
   });
   const record = { kind: 'P5-NS engineering gates', protocol: `${PROTOCOL_ID} ${PROTOCOL_VERSION}`, head: headCommit(), codeDigest: codeDigest(), gates: Object.fromEntries(rows.map((r) => [r.id, r])), pass: rows.every((r) => r.pass), sealedAt: new Date().toISOString() };
 

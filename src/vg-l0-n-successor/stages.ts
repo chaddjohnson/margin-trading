@@ -493,8 +493,8 @@ export const trackLanes = (cut: CutoffKey, track: 'F' | 'N') => {
 export const runRound = async (cut: CutoffKey, track: 'F' | 'N', k: number, resume = false) => {
   const file = roundFile(cut, track, k);
 
-  if (fs.existsSync(file) && !resume) throw new Error(`${rel(file)} exists`);
   if (k < 1 || k > replicates.maxRounds) throw new Error(`--k 1…${replicates.maxRounds}`);
+  if (fs.existsSync(file) && isSealed(roundSearchFile(cut, track, k))) throw new Error(`round ${cut} ${track} ${k}: complete (its decision and lanes are sealed)`);
   if (k > 1) {
     const prev = readSealed<{ fired: boolean }>(roundFile(cut, track, k - 1));
 
@@ -797,8 +797,12 @@ export const runSelect = (cut: CutoffKey) => {
     roles[p] = rolesOf(`population ${p}`, pop);
   }
 
-  // the slice / validation subjects: every population's primary and roles, and the two frozen references (controls)
-  const subjectLabels = [...new Set([...Object.values(primaries), ...Object.values(roles).flatMap((r) => Object.values(r.roles))].filter((l): l is string => Boolean(l)))];
+  // the slice / validation subjects: every population's primary and roles, at C24 every finalist, and the two frozen
+  // references (controls)
+  const finalists = cut === 'C24' ? finalistsOf(candidates, primaries, roles) : [];
+  const subjectLabels = [
+    ...new Set([...Object.values(primaries), ...Object.values(roles).flatMap((r) => Object.values(r.roles)), ...finalists.map((f) => f.label)].filter((l): l is string => Boolean(l)))
+  ];
   const controls = all.filter((e) => e.track === 'control');
   const record: Record<string, unknown> = {
     stage: 'selection',
@@ -819,8 +823,8 @@ export const runSelect = (cut: CutoffKey) => {
   if (cut === 'C24') {
     const seq = readSealed<{ procedures: { population: string; verdict: string; supported: boolean }[] }>(sequentialFile);
 
-    record.finalists = finalistsOf(candidates, primaries, roles);
-    record.successor = successorPreDetermination(record.finalists as ReturnType<typeof finalistsOf>, candidates, controls, seq);
+    record.finalists = finalists;
+    record.successor = successorPreDetermination(finalists, candidates, controls, seq);
   }
 
   seal(file, record, `selection ${cut}`);
@@ -847,9 +851,10 @@ const subjectsOf = (cut: CutoffKey): Subject[] => {
   for (const [p, r] of Object.entries(sel.roles)) for (const [role, l] of Object.entries(r.roles)) if (l) add(byLabel.get(l)!, `role ${p}/${role}`, 'selected');
   if (sel.finalists)
     for (const f of sel.finalists) {
-      const e = byLabel.get(f.label) ?? sel.subjects.find((x) => x.label === f.label);
+      const e = byLabel.get(f.label);
 
-      if (e) add(e, 'finalist', 'selected');
+      if (!e) throw new Error(`${cut}: finalist ${f.label} is not a selection subject`);
+      add(e, 'finalist', 'selected');
     }
   for (const c of sel.controls) add(c, `control ${c.label}`, 'control');
   return [...out.values()];
