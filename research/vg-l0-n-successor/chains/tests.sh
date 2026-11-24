@@ -19,7 +19,7 @@ r e7-suites $T src/vg-l0-n-successor/tests/*.test.ts src/vg-l0-full-joint/tests/
 r npm-test npm test
 r root-tsc npx tsc --noEmit -p tsconfig.json
 r eslint npx eslint src/vg-l0-n-successor tools/vg-l0-n-successor
-r preflight-all npm run research-preflight
+r preflight-all npm run research-preflight -- --all
 r portfolio-parity npm --prefix apps/strategy-lab run portfolio-parity -- --out research/vg-l0-n-successor/results/engineering/tests/portfolio-parity.json
 cd apps/strategy-lab
 r() { local name=$1; shift; echo "$(date -u +%FT%TZ) start [$name]"; "$@" > "../../$OUT/strategy-lab-$name.txt" 2>&1; local rc=$?; echo "exit=$rc" >> "../../$OUT/strategy-lab-$name.txt"; echo "$(date -u +%FT%TZ) end [$name] rc=$rc"; return $rc; }
