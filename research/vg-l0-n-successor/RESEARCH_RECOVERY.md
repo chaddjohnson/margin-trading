@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-24T23:15Z (clock, UTC). **Status: COMPLETE — research and reports done; delivery (commit, push,
-  ZIP) recorded in "Delivery" below.**
+- **Updated:** 2026-11-24T23:17Z (clock, UTC). **Status: COMPLETE — research, reports and delivery (commit, push,
+  verified ZIP) done; see "Delivery" below.**
 - **Outcome (sealed `results/outcome.json` sha256 `75531dd7bb0d66a4ca3b91274832bd73d9e6f47d9223ea2344607c21cab2e977`):
   NO MATERIAL IMPROVEMENT — keep N/original as the preferred research incumbent and New L0 as the frozen benchmark.**
   Nothing adopted, deployed, merged or sent to a broker.
@@ -77,4 +77,10 @@ report-only diagnostics (after the outcome).
 
 ## Delivery
 
-(Filled after the push.)
+| Item | Value |
+|---|---|
+| Reports commit (pushed, `git ls-remote` = local) | `9dfefef26907a2d9f4f236a65fbfe9d9073ae5f4` on `research/vg-l0-n-original-successor` (after `10a077a3`, `65ddb845`) |
+| Handoff ZIP | `bundle/vg-l0-n-successor-handoff.zip`, sha256 `e6d594217ad8785ae16c9e289af36eee40732404af06a8b37224c8028f2e323e`, 2,375,033 bytes, 364 files; built 2026-11-24T23:17Z by `tools/vg-l0-n-successor/bundle.sh` from `9dfefef2` (its `IDENTITY.txt`) |
+| ZIP verification | `zip -T` OK; all 364 checksums of `SHA256SUMS.txt` verified after extraction; secrets / personal-data scan clean; no database, archive or market-data file |
+| Final commit | this checkpoint + the ZIP, pushed to `origin/research/vg-l0-n-original-successor` (verified with `git ls-remote`; the commit id is reported in the final message, since a commit cannot contain its own id) |
+| Not done (not authorized) | merge into `main`, adoption, official config change, deployment, broker access, compression or deletion of the job archives |
