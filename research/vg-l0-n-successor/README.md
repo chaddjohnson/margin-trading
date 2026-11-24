@@ -6,10 +6,15 @@ exclusive $100,000 slot (S1 OFF, P0 = marked DD ≤ $35,000 = 35 % of the fixed 
 independent from-scratch **Track F** at every cutoff (C19, C21, C23, C24) and an **N/original-informed Track N** at C24,
 under the registered reference method NL0 1.0.0 with convergence-driven extensions.
 
+**Status: COMPLETE (2026-11-24, UTC). Sealed outcome: NO MATERIAL IMPROVEMENT — keep N/original as the preferred research
+incumbent and New L0 as the frozen benchmark.** Start with `READ_FIRST.md`.
+
 | Document | Content |
 |---|---|
-| `READ_FIRST.md` | findings, recommendation, how to inspect the handoff (written at the end) |
-| `REPORT.md` | the research narrative, results and limitations (written at the end) |
+| `READ_FIRST.md` | findings, recommendation, how to inspect the handoff |
+| `REPORT.md` | the research narrative, results and limitations |
+| `FINAL_CANDIDATES.md`, `ROBUSTNESS_AND_RISK.md`, `CHRONOLOGICAL_VALIDATION.md`, `SEARCH_AND_CONVERGENCE_REPORT.md` | finalists; report-only risk; folds and the 2025–26 validation; search effort and convergence |
+| `bundle/vg-l0-n-successor-handoff.zip` | the portable handoff (`tools/vg-l0-n-successor/bundle.sh`) |
 | `PROTOCOL.md` | the frozen pre-registration (P5-NS 1.0.0) |
 | `METHOD_AND_BUDGET_RECONSTRUCTION.md` | Phase A: how NL0 / 3B / 5B / Assignment 3 / Stage B / Priority 4 actually searched, and the budget design derived from it |
 | `DECISION_REGISTER.md` | scope decisions, adaptations, operational choices, the user's outstanding decisions |

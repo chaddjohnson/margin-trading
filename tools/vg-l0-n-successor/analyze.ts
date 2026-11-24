@@ -249,6 +249,142 @@ const summary: Record<string, unknown> = {};
     );
 }
 
+// ----- C24: finalists, the successor determination, risk decomposition, validation, references -----
+{
+  interface Ev {
+    label: string;
+    id: string;
+    track: string;
+    stage: string;
+    cell: string;
+    lane: string;
+    replicate: number | null;
+    qualified: boolean;
+    failed: string[];
+    centre: { net: number; dd: number; lots: number; realized: number; unrealized: number; interest: number; costs: number; worstLoss: number; largestWin: number; topEpisodeShare: number; episodes: number; years: Record<string, number>; books: Record<string, { lots: number; wins: number; losses: number; booked: number; decisions: number; granted: number; refused: number }>; signature: string; peakValue: number };
+    select: { robust: number; p90Dd: number; median: number; p10: number };
+    confirm: { robust: number; p90Dd: number; median: number; p10: number; worstDd: number; breachShare: number };
+    confirmTail: { p95Dd: number; worst10Mean: number; breachShare: number; breachInterval: number[] };
+    stress: Record<string, { net: number; dd: number }>;
+    removal: Record<string, { net: number; dd: number }>;
+    risk: { openShare: number | null; occupancy: number; mae: { worst: number }; worstRealized: number | null; openLot: { multiple: number } | null };
+    envelope: { centre: { principalLossMarked: number; principalLossLiquidation: number; bankedDdMarked: number; bankedDdLiquidation: number } };
+  }
+  const sel = rd<{ subjects: Ev[]; controls: Ev[]; finalists?: { label: string; why: string[]; ledgerEquivalent: string[] }[]; successor?: { reference: Record<string, number | string>; rows: { label: string; track: string; criteria: { a: boolean; b: boolean; types: string[]; d: boolean; deltas: Record<string, number>; replication: Record<string, { replicates: number[] }> }; preValidation: boolean; support: string }[] } }>(path.join(resultsDir, 'selection', 'C24.json'));
+  const val = rd<{ rows: { label: string; id: string; sliceNet: number; sliceDd: number; wholeNet: number; wholeDd: number; validation?: Record<string, boolean>; wholeEnvelope: Record<string, number> }[] }>(path.join(resultsDir, 'validation', 'validation.json'));
+  const outc = rd<{ label: string; worthy: unknown[]; rows: { label: string; e: boolean; worthy: boolean }[] }>(path.join(resultsDir, 'outcome.json'));
+  const i1 = rd<{ development: { net: number; dd: number; lots: number; confirm: { median: number; p10: number; p90Dd: number; robust: number } }; validation: { net: number; resetDd: number }; full: { net: number; dd: number } }>(path.join(resultsDir, 'references', 'I1-sealed.json'));
+
+  if (sel && sel.finalists) {
+    const all = [...sel.subjects, ...sel.controls];
+    const by = (l: string) => all.find((e) => e.label === l)!;
+    const vrow = (id: string) => val?.rows.find((r) => r.id === id);
+    const fin = [...sel.finalists.map((f) => ({ ...by(f.label), why: f.why, eq: f.ledgerEquivalent })), ...sel.controls.map((c) => ({ ...c, why: ['frozen reference (control)'], eq: [] as string[] }))];
+    const rows = fin.map((e) => {
+      const v = vrow(e.id);
+
+      return [e.label, e.track, e.cell, e.qualified ? 'Q1–Q6' : `fails ${e.failed.join(',')}`, usd2(e.centre.net), usd2(e.centre.dd), e.centre.lots, usd(e.select.robust), usd(e.select.p90Dd), usd(e.confirm.median), usd(e.confirm.p10), usd(e.confirm.p90Dd), usd(e.confirmTail.worst10Mean), pct(e.confirmTail.breachShare), v ? usd2(v.sliceNet) : '—', v ? usd2(v.sliceDd) : '—', v ? usd2(v.wholeNet) : '—', v ? usd2(v.wholeDd) : '—', e.eq.length ? `= ${e.eq.length} other(s)` : ''];
+    });
+
+    if (i1) rows.push(['I1 (Priority 4, S1-enabled; sealed, not on this instrument)', 'external', 'GA0.VA0 + S1', 'P4 Q1–Q6', usd2(i1.development.net), usd2(i1.development.dd), i1.development.lots, '—', '—', usd(i1.development.confirm.median), usd(i1.development.confirm.p10), usd(i1.development.confirm.p90Dd), '—', '—', usd2(i1.validation.net), usd2(i1.validation.resetDd), usd2(i1.full.net), usd2(i1.full.dd), '']);
+    write(
+      'finalists.md',
+      'C24 finalists and references (development D24; validation and full history on FULL — previously examined)',
+      table(['Finalist', 'Track', 'Cell', 'Gates', 'Centre net', 'Centre DD', 'Lots', 'Sel. robust', 'Sel. p90 DD', 'Conf. median', 'Conf. p10', 'Conf. p90 DD', 'Conf. worst-10 % DD', 'Breaches', '2025–26 P&L', '2025–26 reset DD', 'Full net', 'Full DD', 'Ledger-equivalent'], rows)
+    );
+
+    const risk = fin.map((e) => [
+      e.label,
+      usd2(e.centre.realized),
+      usd2(e.centre.unrealized),
+      usd(e.centre.interest),
+      usd(e.centre.costs),
+      usd(e.centre.worstLoss),
+      usd(e.risk.mae.worst),
+      usd(e.envelope.centre.principalLossMarked),
+      usd(e.envelope.centre.principalLossLiquidation),
+      usd(e.envelope.centre.bankedDdMarked),
+      usd(e.envelope.centre.bankedDdLiquidation),
+      e.risk.openShare === null ? '—' : pct(e.risk.openShare),
+      pct(e.risk.occupancy),
+      pct(e.centre.topEpisodeShare),
+      usd(e.centre.peakValue),
+      Object.entries(e.centre.books).filter(([, b]) => b.lots > 0).map(([k, b]) => `${k} ${b.lots}L ${usd(b.booked)} (${b.granted}/${b.decisions} granted)`).join('; ')
+    ]);
+
+    write(
+      'risk.md',
+      'C24 risk decomposition on the development door (report-only; never a gate)',
+      table(['Finalist', 'Realized', 'Unrealized (open)', 'Interest', 'Costs', 'Worst realized lot', 'Worst lot MAE', 'Principal loss marked', 'Principal loss liquidation', 'Banked DD marked', 'Banked DD liquidation', 'Open share of net', 'Occupancy', 'Top episode share', 'Peak position value', 'Funded books (lots, booked, granted/decisions)'], risk)
+    );
+
+    const stressNames = Object.keys(fin[0]!.stress);
+
+    write(
+      'stresses.md',
+      'C24 stresses and causal removals on the development door (report-only)',
+      [
+        table(['Finalist', ...stressNames.map((k) => `${k} net / DD`)], fin.map((e) => [e.label, ...stressNames.map((k) => `${usd(e.stress[k]?.net)} / ${usd(e.stress[k]?.dd)}`)])),
+        '',
+        table(['Finalist', ...Object.keys(fin[0]!.removal).map((k) => `${k} net / DD`)], fin.map((e) => [e.label, ...Object.keys(fin[0]!.removal).map((k) => `${usd(e.removal[k]?.net)} / ${usd(e.removal[k]?.dd)}`)]))
+      ].join('\n')
+    );
+
+    const years = [...new Set(fin.flatMap((e) => Object.keys(e.centre.years)))].sort();
+
+    write('annual.md', 'C24 finalists: annual marked P&L on the development door (2016–2024)', table(['Finalist', ...years], fin.map((e) => [e.label, ...years.map((y) => usd(e.centre.years[y]))])));
+
+    if (sel.successor)
+      write(
+        'successor.md',
+        'The precommitted successor determination (PROTOCOL.md §12)',
+        [
+          `Reference: ${sel.successor.reference.label} — centre ${usd2(sel.successor.reference.centreNet as number)} / DD ${usd2(sel.successor.reference.centreDd as number)}; confirmation robust ${usd2(sel.successor.reference.confirmRobust as number)}, p10 ${usd2(sel.successor.reference.confirmP10 as number)}, p90 DD ${usd2(sel.successor.reference.confirmP90Dd as number)}.`,
+          '',
+          table(
+            ['Finalist', 'Track', '(a) Q1–Q6', '(b) not dominated', 'Δ centre net', 'Δ conf. robust', 'Δ centre DD', 'Δ conf. p90 DD', '(c) type', '(d) replicates meeting it', '(e) V1–V3', 'Worthy of consideration', 'Support'],
+            sel.successor.rows.map((r) => {
+              const o = outc?.rows.find((x) => x.label === r.label);
+
+              return [r.label, r.track, r.criteria.a ? 'yes' : 'no', r.criteria.b ? 'yes' : 'no', usd(r.criteria.deltas.centreNet), usd(r.criteria.deltas.confirmRobust), usd(r.criteria.deltas.centreDd), usd(r.criteria.deltas.confirmP90Dd), r.criteria.types.join('+') || '—', r.criteria.types.map((t) => `${t}: ${r.criteria.replication[t]!.replicates.length}`).join('; ') || '—', o ? (o.e ? 'pass' : 'fail') : '(after validation)', o ? (o.worthy ? '**yes**' : 'no') : (r.preValidation ? 'pending (e)' : 'no'), r.support];
+            })
+          ),
+          '',
+          outc ? `**Outcome (sealed): ${outc.label}**` : ''
+        ].join('\n')
+      );
+  }
+}
+
+// ----- one row per lane (compact, machine-readable; the full lane records stay in results/search/) -----
+{
+  const csv = (v: unknown) => {
+    const s = v === null || v === undefined ? '' : String(v);
+
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const head = ['cutoff', 'part', 'lane', 'stage', 'structure', 'gatesOn', 'replicate', 'kind', 'islands', 'nl0Cap', 'requested', 'seedDesigns', 'islandConfigs', 'r1Measured', 'r1Feasible', 'refinementStarts', 'refineMoves', 'stop', 'stopClass', 'lastReason', 'shortlist', 'bestShortlistNet', 'bestShortlistDd', 'bestShortlistId'];
+  const lines = [head.join(',')];
+
+  for (const r of searchRecords()) {
+    for (const l of r.lanes) {
+      const c = l.counts as Record<string, number>;
+      const sl = (l.shortlist ?? []) as { id: string; centre: { net: number; dd: number } }[];
+      const best = sl.reduce<(typeof sl)[number] | null>((b, x) => (b === null || x.centre.net > b.centre.net ? x : b), null);
+      const ext = l.extension as { stop: string; reason?: string };
+
+      lines.push(
+        [r.cutoff, r.part, l.key, l.stage, l.structure, gatesOf(l.structure), l.replicate, l.kind, l.islands.length, nl0Caps[r.kind], l.requested, c.seedDesigns ?? '', c.islandConfigs ?? '', c.r1Measured ?? '', c.r1Feasible ?? '', (l.refinements ?? []).length, c.refineMoves ?? '', ext.stop, stopClass(ext.stop), ext.reason ?? '', sl.length, best?.centre.net ?? '', best?.centre.dd ?? '', best?.id ?? '']
+          .map(csv)
+          .join(',')
+      );
+    }
+  }
+  fs.mkdirSync(out, { recursive: true });
+  fs.writeFileSync(path.join(out, 'lanes.csv'), `${lines.join('\n')}\n`);
+  summary.laneRows = lines.length - 1;
+}
+
 fs.mkdirSync(out, { recursive: true });
 fs.writeFileSync(path.join(out, 'summary.json'), `${JSON.stringify(summary, null, 1)}\n`);
 console.log(`tables written to ${path.relative(process.cwd(), out)}`);

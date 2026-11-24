@@ -48,6 +48,20 @@ for the user. Research only: nothing here adopts, deploys, merges or touches a b
 | O4 | Hard ceiling 80 M requested official evaluations; launch rule 1.5 × expected; 60 GiB disk reserve (≈ 4.8 KB per archived evaluation) | Phase A §6; 469 GB free at start |
 | O5 | Job archives kept uncompressed on Apollo; compression or cleanup only after the user's review | brief §9 |
 
+## Outcome decisions (precommitted rules applied; no discretion)
+
+| ID | Decision | Record |
+|---|---|---|
+| R1 | Track F (independent) at C19/C21/C23: **unsupported** chronologically (sequential net −$35,958.68, DD $90,945.51 > $35,000); its C24 selection carries "no chronological support: not a deployment-qualified candidate without an explicit user decision" | `results/sequential.json` |
+| R2 | Successor pre-determination (before FULL): **no candidate** met type P (+$10,000 centre, +$5,000 confirmation robust, risk within $2,500) or type R (−$2,500 confirmation p90 DD, profit within $2,500); the best informed improvement was +$3,821 centre / +$8,265 robust | `FROZEN_SELECTION.json`, `results/selection/C24.json` |
+| R3 | Outcome: **NO MATERIAL IMPROVEMENT — keep N/original as the preferred research incumbent and New L0 as the frozen benchmark** (recommendation 2 of the brief) | `results/outcome.json` |
+
 ## Outstanding decisions for the user (F)
 
-(Filled at the end of the study.)
+| ID | Decision | Notes |
+|---|---|---|
+| F1 | Review this handoff before any successor decision; nothing is adopted | the study recommends keeping N/original as the preferred research incumbent and New L0 frozen |
+| F2 | Whether to merge the research branch `research/vg-l0-n-original-successor` into `main` (research files only; no official config changes) | not done: needs separate authorization |
+| F3 | Job archives on Apollo: `research/vg-l0-n-successor/cache/` (≈ 204 GB; 29 job archives listed with sha256 in `reports/diagnostics/job-archives.sha256`) — keep, compress (zstd, verified) or delete | kept uncompressed until your review, as the brief requires; compression is lossless and keeps replays possible after restore |
+| F4 | Next research hypothesis (instead of another budget expansion): the independent search repeatedly converges ≈ $100k below the informed region and fails chronologically; more compute did not change that. Candidate directions: a prospective (paper/live-shadow) evaluation of N/original from 2026-11 onward; or a study of *why* the 2020–2023 regime breaks the independently selected D1 parameters (regime-conditional gates) under a new protocol | none is started; each needs your brief |
+| F5 | N's robust-profit holder `C24/informed/GA.VC/R101#2 robust` (−$19,249 centre, −$4,838 p90 DD, −$31,929 on 2025–26) is the only distinct lower-tail trade-off in the informed region; it failed the precommitted profit band and is shown for information only | `FINAL_CANDIDATES.md` §2 |

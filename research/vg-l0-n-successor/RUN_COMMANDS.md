@@ -66,3 +66,31 @@ header of `src/vg-l0-n-successor/main.ts`).
 ```bash
 node --no-maglev --experimental-transform-types src/gpu-jobs/cli.ts list --study research/vg-l0-n-successor
 ```
+
+## After the chain: report-only diagnostics and tables (non-official; never official evidence)
+
+Run from the repository root, each in its own unit (`tools/vg-l0-n-successor/launch.sh <unit> <log> -- <command>`):
+
+```bash
+GPU_POLICY_PURPOSE=cpu-reference npm run vg-l0ns-diag -- chain          # exact CPU minute chain of the sequential paths → reports/diagnostics/chain-cpu.json
+GPU_POLICY_PURPOSE=cpu-reference npm run vg-l0ns-diag -- lots --door D24 # every finalist's funded lots, development → lots-D24.json
+GPU_POLICY_PURPOSE=cpu-reference npm run vg-l0ns-diag -- lots --door FULL # … full history → lots-FULL.json
+GPU_POLICY_PURPOSE=diagnostic npm run vg-l0ns-diag -- tail              # D1 maximum-hold-window tail stress → tail-stress.json
+GPU_POLICY_PURPOSE=diagnostic npm run vg-l0ns-diag -- families          # 0.5× / 1.5× neighbourhood families (GPU, non-official) → families.json
+node --no-maglev --experimental-transform-types tools/vg-l0-n-successor/analyze.ts   # reports/tables/*.md, lanes.csv, summary.json
+```
+
+Archive hashes for the omitted-artifact list (`reports/diagnostics/job-archives.sha256`, `other-caches.sha256`): `sha256sum`
+and `stat -c %s` of every `cache/jobs/*/archive.sqlite` and of every cache file over 1 MB.
+
+## Handoff ZIP (after the reports are committed and the branch is pushed)
+
+```bash
+git push origin research/vg-l0-n-original-successor           # outside the sandbox
+git ls-remote origin research/vg-l0-n-original-successor        # must equal git rev-parse HEAD
+tools/vg-l0-n-successor/bundle.sh <scratch dir> "$(git rev-parse HEAD)"
+cp <scratch dir>/vg-l0-n-successor-handoff.zip research/vg-l0-n-successor/bundle/
+```
+
+The script refuses a dirty study tree or a HEAD that is not the remote-verified commit; it verifies `zip -T`, every
+checksum after extraction, and scans for secrets, personal data, databases and market data.

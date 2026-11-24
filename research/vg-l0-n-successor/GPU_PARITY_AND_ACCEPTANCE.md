@@ -41,3 +41,20 @@ an attestation per gate opening, a receipt per batch and the conservation invari
 the C24 finalist subjects). E2–E6 were rerun on the final committed code (job tag `final`); every rerun gave the identical
 result (E2 0 differences, E3 10/10 identical, E4 0 / 5,420, E5 0 / 0, E6 the same gaps) and records the code digest it ran
 under; the `gates` command accepts E2–E6 only if that digest equals the frozen code digest.
+
+## 3. The official run (2026-11-24T13:46Z → 22:56Z)
+
+| Check | Result |
+|---|---|
+| Official jobs (`src/gpu-jobs/jobs.ts openJob`, one isolated job per stage) | 29 opened, 29 completed (`results/jobs/*/complete.json`); no resume needed, no failure |
+| Attestations (`results/gpu-attestations/*.json`) | 29: every one purpose `official-optimization`, binary `cb2ff30b…`, record `bb0e3fcf…` ACCEPTED, device `GPU-ae5f222c…`, Node 24.21.0 with Maglev **disabled** (`--no-maglev`), smoke kernel ok, live parity mini-set 18/18 identical, every check PASS |
+| Receipts and conservation | 6,883 batch receipts; **CPU-scored 0** in every receipt — no CPU fallback |
+| Evaluations | 44,569,440 requested (search 41,030,121; qualification 3,518,005; slices and validation 21,314); 80 M ceiling never approached |
+| FULL door | opened once, by the validation job, after the sealed frozen selection and the sealed authorization (`results/doors.jsonl`) |
+| After the run | `tools/gpu-backend/verify-acceptance.sh --device --expect-record-sha256 bb0e3fcf…` → **VERIFIED** (2026-11-24, after the chain); `config/gpu-backend/acceptance.json` and `gb7` unchanged; no file under `state/strategy-lab/` changed since the freeze |
+
+**Report-only CPU work after the chain** (purposes `cpu-reference` / `diagnostic`; never official evidence): the exact
+CPU minute chain of the sequential paths (`reports/diagnostics/chain-cpu.json`: the GPU statistic is a lower bound in
+every path — gaps $67–$319 on the F paths, $0 for both references; nets equal to the cent; no verdict changes), the
+finalists' lot ledgers on D24 and FULL, the D1 tail stress and the 0.5× / 1.5× neighbourhood families (the latter on the
+GPU evaluator, non-official purpose `diagnostic`, receipts in `reports/diagnostics/families-receipts.jsonl`).
