@@ -24,7 +24,7 @@ deviations = [
   ("AD10", "§0.3, §1.3", "The common complete endpoint is TSLA's 2026-10-30 (the program's); later sessions not downloaded.", "Brief §2."),
   ("AD11", "§3.1-§3.3, §4.4", "No TSLA incumbent: no informed lane; New L0's and N/original's VGT books are external controls only.", "Brief §3."),
   ("AD12", "§2.7, §4.7", "Combined arms require both TSLA books funded (Q6); protected and unrestricted Growth structures protected by cells and reported as sub-populations.", "Brief §3, §6 Stage B."),
-  ("AD13", "data", "TSLA's split ledger is the study's own file in the central schema, applied by the canonical function (the central splits.json is sha-pinned by frozen studies).", "Frozen studies' integrity guards; brief §2 ('use existing corporate-action adjustment pipelines')."),
+  ("AD13", "§5.6", "TSLA's split ledger is the study's own file in the central schema, applied by the canonical function (the central splits.json is sha-pinned by frozen studies).", "Frozen studies' integrity guards; brief §2 ('use existing corporate-action adjustment pipelines')."),
 ]
 out = {
   "kind": "optimization-standard-adoption",
