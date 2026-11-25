@@ -1,0 +1,63 @@
+{
+ "gate": "E8",
+ "what": "regression of the repository and Strategy Lab on this branch (chains/tests.sh): npm test with the known pre-existing failures only, root tsc, eslint of the study code, every study preflight, Strategy Lab portfolio parity, typecheck, lint, Vitest and a scratch build, state/strategy-lab unchanged; Playwright e2e reported beside it",
+ "npmTest": {
+  "tests": 1842,
+  "pass": 1831,
+  "fail": 7,
+  "skipped": 4,
+  "cancelled": 0,
+  "failing": [],
+  "knownPreExisting": 7
+ },
+ "items": {
+  "npm test (failures \u2264 the 7 known pre-existing)": true,
+  "root tsc": true,
+  "eslint (study code)": true,
+  "every study preflight": true,
+  "Strategy Lab portfolio parity": true,
+  "Strategy Lab typecheck": true,
+  "Strategy Lab lint": true,
+  "Strategy Lab Vitest": true,
+  "Strategy Lab build (scratch dir)": true,
+  "state/strategy-lab unchanged": true
+ },
+ "e2eFirstExit": 1,
+ "playwrightE2eReported": {
+  "attempts": [
+   {
+    "log": "strategy-lab-e2e.txt",
+    "exit": 1,
+    "failing": [
+     "e2e/strategy-lab.spec.ts:311:3"
+    ]
+   },
+   {
+    "log": "strategy-lab-e2e-rerun.txt",
+    "exit": 1,
+    "failing": [
+     "e2e/candles.spec.ts:439:3"
+    ]
+   },
+   {
+    "log": "strategy-lab-e2e-rerun2.txt",
+    "exit": 1,
+    "failing": [
+     "e2e/candles.spec.ts:439:3"
+    ]
+   },
+   {
+    "log": "strategy-lab-e2e-rerun3.txt",
+    "exit": 1,
+    "failing": [
+     "e2e/candles.spec.ts:439:3"
+    ]
+   }
+  ],
+  "everyTestPassedInSomeAttempt": true,
+  "anyAttemptExit0": false,
+  "disclosure": "the failing tests are documented timing races in the e2e code (memory/notes: strategy-lab.spec.ts ~311 reads data-view-from before the new chart draws; candles.spec.ts:439 reads the chart width right after setViewportSize(1600) before the layout follows: Expected < 58, Received 698, i.e. the 390-px layout width 258). apps/ is unchanged on this branch (git diff dc023c3b HEAD -- apps/ is empty); the candles test uses VGT only; state/strategy-lab unchanged. Reported, not part of the E8 gate (PROTOCOL.md \u00a713)"
+ },
+ "pass": true,
+ "finished": "2026-11-25T12:21:10Z"
+}
