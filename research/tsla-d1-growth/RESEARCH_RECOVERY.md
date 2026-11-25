@@ -2,35 +2,49 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T20:00Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (C19 COMPLETE at
-  14:24:35Z; C21 COMPLETE at 16:34:18Z; C23 COMPLETE at 19:46:18Z; sequential verdicts sealed 19:43:21Z — every arm
-  UNSUPPORTED; C24 started 19:46:18Z).** Relaunched once after code amendment A1 (14:02:08Z; chain-log line offset 229).
-- **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`;
-  freeze `results/protocol-freeze.json` `d197e9d73feec2edd2f9c250640d22310118977bcdfa31943c3b9103bfbbfe97` (commit `b2667d83`,
-  **pushed**: `git ls-remote` = local); frozen code digest `418a8758…`; gates `results/engineering/gates.json`
-  `4bf79aa97d6ae00cf4d66d2ef672889a898fca731773fabaa568c13ef7a0923b` (E1–E9 pass). Amendments: pre-freeze notes E1, E2; after the freeze **A1** (code defect fix, commit `fa18250a`;
-  sealed `results/amendments/A1.json` sha256 `84557f0c53db4979556db4e4491b17a121eae658949723952628da74bd483024`, commit
-  `bb8fb5a4`): allowed code digests `418a8758…` → `fb7e6ddc5dee614b9112f52acc03c8f18ce02f6dd1f9d0f7570147c58ac84fd0`.
-- **Running:** systemd user unit **`tsla-chain`** (`/bin/bash research/tsla-d1-growth/chains/chain.sh`, all cutoffs; first
-  started 2026-11-25T12:21:57Z, stopped 13:58:13Z at C19-S-refine (A1), relaunched after A1 — see the chain log; log `research/tsla-d1-growth/cache/logs/chain.log`; per-stage logs `cache/logs/chain/<stage>.log`;
-  each stage its own unit `tsla-<stage>` in `tsla.slice`). Every sealed block is committed by the chain itself.
-- **Next:** wait for `CHAIN COMPLETE` (C24 → FROZEN_SELECTION → FULL authorization → validation once → outcome → zstd).
-  Then, in order (commands in `RUN_COMMANDS.md` Phase 7): diagnostics `bh`, `tail`, `lots`, then `nbhd` (unit tsla-nbhd);
-  `analyze.ts`, `tables-md.ts`, `arm-reports.ts`; `gpu-jobs.py` (must exit 0); `search-report.py`; `jobzstd.py final`;
-  fill every `<!-- PENDING… -->` marker (`grep -rn PENDING research/tsla-d1-growth/*.md research/tsla-d1-growth/reports/narrative`);
-  write READ_FIRST, REPORT (§2 = `reports/narrative/METHOD.md`), COMPARISON, FINAL_CANDIDATES, ROBUSTNESS_AND_RISK,
-  reports/narrative/SEARCH.md, GPU_PARITY_AND_ACCEPTANCE §4, DECISION_REGISTER U; commit, push, verify `git ls-remote`;
-  `tools/tsla-d1-growth/bundle.sh <scratch> $(git rev-parse HEAD)`; commit the ZIP under `bundle/`; push; verify.
-- **Reporting drafts already committed (during the chain):** `CHRONOLOGICAL_VALIDATION.md` (folds, verdicts; C24 pending),
-  `reports/narrative/{METHOD,NOTES,D,G,C,J,S}.md`, `DECISION_REGISTER.md` §F, tools `search-report.py`, `gpu-jobs.py`,
-  the `bh` fresh-purchase control (R2) and the exposure-table fix (R1). Generated reports (arm reports, `reports/tables/`)
-  are regenerated at the end and committed then.
-- **If the chain stopped (FAILED in the log or the unit inactive without "CHAIN COMPLETE"):** read the failing stage's log;
-  fix only operational problems (never a rule; a code defect needs a sealed code amendment `A*` per PROTOCOL §17); then
-  relaunch the SAME chain command — it is idempotent (sealed stages are skipped; an interrupted job resumes with
-  `--resume`, the official gate runs again and the job replays its archive):
-  `tools/tsla-d1-growth/launch.sh tsla-chain $PWD/research/tsla-d1-growth/cache/logs/chain.log -- /bin/bash $PWD/research/tsla-d1-growth/chains/chain.sh`
-  — first confirm no `tsla-*` unit is active (`systemctl --user list-units 'tsla-*'`).
+- **Updated:** 2026-11-25T23:02Z (clock, UTC). **Status: COMPLETE: the research, reports and verification are done;
+  the last step, the handoff ZIP commit, follows this commit.** Determination **NO QUALIFYING TSLA CANDIDATE**. The G
+  and C primaries are development-qualified without chronological support (disclosure D1). Nothing was adopted or
+  deployed; MSFT was not started.
+- **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`.
+  - Freeze record `results/protocol-freeze.json` `d197e9d73feec2edd2f9c250640d22310118977bcdfa31943c3b9103bfbbfe97`
+    (commit `b2667d83`); gates `results/engineering/gates.json` `4bf79aa97d6ae00cf4d66d2ef672889a898fca731773fabaa568c13ef7a0923b`
+    (E1–E9 pass).
+  - Amendments (`AMENDMENTS.md`, append-only): pre-freeze E1, E2. After the freeze: **A1**, a code defect fix, commit
+    `fa18250a`; sealed `results/amendments/A1.json` `84557f0c53db4979556db4e4491b17a121eae658949723952628da74bd483024`;
+    code digest `418a8758…` → `fb7e6ddc5dee614b9112f52acc03c8f18ce02f6dd1f9d0f7570147c58ac84fd0`. And **D1**, the
+    outcome join disclosure, 22:45Z.
+- **Sealed end records:**
+  - C24 selection `results/selection/C24.json` `d1e833b37841bfb121a78816f2874687651277cb64531d62f176a8f35bd48f8a` (`1b77da5c`);
+  - `FROZEN_SELECTION.json` `0ebb6b62ad95b1bdb9b6fb14a4a50f38ddceb49ba86b045d3cd34ef53e1a8791` (`46e42cb8`);
+  - FULL authorization `results/doors/FULL-authorization.json` `ed0bbe4057c12c391d5c7e27cb0cc436460a27da6dc856b8af6ea42ad479a58d` (`5b041bb5`);
+  - validation `results/validation/validation.json` `b0f654009960fbaca6debdb0a803885083d2a5428e206ff3234b647e126ff63f` (`567dfe78`);
+  - outcome `results/outcome.json` `a414631e41da8285f6785e2f98dc92bca0244b24fb149da534ba36a18463bf79` (`45ab7699`).
+
+  `GPU_POLICY_PURPOSE=official-optimization npm run tsla -- verify` gave **163 seals ok, 0 failed** (2026-11-25T23:01Z).
+  The research preflight PASSed at 23:00Z.
+- **Outcome join defect (disclosure D1).** `outcome.ts` joins the validation rows by a label that `preDetermination`
+  overwrote, so the sealed outcome shows `validation: null` and `developmentOnly: []`. The candidate list is
+  unaffected. By id (`tools/tsla-d1-growth/outcome-join.py` → `reports/tables/outcome-join.json` `df18bd93…`), G
+  `C24/G/refine/G.h2.s1/R101#1 profit` and C `C24/C/pair DF1×GF3` are development-only. The sealed records and
+  `outcome.ts` are unchanged (U6).
+- **Running:** nothing.
+  - The chain unit `tsla-chain` ran 12:21:57Z → 22:36:17Z (`CHAIN COMPLETE`), with one stop at 13:58:13Z for A1.
+  - Diagnostics `bh`, `tail` and `lots` ran 22:39:02Z–22:39:18Z, and `nbhd` (unit `tsla-nbhd`) 22:39–22:40Z. All exit 0.
+  - `analyze.ts`, `tables-md.ts`, `arm-reports.ts`, `gpu-jobs.py` (exit 0: 82/82 jobs) and `search-report.py` ran.
+  - `jobzstd.py final`: 82/82 archives OK, 184,765,423,616 → 12,332,527,957 bytes (`storage/TSLA_JOB_POST_VERIFY.json`
+    `454b5bb6…`).
+- **Next (the last step):**
+  1. Push this commit and verify that `git ls-remote origin research/tsla-d1-growth` equals HEAD.
+  2. Run `tools/tsla-d1-growth/bundle.sh /tmp/claude-1000/-home-chad-projects-margin-trading/a32adcef-c925-42c8-b7f6-31e8962cdc7a/scratchpad/bundle $(git rev-parse HEAD)`
+     (from the repository root).
+  3. Copy `tsla-d1-growth-handoff.zip` to `research/tsla-d1-growth/bundle/`, with its sha256 in `bundle/SHA256.txt`.
+  4. Record the ZIP identity in this checkpoint; commit, push and verify.
+
+  If the scratch directory is gone, any scratch directory works: the script rebuilds everything from Git.
+- **Recovery performed:** 2026-11-25T22:36Z, after a context compaction during C24. Verified the chain log
+  (`CHAIN COMPLETE`), the sealed records, the remote (it was `e13184c5` and was pushed to `460048bc`) and that no unit
+  was active.
 
 ## Environment
 
@@ -53,8 +67,14 @@
 | 6 C21 | **complete** 16:34:18Z | selection `18b591c5…`, slice `46495615…`, frozen D1 `1b712383…`, pairs `4ffb0de1…`; per arm C `c361e101…`, D `f5835e8e…`, G `ad98ccb2…`, J `f5db5652…`, S `67dcf9c2…` (zstd committed `c7bdd111`) |
 | 6 C23 | **complete** 19:46:18Z | selection `a4056d8d…`, slice `c179935d…`, frozen D1 `2a39a235…`, pairs `6992372a…`; per arm C `41c127fa…`, D `66088ada…`, G `afc56360…`, J `0692ce1f…`, S `eef92bb6…` (zstd committed `3f1c019b`) |
 | 6 sequential | **complete** 19:43:21Z | `results/sequential.json` `2a1079a0…` (commit `8ab3f216`): D, G, C, J, S all **unsupported** (sequential DD > $35,000; nets positive) — see `reports/narrative/NOTES.md` |
-| 6 C24, validation, outcome | running (C24-D-broad since 19:46:18Z) | then FROZEN_SELECTION, FULL authorization, validation once, outcome (chain.sh lines 92–101) |
-| diagnostics, reports, ZIP | not started | `tools/tsla-d1-growth/diagnostics.ts` written (after validation only) |
+| 6 C24 | **complete** 22:32:48Z | selection `d1e833b3…` (`1b77da5c`); per arm C `eda88ef6…`, D `350e9076…`, G `255cdec4…`, J `8629a9a1…`, S `f65c427a…`; frozen D1 `b8a55d90…`; pairs `24dd213b…`; zstd of the C24 job archives committed `460048bc` |
+| 6 frozen selection, FULL authorization | **complete** 22:32:49Z | `FROZEN_SELECTION.json` `0ebb6b62…` (`46e42cb8`); `results/doors/FULL-authorization.json` `ed0bbe40…` (`5b041bb5`) |
+| 6 validation (once) | **complete** 22:33:26Z | `results/validation/validation.json` `b0f65400…` (`567dfe78`); job `C24-validation`, 9,044 evaluations; first TSLA FULL door entry 22:32:55.712Z |
+| 6 outcome | **complete** 22:33:27Z | `results/outcome.json` `a414631e…` (`45ab7699`): NO QUALIFYING TSLA CANDIDATE (join defect: `AMENDMENTS.md` D1) |
+| 7 diagnostics | **complete** 22:39–22:40Z | `reports/diagnostics/{buy-and-hold,tail-stress,lots,nbhd-small-wide}.json`, `nbhd-D24-receipts.jsonl` (FULL door entries 22:39:07Z, 22:39:16Z; nbhd on D24) |
+| 7 tables and reports | **complete** 23:02Z | `reports/tables/*` (analyze.ts, tables-md.ts, gpu-jobs.py, outcome-join.py), the arm reports, `SEARCH_AND_CONVERGENCE_REPORT.md`, `READ_FIRST.md`, `REPORT.md`, `COMPARISON.md`, `FINAL_CANDIDATES.md`, `CHRONOLOGICAL_VALIDATION.md`, `ROBUSTNESS_AND_RISK.md`, `GPU_PARITY_AND_ACCEPTANCE.md` §4, `DECISION_REGISTER.md` (D1, R4, R5, U3–U7) |
+| 7 job archives | **complete** 22:41:47Z | `storage/TSLA_JOB_POST_VERIFY.json` `454b5bb6…` (82/82 OK) |
+| 9 handoff ZIP | next | `tools/tsla-d1-growth/bundle.sh`; to be committed under `bundle/` |
 
 ## Constants
 
@@ -85,11 +105,14 @@ hard ceiling 120 M requested; doors D19/D21/D23/D24 training, slices D21/D23/D24
   (the chain commits between stages; an index.lock collision would stop it — then relaunch, it is idempotent). Do not
   edit package.json or the protocol documents during the chain (`dirtyCode` checks them).
 
-## Disclosures so far
+## Disclosures
 
 - **A1 (after the freeze):** C19-S-refine stopped at 13:58:13Z before any job or evaluation: the arm S refinement lane
   builder did not register the sealed frozen D1 finalists. Three-line fix (`ensureFrozen` for arm S, as every other S
   reader does), sealed code amendment, no rule or result changed; details and checks in `AMENDMENTS.md` A1.
+- **D1 (after the outcome):** the sealed outcome's validation join is empty (label collision in `outcome.ts`); the
+  candidate list is unaffected; by finalist id the development-only list is G's and C's primaries (`AMENDMENTS.md` D1).
+- Report-only tool changes R1–R5 (`DECISION_REGISTER.md` §F).
 
 - P5 compressor smoke-test attribution fix (one conservative blocker); E2–E6 first runs on an earlier code digest (rerun
   on the final code); the cost-based R_S draft replaced pre-freeze; Playwright e2e timing races (reported beside E8).

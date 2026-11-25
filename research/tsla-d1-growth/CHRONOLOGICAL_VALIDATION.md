@@ -18,15 +18,21 @@ unseen period**. *Report-only* = sub-populations, roles, controls and diagnostic
 | C21 slice (2022-01-03 → 2023-12-29) sealed | `6e570f56` 16:31:37Z | D23 training (C23) after it |
 | C23 selection sealed | `6da330d7` 19:42:53Z | D24 for the C23 slice 19:42:58Z |
 | C23 slice (2024-01-02 → 2024-12-31) sealed | `4ad0c595` 19:43:20Z | — |
-| Sequential paths and verdicts sealed | `8ab3f216` 19:43:21Z | D24 training (C24) 19:46:18Z |
-<!-- PENDING-C24: C24 selection, FROZEN_SELECTION, FULL authorization, validation, outcome rows -->
+| Sequential paths and verdicts sealed | `8ab3f216` 19:43:21Z | D24 training (C24-D-broad) 19:46:23Z |
+| C24 selection of every arm sealed | `1b77da5c` 22:32:48Z | — |
+| `FROZEN_SELECTION.json` sealed (finalists, pre-determination, validation plan) | `46e42cb8` 22:32:49Z | — |
+| FULL door authorization sealed | `5b041bb5` 22:32:49Z | FULL (TSLA) for the validation 22:32:55Z |
+| Validation 2025-01-02 → 2026-10-30 sealed (once) | `567dfe78` 22:33:26Z | — |
+| Outcome sealed | `45ab7699` 22:33:27Z | FULL for the report-only diagnostics 22:39:07Z (buy-and-hold) and 22:39:16Z (lot replays) |
 
 Before the freeze, the engineering gates read the development doors D19–D24 for CPU/GPU equality, determinism and
 identity checks (counts and hashes only), and the pilot ran 72 lanes on D21 for counts, timings and stop reasons
 (PROTOCOL §2 "Real-data exposure before this freeze": no box, threshold, budget, cell or rule was derived from a TSLA
 profit or drawdown). The FULL door entries before the validation are gate E3's reproductions of New L0 / N/original on
 their **own VGT/GDX data** (sha256 keys VGT and GDX in the log); TSLA's 2025–2026 file is opened only by the validation.
-<!-- PENDING-C24: confirm the first TSLA FULL entry is the validation's -->
+**Confirmed from the door log:** the first entry for TSLA's FULL file (sha256 `8ed7f7d0…`) is the validation's, at
+22:32:55.712Z, after the committed FULL authorization; the only later TSLA FULL entries are the two report-only
+diagnostics after the sealed outcome. The small/wide neighbourhood diagnostic used D24 only.
 
 ## 2. What each arm's procedure selected at each cutoff (training evidence, centre configuration)
 
@@ -55,7 +61,12 @@ B1·h1 → D1·h2 → C1·h0; S's frozen D1 itself changed with each cutoff's ar
 | S | +$92,527 / $43,801 | −$25,876 / $64,512 | +$17,654 / $32,166 |
 | Control New L0 (VGT phenotype on TSLA; arm D/J) | +$66,044 / $75,933 | +$24,725 / $97,606 | −$1,315 / $37,888 |
 | Control N/original (same) | +$83,032 / $74,761 | −$657 / $98,507 | +$799 / $34,114 |
-<!-- PENDING-DIAG: fresh $100,000 TSLA buy-and-hold per slice (financed / unfinanced), reports/diagnostics/buy-and-hold.json freshPurchase -->
+| Fresh $100,000 TSLA buy-and-hold at the slice's first open, financed 11 % (report-only) | +$1,122,590 / $424,438 | −$56,931 / $89,499 | +$50,354 / $48,064 |
+| The same, unfinanced (report-only) | +$1,144,560 / $423,263 | −$35,082 / $78,439 | +$61,324 / $44,719 |
+
+The fresh-purchase rows (`reports/diagnostics/buy-and-hold.json` `freshPurchase`; `DECISION_REGISTER.md` R2) put
+$100,000 into TSLA at each slice's first regular-minute open (+5 bps) and hold it to the slice's end: exposure-comparable
+with one strategy slot, not a strategy. Their drawdowns are of the same marked-minute kind but unbounded by any exit.
 
 Arm G's projections of the external controls trade TSLA only in 2016–2019 (whole run −$5,531 / DD $11,869) and never
 in a slice.
@@ -122,4 +133,79 @@ of the in-sample rate, with sequential drawdowns larger than any training drawdo
   (2022–2023 and 2024) and deepened the 2024 drawdown: no combination benefit is visible out of sample.
 - **G** came closest to support ($1,079 over the limit) largely by not trading: no entry in 2022–2023.
 - **D** made the least per unit of drawdown ($25,172 for $40,170).
-<!-- PENDING-C24: §6 the C24 finalists and the one validation; §7 interpretation -->
+
+## 6. The C24 finalists and the one validation (2025-01-02 → 2026-10-30; retrospective)
+
+At C24 every arm ran its complete procedure on 2016–2024 (door D24). The selections were sealed, and
+`FROZEN_SELECTION.json` (finalists, the (a)/(b) pre-determination, the validation plan) was committed before FULL
+opened. The validation then evaluated every C24 primary and role of every arm and sub-population, and the external
+controls, **once** (job `C24-validation`, 9,044 official GPU evaluations): one continuous run from 2016, validation P&L
+from the 2024-12-31 close, reset DD restarted at that close, whole-run DD beside it (`results/validation/validation.json`
+`b0f65400…`).
+
+| Arm | C24 primary | Development net / DD | Validation P&L | Reset DD | Whole-run DD | V1 V2 V3 | Validation lots | (b) chronology | PROTOCOL §12 |
+|---|---|---:|---:|---:|---:|---|---|---|---|
+| D | `D.B1/R103#1` | $319,654 / $25,587 | −$8,979 | $13,924 | $27,742 | ✗ ✓ ✓ | 2 D1 | unsupported | not a candidate |
+| G | `G.h2.s1/R101#1` | $340,913 / $28,655 | +$10,703 | $18,255 | $28,655 | ✓ ✓ ✓ | 4 Growth | unsupported | development-qualified, **no chronological support** |
+| C | `DF1×GF3` (D primary × G balanced) | $498,120 / $26,288 | +$71 | $25,953 | $26,288 | ✓ ✓ ✓ | 2 D1 + 4 Growth | unsupported | development-qualified, **no chronological support** |
+| J | `J.B1.h2.s1/R104#1` | $435,551 / $27,882 | −$10,751 | $29,253 | $29,253 | ✗ ✓ ✓ | 3 D1 + 2 Growth | unsupported | not a candidate |
+| S | `S.C24F1.h1.s1/R101#1` (frozen D1 = D's primary) | $540,641 / $26,288 | −$2,412 | $26,869 | $26,869 | ✗ ✓ ✓ | 2 D1 + 4 Growth | unsupported | not a candidate |
+
+Every primary passed Q1–Q6 at C24 (a). **Determination: NO QUALIFYING TSLA CANDIDATE**, with arm G's and arm C's
+primaries *development-qualified without chronological support: not deployment-qualified without an explicit user
+decision*. The sealed `results/outcome.json` omits that list because of a join defect in `outcome.ts`
+(`AMENDMENTS.md` D1). The list here is the frozen rule applied to the sealed validation rows by finalist id
+(`tools/tsla-d1-growth/outcome-join.py` → `reports/tables/outcome-join.json`). The candidate list is the same either way.
+
+**Roles** (descriptive, never nominees):
+- D's three lost $6,544 to $16,974.
+- G's three made $3,669 to $9,050.
+- J's three lost $915 to $25,035; the robust-profit role's whole-run DD of $42,923 also fails V3.
+- S's three lost $2,049 to $19,940.
+
+**Controls on the same period:**
+- New L0 projected on TSLA (arms D, J): −$6,797, reset DD $57,154.
+- N/original: +$5,060 / $58,047. Both fail V2 and V3, as in development. Their arm G projections did not trade.
+- A fresh $100,000 TSLA purchase at the 2025-01-02 open: −$17,628 financed / +$2,443 unfinanced, DD $59,788 / $57,377.
+
+**What happened in the 22 months.** There were few trades:
+- Arm D's primary made 2 lots: a −$2,934 maximum-hold exit in February 2025 and a −$6,045 protective stop in July 2026.
+- Every Growth vector caught the same trend, 2025-09-12 → 10-03 (+$18,167 to +$18,674), then took two initial stops in
+  November and December 2025 (−$5,570 to −$8,575). G's +$10,703 is that one lot net of the stops.
+- Arm C's pair ran arm D's primary and arm G's balanced role unchanged. They never collided in the validation, so the pair
+  is the sum of the two: −$8,979 + $9,050 = +$71.
+- J's D1 component lost −$20,342 on three lots.
+- S's D1 component traded exactly arm D's validation lots; its Growth component made +$6,567.
+
+**Neighbourhood on the validation.** The primaries' selection draws (2 × 128, regenerated exactly) were replayed on the
+validation. Breaches of $35,000:
+- D: 0/256 (median −$10,831).
+- G: 0/256 (median +$5,520; p10 +$433).
+- C: 4/256 (median −$6,753).
+- J: 56/256 (median −$10,083; p90 reset DD $38,133).
+- S: 4/256 (median −$6,682).
+
+## 7. Interpretation
+
+- **The validation agrees with the folds on the architectures.** In development at C24, all three combined primaries
+  are "material improvements" over the better standalone primary, G, under PROTOCOL §12's bands (`results/outcome.json`
+  comparisons; type P):
+  - C +$157,207 centre net (replication not applicable);
+  - J +$94,638 (replicated);
+  - S +$199,729 (replicated).
+
+  S also beats J (+$105,090, replicated). Over the validation, C made +$71, J −$10,751 and S −$2,412, against G's
+  +$10,703. On the folds no arm was supported, and the combined arms had the deepest sequential drawdowns. A single
+  in-sample comparison never proves an architecture superior (standard §3.4). Here the shared-slot advantage is an
+  in-sample result that two independent out-of-sample tests did not repeat.
+- **Why the validation drawdowns stayed below $35,000.** The selected stop distances differ greatly between cutoffs:
+  arm D's primary stop was 24.1 % at C19 and 5.8 % at C24. Under the C24 vectors, each primary's worst validation lot was
+  −$6,045 to −$8,575, against −$18,500 to −$31,800 for D, C, J and S on the folds (G: −$11,659). That is one 22-month period with 2–6 lots per
+  primary. It does not show that the drawdown problem of §3 is solved.
+- **Passing V1–V3 does not repair the chronological failure.** The binding evidence is the arm's procedure re-run at
+  three cutoffs, and each time its next period breached the limit (G by $1,079). The 2025–2026 result of one frozen
+  vector is a single retrospective period. G's validation profit is one +$18,674 lot net of two stops, and C's is $71.
+- **Nothing is promoted.** G's and C's primaries meet (a) and (c) but not (b). Under the frozen rule they are reported for
+  the user's information, and adopting either would need the user's explicit decision. This study does not recommend
+  it: on the same procedure, the fold evidence shows next-period drawdowns above the limit and out-of-sample returns at
+  10–35 % of the in-sample rate.

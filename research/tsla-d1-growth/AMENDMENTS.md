@@ -38,3 +38,22 @@ effect (standard §0.2 [A]). Pre-freeze implementation refinements are `E*`; aft
   evaluator, the acceptance record and its pinned files are untouched; the study code is outside the evaluation
   manifest). Code digest `418a8758…` → `fb7e6ddc…`, sealed in `results/amendments/A1.json`. The chain was relaunched with
   its unchanged idempotent command and resumes at `C19-S-refine`.
+- **D1 — 2026-11-25T22:45Z — the sealed outcome's validation join is empty (code defect found after the outcome;
+  disclosure; no sealed record rewritten).** `preDetermination` in `src/tsla-d1-growth/outcome.ts` replaces each
+  finalist's `label` with its governance label ("development-qualified, NO chronological support: …", "descriptive role
+  holder …"); `outcomeOf` then joins the validation rows to the finalists by `label`, so no row matched. In
+  `results/outcome.json` (`a414631e…`, commit `45ab7699`) every finalist therefore carries `validation: null` and
+  `c: false`, and `developmentOnly` is empty. **Effect on the determination:** none on the candidate list — criterion (b)
+  (primary with a supported chronological verdict) is false for every arm (`results/sequential.json`), so the label
+  *NO QUALIFYING TSLA CANDIDATE* stands. **Effect on the development-only list (PROTOCOL §12: an arm primary meeting (a)
+  and (c) but not (b), listed with the outcome):** joined by the finalist `id`, which both sealed files carry unchanged,
+  the validation record (`results/validation/validation.json` `b0f65400…`, its own sealed V1–V3 per row) gives V1–V3 pass
+  for arm G's primary `C24/G/refine/G.h2.s1/R101#1 profit` (+$10,702.95; reset DD $18,255.00; whole-run DD $28,655.41)
+  and arm C's primary `C24/C/pair DF1×GF3` (+$71.05; $25,953.17; $26,287.97); D, J and S primaries fail V1. The
+  determination under the frozen rule is therefore *NO QUALIFYING TSLA CANDIDATE; development-qualified without
+  chronological support (not deployment-qualified without an explicit user decision): G `C24/G/refine/G.h2.s1/R101#1
+  profit`; C `C24/C/pair DF1×GF3`*. The join is reproduced by the report-only `tools/tsla-d1-growth/outcome-join.py` →
+  `reports/tables/outcome-join.json` (reads only the two sealed files; evaluates nothing). `outcome.ts` is not changed:
+  the sealed outcome is the record the precommitted code produced, and no further official stage runs. The same
+  governance labels appear in place of candidate labels in `FROZEN_SELECTION.json`'s `preDetermination.finalists`
+  (ids, roles and flags there are intact; the file's own `finalists` and `primaries` lists carry the candidate labels).

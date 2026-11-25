@@ -37,3 +37,26 @@ coverage of the risk-envelope pilot domain (⊇ the TSLA domain), a smoke kernel
 host path) — and writes an attestation (`results/gpu-attestations/`). The first official job (`C19-D-broad`) passed all 16
 checks with 18/18 parity subjects identical. Every batch has a device receipt; the conservation invariant (CPU-scored = 0)
 is checked per batch and at the end. The totals over every official job are in §4 (filled at the end of the study).
+
+## 4. Totals over every official job (`tools/tsla-d1-growth/gpu-jobs.py` → `reports/tables/gpu-jobs.json`, `GPU_JOBS.md`)
+
+| Item | Value |
+|---|---|
+| Official jobs | **82**, all complete, each in one session (no resume was needed). Stages: 16 broad, 10 replicate-round, 16 refinement, 36 qualification (16 broad, 16 refinement, 4 fixed pairs), 3 slices, 1 validation |
+| Attestations | 82, one per job: **1,312 checks, 0 failed**; every job attested |
+| Live parity mini-sets | **1,476 / 1,476 subjects identical** (18 per job, on each job's own TSLA door) |
+| Evaluations | submitted **44,161,845**, GPU-returned 44,161,845, **failed 0, CPU-scored 0**; 9,468 receipted batches, all official |
+| Capacity retries | 15. Each is an evaluation re-submitted **on the GPU** with a larger result buffer (at most 4 times); never the CPU |
+| Device, binary, acceptance | one device `GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4`; one binary `cb2ff30b9cb720c0…`; one acceptance record `bb0e3fcf6bde45cc…` |
+| Runtime | Maglev disabled in every job |
+| GPU time | kernel 24,221 s (6.73 h); job wall 34,444 s (9.57 h) |
+| Code | A1 changed only study code outside the evaluation manifest (`AMENDMENTS.md` A1): code digest `418a8758…` → `fb7e6ddc…`. `verify-acceptance.sh` VERIFIED after it |
+
+**Non-official runs, all report-only and labelled.**
+- The small/wide neighbourhood diagnostic ran on the GPU with `official: false` receipts: 35 batches of 128, 0
+  CPU-scored, door D24.
+- The lot replays and the buy-and-hold control used the canonical CPU engine under `GPU_POLICY_PURPOSE=diagnostic`
+  (gate E4: CPU = GPU on every record field).
+- The engineering gates E2–E6 and the pilot E9 are recorded in §2.
+
+None of these is official optimization evidence. Strategy Lab is unchanged (`apps/` untouched on this branch; gate E8).

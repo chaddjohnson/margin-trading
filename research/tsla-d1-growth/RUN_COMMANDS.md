@@ -62,7 +62,7 @@ npm run tsla -- search --cutoff C19 --arm D --part broad [--resume]
 npm run tsla -- round --cutoff C19 --arm D --k 1
 npm run tsla -- qualify --cutoff C19 --arm D --stage broad
 npm run tsla -- ledger
-npm run tsla -- verify      # every seal re-hashed
+GPU_POLICY_PURPOSE=official-optimization npm run tsla -- verify      # every seal re-hashed (no evaluation; 163 ok at the end)
 ```
 
 ## Phase 7 — report-only diagnostics, tables, reports and the handoff (after the outcome)
@@ -83,6 +83,8 @@ node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWa
 python3 -I tools/tsla-d1-growth/gpu-jobs.py
 # SEARCH_AND_CONVERGENCE_REPORT.md = reports/narrative/SEARCH.md + tables from search-summary.json, lanes.csv, gpu-jobs.json
 python3 -I tools/tsla-d1-growth/search-report.py
+# the frozen §12 rule applied to the sealed validation rows by finalist id (AMENDMENTS.md D1) → reports/tables/outcome-join.json
+python3 -I tools/tsla-d1-growth/outcome-join.py
 # this study's job archives: verification of every compressed archive (read-only)
 python3 -I research/tsla-d1-growth/storage/tools/jobzstd.py final --repo . --actions research/tsla-d1-growth/storage/TSLA_JOB_ACTIONS.jsonl \
   --out research/tsla-d1-growth/storage/TSLA_JOB_POST_VERIFY.json

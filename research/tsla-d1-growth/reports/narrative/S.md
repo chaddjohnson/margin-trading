@@ -15,7 +15,13 @@ architecture "win" from more evaluations). Over C19–C23, S's lanes requested 1
 | C19 | C19F1 = arm D's primary `D.B1/R102#1` | 20 lots, $210,046 (identical to arm D: no D1 trade displaced) | 9 lots, $84,739 |
 | C21 | C21F3 = arm D's balanced role `D.D1/R103#3` | 29 lots, $255,727 | 11 lots, $286,443 |
 | C23 | C23F3 = arm D's balanced role `D.B1/R101#2` | 34 lots, $137,757 | 26 lots, $312,161 |
-<!-- PENDING-C24: the C24 frozen D1, primary and roles -->
+| C24 | C24F1 = arm D's primary `D.B1/R103#1` | 48 lots, $300,958 (arm D alone: 50 lots, $319,654) | 21 lots, $239,683 |
+
+At C24 the frozen D1 finalists were arm D's primary (C24F1), robust-profit (F2) and balanced (F3) roles. The selected
+pairing was built on the primary this time, `S.C24F1.h1.s1/R101#1`, $540,641 / $26,288, the highest development net of
+any arm. In the shared slot, Growth held it when D1 signalled 2 times, and D1 held it when Growth signalled 8 times.
+Roles: robust-profit `S.C24F3.h0.s1/R102#2` $391,774 / $28,466, balanced `S.C24F3.h0.s1/R101#3` $374,505 / $21,031,
+lower-drawdown `S.C24F3.h2.s1/R101#2` $263,271 / $19,113. The S-U primary is `S.C24F1.h0.s0/R103#1` $405,954 / $29,301.
 
 At C19, Growth filled only the slot's idle time: the D1 ledger is identical to standalone D. At C21 and C23 the selected
 pairing was not built on arm D's primary but on its balanced-role D1, with Growth earning most of the net. The highest
@@ -31,4 +37,15 @@ stops (−$11,294, −$7,266). In 2020–2021 the S chain's D1 trades were exact
 
 **Unrestricted Growth inside S (S-U, report-only).** $183,722 chained with an $85,703 drawdown, the 2022–2023 reset
 drawdown alone.
-<!-- PENDING-C24: validation outcome; the S comparisons at C24 (S vs the better standalone; J vs S both ways) -->
+
+**C24 comparisons (PROTOCOL §12, development).**
+- Against G's primary, S is a type-P material improvement, replicated in 9 replicate numbers: +$199,729 centre net,
+  +$111,082 confirmation robust, −$2,367 centre DD, +$1,879 confirmation p90 DD.
+- Against J, S is also material and replicated (+$105,090).
+
+**Validation (once, retrospective).** −$2,412. The D1 side traded exactly arm D's primary's lots (−$8,979), and Growth
+made +$6,567 on four. Reset DD $26,869; V1 fails. The roles lost $2,049 to $19,940. **Determination for S: not a
+candidate** (b and c fail).
+
+The largest in-sample architecture advantage of the study is S's. It was followed by the deepest sequential drawdown on
+the folds ($82,547) and a validation loss.
