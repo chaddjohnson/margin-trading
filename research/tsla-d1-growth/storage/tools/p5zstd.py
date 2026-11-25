@@ -105,6 +105,10 @@ def sealed_triples(job):
 
     def walk(x):
         if isinstance(x, dict):
+            # Priority 5's copied incumbent rows (qualification `copiedEvidence`, stage "incumbent") were evaluated by
+            # another job (the cutoff's broad qualification, whose own smoke test covers them): not this archive's rows
+            if x.get('stage') == 'incumbent' and x.get('lane') == 'incumbent':
+                return
             i = x.get('id')
             if isinstance(i, str) and re.fullmatch(r'rc\d-[0-9a-f]{16}', i):
                 if isinstance(x.get('net'), (int, float)) and isinstance(x.get('dd'), (int, float)) and 'lots' in x:
