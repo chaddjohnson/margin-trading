@@ -2,13 +2,16 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T12:31Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (cutoff C19 first).**
+- **Updated:** 2026-11-25T14:02Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING again after code
+  amendment A1 (resumes at C19-S-refine).**
 - **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`;
   freeze `results/protocol-freeze.json` `d197e9d73feec2edd2f9c250640d22310118977bcdfa31943c3b9103bfbbfe97` (commit `b2667d83`,
   **pushed**: `git ls-remote` = local); frozen code digest `418a8758…`; gates `results/engineering/gates.json`
-  `4bf79aa97d6ae00cf4d66d2ef672889a898fca731773fabaa568c13ef7a0923b` (E1–E9 pass). Amendments: pre-freeze notes E1, E2 only.
-- **Running:** systemd user unit **`tsla-chain`** (`/bin/bash research/tsla-d1-growth/chains/chain.sh`, all cutoffs; started
-  2026-11-25T12:21:57Z; log `research/tsla-d1-growth/cache/logs/chain.log`; per-stage logs `cache/logs/chain/<stage>.log`;
+  `4bf79aa97d6ae00cf4d66d2ef672889a898fca731773fabaa568c13ef7a0923b` (E1–E9 pass). Amendments: pre-freeze notes E1, E2; after the freeze **A1** (code defect fix, commit `fa18250a`;
+  sealed `results/amendments/A1.json` sha256 `84557f0c53db4979556db4e4491b17a121eae658949723952628da74bd483024`, commit
+  `bb8fb5a4`): allowed code digests `418a8758…` → `fb7e6ddc5dee614b9112f52acc03c8f18ce02f6dd1f9d0f7570147c58ac84fd0`.
+- **Running:** systemd user unit **`tsla-chain`** (`/bin/bash research/tsla-d1-growth/chains/chain.sh`, all cutoffs; first
+  started 2026-11-25T12:21:57Z, stopped 13:58:13Z at C19-S-refine (A1), relaunched after A1 — see the chain log; log `research/tsla-d1-growth/cache/logs/chain.log`; per-stage logs `cache/logs/chain/<stage>.log`;
   each stage its own unit `tsla-<stage>` in `tsla.slice`). Every sealed block is committed by the chain itself.
 - **Next:** wait; when the chain ends: report-only diagnostics (`npm run tsla-diag -- bh|tail|lots|nbhd`), analysis and
   reports, bundle, commit, push.
@@ -36,7 +39,7 @@
 | 3 functionality audit | complete | `FUNCTIONALITY_AUDIT.md` |
 | 4 protocol | **frozen** 12:20Z | see the top screen |
 | 5 engineering | complete | E1–E9 sealed (`results/engineering/`) |
-| 6 C19 | running | `results/{search,rounds,qualification,refine-plan,selection,pairs,frozen-d1}/C19*`, then `slices/C19.json` |
+| 6 C19 | running (D, G, J sealed through their arm selections; S through its refinement plan; A1 then S refine) | `results/{search,rounds,qualification,refine-plan,selection,pairs,frozen-d1}/C19*`, then `slices/C19.json` |
 | 6 C21, C23, sequential, C24, validation, outcome | not started | chain order (PROTOCOL §14) |
 | diagnostics, reports, ZIP | not started | `tools/tsla-d1-growth/diagnostics.ts` written (after validation only) |
 
@@ -68,6 +71,10 @@ hard ceiling 120 M requested; doors D19/D21/D23/D24 training, slices D21/D23/D24
   edit package.json or the protocol documents during the chain (`dirtyCode` checks them).
 
 ## Disclosures so far
+
+- **A1 (after the freeze):** C19-S-refine stopped at 13:58:13Z before any job or evaluation: the arm S refinement lane
+  builder did not register the sealed frozen D1 finalists. Three-line fix (`ensureFrozen` for arm S, as every other S
+  reader does), sealed code amendment, no rule or result changed; details and checks in `AMENDMENTS.md` A1.
 
 - P5 compressor smoke-test attribution fix (one conservative blocker); E2–E6 first runs on an earlier code digest (rerun
   on the final code); the cost-based R_S draft replaced pre-freeze; Playwright e2e timing races (reported beside E8).
