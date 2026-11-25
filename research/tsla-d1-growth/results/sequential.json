@@ -1,0 +1,1882 @@
+{
+ "stage": "sequential",
+ "protocol": "P6-TSLA 1.0.0",
+ "folds": [
+  {
+   "fold": "C19",
+   "slice": [
+    "2020-01-02",
+    "2021-12-31"
+   ],
+   "primaries": {
+    "D": "C19/D/refine/D.B1/R102#1 profit",
+    "D-A": "C19/D/refine/D.A0/R101#1 profit",
+    "G": "C19/G/refine/G.h1.s1/R102#1 profit",
+    "G-P": "C19/G/refine/G.h1.s1/R102#1 profit",
+    "G-U": "C19/G/refine/G.h0.s0/R103#1 profit",
+    "C": "C19/C/pair DF1×GF3",
+    "J": "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+    "J-P": "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+    "J-U": "C19/J/refine/J.D1.h0.s0/R104#1 profit",
+    "S": "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+    "S-P": "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+    "S-U": "C19/S/refine/S.C19F1.h0.s0/R104#1 profit"
+   },
+   "slice_record": {
+    "file": "research/tsla-d1-growth/results/slices/C19.json",
+    "sha256": "8ce42df6f60895cae55cbee938a16955bb5c0baca2369e1158615858d615c6d6"
+   }
+  },
+  {
+   "fold": "C21",
+   "slice": [
+    "2022-01-03",
+    "2023-12-29"
+   ],
+   "primaries": {
+    "D": "C21/D/refine/D.C1/R102#1 profit",
+    "D-A": null,
+    "G": "C21/G/refine/G.h1.s1/R101#1 profit",
+    "G-P": "C21/G/refine/G.h1.s1/R101#1 profit",
+    "G-U": "C21/G/refine/G.h0.s0/R103#1 profit",
+    "C": "C21/C/pair DF2×GF1",
+    "J": "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+    "J-P": "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+    "J-U": "C21/J/refine/J.A1.h0.s0/R102#1 profit",
+    "S": "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+    "S-P": "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+    "S-U": "C21/S/refine/S.C21F3.h0.s0/R103#1 profit"
+   },
+   "slice_record": {
+    "file": "research/tsla-d1-growth/results/slices/C21.json",
+    "sha256": "46495615f56550b2ad874cf413e320bfe6f848d6e04454d6e27aded7f3d139e7"
+   }
+  },
+  {
+   "fold": "C23",
+   "slice": [
+    "2024-01-02",
+    "2024-12-31"
+   ],
+   "primaries": {
+    "D": "C23/D/refine/D.D1/R102#1 profit",
+    "D-A": null,
+    "G": "C23/G/refine/G.h1.s1/R103#1 profit",
+    "G-P": "C23/G/refine/G.h1.s1/R103#1 profit",
+    "G-U": "C23/G/refine/G.h0.s0/R104#1 profit",
+    "C": "C23/C/pair DF3×GF2",
+    "J": "C23/J/refine/J.C1.h0.s0/R104#1 profit",
+    "J-P": "C23/J/refine/J.D1.h1.s1/R103#1 profit",
+    "J-U": "C23/J/refine/J.C1.h0.s0/R104#1 profit",
+    "S": "C23/S/refine/S.C23F3.h2.s1/R102#1 profit",
+    "S-P": "C23/S/refine/S.C23F3.h2.s1/R102#1 profit",
+    "S-U": "C23/S/broad/S.C23F1.h0.s0/R101#1 profit"
+   },
+   "slice_record": {
+    "file": "research/tsla-d1-growth/results/slices/C23.json",
+    "sha256": "c179935d0cd24eede4716261392c92209827975e64fcdf48a849ca647a2d8a1c"
+   }
+  }
+ ],
+ "switchCharge": "5 bps of $100,000 per open lot closed or adopted at a switch",
+ "drawdown": "PROTOCOL.md §11.2 (Priority 5 AD4): the strict drawdown of the chain over every exactly observed GPU mark — each slice’s minute reset drawdown, every session close, every lot’s exact minute minimum",
+ "verdictRule": "supported iff every fold produced a primary, the sequential net > 0 and the sequential drawdown ≤ $35,000",
+ "procedures": [
+  {
+   "population": "D",
+   "armName": "TSLA D1 standalone",
+   "independent": true,
+   "nominating": true,
+   "name": "D/original",
+   "labels": [
+    "C19/D/refine/D.B1/R102#1 profit",
+    "C21/D/refine/D.C1/R102#1 profit",
+    "C23/D/refine/D.D1/R102#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/D/refine/D.B1/R102#1 profit",
+     "id": "rc1-c48f84ef220a4485",
+     "sliceNet": 20367.65,
+     "sliceDd": 40169.52,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -17264.03,
+     "crossTerm": 17264.03
+    },
+    {
+     "fold": "C21",
+     "label": "C21/D/refine/D.C1/R102#1 profit",
+     "id": "rc2-7ee4e6b09918dcf7",
+     "sliceNet": -7376.11,
+     "sliceDd": 13332.15,
+     "charge": 0,
+     "offset": 20367.65,
+     "priorPeak": 34036.19,
+     "minimum": -11637.13009650528,
+     "crossTerm": 25305.67009650528
+    },
+    {
+     "fold": "C23",
+     "label": "C23/D/refine/D.D1/R102#1 profit",
+     "id": "rc1-29a715db6992edd0",
+     "sliceNet": 12230.57,
+     "sliceDd": 11051.05,
+     "charge": 50,
+     "offset": 12941.54,
+     "priorPeak": 34036.19,
+     "minimum": -4399.330805396952,
+     "crossTerm": 25493.980805396954
+    }
+   ],
+   "charges": 50,
+   "net": 25172.11,
+   "drawdown": 40169.52,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "population": "G",
+   "armName": "TSLA Growth standalone",
+   "independent": true,
+   "nominating": true,
+   "name": "G/original",
+   "labels": [
+    "C19/G/refine/G.h1.s1/R102#1 profit",
+    "C21/G/refine/G.h1.s1/R101#1 profit",
+    "C23/G/refine/G.h1.s1/R103#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/G/refine/G.h1.s1/R102#1 profit",
+     "id": "8cc79d60076876d2",
+     "sliceNet": 30545.62,
+     "sliceDd": 21991.12,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 4862.9499999999825,
+     "crossTerm": -4862.9499999999825
+    },
+    {
+     "fold": "C21",
+     "label": "C21/G/refine/G.h1.s1/R101#1 profit",
+     "id": "10c86c062f1761e4",
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 30545.62,
+     "priorPeak": 48929.95999999999,
+     "minimum": 0,
+     "crossTerm": 18384.339999999993
+    },
+    {
+     "fold": "C23",
+     "label": "C23/G/refine/G.h1.s1/R103#1 profit",
+     "id": "cd47864692b053b5",
+     "sliceNet": 12401,
+     "sliceDd": 26796.01,
+     "charge": 0,
+     "offset": 30545.62,
+     "priorPeak": 48929.95999999999,
+     "minimum": -17694.581775038736,
+     "crossTerm": 36078.92177503873
+    }
+   ],
+   "charges": 0,
+   "net": 42946.619999999995,
+   "drawdown": 36078.92177503873,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "population": "C",
+   "armName": "Fixed D1 + Growth combination (standalone selections, no re-optimization)",
+   "independent": true,
+   "nominating": true,
+   "name": "C/original",
+   "labels": [
+    "C19/C/pair DF1×GF3",
+    "C21/C/pair DF2×GF1",
+    "C23/C/pair DF3×GF2"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/C/pair DF1×GF3",
+     "id": "rc1-4eba7d798e64cc7f",
+     "sliceNet": 45465.34,
+     "sliceDd": 34557.74,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -17174.75256776513,
+     "crossTerm": 17174.75256776513
+    },
+    {
+     "fold": "C21",
+     "label": "C21/C/pair DF2×GF1",
+     "id": "rc2-fd6887b42e2964bf",
+     "sliceNet": -11309.11,
+     "sliceDd": 17560.76,
+     "charge": 0,
+     "offset": 45465.34,
+     "priorPeak": 57780.19,
+     "minimum": -11309.103130939358,
+     "crossTerm": 23623.953130939364
+    },
+    {
+     "fold": "C23",
+     "label": "C23/C/pair DF3×GF2",
+     "id": "rc1-79e6ab0860a89791",
+     "sliceNet": -7567.47,
+     "sliceDd": 37608.46,
+     "charge": 0,
+     "offset": 34156.229999999996,
+     "priorPeak": 57780.19,
+     "minimum": -37468.47389823111,
+     "crossTerm": 61092.43389823112
+    }
+   ],
+   "charges": 0,
+   "net": 26588.759999999995,
+   "drawdown": 61092.43389823112,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "population": "J",
+   "armName": "Fully joint D1 + Growth",
+   "independent": true,
+   "nominating": true,
+   "name": "J/original",
+   "labels": [
+    "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+    "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+    "C23/J/refine/J.C1.h0.s0/R104#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+     "id": "rc1-eb97d59c6787a18f",
+     "sliceNet": 82512.44,
+     "sliceDd": 67635.07,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -3877.211960202141,
+     "crossTerm": 3877.211960202141
+    },
+    {
+     "fold": "C21",
+     "label": "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+     "id": "rc2-f6ba6fe854bcdb97",
+     "sliceNet": -16451.5,
+     "sliceDd": 30241.96,
+     "charge": 0,
+     "offset": 82512.44,
+     "priorPeak": 90113.44000000003,
+     "minimum": -28338.212537032086,
+     "crossTerm": 35939.212537032116
+    },
+    {
+     "fold": "C23",
+     "label": "C23/J/refine/J.C1.h0.s0/R104#1 profit",
+     "id": "rc1-24d62add80f9dc4a",
+     "sliceNet": 33520.01,
+     "sliceDd": 17490.37,
+     "charge": 0,
+     "offset": 66060.94,
+     "priorPeak": 90113.44000000003,
+     "minimum": -541.2164420895278,
+     "crossTerm": 24593.716442089557
+    }
+   ],
+   "charges": 0,
+   "net": 99580.95000000001,
+   "drawdown": 67635.07,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "population": "S",
+   "armName": "D1-first sequential (frozen D1 finalists + Growth searched in the shared slot)",
+   "independent": true,
+   "nominating": true,
+   "name": "S/original",
+   "labels": [
+    "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+    "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+    "C23/S/refine/S.C23F3.h2.s1/R102#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+     "id": "rc1-64b48f95d650a901",
+     "sliceNet": 92526.53,
+     "sliceDd": 43801.26,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -20895.78307475819,
+     "crossTerm": 20895.78307475819
+    },
+    {
+     "fold": "C21",
+     "label": "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+     "id": "rc1-327437fd024d5a7b",
+     "sliceNet": -25875.82,
+     "sliceDd": 64512.19,
+     "charge": 0,
+     "offset": 92526.53,
+     "priorPeak": 104313.59999999998,
+     "minimum": -39573.569253881346,
+     "crossTerm": 51360.63925388132
+    },
+    {
+     "fold": "C23",
+     "label": "C23/S/refine/S.C23F3.h2.s1/R102#1 profit",
+     "id": "rc1-688cc31f46d45fd1",
+     "sliceNet": 17654.11,
+     "sliceDd": 32166.39,
+     "charge": 0,
+     "offset": 66650.70999999999,
+     "priorPeak": 117170.85000000006,
+     "minimum": -32026.404059141292,
+     "crossTerm": 82546.54405914136
+    }
+   ],
+   "charges": 0,
+   "net": 84304.81999999999,
+   "drawdown": 82546.54405914136,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  }
+ ],
+ "secondary": [
+  {
+   "population": "D-A",
+   "independent": true,
+   "nominating": false,
+   "name": "D-A/original (report-only)",
+   "labels": [
+    "C19/D/refine/D.A0/R101#1 profit",
+    null,
+    null
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/D/refine/D.A0/R101#1 profit",
+     "id": "4cb34bd5200a272a",
+     "sliceNet": 228851.8,
+     "sliceDd": 99711.54,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 5195.819999999978,
+     "crossTerm": -5195.819999999978
+    },
+    {
+     "fold": "C21",
+     "label": null,
+     "id": null,
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 228851.8,
+     "priorPeak": 249107.04,
+     "minimum": 0,
+     "crossTerm": 20255.24000000002
+    },
+    {
+     "fold": "C23",
+     "label": null,
+     "id": null,
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 228851.8,
+     "priorPeak": 249107.04,
+     "minimum": 0,
+     "crossTerm": 20255.24000000002
+    }
+   ],
+   "charges": 0,
+   "net": 228851.8,
+   "drawdown": 99711.54,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "chronologically incomplete: C21, C23 had no qualified candidate (flat) — no chronological support",
+   "supported": false
+  },
+  {
+   "population": "G-P",
+   "independent": true,
+   "nominating": false,
+   "name": "G-P/original (report-only)",
+   "labels": [
+    "C19/G/refine/G.h1.s1/R102#1 profit",
+    "C21/G/refine/G.h1.s1/R101#1 profit",
+    "C23/G/refine/G.h1.s1/R103#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/G/refine/G.h1.s1/R102#1 profit",
+     "id": "8cc79d60076876d2",
+     "sliceNet": 30545.62,
+     "sliceDd": 21991.12,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 4862.9499999999825,
+     "crossTerm": -4862.9499999999825
+    },
+    {
+     "fold": "C21",
+     "label": "C21/G/refine/G.h1.s1/R101#1 profit",
+     "id": "10c86c062f1761e4",
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 30545.62,
+     "priorPeak": 48929.95999999999,
+     "minimum": 0,
+     "crossTerm": 18384.339999999993
+    },
+    {
+     "fold": "C23",
+     "label": "C23/G/refine/G.h1.s1/R103#1 profit",
+     "id": "cd47864692b053b5",
+     "sliceNet": 12401,
+     "sliceDd": 26796.01,
+     "charge": 0,
+     "offset": 30545.62,
+     "priorPeak": 48929.95999999999,
+     "minimum": -17694.581775038736,
+     "crossTerm": 36078.92177503873
+    }
+   ],
+   "charges": 0,
+   "net": 42946.619999999995,
+   "drawdown": 36078.92177503873,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "population": "G-U",
+   "independent": true,
+   "nominating": false,
+   "name": "G-U/original (report-only)",
+   "labels": [
+    "C19/G/refine/G.h0.s0/R103#1 profit",
+    "C21/G/refine/G.h0.s0/R103#1 profit",
+    "C23/G/refine/G.h0.s0/R104#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/G/refine/G.h0.s0/R103#1 profit",
+     "id": "3b187af8d123ffac",
+     "sliceNet": 286734.58,
+     "sliceDd": 111943.83,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 4565.570000000007,
+     "crossTerm": -4565.570000000007
+    },
+    {
+     "fold": "C21",
+     "label": "C21/G/refine/G.h0.s0/R103#1 profit",
+     "id": "c0d6c4de59f8ff3c",
+     "sliceNet": -15484,
+     "sliceDd": 41076.89,
+     "charge": 50,
+     "offset": 286684.58,
+     "priorPeak": 308407.78,
+     "minimum": -33313.34255705541,
+     "crossTerm": 55036.54255705542
+    },
+    {
+     "fold": "C23",
+     "label": "C23/G/refine/G.h0.s0/R104#1 profit",
+     "id": "852ec3e2237e054d",
+     "sliceNet": 29168.94,
+     "sliceDd": 12594.57,
+     "charge": 50,
+     "offset": 271150.58,
+     "priorPeak": 308407.78,
+     "minimum": -984.1826845920878,
+     "crossTerm": 38241.3826845921
+    }
+   ],
+   "charges": 100,
+   "net": 300319.52,
+   "drawdown": 111943.83,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "population": "J-P",
+   "independent": true,
+   "nominating": false,
+   "name": "J-P/original (report-only)",
+   "labels": [
+    "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+    "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+    "C23/J/refine/J.D1.h1.s1/R103#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+     "id": "rc1-eb97d59c6787a18f",
+     "sliceNet": 82512.44,
+     "sliceDd": 67635.07,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -3877.211960202141,
+     "crossTerm": 3877.211960202141
+    },
+    {
+     "fold": "C21",
+     "label": "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+     "id": "rc2-f6ba6fe854bcdb97",
+     "sliceNet": -16451.5,
+     "sliceDd": 30241.96,
+     "charge": 0,
+     "offset": 82512.44,
+     "priorPeak": 90113.44000000003,
+     "minimum": -28338.212537032086,
+     "crossTerm": 35939.212537032116
+    },
+    {
+     "fold": "C23",
+     "label": "C23/J/refine/J.D1.h1.s1/R103#1 profit",
+     "id": "rc2-e36a7bdbd401440b",
+     "sliceNet": 13698.86,
+     "sliceDd": 19899.96,
+     "charge": 0,
+     "offset": 66060.94,
+     "priorPeak": 90113.44000000003,
+     "minimum": -18540.431079717935,
+     "crossTerm": 42592.931079717964
+    }
+   ],
+   "charges": 0,
+   "net": 79759.8,
+   "drawdown": 67635.07,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "population": "J-U",
+   "independent": true,
+   "nominating": false,
+   "name": "J-U/original (report-only)",
+   "labels": [
+    "C19/J/refine/J.D1.h0.s0/R104#1 profit",
+    "C21/J/refine/J.A1.h0.s0/R102#1 profit",
+    "C23/J/refine/J.C1.h0.s0/R104#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/J/refine/J.D1.h0.s0/R104#1 profit",
+     "id": "rc2-06162f6a2c9a0479",
+     "sliceNet": 348674.24,
+     "sliceDd": 105478.54,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 3943.5,
+     "crossTerm": -3943.5
+    },
+    {
+     "fold": "C21",
+     "label": "C21/J/refine/J.A1.h0.s0/R102#1 profit",
+     "id": "rc1-c1d6498862770863",
+     "sliceNet": 4840.51,
+     "sliceDd": 45296.29,
+     "charge": 50,
+     "offset": 348624.24,
+     "priorPeak": 356378.18000000005,
+     "minimum": -20748.672432363324,
+     "crossTerm": 28502.612432363385
+    },
+    {
+     "fold": "C23",
+     "label": "C23/J/refine/J.C1.h0.s0/R104#1 profit",
+     "id": "rc1-24d62add80f9dc4a",
+     "sliceNet": 33520.01,
+     "sliceDd": 17490.37,
+     "charge": 50,
+     "offset": 353414.75,
+     "priorPeak": 378471.13999999996,
+     "minimum": -541.2164420895278,
+     "crossTerm": 25597.606442089484
+    }
+   ],
+   "charges": 100,
+   "net": 386934.76,
+   "drawdown": 105478.54,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "population": "S-P",
+   "independent": true,
+   "nominating": false,
+   "name": "S-P/original (report-only)",
+   "labels": [
+    "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+    "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+    "C23/S/refine/S.C23F3.h2.s1/R102#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+     "id": "rc1-64b48f95d650a901",
+     "sliceNet": 92526.53,
+     "sliceDd": 43801.26,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -20895.78307475819,
+     "crossTerm": 20895.78307475819
+    },
+    {
+     "fold": "C21",
+     "label": "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+     "id": "rc1-327437fd024d5a7b",
+     "sliceNet": -25875.82,
+     "sliceDd": 64512.19,
+     "charge": 0,
+     "offset": 92526.53,
+     "priorPeak": 104313.59999999998,
+     "minimum": -39573.569253881346,
+     "crossTerm": 51360.63925388132
+    },
+    {
+     "fold": "C23",
+     "label": "C23/S/refine/S.C23F3.h2.s1/R102#1 profit",
+     "id": "rc1-688cc31f46d45fd1",
+     "sliceNet": 17654.11,
+     "sliceDd": 32166.39,
+     "charge": 0,
+     "offset": 66650.70999999999,
+     "priorPeak": 117170.85000000006,
+     "minimum": -32026.404059141292,
+     "crossTerm": 82546.54405914136
+    }
+   ],
+   "charges": 0,
+   "net": 84304.81999999999,
+   "drawdown": 82546.54405914136,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "population": "S-U",
+   "independent": true,
+   "nominating": false,
+   "name": "S-U/original (report-only)",
+   "labels": [
+    "C19/S/refine/S.C19F1.h0.s0/R104#1 profit",
+    "C21/S/refine/S.C21F3.h0.s0/R103#1 profit",
+    "C23/S/broad/S.C23F1.h0.s0/R101#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/S/refine/S.C19F1.h0.s0/R104#1 profit",
+     "id": "rc1-16fc61810646993a",
+     "sliceNet": 197940.45,
+     "sliceDd": 50136.7,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 3524.600000000035,
+     "crossTerm": -3524.600000000035
+    },
+    {
+     "fold": "C21",
+     "label": "C21/S/refine/S.C21F3.h0.s0/R103#1 profit",
+     "id": "rc1-b8ab0aa15c26085c",
+     "sliceNet": -43190.68,
+     "sliceDd": 85702.63,
+     "charge": 0,
+     "offset": 197940.45,
+     "priorPeak": 208270.17000000004,
+     "minimum": -60764.011902809085,
+     "crossTerm": 71093.73190280912
+    },
+    {
+     "fold": "C23",
+     "label": "C23/S/broad/S.C23F1.h0.s0/R101#1 profit",
+     "id": "rc1-cb569727bdfc0af7",
+     "sliceNet": 29072.47,
+     "sliceDd": 12740.1,
+     "charge": 100,
+     "offset": 154649.77000000002,
+     "priorPeak": 222584.76999999996,
+     "minimum": -4399.330000000016,
+     "crossTerm": 72334.32999999996
+    }
+   ],
+   "charges": 100,
+   "net": 183722.24000000002,
+   "drawdown": 85702.63,
+   "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  }
+ ],
+ "descriptive": [
+  {
+   "name": "D: role robust-profit (descriptive)",
+   "labels": [
+    "C19/D/refine/D.B1/R103#2 robust",
+    "C21/D/refine/D.C1/R102#2 robust",
+    "C23/D/refine/D.A1/R104#2 robust"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/D/refine/D.B1/R103#2 robust",
+     "id": "rc1-2a7762305ee26c56",
+     "sliceNet": 4464.32,
+     "sliceDd": 41756.92,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -19616.441684695223,
+     "crossTerm": 19616.441684695223
+    },
+    {
+     "fold": "C21",
+     "label": "C21/D/refine/D.C1/R102#2 robust",
+     "id": "rc2-ff3e79a873680a67",
+     "sliceNet": -11309.11,
+     "sliceDd": 17560.76,
+     "charge": 0,
+     "offset": 4464.32,
+     "priorPeak": 19640.459999999992,
+     "minimum": -11309.110000000015,
+     "crossTerm": 26485.250000000007
+    },
+    {
+     "fold": "C23",
+     "label": "C23/D/refine/D.A1/R104#2 robust",
+     "id": "rc1-927e48c18d848911",
+     "sliceNet": 582.1,
+     "sliceDd": 20051.68,
+     "charge": 0,
+     "offset": -6844.790000000001,
+     "priorPeak": 19640.459999999992,
+     "minimum": -19022.581358317286,
+     "crossTerm": 45507.83135831728
+    }
+   ],
+   "charges": 0,
+   "net": -6262.6900000000005,
+   "drawdown": 45507.83135831728,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "D: role balanced (descriptive)",
+   "labels": [
+    "C19/D/refine/D.B1/R103#2 robust",
+    "C21/D/refine/D.D1/R103#3 balanced",
+    "C23/D/refine/D.B1/R101#2 robust"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/D/refine/D.B1/R103#2 robust",
+     "id": "rc1-2a7762305ee26c56",
+     "sliceNet": 4464.32,
+     "sliceDd": 41756.92,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -19616.441684695223,
+     "crossTerm": 19616.441684695223
+    },
+    {
+     "fold": "C21",
+     "label": "C21/D/refine/D.D1/R103#3 balanced",
+     "id": "rc1-d5f405c00827592c",
+     "sliceNet": -37395.45,
+     "sliceDd": 71522.89,
+     "charge": 0,
+     "offset": 4464.32,
+     "priorPeak": 19640.459999999992,
+     "minimum": -46584.27305983048,
+     "crossTerm": 61760.41305983047
+    },
+    {
+     "fold": "C23",
+     "label": "C23/D/refine/D.B1/R101#2 robust",
+     "id": "rc1-9130f0dd22af1841",
+     "sliceNet": -15304.65,
+     "sliceDd": 15444.64,
+     "charge": 0,
+     "offset": -32931.13,
+     "priorPeak": 29108.640000000007,
+     "minimum": -15304.650356770624,
+     "crossTerm": 77344.42035677063
+    }
+   ],
+   "charges": 0,
+   "net": -48235.78,
+   "drawdown": 77344.42035677063,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "D: role lower-drawdown (descriptive)",
+   "labels": [
+    "C19/D/refine/D.B1/R103#5 profit order",
+    "C21/D/refine/D.B1/R103#6 profit order",
+    "C23/D/refine/D.B1/R102#6 profit order"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/D/refine/D.B1/R103#5 profit order",
+     "id": "rc2-242ebabb0b2a59aa",
+     "sliceNet": 8017.35,
+     "sliceDd": 55857.45,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -31679.101679863874,
+     "crossTerm": 31679.101679863874
+    },
+    {
+     "fold": "C21",
+     "label": "C21/D/refine/D.B1/R103#6 profit order",
+     "id": "rc2-9c36df363e85ce38",
+     "sliceNet": -5561.46,
+     "sliceDd": 15710.22,
+     "charge": 0,
+     "offset": 8017.35,
+     "priorPeak": 21937.160000000003,
+     "minimum": -7844.108708638523,
+     "crossTerm": 21763.91870863853
+    },
+    {
+     "fold": "C23",
+     "label": "C23/D/refine/D.B1/R102#6 profit order",
+     "id": "rc2-14202dc9e14b2cd2",
+     "sliceNet": 410.3,
+     "sliceDd": 6531.28,
+     "charge": 0,
+     "offset": 2455.8900000000003,
+     "priorPeak": 21937.160000000003,
+     "minimum": -2065.4018566022787,
+     "crossTerm": 21546.671856602283
+    }
+   ],
+   "charges": 0,
+   "net": 2866.1900000000005,
+   "drawdown": 55857.45,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "G: role robust-profit (descriptive)",
+   "labels": [
+    "C19/G/refine/G.h0.s1/R103#2 robust",
+    "C21/G/refine/G.h0.s0/R104#2 robust",
+    "C23/G/refine/G.h0.s1/R102#2 robust"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/G/refine/G.h0.s1/R103#2 robust",
+     "id": "1bb5d5ef887dffe9",
+     "sliceNet": 299793.27,
+     "sliceDd": 65651.62,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 4565.570000000007,
+     "crossTerm": -4565.570000000007
+    },
+    {
+     "fold": "C21",
+     "label": "C21/G/refine/G.h0.s0/R104#2 robust",
+     "id": "5e9538630bcccbfc",
+     "sliceNet": 3608.41,
+     "sliceDd": 13893.63,
+     "charge": 0,
+     "offset": 299793.27,
+     "priorPeak": 323160.01,
+     "minimum": -7779.227156963607,
+     "crossTerm": 31145.967156963598
+    },
+    {
+     "fold": "C23",
+     "label": "C23/G/refine/G.h0.s1/R102#2 robust",
+     "id": "6dccbf02f8a607e3",
+     "sliceNet": 7737.19,
+     "sliceDd": 30235.37,
+     "charge": 0,
+     "offset": 303401.68,
+     "priorPeak": 323160.01,
+     "minimum": -22163.823139932007,
+     "crossTerm": 41922.15313993202
+    }
+   ],
+   "charges": 0,
+   "net": 311138.87,
+   "drawdown": 65651.62,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "G: role balanced (descriptive)",
+   "labels": [
+    "C19/G/refine/G.h1.s1/R104#3 balanced",
+    "C21/G/refine/G.h0.s0/R103#3 balanced",
+    "C23/G/refine/G.h0.s1/R102#2 robust"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/G/refine/G.h1.s1/R104#3 balanced",
+     "id": "7993c99e5837ccd1",
+     "sliceNet": 39492.02,
+     "sliceDd": 17275.29,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -1234.5944229747183,
+     "crossTerm": 1234.5944229747183
+    },
+    {
+     "fold": "C21",
+     "label": "C21/G/refine/G.h0.s0/R103#3 balanced",
+     "id": "112deec1a052e470",
+     "sliceNet": 3493.49,
+     "sliceDd": 13893.63,
+     "charge": 0,
+     "offset": 39492.02,
+     "priorPeak": 45720.840000000004,
+     "minimum": -7779.228608158941,
+     "crossTerm": 14008.048608158948
+    },
+    {
+     "fold": "C23",
+     "label": "C23/G/refine/G.h0.s1/R102#2 robust",
+     "id": "6dccbf02f8a607e3",
+     "sliceNet": 7737.19,
+     "sliceDd": 30235.37,
+     "charge": 0,
+     "offset": 42985.509999999995,
+     "priorPeak": 51160.36999999997,
+     "minimum": -22163.823139932007,
+     "crossTerm": 30338.683139931985
+    }
+   ],
+   "charges": 0,
+   "net": 50722.7,
+   "drawdown": 30338.683139931985,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": true,
+   "verdict": "supported (every fold produced a primary; sequential net > 0 and sequential drawdown ≤ $35,000)",
+   "supported": true
+  },
+  {
+   "name": "G: role lower-drawdown (descriptive)",
+   "labels": [
+    "C19/G/refine/G.h1.s1/R104#3 balanced",
+    "C21/G/refine/G.h1.s1/R102#5 profit order",
+    "C23/G/refine/G.h0.s0/R102#3 profit order"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/G/refine/G.h1.s1/R104#3 balanced",
+     "id": "7993c99e5837ccd1",
+     "sliceNet": 39492.02,
+     "sliceDd": 17275.29,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -1234.5944229747183,
+     "crossTerm": 1234.5944229747183
+    },
+    {
+     "fold": "C21",
+     "label": "C21/G/refine/G.h1.s1/R102#5 profit order",
+     "id": "91fef25ac2651f1a",
+     "sliceNet": -10365.86,
+     "sliceDd": 10909.85,
+     "charge": 0,
+     "offset": 39492.02,
+     "priorPeak": 45720.840000000004,
+     "minimum": -10365.859999999986,
+     "crossTerm": 16594.679999999993
+    },
+    {
+     "fold": "C23",
+     "label": "C23/G/refine/G.h0.s0/R102#3 profit order",
+     "id": "e4a38d7c33dc2e7a",
+     "sliceNet": 41309.43,
+     "sliceDd": 7424.92,
+     "charge": 0,
+     "offset": 29126.159999999996,
+     "priorPeak": 45720.840000000004,
+     "minimum": -163.70799283290398,
+     "crossTerm": 16758.38799283291
+    }
+   ],
+   "charges": 0,
+   "net": 70435.59,
+   "drawdown": 17275.29,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": true,
+   "verdict": "supported (every fold produced a primary; sequential net > 0 and sequential drawdown ≤ $35,000)",
+   "supported": true
+  },
+  {
+   "name": "C: role robust-profit (descriptive)",
+   "labels": [
+    "C19/C/pair DF2×GF3",
+    "C21/C/pair DF2×GF3",
+    "C23/C/pair DF3×GF2"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/C/pair DF2×GF3",
+     "id": "rc1-cf2b42f1179727b1",
+     "sliceNet": 36521.12,
+     "sliceDd": 37411.03,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -20028.044597112836,
+     "crossTerm": 20028.044597112836
+    },
+    {
+     "fold": "C21",
+     "label": "C21/C/pair DF2×GF3",
+     "id": "rc2-5c99a5f0b238cc7e",
+     "sliceNet": -7815.61,
+     "sliceDd": 20222.72,
+     "charge": 0,
+     "offset": 36521.12,
+     "priorPeak": 50343.56999999998,
+     "minimum": -13971.070258097025,
+     "crossTerm": 27793.520258097
+    },
+    {
+     "fold": "C23",
+     "label": "C23/C/pair DF3×GF2",
+     "id": "rc1-79e6ab0860a89791",
+     "sliceNet": -7567.47,
+     "sliceDd": 37608.46,
+     "charge": 0,
+     "offset": 28705.510000000002,
+     "priorPeak": 50343.56999999998,
+     "minimum": -37468.47389823111,
+     "crossTerm": 59106.533898231086
+    }
+   ],
+   "charges": 0,
+   "net": 21138.04,
+   "drawdown": 59106.533898231086,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "C: role balanced (descriptive)",
+   "labels": [
+    "C19/C/pair DF2×GF3",
+    "C21/C/pair DF2×GF3",
+    "C23/C/pair DF3×GF2"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/C/pair DF2×GF3",
+     "id": "rc1-cf2b42f1179727b1",
+     "sliceNet": 36521.12,
+     "sliceDd": 37411.03,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -20028.044597112836,
+     "crossTerm": 20028.044597112836
+    },
+    {
+     "fold": "C21",
+     "label": "C21/C/pair DF2×GF3",
+     "id": "rc2-5c99a5f0b238cc7e",
+     "sliceNet": -7815.61,
+     "sliceDd": 20222.72,
+     "charge": 0,
+     "offset": 36521.12,
+     "priorPeak": 50343.56999999998,
+     "minimum": -13971.070258097025,
+     "crossTerm": 27793.520258097
+    },
+    {
+     "fold": "C23",
+     "label": "C23/C/pair DF3×GF2",
+     "id": "rc1-79e6ab0860a89791",
+     "sliceNet": -7567.47,
+     "sliceDd": 37608.46,
+     "charge": 0,
+     "offset": 28705.510000000002,
+     "priorPeak": 50343.56999999998,
+     "minimum": -37468.47389823111,
+     "crossTerm": 59106.533898231086
+    }
+   ],
+   "charges": 0,
+   "net": 21138.04,
+   "drawdown": 59106.533898231086,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "C: role lower-drawdown (descriptive)",
+   "labels": [
+    "C19/C/pair DF2×GF3",
+    "C21/C/pair DF2×GF3",
+    "C23/C/pair DF3×GF2"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/C/pair DF2×GF3",
+     "id": "rc1-cf2b42f1179727b1",
+     "sliceNet": 36521.12,
+     "sliceDd": 37411.03,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -20028.044597112836,
+     "crossTerm": 20028.044597112836
+    },
+    {
+     "fold": "C21",
+     "label": "C21/C/pair DF2×GF3",
+     "id": "rc2-5c99a5f0b238cc7e",
+     "sliceNet": -7815.61,
+     "sliceDd": 20222.72,
+     "charge": 0,
+     "offset": 36521.12,
+     "priorPeak": 50343.56999999998,
+     "minimum": -13971.070258097025,
+     "crossTerm": 27793.520258097
+    },
+    {
+     "fold": "C23",
+     "label": "C23/C/pair DF3×GF2",
+     "id": "rc1-79e6ab0860a89791",
+     "sliceNet": -7567.47,
+     "sliceDd": 37608.46,
+     "charge": 0,
+     "offset": 28705.510000000002,
+     "priorPeak": 50343.56999999998,
+     "minimum": -37468.47389823111,
+     "crossTerm": 59106.533898231086
+    }
+   ],
+   "charges": 0,
+   "net": 21138.04,
+   "drawdown": 59106.533898231086,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "J: role robust-profit (descriptive)",
+   "labels": [
+    "C19/J/refine/J.D0.h0.s1/R101#2 robust",
+    "C21/J/refine/J.D1.h2.s1/R101#1 profit",
+    "C23/J/refine/J.D1.h1.s1/R103#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/J/refine/J.D0.h0.s1/R101#2 robust",
+     "id": "rc1-803542bf62eb94e0",
+     "sliceNet": 267851.31,
+     "sliceDd": 84910.04,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 3943.5,
+     "crossTerm": -3943.5
+    },
+    {
+     "fold": "C21",
+     "label": "C21/J/refine/J.D1.h2.s1/R101#1 profit",
+     "id": "rc2-58f2f7df0fec96f7",
+     "sliceNet": -8362.9,
+     "sliceDd": 53481.46,
+     "charge": 0,
+     "offset": 267851.31,
+     "priorPeak": 290444.97,
+     "minimum": -38279.989513828885,
+     "crossTerm": 60873.64951382886
+    },
+    {
+     "fold": "C23",
+     "label": "C23/J/refine/J.D1.h1.s1/R103#1 profit",
+     "id": "rc2-e36a7bdbd401440b",
+     "sliceNet": 13698.86,
+     "sliceDd": 19899.96,
+     "charge": 0,
+     "offset": 259488.41,
+     "priorPeak": 290444.97,
+     "minimum": -18540.431079717935,
+     "crossTerm": 49496.9910797179
+    }
+   ],
+   "charges": 0,
+   "net": 273187.27,
+   "drawdown": 84910.04,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "J: role balanced (descriptive)",
+   "labels": [
+    "C19/J/refine/J.D1.h1.s0/R102#3 balanced",
+    "C21/J/refine/J.D1.h2.s1/R101#1 profit",
+    "C23/J/refine/J.A1.h0.s1/R104#1 profit"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/J/refine/J.D1.h1.s0/R102#3 balanced",
+     "id": "rc1-ef8631ce836cb4d5",
+     "sliceNet": 100136.5,
+     "sliceDd": 62614.11,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -8518.815254339366,
+     "crossTerm": 8518.815254339366
+    },
+    {
+     "fold": "C21",
+     "label": "C21/J/refine/J.D1.h2.s1/R101#1 profit",
+     "id": "rc2-58f2f7df0fec96f7",
+     "sliceNet": -8362.9,
+     "sliceDd": 53481.46,
+     "charge": 0,
+     "offset": 100136.5,
+     "priorPeak": 112514.9,
+     "minimum": -38279.989513828885,
+     "crossTerm": 50658.38951382888
+    },
+    {
+     "fold": "C23",
+     "label": "C23/J/refine/J.A1.h0.s1/R104#1 profit",
+     "id": "rc1-35acae9673ff65d3",
+     "sliceNet": 23052.47,
+     "sliceDd": 20350.86,
+     "charge": 0,
+     "offset": 91773.6,
+     "priorPeak": 115045.64000000001,
+     "minimum": -18215.378370946157,
+     "crossTerm": 41487.418370946165
+    }
+   ],
+   "charges": 0,
+   "net": 114826.07,
+   "drawdown": 62614.11,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "J: role lower-drawdown (descriptive)",
+   "labels": [
+    "C19/J/refine/J.C0.h0.s1/R104#3 balanced",
+    "C21/J/refine/J.B1.h0.s0/R104#4 Growth gate alternative",
+    "C23/J/refine/J.D1.h0.s1/R104#4 Growth gate alternative"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/J/refine/J.C0.h0.s1/R104#3 balanced",
+     "id": "rc1-a6974250fd927dea",
+     "sliceNet": 100193.76,
+     "sliceDd": 77937.34,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -30951.999768050067,
+     "crossTerm": 30951.999768050067
+    },
+    {
+     "fold": "C21",
+     "label": "C21/J/refine/J.B1.h0.s0/R104#4 Growth gate alternative",
+     "id": "rc2-0d30ad0506d38a1f",
+     "sliceNet": -3695.38,
+     "sliceDd": 15184,
+     "charge": 0,
+     "offset": 100193.76,
+     "priorPeak": 110275.72,
+     "minimum": -8394.79082619358,
+     "crossTerm": 18476.750826193587
+    },
+    {
+     "fold": "C23",
+     "label": "C23/J/refine/J.D1.h0.s1/R104#4 Growth gate alternative",
+     "id": "rc1-54d10ca86ab61874",
+     "sliceNet": 7882.69,
+     "sliceDd": 6004.22,
+     "charge": 0,
+     "offset": 96498.37999999999,
+     "priorPeak": 110275.72,
+     "minimum": -2350.9245365361276,
+     "crossTerm": 16128.264536536139
+    }
+   ],
+   "charges": 0,
+   "net": 104381.06999999999,
+   "drawdown": 77937.34,
+   "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "S: role robust-profit (descriptive)",
+   "labels": [
+    "C19/S/refine/S.C19F2.h2.s0/R103#2 robust",
+    "C21/S/refine/S.C21F3.h2.s1/R101#2 robust",
+    "C23/S/refine/S.C23F3.h0.s1/R102#2 robust"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/S/refine/S.C19F2.h2.s0/R103#2 robust",
+     "id": "rc1-212bd3a5b7c8ceea",
+     "sliceNet": 151236.59,
+     "sliceDd": 68574.85,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 1762.3099999999977,
+     "crossTerm": -1762.3099999999977
+    },
+    {
+     "fold": "C21",
+     "label": "C21/S/refine/S.C21F3.h2.s1/R101#2 robust",
+     "id": "rc1-71f65db9824b743b",
+     "sliceNet": -44913.61,
+     "sliceDd": 79041.06,
+     "charge": 50,
+     "offset": 151186.59,
+     "priorPeak": 162917.18000000002,
+     "minimum": -54102.43572909903,
+     "crossTerm": 65833.02572909906
+    },
+    {
+     "fold": "C23",
+     "label": "C23/S/refine/S.C23F3.h0.s1/R102#2 robust",
+     "id": "rc1-120d950b014a9638",
+     "sliceNet": 12523.09,
+     "sliceDd": 28872.72,
+     "charge": 0,
+     "offset": 106272.98,
+     "priorPeak": 175830.91000000006,
+     "minimum": -28732.737062708708,
+     "crossTerm": 98290.66706270877
+    }
+   ],
+   "charges": 50,
+   "net": 118796.06999999999,
+   "drawdown": 98290.66706270877,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "S: role balanced (descriptive)",
+   "labels": [
+    "C19/S/refine/S.C19F2.h2.s1/R103#2 robust",
+    "C21/S/refine/S.C21F3.h2.s1/R102#3 balanced",
+    "C23/S/refine/S.C23F3.h0.s1/R102#2 robust"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/S/refine/S.C19F2.h2.s1/R103#2 robust",
+     "id": "rc1-1a86b71d423bfb1e",
+     "sliceNet": 109787.98,
+     "sliceDd": 56136.13,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 1480.3400000000256,
+     "crossTerm": -1480.3400000000256
+    },
+    {
+     "fold": "C21",
+     "label": "C21/S/refine/S.C21F3.h2.s1/R102#3 balanced",
+     "id": "rc1-701a4e09c906199c",
+     "sliceNet": -25831.81,
+     "sliceDd": 62284.39,
+     "charge": 0,
+     "offset": 109787.98,
+     "priorPeak": 122936.48000000004,
+     "minimum": -37345.77000000002,
+     "crossTerm": 50494.27000000006
+    },
+    {
+     "fold": "C23",
+     "label": "C23/S/refine/S.C23F3.h0.s1/R102#2 robust",
+     "id": "rc1-120d950b014a9638",
+     "sliceNet": 12523.09,
+     "sliceDd": 28872.72,
+     "charge": 0,
+     "offset": 83956.17,
+     "priorPeak": 134432.3,
+     "minimum": -28732.737062708708,
+     "crossTerm": 79208.8670627087
+    }
+   ],
+   "charges": 0,
+   "net": 96479.26,
+   "drawdown": 79208.8670627087,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "S: role lower-drawdown (descriptive)",
+   "labels": [
+    "C19/S/broad/S.C19F2.h0.s0/R108#3 Growth entry alternative",
+    "C21/S/refine/S.C21F3.h2.s1/R103#4 Growth gate alternative",
+    "C23/S/broad/S.C23F3.h2.s1/R102#3 Growth gate alternative"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "C19/S/broad/S.C19F2.h0.s0/R108#3 Growth entry alternative",
+     "id": "rc1-cb7aa31c49ec8c3d",
+     "sliceNet": 65166.84,
+     "sliceDd": 47828.92,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -5875.249193095311,
+     "crossTerm": 5875.249193095311
+    },
+    {
+     "fold": "C21",
+     "label": "C21/S/refine/S.C21F3.h2.s1/R103#4 Growth gate alternative",
+     "id": "rc1-b39323f7d321bcc4",
+     "sliceNet": -37395.45,
+     "sliceDd": 71522.89,
+     "charge": 50,
+     "offset": 65116.84,
+     "priorPeak": 77779.81999999998,
+     "minimum": -46584.27055693109,
+     "crossTerm": 59247.250556931074
+    },
+    {
+     "fold": "C23",
+     "label": "C23/S/broad/S.C23F3.h2.s1/R102#3 Growth gate alternative",
+     "id": "rc1-50b9034f03900332",
+     "sliceNet": -8723.41,
+     "sliceDd": 17795.56,
+     "charge": 0,
+     "offset": 27721.39,
+     "priorPeak": 89761.16,
+     "minimum": -17655.578257716,
+     "crossTerm": 79695.348257716
+    }
+   ],
+   "charges": 50,
+   "net": 18997.98,
+   "drawdown": 79695.348257716,
+   "drawdownAt": "C23 (from an earlier peak across the boundary)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "control: New L0 on TSLA (arm D; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+   "labels": [
+    "control: New L0 on TSLA (arm D; external VGT phenotype)",
+    "control: New L0 on TSLA (arm D; external VGT phenotype)",
+    "control: New L0 on TSLA (arm D; external VGT phenotype)"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: New L0 on TSLA (arm D; external VGT phenotype)",
+     "id": "d492ad042d96ee3e",
+     "sliceNet": 66044.27,
+     "sliceDd": 75932.83,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -66731.03496100346,
+     "crossTerm": 66731.03496100346
+    },
+    {
+     "fold": "C21",
+     "label": "control: New L0 on TSLA (arm D; external VGT phenotype)",
+     "id": "d492ad042d96ee3e",
+     "sliceNet": 24725.23,
+     "sliceDd": 97605.64,
+     "charge": 0,
+     "offset": 66044.27,
+     "priorPeak": 77396.92,
+     "minimum": -43846.642500296046,
+     "crossTerm": 55199.29250029604
+    },
+    {
+     "fold": "C23",
+     "label": "control: New L0 on TSLA (arm D; external VGT phenotype)",
+     "id": "d492ad042d96ee3e",
+     "sliceNet": -1315.11,
+     "sliceDd": 37887.91,
+     "charge": 0,
+     "offset": 90769.5,
+     "priorPeak": 118954.40000000001,
+     "minimum": -36240.956318666766,
+     "crossTerm": 64425.856318666774
+    }
+   ],
+   "charges": 0,
+   "net": 89454.39,
+   "drawdown": 97605.64,
+   "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "control: N/original on TSLA (arm D; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+   "labels": [
+    "control: N/original on TSLA (arm D; external VGT phenotype)",
+    "control: N/original on TSLA (arm D; external VGT phenotype)",
+    "control: N/original on TSLA (arm D; external VGT phenotype)"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: N/original on TSLA (arm D; external VGT phenotype)",
+     "id": "rc1-56bd99bf100994cb",
+     "sliceNet": 83032.23,
+     "sliceDd": 74760.51,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -62100.69979980345,
+     "crossTerm": 62100.69979980345
+    },
+    {
+     "fold": "C21",
+     "label": "control: N/original on TSLA (arm D; external VGT phenotype)",
+     "id": "rc1-56bd99bf100994cb",
+     "sliceNet": -657.37,
+     "sliceDd": 98506.56,
+     "charge": 0,
+     "offset": 83032.23,
+     "priorPeak": 89997.2,
+     "minimum": -64343.8198273473,
+     "crossTerm": 71308.7898273473
+    },
+    {
+     "fold": "C23",
+     "label": "control: N/original on TSLA (arm D; external VGT phenotype)",
+     "id": "rc1-56bd99bf100994cb",
+     "sliceNet": 798.82,
+     "sliceDd": 34113.51,
+     "charge": 0,
+     "offset": 82374.86,
+     "priorPeak": 116322.39000000001,
+     "minimum": -31786.40685669922,
+     "crossTerm": 65733.93685669923
+    }
+   ],
+   "charges": 0,
+   "net": 83173.68000000001,
+   "drawdown": 98506.56,
+   "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "control: New L0 on TSLA (arm G; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+   "labels": [
+    "control: New L0 on TSLA (arm G; external VGT phenotype)",
+    "control: New L0 on TSLA (arm G; external VGT phenotype)",
+    "control: New L0 on TSLA (arm G; external VGT phenotype)"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: New L0 on TSLA (arm G; external VGT phenotype)",
+     "id": "a30a4c6233df5ff3",
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 0,
+     "crossTerm": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: New L0 on TSLA (arm G; external VGT phenotype)",
+     "id": "a30a4c6233df5ff3",
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 0,
+     "crossTerm": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: New L0 on TSLA (arm G; external VGT phenotype)",
+     "id": "a30a4c6233df5ff3",
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 0,
+     "crossTerm": 0
+    }
+   ],
+   "charges": 0,
+   "net": 0,
+   "drawdown": 0,
+   "drawdownAt": "",
+   "withinCeiling": true,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "control: N/original on TSLA (arm G; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+   "labels": [
+    "control: N/original on TSLA (arm G; external VGT phenotype)",
+    "control: N/original on TSLA (arm G; external VGT phenotype)",
+    "control: N/original on TSLA (arm G; external VGT phenotype)"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: N/original on TSLA (arm G; external VGT phenotype)",
+     "id": "594206e73bd5ae29",
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 0,
+     "crossTerm": 0
+    },
+    {
+     "fold": "C21",
+     "label": "control: N/original on TSLA (arm G; external VGT phenotype)",
+     "id": "594206e73bd5ae29",
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 0,
+     "crossTerm": 0
+    },
+    {
+     "fold": "C23",
+     "label": "control: N/original on TSLA (arm G; external VGT phenotype)",
+     "id": "594206e73bd5ae29",
+     "sliceNet": 0,
+     "sliceDd": 0,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": 0,
+     "crossTerm": 0
+    }
+   ],
+   "charges": 0,
+   "net": 0,
+   "drawdown": 0,
+   "drawdownAt": "",
+   "withinCeiling": true,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "control: New L0 on TSLA (arm J; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+   "labels": [
+    "control: New L0 on TSLA (arm J; external VGT phenotype)",
+    "control: New L0 on TSLA (arm J; external VGT phenotype)",
+    "control: New L0 on TSLA (arm J; external VGT phenotype)"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: New L0 on TSLA (arm J; external VGT phenotype)",
+     "id": "97fdd4972e46e715",
+     "sliceNet": 66044.27,
+     "sliceDd": 75932.83,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -66731.03496100346,
+     "crossTerm": 66731.03496100346
+    },
+    {
+     "fold": "C21",
+     "label": "control: New L0 on TSLA (arm J; external VGT phenotype)",
+     "id": "97fdd4972e46e715",
+     "sliceNet": 24725.23,
+     "sliceDd": 97605.64,
+     "charge": 0,
+     "offset": 66044.27,
+     "priorPeak": 77396.92,
+     "minimum": -43846.642500296046,
+     "crossTerm": 55199.29250029604
+    },
+    {
+     "fold": "C23",
+     "label": "control: New L0 on TSLA (arm J; external VGT phenotype)",
+     "id": "97fdd4972e46e715",
+     "sliceNet": -1315.11,
+     "sliceDd": 37887.91,
+     "charge": 0,
+     "offset": 90769.5,
+     "priorPeak": 118954.40000000001,
+     "minimum": -36240.956318666766,
+     "crossTerm": 64425.856318666774
+    }
+   ],
+   "charges": 0,
+   "net": 89454.39,
+   "drawdown": 97605.64,
+   "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  },
+  {
+   "name": "control: N/original on TSLA (arm J; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+   "labels": [
+    "control: N/original on TSLA (arm J; external VGT phenotype)",
+    "control: N/original on TSLA (arm J; external VGT phenotype)",
+    "control: N/original on TSLA (arm J; external VGT phenotype)"
+   ],
+   "parts": [
+    {
+     "fold": "C19",
+     "label": "control: N/original on TSLA (arm J; external VGT phenotype)",
+     "id": "rc1-c37c1a4206ee7a7d",
+     "sliceNet": 83032.23,
+     "sliceDd": 74760.51,
+     "charge": 0,
+     "offset": 0,
+     "priorPeak": 0,
+     "minimum": -62100.69979980345,
+     "crossTerm": 62100.69979980345
+    },
+    {
+     "fold": "C21",
+     "label": "control: N/original on TSLA (arm J; external VGT phenotype)",
+     "id": "rc1-c37c1a4206ee7a7d",
+     "sliceNet": -657.37,
+     "sliceDd": 98506.56,
+     "charge": 0,
+     "offset": 83032.23,
+     "priorPeak": 89997.2,
+     "minimum": -64343.8198273473,
+     "crossTerm": 71308.7898273473
+    },
+    {
+     "fold": "C23",
+     "label": "control: N/original on TSLA (arm J; external VGT phenotype)",
+     "id": "rc1-c37c1a4206ee7a7d",
+     "sliceNet": 798.82,
+     "sliceDd": 34113.51,
+     "charge": 0,
+     "offset": 82374.86,
+     "priorPeak": 116322.39000000001,
+     "minimum": -31786.40685669922,
+     "crossTerm": 65733.93685669923
+    }
+   ],
+   "charges": 0,
+   "net": 83173.68000000001,
+   "drawdown": 98506.56,
+   "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+   "withinCeiling": false,
+   "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+   "supported": false
+  }
+ ],
+ "scope": "each arm’s procedure (D, G, C, J, S) is an INDEPENDENT chronological test of that arm’s complete search-and-selection procedure (every phenotype searched fresh at every cutoff from that cutoff’s door only; arm C pairs and arm S’s frozen D1 come from the same cutoff’s D and G selections); the sub-populations are report-only; roles and the external controls are descriptive",
+ "finished": "2026-11-25T19:43:21.352Z"
+}
