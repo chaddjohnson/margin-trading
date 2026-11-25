@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T19:48Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (C19 COMPLETE at
+- **Updated:** 2026-11-25T20:05Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (C19 COMPLETE at
   14:24:35Z; C21 COMPLETE at 16:34:18Z; C23 COMPLETE at 19:46:18Z; sequential verdicts sealed 19:43:21Z — every arm
   UNSUPPORTED; C24 started 19:46:18Z).** Relaunched once after code amendment A1 (14:02:08Z; chain-log line offset 229).
 - **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`;
@@ -14,8 +14,17 @@
 - **Running:** systemd user unit **`tsla-chain`** (`/bin/bash research/tsla-d1-growth/chains/chain.sh`, all cutoffs; first
   started 2026-11-25T12:21:57Z, stopped 13:58:13Z at C19-S-refine (A1), relaunched after A1 — see the chain log; log `research/tsla-d1-growth/cache/logs/chain.log`; per-stage logs `cache/logs/chain/<stage>.log`;
   each stage its own unit `tsla-<stage>` in `tsla.slice`). Every sealed block is committed by the chain itself.
-- **Next:** wait; when the chain ends: report-only diagnostics (`npm run tsla-diag -- bh|tail|lots|nbhd`), analysis and
-  reports, bundle, commit, push.
+- **Next:** wait for `CHAIN COMPLETE` (C24 → FROZEN_SELECTION → FULL authorization → validation once → outcome → zstd).
+  Then, in order (commands in `RUN_COMMANDS.md` Phase 7): diagnostics `bh`, `tail`, `lots`, then `nbhd` (unit tsla-nbhd);
+  `analyze.ts`, `tables-md.ts`, `arm-reports.ts`; `gpu-jobs.py` (must exit 0); `search-report.py`; `jobzstd.py final`;
+  fill every `<!-- PENDING… -->` marker (`grep -rn PENDING research/tsla-d1-growth/*.md research/tsla-d1-growth/reports/narrative`);
+  write READ_FIRST, REPORT (§2 = `reports/narrative/METHOD.md`), COMPARISON, FINAL_CANDIDATES, ROBUSTNESS_AND_RISK,
+  reports/narrative/SEARCH.md, GPU_PARITY_AND_ACCEPTANCE §4, DECISION_REGISTER U; commit, push, verify `git ls-remote`;
+  `tools/tsla-d1-growth/bundle.sh <scratch> $(git rev-parse HEAD)`; commit the ZIP under `bundle/`; push; verify.
+- **Reporting drafts already committed (during the chain):** `CHRONOLOGICAL_VALIDATION.md` (folds, verdicts; C24 pending),
+  `reports/narrative/{METHOD,NOTES,D,G,C,J,S}.md`, `DECISION_REGISTER.md` §F, tools `search-report.py`, `gpu-jobs.py`,
+  the `bh` fresh-purchase control (R2) and the exposure-table fix (R1). Generated reports (arm reports, `reports/tables/`)
+  are regenerated at the end and committed then.
 - **If the chain stopped (FAILED in the log or the unit inactive without "CHAIN COMPLETE"):** read the failing stage's log;
   fix only operational problems (never a rule; a code defect needs a sealed code amendment `A*` per PROTOCOL §17); then
   relaunch the SAME chain command — it is idempotent (sealed stages are skipped; an interrupted job resumes with
