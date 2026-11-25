@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T14:02Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING again after code
-  amendment A1 (resumes at C19-S-refine).**
+- **Updated:** 2026-11-25T14:26Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (C19 COMPLETE at
+  14:24:35Z; C21 started 14:24:35Z).** Relaunched once after code amendment A1 (14:02:08Z; chain-log line offset 229).
 - **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`;
   freeze `results/protocol-freeze.json` `d197e9d73feec2edd2f9c250640d22310118977bcdfa31943c3b9103bfbbfe97` (commit `b2667d83`,
   **pushed**: `git ls-remote` = local); frozen code digest `418a8758…`; gates `results/engineering/gates.json`
@@ -39,8 +39,9 @@
 | 3 functionality audit | complete | `FUNCTIONALITY_AUDIT.md` |
 | 4 protocol | **frozen** 12:20Z | see the top screen |
 | 5 engineering | complete | E1–E9 sealed (`results/engineering/`) |
-| 6 C19 | running (D, G, J sealed through their arm selections; S through its refinement plan; A1 then S refine) | `results/{search,rounds,qualification,refine-plan,selection,pairs,frozen-d1}/C19*`, then `slices/C19.json` |
-| 6 C21, C23, sequential, C24, validation, outcome | not started | chain order (PROTOCOL §14) |
+| 6 C19 | **complete** 14:24:35Z (A1 at 14:01Z; C19-S-refine then ran) | selection `b41af173…`, slice `8ce42df6…`, frozen D1 `a2f2017c…`, pairs `2318780e…`; per arm C `38d484a2…`, D `5dbf7571…`, G `c9817da9…`, J `e0c0b868…`, S `eae07a2e…` (all under `results/`; zstd of the C19 job archives committed `c5ae888e`) |
+| 6 C21 | running | `results/{search,rounds,qualification,refine-plan,selection,pairs,frozen-d1}/C21*`, then `slices/C21.json` |
+| 6 C23, sequential, C24, validation, outcome | not started | chain order (PROTOCOL §14) |
 | diagnostics, reports, ZIP | not started | `tools/tsla-d1-growth/diagnostics.ts` written (after validation only) |
 
 ## Constants
@@ -62,8 +63,10 @@ hard ceiling 120 M requested; doors D19/D21/D23/D24 training, slices D21/D23/D24
   and a SCRATCH actions file (session scratchpad): z-verified, integrity ok, 96/96 sealed ids reproduced, 1,927,417,856 →
   132,096,152 bytes in 6 s; the test `.zst` was removed (single file) so the chain's own run starts clean.
 - `tools/tsla-d1-growth/diagnostics.ts` gained `TSLA_DIAG_TEST=D19` (C19 selection, door D19, CPU nbhd, outputs to
-  git-ignored `cache/diag-test/`) to exercise bh/tail/lots/nbhd before the validation; run it once C19's selection is
-  sealed. `analyze.ts` (tables JSON/CSV), `tables-md.ts` (TABLES.md) and `bundle.sh` (handoff ZIP) are written;
+  git-ignored `cache/diag-test/`) to exercise bh/tail/lots/nbhd before the validation. **Run 2026-11-25T14:25:44Z–14:25:58Z
+  after C19's selection was sealed: all four exit 0** (bh: unfinanced 2016-01-04 → 2019-12-31 +$81,155.09, financed
+  +$37,245.50 = −$43,909.59 of 11 % simple interest, as computed by hand; tail, lots: every C19 subject; nbhd: 5 arm
+  primaries × small/wide on the CPU, 4 workers). Door log entries labelled "ENGINEERING TEST" (D19, use diagnostic). `analyze.ts` (tables JSON/CSV), `tables-md.ts` (TABLES.md) and `bundle.sh` (handoff ZIP) are written;
   tools type-check (scratch tsconfig over tools/ + src/tsla-d1-growth) and lint clean. `engineering.ts` line 438: a
   type-only cast fix (`as unknown as`), erased at run time.
 - Git while the chain runs: read-only commands with `GIT_OPTIONAL_LOCKS=0`; commit only while a long stage is running
