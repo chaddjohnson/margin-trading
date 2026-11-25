@@ -402,8 +402,8 @@ const section = (arm: ArmKey): string[] => {
             code(r.primary),
             k$(r.trainingNet),
             typeof r.openLotShare === 'number' ? pct(r.openLotShare) : String(r.openLotShare),
-            typeof ol === 'string' ? ol : `${String(ol.book)} from ${String(ol.entry)} marked ${k$(ol.mark)} (${num(ol.multiple)}×)`,
-            typeof gb === 'string' ? gb : `${String(gb.reason)} ${String(gb.exit ?? 'open')}: final ${k$(gb.finalNet)} (change ${k$(gb.change)})`,
+            typeof ol === 'string' ? ol : `${String(ol.book)} from ${String(ol.entry)}: unrealized ${k$(ol.mark)} (market value ${num(ol.multiple)}× the lot's principal)`,
+            typeof gb === 'string' ? gb : `${String(gb.reason)} ${String(gb.exit ?? 'open')}: lot net ${k$(gb.lotNetAtCutoff)} at the cutoff (partial exits included) → final ${k$(gb.finalNet)}; change on the slice ${k$(gb.change)}`,
             `${k$(tm.median)} / ${k$(tm.p90)} / ${k$(tm.worst)}`,
             nm ? `${k$(nm.median)} / ${k$(nm.worst)}` : '—'
           ];

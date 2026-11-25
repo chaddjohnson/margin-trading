@@ -436,7 +436,15 @@ const exposureTables = () => {
         trainingNet: e.risk.net,
         openLotShare: e.risk.net > 0 ? r4(e.risk.unrealized / e.risk.net) : `undefined (training net ≤ 0): unrealized ${r2(e.risk.unrealized)}, net ${r2(e.risk.net)}`,
         largestOpenLot: open ? { book: open.book, entry: open.entry, entryRaw: open.entryRaw, multiple: r4(open.multiple), mark: r2(open.mark) } : 'none open',
-        openLotGivebackNextSlice: open && carried ? { markAtCutoff: r2(open.mark), finalNet: r2(carried.net), exit: carried.exit, reason: carried.reason, change: r2(carried.net - open.mark) } : open ? 'open lot not found in the slice row' : 'none open',
+        // the carried lot's change on the next slice = the slice P&L minus the lots entered after the boundary (one slot: at most
+        // one lot is carried). Not finalNet − the unrealized mark: a lot with partial exits before the cutoff had already
+        // realized part of its net inside the training net (the mark is only the open remnant's unrealized gain)
+        openLotGivebackNextSlice: open && carried && sr ? (() => {
+          const after = (sr.lots as { entry: string; net: number }[]).filter((x) => x.entry > (sr.boundary as string)).reduce((s, x) => s + x.net, 0);
+          const change = (sr.sliceNet as number) - after;
+
+          return { unrealizedMarkAtCutoff: r2(open.mark), lotNetAtCutoff: r2(carried.net - change), finalNet: r2(carried.net), exit: carried.exit, reason: carried.reason, change: r2(change) };
+        })() : open ? 'open lot not found in the slice row' : 'none open',
         trainingMae: mae ? { count: mae.count, median: m2(mae.median), p90: m2(mae.p90), worst: m2(mae.worst) } : null,
         nextSliceMae: sr ? { lots: (sr.nextSlice as Record<string, unknown>).lots, median: (sr.nextSlice as Record<string, unknown>).maeMedian, worst: (sr.nextSlice as Record<string, unknown>).worstLotMae } : null,
         trainingNeighbourhoodOnNextSlice: sr ? sr.neighbourhood : null,

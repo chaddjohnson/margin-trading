@@ -1,8 +1,9 @@
 # Decision register — Priority 6 (P6-TSLA)
 
-Three parts: **P** — decisions precommitted in the frozen protocol (with where they are enforced); **A** — adaptations and
-operational choices made before the freeze, with their reasons; **U** — decisions that belong to the user (nothing here
-adopts, deploys or merges anything).
+Four parts: **P** — decisions precommitted in the frozen protocol (with where they are enforced); **A** — adaptations and
+operational choices made before the freeze, with their reasons; **F** — what changed after the freeze (sealed code
+amendments and report-only tools); **U** — decisions that belong to the user (nothing here adopts, deploys or merges
+anything).
 
 ## P. Precommitted (PROTOCOL.md; enforced in code)
 
@@ -31,6 +32,15 @@ adopts, deploys or merges anything).
 | A7 | External controls only (New L0 / N/original's VGT books on TSLA); no informed lane | brief §3 |
 | A8 | Priority 5 archive compressor: a smoke-test attribution fix (Priority 5's copied incumbent rows) after one conservative blocker | `STORAGE_PRESERVATION_REPORT.md` §4 |
 | A9 | `npm test` (gate E8) run in the main checkout: it reads whole data files and feeds no decision (Priority 5's precedent) | `results/engineering/E8-regression.json` |
+
+## F. After the freeze: amendments and report-only tool changes
+
+| ID | Change | Effect |
+|---|---|---|
+| Amendment A1 (`AMENDMENTS.md`; not adaptation A1 above) | Code defect fix, 2026-11-25T14:01Z: the arm S refinement-lane builder registers the sealed frozen D1 finalists before reading S cells (`ensureFrozen`, as every other S reader); sealed `results/amendments/A1.json` `84557f0c…`; allowed code digest `418a8758…` → `fb7e6ddc…` | none on any rule or result: C19-S-refine had stopped before any job or evaluation; the chain resumed with the same command |
+| R1 | `tools/tsla-d1-growth/analyze.ts` registers every cutoff's frozen D1 before reading arm S configurations and reads the sealed evidence's `risk.mae` summary (sealed evidence keeps no per-row risk list); the §5.9 exposure table takes a carried lot's change on the next slice from the slice itself (slice P&L − lots entered after the boundary), because the first version (final net − unrealized mark) overstated it for a lot with partial exits before the cutoff (C19's C pair: +$30,135 shown, +$9,003 actual) | report-only tables; no evaluation |
+| R2 | `tools/tsla-d1-growth/diagnostics.ts bh` also reports a fresh $100,000 TSLA purchase per fold slice and for the validation period, financed and unfinanced (added 2026-11-25T19:50Z, after the folds were sealed and before the validation) | report-only control: the continuous 2016 holding is many times the $100,000 slot by 2020, so its slice P&L is not exposure-comparable; never a selection or qualification input |
+| R3 | `tools/tsla-d1-growth/gpu-jobs.py` (job, attestation, parity and receipt totals) and `search-report.py` (search effort, extensions, seed dependence) | report-only aggregations of committed records |
 
 ## U. Outstanding decisions for the user
 
