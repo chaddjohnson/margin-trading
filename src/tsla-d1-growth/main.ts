@@ -141,8 +141,9 @@ const gates = () => {
     if (!fs.existsSync(file)) return { id, file: f, exists: false, pass: false, sha256: null };
 
     const j = readJson<{ pass?: boolean; codeDigest?: string }>(file);
-    // the code-dependent gates must have run under the final (frozen) code closure
-    const digestRequired = ['E2', 'E3', 'E4', 'E5', 'E6', 'E9'].includes(id);
+    // the code-dependent gates must have run under the final (frozen) code closure (the pilot is planning evidence whose
+    // output — R_S — is frozen into code afterwards: its lanes' run digest is recorded in pilot/lanes.json, as Priority 5)
+    const digestRequired = ['E2', 'E3', 'E4', 'E5', 'E6'].includes(id);
     const digestOk = !digestRequired || j.codeDigest === codeDigest();
 
     return { id, file: f, exists: true, pass: j.pass === true && digestOk, digestRequired, codeDigest: j.codeDigest ?? null, digestOk, sha256: sha256File(file) };

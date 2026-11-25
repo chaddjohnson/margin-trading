@@ -48,7 +48,7 @@ import { stresses } from '../../src/tsla-d1-growth/qualify.ts';
 import { controlMembers } from '../../src/tsla-d1-growth/controls.ts';
 import { runLanes } from '../../src/tsla-d1-growth/lanes.ts';
 import type { LaneSpec } from '../../src/tsla-d1-growth/search.ts';
-import { laneCaps, nl0Caps, perMemberMax, perSubject, replicates, schedules } from '../../src/tsla-d1-growth/budget.ts';
+import { laneCaps, nl0Caps, perMemberMax, perSubject, replicates, schedules, sequentialReplicates } from '../../src/tsla-d1-growth/budget.ts';
 import { codeDigest } from '../../src/tsla-d1-growth/records.ts';
 import { buildDoor, doorNames, doorSessions, doorSpecs, readPins, tslaSplits } from '../../src/tsla-d1-growth/doors.ts';
 import { openToolLab, purposeOf, writeJson as writeJson0 } from './common.ts';
@@ -648,13 +648,13 @@ const pilot = async () => {
   const doors = ['D19', 'D21', 'D23', 'D24'];
   const perLane = Object.fromEntries((['D', 'G', 'J', 'S'] as const).map((a) => [a, { broad: Object.fromEntries(doors.map((d) => [d, m[a]!])), refine: Object.fromEntries(doors.map((d) => [d, refineMean])) }]));
   const F = 3;
-  let rS = 4;
-
-  while (F * 6 * rS * m.S! + 32 * m.D! < 192 * m.J!) rS++;
-
+  const rS = sequentialReplicates(F);
   const expected = { perLane, perMember: perMemberMax, perSubject };
+  // planning: arm S's lanes priced at E[J lane] (an S lane is a J lane with the D1 book frozen; the pilot's own S lanes ran
+  // on a HASH-selected, never outcome-selected frozen D1 whose proposals were mostly implausible, so their mean understates a
+  // real finalist's lanes — reported, never used)
   const perCutoff = {
-    broad: 32 * m.D! + 48 * m.G! + 192 * m.J! + F * 6 * rS * m.S!,
+    broad: 32 * m.D! + 48 * m.G! + 192 * m.J! + F * 6 * rS * m.J!,
     refine: (8 + 6 + 16 + 12) * replicates.refine * refineMean,
     lanes: { D: 32, G: 48, J: 192, S: F * 6 * rS, refine: (8 + 6 + 16 + 12) * replicates.refine }
   };
@@ -663,12 +663,17 @@ const pilot = async () => {
     what: 'the study-schedule pilot (NON-OFFICIAL, purpose benchmark, BENCH seed keys never used by the study) on D21: one broad lane per cell of every arm (D 8, G 6, J 48, S 6 on a hash-selected frozen D1) and 4 J refinement lanes seeded by the pilot’s own shortlists, with the frozen two-tier island rule — requested per lane, islands, stop reasons, throughput, memory and archive bytes; outputs are counts and timings only (no profit or drawdown of any searched configuration was read)',
     pilot: { ...p, arms: p.arms.map((a) => ({ arm: a.arm, laneSummary: summarizeLanes(a.lanes) })) },
     expected,
-    sequentialReplicates: { rule: 'R_S = the smallest integer ≥ 4 such that 3 × 6 × R_S × E[S lane] + 32 × E[D lane] ≥ 192 × E[J lane]', means: m, rS, frozenInCode: replicates.sequentialBase, agrees: rS === replicates.sequentialBase },
-    planning: { perCutoffRequested: perCutoff, studyRequestedEstimate: 4 * (perCutoff.broad + perCutoff.refine), hoursAtPilotThroughput: Math.round((4 * (perCutoff.broad + perCutoff.refine)) / p.requestedPerSecond / 360) / 10 },
+    sequentialReplicates: {
+      rule: 'R_S(F) = max(4, ⌈(192 − 32) ÷ (6·F)⌉): arm S, its D1 step (arm D’s 32 base lanes) included, gets at least arm J’s 192 base lanes (a data-independent lane-count rule fixed before any official result)',
+      byF: { 1: sequentialReplicates(1), 2: sequentialReplicates(2), 3: sequentialReplicates(3) },
+      pilotMeans: m,
+      note: 'the pilot’s S lanes (hash-selected frozen D1) averaged ' + m.S + ' requested — not representative of a qualified finalist; the earlier cost-based draft rule (which would have given R_S = 22, i.e. about twice arm J’s effort) was replaced before the freeze'
+    },
+    planning: { perCutoffRequested: perCutoff, studyRequestedEstimate: 4 * (perCutoff.broad + perCutoff.refine), hoursAtPilotThroughput: Math.round((4 * (perCutoff.broad + perCutoff.refine)) / p.requestedPerSecond / 360) / 10, note: 'before replicate rounds and qualification (≈ 650 requested per qualified member)' },
     laneCaps,
     nl0Caps,
     islandCaps: Object.fromEntries((['broad', 'refine'] as const).map((k) => [k, schedules[k].islandsMax])),
-    pass: rS === replicates.sequentialBase,
+    pass: p.arms.length === 4 && p.refine.lanes.length > 0,
     finished: now()
   };
 

@@ -19,7 +19,7 @@ import type { Evidence as A2Evidence } from '../vg-l0-risk-families/qualify.ts';
 import type { ArmKey } from './context.ts';
 import type { Evidence } from './qualify.ts';
 import { cellOf, families, protectedFamily } from './space.ts';
-import { maxFrozenD1, maxPairSide, refineQuota } from './budget.ts';
+import { maxFrozenD1, maxPairSide, refineQuota, replicates } from './budget.ts';
 
 const asA3 = (ev: readonly Evidence[]) => ev as unknown as readonly A3Evidence[];
 const back = (ev: readonly A3Evidence[]) => ev as unknown as Evidence[];
@@ -118,7 +118,8 @@ export const pairSides = (d: readonly Evidence[], g: readonly Evidence[]) => ({ 
 // Priority 5's refineCells with the arm's quota: profit 4, robust 4, lower drawdown 2, balanced 2, then the arm's coverage
 // safeguards (D, J: every D1 family, a gate both ways, a protective stop; G, J, S: both Growth protection classes
 // (unrestricted and protected), both Growth entries; S: every frozen D1 finalist), then — while the quota allows — every
-// remaining qualified cell by best centre net.
+// remaining qualified cell by best centre net. Each refined cell is seeded by ≤ 24 of its qualified broad members in NL0's
+// original order (Priority 5's maximum: 8 replicates × 3 shortlisted).
 
 export interface RefinePlan {
   cells: { cell: string; why: string[]; seeds: string[]; focus: string[] }[];
@@ -198,7 +199,8 @@ export const refineCells = (arm: Exclude<ArmKey, 'C'>, broad: readonly Evidence[
     const robust = [...own].sort((a, b) => b.select.robust - a.select.robust || byLabel(a, b))[0];
     const focus = [...new Set([order[0]?.label, robust?.label].filter((x): x is string => Boolean(x)))];
 
-    return { cell, why, seeds: own.map((e) => e.label), focus };
+    // ≤ 24 seeds: the cell's qualified broad members in NL0's original order (the focus seeds are among them)
+    return { cell, why, seeds: order.slice(0, replicates.refineSeeds).map((e) => e.label), focus };
   });
 
   return { cells, eligible: eligible.length, quota };

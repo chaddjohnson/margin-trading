@@ -12,7 +12,7 @@ import { armPolicy, freezeFile } from '../context.ts';
 import { armFunded, fitOfArm, plausibleArm, screenViolation, violationArm } from '../fitness.ts';
 import { plausibleArm as pilotPlausible, screenViolation as pilotScreen, violationArm as pilotViolation } from '../../vg-l0-risk-envelope-pilot/fitness.ts';
 import { doorGuard, frozenSelectionFile, fullAuthorizationFile, selectionFile, sequentialFile, sliceFile } from '../doors.ts';
-import { islandCaps, laneCaps, nl0Caps, replicates, schedules } from '../budget.ts';
+import { islandCaps, laneCaps, nl0Caps, schedules, sequentialReplicates } from '../budget.ts';
 import { finalistsOfArm, refineCells } from '../select.ts';
 import { materialType } from '../outcome.ts';
 import { controlMembers, projectReference } from '../controls.ts';
@@ -194,7 +194,8 @@ describe('budgets (budget.ts)', () => {
     assert.equal(schedules.broad.screen, 512);
     assert.equal(schedules.refine.newPerIsland, 384);
     assert.ok(laneCaps.broad > 0 && laneCaps.refine > laneCaps.broad);
-    assert.equal(replicates.base.S, replicates.sequentialBase);
+    assert.deepEqual([0, 1, 2, 3].map(sequentialReplicates), [0, 27, 14, 9]);
+    assert.ok(laneCaps.refine >= 179000 - 50000);
   });
 });
 

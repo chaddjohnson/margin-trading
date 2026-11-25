@@ -73,7 +73,8 @@ import {
   laneCaps,
   perSubject,
   replicates,
-  schedules
+  schedules,
+  sequentialReplicates
 } from './budget.ts';
 import { runLanes, roundTrigger, unionState } from './lanes.ts';
 import { controlMembers } from './controls.ts';
@@ -403,10 +404,11 @@ export const broadSpec = (cut: CutoffKey, arm: SearchArm, cellId: string, r: num
 
   return { key, seedKey: key, position: key, stage: 'broad', replicate: r, cutoff: cut, kind: 'indep', res: 'coarse', cell: cellOf(cellId) };
 };
-const baseReplicates = (arm: SearchArm) => Array.from({ length: replicates.base[arm] }, (_v, i) => replicateOf(i));
+const baseReplicates = (cut: CutoffKey, arm: SearchArm) =>
+  Array.from({ length: arm === 'S' ? sequentialReplicates(ensureFrozen(cut).length) : replicates.base[arm] }, (_v, i) => replicateOf(i));
 
 export const partSpecs = (cut: CutoffKey, arm: SearchArm, part: 'broad' | 'refine'): { kind: Kind; specs: LaneSpec[] } => {
-  if (part === 'broad') return { kind: 'broad', specs: cellsOfSearchArm(cut, arm).flatMap((c) => baseReplicates(arm).map((r) => broadSpec(cut, arm, c.id, r))) };
+  if (part === 'broad') return { kind: 'broad', specs: cellsOfSearchArm(cut, arm).flatMap((c) => baseReplicates(cut, arm).map((r) => broadSpec(cut, arm, c.id, r))) };
 
   // the refinement lanes: the sealed plan's cells × the refinement replicates, seeded by the cell's qualified broad members
   const plan = readSealed<{ cells: { cell: string; seeds: string[]; focus: string[] }[] }>(refinePlanFile(cut, arm));
@@ -762,14 +764,26 @@ export const runRefinePlan = (cut: CutoffKey, arm: SearchArm) => {
 
 // ----- the arm selection (no evaluation) -----
 
-export const qStagesOfArm = (arm: ArmKey): QStage[] => (arm === 'C' ? ['fixed'] : ['broad', 'refine']);
+// the qualification stages an arm has at a cutoff: C its fixed pairs; S nothing without a frozen D1 (arm D had no
+// qualified member: the S procedure has no primary there); a search arm its broad stage and — when its sealed refinement
+// plan has cells — its refinement stage
+export const qStagesOfArm = (arm: ArmKey, cut?: CutoffKey): QStage[] => {
+  if (arm === 'C') return ['fixed'];
+  if (!cut) return ['broad', 'refine'];
+  if (arm === 'S' && ensureFrozen(cut).length === 0) return [];
+
+  const plan = refinePlanFile(cut, arm);
+  const cells = fs.existsSync(plan) ? readSealed<{ cells: unknown[] }>(plan).cells.length : 1;
+
+  return cells > 0 ? ['broad', 'refine'] : ['broad'];
+};
 export const armEvidence = (cut: CutoffKey, arm: ArmKey): Evidence[] => {
   if (arm === 'S') ensureFrozen(cut);
 
   const out: Evidence[] = [];
   const seen = new Set<string>();
 
-  for (const st of qStagesOfArm(arm))
+  for (const st of qStagesOfArm(arm, cut))
     for (const e of readSealed<{ evidence: Evidence[] }>(qualificationFile(cut, arm, st)).evidence)
       if (!seen.has(e.label)) {
         seen.add(e.label);
@@ -784,7 +798,7 @@ export const runSelectArm = (cut: CutoffKey, arm: ArmKey) => {
 
   officialGuards(`select-arm ${cut} ${arm}`);
   if (fs.existsSync(file)) throw new Error(`${rel(file)} exists`);
-  for (const st of qStagesOfArm(arm)) assertCommitted(qualificationFile(cut, arm, st));
+  for (const st of qStagesOfArm(arm, cut)) assertCommitted(qualificationFile(cut, arm, st));
 
   const all = armEvidence(cut, arm);
   const candidates = all.filter((e) => e.stage !== 'control');
@@ -818,7 +832,7 @@ export const runSelectArm = (cut: CutoffKey, arm: ArmKey) => {
     armName: armName[arm],
     rule: 'NL0 1.0.0 §3.5 original rule: the actual-profit role among the Q1–Q6 qualified members (highest centre net; ties: higher selection robust net, lower centre DD, label)',
     ra1Note: 'RA1 (experimental; Assignment 3’s thresholds unchanged) on the identical qualified population: report-only, never a primary, finalist, frozen D1, pair or role',
-    qualification: qStagesOfArm(arm).map((st) => ({ file: rel(qualificationFile(cut, arm, st)), sha256: sha256File(qualificationFile(cut, arm, st)) })),
+    qualification: qStagesOfArm(arm, cut).map((st) => ({ file: rel(qualificationFile(cut, arm, st)), sha256: sha256File(qualificationFile(cut, arm, st)) })),
     populations: Object.fromEntries(pops.map((p) => [p, populationLabel[p]])),
     counts: Object.fromEntries(pops.map((p) => [p, { members: candidates.filter(populations[p]).length, qualified: candidates.filter(populations[p]).filter((e) => e.qualified).length }])),
     primaries,

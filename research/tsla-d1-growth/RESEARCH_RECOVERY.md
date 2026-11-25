@@ -2,43 +2,47 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T10:28Z (clock, UTC). **Status: INCOMPLETE — Phase 0A (Priority 5 archive preservation)
-  starting.**
-- **Brief:** `brief/BRIEF.md` sha256 `65c59cf0ae4a4a79f62bb966ebe8304e1a91dec3c7f8946c1ae9eab46069dceb` (270 newline-
-  terminated lines + the final line; read in full, final section included).
-- **Protocol:** not yet written (Phase 4). No optimization has run. No TSLA data imported.
-- **Running:** nothing yet (the compression unit `tsla-p5-zstd` is the next step).
-- **Next command:** launch `storage/tools/p5zstd.py compress` in a systemd user unit (see §Stages, 0A).
+- **Updated:** 2026-11-25T11:20Z (clock, UTC). **Status: INCOMPLETE — Phase 0A and the TSLA data are complete; the
+  engineering gates and the pilot are next (pre-freeze).**
+- **Brief:** `brief/BRIEF.md` sha256 `65c59cf0ae4a4a79f62bb966ebe8304e1a91dec3c7f8946c1ae9eab46069dceb` (read in full).
+- **Protocol:** not yet written/frozen. No official optimization has run.
+- **Running:** nothing.
+- **Next:** debug the GPU path with the engineering tool on small sets; then run gates E1–E9 under the final code; write
+  PROTOCOL.md / STANDARD_ADOPTION.json; preflight; freeze; chain.
 
 ## Environment
 
-- Main checkout `/home/chad/projects/margin-trading` (no extra worktree). Branch **`research/tsla-d1-growth`**, created
-  2026-11-25T10:24Z from `dc023c3b78614d59ea951b9b87a019d7a72fa758` (Priority 5's final commit on
-  `research/vg-l0-n-original-successor`; clean tree). `main` untouched.
-- `.git/info/exclude` (local) hides `research/gpu-phase8/` and `research/vg-l0-staged-stop/` (Priority 4 branch
-  caches). Never stage them.
-- GPU acceptance at the base: `config/gpu-backend/acceptance.json` sha256 `bb0e3fcf6bde45cc654dc2d8d166153353918dfe3aa18d826dd8deda5cabf7b7`
-  (gpu-phase7, binary `research/gpu-phase7/build/gb7` `cb2ff30b…`, device `GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4`);
-  `tools/gpu-backend/verify-acceptance.sh --rebuild --device --expect-record-sha256 bb0e3fcf…` **VERIFIED** 2026-11-25T10:23Z.
-- Node 24 with `--no-maglev` (mandatory). Alpaca credentials: the git-ignored `.env` (variable names ALPACA_API_KEY,
-  ALPACA_SECRET_KEY); never printed or logged.
+- Main checkout `/home/chad/projects/margin-trading`, branch **`research/tsla-d1-growth`** (from `dc023c3b`, Priority 5's
+  final commit). Latest commit `9bfcafad`. `main` untouched. `.git/info/exclude` hides `research/gpu-phase8/`,
+  `research/vg-l0-staged-stop/` (never stage).
+- GPU acceptance `bb0e3fcf6bde45cc654dc2d8d166153353918dfe3aa18d826dd8deda5cabf7b7` VERIFIED 10:23Z (rebuild + device).
+- Node 24, `--no-maglev`. Alpaca credentials: git-ignored `.env` (never printed).
+- Study cache `research/tsla-d1-growth/cache/` and `logs/` are git-ignored (`research/tsla-d1-growth/.gitignore`).
 
 ## Stages
 
 | Stage | Status | Record |
 |---|---|---|
-| 0 Recovery + inventory | complete 10:27Z | `storage/INVENTORY.json` (29 archives, 195,953,471,488 B, all complete, no sidecars/openers) |
-| 0A P5 archive compression | not started | `storage/ACTIONS.jsonl`, tool `storage/tools/p5zstd.py` |
+| 0 Recovery + inventory | complete 10:27Z | `storage/INVENTORY.json` (commit `3be39b65`) |
+| 0A P5 archive compression | **complete** 11:07Z | `storage/ACTIONS.jsonl`, `storage/POST_VERIFY.json` (29/29 OK; 195,953,471,488 → 16,148,379,429 B; 179.8 GB recovered). One conservative blocker (C24-qualify-informed: copied incumbent rows) fixed in the tool (exclude `stage: incumbent` copies) and rerun — disclosed |
 | 0A other-cache audit | not started | — |
-| 2 TSLA data | not started | — |
-| 3 Functionality audit | not started | — |
+| 2 TSLA data | **complete** 11:19Z | `data/TSLA/data.csv` sha256 `8ed7f7d0…` (1,975,254 rows, 2016-01-04T09:00Z → 2026-10-30T23:59Z); `data/DOOR_PINS.json` `193fc206…`; `data/TSLA-splits.json` `e96d6236…`; `TSLA_DATA_AUDIT.json` (no blockers); `reports/data/SUITABILITY.json` (D24 only) |
+| 3 Functionality audit | not written | (findings: open-ended Growth = exits hold_off + istop off has no loss exit; S1 absent; session hold, swing, breakeven refused) |
 | 4 Protocol freeze | not started | — |
-| 5 Engineering gates | not started | — |
-| 6 Stages A–F | not started | — |
+| 5 Engineering gates | not started | tools `tools/tsla-d1-growth/engineering.ts` |
+| 6 Stages A–F | not started | chain to be written |
+
+## Key design (on disk in code; to be written into PROTOCOL.md)
+
+- Slot binding: both engine slots = one TSLA SymDoor; D1·VGT = D1·TSLA, G:VGT = Growth·TSLA; GDX books disabled. No
+  evaluation-manifest file changed → acceptance valid.
+- Arms D/G/C/J/S; cells D 8, G 6 (exits × istop), J 48, S frozen-D1 × 6; lane derived from P5's (`src/tsla-d1-growth/derive.ts`).
+- TSLA split ledger kept in the study (central `config/market-events/splits.json` is sha-pinned by frozen studies) —
+  a user decision to record.
 
 ## Guards
 
-- Priority 5 (`research/vg-l0-n-successor/`) is sealed: never edit its tracked files or rerun its stages. Only its
-  git-ignored `cache/jobs/*/archive.sqlite` may be replaced by verified `.zst` copies (brief §0A).
-- The other ≈ 22.6 GB of P5 caches are audited only; nothing there is deleted (brief §0A.7).
-- No broker access, no deployment, no merge into `main`, no MSFT study.
+- Priority 5 sealed: never edit tracked files or rerun. Its `.zst` archives + `storage/ACTIONS.jsonl` are the restore
+  source (`zstd -d -q <arc>.zst -o <arc>`, sha256 in ACTIONS).
+- Other P5 caches (≈ 22.6 GB): audit only, no deletion.
+- No broker, deployment, merge into `main`, MSFT.
