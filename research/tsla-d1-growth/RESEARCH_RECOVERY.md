@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T14:26Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (C19 COMPLETE at
-  14:24:35Z; C21 started 14:24:35Z).** Relaunched once after code amendment A1 (14:02:08Z; chain-log line offset 229).
+- **Updated:** 2026-11-25T16:36Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (C19 COMPLETE at
+  14:24:35Z; C21 COMPLETE at 16:34:18Z; C23 started 16:34:18Z).** Relaunched once after code amendment A1 (14:02:08Z; chain-log line offset 229).
 - **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`;
   freeze `results/protocol-freeze.json` `d197e9d73feec2edd2f9c250640d22310118977bcdfa31943c3b9103bfbbfe97` (commit `b2667d83`,
   **pushed**: `git ls-remote` = local); frozen code digest `418a8758…`; gates `results/engineering/gates.json`
@@ -40,8 +40,9 @@
 | 4 protocol | **frozen** 12:20Z | see the top screen |
 | 5 engineering | complete | E1–E9 sealed (`results/engineering/`) |
 | 6 C19 | **complete** 14:24:35Z (A1 at 14:01Z; C19-S-refine then ran) | selection `b41af173…`, slice `8ce42df6…`, frozen D1 `a2f2017c…`, pairs `2318780e…`; per arm C `38d484a2…`, D `5dbf7571…`, G `c9817da9…`, J `e0c0b868…`, S `eae07a2e…` (all under `results/`; zstd of the C19 job archives committed `c5ae888e`) |
-| 6 C21 | running | `results/{search,rounds,qualification,refine-plan,selection,pairs,frozen-d1}/C21*`, then `slices/C21.json` |
-| 6 C23, sequential, C24, validation, outcome | not started | chain order (PROTOCOL §14) |
+| 6 C21 | **complete** 16:34:18Z | selection `18b591c5…`, slice `46495615…`, frozen D1 `1b712383…`, pairs `4ffb0de1…`; per arm C `c361e101…`, D `f5835e8e…`, G `ad98ccb2…`, J `f5db5652…`, S `67dcf9c2…` (zstd committed `c7bdd111`) |
+| 6 C23 | running | `results/{search,rounds,qualification,refine-plan,selection,pairs,frozen-d1}/C23*`, then `slices/C23.json` |
+| 6 sequential, C24, validation, outcome | not started | chain order (PROTOCOL §14) |
 | diagnostics, reports, ZIP | not started | `tools/tsla-d1-growth/diagnostics.ts` written (after validation only) |
 
 ## Constants

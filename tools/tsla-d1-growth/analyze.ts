@@ -9,7 +9,11 @@ import { type ArmKey, cutoffKeys, researchDir, resultsDir } from '../../src/tsla
 import type { Evidence } from '../../src/tsla-d1-growth/qualify.ts';
 import type { LaneResult } from '../../src/tsla-d1-growth/search.ts';
 import * as S from '../../src/tsla-d1-growth/space.ts';
+import { ensureAllFrozen } from '../../src/tsla-d1-growth/stages.ts';
 import { writeJson } from './common.ts';
+
+// arm S cells name a sealed frozen D1 finalist: register every cutoff's before any S configuration is read
+ensureAllFrozen();
 
 const tables = path.join(researchDir, 'reports', 'tables');
 const exists = (f: string) => fs.existsSync(f);
@@ -419,7 +423,9 @@ const exposureTables = () => {
 
       const e = sel.subjects.find((x) => x.label === l)!;
       const sr = srows.find((r) => r.label === l && r.arm === a) as Record<string, unknown> | undefined;
-      const maes = e.risk.rows.map((x) => x.mae).sort((p, q) => p - q);
+      // the sealed evidence keeps the per-lot MAE summary (rows are stripped at sealing; rowsKept counts them)
+      const mae = (e.risk as unknown as { mae?: { count: number; median: number | null; p90: number | null; worst: number | null } }).mae;
+      const m2 = (x: number | null | undefined) => (typeof x === 'number' ? r2(x) : null);
       const open = e.risk.openLot;
       const carried = (sr?.openAtBoundary as { net: number; exit: string | null; reason: string }[] | undefined)?.[0];
 
@@ -431,7 +437,7 @@ const exposureTables = () => {
         openLotShare: e.risk.net > 0 ? r4(e.risk.unrealized / e.risk.net) : `undefined (training net ≤ 0): unrealized ${r2(e.risk.unrealized)}, net ${r2(e.risk.net)}`,
         largestOpenLot: open ? { book: open.book, entry: open.entry, entryRaw: open.entryRaw, multiple: r4(open.multiple), mark: r2(open.mark) } : 'none open',
         openLotGivebackNextSlice: open && carried ? { markAtCutoff: r2(open.mark), finalNet: r2(carried.net), exit: carried.exit, reason: carried.reason, change: r2(carried.net - open.mark) } : open ? 'open lot not found in the slice row' : 'none open',
-        trainingMae: { count: maes.length, median: maes.length ? r2(quantile(maes, 0.5)) : null, p90: maes.length ? r2(quantile(maes, 0.1)) : null, worst: maes.length ? r2(maes[0]!) : null },
+        trainingMae: mae ? { count: mae.count, median: m2(mae.median), p90: m2(mae.p90), worst: m2(mae.worst) } : null,
         nextSliceMae: sr ? { lots: (sr.nextSlice as Record<string, unknown>).lots, median: (sr.nextSlice as Record<string, unknown>).maeMedian, worst: (sr.nextSlice as Record<string, unknown>).worstLotMae } : null,
         trainingNeighbourhoodOnNextSlice: sr ? sr.neighbourhood : null,
         worstRealized: e.risk.worstRealized,
