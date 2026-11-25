@@ -81,6 +81,8 @@ node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWa
 # totals of the official GPU jobs (attestations, parity mini-sets, receipts; exit 0 only if every job is complete with
 # 0 CPU-scored, 0 failed and 0 failed attestation checks) → reports/tables/gpu-jobs.json, GPU_JOBS.md
 python3 -I tools/tsla-d1-growth/gpu-jobs.py
+# SEARCH_AND_CONVERGENCE_REPORT.md = reports/narrative/SEARCH.md + tables from search-summary.json, lanes.csv, gpu-jobs.json
+python3 -I tools/tsla-d1-growth/search-report.py
 # this study's job archives: verification of every compressed archive (read-only)
 python3 -I research/tsla-d1-growth/storage/tools/jobzstd.py final --repo . --actions research/tsla-d1-growth/storage/TSLA_JOB_ACTIONS.jsonl \
   --out research/tsla-d1-growth/storage/TSLA_JOB_POST_VERIFY.json
