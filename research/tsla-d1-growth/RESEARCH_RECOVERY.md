@@ -2,50 +2,58 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T11:50Z (clock, UTC). **Status: INCOMPLETE — pre-freeze: the final-code engineering gates are
-  rerunning (unit `tsla-gates-final`); then the regression chain (E7/E8), gates seal, protocol freeze, official chain.**
-- **Brief:** `brief/BRIEF.md` sha256 `65c59cf0…` (read in full).
-- **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 (NOT yet frozen; committed in `a80dc415`); `STANDARD_ADOPTION.json` written
-  (preflight PASS 11:46Z). No official optimization has run.
-- **Running:** systemd user unit `tsla-gates-final` (log `research/tsla-d1-growth/cache/logs/gates-final.log`; script
-  copy `research/tsla-d1-growth/cache/gates-final.sh`): E2 ✓, E3 ✓, then E4, E6, E5 with `TSLA_ENG_TAG=final`.
-- **Next commands (in order):**
-  1. wait for `GATES FINAL COMPLETE` in the log (check `systemctl --user is-active tsla-gates-final`);
-  2. `tools/tsla-d1-growth/launch.sh tsla-tests $PWD/research/tsla-d1-growth/cache/logs/tests.log --wait -- /bin/bash research/tsla-d1-growth/chains/tests.sh`
-     (E7, E8; GPU must be free);
-  3. commit; `npm run tsla -- gates`; commit; `npm run tsla -- freeze`; commit; push;
-  4. launch the chain: `tools/tsla-d1-growth/launch.sh tsla-chain $PWD/research/tsla-d1-growth/cache/logs/chain.log -- /bin/bash $PWD/research/tsla-d1-growth/chains/chain.sh`.
+- **Updated:** 2026-11-25T12:25Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (cutoff C19 first).**
+- **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`;
+  freeze `results/protocol-freeze.json` `d197e9d73feec2edd2f9c250640d22310118977bcdfa31943c3b9103bfbbfe97` (commit `b2667d83`,
+  **pushed**: `git ls-remote` = local); frozen code digest `418a8758…`; gates `results/engineering/gates.json`
+  `4bf79aa97d6ae00cf4d66d2ef672889a898fca731773fabaa568c13ef7a0923b` (E1–E9 pass). Amendments: pre-freeze notes E1, E2 only.
+- **Running:** systemd user unit **`tsla-chain`** (`/bin/bash research/tsla-d1-growth/chains/chain.sh`, all cutoffs; started
+  2026-11-25T12:21:57Z; log `research/tsla-d1-growth/cache/logs/chain.log`; per-stage logs `cache/logs/chain/<stage>.log`;
+  each stage its own unit `tsla-<stage>` in `tsla.slice`). Every sealed block is committed by the chain itself.
+- **Next:** wait; when the chain ends: report-only diagnostics (`npm run tsla-diag -- bh|tail|lots|nbhd`), analysis and
+  reports, bundle, commit, push.
+- **If the chain stopped (FAILED in the log or the unit inactive without "CHAIN COMPLETE"):** read the failing stage's log;
+  fix only operational problems (never a rule; a code defect needs a sealed code amendment `A*` per PROTOCOL §17); then
+  relaunch the SAME chain command — it is idempotent (sealed stages are skipped; an interrupted job resumes with
+  `--resume`, the official gate runs again and the job replays its archive):
+  `tools/tsla-d1-growth/launch.sh tsla-chain $PWD/research/tsla-d1-growth/cache/logs/chain.log -- /bin/bash $PWD/research/tsla-d1-growth/chains/chain.sh`
+  — first confirm no `tsla-*` unit is active (`systemctl --user list-units 'tsla-*'`).
 
 ## Environment
 
-- Main checkout `/home/chad/projects/margin-trading`, branch **`research/tsla-d1-growth`** (from `dc023c3b`). Commits:
-  `3be39b65` (inventory), `9bfcafad` (storage + data + code), `3b73c181` (final code), `a80dc415` (protocol + adoption).
-- GPU acceptance `bb0e3fcf…` VERIFIED (E1 at 11:44Z: rebuild + device + entrypoint audit clean).
-- Node 24, `--no-maglev`. Alpaca credentials only in the git-ignored `.env`.
+- Main checkout `/home/chad/projects/margin-trading`, branch **`research/tsla-d1-growth`** (from `dc023c3b`), pushed to
+  `origin/research/tsla-d1-growth`. `main` untouched. `.git/info/exclude` hides `research/gpu-phase8/`,
+  `research/vg-l0-staged-stop/` (never stage).
+- GPU acceptance `bb0e3fcf…` VERIFIED; first official attestation (C19-D-broad): all 16 checks, parity mini-set 18/18 on
+  the TSLA door. Node 24 `--no-maglev`. Alpaca credentials only in the git-ignored `.env`.
 
 ## Stages
 
 | Stage | Status | Record |
 |---|---|---|
-| 0 Recovery + inventory | complete | `storage/INVENTORY.json` |
-| 0A P5 archive compression | complete 11:07Z | `storage/ACTIONS.jsonl`, `storage/POST_VERIFY.json` (29/29; 179.8 GB recovered) |
-| 0A other-cache audit | complete | `storage/OTHER_CACHE_AUDIT.json` (22.6 GB; 20.97 GB candidates; nothing deleted); `STORAGE_PRESERVATION_REPORT.md` |
-| 2 TSLA data | complete | `TSLA_DATA_AUDIT.json/.md`, `data/DOOR_PINS.json` `193fc206…`, `data/TSLA-splits.json` `e96d6236…`, `reports/data/SUITABILITY.json` |
-| 3 Functionality audit | complete | `FUNCTIONALITY_AUDIT.md` |
-| 5 Engineering | E1 ✓ (11:44Z), E7 ✓ (18/18); E2–E6 rerunning on the final code (first runs passed on an earlier digest: E4 0/4,660 differ, E5 all identical, E6 all identities) ; pilot ✓ (`results/engineering/pilot.json`: 692 requested/s; means D 8,750 / G 9,992 / J 7,197 / refine 31,480) | `results/engineering/*` |
-| 4 Protocol freeze | not yet | — |
-| 6 Stages A–F | not started | `chains/chain.sh` |
+| 0 / 0A storage | complete | `STORAGE_PRESERVATION_REPORT.md`, `storage/*` (29/29 P5 archives; 179.8 GB recovered; other caches audited, nothing deleted) |
+| 2 data | complete | `TSLA_DATA_AUDIT.{json,md}`, `data/*` |
+| 3 functionality audit | complete | `FUNCTIONALITY_AUDIT.md` |
+| 4 protocol | **frozen** 12:20Z | see the top screen |
+| 5 engineering | complete | E1–E9 sealed (`results/engineering/`) |
+| 6 C19 | running | `results/{search,rounds,qualification,refine-plan,selection,pairs,frozen-d1}/C19*`, then `slices/C19.json` |
+| 6 C21, C23, sequential, C24, validation, outcome | not started | chain order (PROTOCOL §14) |
+| diagnostics, reports, ZIP | not started | `tools/tsla-d1-growth/diagnostics.ts` written (after validation only) |
 
-## Decisions taken pre-freeze (to DECISION_REGISTER.md)
+## Constants
 
-- Slot binding (no evaluation change); TSLA split ledger kept in the study (central file sha-pinned by frozen studies).
-- Endpoint 2026-10-30 (program's); later TSLA data not downloaded.
-- R_S rule replaced pre-freeze: lane-count matching R_S(F) = max(4, ⌈160/(6F)⌉) (the cost-based draft gave 22 from an
-  unrepresentative hash-selected pilot frozen D1); refinement seeds ≤ 24 per cell.
-- Smoke-test attribution fix in the P5 compressor (copied incumbent rows) — disclosed in the storage report.
+Seeds `deriveSeed('tsla-d1-growth', …)`; replicates from R101 (D 4, G 8, J 4, S R_S(F) = max(4, ⌈160/(6F)⌉)); rounds ≤ 4
+at 2 %; refinement 4 lanes per refined cell (quotas D 8, G 6, J 16, S 12; ≤ 24 seeds); per-lane bounds 90,000 / 174,000;
+hard ceiling 120 M requested; doors D19/D21/D23/D24 training, slices D21/D23/D24, FULL once (validation).
 
 ## Guards
 
-- Priority 5 sealed: never edit tracked files or rerun. Restore its archives with `zstd -d -q <arc>.zst -o <arc>`.
-- Other P5 caches: audit only. No broker, deployment, merge into `main`, MSFT.
-- After the freeze: no src/tsla-d1-growth change without a sealed code amendment (`npm run tsla -- code-amendment`).
+- **Do not rerun** a sealed stage (the code refuses). Do not edit the protocol, sealed records or other studies.
+- FULL opens only through the chain's validation after FROZEN_SELECTION.json and the FULL authorization are committed.
+- Priority 5's archives: restore with `zstd -d -q <arc>.zst -o <arc>` before any read.
+- No broker, deployment, merge into `main`, MSFT.
+
+## Disclosures so far
+
+- P5 compressor smoke-test attribution fix (one conservative blocker); E2–E6 first runs on an earlier code digest (rerun
+  on the final code); the cost-based R_S draft replaced pre-freeze; Playwright e2e timing races (reported beside E8).
