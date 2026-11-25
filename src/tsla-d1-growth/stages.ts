@@ -411,6 +411,9 @@ export const partSpecs = (cut: CutoffKey, arm: SearchArm, part: 'broad' | 'refin
   if (part === 'broad') return { kind: 'broad', specs: cellsOfSearchArm(cut, arm).flatMap((c) => baseReplicates(cut, arm).map((r) => broadSpec(cut, arm, c.id, r))) };
 
   // the refinement lanes: the sealed plan's cells × the refinement replicates, seeded by the cell's qualified broad members
+  // (arm S: the cutoff's frozen D1 finalists are registered first, as in every other process that reads S cells — A1)
+  if (arm === 'S') ensureFrozen(cut);
+
   const plan = readSealed<{ cells: { cell: string; seeds: string[]; focus: string[] }[] }>(refinePlanFile(cut, arm));
   const broad = readSealed<{ evidence: Evidence[] }>(qualificationFile(cut, arm, 'broad')).evidence;
   const byLabel = new Map(broad.map((e) => [e.label, e]));
