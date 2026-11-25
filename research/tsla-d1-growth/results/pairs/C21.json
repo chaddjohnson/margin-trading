@@ -1,0 +1,759 @@
+{
+ "stage": "fixed pairs (arm C)",
+ "protocol": "P6-TSLA 1.0.0",
+ "cutoff": "C21",
+ "rule": "every pair of arm D’s and arm G’s finalists (each: primary, robust-profit, balanced; distinct ledgers; ≤ 3 × 3), their parameter vectors unchanged, in one shared slot (D1 first); no re-optimization",
+ "sides": {
+  "d1": [
+   {
+    "key": "F1",
+    "why": "primary (actual-profit)",
+    "label": "C21/D/refine/D.C1/R102#1 profit"
+   },
+   {
+    "key": "F2",
+    "why": "robust-profit role",
+    "label": "C21/D/refine/D.C1/R102#2 robust"
+   },
+   {
+    "key": "F3",
+    "why": "balanced role",
+    "label": "C21/D/refine/D.D1/R103#3 balanced"
+   }
+  ],
+  "g": [
+   {
+    "key": "F1",
+    "why": "primary (actual-profit)",
+    "label": "C21/G/refine/G.h1.s1/R101#1 profit"
+   },
+   {
+    "key": "F2",
+    "why": "robust-profit role",
+    "label": "C21/G/refine/G.h0.s0/R104#2 robust"
+   },
+   {
+    "key": "F3",
+    "why": "balanced role",
+    "label": "C21/G/refine/G.h0.s0/R103#3 balanced"
+   }
+  ]
+ },
+ "pairs": [
+  {
+   "label": "C21/C/pair DF1×GF1",
+   "d1": "C21/D/refine/D.C1/R102#1 profit",
+   "g": "C21/G/refine/G.h1.s1/R101#1 profit",
+   "d1Why": "primary (actual-profit)",
+   "gWhy": "primary (actual-profit)",
+   "id": "rc2-56e178e57b22ea71",
+   "cfg": {
+    "cell": "C.C1.h1.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 84,
+      "trailingBuyPercentage": 49,
+      "trailingStopPercentage": 67,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 218,
+      "intradayLossBuffer": 0,
+      "pullback": 121,
+      "continuationWindow": 148
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 48,
+        "activation": "entry-day"
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 920,
+        "maxBlockSessions": 144
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 155,
+     "breakoutSlopeComparisonSessions": 78,
+     "breakoutPriorHighSessions": 79,
+     "trendFilterEnabled": true,
+     "trendMethod": "momentum",
+     "trendMomentumShortSessions": 11,
+     "trendMomentumLongSessions": 81,
+     "trendMomentumMinimumShortReturnPercent": 1.7,
+     "trendMomentumMinimumLongReturnPercent": -10,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 8.4,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 22,
+     "intradayLossBufferEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 60,
+     "initialStopAtrMultiple": 2.9,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "ma_cross",
+     "continuationWindowSessions": 79,
+     "crossSmaBars": 31,
+     "crossRisingBars": 29,
+     "crossMinimumSlopePercent": 1.8,
+     "crossMarginPercent": 2.45,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C21/C/pair DF1×GF2",
+   "d1": "C21/D/refine/D.C1/R102#1 profit",
+   "g": "C21/G/refine/G.h0.s0/R104#2 robust",
+   "d1Why": "primary (actual-profit)",
+   "gWhy": "robust-profit role",
+   "id": "rc2-260458282963a3f9",
+   "cfg": {
+    "cell": "C.C1.h0.s0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 84,
+      "trailingBuyPercentage": 49,
+      "trailingStopPercentage": 67,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 218,
+      "intradayLossBuffer": 0,
+      "pullback": 121,
+      "continuationWindow": 148
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 48,
+        "activation": "entry-day"
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 920,
+        "maxBlockSessions": 144
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 45,
+     "breakoutSlopeComparisonSessions": 9,
+     "breakoutPriorHighSessions": 98,
+     "trendFilterEnabled": true,
+     "trendMethod": "rising_sma",
+     "trendSmaSessions": 81,
+     "trendSmaComparisonSessions": 24,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 75,
+     "dipThresholdPercent": 8.4,
+     "recoveryRetracementPercent": 30.1,
+     "recoveryConfirmationSessions": 8,
+     "trailingStopPercent": 8.9,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "breakout",
+     "continuationWindowSessions": 67,
+     "breakoutBufferPercent": 3,
+     "breakoutFormationBars": 10,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C21/C/pair DF1×GF3",
+   "d1": "C21/D/refine/D.C1/R102#1 profit",
+   "g": "C21/G/refine/G.h0.s0/R103#3 balanced",
+   "d1Why": "primary (actual-profit)",
+   "gWhy": "balanced role",
+   "id": "rc2-00df3570f98bb282",
+   "cfg": {
+    "cell": "C.C1.h0.s0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 84,
+      "trailingBuyPercentage": 49,
+      "trailingStopPercentage": 67,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 218,
+      "intradayLossBuffer": 0,
+      "pullback": 121,
+      "continuationWindow": 148
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 48,
+        "activation": "entry-day"
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 920,
+        "maxBlockSessions": 144
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 39,
+     "breakoutSlopeComparisonSessions": 6,
+     "breakoutPriorHighSessions": 75,
+     "trendFilterEnabled": true,
+     "trendMethod": "rising_sma",
+     "trendSmaSessions": 82,
+     "trendSmaComparisonSessions": 15,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 70,
+     "dipThresholdPercent": 8,
+     "recoveryRetracementPercent": 33,
+     "recoveryConfirmationSessions": 8,
+     "trailingStopPercent": 9,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": false,
+     "continuationEnabled": false,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C21/C/pair DF2×GF1",
+   "d1": "C21/D/refine/D.C1/R102#2 robust",
+   "g": "C21/G/refine/G.h1.s1/R101#1 profit",
+   "d1Why": "robust-profit role",
+   "gWhy": "primary (actual-profit)",
+   "id": "rc2-fd6887b42e2964bf",
+   "cfg": {
+    "cell": "C.C1.h1.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 49,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 223,
+      "intradayLossBuffer": 0,
+      "pullback": 132,
+      "continuationWindow": 93
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 46,
+        "activation": "entry-day"
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 960,
+        "maxBlockSessions": 152
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 155,
+     "breakoutSlopeComparisonSessions": 78,
+     "breakoutPriorHighSessions": 79,
+     "trendFilterEnabled": true,
+     "trendMethod": "momentum",
+     "trendMomentumShortSessions": 11,
+     "trendMomentumLongSessions": 81,
+     "trendMomentumMinimumShortReturnPercent": 1.7,
+     "trendMomentumMinimumLongReturnPercent": -10,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 8.4,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 22,
+     "intradayLossBufferEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 60,
+     "initialStopAtrMultiple": 2.9,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "ma_cross",
+     "continuationWindowSessions": 79,
+     "crossSmaBars": 31,
+     "crossRisingBars": 29,
+     "crossMinimumSlopePercent": 1.8,
+     "crossMarginPercent": 2.45,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C21/C/pair DF2×GF2",
+   "d1": "C21/D/refine/D.C1/R102#2 robust",
+   "g": "C21/G/refine/G.h0.s0/R104#2 robust",
+   "d1Why": "robust-profit role",
+   "gWhy": "robust-profit role",
+   "id": "rc2-e685d1b375e21e02",
+   "cfg": {
+    "cell": "C.C1.h0.s0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 49,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 223,
+      "intradayLossBuffer": 0,
+      "pullback": 132,
+      "continuationWindow": 93
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 46,
+        "activation": "entry-day"
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 960,
+        "maxBlockSessions": 152
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 45,
+     "breakoutSlopeComparisonSessions": 9,
+     "breakoutPriorHighSessions": 98,
+     "trendFilterEnabled": true,
+     "trendMethod": "rising_sma",
+     "trendSmaSessions": 81,
+     "trendSmaComparisonSessions": 24,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 75,
+     "dipThresholdPercent": 8.4,
+     "recoveryRetracementPercent": 30.1,
+     "recoveryConfirmationSessions": 8,
+     "trailingStopPercent": 8.9,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "breakout",
+     "continuationWindowSessions": 67,
+     "breakoutBufferPercent": 3,
+     "breakoutFormationBars": 10,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C21/C/pair DF2×GF3",
+   "d1": "C21/D/refine/D.C1/R102#2 robust",
+   "g": "C21/G/refine/G.h0.s0/R103#3 balanced",
+   "d1Why": "robust-profit role",
+   "gWhy": "balanced role",
+   "id": "rc2-5c99a5f0b238cc7e",
+   "cfg": {
+    "cell": "C.C1.h0.s0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 49,
+      "trailingStopPercentage": 57,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 223,
+      "intradayLossBuffer": 0,
+      "pullback": 132,
+      "continuationWindow": 93
+     }
+    },
+    "controls": {
+     "version": 2,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 46,
+        "activation": "entry-day"
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 960,
+        "maxBlockSessions": 152
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 39,
+     "breakoutSlopeComparisonSessions": 6,
+     "breakoutPriorHighSessions": 75,
+     "trendFilterEnabled": true,
+     "trendMethod": "rising_sma",
+     "trendSmaSessions": 82,
+     "trendSmaComparisonSessions": 15,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 70,
+     "dipThresholdPercent": 8,
+     "recoveryRetracementPercent": 33,
+     "recoveryConfirmationSessions": 8,
+     "trailingStopPercent": 9,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": false,
+     "continuationEnabled": false,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C21/C/pair DF3×GF1",
+   "d1": "C21/D/refine/D.D1/R103#3 balanced",
+   "g": "C21/G/refine/G.h1.s1/R101#1 profit",
+   "d1Why": "balanced role",
+   "gWhy": "primary (actual-profit)",
+   "id": "rc1-4b7d48c1175c34a9",
+   "cfg": {
+    "cell": "C.D1.h1.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 291,
+      "trailingBuyPercentage": 14,
+      "trailingStopPercentage": 51,
+      "maximumHoldDays": 19,
+      "tickWindowSize": 225,
+      "intradayLossBuffer": 25,
+      "pullback": 199,
+      "continuationWindow": 38
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 176
+       },
+       "hold": {
+        "mode": "adaptive",
+        "extendedHoldDays": 42,
+        "progressTenths": 17
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 610,
+        "maxBlockSessions": 129
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 155,
+     "breakoutSlopeComparisonSessions": 78,
+     "breakoutPriorHighSessions": 79,
+     "trendFilterEnabled": true,
+     "trendMethod": "momentum",
+     "trendMomentumShortSessions": 11,
+     "trendMomentumLongSessions": 81,
+     "trendMomentumMinimumShortReturnPercent": 1.7,
+     "trendMomentumMinimumLongReturnPercent": -10,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 8.4,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 22,
+     "intradayLossBufferEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 60,
+     "initialStopAtrMultiple": 2.9,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "ma_cross",
+     "continuationWindowSessions": 79,
+     "crossSmaBars": 31,
+     "crossRisingBars": 29,
+     "crossMinimumSlopePercent": 1.8,
+     "crossMarginPercent": 2.45,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C21/C/pair DF3×GF2",
+   "d1": "C21/D/refine/D.D1/R103#3 balanced",
+   "g": "C21/G/refine/G.h0.s0/R104#2 robust",
+   "d1Why": "balanced role",
+   "gWhy": "robust-profit role",
+   "id": "rc1-1bf63be95e668aa9",
+   "cfg": {
+    "cell": "C.D1.h0.s0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 291,
+      "trailingBuyPercentage": 14,
+      "trailingStopPercentage": 51,
+      "maximumHoldDays": 19,
+      "tickWindowSize": 225,
+      "intradayLossBuffer": 25,
+      "pullback": 199,
+      "continuationWindow": 38
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 176
+       },
+       "hold": {
+        "mode": "adaptive",
+        "extendedHoldDays": 42,
+        "progressTenths": 17
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 610,
+        "maxBlockSessions": 129
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 45,
+     "breakoutSlopeComparisonSessions": 9,
+     "breakoutPriorHighSessions": 98,
+     "trendFilterEnabled": true,
+     "trendMethod": "rising_sma",
+     "trendSmaSessions": 81,
+     "trendSmaComparisonSessions": 24,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 75,
+     "dipThresholdPercent": 8.4,
+     "recoveryRetracementPercent": 30.1,
+     "recoveryConfirmationSessions": 8,
+     "trailingStopPercent": 8.9,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "breakout",
+     "continuationWindowSessions": 67,
+     "breakoutBufferPercent": 3,
+     "breakoutFormationBars": 10,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C21/C/pair DF3×GF3",
+   "d1": "C21/D/refine/D.D1/R103#3 balanced",
+   "g": "C21/G/refine/G.h0.s0/R103#3 balanced",
+   "d1Why": "balanced role",
+   "gWhy": "balanced role",
+   "id": "rc1-b1638d8d1d2ad746",
+   "cfg": {
+    "cell": "C.D1.h0.s0",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 291,
+      "trailingBuyPercentage": 14,
+      "trailingStopPercentage": 51,
+      "maximumHoldDays": 19,
+      "tickWindowSize": 225,
+      "intradayLossBuffer": 25,
+      "pullback": 199,
+      "continuationWindow": 38
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 176
+       },
+       "hold": {
+        "mode": "adaptive",
+        "extendedHoldDays": 42,
+        "progressTenths": 17
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 610,
+        "maxBlockSessions": 129
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 39,
+     "breakoutSlopeComparisonSessions": 6,
+     "breakoutPriorHighSessions": 75,
+     "trendFilterEnabled": true,
+     "trendMethod": "rising_sma",
+     "trendSmaSessions": 82,
+     "trendSmaComparisonSessions": 15,
+     "drawdownRecoveryGateEnabled": true,
+     "dipLookbackSessions": 70,
+     "dipThresholdPercent": 8,
+     "recoveryRetracementPercent": 33,
+     "recoveryConfirmationSessions": 8,
+     "trailingStopPercent": 9,
+     "maximumHoldEnabled": false,
+     "initialStopEnabled": false,
+     "retentionEnabled": false,
+     "continuationEnabled": false,
+     "costBpsPerSide": 5
+    }
+   }
+  }
+ ],
+ "finished": "2026-11-25T15:01:13.998Z"
+}
