@@ -2,8 +2,8 @@
 # Records gates E7 and E8 from the outputs of research/tsla-d1-growth/chains/tests.sh (results/engineering/tests/).
 # E7: the study's and the reused modules' suites, 0 failures. E8: npm test with only the 7 known pre-existing failures
 # (memory: lowercase allin-original.ts × 6, Study 7's sealed data end), root tsc 0 errors, eslint 0 errors, every study
-# preflight PASS, Strategy Lab portfolio parity, typecheck, lint, Vitest, build and Playwright (or its rerun: known timing
-# races) exit 0, state/strategy-lab unchanged.
+# preflight PASS, Strategy Lab portfolio parity, typecheck, lint, Vitest and build exit 0, state/strategy-lab unchanged;
+# Playwright e2e reported beside the gate with every attempt (AMENDMENTS.md E1: documented timing races in test code).
 import json, os, re, datetime
 
 root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))

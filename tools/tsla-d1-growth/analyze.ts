@@ -48,6 +48,20 @@ const searchRecords = () => {
   return out;
 };
 
+// progress per unit of compute (PROTOCOL §16): the lane's cumulative best feasible centre net after each island against its
+// cumulative island evaluations (the trajectories carry the lane's best so far)
+type Island = { evaluations: number; bestNetTrajectory: number[]; bestRobustTrajectory: number[] };
+const progressOf = (l: LaneResult) => {
+  const isl = l.islands as unknown as Island[];
+  let cum = 0;
+
+  return isl.map((i) => {
+    cum += i.evaluations;
+    return { evaluations: cum, bestNet: i.bestNetTrajectory.at(-1) ?? null, bestRobust: i.bestRobustTrajectory.at(-1) ?? null };
+  });
+};
+const med = (xs: number[]) => (xs.length ? quantile([...xs].sort((a, b) => a - b), 0.5) : null);
+
 const searchTables = () => {
   const recs = searchRecords();
   const lanes: Record<string, unknown>[] = [];
@@ -68,6 +82,7 @@ const searchTables = () => {
         r3Feasible: l.r3.filter((f) => f.feasible).length,
         shortlisted: l.shortlist.length,
         bestFeasibleR3Net: l.r3.filter((f) => f.feasible).reduce<number | null>((a, f) => (a === null || f.net > a ? f.net : a), null),
+        islandProgress: progressOf(l).map((x) => `${x.evaluations}:${x.bestNet ?? ''}`).join(' '),
         screenPlausible: l.failure?.screenPlausible ?? null
       });
   }
@@ -103,6 +118,37 @@ const searchTables = () => {
       }
 
       const budgetBound = ls.filter((l) => l.extension.stop.startsWith('extension cap')).length;
+      // the last island's gain of the lane's best centre net, per 10,000 island evaluations (%); the base islands' share of
+      // the lane's final best; the spread of each cell's best feasible rung-3 net across its broad replicates
+      const lastGain: number[] = [];
+      const baseShare: number[] = [];
+
+      for (const l of ls) {
+        const pr = progressOf(l);
+
+        if (pr.length >= 2 && pr.at(-2)!.bestNet && pr.at(-1)!.bestNet) {
+          const a = pr.at(-2)!.bestNet!;
+          const b = pr.at(-1)!.bestNet!;
+          const ev = pr.at(-1)!.evaluations - pr.at(-2)!.evaluations;
+
+          if (a > 0 && ev > 0) lastGain.push((((b - a) / a) * 100 * 10_000) / ev);
+        }
+        if (pr.length >= 2 && pr[1]!.bestNet && pr.at(-1)!.bestNet && pr.at(-1)!.bestNet! > 0) baseShare.push(pr[1]!.bestNet! / pr.at(-1)!.bestNet!);
+      }
+
+      const spread: Record<string, { replicates: number; min: number; median: number; max: number }> = {};
+
+      for (const cell of [...new Set(broad.map((l) => l.structure))]) {
+        const xs = broad
+          .filter((l) => l.structure === cell)
+          .map((l) => l.r3.filter((f) => f.feasible).reduce<number | null>((x, f) => (x === null || f.net > x ? f.net : x), null))
+          .filter((x): x is number => x !== null)
+          .sort((p, q) => p - q);
+
+        if (xs.length) spread[cell] = { replicates: xs.length, min: r2(xs[0]!), median: r2(quantile(xs, 0.5)), max: r2(xs.at(-1)!) };
+      }
+
+      const rel = Object.values(spread).filter((x) => x.replicates >= 2 && x.max > 0).map((x) => (x.max - x.min) / x.max);
 
       summary.push({
         cutoff: c,
@@ -123,6 +169,11 @@ const searchTables = () => {
         stops,
         budgetBoundShare: r4(budgetBound / Math.max(1, ls.length)),
         budgetLimitedLabel: budgetBound / Math.max(1, ls.length) > 0.1 || (rounds.length === 4 && rounds[3]!.fired) ? 'budget-limited (not converged)' : 'converged by the frozen rules',
+        progress: {
+          lastIslandGainPctPer10k: { median: lastGain.length ? r4(med(lastGain)!) : null, lanes: lastGain.length },
+          baseIslandsShareOfFinalBest: { median: baseShare.length ? r4(med(baseShare)!) : null, lanes: baseShare.length }
+        },
+        replicateSpread: { cells: spread, medianRelativeRange: rel.length ? r4(med(rel)!) : null },
         cellsWithFeasible: [...new Set(ls.filter((l) => l.r3.some((f) => f.feasible)).map((l) => l.structure))].length,
         cells: [...new Set(ls.map((l) => l.structure))].length
       });

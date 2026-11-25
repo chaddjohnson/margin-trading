@@ -42,9 +42,12 @@ for g in e3 e4 e5 e6; do tools/tsla-d1-growth/launch.sh tsla-$g $PWD/research/ts
 tools/tsla-d1-growth/launch.sh tsla-pilot $PWD/research/tsla-d1-growth/cache/logs/pilot.log --wait -- \
   /usr/bin/env GPU_POLICY_PURPOSE=benchmark $(command -v npm) run tsla-eng -- pilot --step lanes
 GPU_POLICY_PURPOSE=benchmark npm run tsla-eng -- pilot --step summary
-node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning --test 'src/tsla-d1-growth/tests/*.test.ts' --test-reporter=tap > research/tsla-d1-growth/cache/logs/E7.tap
-GPU_POLICY_PURPOSE=parity-test npm run tsla-eng -- record --gate E7 --log research/tsla-d1-growth/cache/logs/E7.tap --known 0
-npm test -- --test-reporter=tap > research/tsla-d1-growth/cache/logs/E8.tap   # then record --gate E8 --known <n>
+# E7 + E8: the study's and the reused suites, npm test, tsc, eslint, every preflight, Strategy Lab (parity, typecheck, lint,
+# Vitest, scratch build, Playwright e2e with one rerun), state/strategy-lab fingerprinted; then the recorder
+tools/tsla-d1-growth/launch.sh tsla-tests $PWD/research/tsla-d1-growth/cache/logs/tests.log --wait -- /bin/bash $PWD/research/tsla-d1-growth/chains/tests.sh
+( cd apps/strategy-lab && STRATEGY_LAB_STATIC_DIR=$PWD/../../research/tsla-d1-growth/cache/strategy-lab-scratch/dist npx playwright test \
+  > ../../research/tsla-d1-growth/results/engineering/tests/strategy-lab-e2e-rerun2.txt 2>&1 )   # (and -rerun3: AMENDMENTS.md E1)
+python3 -I tools/tsla-d1-growth/tests-record.py      # writes E7-tests.json, E8-regression.json
 npm run research-preflight -- --study research/tsla-d1-growth
 npm run tsla -- gates
 npm run tsla -- freeze
@@ -60,4 +63,24 @@ npm run tsla -- round --cutoff C19 --arm D --k 1
 npm run tsla -- qualify --cutoff C19 --arm D --stage broad
 npm run tsla -- ledger
 npm run tsla -- verify      # every seal re-hashed
+```
+
+## Phase 7 — report-only diagnostics, tables, reports and the handoff (after the outcome)
+
+```bash
+# report-only diagnostics of the frozen subjects (non-official; the door guard refuses FULL before the committed validation)
+for c in bh tail lots; do GPU_POLICY_PURPOSE=diagnostic npm run tsla-diag -- $c; done
+tools/tsla-d1-growth/launch.sh tsla-nbhd $PWD/research/tsla-d1-growth/cache/logs/nbhd.log --wait -- \
+  /usr/bin/env GPU_POLICY_PURPOSE=diagnostic $(command -v npm) run tsla-diag -- nbhd
+# (engineering test of the same tool during the chain, on D19 with C19's selection; outputs in cache/diag-test only)
+for c in bh tail lots nbhd; do TSLA_DIAG_TEST=D19 GPU_POLICY_PURPOSE=diagnostic npm run tsla-diag -- $c; done
+# tables (JSON, CSV, Markdown) and the per-arm reports from the sealed records
+GPU_POLICY_PURPOSE=diagnostic node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/tsla-d1-growth/analyze.ts
+node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/tsla-d1-growth/tables-md.ts
+node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/tsla-d1-growth/arm-reports.ts
+# this study's job archives: verification of every compressed archive (read-only)
+python3 -I research/tsla-d1-growth/storage/tools/jobzstd.py final --repo . --actions research/tsla-d1-growth/storage/TSLA_JOB_ACTIONS.jsonl \
+  --out research/tsla-d1-growth/storage/TSLA_JOB_POST_VERIFY.json
+# the handoff ZIP: after the final commit is pushed and git ls-remote equals HEAD
+tools/tsla-d1-growth/bundle.sh <scratch dir> $(git rev-parse HEAD)
 ```
