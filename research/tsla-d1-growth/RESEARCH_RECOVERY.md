@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T20:05Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (C19 COMPLETE at
+- **Updated:** 2026-11-25T20:00Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (C19 COMPLETE at
   14:24:35Z; C21 COMPLETE at 16:34:18Z; C23 COMPLETE at 19:46:18Z; sequential verdicts sealed 19:43:21Z — every arm
   UNSUPPORTED; C24 started 19:46:18Z).** Relaunched once after code amendment A1 (14:02:08Z; chain-log line offset 229).
 - **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`;
