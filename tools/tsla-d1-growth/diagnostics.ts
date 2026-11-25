@@ -12,6 +12,9 @@
 //             view per lot, and illustrative margin scenarios
 //   nbhd      the finalists' small (0.5×) and wide (1.5×) neighbourhood families on D24 (non-official GPU): breach shares and
 //             tails beside the main radius
+// TSLA_DIAG_TEST=D19 — an engineering test of this tool only, during the chain: C19's sealed selection stands in for C24's,
+// D19 for FULL and D24, 2018-12-31 for the development end, the CPU for the GPU (nbhd); outputs go to cache/diag-test
+// (git-ignored), never to a report
 import fs from 'node:fs';
 import path from 'node:path';
 import { runWithControls2 } from '../../src/d1-risk-controls-rc2/run.ts';
@@ -20,7 +23,7 @@ import { quantile } from '../../src/vg-d1-growth-joint/fitness.ts';
 import type { SRec } from '../../src/vg-l0-full-joint/evaluate.ts';
 import { quadOf } from '../../src/vg-l0-full-joint/space.ts';
 import { fidelity } from '../../src/vg-l0-risk-families/qualify.ts';
-import { type ArmKey, armOptions, ceiling, chronology, cutoffKeys, researchDir, resultsDir } from '../../src/tsla-d1-growth/context.ts';
+import { type ArmKey, type CutoffKey, type DoorName, armOptions, ceiling, chronology, cutoffKeys, researchDir, resultsDir } from '../../src/tsla-d1-growth/context.ts';
 import * as S from '../../src/tsla-d1-growth/space.ts';
 import type { Cfg } from '../../src/tsla-d1-growth/space.ts';
 import { drawsOf, famOf } from '../../src/tsla-d1-growth/qualify.ts';
@@ -32,13 +35,26 @@ import { openToolLab, purposeOf, writeJson } from './common.ts';
 
 const args = process.argv.slice(2);
 const cmd = args[0];
-const diagDir = path.join(researchDir, 'reports', 'diagnostics');
+const test = process.env.TSLA_DIAG_TEST === 'D19';
+const diagDir = test ? path.join(researchDir, 'cache', 'diag-test') : path.join(researchDir, 'reports', 'diagnostics');
+const fullDoor: DoorName = test ? 'D19' : 'FULL';
+const inSampleDoor: DoorName = test ? 'D19' : 'D24';
+const devEnd = test ? '2018-12-31' : chronology.developmentEnd;
+const valStart = test ? '2019-01-02' : chronology.validationStart;
+const endpoint = test ? '2019-12-31' : chronology.endpoint;
+const lastCut: CutoffKey = test ? 'C19' : 'C24';
+const cuts: readonly CutoffKey[] = test ? ['C19'] : cutoffKeys;
+const tag = test ? 'ENGINEERING TEST of the diagnostics tool (D19 stand-in; not a report): ' : '';
 const readJ = <T>(f: string) => JSON.parse(fs.readFileSync(f, 'utf8')) as T;
 const r2 = (x: number) => Math.round(x * 100) / 100;
 const r4 = (x: number) => Math.round(x * 1e4) / 1e4;
 const now = () => new Date().toISOString();
 
 const requireValidation = () => {
+  if (test) {
+    if (!isSealed(path.join(resultsDir, 'selection', 'C19.json'))) throw new Error('the D19 test needs the sealed C19 selection');
+    return;
+  }
   if (!isSealed(sliceFile('C24'))) throw new Error('report-only diagnostics run only after the sealed validation');
 };
 
@@ -63,7 +79,7 @@ export const subjects = (): Subject[] => {
     else out.set(k, { label, arm, cfg: S.canonicalCfg(cfg), roles: [role] });
   };
 
-  for (const cut of cutoffKeys) {
+  for (const cut of cuts) {
     const sel = readJ<{ primaries: Record<string, string | null>; roles: Record<string, { roles: Record<string, string | null> }>; subjects: Evidence[]; controls: Evidence[] }>(path.join(resultsDir, 'selection', `${cut}.json`));
     const byLabel = new Map(sel.subjects.map((e) => [e.label, e]));
 
@@ -71,10 +87,10 @@ export const subjects = (): Subject[] => {
       const l = sel.primaries[a];
 
       if (l) add(l, a, byLabel.get(l)!.cfg, `${cut} primary ${a}`);
-      if (cut === 'C24')
+      if (cut === lastCut)
         for (const [role, rl] of Object.entries(sel.roles[a]?.roles ?? {})) if (rl && role !== 'actual-profit') add(rl, a, byLabel.get(rl)!.cfg, `C24 role ${a}/${role}`);
     }
-    if (cut === 'C24') for (const c of sel.controls) add(c.label, c.arm, c.cfg, 'control');
+    if (cut === lastCut) for (const c of sel.controls) add(c.label, c.arm, c.cfg, 'control');
   }
   return [...out.values()];
 };
@@ -85,8 +101,8 @@ const bh = async () => {
   purposeOf(['diagnostic']);
   requireValidation();
 
-  const door = await openTslaDoor('FULL', 'diagnostic', 'report-only buy-and-hold control');
-  const sessions = door.sym.VGT.history.length ? door.sym.VGT.history : (await doorSessions('FULL')).history;
+  const door = await openTslaDoor(fullDoor, 'diagnostic', `${tag}report-only buy-and-hold control`);
+  const sessions = door.sym.VGT.history.length ? door.sym.VGT.history : (await doorSessions(fullDoor)).history;
   const first = sessions[0]!;
   const entryPrice = first.bars[0]!.open * 1.0005; // 5 bps inside the fill price, as the engine
   const shares = 100_000 / entryPrice;
@@ -117,19 +133,19 @@ const bh = async () => {
 
   for (const financed of [true, false]) {
     const m = legs(financed);
-    const devEnd = m.filter((x) => x.date <= chronology.developmentEnd).at(-1)!.v;
-    const yearsDev = (Date.parse('2024-12-31') - Date.parse('2016-01-04')) / (365 * 86_400_000);
+    const devNet = m.filter((x) => x.date <= devEnd).at(-1)!.v;
+    const yearsDev = (Date.parse(devEnd) - Date.parse(first.date)) / (365 * 86_400_000);
 
     out[financed ? 'financed11pct' : 'unfinanced'] = {
-      development: { ...stats(m, chronology.firstSession, chronology.developmentEnd, 0), principalYears: r2(yearsDev), netPer100kYear: r2(devEnd / yearsDev) },
-      validation: stats(m, chronology.validationStart, chronology.endpoint, devEnd),
-      full: stats(m, chronology.firstSession, chronology.endpoint, 0)
+      development: { ...stats(m, chronology.firstSession, devEnd, 0), principalYears: r2(yearsDev), netPer100kYear: r2(devNet / yearsDev) },
+      validation: stats(m, valStart, endpoint, devNet),
+      full: stats(m, chronology.firstSession, endpoint, 0)
     };
   }
 
   const record = {
-    kind: 'TSLA buy-and-hold control (report-only)',
-    basis: `$100,000 of TSLA bought at the first regular-minute open of ${first.date} + 5 bps (${r4(entryPrice)} in 2016 share units; ${r4(shares)} shares), held to ${chronology.endpoint}, marked at every regular minute close; DD = the strict running-peak drawdown of the marked net in dollars of the fixed $100,000 allocation; financed: 11 % simple annual interest on $100,000 by calendar day (the strategies’ convention); unfinanced: no interest; no exit cost charged`,
+    kind: `${tag}TSLA buy-and-hold control (report-only)`,
+    basis: `$100,000 of TSLA bought at the first regular-minute open of ${first.date} + 5 bps (${r4(entryPrice)} in 2016 share units; ${r4(shares)} shares), held to ${endpoint}, marked at every regular minute close; DD = the strict running-peak drawdown of the marked net in dollars of the fixed $100,000 allocation; financed: 11 % simple annual interest on $100,000 by calendar day (the strategies’ convention); unfinanced: no interest; no exit cost charged`,
     ...out,
     finished: now()
   };
@@ -150,7 +166,7 @@ const tail = async () => {
   const q = y.indicators.quote[0]!;
   const ny = (t: number) => new Date((t - 5 * 3600) * 1000).toISOString().slice(0, 10);
   const pre = y.timestamp.map((t, i) => ({ date: ny(t), open: q.open[i]!, low: q.low[i]!, close: q.close[i]! })).filter((x) => x.date < '2016-01-01' && Number.isFinite(x.close));
-  const d24 = (await doorSessions('D24')).history.map((s) => ({ date: s.date, open: s.open, low: s.low, close: s.close }));
+  const d24 = (await doorSessions(inSampleDoor)).history.map((s) => ({ date: s.date, open: s.open, low: s.low, close: s.close }));
   const stress = (days: { date: string; open: number; low: number; close: number }[], hold: number, stopPct: number | null) => {
     const t = days.map((d) => Date.parse(`${d.date}T00:00:00Z`) / 86_400_000);
     const losses: { date: string; loss: number }[] = [];
@@ -210,7 +226,7 @@ const tail = async () => {
       };
     });
   const record = {
-    kind: 'D1 maximum-hold-window tail stress (standard §5.9; report-only)',
+    kind: `${tag}D1 maximum-hold-window tail stress (standard §5.9; report-only)`,
     basis: 'loss of a $100,000 lot bought at each daily close and marked at the daily lows of the next H calendar days (H = the book’s maximum hold; family C: a declared 60-day bound; D: the extended bound); for a book with a protective stop, the lot exits at the stop or — gapped through — at the open, and the worst excess of the gap fill below the stop is reported; no interest or costs; DAILY resolution (labelled)',
     referenceHistory: 'pre-2016 TSLA daily (Yahoo Finance, 2010-06-29 → 2015-12-31, split-adjusted; disjoint from every door) and, labelled in-sample stress, 2016-01-04 → 2024-12-31 (D24)',
     rows,
@@ -227,10 +243,10 @@ const lots = async () => {
   purposeOf(['diagnostic']);
   requireValidation();
 
-  const door = await openTslaDoor('FULL', 'diagnostic', 'report-only lot-level replays of frozen subjects (CPU reference)');
+  const door = await openTslaDoor(fullDoor, 'diagnostic', `${tag}report-only lot-level replays of frozen subjects (CPU reference)`);
   const ds = door.sym.VGT.ds;
   const rows = subjects().map((s) => {
-    const o = { ...armOptions[s.arm], boundaries: ['2024-12-31'] };
+    const o = { ...armOptions[s.arm], boundaries: [devEnd] };
     const x = runWithControls2(door, quadOf(s.cfg), s.cfg.controls, o, true, false, { cache: false });
     const r = x.result;
     const days = (a: number, b: number) => (ds.sTime[b]! - ds.sTime[a]!) / 86400;
@@ -249,7 +265,7 @@ const lots = async () => {
         giveback: r2(Math.max(0, l.best - l.net)),
         interest: r2(l.interest),
         costs: r2(l.costs),
-        period: door.dates[l.entryS]! > '2024-12-31' ? 'validation' : 'development'
+        period: door.dates[l.entryS]! > devEnd ? 'validation' : 'development'
       };
     });
     const closed = lotRows.filter((l) => l.exit !== null);
@@ -293,7 +309,7 @@ const lots = async () => {
     };
   });
   const record = {
-    kind: 'lot-level replays (CPU reference engine, purpose diagnostic; report-only)',
+    kind: `${tag}lot-level replays (CPU reference engine, purpose diagnostic; report-only)`,
     basis: 'each subject’s continuous run 2016-01-04 → 2026-10-30 on FULL with the 2024-12-31 boundary, the canonical CPU engine in detail mode (gate E4: CPU = GPU on every record field); giveback = the lot’s best mark − its final net; worst = the lot’s lowest mark (realized fills + remainder, after costs and interest); refusals with their occupant; margin rows are ILLUSTRATIVE (the lot fully financed; maintenance m of market value; no broker’s house rules)',
     rows,
     finished: now()
@@ -309,13 +325,15 @@ const nbhd = async () => {
   purposeOf(['diagnostic']);
   requireValidation();
 
-  const fz = readJ<{ finalists: { label: string; arm: ArmKey; id: string }[] }>(frozenSelectionFile);
-  const sel = readJ<{ subjects: Evidence[] }>(path.join(resultsDir, 'selection', 'C24.json'));
+  const sel = readJ<{ subjects: Evidence[]; primaries: Record<string, string | null> }>(path.join(resultsDir, 'selection', `${lastCut}.json`));
+  const fz = test
+    ? { finalists: Object.entries(sel.primaries).flatMap(([arm, label]) => (label ? [{ label, arm: arm as ArmKey }] : [])) }
+    : readJ<{ finalists: { label: string; arm: ArmKey }[] }>(frozenSelectionFile);
   const byLabel = new Map(sel.subjects.map((e) => [`${e.arm}|${e.label}`, e]));
 
   ensureAllFrozen();
 
-  const t = await openToolLab({ backend: 'gpu', door: 'D24', use: 'diagnostic', area: 'diagnostics', job: 'nbhd-D24', purpose: 'diagnostic: small and wide families', ledger: path.join(diagDir, 'nbhd-D24-receipts.jsonl') });
+  const t = await openToolLab({ backend: test ? 'cpu' : 'gpu', cpuWorkers: 4, door: inSampleDoor, use: 'diagnostic', area: test ? 'diag-test' : 'diagnostics', job: `nbhd-${inSampleDoor}${test ? '-test' : ''}`, purpose: `${tag}diagnostic: small and wide families`, ledger: path.join(diagDir, `nbhd-${inSampleDoor}-receipts.jsonl`) });
   const rows: Record<string, unknown>[] = [];
 
   try {
@@ -327,8 +345,8 @@ const nbhd = async () => {
       const cfg = S.canonicalCfg(e.cfg);
       const o = armOptions[f.arm];
       const fams: Record<string, ReturnType<typeof drawsOf>> = {
-        small: drawsOf(cfg, famOf('small', ['small', 1, 'C24'], 0.5, fidelity.n)),
-        wide: drawsOf(cfg, famOf('wide', ['wide', 1, 'C24'], 1.5, fidelity.n))
+        small: drawsOf(cfg, famOf('small', ['small', 1, lastCut], 0.5, fidelity.n)),
+        wide: drawsOf(cfg, famOf('wide', ['wide', 1, lastCut], 1.5, fidelity.n))
       };
       const out: Record<string, unknown> = { label: f.label, arm: f.arm };
 
@@ -348,7 +366,7 @@ const nbhd = async () => {
     await t.close();
   }
 
-  writeJson(path.join(diagDir, 'nbhd-small-wide.json'), { kind: 'small (0.5×) and wide (1.5×) neighbourhood families of the C24 finalists on D24 (non-official GPU; report-only; standard §5.8)', rows, finished: now() });
+  writeJson(path.join(diagDir, 'nbhd-small-wide.json'), { kind: `${tag}small (0.5×) and wide (1.5×) neighbourhood families of the C24 finalists on D24 (non-official GPU; report-only; standard §5.8)`, rows, finished: now() });
   console.log(JSON.stringify(rows.length));
 };
 

@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T12:25Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (cutoff C19 first).**
+- **Updated:** 2026-11-25T12:31Z (clock, UTC). **Status: INCOMPLETE — the official chain is RUNNING (cutoff C19 first).**
 - **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`;
   freeze `results/protocol-freeze.json` `d197e9d73feec2edd2f9c250640d22310118977bcdfa31943c3b9103bfbbfe97` (commit `b2667d83`,
   **pushed**: `git ls-remote` = local); frozen code digest `418a8758…`; gates `results/engineering/gates.json`
@@ -52,6 +52,20 @@ hard ceiling 120 M requested; doors D19/D21/D23/D24 training, slices D21/D23/D24
 - FULL opens only through the chain's validation after FROZEN_SELECTION.json and the FULL authorization are committed.
 - Priority 5's archives: restore with `zstd -d -q <arc>.zst -o <arc>` before any read.
 - No broker, deployment, merge into `main`, MSFT.
+
+## Tool readiness (during the chain; no official record touched)
+
+- 2026-11-25T12:31Z `storage/tools/jobzstd.py` tested end to end on the completed job C19-D-broad with `--keep-original`
+  and a SCRATCH actions file (session scratchpad): z-verified, integrity ok, 96/96 sealed ids reproduced, 1,927,417,856 →
+  132,096,152 bytes in 6 s; the test `.zst` was removed (single file) so the chain's own run starts clean.
+- `tools/tsla-d1-growth/diagnostics.ts` gained `TSLA_DIAG_TEST=D19` (C19 selection, door D19, CPU nbhd, outputs to
+  git-ignored `cache/diag-test/`) to exercise bh/tail/lots/nbhd before the validation; run it once C19's selection is
+  sealed. `analyze.ts` (tables JSON/CSV), `tables-md.ts` (TABLES.md) and `bundle.sh` (handoff ZIP) are written;
+  tools type-check (scratch tsconfig over tools/ + src/tsla-d1-growth) and lint clean. `engineering.ts` line 438: a
+  type-only cast fix (`as unknown as`), erased at run time.
+- Git while the chain runs: read-only commands with `GIT_OPTIONAL_LOCKS=0`; commit only while a long stage is running
+  (the chain commits between stages; an index.lock collision would stop it — then relaunch, it is idempotent). Do not
+  edit package.json or the protocol documents during the chain (`dirtyCode` checks them).
 
 ## Disclosures so far
 

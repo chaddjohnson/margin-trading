@@ -435,7 +435,7 @@ const e5 = async () => {
 // ----- E6: identities on the GPU -----
 
 const strip = (r: SRec) => {
-  const x = plain(r) as Record<string, unknown>;
+  const x = plain(r) as unknown as Record<string, unknown>;
 
   delete x.id;
   return x;
