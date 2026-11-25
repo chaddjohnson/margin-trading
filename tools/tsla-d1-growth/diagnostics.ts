@@ -23,7 +23,7 @@ import { quantile } from '../../src/vg-d1-growth-joint/fitness.ts';
 import type { SRec } from '../../src/vg-l0-full-joint/evaluate.ts';
 import { quadOf } from '../../src/vg-l0-full-joint/space.ts';
 import { fidelity } from '../../src/vg-l0-risk-families/qualify.ts';
-import { type ArmKey, type CutoffKey, type DoorName, armOptions, ceiling, chronology, cutoffKeys, researchDir, resultsDir } from '../../src/tsla-d1-growth/context.ts';
+import { type ArmKey, type CutoffKey, type DoorName, armOptions, ceiling, chronology, cutoffKeys, cutoffs, foldKeys, researchDir, resultsDir } from '../../src/tsla-d1-growth/context.ts';
 import * as S from '../../src/tsla-d1-growth/space.ts';
 import type { Cfg } from '../../src/tsla-d1-growth/space.ts';
 import { drawsOf, famOf } from '../../src/tsla-d1-growth/qualify.ts';
@@ -143,9 +143,37 @@ const bh = async () => {
     };
   }
 
+  // exposure-normalized controls: a fresh $100,000 bought at the first regular-minute open of each fold slice and of the
+  // validation period (+ 5 bps), held to the window's last close — the scale of one strategy lot (the continuous 2016
+  // holding above is many times larger by then, so its window P&L is not comparable with a $100,000 slot)
+  const windows: [string, string, string][] = [...foldKeys.map((k): [string, string, string] => [`${k} slice`, cutoffs[k].slice[0], cutoffs[k].slice[1]]), ['validation', valStart, endpoint]];
+  const fresh: Record<string, unknown> = {};
+
+  for (const [name, from, to] of windows) {
+    const ss = sessions.filter((s) => s.date >= from && s.date <= to);
+
+    if (!ss.length) continue;
+    const e = ss[0]!.bars[0]!.open * 1.0005;
+    const sh = 100_000 / e;
+    const d0 = Date.parse(`${ss[0]!.date}T00:00:00Z`) / 86_400_000;
+    const per: Record<string, unknown> = { from: ss[0]!.date, to: ss.at(-1)!.date, entryPrice: r4(e), shares: r4(sh) };
+
+    for (const financed of [true, false]) {
+      const marks = ss.flatMap((s) => {
+        const i = financed ? (100_000 * 0.11 * (Date.parse(`${s.date}T00:00:00Z`) / 86_400_000 - d0)) / 365 : 0;
+
+        return s.bars.map((b) => ({ date: s.date, v: sh * b.close - 100_000 - i }));
+      });
+
+      per[financed ? 'financed11pct' : 'unfinanced'] = stats(marks, from, to, 0);
+    }
+    fresh[name] = per;
+  }
+  out.freshPurchase = fresh;
+
   const record = {
     kind: `${tag}TSLA buy-and-hold control (report-only)`,
-    basis: `$100,000 of TSLA bought at the first regular-minute open of ${first.date} + 5 bps (${r4(entryPrice)} in 2016 share units; ${r4(shares)} shares), held to ${endpoint}, marked at every regular minute close; DD = the strict running-peak drawdown of the marked net in dollars of the fixed $100,000 allocation; financed: 11 % simple annual interest on $100,000 by calendar day (the strategies’ convention); unfinanced: no interest; no exit cost charged`,
+    basis: `$100,000 of TSLA bought at the first regular-minute open of ${first.date} + 5 bps (${r4(entryPrice)} in 2016 share units; ${r4(shares)} shares), held to ${endpoint}, marked at every regular minute close; DD = the strict running-peak drawdown of the marked net in dollars of the fixed $100,000 allocation; financed: 11 % simple annual interest on $100,000 by calendar day (the strategies’ convention); unfinanced: no interest; no exit cost charged; freshPurchase: a new $100,000 bought at the first regular-minute open of each fold slice and of the validation period (+ 5 bps), held to the window’s last close, interest from that day (the exposure-normalized control at the scale of one strategy lot)`,
     ...out,
     finished: now()
   };
