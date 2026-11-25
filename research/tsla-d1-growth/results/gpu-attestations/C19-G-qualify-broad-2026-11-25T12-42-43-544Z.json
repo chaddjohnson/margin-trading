@@ -1,0 +1,230 @@
+{
+ "kind": "gpu-backend official attestation",
+ "study": "research/tsla-d1-growth",
+ "runId": "C19-G-qualify-broad",
+ "purpose": "official-optimization",
+ "t": "2026-11-25T12:42:43.544Z",
+ "host": "apollo",
+ "runtime": {
+  "node": "v24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "maglev": "disabled",
+  "execArgv": [
+   "--no-maglev",
+   "--expose-gc",
+   "--experimental-transform-types",
+   "--disable-warning=ExperimentalWarning",
+   "--max-old-space-size=12288"
+  ]
+ },
+ "device": {
+  "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+  "name": "NVIDIA GeForce RTX 5090",
+  "driver": 13020,
+  "runtime": 13020,
+  "cc": "12.0",
+  "smiUuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4"
+ },
+ "binary": {
+  "path": "research/gpu-phase7/build/gb7",
+  "sha256": "cb2ff30b9cb720c01d69e5195a8add9bcf37eb31f7ab85625a3d1a5c02c56a82"
+ },
+ "compat": {
+  "digest": "d1a2e490788fa5fa76a277719dfb623c2cc896de85cf95f739c3e3af184e233b",
+  "serverDigest": "d1a2e490788fa5fa76a277719dfb623c2cc896de85cf95f739c3e3af184e233b"
+ },
+ "source": {
+  "head": "a4b8701b800958a82d2b9ef610d1e4e73e6435fb",
+  "acceptedRevision": "999f299e50696953006dfc6ea0c06ffa410ca303",
+  "pinnedFiles": 142,
+  "clean": true
+ },
+ "acceptance": {
+  "status": "ACCEPTED",
+  "file": "config/gpu-backend/acceptance.json",
+  "sha256": "bb0e3fcf6bde45cc654dc2d8d166153353918dfe3aa18d826dd8deda5cabf7b7",
+  "skippedForTest": false
+ },
+ "domain": {
+  "name": "risk-envelope pilot (NL0-R 0.1.0): assignment-3 (src/vg-l0-full-joint): D1·GDX + D1·VGT with RC 2 families A–D × gate × activation, Growth·VGT 1.4.0 (8 + 50 genes), L0 pool + risk-envelope inputs",
+  "features": [
+   "D1_BOOK",
+   "RC_CONTROLS",
+   "NEXT_OPEN",
+   "SLIPPAGE",
+   "ARM_START",
+   "G_RISE",
+   "G_BREAKOUT",
+   "G_TREND_PRICE_CHANGE",
+   "G_TREND_REGRESSION",
+   "G_TREND_RISING_SMA",
+   "G_TREND_HHL",
+   "G_TREND_MOMENTUM",
+   "G_ELIG_TIME_LIMITED",
+   "G_ELIG_MIN_STRENGTH",
+   "G_ELIG_MAX_EXTENSION",
+   "G_ELIG_DETERIORATION",
+   "G_ELIG_RESET_RENEW",
+   "G_DRAWDOWN_GATE",
+   "G_MAX_HOLD",
+   "G_BUFFER",
+   "G_INITIAL_STOP",
+   "G_RETENTION",
+   "G_CONT_CLASSIC",
+   "G_CONT_BREAKOUT",
+   "G_CONT_SHALLOW",
+   "G_CONT_MA_CROSS",
+   "POOL",
+   "POOL_FUND_FROM",
+   "POOL_ENABLED",
+   "POOL_WHOLE_SHARES",
+   "POOL_BLACKOUTS",
+   "POOL_PERIODS",
+   "POOL_TIE_ORDER",
+   "POOL_DETAIL",
+   "RISK_METRICS"
+  ],
+  "growthStructures": 8640,
+  "d1Structures": 14
+ },
+ "supported": "fffffffff",
+ "smoke": {
+  "ok": true,
+  "sum": 1635.3944173366574,
+  "mix": "4842b073ba50f7fd"
+ },
+ "memory": {
+  "freeBytes": 32332578816,
+  "plannedBytes": 5448138752
+ },
+ "dataset": {
+  "door": "D19",
+  "sessions": 1006,
+  "sha256": "28c9e36fe8e70e67185515f2442be494ef879f728814c3ba5cd1dd4767d8db1d",
+  "dataSha256": {
+   "GDX": "beda557c8653b98462197b0107180bd667da0bae9a30c4b2f934c31d971f9254",
+   "VGT": "beda557c8653b98462197b0107180bd667da0bae9a30c4b2f934c31d971f9254"
+  }
+ },
+ "hostPath": {
+  "mode": "parallel",
+  "workers": 8,
+  "doorDigest": "6cb4141b47cfe3c5908b431504b0f9da82cd31b7de29b1842757cc8185b753a1"
+ },
+ "parity": {
+  "subjects": 18,
+  "identical": 18,
+  "keys": [
+   "R:NL0",
+   "R:IJ1",
+   "R:C4",
+   "R:C4R",
+   "P:0",
+   "P:1",
+   "P:2",
+   "P:3",
+   "P:4",
+   "P:5",
+   "P:6",
+   "P:7",
+   "P:8",
+   "P:9",
+   "P:10",
+   "P:11",
+   "P:12",
+   "P:13"
+  ],
+  "hostPath": "parallel"
+ },
+ "job": {
+  "id": "research/tsla-d1-growth/C19-G-qualify-broad",
+  "name": "C19-G-qualify-broad",
+  "instance": "9776039d23917900",
+  "resumed": false,
+  "definitionSha256": "9a6709777e2ec1de3b5b7dd763ad0bd236880fe9a1d7858d8635f770cc004966",
+  "datasetCache": "job",
+  "cacheDir": "research/tsla-d1-growth/cache/jobs/C19-G-qualify-broad/dataset"
+ },
+ "checks": [
+  {
+   "name": "purpose",
+   "ok": true,
+   "detail": "official-optimization"
+  },
+  {
+   "name": "runtime",
+   "ok": true,
+   "detail": "Node v24.21.0, V8 13.6.233.17-node.53, Maglev disabled (--no-maglev)"
+  },
+  {
+   "name": "acceptance",
+   "ok": true,
+   "detail": "ACCEPTED (research/gpu-phase7, 2026-11-22T00:16:00.494Z)"
+  },
+  {
+   "name": "pins",
+   "ok": true,
+   "detail": "142 pinned files re-hashed independently"
+  },
+  {
+   "name": "source",
+   "ok": true,
+   "detail": "HEAD 77ad5dabf7d7, accepted revision 999f299e5069"
+  },
+  {
+   "name": "job",
+   "ok": true,
+   "detail": "research/tsla-d1-growth/C19-G-qualify-broad (new, instance 9776039d23917900, dataset cache its own)"
+  },
+  {
+   "name": "binary",
+   "ok": true,
+   "detail": "/home/chad/projects/margin-trading/research/gpu-phase7/build/gb7"
+  },
+  {
+   "name": "compat",
+   "ok": true,
+   "detail": "server and working tree d1a2e490788fa5fa"
+  },
+  {
+   "name": "device",
+   "ok": true,
+   "detail": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4 (= nvidia-smi)"
+  },
+  {
+   "name": "no-test-hooks",
+   "ok": true,
+   "detail": "none enabled"
+  },
+  {
+   "name": "accepted-device",
+   "ok": true,
+   "detail": "the accepted device"
+  },
+  {
+   "name": "capability",
+   "ok": true,
+   "detail": "35 reachable features, all implemented"
+  },
+  {
+   "name": "smoke",
+   "ok": true,
+   "detail": "1635.3944173366574/4842b073ba50f7fd = the CPU's expectation"
+  },
+  {
+   "name": "memory",
+   "ok": true,
+   "detail": "free VRAM 32332578816 ≥ planned batch 5448138752 + 1 GiB headroom"
+  },
+  {
+   "name": "host-path",
+   "ok": true,
+   "detail": "8 worker threads, door digest 6cb4141b47cfe3c5"
+  },
+  {
+   "name": "parity",
+   "ok": true,
+   "detail": "18 of 18 precommitted parity subjects identical to the canonical CPU engine"
+  }
+ ]
+}
