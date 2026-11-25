@@ -2,8 +2,8 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-25T23:02Z (clock, UTC). **Status: COMPLETE: the research, reports and verification are done;
-  the last step, the handoff ZIP commit, follows this commit.** Determination **NO QUALIFYING TSLA CANDIDATE**. The G
+- **Updated:** 2026-11-25T23:03Z (clock, UTC). **Status: COMPLETE.** Research, reports, verification and the handoff ZIP are done
+  and pushed. Determination **NO QUALIFYING TSLA CANDIDATE**. The G
   and C primaries are development-qualified without chronological support (disclosure D1). Nothing was adopted or
   deployed; MSFT was not started.
 - **Protocol:** `PROTOCOL.md` P6-TSLA 1.0.0 **FROZEN**, sha256 `d5d462dc906910df4c2372021a44966db633f27019d0d93f9d04758e6686b62e`.
@@ -34,14 +34,20 @@
   - `analyze.ts`, `tables-md.ts`, `arm-reports.ts`, `gpu-jobs.py` (exit 0: 82/82 jobs) and `search-report.py` ran.
   - `jobzstd.py final`: 82/82 archives OK, 184,765,423,616 → 12,332,527,957 bytes (`storage/TSLA_JOB_POST_VERIFY.json`
     `454b5bb6…`).
-- **Next (the last step):**
-  1. Push this commit and verify that `git ls-remote origin research/tsla-d1-growth` equals HEAD.
-  2. Run `tools/tsla-d1-growth/bundle.sh /tmp/claude-1000/-home-chad-projects-margin-trading/a32adcef-c925-42c8-b7f6-31e8962cdc7a/scratchpad/bundle $(git rev-parse HEAD)`
-     (from the repository root).
-  3. Copy `tsla-d1-growth-handoff.zip` to `research/tsla-d1-growth/bundle/`, with its sha256 in `bundle/SHA256.txt`.
-  4. Record the ZIP identity in this checkpoint; commit, push and verify.
+- **Handoff ZIP:** `research/tsla-d1-growth/bundle/tsla-d1-growth-handoff.zip`.
+  - sha256 `a29a51273f15019a49d8175ce1cfc55085886e38ae0f3abd4b2df00e7d0caa5a`; 4,180,819 bytes; 775 files.
+  - Built 2026-11-25T23:02:56Z from `447ac7ce` (remote-verified).
+  - `zip -T` OK; all checksums OK after extraction; the secrets scan is clean (`bundle/VERIFICATION.md`, `bundle/SHA256.txt`).
+  - It is committed in the commit after `447ac7ce` on `research/tsla-d1-growth`; verify with `git ls-remote`.
+- **Follow-up gate: the user's decisions only** (`DECISION_REGISTER.md` §U).
+  - U5: G and C are development-only; the recommendation is no action.
+  - U3: whether a new TSLA study with a precommitted bound on single-lot loss is wanted.
+  - U4: MSFT.
+  - U6: the `outcome.ts` join.
+  - U7: keep this study's archives.
+  - U1, U2.
 
-  If the scratch directory is gone, any scratch directory works: the script rebuilds everything from Git.
+  No further stage of this study is authorized or needed; do not rerun anything.
 - **Recovery performed:** 2026-11-25T22:36Z, after a context compaction during C24. Verified the chain log
   (`CHAIN COMPLETE`), the sealed records, the remote (it was `e13184c5` and was pushed to `460048bc`) and that no unit
   was active.
@@ -74,7 +80,7 @@
 | 7 diagnostics | **complete** 22:39–22:40Z | `reports/diagnostics/{buy-and-hold,tail-stress,lots,nbhd-small-wide}.json`, `nbhd-D24-receipts.jsonl` (FULL door entries 22:39:07Z, 22:39:16Z; nbhd on D24) |
 | 7 tables and reports | **complete** 23:02Z | `reports/tables/*` (analyze.ts, tables-md.ts, gpu-jobs.py, outcome-join.py), the arm reports, `SEARCH_AND_CONVERGENCE_REPORT.md`, `READ_FIRST.md`, `REPORT.md`, `COMPARISON.md`, `FINAL_CANDIDATES.md`, `CHRONOLOGICAL_VALIDATION.md`, `ROBUSTNESS_AND_RISK.md`, `GPU_PARITY_AND_ACCEPTANCE.md` §4, `DECISION_REGISTER.md` (D1, R4, R5, U3–U7) |
 | 7 job archives | **complete** 22:41:47Z | `storage/TSLA_JOB_POST_VERIFY.json` `454b5bb6…` (82/82 OK) |
-| 9 handoff ZIP | next | `tools/tsla-d1-growth/bundle.sh`; to be committed under `bundle/` |
+| 9 handoff ZIP | **complete** 23:03Z | `bundle/tsla-d1-growth-handoff.zip` `a29a5127…` (from `447ac7ce`); `bundle/VERIFICATION.md` |
 
 ## Constants
 
