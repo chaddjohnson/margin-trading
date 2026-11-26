@@ -2,24 +2,25 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-26T15:52Z (clock, UTC). **Status: INCOMPLETE** — pre-freeze engineering. Committed `10389e64`.
-  Gates **E1–E6 PASS** and the **pilot (E9) PASS** (all under code digest `4c2c3fd45d07dd14…`, 195 files); E7/E8
-  (`chains/tests.sh`, unit `gdx8-tests`, log `cache/logs/tests.log`) RUNNING; `STANDARD_ADOPTION.json` written
-  (protocol sha256 `27dcba9a…` at that time); preflight PASS.
-- **Brief:** `research/gdx-d1-growth/brief/BRIEF.md` sha256 `2325d8875280fc85ca08890f1148407083a2205e25c3a32302fb7aa14b739d3d`.
-- **Protocol:** `PROTOCOL.md` P8-GDX 1.0.0 — final draft (sha256 `27dcba9ae032bb4d…`); not yet frozen.
-- **Next steps (in order):** tests finish → `python3 -I tools/gdx-d1-growth/tests-record.py` → commit everything →
-  `npm run gdx8 -- gates` → commit → `npm run gdx8 -- freeze` → commit → launch the chain
-  `tools/gdx-d1-growth/launch.sh gdx8-chain $PWD/research/gdx-d1-growth/cache/logs/chain.log -- /bin/bash $PWD/research/gdx-d1-growth/chains/chain.sh`.
-- **Pilot:** 957 requested/s on D21; per broad lane D 14,130, G 10,498, J 13,333, S 11,960; refinement 30,735; every lane
-  "triggers not met"; planning ≈ 66 M requested before rounds/qualification, ≈ 19 GPU-hours.
-- **Gate results:** E1 VERIFIED + entrypoints clean; E2 doors = canonical, causal, no split, = N/original's GDX slot (D24,
-  FULL); E3 N/original/New L0 = sealed (D24, FULL), the ablation native = projected lot by lot (NORIG, NL0, VG2; D24, FULL),
-  4A Growth incumbents = 4A sealed dev figures to the cent; E4 0/1,198 differ on each of D19–D24 (251 configs, 72 cells);
-  E5 graceful / process-kill / server-kill resumes and CPU identical (0 diffs); E6 single-family, inert slot, causal,
-  accounting all 0. P6-TSLA's 163 seals verify on this branch (`results/engineering/tests/tsla-verify.txt`).
-- **Portfolio tool** `tools/gdx-d1-growth/portfolio.ts`: engineering test on D24 with the three references reconciled
-  (cache/portfolio-test; not a report).
+- **Updated:** 2026-11-26T16:05Z (clock, UTC). **Status: INCOMPLETE** — the official chain is RUNNING (C19 first).
+- **Protocol:** `PROTOCOL.md` P8-GDX 1.0.0 **FROZEN** 2026-11-26T16:03Z, sha256
+  `27dcba9ae032bb4db8919f1e3a8fdf4291296d2c8fb17b65833b99ff2c15ab65`; freeze record `results/protocol-freeze.json`
+  `bf59be1d49bdeed62333f3997c7a2a160648a9a04006a0cc8d3c8f927906e389` (commit `2bd8153d`); gates `results/engineering/gates.json`
+  `43b03b8b68452e02b761a29c2c54e93a5dd02861b5ff74690f7f4f8d8f6dfd77` (E1–E9 pass; commit `3d734a96`); adoption
+  `STANDARD_ADOPTION.json` `25640700…`; frozen code digest `4c2c3fd45d07dd143316d457954beb539c1fa90e896ef76683cc8ecb7f4cd178`.
+  Amendments: pre-freeze E1, E2 only.
+- **Running:** systemd user unit **`gdx8-chain`** (MainPID 2394239 at start; started 2026-11-26T16:03:27Z) running
+  `/bin/bash research/gdx-d1-growth/chains/chain.sh` (all cutoffs); log `research/gdx-d1-growth/cache/logs/chain.log`;
+  per-stage units `gdx8-<stage>` with logs `cache/logs/chain/<stage>.log`. The chain commits each sealed block itself.
+  First attestation `results/gpu-attestations/C19-D-broad-2026-11-26T16-03-35-711Z.json`: 16/16 checks pass.
+- **If the chain stopped:** read `chain.log` (the failing step), fix the cause (a code defect needs a sealed code
+  amendment `npm run gdx8 -- code-amendment --id A<n> --why …` committed with the fix), then relaunch the SAME command
+  (idempotent: sealed stages are skipped; an interrupted job resumes with `--resume`). Never edit `chain.sh` while it runs.
+- **While it runs:** no change to `src/gdx-d1-growth` closure files, PROTOCOL.md, AMENDMENTS.md, STANDARD_ADOPTION.json
+  (dirtyCode guard); git read-only with `GIT_OPTIONAL_LOCKS=0`; tools/ edits are allowed (not in the closure).
+- **Next after CHAIN COMPLETE:** portfolio stage (fetch Yahoo dividends VOOG/VGT/GDX 2016–2026, `npm run gdx8-port -- run`),
+  diagnostics (bh, tail, lots, nbhd), tables, reports, bundle, commit, push.
+- **Pilot:** 957 requested/s; planning ≈ 66 M requested before rounds/qualification (≈ 19 GPU-hours).
 
 ## Environment
 

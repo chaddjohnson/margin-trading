@@ -1,5 +1,5 @@
 #!/bin/bash
-# P8-GDX portable handoff ZIP (brief §9). Contents: the required documents at the top level (READ_FIRST.md first), every
+# P8-GDX portable handoff ZIP (brief Phase 7). Contents: the required documents at the top level (READ_FIRST.md first), every
 # committed file of research/gdx-d1-growth/ under study/ except the bulky per-lane search and qualification records and
 # the bundle itself (committed at the commit named in IDENTITY.txt; listed with size and sha256 in OMITTED_ARTIFACTS.md;
 # their compact per-lane summary is study/reports/tables/lanes.csv), the chain log, the study's code (source/: src/ and
@@ -13,7 +13,7 @@ S=$1; REMOTE_HEAD=$2
 NAME=gdx-d1-growth-handoff
 P=research/gdx-d1-growth
 BRANCH=$(git rev-parse --abbrev-ref HEAD); HEAD_SHA=$(git rev-parse HEAD)
-BASE=$(git rev-parse --verify dc023c3b^{commit})
+BASE=$(git rev-parse --verify 421e4c87^{commit})
 [ "$REMOTE_HEAD" = "$HEAD_SHA" ] || { echo "HEAD $HEAD_SHA is not the remote-verified commit $REMOTE_HEAD"; exit 1; }
 [ -z "$(git status --porcelain -- $P src/gdx-d1-growth tools/gdx-d1-growth package.json | grep -v '^?? '"$P"'/bundle/')" ] || { echo "uncommitted study changes"; git status --short -- $P src/gdx-d1-growth tools/gdx-d1-growth package.json | head; exit 1; }
 rm -rf "$S/$NAME" "$S/$NAME.zip" "$S/x"; mkdir -p "$S/$NAME"
@@ -21,10 +21,10 @@ B="$S/$NAME"
 
 # 1. the required documents at the top level
 for f in READ_FIRST.md REPORT.md DECISION_REGISTER.md PROTOCOL.md AMENDMENTS.md STANDARD_ADOPTION.json FROZEN_SELECTION.json \
-  GDX_DATA_AUDIT.md GDX_DATA_AUDIT.json FUNCTIONALITY_AUDIT.md STORAGE_PRESERVATION_REPORT.md \
+  GDX_DATA_AUDIT.md GDX_DATA_AUDIT.json FUNCTIONALITY_AUDIT.md BASELINES_AND_ABLATION.md TOTAL_PORTFOLIO_COMPARISON.md \
   STANDALONE_D1_REPORT.md STANDALONE_GROWTH_REPORT.md FIXED_COMBINATION_REPORT.md JOINT_REPORT.md SEQUENTIAL_REPORT.md \
   COMPARISON.md FINAL_CANDIDATES.md CHRONOLOGICAL_VALIDATION.md ROBUSTNESS_AND_RISK.md SEARCH_AND_CONVERGENCE_REPORT.md \
-  GPU_PARITY_AND_ACCEPTANCE.md RESEARCH_RECOVERY.md RUN_COMMANDS.md; do cp "$P/$f" "$B/$f"; done
+  OUTCOME_IDENTITY_RECONCILIATION.md GPU_PARITY_AND_ACCEPTANCE.md RESEARCH_RECOVERY.md RUN_COMMANDS.md; do cp "$P/$f" "$B/$f"; done
 cp $P/results/protocol-freeze.json "$B/PROTOCOL_FREEZE.json"
 
 # 2. the study directory (committed files), minus the bulky lane records and the bundle itself
@@ -39,8 +39,10 @@ git diff "$BASE" "$HEAD_SHA" -- src tools package.json > "$B/source/branch-code.
 # 4. unchanged inputs the study cites
 for f in config/gpu-backend/acceptance.json docs/research/OPTIMIZATION_STANDARD.md docs/research/optimization-standard.versions.json \
   docs/research/methods/NEW_L0_METHOD.md docs/gpu/PARITY_CHECKLIST.md docs/gpu/FEATURE_MATRIX.md CLAUDE.md docs/claude/context-recovery.md \
-  config/market-events/splits.json src/vg-l0-risk-envelope-pilot/search.ts src/vg-l0-full-joint/space.ts \
-  research/vg-l0-n-successor/PROTOCOL.md research/vg-l0-n-successor/READ_FIRST.md; do
+  config/market-events/splits.json config/market-events/distributions.csv config/market-events/distributions.manifest.json \
+  src/vg-l0-risk-envelope-pilot/search.ts src/vg-l0-full-joint/space.ts src/research-outcome/identityJoin.ts \
+  research/vg-l0-n-successor/PROTOCOL.md research/tsla-d1-growth/PROTOCOL.md research/tsla-d1-growth/READ_FIRST.md \
+  research/gdx-growth-standalone/FROZEN_SELECTION.json; do
   [ -f "$f" ] && { mkdir -p "$B/reference/$(dirname "$f")"; cp "$f" "$B/reference/$f"; }; done
 
 # 5. omitted artifacts (paths, sizes, sha256, restoration)
@@ -72,11 +74,10 @@ for f in config/gpu-backend/acceptance.json docs/research/OPTIMIZATION_STANDARD.
   echo
   echo "Current on-disk sizes: $(du -sb $P/cache/jobs 2>/dev/null | cut -f1) bytes under \`$P/cache/jobs\`."
   echo
-  echo "## 3. Priority 5's compressed job archives (Apollo only)"
+  echo "## 3. The total-portfolio daily series"
   echo
-  echo "29 archives under \`research/vg-l0-n-successor/cache/jobs/<job>/archive.sqlite.zst\`; inventory, actions and"
-  echo "post-verification in \`study/storage/\` (INVENTORY.json, ACTIONS.jsonl, POST_VERIFY.json); restore procedure in"
-  echo "\`STORAGE_PRESERVATION_REPORT.md\`."
+  echo "\`study/reports/portfolio/series/*.csv\` (one per scenario, primary leverage and variant) are in the ZIP; the other"
+  echo "leverage levels and variants are reproducible with \`npm run gdx8-port -- run\` (RUN_COMMANDS.md)."
   echo
   echo "## 4. Engineering, pilot, diagnostic and door caches (Apollo only; git-ignored)"
   echo
@@ -85,10 +86,10 @@ for f in config/gpu-backend/acceptance.json docs/research/OPTIMIZATION_STANDARD.
   echo
   echo "## 5. Market data (local, git-ignored; licensed)"
   echo
-  echo "\`data/GDX/\` (Alpaca SIP minute bars; \`GDX_DATA_AUDIT.json\` gives partition hashes, coverage and the download"
-  echo "procedure). The door files each stage read are identified by bytes, rows, sha256 and last row in"
+  echo "\`data/GDX/\`, \`data/VOOG/\`, \`data/VGT/\` (Alpaca SIP minute bars; \`GDX_DATA_AUDIT.json\` gives hashes and coverage; the"
+  echo "core files' hashes are in \`study/reports/portfolio/portfolio.json\`). The door files each stage read are identified by bytes, rows, sha256 and last row in"
   echo "\`study/data/DOOR_PINS.json\` and \`PROTOCOL_FREEZE.json\`. The independent Yahoo daily series used for the split check"
-  echo "and the pre-2016 tail stress is in \`$P/cache/independent/\` (not redistributed)."
+  echo "and the pre-2016 tail stress, and the distribution events, are in \`$P/cache/independent/\` (not redistributed)."
   echo
   echo "## 6. GPU binary and toolchain"
   echo
@@ -103,7 +104,7 @@ for f in config/gpu-backend/acceptance.json docs/research/OPTIMIZATION_STANDARD.
 
 # 6. identity
 {
-  echo "P8-GDX (Priority 6: GDX D1 + Growth comprehensive GPU research) — handoff identity"
+  echo "P8-GDX (Priority 8: GDX-only D1 + Growth and the matched total-portfolio comparison) — handoff identity"
   echo "branch: $BRANCH"
   echo "commit: $HEAD_SHA"
   echo "remote: origin $(git remote get-url origin | sed -E 's#https://[^@]*@#https://#')"
