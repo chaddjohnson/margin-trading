@@ -1,0 +1,104 @@
+{
+ "gate": "E2",
+ "what": "the GDX doors (D19, D21, D23, D24, FULL ≤ 2026-10-30): each byte prefix verified (size, sha256, last row) and loaded through the canonical session grouping (regular session and the closing-print proxy only) equals, session by session and bar by bar, the canonical PARTITION path (resolveDataset(\"GDX\", \"all\")); each shorter door is a prefix of the next (causal data access); no split applied (the central ledger lists none for GDX); both engine slots hold one GDX SymDoor; the GDX slot of N/original’s own VGT/GDX door equals the study’s GDX door bar by bar on D24 and FULL; no strategy is evaluated (FULL read for data integrity only, before the freeze)",
+ "rows": [
+  {
+   "door": "D19",
+   "sessions": 1006,
+   "pinnedSessions": 1006,
+   "splitsApplied": [],
+   "doorHash": "87f13c43f511a77100a1024d913585f4f71aedf1404b6fa0e54afb822664dcc2",
+   "partitionPathHash": "87f13c43f511a77100a1024d913585f4f71aedf1404b6fa0e54afb822664dcc2",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "D21",
+   "sessions": 1511,
+   "pinnedSessions": 1511,
+   "splitsApplied": [],
+   "doorHash": "9e0c7a853a83ab3a4c3bc1e1e469168f508360cf8fec48b5ff4cdb9531388359",
+   "partitionPathHash": "9e0c7a853a83ab3a4c3bc1e1e469168f508360cf8fec48b5ff4cdb9531388359",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "D23",
+   "sessions": 2012,
+   "pinnedSessions": 2012,
+   "splitsApplied": [],
+   "doorHash": "a674d087b6cbfa4a2b76bb491f9329a05227371cf8debacfaee6fb28308916d8",
+   "partitionPathHash": "a674d087b6cbfa4a2b76bb491f9329a05227371cf8debacfaee6fb28308916d8",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "D24",
+   "sessions": 2264,
+   "pinnedSessions": 2264,
+   "splitsApplied": [],
+   "doorHash": "967abe6ea5ba1a3b6aa885efaf8866dc3a41ceb0086decf7ae64eee305e26d96",
+   "partitionPathHash": "967abe6ea5ba1a3b6aa885efaf8866dc3a41ceb0086decf7ae64eee305e26d96",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "FULL",
+   "sessions": 2723,
+   "pinnedSessions": 2723,
+   "splitsApplied": [],
+   "doorHash": "01e961bfc31e428babe193fc1b625304325788865b73120a7a482a9414319579",
+   "partitionPathHash": "01e961bfc31e428babe193fc1b625304325788865b73120a7a482a9414319579",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  }
+ ],
+ "causal": [
+  {
+   "shorter": "D19",
+   "longer": "D21",
+   "sessions": 1006,
+   "prefixEqual": true
+  },
+  {
+   "shorter": "D21",
+   "longer": "D23",
+   "sessions": 1511,
+   "prefixEqual": true
+  },
+  {
+   "shorter": "D23",
+   "longer": "D24",
+   "sessions": 2012,
+   "prefixEqual": true
+  },
+  {
+   "shorter": "D24",
+   "longer": "FULL",
+   "sessions": 2264,
+   "prefixEqual": true
+  }
+ ],
+ "noSplit": true,
+ "sameAsNOriginalGdxSlot": [
+  {
+   "door": "D24",
+   "sessions": 2264,
+   "equal": true
+  },
+  {
+   "door": "FULL",
+   "sessions": 2723,
+   "equal": true
+  }
+ ],
+ "pass": true,
+ "finished": "2026-11-26T15:22:19.206Z",
+ "codeDigest": "4c2c3fd45d07dd143316d457954beb539c1fa90e896ef76683cc8ecb7f4cd178",
+ "tag": null
+}
