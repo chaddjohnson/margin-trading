@@ -2,14 +2,27 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-26T14:32Z (clock, UTC). **Status: INCOMPLETE — stage 5 (commits, push, clean-clone replay, ZIP).**
+- **Updated:** 2026-11-26T14:35Z (clock, UTC). **Status: COMPLETE.** TSLA REPORTING FIX COMPLETE — HISTORICAL RESEARCH
+  UNCHANGED — GDX STUDY NOT STARTED.
+- **Commits** on `fix/tsla-outcome-identity-join`:
+  - module `aca31b5fd595850050ca629ef3ac9208a84c9894`;
+  - fix `70f8bdf14712924fe02985515537b111e00a5edd` (pushed; `git ls-remote` equal at 14:32:47Z);
+  - handoff: the commit that contains this file (the ZIP and `bundle/FINAL_VERIFICATION.txt`). Verify it with
+    `git ls-remote origin fix/tsla-outcome-identity-join`.
+- **Deliverables:**
+  - `READ_FIRST.md`, `REPORT.md`, `SOURCE_DIFF.md`, `TEST_REPORT.md`, `OUTCOME_RECONCILIATION.md`,
+    `RESEARCH_RECOVERY.md`, `DECISION_REGISTER.md`;
+  - the replay output `replay/outcome.corrected.report-only.json` (`6b923ff2…`);
+  - the ZIP `bundle/tsla-outcome-identity-fix-handoff.zip` (sha256 in `bundle/FINAL_VERIFICATION.txt`).
+- **Follow-up gate (the user's):** `DECISION_REGISTER.md` §B. I1 is the main one: cherry-pick the module commit onto
+  `main` (do not merge the branch). The next research is the separately authorized GDX-only study.
 - **Task:** correct the post-seal outcome join defect of Priority 6 (`research/tsla-d1-growth/`, disclosure D1, decision
   U6) in `src/tsla-d1-growth/outcome.ts`; engineering and verification only. Brief: `BRIEF.md` (this directory), sha256
   `88b70d9ef6761f49ec7f94c9e6bf68611f6423757a7d70ffbcfbb268a2171a92` (111 lines, read in full).
 - **Not authorised and not started:** GDX, MSFT, any new TSLA search, genetic optimization, paper trading, broker
   activity, deployment, merge into `main`.
 - **Running:** nothing.
-- **Next command:** see the stage table (first incomplete row).
+- **Next command:** none. The task is complete; no further stage is authorized.
 
 ## Environment
 
@@ -66,7 +79,7 @@
 | 2 | Implement the identity join + patch `outcome.ts` | complete 14:15Z | `src/research-outcome/identityJoin.ts`; `src/tsla-d1-growth/outcome.ts` (`governedFinalists`, `candidateLabel`/`governanceLabel`, `outcomeOf` by (arm, id)) |
 | 3 | Focused tests green; report-only replay | complete 14:18Z | 37 new tests + study suite = 55 pass; replay `replay/outcome.corrected.report-only.json` sha256 `6b923ff2…`, 18/18 checks; rerun "unchanged" |
 | 4 | Regression: npm test, tsc, eslint, preflight, seals, acceptance, Strategy Lab | complete 14:19:43Z → 14:31:15Z (unit `tslafix-tests`, exited) | `chains/tests.sh` → `evidence/tests/*.txt`: focused 197/197; npm test 1,879 = 1,868 pass + **the 7 known** + 4 skipped; tsc 0; eslint 0 errors; 30/30 preflights; 163/163 seals; acceptance VERIFIED; fingerprint: only `outcome.ts` differs; replay rerun identical; portfolio parity ALL VERIFIED; SL typecheck/lint/Vitest 314/build/e2e 81 pass; SL state and dist unchanged |
-| 5 | Handoff docs, commit, push, ZIP, verify, final commit/push | not started | |
+| 5 | Commits, push, clean-clone replay, docs, ZIP, final commit/push | complete | module `aca31b5f`, fix `70f8bdf1` pushed and verified 14:32:47Z; clean-clone replay identical (`evidence/clean-clone-run.txt`); cherry-pick dry run clean (`evidence/cherry-pick-dry-run.txt`); ZIP built and verified twice (`bundle/FINAL_VERIFICATION.txt`); the handoff commit is pushed (verified with `git ls-remote`) |
 
 ## Guards
 
@@ -78,4 +91,9 @@
 
 ## Disclosures
 
-- (none yet)
+- **The TSLA code digest changes** (`fb7e6ddc…` → `de6d626a…`) because `outcome.ts` sits in the study's code closure.
+  The study's official stages now refuse (fail closed). No code amendment was sealed (`REPORT.md` §6).
+- **A clean clone has one pre-existing environmental test failure:** `study.test.ts:104` needs a read-only Assignment 3
+  seal, and a fresh clone checks files out 0664. With that file at 0444 it passes (`TEST_REPORT.md` §4).
+- **Strategy Lab e2e** passed 81/81 on the first attempt; no rerun was needed.
+- **Recovery:** none needed. The work ran in one session without compaction.
