@@ -2,16 +2,24 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-26T15:13Z (clock, UTC). **Status: INCOMPLETE** — Phase 0 done (helper integrated, not yet
-  committed with the study); Phase 1 data audit done; code adapted from P6-TSLA; protocol NOT yet written or frozen; no
-  official evaluation has run.
-- **Brief:** `research/gdx-d1-growth/brief/BRIEF.md` (the user's Priority 8 brief, 233 lines, read in full to its final
-  line "GDX STUDY COMPLETE — RESEARCH ONLY — NO STRATEGY ADOPTED OR DEPLOYED"), sha256
-  `2325d8875280fc85ca08890f1148407083a2205e25c3a32302fb7aa14b739d3d`.
-- **Protocol:** `PROTOCOL.md` — not written yet (next).
-- **Running:** nothing.
-- **Next step:** write PROTOCOL.md, AMENDMENTS.md, STANDARD_ADOPTION.json, FUNCTIONALITY_AUDIT.md; adapt engineering.ts
-  (E3 = the ablation + incumbents identity gate); commit code; run gates E1–E9 and the pilot; seal gates; freeze.
+- **Updated:** 2026-11-26T15:52Z (clock, UTC). **Status: INCOMPLETE** — pre-freeze engineering. Committed `10389e64`.
+  Gates **E1–E6 PASS** and the **pilot (E9) PASS** (all under code digest `4c2c3fd45d07dd14…`, 195 files); E7/E8
+  (`chains/tests.sh`, unit `gdx8-tests`, log `cache/logs/tests.log`) RUNNING; `STANDARD_ADOPTION.json` written
+  (protocol sha256 `27dcba9a…` at that time); preflight PASS.
+- **Brief:** `research/gdx-d1-growth/brief/BRIEF.md` sha256 `2325d8875280fc85ca08890f1148407083a2205e25c3a32302fb7aa14b739d3d`.
+- **Protocol:** `PROTOCOL.md` P8-GDX 1.0.0 — final draft (sha256 `27dcba9ae032bb4d…`); not yet frozen.
+- **Next steps (in order):** tests finish → `python3 -I tools/gdx-d1-growth/tests-record.py` → commit everything →
+  `npm run gdx8 -- gates` → commit → `npm run gdx8 -- freeze` → commit → launch the chain
+  `tools/gdx-d1-growth/launch.sh gdx8-chain $PWD/research/gdx-d1-growth/cache/logs/chain.log -- /bin/bash $PWD/research/gdx-d1-growth/chains/chain.sh`.
+- **Pilot:** 957 requested/s on D21; per broad lane D 14,130, G 10,498, J 13,333, S 11,960; refinement 30,735; every lane
+  "triggers not met"; planning ≈ 66 M requested before rounds/qualification, ≈ 19 GPU-hours.
+- **Gate results:** E1 VERIFIED + entrypoints clean; E2 doors = canonical, causal, no split, = N/original's GDX slot (D24,
+  FULL); E3 N/original/New L0 = sealed (D24, FULL), the ablation native = projected lot by lot (NORIG, NL0, VG2; D24, FULL),
+  4A Growth incumbents = 4A sealed dev figures to the cent; E4 0/1,198 differ on each of D19–D24 (251 configs, 72 cells);
+  E5 graceful / process-kill / server-kill resumes and CPU identical (0 diffs); E6 single-family, inert slot, causal,
+  accounting all 0. P6-TSLA's 163 seals verify on this branch (`results/engineering/tests/tsla-verify.txt`).
+- **Portfolio tool** `tools/gdx-d1-growth/portfolio.ts`: engineering test on D24 with the three references reconciled
+  (cache/portfolio-test; not a report).
 
 ## Environment
 

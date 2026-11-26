@@ -25,7 +25,7 @@ deviations = [
   ("AD11", "§3.1-§3.3, §4.4, §1.9", "GDX incumbents (N/original's, New L0's, VG #2's GDX D1 books; 4A's GDX Growth export set) are exact controls at every cutoff; a separately labelled incumbent-informed lane at C24 for arms D and G; informed populations D+, G+, C+ (incumbents are members, standard §3.2) with no independent chronological test.", "Brief Phase 3 item 3."),
   ("AD12", "§2.7, §4.7", "Combined arms require both GDX books funded (Q6); protected and unrestricted Growth structures protected by cells and reported as sub-populations.", "Brief Phase 3 items 1-2."),
   ("AD13", "§5.6", "GDX has no split in the window: the central split ledger applies (no GDX event; one there fails the doors closed); the price-only convention of every strategy is unchanged and its effect reported in the portfolio stage.", "Brief Phase 1.1."),
-  ("AD14", "brief Phase 5", "The matched total-portfolio comparison (PROTOCOL §15) is a precommitted report-only stage after the outcome, on frozen subjects; it never selects.", "Brief Phase 5, Phase 6 item 7."),
+  ("AD14", "§0.2 [R], §7.7", "The matched total-portfolio comparison (PROTOCOL §15) is a precommitted report-only stage after the outcome, on frozen subjects; it never selects.", "Brief Phase 5, Phase 6 item 7."),
 ]
 out = {
   "kind": "optimization-standard-adoption",

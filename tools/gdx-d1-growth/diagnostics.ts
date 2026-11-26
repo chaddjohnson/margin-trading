@@ -4,7 +4,7 @@
 //   bh        GDX buy-and-hold controls (financed at 11 % simple and unfinanced), $100,000 at the 2016-01-04 first regular
 //             minute's open + 5 bps, marked at every regular minute close: development, validation, full; exposure-normalized
 //   tail      the D1 maximum-hold-window tail stress (standard §5.9) for every finalist's D1 book: pre-2016 GDX daily
-//             (Yahoo, 2010-06-29 → 2015-12-31; disjoint) and in-sample 2016–2024 (D24 sessions); and the gap through a
+//             (Yahoo, 2006-05-22 → 2015-12-31; disjoint) and in-sample 2016–2024 (D24 sessions); and the gap through a
 //             protective stop
 //   lots      CPU detailed replays (the canonical engine, purpose diagnostic) of the C24 finalists, fold primaries and
 //             controls on FULL with the 2024-12-31 boundary: per-lot giveback (best mark − final net), durations, slot
@@ -81,14 +81,17 @@ export const subjects = (): Subject[] => {
 
   for (const cut of cuts) {
     const sel = readJ<{ primaries: Record<string, string | null>; roles: Record<string, { roles: Record<string, string | null> }>; subjects: Evidence[]; controls: Evidence[] }>(path.join(resultsDir, 'selection', `${cut}.json`));
-    const byLabel = new Map(sel.subjects.map((e) => [e.label, e]));
+    const byLabel = new Map([...sel.subjects, ...sel.controls].map((e) => [e.label, e]));
+    // the nominating populations: the five independent arms at every cutoff, the informed D+, G+, C+ at C24 only (their
+    // evidence and options are those of the arm whose records hold them)
+    const pops = [...(['D', 'G', 'C', 'J', 'S'] as const).map((a) => [a, a] as const), ...(cut === 'C24' ? (['D+', 'G+', 'C+'] as const).map((p) => [p, p[0] as ArmKey] as const) : [])];
 
-    for (const a of ['D', 'G', 'C', 'J', 'S'] as const) {
-      const l = sel.primaries[a];
+    for (const [p, a] of pops) {
+      const l = sel.primaries[p];
 
-      if (l) add(l, a, byLabel.get(l)!.cfg, `${cut} primary ${a}`);
+      if (l) add(l, a, byLabel.get(l)!.cfg, `${cut} primary ${p}`);
       if (cut === lastCut)
-        for (const [role, rl] of Object.entries(sel.roles[a]?.roles ?? {})) if (rl && role !== 'actual-profit') add(rl, a, byLabel.get(rl)!.cfg, `C24 role ${a}/${role}`);
+        for (const [role, rl] of Object.entries(sel.roles[p]?.roles ?? {})) if (rl && role !== 'actual-profit') add(rl, a, byLabel.get(rl)!.cfg, `C24 role ${p}/${role}`);
     }
     if (cut === lastCut) for (const c of sel.controls) add(c.label, c.arm, c.cfg, 'control');
   }
@@ -189,7 +192,7 @@ const tail = async () => {
   requireValidation();
 
   const y = readJ<{ chart: { result: { timestamp: number[]; indicators: { quote: { open: number[]; high: number[]; low: number[]; close: number[] }[] } }[] } }>(
-    path.join(researchDir, 'cache', 'independent', 'yahoo-GDX-daily-2010-2024.json')
+    path.join(researchDir, 'cache', 'independent', 'yahoo-GDX-daily-2006-2024.json')
   ).chart.result[0]!;
   const q = y.indicators.quote[0]!;
   const ny = (t: number) => new Date((t - 5 * 3600) * 1000).toISOString().slice(0, 10);
@@ -256,7 +259,7 @@ const tail = async () => {
   const record = {
     kind: `${tag}D1 maximum-hold-window tail stress (standard §5.9; report-only)`,
     basis: 'loss of a $100,000 lot bought at each daily close and marked at the daily lows of the next H calendar days (H = the book’s maximum hold; family C: a declared 60-day bound; D: the extended bound); for a book with a protective stop, the lot exits at the stop or — gapped through — at the open, and the worst excess of the gap fill below the stop is reported; no interest or costs; DAILY resolution (labelled)',
-    referenceHistory: 'pre-2016 GDX daily (Yahoo Finance, 2010-06-29 → 2015-12-31, split-adjusted; disjoint from every door) and, labelled in-sample stress, 2016-01-04 → 2024-12-31 (D24)',
+    referenceHistory: 'pre-2016 GDX daily (Yahoo Finance, 2006-05-22 → 2015-12-31, split-adjusted; disjoint from every door) and, labelled in-sample stress, 2016-01-04 → 2024-12-31 (D24)',
     rows,
     finished: now()
   };

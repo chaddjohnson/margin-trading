@@ -43,7 +43,7 @@ and machine-readable results only (standard §7.7).
 | AD11 | §3.1–§3.3, §4.4 | adaptation | **GDX incumbents exist** (§4): exact controls at every cutoff; an **incumbent-informed lane at C24** for arms D and G (§7.5), separately labelled and budgeted, never feeding an independent lane; the **informed populations D+, G+, C+** (C24 only) in which the qualifying incumbents are members (standard §3.2); every informed selection is labelled "no independent chronological test" (standard §1.8) |
 | AD12 | §2.7, §4.7 | adaptation | Real participation: arms C, J, S (and C+) require **both GDX books funded** at the centre (Q6); D and G their own book. Growth's protected and unrestricted exit structures are **protected by cells** (equal budgets) and analysed as report-only sub-populations |
 | AD13 | §5.6 | adaptation | GDX has no split in the window: the doors apply the **central** split ledger (sha256-pinned; no GDX event; a GDX event there fails the doors closed). The price-only convention of every strategy (no distribution credited to a trading lot) is unchanged; its effect is reported in the portfolio stage (§15) |
-| AD14 | brief Phase 5 | adaptation | **The matched total-portfolio comparison** (§15) is a precommitted, report-only stage after the outcome, on frozen subjects; it never selects, ranks, qualifies or stops anything |
+| AD14 | §0.2 [R], §7.7 | adaptation | **The matched total-portfolio comparison** (§15) is a precommitted, report-only stage after the outcome, on frozen subjects; it never selects, ranks, qualifies or stops anything |
 
 No [M] rule is changed: there is **no departure**.
 
@@ -252,9 +252,14 @@ study. Coverage-limited lanes are reported with their share.
   keeps **60 GiB** free after its archive. Each cutoff's completed job archives are preserved with zstd (verified,
   restorable; `storage/tools/jobzstd.py`) before the next cutoff. If the safeguard stops a stage, the study stops at that
   checkpoint, labels it **resource/operational**, reports what was not run and never selects from partial results.
-- **Expected effort** (planning only; the freeze's `expected`; `results/engineering/pilot.json`): measured by the pilot on
-  D21 and recorded in the freeze; P6-TSLA's executed 41.9 M requested scaled by 1.5 suggests ≈ 60–70 M requested and
-  ≈ 15–20 GPU-hours.
+- **Expected effort** (planning only, never a decision input; the freeze's `expected`; `results/engineering/pilot.json`):
+  the pilot (D21, BENCH seed keys: one broad lane per cell of every arm — D 8, G 6, J 48, S 6 on a hash-selected frozen
+  D1 — and 4 J refinement lanes; 1,010,731 requested, 995,292 fresh, 1,057 s: **957 requested/s**, 4,159 bytes per fresh
+  evaluation, cgroup peak 9.1 GB; every lane stopped on *triggers not met*) measured per broad lane D 14,130, G 10,498,
+  J 13,333 (S priced as J) and per refinement lane 30,735 requested. Per cutoff ≈ 8.6 M broad + 7.7 M refinement, plus
+  0.9 M informed at C24: **≈ 66 M requested before replicate rounds and qualification (≈ 650 per qualified member) —
+  ≈ 19 GPU-hours at the pilot's throughput** (official jobs run whole arms concurrently, so larger batches). The hard
+  ceiling (160 M) is a safeguard ≥ 2.4 × that estimate.
 
 ### 7.8 Stage map against NL0 1.0.0 (§4.8) and budget equivalence
 
