@@ -228,8 +228,11 @@ The command is `node --experimental-transform-types --max-old-space-size=6144 ap
 
 - **Fixed window.** Every candidate runs on the archived benchmark window only; there is no separate simulation-window
   control. The period buttons are viewports.
-- **Pinned data.** If the canonical VGT or GDX file changes, the FULL door refuses: the replay fails closed, with a
-  message, until the pins are deliberately updated.
+- **Pinned data.** The FULL door reads the canonical VGT and GDX files as their pinned byte prefixes through 2026-10-30
+  (from 2026-11-27, standard 4.0.0 §1.14): rows appended later are never read, so replays are unchanged after a data
+  update, while any change to a historical byte fails closed with a message. The window stays the fixed benchmark;
+  a pooled configuration on all available data or a custom window runs from the command line
+  (`npm run manual-eval`, README "Research date ranges and manual evaluation on newer data").
 - **Read-only presets.** There is no parameter editor and no custom derivative. Use New Test or Interactive Preview for
   custom single-strategy runs.
 - **No export bundle.** Replays have no research-bundle export.

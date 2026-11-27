@@ -19,7 +19,7 @@
   until `config/gpu-backend/acceptance.json` (schema 2) is ACCEPTED and matches the tree. Status: **ACCEPTED
   2026-11-22 by research/gpu-phase7/** on branch research/gpu-phase7-risk-envelope-readiness (full re-acceptance for the
   risk-envelope delivery through GpuPool/EvalLab; binary `cb2ff30b…`, RTX 5090 `GPU-ae5f222c…`, record sha256
-  `bb0e3fcf6bde45cc…`; `main` keeps research/gpu-phase6's record `3610caaf0bfc14ec…` until a reviewed merge; every Node process that evaluates — official
+  `bb0e3fcf6bde45cc…`; `main` keeps research/gpu-phase6's record `3610caaf0bfc14ec…` until a reviewed merge; on branch feature/research-date-boundaries (2026-11-27) the record is STALE because the evaluation loaders and the preflight changed — official runs there wait for a §2 re-acceptance; every Node process that evaluates — official
   runs, legacy CPU runners, Strategy Lab's server and runners, every npm script — starts as `node --no-maglev …` and
   refuses otherwise, docs/gpu/README.md §3a; every official run owns an isolated job, `src/gpu-jobs/jobs.ts` `openJob`,
   docs/gpu/README.md §4c); any change to a file of the evaluation manifest (CPU closure, CUDA, host path), of the pinned
@@ -65,6 +65,7 @@
 - A new study starts from `docs/research/STUDY_PROTOCOL_TEMPLATE.md`, records `research/<study>/STANDARD_ADOPTION.json` (version, sha256, read/adoption times, protocol hash, date split, objective/roles, risk denominator, budget, deviations) and must pass `npm run research-preflight -- --study research/<study>` before its first substantive stage; new runners call `requireStandardAdoption` (`src/research-standard/preflight.ts`) in code. The preflight checks the declaration and hashes, not understanding.
 - A frozen study keeps the standard version it pinned; adopting a newer version is an explicit amendment. Completed studies are never retrofitted.
 - The standard changes only when the user agrees a process change: a new version, a change-log entry (§8) and the new sha256 in the registry (`npm run research-preflight -- --hash`). Never edit it silently; the preflight then fails for every study.
+- Formal windows are explicit dates (standard 4.0.0 §1): `config/research/date-ranges.json` (R1: development 2016-01-04 → 2024-12-31, validation 2025-01-01 → 2026-10-30). Appending market data never extends them; a later range is a new entry with the user's explicit authorization. Data after the validation end are for manual evaluation only (`npm run manual-eval`, labelled "manual post-validation evaluation"), never selection, qualification or validation evidence. Canonical files grow by `npm run datasets -- append` only (byte-prefix proof, `config/market-data/vintages.json`); historical inputs are verified as byte prefixes, never by weakening a check.
 
 ## Project
 

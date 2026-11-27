@@ -76,6 +76,34 @@ example `set -a; . ./.env; set +a`); the dates are inclusive and the end default
 end date was fixed at 2026-10-13, which is why every canonical file ends on that date. `data/download.sh` runs the
 same script from `data/`.
 
+**Alpaca reads a date-only end as the end of that UTC day** (verified 2026-11-27). For a refresh through the latest
+completed session D, use end = D + 1 calendar day only when that day has no session (for example D = 2026-11-25 and
+end = 2026-11-26, Thanksgiving), because under standard time D's extended session runs to 01:00Z on D + 1; otherwise
+end = D (the 00:00–00:59Z bars of D + 1 then follow at the next refresh, still in order). Never let the end reach the
+current session: a request that reaches the last 15 minutes of SIP data is refused (HTTP 403), and a partly downloaded
+session would only be appended in part. A one-session overlap (start = the canonical file's last date) proves that the
+provider has not revised it: `append` refuses any overlapping row that differs. The refresh of 2026-11-27 (VGT, GDX
+through 2026-11-25) is recorded in `docs/data-updates/2026-11-27/`:
+
+```bash
+set -a; . ./.env; set +a
+OUTPUT_DIR=<an empty scratch directory> scripts/download.sh VGT 2026-10-30 2026-11-26
+cp <scratch>/VGT.csv data/VGT.csv
+npm run datasets -- append VGT --dry-run --keep-source   # proofs only
+npm run datasets -- append VGT                           # then the same for GDX
+npm run datasets -- verify VGT GDX                       # dataset-report.json back to "verified"
+npm run datasets -- vintages VGT GDX                     # every recorded earlier file is still a byte prefix
+npm run market-events -- verify                          # splits against the new overnight moves
+```
+
+**Appending never changes history or a research window.** `append` proves that the new file begins with exactly the
+previous file's bytes (the sha256 of that prefix equals the previous file's) and records both versions in
+`config/market-data/vintages.json` (versioned in git; the data are not). Every earlier file is therefore recoverable and
+verifiable as a byte prefix of today's file: `npm run datasets -- prefix VGT --bytes N --sha256 H` verifies a pin,
+`npm run datasets -- prefix VGT --through 2024-12-31` gives the pin of every row through a New York date, and
+`npm run datasets -- vintages` checks every recorded vintage. The formal research windows are explicit dates in
+`config/research/date-ranges.json` (below), not the files' end.
+
 `import` parses every row (`src/data-partition/scan.ts`), writes the data rows exactly to a temporary file beside the
 target (a header row, if any, is left out), checks its sha256 and renames it into place; the download is then removed
 unless `--keep-source`. Duplicate timestamps, rows out of order, malformed rows and rows outside the partitions fail
@@ -238,6 +266,39 @@ conventions of [Drawdown reporting](#drawdown-reporting) below (`src/multi-etf-a
 The frozen studies (`run`, `all`, `stress`, `parity`, `audit`, `audit-ledger`, `illustration`, `final-validation`)
 refuse `--dataset`. `--dataset training` reproduces the frozen engine on the archived files truncated at 2023-12-29
 exactly (every summary field and daily row).
+
+### Research date ranges and manual evaluation on newer data
+
+Formal research (optimization standard 4.0.0 §1) uses explicit dates, independent of how far the files reach:
+`config/research/date-ranges.json`, read by `src/lib/researchRanges.ts`. In force (R1): **development 2016-01-04 →
+2024-12-31, validation 2025-01-01 (first session 2025-01-02) → 2026-10-30.** Appending data never moves them.
+
+- **Enforced at data access.** A loader request with `access: 'development'` or `'validation'`
+  (`src/lib/evaluation.ts`) is refused before a byte is read when its end is after the stage's authorized end; unset,
+  its end is that end; only the bytes through it are read, and the data must cover it completely. A study's own doors
+  (byte-prefix copies or verified prefixes, `pin`) keep their own windows; the research preflight checks every adoption
+  manifest's windows against the range.
+- **Changing the range** is deliberate: add a new entry (never edit an existing one) citing the user's authorization
+  and make it `current`. Studies keep the range they pinned.
+- **Manual evaluation** may read any window of the files, newer data included, and is never formal evidence
+  (standard §1.13). For the sealed pooled VGT/GDX configurations (N/original, New L0, …):
+
+```bash
+GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window research   # 2016-01-04 → 2026-10-30 (Priority 3's FULL door)
+GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window all        # → the latest common complete session
+GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window custom --from 2025-01-02 --to 2026-11-25
+GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --list                                    # the subjects
+```
+
+  `all` ends at the latest session that **every** required file holds completely (a session appended only in part never
+  counts), so no symbol is simulated on stale prices; a later `--to` is refused. A window past the validation end is
+  reported as a *manual post-validation evaluation*, with the research window (A), the new period (B, attributed by the
+  change of marked net, positions spanning the boundary included) and the whole run (C) of one continuous run, the
+  run's trajectory checked equal to FULL through 2026-10-30, and `--out DIR` writing the period tables, the new
+  period's lot ledger, funding decisions and the books' end state. A custom window starts flat at its first session.
+  Single-symbol strategies keep their partitions: `npm run app -- <strategy> VGT all` (every row, newer data included),
+  `npm run app -- <strategy> VGT all 2025-01-02 2026-11-25` (a custom window of the whole file); Strategy Lab's Run Test
+  offers the same through its dates and the All preset.
 
 ### Holdout safeguards
 

@@ -132,7 +132,7 @@ export const runDatasetsCli = async (args: string[], dataDir = 'data') => {
   const failed = reports.filter((report) => report.status === 'failed').map((report) => report.symbol);
 
   console.info(
-    `\n${reports.length - failed.length} of ${reports.length} symbol(s) ${options.dryRun ? 'checked (dry run, nothing written)' : command === 'verify' ? 'verified' : `${command}d`}${failed.length ? `; FAILED: ${failed.join(', ')}` : ''}`
+    `\n${reports.length - failed.length} of ${reports.length} symbol(s) ${options.dryRun ? 'checked (dry run, nothing written)' : command === 'verify' ? 'verified' : command === 'append' ? 'appended' : command === 'import' ? 'imported' : `${command}d`}${failed.length ? `; FAILED: ${failed.join(', ')}` : ''}`
   );
 
   if (!options.dryRun && reports.length > 0) {

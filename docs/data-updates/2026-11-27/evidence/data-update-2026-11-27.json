@@ -1,0 +1,183 @@
+{
+ "kind": "canonical data update (facts only; no prices)",
+ "brief": "docs/data-updates/2026-11-27/BRIEF.md §8",
+ "download": {
+  "script": "scripts/download.sh",
+  "scriptSha256": "1af992d33137669a8365ae8fe3c58135723ebc94c0a9ead0f8032da428061032",
+  "source": "Alpaca v2 stock bars, timeframe 1Min, feed sip, adjustment raw, limit 10000",
+  "start": "2026-10-30",
+  "end": "2026-11-26",
+  "endSemantics": "a date-only end is read by Alpaca as the END of that UTC day (verified 2026-11-27: end=2026-11-26 returns bars through 2026-11-26T00:59Z, identical to end=2026-11-26T23:59:59Z; end=2026-11-27 is refused with HTTP 403 because it reaches the last 15 minutes of SIP data); 2026-11-26 00:00–00:59Z are the 19:00–19:59 ET extended bars of 2026-11-25 (EST)",
+  "at": "2026-11-27T14:56:4xZ",
+  "files": {
+   "VGT": {
+    "rows": 10862,
+    "sha256": "05b7df2bf87a431abefdb3db0d626ab48492038afa11dd792966a404eaf37807",
+    "firstRowUtc": "2026-10-30T08:00:00Z",
+    "lastRowUtc": "2026-11-26T00:59:00Z"
+   },
+   "GDX": {
+    "rows": 14080,
+    "sha256": "abebc1551758b191b0b1b5ba759872f654047928420893101e6f826e72747e07",
+    "firstRowUtc": "2026-10-30T08:00:00Z",
+    "lastRowUtc": "2026-11-26T00:58:00Z"
+   }
+  }
+ },
+ "append": {
+  "at": "2026-11-27T14:58:05.474Z",
+  "symbols": {
+   "VGT": {
+    "status": "appended",
+    "proof": [
+     "649 overlapping rows identical to data/VGT/data.csv; 10213 new rows",
+     "the first 53395054 bytes of the new file hash to the previous file's sha256 2ee06310f2fa8926… (every earlier byte unchanged)",
+     "final 125082 → 135295 rows, last date 2026-10-30 → 2026-11-25; training and holdout unchanged"
+    ],
+    "after": {
+     "bytes": 53976698,
+     "rows": 945821,
+     "sha256": "dfde0f77a7782579ca27f51e81420860e3ae374493577f99a8ba16ca750a9114",
+     "firstTimestamp": "2016-01-04T13:00:00Z",
+     "lastTimestamp": "2026-11-26T00:59:00Z"
+    },
+    "partitions": {
+     "training": {
+      "rows": 663135,
+      "firstDate": "2016-01-04",
+      "lastDate": "2023-12-29",
+      "sha256": "920f3a20299b3241759fcc70b15045f4634ff3b7d423125c8abe87edbb5a812c"
+     },
+     "holdout": {
+      "rows": 147391,
+      "firstDate": "2024-01-02",
+      "lastDate": "2025-10-16",
+      "sha256": "20f7bb913d1e869e5abf2a6f21c3f44aaed6d96208fdb852a90ad8bdf2fb1f49"
+     },
+     "final": {
+      "rows": 135295,
+      "firstDate": "2025-10-17",
+      "lastDate": "2026-11-25",
+      "sha256": "811bd78643c6a479ea5f3a319e360afe07f9121344669f71653167df36679e0b"
+     }
+    },
+    "vintages": {
+     "previous": {
+      "bytes": 53395054,
+      "rows": 935608,
+      "sha256": "2ee06310f2fa8926220fd9629c093ba77fe5d35fd2515da7f7c54caa50b5412e",
+      "lastRowUtc": "2026-10-30T23:59:00Z",
+      "latestCompleteSession": "2026-10-30",
+      "recorded": "the file before the append of 2026-11-27T14:57:52.680Z (verified as its byte prefix)"
+     },
+     "current": {
+      "bytes": 53976698,
+      "rows": 945821,
+      "sha256": "dfde0f77a7782579ca27f51e81420860e3ae374493577f99a8ba16ca750a9114",
+      "lastRowUtc": "2026-11-26T00:59:00Z",
+      "latestCompleteSession": "2026-11-25",
+      "recorded": "`datasets append` 2026-11-27T14:57:52.680Z"
+     },
+     "registry": "/home/chad/projects/margin-trading/config/market-data/vintages.json"
+    },
+    "anomalies": [
+     "bars after 1:00 p.m. on 13 early-close days"
+    ],
+    "errors": []
+   },
+   "GDX": {
+    "status": "appended",
+    "proof": [
+     "741 overlapping rows identical to data/GDX/data.csv; 13339 new rows",
+     "the first 80036100 bytes of the new file hash to the previous file's sha256 77dba9b21c4b6849… (every earlier byte unchanged)",
+     "final 178159 → 191498 rows, last date 2026-10-30 → 2026-11-25; training and holdout unchanged"
+    ],
+    "after": {
+     "bytes": 80741665,
+     "rows": 1503833,
+     "sha256": "aa23522d9d2408dc805c329a6fce2401f5bc5609f2ef663985eef9308ba41f2c",
+     "firstTimestamp": "2016-01-04T11:15:00Z",
+     "lastTimestamp": "2026-11-26T00:58:00Z"
+    },
+    "partitions": {
+     "training": {
+      "rows": 1047761,
+      "firstDate": "2016-01-04",
+      "lastDate": "2023-12-29",
+      "sha256": "a9ea93aaace8f2a7cc29988c366b8ea1c7888bee5e2072a0703ec4a16a71b002"
+     },
+     "holdout": {
+      "rows": 264574,
+      "firstDate": "2024-01-02",
+      "lastDate": "2025-10-16",
+      "sha256": "6ac858c07bf084ace2a51b8c897e2a4073c2dfdb59feb424b04f3002fd6b060c"
+     },
+     "final": {
+      "rows": 191498,
+      "firstDate": "2025-10-17",
+      "lastDate": "2026-11-25",
+      "sha256": "50b08424b693f7cd1177a9d307f2bade977983cf892cf94aedc600586e29b4f3"
+     }
+    },
+    "vintages": {
+     "previous": {
+      "bytes": 80036100,
+      "rows": 1490494,
+      "sha256": "77dba9b21c4b684996283e7b8f17917696139f890441b1ca900d664b59ea5049",
+      "lastRowUtc": "2026-10-30T23:59:00Z",
+      "latestCompleteSession": "2026-10-30",
+      "recorded": "the file before the append of 2026-11-27T14:58:05.472Z (verified as its byte prefix)"
+     },
+     "current": {
+      "bytes": 80741665,
+      "rows": 1503833,
+      "sha256": "aa23522d9d2408dc805c329a6fce2401f5bc5609f2ef663985eef9308ba41f2c",
+      "lastRowUtc": "2026-11-26T00:58:00Z",
+      "latestCompleteSession": "2026-11-25",
+      "recorded": "`datasets append` 2026-11-27T14:58:05.472Z"
+     },
+     "registry": "/home/chad/projects/margin-trading/config/market-data/vintages.json"
+    },
+    "anomalies": [
+     "bars after 1:00 p.m. on 21 early-close days"
+    ],
+    "errors": []
+   }
+  }
+ },
+ "verify": {
+  "at": "2026-11-27T14:58:25.330Z",
+  "symbols": {
+   "VGT": {
+    "status": "verified",
+    "expectedSessions": 2741,
+    "sessionsWithRegularBars": 2741,
+    "missingSessions": [],
+    "sessionsOnClosedDays": [],
+    "duplicates": 0,
+    "outOfOrder": 0,
+    "malformed": 0,
+    "inconsistentPrices": 0,
+    "unalignedSeconds": 0,
+    "sessionsBelow50pctCoverage": 0,
+    "earlyCloseLateBarDays": 13,
+    "lastDate": "2026-11-25"
+   },
+   "GDX": {
+    "status": "verified",
+    "expectedSessions": 2741,
+    "sessionsWithRegularBars": 2741,
+    "missingSessions": [],
+    "sessionsOnClosedDays": [],
+    "duplicates": 0,
+    "outOfOrder": 0,
+    "malformed": 0,
+    "inconsistentPrices": 0,
+    "unalignedSeconds": 0,
+    "sessionsBelow50pctCoverage": 0,
+    "earlyCloseLateBarDays": 21,
+    "lastDate": "2026-11-25"
+   }
+  }
+ }
+}

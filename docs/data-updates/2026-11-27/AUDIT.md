@@ -19,10 +19,15 @@ starts there). Every figure was read from the files named; hashes were recompute
   2026-10-29, Study 8's pins); Study 9's refresh on 2026-11-02 (`npm run datasets -- append`, one session, 2026-10-30;
   increments and run records in `data/vintages/study9-refresh-2026-11-02/`). Each step was a pure append: Study 9 verified
   that every prior-length prefix hashes to the prior file.
-- Alpaca reads a date-only `end` as 00:00Z of that date (Study 9's `DATA_MANIFEST.md`). In EST, 2026-11-25's extended
-  session ends at 01:00Z on 2026-11-26, so a download through that session needs `end = 2026-11-27`. Thanksgiving
-  (2026-11-26) has no bars, and 2026-11-27's pre-market starts at 09:00Z. 2026-11-26 is a holiday and 2026-11-27 an early
-  close in `src/lib/calendar.ts`, whose coverage ends 2026-12-31.
+- Alpaca's reading of a date-only `end`: Study 9's `DATA_MANIFEST.md` says 00:00Z of that date. **Corrected during the
+  update (2026-11-27T14:55Z, verified against the API):** Alpaca reads a date-only `end` as the **end** of that UTC day.
+  - `end=2026-11-26` returns bars through 2026-11-26T00:59Z (the 19:00–19:59 ET extended bars of 2026-11-25, under EST),
+    identical to `end=2026-11-26T23:59:59Z`.
+  - `end=2026-11-27` was refused (HTTP 403) because it reaches the last 15 minutes of SIP data.
+  - Study 9's statement could not be told apart there, because 2026-10-31 had no bars.
+  - The download through 2026-11-25 therefore used `end = 2026-11-26` (inclusive, as `scripts/download.sh` documents).
+    Thanksgiving (2026-11-26) has no bars.
+  - 2026-11-26 is a holiday and 2026-11-27 an early close in `src/lib/calendar.ts`, whose coverage ends 2026-12-31.
 
 ## 2. Existing optimization and validation date ranges
 
