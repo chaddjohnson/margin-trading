@@ -2,9 +2,9 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-27T07:32Z (clock, UTC). **Status: COMPLETE (research) — the final commit, the push and the handoff
-  ZIP follow** (the steps and their verification are recorded in "Delivery" below once done). Nothing is running. **Never
-  rerun any official stage** (every one is sealed; `results/seals.jsonl`, 156 entries re-verified 07:09Z).
+- **Updated:** 2026-11-27T07:36Z (clock, UTC). **Status: COMPLETE.** Research, reports, commit, push and the verified
+  handoff ZIP are done ("Delivery" below). Nothing is running. **Never rerun any official stage** (every one is sealed;
+  `results/seals.jsonl`, 156 entries re-verified 07:09Z).
 - **OUTCOME (sealed, commit `4615a33b`): NO QUALIFYING GDX CANDIDATE.** Candidates 0; development-only 2 (G
   `f13f3e1d64379748` `C24/G/refine/G.h1.s1/R105#1 profit`; C `rc1-5beecb91ea91c775` `C24/C/pair DF2×GF1`); informed
   development-only 0. All five independent sequential procedures unsupported (D $26,912 / $48,177; G −$36,677 / $62,458;
@@ -34,10 +34,15 @@
   `bf59be1d49bdeed62333f3997c7a2a160648a9a04006a0cc8d3c8f927906e389` (`2bd8153d`); gates `results/engineering/gates.json`
   `43b03b8b…` (E1–E9 pass); frozen code digest `4c2c3fd45d07dd143316d457954beb539c1fa90e896ef76683cc8ecb7f4cd178`.
   Amendments: pre-freeze E1, E2 only (no post-freeze amendment).
-- **Next (single step):** commit the study's files and tools (stage only `research/gdx-d1-growth/` and `tools/gdx-d1-growth/`),
-  push `research/gdx-d1-growth` (unsandboxed), verify `git ls-remote origin research/gdx-d1-growth` = HEAD, then
-  `tools/gdx-d1-growth/bundle.sh <scratch> <HEAD>`, copy the ZIP to `research/gdx-d1-growth/bundle/` and
-  `~/.local/share/margin-trading-gpu/handoffs/`, commit, push, verify.
+- **Delivery:**
+  - Reports and tools commit `c1e6ba14841a2e60c6e55e82f3ef5c8dacf3b3c9`, pushed to `origin research/gdx-d1-growth`.
+    `git ls-remote` equalled it at 07:33Z (new remote branch).
+  - Handoff ZIP built from `c1e6ba14` at 07:34:30Z: `bundle/gdx-d1-growth-handoff.zip`, sha256
+    `ad17b93e76c2653a8095d509e0557d4bd7c95b5a41f84d74b9ca13b490c4bd6b`, 7,575,388 bytes, 790 files. `zip -T` OK;
+    `sha256sum -c` passed on all files after extraction; secrets / personal-data scan clean (`bundle/VERIFICATION.md`).
+  - Stable copy `~/.local/share/margin-trading-gpu/handoffs/gdx-d1-growth-handoff.zip` (+ `.sha256`), re-verified.
+  - The bundle commit follows `c1e6ba14`; its push verification is recorded by the next checkpoint commit.
+  - `main` is untouched (`3606f4b3`). No merge, no deployment, no broker access.
 - **Follow-up gate (needs the user):** DECISION_REGISTER §U (no adoption; optional new prospective study; merge review;
   archive retention). The MSFT study is not started.
 
