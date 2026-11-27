@@ -1,10 +1,10 @@
 // The lint gate of `npm run app` (its `preapp` script): ESLint over exactly the source files the app command can execute —
 // the static import closure of src/app.ts, of every script it can load (src/app/<script>.ts, imported dynamically by name)
 // and of the phenotype CLI — with the repository's own ESLint configuration (eslint.config.js). Repository-wide linting
-// stays available as `npm run lint`; this gate only scopes the pre-run check to the code being run, so frozen research
+// stays available as `npx eslint`; this gate only scopes the pre-run check to the code being run, so frozen research
 // code the app never loads (whose sealed records pin its bytes, e.g. Study 7's search) cannot block the command.
 //
-//   node --experimental-transform-types --disable-warning=ExperimentalWarning tools/lint/app-closure.ts [--list]
+//   node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/lint/app-closure.ts [--list]
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, normalize, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
