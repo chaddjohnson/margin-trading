@@ -5,6 +5,7 @@ import {
   derivedDir,
   developmentEnd,
   holdoutEnd,
+  originalFile,
   repoDefaultFile,
   researchStart,
   resultsDir,
@@ -199,7 +200,7 @@ export const runPhase0 = async () => {
   // runs it), and the engine's extended files for the warm-start development and research windows.
   for (const [label, modulePath] of [
     ['B0', variant.file],
-    ['B0c', 'src/app/allin-original.ts']
+    ['B0c', originalFile]
   ] as const) {
     await runOriginalModule(
       modulePath,
