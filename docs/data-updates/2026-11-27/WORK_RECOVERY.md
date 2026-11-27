@@ -92,3 +92,12 @@ Contained unit `rdb-npm-test-final` (2026-11-27T15:24:33Z → ~15:31Z, after the
   policy "MERGE GATE"; preflight "every study … passes the preflight", with 5 official GPU studies BLOCKED.
 - The earlier run (`rdb-npm-test`, 15:12Z) had an 11th failure, the Study 7 end-validation assumption, fixed in
   `src/study7-runners/tests/runners.test.ts`.
+
+## Delivery
+
+- Commits on `feature/research-date-boundaries` (from `03f3500c`): `7a41ff0b` (implementation and tests, before the data
+  update), `1bb425cc` (data update, N/original, report, docs, fixes), and this checkpoint record.
+- Pushed with `git push -u origin feature/research-date-boundaries` (a new remote branch, no force), outside the sandbox,
+  first attempt. Verified 2026-11-27T15:30:00Z: `git ls-remote origin feature/research-date-boundaries` = `1bb425cc…`
+  = local HEAD. The checkpoint commit is pushed the same way.
+- No merge into `main`, no PR, no deployment. `main` and other branches are untouched.
