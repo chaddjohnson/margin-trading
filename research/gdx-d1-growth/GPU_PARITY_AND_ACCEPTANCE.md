@@ -47,4 +47,22 @@ of the study.
 
 ## 4. Totals over every official job
 
-(Filled at the end of the study from `tools/gdx-d1-growth/gpu-jobs.py` → `reports/tables/gpu-jobs.json`.)
+From `tools/gdx-d1-growth/gpu-jobs.py` → `reports/tables/gpu-jobs.json` (per-job table: `reports/tables/GPU_JOBS.md`):
+
+| Item | Value |
+|---|---|
+| Official jobs | **81**, all complete: 77 search, replicate-round, refinement, informed and qualification jobs, 3 fold slices and 1 validation (SEARCH_AND_CONVERGENCE_REPORT.md §C) |
+| Attestations | 81 (one per job): **1,296 checks, 0 failed**. Every job was attested; Maglev was disabled in every attested process |
+| Live parity mini-sets (each job's own GDX door) | **1,458 / 1,458 configurations identical** |
+| Evaluations | **76,965,697 submitted, 76,965,697 GPU-returned**, 0 failed, **0 CPU-scored**, 0 capacity retries; 13,245 receipted batches, all official |
+| Requested by the search lanes (archive hits included) | 72,769,496: 45.5 % of the 160 M hard ceiling. The ledger stood at 81,752,965 with qualification when the validation launched |
+| Device, binary, acceptance | `GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4` only; `cb2ff30b9cb720c0…` only; `bb0e3fcf6bde45cc…` only |
+| GPU time | kernel 36,623 s (10.2 h); job wall 51,336 s (14.3 h); search lanes 12.4 h of wall time |
+| VRAM | free device memory at each job's gate 30.07–30.12 GiB; the largest planned working set 5.18 GiB (the validation job). No job ran out of VRAM or needed a capacity retry |
+| Host memory | the largest cgroup peak of any chain unit was 22.8 GB, under the 44 G / 48 G limits (MemoryHigh / MemoryMax) of `gdx8.slice`; no swap |
+| Chain wall time | C19 2 h 50 m, C21 3 h 31 m, C23 4 h 16 m, C24 4 h 29 m (with the informed lanes, the frozen selection, the validation and the outcome) |
+
+**Non-official evaluations after the outcome** (purpose `diagnostic`; never official evidence), all labelled report-only:
+- the portfolio stage's CPU reference replays: every overlay equalled its sealed GPU figures to the cent;
+- the buy-and-hold control, the tail stress and the lot replays (CPU);
+- the small and wide neighbourhood families (non-official GPU, `reports/diagnostics/nbhd-D24-receipts.jsonl`).

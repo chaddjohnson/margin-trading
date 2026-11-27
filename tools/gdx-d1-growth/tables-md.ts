@@ -91,12 +91,12 @@ if (fin) {
   out.push('## C24 finalists and external controls — development (2016–2024), validation (2025-01-02 → 2026-10-30) and full history', '');
   out.push(
     table(
-      ['Kind / arm', 'Label', 'Roles', 'Q', 'Dev net', 'Dev gross', 'Interest', 'Costs', 'Dev DD (% of $100k)', 'Lots (W/L)', 'Conf. p10 / p90 DD', 'Val. net', 'Val. reset DD', 'Full net', 'Full DD', 'V1–V3'],
+      ['Kind / population', 'Label', 'Roles', 'Q', 'Dev net', 'Dev gross', 'Interest', 'Costs', 'Dev DD (% of $100k)', 'Lots (W/L)', 'Conf. p10 / p90 DD', 'Val. net', 'Val. reset DD', 'Full net', 'Full DD', 'V1–V3'],
       fin.rows.map((r) => {
         const v = r.validationTests as Row | null;
 
         return [
-          `${String(r.kind)} ${String(r.arm)}`,
+          `${String(r.kind)} ${String(r.population ?? r.arm)}${r.informed ? ' (informed)' : ''}`,
           `\`${String(r.label)}\``,
           String(r.roles),
           r.qualified ? 'pass' : `fails ${String(r.failed)}`,
@@ -122,7 +122,7 @@ if (fin) {
     table(
       ['Arm', 'Label', 'Marked DD', 'Principal loss marked / liq.', 'Banked DD marked / liq.', 'Worst lot MAE', 'Worst realized lot', 'Occupancy', 'Open-lot share', 'Top episode share', 'D1 / Growth booked'],
       fin.rows.map((r) => [
-        String(r.arm),
+        String(r.population ?? r.arm),
         `\`${String(r.label)}\``,
         money(r.centreDd),
         `${money(r.principalLossMarked)} / ${money(r.principalLossLiquidation)}`,
@@ -145,7 +145,7 @@ if (fin) {
         const s = (r.stress as Record<string, { net: number; dd: number }>) ?? {};
 
         return [
-          String(r.arm),
+          String(r.population ?? r.arm),
           `\`${String(r.label)}\``,
           money(r.confirmMedian),
           money(r.confirmP95Dd),

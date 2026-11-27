@@ -44,6 +44,7 @@ import { type ArmKey, STUDY_ID, armOptions, chronology, repoRoot, researchDir, r
 import { openGdxDoor } from '../../src/gdx-d1-growth/doors.ts';
 import { d1Incumbent } from '../../src/gdx-d1-growth/controls.ts';
 import { type Cfg, canonicalCfg, cfgId, quadOf } from '../../src/gdx-d1-growth/space.ts';
+import { ensureAllFrozen } from '../../src/gdx-d1-growth/stages.ts';
 import { purposeOf, writeJson } from './common.ts';
 
 const args = process.argv.slice(2);
@@ -110,8 +111,17 @@ const yahooDividends = (s: string) => {
 
   const y = readJ<{ chart: { result: { events?: { dividends?: Record<string, { date: number; amount: number }> } }[] } }>(f);
 
+  // Yahoo's chart API states every historical amount per CURRENT share (adjusted for every later split: VOOG 6:1, VGT 8:1
+  // on 2026-04-21). The ledger and the accounting use the raw amount per share held on the ex-date, so the Yahoo amount is
+  // converted back by the splits effective after the ex-date (report-only correction found at the stage, DECISION_REGISTER R)
+  const splits = readSplits();
+
   return Object.values(y.chart.result[0]!.events?.dividends ?? {})
-    .map((d) => ({ exDate: new Date((d.date - 5 * 3600) * 1000).toISOString().slice(0, 10), amount: d.amount }))
+    .map((d) => {
+      const exDate = new Date((d.date - 5 * 3600) * 1000).toISOString().slice(0, 10);
+
+      return { exDate, amount: d.amount * splitFactor(splits, s, exDate, '9999-12-31'), yahooAdjusted: d.amount };
+    })
     .sort((a, b) => (a.exDate < b.exDate ? -1 : 1));
 };
 
@@ -142,13 +152,13 @@ const loadDistributions = () => {
     // PROTOCOL §15.3: an "estimated" ledger amount is replaced by an independently observed amount (same quarter, ±10 days)
     if (o.amount_method === 'estimated') {
       if (near) {
-        replaced.push({ etf: o.etf, ex: o.ex_date, ledgerEstimate: rawAmount, independent: near.amount, independentExDate: near.exDate });
+        replaced.push({ etf: o.etf, ex: o.ex_date, ledgerEstimate: rawAmount, independent: near.amount, independentYahooAdjusted: near.yahooAdjusted, independentExDate: near.exDate });
         rawAmount = near.amount;
         method = 'independent (Yahoo event; replaces the ledger estimate)';
         source = `Yahoo Finance chart API dividend event ${near.exDate}`;
       } else replaced.push({ etf: o.etf, ex: o.ex_date, ledgerEstimate: rawAmount, independent: null, note: 'unverified: kept and bounded (zero variant)' });
     }
-    checks.push({ etf: o.etf, ex: o.ex_date, ledger: Number(o.amount), method: o.amount_method, independent: near?.amount ?? null, independentExDate: near?.exDate ?? null, relDiff: near ? r4(Number(o.amount) / near.amount - 1) : null });
+    checks.push({ etf: o.etf, ex: o.ex_date, ledger: Number(o.amount), method: o.amount_method, independent: near?.amount ?? null, independentYahooAdjusted: near?.yahooAdjusted ?? null, independentExDate: near?.exDate ?? null, relDiff: near ? r4(Number(o.amount) / near.amount - 1) : null });
     out.push({ etf: o.etf, ex: o.ex_date!, pay: o.pay_date!, amount: rawAmount * splitFactor(splits, o.etf, chronology.firstSession, o.ex_date!), rawAmount, method, source });
   }
   return { dists: out, checks, replaced };
@@ -624,6 +634,8 @@ const cfgOfSubject = (s: Subject): Cfg => {
 
 const run = async () => {
   purposeOf(TEST ? ['parity-test'] : ['diagnostic']);
+  // arm S cells name a sealed frozen D1 finalist (S.C24F1…): register every cutoff's before any S configuration is read
+  if (!TEST) ensureAllFrozen();
 
   const validation = path.join(resultsDir, 'validation', 'validation.json');
   const outcome = path.join(resultsDir, 'outcome.json');

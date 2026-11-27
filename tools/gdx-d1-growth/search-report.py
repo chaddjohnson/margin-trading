@@ -13,7 +13,7 @@ STUDY = os.path.join(REPO, 'research', 'gdx-d1-growth')
 T = os.path.join(STUDY, 'reports', 'tables')
 NARR = os.path.join(STUDY, 'reports', 'narrative', 'SEARCH.md')
 OUT = os.path.join(STUDY, 'SEARCH_AND_CONVERGENCE_REPORT.md')
-CEILING = 120_000_000
+CEILING = 160_000_000
 NL0_CAP = {'broad': 6, 'refine': 8}
 
 
@@ -35,7 +35,7 @@ md += ['## A. Effort, coverage and stopping per cutoff and arm', '',
        '8 refinement) because a performance component (> 5 %) still fired (tier 1); *at 16* = lanes stopped by the hard '
        'island cap (budget-bound). Replicate spread = across the arm\'s cells, the median of (max − min) ÷ median of the '
        'replicates\' best feasible centre nets.', '',
-       '| Cutoff | Arm | Lanes broad / replicate rounds / refine | Replicates | Rounds (✓ fired) | Requested | Fresh | GPU wall (s) | '
+       '| Cutoff | Arm | Lanes broad / replicate rounds / refine / informed (C24) | Replicates | Rounds (✓ fired) | Requested | Fresh | GPU wall (s) | '
        'Islands per lane | Beyond NL0 | At 16 | Stop reasons | Cells with a feasible fit | Replicate spread | Label |',
        '|---|---|---:|---:|---|---:|---:|---:|---|---:|---:|---|---:|---:|---|']
 lane_idx = collections.defaultdict(list)
@@ -46,13 +46,14 @@ for s in summary:
     rx = sum(1 for r in ls if r['part'].startswith('rx'))
     br = sum(1 for r in ls if r['part'] == 'broad')
     rf = sum(1 for r in ls if r['part'] == 'refine')
-    beyond = sum(1 for r in ls if int(r['islands']) > NL0_CAP['refine' if r['part'] == 'refine' else 'broad'])
+    inf = sum(1 for r in ls if r['part'] == 'informed')
+    beyond = sum(1 for r in ls if int(r['islands']) > NL0_CAP['refine' if r['part'] in ('refine', 'informed') else 'broad'])
     at16 = sum(1 for r in ls if int(r['islands']) >= 16)
     rounds = ' '.join(f"{x['k']}{'✓' if x['fired'] else '✗'}" for x in s['rounds']) or '—'
     isl = ', '.join(f'{k}: {v}' for k, v in sorted(s['islands'].items(), key=lambda kv: int(kv[0])))
     stops = '; '.join(f'{k[:60]} {v}' for k, v in s['stops'].items())
     spread = s.get('replicateSpread', {}).get('medianRelativeRange')
-    md.append(f"| {s['cutoff']} | {s['arm']} | {br} / {rx} / {rf} | {s['replicates']} | {rounds} | {n(s['requested'])} | {n(s['fresh'])} | "
+    md.append(f"| {s['cutoff']} | {s['arm']} | {br} / {rx} / {rf} / {inf if inf else '—'} | {s['replicates']} | {rounds} | {n(s['requested'])} | {n(s['fresh'])} | "
               f"{n(float(s['wallSeconds']))} | {isl} | {beyond} | {at16} | {stops} | {s['cellsWithFeasible']} / {s['cells']} | "
               f"{'—' if spread is None else f'{spread * 100:.0f} %'} | {s['budgetLimitedLabel']} |")
 
@@ -69,7 +70,7 @@ md += ['', '## B. Totals of the search lanes', '',
        '| Cutoff | Requested | Search GPU wall (h) |', '|---|---:|---:|']
 for c in sorted(by_cut):
     md.append(f'| {c} | {n(by_cut[c])} | {wall[c] / 3600:.2f} |')
-md.append(f'| **all** | **{n(tot)}** ({tot / CEILING * 100:.1f} % of the 120 M hard ceiling) | **{sum(wall.values()) / 3600:.2f}** |')
+md.append(f'| **all** | **{n(tot)}** ({tot / CEILING * 100:.1f} % of the 160 M hard ceiling) | **{sum(wall.values()) / 3600:.2f}** |')
 md += ['', '| Arm | Requested over all cutoffs | Share |', '|---|---:|---:|']
 for a in ['D', 'G', 'J', 'S']:
     if by_arm[a]:
@@ -97,7 +98,7 @@ t = jobs['totals']
 md += ['', '## C. Official GPU jobs by kind (every official evaluation of the study)', '',
        '| Kind | Jobs | Evaluations submitted (all GPU-returned) | Kernel (h) | Wall (h) | CPU-scored | Failed |',
        '|---|---:|---:|---:|---:|---:|---:|']
-ORDER = ['broad', 'rx', 'refine', 'qualify-broad', 'qualify-refine', 'qualify-fixed', 'slice', 'validation']
+ORDER = ['broad', 'rx', 'refine', 'informed', 'qualify-broad', 'qualify-refine', 'qualify-fixed', 'qualify-informed', 'qualify-fixed-informed', 'slice', 'validation']
 for kind, k in sorted(kinds.items(), key=lambda kv: ORDER.index(kv[0]) if kv[0] in ORDER else len(ORDER)):
     md.append(f"| {kind} | {k['jobs']} | {n(k['submitted'])} | {k['kernel'] / 3600:.2f} | {k['wall'] / 3600:.2f} | {k['cpu']} | {k['failed']} |")
 md.append(f"| **all** | **{t['jobs']}** ({t['jobsComplete']} complete) | **{n(t['submitted'])}** (GPU-returned {n(t['gpuReturned'])}) | "
@@ -124,12 +125,13 @@ for s in summary:
               f"`{wk}` ${wv['min']:,.0f} / ${wv['median']:,.0f} / ${wv['max']:,.0f} |")
 
 # E. seeds (replicate numbers) per cutoff and arm
-md += ['', '## E. Replicates (seeds) used', '', '| Cutoff | Arm | Broad / round replicates | Refinement replicates |', '|---|---|---|---|']
+md += ['', '## E. Replicates (seeds) used', '', '| Cutoff | Arm | Broad / round replicates | Refinement replicates | Informed replicates (C24) |', '|---|---|---|---|---|']
 for (c, a), ls in sorted(lane_idx.items()):
-    b = sorted({int(r['replicate']) for r in ls if r['part'] != 'refine'})
+    b = sorted({int(r['replicate']) for r in ls if r['part'] not in ('refine', 'informed')})
     rf = sorted({int(r['replicate']) for r in ls if r['part'] == 'refine'})
+    inf = sorted({int(r['replicate']) for r in ls if r['part'] == 'informed'})
     fmt = lambda xs: (f'R{xs[0]}–R{xs[-1]}' if xs and xs == list(range(xs[0], xs[-1] + 1)) else ', '.join(f'R{x}' for x in xs)) if xs else '—'
-    md.append(f'| {c} | {a} | {fmt(b)} | {fmt(rf)} |')
+    md.append(f'| {c} | {a} | {fmt(b)} | {fmt(rf)} | {fmt(inf)} |')
 
 # F. lanes that did not stop on "triggers not met"
 odd = [r for r in lanes if r['stop'] != 'triggers not met']

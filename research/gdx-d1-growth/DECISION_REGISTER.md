@@ -16,8 +16,26 @@
 
 ## R. Report choices (after the outcome; never selection inputs)
 
-(Filled at the end of the study.)
+All entries are post-outcome, report-only tooling in `tools/gdx-d1-growth/`, outside the frozen code closure. **No sealed
+record, selection, threshold or outcome was changed.**
+
+| ID | Choice or correction | Why / effect |
+|---|---|---|
+| R1 | **Reconciler fixes** (`reconcile.py`). It now reads the validation from its sealed location `results/validation/validation.json`; the draft had pointed at `results/slices/C24.json`. It also computes the primary, informed and b flags for every re-derived finalist, independently of the frozen list | The path was wrong in the pre-outcome draft. The flag fix came from the mutation tests: a finalist missing from the frozen list made the reconciler crash instead of failing a check. Both fixes were made before the reconciliation result (507/507) was relied on |
+| R2 | **The portfolio tool registers the frozen D1 finalists** (`ensureAllFrozen`) before reading S configurations | The S cells name a sealed frozen D1 finalist (`S.C24F1…`). The pre-freeze engineering test of the tool used only the three references, so this path was never exercised. The first run stopped with "frozen D1 C24F1 is not registered" before writing anything |
+| R3 | **Yahoo distribution units.** The chart API states every historical amount per current share, adjusted for the 2026-04-21 splits (VOOG 6:1, VGT 8:1). The tool now converts each amount back to the ex-date share basis before comparing or substituting, and records the Yahoo figure beside it | Without the conversion the ledger check showed differences of up to about 8× (ledger ÷ Yahoo), and the three VOOG 2016 "estimated" amounts would have been replaced by values 6× too small. The stage was rerun; the first run's output was overwritten and never reported. Effects: the core is identical in every scenario, and the overlay-distribution table is report-only and never added to trading results |
+| R4 | **Report generators added:** `portfolio-md.py`, `final-md.py`, `reconcile-mutations.py`, and `diag.sh` (the precommitted diagnostics chain, fail-fast) | Every number in the reports is generated from sealed or report-only records. Hand-written narratives (`reports/narrative/*.md`) sit above the generated sections |
+| R5 | **GDX-only rows name the trading slot by what it holds** (`D1:VGT` → `D1·GDX`, `G:VGT` → `Growth·GDX`) in the reports' funding-refusal columns. N/original's and New L0's rows keep their real VGT / GDX book names | Design A2: the engine's VGT-named slot carries GDX |
+| R6 | **Duplicated overlays are listed once** in the portfolio tables. An informed population can share an identical configuration with an independent finalist (S22 = S4, S23 = S5, S24 = S6, S27 = S9, S28 = S10, S31 = S13); the labels table keeps every key | Avoids double counting the same account |
+| R7 | **Negative overlay cash** (the ablation and three J configurations) is reported with its 11 % interest beside the incremental terminal wealth | PROTOCOL §15.4's identity: total − core = overlay net − the negative-cash interest |
+| R8 | The independent distribution events were fetched after the sealed outcome, as precommitted (RUN_COMMANDS.md): Yahoo's public chart API with a generic client name, no account, git-ignored, not redistributed | Brief Phase 5.2: no distribution was invented, and no comparison is blocked |
 
 ## U. Outstanding decisions for the user
 
-(Filled at the end of the study.)
+| ID | Decision | The study's position |
+|---|---|---|
+| U1 | Whether either development-only configuration (G `f13f3e1d64379748`, C `rc1-5beecb91ea91c775`) should receive any further status | **No.** Both have unsupported chronology, sharp optima, 21–30 % validation-neighbourhood breach shares and cost-path-dependent Growth trades. Any status needs your explicit decision and new, prospective evidence |
+| U2 | Whether to commission a new study, for example GDX D1 restricted to protective-stop families and Growth restricted to exit-protected structures, or a prospective paper-monitoring record of N/original against a GDX-only overlay | Optional. These are research questions arising from the failure modes found here (stop-less 2020 D1 lots, unrestricted 2026 Growth lots), not candidates |
+| U3 | Whether and when to review and merge this branch's non-trading code (the study tools; the identity-join module is already on this lineage) | Not done. No merge into `main` is authorized |
+| U4 | Retention of the 25 GB of zstd-compressed official job archives on Apollo (`cache/jobs/`, git-ignored; actions log `storage/GDX8_JOB_ACTIONS.jsonl`) | Keep at least until the handoff has been reviewed. Without them, reproduction means recomputation, which is deterministic (gate E5) |
+| U5 | The MSFT study | Not started, as instructed |

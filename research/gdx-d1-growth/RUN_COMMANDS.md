@@ -68,12 +68,19 @@ for s in VOOG VGT GDX; do curl -sS -m 60 -A "Mozilla/5.0" -o research/gdx-d1-gro
   "https://query1.finance.yahoo.com/v8/finance/chart/$s?period1=$P1&period2=$P2&interval=1mo&events=div%7Csplit"; done
 tools/gdx-d1-growth/launch.sh gdx8-port $PWD/research/gdx-d1-growth/cache/logs/port.log --wait -- \
   /usr/bin/env GPU_POLICY_PURPOSE=diagnostic $(command -v npm) run gdx8-port -- run
-for c in bh tail lots; do GPU_POLICY_PURPOSE=diagnostic npm run gdx8-diag -- $c; done
-tools/gdx-d1-growth/launch.sh gdx8-nbhd $PWD/research/gdx-d1-growth/cache/logs/nbhd.log --wait -- \
-  /usr/bin/env GPU_POLICY_PURPOSE=diagnostic $(command -v npm) run gdx8-diag -- nbhd
+# the four report-only diagnostics in one contained, fail-fast unit (as executed 2026-11-27; equivalent to the two lines below)
+tools/gdx-d1-growth/launch.sh gdx8-diag $PWD/research/gdx-d1-growth/cache/logs/diag.log --wait -- /bin/bash $PWD/tools/gdx-d1-growth/diag.sh
+#   for c in bh tail lots; do GPU_POLICY_PURPOSE=diagnostic npm run gdx8-diag -- $c; done
+#   tools/gdx-d1-growth/launch.sh gdx8-nbhd … -- /usr/bin/env GPU_POLICY_PURPOSE=diagnostic $(command -v npm) run gdx8-diag -- nbhd
+# independent outcome reconciliation and its mutation tests (scratch copies; any scratch directory)
+python3 -I tools/gdx-d1-growth/reconcile.py
+python3 -I tools/gdx-d1-growth/reconcile-mutations.py <scratch dir>
 GPU_POLICY_PURPOSE=diagnostic node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gdx-d1-growth/analyze.ts
 node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gdx-d1-growth/tables-md.ts
 node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gdx-d1-growth/arm-reports.ts
 python3 -I tools/gdx-d1-growth/gpu-jobs.py; python3 -I tools/gdx-d1-growth/search-report.py
-/bin/bash tools/gdx-d1-growth/bundle.sh
+python3 -I tools/gdx-d1-growth/portfolio-md.py   # TOTAL_PORTFOLIO_COMPARISON.md (narrative reports/narrative/PORTFOLIO.md + tables)
+python3 -I tools/gdx-d1-growth/final-md.py       # FINAL_CANDIDATES.md and OUTCOME_IDENTITY_RECONCILIATION.md
+# after the commit is pushed and `git ls-remote origin research/gdx-d1-growth` equals HEAD:
+/bin/bash tools/gdx-d1-growth/bundle.sh <scratch dir> <remote-verified HEAD>
 ```

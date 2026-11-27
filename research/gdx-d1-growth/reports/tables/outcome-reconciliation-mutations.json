@@ -1,0 +1,194 @@
+{
+ "kind": "P8-GDX reconciliation mutation tests (report-only; tools/gdx-d1-growth/reconcile-mutations.py)",
+ "ok": true,
+ "cases": 13,
+ "passed": 13,
+ "results": [
+  {
+   "case": "unmodified copy",
+   "exit": 0,
+   "expected": "exit 0, no failure",
+   "pass": true,
+   "failed": []
+  },
+  {
+   "case": "swap a development-only id (outcome)",
+   "file": "results/outcome.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"development-only set equals\"",
+   "pass": true,
+   "semanticFailures": [
+    "the outcome development-only set equals the recomputed set (2)"
+   ],
+   "hashFailures": [
+    "seal log entry of research/gdx-d1-growth/results/outcome.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "flip a V flag (validation row)",
+   "file": "results/validation/validation.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"V1\u2013V3 recomputed from the raw figures\"",
+   "pass": true,
+   "semanticFailures": [
+    "(D, rc1-c4014158d334248d): V1\u2013V3 recomputed from the raw figures equal the row flags",
+    "(D+, rc1-c4014158d334248d): V1\u2013V3 recomputed from the raw figures equal the row flags"
+   ],
+   "hashFailures": [
+    "outcome quotes research/gdx-d1-growth/results/validation/validation.json sha256 8e20fa93472ef60b\u2026",
+    "seal log entry of research/gdx-d1-growth/results/validation/validation.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "duplicate a validation row",
+   "file": "results/validation/validation.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"exactly one selected validation row\"",
+   "pass": true,
+   "semanticFailures": [
+    "(G, f13f3e1d64379748): exactly one selected validation row claims this identity (found 2)"
+   ],
+   "hashFailures": [
+    "outcome quotes research/gdx-d1-growth/results/validation/validation.json sha256 8e20fa93472ef60b\u2026",
+    "seal log entry of research/gdx-d1-growth/results/validation/validation.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "cross-population validation row",
+   "file": "results/validation/validation.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"exactly one selected validation row\"",
+   "pass": true,
+   "semanticFailures": [
+    "(G, f13f3e1d64379748): exactly one selected validation row claims this identity (found 0)"
+   ],
+   "hashFailures": [
+    "outcome quotes research/gdx-d1-growth/results/validation/validation.json sha256 8e20fa93472ef60b\u2026",
+    "seal log entry of research/gdx-d1-growth/results/validation/validation.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "record-arm conflict in a validation row",
+   "file": "results/validation/validation.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"the row record arm\"",
+   "pass": true,
+   "semanticFailures": [
+    "(C, rc1-5beecb91ea91c775): the row record arm J equals the finalist record arm C"
+   ],
+   "hashFailures": [
+    "outcome quotes research/gdx-d1-growth/results/validation/validation.json sha256 8e20fa93472ef60b\u2026",
+    "seal log entry of research/gdx-d1-growth/results/validation/validation.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "raw validation P&L changed, flags kept",
+   "file": "results/validation/validation.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"V1\u2013V3 recomputed from the raw figures\"",
+   "pass": true,
+   "semanticFailures": [
+    "(D, rc1-c4014158d334248d): V1\u2013V3 recomputed from the raw figures equal the row flags",
+    "(D+, rc1-c4014158d334248d): V1\u2013V3 recomputed from the raw figures equal the row flags"
+   ],
+   "hashFailures": [
+    "outcome quotes research/gdx-d1-growth/results/validation/validation.json sha256 8e20fa93472ef60b\u2026",
+    "seal log entry of research/gdx-d1-growth/results/validation/validation.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "finalist removed from FROZEN_SELECTION",
+   "file": "FROZEN_SELECTION.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"frozen finalist identities equal the re-derived set\"",
+   "pass": true,
+   "semanticFailures": [
+    "the frozen finalist identities equal the re-derived set (28 vs 29)"
+   ],
+   "hashFailures": [
+    "outcome quotes research/gdx-d1-growth/FROZEN_SELECTION.json sha256 984dd972456d5762\u2026",
+    "seal log entry of research/gdx-d1-growth/FROZEN_SELECTION.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "frozen finalist id replaced",
+   "file": "FROZEN_SELECTION.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"frozen finalist identities equal the re-derived set\"",
+   "pass": true,
+   "semanticFailures": [
+    "the frozen finalist identities equal the re-derived set (29 vs 29)"
+   ],
+   "hashFailures": [
+    "outcome quotes research/gdx-d1-growth/FROZEN_SELECTION.json sha256 984dd972456d5762\u2026",
+    "seal log entry of research/gdx-d1-growth/FROZEN_SELECTION.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "sequential supported flag forged",
+   "file": "results/sequential.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"supported recomputed\"",
+   "pass": true,
+   "semanticFailures": [
+    "sequential S: supported recomputed (False) equals the sealed flag (True)"
+   ],
+   "hashFailures": [
+    "frozen selection quotes research/gdx-d1-growth/results/sequential.json sha256 cd5ed595a2f42ffc\u2026",
+    "seal log entry of research/gdx-d1-growth/results/sequential.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "sequential drawdown forged",
+   "file": "results/sequential.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"supported recomputed\"",
+   "pass": true,
+   "semanticFailures": [
+    "sequential S: supported recomputed (True) equals the sealed flag (False)"
+   ],
+   "hashFailures": [
+    "frozen selection quotes research/gdx-d1-growth/results/sequential.json sha256 cd5ed595a2f42ffc\u2026",
+    "seal log entry of research/gdx-d1-growth/results/sequential.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "candidate inserted into the outcome",
+   "file": "results/outcome.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"outcome candidates equal\"",
+   "pass": true,
+   "semanticFailures": [
+    "the outcome candidates equal the recomputed set (0)"
+   ],
+   "hashFailures": [
+    "seal log entry of research/gdx-d1-growth/results/outcome.json equals its sha256"
+   ],
+   "stderr": ""
+  },
+  {
+   "case": "outcome c flag flipped",
+   "file": "results/outcome.json",
+   "exit": 1,
+   "expected": "exit 1 and a failure containing \"the outcome V1\u2013V3 and c equal\"",
+   "pass": true,
+   "semanticFailures": [
+    "(S, rc1-259e15b855bdd8b8): the outcome V1\u2013V3 and c equal the recomputation"
+   ],
+   "hashFailures": [
+    "seal log entry of research/gdx-d1-growth/results/outcome.json equals its sha256"
+   ],
+   "stderr": ""
+  }
+ ]
+}

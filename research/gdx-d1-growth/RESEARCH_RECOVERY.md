@@ -2,29 +2,48 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-26T16:05Z (clock, UTC). **Status: INCOMPLETE** — the official chain is RUNNING (C19 first).
-- **Protocol:** `PROTOCOL.md` P8-GDX 1.0.0 **FROZEN** 2026-11-26T16:03Z, sha256
+- **Updated:** 2026-11-27T07:32Z (clock, UTC). **Status: COMPLETE (research) — the final commit, the push and the handoff
+  ZIP follow** (the steps and their verification are recorded in "Delivery" below once done). Nothing is running. **Never
+  rerun any official stage** (every one is sealed; `results/seals.jsonl`, 156 entries re-verified 07:09Z).
+- **OUTCOME (sealed, commit `4615a33b`): NO QUALIFYING GDX CANDIDATE.** Candidates 0; development-only 2 (G
+  `f13f3e1d64379748` `C24/G/refine/G.h1.s1/R105#1 profit`; C `rc1-5beecb91ea91c775` `C24/C/pair DF2×GF1`); informed
+  development-only 0. All five independent sequential procedures unsupported (D $26,912 / $48,177; G −$36,677 / $62,458;
+  C $11,183 / $52,065; J $26,676 / $45,938; S $69,432 / $48,177). Validation: D −$15,255 (V1 ✗); J, S reset DD $60,066 /
+  $59,792 (V2, V3 ✗).
+- **Total portfolio (report-only, after the outcome):** every GDX-only scenario's max total-account DD exceeds core +
+  N/original's ($612,387) by $3,025–$27,954 (+0.5–4.6 %); terminal wealth −$124,242 to −$443,452; §15.8 label "no material
+  difference" for all.
+- **Sealed records:** `FROZEN_SELECTION.json` `984dd972456d57620e81c4b3a59190cb0014bfb502b949260b00fb6331a1fe0e` (`1ce56feb`);
+  `results/selection/C24.json` `2da07d41bf32285af19e9fd215f7879913ce0466650cb40a5460f608899a9952`;
+  `results/doors/FULL-authorization.json` `1adbb67257fe426bbedb86e721e789e754c7de4df06eb93fc52b6e838454f558` (`76393753`);
+  `results/validation/validation.json` `8e20fa93472ef60b306267b470977c41f1485409fdeeda1fc3b8fed27cd0865e` (`f100a147`);
+  `results/outcome.json` `647afac401db031af768ced69f8ef24b783db6b725d1aba9894af532da7ae929` (`4615a33b`);
+  `results/sequential.json` `cd5ed595a2f42ffc24728f1ae0dc3d696eec38baa5d823dfb4ec78fcbb06185d` (`3f414d7d`); C23 / C21 / C19
+  selections and slices `1b68cd19…` / `dc7c24fc…`, `e90dff15…` / `8e0b21ea…`, `36e3f6f6…` / `c5b7f2ab…`.
+- **Report-only deliverables (07:32Z):** `reports/portfolio/portfolio.json` `7324adfd5dbb91e345149d3ac825a7c435b6ce095cb0db2e9df7fea1cb995011`
+  (+ `series/*.csv`); `reports/tables/outcome-reconciliation.json` `759c7c68c3b58f269dffe569777707b66c129b05eb9e3b86577ddb7d9bf8cbe0`
+  (507/507); `…-mutations.json` `6e5e8ddcc0e6de8f7283f402ca8af55cb30da89ecd9a55358ac6d1a4f34397f9` (13/13);
+  `reports/tables/gpu-jobs.json` `858b16d9cc57e83737fba2ea64ba36899799abd516d0bd7ade4cfdcc55d68337` (81 jobs, 0 CPU-scored);
+  diagnostics `lots.json` `de810470…`, `nbhd-small-wide.json` `8d50d254…`, `tail-stress.json` `c2a7bb2a…`,
+  `buy-and-hold.json` `5ed6551d…`; REPORT.md `75d296a3…`; READ_FIRST.md `4a457511…`; TOTAL_PORTFOLIO_COMPARISON.md `7eea50bd…`.
+- **Post-outcome tool corrections (DECISION_REGISTER R1–R3):** reconciler validation path + per-finalist flags (found by
+  its mutation tests); portfolio tool `ensureAllFrozen` (S configurations); Yahoo per-current-share distribution units
+  (stage rerun 07:14Z). No sealed record changed.
+- **Protocol:** `PROTOCOL.md` P8-GDX 1.0.0 FROZEN 2026-11-26T16:03:15Z, sha256
   `27dcba9ae032bb4db8919f1e3a8fdf4291296d2c8fb17b65833b99ff2c15ab65`; freeze record `results/protocol-freeze.json`
-  `bf59be1d49bdeed62333f3997c7a2a160648a9a04006a0cc8d3c8f927906e389` (commit `2bd8153d`); gates `results/engineering/gates.json`
-  `43b03b8b68452e02b761a29c2c54e93a5dd02861b5ff74690f7f4f8d8f6dfd77` (E1–E9 pass; commit `3d734a96`); adoption
-  `STANDARD_ADOPTION.json` `25640700…`; frozen code digest `4c2c3fd45d07dd143316d457954beb539c1fa90e896ef76683cc8ecb7f4cd178`.
-  Amendments: pre-freeze E1, E2 only.
-- **Running:** systemd user unit **`gdx8-chain`** (MainPID 2394239 at start; started 2026-11-26T16:03:27Z) running
-  `/bin/bash research/gdx-d1-growth/chains/chain.sh` (all cutoffs); log `research/gdx-d1-growth/cache/logs/chain.log`;
-  per-stage units `gdx8-<stage>` with logs `cache/logs/chain/<stage>.log`. The chain commits each sealed block itself.
-  First attestation `results/gpu-attestations/C19-D-broad-2026-11-26T16-03-35-711Z.json`: 16/16 checks pass.
-- **If the chain stopped:** read `chain.log` (the failing step), fix the cause (a code defect needs a sealed code
-  amendment `npm run gdx8 -- code-amendment --id A<n> --why …` committed with the fix), then relaunch the SAME command
-  (idempotent: sealed stages are skipped; an interrupted job resumes with `--resume`). Never edit `chain.sh` while it runs.
-- **While it runs:** no change to `src/gdx-d1-growth` closure files, PROTOCOL.md, AMENDMENTS.md, STANDARD_ADOPTION.json
-  (dirtyCode guard); git read-only with `GIT_OPTIONAL_LOCKS=0`; tools/ edits are allowed (not in the closure).
-- **Next after CHAIN COMPLETE:** portfolio stage (fetch Yahoo dividends VOOG/VGT/GDX 2016–2026, `npm run gdx8-port -- run`),
-  diagnostics (bh, tail, lots, nbhd), tables, reports, bundle, commit, push.
-- **Pilot:** 957 requested/s; planning ≈ 66 M requested before rounds/qualification (≈ 19 GPU-hours).
+  `bf59be1d49bdeed62333f3997c7a2a160648a9a04006a0cc8d3c8f927906e389` (`2bd8153d`); gates `results/engineering/gates.json`
+  `43b03b8b…` (E1–E9 pass); frozen code digest `4c2c3fd45d07dd143316d457954beb539c1fa90e896ef76683cc8ecb7f4cd178`.
+  Amendments: pre-freeze E1, E2 only (no post-freeze amendment).
+- **Next (single step):** commit the study's files and tools (stage only `research/gdx-d1-growth/` and `tools/gdx-d1-growth/`),
+  push `research/gdx-d1-growth` (unsandboxed), verify `git ls-remote origin research/gdx-d1-growth` = HEAD, then
+  `tools/gdx-d1-growth/bundle.sh <scratch> <HEAD>`, copy the ZIP to `research/gdx-d1-growth/bundle/` and
+  `~/.local/share/margin-trading-gpu/handoffs/`, commit, push, verify.
+- **Follow-up gate (needs the user):** DECISION_REGISTER §U (no adoption; optional new prospective study; merge review;
+  archive retention). The MSFT study is not started.
 
 ## Environment
 
-- Main checkout `/home/chad/projects/margin-trading`, branch **`research/gdx-d1-growth`**, created from `421e4c87`
+- Main checkout (repository root), branch **`research/gdx-d1-growth`**, created from `421e4c87`
   (`research/tsla-d1-growth` head: the accepted GPU Phase 7 lineage, P6-TSLA's study code). No extra worktree.
 - Commit `a33c6ff1`: cherry-pick of `aca31b5f` (the identity-join module and its tests only; byte-identical; 12/12 tests
   pass; dry-run onto `main` clean, tree `a7b2ede6…`). Nothing merged into `main`.

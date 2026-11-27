@@ -29,7 +29,9 @@ const title: Record<ArmKey, string> = {
   S: 'D1-first sequential optimization (arm S: arm D’s finalists frozen, Growth searched in the shared slot)'
 };
 const file: Record<ArmKey, string> = { D: 'STANDALONE_D1_REPORT.md', G: 'STANDALONE_GROWTH_REPORT.md', C: 'FIXED_COMBINATION_REPORT.md', J: 'JOINT_REPORT.md', S: 'SEQUENTIAL_REPORT.md' };
-const subs: Record<ArmKey, string[]> = { D: ['D-A'], G: ['G-P', 'G-U'], C: [], J: ['J-P', 'J-U'], S: ['S-P', 'S-U'] };
+// the sub-populations, and the informed populations at C24 (D+, G+, C+: incumbents and incumbent-seeded lanes; no
+// independent chronological test) reported with their record arm
+const subs: Record<ArmKey, string[]> = { D: ['D-A', 'D+'], G: ['G-P', 'G-U', 'G+'], C: ['C+'], J: ['J-P', 'J-U'], S: ['S-P', 'S-U'] };
 
 const search = readJ<{ rows: Row[] }>(path.join(t, 'search-summary.json'))?.rows ?? [];
 const qual = readJ<{ rows: Row[] }>(path.join(t, 'qualification.json'))?.rows ?? [];
@@ -189,12 +191,12 @@ const section = (arm: ArmKey): string[] => {
   );
   o.push(
     table(
-      ['Kind', 'Label', 'Roles', 'Q1–Q6', 'Dev net', 'Gross', 'Interest', 'Costs', 'Dev DD (% of $100k)', 'Lots W/L', 'Val. P&L', 'Val. reset DD', 'Full net', 'Full DD', 'V1 V2 V3'],
+      ['Kind (population)', 'Label', 'Roles', 'Q1–Q6', 'Dev net', 'Gross', 'Interest', 'Costs', 'Dev DD (% of $100k)', 'Lots W/L', 'Val. P&L', 'Val. reset DD', 'Full net', 'Full DD', 'V1 V2 V3'],
       fr.map((r) => {
         const v = r.validationTests as Row | null;
 
         return [
-          String(r.kind),
+          `${String(r.kind)} (${String(r.population ?? r.arm)}${r.informed ? ', informed' : ''})`,
           code(r.label),
           String(r.roles),
           r.qualified ? 'pass' : `fails ${String(r.failed)}`,

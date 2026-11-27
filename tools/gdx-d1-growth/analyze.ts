@@ -9,6 +9,7 @@ import { type ArmKey, cutoffKeys, researchDir, resultsDir } from '../../src/gdx-
 import type { Evidence } from '../../src/gdx-d1-growth/qualify.ts';
 import type { LaneResult } from '../../src/gdx-d1-growth/search.ts';
 import * as S from '../../src/gdx-d1-growth/space.ts';
+import { isInformed, type Population, recordArmOf } from '../../src/gdx-d1-growth/outcome.ts';
 import { ensureAllFrozen } from '../../src/gdx-d1-growth/stages.ts';
 import { writeJson } from './common.ts';
 
@@ -305,7 +306,7 @@ const selectionTables = () => {
 
       if (!exists(af)) continue;
 
-      const s = readJ<{ primaries: Record<string, string | null>; roles: Record<string, { roles: Record<string, string | null>; qualified: number; members: number }>; ra1: Record<string, { first: string | null }>; subjects: Evidence[]; counts: Record<string, { members: number; qualified: number }>; finalists: unknown[] }>(af);
+      const s = readJ<{ primaries: Record<string, string | null>; roles: Record<string, { roles: Record<string, string | null>; qualified: number; members: number }>; ra1: Record<string, { first: string | null }>; subjects: Evidence[]; counts: Record<string, { members: number; qualified: number }>; finalists: unknown[]; informedFinalists?: unknown[] }>(af);
       const byLabel = new Map(s.subjects.map((e) => [e.label, e]));
 
       for (const [p, l] of Object.entries(s.primaries))
@@ -319,7 +320,8 @@ const selectionTables = () => {
           roles: s.roles[p]?.roles,
           ra1First: s.ra1[p]?.first ?? null,
           ra1AgreesWithPrimary: (s.ra1[p]?.first ?? null) === l,
-          finalists: a === p ? s.finalists : undefined
+          informed: isInformed(p),
+          finalists: a === p ? s.finalists : isInformed(p) && recordArmOf(p) === a ? s.informedFinalists : undefined
         });
     }
     void f;
@@ -333,14 +335,18 @@ const finalistTables = () => {
 
   if (!exists(f)) return null;
 
-  const fz = readJ<{ finalists: { label: string; arm: ArmKey; roles: string[] }[]; preDetermination: unknown }>(f);
+  // a finalist's arm is its population (D, G, C, J, S, or informed D+, G+, C+); its record arm holds its evidence
+  const fz = readJ<{ finalists: { label: string; id: string; arm: Population; roles: string[] }[]; preDetermination: unknown }>(f);
   const sel = readJ<{ subjects: Evidence[]; controls: Evidence[] }>(path.join(resultsDir, 'selection', 'C24.json'));
   const v = exists(path.join(resultsDir, 'validation', 'validation.json')) ? readJ<{ rows: Record<string, unknown>[] }>(path.join(resultsDir, 'validation', 'validation.json')).rows : [];
-  const rowOf = (e: Evidence, roles: string[], kind: string) => {
+  const rowOf = (e: Evidence, roles: string[], kind: string, population: string, informed: boolean) => {
     const vr = v.find((r) => r.label === e.label && r.arm === e.arm) as Record<string, unknown> | undefined;
 
     return {
       kind,
+      population,
+      informed,
+      id: e.id,
       roles: roles.join('; '),
       ...memberRow(e),
       validationNet: vr?.sliceNet ?? null,
@@ -355,8 +361,14 @@ const finalistTables = () => {
     };
   };
   const rows = [
-    ...fz.finalists.map((x) => rowOf(sel.subjects.find((e) => e.label === x.label && e.arm === x.arm)!, x.roles, 'finalist')),
-    ...sel.controls.map((e) => rowOf(e, ['external control'], 'control'))
+    ...fz.finalists.map((x) => {
+      const arm = recordArmOf(x.arm);
+      const e = sel.subjects.find((s) => s.label === x.label && s.arm === arm);
+
+      if (!e || e.id !== x.id) throw new Error(`finalist (${x.arm}, ${x.id}) ${x.label}: no C24 subject of arm ${arm} with that label and id`);
+      return rowOf(e, x.roles, 'finalist', x.arm, isInformed(x.arm));
+    }),
+    ...sel.controls.map((e) => rowOf(e, ['external control'], 'control', `control:${e.arm}`, false))
   ];
 
   writeJson(path.join(tables, 'finalists.json'), { kind: 'C24 finalists and external controls: development (D24) evidence, validation (FULL, once) and full-history figures (report)', rows });
