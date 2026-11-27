@@ -128,7 +128,16 @@ const pp = fs.existsSync(path.join(D, 'portfolio-parity.json'))
   ? (JSON.parse(fs.readFileSync(path.join(D, 'portfolio-parity.json'), 'utf8')) as Record<string, unknown>)
   : null;
 const ppLog = txt('portfolio-parity.txt');
-const ppPass = ok('portfolio-parity.txt') && /ALL VERIFIED/.test(ppLog) && pp?.allVerified === true && /node --no-maglev /.test(ppLog); // npm echoes the script line
+// GPU Phase 9: the catalog has six candidates since Assignment 1 (the five Priority 6 candidates and N/original); every
+// one must be verified, N/original included
+const ppResults = (pp?.results as { id?: string; status?: string }[] | undefined) ?? [];
+const ppPass =
+  ok('portfolio-parity.txt') &&
+  /ALL VERIFIED/.test(ppLog) &&
+  pp?.allVerified === true &&
+  ppResults.length === 6 &&
+  ppResults.some((r) => r.id === 'n-original' && r.status === 'verified') &&
+  /node --no-maglev /.test(ppLog); // npm echoes the script line
 
 writeJson(path.join(D, 'strategy-lab-portfolio-parity.json'), {
   kind: 'gpu-phase9 E7 Strategy Lab portfolio parity',

@@ -312,7 +312,7 @@ const samePins = (commit: string | undefined) => !!commit && spawnSync('git', ['
   const p = R('tests/strategy-lab-portfolio-parity.json');
   const x = read<{ pass: boolean; summary: string }>(p);
 
-  gate('E7 Strategy Lab portfolio parity: the five frozen pooled candidates (New L0 among them) = their sealed records (runners under --no-maglev)', p, !!x && x.pass, x ? x.summary : 'missing');
+  gate('E7 Strategy Lab portfolio parity: every catalog candidate (the five Priority 6 pooled candidates, New L0 among them, and N/original) = its sealed records (runners under --no-maglev)', p, !!x && x.pass, x ? x.summary : 'missing');
   const f = R('tests/npm-test.json');
   const s = read<{ pass: boolean; summary: string; rootTsc: string }>(f);
 
