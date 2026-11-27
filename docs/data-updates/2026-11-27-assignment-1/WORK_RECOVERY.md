@@ -2,68 +2,86 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-27T21:20Z (UTC, from the clock). **Status: INCOMPLETE** — B, C, D implemented; E mechanism built and verified; baseline npm test next (work STASHED during it: `git stash list` → `a1-wip`; restore with `git stash pop`).
-- **Task:** the user's brief received 2026-11-27 ~19:15Z (`BRIEF.md`, verbatim).
-- **Branch:** `feature/research-date-boundaries` (main checkout, no extra worktree), starting HEAD `9d2eaec4` =
-  `origin/feature/research-date-boundaries`, working tree clean at start.
-- **Previous assignment:** `docs/data-updates/2026-11-27/` (REPORT.md, AUDIT.md, RUN_COMMANDS.md, WORK_RECOVERY.md
-  COMPLETE).
+- **Updated:** 2026-11-27T20:46Z (UTC, from the clock). **Status: COMPLETE** (stages A–H). The push is verified
+  (Delivery).
+- **Task:** the user's brief received 2026-11-27 ~19:15Z (`BRIEF.md`, verbatim). Report: `REPORT.md`.
+- **Branch:** `feature/research-date-boundaries` (main checkout, no extra worktree), from `9d2eaec4`.
+- **Running:** the Strategy Lab server, as transient user unit `strategy-lab` (started 2026-11-27T20:40:46Z; port 4317,
+  tailnet and loopback, live state `state/strategy-lab`; `systemctl --user status|stop strategy-lab`). It is the
+  user-facing deliverable, so leave it running. Nothing else is running.
+- **Follow-up gate (the user's):**
+  1. Review `REPORT.md` and standard 5.0.0.
+  2. Decide whether `research/vg-l0-staged-trailing-stop` and `fix/tsla-outcome-identity-join` are integrated before
+     Assignment 2's re-acceptance.
+  3. Decide whether Strategy Lab is installed as a permanent service.
+  4. Authorize Assignment 2 (re-acceptance, including the fixed-seed mini-optimization).
 - **Not authorised here:** official GPU re-acceptance, a replacement acceptance record, official GPU jobs, the
-  risk-envelope pilot, any optimization, merge into `main` or other research branches, R1 changes, phenotype/strategy/
-  allocator changes, deleting research evidence, interrupting processes.
-- **Nothing is running** (checked 19:15Z: no node research processes, no Strategy Lab server on 4317, GPU idle).
-- **Next step:** stage C (`npm run app` lint), then D (standard), E (historical compatibility), A report, docs, full verification, deployment, reports, commit, push.
+  risk-envelope pilot, any optimization, merge into `main` or other branches, R1 changes, phenotype/strategy/allocator
+  changes, deleting research evidence.
 
 ## Environment
 
-- Node 24.21.0 (`.node-version`); every evaluating process runs with `--no-maglev`.
-- Credentials (Alpaca) live in `.env`; not needed for this assignment (no data download planned).
-- GPU: RTX 5090 `GPU-ae5f222c…`, accepted binary `research/gpu-phase7/build/gb7` (`cb2ff30b…`), non-official use only.
-- Strategy Lab live state: `state/strategy-lab/` (never delete/reseed). No service unit installed; nothing listening on
-  4317 at 19:15Z. `apps/strategy-lab/dist` dated 2026-11-18.
+- Node 24.21.0 (`.node-version`); every evaluating process ran with `--no-maglev`.
+- No credentials were used. The Strategy Lab API token was read from `state/strategy-lab/api-token` for the live
+  check and never printed.
+- GPU: RTX 5090 `GPU-ae5f222c…`; the accepted binary gb7 (`cb2ff30b…`) was used non-officially (`parity-test`) only.
 
 ## Stages
 
 | Stage | Status | Record |
 |---|---|---|
-| A. P0 audit (repo, branches, processes, acceptance, risk-envelope, data effects) | facts collected (report to write) | `evidence/whole-file-inventory-survey.md`; CROSS_BRANCH.md to write |
-| B. Strategy Lab portfolios: research / all / custom windows, effective dates | implemented; vitest 334/334 (+ windows-model 9), e2e portfolio specs 9/9 (scratch build) | uncommitted edits below |
-| C. `npm run app` lint | done: eslint ignores research/**/cache/** + research/**/results/**; preapp = tools/lint/app-closure.ts (414 files, 0 errors) + tsc; `npm run app -- allIn-trailingBuy VGT all 2025-01-02 2026-11-03` exit 0 | |
-| D. Standard clarification (evidence categories) | done: standard 5.0.0 sha256 68487de7…, registry current 5.0.0; preflight scope prospective + 4 tests (34/35 pass; 1 = STALE by design); research-preflight --all 26 PASS / 5 FAIL (STALE only) | |
-| E. Historical reproducibility inventory and mechanism | tools/historical-repro/env.ts built; verified: vg-l0-full-joint 67b4ae71 doors+47/47 seals PASS, P2 47422d04 doors PASS (doors-pins.json byte-identical); both fail closed at HEAD (observed) | `evidence/repro-*.json`; doc to write |
-| F. Verification (tests, e2e, builds, parity, non-official GPU) | not started | `TESTS_AND_INTEGRITY.md` |
-| G. Deployment of the updated Strategy Lab | not started | |
-| H. Reports, Assignment 2 readiness, commit, push | not started | `REPORT.md`, `ASSIGNMENT_2_READINESS.md` |
+| A. P0 audit | complete | `CROSS_BRANCH.md`; `evidence/whole-file-inventory-survey.md` |
+| B. Strategy Lab windows, N/original, effective dates | complete | `b86d5d25` (with `043aee9c`, the shared execution module); `STRATEGY_LAB.md` |
+| C. `npm run app` | complete | `f53aa7e3`, `2c86f052` |
+| D. Standard 5.0.0 | complete | `dd49e0cd`; standard sha256 `68487de7b67cd9cc…`, registry current 5.0.0 |
+| E. Historical reproducibility | complete | `a4db060c`; `HISTORICAL_COMPATIBILITY.md`; `evidence/repro-*.json` |
+| F. Verification | complete | `TESTS_AND_INTEGRITY.md`; `evidence/npm-test-baseline-9d2eaec4.log`, `evidence/npm-test-final-2c86f052.log`, `evidence/fingerprint-3-assignment-1.json`, `evidence/gpu-nonofficial-check-assignment-1.json` |
+| G. Deployment | complete | `dist` built from the final code; transient unit `strategy-lab`; live HTTP check passed |
+| H. Reports, commit, push | complete | `262234f0` pushed; this record |
 
-## Uncommitted work (on disk, not yet committed)
+## Key results
 
-- `src/manual-eval/execute.ts` (new shared execution module); `tools/manual-eval/pooled.ts` refactored onto it, new
-  `--execution continuous|isolated` (custom default isolated). Verified: CLI outputs for research/all/custom/New L0 all
-  byte-identical to the pre-refactor baseline (scratchpad `cli-before` vs `cli-after`), only an added `execution` key
-  and an explicit execution line in custom `periods.md`.
-- Strategy Lab: `shared/portfolio.ts` (format 2, window types), `runner/portfolio-catalog.ts` (+ N/original entry
-  `n-original`, family rc; existing five entries byte-identical), `catalog/pooled-candidates.json` rebuilt,
-  `runner/portfolio-bridge.ts` (engineRunOf, plans, context, periods, postValidation, inPeriod, crossCheck),
-  `runner/portfolio-run.ts` (window request, research reference + trajectory), `server/portfolios.ts` (identity with
-  window + date-ranges sha, coverage, windowOf), `server/http.ts` (window body), `src/api.ts`.
-- Runner check (scratchpad `runner-check`): N/original research parity verified 10/10; all → 2026-11-25, periods ==
-  CLI summary.json periods (deep-equal), trajectory identical, 13.9 s, 2.7 GB RSS.
-- UI: PortfolioView (WindowControls, effective dates + InfoPopover, post-validation block, PeriodTable, ledger period
-  filters + "P&L in this period" column), EquityChart post-validation shading, App route `?window=…`, RunView/Panels
-  effective run window (shared/run-window.ts), run chart routes use the evaluated window, export run.json/README,
-  meta.research, RunTestDialog post-validation note. Tests: tests/portfolio-windows.test.ts (7, real data),
-  tests/windows-model.test.ts (9), portfolio-server (+2), catalog (+1), parity (+N/original); e2e
-  portfolio-windows.spec.ts (2) + portfolios.spec.ts (N/original added). Screenshots in scratchpad `shots/` (copy to
-  the task dir at the end). Built only into scratchpad `dist/`; apps/strategy-lab/dist untouched so far.
+- **Baseline** at 9d2eaec4: 1,904 / 1,890 / 10 / 4. **Final** at 2c86f052: 1,909 / 1,896 / 9 / 4.
+  - The 9 failures: 6 lowercase `allin-original.ts` + 3 STALE-by-design.
+  - Study 7's endpoint failure: fixed.
+  - Vitest 334/334; Playwright 83/83; lint and tsc clean.
+- **N/original:**
+  - research: $482,700.73 / $20,385.99 / 44 lots; parity 10/10; 44-lot ledger matches;
+  - All → 2026-11-25: $477,002.83 / $25,794.56 / 46 lots; post-validation −$5,697.90; trajectory identical;
+  - the period table equals the CLI's committed summary field for field.
+- **Integrity:**
+  - fingerprint equal to the previous assignment's;
+  - GPU vs CPU (non-official): FULL 102/102 and ALL 102/102 bit-identical; dataset `6e977ccd…` = the accepted one;
+  - `research/` untouched; R1 `818be325…` and vintages `951d4caf…` unchanged.
+- **Acceptance:** STALE (verify-acceptance: 4 failures: the 4 CPU files and the 2 policy files). The tree's digest is
+  `1a007e8c…`, the record's `d1a2e490…`.
 
 ## Guards
 
-- Do not re-run the data append; do not truncate the canonical files; do not edit R1.
-- Do not touch `state/strategy-lab/` except through the running application.
-- `apps/strategy-lab/dist` is what the user's server serves: build into a scratch outDir while developing.
-- Screenshots: the brief asks for them "where practical" (§10.3, §11.2). That is an explicit request, recorded as a
-  departure from the no-visuals reporting preference; Strategy Lab's interface is outside that rule anyway.
+- Do not edit R1, rerun the data append, or truncate the canonical files.
+- Do not install a service, merge, or run any acceptance or optimization without the user's authorization.
+- The reproduction environments were temporary and are removed (`git worktree list` = the main checkout only).
 
 ## Disclosures
 
-- (none yet)
+- **Two policy-test regressions:** the new `preapp` lacked `--no-maglev`, and a new `lint` script was unclassified.
+  Both were caught by the full suite and fixed before the final run.
+- **The prepare tool's first Priority 2 attempt failed closed** on absent sealed caches. The tool was fixed, and the
+  partial worktree was removed by hand.
+
+## Delivery
+
+- **Commits on `feature/research-date-boundaries` (from `9d2eaec4`):**
+  - `043aee9c` (shared execution module);
+  - `b86d5d25` (Strategy Lab);
+  - `f53aa7e3` (`npm run app` lint gate);
+  - `dd49e0cd` (standard 5.0.0);
+  - `a4db060c` (historical reproducibility);
+  - `2c86f052` (policy fix);
+  - `262234f0` (reports and docs);
+  - then this checkpoint's delivery record.
+- **Push:** `git push origin feature/research-date-boundaries`, a fast-forward with no force, unsandboxed. Verified
+  2026-11-27T20:45Z: `git ls-remote origin feature/research-date-boundaries` = `262234f0f738095b1eb4ff538eed136dc73c2a19`
+  = local HEAD. This record is pushed the same way.
+- **Nothing else was touched:** no merge into `main` or any other branch, no PR, no deployment outside this machine,
+  no service installed.
