@@ -488,3 +488,23 @@ describe('appending new sessions', () => {
     );
   });
 });
+
+// The vintage registry against the local canonical files (config/market-data/vintages.json: "every recorded earlier
+// file is a byte prefix of today's"): run where the canonical data exist, and reported (not silently passed) where not.
+describe('the recorded vintages of the local canonical files', () => {
+  const repo = path.resolve(import.meta.dirname, '..', '..', '..');
+  const registry = JSON.parse(fs.readFileSync(path.join(repo, 'config/market-data/vintages.json'), 'utf8')) as {
+    symbols: Record<string, { bytes: number; sha256: string }[]>;
+  };
+  const present = Object.keys(registry.symbols).filter((s) => fs.existsSync(path.join(repo, 'data', s, 'data.csv')));
+
+  test('every recorded vintage of a present canonical file is a verified byte prefix of it (the latest is the whole file)', { skip: present.length === 0 && 'no canonical data here' }, async () => {
+    const rows = await verifyVintages(present, { dataDir: path.join(repo, 'data'), vintagesFile: path.join(repo, 'config/market-data/vintages.json') });
+    assert.equal(rows.length, present.reduce((n, s) => n + registry.symbols[s]!.length, 0));
+    for (const r of rows) assert.equal(r.ok, true, `${r.symbol} ${r.bytes} ${r.sha256.slice(0, 12)}: ${r.error ?? ''}`);
+    for (const s of present) {
+      const latest = registry.symbols[s]!.at(-1)!;
+      assert.equal(fs.statSync(path.join(repo, 'data', s, 'data.csv')).size, latest.bytes, `${s}: the file grew after its last recorded vintage (append through npm run datasets -- append)`);
+    }
+  });
+});
