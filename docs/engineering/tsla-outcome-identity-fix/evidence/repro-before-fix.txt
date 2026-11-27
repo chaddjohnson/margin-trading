@@ -1,0 +1,74 @@
+▶ the defect (reproduction before the fix)
+  ✖ a finalist whose label was overwritten by its governance label still receives its validation row (1.356769ms)
+  ✖ the sealed TSLA inputs give G and C as development-only (1.797922ms)
+✖ the defect (reproduction before the fix) (3.647275ms)
+ℹ tests 2
+ℹ suites 1
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 318.456221
+
+✖ failing tests:
+
+test at src/tsla-d1-growth/tests/outcome.test.ts:23:3
+✖ a finalist whose label was overwritten by its governance label still receives its validation row (1.356769ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + null
+  - {
+  -   V1: true,
+  -   V2: true,
+  -   V3: true
+  - }
+  
+      at TestContext.<anonymous> (/home/chad/projects/margin-trading/src/tsla-d1-growth/tests/outcome.test.ts:31:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at node:internal/test_runner/test:1903:71
+      at node:internal/per_context/primordials:504:82
+      at new Promise (<anonymous>)
+      at new SafePromise (node:internal/per_context/primordials:478:3)
+      at node:internal/per_context/primordials:504:9
+      at Array.map (<anonymous>) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: { V1: true, V2: true, V3: true },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at src/tsla-d1-growth/tests/outcome.test.ts:38:3
+✖ the sealed TSLA inputs give G and C as development-only (1.797922ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'G d375f8105c15ad72',
+  -   'C rc1-99c7a25e9144531e'
+  - ]
+  
+      at TestContext.<anonymous> (/home/chad/projects/margin-trading/src/tsla-d1-growth/tests/outcome.test.ts:43:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1905:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'G d375f8105c15ad72', 'C rc1-99c7a25e9144531e' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+exit=1
