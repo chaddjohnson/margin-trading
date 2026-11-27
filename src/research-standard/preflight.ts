@@ -32,13 +32,16 @@ export const methodRegistryPath = 'docs/research/methods/methods.versions.json';
 export const manifestName = 'STANDARD_ADOPTION.json';
 export const researchRangesPath = 'config/research/date-ranges.json'; // the authoritative research date ranges (§1, 4.0.0)
 
-export const scopes = ['optimization', 'continuation', 'diagnostic'] as const;
+// `prospective` (from 5.0.0, §1.15): a pre-registered prospective (shadow) evaluation of a configuration frozen before the
+// observed sessions; it never searches, so it is treated as a diagnostic for search-related fields.
+export const scopes = ['optimization', 'continuation', 'diagnostic', 'prospective'] as const;
 export const priorities = ['actual-profit', 'robust-profit', 'compromise', 'not-applicable'] as const;
 export const requiredRoles = ['actual-profit', 'robust-profit', 'balanced'] as const;
 // The first version whose §1.8 [S] requires the consequence of the chronological verdict to be declared.
 export const consequenceSince = '2.2.0';
 // The first version whose §1.3 requires a pinned research date range and the data's byte-prefix provenance.
 export const dateRangesSince = '4.0.0';
+export const prospectiveSince = '5.0.0';
 
 // The standard's fixed values (§2.1); a different declared value needs a departure for that section. The date bounds
 // (§1) are not constants here: they are the research date ranges of the repository checked (researchRangesPath).
@@ -94,6 +97,18 @@ export interface Adoption {
   // provenance of every instrument's data through its validation end (required for studies pinning 4.0.0 or later)
   dateRanges?: { file: string; id: string };
   dataPins?: Record<string, { file: string; bytes: number; sha256: string; through: string }>;
+  // §1.15 [M], from 5.0.0: required for scope `prospective` — the frozen configuration and its verifiable freeze time, the
+  // pre-registered observation start (a New York session after both the freeze and the validation end), and the
+  // acceptance criteria when the evaluation is decision-bearing
+  prospective?: {
+    configuration: { label: string; file: string; sha256: string; pointer?: string };
+    frozenAt: string;
+    freezeEvidence: string;
+    observationFrom: string;
+    decisionBearing: boolean;
+    acceptanceCriteria: string | null;
+    reporting: string;
+  };
 }
 
 export interface MethodRegistry {
@@ -419,10 +434,12 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
   // objective and roles (§2)
   if (!priorities.includes(a.objective?.prioritizes))
     errors.push(`objective.prioritizes must be one of ${priorities.join(', ')}`);
-  if (a.objective?.prioritizes === 'not-applicable' && a.scope !== 'diagnostic')
-    errors.push('only a diagnostic may declare no primary-selection priority');
+  const searches = a.scope === 'optimization' || a.scope === 'continuation';
+
+  if (a.objective?.prioritizes === 'not-applicable' && searches)
+    errors.push('only a diagnostic or prospective evaluation may declare no primary-selection priority');
   if (!text(a.objective?.primaryRule)) errors.push('objective.primaryRule is missing');
-  if (a.scope !== 'diagnostic') {
+  if (searches) {
     const roles = Array.isArray(a.objective?.roles) ? a.objective.roles : [];
     const missing = requiredRoles.filter((r) => !roles.includes(r));
 
@@ -446,7 +463,7 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
   const count = (v: unknown) => typeof v === 'number' && Number.isFinite(v) && v >= 0;
 
   if (!b) errors.push('budget is missing');
-  else if (a.scope === 'diagnostic') {
+  else if (!searches) {
     for (const k of ['distinctProposals', 'backendEvaluations'] as const)
       if (b[k] !== null && !count(b[k])) errors.push(`budget.${k} must be a count or null`);
   } else
@@ -454,7 +471,7 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
       if (!count(b[k]) || (b[k] as number) <= 0) errors.push(`budget.${k} must be declared (§4.2)`);
 
   // the consequence of the chronological verdict (§1.8 [S], from 2.2.0): declared before searching
-  if (pinned && compareVersions(pinned.version, consequenceSince) >= 0 && a.scope !== 'diagnostic') {
+  if (pinned && compareVersions(pinned.version, consequenceSince) >= 0 && searches) {
     if (!text(a.chronologicalConsequence))
       errors.push(
         `chronologicalConsequence is missing: standard ${pinned.version} §1.8 requires the protocol to state, before ` +
@@ -462,6 +479,45 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
       );
   } else if (a.chronologicalConsequence !== undefined && !text(a.chronologicalConsequence))
     errors.push('chronologicalConsequence must be a non-empty statement when given');
+
+  // a controlled prospective (shadow) evaluation (§1.15, from 5.0.0): pre-registered before its first observed session
+  if (a.scope === 'prospective' || a.prospective !== undefined) {
+    const pr = a.prospective;
+    // the earliest regular-session open of a New York date (09:30 EDT = 13:30 UTC): conservative for EST dates
+    const openOf = (d: string) => Date.parse(`${d}T13:30:00Z`);
+
+    if (a.scope !== 'prospective') errors.push('a prospective block needs scope "prospective" (§1.15)');
+    if (!pinned || compareVersions(pinned.version, prospectiveSince) < 0)
+      errors.push(`scope prospective needs standard ${prospectiveSince} or later (§1.15); ${pinned?.version ?? 'no version'} is pinned`);
+    if (!pr) errors.push('prospective is missing: §1.15 requires the frozen configuration, its freeze time and the observation start');
+    else {
+      const c = pr.configuration;
+
+      if (!c || !text(c.label) || !text(c.file) || !hex64.test(c.sha256 ?? ''))
+        errors.push('prospective.configuration needs label, file and sha256 (64 hex) of the sealed configuration record');
+      else if (!fs.existsSync(path.resolve(repoRoot, c.file))) errors.push(`prospective.configuration ${c.file} does not exist`);
+      else if (sha256File(path.resolve(repoRoot, c.file)) !== c.sha256)
+        errors.push(`prospective.configuration ${c.file} does not match its sha256: the frozen configuration changed (§1.15: a change is a new version)`);
+      if (!isoUtc.test(pr.frozenAt ?? '')) errors.push('prospective.frozenAt must be an ISO UTC time (…Z): the verifiable freeze time');
+      if (!text(pr.freezeEvidence)) errors.push('prospective.freezeEvidence must name the commit or sealed record that proves the freeze time');
+      if (!isoDate.test(pr.observationFrom ?? '')) errors.push('prospective.observationFrom must be the first observed New York session (YYYY-MM-DD)');
+      if (typeof pr.decisionBearing !== 'boolean') errors.push('prospective.decisionBearing must be true or false');
+      if (pr.decisionBearing === true && !text(pr.acceptanceCriteria))
+        errors.push('prospective.acceptanceCriteria are required for a decision-bearing evaluation, fixed before the first observed session (§1.15)');
+      if (!text(pr.reporting)) errors.push('prospective.reporting must state that every observed session is reported (no selective reporting, §1.15)');
+      if (isoUtc.test(pr.frozenAt ?? '') && isoDate.test(pr.observationFrom ?? '')) {
+        if (Date.parse(pr.frozenAt) >= openOf(pr.observationFrom))
+          errors.push(
+            `the configuration was frozen ${pr.frozenAt}, not before the first observed session ${pr.observationFrom} opened: ` +
+              'sessions that opened before the freeze are never prospective for it (§1.15)'
+          );
+        if (isoUtc.test(a.adoptedAt ?? '') && Date.parse(a.adoptedAt) >= openOf(pr.observationFrom))
+          errors.push(`the evaluation was pre-registered (adoptedAt ${a.adoptedAt}) only after the first observed session ${pr.observationFrom} opened (§1.15: no retroactive classification)`);
+      }
+      if (range && isoDate.test(pr.observationFrom ?? '') && pr.observationFrom <= range.validation.to)
+        errors.push(`prospective observations start ${pr.observationFrom}, inside the formal validation window of ${range.id} (ends ${range.validation.to}): they are reported apart from it (§1.15, §1.16)`);
+    }
+  }
 
   // the reference method, if the study declares one (§4.8)
   if (a.referenceMethod !== undefined) {

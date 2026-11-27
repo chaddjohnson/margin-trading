@@ -62,7 +62,9 @@ governed work). Afterwards it is never edited; changes go to `AMENDMENTS.md` (ap
   reads the canonical files through the shared loader uses `access: 'development'` / `'validation'`
   (`src/lib/evaluation.ts`), which refuses an end after the range's and reads nothing after it. Manual evaluations of
   later data are labelled "manual post-validation evaluation" and never enter selection, qualification or validation
-  (§1.13).
+  (§1.13). Evidence categories (standard 5.0.0 §0.3, §1.16): name each result's category; prospective evidence about a
+  frozen configuration needs its own pre-registered study (scope `prospective`, §1.15), never this protocol's
+  post-validation runs.
 - **Continuity:** continuous runs, no reset at a boundary. Period P&L = the change of the marked net between boundary
   closes. Report the reset and the whole-run DD.
 - **The door log:** `results/doors.jsonl`. Validation data stay closed until `<the guard record>` is sealed and committed.
