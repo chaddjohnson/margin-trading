@@ -34,7 +34,8 @@
   },
   "scripts": {
     "format": "prettier --write 'src/**/*.ts'",
-    "preapp": "eslint && tsc --noEmit",
+    "preapp": "node --experimental-transform-types --disable-warning=ExperimentalWarning tools/lint/app-closure.ts && tsc --noEmit",
+    "lint": "eslint",
     "app": "node --no-maglev --env-file-if-exists=.env --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts",
     "legacy-archive": "node --no-maglev --env-file-if-exists=.env --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts legacyArchive",
     "market-events": "node --no-maglev --env-file-if-exists=.env --experimental-transform-types --disable-warning=ExperimentalWarning src/app.ts marketEvents",
