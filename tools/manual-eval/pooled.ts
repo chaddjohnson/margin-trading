@@ -7,11 +7,14 @@
 //   GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window all [--out DIR]
 //   GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window research
 //   GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window custom --from 2025-01-02 --to 2026-11-25
+//   GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window custom --from 2026-11-02 --to 2026-11-25 --execution continuous
 //   GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --list
 //
 // Windows (src/manual-eval/door.ts): research = Priority 3's FULL door (2016-01-04 → 2026-10-30, the verified byte
 // prefix of the sealed evaluations); all = 2016-01-04 → the latest common complete session of both files; custom = any
-// [from, to] inside it (a later start runs flat from that session). A window past the research validation end
+// [from, to] inside it — isolated by default (a later start runs flat from that session), or with --execution
+// continuous one run from 2016-01-04 whose [from, to] is the reporting window R (src/manual-eval/execute.ts; Strategy
+// Lab's Portfolios tab uses the same module and defaults to continuous). A window past the research validation end
 // (config/research/date-ranges.json) is a MANUAL POST-VALIDATION EVALUATION: never optimization, selection,
 // qualification or validation evidence (standard 4.0.0 §1.13). For such a window the tool also replays FULL and proves
 // that the longer run equals it through 2026-10-30 decision for decision (report.ts compareTrajectories), then reports:
@@ -24,20 +27,22 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { prefixThroughDate, sha256Prefix, vintageOf } from '../../src/lib/canonicalPrefix.ts';
 import { researchRange } from '../../src/lib/researchRanges.ts';
-import { openManualDoor, resolveManualWindow, type WindowMode } from '../../src/manual-eval/door.ts';
+import type { WindowMode } from '../../src/manual-eval/door.ts';
 import {
-  type PeriodSpec,
-  bookStates,
-  compareTrajectories,
-  periodFunding,
-  periodLedger,
-  periodMetrics,
-  r2
-} from '../../src/manual-eval/report.ts';
-import { canonical, chronology, repoRoot, symbols } from '../../src/vg-d1-growth-joint/context.ts';
+  type ExecutionMode,
+  type ManualRunPlan,
+  compareTo,
+  evaluatePlan,
+  openPlanDoor,
+  planManualRun,
+  researchPlan,
+  researchReference
+} from '../../src/manual-eval/execute.ts';
+import { bookStates, periodFunding, periodLedger, r2 } from '../../src/manual-eval/report.ts';
+import { canonical, repoRoot, symbols } from '../../src/vg-d1-growth-joint/context.ts';
 import { cfgId } from '../../src/vg-l0-full-joint/space.ts';
 import { vOptions } from '../../src/vg-l0-full-joint/nl0.ts';
-import { reconcile, replay, toLedger } from '../../src/vg-l0-risk-metrics/engine.ts';
+import { replay } from '../../src/vg-l0-risk-metrics/engine.ts';
 import { auditSubjects } from '../../src/vg-l0-risk-metrics/subjects.ts';
 
 const argv = process.argv.slice(2);
@@ -58,73 +63,40 @@ const subject = subjects.find((s) => s.key === key);
 
 if (!subject) throw new Error(`unknown subject '${key}' (--list shows them)`);
 
-const window = resolveManualWindow({
-  mode: (opt('--window') ?? 'all') as WindowMode,
-  from: opt('--from'),
-  to: opt('--to')
-});
+// A custom window runs ISOLATED (flat at its first session) unless --execution continuous asks for the continuous run
+// from 2016-01-04 with the custom window as its reporting window (src/manual-eval/execute.ts).
+const plan = planManualRun(
+  {
+    mode: (opt('--window') ?? 'all') as WindowMode,
+    from: opt('--from'),
+    to: opt('--to'),
+    execution: opt('--execution') as ExecutionMode | undefined
+  },
+  'isolated'
+);
+const window = plan.reporting;
 const range = researchRange();
 const validationEnd = range.validation.to;
-const developmentEnd = range.development.to;
-const label = window.postValidation
-  ? 'MANUAL POST-VALIDATION EVALUATION (not an extension of the formal validation dataset)'
-  : 'manual evaluation';
+const label = plan.label;
 const purpose = `manual evaluation of ${subject.key} (${window.mode} ${window.from} → ${window.to}); report-only, never formal evidence`;
 const t0 = Date.now();
 
-const run = async (w: typeof window) => {
-  const door = await openManualDoor(w, purpose);
-  const boundaries = [developmentEnd, validationEnd].filter((d) => door.dates.includes(d) && d !== door.dates.at(-1));
-  const r = replay(door, subject.subject, vOptions, boundaries);
-  const L = toLedger(r);
+const run = async (p: ManualRunPlan) =>
+  evaluatePlan(p, await openPlanDoor(p, purpose), (door, boundaries) => replay(door, subject.subject, vOptions, boundaries));
 
-  return { door, r, L, reconciliation: reconcile(r, L), boundaries };
-};
-
-const main = await run(window);
-const full =
-  window.mode !== 'research' && window.to > validationEnd && window.from === chronology.firstSession
-    ? await run(resolveManualWindow({ mode: 'research' }))
-    : null;
-const trajectory = full ? compareTrajectories({ r: full.r, L: full.L }, { r: main.r, L: main.L }) : null;
+const main = await run(plan);
+const full = researchReference(plan) ? await run(researchPlan()) : null;
+const trajectory = full ? compareTo(full, main) : null;
 
 if (trajectory && !trajectory.identical) {
-  console.error(`the run differs from FULL before ${validationEnd}: ${trajectory.differences.join('; ')}`);
+  console.error(`the run differs from FULL over their common span: ${trajectory.differences.join('; ')}`);
   process.exitCode = 1;
 }
 
 const first = main.door.dates[0]!;
 const end = main.door.dates.at(-1)!;
-const has = (d: string) => main.door.dates.includes(d) && d !== end;
-const specs: PeriodSpec[] = [];
-
-if (has(validationEnd) || end === validationEnd) {
-  specs.push({
-    key: 'A',
-    label: `historical research window ${first} → ${validationEnd}`,
-    after: null,
-    through: validationEnd
-  });
-  if (has(developmentEnd)) {
-    specs.push({ key: 'A1', label: `development ${first} → ${developmentEnd}`, after: null, through: developmentEnd });
-    specs.push({
-      key: 'A2',
-      label: `formal validation window (after the ${developmentEnd} close) → ${validationEnd}`,
-      after: developmentEnd,
-      through: validationEnd
-    });
-  }
-}
-if (has(validationEnd))
-  specs.push({
-    key: 'B',
-    label: `newly available period (after the ${validationEnd} close) → ${end}: ${label}`,
-    after: validationEnd,
-    through: end
-  });
-specs.push({ key: 'C', label: `entire window ${first} → ${end}`, after: null, through: end });
-
-const periods = specs.map((s) => periodMetrics(main.L, main.door, s));
+const specs = main.specs;
+const periods = main.periods;
 const post = specs.find((s) => s.key === 'B');
 const ledger = post ? periodLedger(main.L, main.door, post) : [];
 const funding = post ? periodFunding(main.r, main.door, post) : [];
@@ -174,6 +146,15 @@ const summary = {
     options: vOptions
   },
   window: { ...window, door: main.door.name, sessions: main.door.sessions, first, end },
+  execution: {
+    mode: plan.execution,
+    simulated: main.effective.simulation,
+    reporting: main.effective.reporting,
+    note:
+      plan.execution === 'isolated'
+        ? 'isolated: the run starts flat at the first reported session (no state from earlier sessions)'
+        : 'continuous: one causal run from the first common session; every period is a change of its marked net'
+  },
   researchDateRange: {
     id: range.id,
     development: range.development,
@@ -261,6 +242,14 @@ const md = [
   `# ${subject.key}: ${label}`,
   '',
   `Window ${first} → ${end} (${window.mode}; ${main.door.sessions} sessions; common complete endpoint ${window.endpoint.date}, limited by ${window.endpoint.limitedBy.join(', ')}). Research date range ${range.id}: validation ends ${validationEnd}.`,
+  ...(window.mode === 'custom'
+    ? [
+        '',
+        plan.execution === 'isolated'
+          ? `Execution: isolated — the run starts flat at ${main.effective.reporting.from} (no state from earlier sessions).`
+          : `Execution: continuous — one run from ${first}; the reporting window ${main.effective.reporting.from} → ${main.effective.reporting.to} is period R (state carried in).`
+      ]
+    : []),
   '',
   ...periods.map((p) => `- **${p.key}** — ${p.label}`),
   '',
@@ -271,7 +260,7 @@ const md = [
 console.info(md);
 if (trajectory)
   console.info(
-    `Trajectory through ${validationEnd} equal to FULL: ${trajectory.identical ? 'yes (decision for decision)' : `NO: ${trajectory.differences.join('; ')}`}`
+    `Trajectory through ${trajectory.comparedThrough.slice(0, 10)} equal to FULL: ${trajectory.identical ? 'yes (decision for decision)' : `NO: ${trajectory.differences.join('; ')}`}`
   );
 if (full) console.info(`FULL replay = sealed ${subject.key} figures: ${summary.research!.equalsSealed ? 'yes' : 'NO'}`);
 
