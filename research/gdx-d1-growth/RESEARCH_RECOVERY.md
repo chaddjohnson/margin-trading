@@ -2,7 +2,7 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-27T07:36Z (clock, UTC). **Status: COMPLETE.** Research, reports, commit, push and the verified
+- **Updated:** 2026-11-27T07:35Z (clock, UTC). **Status: COMPLETE.** Research, reports, commit, push and the verified
   handoff ZIP are done ("Delivery" below). Nothing is running. **Never rerun any official stage** (every one is sealed;
   `results/seals.jsonl`, 156 entries re-verified 07:09Z).
 - **OUTCOME (sealed, commit `4615a33b`): NO QUALIFYING GDX CANDIDATE.** Candidates 0; development-only 2 (G
@@ -41,7 +41,8 @@
     `ad17b93e76c2653a8095d509e0557d4bd7c95b5a41f84d74b9ca13b490c4bd6b`, 7,575,388 bytes, 790 files. `zip -T` OK;
     `sha256sum -c` passed on all files after extraction; secrets / personal-data scan clean (`bundle/VERIFICATION.md`).
   - Stable copy `~/.local/share/margin-trading-gpu/handoffs/gdx-d1-growth-handoff.zip` (+ `.sha256`), re-verified.
-  - The bundle commit follows `c1e6ba14`; its push verification is recorded by the next checkpoint commit.
+  - Bundle commit `9e5958fd58133dedf9e83117f3415972b514ee35` pushed; `git ls-remote origin research/gdx-d1-growth` equalled it
+    at 07:35:36Z. This checkpoint update is the branch's last commit; its push is verified the same way.
   - `main` is untouched (`3606f4b3`). No merge, no deployment, no broker access.
 - **Follow-up gate (needs the user):** DECISION_REGISTER §U (no adoption; optional new prospective study; merge review;
   archive retention). The MSFT study is not started.
