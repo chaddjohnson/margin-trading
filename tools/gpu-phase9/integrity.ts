@@ -1,0 +1,217 @@
+// gpu-phase9 (a copy of tools/gpu-phase8/integrity.ts on research/vg-l0-staged-trailing-stop, itself a copy of
+// tools/gpu-phase6/integrity.ts): the baseline research/gpu-phase9/results/baseline/ is taken from the last commit before
+// any Assignment 2 change, f2c414ef (tools/gpu-phase9/baseline.ts); the excluded directory is this study's own; a study
+// preflight may fail BEFORE the new record only with the §9.9 stale-acceptance block naming only files pinned by the
+// record in force (the rerun after the record must pass every preflight); the evaluation check requires the changed
+// manifest files (against the base commit) to be exactly the declared set: toolchain.ts (the default binary path).
+// Phase 6's header follows.
+// gpu-phase6 (PROTOCOL.md §6 gate E10): historical research files and their integrity checks unchanged, against the
+// baselines captured before any change (research/gpu-phase9/results/baseline/):
+//   - every tracked file under research/ outside research/gpu-phase9/: the same blob (git ls-files -s) as at baseline;
+//     none added, none removed; and the working tree equals the index for them (no uncommitted change);
+//   - every study's research preflight: the same PASS line as at baseline (22 studies);
+//   - sealed-file protection (tools/gpu-phase5/seal-protect.ts --check, read-only): the same counts for every other
+//     study (amendment A2: this study's own new seals must verify and be 0444), nothing writable,
+//     no content difference;
+//   - the prospective B4/B5 forward freeze: exactly the baseline's (pre-existing) failure list — nothing new, in
+//     particular its bound code closure (src/app.ts …) still verifies;
+//   - the GPU compatibility digests: the evaluation digest, CPU closure, CUDA and host groups as at baseline.
+// Read-only (it writes only --out).
+//   node --no-maglev --experimental-transform-types tools/gpu-phase9/integrity.ts --out <json>
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { repoRoot, resultsDir, writeJson } from '../../src/gpu-phase9/context.ts';
+import { compatManifest } from '../../src/gpu-backend/compat.ts';
+
+const out = process.argv[process.argv.indexOf('--out') + 1]!;
+const B = path.join(resultsDir, 'baseline');
+const node = process.execPath;
+const ts = ['--no-maglev', '--experimental-transform-types', '--disable-warning=ExperimentalWarning'];
+const sh = (cmd: string, args: string[]) =>
+  spawnSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', maxBuffer: 512 << 20 });
+const checks: { name: string; pass: boolean; detail: unknown }[] = [];
+const check = (name: string, pass: boolean, detail: unknown) => {
+  checks.push({ name, pass, detail });
+  console.log(`${pass ? 'PASS' : 'FAIL'} ${name}`);
+};
+
+// tracked research files
+{
+  const parse = (t: string) =>
+    new Map(
+      t
+        .split('\n')
+        .filter(Boolean)
+        .map((l) => {
+          const [blob, file] = l.split('  ');
+          return [file!, blob!] as const;
+        })
+        .filter(([f]) => !f.startsWith('research/gpu-phase9/'))
+    );
+  const before = parse(fs.readFileSync(path.join(B, 'research-tracked-blobs.txt'), 'utf8'));
+  const now = parse(
+    sh('git', ['ls-files', '-s', 'research'])
+      .stdout.split('\n')
+      .filter(Boolean)
+      .map((l) => {
+        const [, blob, , file] = l.split(/\s+/);
+        return `${blob}  ${file}`;
+      })
+      .join('\n')
+  );
+  const changed = [...before].filter(([f, b]) => now.get(f) !== b).map(([f]) => f);
+  const added = [...now.keys()].filter((f) => !before.has(f));
+  const dirty = sh('git', [
+    'status',
+    '--porcelain',
+    '--',
+    'research',
+    ':!research/gpu-phase9',
+  ])
+    .stdout.split('\n')
+    .filter(Boolean);
+
+  check(
+    `tracked research files outside gpu-phase9 as at the base commit f2c414ef (${before.size})`,
+    changed.length === 0 && added.length === 0 && dirty.length === 0,
+    { changed: changed.slice(0, 10), added: added.slice(0, 10), dirty: dirty.slice(0, 10) }
+  );
+}
+// study preflights (amendment E2): every study of the base commit; PASS, or — before the new record only — FAIL whose
+// only error is the §9.9 stale-acceptance block naming only files pinned by the record in force
+{
+  const base = fs.readFileSync(path.join(B, 'preflights.txt'), 'utf8').trim().split('\n');
+  const pinned = new Set(
+    (JSON.parse(fs.readFileSync(path.join(repoRoot, 'config/gpu-backend/acceptance.json'), 'utf8')) as { pins?: { path: string }[] }).pins?.map((x) => x.path) ??
+      []
+  );
+  const accText = fs.readFileSync(path.join(repoRoot, 'config/gpu-backend/acceptance.json'), 'utf8');
+  const isPinned = (f: string) => pinned.has(f) || accText.includes(`"${f}"`);
+  const rows = base.map((l) => {
+    const d = l.split(' ')[0]!;
+    const r = sh(node, [...ts, 'src/research-standard/main.ts', '--study', d]);
+    const text = `${r.stdout}${r.stderr}`;
+    const head = text.split('\n').find((x) => /^(PASS|FAIL)/.test(x)) ?? '';
+    const errors = text.split('\n').filter((x) => /^\s*error:/.test(x));
+    const files = errors.flatMap((e) => [...e.matchAll(/(?:src|config|tools)\/[\w./-]+?\.(?:ts|cuh|cu|h|json|sh|cpp)\b/g)].map((m) => m[0]));
+    const stale =
+      /^FAIL/.test(head) &&
+      errors.length === 1 &&
+      /official GPU optimization is BLOCKED \(§9\.9\)/.test(errors[0]!) &&
+      /changed since acceptance/.test(errors[0]!) &&
+      files.length > 0 &&
+      files.every(isPinned);
+
+    return { study: d, exit: r.status, head: head.slice(0, 100), pass: r.status === 0 && /^PASS/.test(head), stale, unpinned: files.filter((f) => !isPinned(f)) };
+  });
+
+  check(
+    `study preflights of the base commit (${base.length}): PASS, or (before the new record) only the §9.9 stale-acceptance block on pinned files — ${rows.filter((x) => x.pass).length} PASS, ${rows.filter((x) => x.stale).length} stale-blocked`,
+    base.length === 31 && rows.every((x) => x.pass || x.stale),
+    { rows: rows.filter((x) => !x.pass) }
+  );
+}
+// sealed-file protection
+{
+  // Amendment A2: the baseline (captured before this study sealed anything) is compared with the seals of every OTHER
+  // study; this study's own seals (research/gpu-phase9/, added by the campaign itself) must verify and be read-only.
+  const full = path.join(repoRoot, 'research/gpu-phase9/cache/integrity-seals.json');
+  const r = sh(node, [...ts, 'tools/gpu-phase5/seal-protect.ts', '--check', '--out', full]);
+  const all = JSON.parse(fs.readFileSync(full, 'utf8')) as { rows: { file: string; status: string; mode: string }[] };
+  const base = JSON.parse(fs.readFileSync(path.join(B, 'seals-check.json'), 'utf8')) as Record<string, number>;
+  const status: Record<string, string> = {
+    protected: 'protected',
+    writableVerified: 'writable (verified)',
+    contentDiffers: 'content differs',
+    matchesAnEarlierSealOnly: 'matches an earlier seal only',
+    absent: 'absent',
+    notARegularFile: 'not a regular file',
+    untrackedOrModified: 'untracked or modified in Git',
+    restored: 'restored'
+  };
+  const ownDir = (f: string) => f.startsWith('research/gpu-phase9/');
+  const own = all.rows.filter((x) => ownDir(x.file));
+  const others = all.rows.filter((x) => !ownDir(x.file));
+  const line: Record<string, number> = {
+    sealedFiles: others.length,
+    ...Object.fromEntries(Object.entries(status).map(([k, s]) => [k, others.filter((x) => x.status === s).length]))
+  };
+  const keys = ['sealedFiles', ...Object.keys(status)];
+  const ownOk = own.every(
+    (x) => (x.status === 'protected' || x.status === 'untracked or modified in Git') && x.mode === '444'
+  );
+
+  check(
+    'sealed-file protection as at baseline (read-only check; other studies = baseline, own seals verified 0444)',
+    r.status === 0 && keys.every((k) => line[k] === (base[k] ?? 0)) && ownOk,
+    { others: Object.fromEntries(keys.map((k) => [k, [base[k] ?? 0, line[k]]])), own }
+  );
+}
+// the B4/B5 forward freeze
+{
+  const r = sh(node, [
+    ...ts,
+    '-e',
+    "import('./src/pools/forward/freeze.ts').then(async m=>{const r=await m.verifyProspectiveFreeze();const {freeze,...rest}=r;console.log(JSON.stringify(rest))})"
+  ]);
+  const now = JSON.parse(r.stdout.trim().split('\n').at(-1)!) as { failures: string[] };
+  const base = JSON.parse(fs.readFileSync(path.join(B, 'forward-freeze.json'), 'utf8')) as { failures: string[] };
+
+  // GPU Phase 9: at the base commit f2c414ef the freeze's code-closure line already names the four loader files of the
+  // research-date-boundaries work (src/lib/canonicalPrefix.ts, csv.ts, evaluation.ts, researchRanges.ts; committed before
+  // this study, disclosed in its report); nothing else of the closure may differ, before or after this campaign
+  const codeLines = (list: string[]) => list.filter((f) => /code|src\//.test(f));
+  const declaredCode = [
+    'the code changed after the freeze: src/lib/canonicalPrefix.ts, src/lib/csv.ts, src/lib/evaluation.ts, src/lib/researchRanges.ts'
+  ];
+
+  check(
+    'the B4/B5 forward freeze: the base commit\'s failure list exactly, nothing new (its code-closure line names only the four research-date-boundaries loader files)',
+    JSON.stringify(now.failures) === JSON.stringify(base.failures) &&
+      JSON.stringify(codeLines(now.failures)) === JSON.stringify(declaredCode),
+    {
+      baseline: base.failures.length,
+      now: now.failures.length,
+      new: now.failures.filter((f) => !base.failures.includes(f))
+    }
+  );
+}
+// compatibility: against the base commit f2c414ef, the changed files of the evaluation manifest are exactly the declared
+// set of this campaign (the CPU closure and CUDA unchanged; host: toolchain.ts, the default binary path). The CPU-closure
+// change of the research-date-boundaries work happened before the base commit; tools/gpu-phase9/accept.ts S1 checks it
+// against the record in force.
+{
+  const base = JSON.parse(fs.readFileSync(path.join(B, 'compat-base.json'), 'utf8')) as Record<'cpu' | 'cuda' | 'host', Record<string, string | null>>;
+  const m = compatManifest();
+  const changed = (g: 'cpu' | 'cuda' | 'host') =>
+    m[g].files
+      .filter((f) => base[g][f.path] !== f.sha256)
+      .map((f) => f.path)
+      .sort();
+  const want = {
+    cpu: [] as string[],
+    cuda: [] as string[],
+    host: ['src/gpu-backend/toolchain.ts']
+  };
+  const got = { cpu: changed('cpu'), cuda: changed('cuda'), host: changed('host') };
+
+  check(
+    'GPU evaluation: against the base commit, the CPU closure and CUDA unchanged; the host group changed exactly in toolchain.ts',
+    (['cpu', 'cuda', 'host'] as const).every((g) => JSON.stringify(got[g]) === JSON.stringify(want[g])),
+    { digest: m.digest, changed: got, declared: want }
+  );
+}
+
+const pass = checks.every((c) => c.pass);
+
+writeJson(out, {
+  kind: 'gpu-phase9 integrity of historical research',
+  t: new Date().toISOString(),
+  head: sh('git', ['rev-parse', 'HEAD']).stdout.trim(),
+  checks,
+  summary: `${checks.filter((c) => c.pass).length}/${checks.length} integrity checks pass`,
+  pass
+});
+console.log(`${checks.filter((c) => c.pass).length}/${checks.length} integrity checks pass`);
+process.exitCode = pass ? 0 : 2;
