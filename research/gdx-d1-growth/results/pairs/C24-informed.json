@@ -1,0 +1,513 @@
+{
+ "stage": "fixed informed pairs (arm C+)",
+ "protocol": "P8-GDX 1.0.0",
+ "cutoff": "C24",
+ "rule": "every pair of the D+ and G+ finalists (each: the informed population’s primary, robust-profit and balanced role holders; distinct ledgers; ≤ 3 × 3), their parameter vectors unchanged, in one shared slot (D1 first); no re-optimization; informed (no independent chronological test)",
+ "sides": {
+  "d1": [
+   {
+    "key": "F1",
+    "why": "primary (actual-profit)",
+    "label": "C24/D/refine/D.D1/R103#1 profit"
+   },
+   {
+    "key": "F2",
+    "why": "robust-profit role",
+    "label": "C24/D/refine/D.B1/R106#2 robust"
+   }
+  ],
+  "g": [
+   {
+    "key": "F1",
+    "why": "primary (actual-profit)",
+    "label": "C24/G/informed/G.h1.s1/R101#1 profit"
+   },
+   {
+    "key": "F2",
+    "why": "robust-profit role",
+    "label": "C24/G/informed/G.h2.s1/R105#1 profit"
+   },
+   {
+    "key": "F3",
+    "why": "balanced role",
+    "label": "C24/G/refine/G.h1.s1/R101#2 robust"
+   }
+  ]
+ },
+ "pairs": [
+  {
+   "label": "C24/C+/pair D+F1×G+F1",
+   "d1": "C24/D/refine/D.D1/R103#1 profit",
+   "g": "C24/G/informed/G.h1.s1/R101#1 profit",
+   "d1Why": "primary (actual-profit)",
+   "gWhy": "primary (actual-profit)",
+   "id": "rc1-ca44605bd03bf6da",
+   "cfg": {
+    "cell": "C.D1.h1.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 278,
+      "trailingBuyPercentage": 6,
+      "trailingStopPercentage": 66,
+      "maximumHoldDays": 5,
+      "tickWindowSize": 246,
+      "intradayLossBuffer": 35,
+      "pullback": 77,
+      "continuationWindow": 82
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 219
+       },
+       "hold": {
+        "mode": "adaptive",
+        "extendedHoldDays": 59,
+        "progressTenths": 47
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 2,
+        "recoveryTenths": 1000,
+        "maxBlockSessions": 83
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 3,
+     "recentLowLookbackBars": 59,
+     "trendFilterEnabled": false,
+     "eligibilityEnabled": true,
+     "eligibilityPolicy": "minimum_strength",
+     "eligibilityMaxAgeSessions": 17,
+     "eligibilityMinimumAdvancePercent": 8.4,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 6.9,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 28,
+     "intradayLossBufferEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 40,
+     "initialStopAtrMultiple": 4.1,
+     "retentionEnabled": true,
+     "retentionSellPercent": 77,
+     "retentionSmaSessions": 30,
+     "retentionClosesBelow": 5,
+     "continuationEnabled": true,
+     "continuationMethod": "classic_d1",
+     "continuationWindowSessions": 38,
+     "classicPullbackPercent": 9.9,
+     "classicReboundPercent": 0.37,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C24/C+/pair D+F1×G+F2",
+   "d1": "C24/D/refine/D.D1/R103#1 profit",
+   "g": "C24/G/informed/G.h2.s1/R105#1 profit",
+   "d1Why": "primary (actual-profit)",
+   "gWhy": "robust-profit role",
+   "id": "rc1-c9d4f413db835dd4",
+   "cfg": {
+    "cell": "C.D1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 278,
+      "trailingBuyPercentage": 6,
+      "trailingStopPercentage": 66,
+      "maximumHoldDays": 5,
+      "tickWindowSize": 246,
+      "intradayLossBuffer": 35,
+      "pullback": 77,
+      "continuationWindow": 82
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 219
+       },
+       "hold": {
+        "mode": "adaptive",
+        "extendedHoldDays": 59,
+        "progressTenths": 47
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 2,
+        "recoveryTenths": 1000,
+        "maxBlockSessions": 83
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 3.9,
+     "recentLowLookbackBars": 153,
+     "trendFilterEnabled": false,
+     "eligibilityEnabled": true,
+     "eligibilityPolicy": "minimum_strength",
+     "eligibilityMaxAgeSessions": 27,
+     "eligibilityMinimumAdvancePercent": 7.8,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 6.1,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 16,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 2.7,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 48,
+     "initialStopAtrMultiple": 3.8,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "classic_d1",
+     "continuationWindowSessions": 98,
+     "classicPullbackPercent": 3.3,
+     "classicReboundPercent": 3.57,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C24/C+/pair D+F1×G+F3",
+   "d1": "C24/D/refine/D.D1/R103#1 profit",
+   "g": "C24/G/refine/G.h1.s1/R101#2 robust",
+   "d1Why": "primary (actual-profit)",
+   "gWhy": "balanced role",
+   "id": "rc1-79efbd142306a6ed",
+   "cfg": {
+    "cell": "C.D1.h1.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 278,
+      "trailingBuyPercentage": 6,
+      "trailingStopPercentage": 66,
+      "maximumHoldDays": 5,
+      "tickWindowSize": 246,
+      "intradayLossBuffer": 35,
+      "pullback": 77,
+      "continuationWindow": 82
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 219
+       },
+       "hold": {
+        "mode": "adaptive",
+        "extendedHoldDays": 59,
+        "progressTenths": 47
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 2,
+        "recoveryTenths": 1000,
+        "maxBlockSessions": 83
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 4.5,
+     "recentLowLookbackBars": 152,
+     "trendFilterEnabled": false,
+     "eligibilityEnabled": true,
+     "eligibilityPolicy": "minimum_strength",
+     "eligibilityMaxAgeSessions": 28,
+     "eligibilityMinimumAdvancePercent": 9.5,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 4.7,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 11,
+     "intradayLossBufferEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 14,
+     "initialStopAtrMultiple": 3.7,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "classic_d1",
+     "continuationWindowSessions": 135,
+     "classicPullbackPercent": 3,
+     "classicReboundPercent": 1.56,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C24/C+/pair D+F2×G+F1",
+   "d1": "C24/D/refine/D.B1/R106#2 robust",
+   "g": "C24/G/informed/G.h1.s1/R101#1 profit",
+   "d1Why": "robust-profit role",
+   "gWhy": "primary (actual-profit)",
+   "id": "rc1-56ed0cc33c9b49cd",
+   "cfg": {
+    "cell": "C.B1.h1.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 265,
+      "trailingBuyPercentage": 8,
+      "trailingStopPercentage": 62,
+      "maximumHoldDays": 25,
+      "tickWindowSize": 250,
+      "intradayLossBuffer": 37,
+      "pullback": 199,
+      "continuationWindow": 167
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 173
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 780,
+        "maxBlockSessions": 188
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 3,
+     "recentLowLookbackBars": 59,
+     "trendFilterEnabled": false,
+     "eligibilityEnabled": true,
+     "eligibilityPolicy": "minimum_strength",
+     "eligibilityMaxAgeSessions": 17,
+     "eligibilityMinimumAdvancePercent": 8.4,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 6.9,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 28,
+     "intradayLossBufferEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 40,
+     "initialStopAtrMultiple": 4.1,
+     "retentionEnabled": true,
+     "retentionSellPercent": 77,
+     "retentionSmaSessions": 30,
+     "retentionClosesBelow": 5,
+     "continuationEnabled": true,
+     "continuationMethod": "classic_d1",
+     "continuationWindowSessions": 38,
+     "classicPullbackPercent": 9.9,
+     "classicReboundPercent": 0.37,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C24/C+/pair D+F2×G+F2",
+   "d1": "C24/D/refine/D.B1/R106#2 robust",
+   "g": "C24/G/informed/G.h2.s1/R105#1 profit",
+   "d1Why": "robust-profit role",
+   "gWhy": "robust-profit role",
+   "id": "rc1-74639bb1e2040318",
+   "cfg": {
+    "cell": "C.B1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 265,
+      "trailingBuyPercentage": 8,
+      "trailingStopPercentage": 62,
+      "maximumHoldDays": 25,
+      "tickWindowSize": 250,
+      "intradayLossBuffer": 37,
+      "pullback": 199,
+      "continuationWindow": 167
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 173
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 780,
+        "maxBlockSessions": 188
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 3.9,
+     "recentLowLookbackBars": 153,
+     "trendFilterEnabled": false,
+     "eligibilityEnabled": true,
+     "eligibilityPolicy": "minimum_strength",
+     "eligibilityMaxAgeSessions": 27,
+     "eligibilityMinimumAdvancePercent": 7.8,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 6.1,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 16,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 2.7,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 48,
+     "initialStopAtrMultiple": 3.8,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "classic_d1",
+     "continuationWindowSessions": 98,
+     "classicPullbackPercent": 3.3,
+     "classicReboundPercent": 3.57,
+     "costBpsPerSide": 5
+    }
+   }
+  },
+  {
+   "label": "C24/C+/pair D+F2×G+F3",
+   "d1": "C24/D/refine/D.B1/R106#2 robust",
+   "g": "C24/G/refine/G.h1.s1/R101#2 robust",
+   "d1Why": "robust-profit role",
+   "gWhy": "balanced role",
+   "id": "rc1-f2ab4f77e770a59f",
+   "cfg": {
+    "cell": "C.B1.h1.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 265,
+      "trailingBuyPercentage": 8,
+      "trailingStopPercentage": 62,
+      "maximumHoldDays": 25,
+      "tickWindowSize": 250,
+      "intradayLossBuffer": 37,
+      "pullback": 199,
+      "continuationWindow": 167
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 173
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 780,
+        "maxBlockSessions": 188
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "rise_from_recent_low",
+     "advanceFromRecentLowPercent": 4.5,
+     "recentLowLookbackBars": 152,
+     "trendFilterEnabled": false,
+     "eligibilityEnabled": true,
+     "eligibilityPolicy": "minimum_strength",
+     "eligibilityMaxAgeSessions": 28,
+     "eligibilityMinimumAdvancePercent": 9.5,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 4.7,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 11,
+     "intradayLossBufferEnabled": false,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 14,
+     "initialStopAtrMultiple": 3.7,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "classic_d1",
+     "continuationWindowSessions": 135,
+     "classicPullbackPercent": 3,
+     "classicReboundPercent": 1.56,
+     "costBpsPerSide": 5
+    }
+   }
+  }
+ ],
+ "finished": "2026-11-27T04:01:02.649Z"
+}
