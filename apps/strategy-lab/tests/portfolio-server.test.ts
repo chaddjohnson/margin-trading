@@ -52,8 +52,11 @@ describe('pooled-candidate server', () => {
     const r = await fetch(`${base}${path}`);
     return { status: r.status, body: (await r.json()) as T };
   };
-  const post = async <T,>(path: string) => {
-    const r = await fetch(`${base}${path}`, { method: 'POST' });
+  const post = async <T,>(path: string, body?: unknown) => {
+    const r = await fetch(`${base}${path}`, {
+      method: 'POST',
+      ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    });
     return { status: r.status, body: (await r.json()) as T };
   };
   type Ticket = { ticket: string; replayId: string; state: string; cacheHit: boolean; coalesced: boolean; error: string | null; candidateId: string };
@@ -66,10 +69,10 @@ describe('pooled-candidate server', () => {
     return x;
   };
 
-  it('lists the five frozen candidates with their full settings; no route launches a search or batch', async () => {
+  it('lists the frozen candidates with their full settings; no route launches a search or batch', async () => {
     const { status, body } = await get<{ candidates: { id: string; cached: boolean; quad: unknown; components: unknown[] }[] }>('/api/portfolios');
     expect(status).toBe(200);
-    expect(body.candidates.map((c) => c.id)).toEqual(['l0-primary', 'c4-refined', 'c4', 'vgt-d1-g4', 'vgt-d1-g085']);
+    expect(body.candidates.map((c) => c.id)).toEqual(['l0-primary', 'c4-refined', 'c4', 'vgt-d1-g4', 'vgt-d1-g085', 'n-original']);
     expect(body.candidates.every((c) => c.quad && c.components.length === 4)).toBe(true);
     expect((await get('/api/portfolios/c4')).status).toBe(200);
     expect((await get('/api/portfolios/nope')).status).toBe(404);
@@ -85,7 +88,22 @@ describe('pooled-candidate server', () => {
     const a = portfolios.identityOf(list[0]!);
     const b = portfolios.identityOf(list[1]!);
     expect(a.candidate.entrySha256).not.toBe(b.candidate.entrySha256);
-    expect(a.window).toEqual({ from: '2016-01-04', to: '2026-10-30', boundary: '2024-12-31' });
+    expect(a.window).toEqual({ request: { mode: 'research' }, boundary: '2024-12-31' });
+    expect(a.researchRanges.file).toBe('config/research/date-ranges.json');
+    expect(a.researchRanges.sha256).toMatch(/^[0-9a-f]{64}$/);
+    // different windows (and execution modes) are different identities; the default is the research window
+    const keyOf = (w: Parameters<typeof portfolios.identityOf>[1]) => JSON.stringify(portfolios.identityOf(list[0]!, w));
+    const keys = new Set(
+      [
+        undefined,
+        { mode: 'all' as const },
+        { mode: 'custom' as const, from: '2025-01-02', to: '2026-10-30', execution: 'continuous' as const },
+        { mode: 'custom' as const, from: '2025-01-02', to: '2026-10-30', execution: 'isolated' as const },
+        { mode: 'custom' as const, from: '2025-01-03', to: '2026-10-30', execution: 'continuous' as const }
+      ].map(keyOf)
+    );
+    expect(keys.size).toBe(5);
+    expect(keyOf(undefined)).toBe(keyOf({ mode: 'research' }));
     expect(Object.keys(a.data.symbols)).toEqual(['GDX', 'VGT']);
     expect(Object.keys(a.implementation.files)).toEqual(
       expect.arrayContaining([
@@ -138,9 +156,58 @@ describe('pooled-candidate server', () => {
     120_000
   );
 
+  it.skipIf(!hasData)('serves the local coverage and refuses a malformed window or one past the common complete session', async () => {
+    const list = (await get<{ coverage: { endpoint: string; limitedBy: string[]; research: { validationEnd: string } } }>('/api/portfolios')).body;
+    expect(list.coverage.endpoint >= '2026-11-25').toBe(true);
+    expect(list.coverage.research.validationEnd).toBe('2026-10-30');
+    const bad = [
+      { window: { mode: 'later' } },
+      { window: { mode: 'all', to: '2026-11-25' } },
+      { window: { mode: 'custom', from: '2026-11-25', to: '2026-11-02' } },
+      { window: { mode: 'custom', from: '2015-06-01', to: '2016-12-30' } },
+      { window: { mode: 'custom', from: '2026-11-02', to: '2099-12-31' } },
+      { window: { mode: 'custom', from: '2026-11-02', to: '2026-11-25', execution: 'warm' } }
+    ];
+    for (const b of bad) {
+      const r = await post<{ error: string }>('/api/portfolios/n-original/replay', b);
+      expect({ b, status: r.status }).toEqual({ b, status: 400 });
+    }
+    expect((await post<{ error: string }>('/api/portfolios/n-original/replay', bad[4])).body.error).toMatch(/latest common complete session/);
+    expect(portfolios.cacheStatus().queued).toEqual([]);
+  });
+
+  it.skipIf(!hasData)(
+    'replays N/original on all data: a new identity beside the research window, dates and labels of the effective run',
+    async () => {
+      const t = (await post<Ticket>('/api/portfolios/n-original/replay', { window: { mode: 'all' } })).body;
+      const done = await until(t);
+      expect(done.error).toBeNull();
+      expect(done.state).toBe('completed');
+      type D = { window: { from: string; to: string; requested: unknown; simulation: { to: string } }; metrics: { window: { postValidation: boolean; label: string }; trajectory: { identical: boolean }; postValidation: { net: number } | null }; priceSource: { basisDate: string } };
+      const d = (await get<D>(`/api/portfolio-replays/${done.replayId}`)).body;
+      expect(d.window.requested).toEqual({ mode: 'all' });
+      expect(d.window.from).toBe('2016-01-04');
+      expect(d.window.to).toBe(d.window.simulation.to);
+      expect(d.window.to >= '2026-11-25').toBe(true);
+      expect(d.metrics.window.postValidation).toBe(true);
+      expect(d.metrics.window.label).toMatch(/MANUAL POST-VALIDATION EVALUATION/);
+      expect(d.metrics.trajectory.identical).toBe(true);
+      expect(d.priceSource.basisDate).toBe('2016-01-04');
+      // the research window of the same candidate is another identity (and its cached state is per window)
+      const r = (await post<Ticket>('/api/portfolios/n-original/replay')).body;
+      expect(r.replayId).not.toBe(done.replayId);
+      await until(r);
+      // the chart serves prices through the simulated end (the appended sessions), never past it
+      const c = (await get<{ d: string[] }>(`/api/portfolio-replays/${done.replayId}/candles?symbol=GDX`)).body;
+      expect(c.d.at(-1)).toBe(d.window.to);
+    },
+    180_000
+  );
+
   it.skipIf(!hasData)(
     'releases a queued replay nobody waits for, and evicts a tampered cache entry instead of serving it',
     async () => {
+      const before = portfolios.cacheStatus().entries; // the earlier tests' entries
       const running = (await post<Ticket>('/api/portfolios/c4/replay')).body; // occupies the one replay slot
       const queued = (await post<Ticket>('/api/portfolios/c4-refined/replay')).body;
       expect(queued.state).toBe('queued');
@@ -149,7 +216,7 @@ describe('pooled-candidate server', () => {
       expect(portfolios.cacheStatus().queued).toEqual([]);
       const done = await until(running);
       expect(done.state).toBe('completed');
-      expect(portfolios.cacheStatus().entries).toBe(2);
+      expect(portfolios.cacheStatus().entries).toBe(before + 1);
       // tamper with the cached metrics: the read refuses it, the entry is evicted, a new request replays again
       const dir = join(state, 'portfolio-cache', 'entries', done.replayId.slice(3));
       writeFileSync(join(dir, 'metrics.json'), '{"tampered":true}\n');

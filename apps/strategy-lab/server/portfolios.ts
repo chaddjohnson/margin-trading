@@ -11,9 +11,12 @@
 //     trash/               evicted entries on their way out
 //
 // The key is sha256 of the replay IDENTITY: the catalog entry's own sha256 (its full vectors, enabled components,
-// conventions and targets), the lifecycle, the benchmark window, the content hashes of the VGT and GDX data files and
-// the runtime inputs, the read-only guard file of the FULL door, and the implementation fingerprint of the runner's
-// whole static import closure (server/preview-identity.ts), Node version and flags. Every request recomputes it; a hit
+// conventions and targets), the lifecycle, the requested evaluation WINDOW (research | all | custom with its dates and
+// execution mode, in canonical form), the research date ranges file (config/research/date-ranges.json: the validation
+// end that splits the periods), the content hashes of the VGT and GDX data files and the runtime inputs (so "all"
+// resolves to a new identity whenever a file grows: a new data vintage never serves an older replay), the read-only
+// guard file of the FULL door, and the implementation fingerprint of the runner's whole static import closure
+// (server/preview-identity.ts), Node version and flags. Every request recomputes it; a hit
 // requires the stored identity to be equal and every file to match its sha256 and size. A changed engine, catalog or
 // data file therefore never serves an older replay under the new identity. Replays run one at a time; identical
 // requests are coalesced; a queued replay nobody waits for is dropped (a running one finishes and is cached).
@@ -24,15 +27,24 @@ import { createWriteStream, existsSync, mkdirSync, readFileSync, readdirSync, re
 import { join } from 'node:path';
 
 import { EVENT_CONTRACT_VERSION, type LabEvent } from '../shared/contract.ts';
+import { commonCompleteEndpoint } from '../../../src/lib/canonicalPrefix.ts';
+import { researchRange } from '../../../src/lib/researchRanges.ts';
 import {
   type CandidateCatalog,
   type CandidateEntry,
   PORTFOLIO_BENCHMARK,
+  PORTFOLIO_EXECUTIONS,
   PORTFOLIO_REPLAY_FORMAT,
+  PORTFOLIO_WINDOW_MODES,
+  type PortfolioCoverage,
   type PortfolioEquity,
   type PortfolioMetrics,
   type PortfolioPosition,
-  type PortfolioReplayDetail
+  type PortfolioReplayDetail,
+  type PortfolioWindowRequest,
+  RESEARCH_WINDOW,
+  normalizeWindowRequest,
+  windowRequestText
 } from '../shared/portfolio.ts';
 import { canonicalJson } from '../shared/preview.ts';
 import { validateEvents } from '../shared/validate-events.ts';
@@ -73,7 +85,9 @@ export interface ReplayIdentity {
   eventContract: number;
   candidate: { id: string; entrySha256: string };
   lifecycle: 'L0';
-  window: { from: string; to: string; boundary: string };
+  /** The requested window in canonical form (the effective dates follow from it and the data fingerprint). */
+  window: { request: PortfolioWindowRequest; boundary: string };
+  researchRanges: { file: string; sha256: string | null };
   data: DataFingerprint;
   guard: { file: string; sha256: string | null };
   implementation: ImplementationFingerprint;
@@ -97,6 +111,7 @@ interface Execution {
   replayId: string;
   identity: ReplayIdentity;
   entry: CandidateEntry;
+  window: PortfolioWindowRequest;
   state: State;
   progress: { message: string; fraction: number | null } | null;
   error: string | null;
@@ -196,7 +211,10 @@ export class PortfolioService {
     return e;
   }
 
-  /** The catalog for the selector: every entry with its full settings, and the cached replay id when one is valid. */
+  /**
+   * The catalog for the selector: every entry with its full settings, and whether its research-window replay is
+   * cached; with the window modes and the local data coverage the window controls show.
+   */
   list() {
     const c = this.catalog();
     const shared = this.sharedParts();
@@ -205,17 +223,46 @@ export class PortfolioService {
       version: c.version,
       note: c.note,
       benchmark: c.benchmark,
-      candidates: c.candidates.map((e) => ({ ...e, cached: this.index.has(this.keyOf(e, shared)) }))
+      windowModes: PORTFOLIO_WINDOW_MODES,
+      executions: PORTFOLIO_EXECUTIONS,
+      coverage: this.coverage(),
+      candidates: c.candidates.map((e) => ({ ...e, cached: this.index.has(this.keyOf(e, RESEARCH_WINDOW, shared)) }))
     };
+  }
+
+  /** The local VGT/GDX coverage: the latest common complete session, and the research date range (fail-soft). */
+  coverage(): PortfolioCoverage {
+    let research: PortfolioCoverage['research'];
+    try {
+      const r = researchRange();
+      research = { id: r.id, developmentEnd: r.development.to, validationEnd: r.validation.to, file: 'config/research/date-ranges.json' };
+    } catch (e) {
+      throw new PortfolioError(500, `the research date ranges are unreadable: ${(e as Error).message}`);
+    }
+    try {
+      const cc = commonCompleteEndpoint(['GDX', 'VGT'], join(this.cfg.repoRoot, 'data'));
+      return {
+        endpoint: cc.endpoint,
+        limitedBy: cc.limitedBy,
+        firstSession: PORTFOLIO_BENCHMARK.from,
+        files: cc.files.map((f) => ({ symbol: f.symbol, latestCompleteSession: f.latestCompleteSession, lastRowUtc: f.lastRowUtc, bytes: f.bytes })),
+        research,
+        error: null
+      };
+    } catch (e) {
+      return { endpoint: null, limitedBy: [], firstSession: PORTFOLIO_BENCHMARK.from, files: [], research, error: (e as Error).message };
+    }
   }
 
   // ----- identity -----
 
   /** The parts of the identity shared by every candidate (data, guard, implementation): computed once per request. */
-  private sharedParts(): Pick<ReplayIdentity, 'data' | 'guard' | 'implementation'> {
+  private sharedParts(): Pick<ReplayIdentity, 'researchRanges' | 'data' | 'guard' | 'implementation'> {
     const guard = join(this.cfg.repoRoot, PORTFOLIO_GUARD_FILE);
     try {
+      const ranges = join(this.cfg.repoRoot, 'config', 'research', 'date-ranges.json');
       return {
+        researchRanges: { file: 'config/research/date-ranges.json', sha256: existsSync(ranges) ? fileSha(ranges) : null },
         data: dataFingerprint(this.cfg.repoRoot, ['GDX', 'VGT']),
         guard: { file: PORTFOLIO_GUARD_FILE, sha256: existsSync(guard) ? fileSha(guard) : null },
         implementation: implementationFingerprint(this.cfg.repoRoot, PORTFOLIO_RUNNER)
@@ -225,28 +272,52 @@ export class PortfolioService {
     }
   }
 
-  identityOf(entry: CandidateEntry, shared = this.sharedParts()): ReplayIdentity {
+  identityOf(entry: CandidateEntry, window: PortfolioWindowRequest = RESEARCH_WINDOW, shared = this.sharedParts()): ReplayIdentity {
     return {
       schema: IDENTITY_SCHEMA,
       format: PORTFOLIO_REPLAY_FORMAT,
       eventContract: EVENT_CONTRACT_VERSION,
       candidate: { id: entry.id, entrySha256: entry.entrySha256 },
       lifecycle: entry.lifecycle,
-      window: { from: PORTFOLIO_BENCHMARK.from, to: PORTFOLIO_BENCHMARK.to, boundary: PORTFOLIO_BENCHMARK.boundary },
+      window: { request: normalizeWindowRequest(window), boundary: PORTFOLIO_BENCHMARK.boundary },
       ...shared
     };
   }
 
-  private keyOf(entry: CandidateEntry, shared = this.sharedParts()) {
-    return sha256(canonicalJson(this.identityOf(entry, shared)));
+  private keyOf(entry: CandidateEntry, window: PortfolioWindowRequest = RESEARCH_WINDOW, shared = this.sharedParts()) {
+    return sha256(canonicalJson(this.identityOf(entry, window, shared)));
+  }
+
+  /** A window request checked against the local coverage (the runner checks it again before reading any data). */
+  windowOf(raw: unknown): PortfolioWindowRequest {
+    let w: PortfolioWindowRequest;
+    try {
+      w = normalizeWindowRequest(raw);
+    } catch (e) {
+      throw new PortfolioError(400, `invalid window: ${(e as Error).message}`);
+    }
+    if (w.mode !== 'research') {
+      const c = this.coverage();
+      if (!c.endpoint) throw new PortfolioError(409, `the local VGT/GDX data have no common complete session: ${c.error ?? 'unknown'}`);
+      if (w.mode === 'custom') {
+        if (w.from < c.firstSession) throw new PortfolioError(400, `the window starts ${w.from}, before the first common session ${c.firstSession}`);
+        if (w.to > c.endpoint)
+          throw new PortfolioError(
+            400,
+            `the window ends ${w.to}, after the latest common complete session of GDX and VGT (${c.endpoint}, limited by ${c.limitedBy.join(', ')}): no complete data exist locally after it`
+          );
+      }
+    }
+    return w;
   }
 
   // ----- submit / tickets -----
 
-  /** ONE replay of ONE catalog candidate: a validated cache hit, a join of the same running replay, or a new one. */
-  submit(candidateId: string): TicketView {
+  /** ONE replay of ONE catalog candidate over ONE window: a validated cache hit, a join of the same running replay, or a new one. */
+  submit(candidateId: string, rawWindow?: unknown): TicketView {
     const entry = this.candidate(candidateId);
-    const identity = this.identityOf(entry);
+    const window = this.windowOf(rawWindow);
+    const identity = this.identityOf(entry, window);
     const key = sha256(canonicalJson(identity));
     const replayId = `PR-${key}`;
     const ticket: Ticket = {
@@ -271,7 +342,7 @@ export class PortfolioService {
       running.tickets.add(ticket.id);
       return this.view(ticket);
     }
-    const e: Execution = { key, replayId, identity, entry, state: 'queued', progress: null, error: null, tickets: new Set([ticket.id]), child: null, work: null, startedAt: 0 };
+    const e: Execution = { key, replayId, identity, entry, window, state: 'queued', progress: null, error: null, tickets: new Set([ticket.id]), child: null, work: null, startedAt: 0 };
     this.executions.set(key, e);
     this.queue.push(e);
     this.pump();
@@ -347,7 +418,7 @@ export class PortfolioService {
     e.work = work;
     atomicWrite(
       join(work, 'request.json'),
-      `${JSON.stringify({ kind: 'pooled-candidate-replay', format: PORTFOLIO_REPLAY_FORMAT, replayId: e.replayId, candidateId: e.entry.id, entrySha256: e.entry.entrySha256 }, null, 2)}\n`
+      `${JSON.stringify({ kind: 'pooled-candidate-replay', format: PORTFOLIO_REPLAY_FORMAT, replayId: e.replayId, candidateId: e.entry.id, entrySha256: e.entry.entrySha256, window: e.window }, null, 2)}\n`
     );
     e.state = 'running';
     e.startedAt = Date.now();
@@ -360,7 +431,7 @@ export class PortfolioService {
       shell: false
     });
     e.child = child;
-    this.log(`portfolio replay ${e.entry.id} (${e.key.slice(0, 12)}…): started (pid ${child.pid})`);
+    this.log(`portfolio replay ${e.entry.id} ${windowRequestText(e.window)} (${e.key.slice(0, 12)}…): started (pid ${child.pid})`);
     const timer = setTimeout(() => {
       e.error = `timed out after ${TIMEOUT_MS / 1000} s`;
       child.kill('SIGTERM');
@@ -438,7 +509,7 @@ export class PortfolioService {
     if (fills !== executed) throw new Error(`${fills} ledger fills ≠ ${executed} executed events`);
     const net = positions.reduce((a, p) => a + p.net, 0);
     if (Math.abs(net - metrics.full.net) > 0.01 * (positions.length + 1)) throw new Error('Σ position net ≠ the portfolio net');
-    const fresh = this.identityOf(e.entry);
+    const fresh = this.identityOf(e.entry, e.window);
     if (sha256(canonicalJson(fresh)) !== e.key) throw new Error('the code, catalog or data changed while the replay ran');
     const files = Object.fromEntries(
       FILES.concat('run.log').map((f) => [f, { sha256: fileSha(join(work, f)), bytes: statSync(join(work, f)).size }])
@@ -578,7 +649,13 @@ export class PortfolioService {
       id: replayId,
       candidateId: meta.identity.candidate.id,
       catalogEntrySha256: meta.identity.candidate.entrySha256,
-      window: { from: meta.identity.window.from, to: metrics.window.to },
+      window: {
+        from: metrics.window.reporting.from,
+        to: metrics.window.reporting.to,
+        requested: meta.identity.window.request,
+        reporting: { from: metrics.window.reporting.from, to: metrics.window.reporting.to },
+        simulation: { from: metrics.window.simulation.from, to: metrics.window.simulation.to }
+      },
       executedAt: meta.executedAt,
       executionMs: meta.executionMs,
       cacheHit: true,
@@ -586,14 +663,14 @@ export class PortfolioService {
       symbols: entry?.symbols ?? Object.keys(prov.basisBySymbol),
       metrics,
       positions,
-      priceSource: { kind: 'market', basisDate: meta.identity.window.from, basisBySymbol: prov.basisBySymbol },
+      priceSource: { kind: 'market', basisDate: metrics.window.simulation.from, basisBySymbol: prov.basisBySymbol },
       implementationSha256: meta.identity.implementation.sha256,
       dataSha256: prov.data
     };
     if (opts.checkCurrent && entry) {
       let matches: boolean;
       try {
-        matches = this.keyOf(entry) === key;
+        matches = this.keyOf(entry, meta.identity.window.request) === key;
       } catch {
         matches = false;
       }
@@ -605,13 +682,14 @@ export class PortfolioService {
   /** The run-shaped view the chart routes need (prices, candles, events): real data, the benchmark window. */
   chartSource(replayId: string) {
     const { meta, dir } = this.entryDir(replayId);
-    const prov = this.readVerified<{ basisBySymbol: Record<string, string> }>(dir, meta, 'provenance.json');
+    const prov = this.readVerified<{ basisBySymbol: Record<string, string>; door: { from: string; to: string } }>(dir, meta, 'provenance.json');
     return {
       id: replayId,
       symbols: Object.keys(prov.basisBySymbol),
-      priceSource: { kind: 'market' as const, basisDate: meta.identity.window.from, basisBySymbol: prov.basisBySymbol },
-      // the archived benchmark window over the canonical files (partition all); minute fills, daily Growth signals
-      window: { from: meta.identity.window.from, to: meta.identity.window.to, resolution: null, partition: 'all' },
+      priceSource: { kind: 'market' as const, basisDate: prov.door.from, basisBySymbol: prov.basisBySymbol },
+      // the SIMULATED window over the canonical files (partition all): the dates the replay evaluated, never later
+      // appended prices; minute fills, daily Growth signals
+      window: { from: prov.door.from, to: prov.door.to, resolution: null, partition: 'all' },
       dataOrigin: 'real' as const
     };
   }

@@ -20,13 +20,14 @@ describe('pooled-candidate catalog', () => {
     expect(catalogText(buildCatalog(REPO))).toBe(readFileSync(join(REPO, CATALOG_FILE), 'utf8'));
   });
 
-  it('holds exactly the five candidates of the brief, in the brief’s order', () => {
+  it('holds exactly the five candidates of the Priority 6 brief, in its order, then N/original (2026-11-27)', () => {
     expect(catalog.candidates.map((c) => [c.order, c.id, c.name])).toEqual([
       [1, 'l0-primary', 'New L0 primary'],
       [2, 'c4-refined', 'C4-refined'],
       [3, 'c4', 'Original C4'],
       [4, 'vgt-d1-g4', 'VGT-only: D1 primary + Growth #4'],
-      [5, 'vgt-d1-g085', 'VGT-only: D1 primary + Growth 08500a60']
+      [5, 'vgt-d1-g085', 'VGT-only: D1 primary + Growth 08500a60'],
+      [6, 'n-original', 'N/original']
     ]);
     expect(catalog.note).toMatch(/not a safety ranking/);
     for (const c of catalog.candidates) expect(entrySha256(c)).toBe(c.entrySha256);
@@ -70,6 +71,31 @@ describe('pooled-candidate catalog', () => {
     for (const id of ['l0-primary', 'c4-refined', 'c4']) {
       expect(byId(id).enabled).toEqual({ 'D1:GDX': true, 'D1:VGT': true, 'G:GDX': false, 'G:VGT': true });
       expect(byId(id).symbols).toEqual(['VGT', 'GDX']);
+    }
+  });
+
+  it('adds N/original from its sealed records: RC 2 controls, the risk-metrics engine, its sealed FULL targets', () => {
+    const n = byId('n-original');
+    expect(n.identities.assignment3CfgId).toBe('rc1-f1a8b57cb02455c3');
+    expect(n.identities.cell).toBe('GD1.VB0');
+    expect(n.identities.growthVgt).toBe('134e40dc8739b464');
+    expect(grid(n, 'VGT')).toBe('237,2,73,15,70,42,103,41');
+    expect(grid(n, 'GDX')).toBe('277,2,61,13,232,24,152,10');
+    expect(n.enabled).toEqual({ 'D1:GDX': true, 'D1:VGT': true, 'G:GDX': false, 'G:VGT': true });
+    expect(n.engine.kind).toBe('rc2-replay');
+    expect(n.engine.subject).toBe('N/original');
+    const books = (n.controls as { books: Record<string, { protectiveStop: { stopDistanceTenths: number } }> }).books;
+    expect(books['D1:GDX']!.protectiveStop.stopDistanceTenths).toBe(159);
+    expect(books['D1:VGT']!.protectiveStop.stopDistanceTenths).toBe(120);
+    expect(n.components.find((c) => c.book === 'D1:GDX')!.controls).toEqual(books['D1:GDX']);
+    const t = n.targets;
+    expect([t.fullNet, t.fullMinuteDd, t.lots, t.developmentNet, t.validationNet, t.validationResetDd]).toEqual([482700.73, 20385.99, 44, 388031.02, 94669.7, 20385.99]);
+    expect([t.fullRealized, t.fullUnrealized, t.developmentMinuteDd, t.developmentLots, t.signature]).toEqual([488265.48, -5564.76, 19459.83, 32, '54d1c2e07c2dbbfd']);
+    expect(t.window).toEqual({ from: '2016-01-04', to: '2026-10-30', boundary: '2024-12-31' });
+    // the five Priority 6 entries carry no engine kind and no controls (their bytes are unchanged)
+    for (const c of catalog.candidates.filter((x) => x.id !== 'n-original')) {
+      expect(c.engine.kind).toBeUndefined();
+      expect(c.controls).toBeUndefined();
     }
   });
 

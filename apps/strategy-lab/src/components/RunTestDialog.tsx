@@ -488,6 +488,13 @@ export function RunTestDialog({ meta, initial, phenotype, onClose, onCreated }: 
               those dates are already exposed. This rerun is exploratory, NOT another independent holdout.
             </p>
           )}
+          {meta.research && to > meta.research.validationEnd && (
+            <p className="warn small" role="note" data-testid="run-post-validation-note">
+              Dates after {meta.research.validationEnd} (the end of research range {meta.research.id}’s validation window) are a{' '}
+              <b>manual post-validation evaluation</b>: never optimization, selection, qualification or validation evidence. The run
+              ends at the last session the data hold; its view shows the evaluated dates.
+            </p>
+          )}
         </fieldset>
 
         <label className="field">

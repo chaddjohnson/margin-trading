@@ -47,8 +47,8 @@ for (const entry of catalog.candidates) {
     replayMs: Date.now() - t,
     status: a.metrics.parity.status === 'verified' && ledgers.every((l) => l.pass) ? 'verified' : 'mismatch',
     full: { net: a.metrics.full.net, minuteDd: a.metrics.full.minuteDd.usd },
-    validation: { net: a.metrics.validation.net, resetDd: a.metrics.validation.resetDd.usd },
-    development: { net: a.metrics.development.net, minuteDd: a.metrics.development.minuteDd.usd },
+    validation: { net: a.metrics.validation!.net, resetDd: a.metrics.validation!.resetDd.usd },
+    development: { net: a.metrics.development!.net, minuteDd: a.metrics.development!.minuteDd.usd },
     targets: {
       fullNet: entry.targets.fullNet,
       fullMinuteDd: entry.targets.fullMinuteDd,

@@ -20,6 +20,7 @@ import { decode } from '../../../src/growth140-vgt-s8m/store.ts';
 import { type BookId, type D1Grid, d1Keys, d1StrategyParams, growthParamsOf } from '../../../src/vg-d1-growth-joint/books.ts';
 import { type GConfig, type Quad, gId, normalize, quadId } from '../../../src/vg-d1-growth-joint/space.ts';
 import { canonicalOf, cfgId, placeholder } from '../../../src/vg-lifecycle-matched-optimization/config.ts';
+import { type Cfg as A3Cfg, canonicalCfg as a3CanonicalCfg, cfgId as a3CfgId, quadOf as a3QuadOf } from '../../../src/vg-l0-full-joint/space.ts';
 import { jointId, normalize as p2Normalize } from '../../../src/vgt-d1-growth-joint/space.ts';
 import { canonicalJson } from '../shared/preview.ts';
 import { entrySha256 } from './portfolio-catalog-read.ts';
@@ -49,6 +50,11 @@ const SRC = {
   p2LedgerIndex: 'research/vgt-d1-growth-joint/results/validation/ledgers/INDEX.md',
   p2Comparison: 'research/vgt-d1-growth-separate-pooled/results/comparison.json',
   g085Frozen: 'research/growth140-vgt-stable/FROZEN_SELECTION.json',
+  a3Frozen: 'research/vg-l0-full-joint/FROZEN_SELECTION.json',
+  a3Validation: 'research/vg-l0-full-joint/results/validation/validation.json',
+  rmParity: 'research/vg-l0-risk-metrics/results/baseline/parity.json',
+  rmTrades: 'research/vg-l0-risk-metrics/results/tables/trades.csv',
+  nsOutcome: 'research/vg-l0-n-successor/results/outcome.json',
   vg2Config: 'config/research-pools/study8-expanded-regime-d1/S8-VG-F24-3.json',
   d1Primary: 'config/phenotypes/D1/VGT.json'
 } as const;
@@ -127,7 +133,12 @@ interface Spec {
   name: string;
   summary: string;
   distinctions: string[];
-  family: 'vg' | 'vgt';
+  /** vg / vgt: Priority 3's pool via 5B runLife (L0); rc: a configuration with RC 2 D1 risk controls (risk-metrics replay). */
+  family: 'vg' | 'vgt' | 'rc';
+  /** rc: the sealed finalist label (research/vg-l0-full-joint/FROZEN_SELECTION.json) and the risk-metrics subject key. */
+  label?: string;
+  subject?: string;
+  cfgId?: string;
 }
 
 const SPECS: Spec[] = [
@@ -181,6 +192,20 @@ const SPECS: Spec[] = [
       'The same standalone VGT D1 primary paired as-is with Growth 08500a60ec56cfae under architecture A, D1 first. No GDX component. Growth sells 50% at its first trailing-stop event and manages the remainder.',
     distinctions: [
       'Growth 08500a60 retains a remainder after a partial exit (50% at the first profit trailing-stop event); the remainder exits after one close below its 160-session SMA, or at its initial stop. The remainder keeps the slot until its final exit.'
+    ]
+  },
+  {
+    id: 'n-original',
+    name: 'N/original',
+    family: 'rc',
+    label: 'C24/informed/GD.VB/R2#1 profit',
+    subject: 'N/original',
+    cfgId: 'rc1-f1a8b57cb02455c3',
+    summary:
+      'D1·GDX + D1·VGT with RC 2 risk controls (cell GD1.VB0) + VGT Growth 134e40dc; GDX Growth OFF; L0 (Assignment 3 Track N C24/informed/GD.VB/R2#1 profit, rc1-f1a8b57cb02455c3). The preferred research incumbent after Priority 5 (P5-NS).',
+    distinctions: [
+      'D1·GDX carries a 15.9% protective stop, an adaptive hold (extended to 28 days at 7.0% progress) and a decline gate (3 losses, 70% recovery, at most 60 sessions); D1·VGT a 12.0% protective stop. Its D1 grids (D1·VGT 237,2,73,15,70,42,103,41; D1·GDX 277,2,61,13,232,24,152,10) differ from New L0’s and from VG #2’s.',
+      'Incumbent-informed (Track N): no independent chronological test. Its 2025–2026 figures are validation on previously examined history; it runs on the risk-metrics replay (RC 2 runWithControls2 on Priority 3’s books and pool), the path of `npm run manual-eval`.'
     ]
   }
 ];
@@ -263,6 +288,7 @@ export function buildCatalog(repoRoot: string): CandidateCatalog {
     let sources: CandidateSource[];
     let ledgers: LedgerRef[];
     let conventions: Record<string, unknown>;
+    let rcControls: Record<string, unknown> | null = null;
 
     if (spec.family === 'vg') {
       const row = { 'l0-primary': 'R01', 'c4-refined': 'R21', c4: 'R20' }[spec.id]!;
@@ -374,6 +400,91 @@ export function buildCatalog(repoRoot: string): CandidateCatalog {
         sources.push(src(SRC.p3LedgerIndex, 'entry 18', 'full-history ledger index'));
       }
       conventions = settings.allocator as Json;
+    } else if (spec.family === 'rc') {
+      const a3 = r.json<{ finalists: { label: string; id: string; cell: string; cfg: A3Cfg; track: string }[]; newL0: { cfg: A3Cfg } }>(SRC.a3Frozen);
+      const a3v = r.json<{ door: string; stage: string; rows: Json[] }>(SRC.a3Validation);
+      const rm = r.json<{ rows: Json[] }>(SRC.rmParity);
+      const ns = r.json<Json>(SRC.nsOutcome);
+      const f = a3.finalists.find((x) => x.label === spec.label) ?? fail(`${spec.id}: no Assignment 3 finalist ${spec.label}`);
+      const cfg = a3CanonicalCfg(f.cfg);
+      expect(`${spec.id} cfg is canonical`, cfg, f.cfg);
+      expect(`${spec.id} cfgId (recomputed)`, a3CfgId(cfg), spec.cfgId);
+      expect(`${spec.id} cfgId (recorded)`, f.id, spec.cfgId);
+      quad = normalize(a3QuadOf(cfg));
+      expect(`${spec.id} quad is canonical`, quad, a3QuadOf(cfg));
+      expect(`${spec.id} GDX Growth placeholder`, gId(quad.g.GDX), gId(placeholder));
+      if (!cfg.controls) fail(`${spec.id}: no RC 2 controls`);
+      enabled = { 'D1:GDX': true, 'D1:VGT': true, 'G:GDX': false, 'G:VGT': true };
+      expect(`${spec.id} A3 validation door`, [a3v.stage, a3v.door], ['validation', 'FULL']);
+      const v = a3v.rows.find((x) => x.label === spec.label) ?? fail(`${spec.id}: no A3 validation row`);
+      const pm = rm.rows.find((x) => x.key === spec.subject) ?? fail(`${spec.id}: no risk-metrics parity row`);
+      const full = pm.full as Json;
+      const dev = pm.development as Json;
+      expect(`${spec.id} risk-metrics id`, pm.id, spec.cfgId);
+      for (const [k, w] of [['net', 'net'], ['dd', 'dd'], ['lots', 'lots'], ['developmentNet', 'developmentNet'], ['validationPnl', 'validationPnl'], ['resetValidationDd', 'resetValidationDd']] as const)
+        expect(`${spec.id} risk-metrics full.${k} = A3 validation ${w}`, full[k], v[w]);
+      expect(`${spec.id} development net (risk-metrics)`, dev.net, v.developmentNet);
+      identities = {
+        assignment3CfgId: spec.cfgId!,
+        priority3QuadId: quadId(quad),
+        cell: f.cell,
+        growthVgt: gId(quad.g.VGT),
+        growthGdxPlaceholder: gId(placeholder),
+        d1Vgt: `d1-${d1Keys.map((k) => quad.d1.VGT[k]).join(',')}`,
+        d1Gdx: `d1-${d1Keys.map((k) => quad.d1.GDX[k]).join(',')}`,
+        track: f.track
+      };
+      expect(`${spec.id} Growth·VGT identity (risk-metrics)`, pm.growthVgtId, identities.growthVgt);
+      expect(`${spec.id} P5-NS keeps it as the preferred research incumbent`, /keep N\/original as the preferred research incumbent/i.test(String(ns.label)), true);
+      targets = {
+        window: { from: PORTFOLIO_BENCHMARK.from, to: PORTFOLIO_BENCHMARK.to, boundary: PORTFOLIO_BENCHMARK.boundary },
+        fullNet: v.net as number,
+        fullMinuteDd: v.dd as number,
+        validationNet: v.validationPnl as number,
+        validationResetDd: v.resetValidationDd as number,
+        developmentNet: v.developmentNet as number,
+        developmentMinuteDd: dev.dd as number,
+        developmentLots: dev.lots as number,
+        fullRealized: full.realized as number,
+        fullUnrealized: full.unrealized as number,
+        lots: v.lots as number,
+        signature: full.signature as string,
+        record: {},
+        recordFormat: 'no compact record is archived for this subject; the headline targets are A3 validation.json and the risk-metrics baseline parity (FULL door, boundary 2024-12-31)'
+      };
+      sources = [
+        src(SRC.a3Frozen, `finalists[label=${spec.label}].cfg`, 'settings (Assignment 3 frozen selection)'),
+        src(SRC.a3Validation, `rows[label=${spec.label}]`, 'full-history and validation targets (A3 FULL validation)'),
+        src(SRC.rmParity, `rows[key=${spec.subject}] (full, development)`, 'realized, unrealized, signature and development targets (risk-metrics G0 parity)'),
+        src(SRC.rmTrades, `rows[subject=${spec.subject}]`, 'per-lot ledger (risk-metrics trades table, FULL)'),
+        src(SRC.nsOutcome, 'outcome', 'status: the preferred research incumbent (P5-NS)')
+      ];
+      ledgers = [
+        {
+          scope: 'risk-metrics trades',
+          engine: 'risk-metrics replay (RC 2 runWithControls2, FULL door)',
+          files: { lots: { path: SRC.rmTrades, sha256: r.sha(SRC.rmTrades) } }
+        }
+      ];
+      conventions = {
+        architecture: 'one exclusive funded $100,000 slot (Priority 3 pool, L0)',
+        principalBudget: 100000,
+        compounding: false,
+        preemption: false,
+        simultaneousFundedPositions: false,
+        sameInstantOrder: 'D1 first, then GDX before VGT',
+        costBpsPerSide: 5,
+        commission: 0,
+        interest: '11% simple annual on outstanding principal, calendar days / 365',
+        stopFill: 'at the stop or the gapped open; no extra slippage',
+        shares: 'fractional',
+        fundingFrom: '2016-01-04',
+        d1RiskControls: 'RC 2 (src/d1-risk-controls-rc2/): per-book protective loss stop, hold policy and decline gate as listed on each D1 component',
+        growthLifecycle: 'L0 — a refused Growth entry becomes an unfunded virtual position and waits for its virtual exit; funding never feeds back',
+        d1Lifecycle: 'canonical shadow book (refusals never feed back into D1)',
+        shadowEligibility: 'off'
+      };
+      rcControls = cfg.controls as unknown as Record<string, unknown>;
     } else {
       const label = spec.id === 'vgt-d1-g4' ? 'D1 primary + Growth #4 · A' : 'D1 primary + Growth 08500a60 · A';
       const p3key = spec.id === 'vgt-d1-g4' ? 'p2:primary+g4' : 'p2:primary+g085';
@@ -486,7 +597,8 @@ export function buildCatalog(repoRoot: string): CandidateCatalog {
           grid: { ...quad.d1[s] },
           gridUnits: Object.fromEntries(d1Keys.map((k) => [k, D1_PARAM_LABELS[k].grid])),
           engineParams: engine.params,
-          inactive: engine.inactive
+          inactive: engine.inactive,
+          ...(rcControls ? { controls: ((rcControls.books as Record<string, Record<string, unknown>>)[book] ?? { none: 'no RC 2 control on this book' }) } : {})
         });
       }
     }
@@ -552,16 +664,26 @@ export function buildCatalog(repoRoot: string): CandidateCatalog {
       name: spec.name,
       summary: spec.summary,
       distinctions: spec.distinctions,
-      symbols: spec.family === 'vg' ? ['VGT', 'GDX'] : ['VGT'],
+      symbols: spec.family === 'vgt' ? ['VGT'] : ['VGT', 'GDX'],
       lifecycle: 'L0',
-      engine: {
-        path: 'src/vg-lifecycle-matched-optimization/life.ts runLife(door, quad, options, "L0") = src/vg-d1-growth-joint/evaluate.ts run + recordOf (src/vg-d1-growth-joint/pool.ts runPool)',
-        door: 'Priority 3 FULL door (src/vg-d1-growth-joint/data.ts openFullDoor, quiet): canonical VGT and GDX minute files, partition all, forward split adjustment to 2016-01-04',
-        options: { enabled, boundaries: [PORTFOLIO_BENCHMARK.boundary] }
-      },
+      engine:
+        spec.family === 'rc'
+          ? {
+              kind: 'rc2-replay' as const,
+              subject: spec.subject!,
+              path: 'src/vg-l0-risk-metrics/engine.ts replay(door, subject, vOptions, boundaries) = src/d1-risk-controls-rc2/run.ts runWithControls2 on src/vg-d1-growth-joint books and pool + recordOf (the path of npm run manual-eval)',
+              door: 'Priority 3 FULL door (src/vg-d1-growth-joint/data.ts openFullDoor, quiet) for the research window; src/manual-eval/door.ts for all and custom windows',
+              options: { enabled, boundaries: [PORTFOLIO_BENCHMARK.boundary] }
+            }
+          : {
+              path: 'src/vg-lifecycle-matched-optimization/life.ts runLife(door, quad, options, "L0") = src/vg-d1-growth-joint/evaluate.ts run + recordOf (src/vg-d1-growth-joint/pool.ts runPool)',
+              door: 'Priority 3 FULL door (src/vg-d1-growth-joint/data.ts openFullDoor, quiet): canonical VGT and GDX minute files, partition all, forward split adjustment to 2016-01-04',
+              options: { enabled, boundaries: [PORTFOLIO_BENCHMARK.boundary] }
+            },
       components,
       enabled,
       quad: quad as unknown as CandidateEntry['quad'],
+      ...(rcControls ? { controls: rcControls } : {}),
       identities,
       conventions,
       targets,
@@ -582,7 +704,7 @@ export function buildCatalog(repoRoot: string): CandidateCatalog {
     schema: CATALOG_SCHEMA,
     version: CATALOG_VERSION,
     note:
-      'Five frozen portfolio candidates for inspection in Strategy Lab (Priority 6). Listed in the order of the Priority 6 brief; the order is not a safety ranking, no candidate is an adopted favourite, and inclusion is permission to inspect, not a trading instruction or a deployment.',
+      'Frozen portfolio candidates for inspection in Strategy Lab: the five of Priority 6, in the order of its brief, then N/original (added 2026-11-27 for manual all-data inspection). The order is not a safety ranking, no candidate is an adopted favourite, and inclusion is permission to inspect, not a trading instruction or a deployment.',
     builtBy: 'apps/strategy-lab/scripts/build-candidate-catalog.ts (runner/portfolio-catalog.ts buildCatalog)',
     benchmark: PORTFOLIO_BENCHMARK,
     candidates

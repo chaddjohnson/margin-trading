@@ -11,7 +11,15 @@ import type {
   SymbolInfo,
   VariationSummary
 } from '../shared/contract.ts';
-import type { CandidateCatalog, CandidateEntry, PortfolioEquity, PortfolioReplayDetail } from '../shared/portfolio.ts';
+import {
+  type CandidateCatalog,
+  type CandidateEntry,
+  type PortfolioCoverage,
+  type PortfolioEquity,
+  type PortfolioReplayDetail,
+  type PortfolioWindowRequest,
+  RESEARCH_WINDOW
+} from '../shared/portfolio.ts';
 import { type CandlesResponse, validateCandles } from '../shared/candles.ts';
 import type { ExecutionKind, PhenotypeRecord } from '../shared/phenotypes.ts';
 import type { PreviewCapability, PreviewConfig, PreviewDetail, PreviewTicketStatus } from '../shared/preview.ts';
@@ -86,6 +94,8 @@ export interface Meta {
   symbols: SymbolInfo[];
   experiments: { id: string; slug: string; title: string; description: string }[];
   partitions: Record<string, { start: string | null; end: string | null }>;
+  /** The research date range (absent from an older server). */
+  research?: { id: string; developmentEnd: string; validationEnd: string };
 }
 
 export interface EventsResponse {
@@ -254,7 +264,9 @@ export const api = {
     call<Comparison>('GET', `/api/compare${qs({ a, b })}`, undefined, signal),
   // Pooled portfolio candidates (read-only frozen presets): the catalog and ONE replay per request; never a run.
   portfolios: (signal?: AbortSignal) => call<PortfolioCatalogView>('GET', '/api/portfolios', undefined, signal),
-  replayPortfolio: (candidateId: string) => call<PortfolioTicket>('POST', `/api/portfolios/${candidateId}/replay`),
+  /** ONE replay over ONE window (the research window sends no body, as before). */
+  replayPortfolio: (candidateId: string, window: PortfolioWindowRequest = RESEARCH_WINDOW) =>
+    call<PortfolioTicket>('POST', `/api/portfolios/${candidateId}/replay`, window.mode === 'research' ? undefined : { window }),
   portfolioTicket: (ticket: string, signal?: AbortSignal) =>
     call<PortfolioTicket>('GET', `/api/portfolio-replays/tickets/${ticket}`, undefined, signal),
   releasePortfolioTicket: (ticket: string) => call<PortfolioTicket>('POST', `/api/portfolio-replays/tickets/${ticket}/release`),
@@ -267,6 +279,8 @@ export const api = {
 
 export type PortfolioCatalogView = Omit<CandidateCatalog, 'candidates' | 'builtBy'> & {
   candidates: (CandidateEntry & { cached: boolean })[];
+  /** The local data coverage and the research date range (the window controls). */
+  coverage: PortfolioCoverage;
 };
 
 export interface PortfolioTicket {

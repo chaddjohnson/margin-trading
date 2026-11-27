@@ -18,12 +18,15 @@ const DD = '#f07070';
 export function EquityChart({
   equity,
   window,
-  boundaryMs
+  boundaryMs,
+  postBoundaryMs = null
 }: {
   equity: PortfolioEquity;
   /** The viewport (ms) or null for the whole run. */
   window: readonly [number, number] | null;
   boundaryMs: number | null;
+  /** The research validation end's close, when the run reaches past it: after it, manual post-validation evaluation. */
+  postBoundaryMs?: number | null;
 }) {
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -41,12 +44,30 @@ export function EquityChart({
     const marked = equity.closeMs.map((x, i) => [new Date(x), equity.marked[i]!] as [Date, number]);
     const dd = equity.closeMs.map((x, i) => [new Date(x), -equity.drawdown[i]!] as [Date, number]);
     const shade = (canvas: CanvasRenderingContext2D, area: { x: number; y: number; w: number; h: number }, g: Dygraph) => {
+      const right = area.x + area.w;
+      // after the research validation end: manual post-validation evaluation (amber), drawn over the validation shade
+      if (postBoundaryMs !== null) {
+        const [p0] = g.toDomCoords(postBoundaryMs, 0);
+        if (p0 < right) {
+          canvas.fillStyle = 'rgba(233, 180, 76, 0.12)';
+          canvas.fillRect(Math.max(area.x, p0), area.y, right - Math.max(area.x, p0), area.h);
+        }
+        if (p0 >= area.x && p0 <= right) {
+          canvas.strokeStyle = 'rgba(233, 180, 76, 0.7)';
+          canvas.setLineDash([4, 3]);
+          canvas.beginPath();
+          canvas.moveTo(p0 + 0.5, area.y);
+          canvas.lineTo(p0 + 0.5, area.y + area.h);
+          canvas.stroke();
+          canvas.setLineDash([]);
+        }
+      }
       if (boundaryMs === null) return;
       const [x0] = g.toDomCoords(boundaryMs, 0);
-      const right = area.x + area.w;
-      if (x0 < right) {
+      const vRight = postBoundaryMs !== null ? Math.min(right, g.toDomCoords(postBoundaryMs, 0)[0]) : right;
+      if (x0 < vRight) {
         canvas.fillStyle = 'rgba(148, 163, 184, 0.10)';
-        canvas.fillRect(Math.max(area.x, x0), area.y, right - Math.max(area.x, x0), area.h);
+        canvas.fillRect(Math.max(area.x, x0), area.y, vRight - Math.max(area.x, x0), area.h);
       }
       if (x0 >= area.x && x0 <= right) {
         canvas.strokeStyle = 'rgba(226, 232, 240, 0.55)';
@@ -114,7 +135,7 @@ export function EquityChart({
       g2.destroy();
       graphs.current = [];
     };
-  }, [equity, boundaryMs]);
+  }, [equity, boundaryMs, postBoundaryMs]);
 
   useEffect(() => {
     const first = equity.closeMs[0];

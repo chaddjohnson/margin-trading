@@ -20,12 +20,15 @@ const BRIEF: Record<string, [number, number, number]> = {
   'c4-refined': [452082.36, 19477.66, 91512.65],
   c4: [401867.24, 21536.85, 99081.34],
   'vgt-d1-g4': [271525.33, 19534.41, 66585.12],
-  'vgt-d1-g085': [252359.65, 19556.63, 60551.2]
+  'vgt-d1-g085': [252359.65, 19556.63, 60551.2],
+  // N/original (added 2026-11-27): Assignment 3's sealed FULL validation row (research/vg-l0-full-joint)
+  'n-original': [482700.73, 20385.99, 94669.7]
 };
 const DEV: Record<string, [number, number]> = {
   'l0-primary': [382721.46, 19459.83],
   'c4-refined': [360569.71, 17280.74],
-  c4: [302785.91, 17332.09]
+  c4: [302785.91, 17332.09],
+  'n-original': [388031.02, 19459.83]
 };
 
 describe.skipIf(!hasData)('pooled candidates: canonical parity on real data', () => {
@@ -42,8 +45,8 @@ describe.skipIf(!hasData)('pooled candidates: canonical parity on real data', ()
       const a = out.get(id)!;
       expect(a.metrics.full.net).toBe(net);
       expect(a.metrics.full.minuteDd.usd).toBe(dd);
-      expect(a.metrics.validation.net).toBe(val);
-      if (DEV[id]) expect([a.metrics.development.net, a.metrics.development.minuteDd.usd]).toEqual(DEV[id]);
+      expect(a.metrics.validation!.net).toBe(val);
+      if (DEV[id]) expect([a.metrics.development!.net, a.metrics.development!.minuteDd.usd]).toEqual(DEV[id]);
       const failed = a.metrics.parity.checks.filter((c) => !c.pass);
       expect(failed).toEqual([]);
       expect(a.metrics.parity.status).toBe('verified');
@@ -108,8 +111,8 @@ describe.skipIf(!hasData)('pooled candidates: canonical parity on real data', ()
   it('the validation period is a viewport of the continuous run: carry-in and the 2024-12-31 equity', () => {
     for (const e of catalog.candidates) {
       const m = out.get(e.id)!.metrics;
-      expect(m.validation.net).toBeCloseTo(m.full.net - m.development.net, 1);
-      expect(m.validation.realizedChange + m.validation.unrealizedChange).toBeCloseTo(m.validation.net, 1);
+      expect(m.validation!.net).toBeCloseTo(m.full.net - m.development!.net, 1);
+      expect(m.validation!.realizedChange + m.validation!.unrealizedChange).toBeCloseTo(m.validation!.net, 1);
     }
   });
 });
