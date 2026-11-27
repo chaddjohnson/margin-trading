@@ -269,7 +269,8 @@ exactly (every summary field and daily row).
 
 ### Research date ranges and manual evaluation on newer data
 
-Formal research (optimization standard 4.0.0 §1) uses explicit dates, independent of how far the files reach:
+Formal research (optimization standard 4.0.0 §1; current version 5.0.0) uses explicit dates, independent of how far the
+files reach:
 `config/research/date-ranges.json`, read by `src/lib/researchRanges.ts`. In force (R1): **development 2016-01-04 →
 2024-12-31, validation 2025-01-01 (first session 2025-01-02) → 2026-10-30.** Appending data never moves them.
 
@@ -280,13 +281,21 @@ Formal research (optimization standard 4.0.0 §1) uses explicit dates, independe
   manifest's windows against the range.
 - **Changing the range** is deliberate: add a new entry (never edit an existing one) citing the user's authorization
   and make it `current`. Studies keep the range they pinned.
-- **Manual evaluation** may read any window of the files, newer data included, and is never formal evidence
-  (standard §1.13). For the sealed pooled VGT/GDX configurations (N/original, New L0, …):
+- **Evidence categories** (standard 5.0.0 §0.3, §1.13–§1.16): formal historical research (inside the range only);
+  manual post-validation evaluation (informational: never selection, qualification or formal validation evidence, and
+  not prospective by itself); a controlled prospective (shadow) evaluation (a separate, pre-registered study of a
+  configuration frozen before the observed sessions, scope `prospective`, authorized by the user); live trading
+  performance (actual fills). They are never interchanged.
+- **Manual evaluation** may read any window of the files, newer data included. For the sealed pooled VGT/GDX
+  configurations (N/original, New L0, …) on the command line, or in Strategy Lab's **Portfolios** tab (every catalog
+  candidate, N/original included: *Evaluation window* Research / All / Custom; `docs/strategy-lab/POOLED_CANDIDATES.md`
+  §3a) — both through the same module, `src/manual-eval/execute.ts`, with identical figures:
 
 ```bash
 GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window research   # 2016-01-04 → 2026-10-30 (Priority 3's FULL door)
 GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window all        # → the latest common complete session
-GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window custom --from 2025-01-02 --to 2026-11-25
+GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window custom --from 2025-01-02 --to 2026-11-25   # isolated (flat at --from)
+GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --subject "N/original" --window custom --from 2026-11-02 --to 2026-11-25 --execution continuous   # reporting window of the run from 2016
 GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --list                                    # the subjects
 ```
 
@@ -295,10 +304,18 @@ GPU_POLICY_PURPOSE=cpu-reference npm run manual-eval -- --list                  
   reported as a *manual post-validation evaluation*, with the research window (A), the new period (B, attributed by the
   change of marked net, positions spanning the boundary included) and the whole run (C) of one continuous run, the
   run's trajectory checked equal to FULL through 2026-10-30, and `--out DIR` writing the period tables, the new
-  period's lot ledger, funding decisions and the books' end state. A custom window starts flat at its first session.
-  Single-symbol strategies keep their partitions: `npm run app -- <strategy> VGT all` (every row, newer data included),
+  period's lot ledger, funding decisions and the books' end state. A custom window is isolated by default on the
+  command line (it starts flat at its first session); `--execution continuous` runs from 2016-01-04 and reports the
+  window as period R with every state carried in (Strategy Lab's default for Custom). Single-symbol strategies keep
+  their partitions: `npm run app -- <strategy> VGT all` (every row, newer data included),
   `npm run app -- <strategy> VGT all 2025-01-02 2026-11-25` (a custom window of the whole file); Strategy Lab's Run Test
-  offers the same through its dates and the All preset.
+  offers the same through its dates and the All preset, and the run views show the evaluated sessions beside the
+  request. `npm run app` lints the code it can run first (`tools/lint/app-closure.ts`); `npx eslint` lints the whole
+  repository.
+- **Reproducing a completed study whose own code checks a whole canonical file** (it fails closed after an append):
+  `tools/historical-repro/env.ts prepare --commit <its commit> --dir <scratch outside the repo> --data VGT=<pinned
+  sha256> …` rebuilds the exact earlier file from the verified byte prefix in a temporary worktree at that commit;
+  `remove` deletes it (`docs/data-updates/2026-11-27-assignment-1/HISTORICAL_COMPATIBILITY.md`).
 
 ### Holdout safeguards
 

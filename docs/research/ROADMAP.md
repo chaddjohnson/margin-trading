@@ -15,7 +15,9 @@ as the next optimization study after the user reported Priority 7 complete, by t
 L0 shadow-position eligibility study (row 9) commissioned by the shadow-eligibility brief, 2026-11-12; the New L0 risk-aware
 successor foundation (row A1: standard 2.2.0 and the optional D1 risk controls) commissioned by the Assignment 1 brief,
 2026-11-13), with status and outcome as of 2026-11-13. Every priority follows the [optimization standard](OPTIMIZATION_STANDARD.md)
-(current version 4.0.0, effective 2026-11-27, with explicit research date ranges (§1); 3.0.0, effective 2026-11-19, made
+(current version 5.0.0, effective 2026-11-27, with evidence categories — formal historical research, manual
+post-validation evaluation, controlled prospective (shadow) evaluation, live trading (§0.3, §1.13–§1.16); 4.0.0, effective
+2026-11-27, with explicit research date ranges (§1); 3.0.0, effective 2026-11-19, made
 official optimization GPU-only (§9); reports are text and tables only, §7.7):
 - development 2016-01-04 → 2024-12-31 for all optimization and selection;
 - 2025-01-01 → 2026-10-30 (the explicit validation end of research date range R1, `config/research/date-ranges.json`)

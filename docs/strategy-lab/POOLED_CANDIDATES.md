@@ -1,9 +1,10 @@
 # Strategy Lab — pooled portfolio candidates
 
 **Priority 6** (brief: [`brief/2026-11-11-pooled-candidate-viewing-brief.md`](brief/2026-11-11-pooled-candidate-viewing-brief.md)).
-The **Portfolios** tab lets you pick one of five frozen D1 + Growth portfolio candidates and inspect its **actual funded
-trades**, D1 and Growth together, on VGT and GDX. Each candidate is ONE replay of the research engine with one shared
-$100,000 pool, the same replay the research studies ran.
+The **Portfolios** tab lets you pick one of the frozen D1 + Growth portfolio candidates (the five of Priority 6 and, from
+2026-11-27, **N/original**) and inspect its **actual funded trades**, D1 and Growth together, on VGT and GDX. Each
+candidate is ONE replay of the research engine with one shared $100,000 pool, the same replay the research studies ran,
+over ONE **evaluation window**: its research window (the default), all available data, or a custom window (§3a).
 
 This is an inspection tool, not an optimizer. It does no search, retuning, substitution or deployment. Inclusion in the
 catalog is permission to inspect a candidate, not a trading instruction or a new favourite. The list follows the brief's
@@ -54,7 +55,7 @@ order, which is not a safety ranking.
    the validated cache. The show/hide choices and ledger filters are page state: a reload resets them, and refused signals
    are OFF again.
 
-## 2. The five candidates (catalog `apps/strategy-lab/catalog/pooled-candidates.json`)
+## 2. The candidates (catalog `apps/strategy-lab/catalog/pooled-candidates.json`)
 
 | # | Name (catalog id) | Composition | Identities | Settings source |
 |---|---|---|---|---|
@@ -63,6 +64,7 @@ order, which is not a safety ranking.
 | 3 | **Original C4** (`c4`) | VG #2 Balanced's D1 pair + VGT Growth #4 `420cd989e4fa7749`; GDX Growth OFF | quad `f324035d15f69610` (5B cfg `2f49a1cc226b4ece`) | 5B `crossTestSubjects[R20]` (control C4) |
 | 4 | **VGT-only: D1 primary + Growth #4** (`vgt-d1-g4`) | Standalone VGT D1 primary `d1-ebc9f639b3` [216,3,73,8,74,29,90,60] + Growth #4; architecture A, D1 first; no GDX | Priority 2 joint `04741779be90e639`, P3 quad `dbe7be81867b739a` | Priority 2 `FROZEN_SELECTION.json` control; Priority 3 `CONTROL_MANIFEST.json` `p2:primary+g4` |
 | 5 | **VGT-only: D1 primary + Growth 08500a60** (`vgt-d1-g085`) | The same D1 primary + Growth `08500a60ec56cfae` (50% sale at the first trailing-stop event; the remainder exits on one close below its 160-session SMA, or its initial stop) | Priority 2 joint `a8833010dd6f9c30`, P3 quad `51da785f9a3b5f26` | Priority 2 control; Priority 3 `p2:primary+g085` |
+| 6 | **N/original** (`n-original`, added 2026-11-27) | D1·GDX [277,2,61,13,232,24,152,10] + D1·VGT [237,2,73,15,70,42,103,41] with RC 2 controls (D1·GDX: 15.9% protective stop, adaptive hold to 28 days at 7.0% progress, decline gate 3 losses / 70% / ≤ 60 sessions; D1·VGT: 12.0% protective stop) + VGT Growth `134e40dc8739b464`; GDX Growth OFF; L0; cell GD1.VB0 | Assignment 3 cfg `rc1-f1a8b57cb02455c3`, Priority 3 quad `ebde8a24d63a0211` | `research/vg-l0-full-joint/FROZEN_SELECTION.json` `finalists[C24/informed/GD.VB/R2#1 profit]`; targets from its FULL validation row and the risk-metrics G0 parity (`research/vg-l0-risk-metrics/results/baseline/parity.json`); the preferred research incumbent after P5-NS. Engine: the risk-metrics replay (RC 2 `runWithControls2` on Priority 3's books and pool), exactly `npm run manual-eval`'s; the runner re-checks the entry against the sealed subject |
 
 Distinctions the catalog enforces:
 - **VG #2 Balanced** is Study 8 `S8-VG-F24-3` (`s8-vg-balanced`), not Study 7's pool.
@@ -111,6 +113,51 @@ Distinctions the catalog enforces:
   `SYM:P-n:entry`, `SYM:P-n:partial-k` and `SYM:P-n:exit`; a refusal is `SYM:refused:<book>:<trade>`. The chart,
   tooltips, the selected-event panel and the ledger use the same ids.
 
+## 3a. Evaluation windows (2026-11-27)
+
+The window is chosen under **Evaluation window** (the Run Test dialog's date fields and preset chips, New York session
+dates, inclusive) and kept in the address (`?window=all`, `?window=custom&from=…&to=…&exec=continuous|isolated`; no
+parameter = the research window, so every earlier link and the catalog's benchmark behave as before).
+
+| Mode | Simulated | Reported | Checked against |
+|---|---|---|---|
+| **Research** (default) | the candidate's research window: the window its archived targets were sealed on (`targets.window`; for all six: Priority 3's FULL door, 2016-01-04 → 2026-10-30, the verified byte prefix of the canonical files) | that window | the archived targets (*Parity verified*) |
+| **All** | 2016-01-04 → the latest **common complete** session of VGT and GDX (`src/lib/canonicalPrefix.ts`: never past either file's last complete session; a partly appended session is never used) | the whole run | the research-window replay of the same candidate, decision for decision through its end (*Research window reproduced*), whose archived parity is checked too |
+| **Custom · continuous history** (default for Custom) | 2016-01-04 → *To* | *From* → *To* = period R (positions, book states, stops, accrued interest carried in) | as All |
+| **Custom · isolated window** | *From* → *To*, starting flat (a cold start) | *From* → *To* | none archived: the engine-independent ledger reconciliation only |
+
+- **One plan for both tools.** Windows are planned, opened and attributed by `src/manual-eval/execute.ts`, the module
+  `npm run manual-eval` uses. The **Periods** table is `src/manual-eval/report.ts` `periodMetrics`: A (research window),
+  A1 (development), A2 (formal validation), B (after the validation end: **manual post-validation evaluation**),
+  C (entire run), R (a continuous custom reporting window). Strategy Lab's table equals the CLI's field for field
+  (`tests/portfolio-windows.test.ts`).
+- **What a replay records.**
+  - The requested window, the simulated and reported sessions, the research window and the local data coverage are
+    in `metrics.window`. The header shows the reported range; its (i) popover shows the rest.
+  - A run past the research validation end (`config/research/date-ranges.json`) carries the
+    *MANUAL POST-VALIDATION EVALUATION* label. It is never optimization, selection, qualification or validation
+    evidence (standard 5.0.0 §1.13).
+  - The validation figures stay those of the formal window (to 2026-10-30). The later period is reported separately
+    (summary block, ledger filter *Active After …*, the equity chart's amber shading and viewport).
+- **Positions spanning a boundary.**
+  - The ledger's lifetime net is the whole position's.
+  - With a period filter, the column **P&L in this period** shows the change of the position's marked value inside
+    that period. For a carried-in position it is not its lifetime net: N/original's P-44 earns +$11,048.24 after
+    2026-10-30, against a lifetime +$5,483.48.
+- **Coverage.**
+  - `GET /api/portfolios` returns `coverage`: each file's latest complete session and the common endpoint.
+  - A custom *To* after the common endpoint is refused by the form and by the server (400), and again by the runner
+    before any data are read.
+  - The VGT-only candidates read the two-symbol door too, so their All endpoint is the common one.
+- **Engines.** The five Priority 6 candidates run on 5B's `runLife(…, 'L0')` as before. N/original runs on the
+  risk-metrics replay (`engine.kind: rc2-replay`). Every window uses the candidate's unchanged engine and parameters,
+  and the catalog is never modified by a replay.
+- **Requested versus evaluated dates of single-symbol runs.**
+  - The run header and the Parameters panel show the sessions the runner evaluated (`shared/run-window.ts`, from the
+    run's provenance), with the request beside them when they differ.
+  - A saved run's chart covers the evaluated sessions only.
+  - The export's `run.json` carries `effectiveWindow`.
+
 ## 4. Figures and definitions
 
 - **Marked net** = realized + the open remainder marked at the last close (shares × close − outstanding principal −
@@ -149,9 +196,10 @@ Distinctions the catalog enforces:
 - **No saved run.** Browsing writes no run, variation, note or database row.
 - **The replay cache.** Results live in their own disposable cache, `<state>/portfolio-cache/`, configured with
   `STRATEGY_LAB_PORTFOLIO_CACHE_DIR`, `_MAX_ENTRIES` (default 40) and `_MAX_MB` (default 512).
-  - Each entry is keyed by the sha256 of its **identity**: the catalog entry's own sha256, the lifecycle, the benchmark
-    window, the content hashes of `data/VGT`, `data/GDX` and the runtime inputs, the FULL door's guard file, and the
-    implementation fingerprint (the runner's whole static import closure, the packages, Node and its flags).
+  - Each entry is keyed by the sha256 of its **identity**: the catalog entry's own sha256, the lifecycle, the requested
+    evaluation window (canonical form; from replay format 2), the research date ranges file's sha256, the content hashes
+    of `data/VGT`, `data/GDX` and the runtime inputs, the FULL door's guard file, and the implementation fingerprint (the
+    runner's whole static import closure, the packages, Node and its flags).
   - Every request recomputes the identity. A hit requires an equal identity and every file matching its sha256 and size;
     a tampered or stale entry is evicted, never served.
   - A typical entry is about 330 KB; the browser receives only the summary, the ledger, one symbol's events and the
@@ -161,8 +209,10 @@ Distinctions the catalog enforces:
   - Identical requests coalesce. A queued replay that nobody waits for is dropped when its ticket is released (a newer
     selection, or a ticket idle for 60 s). A running one finishes and is cached.
   - The page displays a result only if it belongs to the selected candidate (candidate id and replay id checked).
-- **Cost.** A cold replay takes about 6 s: 5.5 s loads both minute files, then 40–210 ms for the replay itself. The child
-  peaks at about 0.9 GB RSS. A cache hit takes about 0.1 s.
+- **Cost.** A cold research-window replay takes about 6 s: 5.5 s loads both minute files, then 40–210 ms for the
+  replay itself (the child peaks at about 0.9 GB RSS; N/original about 1.6 GB with its ledger and period table). An
+  All or continuous custom replay also replays the research window for its trajectory check: about 14 s and 2.7 GB. A
+  cache hit takes about 0.1 s.
 
 ## 6. Parity (verified 2026-11-11)
 
@@ -226,13 +276,12 @@ The command is `node --experimental-transform-types --max-old-space-size=6144 ap
 
 ## 9. Limitations
 
-- **Fixed window.** Every candidate runs on the archived benchmark window only; there is no separate simulation-window
-  control. The period buttons are viewports.
-- **Pinned data.** The FULL door reads the canonical VGT and GDX files as their pinned byte prefixes through 2026-10-30
-  (from 2026-11-27, standard 4.0.0 §1.14): rows appended later are never read, so replays are unchanged after a data
-  update, while any change to a historical byte fails closed with a message. The window stays the fixed benchmark;
-  a pooled configuration on all available data or a custom window runs from the command line
-  (`npm run manual-eval`, README "Research date ranges and manual evaluation on newer data").
+- **Windows (from 2026-11-27).** Research, All and Custom (§3a). The period buttons remain viewports of the one run.
+  An isolated custom window has no archived target to compare with.
+- **Pinned data.** The research window (FULL door) reads the canonical VGT and GDX files as their pinned byte prefixes
+  through 2026-10-30 (standard 4.0.0 §1.14): rows appended later are never read there, so research replays are unchanged
+  after a data update, and any change to a historical byte fails closed. All and Custom read the files through their
+  latest common complete session; a new data vintage is a new cache identity (§5).
 - **Read-only presets.** There is no parameter editor and no custom derivative. Use New Test or Interactive Preview for
   custom single-strategy runs.
 - **No export bundle.** Replays have no research-bundle export.
