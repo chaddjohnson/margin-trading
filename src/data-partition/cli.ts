@@ -9,6 +9,11 @@
 //   Appends the rows of a download of only the newest sessions (data/<SYMBOL>.csv) after the canonical file's last bar.
 // npm run datasets -- config
 //   Validates data/partitions.json and prints the partitions.
+// npm run datasets -- prefix SYMBOL --through YYYY-MM-DD | --bytes N --sha256 HEX
+//   The byte-prefix pin of every row through a New York date, or the verification of a pin (src/lib/canonicalPrefix.ts).
+// npm run datasets -- vintages [SYMBOL ...]
+//   Verifies every recorded vintage (config/market-data/vintages.json) as a byte prefix of today's file.
+// prefix and vintages write nothing.
 // Every symbol's report is printed and saved in data/<SYMBOL>/dataset-report.json (a completed migration's in
 // data/<SYMBOL>/migration-report.json, which nothing overwrites), and the run's in data/datasets-<command>-run.json. The exit code is 1 when any symbol fails; a failed symbol keeps every original file.
 import path from 'node:path';
@@ -22,11 +27,14 @@ import {
   appendSymbol,
   importSymbol,
   migrateSymbol,
+  prefixCheck,
   reportLines,
-  verifySymbol
+  verifySymbol,
+  verifyVintages
 } from './canonical.ts';
 
-const commands = ['migrate', 'verify', 'import', 'append', 'config'] as const;
+const commands = ['migrate', 'verify', 'import', 'append', 'config', 'prefix', 'vintages'] as const;
+const valued = ['--through', '--bytes', '--sha256'];
 
 // A migration's record (the former files' hashes) is kept apart from later verifications, which never replace it.
 const reportFile = (command: string, report: DatasetReport) =>
@@ -34,7 +42,15 @@ const reportFile = (command: string, report: DatasetReport) =>
 const flags = ['--dry-run', '--replace', '--keep-source'];
 
 export const runDatasetsCli = async (args: string[], dataDir = 'data') => {
-  const [command, ...rest] = args;
+  const [command, ...all] = args;
+  const values: Record<string, string> = {};
+  const rest = all.filter((arg, i) => {
+    if (valued.includes(arg)) {
+      values[arg] = all[i + 1] ?? '';
+      return false;
+    }
+    return !valued.includes(all[i - 1] ?? '');
+  });
   const unknown = rest.filter((arg) => arg.startsWith('--') && !flags.includes(arg));
 
   if (!commands.includes(command as (typeof commands)[number])) {
@@ -42,10 +58,30 @@ export const runDatasetsCli = async (args: string[], dataDir = 'data') => {
   }
 
   if (unknown.length > 0) {
-    throw new Error(`Unknown option(s) ${unknown.join(', ')}; the options are ${flags.join(', ')}`);
+    throw new Error(`Unknown option(s) ${unknown.join(', ')}; the options are ${[...flags, ...valued].join(', ')}`);
   }
 
   const named = rest.filter((arg) => !arg.startsWith('--'));
+
+  if (command === 'vintages') {
+    const rows = await verifyVintages(named, { dataDir });
+
+    for (const r of rows)
+      console.info(
+        `${r.ok ? 'ok  ' : 'FAIL'} ${r.symbol} ${r.bytes} bytes ${r.sha256.slice(0, 16)}…${r.ok ? `: a byte prefix of ${r.file} (${r.laterBytes} later bytes${r.nextRowUtc ? `, next row ${r.nextRowUtc}` : ''})` : `: ${r.error}`}`
+      );
+    console.info(`${rows.filter((r) => r.ok).length} of ${rows.length} recorded vintage(s) verified`);
+    return rows.every((r) => r.ok);
+  }
+
+  if (command === 'prefix') {
+    if (named.length !== 1) throw new Error('prefix takes one symbol');
+
+    const pin = values['--bytes'] !== undefined ? { bytes: Number(values['--bytes']), sha256: values['--sha256'] ?? '' } : undefined;
+
+    console.info(JSON.stringify(prefixCheck(named[0]!, { through: values['--through'], pin }, { dataDir }), null, 1));
+    return true;
+  }
   const log = (line: string) => console.info(line);
   const config =
     command === 'migrate'

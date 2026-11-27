@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { sha256File } from '../../four-family/data.ts';
+import { historicalPin } from '../../lib/canonicalPrefix.ts';
 import { type BaselineCase, exactJson, recordCase } from '../tools/capture-baseline.ts';
 import { warmupSessionsFor, warmupSessionsForParams } from '../riseTrading.ts';
 
@@ -44,8 +44,10 @@ describe('Growth (current engine) with continuation and both entry gates OFF = t
 
     test(`${expected.id}: identical signals, trades, excursions, drawdowns, marks and metrics`, async (t) => {
       if (!existsSync(dataFile)) return t.skip('no local data');
-      if ((await sha256File(dataFile)) !== expected.dataSha256)
-        return t.skip('the data file changed since the capture');
+      // the captured input: the whole file while unchanged, else its recorded vintage, verified as today's byte prefix
+      const pin = historicalPin(dataFile, expected.symbol, expected.dataSha256);
+
+      if (!pin) return t.skip('the data file no longer holds the captured input');
 
       // OFF: the configuration as 1.0.0 knew it (no continuation field), and the explicit OFF of 1.1.0.
       for (const params of [expected.params, { ...expected.params, continuation: null }]) {
@@ -54,7 +56,7 @@ describe('Growth (current engine) with continuation and both entry gates OFF = t
           warmupSessionsFor(params.resolution, params.recentLowLookbackBars)
         );
 
-        const actual = parse(exactJson(await recordCase({ ...expected, params })));
+        const actual = parse(exactJson(await recordCase({ ...expected, params, pin })));
         const want = parse(exactJson(expected));
 
         assert.equal(actual.dataSha256, want.dataSha256);

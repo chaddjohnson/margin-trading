@@ -44,14 +44,19 @@ export const chronology = {
   sensitivityFunding: '2017-06-15' // the prespecified common later funding start (report-only)
 } as const;
 
-export const canonical: Record<Sym, { file: string; sha256: string }> = {
+// The canonical files as this study froze them (2016-01-04 → 2026-10-30): each pin is the whole file of that date and,
+// since appended rows never change earlier bytes, a byte prefix ({ bytes, sha256 }) of today's file. FULL verifies that
+// prefix and reads nothing after it (standard 4.0.0 §1; src/lib/canonicalPrefix.ts), so later data never enter it.
+export const canonical: Record<Sym, { file: string; sha256: string; bytes: number }> = {
   GDX: {
     file: path.join(repoRoot, 'data', 'GDX', 'data.csv'),
-    sha256: '77dba9b21c4b684996283e7b8f17917696139f890441b1ca900d664b59ea5049'
+    sha256: '77dba9b21c4b684996283e7b8f17917696139f890441b1ca900d664b59ea5049',
+    bytes: 80036100
   },
   VGT: {
     file: path.join(repoRoot, 'data', 'VGT', 'data.csv'),
-    sha256: '2ee06310f2fa8926220fd9629c093ba77fe5d35fd2515da7f7c54caa50b5412e'
+    sha256: '2ee06310f2fa8926220fd9629c093ba77fe5d35fd2515da7f7c54caa50b5412e',
+    bytes: 53395054
   }
 };
 

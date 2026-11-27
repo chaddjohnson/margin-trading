@@ -17,9 +17,21 @@
 //
 // Warm-up never widens the evaluation window: every result, metric and decision comes from the window's sessions,
 // and nothing after the window's last date is loaded or read.
+//
+// Pinned inputs and formal stages (from standard 4.0.0, docs/research/OPTIMIZATION_STANDARD.md §1):
+// - `pin` ({ bytes, sha256 }, src/lib/canonicalPrefix.ts) makes the input a verified byte prefix of the file: those bytes
+//   must hash to the pin before anything is parsed, nothing after them is read, and the report's dataSha256 is the pin's.
+//   A historical input (a study's FULL door, a golden master) stays the same input after rows are appended to the file.
+// - access 'development' and 'validation' are the formal research stages of config/research/date-ranges.json
+//   (src/lib/researchRanges.ts): the window may not end after the stage's authorized end (refused before a byte is read;
+//   unset, it is that end), only the bytes through it are read, and the data must cover it completely. Appending data
+//   never extends them; 'manual evaluation' (the default) reads any window of the file, newer data included.
 import type { MarketSession, Tick } from '#types';
+import { type BytePin, prefixThroughDate, tailStatus, verifyBytePin } from './canonicalPrefix.ts';
+import { nyseHolidays } from './calendar.ts';
 import { type SplitAdjustment, type SplitEvent, adjustSessionsForSplits, readSplits } from './corporateActions.ts';
 import { loadCsvMinuteBacktestData } from './csv.ts';
+import { type ResearchStage, researchWindow } from './researchRanges.ts';
 import { type DatasetSelection, assertOptimizationPartition, sha256FileSync } from './dataset.ts';
 import {
   type DatasetPartition,
@@ -36,13 +48,19 @@ export interface WindowRequest {
   endDate?: string;
   warmupSessions?: number; // the sessions of history the strategy's lookbacks need before the window
   // 'optimization' (an optimizer, a parameter search or a selection) accepts the training partition only, here at
-  // the loader as well as in each command line; 'manual evaluation' (the default) any partition or file.
+  // the loader as well as in each command line; 'manual evaluation' (the default) any partition or file;
+  // 'development' and 'validation' the formal stages of the research date ranges (header).
   access?: AccessMode;
   // The recorded splits (config/market-events/splits.json by default) a partition run is forward-adjusted for.
   splits?: readonly SplitEvent[];
+  // A verified byte prefix of the data file: the only bytes read (header). Loaders only (loadDatasetSessions).
+  pin?: BytePin;
 }
 
-export type AccessMode = 'manual evaluation' | 'optimization';
+export type AccessMode = 'manual evaluation' | 'optimization' | ResearchStage;
+
+export const isResearchStage = (access: AccessMode | undefined): access is ResearchStage =>
+  access === 'development' || access === 'validation';
 
 export interface WarmupReport {
   requiredSessions: number;
@@ -70,6 +88,11 @@ export interface WindowReport {
   // Splits inside the run, forward-adjusted: prices from each effective date on × ratio, volumes ÷ ratio, so the run
   // is in the share units of its first session (src/lib/corporateActions.ts).
   splitAdjustments: SplitAdjustment[];
+  // Only when the input was a byte prefix (a pin, or a formal stage): the bytes read of the file's fileBytes; dataSha256
+  // is then the prefix's sha256. Absent for a whole-file read.
+  dataPrefix?: { bytes: number; fileBytes: number; pinned: boolean };
+  // Only for a formal stage: the research date range (config/research/date-ranges.json) and the authorized end.
+  researchRange?: { id: string; stage: ResearchStage; authorizedEnd: string };
 }
 
 export interface RunWindow {
@@ -113,8 +136,9 @@ export const windowInterval = (
   return { start: startDate ?? interval.start, end: endDate ?? interval.end };
 };
 
-// The access mode of a request; an optimization input must be the training partition.
-export const assertAccess = ({ dataset, access = 'manual evaluation' }: WindowRequest): AccessMode => {
+// The access mode of a request; an optimization input must be the training partition, a formal research stage the
+// canonical file (partition all) ending no later than the stage's authorized end.
+export const assertAccess = ({ dataset, access = 'manual evaluation', endDate }: WindowRequest): AccessMode => {
   if (access === 'optimization') {
     if (!dataset.partition) {
       throw new Error(`Optimization reads the training partition only, not the explicit file ${dataset.file}`);
@@ -123,8 +147,22 @@ export const assertAccess = ({ dataset, access = 'manual evaluation' }: WindowRe
     assertOptimizationPartition(dataset.partition);
   }
 
+  if (isResearchStage(access)) {
+    if (dataset.partition !== 'all') {
+      throw new Error(
+        `A ${access} stage reads the canonical file by the research date ranges (partition all), not ${dataset.partition ? `the ${dataset.partition} partition` : `the explicit file ${dataset.file}`}`
+      );
+    }
+
+    researchWindow(access, unset(endDate)); // refuses an end after the authorized end
+  }
+
   return access;
 };
+
+// The window's end: the requested one, or for a formal stage its authorized end when none is requested.
+const effectiveEnd = (request: WindowRequest) =>
+  isResearchStage(request.access) ? researchWindow(request.access, unset(request.endDate)).to : unset(request.endDate);
 
 const warmupNote = (required: number, available: number, firstEvaluationDate: string) =>
   required === 0
@@ -139,8 +177,8 @@ const warmupNote = (required: number, available: number, firstEvaluationDate: st
 export const selectRunSessions = (allSessions: MarketSession[], request: WindowRequest): RunWindow => {
   const { dataset } = request;
   const startDate = unset(request.startDate);
-  const endDate = unset(request.endDate);
   const access = assertAccess(request);
+  const endDate = effectiveEnd(request);
 
   if (!dataset.partition) {
     // An explicit file: the strategies' original date filter, unchanged.
@@ -202,7 +240,10 @@ export const selectRunSessions = (allSessions: MarketSession[], request: WindowR
       },
       mode: dataset.partition === 'all' && startDate === undefined ? 'continuous all' : 'isolated partition',
       access,
-      splitAdjustments: adjusted.applied
+      splitAdjustments: adjusted.applied,
+      ...(isResearchStage(access)
+        ? { researchRange: { id: researchWindow(access).range, stage: access, authorizedEnd: researchWindow(access).to } }
+        : {})
     }
   };
 };
@@ -234,15 +275,72 @@ const secondsPerDay = 86400;
 // Loads only the rows a window can use: a New York date is the UTC date or the one before, so rows from the lower
 // bound's UTC midnight to two UTC days after the upper bound cover every session of the window and of a warm-up
 // that starts at the lower bound. Every row is still parsed and checked for order; rows outside are not kept.
-const loadBounded = async (symbol: string, file: string, lower: string | null, upper: string | null) => {
+const loadBounded = async (
+  symbol: string,
+  file: string,
+  lower: string | null,
+  upper: string | null,
+  maxBytes?: number
+) => {
   const stats = { before: 0, after: 0 };
   const ticks: Tick[] = await loadCsvMinuteBacktestData(symbol, file, {
     fromTime: lower === null ? -Infinity : Date.parse(`${lower}T00:00:00Z`) / 1000,
     toTime: upper === null ? Infinity : Date.parse(`${upper}T00:00:00Z`) / 1000 + 2 * secondsPerDay,
-    stats
+    stats,
+    ...(maxBytes === undefined ? {} : { maxBytes })
   });
 
   return { sessions: groupMarketSessions(ticks), skippedBefore: stats.before };
+};
+
+// True when no NYSE session falls after `after` up to and including `through` (weekdays that are not holidays).
+const noSessionBetween = (after: string, through: string) => {
+  for (let t = Date.parse(`${after}T00:00:00Z`) + secondsPerDay * 1000; t <= Date.parse(`${through}T00:00:00Z`); t += secondsPerDay * 1000) {
+    const d = new Date(t);
+    const date = d.toISOString().slice(0, 10);
+
+    if (d.getUTCDay() !== 0 && d.getUTCDay() !== 6 && !nyseHolidays.has(date)) return false;
+  }
+
+  return true;
+};
+
+// The bytes a request may read: its pin (verified before anything is parsed), or for a formal stage the prefix through
+// the stage's end; undefined for a whole-file read.
+const inputPrefix = (request: WindowRequest) => {
+  const { dataset, pin } = request;
+  const what = `${dataset.symbol} ${dataset.file}`;
+
+  if (!isResearchStage(request.access)) {
+    return pin ? { pin, fileBytes: verifyBytePin(dataset.file, pin, what).fileBytes, pinned: true } : undefined;
+  }
+
+  const end = effectiveEnd(request)!;
+  const through = prefixThroughDate(dataset.file, end);
+
+  if (through.rows === 0) throw new Error(`${what} has no row on or before ${end}`);
+
+  // the stage's end must be covered completely: a row of a later date exists, or no session is missing after the file's
+  // latest complete session (a partly appended session never counts)
+  const latest = through.nextRowUtc === null ? tailStatus(dataset.file).latestCompleteSession : end;
+
+  if (latest === null || (latest < end && !noSessionBetween(latest, end))) {
+    throw new Error(
+      `${what} does not cover the ${request.access} end ${end} completely (its latest complete session is ${latest ?? 'none'})`
+    );
+  }
+
+  if (pin) {
+    verifyBytePin(dataset.file, pin, what);
+
+    if (pin.bytes > through.bytes) {
+      throw new Error(`${what}: the pinned prefix of ${pin.bytes} bytes reaches past the ${request.access} end ${end}`);
+    }
+
+    return { pin, fileBytes: through.fileBytes, pinned: true };
+  }
+
+  return { pin: { bytes: through.bytes, sha256: through.sha256 }, fileBytes: through.fileBytes, pinned: false };
 };
 
 // The run's sessions straight from its canonical file, for runners that load data themselves (the allocator, the
@@ -253,14 +351,19 @@ export const loadDatasetSessions = async (request: WindowRequest): Promise<RunWi
 
   assertAccess(request); // before a byte is read
 
+  const prefix = inputPrefix(request); // verified before a byte is parsed
+  const maxBytes = prefix?.pin.bytes;
+
   if (!dataset.partition) {
     return selectRunSessions(
-      groupMarketSessions(await loadCsvMinuteBacktestData(dataset.symbol, dataset.file)),
+      groupMarketSessions(
+        await loadCsvMinuteBacktestData(dataset.symbol, dataset.file, maxBytes === undefined ? undefined : { maxBytes })
+      ),
       request
     );
   }
 
-  const window = windowInterval(dataset.partition, dataset.interval!, unset(request.startDate), unset(request.endDate));
+  const window = windowInterval(dataset.partition, dataset.interval!, unset(request.startDate), effectiveEnd(request));
   const required = Math.max(0, Math.floor(request.warmupSessions ?? 0));
   // Calendar days that hold `required` sessions with room for holidays and missing sessions; if they don't, the
   // file is read again from its start.
@@ -270,14 +373,19 @@ export const loadDatasetSessions = async (request: WindowRequest): Promise<RunWi
       : new Date(Date.parse(`${window.start}T00:00:00Z`) - (Math.ceil(required * 1.6) + 14) * secondsPerDay * 1000)
           .toISOString()
           .slice(0, 10);
-  let loaded = await loadBounded(dataset.symbol, dataset.file, lower, window.end);
+  let loaded = await loadBounded(dataset.symbol, dataset.file, lower, window.end, maxBytes);
   let run = selectRunSessions(loaded.sessions, request);
 
   if (run.warmup < required && loaded.skippedBefore > 0) {
-    loaded = await loadBounded(dataset.symbol, dataset.file, null, window.end);
+    loaded = await loadBounded(dataset.symbol, dataset.file, null, window.end, maxBytes);
     run = selectRunSessions(loaded.sessions, request);
   }
 
-  run.report!.dataSha256 = sha256FileSync(dataset.file);
+  run.report!.dataSha256 = prefix ? prefix.pin.sha256 : sha256FileSync(dataset.file);
+
+  if (prefix) {
+    run.report!.dataPrefix = { bytes: prefix.pin.bytes, fileBytes: prefix.fileBytes, pinned: prefix.pinned };
+  }
+
   return run;
 };

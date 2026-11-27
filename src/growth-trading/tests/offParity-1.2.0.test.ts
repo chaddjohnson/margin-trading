@@ -11,7 +11,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { sha256File } from '../../four-family/data.ts';
+import { historicalPin } from '../../lib/canonicalPrefix.ts';
 import { exactJson } from '../tools/capture-baseline.ts';
 import { type BaselineCase11, recordCase11 } from '../tools/capture-baseline-1.1.0.ts';
 import { warmupSessionsForParams } from '../riseTrading.ts';
@@ -40,8 +40,10 @@ describe('Growth 1.3.0 with the three optional rules OFF = the 1.2.0 baseline (c
 
     test(`${expected.id}: identical signals, trades, episodes, decision log, marks and metrics`, async (t) => {
       if (!existsSync(dataFile)) return t.skip('no local data');
-      if ((await sha256File(dataFile)) !== expected.dataSha256)
-        return t.skip('the data file changed since the capture');
+      // the captured input: the whole file while unchanged, else its recorded vintage, verified as today's byte prefix
+      const pin = historicalPin(dataFile, expected.symbol, expected.dataSha256);
+
+      if (!pin) return t.skip('the data file no longer holds the captured input');
 
       // OFF: the configuration as 1.2.0 knew it (no v1.3.0 fields), and the explicit OFF of 1.3.0.
       for (const params of [
@@ -56,7 +58,7 @@ describe('Growth 1.3.0 with the three optional rules OFF = the 1.2.0 baseline (c
       ]) {
         assert.equal(warmupSessionsForParams(params), expected.warmupSessions);
 
-        const actual = parse(exactJson(await recordCase11({ ...expected, params })));
+        const actual = parse(exactJson(await recordCase11({ ...expected, params, pin })));
         const want = parse(exactJson(expected));
 
         assert.deepEqual(

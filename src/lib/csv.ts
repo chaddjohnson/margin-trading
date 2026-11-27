@@ -93,6 +93,9 @@ export interface MinuteLoadBounds {
   toTime?: number;
   // Filled with the number of rows left out on each side.
   stats?: { before: number; after: number };
+  // Read only the first maxBytes bytes of the file (a verified byte prefix, src/lib/canonicalPrefix.ts): rows after
+  // it are never read. The prefix must end at a row boundary. Unset: the whole file.
+  maxBytes?: number;
 }
 
 // Loads a file in the canonical minute format (see ohlcvCsvColumns). The file has no trade counts. Every row
@@ -102,10 +105,14 @@ export interface MinuteLoadBounds {
 export const loadCsvMinuteBacktestData = async (
   symbol: string,
   filename: string,
-  { fromTime = -Infinity, toTime = Infinity, stats }: MinuteLoadBounds = {}
+  { fromTime = -Infinity, toTime = Infinity, stats, maxBytes }: MinuteLoadBounds = {}
 ): Promise<Tick[]> => {
+  if (maxBytes !== undefined && (!Number.isSafeInteger(maxBytes) || maxBytes < 1)) {
+    throw new Error(`${filename}: maxBytes must be a positive integer, not ${maxBytes}`);
+  }
+
   const parser = fs
-    .createReadStream(filename)
+    .createReadStream(filename, maxBytes === undefined ? undefined : { end: maxBytes - 1 })
     .pipe(parse({ delimiter: minuteCsvDelimiter, relax_column_count: true, info: true }));
   const ticks: Tick[] = [];
   let previousTime = -Infinity;

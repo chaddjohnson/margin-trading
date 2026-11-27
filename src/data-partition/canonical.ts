@@ -11,6 +11,13 @@
 // - verify: re-scans data/<SYMBOL>/data.csv against partitions.json; nothing is written except the report.
 // - import: makes data/<SYMBOL>.csv (a fresh download) the symbol's canonical file after the same scan, writing the
 //   data rows exactly (a header row, if any, is left out). A new symbol needs nothing else: partitions are dates.
+// - append: appends a download of only the newest sessions after the last bar. It proves that the new file begins
+//   with exactly the previous file's bytes (the sha256 of that prefix equals the previous file's sha256), so every
+//   pinned historical input stays a verified byte prefix, and records both versions in the vintage registry
+//   (config/market-data/vintages.json, src/lib/canonicalPrefix.ts). Appending never moves a research window
+//   (config/research/date-ranges.json): only manual evaluations read the new rows.
+// - prefix / vintages: verify a byte-prefix pin (or compute the pin of every row through a date) and every recorded
+//   vintage against today's files.
 //
 // Bytes are never rewritten: no re-encoding, delimiter change, resampling, interpolation or adjustment.
 import { createHash } from 'node:crypto';
@@ -26,6 +33,16 @@ import {
   readPartitionConfig,
   segmentPartitions
 } from '#lib';
+import {
+  type BytePin,
+  type Vintage,
+  type VintageRegistry,
+  prefixThroughDate,
+  sha256Prefix,
+  tailStatus,
+  verifyBytePin,
+  vintagesFile
+} from '../lib/canonicalPrefix.ts';
 import { type PartitionStats, type ScanResult, fatalProblems, scanMinuteFile } from './scan.ts';
 
 const symbolPattern = /^[A-Z0-9][A-Z0-9.-]*$/;
@@ -56,6 +73,8 @@ export interface DatasetReport {
   anomalies: string[];
   errors: string[];
   scan?: Omit<ScanResult, 'file'>;
+  // append: the previous and the new version of the file, as recorded in the vintage registry
+  vintages?: { previous: Vintage; current: Vintage; registry: string };
 }
 
 export interface DatasetOptions {
@@ -66,7 +85,47 @@ export interface DatasetOptions {
   log?: (line: string) => void;
   // The validated metadata; read from the data directory when absent.
   config?: PartitionConfig;
+  // The vintage registry an append records into: config/market-data/vintages.json for the repository's data/, else
+  // <dataDir>/vintages.json (tests).
+  vintagesFile?: string;
 }
+
+const registryFileOf = (options: DatasetOptions) =>
+  options.vintagesFile ??
+  (path.resolve(options.dataDir ?? 'data') === path.resolve(path.dirname(vintagesFile), '..', '..', 'data')
+    ? vintagesFile
+    : path.join(options.dataDir ?? 'data', 'vintages.json'));
+
+const vintageOfFacts = (facts: FileFacts, latestCompleteSession: string | null, recorded: string): Vintage => ({
+  bytes: facts.bytes,
+  rows: facts.rows,
+  sha256: facts.sha256,
+  lastRowUtc: facts.lastTimestamp ?? '',
+  latestCompleteSession: latestCompleteSession ?? '',
+  recorded
+});
+
+// Adds a symbol's previous (if absent) and new vintage to the registry; refuses one that is not a growth of the last.
+const recordVintages = async (symbol: string, previous: Vintage, current: Vintage, file: string) => {
+  const registry: VintageRegistry = (await fs.pathExists(file))
+    ? ((await fs.readJson(file)) as VintageRegistry)
+    : { kind: 'canonical data vintages', schema: 1, description: 'Verified earlier versions of canonical minute files (src/lib/canonicalPrefix.ts).', symbols: {} };
+  const list = (registry.symbols[symbol] ??= []);
+
+  for (const v of [previous, current]) {
+    if (list.some((x) => x.sha256 === v.sha256 && x.bytes === v.bytes)) continue;
+    if (list.length && !(v.bytes > list.at(-1)!.bytes)) {
+      throw new Error(`${file}: ${symbol}'s vintage of ${v.bytes} bytes does not follow its last recorded one (${list.at(-1)!.bytes} bytes)`);
+    }
+    list.push(v);
+  }
+
+  const temporary = `${file}.tmp-${process.pid}`;
+
+  await fs.ensureDir(path.dirname(file));
+  await fs.writeFile(temporary, `${JSON.stringify(registry, null, 1)}\n`);
+  await fs.rename(temporary, file);
+};
 
 const sha256File = async (file: string) => {
   const hash = createHash('sha256');
@@ -543,6 +602,9 @@ export const appendSymbol = async (symbol: string, options: DatasetOptions = {})
       throw new Error(`${report.file} fails its own checks; run verify`);
     }
 
+    const previous = await factsOf(report.file);
+    const previousComplete = tailStatus(report.file).latestCompleteSession;
+
     const sourceLines: string[] = [];
     const sourceScan = await scanMinuteFile(source, config, (_partition, line) => {
       sourceLines.push(line);
@@ -609,6 +671,17 @@ export const appendSymbol = async (symbol: string, options: DatasetOptions = {})
       }
     }
 
+    // The byte-prefix proof: the new file begins with exactly the previous file, so every pinned input is unchanged.
+    const prefixSha256 = sha256Prefix(temporary, previous.bytes);
+
+    if (prefixSha256 !== previous.sha256) {
+      report.errors.push(`the first ${previous.bytes} bytes of the appended file are not the previous file (sha256 ${prefixSha256})`);
+    } else {
+      report.proof.push(
+        `the first ${previous.bytes} bytes of the new file hash to the previous file's sha256 ${previous.sha256.slice(0, 16)}… (every earlier byte unchanged)`
+      );
+    }
+
     if (report.errors.length > 0) {
       throw new Error('validation failed');
     }
@@ -625,6 +698,16 @@ export const appendSymbol = async (symbol: string, options: DatasetOptions = {})
 
     await fs.rename(temporary, report.file);
     report.after = await factsOf(report.file);
+
+    const at = new Date().toISOString();
+    const vintages = {
+      previous: vintageOfFacts(previous, previousComplete, `the file before the append of ${at} (verified as its byte prefix)`),
+      current: vintageOfFacts(report.after, tailStatus(report.file).latestCompleteSession, `\`datasets append\` ${at}`),
+      registry: registryFileOf(options)
+    };
+
+    await recordVintages(symbol, vintages.previous, vintages.current, vintages.registry);
+    report.vintages = vintages;
 
     if (!options.keepSource) {
       await fs.remove(source);
@@ -669,4 +752,65 @@ export const reportLines = (report: DatasetReport): string[] => {
   lines.push(...report.errors.map((line) => `  ERROR: ${line}`));
 
   return lines;
+};
+
+// ----- byte-prefix pins and the vintage registry (verification only; nothing is written) -----
+
+export interface PrefixCheck {
+  symbol: string;
+  file: string;
+  bytes: number;
+  sha256: string;
+  ok: boolean;
+  recorded?: string;
+  laterBytes?: number;
+  nextRowUtc?: string | null;
+  error?: string;
+}
+
+// Every recorded vintage of the given symbols (all recorded symbols by default) against today's canonical files: each
+// must be a byte prefix of the file. A symbol without a local file is listed with ok = false.
+export const verifyVintages = async (symbols: readonly string[] = [], options: DatasetOptions = {}): Promise<PrefixCheck[]> => {
+  const dataDir = options.dataDir ?? 'data';
+  const registryFile = registryFileOf(options);
+  const registry = (await fs.readJson(registryFile)) as VintageRegistry;
+  const out: PrefixCheck[] = [];
+
+  for (const symbol of symbols.length ? symbols : Object.keys(registry.symbols)) {
+    const file = canonicalDataFile(symbol, dataDir);
+
+    for (const v of registry.symbols[symbol] ?? []) {
+      const row: PrefixCheck = { symbol, file, bytes: v.bytes, sha256: v.sha256, ok: false, recorded: v.recorded };
+
+      try {
+        if (!(await fs.pathExists(file))) throw new Error(`${file} does not exist`);
+
+        const r = verifyBytePin(file, v, `${symbol} ${file}`);
+
+        Object.assign(row, { ok: true, laterBytes: r.laterBytes, nextRowUtc: r.nextRowUtc });
+      } catch (error) {
+        row.error = (error as Error).message;
+      }
+
+      out.push(row);
+    }
+  }
+
+  return out;
+};
+
+// The pin of a symbol's canonical file through a New York date (every row whose date is ≤ it), or the verification of
+// a given pin.
+export const prefixCheck = (symbol: string, request: { through?: string; pin?: BytePin }, options: DatasetOptions = {}) => {
+  const file = canonicalDataFile(symbol, options.dataDir ?? 'data');
+
+  if (request.through !== undefined) {
+    const facts = prefixThroughDate(file, request.through);
+
+    return { symbol, file, through: request.through, ...facts };
+  }
+
+  if (!request.pin) throw new Error('prefix needs --through YYYY-MM-DD, or --bytes N --sha256 HEX');
+
+  return { symbol, file, ...request.pin, ...verifyBytePin(file, request.pin, `${symbol} ${file}`) };
 };

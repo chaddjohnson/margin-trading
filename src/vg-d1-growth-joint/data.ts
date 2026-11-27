@@ -3,6 +3,9 @@
 // only that cutoff's door. FULL (2016-01-04 → 2026-10-30, the browser's path: partition `all`, forward split
 // adjustment) opens only after FROZEN_SELECTION.json is committed read-only with the expected sha256 (the guard).
 // Every opening is logged in results/doors.jsonl.
+// From 2026-11-27 (standard 4.0.0 §1) FULL and the door builder verify the canonical files as a pinned byte prefix
+// (context.ts canonical: bytes + sha256) instead of their whole length, and FULL reads only those bytes: rows appended
+// after 2026-10-30 are never read, and FULL's sessions, arrays, dataSha256 and ids are those of the frozen files.
 //
 // One door = the two symbols' Datasets (fixtureDataset of the sessions) and daily signal bars, on ONE common session
 // calendar (checked date by date), shared by all four virtual books of every evaluation in a process.
@@ -13,6 +16,7 @@ import type { MarketSession } from '#types';
 import { type SignalBar, barsFromSessions } from '../entry-signals/bars.ts';
 import { type Dataset, fixtureDataset } from '../four-family/data.ts';
 import { resolveDataset } from '../lib/dataset.ts';
+import { verifyBytePin } from '../lib/canonicalPrefix.ts';
 import { loadDatasetSessions } from '../lib/evaluation.ts';
 import {
   type DoorName,
@@ -75,9 +79,9 @@ export const buildDoors = () => {
   const out: Record<string, Record<string, ReturnType<typeof verifyDoorFile>>> = {};
 
   for (const s of symbols) {
-    if (sha256File(canonical[s].file) !== canonical[s].sha256) throw new Error(`the canonical ${s} file changed`);
+    verifyBytePin(canonical[s].file, canonical[s], `the canonical ${s} file`); // throws if the frozen rows changed
 
-    const text = fs.readFileSync(canonical[s].file);
+    const text = fs.readFileSync(canonical[s].file).subarray(0, canonical[s].bytes);
 
     for (const [door, spec] of Object.entries(doorSpecs) as [PrefixDoor, (typeof doorSpecs)[PrefixDoor]][]) {
       const file = doorFile(door, s);
@@ -117,7 +121,8 @@ export const logDoor = (door: string, purpose: string, extra: Record<string, unk
   );
 };
 
-const symDoorOf = (s: Sym, history: MarketSession[], dataSha256: string): SymDoor => {
+// Exported for manual (non-formal) doors over other windows (src/manual-eval/door.ts), which must build the same arrays.
+export const symDoorOf = (s: Sym, history: MarketSession[], dataSha256: string): SymDoor => {
   const ds = fixtureDataset(history);
 
   ds.id = `${s}:${dataSha256.slice(0, 16)}:${ds.lastDate}`;
@@ -190,16 +195,15 @@ export const openFullDoor = async (
   const shas: Record<string, string> = {};
 
   for (const s of symbols) {
-    const sha = sha256File(canonical[s].file);
-
-    if (sha !== canonical[s].sha256) throw new Error(`canonical ${s} sha256 ${sha}, expected ${canonical[s].sha256}`);
-
+    const sha = canonical[s].sha256;
+    // the frozen file as a verified byte prefix of the canonical file: checked before a byte is parsed, nothing after it read
     const loaded = await loadDatasetSessions({
       dataset: resolveDataset(s, 'all'),
       startDate: chronology.firstSession,
       endDate: chronology.validationEnd,
       warmupSessions: 0,
-      access: 'manual evaluation'
+      access: 'manual evaluation',
+      pin: { bytes: canonical[s].bytes, sha256: sha }
     });
 
     if (loaded.history[0]!.date !== chronology.firstSession || loaded.history.at(-1)!.date !== chronology.validationEnd)

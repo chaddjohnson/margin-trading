@@ -16,6 +16,9 @@ import {
   verifySymbol
 } from '../canonical.ts';
 import { newYorkDateAndMinute } from '../scan.ts';
+import { prefixCheck, verifyVintages } from '../canonical.ts';
+import { researchRangesFile } from '../../lib/researchRanges.ts';
+import { createHash } from 'node:crypto';
 
 let dataDir = '';
 
@@ -432,6 +435,37 @@ describe('appending new sessions', () => {
 
     await fs.writeFile(path.join(dataDir, 'APP.csv'), `${later.join('\n')}\n`);
     assert.equal((await appendSymbol('APP', { dataDir })).status, 'unchanged');
+  });
+
+  // Standard 4.0.0 §1.12/§1.14: the append proves that the new file begins with exactly the previous one and records both
+  // versions in the vintage registry (here <dataDir>/vintages.json; the repository's is config/market-data/vintages.json),
+  // so a pin of the earlier file stays verifiable; the research date ranges are not touched.
+  test('the append proves the byte prefix, records both vintages, and the earlier file stays a verifiable prefix', async () => {
+    const before = await prepare();
+    const rangesBefore = await fs.readFile(researchRangesFile);
+
+    await fs.writeFile(path.join(dataDir, 'APP.csv'), `${later.join('\n')}\n`);
+
+    const report = await appendSymbol('APP', { dataDir });
+    const previous = { bytes: Buffer.byteLength(before), sha256: createHash('sha256').update(before).digest('hex') };
+
+    assert.equal(report.status, 'appended', report.errors.join('; '));
+    assert.ok(report.proof.some((line) => line.includes(`the first ${previous.bytes} bytes of the new file hash to the previous file's sha256`)));
+    assert.deepEqual(
+      [report.vintages!.previous.bytes, report.vintages!.previous.sha256, report.vintages!.current.bytes],
+      [previous.bytes, previous.sha256, previous.bytes + Buffer.byteLength(`${later.join('\n')}\n`)]
+    );
+
+    const registry = await fs.readJson(path.join(dataDir, 'vintages.json'));
+
+    assert.deepEqual(registry.symbols.APP.map((v: { sha256: string }) => v.sha256), [previous.sha256, report.after!.sha256]);
+    assert.deepEqual((await verifyVintages(['APP'], { dataDir })).map((r) => r.ok), [true, true]);
+    assert.equal((prefixCheck('APP', { pin: previous }, { dataDir }) as { laterBytes: number }).laterBytes, report.after!.bytes - previous.bytes);
+    assert.deepEqual(await fs.readFile(researchRangesFile), rangesBefore);
+
+    // a later rewrite of an earlier byte is caught by the recorded vintage
+    await fs.writeFile(path.join(dataDir, 'APP', 'data.csv'), (await canonical('APP')).replace(',1200', ',1201'));
+    assert.deepEqual((await verifyVintages(['APP'], { dataDir })).map((r) => r.ok), [false, false]);
   });
 
   test('a download that revises existing rows, or holds rows the file lacks, is refused and nothing changes', async () => {
