@@ -4,9 +4,10 @@
 // record-in-force tests with the stale-acceptance reason (they must pass in the rerun after the record). The seven failures
 // known since 2026-11-06 are resolved: the Study 7 data end in Assignment 1 (2026-11-27), the six lowercase
 // src/app/allin-original.ts failures by 4fb23ebd (the callers read the renamed file). Strategy Lab passes iff its
-// typecheck, lint, unit tests and e2e pass (one rerun of the known flaky e2e allowed), the campaign checkout has no
-// state/strategy-lab/ before or after (every suite uses temporary state), and the user's live dist in the main checkout
-// is byte-identical before and after.
+// typecheck, lint, unit tests and e2e pass (one rerun of the known flaky e2e allowed), the campaign checkout's
+// state/strategy-lab/ holds only the read-only copy of the Study 8 imports and is byte-identical before and after (every
+// suite uses temporary state; amendment A2), and the user's live dist in the main checkout is byte-identical before
+// and after.
 import fs from 'node:fs';
 import path from 'node:path';
 import { resultsDir, writeJson } from '../../src/gpu-phase9/context.ts';
@@ -91,8 +92,8 @@ const slPass =
   ok('strategy-lab-vitest.txt') &&
   ok('strategy-lab-build.txt') &&
   e2eOk &&
-  stateBefore === 'absent' &&
-  stateAfter === 'absent' &&
+  /^imports-only:[0-9a-f]{64}$/.test(stateBefore) &&
+  stateAfter === stateBefore &&
   liveDistOk;
 
 writeJson(path.join(D, 'strategy-lab.json'), {
@@ -117,10 +118,10 @@ writeJson(path.join(D, 'strategy-lab.json'), {
   stateStrategyLab: {
     before: stateBefore,
     after: stateAfter,
-    unchanged: stateBefore === 'absent' && stateAfter === 'absent',
-    method: "the campaign checkout (the integration worktree) has no state/strategy-lab/ before or after: every suite uses temporary state; the user's live state is in the main checkout, which no suite reads or writes"
+    unchanged: /^imports-only:[0-9a-f]{64}$/.test(stateBefore) && stateAfter === stateBefore,
+    method: "amendment A2: the campaign checkout (the integration worktree) holds in state/strategy-lab/ only a read-only copy of the live state's imports/study8 (the e2e server imports it into its own temporary state); sha256 of the sorted (path, sha256) of every file there, before and after; nothing else may exist. The user's live state is in the main checkout, which no suite reads or writes"
   },
-  summary: `typecheck ${ok('strategy-lab-typecheck.txt') ? 'ok' : 'FAIL'}, lint ${ok('strategy-lab-lint.txt') ? 'ok' : 'FAIL'}, vitest ${(vitest.match(/Tests\s+.*$/m) ?? ['?'])[0].trim()}, e2e ${passedOf(e2e)} passed / ${failedOf(e2e)} failed${e2eRerun ? ` (rerun ${passedOf(e2eRerun)} / ${failedOf(e2eRerun)})` : ''}, state ${stateBefore === 'absent' && stateAfter === 'absent' ? 'not created' : 'CREATED'}, live dist ${liveDistOk ? 'untouched' : 'CHANGED'}`,
+  summary: `typecheck ${ok('strategy-lab-typecheck.txt') ? 'ok' : 'FAIL'}, lint ${ok('strategy-lab-lint.txt') ? 'ok' : 'FAIL'}, vitest ${(vitest.match(/Tests\s+.*$/m) ?? ['?'])[0].trim()}, e2e ${passedOf(e2e)} passed / ${failedOf(e2e)} failed${e2eRerun ? ` (rerun ${passedOf(e2eRerun)} / ${failedOf(e2eRerun)})` : ''}, state ${/^imports-only:/.test(stateBefore) && stateAfter === stateBefore ? 'imports copy only, unchanged' : 'CHANGED'}, live dist ${liveDistOk ? 'untouched' : 'CHANGED'}`,
   pass: slPass
 });
 // E7: Strategy Lab's portfolio parity (the five frozen pooled candidates against their archived records)

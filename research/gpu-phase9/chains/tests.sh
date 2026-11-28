@@ -1,7 +1,9 @@
 #!/bin/bash
 # gpu-phase9 gates E7 (Strategy Lab part), E8, E9, E10 on the final committed tree (a copy of research/gpu-phase7/chains/tests.sh with
 # this study's paths). The campaign checkout is the Assignment 2 integration worktree: the UI is built into a scratch
-# directory; the e2e server uses its own temporary state, so the worktree must have no state/strategy-lab/ before or after;
+# directory; the e2e server uses its own temporary state. Amendment A2: the worktree's state/strategy-lab/ holds only a
+# read-only copy of the live state's imports/study8 (the e2e server imports it into its temporary state, as in the main
+# checkout), byte-identical before and after;
 # the user's live server runs from the main checkout ($MAIN), whose apps/strategy-lab/dist is fingerprinted before and
 # after (never written). The GPU must be free (Phase 1's live GPU test).
 #   tools/gpu-phase9/launch-slice.sh p9chain-tests <abs log> -- /bin/bash research/gpu-phase9/chains/tests.sh
@@ -12,7 +14,13 @@ OUT=research/gpu-phase9/results/tests
 SCRATCH=$ROOT/research/gpu-phase9/cache/strategy-lab-scratch
 mkdir -p "$OUT" "$SCRATCH"
 MAIN=${MAIN_CHECKOUT:-/home/chad/projects/margin-trading}
-fp() { if [ -e state/strategy-lab ]; then find state/strategy-lab -type f -printf '%p %s %T@\n' | sort | sha256sum | cut -d' ' -f1; else echo absent; fi; }
+fp() {
+  if [ ! -e state/strategy-lab ]; then echo absent; return; fi
+  local other h
+  other=$(cd state/strategy-lab && find . -type f -not -path './imports/study8/*' | wc -l)
+  h=$(cd state/strategy-lab && find . -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1)
+  if [ "$other" = 0 ]; then echo "imports-only:$h"; else echo "other:$h"; fi
+}
 dist() { (cd "$MAIN/apps/strategy-lab/dist" && find . -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1); }
 fp > "$OUT/strategy-lab-state-before.txt"
 dist > "$OUT/strategy-lab-live-dist-before.txt"

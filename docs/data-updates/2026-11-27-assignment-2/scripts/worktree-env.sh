@@ -1,7 +1,10 @@
 #!/bin/bash
 # Assignment 2: give the integration worktree the git-ignored inputs of the main checkout (temporary; removed with the
 # worktree at the end). Read-only towards the main checkout: it only reads from it, never writes there.
-#   - node_modules (root and Strategy Lab): symlinks (no test writes there)
+#   - node_modules (root and Strategy Lab): REAL copies (GPU Phase 9 amendment A2: Strategy Lab's implementation-
+#     fingerprint tests trace every module a run loads and refuse paths outside the checkout, so links fail them)
+#   - state/strategy-lab/imports/study8: a read-only copy of the live state's Study 8 imports (amendment A2: the e2e server
+#     imports the latest vg-balanced replay from there into its own temporary state; without it 9 e2e tests skip)
 #   - src/four-family/generated: copies (self-ignored generated sources)
 #   - data/<SYM>/ and data/archive/: REAL copies (a repo-copy test writes through symlinks); data/vintages/ is not copied
 #   - .cache: a directory of links to the main checkout's per-study caches (the same exposure as running the suite there)
@@ -12,8 +15,10 @@ M=/home/chad/projects/margin-trading
 W=/home/chad/.local/share/margin-trading-worktrees/a2-integration
 cd "$W"
 [ "$(git rev-parse --show-toplevel)" = "$W" ] || { echo "not the worktree"; exit 1; }
-ln -sfn "$M/node_modules" node_modules
-ln -sfn "$M/apps/strategy-lab/node_modules" apps/strategy-lab/node_modules
+rm -rf node_modules apps/strategy-lab/node_modules
+cp -a "$M/node_modules" node_modules
+cp -a "$M/apps/strategy-lab/node_modules" apps/strategy-lab/node_modules
+mkdir -p state/strategy-lab/imports && rm -rf state/strategy-lab/imports/study8 && cp -a "$M/state/strategy-lab/imports/study8" state/strategy-lab/imports/study8
 cp -a "$M"/src/four-family/generated/. src/four-family/generated/
 mkdir -p data
 for d in "$M"/data/*/; do
