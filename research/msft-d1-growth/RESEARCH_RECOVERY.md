@@ -2,16 +2,15 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-28T09:18Z (clock, UTC). **Status: INCOMPLETE** — data done; PROTOCOL.md final text (not yet frozen); gates
-  E1–E6 and the pilot PASS; pre-freeze commit `e9317da8`; E7/E8 running (`chains/tests.sh` in unit `msft9-tests`, log
-  `cache/logs/tests.log`, outputs `results/engineering/tests/`). **No official evaluation has run.**
+- **Updated:** 2026-11-28T09:31Z (clock, UTC). **Status: INCOMPLETE** — **protocol FROZEN 2026-11-28T09:31:30Z** (commit `2799dc78`);
+  gates E1–E9 sealed (`90a42bdd`). **Next: the official chain, one cutoff per launch** (C19 first; RUN_COMMANDS.md Phase 5).
+  No official evaluation had run at the freeze.
 - **Brief:** `brief/BRIEF.md` (256 lines, 28,460 bytes, sha256 `562e12eb3ab85ae1013bcda139cc7329e42ad80508bc9b1957f38ae116e6aad5`,
   read in full to its final line 2026-11-28T08:20Z). It authorizes implementation and the full optimization after the
   data, protocol-freeze and CPU/GPU gates; commit and push of the research branch; no trading, broker, deployment,
   adoption, merge into `main`, combination with any other security, or start of the additional-stocks study.
-- **Protocol:** not yet written/frozen (`PROTOCOL.md` P9-MSFT 1.0.0 to be derived from P8-GDX / P6-TSLA).
-- **Next step:** finish the protocol, adoption manifest, functionality audit and chain scripts; run gates E1–E9 and the
-  pilot; commit; seal `gates`; `freeze`; commit; launch the chain.
+- **Protocol:** `PROTOCOL.md` P9-MSFT 1.0.0 sha256 `a0ff207e246a263898804aa56861a03c0be637c11164840478ee1acdfcf184d4`; freeze record `results/protocol-freeze.json` `1c64559a4be976a9e0bffdb7f934d63ac1d8bca1c2a5029678e231b024d03aa7`; code digest `e014f8db…`; amendments: none.
+- **Next step:** `tools/msft-d1-growth/launch.sh msft9-chain-C19 $PWD/research/msft-d1-growth/cache/logs/chain-C19.log --wait -- /bin/bash $PWD/research/msft-d1-growth/chains/chain.sh C19` (then C21, C23, C24).
 
 ## Environment
 
@@ -78,8 +77,24 @@
 | E5 | PASS 08:57Z | graceful stop/resume, process SIGKILL resume, server SIGKILL (fails closed, exit 1) resume, CPU: 0 differences |
 | E6 | PASS 08:58Z | single-family 48/48, inert slot 48/48, causal 136 × 3 doors, accounting: 0 differ |
 | E9 pilot | PASS 09:17Z | D21, BENCH keys: 1,168,221 requested in 1,140 s (1,025/s); per broad lane D 13,910 / G 14,660 / J 16,546; refine 30,766; all *triggers not met*; cgroup peak 9.5 GB. Summary step re-run (no evaluation) after fixing its planning arithmetic, which had used P6-TSLA's lane counts: ≈ 100.2 M requested before rounds/qualification |
-| E7, E8 | running since 09:18Z (tests.sh) | — |
+| E7 | PASS 09:30Z | 182 / 182 (study 40 incl. the identity join, TSLA regression and ES1–ES3; reused suites; policy tests) |
+| E8 | PASS 09:30Z | npm test 1,974 / 1,970 pass / 0 fail / 4 skip; root tsc 0; eslint 0 errors; preflight-all 33 PASS; Strategy Lab portfolio parity, typecheck, lint, Vitest, build; e2e 83/83 first attempt; state fingerprint unchanged |
+| gates.json | sealed 09:31Z | `58d8f0f600b5155c6c9913e24812628d1ffdc7134048a6e0f23d1e22be9b58a5` (commit `90a42bdd`) |
 | Adoption | written 09:17:53Z | `STANDARD_ADOPTION.json` (protocol sha256 `a0ff207e…` at writing); preflight PASS |
+
+## Official chain (stage table; resume semantics)
+
+The chain (`chains/chain.sh <cutoff>`) is idempotent: a stage whose sealed record exists is skipped; a stage whose job exists
+without a record resumes (`--resume`: the official gate runs again and the job replays from its archive); each sealed block is
+committed by the chain itself (results paths only). Never run git commands that take the index lock while it runs (use
+`git --no-optional-locks` for reads).
+
+| Cutoff | Status | Launch / log | Notes |
+|---|---|---|---|
+| C19 | not started | `msft9-chain-C19`, `cache/logs/chain-C19.log` | |
+| C21 | not started | | |
+| C23 | not started | | |
+| C24 | not started | | validation + outcome |
 
 ## Guards
 
