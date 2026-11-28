@@ -2,8 +2,23 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-27T22:59Z (UTC, clock). **Status: INCOMPLETE.**
-  - **Stages:** A and B done; C partly done (legacy failures fixed); D set up, its campaign not yet started.
+- **Updated:** 2026-11-28T02:13Z (UTC, clock). **Status: INCOMPLETE — Stage D campaign RUNNING (resumed at step 27).**
+  - **Campaign:** GPU Phase 9 `chains/final.sh`, unit `p9chain-final`.
+    - **First run:** 23:00:42Z → step 27 FAILED 02:06:43Z (E4 tamper: the fixture pinned standard 3.0.0; amendment A1,
+      commit `97ae35cd`).
+    - **Resumed:** `START=27` at 02:08:38Z. E4 now 23/23 with the baseline OK; step 28 (A6, 2 × 32 min) is running;
+      step 29 (suites) follows.
+  - **Steps 1–26 all passed:**
+    - B1 gb9 `36dcc251…`;
+    - parity 54 runs, 144,795 subjects, 0 mismatches;
+    - D1 38/38;
+    - A2 finalists;
+    - R1–R3, four runs;
+    - A3: three sealed replays identical;
+    - A4: 9/9 comparisons identical;
+    - Q1: 30,749 evaluations;
+    - A5 sanitizer;
+    - E3 negative 73/73.
 - **Task:** the user's brief, received 2026-11-27 ~22:23Z, saved verbatim as `BRIEF.md` (409 lines, sha256
   `a674ced6cab508f80791f6d1c900d66c9b7e2623a84c4c93321c9232f3669e30`, read in full to §12).
 - **Where the work is:**
@@ -23,10 +38,16 @@
     which is harmless to the user's server.
   - **22:30Z:** stopping it was refused by the auto-mode classifier.
   - **Resolution:** at Stage F, where the permanent unit replaces it.
-- **Next step:** commit the Phase 9 set-up, then `python3 -I tools/gpu-phase9/protocol-freeze.py`, commit, then launch
-  the campaign:
-  `tools/gpu-phase9/launch-slice.sh p9chain-final "$PWD/research/gpu-phase9/results/logs/final-chain.txt" -- /usr/bin/env START=1 /bin/bash research/gpu-phase9/chains/final.sh`.
-  Run it from the worktree root.
+- **Next step:** wait for the chain. Check it with `tail -5 research/gpu-phase9/results/logs/final-chain.txt`; a
+  harness watcher waits for "chain final complete" or "FAILED".
+  - **On FAILED:** read the step's log under `results/logs/final/`. A step resumes with
+    `tools/gpu-phase9/launch-slice.sh p9chain-final "$PWD/research/gpu-phase9/results/logs/final-chain.txt" -- /usr/bin/env START=<n> /bin/bash research/gpu-phase9/chains/final.sh`.
+  - **On complete:**
+    1. `node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase9/accept.ts`;
+    2. commit;
+    3. the post-record checks.
+- **While the chain runs:** never write under `src/`, `tools/` or `config/`, because the tamper and final steps refuse a
+  dirty tree (Phase 7's D1). Documents under `docs/` are fine.
 
 ## Decisions
 
@@ -45,6 +66,28 @@
 - `00e1425c`: the legacy renamed-path fix plus the entrypoint registry's two legacy digests.
 
 ## Evidence so far
+
+- **Protocol freeze:** `research/gpu-phase9/results/protocol-freeze.json` `da4c9a40…` (23:00:35Z, at `25fc8e37`).
+  Commits: `7156a719` set-up, `25fc8e37` E7 six candidates, `a8ba54ea` the freeze.
+- **`evidence/manual-eval/{research,all,custom-2016-01-04-2026-11-25,custom-2026-11-02-2026-11-25-continuous}`
+  (candidate code):**
+  - the reference table reproduced exactly (A $482,700.73 / C $477,002.83 / B −$5,697.90 / DD $20,385.99 and
+    $25,794.56 / 44 and 46 lots / interest $72,509.59 and $73,232.88 / costs $4,630.40 and $4,875.26);
+  - the lots: 44 +$5,483.48 lifetime, +$11,048.24 after; 45 −$16,225.15; 46 −$520.99;
+  - the All summary is deep-equal to the 2026-11-27 committed one (only `execution`, `generated` and `seconds`
+    differ);
+  - custom 2016-01-04 → 2026-11-25 equals All, period for period.
+- **`evidence/npm-run-app.log`:** `npm run app -- allIn-trailingBuy VGT all 2025-01-02 2026-11-03`, exit 0 (lint 414
+  files, 0 errors; tsc; the run).
+- **`evidence/historical-repro/`:** vg-l0-full-joint `67b4ae71` doors PASS, 47/47 sealed records verify; Priority 2
+  `47422d04` doors PASS. Both environments were removed (`worktree-list-after.txt`).
+- **Stage F dry run (23:12Z):** `scripts/strategy-lab-release.sh a8ba54ea` built the locked release
+  `~/.local/share/strategy-lab/releases/a8ba54ea3b1c` (11 s).
+  - **Smoke test:** `scripts/strategy-lab-smoke.mjs` on loopback port 4392 against a scratch copy of the state: six
+    candidates; research $482,700.73 parity verified; All $477,002.83 / DD $25,794.56 / 46; trajectory identical;
+    charts 200.
+  - **Removed afterwards:** the smoke server (SIGINT), the release (`worktree remove`) and the copy. The canonical data
+    were verified intact afterwards.
 
 - `evidence/npm-test-baseline-f2c414ef-worktree.log`: 1,909 tests, 1,895 pass, 9 fail, 5 skipped. The extra skip was
   Phase 7's export metadata, which was not yet copied; after copying, that file passes 4/4. The environment equals the

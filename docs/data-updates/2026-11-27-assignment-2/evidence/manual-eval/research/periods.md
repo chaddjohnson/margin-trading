@@ -1,0 +1,24 @@
+# N/original: manual evaluation
+
+Window 2016-01-04 → 2026-10-30 (research; 2723 sessions; common complete endpoint 2026-11-25, limited by GDX, VGT). Research date range R1: validation ends 2026-10-30.
+
+- **A** — historical research window 2016-01-04 → 2026-10-30
+- **A1** — development 2016-01-04 → 2024-12-31
+- **A2** — formal validation window (after the 2024-12-31 close) → 2026-10-30
+- **C** — entire window 2016-01-04 → 2026-10-30
+
+| Item | A | A1 | A2 | C |
+|---|---:|---:|---:|---:|
+| Net profit (Δ marked net) | $482,700.73 | $388,031.02 | $94,669.70 | $482,700.73 |
+| Gross trading P&L (net + interest + costs) | $559,840.71 | $452,935.34 | $106,905.37 | $559,840.71 |
+| Margin interest | $72,509.59 | $61,479.45 | $11,030.14 | $72,509.59 |
+| Transaction costs | $4,630.40 | $3,424.87 | $1,205.53 | $4,630.40 |
+| Realized P&L in the period | $488,265.48 | $388,031.02 | $100,234.46 | $488,265.48 |
+| Unrealized at the start / end | $0.00 / $-5,564.76 | $0.00 / $0.00 | $0.00 / $-5,564.76 | $0.00 / $-5,564.76 |
+| Max marked DD, reset at the period start | $20,385.99 (2026-06-17 13:42 ET → 2026-07-17 09:34 ET) | $19,459.83 (2023-01-25 15:49 ET → 2023-02-24 09:30 ET) | $20,385.99 (2026-06-17 13:42 ET → 2026-07-17 09:34 ET) | $20,385.99 (2026-06-17 13:42 ET → 2026-07-17 09:34 ET) |
+| Max marked DD from the continuous peak | $20,385.99 | $19,459.83 | $20,385.99 | $20,385.99 |
+| Max banked-capital DD | $13,479.90 | $10,335.73 | $13,479.90 | $13,479.90 |
+| Max trade-principal loss | $11,113.57 (lot 40 D1:GDX) | $8,092.81 (lot 26 D1:GDX) | $11,113.57 (lot 40 D1:GDX) | $11,113.57 (lot 40 D1:GDX) |
+| Lots: active / entered / closed / carried in | 44 / 44 / 43 / 0 | 32 / 32 / 32 / 0 | 12 / 12 / 11 / 0 | 44 / 44 / 43 / 0 |
+| Win rate (closed lots) | 83.72% (36 of 43) | 87.5% (28 of 32) | 72.73% (8 of 11) | 83.72% (36 of 43) |
+| Open positions at the end | lot 44 D1:GDX $-5,564.76 | none | lot 44 D1:GDX $-5,564.76 | lot 44 D1:GDX $-5,564.76 |
