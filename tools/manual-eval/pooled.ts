@@ -21,8 +21,11 @@
 //   A  the historical research window (through the validation end), with its development and validation parts;
 //   B  the newly available period (after the validation end), attributed by marked net;
 //   C  the entire window.
-// Outputs (with --out; nothing is written otherwise): summary.json, periods.md, ledger-post-validation.{json,csv},
-// funding-post-validation.json, book-states.json. The output names carry the window and the data versions.
+// The console report ends with every trade (funded lot) of the reported window — R for a continuous custom run,
+// otherwise the whole run — with its entry, exit, net and MAE (the canonical per-lot MAE); --no-trades omits it.
+// Outputs (with --out; nothing is written otherwise): summary.json, periods.md, trades.{md,json,csv},
+// ledger-post-validation.{json,csv}, funding-post-validation.json, book-states.json. The output names carry the window
+// and the data versions.
 import fs from 'node:fs';
 import path from 'node:path';
 import { prefixThroughDate, sha256Prefix, vintageOf } from '../../src/lib/canonicalPrefix.ts';
@@ -38,7 +41,8 @@ import {
   researchPlan,
   researchReference
 } from '../../src/manual-eval/execute.ts';
-import { bookStates, periodFunding, periodLedger, r2 } from '../../src/manual-eval/report.ts';
+import { bookStates, closeOf, periodFunding, periodLedger, r2 } from '../../src/manual-eval/report.ts';
+import { formatNewYorkTime } from '../../src/lib/session.ts';
 import { canonical, repoRoot, symbols } from '../../src/vg-d1-growth-joint/context.ts';
 import { cfgId } from '../../src/vg-l0-full-joint/space.ts';
 import { vOptions } from '../../src/vg-l0-full-joint/nl0.ts';
@@ -100,6 +104,91 @@ const periods = main.periods;
 const post = specs.find((s) => s.key === 'B');
 const ledger = post ? periodLedger(main.L, main.door, post) : [];
 const funding = post ? periodFunding(main.r, main.door, post) : [];
+
+// Every trade (funded lot) of the reported window — the reporting window R of a continuous custom run, otherwise the
+// whole run C — with its maximum adverse excursion. MAE is the established per-lot measure, the engine's canonical MAE
+// (research/vg-l0-risk-metrics/METRIC_SPECIFICATION.md §4): the lowest MARKED P&L of the lot over its life up to the
+// window's end (every minute close and session close while it is open: realized fills + shares × price − principal −
+// accrued interest, no exit cost on the open shares), or its final net if that is lower; negative = adverse, not
+// floored at 0. A lot carried into R keeps its whole life (as the principal loss does). When the window ends at the
+// run's end the value is checked against the engine's reconciled canonical MAE.
+const tradeSpec = specs.find((s) => s.key === 'R') ?? specs.find((s) => s.key === 'C')!;
+const tradeFromT = tradeSpec.after === null ? -Infinity : closeOf(main.door, tradeSpec.after);
+const tradeToT = closeOf(main.door, tradeSpec.through);
+const sessionOf = (date: string) => main.door.dates.indexOf(date);
+const trades = main.L.lots
+  .filter((l) => l.entryT <= tradeToT && (l.open ? Infinity : l.fills.at(-1)!.t) > tradeFromT)
+  .map((l) => {
+    const exitFill = l.open ? undefined : l.fills.at(-1)!;
+    const closed = exitFill !== undefined && exitFill.t <= tradeToT;
+    const fills = l.fills.filter((f) => f.t <= tradeToT);
+    let mae = Infinity;
+    let maeT = NaN;
+    let maePrice = NaN;
+    let lastMark: (typeof l.marks)[number] | undefined;
+
+    for (const k of l.marks) {
+      if (k.t > tradeToT) break;
+      lastMark = k;
+      if (k.pnl < mae) {
+        mae = k.pnl;
+        maeT = k.t;
+        maePrice = k.price;
+      }
+    }
+
+    const net = closed ? l.net : (lastMark?.pnl ?? 0);
+
+    if (closed && l.net < mae) {
+      mae = l.net;
+      maeT = exitFill.t;
+      maePrice = exitFill.raw;
+    }
+    if (tradeToT >= main.L.endT && l.canonicalMae !== null) {
+      const tol = 1e-6 * Math.max(1, Math.abs(l.canonicalMae));
+
+      if (Math.abs(mae - l.canonicalMae) > tol)
+        throw new Error(`lot ${l.id}: MAE ${mae} differs from the engine's canonical MAE ${l.canonicalMae}`);
+    }
+
+    const endDate = closed ? exitFill.date : tradeSpec.through;
+
+    return {
+      lot: l.id,
+      book: l.book,
+      symbol: l.symbol,
+      kind: l.kind,
+      carriedIn: l.entryT <= tradeFromT,
+      status: closed ? 'closed' : 'open at the window end',
+      entryTime: formatNewYorkTime(l.entryT),
+      entryRaw: l.entryRaw,
+      entryPrice: l.entryPrice,
+      shares: l.shares0,
+      principal: l.principal0,
+      exitTime: closed ? formatNewYorkTime(exitFill.t) : null,
+      exitRaw: closed ? exitFill.raw : null,
+      exitPrice: closed ? exitFill.price : null,
+      exitReason: closed ? exitFill.reason : null,
+      partialExits: fills.filter((f) => f.partial).length,
+      sessions: sessionOf(endDate) - sessionOf(l.entryDate) + 1,
+      net: r2(net),
+      returnPct: r2((100 * net) / l.principal0),
+      interest: r2(closed ? l.interest : (lastMark?.interest ?? 0) + fills.reduce((s, f) => s + f.interest, 0)),
+      mae: r2(mae),
+      maePct: r2((100 * mae) / l.principal0),
+      maeTime: Number.isFinite(maeT) ? formatNewYorkTime(maeT) : null,
+      maePrice: Number.isFinite(maePrice) ? maePrice : null,
+      fills: fills.map((f) => ({
+        time: formatNewYorkTime(f.t),
+        reason: f.reason,
+        partial: f.partial,
+        raw: f.raw,
+        price: f.price,
+        shares: f.shares,
+        net: r2(f.net)
+      }))
+    };
+  });
 
 const dataProvenance = Object.fromEntries(
   symbols.map((s) => {
@@ -257,7 +346,42 @@ const md = [
   ''
 ].join('\n');
 
+const price = (x: number | null) =>
+  x === null ? '—' : x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+const pct = (x: number) => `${x.toFixed(2)}%`;
+const tradesMd = [
+  `## Trades — ${tradeSpec.key}: ${tradeSpec.label} (${trades.length} ${trades.length === 1 ? 'lot' : 'lots'})`,
+  '',
+  'Net: the lot\'s net to the window end (realized fills; an open lot at its last mark), interest and costs included. ' +
+    'MAE: the lot\'s lowest marked P&L (minute and session closes, accrued interest, no exit cost on open shares) or ' +
+    'its final net if lower; negative = adverse; % of the funded principal.' +
+    (trades.some((t) => t.carriedIn) ? ' * carried into the window: entry, net and MAE cover its whole life.' : ''),
+  '',
+  '| Lot | Book | Kind | Entry (ET) | Entry | Exit (ET) | Exit | Exit reason | Sessions | Net | Return | MAE | MAE % | MAE at (ET) |',
+  '|---:|---|---|---|---:|---|---:|---|---:|---:|---:|---:|---:|---|',
+  ...trades.map((t) =>
+    [
+      `${t.lot}${t.carriedIn ? '*' : ''}`,
+      t.book,
+      t.kind,
+      t.entryTime,
+      price(t.entryRaw),
+      t.exitTime ?? 'open',
+      price(t.exitRaw),
+      t.exitReason === null ? '—' : `${t.exitReason}${t.partialExits ? ` (+${t.partialExits} partial)` : ''}`,
+      t.sessions,
+      money(t.net),
+      pct(t.returnPct),
+      money(t.mae),
+      pct(t.maePct),
+      t.maeTime ?? '—'
+    ].join(' | ')
+  ).map((row) => `| ${row} |`),
+  ''
+].join('\n');
+
 console.info(md);
+if (!argv.includes('--no-trades')) console.info(tradesMd);
 if (trajectory)
   console.info(
     `Trajectory through ${trajectory.comparedThrough.slice(0, 10)} equal to FULL: ${trajectory.identical ? 'yes (decision for decision)' : `NO: ${trajectory.differences.join('; ')}`}`
@@ -298,6 +422,17 @@ if (out) {
   fs.writeFileSync(path.join(dir, 'summary.json'), `${JSON.stringify(summary, null, 1)}\n`);
   fs.writeFileSync(path.join(dir, 'periods.md'), md);
   fs.writeFileSync(path.join(dir, 'book-states.json'), `${JSON.stringify(bookStates(main.r), null, 1)}\n`);
+  fs.writeFileSync(
+    path.join(dir, 'trades.json'),
+    `${JSON.stringify({ window: tradeSpec, basis: 'MAE = the canonical per-lot MAE (marked basis, whole life to the window end)', trades }, null, 1)}\n`
+  );
+  fs.writeFileSync(path.join(dir, 'trades.md'), tradesMd);
+  const tradeHeader = Object.keys(trades[0] ?? {}).filter((h) => h !== 'fills');
+
+  fs.writeFileSync(
+    path.join(dir, 'trades.csv'),
+    `${[tradeHeader.join(','), ...trades.map((t) => tradeHeader.map((h) => csvCell((t as Record<string, unknown>)[h])).join(','))].join('\n')}\n`
+  );
   if (post) {
     fs.writeFileSync(path.join(dir, 'ledger-post-validation.json'), `${JSON.stringify(ledger, null, 1)}\n`);
     fs.writeFileSync(path.join(dir, 'funding-post-validation.json'), `${JSON.stringify(funding, null, 1)}\n`);
