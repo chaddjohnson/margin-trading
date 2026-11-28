@@ -84,13 +84,16 @@ const writeRecord = (commit = head) => {
 writeRecord();
 
 const reg = JSON.parse(fs.readFileSync(path.join(root, 'docs/research/optimization-standard.versions.json'), 'utf8'));
-const std = reg.versions.find((v: { version: string }) => v.version === '3.0.0');
+// GPU Phase 9 amendment A1: the fixture adopts the CURRENT standard (5.0.0 here). Since 4.0.0 the preflight refuses a new
+// optimization manifest pinning an earlier version (the no-evasion rule) and requires the research date range and the
+// data's byte-prefix pins; Phase 7's fixture pinned 3.0.0, the version current when it was written.
+const std = reg.versions.find((v: { version: string }) => v.version === reg.current);
 const study = path.join(root, 'research/zz-tamper');
 
 fs.mkdirSync(study, { recursive: true });
 fs.writeFileSync(
   path.join(study, 'PROTOCOL.md'),
-  `# zz-tamper (sandbox fixture, not a study)\n\nStandard 3.0.0 ${std.sha256}\n`
+  `# zz-tamper (sandbox fixture, not a study)\n\nStandard ${std.version} ${std.sha256}\n`
 );
 fs.writeFileSync(
   path.join(study, 'run.ts'),
@@ -103,7 +106,7 @@ fs.writeFileSync(
     schema: 1,
     study: 'research/zz-tamper',
     scope: 'optimization',
-    standard: { path: 'docs/research/OPTIMIZATION_STANDARD.md', version: '3.0.0', sha256: std.sha256 },
+    standard: { path: 'docs/research/OPTIMIZATION_STANDARD.md', version: std.version, sha256: std.sha256 },
     readAt: new Date(Date.now() - 60000).toISOString().replace(/\.\d+Z$/, 'Z'),
     adoptedAt: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
     protocol: { path: 'research/zz-tamper/PROTOCOL.md', sha256: sha('research/zz-tamper/PROTOCOL.md') },
@@ -111,6 +114,11 @@ fs.writeFileSync(
       development: { from: '2016-01-04', to: '2024-12-31' },
       validation: { from: '2025-01-01', to: '2026-10-30' },
       commonCompleteEndpoint: '2026-10-30'
+    },
+    dateRanges: { file: 'config/research/date-ranges.json', id: 'R1' },
+    dataPins: {
+      VGT: { file: 'data/VGT/data.csv', bytes: 53395054, sha256: '2ee06310f2fa8926220fd9629c093ba77fe5d35fd2515da7f7c54caa50b5412e', through: '2026-10-30' },
+      GDX: { file: 'data/GDX/data.csv', bytes: 80036100, sha256: '77dba9b21c4b684996283e7b8f17917696139f890441b1ca900d664b59ea5049', through: '2026-10-30' }
     },
     objective: {
       prioritizes: 'robust-profit',

@@ -1,0 +1,24 @@
+PASS T1 a modified host-worker decoder (results returned in another order)
+PASS T2 a modified batch encoder (the request assembly)
+PASS T3 the CPU-official refusal removed (a CPU runner accepts official optimization)
+PASS T4 acceptance verification disabled (the validator always says ACCEPTED)
+PASS T5 the manifest generator altered (a host-path file dropped from the evaluation digest)
+PASS T6 the official entrypoint altered (the parity mini-set check removed)
+PASS T7 the entrypoint registry altered (an unregistered optimizer declared non-official)
+PASS T8 the legacy-runner purpose gate disabled
+PASS T9 the preflight §9 rule weakened (no GPU backend or acceptance required)
+PASS T10 the independent verifier altered (it always says VERIFIED)
+PASS T11 forced mixed CPU scoring in the pool (a CPU-scored counter bypass)
+PASS T12 a CUDA source changed without a new build and acceptance
+PASS T13 a new, unclassified GPU-backend file (a loader outside the manifest)
+PASS T15 the engine-runtime requirement removed (a process running under V8's Maglev is accepted)
+PASS T16 the job ownership lock disabled (a second process could write a job)
+PASS T17 the official gate's job requirement removed (an official run without an isolated job)
+PASS T18 the legacy runner's engine check and child guard removed (a CPU runner under V8's Maglev)
+PASS T19 the job module dropped from the required pins of an acceptance record
+PASS T20 a new, unclassified file in the job module (an ownership bypass outside the pins)
+PASS T21 the pool's risk-envelope mismatch check removed (a risk record could be released without its envelope)
+PASS T22 the Lab's envelope validation removed (an invalid or missing envelope could be archived)
+PASS T23 the risk key suffix dropped (risk-bearing and plain records would share one archive identity)
+FAIL T14 a weakened gate committed with a regenerated record (the malicious-committer case: the parity mini-set shrunk to one seeded genome); only the out-of-band record pin detects it
+22/23 tamper cases pass; baseline NOT OK
