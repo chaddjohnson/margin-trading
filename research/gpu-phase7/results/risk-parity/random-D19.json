@@ -1,0 +1,158 @@
+{
+ "kind": "gpu-phase7 risk-delivery parity (R1–R3)",
+ "t": "2026-11-21T22:20:11.547Z",
+ "label": "random-D19",
+ "door": "D19",
+ "doorPin": "GDX:528786451a8fa1ab40c3ba784937581d8a74d6ec088c9110f8655f64c3ac1e48,VGT:a2e4c721eee98fd0ad1f96f413c99c953b3804fdfe033c4e44e866d31dce81d1",
+ "runtime": {
+  "node": "v24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "maglev": "disabled",
+  "execArgv": [
+   "--no-maglev",
+   "--expose-gc",
+   "--experimental-transform-types",
+   "--disable-warning=ExperimentalWarning",
+   "--max-old-space-size=14000"
+  ]
+ },
+ "build": {
+  "binary": "research/gpu-phase7/build/gb7",
+  "binarySha256": "cb2ff30b9cb720c01d69e5195a8add9bcf37eb31f7ab85625a3d1a5c02c56a82",
+  "compatDigest": "d1a2e490788fa5fa76a277719dfb623c2cc896de85cf95f739c3e3af184e233b",
+  "serverDigest": "d1a2e490788fa5fa76a277719dfb623c2cc896de85cf95f739c3e3af184e233b",
+  "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4"
+ },
+ "datasetSha256": "6d821464404676e2b63b8afa9924ddc4d2bf002f5b79a4c1062b9be1e42decf7",
+ "options": [
+  "base",
+  "cost0"
+ ],
+ "hostWorkers": 8,
+ "cpuWorkers": 12,
+ "jobs": {
+  "gpu": "research/gpu-phase7/riskpar-random-D19-gpu",
+  "cpu": "research/gpu-phase7/riskpar-random-D19-cpu"
+ },
+ "subjects": {
+  "total": 1000,
+  "bySet": {
+   "A": 1000
+  }
+ },
+ "items": 4000,
+ "r1": {
+  "compared": 4000,
+  "differing": 0,
+  "examples": []
+ },
+ "r2": {
+  "compared": 4000,
+  "differing": 0,
+  "examples": [],
+  "archive": {
+   "compared": 0,
+   "differing": 0,
+   "examples": []
+  }
+ },
+ "r3": {
+  "compared": 4000,
+  "differing": 0,
+  "examples": [],
+  "rankings": {
+   "base/nl0-control": {
+    "qualified": 492,
+    "sameQualifiedOrder": true,
+    "sameConstrainedOrder": true,
+    "top5": [
+     "A:riskpar-D19:coarse:119|base",
+     "A:riskpar-D19:coarse:0|base",
+     "A:riskpar-D19:coarse:542|base",
+     "A:riskpar-D19:coarse:76|base",
+     "A:riskpar-D19:coarse:976|base"
+    ]
+   },
+   "base/re-40-25-25": {
+    "qualified": 476,
+    "sameQualifiedOrder": true,
+    "sameConstrainedOrder": true,
+    "top5": [
+     "A:riskpar-D19:coarse:119|base",
+     "A:riskpar-D19:coarse:0|base",
+     "A:riskpar-D19:coarse:542|base",
+     "A:riskpar-D19:coarse:76|base",
+     "A:riskpar-D19:coarse:976|base"
+    ]
+   },
+   "cost0/nl0-control": {
+    "qualified": 517,
+    "sameQualifiedOrder": true,
+    "sameConstrainedOrder": true,
+    "top5": [
+     "A:riskpar-D19:coarse:119|cost0",
+     "A:riskpar-D19:coarse:0|cost0",
+     "A:riskpar-D19:coarse:542|cost0",
+     "A:riskpar-D19:coarse:76|cost0",
+     "A:riskpar-D19:coarse:976|cost0"
+    ]
+   },
+   "cost0/re-40-25-25": {
+    "qualified": 496,
+    "sameQualifiedOrder": true,
+    "sameConstrainedOrder": true,
+    "top5": [
+     "A:riskpar-D19:coarse:119|cost0",
+     "A:riskpar-D19:coarse:0|cost0",
+     "A:riskpar-D19:coarse:542|cost0",
+     "A:riskpar-D19:coarse:76|cost0",
+     "A:riskpar-D19:coarse:976|cost0"
+    ]
+   }
+  }
+ },
+ "census": {
+  "subjects": 1000,
+  "within1pct": {
+   "dd35": 20,
+   "dd40": 19,
+   "principalLossLiq25": 6,
+   "bankedDdLiq25": 16
+  },
+  "within5pct": {
+   "dd35": 105,
+   "dd40": 102,
+   "principalLossLiq25": 20,
+   "bankedDdLiq25": 67
+  },
+  "closest": {
+   "dd35": 0.7399999999979627,
+   "dd40": 1.4700000000011642,
+   "principalLossLiq25": 44.481465824501356,
+   "bankedDdLiq25": 23.018199769485364
+  },
+  "decisions": {
+   "controlPass": 492,
+   "experimentalPass": 476,
+   "controlOnly": 58,
+   "experimentalOnly": 42,
+   "experimentalFailBy": {
+    "markedDd": 376,
+    "principalLoss": 97,
+    "bankedDd": 507
+   }
+  },
+  "structural": {
+   "principalLossMarkedAboveDd": 0,
+   "bankedDdMarkedAboveDd": 3,
+   "liquidationEqualsMarkedAtCost0": true
+  }
+ },
+ "selected": [],
+ "timing": {
+  "gpuSeconds": 3.8,
+  "cpuSeconds": 52.2,
+  "wallSeconds": 58.7
+ },
+ "pass": true
+}

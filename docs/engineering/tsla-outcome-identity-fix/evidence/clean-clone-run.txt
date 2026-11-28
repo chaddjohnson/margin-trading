@@ -1,0 +1,33 @@
+# clean clone: git clone --depth 1 --branch fix/tsla-outcome-identity-join file:///home/chad/projects/margin-trading (commit 70f8bdf14712924fe02985515537b111e00a5edd); node_modules linked; src/four-family/generated copied (git-ignored); sealed files mode 664
+## replay, default output (the committed file):
+unchanged: docs/engineering/tsla-outcome-identity-fix/replay/outcome.corrected.report-only.json (identical bytes)
+{
+ "sha256": "6b923ff290b6ccc6576aeb32c22272ea19449b1ad2929684cfe4899d98ed86c6",
+ "pass": true,
+exit=0
+## replay --out fresh file:
+wrote ../clean-replay.json
+{
+ "sha256": "6b923ff290b6ccc6576aeb32c22272ea19449b1ad2929684cfe4899d98ed86c6",
+exit=0
+## sha256:
+6b923ff290b6ccc6576aeb32c22272ea19449b1ad2929684cfe4899d98ed86c6  /tmp/claude-1000/-home-chad-projects-margin-trading/535ea94f-4001-41d2-9631-ad8354c6ef21/scratchpad/clean-replay.json
+6b923ff290b6ccc6576aeb32c22272ea19449b1ad2929684cfe4899d98ed86c6  docs/engineering/tsla-outcome-identity-fix/replay/outcome.corrected.report-only.json
+6b923ff290b6ccc6576aeb32c22272ea19449b1ad2929684cfe4899d98ed86c6  /home/chad/projects/margin-trading/docs/engineering/tsla-outcome-identity-fix/replay/outcome.corrected.report-only.json
+byte-identical: yes
+## focused tests in the clean clone:
+ℹ tests 55
+ℹ pass 54
+ℹ fail 1
+ℹ skipped 0
+## the one failure in the clean clone: src/tsla-d1-growth/tests/study.test.ts:104 (pre-existing study test) — 'research/vg-l0-full-joint/FROZEN_SELECTION.json is not sealed (read-only)': a fresh clone checks sealed files out 0664
+## after chmod 0444 of that one file in the scratch clone (never in the main checkout):
+ℹ tests 55
+ℹ pass 55
+ℹ fail 0
+ℹ skipped 0
+## the 37 new tests alone, with every file at its fresh-clone mode except that one:
+ℹ tests 37
+ℹ pass 37
+ℹ fail 0
+ℹ skipped 0

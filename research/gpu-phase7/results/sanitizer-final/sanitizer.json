@@ -1,0 +1,74 @@
+{
+ "kind": "gpu-phase7 compute-sanitizer (requests from the host pipeline)",
+ "t": "2026-11-21T23:24:34.796Z",
+ "door": "W-CRASH",
+ "version": "NVIDIA (R) Compute Sanitizer\nCopyright (c) 2020-2026 NVIDIA Corporation\nVersion 2026.1.1.0 (build 38000597) (public-release)",
+ "binary": "/home/chad/projects/margin-trading/research/gpu-phase7/build/gb7",
+ "binarySha256": "cb2ff30b9cb720c01d69e5195a8add9bcf37eb31f7ab85625a3d1a5c02c56a82",
+ "rows": [
+  {
+   "tool": "memcheck",
+   "extra": [
+    "--leak-check",
+    "full"
+   ],
+   "subjects": 97,
+   "smoke": true,
+   "identical": 97,
+   "errors": 0,
+   "warnings": null,
+   "seconds": 27,
+   "log": "research/gpu-phase7/results/sanitizer-final/memcheck.txt",
+   "summaryLines": [
+    "========= COMPUTE-SANITIZER",
+    "========= LEAK SUMMARY: 0 bytes leaked in 0 allocations",
+    "========= ERROR SUMMARY: 0 errors"
+   ]
+  },
+  {
+   "tool": "racecheck",
+   "extra": [],
+   "subjects": 97,
+   "smoke": true,
+   "identical": 97,
+   "errors": 0,
+   "warnings": 0,
+   "seconds": 5,
+   "log": "research/gpu-phase7/results/sanitizer-final/racecheck.txt",
+   "summaryLines": [
+    "========= COMPUTE-SANITIZER",
+    "========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)"
+   ]
+  },
+  {
+   "tool": "initcheck",
+   "extra": [],
+   "subjects": 97,
+   "smoke": true,
+   "identical": 97,
+   "errors": 0,
+   "warnings": null,
+   "seconds": 14,
+   "log": "research/gpu-phase7/results/sanitizer-final/initcheck.txt",
+   "summaryLines": [
+    "========= COMPUTE-SANITIZER",
+    "========= ERROR SUMMARY: 0 errors"
+   ]
+  },
+  {
+   "tool": "synccheck",
+   "extra": [],
+   "subjects": 97,
+   "smoke": true,
+   "identical": 97,
+   "errors": 0,
+   "warnings": null,
+   "seconds": 5,
+   "log": "research/gpu-phase7/results/sanitizer-final/synccheck.txt",
+   "summaryLines": [
+    "========= COMPUTE-SANITIZER",
+    "========= ERROR SUMMARY: 0 errors"
+   ]
+  }
+ ]
+}

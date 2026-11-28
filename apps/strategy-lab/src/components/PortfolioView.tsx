@@ -1,6 +1,9 @@
-// Pooled portfolio candidates (Priority 6, docs/strategy-lab/POOLED_CANDIDATES.md): pick one of the five frozen
-// candidates and inspect its ACTUAL funded trades — D1 and Growth together, on VGT and GDX — from ONE replay of the
-// research engine on the archived benchmark (one shared $100,000 pool, 2016-01-04 → 2026-10-30, continuous).
+// Pooled portfolio candidates (Priority 6, docs/strategy-lab/POOLED_CANDIDATES.md): pick a frozen candidate and inspect
+// its ACTUAL funded trades — D1 and Growth together, on VGT and GDX — from ONE replay of the research engine (one shared
+// $100,000 pool, continuous) over ONE evaluation window: its research window (the archived benchmark, the default), all
+// available data (to the latest common complete session of VGT and GDX) or a custom window (continuous history with a
+// reporting window, or an isolated cold start). Dates after the research validation end are a MANUAL POST-VALIDATION
+// EVALUATION, labelled as such; they never extend formal validation.
 //
 // Read-only frozen presets: nothing here edits a candidate, saves a run or reruns anything with a component removed.
 // Visibility toggles, symbol tabs, filters and period buttons change only what is shown; every aggregate figure comes
@@ -16,9 +19,15 @@ import {
   type Component,
   eventComponent,
   PORTFOLIO_BENCHMARK,
+  type PortfolioCoverage,
+  type PortfolioPeriod,
   type PortfolioPosition,
   type PortfolioReplayDetail,
-  type PositionFill
+  type PortfolioWindowRequest,
+  type PositionFill,
+  RESEARCH_WINDOW,
+  normalizeWindowRequest,
+  windowRequestText
 } from '../../shared/portfolio.ts';
 import { api, type EventsResponse, type PortfolioCatalogView, type PortfolioTicket, type PricesResponse } from '../api.ts';
 import { markerSlots, sessionIndex } from '../chart/candles.ts';
@@ -30,6 +39,8 @@ import { formatEt, formatEtDate, formatPrice } from '../format.ts';
 import { useFetched } from '../hooks.ts';
 import {
   bookedSubtotal,
+  boundsOf,
+  carriedAcross,
   carriedIn,
   DEFAULT_LEDGER_FILTER,
   DEFAULT_VISIBILITY,
@@ -38,6 +49,8 @@ import {
   FRAME_OF,
   isFiltered,
   type LedgerFilter,
+  type LedgerPeriod,
+  PERIOD_KEY,
   periodWindow,
   portfolioTotals,
   type Visibility,
@@ -45,6 +58,7 @@ import {
 } from '../portfolio.ts';
 import { buildTrades, toneOf, type Trade } from '../trades.ts';
 import { MarkerTooltip } from './Events.tsx';
+import { InfoPopover } from './InfoPopover.tsx';
 import { Glyph } from './Panels.tsx';
 
 const DAY = 86_400_000;
@@ -57,12 +71,15 @@ const pct = (x: number) => `${x.toFixed(2)}%`;
 const toneClass = (x: number) => (x > 0 ? 'pos' : x < 0 ? 'neg' : '');
 const ACTION_LABEL = { entry: 'Entry', partial: 'Partial exit', final: 'Final exit' } as const;
 
-type Period = 'all' | 'development' | 'validation';
+type Period = LedgerPeriod;
+const windowKey = (w: PortfolioWindowRequest) => JSON.stringify(w);
 
 // ----- the replay of the selected candidate: a cache hit, or one replay polled to completion -----
 
 interface ReplayState {
   cid: string;
+  /** The window this state belongs to (a newer window selection never shows an older window's figures). */
+  wk: string;
   state: PortfolioTicket['state'] | 'submitting';
   progress: PortfolioTicket['progress'];
   cacheHit: boolean;
@@ -70,18 +87,19 @@ interface ReplayState {
   detail: PortfolioReplayDetail | null;
 }
 
-function usePortfolioReplay(cid: string | null, attempt: number, onCompleted: (cid: string) => void) {
+function usePortfolioReplay(cid: string | null, window: PortfolioWindowRequest, attempt: number, onCompleted: (cid: string) => void) {
   const [st, setSt] = useState<ReplayState | null>(null);
+  const wk = windowKey(window);
   useEffect(() => {
     if (!cid) return;
     let alive = true;
     let ticket: string | null = null;
     let done = false;
     const ctl = new AbortController();
-    const set = (s: Omit<ReplayState, 'cid'>) => alive && setSt({ cid, ...s });
+    const set = (s: Omit<ReplayState, 'cid' | 'wk'>) => alive && setSt({ cid, wk, ...s });
     (async () => {
       try {
-        let t = await api.replayPortfolio(cid);
+        let t = await api.replayPortfolio(cid, window);
         ticket = t.ticket;
         while (alive && (t.state === 'queued' || t.state === 'running')) {
           set({ state: t.state, progress: t.progress, cacheHit: false, error: null, detail: null });
@@ -99,7 +117,7 @@ function usePortfolioReplay(cid: string | null, attempt: number, onCompleted: (c
         // Never show one candidate's figures under another's label.
         if (d.candidateId !== cid || d.id !== t.replayId) throw new Error('the server answered for another candidate');
         set({ state: 'completed', progress: null, cacheHit: t.cacheHit, error: null, detail: d });
-        if (alive) onCompleted(cid);
+        if (alive && window.mode === 'research') onCompleted(cid);
       } catch (e) {
         if (alive && !ctl.signal.aborted)
           set({ state: 'failed', progress: null, cacheHit: false, error: (e as Error).message, detail: null });
@@ -111,9 +129,9 @@ function usePortfolioReplay(cid: string | null, attempt: number, onCompleted: (c
       // A newer selection releases this one: a queued replay nobody waits for is dropped by the server.
       if (ticket && !done) api.releasePortfolioTicket(ticket).catch(() => {});
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- onCompleted is a stable notification, not an input
-  }, [cid, attempt]);
-  return st && st.cid === cid ? st : null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- onCompleted is a stable notification, not an input; the window is keyed by wk
+  }, [cid, wk, attempt]);
+  return st && st.cid === cid && st.wk === wk ? st : null;
 }
 
 // ----- the page -----
@@ -121,11 +139,14 @@ function usePortfolioReplay(cid: string | null, attempt: number, onCompleted: (c
 export function PortfolioView({
   candidateId,
   symbol: routeSymbol,
+  window = RESEARCH_WINDOW,
   onRoute
 }: {
   candidateId: string | null;
   symbol: string | null;
-  onRoute: (r: { candidate?: string | null; symbol?: string | null }) => void;
+  /** The evaluation window (from the address; absent = the research window, as every earlier link). */
+  window?: PortfolioWindowRequest;
+  onRoute: (r: { candidate?: string | null; symbol?: string | null; window?: PortfolioWindowRequest }) => void;
 }) {
   const catalogQ = useFetched<PortfolioCatalogView>('portfolios', (signal) => api.portfolios(signal));
   const catalog = catalogQ.data;
@@ -134,7 +155,7 @@ export function PortfolioView({
   // Candidates replayed in this tab (the catalog's own "cached" marks were taken when it loaded).
   const [replayed, setReplayed] = useState<ReadonlySet<string>>(() => new Set());
   const onCompleted = useCallback((cid: string) => setReplayed((s) => (s.has(cid) ? s : new Set([...s, cid]))), []);
-  const replay = usePortfolioReplay(entry ? entry.id : null, attempt, onCompleted);
+  const replay = usePortfolioReplay(entry ? entry.id : null, window, attempt, onCompleted);
   const detail = replay?.detail && replay.detail.candidateId === entry?.id ? replay.detail : null;
 
   // Presentation preferences of the page (survive candidate and symbol changes; never alter a figure).
@@ -159,7 +180,8 @@ export function PortfolioView({
         </div>
       ) : (
         <>
-          <CandidateHeader entry={entry} replay={replay} detail={detail} onRetry={() => setAttempt((a) => a + 1)} />
+          <WindowControls key={windowKey(window)} coverage={catalog.coverage} window={window} onChange={(w) => onRoute({ window: w })} />
+          <CandidateHeader entry={entry} window={window} replay={replay} detail={detail} onRetry={() => setAttempt((a) => a + 1)} />
           {detail && (
             <ReplayBody
               key={detail.id}
@@ -199,9 +221,9 @@ function CandidateSelector({
       <div className="candidate-selector-head">
         <h2>Portfolio candidates</h2>
         <span className="muted small">
-          Frozen, read-only presets replayed on {PORTFOLIO_BENCHMARK.from} → {PORTFOLIO_BENCHMARK.to} with one shared $100,000
-          pool. Listed in the brief’s order — not a safety ranking, not a recommendation; inclusion is permission to
-          inspect, not a trading instruction.
+          Frozen, read-only presets replayed with one shared $100,000 pool — on their research window ({PORTFOLIO_BENCHMARK.from} →{' '}
+          {PORTFOLIO_BENCHMARK.to}) by default, or on all available data or a custom window. Listed in catalog order — not a safety
+          ranking, not a recommendation; inclusion is permission to inspect, not a trading instruction.
         </span>
       </div>
       <div className="candidate-list" role="radiogroup" aria-label="Portfolio candidate">
@@ -227,7 +249,7 @@ function CandidateSelector({
                 ))}
               </span>
               <span className="muted small candidate-state" data-testid={`candidate-cached-${c.id}`}>
-                {c.cached || replayed.has(c.id) ? 'replayed · cached' : 'not replayed yet (≈ 6 s)'}
+                {c.cached || replayed.has(c.id) ? 'research window replayed · cached' : 'not replayed yet (≈ 6 s)'}
               </span>
             </button>
           );
@@ -236,6 +258,118 @@ function CandidateSelector({
     </section>
   );
 }
+
+// ----- the evaluation window (research | all | custom): the same New York session-date fields and preset chips as the
+// Run Test dialog; a change replays ONE window (Research and All at once, Custom with its button) -----
+
+function WindowControls({
+  coverage,
+  window,
+  onChange
+}: {
+  coverage: PortfolioCoverage;
+  window: PortfolioWindowRequest;
+  onChange: (w: PortfolioWindowRequest) => void;
+}) {
+  const endpoint = coverage.endpoint;
+  const validationEnd = coverage.research.validationEnd;
+  const [mode, setMode] = useState<PortfolioWindowRequest['mode']>(window.mode);
+  const [from, setFrom] = useState(window.mode === 'custom' ? window.from : '2025-01-02');
+  const [to, setTo] = useState(window.mode === 'custom' ? window.to : (endpoint ?? validationEnd));
+  const [execution, setExecution] = useState(window.mode === 'custom' ? window.execution : 'continuous');
+  const custom = (() => {
+    try {
+      const w = normalizeWindowRequest({ mode: 'custom', from, to, execution });
+      if (w.mode !== 'custom') return { w: null, error: 'invalid' };
+      if (w.from < coverage.firstSession) return { w: null, error: `starts before the first common session ${coverage.firstSession}` };
+      if (endpoint && w.to > endpoint) return { w: null, error: `ends after the latest common complete session ${endpoint}` };
+      return { w, error: null };
+    } catch (e) {
+      return { w: null, error: (e as Error).message };
+    }
+  })();
+  const pick = (m: PortfolioWindowRequest['mode']) => {
+    setMode(m);
+    if (m !== 'custom') onChange({ mode: m });
+  };
+  const pending = mode === 'custom' && custom.w !== null && windowKey(custom.w) !== windowKey(window);
+  return (
+    <section className="card window-controls" aria-label="Evaluation window" data-testid="window-controls" data-window={window.mode}>
+      <div className="row window-row">
+        <b className="small">Evaluation window</b>
+        <div className="segmented small" role="radiogroup" aria-label="Evaluation window" data-testid="window-mode">
+          {(
+            [
+              ['research', 'Research', `The candidate's research window: the archived benchmark its targets were sealed on (${PORTFOLIO_BENCHMARK.from} → ${PORTFOLIO_BENCHMARK.to})`],
+              ['all', 'All', `All available data: ${coverage.firstSession} → the latest common complete session of GDX and VGT${endpoint ? ` (${endpoint})` : ''}`],
+              ['custom', 'Custom', 'Explicit New York session dates (inclusive), continuous history or an isolated window']
+            ] as const
+          ).map(([m, label, title]) => (
+            <label key={m} className={mode === m ? 'is-on' : ''} title={title}>
+              <input type="radio" name="portfolio-window" checked={mode === m} onChange={() => pick(m)} disabled={m !== 'research' && !endpoint} data-testid={`window-mode-${m}`} />
+              {label}
+            </label>
+          ))}
+        </div>
+        <span className="muted small" data-testid="coverage">
+          {endpoint
+            ? `Local data: GDX and VGT complete through ${endpoint} (the latest common complete session). Research range ${coverage.research.id}: development to ${coverage.research.developmentEnd}, validation to ${validationEnd}.`
+            : `Local data coverage unavailable: ${coverage.error ?? 'unknown'}`}
+        </span>
+      </div>
+      {mode === 'custom' && (
+        <div className="row window-custom" data-testid="window-custom">
+          <label className="field inline">
+            <span className="field-label">From</span>
+            <input type="date" value={from} min={coverage.firstSession} max={endpoint ?? undefined} onChange={(e) => setFrom(e.target.value)} data-testid="window-from" />
+          </label>
+          <label className="field inline">
+            <span className="field-label">To</span>
+            <input type="date" value={to} min={coverage.firstSession} max={endpoint ?? undefined} onChange={(e) => setTo(e.target.value)} data-testid="window-to" />
+          </label>
+          <div className="row presets">
+            <button type="button" className="btn-chip" onClick={() => { setFrom(coverage.firstSession); setTo(coverage.research.developmentEnd); }}>
+              Development
+            </button>
+            <button type="button" className="btn-chip" onClick={() => { setFrom('2025-01-02'); setTo(validationEnd); }}>
+              Validation
+            </button>
+            {endpoint && endpoint > validationEnd && (
+              <button type="button" className="btn-chip" onClick={() => { setFrom(nextDay(validationEnd)); setTo(endpoint); }} data-testid="window-preset-post">
+                After {validationEnd}
+              </button>
+            )}
+          </div>
+          <div className="segmented small" role="radiogroup" aria-label="Execution" data-testid="window-execution">
+            {(
+              [
+                ['continuous', 'Continuous history', `ONE run from ${coverage.firstSession}; the figures are those of [From, To] with every position, book state, stop and accrued interest carried in`],
+                ['isolated', 'Isolated window', 'The run itself starts flat at From: a cold start with no state from earlier sessions']
+              ] as const
+            ).map(([x, label, title]) => (
+              <label key={x} className={execution === x ? 'is-on' : ''} title={title}>
+                <input type="radio" name="portfolio-execution" checked={execution === x} onChange={() => setExecution(x)} data-testid={`window-execution-${x}`} />
+                {label}
+              </label>
+            ))}
+          </div>
+          <button type="button" className="btn-primary small" disabled={!custom.w || !pending} onClick={() => custom.w && onChange(custom.w)} data-testid="window-apply">
+            Replay this window
+          </button>
+          {custom.error && <span className="form-error small" data-testid="window-error">{custom.error}</span>}
+        </div>
+      )}
+      {(window.mode === 'all' || (window.mode === 'custom' && window.to > validationEnd)) && (
+        <p className="warn small" role="note" data-testid="window-post-note">
+          Dates after {validationEnd} are a <b>manual post-validation evaluation</b>: never optimization, selection, qualification or
+          validation evidence, and not an extension of the formal validation window.
+        </p>
+      )}
+    </section>
+  );
+}
+
+const nextDay = (d: string) => new Date(Date.parse(`${d}T12:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
 
 function ComponentChip({ c }: { c: CandidateEntry['components'][number] }) {
   return (
@@ -251,17 +385,21 @@ function ComponentChip({ c }: { c: CandidateEntry['components'][number] }) {
 
 function CandidateHeader({
   entry,
+  window,
   replay,
   detail,
   onRetry
 }: {
   entry: CandidateEntry;
+  window: PortfolioWindowRequest;
   replay: ReturnType<typeof usePortfolioReplay>;
   detail: PortfolioReplayDetail | null;
   onRetry: () => void;
 }) {
   const state = replay?.state ?? 'submitting';
   const parity = detail?.metrics.parity;
+  const w = detail?.metrics.window;
+  const trajectory = detail?.metrics.trajectory;
   return (
     <section className="card candidate-header" aria-label="Selected candidate" data-testid="candidate-header">
       <div className="candidate-title-row">
@@ -270,7 +408,30 @@ function CandidateHeader({
           FROZEN PRESET · READ-ONLY
         </span>
         <span className="badge badge-real">L0 lifecycle · one $100,000 pool · no compounding</span>
-        {parity && (
+        {w?.postValidation && (
+          <span className="badge badge-warn" data-testid="post-validation-badge" title="Dates after the research validation end: never optimization, selection, qualification or validation evidence">
+            MANUAL POST-VALIDATION EVALUATION
+          </span>
+        )}
+        {parity && parity.status === 'not applicable' && (
+          <span
+            className={`badge ${trajectory ? (trajectory.identical && trajectory.researchParity === 'verified' ? 'badge-ok' : 'badge-danger') : 'badge-muted'}`}
+            data-testid="parity-badge"
+            data-parity={trajectory ? (trajectory.identical && trajectory.researchParity === 'verified' ? 'trajectory-verified' : 'mismatch') : 'not-applicable'}
+            title={
+              trajectory
+                ? 'This continuous run was replayed beside the research window: identical decision for decision over their common span, and the research-window replay matches the archived records'
+                : 'An isolated window has no archived target; its figures are reconciled with the engine-independent ledger only'
+            }
+          >
+            {trajectory
+              ? trajectory.identical && trajectory.researchParity === 'verified'
+                ? `Research window reproduced: identical through ${trajectory.comparedThrough.slice(0, 10)} · archived parity verified`
+                : 'NOT VERIFIED against the research window'
+              : 'No archived target (isolated window): ledger-reconciled only'}
+          </span>
+        )}
+        {parity && parity.status !== 'not applicable' && (
           <span
             className={`badge ${parity.status === 'verified' ? 'badge-ok' : 'badge-danger'}`}
             data-testid="parity-badge"
@@ -283,6 +444,36 @@ function CandidateHeader({
           </span>
         )}
       </div>
+      {w && (
+        <p className="window-effective" data-testid="window-effective" data-from={w.reporting.from} data-to={w.reporting.to}>
+          <b>
+            {w.reporting.from} → {w.reporting.to}
+          </b>{' '}
+          <span className="muted small">
+            ({w.reporting.sessions} sessions ·{' '}
+            {w.requested.mode === 'research'
+              ? 'research window, the archived benchmark'
+              : w.requested.mode === 'all'
+                ? `all available data, ending at the latest common complete session of ${w.coverage.limitedBy.join(' and ') || 'GDX and VGT'}`
+                : w.execution === 'continuous'
+                  ? `custom reporting window of ONE continuous run simulated ${w.simulation.from} → ${w.simulation.to}`
+                  : 'custom isolated window: the run starts flat at its first session'}
+            )
+          </span>
+          <InfoPopover label="Requested and effective dates">
+            <table className="param-table small" data-testid="window-details">
+              <tbody>
+                <tr><th scope="row">Requested</th><td>{windowRequestText(w.requested)}</td></tr>
+                <tr><th scope="row">Simulated (engine)</th><td>{w.simulation.from} → {w.simulation.to} ({w.simulation.sessions} sessions)</td></tr>
+                <tr><th scope="row">Reported (these figures)</th><td>{w.reporting.from} → {w.reporting.to} ({w.reporting.sessions} sessions)</td></tr>
+                <tr><th scope="row">Research window</th><td>{w.research.from} → {w.research.to} ({w.research.source})</td></tr>
+                <tr><th scope="row">Local data</th><td>{w.coverage.files.map((f) => `${f.symbol} complete through ${f.latestCompleteSession ?? '—'} (last row ${f.lastRowUtc})`).join('; ')}; common complete endpoint {w.coverage.endpoint}</td></tr>
+                <tr><th scope="row">Label</th><td>{w.label}</td></tr>
+              </tbody>
+            </table>
+          </InfoPopover>
+        </p>
+      )}
       <p className="candidate-summary">{entry.summary}</p>
       <ul className="candidate-distinctions small muted">
         {entry.distinctions.map((d) => (
@@ -294,7 +485,7 @@ function CandidateHeader({
           <>
             Replay <code title={detail.id}>{detail.id.slice(0, 15)}…</code> ·{' '}
             {replay?.cacheHit ? 'from the replay cache (validated)' : `computed in ${(detail.executionMs / 1000).toFixed(1)} s`} ·
-            research engine (Priority 3 pool via 5B L0) · no saved run created
+            research engine ({entry.engine.kind === 'rc2-replay' ? 'RC 2 risk-metrics replay on the Priority 3 pool, as npm run manual-eval' : 'Priority 3 pool via 5B L0'}) · no saved run created
           </>
         ) : state === 'failed' ? (
           <span className="form-error">
@@ -305,7 +496,7 @@ function CandidateHeader({
           </span>
         ) : (
           <>
-            {state === 'queued' ? 'Queued' : 'Replaying'} {entry.name} with the research engine
+            {state === 'queued' ? 'Queued' : 'Replaying'} {entry.name} ({windowRequestText(window)}) with the research engine
             {replay?.progress ? `: ${replay.progress.message}` : '…'} (previous results are not shown while this runs)
           </>
         )}
@@ -559,12 +750,21 @@ function ReplayBody(p: BodyProps) {
   };
 
   const totals = portfolioTotals(detail.metrics);
+  const m = detail.metrics;
+  const periods = periodOptionsOf(detail);
+  const shownPeriod: Period = periods.some(([k]) => k === period) ? period : 'all';
+  const viewOpts = {
+    validationEnd: m.window.postValidation ? m.window.research.validationEnd : null,
+    reportingFrom: m.window.reporting.from !== m.window.simulation.from ? m.window.reporting.from : null
+  };
   const equity = equityQ.data && equityQ.data.replayId === detail.id ? equityQ.data : null;
-  const boundaryMs = equity ? (equity.closeMs[equity.dates.indexOf(PORTFOLIO_BENCHMARK.boundary)] ?? null) : null;
-  const periodRange = equity ? periodWindow(period, equity.closeMs, equity.dates) : null;
+  const closeAt = (d: string | null) => (equity && d ? (equity.closeMs[equity.dates.indexOf(d)] ?? null) : null);
+  const boundaryMs = m.development ? closeAt(PORTFOLIO_BENCHMARK.boundary) : null;
+  const postBoundaryMs = m.postValidation ? closeAt(m.postValidation.after) : null;
+  const periodRange = equity ? periodWindow(shownPeriod, equity.closeMs, equity.dates, viewOpts) : null;
   const choosePeriod = (pp: Period) => {
     setPeriod(pp);
-    const w = equity ? periodWindow(pp, equity.closeMs, equity.dates) : null;
+    const w = equity ? periodWindow(pp, equity.closeMs, equity.dates, viewOpts) : null;
     chartRef.current?.setWindow(w);
   };
 
@@ -607,10 +807,10 @@ function ReplayBody(p: BodyProps) {
       <section className="card" aria-label="Portfolio equity and drawdown" data-testid="equity-card">
         <div className="equity-head">
           <h3>Portfolio equity and minute drawdown</h3>
-          <PeriodButtons period={period} onChange={choosePeriod} />
+          <PeriodButtons options={periods} period={shownPeriod} onChange={choosePeriod} />
         </div>
         {equity ? (
-          <EquityChart equity={equity} window={periodRange} boundaryMs={boundaryMs} />
+          <EquityChart equity={equity} window={periodRange} boundaryMs={boundaryMs} postBoundaryMs={postBoundaryMs} />
         ) : equityQ.error ? (
           <div className="chart-missing" role="alert">
             Equity unavailable: {equityQ.error}
@@ -656,8 +856,11 @@ function ReplayBody(p: BodyProps) {
               </label>
             ))}
           </div>
-          <PeriodButtons period={period} onChange={choosePeriod} testid="chart-period" />
-          <span className="muted small">Periods are viewports of the one continuous run (2025–2026 keeps the positions carried in).</span>
+          <PeriodButtons options={periods} period={shownPeriod} onChange={choosePeriod} testid="chart-period" />
+          <span className="muted small">
+            Periods are viewports of the one continuous run (each keeps the positions carried in).
+            {m.postValidation ? ` After ${m.postValidation.after}: manual post-validation evaluation.` : ''}
+          </span>
         </div>
         <div className="legend portfolio-legend" data-testid="legend">
           <span className="legend-group" aria-label="Components">
@@ -808,16 +1011,33 @@ function ReplayBody(p: BodyProps) {
   );
 }
 
-function PeriodButtons({ period, onChange, testid = 'period' }: { period: Period; onChange: (p: Period) => void; testid?: string }) {
+/** The period viewports a replay offers (only those its run spans), with their labels. */
+function periodOptionsOf(detail: PortfolioReplayDetail): [Period, string][] {
+  const m = detail.metrics;
+  const w = m.window;
+  const y = (d: string) => d.slice(0, 4);
+  const out: [Period, string][] = [['all', `Full run ${y(w.simulation.from)}–${y(w.simulation.to)}`]];
+  if (m.development) out.push(['development', `${y(w.simulation.from)}–2024`]);
+  if (m.validation) out.push(['validation', m.postValidation ? `2025 → ${m.validation.through} (validation)` : '2025–2026 (validation)']);
+  if (m.postValidation) out.push(['post', `After ${m.postValidation.after} (post-validation)`]);
+  if (w.reporting.from !== w.simulation.from) out.push(['reporting', `Reporting ${w.reporting.from} → ${w.reporting.to}`]);
+  return out;
+}
+
+function PeriodButtons({
+  options,
+  period,
+  onChange,
+  testid = 'period'
+}: {
+  options: [Period, string][];
+  period: Period;
+  onChange: (p: Period) => void;
+  testid?: string;
+}) {
   return (
     <div className="segmented small" role="radiogroup" aria-label="Period (viewport)" data-testid={testid}>
-      {(
-        [
-          ['all', 'Full run 2016–2026'],
-          ['development', '2016–2024'],
-          ['validation', '2025–2026 (validation)']
-        ] as const
-      ).map(([k, label]) => (
+      {options.map(([k, label]) => (
         <label key={k} className={period === k ? 'is-on' : ''}>
           <input type="radio" name={`${testid}-period`} checked={period === k} onChange={() => onChange(k)} data-testid={`${testid}-${k}`} />
           {label}
@@ -831,6 +1051,8 @@ function PeriodButtons({ period, onChange, testid = 'period' }: { period: Period
 
 function PortfolioSummary({ detail, totals }: { detail: PortfolioReplayDetail; totals: ReturnType<typeof portfolioTotals> }) {
   const m = detail.metrics;
+  const w = m.window;
+  const R = m.periods.find((p) => p.key === 'R') ?? null;
   const dd = (x: typeof totals.minuteDd) => (
     <>
       {usd(x.usd)} <span className="muted small">({pct(x.pctOfPrincipal)} of the $100,000 principal)</span>
@@ -845,11 +1067,50 @@ function PortfolioSummary({ detail, totals }: { detail: PortfolioReplayDetail; t
   return (
     <section className="card portfolio-summary" aria-label="Portfolio summary" data-testid="portfolio-summary">
       <h3>
-        Portfolio totals <span className="muted small">— the ONE shared $100,000 pool, {m.window.from} → {m.window.to}, continuous</span>
+        Portfolio totals{' '}
+        <span className="muted small">
+          — the ONE shared $100,000 pool, {w.simulation.from} → {w.simulation.to},{' '}
+          {w.execution === 'isolated' && w.requested.mode === 'custom' ? 'isolated (starts flat)' : 'continuous'}
+        </span>
       </h3>
+      {R && (
+        <div className="summary-block summary-reporting" data-testid="summary-reporting">
+          <h4>
+            Reporting window {w.reporting.from} → {w.reporting.to}{' '}
+            <span className="muted small">(of the continuous run from {w.simulation.from}; positions and state carried in)</span>
+          </h4>
+          <dl>
+            <dt>Marked net change</dt>
+            <dd className={`big ${toneClass(R.net)}`} data-testid="summary-reporting-net" data-value={R.net}>
+              {usd(R.net, true)}
+            </dd>
+            <dt>Realized in the window / unrealized at its start → end</dt>
+            <dd>
+              {usd(R.realizedPnl, true)} / {usd(R.unrealizedAtStart, true)} → {usd(R.unrealizedAtEnd, true)}
+            </dd>
+            <dt>Reset minute drawdown · from the continuous peak</dt>
+            <dd>
+              {usd(R.drawdownReset.max)} · {usd(R.drawdownFromContinuousPeak.max)}
+            </dd>
+            <dt>Lots active · entered · carried in</dt>
+            <dd>
+              {R.lots.active} · {R.lots.entered} · {R.lots.carriedIn}
+            </dd>
+            <dt>Interest · transaction costs</dt>
+            <dd>
+              {usd(R.interest)} · {usd(R.costs)}
+            </dd>
+          </dl>
+        </div>
+      )}
       <div className="summary-grid">
         <div className="summary-block" data-testid="summary-full">
-          <h4>Full run</h4>
+          <h4>
+            Full run{' '}
+            <span className="muted small">
+              {w.simulation.from} → {w.simulation.to}
+            </span>
+          </h4>
           <dl>
             <dt>Marked net P&amp;L</dt>
             <dd className={`big ${toneClass(totals.net)}`} data-testid="summary-net" data-value={totals.net}>
@@ -868,30 +1129,69 @@ function PortfolioSummary({ detail, totals }: { detail: PortfolioReplayDetail; t
           </dl>
         </div>
         <div className="summary-block" data-testid="summary-validation">
-          <h4>2025-01-02 → {m.window.to} (validation, examined history)</h4>
-          <dl>
-            <dt>Marked net change from the 2024-12-31 close</dt>
-            <dd className={`big ${toneClass(totals.validationNet)}`} data-testid="summary-validation-net" data-value={totals.validationNet}>
-              {usd(totals.validationNet, true)}
-            </dd>
-            <dt>Realized / unrealized change</dt>
-            <dd>
-              {usd(m.validation.realizedChange, true)} / {usd(m.validation.unrealizedChange, true)}
-            </dd>
-            <dt>Reset minute drawdown (peak = the 2024-12-31 close)</dt>
-            <dd>{dd(totals.validationDd)}</dd>
-            <dt>Positions entered · carried in</dt>
-            <dd>
-              {m.validation.positionsEntered} · {m.validation.carriedIn.length ? m.validation.carriedIn.join(', ') : 'none'}
-            </dd>
-          </dl>
-          <h4>2016-01-04 → 2024-12-31 (development)</h4>
-          <dl>
-            <dt>Marked net at the 2024-12-31 close</dt>
-            <dd data-testid="summary-development-net">{usd(totals.developmentNet, true)}</dd>
-            <dt>Minute drawdown (to that close)</dt>
-            <dd>{dd(totals.developmentDd)}</dd>
-          </dl>
+          {m.postValidation && totals.postValidationDd && (
+            <div className="summary-post" data-testid="summary-post">
+              <h4>
+                After {m.postValidation.after} → {m.postValidation.through}{' '}
+                <span className="badge badge-warn small">manual post-validation evaluation</span>
+              </h4>
+              <dl>
+                <dt>Marked net change from the {m.postValidation.after} close</dt>
+                <dd className={`big ${toneClass(m.postValidation.net)}`} data-testid="summary-post-net" data-value={m.postValidation.net}>
+                  {usd(m.postValidation.net, true)}
+                </dd>
+                <dt>Realized / unrealized change</dt>
+                <dd>
+                  {usd(m.postValidation.realizedChange, true)} / {usd(m.postValidation.unrealizedChange, true)}
+                </dd>
+                <dt>Reset minute drawdown (peak = the {m.postValidation.after} close)</dt>
+                <dd data-testid="summary-post-dd" data-value={m.postValidation.resetDd.usd}>
+                  {dd(totals.postValidationDd)}
+                </dd>
+                <dt>Positions entered · carried in</dt>
+                <dd>
+                  {m.postValidation.positionsEntered} · {m.postValidation.carriedIn.length ? m.postValidation.carriedIn.join(', ') : 'none'}
+                </dd>
+                <dt>Interest · transaction costs</dt>
+                <dd>
+                  {usd(m.postValidation.interest)} · {usd(m.postValidation.costs)}
+                </dd>
+              </dl>
+            </div>
+          )}
+          {m.validation && totals.validationDd && (
+            <>
+              <h4>2025-01-02 → {m.validation.through} (validation, examined history)</h4>
+              <dl>
+                <dt>Marked net change from the 2024-12-31 close</dt>
+                <dd className={`big ${toneClass(m.validation.net)}`} data-testid="summary-validation-net" data-value={m.validation.net}>
+                  {usd(m.validation.net, true)}
+                </dd>
+                <dt>Realized / unrealized change</dt>
+                <dd>
+                  {usd(m.validation.realizedChange, true)} / {usd(m.validation.unrealizedChange, true)}
+                </dd>
+                <dt>Reset minute drawdown (peak = the 2024-12-31 close)</dt>
+                <dd>{dd(totals.validationDd)}</dd>
+                <dt>Positions entered · carried in</dt>
+                <dd>
+                  {m.validation.positionsEntered} · {m.validation.carriedIn.length ? m.validation.carriedIn.join(', ') : 'none'}
+                </dd>
+              </dl>
+            </>
+          )}
+          {m.development && totals.developmentDd && (
+            <>
+              <h4>{w.simulation.from} → 2024-12-31 (development)</h4>
+              <dl>
+                <dt>Marked net at the 2024-12-31 close</dt>
+                <dd data-testid="summary-development-net">{usd(m.development.net, true)}</dd>
+                <dt>Minute drawdown (to that close)</dt>
+                <dd>{dd(totals.developmentDd)}</dd>
+              </dl>
+            </>
+          )}
+          {!m.validation && !m.development && <p className="muted small">The window does not span the 2024-12-31 boundary.</p>}
         </div>
         <div className="summary-block" data-testid="summary-positions">
           <h4>Positions and exposure</h4>
@@ -978,9 +1278,72 @@ function PortfolioSummary({ detail, totals }: { detail: PortfolioReplayDetail; t
           </tr>
         </tbody>
       </table>
+      {m.periods.length > 0 && <PeriodTable periods={m.periods} />}
     </section>
   );
 }
+
+/** The period table of the run: src/manual-eval/report.ts periodMetrics, the same figures as `npm run manual-eval`. */
+function PeriodTable({ periods }: { periods: PortfolioPeriod[] }) {
+  const rows: [string, (p: PortfolioPeriod) => string][] = [
+    ['After the close of → through', (p) => `${p.after ?? 'start'} → ${p.through}`],
+    ['Net P&L (Δ marked net)', (p) => usd(p.net, true)],
+    ['Gross trading P&L', (p) => usd(p.grossTradingPnl, true)],
+    ['Margin interest', (p) => usd(p.interest)],
+    ['Transaction costs', (p) => usd(p.costs)],
+    ['Realized in the period', (p) => usd(p.realizedPnl, true)],
+    ['Unrealized at start / end', (p) => `${usd(p.unrealizedAtStart, true)} / ${usd(p.unrealizedAtEnd, true)}`],
+    ['Max marked DD, reset at the start', (p) => usd(p.drawdownReset.max)],
+    ['Max marked DD from the continuous peak', (p) => usd(p.drawdownFromContinuousPeak.max)],
+    ['Max banked-capital DD', (p) => usd(p.bankedCapitalDrawdown.max)],
+    ['Max trade-principal loss', (p) => (p.maxTradePrincipalLoss ? `${usd(p.maxTradePrincipalLoss.loss)} (P-${p.maxTradePrincipalLoss.lot})` : '—')],
+    ['Lots active / entered / closed / carried in', (p) => `${p.lots.active} / ${p.lots.entered} / ${p.lots.closed} / ${p.lots.carriedIn}`],
+    ['Win rate (closed lots)', (p) => (p.lots.winRate === null ? '—' : `${p.lots.winRate}% (${p.lots.winners} of ${p.lots.closed})`)],
+    ['Open at the end', (p) => (p.openPositions.length ? p.openPositions.map((o) => `P-${o.lot} ${usd(o.markedPnl, true)}`).join('; ') : 'none')]
+  ];
+  return (
+    <details className="period-details" open data-testid="period-table">
+      <summary className="small">
+        <b>Periods of the continuous run</b> — the figures of <code>npm run manual-eval</code> (a period’s P&amp;L is the change of the
+        marked net; a position spanning a boundary is attributed by its marks)
+      </summary>
+      <div className="table-scroll">
+        <table className="period-table small">
+          <thead>
+            <tr>
+              <th>Item</th>
+              {periods.map((p) => (
+                <th key={p.key} className={p.key === 'B' ? 'period-post' : ''} title={p.label} data-period={p.key}>
+                  {p.key}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(([name, f]) => (
+              <tr key={name}>
+                <td>{name}</td>
+                {periods.map((p) => (
+                  <td key={p.key} className={p.key === 'B' ? 'period-post' : ''} data-period={p.key}>
+                    {f(p)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ul className="small muted">
+        {periods.map((p) => (
+          <li key={p.key}>
+            <b>{p.key}</b> — {p.label}
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
 
 // ----- events: tooltip body and the selected event -----
 
@@ -1079,7 +1442,13 @@ function PositionLedger({
   selectedPosition: string | null;
   onShow: (p: PortfolioPosition, f?: PositionFill) => void;
 }) {
-  const rows = filterPositions(detail.positions, filter);
+  const bounds = boundsOf(detail.metrics);
+  const options = periodOptionsOf(detail);
+  const period = options.some(([k]) => k === filter.period) ? filter.period : 'all';
+  const rows = filterPositions(detail.positions, { ...filter, period }, bounds);
+  // a period that starts after the run's start: each listed position's contribution to it (NOT its lifetime net)
+  const pk = PERIOD_KEY[period] ?? null;
+  const periodLabel = options.find(([k]) => k === period)?.[1] ?? '';
   const sub = bookedSubtotal(rows);
   const all = bookedSubtotal(detail.positions);
   const selectedRow = useRef<HTMLTableRowElement>(null);
@@ -1121,11 +1490,13 @@ function PositionLedger({
             ['open', 'Open'],
             ['closed', 'Closed']
           ])}
-          {sel('period', [
-            ['all', 'Whole run'],
-            ['development', 'Entered 2016–2024'],
-            ['validation', 'Active in 2025–2026 (incl. carried in)']
-          ])}
+          {sel(
+            'period',
+            options.map(([k, label]) => [
+              k,
+              k === 'all' ? 'Whole run' : k === 'development' ? `Entered ${label}` : `Active ${label.replace(/^After/, 'after')} (incl. carried in)`
+            ])
+          )}
           {isFiltered(filter) && (
             <button type="button" className="btn-chip" onClick={() => setFilter(DEFAULT_LEDGER_FILTER)} data-testid="ledger-reset">
               Show all
@@ -1143,6 +1514,13 @@ function PositionLedger({
         ) : (
           <> · Σ booked net {usd(all.net, true)} = the portfolio’s marked net</>
         )}
+        {pk ? (
+          <span data-testid="ledger-period-sum">
+            {' '}
+            · Σ P&amp;L in {periodLabel} of the listed positions: {usd(rows.reduce((a, x) => a + (x.inPeriod?.[pk]?.pnl ?? 0), 0), true)} (the change of their
+            marks inside the period, not their lifetime net)
+          </span>
+        ) : null}
       </p>
       <div className="table-scroll">
         <table className="ledger-table small">
@@ -1159,7 +1537,12 @@ function PositionLedger({
               <th>Final exit (ET)</th>
               <th>Exit reason</th>
               <th>Days</th>
-              <th>Net (whole position)</th>
+              <th>Net (whole position, lifetime)</th>
+              {pk && (
+                <th title="The change of the position's marked value inside the selected period (for a position carried in: from its mark at the period's opening close). Not its lifetime net." data-testid="ledger-period-col">
+                  P&amp;L in this period ({pk})
+                </th>
+              )}
               <th />
             </tr>
           </thead>
@@ -1205,6 +1588,23 @@ function PositionLedger({
                       {usd(p.net, true)}
                       {p.status === 'open' ? <span className="muted"> (marked)</span> : null}
                     </td>
+                    {pk && (
+                      <td className={`in-period ${toneClass(p.inPeriod?.[pk]?.pnl ?? 0)}`} data-testid={`in-period-${p.id}`} data-value={p.inPeriod?.[pk]?.pnl ?? ''}>
+                        {p.inPeriod?.[pk] ? (
+                          <>
+                            {usd(p.inPeriod[pk]!.pnl, true)}
+                            {p.inPeriod[pk]!.carriedIn ? (
+                              <span className="muted" title={`Carried in: marked at ${usd(p.inPeriod[pk]!.valueAtStart, true)} at the period's opening close`}>
+                                {' '}
+                                (carried in from {usd(p.inPeriod[pk]!.valueAtStart, true)})
+                              </span>
+                            ) : null}
+                          </>
+                        ) : (
+                          '—'
+                        )}
+                      </td>
+                    )}
                     <td>
                       <button
                         type="button"
@@ -1221,7 +1621,7 @@ function PositionLedger({
                   {open && (
                     <tr className="ledger-fills" data-testid={`fills-${p.id}`}>
                       <td />
-                      <td colSpan={12}>
+                      <td colSpan={pk ? 13 : 12}>
                         <table className="fills-table">
                           <thead>
                             <tr>
@@ -1275,7 +1675,11 @@ function PositionLedger({
                           Position totals: realized {usd(p.realized, true)} · unrealized {usd(p.unrealized, true)} · interest{' '}
                           {usd(p.interest)} · transaction costs {usd(p.costs)} · net {usd(p.net, true)}. Decision{' '}
                           {formatEt(p.decisionT)} at {formatPrice(p.decisionPrice)}; worst mark {usd(p.mae, true)}
-                          {carriedIn(p) ? ' · carried across the 2024-12-31 boundary' : ''}.
+                          {carriedIn(p, bounds) ? ' · carried across the 2024-12-31 boundary' : ''}
+                          {bounds.validationEnd !== Infinity && carriedAcross(p, bounds.validationEnd)
+                            ? ` · carried across the ${detail.metrics.window.research.validationEnd} validation end (its post-validation P&L is ${usd(p.inPeriod?.B?.pnl, true)}; its lifetime net is ${usd(p.net, true)})`
+                            : ''}
+                          .
                         </p>
                       </td>
                     </tr>

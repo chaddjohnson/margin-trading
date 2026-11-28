@@ -16,8 +16,10 @@ import {
   methodRegistryPath,
   registryPath,
   requireStandardAdoption,
+  researchRangesPath,
   standardPath
 } from '../preflight.ts';
+import { researchRangesFile } from '../../lib/researchRanges.ts';
 
 const sha = (s: string) => createHash('sha256').update(s).digest('hex');
 const standardText = (version: string, extra = '') =>
@@ -47,6 +49,9 @@ const fixture = (o: { current?: '1.0.0' | '1.1.0' } = {}): Fixture => {
   const current = o.current === '1.1.0' ? v110 : v100;
 
   fs.mkdirSync(path.join(root, 'docs/research'), { recursive: true });
+  // the repository's authoritative research date ranges (§1, from 4.0.0), which every manifest is checked against
+  fs.mkdirSync(path.join(root, 'config/research'), { recursive: true });
+  fs.copyFileSync(researchRangesFile, path.join(root, researchRangesPath));
   fs.writeFileSync(path.join(root, standardPath), current);
   fs.writeFileSync(
     path.join(root, registryPath),
@@ -478,5 +483,251 @@ describe('the repository', () => {
           study
         );
     }
+  });
+});
+
+// Standard 4.0.0 §1.3/§1.12: every manifest's windows lie inside the authoritative research date range, whatever the
+// canonical files hold; a 4.0.0 manifest pins its range and its data's byte-prefix provenance, verified as a prefix of
+// the local file, so appending rows to the file changes nothing.
+describe('the research date ranges (standard 4.0.0 §1)', () => {
+  it('refuses a validation window that ends after the authorized validation end, unless a departure cites the user', () => {
+    const f = fixture();
+    const late = clone(f.adoption);
+
+    late.dateSplit.validation.to = '2026-11-25';
+    late.dateSplit.commonCompleteEndpoint = '2026-11-25';
+    f.write(late);
+    assert.ok(hasError(run(f), /after the authorized validation end 2026-10-30 \(§1\.3; research date range R1/));
+
+    late.deviations = [
+      { id: 'D1', section: '§1.3', kind: 'departure', description: 'later end', justification: 'test', userAgreement: 'brief §1' }
+    ];
+    f.write(late);
+    assert.deepEqual(run(f).errors, []);
+  });
+
+  it('accepts an earlier validation end, and refuses a development window past the range', () => {
+    const f = fixture();
+    const early = clone(f.adoption);
+
+    early.dateSplit.validation.to = '2026-06-30';
+    early.dateSplit.commonCompleteEndpoint = '2026-06-30';
+    f.write(early);
+    assert.deepEqual(run(f).errors, []);
+
+    const dev = clone(f.adoption);
+
+    dev.dateSplit.development.to = '2025-03-31';
+    dev.dateSplit.validation.from = '2025-04-01';
+    f.write(dev);
+    assert.ok(hasError(run(f), /development ends 2025-03-31, after 2024-12-31/));
+  });
+
+  it('refuses a manifest naming an unknown range or another file, and the repository without its ranges', () => {
+    const f = fixture();
+    const a = clone(f.adoption);
+
+    a.dateRanges = { file: researchRangesPath, id: 'R9' };
+    f.write(a);
+    assert.ok(hasError(run(f), /dateRanges\.id R9 is not a range/));
+    a.dateRanges = { file: 'config/other.json', id: 'R1' };
+    f.write(a);
+    assert.ok(hasError(run(f), /dateRanges\.file must be config\/research\/date-ranges\.json/));
+    fs.rmSync(path.join(f.root, researchRangesPath));
+    f.write(f.adoption);
+    assert.ok(hasError(run(f), /research date ranges config\/research\/date-ranges\.json are missing/));
+  });
+
+  // A fixture repository whose current standard is 4.0.0, with one canonical data file.
+  const v4fixture = () => {
+    const f = fixture();
+    const v400 = standardText('4.0.0', '\nExplicit research date ranges.\n');
+    const registry = JSON.parse(fs.readFileSync(path.join(f.root, registryPath), 'utf8'));
+
+    registry.current = '4.0.0';
+    registry.versions.push({ version: '4.0.0', effective: '2026-11-27', sha256: sha(v400), summary: 'ranges' });
+    fs.writeFileSync(path.join(f.root, registryPath), JSON.stringify(registry));
+    fs.writeFileSync(path.join(f.root, standardPath), v400);
+
+    const protocol = `# Protocol\n\nStandard version 4.0.0, sha256 ${sha(v400)}.\n`;
+
+    fs.writeFileSync(path.join(f.root, f.study, 'PROTOCOL.md'), protocol);
+    fs.mkdirSync(path.join(f.root, 'data/AAA'), { recursive: true });
+
+    const rows = '"2026-10-30T14:30:00Z",1,1,1,1,1\n"2026-10-30T20:00:00Z",1,1,1,1,1\n';
+
+    fs.writeFileSync(path.join(f.root, 'data/AAA/data.csv'), rows);
+
+    const a = clone(f.adoption);
+
+    a.standard = { path: standardPath, version: '4.0.0', sha256: sha(v400) };
+    a.readAt = '2026-11-27T10:00:00Z';
+    a.adoptedAt = '2026-11-27T10:05:00Z';
+    a.protocol = { path: `${f.study}/PROTOCOL.md`, sha256: sha(protocol) };
+    a.chronologicalConsequence = 'no chronological support: not deployment-qualified without a user decision';
+    a.evaluationBackend = { policy: 'gpu-required', purpose: 'official-optimization', acceptance: 'config/gpu-backend/acceptance.json' } as Adoption['evaluationBackend'];
+    a.dateRanges = { file: researchRangesPath, id: 'R1' };
+    a.dataPins = { AAA: { file: 'data/AAA/data.csv', bytes: Buffer.byteLength(rows), sha256: sha(rows), through: '2026-10-30' } };
+    f.write(a);
+    return { f, a, rows, at: new Date('2026-11-28T00:00:00Z') };
+  };
+  const dateErrors = (r: ReturnType<typeof run>) => r.errors.filter((e) => !/GPU|acceptance|§9/.test(e));
+
+  it('requires dateRanges and dataPins from 4.0.0, verifies each pin, and keeps passing after rows are appended', () => {
+    const { f, a, rows, at } = v4fixture();
+    const check = () => dateErrors(checkAdoption(f.study, { repoRoot: f.root, now: at }));
+
+    assert.deepEqual(check(), []);
+    // an append: the pin is still a byte prefix of the file
+    fs.appendFileSync(path.join(f.root, 'data/AAA/data.csv'), '"2026-11-25T14:30:00Z",2,2,2,2,2\n');
+    assert.deepEqual(check(), []);
+    // a changed historical row fails the pin
+    fs.writeFileSync(path.join(f.root, 'data/AAA/data.csv'), rows.replace('1,1,1,1,1\n"2026-10-30T20', '1,1,1,1,9\n"2026-10-30T20'));
+    assert.ok(check().some((e) => /first \d+ bytes hash to .* not the pinned/.test(e)));
+
+    const missing = clone(a);
+
+    delete missing.dateRanges;
+    delete missing.dataPins;
+    f.write(missing);
+    assert.ok(check().some((e) => /dateRanges is missing/.test(e)));
+    assert.ok(check().some((e) => /dataPins is missing/.test(e)));
+
+    const late = clone(a);
+
+    late.dataPins!.AAA!.through = '2026-11-25';
+    f.write(late);
+    assert.ok(check().some((e) => /reaches 2026-11-25, after the validation end 2026-10-30/.test(e)));
+  });
+
+  it('refuses a new optimization that pins an earlier standard once 4.0.0 is in force', () => {
+    const { f, at } = v4fixture();
+    const old = clone(f.adoption); // pinned to 1.0.0, adopted 2026-11-08
+
+    old.adoptedAt = '2026-11-27T10:05:00Z';
+    old.readAt = '2026-11-27T10:00:00Z';
+    f.write(old);
+    assert.ok(
+      dateErrors(checkAdoption(f.study, { repoRoot: f.root, now: at })).some((e) => /from 2026-11-27 new optimization and continuation manifests adopt 4\.0\.0/.test(e))
+    );
+  });
+});
+
+describe('evidence categories: the controlled prospective evaluation (standard 5.0.0 §1.15)', () => {
+  // A fixture repository whose current standard is 5.0.0 (4.0.0 also registered), with a canonical data file and a sealed
+  // configuration record frozen at 2026-11-28T09:00Z, and a prospective manifest observing from 2026-11-30.
+  const v5fixture = () => {
+    const f = fixture();
+    const v400 = standardText('4.0.0', '\nExplicit research date ranges.\n');
+    const v500 = standardText('5.0.0', '\nEvidence categories.\n');
+    const registry = JSON.parse(fs.readFileSync(path.join(f.root, registryPath), 'utf8'));
+
+    registry.current = '5.0.0';
+    registry.versions.push({ version: '4.0.0', effective: '2026-11-27', sha256: sha(v400), summary: 'ranges' });
+    registry.versions.push({ version: '5.0.0', effective: '2026-11-27', sha256: sha(v500), summary: 'evidence' });
+    fs.writeFileSync(path.join(f.root, registryPath), JSON.stringify(registry));
+    fs.writeFileSync(path.join(f.root, standardPath), v500);
+
+    const protocol = `# Protocol\n\nStandard version 5.0.0, sha256 ${sha(v500)}.\n`;
+
+    fs.writeFileSync(path.join(f.root, f.study, 'PROTOCOL.md'), protocol);
+    fs.mkdirSync(path.join(f.root, 'data/AAA'), { recursive: true });
+
+    const rows = '"2026-10-30T14:30:00Z",1,1,1,1,1\n"2026-10-30T20:00:00Z",1,1,1,1,1\n';
+    const cfg = JSON.stringify({ label: 'X', d1: [1, 2, 3] });
+
+    fs.writeFileSync(path.join(f.root, 'data/AAA/data.csv'), rows);
+    fs.writeFileSync(path.join(f.root, f.study, 'FROZEN_CONFIGURATION.json'), cfg);
+
+    const a = clone(f.adoption);
+
+    a.scope = 'prospective';
+    a.standard = { path: standardPath, version: '5.0.0', sha256: sha(v500) };
+    a.readAt = '2026-11-28T10:00:00Z';
+    a.adoptedAt = '2026-11-28T10:05:00Z';
+    a.protocol = { path: `${f.study}/PROTOCOL.md`, sha256: sha(protocol) };
+    a.objective = { prioritizes: 'not-applicable', primaryRule: 'none: one frozen configuration is observed', roles: [] };
+    a.budget = { distinctProposals: null, backendEvaluations: null, notes: 'no search' };
+    a.dateRanges = { file: researchRangesPath, id: 'R1' };
+    a.dataPins = { AAA: { file: 'data/AAA/data.csv', bytes: Buffer.byteLength(rows), sha256: sha(rows), through: '2026-10-30' } };
+    a.prospective = {
+      configuration: { label: 'X', file: `${f.study}/FROZEN_CONFIGURATION.json`, sha256: sha(cfg) },
+      frozenAt: '2026-11-28T09:00:00Z',
+      freezeEvidence: 'commit abcdef0 (git), sealed before any observed session',
+      observationFrom: '2026-11-30',
+      decisionBearing: true,
+      acceptanceCriteria: 'reported against the frozen criteria of PROTOCOL.md §9; no adoption without the user',
+      reporting: 'every observed session, cumulatively, from 2026-11-30; no restart, no omission'
+    };
+    f.write(a);
+    return { f, a, cfg, at: new Date('2026-11-29T00:00:00Z') };
+  };
+  const errorsOf = (f: Fixture, at: Date) => checkAdoption(f.study, { repoRoot: f.root, now: at }).errors;
+
+  it('accepts a pre-registered prospective evaluation of a configuration frozen before its first observed session', () => {
+    const { f, at } = v5fixture();
+
+    assert.deepEqual(errorsOf(f, at), []);
+  });
+
+  it('refuses observations that opened before the freeze or before the pre-registration (no retroactive classification)', () => {
+    const { f, a, at } = v5fixture();
+    const early = clone(a);
+
+    early.prospective!.observationFrom = '2026-11-27'; // opened before both the freeze and the adoption
+    early.prospective!.frozenAt = '2026-11-28T09:00:00Z';
+    f.write(early);
+    assert.ok(errorsOf(f, at).some((e) => /never prospective for it \(§1\.15\)/.test(e)));
+    assert.ok(errorsOf(f, at).some((e) => /pre-registered .* only after the first observed session/.test(e)));
+  });
+
+  it('refuses observations inside the formal validation window, a changed configuration, and missing criteria', () => {
+    const { f, a, at } = v5fixture();
+    const inside = clone(a);
+
+    inside.prospective!.observationFrom = '2026-10-29';
+    inside.prospective!.frozenAt = '2026-10-01T09:00:00Z';
+    inside.readAt = '2026-10-01T10:00:00Z';
+    inside.adoptedAt = '2026-11-28T10:05:00Z';
+    f.write(inside);
+    assert.ok(errorsOf(f, at).some((e) => /inside the formal validation window of R1/.test(e)));
+
+    const changed = clone(a);
+
+    changed.prospective!.configuration.sha256 = 'f'.repeat(64);
+    f.write(changed);
+    assert.ok(errorsOf(f, at).some((e) => /does not match its sha256: the frozen configuration changed/.test(e)));
+
+    const noCriteria = clone(a);
+
+    noCriteria.prospective!.acceptanceCriteria = null;
+    f.write(noCriteria);
+    assert.ok(errorsOf(f, at).some((e) => /acceptanceCriteria are required for a decision-bearing evaluation/.test(e)));
+    noCriteria.prospective!.decisionBearing = false;
+    f.write(noCriteria);
+    assert.deepEqual(errorsOf(f, at), []);
+  });
+
+  it('refuses the prospective scope under 4.0.0, a prospective block on another scope, and a missing block', () => {
+    const { f, a, at } = v5fixture();
+    const missing = clone(a);
+
+    delete missing.prospective;
+    f.write(missing);
+    assert.ok(errorsOf(f, at).some((e) => /prospective is missing: §1\.15 requires/.test(e)));
+
+    const other = clone(a);
+
+    other.scope = 'diagnostic';
+    f.write(other);
+    assert.ok(errorsOf(f, at).some((e) => /a prospective block needs scope "prospective"/.test(e)));
+
+    const registry = JSON.parse(fs.readFileSync(path.join(f.root, registryPath), 'utf8'));
+    const v400 = registry.versions.find((v: { version: string }) => v.version === '4.0.0');
+    const old = clone(a);
+
+    old.standard = { path: standardPath, version: '4.0.0', sha256: v400.sha256 };
+    f.write(old);
+    assert.ok(errorsOf(f, at).some((e) => /scope prospective needs standard 5\.0\.0 or later/.test(e)));
   });
 });

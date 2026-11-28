@@ -1,0 +1,24 @@
+{
+  "kind": "research-date-ranges",
+  "schema": 1,
+  "timezone": "America/New_York",
+  "description": "The authoritative default date ranges of formal research (docs/research/OPTIMIZATION_STANDARD.md §1, from 4.0.0): inclusive New York session dates of the development window (every optimization, search, refinement, qualification and selection choice) and of the formal validation window (frozen selections only). They are explicit dates, independent of the canonical files' coverage: appending market data to data/<SYMBOL>/data.csv never changes them. Changing them is a deliberate act: a NEW entry here (never an edit of an existing one) citing the user's explicit authorization, made current; a study pins the entry it adopted (STANDARD_ADOPTION.json dateRanges) and keeps it. Manual backtests are not bound by these ranges and are never formal evidence. Read and validated by src/lib/researchRanges.ts.",
+  "current": "R1",
+  "ranges": [
+    {
+      "id": "R1",
+      "effective": "2026-11-08",
+      "recorded": "2026-11-27",
+      "development": { "from": "2016-01-04", "to": "2024-12-31" },
+      "validation": { "from": "2025-01-01", "to": "2026-10-30" },
+      "sessions": {
+        "developmentFirst": "2016-01-04",
+        "developmentLast": "2024-12-31",
+        "validationFirst": "2025-01-02",
+        "validationLast": "2026-10-30"
+      },
+      "authorization": "Development 2016-01-04 → 2024-12-31 and validation from 2025-01-01: optimization standard 1.0.0 §1 (2026-11-08, the user's Priority 2 follow-up brief, research/vgt-d1-growth-separate-pooled/brief/BRIEF.md). Validation end 2026-10-30: the common complete endpoint every adopting study recorded (31 STANDARD_ADOPTION.json, 2026-11-08 → 2026-11-26), fixed as the explicit validation end by the user's brief of 2026-11-27 (docs/data-updates/2026-11-27/BRIEF.md §4).",
+      "notes": "2025-01-01 is an NYSE holiday, so the validation window's first session is 2025-01-02. The data after 2026-10-30 (appended 2026-11-27) are outside every formal window: manual post-validation evaluation only."
+    }
+  ]
+}

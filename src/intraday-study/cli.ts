@@ -41,10 +41,19 @@ export const readStartHashes = async () => {
 };
 
 // Where the study now reads a protected file, when not from its own path: the incumbent from its frozen revision
-// (constants.ts) and the minute data from the verified legacy archive (src/lib/archive.ts).
+// (constants.ts), the minute data from the verified legacy archive (src/lib/archive.ts) and the original daily strategy
+// from its current name (the user renamed src/app/allin-original.ts to src/app/allIn-original.ts on 2026-10-17,
+// 86d2b2d9 and fb499e51, identical bytes; the study's records keep the name it had).
+const renamedOriginal = 'src/app/allIn-original.ts';
 const readFrom: Record<string, () => Promise<string>> = {
   'src/app/allIn.ts': async () => createHash('sha256').update(frozenSourceText(incumbentSource)).digest('hex'),
-  'data/VGT/VGT-2016-2025-1-minute.csv': () => sha256File(dataFile)
+  'data/VGT/VGT-2016-2025-1-minute.csv': () => sha256File(dataFile),
+  'src/app/allin-original.ts': () => sha256File(renamedOriginal)
+};
+const readFromLabel: Record<string, string> = {
+  'src/app/allIn.ts': `git ${incumbentSource.revision}`,
+  'data/VGT/VGT-2016-2025-1-minute.csv': dataFile,
+  'src/app/allin-original.ts': renamedOriginal
 };
 
 // Files changed after the study (2026-10-15), with the revision holding the bytes it started with (null: never
@@ -78,7 +87,7 @@ export const verifyProtected = async () => {
       start: start.get(file) ?? '',
       now,
       unchanged: start.get(file) === now,
-      readFrom: readFrom[file] ? (file === 'src/app/allIn.ts' ? `git ${incumbentSource.revision}` : dataFile) : file
+      readFrom: readFromLabel[file] ?? file
     });
   }
 

@@ -48,12 +48,23 @@ governed work). Afterwards it is never edited; changes go to `AMENDMENTS.md` (ap
 
 ## 3. Data, doors and windows
 
-- **Canonical files:** `<path>`, sha256 `<…>`, per instrument.
-- **Common complete endpoint:** `<date>`, verified by `<how>`.
+- **Research date range** (standard 4.0.0 §1.3): `<R1>` of `config/research/date-ranges.json` (its validation end
+  `<2026-10-30>`). The windows below are fixed now, before the research; newer data never move them (§1.12).
+- **Canonical files and data provenance:** per instrument, the byte-prefix pin of every row through the validation end
+  (`npm run datasets -- prefix <SYMBOL> --through <end>`: bytes, sha256, rows, last row) and the file's vintage
+  (`config/market-data/vintages.json`); the same pins go into `STANDARD_ADOPTION.json` `dataPins`.
+- **Common complete endpoint:** `<the validation end>`, verified complete in every instrument's file by `<how>`.
 - **Windows:**
   - development 2016-01-04 → 2024-12-31;
-  - validation 2025-01-02 → `<endpoint>`;
+  - validation 2025-01-02 → `<the validation end>`;
   - earlier cutoffs `<C19/C21/C23>` with their doors (sizes, sha256, last rows).
+- **Data access:** doors are byte-prefix copies or verified byte prefixes of the canonical files (`pin`); a stage that
+  reads the canonical files through the shared loader uses `access: 'development'` / `'validation'`
+  (`src/lib/evaluation.ts`), which refuses an end after the range's and reads nothing after it. Manual evaluations of
+  later data are labelled "manual post-validation evaluation" and never enter selection, qualification or validation
+  (§1.13). Evidence categories (standard 5.0.0 §0.3, §1.16): name each result's category; prospective evidence about a
+  frozen configuration needs its own pre-registered study (scope `prospective`, §1.15), never this protocol's
+  post-validation runs.
 - **Continuity:** continuous runs, no reset at a boundary. Period P&L = the change of the marked net between boundary
   closes. Report the reset and the whole-run DD.
 - **The door log:** `results/doors.jsonl`. Validation data stay closed until `<the guard record>` is sealed and committed.

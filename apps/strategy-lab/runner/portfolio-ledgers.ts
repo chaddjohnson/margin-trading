@@ -5,6 +5,7 @@
 //   time, raw and after-cost price, principal, shares, each exit fill (time, partial/final, reason, raw price, shares,
 //   repaid principal, net), interest, costs, realized, unrealized, net, status — every funding decision (granted lots,
 //   refusals with their occupant) and every session's marked net.
+//   The risk-metrics trades table (N/original): every lot's book, entry/exit session, exit reason, principal and net.
 //   5B development ledgers (D24 door, `lots.csv` with JSON exits): every lot entered by 2024-12-31; those closed by then
 //   in full (the FULL run is causal, so its prefix is the D24 run); the one open at the D24 end on its entry and the
 //   exits it had by then.
@@ -241,9 +242,42 @@ function compareDevLedger(repoRoot: string, r: ReplayArtifacts, ref: CandidateEn
   return { ledger: ref.files.lots.path, scope: ref.scope, compared: `${rows.length} lots entered by 2024-12-31`, pass: problems.length === 0, problems };
 }
 
+/**
+ * The risk-metrics trades table (research/vg-l0-risk-metrics/results/tables/trades.csv; one row per funded lot of the
+ * FULL run of each subject): every lot of the entry's subject — book, entry and exit session, exit reason, open flag,
+ * principal and whole-lot net (to the cent).
+ */
+function compareTradesTable(repoRoot: string, entry: CandidateEntry, r: ReplayArtifacts, ref: CandidateEntry['ledgers'][number]): LedgerComparison {
+  const problems: string[] = [];
+  const rows = parseCsvRows(readFileSync(join(repoRoot, ref.files.lots.path), 'utf8')).filter((x) => x.subject === entry.engine.subject);
+  if (rows.length !== r.positions.length) problems.push(`${rows.length} archived lots, ${r.positions.length} replayed`);
+  const byLot = new Map<number, PortfolioPosition>(r.positions.map((p) => [p.lot, p]));
+  for (const a of rows) {
+    const p = byLot.get(num(a.id));
+    const at = `lot ${a.id}`;
+    if (!p) {
+      problems.push(`${at}: not replayed`);
+      continue;
+    }
+    const open = a.open === 'true';
+    if (p.book !== a.book) problems.push(`${at}: book ${a.book} ≠ ${p.book}`);
+    if (p.fills[0]!.t.slice(0, 10) !== a.entry) problems.push(`${at}: entry ${a.entry} ≠ ${p.fills[0]!.t.slice(0, 10)}`);
+    if ((p.status === 'open') !== open) problems.push(`${at}: open ${a.open} ≠ ${p.status}`);
+    if (!open && p.fills.at(-1)!.t.slice(0, 10) !== a.exit) problems.push(`${at}: exit ${a.exit} ≠ ${p.fills.at(-1)!.t.slice(0, 10)}`);
+    if (!open && p.exitReason !== a.reason) problems.push(`${at}: reason ${a.reason} ≠ ${p.exitReason}`);
+    if (!near(num(a.principal0), p.principal, 0.0051)) problems.push(`${at}: principal ${a.principal0} ≠ ${p.principal}`);
+    if (!near(num(a.net), p.net, 0.0051)) problems.push(`${at}: net ${a.net} ≠ ${p.net}`);
+  }
+  return { ledger: ref.files.lots.path, scope: ref.scope, compared: `${rows.length} lots of ${String(entry.engine.subject)} (FULL)`, pass: problems.length === 0, problems };
+}
+
 /** Every archived ledger of a catalog entry against the replay. */
 export function compareLedgers(repoRoot: string, entry: CandidateEntry, r: ReplayArtifacts): LedgerComparison[] {
   return entry.ledgers.map((ref) =>
-    ref.scope === 'full' ? compareFullLedger(repoRoot, entry, r, ref) : compareDevLedger(repoRoot, r, ref)
+    ref.scope === 'full'
+      ? compareFullLedger(repoRoot, entry, r, ref)
+      : ref.scope === 'risk-metrics trades'
+        ? compareTradesTable(repoRoot, entry, r, ref)
+        : compareDevLedger(repoRoot, r, ref)
   );
 }

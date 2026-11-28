@@ -1,0 +1,6713 @@
+{
+ "kind": "fold slices and the sequential procedures (report)",
+ "sequential": {
+  "stage": "sequential",
+  "protocol": "P6-TSLA 1.0.0",
+  "folds": [
+   {
+    "fold": "C19",
+    "slice": [
+     "2020-01-02",
+     "2021-12-31"
+    ],
+    "primaries": {
+     "D": "C19/D/refine/D.B1/R102#1 profit",
+     "D-A": "C19/D/refine/D.A0/R101#1 profit",
+     "G": "C19/G/refine/G.h1.s1/R102#1 profit",
+     "G-P": "C19/G/refine/G.h1.s1/R102#1 profit",
+     "G-U": "C19/G/refine/G.h0.s0/R103#1 profit",
+     "C": "C19/C/pair DF1×GF3",
+     "J": "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+     "J-P": "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+     "J-U": "C19/J/refine/J.D1.h0.s0/R104#1 profit",
+     "S": "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+     "S-P": "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+     "S-U": "C19/S/refine/S.C19F1.h0.s0/R104#1 profit"
+    },
+    "slice_record": {
+     "file": "research/tsla-d1-growth/results/slices/C19.json",
+     "sha256": "8ce42df6f60895cae55cbee938a16955bb5c0baca2369e1158615858d615c6d6"
+    }
+   },
+   {
+    "fold": "C21",
+    "slice": [
+     "2022-01-03",
+     "2023-12-29"
+    ],
+    "primaries": {
+     "D": "C21/D/refine/D.C1/R102#1 profit",
+     "D-A": null,
+     "G": "C21/G/refine/G.h1.s1/R101#1 profit",
+     "G-P": "C21/G/refine/G.h1.s1/R101#1 profit",
+     "G-U": "C21/G/refine/G.h0.s0/R103#1 profit",
+     "C": "C21/C/pair DF2×GF1",
+     "J": "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+     "J-P": "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+     "J-U": "C21/J/refine/J.A1.h0.s0/R102#1 profit",
+     "S": "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+     "S-P": "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+     "S-U": "C21/S/refine/S.C21F3.h0.s0/R103#1 profit"
+    },
+    "slice_record": {
+     "file": "research/tsla-d1-growth/results/slices/C21.json",
+     "sha256": "46495615f56550b2ad874cf413e320bfe6f848d6e04454d6e27aded7f3d139e7"
+    }
+   },
+   {
+    "fold": "C23",
+    "slice": [
+     "2024-01-02",
+     "2024-12-31"
+    ],
+    "primaries": {
+     "D": "C23/D/refine/D.D1/R102#1 profit",
+     "D-A": null,
+     "G": "C23/G/refine/G.h1.s1/R103#1 profit",
+     "G-P": "C23/G/refine/G.h1.s1/R103#1 profit",
+     "G-U": "C23/G/refine/G.h0.s0/R104#1 profit",
+     "C": "C23/C/pair DF3×GF2",
+     "J": "C23/J/refine/J.C1.h0.s0/R104#1 profit",
+     "J-P": "C23/J/refine/J.D1.h1.s1/R103#1 profit",
+     "J-U": "C23/J/refine/J.C1.h0.s0/R104#1 profit",
+     "S": "C23/S/refine/S.C23F3.h2.s1/R102#1 profit",
+     "S-P": "C23/S/refine/S.C23F3.h2.s1/R102#1 profit",
+     "S-U": "C23/S/broad/S.C23F1.h0.s0/R101#1 profit"
+    },
+    "slice_record": {
+     "file": "research/tsla-d1-growth/results/slices/C23.json",
+     "sha256": "c179935d0cd24eede4716261392c92209827975e64fcdf48a849ca647a2d8a1c"
+    }
+   }
+  ],
+  "switchCharge": "5 bps of $100,000 per open lot closed or adopted at a switch",
+  "drawdown": "PROTOCOL.md §11.2 (Priority 5 AD4): the strict drawdown of the chain over every exactly observed GPU mark — each slice’s minute reset drawdown, every session close, every lot’s exact minute minimum",
+  "verdictRule": "supported iff every fold produced a primary, the sequential net > 0 and the sequential drawdown ≤ $35,000",
+  "procedures": [
+   {
+    "population": "D",
+    "armName": "TSLA D1 standalone",
+    "independent": true,
+    "nominating": true,
+    "name": "D/original",
+    "labels": [
+     "C19/D/refine/D.B1/R102#1 profit",
+     "C21/D/refine/D.C1/R102#1 profit",
+     "C23/D/refine/D.D1/R102#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/D/refine/D.B1/R102#1 profit",
+      "id": "rc1-c48f84ef220a4485",
+      "sliceNet": 20367.65,
+      "sliceDd": 40169.52,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -17264.03,
+      "crossTerm": 17264.03
+     },
+     {
+      "fold": "C21",
+      "label": "C21/D/refine/D.C1/R102#1 profit",
+      "id": "rc2-7ee4e6b09918dcf7",
+      "sliceNet": -7376.11,
+      "sliceDd": 13332.15,
+      "charge": 0,
+      "offset": 20367.65,
+      "priorPeak": 34036.19,
+      "minimum": -11637.13009650528,
+      "crossTerm": 25305.67009650528
+     },
+     {
+      "fold": "C23",
+      "label": "C23/D/refine/D.D1/R102#1 profit",
+      "id": "rc1-29a715db6992edd0",
+      "sliceNet": 12230.57,
+      "sliceDd": 11051.05,
+      "charge": 50,
+      "offset": 12941.54,
+      "priorPeak": 34036.19,
+      "minimum": -4399.330805396952,
+      "crossTerm": 25493.980805396954
+     }
+    ],
+    "charges": 50,
+    "net": 25172.11,
+    "drawdown": 40169.52,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "population": "G",
+    "armName": "TSLA Growth standalone",
+    "independent": true,
+    "nominating": true,
+    "name": "G/original",
+    "labels": [
+     "C19/G/refine/G.h1.s1/R102#1 profit",
+     "C21/G/refine/G.h1.s1/R101#1 profit",
+     "C23/G/refine/G.h1.s1/R103#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/G/refine/G.h1.s1/R102#1 profit",
+      "id": "8cc79d60076876d2",
+      "sliceNet": 30545.62,
+      "sliceDd": 21991.12,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 4862.9499999999825,
+      "crossTerm": -4862.9499999999825
+     },
+     {
+      "fold": "C21",
+      "label": "C21/G/refine/G.h1.s1/R101#1 profit",
+      "id": "10c86c062f1761e4",
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 30545.62,
+      "priorPeak": 48929.95999999999,
+      "minimum": 0,
+      "crossTerm": 18384.339999999993
+     },
+     {
+      "fold": "C23",
+      "label": "C23/G/refine/G.h1.s1/R103#1 profit",
+      "id": "cd47864692b053b5",
+      "sliceNet": 12401,
+      "sliceDd": 26796.01,
+      "charge": 0,
+      "offset": 30545.62,
+      "priorPeak": 48929.95999999999,
+      "minimum": -17694.581775038736,
+      "crossTerm": 36078.92177503873
+     }
+    ],
+    "charges": 0,
+    "net": 42946.619999999995,
+    "drawdown": 36078.92177503873,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "population": "C",
+    "armName": "Fixed D1 + Growth combination (standalone selections, no re-optimization)",
+    "independent": true,
+    "nominating": true,
+    "name": "C/original",
+    "labels": [
+     "C19/C/pair DF1×GF3",
+     "C21/C/pair DF2×GF1",
+     "C23/C/pair DF3×GF2"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/C/pair DF1×GF3",
+      "id": "rc1-4eba7d798e64cc7f",
+      "sliceNet": 45465.34,
+      "sliceDd": 34557.74,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -17174.75256776513,
+      "crossTerm": 17174.75256776513
+     },
+     {
+      "fold": "C21",
+      "label": "C21/C/pair DF2×GF1",
+      "id": "rc2-fd6887b42e2964bf",
+      "sliceNet": -11309.11,
+      "sliceDd": 17560.76,
+      "charge": 0,
+      "offset": 45465.34,
+      "priorPeak": 57780.19,
+      "minimum": -11309.103130939358,
+      "crossTerm": 23623.953130939364
+     },
+     {
+      "fold": "C23",
+      "label": "C23/C/pair DF3×GF2",
+      "id": "rc1-79e6ab0860a89791",
+      "sliceNet": -7567.47,
+      "sliceDd": 37608.46,
+      "charge": 0,
+      "offset": 34156.229999999996,
+      "priorPeak": 57780.19,
+      "minimum": -37468.47389823111,
+      "crossTerm": 61092.43389823112
+     }
+    ],
+    "charges": 0,
+    "net": 26588.759999999995,
+    "drawdown": 61092.43389823112,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "population": "J",
+    "armName": "Fully joint D1 + Growth",
+    "independent": true,
+    "nominating": true,
+    "name": "J/original",
+    "labels": [
+     "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+     "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+     "C23/J/refine/J.C1.h0.s0/R104#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+      "id": "rc1-eb97d59c6787a18f",
+      "sliceNet": 82512.44,
+      "sliceDd": 67635.07,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -3877.211960202141,
+      "crossTerm": 3877.211960202141
+     },
+     {
+      "fold": "C21",
+      "label": "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+      "id": "rc2-f6ba6fe854bcdb97",
+      "sliceNet": -16451.5,
+      "sliceDd": 30241.96,
+      "charge": 0,
+      "offset": 82512.44,
+      "priorPeak": 90113.44000000003,
+      "minimum": -28338.212537032086,
+      "crossTerm": 35939.212537032116
+     },
+     {
+      "fold": "C23",
+      "label": "C23/J/refine/J.C1.h0.s0/R104#1 profit",
+      "id": "rc1-24d62add80f9dc4a",
+      "sliceNet": 33520.01,
+      "sliceDd": 17490.37,
+      "charge": 0,
+      "offset": 66060.94,
+      "priorPeak": 90113.44000000003,
+      "minimum": -541.2164420895278,
+      "crossTerm": 24593.716442089557
+     }
+    ],
+    "charges": 0,
+    "net": 99580.95000000001,
+    "drawdown": 67635.07,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "population": "S",
+    "armName": "D1-first sequential (frozen D1 finalists + Growth searched in the shared slot)",
+    "independent": true,
+    "nominating": true,
+    "name": "S/original",
+    "labels": [
+     "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+     "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+     "C23/S/refine/S.C23F3.h2.s1/R102#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+      "id": "rc1-64b48f95d650a901",
+      "sliceNet": 92526.53,
+      "sliceDd": 43801.26,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -20895.78307475819,
+      "crossTerm": 20895.78307475819
+     },
+     {
+      "fold": "C21",
+      "label": "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+      "id": "rc1-327437fd024d5a7b",
+      "sliceNet": -25875.82,
+      "sliceDd": 64512.19,
+      "charge": 0,
+      "offset": 92526.53,
+      "priorPeak": 104313.59999999998,
+      "minimum": -39573.569253881346,
+      "crossTerm": 51360.63925388132
+     },
+     {
+      "fold": "C23",
+      "label": "C23/S/refine/S.C23F3.h2.s1/R102#1 profit",
+      "id": "rc1-688cc31f46d45fd1",
+      "sliceNet": 17654.11,
+      "sliceDd": 32166.39,
+      "charge": 0,
+      "offset": 66650.70999999999,
+      "priorPeak": 117170.85000000006,
+      "minimum": -32026.404059141292,
+      "crossTerm": 82546.54405914136
+     }
+    ],
+    "charges": 0,
+    "net": 84304.81999999999,
+    "drawdown": 82546.54405914136,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   }
+  ],
+  "secondary": [
+   {
+    "population": "D-A",
+    "independent": true,
+    "nominating": false,
+    "name": "D-A/original (report-only)",
+    "labels": [
+     "C19/D/refine/D.A0/R101#1 profit",
+     null,
+     null
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/D/refine/D.A0/R101#1 profit",
+      "id": "4cb34bd5200a272a",
+      "sliceNet": 228851.8,
+      "sliceDd": 99711.54,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 5195.819999999978,
+      "crossTerm": -5195.819999999978
+     },
+     {
+      "fold": "C21",
+      "label": null,
+      "id": null,
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 228851.8,
+      "priorPeak": 249107.04,
+      "minimum": 0,
+      "crossTerm": 20255.24000000002
+     },
+     {
+      "fold": "C23",
+      "label": null,
+      "id": null,
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 228851.8,
+      "priorPeak": 249107.04,
+      "minimum": 0,
+      "crossTerm": 20255.24000000002
+     }
+    ],
+    "charges": 0,
+    "net": 228851.8,
+    "drawdown": 99711.54,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "chronologically incomplete: C21, C23 had no qualified candidate (flat) — no chronological support",
+    "supported": false
+   },
+   {
+    "population": "G-P",
+    "independent": true,
+    "nominating": false,
+    "name": "G-P/original (report-only)",
+    "labels": [
+     "C19/G/refine/G.h1.s1/R102#1 profit",
+     "C21/G/refine/G.h1.s1/R101#1 profit",
+     "C23/G/refine/G.h1.s1/R103#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/G/refine/G.h1.s1/R102#1 profit",
+      "id": "8cc79d60076876d2",
+      "sliceNet": 30545.62,
+      "sliceDd": 21991.12,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 4862.9499999999825,
+      "crossTerm": -4862.9499999999825
+     },
+     {
+      "fold": "C21",
+      "label": "C21/G/refine/G.h1.s1/R101#1 profit",
+      "id": "10c86c062f1761e4",
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 30545.62,
+      "priorPeak": 48929.95999999999,
+      "minimum": 0,
+      "crossTerm": 18384.339999999993
+     },
+     {
+      "fold": "C23",
+      "label": "C23/G/refine/G.h1.s1/R103#1 profit",
+      "id": "cd47864692b053b5",
+      "sliceNet": 12401,
+      "sliceDd": 26796.01,
+      "charge": 0,
+      "offset": 30545.62,
+      "priorPeak": 48929.95999999999,
+      "minimum": -17694.581775038736,
+      "crossTerm": 36078.92177503873
+     }
+    ],
+    "charges": 0,
+    "net": 42946.619999999995,
+    "drawdown": 36078.92177503873,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "population": "G-U",
+    "independent": true,
+    "nominating": false,
+    "name": "G-U/original (report-only)",
+    "labels": [
+     "C19/G/refine/G.h0.s0/R103#1 profit",
+     "C21/G/refine/G.h0.s0/R103#1 profit",
+     "C23/G/refine/G.h0.s0/R104#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/G/refine/G.h0.s0/R103#1 profit",
+      "id": "3b187af8d123ffac",
+      "sliceNet": 286734.58,
+      "sliceDd": 111943.83,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 4565.570000000007,
+      "crossTerm": -4565.570000000007
+     },
+     {
+      "fold": "C21",
+      "label": "C21/G/refine/G.h0.s0/R103#1 profit",
+      "id": "c0d6c4de59f8ff3c",
+      "sliceNet": -15484,
+      "sliceDd": 41076.89,
+      "charge": 50,
+      "offset": 286684.58,
+      "priorPeak": 308407.78,
+      "minimum": -33313.34255705541,
+      "crossTerm": 55036.54255705542
+     },
+     {
+      "fold": "C23",
+      "label": "C23/G/refine/G.h0.s0/R104#1 profit",
+      "id": "852ec3e2237e054d",
+      "sliceNet": 29168.94,
+      "sliceDd": 12594.57,
+      "charge": 50,
+      "offset": 271150.58,
+      "priorPeak": 308407.78,
+      "minimum": -984.1826845920878,
+      "crossTerm": 38241.3826845921
+     }
+    ],
+    "charges": 100,
+    "net": 300319.52,
+    "drawdown": 111943.83,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "population": "J-P",
+    "independent": true,
+    "nominating": false,
+    "name": "J-P/original (report-only)",
+    "labels": [
+     "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+     "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+     "C23/J/refine/J.D1.h1.s1/R103#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+      "id": "rc1-eb97d59c6787a18f",
+      "sliceNet": 82512.44,
+      "sliceDd": 67635.07,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -3877.211960202141,
+      "crossTerm": 3877.211960202141
+     },
+     {
+      "fold": "C21",
+      "label": "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+      "id": "rc2-f6ba6fe854bcdb97",
+      "sliceNet": -16451.5,
+      "sliceDd": 30241.96,
+      "charge": 0,
+      "offset": 82512.44,
+      "priorPeak": 90113.44000000003,
+      "minimum": -28338.212537032086,
+      "crossTerm": 35939.212537032116
+     },
+     {
+      "fold": "C23",
+      "label": "C23/J/refine/J.D1.h1.s1/R103#1 profit",
+      "id": "rc2-e36a7bdbd401440b",
+      "sliceNet": 13698.86,
+      "sliceDd": 19899.96,
+      "charge": 0,
+      "offset": 66060.94,
+      "priorPeak": 90113.44000000003,
+      "minimum": -18540.431079717935,
+      "crossTerm": 42592.931079717964
+     }
+    ],
+    "charges": 0,
+    "net": 79759.8,
+    "drawdown": 67635.07,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "population": "J-U",
+    "independent": true,
+    "nominating": false,
+    "name": "J-U/original (report-only)",
+    "labels": [
+     "C19/J/refine/J.D1.h0.s0/R104#1 profit",
+     "C21/J/refine/J.A1.h0.s0/R102#1 profit",
+     "C23/J/refine/J.C1.h0.s0/R104#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/J/refine/J.D1.h0.s0/R104#1 profit",
+      "id": "rc2-06162f6a2c9a0479",
+      "sliceNet": 348674.24,
+      "sliceDd": 105478.54,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 3943.5,
+      "crossTerm": -3943.5
+     },
+     {
+      "fold": "C21",
+      "label": "C21/J/refine/J.A1.h0.s0/R102#1 profit",
+      "id": "rc1-c1d6498862770863",
+      "sliceNet": 4840.51,
+      "sliceDd": 45296.29,
+      "charge": 50,
+      "offset": 348624.24,
+      "priorPeak": 356378.18000000005,
+      "minimum": -20748.672432363324,
+      "crossTerm": 28502.612432363385
+     },
+     {
+      "fold": "C23",
+      "label": "C23/J/refine/J.C1.h0.s0/R104#1 profit",
+      "id": "rc1-24d62add80f9dc4a",
+      "sliceNet": 33520.01,
+      "sliceDd": 17490.37,
+      "charge": 50,
+      "offset": 353414.75,
+      "priorPeak": 378471.13999999996,
+      "minimum": -541.2164420895278,
+      "crossTerm": 25597.606442089484
+     }
+    ],
+    "charges": 100,
+    "net": 386934.76,
+    "drawdown": 105478.54,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "population": "S-P",
+    "independent": true,
+    "nominating": false,
+    "name": "S-P/original (report-only)",
+    "labels": [
+     "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+     "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+     "C23/S/refine/S.C23F3.h2.s1/R102#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+      "id": "rc1-64b48f95d650a901",
+      "sliceNet": 92526.53,
+      "sliceDd": 43801.26,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -20895.78307475819,
+      "crossTerm": 20895.78307475819
+     },
+     {
+      "fold": "C21",
+      "label": "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+      "id": "rc1-327437fd024d5a7b",
+      "sliceNet": -25875.82,
+      "sliceDd": 64512.19,
+      "charge": 0,
+      "offset": 92526.53,
+      "priorPeak": 104313.59999999998,
+      "minimum": -39573.569253881346,
+      "crossTerm": 51360.63925388132
+     },
+     {
+      "fold": "C23",
+      "label": "C23/S/refine/S.C23F3.h2.s1/R102#1 profit",
+      "id": "rc1-688cc31f46d45fd1",
+      "sliceNet": 17654.11,
+      "sliceDd": 32166.39,
+      "charge": 0,
+      "offset": 66650.70999999999,
+      "priorPeak": 117170.85000000006,
+      "minimum": -32026.404059141292,
+      "crossTerm": 82546.54405914136
+     }
+    ],
+    "charges": 0,
+    "net": 84304.81999999999,
+    "drawdown": 82546.54405914136,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "population": "S-U",
+    "independent": true,
+    "nominating": false,
+    "name": "S-U/original (report-only)",
+    "labels": [
+     "C19/S/refine/S.C19F1.h0.s0/R104#1 profit",
+     "C21/S/refine/S.C21F3.h0.s0/R103#1 profit",
+     "C23/S/broad/S.C23F1.h0.s0/R101#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/S/refine/S.C19F1.h0.s0/R104#1 profit",
+      "id": "rc1-16fc61810646993a",
+      "sliceNet": 197940.45,
+      "sliceDd": 50136.7,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 3524.600000000035,
+      "crossTerm": -3524.600000000035
+     },
+     {
+      "fold": "C21",
+      "label": "C21/S/refine/S.C21F3.h0.s0/R103#1 profit",
+      "id": "rc1-b8ab0aa15c26085c",
+      "sliceNet": -43190.68,
+      "sliceDd": 85702.63,
+      "charge": 0,
+      "offset": 197940.45,
+      "priorPeak": 208270.17000000004,
+      "minimum": -60764.011902809085,
+      "crossTerm": 71093.73190280912
+     },
+     {
+      "fold": "C23",
+      "label": "C23/S/broad/S.C23F1.h0.s0/R101#1 profit",
+      "id": "rc1-cb569727bdfc0af7",
+      "sliceNet": 29072.47,
+      "sliceDd": 12740.1,
+      "charge": 100,
+      "offset": 154649.77000000002,
+      "priorPeak": 222584.76999999996,
+      "minimum": -4399.330000000016,
+      "crossTerm": 72334.32999999996
+     }
+    ],
+    "charges": 100,
+    "net": 183722.24000000002,
+    "drawdown": 85702.63,
+    "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   }
+  ],
+  "descriptive": [
+   {
+    "name": "D: role robust-profit (descriptive)",
+    "labels": [
+     "C19/D/refine/D.B1/R103#2 robust",
+     "C21/D/refine/D.C1/R102#2 robust",
+     "C23/D/refine/D.A1/R104#2 robust"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/D/refine/D.B1/R103#2 robust",
+      "id": "rc1-2a7762305ee26c56",
+      "sliceNet": 4464.32,
+      "sliceDd": 41756.92,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -19616.441684695223,
+      "crossTerm": 19616.441684695223
+     },
+     {
+      "fold": "C21",
+      "label": "C21/D/refine/D.C1/R102#2 robust",
+      "id": "rc2-ff3e79a873680a67",
+      "sliceNet": -11309.11,
+      "sliceDd": 17560.76,
+      "charge": 0,
+      "offset": 4464.32,
+      "priorPeak": 19640.459999999992,
+      "minimum": -11309.110000000015,
+      "crossTerm": 26485.250000000007
+     },
+     {
+      "fold": "C23",
+      "label": "C23/D/refine/D.A1/R104#2 robust",
+      "id": "rc1-927e48c18d848911",
+      "sliceNet": 582.1,
+      "sliceDd": 20051.68,
+      "charge": 0,
+      "offset": -6844.790000000001,
+      "priorPeak": 19640.459999999992,
+      "minimum": -19022.581358317286,
+      "crossTerm": 45507.83135831728
+     }
+    ],
+    "charges": 0,
+    "net": -6262.6900000000005,
+    "drawdown": 45507.83135831728,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "D: role balanced (descriptive)",
+    "labels": [
+     "C19/D/refine/D.B1/R103#2 robust",
+     "C21/D/refine/D.D1/R103#3 balanced",
+     "C23/D/refine/D.B1/R101#2 robust"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/D/refine/D.B1/R103#2 robust",
+      "id": "rc1-2a7762305ee26c56",
+      "sliceNet": 4464.32,
+      "sliceDd": 41756.92,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -19616.441684695223,
+      "crossTerm": 19616.441684695223
+     },
+     {
+      "fold": "C21",
+      "label": "C21/D/refine/D.D1/R103#3 balanced",
+      "id": "rc1-d5f405c00827592c",
+      "sliceNet": -37395.45,
+      "sliceDd": 71522.89,
+      "charge": 0,
+      "offset": 4464.32,
+      "priorPeak": 19640.459999999992,
+      "minimum": -46584.27305983048,
+      "crossTerm": 61760.41305983047
+     },
+     {
+      "fold": "C23",
+      "label": "C23/D/refine/D.B1/R101#2 robust",
+      "id": "rc1-9130f0dd22af1841",
+      "sliceNet": -15304.65,
+      "sliceDd": 15444.64,
+      "charge": 0,
+      "offset": -32931.13,
+      "priorPeak": 29108.640000000007,
+      "minimum": -15304.650356770624,
+      "crossTerm": 77344.42035677063
+     }
+    ],
+    "charges": 0,
+    "net": -48235.78,
+    "drawdown": 77344.42035677063,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "D: role lower-drawdown (descriptive)",
+    "labels": [
+     "C19/D/refine/D.B1/R103#5 profit order",
+     "C21/D/refine/D.B1/R103#6 profit order",
+     "C23/D/refine/D.B1/R102#6 profit order"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/D/refine/D.B1/R103#5 profit order",
+      "id": "rc2-242ebabb0b2a59aa",
+      "sliceNet": 8017.35,
+      "sliceDd": 55857.45,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -31679.101679863874,
+      "crossTerm": 31679.101679863874
+     },
+     {
+      "fold": "C21",
+      "label": "C21/D/refine/D.B1/R103#6 profit order",
+      "id": "rc2-9c36df363e85ce38",
+      "sliceNet": -5561.46,
+      "sliceDd": 15710.22,
+      "charge": 0,
+      "offset": 8017.35,
+      "priorPeak": 21937.160000000003,
+      "minimum": -7844.108708638523,
+      "crossTerm": 21763.91870863853
+     },
+     {
+      "fold": "C23",
+      "label": "C23/D/refine/D.B1/R102#6 profit order",
+      "id": "rc2-14202dc9e14b2cd2",
+      "sliceNet": 410.3,
+      "sliceDd": 6531.28,
+      "charge": 0,
+      "offset": 2455.8900000000003,
+      "priorPeak": 21937.160000000003,
+      "minimum": -2065.4018566022787,
+      "crossTerm": 21546.671856602283
+     }
+    ],
+    "charges": 0,
+    "net": 2866.1900000000005,
+    "drawdown": 55857.45,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "G: role robust-profit (descriptive)",
+    "labels": [
+     "C19/G/refine/G.h0.s1/R103#2 robust",
+     "C21/G/refine/G.h0.s0/R104#2 robust",
+     "C23/G/refine/G.h0.s1/R102#2 robust"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/G/refine/G.h0.s1/R103#2 robust",
+      "id": "1bb5d5ef887dffe9",
+      "sliceNet": 299793.27,
+      "sliceDd": 65651.62,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 4565.570000000007,
+      "crossTerm": -4565.570000000007
+     },
+     {
+      "fold": "C21",
+      "label": "C21/G/refine/G.h0.s0/R104#2 robust",
+      "id": "5e9538630bcccbfc",
+      "sliceNet": 3608.41,
+      "sliceDd": 13893.63,
+      "charge": 0,
+      "offset": 299793.27,
+      "priorPeak": 323160.01,
+      "minimum": -7779.227156963607,
+      "crossTerm": 31145.967156963598
+     },
+     {
+      "fold": "C23",
+      "label": "C23/G/refine/G.h0.s1/R102#2 robust",
+      "id": "6dccbf02f8a607e3",
+      "sliceNet": 7737.19,
+      "sliceDd": 30235.37,
+      "charge": 0,
+      "offset": 303401.68,
+      "priorPeak": 323160.01,
+      "minimum": -22163.823139932007,
+      "crossTerm": 41922.15313993202
+     }
+    ],
+    "charges": 0,
+    "net": 311138.87,
+    "drawdown": 65651.62,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "G: role balanced (descriptive)",
+    "labels": [
+     "C19/G/refine/G.h1.s1/R104#3 balanced",
+     "C21/G/refine/G.h0.s0/R103#3 balanced",
+     "C23/G/refine/G.h0.s1/R102#2 robust"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/G/refine/G.h1.s1/R104#3 balanced",
+      "id": "7993c99e5837ccd1",
+      "sliceNet": 39492.02,
+      "sliceDd": 17275.29,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -1234.5944229747183,
+      "crossTerm": 1234.5944229747183
+     },
+     {
+      "fold": "C21",
+      "label": "C21/G/refine/G.h0.s0/R103#3 balanced",
+      "id": "112deec1a052e470",
+      "sliceNet": 3493.49,
+      "sliceDd": 13893.63,
+      "charge": 0,
+      "offset": 39492.02,
+      "priorPeak": 45720.840000000004,
+      "minimum": -7779.228608158941,
+      "crossTerm": 14008.048608158948
+     },
+     {
+      "fold": "C23",
+      "label": "C23/G/refine/G.h0.s1/R102#2 robust",
+      "id": "6dccbf02f8a607e3",
+      "sliceNet": 7737.19,
+      "sliceDd": 30235.37,
+      "charge": 0,
+      "offset": 42985.509999999995,
+      "priorPeak": 51160.36999999997,
+      "minimum": -22163.823139932007,
+      "crossTerm": 30338.683139931985
+     }
+    ],
+    "charges": 0,
+    "net": 50722.7,
+    "drawdown": 30338.683139931985,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": true,
+    "verdict": "supported (every fold produced a primary; sequential net > 0 and sequential drawdown ≤ $35,000)",
+    "supported": true
+   },
+   {
+    "name": "G: role lower-drawdown (descriptive)",
+    "labels": [
+     "C19/G/refine/G.h1.s1/R104#3 balanced",
+     "C21/G/refine/G.h1.s1/R102#5 profit order",
+     "C23/G/refine/G.h0.s0/R102#3 profit order"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/G/refine/G.h1.s1/R104#3 balanced",
+      "id": "7993c99e5837ccd1",
+      "sliceNet": 39492.02,
+      "sliceDd": 17275.29,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -1234.5944229747183,
+      "crossTerm": 1234.5944229747183
+     },
+     {
+      "fold": "C21",
+      "label": "C21/G/refine/G.h1.s1/R102#5 profit order",
+      "id": "91fef25ac2651f1a",
+      "sliceNet": -10365.86,
+      "sliceDd": 10909.85,
+      "charge": 0,
+      "offset": 39492.02,
+      "priorPeak": 45720.840000000004,
+      "minimum": -10365.859999999986,
+      "crossTerm": 16594.679999999993
+     },
+     {
+      "fold": "C23",
+      "label": "C23/G/refine/G.h0.s0/R102#3 profit order",
+      "id": "e4a38d7c33dc2e7a",
+      "sliceNet": 41309.43,
+      "sliceDd": 7424.92,
+      "charge": 0,
+      "offset": 29126.159999999996,
+      "priorPeak": 45720.840000000004,
+      "minimum": -163.70799283290398,
+      "crossTerm": 16758.38799283291
+     }
+    ],
+    "charges": 0,
+    "net": 70435.59,
+    "drawdown": 17275.29,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": true,
+    "verdict": "supported (every fold produced a primary; sequential net > 0 and sequential drawdown ≤ $35,000)",
+    "supported": true
+   },
+   {
+    "name": "C: role robust-profit (descriptive)",
+    "labels": [
+     "C19/C/pair DF2×GF3",
+     "C21/C/pair DF2×GF3",
+     "C23/C/pair DF3×GF2"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/C/pair DF2×GF3",
+      "id": "rc1-cf2b42f1179727b1",
+      "sliceNet": 36521.12,
+      "sliceDd": 37411.03,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -20028.044597112836,
+      "crossTerm": 20028.044597112836
+     },
+     {
+      "fold": "C21",
+      "label": "C21/C/pair DF2×GF3",
+      "id": "rc2-5c99a5f0b238cc7e",
+      "sliceNet": -7815.61,
+      "sliceDd": 20222.72,
+      "charge": 0,
+      "offset": 36521.12,
+      "priorPeak": 50343.56999999998,
+      "minimum": -13971.070258097025,
+      "crossTerm": 27793.520258097
+     },
+     {
+      "fold": "C23",
+      "label": "C23/C/pair DF3×GF2",
+      "id": "rc1-79e6ab0860a89791",
+      "sliceNet": -7567.47,
+      "sliceDd": 37608.46,
+      "charge": 0,
+      "offset": 28705.510000000002,
+      "priorPeak": 50343.56999999998,
+      "minimum": -37468.47389823111,
+      "crossTerm": 59106.533898231086
+     }
+    ],
+    "charges": 0,
+    "net": 21138.04,
+    "drawdown": 59106.533898231086,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "C: role balanced (descriptive)",
+    "labels": [
+     "C19/C/pair DF2×GF3",
+     "C21/C/pair DF2×GF3",
+     "C23/C/pair DF3×GF2"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/C/pair DF2×GF3",
+      "id": "rc1-cf2b42f1179727b1",
+      "sliceNet": 36521.12,
+      "sliceDd": 37411.03,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -20028.044597112836,
+      "crossTerm": 20028.044597112836
+     },
+     {
+      "fold": "C21",
+      "label": "C21/C/pair DF2×GF3",
+      "id": "rc2-5c99a5f0b238cc7e",
+      "sliceNet": -7815.61,
+      "sliceDd": 20222.72,
+      "charge": 0,
+      "offset": 36521.12,
+      "priorPeak": 50343.56999999998,
+      "minimum": -13971.070258097025,
+      "crossTerm": 27793.520258097
+     },
+     {
+      "fold": "C23",
+      "label": "C23/C/pair DF3×GF2",
+      "id": "rc1-79e6ab0860a89791",
+      "sliceNet": -7567.47,
+      "sliceDd": 37608.46,
+      "charge": 0,
+      "offset": 28705.510000000002,
+      "priorPeak": 50343.56999999998,
+      "minimum": -37468.47389823111,
+      "crossTerm": 59106.533898231086
+     }
+    ],
+    "charges": 0,
+    "net": 21138.04,
+    "drawdown": 59106.533898231086,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "C: role lower-drawdown (descriptive)",
+    "labels": [
+     "C19/C/pair DF2×GF3",
+     "C21/C/pair DF2×GF3",
+     "C23/C/pair DF3×GF2"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/C/pair DF2×GF3",
+      "id": "rc1-cf2b42f1179727b1",
+      "sliceNet": 36521.12,
+      "sliceDd": 37411.03,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -20028.044597112836,
+      "crossTerm": 20028.044597112836
+     },
+     {
+      "fold": "C21",
+      "label": "C21/C/pair DF2×GF3",
+      "id": "rc2-5c99a5f0b238cc7e",
+      "sliceNet": -7815.61,
+      "sliceDd": 20222.72,
+      "charge": 0,
+      "offset": 36521.12,
+      "priorPeak": 50343.56999999998,
+      "minimum": -13971.070258097025,
+      "crossTerm": 27793.520258097
+     },
+     {
+      "fold": "C23",
+      "label": "C23/C/pair DF3×GF2",
+      "id": "rc1-79e6ab0860a89791",
+      "sliceNet": -7567.47,
+      "sliceDd": 37608.46,
+      "charge": 0,
+      "offset": 28705.510000000002,
+      "priorPeak": 50343.56999999998,
+      "minimum": -37468.47389823111,
+      "crossTerm": 59106.533898231086
+     }
+    ],
+    "charges": 0,
+    "net": 21138.04,
+    "drawdown": 59106.533898231086,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "J: role robust-profit (descriptive)",
+    "labels": [
+     "C19/J/refine/J.D0.h0.s1/R101#2 robust",
+     "C21/J/refine/J.D1.h2.s1/R101#1 profit",
+     "C23/J/refine/J.D1.h1.s1/R103#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/J/refine/J.D0.h0.s1/R101#2 robust",
+      "id": "rc1-803542bf62eb94e0",
+      "sliceNet": 267851.31,
+      "sliceDd": 84910.04,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 3943.5,
+      "crossTerm": -3943.5
+     },
+     {
+      "fold": "C21",
+      "label": "C21/J/refine/J.D1.h2.s1/R101#1 profit",
+      "id": "rc2-58f2f7df0fec96f7",
+      "sliceNet": -8362.9,
+      "sliceDd": 53481.46,
+      "charge": 0,
+      "offset": 267851.31,
+      "priorPeak": 290444.97,
+      "minimum": -38279.989513828885,
+      "crossTerm": 60873.64951382886
+     },
+     {
+      "fold": "C23",
+      "label": "C23/J/refine/J.D1.h1.s1/R103#1 profit",
+      "id": "rc2-e36a7bdbd401440b",
+      "sliceNet": 13698.86,
+      "sliceDd": 19899.96,
+      "charge": 0,
+      "offset": 259488.41,
+      "priorPeak": 290444.97,
+      "minimum": -18540.431079717935,
+      "crossTerm": 49496.9910797179
+     }
+    ],
+    "charges": 0,
+    "net": 273187.27,
+    "drawdown": 84910.04,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "J: role balanced (descriptive)",
+    "labels": [
+     "C19/J/refine/J.D1.h1.s0/R102#3 balanced",
+     "C21/J/refine/J.D1.h2.s1/R101#1 profit",
+     "C23/J/refine/J.A1.h0.s1/R104#1 profit"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/J/refine/J.D1.h1.s0/R102#3 balanced",
+      "id": "rc1-ef8631ce836cb4d5",
+      "sliceNet": 100136.5,
+      "sliceDd": 62614.11,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -8518.815254339366,
+      "crossTerm": 8518.815254339366
+     },
+     {
+      "fold": "C21",
+      "label": "C21/J/refine/J.D1.h2.s1/R101#1 profit",
+      "id": "rc2-58f2f7df0fec96f7",
+      "sliceNet": -8362.9,
+      "sliceDd": 53481.46,
+      "charge": 0,
+      "offset": 100136.5,
+      "priorPeak": 112514.9,
+      "minimum": -38279.989513828885,
+      "crossTerm": 50658.38951382888
+     },
+     {
+      "fold": "C23",
+      "label": "C23/J/refine/J.A1.h0.s1/R104#1 profit",
+      "id": "rc1-35acae9673ff65d3",
+      "sliceNet": 23052.47,
+      "sliceDd": 20350.86,
+      "charge": 0,
+      "offset": 91773.6,
+      "priorPeak": 115045.64000000001,
+      "minimum": -18215.378370946157,
+      "crossTerm": 41487.418370946165
+     }
+    ],
+    "charges": 0,
+    "net": 114826.07,
+    "drawdown": 62614.11,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "J: role lower-drawdown (descriptive)",
+    "labels": [
+     "C19/J/refine/J.C0.h0.s1/R104#3 balanced",
+     "C21/J/refine/J.B1.h0.s0/R104#4 Growth gate alternative",
+     "C23/J/refine/J.D1.h0.s1/R104#4 Growth gate alternative"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/J/refine/J.C0.h0.s1/R104#3 balanced",
+      "id": "rc1-a6974250fd927dea",
+      "sliceNet": 100193.76,
+      "sliceDd": 77937.34,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -30951.999768050067,
+      "crossTerm": 30951.999768050067
+     },
+     {
+      "fold": "C21",
+      "label": "C21/J/refine/J.B1.h0.s0/R104#4 Growth gate alternative",
+      "id": "rc2-0d30ad0506d38a1f",
+      "sliceNet": -3695.38,
+      "sliceDd": 15184,
+      "charge": 0,
+      "offset": 100193.76,
+      "priorPeak": 110275.72,
+      "minimum": -8394.79082619358,
+      "crossTerm": 18476.750826193587
+     },
+     {
+      "fold": "C23",
+      "label": "C23/J/refine/J.D1.h0.s1/R104#4 Growth gate alternative",
+      "id": "rc1-54d10ca86ab61874",
+      "sliceNet": 7882.69,
+      "sliceDd": 6004.22,
+      "charge": 0,
+      "offset": 96498.37999999999,
+      "priorPeak": 110275.72,
+      "minimum": -2350.9245365361276,
+      "crossTerm": 16128.264536536139
+     }
+    ],
+    "charges": 0,
+    "net": 104381.06999999999,
+    "drawdown": 77937.34,
+    "drawdownAt": "C19 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "S: role robust-profit (descriptive)",
+    "labels": [
+     "C19/S/refine/S.C19F2.h2.s0/R103#2 robust",
+     "C21/S/refine/S.C21F3.h2.s1/R101#2 robust",
+     "C23/S/refine/S.C23F3.h0.s1/R102#2 robust"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/S/refine/S.C19F2.h2.s0/R103#2 robust",
+      "id": "rc1-212bd3a5b7c8ceea",
+      "sliceNet": 151236.59,
+      "sliceDd": 68574.85,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 1762.3099999999977,
+      "crossTerm": -1762.3099999999977
+     },
+     {
+      "fold": "C21",
+      "label": "C21/S/refine/S.C21F3.h2.s1/R101#2 robust",
+      "id": "rc1-71f65db9824b743b",
+      "sliceNet": -44913.61,
+      "sliceDd": 79041.06,
+      "charge": 50,
+      "offset": 151186.59,
+      "priorPeak": 162917.18000000002,
+      "minimum": -54102.43572909903,
+      "crossTerm": 65833.02572909906
+     },
+     {
+      "fold": "C23",
+      "label": "C23/S/refine/S.C23F3.h0.s1/R102#2 robust",
+      "id": "rc1-120d950b014a9638",
+      "sliceNet": 12523.09,
+      "sliceDd": 28872.72,
+      "charge": 0,
+      "offset": 106272.98,
+      "priorPeak": 175830.91000000006,
+      "minimum": -28732.737062708708,
+      "crossTerm": 98290.66706270877
+     }
+    ],
+    "charges": 50,
+    "net": 118796.06999999999,
+    "drawdown": 98290.66706270877,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "S: role balanced (descriptive)",
+    "labels": [
+     "C19/S/refine/S.C19F2.h2.s1/R103#2 robust",
+     "C21/S/refine/S.C21F3.h2.s1/R102#3 balanced",
+     "C23/S/refine/S.C23F3.h0.s1/R102#2 robust"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/S/refine/S.C19F2.h2.s1/R103#2 robust",
+      "id": "rc1-1a86b71d423bfb1e",
+      "sliceNet": 109787.98,
+      "sliceDd": 56136.13,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 1480.3400000000256,
+      "crossTerm": -1480.3400000000256
+     },
+     {
+      "fold": "C21",
+      "label": "C21/S/refine/S.C21F3.h2.s1/R102#3 balanced",
+      "id": "rc1-701a4e09c906199c",
+      "sliceNet": -25831.81,
+      "sliceDd": 62284.39,
+      "charge": 0,
+      "offset": 109787.98,
+      "priorPeak": 122936.48000000004,
+      "minimum": -37345.77000000002,
+      "crossTerm": 50494.27000000006
+     },
+     {
+      "fold": "C23",
+      "label": "C23/S/refine/S.C23F3.h0.s1/R102#2 robust",
+      "id": "rc1-120d950b014a9638",
+      "sliceNet": 12523.09,
+      "sliceDd": 28872.72,
+      "charge": 0,
+      "offset": 83956.17,
+      "priorPeak": 134432.3,
+      "minimum": -28732.737062708708,
+      "crossTerm": 79208.8670627087
+     }
+    ],
+    "charges": 0,
+    "net": 96479.26,
+    "drawdown": 79208.8670627087,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "S: role lower-drawdown (descriptive)",
+    "labels": [
+     "C19/S/broad/S.C19F2.h0.s0/R108#3 Growth entry alternative",
+     "C21/S/refine/S.C21F3.h2.s1/R103#4 Growth gate alternative",
+     "C23/S/broad/S.C23F3.h2.s1/R102#3 Growth gate alternative"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "C19/S/broad/S.C19F2.h0.s0/R108#3 Growth entry alternative",
+      "id": "rc1-cb7aa31c49ec8c3d",
+      "sliceNet": 65166.84,
+      "sliceDd": 47828.92,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -5875.249193095311,
+      "crossTerm": 5875.249193095311
+     },
+     {
+      "fold": "C21",
+      "label": "C21/S/refine/S.C21F3.h2.s1/R103#4 Growth gate alternative",
+      "id": "rc1-b39323f7d321bcc4",
+      "sliceNet": -37395.45,
+      "sliceDd": 71522.89,
+      "charge": 50,
+      "offset": 65116.84,
+      "priorPeak": 77779.81999999998,
+      "minimum": -46584.27055693109,
+      "crossTerm": 59247.250556931074
+     },
+     {
+      "fold": "C23",
+      "label": "C23/S/broad/S.C23F3.h2.s1/R102#3 Growth gate alternative",
+      "id": "rc1-50b9034f03900332",
+      "sliceNet": -8723.41,
+      "sliceDd": 17795.56,
+      "charge": 0,
+      "offset": 27721.39,
+      "priorPeak": 89761.16,
+      "minimum": -17655.578257716,
+      "crossTerm": 79695.348257716
+     }
+    ],
+    "charges": 50,
+    "net": 18997.98,
+    "drawdown": 79695.348257716,
+    "drawdownAt": "C23 (from an earlier peak across the boundary)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "control: New L0 on TSLA (arm D; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+    "labels": [
+     "control: New L0 on TSLA (arm D; external VGT phenotype)",
+     "control: New L0 on TSLA (arm D; external VGT phenotype)",
+     "control: New L0 on TSLA (arm D; external VGT phenotype)"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "control: New L0 on TSLA (arm D; external VGT phenotype)",
+      "id": "d492ad042d96ee3e",
+      "sliceNet": 66044.27,
+      "sliceDd": 75932.83,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -66731.03496100346,
+      "crossTerm": 66731.03496100346
+     },
+     {
+      "fold": "C21",
+      "label": "control: New L0 on TSLA (arm D; external VGT phenotype)",
+      "id": "d492ad042d96ee3e",
+      "sliceNet": 24725.23,
+      "sliceDd": 97605.64,
+      "charge": 0,
+      "offset": 66044.27,
+      "priorPeak": 77396.92,
+      "minimum": -43846.642500296046,
+      "crossTerm": 55199.29250029604
+     },
+     {
+      "fold": "C23",
+      "label": "control: New L0 on TSLA (arm D; external VGT phenotype)",
+      "id": "d492ad042d96ee3e",
+      "sliceNet": -1315.11,
+      "sliceDd": 37887.91,
+      "charge": 0,
+      "offset": 90769.5,
+      "priorPeak": 118954.40000000001,
+      "minimum": -36240.956318666766,
+      "crossTerm": 64425.856318666774
+     }
+    ],
+    "charges": 0,
+    "net": 89454.39,
+    "drawdown": 97605.64,
+    "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "control: N/original on TSLA (arm D; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+    "labels": [
+     "control: N/original on TSLA (arm D; external VGT phenotype)",
+     "control: N/original on TSLA (arm D; external VGT phenotype)",
+     "control: N/original on TSLA (arm D; external VGT phenotype)"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "control: N/original on TSLA (arm D; external VGT phenotype)",
+      "id": "rc1-56bd99bf100994cb",
+      "sliceNet": 83032.23,
+      "sliceDd": 74760.51,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -62100.69979980345,
+      "crossTerm": 62100.69979980345
+     },
+     {
+      "fold": "C21",
+      "label": "control: N/original on TSLA (arm D; external VGT phenotype)",
+      "id": "rc1-56bd99bf100994cb",
+      "sliceNet": -657.37,
+      "sliceDd": 98506.56,
+      "charge": 0,
+      "offset": 83032.23,
+      "priorPeak": 89997.2,
+      "minimum": -64343.8198273473,
+      "crossTerm": 71308.7898273473
+     },
+     {
+      "fold": "C23",
+      "label": "control: N/original on TSLA (arm D; external VGT phenotype)",
+      "id": "rc1-56bd99bf100994cb",
+      "sliceNet": 798.82,
+      "sliceDd": 34113.51,
+      "charge": 0,
+      "offset": 82374.86,
+      "priorPeak": 116322.39000000001,
+      "minimum": -31786.40685669922,
+      "crossTerm": 65733.93685669923
+     }
+    ],
+    "charges": 0,
+    "net": 83173.68000000001,
+    "drawdown": 98506.56,
+    "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "control: New L0 on TSLA (arm G; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+    "labels": [
+     "control: New L0 on TSLA (arm G; external VGT phenotype)",
+     "control: New L0 on TSLA (arm G; external VGT phenotype)",
+     "control: New L0 on TSLA (arm G; external VGT phenotype)"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "control: New L0 on TSLA (arm G; external VGT phenotype)",
+      "id": "a30a4c6233df5ff3",
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 0,
+      "crossTerm": 0
+     },
+     {
+      "fold": "C21",
+      "label": "control: New L0 on TSLA (arm G; external VGT phenotype)",
+      "id": "a30a4c6233df5ff3",
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 0,
+      "crossTerm": 0
+     },
+     {
+      "fold": "C23",
+      "label": "control: New L0 on TSLA (arm G; external VGT phenotype)",
+      "id": "a30a4c6233df5ff3",
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 0,
+      "crossTerm": 0
+     }
+    ],
+    "charges": 0,
+    "net": 0,
+    "drawdown": 0,
+    "drawdownAt": "",
+    "withinCeiling": true,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "control: N/original on TSLA (arm G; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+    "labels": [
+     "control: N/original on TSLA (arm G; external VGT phenotype)",
+     "control: N/original on TSLA (arm G; external VGT phenotype)",
+     "control: N/original on TSLA (arm G; external VGT phenotype)"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "control: N/original on TSLA (arm G; external VGT phenotype)",
+      "id": "594206e73bd5ae29",
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 0,
+      "crossTerm": 0
+     },
+     {
+      "fold": "C21",
+      "label": "control: N/original on TSLA (arm G; external VGT phenotype)",
+      "id": "594206e73bd5ae29",
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 0,
+      "crossTerm": 0
+     },
+     {
+      "fold": "C23",
+      "label": "control: N/original on TSLA (arm G; external VGT phenotype)",
+      "id": "594206e73bd5ae29",
+      "sliceNet": 0,
+      "sliceDd": 0,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": 0,
+      "crossTerm": 0
+     }
+    ],
+    "charges": 0,
+    "net": 0,
+    "drawdown": 0,
+    "drawdownAt": "",
+    "withinCeiling": true,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "control: New L0 on TSLA (arm J; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+    "labels": [
+     "control: New L0 on TSLA (arm J; external VGT phenotype)",
+     "control: New L0 on TSLA (arm J; external VGT phenotype)",
+     "control: New L0 on TSLA (arm J; external VGT phenotype)"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "control: New L0 on TSLA (arm J; external VGT phenotype)",
+      "id": "97fdd4972e46e715",
+      "sliceNet": 66044.27,
+      "sliceDd": 75932.83,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -66731.03496100346,
+      "crossTerm": 66731.03496100346
+     },
+     {
+      "fold": "C21",
+      "label": "control: New L0 on TSLA (arm J; external VGT phenotype)",
+      "id": "97fdd4972e46e715",
+      "sliceNet": 24725.23,
+      "sliceDd": 97605.64,
+      "charge": 0,
+      "offset": 66044.27,
+      "priorPeak": 77396.92,
+      "minimum": -43846.642500296046,
+      "crossTerm": 55199.29250029604
+     },
+     {
+      "fold": "C23",
+      "label": "control: New L0 on TSLA (arm J; external VGT phenotype)",
+      "id": "97fdd4972e46e715",
+      "sliceNet": -1315.11,
+      "sliceDd": 37887.91,
+      "charge": 0,
+      "offset": 90769.5,
+      "priorPeak": 118954.40000000001,
+      "minimum": -36240.956318666766,
+      "crossTerm": 64425.856318666774
+     }
+    ],
+    "charges": 0,
+    "net": 89454.39,
+    "drawdown": 97605.64,
+    "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   },
+   {
+    "name": "control: N/original on TSLA (arm J; external VGT phenotype), fixed (descriptive: an external VGT phenotype)",
+    "labels": [
+     "control: N/original on TSLA (arm J; external VGT phenotype)",
+     "control: N/original on TSLA (arm J; external VGT phenotype)",
+     "control: N/original on TSLA (arm J; external VGT phenotype)"
+    ],
+    "parts": [
+     {
+      "fold": "C19",
+      "label": "control: N/original on TSLA (arm J; external VGT phenotype)",
+      "id": "rc1-c37c1a4206ee7a7d",
+      "sliceNet": 83032.23,
+      "sliceDd": 74760.51,
+      "charge": 0,
+      "offset": 0,
+      "priorPeak": 0,
+      "minimum": -62100.69979980345,
+      "crossTerm": 62100.69979980345
+     },
+     {
+      "fold": "C21",
+      "label": "control: N/original on TSLA (arm J; external VGT phenotype)",
+      "id": "rc1-c37c1a4206ee7a7d",
+      "sliceNet": -657.37,
+      "sliceDd": 98506.56,
+      "charge": 0,
+      "offset": 83032.23,
+      "priorPeak": 89997.2,
+      "minimum": -64343.8198273473,
+      "crossTerm": 71308.7898273473
+     },
+     {
+      "fold": "C23",
+      "label": "control: N/original on TSLA (arm J; external VGT phenotype)",
+      "id": "rc1-c37c1a4206ee7a7d",
+      "sliceNet": 798.82,
+      "sliceDd": 34113.51,
+      "charge": 0,
+      "offset": 82374.86,
+      "priorPeak": 116322.39000000001,
+      "minimum": -31786.40685669922,
+      "crossTerm": 65733.93685669923
+     }
+    ],
+    "charges": 0,
+    "net": 83173.68000000001,
+    "drawdown": 98506.56,
+    "drawdownAt": "C21 (minute reset drawdown inside the slice)",
+    "withinCeiling": false,
+    "verdict": "unsupported (sequential net ≤ 0 or sequential drawdown > $35,000)",
+    "supported": false
+   }
+  ],
+  "scope": "each arm’s procedure (D, G, C, J, S) is an INDEPENDENT chronological test of that arm’s complete search-and-selection procedure (every phenotype searched fresh at every cutoff from that cutoff’s door only; arm C pairs and arm S’s frozen D1 come from the same cutoff’s D and G selections); the sub-populations are report-only; roles and the external controls are descriptive",
+  "finished": "2026-11-25T19:43:21.352Z"
+ },
+ "slices": {
+  "C19": [
+   {
+    "label": "C19/D/refine/D.B1/R102#1 profit",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "primary D/original",
+     "role D/actual-profit"
+    ],
+    "boundaryEquity": 210046.11,
+    "sliceNet": 20367.65,
+    "sliceDd": 40169.52,
+    "wholeNet": 230413.76,
+    "wholeDd": 40169.52,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 14,
+     "byBook": {
+      "D1·TSLA": 14,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -24507.368918280576,
+     "maeMedian": -6305.31,
+     "worstRealized": -24507.368918280576,
+     "losing": 5,
+     "exitReasons": {
+      "trailing stop": 6,
+      "protective stop": 2,
+      "trailing stop gap": 4,
+      "maximum hold": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 43029.89,
+     "p90SliceDd": 56000.41,
+     "worstSliceDd": 62647.73,
+     "medianSliceNet": 34237.66,
+     "p10SliceNet": 7397.3,
+     "breaches": 243,
+     "breachShare": 0.94921875,
+     "wilson95": [
+      0.9150689400494775,
+      0.9700861887364622
+     ],
+     "trainingBreachShare": 0.0234
+    }
+   },
+   {
+    "label": "C19/D/refine/D.A0/R101#1 profit",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "primary D-A/original",
+     "role D-A/actual-profit"
+    ],
+    "boundaryEquity": 196295.67,
+    "sliceNet": 228851.8,
+    "sliceDd": 99711.54,
+    "wholeNet": 425147.46,
+    "wholeDd": 99711.54,
+    "openAtBoundary": [
+     {
+      "book": "D1:VGT",
+      "entry": "2019-10-03",
+      "exit": "2020-02-05",
+      "reason": "trailing stop gap",
+      "net": 258761.66146013397,
+      "mae": -481.69727035563847
+     }
+    ],
+    "nextSlice": {
+     "lots": 10,
+     "byBook": {
+      "D1·TSLA": 10,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -55963.583085158585,
+     "maeMedian": -10535.67,
+     "worstRealized": -44178.02915083257,
+     "losing": 4,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "maximum hold": 3,
+      "trailing stop": 5,
+      "buffered intraday loss": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 59184.5,
+     "p90SliceDd": 100202.43,
+     "worstSliceDd": 122826.43,
+     "medianSliceNet": 77992.83,
+     "p10SliceNet": 42334.86,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0547
+    }
+   },
+   {
+    "label": "C19/G/refine/G.h1.s1/R102#1 profit",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "primary G/original",
+     "primary G-P/original",
+     "role G/actual-profit",
+     "role G-P/actual-profit"
+    ],
+    "boundaryEquity": 150159.91,
+    "sliceNet": 30545.62,
+    "sliceDd": 21991.12,
+    "wholeNet": 180705.53,
+    "wholeDd": 24037.62,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-09-27",
+      "exit": "2020-01-16",
+      "reason": "trailing stop",
+      "net": 100317.18219128736,
+      "mae": -7473.253323905313
+     }
+    ],
+    "nextSlice": {
+     "lots": 0,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": null,
+     "maeMedian": null,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {}
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 0,
+     "p90SliceDd": 48579.37,
+     "worstSliceDd": 59728.46,
+     "medianSliceNet": 0,
+     "p10SliceNet": 0,
+     "breaches": 31,
+     "breachShare": 0.12109375,
+     "wilson95": [
+      0.0866351704438228,
+      0.16675572092803687
+     ],
+     "trainingBreachShare": 0.0352
+    }
+   },
+   {
+    "label": "C19/G/refine/G.h0.s0/R103#1 profit",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "primary G-U/original",
+     "role G-U/actual-profit"
+    ],
+    "boundaryEquity": 91465.53,
+    "sliceNet": 286734.58,
+    "sliceDd": 111943.83,
+    "wholeNet": 378200.11,
+    "wholeDd": 111943.83,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-10-15",
+      "exit": "2020-03-17",
+      "reason": "trend exit",
+      "net": 173717.45844476044,
+      "mae": -3115.648487531432
+     }
+    ],
+    "nextSlice": {
+     "lots": 2,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -30015.31750286111,
+     "maeMedian": -21950.52,
+     "worstRealized": 141220.95146270984,
+     "losing": 0,
+     "exitReasons": {
+      "trend exit": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 107450.73,
+     "p90SliceDd": 120930.02,
+     "worstSliceDd": 131018.3,
+     "medianSliceNet": 270833.89,
+     "p10SliceNet": 260671.55,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0391
+    }
+   },
+   {
+    "label": "C19/C/pair DF1×GF3",
+    "arm": "C",
+    "kind": "selected",
+    "roles": [
+     "primary C/original",
+     "role C/actual-profit"
+    ],
+    "boundaryEquity": 242090,
+    "sliceNet": 45465.34,
+    "sliceDd": 34557.74,
+    "wholeNet": 287555.34,
+    "wholeDd": 34557.74,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-12-10",
+      "exit": "2020-02-27",
+      "reason": "trend exit",
+      "net": 32370.335633184164,
+      "mae": -65.46908919936686
+     }
+    ],
+    "nextSlice": {
+     "lots": 20,
+     "byBook": {
+      "D1·TSLA": 11,
+      "Growth·TSLA": 9
+     },
+     "worstLotMae": -24507.368918280576,
+     "maeMedian": -4305.81,
+     "worstRealized": -24507.368918280576,
+     "losing": 9,
+     "exitReasons": {
+      "trailing stop": 4,
+      "protective stop": 2,
+      "trailing stop gap": 3,
+      "initial stop": 4,
+      "trend exit": 4,
+      "initial stop gap": 1,
+      "maximum hold": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 41496.96,
+     "p90SliceDd": 58067.77,
+     "worstSliceDd": 72715.07,
+     "medianSliceNet": 76926,
+     "p10SliceNet": 49327.95,
+     "breaches": 193,
+     "breachShare": 0.75390625,
+     "wilson95": [
+      0.6976457445974964,
+      0.8026593281945565
+     ],
+     "trainingBreachShare": 0.0234
+    }
+   },
+   {
+    "label": "C19/J/refine/J.B1.h1.s0/R102#1 profit",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "primary J/original",
+     "primary J-P/original",
+     "role J/actual-profit",
+     "role J-P/actual-profit"
+    ],
+    "boundaryEquity": 238402.58,
+    "sliceNet": 82512.44,
+    "sliceDd": 67635.07,
+    "wholeNet": 320915.03,
+    "wholeDd": 67635.07,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 32,
+     "byBook": {
+      "D1·TSLA": 12,
+      "Growth·TSLA": 20
+     },
+     "worstLotMae": -34631.88191541224,
+     "maeMedian": -2660.88,
+     "worstRealized": -31798.987353348908,
+     "losing": 9,
+     "exitReasons": {
+      "trailing stop": 18,
+      "trailing stop gap": 7,
+      "maximum hold": 6,
+      "protective stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 66132.53,
+     "p90SliceDd": 78978.25,
+     "worstSliceDd": 91385.98,
+     "medianSliceNet": 110936.96,
+     "p10SliceNet": 79604.37,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0273
+    }
+   },
+   {
+    "label": "C19/J/refine/J.D1.h0.s0/R104#1 profit",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "primary J-U/original",
+     "role J-U/actual-profit"
+    ],
+    "boundaryEquity": 224331.84,
+    "sliceNet": 348674.24,
+    "sliceDd": 105478.54,
+    "wholeNet": 573006.08,
+    "wholeDd": 105478.54,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-10-25",
+      "exit": "2020-02-05",
+      "reason": "trailing stop gap",
+      "net": 173048.31517232076,
+      "mae": -482.70472244906705
+     }
+    ],
+    "nextSlice": {
+     "lots": 9,
+     "byBook": {
+      "D1·TSLA": 2,
+      "Growth·TSLA": 7
+     },
+     "worstLotMae": -57013.351733005205,
+     "maeMedian": -10035.17,
+     "worstRealized": -2695.795946954824,
+     "losing": 1,
+     "exitReasons": {
+      "trailing stop gap": 3,
+      "trailing stop": 5,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 87141.9,
+     "p90SliceDd": 105478.54,
+     "worstSliceDd": 115551.41,
+     "medianSliceNet": 342047.96,
+     "p10SliceNet": 282424.66,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0078
+    }
+   },
+   {
+    "label": "C19/S/refine/S.C19F1.h1.s1/R104#1 profit",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "primary S/original",
+     "primary S-P/original",
+     "role S/actual-profit",
+     "role S-P/actual-profit"
+    ],
+    "boundaryEquity": 294784.64,
+    "sliceNet": 92526.53,
+    "sliceDd": 43801.26,
+    "wholeNet": 387311.17,
+    "wholeDd": 43801.26,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 20,
+     "byBook": {
+      "D1·TSLA": 14,
+      "Growth·TSLA": 6
+     },
+     "worstLotMae": -24507.368918280576,
+     "maeMedian": -6305.31,
+     "worstRealized": -24507.368918280576,
+     "losing": 6,
+     "exitReasons": {
+      "trailing stop": 9,
+      "protective stop": 2,
+      "trailing stop gap": 6,
+      "maximum hold": 2,
+      "initial stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 45992.36,
+     "p90SliceDd": 55625.77,
+     "worstSliceDd": 62647.73,
+     "medianSliceNet": 86167.05,
+     "p10SliceNet": 34437.27,
+     "breaches": 253,
+     "breachShare": 0.98828125,
+     "wilson95": [
+      0.9661184270766886,
+      0.9960067129080287
+     ],
+     "trainingBreachShare": 0.0273
+    }
+   },
+   {
+    "label": "C19/S/refine/S.C19F1.h0.s0/R104#1 profit",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "primary S-U/original",
+     "role S-U/actual-profit"
+    ],
+    "boundaryEquity": 265964.47,
+    "sliceNet": 197940.45,
+    "sliceDd": 50136.7,
+    "wholeNet": 463904.92,
+    "wholeDd": 50136.7,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-12-03",
+      "exit": "2020-01-16",
+      "reason": "trailing stop gap",
+      "net": 47034.34686212559,
+      "mae": -1723.8970945995575
+     }
+    ],
+    "nextSlice": {
+     "lots": 14,
+     "byBook": {
+      "D1·TSLA": 7,
+      "Growth·TSLA": 7
+     },
+     "worstLotMae": -39829.95493493366,
+     "maeMedian": -8780.82,
+     "worstRealized": -24386.820973075097,
+     "losing": 2,
+     "exitReasons": {
+      "trailing stop gap": 5,
+      "trailing stop": 8,
+      "protective stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 52344.85,
+     "p90SliceDd": 58262.3,
+     "worstSliceDd": 81950.57,
+     "medianSliceNet": 199926.96,
+     "p10SliceNet": 155112.57,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.043
+    }
+   },
+   {
+    "label": "C19/D/refine/D.B1/R103#2 robust",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D/robust-profit",
+     "role D/balanced"
+    ],
+    "boundaryEquity": 188585.22,
+    "sliceNet": 4464.32,
+    "sliceDd": 41756.92,
+    "wholeNet": 193049.53,
+    "wholeDd": 41756.92,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 12,
+     "byBook": {
+      "D1·TSLA": 12,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -22009.86766890526,
+     "maeMedian": -7278.76,
+     "worstRealized": -22009.86766890526,
+     "losing": 5,
+     "exitReasons": {
+      "trailing stop": 6,
+      "protective stop": 2,
+      "trailing stop gap": 2,
+      "maximum hold": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 55677.87,
+     "p90SliceDd": 62522.05,
+     "worstSliceDd": 67460.58,
+     "medianSliceNet": 13747.22,
+     "p10SliceNet": -11406.35,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/D/refine/D.B1/R103#5 profit order",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D/lower-drawdown"
+    ],
+    "boundaryEquity": 183364.55,
+    "sliceNet": 8017.35,
+    "sliceDd": 55857.45,
+    "wholeNet": 191381.9,
+    "wholeDd": 55857.45,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 13,
+     "byBook": {
+      "D1·TSLA": 13,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -27454.732666997643,
+     "maeMedian": -7595.86,
+     "worstRealized": -27454.732666997643,
+     "losing": 5,
+     "exitReasons": {
+      "trailing stop": 7,
+      "protective stop gap": 1,
+      "trailing stop gap": 2,
+      "protective stop": 1,
+      "maximum hold": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 46153,
+     "p90SliceDd": 62861.81,
+     "worstSliceDd": 63361.8,
+     "medianSliceNet": 22997.75,
+     "p10SliceNet": -10932.92,
+     "breaches": 251,
+     "breachShare": 0.98046875,
+     "wilson95": [
+      0.9551018674765416,
+      0.9916292702684201
+     ],
+     "trainingBreachShare": 0.0156
+    }
+   },
+   {
+    "label": "C19/D/refine/D.A0/R104#2 profit order",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D-A/robust-profit"
+    ],
+    "boundaryEquity": 152990.8,
+    "sliceNet": -8400.26,
+    "sliceDd": 59045.28,
+    "wholeNet": 144590.54,
+    "wholeDd": 61180.6,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 5,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -43548.288249617995,
+     "maeMedian": -11056.46,
+     "worstRealized": -18698.363725697778,
+     "losing": 2,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "maximum hold": 2,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 59045.28,
+     "p90SliceDd": 65612.25,
+     "worstSliceDd": 67407.8,
+     "medianSliceNet": 2073.18,
+     "p10SliceNet": -9525.06,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/D/refine/D.A0/R102#2 robust",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D-A/balanced"
+    ],
+    "boundaryEquity": 147798.33,
+    "sliceNet": 1941.21,
+    "sliceDd": 58635.55,
+    "wholeNet": 149739.53,
+    "wholeDd": 59087.59,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 5,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -42884.25298002539,
+     "maeMedian": -9587.87,
+     "worstRealized": -17736.71600216397,
+     "losing": 2,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "maximum hold": 2,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 58635.55,
+     "p90SliceDd": 58998.24,
+     "worstSliceDd": 61049.14,
+     "medianSliceNet": 3087.09,
+     "p10SliceNet": -9710.12,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/D/refine/D.A0/R102#6 profit order",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D-A/lower-drawdown"
+    ],
+    "boundaryEquity": 93640.18,
+    "sliceNet": 58572.78,
+    "sliceDd": 70723.12,
+    "wholeNet": 152212.96,
+    "wholeDd": 70723.12,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 26,
+     "byBook": {
+      "D1·TSLA": 26,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -45695.0977778046,
+     "maeMedian": -3795.42,
+     "worstRealized": -22714.522444231876,
+     "losing": 7,
+     "exitReasons": {
+      "trailing stop gap": 6,
+      "trailing stop": 16,
+      "maximum hold": 3,
+      "buffered intraday loss": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 67661.19,
+     "p90SliceDd": 70690.55,
+     "worstSliceDd": 77185.29,
+     "medianSliceNet": 60817.95,
+     "p10SliceNet": 23082.74,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/G/refine/G.h0.s1/R103#2 robust",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G/robust-profit",
+     "role G-P/robust-profit"
+    ],
+    "boundaryEquity": 101925.43,
+    "sliceNet": 299793.27,
+    "sliceDd": 65651.62,
+    "wholeNet": 401718.71,
+    "wholeDd": 65651.62,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-10-15",
+      "exit": "2020-02-05",
+      "reason": "trailing stop gap",
+      "net": 215653.04226276386,
+      "mae": -3115.648487531432
+     }
+    ],
+    "nextSlice": {
+     "lots": 13,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 13
+     },
+     "worstLotMae": -12114.2747994226,
+     "maeMedian": -4068.26,
+     "worstRealized": -12114.2747994226,
+     "losing": 6,
+     "exitReasons": {
+      "trailing stop": 6,
+      "initial stop gap": 2,
+      "initial stop": 4,
+      "trailing stop gap": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 58325.2,
+     "p90SliceDd": 65638.67,
+     "worstSliceDd": 73230.81,
+     "medianSliceNet": 307493.92,
+     "p10SliceNet": 288588.14,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0117
+    }
+   },
+   {
+    "label": "C19/G/refine/G.h1.s1/R104#3 balanced",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G/balanced",
+     "role G/lower-drawdown",
+     "role G-P/balanced",
+     "role G-P/lower-drawdown"
+    ],
+    "boundaryEquity": 42091.23,
+    "sliceNet": 39492.02,
+    "sliceDd": 17275.29,
+    "wholeNet": 81583.24,
+    "wholeDd": 17275.29,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-12-10",
+      "exit": "2020-02-27",
+      "reason": "trend exit",
+      "net": 32370.335633184164,
+      "mae": -65.46908919936686
+     }
+    ],
+    "nextSlice": {
+     "lots": 10,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 10
+     },
+     "worstLotMae": -5619.653561488434,
+     "maeMedian": -2668.63,
+     "worstRealized": -5619.653561488434,
+     "losing": 5,
+     "exitReasons": {
+      "initial stop": 5,
+      "trend exit": 4,
+      "initial stop gap": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 18395,
+     "p90SliceDd": 22131.87,
+     "worstSliceDd": 26608.47,
+     "medianSliceNet": 52608.29,
+     "p10SliceNet": 35727.4,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/G/refine/G.h0.s0/R102#2 robust",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G-U/robust-profit",
+     "role G-U/balanced"
+    ],
+    "boundaryEquity": 81228.23,
+    "sliceNet": 261218.36,
+    "sliceDd": 111032.49,
+    "wholeNet": 342446.59,
+    "wholeDd": 111032.49,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-10-15",
+      "exit": "2020-03-18",
+      "reason": "trend exit",
+      "net": 164811.3311050315,
+      "mae": -3115.648487531432
+     }
+    ],
+    "nextSlice": {
+     "lots": 2,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -4068.256568987567,
+     "maeMedian": -2719.18,
+     "worstRealized": 118778.13099940309,
+     "losing": 0,
+     "exitReasons": {
+      "trend exit": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 111032.49,
+     "p90SliceDd": 122895.55,
+     "worstSliceDd": 126743.05,
+     "medianSliceNet": 261557.65,
+     "p10SliceNet": 243545.93,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0469
+    }
+   },
+   {
+    "label": "C19/G/refine/G.h0.s0/R102#3 Growth gate alternative",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G-U/lower-drawdown"
+    ],
+    "boundaryEquity": 53913.81,
+    "sliceNet": 235964.49,
+    "sliceDd": 102309.53,
+    "wholeNet": 289878.31,
+    "wholeDd": 102309.53,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-10-25",
+      "exit": "2020-03-18",
+      "reason": "trend exit",
+      "net": 127524.06637681744,
+      "mae": -482.70472244906705
+     }
+    ],
+    "nextSlice": {
+     "lots": 2,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -8205.909154472021,
+     "maeMedian": -5913.55,
+     "worstRealized": 100257.99065332547,
+     "losing": 0,
+     "exitReasons": {
+      "trend exit": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 91648.58,
+     "p90SliceDd": 108166.6,
+     "worstSliceDd": 115971.61,
+     "medianSliceNet": 228009.52,
+     "p10SliceNet": 156450.59,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/C/pair DF2×GF3",
+    "arm": "C",
+    "kind": "selected",
+    "roles": [
+     "role C/robust-profit",
+     "role C/balanced",
+     "role C/lower-drawdown"
+    ],
+    "boundaryEquity": 220629.1,
+    "sliceNet": 36521.12,
+    "sliceDd": 37411.03,
+    "wholeNet": 257150.22,
+    "wholeDd": 37411.03,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-12-10",
+      "exit": "2020-02-27",
+      "reason": "trend exit",
+      "net": 32370.335633184164,
+      "mae": -65.46908919936686
+     }
+    ],
+    "nextSlice": {
+     "lots": 20,
+     "byBook": {
+      "D1·TSLA": 11,
+      "Growth·TSLA": 9
+     },
+     "worstLotMae": -22009.86766890526,
+     "maeMedian": -4717.91,
+     "worstRealized": -22009.86766890526,
+     "losing": 9,
+     "exitReasons": {
+      "trailing stop": 5,
+      "protective stop": 2,
+      "trailing stop gap": 2,
+      "initial stop": 4,
+      "trend exit": 4,
+      "initial stop gap": 1,
+      "maximum hold": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 54134.96,
+     "p90SliceDd": 59484.56,
+     "worstSliceDd": 65180.66,
+     "medianSliceNet": 59657.4,
+     "p10SliceNet": 33179.81,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/J/refine/J.D0.h0.s1/R101#2 robust",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J/robust-profit",
+     "role J-P/robust-profit"
+    ],
+    "boundaryEquity": 208131.89,
+    "sliceNet": 267851.31,
+    "sliceDd": 84910.04,
+    "wholeNet": 475983.2,
+    "wholeDd": 84910.04,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-10-25",
+      "exit": "2020-02-05",
+      "reason": "trailing stop gap",
+      "net": 173048.31517232076,
+      "mae": -482.70472244906705
+     }
+    ],
+    "nextSlice": {
+     "lots": 20,
+     "byBook": {
+      "D1·TSLA": 10,
+      "Growth·TSLA": 10
+     },
+     "worstLotMae": -24571.89919339426,
+     "maeMedian": -5988.82,
+     "worstRealized": -24571.89919339426,
+     "losing": 6,
+     "exitReasons": {
+      "trailing stop gap": 3,
+      "protective stop gap": 1,
+      "trailing stop": 11,
+      "maximum hold": 2,
+      "initial stop": 3
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 85573.37,
+     "p90SliceDd": 96470.8,
+     "worstSliceDd": 110015.55,
+     "medianSliceNet": 324187.99,
+     "p10SliceNet": 248286.05,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/J/refine/J.D1.h1.s0/R102#3 balanced",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J/balanced",
+     "role J-P/balanced"
+    ],
+    "boundaryEquity": 190868.84,
+    "sliceNet": 100136.5,
+    "sliceDd": 62614.11,
+    "wholeNet": 291005.34,
+    "wholeDd": 62614.11,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 33,
+     "byBook": {
+      "D1·TSLA": 12,
+      "Growth·TSLA": 21
+     },
+     "worstLotMae": -20002.68059221085,
+     "maeMedian": -2638.18,
+     "worstRealized": -18669.21368645613,
+     "losing": 12,
+     "exitReasons": {
+      "trailing stop": 15,
+      "maximum hold": 8,
+      "trailing stop gap": 8,
+      "protective stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 56122.95,
+     "p90SliceDd": 63134.43,
+     "worstSliceDd": 70423.73,
+     "medianSliceNet": 101865.2,
+     "p10SliceNet": 90417.78,
+     "breaches": 255,
+     "breachShare": 0.99609375,
+     "wilson95": [
+      0.9782090243838145,
+      0.9993101178406582
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/J/refine/J.C0.h0.s1/R104#3 balanced",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J/lower-drawdown",
+     "role J-P/lower-drawdown"
+    ],
+    "boundaryEquity": 87090.82,
+    "sliceNet": 100193.76,
+    "sliceDd": 77937.34,
+    "wholeNet": 187284.59,
+    "wholeDd": 77937.34,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 41,
+     "byBook": {
+      "D1·TSLA": 15,
+      "Growth·TSLA": 26
+     },
+     "worstLotMae": -22959.27481306799,
+     "maeMedian": -3058.55,
+     "worstRealized": -22959.27481306799,
+     "losing": 19,
+     "exitReasons": {
+      "trailing stop": 18,
+      "initial stop": 10,
+      "initial stop gap": 3,
+      "trailing stop gap": 6,
+      "protective stop gap": 2,
+      "protective stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 72612.19,
+     "p90SliceDd": 78760.45,
+     "worstSliceDd": 86320.57,
+     "medianSliceNet": 110670.95,
+     "p10SliceNet": 94748.19,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/J/refine/J.D1.h0.s0/R101#2 robust",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J-U/robust-profit"
+    ],
+    "boundaryEquity": 148723.66,
+    "sliceNet": 255165.87,
+    "sliceDd": 168254.59,
+    "wholeNet": 403889.53,
+    "wholeDd": 168254.59,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-10-25",
+      "exit": "2020-03-20",
+      "reason": "trend exit",
+      "net": 75332.0166710985,
+      "mae": -482.70472244906705
+     }
+    ],
+    "nextSlice": {
+     "lots": 9,
+     "byBook": {
+      "D1·TSLA": 7,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -16279.782876946496,
+     "maeMedian": -4261.78,
+     "worstRealized": -14092.967606452017,
+     "losing": 2,
+     "exitReasons": {
+      "trend exit": 1,
+      "trailing stop": 5,
+      "maximum hold": 2,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 168254.59,
+     "p90SliceDd": 177828.61,
+     "worstSliceDd": 181019.95,
+     "medianSliceNet": 244386.37,
+     "p10SliceNet": 226175.33,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0117
+    }
+   },
+   {
+    "label": "C19/J/refine/J.D1.h0.s0/R101#3 balanced",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J-U/balanced",
+     "role J-U/lower-drawdown"
+    ],
+    "boundaryEquity": 126998.37,
+    "sliceNet": 50879.95,
+    "sliceDd": 36925.09,
+    "wholeNet": 177878.31,
+    "wholeDd": 45604.2,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 19,
+     "byBook": {
+      "D1·TSLA": 19,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -17842.53284316746,
+     "maeMedian": -1314.41,
+     "worstRealized": -17842.53284316746,
+     "losing": 5,
+     "exitReasons": {
+      "trailing stop gap": 5,
+      "trailing stop": 12,
+      "protective stop": 1,
+      "maximum hold": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 42124.52,
+     "p90SliceDd": 50179.73,
+     "worstSliceDd": 61366.87,
+     "medianSliceNet": 51398.7,
+     "p10SliceNet": 34677.44,
+     "breaches": 240,
+     "breachShare": 0.9375,
+     "wilson95": [
+      0.9008977664103762,
+      0.9611663590159303
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/S/refine/S.C19F2.h2.s0/R103#2 robust",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S/robust-profit",
+     "role S-P/robust-profit"
+    ],
+    "boundaryEquity": 246492.27,
+    "sliceNet": 151236.59,
+    "sliceDd": 68574.85,
+    "wholeNet": 397728.87,
+    "wholeDd": 68574.85,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-12-03",
+      "exit": "2020-02-27",
+      "reason": "trend exit",
+      "net": 68702.40244994473,
+      "mae": -1723.8970945995575
+     }
+    ],
+    "nextSlice": {
+     "lots": 17,
+     "byBook": {
+      "D1·TSLA": 9,
+      "Growth·TSLA": 8
+     },
+     "worstLotMae": -37553.095301476096,
+     "maeMedian": -7595.86,
+     "worstRealized": -30814.154754761326,
+     "losing": 6,
+     "exitReasons": {
+      "trailing stop": 4,
+      "protective stop": 1,
+      "trailing stop gap": 2,
+      "trend exit": 5,
+      "maximum hold": 4,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 80401.48,
+     "p90SliceDd": 91429.92,
+     "worstSliceDd": 110251.76,
+     "medianSliceNet": 132947.14,
+     "p10SliceNet": 102845.67,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0547
+    }
+   },
+   {
+    "label": "C19/S/refine/S.C19F2.h2.s1/R103#2 robust",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S/balanced",
+     "role S-P/balanced"
+    ],
+    "boundaryEquity": 245004.61,
+    "sliceNet": 109787.98,
+    "sliceDd": 56136.13,
+    "wholeNet": 354792.59,
+    "wholeDd": 56136.13,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-12-03",
+      "exit": "2020-02-27",
+      "reason": "trend exit",
+      "net": 61198.800005484474,
+      "mae": -1723.8970945995575
+     }
+    ],
+    "nextSlice": {
+     "lots": 17,
+     "byBook": {
+      "D1·TSLA": 11,
+      "Growth·TSLA": 6
+     },
+     "worstLotMae": -22009.86766890526,
+     "maeMedian": -4903.8,
+     "worstRealized": -22009.86766890526,
+     "losing": 7,
+     "exitReasons": {
+      "trailing stop": 5,
+      "protective stop": 2,
+      "trailing stop gap": 2,
+      "trend exit": 3,
+      "buffered intraday loss": 1,
+      "initial stop": 1,
+      "maximum hold": 3
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 73441.32,
+     "p90SliceDd": 84162.25,
+     "worstSliceDd": 100220.07,
+     "medianSliceNet": 118818.82,
+     "p10SliceNet": 87507.36,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/S/broad/S.C19F2.h0.s0/R108#3 Growth entry alternative",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S/lower-drawdown",
+     "role S-U/lower-drawdown"
+    ],
+    "boundaryEquity": 198307.97,
+    "sliceNet": 65166.84,
+    "sliceDd": 47828.92,
+    "wholeNet": 263474.81,
+    "wholeDd": 47828.92,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-12-18",
+      "exit": "2020-03-20",
+      "reason": "trend exit",
+      "net": 5374.379238767956,
+      "mae": -1336.2583023024126
+     }
+    ],
+    "nextSlice": {
+     "lots": 6,
+     "byBook": {
+      "D1·TSLA": 4,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -10133.749175361447,
+     "maeMedian": -3566.44,
+     "worstRealized": -5121.650379658804,
+     "losing": 2,
+     "exitReasons": {
+      "trend exit": 1,
+      "trailing stop": 2,
+      "maximum hold": 2,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 53136.77,
+     "p90SliceDd": 61860.15,
+     "worstSliceDd": 70890.63,
+     "medianSliceNet": 65012.48,
+     "p10SliceNet": 1706.65,
+     "breaches": 254,
+     "breachShare": 0.9921875,
+     "wilson95": [
+      0.9719672314529922,
+      0.9978549096516027
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/S/broad/S.C19F2.h1.s1/R102#2 robust",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S-P/lower-drawdown"
+    ],
+    "boundaryEquity": 205730.39,
+    "sliceNet": 55377.93,
+    "sliceDd": 41704.64,
+    "wholeNet": 261108.31,
+    "wholeDd": 41704.64,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 16,
+     "byBook": {
+      "D1·TSLA": 10,
+      "Growth·TSLA": 6
+     },
+     "worstLotMae": -22009.86766890526,
+     "maeMedian": -6305.31,
+     "worstRealized": -22009.86766890526,
+     "losing": 7,
+     "exitReasons": {
+      "trailing stop": 4,
+      "protective stop": 2,
+      "trailing stop gap": 2,
+      "maximum hold": 4,
+      "trend exit": 4
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 54289.22,
+     "p90SliceDd": 61748.53,
+     "worstSliceDd": 66010.13,
+     "medianSliceNet": 61306.26,
+     "p10SliceNet": 31104.73,
+     "breaches": 236,
+     "breachShare": 0.921875,
+     "wilson95": [
+      0.8824167613448927,
+      0.9488593596019028
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C19/S/refine/S.C19F2.h0.s0/R102#2 robust",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S-U/robust-profit"
+    ],
+    "boundaryEquity": 242430.78,
+    "sliceNet": 202920.65,
+    "sliceDd": 74225.26,
+    "wholeNet": 445351.43,
+    "wholeDd": 74225.26,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-12-03",
+      "exit": "2020-02-26",
+      "reason": "trend exit",
+      "net": 104142.8480068021,
+      "mae": -1723.8970945995575
+     }
+    ],
+    "nextSlice": {
+     "lots": 10,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 5
+     },
+     "worstLotMae": -38959.56007974599,
+     "maeMedian": -7900.88,
+     "worstRealized": -21889.31972369978,
+     "losing": 2,
+     "exitReasons": {
+      "trailing stop": 3,
+      "protective stop": 1,
+      "trailing stop gap": 1,
+      "trend exit": 5
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 89461.61,
+     "p90SliceDd": 113129.55,
+     "worstSliceDd": 136930.9,
+     "medianSliceNet": 198732.57,
+     "p10SliceNet": 122911.89,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0352
+    }
+   },
+   {
+    "label": "C19/S/refine/S.C19F2.h0.s0/R103#2 robust",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S-U/balanced"
+    ],
+    "boundaryEquity": 231686.79,
+    "sliceNet": 142795.42,
+    "sliceDd": 48026.03,
+    "wholeNet": 374482.21,
+    "wholeDd": 48026.03,
+    "openAtBoundary": [
+     {
+      "book": "G:VGT",
+      "entry": "2019-12-10",
+      "exit": "2020-02-26",
+      "reason": "trend exit",
+      "net": 51567.02663723576,
+      "mae": -65.46908919936686
+     }
+    ],
+    "nextSlice": {
+     "lots": 16,
+     "byBook": {
+      "D1·TSLA": 11,
+      "Growth·TSLA": 5
+     },
+     "worstLotMae": -22009.86766890526,
+     "maeMedian": -6305.31,
+     "worstRealized": -22009.86766890526,
+     "losing": 5,
+     "exitReasons": {
+      "trailing stop": 5,
+      "protective stop": 2,
+      "trailing stop gap": 2,
+      "trend exit": 5,
+      "maximum hold": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 62052.11,
+     "p90SliceDd": 71780.77,
+     "worstSliceDd": 89082.54,
+     "medianSliceNet": 138545.84,
+     "p10SliceNet": 75323.25,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0039
+    }
+   },
+   {
+    "label": "control: New L0 on TSLA (arm D; external VGT phenotype)",
+    "arm": "D",
+    "kind": "control",
+    "roles": [
+     "control control: New L0 on TSLA (arm D; external VGT phenotype)"
+    ],
+    "boundaryEquity": 29055.08,
+    "sliceNet": 66044.27,
+    "sliceDd": 75932.83,
+    "wholeNet": 95099.35,
+    "wholeDd": 92795.91,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 23,
+     "byBook": {
+      "D1·TSLA": 23,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -45695.0977778046,
+     "maeMedian": -6663.85,
+     "worstRealized": -21659.20907267461,
+     "losing": 6,
+     "exitReasons": {
+      "trailing stop gap": 2,
+      "maximum hold": 6,
+      "trailing stop": 14,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 76985.16,
+     "p90SliceDd": 82881.63,
+     "worstSliceDd": 84876.87,
+     "medianSliceNet": 86774.84,
+     "p10SliceNet": 45112.8,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 1
+    }
+   },
+   {
+    "label": "control: N/original on TSLA (arm D; external VGT phenotype)",
+    "arm": "D",
+    "kind": "control",
+    "roles": [
+     "control control: N/original on TSLA (arm D; external VGT phenotype)"
+    ],
+    "boundaryEquity": 18812.56,
+    "sliceNet": 83032.23,
+    "sliceDd": 74760.51,
+    "wholeNet": 101844.79,
+    "wholeDd": 95080.5,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 34,
+     "byBook": {
+      "D1·TSLA": 34,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -22959.27481306799,
+     "maeMedian": -6444.65,
+     "worstRealized": -22959.27481306799,
+     "losing": 13,
+     "exitReasons": {
+      "trailing stop": 17,
+      "protective stop gap": 6,
+      "trailing stop gap": 4,
+      "protective stop": 5,
+      "maximum hold": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 76031.66,
+     "p90SliceDd": 85741.25,
+     "worstSliceDd": 86840.07,
+     "medianSliceNet": 86186.49,
+     "p10SliceNet": 38160.11,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 1
+    }
+   },
+   {
+    "label": "control: New L0 on TSLA (arm G; external VGT phenotype)",
+    "arm": "G",
+    "kind": "control",
+    "roles": [
+     "control control: New L0 on TSLA (arm G; external VGT phenotype)"
+    ],
+    "boundaryEquity": -5530.63,
+    "sliceNet": 0,
+    "sliceDd": 0,
+    "wholeNet": -5530.63,
+    "wholeDd": 11868.76,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 0,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": null,
+     "maeMedian": null,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {}
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 0,
+     "p90SliceDd": 0,
+     "worstSliceDd": 16401.52,
+     "medianSliceNet": 0,
+     "p10SliceNet": 0,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "control: N/original on TSLA (arm G; external VGT phenotype)",
+    "arm": "G",
+    "kind": "control",
+    "roles": [
+     "control control: N/original on TSLA (arm G; external VGT phenotype)"
+    ],
+    "boundaryEquity": -5668.7,
+    "sliceNet": 0,
+    "sliceDd": 0,
+    "wholeNet": -5668.7,
+    "wholeDd": 11851.72,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 0,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": null,
+     "maeMedian": null,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {}
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 0,
+     "p90SliceDd": 0,
+     "worstSliceDd": 16637.91,
+     "medianSliceNet": 0,
+     "p10SliceNet": 0,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0039
+    }
+   },
+   {
+    "label": "control: New L0 on TSLA (arm J; external VGT phenotype)",
+    "arm": "J",
+    "kind": "control",
+    "roles": [
+     "control control: New L0 on TSLA (arm J; external VGT phenotype)"
+    ],
+    "boundaryEquity": 29055.08,
+    "sliceNet": 66044.27,
+    "sliceDd": 75932.83,
+    "wholeNet": 95099.35,
+    "wholeDd": 92795.91,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 23,
+     "byBook": {
+      "D1·TSLA": 23,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -45695.0977778046,
+     "maeMedian": -6663.85,
+     "worstRealized": -21659.20907267461,
+     "losing": 6,
+     "exitReasons": {
+      "trailing stop gap": 2,
+      "maximum hold": 6,
+      "trailing stop": 14,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 76985.16,
+     "p90SliceDd": 82881.63,
+     "worstSliceDd": 84876.87,
+     "medianSliceNet": 86774.84,
+     "p10SliceNet": 44167.72,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 1
+    }
+   },
+   {
+    "label": "control: N/original on TSLA (arm J; external VGT phenotype)",
+    "arm": "J",
+    "kind": "control",
+    "roles": [
+     "control control: N/original on TSLA (arm J; external VGT phenotype)"
+    ],
+    "boundaryEquity": 18812.56,
+    "sliceNet": 83032.23,
+    "sliceDd": 74760.51,
+    "wholeNet": 101844.79,
+    "wholeDd": 95080.5,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 34,
+     "byBook": {
+      "D1·TSLA": 34,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -22959.27481306799,
+     "maeMedian": -6444.65,
+     "worstRealized": -22959.27481306799,
+     "losing": 13,
+     "exitReasons": {
+      "trailing stop": 17,
+      "protective stop gap": 6,
+      "trailing stop gap": 4,
+      "protective stop": 5,
+      "maximum hold": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 76031.66,
+     "p90SliceDd": 85741.25,
+     "worstSliceDd": 86840.07,
+     "medianSliceNet": 86074.1,
+     "p10SliceNet": 38160.11,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 1
+    }
+   }
+  ],
+  "C21": [
+   {
+    "label": "C21/D/refine/D.C1/R102#1 profit",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "primary D/original",
+     "role D/actual-profit"
+    ],
+    "boundaryEquity": 297253.89,
+    "sliceNet": -7376.11,
+    "sliceDd": 13332.15,
+    "wholeNet": 289877.79,
+    "wholeDd": 28921.08,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 4,
+     "byBook": {
+      "D1·TSLA": 4,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -6461.957785451568,
+     "maeMedian": -4925.29,
+     "worstRealized": -6461.957785451568,
+     "losing": 3,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "protective stop": 2,
+      "trailing stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 19268.68,
+     "p90SliceDd": 24775.41,
+     "worstSliceDd": 29322.87,
+     "medianSliceNet": -8522.17,
+     "p10SliceNet": -16979,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0352
+    }
+   },
+   {
+    "label": "C21/G/refine/G.h1.s1/R101#1 profit",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "primary G/original",
+     "primary G-P/original",
+     "role G/actual-profit",
+     "role G-P/actual-profit"
+    ],
+    "boundaryEquity": 303551.26,
+    "sliceNet": 0,
+    "sliceDd": 0,
+    "wholeNet": 303551.26,
+    "wholeDd": 32291.84,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 0,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": null,
+     "maeMedian": null,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {}
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 0,
+     "p90SliceDd": 16355.47,
+     "worstSliceDd": 29007.17,
+     "medianSliceNet": 0,
+     "p10SliceNet": -13187.76,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0469
+    }
+   },
+   {
+    "label": "C21/G/refine/G.h0.s0/R103#1 profit",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "primary G-U/original",
+     "role G-U/actual-profit"
+    ],
+    "boundaryEquity": 289560.55,
+    "sliceNet": -15484,
+    "sliceDd": 41076.89,
+    "wholeNet": 274076.56,
+    "wholeDd": 47883.16,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 1,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -33313.34550186241,
+     "maeMedian": -33313.35,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 41076.89,
+     "p90SliceDd": 41076.89,
+     "worstSliceDd": 41076.89,
+     "medianSliceNet": -15484,
+     "p10SliceNet": -16240.79,
+     "breaches": 192,
+     "breachShare": 0.75,
+     "wilson95": [
+      0.6935249369991875,
+      0.7990831346729876
+     ],
+     "trainingBreachShare": 0.0234
+    }
+   },
+   {
+    "label": "C21/C/pair DF2×GF1",
+    "arm": "C",
+    "kind": "selected",
+    "roles": [
+     "primary C/original",
+     "role C/actual-profit"
+    ],
+    "boundaryEquity": 329170.05,
+    "sliceNet": -11309.11,
+    "sliceDd": 17560.76,
+    "wholeNet": 317860.95,
+    "wholeDd": 32291.84,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 5,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -5117.270132057251,
+     "maeMedian": -4815.9,
+     "worstRealized": -5117.270132057251,
+     "losing": 3,
+     "exitReasons": {
+      "protective stop": 3,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 18580.88,
+     "p90SliceDd": 26846.93,
+     "worstSliceDd": 48137.95,
+     "medianSliceNet": -7802.94,
+     "p10SliceNet": -20264.37,
+     "breaches": 3,
+     "breachShare": 0.01171875,
+     "wilson95": [
+      0.003993287091971495,
+      0.0338815729233115
+     ],
+     "trainingBreachShare": 0.1133
+    }
+   },
+   {
+    "label": "C21/J/refine/J.D1.h2.s1/R104#1 profit",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "primary J/original",
+     "primary J-P/original",
+     "role J/actual-profit",
+     "role J-P/actual-profit"
+    ],
+    "boundaryEquity": 410873.61,
+    "sliceNet": -16451.5,
+    "sliceDd": 30241.96,
+    "wholeNet": 394422.11,
+    "wholeDd": 37891.25,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 10,
+     "byBook": {
+      "D1·TSLA": 7,
+      "Growth·TSLA": 3
+     },
+     "worstLotMae": -6362.504602855078,
+     "maeMedian": -3938.52,
+     "worstRealized": -6362.504602855078,
+     "losing": 8,
+     "exitReasons": {
+      "protective stop gap": 2,
+      "protective stop": 3,
+      "initial stop gap": 1,
+      "initial stop": 2,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 23764.5,
+     "p90SliceDd": 37024.12,
+     "worstSliceDd": 49126.42,
+     "medianSliceNet": -16288.1,
+     "p10SliceNet": -34882.78,
+     "breaches": 33,
+     "breachShare": 0.12890625,
+     "wilson95": [
+      0.0932807796856413,
+      0.17550411392597384
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C21/J/refine/J.A1.h0.s0/R102#1 profit",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "primary J-U/original",
+     "role J-U/actual-profit"
+    ],
+    "boundaryEquity": 340411.27,
+    "sliceNet": 4840.51,
+    "sliceDd": 45296.29,
+    "wholeNet": 345251.77,
+    "wholeDd": 45296.29,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 12,
+     "byBook": {
+      "D1·TSLA": 11,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -36146.15189843372,
+     "maeMedian": -5536.5,
+     "worstRealized": -14750.025312173422,
+     "losing": 5,
+     "exitReasons": {
+      "trailing stop": 5,
+      "maximum hold": 3,
+      "trailing stop gap": 3,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 52877.77,
+     "p90SliceDd": 86754.37,
+     "worstSliceDd": 115017.3,
+     "medianSliceNet": 1437.43,
+     "p10SliceNet": -59172.78,
+     "breaches": 250,
+     "breachShare": 0.9765625,
+     "wilson95": [
+      0.9498190041177833,
+      0.9892151325073005
+     ],
+     "trainingBreachShare": 0.082
+    }
+   },
+   {
+    "label": "C21/S/refine/S.C21F3.h0.s1/R104#1 profit",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "primary S/original",
+     "primary S-P/original",
+     "role S/actual-profit",
+     "role S-P/actual-profit"
+    ],
+    "boundaryEquity": 542170.48,
+    "sliceNet": -25875.82,
+    "sliceDd": 64512.19,
+    "wholeNet": 516294.66,
+    "wholeDd": 64512.19,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 11,
+     "byBook": {
+      "D1·TSLA": 8,
+      "Growth·TSLA": 3
+     },
+     "worstLotMae": -20384.691095356535,
+     "maeMedian": -8345.91,
+     "worstRealized": -20384.691095356535,
+     "losing": 5,
+     "exitReasons": {
+      "trailing stop gap": 2,
+      "trailing stop": 5,
+      "protective stop gap": 2,
+      "protective stop": 1,
+      "initial stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 58263.74,
+     "p90SliceDd": 65667.77,
+     "worstSliceDd": 79930.72,
+     "medianSliceNet": -15247.15,
+     "p10SliceNet": -34766.77,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0938
+    }
+   },
+   {
+    "label": "C21/S/refine/S.C21F3.h0.s0/R103#1 profit",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "primary S-U/original",
+     "role S-U/actual-profit"
+    ],
+    "boundaryEquity": 483612.4,
+    "sliceNet": -43190.68,
+    "sliceDd": 85702.63,
+    "wholeNet": 440421.72,
+    "wholeDd": 85702.63,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 9,
+     "byBook": {
+      "D1·TSLA": 7,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -33814.122537246556,
+     "maeMedian": -8345.91,
+     "worstRealized": -20384.691095356535,
+     "losing": 3,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "trailing stop": 3,
+      "protective stop gap": 2,
+      "protective stop": 1,
+      "trend exit": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 72604.29,
+     "p90SliceDd": 86754.37,
+     "worstSliceDd": 99043.1,
+     "medianSliceNet": -35907.16,
+     "p10SliceNet": -59172.78,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.1133
+    }
+   },
+   {
+    "label": "C21/D/refine/D.C1/R102#2 robust",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D/robust-profit"
+    ],
+    "boundaryEquity": 203523.38,
+    "sliceNet": -11309.11,
+    "sliceDd": 17560.76,
+    "wholeNet": 192214.27,
+    "wholeDd": 25375.45,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 5,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -5117.270132057251,
+     "maeMedian": -4815.9,
+     "worstRealized": -5117.270132057251,
+     "losing": 3,
+     "exitReasons": {
+      "protective stop": 3,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 16258.88,
+     "p90SliceDd": 22360.52,
+     "worstSliceDd": 26152.62,
+     "medianSliceNet": -6938.03,
+     "p10SliceNet": -17309.19,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0313
+    }
+   },
+   {
+    "label": "C21/D/refine/D.D1/R103#3 balanced",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D/balanced"
+    ],
+    "boundaryEquity": 255727.2,
+    "sliceNet": -37395.45,
+    "sliceDd": 71522.89,
+    "wholeNet": 218331.75,
+    "wholeDd": 71522.89,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 8,
+     "byBook": {
+      "D1·TSLA": 8,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -20384.691095356535,
+     "maeMedian": -8792.21,
+     "worstRealized": -20384.691095356535,
+     "losing": 4,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "trailing stop": 4,
+      "protective stop gap": 2,
+      "protective stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 61779.95,
+     "p90SliceDd": 68641.05,
+     "worstSliceDd": 73765.68,
+     "medianSliceNet": -23699.58,
+     "p10SliceNet": -42104.12,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0078
+    }
+   },
+   {
+    "label": "C21/D/refine/D.B1/R103#6 profit order",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D/lower-drawdown"
+    ],
+    "boundaryEquity": 106463.14,
+    "sliceNet": -5561.46,
+    "sliceDd": 15710.22,
+    "wholeNet": 100901.68,
+    "wholeDd": 17172.36,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 6,
+     "byBook": {
+      "D1·TSLA": 6,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -6774.286170997503,
+     "maeMedian": -3978.92,
+     "worstRealized": -6774.286170997503,
+     "losing": 3,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "trailing stop gap": 2,
+      "trailing stop": 1,
+      "protective stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 16131.25,
+     "p90SliceDd": 20264.55,
+     "worstSliceDd": 23697.27,
+     "medianSliceNet": -12888.9,
+     "p10SliceNet": -18860.32,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C21/G/refine/G.h0.s0/R104#2 robust",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G/robust-profit",
+     "role G-U/robust-profit"
+    ],
+    "boundaryEquity": 275738.33,
+    "sliceNet": 3608.41,
+    "sliceDd": 13893.63,
+    "wholeNet": 279346.75,
+    "wholeDd": 33884.73,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 1,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -7779.230733446306,
+     "maeMedian": -7779.23,
+     "worstRealized": 3608.412486872404,
+     "losing": 0,
+     "exitReasons": {
+      "trailing stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 13893.63,
+     "p90SliceDd": 41076.89,
+     "worstSliceDd": 44969.43,
+     "medianSliceNet": 2918.88,
+     "p10SliceNet": -15484,
+     "breaches": 82,
+     "breachShare": 0.3203125,
+     "wilson95": [
+      0.26617385293992313,
+      0.3797640955457011
+     ],
+     "trainingBreachShare": 0.0234
+    }
+   },
+   {
+    "label": "C21/G/refine/G.h0.s0/R103#3 balanced",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G/balanced",
+     "role G-U/balanced"
+    ],
+    "boundaryEquity": 278493.65,
+    "sliceNet": 3493.49,
+    "sliceDd": 13893.63,
+    "wholeNet": 281987.14,
+    "wholeDd": 32291.84,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 1,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -7779.230733446306,
+     "maeMedian": -7779.23,
+     "worstRealized": 3493.49114330081,
+     "losing": 0,
+     "exitReasons": {
+      "trailing stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 40581.46,
+     "p90SliceDd": 41076.89,
+     "worstSliceDd": 45081.03,
+     "medianSliceNet": -15484,
+     "p10SliceNet": -15505.92,
+     "breaches": 139,
+     "breachShare": 0.54296875,
+     "wilson95": [
+      0.48176064041177796,
+      0.6029063719068771
+     ],
+     "trainingBreachShare": 0.0664
+    }
+   },
+   {
+    "label": "C21/G/refine/G.h1.s1/R102#5 profit order",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G/lower-drawdown",
+     "role G-P/lower-drawdown"
+    ],
+    "boundaryEquity": 161093.81,
+    "sliceNet": -10365.86,
+    "sliceDd": 10909.85,
+    "wholeNet": 150727.95,
+    "wholeDd": 22622.22,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 3,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 3
+     },
+     "worstLotMae": -3772.6042948597064,
+     "maeMedian": -3501.87,
+     "worstRealized": -3772.6042948597064,
+     "losing": 3,
+     "exitReasons": {
+      "initial stop": 2,
+      "initial stop gap": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 12166.02,
+     "p90SliceDd": 16097.02,
+     "worstSliceDd": 18810.64,
+     "medianSliceNet": -10377.89,
+     "p10SliceNet": -14459.67,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C21/G/refine/G.h0.s1/R101#2 robust",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G-P/robust-profit"
+    ],
+    "boundaryEquity": 247731.12,
+    "sliceNet": -10156.63,
+    "sliceDd": 33137.73,
+    "wholeNet": 237574.49,
+    "wholeDd": 33884.73,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 2,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -21463.97118385938,
+     "maeMedian": -10711.28,
+     "worstRealized": -21463.97118385938,
+     "losing": 1,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "initial stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 31723.32,
+     "p90SliceDd": 33924.56,
+     "worstSliceDd": 36803.27,
+     "medianSliceNet": -11559.45,
+     "p10SliceNet": -21705.14,
+     "breaches": 9,
+     "breachShare": 0.03515625,
+     "wilson95": [
+      0.018604096001741982,
+      0.06545277073280745
+     ],
+     "trainingBreachShare": 0.0703
+    }
+   },
+   {
+    "label": "C21/G/refine/G.h0.s1/R101#3 balanced",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G-P/balanced"
+    ],
+    "boundaryEquity": 286572.47,
+    "sliceNet": 3493.49,
+    "sliceDd": 13893.63,
+    "wholeNet": 290065.96,
+    "wholeDd": 32291.84,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 1,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -7779.230733446306,
+     "maeMedian": -7779.23,
+     "worstRealized": 3493.49114330081,
+     "losing": 0,
+     "exitReasons": {
+      "trailing stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 23478.88,
+     "p90SliceDd": 26465.05,
+     "worstSliceDd": 28756.97,
+     "medianSliceNet": 982.17,
+     "p10SliceNet": -12425.93,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0742
+    }
+   },
+   {
+    "label": "C21/G/broad/G.h0.s0/R105#3 profit order",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G-U/lower-drawdown"
+    ],
+    "boundaryEquity": 234004.86,
+    "sliceNet": -16240.79,
+    "sliceDd": 40581.46,
+    "wholeNet": 217764.07,
+    "wholeDd": 47489.43,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 1,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -33814.122537246556,
+     "maeMedian": -33814.12,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 39118.94,
+     "p90SliceDd": 40581.46,
+     "worstSliceDd": 41076.89,
+     "medianSliceNet": -19328.6,
+     "p10SliceNet": -19328.6,
+     "breaches": 255,
+     "breachShare": 0.99609375,
+     "wilson95": [
+      0.9782090243838145,
+      0.9993101178406582
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C21/C/pair DF2×GF3",
+    "arm": "C",
+    "kind": "selected",
+    "roles": [
+     "role C/robust-profit",
+     "role C/balanced",
+     "role C/lower-drawdown"
+    ],
+    "boundaryEquity": 306555.14,
+    "sliceNet": -7815.61,
+    "sliceDd": 20222.72,
+    "wholeNet": 298739.52,
+    "wholeDd": 32291.84,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 6,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -7779.230733446306,
+     "maeMedian": -4876.17,
+     "worstRealized": -5117.270132057251,
+     "losing": 3,
+     "exitReasons": {
+      "protective stop": 3,
+      "trailing stop": 3
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 42287.19,
+     "p90SliceDd": 48637.52,
+     "worstSliceDd": 55093.91,
+     "medianSliceNet": -11079.09,
+     "p10SliceNet": -25320.98,
+     "breaches": 137,
+     "breachShare": 0.53515625,
+     "wilson95": [
+      0.4739903014075066,
+      0.5952827086713931
+     ],
+     "trainingBreachShare": 0.043
+    }
+   },
+   {
+    "label": "C21/J/refine/J.D1.h2.s1/R101#1 profit",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J/robust-profit",
+     "role J/balanced",
+     "role J-P/robust-profit",
+     "role J-P/balanced"
+    ],
+    "boundaryEquity": 374787.29,
+    "sliceNet": -8362.9,
+    "sliceDd": 53481.46,
+    "wholeNet": 366424.39,
+    "wholeDd": 53481.46,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 12,
+     "byBook": {
+      "D1·TSLA": 9,
+      "Growth·TSLA": 3
+     },
+     "worstLotMae": -24818.227872365176,
+     "maeMedian": -6018.96,
+     "worstRealized": -24818.227872365176,
+     "losing": 4,
+     "exitReasons": {
+      "trailing stop": 7,
+      "maximum hold": 2,
+      "protective stop": 1,
+      "trailing stop gap": 1,
+      "initial stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 52788.71,
+     "p90SliceDd": 61279.43,
+     "worstSliceDd": 69294.92,
+     "medianSliceNet": 8004.77,
+     "p10SliceNet": -14621.62,
+     "breaches": 226,
+     "breachShare": 0.8828125,
+     "wilson95": [
+      0.8376373979042313,
+      0.9166687118437868
+     ],
+     "trainingBreachShare": 0.043
+    }
+   },
+   {
+    "label": "C21/J/refine/J.B1.h0.s0/R104#4 Growth gate alternative",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J/lower-drawdown",
+     "role J-U/lower-drawdown"
+    ],
+    "boundaryEquity": 112337.68,
+    "sliceNet": -3695.38,
+    "sliceDd": 15184,
+    "wholeNet": 108642.3,
+    "wholeDd": 18250.13,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 6,
+     "byBook": {
+      "D1·TSLA": 4,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -7739.63943965406,
+     "maeMedian": -5337.88,
+     "worstRealized": -7739.63943965406,
+     "losing": 4,
+     "exitReasons": {
+      "protective stop gap": 2,
+      "trailing stop": 1,
+      "protective stop": 1,
+      "trend exit": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 13179.46,
+     "p90SliceDd": 15293.05,
+     "worstSliceDd": 20854.5,
+     "medianSliceNet": -4409.33,
+     "p10SliceNet": -9966.82,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0156
+    }
+   },
+   {
+    "label": "C21/J/refine/J.C1.h0.s1/R104#2 Growth gate alternative",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J-P/lower-drawdown"
+    ],
+    "boundaryEquity": 182124.13,
+    "sliceNet": -7652.78,
+    "sliceDd": 8983.36,
+    "wholeNet": 174471.35,
+    "wholeDd": 19996.79,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 2,
+     "byBook": {
+      "D1·TSLA": 2,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -3826.3888603643445,
+     "maeMedian": -3826.39,
+     "worstRealized": -3826.3888603643445,
+     "losing": 2,
+     "exitReasons": {
+      "protective stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 10580.7,
+     "p90SliceDd": 12967.36,
+     "worstSliceDd": 19698.83,
+     "medianSliceNet": -8946.35,
+     "p10SliceNet": -11824.31,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C21/J/refine/J.A1.h0.s0/R103#2 robust",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J-U/robust-profit"
+    ],
+    "boundaryEquity": 312026.62,
+    "sliceNet": 2195.94,
+    "sliceDd": 68734.08,
+    "wholeNet": 314222.56,
+    "wholeDd": 68734.08,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 32,
+     "byBook": {
+      "D1·TSLA": 31,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -36146.15189843372,
+     "maeMedian": -4738.63,
+     "worstRealized": -17680.034399928085,
+     "losing": 13,
+     "exitReasons": {
+      "trailing stop": 16,
+      "maximum hold": 10,
+      "trailing stop gap": 5,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 70026.21,
+     "p90SliceDd": 105900.91,
+     "worstSliceDd": 141241.78,
+     "medianSliceNet": 16258.84,
+     "p10SliceNet": -42465.21,
+     "breaches": 255,
+     "breachShare": 0.99609375,
+     "wilson95": [
+      0.9782090243838145,
+      0.9993101178406582
+     ],
+     "trainingBreachShare": 0.0898
+    }
+   },
+   {
+    "label": "C21/J/refine/J.A1.h0.s0/R102#2 robust",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J-U/balanced"
+    ],
+    "boundaryEquity": 307785.82,
+    "sliceNet": 2927.53,
+    "sliceDd": 51650.57,
+    "wholeNet": 310713.35,
+    "wholeDd": 55725.17,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 26,
+     "byBook": {
+      "D1·TSLA": 26,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -27263.341143111014,
+     "maeMedian": -4908.98,
+     "worstRealized": -27263.341143111014,
+     "losing": 10,
+     "exitReasons": {
+      "maximum hold": 7,
+      "trailing stop": 10,
+      "trailing stop gap": 8,
+      "buffered intraday loss": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 67401.96,
+     "p90SliceDd": 100408.37,
+     "worstSliceDd": 120615.5,
+     "medianSliceNet": -40429.75,
+     "p10SliceNet": -78202.45,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.043
+    }
+   },
+   {
+    "label": "C21/S/refine/S.C21F3.h2.s1/R101#2 robust",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S/robust-profit",
+     "role S-P/robust-profit"
+    ],
+    "boundaryEquity": 523868.22,
+    "sliceNet": -44913.61,
+    "sliceDd": 79041.06,
+    "wholeNet": 478954.61,
+    "wholeDd": 79041.06,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 10,
+     "byBook": {
+      "D1·TSLA": 8,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -20384.691095356535,
+     "maeMedian": -7806.55,
+     "worstRealized": -20384.691095356535,
+     "losing": 6,
+     "exitReasons": {
+      "trailing stop gap": 2,
+      "trailing stop": 4,
+      "protective stop gap": 2,
+      "protective stop": 1,
+      "initial stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 63952.02,
+     "p90SliceDd": 80830.27,
+     "worstSliceDd": 94456.52,
+     "medianSliceNet": -28524.51,
+     "p10SliceNet": -51176.62,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0156
+    }
+   },
+   {
+    "label": "C21/S/refine/S.C21F3.h2.s1/R102#3 balanced",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S/balanced",
+     "role S-P/balanced"
+    ],
+    "boundaryEquity": 516840.2,
+    "sliceNet": -25831.81,
+    "sliceDd": 62284.39,
+    "wholeNet": 491008.39,
+    "wholeDd": 62284.39,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 11,
+     "byBook": {
+      "D1·TSLA": 8,
+      "Growth·TSLA": 3
+     },
+     "worstLotMae": -20384.691095356535,
+     "maeMedian": -5940.35,
+     "worstRealized": -20384.691095356535,
+     "losing": 5,
+     "exitReasons": {
+      "trailing stop gap": 2,
+      "trailing stop": 5,
+      "protective stop gap": 2,
+      "protective stop": 1,
+      "initial stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 60089.54,
+     "p90SliceDd": 69573.07,
+     "worstSliceDd": 87199.25,
+     "medianSliceNet": -13722.56,
+     "p10SliceNet": -38698.43,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0078
+    }
+   },
+   {
+    "label": "C21/S/refine/S.C21F3.h2.s1/R103#4 Growth gate alternative",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S/lower-drawdown",
+     "role S-P/lower-drawdown"
+    ],
+    "boundaryEquity": 321006.79,
+    "sliceNet": -37395.45,
+    "sliceDd": 71522.89,
+    "wholeNet": 283611.35,
+    "wholeDd": 71522.89,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 8,
+     "byBook": {
+      "D1·TSLA": 8,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -20384.691095356535,
+     "maeMedian": -8792.21,
+     "worstRealized": -20384.691095356535,
+     "losing": 4,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "trailing stop": 4,
+      "protective stop gap": 2,
+      "protective stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 61779.95,
+     "p90SliceDd": 69342.16,
+     "worstSliceDd": 77872.8,
+     "medianSliceNet": -24569.47,
+     "p10SliceNet": -42206.5,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0039
+    }
+   },
+   {
+    "label": "C21/S/refine/S.C21F3.h0.s0/R104#2 robust",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S-U/robust-profit"
+    ],
+    "boundaryEquity": 456946.63,
+    "sliceNet": -37395.45,
+    "sliceDd": 71522.89,
+    "wholeNet": 419551.18,
+    "wholeDd": 71522.89,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 8,
+     "byBook": {
+      "D1·TSLA": 8,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -20384.691095356535,
+     "maeMedian": -8792.21,
+     "worstRealized": -20384.691095356535,
+     "losing": 4,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "trailing stop": 4,
+      "protective stop gap": 2,
+      "protective stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 61779.95,
+     "p90SliceDd": 68641.05,
+     "worstSliceDd": 73765.68,
+     "medianSliceNet": -23699.58,
+     "p10SliceNet": -42104.12,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.043
+    }
+   },
+   {
+    "label": "C21/S/refine/S.C21F3.h0.s0/R101#3 balanced",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S-U/balanced"
+    ],
+    "boundaryEquity": 452650.69,
+    "sliceNet": -56674.37,
+    "sliceDd": 98430.54,
+    "wholeNet": 395976.31,
+    "wholeDd": 98430.54,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 8,
+     "byBook": {
+      "D1·TSLA": 7,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -36146.15189843372,
+     "maeMedian": -13436.05,
+     "worstRealized": -20384.691095356535,
+     "losing": 3,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "trailing stop": 3,
+      "protective stop gap": 2,
+      "protective stop": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 84726.5,
+     "p90SliceDd": 95912.29,
+     "worstSliceDd": 104031,
+     "medianSliceNet": -48825.76,
+     "p10SliceNet": -68121.3,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0664
+    }
+   },
+   {
+    "label": "C21/S/refine/S.C21F3.h0.s0/R104#3 balanced",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S-U/lower-drawdown"
+    ],
+    "boundaryEquity": 378722.79,
+    "sliceNet": -37395.45,
+    "sliceDd": 71522.89,
+    "wholeNet": 341327.34,
+    "wholeDd": 71522.89,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 8,
+     "byBook": {
+      "D1·TSLA": 8,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -20384.691095356535,
+     "maeMedian": -8792.21,
+     "worstRealized": -20384.691095356535,
+     "losing": 4,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "trailing stop": 4,
+      "protective stop gap": 2,
+      "protective stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 64187.42,
+     "p90SliceDd": 86754.37,
+     "worstSliceDd": 86754.37,
+     "medianSliceNet": -29830.21,
+     "p10SliceNet": -59172.78,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 0.0039
+    }
+   },
+   {
+    "label": "control: New L0 on TSLA (arm D; external VGT phenotype)",
+    "arm": "D",
+    "kind": "control",
+    "roles": [
+     "control control: New L0 on TSLA (arm D; external VGT phenotype)"
+    ],
+    "boundaryEquity": 95099.35,
+    "sliceNet": 24725.23,
+    "sliceDd": 97605.64,
+    "wholeNet": 119824.58,
+    "wholeDd": 97605.64,
+    "openAtBoundary": [
+     {
+      "book": "D1:VGT",
+      "entry": "2021-12-14",
+      "exit": "2022-01-05",
+      "reason": "trailing stop",
+      "net": 17456.132051357985,
+      "mae": -6663.84852956586
+     }
+    ],
+    "nextSlice": {
+     "lots": 31,
+     "byBook": {
+      "D1·TSLA": 31,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -25306.770320880823,
+     "maeMedian": -6353.62,
+     "worstRealized": -24562.66800885579,
+     "losing": 15,
+     "exitReasons": {
+      "trailing stop": 16,
+      "maximum hold": 14,
+      "trailing stop gap": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 95760.96,
+     "p90SliceDd": 109580.95,
+     "worstSliceDd": 126437.06,
+     "medianSliceNet": 20818.52,
+     "p10SliceNet": 390.82,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 1
+    }
+   },
+   {
+    "label": "control: N/original on TSLA (arm D; external VGT phenotype)",
+    "arm": "D",
+    "kind": "control",
+    "roles": [
+     "control control: N/original on TSLA (arm D; external VGT phenotype)"
+    ],
+    "boundaryEquity": 101844.79,
+    "sliceNet": -657.37,
+    "sliceDd": 98506.56,
+    "wholeNet": 101187.42,
+    "wholeDd": 98506.56,
+    "openAtBoundary": [
+     {
+      "book": "D1:VGT",
+      "entry": "2021-12-14",
+      "exit": "2022-01-05",
+      "reason": "trailing stop",
+      "net": 17456.132051357985,
+      "mae": -6663.84852956586
+     }
+    ],
+    "nextSlice": {
+     "lots": 43,
+     "byBook": {
+      "D1·TSLA": 43,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -18907.86890891966,
+     "maeMedian": -4871.02,
+     "worstRealized": -18907.86890891966,
+     "losing": 20,
+     "exitReasons": {
+      "trailing stop": 22,
+      "protective stop": 12,
+      "protective stop gap": 3,
+      "trailing stop gap": 3,
+      "maximum hold": 3
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 104475.9,
+     "p90SliceDd": 119816.84,
+     "worstSliceDd": 135266.33,
+     "medianSliceNet": 4769.67,
+     "p10SliceNet": -26914.29,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 1
+    }
+   },
+   {
+    "label": "control: New L0 on TSLA (arm G; external VGT phenotype)",
+    "arm": "G",
+    "kind": "control",
+    "roles": [
+     "control control: New L0 on TSLA (arm G; external VGT phenotype)"
+    ],
+    "boundaryEquity": -5530.63,
+    "sliceNet": 0,
+    "sliceDd": 0,
+    "wholeNet": -5530.63,
+    "wholeDd": 11868.76,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 0,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": null,
+     "maeMedian": null,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {}
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 0,
+     "p90SliceDd": 8266.96,
+     "worstSliceDd": 15953.48,
+     "medianSliceNet": 0,
+     "p10SliceNet": -764.38,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0039
+    }
+   },
+   {
+    "label": "control: N/original on TSLA (arm G; external VGT phenotype)",
+    "arm": "G",
+    "kind": "control",
+    "roles": [
+     "control control: N/original on TSLA (arm G; external VGT phenotype)"
+    ],
+    "boundaryEquity": -5668.7,
+    "sliceNet": 0,
+    "sliceDd": 0,
+    "wholeNet": -5668.7,
+    "wholeDd": 11851.72,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 0,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": null,
+     "maeMedian": null,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {}
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 0,
+     "p90SliceDd": 8373.93,
+     "worstSliceDd": 17229.26,
+     "medianSliceNet": 0,
+     "p10SliceNet": -2260.09,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0078
+    }
+   },
+   {
+    "label": "control: New L0 on TSLA (arm J; external VGT phenotype)",
+    "arm": "J",
+    "kind": "control",
+    "roles": [
+     "control control: New L0 on TSLA (arm J; external VGT phenotype)"
+    ],
+    "boundaryEquity": 95099.35,
+    "sliceNet": 24725.23,
+    "sliceDd": 97605.64,
+    "wholeNet": 119824.58,
+    "wholeDd": 97605.64,
+    "openAtBoundary": [
+     {
+      "book": "D1:VGT",
+      "entry": "2021-12-14",
+      "exit": "2022-01-05",
+      "reason": "trailing stop",
+      "net": 17456.132051357985,
+      "mae": -6663.84852956586
+     }
+    ],
+    "nextSlice": {
+     "lots": 31,
+     "byBook": {
+      "D1·TSLA": 31,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -25306.770320880823,
+     "maeMedian": -6353.62,
+     "worstRealized": -24562.66800885579,
+     "losing": 15,
+     "exitReasons": {
+      "trailing stop": 16,
+      "maximum hold": 14,
+      "trailing stop gap": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 95760.96,
+     "p90SliceDd": 109580.95,
+     "worstSliceDd": 126437.06,
+     "medianSliceNet": 21401.22,
+     "p10SliceNet": 470.88,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 1
+    }
+   },
+   {
+    "label": "control: N/original on TSLA (arm J; external VGT phenotype)",
+    "arm": "J",
+    "kind": "control",
+    "roles": [
+     "control control: N/original on TSLA (arm J; external VGT phenotype)"
+    ],
+    "boundaryEquity": 101844.79,
+    "sliceNet": -657.37,
+    "sliceDd": 98506.56,
+    "wholeNet": 101187.42,
+    "wholeDd": 98506.56,
+    "openAtBoundary": [
+     {
+      "book": "D1:VGT",
+      "entry": "2021-12-14",
+      "exit": "2022-01-05",
+      "reason": "trailing stop",
+      "net": 17456.132051357985,
+      "mae": -6663.84852956586
+     }
+    ],
+    "nextSlice": {
+     "lots": 43,
+     "byBook": {
+      "D1·TSLA": 43,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -18907.86890891966,
+     "maeMedian": -4871.02,
+     "worstRealized": -18907.86890891966,
+     "losing": 20,
+     "exitReasons": {
+      "trailing stop": 22,
+      "protective stop": 12,
+      "protective stop gap": 3,
+      "trailing stop gap": 3,
+      "maximum hold": 3
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 104475.9,
+     "p90SliceDd": 119816.84,
+     "worstSliceDd": 135266.33,
+     "medianSliceNet": 4824.85,
+     "p10SliceNet": -26914.29,
+     "breaches": 256,
+     "breachShare": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ],
+     "trainingBreachShare": 1
+    }
+   }
+  ],
+  "C23": [
+   {
+    "label": "C23/D/refine/D.D1/R102#1 profit",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "primary D/original",
+     "role D/actual-profit"
+    ],
+    "boundaryEquity": 235329.54,
+    "sliceNet": 12230.57,
+    "sliceDd": 11051.05,
+    "wholeNet": 247560.11,
+    "wholeDd": 20969.47,
+    "openAtBoundary": [
+     {
+      "book": "D1:VGT",
+      "entry": "2023-12-01",
+      "exit": "2024-01-02",
+      "reason": "trailing stop",
+      "net": 4110.207836142052,
+      "mae": -3316.1416428814937
+     }
+    ],
+    "nextSlice": {
+     "lots": 4,
+     "byBook": {
+      "D1·TSLA": 4,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -3748.6603714354733,
+     "maeMedian": -2718.7,
+     "worstRealized": -3748.6603714354733,
+     "losing": 2,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "trailing stop": 2,
+      "protective stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 11501.3,
+     "p90SliceDd": 13241.78,
+     "worstSliceDd": 21129.54,
+     "medianSliceNet": 13046.75,
+     "p10SliceNet": 5449.69,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.1094
+    }
+   },
+   {
+    "label": "C23/G/refine/G.h1.s1/R103#1 profit",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "primary G/original",
+     "primary G-P/original",
+     "role G/actual-profit",
+     "role G-P/actual-profit"
+    ],
+    "boundaryEquity": 302507.53,
+    "sliceNet": 12401,
+    "sliceDd": 26796.01,
+    "wholeNet": 314908.53,
+    "wholeDd": 35442.77,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 5,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 5
+     },
+     "worstLotMae": -13466.879186258398,
+     "maeMedian": -5051.38,
+     "worstRealized": -11659.021280304616,
+     "losing": 2,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "initial stop": 1,
+      "trailing stop": 2,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 25739.8,
+     "p90SliceDd": 28347.88,
+     "worstSliceDd": 38964.12,
+     "medianSliceNet": 19869.6,
+     "p10SliceNet": 3919.66,
+     "breaches": 10,
+     "breachShare": 0.0390625,
+     "wilson95": [
+      0.021354035743356925,
+      0.07039983211107023
+     ],
+     "trainingBreachShare": 0.1016
+    }
+   },
+   {
+    "label": "C23/G/refine/G.h0.s0/R104#1 profit",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "primary G-U/original",
+     "role G-U/actual-profit",
+     "role G-U/robust-profit",
+     "role G-U/balanced"
+    ],
+    "boundaryEquity": 288115.27,
+    "sliceNet": 29168.94,
+    "sliceDd": 12594.57,
+    "wholeNet": 317284.22,
+    "wholeDd": 32291.84,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 2,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -1689.04738824589,
+     "maeMedian": -1336.62,
+     "worstRealized": 12839.408272661318,
+     "losing": 0,
+     "exitReasons": {
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 12594.57,
+     "p90SliceDd": 13864.99,
+     "worstSliceDd": 41121.78,
+     "medianSliceNet": 29168.94,
+     "p10SliceNet": 26617.61,
+     "breaches": 1,
+     "breachShare": 0.00390625,
+     "wilson95": [
+      0.0006898821593419175,
+      0.021790975616185614
+     ],
+     "trainingBreachShare": 0.0703
+    }
+   },
+   {
+    "label": "C23/C/pair DF3×GF2",
+    "arm": "C",
+    "kind": "selected",
+    "roles": [
+     "primary C/original",
+     "role C/actual-profit",
+     "role C/robust-profit",
+     "role C/balanced",
+     "role C/lower-drawdown"
+    ],
+    "boundaryEquity": 403640.57,
+    "sliceNet": -7567.47,
+    "sliceDd": 37608.46,
+    "wholeNet": 396073.1,
+    "wholeDd": 44972.71,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 5,
+     "byBook": {
+      "D1·TSLA": 1,
+      "Growth·TSLA": 4
+     },
+     "worstLotMae": -15304.652814742254,
+     "maeMedian": -10547.02,
+     "worstRealized": -15304.652814742254,
+     "losing": 3,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "initial stop gap": 1,
+      "initial stop": 1,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 32219.76,
+     "p90SliceDd": 40445.62,
+     "worstSliceDd": 52471.21,
+     "medianSliceNet": 3133.73,
+     "p10SliceNet": -11123.59,
+     "breaches": 113,
+     "breachShare": 0.44140625,
+     "wilson95": [
+      0.38189072121763096,
+      0.502654261984203
+     ],
+     "trainingBreachShare": 0.0664
+    }
+   },
+   {
+    "label": "C23/J/refine/J.C1.h0.s0/R104#1 profit",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "primary J/original",
+     "primary J-U/original",
+     "role J/actual-profit",
+     "role J-U/actual-profit"
+    ],
+    "boundaryEquity": 401482.08,
+    "sliceNet": 33520.01,
+    "sliceDd": 17490.37,
+    "wholeNet": 435002.09,
+    "wholeDd": 31670.07,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 3,
+     "byBook": {
+      "D1·TSLA": 2,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -4415.619503405891,
+     "maeMedian": -2350.92,
+     "worstRealized": -3226.9885605142645,
+     "losing": 1,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "protective stop": 1,
+      "trend exit": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 9711.86,
+     "p90SliceDd": 18136.08,
+     "worstSliceDd": 33891.16,
+     "medianSliceNet": 2856.44,
+     "p10SliceNet": -3656.4,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C23/J/refine/J.D1.h1.s1/R103#1 profit",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "primary J-P/original",
+     "role J/robust-profit",
+     "role J-P/actual-profit",
+     "role J-P/robust-profit"
+    ],
+    "boundaryEquity": 391212.39,
+    "sliceNet": 13698.86,
+    "sliceDd": 19899.96,
+    "wholeNet": 404911.26,
+    "wholeDd": 32291.84,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 3,
+     "byBook": {
+      "D1·TSLA": 1,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -18540.431780771618,
+     "maeMedian": -1689.05,
+     "worstRealized": -16226.439238939824,
+     "losing": 1,
+     "exitReasons": {
+      "maximum hold": 1,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 19899.96,
+     "p90SliceDd": 29172.97,
+     "worstSliceDd": 30171.89,
+     "medianSliceNet": 17722.76,
+     "p10SliceNet": 12461.05,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0313
+    }
+   },
+   {
+    "label": "C23/S/refine/S.C23F3.h2.s1/R102#1 profit",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "primary S/original",
+     "primary S-P/original",
+     "role S/actual-profit",
+     "role S-P/actual-profit"
+    ],
+    "boundaryEquity": 449917.26,
+    "sliceNet": 17654.11,
+    "sliceDd": 32166.39,
+    "wholeNet": 467571.36,
+    "wholeDd": 37877.45,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 8,
+     "byBook": {
+      "D1·TSLA": 1,
+      "Growth·TSLA": 7
+     },
+     "worstLotMae": -15304.652814742254,
+     "maeMedian": -3619.71,
+     "worstRealized": -15304.652814742254,
+     "losing": 3,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "trailing stop": 5,
+      "initial stop gap": 1,
+      "initial stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 28687.91,
+     "p90SliceDd": 37876.21,
+     "worstSliceDd": 51387.81,
+     "medianSliceNet": 18692.26,
+     "p10SliceNet": -3425.24,
+     "breaches": 51,
+     "breachShare": 0.19921875,
+     "wilson95": [
+      0.1548981388236827,
+      0.2524327749457317
+     ],
+     "trainingBreachShare": 0.0117
+    }
+   },
+   {
+    "label": "C23/S/broad/S.C23F1.h0.s0/R101#1 profit",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "primary S-U/original",
+     "role S-U/actual-profit"
+    ],
+    "boundaryEquity": 397456.19,
+    "sliceNet": 29072.47,
+    "sliceDd": 12740.1,
+    "wholeNet": 426528.66,
+    "wholeDd": 26287.97,
+    "openAtBoundary": [
+     {
+      "book": "D1:VGT",
+      "entry": "2023-12-01",
+      "exit": "2024-01-02",
+      "reason": "trailing stop",
+      "net": 4110.207836142052,
+      "mae": -3316.1416428814937
+     }
+    ],
+    "nextSlice": {
+     "lots": 5,
+     "byBook": {
+      "D1·TSLA": 4,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -3748.6603714354733,
+     "maeMedian": -1999.44,
+     "worstRealized": -3748.6603714354733,
+     "losing": 2,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "trailing stop": 3,
+      "protective stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 13271.1,
+     "p90SliceDd": 20583.06,
+     "worstSliceDd": 28117.7,
+     "medianSliceNet": 30200.71,
+     "p10SliceNet": 22611.78,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0625
+    }
+   },
+   {
+    "label": "C23/D/refine/D.A1/R104#2 robust",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D/robust-profit"
+    ],
+    "boundaryEquity": 153259.95,
+    "sliceNet": 582.1,
+    "sliceDd": 20051.68,
+    "wholeNet": 153842.05,
+    "wholeDd": 32001.11,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 5,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -19022.581768263437,
+     "maeMedian": -2017.96,
+     "worstRealized": -11060.92882692741,
+     "losing": 1,
+     "exitReasons": {
+      "maximum hold": 1,
+      "trailing stop": 4
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 19963.19,
+     "p90SliceDd": 22513.16,
+     "worstSliceDd": 25415.26,
+     "medianSliceNet": 197.71,
+     "p10SliceNet": -8123.85,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0625
+    }
+   },
+   {
+    "label": "C23/D/refine/D.B1/R101#2 robust",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D/balanced"
+    ],
+    "boundaryEquity": 137756.66,
+    "sliceNet": -15304.65,
+    "sliceDd": 15444.64,
+    "wholeNet": 122452.01,
+    "wholeDd": 22522.72,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 1,
+     "byBook": {
+      "D1·TSLA": 1,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -15304.652814742254,
+     "maeMedian": -15304.65,
+     "worstRealized": -15304.652814742254,
+     "losing": 1,
+     "exitReasons": {
+      "protective stop gap": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 15444.64,
+     "p90SliceDd": 16303.1,
+     "worstSliceDd": 17773.07,
+     "medianSliceNet": -15304.65,
+     "p10SliceNet": -15304.65,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C23/D/refine/D.B1/R102#6 profit order",
+    "arm": "D",
+    "kind": "selected",
+    "roles": [
+     "role D/lower-drawdown"
+    ],
+    "boundaryEquity": 50652.24,
+    "sliceNet": 410.3,
+    "sliceDd": 6531.28,
+    "wholeNet": 51062.54,
+    "wholeDd": 12053.97,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 5,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -3387.162583092015,
+     "maeMedian": -1206.93,
+     "worstRealized": -3387.162583092015,
+     "losing": 2,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "trailing stop": 3,
+      "protective stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 6328.05,
+     "p90SliceDd": 7986.31,
+     "worstSliceDd": 9195.47,
+     "medianSliceNet": 0,
+     "p10SliceNet": -3127.09,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C23/G/refine/G.h0.s1/R102#2 robust",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G/robust-profit",
+     "role G/balanced",
+     "role G-P/robust-profit",
+     "role G-P/balanced"
+    ],
+    "boundaryEquity": 285708.65,
+    "sliceNet": 7737.19,
+    "sliceDd": 30235.37,
+    "wholeNet": 293445.84,
+    "wholeDd": 44386.92,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 4,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 4
+     },
+     "worstLotMae": -10632.615583734208,
+     "maeMedian": -6118.03,
+     "worstRealized": -10632.615583734208,
+     "losing": 2,
+     "exitReasons": {
+      "initial stop gap": 1,
+      "initial stop": 1,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 28881.93,
+     "p90SliceDd": 34425,
+     "worstSliceDd": 45257.72,
+     "medianSliceNet": 10846.6,
+     "p10SliceNet": 2039.28,
+     "breaches": 25,
+     "breachShare": 0.09765625,
+     "wilson95": [
+      0.06702402202281094,
+      0.14018486262978228
+     ],
+     "trainingBreachShare": 0.0703
+    }
+   },
+   {
+    "label": "C23/G/refine/G.h0.s0/R102#3 profit order",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G/lower-drawdown",
+     "role G-U/lower-drawdown"
+    ],
+    "boundaryEquity": 129816.05,
+    "sliceNet": 41309.43,
+    "sliceDd": 7424.92,
+    "wholeNet": 171125.48,
+    "wholeDd": 14631.37,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 3,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 3
+     },
+     "worstLotMae": -1689.04738824589,
+     "maeMedian": -984.18,
+     "worstRealized": 1869.0902939124305,
+     "losing": 0,
+     "exitReasons": {
+      "trend exit": 3
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 7564.63,
+     "p90SliceDd": 12403.57,
+     "worstSliceDd": 34428.41,
+     "medianSliceNet": 28872.39,
+     "p10SliceNet": 20126.09,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0742
+    }
+   },
+   {
+    "label": "C23/G/refine/G.h0.s1/R101#5 profit order",
+    "arm": "G",
+    "kind": "selected",
+    "roles": [
+     "role G-P/lower-drawdown"
+    ],
+    "boundaryEquity": 140212.09,
+    "sliceNet": 50577.03,
+    "sliceDd": 11078.87,
+    "wholeNet": 190789.11,
+    "wholeDd": 25598.81,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 6,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 6
+     },
+     "worstLotMae": -3951.6222908473737,
+     "maeMedian": -1187.52,
+     "worstRealized": -3951.6222908473737,
+     "losing": 1,
+     "exitReasons": {
+      "trailing stop": 5,
+      "initial stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 11248.45,
+     "p90SliceDd": 13169.06,
+     "worstSliceDd": 15474.39,
+     "medianSliceNet": 47077.4,
+     "p10SliceNet": 37938.68,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C23/J/refine/J.A1.h0.s1/R104#1 profit",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J/balanced",
+     "role J-P/balanced"
+    ],
+    "boundaryEquity": 337503.11,
+    "sliceNet": 23052.47,
+    "sliceDd": 20350.86,
+    "wholeNet": 360555.58,
+    "wholeDd": 28655.41,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 6,
+     "byBook": {
+      "D1·TSLA": 2,
+      "Growth·TSLA": 4
+     },
+     "worstLotMae": -18148.730739264796,
+     "maeMedian": -5091.32,
+     "worstRealized": -16664.21058292935,
+     "losing": 3,
+     "exitReasons": {
+      "maximum hold": 1,
+      "trailing stop": 3,
+      "initial stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 20284.21,
+     "p90SliceDd": 29514.03,
+     "worstSliceDd": 41422.06,
+     "medianSliceNet": 27070.49,
+     "p10SliceNet": 11993.08,
+     "breaches": 3,
+     "breachShare": 0.01171875,
+     "wilson95": [
+      0.003993287091971495,
+      0.0338815729233115
+     ],
+     "trainingBreachShare": 0.0234
+    }
+   },
+   {
+    "label": "C23/J/refine/J.D1.h0.s1/R104#4 Growth gate alternative",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J/lower-drawdown"
+    ],
+    "boundaryEquity": 165894.53,
+    "sliceNet": 7882.69,
+    "sliceDd": 6004.22,
+    "wholeNet": 173777.22,
+    "wholeDd": 16594.99,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 1,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -2350.9218485877354,
+     "maeMedian": -2350.92,
+     "worstRealized": 7882.694610878268,
+     "losing": 0,
+     "exitReasons": {
+      "initial stop": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 6748.63,
+     "p90SliceDd": 12018.48,
+     "worstSliceDd": 18094.62,
+     "medianSliceNet": 7863.15,
+     "p10SliceNet": 5253.95,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C23/J/refine/J.C1.h2.s0/R104#3 balanced",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J-P/lower-drawdown"
+    ],
+    "boundaryEquity": 212471.98,
+    "sliceNet": 29932.84,
+    "sliceDd": 12154.78,
+    "wholeNet": 242404.82,
+    "wholeDd": 19037.76,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 6,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -4516.20011911852,
+     "maeMedian": -2084.16,
+     "worstRealized": -4516.20011911852,
+     "losing": 2,
+     "exitReasons": {
+      "trailing stop gap": 2,
+      "protective stop": 2,
+      "trailing stop": 1,
+      "trend exit": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 10670.18,
+     "p90SliceDd": 11727.83,
+     "worstSliceDd": 13997.26,
+     "medianSliceNet": 20864.7,
+     "p10SliceNet": 12608.84,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0039
+    }
+   },
+   {
+    "label": "C23/J/refine/J.D1.h0.s0/R103#2 robust",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J-U/robust-profit",
+     "role J-U/balanced"
+    ],
+    "boundaryEquity": 314412.47,
+    "sliceNet": 859.37,
+    "sliceDd": 23380.36,
+    "wholeNet": 315271.84,
+    "wholeDd": 28325.73,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 6,
+     "byBook": {
+      "D1·TSLA": 5,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -13451.370863427223,
+     "maeMedian": -6260.04,
+     "worstRealized": -13451.370863427223,
+     "losing": 2,
+     "exitReasons": {
+      "protective stop gap": 2,
+      "trailing stop": 3,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 19932.66,
+     "p90SliceDd": 26598.27,
+     "worstSliceDd": 43462.07,
+     "medianSliceNet": 9917.74,
+     "p10SliceNet": -2611.03,
+     "breaches": 2,
+     "breachShare": 0.0078125,
+     "wilson95": [
+      0.0021450903483974013,
+      0.02803276854700787
+     ],
+     "trainingBreachShare": 0.0547
+    }
+   },
+   {
+    "label": "C23/J/refine/J.C1.h0.s0/R101#4 control alternative",
+    "arm": "J",
+    "kind": "selected",
+    "roles": [
+     "role J-U/lower-drawdown"
+    ],
+    "boundaryEquity": 83170.84,
+    "sliceNet": -4712.39,
+    "sliceDd": 20069.66,
+    "wholeNet": 78458.45,
+    "wholeDd": 31663.33,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 3,
+     "byBook": {
+      "D1·TSLA": 2,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -11467.468824490037,
+     "maeMedian": -2350.92,
+     "worstRealized": -11467.468824490037,
+     "losing": 2,
+     "exitReasons": {
+      "trailing stop gap": 1,
+      "protective stop gap": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 18634.32,
+     "p90SliceDd": 24113.75,
+     "worstSliceDd": 28008.6,
+     "medianSliceNet": -3988.21,
+     "p10SliceNet": -10254.19,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C23/S/refine/S.C23F3.h0.s1/R102#2 robust",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S/robust-profit",
+     "role S/balanced",
+     "role S-P/robust-profit",
+     "role S-P/balanced"
+    ],
+    "boundaryEquity": 396461.38,
+    "sliceNet": 12523.09,
+    "sliceDd": 28872.72,
+    "wholeNet": 408984.47,
+    "wholeDd": 38879.37,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 6,
+     "byBook": {
+      "D1·TSLA": 1,
+      "Growth·TSLA": 5
+     },
+     "worstLotMae": -15304.652814742254,
+     "maeMedian": -6221.95,
+     "worstRealized": -15304.652814742254,
+     "losing": 4,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "trailing stop gap": 1,
+      "initial stop": 2,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 27424.63,
+     "p90SliceDd": 34456.42,
+     "worstSliceDd": 43857.69,
+     "medianSliceNet": 16100.06,
+     "p10SliceNet": 1519.62,
+     "breaches": 21,
+     "breachShare": 0.08203125,
+     "wilson95": [
+      0.05427759173050018,
+      0.12214328844258207
+     ],
+     "trainingBreachShare": 0.0039
+    }
+   },
+   {
+    "label": "C23/S/broad/S.C23F3.h2.s1/R102#3 Growth gate alternative",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S/lower-drawdown",
+     "role S-P/lower-drawdown"
+    ],
+    "boundaryEquity": 208130.41,
+    "sliceNet": -8723.41,
+    "sliceDd": 17795.56,
+    "wholeNet": 199406.99,
+    "wholeDd": 22559.21,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 2,
+     "byBook": {
+      "D1·TSLA": 1,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -15304.652814742254,
+     "maeMedian": -8827.79,
+     "worstRealized": -15304.652814742254,
+     "losing": 1,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "maximum hold": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 17795.56,
+     "p90SliceDd": 17795.56,
+     "worstSliceDd": 17795.56,
+     "medianSliceNet": -8861.42,
+     "p10SliceNet": -10007.26,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "C23/S/refine/S.C23F3.h0.s0/R101#3 profit order",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S-U/robust-profit"
+    ],
+    "boundaryEquity": 380321.31,
+    "sliceNet": 13864.29,
+    "sliceDd": 16428.82,
+    "wholeNet": 394185.6,
+    "wholeDd": 32505.58,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 3,
+     "byBook": {
+      "D1·TSLA": 1,
+      "Growth·TSLA": 2
+     },
+     "worstLotMae": -15304.652814742254,
+     "maeMedian": -1689.05,
+     "worstRealized": -15304.652814742254,
+     "losing": 1,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "trailing stop": 2
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 16428.82,
+     "p90SliceDd": 16428.82,
+     "worstSliceDd": 27031.64,
+     "medianSliceNet": 14872.77,
+     "p10SliceNet": 11060.83,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0703
+    }
+   },
+   {
+    "label": "C23/S/refine/S.C23F3.h0.s0/R104#2 balanced",
+    "arm": "S",
+    "kind": "selected",
+    "roles": [
+     "role S-U/balanced",
+     "role S-U/lower-drawdown"
+    ],
+    "boundaryEquity": 243246.41,
+    "sliceNet": 3139.02,
+    "sliceDd": 17133.68,
+    "wholeNet": 246385.43,
+    "wholeDd": 21897.34,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 2,
+     "byBook": {
+      "D1·TSLA": 1,
+      "Growth·TSLA": 1
+     },
+     "worstLotMae": -15304.652814742254,
+     "maeMedian": -8496.85,
+     "worstRealized": -15304.652814742254,
+     "losing": 1,
+     "exitReasons": {
+      "protective stop gap": 1,
+      "trend exit": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 17133.68,
+     "p90SliceDd": 26320.59,
+     "worstSliceDd": 26320.59,
+     "medianSliceNet": 13255.75,
+     "p10SliceNet": 1815.69,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0
+    }
+   },
+   {
+    "label": "control: New L0 on TSLA (arm D; external VGT phenotype)",
+    "arm": "D",
+    "kind": "control",
+    "roles": [
+     "control control: New L0 on TSLA (arm D; external VGT phenotype)"
+    ],
+    "boundaryEquity": 119824.58,
+    "sliceNet": -1315.11,
+    "sliceDd": 37887.91,
+    "wholeNet": 118509.47,
+    "wholeDd": 97605.64,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 14,
+     "byBook": {
+      "D1·TSLA": 14,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -18810.5022058399,
+     "maeMedian": -6837.19,
+     "worstRealized": -12952.78838757884,
+     "losing": 6,
+     "exitReasons": {
+      "maximum hold": 6,
+      "trailing stop": 7,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 41388.2,
+     "p90SliceDd": 49963.12,
+     "worstSliceDd": 66737.05,
+     "medianSliceNet": -7485.26,
+     "p10SliceNet": -28562.14,
+     "breaches": 201,
+     "breachShare": 0.78515625,
+     "wilson95": [
+      0.7308246695141415,
+      0.8310564122369333
+     ],
+     "trainingBreachShare": 1
+    }
+   },
+   {
+    "label": "control: N/original on TSLA (arm D; external VGT phenotype)",
+    "arm": "D",
+    "kind": "control",
+    "roles": [
+     "control control: N/original on TSLA (arm D; external VGT phenotype)"
+    ],
+    "boundaryEquity": 101187.42,
+    "sliceNet": 798.82,
+    "sliceDd": 34113.51,
+    "wholeNet": 101986.24,
+    "wholeDd": 98506.56,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 15,
+     "byBook": {
+      "D1·TSLA": 15,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -16889.94270797727,
+     "maeMedian": -7595.5,
+     "worstRealized": -16889.94270797727,
+     "losing": 6,
+     "exitReasons": {
+      "maximum hold": 5,
+      "trailing stop": 8,
+      "protective stop gap": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 41203.55,
+     "p90SliceDd": 49101.16,
+     "worstSliceDd": 64845.91,
+     "medianSliceNet": -10542.97,
+     "p10SliceNet": -31428.35,
+     "breaches": 209,
+     "breachShare": 0.81640625,
+     "wilson95": [
+      0.7644232591880553,
+      0.8590338315220414
+     ],
+     "trainingBreachShare": 1
+    }
+   },
+   {
+    "label": "control: New L0 on TSLA (arm G; external VGT phenotype)",
+    "arm": "G",
+    "kind": "control",
+    "roles": [
+     "control control: New L0 on TSLA (arm G; external VGT phenotype)"
+    ],
+    "boundaryEquity": -5530.63,
+    "sliceNet": 0,
+    "sliceDd": 0,
+    "wholeNet": -5530.63,
+    "wholeDd": 11868.76,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 0,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": null,
+     "maeMedian": null,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {}
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 0,
+     "p90SliceDd": 0,
+     "worstSliceDd": 5780,
+     "medianSliceNet": 0,
+     "p10SliceNet": 0,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0234
+    }
+   },
+   {
+    "label": "control: N/original on TSLA (arm G; external VGT phenotype)",
+    "arm": "G",
+    "kind": "control",
+    "roles": [
+     "control control: N/original on TSLA (arm G; external VGT phenotype)"
+    ],
+    "boundaryEquity": -5668.7,
+    "sliceNet": 0,
+    "sliceDd": 0,
+    "wholeNet": -5668.7,
+    "wholeDd": 11851.72,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 0,
+     "byBook": {
+      "D1·TSLA": 0,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": null,
+     "maeMedian": null,
+     "worstRealized": null,
+     "losing": 0,
+     "exitReasons": {}
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 0,
+     "p90SliceDd": 0,
+     "worstSliceDd": 5780,
+     "medianSliceNet": 0,
+     "p10SliceNet": 0,
+     "breaches": 0,
+     "breachShare": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ],
+     "trainingBreachShare": 0.0195
+    }
+   },
+   {
+    "label": "control: New L0 on TSLA (arm J; external VGT phenotype)",
+    "arm": "J",
+    "kind": "control",
+    "roles": [
+     "control control: New L0 on TSLA (arm J; external VGT phenotype)"
+    ],
+    "boundaryEquity": 119824.58,
+    "sliceNet": -1315.11,
+    "sliceDd": 37887.91,
+    "wholeNet": 118509.47,
+    "wholeDd": 97605.64,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 14,
+     "byBook": {
+      "D1·TSLA": 14,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -18810.5022058399,
+     "maeMedian": -6837.19,
+     "worstRealized": -12952.78838757884,
+     "losing": 6,
+     "exitReasons": {
+      "maximum hold": 6,
+      "trailing stop": 7,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 41388.2,
+     "p90SliceDd": 49963.12,
+     "worstSliceDd": 66737.05,
+     "medianSliceNet": -7485.26,
+     "p10SliceNet": -28562.14,
+     "breaches": 201,
+     "breachShare": 0.78515625,
+     "wilson95": [
+      0.7308246695141415,
+      0.8310564122369333
+     ],
+     "trainingBreachShare": 1
+    }
+   },
+   {
+    "label": "control: N/original on TSLA (arm J; external VGT phenotype)",
+    "arm": "J",
+    "kind": "control",
+    "roles": [
+     "control control: N/original on TSLA (arm J; external VGT phenotype)"
+    ],
+    "boundaryEquity": 101187.42,
+    "sliceNet": 798.82,
+    "sliceDd": 34113.51,
+    "wholeNet": 101986.24,
+    "wholeDd": 98506.56,
+    "openAtBoundary": [],
+    "nextSlice": {
+     "lots": 15,
+     "byBook": {
+      "D1·TSLA": 15,
+      "Growth·TSLA": 0
+     },
+     "worstLotMae": -16889.94270797727,
+     "maeMedian": -7595.5,
+     "worstRealized": -16889.94270797727,
+     "losing": 6,
+     "exitReasons": {
+      "maximum hold": 5,
+      "trailing stop": 8,
+      "protective stop gap": 1,
+      "open": 1
+     }
+    },
+    "neighbourhood": {
+     "draws": 256,
+     "medianSliceDd": 41203.55,
+     "p90SliceDd": 49001.26,
+     "worstSliceDd": 64845.91,
+     "medianSliceNet": -10542.97,
+     "p10SliceNet": -31170.5,
+     "breaches": 209,
+     "breachShare": 0.81640625,
+     "wilson95": [
+      0.7644232591880553,
+      0.8590338315220414
+     ],
+     "trainingBreachShare": 1
+    }
+   }
+  ]
+ }
+}

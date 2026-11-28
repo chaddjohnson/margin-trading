@@ -95,9 +95,12 @@ test('options: cost per side and end validation', async () => {
   for (const bad of ['abc', '-1', '101', '', 'NaN']) assert.throws(() => parseCostBps(bad), UsageError);
 
   if (hasData) {
-    const latest = await commonLastDate();
+    // the default end is the common last date of the requested files (not of the whole universe: files can be refreshed
+    // separately, e.g. VGT and GDX on 2026-11-27 while XBI/XRT/KRE still end on 2026-10-30)
+    const latest = await commonLastDate(['VGT', 'GDX']);
 
     assert.equal(await validateEnd(undefined, ['VGT', 'GDX']), latest);
+    assert.ok(latest >= (await commonLastDate()));
     assert.equal(await validateEnd('2023-12-29', ['VGT']), '2023-12-29');
     await assert.rejects(validateEnd('2099-01-01', ['VGT']), UsageError);
     await assert.rejects(validateEnd('2017-06-01', ['VGT']), UsageError);
@@ -145,9 +148,11 @@ test('invalid commands exit non-zero with a useful message', () => {
   }
 });
 
+// The sealed final door ends 2026-10-29: the run is bounded there explicitly (an unbounded run follows the canonical files,
+// which grow by appends — 2026-10-30 on 2026-11-02, 2026-11-25 on 2026-11-27 — and then never reconciles).
 test('parity with the sealed Study 7 final door, and determinism', { skip: !hasData }, async () => {
-  const one = await runAlias('gdx-robust', { costBps: 5, outDir: path.join(scratch, 'p1') });
-  const two = await runAlias('gdx-robust', { costBps: 5, outDir: path.join(scratch, 'p2') });
+  const one = await runAlias('gdx-robust', { end: '2026-10-29', costBps: 5, outDir: path.join(scratch, 'p1') });
+  const two = await runAlias('gdx-robust', { end: '2026-10-29', costBps: 5, outDir: path.join(scratch, 'p2') });
 
   assert.equal(one.reconciliation.applicable, true);
   assert.equal(one.reconciliation.pass, true, JSON.stringify(one.reconciliation));

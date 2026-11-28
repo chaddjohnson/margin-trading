@@ -1,8 +1,8 @@
 # Optimization research standard
 
-- **Version:** 3.0.0 — **effective** 2026-11-19 — **status:** current (2.2.0, effective 2026-11-13, 2.1.0, effective
-  2026-11-12, 2.0.0 and 1.1.0, effective 2026-11-09, and 1.0.0, effective 2026-11-08, remain registered for the
-  studies that pinned them).
+- **Version:** 5.0.0 — **effective** 2026-11-27 — **status:** current (4.0.0, effective 2026-11-27, 3.0.0, effective
+  2026-11-19, 2.2.0, effective 2026-11-13, 2.1.0, effective 2026-11-12, 2.0.0 and 1.1.0, effective 2026-11-09, and 1.0.0,
+  effective 2026-11-08, remain registered for the studies that pinned them).
 - **Authoritative path:** `docs/research/OPTIMIZATION_STANDARD.md` (this file). There is no other copy; earlier versions
   are read from git history (`git log -p -- docs/research/OPTIMIZATION_STANDARD.md`).
 - **Version registry:** `docs/research/optimization-standard.versions.json` (version → sha256 of this file).
@@ -14,6 +14,9 @@
     [NEW_L0_METHOD.md](methods/NEW_L0_METHOD.md), the recovered procedure that produced New L0 (§4.8, from 2.1.0).
 - **Change log:** §8. **GPU-only official optimization and CPU/GPU parity:** §9 (from 3.0.0), after the change log so
   that the earlier section numbers stay unchanged; its companions are [docs/gpu/](../gpu/).
+- **Research date ranges** (from 4.0.0): `config/research/date-ranges.json` — the authoritative, explicit development and
+  validation windows (§1), read by `src/lib/researchRanges.ts`; the canonical files' verified earlier versions:
+  `config/market-data/vintages.json` (`src/lib/canonicalPrefix.ts`).
 
 This standard sets how optimization research is done in this repository: what is mandatory, what each study must
 specify, what is report-only, and what can change only through a documented amendment. It does not replace a study's
@@ -30,6 +33,9 @@ own protocol; every new study writes one from the template and pins the version 
 - **Bounded diagnostics of frozen selections that open validation data** (for example a retrospective pooled
   comparison). They adopt the standard with scope `diagnostic`. §1, §2.1, §3.4, §5 and §6 apply, and (from 1.1.0) the
   report-only §2.8 and §2.9 where they are relevant. §4 (search) does not, except that a diagnostic never searches.
+- **Controlled prospective (shadow) evaluations of a frozen configuration** (from 5.0.0). A pre-registered, causal
+  evaluation of a configuration frozen before the sessions it observes (scope `prospective`, §1.15). It never searches,
+  retunes or changes the configuration. §1, §2.1, §5 and §6 apply, and §1.13–§1.16 define its evidence category.
 - **Not retroactive.** Studies completed before 2026-11-08 keep their own frozen protocols. They are never edited,
   re-hashed or rerun to look compliant (see [context-recovery.md](../claude/context-recovery.md) §4).
 
@@ -55,15 +61,44 @@ items where amendments most often arise.
 
 ### 0.3 Terms
 
-- **Development window.** 2016-01-04 → 2024-12-31 (sessions on canonical data). This is where all optimization and
-  selection happens.
-- **Validation window.** 2025-01-01 → the study's **common complete endpoint**. The first session is 2025-01-02.
-- **Common complete endpoint.** The latest date D such that every instrument the study trades has a complete regular
-  session at D in its canonical file (recorded by sha256), and no session between the start and D is missing. It is
-  verified from the files, never assumed.
-- **Door.** A data source that physically holds only the rows a stage may read: a byte-prefix file through a cutoff,
-  or the full file. Every door is verified by size, sha256 and last-row time before parsing, and every opening is
-  logged.
+- **Research date range** (from 4.0.0). The authoritative, explicit inclusive New York session dates of formal research,
+  `config/research/date-ranges.json`: a development window and a validation window, each with a fixed end. They are
+  dates, independent of how far the canonical files reach. The range in force is `current`; a study pins the range it
+  adopted. **R1** (in force from 2026-11-08, recorded 2026-11-27): development 2016-01-04 → 2024-12-31, validation
+  2025-01-01 → 2026-10-30.
+- **Development window.** The development window of the study's research date range (R1: 2016-01-04 → 2024-12-31,
+  sessions on canonical data). This is where all optimization and selection happens.
+- **Validation window.** 2025-01-01 → the study's **validation end**: the authorized validation end of its research
+  date range (R1: 2026-10-30), or an earlier date its protocol fixes. The first session is 2025-01-02. It is a fixed
+  date, never "the end of the files" (from 4.0.0).
+- **Common complete endpoint.** The study's validation end, verified from the files: every instrument the study trades
+  has a complete regular session at that date in its canonical file (recorded by a byte-prefix pin, from 4.0.0), and no
+  session between the start and it is missing. Later rows may exist in the files; they are outside every formal window.
+  (Before 4.0.0: the latest such date in the files.)
+- **Door.** A data source that physically holds — or, from 4.0.0, reads — only the rows a stage may read: a byte-prefix
+  file through a cutoff, or a verified byte prefix of the canonical file read no further (`src/lib/canonicalPrefix.ts`,
+  the loaders' `pin` and formal-stage access, `src/lib/evaluation.ts`). Every door is verified by size, sha256 and
+  last-row time before parsing, and every opening is logged.
+- **Evidence categories** (from 5.0.0). Every result belongs to exactly one category; they are not interchangeable
+  (§1.16):
+  1. **Formal historical research:** optimization, qualification, candidate selection, formal validation,
+     validation-neighbourhood robustness tests and every other decision-bearing evaluation a study's protocol authorizes,
+     only inside its pinned research date range (§1.12).
+  2. **Manual post-validation evaluation** (called *manual evaluation* in 4.0.0): a backtest of an existing configuration
+     on any window of the canonical files, including sessions after the validation end; informational (§1.13).
+  3. **Controlled prospective (shadow) evaluation:** a pre-registered, causal evaluation of a configuration frozen before
+     the sessions it observes, meeting every condition of §1.15; prospective research evidence, reported apart from the
+     historical validation window.
+  4. **Live trading performance:** actual orders and broker fills (§1.16). Backtests in this repository never produce it.
+- **Manual (post-validation) evaluation** (from 4.0.0). Category 2 above: a backtest outside formal research. By itself
+  it is never optimization, selection, qualification or validation evidence, and never prospective (§1.13).
+- **Observation availability and freeze time** (from 5.0.0). A market session is *available* from its regular-session
+  open (New York time), whether or not a canonical file holds it yet. A configuration's *freeze time* is the verifiable
+  UTC time of its sealed, hashed record (a commit or a seal). A session is *prospective* for a configuration only if it
+  opened after the configuration's freeze time and after the evaluation was pre-registered (§1.15).
+- **Vintage** (from 4.0.0). A verified earlier version of a canonical file: the files only grow by appending rows after
+  their last bar, so an earlier file is exactly the first `bytes` bytes of today's file and hashes to its old sha256
+  (`config/market-data/vintages.json`).
 - **Frozen / sealed.**
   - *Frozen:* fixed by a protocol whose sha256 is recorded before the governed work starts.
   - *Sealed:* a record written once, made read-only (0444), with its sha256 appended to the study's `seals.jsonl`.
@@ -133,10 +168,18 @@ user's agreement. When the brief is silent, this standard applies.
 ## 1. Date separation and provenance
 
 1. **[M] Development only for choices.** Every optimization, refinement, architecture selection, ETF selection,
-   threshold, range and ranking choice uses development data (2016-01-04 → 2024-12-31) only.
-2. **[M] Validation only for frozen selections.** 2025–2026 data are opened only to evaluate selections already frozen.
-3. **[M][S] The endpoint.** Each study records its actual common complete endpoint (§0.3) with the data hashes. It
-   never implies that unavailable dates (for example November–December 2026) were tested.
+   threshold, range and ranking choice uses development data (the development window of the study's research date
+   range; R1: 2016-01-04 → 2024-12-31) only.
+2. **[M] Validation only for frozen selections.** Validation-window data (R1: 2025-01-01 → 2026-10-30) are opened only to
+   evaluate selections already frozen.
+3. **[M][S] Explicit, fixed windows and the endpoint** (rewritten in 4.0.0).
+   - Before the governed research begins, the protocol and the adoption manifest fix the study's windows as explicit
+     dates inside its research date range (`dateRanges`: the range's id). The validation end is the range's authorized
+     end, or an earlier date the protocol fixes; it never follows the files' coverage.
+   - The study verifies that every traded instrument's file holds the validation end completely (§0.3) and records the
+     byte-prefix provenance of each instrument's data through it (`dataPins`: file, bytes, sha256, through-date), so the
+     exact inputs stay verifiable however the files grow (§1.14).
+   - Reports never imply that dates outside the windows (for example data appended later) were tested.
 4. **[M] Freeze before opening.** Before any new validation result of a candidate exists, the following are frozen,
    sealed and **committed**:
    - the primary, the shortlist and the reporting roles;
@@ -183,8 +226,82 @@ user's agreement. When the brief is silent, this standard applies.
     evidence (§5.4).
 11. **[M] Standard changes never reach into an active study.** See §7.5.
 
+12. **[M] Appended data never move a window** (added in 4.0.0).
+    - The canonical files grow continuously: `npm run datasets -- append` adds rows after the last bar only and proves
+      that every earlier byte is unchanged. Newer data never extend a study's windows, doors, folds or cutoffs, nor the
+      research date range, implicitly or by default.
+    - Formal stages read data only through their windows' ends, **enforced at data access**: byte-prefix doors, or the
+      loaders' `development` / `validation` access (`src/lib/evaluation.ts`: a window ending after the stage's
+      authorized end is refused before a byte is read, and only the bytes through the end are read). Filtering results
+      after a run is never the boundary.
+    - A later range is a **new entry** in `config/research/date-ranges.json` citing the user's explicit authorization,
+      made `current`. Existing entries are never edited. A study keeps the range it pinned; using a newer range is a new
+      study or an explicit amendment. Adding a range is not a change of this standard.
+13. **[M] Manual post-validation evaluation is informational** (added in 4.0.0; clarified in 5.0.0).
+    - Manual backtests of an existing configuration may run any window, including data after the validation end. Reports
+      label such a period "manual post-validation evaluation, not an extension of the formal validation dataset" and
+      record the actual simulated and reported dates, the execution convention (continuous history or an isolated
+      window) and the data provenance (the files' versions or byte-prefix pins).
+    - It does not extend formal validation. By itself it is never optimization, selection, qualification or validation
+      evidence, and never a promotion, ranking or stopping input of a study.
+    - It must not silently influence historical research: newly appended data do not adjust strategy rules, parameter
+      ranges, phenotypes, allocator behaviour, gates or acceptance criteria of any study without the user's separate
+      authorization, recorded as an amendment or a new study. A study that wants newer sessions as formal evidence needs a
+      new authorized range and its own protocol (§1.12), or a prospective protocol (§1.15).
+    - Running a configuration on newer data does not make the evaluation prospective: a backtest run after the sessions
+      it covers were available stays a manual post-validation evaluation, whatever the configuration's freeze time,
+      unless §1.15 was met before the first of those sessions.
+    - Selecting all available data for a manual run grants no formal stage access to those dates.
+14. **[M] Reproducible inputs after appends** (added in 4.0.0).
+    - Every pinned input stays verifiable: a whole-file pin of an earlier file is a byte prefix of today's file (its
+      vintage), verified by hashing that prefix; integrity checks are never weakened or removed to accommodate an
+      append.
+    - Shared loaders read a pinned historical input as its verified prefix and nothing after it, so its sessions, ids,
+      hashes and cache keys are unchanged (Priority 3's FULL door from 2026-11-27).
+    - A completed study whose own code checks a whole file fails closed after an append; it is reproduced at its own
+      commit from the verified prefix (`npm run datasets -- prefix`), never by editing its code or sealed records.
+    - Cache identities of manual runs include the data version and the window, so an extended manual run never returns
+      a stale result.
+
+15. **[M] Controlled prospective (shadow) evaluation** (added in 5.0.0). Newly arriving sessions can be legitimate
+    forward evidence about a configuration that was genuinely frozen before them. A prospective evaluation counts as
+    prospective research evidence — reported apart from the historical validation window — only when **every** condition
+    holds:
+    - **Frozen before the observations.** The complete decision-bearing configuration is recorded in a sealed, hashed
+      record: every strategy parameter and risk control, the allocator, the execution, cost and interest assumptions,
+      and the engine version. Its verifiable freeze time precedes the open of the first observed session. Sessions
+      that opened before the freeze are never prospective for it.
+    - **Pre-registered.** Before the first observed session opens, a study protocol (scope `prospective`) fixes the
+      configuration's identity, the evaluation method, the observation start, the reporting periods and, when
+      decision-bearing claims are intended, the acceptance criteria. These are [A] items that are never loosened once
+      observations exist.
+    - **Verifiable provenance.** The freeze time (commit or seal), the configuration's sha256, each observed session's
+      data provenance (vintage or byte-prefix pin) and the time of every evaluation are recorded.
+    - **Causal and complete.** The evaluation is causal (the frozen engine, no look-ahead, one continuous run with the
+      configuration's state carried through), and every observed session is reported: no selective reporting, restarted
+      clocks or dropped periods.
+    - **Versioned changes.** A change of the configuration (strategy, phenotype, allocator, engine) is a new version
+      with its own freeze time. Observations before that freeze are never represented as untouched for the new version,
+      and the change never resets or rewrites the earlier version's record.
+    - **Reported separately.** Results are labelled "prospective (shadow) evaluation of <configuration>, frozen <UTC
+      time>, observed from <session>" and never merged into development or formal validation figures.
+    - **No retroactive classification.** An evaluation that did not meet these conditions before its first observed
+      session stays a manual post-validation evaluation (§1.13), even if the configuration happened to be frozen
+      earlier.
+    - A prospective evaluation changes neither the configuration, the research date ranges nor any completed study.
+      Starting one is a new study authorized by the user.
+16. **[M] Evidence categories are never interchanged** (added in 5.0.0).
+    - Every report names each result's category (§0.3): formal historical research, manual post-validation
+      evaluation, controlled prospective (shadow) evaluation, or live trading performance.
+    - A shadow evaluation is not live trading. It simulates fills under the frozen execution assumptions. Live
+      performance consists of actual orders and broker fills, which this repository's backtests never claim (broker
+      access needs the user's explicit request).
+    - A result is never moved to a stronger category after the fact, and figures from different categories are never
+      reported as one combined figure.
+
 **Amendment items:** the endpoint (if the data change), doors, fold cutoffs, the verdict rule, the verdict's
-consequence (from 2.2.0).
+consequence (from 2.2.0), the pinned research date range (from 4.0.0), a prospective protocol's observation start,
+reporting periods and acceptance criteria (from 5.0.0; never loosened once observations exist).
 
 ## 2. Objectives and candidate retention
 
@@ -586,8 +703,13 @@ threshold, and any change of the cap (with the user's approval).
    - the objective, the primary-selection rule and the roles;
    - the risk ceiling and its denominator;
    - the budget (proposals, evaluations);
-   - the scope (`optimization`, `continuation` or `diagnostic`);
+   - the scope (`optimization`, `continuation`, `diagnostic` or, from 5.0.0, `prospective`);
    - from 3.0.0, the evaluation backend (`evaluationBackend`, §9.11);
+   - from 4.0.0, the research date range (`dateRanges`) and the byte-prefix provenance of every instrument's data
+     through the validation end (`dataPins`, §1.3);
+   - from 5.0.0, for scope `prospective`, the `prospective` block (§1.15): the frozen configuration's record and
+     sha256, its freeze time and the evidence for it, the first observed session, whether the evaluation is
+     decision-bearing, its acceptance criteria, and the reporting rule;
    - every deviation.
 
    The protocol carries the same adoption entry, including the standard's version and sha256.
@@ -619,7 +741,14 @@ threshold, and any change of the cap (with the user's approval).
    - **What the preflight verifies:**
      - the manifest exists and is complete;
      - its hashes match the registered standard and the current protocol;
-     - its declared windows and risk budget agree with the standard, or are covered by a recorded departure;
+     - its declared windows and risk budget agree with the standard, or are covered by a recorded departure; from
+       4.0.0 every manifest's windows lie inside the research date range (`config/research/date-ranges.json`), whatever
+       the files hold, and a manifest pinning 4.0.0 or later declares `dateRanges` and `dataPins`, each pin verified as a
+       byte prefix of the local canonical file when present; an optimization or continuation adopted from 4.0.0's
+       effective date pins 4.0.0 or later;
+     - from 5.0.0, a `prospective` manifest: it pins 5.0.0 or later, its configuration record matches its sha256, the
+       freeze time and the pre-registration (`adoptedAt`) both precede the open of the first observed session, the
+       observations start after the validation end, and a decision-bearing evaluation declares acceptance criteria;
      - every departure cites an agreement.
    - **What it cannot verify:** that an agent read or understood the document, or that the study's code obeys it.
    - **Who checks those:** protocol reviews, the study's own guards (doors, seals, freezes) and the user's review.
@@ -639,6 +768,8 @@ threshold, and any change of the cap (with the user's approval).
 
 | Version | Effective | Change | Rationale and evidence | Implications |
 |---|---|---|---|---|
+| 5.0.0 | 2026-11-27 | **Major** (§7.4: a mandatory rule changed and mandatory rules added; item numbers kept). §0.3 defines four **evidence categories**: formal historical research, manual post-validation evaluation, controlled prospective (shadow) evaluation and live trading performance. It also defines observation availability (a session from its regular-session open) and the freeze time. §0.1 adds the scope `prospective`. §1.13 is clarified: manual post-validation evaluation is informational; it records its actual dates, execution convention and data provenance; it never silently influences historical research and is not prospective by itself. The flat "never research evidence" is replaced by §1.15. New §1.15 *controlled prospective (shadow) evaluation*: prospective evidence only if the complete configuration was frozen (sealed, hashed, verifiable time) before the first observed session opened, the method, observation start, reporting and any acceptance criteria were pre-registered before it, provenance is verifiable, the evaluation is causal and complete, changes are versioned, and results are reported apart from the historical validation; no retroactive classification. New §1.16 *evidence categories are never interchanged*: shadow ≠ live, no promotion of a result to a stronger category, no combined figures across categories. §7.2/§7.6 add the `prospective` manifest block and its preflight checks; the amendment items add a prospective protocol's observation start, reporting periods and acceptance criteria. Companions: the preflight (`scope: prospective`, `src/research-standard/preflight.ts`), its tests, the adoption template, `CLAUDE.md`, the README and the roadmap. | The user's brief of 2026-11-27, Assignment 1 (`docs/data-updates/2026-11-27-assignment-1/BRIEF.md` §8): 4.0.0's "manual runs on newer data are never research evidence" was overly restrictive. Newer sessions must not contaminate historical research, but they may provide prospective evidence about a configuration that was genuinely frozen before them. The categories must distinguish an informal manual post-validation backtest, a properly controlled prospective shadow evaluation and actual live trading. Evidence: the manual N/original evaluation through 2026-11-25 (`docs/data-updates/2026-11-27/`, frozen 2026-11-17T09:50Z, evaluated 2026-11-27 without pre-registration) is the case the rules classify: category 2, not prospective. | Applies to studies adopting it from 2026-11-27. Studies pinned to 4.0.0 or earlier keep their pins, windows, labels and sealed records. A 4.0.0 study's manual runs on newer data stay informational; a prospective evaluation is a new study (scope `prospective`, pinning 5.0.0) authorized by the user. No formal window, research date range, gate, budget, instrument, objective weight, fitness rule or the $35,000 ceiling changes. N/original's November 2026 evaluation is **not** reclassified: it was not pre-registered, and its first sessions (2026-11-02 → 2026-11-14) opened before its 2026-11-17 freeze. The preflight change keeps the GPU acceptance record STALE on this branch (as 4.0.0 did). |
+| 4.0.0 | 2026-11-27 | **Major** (§7.4: a mandatory rule changed and mandatory rules added; item numbers kept). §0.3 defines the **research date range** (`config/research/date-ranges.json`; R1: development 2016-01-04 → 2024-12-31, validation 2025-01-01 → 2026-10-30), the fixed **validation end** (the common complete endpoint is now that end verified in the files, no longer the files' latest complete date), byte-prefix doors without copies, manual post-validation evaluation and vintages. §1.3 is rewritten: explicit windows fixed before the research, inside the pinned range, with byte-prefix data provenance (`dateRanges`, `dataPins`). New §1.12 *appended data never move a window* (enforced at data access; a later range only as a new user-authorized entry), §1.13 *manual evaluation on newer data is not research evidence*, §1.14 *reproducible inputs after appends* (prefix verification, never weaker checks; completed studies reproduced at their commit). §7.2/§7.6 list the new manifest fields and preflight checks. The companions follow: the loaders (`src/lib/evaluation.ts` `pin` and `development`/`validation` access, `src/lib/csv.ts` `maxBytes`, `src/lib/canonicalPrefix.ts`, `src/lib/researchRanges.ts`), Priority 3's FULL door (verified prefix), `npm run datasets -- append` (prefix proof, vintage record) / `prefix` / `vintages`, the preflight (range bounds for every manifest; `dateRanges`/`dataPins` from 4.0.0; the 4.0.0 no-evasion rule), the protocol and adoption templates, `CLAUDE.md`, the roadmap, the README. | The user's brief of 2026-11-27 (`docs/data-updates/2026-11-27/BRIEF.md` §4–§6: explicit fixed ranges established before research, never changed by newer data, manual runs distinct, provenance recorded; "update [the standard] where necessary"). Evidence: the audit `docs/data-updates/2026-11-27/AUDIT.md` (the standard's endpoint was defined by the files; every adopting study had fixed 2026-10-30; an append would break Priority 3's whole-file FULL pin and skip golden masters), and the reproducibility evidence of the same directory (doors and sealed replays identical before and after the change and the append). | Applies to studies adopting it from 2026-11-27; from that date new optimization and continuation manifests adopt 4.0.0 or later. Studies pinned to 3.0.0 or earlier keep their pins, windows, engines and sealed records (never re-hashed or rerun); the preflight checks every manifest's windows against the range, which every existing manifest (validation end 2026-10-30) satisfies. The code change to the evaluation loaders makes the GPU acceptance record STALE: official GPU optimization stays blocked until a §9.9 re-acceptance (docs/gpu/PARITY_CHECKLIST.md §2). No gate, window, budget, instrument, objective weight, fitness rule or the $35,000 ceiling changes; no completed study's window moves. |
 | 3.0.0 | 2026-11-19 | **Major** (§7.4: mandatory rules added). Adds §9 [M] *GPU-only official optimization and CPU/GPU parity*: official evaluations (defined in §9.1) run only on the attested NVIDIA GPU evaluator, with no CPU fallback, `auto` backend or hybrid, failing closed (§9.2); the single official gate with its live preflight and attestation (§9.3); capability coverage of the whole reachable domain (§9.4); per-batch device receipts, the conservation invariant (CPU-scored = 0) and archive provenance (§9.5); permanent bit-identical CPU/GPU parity for every evaluation-dependency change, with the TypeScript engine authoritative and CUDA C++ the accelerator (§9.6); stale-port protection by the compatibility manifest (§9.7); explicit non-official purposes for CPU evaluation (§9.8); activation only by an ACCEPTED acceptance record (§9.9); the merge gate (policy tests plus the Apollo GPU verification step; a CPU-only CI pass is never parity) and the entrypoint audit (§9.10); the adoption manifest's `evaluationBackend` and the no-evasion rule (§9.11); enforcement limits (§9.12). One-line pointers in §0.1, §6.5 and §7.6. The companions follow: `CLAUDE.md` (a mandatory section), `docs/gpu/` (checklist, feature matrix, operations), the protocol template, the adoption template (`evaluationBackend`), the preflight (`src/research-standard/gpuPolicy.ts`), the PR template and contribution guide, the roadmap. | The user's GPU Acceleration Phase 2 brief (`research/gpu-phase2/brief/BRIEF.md`, 2026-11-19): official optimization becomes GPU-only and parity a permanent policy, implemented as a new major version of this standard. Evidence: `research/gpu-phase2/` (the complete CUDA port of D1/RC, Growth 1.4.0, the pool and the risk-envelope inputs; its parity campaign, determinism, sanitizer, negative tests and fixed-seed mini-optimization; the policy tests) and Phase 1 (`research/gpu-phase1-feasibility/`). | Applies to studies adopting it from 2026-11-19; from that date new optimization and continuation manifests adopt 3.0.0 or later. Studies pinned to 2.2.0 or earlier keep their pins, engines and sealed records (never re-hashed or rerun); a continuation of one either retains its pin as a CPU-era study whose new official stages need the user's decision, or migrates by amendment. **Official GPU optimization stays blocked until `config/gpu-backend/acceptance.json` is ACCEPTED** (§9.9). No gate, window, budget, instrument, objective weight, fitness rule or the $35,000 ceiling changes. |
 | 2.2.0 | 2026-11-13 | **Minor** (§7.4: a new [S] item and a new [R] item; no [M] rule added, removed or changed; existing item numbers kept). Adds §1.8 [S] *Consequence*: before searching, the protocol states what a failed or uncomputable independent chronological verdict means for the final selection (default: "no chronological support: not a deployment-qualified candidate without an explicit user decision"). It is governance, not a fitness term, ranking input or gate. "No qualifying candidate" is a valid outcome. An informed lane's selection is labelled "no independent chronological test". Adds §5.9 [R] *Chronological exposure disclosure* for every fold primary and final candidate: the open-lot share of training net (denominator and ≤ 0 handling fixed), the largest open lot's market-value multiple and its give-back on the next slice, the per-lot MAE distribution and loss severity, a D1 maximum-hold-window tail stress on a declared reference history (disjoint data, or a labelled proxy), and the training neighbourhood replayed on the next slice; with the evidence limits stated. One-line pointers in §5.4 and the amendment items. The companions follow: the protocol template (§10, §15), the adoption template (`chronologicalConsequence`), the preflight (it requires `chronologicalConsequence` from optimization and continuation studies adopting 2.2.0 or later), the roadmap. | The user's approval in the Assignment 1 brief (`research/vg-l0-risk-controls-foundation/brief/BRIEF.md` §1: "the user has approved these diagnostic/governance safeguards"). Evidence: the walk-forward diagnostic (`research/vg-l0-walk-forward-diagnostic/REPORT.md` §3–§4, recommendations 1–4 and its "Proposed narrowly scoped amendment"): 4 of 4 anchor procedures and 6 earlier ones failed chronologically; carried open lots were 33–53% of the C21 training nets of 5B, B1 and B2, at 1.5–2.5× exposure (ρ +0.72 with the 2022–2023 DD); training neighbourhoods breached in 0–8% of draws against 54–100% on the next slice; D1 dip-buys had no loss exit before their maximum hold. | Applies to studies adopting it from 2026-11-13. Studies pinned to 2.1.0, 2.0.0, 1.1.0 or 1.0.0 keep their pin, labels and sealed verdicts (the preflight passes with a notice; a continuation records "retained pinned standard x.y.z" or migrates by amendment, §7.5). No gate, window, budget, instrument, objective weight or the $35,000 ceiling changes. No numeric threshold is attached to any §5.9 item. NL0 1.0.0 (`methods/NEW_L0_METHOD.md`) is unchanged: it records what was executed, before these items existed. The first adopter is `research/vg-l0-risk-controls-foundation/` (scope `diagnostic`). |
 | 2.1.0 | 2026-11-12 | **Minor** (§7.4: new [S] items; no [M] rule added, removed or changed). Adds §3.5 [S] *Convention changes* (A frozen incumbent / B direct conversion / C re-optimized selection, with the decomposition; the new convention an explicit option, the original the default) and §4.8 [S] *Reproducing a reference method* (pin, stage map, omitted-stage reassignment through the original schedules, proportional scaling by replicates, side-by-side budget equivalence against the effective original budget). Adds the companion directory `docs/research/methods/` with its registry and the first reference method, NL0 1.0.0 (`methods/NEW_L0_METHOD.md`). The preflight gains an optional check of a declared `referenceMethod` pin; the protocol template gains the matching rows. | The user's brief for the New L0 trading-session study (`research/vg-l0-session-hold/brief/BRIEF.md`, 2026-11-12, Phase 2: "Update the appropriate documentation … Where the original methodology contains reusable practices, incorporate them appropriately into the optimization documentation … Where something is specific to New L0, preserve it in a dedicated, versioned reference protocol"). Evidence: Priority 5B (`research/vg-lifecycle-matched-optimization/`), whose L0 arm produced New L0; its executed budget and stage allocation recovered in `methods/NEW_L0_METHOD.md` §4; Priorities 5A/5B's lifecycle-on-fixed-phenotype versus matched-optimization designs (the precedent for §3.5). | Applies to studies adopting it from 2026-11-12. Studies pinned to 2.0.0, 1.1.0 or 1.0.0 keep their pin (the preflight passes with a notice). No gate, window, budget, instrument or the $35,000 ceiling changes. The first adopter is `research/vg-l0-session-hold/` (scope `optimization`). |

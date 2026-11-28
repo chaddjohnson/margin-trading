@@ -8,7 +8,10 @@
 //   protocol's sha256 (a protocol edited after adoption fails until it is re-adopted or amended);
 // - the protocol itself records the standard's version and sha256;
 // - the declared date split and risk budget agree with the standard, unless a departure for that section cites the
-//   user's agreement; every departure cites one;
+//   user's agreement; every departure cites one; from 4.0.0 the date split must lie inside the authoritative research
+//   date ranges (config/research/date-ranges.json: development and validation may not end after the range's ends,
+//   whatever data the canonical files hold), and a study adopting 4.0.0 or later pins its range and the byte-prefix
+//   provenance of its data (each pin verified against the local canonical file when present);
 // - from 2.2.0, an optimization or continuation declares the consequence of its chronological verdict (§1.8);
 // - from 3.0.0, an optimization or continuation declares the GPU-required evaluation backend and is refused while no
 //   ACCEPTED GPU evaluator matches the working tree; a new optimization may not pin an earlier version (§9,
@@ -19,23 +22,30 @@
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { verifyBytePin } from '../lib/canonicalPrefix.ts';
+import { type ResearchRange, readResearchRanges } from '../lib/researchRanges.ts';
 import { type EvaluationBackend, checkGpuPolicy } from './gpuPolicy.ts';
 
 export const standardPath = 'docs/research/OPTIMIZATION_STANDARD.md';
 export const registryPath = 'docs/research/optimization-standard.versions.json';
 export const methodRegistryPath = 'docs/research/methods/methods.versions.json'; // reference methods (§4.8, from 2.1.0)
 export const manifestName = 'STANDARD_ADOPTION.json';
+export const researchRangesPath = 'config/research/date-ranges.json'; // the authoritative research date ranges (§1, 4.0.0)
 
-export const scopes = ['optimization', 'continuation', 'diagnostic'] as const;
+// `prospective` (from 5.0.0, §1.15): a pre-registered prospective (shadow) evaluation of a configuration frozen before the
+// observed sessions; it never searches, so it is treated as a diagnostic for search-related fields.
+export const scopes = ['optimization', 'continuation', 'diagnostic', 'prospective'] as const;
 export const priorities = ['actual-profit', 'robust-profit', 'compromise', 'not-applicable'] as const;
 export const requiredRoles = ['actual-profit', 'robust-profit', 'balanced'] as const;
 // The first version whose §1.8 [S] requires the consequence of the chronological verdict to be declared.
 export const consequenceSince = '2.2.0';
+// The first version whose §1.3 requires a pinned research date range and the data's byte-prefix provenance.
+export const dateRangesSince = '4.0.0';
+export const prospectiveSince = '5.0.0';
 
-// The standard's fixed values (§1.1, §2.1); a different declared value needs a departure for that section.
+// The standard's fixed values (§2.1); a different declared value needs a departure for that section. The date bounds
+// (§1) are not constants here: they are the research date ranges of the repository checked (researchRangesPath).
 export const rules = {
-  developmentEndMax: '2024-12-31',
-  validationStartMin: '2025-01-01',
   maximumMinuteDrawdown: 35_000,
   principalBudget: 100_000
 };
@@ -83,6 +93,22 @@ export interface Adoption {
   referenceMethod?: { id: string; path: string; version: string; sha256: string }; // optional (§4.8, from 2.1.0)
   chronologicalConsequence?: string; // §1.8 [S], from 2.2.0: required for optimization and continuation scopes
   evaluationBackend?: EvaluationBackend; // §9 [M], from 3.0.0: required for optimization and continuation scopes
+  // §1.3 [M], from 4.0.0: the research date range the study adopted (config/research/date-ranges.json) and the byte-prefix
+  // provenance of every instrument's data through its validation end (required for studies pinning 4.0.0 or later)
+  dateRanges?: { file: string; id: string };
+  dataPins?: Record<string, { file: string; bytes: number; sha256: string; through: string }>;
+  // §1.15 [M], from 5.0.0: required for scope `prospective` — the frozen configuration and its verifiable freeze time, the
+  // pre-registered observation start (a New York session after both the freeze and the validation end), and the
+  // acceptance criteria when the evaluation is decision-bearing
+  prospective?: {
+    configuration: { label: string; file: string; sha256: string; pointer?: string };
+    frozenAt: string;
+    freezeEvidence: string;
+    observationFrom: string;
+    decisionBearing: boolean;
+    acceptanceCriteria: string | null;
+    reporting: string;
+  };
 }
 
 export interface MethodRegistry {
@@ -314,6 +340,27 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
     }
   }
 
+  // the research date range (§1, from 4.0.0): the repository's authoritative ranges, and the study's pinned one
+  let range: ResearchRange | null = null;
+  const rangesFile = path.join(repoRoot, researchRangesPath);
+
+  if (!fs.existsSync(rangesFile)) errors.push(`the research date ranges ${researchRangesPath} are missing (§1)`);
+  else {
+    try {
+      const all = readResearchRanges(rangesFile);
+      const id = a.dateRanges?.id ?? all.current;
+
+      range = all.ranges.find((r) => r.id === id) ?? null;
+      if (a.dateRanges !== undefined && a.dateRanges?.file !== researchRangesPath)
+        errors.push(`dateRanges.file must be ${researchRangesPath}`);
+      if (!range) errors.push(`dateRanges.id ${id} is not a range of ${researchRangesPath}`);
+      else if (range.id !== all.current)
+        notices.push(`pinned to research date range ${range.id}; the current range is ${all.current} (a frozen study keeps its range)`);
+    } catch (error) {
+      errors.push((error as Error).message);
+    }
+  }
+
   // the date split (§1)
   const ds = a.dateSplit;
   const dates = [
@@ -327,23 +374,72 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
   if (!dates.every((d) => isoDate.test(d ?? '')))
     errors.push('dateSplit needs YYYY-MM-DD development, validation and endpoint dates');
   else if (!deviationFor(a, '§1')) {
-    if (ds.development.to > rules.developmentEndMax)
-      errors.push(`development ends ${ds.development.to}, after ${rules.developmentEndMax} (§1.1)`);
-    if (ds.validation.from < rules.validationStartMin)
-      errors.push(`validation starts ${ds.validation.from}, before ${rules.validationStartMin} (§1.2)`);
+    if (range) {
+      if (ds.development.to > range.development.to)
+        errors.push(`development ends ${ds.development.to}, after ${range.development.to} (§1.1; research date range ${range.id})`);
+      if (ds.validation.from < range.validation.from)
+        errors.push(`validation starts ${ds.validation.from}, before ${range.validation.from} (§1.2; research date range ${range.id})`);
+      if (ds.validation.to > range.validation.to)
+        errors.push(
+          `validation ends ${ds.validation.to}, after the authorized validation end ${range.validation.to} (§1.3; research date range ` +
+            `${range.id}, ${researchRangesPath}): newer data are for manual evaluation only, and a later formal end needs a new range authorized by the user`
+        );
+    }
     if (!(ds.development.from <= ds.development.to && ds.development.to < ds.validation.from))
       errors.push('the development window must end before the validation window starts');
     if (ds.validation.to !== ds.commonCompleteEndpoint)
       errors.push('validation.to must be the common complete endpoint (§1.3)');
   } else notices.push('the date split is covered by a recorded departure for §1');
 
+  // no evasion of §1.3 by pinning an earlier standard once 4.0.0 is in force (as §9.11 for 3.0.0)
+  const v4 = reg.registry?.versions.find((x) => x.version === dateRangesSince);
+
+  if (
+    (a.scope === 'optimization' || a.scope === 'continuation') &&
+    v4 &&
+    pinned &&
+    compareVersions(pinned.version, dateRangesSince) < 0 &&
+    typeof a.adoptedAt === 'string' &&
+    a.adoptedAt.slice(0, 10) >= v4.effective
+  )
+    errors.push(
+      `a ${a.scope} adopted on ${a.adoptedAt.slice(0, 10)} pins standard ${pinned.version}: from ${v4.effective} new optimization ` +
+        `and continuation manifests adopt ${dateRangesSince} or later (explicit research date ranges and data provenance, §1.3)`
+    );
+
+  // the pinned range and the data's byte-prefix provenance (§1.3, from 4.0.0); pins are verified when the data exist
+  if (pinned && compareVersions(pinned.version, dateRangesSince) >= 0) {
+    if (a.dateRanges === undefined) errors.push(`dateRanges is missing: standard ${pinned.version} §1.3 requires the study's research date range`);
+    if (a.scope !== 'diagnostic' && (!a.dataPins || Object.keys(a.dataPins).length === 0))
+      errors.push(`dataPins is missing: standard ${pinned.version} §1.3 requires each instrument's byte-prefix provenance`);
+  }
+
+  for (const [symbol, p] of Object.entries(a.dataPins ?? {})) {
+    const where = `dataPins.${symbol}`;
+
+    if (!p || !text(p.file) || !Number.isSafeInteger(p.bytes) || p.bytes < 1 || !hex64.test(p.sha256 ?? '') || !isoDate.test(p.through ?? ''))
+      errors.push(`${where} needs file, bytes, sha256 (64 hex) and through (YYYY-MM-DD)`);
+    else if (isoDate.test(ds?.validation?.to ?? '') && p.through > ds.validation.to)
+      errors.push(`${where} reaches ${p.through}, after the validation end ${ds.validation.to}`);
+    else if (!fs.existsSync(path.join(repoRoot, p.file))) notices.push(`${where}: ${p.file} is not present here; the pin is not verified`);
+    else {
+      try {
+        verifyBytePin(path.join(repoRoot, p.file), p, `${where} (${p.file})`);
+      } catch (error) {
+        errors.push((error as Error).message);
+      }
+    }
+  }
+
   // objective and roles (§2)
   if (!priorities.includes(a.objective?.prioritizes))
     errors.push(`objective.prioritizes must be one of ${priorities.join(', ')}`);
-  if (a.objective?.prioritizes === 'not-applicable' && a.scope !== 'diagnostic')
-    errors.push('only a diagnostic may declare no primary-selection priority');
+  const searches = a.scope === 'optimization' || a.scope === 'continuation';
+
+  if (a.objective?.prioritizes === 'not-applicable' && searches)
+    errors.push('only a diagnostic or prospective evaluation may declare no primary-selection priority');
   if (!text(a.objective?.primaryRule)) errors.push('objective.primaryRule is missing');
-  if (a.scope !== 'diagnostic') {
+  if (searches) {
     const roles = Array.isArray(a.objective?.roles) ? a.objective.roles : [];
     const missing = requiredRoles.filter((r) => !roles.includes(r));
 
@@ -367,7 +463,7 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
   const count = (v: unknown) => typeof v === 'number' && Number.isFinite(v) && v >= 0;
 
   if (!b) errors.push('budget is missing');
-  else if (a.scope === 'diagnostic') {
+  else if (!searches) {
     for (const k of ['distinctProposals', 'backendEvaluations'] as const)
       if (b[k] !== null && !count(b[k])) errors.push(`budget.${k} must be a count or null`);
   } else
@@ -375,7 +471,7 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
       if (!count(b[k]) || (b[k] as number) <= 0) errors.push(`budget.${k} must be declared (§4.2)`);
 
   // the consequence of the chronological verdict (§1.8 [S], from 2.2.0): declared before searching
-  if (pinned && compareVersions(pinned.version, consequenceSince) >= 0 && a.scope !== 'diagnostic') {
+  if (pinned && compareVersions(pinned.version, consequenceSince) >= 0 && searches) {
     if (!text(a.chronologicalConsequence))
       errors.push(
         `chronologicalConsequence is missing: standard ${pinned.version} §1.8 requires the protocol to state, before ` +
@@ -383,6 +479,45 @@ export const checkAdoption = (studyDir: string, o: { repoRoot: string; now?: Dat
       );
   } else if (a.chronologicalConsequence !== undefined && !text(a.chronologicalConsequence))
     errors.push('chronologicalConsequence must be a non-empty statement when given');
+
+  // a controlled prospective (shadow) evaluation (§1.15, from 5.0.0): pre-registered before its first observed session
+  if (a.scope === 'prospective' || a.prospective !== undefined) {
+    const pr = a.prospective;
+    // the earliest regular-session open of a New York date (09:30 EDT = 13:30 UTC): conservative for EST dates
+    const openOf = (d: string) => Date.parse(`${d}T13:30:00Z`);
+
+    if (a.scope !== 'prospective') errors.push('a prospective block needs scope "prospective" (§1.15)');
+    if (!pinned || compareVersions(pinned.version, prospectiveSince) < 0)
+      errors.push(`scope prospective needs standard ${prospectiveSince} or later (§1.15); ${pinned?.version ?? 'no version'} is pinned`);
+    if (!pr) errors.push('prospective is missing: §1.15 requires the frozen configuration, its freeze time and the observation start');
+    else {
+      const c = pr.configuration;
+
+      if (!c || !text(c.label) || !text(c.file) || !hex64.test(c.sha256 ?? ''))
+        errors.push('prospective.configuration needs label, file and sha256 (64 hex) of the sealed configuration record');
+      else if (!fs.existsSync(path.resolve(repoRoot, c.file))) errors.push(`prospective.configuration ${c.file} does not exist`);
+      else if (sha256File(path.resolve(repoRoot, c.file)) !== c.sha256)
+        errors.push(`prospective.configuration ${c.file} does not match its sha256: the frozen configuration changed (§1.15: a change is a new version)`);
+      if (!isoUtc.test(pr.frozenAt ?? '')) errors.push('prospective.frozenAt must be an ISO UTC time (…Z): the verifiable freeze time');
+      if (!text(pr.freezeEvidence)) errors.push('prospective.freezeEvidence must name the commit or sealed record that proves the freeze time');
+      if (!isoDate.test(pr.observationFrom ?? '')) errors.push('prospective.observationFrom must be the first observed New York session (YYYY-MM-DD)');
+      if (typeof pr.decisionBearing !== 'boolean') errors.push('prospective.decisionBearing must be true or false');
+      if (pr.decisionBearing === true && !text(pr.acceptanceCriteria))
+        errors.push('prospective.acceptanceCriteria are required for a decision-bearing evaluation, fixed before the first observed session (§1.15)');
+      if (!text(pr.reporting)) errors.push('prospective.reporting must state that every observed session is reported (no selective reporting, §1.15)');
+      if (isoUtc.test(pr.frozenAt ?? '') && isoDate.test(pr.observationFrom ?? '')) {
+        if (Date.parse(pr.frozenAt) >= openOf(pr.observationFrom))
+          errors.push(
+            `the configuration was frozen ${pr.frozenAt}, not before the first observed session ${pr.observationFrom} opened: ` +
+              'sessions that opened before the freeze are never prospective for it (§1.15)'
+          );
+        if (isoUtc.test(a.adoptedAt ?? '') && Date.parse(a.adoptedAt) >= openOf(pr.observationFrom))
+          errors.push(`the evaluation was pre-registered (adoptedAt ${a.adoptedAt}) only after the first observed session ${pr.observationFrom} opened (§1.15: no retroactive classification)`);
+      }
+      if (range && isoDate.test(pr.observationFrom ?? '') && pr.observationFrom <= range.validation.to)
+        errors.push(`prospective observations start ${pr.observationFrom}, inside the formal validation window of ${range.id} (ends ${range.validation.to}): they are reported apart from it (§1.15, §1.16)`);
+    }
+  }
 
   // the reference method, if the study declares one (§4.8)
   if (a.referenceMethod !== undefined) {

@@ -1,0 +1,1146 @@
+TAP version 13
+# Subtest: purpose: explicit, never defaulted; unknown refused
+ok 1 - purpose: explicit, never defaulted; unknown refused
+  ---
+  duration_ms: 1.034967
+  type: 'test'
+  ...
+# Subtest: a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+ok 2 - a CPU runner refuses a missing purpose and official optimization; accepts a declared non-official purpose
+  ---
+  duration_ms: 0.183771
+  type: 'test'
+  ...
+# Subtest: the legacy runner wrapper refuses before importing the runner
+ok 3 - the legacy runner wrapper refuses before importing the runner
+  ---
+  duration_ms: 963.228547
+  type: 'test'
+  ...
+# Subtest: every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+ok 4 - every npm script that can start a CPU research runner or optimizer goes through the purpose gate
+  ---
+  duration_ms: 1.41852
+  type: 'test'
+  ...
+# Subtest: the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+ok 5 - the official runner wrapper refuses a missing or non-official purpose, a non-optimization study and a module without the gate
+  ---
+  duration_ms: 619.849502
+  type: 'test'
+  ...
+# Subtest: engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+ok 6 - engine runtime: Maglev is off only with --no-maglev and no other Maglev option; the gate and the reference pools use it
+  ---
+  duration_ms: 0.947267
+  type: 'test'
+  ...
+# Subtest: entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+ok 7 - entrypoint audit: no search machinery outside the official GPU gate, legacy runners unchanged
+  ---
+  duration_ms: 147.973038
+  type: 'test'
+  ...
+# Subtest: acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+ok 8 - acceptance record: missing, forged, stale, changed evidence and wrong binary/device all fail closed
+  ---
+  duration_ms: 108.835845
+  type: 'test'
+  ...
+# Subtest: preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+ok 9 - preflight §9: an official study needs the GPU backend and an accepted evaluator; no evasion by an old pin
+  ---
+  duration_ms: 0.456933
+  type: 'test'
+  ...
+# Subtest: the deferred pilot domain reaches only capabilities the evaluator implements
+ok 10 - the deferred pilot domain reaches only capabilities the evaluator implements
+  ---
+  duration_ms: 3307.628912
+  type: 'test'
+  ...
+# Subtest: MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+ok 11 - MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)
+  ---
+  duration_ms: 10.393081
+  type: 'test'
+  ...
+# Subtest: the derived lane (derive.ts)
+    # Subtest: search.ts equals a fresh derivation from the lane Priority 5 ran
+    ok 1 - search.ts equals a fresh derivation from the lane Priority 5 ran
+      ---
+      duration_ms: 0.947546
+      type: 'test'
+      ...
+    1..1
+ok 12 - the derived lane (derive.ts)
+  ---
+  duration_ms: 1.659801
+  type: 'suite'
+  ...
+# Subtest: the TSLA space (space.ts)
+    # Subtest: has 8 D, 6 G and 48 J cells and a 75-gene genome
+    ok 1 - has 8 D, 6 G and 48 J cells and a 75-gene genome
+      ---
+      duration_ms: 0.354523
+      type: 'test'
+      ...
+    # Subtest: decodes into the lane cell, round-trips, keeps the disabled slot inert and the absent book off
+    ok 2 - decodes into the lane cell, round-trips, keeps the disabled slot inert and the absent book off
+      ---
+      duration_ms: 6367.417192
+      type: 'test'
+      ...
+    # Subtest: a mutated genome stays in its cell (free genes only)
+    ok 3 - a mutated genome stays in its cell (free genes only)
+      ---
+      duration_ms: 25.962695
+      type: 'test'
+      ...
+    # Subtest: arm S: the frozen D1 never moves in designs or moves; the measurement neighbourhood perturbs it
+    ok 4 - arm S: the frozen D1 never moves in designs or moves; the measurement neighbourhood perturbs it
+      ---
+      duration_ms: 41.398219
+      type: 'test'
+      ...
+    # Subtest: a pair (arm C) carries the D1 of one configuration and the Growth of another
+    ok 5 - a pair (arm C) carries the D1 of one configuration and the Growth of another
+      ---
+      duration_ms: 2.282755
+      type: 'test'
+      ...
+    # Subtest: the external controls are New L0’s and N/original’s TSLA-slot books, never seeds
+    ok 6 - the external controls are New L0’s and N/original’s TSLA-slot books, never seeds
+      ---
+      duration_ms: 1.944133
+      type: 'test'
+      ...
+    1..6
+ok 13 - the TSLA space (space.ts)
+  ---
+  duration_ms: 6439.700069
+  type: 'suite'
+  ...
+# Subtest: the arm fitness (fitness.ts)
+    # Subtest: equals the pilot’s under P0 for a both-families arm
+    ok 1 - equals the pilot’s under P0 for a both-families arm
+      ---
+      duration_ms: 0.621984
+      type: 'test'
+      ...
+    # Subtest: requires only the arm’s own family in the standalone arms
+    ok 2 - requires only the arm’s own family in the standalone arms
+      ---
+      duration_ms: 0.152761
+      type: 'test'
+      ...
+    1..2
+ok 14 - the arm fitness (fitness.ts)
+  ---
+  duration_ms: 0.888706
+  type: 'suite'
+  ...
+# Subtest: the door guards (doors.ts)
+    # Subtest: opens training doors only after the previous fold’s slice, D24 also after the sequential record
+    ok 1 - opens training doors only after the previous fold’s slice, D24 also after the sequential record
+      ---
+      duration_ms: 0.314872
+      type: 'test'
+      ...
+    # Subtest: opens a slice door only after the committed selection, once
+    ok 2 - opens a slice door only after the committed selection, once
+      ---
+      duration_ms: 0.113751
+      type: 'test'
+      ...
+    # Subtest: opens FULL for the validation only after the frozen selection and the authorization, once
+    ok 3 - opens FULL for the validation only after the frozen selection and the authorization, once
+      ---
+      duration_ms: 0.078391
+      type: 'test'
+      ...
+    # Subtest: engineering reads FULL only for data integrity before the freeze; D21+ never after the freeze
+    ok 4 - engineering reads FULL only for data integrity before the freeze; D21+ never after the freeze
+      ---
+      duration_ms: 0.09536
+      type: 'test'
+      ...
+    1..4
+ok 15 - the door guards (doors.ts)
+  ---
+  duration_ms: 0.680814
+  type: 'suite'
+  ...
+# Subtest: budgets (budget.ts)
+    # Subtest: keeps NL0’s schedules with Priority 5’s island caps
+    ok 1 - keeps NL0’s schedules with Priority 5’s island caps
+      ---
+      duration_ms: 0.07612
+      type: 'test'
+      ...
+    1..1
+ok 16 - budgets (budget.ts)
+  ---
+  duration_ms: 0.107901
+  type: 'suite'
+  ...
+# Subtest: selection (select.ts)
+    # Subtest: finalists: primary, robust and balanced role holders with distinct ledgers
+    ok 1 - finalists: primary, robust and balanced role holders with distinct ledgers
+      ---
+      duration_ms: 0.370333
+      type: 'test'
+      ...
+    # Subtest: the refinement plan takes every qualified cell when the quota allows
+    ok 2 - the refinement plan takes every qualified cell when the quota allows
+      ---
+      duration_ms: 0.330782
+      type: 'test'
+      ...
+    1..2
+ok 17 - selection (select.ts)
+  ---
+  duration_ms: 0.755145
+  type: 'suite'
+  ...
+# Subtest: outcome (outcome.ts)
+    # Subtest: material improvement types P and R with the bands
+    ok 1 - material improvement types P and R with the bands
+      ---
+      duration_ms: 0.08613
+      type: 'test'
+      ...
+    # Subtest: the arm Q6 replaces "both families funded" by the arm’s families
+    ok 2 - the arm Q6 replaces "both families funded" by the arm’s families
+      ---
+      duration_ms: 0.196982
+      type: 'test'
+      ...
+    1..2
+ok 18 - outcome (outcome.ts)
+  ---
+  duration_ms: 0.331223
+  type: 'suite'
+  ...
+# Subtest: gap scenarios: a protective stop is not a loss cap
+    # Subtest: −10% gap through an 8% stop, family B (legacy hold), next-session: fills at the gapped open
+    ok 1 - −10% gap through an 8% stop, family B (legacy hold), next-session: fills at the gapped open
+      ---
+      duration_ms: 12.188072
+      type: 'test'
+      ...
+    # Subtest: −10% gap through an 8% stop, family B (legacy hold), entry-day: fills at the gapped open
+    ok 2 - −10% gap through an 8% stop, family B (legacy hold), entry-day: fills at the gapped open
+      ---
+      duration_ms: 0.787915
+      type: 'test'
+      ...
+    # Subtest: −10% gap through an 8% stop, family C (hold disabled), next-session: fills at the gapped open
+    ok 3 - −10% gap through an 8% stop, family C (hold disabled), next-session: fills at the gapped open
+      ---
+      duration_ms: 0.376502
+      type: 'test'
+      ...
+    # Subtest: −10% gap through an 8% stop, family C (hold disabled), entry-day: fills at the gapped open
+    ok 4 - −10% gap through an 8% stop, family C (hold disabled), entry-day: fills at the gapped open
+      ---
+      duration_ms: 0.327133
+      type: 'test'
+      ...
+    # Subtest: −10% gap through an 8% stop, family D (adaptive hold), next-session: fills at the gapped open
+    ok 5 - −10% gap through an 8% stop, family D (adaptive hold), next-session: fills at the gapped open
+      ---
+      duration_ms: 0.371583
+      type: 'test'
+      ...
+    # Subtest: −10% gap through an 8% stop, family D (adaptive hold), entry-day: fills at the gapped open
+    ok 6 - −10% gap through an 8% stop, family D (adaptive hold), entry-day: fills at the gapped open
+      ---
+      duration_ms: 0.262332
+      type: 'test'
+      ...
+    # Subtest: −20% gap through an 8% stop, family B (legacy hold), next-session: fills at the gapped open
+    ok 7 - −20% gap through an 8% stop, family B (legacy hold), next-session: fills at the gapped open
+      ---
+      duration_ms: 0.208282
+      type: 'test'
+      ...
+    # Subtest: −20% gap through an 8% stop, family B (legacy hold), entry-day: fills at the gapped open
+    ok 8 - −20% gap through an 8% stop, family B (legacy hold), entry-day: fills at the gapped open
+      ---
+      duration_ms: 0.279752
+      type: 'test'
+      ...
+    # Subtest: −20% gap through an 8% stop, family C (hold disabled), next-session: fills at the gapped open
+    ok 9 - −20% gap through an 8% stop, family C (hold disabled), next-session: fills at the gapped open
+      ---
+      duration_ms: 0.238312
+      type: 'test'
+      ...
+    # Subtest: −20% gap through an 8% stop, family C (hold disabled), entry-day: fills at the gapped open
+    ok 10 - −20% gap through an 8% stop, family C (hold disabled), entry-day: fills at the gapped open
+      ---
+      duration_ms: 0.351192
+      type: 'test'
+      ...
+    # Subtest: −20% gap through an 8% stop, family D (adaptive hold), next-session: fills at the gapped open
+    ok 11 - −20% gap through an 8% stop, family D (adaptive hold), next-session: fills at the gapped open
+      ---
+      duration_ms: 0.202101
+      type: 'test'
+      ...
+    # Subtest: −20% gap through an 8% stop, family D (adaptive hold), entry-day: fills at the gapped open
+    ok 12 - −20% gap through an 8% stop, family D (adaptive hold), entry-day: fills at the gapped open
+      ---
+      duration_ms: 0.161391
+      type: 'test'
+      ...
+    # Subtest: −30% gap through an 8% stop, family B (legacy hold), next-session: fills at the gapped open
+    ok 13 - −30% gap through an 8% stop, family B (legacy hold), next-session: fills at the gapped open
+      ---
+      duration_ms: 0.155591
+      type: 'test'
+      ...
+    # Subtest: −30% gap through an 8% stop, family B (legacy hold), entry-day: fills at the gapped open
+    ok 14 - −30% gap through an 8% stop, family B (legacy hold), entry-day: fills at the gapped open
+      ---
+      duration_ms: 0.152801
+      type: 'test'
+      ...
+    # Subtest: −30% gap through an 8% stop, family C (hold disabled), next-session: fills at the gapped open
+    ok 15 - −30% gap through an 8% stop, family C (hold disabled), next-session: fills at the gapped open
+      ---
+      duration_ms: 0.153771
+      type: 'test'
+      ...
+    # Subtest: −30% gap through an 8% stop, family C (hold disabled), entry-day: fills at the gapped open
+    ok 16 - −30% gap through an 8% stop, family C (hold disabled), entry-day: fills at the gapped open
+      ---
+      duration_ms: 0.140781
+      type: 'test'
+      ...
+    # Subtest: −30% gap through an 8% stop, family D (adaptive hold), next-session: fills at the gapped open
+    ok 17 - −30% gap through an 8% stop, family D (adaptive hold), next-session: fills at the gapped open
+      ---
+      duration_ms: 0.126231
+      type: 'test'
+      ...
+    # Subtest: −30% gap through an 8% stop, family D (adaptive hold), entry-day: fills at the gapped open
+    ok 18 - −30% gap through an 8% stop, family D (adaptive hold), entry-day: fills at the gapped open
+      ---
+      duration_ms: 0.118681
+      type: 'test'
+      ...
+    # Subtest: a −10% gap inside a 20% stop does not stop: B leaves at its maximum hold, C stays open to the end
+    ok 19 - a −10% gap inside a 20% stop does not stop: B leaves at its maximum hold, C stays open to the end
+      ---
+      duration_ms: 0.480363
+      type: 'test'
+      ...
+    # Subtest: a −30% gap through a 25% stop still loses the full 30%
+    ok 20 - a −30% gap through a 25% stop still loses the full 30%
+      ---
+      duration_ms: 0.197692
+      type: 'test'
+      ...
+    # Subtest: family A (no stop) rides the same −30% gap to its maximum hold
+    ok 21 - family A (no stop) rides the same −30% gap to its maximum hold
+      ---
+      duration_ms: 0.245982
+      type: 'test'
+      ...
+    1..21
+ok 19 - gap scenarios: a protective stop is not a loss cap
+  ---
+  duration_ms: 18.854697
+  type: 'suite'
+  ...
+# Subtest: halts and illiquidity
+    # Subtest: a halt (the next session’s first 120 minutes absent) fills at the first trade after it, below the level
+    ok 1 - a halt (the next session’s first 120 minutes absent) fills at the first trade after it, below the level
+      ---
+      duration_ms: 0.167931
+      type: 'test'
+      ...
+    # Subtest: entry day: minutes missing after the fill, the next present minute opens through the level and fills at that open
+    ok 2 - entry day: minutes missing after the fill, the next present minute opens through the level and fills at that open
+      ---
+      duration_ms: 0.193071
+      type: 'test'
+      ...
+    # Subtest: next-open stress: a minute low through the level fills at the next minute’s open, below the level
+    ok 3 - next-open stress: a minute low through the level fills at the next minute’s open, below the level
+      ---
+      duration_ms: 0.266192
+      type: 'test'
+      ...
+    1..3
+ok 20 - halts and illiquidity
+  ---
+  duration_ms: 0.737625
+  type: 'suite'
+  ...
+# Subtest: the selectors are Assignment 2’s, unchanged
+    # Subtest: C19: every sealed primary of Assignment 2 is re-derived from its sealed evidence
+    ok 1 - C19: every sealed primary of Assignment 2 is re-derived from its sealed evidence
+      ---
+      duration_ms: 687.83486
+      type: 'test'
+      ...
+    # Subtest: C21: every sealed primary of Assignment 2 is re-derived from its sealed evidence
+    ok 2 - C21: every sealed primary of Assignment 2 is re-derived from its sealed evidence
+      ---
+      duration_ms: 399.189203
+      type: 'test'
+      ...
+    # Subtest: C23: every sealed primary of Assignment 2 is re-derived from its sealed evidence
+    ok 3 - C23: every sealed primary of Assignment 2 is re-derived from its sealed evidence
+      ---
+      duration_ms: 369.393772
+      type: 'test'
+      ...
+    # Subtest: C24: every sealed primary of Assignment 2 is re-derived from its sealed evidence
+    ok 4 - C24: every sealed primary of Assignment 2 is re-derived from its sealed evidence
+      ---
+      duration_ms: 323.245631
+      type: 'test'
+      ...
+    1..4
+ok 21 - the selectors are Assignment 2’s, unchanged
+  ---
+  duration_ms: 1780.508871
+  type: 'suite'
+  ...
+# Subtest: populations
+    # Subtest: L, B, F hold only Track I; N only Track N (with the incumbents); U both; the control is never a member
+    ok 1 - L, B, F hold only Track I; N only Track N (with the incumbents); U both; the control is never a member
+      ---
+      duration_ms: 0.956617
+      type: 'test'
+      ...
+    # Subtest: the original rule takes the highest qualified centre net; RA1 prefers a member passing every screen
+    ok 2 - the original rule takes the highest qualified centre net; RA1 prefers a member passing every screen
+      ---
+      duration_ms: 0.250702
+      type: 'test'
+      ...
+    1..2
+ok 22 - populations
+  ---
+  duration_ms: 1.336159
+  type: 'suite'
+  ...
+# Subtest: the stage-2 refinement plan
+    # Subtest: always the legacy cell, at most 16 others, every family on every book and both Growth entries covered when available
+    ok 1 - always the legacy cell, at most 16 others, every family on every book and both Growth entries covered when available
+      ---
+      duration_ms: 4.41521
+      type: 'test'
+      ...
+    1..1
+ok 23 - the stage-2 refinement plan
+  ---
+  duration_ms: 4.588381
+  type: 'suite'
+  ...
+# Subtest: structure
+    # Subtest: 8 × 8 = 64 cells, 16 family pairs of 4 gate states each
+    ok 1 - 8 × 8 = 64 cells, 16 family pairs of 4 gate states each
+      ---
+      duration_ms: 1.750352
+      type: 'test'
+      ...
+    # Subtest: the genome: 14 categorical + 78 ordinal genes (D1 16, controls 12, Growth 50) at both resolutions
+    ok 2 - the genome: 14 categorical + 78 ordinal genes (D1 16, controls 12, Growth 50) at both resolutions
+      ---
+      duration_ms: 0.389742
+      type: 'test'
+      ...
+    1..2
+ok 24 - structure
+  ---
+  duration_ms: 2.894269
+  type: 'suite'
+  ...
+# Subtest: genome, controls and identity
+    # Subtest: every cell, both resolutions: decode → encode → decode is exact and the controls express the cell
+    ok 1 - every cell, both resolutions: decode → encode → decode is exact and the controls express the cell
+      ---
+      duration_ms: 423.053923
+      type: 'test'
+      ...
+    # Subtest: identities: Priority 3 quadId when legacy, rc1 with next-session controls, rc2 with an entry-day book; New L0 = a2e385640ca61012
+    ok 2 - identities: Priority 3 quadId when legacy, rc1 with next-session controls, rc2 with an entry-day book; New L0 = a2e385640ca61012
+      ---
+      duration_ms: 38.114217
+      type: 'test'
+      ...
+    # Subtest: inactive genes never change an identity; an active Growth gene does
+    ok 3 - inactive genes never change an identity; an active Growth gene does
+      ---
+      duration_ms: 1197.307086
+      type: 'test'
+      ...
+    # Subtest: a configuration read back from JSON keeps its identity and evaluation key
+    ok 4 - a configuration read back from JSON keeps its identity and evaluation key
+      ---
+      duration_ms: 28.04982
+      type: 'test'
+      ...
+    # Subtest: the adaptive bound is repaired to ≥ the book’s hold + 3
+    ok 5 - the adaptive bound is repaired to ≥ the book’s hold + 3
+      ---
+      duration_ms: 4.177388
+      type: 'test'
+      ...
+    1..5
+ok 25 - genome, controls and identity
+  ---
+  duration_ms: 1691.116288
+  type: 'suite'
+  ...
+# Subtest: strata
+    # Subtest: every stratum ≥ ⌊n / P⌋ proposals and every factor level within one of the others (n = 512, 192)
+    ok 1 - every stratum ≥ ⌊n / P⌋ proposals and every factor level within one of the others (n = 512, 192)
+      ---
+      duration_ms: 421.700115
+      type: 'test'
+      ...
+    # Subtest: a pinned screen position decodes into its cell with its stratum (activation, K, Growth entry and gate)
+    ok 2 - a pinned screen position decodes into its cell with its stratum (activation, K, Growth entry and gate)
+      ---
+      duration_ms: 59.600092
+      type: 'test'
+      ...
+    1..2
+ok 26 - strata
+  ---
+  duration_ms: 481.537928
+  type: 'suite'
+  ...
+# Subtest: neighbourhoods and moves
+    # Subtest: categorical genes and K stay fixed; every active input moves within its radius; duplicates dropped
+    ok 1 - categorical genes and K stay fixed; every active input moves within its radius; duplicates dropped
+      ---
+      duration_ms: 35.919123
+      type: 'test'
+      ...
+    # Subtest: refinement moves keep the cell (Track I), switch activations, and switch gates only in Track N
+    ok 2 - refinement moves keep the cell (Track I), switch activations, and switch gates only in Track N
+      ---
+      duration_ms: 57.040695
+      type: 'test'
+      ...
+    1..2
+ok 27 - neighbourhoods and moves
+  ---
+  duration_ms: 93.097078
+  type: 'suite'
+  ...
+# Subtest: projections and Track N seeds
+    # Subtest: every incumbent projects onto every cell
+    ok 1 - every incumbent projects onto every cell
+      ---
+      duration_ms: 19.817923
+      type: 'test'
+      ...
+    # Subtest: 16 seeds per lane: each grid level 4 times per book, 8 entry-day seeds per book, 2 focus seeds; genomes decode to the seeds
+    ok 2 - 16 seeds per lane: each grid level 4 times per book, 8 entry-day seeds per book, 2 focus seeds; genomes decode to the seeds
+      ---
+      duration_ms: 56.611752
+      type: 'test'
+      ...
+    1..2
+ok 28 - projections and Track N seeds
+  ---
+  duration_ms: 76.561337
+  type: 'suite'
+  ...
+# Subtest: Track N seeds (informed.ts)
+    # Subtest: N/original is its own native projection in pair GD.VB, a focus seed in odd replicates
+    ok 1 - N/original is its own native projection in pair GD.VB, a focus seed in odd replicates
+      ---
+      duration_ms: 71.999165
+      type: 'test'
+      ...
+    # Subtest: 16 seeds per lane, 2 focus seeds (native), genomes decode to their configurations
+    ok 2 - 16 seeds per lane, 2 focus seeds (native), genomes decode to their configurations
+      ---
+      duration_ms: 429.773099
+      type: 'test'
+      ...
+    # Subtest: focus gate states cover every state over four replicates
+    ok 3 - focus gate states cover every state over four replicates
+      ---
+      duration_ms: 0.820185
+      type: 'test'
+      ...
+    1..3
+ok 29 - Track N seeds (informed.ts)
+  ---
+  duration_ms: 503.420196
+  type: 'suite'
+  ...
+# Subtest: door guards (doors.ts)
+    # Subtest: training doors follow the folds; D24 needs the sequential record
+    ok 1 - training doors follow the folds; D24 needs the sequential record
+      ---
+      duration_ms: 0.399732
+      type: 'test'
+      ...
+    # Subtest: a slice door opens after the committed selection, once
+    ok 2 - a slice door opens after the committed selection, once
+      ---
+      duration_ms: 0.12105
+      type: 'test'
+      ...
+    # Subtest: FULL: validation after the frozen selection and the authorization, once; engineering only for the references before the freeze
+    ok 3 - FULL: validation after the frozen selection and the authorization, once; engineering only for the references before the freeze
+      ---
+      duration_ms: 0.187641
+      type: 'test'
+      ...
+    1..3
+ok 30 - door guards (doors.ts)
+  ---
+  duration_ms: 0.850396
+  type: 'suite'
+  ...
+# Subtest: budgets (budget.ts)
+    # Subtest: the schedules are NL0 / Assignment 3 with only the island cap raised
+    ok 1 - the schedules are NL0 / Assignment 3 with only the island cap raised
+      ---
+      duration_ms: 0.190961
+      type: 'test'
+      ...
+    # Subtest: the lane caps are the deterministic worst cases rounded up
+    ok 2 - the lane caps are the deterministic worst cases rounded up
+      ---
+      duration_ms: 0.207682
+      type: 'test'
+      ...
+    1..2
+ok 31 - budgets (budget.ts)
+  ---
+  duration_ms: 0.526634
+  type: 'suite'
+  ...
+# Subtest: the two-tier extension rule (lanes.ts)
+    # Subtest: NL0 exactly up to its cap
+    ok 1 - NL0 exactly up to its cap
+      ---
+      duration_ms: 0.083351
+      type: 'test'
+      ...
+    # Subtest: beyond NL0’s cap only a performance component extends
+    ok 2 - beyond NL0’s cap only a performance component extends
+      ---
+      duration_ms: 0.091491
+      type: 'test'
+      ...
+    # Subtest: at 16 islands: budget-bound iff a performance component still fires
+    ok 3 - at 16 islands: budget-bound iff a performance component still fires
+      ---
+      duration_ms: 0.06358
+      type: 'test'
+      ...
+    1..3
+ok 32 - the two-tier extension rule (lanes.ts)
+  ---
+  duration_ms: 0.319402
+  type: 'suite'
+  ...
+# Subtest: replicate rounds (lanes.ts unionState / roundTrigger)
+    # Subtest: fires on a > 2 % union gain or a new feasible structure, not otherwise
+    ok 1 - fires on a > 2 % union gain or a new feasible structure, not otherwise
+      ---
+      duration_ms: 0.413392
+      type: 'test'
+      ...
+    1..1
+ok 33 - replicate rounds (lanes.ts unionState / roundTrigger)
+  ---
+  duration_ms: 0.458253
+  type: 'suite'
+  ...
+# Subtest: the sequential statistic (sequential.ts)
+    # Subtest: equals the brute-force tracker when every extreme is a session close; charges at switches
+    ok 1 - equals the brute-force tracker when every extreme is a session close; charges at switches
+      ---
+      duration_ms: 0.461303
+      type: 'test'
+      ...
+    # Subtest: is a lower bound when a minute trough is hidden between closes, exact when a lot minimum shows it
+    ok 2 - is a lower bound when a minute trough is hidden between closes, exact when a lot minimum shows it
+      ---
+      duration_ms: 0.174571
+      type: 'test'
+      ...
+    # Subtest: switch charges, flat folds and the verdict strings
+    ok 3 - switch charges, flat folds and the verdict strings
+      ---
+      duration_ms: 0.209392
+      type: 'test'
+      ...
+    1..3
+ok 34 - the sequential statistic (sequential.ts)
+  ---
+  duration_ms: 0.925686
+  type: 'suite'
+  ...
+# Subtest: the refinement plan (select.ts refineCells)
+    # Subtest: fills the balanced slot instead of Assignment 3’s RA1 slot
+    ok 1 - fills the balanced slot instead of Assignment 3’s RA1 slot
+      ---
+      duration_ms: 0.614234
+      type: 'test'
+      ...
+    1..1
+ok 35 - the refinement plan (select.ts refineCells)
+  ---
+  duration_ms: 0.659474
+  type: 'suite'
+  ...
+# Subtest: the successor rule (successor.ts)
+    # Subtest: profit type needs +$10,000 centre, +$5,000 robust and risk within $2,500
+    ok 1 - profit type needs +$10,000 centre, +$5,000 robust and risk within $2,500
+      ---
+      duration_ms: 0.186581
+      type: 'test'
+      ...
+    # Subtest: risk type needs −$2,500 confirmation p90 DD at non-inferior profit
+    ok 2 - risk type needs −$2,500 confirmation p90 DD at non-inferior profit
+      ---
+      duration_ms: 0.06552
+      type: 'test'
+      ...
+    # Subtest: replication across two replicates, then V1–V3
+    ok 3 - replication across two replicates, then V1–V3
+      ---
+      duration_ms: 0.383403
+      type: 'test'
+      ...
+    1..3
+ok 36 - the successor rule (successor.ts)
+  ---
+  duration_ms: 0.710295
+  type: 'suite'
+  ...
+# Subtest: the limits come from the policies: CTRL marked DD 35 % of C0; EXP 40 % / 25 % / 25 %
+ok 37 - the limits come from the policies: CTRL marked DD 35 % of C0; EXP 40 % / 25 % / 25 %
+  ---
+  duration_ms: 0.594474
+  type: 'test'
+  ...
+# Subtest: plausibility flips: DD $38k with PL/BD ≤ $25k — CTRL fails, EXP passes
+ok 38 - plausibility flips: DD $38k with PL/BD ≤ $25k — CTRL fails, EXP passes
+  ---
+  duration_ms: 0.629584
+  type: 'test'
+  ...
+# Subtest: plausibility flips: PL $26k or BD $26k with DD ≤ $35k — CTRL passes, EXP fails
+ok 39 - plausibility flips: PL $26k or BD $26k with DD ≤ $35k — CTRL passes, EXP fails
+  ---
+  duration_ms: 0.356832
+  type: 'test'
+  ...
+# Subtest: exact boundaries: a value equal to its limit passes, one ulp above fails (unrounded)
+ok 40 - exact boundaries: a value equal to its limit passes, one ulp above fails (unrounded)
+  ---
+  duration_ms: 0.430613
+  type: 'test'
+  ...
+# Subtest: the neighbourhood p90 of EACH of the three metrics gates EXP (decision D-4); CTRL reads the marked p90 DD only
+ok 41 - the neighbourhood p90 of EACH of the three metrics gates EXP (decision D-4); CTRL reads the marked p90 DD only
+  ---
+  duration_ms: 2.529697
+  type: 'test'
+  ...
+# Subtest: EXP compares UNROUNDED neighbourhood p90s; CTRL the frozen instrument (Priority 3’s p90 DD in cents)
+ok 42 - EXP compares UNROUNDED neighbourhood p90s; CTRL the frozen instrument (Priority 3’s p90 DD in cents)
+  ---
+  duration_ms: 0.394442
+  type: 'test'
+  ...
+# Subtest: CTRL = Assignment 2/3’s frozen fitness bit for bit (20,000 random and edge records)
+ok 43 - CTRL = Assignment 2/3’s frozen fitness bit for bit (20,000 random and edge records)
+  ---
+  duration_ms: 257.729308
+  type: 'test'
+  ...
+# Subtest: stage wiring (giveback): only EXP finds feasible proposals; every request carries the envelope
+ok 44 - stage wiring (giveback): only EXP finds feasible proposals; every request carries the envelope
+  ---
+  duration_ms: 488.712087
+  type: 'test'
+  ...
+# Subtest: stage wiring (principal): only CTRL finds feasible proposals; every request carries the envelope
+ok 45 - stage wiring (principal): only CTRL finds feasible proposals; every request carries the envelope
+  ---
+  duration_ms: 293.153708
+  type: 'test'
+  ...
+# Subtest: stage wiring (banked): only CTRL finds feasible proposals; every request carries the envelope
+ok 46 - stage wiring (banked): only CTRL finds feasible proposals; every request carries the envelope
+  ---
+  duration_ms: 249.423043
+  type: 'test'
+  ...
+# Subtest: a baseline member qualifies under both arms
+ok 47 - a baseline member qualifies under both arms
+  ---
+  duration_ms: 2.126864
+  type: 'test'
+  ...
+# Subtest: Q2 flips: centre DD $38k (PL/BD $10k) → CTRL fails, EXP passes; centre PL or BD $26k → CTRL passes, EXP fails
+ok 48 - Q2 flips: centre DD $38k (PL/BD $10k) → CTRL fails, EXP passes; centre PL or BD $26k → CTRL passes, EXP fails
+  ---
+  duration_ms: 2.365366
+  type: 'test'
+  ...
+# Subtest: Q3 gates the confirmation p90 of each of the three metrics under EXP; the marked p90 DD only under CTRL
+ok 49 - Q3 gates the confirmation p90 of each of the three metrics under EXP; the marked p90 DD only under CTRL
+  ---
+  duration_ms: 1.738972
+  type: 'test'
+  ...
+# Subtest: Q5 at 10 bps: CTRL net > 0 ∧ DD ≤ 35 % of C0; EXP net > 0 ∧ the FULL envelope (D-10)
+ok 50 - Q5 at 10 bps: CTRL net > 0 ∧ DD ≤ 35 % of C0; EXP net > 0 ∧ the FULL envelope (D-10)
+  ---
+  duration_ms: 2.689338
+  type: 'test'
+  ...
+# Subtest: exact boundaries in qualification: equal to the limit passes, one ulp above fails
+ok 51 - exact boundaries in qualification: equal to the limit passes, one ulp above fails
+  ---
+  duration_ms: 6.831347
+  type: 'test'
+  ...
+# Subtest: CTRL severities use Assignment 3’s keys and order
+ok 52 - CTRL severities use Assignment 3’s keys and order
+  ---
+  duration_ms: 1.762002
+  type: 'test'
+  ...
+# Subtest: the RA1 thresholds: original S4 = 35 % of C0 in both arms; adapted S4 = 40 % of C0 (EXP only); S1–S3 unchanged
+ok 53 - the RA1 thresholds: original S4 = 35 % of C0 in both arms; adapted S4 = 40 % of C0 (EXP only); S1–S3 unchanged
+  ---
+  duration_ms: 0.563473
+  type: 'test'
+  ...
+# Subtest: ra1OrderWith(·, 35 % of C0) = Assignment 2’s ra1Order on every sealed Assignment 3 population
+ok 54 - ra1OrderWith(·, 35 % of C0) = Assignment 2’s ra1Order on every sealed Assignment 3 population
+  ---
+  duration_ms: 412.714634
+  type: 'test'
+  ...
+# Subtest: S4 flips between the original and the adapted RA1 for a worst-10 % mean DD in (35 %, 40 %] of C0
+ok 55 - S4 flips between the original and the adapted RA1 for a worst-10 % mean DD in (35 %, 40 %] of C0
+  ---
+  duration_ms: 0.222851
+  type: 'test'
+  ...
+# Subtest: no hidden ceiling: no pilot module reads economics.ceiling or a literal 35k / 40k / 25k limit
+ok 56 - no hidden ceiling: no pilot module reads economics.ceiling or a literal 35k / 40k / 25k limit
+  ---
+  duration_ms: 2.403726
+  type: 'test'
+  ...
+# Subtest: the derived lane imports no frozen plausibility or fit and reads the arm everywhere
+ok 57 - the derived lane imports no frozen plausibility or fit and reads the arm everywhere
+  ---
+  duration_ms: 0.343593
+  type: 'test'
+  ...
+# Subtest: every evaluation the pilot requests carries the risk envelope
+ok 58 - every evaluation the pilot requests carries the risk envelope
+  ---
+  duration_ms: 0.852326
+  type: 'test'
+  ...
+# Subtest: the pilot lane = a fresh derivation from Assignment 3’s frozen search.ts (the declared substitutions only)
+ok 59 - the pilot lane = a fresh derivation from Assignment 3’s frozen search.ts (the declared substitutions only)
+  ---
+  duration_ms: 2.578477
+  type: 'test'
+  ...
+# Subtest: the hash-selected cell is GB0.VD1 (outcome-independent; both cells in Assignment 3’s broad1 part)
+ok 60 - the hash-selected cell is GB0.VD1 (outcome-independent; both cells in Assignment 3’s broad1 part)
+  ---
+  duration_ms: 1.360189
+  type: 'test'
+  ...
+# Subtest: the deterministic budget bound ≤ 700,000 requested evaluations
+ok 61 - the deterministic budget bound ≤ 700,000 requested evaluations
+  ---
+  duration_ms: 0.316382
+  type: 'test'
+  ...
+# Subtest: the door guards follow the stage state: D23 behind the committed C21 selection; FULL behind the committed C24 selection, manifest and authorization, once for the validation, for diagnostics only after it
+ok 62 - the door guards follow the stage state: D23 behind the committed C21 selection; FULL behind the committed C24 selection, manifest and authorization, once for the validation, for diagnostics only after it
+  ---
+  duration_ms: 195.379888
+  type: 'test'
+  ...
+# Subtest: amendment A1: the sealed form of an evidence row is idempotent (a row read back from a sealed record keeps rowsKept)
+ok 63 - amendment A1: the sealed form of an evidence row is idempotent (a row read back from a sealed record keeps rowsKept)
+  ---
+  duration_ms: 200.450952
+  type: 'test'
+  ...
+# Subtest: the bound from the frozen schedules = the preregistered bound (PROTOCOL.md §6)
+ok 64 - the bound from the frozen schedules = the preregistered bound (PROTOCOL.md §6)
+  ---
+  duration_ms: 0.726075
+  type: 'test'
+  ...
+# Subtest: training doors follow the fold order
+ok 65 - training doors follow the fold order
+  ---
+  duration_ms: 1.113797
+  type: 'test'
+  ...
+# Subtest: interval doors only behind the sealed and committed selection of their fold
+ok 66 - interval doors only behind the sealed and committed selection of their fold
+  ---
+  duration_ms: 0.415172
+  type: 'test'
+  ...
+# Subtest: FULL once: the C24 selection, the frozen selection and the authorization; never after the sealed validation
+ok 67 - FULL once: the C24 selection, the frozen selection and the authorization; never after the sealed validation
+  ---
+  duration_ms: 0.214131
+  type: 'test'
+  ...
+# Subtest: engineering reads D19 always, D21 / D24 only before the freeze, never D23 or FULL; a purpose is required
+ok 68 - engineering reads D19 always, D21 / D24 only before the freeze, never D23 or FULL; a purpose is required
+  ---
+  duration_ms: 0.203972
+  type: 'test'
+  ...
+# Subtest: the limits come from the policies on named denominators: CTRL 35 % of C0; EXP30 40 % / 25 % / 30 %
+ok 69 - the limits come from the policies on named denominators: CTRL 35 % of C0; EXP30 40 % / 25 % / 30 %
+  ---
+  duration_ms: 1.4596
+  type: 'test'
+  ...
+# Subtest: plausibility flips: DD $38k with PL/BD inside — CTRL fails, EXP30 passes
+ok 70 - plausibility flips: DD $38k with PL/BD inside — CTRL fails, EXP30 passes
+  ---
+  duration_ms: 0.556764
+  type: 'test'
+  ...
+# Subtest: BD in ($25k, $30k]: fails the pilot 40/25/25, passes P3; BD > $30k fails P3; PL > $25k fails P3
+ok 71 - BD in ($25k, $30k]: fails the pilot 40/25/25, passes P3; BD > $30k fails P3; PL > $25k fails P3
+  ---
+  duration_ms: 0.441303
+  type: 'test'
+  ...
+# Subtest: exact boundaries: equal to the limit passes, one ulp above fails (unrounded)
+ok 72 - exact boundaries: equal to the limit passes, one ulp above fails (unrounded)
+  ---
+  duration_ms: 0.534373
+  type: 'test'
+  ...
+# Subtest: the marked twins are reported, never gated; the envelope validation keeps liquidation ≥ marked (fail closed)
+ok 73 - the marked twins are reported, never gated; the envelope validation keeps liquidation ≥ marked (fail closed)
+  ---
+  duration_ms: 0.332432
+  type: 'test'
+  ...
+# Subtest: the rung violation under EXP30: one part per gated centre metric and per gated neighbourhood p90 (unrounded)
+ok 74 - the rung violation under EXP30: one part per gated centre metric and per gated neighbourhood p90 (unrounded)
+  ---
+  duration_ms: 1.734732
+  type: 'test'
+  ...
+# Subtest: invalid states fail closed: an error record is never plausible; a missing or invalid envelope throws under EXP30
+ok 75 - invalid states fail closed: an error record is never plausible; a missing or invalid envelope throws under EXP30
+  ---
+  duration_ms: 0.191011
+  type: 'test'
+  ...
+# Subtest: stage wiring (giveback): feasibility follows the arm; every request carries the envelope
+ok 76 - stage wiring (giveback): feasibility follows the arm; every request carries the envelope
+  ---
+  duration_ms: 434.132448
+  type: 'test'
+  ...
+# Subtest: stage wiring (banked28): feasibility follows the arm; every request carries the envelope
+ok 77 - stage wiring (banked28): feasibility follows the arm; every request carries the envelope
+  ---
+  duration_ms: 340.390996
+  type: 'test'
+  ...
+# Subtest: stage wiring (banked31): feasibility follows the arm; every request carries the envelope
+ok 78 - stage wiring (banked31): feasibility follows the arm; every request carries the envelope
+  ---
+  duration_ms: 257.032644
+  type: 'test'
+  ...
+# Subtest: stage wiring (principal): feasibility follows the arm; every request carries the envelope
+ok 79 - stage wiring (principal): feasibility follows the arm; every request carries the envelope
+  ---
+  duration_ms: 247.354058
+  type: 'test'
+  ...
+# Subtest: seed pairing: both arms of one seed key request the identical screen; the arm never enters a seed
+ok 80 - seed pairing: both arms of one seed key request the identical screen; the arm never enters a seed
+  ---
+  duration_ms: 491.676186
+  type: 'test'
+  ...
+# Subtest: grouping invariance: a lane run together with its paired lane and others equals the lane run alone
+ok 81 - grouping invariance: a lane run together with its paired lane and others equals the lane run alone
+  ---
+  duration_ms: 780.688126
+  type: 'test'
+  ...
+# Subtest: a baseline member qualifies under both arms
+ok 82 - a baseline member qualifies under both arms
+  ---
+  duration_ms: 1.44588
+  type: 'test'
+  ...
+# Subtest: Q2: DD $38k → CTRL fails, EXP30 passes; BD $28k → both pass; BD $31k or PL $26k → CTRL passes, EXP30 fails
+ok 83 - Q2: DD $38k → CTRL fails, EXP30 passes; BD $28k → both pass; BD $31k or PL $26k → CTRL passes, EXP30 fails
+  ---
+  duration_ms: 1.949614
+  type: 'test'
+  ...
+# Subtest: Q3 gates the confirmation p90 of each metric under EXP30; the marked p90 DD only under CTRL
+ok 84 - Q3 gates the confirmation p90 of each metric under EXP30; the marked p90 DD only under CTRL
+  ---
+  duration_ms: 2.390496
+  type: 'test'
+  ...
+# Subtest: Q5 at 10 bps: EXP30 needs net > 0 and the full P3 envelope
+ok 85 - Q5 at 10 bps: EXP30 needs net > 0 and the full P3 envelope
+  ---
+  duration_ms: 1.531301
+  type: 'test'
+  ...
+# Subtest: exact boundaries in qualification at the P3 limits
+ok 86 - exact boundaries in qualification at the P3 limits
+  ---
+  duration_ms: 4.967593
+  type: 'test'
+  ...
+# Subtest: Q4: the unrounded confirmation p10 under EXP30; a failed draw counts as −C0 (fail closed)
+ok 87 - Q4: the unrounded confirmation p10 under EXP30; a failed draw counts as −C0 (fail closed)
+  ---
+  duration_ms: 0.677534
+  type: 'test'
+  ...
+# Subtest: V = the best centre net among the lane’s OWN members qualified under the lane’s OWN arm
+ok 88 - V = the best centre net among the lane’s OWN members qualified under the lane’s OWN arm
+  ---
+  duration_ms: 1.030137
+  type: 'test'
+  ...
+# Subtest: a lane with no qualified member has V = $0 and no representative; a count mismatch fails closed
+ok 89 - a lane with no qualified member has V = $0 and no representative; a count mismatch fails closed
+  ---
+  duration_ms: 0.279832
+  type: 'test'
+  ...
+# Subtest: ties in V follow the P0 order (selection robust, then lower centre DD, then label)
+ok 90 - ties in V follow the P0 order (selection robust, then lower centre DD, then label)
+  ---
+  duration_ms: 0.199241
+  type: 'test'
+  ...
+# Subtest: populations: an arm sees only its own members, with its own verdicts; the adapted RA1 is EXP30-only
+ok 91 - populations: an arm sees only its own members, with its own verdicts; the adapted RA1 is EXP30-only
+  ---
+  duration_ms: 1.036787
+  type: 'test'
+  ...
+# Subtest: P3 deep-equals Stage A’s predeclared P3; P0 is NL0_CONTROL itself
+ok 92 - P3 deep-equals Stage A’s predeclared P3; P0 is NL0_CONTROL itself
+  ---
+  duration_ms: 0.888006
+  type: 'test'
+  ...
+# Subtest: the pilot modules Stage B reuses are byte-identical to the pilot’s sealed code
+ok 93 - the pilot modules Stage B reuses are byte-identical to the pilot’s sealed code
+  ---
+  duration_ms: 0.618834
+  type: 'test'
+  ...
+# Subtest: no hidden limit: no Stage B module hard-codes a dollar limit or reads economics.ceiling
+ok 94 - no hidden limit: no Stage B module hard-codes a dollar limit or reads economics.ceiling
+  ---
+  duration_ms: 0.739975
+  type: 'test'
+  ...
+# Subtest: every evaluation Stage B requests carries the risk envelope
+ok 95 - every evaluation Stage B requests carries the risk envelope
+  ---
+  duration_ms: 0.654264
+  type: 'test'
+  ...
+# Subtest: the cells: the legacy cell and the pilot’s hash-selected cell
+ok 96 - the cells: the legacy cell and the pilot’s hash-selected cell
+  ---
+  duration_ms: 1.082017
+  type: 'test'
+  ...
+# Subtest: 16 new replicates R3–R18; R1/R2 only as reproduction lanes; never used by any earlier sealed search
+ok 97 - 16 new replicates R3–R18; R1/R2 only as reproduction lanes; never used by any earlier sealed search
+  ---
+  duration_ms: 216.44718
+  type: 'test'
+  ...
+# Subtest: SEED_BUDGET_MATRIX.json equals the code’s matrix
+ok 98 - SEED_BUDGET_MATRIX.json equals the code’s matrix
+  ---
+  duration_ms: 0.742555
+  type: 'test'
+  ...
+# Subtest: pairs match by (cell, replicate); D = EXP30 − CTRL; an unpaired design fails closed
+ok 99 - pairs match by (cell, replicate); D = EXP30 − CTRL; an unpaired design fails closed
+  ---
+  duration_ms: 1.758132
+  type: 'test'
+  ...
+# Subtest: the bootstrap is deterministic, labelled and stratified (a constant per cell keeps the mean exactly)
+ok 100 - the bootstrap is deterministic, labelled and stratified (a constant per cell keeps the mean exactly)
+  ---
+  duration_ms: 5.236985
+  type: 'test'
+  ...
+# Subtest: non-inferiority: L90 > −$5,000; superiority: mean > +$2,500 and L90 > 0
+ok 101 - non-inferiority: L90 > −$5,000; superiority: mean > +$2,500 and L90 > 0
+  ---
+  duration_ms: 1144.937463
+  type: 'test'
+  ...
+# Subtest: V = $0 lanes stay in the statistic and are counted; the sensitivity drops their pairs
+ok 102 - V = $0 lanes stay in the statistic and are counted; the sensitivity drops their pairs
+  ---
+  duration_ms: 172.884336
+  type: 'test'
+  ...
+# Subtest: the outcome label
+ok 103 - the outcome label
+  ---
+  duration_ms: 0.244441
+  type: 'test'
+  ...
+# Subtest: T2: the paired interval DD uses the UPPER one-sided 90 % bound against +$5,000
+ok 104 - T2: the paired interval DD uses the UPPER one-sided 90 % bound against +$5,000
+  ---
+  duration_ms: 538.23879
+  type: 'test'
+  ...
+1..104
+# tests 160
+# suites 25
+# pass 160
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7188.649581
+exit=0

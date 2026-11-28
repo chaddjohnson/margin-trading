@@ -14,7 +14,8 @@ Any change to — or new dependency of — historical strategy evaluation:
   continuation methods) and any new Growth version;
 - the pooled allocator (funding, tie order, reservations, partial exits, marks, drawdown trackers, options);
 - fills and same-bar semantics, costs, slippage, interest, the session clock, the data loader or adjustments;
-- the compact or detailed record, risk metrics that an optimization reads (e.g. the risk-envelope inputs);
+- the compact or detailed record, risk metrics that an optimization reads (e.g. the risk-envelope inputs) and their
+  delivery to a search (the pool's value for a `risk` task, the Lab's `|risk` key and `checkEnvelope` — GPU Phase 7);
 - a new conditional genome parameter or structural gene that an optimizer can generate.
 
 The mechanical trigger: a change to any file of the **compatibility manifest** (`node --experimental-transform-types

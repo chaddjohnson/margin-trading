@@ -1,0 +1,7860 @@
+{
+ "stage": "qualification",
+ "protocol": "P6-TSLA 1.0.0",
+ "cutoff": "C24",
+ "arm": "C",
+ "qualificationStage": "fixed",
+ "door": "D24",
+ "job": "research/tsla-d1-growth/C24-C-qualify-fixed",
+ "attestation": "research/tsla-d1-growth/results/gpu-attestations/C24-C-qualify-fixed-2026-11-25T20-41-40-065Z.json",
+ "backend": "gpu:GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4:cb2ff30b9cb720c0:d1a2e490788fa5fa",
+ "head": "a602844757b389f18ece6a3f03eb7bafcd5e6788",
+ "launch": {
+  "ledgerUsed": 39140463,
+  "remaining": 80859537,
+  "expectedRequested": 5868,
+  "freeGiB": 408.02
+ },
+ "members": 9,
+ "qualified": 1,
+ "duplicates": [],
+ "byCell": {
+  "C.B1.h2.s1": {
+   "members": 3,
+   "qualified": 1,
+   "failed": {
+    "Q3": 2
+   }
+  },
+  "C.C1.h2.s1": {
+   "members": 6,
+   "qualified": 0,
+   "failed": {
+    "Q2": 3,
+    "Q3": 6,
+    "Q5": 3
+   }
+  }
+ },
+ "evidence": [
+  {
+   "label": "C24/C/pair DF1×GF1",
+   "cell": "C.B1.h2.s1",
+   "d1Structure": "B1",
+   "growthProtection": "hold_on_buffer_on / istop on",
+   "unrestrictedGrowth": false,
+   "base": true,
+   "activation": "n",
+   "controlPattern": "K1|n",
+   "growthEntry": "breakout",
+   "growthStratum": "breakout·gate off",
+   "growthId": "f46c06257f776da2",
+   "id": "rc1-4ffcfb0d695e0c31",
+   "activeInputs": 26,
+   "boundary": [
+    "ctl.k=1",
+    "G.breakoutSmaSessions=10"
+   ],
+   "arm": "C",
+   "lane": "pairs",
+   "stage": "fixed",
+   "pick": "C24/D/refine/D.B1/R103#1 profit × C24/G/refine/G.h2.s1/R101#1 profit",
+   "replicate": null,
+   "cfg": {
+    "cell": "C.B1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 285,
+      "trailingBuyPercentage": 12,
+      "trailingStopPercentage": 70,
+      "maximumHoldDays": 11,
+      "tickWindowSize": 59,
+      "intradayLossBuffer": 40,
+      "pullback": 39,
+      "continuationWindow": 166
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 58
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 500,
+        "maxBlockSessions": 214
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 96,
+     "breakoutPriorHighSessions": 50,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 5.9,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 23,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 5,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 26,
+     "initialStopAtrMultiple": 1.3,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 132,
+     "uptrendSmaBars": 109,
+     "uptrendSlopeBars": 6,
+     "uptrendMinimumRisePercent": 1.15,
+     "pullbackMinimumPercent": 1.3,
+     "pullbackMaximumPercent": 10.5,
+     "recoveryPercent": 2.64,
+     "costBpsPerSide": 5
+    }
+   },
+   "centre": {
+    "id": "rc1-4ffcfb0d695e0c31",
+    "net": 527865.63,
+    "realized": 527865.63,
+    "unrealized": 0,
+    "dd": 26287.97,
+    "ddPeakT": 1580849220,
+    "ddTroughT": 1581000300,
+    "ddRecoveryT": 1582125780,
+    "ddDaily": 24286.59,
+    "lots": 71,
+    "wins": 48,
+    "losses": 23,
+    "partials": 0,
+    "lossSum": -116207.33,
+    "worstLoss": -10332.48,
+    "largestWin": 56331.1,
+    "interest": 27002.74,
+    "costs": 7377.57,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 48,
+      "wins": 32,
+      "losses": 16,
+      "booked": 300957.9,
+      "principalDays": 61400000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 50,
+      "granted": 48,
+      "refused": 2
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 23,
+      "wins": 16,
+      "losses": 7,
+      "booked": 226907.73,
+      "principalDays": 28200000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 23,
+      "refused": 8
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 48,
+      "wins": 32,
+      "losses": 16,
+      "booked": 300957.9,
+      "principalDays": 61400000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 50,
+      "granted": 48,
+      "refused": 2
+     },
+     "G": {
+      "lots": 23,
+      "wins": 16,
+      "losses": 7,
+      "booked": 226907.73,
+      "principalDays": 28200000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 23,
+      "refused": 8
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 695,
+    "peakPrincipal": 100000,
+    "peakValue": 171540.72,
+    "years": {
+     "2016": 5277.07,
+     "2017": 19141.98,
+     "2018": 19420.52,
+     "2019": 45539.76,
+     "2020": 225345.37,
+     "2021": 108494.76,
+     "2022": -7509.25,
+     "2023": 53283.28,
+     "2024": 58872.14
+    },
+    "periods": [],
+    "topEpisode": 113873.65,
+    "topEpisodeShare": 0.2157,
+    "episodes": 24,
+    "signature": "2a095894b182504f",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 50,
+      "net": 319654.09,
+      "dd": 25587.28,
+      "first": "2016-06-23"
+     },
+     "G:VGT": {
+      "trades": 31,
+      "net": 340912.6,
+      "dd": 28655.41,
+      "first": "2017-01-13"
+     }
+    },
+    "sessions": 2264,
+    "rc": {
+     "D1:VGT": {
+      "virtualTrades": 50,
+      "protective": 11,
+      "protectiveGap": 2,
+      "entryDay": 0,
+      "maximumHold": 5,
+      "adaptive": 0,
+      "episodes": 16,
+      "blocks": 16,
+      "blockedSessions": 261
+     }
+    },
+    "envelope": {
+     "bankedDdMarked": 16533.833600676327,
+     "bankedDdLiquidation": 16583.341508473444,
+     "principalLossMarked": 10332.477336418704,
+     "principalLossLiquidation": 10332.477336418704
+    }
+   },
+   "risk": {
+    "endDate": "2024-12-31",
+    "net": 527865.63,
+    "realized": 527865.63,
+    "unrealized": 0,
+    "conservativeNet": 527865.63,
+    "openLot": null,
+    "openShare": 0,
+    "occupancy": 0.30697879858657245,
+    "lots": 71,
+    "mae": {
+     "count": 71,
+     "median": -3052.937238210523,
+     "p90": -5954.426896140958,
+     "worst": -10332.477336418704,
+     "worstBook": "D1:VGT"
+    },
+    "maeByBook": {
+     "D1:VGT": -10332.477336418704,
+     "G:VGT": -6171.082721835019
+    },
+    "worstRealized": -10332.477336418704,
+    "meanLosing": -5052.492741975984,
+    "losing": 23,
+    "rowsKept": 71
+   },
+   "select": {
+    "n": 256,
+    "failed": 0,
+    "median": 352873.61,
+    "p10": 293644.73,
+    "p90Net": 417135.35,
+    "mean": 353990.38,
+    "robust": 323259.17,
+    "medianDd": 31640.35,
+    "p90Dd": 38669.18,
+    "worstDd": 53178.89,
+    "breaches": 68,
+    "breachShare": 0.2656,
+    "meanExcess": 3853.85,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 256,
+    "sameAsCentre": 0,
+    "clipped": 132
+   },
+   "selectTail": {
+    "n": 256,
+    "centreDd": 26287.97,
+    "centreNet": 527865.63,
+    "medianDd": 31640.35,
+    "p90Dd": 38669.18,
+    "p90Interval": [
+     37553.14,
+     40495.81
+    ],
+    "p95Dd": 41623.58,
+    "worst10Mean": 42312.41,
+    "worst10K": 26,
+    "worstDd": 53178.89,
+    "breaches": 68,
+    "breachShare": 0.2656,
+    "breachInterval": [
+     0.2153,
+     0.3229
+    ],
+    "meanExcess": 3853.85,
+    "breachLedgers": 68,
+    "sameAsCentre": 0,
+    "clipped": 132,
+    "medianNet": 352873.61,
+    "p10Net": 293644.73,
+    "p90Net": 417135.35,
+    "meanNet": 353990.38,
+    "worstNet": 204888.27,
+    "positiveShare": 1
+   },
+   "confirm": {
+    "n": 384,
+    "failed": 0,
+    "median": 357785.54,
+    "p10": 298744.78,
+    "p90Net": 412382.08,
+    "mean": 356854.87,
+    "robust": 328265.16,
+    "medianDd": 30806.34,
+    "p90Dd": 37545.77,
+    "worstDd": 49645.53,
+    "breaches": 87,
+    "breachShare": 0.2266,
+    "meanExcess": 3219.08,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 384,
+    "sameAsCentre": 0,
+    "clipped": 203
+   },
+   "confirmTail": {
+    "n": 384,
+    "centreDd": 26287.97,
+    "centreNet": 527865.63,
+    "medianDd": 30806.34,
+    "p90Dd": 37545.77,
+    "p90Interval": [
+     36981.74,
+     39351.05
+    ],
+    "p95Dd": 40143.49,
+    "worst10Mean": 40685.08,
+    "worst10K": 39,
+    "worstDd": 49645.53,
+    "breaches": 87,
+    "breachShare": 0.2266,
+    "breachInterval": [
+     0.1875,
+     0.271
+    ],
+    "meanExcess": 3219.08,
+    "breachLedgers": 87,
+    "sameAsCentre": 0,
+    "clipped": 203,
+    "medianNet": 357785.54,
+    "p10Net": 298744.78,
+    "p90Net": 412382.08,
+    "meanNet": 356854.87,
+    "worstNet": 209128.05,
+    "positiveShare": 1
+   },
+   "confirmReps": [
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 352859.84,
+     "p10": 310289,
+     "p90Net": 407930.14,
+     "mean": 354124.18,
+     "robust": 331574.42,
+     "medianDd": 30740.53,
+     "p90Dd": 38724.39,
+     "worstDd": 46047.77,
+     "breaches": 29,
+     "breachShare": 0.2266,
+     "meanExcess": 3663.6,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 69
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 362187.26,
+     "p10": 294638.1,
+     "p90Net": 416514.64,
+     "mean": 359762.25,
+     "robust": 328412.68,
+     "medianDd": 31091,
+     "p90Dd": 37507.59,
+     "worstDd": 49645.53,
+     "breaches": 35,
+     "breachShare": 0.2734,
+     "meanExcess": 2861.21,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 67
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 357433.96,
+     "p10": 307664.15,
+     "p90Net": 413344.2,
+     "mean": 356678.19,
+     "robust": 332549.05,
+     "medianDd": 30360.5,
+     "p90Dd": 37396.29,
+     "worstDd": 43222.47,
+     "breaches": 23,
+     "breachShare": 0.1797,
+     "meanExcess": 3203.2,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 67
+    }
+   ],
+   "confirmDraws": {
+    "drawn": 384,
+    "unique": 384
+   },
+   "selectDraws": {
+    "drawn": 256,
+    "unique": 256
+   },
+   "stress": {
+    "cost 0 bps": {
+     "net": 535524.33,
+     "dd": 26178.08,
+     "lots": 71,
+     "realized": 535524.33,
+     "unrealized": 0,
+     "interest": 27002.74,
+     "costs": 0,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 306079.92,
+      "G:GDX": 0,
+      "G:VGT": 229444.41
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    },
+    "cost 10 bps": {
+     "net": 520214.58,
+     "dd": 26397.75,
+     "lots": 71,
+     "realized": 520214.58,
+     "unrealized": 0,
+     "interest": 27002.74,
+     "costs": 14747.78,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 295840.99,
+      "G:GDX": 0,
+      "G:VGT": 224373.59
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    },
+    "cost 20 bps": {
+     "net": 511141.58,
+     "dd": 27063.61,
+     "lots": 70,
+     "realized": 511141.58,
+     "unrealized": 0,
+     "interest": 26972.6,
+     "costs": 29078.5,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 291828.68,
+      "G:GDX": 0,
+      "G:VGT": 219312.9
+     },
+     "famLots": {
+      "D1": 47,
+      "G": 23
+     }
+    },
+    "interest 14%": {
+     "net": 520501.25,
+     "dd": 26296.19,
+     "lots": 71,
+     "realized": 520501.25,
+     "unrealized": 0,
+     "interest": 34367.12,
+     "costs": 7377.57,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 295911.32,
+      "G:GDX": 0,
+      "G:VGT": 224589.93
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    },
+    "stop slippage +25 bps": {
+     "net": 517779.16,
+     "dd": 26864.39,
+     "lots": 70,
+     "realized": 517779.16,
+     "unrealized": 0,
+     "interest": 26972.6,
+     "costs": 23291.29,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 295547.06,
+      "G:GDX": 0,
+      "G:VGT": 222232.1
+     },
+     "famLots": {
+      "D1": 47,
+      "G": 23
+     }
+    },
+    "next-open stops": {
+     "net": 504851.74,
+     "dd": 26287.97,
+     "lots": 69,
+     "realized": 504851.74,
+     "unrealized": 0,
+     "interest": 26249.32,
+     "costs": 7165.69,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 228146.32,
+      "G:GDX": 0,
+      "G:VGT": 276705.42
+     },
+     "famLots": {
+      "D1": 44,
+      "G": 25
+     }
+    },
+    "cost 2 bps": {
+     "net": 532459.93,
+     "dd": 26222.05,
+     "lots": 71,
+     "realized": 532459.93,
+     "unrealized": 0,
+     "interest": 27002.74,
+     "costs": 2951.92,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 304030.5,
+      "G:GDX": 0,
+      "G:VGT": 228429.43
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    },
+    "stop slippage +10 bps": {
+     "net": 521367.22,
+     "dd": 26433.86,
+     "lots": 71,
+     "realized": 521367.22,
+     "unrealized": 0,
+     "interest": 27002.74,
+     "costs": 13875.99,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 296329.74,
+      "G:GDX": 0,
+      "G:VGT": 225037.48
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    }
+   },
+   "removal": {
+    "without D1": {
+     "net": 340912.6,
+     "dd": 28655.41,
+     "lots": 31,
+     "realized": 340912.6,
+     "unrealized": 0,
+     "interest": 12597.26,
+     "costs": 3276.84,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 340912.6
+     },
+     "famLots": {
+      "D1": 0,
+      "G": 31
+     }
+    },
+    "without Growth": {
+     "net": 319654.09,
+     "dd": 25587.28,
+     "lots": 50,
+     "realized": 319654.09,
+     "unrealized": 0,
+     "interest": 18926.03,
+     "costs": 5169.38,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 319654.09,
+      "G:GDX": 0,
+      "G:VGT": 0
+     },
+     "famLots": {
+      "D1": 50,
+      "G": 0
+     }
+    }
+   },
+   "gates": {
+    "Q1": true,
+    "Q2": true,
+    "Q3": false,
+    "Q4": true,
+    "Q5": true,
+    "Q6": true
+   },
+   "qualified": false,
+   "failed": [
+    "Q3"
+   ],
+   "severity": {
+    "Q3": 2545.77
+   },
+   "reasons": [
+    "Q3 p90 DD > limit"
+   ],
+   "participation": {
+    "D1:GDX": "disabled",
+    "D1:VGT": "funded",
+    "G:GDX": "disabled",
+    "G:VGT": "funded"
+   },
+   "envelope": {
+    "centre": {
+     "bankedDdMarked": 16533.833600676327,
+     "bankedDdLiquidation": 16583.341508473444,
+     "principalLossMarked": 10332.477336418704,
+     "principalLossLiquidation": 10332.477336418704
+    },
+    "select": {
+     "n": 256,
+     "failed": 0,
+     "markedDd": {
+      "median": 31640.345,
+      "p90": 38669.175,
+      "p95": 41623.58,
+      "worst": 53178.89,
+      "worst10Mean": 42312.40692307692
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 9999.440995650803,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11995.668045175913,
+       "worst10Mean": 11431.04136689402
+      },
+      "liquidation": {
+       "median": 9999.440995650803,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11995.668045175913,
+       "worst10Mean": 11431.04136689402
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 22779.250786053417,
+       "p90": 30351.320565362665,
+       "p95": 32774.00681166726,
+       "worst": 46350.069739971426,
+       "worst10Mean": 34277.98004420563
+      },
+      "liquidation": {
+       "median": 22823.396348959097,
+       "p90": 30399.731391219575,
+       "p95": 32822.84591361331,
+       "worst": 46399.577647768485,
+       "worst10Mean": 34326.48539786366
+      }
+     }
+    },
+    "confirm": {
+     "n": 384,
+     "failed": 0,
+     "markedDd": {
+      "median": 30806.339999999997,
+      "p90": 37545.772,
+      "p95": 40143.4925,
+      "worst": 49645.53,
+      "worst10Mean": 40685.079743589755
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 9806.080965303452,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11995.668045175913,
+       "worst10Mean": 11365.338319348317
+      },
+      "liquidation": {
+       "median": 9806.080965303452,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11995.668045175913,
+       "worst10Mean": 11365.338319348317
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 22160.51295081542,
+       "p90": 29390.7086182037,
+       "p95": 31797.907819749576,
+       "worst": 42037.32654561878,
+       "worst10Mean": 32819.99404211527
+      },
+      "liquidation": {
+       "median": 22209.4141200655,
+       "p90": 29439.499212693292,
+       "p95": 31846.159096532305,
+       "worst": 42085.85913233392,
+       "worst10Mean": 32865.80508472172
+      }
+     }
+    },
+    "stress": {
+     "cost 0 bps": {
+      "net": 535524.33,
+      "dd": 26178.08,
+      "envelope": {
+       "bankedDdMarked": 16299.662462513777,
+       "bankedDdLiquidation": 16299.662462513777,
+       "principalLossMarked": 10242.674501378706,
+       "principalLossLiquidation": 10242.674501378706
+      }
+     },
+     "cost 10 bps": {
+      "net": 520214.58,
+      "dd": 26397.75,
+      "envelope": {
+       "bankedDdMarked": 16767.77080163808,
+       "bankedDdLiquidation": 16866.73715878284,
+       "principalLossMarked": 10422.190458336792,
+       "principalLossLiquidation": 10422.190458336792
+      }
+     },
+     "cost 20 bps": {
+      "net": 511141.58,
+      "dd": 27063.61,
+      "envelope": {
+       "bankedDdMarked": 17548.266912977677,
+       "bankedDdLiquidation": 17744.94514171302,
+       "principalLossMarked": 10601.348100011533,
+       "principalLossLiquidation": 10601.348100011533
+      }
+     },
+     "interest 14%": {
+      "net": 520501.25,
+      "dd": 26296.19,
+      "envelope": {
+       "bankedDdMarked": 16566.710313005082,
+       "bankedDdLiquidation": 16616.2182208022,
+       "principalLossMarked": 10357.13487066528,
+       "principalLossLiquidation": 10357.13487066528
+      }
+     },
+     "stop slippage +25 bps": {
+      "net": 517779.16,
+      "dd": 26864.39,
+      "envelope": {
+       "bankedDdMarked": 17209.73385110998,
+       "bankedDdLiquidation": 17258.97712577082,
+       "principalLossMarked": 10556.87217047491,
+       "principalLossLiquidation": 10556.87217047491
+      }
+     },
+     "next-open stops": {
+      "net": 504851.74,
+      "dd": 26287.97,
+      "envelope": {
+       "bankedDdMarked": 16533.833600676327,
+       "bankedDdLiquidation": 16583.341508473444,
+       "principalLossMarked": 10332.477336418704,
+       "principalLossLiquidation": 10332.477336418704
+      }
+     },
+     "cost 2 bps": {
+      "net": 532459.93,
+      "dd": 26222.05,
+      "envelope": {
+       "bankedDdMarked": 16393.359012696426,
+       "bankedDdLiquidation": 16413.168115576264,
+       "principalLossMarked": 10278.606409580074,
+       "principalLossLiquidation": 10278.606409580074
+      }
+     },
+     "stop slippage +10 bps": {
+      "net": 521367.22,
+      "dd": 26433.86,
+      "envelope": {
+       "bankedDdMarked": 16631.244380961114,
+       "bankedDdLiquidation": 16680.487655621953,
+       "principalLossMarked": 10422.235270041178,
+       "principalLossLiquidation": 10422.235270041178
+      }
+     }
+    },
+    "removal": {
+     "without D1": {
+      "bankedDdMarked": 14156.718940798688,
+      "bankedDdLiquidation": 14205.104235439328,
+      "principalLossMarked": 6171.082721835019,
+      "principalLossLiquidation": 6171.082721835019
+     },
+     "without Growth": {
+      "bankedDdMarked": 16245.584734195145,
+      "bankedDdLiquidation": 16294.828008856013,
+      "principalLossMarked": 10332.477336418704,
+      "principalLossLiquidation": 10332.477336418704
+     }
+    },
+    "confirmP10Unrounded": 298744.776
+   },
+   "sources": [
+    {
+     "label": "C24/C/pair DF1×GF1",
+     "lane": "pairs",
+     "pick": "C24/D/refine/D.B1/R103#1 profit × C24/G/refine/G.h2.s1/R101#1 profit"
+    }
+   ]
+  },
+  {
+   "label": "C24/C/pair DF1×GF2",
+   "cell": "C.B1.h2.s1",
+   "d1Structure": "B1",
+   "growthProtection": "hold_on_buffer_on / istop on",
+   "unrestrictedGrowth": false,
+   "base": true,
+   "activation": "n",
+   "controlPattern": "K1|n",
+   "growthEntry": "breakout",
+   "growthStratum": "breakout·gate off",
+   "growthId": "fc44ea5527b26167",
+   "id": "rc1-12e462596833d78f",
+   "activeInputs": 28,
+   "boundary": [
+    "ctl.k=1",
+    "G.breakoutSmaSessions=10"
+   ],
+   "arm": "C",
+   "lane": "pairs",
+   "stage": "fixed",
+   "pick": "C24/D/refine/D.B1/R103#1 profit × C24/G/refine/G.h2.s1/R102#2 robust",
+   "replicate": null,
+   "cfg": {
+    "cell": "C.B1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 285,
+      "trailingBuyPercentage": 12,
+      "trailingStopPercentage": 70,
+      "maximumHoldDays": 11,
+      "tickWindowSize": 59,
+      "intradayLossBuffer": 40,
+      "pullback": 39,
+      "continuationWindow": 166
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 58
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 500,
+        "maxBlockSessions": 214
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 99,
+     "breakoutPriorHighSessions": 49,
+     "trendFilterEnabled": true,
+     "trendMethod": "price_change",
+     "trendChangeLookbackSessions": 66,
+     "trendChangeMinimumReturnPercent": -1.8,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 6.7,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 25,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 1.2,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 20,
+     "initialStopAtrMultiple": 1.4,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 41,
+     "uptrendSmaBars": 117,
+     "uptrendSlopeBars": 8,
+     "uptrendMinimumRisePercent": 0.7,
+     "pullbackMinimumPercent": 1.4,
+     "pullbackMaximumPercent": 10,
+     "recoveryPercent": 2.82,
+     "costBpsPerSide": 5
+    }
+   },
+   "centre": {
+    "id": "rc1-12e462596833d78f",
+    "net": 505178.08,
+    "realized": 505178.08,
+    "unrealized": 0,
+    "dd": 26287.97,
+    "ddPeakT": 1580849220,
+    "ddTroughT": 1581000300,
+    "ddRecoveryT": 1582125780,
+    "ddDaily": 24286.59,
+    "lots": 71,
+    "wins": 48,
+    "losses": 23,
+    "partials": 0,
+    "lossSum": -124979.42,
+    "worstLoss": -11293.58,
+    "largestWin": 56331.1,
+    "interest": 27123.29,
+    "costs": 7366.29,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 48,
+      "wins": 32,
+      "losses": 16,
+      "booked": 300957.9,
+      "principalDays": 61400000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 50,
+      "granted": 48,
+      "refused": 2
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 23,
+      "wins": 16,
+      "losses": 7,
+      "booked": 204220.18,
+      "principalDays": 28600000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 23,
+      "refused": 8
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 48,
+      "wins": 32,
+      "losses": 16,
+      "booked": 300957.9,
+      "principalDays": 61400000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 50,
+      "granted": 48,
+      "refused": 2
+     },
+     "G": {
+      "lots": 23,
+      "wins": 16,
+      "losses": 7,
+      "booked": 204220.18,
+      "principalDays": 28600000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 23,
+      "refused": 8
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 699,
+    "peakPrincipal": 100000,
+    "peakValue": 171540.72,
+    "years": {
+     "2016": 5277.07,
+     "2017": 14827.9,
+     "2018": 19420.52,
+     "2019": 42621.97,
+     "2020": 221296.89,
+     "2021": 106968.85,
+     "2022": -7509.25,
+     "2023": 53283.28,
+     "2024": 48990.85
+    },
+    "periods": [],
+    "topEpisode": 112660.55,
+    "topEpisodeShare": 0.223,
+    "episodes": 23,
+    "signature": "d6863a3a0ecb8cfc",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 50,
+      "net": 319654.09,
+      "dd": 25587.28,
+      "first": "2016-06-23"
+     },
+     "G:VGT": {
+      "trades": 31,
+      "net": 309868.56,
+      "dd": 28655.41,
+      "first": "2017-01-13"
+     }
+    },
+    "sessions": 2264,
+    "rc": {
+     "D1:VGT": {
+      "virtualTrades": 50,
+      "protective": 11,
+      "protectiveGap": 2,
+      "entryDay": 0,
+      "maximumHold": 5,
+      "adaptive": 0,
+      "episodes": 16,
+      "blocks": 16,
+      "blockedSessions": 261
+     }
+    },
+    "envelope": {
+     "bankedDdMarked": 17345.881446668413,
+     "bankedDdLiquidation": 17395.38935446547,
+     "principalLossMarked": 11293.578711320837,
+     "principalLossLiquidation": 11293.578711320837
+    }
+   },
+   "risk": {
+    "endDate": "2024-12-31",
+    "net": 505178.08,
+    "realized": 505178.08,
+    "unrealized": 0,
+    "conservativeNet": 505178.08,
+    "openLot": null,
+    "openShare": 0,
+    "occupancy": 0.30874558303886923,
+    "lots": 71,
+    "mae": {
+     "count": 71,
+     "median": -3052.937238210523,
+     "p90": -6029.219704373935,
+     "worst": -11293.578711320837,
+     "worstBook": "G:VGT"
+    },
+    "maeByBook": {
+     "D1:VGT": -10332.477336418704,
+     "G:VGT": -11293.578711320837
+    },
+    "worstRealized": -11293.578711320837,
+    "meanLosing": -5433.88776765604,
+    "losing": 23,
+    "rowsKept": 71
+   },
+   "select": {
+    "n": 256,
+    "failed": 0,
+    "median": 365820.69,
+    "p10": 313734.63,
+    "p90Net": 416477.49,
+    "mean": 365468.54,
+    "robust": 339777.66,
+    "medianDd": 32531.25,
+    "p90Dd": 39520.41,
+    "worstDd": 51263.16,
+    "breaches": 82,
+    "breachShare": 0.3203,
+    "meanExcess": 3766.14,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 256,
+    "sameAsCentre": 0,
+    "clipped": 126
+   },
+   "selectTail": {
+    "n": 256,
+    "centreDd": 26287.97,
+    "centreNet": 505178.08,
+    "medianDd": 32531.25,
+    "p90Dd": 39520.41,
+    "p90Interval": [
+     38173.93,
+     41231.46
+    ],
+    "p95Dd": 41372.89,
+    "worst10Mean": 42359.13,
+    "worst10K": 26,
+    "worstDd": 51263.16,
+    "breaches": 82,
+    "breachShare": 0.3203,
+    "breachInterval": [
+     0.2662,
+     0.3798
+    ],
+    "meanExcess": 3766.14,
+    "breachLedgers": 82,
+    "sameAsCentre": 0,
+    "clipped": 126,
+    "medianNet": 365820.69,
+    "p10Net": 313734.63,
+    "p90Net": 416477.49,
+    "meanNet": 365468.54,
+    "worstNet": 251659.91,
+    "positiveShare": 1
+   },
+   "confirm": {
+    "n": 384,
+    "failed": 0,
+    "median": 367745.56,
+    "p10": 321464.87,
+    "p90Net": 412097.06,
+    "mean": 367723.59,
+    "robust": 344605.21,
+    "medianDd": 31567.89,
+    "p90Dd": 37372.09,
+    "worstDd": 48140.88,
+    "breaches": 86,
+    "breachShare": 0.224,
+    "meanExcess": 2853.37,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 384,
+    "sameAsCentre": 0,
+    "clipped": 191
+   },
+   "confirmTail": {
+    "n": 384,
+    "centreDd": 26287.97,
+    "centreNet": 505178.08,
+    "medianDd": 31567.89,
+    "p90Dd": 37372.09,
+    "p90Interval": [
+     36780.94,
+     38382.77
+    ],
+    "p95Dd": 38796.25,
+    "worst10Mean": 39983,
+    "worst10K": 39,
+    "worstDd": 48140.88,
+    "breaches": 86,
+    "breachShare": 0.224,
+    "breachInterval": [
+     0.1851,
+     0.2683
+    ],
+    "meanExcess": 2853.37,
+    "breachLedgers": 86,
+    "sameAsCentre": 0,
+    "clipped": 191,
+    "medianNet": 367745.56,
+    "p10Net": 321464.87,
+    "p90Net": 412097.06,
+    "meanNet": 367723.59,
+    "worstNet": 224876.17,
+    "positiveShare": 1
+   },
+   "confirmReps": [
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 369162.09,
+     "p10": 324661.8,
+     "p90Net": 408437.75,
+     "mean": 368223.22,
+     "robust": 346911.95,
+     "medianDd": 31639.31,
+     "p90Dd": 36889.4,
+     "worstDd": 48140.88,
+     "breaches": 25,
+     "breachShare": 0.1953,
+     "meanExcess": 2467.51,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 64
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 364420.28,
+     "p10": 317508.78,
+     "p90Net": 418067.35,
+     "mean": 367527.32,
+     "robust": 340964.53,
+     "medianDd": 31465.34,
+     "p90Dd": 37758.27,
+     "worstDd": 45549.3,
+     "breaches": 31,
+     "breachShare": 0.2422,
+     "meanExcess": 3304.21,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 64
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 367726.57,
+     "p10": 323113.33,
+     "p90Net": 411057.31,
+     "mean": 367420.23,
+     "robust": 345419.95,
+     "medianDd": 31598.13,
+     "p90Dd": 37710.52,
+     "worstDd": 43445.15,
+     "breaches": 30,
+     "breachShare": 0.2344,
+     "meanExcess": 2709.05,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 63
+    }
+   ],
+   "confirmDraws": {
+    "drawn": 384,
+    "unique": 384
+   },
+   "selectDraws": {
+    "drawn": 256,
+    "unique": 256
+   },
+   "stress": {
+    "cost 0 bps": {
+     "net": 512814.2,
+     "dd": 26178.08,
+     "lots": 71,
+     "realized": 512814.2,
+     "unrealized": 0,
+     "interest": 27123.29,
+     "costs": 0,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 306079.92,
+      "G:GDX": 0,
+      "G:VGT": 206734.28
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    },
+    "cost 10 bps": {
+     "net": 497549.59,
+     "dd": 26397.75,
+     "lots": 71,
+     "realized": 497549.59,
+     "unrealized": 0,
+     "interest": 27123.29,
+     "costs": 14725.21,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 295840.99,
+      "G:GDX": 0,
+      "G:VGT": 201708.6
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    },
+    "cost 20 bps": {
+     "net": 488521.63,
+     "dd": 27063.61,
+     "lots": 70,
+     "realized": 488521.63,
+     "unrealized": 0,
+     "interest": 27093.15,
+     "costs": 29033.41,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 291828.68,
+      "G:GDX": 0,
+      "G:VGT": 196692.95
+     },
+     "famLots": {
+      "D1": 47,
+      "G": 23
+     }
+    },
+    "interest 14%": {
+     "net": 497780.82,
+     "dd": 26296.19,
+     "lots": 71,
+     "realized": 497780.82,
+     "unrealized": 0,
+     "interest": 34520.55,
+     "costs": 7366.29,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 295911.32,
+      "G:GDX": 0,
+      "G:VGT": 201869.5
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    },
+    "stop slippage +25 bps": {
+     "net": 495126.17,
+     "dd": 26864.39,
+     "lots": 70,
+     "realized": 495126.17,
+     "unrealized": 0,
+     "interest": 27093.15,
+     "costs": 23245.43,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 295547.06,
+      "G:GDX": 0,
+      "G:VGT": 199579.11
+     },
+     "famLots": {
+      "D1": 47,
+      "G": 23
+     }
+    },
+    "next-open stops": {
+     "net": 481573.17,
+     "dd": 26287.97,
+     "lots": 69,
+     "realized": 481573.17,
+     "unrealized": 0,
+     "interest": 26369.86,
+     "costs": 7154.1,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 228146.32,
+      "G:GDX": 0,
+      "G:VGT": 253426.85
+     },
+     "famLots": {
+      "D1": 44,
+      "G": 25
+     }
+    },
+    "cost 2 bps": {
+     "net": 509758.84,
+     "dd": 26222.05,
+     "lots": 71,
+     "realized": 509758.84,
+     "unrealized": 0,
+     "interest": 27123.29,
+     "costs": 2947.4,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 304030.5,
+      "G:GDX": 0,
+      "G:VGT": 205728.34
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    },
+    "stop slippage +10 bps": {
+     "net": 498693.49,
+     "dd": 26433.86,
+     "lots": 71,
+     "realized": 498693.49,
+     "unrealized": 0,
+     "interest": 27123.29,
+     "costs": 13850.87,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 296329.74,
+      "G:GDX": 0,
+      "G:VGT": 202363.75
+     },
+     "famLots": {
+      "D1": 48,
+      "G": 23
+     }
+    }
+   },
+   "removal": {
+    "without D1": {
+     "net": 309868.56,
+     "dd": 28655.41,
+     "lots": 31,
+     "realized": 309868.56,
+     "unrealized": 0,
+     "interest": 12747.95,
+     "costs": 3261.39,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 309868.56
+     },
+     "famLots": {
+      "D1": 0,
+      "G": 31
+     }
+    },
+    "without Growth": {
+     "net": 319654.09,
+     "dd": 25587.28,
+     "lots": 50,
+     "realized": 319654.09,
+     "unrealized": 0,
+     "interest": 18926.03,
+     "costs": 5169.38,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 319654.09,
+      "G:GDX": 0,
+      "G:VGT": 0
+     },
+     "famLots": {
+      "D1": 50,
+      "G": 0
+     }
+    }
+   },
+   "gates": {
+    "Q1": true,
+    "Q2": true,
+    "Q3": false,
+    "Q4": true,
+    "Q5": true,
+    "Q6": true
+   },
+   "qualified": false,
+   "failed": [
+    "Q3"
+   ],
+   "severity": {
+    "Q3": 2372.09
+   },
+   "reasons": [
+    "Q3 p90 DD > limit"
+   ],
+   "participation": {
+    "D1:GDX": "disabled",
+    "D1:VGT": "funded",
+    "G:GDX": "disabled",
+    "G:VGT": "funded"
+   },
+   "envelope": {
+    "centre": {
+     "bankedDdMarked": 17345.881446668413,
+     "bankedDdLiquidation": 17395.38935446547,
+     "principalLossMarked": 11293.578711320837,
+     "principalLossLiquidation": 11293.578711320837
+    },
+    "select": {
+     "n": 256,
+     "failed": 0,
+     "markedDd": {
+      "median": 32531.254999999997,
+      "p90": 39520.41,
+      "p95": 41372.885,
+      "worst": 51263.16,
+      "worst10Mean": 42359.12653846154
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10048.140688519088,
+       "p90": 11293.578711320837,
+       "p95": 11489.819302789458,
+       "worst": 11995.668045175913,
+       "worst10Mean": 11592.320034076256
+      },
+      "liquidation": {
+       "median": 10048.140688519088,
+       "p90": 11293.578711320837,
+       "p95": 11489.819302789458,
+       "worst": 11995.668045175913,
+       "worst10Mean": 11592.320034076256
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 23328.571493399846,
+       "p90": 30759.037559942517,
+       "p95": 33638.65931829933,
+       "worst": 44434.3464633408,
+       "worst10Mean": 34265.308285790605
+      },
+      "liquidation": {
+       "median": 23377.288371382456,
+       "p90": 30806.359718691398,
+       "p95": 33686.78281272714,
+       "worst": 44483.85437113792,
+       "worst10Mean": 34314.00892139528
+      }
+     }
+    },
+    "confirm": {
+     "n": 384,
+     "failed": 0,
+     "markedDd": {
+      "median": 31567.885000000002,
+      "p90": 37372.093,
+      "p95": 38796.255,
+      "worst": 48140.88,
+      "worst10Mean": 39983.00333333333
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10048.140688519088,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11995.668045175913,
+       "worst10Mean": 11468.233200096438
+      },
+      "liquidation": {
+       "median": 10048.140688519088,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11995.668045175913,
+       "worst10Mean": 11468.233200096438
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 22532.5280120981,
+       "p90": 28972.98055542663,
+       "p95": 30809.153513945745,
+       "worst": 41125.98936248661,
+       "worst10Mean": 31689.996449972812
+      },
+      "liquidation": {
+       "median": 22581.24489008071,
+       "p90": 29005.64058644264,
+       "p95": 30858.345472794994,
+       "worst": 41173.97649281865,
+       "worst10Mean": 31737.233995061906
+      }
+     }
+    },
+    "stress": {
+     "cost 0 bps": {
+      "net": 512814.2,
+      "dd": 26178.08,
+      "envelope": {
+       "bankedDdMarked": 17112.46245845419,
+       "bankedDdLiquidation": 17112.46245845419,
+       "principalLossMarked": 11204.797762571501,
+       "principalLossLiquidation": 11204.797762571501
+      }
+     },
+     "cost 10 bps": {
+      "net": 497549.59,
+      "dd": 26397.75,
+      "envelope": {
+       "bankedDdMarked": 17579.067249080283,
+       "bankedDdLiquidation": 17678.033606225043,
+       "principalLossMarked": 11382.27096781369,
+       "principalLossLiquidation": 11382.27096781369
+      }
+     },
+     "cost 20 bps": {
+      "net": 488521.63,
+      "dd": 27063.61,
+      "envelope": {
+       "bankedDdMarked": 18044.740692818945,
+       "bankedDdLiquidation": 18242.47586946952,
+       "principalLossMarked": 11559.38993512132,
+       "principalLossLiquidation": 11559.38993512132
+      }
+     },
+     "interest 14%": {
+      "net": 497780.82,
+      "dd": 26296.19,
+      "envelope": {
+       "bankedDdMarked": 17395.196515161602,
+       "bankedDdLiquidation": 17444.70442295866,
+       "principalLossMarked": 11301.79788940303,
+       "principalLossLiquidation": 11301.79788940303
+      }
+     },
+     "stop slippage +25 bps": {
+      "net": 495126.17,
+      "dd": 26864.39,
+      "envelope": {
+       "bankedDdMarked": 17570.27628072456,
+       "bankedDdLiquidation": 17619.784188521677,
+       "principalLossMarked": 11293.578711320837,
+       "principalLossLiquidation": 11293.578711320837
+      }
+     },
+     "next-open stops": {
+      "net": 481573.17,
+      "dd": 26287.97,
+      "envelope": {
+       "bankedDdMarked": 17345.881446668413,
+       "bankedDdLiquidation": 17395.38935446547,
+       "principalLossMarked": 11293.578711320837,
+       "principalLossLiquidation": 11293.578711320837
+      }
+     },
+     "cost 2 bps": {
+      "net": 509758.84,
+      "dd": 26222.05,
+      "envelope": {
+       "bankedDdMarked": 17205.858058417507,
+       "bankedDdLiquidation": 17225.667161297344,
+       "principalLossMarked": 11240.320793654757,
+       "principalLossLiquidation": 11240.320793654757
+      }
+     },
+     "stop slippage +10 bps": {
+      "net": 498693.49,
+      "dd": 26433.86,
+      "envelope": {
+       "bankedDdMarked": 17435.639380290813,
+       "bankedDdLiquidation": 17485.14728808793,
+       "principalLossMarked": 11293.578711320837,
+       "principalLossLiquidation": 11293.578711320837
+      }
+     }
+    },
+    "removal": {
+     "without D1": {
+      "bankedDdMarked": 18306.982821570477,
+      "bankedDdLiquidation": 18356.490729367593,
+      "principalLossMarked": 11293.578711320837,
+      "principalLossLiquidation": 11293.578711320837
+     },
+     "without Growth": {
+      "bankedDdMarked": 16245.584734195145,
+      "bankedDdLiquidation": 16294.828008856013,
+      "principalLossMarked": 10332.477336418704,
+      "principalLossLiquidation": 10332.477336418704
+     }
+    },
+    "confirmP10Unrounded": 321464.87100000004
+   },
+   "sources": [
+    {
+     "label": "C24/C/pair DF1×GF2",
+     "lane": "pairs",
+     "pick": "C24/D/refine/D.B1/R103#1 profit × C24/G/refine/G.h2.s1/R102#2 robust"
+    }
+   ]
+  },
+  {
+   "label": "C24/C/pair DF1×GF3",
+   "cell": "C.B1.h2.s1",
+   "d1Structure": "B1",
+   "growthProtection": "hold_on_buffer_on / istop on",
+   "unrestrictedGrowth": false,
+   "base": true,
+   "activation": "n",
+   "controlPattern": "K1|n",
+   "growthEntry": "breakout",
+   "growthStratum": "breakout·gate off",
+   "growthId": "ff7498c10e5a85b9",
+   "id": "rc1-99c7a25e9144531e",
+   "activeInputs": 26,
+   "boundary": [
+    "ctl.k=1",
+    "G.breakoutSmaSessions=10"
+   ],
+   "arm": "C",
+   "lane": "pairs",
+   "stage": "fixed",
+   "pick": "C24/D/refine/D.B1/R103#1 profit × C24/G/refine/G.h2.s1/R101#3 balanced",
+   "replicate": null,
+   "cfg": {
+    "cell": "C.B1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 285,
+      "trailingBuyPercentage": 12,
+      "trailingStopPercentage": 70,
+      "maximumHoldDays": 11,
+      "tickWindowSize": 59,
+      "intradayLossBuffer": 40,
+      "pullback": 39,
+      "continuationWindow": 166
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 58
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 500,
+        "maxBlockSessions": 214
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 100,
+     "breakoutPriorHighSessions": 82,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 5.9,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 27,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 1.7,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 23,
+     "initialStopAtrMultiple": 1.5,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 49,
+     "uptrendSmaBars": 96,
+     "uptrendSlopeBars": 7,
+     "uptrendMinimumRisePercent": 1,
+     "pullbackMinimumPercent": 1.2,
+     "pullbackMaximumPercent": 10.6,
+     "recoveryPercent": 2.6,
+     "costBpsPerSide": 5
+    }
+   },
+   "centre": {
+    "id": "rc1-99c7a25e9144531e",
+    "net": 498119.5,
+    "realized": 498119.5,
+    "unrealized": 0,
+    "dd": 26287.97,
+    "ddPeakT": 1580849220,
+    "ddTroughT": 1581000300,
+    "ddRecoveryT": 1582125780,
+    "ddDaily": 24286.59,
+    "lots": 69,
+    "wins": 48,
+    "losses": 21,
+    "partials": 0,
+    "lossSum": -116276.77,
+    "worstLoss": -11197.02,
+    "largestWin": 56331.1,
+    "interest": 26580.82,
+    "costs": 7162.48,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 47,
+      "wins": 31,
+      "losses": 16,
+      "booked": 263022.94,
+      "principalDays": 60500000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 50,
+      "granted": 47,
+      "refused": 3
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 22,
+      "wins": 17,
+      "losses": 5,
+      "booked": 235096.56,
+      "principalDays": 27700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 28,
+      "granted": 22,
+      "refused": 6
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 47,
+      "wins": 31,
+      "losses": 16,
+      "booked": 263022.94,
+      "principalDays": 60500000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 50,
+      "granted": 47,
+      "refused": 3
+     },
+     "G": {
+      "lots": 22,
+      "wins": 17,
+      "losses": 5,
+      "booked": 235096.56,
+      "principalDays": 27700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 28,
+      "granted": 22,
+      "refused": 6
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 681,
+    "peakPrincipal": 100000,
+    "peakValue": 171540.72,
+    "years": {
+     "2016": 5277.07,
+     "2017": 22155.28,
+     "2018": 19420.52,
+     "2019": 29172.98,
+     "2020": 210993.34,
+     "2021": 107489.36,
+     "2022": -7509.25,
+     "2023": 53283.28,
+     "2024": 57836.93
+    },
+    "periods": [],
+    "topEpisode": 109621.58,
+    "topEpisodeShare": 0.2201,
+    "episodes": 22,
+    "signature": "2424ff91ae772342",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 50,
+      "net": 319654.09,
+      "dd": 25587.28,
+      "first": "2016-06-23"
+     },
+     "G:VGT": {
+      "trades": 28,
+      "net": 311583.05,
+      "dd": 28655.41,
+      "first": "2017-01-13"
+     }
+    },
+    "sessions": 2264,
+    "rc": {
+     "D1:VGT": {
+      "virtualTrades": 50,
+      "protective": 11,
+      "protectiveGap": 2,
+      "entryDay": 0,
+      "maximumHold": 5,
+      "adaptive": 0,
+      "episodes": 16,
+      "blocks": 16,
+      "blockedSessions": 261
+     }
+    },
+    "envelope": {
+     "bankedDdMarked": 16245.584734195145,
+     "bankedDdLiquidation": 16294.828008855984,
+     "principalLossMarked": 11197.022078750248,
+     "principalLossLiquidation": 11197.022078750248
+    }
+   },
+   "risk": {
+    "endDate": "2024-12-31",
+    "net": 498119.5,
+    "realized": 498119.5,
+    "unrealized": 0,
+    "conservativeNet": 498119.5,
+    "openLot": null,
+    "openShare": 0,
+    "occupancy": 0.30079505300353354,
+    "lots": 69,
+    "mae": {
+     "count": 69,
+     "median": -2976.586238766719,
+     "p90": -6056.892649565616,
+     "worst": -11197.022078750248,
+     "worstBook": "G:VGT"
+    },
+    "maeByBook": {
+     "D1:VGT": -10332.477336418704,
+     "G:VGT": -11197.022078750248
+    },
+    "worstRealized": -11197.022078750248,
+    "meanLosing": -5536.9891342630835,
+    "losing": 21,
+    "rowsKept": 69
+   },
+   "select": {
+    "n": 256,
+    "failed": 0,
+    "median": 354726.52,
+    "p10": 290443.36,
+    "p90Net": 405392.21,
+    "mean": 352319.38,
+    "robust": 322584.94,
+    "medianDd": 29162.22,
+    "p90Dd": 33064.21,
+    "worstDd": 42552.92,
+    "breaches": 12,
+    "breachShare": 0.0469,
+    "meanExcess": 3356.96,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 256,
+    "sameAsCentre": 0,
+    "clipped": 126
+   },
+   "selectTail": {
+    "n": 256,
+    "centreDd": 26287.97,
+    "centreNet": 498119.5,
+    "medianDd": 29162.22,
+    "p90Dd": 33064.21,
+    "p90Interval": [
+     32265.57,
+     34464.53
+    ],
+    "p95Dd": 34804.33,
+    "worst10Mean": 36080.09,
+    "worst10K": 26,
+    "worstDd": 42552.92,
+    "breaches": 12,
+    "breachShare": 0.0469,
+    "breachInterval": [
+     0.027,
+     0.0801
+    ],
+    "meanExcess": 3356.96,
+    "breachLedgers": 12,
+    "sameAsCentre": 0,
+    "clipped": 126,
+    "medianNet": 354726.52,
+    "p10Net": 290443.36,
+    "p90Net": 405392.21,
+    "meanNet": 352319.38,
+    "worstNet": 245783.84,
+    "positiveShare": 1
+   },
+   "confirm": {
+    "n": 384,
+    "failed": 0,
+    "median": 357588.59,
+    "p10": 298233.8,
+    "p90Net": 407651.92,
+    "mean": 354906.94,
+    "robust": 327911.19,
+    "medianDd": 28881.66,
+    "p90Dd": 32455.93,
+    "worstDd": 40606.51,
+    "breaches": 9,
+    "breachShare": 0.0234,
+    "meanExcess": 2600.38,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 384,
+    "sameAsCentre": 0,
+    "clipped": 191
+   },
+   "confirmTail": {
+    "n": 384,
+    "centreDd": 26287.97,
+    "centreNet": 498119.5,
+    "medianDd": 28881.66,
+    "p90Dd": 32455.93,
+    "p90Interval": [
+     31859.19,
+     33235.95
+    ],
+    "p95Dd": 33809.48,
+    "worst10Mean": 34420.58,
+    "worst10K": 39,
+    "worstDd": 40606.51,
+    "breaches": 9,
+    "breachShare": 0.0234,
+    "breachInterval": [
+     0.0124,
+     0.0439
+    ],
+    "meanExcess": 2600.38,
+    "breachLedgers": 9,
+    "sameAsCentre": 0,
+    "clipped": 191,
+    "medianNet": 357588.59,
+    "p10Net": 298233.8,
+    "p90Net": 407651.92,
+    "meanNet": 354906.94,
+    "worstNet": 236983.9,
+    "positiveShare": 1
+   },
+   "confirmReps": [
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 358153.93,
+     "p10": 299418.67,
+     "p90Net": 405699.3,
+     "mean": 355226.8,
+     "robust": 328786.3,
+     "medianDd": 28952.84,
+     "p90Dd": 32651.2,
+     "worstDd": 39756.09,
+     "breaches": 3,
+     "breachShare": 0.0234,
+     "meanExcess": 3387.94,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 64
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 355888.75,
+     "p10": 300572.07,
+     "p90Net": 409939.61,
+     "mean": 355449.16,
+     "robust": 328230.41,
+     "medianDd": 28794.43,
+     "p90Dd": 32361.35,
+     "worstDd": 38780.12,
+     "breaches": 4,
+     "breachShare": 0.0313,
+     "meanExcess": 1712.93,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 64
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 359139.97,
+     "p10": 296448.27,
+     "p90Net": 405638.3,
+     "mean": 354044.86,
+     "robust": 327794.12,
+     "medianDd": 28773.33,
+     "p90Dd": 32123.11,
+     "worstDd": 40606.51,
+     "breaches": 2,
+     "breachShare": 0.0156,
+     "meanExcess": 3193.94,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 63
+    }
+   ],
+   "confirmDraws": {
+    "drawn": 384,
+    "unique": 384
+   },
+   "selectDraws": {
+    "drawn": 256,
+    "unique": 256
+   },
+   "stress": {
+    "cost 0 bps": {
+     "net": 505547.92,
+     "dd": 26178.08,
+     "lots": 69,
+     "realized": 505547.92,
+     "unrealized": 0,
+     "interest": 26580.82,
+     "costs": 0,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 268006.69,
+      "G:GDX": 0,
+      "G:VGT": 237541.23
+     },
+     "famLots": {
+      "D1": 47,
+      "G": 22
+     }
+    },
+    "cost 10 bps": {
+     "net": 490698.51,
+     "dd": 26397.75,
+     "lots": 69,
+     "realized": 490698.51,
+     "unrealized": 0,
+     "interest": 26580.82,
+     "costs": 14317.81,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 258044.17,
+      "G:GDX": 0,
+      "G:VGT": 232654.34
+     },
+     "famLots": {
+      "D1": 47,
+      "G": 22
+     }
+    },
+    "cost 20 bps": {
+     "net": 482084.92,
+     "dd": 27063.61,
+     "lots": 68,
+     "realized": 482084.92,
+     "unrealized": 0,
+     "interest": 26550.68,
+     "costs": 28219.42,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 254307.72,
+      "G:GDX": 0,
+      "G:VGT": 227777.2
+     },
+     "famLots": {
+      "D1": 46,
+      "G": 22
+     }
+    },
+    "interest 14%": {
+     "net": 490870.19,
+     "dd": 26296.19,
+     "lots": 69,
+     "realized": 490870.19,
+     "unrealized": 0,
+     "interest": 33830.14,
+     "costs": 7162.48,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 258050.34,
+      "G:GDX": 0,
+      "G:VGT": 232819.85
+     },
+     "famLots": {
+      "D1": 47,
+      "G": 22
+     }
+    },
+    "stop slippage +25 bps": {
+     "net": 488108.13,
+     "dd": 26864.39,
+     "lots": 68,
+     "realized": 488108.13,
+     "unrealized": 0,
+     "interest": 26550.68,
+     "costs": 23001.1,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 257957.62,
+      "G:GDX": 0,
+      "G:VGT": 230150.51
+     },
+     "famLots": {
+      "D1": 46,
+      "G": 22
+     }
+    },
+    "next-open stops": {
+     "net": 479814.75,
+     "dd": 26287.97,
+     "lots": 66,
+     "realized": 479814.75,
+     "unrealized": 0,
+     "interest": 25435.62,
+     "costs": 6852.75,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 190058.02,
+      "G:GDX": 0,
+      "G:VGT": 289756.73
+     },
+     "famLots": {
+      "D1": 43,
+      "G": 23
+     }
+    },
+    "cost 2 bps": {
+     "net": 502575.66,
+     "dd": 26222.05,
+     "lots": 69,
+     "realized": 502575.66,
+     "unrealized": 0,
+     "interest": 26580.82,
+     "costs": 2865.85,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 266012.59,
+      "G:GDX": 0,
+      "G:VGT": 236563.07
+     },
+     "famLots": {
+      "D1": 47,
+      "G": 22
+     }
+    },
+    "stop slippage +10 bps": {
+     "net": 491651.13,
+     "dd": 26433.86,
+     "lots": 69,
+     "realized": 491651.13,
+     "unrealized": 0,
+     "interest": 26580.82,
+     "costs": 13630.86,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 258532.99,
+      "G:GDX": 0,
+      "G:VGT": 233118.14
+     },
+     "famLots": {
+      "D1": 47,
+      "G": 22
+     }
+    }
+   },
+   "removal": {
+    "without D1": {
+     "net": 311583.05,
+     "dd": 28655.41,
+     "lots": 28,
+     "realized": 311583.05,
+     "unrealized": 0,
+     "interest": 11512.33,
+     "costs": 2961.63,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 311583.05
+     },
+     "famLots": {
+      "D1": 0,
+      "G": 28
+     }
+    },
+    "without Growth": {
+     "net": 319654.09,
+     "dd": 25587.28,
+     "lots": 50,
+     "realized": 319654.09,
+     "unrealized": 0,
+     "interest": 18926.03,
+     "costs": 5169.38,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 319654.09,
+      "G:GDX": 0,
+      "G:VGT": 0
+     },
+     "famLots": {
+      "D1": 50,
+      "G": 0
+     }
+    }
+   },
+   "gates": {
+    "Q1": true,
+    "Q2": true,
+    "Q3": true,
+    "Q4": true,
+    "Q5": true,
+    "Q6": true
+   },
+   "qualified": true,
+   "failed": [],
+   "severity": {},
+   "reasons": [],
+   "participation": {
+    "D1:GDX": "disabled",
+    "D1:VGT": "funded",
+    "G:GDX": "disabled",
+    "G:VGT": "funded"
+   },
+   "envelope": {
+    "centre": {
+     "bankedDdMarked": 16245.584734195145,
+     "bankedDdLiquidation": 16294.828008855984,
+     "principalLossMarked": 11197.022078750248,
+     "principalLossLiquidation": 11197.022078750248
+    },
+    "select": {
+     "n": 256,
+     "failed": 0,
+     "markedDd": {
+      "median": 29162.215,
+      "p90": 33064.21000000001,
+      "p95": 34804.332500000004,
+      "worst": 42552.92,
+      "worst10Mean": 36080.093076923076
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 11197.022078750248,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11381.318054514573,
+       "worst10Mean": 11303.702481689352
+      },
+      "liquidation": {
+       "median": 11197.022078750248,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11381.318054514573,
+       "worst10Mean": 11303.702481689352
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 19806.53572752775,
+       "p90": 24182.494828208582,
+       "p95": 26001.543236831778,
+       "worst": 35724.099166823784,
+       "worst10Mean": 27019.496800300123
+      },
+      "liquidation": {
+       "median": 19831.198719029417,
+       "p90": 24207.815914883737,
+       "p95": 26051.054066802106,
+       "worst": 35773.6070746209,
+       "worst10Mean": 27053.6823467002
+      }
+     }
+    },
+    "confirm": {
+     "n": 384,
+     "failed": 0,
+     "markedDd": {
+      "median": 28881.655,
+      "p90": 32455.925,
+      "p95": 33809.477,
+      "worst": 40606.51,
+      "worst10Mean": 34420.58051282052
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 11197.022078750248,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11381.318054514573,
+       "worst10Mean": 11302.577618315067
+      },
+      "liquidation": {
+       "median": 11197.022078750248,
+       "p90": 11293.578711320837,
+       "p95": 11293.578711320837,
+       "worst": 11381.318054514573,
+       "worst10Mean": 11302.577618315067
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 19772.36488226078,
+       "p90": 23848.845276735945,
+       "p95": 25012.394737218,
+       "worst": 32046.261717085436,
+       "worst10Mean": 25742.41034758483
+      },
+      "liquidation": {
+       "median": 19816.085750159487,
+       "p90": 23898.243163290168,
+       "p95": 25061.623955487397,
+       "worst": 32046.261717085436,
+       "worst10Mean": 25774.936451705573
+      }
+     }
+    },
+    "stress": {
+     "cost 0 bps": {
+      "net": 505547.92,
+      "dd": 26178.08,
+      "envelope": {
+       "bankedDdMarked": 15810.488886481791,
+       "bankedDdLiquidation": 15810.488886481791,
+       "principalLossMarked": 11107.963612691878,
+       "principalLossLiquidation": 11107.963612691878
+      }
+     },
+     "cost 10 bps": {
+      "net": 490698.51,
+      "dd": 26397.75,
+      "envelope": {
+       "bankedDdMarked": 16680.245920722024,
+       "bankedDdLiquidation": 16778.68327596318,
+       "principalLossMarked": 11285.991575312073,
+       "principalLossLiquidation": 11285.991575312073
+      }
+     },
+     "cost 20 bps": {
+      "net": 482084.92,
+      "dd": 27063.61,
+      "envelope": {
+       "bankedDdMarked": 17548.266912977677,
+       "bankedDdLiquidation": 17744.94514171302,
+       "principalLossMarked": 11463.664192697543,
+       "principalLossLiquidation": 11463.664192697543
+      }
+     },
+     "interest 14%": {
+      "net": 490870.19,
+      "dd": 26296.19,
+      "envelope": {
+       "bankedDdMarked": 16352.434049263655,
+       "bankedDdLiquidation": 16401.677323924494,
+       "principalLossMarked": 11254.55632532559,
+       "principalLossLiquidation": 11254.55632532559
+      }
+     },
+     "stop slippage +25 bps": {
+      "net": 488108.13,
+      "dd": 26864.39,
+      "envelope": {
+       "bankedDdMarked": 17209.73385110998,
+       "bankedDdLiquidation": 17258.97712577082,
+       "principalLossMarked": 11197.022078750248,
+       "principalLossLiquidation": 11197.022078750248
+      }
+     },
+     "next-open stops": {
+      "net": 479814.75,
+      "dd": 26287.97,
+      "envelope": {
+       "bankedDdMarked": 15763.653746216616,
+       "bankedDdLiquidation": 15812.897020877455,
+       "principalLossMarked": 11197.022078750248,
+       "principalLossLiquidation": 11197.022078750248
+      }
+     },
+     "cost 2 bps": {
+      "net": 502575.66,
+      "dd": 26222.05,
+      "envelope": {
+       "bankedDdMarked": 15984.579426628596,
+       "bankedDdLiquidation": 16004.282644504274,
+       "principalLossMarked": 11143.597683994172,
+       "principalLossLiquidation": 11143.597683994172
+      }
+     },
+     "stop slippage +10 bps": {
+      "net": 491651.13,
+      "dd": 26433.86,
+      "envelope": {
+       "bankedDdMarked": 16631.244380961114,
+       "bankedDdLiquidation": 16680.487655621953,
+       "principalLossMarked": 11197.022078750248,
+       "principalLossLiquidation": 11197.022078750248
+      }
+     }
+    },
+    "removal": {
+     "without D1": {
+      "bankedDdMarked": 12181.206484626047,
+      "bankedDdLiquidation": 12230.714392423106,
+      "principalLossMarked": 11197.022078750248,
+      "principalLossLiquidation": 11197.022078750248
+     },
+     "without Growth": {
+      "bankedDdMarked": 16245.584734195145,
+      "bankedDdLiquidation": 16294.828008856013,
+      "principalLossMarked": 10332.477336418704,
+      "principalLossLiquidation": 10332.477336418704
+     }
+    },
+    "confirmP10Unrounded": 298233.798
+   },
+   "sources": [
+    {
+     "label": "C24/C/pair DF1×GF3",
+     "lane": "pairs",
+     "pick": "C24/D/refine/D.B1/R103#1 profit × C24/G/refine/G.h2.s1/R101#3 balanced"
+    }
+   ]
+  },
+  {
+   "label": "C24/C/pair DF2×GF1",
+   "cell": "C.C1.h2.s1",
+   "d1Structure": "C1",
+   "growthProtection": "hold_on_buffer_on / istop on",
+   "unrestrictedGrowth": false,
+   "base": true,
+   "activation": "n",
+   "controlPattern": "K1|n",
+   "growthEntry": "breakout",
+   "growthStratum": "breakout·gate off",
+   "growthId": "f46c06257f776da2",
+   "id": "rc1-32826b7d3e87f9a8",
+   "activeInputs": 24,
+   "boundary": [
+    "ctl.k=1",
+    "G.breakoutSmaSessions=10"
+   ],
+   "arm": "C",
+   "lane": "pairs",
+   "stage": "fixed",
+   "pick": "C24/D/refine/D.C1/R103#2 robust × C24/G/refine/G.h2.s1/R101#1 profit",
+   "replicate": null,
+   "cfg": {
+    "cell": "C.C1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 227,
+      "trailingBuyPercentage": 31,
+      "trailingStopPercentage": 58,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 81,
+      "intradayLossBuffer": 0,
+      "pullback": 173,
+      "continuationWindow": 87
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 95
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 940,
+        "maxBlockSessions": 248
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 96,
+     "breakoutPriorHighSessions": 50,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 5.9,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 23,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 5,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 26,
+     "initialStopAtrMultiple": 1.3,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 132,
+     "uptrendSmaBars": 109,
+     "uptrendSlopeBars": 6,
+     "uptrendMinimumRisePercent": 1.15,
+     "pullbackMinimumPercent": 1.3,
+     "pullbackMaximumPercent": 10.5,
+     "recoveryPercent": 2.64,
+     "costBpsPerSide": 5
+    }
+   },
+   "centre": {
+    "id": "rc1-32826b7d3e87f9a8",
+    "net": 530344.82,
+    "realized": 530344.82,
+    "unrealized": 0,
+    "dd": 38300.27,
+    "ddPeakT": 1580849220,
+    "ddTroughT": 1581604200,
+    "ddRecoveryT": 1593614400,
+    "ddDaily": 21989.35,
+    "lots": 58,
+    "wins": 43,
+    "losses": 15,
+    "partials": 0,
+    "lossSum": -95010.26,
+    "worstLoss": -9861.69,
+    "largestWin": 54660.16,
+    "interest": 24139.73,
+    "costs": 6077.38,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 30,
+      "wins": 23,
+      "losses": 7,
+      "booked": 200866.18,
+      "principalDays": 42000000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 30,
+      "granted": 30,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 28,
+      "wins": 20,
+      "losses": 8,
+      "booked": 329478.65,
+      "principalDays": 38100000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 28,
+      "refused": 3
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 30,
+      "wins": 23,
+      "losses": 7,
+      "booked": 200866.18,
+      "principalDays": 42000000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 30,
+      "granted": 30,
+      "refused": 0
+     },
+     "G": {
+      "lots": 28,
+      "wins": 20,
+      "losses": 8,
+      "booked": 329478.65,
+      "principalDays": 38100000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 28,
+      "refused": 3
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 607,
+    "peakPrincipal": 100000,
+    "peakValue": 171540.72,
+    "years": {
+     "2016": 23786.97,
+     "2017": 40838.79,
+     "2018": 36191.27,
+     "2019": 46005.94,
+     "2020": 173591.11,
+     "2021": 75331.38,
+     "2022": -6051.1,
+     "2023": 62376.41,
+     "2024": 78274.06
+    },
+    "periods": [],
+    "topEpisode": 82596.86,
+    "topEpisodeShare": 0.1557,
+    "episodes": 27,
+    "signature": "f116889512644ddc",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 30,
+      "net": 200866.18,
+      "dd": 26048.97,
+      "first": "2016-05-11"
+     },
+     "G:VGT": {
+      "trades": 31,
+      "net": 340912.6,
+      "dd": 28655.41,
+      "first": "2017-01-13"
+     }
+    },
+    "sessions": 2264,
+    "rc": {
+     "D1:VGT": {
+      "virtualTrades": 30,
+      "protective": 5,
+      "protectiveGap": 1,
+      "entryDay": 0,
+      "maximumHold": 0,
+      "adaptive": 0,
+      "episodes": 7,
+      "blocks": 7,
+      "blockedSessions": 547
+     }
+    },
+    "envelope": {
+     "bankedDdMarked": 18254.94617112045,
+     "bankedDdLiquidation": 18303.33146576106,
+     "principalLossMarked": 9861.68764932601,
+     "principalLossLiquidation": 9861.68764932601
+    }
+   },
+   "risk": {
+    "endDate": "2024-12-31",
+    "net": 530344.82,
+    "realized": 530344.82,
+    "unrealized": 0,
+    "conservativeNet": 530344.82,
+    "openLot": null,
+    "openShare": 0,
+    "occupancy": 0.2681095406360424,
+    "lots": 58,
+    "mae": {
+     "count": 58,
+     "median": -2954.565596477705,
+     "p90": -8055.053461344147,
+     "worst": -9861.68764932601,
+     "worstBook": "D1:VGT"
+    },
+    "maeByBook": {
+     "D1:VGT": -9861.68764932601,
+     "G:VGT": -6171.082721835019
+    },
+    "worstRealized": -9861.68764932601,
+    "meanLosing": -6334.017327576393,
+    "losing": 15,
+    "rowsKept": 58
+   },
+   "select": {
+    "n": 256,
+    "failed": 0,
+    "median": 430625.13,
+    "p10": 373742.99,
+    "p90Net": 480209.83,
+    "mean": 429299.88,
+    "robust": 402184.06,
+    "medianDd": 35677.97,
+    "p90Dd": 38975.3,
+    "worstDd": 50682.74,
+    "breaches": 154,
+    "breachShare": 0.6016,
+    "meanExcess": 2804.7,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 256,
+    "sameAsCentre": 0,
+    "clipped": 176
+   },
+   "selectTail": {
+    "n": 256,
+    "centreDd": 38300.27,
+    "centreNet": 530344.82,
+    "medianDd": 35677.97,
+    "p90Dd": 38975.3,
+    "p90Interval": [
+     38775.5,
+     39731.04
+    ],
+    "p95Dd": 40429.45,
+    "worst10Mean": 41486.75,
+    "worst10K": 26,
+    "worstDd": 50682.74,
+    "breaches": 154,
+    "breachShare": 0.6016,
+    "breachInterval": [
+     0.5405,
+     0.6596
+    ],
+    "meanExcess": 2804.7,
+    "breachLedgers": 154,
+    "sameAsCentre": 0,
+    "clipped": 176,
+    "medianNet": 430625.13,
+    "p10Net": 373742.99,
+    "p90Net": 480209.83,
+    "meanNet": 429299.88,
+    "worstNet": 307294.69,
+    "positiveShare": 1
+   },
+   "confirm": {
+    "n": 384,
+    "failed": 0,
+    "median": 431114.11,
+    "p10": 373213.98,
+    "p90Net": 479256.12,
+    "mean": 428484.7,
+    "robust": 402164.05,
+    "medianDd": 35677.97,
+    "p90Dd": 39075.2,
+    "worstDd": 51400.37,
+    "breaches": 225,
+    "breachShare": 0.5859,
+    "meanExcess": 3077.74,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 384,
+    "sameAsCentre": 0,
+    "clipped": 267
+   },
+   "confirmTail": {
+    "n": 384,
+    "centreDd": 38300.27,
+    "centreNet": 530344.82,
+    "medianDd": 35677.97,
+    "p90Dd": 39075.2,
+    "p90Interval": [
+     38875.4,
+     39275
+    ],
+    "p95Dd": 41162.84,
+    "worst10Mean": 41968.47,
+    "worst10K": 39,
+    "worstDd": 51400.37,
+    "breaches": 225,
+    "breachShare": 0.5859,
+    "breachInterval": [
+     0.5361,
+     0.6341
+    ],
+    "meanExcess": 3077.74,
+    "breachLedgers": 225,
+    "sameAsCentre": 0,
+    "clipped": 267,
+    "medianNet": 431114.11,
+    "p10Net": 373213.98,
+    "p90Net": 479256.12,
+    "meanNet": 428484.7,
+    "worstNet": 306125.58,
+    "positiveShare": 1
+   },
+   "confirmReps": [
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 431356.67,
+     "p10": 369452.43,
+     "p90Net": 478900.53,
+     "mean": 427148.66,
+     "robust": 400404.55,
+     "medianDd": 35677.97,
+     "p90Dd": 39134.33,
+     "worstDd": 51054.74,
+     "breaches": 75,
+     "breachShare": 0.5859,
+     "meanExcess": 2982.45,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 92
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 432942.32,
+     "p10": 375618.12,
+     "p90Net": 486802.7,
+     "mean": 431562.88,
+     "robust": 404280.22,
+     "medianDd": 35698.44,
+     "p90Dd": 38905.37,
+     "worstDd": 44597.29,
+     "breaches": 76,
+     "breachShare": 0.5938,
+     "meanExcess": 2916.81,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 85
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 425598.55,
+     "p10": 375104.85,
+     "p90Net": 474238.2,
+     "mean": 426742.57,
+     "robust": 400351.7,
+     "medianDd": 35677.97,
+     "p90Dd": 39105.17,
+     "worstDd": 51400.37,
+     "breaches": 74,
+     "breachShare": 0.5781,
+     "meanExcess": 3339.6,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 90
+    }
+   ],
+   "confirmDraws": {
+    "drawn": 384,
+    "unique": 384
+   },
+   "selectDraws": {
+    "drawn": 256,
+    "unique": 256
+   },
+   "stress": {
+    "cost 0 bps": {
+     "net": 536702.49,
+     "dd": 38101.1,
+     "lots": 58,
+     "realized": 536702.49,
+     "unrealized": 0,
+     "interest": 24139.73,
+     "costs": 0,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 204081.31,
+      "G:GDX": 0,
+      "G:VGT": 332621.18
+     },
+     "famLots": {
+      "D1": 30,
+      "G": 28
+     }
+    },
+    "cost 10 bps": {
+     "net": 502754.47,
+     "dd": 38499.23,
+     "lots": 58,
+     "realized": 502754.47,
+     "unrealized": 0,
+     "interest": 23928.77,
+     "costs": 12127.22,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 181727.15,
+      "G:GDX": 0,
+      "G:VGT": 321027.32
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 29
+     }
+    },
+    "cost 20 bps": {
+     "net": 513336.66,
+     "dd": 38896.57,
+     "lots": 57,
+     "realized": 513336.66,
+     "unrealized": 0,
+     "interest": 24200,
+     "costs": 23877.32,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 193266.79,
+      "G:GDX": 0,
+      "G:VGT": 320069.87
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 28
+     }
+    },
+    "interest 14%": {
+     "net": 525477.4,
+     "dd": 38333.14,
+     "lots": 57,
+     "realized": 525477.4,
+     "unrealized": 0,
+     "interest": 30800,
+     "costs": 5978.28,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 199130.26,
+      "G:GDX": 0,
+      "G:VGT": 326347.14
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 28
+     }
+    },
+    "stop slippage +25 bps": {
+     "net": 495390.83,
+     "dd": 38890.96,
+     "lots": 58,
+     "realized": 495390.83,
+     "unrealized": 0,
+     "interest": 23928.77,
+     "costs": 19760.14,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 177079.75,
+      "G:GDX": 0,
+      "G:VGT": 318311.08
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 29
+     }
+    },
+    "next-open stops": {
+     "net": 506176.65,
+     "dd": 38300.27,
+     "lots": 58,
+     "realized": 506176.65,
+     "unrealized": 0,
+     "interest": 23928.77,
+     "costs": 6065.19,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 181915.18,
+      "G:GDX": 0,
+      "G:VGT": 324261.48
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 29
+     }
+    },
+    "cost 2 bps": {
+     "net": 534158.66,
+     "dd": 38180.79,
+     "lots": 58,
+     "realized": 534158.66,
+     "unrealized": 0,
+     "interest": 24139.73,
+     "costs": 2431.68,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 202794.87,
+      "G:GDX": 0,
+      "G:VGT": 331363.79
+     },
+     "famLots": {
+      "D1": 30,
+      "G": 28
+     }
+    },
+    "stop slippage +10 bps": {
+     "net": 503606.92,
+     "dd": 38536.54,
+     "lots": 58,
+     "realized": 503606.92,
+     "unrealized": 0,
+     "interest": 23928.77,
+     "costs": 11544.04,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 181725.61,
+      "G:GDX": 0,
+      "G:VGT": 321881.32
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 29
+     }
+    }
+   },
+   "removal": {
+    "without D1": {
+     "net": 340912.6,
+     "dd": 28655.41,
+     "lots": 31,
+     "realized": 340912.6,
+     "unrealized": 0,
+     "interest": 12597.26,
+     "costs": 3276.84,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 340912.6
+     },
+     "famLots": {
+      "D1": 0,
+      "G": 31
+     }
+    },
+    "without Growth": {
+     "net": 200866.18,
+     "dd": 26048.97,
+     "lots": 30,
+     "realized": 200866.18,
+     "unrealized": 0,
+     "interest": 12657.53,
+     "costs": 3106.82,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 200866.18,
+      "G:GDX": 0,
+      "G:VGT": 0
+     },
+     "famLots": {
+      "D1": 30,
+      "G": 0
+     }
+    }
+   },
+   "gates": {
+    "Q1": true,
+    "Q2": false,
+    "Q3": false,
+    "Q4": true,
+    "Q5": false,
+    "Q6": true
+   },
+   "qualified": false,
+   "failed": [
+    "Q2",
+    "Q3",
+    "Q5"
+   ],
+   "severity": {
+    "Q2": 3300.27,
+    "Q3": 4075.2,
+    "Q5": 3499.23
+   },
+   "reasons": [
+    "Q2 DD > limit",
+    "Q3 p90 DD > limit",
+    "Q5 10 bps DD > limit"
+   ],
+   "participation": {
+    "D1:GDX": "disabled",
+    "D1:VGT": "funded",
+    "G:GDX": "disabled",
+    "G:VGT": "funded"
+   },
+   "envelope": {
+    "centre": {
+     "bankedDdMarked": 18254.94617112045,
+     "bankedDdLiquidation": 18303.33146576106,
+     "principalLossMarked": 9861.68764932601,
+     "principalLossLiquidation": 9861.68764932601
+    },
+    "select": {
+     "n": 256,
+     "failed": 0,
+     "markedDd": {
+      "median": 35677.97,
+      "p90": 38975.3,
+      "p95": 40429.45,
+      "worst": 50682.74,
+      "worst10Mean": 41486.749615384615
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10805.42331573939,
+       "p90": 11837.900227968188,
+       "p95": 12254.874851690394,
+       "worst": 14405.367538816341,
+       "worst10Mean": 12581.102274849483
+      },
+      "liquidation": {
+       "median": 10805.42331573939,
+       "p90": 11837.900227968188,
+       "p95": 12254.874851690394,
+       "worst": 14405.367538816341,
+       "worst10Mean": 12581.102274849483
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 21326.822244024952,
+       "p90": 29980.116643012647,
+       "p95": 32656.345603372756,
+       "worst": 40758.16945572356,
+       "worst10Mean": 33761.230704710506
+      },
+      "liquidation": {
+       "median": 21361.64900127321,
+       "p90": 30028.8110516718,
+       "p95": 32704.298092533005,
+       "worst": 40806.7020424387,
+       "worst10Mean": 33809.66798344637
+      }
+     }
+    },
+    "confirm": {
+     "n": 384,
+     "failed": 0,
+     "markedDd": {
+      "median": 35677.97,
+      "p90": 39075.2,
+      "p95": 41162.84249999997,
+      "worst": 51400.37,
+      "worst10Mean": 41968.46897435898
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10759.38297974299,
+       "p90": 11926.641473783646,
+       "p95": 12233.674224531558,
+       "worst": 13819.665314025278,
+       "worst10Mean": 12273.303635352637
+      },
+      "liquidation": {
+       "median": 10759.38297974299,
+       "p90": 11926.641473783646,
+       "p95": 12233.674224531558,
+       "worst": 13819.665314025278,
+       "worst10Mean": 12273.303635352637
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 21699.923400216358,
+       "p90": 29972.637337281874,
+       "p95": 33690.018067395875,
+       "worst": 44741.472906148985,
+       "worst10Mean": 34389.488414564505
+      },
+      "liquidation": {
+       "median": 21744.46464815925,
+       "p90": 30021.212433462653,
+       "p95": 33738.374397228705,
+       "worst": 44789.46003648102,
+       "worst10Mean": 34436.31791594107
+      }
+     }
+    },
+    "stress": {
+     "cost 0 bps": {
+      "net": 536702.49,
+      "dd": 38101.1,
+      "envelope": {
+       "bankedDdMarked": 18020.52901243861,
+       "bankedDdLiquidation": 18020.52901243861,
+       "principalLossMarked": 9771.232876712329,
+       "principalLossLiquidation": 9771.232876712329
+      }
+     },
+     "cost 10 bps": {
+      "net": 502754.47,
+      "dd": 38499.23,
+      "envelope": {
+       "bankedDdMarked": 18489.129146826686,
+       "bankedDdLiquidation": 18585.85139915027,
+       "principalLossMarked": 13906.073720588905,
+       "principalLossLiquidation": 13906.073720588905
+      }
+     },
+     "cost 20 bps": {
+      "net": 513336.66,
+      "dd": 38896.57,
+      "envelope": {
+       "bankedDdMarked": 18956.793951605214,
+       "bankedDdLiquidation": 19150.04539786454,
+       "principalLossMarked": 10132.510321822108,
+       "principalLossLiquidation": 10132.510321822108
+      }
+     },
+     "interest 14%": {
+      "net": 525477.4,
+      "dd": 38333.14,
+      "envelope": {
+       "bankedDdMarked": 18517.9598697506,
+       "bankedDdLiquidation": 18566.345164391212,
+       "principalLossMarked": 9935.660252065736,
+       "principalLossLiquidation": 9935.660252065736
+      }
+     },
+     "stop slippage +25 bps": {
+      "net": 495390.83,
+      "dd": 38890.96,
+      "envelope": {
+       "bankedDdMarked": 18480.970034188882,
+       "bankedDdLiquidation": 18529.355328829493,
+       "principalLossMarked": 14035.794232931996,
+       "principalLossLiquidation": 14035.794232931996
+      }
+     },
+     "next-open stops": {
+      "net": 506176.65,
+      "dd": 38300.27,
+      "envelope": {
+       "bankedDdMarked": 18386.588296454865,
+       "bankedDdLiquidation": 18434.973591095477,
+       "principalLossMarked": 13819.665314025278,
+       "principalLossLiquidation": 13819.665314025278
+      }
+     },
+     "cost 2 bps": {
+      "net": 534158.66,
+      "dd": 38180.79,
+      "envelope": {
+       "bankedDdMarked": 18114.324000345485,
+       "bankedDdLiquidation": 18133.683923276083,
+       "principalLossMarked": 9807.425638160032,
+       "principalLossLiquidation": 9807.425638160032
+      }
+     },
+     "stop slippage +10 bps": {
+      "net": 503606.92,
+      "dd": 38536.54,
+      "envelope": {
+       "bankedDdMarked": 18345.35571634781,
+       "bankedDdLiquidation": 18393.741010988422,
+       "principalLossMarked": 13906.116881587968,
+       "principalLossLiquidation": 13906.116881587968
+      }
+     }
+    },
+    "removal": {
+     "without D1": {
+      "bankedDdMarked": 14156.718940798688,
+      "bankedDdLiquidation": 14205.104235439328,
+      "principalLossMarked": 6171.082721835019,
+      "principalLossLiquidation": 6171.082721835019
+     },
+     "without Growth": {
+      "bankedDdMarked": 19532.730932893173,
+      "bankedDdLiquidation": 19582.597292181294,
+      "principalLossMarked": 9861.68764932601,
+      "principalLossLiquidation": 9861.68764932601
+     }
+    },
+    "confirmP10Unrounded": 373213.98
+   },
+   "sources": [
+    {
+     "label": "C24/C/pair DF2×GF1",
+     "lane": "pairs",
+     "pick": "C24/D/refine/D.C1/R103#2 robust × C24/G/refine/G.h2.s1/R101#1 profit"
+    }
+   ]
+  },
+  {
+   "label": "C24/C/pair DF2×GF2",
+   "cell": "C.C1.h2.s1",
+   "d1Structure": "C1",
+   "growthProtection": "hold_on_buffer_on / istop on",
+   "unrestrictedGrowth": false,
+   "base": true,
+   "activation": "n",
+   "controlPattern": "K1|n",
+   "growthEntry": "breakout",
+   "growthStratum": "breakout·gate off",
+   "growthId": "fc44ea5527b26167",
+   "id": "rc1-4163494ef43209f0",
+   "activeInputs": 26,
+   "boundary": [
+    "ctl.k=1",
+    "G.breakoutSmaSessions=10"
+   ],
+   "arm": "C",
+   "lane": "pairs",
+   "stage": "fixed",
+   "pick": "C24/D/refine/D.C1/R103#2 robust × C24/G/refine/G.h2.s1/R102#2 robust",
+   "replicate": null,
+   "cfg": {
+    "cell": "C.C1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 227,
+      "trailingBuyPercentage": 31,
+      "trailingStopPercentage": 58,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 81,
+      "intradayLossBuffer": 0,
+      "pullback": 173,
+      "continuationWindow": 87
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 95
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 940,
+        "maxBlockSessions": 248
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 99,
+     "breakoutPriorHighSessions": 49,
+     "trendFilterEnabled": true,
+     "trendMethod": "price_change",
+     "trendChangeLookbackSessions": 66,
+     "trendChangeMinimumReturnPercent": -1.8,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 6.7,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 25,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 1.2,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 20,
+     "initialStopAtrMultiple": 1.4,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 41,
+     "uptrendSmaBars": 117,
+     "uptrendSlopeBars": 8,
+     "uptrendMinimumRisePercent": 0.7,
+     "pullbackMinimumPercent": 1.4,
+     "pullbackMaximumPercent": 10,
+     "recoveryPercent": 2.82,
+     "costBpsPerSide": 5
+    }
+   },
+   "centre": {
+    "id": "rc1-4163494ef43209f0",
+    "net": 502978.35,
+    "realized": 502978.35,
+    "unrealized": 0,
+    "dd": 38300.27,
+    "ddPeakT": 1580849220,
+    "ddTroughT": 1581604200,
+    "ddRecoveryT": 1593696600,
+    "ddDaily": 22580.37,
+    "lots": 58,
+    "wins": 43,
+    "losses": 15,
+    "partials": 0,
+    "lossSum": -103887.43,
+    "worstLoss": -11293.58,
+    "largestWin": 54660.16,
+    "interest": 24200,
+    "costs": 6063.72,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 30,
+      "wins": 23,
+      "losses": 7,
+      "booked": 200866.18,
+      "principalDays": 42000000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 30,
+      "granted": 30,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 28,
+      "wins": 20,
+      "losses": 8,
+      "booked": 302112.17,
+      "principalDays": 38300000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 28,
+      "refused": 3
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 30,
+      "wins": 23,
+      "losses": 7,
+      "booked": 200866.18,
+      "principalDays": 42000000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 30,
+      "granted": 30,
+      "refused": 0
+     },
+     "G": {
+      "lots": 28,
+      "wins": 20,
+      "losses": 8,
+      "booked": 302112.17,
+      "principalDays": 38300000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 28,
+      "refused": 3
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 608,
+    "peakPrincipal": 100000,
+    "peakValue": 171540.72,
+    "years": {
+     "2016": 23786.97,
+     "2017": 38508.32,
+     "2018": 36191.27,
+     "2019": 43088.15,
+     "2020": 167488.91,
+     "2021": 73214.45,
+     "2022": -6051.1,
+     "2023": 57546.56,
+     "2024": 69204.81
+    },
+    "periods": [],
+    "topEpisode": 80277.99,
+    "topEpisodeShare": 0.1596,
+    "episodes": 27,
+    "signature": "6814613cb4de82b4",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 30,
+      "net": 200866.18,
+      "dd": 26048.97,
+      "first": "2016-05-11"
+     },
+     "G:VGT": {
+      "trades": 31,
+      "net": 309868.56,
+      "dd": 28655.41,
+      "first": "2017-01-13"
+     }
+    },
+    "sessions": 2264,
+    "rc": {
+     "D1:VGT": {
+      "virtualTrades": 30,
+      "protective": 5,
+      "protectiveGap": 1,
+      "entryDay": 0,
+      "maximumHold": 0,
+      "adaptive": 0,
+      "episodes": 7,
+      "blocks": 7,
+      "blockedSessions": 547
+     }
+    },
+    "envelope": {
+     "bankedDdMarked": 18845.96856881265,
+     "bankedDdLiquidation": 18894.35386345326,
+     "principalLossMarked": 11293.578711320837,
+     "principalLossLiquidation": 11293.578711320837
+    }
+   },
+   "risk": {
+    "endDate": "2024-12-31",
+    "net": 502978.35,
+    "realized": 502978.35,
+    "unrealized": 0,
+    "conservativeNet": 502978.35,
+    "openLot": null,
+    "openShare": 0,
+    "occupancy": 0.26855123674911663,
+    "lots": 58,
+    "mae": {
+     "count": 58,
+     "median": -2954.565596477705,
+     "p90": -8621.038189242568,
+     "worst": -11293.578711320837,
+     "worstBook": "G:VGT"
+    },
+    "maeByBook": {
+     "D1:VGT": -9861.68764932601,
+     "G:VGT": -11293.578711320837
+    },
+    "worstRealized": -11293.578711320837,
+    "meanLosing": -6925.828816676584,
+    "losing": 15,
+    "rowsKept": 58
+   },
+   "select": {
+    "n": 256,
+    "failed": 0,
+    "median": 449480.63,
+    "p10": 402398.11,
+    "p90Net": 496218.74,
+    "mean": 449508.65,
+    "robust": 425939.37,
+    "medianDd": 38288.13,
+    "p90Dd": 39826.24,
+    "worstDd": 45862.63,
+    "breaches": 163,
+    "breachShare": 0.6367,
+    "meanExcess": 3752.7,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 256,
+    "sameAsCentre": 0,
+    "clipped": 174
+   },
+   "selectTail": {
+    "n": 256,
+    "centreDd": 38300.27,
+    "centreNet": 502978.35,
+    "medianDd": 38288.13,
+    "p90Dd": 39826.24,
+    "p90Interval": [
+     39825.2,
+     40065.93
+    ],
+    "p95Dd": 40265.73,
+    "worst10Mean": 41380.13,
+    "worst10K": 26,
+    "worstDd": 45862.63,
+    "breaches": 163,
+    "breachShare": 0.6367,
+    "breachInterval": [
+     0.5762,
+     0.6932
+    ],
+    "meanExcess": 3752.7,
+    "breachLedgers": 163,
+    "sameAsCentre": 0,
+    "clipped": 174,
+    "medianNet": 449480.63,
+    "p10Net": 402398.11,
+    "p90Net": 496218.74,
+    "meanNet": 449508.65,
+    "worstNet": 328323.9,
+    "positiveShare": 1
+   },
+   "confirm": {
+    "n": 384,
+    "failed": 0,
+    "median": 450275.84,
+    "p10": 401086.17,
+    "p90Net": 492217.45,
+    "mean": 448425.28,
+    "robust": 425681,
+    "medianDd": 38121.14,
+    "p90Dd": 39825.93,
+    "worstDd": 51342.9,
+    "breaches": 233,
+    "breachShare": 0.6068,
+    "meanExcess": 4055.31,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 384,
+    "sameAsCentre": 0,
+    "clipped": 258
+   },
+   "confirmTail": {
+    "n": 384,
+    "centreDd": 38300.27,
+    "centreNet": 502978.35,
+    "medianDd": 38121.14,
+    "p90Dd": 39825.93,
+    "p90Interval": [
+     39825.2,
+     40265.73
+    ],
+    "p95Dd": 40360.89,
+    "worst10Mean": 42591.25,
+    "worst10K": 39,
+    "worstDd": 51342.9,
+    "breaches": 233,
+    "breachShare": 0.6068,
+    "breachInterval": [
+     0.5571,
+     0.6543
+    ],
+    "meanExcess": 4055.31,
+    "breachLedgers": 233,
+    "sameAsCentre": 0,
+    "clipped": 258,
+    "medianNet": 450275.84,
+    "p10Net": 401086.17,
+    "p90Net": 492217.45,
+    "meanNet": 448425.28,
+    "worstNet": 341831.23,
+    "positiveShare": 1
+   },
+   "confirmReps": [
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 449658.63,
+     "p10": 394534.68,
+     "p90Net": 496458.68,
+     "mean": 449079.87,
+     "robust": 422096.65,
+     "medianDd": 38220.2,
+     "p90Dd": 39825.2,
+     "worstDd": 51342.9,
+     "breaches": 80,
+     "breachShare": 0.625,
+     "meanExcess": 4243.87,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 89
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 453136.9,
+     "p10": 400946.54,
+     "p90Net": 490275.13,
+     "mean": 449143.06,
+     "robust": 427041.72,
+     "medianDd": 38139.68,
+     "p90Dd": 39825.2,
+     "worstDd": 43228.9,
+     "breaches": 80,
+     "breachShare": 0.625,
+     "meanExcess": 3584.18,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 83
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 445475.74,
+     "p10": 406086.08,
+     "p90Net": 487980.38,
+     "mean": 447052.89,
+     "robust": 425780.91,
+     "medianDd": 36789.07,
+     "p90Dd": 40166.14,
+     "worstDd": 48484.01,
+     "breaches": 73,
+     "breachShare": 0.5703,
+     "meanExcess": 4364.99,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 86
+    }
+   ],
+   "confirmDraws": {
+    "drawn": 384,
+    "unique": 384
+   },
+   "selectDraws": {
+    "drawn": 256,
+    "unique": 256
+   },
+   "stress": {
+    "cost 0 bps": {
+     "net": 509308.69,
+     "dd": 38101.1,
+     "lots": 58,
+     "realized": 509308.69,
+     "unrealized": 0,
+     "interest": 24200,
+     "costs": 0,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 204081.31,
+      "G:GDX": 0,
+      "G:VGT": 305227.39
+     },
+     "famLots": {
+      "D1": 30,
+      "G": 28
+     }
+    },
+    "cost 10 bps": {
+     "net": 474603.99,
+     "dd": 38499.23,
+     "lots": 58,
+     "realized": 474603.99,
+     "unrealized": 0,
+     "interest": 24049.32,
+     "costs": 12099.16,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 181727.15,
+      "G:GDX": 0,
+      "G:VGT": 292876.84
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 29
+     }
+    },
+    "cost 20 bps": {
+     "net": 486051.98,
+     "dd": 38896.57,
+     "lots": 57,
+     "realized": 486051.98,
+     "unrealized": 0,
+     "interest": 24260.27,
+     "costs": 23822.76,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 193266.79,
+      "G:GDX": 0,
+      "G:VGT": 292785.19
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 28
+     }
+    },
+    "interest 14%": {
+     "net": 498094.49,
+     "dd": 38333.14,
+     "lots": 57,
+     "realized": 498094.49,
+     "unrealized": 0,
+     "interest": 30876.71,
+     "costs": 5964.62,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 199130.26,
+      "G:GDX": 0,
+      "G:VGT": 298964.23
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 28
+     }
+    },
+    "stop slippage +25 bps": {
+     "net": 467258.3,
+     "dd": 38890.96,
+     "lots": 58,
+     "realized": 467258.3,
+     "unrealized": 0,
+     "interest": 24049.32,
+     "costs": 19700.1,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 177079.75,
+      "G:GDX": 0,
+      "G:VGT": 290178.55
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 29
+     }
+    },
+    "next-open stops": {
+     "net": 477998.13,
+     "dd": 38300.27,
+     "lots": 58,
+     "realized": 477998.13,
+     "unrealized": 0,
+     "interest": 24049.32,
+     "costs": 6051.15,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 181915.18,
+      "G:GDX": 0,
+      "G:VGT": 296082.95
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 29
+     }
+    },
+    "cost 2 bps": {
+     "net": 506775.8,
+     "dd": 38180.79,
+     "lots": 58,
+     "realized": 506775.8,
+     "unrealized": 0,
+     "interest": 24200,
+     "costs": 2426.22,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 202794.87,
+      "G:GDX": 0,
+      "G:VGT": 303980.93
+     },
+     "famLots": {
+      "D1": 30,
+      "G": 28
+     }
+    },
+    "stop slippage +10 bps": {
+     "net": 475446.8,
+     "dd": 38536.54,
+     "lots": 58,
+     "realized": 475446.8,
+     "unrealized": 0,
+     "interest": 24049.32,
+     "costs": 11511.61,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 181725.61,
+      "G:GDX": 0,
+      "G:VGT": 293721.19
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 29
+     }
+    }
+   },
+   "removal": {
+    "without D1": {
+     "net": 309868.56,
+     "dd": 28655.41,
+     "lots": 31,
+     "realized": 309868.56,
+     "unrealized": 0,
+     "interest": 12747.95,
+     "costs": 3261.39,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 309868.56
+     },
+     "famLots": {
+      "D1": 0,
+      "G": 31
+     }
+    },
+    "without Growth": {
+     "net": 200866.18,
+     "dd": 26048.97,
+     "lots": 30,
+     "realized": 200866.18,
+     "unrealized": 0,
+     "interest": 12657.53,
+     "costs": 3106.82,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 200866.18,
+      "G:GDX": 0,
+      "G:VGT": 0
+     },
+     "famLots": {
+      "D1": 30,
+      "G": 0
+     }
+    }
+   },
+   "gates": {
+    "Q1": true,
+    "Q2": false,
+    "Q3": false,
+    "Q4": true,
+    "Q5": false,
+    "Q6": true
+   },
+   "qualified": false,
+   "failed": [
+    "Q2",
+    "Q3",
+    "Q5"
+   ],
+   "severity": {
+    "Q2": 3300.27,
+    "Q3": 4825.93,
+    "Q5": 3499.23
+   },
+   "reasons": [
+    "Q2 DD > limit",
+    "Q3 p90 DD > limit",
+    "Q5 10 bps DD > limit"
+   ],
+   "participation": {
+    "D1:GDX": "disabled",
+    "D1:VGT": "funded",
+    "G:GDX": "disabled",
+    "G:VGT": "funded"
+   },
+   "envelope": {
+    "centre": {
+     "bankedDdMarked": 18845.96856881265,
+     "bankedDdLiquidation": 18894.35386345326,
+     "principalLossMarked": 11293.578711320837,
+     "principalLossLiquidation": 11293.578711320837
+    },
+    "select": {
+     "n": 256,
+     "failed": 0,
+     "markedDd": {
+      "median": 38288.134999999995,
+      "p90": 39826.24,
+      "p95": 40265.73,
+      "worst": 45862.63,
+      "worst10Mean": 41380.13461538462
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10790.9250854025,
+       "p90": 11926.641473783646,
+       "p95": 12254.874851690394,
+       "worst": 14405.367538816341,
+       "worst10Mean": 12595.034759368273
+      },
+      "liquidation": {
+       "median": 10790.9250854025,
+       "p90": 11926.641473783646,
+       "p95": 12254.874851690394,
+       "worst": 14405.367538816341,
+       "worst10Mean": 12595.034759368273
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 21583.502092385548,
+       "p90": 28490.672635436553,
+       "p95": 31256.351958859785,
+       "worst": 38847.74105201465,
+       "worst10Mean": 32359.668709785336
+      },
+      "liquidation": {
+       "median": 21631.972818124632,
+       "p90": 28539.743439140904,
+       "p95": 31304.018193747193,
+       "worst": 38896.27363872979,
+       "worst10Mean": 32407.775224815803
+      }
+     }
+    },
+    "confirm": {
+     "n": 384,
+     "failed": 0,
+     "markedDd": {
+      "median": 38121.14,
+      "p90": 39825.928,
+      "p95": 40360.8915,
+      "worst": 51342.9,
+      "worst10Mean": 42591.252564102564
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10691.025035427467,
+       "p90": 11957.361954382282,
+       "p95": 12233.674224531558,
+       "worst": 13819.665314025278,
+       "worst10Mean": 12276.271213159444
+      },
+      "liquidation": {
+       "median": 10691.025035427467,
+       "p90": 11957.361954382282,
+       "p95": 12233.674224531558,
+       "worst": 13819.665314025278,
+       "worst10Mean": 12276.271213159444
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 21767.19586807407,
+       "p90": 29307.368601352657,
+       "p95": 31986.226270337873,
+       "worst": 43972.01991383622,
+       "worst10Mean": 33906.65774292161
+      },
+      "liquidation": {
+       "median": 21815.678853200072,
+       "p90": 29355.313043748924,
+       "p95": 32034.677038595546,
+       "worst": 44020.007044168255,
+       "worst10Mean": 33954.73712707077
+      }
+     }
+    },
+    "stress": {
+     "cost 0 bps": {
+      "net": 509308.69,
+      "dd": 38101.1,
+      "envelope": {
+       "bankedDdMarked": 18612.142728187493,
+       "bankedDdLiquidation": 18612.142728187493,
+       "principalLossMarked": 11204.797762571501,
+       "principalLossLiquidation": 11204.797762571501
+      }
+     },
+     "cost 10 bps": {
+      "net": 474603.99,
+      "dd": 38499.23,
+      "envelope": {
+       "bankedDdMarked": 19079.560817189456,
+       "bankedDdLiquidation": 19176.28306951304,
+       "principalLossMarked": 13906.073720588905,
+       "principalLossLiquidation": 13906.073720588905
+      }
+     },
+     "cost 20 bps": {
+      "net": 486051.98,
+      "dd": 38896.57,
+      "envelope": {
+       "bankedDdMarked": 19546.045935953967,
+       "bankedDdLiquidation": 19739.29738221329,
+       "principalLossMarked": 11559.38993512132,
+       "principalLossLiquidation": 11559.38993512132
+      }
+     },
+     "interest 14%": {
+      "net": 498094.49,
+      "dd": 38333.14,
+      "envelope": {
+       "bankedDdMarked": 19108.9822674428,
+       "bankedDdLiquidation": 19157.36756208341,
+       "principalLossMarked": 11301.79788940303,
+       "principalLossLiquidation": 11301.79788940303
+      }
+     },
+     "stop slippage +25 bps": {
+      "net": 467258.3,
+      "dd": 38890.96,
+      "envelope": {
+       "bankedDdMarked": 19071.99243188108,
+       "bankedDdLiquidation": 19120.377726521692,
+       "principalLossMarked": 14035.794232931996,
+       "principalLossLiquidation": 14035.794232931996
+      }
+     },
+     "next-open stops": {
+      "net": 477998.13,
+      "dd": 38300.27,
+      "envelope": {
+       "bankedDdMarked": 18977.610694147064,
+       "bankedDdLiquidation": 19025.995988787676,
+       "principalLossMarked": 13819.665314025278,
+       "principalLossLiquidation": 13819.665314025278
+      }
+     },
+     "cost 2 bps": {
+      "net": 506775.8,
+      "dd": 38180.79,
+      "envelope": {
+       "bankedDdMarked": 18705.701117927732,
+       "bankedDdLiquidation": 18725.06104085833,
+       "principalLossMarked": 11240.320793654757,
+       "principalLossLiquidation": 11240.320793654757
+      }
+     },
+     "stop slippage +10 bps": {
+      "net": 475446.8,
+      "dd": 38536.54,
+      "envelope": {
+       "bankedDdMarked": 18936.37811404001,
+       "bankedDdLiquidation": 18984.76340868062,
+       "principalLossMarked": 13906.116881587968,
+       "principalLossLiquidation": 13906.116881587968
+      }
+     }
+    },
+    "removal": {
+     "without D1": {
+      "bankedDdMarked": 18306.982821570477,
+      "bankedDdLiquidation": 18356.490729367593,
+      "principalLossMarked": 11293.578711320837,
+      "principalLossLiquidation": 11293.578711320837
+     },
+     "without Growth": {
+      "bankedDdMarked": 19532.730932893173,
+      "bankedDdLiquidation": 19582.597292181294,
+      "principalLossMarked": 9861.68764932601,
+      "principalLossLiquidation": 9861.68764932601
+     }
+    },
+    "confirmP10Unrounded": 401086.167
+   },
+   "sources": [
+    {
+     "label": "C24/C/pair DF2×GF2",
+     "lane": "pairs",
+     "pick": "C24/D/refine/D.C1/R103#2 robust × C24/G/refine/G.h2.s1/R102#2 robust"
+    }
+   ]
+  },
+  {
+   "label": "C24/C/pair DF2×GF3",
+   "cell": "C.C1.h2.s1",
+   "d1Structure": "C1",
+   "growthProtection": "hold_on_buffer_on / istop on",
+   "unrestrictedGrowth": false,
+   "base": true,
+   "activation": "n",
+   "controlPattern": "K1|n",
+   "growthEntry": "breakout",
+   "growthStratum": "breakout·gate off",
+   "growthId": "ff7498c10e5a85b9",
+   "id": "rc1-ecc0bc601f6ad329",
+   "activeInputs": 24,
+   "boundary": [
+    "ctl.k=1",
+    "G.breakoutSmaSessions=10"
+   ],
+   "arm": "C",
+   "lane": "pairs",
+   "stage": "fixed",
+   "pick": "C24/D/refine/D.C1/R103#2 robust × C24/G/refine/G.h2.s1/R101#3 balanced",
+   "replicate": null,
+   "cfg": {
+    "cell": "C.C1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 227,
+      "trailingBuyPercentage": 31,
+      "trailingStopPercentage": 58,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 81,
+      "intradayLossBuffer": 0,
+      "pullback": 173,
+      "continuationWindow": 87
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 95
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 940,
+        "maxBlockSessions": 248
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 100,
+     "breakoutPriorHighSessions": 82,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 5.9,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 27,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 1.7,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 23,
+     "initialStopAtrMultiple": 1.5,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 49,
+     "uptrendSmaBars": 96,
+     "uptrendSlopeBars": 7,
+     "uptrendMinimumRisePercent": 1,
+     "pullbackMinimumPercent": 1.2,
+     "pullbackMaximumPercent": 10.6,
+     "recoveryPercent": 2.6,
+     "costBpsPerSide": 5
+    }
+   },
+   "centre": {
+    "id": "rc1-ecc0bc601f6ad329",
+    "net": 495798.1,
+    "realized": 495798.1,
+    "unrealized": 0,
+    "dd": 38300.27,
+    "ddPeakT": 1580849220,
+    "ddTroughT": 1581604200,
+    "ddRecoveryT": 1593696600,
+    "ddDaily": 21884.87,
+    "lots": 56,
+    "wins": 43,
+    "losses": 13,
+    "partials": 0,
+    "lossSum": -96129.18,
+    "worstLoss": -11197.02,
+    "largestWin": 54660.16,
+    "interest": 23084.93,
+    "costs": 5859.57,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 30,
+      "wins": 23,
+      "losses": 7,
+      "booked": 200866.18,
+      "principalDays": 42000000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 30,
+      "granted": 30,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 26,
+      "wins": 20,
+      "losses": 6,
+      "booked": 294931.93,
+      "principalDays": 34600000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 28,
+      "granted": 26,
+      "refused": 2
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 30,
+      "wins": 23,
+      "losses": 7,
+      "booked": 200866.18,
+      "principalDays": 42000000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 30,
+      "granted": 30,
+      "refused": 0
+     },
+     "G": {
+      "lots": 26,
+      "wins": 20,
+      "losses": 6,
+      "booked": 294931.93,
+      "principalDays": 34600000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 28,
+      "granted": 26,
+      "refused": 2
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 578,
+    "peakPrincipal": 100000,
+    "peakValue": 171540.72,
+    "years": {
+     "2016": 23786.97,
+     "2017": 43852.08,
+     "2018": 36191.27,
+     "2019": 29639.15,
+     "2020": 158793,
+     "2021": 79188.46,
+     "2022": -6051.1,
+     "2023": 58376.59,
+     "2024": 72021.67
+    },
+    "periods": [],
+    "topEpisode": 82596.86,
+    "topEpisodeShare": 0.1666,
+    "episodes": 24,
+    "signature": "0bc1bc7a3dc7ff50",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 30,
+      "net": 200866.18,
+      "dd": 26048.97,
+      "first": "2016-05-11"
+     },
+     "G:VGT": {
+      "trades": 28,
+      "net": 311583.05,
+      "dd": 28655.41,
+      "first": "2017-01-13"
+     }
+    },
+    "sessions": 2264,
+    "rc": {
+     "D1:VGT": {
+      "virtualTrades": 30,
+      "protective": 5,
+      "protectiveGap": 1,
+      "entryDay": 0,
+      "maximumHold": 0,
+      "adaptive": 0,
+      "episodes": 7,
+      "blocks": 7,
+      "blockedSessions": 547
+     }
+    },
+    "envelope": {
+     "bankedDdMarked": 15763.819886226964,
+     "bankedDdLiquidation": 15813.780053753115,
+     "principalLossMarked": 11197.022078750248,
+     "principalLossLiquidation": 11197.022078750248
+    }
+   },
+   "risk": {
+    "endDate": "2024-12-31",
+    "net": 495798.1,
+    "realized": 495798.1,
+    "unrealized": 0,
+    "conservativeNet": 495798.1,
+    "openLot": null,
+    "openShare": 0,
+    "occupancy": 0.25530035335689044,
+    "lots": 56,
+    "mae": {
+     "count": 56,
+     "median": -2477.8237908235387,
+     "p90": -8906.62492343471,
+     "worst": -11197.022078750248,
+     "worstBook": "G:VGT"
+    },
+    "maeByBook": {
+     "D1:VGT": -9861.68764932601,
+     "G:VGT": -11197.022078750248
+    },
+    "worstRealized": -11197.022078750248,
+    "meanLosing": -7394.552633498854,
+    "losing": 13,
+    "rowsKept": 56
+   },
+   "select": {
+    "n": 256,
+    "failed": 0,
+    "median": 418277.51,
+    "p10": 364440.85,
+    "p90Net": 460495.75,
+    "mean": 416519.79,
+    "robust": 391359.18,
+    "medianDd": 36068.55,
+    "p90Dd": 38875.4,
+    "worstDd": 43904.15,
+    "breaches": 150,
+    "breachShare": 0.5859,
+    "meanExcess": 3170.61,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 256,
+    "sameAsCentre": 0,
+    "clipped": 174
+   },
+   "selectTail": {
+    "n": 256,
+    "centreDd": 38300.27,
+    "centreNet": 495798.1,
+    "medianDd": 36068.55,
+    "p90Dd": 38875.4,
+    "p90Interval": [
+     38734.57,
+     38975.3
+    ],
+    "p95Dd": 39075.2,
+    "worst10Mean": 39573.4,
+    "worst10K": 26,
+    "worstDd": 43904.15,
+    "breaches": 150,
+    "breachShare": 0.5859,
+    "breachInterval": [
+     0.5248,
+     0.6446
+    ],
+    "meanExcess": 3170.61,
+    "breachLedgers": 150,
+    "sameAsCentre": 0,
+    "clipped": 174,
+    "medianNet": 418277.51,
+    "p10Net": 364440.85,
+    "p90Net": 460495.75,
+    "meanNet": 416519.79,
+    "worstNet": 318298,
+    "positiveShare": 1
+   },
+   "confirm": {
+    "n": 384,
+    "failed": 0,
+    "median": 415535.6,
+    "p10": 365228.23,
+    "p90Net": 464541.44,
+    "mean": 414658.55,
+    "robust": 390381.91,
+    "medianDd": 35677.97,
+    "p90Dd": 38975.3,
+    "worstDd": 43265.6,
+    "breaches": 219,
+    "breachShare": 0.5703,
+    "meanExcess": 3156.84,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 384,
+    "sameAsCentre": 0,
+    "clipped": 258
+   },
+   "confirmTail": {
+    "n": 384,
+    "centreDd": 38300.27,
+    "centreNet": 495798.1,
+    "medianDd": 35677.97,
+    "p90Dd": 38975.3,
+    "p90Interval": [
+     38775.5,
+     39075.2
+    ],
+    "p95Dd": 39175.1,
+    "worst10Mean": 39472.09,
+    "worst10K": 39,
+    "worstDd": 43265.6,
+    "breaches": 219,
+    "breachShare": 0.5703,
+    "breachInterval": [
+     0.5203,
+     0.6189
+    ],
+    "meanExcess": 3156.84,
+    "breachLedgers": 219,
+    "sameAsCentre": 0,
+    "clipped": 258,
+    "medianNet": 415535.6,
+    "p10Net": 365228.23,
+    "p90Net": 464541.44,
+    "meanNet": 414658.55,
+    "worstNet": 299442.25,
+    "positiveShare": 1
+   },
+   "confirmReps": [
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 418017.34,
+     "p10": 362138.64,
+     "p90Net": 465438.68,
+     "mean": 415956.64,
+     "robust": 390077.99,
+     "medianDd": 35677.97,
+     "p90Dd": 38975.3,
+     "worstDd": 43265.6,
+     "breaches": 74,
+     "breachShare": 0.5781,
+     "meanExcess": 3071.57,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 89
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 417560.46,
+     "p10": 370710.73,
+     "p90Net": 467163.14,
+     "mean": 416787.75,
+     "robust": 394135.59,
+     "medianDd": 35677.97,
+     "p90Dd": 38875.4,
+     "worstDd": 39959.26,
+     "breaches": 75,
+     "breachShare": 0.5859,
+     "meanExcess": 2963.8,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 83
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 412776.29,
+     "p10": 365824.48,
+     "p90Net": 455189.95,
+     "mean": 411231.25,
+     "robust": 389300.39,
+     "medianDd": 35698.44,
+     "p90Dd": 39075.2,
+     "worstDd": 41215.8,
+     "breaches": 70,
+     "breachShare": 0.5469,
+     "meanExcess": 3453.81,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 86
+    }
+   ],
+   "confirmDraws": {
+    "drawn": 384,
+    "unique": 384
+   },
+   "selectDraws": {
+    "drawn": 256,
+    "unique": 256
+   },
+   "stress": {
+    "cost 0 bps": {
+     "net": 501920.05,
+     "dd": 38101.1,
+     "lots": 56,
+     "realized": 501920.05,
+     "unrealized": 0,
+     "interest": 23084.93,
+     "costs": 0,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 204081.31,
+      "G:GDX": 0,
+      "G:VGT": 297838.74
+     },
+     "famLots": {
+      "D1": 30,
+      "G": 26
+     }
+    },
+    "cost 10 bps": {
+     "net": 473755.17,
+     "dd": 38499.23,
+     "lots": 55,
+     "realized": 473755.17,
+     "unrealized": 0,
+     "interest": 22843.84,
+     "costs": 11497.11,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 181727.15,
+      "G:GDX": 0,
+      "G:VGT": 292028.02
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 26
+     }
+    },
+    "cost 20 bps": {
+     "net": 479495.69,
+     "dd": 38896.57,
+     "lots": 55,
+     "realized": 479495.69,
+     "unrealized": 0,
+     "interest": 23145.21,
+     "costs": 23007.38,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 193266.79,
+      "G:GDX": 0,
+      "G:VGT": 286228.9
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 26
+     }
+    },
+    "interest 14%": {
+     "net": 491218.35,
+     "dd": 38333.14,
+     "lots": 55,
+     "realized": 491218.35,
+     "unrealized": 0,
+     "interest": 29457.53,
+     "costs": 5760.47,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 199130.26,
+      "G:GDX": 0,
+      "G:VGT": 292088.09
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 26
+     }
+    },
+    "stop slippage +25 bps": {
+     "net": 466146.43,
+     "dd": 38890.96,
+     "lots": 55,
+     "realized": 466146.43,
+     "unrealized": 0,
+     "interest": 22843.84,
+     "costs": 19359.77,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 177079.75,
+      "G:GDX": 0,
+      "G:VGT": 289066.68
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 26
+     }
+    },
+    "next-open stops": {
+     "net": 476847.11,
+     "dd": 38300.27,
+     "lots": 55,
+     "realized": 476847.11,
+     "unrealized": 0,
+     "interest": 22843.84,
+     "costs": 5749.97,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 181915.18,
+      "G:GDX": 0,
+      "G:VGT": 294931.93
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 26
+     }
+    },
+    "cost 2 bps": {
+     "net": 499470.54,
+     "dd": 38180.79,
+     "lots": 56,
+     "realized": 499470.54,
+     "unrealized": 0,
+     "interest": 23084.93,
+     "costs": 2344.53,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 202794.87,
+      "G:GDX": 0,
+      "G:VGT": 296675.67
+     },
+     "famLots": {
+      "D1": 30,
+      "G": 26
+     }
+    },
+    "stop slippage +10 bps": {
+     "net": 474311.44,
+     "dd": 38536.54,
+     "lots": 55,
+     "realized": 474311.44,
+     "unrealized": 0,
+     "interest": 22843.84,
+     "costs": 11194.76,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 181725.61,
+      "G:GDX": 0,
+      "G:VGT": 292585.83
+     },
+     "famLots": {
+      "D1": 29,
+      "G": 26
+     }
+    }
+   },
+   "removal": {
+    "without D1": {
+     "net": 311583.05,
+     "dd": 28655.41,
+     "lots": 28,
+     "realized": 311583.05,
+     "unrealized": 0,
+     "interest": 11512.33,
+     "costs": 2961.63,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 311583.05
+     },
+     "famLots": {
+      "D1": 0,
+      "G": 28
+     }
+    },
+    "without Growth": {
+     "net": 200866.18,
+     "dd": 26048.97,
+     "lots": 30,
+     "realized": 200866.18,
+     "unrealized": 0,
+     "interest": 12657.53,
+     "costs": 3106.82,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 200866.18,
+      "G:GDX": 0,
+      "G:VGT": 0
+     },
+     "famLots": {
+      "D1": 30,
+      "G": 0
+     }
+    }
+   },
+   "gates": {
+    "Q1": true,
+    "Q2": false,
+    "Q3": false,
+    "Q4": true,
+    "Q5": false,
+    "Q6": true
+   },
+   "qualified": false,
+   "failed": [
+    "Q2",
+    "Q3",
+    "Q5"
+   ],
+   "severity": {
+    "Q2": 3300.27,
+    "Q3": 3975.3,
+    "Q5": 3499.23
+   },
+   "reasons": [
+    "Q2 DD > limit",
+    "Q3 p90 DD > limit",
+    "Q5 10 bps DD > limit"
+   ],
+   "participation": {
+    "D1:GDX": "disabled",
+    "D1:VGT": "funded",
+    "G:GDX": "disabled",
+    "G:VGT": "funded"
+   },
+   "envelope": {
+    "centre": {
+     "bankedDdMarked": 15763.819886226964,
+     "bankedDdLiquidation": 15813.780053753115,
+     "principalLossMarked": 11197.022078750248,
+     "principalLossLiquidation": 11197.022078750248
+    },
+    "select": {
+     "n": 256,
+     "failed": 0,
+     "markedDd": {
+      "median": 36068.55,
+      "p90": 38875.4,
+      "p95": 39075.2,
+      "worst": 43904.15,
+      "worst10Mean": 39573.402307692304
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 11197.022078750248,
+       "p90": 11837.900227968188,
+       "p95": 12254.874851690394,
+       "worst": 14405.367538816341,
+       "worst10Mean": 12581.102274849483
+      },
+      "liquidation": {
+       "median": 11197.022078750248,
+       "p90": 11837.900227968188,
+       "p95": 12254.874851690394,
+       "worst": 14405.367538816341,
+       "worst10Mean": 12581.102274849483
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 21519.427247459156,
+       "p90": 28655.431871405774,
+       "p95": 30350.408977743704,
+       "worst": 35195.64060568798,
+       "worst10Mean": 30743.68508954974
+      },
+      "liquidation": {
+       "median": 21566.429837367352,
+       "p90": 28704.570735897694,
+       "p95": 30398.97665744531,
+       "worst": 35245.39925332676,
+       "worst10Mean": 30792.18489458546
+      }
+     }
+    },
+    "confirm": {
+     "n": 384,
+     "failed": 0,
+     "markedDd": {
+      "median": 35677.97,
+      "p90": 38975.3,
+      "p95": 39175.1,
+      "worst": 43265.6,
+      "worst10Mean": 39472.09410256411
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 11197.022078750248,
+       "p90": 11926.641473783646,
+       "p95": 12233.674224531558,
+       "worst": 13819.665314025278,
+       "worst10Mean": 12269.763811178676
+      },
+      "liquidation": {
+       "median": 11197.022078750248,
+       "p90": 11926.641473783646,
+       "p95": 12233.674224531558,
+       "worst": 13819.665314025278,
+       "worst10Mean": 12269.763811178676
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 21069.213397771353,
+       "p90": 28361.565835785575,
+       "p95": 30265.395575827075,
+       "worst": 36089.51913982141,
+       "worst10Mean": 30793.398292954713
+      },
+      "liquidation": {
+       "median": 21093.799014570162,
+       "p90": 28398.001887734943,
+       "p95": 30313.200080096547,
+       "worst": 36139.02704761847,
+       "worst10Mean": 30840.733183775723
+      }
+     }
+    },
+    "stress": {
+     "cost 0 bps": {
+      "net": 501920.05,
+      "dd": 38101.1,
+      "envelope": {
+       "bankedDdMarked": 15529.119996929192,
+       "bankedDdLiquidation": 15529.119996929192,
+       "principalLossMarked": 11107.963612691878,
+       "principalLossLiquidation": 11107.963612691878
+      }
+     },
+     "cost 10 bps": {
+      "net": 473755.17,
+      "dd": 38499.23,
+      "envelope": {
+       "bankedDdMarked": 14035.64892556856,
+       "bankedDdLiquidation": 14135.519350363582,
+       "principalLossMarked": 13906.073720588905,
+       "principalLossLiquidation": 13906.073720588905
+      }
+     },
+     "cost 20 bps": {
+      "net": 479495.69,
+      "dd": 38896.57,
+      "envelope": {
+       "bankedDdMarked": 16466.51416556188,
+       "bankedDdLiquidation": 16666.055672986666,
+       "principalLossMarked": 11463.664192697543,
+       "principalLossLiquidation": 11463.664192697543
+      }
+     },
+     "interest 14%": {
+      "net": 491218.35,
+      "dd": 38333.14,
+      "envelope": {
+       "bankedDdMarked": 15854.230845131096,
+       "bankedDdLiquidation": 15904.191012657247,
+       "principalLossMarked": 11254.55632532559,
+       "principalLossLiquidation": 11254.55632532559
+      }
+     },
+     "stop slippage +25 bps": {
+      "net": 466146.43,
+      "dd": 38890.96,
+      "envelope": {
+       "bankedDdMarked": 14115.459180642734,
+       "bankedDdLiquidation": 14165.419348168885,
+       "principalLossMarked": 14035.794232931996,
+       "principalLossLiquidation": 14035.794232931996
+      }
+     },
+     "next-open stops": {
+      "net": 476847.11,
+      "dd": 38300.27,
+      "envelope": {
+       "bankedDdMarked": 13899.33026173606,
+       "bankedDdLiquidation": 13949.290429262212,
+       "principalLossMarked": 13819.665314025278,
+       "principalLossLiquidation": 13819.665314025278
+      }
+     },
+     "cost 2 bps": {
+      "net": 499470.54,
+      "dd": 38180.79,
+      "envelope": {
+       "bankedDdMarked": 15623.028111003397,
+       "bankedDdLiquidation": 15643.018172035168,
+       "principalLossMarked": 11143.597683994172,
+       "principalLossLiquidation": 11143.597683994172
+      }
+     },
+     "stop slippage +10 bps": {
+      "net": 474311.44,
+      "dd": 38536.54,
+      "envelope": {
+       "bankedDdMarked": 13985.781829298707,
+       "bankedDdLiquidation": 14035.741996824858,
+       "principalLossMarked": 13906.116881587968,
+       "principalLossLiquidation": 13906.116881587968
+      }
+     }
+    },
+    "removal": {
+     "without D1": {
+      "bankedDdMarked": 12181.206484626047,
+      "bankedDdLiquidation": 12230.714392423106,
+      "principalLossMarked": 11197.022078750248,
+      "principalLossLiquidation": 11197.022078750248
+     },
+     "without Growth": {
+      "bankedDdMarked": 19532.730932893173,
+      "bankedDdLiquidation": 19582.597292181294,
+      "principalLossMarked": 9861.68764932601,
+      "principalLossLiquidation": 9861.68764932601
+     }
+    },
+    "confirmP10Unrounded": 365228.234
+   },
+   "sources": [
+    {
+     "label": "C24/C/pair DF2×GF3",
+     "lane": "pairs",
+     "pick": "C24/D/refine/D.C1/R103#2 robust × C24/G/refine/G.h2.s1/R101#3 balanced"
+    }
+   ]
+  },
+  {
+   "label": "C24/C/pair DF3×GF1",
+   "cell": "C.C1.h2.s1",
+   "d1Structure": "C1",
+   "growthProtection": "hold_on_buffer_on / istop on",
+   "unrestrictedGrowth": false,
+   "base": true,
+   "activation": "n",
+   "controlPattern": "K1|n",
+   "growthEntry": "breakout",
+   "growthStratum": "breakout·gate off",
+   "growthId": "f46c06257f776da2",
+   "id": "rc1-6447234621aca881",
+   "activeInputs": 24,
+   "boundary": [
+    "ctl.k=1",
+    "G.breakoutSmaSessions=10"
+   ],
+   "arm": "C",
+   "lane": "pairs",
+   "stage": "fixed",
+   "pick": "C24/D/refine/D.C1/R102#2 robust × C24/G/refine/G.h2.s1/R101#1 profit",
+   "replicate": null,
+   "cfg": {
+    "cell": "C.C1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 228,
+      "trailingBuyPercentage": 33,
+      "trailingStopPercentage": 61,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 0,
+      "pullback": 173,
+      "continuationWindow": 65
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 92
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 990,
+        "maxBlockSessions": 249
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 96,
+     "breakoutPriorHighSessions": 50,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 5.9,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 23,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 5,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 26,
+     "initialStopAtrMultiple": 1.3,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 132,
+     "uptrendSmaBars": 109,
+     "uptrendSlopeBars": 6,
+     "uptrendMinimumRisePercent": 1.15,
+     "pullbackMinimumPercent": 1.3,
+     "pullbackMaximumPercent": 10.5,
+     "recoveryPercent": 2.64,
+     "costBpsPerSide": 5
+    }
+   },
+   "centre": {
+    "id": "rc1-6447234621aca881",
+    "net": 520613.43,
+    "realized": 520613.43,
+    "unrealized": 0,
+    "dd": 31523.07,
+    "ddPeakT": 1580849220,
+    "ddTroughT": 1580999460,
+    "ddRecoveryT": 1591797360,
+    "ddDaily": 22038.5,
+    "lots": 55,
+    "wins": 40,
+    "losses": 15,
+    "partials": 0,
+    "lossSum": -85655.49,
+    "worstLoss": -9971.01,
+    "largestWin": 54660.16,
+    "interest": 23747.95,
+    "costs": 5772.32,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 27,
+      "wins": 20,
+      "losses": 7,
+      "booked": 191134.78,
+      "principalDays": 40700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 27,
+      "granted": 27,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 28,
+      "wins": 20,
+      "losses": 8,
+      "booked": 329478.65,
+      "principalDays": 38100000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 28,
+      "refused": 3
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 27,
+      "wins": 20,
+      "losses": 7,
+      "booked": 191134.78,
+      "principalDays": 40700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 27,
+      "granted": 27,
+      "refused": 0
+     },
+     "G": {
+      "lots": 28,
+      "wins": 20,
+      "losses": 8,
+      "booked": 329478.65,
+      "principalDays": 38100000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 28,
+      "refused": 3
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 595,
+    "peakPrincipal": 100000,
+    "peakValue": 171540.72,
+    "years": {
+     "2016": 22193.2,
+     "2017": 34466.76,
+     "2018": 33856.87,
+     "2019": 46005.94,
+     "2020": 180893.01,
+     "2021": 74608.43,
+     "2022": -2197.42,
+     "2023": 55654.81,
+     "2024": 75131.82
+    },
+    "periods": [],
+    "topEpisode": 91580.79,
+    "topEpisodeShare": 0.1759,
+    "episodes": 27,
+    "signature": "703998a24288f235",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 27,
+      "net": 191134.78,
+      "dd": 22651.9,
+      "first": "2016-05-11"
+     },
+     "G:VGT": {
+      "trades": 31,
+      "net": 340912.6,
+      "dd": 28655.41,
+      "first": "2017-01-13"
+     }
+    },
+    "sessions": 2264,
+    "rc": {
+     "D1:VGT": {
+      "virtualTrades": 27,
+      "protective": 4,
+      "protectiveGap": 1,
+      "entryDay": 0,
+      "maximumHold": 0,
+      "adaptive": 0,
+      "episodes": 7,
+      "blocks": 7,
+      "blockedSessions": 531
+     }
+    },
+    "envelope": {
+     "bankedDdMarked": 17955.246021195373,
+     "bankedDdLiquidation": 18003.631315835984,
+     "principalLossMarked": 9971.011435560084,
+     "principalLossLiquidation": 9971.011435560084
+    }
+   },
+   "risk": {
+    "endDate": "2024-12-31",
+    "net": 520613.43,
+    "realized": 520613.43,
+    "unrealized": 0,
+    "conservativeNet": 520613.43,
+    "openLot": null,
+    "openShare": 0,
+    "occupancy": 0.2628091872791519,
+    "lots": 55,
+    "mae": {
+     "count": 55,
+     "median": -3240.078006240452,
+     "p90": -8075.530480818931,
+     "worst": -9971.011435560084,
+     "worstBook": "D1:VGT"
+    },
+    "maeByBook": {
+     "D1:VGT": -9971.011435560084,
+     "G:VGT": -6171.082721835019
+    },
+    "worstRealized": -9971.011435560084,
+    "meanLosing": -5710.36599939181,
+    "losing": 15,
+    "rowsKept": 55
+   },
+   "select": {
+    "n": 256,
+    "failed": 0,
+    "median": 426895.45,
+    "p10": 376068.79,
+    "p90Net": 483103.9,
+    "mean": 427034.91,
+    "robust": 401482.12,
+    "medianDd": 35243.66,
+    "p90Dd": 38734.57,
+    "worstDd": 48799.31,
+    "breaches": 143,
+    "breachShare": 0.5586,
+    "meanExcess": 2405.3,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 256,
+    "sameAsCentre": 0,
+    "clipped": 208
+   },
+   "selectTail": {
+    "n": 256,
+    "centreDd": 31523.07,
+    "centreNet": 520613.43,
+    "medianDd": 35243.66,
+    "p90Dd": 38734.57,
+    "p90Interval": [
+     38575.7,
+     38775.5
+    ],
+    "p95Dd": 38875.4,
+    "worst10Mean": 40424.86,
+    "worst10K": 26,
+    "worstDd": 48799.31,
+    "breaches": 143,
+    "breachShare": 0.5586,
+    "breachInterval": [
+     0.4973,
+     0.6181
+    ],
+    "meanExcess": 2405.3,
+    "breachLedgers": 143,
+    "sameAsCentre": 0,
+    "clipped": 208,
+    "medianNet": 426895.45,
+    "p10Net": 376068.79,
+    "p90Net": 483103.9,
+    "meanNet": 427034.91,
+    "worstNet": 280472.55,
+    "positiveShare": 1
+   },
+   "confirm": {
+    "n": 384,
+    "failed": 0,
+    "median": 430814.15,
+    "p10": 374357.09,
+    "p90Net": 481146.34,
+    "mean": 428034.82,
+    "robust": 402585.62,
+    "medianDd": 35243.66,
+    "p90Dd": 38734.57,
+    "worstDd": 47568.85,
+    "breaches": 208,
+    "breachShare": 0.5417,
+    "meanExcess": 2447.97,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 384,
+    "sameAsCentre": 0,
+    "clipped": 316
+   },
+   "confirmTail": {
+    "n": 384,
+    "centreDd": 31523.07,
+    "centreNet": 520613.43,
+    "medianDd": 35243.66,
+    "p90Dd": 38734.57,
+    "p90Interval": [
+     38734.57,
+     38734.57
+    ],
+    "p95Dd": 38775.5,
+    "worst10Mean": 39647.14,
+    "worst10K": 39,
+    "worstDd": 47568.85,
+    "breaches": 208,
+    "breachShare": 0.5417,
+    "breachInterval": [
+     0.4917,
+     0.5908
+    ],
+    "meanExcess": 2447.97,
+    "breachLedgers": 208,
+    "sameAsCentre": 0,
+    "clipped": 316,
+    "medianNet": 430814.15,
+    "p10Net": 374357.09,
+    "p90Net": 481146.34,
+    "meanNet": 428034.82,
+    "worstNet": 317511.22,
+    "positiveShare": 1
+   },
+   "confirmReps": [
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 428097.5,
+     "p10": 373695.44,
+     "p90Net": 475865.36,
+     "mean": 425625.47,
+     "robust": 400896.47,
+     "medianDd": 35243.66,
+     "p90Dd": 38734.57,
+     "worstDd": 38975.3,
+     "breaches": 69,
+     "breachShare": 0.5391,
+     "meanExcess": 2018.95,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 104
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 438486.45,
+     "p10": 377088.2,
+     "p90Net": 483544.96,
+     "mean": 431842.02,
+     "robust": 407787.32,
+     "medianDd": 35243.66,
+     "p90Dd": 38734.57,
+     "worstDd": 47568.85,
+     "breaches": 67,
+     "breachShare": 0.5234,
+     "meanExcess": 2695.94,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 107
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 430378.49,
+     "p10": 371751.87,
+     "p90Net": 481673.65,
+     "mean": 426636.97,
+     "robust": 401065.18,
+     "medianDd": 35243.66,
+     "p90Dd": 38734.57,
+     "worstDd": 45000.62,
+     "breaches": 72,
+     "breachShare": 0.5625,
+     "meanExcess": 2628.37,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 105
+    }
+   ],
+   "confirmDraws": {
+    "drawn": 384,
+    "unique": 384
+   },
+   "selectDraws": {
+    "drawn": 256,
+    "unique": 256
+   },
+   "stress": {
+    "cost 0 bps": {
+     "net": 526660.81,
+     "dd": 31415.79,
+     "lots": 55,
+     "realized": 526660.81,
+     "unrealized": 0,
+     "interest": 23747.95,
+     "costs": 0,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 194039.63,
+      "G:GDX": 0,
+      "G:VGT": 332621.18
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "cost 10 bps": {
+     "net": 514572.08,
+     "dd": 31630.25,
+     "lots": 55,
+     "realized": 514572.08,
+     "unrealized": 0,
+     "interest": 23747.95,
+     "costs": 11538.87,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 188232.83,
+      "G:GDX": 0,
+      "G:VGT": 326339.25
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "cost 20 bps": {
+     "net": 502507.48,
+     "dd": 31844.29,
+     "lots": 55,
+     "realized": 502507.48,
+     "unrealized": 0,
+     "interest": 23747.95,
+     "costs": 23054.71,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 182437.61,
+      "G:GDX": 0,
+      "G:VGT": 320069.87
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "interest 14%": {
+     "net": 514136.71,
+     "dd": 31539.51,
+     "lots": 55,
+     "realized": 514136.71,
+     "unrealized": 0,
+     "interest": 30224.66,
+     "costs": 5772.32,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 187789.57,
+      "G:GDX": 0,
+      "G:VGT": 326347.14
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "stop slippage +25 bps": {
+     "net": 507404.53,
+     "dd": 31887.8,
+     "lots": 55,
+     "realized": 507404.53,
+     "unrealized": 0,
+     "interest": 23747.95,
+     "costs": 18981.22,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 183876.28,
+      "G:GDX": 0,
+      "G:VGT": 323528.25
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "next-open stops": {
+     "net": 519556.8,
+     "dd": 31523.07,
+     "lots": 55,
+     "realized": 519556.8,
+     "unrealized": 0,
+     "interest": 23747.95,
+     "costs": 5771.79,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 190078.15,
+      "G:GDX": 0,
+      "G:VGT": 329478.65
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "cost 2 bps": {
+     "net": 524241.13,
+     "dd": 31458.71,
+     "lots": 55,
+     "realized": 524241.13,
+     "unrealized": 0,
+     "interest": 23747.95,
+     "costs": 2309.62,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 192877.34,
+      "G:GDX": 0,
+      "G:VGT": 331363.79
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "stop slippage +10 bps": {
+     "net": 515329.87,
+     "dd": 31668.97,
+     "lots": 55,
+     "realized": 515329.87,
+     "unrealized": 0,
+     "interest": 23747.95,
+     "costs": 11055.88,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 188231.38,
+      "G:GDX": 0,
+      "G:VGT": 327098.49
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    }
+   },
+   "removal": {
+    "without D1": {
+     "net": 340912.6,
+     "dd": 28655.41,
+     "lots": 31,
+     "realized": 340912.6,
+     "unrealized": 0,
+     "interest": 12597.26,
+     "costs": 3276.84,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 340912.6
+     },
+     "famLots": {
+      "D1": 0,
+      "G": 31
+     }
+    },
+    "without Growth": {
+     "net": 191134.78,
+     "dd": 22651.9,
+     "lots": 27,
+     "realized": 191134.78,
+     "unrealized": 0,
+     "interest": 12265.75,
+     "costs": 2801.75,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 191134.78,
+      "G:GDX": 0,
+      "G:VGT": 0
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 0
+     }
+    }
+   },
+   "gates": {
+    "Q1": true,
+    "Q2": true,
+    "Q3": false,
+    "Q4": true,
+    "Q5": true,
+    "Q6": true
+   },
+   "qualified": false,
+   "failed": [
+    "Q3"
+   ],
+   "severity": {
+    "Q3": 3734.57
+   },
+   "reasons": [
+    "Q3 p90 DD > limit"
+   ],
+   "participation": {
+    "D1:GDX": "disabled",
+    "D1:VGT": "funded",
+    "G:GDX": "disabled",
+    "G:VGT": "funded"
+   },
+   "envelope": {
+    "centre": {
+     "bankedDdMarked": 17955.246021195373,
+     "bankedDdLiquidation": 18003.631315835984,
+     "principalLossMarked": 9971.011435560084,
+     "principalLossLiquidation": 9971.011435560084
+    },
+    "select": {
+     "n": 256,
+     "failed": 0,
+     "markedDd": {
+      "median": 35243.66,
+      "p90": 38734.57,
+      "p95": 38875.4,
+      "worst": 48799.31,
+      "worst10Mean": 40424.85846153845
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10362.022755745413,
+       "p90": 13819.665314025278,
+       "p95": 13992.883319417222,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13912.93654769787
+      },
+      "liquidation": {
+       "median": 10362.022755745413,
+       "p90": 13819.665314025278,
+       "p95": 13992.883319417222,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13912.93654769787
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 21037.261239126237,
+       "p90": 29129.854520681205,
+       "p95": 31643.55495126851,
+       "worst": 42944.491086007125,
+       "worst10Mean": 32556.576775354566
+      },
+      "liquidation": {
+       "median": 21061.948851348163,
+       "p90": 29177.616251297513,
+       "p95": 31692.52526732457,
+       "worst": 42993.99899380418,
+       "worst10Mean": 32604.948938647787
+      }
+     }
+    },
+    "confirm": {
+     "n": 384,
+     "failed": 0,
+     "markedDd": {
+      "median": 35243.66,
+      "p90": 38734.57,
+      "p95": 38775.5,
+      "worst": 47568.85,
+      "worst10Mean": 39647.13512820513
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10361.187899201079,
+       "p90": 12457.346681111278,
+       "p95": 13819.665314025278,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13803.100667842604
+      },
+      "liquidation": {
+       "median": 10361.187899201079,
+       "p90": 12457.346681111278,
+       "p95": 13819.665314025278,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13803.100667842604
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 20986.85743990104,
+       "p90": 28464.93444205319,
+       "p95": 30743.97657497034,
+       "worst": 40242.32839686517,
+       "worst10Mean": 31378.639318190515
+      },
+      "liquidation": {
+       "median": 21036.23266434489,
+       "p90": 28502.082148186233,
+       "p95": 30791.334115803405,
+       "worst": 40291.836304662225,
+       "worst10Mean": 31426.803165084122
+      }
+     }
+    },
+    "stress": {
+     "cost 0 bps": {
+      "net": 526660.81,
+      "dd": 31415.79,
+      "envelope": {
+       "bankedDdMarked": 17720.52901243861,
+       "bankedDdLiquidation": 17720.52901243861,
+       "principalLossMarked": 9880.907257920526,
+       "principalLossLiquidation": 9880.907257920526
+      }
+     },
+     "cost 10 bps": {
+      "net": 514572.08,
+      "dd": 31630.25,
+      "envelope": {
+       "bankedDdMarked": 18189.728547426057,
+       "bankedDdLiquidation": 18286.45079974964,
+       "principalLossMarked": 10061.025599036178,
+       "principalLossLiquidation": 10061.025599036178
+      }
+     },
+     "cost 20 bps": {
+      "net": 502507.48,
+      "dd": 31844.29,
+      "envelope": {
+       "bankedDdMarked": 18657.991556395602,
+       "bankedDdLiquidation": 18851.243002654926,
+       "principalLossMarked": 10240.784422504878,
+       "principalLossLiquidation": 10240.784422504878
+      }
+     },
+     "interest 14%": {
+      "net": 514136.71,
+      "dd": 31539.51,
+      "envelope": {
+       "bankedDdMarked": 18218.259719825583,
+       "bankedDdLiquidation": 18266.645014466194,
+       "principalLossMarked": 9979.230613642276,
+       "principalLossLiquidation": 9979.230613642276
+      }
+     },
+     "stop slippage +25 bps": {
+      "net": 507404.53,
+      "dd": 31887.8,
+      "envelope": {
+       "bankedDdMarked": 18182.019134638656,
+       "bankedDdLiquidation": 18230.404429279268,
+       "principalLossMarked": 10196.159249436942,
+       "principalLossLiquidation": 10196.159249436942
+      }
+     },
+     "next-open stops": {
+      "net": 519556.8,
+      "dd": 31523.07,
+      "envelope": {
+       "bankedDdMarked": 18026.77259828907,
+       "bankedDdLiquidation": 18075.15789292968,
+       "principalLossMarked": 9971.011435560084,
+       "principalLossLiquidation": 9971.011435560084
+      }
+     },
+     "cost 2 bps": {
+      "net": 524241.13,
+      "dd": 31458.71,
+      "envelope": {
+       "bankedDdMarked": 17814.443976350303,
+       "bankedDdLiquidation": 17833.8038992809,
+       "principalLossMarked": 9916.959739315587,
+       "principalLossLiquidation": 9916.959739315587
+      }
+     },
+     "stop slippage +10 bps": {
+      "net": 515329.87,
+      "dd": 31668.97,
+      "envelope": {
+       "bankedDdMarked": 18045.95526657271,
+       "bankedDdLiquidation": 18094.34056121332,
+       "principalLossMarked": 10061.07056111083,
+       "principalLossLiquidation": 10061.07056111083
+      }
+     }
+    },
+    "removal": {
+     "without D1": {
+      "bankedDdMarked": 14156.718940798688,
+      "bankedDdLiquidation": 14205.104235439328,
+      "principalLossMarked": 6171.082721835019,
+      "principalLossLiquidation": 6171.082721835019
+     },
+     "without Growth": {
+      "bankedDdMarked": 15815.262597902023,
+      "bankedDdLiquidation": 15862.35554081401,
+      "principalLossMarked": 9971.011435560084,
+      "principalLossLiquidation": 9971.011435560084
+     }
+    },
+    "confirmP10Unrounded": 374357.092
+   },
+   "sources": [
+    {
+     "label": "C24/C/pair DF3×GF1",
+     "lane": "pairs",
+     "pick": "C24/D/refine/D.C1/R102#2 robust × C24/G/refine/G.h2.s1/R101#1 profit"
+    }
+   ]
+  },
+  {
+   "label": "C24/C/pair DF3×GF2",
+   "cell": "C.C1.h2.s1",
+   "d1Structure": "C1",
+   "growthProtection": "hold_on_buffer_on / istop on",
+   "unrestrictedGrowth": false,
+   "base": true,
+   "activation": "n",
+   "controlPattern": "K1|n",
+   "growthEntry": "breakout",
+   "growthStratum": "breakout·gate off",
+   "growthId": "fc44ea5527b26167",
+   "id": "rc1-6eeee394c244c97a",
+   "activeInputs": 26,
+   "boundary": [
+    "ctl.k=1",
+    "G.breakoutSmaSessions=10"
+   ],
+   "arm": "C",
+   "lane": "pairs",
+   "stage": "fixed",
+   "pick": "C24/D/refine/D.C1/R102#2 robust × C24/G/refine/G.h2.s1/R102#2 robust",
+   "replicate": null,
+   "cfg": {
+    "cell": "C.C1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 228,
+      "trailingBuyPercentage": 33,
+      "trailingStopPercentage": 61,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 0,
+      "pullback": 173,
+      "continuationWindow": 65
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 92
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 990,
+        "maxBlockSessions": 249
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 99,
+     "breakoutPriorHighSessions": 49,
+     "trendFilterEnabled": true,
+     "trendMethod": "price_change",
+     "trendChangeLookbackSessions": 66,
+     "trendChangeMinimumReturnPercent": -1.8,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 6.7,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 25,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 1.2,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 20,
+     "initialStopAtrMultiple": 1.4,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 41,
+     "uptrendSmaBars": 117,
+     "uptrendSlopeBars": 8,
+     "uptrendMinimumRisePercent": 0.7,
+     "pullbackMinimumPercent": 1.4,
+     "pullbackMaximumPercent": 10,
+     "recoveryPercent": 2.82,
+     "costBpsPerSide": 5
+    }
+   },
+   "centre": {
+    "id": "rc1-6eeee394c244c97a",
+    "net": 493246.95,
+    "realized": 493246.95,
+    "unrealized": 0,
+    "dd": 31523.07,
+    "ddPeakT": 1580849220,
+    "ddTroughT": 1580999460,
+    "ddRecoveryT": 1591798140,
+    "ddDaily": 22629.52,
+    "lots": 55,
+    "wins": 40,
+    "losses": 15,
+    "partials": 0,
+    "lossSum": -94532.66,
+    "worstLoss": -11293.58,
+    "largestWin": 54660.16,
+    "interest": 23808.22,
+    "costs": 5758.66,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 27,
+      "wins": 20,
+      "losses": 7,
+      "booked": 191134.78,
+      "principalDays": 40700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 27,
+      "granted": 27,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 28,
+      "wins": 20,
+      "losses": 8,
+      "booked": 302112.17,
+      "principalDays": 38300000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 28,
+      "refused": 3
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 27,
+      "wins": 20,
+      "losses": 7,
+      "booked": 191134.78,
+      "principalDays": 40700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 27,
+      "granted": 27,
+      "refused": 0
+     },
+     "G": {
+      "lots": 28,
+      "wins": 20,
+      "losses": 8,
+      "booked": 302112.17,
+      "principalDays": 38300000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 31,
+      "granted": 28,
+      "refused": 3
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 596,
+    "peakPrincipal": 100000,
+    "peakValue": 171540.72,
+    "years": {
+     "2016": 22193.2,
+     "2017": 32136.3,
+     "2018": 33856.87,
+     "2019": 43088.15,
+     "2020": 174790.81,
+     "2021": 72491.5,
+     "2022": -2197.42,
+     "2023": 50824.96,
+     "2024": 66062.58
+    },
+    "periods": [],
+    "topEpisode": 89261.92,
+    "topEpisodeShare": 0.181,
+    "episodes": 27,
+    "signature": "3f53e2a6ad5cf90c",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 27,
+      "net": 191134.78,
+      "dd": 22651.9,
+      "first": "2016-05-11"
+     },
+     "G:VGT": {
+      "trades": 31,
+      "net": 309868.56,
+      "dd": 28655.41,
+      "first": "2017-01-13"
+     }
+    },
+    "sessions": 2264,
+    "rc": {
+     "D1:VGT": {
+      "virtualTrades": 27,
+      "protective": 4,
+      "protectiveGap": 1,
+      "entryDay": 0,
+      "maximumHold": 0,
+      "adaptive": 0,
+      "episodes": 7,
+      "blocks": 7,
+      "blockedSessions": 531
+     }
+    },
+    "envelope": {
+     "bankedDdMarked": 18546.268418887572,
+     "bankedDdLiquidation": 18594.653713528183,
+     "principalLossMarked": 11293.578711320837,
+     "principalLossLiquidation": 11293.578711320837
+    }
+   },
+   "risk": {
+    "endDate": "2024-12-31",
+    "net": 493246.95,
+    "realized": 493246.95,
+    "unrealized": 0,
+    "conservativeNet": 493246.95,
+    "openLot": null,
+    "openShare": 0,
+    "occupancy": 0.26325088339222613,
+    "lots": 55,
+    "mae": {
+     "count": 55,
+     "median": -3240.078006240452,
+     "p90": -8260.234558860348,
+     "worst": -11293.578711320837,
+     "worstBook": "G:VGT"
+    },
+    "maeByBook": {
+     "D1:VGT": -9971.011435560084,
+     "G:VGT": -11293.578711320837
+    },
+    "worstRealized": -11293.578711320837,
+    "meanLosing": -6302.177488492001,
+    "losing": 15,
+    "rowsKept": 55
+   },
+   "select": {
+    "n": 256,
+    "failed": 0,
+    "median": 449898.99,
+    "p10": 395266.17,
+    "p90Net": 492950.03,
+    "mean": 447384.6,
+    "robust": 422582.58,
+    "medianDd": 36265.99,
+    "p90Dd": 39539.35,
+    "worstDd": 43755.38,
+    "breaches": 144,
+    "breachShare": 0.5625,
+    "meanExcess": 3530.24,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 256,
+    "sameAsCentre": 0,
+    "clipped": 208
+   },
+   "selectTail": {
+    "n": 256,
+    "centreDd": 31523.07,
+    "centreNet": 493246.95,
+    "medianDd": 36265.99,
+    "p90Dd": 39539.35,
+    "p90Interval": [
+     39390.9,
+     39825.2
+    ],
+    "p95Dd": 39826.24,
+    "worst10Mean": 40440.87,
+    "worst10K": 26,
+    "worstDd": 43755.38,
+    "breaches": 144,
+    "breachShare": 0.5625,
+    "breachInterval": [
+     0.5013,
+     0.6219
+    ],
+    "meanExcess": 3530.24,
+    "breachLedgers": 144,
+    "sameAsCentre": 0,
+    "clipped": 208,
+    "medianNet": 449898.99,
+    "p10Net": 395266.17,
+    "p90Net": 492950.03,
+    "meanNet": 447384.6,
+    "worstNet": 324314.41,
+    "positiveShare": 1
+   },
+   "confirm": {
+    "n": 384,
+    "failed": 0,
+    "median": 449643.79,
+    "p10": 404549.43,
+    "p90Net": 486693.75,
+    "mean": 448087.87,
+    "robust": 427096.61,
+    "medianDd": 35648.49,
+    "p90Dd": 39498.54,
+    "worstDd": 47612,
+    "breaches": 205,
+    "breachShare": 0.5339,
+    "meanExcess": 3510.94,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 384,
+    "sameAsCentre": 0,
+    "clipped": 310
+   },
+   "confirmTail": {
+    "n": 384,
+    "centreDd": 31523.07,
+    "centreNet": 493246.95,
+    "medianDd": 35648.49,
+    "p90Dd": 39498.54,
+    "p90Interval": [
+     39390.9,
+     39825.2
+    ],
+    "p95Dd": 39826.24,
+    "worst10Mean": 40158.11,
+    "worst10K": 39,
+    "worstDd": 47612,
+    "breaches": 205,
+    "breachShare": 0.5339,
+    "breachInterval": [
+     0.4839,
+     0.5832
+    ],
+    "meanExcess": 3510.94,
+    "breachLedgers": 205,
+    "sameAsCentre": 0,
+    "clipped": 310,
+    "medianNet": 449643.79,
+    "p10Net": 404549.43,
+    "p90Net": 486693.75,
+    "meanNet": 448087.87,
+    "worstNet": 346675.24,
+    "positiveShare": 1
+   },
+   "confirmReps": [
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 449211.42,
+     "p10": 401155.33,
+     "p90Net": 486579.88,
+     "mean": 447727.5,
+     "robust": 425183.38,
+     "medianDd": 35677.97,
+     "p90Dd": 38899.6,
+     "worstDd": 39866.13,
+     "breaches": 69,
+     "breachShare": 0.5391,
+     "meanExcess": 3274,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 103
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 451805.94,
+     "p10": 408747.44,
+     "p90Net": 487120.56,
+     "mean": 449394.81,
+     "robust": 430276.69,
+     "medianDd": 35492.15,
+     "p90Dd": 39428.35,
+     "worstDd": 41919.84,
+     "breaches": 69,
+     "breachShare": 0.5391,
+     "meanExcess": 3446.78,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 106
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 447218.11,
+     "p10": 405281.68,
+     "p90Net": 485792.95,
+     "mean": 447141.31,
+     "robust": 426249.89,
+     "medianDd": 36082.99,
+     "p90Dd": 39825.51,
+     "worstDd": 47612,
+     "breaches": 67,
+     "breachShare": 0.5234,
+     "meanExcess": 3821.03,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 101
+    }
+   ],
+   "confirmDraws": {
+    "drawn": 384,
+    "unique": 384
+   },
+   "selectDraws": {
+    "drawn": 256,
+    "unique": 256
+   },
+   "stress": {
+    "cost 0 bps": {
+     "net": 499267.02,
+     "dd": 31415.79,
+     "lots": 55,
+     "realized": 499267.02,
+     "unrealized": 0,
+     "interest": 23808.22,
+     "costs": 0,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 194039.63,
+      "G:GDX": 0,
+      "G:VGT": 305227.39
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "cost 10 bps": {
+     "net": 487232.9,
+     "dd": 31630.25,
+     "lots": 55,
+     "realized": 487232.9,
+     "unrealized": 0,
+     "interest": 23808.22,
+     "costs": 11511.56,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 188232.83,
+      "G:GDX": 0,
+      "G:VGT": 299000.07
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "cost 20 bps": {
+     "net": 475222.8,
+     "dd": 31844.29,
+     "lots": 55,
+     "realized": 475222.8,
+     "unrealized": 0,
+     "interest": 23808.22,
+     "costs": 23000.15,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 182437.61,
+      "G:GDX": 0,
+      "G:VGT": 292785.19
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "interest 14%": {
+     "net": 486753.8,
+     "dd": 31539.51,
+     "lots": 55,
+     "realized": 486753.8,
+     "unrealized": 0,
+     "interest": 30301.37,
+     "costs": 5758.66,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 187789.57,
+      "G:GDX": 0,
+      "G:VGT": 298964.23
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "stop slippage +25 bps": {
+     "net": 480084.05,
+     "dd": 31887.8,
+     "lots": 55,
+     "realized": 480084.05,
+     "unrealized": 0,
+     "interest": 23808.22,
+     "costs": 18921.56,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 183876.28,
+      "G:GDX": 0,
+      "G:VGT": 296207.77
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "next-open stops": {
+     "net": 492190.32,
+     "dd": 31523.07,
+     "lots": 55,
+     "realized": 492190.32,
+     "unrealized": 0,
+     "interest": 23808.22,
+     "costs": 5758.13,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 190078.15,
+      "G:GDX": 0,
+      "G:VGT": 302112.17
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "cost 2 bps": {
+     "net": 496858.27,
+     "dd": 31458.71,
+     "lots": 55,
+     "realized": 496858.27,
+     "unrealized": 0,
+     "interest": 23808.22,
+     "costs": 2304.15,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 192877.34,
+      "G:GDX": 0,
+      "G:VGT": 303980.93
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    },
+    "stop slippage +10 bps": {
+     "net": 487981.79,
+     "dd": 31668.97,
+     "lots": 55,
+     "realized": 487981.79,
+     "unrealized": 0,
+     "interest": 23808.22,
+     "costs": 11023.82,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 188231.38,
+      "G:GDX": 0,
+      "G:VGT": 299750.41
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 28
+     }
+    }
+   },
+   "removal": {
+    "without D1": {
+     "net": 309868.56,
+     "dd": 28655.41,
+     "lots": 31,
+     "realized": 309868.56,
+     "unrealized": 0,
+     "interest": 12747.95,
+     "costs": 3261.39,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 309868.56
+     },
+     "famLots": {
+      "D1": 0,
+      "G": 31
+     }
+    },
+    "without Growth": {
+     "net": 191134.78,
+     "dd": 22651.9,
+     "lots": 27,
+     "realized": 191134.78,
+     "unrealized": 0,
+     "interest": 12265.75,
+     "costs": 2801.75,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 191134.78,
+      "G:GDX": 0,
+      "G:VGT": 0
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 0
+     }
+    }
+   },
+   "gates": {
+    "Q1": true,
+    "Q2": true,
+    "Q3": false,
+    "Q4": true,
+    "Q5": true,
+    "Q6": true
+   },
+   "qualified": false,
+   "failed": [
+    "Q3"
+   ],
+   "severity": {
+    "Q3": 4498.54
+   },
+   "reasons": [
+    "Q3 p90 DD > limit"
+   ],
+   "participation": {
+    "D1:GDX": "disabled",
+    "D1:VGT": "funded",
+    "G:GDX": "disabled",
+    "G:VGT": "funded"
+   },
+   "envelope": {
+    "centre": {
+     "bankedDdMarked": 18546.268418887572,
+     "bankedDdLiquidation": 18594.653713528183,
+     "principalLossMarked": 11293.578711320837,
+     "principalLossLiquidation": 11293.578711320837
+    },
+    "select": {
+     "n": 256,
+     "failed": 0,
+     "markedDd": {
+      "median": 36265.99,
+      "p90": 39539.345,
+      "p95": 39826.24,
+      "worst": 43755.38,
+      "worst10Mean": 40440.86961538461
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10297.839094151554,
+       "p90": 13819.665314025278,
+       "p95": 13992.883319417222,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13912.93654769787
+      },
+      "liquidation": {
+       "median": 10297.839094151554,
+       "p90": 13819.665314025278,
+       "p95": 13992.883319417222,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13912.93654769787
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 21346.858713214868,
+       "p90": 27836.71380080466,
+       "p95": 30244.370383401707,
+       "worst": 35295.5350046613,
+       "worst10Mean": 30851.63406002365
+      },
+      "liquidation": {
+       "median": 21394.871154922614,
+       "p90": 27885.734048060785,
+       "p95": 30293.34069945781,
+       "worst": 35343.33991133451,
+       "worst10Mean": 30900.107137942246
+      }
+     }
+    },
+    "confirm": {
+     "n": 384,
+     "failed": 0,
+     "markedDd": {
+      "median": 35648.485,
+      "p90": 39498.541,
+      "p95": 39826.24,
+      "worst": 47612,
+      "worst10Mean": 40158.10692307693
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 10361.187899201079,
+       "p90": 12457.346681111278,
+       "p95": 13819.665314025278,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13803.100667842604
+      },
+      "liquidation": {
+       "median": 10361.187899201079,
+       "p90": 12457.346681111278,
+       "p95": 13819.665314025278,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13803.100667842604
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 20735.663807762292,
+       "p90": 27575.53742942609,
+       "p95": 29260.979453032498,
+       "worst": 39032.40909380274,
+       "worst10Mean": 30151.158219432673
+      },
+      "liquidation": {
+       "median": 20759.856455082598,
+       "p90": 27623.439078088522,
+       "p95": 29309.117127856887,
+       "worst": 39080.21400047594,
+       "worst10Mean": 30196.669096046055
+      }
+     }
+    },
+    "stress": {
+     "cost 0 bps": {
+      "net": 499267.02,
+      "dd": 31415.79,
+      "envelope": {
+       "bankedDdMarked": 18312.142728187493,
+       "bankedDdLiquidation": 18312.142728187493,
+       "principalLossMarked": 11204.797762571501,
+       "principalLossLiquidation": 11204.797762571501
+      }
+     },
+     "cost 10 bps": {
+      "net": 487232.9,
+      "dd": 31630.25,
+      "envelope": {
+       "bankedDdMarked": 18780.160217788827,
+       "bankedDdLiquidation": 18876.88247011241,
+       "principalLossMarked": 11382.27096781369,
+       "principalLossLiquidation": 11382.27096781369
+      }
+     },
+     "cost 20 bps": {
+      "net": 475222.8,
+      "dd": 31844.29,
+      "envelope": {
+       "bankedDdMarked": 19247.243540744355,
+       "bankedDdLiquidation": 19440.49498700368,
+       "principalLossMarked": 11559.38993512132,
+       "principalLossLiquidation": 11559.38993512132
+      }
+     },
+     "interest 14%": {
+      "net": 486753.8,
+      "dd": 31539.51,
+      "envelope": {
+       "bankedDdMarked": 18809.28211751778,
+       "bankedDdLiquidation": 18857.667412158393,
+       "principalLossMarked": 11301.79788940303,
+       "principalLossLiquidation": 11301.79788940303
+      }
+     },
+     "stop slippage +25 bps": {
+      "net": 480084.05,
+      "dd": 31887.8,
+      "envelope": {
+       "bankedDdMarked": 18773.041532330855,
+       "bankedDdLiquidation": 18821.426826971467,
+       "principalLossMarked": 11293.578711320837,
+       "principalLossLiquidation": 11293.578711320837
+      }
+     },
+     "next-open stops": {
+      "net": 492190.32,
+      "dd": 31523.07,
+      "envelope": {
+       "bankedDdMarked": 18617.79499598127,
+       "bankedDdLiquidation": 18666.18029062188,
+       "principalLossMarked": 11293.578711320837,
+       "principalLossLiquidation": 11293.578711320837
+      }
+     },
+     "cost 2 bps": {
+      "net": 496858.27,
+      "dd": 31458.71,
+      "envelope": {
+       "bankedDdMarked": 18405.82109393255,
+       "bankedDdLiquidation": 18425.18101686315,
+       "principalLossMarked": 11240.320793654757,
+       "principalLossLiquidation": 11240.320793654757
+      }
+     },
+     "stop slippage +10 bps": {
+      "net": 487981.79,
+      "dd": 31668.97,
+      "envelope": {
+       "bankedDdMarked": 18636.97766426491,
+       "bankedDdLiquidation": 18685.36295890552,
+       "principalLossMarked": 11293.578711320837,
+       "principalLossLiquidation": 11293.578711320837
+      }
+     }
+    },
+    "removal": {
+     "without D1": {
+      "bankedDdMarked": 18306.982821570477,
+      "bankedDdLiquidation": 18356.490729367593,
+      "principalLossMarked": 11293.578711320837,
+      "principalLossLiquidation": 11293.578711320837
+     },
+     "without Growth": {
+      "bankedDdMarked": 15815.262597902023,
+      "bankedDdLiquidation": 15862.35554081401,
+      "principalLossMarked": 9971.011435560084,
+      "principalLossLiquidation": 9971.011435560084
+     }
+    },
+    "confirmP10Unrounded": 404549.434
+   },
+   "sources": [
+    {
+     "label": "C24/C/pair DF3×GF2",
+     "lane": "pairs",
+     "pick": "C24/D/refine/D.C1/R102#2 robust × C24/G/refine/G.h2.s1/R102#2 robust"
+    }
+   ]
+  },
+  {
+   "label": "C24/C/pair DF3×GF3",
+   "cell": "C.C1.h2.s1",
+   "d1Structure": "C1",
+   "growthProtection": "hold_on_buffer_on / istop on",
+   "unrestrictedGrowth": false,
+   "base": true,
+   "activation": "n",
+   "controlPattern": "K1|n",
+   "growthEntry": "breakout",
+   "growthStratum": "breakout·gate off",
+   "growthId": "ff7498c10e5a85b9",
+   "id": "rc1-f0cca27331943636",
+   "activeInputs": 24,
+   "boundary": [
+    "ctl.k=1",
+    "G.breakoutSmaSessions=10"
+   ],
+   "arm": "C",
+   "lane": "pairs",
+   "stage": "fixed",
+   "pick": "C24/D/refine/D.C1/R102#2 robust × C24/G/refine/G.h2.s1/R101#3 balanced",
+   "replicate": null,
+   "cfg": {
+    "cell": "C.C1.h2.s1",
+    "d1": {
+     "GDX": {
+      "targetPercentChange": 80,
+      "trailingBuyPercentage": 1,
+      "trailingStopPercentage": 30,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 20,
+      "intradayLossBuffer": 0,
+      "pullback": 30,
+      "continuationWindow": 10
+     },
+     "VGT": {
+      "targetPercentChange": 228,
+      "trailingBuyPercentage": 33,
+      "trailingStopPercentage": 61,
+      "maximumHoldDays": 3,
+      "tickWindowSize": 78,
+      "intradayLossBuffer": 0,
+      "pullback": 173,
+      "continuationWindow": 65
+     }
+    },
+    "controls": {
+     "version": 1,
+     "books": {
+      "D1:VGT": {
+       "protectiveStop": {
+        "mode": "on",
+        "stopDistanceTenths": 92
+       },
+       "hold": {
+        "mode": "disabled"
+       },
+       "declineGate": {
+        "mode": "on",
+        "losses": 1,
+        "recoveryTenths": 990,
+        "maxBlockSessions": 249
+       }
+      }
+     }
+    },
+    "g": {
+     "entryMethod": "trend_breakout",
+     "breakoutSmaSessions": 10,
+     "breakoutSlopeComparisonSessions": 100,
+     "breakoutPriorHighSessions": 82,
+     "trendFilterEnabled": false,
+     "drawdownRecoveryGateEnabled": false,
+     "trailingStopPercent": 5.9,
+     "maximumHoldEnabled": true,
+     "maximumHoldDays": 27,
+     "intradayLossBufferEnabled": true,
+     "intradayLossBufferPercent": 1.7,
+     "initialStopEnabled": true,
+     "initialStopAtrSessions": 23,
+     "initialStopAtrMultiple": 1.5,
+     "retentionEnabled": false,
+     "continuationEnabled": true,
+     "continuationMethod": "shallow_pullback",
+     "continuationWindowSessions": 49,
+     "uptrendSmaBars": 96,
+     "uptrendSlopeBars": 7,
+     "uptrendMinimumRisePercent": 1,
+     "pullbackMinimumPercent": 1.2,
+     "pullbackMaximumPercent": 10.6,
+     "recoveryPercent": 2.6,
+     "costBpsPerSide": 5
+    }
+   },
+   "centre": {
+    "id": "rc1-f0cca27331943636",
+    "net": 486066.71,
+    "realized": 486066.71,
+    "unrealized": 0,
+    "dd": 31523.07,
+    "ddPeakT": 1580849220,
+    "ddTroughT": 1580999460,
+    "ddRecoveryT": 1593531540,
+    "ddDaily": 21585.17,
+    "lots": 53,
+    "wins": 40,
+    "losses": 13,
+    "partials": 0,
+    "lossSum": -86774.41,
+    "worstLoss": -11197.02,
+    "largestWin": 54660.16,
+    "interest": 22693.15,
+    "costs": 5554.51,
+    "books": {
+     "D1:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "D1:VGT": {
+      "lots": 27,
+      "wins": 20,
+      "losses": 7,
+      "booked": 191134.78,
+      "principalDays": 40700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 27,
+      "granted": 27,
+      "refused": 0
+     },
+     "G:GDX": {
+      "lots": 0,
+      "wins": 0,
+      "losses": 0,
+      "booked": 0,
+      "principalDays": 0,
+      "partials": 0,
+      "open": 0,
+      "decisions": 0,
+      "granted": 0,
+      "refused": 0
+     },
+     "G:VGT": {
+      "lots": 26,
+      "wins": 20,
+      "losses": 6,
+      "booked": 294931.93,
+      "principalDays": 34600000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 28,
+      "granted": 26,
+      "refused": 2
+     }
+    },
+    "fam": {
+     "D1": {
+      "lots": 27,
+      "wins": 20,
+      "losses": 7,
+      "booked": 191134.78,
+      "principalDays": 40700000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 27,
+      "granted": 27,
+      "refused": 0
+     },
+     "G": {
+      "lots": 26,
+      "wins": 20,
+      "losses": 6,
+      "booked": 294931.93,
+      "principalDays": 34600000,
+      "partials": 0,
+      "open": 0,
+      "decisions": 28,
+      "granted": 26,
+      "refused": 2
+     }
+    },
+    "mixed": true,
+    "funded": [
+     "D1:VGT",
+     "G:VGT"
+    ],
+    "sessionsHeld": 566,
+    "peakPrincipal": 100000,
+    "peakValue": 171540.72,
+    "years": {
+     "2016": 22193.2,
+     "2017": 37480.06,
+     "2018": 33856.87,
+     "2019": 29639.15,
+     "2020": 166094.9,
+     "2021": 78465.51,
+     "2022": -2197.42,
+     "2023": 51654.99,
+     "2024": 68879.44
+    },
+    "periods": [],
+    "topEpisode": 91580.79,
+    "topEpisodeShare": 0.1884,
+    "episodes": 24,
+    "signature": "f1c58de81c2b2b7d",
+    "virtual": {
+     "D1:VGT": {
+      "trades": 27,
+      "net": 191134.78,
+      "dd": 22651.9,
+      "first": "2016-05-11"
+     },
+     "G:VGT": {
+      "trades": 28,
+      "net": 311583.05,
+      "dd": 28655.41,
+      "first": "2017-01-13"
+     }
+    },
+    "sessions": 2264,
+    "rc": {
+     "D1:VGT": {
+      "virtualTrades": 27,
+      "protective": 4,
+      "protectiveGap": 1,
+      "entryDay": 0,
+      "maximumHold": 0,
+      "adaptive": 0,
+      "episodes": 7,
+      "blocks": 7,
+      "blockedSessions": 531
+     }
+    },
+    "envelope": {
+     "bankedDdMarked": 15464.119736301946,
+     "bankedDdLiquidation": 15514.079903828097,
+     "principalLossMarked": 11197.022078750248,
+     "principalLossLiquidation": 11197.022078750248
+    }
+   },
+   "risk": {
+    "endDate": "2024-12-31",
+    "net": 486066.71,
+    "realized": 486066.71,
+    "unrealized": 0,
+    "conservativeNet": 486066.71,
+    "openLot": null,
+    "openShare": 0,
+    "occupancy": 0.25,
+    "lots": 53,
+    "mae": {
+     "count": 53,
+     "median": -2976.586238766719,
+     "p90": -8309.382511277701,
+     "worst": -11197.022078750248,
+     "worstBook": "G:VGT"
+    },
+    "maeByBook": {
+     "D1:VGT": -9971.011435560084,
+     "G:VGT": -11197.022078750248
+    },
+    "worstRealized": -11197.022078750248,
+    "meanLosing": -6674.954947132027,
+    "losing": 13,
+    "rowsKept": 53
+   },
+   "select": {
+    "n": 256,
+    "failed": 0,
+    "median": 416331.43,
+    "p10": 371291.32,
+    "p90Net": 458913.8,
+    "mean": 414733.49,
+    "robust": 393811.38,
+    "medianDd": 35342.16,
+    "p90Dd": 38734.57,
+    "worstDd": 42258.56,
+    "breaches": 136,
+    "breachShare": 0.5313,
+    "meanExcess": 2868.43,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 256,
+    "sameAsCentre": 0,
+    "clipped": 208
+   },
+   "selectTail": {
+    "n": 256,
+    "centreDd": 31523.07,
+    "centreNet": 486066.71,
+    "medianDd": 35342.16,
+    "p90Dd": 38734.57,
+    "p90Interval": [
+     38734.57,
+     38734.57
+    ],
+    "p95Dd": 38734.57,
+    "worst10Mean": 38961.31,
+    "worst10K": 26,
+    "worstDd": 42258.56,
+    "breaches": 136,
+    "breachShare": 0.5313,
+    "breachInterval": [
+     0.4701,
+     0.5915
+    ],
+    "meanExcess": 2868.43,
+    "breachLedgers": 136,
+    "sameAsCentre": 0,
+    "clipped": 208,
+    "medianNet": 416331.43,
+    "p10Net": 371291.32,
+    "p90Net": 458913.8,
+    "meanNet": 414733.49,
+    "worstNet": 292418.45,
+    "positiveShare": 1
+   },
+   "confirm": {
+    "n": 384,
+    "failed": 0,
+    "median": 414433.85,
+    "p10": 367306.93,
+    "p90Net": 463332.22,
+    "mean": 414739.54,
+    "robust": 390870.39,
+    "medianDd": 35259.44,
+    "p90Dd": 38734.57,
+    "worstDd": 40031.14,
+    "breaches": 205,
+    "breachShare": 0.5339,
+    "meanExcess": 2967.5,
+    "mixedShare": 1,
+    "allFourShare": 0,
+    "distinct": 384,
+    "sameAsCentre": 0,
+    "clipped": 310
+   },
+   "confirmTail": {
+    "n": 384,
+    "centreDd": 31523.07,
+    "centreNet": 486066.71,
+    "medianDd": 35259.44,
+    "p90Dd": 38734.57,
+    "p90Interval": [
+     38734.57,
+     38775.5
+    ],
+    "p95Dd": 38775.5,
+    "worst10Mean": 38920.28,
+    "worst10K": 39,
+    "worstDd": 40031.14,
+    "breaches": 205,
+    "breachShare": 0.5339,
+    "breachInterval": [
+     0.4839,
+     0.5832
+    ],
+    "meanExcess": 2967.5,
+    "breachLedgers": 205,
+    "sameAsCentre": 0,
+    "clipped": 310,
+    "medianNet": 414433.85,
+    "p10Net": 367306.93,
+    "p90Net": 463332.22,
+    "meanNet": 414739.54,
+    "worstNet": 320185.64,
+    "positiveShare": 1
+   },
+   "confirmReps": [
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 414949.1,
+     "p10": 368178.01,
+     "p90Net": 463441.28,
+     "mean": 415004.79,
+     "robust": 391563.55,
+     "medianDd": 35243.66,
+     "p90Dd": 38734.57,
+     "worstDd": 39795.76,
+     "breaches": 68,
+     "breachShare": 0.5313,
+     "meanExcess": 2822.64,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 103
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 417842.99,
+     "p10": 369421.64,
+     "p90Net": 464913.48,
+     "mean": 417709.68,
+     "robust": 393632.31,
+     "medianDd": 35243.66,
+     "p90Dd": 38734.57,
+     "worstDd": 39109.44,
+     "breaches": 67,
+     "breachShare": 0.5234,
+     "meanExcess": 2883.94,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 106
+    },
+    {
+     "n": 128,
+     "failed": 0,
+     "median": 409102.81,
+     "p10": 363115.95,
+     "p90Net": 459042.39,
+     "mean": 411504.15,
+     "robust": 386109.38,
+     "medianDd": 35678.82,
+     "p90Dd": 38775.5,
+     "worstDd": 40031.14,
+     "breaches": 70,
+     "breachShare": 0.5469,
+     "meanExcess": 3188.2,
+     "mixedShare": 1,
+     "allFourShare": 0,
+     "distinct": 128,
+     "sameAsCentre": 0,
+     "clipped": 101
+    }
+   ],
+   "confirmDraws": {
+    "drawn": 384,
+    "unique": 384
+   },
+   "selectDraws": {
+    "drawn": 256,
+    "unique": 256
+   },
+   "stress": {
+    "cost 0 bps": {
+     "net": 491878.37,
+     "dd": 31415.79,
+     "lots": 53,
+     "realized": 491878.37,
+     "unrealized": 0,
+     "interest": 22693.15,
+     "costs": 0,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 194039.63,
+      "G:GDX": 0,
+      "G:VGT": 297838.74
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 26
+     }
+    },
+    "cost 10 bps": {
+     "net": 480260.85,
+     "dd": 31630.25,
+     "lots": 53,
+     "realized": 480260.85,
+     "unrealized": 0,
+     "interest": 22693.15,
+     "costs": 11103.47,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 188232.83,
+      "G:GDX": 0,
+      "G:VGT": 292028.02
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 26
+     }
+    },
+    "cost 20 bps": {
+     "net": 468666.51,
+     "dd": 31844.29,
+     "lots": 53,
+     "realized": 468666.51,
+     "unrealized": 0,
+     "interest": 22693.15,
+     "costs": 22184.77,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 182437.61,
+      "G:GDX": 0,
+      "G:VGT": 286228.9
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 26
+     }
+    },
+    "interest 14%": {
+     "net": 479877.67,
+     "dd": 31539.51,
+     "lots": 53,
+     "realized": 479877.67,
+     "unrealized": 0,
+     "interest": 28882.19,
+     "costs": 5554.51,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 187789.57,
+      "G:GDX": 0,
+      "G:VGT": 292088.09
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 26
+     }
+    },
+    "stop slippage +25 bps": {
+     "net": 472942.96,
+     "dd": 31887.8,
+     "lots": 53,
+     "realized": 472942.96,
+     "unrealized": 0,
+     "interest": 22693.15,
+     "costs": 18678.26,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 183876.28,
+      "G:GDX": 0,
+      "G:VGT": 289066.68
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 26
+     }
+    },
+    "next-open stops": {
+     "net": 485010.08,
+     "dd": 31523.07,
+     "lots": 53,
+     "realized": 485010.08,
+     "unrealized": 0,
+     "interest": 22693.15,
+     "costs": 5553.98,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 190078.15,
+      "G:GDX": 0,
+      "G:VGT": 294931.93
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 26
+     }
+    },
+    "cost 2 bps": {
+     "net": 489553.01,
+     "dd": 31458.71,
+     "lots": 53,
+     "realized": 489553.01,
+     "unrealized": 0,
+     "interest": 22693.15,
+     "costs": 2222.47,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 192877.34,
+      "G:GDX": 0,
+      "G:VGT": 296675.67
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 26
+     }
+    },
+    "stop slippage +10 bps": {
+     "net": 480817.21,
+     "dd": 31668.97,
+     "lots": 53,
+     "realized": 480817.21,
+     "unrealized": 0,
+     "interest": 22693.15,
+     "costs": 10804.01,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 188231.38,
+      "G:GDX": 0,
+      "G:VGT": 292585.83
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 26
+     }
+    }
+   },
+   "removal": {
+    "without D1": {
+     "net": 311583.05,
+     "dd": 28655.41,
+     "lots": 28,
+     "realized": 311583.05,
+     "unrealized": 0,
+     "interest": 11512.33,
+     "costs": 2961.63,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:GDX": 0,
+      "G:VGT": 311583.05
+     },
+     "famLots": {
+      "D1": 0,
+      "G": 28
+     }
+    },
+    "without Growth": {
+     "net": 191134.78,
+     "dd": 22651.9,
+     "lots": 27,
+     "realized": 191134.78,
+     "unrealized": 0,
+     "interest": 12265.75,
+     "costs": 2801.75,
+     "booked": {
+      "D1:GDX": 0,
+      "D1:VGT": 191134.78,
+      "G:GDX": 0,
+      "G:VGT": 0
+     },
+     "famLots": {
+      "D1": 27,
+      "G": 0
+     }
+    }
+   },
+   "gates": {
+    "Q1": true,
+    "Q2": true,
+    "Q3": false,
+    "Q4": true,
+    "Q5": true,
+    "Q6": true
+   },
+   "qualified": false,
+   "failed": [
+    "Q3"
+   ],
+   "severity": {
+    "Q3": 3734.57
+   },
+   "reasons": [
+    "Q3 p90 DD > limit"
+   ],
+   "participation": {
+    "D1:GDX": "disabled",
+    "D1:VGT": "funded",
+    "G:GDX": "disabled",
+    "G:VGT": "funded"
+   },
+   "envelope": {
+    "centre": {
+     "bankedDdMarked": 15464.119736301946,
+     "bankedDdLiquidation": 15514.079903828097,
+     "principalLossMarked": 11197.022078750248,
+     "principalLossLiquidation": 11197.022078750248
+    },
+    "select": {
+     "n": 256,
+     "failed": 0,
+     "markedDd": {
+      "median": 35342.16,
+      "p90": 38734.57,
+      "p95": 38734.57,
+      "worst": 42258.56,
+      "worst10Mean": 38961.312692307685
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 11197.022078750248,
+       "p90": 13819.665314025278,
+       "p95": 13992.883319417222,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13912.93654769787
+      },
+      "liquidation": {
+       "median": 11197.022078750248,
+       "p90": 13819.665314025278,
+       "p95": 13992.883319417222,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13912.93654769787
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 20999.65342756876,
+       "p90": 28368.626303484256,
+       "p95": 29863.960782820606,
+       "worst": 33918.45541114529,
+       "worst10Mean": 30093.20839861639
+      },
+      "liquidation": {
+       "median": 21045.151417205954,
+       "p90": 28417.941777500324,
+       "p95": 29911.890094735194,
+       "worst": 33965.812951978354,
+       "worst10Mean": 30141.368016573375
+      }
+     }
+    },
+    "confirm": {
+     "n": 384,
+     "failed": 0,
+     "markedDd": {
+      "median": 35259.435,
+      "p90": 38734.57,
+      "p95": 38775.5,
+      "worst": 40031.14,
+      "worst10Mean": 38920.28102564102
+     },
+     "principalLoss": {
+      "marked": {
+       "median": 11197.022078750248,
+       "p90": 12457.346681111278,
+       "p95": 13819.665314025278,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13803.100667842604
+      },
+      "liquidation": {
+       "median": 11197.022078750248,
+       "p90": 12457.346681111278,
+       "p95": 13819.665314025278,
+       "worst": 13992.883319417222,
+       "worst10Mean": 13803.100667842604
+      }
+     },
+     "bankedDd": {
+      "marked": {
+       "median": 20566.86365162625,
+       "p90": 28344.9666608556,
+       "p95": 29764.213538231135,
+       "worst": 33855.177059018635,
+       "worst10Mean": 30236.92255144934
+      },
+      "liquidation": {
+       "median": 20600.92389996996,
+       "p90": 28392.324201688665,
+       "p95": 29813.173440195224,
+       "worst": 33902.5345998517,
+       "worst10Mean": 30285.001627920887
+      }
+     }
+    },
+    "stress": {
+     "cost 0 bps": {
+      "net": 491878.37,
+      "dd": 31415.79,
+      "envelope": {
+       "bankedDdMarked": 15229.11999692925,
+       "bankedDdLiquidation": 15229.11999692925,
+       "principalLossMarked": 11107.963612691878,
+       "principalLossLiquidation": 11107.963612691878
+      }
+     },
+     "cost 10 bps": {
+      "net": 480260.85,
+      "dd": 31630.25,
+      "envelope": {
+       "bankedDdMarked": 15698.884710700426,
+       "bankedDdLiquidation": 15798.755135495448,
+       "principalLossMarked": 11285.991575312073,
+       "principalLossLiquidation": 11285.991575312073
+      }
+     },
+     "cost 20 bps": {
+      "net": 468666.51,
+      "dd": 31844.29,
+      "envelope": {
+       "bankedDdMarked": 16167.711770352267,
+       "bankedDdLiquidation": 16367.253277777054,
+       "principalLossMarked": 11463.664192697543,
+       "principalLossLiquidation": 11463.664192697543
+      }
+     },
+     "interest 14%": {
+      "net": 479877.67,
+      "dd": 31539.51,
+      "envelope": {
+       "bankedDdMarked": 15554.530695206078,
+       "bankedDdLiquidation": 15604.49086273223,
+       "principalLossMarked": 11254.55632532559,
+       "principalLossLiquidation": 11254.55632532559
+      }
+     },
+     "stop slippage +25 bps": {
+      "net": 472942.96,
+      "dd": 31887.8,
+      "envelope": {
+       "bankedDdMarked": 15690.892849745229,
+       "bankedDdLiquidation": 15740.85301727138,
+       "principalLossMarked": 11197.022078750248,
+       "principalLossLiquidation": 11197.022078750248
+      }
+     },
+     "next-open stops": {
+      "net": 485010.08,
+      "dd": 31523.07,
+      "envelope": {
+       "bankedDdMarked": 14873.16393828392,
+       "bankedDdLiquidation": 14923.124105810071,
+       "principalLossMarked": 11197.022078750248,
+       "principalLossLiquidation": 11197.022078750248
+      }
+     },
+     "cost 2 bps": {
+      "net": 489553.01,
+      "dd": 31458.71,
+      "envelope": {
+       "bankedDdMarked": 15323.148087008216,
+       "bankedDdLiquidation": 15343.138148039987,
+       "principalLossMarked": 11143.597683994172,
+       "principalLossLiquidation": 11143.597683994172
+      }
+     },
+     "stop slippage +10 bps": {
+      "net": 480817.21,
+      "dd": 31668.97,
+      "envelope": {
+       "bankedDdMarked": 15554.828981679282,
+       "bankedDdLiquidation": 15604.789149205433,
+       "principalLossMarked": 11197.022078750248,
+       "principalLossLiquidation": 11197.022078750248
+      }
+     }
+    },
+    "removal": {
+     "without D1": {
+      "bankedDdMarked": 12181.206484626047,
+      "bankedDdLiquidation": 12230.714392423106,
+      "principalLossMarked": 11197.022078750248,
+      "principalLossLiquidation": 11197.022078750248
+     },
+     "without Growth": {
+      "bankedDdMarked": 15815.262597902023,
+      "bankedDdLiquidation": 15862.35554081401,
+      "principalLossMarked": 9971.011435560084,
+      "principalLossLiquidation": 9971.011435560084
+     }
+    },
+    "confirmP10Unrounded": 367306.925
+   },
+   "sources": [
+    {
+     "label": "C24/C/pair DF3×GF3",
+     "lane": "pairs",
+     "pick": "C24/D/refine/D.C1/R102#2 robust × C24/G/refine/G.h2.s1/R101#3 balanced"
+    }
+   ]
+  }
+ ],
+ "requested": 5868,
+ "compute": {
+  "fresh": 5868,
+  "archiveHits": 0,
+  "tallies": {
+   "qualify C24": {
+    "fresh": 5868,
+    "hits": 0,
+    "ms": 3649.9066280001202
+   }
+  },
+  "lab": {
+   "unique": 5868,
+   "freshAllRuns": 5868,
+   "priorRuns": [],
+   "fresh": 5868,
+   "archiveHits": 0,
+   "workerSeconds": 3.6,
+   "wallSeconds": 5.8,
+   "tallies": {
+    "qualify C24": {
+     "fresh": 5868,
+     "hits": 0,
+     "ms": 3649.9066280001202
+    }
+   }
+  },
+  "wallSeconds": 22.6
+ },
+ "codeDigest": "fb7e6ddc5dee614b9112f52acc03c8f18ce02f6dd1f9d0f7570147c58ac84fd0",
+ "finished": "2026-11-25T20:41:45.890Z"
+}

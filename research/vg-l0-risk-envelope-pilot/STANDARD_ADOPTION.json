@@ -1,0 +1,127 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-risk-envelope-pilot",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "3.0.0",
+  "sha256": "4e8244e65bf1dd7c54ad46a1c941321d68b0c144344fd0c464dcc047eea5fef1"
+ },
+ "readAt": "2026-11-22T09:43:00Z",
+ "adoptedAt": "2026-11-22T10:21:08Z",
+ "protocol": {
+  "path": "research/vg-l0-risk-envelope-pilot/PROTOCOL.md",
+  "sha256": "723eea5d96fb986bb3d285b62201895052d573b2e6154a6fe94e8302c5ef2e78"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "per (cutoff, arm), on the arm's own qualified population (its four lanes' shortlists qualified under the arm's Q1-Q6): P0 = NL0 1.0.0's original rule, the actual-profit role (highest centre net; ties selection robust, lower centre DD, label) - the reference; RA1-original = Assignment 2's RA1 unchanged (S1 open-lot multiple <= 1.50, S2 open-lot share <= 25%, S3 worst lot MAE >= -$17,500, S4 selection worst-10% mean DD <= 35% of C0; fewest failed screens, then the lowest occupancy within 5% of the best conservative training net, then ties) in both arms; RA1-adapted (EXP only) = RA1 with only S4 = 40% of C0. Comparison selectors on identical populations; no selector launches an evaluation.",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (C0, not peak account equity); the CTRL arm keeps the $35,000 rule exactly; the EXP arm's envelope (marked DD <= 40% of C0, trade principal loss <= 25% of the funded entry principal, banked-capital DD <= 25% of C0, liquidation basis) is departure RD1"
+ },
+ "budget": {
+  "distinctProposals": 32768,
+  "backendEvaluations": 700000,
+  "notes": "Distinct candidate proposals (centres; refinement moves apart): 16 lanes x (512 screen + 2-6 islands x 256) = 16,384 configured base / 32,768 maximum (8,192 / 16,384 per arm). Backend evaluations: the authorized ceiling of 700,000 REQUESTED pilot research evaluations (search + qualification + next intervals; archive hits included); the deterministic bound from the frozen schedules is 693,652 (16 lanes x the per-lane cap 41,000 + 2 cutoffs x <= 26 members x 653 + 2 x <= 7 subjects x 264). Expected about 0.27-0.38 M. Counted separately per arm, lane, rung tag, cutoff and stage: requested, fresh, archive hits; engineering verification (E2 reads records; E3 non-official mini-pilot on D19 and edge subjects) and the nonbinding CPU diagnostics are not pilot research evaluations."
+ },
+ "referenceMethod": {
+  "id": "NL0",
+  "path": "docs/research/methods/NEW_L0_METHOD.md",
+  "version": "1.0.0",
+  "sha256": "9b387bb47ce02178ee27bb8379a11e4940c9c6c5a44c3e7ab5fcc3c2cc0411e4"
+ },
+ "evaluationBackend": {
+  "policy": "gpu-required",
+  "purpose": "official-optimization",
+  "acceptance": "config/gpu-backend/acceptance.json",
+  "notes": "Every official evaluation (search, qualification, next intervals) runs only through openOfficialGpuSession -> GpuPool -> EvalLab on the accepted Phase 7 evaluator (record sha256 bb0e3fcf6bde45cc..., binary gb7 cb2ff30b..., RTX 5090 GPU-ae5f222c...), with the risk envelope requested on every evaluation; no CPU fallback, auto backend or hybrid. CPU runs only under non-official purposes: parity-test (engineering gate E3) and diagnostic (the nonbinding D1-D3, DD^L, interval-window and scaling diagnostics of frozen selections)."
+ },
+ "chronologicalConsequence": "Standard 3.0.0 §1.8 default, adopted: the pilot runs two cutoffs with one next interval each and no sequential fold path (departure RD2), so every pilot selection is labelled 'no chronological support: not a deployment-qualified candidate without an explicit user decision'. The next intervals (C21 -> 2022-2023, C24 -> 2025-2026) are retrospective, previously inspected history, never a pristine holdout. 'No qualifying candidate' in an arm is a valid outcome. Governance only: never a fitness term, ranking input or gate.",
+ "deviations": [
+  {
+   "id": "RD1",
+   "section": "§2.1, §2.3",
+   "kind": "departure",
+   "description": "The EXP arm replaces the $35,000 marked-DD ceiling by the envelope (marked DD <= 40% of C0, trade principal loss <= 25% of funded principal, banked-capital DD <= 25% of C0, liquidation basis) in every stage of its search, qualification and selection; the CTRL arm keeps the standard's rule exactly. The standard is not changed.",
+   "justification": "the pilot's research question",
+   "userAgreement": "brief/BRIEF.md §2 ('Test whether replacing the conventional NL0 35%-of-initial-allocation marked-DD gate with a 40% marked DD / 25% funded-trade principal loss / 25% banked-capital DD envelope ...'), decisions D-0, D-3, D-4, D-10"
+  },
+  {
+   "id": "RD2",
+   "section": "§1.8, §1.9",
+   "kind": "departure",
+   "description": "Two cutoffs (C21, C24) with one next interval each instead of the C19/C21/C23 repeat with a sequential verdict; consequence: no chronological support for any selection.",
+   "justification": "a bounded pilot",
+   "userAgreement": "brief/BRIEF.md §4 ('Four independent search blocks'; C21 -> 2022-2023 via D23; C24 -> 2025-2026 via FULL)"
+  },
+  {
+   "id": "RD3",
+   "section": "§4.4, §3.2",
+   "kind": "departure",
+   "description": "No incumbent-informed lane; New L0 and N/original are descriptive frozen benchmarks, never selectable or injected.",
+   "justification": "independent-lane pilot",
+   "userAgreement": "brief/BRIEF.md §1 D-7 ('New L0 and N/original are descriptive, frozen benchmarks, never injected into independent search or selectable as search candidates. No informed lane in this pilot.')"
+  },
+  {
+   "id": "RD4",
+   "section": "§4.3, §4.8",
+   "kind": "adaptation",
+   "description": "Reduced structural scope: 2 of Assignment 3's 64 cells (GA0.VA0 and the outcome-independent hash-selected GB0.VD1) x R1/R2; no stage-2 refinement lanes, no Track N; no claim of equal effort with Assignment 3 or NL0.",
+   "justification": "brief D-1 and §4 (bounded pilot)",
+   "userAgreement": null
+  },
+  {
+   "id": "RD5",
+   "section": "§5.9, §0.2",
+   "kind": "departure",
+   "description": "RA1 (original and envelope-adapted) ranks on §5.9-type training quantities (open-lot multiple and share, worst lot MAE, selection worst-10% mean DD, occupancy) - Assignment 3's AD5, kept; the adapted version changes only S4's ceiling (40% of C0).",
+   "justification": "comparison selectors",
+   "userAgreement": "brief/BRIEF.md §1 D-8 (refined: original RA1 S4 35% and envelope-adapted RA1 S4 40% under EXP, on the same population); Assignment 3 brief §4"
+  },
+  {
+   "id": "RD6",
+   "section": "§5.3, §5.8",
+   "kind": "adaptation",
+   "description": "The EXP arm's neighbourhood gates (rung feasibility, Q3, Q4) compare unrounded quantiles of all three metrics; CTRL keeps Priority 3's cent-rounded p90 DD (the frozen instrument, required for CTRL = Assignment 3).",
+   "justification": "brief §2 ('Compute decisions on unrounded quantities'), D-4",
+   "userAgreement": null
+  },
+  {
+   "id": "RD7",
+   "section": "§6.3",
+   "kind": "adaptation",
+   "description": "No new worker/batch benchmark: the GPU execution shape (8 host workers, batch 8,192, linger 30 ms) is GPU Phase 7's measured shape; timings select nothing.",
+   "justification": "brief §8; research/gpu-phase7/results/bench/benchmark.json",
+   "userAgreement": null
+  },
+  {
+   "id": "RD8",
+   "section": "§1.4, §1.2",
+   "kind": "adaptation",
+   "description": "D24 opens for the C24 CTRL phase before the C21 selection exists (E2 must precede every EXP evaluation); the CTRL lanes are Assignment 3's sealed lanes; no C21 stage reads a C24 record; D23 and FULL open only behind their sealed, committed selections; FULL once.",
+   "justification": "brief §7 (E2 before EXP) and the readiness execution plan's order (searches before qualifications)",
+   "userAgreement": null
+  }
+ ]
+}

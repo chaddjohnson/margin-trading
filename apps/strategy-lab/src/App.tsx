@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import type { LabRunRequest } from '../shared/contract.ts';
+import { type PortfolioWindowRequest, RESEARCH_WINDOW, normalizeWindowRequest } from '../shared/portfolio.ts';
 import { api, type DeleteRunResult, type Meta, onTokenRequired, type PhenotypeView, setToken } from './api.ts';
 import { Phenotypes } from './components/Phenotypes.tsx';
 import { PortfolioView } from './components/PortfolioView.tsx';
@@ -18,22 +19,42 @@ interface Route {
   /** The phenotype catalogue view (#/phenotypes, #/phenotype/PH-0001). */
   phenotypes?: boolean;
   phenotype?: string | null;
-  /** Pooled portfolio candidates (#/portfolios, #/portfolio/<candidate>?symbol=VGT). */
+  /**
+   * Pooled portfolio candidates (#/portfolios, #/portfolio/<candidate>?symbol=VGT[&window=all |
+   * &window=custom&from=YYYY-MM-DD&to=YYYY-MM-DD&exec=continuous|isolated]); no window = the research window.
+   */
   portfolios?: boolean;
   candidate?: string | null;
+  window?: PortfolioWindowRequest;
 }
+
+const windowOfParams = (p: URLSearchParams): PortfolioWindowRequest => {
+  const mode = p.get('window');
+  if (mode !== 'all' && mode !== 'custom') return RESEARCH_WINDOW;
+  try {
+    return normalizeWindowRequest(
+      mode === 'all' ? { mode } : { mode, from: p.get('from') ?? undefined, to: p.get('to') ?? undefined, execution: p.get('exec') ?? undefined }
+    );
+  } catch {
+    return RESEARCH_WINDOW; // a malformed link falls back to the research window, never to a guessed one
+  }
+};
+const windowParams = (w: PortfolioWindowRequest | undefined): string =>
+  !w || w.mode === 'research' ? '' : w.mode === 'all' ? 'window=all' : `window=custom&from=${w.from}&to=${w.to}&exec=${w.execution}`;
 
 // #/run/R-000042?symbol=VGT&compare=R-000013(&preview=PV-…) — survives a refresh and can be bookmarked in the browser.
 function parseHash(): Route {
   const pf = /^#\/portfolio(?:s|\/([a-z0-9][a-z0-9-]{0,40}))(?:\?(.*))?$/.exec(window.location.hash);
   if (pf) {
-    const sym = new URLSearchParams(pf[2] ?? '').get('symbol');
+    const params = new URLSearchParams(pf[2] ?? '');
+    const sym = params.get('symbol');
     return {
       run: null,
       symbol: sym && /^[A-Z0-9][A-Z0-9.-]{0,9}$/.test(sym) ? sym : null,
       compare: null,
       portfolios: true,
-      candidate: pf[1] ?? null
+      candidate: pf[1] ?? null,
+      window: windowOfParams(params)
     };
   }
   const ph = /^#\/phenotype(?:s|\/(PH-\d{4,12}))$/.exec(window.location.hash);
@@ -53,8 +74,11 @@ function parseHash(): Route {
 }
 
 function toHash(r: Route): string {
-  if (r.portfolios)
-    return r.candidate ? `#/portfolio/${r.candidate}${r.symbol ? `?symbol=${r.symbol}` : ''}` : '#/portfolios';
+  if (r.portfolios) {
+    if (!r.candidate) return '#/portfolios';
+    const q = [r.symbol ? `symbol=${r.symbol}` : '', windowParams(r.window)].filter(Boolean).join('&');
+    return `#/portfolio/${r.candidate}${q ? `?${q}` : ''}`;
+  }
   if (r.phenotypes) return r.phenotype ? `#/phenotype/${r.phenotype}` : '#/phenotypes';
   if (!r.run) return '#/';
   const p = new URLSearchParams();
@@ -171,7 +195,7 @@ export function App() {
             aria-current={route.portfolios ? 'page' : undefined}
             href="#/portfolios"
             data-testid="view-portfolios"
-            title="Five frozen D1 + Growth portfolio candidates, each replayed as ONE shared $100,000 pool"
+            title="Frozen D1 + Growth portfolio candidates (N/original among them), each replayed as ONE shared $100,000 pool on its research window, all available data or a custom window"
           >
             Portfolios
           </a>
@@ -230,13 +254,16 @@ export function App() {
             <PortfolioView
               candidateId={route.candidate ?? null}
               symbol={route.symbol}
+              window={route.window ?? RESEARCH_WINDOW}
               onRoute={(r) => {
                 const next: Route = {
                   run: null,
                   compare: null,
                   portfolios: true,
                   candidate: r.candidate !== undefined ? r.candidate : (route.candidate ?? null),
-                  symbol: r.symbol !== undefined ? r.symbol : route.symbol
+                  symbol: r.symbol !== undefined ? r.symbol : route.symbol,
+                  // the window stays across candidate changes (the same window for another candidate)
+                  window: r.window !== undefined ? r.window : route.window
                 };
                 window.location.hash = toHash(next);
               }}
@@ -259,6 +286,7 @@ export function App() {
               onChanged={refresh}
               onDeleted={onDeleted}
               previewId={route.preview ?? null}
+              researchValidationEnd={meta?.research?.validationEnd ?? null}
               onSaved={(id, source) => {
                 setNotice({ tone: 'ok', text: `Saved the preview as ${id}: a new immutable run (${source} is unchanged).` });
                 refresh();

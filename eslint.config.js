@@ -6,7 +6,19 @@ import tseslint from 'typescript-eslint';
 export default [
   {
     // apps/* are self-contained front-end apps with their own package.json and ESLint config (npm --prefix apps/<name> run lint)
-    ignores: ['dist/**', 'src/startTradingServer.js', 'research/**/tmp/**', 'research/**/freeze/source/**', 'src/d1-refinement/generated/**', '.cache/**', 'apps/**']
+    // research/**/cache/**: generated, git-ignored study caches (e.g. Strategy Lab scratch builds under
+    // cache/strategy-lab-scratch/dist); research/**/results/**: sealed research records (never edited, not source).
+    ignores: [
+      'dist/**',
+      'src/startTradingServer.js',
+      'research/**/tmp/**',
+      'research/**/freeze/source/**',
+      'research/**/cache/**',
+      'research/**/results/**',
+      'src/d1-refinement/generated/**',
+      '.cache/**',
+      'apps/**'
+    ]
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

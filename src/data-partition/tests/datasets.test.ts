@@ -16,6 +16,9 @@ import {
   verifySymbol
 } from '../canonical.ts';
 import { newYorkDateAndMinute } from '../scan.ts';
+import { prefixCheck, verifyVintages } from '../canonical.ts';
+import { researchRangesFile } from '../../lib/researchRanges.ts';
+import { createHash } from 'node:crypto';
 
 let dataDir = '';
 
@@ -434,6 +437,37 @@ describe('appending new sessions', () => {
     assert.equal((await appendSymbol('APP', { dataDir })).status, 'unchanged');
   });
 
+  // Standard 4.0.0 §1.12/§1.14: the append proves that the new file begins with exactly the previous one and records both
+  // versions in the vintage registry (here <dataDir>/vintages.json; the repository's is config/market-data/vintages.json),
+  // so a pin of the earlier file stays verifiable; the research date ranges are not touched.
+  test('the append proves the byte prefix, records both vintages, and the earlier file stays a verifiable prefix', async () => {
+    const before = await prepare();
+    const rangesBefore = await fs.readFile(researchRangesFile);
+
+    await fs.writeFile(path.join(dataDir, 'APP.csv'), `${later.join('\n')}\n`);
+
+    const report = await appendSymbol('APP', { dataDir });
+    const previous = { bytes: Buffer.byteLength(before), sha256: createHash('sha256').update(before).digest('hex') };
+
+    assert.equal(report.status, 'appended', report.errors.join('; '));
+    assert.ok(report.proof.some((line) => line.includes(`the first ${previous.bytes} bytes of the new file hash to the previous file's sha256`)));
+    assert.deepEqual(
+      [report.vintages!.previous.bytes, report.vintages!.previous.sha256, report.vintages!.current.bytes],
+      [previous.bytes, previous.sha256, previous.bytes + Buffer.byteLength(`${later.join('\n')}\n`)]
+    );
+
+    const registry = await fs.readJson(path.join(dataDir, 'vintages.json'));
+
+    assert.deepEqual(registry.symbols.APP.map((v: { sha256: string }) => v.sha256), [previous.sha256, report.after!.sha256]);
+    assert.deepEqual((await verifyVintages(['APP'], { dataDir })).map((r) => r.ok), [true, true]);
+    assert.equal((prefixCheck('APP', { pin: previous }, { dataDir }) as { laterBytes: number }).laterBytes, report.after!.bytes - previous.bytes);
+    assert.deepEqual(await fs.readFile(researchRangesFile), rangesBefore);
+
+    // a later rewrite of an earlier byte is caught by the recorded vintage
+    await fs.writeFile(path.join(dataDir, 'APP', 'data.csv'), (await canonical('APP')).replace(',1200', ',1201'));
+    assert.deepEqual((await verifyVintages(['APP'], { dataDir })).map((r) => r.ok), [false, false]);
+  });
+
   test('a download that revises existing rows, or holds rows the file lacks, is refused and nothing changes', async () => {
     const before = await prepare();
     const revised = sourceRows().at(-1)!.replace(',1200', ',1300');
@@ -452,5 +486,25 @@ describe('appending new sessions', () => {
       (await fs.readdir(path.join(dataDir, 'APP'))).filter((name) => name.startsWith('.')),
       []
     );
+  });
+});
+
+// The vintage registry against the local canonical files (config/market-data/vintages.json: "every recorded earlier
+// file is a byte prefix of today's"): run where the canonical data exist, and reported (not silently passed) where not.
+describe('the recorded vintages of the local canonical files', () => {
+  const repo = path.resolve(import.meta.dirname, '..', '..', '..');
+  const registry = JSON.parse(fs.readFileSync(path.join(repo, 'config/market-data/vintages.json'), 'utf8')) as {
+    symbols: Record<string, { bytes: number; sha256: string }[]>;
+  };
+  const present = Object.keys(registry.symbols).filter((s) => fs.existsSync(path.join(repo, 'data', s, 'data.csv')));
+
+  test('every recorded vintage of a present canonical file is a verified byte prefix of it (the latest is the whole file)', { skip: present.length === 0 && 'no canonical data here' }, async () => {
+    const rows = await verifyVintages(present, { dataDir: path.join(repo, 'data'), vintagesFile: path.join(repo, 'config/market-data/vintages.json') });
+    assert.equal(rows.length, present.reduce((n, s) => n + registry.symbols[s]!.length, 0));
+    for (const r of rows) assert.equal(r.ok, true, `${r.symbol} ${r.bytes} ${r.sha256.slice(0, 12)}: ${r.error ?? ''}`);
+    for (const s of present) {
+      const latest = registry.symbols[s]!.at(-1)!;
+      assert.equal(fs.statSync(path.join(repo, 'data', s, 'data.csv')).size, latest.bytes, `${s}: the file grew after its last recorded vintage (append through npm run datasets -- append)`);
+    }
   });
 });

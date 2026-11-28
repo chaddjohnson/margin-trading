@@ -1,0 +1,248 @@
+### gpu-phase3/cache/replay
+### s2-a3-w
+### p2-a3-r\|p2-a2-r\|p2-mini
+tools/gpu-phase3/archive-digest.ts:3:// p2-a2-r1, whose job completed (runs.jsonl "job-end") but whose final dump failed (a 2.2 M-row map serialized as one
+tools/gpu-phase4/archive-digest.ts:3:// p2-a2-r1, whose job completed (runs.jsonl "job-end") but whose final dump failed (a 2.2 M-row map serialized as one
+tools/gpu-phase5/archive-digest.ts:3:// p2-a2-r1, whose job completed (runs.jsonl "job-end") but whose final dump failed (a 2.2 M-row map serialized as one
+### dev-a-mini\|dev-b-mini\|smoke-a2\|smoke-mini
+### jobs/pilot-\|'pilot-\|"pilot-\|`pilot-
+src/vg-growth-funding-lifecycle/main.ts:166:    case 'pilot-compare': {
+src/vg-growth-funding-lifecycle/pilot.ts:28:  const job = `pilot-${name}`;
+src/vg-growth-funding-lifecycle/pilot.ts:75:        .readFileSync(path.join(jobDir(`pilot-${job}`), 'results.jsonl'), 'utf8')
+src/growth-etf-screening/audit.ts:29:  const pilot = rows.filter((r) => r.job.startsWith('pilot-')).reduce((a, r) => a + r.rows, 0);
+src/growth-etf-screening/audit.ts:30:  const study = rows.filter((r) => !r.job.startsWith('pilot-')).reduce((a, r) => a + r.rows, 0);
+src/growth-etf-screening/stages.ts:6:// a sealed one. The pilot runs identical code with pilot budgets, `pilot-` job names and an output directory in the
+src/growth-etf-screening/stages.ts:45:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/vg-lifecycle-matched-optimization/lab.ts:125:        (o.job.startsWith('pilot-')
+src/growth-etf-screening/parity.ts:363:    job: o.dry ? 'pilot-parity-dry' : 'parity',
+src/c4-gdx-growth-partner/bench.ts:20:    arms.flatMap((arm) => randomGdx(n, `pilot-bench-${labels}-${arm}`).map((g) => build(anchors[arm], g)));
+src/c4-gdx-growth-partner/bench.ts:24:      ...rowsOf(b, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door], scope: 'joint' })
+src/c4-gdx-growth-partner/bench.ts:31:  const job = `pilot-bench-${o.label}`;
+src/growth-etf-screening/bench.ts:15:  const pick = (labels: string, n: number) => randomG(n, `pilot-bench-${labels}`).map((g) => build(g));
+src/growth-etf-screening/bench.ts:19:      ...rowsOf(b, { name: 'r1', n: 8, labels: ['pilot-bench', 'r1'] })
+src/growth-etf-screening/bench.ts:26:  const job = `pilot-bench-${o.label}`;
+src/growth-etf-screening/bench.ts:87:  const bs = randomG(24, `pilot-dupkeys-${o.label}`).map((g) => build(g));
+src/growth-etf-screening/bench.ts:91:  const job = `pilot-dupkeys-${o.label}`;
+src/study8-expanded-regime-d1/gates.ts:44:  if (key === 'pilot-F24') {
+src/c4-gdx-growth-partner/lab.ts:124:        (o.job.startsWith('pilot-')
+src/study8-expanded-regime-d1/parity.ts:808:  for (const key of ['search-F24', 'search-F19', 'test-F19', 'test-F24', 'pilot-F24'] as const) {
+src/vg-l0-risk-families/bench.ts:20:    return cells.map((cell, i) => decode(pinStratum(screenGenomes(1, 'pilot-bench', ...labels, cell.id, i)[0]!, cell, i), cell));
+src/vg-l0-risk-families/bench.ts:23:    cs.flatMap((c) => [{ cfg: c, options: vOptions }, ...neighbourhood(c, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door] }).map((p) => ({ cfg: p.cfg, options: vOptions }))]
+src/vg-l0-risk-families/bench.ts:31:    at += 1 + neighbourhood(mainCfgs[i]!, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door] }).length;
+src/vg-l0-risk-families/bench.ts:34:  const job = `pilot-bench-${o.label}`;
+src/study8-expanded-regime-d1/pilot.ts:15:  const door = await openDoor('pilot-F24', [...bookOrder], 'pre-freeze timing pilot (no economic output)');
+src/vgt-d1-growth-joint/bench.ts:37:    { job: `pilot-bench-${label}-${door}-w${workers}`, door, purpose: 'pilot bench (engineering)', workers },
+src/vg-l0-risk-families/stages.ts:6:// identical code with pilot budgets, `pilot-` job names, a handful of cells and an output directory in the cache.
+src/vg-l0-risk-families/stages.ts:44:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/vg-l0-risk-families/lab.ts:125:        (o.job.startsWith('pilot-')
+src/growth140-vgt-stable/commands.ts:242:  const file = pilot ? path.join(cacheRoot, 'pilot-out', 'parity.json') : out.parity;
+src/growth140-vgt-stable/commands.ts:263:  const name = pilot ? 'pilot-parity' : 'parity';
+src/growth140-vgt-stable/commands.ts:502:  const target = pilot ? path.join(cacheRoot, 'pilot-out', 'sensitivity.json') : out.sensitivity;
+src/growth140-vgt-stable/commands.ts:508:  const name = pilot ? 'pilot-sensitivity' : 'sensitivity';
+src/growth140-vgt-stable/commands.ts:586:  const name = opt('job', pilot ? `pilot-search-${cut.key}` : `search-${cut.key}`)!;
+src/growth140-vgt-stable/commands.ts:587:  const file = pilot ? path.join(cacheRoot, 'pilot-out', `${name}.json`) : out.search(cut.key);
+src/growth140-vgt-stable/commands.ts:724:  const name = pilot ? `pilot-qualify-${cut.key}` : `qualify-${cut.key}`;
+src/growth140-vgt-stable/commands.ts:725:  const file = pilot ? path.join(cacheRoot, 'pilot-out', `${name}.json`) : out.qualify(cut.key);
+src/growth140-vgt-stable/commands.ts:726:  const searchFile = pilot ? path.join(cacheRoot, 'pilot-out', `pilot-search-${cut.key}.json`) : out.search(cut.key);
+src/growth140-vgt-stable/commands.ts:795:const pilotOut = (n: string) => path.join(cacheRoot, 'pilot-out', n);
+src/growth140-vgt-stable/commands.ts:805:  const q = readJson(pilot ? pilotOut('pilot-qualify-C19.json') : out.qualify(cut.key));
+src/growth140-vgt-stable/commands.ts:1002:  const q = readJson(pilot ? pilotOut('pilot-qualify-C19.json') : out.qualify('C24'));
+src/growth140-vgt-stable/commands.ts:1131:  const target = pilot ? pilotOut(`${opt('job', 'pilot-final')}.json`) : out.final;
+src/growth140-vgt-stable/commands.ts:1135:  const name = pilot ? opt('job', 'pilot-final')! : 'final';
+src/study9-phase-b/pilot.ts:27:    const lab = new Lab(ev, PointCache.memory(door, `pilot-${track}`));
+src/study9-phase-b/pilot.ts:41:      fitOf(lab, books, symbols, { name: 'pilot', n: 16, labels: ['pilot-r1', track] }, floors);
+src/vg-lifecycle-matched-optimization/stages.ts:4:// refuses to rerun. The pilot runs the identical code with pilot budgets, `pilot-` job names and an output directory
+src/vg-lifecycle-matched-optimization/stages.ts:41:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/vgt-d1-growth-joint/main.ts:117:    prefix: `pilot-${pilot}-`,
+src/vg-d1-growth-expanded/stages.ts:3:// refuses to rerun. The pilot runs the identical code with pilot budgets, `pilot-` job names and an output directory
+src/vg-d1-growth-expanded/stages.ts:40:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/vgt-d1-growth-separate-pooled/neighbourhood.ts:49:// `pilot`: the interruption tests (development data only): job `pilot-<name>-neighbourhood`, nothing sealed, the
+src/vgt-d1-growth-separate-pooled/neighbourhood.ts:97:    { job: pilot ? `pilot-${pilot}-neighbourhood` : 'neighbourhood', workers, killWorkerAfter },
+src/vg-d1-growth-expanded/commands.ts:2:// (stages.ts studyGuards); a pilot (--pilot NAME) uses pilot budgets, `pilot-NAME-` job names and the git-ignored cache.
+src/vg-d1-growth-expanded/commands.ts:31:    prefix: `pilot-${pilot}-`,
+src/vg-d1-growth-expanded/commands.ts:97:  'pilot-compare': async (args) => {
+src/vg-d1-growth-expanded/commands.ts:109:      log(`pilot-compare ${o} vs ${ref}: ${same ? 'identical lane results' : 'DIFFERENT'}`);
+src/d1-robust/context.ts:259:    'pilot-A2',
+src/d1-robust/context.ts:260:    'pilot-N2',
+src/d1-robust/context.ts:261:    'pilot-N3',
+src/d1-robust/pilot.ts:50:      const rng = Rng.from(study.seedLabel, 'pilot-config', stratum, index);
+src/d1-robust/pilot.ts:139:    stage: 'pilot-A2',
+src/d1-robust/pilot.ts:145:    stage: 'pilot-N2',
+src/d1-robust/pilot.ts:158:      stage: 'pilot-N3',
+src/d1-robust/pilot.ts:375:  const parityRng = Rng.from(study.seedLabel, window, 'pilot-parity');
+src/d1-robust/pilot.ts:439:        Rng.from(study.seedLabel, window, 'pilot-se', record.key, n),
+src/study8-expanded-regime-d1/tests/study8.test.ts:135:  assert.equal(doorSpecOf('pilot-F24').end, '2024-12-31');
+src/study8-expanded-regime-d1/tests/study8.test.ts:367:      '{"door":"pilot-F24","purpose":"p"}\n'
+src/study8-expanded-regime-d1/tests/study8.test.ts:385:      '{"door":"pilot-F24","purpose":"EDITED"}\n{"door":"search-F19","purpose":"q"}\n'
+src/study8-expanded-regime-d1/tests/study8.test.ts:390:      '{"door":"pilot-F24","purpose":"p"}\n{"door":"search-F19","purpose":"q"}\n'
+src/study8-expanded-regime-d1/tests/study8.test.ts:401:      '{"door":"pilot-F24","purpose":"p"}\n{"door":"search-F19","purpose":"q"}\n'
+src/study8-expanded-regime-d1/tests/study8.test.ts:423:    await doorGate('pilot-F24'); // before the freeze
+src/study8-expanded-regime-d1/tests/study8.test.ts:430:    await assert.rejects(doorGate('pilot-F24'), /pre-freeze/);
+src/optimization-process-audit/pilot.ts:46:    ['--expose-gc', '--experimental-transform-types', '--disable-warning=ExperimentalWarning', path.join(codeDir, 'main.ts'), 'stage3', 'pilot-child', job, mode],
+src/optimization-process-audit/pilot.ts:51:  for (const j of ['pilot-straight', 'pilot-kill', 'pilot-stop']) fs.rmSync(path.join(cacheRoot, 'jobs', j), { recursive: true, force: true });
+src/optimization-process-audit/pilot.ts:55:  const a = child('pilot-straight', 'straight');
+src/optimization-process-audit/pilot.ts:59:  const k1 = child('pilot-kill', 'kill');
+src/optimization-process-audit/pilot.ts:62:  const k2 = child('pilot-kill', 'straight');
+src/optimization-process-audit/pilot.ts:66:  const s1 = child('pilot-stop', 'stop');
+src/optimization-process-audit/pilot.ts:67:  const s2 = child('pilot-stop', 'straight');
+src/optimization-process-audit/pilot.ts:79:  const A = await read('pilot-straight');
+src/optimization-process-audit/pilot.ts:80:  const B = await read('pilot-kill');
+src/optimization-process-audit/pilot.ts:81:  const C = await read('pilot-stop');
+src/growth-etf-screening/commands.ts:2:// guards (stages.ts studyGuards); a pilot (--pilot NAME) uses pilot budgets, `pilot-NAME-` job names and the cache.
+src/growth-etf-screening/commands.ts:35:    prefix: `pilot-${pilot}-`,
+src/growth-etf-screening/commands.ts:39:    planKey: opt('pilot-budget') === 'study' ? 'study' : 'pilot',
+src/growth-etf-screening/commands.ts:180:  'pilot-compare': async (args, opt) => {
+src/growth-etf-screening/commands.ts:205:      log(`pilot-compare ${o} vs ${ref}: ${same ? 'identical search and qualification results' : 'DIFFERENT'}`);
+src/vg-lifecycle-matched-optimization/bench.ts:18:      for (const [i, g] of screenGenomes(n * 4, 'coarse', 'pilot-bench', ...labels, cellName(cell)).entries()) {
+src/vg-lifecycle-matched-optimization/bench.ts:32:        ...neighbourhood(c, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door] }).map((p) => ({
+src/vg-lifecycle-matched-optimization/bench.ts:47:      at += 1 + neighbourhood(mainCfgs[i]!, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door] }).length;
+src/vg-lifecycle-matched-optimization/bench.ts:50:  const job = `pilot-bench-${o.label}`;
+src/growth-etf-screening/lab.ts:142:        (o.job.startsWith('pilot-')
+src/vg-lifecycle-matched-optimization/commands.ts:2:// (stages.ts studyGuards); a pilot (--pilot NAME) uses pilot budgets, `pilot-NAME-` job names and the git-ignored cache.
+src/vg-lifecycle-matched-optimization/commands.ts:32:    prefix: `pilot-${pilot}-`,
+src/vg-lifecycle-matched-optimization/commands.ts:101:  'pilot-compare': async (args) => {
+src/vg-lifecycle-matched-optimization/commands.ts:113:      log(`pilot-compare ${o} vs ${ref}: ${same ? 'identical lane results' : 'DIFFERENT'}`);
+src/vg-d1-growth-joint/stages.ts:56:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/vg-d1-growth-expanded/bench.ts:18:      for (const [i, g] of screenGenomes(n * 4, 'coarse', 'pilot-bench', ...labels, cellName(cell)).entries()) {
+src/vg-d1-growth-expanded/bench.ts:31:      ...neighbourhood(c, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door] }).map((p) => ({
+src/vg-d1-growth-expanded/bench.ts:43:    at += 1 + neighbourhood(mainCfgs[i]!, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door] }).length;
+src/vg-d1-growth-expanded/bench.ts:46:  const job = `pilot-bench-${o.label}`;
+src/vgt-d1-growth-joint/stages.ts:54:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/c4-gdx-growth-partner/stages.ts:4:// with pilot budgets, `pilot-` job names and an output directory in the git-ignored cache.
+src/c4-gdx-growth-partner/stages.ts:41:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/vg-l0-full-joint/stages.ts:7:// The pilot runs the identical code with pilot budgets, `pilot-` job names, a handful of cells and an output directory in
+src/vg-l0-full-joint/stages.ts:58:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/vg-l0-full-joint/stages.ts:100:export type Part = 'broad1' | 'broad2' | 'refine' | 'informed1' | 'informed2' | 'pilot' | 'pilot-informed';
+src/vg-l0-full-joint/stages.ts:120:  part === 'informed1' ? allPairs.slice(0, 8) : part === 'informed2' ? allPairs.slice(8) : part === 'pilot-informed' ? pilotPairs : [];
+src/vg-l0-full-joint/stages.ts:122:export const informedPartsOf = (env: Env): Part[] => (env.schedule === 'pilot' ? ['pilot-informed'] : informedParts);
+src/vg-l0-full-joint/stages.ts:124:  part === 'refine' ? 'refine' : part === 'informed1' || part === 'informed2' || part === 'pilot-informed' ? 'informed' : 'broad';
+src/vg-l0-full-joint/stages.ts:185:  const pilotOnly = part === 'pilot' || part === 'pilot-informed';
+src/c4-gdx-growth-partner/commands.ts:2:// (stages.ts studyGuards); a pilot (--pilot NAME) uses pilot budgets, `pilot-NAME-` job names and the git-ignored cache.
+src/c4-gdx-growth-partner/commands.ts:34:    prefix: `pilot-${pilot}-`,
+src/c4-gdx-growth-partner/commands.ts:123:  'pilot-compare': async (args) => {
+src/c4-gdx-growth-partner/commands.ts:139:      log(`pilot-compare ${o} vs ${ref}: ${same ? 'identical lane results' : 'DIFFERENT'}`);
+src/vg-l0-full-joint/lab.ts:125:        (o.job.startsWith('pilot-')
+src/vg-l0-shadow-eligibility/commands.ts:3:// preflight and its guards (stages.ts studyGuards); a pilot (--pilot NAME) uses pilot budgets, `pilot-NAME-` job names
+src/vg-l0-shadow-eligibility/commands.ts:46:    prefix: `pilot-${pilot}-`,
+src/vg-l0-shadow-eligibility/commands.ts:134:  'pilot-compare': async (args) => {
+src/vg-l0-shadow-eligibility/commands.ts:156:      log(`pilot-compare ${o} vs ${ref}: ${same ? 'identical lane results' : 'DIFFERENT'}`);
+src/vg-l0-risk-families/main.ts:55:    prefix: `pilot-${pilot}-`,
+src/vg-l0-risk-families/main.ts:164:    case 'pilot-compare': {
+src/vg-l0-risk-families/main.ts:177:        log(`pilot-compare ${o} vs ${ref}: ${same ? 'identical lane results' : 'DIFFERENT'}`);
+src/d1-robust/tests/neighbourhood.test.ts:127:      const n2 = neighbourOf(centre, 'final', 'pilot-N2', 'N2', draw);
+src/d1-robust/tests/neighbourhood.test.ts:131:      const n3 = neighbourOf(centre, 'final', 'pilot-N3', 'N3', draw, 'KRE');
+src/vg-l0-shadow-eligibility/stages.ts:6:// pilot runs the identical code with pilot budgets, `pilot-` job names and an output directory in the git-ignored cache.
+src/vg-l0-shadow-eligibility/stages.ts:54:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/vg-l0-shadow-eligibility/bench.ts:35:      for (const [i, g] of screenGenomes(n * 4, 'coarse', 'pilot-bench', ...labels, cellName(cell)).entries()) {
+src/vg-l0-shadow-eligibility/bench.ts:50:      ...neighbourhood(c, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door] }).map((p) => ({
+src/vg-l0-shadow-eligibility/bench.ts:63:    at += 1 + neighbourhood(mainCfgs[i]!, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door] }).length;
+src/vg-l0-shadow-eligibility/bench.ts:66:  const job = `pilot-bench-${o.label}`;
+src/vg-d1-growth-joint/bench.ts:48:    { job: `pilot-bench-${label}-${door}-w${workers}`, door, purpose: 'pilot bench (engineering)', workers },
+src/vg-d1-growth-joint/main.ts:122:    prefix: `pilot-${pilot}-`,
+src/vg-d1-growth-expanded/lab.ts:123:        (o.job.startsWith('pilot-')
+src/gdx-growth-standalone/stages.ts:4:// `pilot-` job names and an output directory in the git-ignored cache.
+src/gdx-growth-standalone/stages.ts:43:  prefix: string; // job-name prefix ('' for the study; 'pilot-<run>-' for the pilot)
+src/gdx-growth-standalone/commands.ts:2:// (stages.ts studyGuards); a pilot (--pilot NAME) uses pilot budgets, `pilot-NAME-` job names and the git-ignored cache.
+src/gdx-growth-standalone/commands.ts:32:    prefix: `pilot-${pilot}-`,
+src/gdx-growth-standalone/commands.ts:138:  'pilot-compare': async (args) => {
+src/gdx-growth-standalone/commands.ts:155:      log(`pilot-compare ${o} vs ${ref}: ${same ? 'identical lane results' : 'DIFFERENT'}`);
+src/vg-l0-full-joint/bench.ts:18:    const gs = screenGenomes(n, 'coarse', 'pilot-bench', ...labels);
+src/vg-l0-full-joint/bench.ts:22:  const nb = (c: Cfg) => neighbourhood(c, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door] });
+src/vg-l0-full-joint/bench.ts:34:  const job = `pilot-bench-${o.label}`;
+src/gdx-growth-standalone/bench.ts:15:  const pick = (labels: string, n: number) => randomGdx(n, `pilot-bench-${labels}`).map((g) => buildS(g));
+src/gdx-growth-standalone/bench.ts:19:      ...rowsOf(b, { name: 'r1', n: 16, labels: ['pilot-bench', 'r1', o.door], scope: 'joint' })
+src/gdx-growth-standalone/bench.ts:26:  const job = `pilot-bench-${o.label}`;
+src/gdx-growth-standalone/bench.ts:85:  const bs = randomGdx(24, `pilot-dupkeys-${o.label}`).map((g) => buildS(g));
+src/gdx-growth-standalone/bench.ts:89:  const job = `pilot-dupkeys-${o.label}`;
+src/growth140-vgt-s8m/commands.ts:298:  const searchJob = opt('search', pilot ? 'pilot-a' : 'search')!;
+src/growth140-vgt-s8m/commands.ts:301:    ? path.join(cacheRoot, 'pilot-out', `${searchJob}.json`)
+src/growth140-vgt-s8m/commands.ts:305:    pilot ? path.join(cacheRoot, 'pilot-out', `${name}.json`) : path.join(resultsDir, 'qualify', `${name}.json`)
+src/growth140-vgt-s8m/commands.ts:474:  const name = pilot ? opt('job', 'pilot-validate')! : 'validate';
+src/growth140-vgt-s8m/commands.ts:476:    ? path.join(cacheRoot, 'pilot-out', `${name}.json`)
+src/growth140-vgt-s8m/commands.ts:490:    const q = JSON.parse(fs.readFileSync(path.join(cacheRoot, 'pilot-out', 'pilot-a-qualify.json'), 'utf8'));
+src/growth140-vgt-s8m/commands.ts:672:  const outOf = (job: string) => path.join(cacheRoot, 'pilot-out', `${job}.json`);
+src/growth140-vgt-s8m/commands.ts:692:  steps.A = launchWait('growth140-s8m-pilot-a', S('pilot-a', 1));
+src/growth140-vgt-s8m/commands.ts:694:  steps.A2 = launchWait('growth140-s8m-pilot-a2', ['qualify', '--pilot', '--search', 'pilot-a', '--workers', '2']);
+src/growth140-vgt-s8m/commands.ts:696:  fs.mkdirSync(jobDir('pilot-b'), { recursive: true });
+src/growth140-vgt-s8m/commands.ts:697:  fs.copyFileSync(path.join(jobDir('pilot-a'), 'archive.sqlite'), path.join(jobDir('pilot-b'), 'archive.sqlite'));
+src/growth140-vgt-s8m/commands.ts:698:  steps.B = launchWait('growth140-s8m-pilot-b', [...S('pilot-b', 2, ['--namespace', 'pilot-a', '--resume-empty'])]);
+src/growth140-vgt-s8m/commands.ts:700:  steps.C = launchWait('growth140-s8m-pilot-c', S('pilot-c', 4, ['--lru', '256']));
+src/growth140-vgt-s8m/commands.ts:702:  steps.D1 = launchWait('growth140-s8m-pilot-d1', S('pilot-d', 8, ['--stop-after', '3000']));
+src/growth140-vgt-s8m/commands.ts:703:  steps.D2 = launchWait('growth140-s8m-pilot-d2', S('pilot-d', 8, ['--resume']));
+src/growth140-vgt-s8m/commands.ts:714:    ...S('pilot-e', 12)
+src/growth140-vgt-s8m/commands.ts:723:  steps.E2 = launchWait('growth140-s8m-pilot-e2', S('pilot-e', 12, ['--resume']));
+src/growth140-vgt-s8m/commands.ts:725:  steps.F = launchWait('growth140-s8m-pilot-f', ['parity', '--pilot', '--job', 'pilot-parity', '--workers', '2']);
+src/growth140-vgt-s8m/commands.ts:727:  const ref = comparable(outOf('pilot-a'));
+src/growth140-vgt-s8m/commands.ts:729:    ['pilot-b', 'pilot-c', 'pilot-d', 'pilot-e'].map((j) => [
+src/growth140-vgt-s8m/commands.ts:735:  writeJson(path.join(resultsDir, 'pilot', 'pilot-driver.json'), {
+src/growth140-vgt-s8m/commands.ts:757:  const out = (n: string) => path.join(cacheRoot, 'pilot-out', `${n}.json`);
+src/growth140-vgt-s8m/commands.ts:764:    'pilot-a',
+src/growth140-vgt-s8m/commands.ts:766:    'pilot-a-qualify-r',
+src/growth140-vgt-s8m/commands.ts:776:    'pilot-a',
+src/growth140-vgt-s8m/commands.ts:778:    'pilot-a-qualify-r',
+src/growth140-vgt-s8m/commands.ts:782:  steps.G = launchWait('growth140-s8m-pilot-g', ['validate', '--pilot', '--job', 'pilot-validate', '--workers', '8']);
+src/growth140-vgt-s8m/commands.ts:787:    'pilot-validate-r',
+src/growth140-vgt-s8m/commands.ts:797:    'pilot-validate-r',
+src/growth140-vgt-s8m/commands.ts:805:      comparableJson(out('pilot-a-qualify-r'), skip) === comparableJson(out('pilot-a-qualify'), skip),
+src/growth140-vgt-s8m/commands.ts:807:      comparableJson(out('pilot-validate-r'), skip) === comparableJson(out('pilot-validate'), skip)
+src/growth140-vgt-s8m/commands.ts:810:  writeJson(path.join(resultsDir, 'pilot', 'pilot-driver-2.json'), {
+src/gdx-growth-standalone/lab.ts:124:        (o.job.startsWith('pilot-')
+src/optimization-process-audit/stage3.ts:415:  if (sub === 'pilot-child') return (await import('./pilot.ts')).runPilotChild(rest[0]!, rest[1]!);
+src/vg-l0-shadow-eligibility/lab.ts:125:        (o.job.startsWith('pilot-')
+src/vg-l0-full-joint/main.ts:56:    prefix: `pilot-${pilot}-`,
+src/vg-l0-full-joint/main.ts:165:    case 'pilot-compare': {
+src/vg-l0-full-joint/main.ts:178:        log(`pilot-compare ${o} vs ${ref}: ${same ? 'identical lane results' : 'DIFFERENT'}`);
+src/vg-balanced-entry-eligibility/commands.ts:224:  if (!name.startsWith('pilot-')) throw new Error('pilot jobs must be named pilot-*');
+src/study8-expanded-regime-d1/data.ts:17:export type DoorKey = 'pilot-F24' | 'parity' | 'parity-cut' | 'parity-F19' | `search-${FoldKey}` | `test-${FoldKey}`;
+src/study8-expanded-regime-d1/data.ts:36:  if (key === 'pilot-F24' || key === 'parity-cut') return { end: windows.W24 };
+tools/growth-etf-screening/tables.ts:305:    const k = e.job.startsWith('pilot-') ? 'pilot and bench' : e.job.replace(/-[A-Z]{2,5}$/, '').replace(/-[0-9a-f]{16}$/, '');
+tools/vg-l0-full-joint/common.ts:39:  ['broad1', 'broad2', 'refine', 'informed1', 'informed2', 'pilot', 'pilot-informed'].filter((p) => exists('search', cut, `${p}.json`));
+src/growth140-vgt-stable/main.ts:163:  const name = opt('job', `pilot-bench-${door}-${workers}`)!;
+src/growth140-vgt-stable/main.ts:229:  const outOf = (n: string) => path.join(cacheRoot, 'pilot-out', `${n}.json`);
+src/growth140-vgt-stable/main.ts:245:  steps.A = launchWait('growth140-stable-pilot-a', S('pilot-search-C19', 4));
+src/growth140-vgt-stable/main.ts:247:  steps.B1 = launchWait('growth140-stable-pilot-b1', S('pilot-search-C19-b', 8, ['--stop-after', '1500']));
+src/growth140-vgt-stable/main.ts:248:  steps.B2 = launchWait('growth140-stable-pilot-b2', S('pilot-search-C19-b', 8));
+src/growth140-vgt-stable/main.ts:260:      ...S('pilot-search-C19-c', 14)
+src/growth140-vgt-stable/main.ts:269:  steps.C2 = launchWait('growth140-stable-pilot-c2', S('pilot-search-C19-c', 14));
+src/growth140-vgt-stable/main.ts:271:  steps.D = launchWait('growth140-stable-pilot-d', S('pilot-search-C19-d', 12, ['--lru', '256']));
+src/growth140-vgt-stable/main.ts:320:  const ref = comparable(outOf('pilot-search-C19'), skip);
+src/growth140-vgt-stable/main.ts:322:    ['pilot-search-C19-b', 'pilot-search-C19-c', 'pilot-search-C19-d'].map((j) => [
+src/growth140-vgt-stable/main.ts:329:    fs.existsSync(path.join(cacheRoot, 'pilot-out', 'P18', 'evaluate-P18-r.json')) &&
+src/growth140-vgt-stable/main.ts:330:    comparable(path.join(cacheRoot, 'pilot-out', 'P18', 'evaluate-P18-r.json'), fSkip) ===
+src/growth140-vgt-stable/main.ts:331:      comparable(path.join(cacheRoot, 'pilot-out', 'P18', 'evaluate-P18.json'), fSkip);
+src/growth140-vgt-stable/main.ts:333:  writeJson(path.join(resultsDir, 'pilot', 'pilot-driver.json'), {
+src/vg-l0-full-joint/parity.ts:543:    const job = `pilot-stagev-workers-${Date.now()}`;
+tools/gdx-growth-standalone/archive-manifest.ts:3:// recovery path in results/archive-manifest.json. Pilot and bench jobs (`pilot-…`) are excluded. Run after the last job.
+tools/gdx-growth-standalone/archive-manifest.ts:33:  .filter((j) => !j.startsWith('pilot-'))
+### growth-etf-screening/doors\|'doors'
+src/vg-lifecycle-matched-optimization/main.ts:27:    case 'doors': {
+src/growth-etf-screening/universe.ts:433:  if (!isSealed(doorManifestFile)) sealJson(doorManifestFile, manifest, 'doors');
+src/vgt-d1-growth-joint/main.ts:136:    case 'doors': {
+src/growth-etf-screening/lab.ts:33:  'src/growth-etf-screening/doors.ts'
+src/vg-d1-growth-expanded/main.ts:27:    case 'doors': {
+src/vg-l0-risk-families/main.ts:86:    case 'doors': {
+src/growth140-vgt-stable/context.ts:54:export const doorFile = (d: PrefixDoor) => path.join(cacheRoot, 'doors', `${symbol}-${d}.csv`);
+src/vg-d1-growth-joint/context.ts:151:export const doorFile = (d: PrefixDoor, s: Sym) => path.join(cacheRoot, 'doors', `${s}-${d}.csv`);
+tools/gpu-phase1/profile-components.ts:29:const doors = opt('doors', 'D24').split(',') as DoorKey[];
+src/vg-balanced-entry-eligibility/context.ts:61:export const doorRoot = (door: PrefixDoor) => path.join(cacheRoot, 'doors', door);
+tools/gpu-phase1/parity-fixtures.ts:34:const nDoors = Number(opt('doors', '6'));
+src/vg-l0-full-joint/main.ts:87:    case 'doors': {
+src/vg-d1-growth-joint/main.ts:171:    case 'doors': {
+src/gdx-growth-standalone/main.ts:27:    case 'doors': {
+src/growth-etf-screening/context.ts:27:export const doorManifestFile = path.join(resultsDir, 'doors', 'DOORS.json');
+src/growth-etf-screening/context.ts:56:export const doorFile = (sym: string, d: PrefixDoor) => path.join(cacheRoot, 'doors', sym, `${d}.csv`);
+src/c4-gdx-growth-partner/main.ts:27:    case 'doors': {
+src/vgt-d1-growth-joint/context.ts:93:export const doorFile = (d: PrefixDoor) => path.join(cacheRoot, 'doors', `${symbol}-${d}.csv`);
+src/vg-l0-shadow-eligibility/main.ts:27:    case 'doors': {
+tools/gpu-phase6/parity-finalists.ts:63:for (const doorName of opt('doors', 'D24').split(',') as DoorKey[]) {
+### vg-balanced-entry-eligibility/doors\|growth140-vgt-stable/doors
+### gpu-phase4/cache/\(pool\|sustained\|barrier\|staged\|strategy-lab-scratch\)
+tools/gpu-phase4/group.sh:23:BAR=$REPO/research/gpu-phase4/cache/barrier/$G
+### gpu-phase1-feasibility/cache
+### gpu-phase6/cache/\(barriers\|strategy-lab-scratch\)\|gpu-phase3/cache/\(staged\|strategy-lab-scratch\)
+### growth-vgt-study8
+### .cache/vg-l0-risk-families/jobs\|'vg-l0-risk-families', 'jobs'
+### .cache/vg-l0-full-joint/jobs\|'vg-l0-full-joint', 'jobs'
+tools/vg-l0-risk-metrics/exclusions.ts:2:// Assignment 3's own search archives (READ-ONLY SQLite, `.cache/vg-l0-full-joint/jobs/<job>/archive.sqlite`):
+tools/vg-l0-risk-metrics/exclusions.ts:27:const jobsDir = path.join(repoRoot, '.cache', 'vg-l0-full-joint', 'jobs');
+### .cache/vg-l0-shadow-eligibility/jobs\|'vg-l0-shadow-eligibility', 'jobs'

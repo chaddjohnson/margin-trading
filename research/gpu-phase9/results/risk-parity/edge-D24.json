@@ -1,0 +1,160 @@
+{
+ "kind": "gpu-phase9 risk-delivery parity (R1–R3)",
+ "t": "2026-11-28T00:56:50.049Z",
+ "label": "edge-D24",
+ "door": "D24",
+ "doorPin": "GDX:f78dbe2a1f88666b0095bde886903af4453df79147bc96da7dc916011ff5094c,VGT:c144619f0104403710098911b31cb1e84982ca6b724e29003a4ab40770bf9ecb",
+ "runtime": {
+  "node": "v24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "maglev": "disabled",
+  "execArgv": [
+   "--no-maglev",
+   "--expose-gc",
+   "--experimental-transform-types",
+   "--disable-warning=ExperimentalWarning",
+   "--max-old-space-size=14000"
+  ]
+ },
+ "build": {
+  "binary": "research/gpu-phase9/build/gb9",
+  "binarySha256": "36dcc25109a9ffada8951ba02d7745fe242e8bf781d268b68f4b57ddf7ab36aa",
+  "compatDigest": "b51f6189d82fbd8b597a77e6044a46807099296e2fbc34faa69cdccb1fb22db8",
+  "serverDigest": "b51f6189d82fbd8b597a77e6044a46807099296e2fbc34faa69cdccb1fb22db8",
+  "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4"
+ },
+ "datasetSha256": "4112a7bc2ce3b7a38fa3830b9f46126e198fa189898136b9aafdaee17b7ac588",
+ "options": [
+  "base",
+  "cost10"
+ ],
+ "hostWorkers": 8,
+ "cpuWorkers": 12,
+ "jobs": {
+  "gpu": "research/gpu-phase9/riskpar-edge-D24-gpu",
+  "cpu": "research/gpu-phase9/riskpar-edge-D24-cpu"
+ },
+ "subjects": {
+  "total": 1000,
+  "bySet": {
+   "E-near35": 300,
+   "E-near40": 300,
+   "E-band": 400
+  }
+ },
+ "items": 4000,
+ "r1": {
+  "compared": 4000,
+  "differing": 0,
+  "examples": []
+ },
+ "r2": {
+  "compared": 4000,
+  "differing": 0,
+  "examples": [],
+  "archive": {
+   "compared": 1000,
+   "differing": 0,
+   "examples": []
+  }
+ },
+ "r3": {
+  "compared": 4000,
+  "differing": 0,
+  "examples": [],
+  "rankings": {
+   "base/nl0-control": {
+    "qualified": 417,
+    "sameQualifiedOrder": true,
+    "sameConstrainedOrder": true,
+    "top5": [
+     "E:band:rc1-c762f6af34eeda31|base",
+     "E:band:rc1-c402d3d0ff673fc9|base",
+     "E:band:rc1-f2040d2324a759c8|base",
+     "E:band:rc1-8c206492311cb7da|base",
+     "E:band:rc1-662b285463d71dbc|base"
+    ]
+   },
+   "base/re-40-25-25": {
+    "qualified": 392,
+    "sameQualifiedOrder": true,
+    "sameConstrainedOrder": true,
+    "top5": [
+     "E:band:rc1-c762f6af34eeda31|base",
+     "E:band:rc1-c402d3d0ff673fc9|base",
+     "E:band:rc1-f2040d2324a759c8|base",
+     "E:band:rc1-8c206492311cb7da|base",
+     "E:band:rc1-662b285463d71dbc|base"
+    ]
+   },
+   "cost10/nl0-control": {
+    "qualified": 277,
+    "sameQualifiedOrder": true,
+    "sameConstrainedOrder": true,
+    "top5": [
+     "E:band:rc1-c762f6af34eeda31|cost10",
+     "E:band:rc1-c402d3d0ff673fc9|cost10",
+     "E:band:rc1-f2040d2324a759c8|cost10",
+     "E:band:rc1-8c206492311cb7da|cost10",
+     "E:band:rc1-662b285463d71dbc|cost10"
+    ]
+   },
+   "cost10/re-40-25-25": {
+    "qualified": 345,
+    "sameQualifiedOrder": true,
+    "sameConstrainedOrder": true,
+    "top5": [
+     "E:band:rc1-c762f6af34eeda31|cost10",
+     "E:band:rc1-c402d3d0ff673fc9|cost10",
+     "E:band:rc1-f2040d2324a759c8|cost10",
+     "E:band:rc1-8c206492311cb7da|cost10",
+     "E:band:rc1-662b285463d71dbc|cost10"
+    ]
+   }
+  }
+ },
+ "census": {
+  "subjects": 1000,
+  "within1pct": {
+   "dd35": 304,
+   "dd40": 303,
+   "principalLossLiq25": 6,
+   "bankedDdLiq25": 29
+  },
+  "within5pct": {
+   "dd35": 337,
+   "dd40": 340,
+   "principalLossLiq25": 25,
+   "bankedDdLiq25": 122
+  },
+  "closest": {
+   "dd35": 0.6500000000014552,
+   "dd40": 0.09999999999854481,
+   "principalLossLiq25": 5.199455066966038,
+   "bankedDdLiq25": 0.07564949932566378
+  },
+  "decisions": {
+   "controlPass": 417,
+   "experimentalPass": 392,
+   "controlOnly": 129,
+   "experimentalOnly": 104,
+   "experimentalFailBy": {
+    "markedDd": 239,
+    "principalLoss": 69,
+    "bankedDd": 571
+   }
+  },
+  "structural": {
+   "principalLossMarkedAboveDd": 0,
+   "bankedDdMarkedAboveDd": 0,
+   "liquidationEqualsMarkedAtCost0": null
+  }
+ },
+ "selected": [],
+ "timing": {
+  "gpuSeconds": 6.3,
+  "cpuSeconds": 96,
+  "wallSeconds": 107.8
+ },
+ "pass": true
+}

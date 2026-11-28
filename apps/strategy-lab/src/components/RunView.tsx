@@ -12,6 +12,7 @@ import {
 } from '../../shared/contract.ts';
 import type { CandlesResponse } from '../../shared/candles.ts';
 import type { PreviewDetail } from '../../shared/preview.ts';
+import { effectiveWindowOf, shownWindowOf } from '../../shared/run-window.ts';
 import { api, type DeleteRunResult, displayId, type EventsResponse, type PricesResponse } from '../api.ts';
 import { CANDLE_COLOR, CANDLE_UP_FILL, markerSlots, sessionIndex } from '../chart/candles.ts';
 import type { Role } from '../chart/markers.ts';
@@ -38,6 +39,8 @@ import type { EventTableView } from './Events.tsx';
 type Detail = RunDetail & { request: LabRunRequest | null };
 
 interface Props {
+  /** The research date range's validation end (meta.research): later dates are a manual post-validation evaluation. */
+  researchValidationEnd?: string | null;
   runId: string;
   compareId: string | null;
   symbol: string | null;
@@ -103,7 +106,7 @@ function useRun(id: string | null, refreshKey: number, onFinished: () => void) {
   return { run: mine?.run ?? null, error: mine?.error ?? null };
 }
 
-export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRoute, onClone, onChanged, onDeleted, onSaved, refreshKey }: Props) {
+export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRoute, onClone, onChanged, onDeleted, onSaved, refreshKey, researchValidationEnd = null }: Props) {
   const { run, error } = useRun(runId, refreshKey, onChanged);
   // Interactive Preview: the displayed result is the saved run, or a temporary preview that replaces EVERY result view
   // at once (chart, events, trades, analysis, parameters). The saved run itself is never modified.
@@ -403,6 +406,17 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
     }
   };
 
+  // The window the displayed figures cover: the sessions the runner evaluated (its provenance), beside the request.
+  const runWindow = effectiveWindowOf(run);
+  const shownWindow = shownWindowOf(runWindow);
+  const postValidation = researchValidationEnd !== null && shownWindow.to > researchValidationEnd;
+  const windowTitle = [
+    `Requested ${runWindow.requested.from} → ${runWindow.requested.to}`,
+    runWindow.effective ? `evaluated ${runWindow.effective.from} → ${runWindow.effective.to}` : 'evaluated window not recorded by this run',
+    ...runWindow.bySymbol.map((x) => `${x.symbol}: ${x.from} → ${x.to}${x.sessions !== null ? ` (${x.sessions} sessions)` : ''}${x.warmupSessions ? `, warm-up ${x.warmupSessions} sessions from ${x.warmupFrom}` : ''}`),
+    ...(postValidation ? [`dates after ${researchValidationEnd}: manual post-validation evaluation`] : [])
+  ].join('; ');
+
   return (
     <div className="run-view" data-run-id={run.id} data-symbol={symbol}>
       <section className={`card run-header${previewing ? ' is-previewing' : ''}`} aria-label="Run" data-testid="run-header">
@@ -579,7 +593,21 @@ export function RunView({ runId, compareId, symbol: routeSymbol, previewId, onRo
         {!previewing && (
           <p className="run-meta small">
             {run.strategy.title} · variation <span className="mono">{run.variation.id}</span> ({run.variation.title}) ·{' '}
-            {run.window.from} → {run.window.to}
+            <span data-testid="run-window" data-from={shownWindow.from} data-to={shownWindow.to} title={windowTitle}>
+              {shownWindow.from} → {shownWindow.to}
+            </span>
+            {runWindow.differs ? (
+              <span className="muted" data-testid="run-window-requested" title={windowTitle}>
+                {' '}
+                (requested {runWindow.requested.from} → {runWindow.requested.to})
+              </span>
+            ) : null}
+            {postValidation ? (
+              <span className="badge badge-warn" title="Dates after the research validation end: a manual post-validation evaluation, never formal research evidence" data-testid="run-post-validation">
+                {' '}
+                manual post-validation
+              </span>
+            ) : null}
             {run.window.resolution ? ` · ${run.window.resolution}` : ''} · created {formatEt(run.createdAt)}
             {run.completedAt ? ` · finished ${relativeTime(run.completedAt)}` : ''}
           </p>

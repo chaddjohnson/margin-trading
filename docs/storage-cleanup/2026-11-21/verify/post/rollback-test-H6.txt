@@ -1,0 +1,15 @@
+# H6 in-place rollback test 2026-11-21T17:34:27Z
+$ test ! -e .cache/growth-vgt-study8
+absent before restore
+$ sha256sum .cache/storage-cleanup-2026-11-21/quarantine/H6.tar.zst
+0065d5a2103f7df53c7d5fb26db2254a17ee9344a3b4bfee3fb20d2225ee1079  .cache/storage-cleanup-2026-11-21/quarantine/H6.tar.zst
+"bundleSha256": "0065d5a2103f7df53c7d5fb26db2254a17ee9344a3b4bfee3fb20d2225ee1079"
+$ zstd -dc .cache/storage-cleanup-2026-11-21/quarantine/H6.tar.zst | tar -C . -xpf - --keep-old-files
+tar exit=0
+$ python3 -I docs/storage-cleanup/2026-11-21/tools/verify-restore.py --manifest docs/storage-cleanup/2026-11-21/DRY_RUN_MANIFEST.json --group H6
+H6: 344 files checked, 0 problems []
+verify exit=0
+# re-removal through the guarded tool (scratch bundle + actions)
+{"t": "2026-11-21T17:34:28Z", "group": "H6", "event": "bundle-verified", "ok": true, "bundle": ".cache/storage-cleanup-2026-11-21/scratch/rollback-test-H6/H6.tar.zst", "bundleBytes": 71011259, "bundleAllocated": 71016448, "bundleSha256": "188ff14d6d70ee9e9b610
+{"t": "2026-11-21T17:34:28Z", "group": "H6", "event": "removed", "ok": true, "files": 344, "allocatedRemoved": 150540288, "dirsRemoved": 46, "dirsLeft": [], "rollback": "zstd -dc .cache/storage-cleanup-2026-11-21/scratch/rollback-test-H6/H6.tar.zst | tar -C <r
+absent again

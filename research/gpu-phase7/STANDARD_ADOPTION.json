@@ -1,0 +1,123 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/gpu-phase7",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "3.0.0",
+  "sha256": "4e8244e65bf1dd7c54ad46a1c941321d68b0c144344fd0c464dcc047eea5fef1"
+ },
+ "readAt": "2026-11-21T19:55:00Z",
+ "adoptedAt": "2026-11-21T20:18:00Z",
+ "protocol": {
+  "path": "research/gpu-phase7/PROTOCOL.md",
+  "sha256": "6960758831c04d13dc8d1d71837da83de73fe35c7b36fdff419eedb511ce7cd8"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched for selection, ranked for a decision or selected (AD1). The study delivers the risk-envelope inputs through the official GpuPool/EvalLab interface (opt-in, backward compatible), centralizes the risk-envelope qualification logic, and \u2014 only if every gate passes (PROTOCOL.md section 6) \u2014 renews the GPU acceptance with a full checklist section 2 cycle. The risk-envelope pilot is prepared for review only and is not run (AD9).",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity)"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 250000,
+  "notes": "No search proposals for selection. backendEvaluations caps fresh CPU evaluations on real data (the CPU arms of the mini schedule, plain and with the envelope; the CPU references of the parity campaign, the finalists and the risk-delivery parity). GPU evaluations (sealed replays, the mini schedule, parity, reliability) are counted separately in the records; synthetic fixtures are not counted."
+ },
+ "evaluationBackend": {
+  "policy": "non-official-cpu",
+  "purpose": "diagnostic",
+  "justification": "Engineering acceptance study (GPU Phase 7): CPU evaluations are parity references (records and risk envelopes) and the non-official CPU arm of the mini schedule; GPU runs are non-official replays of sealed jobs, the mini schedule, parity and reliability tests. Nothing is official optimization evidence (standard 3.0.0 section 9.8); the engineering output, if every gate passes, is a new acceptance record (section 9.9) for the final code."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search for selection and no chronological verdict (AD2)",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "\u00a72.3",
+   "kind": "adaptation",
+   "description": "no roles and no primary; nothing is selected",
+   "justification": "brief: engineering assignment; no trading-rule, fitness, search or selection change",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "\u00a74",
+   "kind": "adaptation",
+   "description": "no search for selection, no chronological verdict; sealed jobs of Assignments 3 and 2 replayed with their own frozen code and seeds (Assignment 3 C19 broad1 also with the risk envelope requested), and the parity-only mini schedule, compared by identity only",
+   "justification": "brief Phase F: sealed historical candidate reproduction, fixed-seed mini-optimizer parity as engineering verification only",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "\u00a71.4",
+   "kind": "adaptation",
+   "description": "development doors D19-D24 and the parity windows; FULL and the 2025 window only inside the parity campaign identity comparisons (no figure reported); two compressed Assignment 3 search archives restored read-only to a scratch directory for threshold-edge subjects and the sealed-archive reproduction check",
+   "justification": "brief sections 2.1, 4 and 8: verify the restored archives; threshold-edge parity; every door of the parity checklist",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "\u00a75.1",
+   "kind": "adaptation",
+   "description": "the CPU engine is the unmodified canonical reference (no file of the CPU closure is edited); every result of the final path must reproduce the canonical or sealed records bit for bit",
+   "justification": "brief: no change of trading algorithms, numerical formulas, the CPU engine or the CUDA algorithms; every result must reproduce the canonical or sealed records bit for bit",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "\u00a75.9",
+   "kind": "adaptation",
+   "description": "not applicable: no fold primary or final candidate",
+   "justification": "no search (AD2)",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "\u00a76.3",
+   "kind": "adaptation",
+   "description": "no tuning benchmark: batch size and host workers stay Phase 4 decisions; timings are reported (the pilot compute estimate), never decision inputs",
+   "justification": "brief: no unnecessary performance refactoring",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "\u00a71.5",
+   "kind": "adaptation",
+   "description": "stricter: no money figure of a searched configuration is reported as a finding; the one failing parity candidate's record appears only as diagnostic evidence of field identity",
+   "justification": "brief: no new trading candidate is optimized here",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "\u00a76.4",
+   "kind": "adaptation",
+   "description": "bounded reliability (two concurrent processes x 32 minutes) instead of an endurance test",
+   "justification": "brief Phase F: bounded reliability testing",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "\u00a70.4",
+   "kind": "adaptation",
+   "description": "the risk-envelope pilot is prepared for review only (research/vg-l0-risk-envelope-pilot/PROTOCOL_PROPOSED.md): no pilot job, adoption, preflight, attestation or search is created or run, and no standard change is made",
+   "justification": "brief: stop before executing the pilot; the user reviews and authorizes separately (the user instructions take precedence, section 0.4)",
+   "userAgreement": null
+  }
+ ]
+}

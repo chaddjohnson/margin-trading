@@ -1,0 +1,48 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-risk-envelope-sensitivity",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "3.0.0",
+  "sha256": "4e8244e65bf1dd7c54ad46a1c941321d68b0c144344fd0c464dcc047eea5fef1"
+ },
+ "readAt": "2026-11-22T15:40:00Z",
+ "adoptedAt": "2026-11-22T16:00:34Z",
+ "protocol": {
+  "path": "research/vg-l0-risk-envelope-sensitivity/PROTOCOL.md",
+  "sha256": "f22f20e1619dd388d925ee0fe56e2c76b2584cc6717536b35159d2678db86825"
+ },
+ "dateSplit": {
+  "development": { "from": "2016-01-04", "to": "2024-12-31" },
+  "validation": { "from": "2025-01-01", "to": "2026-10-30" },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched or selected (AD1). The audit re-assesses the completed risk-envelope pilot's already-evaluated candidates under nine predeclared risk-envelope policies (POLICY_MATRIX.md); the frozen P0 and RA1-original selectors are re-applied as labelled counterfactual selectors only.",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity); the counterfactual policies P1-P8 are report-only views, never a change of the standard's ceiling"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 70000,
+  "notes": "No search proposals. backendEvaluations caps the bounded non-official CPU replays of fixed, already-evaluated configurations (PROTOCOL.md section 5: G1 confirmation gap fill, G2 giveback-attribution path replays, G3 parity samples). The archive replays of the pilot's lanes and qualifications are zero-evaluation (every request must be an archive hit)."
+ },
+ "evaluationBackend": {
+  "policy": "non-official-cpu",
+  "purpose": "diagnostic",
+  "justification": "Retrospective diagnostic audit of a completed study (brief section 8): archived GPU records are re-assessed with zero evaluations; the only evaluations are bounded CPU replays of exactly the fixed configurations listed in PROTOCOL.md section 5, each parity-checked against the archived official GPU record. Nothing is official optimization evidence (standard 3.0.0 section 9.8)."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search, no selection and no chronological verdict (AD2); sealed next-interval records of the pilot are restated only as retrospective, previously inspected history",
+ "deviations": [
+  { "id": "AD1", "section": "§2.3", "kind": "adaptation", "description": "no roles and no primary; the frozen P0 / RA1-original selectors are re-applied only as labelled counterfactual selectors on archived populations", "justification": "brief sections 5 and 8: rescore and requalify archived evaluations; do not adopt a candidate", "userAgreement": null },
+  { "id": "AD2", "section": "§4, §1.8", "kind": "adaptation", "description": "no search, no earlier-cutoff repeat, no chronological verdict; no D23 or FULL opening", "justification": "brief sections 0 and 8: no new genetic search or optimization; reuse sealed interval results", "userAgreement": null },
+  { "id": "AD3", "section": "§2.1", "kind": "adaptation", "description": "the counterfactual policies P1-P8 (marked DD 40 % of C0 with optional 25 % principal-loss and 25/30/35 % banked-capital gates) are analysed beside the standard's 35 % rule (P0) as retrospective report-only views; the standard's ceiling is unchanged", "justification": "brief section 2 (the predeclared policy matrix authorized by the user)", "userAgreement": null }
+ ]
+}

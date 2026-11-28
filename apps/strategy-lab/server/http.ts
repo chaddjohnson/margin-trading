@@ -7,6 +7,8 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 
 import type { CandlesResponse } from '../shared/candles.ts';
+import { effectiveWindowOf } from '../shared/run-window.ts';
+import { researchRange } from '../../../src/lib/researchRanges.ts';
 import { basisDateOf, EVENT_CONTRACT_VERSION, eventsForSymbol, type LabEvent, type RunDetail } from '../shared/contract.ts';
 import { DeleteRunError, deleteRun } from './delete-run.ts';
 import { RUNNABLE_STRATEGIES, MAX_TITLE_LENGTH, STRATEGY_REGISTRY } from '../shared/strategies.ts';
@@ -134,6 +136,12 @@ export function createHandler(d: Deps) {
     const run = runOr404(id);
     if (run.status !== 'completed' || !run.artifactDir) return { events: [], run };
     return { events: readEvents(join(cfg.stateDir, run.artifactDir), run.artifact.sha256).events, run };
+  };
+
+  // The chart window of a saved run: its effective (evaluated) sessions when its runner recorded them.
+  const evaluatedWindowOf = <T extends Shown & { provenance: Record<string, unknown> }>(run: T): T => {
+    const e = effectiveWindowOf(run);
+    return e.effective ? { ...run, window: { ...run.window, from: e.effective.from, to: e.effective.to } } : run;
   };
 
   const seriesFor = async (run: Shown, symbol: string) => {
@@ -285,6 +293,12 @@ export function createHandler(d: Deps) {
         symbols: prices.symbols(),
         experiments: repo.listExperiments(),
         partitions: JSON.parse(readFileSync(join(cfg.repoRoot, 'data', 'partitions.json'), 'utf8')).partitions,
+        // the research date range (config/research/date-ranges.json): dates after its validation end are a manual
+        // post-validation evaluation, labelled as such in the run views and the Run Test dialog
+        research: (() => {
+          const r = researchRange();
+          return { id: r.id, developmentEnd: r.development.to, validationEnd: r.validation.to };
+        })(),
         maxConcurrentRuns: cfg.maxConcurrentRuns
       })
     ],
@@ -367,12 +381,14 @@ export function createHandler(d: Deps) {
         return eventsResponse(run, events, url);
       }
     ],
+    // A saved run's chart covers the sessions it EVALUATED (its provenance), not a requested end that lay past the data
+    // at the time: rows appended to a canonical file later are never drawn as if the run had seen them.
     [
       'GET',
       /^\/api\/runs\/(R-\d{6,12})\/prices$/,
-      async ({ m, url }) => pricesResponse(runOr404(m[1]!), url)
+      async ({ m, url }) => pricesResponse(evaluatedWindowOf(runOr404(m[1]!)), url)
     ],
-    ['GET', /^\/api\/runs\/(R-\d{6,12})\/candles$/, async ({ m, url }) => candlesResponse(runOr404(m[1]!), url)],
+    ['GET', /^\/api\/runs\/(R-\d{6,12})\/candles$/, async ({ m, url }) => candlesResponse(evaluatedWindowOf(runOr404(m[1]!)), url)],
     [
       'GET',
       /^\/api\/runs\/(R-\d{6,12})\/log$/,
@@ -547,7 +563,18 @@ export function createHandler(d: Deps) {
     // ----- pooled portfolio candidates: the frozen catalog and ONE replay of ONE candidate per request -----
     ['GET', /^\/api\/portfolios$/, () => portfolio((p) => p.list())],
     ['GET', /^\/api\/portfolios\/([a-z0-9][a-z0-9-]{0,40})$/, ({ m }) => portfolio((p) => p.candidate(m[1]!))],
-    ['POST', /^\/api\/portfolios\/([a-z0-9][a-z0-9-]{0,40})\/replay$/, ({ m }) => portfolio((p) => p.submit(m[1]!))],
+    // ONE replay over ONE window: the optional JSON body {"window": {"mode": "research" | "all" | "custom", "from", "to",
+    // "execution": "continuous" | "isolated"}}; no body = the research window (every older client and link).
+    [
+      'POST',
+      /^\/api\/portfolios\/([a-z0-9][a-z0-9-]{0,40})\/replay$/,
+      async ({ req, m, body }) => {
+        const json = (req.headers['content-type'] ?? '').startsWith('application/json') && req.headers['content-length'] !== '0';
+        const b = json ? await body() : undefined;
+        const window = b && typeof b === 'object' && !Array.isArray(b) ? (b as Record<string, unknown>).window : undefined;
+        return portfolio((p) => p.submit(m[1]!, window));
+      }
+    ],
     ['GET', /^\/api\/portfolio-replays\/tickets\/(PQ-[0-9a-f]{24})$/, ({ m }) => portfolio((p) => p.status(m[1]!))],
     ['POST', /^\/api\/portfolio-replays\/tickets\/(PQ-[0-9a-f]{24})\/release$/, ({ m }) => portfolio((p) => p.release(m[1]!))],
     [

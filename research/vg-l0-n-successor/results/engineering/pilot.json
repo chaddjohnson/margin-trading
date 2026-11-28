@@ -1,0 +1,148 @@
+{
+ "gate": "E9 (pilot / benchmark)",
+ "what": "the study-schedule pilot (NON-OFFICIAL, purpose benchmark, BENCH seed keys never used by the study): 128 broad lanes (64 cells × 2) on D21 and 16 Track N lanes (one per family pair) on D24 with the frozen two-tier island rule — requested per lane, islands, stop reasons, throughput, memory and archive bytes; outputs are counts and timings only (no profit or drawdown of any searched configuration was read)",
+ "broad": {
+  "name": "pilot-broad-D21",
+  "door": "D21",
+  "kind": "broad",
+  "rounds": [
+   "extend 117 lane(s)",
+   "extend 100 lane(s)",
+   "extend 77 lane(s)",
+   "extend 53 lane(s)",
+   "extend 13 lane(s)",
+   "no lane extends"
+  ],
+  "requested": 2701244,
+  "fresh": 2684826,
+  "hits": 15190,
+  "wallSeconds": 3235,
+  "requestedPerSecond": 835,
+  "archiveBytes": 12727613579,
+  "bytesPerFresh": 4741,
+  "cgroupPeakBytes": 20349587456,
+  "rssPeakBytes": 7376834560,
+  "laneSummary": {
+   "lanes": 128,
+   "meanRequested": 21103,
+   "medianRequested": 22029,
+   "maxRequested": 28917,
+   "byStop": {
+    "triggers not met": 93,
+    "class trigger only beyond NL0's cap (coverage-limited: performance converged by NL0's 5 % rule; feasible behaviour classes still growing)": 35
+   },
+   "islands": {
+    "2": 11,
+    "3": 17,
+    "4": 23,
+    "5": 24,
+    "6": 40,
+    "7": 13
+   }
+  }
+ },
+ "informed": {
+  "name": "pilot-informed-D24",
+  "door": "D24",
+  "kind": "informed",
+  "rounds": [
+   "extend 12 lane(s)",
+   "extend 10 lane(s)",
+   "extend 9 lane(s)",
+   "extend 5 lane(s)",
+   "no lane extends"
+  ],
+  "requested": 1043379,
+  "fresh": 997667,
+  "hits": 45574,
+  "wallSeconds": 2912,
+  "requestedPerSecond": 358,
+  "archiveBytes": 4727352532,
+  "bytesPerFresh": 4738,
+  "cgroupPeakBytes": 12698386432,
+  "rssPeakBytes": 7462232064,
+  "laneSummary": {
+   "lanes": 16,
+   "meanRequested": 65211,
+   "medianRequested": 69703,
+   "maxRequested": 77031,
+   "byStop": {
+    "triggers not met": 13,
+    "class trigger only beyond NL0's cap (coverage-limited: performance converged by NL0's 5 % rule; feasible behaviour classes still growing)": 3
+   },
+   "islands": {
+    "4": 4,
+    "5": 2,
+    "6": 1,
+    "7": 4,
+    "8": 5
+   }
+  }
+ },
+ "assignment3Means": {
+  "broad": {
+   "C19": 19963.2421875,
+   "C21": 20469.8359375,
+   "C23": 16285.25,
+   "C24": 15501.875
+  },
+  "refine": {
+   "C19": 43705.346153846156,
+   "C21": 50375.88461538462,
+   "C23": 47443.692307692305,
+   "C24": 46121.61538461538
+  },
+  "informed": 64722.140625
+ },
+ "ratios": {
+  "broad": 1.0309544646295483,
+  "informed": 1.0075560985819911
+ },
+ "expected": {
+  "perLane": {
+   "broad": {
+    "D19": 20581,
+    "D21": 21103,
+    "D23": 16789,
+    "D24": 15982
+   },
+   "refine": {
+    "D19": 46586,
+    "D21": 53307,
+    "D23": 50352,
+    "D24": 49020
+   },
+   "informed": {
+    "D24": 65211
+   }
+  },
+  "perMember": 655,
+  "perSubject": 306
+ },
+ "trackN": {
+  "rule": "R_N = the smallest integer ≥ 4 such that 16 × R_N × the expected informed lane ≥ the expected Track F C24 search (256 broad lanes + 17 refined cells × 4 lanes)",
+  "trackFC24": 7424752,
+  "rN": 8,
+  "frozenInCode": 8,
+  "agrees": true
+ },
+ "laneCaps": {
+  "broad": 90000,
+  "refine": 174000,
+  "informed": 171000
+ },
+ "nl0Caps": {
+  "broad": 6,
+  "refine": 8,
+  "informed": 8
+ },
+ "islandCaps": {
+  "broad": 16,
+  "refine": 16,
+  "informed": 16
+ },
+ "pass": true,
+ "finished": "2026-11-24T13:19:17.504Z",
+ "codeDigest": "cd31849e3ab0d6bbf90e9943f7cc8f735e840d24fb3e61f59a50dc6892ee8045",
+ "tag": null
+}

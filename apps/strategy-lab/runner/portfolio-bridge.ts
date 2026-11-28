@@ -16,15 +16,33 @@
 // Every aggregate is reconciled against the engine's own figures (net, realized, unrealized, minute drawdown, lots);
 // any disagreement throws, so an unverifiable replay is never displayed.
 
+import { canonicalJson2 } from '../../../src/d1-risk-controls-rc2/config.ts';
+import { researchRange } from '../../../src/lib/researchRanges.ts';
+import {
+  type ManualEvaluation,
+  type ManualRunPlan,
+  compareTo,
+  evaluatePlan,
+  researchPlan,
+  researchReference
+} from '../../../src/manual-eval/execute.ts';
+import { periodLedger } from '../../../src/manual-eval/report.ts';
 import { Tracker } from '../../../src/multi-etf-allocator/engine.ts';
 import type { BookId as EngineBookId } from '../../../src/vg-d1-growth-joint/books.ts';
 import type { Door } from '../../../src/vg-d1-growth-joint/data.ts';
 import { type EvalOptions, type Rec, recordOf } from '../../../src/vg-d1-growth-joint/evaluate.ts';
 import type { FundingRecord, Lot, PoolResult } from '../../../src/vg-d1-growth-joint/pool.ts';
 import { type Quad, gId, normalize, quadId } from '../../../src/vg-d1-growth-joint/space.ts';
+import { vOptions } from '../../../src/vg-l0-full-joint/nl0.ts';
+import { type Replay, replay as rc2Replay } from '../../../src/vg-l0-risk-metrics/engine.ts';
+import { auditSubjects } from '../../../src/vg-l0-risk-metrics/subjects.ts';
 import { runLife } from '../../../src/vg-lifecycle-matched-optimization/life.ts';
 import type { LabEvent, LabValue } from '../shared/contract.ts';
 import {
+  type PortfolioPeriod,
+  type PortfolioWindowInfo,
+  type PortfolioWindowRequest,
+  type PositionInPeriod,
   type Attribution,
   type BookId,
   type CandidateEntry,
@@ -77,7 +95,7 @@ const close = (a: number, b: number, tol: number) => Math.abs(a - b) <= tol;
 const FAMILY_TEXT = { D1: 'D1', Growth: 'Growth' } as const;
 
 /** The engine input of a catalog entry: its canonical quad (identity re-checked) and the evaluation options. */
-export function engineInputOf(entry: CandidateEntry): { quad: Quad; options: EvalOptions } {
+export function engineInputOf(entry: CandidateEntry): { quad: Quad; options: EvalOptions; controls: Record<string, unknown> | null } {
   const quad = normalize(entry.quad as unknown as Quad);
   if (canonicalJson(quad) !== canonicalJson(entry.quad)) fail(`${entry.id}: the catalog quad is not canonical`);
   if (quadId(quad) !== entry.identities.priority3QuadId)
@@ -88,24 +106,166 @@ export function engineInputOf(entry: CandidateEntry): { quad: Quad; options: Eva
   for (const [b, on] of Object.entries(entry.enabled))
     if (entry.components.find((c) => c.book === b)?.enabled !== on) fail(`${entry.id}: component ${b} switch differs`);
   if (quad.first !== 'D1') fail(`${entry.id}: the same-instant priority must be D1 first`);
+  if ((entry.engine.kind === 'rc2-replay') !== Boolean(entry.controls)) fail(`${entry.id}: RC 2 controls and the engine kind disagree`);
   return {
     quad,
-    options: { enabled: { ...(entry.enabled as Record<EngineBookId, boolean>) }, boundaries: [PORTFOLIO_BENCHMARK.boundary] }
+    options: { enabled: { ...(entry.enabled as Record<EngineBookId, boolean>) }, boundaries: [PORTFOLIO_BENCHMARK.boundary] },
+    controls: entry.controls ?? null
   };
 }
 
-/** Replay one catalog candidate on an open FULL door and convert the result. */
-export function replayCandidate(door: Door, entry: CandidateEntry, replayId: string): ReplayArtifacts & { record: Rec } {
-  if (door.from !== PORTFOLIO_BENCHMARK.from || door.to !== PORTFOLIO_BENCHMARK.to)
-    fail(`the door covers ${door.from} → ${door.to}, not the benchmark window`);
-  const { quad, options } = engineInputOf(entry);
-  const x = runLife(door, quad, options, 'L0', { recordMarks: true });
-  if (x.rounds !== 1 || x.growthSims !== 0) fail('L0 must be one pooled replay of the canonical books');
-  const record = recordOf(door, quad, { books: x.books, result: x.result }, options);
-  return { ...convertReplay({ calendar: calendarOf(door), result: x.result, record, entry, replayId }), record };
+/**
+ * The engine of a catalog entry as a function of (door, boundaries) — ONE run, never a search:
+ * - default: Priority 3's pool through 5B's runLife(…, 'L0') (the five Priority 6 candidates; unchanged);
+ * - rc2-replay: the risk-metrics replay of the sealed subject (src/vg-l0-risk-metrics/engine.ts replay with
+ *   src/vg-l0-full-joint/nl0.ts vOptions), exactly the call of `npm run manual-eval`; the catalog's quad and controls
+ *   must equal the subject read from its pinned sealed records (src/vg-l0-risk-metrics/subjects.ts).
+ */
+export function engineRunOf(entry: CandidateEntry): (door: Door, boundaries: string[]) => Replay {
+  const { quad, options, controls } = engineInputOf(entry);
+  if (entry.engine.kind === 'rc2-replay') {
+    const subject = auditSubjects().find((x) => x.key === entry.engine.subject) ?? fail(`${entry.id}: no sealed subject ${String(entry.engine.subject)}`);
+    if (canonicalJson(normalize(subject.subject.quad)) !== canonicalJson(quad)) fail(`${entry.id}: the catalog quad differs from the sealed subject ${subject.key}`);
+    if (canonicalJson2(subject.subject.controls) !== canonicalJson2(controls as never)) fail(`${entry.id}: the catalog RC 2 controls differ from the sealed subject ${subject.key}`);
+    return (door, boundaries) => rc2Replay(door, subject.subject, vOptions, boundaries);
+  }
+  return (door, boundaries) => {
+    const o: EvalOptions = { ...options, boundaries };
+    const x = runLife(door, quad, o, 'L0', { recordMarks: true });
+    if (x.rounds !== 1 || x.growthSims !== 0) fail('L0 must be one pooled replay of the canonical books');
+    const rec = recordOf(door, quad, { books: x.books, result: x.result }, o);
+    return { door, subject: { quad, controls: null }, options: o, books: x.books, result: x.result, rec };
+  };
+}
+
+/** The window request of a plan, in its canonical (shared) form. */
+export const windowRequestOf = (plan: ManualRunPlan): PortfolioWindowRequest =>
+  plan.request.mode === 'custom'
+    ? { mode: 'custom', from: plan.request.from!, to: plan.request.to!, execution: plan.execution }
+    : { mode: plan.request.mode };
+
+/** The research window of an entry: the archived window its targets were sealed on. */
+export const researchWindowOfEntry = (entry: Pick<CandidateEntry, 'targets'>) =>
+  entry.targets.window ?? { from: PORTFOLIO_BENCHMARK.from, to: PORTFOLIO_BENCHMARK.to, boundary: PORTFOLIO_BENCHMARK.boundary };
+
+export interface ReplayOptions {
+  /** The window plan (absent: the research window, which must be the door's). */
+  plan?: ManualRunPlan;
+  /**
+   * A continuous non-research run's reference: the research-window replay of the same candidate (its evaluation and
+   * its parity against the archived targets). The run is then proven equal to it, decision for decision, over their
+   * common span (src/manual-eval/execute.ts compareTo).
+   */
+  reference?: { evaluation: ManualEvaluation; parity: PortfolioMetrics['parity'] };
+}
+
+/**
+ * Replay one catalog candidate on an open door and convert the result. The research window must be the archived
+ * benchmark (Priority 3's FULL door, the engine's boundaries unchanged), so its figures are checked against the
+ * archived targets; any other window is a manual evaluation (src/manual-eval/execute.ts) whose door is the plan's.
+ */
+export function replayCandidate(
+  door: Door,
+  entry: CandidateEntry,
+  replayId: string,
+  o: ReplayOptions = {}
+): ReplayArtifacts & { record: Rec; evaluation: ManualEvaluation } {
+  const plan = o.plan ?? researchPlan();
+  const research = plan.request.mode === 'research';
+  const rw = researchWindowOfEntry(entry);
+  if (research && (door.from !== rw.from || door.to !== rw.to)) fail(`the door covers ${door.from} → ${door.to}, not the candidate's research window ${rw.from} → ${rw.to}`);
+  if (!research && (door.from !== plan.simulation.from || door.to !== plan.simulation.to))
+    fail(`the door covers ${door.from} → ${door.to}, not the planned ${plan.simulation.from} → ${plan.simulation.to}`);
+  // The research window keeps the archived engine boundaries (its record is compared field by field); other windows
+  // mark every research-range boundary inside them.
+  const evaluation = evaluatePlan(plan, door, engineRunOf(entry), research ? [rw.boundary] : undefined);
+  if (researchReference(plan) && !o.reference) fail('a continuous run that is not the research window needs its research-window reference');
+  const trajectory: PortfolioMetrics['trajectory'] = o.reference
+    ? (() => {
+        const t = compareTo(o.reference.evaluation, evaluation);
+        return { identical: t.identical, comparedThrough: t.comparedThrough ?? '', differences: t.differences, researchParity: o.reference.parity.status === 'verified' ? 'verified' : 'mismatch' };
+      })()
+    : null;
+  if (trajectory && !trajectory.identical) fail(`the run differs from the research-window run over their common span: ${trajectory.differences.join('; ')}`);
+  const record = evaluation.r.rec;
+  const converted = convertReplay({
+    calendar: calendarOf(door),
+    result: evaluation.r.result,
+    record,
+    entry,
+    replayId,
+    context: contextOf(entry, plan, evaluation, trajectory)
+  });
+  return { ...converted, record, evaluation };
+}
+
+/** The window context of a converted replay: effective dates, periods and per-position period contributions. */
+export function contextOf(
+  entry: Pick<CandidateEntry, 'targets'>,
+  plan: ManualRunPlan,
+  ev: ManualEvaluation,
+  trajectory: PortfolioMetrics['trajectory']
+): ConvertContext {
+  const range = researchRange();
+  const rw = researchWindowOfEntry(entry);
+  const window: PortfolioWindowInfo = {
+    from: ev.effective.simulation.from,
+    to: ev.effective.simulation.to,
+    boundary: PORTFOLIO_BENCHMARK.boundary,
+    validationFrom: PORTFOLIO_BENCHMARK.validationFrom,
+    sessions: ev.effective.simulation.sessions,
+    requested: windowRequestOf(plan),
+    execution: plan.execution,
+    simulation: ev.effective.simulation,
+    reporting: ev.effective.reporting,
+    research: { ...rw, validationEnd: rw.to, source: entry.targets.window ? 'the archived targets’ window' : 'the catalog benchmark (the archived targets’ window)' },
+    coverage: {
+      endpoint: plan.reporting.endpoint.date,
+      limitedBy: plan.reporting.endpoint.limitedBy,
+      files: plan.reporting.endpoint.files.map((f) => ({ symbol: f.symbol, latestCompleteSession: f.latestCompleteSession, lastRowUtc: f.lastRowUtc }))
+    },
+    postValidation: ev.effective.simulation.to > range.validation.to,
+    label: ev.effective.simulation.to > range.validation.to ? plan.label : plan.request.mode === 'research' ? 'research window (the archived benchmark)' : 'manual evaluation'
+  };
+  const inPeriod = new Map<number, Record<string, PositionInPeriod>>();
+  for (const spec of ev.specs.filter((x) => x.after !== null && ['R', 'A2', 'B'].includes(x.key)))
+    for (const l of periodLedger(ev.L, ev.door, spec)) {
+      const m = inPeriod.get(l.lot) ?? {};
+      m[spec.key] = {
+        period: spec.key,
+        carriedIn: l.carriedIn,
+        valueAtStart: l.valueAtPeriodStart,
+        valueAtEnd: l.valueAtPeriodEnd,
+        pnl: l.periodPnl,
+        interest: l.periodInterest,
+        costs: l.periodCosts
+      };
+      inPeriod.set(l.lot, m);
+    }
+  return {
+    window,
+    validationEnd: range.validation.to,
+    periods: ev.periods as unknown as PortfolioPeriod[],
+    inPeriod,
+    reconciliation: ev.reconciliation,
+    trajectory,
+    research: plan.request.mode === 'research'
+  };
 }
 
 // ----- the conversion (pure; unit-tested on synthetic engine results) -----
+
+export interface ConvertContext {
+  window: PortfolioWindowInfo;
+  /** The research date range's validation end (config/research/date-ranges.json). */
+  validationEnd: string;
+  periods: PortfolioPeriod[];
+  inPeriod: Map<number, Record<string, PositionInPeriod>>;
+  reconciliation: PortfolioMetrics['reconciliation'];
+  trajectory: PortfolioMetrics['trajectory'];
+  /** The research window: its figures are compared with the archived targets. */
+  research: boolean;
+}
 
 export interface ConvertInput {
   calendar: Calendar;
@@ -113,6 +273,8 @@ export interface ConvertInput {
   record: Rec | Record<string, unknown>;
   entry: Pick<CandidateEntry, 'id' | 'symbols' | 'targets' | 'enabled'>;
   replayId: string;
+  /** The window context (absent: a synthetic research-window replay without a period table). */
+  context?: ConvertContext;
 }
 
 const precisionOf = (cal: Calendar, symbol: string, s: number, k: number): 'minute' | 'session-close' => {
@@ -139,11 +301,19 @@ function drawdownFigure(d: { max: number; peakT: number; troughT: number; recove
   };
 }
 
-export function convertReplay({ calendar: cal, result: r, record, entry, replayId }: ConvertInput): ReplayArtifacts {
+export function convertReplay({ calendar: cal, result: r, record, entry, replayId, context }: ConvertInput): ReplayArtifacts {
   const marks = r.markChanges ?? fail('the replay recorded no minute marks');
+  const endDate = cal.dates[r.endIndex]!;
+  // The development / validation boundary (2024-12-31) and the research validation end, when the run spans them.
   const boundaryIndex = cal.dates.indexOf(PORTFOLIO_BENCHMARK.boundary);
-  if (boundaryIndex < 0) fail(`${PORTFOLIO_BENCHMARK.boundary} is not a session of the replay`);
-  const boundaryClose = cal.sCloseTime[boundaryIndex]!;
+  const hasBoundary = boundaryIndex >= 0 && boundaryIndex < r.endIndex;
+  if (!context && !hasBoundary) fail(`${PORTFOLIO_BENCHMARK.boundary} is not a session of the replay`);
+  const boundaryClose = hasBoundary ? cal.sCloseTime[boundaryIndex]! : -Infinity;
+  const validationEnd = context?.validationEnd ?? PORTFOLIO_BENCHMARK.to;
+  const vIndex = cal.dates.indexOf(validationEnd);
+  const pastValidation = vIndex >= 0 && vIndex < r.endIndex;
+  if (pastValidation && !context) fail('a run past the validation end needs its window context');
+  const validationClose = pastValidation ? cal.sCloseTime[vIndex]! : Infinity;
   const lastClose = cal.sCloseTime[r.endIndex]!;
 
   // ----- positions and their events -----
@@ -243,7 +413,8 @@ export function convertReplay({ calendar: cal, result: r, record, entry, replayI
       exitReason: finalFill?.reason ?? null,
       calendarDays: Math.round(((lastT - lot.entryTs) / 86400) * 10) / 10,
       mae: lot.worst,
-      maeT: isoOrNull(lot.worstT)
+      maeT: isoOrNull(lot.worstT),
+      ...(context?.inPeriod.get(lot.id) ? { inPeriod: context.inPeriod.get(lot.id)! } : {})
     };
     positions.push(position);
 
@@ -398,6 +569,11 @@ export function convertReplay({ calendar: cal, result: r, record, entry, replayI
   };
   const minute = new Tracker(0, 0);
   const dev = new Tracker(0, 0);
+  // reset trackers of the formal validation window (to the validation end) and of the post-validation period
+  const boundaryEquity = hasBoundary ? r.daily[boundaryIndex]! : 0;
+  const validationEquity = pastValidation ? r.daily[vIndex]! : r.net;
+  const val = hasBoundary ? new Tracker(boundaryEquity, boundaryClose) : null;
+  const post = pastValidation ? new Tracker(validationEquity, validationClose) : null;
   let peak = 0;
   let last = 0;
   let s = 0;
@@ -419,6 +595,8 @@ export function convertReplay({ calendar: cal, result: r, record, entry, replayI
     }
     minute.updateStrict(value, t);
     if (t <= boundaryClose) dev.updateStrict(value, t);
+    if (val && t > boundaryClose && t <= validationClose) val.updateStrict(value, t);
+    if (post && t > validationClose) post.updateStrict(value, t);
     if (value > peak) peak = value;
     last = value;
     if (value < sessionLow) sessionLow = value;
@@ -446,8 +624,17 @@ export function convertReplay({ calendar: cal, result: r, record, entry, replayI
 
   // ----- metrics -----
   const rec = record as Record<string, unknown>;
-  const period = r.periods[0] ?? fail('no period boundary in the replay');
-  if (period.boundary !== boundaryIndex) fail('the period boundary is not 2024-12-31');
+  const period = hasBoundary ? (r.periods.find((x) => x.boundary === boundaryIndex) ?? fail('no 2024-12-31 period boundary in the replay')) : null;
+  if (period && !close(period.equity, boundaryEquity, 1e-6)) fail('the 2024-12-31 period equity differs from its close mark');
+  const trackerDd = (x: Tracker) => {
+    const st = x.stats();
+    return { max: st.maximum, peakT: st.peakTime, troughT: st.troughTime, recoveryT: st.recoveryTime };
+  };
+  // The engine's own reset drawdowns where they cover the same span (the run ends at the validation end; the
+  // post-validation period from its boundary to the end) must equal the trackers above.
+  if (period && val && !pastValidation && !close(trackerDd(val).max, period.dd.max, 1e-6)) fail('the validation reset drawdown differs from the engine’s');
+  const postPeriod = pastValidation ? (r.periods.find((x) => x.boundary === vIndex) ?? null) : null;
+  if (post && postPeriod && !close(trackerDd(post).max, postPeriod.dd.max, 1e-6)) fail('the post-validation reset drawdown differs from the engine’s');
   const sumNet = positions.reduce((a, p) => a + p.net, 0);
   const sumRealized = positions.reduce((a, p) => a + p.realized, 0);
   const sumUnrealized = positions.reduce((a, p) => a + p.unrealized, 0);
@@ -457,15 +644,17 @@ export function convertReplay({ calendar: cal, result: r, record, entry, replayI
   if (!close(sumUnrealized, r.unrealized, tol)) fail(`Σ unrealized ${sumUnrealized} ≠ ${r.unrealized}`);
   if (rec.lots !== positions.length) fail(`the record has ${String(rec.lots)} lots, the ledger ${positions.length}`);
 
-  const entryAfter = (p: PortfolioPosition) => Date.parse(p.fills[0]!.t) / 1000 > boundaryClose;
-  const realizedAtBoundary = r.lots.reduce(
-    (a, l) => a + l.fills.filter((f) => f.t <= boundaryClose).reduce((x, f) => x + f.net, 0),
-    0
-  );
-  const carriedIn = positions
-    .filter((p) => !entryAfter(p) && (p.status === 'open' || Date.parse(p.fills.at(-1)!.t) / 1000 > boundaryClose))
-    .map((p) => p.id);
-  const unrealizedAtBoundary = period.equity - realizedAtBoundary;
+  const entrySec = (p: PortfolioPosition) => Date.parse(p.fills[0]!.t) / 1000;
+  const lastSec = (p: PortfolioPosition) => (p.status === 'open' ? Infinity : Date.parse(p.fills.at(-1)!.t) / 1000);
+  const entryAfter = (p: PortfolioPosition) => entrySec(p) > boundaryClose;
+  const realizedAt = (t: number) => r.lots.reduce((a, l) => a + l.fills.filter((f) => f.t <= t).reduce((x, f) => x + f.net, 0), 0);
+  const carriedAcross = (t: number) => positions.filter((p) => entrySec(p) <= t && lastSec(p) > t).map((p) => p.id);
+  const realizedAtBoundary = realizedAt(boundaryClose);
+  const unrealizedAtBoundary = boundaryEquity - realizedAtBoundary;
+  const validationThroughClose = pastValidation ? validationClose : lastClose;
+  const realizedAtValidationEnd = pastValidation ? realizedAt(validationClose) : r.realized;
+  const periodB = context?.periods.find((x) => x.key === 'B') ?? null;
+  if (pastValidation && !periodB) fail('no post-validation period (B) in the window context');
   const attribution: Attribution[] = (Object.keys(entry.enabled) as BookId[])
     .filter((b) => entry.enabled[b])
     .map((book) => {
@@ -493,13 +682,7 @@ export function convertReplay({ calendar: cal, result: r, record, entry, replayI
   const devDd = dev.stats();
   const metrics: PortfolioMetrics = {
     kind: 'pooled candidate replay',
-    window: {
-      from: PORTFOLIO_BENCHMARK.from,
-      to: cal.dates[r.endIndex]!,
-      boundary: PORTFOLIO_BENCHMARK.boundary,
-      validationFrom: PORTFOLIO_BENCHMARK.validationFrom,
-      sessions
-    },
+    window: context?.window ?? syntheticWindow(endDate, sessions),
     principal: PRINCIPAL,
     full: {
       net: r2(r.net),
@@ -520,27 +703,96 @@ export function convertReplay({ calendar: cal, result: r, record, entry, replayI
       exposurePct: Math.round((r.sessionsHeld / sessions) * 1e4) / 100,
       peakPrincipal: r2(r.peakPrincipal)
     },
-    development: {
-      net: r2(period.equity),
-      minuteDd: drawdownFigure({ max: devDd.maximum, peakT: devDd.peakTime, troughT: devDd.troughTime, recoveryT: devDd.recoveryTime }),
-      positionsEntered: positions.filter((p) => !entryAfter(p)).length
-    },
-    validation: {
-      net: r2(r.net - period.equity),
-      resetDd: drawdownFigure(period.dd),
-      realizedChange: r2(r.realized - realizedAtBoundary),
-      unrealizedChange: r2(r.unrealized - unrealizedAtBoundary),
-      positionsEntered: positions.filter(entryAfter).length,
-      carriedIn
-    },
+    development: hasBoundary
+      ? {
+          net: r2(boundaryEquity),
+          minuteDd: drawdownFigure({ max: devDd.maximum, peakT: devDd.peakTime, troughT: devDd.troughTime, recoveryT: devDd.recoveryTime }),
+          positionsEntered: positions.filter((p) => !entryAfter(p)).length
+        }
+      : null,
+    validation: hasBoundary
+      ? {
+          through: pastValidation ? validationEnd : endDate,
+          net: r2(validationEquity - boundaryEquity),
+          resetDd: drawdownFigure(pastValidation || !period ? trackerDd(val!) : period.dd),
+          realizedChange: r2(realizedAtValidationEnd - realizedAtBoundary),
+          unrealizedChange: r2(validationEquity - realizedAtValidationEnd - unrealizedAtBoundary),
+          positionsEntered: positions.filter((p) => entryAfter(p) && entrySec(p) <= validationThroughClose).length,
+          carriedIn: carriedAcross(boundaryClose)
+        }
+      : null,
+    postValidation: pastValidation
+      ? {
+          after: validationEnd,
+          through: endDate,
+          net: r2(r.net - validationEquity),
+          resetDd: drawdownFigure(trackerDd(post!)),
+          realizedChange: r2(r.realized - realizedAtValidationEnd),
+          unrealizedChange: r2(r.unrealized - (validationEquity - realizedAtValidationEnd)),
+          positionsEntered: positions.filter((p) => entrySec(p) > validationClose).length,
+          carriedIn: carriedAcross(validationClose),
+          interest: periodB!.interest,
+          costs: periodB!.costs
+        }
+      : null,
+    periods: context?.periods ?? [],
+    reconciliation: context?.reconciliation ?? { marksChecked: 0, engineChangesNotRebuilt: 0, points: 0, ddMax: r.dd.max, lots: r.lots.length },
+    trajectory: context?.trajectory ?? null,
     attribution,
     refusals: { slotOccupied, byBook: refusalsByBook },
     pending,
-    parity: parityOf(entry.targets, r, rec, positions.length, period.equity, devDd.maximum),
+    parity:
+      context && !context.research
+        ? { status: 'not applicable', checks: [] }
+        : parityOf(entry.targets, r, rec, positions.length, period?.equity ?? fail('the research window must span 2024-12-31'), devDd.maximum),
     record: rec
   };
+  if (context) crossCheck(metrics, context);
   return { events, positions, metrics, equity };
 }
+
+/**
+ * The bridge's own figures against the engine-independent period table (src/manual-eval/report.ts, the CLI's): the
+ * whole run, the formal validation window and the post-validation period must agree to the cent.
+ */
+function crossCheck(m: PortfolioMetrics, c: ConvertContext) {
+  const p = (k: string) => c.periods.find((x) => x.key === k) ?? null;
+  const same = (what: string, a: number, b: number) => {
+    if (Math.abs(a - b) > 0.011) fail(`${what}: bridge ${a} ≠ period table ${b}`);
+  };
+  const C = p('C') ?? fail('no entire-window period (C)');
+  same('net of the whole run', m.full.net, C.net);
+  same('maximum minute drawdown', m.full.minuteDd.usd, C.drawdownReset.max);
+  same('interest of the whole run', m.full.interest, C.interest);
+  same('costs of the whole run', m.full.costs, C.costs);
+  const A2 = p('A2');
+  if (A2 && m.validation) {
+    same('validation net', m.validation.net, A2.net);
+    same('validation reset drawdown', m.validation.resetDd.usd, A2.drawdownReset.max);
+  }
+  const B = p('B');
+  if (B && m.postValidation) {
+    same('post-validation net', m.postValidation.net, B.net);
+    same('post-validation reset drawdown', m.postValidation.resetDd.usd, B.drawdownReset.max);
+  }
+}
+
+/** The window of a replay converted without a context (synthetic research-window results in the unit tests). */
+const syntheticWindow = (to: string, sessions: number): PortfolioWindowInfo => ({
+  from: PORTFOLIO_BENCHMARK.from,
+  to,
+  boundary: PORTFOLIO_BENCHMARK.boundary,
+  validationFrom: PORTFOLIO_BENCHMARK.validationFrom,
+  sessions,
+  requested: { mode: 'research' },
+  execution: 'continuous',
+  simulation: { from: PORTFOLIO_BENCHMARK.from, to, sessions },
+  reporting: { from: PORTFOLIO_BENCHMARK.from, to, sessions },
+  research: { from: PORTFOLIO_BENCHMARK.from, to: PORTFOLIO_BENCHMARK.to, boundary: PORTFOLIO_BENCHMARK.boundary, validationEnd: PORTFOLIO_BENCHMARK.to, source: 'the catalog benchmark' },
+  coverage: { endpoint: to, limitedBy: [], files: [] },
+  postValidation: false,
+  label: 'research window (the archived benchmark)'
+});
 
 // ----- parity against the archived targets -----
 

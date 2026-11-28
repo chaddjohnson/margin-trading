@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "description": "P6-TSLA's share-split ledger for TSLA, in the exact schema of config/market-events/splits.json and applied by the same code (src/lib/corporateActions.ts parseSplits / adjustSessionsForSplits: forward adjustment — every bar from a split's effective date on has its prices multiplied by the ratio and its volume divided by it, so a run is in the share units of its first session). Kept in the study rather than in config/market-events/splits.json because 45+ frozen records and three code pins (e.g. src/growth140-vgt-s8m/context.ts) pin that file's sha256 e5bde427…; adding TSLA there would make their fail-closed integrity guards refuse (a user decision, DECISION_REGISTER.md). effectiveDate is the first session trading split-adjusted; ratio is new shares per old share.",
+  "splits": [
+    {
+      "symbol": "TSLA",
+      "effectiveDate": "2020-08-31",
+      "ratio": 5,
+      "source": "Tesla, Inc. Form 8-K filed 2020-08-11 (SEC accession 0001564590-20-039353, items 8.01/9.01), Exhibit 99.1 'Tesla Announces a Five-for-One Stock Split' (https://www.sec.gov/Archives/edgar/data/1318605/000156459020039353/tsla-ex991_6.htm): 'the Board of Directors has approved and declared a five-for-one split of Tesla’s common stock … in the form of a stock dividend. Each stockholder of record on August 21, 2020 will receive a dividend of four additional shares of common stock for each then-held share, to be distributed after close of trading on August 28, 2020. Trading will begin on a stock split-adjusted basis on August 31, 2020.' Filing listed in the EDGAR submissions index (copy research/tsla-d1-growth/data/split-sources/SEC-EDGAR-submissions-CIK0001318605-retrieved-2026-11-25.json, sha256 53460bc0…); exhibit text read 2026-11-25 (the archive refuses undeclared automated clients, so no byte copy is kept)"
+    },
+    {
+      "symbol": "TSLA",
+      "effectiveDate": "2022-08-25",
+      "ratio": 3,
+      "source": "Tesla, Inc. Form 8-K filed 2022-08-05 (SEC accession 0001564590-22-028207, items 5.07/8.01/9.01), Exhibit 99.1 'Tesla Announces a Three-for-One Stock Split' (https://www.sec.gov/Archives/edgar/data/1318605/000156459022028207/tsla-ex991_6.htm): 'the Board of Directors has approved and declared a three-for-one split of Tesla’s common stock … in the form of a stock dividend. Each stockholder of record on August 17, 2022 will receive a dividend of two additional shares of common stock for each then-held share, to be distributed after close of trading on August 24, 2022. Trading will begin on a stock split-adjusted basis on August 25, 2022.' Independently: OCC/ONN memo 50828 (exchange memo 205597, 2022-08-24) 'Tesla, Inc. - 3 For 1 Stock Split', ex-distribution 2022-08-25, record 2022-08-17, payable 2022-08-24, CUSIP 88160R101, contract multiplier 3, strike divisor 3 (from https://boxoptions.com/assets/BOXOnnMemo205597.pdf, a 53-page bundle, sha256 c58294ac…, kept in the study's git-ignored cache; its first page — the TSLA memo — committed as research/tsla-d1-growth/data/split-sources/TSLA-2022-OCC-memo-BOX205597-page1.pdf, sha256 0ae5f401…, with its text); retrieved 2026-11-25"
+    }
+  ]
+}

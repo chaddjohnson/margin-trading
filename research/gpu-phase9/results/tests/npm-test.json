@@ -1,0 +1,60 @@
+{
+ "kind": "gpu-phase9 E8 npm test",
+ "t": "2026-11-28T03:17:58.774Z",
+ "command": "npm test (node --test --test-concurrency=4 src/**/*.test.ts)",
+ "totals": {
+  "tests": 1934,
+  "pass": 1927,
+  "fail": 3,
+  "cancelled": 0,
+  "skipped": 4
+ },
+ "baseline": {
+  "tests": 1909,
+  "fail": 9,
+  "source": "docs/data-updates/2026-11-27-assignment-2/evidence/npm-test-baseline-f2c414ef-worktree.log (f2c414ef: 1,909 tests, 9 failures = the six lowercase allin-original.ts + the three record-in-force tests of the stale record)"
+ },
+ "failures": [
+  {
+   "file": "src/gpu-backend/tests/enforcement.test.ts",
+   "test": "the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not",
+   "known": false
+  },
+  {
+   "file": "src/gpu-backend/tests/policy.test.ts",
+   "test": "MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)",
+   "known": false
+  },
+  {
+   "file": "src/research-standard/tests/preflight.test.ts",
+   "test": "every study that declares an adoption passes the preflight",
+   "known": false
+  }
+ ],
+ "unexpected": [],
+ "recordInForceBeforeRecord": {
+  "tests": [
+   {
+    "file": "src/gpu-backend/tests/enforcement.test.ts",
+    "test": "the recorded acceptance re-verifies independently; a tampered pin, digest or evidence file does not"
+   },
+   {
+    "file": "src/gpu-backend/tests/policy.test.ts",
+    "test": "MERGE GATE: a recorded GPU acceptance still matches the working tree (mirrored CPU sources, CUDA, host path)"
+   },
+   {
+    "file": "src/research-standard/tests/preflight.test.ts",
+    "test": "every study that declares an adoption passes the preflight"
+   }
+  ],
+  "staleReason": true,
+  "rule": "amendment A4: accepted only with the stale-enforcement reason; rerun after the new record must pass (results/tests/record-in-force-after.txt)"
+ },
+ "rootTsc": "exit 0",
+ "eslintGpu": [
+  "✖ 1 problem (0 errors, 1 warning)",
+  "exit=0"
+ ],
+ "summary": "1934 tests, 1927 pass, 3 fail (0 known pre-existing, 3 record-in-force before the new record (A4), 0 unexpected), 4 skipped",
+ "pass": true
+}

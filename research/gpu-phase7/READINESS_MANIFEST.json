@@ -1,0 +1,654 @@
+{
+ "kind": "gpu-phase7 risk-envelope pilot readiness manifest",
+ "schema": 1,
+ "t": "2026-11-22T00:48:55Z",
+ "pilot": {
+  "executionAuthorized": false,
+  "started": false,
+  "status": "NOT STARTED — awaiting original-conversation review and separate authorization",
+  "protocolStatus": "PROPOSED for review (not frozen, no adoption manifest, no code, no job)",
+  "protocol": {
+   "path": "research/vg-l0-risk-envelope-pilot/PROTOCOL_PROPOSED.md",
+   "sha256": "4f7c215fd586c7c4ec0f119b510e949da4ad9961a6c5a29fdd790f03cc4966d0"
+  },
+  "decisionRegister": {
+   "path": "research/vg-l0-risk-envelope-pilot/DECISION_REGISTER.md",
+   "sha256": "c74390d2674683852556b446db9fca5f97cd94ea97081b5a319300551be33122",
+   "openDecisions": [
+    "D-0",
+    "D-1",
+    "D-2",
+    "D-3",
+    "D-4",
+    "D-5",
+    "D-6",
+    "D-7",
+    "D-8",
+    "D-9",
+    "D-10",
+    "D-11",
+    "D-12",
+    "D-13",
+    "D-14"
+   ],
+   "resolved": {
+    "D-15": "scratch restores deleted 2026-11-22T00:47:30Z"
+   }
+  },
+  "budgetProposed": {
+   "expected": "≈ 0.27–0.38 M evaluations",
+   "worstCase": "0.70 M (above the approved 0.3–0.5 M band; decision D-2)"
+  }
+ },
+ "readiness": {
+  "verdict": "READY FOR REVIEW — infrastructure prerequisites met; pilot execution blocked on the user decisions below",
+  "blockers": [
+   "B1 user review and authorization of the pilot protocol and every open decision (D-0 … D-14) in the original conversation",
+   "B2 the pilot code (src/vg-l0-risk-envelope-pilot/, IMPLEMENTATION_PLAN.md) does not exist by design; it needs implementation and its engineering gates E2–E6 after authorization",
+   "B3 the Phase 7 acceptance record is valid on this branch only; official pilot runs need either this branch or a reviewed merge into main (decision D-14) — main still carries the Phase 6 record for main's tree"
+  ],
+  "caveats": [
+   "worst-case pilot budget 0.70 M exceeds the approved 0.3–0.5 M band (D-2 proposes a stop rule)",
+   "the experimental envelope is not a pure relaxation of the control (PARITY_REPORT §4)",
+   "banked DD (marked) exceeded marked DD in 4 engineering subjects (partial sales under water; expected by SELECTION_PIPELINE_AUDIT §3; GPU = CPU)",
+   "the liquidation-basis conventional DD (DD^L) is not delivered by the GPU (report-only CPU diagnostic; D-11)",
+   "amendments D0, D1, A1, A2 (AMENDMENTS.md) — disclosures and two corrected check criteria; no evidence changed"
+  ]
+ },
+ "repository": {
+  "branch": "research/gpu-phase7-risk-envelope-readiness",
+  "head": "269128fbf47d7e4ed9d3b7cb17a121103428c1c9",
+  "branchBase": {
+   "cleanup/storage-2026-11-21": "d89b9dec7fa48ceef49f716898211a464fa7ffa3",
+   "main": "3606f4b3bcf5bf4a03a3e829b5234081be36f959"
+  },
+  "mergedIntoMain": false,
+  "statusShort": "(clean)"
+ },
+ "environment": {
+  "device": {
+   "uuid": "GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4",
+   "name": "NVIDIA GeForce RTX 5090",
+   "driver": "595.91.07",
+   "cc": "12.0"
+  },
+  "runtime": {
+   "node": "v24.21.0",
+   "v8": "13.6.233.17-node.53",
+   "maglev": "disabled",
+   "execArgv": [
+    "--no-maglev",
+    "--experimental-transform-types",
+    "--disable-warning=ExperimentalWarning"
+   ],
+   "requiredOptions": [
+    "--no-maglev"
+   ],
+   "enforcedBy": "src/gpu-backend/runtime.ts (official gate, official runner; from GPU Phase 6 also the legacy runner gate with the child-process guard, Strategy Lab server and runners, every npm script)"
+  },
+  "cuda": "user-space toolkit 13.2 (V13.2.86)",
+  "host": "Apollo"
+ },
+ "acceptance": {
+  "status": "ACCEPTED",
+  "study": "research/gpu-phase7",
+  "acceptedAt": "2026-11-22T00:16:00.494Z",
+  "recordSha256": "bb0e3fcf6bde45cc654dc2d8d166153353918dfe3aa18d826dd8deda5cabf7b7",
+  "source": {
+   "commit": "999f299e50696953006dfc6ea0c06ffa410ca303",
+   "tree": "d131c179f84ecfe2267251dfc3c9ea0b65a95fc6",
+   "branch": "research/gpu-phase7-risk-envelope-readiness"
+  },
+  "binary": {
+   "path": "research/gpu-phase7/build/gb7",
+   "sha256": "cb2ff30b9cb720c01d69e5195a8add9bcf37eb31f7ab85625a3d1a5c02c56a82"
+  },
+  "evaluationDigest": "d1a2e490788fa5fa76a277719dfb623c2cc896de85cf95f739c3e3af184e233b",
+  "groups": {
+   "cpu": "c8a9f416e25b393a92018544322cc6ade272cb237e50d6557cc4333cf9024e6a",
+   "cuda": "d88990612c5cd6d7f274821cd8b49ba4a29710419dd6a5f872fc8582b6592e46",
+   "host": "bfdcdfbb498f24419d638f03a650d06a4db40695431663c5ccd2510b91f9ac5f"
+  },
+  "policyDigest": "1bdcba9cd063c3f893cfc428b8a0276c8dc0519ad91a86715bc927d07deae641",
+  "supersedes": {
+   "study": "research/gpu-phase6",
+   "acceptedAt": "2026-11-21T11:10:46.040Z",
+   "sha256": "3610caaf0bfc14ecd5ea75981a69f9316ff9ff6b610d4913b949d36950c884d3"
+  },
+  "evidenceEntries": 42,
+  "outOfBandPin": "~/.local/share/margin-trading-gpu/acceptance-pins/acceptance-gpu-phase7-bb0e3fcf.json",
+  "verifier": "VERIFIED (results/post-record/verify-acceptance.txt)",
+  "liveOfficialGate": "GATE OPEN on D24 (results/post-record/official-preflight-D24.txt)",
+  "scope": "this branch; main keeps the Phase 6 record 3610caaf… (valid for main)"
+ },
+ "requiredFields": {
+  "deliveredBy": "EvalLab.evalMany items { cfg, options, detail?, risk: true } → archive key + \"|risk\" → value { ...record, envelope }",
+  "envelope": {
+   "principalLossMarked": "dollars, finite, ≥ 0",
+   "principalLossLiquidation": "dollars, finite, ≥ 0",
+   "bankedDdMarked": "dollars, finite, ≥ 0",
+   "bankedDdLiquidation": "dollars, finite, ≥ 0"
+  },
+  "orderings": [
+   "principalLossLiquidation ≥ principalLossMarked",
+   "bankedDdLiquidation ≥ bankedDdMarked"
+  ],
+  "conventionalDd": "record.dd (marked maximum minute drawdown, unchanged)",
+  "interpretation": "src/risk-envelope/policy.ts (nl0-control: DD ≤ 35 % C0; re-40-25-25: DD ≤ 40 % C0, PL liq ≤ 25 % C0, BD liq ≤ 25 % C0; value = limit passes; limit = C0·pct/100)",
+  "failClosed": "missing / extra / invalid envelope → PolicyError risk-envelope-mismatch or checkEnvelope failure; no CPU fallback"
+ },
+ "code": {
+  "src/gpu-backend/pool.ts": "a6293c0a432ebcbec3282b38523d9aac19020de1875758c1b7f789714f2f68ab",
+  "src/gpu-backend/lab.ts": "3e4d1cdc46033238c584100d1a2b14d9b46ac5bce3524dc6eaec22ab646a03fa",
+  "src/gpu-backend/toolchain.ts": "69648cef48acadfc056e32853441af83bc2b605ad6e2892e772efa7d52a0d1d4",
+  "src/gpu-backend/entrypoints.ts": "366a78fa891f817160d339da349ec886b65ddc1f835451c3e75ef52c1e796593",
+  "config/gpu-backend/entrypoints.json": "37e931fd97ffe22ae5c377778a5df65f6d829d79af15b8118bb43599fa3c4425",
+  "src/gpu-backend/batch.ts": "fd984c7adde04acb8976902cfcc75fa401295b29cd39f8932b8d0d92811d463e",
+  "src/risk-envelope/policy.ts": "df9d314ff0dbe78ba9d68103721105c4541b42d06a4f6a5edfd7f74f2821eeee",
+  "src/risk-envelope/diagnostics.ts": "16e4896c91019c1b08c7ce6c87884d22b20e64265c79a4de042b422ebe9ee076",
+  "src/gpu-phase7/envelope.ts": "c08ee27a4014f10d3b66da42194b91601cb8684e0728a71e3c30cc702a2e4574",
+  "src/gpu-backend/cuda/gb_pool.cuh": "a29f03bdc6d15ac3a041a06dc49809a7ffd7c1ee47d043f16495169d27ebf1c8"
+ },
+ "data": {
+  "GDX": "77dba9b21c4b684996283e7b8f17917696139f890441b1ca900d664b59ea5049",
+  "VGT": "2ee06310f2fa8926220fd9629c093ba77fe5d35fd2515da7f7c54caa50b5412e",
+  "note": "Priority 3 pins; doors D19–D24 verified as canonical prefixes"
+ },
+ "tests": {
+  "parity": {
+   "pass": true,
+   "runs": 54,
+   "subjects": 144795,
+   "identical": 144795,
+   "mismatches": 0,
+   "envelopesCompared": 64033,
+   "randomGenomes": 141600
+  },
+  "riskParity": {
+   "edge-D21": {
+    "pass": true,
+    "subjects": 1000,
+    "items": 4000,
+    "r1": 0,
+    "r2": 0,
+    "archive": {
+     "compared": 1000,
+     "differing": 0,
+     "examples": []
+    },
+    "r3": 0
+   },
+   "edge-D24": {
+    "pass": true,
+    "subjects": 1000,
+    "items": 4000,
+    "r1": 0,
+    "r2": 0,
+    "archive": {
+     "compared": 1000,
+     "differing": 0,
+     "examples": []
+    },
+    "r3": 0
+   },
+   "finalists-D24": {
+    "pass": true,
+    "subjects": 48,
+    "items": 384,
+    "r1": 0,
+    "r2": 0,
+    "archive": {
+     "compared": 0,
+     "differing": 0,
+     "examples": []
+    },
+    "r3": 0
+   },
+   "random-D19": {
+    "pass": true,
+    "subjects": 1000,
+    "items": 4000,
+    "r1": 0,
+    "r2": 0,
+    "archive": {
+     "compared": 0,
+     "differing": 0,
+     "examples": []
+    },
+    "r3": 0
+   }
+  },
+  "compare": {
+   "a2-plain-vs-sealed.json": true,
+   "a3-plain-vs-sealed.json": true,
+   "a3-risk-vs-sealed.json": true,
+   "mini-concurrent-plain-vs-ref.json": true,
+   "mini-concurrent-risk-vs-ref.json": true,
+   "mini-gpu-vs-cpu.json": true,
+   "mini-killed-resumed-vs-ref.json": true,
+   "mini-risk-gpu-vs-cpu.json": true,
+   "mini-risk-vs-plain.json": true,
+   "mini-stopped-resumed-vs-ref.json": true,
+   "mini-w0-vs-w8.json": true,
+   "mini-w1-vs-w8.json": true
+  },
+  "qualify": {
+   "assessmentsCompared": 61498,
+   "assessmentsDiffering": 0
+  },
+  "finalists": {
+   "pass": true
+  },
+  "sanitizer": [
+   {
+    "tool": "memcheck",
+    "errors": 0,
+    "identical": 97,
+    "subjects": 97
+   },
+   {
+    "tool": "racecheck",
+    "errors": 0,
+    "identical": 97,
+    "subjects": 97
+   },
+   {
+    "tool": "initcheck",
+    "errors": 0,
+    "identical": 97,
+    "subjects": 97
+   },
+   {
+    "tool": "synccheck",
+    "errors": 0,
+    "identical": 97,
+    "subjects": 97
+   }
+  ],
+  "negative": {
+   "pass": true,
+   "passed": 73,
+   "total": 73,
+   "groups": {
+    "gate": "19/19",
+    "job": "11/11",
+    "runtime": "21/21",
+    "risk": "6/6",
+    "cli": "5/5",
+    "engine": "11/11"
+   }
+  },
+  "tamper": {
+   "pass": true,
+   "passed": 23,
+   "cases": 23,
+   "baselineOk": true
+  },
+  "sustained": [
+   {
+    "pass": true,
+    "minutes": 32.3,
+    "failures": 0,
+    "parity": {
+     "samples": 2304,
+     "mismatches": 0,
+     "cpuErrors": 0,
+     "examples": []
+    },
+    "repeat": {
+     "checks": 3,
+     "tasks": 6144,
+     "mismatches": 0,
+     "examples": []
+    }
+   },
+   {
+    "pass": true,
+    "minutes": 32.27,
+    "failures": 0,
+    "parity": {
+     "samples": 2304,
+     "mismatches": 0,
+     "cpuErrors": 0,
+     "examples": []
+    },
+    "repeat": {
+     "checks": 3,
+     "tasks": 6144,
+     "mismatches": 0,
+     "examples": []
+    }
+   }
+  ],
+  "npmTest": "1737 tests, 1724 pass, 9 fail (7 known pre-existing, 2 record-in-force before the new record (A4), 0 unexpected), 4 skipped",
+  "strategyLab": "typecheck ok, lint ok, vitest Tests \u001b[22m \u001b[1m\u001b[32m314 passed\u001b[39m\u001b[22m\u001b[90m (314)\u001b[39m, e2e 81 passed / 0 failed, state unchanged, live dist untouched",
+  "portfolioParity": "ALL VERIFIED — door 5468 ms, rss 847 MB",
+  "integrity": "5/5 integrity checks pass",
+  "scaling": [
+   {
+    "door": "D24",
+    "pass": true,
+    "subjects": 148,
+    "chronologyDiffers": 0,
+    "decisionDiffers": 0,
+    "worstC0": 2.7939677238464356e-15
+   },
+   {
+    "door": "D21",
+    "pass": true,
+    "subjects": 148,
+    "chronologyDiffers": 0,
+    "decisionDiffers": 0,
+    "worstC0": 1.5133991837501525e-15
+   }
+  ],
+  "recordInForceTests": "16/16 after the record (results/post-record/record-in-force-tests.txt)"
+ },
+ "throughput": {
+  "kind": "gpu-phase7 pilot-shaped throughput benchmark (non-official)",
+  "t": "2026-11-22T00:46:19.901Z",
+  "shape": "8 lanes (lanes 0/8 of Assignment 3 broad1), every evaluation with the risk envelope requested, batch 8,192, 8 host workers, final binary gb7",
+  "rows": [
+   {
+    "job": "bench-C21-risk-l8",
+    "cutoff": "C21",
+    "mode": "alone",
+    "lanes": 8,
+    "fresh": 138316,
+    "archiveHits": 939,
+    "wallSeconds": 377.2,
+    "evaluationsPerSecond": 366.7,
+    "hostWorkers": 8,
+    "batchSize": 8192,
+    "batches": {
+     "n": 108,
+     "median": 384,
+     "under1024": 66,
+     "serverSeconds": 328.786
+    },
+    "peakRssMiB": 3433,
+    "lanesIdenticalToSealed": true,
+    "laneChecks": [
+     {
+      "lane": "C21/broad/GA0.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GA0.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GA1.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GA1.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GB0.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GB0.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GB1.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GB1.VC0/R1",
+      "identicalToSealed": true
+     }
+    ]
+   },
+   {
+    "job": "bench-C24-risk-l8",
+    "cutoff": "C24",
+    "mode": "alone",
+    "lanes": 8,
+    "fresh": 104431,
+    "archiveHits": 982,
+    "wallSeconds": 459.7,
+    "evaluationsPerSecond": 227.2,
+    "hostWorkers": 8,
+    "batchSize": 8192,
+    "batches": {
+     "n": 92,
+     "median": 368,
+     "under1024": 64,
+     "serverSeconds": 418.901
+    },
+    "peakRssMiB": 3921,
+    "lanesIdenticalToSealed": true,
+    "laneChecks": [
+     {
+      "lane": "C24/broad/GA0.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GA0.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GA1.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GA1.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GB0.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GB0.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GB1.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GB1.VC0/R1",
+      "identicalToSealed": true
+     }
+    ]
+   },
+   {
+    "job": "bench-C21-risk-l8-conc",
+    "cutoff": "C21",
+    "mode": "concurrent with C24",
+    "lanes": 8,
+    "fresh": 138316,
+    "archiveHits": 939,
+    "wallSeconds": 714.8,
+    "evaluationsPerSecond": 193.5,
+    "hostWorkers": 8,
+    "batchSize": 8192,
+    "batches": {
+     "n": 108,
+     "median": 384,
+     "under1024": 66,
+     "serverSeconds": 665.203
+    },
+    "peakRssMiB": 3276,
+    "lanesIdenticalToSealed": true,
+    "laneChecks": [
+     {
+      "lane": "C21/broad/GA0.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GA0.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GA1.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GA1.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GB0.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GB0.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GB1.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C21/broad/GB1.VC0/R1",
+      "identicalToSealed": true
+     }
+    ]
+   },
+   {
+    "job": "bench-C24-risk-l8-conc",
+    "cutoff": "C24",
+    "mode": "concurrent with C21",
+    "lanes": 8,
+    "fresh": 104431,
+    "archiveHits": 982,
+    "wallSeconds": 796.4,
+    "evaluationsPerSecond": 131.1,
+    "hostWorkers": 8,
+    "batchSize": 8192,
+    "batches": {
+     "n": 92,
+     "median": 368,
+     "under1024": 64,
+     "serverSeconds": 754.251
+    },
+    "peakRssMiB": 4181,
+    "lanesIdenticalToSealed": true,
+    "laneChecks": [
+     {
+      "lane": "C24/broad/GA0.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GA0.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GA1.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GA1.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GB0.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GB0.VC0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GB1.VA0/R1",
+      "identicalToSealed": true
+     },
+     {
+      "lane": "C24/broad/GB1.VC0/R1",
+      "identicalToSealed": true
+     }
+    ]
+   }
+  ],
+  "concurrentPairWallSeconds": 796.4,
+  "concurrentPairFresh": 242747,
+  "aloneVsConcurrentIdentity": "results/bench/compare-C21-alone-vs-concurrent.json, compare-C24-alone-vs-concurrent.json (arms mode)"
+ },
+ "archives": {
+  "restoredTemporarily": [
+   {
+    "job": "search-C21-broad1",
+    "compressed": ".cache/vg-l0-full-joint/jobs/search-C21-broad1/archive.sqlite.zst",
+    "scratch": "research/gpu-phase7/cache/restore/search-C21-broad1.sqlite",
+    "checksPassed": "10/10",
+    "compressed sha256 = manifest zstSha256": "495a0bcf10e675e8e61f844fa31006bfb933fe43fb6a2fbfadb3d23baa88af3d",
+    "restored sha256 = manifest sha256 (the pre-compression original)": "99b5406d5f483a8a1512c01c9e6e3aecf74d108d154b584d418e0367b8eb6d70",
+    "points rows = manifest pointsRows": 1276425,
+    "compressed original unchanged after (sha256, size, mode, mtime)": {
+     "bytes": 465192516,
+     "mode": "0o644",
+     "mtime_ns": 1794777013672726933
+    }
+   },
+   {
+    "job": "search-C24-broad1",
+    "compressed": ".cache/vg-l0-full-joint/jobs/search-C24-broad1/archive.sqlite.zst",
+    "scratch": "research/gpu-phase7/cache/restore/search-C24-broad1.sqlite",
+    "checksPassed": "10/10",
+    "compressed sha256 = manifest zstSha256": "020d0b50e477ced8d8690c315bc6ff193fb4028e9ed0ca8c5fb36b6e832bb920",
+    "restored sha256 = manifest sha256 (the pre-compression original)": "cec9aed968288feea59551320c0dd9fa187229d8271f76fcedde30cd44a8cc54",
+    "points rows = manifest pointsRows": 1013181,
+    "compressed original unchanged after (sha256, size, mode, mtime)": {
+     "bytes": 388725952,
+     "mode": "0o644",
+     "mtime_ns": 1794836472983099011
+    }
+   }
+  ],
+  "compressedOriginalsUnchanged": true,
+  "scratchCopiesRemaining": [],
+  "recreate": "python3 -I tools/gpu-phase7/restore-archives.py search-C21-broad1 search-C24-broad1"
+ },
+ "deliverables": {
+  "A": {
+   "path": "research/gpu-phase7/PREREQUISITES_READY.md",
+   "sha256": "967703ad0723486c3fd978a4182d7c22d6ed65d97a432c8b54edfa4f4a7b7543"
+  },
+  "B": {
+   "path": "research/gpu-phase7/RISK_METRIC_INTEGRATION_SPEC.md",
+   "sha256": "b06f4c3a115b96d09808ae4ad789b1264eff47b450ec34bb21c2aa08b98e7e6f"
+  },
+  "C": {
+   "path": "research/gpu-phase7/PARITY_REPORT.md",
+   "sha256": "17cfcc7bbe7e7846f6fd21ca629f2d7a053b19f542b563e3ffa1b5bd32abf091"
+  },
+  "D": {
+   "path": "research/gpu-phase7/ACCEPTANCE_EVIDENCE.md",
+   "sha256": "93d8f75a650f1344721b72f70c679c8905d4f2b7fa67148a44e223a3e4fec2d3"
+  },
+  "E": {
+   "path": "research/vg-l0-risk-envelope-pilot/PROTOCOL_PROPOSED.md",
+   "sha256": "4f7c215fd586c7c4ec0f119b510e949da4ad9961a6c5a29fdd790f03cc4966d0"
+  },
+  "F": {
+   "path": "research/gpu-phase7/RESTORATION_REPORT.md",
+   "sha256": "4bc03e1158d66f9bfc4455af1c89641c3c128b09bd7341453cd992b130ae3c95"
+  },
+  "G": {
+   "path": "research/vg-l0-risk-envelope-pilot/EXECUTION_PLAN.md",
+   "sha256": "bd118e23d55a72f3694d77ae9a02bbb3df571fafe047d90eeaf5e6c14adf1f1b"
+  }
+ },
+ "support": {
+  "research/vg-l0-risk-envelope-pilot/README.md": "0f4480705f0cdb78420668ad2fe3a5ed1b6511a4ac835087f4c55a6a1c52d482",
+  "research/vg-l0-risk-envelope-pilot/DECISION_REGISTER.md": "c74390d2674683852556b446db9fca5f97cd94ea97081b5a319300551be33122",
+  "research/vg-l0-risk-envelope-pilot/DIAGNOSTICS_SPEC.md": "c722bc11918a10d87d2cdb6bca2f4d3dde8516257e467bd0dd0abdd10c6e5172",
+  "research/vg-l0-risk-envelope-pilot/SCALING_CHECKS.md": "55677725998e0f23ad632274930d7b8c9a1d44d4a384b9853ffd75cf1864b8f1",
+  "research/vg-l0-risk-envelope-pilot/IMPLEMENTATION_PLAN.md": "64f154d9d46437e53b5fdd5868a75b76c2c2f53b96f9b1f40a784da35523cdaa",
+  "research/gpu-phase7/INTEGRATION_PLAN.md": "b8a80ffef227b98b6de4e2a05222a103157d28bb5ecdd938c73b4c6c238a2850",
+  "research/gpu-phase7/PROTOCOL.md": "6960758831c04d13dc8d1d71837da83de73fe35c7b36fdff419eedb511ce7cd8",
+  "research/gpu-phase7/AMENDMENTS.md": "928ab1731e40de175984596cd45b024adf83e7bd9cce22d5f99f11aed16658e4",
+  "research/gpu-phase7/RUN_COMMANDS.md": "bdac1947b7d7d8377f96d827fca0ec564cbbe33cdc94056c5eb2de0de162acdc",
+  "research/gpu-phase7/RESEARCH_RECOVERY.md": "5e7ed32adadb49d4f81042c24a974aa91a5504d7cced4a2607266954579af8af",
+  "research/gpu-phase7/STANDARD_ADOPTION.json": "5f953fa603c87494e8db68cfc69ee0f24d90bf4b4fe57dcbc2c978b11ef3cad0",
+  "research/gpu-phase7/brief/BRIEF.md": "dfc11ac041e6315a032adf86a1f6dcb9b4bfc55e98fa49db15f944aecbff90f2",
+  "config/gpu-backend/acceptance.json": "bb0e3fcf6bde45cc654dc2d8d166153353918dfe3aa18d826dd8deda5cabf7b7",
+  "research/gpu-phase7/results/superseded/acceptance-gpu-phase6.json": "3610caaf0bfc14ecd5ea75981a69f9316ff9ff6b610d4913b949d36950c884d3"
+ }
+}

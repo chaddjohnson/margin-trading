@@ -7,8 +7,9 @@ export const studyDir = 'research/trailing-buy-entry';
 export const resultsDir = `${studyDir}/results`;
 export const chartsDir = `${studyDir}/charts`;
 
-// The immutable daily strategy. Only read, never edited (a test checks the hash).
-export const originalFile = 'src/app/allin-original.ts';
+// The immutable daily strategy. Only read, never edited (a test checks the hash). The study ran when it was
+// src/app/allin-original.ts; it was renamed by the user on 2026-10-17 (86d2b2d9, fb499e51: identical bytes).
+export const originalFile = 'src/app/allIn-original.ts';
 export const originalSha256 = '42f2b7e7be4ef99e1af6c4fe113dd8da9ed4d329d2fe0564463db80b87f449e2';
 
 // Data: the repository's continuous VGT daily file (Stooq back-adjusted history extended with the user's

@@ -1,4 +1,5 @@
-// Priority 6 acceptance in the browser: the five pooled portfolio candidates (docs/strategy-lab/POOLED_CANDIDATES.md).
+// Priority 6 acceptance in the browser: the pooled portfolio candidates (docs/strategy-lab/POOLED_CANDIDATES.md) on their
+// research window — the five of Priority 6 and N/original (2026-11-27; its windows: e2e/portfolio-windows.spec.ts).
 // Real data only (skipped without data/VGT and data/GDX). Each candidate is replayed once by the e2e server (one shared
 // $100,000 pool, the research engine) and then served from its replay cache.
 import { type Page, expect, test } from '@playwright/test';
@@ -14,7 +15,8 @@ const TARGETS: Record<string, { name: string; net: number; dd: number; val: numb
   'c4-refined': { name: 'C4-refined', net: 452082.36, dd: 19477.66, val: 91512.65, symbols: ['VGT', 'GDX'] },
   c4: { name: 'Original C4', net: 401867.24, dd: 21536.85, val: 99081.34, symbols: ['VGT', 'GDX'] },
   'vgt-d1-g4': { name: 'VGT-only: D1 primary + Growth #4', net: 271525.33, dd: 19534.41, val: 66585.12, symbols: ['VGT'] },
-  'vgt-d1-g085': { name: 'VGT-only: D1 primary + Growth 08500a60', net: 252359.65, dd: 19556.63, val: 60551.2, symbols: ['VGT'] }
+  'vgt-d1-g085': { name: 'VGT-only: D1 primary + Growth 08500a60', net: 252359.65, dd: 19556.63, val: 60551.2, symbols: ['VGT'] },
+  'n-original': { name: 'N/original', net: 482700.73, dd: 20385.99, val: 94669.7, symbols: ['VGT', 'GDX'] }
 };
 
 const markers = (page: Page) => page.locator('[data-testid=price-chart] .marker');
@@ -45,7 +47,7 @@ test('every candidate loads from the selector as ONE pooled replay with the arch
   await page.getByTestId('view-portfolios').click();
   await expect(page.getByTestId('candidate-selector')).toBeVisible();
   const order = await page.locator('[data-testid=candidate-selector] [role=radio]').evaluateAll((els) => els.map((e) => e.getAttribute('data-candidate')));
-  expect(order).toEqual(['l0-primary', 'c4-refined', 'c4', 'vgt-d1-g4', 'vgt-d1-g085']);
+  expect(order).toEqual(['l0-primary', 'c4-refined', 'c4', 'vgt-d1-g4', 'vgt-d1-g085', 'n-original']);
   for (const [id, t] of Object.entries(TARGETS)) {
     await page.getByTestId(`candidate-${id}`).click();
     await expect(page.getByTestId(`candidate-${id}`)).toHaveAttribute('aria-checked', 'true');

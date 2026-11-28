@@ -80,6 +80,7 @@ counterpart, its capability bit and its parity evidence. Update it with every ch
 | Detail mode: funding log, every lot's worst/best mark | PoolOptions detail | `GbFunding`, `lotMark` | `POOL_DETAIL` | GPU |
 | Compact record (recordOf) and detailed record (riskInputsOf) | vg-d1-growth-joint/evaluate.ts, vg-l0-risk-families/evaluate.ts | the UNCHANGED CPU functions on the GPU's books and PoolResult (a reduction of GPU evidence) | — | GPU evidence + canonical CPU reduction |
 | Risk-envelope inputs: banked-capital DD (marked, liquidation), trade principal loss (marked, liquidation) | vg-l0-risk-metrics engine.ts remark + metrics.ts | `riskMark`, `riskPoint`, exit points | `RISK_METRICS` | GPU |
+| Risk-envelope DELIVERY to a search (GPU Phase 7): EvalLab items `risk: true` → `{ ...record, envelope }` under the `|risk` key; validated (`checkEnvelope`); interpreted only by `src/risk-envelope/policy.ts` | CPU reference: src/gpu-phase7/envelope.ts (= Phases 2–6's envelopeOf) through src/gpu-phase7/cpuEvalWorker.ts | `pool.ts` (value + mismatch check), `lab.ts` (key, validation) | `RISK_METRICS` | GPU (research/gpu-phase7: risk-delivery parity R1–R3, Q1, sealed replay with the envelope requested) |
 | Minute-mark change recording | PoolOptions recordMarks | — | `RECORD_MARKS` | refused (charts/slices diagnostics) |
 | Funding lifecycles L1/L2, shadow-position eligibility | experimental study namespaces | — | `LIFECYCLE_L1_L2`, `SHADOW_ELIGIBILITY` | refused (outside the domain) |
 
@@ -89,6 +90,7 @@ counterpart, its capability bit and its parity evidence. Update it with every ch
 |---|---|
 | Bars | the CPU loader's exact in-memory arrays (GB2 dataset v2, `src/gpu-backend/dataset.ts`); the CPU door's own daily signal bars; FULL's split adjustment included; no CSV parsing on the GPU |
 | Refused datasets | an empty session, a non-positive or non-finite price, non-integer times, bars not one per session |
+| Doors after appends (GPU Phase 9) | the CPU closure's loaders read a pinned historical input as its verified byte prefix (`src/lib/canonicalPrefix.ts`, `src/lib/researchRanges.ts`, the loaders' `pin` / `maxBytes`, Priority 3's FULL door): no CUDA counterpart is needed, because the GPU receives the exported door arrays. Evidence: `research/gpu-phase9/results/dataset-identity.json` (every real-data door's GB2 dataset = GPU Phase 7's, 38/38) and the parity campaign (0 mismatches) |
 | Precision | binary64 only; `--fmad=false`, IEEE division/sqrt, `-ffp-contract=off`; JavaScript operation order; `Math.max/min` NaN/±0 semantics; V8 `log/exp` |
 | Capacity | fixed per-candidate capacities raise explicit statuses; the pool re-evaluates such a candidate on the GPU with larger capacities |
 | Errors | each CPU throw has a per-candidate status; loops have device-side bounds (`C_G_LOOP`) |

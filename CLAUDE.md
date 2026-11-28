@@ -17,8 +17,11 @@
   path: 8 worker threads by default) → `EvalLab` (src/gpu-backend/); an official study's npm script starts its runner
   through `src/gpu-backend/officialRunner.ts`. The preflight (`npm run research-preflight`) refuses an official study
   until `config/gpu-backend/acceptance.json` (schema 2) is ACCEPTED and matches the tree. Status: **ACCEPTED
-  2026-11-21 by research/gpu-phase6/** (enforcement-only re-acceptance carrying Phase 5's evaluation evidence; binary
-  `f444c521…`, RTX 5090 `GPU-ae5f222c…`, record sha256 `3610caaf0bfc14ec…`; every Node process that evaluates — official
+  2026-11-28 by research/gpu-phase9/** (Assignment 2: the research-date-boundaries integration, a full §2 cycle;
+  binary `research/gpu-phase9/build/gb9` `36dcc251…`, git-ignored, rebuilt reproducibly by `verify-acceptance.sh
+  --rebuild`; RTX 5090 `GPU-ae5f222c…`; record sha256 `9ebb33ce8620dead…`, out-of-band pin
+  `~/.local/share/margin-trading-gpu/acceptance-pins/acceptance-gpu-phase9-9ebb33ce.json`), merged into `main`; it
+  supersedes Phase 7's `bb0e3fcf…`; the unmerged staged-stop branch keeps its own Phase 8 record; every Node process that evaluates — official
   runs, legacy CPU runners, Strategy Lab's server and runners, every npm script — starts as `node --no-maglev …` and
   refuses otherwise, docs/gpu/README.md §3a; every official run owns an isolated job, `src/gpu-jobs/jobs.ts` `openJob`,
   docs/gpu/README.md §4c); any change to a file of the evaluation manifest (CPU closure, CUDA, host path), of the pinned
@@ -64,6 +67,7 @@
 - A new study starts from `docs/research/STUDY_PROTOCOL_TEMPLATE.md`, records `research/<study>/STANDARD_ADOPTION.json` (version, sha256, read/adoption times, protocol hash, date split, objective/roles, risk denominator, budget, deviations) and must pass `npm run research-preflight -- --study research/<study>` before its first substantive stage; new runners call `requireStandardAdoption` (`src/research-standard/preflight.ts`) in code. The preflight checks the declaration and hashes, not understanding.
 - A frozen study keeps the standard version it pinned; adopting a newer version is an explicit amendment. Completed studies are never retrofitted.
 - The standard changes only when the user agrees a process change: a new version, a change-log entry (§8) and the new sha256 in the registry (`npm run research-preflight -- --hash`). Never edit it silently; the preflight then fails for every study.
+- Formal windows are explicit dates (standard 4.0.0 §1, current 5.0.0): `config/research/date-ranges.json` (R1: development 2016-01-04 → 2024-12-31, validation 2025-01-01 → 2026-10-30). Appending market data never extends them; a later range is a new entry with the user's explicit authorization. Data after the validation end are for manual post-validation evaluation (`npm run manual-eval`, Strategy Lab's Portfolios window "All"/"Custom"; labelled as such): informational, never selection, qualification or formal validation evidence. Only a pre-registered prospective study of a configuration frozen before the observed sessions (standard 5.0.0 §1.15, scope `prospective`, a new study needing the user's authorization) yields prospective evidence; evidence categories are never interchanged (§1.16). Canonical files grow by `npm run datasets -- append` only (byte-prefix proof, `config/market-data/vintages.json`); historical inputs are verified as byte prefixes, never by weakening a check.
 
 ## Project
 

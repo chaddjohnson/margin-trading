@@ -132,7 +132,8 @@ export const recordCase13 = async (c: BaselineCase11) => {
     startDate: c.from,
     endDate: c.to,
     warmupSessions: warmupSessionsForParams(c.params),
-    access: 'manual evaluation'
+    access: 'manual evaluation',
+    ...(c.pin ? { pin: c.pin } : {})
   });
   const run = runRiseTrading(c.symbol, loaded.history, loaded.warmup, c.params, loaded.report!.dataSha256!, {
     recordMinuteMarks: true

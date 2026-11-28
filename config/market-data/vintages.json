@@ -1,0 +1,75 @@
+{
+ "kind": "canonical data vintages",
+ "schema": 1,
+ "description": "Verified earlier versions (vintages) of canonical minute files, data/<SYMBOL>/data.csv. The files only grow by appending rows after their last bar (npm run datasets -- append), so each vintage is exactly the first `bytes` bytes of today's file and hashes to `sha256`: a study's whole-file pin of an earlier file is that vintage's sha256, and its input is recovered and verified as that prefix (src/lib/canonicalPrefix.ts verifyBytePin; npm run datasets -- prefix). Oldest first. `datasets append` adds the new vintage of every symbol it appends; src/data-partition/tests verify every entry against the local files when they are present. Market data never enter Git: only these facts do.",
+ "symbols": {
+  "VGT": [
+   {
+    "bytes": 52969147,
+    "rows": 928192,
+    "sha256": "d8e6991de7d4901052c0d52c63e6461f28a62049615412f7188f3f57ff4f0a09",
+    "lastRowUtc": "2026-10-13T23:57:00Z",
+    "latestCompleteSession": "2026-10-13",
+    "recorded": "the 2026-10-24 canonical migration (docs/canonical-dataset-migration.md §2); verified as a prefix 2026-11-27"
+   },
+   {
+    "bytes": 53357534,
+    "rows": 934959,
+    "sha256": "624e4094a988bd0136ce3aeaafbbe6b47afa3e6be400d656d6096890b3e7e41a",
+    "lastRowUtc": "2026-10-29T23:58:00Z",
+    "latestCompleteSession": "2026-10-29",
+    "recorded": "the 2026-10-30 append (Study 8's pin, research/study8-expanded-regime-d1/results/protocol_freeze.json); verified as a prefix 2026-11-27"
+   },
+   {
+    "bytes": 53395054,
+    "rows": 935608,
+    "sha256": "2ee06310f2fa8926220fd9629c093ba77fe5d35fd2515da7f7c54caa50b5412e",
+    "lastRowUtc": "2026-10-30T23:59:00Z",
+    "latestCompleteSession": "2026-10-30",
+    "recorded": "Study 9's 2026-11-02 refresh (data/datasets-append-run.json); the file of every standard study (validation end 2026-10-30) and of Priority 3's FULL door; verified as a prefix 2026-11-27"
+   },
+   {
+    "bytes": 53976698,
+    "rows": 945821,
+    "sha256": "dfde0f77a7782579ca27f51e81420860e3ae374493577f99a8ba16ca750a9114",
+    "lastRowUtc": "2026-11-26T00:59:00Z",
+    "latestCompleteSession": "2026-11-25",
+    "recorded": "`datasets append` 2026-11-27T14:57:52.680Z"
+   }
+  ],
+  "GDX": [
+   {
+    "bytes": 79578836,
+    "rows": 1481880,
+    "sha256": "86ce101fede1a412dd452fcc29dc87b69ade4ad67629230172fde878b7c2c320",
+    "lastRowUtc": "2026-10-13T23:59:00Z",
+    "latestCompleteSession": "2026-10-13",
+    "recorded": "the 2026-10-24 canonical migration (docs/canonical-dataset-migration.md §2); verified as a prefix 2026-11-27"
+   },
+   {
+    "bytes": 79996839,
+    "rows": 1489753,
+    "sha256": "134b74506f190f43a9118366bc626e697e92e9ea6302a8da6aa4bf85b76e50b6",
+    "lastRowUtc": "2026-10-29T23:57:00Z",
+    "latestCompleteSession": "2026-10-29",
+    "recorded": "the 2026-10-30 append (Study 8's pin, research/study8-expanded-regime-d1/results/protocol_freeze.json); verified as a prefix 2026-11-27"
+   },
+   {
+    "bytes": 80036100,
+    "rows": 1490494,
+    "sha256": "77dba9b21c4b684996283e7b8f17917696139f890441b1ca900d664b59ea5049",
+    "lastRowUtc": "2026-10-30T23:59:00Z",
+    "latestCompleteSession": "2026-10-30",
+    "recorded": "Study 9's 2026-11-02 refresh (data/datasets-append-run.json); the file of every standard study (validation end 2026-10-30) and of Priority 3's FULL door; verified as a prefix 2026-11-27"
+   },
+   {
+    "bytes": 80741665,
+    "rows": 1503833,
+    "sha256": "aa23522d9d2408dc805c329a6fce2401f5bc5609f2ef663985eef9308ba41f2c",
+    "lastRowUtc": "2026-11-26T00:58:00Z",
+    "latestCompleteSession": "2026-11-25",
+    "recorded": "`datasets append` 2026-11-27T14:58:05.472Z"
+   }
+  ]
+ }
+}

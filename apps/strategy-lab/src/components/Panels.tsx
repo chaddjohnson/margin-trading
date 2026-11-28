@@ -1,5 +1,6 @@
 // Run-level panels: Parameters (inputs, assumptions, provenance), the selected event, and the analysis.
 
+import { effectiveWindowOf, shownWindowOf } from '../../shared/run-window.ts';
 import type { LabEvent, LabValue, RunDetail } from '../../shared/contract.ts';
 import type { ParamSpec, Predicate } from '../../shared/contract.ts';
 import { findStrategy, RISE_FROM_RECENT_LOW, RISE_FROM_RECENT_LOW_TRADING, STUDY8_POOL } from '../../shared/strategies.ts';
@@ -142,10 +143,29 @@ export function ParametersPanel({ run, onClone }: { run: RunDetail; onClone: (()
           { key: 'symbols', label: 'Symbols', value: run.symbols.join(', '), unit: 'text' },
           {
             key: 'window',
-            label: 'Window (NY session dates)',
-            value: `${run.window.from} → ${run.window.to}`,
+            label: 'Evaluated window (NY session dates)',
+            value: (() => {
+              const e = effectiveWindowOf(run);
+              const w = shownWindowOf(e);
+              return `${w.from} → ${w.to}${e.effective ? '' : ' (as requested; the evaluated sessions were not recorded)'}`;
+            })(),
             unit: 'text'
           },
+          {
+            key: 'requestedWindow',
+            label: 'Requested window',
+            value: (() => {
+              const e = effectiveWindowOf(run);
+              return `${e.requested.from} → ${e.requested.to}${e.differs ? ' (differs: the data end before the requested end, or start later)' : ''}`;
+            })(),
+            unit: 'text'
+          },
+          ...effectiveWindowOf(run).bySymbol.map((x) => ({
+            key: `window-${x.symbol}`,
+            label: `${x.symbol}: evaluated sessions`,
+            value: `${x.from} → ${x.to}${x.sessions !== null ? ` (${x.sessions} sessions)` : ''}${x.warmupSessions ? `; warm-up ${x.warmupSessions} sessions from ${x.warmupFrom ?? '—'}` : ''}`,
+            unit: 'text' as const
+          })),
           { key: 'partition', label: 'Partitions touched', value: run.window.partition, unit: 'text' },
           { key: 'resolution', label: 'Resolution', value: run.window.resolution, unit: 'text' },
           {

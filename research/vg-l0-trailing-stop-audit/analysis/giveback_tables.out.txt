@@ -1,0 +1,65 @@
+## Implied activation gain of the net-profit stop (percent of the raw fill)
+D1:GDX {0: 6.5495, 1: 6.5816, 30: 7.5128, 120: 10.4028, 300: 16.1828}
+D1:VGT {0: 7.9288, 1: 7.9613, 30: 8.9046, 120: 11.832, 300: 17.6867}
+G:VGT {0: 6.0976, 1: 6.1295, 30: 7.0568, 120: 9.9345, 300: 15.6899}
+
+## New L0: 46 lots, net 479,605.15
+D1:GDX: lots 31, winners 23, losers 7, open 1, net 221,780.70, peak sum 446,990.15, giveback-to-exit (closed winners) 176,024.60, tau*(N+peak) 166,230, median ratio 0.0632 (tau 0.061), reasons {'trailing stop': 18, 'trailing stop gap': 5, 'maximum hold': 7, 'open': 1}, losing/open lots with peak above the day-0 activation: 0
+D1:VGT: lots 7, winners 6, losers 1, open 0, net 146,898.43, peak sum 214,138.20, giveback-to-exit (closed winners) 61,235.53, tau*(N+peak) 59,018, median ratio 0.0769 (tau 0.073), reasons {'trailing stop': 6, 'maximum hold': 1}, losing/open lots with peak above the day-0 activation: 0
+G:VGT: lots 8, winners 8, losers 0, open 0, net 110,926.02, peak sum 173,572.90, giveback-to-exit (closed winners) 62,646.88, tau*(N+peak) 55,494, median ratio 0.0621 (tau 0.057), reasons {'trailing stop': 6, 'trailing stop gap': 2}, losing/open lots with peak above the day-0 activation: 0
+total giveback-to-exit 299,907.01; total tau*(N+peak) 280,742
+winners 37; with an interim decline larger than the final giveback: 7 -> lots ['7', '8', '9', '18', '26', '33', '40']
+winners with peak >= $30k: 7; >= $40k: 4
+gap / open-through beyond-level cost: $10,918.91 over 9 lots (duplicate rows ignored: 0)
+
+## N/original: 44 lots, net 482,700.73
+D1:GDX: lots 27, winners 21, losers 5, open 1, net 223,904.87, peak sum 427,525.55, giveback-to-exit (closed winners) 162,932.07, tau*(N+peak) 153,255, median ratio 0.0632 (tau 0.061), reasons {'trailing stop': 16, 'trailing stop gap': 5, 'maximum hold': 5, 'open': 1}, losing/open lots with peak above the day-0 activation: 0
+D1:VGT: lots 9, winners 7, losers 2, open 0, net 147,869.84, peak sum 227,610.93, giveback-to-exit (closed winners) 69,586.23, tau*(N+peak) 67,256, median ratio 0.0767 (tau 0.073), reasons {'trailing stop': 7, 'maximum hold': 2}, losing/open lots with peak above the day-0 activation: 0
+G:VGT: lots 8, winners 8, losers 0, open 0, net 110,926.02, peak sum 173,572.90, giveback-to-exit (closed winners) 62,646.88, tau*(N+peak) 55,494, median ratio 0.0621 (tau 0.057), reasons {'trailing stop': 6, 'trailing stop gap': 2}, losing/open lots with peak above the day-0 activation: 0
+total giveback-to-exit 295,165.18; total tau*(N+peak) 276,006
+winners 36; with an interim decline larger than the final giveback: 7 -> lots ['7', '8', '9', '18', '24', '31', '38']
+winners with peak >= $30k: 8; >= $40k: 4
+gap / open-through beyond-level cost: $10,918.68 over 9 lots (duplicate rows ignored: 0)
+
+## New L0 FULL ledger: implied post-entry high of stop-level exits (exit raw / (1 - tau))
+#1 G:VGT 2016-07-05->2017-06-29 fill 106.57 exit 139.809 H 148.2600 (+39.12%) exit gain 31.19% net 20239.69
+#2 G:VGT 2017-07-06->2018-02-05 fill 140.12 exit 168.976 H 179.1900 (+27.88%) exit gain 20.59% net 14024.05
+#4 D1:GDX 2018-09-05->2018-10-25 fill 17.89 exit 19.2589 H 20.5100 (+14.65%) exit gain 7.65% net 6037.26
+#5 D1:VGT 2018-12-24->2019-05-13 fill 156.71 exit 200.019 H 215.7700 (+37.69%) exit gain 27.64% net 23289.51
+#8 D1:GDX 2020-03-16->2020-03-18 fill 17.12 exit 23.813 H 25.3600 (+48.13%) exit gain 39.09% net 38895.56
+#10 D1:GDX 2020-03-23->2020-03-26 fill 21.62 exit 25.353 H 27.0000 (+24.88%) exit gain 17.27% net 17058.8
+#11 D1:VGT 2020-04-02->2020-09-04 fill 201.7648 exit 315.866 H 340.7400 (+68.88%) exit gain 56.55% net 51723.87
+#12 D1:VGT 2020-10-30->2021-02-23 fill 297.93 exit 354.791 H 382.7300 (+28.46%) exit gain 19.09% net 15470.34
+#13 D1:GDX 2021-03-03->2021-03-24 fill 31.44 exit 32.3767 H 34.4800 (+9.67%) exit gain 2.98% net 2243.58
+#14 D1:GDX 2021-03-25->2021-04-29 fill 32.36 exit 34.5881 H 36.8350 (+13.83%) exit gain 6.89% net 5723.62
+#16 D1:GDX 2021-10-05->2021-10-29 fill 29.5 exit 31.8791 H 33.9500 (+15.08%) exit gain 8.06% net 7233.28
+#17 D1:GDX 2021-12-15->2022-01-06 fill 28.98 exit 30.1184 H 32.0750 (+10.68%) exit gain 3.93% net 3161.42
+#19 D1:GDX 2022-05-12->2022-06-09 fill 30.1 exit 31.4753 H 33.5200 (+11.36%) exit gain 4.57% net 3620.68
+#21 D1:VGT 2022-07-01->2022-08-26 fill 327 exit 363.013 H 391.5996 (+19.76%) exit gain 11.01% net 9214.47
+#22 D1:GDX 2022-09-01->2022-09-15 fill 23.168 exit 24.1417 H 25.7100 (+10.97%) exit gain 4.20% net 3676.67
+#24 D1:GDX 2022-09-30->2022-10-07 fill 23.75 exit 24.5173 H 26.1100 (+9.94%) exit gain 3.23% net 2916.56
+#26 D1:GDX 2022-10-25->2022-12-15 fill 24.15 exit 28.5972 H 30.4550 (+26.11%) exit gain 18.42% net 16759.75
+#30 D1:GDX 2023-03-08->2023-04-19 fill 27.08 exit 33.8979 H 36.1000 (+33.31%) exit gain 25.18% net 23786.02
+#31 D1:GDX 2023-10-02->2023-10-26 fill 26.21 exit 28.3202 H 30.1600 (+15.07%) exit gain 8.05% net 7219.99
+#33 D1:GDX 2024-02-28->2024-04-15 fill 25.78 exit 33.5646 H 35.7450 (+38.65%) exit gain 30.20% net 28649.53
+#34 G:VGT 2024-04-23->2024-07-18 fill 488.63 exit 574.428 H 609.1500 (+24.66%) exit gain 17.56% net 14849.7
+#35 D1:VGT 2025-04-04->2025-04-10 fill 493 exit 498.624 H 537.8900 (+9.11%) exit gain 1.14% net 858.86
+#36 D1:VGT 2025-04-21->2025-11-07 fill 489.415 exit 748.08 H 806.9900 (+64.89%) exit gain 52.85% net 46671.65
+#37 D1:GDX 2026-03-19->2026-03-26 fill 82.045 exit 82.6977 H 88.0700 (+7.34%) exit gain 0.80% net 483.87
+#39 G:VGT 2026-04-15->2026-06-05 fill 772.185 exit 950.544 H 1008.0000 (+30.54%) exit gain 23.10% net 21437.94
+#40 D1:GDX 2026-06-08->2026-06-18 fill 79.9 exit 84.5006 H 89.9900 (+12.63%) exit gain 5.76% net 5350.88
+#43 D1:GDX 2026-07-21->2026-07-29 fill 72.66 exit 73.2326 H 77.9900 (+7.34%) exit gain 0.79% net 446.23
+#44 D1:GDX 2026-07-30->2026-08-28 fill 74.635 exit 99.2241 H 105.6700 (+41.58%) exit gain 32.95% net 31938.99
+
+## Design examples (hypothetical prices, e = 100)
+E1 tiny gain: H 102 -> L1 94.554
+E2 large winner, 120 d: L1 148.32 net 44555.32 | L2 153.60 net 49830.04
+E3 interim exit 124.80 at day 60: net 22867.04 difference vs E2 stage 1 -21688.27
+E4 placement: H 121 -> L2 116.16
+E5 lapse, 300 d: interest 9041.1 L2 107.185 net at L2 -1963.23
+lot #11 check: 340.74 * 0.927 = 315.866 ; 4% stage-2 level 327.11
+
+## S3 retained-profit floor: distance below H (percent) and the gain ceiling where it binds (tau 7.3 %)
+rho 0.5 {0.02: 0.98, 0.05: 2.38, 0.1: 4.55, 0.2: 8.33, 0.4: 14.29, 0.6: 18.75} binds for g < 17.1 %
+rho 0.7 {0.02: 0.59, 0.05: 1.43, 0.1: 2.73, 0.2: 5.0, 0.4: 8.57, 0.6: 11.25} binds for g < 32.2 %
+rho 0.8 {0.02: 0.39, 0.05: 0.95, 0.1: 1.82, 0.2: 3.33, 0.4: 5.71, 0.6: 7.5} binds for g < 57.5 %

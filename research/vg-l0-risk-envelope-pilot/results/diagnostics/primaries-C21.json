@@ -1,0 +1,3645 @@
+{
+ "kind": "risk-envelope pilot frozen-primary and benchmark diagnostics (nonbinding CPU)",
+ "cutoff": "C21",
+ "trainingDoor": "D21",
+ "intervalDoor": "D23",
+ "interval": [
+  "2022-01-03",
+  "2023-12-29"
+ ],
+ "label": "retrospective, previously inspected history; a tail stress on the training window is in-sample (daily-bar approximation)",
+ "purpose": "diagnostic",
+ "marginExamples": {
+  "note": "illustrative only: a $100,000 position bought on a $100,000 loan with other account equity B; a common decline s* (percent) at which equity meets the maintenance requirement; not a broker rule and not the user’s account",
+  "rows": [
+   {
+    "otherEquity": 25000,
+    "maintenance": 0.25,
+    "firstDeficiencyDecline": 0
+   },
+   {
+    "otherEquity": 25000,
+    "maintenance": 0.3,
+    "firstDeficiencyDecline": -7.14
+   },
+   {
+    "otherEquity": 25000,
+    "maintenance": 0.5,
+    "firstDeficiencyDecline": -50
+   },
+   {
+    "otherEquity": 50000,
+    "maintenance": 0.25,
+    "firstDeficiencyDecline": 33.33
+   },
+   {
+    "otherEquity": 50000,
+    "maintenance": 0.3,
+    "firstDeficiencyDecline": 28.57
+   },
+   {
+    "otherEquity": 50000,
+    "maintenance": 0.5,
+    "firstDeficiencyDecline": 0
+   },
+   {
+    "otherEquity": 100000,
+    "maintenance": 0.25,
+    "firstDeficiencyDecline": null
+   },
+   {
+    "otherEquity": 100000,
+    "maintenance": 0.3,
+    "firstDeficiencyDecline": null
+   },
+   {
+    "otherEquity": 100000,
+    "maintenance": 0.5,
+    "firstDeficiencyDecline": null
+   }
+  ]
+ },
+ "seconds": 238,
+ "rows": [
+  {
+   "label": "CTRL C21/broad/GB0.VD1/R1#1 profit",
+   "id": "rc2-93911a0376639793",
+   "kind": "primary",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "selector": "P0"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "growthBounded": true,
+   "training": {
+    "key": "rc2-93911a0376639793",
+    "net": 216732.26,
+    "dd": 30150.46,
+    "ddLiquidation": 30135.64,
+    "envelope": {
+     "bankedDdMarked": 15292.1,
+     "bankedDdLiquidation": 15341.64,
+     "principalLossMarked": 6558.55,
+     "principalLossLiquidation": 6568.54
+    },
+    "policies": {
+     "CTRL": true,
+     "EXP": true
+    },
+    "givebackDominated": true,
+    "unbankedGivebackShare": 0.9018,
+    "d3Illustrative": true,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.1785,
+       "dollars": 29069.61,
+       "peakEquity": 162840.6,
+       "peakDate": "2018-10-03",
+       "troughDate": "2019-01-23",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.5951,
+       "allowance": 48852.18,
+       "regime": "peak-proportional",
+       "dollars": 29069.61,
+       "peakEquity": 162840.6,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2020-02-19",
+        "troughDate": "2020-03-09",
+        "peakValue": 76252.32,
+        "troughValue": 46101.86,
+        "bankedHigh": 49063.1
+       },
+       "account": {
+        "unbankedGiveback": 27189.22,
+        "bankedErosion": 2961.23,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 30150.46,
+        "principalLoss": 0,
+        "residual": -7.275957614183426e-12
+       },
+       "bankedDd": 15292.1
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.1784,
+       "dollars": 29032.38,
+       "peakEquity": 162753.84,
+       "peakDate": "2018-10-03",
+       "troughDate": "2019-01-23",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.5946,
+       "allowance": 48826.15,
+       "regime": "peak-proportional",
+       "dollars": 29032.38,
+       "peakEquity": 162753.84,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2020-02-19",
+        "troughDate": "2020-03-09",
+        "peakValue": 76181.57,
+        "troughValue": 46045.93,
+        "bankedHigh": 49063.1
+       },
+       "account": {
+        "unbankedGiveback": 27118.47,
+        "bankedErosion": 3017.17,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 30135.64,
+        "principalLoss": 0,
+        "residual": 0
+       },
+       "bankedDd": 15341.64
+      }
+     }
+    },
+    "trades": {
+     "lots": 13,
+     "worstNet": -6558.55,
+     "maxPrincipalLossLiq": 6568.54,
+     "maxGivebackAboveBreakeven": 30150.46,
+     "maxPeakProfit": 76628.01,
+     "byBook": {
+      "D1:GDX": 5,
+      "D1:VGT": 0,
+      "G:VGT": 8
+     }
+    },
+    "occupancy": 0.9146,
+    "tradedNotional": 1300000,
+    "principalDays": 197927986.11
+   },
+   "interval": {
+    "key": "rc2-93911a0376639793",
+    "net": 188921.88,
+    "dd": 47359.97,
+    "ddLiquidation": 47313.39,
+    "envelope": {
+     "bankedDdMarked": 28916.75,
+     "bankedDdLiquidation": 28960,
+     "principalLossMarked": 14159.18,
+     "principalLossLiquidation": 14202.43
+    },
+    "policies": {
+     "CTRL": false,
+     "EXP": false
+    },
+    "givebackDominated": false,
+    "unbankedGivebackShare": 0.3894,
+    "d3Illustrative": false,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.1785,
+       "dollars": 29069.61,
+       "peakEquity": 162840.6,
+       "peakDate": "2018-10-03",
+       "troughDate": "2019-01-23",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.7893,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 47359.97,
+       "peakEquity": 319923.31,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2021-11-22",
+        "troughDate": "2022-07-06",
+        "peakValue": 219923.31,
+        "troughValue": 172563.34,
+        "bankedHigh": 201480.08
+       },
+       "account": {
+        "unbankedGiveback": 18443.23,
+        "bankedErosion": 28916.75,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 18443.23,
+        "principalLoss": 28916.75,
+        "residual": 0
+       },
+       "bankedDd": 28916.75
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.1784,
+       "dollars": 29032.38,
+       "peakEquity": 162753.84,
+       "peakDate": "2018-10-03",
+       "troughDate": "2019-01-23",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.7886,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 47313.39,
+       "peakEquity": 319833.47,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2021-11-22",
+        "troughDate": "2022-07-06",
+        "peakValue": 219833.47,
+        "troughValue": 172520.09,
+        "bankedHigh": 201480.08
+       },
+       "account": {
+        "unbankedGiveback": 18353.39,
+        "bankedErosion": 28960,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 18353.39,
+        "principalLoss": 28960,
+        "residual": 7.275957614183426e-12
+       },
+       "bankedDd": 28960
+      }
+     }
+    },
+    "trades": {
+     "lots": 24,
+     "worstNet": -10582.34,
+     "maxPrincipalLossLiq": 14202.43,
+     "maxGivebackAboveBreakeven": 30150.46,
+     "maxPeakProfit": 76628.01,
+     "byBook": {
+      "D1:GDX": 10,
+      "D1:VGT": 0,
+      "G:VGT": 14
+     }
+    },
+    "occupancy": 0.7793,
+    "tradedNotional": 2400000,
+    "principalDays": 223894097.22,
+    "interval": {
+     "boundary": "2021-12-31",
+     "boundaryEquityNet": 216732.26,
+     "net": -27810.38,
+     "ddMarked": 45819.69,
+     "ddLiquidation": 45773.29,
+     "bankedDdMarked": 28916.75,
+     "bankedDdLiquidation": 28960,
+     "newLots": 11,
+     "newLotMaxPrincipalLossMarked": 14159.18,
+     "newLotMaxPrincipalLossLiq": 14202.43,
+     "carried": [
+      {
+       "book": "G:VGT",
+       "entry": "2020-04-20",
+       "exit": "2022-01-20",
+       "net": 58184.78,
+       "principalLossLiq": 4990.82,
+       "peakProfit": 76628.01
+      }
+     ],
+     "views": {
+      "marked": {
+       "D1": {
+        "pct": 0.1439,
+        "dollars": 45819.69,
+        "peakEquity": 318383.03,
+        "peakDate": "2022-01-04",
+        "troughDate": "2022-07-06",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.3617,
+        "allowance": 126692.9,
+        "regime": "floor",
+        "dollars": 45819.69,
+        "peakEquity": 318383.03,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2022-01-04",
+         "troughDate": "2022-07-06",
+         "peakValue": 1650.77,
+         "troughValue": -44168.92,
+         "bankedHigh": 55473.79
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 1650.77,
+         "capitalLoss": 44168.92,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 99642.71
+       }
+      },
+      "liquidation": {
+       "D1": {
+        "pct": 0.1438,
+        "dollars": 45773.29,
+        "peakEquity": 318382.15,
+        "peakDate": "2022-01-04",
+        "troughDate": "2022-07-06",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.3613,
+        "allowance": 126692.9,
+        "regime": "floor",
+        "dollars": 45773.29,
+        "peakEquity": 318382.15,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2022-01-04",
+         "troughDate": "2022-07-06",
+         "peakValue": 1649.89,
+         "troughValue": -44123.4,
+         "bankedHigh": 55473.79
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 1649.89,
+         "capitalLoss": 44123.4,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 99597.19
+       }
+      }
+     }
+    }
+   },
+   "foldRun": {
+    "sliceNet": -27810.38,
+    "sliceDd": 45819.69,
+    "giveBack": {
+     "book": "G:VGT",
+     "entry": "2020-04-20",
+     "entryRaw": 232.14,
+     "markAtCutoff": 73436.95,
+     "multipleAtCutoff": 1.97,
+     "highestLater": {
+      "mark": 75087.73,
+      "date": "2022-01-04"
+     },
+     "lowestLater": {
+      "mark": 56762.72,
+      "date": "2022-01-19"
+     },
+     "exit": {
+      "date": "2022-01-20",
+      "reason": "trend exit",
+      "raw": 420.42
+     },
+     "final": 58184.78,
+     "changeFromCutoff": -15252.17
+    },
+    "nextSlice": {
+     "lots": 11,
+     "byBook": {
+      "D1:GDX": 5,
+      "D1:VGT": 0,
+      "G:VGT": 6
+     },
+     "maeMedian": -4095.45,
+     "maeP90": -7128.32,
+     "maeWorst": -14159.18,
+     "worstRealized": -10582.34,
+     "meanLosing": -4216.04,
+     "losing": 8,
+     "exitReasons": {
+      "maximum hold": 6,
+      "initial stop gap": 1,
+      "trailing stop": 1,
+      "trailing stop gap": 1,
+      "initial stop": 1
+     }
+    },
+    "openAtBoundary": [
+     "G:VGT"
+    ]
+   },
+   "confirmation": {
+    "draws": 384,
+    "ddLiquidation": {
+     "p90": 33265.32,
+     "worst": 41562.11
+    },
+    "D1pct": {
+     "median": 0.17,
+     "p90": 0.21,
+     "worst": 0.2586
+    },
+    "D2utilization": {
+     "median": 0.55,
+     "p90": 0.69,
+     "shareAbove1": 0
+    },
+    "givebackDominatedShare": 0.81,
+    "cpuPolicyPassShare": {
+     "CTRL": 0.93,
+     "EXP": 0.98
+    }
+   },
+   "scaling": {
+    "training": [
+     {
+      "allocation": 100000,
+      "net": 216732.26,
+      "dd": 30150.46,
+      "ddPctC0": 30.1505,
+      "principalLossLiqPct": 6.5685,
+      "bankedDdLiqPct": 15.3416,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 541830.64,
+      "dd": 75376.15,
+      "ddPctC0": 30.1505,
+      "principalLossLiqPct": 6.5685,
+      "bankedDdLiqPct": 15.3416,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     },
+     {
+      "allocation": 500000,
+      "net": 1083661.29,
+      "dd": 150752.29,
+      "ddPctC0": 30.1505,
+      "principalLossLiqPct": 6.5685,
+      "bankedDdLiqPct": 15.3416,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     }
+    ],
+    "interval": [
+     {
+      "allocation": 100000,
+      "net": 188921.88,
+      "dd": 47359.97,
+      "ddPctC0": 47.36,
+      "principalLossLiqPct": 14.2024,
+      "bankedDdLiqPct": 28.96,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": false,
+       "EXP": false
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 472304.69,
+      "dd": 118399.93,
+      "ddPctC0": 47.36,
+      "principalLossLiqPct": 14.2024,
+      "bankedDdLiqPct": 28.96,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": false,
+       "EXP": false
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 2.9103830456733706e-16
+     },
+     {
+      "allocation": 500000,
+      "net": 944609.39,
+      "dd": 236799.87,
+      "ddPctC0": 47.36,
+      "principalLossLiqPct": 14.2024,
+      "bankedDdLiqPct": 28.96,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": false,
+       "EXP": false
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 2.9103830456733706e-16
+     }
+    ]
+   },
+   "tail": {
+    "D1·GDX": {
+     "holdDays": 23,
+     "holdBasis": "legacy calendar hold",
+     "stopDistancePct": 22.1,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -38737.22,
+       "worstEntry": "2020-02-21",
+       "p95Loss": -12487.02,
+       "shareBelowMinus10k": 0.1,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": {
+       "windows": 1510,
+       "worstLoss": -26544.47,
+       "worstEntry": "2020-02-24",
+       "p95Loss": -12667.01,
+       "shareBelowMinus10k": 0.1,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": {
+        "beyondStopPct": 3.86,
+        "date": "2020-03-12"
+       }
+      }
+     },
+     "syntheticGaps": {
+      "gap −10%": -22177.86,
+      "gap −20%": -22177.86,
+      "gap −30%": -30069.97
+     }
+    },
+    "D1·VGT": {
+     "holdDays": 32,
+     "holdBasis": "adaptive: the extended bound",
+     "stopDistancePct": 14.3,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -32505.46,
+       "worstEntry": "2020-02-20",
+       "p95Loss": -7699.55,
+       "shareBelowMinus10k": 0.02,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": {
+       "windows": 1510,
+       "worstLoss": -18607.27,
+       "worstEntry": "2020-03-04",
+       "p95Loss": -7971.23,
+       "shareBelowMinus10k": 0.03,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": {
+        "beyondStopPct": 3.98,
+        "date": "2020-03-12"
+       }
+      }
+     },
+     "syntheticGaps": {
+      "gap −10%": -14385.66,
+      "gap −20%": -20079.96,
+      "gap −30%": -30069.97
+     }
+    }
+   }
+  },
+  {
+   "label": "CTRL C21/broad/GB0.VD1/R2#1 profit",
+   "id": "rc2-e8e3ee2f70311515",
+   "kind": "primary",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "selector": "RA1-original"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "growthBounded": false,
+   "training": {
+    "key": "rc2-e8e3ee2f70311515",
+    "net": 212164.64,
+    "dd": 27553.78,
+    "ddLiquidation": 27504.87,
+    "envelope": {
+     "bankedDdMarked": 5847.16,
+     "bankedDdLiquidation": 5896,
+     "principalLossMarked": 5847.16,
+     "principalLossLiquidation": 5896
+    },
+    "policies": {
+     "CTRL": true,
+     "EXP": true
+    },
+    "givebackDominated": true,
+    "unbankedGivebackShare": 0.9594,
+    "d3Illustrative": true,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.1638,
+       "dollars": 27553.78,
+       "peakEquity": 168254.46,
+       "peakDate": "2018-10-03",
+       "troughDate": "2019-01-29",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.5459,
+       "allowance": 50476.34,
+       "regime": "peak-proportional",
+       "dollars": 27553.78,
+       "peakEquity": 168254.46,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2018-10-03",
+        "troughDate": "2019-01-29",
+        "peakValue": 68254.46,
+        "troughValue": 40700.68,
+        "bankedHigh": 41818.27
+       },
+       "account": {
+        "unbankedGiveback": 26436.18,
+        "bankedErosion": 1117.6,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 26436.18,
+        "principalLoss": 1117.6,
+        "residual": -3.637978807091713e-12
+       },
+       "bankedDd": 5847.16
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.1636,
+       "dollars": 27504.87,
+       "peakEquity": 168156.09,
+       "peakDate": "2018-10-03",
+       "troughDate": "2019-01-29",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.5452,
+       "allowance": 50446.83,
+       "regime": "peak-proportional",
+       "dollars": 27504.87,
+       "peakEquity": 168156.09,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2018-10-03",
+        "troughDate": "2019-01-29",
+        "peakValue": 68156.09,
+        "troughValue": 40651.22,
+        "bankedHigh": 41818.27
+       },
+       "account": {
+        "unbankedGiveback": 26337.81,
+        "bankedErosion": 1167.05,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 26337.81,
+        "principalLoss": 1167.05,
+        "residual": 0
+       },
+       "bankedDd": 5896
+      }
+     }
+    },
+    "trades": {
+     "lots": 10,
+     "worstNet": 2984.62,
+     "maxPrincipalLossLiq": 5896,
+     "maxGivebackAboveBreakeven": 26436.18,
+     "maxPeakProfit": 68254.46,
+     "byBook": {
+      "D1:GDX": 6,
+      "D1:VGT": 0,
+      "G:VGT": 4
+     }
+    },
+    "occupancy": 0.9107,
+    "tradedNotional": 1000000,
+    "principalDays": 197354791.67
+   },
+   "interval": {
+    "key": "rc2-e8e3ee2f70311515",
+    "net": 189675.65,
+    "dd": 57051.7,
+    "ddLiquidation": 57014.66,
+    "envelope": {
+     "bankedDdMarked": 37568.5,
+     "bankedDdLiquidation": 37602.68,
+     "principalLossMarked": 37568.5,
+     "principalLossLiquidation": 37602.68
+    },
+    "policies": {
+     "CTRL": false,
+     "EXP": false
+    },
+    "givebackDominated": false,
+    "unbankedGivebackShare": 0.3415,
+    "d3Illustrative": false,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.1811,
+       "dollars": 57051.7,
+       "peakEquity": 315031.14,
+       "peakDate": "2021-11-22",
+       "troughDate": "2022-10-13",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.9509,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 57051.7,
+       "peakEquity": 315031.14,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2021-11-22",
+        "troughDate": "2022-10-13",
+        "peakValue": 215031.14,
+        "troughValue": 157979.45,
+        "bankedHigh": 195547.94
+       },
+       "account": {
+        "unbankedGiveback": 19483.2,
+        "bankedErosion": 37568.5,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 19483.2,
+        "principalLoss": 37568.5,
+        "residual": -1.4551915228366852e-11
+       },
+       "bankedDd": 37568.5
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.181,
+       "dollars": 57014.66,
+       "peakEquity": 314959.92,
+       "peakDate": "2021-11-22",
+       "troughDate": "2022-10-13",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.9502,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 57014.66,
+       "peakEquity": 314959.92,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2021-11-22",
+        "troughDate": "2022-10-13",
+        "peakValue": 214959.92,
+        "troughValue": 157945.26,
+        "bankedHigh": 195547.94
+       },
+       "account": {
+        "unbankedGiveback": 19411.98,
+        "bankedErosion": 37602.68,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 19411.98,
+        "principalLoss": 37602.68,
+        "residual": -2.9103830456733704e-11
+       },
+       "bankedDd": 37602.68
+      }
+     }
+    },
+    "trades": {
+     "lots": 11,
+     "worstNet": -5872.3,
+     "maxPrincipalLossLiq": 37602.68,
+     "maxGivebackAboveBreakeven": 26436.18,
+     "maxPeakProfit": 68254.46,
+     "byBook": {
+      "D1:GDX": 6,
+      "D1:VGT": 0,
+      "G:VGT": 5
+     }
+    },
+    "occupancy": 0.91,
+    "tradedNotional": 1100000,
+    "principalDays": 263362291.67,
+    "interval": {
+     "boundary": "2021-12-31",
+     "boundaryEquityNet": 212164.64,
+     "net": -22489,
+     "ddMarked": 55459.33,
+     "ddLiquidation": 55422.44,
+     "bankedDdMarked": 37568.5,
+     "bankedDdLiquidation": 37602.68,
+     "newLots": 1,
+     "newLotMaxPrincipalLossMarked": 37568.5,
+     "newLotMaxPrincipalLossLiq": 37602.68,
+     "carried": [
+      {
+       "book": "G:VGT",
+       "entry": "2020-11-06",
+       "exit": "2022-01-21",
+       "net": 11474.79,
+       "principalLossLiq": 3530.44,
+       "peakProfit": 30957.99
+      }
+     ],
+     "views": {
+      "marked": {
+       "D1": {
+        "pct": 0.1769,
+        "dollars": 55459.33,
+        "peakEquity": 313438.78,
+        "peakDate": "2022-01-04",
+        "troughDate": "2022-10-13",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.4442,
+        "allowance": 124865.86,
+        "regime": "floor",
+        "dollars": 55459.33,
+        "peakEquity": 313438.78,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2022-01-04",
+         "troughDate": "2022-10-13",
+         "peakValue": 1274.13,
+         "troughValue": -54185.2,
+         "bankedHigh": 11474.79
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 1274.13,
+         "capitalLoss": 54185.2,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 65659.99
+       }
+      },
+      "liquidation": {
+       "D1": {
+        "pct": 0.1768,
+        "dollars": 55422.44,
+        "peakEquity": 313438.08,
+        "peakDate": "2022-01-04",
+        "troughDate": "2022-10-13",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.4439,
+        "allowance": 124865.86,
+        "regime": "floor",
+        "dollars": 55422.44,
+        "peakEquity": 313438.08,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2022-01-04",
+         "troughDate": "2022-10-13",
+         "peakValue": 1273.43,
+         "troughValue": -54149.01,
+         "bankedHigh": 11474.79
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 1273.43,
+         "capitalLoss": 54149.01,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 65623.8
+       }
+      }
+     }
+    }
+   },
+   "foldRun": {
+    "sliceNet": -22489,
+    "sliceDd": 55459.33,
+    "giveBack": {
+     "book": "G:VGT",
+     "entry": "2020-11-06",
+     "entryRaw": 325.36,
+     "markAtCutoff": 28091.49,
+     "multipleAtCutoff": 1.41,
+     "highestLater": {
+      "mark": 29365.62,
+      "date": "2022-01-04"
+     },
+     "lowestLater": {
+      "mark": 11636.37,
+      "date": "2022-01-21"
+     },
+     "exit": {
+      "date": "2022-01-21",
+      "reason": "trailing stop",
+      "raw": 406.3422
+     },
+     "final": 11474.79,
+     "changeFromCutoff": -16616.7
+    },
+    "nextSlice": {
+     "lots": 1,
+     "byBook": {
+      "D1:GDX": 0,
+      "D1:VGT": 0,
+      "G:VGT": 1
+     },
+     "maeMedian": -37568.5,
+     "maeP90": -37568.5,
+     "maeWorst": -37568.5,
+     "worstRealized": null,
+     "meanLosing": null,
+     "losing": 0,
+     "exitReasons": {}
+    },
+    "openAtBoundary": [
+     "G:VGT"
+    ]
+   },
+   "confirmation": {
+    "draws": 384,
+    "ddLiquidation": {
+     "p90": 29845.83,
+     "worst": 45804.63
+    },
+    "D1pct": {
+     "median": 0.17,
+     "p90": 0.18,
+     "worst": 0.3076
+    },
+    "D2utilization": {
+     "median": 0.55,
+     "p90": 0.59,
+     "shareAbove1": 0.01
+    },
+    "givebackDominatedShare": 0.95,
+    "cpuPolicyPassShare": {
+     "CTRL": 0.98,
+     "EXP": 0.98
+    }
+   },
+   "scaling": {
+    "training": [
+     {
+      "allocation": 100000,
+      "net": 212164.64,
+      "dd": 27553.78,
+      "ddPctC0": 27.5538,
+      "principalLossLiqPct": 5.896,
+      "bankedDdLiqPct": 5.896,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 530411.61,
+      "dd": 68884.44,
+      "ddPctC0": 27.5538,
+      "principalLossLiqPct": 5.896,
+      "bankedDdLiqPct": 5.896,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     },
+     {
+      "allocation": 500000,
+      "net": 1060823.22,
+      "dd": 137768.89,
+      "ddPctC0": 27.5538,
+      "principalLossLiqPct": 5.896,
+      "bankedDdLiqPct": 5.896,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     }
+    ],
+    "interval": [
+     {
+      "allocation": 100000,
+      "net": 189675.65,
+      "dd": 57051.7,
+      "ddPctC0": 57.0517,
+      "principalLossLiqPct": 37.6027,
+      "bankedDdLiqPct": 37.6027,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": false,
+       "EXP": false
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 474189.12,
+      "dd": 142629.25,
+      "ddPctC0": 57.0517,
+      "principalLossLiqPct": 37.6027,
+      "bankedDdLiqPct": 37.6027,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": false,
+       "EXP": false
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     },
+     {
+      "allocation": 500000,
+      "net": 948378.25,
+      "dd": 285258.49,
+      "ddPctC0": 57.0517,
+      "principalLossLiqPct": 37.6027,
+      "bankedDdLiqPct": 37.6027,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": false,
+       "EXP": false
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     }
+    ]
+   },
+   "tail": {
+    "D1·GDX": {
+     "holdDays": 20,
+     "holdBasis": "legacy calendar hold",
+     "stopDistancePct": 7.2,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -39444.17,
+       "worstEntry": "2020-02-24",
+       "p95Loss": -11652.94,
+       "shareBelowMinus10k": 0.07,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": {
+       "windows": 1510,
+       "worstLoss": -12764.84,
+       "worstEntry": "2020-02-28",
+       "p95Loss": -7865.36,
+       "shareBelowMinus10k": 0.01,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": {
+        "beyondStopPct": 5.09,
+        "date": "2020-03-12"
+       }
+      }
+     },
+     "syntheticGaps": {
+      "gap −10%": -10089.96,
+      "gap −20%": -20079.96,
+      "gap −30%": -30069.97
+     }
+    },
+    "D1·VGT": {
+     "holdDays": 28,
+     "holdBasis": "adaptive: the extended bound",
+     "stopDistancePct": 7.8,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -30206.48,
+       "worstEntry": "2020-02-21",
+       "p95Loss": -7302.47,
+       "shareBelowMinus10k": 0.02,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": {
+       "windows": 1510,
+       "worstLoss": -13494.68,
+       "worstEntry": "2020-02-27",
+       "p95Loss": -8464.76,
+       "shareBelowMinus10k": 0.01,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": {
+        "beyondStopPct": 5.19,
+        "date": "2020-03-12"
+       }
+      }
+     },
+     "syntheticGaps": {
+      "gap −10%": -10089.96,
+      "gap −20%": -20079.96,
+      "gap −30%": -30069.97
+     }
+    }
+   }
+  },
+  {
+   "label": "EXP C21/broad/GA0.VA0/R2#1 profit",
+   "id": "1769b381b5687d6d",
+   "kind": "primary",
+   "roles": [
+    {
+     "arm": "EXP",
+     "selector": "P0"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "growthBounded": false,
+   "training": {
+    "key": "1769b381b5687d6d",
+    "net": 212275.99,
+    "dd": 26324.57,
+    "ddLiquidation": 26287.83,
+    "envelope": {
+     "bankedDdMarked": 11158.02,
+     "bankedDdLiquidation": 11202.74,
+     "principalLossMarked": 11158.02,
+     "principalLossLiquidation": 11202.74
+    },
+    "policies": {
+     "CTRL": true,
+     "EXP": true
+    },
+    "givebackDominated": true,
+    "unbankedGivebackShare": 1,
+    "d3Illustrative": true,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.1652,
+       "dollars": 26324.57,
+       "peakEquity": 159326.41,
+       "peakDate": "2018-10-03",
+       "troughDate": "2018-10-29",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.5507,
+       "allowance": 47797.92,
+       "regime": "peak-proportional",
+       "dollars": 26324.57,
+       "peakEquity": 159326.41,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2018-10-03",
+        "troughDate": "2018-10-29",
+        "peakValue": 59326.41,
+        "troughValue": 33001.83,
+        "bankedHigh": 10373.11
+       },
+       "account": {
+        "unbankedGiveback": 26324.57,
+        "bankedErosion": 0,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 26324.57,
+        "principalLoss": 0,
+        "residual": 0
+       },
+       "bankedDd": 11158.02
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.1651,
+       "dollars": 26287.83,
+       "peakEquity": 159234.51,
+       "peakDate": "2018-10-03",
+       "troughDate": "2018-10-29",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.5503,
+       "allowance": 47770.35,
+       "regime": "peak-proportional",
+       "dollars": 26287.83,
+       "peakEquity": 159234.51,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2018-10-03",
+        "troughDate": "2018-10-29",
+        "peakValue": 59234.51,
+        "troughValue": 32946.68,
+        "bankedHigh": 10373.11
+       },
+       "account": {
+        "unbankedGiveback": 26287.83,
+        "bankedErosion": 0,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 26287.83,
+        "principalLoss": 0,
+        "residual": 0
+       },
+       "bankedDd": 11202.74
+      }
+     }
+    },
+    "trades": {
+     "lots": 12,
+     "worstNet": -502.13,
+     "maxPrincipalLossLiq": 11202.74,
+     "maxGivebackAboveBreakeven": 26324.57,
+     "maxPeakProfit": 59326.41,
+     "byBook": {
+      "D1:GDX": 9,
+      "D1:VGT": 1,
+      "G:VGT": 2
+     }
+    },
+    "occupancy": 0.8736,
+    "tradedNotional": 1200000,
+    "principalDays": 188996180.56
+   },
+   "interval": {
+    "key": "1769b381b5687d6d",
+    "net": 199045.74,
+    "dd": 33312.27,
+    "ddLiquidation": 33301.09,
+    "envelope": {
+     "bankedDdMarked": 19499.57,
+     "bankedDdLiquidation": 19545.31,
+     "principalLossMarked": 13153.53,
+     "principalLossLiquidation": 13197.13
+    },
+    "policies": {
+     "CTRL": true,
+     "EXP": true
+    },
+    "givebackDominated": false,
+    "unbankedGivebackShare": 0.4146,
+    "d3Illustrative": true,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.1652,
+       "dollars": 26324.57,
+       "peakEquity": 159326.41,
+       "peakDate": "2018-10-03",
+       "troughDate": "2018-10-29",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.5552,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 33312.27,
+       "peakEquity": 314450.42,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2021-11-22",
+        "troughDate": "2023-10-26",
+        "peakValue": 214450.42,
+        "troughValue": 181138.15,
+        "bankedHigh": 200637.72
+       },
+       "account": {
+        "unbankedGiveback": 13812.7,
+        "bankedErosion": 19499.57,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": -226.45,
+        "principalLoss": 33538.71,
+        "residual": -8.731149137020111e-11
+       },
+       "bankedDd": 19499.57
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.1651,
+       "dollars": 26287.83,
+       "peakEquity": 159234.51,
+       "peakDate": "2018-10-03",
+       "troughDate": "2018-10-29",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.555,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 33301.09,
+       "peakEquity": 314393.49,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2021-11-22",
+        "troughDate": "2023-10-26",
+        "peakValue": 214393.49,
+        "troughValue": 181092.41,
+        "bankedHigh": 200637.72
+       },
+       "account": {
+        "unbankedGiveback": 13755.77,
+        "bankedErosion": 19545.31,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": -283.37,
+        "principalLoss": 33584.46,
+        "residual": -7.275957614183426e-11
+       },
+       "bankedDd": 19545.31
+      }
+     }
+    },
+    "trades": {
+     "lots": 25,
+     "worstNet": -10823.58,
+     "maxPrincipalLossLiq": 13197.13,
+     "maxGivebackAboveBreakeven": 26324.57,
+     "maxPeakProfit": 59326.41,
+     "byBook": {
+      "D1:GDX": 18,
+      "D1:VGT": 4,
+      "G:VGT": 3
+     }
+    },
+    "occupancy": 0.8255,
+    "tradedNotional": 2500000,
+    "principalDays": 236682361.11,
+    "interval": {
+     "boundary": "2021-12-31",
+     "boundaryEquityNet": 212275.99,
+     "net": -13230.25,
+     "ddMarked": 32168.18,
+     "ddLiquidation": 32157.12,
+     "bankedDdMarked": 19499.57,
+     "bankedDdLiquidation": 19545.31,
+     "newLots": 13,
+     "newLotMaxPrincipalLossMarked": 13153.53,
+     "newLotMaxPrincipalLossLiq": 13197.13,
+     "carried": [
+      {
+       "book": "G:VGT",
+       "entry": "2020-07-07",
+       "exit": "2022-01-24",
+       "net": 15304.63,
+       "principalLossLiq": 3432.76,
+       "peakProfit": 33819.12
+      }
+     ],
+     "views": {
+      "marked": {
+       "D1": {
+        "pct": 0.1027,
+        "dollars": 32168.18,
+        "peakEquity": 313306.33,
+        "peakDate": "2022-01-04",
+        "troughDate": "2023-10-26",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.2575,
+        "allowance": 124910.39,
+        "regime": "floor",
+        "dollars": 32168.18,
+        "peakEquity": 313306.33,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2022-01-04",
+         "troughDate": "2023-10-26",
+         "peakValue": 1030.34,
+         "troughValue": -31137.83,
+         "bankedHigh": 19424.24
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 1030.34,
+         "capitalLoss": 31137.83,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 50562.08
+       }
+      },
+      "liquidation": {
+       "D1": {
+        "pct": 0.1026,
+        "dollars": 32157.12,
+        "peakEquity": 313305.77,
+        "peakDate": "2022-01-04",
+        "troughDate": "2023-10-26",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.2574,
+        "allowance": 124910.39,
+        "regime": "floor",
+        "dollars": 32157.12,
+        "peakEquity": 313305.77,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2022-01-04",
+         "troughDate": "2023-10-26",
+         "peakValue": 1029.79,
+         "troughValue": -31127.33,
+         "bankedHigh": 19424.24
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 1029.79,
+         "capitalLoss": 31127.33,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 50551.57
+       }
+      }
+     }
+    }
+   },
+   "foldRun": {
+    "sliceNet": -13230.25,
+    "sliceDd": 32168.18,
+    "giveBack": {
+     "book": "G:VGT",
+     "entry": "2020-07-07",
+     "entryRaw": 284.95,
+     "markAtCutoff": 31644.69,
+     "multipleAtCutoff": 1.61,
+     "highestLater": {
+      "mark": 32675.03,
+      "date": "2022-01-04"
+     },
+     "lowestLater": {
+      "mark": 17481.21,
+      "date": "2022-01-21"
+     },
+     "exit": {
+      "date": "2022-01-24",
+      "reason": "trend exit",
+      "raw": 393.88
+     },
+     "final": 15304.63,
+     "changeFromCutoff": -16340.06
+    },
+    "nextSlice": {
+     "lots": 13,
+     "byBook": {
+      "D1:GDX": 9,
+      "D1:VGT": 3,
+      "G:VGT": 1
+     },
+     "maeMedian": -4857.68,
+     "maeP90": -12375.37,
+     "maeWorst": -13153.53,
+     "worstRealized": -10823.58,
+     "meanLosing": -3493.39,
+     "losing": 6,
+     "exitReasons": {
+      "maximum hold": 6,
+      "trailing stop": 5,
+      "trailing stop gap": 1
+     }
+    },
+    "openAtBoundary": [
+     "G:VGT"
+    ]
+   },
+   "confirmation": {
+    "draws": 384,
+    "ddLiquidation": {
+     "p90": 27933.08,
+     "worst": 37309.15
+    },
+    "D1pct": {
+     "median": 0.17,
+     "p90": 0.17,
+     "worst": 0.2196
+    },
+    "D2utilization": {
+     "median": 0.55,
+     "p90": 0.56,
+     "shareAbove1": 0
+    },
+    "givebackDominatedShare": 0.96,
+    "cpuPolicyPassShare": {
+     "CTRL": 1,
+     "EXP": 1
+    }
+   },
+   "scaling": {
+    "training": [
+     {
+      "allocation": 100000,
+      "net": 212275.99,
+      "dd": 26324.57,
+      "ddPctC0": 26.3246,
+      "principalLossLiqPct": 11.2027,
+      "bankedDdLiqPct": 11.2027,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 530689.96,
+      "dd": 65811.43,
+      "ddPctC0": 26.3246,
+      "principalLossLiqPct": 11.2027,
+      "bankedDdLiqPct": 11.2027,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     },
+     {
+      "allocation": 500000,
+      "net": 1061379.93,
+      "dd": 131622.87,
+      "ddPctC0": 26.3246,
+      "principalLossLiqPct": 11.2027,
+      "bankedDdLiqPct": 11.2027,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     }
+    ],
+    "interval": [
+     {
+      "allocation": 100000,
+      "net": 199045.74,
+      "dd": 33312.27,
+      "ddPctC0": 33.3123,
+      "principalLossLiqPct": 13.1971,
+      "bankedDdLiqPct": 19.5453,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 497614.35,
+      "dd": 83280.66,
+      "ddPctC0": 33.3123,
+      "principalLossLiqPct": 13.1971,
+      "bankedDdLiqPct": 19.5453,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 1.4551915228366853e-15
+     },
+     {
+      "allocation": 500000,
+      "net": 995228.7,
+      "dd": 166561.33,
+      "ddPctC0": 33.3123,
+      "principalLossLiqPct": 13.1971,
+      "bankedDdLiqPct": 19.5453,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 1.4551915228366853e-15
+     }
+    ]
+   },
+   "tail": {
+    "D1·GDX": {
+     "holdDays": 28,
+     "holdBasis": "legacy calendar hold",
+     "stopDistancePct": null,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -33863.54,
+       "worstEntry": "2020-02-21",
+       "p95Loss": -13032.22,
+       "shareBelowMinus10k": 0.11,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": null
+     },
+     "syntheticGaps": {
+      "gap −10%": "no protective stop (held to the hold rule)",
+      "gap −20%": "no protective stop (held to the hold rule)",
+      "gap −30%": "no protective stop (held to the hold rule)"
+     }
+    },
+    "D1·VGT": {
+     "holdDays": 14,
+     "holdBasis": "legacy calendar hold",
+     "stopDistancePct": null,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -23887.73,
+       "worstEntry": "2020-03-02",
+       "p95Loss": -6470.14,
+       "shareBelowMinus10k": 0.01,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": null
+     },
+     "syntheticGaps": {
+      "gap −10%": "no protective stop (held to the hold rule)",
+      "gap −20%": "no protective stop (held to the hold rule)",
+      "gap −30%": "no protective stop (held to the hold rule)"
+     }
+    }
+   }
+  },
+  {
+   "label": "EXP C21/broad/GB0.VD1/R2#1 profit",
+   "id": "rc2-31523507f6325597",
+   "kind": "primary",
+   "roles": [
+    {
+     "arm": "EXP",
+     "selector": "RA1-original"
+    },
+    {
+     "arm": "EXP",
+     "selector": "RA1-adapted"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "growthBounded": true,
+   "training": {
+    "key": "rc2-31523507f6325597",
+    "net": 209268.59,
+    "dd": 18701.17,
+    "ddLiquidation": 18682.96,
+    "envelope": {
+     "bankedDdMarked": 5145.85,
+     "bankedDdLiquidation": 5193.46,
+     "principalLossMarked": 5145.85,
+     "principalLossLiquidation": 5193.46
+    },
+    "policies": {
+     "CTRL": true,
+     "EXP": true
+    },
+    "givebackDominated": true,
+    "unbankedGivebackShare": 0.7562,
+    "d3Illustrative": true,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.1163,
+       "dollars": 18701.17,
+       "peakEquity": 160859.63,
+       "peakDate": "2019-05-01",
+       "troughDate": "2019-08-15",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.3875,
+       "allowance": 48257.89,
+       "regime": "peak-proportional",
+       "dollars": 18701.17,
+       "peakEquity": 160859.63,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2019-05-01",
+        "troughDate": "2019-08-15",
+        "peakValue": 60859.63,
+        "troughValue": 42158.46,
+        "bankedHigh": 46718.13
+       },
+       "account": {
+        "unbankedGiveback": 14141.5,
+        "bankedErosion": 4559.67,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 14141.5,
+        "principalLoss": 4559.67,
+        "residual": 0
+       },
+       "bankedDd": 5145.85
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.1162,
+       "dollars": 18682.96,
+       "peakEquity": 160793.1,
+       "peakDate": "2019-05-01",
+       "troughDate": "2019-08-15",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.3873,
+       "allowance": 48237.93,
+       "regime": "peak-proportional",
+       "dollars": 18682.96,
+       "peakEquity": 160793.1,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2019-05-01",
+        "troughDate": "2019-08-15",
+        "peakValue": 60793.1,
+        "troughValue": 42110.15,
+        "bankedHigh": 46718.13
+       },
+       "account": {
+        "unbankedGiveback": 14074.97,
+        "bankedErosion": 4607.98,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 14074.97,
+        "principalLoss": 4607.98,
+        "residual": 7.275957614183426e-12
+       },
+       "bankedDd": 5193.46
+      }
+     }
+    },
+    "trades": {
+     "lots": 16,
+     "worstNet": -1031.24,
+     "maxPrincipalLossLiq": 5193.46,
+     "maxGivebackAboveBreakeven": 17744.39,
+     "maxPeakProfit": 47793.15,
+     "byBook": {
+      "D1:GDX": 8,
+      "D1:VGT": 3,
+      "G:VGT": 5
+     }
+    },
+    "occupancy": 0.7816,
+    "tradedNotional": 1600000,
+    "principalDays": 168828125
+   },
+   "interval": {
+    "key": "rc2-31523507f6325597",
+    "net": 172229.13,
+    "dd": 61921.5,
+    "ddLiquidation": 61910.42,
+    "envelope": {
+     "bankedDdMarked": 50865.66,
+     "bankedDdLiquidation": 50914.72,
+     "principalLossMarked": 8917.15,
+     "principalLossLiquidation": 8963.34
+    },
+    "policies": {
+     "CTRL": false,
+     "EXP": false
+    },
+    "givebackDominated": false,
+    "unbankedGivebackShare": 0.1785,
+    "d3Illustrative": false,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.1985,
+       "dollars": 61921.5,
+       "peakEquity": 311871.97,
+       "peakDate": "2021-11-22",
+       "troughDate": "2022-09-27",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 1.032,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 61921.5,
+       "peakEquity": 311871.97,
+       "illustrativePass": false
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2021-11-22",
+        "troughDate": "2022-09-27",
+        "peakValue": 211871.97,
+        "troughValue": 149950.46,
+        "bankedHigh": 200816.12
+       },
+       "account": {
+        "unbankedGiveback": 11055.84,
+        "bankedErosion": 50865.66,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 10207.26,
+        "principalLoss": 51714.24,
+        "residual": -1.4551915228366852e-11
+       },
+       "bankedDd": 50865.66
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.1986,
+       "dollars": 61910.42,
+       "peakEquity": 311811.83,
+       "peakDate": "2021-11-22",
+       "troughDate": "2022-09-27",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 1.0318,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 61910.42,
+       "peakEquity": 311811.83,
+       "illustrativePass": false
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2021-11-22",
+        "troughDate": "2022-09-27",
+        "peakValue": 211811.83,
+        "troughValue": 149901.41,
+        "bankedHigh": 200816.12
+       },
+       "account": {
+        "unbankedGiveback": 10995.7,
+        "bankedErosion": 50914.72,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 10147.12,
+        "principalLoss": 51763.3,
+        "residual": -2.9103830456733704e-11
+       },
+       "bankedDd": 50914.72
+      }
+     }
+    },
+    "trades": {
+     "lots": 33,
+     "worstNet": -8195.19,
+     "maxPrincipalLossLiq": 8963.34,
+     "maxGivebackAboveBreakeven": 17744.39,
+     "maxPeakProfit": 47793.15,
+     "byBook": {
+      "D1:GDX": 21,
+      "D1:VGT": 4,
+      "G:VGT": 8
+     }
+    },
+    "occupancy": 0.7276,
+    "tradedNotional": 3300000,
+    "principalDays": 207146944.44,
+    "interval": {
+     "boundary": "2021-12-31",
+     "boundaryEquityNet": 209268.59,
+     "net": -37039.47,
+     "ddMarked": 60375.26,
+     "ddLiquidation": 60364.31,
+     "bankedDdMarked": 50865.66,
+     "bankedDdLiquidation": 50914.72,
+     "newLots": 17,
+     "newLotMaxPrincipalLossMarked": 8917.15,
+     "newLotMaxPrincipalLossLiq": 8963.34,
+     "carried": [
+      {
+       "book": "G:VGT",
+       "entry": "2021-06-18",
+       "exit": "2022-01-19",
+       "net": 4490.71,
+       "principalLossLiq": 1149.2,
+       "peakProfit": 15546.55
+      }
+     ],
+     "views": {
+      "marked": {
+       "D1": {
+        "pct": 0.1946,
+        "dollars": 60375.26,
+        "peakEquity": 310325.73,
+        "peakDate": "2022-01-04",
+        "troughDate": "2022-09-27",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.488,
+        "allowance": 123707.44,
+        "regime": "floor",
+        "dollars": 60375.26,
+        "peakEquity": 310325.73,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2022-01-04",
+         "troughDate": "2022-09-27",
+         "peakValue": 1057.14,
+         "troughValue": -59318.13,
+         "bankedHigh": 4490.71
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 1057.14,
+         "capitalLoss": 59318.13,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 63808.83
+       }
+      },
+      "liquidation": {
+       "D1": {
+        "pct": 0.1945,
+        "dollars": 60364.31,
+        "peakEquity": 310325.14,
+        "peakDate": "2022-01-04",
+        "troughDate": "2022-09-27",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.488,
+        "allowance": 123707.44,
+        "regime": "floor",
+        "dollars": 60364.31,
+        "peakEquity": 310325.14,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2022-01-04",
+         "troughDate": "2022-09-27",
+         "peakValue": 1056.55,
+         "troughValue": -59307.76,
+         "bankedHigh": 4490.71
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 1056.55,
+         "capitalLoss": 59307.76,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 63798.47
+       }
+      }
+     }
+    }
+   },
+   "foldRun": {
+    "sliceNet": -37039.47,
+    "sliceDd": 60375.26,
+    "giveBack": {
+     "book": "G:VGT",
+     "entry": "2021-06-18",
+     "entryRaw": 385.31,
+     "markAtCutoff": 12943.18,
+     "multipleAtCutoff": 1.19,
+     "highestLater": {
+      "mark": 14000.31,
+      "date": "2022-01-04"
+     },
+     "lowestLater": {
+      "mark": 4388.41,
+      "date": "2022-01-18"
+     },
+     "exit": {
+      "date": "2022-01-19",
+      "reason": "trend exit",
+      "raw": 424.01
+     },
+     "final": 4490.71,
+     "changeFromCutoff": -8452.47
+    },
+    "nextSlice": {
+     "lots": 17,
+     "byBook": {
+      "D1:GDX": 13,
+      "D1:VGT": 1,
+      "G:VGT": 3
+     },
+     "maeMedian": -5424.21,
+     "maeP90": -8014.37,
+     "maeWorst": -8917.15,
+     "worstRealized": -8195.19,
+     "meanLosing": -6006.28,
+     "losing": 10,
+     "exitReasons": {
+      "maximum hold": 4,
+      "protective stop": 5,
+      "protective stop gap": 1,
+      "trailing stop": 5,
+      "trailing stop gap": 1
+     }
+    },
+    "openAtBoundary": [
+     "G:VGT"
+    ]
+   },
+   "confirmation": {
+    "draws": 384,
+    "ddLiquidation": {
+     "p90": 25291.69,
+     "worst": 35146.2
+    },
+    "D1pct": {
+     "median": 0.11,
+     "p90": 0.17,
+     "worst": 0.2917
+    },
+    "D2utilization": {
+     "median": 0.39,
+     "p90": 0.55,
+     "shareAbove1": 0
+    },
+    "givebackDominatedShare": 0.8,
+    "cpuPolicyPassShare": {
+     "CTRL": 1,
+     "EXP": 0.99
+    }
+   },
+   "scaling": {
+    "training": [
+     {
+      "allocation": 100000,
+      "net": 209268.59,
+      "dd": 18701.17,
+      "ddPctC0": 18.7012,
+      "principalLossLiqPct": 5.1935,
+      "bankedDdLiqPct": 5.1935,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 523171.48,
+      "dd": 46752.93,
+      "ddPctC0": 18.7012,
+      "principalLossLiqPct": 5.1935,
+      "bankedDdLiqPct": 5.1935,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     },
+     {
+      "allocation": 500000,
+      "net": 1046342.96,
+      "dd": 93505.86,
+      "ddPctC0": 18.7012,
+      "principalLossLiqPct": 5.1935,
+      "bankedDdLiqPct": 5.1935,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     }
+    ],
+    "interval": [
+     {
+      "allocation": 100000,
+      "net": 172229.13,
+      "dd": 61921.5,
+      "ddPctC0": 61.9215,
+      "principalLossLiqPct": 8.9633,
+      "bankedDdLiqPct": 50.9147,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": false,
+       "EXP": false
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 430572.82,
+      "dd": 154803.76,
+      "ddPctC0": 61.9215,
+      "principalLossLiqPct": 8.9633,
+      "bankedDdLiqPct": 50.9147,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": false,
+       "EXP": false
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 4.3655745685100557e-16
+     },
+     {
+      "allocation": 500000,
+      "net": 861145.63,
+      "dd": 309607.51,
+      "ddPctC0": 61.9215,
+      "principalLossLiqPct": 8.9633,
+      "bankedDdLiqPct": 50.9147,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": false,
+       "EXP": false
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 4.3655745685100557e-16
+     }
+    ]
+   },
+   "tail": {
+    "D1·GDX": {
+     "holdDays": 26,
+     "holdBasis": "legacy calendar hold",
+     "stopDistancePct": 7.5,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -35820.72,
+       "worstEntry": "2020-02-18",
+       "p95Loss": -12686.28,
+       "shareBelowMinus10k": 0.1,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": {
+       "windows": 1510,
+       "worstLoss": -12764.84,
+       "worstEntry": "2020-02-28",
+       "p95Loss": -8345.88,
+       "shareBelowMinus10k": 0.01,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": {
+        "beyondStopPct": 4.79,
+        "date": "2020-03-12"
+       }
+      }
+     },
+     "syntheticGaps": {
+      "gap −10%": -10089.96,
+      "gap −20%": -20079.96,
+      "gap −30%": -30069.97
+     }
+    },
+    "D1·VGT": {
+     "holdDays": 48,
+     "holdBasis": "adaptive: the extended bound",
+     "stopDistancePct": 22.6,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -31282.02,
+       "worstEntry": "2020-02-04",
+       "p95Loss": -7975.13,
+       "shareBelowMinus10k": 0.03,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": {
+       "windows": 1510,
+       "worstLoss": -26325.76,
+       "worstEntry": "2020-02-19",
+       "p95Loss": -8319.65,
+       "shareBelowMinus10k": 0.04,
+       "shareBelowMinus25k": 0.01,
+       "worstGapThroughStopPct": {
+        "beyondStopPct": 2.99,
+        "date": "2020-03-12"
+       }
+      }
+     },
+     "syntheticGaps": {
+      "gap −10%": -22677.36,
+      "gap −20%": -22677.36,
+      "gap −30%": -30069.97
+     }
+    }
+   }
+  },
+  {
+   "label": "benchmark: New L0",
+   "id": "a2e385640ca61012",
+   "kind": "benchmark",
+   "roles": [],
+   "cell": "GA0.VA0",
+   "growthBounded": true,
+   "training": {
+    "key": "a2e385640ca61012",
+    "net": 251372.87,
+    "dd": 17280.74,
+    "ddLiquidation": 17272.1,
+    "envelope": {
+     "bankedDdMarked": 5590.55,
+     "bankedDdLiquidation": 5637.75,
+     "principalLossMarked": 5590.55,
+     "principalLossLiquidation": 5637.75
+    },
+    "policies": {
+     "CTRL": true,
+     "EXP": true
+    },
+    "givebackDominated": true,
+    "unbankedGivebackShare": 1,
+    "d3Illustrative": true,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.0729,
+       "dollars": 13992.9,
+       "peakEquity": 191948.12,
+       "peakDate": "2020-02-19",
+       "troughDate": "2020-03-12",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.288,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 17280.74,
+       "peakEquity": 243434.11,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2020-03-19",
+        "troughDate": "2020-03-19",
+        "peakValue": 143434.11,
+        "troughValue": 126153.38,
+        "bankedHigh": 122322.51
+       },
+       "account": {
+        "unbankedGiveback": 17280.74,
+        "bankedErosion": 0,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 17280.74,
+        "principalLoss": 0,
+        "residual": 0
+       },
+       "bankedDd": 5590.55
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.0728,
+       "dollars": 13977.11,
+       "peakEquity": 191884.19,
+       "peakDate": "2020-02-19",
+       "troughDate": "2020-03-12",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.2879,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 17272.1,
+       "peakEquity": 243373.56,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2020-03-19",
+        "troughDate": "2020-03-19",
+        "peakValue": 143373.56,
+        "troughValue": 126101.46,
+        "bankedHigh": 122322.51
+       },
+       "account": {
+        "unbankedGiveback": 17272.1,
+        "bankedErosion": 0,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 17272.1,
+        "principalLoss": 0,
+        "residual": 0
+       },
+       "bankedDd": 5637.75
+      }
+     }
+    },
+    "trades": {
+     "lots": 17,
+     "worstNet": 1749.05,
+     "maxPrincipalLossLiq": 5637.75,
+     "maxGivebackAboveBreakeven": 17280.74,
+     "maxPeakProfit": 63570.18,
+     "byBook": {
+      "D1:GDX": 9,
+      "D1:VGT": 3,
+      "G:VGT": 5
+     }
+    },
+    "occupancy": 0.6691,
+    "tradedNotional": 1700000,
+    "principalDays": 144171527.78
+   },
+   "interval": {
+    "key": "a2e385640ca61012",
+    "net": 338611.35,
+    "dd": 19459.83,
+    "ddLiquidation": 19448.94,
+    "envelope": {
+     "bankedDdMarked": 10335.73,
+     "bankedDdLiquidation": 10383.82,
+     "principalLossMarked": 8046.67,
+     "principalLossLiquidation": 8092.81
+    },
+    "policies": {
+     "CTRL": true,
+     "EXP": true
+    },
+    "givebackDominated": false,
+    "unbankedGivebackShare": 0.4689,
+    "d3Illustrative": true,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.0729,
+       "dollars": 13992.9,
+       "peakEquity": 191948.12,
+       "peakDate": "2020-02-19",
+       "troughDate": "2020-03-12",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.3243,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 19459.83,
+       "peakEquity": 410562.74,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2023-01-25",
+        "troughDate": "2023-02-24",
+        "peakValue": 310562.74,
+        "troughValue": 291102.91,
+        "bankedHigh": 301438.63
+       },
+       "account": {
+        "unbankedGiveback": 9124.1,
+        "bankedErosion": 10335.73,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 9124.1,
+        "principalLoss": 10335.73,
+        "residual": 7.275957614183426e-12
+       },
+       "bankedDd": 10335.73
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.0728,
+       "dollars": 13977.11,
+       "peakEquity": 191884.19,
+       "peakDate": "2020-02-19",
+       "troughDate": "2020-03-12",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.3241,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 19448.94,
+       "peakEquity": 410503.76,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2023-01-25",
+        "troughDate": "2023-02-24",
+        "peakValue": 310503.76,
+        "troughValue": 291054.82,
+        "bankedHigh": 301438.63
+       },
+       "account": {
+        "unbankedGiveback": 9065.13,
+        "bankedErosion": 10383.82,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 9065.13,
+        "principalLoss": 10383.82,
+        "residual": 2.9103830456733704e-11
+       },
+       "bankedDd": 10383.82
+      }
+     }
+    },
+    "trades": {
+     "lots": 32,
+     "worstNet": -6455.48,
+     "maxPrincipalLossLiq": 8092.81,
+     "maxGivebackAboveBreakeven": 17280.74,
+     "maxPeakProfit": 63570.18,
+     "byBook": {
+      "D1:GDX": 21,
+      "D1:VGT": 5,
+      "G:VGT": 6
+     }
+    },
+    "occupancy": 0.6581,
+    "tradedNotional": 3200000,
+    "principalDays": 187497986.11,
+    "interval": {
+     "boundary": "2021-12-31",
+     "boundaryEquityNet": 251372.87,
+     "net": 87238.48,
+     "ddMarked": 19459.83,
+     "ddLiquidation": 19448.94,
+     "bankedDdMarked": 10335.73,
+     "bankedDdLiquidation": 10383.82,
+     "newLots": 15,
+     "newLotMaxPrincipalLossMarked": 8046.67,
+     "newLotMaxPrincipalLossLiq": 8092.81,
+     "carried": [
+      {
+       "book": "D1:GDX",
+       "entry": "2021-12-15",
+       "exit": "2022-01-06",
+       "net": 3161.42,
+       "principalLossLiq": 0,
+       "peakProfit": 10125.03
+      }
+     ],
+     "views": {
+      "marked": {
+       "D1": {
+        "pct": 0.0474,
+        "dollars": 19459.83,
+        "peakEquity": 410562.74,
+        "peakDate": "2023-01-25",
+        "troughDate": "2023-02-24",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.1385,
+        "allowance": 140549.15,
+        "regime": "floor",
+        "dollars": 19459.83,
+        "peakEquity": 410562.74,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2023-01-25",
+         "troughDate": "2023-02-24",
+         "peakValue": 59189.87,
+         "troughValue": 39730.04,
+         "bankedHigh": 60052.84
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 19459.83,
+         "capitalLoss": 0,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 20322.8
+       }
+      },
+      "liquidation": {
+       "D1": {
+        "pct": 0.0474,
+        "dollars": 19448.94,
+        "peakEquity": 410559,
+        "peakDate": "2023-01-25",
+        "troughDate": "2023-02-24",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.1384,
+        "allowance": 140549.15,
+        "regime": "floor",
+        "dollars": 19448.94,
+        "peakEquity": 410559,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2023-01-25",
+         "troughDate": "2023-02-24",
+         "peakValue": 59186.13,
+         "troughValue": 39737.18,
+         "bankedHigh": 60052.84
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 19448.94,
+         "capitalLoss": 0,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 20315.66
+       }
+      }
+     }
+    }
+   },
+   "foldRun": {
+    "sliceNet": 87238.48,
+    "sliceDd": 19459.83,
+    "giveBack": {
+     "book": "D1:GDX",
+     "entry": "2021-12-15",
+     "entryRaw": 28.98,
+     "markAtCutoff": 9987.07,
+     "multipleAtCutoff": 1.1,
+     "highestLater": {
+      "mark": 9784.65,
+      "date": "2022-01-05"
+     },
+     "lowestLater": {
+      "mark": 3494.71,
+      "date": "2022-01-06"
+     },
+     "exit": {
+      "date": "2022-01-06",
+      "reason": "trailing stop",
+      "raw": 30.118425000000006
+     },
+     "final": 3161.42,
+     "changeFromCutoff": -6825.65
+    },
+    "nextSlice": {
+     "lots": 15,
+     "byBook": {
+      "D1:GDX": 12,
+      "D1:VGT": 2,
+      "G:VGT": 1
+     },
+     "maeMedian": -2302.97,
+     "maeP90": -7530.54,
+     "maeWorst": -8046.67,
+     "worstRealized": -6455.48,
+     "meanLosing": -1775.99,
+     "losing": 5,
+     "exitReasons": {
+      "trailing stop gap": 2,
+      "trailing stop": 7,
+      "maximum hold": 5
+     }
+    },
+    "openAtBoundary": [
+     "D1:GDX"
+    ]
+   },
+   "confirmation": {
+    "draws": 384,
+    "ddLiquidation": {
+     "p90": 23432.84,
+     "worst": 29464.02
+    },
+    "D1pct": {
+     "median": 0.14,
+     "p90": 0.19,
+     "worst": 0.2511
+    },
+    "D2utilization": {
+     "median": 0.44,
+     "p90": 0.55,
+     "shareAbove1": 0
+    },
+    "givebackDominatedShare": 0.55,
+    "cpuPolicyPassShare": {
+     "CTRL": 1,
+     "EXP": 1
+    }
+   },
+   "scaling": {
+    "training": [
+     {
+      "allocation": 100000,
+      "net": 251372.87,
+      "dd": 17280.74,
+      "ddPctC0": 17.2807,
+      "principalLossLiqPct": 5.6378,
+      "bankedDdLiqPct": 5.6378,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 628432.18,
+      "dd": 43201.84,
+      "ddPctC0": 17.2807,
+      "principalLossLiqPct": 5.6378,
+      "bankedDdLiqPct": 5.6378,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 8.731149137020111e-16
+     },
+     {
+      "allocation": 500000,
+      "net": 1256864.36,
+      "dd": 86403.68,
+      "ddPctC0": 17.2807,
+      "principalLossLiqPct": 5.6378,
+      "bankedDdLiqPct": 5.6378,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 8.731149137020111e-16
+     }
+    ],
+    "interval": [
+     {
+      "allocation": 100000,
+      "net": 338611.35,
+      "dd": 19459.83,
+      "ddPctC0": 19.4598,
+      "principalLossLiqPct": 8.0928,
+      "bankedDdLiqPct": 10.3838,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 846528.38,
+      "dd": 48649.58,
+      "ddPctC0": 19.4598,
+      "principalLossLiqPct": 8.0928,
+      "bankedDdLiqPct": 10.3838,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 1.7462298274040223e-15
+     },
+     {
+      "allocation": 500000,
+      "net": 1693056.76,
+      "dd": 97299.15,
+      "ddPctC0": 19.4598,
+      "principalLossLiqPct": 8.0928,
+      "bankedDdLiqPct": 10.3838,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 1.7462298274040223e-15
+     }
+    ]
+   },
+   "tail": {
+    "D1·GDX": {
+     "holdDays": 13,
+     "holdBasis": "legacy calendar hold",
+     "stopDistancePct": null,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -30987.89,
+       "worstEntry": "2020-03-05",
+       "p95Loss": -10016.97,
+       "shareBelowMinus10k": 0.05,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": null
+     },
+     "syntheticGaps": {
+      "gap −10%": "no protective stop (held to the hold rule)",
+      "gap −20%": "no protective stop (held to the hold rule)",
+      "gap −30%": "no protective stop (held to the hold rule)"
+     }
+    },
+    "D1·VGT": {
+     "holdDays": 15,
+     "holdBasis": "legacy calendar hold",
+     "stopDistancePct": null,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -22854.75,
+       "worstEntry": "2020-03-05",
+       "p95Loss": -6344.45,
+       "shareBelowMinus10k": 0.01,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": null
+     },
+     "syntheticGaps": {
+      "gap −10%": "no protective stop (held to the hold rule)",
+      "gap −20%": "no protective stop (held to the hold rule)",
+      "gap −30%": "no protective stop (held to the hold rule)"
+     }
+    }
+   }
+  },
+  {
+   "label": "benchmark: N/original",
+   "id": "rc1-f1a8b57cb02455c3",
+   "kind": "benchmark",
+   "roles": [],
+   "cell": "GD1.VB0",
+   "growthBounded": true,
+   "training": {
+    "key": "rc1-f1a8b57cb02455c3",
+    "net": 251838.53,
+    "dd": 17280.74,
+    "ddLiquidation": 17272.1,
+    "envelope": {
+     "bankedDdMarked": 5590.55,
+     "bankedDdLiquidation": 5637.75,
+     "principalLossMarked": 5590.55,
+     "principalLossLiquidation": 5637.75
+    },
+    "policies": {
+     "CTRL": true,
+     "EXP": true
+    },
+    "givebackDominated": true,
+    "unbankedGivebackShare": 1,
+    "d3Illustrative": true,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.0728,
+       "dollars": 10594.44,
+       "peakEquity": 145447.94,
+       "peakDate": "2018-03-13",
+       "troughDate": "2018-09-11",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.288,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 17280.74,
+       "peakEquity": 243900.8,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2020-03-19",
+        "troughDate": "2020-03-19",
+        "peakValue": 143900.8,
+        "troughValue": 126620.07,
+        "bankedHigh": 122789.2
+       },
+       "account": {
+        "unbankedGiveback": 17280.74,
+        "bankedErosion": 0,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 17280.74,
+        "principalLoss": 0,
+        "residual": 0
+       },
+       "bankedDd": 5590.55
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.0728,
+       "dollars": 10586.56,
+       "peakEquity": 145391.91,
+       "peakDate": "2018-03-13",
+       "troughDate": "2018-09-11",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.2879,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 17272.1,
+       "peakEquity": 243840.25,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2020-03-19",
+        "troughDate": "2020-03-19",
+        "peakValue": 143840.25,
+        "troughValue": 126568.15,
+        "bankedHigh": 122789.2
+       },
+       "account": {
+        "unbankedGiveback": 17272.1,
+        "bankedErosion": 0,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 17272.1,
+        "principalLoss": 0,
+        "residual": 0
+       },
+       "bankedDd": 5637.75
+      }
+     }
+    },
+    "trades": {
+     "lots": 17,
+     "worstNet": 1749.05,
+     "maxPrincipalLossLiq": 5637.75,
+     "maxGivebackAboveBreakeven": 17280.74,
+     "maxPeakProfit": 63075.51,
+     "byBook": {
+      "D1:GDX": 9,
+      "D1:VGT": 3,
+      "G:VGT": 5
+     }
+    },
+    "occupancy": 0.6691,
+    "tradedNotional": 1700000,
+    "principalDays": 144181666.67
+   },
+   "interval": {
+    "key": "rc1-f1a8b57cb02455c3",
+    "net": 343920.92,
+    "dd": 19459.83,
+    "ddLiquidation": 19448.94,
+    "envelope": {
+     "bankedDdMarked": 10335.73,
+     "bankedDdLiquidation": 10383.82,
+     "principalLossMarked": 8046.67,
+     "principalLossLiquidation": 8092.81
+    },
+    "policies": {
+     "CTRL": true,
+     "EXP": true
+    },
+    "givebackDominated": false,
+    "unbankedGivebackShare": 0.4689,
+    "d3Illustrative": true,
+    "views": {
+     "marked": {
+      "D1": {
+       "pct": 0.0728,
+       "dollars": 10594.44,
+       "peakEquity": 145447.94,
+       "peakDate": "2018-03-13",
+       "troughDate": "2018-09-11",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.3243,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 19459.83,
+       "peakEquity": 415831.11,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2023-01-25",
+        "troughDate": "2023-02-24",
+        "peakValue": 315831.11,
+        "troughValue": 296371.28,
+        "bankedHigh": 306707
+       },
+       "account": {
+        "unbankedGiveback": 9124.1,
+        "bankedErosion": 10335.73,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 9124.1,
+        "principalLoss": 10335.73,
+        "residual": 7.275957614183426e-12
+       },
+       "bankedDd": 10335.73
+      }
+     },
+     "liquidation": {
+      "D1": {
+       "pct": 0.0728,
+       "dollars": 10586.56,
+       "peakEquity": 145391.91,
+       "peakDate": "2018-03-13",
+       "troughDate": "2018-09-11",
+       "illustrativePassAt40": true
+      },
+      "D2": {
+       "utilization": 0.3241,
+       "allowance": 60000,
+       "regime": "cap",
+       "dollars": 19448.94,
+       "peakEquity": 415772.13,
+       "illustrativePass": true
+      },
+      "D3": {
+       "window": {
+        "peakDate": "2023-01-25",
+        "troughDate": "2023-02-24",
+        "peakValue": 315772.13,
+        "troughValue": 296323.19,
+        "bankedHigh": 306707
+       },
+       "account": {
+        "unbankedGiveback": 9065.13,
+        "bankedErosion": 10383.82,
+        "capitalLoss": 0,
+        "residual": 0
+       },
+       "lot": {
+        "profitGiveback": 9065.13,
+        "principalLoss": 10383.82,
+        "residual": 2.9103830456733704e-11
+       },
+       "bankedDd": 10383.82
+      }
+     }
+    },
+    "trades": {
+     "lots": 30,
+     "worstNet": -6455.48,
+     "maxPrincipalLossLiq": 8092.81,
+     "maxGivebackAboveBreakeven": 17280.74,
+     "maxPeakProfit": 63075.51,
+     "byBook": {
+      "D1:GDX": 17,
+      "D1:VGT": 7,
+      "G:VGT": 6
+     }
+    },
+    "occupancy": 0.6496,
+    "tradedNotional": 3000000,
+    "principalDays": 185391805.56,
+    "interval": {
+     "boundary": "2021-12-31",
+     "boundaryEquityNet": 251838.53,
+     "net": 92082.39,
+     "ddMarked": 19459.83,
+     "ddLiquidation": 19448.94,
+     "bankedDdMarked": 10335.73,
+     "bankedDdLiquidation": 10383.82,
+     "newLots": 13,
+     "newLotMaxPrincipalLossMarked": 8046.67,
+     "newLotMaxPrincipalLossLiq": 8092.81,
+     "carried": [
+      {
+       "book": "D1:GDX",
+       "entry": "2021-12-15",
+       "exit": "2022-01-06",
+       "net": 3161.42,
+       "principalLossLiq": 0,
+       "peakProfit": 10125.03
+      }
+     ],
+     "views": {
+      "marked": {
+       "D1": {
+        "pct": 0.0468,
+        "dollars": 19459.83,
+        "peakEquity": 415831.11,
+        "peakDate": "2023-01-25",
+        "troughDate": "2023-02-24",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.1383,
+        "allowance": 140735.41,
+        "regime": "floor",
+        "dollars": 19459.83,
+        "peakEquity": 415831.11,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2023-01-25",
+         "troughDate": "2023-02-24",
+         "peakValue": 63992.58,
+         "troughValue": 44532.75,
+         "bankedHigh": 64855.55
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 19459.83,
+         "capitalLoss": 0,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 20322.8
+       }
+      },
+      "liquidation": {
+       "D1": {
+        "pct": 0.0468,
+        "dollars": 19448.94,
+        "peakEquity": 415827.36,
+        "peakDate": "2023-01-25",
+        "troughDate": "2023-02-24",
+        "illustrativePassAt40": true
+       },
+       "D2": {
+        "utilization": 0.1382,
+        "allowance": 140735.41,
+        "regime": "floor",
+        "dollars": 19448.94,
+        "peakEquity": 415827.36,
+        "illustrativePass": true
+       },
+       "D3": {
+        "window": {
+         "peakDate": "2023-01-25",
+         "troughDate": "2023-02-24",
+         "peakValue": 63988.83,
+         "troughValue": 44539.89,
+         "bankedHigh": 64855.55
+        },
+        "account": {
+         "unbankedGiveback": 0,
+         "bankedErosion": 19448.94,
+         "capitalLoss": 0,
+         "residual": 0
+        },
+        "lot": null,
+        "bankedDd": 20315.66
+       }
+      }
+     }
+    }
+   },
+   "foldRun": {
+    "sliceNet": 92082.39,
+    "sliceDd": 19459.83,
+    "giveBack": {
+     "book": "D1:GDX",
+     "entry": "2021-12-15",
+     "entryRaw": 28.98,
+     "markAtCutoff": 9987.07,
+     "multipleAtCutoff": 1.1,
+     "highestLater": {
+      "mark": 9784.65,
+      "date": "2022-01-05"
+     },
+     "lowestLater": {
+      "mark": 3494.71,
+      "date": "2022-01-06"
+     },
+     "exit": {
+      "date": "2022-01-06",
+      "reason": "trailing stop",
+      "raw": 30.118425000000006
+     },
+     "final": 3161.42,
+     "changeFromCutoff": -6825.65
+    },
+    "nextSlice": {
+     "lots": 13,
+     "byBook": {
+      "D1:GDX": 8,
+      "D1:VGT": 4,
+      "G:VGT": 1
+     },
+     "maeMedian": -1851.38,
+     "maeP90": -5737.65,
+     "maeWorst": -8046.67,
+     "worstRealized": -6455.48,
+     "meanLosing": -2671.59,
+     "losing": 4,
+     "exitReasons": {
+      "trailing stop gap": 2,
+      "trailing stop": 6,
+      "maximum hold": 4
+     }
+    },
+    "openAtBoundary": [
+     "D1:GDX"
+    ]
+   },
+   "confirmation": {
+    "draws": 384,
+    "ddLiquidation": {
+     "p90": 24670.79,
+     "worst": 36641.78
+    },
+    "D1pct": {
+     "median": 0.15,
+     "p90": 0.2,
+     "worst": 0.3239
+    },
+    "D2utilization": {
+     "median": 0.47,
+     "p90": 0.61,
+     "shareAbove1": 0
+    },
+    "givebackDominatedShare": 0.4,
+    "cpuPolicyPassShare": {
+     "CTRL": 1,
+     "EXP": 0.99
+    }
+   },
+   "scaling": {
+    "training": [
+     {
+      "allocation": 100000,
+      "net": 251838.53,
+      "dd": 17280.74,
+      "ddPctC0": 17.2807,
+      "principalLossLiqPct": 5.6378,
+      "bankedDdLiqPct": 5.6378,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 629596.32,
+      "dd": 43201.84,
+      "ddPctC0": 17.2807,
+      "principalLossLiqPct": 5.6378,
+      "bankedDdLiqPct": 5.6378,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     },
+     {
+      "allocation": 500000,
+      "net": 1259192.65,
+      "dd": 86403.68,
+      "ddPctC0": 17.2807,
+      "principalLossLiqPct": 5.6378,
+      "bankedDdLiqPct": 5.6378,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 5.820766091346741e-16
+     }
+    ],
+    "interval": [
+     {
+      "allocation": 100000,
+      "net": 343920.92,
+      "dd": 19459.83,
+      "ddPctC0": 19.4598,
+      "principalLossLiqPct": 8.0928,
+      "bankedDdLiqPct": 10.3838,
+      "limits": {
+       "ctrlDd": 35000,
+       "expDd": 40000,
+       "expPl": 25000,
+       "expBd": 25000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 0
+     },
+     {
+      "allocation": 250000,
+      "net": 859802.3,
+      "dd": 48649.58,
+      "ddPctC0": 19.4598,
+      "principalLossLiqPct": 8.0928,
+      "bankedDdLiqPct": 10.3838,
+      "limits": {
+       "ctrlDd": 87500,
+       "expDd": 100000,
+       "expPl": 62500,
+       "expBd": 62500
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 1.1641532182693482e-15
+     },
+     {
+      "allocation": 500000,
+      "net": 1719604.6,
+      "dd": 97299.15,
+      "ddPctC0": 19.4598,
+      "principalLossLiqPct": 8.0928,
+      "bankedDdLiqPct": 10.3838,
+      "limits": {
+       "ctrlDd": 175000,
+       "expDd": 200000,
+       "expPl": 125000,
+       "expBd": 125000
+      },
+      "decisions": {
+       "CTRL": true,
+       "EXP": true
+      },
+      "sameChronology": true,
+      "sameDecisions": true,
+      "worstDeviationOverC0": 1.1641532182693482e-15
+     }
+    ]
+   },
+   "tail": {
+    "D1·GDX": {
+     "holdDays": 28,
+     "holdBasis": "adaptive: the extended bound",
+     "stopDistancePct": 15.9,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -33863.54,
+       "worstEntry": "2020-02-21",
+       "p95Loss": -13032.22,
+       "shareBelowMinus10k": 0.11,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": {
+       "windows": 1510,
+       "worstLoss": -23514.81,
+       "worstEntry": "2020-02-19",
+       "p95Loss": -15541.5,
+       "shareBelowMinus10k": 0.12,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": {
+        "beyondStopPct": 6.87,
+        "date": "2020-03-12"
+       }
+      }
+     },
+     "syntheticGaps": {
+      "gap −10%": -15984.06,
+      "gap −20%": -20079.96,
+      "gap −30%": -30069.97
+     }
+    },
+    "D1·VGT": {
+     "holdDays": 15,
+     "holdBasis": "legacy calendar hold",
+     "stopDistancePct": 12,
+     "inSample": {
+      "unprotected": {
+       "windows": 1510,
+       "worstLoss": -22854.75,
+       "worstEntry": "2020-03-05",
+       "p95Loss": -6344.45,
+       "shareBelowMinus10k": 0.01,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": null
+      },
+      "protected": {
+       "windows": 1510,
+       "worstLoss": -15917.44,
+       "worstEntry": "2020-03-05",
+       "p95Loss": -6625.49,
+       "shareBelowMinus10k": 0.02,
+       "shareBelowMinus25k": 0,
+       "worstGapThroughStopPct": {
+        "beyondStopPct": 3.62,
+        "date": "2020-03-12"
+       }
+      }
+     },
+     "syntheticGaps": {
+      "gap −10%": -12087.96,
+      "gap −20%": -20079.96,
+      "gap −30%": -30069.97
+     }
+    }
+   }
+  }
+ ]
+}

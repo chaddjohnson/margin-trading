@@ -29,6 +29,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { gunzipSync } from 'node:zlib';
 
+import { effectiveWindowOf } from '../shared/run-window.ts';
 import type { DecisionsFile, DrawdownGateCounts, ExitFillRecord, SymbolMetrics } from '../shared/artifact-types.ts';
 import type { LabEvent, RunDetail } from '../shared/contract.ts';
 import type { PreviewService } from './previews.ts';
@@ -165,7 +166,8 @@ function buildBundle(cfg: Config, src: BundleSource, opts: { minuteMarks?: boole
 
   // 2. Run record and parameters.
   const publicRun = Object.fromEntries(Object.entries(run).filter(([k]) => k !== 'artifactDir' && k !== 'progress' && k !== 'request'));
-  add('run.json', `${JSON.stringify({ ...publicRun, request }, null, 2)}\n`, 'the run record: inputs, assumptions, provenance, code revision, metrics, phenotype link');
+  // the evaluated window beside the requested one (shared/run-window.ts; from the runner's provenance)
+  add('run.json', `${JSON.stringify({ ...publicRun, request, effectiveWindow: effectiveWindowOf(run) }, null, 2)}\n`, 'the run record: inputs, assumptions, provenance, code revision, metrics, phenotype link, the evaluated (effective) window');
   const spec = findStrategy(run.strategy.key, run.strategy.version);
   const reqParams = (request as { params?: Record<string, unknown> } | null)?.params ?? null;
   add(
@@ -640,7 +642,11 @@ ${preview ? `\n> **Interactive Preview — not a saved run.** Preview id \`${run
 | Strategy | ${run.strategy.title} — \`${run.strategy.key}@${run.strategy.version}\`${run.strategyFormerTitle ? ` (formerly “${run.strategyFormerTitle}”)` : ''} |
 | Phenotype | ${run.phenotype ? `${run.phenotype.id} \`${run.phenotype.key}\` from study \`${run.phenotype.study}\`${run.phenotype.edited ? ' — EDITED (a derived variation, not the frozen phenotype)' : ''}` : 'none'} |
 | Symbols | ${run.symbols.join(', ')} |
-| Window | ${run.window.from} → ${run.window.to} (New York session dates, inclusive); resolution ${run.window.resolution ?? 'n/a'}; partitions touched: ${run.window.partition ?? 'n/a'} |
+| Window | evaluated ${(() => {
+    const e = effectiveWindowOf(run);
+    const w = e.effective ?? e.requested;
+    return `${w.from} → ${w.to}${e.effective ? '' : ' (not recorded: as requested)'}; requested ${e.requested.from} → ${e.requested.to}`;
+  })()} (New York session dates, inclusive); resolution ${run.window.resolution ?? 'n/a'}; partitions touched: ${run.window.partition ?? 'n/a'} |
 | Data | ${origin} |
 | Semantics | ${semantics} |
 | Completed | ${run.completedAt ?? 'n/a'} (UTC) |

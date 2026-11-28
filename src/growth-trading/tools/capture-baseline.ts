@@ -13,6 +13,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolveDataset } from '../../lib/dataset.ts';
+import type { BytePin } from '../../lib/canonicalPrefix.ts';
 import { loadDatasetSessions } from '../../lib/evaluation.ts';
 import type { VirtualTrade } from '../../multi-etf-allocator/shadow.ts';
 import {
@@ -31,6 +32,7 @@ export interface BaselineCase {
   from: string;
   to: string;
   params: RiseTradingParams;
+  pin?: BytePin; // replay only: the captured input as a verified byte prefix of today's file (never recorded)
 }
 
 // Daily and intraday resolutions, every switch combination, several costs. Exploratory configurations, not candidates.
@@ -133,7 +135,9 @@ export const recordCase = async (c: BaselineCase) => {
     startDate: c.from,
     endDate: c.to,
     warmupSessions,
-    access: 'manual evaluation'
+    access: 'manual evaluation',
+    // a captured input after rows were appended: read exactly the captured bytes (src/lib/canonicalPrefix.ts)
+    ...(c.pin ? { pin: c.pin } : {})
   });
   const dataSha256 = loaded.report!.dataSha256!;
   const run = runRiseTrading(c.symbol, loaded.history, loaded.warmup, c.params, dataSha256);

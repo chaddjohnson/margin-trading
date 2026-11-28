@@ -104,11 +104,11 @@ describe('pooled replay bridge (synthetic engine result)', () => {
   it('measures the periods of ONE continuous run: carry-in, the validation change and the reset drawdown', () => {
     const { metrics, equity, positions } = convert();
     const { result } = syntheticResult();
-    expect(metrics.validation.carriedIn).toEqual(['P-1']); // entered in 2024, closed in 2025
-    expect(metrics.validation.positionsEntered).toBe(1);
-    expect(metrics.development.positionsEntered).toBe(1);
-    expect(metrics.validation.net).toBeCloseTo(result.net - result.periods[0]!.equity, 2);
-    expect(metrics.validation.realizedChange + metrics.validation.unrealizedChange).toBeCloseTo(metrics.validation.net, 1);
+    expect(metrics.validation!.carriedIn).toEqual(['P-1']); // entered in 2024, closed in 2025
+    expect(metrics.validation!.positionsEntered).toBe(1);
+    expect(metrics.development!.positionsEntered).toBe(1);
+    expect(metrics.validation!.net).toBeCloseTo(result.net - result.periods[0]!.equity, 2);
+    expect(metrics.validation!.realizedChange + metrics.validation!.unrealizedChange).toBeCloseTo(metrics.validation!.net, 1);
     expect(metrics.full.minuteDd.usd).toBeCloseTo(result.dd.max, 2);
     expect(Math.max(...equity.drawdown)).toBeCloseTo(result.dd.max, 2);
     expect(metrics.full.minuteDd.pctOfPrincipal).toBeCloseTo((result.dd.max / 100_000) * 100, 3);

@@ -13,7 +13,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { sha256File } from '../../four-family/data.ts';
+import { historicalPin } from '../../lib/canonicalPrefix.ts';
 import { exactJson } from '../tools/capture-baseline.ts';
 import type { BaselineCase11 } from '../tools/capture-baseline-1.1.0.ts';
 import { recordCase13 } from '../tools/capture-baseline-1.3.0.ts';
@@ -44,14 +44,16 @@ describe('Growth 1.4.0 with the Drawdown Recovery Gate OFF = the 1.3.0 baseline 
 
     test(`${expected.id}: identical signals, trades, gates, rules, decision log, marks and metrics`, async (t) => {
       if (!existsSync(dataFile)) return t.skip('no local data');
-      if ((await sha256File(dataFile)) !== expected.dataSha256)
-        return t.skip('the data file changed since the capture');
+      // the captured input: the whole file while unchanged, else its recorded vintage, verified as today's byte prefix
+      const pin = historicalPin(dataFile, expected.symbol, expected.dataSha256);
+
+      if (!pin) return t.skip('the data file no longer holds the captured input');
 
       // OFF: the configuration as 1.3.0 knew it (no drawdownGate field), and the explicit OFF of 1.4.0.
       for (const params of [expected.params, { ...expected.params, drawdownGate: null }]) {
         assert.equal(warmupSessionsForParams(params), expected.warmupSessions);
 
-        const actual = parse(exactJson(await recordCase13({ ...expected, params })));
+        const actual = parse(exactJson(await recordCase13({ ...expected, params, pin })));
         const want = parse(exactJson(expected));
 
         assert.deepEqual(

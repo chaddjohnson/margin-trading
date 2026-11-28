@@ -1,0 +1,260 @@
+{
+ "gate": "E9 (pilot / benchmark)",
+ "what": "the study-schedule pilot (NON-OFFICIAL, purpose benchmark, BENCH seed keys never used by the study) on D21: one broad lane per cell of every arm (D 8, G 6, J 48, S 6 on a hash-selected frozen D1) and 4 J refinement lanes seeded by the pilot’s own shortlists, with the frozen two-tier island rule — requested per lane, islands, stop reasons, throughput, memory and archive bytes; outputs are counts and timings only (no profit or drawdown of any searched configuration was read)",
+ "pilot": {
+  "door": "D21",
+  "frozen": {
+   "key": "BENCHF1",
+   "label": "pilot (hash-selected)",
+   "structure": {
+    "family": "B",
+    "gate": false
+   },
+   "d1": {
+    "targetPercentChange": 297,
+    "trailingBuyPercentage": 2,
+    "trailingStopPercentage": 80,
+    "maximumHoldDays": 5,
+    "tickWindowSize": 60,
+    "intradayLossBuffer": 15,
+    "pullback": 154,
+    "continuationWindow": 113
+   },
+   "ctl": {
+    "d": 238
+   },
+   "entryDay": false
+  },
+  "arms": [
+   {
+    "arm": "D",
+    "laneSummary": {
+     "lanes": 8,
+     "meanRequested": 14130,
+     "medianRequested": 12508,
+     "maxRequested": 20375,
+     "byStop": {
+      "triggers not met": 8
+     },
+     "islands": {
+      "2": 5,
+      "3": 2,
+      "4": 1
+     }
+    }
+   },
+   {
+    "arm": "G",
+    "laneSummary": {
+     "lanes": 6,
+     "meanRequested": 10498,
+     "medianRequested": 11565,
+     "maxRequested": 14220,
+     "byStop": {
+      "triggers not met": 6
+     },
+     "islands": {
+      "2": 1,
+      "3": 2,
+      "4": 1,
+      "5": 1,
+      "6": 1
+     }
+    }
+   },
+   {
+    "arm": "J",
+    "laneSummary": {
+     "lanes": 48,
+     "meanRequested": 13333,
+     "medianRequested": 13342,
+     "maxRequested": 18549,
+     "byStop": {
+      "triggers not met": 48
+     },
+     "islands": {
+      "2": 9,
+      "3": 23,
+      "4": 10,
+      "5": 5,
+      "6": 1
+     }
+    }
+   },
+   {
+    "arm": "S",
+    "laneSummary": {
+     "lanes": 6,
+     "meanRequested": 11960,
+     "medianRequested": 13039,
+     "maxRequested": 15424,
+     "byStop": {
+      "triggers not met": 6
+     },
+     "islands": {
+      "2": 3,
+      "3": 3
+     }
+    }
+   }
+  ],
+  "refine": {
+   "wallSeconds": 351,
+   "lanes": [
+    {
+     "key": "BENCH-C21/J/refine/J.A0.h0.s0/R9001",
+     "structure": "J.A0.h0.s0",
+     "requested": 29936,
+     "islands": 5,
+     "stop": "triggers not met"
+    },
+    {
+     "key": "BENCH-C21/J/refine/J.A0.h0.s0/R9002",
+     "structure": "J.A0.h0.s0",
+     "requested": 27142,
+     "islands": 4,
+     "stop": "triggers not met"
+    },
+    {
+     "key": "BENCH-C21/J/refine/J.A0.h0.s1/R9001",
+     "structure": "J.A0.h0.s1",
+     "requested": 32983,
+     "islands": 4,
+     "stop": "triggers not met"
+    },
+    {
+     "key": "BENCH-C21/J/refine/J.A0.h0.s1/R9002",
+     "structure": "J.A0.h0.s1",
+     "requested": 32880,
+     "islands": 4,
+     "stop": "triggers not met"
+    }
+   ]
+  },
+  "requested": 1010731,
+  "fresh": 995292,
+  "hits": 14933,
+  "wallSeconds": 1057,
+  "requestedPerSecond": 957,
+  "freshPerSecond": 942,
+  "archiveBytes": 4139686604,
+  "bytesPerFresh": 4159,
+  "cgroupPeakBytes": 9101840384,
+  "rssPeakBytes": 5197979648,
+  "codeDigest": "4c2c3fd45d07dd143316d457954beb539c1fa90e896ef76683cc8ecb7f4cd178",
+  "tag": null
+ },
+ "expected": {
+  "perLane": {
+   "D": {
+    "broad": {
+     "D19": 14130,
+     "D21": 14130,
+     "D23": 14130,
+     "D24": 14130
+    },
+    "refine": {
+     "D19": 30735,
+     "D21": 30735,
+     "D23": 30735,
+     "D24": 30735
+    }
+   },
+   "G": {
+    "broad": {
+     "D19": 10498,
+     "D21": 10498,
+     "D23": 10498,
+     "D24": 10498
+    },
+    "refine": {
+     "D19": 30735,
+     "D21": 30735,
+     "D23": 30735,
+     "D24": 30735
+    }
+   },
+   "J": {
+    "broad": {
+     "D19": 13333,
+     "D21": 13333,
+     "D23": 13333,
+     "D24": 13333
+    },
+    "refine": {
+     "D19": 30735,
+     "D21": 30735,
+     "D23": 30735,
+     "D24": 30735
+    }
+   },
+   "S": {
+    "broad": {
+     "D19": 11960,
+     "D21": 11960,
+     "D23": 11960,
+     "D24": 11960
+    },
+    "refine": {
+     "D19": 30735,
+     "D21": 30735,
+     "D23": 30735,
+     "D24": 30735
+    }
+   }
+  },
+  "perMember": 652,
+  "perSubject": 306
+ },
+ "sequentialReplicates": {
+  "rule": "R_S(F) = max(6, ⌈(288 − 48) ÷ (6·F)⌉): arm S, its D1 step (arm D’s 48 base lanes) included, gets at least arm J’s 288 base lanes (a data-independent lane-count rule fixed before any official result; P6-TSLA’s rule × 1.5)",
+  "byF": {
+   "1": 40,
+   "2": 20,
+   "3": 14
+  },
+  "pilotMeans": {
+   "D": 14130,
+   "G": 10498,
+   "J": 13333,
+   "S": 11960
+  },
+  "note": "the pilot’s S lanes (hash-selected frozen D1) averaged 11960 requested — not representative of a qualified finalist (planning prices an S lane as a J lane, as P6-TSLA)"
+ },
+ "planning": {
+  "perCutoffRequested": {
+   "broad": 8633916,
+   "refine": 7745220,
+   "lanes": {
+    "D": 48,
+    "G": 72,
+    "J": 288,
+    "S": 252,
+    "refine": 252
+   }
+  },
+  "informedC24": {
+   "lanes": 30,
+   "requested": 922050
+  },
+  "studyRequestedEstimate": 66438594,
+  "hoursAtPilotThroughput": 19.3,
+  "note": "before replicate rounds and qualification (≈ 650 requested per qualified member)"
+ },
+ "laneCaps": {
+  "broad": 90000,
+  "refine": 174000
+ },
+ "nl0Caps": {
+  "broad": 6,
+  "refine": 8
+ },
+ "islandCaps": {
+  "broad": 16,
+  "refine": 16
+ },
+ "pass": true,
+ "finished": "2026-11-26T15:49:55.050Z",
+ "codeDigest": "4c2c3fd45d07dd143316d457954beb539c1fa90e896ef76683cc8ecb7f4cd178",
+ "tag": null
+}

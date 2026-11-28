@@ -1,0 +1,119 @@
+
+Running 81 tests using 1 worker
+
+  ✓   1 e2e/candles.spec.ts:88:3 › daily OHLC candles on real data › a real VGT run opens on daily candles: teal-green up, red down, wicks, highs/lows in the axis, a session read-out (5.9s)
+  ✓   2 e2e/candles.spec.ts:155:3 › daily OHLC candles on real data › switching to Line · intraday and back keeps run, symbol, window, selection and marker checkboxes — no rerun, no refetch (10.6s)
+  ✓   3 e2e/candles.spec.ts:217:3 › daily OHLC candles on real data › dense intraday markers sit on their New York session’s candle with exact times and prices; clusters, trades and links work (3.9s)
+  ✓   4 e2e/candles.spec.ts:285:3 › daily OHLC candles on real data › on candles an exit marker selects its trade; hovering an entry links it to its exit with the net P&L, cleared on leave (272ms)
+  ✓   5 e2e/candles.spec.ts:311:3 › daily OHLC candles on real data › gestures on candles: drag measures daily CLOSE → CLOSE, Ctrl-drag pans, swipe up zooms in around the cursor, double-click and buttons (1.9s)
+  ✓   6 e2e/candles.spec.ts:383:3 › daily OHLC candles on real data › the Study 8 vg-balanced import: dense multi-year candles in its own units, one request, per-symbol markers (370ms)
+  ✓   7 e2e/candles.spec.ts:428:3 › daily OHLC candles on real data › comparing runs on candles: only the symbol’s markers of both runs, run B on its sessions too (243ms)
+  ✘   8 e2e/candles.spec.ts:439:3 › daily OHLC candles on real data › narrow screens and the Interactive Preview panel: the candles fit; a preview keeps the chart type and checkboxes (5.3s)
+  ✓   9 e2e/candles.spec.ts:473:3 › daily OHLC candles on real data › viewing on candles changes no saved result: run, metrics, artifact hash and events are identical afterwards (462ms)
+  ✓  10 e2e/candles.spec.ts:490:1 › the synthetic demo has no genuine OHLC: it stays a line, Candles · 1D is unavailable with the reason, the API refuses (204ms)
+  ✓  11 e2e/compare.spec.ts:14:1 › (real data) ON vs OFF: comparable, side by side, non-additive; a different window is flagged (9.2s)
+  ✓  12 e2e/continuation.spec.ts:24:1 › the Growth form: continuation OFF by default, method-specific inputs only, drafts kept, band rule enforced (943ms)
+  ✓  13 e2e/continuation.spec.ts:66:1 › (real data) one Classic D1 run: attributed continuation entries, applied parameters, a verified bundle (3.9s)
+  ✓  14 e2e/delete-run.spec.ts:59:3 › delete a saved result › the confirmation shows the run and the warning; Cancel is the default; Enter, Escape and Cancel keep it (2.3s)
+  ✓  15 e2e/delete-run.spec.ts:91:3 › delete a saved result › Delete result deletes exactly that run: feedback, list and selection updated, its note and bookmark gone (4.1s)
+  ✓  16 e2e/delete-run.spec.ts:119:3 › delete a saved result › a failed deletion is reported and nothing is assumed deleted; a slow one cannot be sent twice (3.0s)
+  ✓  17 e2e/delete-run.spec.ts:149:3 › delete a saved result › a comparison with a run deleted elsewhere is dropped from the view (4.0s)
+  ✓  18 e2e/drawdown-gate.spec.ts:34:1 › the form: the Drawdown Recovery Gate OFF by default, its inputs only ON, the notes and a bound (852ms)
+  ✓  19 e2e/drawdown-gate.spec.ts:68:1 › (real data) one run with the gate and eligibility ON: Analysis, parameters, a release-decided entry; the preview panel (5.6s)
+  ✓  20 e2e/entry-gates.spec.ts:53:1 › the strategy rich select: keyboard, pointer, Escape, click-away, Tab, typeahead and focus return (687ms)
+  ✓  21 e2e/entry-gates.spec.ts:135:1 › small viewport and a scrolled dialog: the popup stays in view, no horizontal overflow, selection works (571ms)
+  ✓  22 e2e/entry-gates.spec.ts:174:1 › the entry trend filter and persistent eligibility: OFF by default, only the chosen inputs, rules and notes (1.2s)
+  ✓  23 e2e/entry-gates.spec.ts:230:1 › (real data) one trend-filter + latched-eligibility run: latched entries, counts, parameters, records, clone, bundle (7.8s)
+  ✓  24 e2e/losses.spec.ts:15:1 › (real data) Growth: strict realised losers, counts, markers kept, a hidden selection explained (409ms)
+  ✓  25 e2e/losses.spec.ts:48:1 › the imported vg-balanced pool: the filter per symbol, open lot excluded (282ms)
+  ✓  26 e2e/markers.spec.ts:74:1 › synthetic fixture: profit green, loss red, breakeven grey, open blue, rejected purple, raw signals hollow (553ms)
+  ✓  27 e2e/markers.spec.ts:155:3 › real data › trading backtest: tones follow each trade’s recorded net; the open position is blue despite a positive unrealized P&L (388ms)
+  ✓  28 e2e/markers.spec.ts:179:3 › real data › comparison: run B keeps the outcome colours, marked by an orange halo; the legend says so (321ms)
+  ✓  29 e2e/markers.spec.ts:201:3 › imported multi-ETF result (vg-balanced) › every lot’s markers follow its recorded net, per symbol; the open GDX lot is blue (331ms)
+  ✓  30 e2e/measure.spec.ts:82:1 › while the button is held the measurement is live, snapped and chronological; releasing clears all of it (1.1s)
+  ✓  31 e2e/measure.spec.ts:148:1 › release outside the chart, Escape, window blur and a missed release clear it; a click shows nothing; pan, zoom, markers and the crosshair work (2.1s)
+  ✓  32 e2e/measure.spec.ts:231:3 › real intraday data › Eastern date-times on vg-balanced while held; cleared on release and after a symbol switch (564ms)
+  ✓  33 e2e/optional-rules.spec.ts:29:1 › the form: entry method, the breakout’s intrinsic inputs, eligibility not applicable, the two exit options OFF (872ms)
+  ✓  34 e2e/optional-rules.spec.ts:78:1 › (real data) one run with the initial stop and retention: partial exits on the chart, in Trades and Analysis (3.3s)
+  ✓  35 e2e/optional-rules.spec.ts:122:1 › (real data) a failed preview says the chart and Analysis still show the previous successful result (3.4s)
+  ✓  36 e2e/pan.spec.ts:76:1 › Ctrl-drag left shows later times, right earlier; same span; overview in step; no measurement (1.6s)
+  ✓  37 e2e/pan.spec.ts:121:1 › the mode is locked at the mouse-down: releasing Ctrl keeps panning; pressing it mid-measure keeps measuring (1.3s)
+  ✓  38 e2e/pan.spec.ts:159:1 › clamped at the data’s ends at the same zoom; release outside the chart, Escape and focus loss end the pan; no text selected (6.6s)
+  ✓  39 e2e/pan.spec.ts:224:1 › after panning: wheel zoom, crosshair, marker tooltips and clicks, zoom buttons and the overview still work (1.4s)
+  ✓  40 e2e/pan.spec.ts:260:3 › macOS › ⌘-drag pans (Ctrl-drag does not: Ctrl-click is a right-click on macOS) (1.3s)
+  ✓  41 e2e/phenotypes.spec.ts:11:1 › catalogue: filter, inspect and run ONE Growth phenotype with an edit (a derived variation) (3.7s)
+  ✓  42 e2e/phenotypes.spec.ts:53:1 › (real data) the shared-slot pool phenotype: locked books and start, one allocator replay (8.1s)
+  ✓  43 e2e/phenotypes.spec.ts:74:1 › (real data) a Growth 1.2.0 phenotype with the entry gates: its switches in the form, ONE run with provenance (3.6s)
+  ✓  44 e2e/portfolios.spec.ts:41:1 › every candidate loads from the selector as ONE pooled replay with the archived figures and its symbol tabs (33.4s)
+  ✓  45 e2e/portfolios.spec.ts:73:1 › VGT tab of a VG candidate holds D1 and Growth trades, distinguished by their frames and the legend (519ms)
+  ✓  46 e2e/portfolios.spec.ts:86:1 › 08500a60: a real entry, partial exit and final exit match the ledger; the open remainder is marked, never closed (729ms)
+  ✓  47 e2e/portfolios.spec.ts:125:1 › refused signals are hidden by default, shown only on request, and never become fills or ledger rows (610ms)
+  ✓  48 e2e/portfolios.spec.ts:145:1 › visibility toggles and ledger filters change only what is shown; the portfolio figures never move (869ms)
+  ✓  49 e2e/portfolios.spec.ts:176:1 › zoom, intraday line and the validation viewport keep the continuous run (carry-in, unchanged figures) (698ms)
+  ✓  50 e2e/portfolios.spec.ts:197:1 › rapid candidate switching never shows one candidate’s figures under another’s name; reload restores from the cache (1.2s)
+  ✓  51 e2e/preview.spec.ts:49:1 › the panel: hidden by default, beside the chart, bounded and scrolling, compact with exact help popovers (7.0s)
+  ✓  52 e2e/preview.spec.ts:115:1 › narrow screens: a drawer over the page (the chart keeps its width), Escape closes it (382ms)
+  ✓  53 e2e/preview.spec.ts:134:1 › dynamic controls: every continuation method, trend method and eligibility policy; the exit dependency; drafts kept (1.1s)
+  ✓  54 e2e/preview.spec.ts:188:1 › C1 → C2 → C1: Enter and Run preview, a cache hit on return, zero new runs, presentation kept, saving, returning (19.0s)
+  ✓  55 e2e/preview.spec.ts:307:1 › after repeated swaps the chart still hovers, links, zooms, measures and pans; a selection is kept only for the same trade (11.7s)
+  ✓  56 e2e/preview.spec.ts:375:1 › a preview shown without being run is re-checked; an outdated one says why and can be run again with the same values (6.5s)
+  ✓  57 e2e/preview.spec.ts:416:1 › runs that cannot be previewed say why: the synthetic demo and an imported shared-slot replay (382ms)
+  ✓  58 e2e/strategy-lab.spec.ts:43:1 › the app is Strategy Lab, with no optimisation or sweep control anywhere (236ms)
+  ✓  59 e2e/strategy-lab.spec.ts:54:1 › the sidebar ends at the bottom of the viewport with and without the banner, and its list scrolls inside (773ms)
+  ✓  60 e2e/strategy-lab.spec.ts:87:1 › recent runs are newest first; variations by latest result, never-run last (with the explanation) (194ms)
+  ✓  61 e2e/strategy-lab.spec.ts:106:1 › bookmarks: revealed on hover and keyboard focus, persistent, filterable (900ms)
+  ✓  62 e2e/strategy-lab.spec.ts:135:3 › real data › Run Test from the browser, then 5% → 6% creates a new variation and run; the old run is unchanged; notes persist (13.4s)
+  ✓  63 e2e/strategy-lab.spec.ts:188:3 › real data › crosshair follows the pointer with an Eastern-time readout (297ms)
+  ✓  64 e2e/strategy-lab.spec.ts:217:3 › vg-balanced (Study 8 #2) entries and exits › VGT shows only VGT, GDX only GDX — markers, table, tooltips, analysis — and counts match the source (721ms)
+  ✓  65 e2e/strategy-lab.spec.ts:258:3 › vg-balanced (Study 8 #2) entries and exits › entry times match the source to the minute, labelled EST/EDT, and stay on their price after zooming (1.7s)
+  ✓  66 e2e/strategy-lab.spec.ts:311:3 › vg-balanced (Study 8 #2) entries and exits › symbol switch clears the selection, keeps a valid zoom; comparison never leaks the other symbol (2.2s)
+  ✓  67 e2e/trades.spec.ts:107:3 › trading backtest (real data) › entry and exit tooltips show the same trade net P&L; an open position is unrealized from the run’s mark (4.9s)
+  ✓  68 e2e/trades.spec.ts:151:3 › trading backtest (real data) › clicking either marker selects the same trade: row highlighted, details beneath, kept across entry ↔ exit (1.4s)
+  ✓  69 e2e/trades.spec.ts:185:3 › trading backtest (real data) › hover links entry ↔ exit (both highlighted, toned connector, summary) and clears at once on leave (2.0s)
+  ✓  70 e2e/trades.spec.ts:254:3 › trading backtest (real data) › a counterpart outside the view is reported and the chart is not zoomed to it (846ms)
+  ✓  71 e2e/trades.spec.ts:272:3 › trading backtest (real data) › two symbols: each tab pairs only its own markers and lists only its own trades (6.2s)
+  ✓  72 e2e/trades.spec.ts:295:3 › trading backtest (real data) › chart interactions keep working: crosshair, drag-to-measure, Ctrl-drag pan (no links while dragging), wheel zoom (1.2s)
+  ✓  73 e2e/trades.spec.ts:338:3 › imported multi-ETF result (vg-balanced) › exit and entry markers select the same lot, P&L as recorded, the open lot unrealized, per symbol only (2.0s)
+  ✓  74 e2e/trades.spec.ts:405:1 › synthetic demo: executed entries without a recorded trade show "not recorded", never a made-up P&L (239ms)
+  ✓  75 e2e/trading.spec.ts:51:1 › New test offers the trading backtest with its switches, defaults, units, dependency and warning (641ms)
+  ✓  76 e2e/trading.spec.ts:108:3 › real data › Run Test runs ONE trading backtest: executed markers, trades, metrics in ET; clone 5% → 6% keeps the old run (11.0s)
+  ✓  77 e2e/trading.spec.ts:172:3 › real data › a two-symbol trading run: each tab shows only its own symbol’s trades and markers (6.9s)
+  ✓  78 e2e/wheel.spec.ts:55:1 › two-finger swipe up zooms in around the cursor, gradually; swipe down zooms out (1.9s)
+  ✓  79 e2e/wheel.spec.ts:78:1 › pinch (Ctrl + wheel) keeps the page-zoom sign: deltaY < 0 zooms in, > 0 zooms out (1.1s)
+  ✓  80 e2e/wheel.spec.ts:94:1 › zoom stops at the minimum span and at the full data range; the page scrolls only when not zooming (5.5s)
+  ✓  81 e2e/wheel.spec.ts:129:1 › after wheel zoom, drag still measures without zooming, and zoom buttons, overview and markers work (1.5s)
+
+
+  1) e2e/candles.spec.ts:439:3 › daily OHLC candles on real data › narrow screens and the Interactive Preview panel: the candles fit; a preview keeps the chart type and checkboxes 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 58
+    Received:   698
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      456 |     await page.getByTestId('preview-toggle').click();
+      457 |     await expect(page.getByTestId('preview-panel')).toBeVisible();
+    > 458 |     await expect.poll(async () => (await geometry(page)).area.w).toBeLessThan(wide - 200);
+          |                                                                  ^
+      459 |     await page.getByTestId('pv-param-advanceFromRecentLowPercent').fill('6');
+      460 |     await page.getByTestId('pv-param-advanceFromRecentLowPercent').press('Enter');
+      461 |     await expect(page.getByTestId('preview-status')).toHaveAttribute('data-state', 'ready', { timeout: 120_000 });
+        at /home/chad/projects/margin-trading/apps/strategy-lab/e2e/candles.spec.ts:458:66
+
+    Error Context: test-results/candles-daily-OHLC-candles-39cc7-e-chart-type-and-checkboxes/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/candles-daily-OHLC-candles-39cc7-e-chart-type-and-checkboxes/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/candles-daily-OHLC-candles-39cc7-e-chart-type-and-checkboxes/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/candles.spec.ts:439:3 › daily OHLC candles on real data › narrow screens and the Interactive Preview panel: the candles fit; a preview keeps the chart type and checkboxes 
+  80 passed (4.5m)
+exit=1

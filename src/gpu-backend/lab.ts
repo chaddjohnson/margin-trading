@@ -21,10 +21,59 @@ import type { EvalOptions } from '../vg-d1-growth-joint/evaluate.ts';
 import type { DRec, SRec } from '../vg-l0-risk-families/evaluate.ts';
 import { type Cfg, evalKeyOf, quadOf } from '../vg-l0-full-joint/space.ts';
 import type { Task } from './client.ts';
+import type { Envelope } from './batch.ts';
 import { type JobContext, claimJobDirectory } from '../gpu-jobs/jobs.ts';
 import type { OwnershipLock } from '../gpu-jobs/lock.ts';
 
 export { StopRequested };
+
+// ----- the optional risk-envelope delivery (GPU Phase 7, research/gpu-phase7/RISK_METRIC_INTEGRATION_SPEC.md) -----
+// An item of evalMany with `risk: true` is evaluated with the device's risk-envelope inputs and archived under its own
+// key (`…|risk`), so a risk-bearing record never mixes with a plain one; its archived value is the canonical record
+// with one extra field, `envelope` (four dollar amounts, the definitions of src/vg-l0-risk-metrics/metrics.ts). An item
+// without `risk` keeps the key, the task and the archived record of every earlier version, byte for byte.
+export const RISK_KEY_SUFFIX = '|risk';
+export const ENVELOPE_FIELDS = [
+  'bankedDdMarked',
+  'bankedDdLiquidation',
+  'principalLossMarked',
+  'principalLossLiquidation'
+] as const;
+export type RiskRec<R extends SRec = SRec> = R & { envelope: Envelope };
+
+// The one validity check of a delivered envelope, used by the Lab on every write and every read and by the
+// qualification code (src/risk-envelope/qualify.ts): exactly the four fields, each a finite number ≥ 0, and the
+// liquidation basis never below the marked one (the device computes the liquidation mark as the marked P&L minus the
+// open shares' exit cost, so both orderings hold exactly). Anything else throws: a missing, extra, non-finite, negative
+// or inconsistent value is a defect, never repaired or approximated.
+export const checkEnvelope = (e: unknown, where: string): Envelope => {
+  if (typeof e !== 'object' || e === null || Array.isArray(e))
+    throw new Error(`risk envelope missing or not an object (${where})`);
+
+  const keys = Object.keys(e).sort();
+  const want = [...ENVELOPE_FIELDS].sort();
+
+  if (keys.join(',') !== want.join(','))
+    throw new Error(`risk envelope fields [${keys.join(', ')}] ≠ [${want.join(', ')}] (${where})`);
+  for (const f of ENVELOPE_FIELDS) {
+    const v = (e as Record<string, unknown>)[f];
+
+    if (typeof v !== 'number' || !Number.isFinite(v) || v < 0)
+      throw new Error(`risk envelope ${f} = ${String(v)} is not a finite number ≥ 0 (${where})`);
+  }
+
+  const x = e as Envelope;
+
+  if (x.bankedDdLiquidation < x.bankedDdMarked)
+    throw new Error(
+      `risk envelope: liquidation banked DD ${x.bankedDdLiquidation} < marked ${x.bankedDdMarked} (${where})`
+    );
+  if (x.principalLossLiquidation < x.principalLossMarked)
+    throw new Error(
+      `risk envelope: liquidation principal loss ${x.principalLossLiquidation} < marked ${x.principalLossMarked} (${where})`
+    );
+  return x;
+};
 
 export interface PoolLike {
   start(): Promise<void>;
@@ -156,12 +205,16 @@ export class EvalLab {
     return (this.tallies[tag] ??= { fresh: 0, hits: 0, ms: 0 });
   }
 
-  // Assignment 3's evalMany, unchanged in its semantics (keys, dedupe, archive reads, input order, the fresh cap).
+  // Assignment 3's evalMany, unchanged in its semantics (keys, dedupe, archive reads, input order, the fresh cap). An
+  // item may add `risk: true` (GPU Phase 7): its record carries the risk envelope (RiskRec) under the `|risk` key.
   async evalMany<R extends SRec = SRec>(
-    items: readonly { cfg: Cfg; options: EvalOptions; detail?: boolean }[],
+    items: readonly { cfg: Cfg; options: EvalOptions; detail?: boolean; risk?: boolean }[],
     tag = 'other'
   ): Promise<R[]> {
-    const keys = items.map((x) => `${evalKeyOf(this.o.door as never, x.cfg, x.options)}${x.detail ? '|detail' : ''}`);
+    const keys = items.map(
+      (x) =>
+        `${evalKeyOf(this.o.door as never, x.cfg, x.options)}${x.detail ? '|detail' : ''}${x.risk ? RISK_KEY_SUFFIX : ''}`
+    );
     const missing = new Map<string, Task>();
     const waits: Promise<void>[] = [];
     const t = this.tally(tag);
@@ -190,7 +243,8 @@ export class EvalLab {
         quad: quadOf(x.cfg),
         controls: x.cfg.controls,
         options: x.options,
-        detail: Boolean(x.detail)
+        detail: Boolean(x.detail),
+        ...(x.risk ? { risk: true } : {}) // a plain item's task is exactly the earlier task object
       });
     });
 
@@ -215,6 +269,7 @@ export class EvalLab {
 
         for (let i = 0; i < tasks.length; i += chunk)
           await this.pool.run<SRec | DRec>(tasks.slice(i, i + chunk), (task, record, ms) => {
+            this.checkDelivered(task.k, record, 'delivered');
             this.store.write('points', task.k, record);
             this.fresh++;
             this.evalMs += ms;
@@ -246,8 +301,17 @@ export class EvalLab {
       const r = this.store.read<R>('points', k);
 
       if (!r) throw new Error(`${k} missing after evaluation`);
+      this.checkDelivered(k, r, 'archived');
       return r;
     });
+  }
+
+  // a `|risk` key's record must carry a valid envelope; any other key's record must carry none (fail closed)
+  private checkDelivered(k: string, r: unknown, where: string) {
+    const env = (r as { envelope?: unknown } | null)?.envelope;
+
+    if (k.endsWith(RISK_KEY_SUFFIX)) checkEnvelope(env, `${where} ${k}`);
+    else if (env !== undefined) throw new Error(`${where} ${k}: a record without a risk request carries an envelope`);
   }
 
   async close(event = 'job-end') {

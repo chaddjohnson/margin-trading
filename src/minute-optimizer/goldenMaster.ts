@@ -50,8 +50,9 @@ export const originalSource: FrozenSource = {
 export const protectedFiles: { file: string; sha256: string; frozen?: FrozenSource }[] = [
   { file: originalSource.file, sha256: originalSource.sha256, frozen: originalSource },
   // The study ran while this file held an uncommitted edit (sha256 e8473085…, unchanged throughout the
-  // study). That edit was later reverted to the committed version, which is what's protected now.
-  { file: 'src/app/allin-original.ts', sha256: '42f2b7e7be4ef99e1af6c4fe113dd8da9ed4d329d2fe0564463db80b87f449e2' }
+  // study). That edit was later reverted to the committed version, which is what's protected now. The study knew it
+  // as src/app/allin-original.ts; it was renamed by the user on 2026-10-17 (86d2b2d9, fb499e51: identical bytes).
+  { file: 'src/app/allIn-original.ts', sha256: '42f2b7e7be4ef99e1af6c4fe113dd8da9ed4d329d2fe0564463db80b87f449e2' }
 ];
 
 export const originalFile = originalSource.file;

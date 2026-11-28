@@ -1,0 +1,145 @@
+{
+ "gate": "E2",
+ "what": "the TSLA doors (D19, D21, D23, D24, FULL ≤ 2026-10-30): each byte prefix verified (size, sha256, last row) and loaded through the canonical session grouping + the canonical forward split adjustment with the study ledger equals, session by session and bar by bar, the canonical PARTITION path (resolveDataset(\"TSLA\", \"all\") with the same ledger); each shorter door is a prefix of the next (causal data access); both engine slots hold one TSLA SymDoor; each registered split leaves an adjusted overnight move within ±10 %; no strategy is evaluated (FULL read for data integrity only, before the freeze)",
+ "rows": [
+  {
+   "door": "D19",
+   "sessions": 1006,
+   "pinnedSessions": 1006,
+   "splitsApplied": [],
+   "doorHash": "b021b4e0c6f376526db0e86d507a87998e4a27aabb83cf3733919a4881905496",
+   "partitionPathHash": "b021b4e0c6f376526db0e86d507a87998e4a27aabb83cf3733919a4881905496",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "D21",
+   "sessions": 1511,
+   "pinnedSessions": 1511,
+   "splitsApplied": [
+    {
+     "symbol": "TSLA",
+     "effectiveDate": "2020-08-31",
+     "ratio": 5
+    }
+   ],
+   "doorHash": "92e13a83fe059497246ca9931f02682ae4daca4594e87dd37d10f0d78e8bdd21",
+   "partitionPathHash": "92e13a83fe059497246ca9931f02682ae4daca4594e87dd37d10f0d78e8bdd21",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "D23",
+   "sessions": 2012,
+   "pinnedSessions": 2012,
+   "splitsApplied": [
+    {
+     "symbol": "TSLA",
+     "effectiveDate": "2020-08-31",
+     "ratio": 5
+    },
+    {
+     "symbol": "TSLA",
+     "effectiveDate": "2022-08-25",
+     "ratio": 3
+    }
+   ],
+   "doorHash": "7d536b30f95e2af81d054d0ba119bf5717a27caae32877893a362bec5ce51116",
+   "partitionPathHash": "7d536b30f95e2af81d054d0ba119bf5717a27caae32877893a362bec5ce51116",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "D24",
+   "sessions": 2264,
+   "pinnedSessions": 2264,
+   "splitsApplied": [
+    {
+     "symbol": "TSLA",
+     "effectiveDate": "2020-08-31",
+     "ratio": 5
+    },
+    {
+     "symbol": "TSLA",
+     "effectiveDate": "2022-08-25",
+     "ratio": 3
+    }
+   ],
+   "doorHash": "6aa5ef06ff3a0107deb385c320c58685e90aea6536d5aa099bbfaad59fd8ab5c",
+   "partitionPathHash": "6aa5ef06ff3a0107deb385c320c58685e90aea6536d5aa099bbfaad59fd8ab5c",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "FULL",
+   "sessions": 2723,
+   "pinnedSessions": 2723,
+   "splitsApplied": [
+    {
+     "symbol": "TSLA",
+     "effectiveDate": "2020-08-31",
+     "ratio": 5
+    },
+    {
+     "symbol": "TSLA",
+     "effectiveDate": "2022-08-25",
+     "ratio": 3
+    }
+   ],
+   "doorHash": "9e7db100e49176031d9e706d8db6cc76358c30ef355b07170f306930a1abe485",
+   "partitionPathHash": "9e7db100e49176031d9e706d8db6cc76358c30ef355b07170f306930a1abe485",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  }
+ ],
+ "causal": [
+  {
+   "shorter": "D19",
+   "longer": "D21",
+   "sessions": 1006,
+   "prefixEqual": true
+  },
+  {
+   "shorter": "D21",
+   "longer": "D23",
+   "sessions": 1511,
+   "prefixEqual": true
+  },
+  {
+   "shorter": "D23",
+   "longer": "D24",
+   "sessions": 2012,
+   "prefixEqual": true
+  },
+  {
+   "shorter": "D24",
+   "longer": "FULL",
+   "sessions": 2264,
+   "prefixEqual": true
+  }
+ ],
+ "splits": [
+  {
+   "effectiveDate": "2020-08-31",
+   "ratio": 5,
+   "adjustedMoveWithinTenPercent": true
+  },
+  {
+   "effectiveDate": "2022-08-25",
+   "ratio": 3,
+   "adjustedMoveWithinTenPercent": true
+  }
+ ],
+ "ledgerAppliedOnce": {
+  "reapplyingWouldChangeTheData": true
+ },
+ "pass": true,
+ "finished": "2026-11-25T11:46:41.833Z",
+ "codeDigest": "418a87587f31d13cbf2b8df3309442fc9f8de28b5a485da217bd0110f6affcbe",
+ "tag": "final"
+}

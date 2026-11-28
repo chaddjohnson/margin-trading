@@ -1,0 +1,48 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/vg-l0-risk-envelope-stage-b-diagnostics",
+ "scope": "diagnostic",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "3.0.0",
+  "sha256": "4e8244e65bf1dd7c54ad46a1c941321d68b0c144344fd0c464dcc047eea5fef1"
+ },
+ "readAt": "2026-11-23T07:31:21Z",
+ "adoptedAt": "2026-11-23T07:34:34Z",
+ "protocol": {
+  "path": "research/vg-l0-risk-envelope-stage-b-diagnostics/PROTOCOL.md",
+  "sha256": "90341d417dcbce6da31ad6d9358ddb6b11ededb2d306e9518a003974c3c61aab"
+ },
+ "dateSplit": {
+  "development": { "from": "2016-01-04", "to": "2024-12-31" },
+  "validation": { "from": "2025-01-01", "to": "2026-10-30" },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "objective": {
+  "prioritizes": "not-applicable",
+  "primaryRule": "No primary and no roles: nothing is searched or selected (AD1). The diagnostics re-read Stage B's archived official GPU records (zero evaluations) and replay its frozen lane representatives, pooled primaries and benchmarks on the CPU for drawdown attribution; Stage B's sealed selections and verdict are quoted unchanged.",
+  "roles": []
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 principal budget (not peak account equity); P3 (40 % marked DD, 25 % trade principal loss, 30 % banked-capital DD) is analysed beside P0 only as Stage B's predeclared counterfactual arm, never as a change of the standard's ceiling"
+ },
+ "budget": {
+  "distinctProposals": 0,
+  "backendEvaluations": 630,
+  "notes": "No search proposals. backendEvaluations caps the bounded non-official CPU replays of Diagnostic B: at most 70 fixed configurations per cutoff (the sealed interval subjects: 64 lane representatives incl. pooled primaries, plus New L0 and N/original), at most 3 engine runs each (diag-core diagnose, canonical evaluate for bit-for-bit parity, one ledger replay). The census and the qualification replay are zero-evaluation archive replays (every request must be an archive hit; a refusing pool)."
+ },
+ "evaluationBackend": {
+  "policy": "non-official-cpu",
+  "purpose": "diagnostic",
+  "justification": "Post hoc report-only diagnostics of a completed, sealed study (brief sections 2-4): archived official GPU records are re-read with zero evaluations; the only evaluations are bounded CPU replays of exactly the fixed sealed subjects of PROTOCOL.md section 4, each parity-checked to the cent and bit for bit against the archived official GPU record. Nothing is official optimization evidence (standard 3.0.0 section 9.8)."
+ },
+ "chronologicalConsequence": "not applicable: a diagnostic with no search, no selection and no chronological verdict (AD2); Stage B's sealed next-interval records are quoted only as retrospective, previously inspected history",
+ "deviations": [
+  { "id": "AD1", "section": "§2.3", "kind": "adaptation", "description": "no roles and no primary; Stage B's sealed lane representatives, pooled primaries and benchmarks are the fixed subjects", "justification": "brief section 1: report-only diagnostics that may not revisit Stage B selection", "userAgreement": null },
+  { "id": "AD2", "section": "§4, §1.8", "kind": "adaptation", "description": "no search, no earlier-cutoff repeat, no chronological verdict; D23 and FULL are not opened; only the training doors D19 / D21 / D24 are read, for the CPU replays", "justification": "brief sections 1-2: no new optimization or candidate search; zero new evaluations for the census", "userAgreement": null },
+  { "id": "AD3", "section": "§2.1", "kind": "adaptation", "description": "Stage B's predeclared counterfactual policy P3 is analysed beside P0 (35 %) as a report-only view on archived populations; the standard's ceiling is unchanged", "justification": "brief sections 3-4 (Stage B's frozen arms, authorized by the user)", "userAgreement": null }
+ ]
+}

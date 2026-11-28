@@ -1,0 +1,8644 @@
+{
+ "stage": "interval",
+ "protocol": "RES-B 1.0.0",
+ "cutoff": "C19",
+ "door": "D21",
+ "interval": [
+  "2020-01-02",
+  "2021-12-31"
+ ],
+ "boundary": "2019-12-31",
+ "basis": "one continuous run from 2016-01-04 (state, open lots and marks preserved); interval P&L = the change of the marked net from the boundary close; interval DD = the strict tracker restarted at the boundary close (peak = the marked net there); whole-run figures beside it; the envelope is a whole-run statistic",
+ "label": "retrospective, previously inspected history — never a pristine holdout or independent future validation",
+ "selection": {
+  "file": "research/vg-l0-risk-envelope-stage-b/results/selection/C19.json",
+  "sha256": "179a2c8d90a75793722b92d9b8e9e5dbbaa8d09eb96f536c0b05646aaac09b56"
+ },
+ "job": "research/vg-l0-risk-envelope-stage-b/C19-interval",
+ "attestation": "research/vg-l0-risk-envelope-stage-b/results/gpu-attestations/C19-interval-2026-11-22T22-11-46-420Z.json",
+ "backend": "gpu:GPU-ae5f222c-8bf8-6bf0-db01-db53dc9229f4:cb2ff30b9cb720c0:d1a2e490788fa5fa",
+ "head": "f9520f59005b50e600da4d99e4589aa57256feba",
+ "requested": 17688,
+ "rows": [
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R3#1 profit",
+   "id": "1950fb94979b1e14",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R3"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 50183.11,
+   "sliceDd": 33043.97,
+   "boundaryEquity": 88983.52,
+   "wholeNet": 139166.63,
+   "wholeDd": 33043.97,
+   "wholeEnvelope": {
+    "bankedDdMarked": 27496.94039952886,
+    "bankedDdLiquidation": 27544.145124394752,
+    "principalLossMarked": 25424.456438926307,
+    "principalLossLiquidation": 25462.04558056986
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9009.48,
+    "2017": 24047.88,
+    "2018": 16733.41,
+    "2019": 39192.75,
+    "2020": 32347.64,
+    "2021": 17835.48
+   },
+   "lots": 14,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2019-10-04",
+     "exit": "2020-01-27",
+     "reason": "trailing stop",
+     "net": 14131.569120537391,
+     "mae": -1780.9997251505345
+    }
+   ],
+   "nextInterval": {
+    "lots": 9,
+    "byBook": {
+     "D1:GDX": 2,
+     "D1:VGT": 6,
+     "G:VGT": 1
+    },
+    "worstLotMae": -25424.456438926307,
+    "maxPrincipalLossMarked": 25424.456438926307,
+    "worstRealized": -21906.39013131743,
+    "losing": 2,
+    "exitReasons": {
+     "maximum hold": 2,
+     "trailing stop gap": 1,
+     "trailing stop": 5,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 51147.43,
+     "sliceDd": 32861.87,
+     "wholeNet": 140692.81,
+     "wholeDd": 32861.87
+    },
+    "cost 10 bps": {
+     "sliceNet": 49219.76,
+     "sliceDd": 33225.89,
+     "wholeNet": 137641.98,
+     "wholeDd": 33225.89
+    },
+    "cost 20 bps": {
+     "sliceNet": 42217.76,
+     "sliceDd": 33589.18,
+     "wholeNet": 129519.05,
+     "wholeDd": 33589.18
+    },
+    "interest 14%": {
+     "sliceNet": 46083.39,
+     "sliceDd": 33241.23,
+     "wholeNet": 126966.08,
+     "wholeDd": 33241.23
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 42842.98,
+     "sliceDd": 33337.97,
+     "wholeNet": 130922.94,
+     "wholeDd": 33337.97
+    },
+    "next-open stops": {
+     "sliceNet": 50368.07,
+     "sliceDd": 32726.86,
+     "wholeNet": 139338.75,
+     "wholeDd": 32726.86
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 35634.75,
+    "p90SliceDd": 38643.07,
+    "worstSliceDd": 48167.98,
+    "medianSliceNet": 25472.37,
+    "p10SliceNet": 4727.61,
+    "above35pctC0": {
+     "breaches": 140,
+     "share": 0.546875,
+     "wilson95": [
+      0.4856513504898383,
+      0.6067126629486945
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 18,
+     "share": 0.0703125,
+     "wilson95": [
+      0.044935547304242984,
+      0.10839432950920606
+     ]
+    },
+    "trainingBreachShare": 0.043
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R4#1 profit",
+   "id": "237740b93b0856d9",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R4"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": -15404.27,
+   "sliceDd": 64754.63,
+   "boundaryEquity": 95587.55,
+   "wholeNet": 80183.28,
+   "wholeDd": 64754.63,
+   "wholeEnvelope": {
+    "bankedDdMarked": 44673.89674050253,
+    "bankedDdLiquidation": 44721.28595045331,
+    "principalLossMarked": 20202.326205001773,
+    "principalLossLiquidation": 20242.39079532393
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 1729.72,
+    "2017": 26348.08,
+    "2018": 9722.84,
+    "2019": 57786.92,
+    "2020": 8018.69,
+    "2021": -23422.96
+   },
+   "lots": 33,
+   "openAtBoundary": [
+    {
+     "book": "G:VGT",
+     "entry": "2019-09-26",
+     "exit": "2020-02-28",
+     "reason": "maximum hold",
+     "net": 2222.8695736027425,
+     "mae": -4496.222018030719
+    }
+   ],
+   "nextInterval": {
+    "lots": 25,
+    "byBook": {
+     "D1:GDX": 19,
+     "D1:VGT": 6,
+     "G:VGT": 0
+    },
+    "worstLotMae": -20202.326205001773,
+    "maxPrincipalLossMarked": 20202.326205001773,
+    "worstRealized": -18816.594922343338,
+    "losing": 18,
+    "exitReasons": {
+     "trailing stop": 6,
+     "maximum hold": 18,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": -12894.65,
+     "sliceDd": 62980.85,
+     "wholeNet": 83566.67,
+     "wholeDd": 62980.85
+    },
+    "cost 10 bps": {
+     "sliceNet": -17911.38,
+     "sliceDd": 66526.64,
+     "wholeNet": 76803.28,
+     "wholeDd": 66526.64
+    },
+    "cost 20 bps": {
+     "sliceNet": -23854.3,
+     "sliceDd": 68993.28,
+     "wholeNet": 69117.17,
+     "wholeDd": 68993.28
+    },
+    "interest 14%": {
+     "sliceNet": -21341.56,
+     "sliceDd": 67476.78,
+     "wholeNet": 46558.19,
+     "wholeDd": 67476.78
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -17087.1,
+     "sliceDd": 65060.1,
+     "wholeNet": 77796.9,
+     "wholeDd": 65060.1
+    },
+    "next-open stops": {
+     "sliceNet": -15515.03,
+     "sliceDd": 64648.5,
+     "wholeNet": 80158.11,
+     "wholeDd": 64648.5
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 64064.75,
+    "p90SliceDd": 74042.67,
+    "worstSliceDd": 86084.38,
+    "medianSliceNet": -14603.68,
+    "p10SliceNet": -32177.02,
+    "above35pctC0": {
+     "breaches": 251,
+     "share": 0.98046875,
+     "wilson95": [
+      0.9551018674765416,
+      0.9916292702684201
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 248,
+     "share": 0.96875,
+     "wilson95": [
+      0.9395583931947824,
+      0.9840817411905459
+     ]
+    },
+    "trainingBreachShare": 0.0117
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R5#1 profit",
+   "id": "3e1a96b99df243c4",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R5"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 66765.37,
+   "sliceDd": 53921.39,
+   "boundaryEquity": 95934.81,
+   "wholeNet": 162700.18,
+   "wholeDd": 53921.39,
+   "wholeEnvelope": {
+    "bankedDdMarked": 44609.760404053726,
+    "bankedDdLiquidation": 44659.24413676365,
+    "principalLossMarked": 20548.006984709402,
+    "principalLossLiquidation": 20587.763118203347
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 14761.91,
+    "2017": 27897.09,
+    "2018": -977.03,
+    "2019": 54252.84,
+    "2020": 88476.96,
+    "2021": -21711.6
+   },
+   "lots": 68,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-26",
+     "exit": "2020-01-13",
+     "reason": "trailing stop",
+     "net": 4606.298943374589,
+     "mae": -487.3514536491275
+    }
+   ],
+   "nextInterval": {
+    "lots": 56,
+    "byBook": {
+     "D1:GDX": 50,
+     "D1:VGT": 1,
+     "G:VGT": 5
+    },
+    "worstLotMae": -20548.006984709402,
+    "maxPrincipalLossMarked": 20548.006984709402,
+    "worstRealized": -15799.7437924873,
+    "losing": 38,
+    "exitReasons": {
+     "trailing stop": 12,
+     "maximum hold": 30,
+     "trailing stop gap": 3,
+     "buffered intraday loss": 10,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 67999.67,
+     "sliceDd": 50930.02,
+     "wholeNet": 164497.48,
+     "wholeDd": 50930.02
+    },
+    "cost 10 bps": {
+     "sliceNet": 61668.79,
+     "sliceDd": 57510.48,
+     "wholeNet": 153362.21,
+     "wholeDd": 57510.48
+    },
+    "cost 20 bps": {
+     "sliceNet": 52951.01,
+     "sliceDd": 63217.81,
+     "wholeNet": 142498.61,
+     "wholeDd": 63217.81
+    },
+    "interest 14%": {
+     "sliceNet": 63127.04,
+     "sliceDd": 56047.38,
+     "wholeNet": 148742.22,
+     "wholeDd": 56047.38
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 62375.54,
+     "sliceDd": 55795.31,
+     "wholeNet": 156927.34,
+     "wholeDd": 55795.31
+    },
+    "next-open stops": {
+     "sliceNet": 65062.49,
+     "sliceDd": 53995.19,
+     "wholeNet": 161119.59,
+     "wholeDd": 53995.19
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 48889,
+    "p90SliceDd": 59665.08,
+    "worstSliceDd": 72400,
+    "medianSliceNet": 48899.99,
+    "p10SliceNet": 8528.2,
+    "above35pctC0": {
+     "breaches": 249,
+     "share": 0.97265625,
+     "wilson95": [
+      0.9446442917875,
+      0.9866928437177062
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 231,
+     "share": 0.90234375,
+     "wilson95": [
+      0.8598151373702178,
+      0.9329759779771891
+     ]
+    },
+    "trainingBreachShare": 0.0078
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R6#1 profit",
+   "id": "afaa9f77fa8ddf5b",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R6"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 27421.86,
+   "sliceDd": 58355.43,
+   "boundaryEquity": 98198.15,
+   "wholeNet": 125620.02,
+   "wholeDd": 58355.43,
+   "wholeEnvelope": {
+    "bankedDdMarked": 41363.59835215146,
+    "bankedDdLiquidation": 41410.340247225686,
+    "principalLossMarked": 26513.59012212787,
+    "principalLossLiquidation": 26550.393601039406
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 10704.46,
+    "2019": 55482.43,
+    "2020": 36437.8,
+    "2021": -9015.94
+   },
+   "lots": 40,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 4799.775359287105,
+     "mae": -164.20361247946857
+    }
+   ],
+   "nextInterval": {
+    "lots": 31,
+    "byBook": {
+     "D1:GDX": 31,
+     "D1:VGT": 0,
+     "G:VGT": 0
+    },
+    "worstLotMae": -26513.59012212787,
+    "maxPrincipalLossMarked": 26513.59012212787,
+    "worstRealized": -7205.79306228743,
+    "losing": 21,
+    "exitReasons": {
+     "buffered intraday loss": 1,
+     "trailing stop": 5,
+     "trailing stop gap": 3,
+     "maximum hold": 21,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 7310.88,
+     "sliceDd": 57084.7,
+     "wholeNet": 106487.65,
+     "wholeDd": 57084.7
+    },
+    "cost 10 bps": {
+     "sliceNet": 24366.66,
+     "sliceDd": 60339.64,
+     "wholeNet": 96270.02,
+     "wholeDd": 60339.64
+    },
+    "cost 20 bps": {
+     "sliceNet": 18077.25,
+     "sliceDd": 64478.54,
+     "wholeNet": 87476.68,
+     "wholeDd": 64478.54
+    },
+    "interest 14%": {
+     "sliceNet": 21853.06,
+     "sliceDd": 61489,
+     "wholeNet": 84885.88,
+     "wholeDd": 61489
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 24900.57,
+     "sliceDd": 59115.23,
+     "wholeNet": 122281.72,
+     "wholeDd": 59115.23
+    },
+    "next-open stops": {
+     "sliceNet": 27413.88,
+     "sliceDd": 58298.42,
+     "wholeNet": 125599.92,
+     "wholeDd": 58298.42
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 60977.05,
+    "p90SliceDd": 72607.98,
+    "worstSliceDd": 77234.88,
+    "medianSliceNet": 8566.52,
+    "p10SliceNet": -25154.24,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R7#1 profit",
+   "id": "5e9443aed6840030",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R7"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 20270.52,
+   "sliceDd": 36140.5,
+   "boundaryEquity": 88192.45,
+   "wholeNet": 108462.96,
+   "wholeDd": 36140.5,
+   "wholeEnvelope": {
+    "bankedDdMarked": 10958.738783541688,
+    "bankedDdLiquidation": 11008.067092955258,
+    "principalLossMarked": 10399.708744150614,
+    "principalLossLiquidation": 10444.599300737442
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 9554.56,
+    "2017": 31312.55,
+    "2018": 9088.68,
+    "2019": 38236.65,
+    "2020": 20270.52,
+    "2021": 0
+   },
+   "lots": 6,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 34836.70405930294,
+     "mae": -2347.096435366082
+    }
+   ],
+   "nextInterval": {
+    "lots": 4,
+    "byBook": {
+     "D1:GDX": 2,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -10399.708744150614,
+    "maxPrincipalLossMarked": 10399.708744150614,
+    "worstRealized": -9615.357610692015,
+    "losing": 2,
+    "exitReasons": {
+     "maximum hold": 2,
+     "trailing stop": 2
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 20776.75,
+     "sliceDd": 35938.91,
+     "wholeNet": 109215.19,
+     "wholeDd": 35938.91
+    },
+    "cost 10 bps": {
+     "sliceNet": 19764.79,
+     "sliceDd": 36341.89,
+     "wholeNet": 107711.49,
+     "wholeDd": 36341.89
+    },
+    "cost 20 bps": {
+     "sliceNet": 18754.86,
+     "sliceDd": 36744.07,
+     "wholeNet": 106210.8,
+     "wholeDd": 36744.07
+    },
+    "interest 14%": {
+     "sliceNet": 17977.37,
+     "sliceDd": 36296.66,
+     "wholeNet": 96630.64,
+     "wholeDd": 36296.66
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 19283.34,
+     "sliceDd": 36509.99,
+     "wholeNet": 107187.62,
+     "wholeDd": 36509.99
+    },
+    "next-open stops": {
+     "sliceNet": 19669.09,
+     "sliceDd": 36564.93,
+     "wholeNet": 107861.53,
+     "wholeDd": 36564.93
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 41409.17,
+    "p90SliceDd": 51942.37,
+    "worstSliceDd": 66334.5,
+    "medianSliceNet": 40219,
+    "p10SliceNet": 15002.45,
+    "above35pctC0": {
+     "breaches": 191,
+     "share": 0.74609375,
+     "wilson95": [
+      0.6894097167266013,
+      0.7955013538256961
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 137,
+     "share": 0.53515625,
+     "wilson95": [
+      0.4739903014075066,
+      0.5952827086713931
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R8#1 profit",
+   "id": "03135883182b2791",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R8"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 3148.47,
+   "sliceDd": 58824.36,
+   "boundaryEquity": 99188.71,
+   "wholeNet": 102337.18,
+   "wholeDd": 58824.36,
+   "wholeEnvelope": {
+    "bankedDdMarked": 43682.626667637946,
+    "bankedDdLiquidation": 43713.174245631315,
+    "principalLossMarked": 39085.66593107363,
+    "principalLossLiquidation": 39116.213509067
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 13175.08,
+    "2017": 30239.86,
+    "2018": 17645.69,
+    "2019": 38128.09,
+    "2020": -5386.56,
+    "2021": 8535.03
+   },
+   "lots": 31,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop gap",
+     "net": 37030.11619355916,
+     "mae": -322.55519226005845
+    }
+   ],
+   "nextInterval": {
+    "lots": 24,
+    "byBook": {
+     "D1:GDX": 19,
+     "D1:VGT": 2,
+     "G:VGT": 3
+    },
+    "worstLotMae": -39085.66593107363,
+    "maxPrincipalLossMarked": 39085.66593107363,
+    "worstRealized": -9861.05749480785,
+    "losing": 12,
+    "exitReasons": {
+     "trailing stop": 9,
+     "maximum hold": 10,
+     "trailing stop gap": 3,
+     "initial stop": 1,
+     "initial stop gap": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 2877.05,
+     "sliceDd": 58526.68,
+     "wholeNet": 102824.2,
+     "wholeDd": 58526.68
+    },
+    "cost 10 bps": {
+     "sliceNet": 2755.15,
+     "sliceDd": 59121.74,
+     "wholeNet": 101186.19,
+     "wholeDd": 59121.74
+    },
+    "cost 20 bps": {
+     "sliceNet": -2227.06,
+     "sliceDd": 59715.6,
+     "wholeNet": 94690.87,
+     "wholeDd": 59715.6
+    },
+    "interest 14%": {
+     "sliceNet": 1510.27,
+     "sliceDd": 59013.4,
+     "wholeNet": 90881.18,
+     "wholeDd": 59013.4
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -406.61,
+     "sliceDd": 59468.37,
+     "wholeNet": 97888.7,
+     "wholeDd": 59468.37
+    },
+    "next-open stops": {
+     "sliceNet": 2699.25,
+     "sliceDd": 58913.48,
+     "wholeNet": 102082.1,
+     "wholeDd": 58913.48
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 60313.63,
+    "p90SliceDd": 62968.97,
+    "worstSliceDd": 64211.96,
+    "medianSliceNet": 19233.76,
+    "p10SliceNet": -3968.36,
+    "above35pctC0": {
+     "breaches": 241,
+     "share": 0.94140625,
+     "wilson95": [
+      0.9055877340418452,
+      0.964173392504339
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 228,
+     "share": 0.890625,
+     "wilson95": [
+      0.8464641648384347,
+      0.923235947149339
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R9#1 profit",
+   "id": "12a7ccc3d8d31138",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R9"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 14860.86,
+   "sliceDd": 42657.7,
+   "boundaryEquity": 93183.19,
+   "wholeNet": 108044.05,
+   "wholeDd": 42657.7,
+   "wholeEnvelope": {
+    "bankedDdMarked": 20121.29623939177,
+    "bankedDdLiquidation": 20161.446550176188,
+    "principalLossMarked": 20121.29623939177,
+    "principalLossLiquidation": 20161.446550176184
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 29800.47,
+    "2018": 16470.43,
+    "2019": 37840.39,
+    "2020": 550.27,
+    "2021": 14310.59
+   },
+   "lots": 7,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop gap",
+     "net": 36152.131802371,
+     "mae": -907.6792679984515
+    }
+   ],
+   "nextInterval": {
+    "lots": 5,
+    "byBook": {
+     "D1:GDX": 3,
+     "D1:VGT": 1,
+     "G:VGT": 1
+    },
+    "worstLotMae": -20121.29623939177,
+    "maxPrincipalLossMarked": 20121.29623939177,
+    "worstRealized": -8457.725810470954,
+    "losing": 2,
+    "exitReasons": {
+     "maximum hold": 2,
+     "trailing stop gap": 1,
+     "trailing stop": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 15402.24,
+     "sliceDd": 42554.1,
+     "wholeNet": 108837.69,
+     "wholeDd": 42554.1
+    },
+    "cost 10 bps": {
+     "sliceNet": 14320.01,
+     "sliceDd": 42761.2,
+     "wholeNet": 107251.2,
+     "wholeDd": 42761.2
+    },
+    "cost 20 bps": {
+     "sliceNet": 13239.93,
+     "sliceDd": 42967.89,
+     "wholeNet": 105667.88,
+     "wholeDd": 42967.89
+    },
+    "interest 14%": {
+     "sliceNet": 12181.4,
+     "sliceDd": 42838.53,
+     "wholeNet": 95650.35,
+     "wholeDd": 42838.53
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 13932.26,
+     "sliceDd": 43030.33,
+     "wholeNet": 107077.09,
+     "wholeDd": 43030.33
+    },
+    "next-open stops": {
+     "sliceNet": 15063.29,
+     "sliceDd": 42657.7,
+     "wholeNet": 108246.48,
+     "wholeDd": 42657.7
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 42704.57,
+    "p90SliceDd": 43927.8,
+    "worstSliceDd": 50181.47,
+    "medianSliceNet": 24749.11,
+    "p10SliceNet": 3414.65,
+    "above35pctC0": {
+     "breaches": 230,
+     "share": 0.8984375,
+     "wilson95": [
+      0.8553490982473966,
+      0.9297450159801326
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 230,
+     "share": 0.8984375,
+     "wilson95": [
+      0.8553490982473966,
+      0.9297450159801326
+     ]
+    },
+    "trainingBreachShare": 0.0156
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R10#1 profit",
+   "id": "5e8ab2091d4d7465",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R10"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 3663.41,
+   "sliceDd": 55463.19,
+   "boundaryEquity": 95745.85,
+   "wholeNet": 99409.26,
+   "wholeDd": 56329.92,
+   "wholeEnvelope": {
+    "bankedDdMarked": 39914.43235857023,
+    "bankedDdLiquidation": 39944.5504848567,
+    "principalLossMarked": 39914.43235857023,
+    "principalLossLiquidation": 39944.5504848567
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 9038.91,
+    "2019": 54695.68,
+    "2020": 22344.96,
+    "2021": -18681.55
+   },
+   "lots": 31,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-27",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 3872.362167408841,
+     "mae": -688.6333191231824
+    }
+   ],
+   "nextInterval": {
+    "lots": 23,
+    "byBook": {
+     "D1:GDX": 23,
+     "D1:VGT": 0,
+     "G:VGT": 0
+    },
+    "worstLotMae": -39914.43235857023,
+    "maxPrincipalLossMarked": 39914.43235857023,
+    "worstRealized": -14731.01486431244,
+    "losing": 16,
+    "exitReasons": {
+     "trailing stop": 3,
+     "maximum hold": 16,
+     "trailing stop gap": 3,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 5992.73,
+     "sliceDd": 53782.45,
+     "wholeNet": 102616.07,
+     "wholeDd": 55634.99
+    },
+    "cost 10 bps": {
+     "sliceNet": 1293.36,
+     "sliceDd": 57142.26,
+     "wholeNet": 98299.63,
+     "wholeDd": 57142.26
+    },
+    "cost 20 bps": {
+     "sliceNet": -3354.94,
+     "sliceDd": 60697.21,
+     "wholeNet": 91897.82,
+     "wholeDd": 60697.21
+    },
+    "interest 14%": {
+     "sliceNet": -1976.27,
+     "sliceDd": 59132.98,
+     "wholeNet": 85989.99,
+     "wholeDd": 59132.98
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 1709.87,
+     "sliceDd": 56479.83,
+     "wholeNet": 96681.62,
+     "wholeDd": 57185.04
+    },
+    "next-open stops": {
+     "sliceNet": 1274.73,
+     "sliceDd": 57771.81,
+     "wholeNet": 97038.52,
+     "wholeDd": 57771.81
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 54537.69,
+    "p90SliceDd": 65180.64,
+    "worstSliceDd": 71963.57,
+    "medianSliceNet": 10104.46,
+    "p10SliceNet": -20062.96,
+    "above35pctC0": {
+     "breaches": 253,
+     "share": 0.98828125,
+     "wilson95": [
+      0.9661184270766886,
+      0.9960067129080287
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 253,
+     "share": 0.98828125,
+     "wilson95": [
+      0.9661184270766886,
+      0.9960067129080287
+     ]
+    },
+    "trainingBreachShare": 0.0078
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R11#1 profit",
+   "id": "2a9c838fba6afecc",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R11"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 36835.3,
+   "sliceDd": 35726.36,
+   "boundaryEquity": 89920.93,
+   "wholeNet": 126756.24,
+   "wholeDd": 35726.36,
+   "wholeEnvelope": {
+    "bankedDdMarked": 12417.476086629089,
+    "bankedDdLiquidation": 12454.63865089463,
+    "principalLossMarked": 12097.08435570762,
+    "principalLossLiquidation": 12141.081019009218
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 26348.08,
+    "2018": 16935.79,
+    "2019": 37565.15,
+    "2020": 18999.82,
+    "2021": 17835.48
+   },
+   "lots": 10,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 34414.03050430482,
+     "mae": -1467.4778896680232
+    }
+   ],
+   "nextInterval": {
+    "lots": 7,
+    "byBook": {
+     "D1:GDX": 2,
+     "D1:VGT": 2,
+     "G:VGT": 3
+    },
+    "worstLotMae": -12097.08435570762,
+    "maxPrincipalLossMarked": 12097.08435570762,
+    "worstRealized": -6375.083210070626,
+    "losing": 4,
+    "exitReasons": {
+     "maximum hold": 4,
+     "trend exit": 1,
+     "trailing stop gap": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 37604.53,
+     "sliceDd": 35459.35,
+     "wholeNet": 127873.03,
+     "wholeDd": 35459.35
+    },
+    "cost 10 bps": {
+     "sliceNet": 36066.84,
+     "sliceDd": 36039.27,
+     "wholeNet": 125640.56,
+     "wholeDd": 36039.27
+    },
+    "cost 20 bps": {
+     "sliceNet": 35572.2,
+     "sliceDd": 36664.17,
+     "wholeNet": 124452.53,
+     "wholeDd": 36664.17
+    },
+    "interest 14%": {
+     "sliceNet": 104925.41,
+     "sliceDd": 35813.48,
+     "wholeNet": 185652.37,
+     "wholeDd": 35813.48
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 36003.76,
+     "sliceDd": 36144.81,
+     "wholeNet": 125858.66,
+     "wholeDd": 36144.81
+    },
+    "next-open stops": {
+     "sliceNet": 36744.19,
+     "sliceDd": 35817.47,
+     "wholeNet": 126665.12,
+     "wholeDd": 35817.47
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 38741.34,
+    "p90SliceDd": 40962.62,
+    "worstSliceDd": 46174.17,
+    "medianSliceNet": 76245.18,
+    "p10SliceNet": 20636.59,
+    "above35pctC0": {
+     "breaches": 247,
+     "share": 0.96484375,
+     "wilson95": [
+      0.9345472292671926,
+      0.981395903998258
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 61,
+     "share": 0.23828125,
+     "wilson95": [
+      0.19020540002058958,
+      0.29409552494760216
+     ]
+    },
+    "trainingBreachShare": 0.0547
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R12#1 profit",
+   "id": "6a1f8ee8c1ffc940",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R12"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 32223.18,
+   "sliceDd": 36381.8,
+   "boundaryEquity": 93241.56,
+   "wholeNet": 125464.74,
+   "wholeDd": 36381.8,
+   "wholeEnvelope": {
+    "bankedDdMarked": 20121.29623939177,
+    "bankedDdLiquidation": 20161.446550176188,
+    "principalLossMarked": 20121.29623939177,
+    "principalLossLiquidation": 20161.446550176184
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 14328.51,
+    "2017": 29800.47,
+    "2018": 11038.73,
+    "2019": 38073.86,
+    "2020": 24816.77,
+    "2021": 7406.41
+   },
+   "lots": 22,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 36817.536785625234,
+     "mae": -432.8454154900551
+    }
+   ],
+   "nextInterval": {
+    "lots": 14,
+    "byBook": {
+     "D1:GDX": 6,
+     "D1:VGT": 1,
+     "G:VGT": 7
+    },
+    "worstLotMae": -20121.29623939177,
+    "maxPrincipalLossMarked": 20121.29623939177,
+    "worstRealized": -10318.702585320098,
+    "losing": 5,
+    "exitReasons": {
+     "trailing stop": 8,
+     "maximum hold": 5,
+     "trailing stop gap": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 33752.53,
+     "sliceDd": 36171.16,
+     "wholeNet": 127849.23,
+     "wholeDd": 36171.16
+    },
+    "cost 10 bps": {
+     "sliceNet": 30695.36,
+     "sliceDd": 36592.24,
+     "wholeNet": 123082.64,
+     "wholeDd": 36592.24
+    },
+    "cost 20 bps": {
+     "sliceNet": 27644.29,
+     "sliceDd": 37012.47,
+     "wholeNet": 118825.92,
+     "wholeDd": 37012.47
+    },
+    "interest 14%": {
+     "sliceNet": 26954.69,
+     "sliceDd": 36644.82,
+     "wholeNet": 110218.39,
+     "wholeDd": 36644.82
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 29403.75,
+     "sliceDd": 37022.92,
+     "wholeNet": 121452.35,
+     "wholeDd": 37022.92
+    },
+    "next-open stops": {
+     "sliceNet": 31915.35,
+     "sliceDd": 36410.33,
+     "wholeNet": 125062.3,
+     "wholeDd": 36410.33
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 38507.05,
+    "p90SliceDd": 53458.85,
+    "worstSliceDd": 71693.2,
+    "medianSliceNet": 18222.14,
+    "p10SliceNet": -3069.97,
+    "above35pctC0": {
+     "breaches": 246,
+     "share": 0.9609375,
+     "wilson95": [
+      0.9296001678889299,
+      0.9786459642566431
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 103,
+     "share": 0.40234375,
+     "wilson95": [
+      0.3441464037372425,
+      0.4634285682658142
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R13#1 profit",
+   "id": "9811f6e8ec4df0e5",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R13"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 102150.8,
+   "sliceDd": 48918.51,
+   "boundaryEquity": 92059.61,
+   "wholeNet": 194210.41,
+   "wholeDd": 48918.51,
+   "wholeEnvelope": {
+    "bankedDdMarked": 17394.529488057648,
+    "bankedDdLiquidation": 17394.529488057648,
+    "principalLossMarked": 13572.75696187396,
+    "principalLossLiquidation": 13572.75696187396
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 7552.41,
+    "2017": 30492.95,
+    "2018": 15713.72,
+    "2019": 38300.53,
+    "2020": 60924.21,
+    "2021": 41226.59
+   },
+   "lots": 8,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 28778.85136520454,
+     "mae": 28.162961299253283
+    }
+   ],
+   "nextInterval": {
+    "lots": 5,
+    "byBook": {
+     "D1:GDX": 1,
+     "D1:VGT": 4,
+     "G:VGT": 0
+    },
+    "worstLotMae": -13572.75696187396,
+    "maxPrincipalLossMarked": 13572.75696187396,
+    "worstRealized": -13572.75696187396,
+    "losing": 3,
+    "exitReasons": {
+     "maximum hold": 3,
+     "trailing stop gap": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 102737.72,
+     "sliceDd": 48680.24,
+     "wholeNet": 195152.93,
+     "wholeDd": 48680.24
+    },
+    "cost 10 bps": {
+     "sliceNet": 101564.46,
+     "sliceDd": 49156.54,
+     "wholeNet": 193268.82,
+     "wholeDd": 49156.54
+    },
+    "cost 20 bps": {
+     "sliceNet": 100393.55,
+     "sliceDd": 49631.88,
+     "wholeNet": 191388.48,
+     "wholeDd": 49631.88
+    },
+    "interest 14%": {
+     "sliceNet": 96216.55,
+     "sliceDd": 49066.45,
+     "wholeNet": 177158.9,
+     "wholeDd": 49066.45
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 101476.6,
+     "sliceDd": 49272.78,
+     "wholeNet": 193019.94,
+     "wholeDd": 49272.78
+    },
+    "next-open stops": {
+     "sliceNet": 102150.8,
+     "sliceDd": 48918.51,
+     "wholeNet": 194094.24,
+     "wholeDd": 48918.51
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 48918.51,
+    "p90SliceDd": 55902.19,
+    "worstSliceDd": 64774.64,
+    "medianSliceNet": 72868.5,
+    "p10SliceNet": 13690.1,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 255,
+     "share": 0.99609375,
+     "wilson95": [
+      0.9782090243838145,
+      0.9993101178406582
+     ]
+    },
+    "trainingBreachShare": 0.0273
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R14#1 profit",
+   "id": "fc6e1744863fa245",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R14"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": -7694.93,
+   "sliceDd": 44152.21,
+   "boundaryEquity": 90423.95,
+   "wholeNet": 82729.02,
+   "wholeDd": 44152.21,
+   "wholeEnvelope": {
+    "bankedDdMarked": 24653.978572757274,
+    "bankedDdLiquidation": 24699.62896769683,
+    "principalLossMarked": 19875.55190482585,
+    "principalLossLiquidation": 19915.9004302433
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 19546.36,
+    "2019": 38866.33,
+    "2020": -7865.52,
+    "2021": 170.58
+   },
+   "lots": 25,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 37950.88496553454,
+     "mae": -1098.2416140754503
+    }
+   ],
+   "nextInterval": {
+    "lots": 22,
+    "byBook": {
+     "D1:GDX": 18,
+     "D1:VGT": 1,
+     "G:VGT": 3
+    },
+    "worstLotMae": -19875.55190482585,
+    "maxPrincipalLossMarked": 19875.55190482585,
+    "worstRealized": -19185.80781735812,
+    "losing": 12,
+    "exitReasons": {
+     "maximum hold": 12,
+     "trailing stop": 5,
+     "trailing stop gap": 4,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": -6511.32,
+     "sliceDd": 44048.35,
+     "wholeNet": 84262.55,
+     "wholeDd": 44048.35
+    },
+    "cost 10 bps": {
+     "sliceNet": -9929.56,
+     "sliceDd": 44255.96,
+     "wholeNet": 80144.83,
+     "wholeDd": 44255.96
+    },
+    "cost 20 bps": {
+     "sliceNet": -14392.11,
+     "sliceDd": 44463.17,
+     "wholeNet": 74984.18,
+     "wholeDd": 44463.17
+    },
+    "interest 14%": {
+     "sliceNet": -11407.93,
+     "sliceDd": 44374.12,
+     "wholeNet": 68760.13,
+     "wholeDd": 44374.12
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -10451.73,
+     "sliceDd": 44529.48,
+     "wholeNet": 79587.01,
+     "wholeDd": 44529.48
+    },
+    "next-open stops": {
+     "sliceNet": -7800.2,
+     "sliceDd": 44215.44,
+     "wholeNet": 82607.92,
+     "wholeDd": 44215.44
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 43074.38,
+    "p90SliceDd": 46740.63,
+    "worstSliceDd": 65016.72,
+    "medianSliceNet": 22961.95,
+    "p10SliceNet": -8645.69,
+    "above35pctC0": {
+     "breaches": 218,
+     "share": 0.8515625,
+     "wilson95": [
+      0.8028248474852336,
+      0.8899052533037626
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 183,
+     "share": 0.71484375,
+     "wilson95": [
+      0.6566796986165281,
+      0.7666553629767474
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R15#1 profit",
+   "id": "1db474c87374848f",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R15"
+    },
+    {
+     "arm": "CTRL",
+     "kind": "pooled",
+     "selector": "P0"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": -23583.88,
+   "sliceDd": 63636.3,
+   "boundaryEquity": 127621.5,
+   "wholeNet": 104037.62,
+   "wholeDd": 63636.3,
+   "wholeEnvelope": {
+    "bankedDdMarked": 47975.41084718898,
+    "bankedDdLiquidation": 48023.55750556711,
+    "principalLossMarked": 44799.927482109175,
+    "principalLossLiquidation": 44827.69327179278
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 49251.01,
+    "2017": 27897.09,
+    "2018": 11655.98,
+    "2019": 38817.43,
+    "2020": -15409.13,
+    "2021": -8174.75
+   },
+   "lots": 45,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 36929.42467827779,
+     "mae": -1195.2266697583254
+    }
+   ],
+   "nextInterval": {
+    "lots": 33,
+    "byBook": {
+     "D1:GDX": 30,
+     "D1:VGT": 0,
+     "G:VGT": 3
+    },
+    "worstLotMae": -44799.927482109175,
+    "maxPrincipalLossMarked": 44799.927482109175,
+    "worstRealized": -23653.03956816373,
+    "losing": 15,
+    "exitReasons": {
+     "trailing stop": 13,
+     "maximum hold": 15,
+     "trailing stop gap": 3,
+     "buffered intraday loss": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": -20262.84,
+     "sliceDd": 63439.46,
+     "wholeNet": 108642.93,
+     "wholeDd": 63439.46
+    },
+    "cost 10 bps": {
+     "sliceNet": -26717.47,
+     "sliceDd": 63832.94,
+     "wholeNet": 99621.05,
+     "wholeDd": 63832.94
+    },
+    "cost 20 bps": {
+     "sliceNet": -33343.35,
+     "sliceDd": 64993.75,
+     "wholeNet": 90433.05,
+     "wholeDd": 64993.75
+    },
+    "interest 14%": {
+     "sliceNet": -27990.8,
+     "sliceDd": 63833.56,
+     "wholeNet": 90300.29,
+     "wholeDd": 63833.56
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -28331.03,
+     "sliceDd": 64277.12,
+     "wholeNet": 96440.32,
+     "wholeDd": 64277.12
+    },
+    "next-open stops": {
+     "sliceNet": -23848.25,
+     "sliceDd": 63697.26,
+     "wholeNet": 104290.5,
+     "wholeDd": 63697.26
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 64175,
+    "p90SliceDd": 75544.29,
+    "worstSliceDd": 89585.83,
+    "medianSliceNet": -27967.97,
+    "p10SliceNet": -46188.14,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R16#1 profit",
+   "id": "fb660d7b31f1125b",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R16"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 31719.22,
+   "sliceDd": 38112.89,
+   "boundaryEquity": 91709.82,
+   "wholeNet": 123429.04,
+   "wholeDd": 38112.89,
+   "wholeEnvelope": {
+    "bankedDdMarked": 12835.054315422167,
+    "bankedDdLiquidation": 12878.802541689118,
+    "principalLossMarked": 12835.054315422174,
+    "principalLossLiquidation": 12878.802541689121
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 8894.92,
+    "2017": 26820.42,
+    "2018": 17223.6,
+    "2019": 38770.88,
+    "2020": 3646.91,
+    "2021": 28072.31
+   },
+   "lots": 15,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 36675.11292191571,
+     "mae": -979.8776894422481
+    }
+   ],
+   "nextInterval": {
+    "lots": 12,
+    "byBook": {
+     "D1:GDX": 10,
+     "D1:VGT": 1,
+     "G:VGT": 1
+    },
+    "worstLotMae": -12835.054315422174,
+    "maxPrincipalLossMarked": 12835.054315422174,
+    "worstRealized": -4128.908535706415,
+    "losing": 5,
+    "exitReasons": {
+     "maximum hold": 5,
+     "trailing stop": 4,
+     "trailing stop gap": 2,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 32984.38,
+     "sliceDd": 38006.8,
+     "wholeNet": 125042.66,
+     "wholeDd": 38006.8
+    },
+    "cost 10 bps": {
+     "sliceNet": 30455.33,
+     "sliceDd": 38218.88,
+     "wholeNet": 121817.03,
+     "wholeDd": 38218.88
+    },
+    "cost 20 bps": {
+     "sliceNet": 27931.32,
+     "sliceDd": 38430.53,
+     "wholeNet": 118597.85,
+     "wholeDd": 38430.53
+    },
+    "interest 14%": {
+     "sliceNet": 28567.17,
+     "sliceDd": 38269.06,
+     "wholeNet": 110810.14,
+     "wholeDd": 38269.06
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 29734.54,
+     "sliceDd": 38486.83,
+     "wholeNet": 121157.31,
+     "wholeDd": 38486.83
+    },
+    "next-open stops": {
+     "sliceNet": 31749.54,
+     "sliceDd": 38251.01,
+     "wholeNet": 123458.27,
+     "wholeDd": 38251.01
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 29323.65,
+    "p90SliceDd": 44473.11,
+    "worstSliceDd": 44717.71,
+    "medianSliceNet": 59398.04,
+    "p10SliceNet": 27126.71,
+    "above35pctC0": {
+     "breaches": 103,
+     "share": 0.40234375,
+     "wilson95": [
+      0.3441464037372425,
+      0.4634285682658142
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 27,
+     "share": 0.10546875,
+     "wilson95": [
+      0.07350191116648169,
+      0.14910097572586697
+     ]
+    },
+    "trainingBreachShare": 0.0117
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R17#1 profit",
+   "id": "3045924837d6a88f",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R17"
+    },
+    {
+     "arm": "CTRL",
+     "kind": "pooled",
+     "selector": "RA1-original"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": -1483.4,
+   "sliceDd": 52305.99,
+   "boundaryEquity": 102280.01,
+   "wholeNet": 100796.62,
+   "wholeDd": 59472.76,
+   "wholeEnvelope": {
+    "bankedDdMarked": 48262.362463219535,
+    "bankedDdLiquidation": 48290.60016538822,
+    "principalLossMarked": 44067.0614160512,
+    "principalLossLiquidation": 44095.29911821988
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 24059.62,
+    "2017": 23444.39,
+    "2018": 14080.26,
+    "2019": 40695.74,
+    "2020": 8192.64,
+    "2021": -9676.03
+   },
+   "lots": 33,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-12",
+     "exit": "2020-01-14",
+     "reason": "trailing stop gap",
+     "net": 3197.4361047599577,
+     "mae": -1378.0884804370871
+    }
+   ],
+   "nextInterval": {
+    "lots": 23,
+    "byBook": {
+     "D1:GDX": 22,
+     "D1:VGT": 0,
+     "G:VGT": 1
+    },
+    "worstLotMae": -44067.0614160512,
+    "maxPrincipalLossMarked": 44067.0614160512,
+    "worstRealized": -22918.765766433273,
+    "losing": 15,
+    "exitReasons": {
+     "maximum hold": 15,
+     "trailing stop gap": 2,
+     "trailing stop": 5,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": -1890.49,
+     "sliceDd": 52229.1,
+     "wholeNet": 101469.02,
+     "wholeDd": 58987.69
+    },
+    "cost 10 bps": {
+     "sliceNet": -7466.94,
+     "sliceDd": 52382.79,
+     "wholeNet": 93734.65,
+     "wholeDd": 59957.34
+    },
+    "cost 20 bps": {
+     "sliceNet": -12086.77,
+     "sliceDd": 52536.18,
+     "wholeNet": 86961.2,
+     "wholeDd": 60925.06
+    },
+    "interest 14%": {
+     "sliceNet": -9727.53,
+     "sliceDd": 52544.34,
+     "wholeNet": 83743.99,
+     "wholeDd": 60713.85
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -3758.06,
+     "sliceDd": 52568.73,
+     "wholeNet": 96996.58,
+     "wholeDd": 60047.98
+    },
+    "next-open stops": {
+     "sliceNet": -936.67,
+     "sliceDd": 52305.99,
+     "wholeNet": 101289.9,
+     "wholeDd": 59472.76
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 51642.44,
+    "p90SliceDd": 59106.43,
+    "worstSliceDd": 72805.3,
+    "medianSliceNet": 7041.89,
+    "p10SliceNet": -11124.58,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 255,
+     "share": 0.99609375,
+     "wilson95": [
+      0.9782090243838145,
+      0.9993101178406582
+     ]
+    },
+    "trainingBreachShare": 0.0352
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GA0.VA0/R18#1 profit",
+   "id": "54ab0f5f450a2018",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R18"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 44404.06,
+   "sliceDd": 21494.15,
+   "boundaryEquity": 87790.59,
+   "wholeNet": 132194.65,
+   "wholeDd": 21494.15,
+   "wholeEnvelope": {
+    "bankedDdMarked": 11184.522891511471,
+    "bankedDdLiquidation": 11231.449564073162,
+    "principalLossMarked": 6327.476794425934,
+    "principalLossLiquidation": 6374.403466987625
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 2267.33,
+    "2019": 53512,
+    "2020": 39296.4,
+    "2021": 5107.65
+   },
+   "lots": 20,
+   "openAtBoundary": [
+    {
+     "book": "G:VGT",
+     "entry": "2019-10-29",
+     "exit": "2020-02-24",
+     "reason": "trailing stop gap",
+     "net": 8826.378341596295,
+     "mae": -1052.1022493762014
+    }
+   ],
+   "nextInterval": {
+    "lots": 12,
+    "byBook": {
+     "D1:GDX": 4,
+     "D1:VGT": 5,
+     "G:VGT": 3
+    },
+    "worstLotMae": -6327.476794425934,
+    "maxPrincipalLossMarked": 6327.476794425934,
+    "worstRealized": -4857.046097085528,
+    "losing": 3,
+    "exitReasons": {
+     "trailing stop gap": 5,
+     "trailing stop": 4,
+     "maximum hold": 2,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 44618.06,
+     "sliceDd": 21392.85,
+     "wholeNet": 133271.22,
+     "wholeDd": 21392.85
+    },
+    "cost 10 bps": {
+     "sliceNet": 43138.08,
+     "sliceDd": 21595.34,
+     "wholeNet": 130066.96,
+     "wholeDd": 21595.34
+    },
+    "cost 20 bps": {
+     "sliceNet": 40904.52,
+     "sliceDd": 21797.43,
+     "wholeNet": 106554.6,
+     "wholeDd": 21797.43
+    },
+    "interest 14%": {
+     "sliceNet": 40928.48,
+     "sliceDd": 21683.19,
+     "wholeNet": 101147.17,
+     "wholeDd": 21683.19
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 42016.98,
+     "sliceDd": 21802.32,
+     "wholeNet": 107193.17,
+     "wholeDd": 21802.32
+    },
+    "next-open stops": {
+     "sliceNet": 44338.86,
+     "sliceDd": 21494.15,
+     "wholeNet": 131919.79,
+     "wholeDd": 21494.15
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 21699.33,
+    "p90SliceDd": 24634.09,
+    "worstSliceDd": 44070.51,
+    "medianSliceNet": 40537.07,
+    "p10SliceNet": 19867.07,
+    "above35pctC0": {
+     "breaches": 21,
+     "share": 0.08203125,
+     "wilson95": [
+      0.05427759173050018,
+      0.12214328844258207
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 5,
+     "share": 0.01953125,
+     "wilson95": [
+      0.008370729731579924,
+      0.044898132523458555
+     ]
+    },
+    "trainingBreachShare": 0.0117
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R3#1 profit",
+   "id": "rc2-b7ece82ad131c150",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R3"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 58109.53,
+   "sliceDd": 33778.56,
+   "boundaryEquity": 91238.69,
+   "wholeNet": 149348.22,
+   "wholeDd": 33778.56,
+   "wholeEnvelope": {
+    "bankedDdMarked": 27436.84986430485,
+    "bankedDdLiquidation": 27483.001903492608,
+    "principalLossMarked": 10909.80331751932,
+    "principalLossLiquidation": 10909.80331751932
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 10276.71,
+    "2017": 30239.86,
+    "2018": 13357.91,
+    "2019": 37364.22,
+    "2020": 71261.97,
+    "2021": -13152.44
+   },
+   "lots": 41,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop gap",
+     "net": 34698.94303199776,
+     "mae": -1876.1426537624661
+    }
+   ],
+   "nextInterval": {
+    "lots": 37,
+    "byBook": {
+     "D1:GDX": 36,
+     "D1:VGT": 1,
+     "G:VGT": 0
+    },
+    "worstLotMae": -10909.80331751932,
+    "maxPrincipalLossMarked": 10909.80331751932,
+    "worstRealized": -10909.80331751932,
+    "losing": 20,
+    "exitReasons": {
+     "trailing stop": 10,
+     "protective stop": 2,
+     "trailing stop gap": 7,
+     "maximum hold": 18
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 61956.73,
+     "sliceDd": 31293.41,
+     "wholeNet": 153644.83,
+     "wholeDd": 31293.41
+    },
+    "cost 10 bps": {
+     "sliceNet": 54266.17,
+     "sliceDd": 36261.23,
+     "wholeNet": 145055.9,
+     "wholeDd": 36261.23
+    },
+    "cost 20 bps": {
+     "sliceNet": 46590.96,
+     "sliceDd": 41394.15,
+     "wholeNet": 136484.11,
+     "wholeDd": 41394.15
+    },
+    "interest 14%": {
+     "sliceNet": 55043.77,
+     "sliceDd": 35866.23,
+     "wholeNet": 137044.11,
+     "wholeDd": 35866.23
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 52696.56,
+     "sliceDd": 36355.8,
+     "wholeNet": 143220.1,
+     "wholeDd": 36355.8
+    },
+    "next-open stops": {
+     "sliceNet": 58187.74,
+     "sliceDd": 33675.09,
+     "wholeNet": 149330.71,
+     "wholeDd": 33675.09
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 36912.14,
+    "p90SliceDd": 45862.37,
+    "worstSliceDd": 61763.3,
+    "medianSliceNet": 52329.25,
+    "p10SliceNet": 19999.53,
+    "above35pctC0": {
+     "breaches": 152,
+     "share": 0.59375,
+     "wilson95": [
+      0.5326317032327199,
+      0.6520963236443458
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 82,
+     "share": 0.3203125,
+     "wilson95": [
+      0.26617385293992313,
+      0.3797640955457011
+     ]
+    },
+    "trainingBreachShare": 0.0078
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R4#1 profit",
+   "id": "rc2-04a8153544c49abb",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R4"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 49813.6,
+   "sliceDd": 35887.95,
+   "boundaryEquity": 90967.4,
+   "wholeNet": 140781,
+   "wholeDd": 35887.95,
+   "wholeEnvelope": {
+    "bankedDdMarked": 12835.054315422167,
+    "bankedDdLiquidation": 12878.802541689118,
+    "principalLossMarked": 12835.054315422174,
+    "principalLossLiquidation": 12878.802541689121
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 10276.71,
+    "2017": 30239.86,
+    "2018": 11479.02,
+    "2019": 38971.81,
+    "2020": 34022.21,
+    "2021": 15791.39
+   },
+   "lots": 6,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop gap",
+     "net": 39544.715916348025,
+     "mae": -889.0300123888592
+    }
+   ],
+   "nextInterval": {
+    "lots": 4,
+    "byBook": {
+     "D1:GDX": 2,
+     "D1:VGT": 1,
+     "G:VGT": 1
+    },
+    "worstLotMae": -12835.054315422174,
+    "maxPrincipalLossMarked": 12835.054315422174,
+    "worstRealized": -888.2742724393473,
+    "losing": 1,
+    "exitReasons": {
+     "trailing stop": 2,
+     "maximum hold": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 50295.38,
+     "sliceDd": 35779.28,
+     "wholeNet": 141512.33,
+     "wholeDd": 35779.28
+    },
+    "cost 10 bps": {
+     "sliceNet": 49332.3,
+     "sliceDd": 35996.51,
+     "wholeNet": 140050.4,
+     "wholeDd": 35996.51
+    },
+    "cost 20 bps": {
+     "sliceNet": 48796.83,
+     "sliceDd": 36213.31,
+     "wholeNet": 139017.06,
+     "wholeDd": 36213.31
+    },
+    "interest 14%": {
+     "sliceNet": 46360.83,
+     "sliceDd": 36044.11,
+     "wholeNet": 127260.56,
+     "wholeDd": 36044.11
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 48815.2,
+     "sliceDd": 36269.21,
+     "wholeNet": 139487.74,
+     "wholeDd": 36269.21
+    },
+    "next-open stops": {
+     "sliceNet": 49609.89,
+     "sliceDd": 35887.95,
+     "wholeNet": 140577.29,
+     "wholeDd": 35887.95
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 35796.22,
+    "p90SliceDd": 36482.33,
+    "worstSliceDd": 46030.7,
+    "medianSliceNet": 47614.46,
+    "p10SliceNet": 32958.53,
+    "above35pctC0": {
+     "breaches": 146,
+     "share": 0.5703125,
+     "wilson95": [
+      0.5090737113443533,
+      0.629472308813446
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 7,
+     "share": 0.02734375,
+     "wilson95": [
+      0.013307156282293921,
+      0.05535570821250003
+     ]
+    },
+    "trainingBreachShare": 0.0313
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R5#1 profit",
+   "id": "rc2-c852f20b302c3a33",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R5"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": -7960.79,
+   "sliceDd": 47983.08,
+   "boundaryEquity": 95056.22,
+   "wholeNet": 87095.43,
+   "wholeDd": 47983.08,
+   "wholeEnvelope": {
+    "bankedDdMarked": 25288.475083090045,
+    "bankedDdLiquidation": 25334.92828842198,
+    "principalLossMarked": 9786.53911491229,
+    "principalLossLiquidation": 9786.53911491229
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 10276.71,
+    "2017": 30239.86,
+    "2018": 16352.72,
+    "2019": 38186.93,
+    "2020": -17260.89,
+    "2021": 9300.1
+   },
+   "lots": 10,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop gap",
+     "net": 37209.70147783847,
+     "mae": -202.8723430718833
+    }
+   ],
+   "nextInterval": {
+    "lots": 7,
+    "byBook": {
+     "D1:GDX": 1,
+     "D1:VGT": 2,
+     "G:VGT": 4
+    },
+    "worstLotMae": -9786.53911491229,
+    "maxPrincipalLossMarked": 9786.53911491229,
+    "worstRealized": -9786.53911491229,
+    "losing": 5,
+    "exitReasons": {
+     "maximum hold": 2,
+     "initial stop": 1,
+     "trailing stop gap": 1,
+     "trend exit": 1,
+     "buffered intraday loss": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": -7284.29,
+     "sliceDd": 47590.41,
+     "wholeNet": 88087.42,
+     "wholeDd": 47590.41
+    },
+    "cost 10 bps": {
+     "sliceNet": -8591.89,
+     "sliceDd": 48375.35,
+     "wholeNet": 86110.52,
+     "wholeDd": 48375.35
+    },
+    "cost 20 bps": {
+     "sliceNet": -27680.97,
+     "sliceDd": 57411.59,
+     "wholeNet": 66348.32,
+     "wholeDd": 57411.59
+    },
+    "interest 14%": {
+     "sliceNet": -9373.96,
+     "sliceDd": 48147.46,
+     "wholeNet": 75853.64,
+     "wholeDd": 48147.46
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -8612.09,
+     "sliceDd": 48608.31,
+     "wholeNet": 86405.35,
+     "wholeDd": 48608.31
+    },
+    "next-open stops": {
+     "sliceNet": -7960.79,
+     "sliceDd": 47983.08,
+     "wholeNet": 87095.43,
+     "wholeDd": 47983.08
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 42071.91,
+    "p90SliceDd": 49190.74,
+    "worstSliceDd": 58136.74,
+    "medianSliceNet": 711.91,
+    "p10SliceNet": -14597.21,
+    "above35pctC0": {
+     "breaches": 203,
+     "share": 0.79296875,
+     "wilson95": [
+      0.7391823609564361,
+      0.8380927230343942
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 147,
+     "share": 0.57421875,
+     "wilson95": [
+      0.5129905505243357,
+      0.6332524707533412
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R6#1 profit",
+   "id": "rc1-3f5043e05146af26",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R6"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 29679.05,
+   "sliceDd": 44715.87,
+   "boundaryEquity": 108926.77,
+   "wholeNet": 138605.82,
+   "wholeDd": 44715.87,
+   "wholeEnvelope": {
+    "bankedDdMarked": 27593.692214192502,
+    "bankedDdLiquidation": 27641.244372692687,
+    "principalLossMarked": 22698.009214570797,
+    "principalLossLiquidation": 22698.009214570797
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 28411.46,
+    "2017": 27897.09,
+    "2018": 14134.74,
+    "2019": 38483.48,
+    "2020": 21995.25,
+    "2021": 7683.8
+   },
+   "lots": 17,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 36792.27240254202,
+     "mae": -1857.5616056430008
+    }
+   ],
+   "nextInterval": {
+    "lots": 11,
+    "byBook": {
+     "D1:GDX": 10,
+     "D1:VGT": 0,
+     "G:VGT": 1
+    },
+    "worstLotMae": -22698.009214570797,
+    "maxPrincipalLossMarked": 22698.009214570797,
+    "worstRealized": -22698.009214570797,
+    "losing": 4,
+    "exitReasons": {
+     "trailing stop": 5,
+     "protective stop": 1,
+     "trailing stop gap": 3,
+     "maximum hold": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 30872.12,
+     "sliceDd": 44420.66,
+     "wholeNet": 140467.87,
+     "wholeDd": 44420.66
+    },
+    "cost 10 bps": {
+     "sliceNet": 28487.18,
+     "sliceDd": 45010.79,
+     "wholeNet": 136745.62,
+     "wholeDd": 45010.79
+    },
+    "cost 20 bps": {
+     "sliceNet": 26107.01,
+     "sliceDd": 45599.74,
+     "wholeNet": 133030.8,
+     "wholeDd": 45599.74
+    },
+    "interest 14%": {
+     "sliceNet": 27164.81,
+     "sliceDd": 44855.6,
+     "wholeNet": 125886.64,
+     "wholeDd": 44855.6
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 26808.02,
+     "sliceDd": 45551.61,
+     "wholeNet": 134379.1,
+     "wholeDd": 45551.61
+    },
+    "next-open stops": {
+     "sliceNet": 29674.17,
+     "sliceDd": 45337.76,
+     "wholeNet": 138757.65,
+     "wholeDd": 45337.76
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 45669.56,
+    "p90SliceDd": 53361.63,
+    "worstSliceDd": 59143.47,
+    "medianSliceNet": 32810.46,
+    "p10SliceNet": 17803.75,
+    "above35pctC0": {
+     "breaches": 224,
+     "share": 0.875,
+     "wilson95": [
+      0.8288639404599362,
+      0.9100481670483266
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 217,
+     "share": 0.84765625,
+     "wilson95": [
+      0.798521870655577,
+      0.8865112290135415
+     ]
+    },
+    "trainingBreachShare": 0.0586
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R7#1 profit",
+   "id": "rc2-95ed87b6701b602f",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R7"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 38693.09,
+   "sliceDd": 37388.93,
+   "boundaryEquity": 107819.72,
+   "wholeNet": 146512.81,
+   "wholeDd": 37388.93,
+   "wholeEnvelope": {
+    "bankedDdMarked": 19350.333155313885,
+    "bankedDdLiquidation": 19397.58173067798,
+    "principalLossMarked": 8602.613077023125,
+    "principalLossLiquidation": 8602.613077023125
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 24099.89,
+    "2017": 30239.86,
+    "2018": 16158.38,
+    "2019": 37321.6,
+    "2020": 26722.83,
+    "2021": 11970.26
+   },
+   "lots": 53,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 33844.72234329435,
+     "mae": -1962.8173698984479
+    }
+   ],
+   "nextInterval": {
+    "lots": 39,
+    "byBook": {
+     "D1:GDX": 37,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -8602.613077023125,
+    "maxPrincipalLossMarked": 8602.613077023125,
+    "worstRealized": -8602.613077023125,
+    "losing": 15,
+    "exitReasons": {
+     "trailing stop": 17,
+     "protective stop": 5,
+     "trailing stop gap": 6,
+     "maximum hold": 10,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 42671.18,
+     "sliceDd": 36887.97,
+     "wholeNet": 151957.5,
+     "wholeDd": 36887.97
+    },
+    "cost 10 bps": {
+     "sliceNet": 34718.97,
+     "sliceDd": 37889.4,
+     "wholeNet": 141073.56,
+     "wholeDd": 37889.4
+    },
+    "cost 20 bps": {
+     "sliceNet": 25732.63,
+     "sliceDd": 38888.83,
+     "wholeNet": 129161.35,
+     "wholeDd": 38888.83
+    },
+    "interest 14%": {
+     "sliceNet": 35035.55,
+     "sliceDd": 37545.1,
+     "wholeNet": 133608.7,
+     "wholeDd": 37545.1
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 31118.05,
+     "sliceDd": 38734.46,
+     "wholeNet": 136457.44,
+     "wholeDd": 38734.46
+    },
+    "next-open stops": {
+     "sliceNet": 40348.08,
+     "sliceDd": 37621.83,
+     "wholeNet": 148286.59,
+     "wholeDd": 37621.83
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 36063.66,
+    "p90SliceDd": 45574.08,
+    "worstSliceDd": 57186.24,
+    "medianSliceNet": 42053.44,
+    "p10SliceNet": 17864.22,
+    "above35pctC0": {
+     "breaches": 150,
+     "share": 0.5859375,
+     "wilson95": [
+      0.5247637923071623,
+      0.644570232330148
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 69,
+     "share": 0.26953125,
+     "wilson95": [
+      0.21888001474040417,
+      0.3269969191868095
+     ]
+    },
+    "trainingBreachShare": 0.043
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R8#1 profit",
+   "id": "rc2-11d31f746b191435",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R8"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": -32761.99,
+   "sliceDd": 71194.92,
+   "boundaryEquity": 96733.94,
+   "wholeNet": 63971.95,
+   "wholeDd": 71194.92,
+   "wholeEnvelope": {
+    "bankedDdMarked": 39675.91760429117,
+    "bankedDdLiquidation": 39725.098081620075,
+    "principalLossMarked": 14441.439247708984,
+    "principalLossLiquidation": 14484.534966441293
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 8588.21,
+    "2017": 29574.75,
+    "2018": 20278.3,
+    "2019": 38292.67,
+    "2020": -36542.77,
+    "2021": 3780.78
+   },
+   "lots": 27,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 28696.00449762134,
+     "mae": -2235.9869369992375
+    }
+   ],
+   "nextInterval": {
+    "lots": 19,
+    "byBook": {
+     "D1:GDX": 16,
+     "D1:VGT": 2,
+     "G:VGT": 1
+    },
+    "worstLotMae": -14441.439247708984,
+    "maxPrincipalLossMarked": 14441.439247708984,
+    "worstRealized": -13998.694446366133,
+    "losing": 8,
+    "exitReasons": {
+     "protective stop gap": 1,
+     "trailing stop gap": 4,
+     "protective stop": 1,
+     "maximum hold": 6,
+     "trailing stop": 6,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": -26338.45,
+     "sliceDd": 65001.27,
+     "wholeNet": 70707.15,
+     "wholeDd": 65001.27
+    },
+    "cost 10 bps": {
+     "sliceNet": -33796.15,
+     "sliceDd": 68559.8,
+     "wholeNet": 62085.56,
+     "wholeDd": 68559.8
+    },
+    "cost 20 bps": {
+     "sliceNet": -37903.89,
+     "sliceDd": 72111.22,
+     "wholeNet": 56275.93,
+     "wholeDd": 72111.22
+    },
+    "interest 14%": {
+     "sliceNet": -35100.85,
+     "sliceDd": 69164.99,
+     "wholeNet": 52550.89,
+     "wholeDd": 69164.99
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -36167.41,
+     "sliceDd": 74056.65,
+     "wholeNet": 59117.08,
+     "wholeDd": 74056.65
+    },
+    "next-open stops": {
+     "sliceNet": -33232.57,
+     "sliceDd": 71552.93,
+     "wholeNet": 63419.94,
+     "wholeDd": 71552.93
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 54688.92,
+    "p90SliceDd": 61847.01,
+    "worstSliceDd": 75343.83,
+    "medianSliceNet": -1235.99,
+    "p10SliceNet": -23858.29,
+    "above35pctC0": {
+     "breaches": 224,
+     "share": 0.875,
+     "wilson95": [
+      0.8288639404599362,
+      0.9100481670483266
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 218,
+     "share": 0.8515625,
+     "wilson95": [
+      0.8028248474852336,
+      0.8899052533037626
+     ]
+    },
+    "trainingBreachShare": 0.0625
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R9#1 profit",
+   "id": "rc2-f98c6bdb81e30ff5",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R9"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 9721.05,
+   "sliceDd": 41626.58,
+   "boundaryEquity": 96376.1,
+   "wholeNet": 106097.15,
+   "wholeDd": 41626.58,
+   "wholeEnvelope": {
+    "bankedDdMarked": 27937.68321318792,
+    "bankedDdLiquidation": 27983.51966995954,
+    "principalLossMarked": 19610.59675641632,
+    "principalLossLiquidation": 19610.59675641632
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 10276.71,
+    "2017": 30239.86,
+    "2018": 17706.67,
+    "2019": 38152.86,
+    "2020": 11668.75,
+    "2021": -1947.7
+   },
+   "lots": 27,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop gap",
+     "net": 37105.71846085475,
+     "mae": -272.17080363191917
+    }
+   ],
+   "nextInterval": {
+    "lots": 18,
+    "byBook": {
+     "D1:GDX": 16,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -19610.59675641632,
+    "maxPrincipalLossMarked": 19610.59675641632,
+    "worstRealized": -19610.59675641632,
+    "losing": 8,
+    "exitReasons": {
+     "protective stop": 2,
+     "protective stop gap": 1,
+     "trailing stop gap": 4,
+     "trailing stop": 5,
+     "maximum hold": 5,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 11566.35,
+     "sliceDd": 41329.45,
+     "wholeNet": 108895.05,
+     "wholeDd": 41329.45
+    },
+    "cost 10 bps": {
+     "sliceNet": 7877.6,
+     "sliceDd": 41923.41,
+     "wholeNet": 103302.06,
+     "wholeDd": 41923.41
+    },
+    "cost 20 bps": {
+     "sliceNet": 4196.21,
+     "sliceDd": 42516.2,
+     "wholeNet": 97698.71,
+     "wholeDd": 42516.2
+    },
+    "interest 14%": {
+     "sliceNet": 7189.54,
+     "sliceDd": 41790.96,
+     "wholeNet": 94571.16,
+     "wholeDd": 41790.96
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 6263.25,
+     "sliceDd": 42463.96,
+     "wholeNet": 101145.98,
+     "wholeDd": 42463.96
+    },
+    "next-open stops": {
+     "sliceNet": 8955.5,
+     "sliceDd": 41726.1,
+     "wholeNet": 104775.38,
+     "wholeDd": 41726.1
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 41908.63,
+    "p90SliceDd": 45464.61,
+    "worstSliceDd": 71186.39,
+    "medianSliceNet": 22227.75,
+    "p10SliceNet": 5197.49,
+    "above35pctC0": {
+     "breaches": 215,
+     "share": 0.83984375,
+     "wilson95": [
+      0.789944573985882,
+      0.8796945234434811
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 215,
+     "share": 0.83984375,
+     "wilson95": [
+      0.789944573985882,
+      0.8796945234434811
+     ]
+    },
+    "trainingBreachShare": 0.0117
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R10#1 profit",
+   "id": "rc2-147290b759f38c47",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R10"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 74242.28,
+   "sliceDd": 29544.15,
+   "boundaryEquity": 116530.2,
+   "wholeNet": 190772.48,
+   "wholeDd": 29544.15,
+   "wholeEnvelope": {
+    "bankedDdMarked": 14035.418173199898,
+    "bankedDdLiquidation": 14081.871378531825,
+    "principalLossMarked": 7304.548240243005,
+    "principalLossLiquidation": 7351.001445574939
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 39504.06,
+    "2017": 28486.26,
+    "2018": 10748.38,
+    "2019": 37791.5,
+    "2020": 57050.14,
+    "2021": 17192.14
+   },
+   "lots": 21,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 33731.834824495156,
+     "mae": -1007.1214495068866
+    }
+   ],
+   "nextInterval": {
+    "lots": 6,
+    "byBook": {
+     "D1:GDX": 5,
+     "D1:VGT": 0,
+     "G:VGT": 1
+    },
+    "worstLotMae": -7304.548240243005,
+    "maxPrincipalLossMarked": 7304.548240243005,
+    "worstRealized": -3226.9885605142645,
+    "losing": 3,
+    "exitReasons": {
+     "trailing stop": 1,
+     "protective stop": 3,
+     "trailing stop gap": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 74959.06,
+     "sliceDd": 28933.54,
+     "wholeNet": 193064.01,
+     "wholeDd": 28933.54
+    },
+    "cost 10 bps": {
+     "sliceNet": 73526.21,
+     "sliceDd": 30154.14,
+     "wholeNet": 185150.1,
+     "wholeDd": 30154.14
+    },
+    "cost 20 bps": {
+     "sliceNet": 72096.22,
+     "sliceDd": 31372.31,
+     "wholeNet": 180585.07,
+     "wholeDd": 31372.31
+    },
+    "interest 14%": {
+     "sliceNet": 70698.17,
+     "sliceDd": 29733.19,
+     "wholeNet": 177947.27,
+     "wholeDd": 29733.19
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 72378.33,
+     "sliceDd": 31167.69,
+     "wholeNet": 185336.96,
+     "wholeDd": 31167.69
+    },
+    "next-open stops": {
+     "sliceNet": 73703.26,
+     "sliceDd": 30083.17,
+     "wholeNet": 190691.1,
+     "wholeDd": 30083.17
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 41601.49,
+    "p90SliceDd": 47038.9,
+    "worstSliceDd": 69152.12,
+    "medianSliceNet": 17087.18,
+    "p10SliceNet": -7521.22,
+    "above35pctC0": {
+     "breaches": 203,
+     "share": 0.79296875,
+     "wilson95": [
+      0.7391823609564361,
+      0.8380927230343942
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 139,
+     "share": 0.54296875,
+     "wilson95": [
+      0.48176064041177796,
+      0.6029063719068771
+     ]
+    },
+    "trainingBreachShare": 0.0156
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R11#1 profit",
+   "id": "rc2-3f33d976f39f066d",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R11"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 101738.28,
+   "sliceDd": 47366.92,
+   "boundaryEquity": 98465.02,
+   "wholeNet": 200203.31,
+   "wholeDd": 47366.92,
+   "wholeEnvelope": {
+    "bankedDdMarked": 23171.039114717743,
+    "bankedDdLiquidation": 23216.693887128116,
+    "principalLossMarked": 14360.03599028774,
+    "principalLossLiquidation": 14360.03599028774
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 21433.97,
+    "2017": 27897.09,
+    "2018": 12018.33,
+    "2019": 37115.63,
+    "2020": 59685.74,
+    "2021": 42052.55
+   },
+   "lots": 12,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 25373.042051103363,
+     "mae": -2381.7143576319518
+    }
+   ],
+   "nextInterval": {
+    "lots": 7,
+    "byBook": {
+     "D1:GDX": 5,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -14360.03599028774,
+    "maxPrincipalLossMarked": 14360.03599028774,
+    "worstRealized": -14360.03599028774,
+    "losing": 3,
+    "exitReasons": {
+     "trailing stop": 1,
+     "protective stop gap": 1,
+     "protective stop": 1,
+     "trailing stop gap": 3,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 102521.34,
+     "sliceDd": 46978.02,
+     "wholeNet": 201544.55,
+     "wholeDd": 46978.02
+    },
+    "cost 10 bps": {
+     "sliceNet": 100956.01,
+     "sliceDd": 47792.49,
+     "wholeNet": 198863.4,
+     "wholeDd": 47792.49
+    },
+    "cost 20 bps": {
+     "sliceNet": 99393.81,
+     "sliceDd": 48770.99,
+     "wholeNet": 196187.61,
+     "wholeDd": 48770.99
+    },
+    "interest 14%": {
+     "sliceNet": 95771.16,
+     "sliceDd": 47539.52,
+     "wholeNet": 184695.36,
+     "wholeDd": 47539.52
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 99883.92,
+     "sliceDd": 48620.16,
+     "wholeNet": 197481.75,
+     "wholeDd": 48620.16
+    },
+    "next-open stops": {
+     "sliceNet": 101666.09,
+     "sliceDd": 47439.11,
+     "wholeNet": 200078.51,
+     "wholeDd": 47439.11
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 46742.95,
+    "p90SliceDd": 48463.54,
+    "worstSliceDd": 62180.61,
+    "medianSliceNet": 67408.08,
+    "p10SliceNet": 25302.24,
+    "above35pctC0": {
+     "breaches": 227,
+     "share": 0.88671875,
+     "wilson95": [
+      0.8420438329449715,
+      0.9199592779229244
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 207,
+     "share": 0.80859375,
+     "wilson95": [
+      0.7559804287422628,
+      0.8520826597280784
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R12#1 profit",
+   "id": "rc2-df118bc5b7a0efa8",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R12"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 82446.99,
+   "sliceDd": 36289.03,
+   "boundaryEquity": 96656.74,
+   "wholeNet": 179103.73,
+   "wholeDd": 36289.03,
+   "wholeEnvelope": {
+    "bankedDdMarked": 20528.651727419667,
+    "bankedDdLiquidation": 20576.676915702992,
+    "principalLossMarked": 8636.089489501812,
+    "principalLossLiquidation": 8636.089489501812
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 16812.75,
+    "2017": 27897.09,
+    "2018": 14055.98,
+    "2019": 37890.92,
+    "2020": 87532.96,
+    "2021": -5085.97
+   },
+   "lots": 18,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 36087.96391081742,
+     "mae": -804.9205611476805
+    }
+   ],
+   "nextInterval": {
+    "lots": 15,
+    "byBook": {
+     "D1:GDX": 13,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -8636.089489501812,
+    "maxPrincipalLossMarked": 8636.089489501812,
+    "worstRealized": -8636.089489501812,
+    "losing": 4,
+    "exitReasons": {
+     "trailing stop": 9,
+     "trailing stop gap": 2,
+     "maximum hold": 2,
+     "protective stop": 2
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 84120.05,
+     "sliceDd": 35582.07,
+     "wholeNet": 181131.91,
+     "wholeDd": 35582.07
+    },
+    "cost 10 bps": {
+     "sliceNet": 81585.2,
+     "sliceDd": 36995.28,
+     "wholeNet": 177887.18,
+     "wholeDd": 36995.28
+    },
+    "cost 20 bps": {
+     "sliceNet": 79545.86,
+     "sliceDd": 37105.68,
+     "wholeNet": 175139.36,
+     "wholeDd": 37105.68
+    },
+    "interest 14%": {
+     "sliceNet": 81026.92,
+     "sliceDd": 35831.81,
+     "wholeNet": 168126.4,
+     "wholeDd": 35831.81
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 78574.49,
+     "sliceDd": 37905.56,
+     "wholeNet": 174874.9,
+     "wholeDd": 37905.56
+    },
+    "next-open stops": {
+     "sliceNet": 85675.56,
+     "sliceDd": 36083.37,
+     "wholeNet": 182324.99,
+     "wholeDd": 36083.37
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 34913.22,
+    "p90SliceDd": 47186.35,
+    "worstSliceDd": 53571.32,
+    "medianSliceNet": 84824.13,
+    "p10SliceNet": 42474.91,
+    "above35pctC0": {
+     "breaches": 128,
+     "share": 0.5,
+     "wilson95": [
+      0.4392055581166136,
+      0.5607944418833865
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 115,
+     "share": 0.44921875,
+     "wilson95": [
+      0.38948474981190145,
+      0.5104542356296881
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R13#1 profit",
+   "id": "rc1-8cbf99a95183f342",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R13"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 43780.78,
+   "sliceDd": 74544.02,
+   "boundaryEquity": 100005.77,
+   "wholeNet": 143786.55,
+   "wholeDd": 74544.02,
+   "wholeEnvelope": {
+    "bankedDdMarked": 57526.58022838179,
+    "bankedDdLiquidation": 57576.177016036,
+    "principalLossMarked": 7502.537068698081,
+    "principalLossLiquidation": 7502.537068698081
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 8041.55,
+    "2017": 29423.14,
+    "2018": 6516.19,
+    "2019": 56024.88,
+    "2020": 80502.08,
+    "2021": -36721.3
+   },
+   "lots": 49,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 8071.47345309734,
+     "mae": -164.20361247946857
+    }
+   ],
+   "nextInterval": {
+    "lots": 40,
+    "byBook": {
+     "D1:GDX": 39,
+     "D1:VGT": 1,
+     "G:VGT": 0
+    },
+    "worstLotMae": -7502.537068698081,
+    "maxPrincipalLossMarked": 7502.537068698081,
+    "worstRealized": -7502.537068698081,
+    "losing": 27,
+    "exitReasons": {
+     "trailing stop": 9,
+     "protective stop": 8,
+     "protective stop gap": 1,
+     "trailing stop gap": 4,
+     "maximum hold": 17,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 47849.78,
+     "sliceDd": 71783.07,
+     "wholeNet": 148837.36,
+     "wholeDd": 71783.07
+    },
+    "cost 10 bps": {
+     "sliceNet": 36566.44,
+     "sliceDd": 80451.62,
+     "wholeNet": 135591.36,
+     "wholeDd": 80451.62
+    },
+    "cost 20 bps": {
+     "sliceNet": 29167.48,
+     "sliceDd": 85241.01,
+     "wholeNet": 126233.66,
+     "wholeDd": 85241.01
+    },
+    "interest 14%": {
+     "sliceNet": 39931.21,
+     "sliceDd": 76749.75,
+     "wholeNet": 129809.31,
+     "wholeDd": 76749.75
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 37802.45,
+     "sliceDd": 77542.79,
+     "wholeNet": 137119.49,
+     "wholeDd": 77542.79
+    },
+    "next-open stops": {
+     "sliceNet": 43135.88,
+     "sliceDd": 74424.41,
+     "wholeNet": 143483.32,
+     "wholeDd": 74424.41
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 64206.2,
+    "p90SliceDd": 76204.7,
+    "worstSliceDd": 87813.51,
+    "medianSliceNet": 43043.01,
+    "p10SliceNet": -9493.25,
+    "above35pctC0": {
+     "breaches": 239,
+     "share": 0.93359375,
+     "wilson95": [
+      0.8962378470144216,
+      0.9581292772920073
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 239,
+     "share": 0.93359375,
+     "wilson95": [
+      0.8962378470144216,
+      0.9581292772920073
+     ]
+    },
+    "trainingBreachShare": 0.0117
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R14#1 profit",
+   "id": "rc1-257b7e10512b7d48",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R14"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 10043.14,
+   "sliceDd": 56987.32,
+   "boundaryEquity": 97673.93,
+   "wholeNet": 107717.07,
+   "wholeDd": 56987.32,
+   "wholeEnvelope": {
+    "bankedDdMarked": 45800.881214542045,
+    "bankedDdLiquidation": 45848.08593940794,
+    "principalLossMarked": 26392.35937586763,
+    "principalLossLiquidation": 26429.163196179696
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 6655.74,
+    "2017": 30098.85,
+    "2018": 23889.46,
+    "2019": 37029.87,
+    "2020": 19018.76,
+    "2021": -8975.62
+   },
+   "lots": 47,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 6375.037404455001,
+     "mae": -164.20361247946857
+    }
+   ],
+   "nextInterval": {
+    "lots": 37,
+    "byBook": {
+     "D1:GDX": 37,
+     "D1:VGT": 0,
+     "G:VGT": 0
+    },
+    "worstLotMae": -26392.35937586763,
+    "maxPrincipalLossMarked": 26392.35937586763,
+    "worstRealized": -25720.37375528369,
+    "losing": 28,
+    "exitReasons": {
+     "trailing stop": 5,
+     "protective stop gap": 2,
+     "trailing stop gap": 3,
+     "buffered intraday loss": 1,
+     "maximum hold": 25,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 13777.41,
+     "sliceDd": 56634.66,
+     "wholeNet": 112494.62,
+     "wholeDd": 56634.66
+    },
+    "cost 10 bps": {
+     "sliceNet": 6312.6,
+     "sliceDd": 57750.84,
+     "wholeNet": 102944.25,
+     "wholeDd": 57774.38
+    },
+    "cost 20 bps": {
+     "sliceNet": 2790.7,
+     "sliceDd": 59089.26,
+     "wholeNet": 98057.11,
+     "wholeDd": 59664.69
+    },
+    "interest 14%": {
+     "sliceNet": 11957.64,
+     "sliceDd": 57061.29,
+     "wholeNet": 99989.61,
+     "wholeDd": 58216.95
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 7111.96,
+     "sliceDd": 57891.52,
+     "wholeNet": 104077.55,
+     "wholeDd": 58353.12
+    },
+    "next-open stops": {
+     "sliceNet": 10707.31,
+     "sliceDd": 56651.49,
+     "wholeNet": 108385.89,
+     "wholeDd": 56651.49
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 57211.89,
+    "p90SliceDd": 73904.74,
+    "worstSliceDd": 83442.34,
+    "medianSliceNet": 1085.3,
+    "p10SliceNet": -24324.68,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 250,
+     "share": 0.9765625,
+     "wilson95": [
+      0.9498190041177833,
+      0.9892151325073005
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R15#1 profit",
+   "id": "rc1-e99bb2524cab9e33",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R15"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 57395.74,
+   "sliceDd": 38510.64,
+   "boundaryEquity": 90360.11,
+   "wholeNet": 147755.85,
+   "wholeDd": 38510.64,
+   "wholeEnvelope": {
+    "bankedDdMarked": 12835.054315422181,
+    "bankedDdLiquidation": 12878.802541689118,
+    "principalLossMarked": 12835.054315422174,
+    "principalLossLiquidation": 12878.802541689121
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 29800.47,
+    "2018": 12621.4,
+    "2019": 38866.33,
+    "2020": 34157.29,
+    "2021": 23238.45
+   },
+   "lots": 6,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 36551.95296947313,
+     "mae": -1098.2416140754503
+    }
+   ],
+   "nextInterval": {
+    "lots": 4,
+    "byBook": {
+     "D1:GDX": 2,
+     "D1:VGT": 1,
+     "G:VGT": 1
+    },
+    "worstLotMae": -12835.054315422174,
+    "maxPrincipalLossMarked": 12835.054315422174,
+    "worstRealized": 3760.2080028219643,
+    "losing": 0,
+    "exitReasons": {
+     "trailing stop": 2,
+     "trailing stop gap": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 57883.89,
+     "sliceDd": 38404.78,
+     "wholeNet": 148492.92,
+     "wholeDd": 38404.78
+    },
+    "cost 10 bps": {
+     "sliceNet": 56908.08,
+     "sliceDd": 38616.4,
+     "wholeNet": 147019.51,
+     "wholeDd": 38616.4
+    },
+    "cost 20 bps": {
+     "sliceNet": 55934.21,
+     "sliceDd": 38827.59,
+     "wholeNet": 145549.05,
+     "wholeDd": 38827.59
+    },
+    "interest 14%": {
+     "sliceNet": 53187.52,
+     "sliceDd": 38666.81,
+     "wholeNet": 133532.56,
+     "wholeDd": 38666.81
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 56138.31,
+     "sliceDd": 38884.42,
+     "wholeNet": 146286.43,
+     "wholeDd": 38884.42
+    },
+    "next-open stops": {
+     "sliceNet": 57353.39,
+     "sliceDd": 38765.63,
+     "wholeNet": 147713.5,
+     "wholeDd": 38765.63
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 38287.43,
+    "p90SliceDd": 44702.63,
+    "worstSliceDd": 44784.57,
+    "medianSliceNet": 60963.98,
+    "p10SliceNet": 53666.55,
+    "above35pctC0": {
+     "breaches": 239,
+     "share": 0.93359375,
+     "wilson95": [
+      0.8962378470144216,
+      0.9581292772920073
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 112,
+     "share": 0.4375,
+     "wilson95": [
+      0.378099298888468,
+      0.4987486831934883
+     ]
+    },
+    "trainingBreachShare": 0.0313
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R16#1 profit",
+   "id": "rc2-123ab87289bb3036",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R16"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 18427.31,
+   "sliceDd": 42879.09,
+   "boundaryEquity": 99991.75,
+   "wholeNet": 118419.06,
+   "wholeDd": 42879.09,
+   "wholeEnvelope": {
+    "bankedDdMarked": 31648.025847638026,
+    "bankedDdLiquidation": 31696.705679656283,
+    "principalLossMarked": 20121.29623939177,
+    "principalLossLiquidation": 20161.446550176184
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9620.11,
+    "2017": 30059.85,
+    "2018": 22520.28,
+    "2019": 37791.5,
+    "2020": 37792.94,
+    "2021": -19365.63
+   },
+   "lots": 34,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 34758.41917661754,
+     "mae": -1007.1214495068866
+    }
+   ],
+   "nextInterval": {
+    "lots": 29,
+    "byBook": {
+     "D1:GDX": 28,
+     "D1:VGT": 1,
+     "G:VGT": 0
+    },
+    "worstLotMae": -20121.29623939177,
+    "maxPrincipalLossMarked": 20121.29623939177,
+    "worstRealized": -6455.493130300746,
+    "losing": 15,
+    "exitReasons": {
+     "trailing stop": 9,
+     "trailing stop gap": 3,
+     "maximum hold": 16,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 21389.59,
+     "sliceDd": 41490.39,
+     "wholeNet": 121941.34,
+     "wholeDd": 41490.39
+    },
+    "cost 10 bps": {
+     "sliceNet": 15467.99,
+     "sliceDd": 44266.4,
+     "wholeNet": 114900.29,
+     "wholeDd": 44266.4
+    },
+    "cost 20 bps": {
+     "sliceNet": 9558.2,
+     "sliceDd": 48407.09,
+     "wholeNet": 107873.3,
+     "wholeDd": 48407.09
+    },
+    "interest 14%": {
+     "sliceNet": 14104.02,
+     "sliceDd": 43927.76,
+     "wholeNet": 104188.37,
+     "wholeDd": 43927.76
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 14818.74,
+     "sliceDd": 44305.21,
+     "wholeNet": 114210.02,
+     "wholeDd": 44305.21
+    },
+    "next-open stops": {
+     "sliceNet": 17996.12,
+     "sliceDd": 43167.06,
+     "wholeNet": 117880,
+     "wholeDd": 43167.06
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 36084.19,
+    "p90SliceDd": 41688.91,
+    "worstSliceDd": 45033.16,
+    "medianSliceNet": 29842.21,
+    "p10SliceNet": 9015.11,
+    "above35pctC0": {
+     "breaches": 157,
+     "share": 0.61328125,
+     "wilson95": [
+      0.5523692563156545,
+      0.6708437761607998
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 62,
+     "share": 0.2421875,
+     "wilson95": [
+      0.19377015300198713,
+      0.29822777308608234
+     ]
+    },
+    "trainingBreachShare": 0.0508
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R17#1 profit",
+   "id": "rc1-3c11b697705d2aa7",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R17"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 62946.09,
+   "sliceDd": 47234.21,
+   "boundaryEquity": 99889.23,
+   "wholeNet": 162835.32,
+   "wholeDd": 47234.21,
+   "wholeEnvelope": {
+    "bankedDdMarked": 30568.322699493496,
+    "bankedDdLiquidation": 30615.57127485759,
+    "principalLossMarked": 25065.473427669735,
+    "principalLossLiquidation": 25065.473427669735
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 21429.56,
+    "2017": 30059.85,
+    "2018": 10209.75,
+    "2019": 38190.06,
+    "2020": 72301.67,
+    "2021": -9355.58
+   },
+   "lots": 27,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 35386.841077490695,
+     "mae": -2439.4949437537434
+    }
+   ],
+   "nextInterval": {
+    "lots": 24,
+    "byBook": {
+     "D1:GDX": 24,
+     "D1:VGT": 0,
+     "G:VGT": 0
+    },
+    "worstLotMae": -25065.473427669735,
+    "maxPrincipalLossMarked": 25065.473427669735,
+    "worstRealized": -25065.473427669735,
+    "losing": 11,
+    "exitReasons": {
+     "trailing stop": 11,
+     "protective stop": 1,
+     "trailing stop gap": 3,
+     "maximum hold": 9
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 65501.25,
+     "sliceDd": 46941.61,
+     "wholeNet": 165751.01,
+     "wholeDd": 46941.61
+    },
+    "cost 10 bps": {
+     "sliceNet": 60393.49,
+     "sliceDd": 47526.52,
+     "wholeNet": 159922.55,
+     "wholeDd": 47526.52
+    },
+    "cost 20 bps": {
+     "sliceNet": 55295.91,
+     "sliceDd": 48110.27,
+     "wholeNet": 154105.72,
+     "wholeDd": 48110.27
+    },
+    "interest 14%": {
+     "sliceNet": 59206.37,
+     "sliceDd": 47406.82,
+     "wholeNet": 148818.34,
+     "wholeDd": 47406.82
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 58559.69,
+     "sliceDd": 48062.9,
+     "wholeNet": 157828.5,
+     "wholeDd": 48062.9
+    },
+    "next-open stops": {
+     "sliceNet": 60382.94,
+     "sliceDd": 47312.54,
+     "wholeNet": 160269.72,
+     "wholeDd": 47312.54
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 48817.91,
+    "p90SliceDd": 55061.55,
+    "worstSliceDd": 59119.9,
+    "medianSliceNet": 62659.22,
+    "p10SliceNet": 47365.73,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "trainingBreachShare": 0.0039
+   }
+  },
+  {
+   "label": "CTRL C19/broad/GB0.VD1/R18#1 profit",
+   "id": "rc2-8b760805f2cca548",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "CTRL",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R18"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 70161.37,
+   "sliceDd": 46338.06,
+   "boundaryEquity": 88197.06,
+   "wholeNet": 158358.43,
+   "wholeDd": 46338.06,
+   "wholeEnvelope": {
+    "bankedDdMarked": 22408.378706562726,
+    "bankedDdLiquidation": 22455.930865062917,
+    "principalLossMarked": 17512.69570694103,
+    "principalLossLiquidation": 17512.69570694103
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 18394.3,
+    "2019": 37791.5,
+    "2020": 65373.83,
+    "2021": 4787.54
+   },
+   "lots": 17,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 34587.321784597145,
+     "mae": -1007.1214495068866
+    }
+   ],
+   "nextInterval": {
+    "lots": 15,
+    "byBook": {
+     "D1:GDX": 10,
+     "D1:VGT": 0,
+     "G:VGT": 5
+    },
+    "worstLotMae": -17512.69570694103,
+    "maxPrincipalLossMarked": 17512.69570694103,
+    "worstRealized": -17512.69570694103,
+    "losing": 8,
+    "exitReasons": {
+     "protective stop": 1,
+     "trailing stop": 5,
+     "maximum hold": 7,
+     "trailing stop gap": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 70717.18,
+     "sliceDd": 46145.98,
+     "wholeNet": 159161.25,
+     "wholeDd": 46145.98
+    },
+    "cost 10 bps": {
+     "sliceNet": 68553.93,
+     "sliceDd": 46529.96,
+     "wholeNet": 156504.22,
+     "wholeDd": 46529.96
+    },
+    "cost 20 bps": {
+     "sliceNet": 65343.86,
+     "sliceDd": 46913.16,
+     "wholeNet": 152801.36,
+     "wholeDd": 46913.16
+    },
+    "interest 14%": {
+     "sliceNet": 66772.21,
+     "sliceDd": 46412.04,
+     "wholeNet": 145344.61,
+     "wholeDd": 46412.04
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 67791.99,
+     "sliceDd": 46913.07,
+     "wholeNet": 155953.02,
+     "wholeDd": 46913.07
+    },
+    "next-open stops": {
+     "sliceNet": 68832.49,
+     "sliceDd": 48636.45,
+     "wholeNet": 157029.55,
+     "wholeDd": 48636.45
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 45561.11,
+    "p90SliceDd": 53723.05,
+    "worstSliceDd": 63754.35,
+    "medianSliceNet": 75883.24,
+    "p10SliceNet": 64126.16,
+    "above35pctC0": {
+     "breaches": 178,
+     "share": 0.6953125,
+     "wilson95": [
+      0.6363862710256838,
+      0.748463784968203
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 172,
+     "share": 0.671875,
+     "wilson95": [
+      0.6121878035965106,
+      0.7264802456781099
+     ]
+    },
+    "trainingBreachShare": 0.0547
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R3#1 profit",
+   "id": "65a625274b49b5a1",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R3"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 5730.51,
+   "sliceDd": 37262.3,
+   "boundaryEquity": 92080.11,
+   "wholeNet": 97810.62,
+   "wholeDd": 37262.3,
+   "wholeEnvelope": {
+    "bankedDdMarked": 27021.145312051143,
+    "bankedDdLiquidation": 27058.011451723898,
+    "principalLossMarked": 27021.14531205115,
+    "principalLossLiquidation": 27058.01145172389
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 10276.71,
+    "2017": 30239.86,
+    "2018": 14065.99,
+    "2019": 37497.55,
+    "2020": 22587.16,
+    "2021": -16856.65
+   },
+   "lots": 22,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2019-10-04",
+     "exit": "2020-02-24",
+     "reason": "trailing stop gap",
+     "net": 13097.51911571285,
+     "mae": -1864.3638034985277
+    }
+   ],
+   "nextInterval": {
+    "lots": 17,
+    "byBook": {
+     "D1:GDX": 13,
+     "D1:VGT": 4,
+     "G:VGT": 0
+    },
+    "worstLotMae": -27021.14531205115,
+    "maxPrincipalLossMarked": 27021.14531205115,
+    "worstRealized": -14967.040305721019,
+    "losing": 9,
+    "exitReasons": {
+     "maximum hold": 9,
+     "trailing stop gap": 4,
+     "trailing stop": 3,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 10501.97,
+     "sliceDd": 37171.72,
+     "wholeNet": 103151.71,
+     "wholeDd": 37171.72
+    },
+    "cost 10 bps": {
+     "sliceNet": 4006.56,
+     "sliceDd": 37352.79,
+     "wholeNet": 95517.6,
+     "wholeDd": 37352.79
+    },
+    "cost 20 bps": {
+     "sliceNet": 563.81,
+     "sliceDd": 37533.51,
+     "wholeNet": 90938.44,
+     "wholeDd": 37533.51
+    },
+    "interest 14%": {
+     "sliceNet": 2294.89,
+     "sliceDd": 37508.87,
+     "wholeNet": 85015,
+     "wholeDd": 37508.87
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 3563.45,
+     "sliceDd": 37555.82,
+     "wholeNet": 94750.56,
+     "wholeDd": 37555.82
+    },
+    "next-open stops": {
+     "sliceNet": 5864.57,
+     "sliceDd": 37262.3,
+     "wholeNet": 97847.61,
+     "wholeDd": 37262.3
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 31051.41,
+    "p90SliceDd": 37262.3,
+    "worstSliceDd": 48653.63,
+    "medianSliceNet": 5226.26,
+    "p10SliceNet": -13210.2,
+    "above35pctC0": {
+     "breaches": 86,
+     "share": 0.3359375,
+     "wilson95": [
+      0.28088326384707596,
+      0.39584268911805925
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 6,
+     "share": 0.0234375,
+     "wilson95": [
+      0.01078486749269942,
+      0.05018099588221679
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R4#1 profit",
+   "id": "8dfb6c869bdf429b",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R4"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 46003.23,
+   "sliceDd": 44584.8,
+   "boundaryEquity": 91135.28,
+   "wholeNet": 137138.51,
+   "wholeDd": 44584.8,
+   "wholeEnvelope": {
+    "bankedDdMarked": 21596.876538905606,
+    "bankedDdLiquidation": 21646.396452488334,
+    "principalLossMarked": 13199.63816761958,
+    "principalLossLiquidation": 13243.189033467277
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 21458.88,
+    "2019": 37665.13,
+    "2020": 30851.73,
+    "2021": 15151.51
+   },
+   "lots": 29,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 34376.00732274114,
+     "mae": -1264.1240667870748
+    }
+   ],
+   "nextInterval": {
+    "lots": 25,
+    "byBook": {
+     "D1:GDX": 22,
+     "D1:VGT": 3,
+     "G:VGT": 0
+    },
+    "worstLotMae": -13199.63816761958,
+    "maxPrincipalLossMarked": 13199.63816761958,
+    "worstRealized": -12841.43430682462,
+    "losing": 10,
+    "exitReasons": {
+     "maximum hold": 10,
+     "trailing stop gap": 6,
+     "trailing stop": 9
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 48643.35,
+     "sliceDd": 44286.43,
+     "wholeNet": 140231.14,
+     "wholeDd": 44286.43
+    },
+    "cost 10 bps": {
+     "sliceNet": 43365.75,
+     "sliceDd": 44882.86,
+     "wholeNet": 134048.97,
+     "wholeDd": 44882.86
+    },
+    "cost 20 bps": {
+     "sliceNet": 4707.79,
+     "sliceDd": 45478.1,
+     "wholeNet": 94488.26,
+     "wholeDd": 45478.1
+    },
+    "interest 14%": {
+     "sliceNet": 24807.91,
+     "sliceDd": 44847.81,
+     "wholeNet": 105702.91,
+     "wholeDd": 44847.81
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 41589.95,
+     "sliceDd": 45215.94,
+     "wholeNet": 132075.7,
+     "wholeDd": 45215.94
+    },
+    "next-open stops": {
+     "sliceNet": 45793.98,
+     "sliceDd": 44646.51,
+     "wholeNet": 136819.93,
+     "wholeDd": 44646.51
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 40081.89,
+    "p90SliceDd": 47658.47,
+    "worstSliceDd": 52138.49,
+    "medianSliceNet": 55711.92,
+    "p10SliceNet": 30272.42,
+    "above35pctC0": {
+     "breaches": 168,
+     "share": 0.65625,
+     "wilson95": [
+      0.5961441215043757,
+      0.7117359232907338
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 129,
+     "share": 0.50390625,
+     "wilson95": [
+      0.4430558865746854,
+      0.5646411145451924
+     ]
+    },
+    "trainingBreachShare": 0.043
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R5#1 profit",
+   "id": "53b9c96be0735835",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R5"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": -54525.14,
+   "sliceDd": 79113.53,
+   "boundaryEquity": 89471.74,
+   "wholeNet": 34946.6,
+   "wholeDd": 79113.53,
+   "wholeEnvelope": {
+    "bankedDdMarked": 55516.80982722182,
+    "bankedDdLiquidation": 55565.31203291737,
+    "principalLossMarked": 38788.65303131608,
+    "principalLossLiquidation": 38819.28884178672
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 8463.99,
+    "2019": 48996.49,
+    "2020": -27138.29,
+    "2021": -27386.85
+   },
+   "lots": 57,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-26",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": -956.1134196980547,
+     "mae": -956.1134196980547
+    }
+   ],
+   "nextInterval": {
+    "lots": 49,
+    "byBook": {
+     "D1:GDX": 46,
+     "D1:VGT": 0,
+     "G:VGT": 3
+    },
+    "worstLotMae": -38788.65303131608,
+    "maxPrincipalLossMarked": 38788.65303131608,
+    "worstRealized": -37542.21853947163,
+    "losing": 45,
+    "exitReasons": {
+     "buffered intraday loss": 17,
+     "maximum hold": 28,
+     "trailing stop": 2,
+     "trailing stop gap": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": -50389.9,
+     "sliceDd": 75273.66,
+     "wholeNet": 39952.11,
+     "wholeDd": 76644.98
+    },
+    "cost 10 bps": {
+     "sliceNet": -58320.76,
+     "sliceDd": 82409.19,
+     "wholeNet": 27527.67,
+     "wholeDd": 84714.72
+    },
+    "cost 20 bps": {
+     "sliceNet": -80395.35,
+     "sliceDd": 98976.57,
+     "wholeNet": 4571.38,
+     "wholeDd": 102433.1
+    },
+    "interest 14%": {
+     "sliceNet": -68417.66,
+     "sliceDd": 84433.84,
+     "wholeNet": 8449.19,
+     "wholeDd": 89035.82
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -55655.97,
+     "sliceDd": 79720.92,
+     "wholeNet": 32948.43,
+     "wholeDd": 79720.92
+    },
+    "next-open stops": {
+     "sliceNet": -54424.2,
+     "sliceDd": 79060.87,
+     "wholeNet": 35103.13,
+     "wholeDd": 79060.87
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 79709.01,
+    "p90SliceDd": 86397.19,
+    "worstSliceDd": 99113.37,
+    "medianSliceNet": -55717.21,
+    "p10SliceNet": -65457.22,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "trainingBreachShare": 0.0117
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R6#1 profit",
+   "id": "d13c10ba9ccef87f",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R6"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 117080.29,
+   "sliceDd": 51196.29,
+   "boundaryEquity": 91269.98,
+   "wholeNet": 208350.27,
+   "wholeDd": 51196.29,
+   "wholeEnvelope": {
+    "bankedDdMarked": 19744.325233270676,
+    "bankedDdLiquidation": 19791.573808634763,
+    "principalLossMarked": 14241.475961446922,
+    "principalLossLiquidation": 14241.475961446922
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 29800.47,
+    "2018": 14210.67,
+    "2019": 38186.93,
+    "2020": 73944.19,
+    "2021": 43136.1
+   },
+   "lots": 6,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 28452.33590927984,
+     "mae": -202.8723430718833
+    }
+   ],
+   "nextInterval": {
+    "lots": 3,
+    "byBook": {
+     "D1:GDX": 1,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -14241.475961446922,
+    "maxPrincipalLossMarked": 14241.475961446922,
+    "worstRealized": -14241.475961446922,
+    "losing": 1,
+    "exitReasons": {
+     "maximum hold": 1,
+     "trailing stop gap": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 117477.64,
+     "sliceDd": 51007.86,
+     "wholeNet": 209095.31,
+     "wholeDd": 51007.86
+    },
+    "cost 10 bps": {
+     "sliceNet": 116683.33,
+     "sliceDd": 51384.54,
+     "wholeNet": 207605.97,
+     "wholeDd": 51384.54
+    },
+    "cost 20 bps": {
+     "sliceNet": 115890.6,
+     "sliceDd": 51760.46,
+     "wholeNet": 206119.6,
+     "wholeDd": 51760.46
+    },
+    "interest 14%": {
+     "sliceNet": 111154.26,
+     "sliceDd": 51327.8,
+     "wholeNet": 193297.67,
+     "wholeDd": 51327.8
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 116406.35,
+     "sliceDd": 51549.75,
+     "wholeNet": 207267.04,
+     "wholeDd": 51549.75
+    },
+    "next-open stops": {
+     "sliceNet": 117080.29,
+     "sliceDd": 51196.29,
+     "wholeNet": 208553.54,
+     "wholeDd": 51196.29
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 45036.78,
+    "p90SliceDd": 59978.94,
+    "worstSliceDd": 66791.46,
+    "medianSliceNet": 68146.52,
+    "p10SliceNet": 4611.73,
+    "above35pctC0": {
+     "breaches": 247,
+     "share": 0.96484375,
+     "wilson95": [
+      0.9345472292671926,
+      0.981395903998258
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 198,
+     "share": 0.7734375,
+     "wilson95": [
+      0.7183367854349773,
+      0.8204532929564643
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R7#1 profit",
+   "id": "24a09b5f47867e17",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R7"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 24048.83,
+   "sliceDd": 49148.01,
+   "boundaryEquity": 109210.92,
+   "wholeNet": 133259.75,
+   "wholeDd": 49148.01,
+   "wholeEnvelope": {
+    "bankedDdMarked": 36368.46536577285,
+    "bankedDdLiquidation": 36417.5634742995,
+    "principalLossMarked": 11737.056434193153,
+    "principalLossLiquidation": 11781.353659400715
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 17034.65,
+    "2017": 27897.09,
+    "2018": 7985.41,
+    "2019": 56293.76,
+    "2020": 26255.76,
+    "2021": -2206.93
+   },
+   "lots": 69,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-26",
+     "exit": "2020-01-08",
+     "reason": "trailing stop",
+     "net": 6793.624170749319,
+     "mae": -257.6143467454094
+    }
+   ],
+   "nextInterval": {
+    "lots": 50,
+    "byBook": {
+     "D1:GDX": 49,
+     "D1:VGT": 1,
+     "G:VGT": 0
+    },
+    "worstLotMae": -11737.056434193153,
+    "maxPrincipalLossMarked": 11737.056434193153,
+    "worstRealized": -6799.753737374452,
+    "losing": 35,
+    "exitReasons": {
+     "buffered intraday loss": 10,
+     "trailing stop": 11,
+     "maximum hold": 26,
+     "trailing stop gap": 3
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 28864.22,
+     "sliceDd": 45418.51,
+     "wholeNet": 140066.13,
+     "wholeDd": 45418.51
+    },
+    "cost 10 bps": {
+     "sliceNet": 19456.21,
+     "sliceDd": 52688.22,
+     "wholeNet": 126678.12,
+     "wholeDd": 52688.22
+    },
+    "cost 20 bps": {
+     "sliceNet": 10244.44,
+     "sliceDd": 59943.76,
+     "wholeNet": 113683.52,
+     "wholeDd": 59943.76
+    },
+    "interest 14%": {
+     "sliceNet": 19848.1,
+     "sliceDd": 51170.5,
+     "wholeNet": 119207.52,
+     "wholeDd": 51170.5
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 20025.81,
+     "sliceDd": 52097.98,
+     "wholeNet": 126434.9,
+     "wholeDd": 52097.98
+    },
+    "next-open stops": {
+     "sliceNet": 23562.21,
+     "sliceDd": 49319.06,
+     "wholeNet": 132788.89,
+     "wholeDd": 49319.06
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 48894.26,
+    "p90SliceDd": 58630.94,
+    "worstSliceDd": 70351.44,
+    "medianSliceNet": 13177.25,
+    "p10SliceNet": -13705.09,
+    "above35pctC0": {
+     "breaches": 236,
+     "share": 0.921875,
+     "wilson95": [
+      0.8824167613448927,
+      0.9488593596019028
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 214,
+     "share": 0.8359375,
+     "wilson95": [
+      0.7856696972799888,
+      0.8762723990294966
+     ]
+    },
+    "trainingBreachShare": 0.0508
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R8#1 profit",
+   "id": "76bd9417adf87c23",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R8"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 29566.61,
+   "sliceDd": 35883.69,
+   "boundaryEquity": 98338.2,
+   "wholeNet": 127904.81,
+   "wholeDd": 35883.69,
+   "wholeEnvelope": {
+    "bankedDdMarked": 31285.635897355663,
+    "bankedDdLiquidation": 31335.02851038934,
+    "principalLossMarked": 13305.790008244801,
+    "principalLossLiquidation": 13349.348072144789
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 21324.27,
+    "2017": 27897.09,
+    "2018": 8499.59,
+    "2019": 40617.25,
+    "2020": 37712.74,
+    "2021": -8146.14
+   },
+   "lots": 44,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-25",
+     "exit": "2020-01-08",
+     "reason": "trailing stop",
+     "net": 6377.017335548342,
+     "mae": -1603.625740606951
+    }
+   ],
+   "nextInterval": {
+    "lots": 31,
+    "byBook": {
+     "D1:GDX": 22,
+     "D1:VGT": 9,
+     "G:VGT": 0
+    },
+    "worstLotMae": -13305.790008244801,
+    "maxPrincipalLossMarked": 13305.790008244801,
+    "worstRealized": -11440.997066685468,
+    "losing": 11,
+    "exitReasons": {
+     "trailing stop": 13,
+     "trailing stop gap": 9,
+     "buffered intraday loss": 1,
+     "maximum hold": 8
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 36100.59,
+     "sliceDd": 34707.48,
+     "wholeNet": 136239.6,
+     "wholeDd": 34707.48
+    },
+    "cost 10 bps": {
+     "sliceNet": 26369.31,
+     "sliceDd": 37127.54,
+     "wholeNet": 123333.84,
+     "wholeDd": 37127.54
+    },
+    "cost 20 bps": {
+     "sliceNet": 20172.63,
+     "sliceDd": 39689.51,
+     "wholeNet": 118810.47,
+     "wholeDd": 39689.51
+    },
+    "interest 14%": {
+     "sliceNet": 25947.27,
+     "sliceDd": 38004.23,
+     "wholeNet": 119269.82,
+     "wholeDd": 38004.23
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 23583.88,
+     "sliceDd": 37307.12,
+     "wholeNet": 119693.19,
+     "wholeDd": 37307.12
+    },
+    "next-open stops": {
+     "sliceNet": 29217.9,
+     "sliceDd": 35883.61,
+     "wholeNet": 127154.56,
+     "wholeDd": 35883.61
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 33489.14,
+    "p90SliceDd": 46780.14,
+    "worstSliceDd": 56196.4,
+    "medianSliceNet": 24702.33,
+    "p10SliceNet": 1855.6,
+    "above35pctC0": {
+     "breaches": 109,
+     "share": 0.42578125,
+     "wilson95": [
+      0.36674752924665877,
+      0.4870094494756643
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 75,
+     "share": 0.29296875,
+     "wilson95": [
+      0.24060684481353722,
+      0.3514520958329429
+     ]
+    },
+    "trainingBreachShare": 0.0586
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R9#1 profit",
+   "id": "fe5c2634ae7ff666",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R9"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": -11126.25,
+   "sliceDd": 49657.18,
+   "boundaryEquity": 99051.35,
+   "wholeNet": 87925.1,
+   "wholeDd": 49657.18,
+   "wholeEnvelope": {
+    "bankedDdMarked": 44840.05368196624,
+    "bankedDdLiquidation": 44887.5804646036,
+    "principalLossMarked": 15354.290342640083,
+    "principalLossLiquidation": 15396.688539934516
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 29800.47,
+    "2018": 21336.43,
+    "2019": 38842.55,
+    "2020": 9035.52,
+    "2021": -20161.78
+   },
+   "lots": 57,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 36480.66390025309,
+     "mae": -1145.3994890104368
+    }
+   ],
+   "nextInterval": {
+    "lots": 47,
+    "byBook": {
+     "D1:GDX": 44,
+     "D1:VGT": 2,
+     "G:VGT": 1
+    },
+    "worstLotMae": -15354.290342640083,
+    "maxPrincipalLossMarked": 15354.290342640083,
+    "worstRealized": -15061.714191582998,
+    "losing": 29,
+    "exitReasons": {
+     "trailing stop": 12,
+     "maximum hold": 28,
+     "trailing stop gap": 6,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": -6392.47,
+     "sliceDd": 46189.7,
+     "wholeNet": 93718.12,
+     "wholeDd": 46189.7
+    },
+    "cost 10 bps": {
+     "sliceNet": -15855.31,
+     "sliceDd": 53121.19,
+     "wholeNet": 82137.86,
+     "wholeDd": 53121.19
+    },
+    "cost 20 bps": {
+     "sliceNet": -25299.25,
+     "sliceDd": 60038.84,
+     "wholeNet": 70580.72,
+     "wholeDd": 60038.84
+    },
+    "interest 14%": {
+     "sliceNet": -15087.9,
+     "sliceDd": 52361.29,
+     "wholeNet": 73623.73,
+     "wholeDd": 52361.29
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -16240.59,
+     "sliceDd": 52495.99,
+     "wholeNet": 81351.47,
+     "wholeDd": 52495.99
+    },
+    "next-open stops": {
+     "sliceNet": -12810.78,
+     "sliceDd": 50372.84,
+     "wholeNet": 86114,
+     "wholeDd": 50372.84
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 41550.2,
+    "p90SliceDd": 50293.15,
+    "worstSliceDd": 75852.7,
+    "medianSliceNet": 30119.38,
+    "p10SliceNet": -1178.3,
+    "above35pctC0": {
+     "breaches": 206,
+     "share": 0.8046875,
+     "wilson95": [
+      0.7517702070072431,
+      0.8485958803432204
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 152,
+     "share": 0.59375,
+     "wilson95": [
+      0.5326317032327199,
+      0.6520963236443458
+     ]
+    },
+    "trainingBreachShare": 0.0117
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R10#1 profit",
+   "id": "6d0d69456121e1c8",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R10"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": -5910.79,
+   "sliceDd": 41759.93,
+   "boundaryEquity": 99717.47,
+   "wholeNet": 93806.69,
+   "wholeDd": 41759.93,
+   "wholeEnvelope": {
+    "bankedDdMarked": 34583.42376550297,
+    "bankedDdLiquidation": 34630.25605296665,
+    "principalLossMarked": 24153.523367934027,
+    "principalLossLiquidation": 24191.747976113074
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 3437.08,
+    "2017": 27591.85,
+    "2018": 6007.63,
+    "2019": 62680.92,
+    "2020": 16695.81,
+    "2021": -22606.6
+   },
+   "lots": 28,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2019-10-03",
+     "exit": "2020-02-24",
+     "reason": "trailing stop gap",
+     "net": 16866.88740872812,
+     "mae": -73.20131130005757
+    }
+   ],
+   "nextInterval": {
+    "lots": 23,
+    "byBook": {
+     "D1:GDX": 16,
+     "D1:VGT": 7,
+     "G:VGT": 0
+    },
+    "worstLotMae": -24153.523367934027,
+    "maxPrincipalLossMarked": 24153.523367934027,
+    "worstRealized": -23508.018857070078,
+    "losing": 14,
+    "exitReasons": {
+     "maximum hold": 14,
+     "trailing stop gap": 2,
+     "trailing stop": 6,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": -3589.97,
+     "sliceDd": 41182.86,
+     "wholeNet": 96704.63,
+     "wholeDd": 41182.86
+    },
+    "cost 10 bps": {
+     "sliceNet": -8229.29,
+     "sliceDd": 42968.23,
+     "wholeNet": 90911.64,
+     "wholeDd": 42968.23
+    },
+    "cost 20 bps": {
+     "sliceNet": 64035.09,
+     "sliceDd": 52902.13,
+     "wholeNet": 144078.36,
+     "wholeDd": 56699.53
+    },
+    "interest 14%": {
+     "sliceNet": 60714.64,
+     "sliceDd": 52524.15,
+     "wholeNet": 133244.06,
+     "wholeDd": 56442.54
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -8358.04,
+     "sliceDd": 42230.5,
+     "wholeNet": 90603.28,
+     "wholeDd": 42230.5
+    },
+    "next-open stops": {
+     "sliceNet": -6618.68,
+     "sliceDd": 41759.93,
+     "wholeNet": 93103.54,
+     "wholeDd": 41759.93
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 52835.25,
+    "p90SliceDd": 65080.85,
+    "worstSliceDd": 70273.32,
+    "medianSliceNet": 34343.01,
+    "p10SliceNet": -14314.9,
+    "above35pctC0": {
+     "breaches": 238,
+     "share": 0.9296875,
+     "wilson95": [
+      0.891605670490794,
+      0.9550644526957571
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 236,
+     "share": 0.921875,
+     "wilson95": [
+      0.8824167613448927,
+      0.9488593596019028
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R11#1 profit",
+   "id": "14e5d066df3fb911",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R11"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 60038.25,
+   "sliceDd": 48471.82,
+   "boundaryEquity": 89934.17,
+   "wholeNet": 149972.43,
+   "wholeDd": 48471.82,
+   "wholeEnvelope": {
+    "bankedDdMarked": 23815.675473506555,
+    "bankedDdLiquidation": 23862.880198372448,
+    "principalLossMarked": 19624.789071696454,
+    "principalLossLiquidation": 19665.247910037317
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 29800.47,
+    "2018": 13186.08,
+    "2019": 37875.72,
+    "2020": 36705.67,
+    "2021": 23332.59
+   },
+   "lots": 9,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 34156.32771404203,
+     "mae": -835.8327934336426
+    }
+   ],
+   "nextInterval": {
+    "lots": 7,
+    "byBook": {
+     "D1:GDX": 5,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -19624.789071696454,
+    "maxPrincipalLossMarked": 19624.789071696454,
+    "worstRealized": -18225.125205295124,
+    "losing": 2,
+    "exitReasons": {
+     "maximum hold": 2,
+     "trailing stop": 2,
+     "trailing stop gap": 2,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 60818.47,
+     "sliceDd": 48280.83,
+     "wholeNet": 151002.75,
+     "wholeDd": 48280.83
+    },
+    "cost 10 bps": {
+     "sliceNet": 59258.82,
+     "sliceDd": 48662.62,
+     "wholeNet": 148943.13,
+     "wholeDd": 48662.62
+    },
+    "cost 20 bps": {
+     "sliceNet": 57702.28,
+     "sliceDd": 49043.64,
+     "wholeNet": 146887.62,
+     "wholeDd": 49043.64
+    },
+    "interest 14%": {
+     "sliceNet": 55008.12,
+     "sliceDd": 48693.74,
+     "wholeNet": 134910.78,
+     "wholeDd": 48693.74
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 58540.7,
+     "sliceDd": 48839.46,
+     "wholeNet": 148432.48,
+     "wholeDd": 48839.46
+    },
+    "next-open stops": {
+     "sliceNet": 59591.64,
+     "sliceDd": 48553.43,
+     "wholeNet": 149525.82,
+     "wholeDd": 48553.43
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 48481.13,
+    "p90SliceDd": 53370.39,
+    "worstSliceDd": 55905.82,
+    "medianSliceNet": 61793.41,
+    "p10SliceNet": 33661.24,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R12#1 profit",
+   "id": "13e969d2ca87ad69",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R12"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 51162.02,
+   "sliceDd": 41746.45,
+   "boundaryEquity": 102010.29,
+   "wholeNet": 153172.32,
+   "wholeDd": 43774.92,
+   "wholeEnvelope": {
+    "bankedDdMarked": 22512.178845474016,
+    "bankedDdLiquidation": 22560.819935128748,
+    "principalLossMarked": 18840.252437589665,
+    "principalLossLiquidation": 18880.967927809226
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9671.58,
+    "2017": 30059.85,
+    "2018": 10447.16,
+    "2019": 51831.7,
+    "2020": 32014.92,
+    "2021": 19147.1
+   },
+   "lots": 12,
+   "openAtBoundary": [
+    {
+     "book": "G:VGT",
+     "entry": "2019-10-25",
+     "exit": "2020-02-28",
+     "reason": "maximum hold",
+     "net": 510.44669446099965,
+     "mae": -4.335731677550939
+    }
+   ],
+   "nextInterval": {
+    "lots": 6,
+    "byBook": {
+     "D1:GDX": 3,
+     "D1:VGT": 2,
+     "G:VGT": 1
+    },
+    "worstLotMae": -18840.252437589665,
+    "maxPrincipalLossMarked": 18840.252437589665,
+    "worstRealized": -18142.864753102083,
+    "losing": 2,
+    "exitReasons": {
+     "maximum hold": 2,
+     "trailing stop gap": 2,
+     "trailing stop": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 51824.25,
+     "sliceDd": 41573.61,
+     "wholeNet": 154516.91,
+     "wholeDd": 43386.9
+    },
+    "cost 10 bps": {
+     "sliceNet": 50500.45,
+     "sliceDd": 41919.13,
+     "wholeNet": 151829.06,
+     "wholeDd": 44162.54
+    },
+    "cost 20 bps": {
+     "sliceNet": 49179.3,
+     "sliceDd": 42263.96,
+     "wholeNet": 149146.58,
+     "wholeDd": 44936.64
+    },
+    "interest 14%": {
+     "sliceNet": 45988.05,
+     "sliceDd": 41932.21,
+     "wholeNet": 138202.73,
+     "wholeDd": 45209.99
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 50215.14,
+     "sliceDd": 41775.21,
+     "wholeNet": 151546.33,
+     "wholeDd": 44126.01
+    },
+    "next-open stops": {
+     "sliceNet": 51264.96,
+     "sliceDd": 41746.45,
+     "wholeNet": 153353.17,
+     "wholeDd": 43705.19
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 29929.9,
+    "p90SliceDd": 41753.39,
+    "worstSliceDd": 49350.04,
+    "medianSliceNet": 28905.93,
+    "p10SliceNet": 3045.03,
+    "above35pctC0": {
+     "breaches": 95,
+     "share": 0.37109375,
+     "wilson95": [
+      0.314229291182557,
+      0.43176967186147786
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 83,
+     "share": 0.32421875,
+     "wilson95": [
+      0.2698445826497339,
+      0.38379036695576807
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R13#1 profit",
+   "id": "63e3368d9ac9651e",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R13"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 77812.84,
+   "sliceDd": 21511.48,
+   "boundaryEquity": 88679.11,
+   "wholeNet": 166491.95,
+   "wholeDd": 21511.48,
+   "wholeEnvelope": {
+    "bankedDdMarked": 6343.875757063506,
+    "bankedDdLiquidation": 6390.990120554838,
+    "principalLossMarked": 6343.875757063515,
+    "principalLossLiquidation": 6390.990120554847
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 10276.71,
+    "2017": 30239.86,
+    "2018": 15208.93,
+    "2019": 32953.6,
+    "2020": 63997.98,
+    "2021": 13814.87
+   },
+   "lots": 14,
+   "openAtBoundary": [
+    {
+     "book": "G:VGT",
+     "entry": "2019-08-07",
+     "exit": "2020-02-24",
+     "reason": "trailing stop gap",
+     "net": 16672.502303815134,
+     "mae": -920.5427996639455
+    }
+   ],
+   "nextInterval": {
+    "lots": 8,
+    "byBook": {
+     "D1:GDX": 7,
+     "D1:VGT": 0,
+     "G:VGT": 1
+    },
+    "worstLotMae": -6343.875757063515,
+    "maxPrincipalLossMarked": 6343.875757063515,
+    "worstRealized": -2113.894639877081,
+    "losing": 2,
+    "exitReasons": {
+     "trailing stop": 4,
+     "trailing stop gap": 2,
+     "maximum hold": 1,
+     "buffered intraday loss": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 78759.33,
+     "sliceDd": 21415.02,
+     "wholeNet": 168099.15,
+     "wholeDd": 21415.02
+    },
+    "cost 10 bps": {
+     "sliceNet": 76867.3,
+     "sliceDd": 21607.83,
+     "wholeNet": 164886.36,
+     "wholeDd": 21607.83
+    },
+    "cost 20 bps": {
+     "sliceNet": 76018.15,
+     "sliceDd": 21800.26,
+     "wholeNet": 162719.09,
+     "wholeDd": 21800.26
+    },
+    "interest 14%": {
+     "sliceNet": 75122.68,
+     "sliceDd": 21823.8,
+     "wholeNet": 141258.9,
+     "wholeDd": 21823.8
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 75794.52,
+     "sliceDd": 21794.38,
+     "wholeNet": 162971.63,
+     "wholeDd": 21794.38
+    },
+    "next-open stops": {
+     "sliceNet": 77524.5,
+     "sliceDd": 21511.48,
+     "wholeNet": 166346.24,
+     "wholeDd": 21511.48
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 18704.22,
+    "p90SliceDd": 36892.21,
+    "worstSliceDd": 38775.55,
+    "medianSliceNet": 94886.01,
+    "p10SliceNet": 73522.72,
+    "above35pctC0": {
+     "breaches": 27,
+     "share": 0.10546875,
+     "wilson95": [
+      0.07350191116648169,
+      0.14910097572586697
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 0,
+     "share": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R14#1 profit",
+   "id": "dfd8eabb3d02c5df",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R14"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 50584.83,
+   "sliceDd": 48896.79,
+   "boundaryEquity": 103217.61,
+   "wholeNet": 153802.44,
+   "wholeDd": 48896.79,
+   "wholeEnvelope": {
+    "bankedDdMarked": 17377.785246958025,
+    "bankedDdLiquidation": 17427.582833371926,
+    "principalLossMarked": 13419.27790774598,
+    "principalLossLiquidation": 13419.27790774598
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 20286.4,
+    "2017": 35291.8,
+    "2018": 9346.74,
+    "2019": 38292.67,
+    "2020": 35542.89,
+    "2021": 15041.93
+   },
+   "lots": 17,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 28696.00449762134,
+     "mae": -2235.9869369992375
+    }
+   ],
+   "nextInterval": {
+    "lots": 12,
+    "byBook": {
+     "D1:GDX": 7,
+     "D1:VGT": 3,
+     "G:VGT": 2
+    },
+    "worstLotMae": -13419.27790774598,
+    "maxPrincipalLossMarked": 13419.27790774598,
+    "worstRealized": -13419.27790774598,
+    "losing": 5,
+    "exitReasons": {
+     "maximum hold": 4,
+     "trailing stop gap": 3,
+     "trailing stop": 4,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 51874.32,
+     "sliceDd": 48608.31,
+     "wholeNet": 155657.83,
+     "wholeDd": 48608.31
+    },
+    "cost 10 bps": {
+     "sliceNet": 49296.62,
+     "sliceDd": 49184.97,
+     "wholeNet": 151948.89,
+     "wholeDd": 49184.97
+    },
+    "cost 20 bps": {
+     "sliceNet": 36467.53,
+     "sliceDd": 49760.49,
+     "wholeNet": 137990.83,
+     "wholeDd": 49760.49
+    },
+    "interest 14%": {
+     "sliceNet": 46726.74,
+     "sliceDd": 49044.73,
+     "wholeNet": 139093.39,
+     "wholeDd": 49044.73
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 37789.74,
+     "sliceDd": 49251,
+     "wholeNet": 140877.98,
+     "wholeDd": 49251
+    },
+    "next-open stops": {
+     "sliceNet": 49676.21,
+     "sliceDd": 48896.79,
+     "wholeNet": 152893.82,
+     "wholeDd": 48896.79
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 46558.44,
+    "p90SliceDd": 54829.79,
+    "worstSliceDd": 63249.33,
+    "medianSliceNet": 42734.11,
+    "p10SliceNet": 7324.34,
+    "above35pctC0": {
+     "breaches": 237,
+     "share": 0.92578125,
+     "wilson95": [
+      0.8869992290943741,
+      0.9519738929722992
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 234,
+     "share": 0.9140625,
+     "wilson95": [
+      0.8733176975609717,
+      0.9425644211460684
+     ]
+    },
+    "trainingBreachShare": 0.0547
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R15#3 profit order",
+   "id": "b3adb6926c6886e8",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R15"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 6223.28,
+   "sliceDd": 62999.48,
+   "boundaryEquity": 101698.55,
+   "wholeNet": 107921.83,
+   "wholeDd": 62999.48,
+   "wholeEnvelope": {
+    "bankedDdMarked": 49497.12308551489,
+    "bankedDdLiquidation": 49526.30204442253,
+    "principalLossMarked": 41853.04108882368,
+    "principalLossLiquidation": 41882.22004773132
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 19674.53,
+    "2017": 27897.09,
+    "2018": 12487.74,
+    "2019": 41639.18,
+    "2020": -11705.6,
+    "2021": 17928.88
+   },
+   "lots": 20,
+   "openAtBoundary": [
+    {
+     "book": "G:VGT",
+     "entry": "2019-10-29",
+     "exit": "2020-03-09",
+     "reason": "initial stop gap",
+     "net": -2510.740573890063,
+     "mae": -2510.740573890063
+    }
+   ],
+   "nextInterval": {
+    "lots": 8,
+    "byBook": {
+     "D1:GDX": 7,
+     "D1:VGT": 0,
+     "G:VGT": 1
+    },
+    "worstLotMae": -41853.04108882368,
+    "maxPrincipalLossMarked": 41853.04108882368,
+    "worstRealized": -23008.330694965756,
+    "losing": 4,
+    "exitReasons": {
+     "maximum hold": 3,
+     "trailing stop": 2,
+     "trailing stop gap": 2,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 7043.98,
+     "sliceDd": 62929.93,
+     "wholeNet": 109915.88,
+     "wholeDd": 62929.93
+    },
+    "cost 10 bps": {
+     "sliceNet": 5403.4,
+     "sliceDd": 63068.96,
+     "wholeNet": 105821.78,
+     "wholeDd": 63068.96
+    },
+    "cost 20 bps": {
+     "sliceNet": 3766.1,
+     "sliceDd": 63207.71,
+     "wholeNet": 101627.95,
+     "wholeDd": 63207.71
+    },
+    "interest 14%": {
+     "sliceNet": 1933.69,
+     "sliceDd": 63178.66,
+     "wholeNet": 94433.34,
+     "wholeDd": 63178.66
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 5025,
+     "sliceDd": 63083.19,
+     "wholeNet": 104685.04,
+     "wholeDd": 63083.19
+    },
+    "next-open stops": {
+     "sliceNet": 5657.22,
+     "sliceDd": 62999.48,
+     "wholeNet": 107133.46,
+     "wholeDd": 62999.48
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 47214.48,
+    "p90SliceDd": 58322.62,
+    "worstSliceDd": 77388.52,
+    "medianSliceNet": -3485.48,
+    "p10SliceNet": -35493.78,
+    "above35pctC0": {
+     "breaches": 230,
+     "share": 0.8984375,
+     "wilson95": [
+      0.8553490982473966,
+      0.9297450159801326
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 211,
+     "share": 0.82421875,
+     "wilson95": [
+      0.7728971410804775,
+      0.8659539518693747
+     ]
+    },
+    "trainingBreachShare": 0.0703
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R16#1 profit",
+   "id": "1e12720e3f5d472b",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R16"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 43109.9,
+   "sliceDd": 36328.87,
+   "boundaryEquity": 90428.17,
+   "wholeNet": 133538.07,
+   "wholeDd": 36328.87,
+   "wholeEnvelope": {
+    "bankedDdMarked": 13379.588178606835,
+    "bankedDdLiquidation": 13425.90183327801,
+    "principalLossMarked": 11694.91459680387,
+    "principalLossLiquidation": 11739.11234498492
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 29800.47,
+    "2018": 13664.88,
+    "2019": 37890.92,
+    "2020": 37163.85,
+    "2021": 5946.05
+   },
+   "lots": 9,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 35916.51788774743,
+     "mae": -804.9205611476805
+    }
+   ],
+   "nextInterval": {
+    "lots": 5,
+    "byBook": {
+     "D1:GDX": 0,
+     "D1:VGT": 3,
+     "G:VGT": 2
+    },
+    "worstLotMae": -11694.91459680387,
+    "maxPrincipalLossMarked": 11694.91459680387,
+    "worstRealized": -5946.623548341239,
+    "losing": 2,
+    "exitReasons": {
+     "maximum hold": 1,
+     "buffered intraday loss": 1,
+     "trailing stop": 2,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 43589.97,
+     "sliceDd": 36125.2,
+     "wholeNet": 134467.88,
+     "wholeDd": 36125.2
+    },
+    "cost 10 bps": {
+     "sliceNet": 42529.13,
+     "sliceDd": 36532.32,
+     "wholeNet": 132508.03,
+     "wholeDd": 36532.32
+    },
+    "cost 20 bps": {
+     "sliceNet": 41439.95,
+     "sliceDd": 36938.63,
+     "wholeNet": 130521.62,
+     "wholeDd": 36938.63
+    },
+    "interest 14%": {
+     "sliceNet": 39674.28,
+     "sliceDd": 36443.93,
+     "wholeNet": 120329.85,
+     "wholeDd": 36443.93
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 42072.77,
+     "sliceDd": 36700.9,
+     "wholeNet": 131568.88,
+     "wholeDd": 36700.9
+    },
+    "next-open stops": {
+     "sliceNet": 44274.82,
+     "sliceDd": 35262.87,
+     "wholeNet": 134768.06,
+     "wholeDd": 35262.87
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 48174.88,
+    "p90SliceDd": 52947.34,
+    "worstSliceDd": 62774.38,
+    "medianSliceNet": 21515.92,
+    "p10SliceNet": 9211.68,
+    "above35pctC0": {
+     "breaches": 214,
+     "share": 0.8359375,
+     "wilson95": [
+      0.7856696972799888,
+      0.8762723990294966
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 160,
+     "share": 0.625,
+     "wilson95": [
+      0.5642590519421044,
+      0.6820449838939832
+     ]
+    },
+    "trainingBreachShare": 0.0547
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R17#1 profit",
+   "id": "1c6d92641bdf30cb",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R17"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 61369.79,
+   "sliceDd": 42854.22,
+   "boundaryEquity": 93689.89,
+   "wholeNet": 155059.68,
+   "wholeDd": 42854.22,
+   "wholeEnvelope": {
+    "bankedDdMarked": 18558.044419847254,
+    "bankedDdLiquidation": 18598.976356541447,
+    "principalLossMarked": 18558.044419847254,
+    "principalLossLiquidation": 18598.97635654144
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 29800.47,
+    "2018": 16271.16,
+    "2019": 38546.36,
+    "2020": 38048.03,
+    "2021": 23321.75
+   },
+   "lots": 6,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 36808.82106905682,
+     "mae": -1732.8491863096715
+    }
+   ],
+   "nextInterval": {
+    "lots": 4,
+    "byBook": {
+     "D1:GDX": 1,
+     "D1:VGT": 3,
+     "G:VGT": 0
+    },
+    "worstLotMae": -18558.044419847254,
+    "maxPrincipalLossMarked": 18558.044419847254,
+    "worstRealized": -5164.576592330767,
+    "losing": 1,
+    "exitReasons": {
+     "maximum hold": 1,
+     "trailing stop": 2,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 61854.62,
+     "sliceDd": 42750.36,
+     "wholeNet": 155797.51,
+     "wholeDd": 42750.36
+    },
+    "cost 10 bps": {
+     "sliceNet": 60885.45,
+     "sliceDd": 42957.98,
+     "wholeNet": 154322.6,
+     "wholeDd": 42957.98
+    },
+    "cost 20 bps": {
+     "sliceNet": 59918.21,
+     "sliceDd": 43165.19,
+     "wholeNet": 152850.63,
+     "wholeDd": 43165.19
+    },
+    "interest 14%": {
+     "sliceNet": 55698.56,
+     "sliceDd": 43035.04,
+     "wholeNet": 139306.81,
+     "wholeDd": 43035.04
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 60390.65,
+     "sliceDd": 43228.64,
+     "wholeNet": 154038.63,
+     "wholeDd": 43228.64
+    },
+    "next-open stops": {
+     "sliceNet": 61522.57,
+     "sliceDd": 42736.96,
+     "wholeNet": 155212.47,
+     "wholeDd": 42736.96
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 43511.63,
+    "p90SliceDd": 50237.86,
+    "worstSliceDd": 55847.08,
+    "medianSliceNet": 59385.44,
+    "p10SliceNet": 23971.25,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GA0.VA0/R18#1 profit",
+   "id": "7e2816b4aa215fea",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GA0.VA0/R18"
+    }
+   ],
+   "cell": "GA0.VA0",
+   "sliceNet": 9671.97,
+   "sliceDd": 76448.07,
+   "boundaryEquity": 91618.42,
+   "wholeNet": 101290.4,
+   "wholeDd": 76448.07,
+   "wholeEnvelope": {
+    "bankedDdMarked": 59831.14726983817,
+    "bankedDdLiquidation": 59878.647298112,
+    "principalLossMarked": 27124.09391936029,
+    "principalLossLiquidation": 27160.592146373212
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 4696.67,
+    "2017": 28115.07,
+    "2018": 6666.54,
+    "2019": 52140.14,
+    "2020": 37539.58,
+    "2021": -27867.61
+   },
+   "lots": 36,
+   "openAtBoundary": [
+    {
+     "book": "G:VGT",
+     "entry": "2019-10-16",
+     "exit": "2020-02-28",
+     "reason": "maximum hold",
+     "net": 4842.044898774777,
+     "mae": -2483.6650592347137
+    }
+   ],
+   "nextInterval": {
+    "lots": 30,
+    "byBook": {
+     "D1:GDX": 30,
+     "D1:VGT": 0,
+     "G:VGT": 0
+    },
+    "worstLotMae": -27124.09391936029,
+    "maxPrincipalLossMarked": 27124.09391936029,
+    "worstRealized": -7783.122093394286,
+    "losing": 22,
+    "exitReasons": {
+     "maximum hold": 21,
+     "trailing stop": 5,
+     "trailing stop gap": 2,
+     "buffered intraday loss": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 12706.13,
+     "sliceDd": 74189.59,
+     "wholeNet": 104992.7,
+     "wholeDd": 74189.59
+    },
+    "cost 10 bps": {
+     "sliceNet": 6640.84,
+     "sliceDd": 78704.3,
+     "wholeNet": 97591.79,
+     "wholeDd": 78704.3
+    },
+    "cost 20 bps": {
+     "sliceNet": 2091.1,
+     "sliceDd": 81706.55,
+     "wholeNet": 92257.81,
+     "wholeDd": 81706.55
+    },
+    "interest 14%": {
+     "sliceNet": 8417.52,
+     "sliceDd": 75951.84,
+     "wholeNet": 71608.86,
+     "wholeDd": 75951.84
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 7553.89,
+     "sliceDd": 77289.47,
+     "wholeNet": 98344.8,
+     "wholeDd": 77289.47
+    },
+    "next-open stops": {
+     "sliceNet": 9456.41,
+     "sliceDd": 76303.76,
+     "wholeNet": 100929.05,
+     "wholeDd": 76303.76
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 65477.28,
+    "p90SliceDd": 76525.21,
+    "worstSliceDd": 88417.39,
+    "medianSliceNet": 6544.57,
+    "p10SliceNet": -32192.73,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "trainingBreachShare": 0.0352
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R3#1 profit",
+   "id": "rc1-affec5751841d4fc",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R3"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": -977.3,
+   "sliceDd": 54192.03,
+   "boundaryEquity": 97731.28,
+   "wholeNet": 96753.98,
+   "wholeDd": 54192.03,
+   "wholeEnvelope": {
+    "bankedDdMarked": 35469.69305326297,
+    "bankedDdLiquidation": 35518.58883454818,
+    "principalLossMarked": 23889.158361995476,
+    "principalLossLiquidation": 23927.213782814477
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 20021.53,
+    "2017": 27897.09,
+    "2018": 11737.25,
+    "2019": 38075.4,
+    "2020": 11.14,
+    "2021": -988.44
+   },
+   "lots": 36,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 35213.13715139842,
+     "mae": -2666.9104258597363
+    }
+   ],
+   "nextInterval": {
+    "lots": 30,
+    "byBook": {
+     "D1:GDX": 28,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -23889.158361995476,
+    "maxPrincipalLossMarked": 23889.158361995476,
+    "worstRealized": -23191.24565185175,
+    "losing": 20,
+    "exitReasons": {
+     "trailing stop": 7,
+     "protective stop": 1,
+     "trailing stop gap": 5,
+     "maximum hold": 15,
+     "buffered intraday loss": 2
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 3849.96,
+     "sliceDd": 53808.25,
+     "wholeNet": 102237.16,
+     "wholeDd": 53808.25
+    },
+    "cost 10 bps": {
+     "sliceNet": -1118.83,
+     "sliceDd": 54641.72,
+     "wholeNet": 96036.1,
+     "wholeDd": 54641.72
+    },
+    "cost 20 bps": {
+     "sliceNet": -6893.76,
+     "sliceDd": 58724.47,
+     "wholeNet": 89083.71,
+     "wholeDd": 58724.47
+    },
+    "interest 14%": {
+     "sliceNet": -2533.91,
+     "sliceDd": 54479.5,
+     "wholeNet": 85888.57,
+     "wholeDd": 54479.5
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": -4743.33,
+     "sliceDd": 55243.93,
+     "wholeNet": 92028.39,
+     "wholeDd": 55243.93
+    },
+    "next-open stops": {
+     "sliceNet": -960.41,
+     "sliceDd": 54450.64,
+     "wholeNet": 96564.09,
+     "wholeDd": 54450.64
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 54730.18,
+    "p90SliceDd": 62365.76,
+    "worstSliceDd": 77232.39,
+    "medianSliceNet": 10713.88,
+    "p10SliceNet": -6743.13,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 254,
+     "share": 0.9921875,
+     "wilson95": [
+      0.9719672314529922,
+      0.9978549096516027
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R4#1 profit",
+   "id": "rc2-c99f0191dc3274e8",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R4"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 95746.94,
+   "sliceDd": 54267.22,
+   "boundaryEquity": 93425.1,
+   "wholeNet": 189172.04,
+   "wholeDd": 54267.22,
+   "wholeEnvelope": {
+    "bankedDdMarked": 22813.263107325227,
+    "bankedDdLiquidation": 22860.81526582542,
+    "principalLossMarked": 17917.580107703532,
+    "principalLossLiquidation": 17917.580107703532
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 29800.47,
+    "2018": 16362.66,
+    "2019": 38190.06,
+    "2020": 68601.27,
+    "2021": 27145.68
+   },
+   "lots": 7,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 28401.06937464235,
+     "mae": -2439.4949437537434
+    }
+   ],
+   "nextInterval": {
+    "lots": 5,
+    "byBook": {
+     "D1:GDX": 3,
+     "D1:VGT": 1,
+     "G:VGT": 1
+    },
+    "worstLotMae": -17917.580107703532,
+    "maxPrincipalLossMarked": 17917.580107703532,
+    "worstRealized": -17917.580107703532,
+    "losing": 1,
+    "exitReasons": {
+     "maximum hold": 1,
+     "trailing stop": 2,
+     "trailing stop gap": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 96358.97,
+     "sliceDd": 54082.07,
+     "wholeNet": 190035.31,
+     "wholeDd": 54082.07
+    },
+    "cost 10 bps": {
+     "sliceNet": 95135.53,
+     "sliceDd": 54452.18,
+     "wholeNet": 188309.64,
+     "wholeDd": 54452.18
+    },
+    "cost 20 bps": {
+     "sliceNet": 93914.53,
+     "sliceDd": 54821.56,
+     "wholeNet": 186587.41,
+     "wholeDd": 54821.56
+    },
+    "interest 14%": {
+     "sliceNet": 90925.57,
+     "sliceDd": 54423.38,
+     "wholeNet": 174827.93,
+     "wholeDd": 54423.38
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 94427.86,
+     "sliceDd": 54620.69,
+     "wholeNet": 187773.99,
+     "wholeDd": 54620.69
+    },
+    "next-open stops": {
+     "sliceNet": 95561.7,
+     "sliceDd": 54267.22,
+     "wholeNet": 188986.8,
+     "wholeDd": 54267.22
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 54267.22,
+    "p90SliceDd": 55857.45,
+    "worstSliceDd": 59036.01,
+    "medianSliceNet": 67501.54,
+    "p10SliceNet": 41368.99,
+    "above35pctC0": {
+     "breaches": 252,
+     "share": 0.984375,
+     "wilson95": [
+      0.9605207370259043,
+      0.9939074018389349
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 251,
+     "share": 0.98046875,
+     "wilson95": [
+      0.9551018674765416,
+      0.9916292702684201
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R5#1 profit",
+   "id": "rc2-97a27d4323da0a28",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R5"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 91723.8,
+   "sliceDd": 36156.37,
+   "boundaryEquity": 94969.93,
+   "wholeNet": 186693.74,
+   "wholeDd": 36156.37,
+   "wholeEnvelope": {
+    "bankedDdMarked": 13251.171788584252,
+    "bankedDdLiquidation": 13297.624993916179,
+    "principalLossMarked": 11694.91459680387,
+    "principalLossLiquidation": 11739.11234498492
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 15870.24,
+    "2017": 33666.91,
+    "2018": 7767.65,
+    "2019": 37665.13,
+    "2020": 57339.52,
+    "2021": 34384.29
+   },
+   "lots": 7,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 35058.62441409562,
+     "mae": -1264.1240667870748
+    }
+   ],
+   "nextInterval": {
+    "lots": 3,
+    "byBook": {
+     "D1:GDX": 0,
+     "D1:VGT": 2,
+     "G:VGT": 1
+    },
+    "worstLotMae": -11694.91459680387,
+    "maxPrincipalLossMarked": 11694.91459680387,
+    "worstRealized": -5946.623548341239,
+    "losing": 1,
+    "exitReasons": {
+     "maximum hold": 2,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 92116.21,
+     "sliceDd": 35852.66,
+     "wholeNet": 187545.3,
+     "wholeDd": 35852.66
+    },
+    "cost 10 bps": {
+     "sliceNet": 91331.79,
+     "sliceDd": 36459.78,
+     "wholeNet": 185843.03,
+     "wholeDd": 36459.78
+    },
+    "cost 20 bps": {
+     "sliceNet": 90548.94,
+     "sliceDd": 37065.68,
+     "wholeNet": 184144.15,
+     "wholeDd": 37065.68
+    },
+    "interest 14%": {
+     "sliceNet": 86567.09,
+     "sliceDd": 36370.07,
+     "wholeNet": 170529.9,
+     "wholeDd": 36370.07
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 91275.54,
+     "sliceDd": 36526.26,
+     "wholeNet": 186163.18,
+     "wholeDd": 36526.26
+    },
+    "next-open stops": {
+     "sliceNet": 91640.32,
+     "sliceDd": 36239.85,
+     "wholeNet": 186610.25,
+     "wholeDd": 36239.85
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 41802.87,
+    "p90SliceDd": 49741.37,
+    "worstSliceDd": 51872.85,
+    "medianSliceNet": 84089.51,
+    "p10SliceNet": 31663.03,
+    "above35pctC0": {
+     "breaches": 231,
+     "share": 0.90234375,
+     "wilson95": [
+      0.8598151373702178,
+      0.9329759779771891
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 152,
+     "share": 0.59375,
+     "wilson95": [
+      0.5326317032327199,
+      0.6520963236443458
+     ]
+    },
+    "trainingBreachShare": 0.1797
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R6#1 profit",
+   "id": "rc2-277ab36e70b12955",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R6"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 38502.79,
+   "sliceDd": 49021.03,
+   "boundaryEquity": 97811.89,
+   "wholeNet": 136314.69,
+   "wholeDd": 49021.03,
+   "wholeEnvelope": {
+    "bankedDdMarked": 34554.212038172336,
+    "bankedDdLiquidation": 34603.57596251738,
+    "principalLossMarked": 15036.80942293334,
+    "principalLossLiquidation": 15079.321155208176
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 24442.69,
+    "2017": 27897.09,
+    "2018": 5735.68,
+    "2019": 39736.43,
+    "2020": 44794.92,
+    "2021": -6292.12
+   },
+   "lots": 51,
+   "openAtBoundary": [],
+   "nextInterval": {
+    "lots": 37,
+    "byBook": {
+     "D1:GDX": 34,
+     "D1:VGT": 2,
+     "G:VGT": 1
+    },
+    "worstLotMae": -15036.80942293334,
+    "maxPrincipalLossMarked": 15036.80942293334,
+    "worstRealized": -11380.56891744716,
+    "losing": 12,
+    "exitReasons": {
+     "trailing stop": 19,
+     "maximum hold": 12,
+     "trailing stop gap": 4,
+     "trend exit": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 37880.7,
+     "sliceDd": 46972.72,
+     "wholeNet": 137096.23,
+     "wholeDd": 46972.72
+    },
+    "cost 10 bps": {
+     "sliceNet": 34803.68,
+     "sliceDd": 51089.77,
+     "wholeNet": 131926.85,
+     "wholeDd": 51089.77
+    },
+    "cost 20 bps": {
+     "sliceNet": 29786.11,
+     "sliceDd": 52851.48,
+     "wholeNet": 125060.39,
+     "wholeDd": 52851.48
+    },
+    "interest 14%": {
+     "sliceNet": 89869.87,
+     "sliceDd": 18292.67,
+     "wholeNet": 179414.2,
+     "wholeDd": 27100.23
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 32252.52,
+     "sliceDd": 51822.27,
+     "wholeNet": 127060.67,
+     "wholeDd": 51822.27
+    },
+    "next-open stops": {
+     "sliceNet": 38100.47,
+     "sliceDd": 48502.01,
+     "wholeNet": 136083.27,
+     "wholeDd": 48502.01
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 40738.49,
+    "p90SliceDd": 51853.88,
+    "worstSliceDd": 63401.72,
+    "medianSliceNet": 11025.99,
+    "p10SliceNet": -13662.75,
+    "above35pctC0": {
+     "breaches": 212,
+     "share": 0.828125,
+     "wilson95": [
+      0.7771462141473615,
+      0.8694018799223684
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 139,
+     "share": 0.54296875,
+     "wilson95": [
+      0.48176064041177796,
+      0.6029063719068771
+     ]
+    },
+    "trainingBreachShare": 0.0742
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R7#1 profit",
+   "id": "rc2-1749803c15a966bf",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R7"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 116380.75,
+   "sliceDd": 40405.34,
+   "boundaryEquity": 90077.41,
+   "wholeNet": 206458.15,
+   "wholeDd": 40405.34,
+   "wholeEnvelope": {
+    "bankedDdMarked": 26237.55543406849,
+    "bankedDdLiquidation": 26285.107592568675,
+    "principalLossMarked": 11388.655672163906,
+    "principalLossLiquidation": 11388.655672163906
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 3437.08,
+    "2017": 27591.85,
+    "2018": 21383.35,
+    "2019": 37665.13,
+    "2020": 92941.16,
+    "2021": 23439.59
+   },
+   "lots": 14,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 34376.00732274114,
+     "mae": -1264.1240667870748
+    }
+   ],
+   "nextInterval": {
+    "lots": 10,
+    "byBook": {
+     "D1:GDX": 6,
+     "D1:VGT": 4,
+     "G:VGT": 0
+    },
+    "worstLotMae": -11388.655672163906,
+    "maxPrincipalLossMarked": 11388.655672163906,
+    "worstRealized": -11388.655672163906,
+    "losing": 3,
+    "exitReasons": {
+     "trailing stop": 3,
+     "protective stop gap": 1,
+     "protective stop": 2,
+     "trailing stop gap": 3,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 117519.57,
+     "sliceDd": 40007.27,
+     "wholeNet": 208048.21,
+     "wholeDd": 40007.27
+    },
+    "cost 10 bps": {
+     "sliceNet": 115243.06,
+     "sliceDd": 40803.02,
+     "wholeNet": 204869.69,
+     "wholeDd": 40803.02
+    },
+    "cost 20 bps": {
+     "sliceNet": 112971.1,
+     "sliceDd": 41597.19,
+     "wholeNet": 201697.5,
+     "wholeDd": 41597.19
+    },
+    "interest 14%": {
+     "sliceNet": 110627.32,
+     "sliceDd": 40528.63,
+     "wholeNet": 190523.63,
+     "wholeDd": 40528.63
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 113533.17,
+     "sliceDd": 41494.53,
+     "wholeNet": 203046.61,
+     "wholeDd": 41494.53
+    },
+    "next-open stops": {
+     "sliceNet": 116187.64,
+     "sliceDd": 40494.8,
+     "wholeNet": 206167.88,
+     "wholeDd": 40494.8
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 41175.02,
+    "p90SliceDd": 57126.53,
+    "worstSliceDd": 68989.03,
+    "medianSliceNet": 98783.66,
+    "p10SliceNet": 55265.62,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 174,
+     "share": 0.6796875,
+     "wilson95": [
+      0.6202359044542989,
+      0.733826147060077
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R8#1 profit",
+   "id": "rc2-88edff9f0d4a7629",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R8"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 35496.93,
+   "sliceDd": 35729.7,
+   "boundaryEquity": 100108.29,
+   "wholeNet": 135605.22,
+   "wholeDd": 35729.7,
+   "wholeEnvelope": {
+    "bankedDdMarked": 17397.425139034618,
+    "bankedDdLiquidation": 17446.754717787684,
+    "principalLossMarked": 8012.701868243946,
+    "principalLossLiquidation": 8012.701868243946
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 9071.91,
+    "2017": 29800.47,
+    "2018": 9667.31,
+    "2019": 51568.59,
+    "2020": 31611.04,
+    "2021": 3885.89
+   },
+   "lots": 19,
+   "openAtBoundary": [
+    {
+     "book": "G:VGT",
+     "entry": "2019-10-18",
+     "exit": "2020-02-27",
+     "reason": "trailing stop gap",
+     "net": 5068.1757481121585,
+     "mae": -1885.7641091468931
+    }
+   ],
+   "nextInterval": {
+    "lots": 14,
+    "byBook": {
+     "D1:GDX": 12,
+     "D1:VGT": 1,
+     "G:VGT": 1
+    },
+    "worstLotMae": -8012.701868243946,
+    "maxPrincipalLossMarked": 8012.701868243946,
+    "worstRealized": -8012.701868243946,
+    "losing": 9,
+    "exitReasons": {
+     "buffered intraday loss": 1,
+     "protective stop": 3,
+     "trailing stop": 2,
+     "trailing stop gap": 2,
+     "maximum hold": 5,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 36943.76,
+     "sliceDd": 35136.03,
+     "wholeNet": 137631.91,
+     "wholeDd": 35136.03
+    },
+    "cost 10 bps": {
+     "sliceNet": 36131.55,
+     "sliceDd": 34392.12,
+     "wholeNet": 135660.55,
+     "wholeDd": 34392.12
+    },
+    "cost 20 bps": {
+     "sliceNet": 32045.07,
+     "sliceDd": 35580.06,
+     "wholeNet": 104198.1,
+     "wholeDd": 35580.06
+    },
+    "interest 14%": {
+     "sliceNet": 33847.35,
+     "sliceDd": 34117.81,
+     "wholeNet": 124257.01,
+     "wholeDd": 34117.81
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 33368.1,
+     "sliceDd": 36300.2,
+     "wholeNet": 132418.72,
+     "wholeDd": 36300.2
+    },
+    "next-open stops": {
+     "sliceNet": 34805.33,
+     "sliceDd": 35772.8,
+     "wholeNet": 134628.62,
+     "wholeDd": 35772.8
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 37232.01,
+    "p90SliceDd": 44658.57,
+    "worstSliceDd": 58679.04,
+    "medianSliceNet": 34590.72,
+    "p10SliceNet": 21159.24,
+    "above35pctC0": {
+     "breaches": 204,
+     "share": 0.796875,
+     "wilson95": [
+      0.743371326125509,
+      0.8416007589851989
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 70,
+     "share": 0.2734375,
+     "wilson95": [
+      0.2224885388096278,
+      0.3310853962374636
+     ]
+    },
+    "trainingBreachShare": 0.3125
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R9#1 profit",
+   "id": "rc1-3fab05073ab9efd1",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R9"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 106385.27,
+   "sliceDd": 33461.74,
+   "boundaryEquity": 100983.58,
+   "wholeNet": 207368.84,
+   "wholeDd": 33461.74,
+   "wholeEnvelope": {
+    "bankedDdMarked": 28592.69271394261,
+    "bankedDdLiquidation": 28640.244872442796,
+    "principalLossMarked": 23697.00971432092,
+    "principalLossLiquidation": 23697.00971432092
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 4114.17,
+    "2017": 27897.09,
+    "2018": 23123.24,
+    "2019": 45849.08,
+    "2020": 83333.86,
+    "2021": 23051.41
+   },
+   "lots": 21,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-12-11",
+     "exit": "2020-01-08",
+     "reason": "trailing stop",
+     "net": 3881.4894596432882,
+     "mae": -1108.7739416353672
+    }
+   ],
+   "nextInterval": {
+    "lots": 10,
+    "byBook": {
+     "D1:GDX": 9,
+     "D1:VGT": 0,
+     "G:VGT": 1
+    },
+    "worstLotMae": -23697.00971432092,
+    "maxPrincipalLossMarked": 23697.00971432092,
+    "worstRealized": -23697.00971432092,
+    "losing": 1,
+    "exitReasons": {
+     "trailing stop": 4,
+     "protective stop": 1,
+     "trailing stop gap": 4,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 107490.6,
+     "sliceDd": 33287.32,
+     "wholeNet": 209656.41,
+     "wholeDd": 33287.32
+    },
+    "cost 10 bps": {
+     "sliceNet": 105281.04,
+     "sliceDd": 33636,
+     "wholeNet": 205083.57,
+     "wholeDd": 33636
+    },
+    "cost 20 bps": {
+     "sliceNet": 103075.89,
+     "sliceDd": 33983.98,
+     "wholeNet": 200519.86,
+     "wholeDd": 33983.98
+    },
+    "interest 14%": {
+     "sliceNet": 101757.05,
+     "sliceDd": 33502.84,
+     "wholeNet": 193349.39,
+     "wholeDd": 33502.84
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 103669.71,
+     "sliceDd": 33916.7,
+     "wholeNet": 202955.75,
+     "wholeDd": 33916.7
+    },
+    "next-open stops": {
+     "sliceNet": 105549.77,
+     "sliceDd": 33443.56,
+     "wholeNet": 206498.85,
+     "wholeDd": 33443.56
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 34270.79,
+    "p90SliceDd": 45060.6,
+    "worstSliceDd": 57760.74,
+    "medianSliceNet": 55412.06,
+    "p10SliceNet": 16906.75,
+    "above35pctC0": {
+     "breaches": 113,
+     "share": 0.44140625,
+     "wilson95": [
+      0.38189072121763096,
+      0.502654261984203
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 70,
+     "share": 0.2734375,
+     "wilson95": [
+      0.2224885388096278,
+      0.3310853962374636
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R10#1 profit",
+   "id": "rc2-df4c3938812399ad",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R10"
+    },
+    {
+     "arm": "EXP30",
+     "kind": "pooled",
+     "selector": "P0"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 122358.04,
+   "sliceDd": 37790.49,
+   "boundaryEquity": 111861.66,
+   "wholeNet": 234219.7,
+   "wholeDd": 37790.49,
+   "wholeEnvelope": {
+    "bankedDdMarked": 14258.455882854076,
+    "bankedDdLiquidation": 14258.455882854076,
+    "principalLossMarked": 14258.455882854076,
+    "principalLossLiquidation": 14258.455882854076
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 35250.53,
+    "2017": 27897.09,
+    "2018": 11148.88,
+    "2019": 37565.15,
+    "2020": 79716.85,
+    "2021": 42641.2
+   },
+   "lots": 18,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 26665.105781245238,
+     "mae": -1467.4778896680232
+    }
+   ],
+   "nextInterval": {
+    "lots": 4,
+    "byBook": {
+     "D1:GDX": 2,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -14258.455882854076,
+    "maxPrincipalLossMarked": 14258.455882854076,
+    "worstRealized": -14258.455882854076,
+    "losing": 1,
+    "exitReasons": {
+     "trailing stop": 1,
+     "protective stop gap": 1,
+     "trailing stop gap": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 122860.99,
+     "sliceDd": 37542.29,
+     "wholeNet": 236196.19,
+     "wholeDd": 37542.29
+    },
+    "cost 10 bps": {
+     "sliceNet": 121855.6,
+     "sliceDd": 38038.44,
+     "wholeNet": 233659.53,
+     "wholeDd": 38038.44
+    },
+    "cost 20 bps": {
+     "sliceNet": 120852.22,
+     "sliceDd": 38533.6,
+     "wholeNet": 229913.03,
+     "wholeDd": 38533.6
+    },
+    "interest 14%": {
+     "sliceNet": 116390.92,
+     "sliceDd": 37963.09,
+     "wholeNet": 218110.11,
+     "wholeDd": 37963.09
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 121205.06,
+     "sliceDd": 38623.54,
+     "wholeNet": 230071.91,
+     "wholeDd": 38623.54
+    },
+    "next-open stops": {
+     "sliceNet": 122535.28,
+     "sliceDd": 37613.25,
+     "wholeNet": 234992.14,
+     "wholeDd": 37613.25
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 38423.81,
+    "p90SliceDd": 50455.92,
+    "worstSliceDd": 68932.69,
+    "medianSliceNet": 87540.53,
+    "p10SliceNet": 35556.13,
+    "above35pctC0": {
+     "breaches": 220,
+     "share": 0.859375,
+     "wilson95": [
+      0.811460986697846,
+      0.8966631163309057
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 83,
+     "share": 0.32421875,
+     "wilson95": [
+      0.2698445826497339,
+      0.38379036695576807
+     ]
+    },
+    "trainingBreachShare": 0.0586
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R11#1 profit",
+   "id": "rc2-fee991a2f0104fd2",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R11"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 11805.3,
+   "sliceDd": 45642.46,
+   "boundaryEquity": 95883.79,
+   "wholeNet": 107689.09,
+   "wholeDd": 45642.46,
+   "wholeEnvelope": {
+    "bankedDdMarked": 32197.245883349722,
+    "bankedDdLiquidation": 32244.798041849906,
+    "principalLossMarked": 19440.93364276765,
+    "principalLossLiquidation": 19440.93364276765
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 8041.55,
+    "2017": 29423.14,
+    "2018": 20471.4,
+    "2019": 37947.69,
+    "2020": 18574.31,
+    "2021": -6769.01
+   },
+   "lots": 33,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 35746.03501435357,
+     "mae": -689.4531385200985
+    }
+   ],
+   "nextInterval": {
+    "lots": 29,
+    "byBook": {
+     "D1:GDX": 28,
+     "D1:VGT": 1,
+     "G:VGT": 0
+    },
+    "worstLotMae": -19440.93364276765,
+    "maxPrincipalLossMarked": 19440.93364276765,
+    "worstRealized": -19440.93364276765,
+    "losing": 13,
+    "exitReasons": {
+     "trailing stop": 12,
+     "protective stop gap": 1,
+     "protective stop": 1,
+     "trailing stop gap": 4,
+     "maximum hold": 10,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 14757.36,
+     "sliceDd": 45249.04,
+     "wholeNet": 111097.41,
+     "wholeDd": 45249.04
+    },
+    "cost 10 bps": {
+     "sliceNet": 8856.19,
+     "sliceDd": 46035.5,
+     "wholeNet": 104284.17,
+     "wholeDd": 46035.5
+    },
+    "cost 20 bps": {
+     "sliceNet": 2966.8,
+     "sliceDd": 46820.38,
+     "wholeNet": 97484.52,
+     "wholeDd": 46820.38
+    },
+    "interest 14%": {
+     "sliceNet": 7983.38,
+     "sliceDd": 45790.41,
+     "wholeNet": 93776.48,
+     "wholeDd": 45790.41
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 6758.69,
+     "sliceDd": 46721.26,
+     "wholeNet": 102081.61,
+     "wholeDd": 46721.26
+    },
+    "next-open stops": {
+     "sliceNet": 14019.73,
+     "sliceDd": 45860.59,
+     "wholeNet": 110132.78,
+     "wholeDd": 45860.59
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 46737.36,
+    "p90SliceDd": 56739.5,
+    "worstSliceDd": 58093.3,
+    "medianSliceNet": 50443.68,
+    "p10SliceNet": 12443.44,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 233,
+     "share": 0.91015625,
+     "wilson95": [
+      0.8687984846652447,
+      0.9393866329219177
+     ]
+    },
+    "trainingBreachShare": 0.0547
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R12#1 profit",
+   "id": "rc1-9216c9b1cdc5cc04",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R12"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 30957.12,
+   "sliceDd": 30527.86,
+   "boundaryEquity": 95007.67,
+   "wholeNet": 125964.79,
+   "wholeDd": 30527.86,
+   "wholeEnvelope": {
+    "bankedDdMarked": 25266.241379921936,
+    "bankedDdLiquidation": 25314.765348771543,
+    "principalLossMarked": 13606.340087096994,
+    "principalLossLiquidation": 13606.340087096994
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 5994.11,
+    "2017": 29408.04,
+    "2018": 22406.62,
+    "2019": 37198.91,
+    "2020": 28386.15,
+    "2021": 2570.97
+   },
+   "lots": 39,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 33641.14654430039,
+     "mae": -2212.3551461282927
+    }
+   ],
+   "nextInterval": {
+    "lots": 32,
+    "byBook": {
+     "D1:GDX": 29,
+     "D1:VGT": 0,
+     "G:VGT": 3
+    },
+    "worstLotMae": -13606.340087096994,
+    "maxPrincipalLossMarked": 13606.340087096994,
+    "worstRealized": -13606.340087096994,
+    "losing": 15,
+    "exitReasons": {
+     "trailing stop gap": 4,
+     "trailing stop": 13,
+     "protective stop": 8,
+     "protective stop gap": 1,
+     "maximum hold": 4,
+     "initial stop": 1,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 32784.17,
+     "sliceDd": 30039.42,
+     "wholeNet": 128549.93,
+     "wholeDd": 30039.42
+    },
+    "cost 10 bps": {
+     "sliceNet": 27691.22,
+     "sliceDd": 31015.81,
+     "wholeNet": 121941.56,
+     "wholeDd": 31015.81
+    },
+    "cost 20 bps": {
+     "sliceNet": 21169.19,
+     "sliceDd": 31990.25,
+     "wholeNet": 113907.14,
+     "wholeDd": 31990.25
+    },
+    "interest 14%": {
+     "sliceNet": 27488.63,
+     "sliceDd": 30601.83,
+     "wholeNet": 112031.64,
+     "wholeDd": 30601.83
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 23963.67,
+     "sliceDd": 31794.42,
+     "wholeNet": 118360.86,
+     "wholeDd": 31794.42
+    },
+    "next-open stops": {
+     "sliceNet": 34972.37,
+     "sliceDd": 28399.7,
+     "wholeNet": 129991.8,
+     "wholeDd": 28399.7
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 43146.75,
+    "p90SliceDd": 49240.38,
+    "worstSliceDd": 69217.49,
+    "medianSliceNet": 25962.59,
+    "p10SliceNet": -439.31,
+    "above35pctC0": {
+     "breaches": 185,
+     "share": 0.72265625,
+     "wilson95": [
+      0.6648312579699814,
+      0.7738978058630496
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 153,
+     "share": 0.59765625,
+     "wilson95": [
+      0.5365714317341859,
+      0.6558535962627575
+     ]
+    },
+    "trainingBreachShare": 0.0078
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R13#1 profit",
+   "id": "rc2-9e2e3f9624974eee",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R13"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 8404.92,
+   "sliceDd": 34525,
+   "boundaryEquity": 107055.73,
+   "wholeNet": 115460.65,
+   "wholeDd": 34525,
+   "wholeEnvelope": {
+    "bankedDdMarked": 29424.31813585208,
+    "bankedDdLiquidation": 29468.987369741022,
+    "principalLossMarked": 20536.62567167876,
+    "principalLossLiquidation": 20536.62567167876
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 37127.76,
+    "2017": 29423.14,
+    "2018": 4741.76,
+    "2019": 35763.07,
+    "2020": 17658.68,
+    "2021": -9253.76
+   },
+   "lots": 43,
+   "openAtBoundary": [
+    {
+     "book": "D1:GDX",
+     "entry": "2019-11-07",
+     "exit": "2020-01-08",
+     "reason": "trailing stop",
+     "net": 5694.246709165433,
+     "mae": -2611.5540448692436
+    }
+   ],
+   "nextInterval": {
+    "lots": 28,
+    "byBook": {
+     "D1:GDX": 27,
+     "D1:VGT": 1,
+     "G:VGT": 0
+    },
+    "worstLotMae": -20536.62567167876,
+    "maxPrincipalLossMarked": 20536.62567167876,
+    "worstRealized": -20536.62567167876,
+    "losing": 14,
+    "exitReasons": {
+     "protective stop gap": 1,
+     "trailing stop": 10,
+     "trailing stop gap": 7,
+     "maximum hold": 9,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 11232.42,
+     "sliceDd": 33542.81,
+     "wholeNet": 119875.47,
+     "wholeDd": 33542.81
+    },
+    "cost 10 bps": {
+     "sliceNet": 5580.25,
+     "sliceDd": 35506.21,
+     "wholeNet": 111050.24,
+     "wholeDd": 35506.21
+    },
+    "cost 20 bps": {
+     "sliceNet": -180.82,
+     "sliceDd": 37465.7,
+     "wholeNet": 93482.02,
+     "wholeDd": 37465.7
+    },
+    "interest 14%": {
+     "sliceNet": 4500.81,
+     "sliceDd": 36661.99,
+     "wholeNet": 102152.16,
+     "wholeDd": 36661.99
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 3491.85,
+     "sliceDd": 35561.24,
+     "wholeNet": 107375.17,
+     "wholeDd": 35561.24
+    },
+    "next-open stops": {
+     "sliceNet": 10135.93,
+     "sliceDd": 34591.43,
+     "wholeNet": 117193.65,
+     "wholeDd": 34591.43
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 42947.11,
+    "p90SliceDd": 48052.36,
+    "worstSliceDd": 55217.25,
+    "medianSliceNet": 23517.94,
+    "p10SliceNet": -3081.37,
+    "above35pctC0": {
+     "breaches": 184,
+     "share": 0.71875,
+     "wilson95": [
+      0.6607529774210059,
+      0.7702790852921473
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 160,
+     "share": 0.625,
+     "wilson95": [
+      0.5642590519421044,
+      0.6820449838939832
+     ]
+    },
+    "trainingBreachShare": 0.0117
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R14#2 robust",
+   "id": "rc2-36408eeae777ca07",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R14"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 4094.74,
+   "sliceDd": 46513.3,
+   "boundaryEquity": 94724.72,
+   "wholeNet": 98819.46,
+   "wholeDd": 46513.3,
+   "wholeEnvelope": {
+    "bankedDdMarked": 20121.29623939177,
+    "bankedDdLiquidation": 20161.446550176188,
+    "principalLossMarked": 20121.29623939177,
+    "principalLossLiquidation": 20161.446550176184
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 21014.16,
+    "2017": 29423.14,
+    "2018": 6722.28,
+    "2019": 37565.15,
+    "2020": -22.72,
+    "2021": 4117.46
+   },
+   "lots": 17,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 26665.105781245238,
+     "mae": -1467.4778896680232
+    }
+   ],
+   "nextInterval": {
+    "lots": 14,
+    "byBook": {
+     "D1:GDX": 5,
+     "D1:VGT": 1,
+     "G:VGT": 8
+    },
+    "worstLotMae": -20121.29623939177,
+    "maxPrincipalLossMarked": 20121.29623939177,
+    "worstRealized": -2820.146994880242,
+    "losing": 8,
+    "exitReasons": {
+     "trailing stop gap": 1,
+     "maximum hold": 9,
+     "trailing stop": 3,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 5535.55,
+     "sliceDd": 46313.65,
+     "wholeNet": 100616.3,
+     "wholeDd": 46313.65
+    },
+    "cost 10 bps": {
+     "sliceNet": 2655.37,
+     "sliceDd": 46712.74,
+     "wholeNet": 97024.42,
+     "wholeDd": 46712.74
+    },
+    "cost 20 bps": {
+     "sliceNet": -219.07,
+     "sliceDd": 47111.03,
+     "wholeNet": 93439.7,
+     "wholeDd": 47111.03
+    },
+    "interest 14%": {
+     "sliceNet": 396.11,
+     "sliceDd": 46784.53,
+     "wholeNet": 84929.05,
+     "wholeDd": 46784.53
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 2676.08,
+     "sliceDd": 47124.7,
+     "wholeNet": 96701.6,
+     "wholeDd": 47124.7
+    },
+    "next-open stops": {
+     "sliceNet": 4003.95,
+     "sliceDd": 46513.3,
+     "wholeNet": 98733.75,
+     "wholeDd": 46513.3
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 42756.2,
+    "p90SliceDd": 46862.99,
+    "worstSliceDd": 48326.41,
+    "medianSliceNet": 23922.02,
+    "p10SliceNet": -3325.24,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 181,
+     "share": 0.70703125,
+     "wilson95": [
+      0.6485479041670572,
+      0.7593931551864629
+     ]
+    },
+    "trainingBreachShare": 0.0039
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R15#1 profit",
+   "id": "rc1-2e3962df36e42476",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R15"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 34641.81,
+   "sliceDd": 57758.96,
+   "boundaryEquity": 82514.56,
+   "wholeNet": 117156.38,
+   "wholeDd": 57758.96,
+   "wholeEnvelope": {
+    "bankedDdMarked": 26504.280755538246,
+    "bankedDdLiquidation": 26551.832914038438,
+    "principalLossMarked": 21608.59775591655,
+    "principalLossLiquidation": 21608.59775591655
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9620.11,
+    "2017": 30059.85,
+    "2018": 4958.88,
+    "2019": 37875.72,
+    "2020": 42929.48,
+    "2021": -8287.67
+   },
+   "lots": 15,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 27557.79136945414,
+     "mae": -835.8327934336426
+    }
+   ],
+   "nextInterval": {
+    "lots": 10,
+    "byBook": {
+     "D1:GDX": 7,
+     "D1:VGT": 0,
+     "G:VGT": 3
+    },
+    "worstLotMae": -21608.59775591655,
+    "maxPrincipalLossMarked": 21608.59775591655,
+    "worstRealized": -21608.59775591655,
+    "losing": 4,
+    "exitReasons": {
+     "protective stop": 1,
+     "trailing stop": 3,
+     "trailing stop gap": 2,
+     "maximum hold": 3,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 35710.16,
+     "sliceDd": 57578.13,
+     "wholeNet": 118763.44,
+     "wholeDd": 57578.13
+    },
+    "cost 10 bps": {
+     "sliceNet": 33574.54,
+     "sliceDd": 57939.62,
+     "wholeNet": 115550.92,
+     "wholeDd": 57939.62
+    },
+    "cost 20 bps": {
+     "sliceNet": 31443.18,
+     "sliceDd": 58300.38,
+     "wholeNet": 112773.13,
+     "wholeDd": 58300.38
+    },
+    "interest 14%": {
+     "sliceNet": 32759.62,
+     "sliceDd": 57841.15,
+     "wholeNet": 106794.21,
+     "wholeDd": 57841.15
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 32635.42,
+     "sliceDd": 58306.23,
+     "wholeNet": 114497.76,
+     "wholeDd": 58306.23
+    },
+    "next-open stops": {
+     "sliceNet": 31994.86,
+     "sliceDd": 58625.35,
+     "wholeNet": 114585.36,
+     "wholeDd": 58625.35
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 57105.29,
+    "p90SliceDd": 58503.89,
+    "worstSliceDd": 58803.59,
+    "medianSliceNet": 48292.09,
+    "p10SliceNet": 12745.24,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 224,
+     "share": 0.875,
+     "wilson95": [
+      0.8288639404599362,
+      0.9100481670483266
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R16#1 profit",
+   "id": "rc2-733a343711735303",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R16"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 67610.78,
+   "sliceDd": 46271.34,
+   "boundaryEquity": 94372.17,
+   "wholeNet": 161982.95,
+   "wholeDd": 46271.34,
+   "wholeEnvelope": {
+    "bankedDdMarked": 14752.340475676996,
+    "bankedDdLiquidation": 14802.13806209089,
+    "principalLossMarked": 9092.573192952994,
+    "principalLossLiquidation": 9138.08718032912
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 9620.11,
+    "2017": 30059.85,
+    "2018": 16399.53,
+    "2019": 38292.67,
+    "2020": 56626.83,
+    "2021": 10983.95
+   },
+   "lots": 21,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-28",
+     "reason": "trailing stop gap",
+     "net": 28696.00449762134,
+     "mae": -2235.9869369992375
+    }
+   ],
+   "nextInterval": {
+    "lots": 18,
+    "byBook": {
+     "D1:GDX": 9,
+     "D1:VGT": 2,
+     "G:VGT": 7
+    },
+    "worstLotMae": -9092.573192952994,
+    "maxPrincipalLossMarked": 9092.573192952994,
+    "worstRealized": -7880.1976407138345,
+    "losing": 10,
+    "exitReasons": {
+     "protective stop gap": 1,
+     "protective stop": 1,
+     "trailing stop": 4,
+     "trailing stop gap": 4,
+     "maximum hold": 5,
+     "buffered intraday loss": 2,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 68359.39,
+     "sliceDd": 45980.3,
+     "wholeNet": 163086.07,
+     "wholeDd": 45980.3
+    },
+    "cost 10 bps": {
+     "sliceNet": 66722.64,
+     "sliceDd": 46562.09,
+     "wholeNet": 160740.65,
+     "wholeDd": 46562.09
+    },
+    "cost 20 bps": {
+     "sliceNet": 63439.1,
+     "sliceDd": 47142.73,
+     "wholeNet": 150526.54,
+     "wholeDd": 47142.73
+    },
+    "interest 14%": {
+     "sliceNet": 65854.14,
+     "sliceDd": 46402.85,
+     "wholeNet": 144139.36,
+     "wholeDd": 46402.85
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 64484.19,
+     "sliceDd": 47090.21,
+     "wholeNet": 158554.77,
+     "wholeDd": 47090.21
+    },
+    "next-open stops": {
+     "sliceNet": 64764.42,
+     "sliceDd": 46271.34,
+     "wholeNet": 159009.96,
+     "wholeDd": 46271.34
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 45616.11,
+    "p90SliceDd": 46660.44,
+    "worstSliceDd": 47063.41,
+    "medianSliceNet": 64603.88,
+    "p10SliceNet": 24154.47,
+    "above35pctC0": {
+     "breaches": 250,
+     "share": 0.9765625,
+     "wilson95": [
+      0.9498190041177833,
+      0.9892151325073005
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 177,
+     "share": 0.69140625,
+     "wilson95": [
+      0.6323417969817724,
+      0.7448112578922367
+     ]
+    },
+    "trainingBreachShare": 0.0078
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R17#1 profit",
+   "id": "rc2-be25b2c3789b79bb",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R17"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 63402.79,
+   "sliceDd": 45588.34,
+   "boundaryEquity": 92764.51,
+   "wholeNet": 156167.31,
+   "wholeDd": 45588.34,
+   "wholeEnvelope": {
+    "bankedDdMarked": 21813.402988819522,
+    "bankedDdLiquidation": 21860.65156418361,
+    "principalLossMarked": 11478.997887136673,
+    "principalLossLiquidation": 11478.997887136673
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 10276.71,
+    "2017": 30239.86,
+    "2018": 13701.59,
+    "2019": 38546.36,
+    "2020": 69099.69,
+    "2021": -5696.9
+   },
+   "lots": 20,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-24",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 37330.05445134909,
+     "mae": -1732.8491863096715
+    }
+   ],
+   "nextInterval": {
+    "lots": 17,
+    "byBook": {
+     "D1:GDX": 15,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -11478.997887136673,
+    "maxPrincipalLossMarked": 11478.997887136673,
+    "worstRealized": -11478.997887136673,
+    "losing": 7,
+    "exitReasons": {
+     "protective stop gap": 1,
+     "trailing stop gap": 7,
+     "protective stop": 1,
+     "trailing stop": 4,
+     "maximum hold": 4
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 65254.94,
+     "sliceDd": 45193.3,
+     "wholeNet": 158368.42,
+     "wholeDd": 45193.3
+    },
+    "cost 10 bps": {
+     "sliceNet": 85610.04,
+     "sliceDd": 45982.99,
+     "wholeNet": 178025.94,
+     "wholeDd": 45982.99
+    },
+    "cost 20 bps": {
+     "sliceNet": 82582.94,
+     "sliceDd": 46771.11,
+     "wholeNet": 174302.65,
+     "wholeDd": 46771.11
+    },
+    "interest 14%": {
+     "sliceNet": 83517.64,
+     "sliceDd": 45793.82,
+     "wholeNet": 167061.88,
+     "wholeDd": 45793.82
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 59552.48,
+     "sliceDd": 46674.57,
+     "wholeNet": 151908.8,
+     "wholeDd": 46674.57
+    },
+    "next-open stops": {
+     "sliceNet": 62561.22,
+     "sliceDd": 45681.3,
+     "wholeNet": 155305.63,
+     "wholeDd": 45681.3
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 45414.6,
+    "p90SliceDd": 47241.33,
+    "worstSliceDd": 50466.82,
+    "medianSliceNet": 74570.29,
+    "p10SliceNet": 45590.47,
+    "above35pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 256,
+     "share": 1,
+     "wilson95": [
+      0.9852161433443503,
+      1.0000000000000002
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R18#1 profit",
+   "id": "rc1-b53afbd7bd5af427",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "lane",
+     "lane": "C19/broad/GB0.VD1/R18"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 13106.2,
+   "sliceDd": 43938.41,
+   "boundaryEquity": 100122.83,
+   "wholeNet": 113229.03,
+   "wholeDd": 43938.41,
+   "wholeEnvelope": {
+    "bankedDdMarked": 29089.576918286766,
+    "bankedDdLiquidation": 29138.47269957197,
+    "principalLossMarked": 20314.630978858033,
+    "principalLossLiquidation": 20314.630978858033
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 10276.71,
+    "2017": 28559.2,
+    "2018": 23446.53,
+    "2019": 37840.39,
+    "2020": 16950.58,
+    "2021": -3844.38
+   },
+   "lots": 36,
+   "openAtBoundary": [
+    {
+     "book": "D1:VGT",
+     "entry": "2018-12-26",
+     "exit": "2020-02-27",
+     "reason": "trailing stop",
+     "net": 35248.92372833203,
+     "mae": -907.6792679984515
+    }
+   ],
+   "nextInterval": {
+    "lots": 31,
+    "byBook": {
+     "D1:GDX": 30,
+     "D1:VGT": 1,
+     "G:VGT": 0
+    },
+    "worstLotMae": -20314.630978858033,
+    "maxPrincipalLossMarked": 20314.630978858033,
+    "worstRealized": -20314.630978858033,
+    "losing": 12,
+    "exitReasons": {
+     "trailing stop": 14,
+     "protective stop": 1,
+     "protective stop gap": 1,
+     "trailing stop gap": 5,
+     "maximum hold": 10
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 16311.72,
+     "sliceDd": 43544.75,
+     "wholeNet": 116994.69,
+     "wholeDd": 43544.75
+    },
+    "cost 10 bps": {
+     "sliceNet": 9903.88,
+     "sliceDd": 44331.67,
+     "wholeNet": 109467.13,
+     "wholeDd": 44331.67
+    },
+    "cost 20 bps": {
+     "sliceNet": 3508.84,
+     "sliceDd": 45117.02,
+     "wholeNet": 101954.6,
+     "wholeDd": 45117.02
+    },
+    "interest 14%": {
+     "sliceNet": 9251.41,
+     "sliceDd": 44102.79,
+     "wholeNet": 99443,
+     "wholeDd": 44102.79
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 7277,
+     "sliceDd": 45013.95,
+     "wholeNet": 106842.56,
+     "wholeDd": 45013.95
+    },
+    "next-open stops": {
+     "sliceNet": 13021.6,
+     "sliceDd": 44054.49,
+     "wholeNet": 113042.31,
+     "wholeDd": 44054.49
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 45497.22,
+    "p90SliceDd": 63696.78,
+    "worstSliceDd": 65819.61,
+    "medianSliceNet": 41078.03,
+    "p10SliceNet": -6213.06,
+    "above35pctC0": {
+     "breaches": 218,
+     "share": 0.8515625,
+     "wilson95": [
+      0.8028248474852336,
+      0.8899052533037626
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 185,
+     "share": 0.72265625,
+     "wilson95": [
+      0.6648312579699814,
+      0.7738978058630496
+     ]
+    },
+    "trainingBreachShare": 0.043
+   }
+  },
+  {
+   "label": "EXP30 C19/broad/GB0.VD1/R13#2 robust",
+   "id": "rc2-ba92b6a72a6cc329",
+   "kind": "selected",
+   "roles": [
+    {
+     "arm": "EXP30",
+     "kind": "pooled",
+     "selector": "RA1-original"
+    },
+    {
+     "arm": "EXP30",
+     "kind": "pooled",
+     "selector": "RA1-adapted"
+    }
+   ],
+   "cell": "GB0.VD1",
+   "sliceNet": 26904.39,
+   "sliceDd": 40041.32,
+   "boundaryEquity": 101590.07,
+   "wholeNet": 128494.46,
+   "wholeDd": 40041.32,
+   "wholeEnvelope": {
+    "bankedDdMarked": 35453.10795663668,
+    "bankedDdLiquidation": 35498.75169638042,
+    "principalLossMarked": 20592.1594166468,
+    "principalLossLiquidation": 20592.1594166468
+   },
+   "wholeAssessment": {
+    "CTRL": false,
+    "EXP30": false
+   },
+   "years": {
+    "2016": 36399.55,
+    "2017": 30059.85,
+    "2018": 8996.73,
+    "2019": 26133.94,
+    "2020": 42233.04,
+    "2021": -15328.65
+   },
+   "lots": 39,
+   "openAtBoundary": [],
+   "nextInterval": {
+    "lots": 24,
+    "byBook": {
+     "D1:GDX": 22,
+     "D1:VGT": 2,
+     "G:VGT": 0
+    },
+    "worstLotMae": -20592.1594166468,
+    "maxPrincipalLossMarked": 20592.1594166468,
+    "worstRealized": -20592.1594166468,
+    "losing": 11,
+    "exitReasons": {
+     "protective stop gap": 1,
+     "trailing stop": 7,
+     "trailing stop gap": 6,
+     "maximum hold": 9,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 29295.19,
+     "sliceDd": 38762.73,
+     "wholeNet": 132521.67,
+     "wholeDd": 38762.73
+    },
+    "cost 10 bps": {
+     "sliceNet": 24515.98,
+     "sliceDd": 41318.63,
+     "wholeNet": 124471.27,
+     "wholeDd": 41318.63
+    },
+    "cost 20 bps": {
+     "sliceNet": 22014.64,
+     "sliceDd": 41601.1,
+     "wholeNet": 118705.28,
+     "wholeDd": 41601.1
+    },
+    "interest 14%": {
+     "sliceNet": 25583.92,
+     "sliceDd": 40391.93,
+     "wholeNet": 117901.11,
+     "wholeDd": 40391.93
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 23222.87,
+     "sliceDd": 41333.5,
+     "wholeNet": 121638.33,
+     "wholeDd": 41333.5
+    },
+    "next-open stops": {
+     "sliceNet": 26361.25,
+     "sliceDd": 39724.42,
+     "wholeNet": 127928.35,
+     "wholeDd": 39724.42
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 40968.55,
+    "p90SliceDd": 49390.65,
+    "worstSliceDd": 58379.19,
+    "medianSliceNet": 31544.35,
+    "p10SliceNet": 8791.98,
+    "above35pctC0": {
+     "breaches": 153,
+     "share": 0.59765625,
+     "wilson95": [
+      0.5365714317341859,
+      0.6558535962627575
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 133,
+     "share": 0.51953125,
+     "wilson95": [
+      0.4584937748697849,
+      0.5799912307296038
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "benchmark: New L0",
+   "id": "a2e385640ca61012",
+   "kind": "benchmark",
+   "roles": [],
+   "cell": "GA0.VA0",
+   "sliceNet": 171402.7,
+   "sliceDd": 17280.74,
+   "boundaryEquity": 79970.17,
+   "wholeNet": 251372.87,
+   "wholeDd": 17280.74,
+   "wholeEnvelope": {
+    "bankedDdMarked": 5590.550268211431,
+    "bankedDdLiquidation": 5637.754993077324,
+    "principalLossMarked": 5590.550268211431,
+    "principalLossLiquidation": 5637.754993077326
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 8588.21,
+    "2017": 23852.14,
+    "2018": 18525.08,
+    "2019": 29004.74,
+    "2020": 138877.67,
+    "2021": 32525.03
+   },
+   "lots": 17,
+   "openAtBoundary": [
+    {
+     "book": "G:VGT",
+     "entry": "2019-10-10",
+     "exit": "2020-02-24",
+     "reason": "trailing stop gap",
+     "net": 13616.580617872609,
+     "mae": -161.46972956717627
+    }
+   ],
+   "nextInterval": {
+    "lots": 11,
+    "byBook": {
+     "D1:GDX": 8,
+     "D1:VGT": 2,
+     "G:VGT": 1
+    },
+    "worstLotMae": -5590.550268211431,
+    "maxPrincipalLossMarked": 5590.550268211431,
+    "worstRealized": 1749.0477870162847,
+    "losing": 0,
+    "exitReasons": {
+     "trailing stop gap": 2,
+     "trailing stop": 8,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 172693.52,
+     "sliceDd": 17289.38,
+     "wholeNet": 253313.38,
+     "wholeDd": 17289.38
+    },
+    "cost 10 bps": {
+     "sliceNet": 170113.17,
+     "sliceDd": 17272.11,
+     "wholeNet": 249434.3,
+     "wholeDd": 17272.11
+    },
+    "cost 20 bps": {
+     "sliceNet": 167537.96,
+     "sliceDd": 17254.87,
+     "wholeNet": 245562.97,
+     "wholeDd": 17254.87
+    },
+    "interest 14%": {
+     "sliceNet": 166816.4,
+     "sliceDd": 17280.74,
+     "wholeNet": 239529.04,
+     "wholeDd": 17280.74
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 168172.37,
+     "sliceDd": 17280.74,
+     "wholeNet": 246662.04,
+     "wholeDd": 17280.74
+    },
+    "next-open stops": {
+     "sliceNet": 170993.19,
+     "sliceDd": 17280.74,
+     "wholeNet": 250819.52,
+     "wholeDd": 17280.74
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 17280.74,
+    "p90SliceDd": 20895.52,
+    "worstSliceDd": 25492.27,
+    "medianSliceNet": 121421.17,
+    "p10SliceNet": 99961.39,
+    "above35pctC0": {
+     "breaches": 0,
+     "share": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 0,
+     "share": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  },
+  {
+   "label": "benchmark: N/original",
+   "id": "rc1-f1a8b57cb02455c3",
+   "kind": "benchmark",
+   "roles": [],
+   "cell": "GD1.VB0",
+   "sliceNet": 171401.67,
+   "sliceDd": 17280.74,
+   "boundaryEquity": 80436.86,
+   "wholeNet": 251838.53,
+   "wholeDd": 17280.74,
+   "wholeEnvelope": {
+    "bankedDdMarked": 5590.550268211431,
+    "bankedDdLiquidation": 5637.754993077324,
+    "principalLossMarked": 5590.550268211431,
+    "principalLossLiquidation": 5637.754993077326
+   },
+   "wholeAssessment": {
+    "CTRL": true,
+    "EXP30": true
+   },
+   "years": {
+    "2016": 8588.21,
+    "2017": 23852.14,
+    "2018": 18869.87,
+    "2019": 29126.64,
+    "2020": 138875.57,
+    "2021": 32526.1
+   },
+   "lots": 17,
+   "openAtBoundary": [
+    {
+     "book": "G:VGT",
+     "entry": "2019-10-10",
+     "exit": "2020-02-24",
+     "reason": "trailing stop gap",
+     "net": 13616.580617872609,
+     "mae": -161.46972956717627
+    }
+   ],
+   "nextInterval": {
+    "lots": 11,
+    "byBook": {
+     "D1:GDX": 8,
+     "D1:VGT": 2,
+     "G:VGT": 1
+    },
+    "worstLotMae": -5590.550268211431,
+    "maxPrincipalLossMarked": 5590.550268211431,
+    "worstRealized": 1749.0477870162847,
+    "losing": 0,
+    "exitReasons": {
+     "trailing stop gap": 2,
+     "trailing stop": 8,
+     "open": 1
+    }
+   },
+   "stresses": {
+    "cost 0 bps": {
+     "sliceNet": 172692.49,
+     "sliceDd": 17289.38,
+     "wholeNet": 253779.5,
+     "wholeDd": 17289.38
+    },
+    "cost 10 bps": {
+     "sliceNet": 170112.14,
+     "sliceDd": 17272.11,
+     "wholeNet": 249899.49,
+     "wholeDd": 17272.11
+    },
+    "cost 20 bps": {
+     "sliceNet": 167536.94,
+     "sliceDd": 17254.87,
+     "wholeNet": 246027.23,
+     "wholeDd": 17254.87
+    },
+    "interest 14%": {
+     "sliceNet": 166815.37,
+     "sliceDd": 17280.74,
+     "wholeNet": 239994.69,
+     "wholeDd": 17280.74
+    },
+    "stop slippage +25 bps": {
+     "sliceNet": 168171.34,
+     "sliceDd": 17280.74,
+     "wholeNet": 247126.54,
+     "wholeDd": 17280.74
+    },
+    "next-open stops": {
+     "sliceNet": 170989.82,
+     "sliceDd": 17280.74,
+     "wholeNet": 251283.57,
+     "wholeDd": 17280.74
+    }
+   },
+   "neighbourhood": {
+    "draws": 256,
+    "medianSliceDd": 17871.49,
+    "p90SliceDd": 22499.01,
+    "worstSliceDd": 25419.36,
+    "medianSliceNet": 113089,
+    "p10SliceNet": 52758.25,
+    "above35pctC0": {
+     "breaches": 0,
+     "share": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ]
+    },
+    "above40pctC0": {
+     "breaches": 0,
+     "share": 0,
+     "wilson95": [
+      0,
+      0.014783856655649795
+     ]
+    },
+    "trainingBreachShare": 0
+   }
+  }
+ ],
+ "compute": {
+  "fresh": 17688,
+  "archiveHits": 0,
+  "tallies": {
+   "interval C19": {
+    "fresh": 17688,
+    "hits": 0,
+    "ms": 16585.90321900568
+   }
+  },
+  "lab": {
+   "unique": 17688,
+   "freshAllRuns": 17688,
+   "priorRuns": [],
+   "fresh": 17688,
+   "archiveHits": 0,
+   "workerSeconds": 16.6,
+   "wallSeconds": 21.6,
+   "tallies": {
+    "interval C19": {
+     "fresh": 17688,
+     "hits": 0,
+     "ms": 16585.90321900568
+    }
+   }
+  },
+  "wallSeconds": 33.4
+ },
+ "codeDigest": "fcc20138b64c8e05e7bc24044fa4d6d6af237a213837690f76347be802e690e4",
+ "finished": "2026-11-22T22:12:08.123Z"
+}
