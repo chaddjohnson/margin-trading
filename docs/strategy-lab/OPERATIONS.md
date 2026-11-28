@@ -15,7 +15,7 @@ recomputed on demand (nothing stored is modified).
 | --- | --- | --- |
 | Local use on apollo (installs dependencies and builds the UI if needed) | `npm --prefix apps/strategy-lab start` | http://127.0.0.1:4317 and http://apollo:4317 **on apollo itself** (loopback only, no token) |
 | VPN use, foreground | `npm --prefix apps/strategy-lab run start:vpn` | The above plus http://apollo:4317 from every machine on the tailnet (token required for the API) |
-| VPN use, permanent (systemd user service) | `npm --prefix apps/strategy-lab run service:install -- --enable` | Same as `start:vpn`; restarts on failure and starts with the user session (linger is on for `chad`) |
+| VPN use, permanent (systemd user service; **installed 2026-11-28 from a release checkout**, see [§Permanent service](#permanent-service-release-checkouts)) | `node --no-maglev <release>/apps/strategy-lab/scripts/install-service.mjs`, then `systemctl --user daemon-reload && systemctl --user enable --now strategy-lab` | Same as `start:vpn`; restarts on failure with a backoff and starts at boot (linger is on for `chad`) |
 | Development (hot reload) | `npm --prefix apps/strategy-lab run dev` | UI on http://127.0.0.1:5174 (Vite, proxies `/api`), API on 127.0.0.1:4317 |
 | Import a Study 8 replay | see [§Importing vg-balanced](#importing-vg-balanced) | — |
 | Import selected phenotypes | `npm --prefix apps/strategy-lab run import:phenotypes -- <export dir>` ([PHENOTYPES.md](PHENOTYPES.md)) | — |
@@ -37,6 +37,42 @@ this checkout's path. Manage it with:
 
 After changing the UI code, rebuild with `npm --prefix apps/strategy-lab run build`, then restart. The `start` script
 rebuilds automatically.
+
+## Permanent service: release checkouts
+
+**Why a release checkout.** Since 2026-11-28 (Assignment 2, `docs/data-updates/2026-11-27-assignment-2/STRATEGY_LAB_SERVICE.md`)
+the service runs from an immutable release of an accepted `main` commit, not from the main checkout. The main checkout is
+where research branches are checked out, and the server's runner processes load the checkout's code, so serving from it
+would change the deployed code with every branch switch.
+
+**What a release is:**
+- **Location:** `~/.local/share/strategy-lab/releases/<commit12>/`.
+- **Form:** a detached, locked `git worktree` of the commit (`git worktree list` shows it).
+- **Its own files:** real copies of `node_modules`, the generated sources, and its own `apps/strategy-lab/dist`. The
+  sealed files' read-only mode is restored, which Priority 3's FULL door requires.
+- **Shared with the main checkout:** only the canonical market data (`data/<SYMBOL>` are links to the main checkout's
+  files, read only, one file per symbol) and the per-study `.cache` links.
+- **Never run tests in a release:** a repository-copy test would write through the data links.
+
+**Where the state is.** `~/.config/strategy-lab/env` sets `STRATEGY_LAB_STATE_DIR` to the main checkout's
+`state/strategy-lab` (database, runs, imports, token, caches). The token and every saved run are therefore the same for
+every release.
+
+| Task | Command |
+| --- | --- |
+| Status / logs | `systemctl --user status strategy-lab`; `journalctl --user -u strategy-lab -f` |
+| Restart / stop / start | `systemctl --user restart strategy-lab`; `systemctl --user stop strategy-lab`; `systemctl --user start strategy-lab` |
+| Which build is live | `systemctl --user show strategy-lab -p WorkingDirectory` (the release directory = the commit) |
+| Prepare a new release of an accepted `main` commit | `bash docs/data-updates/2026-11-27-assignment-2/scripts/strategy-lab-release.sh <commit>` (prints the directory; builds the UI there) |
+| Smoke-test it before switching (loopback, a state COPY, another port) | see `docs/data-updates/2026-11-27-assignment-2/RUN_COMMANDS.md` §Strategy Lab |
+| Switch to it | `node --no-maglev <release>/apps/strategy-lab/scripts/install-service.mjs && systemctl --user daemon-reload && systemctl --user restart strategy-lab` |
+| Roll back | run the same `install-service.mjs` from the previous release directory, then `daemon-reload` and `restart` |
+| Fall back to the main checkout | `systemctl --user disable --now strategy-lab`, then `npm --prefix /home/chad/projects/margin-trading/apps/strategy-lab run start:vpn` |
+| Remove an old release | `git worktree unlock <dir> && git worktree remove --force <dir>` (it removes the data links, not the data) |
+
+**Restart policy.** `Restart=on-failure`, `RestartSec=10`, `RestartSteps=5`, `RestartMaxDelaySec=120`. The service
+retries forever, with waits growing from 10 s to 2 min. A missing Tailscale address at boot or a port in use is therefore
+retried, but never in a tight loop.
 
 ## Connecting from another computer on the tailnet
 

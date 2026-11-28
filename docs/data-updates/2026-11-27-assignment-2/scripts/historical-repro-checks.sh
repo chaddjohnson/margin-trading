@@ -1,7 +1,7 @@
 #!/bin/bash
 # Assignment 2 §6.2: the two previously demonstrated historical reproductions, re-run with the candidate's tool
 # (tools/historical-repro/env.ts), environments outside the repository, removed afterwards. Outputs: evidence/historical-repro/.
-W=/home/chad/.local/share/margin-trading-worktrees/a2-integration
+W=$(cd "$(dirname "$0")/../../../.." && pwd)   # the checkout holding this script (the Assignment 2 worktree when first run)
 E=$W/docs/data-updates/2026-11-27-assignment-2/evidence/historical-repro
 B=/home/chad/.local/share/margin-trading-worktrees
 NODE="node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning"
