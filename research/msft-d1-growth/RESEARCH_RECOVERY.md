@@ -2,9 +2,9 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-28T08:53Z (clock, UTC). **Status: INCOMPLETE** — Phase 1 (data) done; code and PROTOCOL.md draft
-  written; gates E1–E4 PASS; E5, E6 and the pilot running (`chains/gates.sh`, log `cache/logs/gates.log`, units
-  `msft9-e5` / `msft9-e6` / `msft9-pilot` in `msft9.slice`). **No official evaluation has run.**
+- **Updated:** 2026-11-28T09:18Z (clock, UTC). **Status: INCOMPLETE** — data done; PROTOCOL.md final text (not yet frozen); gates
+  E1–E6 and the pilot PASS; pre-freeze commit `e9317da8`; E7/E8 running (`chains/tests.sh` in unit `msft9-tests`, log
+  `cache/logs/tests.log`, outputs `results/engineering/tests/`). **No official evaluation has run.**
 - **Brief:** `brief/BRIEF.md` (256 lines, 28,460 bytes, sha256 `562e12eb3ab85ae1013bcda139cc7329e42ad80508bc9b1957f38ae116e6aad5`,
   read in full to its final line 2026-11-28T08:20Z). It authorizes implementation and the full optimization after the
   data, protocol-freeze and CPU/GPU gates; commit and push of the research branch; no trading, broker, deployment,
@@ -75,8 +75,11 @@
 | E2 | PASS | 5 doors = partition path; causal prefixes; no split; regular-session semantics (0 bars outside, 2,723 closing prints, 21 early closes at 13:00) |
 | E3 | PASS | New L0 / N/original GPU = CPU = sealed on D24 and FULL (own VGT/GDX data) |
 | E4 | PASS 08:51Z | 0 / 2,852 record comparisons differ on each of D19, D21, D23, D24 (576 configs, 72 cells, box extremes included) |
-| E5, E6, pilot | running (gates.sh) | — |
-| E7, E8 | not started (tests.sh; after the pilot: needs the GPU free and the final protocol + adoption) | — |
+| E5 | PASS 08:57Z | graceful stop/resume, process SIGKILL resume, server SIGKILL (fails closed, exit 1) resume, CPU: 0 differences |
+| E6 | PASS 08:58Z | single-family 48/48, inert slot 48/48, causal 136 × 3 doors, accounting: 0 differ |
+| E9 pilot | PASS 09:17Z | D21, BENCH keys: 1,168,221 requested in 1,140 s (1,025/s); per broad lane D 13,910 / G 14,660 / J 16,546; refine 30,766; all *triggers not met*; cgroup peak 9.5 GB. Summary step re-run (no evaluation) after fixing its planning arithmetic, which had used P6-TSLA's lane counts: ≈ 100.2 M requested before rounds/qualification |
+| E7, E8 | running since 09:18Z (tests.sh) | — |
+| Adoption | written 09:17:53Z | `STANDARD_ADOPTION.json` (protocol sha256 `a0ff207e…` at writing); preflight PASS |
 
 ## Guards
 
