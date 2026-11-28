@@ -13,9 +13,13 @@ Environment=STRATEGY_LAB_HOSTS=127.0.0.1,tailscale
 Environment=STRATEGY_LAB_PORT=4317
 EnvironmentFile=-%h/.config/strategy-lab/env
 ExecStart=@NODE@ --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning --max-old-space-size=4096 @APP_DIR@/server/main.ts
-# Tailscale may come up after the user session: retry until its address exists.
+# Tailscale may come up after the user session: retry until its address exists. The retries never stop, but they back
+# off (systemd ≥ 254: 10 s growing to at most 2 min in 5 steps), so a persistent failure such as a port in use cannot
+# become a tight restart loop.
 Restart=on-failure
 RestartSec=10
+RestartSteps=5
+RestartMaxDelaySec=120
 # Runs are child processes; stop them with the server.
 KillMode=control-group
 TimeoutStopSec=20
