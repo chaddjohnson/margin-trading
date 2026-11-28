@@ -1,0 +1,104 @@
+{
+ "gate": "E2",
+ "what": "the MSFT doors (D19, D21, D23, D24, FULL ≤ 2026-10-30): each byte prefix verified (size, sha256, last row) and loaded through the canonical session grouping + the canonical forward split adjustment with the CENTRAL ledger equals, session by session and bar by bar, the canonical PARTITION path (resolveDataset(\"MSFT\", \"all\"), the central ledger by default); each shorter door is a prefix of the next (causal data access); both engine slots hold one MSFT SymDoor; no MSFT split (no ledger event, no split-sized raw gap, the adjustment is the identity — applied exactly once by construction); regular-session semantics (no bar outside the regular minutes, a closing-print proxy on every session, early closes end at 13:00); no strategy is evaluated (FULL read for data integrity only, before the freeze)",
+ "rows": [
+  {
+   "door": "D19",
+   "sessions": 1006,
+   "pinnedSessions": 1006,
+   "splitsApplied": [],
+   "doorHash": "e24a941d3e97b66d4940fb322f89eee657138d51e70cfbc2bbbd398a4e44f6f0",
+   "partitionPathHash": "e24a941d3e97b66d4940fb322f89eee657138d51e70cfbc2bbbd398a4e44f6f0",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "D21",
+   "sessions": 1511,
+   "pinnedSessions": 1511,
+   "splitsApplied": [],
+   "doorHash": "2007bd27c3e1394ced69c837f8418501170fafdef9e6641a89e600745600016b",
+   "partitionPathHash": "2007bd27c3e1394ced69c837f8418501170fafdef9e6641a89e600745600016b",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "D23",
+   "sessions": 2012,
+   "pinnedSessions": 2012,
+   "splitsApplied": [],
+   "doorHash": "4ff2983ef03974360e12622564f6358ac56bcd453d64aba646b30dd3568a3ea5",
+   "partitionPathHash": "4ff2983ef03974360e12622564f6358ac56bcd453d64aba646b30dd3568a3ea5",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "D24",
+   "sessions": 2264,
+   "pinnedSessions": 2264,
+   "splitsApplied": [],
+   "doorHash": "7f7029e521a2bc46ce7f39172a26d60ed109b5b1546171cf169db0c578af4a33",
+   "partitionPathHash": "7f7029e521a2bc46ce7f39172a26d60ed109b5b1546171cf169db0c578af4a33",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  },
+  {
+   "door": "FULL",
+   "sessions": 2723,
+   "pinnedSessions": 2723,
+   "splitsApplied": [],
+   "doorHash": "f4f38d0a0ce8b1ad231025b2d8d7bfbaf6780e10a17b185e00b4c3a675bd6bb6",
+   "partitionPathHash": "f4f38d0a0ce8b1ad231025b2d8d7bfbaf6780e10a17b185e00b4c3a675bd6bb6",
+   "equal": true,
+   "bothSlotsOneSymDoor": true,
+   "ok": true
+  }
+ ],
+ "causal": [
+  {
+   "shorter": "D19",
+   "longer": "D21",
+   "sessions": 1006,
+   "prefixEqual": true
+  },
+  {
+   "shorter": "D21",
+   "longer": "D23",
+   "sessions": 1511,
+   "prefixEqual": true
+  },
+  {
+   "shorter": "D23",
+   "longer": "D24",
+   "sessions": 2012,
+   "prefixEqual": true
+  },
+  {
+   "shorter": "D24",
+   "longer": "FULL",
+   "sessions": 2264,
+   "prefixEqual": true
+  }
+ ],
+ "splits": {
+  "ledgerEvents": 0,
+  "splitSizedRawGaps": 0,
+  "adjustmentIsIdentity": true,
+  "ok": true
+ },
+ "regular": {
+  "barsOutsideRegularMinutes": 0,
+  "sessionsWithoutClosingPrint": 0,
+  "earlyCloses": 21,
+  "earlyClosesEndAt1300": true,
+  "ok": true
+ },
+ "pass": true,
+ "finished": "2026-11-28T08:45:53.400Z",
+ "codeDigest": "e014f8dbad1c16a71360776449119edbdd5b572aebe8e3b1259c678c208e1564",
+ "tag": null
+}

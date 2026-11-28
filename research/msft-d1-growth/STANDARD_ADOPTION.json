@@ -1,0 +1,195 @@
+{
+ "kind": "optimization-standard-adoption",
+ "schema": 1,
+ "study": "research/msft-d1-growth",
+ "scope": "optimization",
+ "standard": {
+  "path": "docs/research/OPTIMIZATION_STANDARD.md",
+  "version": "5.0.0",
+  "sha256": "68487de7b67cd9ccbf70478f51d12f5ef19287d6fa34a737c69f4b49b277eeaf"
+ },
+ "readAt": "2026-11-28T08:20:00Z",
+ "adoptedAt": "2026-11-28T09:17:53Z",
+ "protocol": {
+  "path": "research/msft-d1-growth/PROTOCOL.md",
+  "sha256": "a0ff207e246a263898804aa56861a03c0be637c11164840478ee1acdfcf184d4"
+ },
+ "dateSplit": {
+  "development": {
+   "from": "2016-01-04",
+   "to": "2024-12-31"
+  },
+  "validation": {
+   "from": "2025-01-01",
+   "to": "2026-10-30"
+  },
+  "commonCompleteEndpoint": "2026-10-30"
+ },
+ "dateRanges": {
+  "file": "config/research/date-ranges.json",
+  "id": "R1"
+ },
+ "dataPins": {
+  "MSFT": {
+   "file": "data/MSFT/data.csv",
+   "bytes": 90939174,
+   "sha256": "b2d79f9425e9f79eb3f59584a3bdfc3b7f797124f247399b759f2aab1a98be91",
+   "through": "2026-10-30"
+  }
+ },
+ "objective": {
+  "prioritizes": "actual-profit",
+  "primaryRule": "NL0 1.0.0 §3.5 original rule: the actual-profit role among the Q1-Q6 qualified members (highest centre net; ties: higher selection robust net, lower centre DD, label), per arm population (D, G, C, J, S) at every cutoff; RA1 report-only. The determination (PROTOCOL.md §12: (a) Q1-Q6, (b) chronological support, (c) V1-V3, (d) ES1-ES3) is a separate precommitted governance label.",
+  "roles": [
+   "actual-profit",
+   "robust-profit",
+   "balanced",
+   "lower-drawdown"
+  ]
+ },
+ "risk": {
+  "maximumMinuteDrawdown": 35000,
+  "principalBudget": 100000,
+  "denominator": "one fixed $100,000 initial trading allocation (not peak account equity); P0 = 35 % of it; trade principal loss, banked-capital DD and giveback are report-only"
+ },
+ "budget": {
+  "distinctProposals": 3751936,
+  "backendEvaluations": 250000000,
+  "notes": "Distinct candidate proposals: the configured base broad lanes x (512 screen + 2 x 256 island) per cutoff — D 64, G 144, J 384, S 18 x 18 lanes (F = 3) — over 4 cutoffs, before refinement designs, extension islands and replicate rounds (PROTOCOL.md §7.6). Backend evaluations: the hard ceiling of 250,000,000 requested official evaluations (archive hits included; fresh and hits reported separately; ledger over the sealed stage records); deterministic per-lane bounds (budget.ts laneCaps), 650/652 per qualified member, 306 per slice subject; the pilot's expected effort in the freeze record."
+ },
+ "referenceMethod": {
+  "id": "NL0",
+  "path": "docs/research/methods/NEW_L0_METHOD.md",
+  "version": "1.0.0",
+  "sha256": "9b387bb47ce02178ee27bb8379a11e4940c9c6c5a44c3e7ab5fcc3c2cc0411e4"
+ },
+ "evaluationBackend": {
+  "policy": "gpu-required",
+  "purpose": "official-optimization",
+  "acceptance": "config/gpu-backend/acceptance.json",
+  "notes": "Every official evaluation (searches, replicate rounds, qualification, fold slices, validation) runs only through openOfficialGpuSession -> GpuPool -> EvalLab on the accepted GPU Phase 9 evaluator (record sha256 9ebb33ce8620dead..., binary gb9 36dcc251..., RTX 5090 GPU-ae5f222c...), node --no-maglev, one held job per stage; no CPU fallback. Engineering gates, data tools, the pilot and report-only diagnostics are non-official (parity-test / benchmark / diagnostic)."
+ },
+ "chronologicalConsequence": "Standard §1.8 default, adopted: a failed or uncomputable independent verdict of an arm's procedure means 'no chronological support: the selection is not a deployment-qualified candidate without an explicit user decision' (brief Phase 5F: development-qualified only, not independently deployment-qualified). Governance only. 'No qualifying MSFT candidate' is a valid outcome. There is no informed lane.",
+ "deviations": [
+  {
+   "id": "AD1",
+   "section": "§4.1, §4.3, §4.8",
+   "kind": "adaptation",
+   "description": "The MSFT space: P6-TSLA's / P8-GDX's space unchanged (Assignment 3's genome semantics on the one trading slot; the accepted engine's VGT slot carries MSFT; the GDX-named slot's books disabled; no evaluation file changed); arms D (8 D1 cells), G (6 Growth exit-protection cells), J (48), S (frozen D1 x 6), C (fixed pairs). S1 absent; shadow eligibility OFF; calendar-day holds.",
+   "justification": "Brief Phase 2 (five arms, existing allocator and semantics; S1 and shadow eligibility OFF).",
+   "userAgreement": null
+  },
+  {
+   "id": "AD2",
+   "section": "§4.2, §4.5, §4.8",
+   "kind": "adaptation",
+   "description": "Effort by replicates of NL0's unchanged per-lane schedules: P8-GDX's executed allocation x 4/3 in every stage and Growth's base replicates x 2 — base D 8, G 24, J 8, S R_S(F) = max(8, ceil(320 / (6F))) = 18 for F = 3; 8 refinement lanes per refined cell — with Priority 5's two-tier island rule and convergence-driven replicate rounds (<= 4, 2 %).",
+   "justification": "Brief Phase 3 items 2-5 and Phase 5 (substantial, fairly allocated effort, multiple seeds, do not starve Growth or the joint arm); P8-GDX's measured Growth seed dispersion 49-63 %; NL0 §7.4 scaling.",
+   "userAgreement": null
+  },
+  {
+   "id": "AD3",
+   "section": "§1.8",
+   "kind": "adaptation",
+   "description": "Priority 5's exact sequential drawdown statistic from GPU marks; one procedure per arm.",
+   "justification": "The accepted GPU path returns no minute mark series; a CPU-scored official statistic is forbidden (§9.2).",
+   "userAgreement": null
+  },
+  {
+   "id": "AD4",
+   "section": "§2.3, §2.5",
+   "kind": "adaptation",
+   "description": "NL0's original rule is THE selector; RA1 computed on the identical populations as a separately labelled report-only experimental selector (never selects).",
+   "justification": "Brief Phase 2 (the original NL0/P0 selector remains the official selector) and Phase 3 item 6.",
+   "userAgreement": null
+  },
+  {
+   "id": "AD5",
+   "section": "§3.4",
+   "kind": "adaptation",
+   "description": "Method comparison: C (separately optimized, pooled), J (joint), S (D1-first sequential), with D and G standalone; matched rules; effort matched by the frozen R_S rule (S + its D1 step >= J) and disclosed per arm.",
+   "justification": "Brief Mission item 4, Phase 2, Phase 3 item 2.",
+   "userAgreement": null
+  },
+  {
+   "id": "AD6",
+   "section": "§5.3",
+   "kind": "adaptation",
+   "description": "Assignment 3's instrument on the MSFT slot in this study's seed namespace, common random numbers across centres and arms; arm S's design neighbourhoods never move the frozen D1.",
+   "justification": "Brief Phase 2 arm S (D1 parameters must not move).",
+   "userAgreement": null
+  },
+  {
+   "id": "AD7",
+   "section": "§5.1",
+   "kind": "adaptation",
+   "description": "Priority 5's eight stresses (cost 0/2/10/20 bps, 14 % interest, stop slippage +10/+25 bps, next-open stops).",
+   "justification": "Brief Phase 3 item 9.",
+   "userAgreement": null
+  },
+  {
+   "id": "AD8",
+   "section": "§1.8, §2.5",
+   "kind": "adaptation",
+   "description": "Precommitted determination: finalists, development, chronological and sufficiency labels sealed before FULL; architecture comparisons with Priority 5's bands ($10,000 / $5,000 / $2,500) and replication; the outcome joins validation records by (arm, id) and fails closed; 'no qualifying MSFT candidate' valid.",
+   "justification": "Brief Phase 0 (outcome identity), Phase 3 item 10, Phase 5F.",
+   "userAgreement": null
+  },
+  {
+   "id": "AD9",
+   "section": "§5.9",
+   "kind": "adaptation",
+   "description": "D1 hold-window tail stress on pre-2016 MSFT daily data (1986-03-13 -> 2015-12-31, Yahoo split-adjusted closes; disjoint) plus in-sample.",
+   "justification": "Standard §5.9's preferred disjoint reference history.",
+   "userAgreement": null
+  },
+  {
+   "id": "AD10",
+   "section": "§0.3, §1.3",
+   "kind": "adaptation",
+   "description": "The common complete endpoint is 2026-10-30 (R1's validation end; the program's); no later MSFT row was downloaded.",
+   "justification": "Brief Phase 1 item 2.",
+   "userAgreement": null
+  },
+  {
+   "id": "AD11",
+   "section": "§3.1-§3.3, §4.4",
+   "kind": "adaptation",
+   "description": "No MSFT incumbent: no informed lane or population; New L0's and N/original's VGT books are external controls only (never seeds, members or finalists); NL0's informed-lane budget reassigned to the stage-2 refinement.",
+   "justification": "Brief Phase 0 (independent MSFT search, references isolated and labelled).",
+   "userAgreement": null
+  },
+  {
+   "id": "AD12",
+   "section": "§2.7, §4.7",
+   "kind": "adaptation",
+   "description": "Combined arms require both MSFT books funded (Q6); protected and unrestricted Growth structures protected by cells and reported as sub-populations.",
+   "justification": "Brief Phase 2 (protected and unrestricted alternatives fairly represented) and Phase 5B.",
+   "userAgreement": null
+  },
+  {
+   "id": "AD13",
+   "section": "§5.6",
+   "kind": "adaptation",
+   "description": "MSFT has no split in the window: the doors apply the central split ledger (no MSFT event; an event fails closed). Price-only convention unchanged; dividends reported, never credited.",
+   "justification": "Brief Phase 1 items 4 and 8.",
+   "userAgreement": null
+  },
+  {
+   "id": "AD14",
+   "section": "§0.2",
+   "kind": "adaptation",
+   "description": "Buy-and-hold comparators (financed/unfinanced; price-only/with dividends) and per-lot dividend entitlement are report-only, after the outcome.",
+   "justification": "Brief Phase 2 'Research comparators', Phase 6.",
+   "userAgreement": null
+  },
+  {
+   "id": "DP1",
+   "section": "§2.6",
+   "kind": "departure",
+   "description": "Evidence-sufficiency thresholds ES1-ES3 bind the final candidate determination (never the search, Q1-Q6, ranking or selection): >= 10 funded lots (C, J, S also >= 3 of each family), >= 5 independent pool-level episodes and funded entries in >= 4 calendar years, largest winning episode <= 50 % of the development net; a primary failing them is not a research candidate.",
+   "justification": "The brief asks for precommitted trade/episode/concentration thresholds that are not lowered for MSFT; §2.6 forbids activity floors and largest-winner caps from eliminating candidates, so binding them on the candidate label departs from it.",
+   "userAgreement": "research/msft-d1-growth/brief/BRIEF.md (sha256 562e12eb3ab85ae1013bcda139cc7329e42ad80508bc9b1957f38ae116e6aad5) Phase 3 item 7: 'Thresholds for sufficient independent trades/episodes, concentration of gains, eligibility and participation for D, G, and combined arms. Do not lower trade-count/risk requirements simply because MSFT is less volatile or has fewer qualifying D1 opportunities. No qualified candidate is an acceptable finding.'; Phase 5B: 'Do not let a single enormous winner satisfy robustness requirements by itself.'"
+  }
+ ]
+}

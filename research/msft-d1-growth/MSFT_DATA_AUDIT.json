@@ -1,0 +1,666 @@
+{
+ "kind": "P9-MSFT data audit",
+ "written": "2026-11-28T08:34:36.157Z",
+ "symbol": "MSFT",
+ "source": {
+  "vendor": "Alpaca Markets Data API v2, /v2/stocks/MSFT/bars (SIP, 1-minute, raw prices) — the repository’s canonical source and convention (the 61 canonical ETF files, TSLA)",
+  "feed": "sip (consolidated, all US exchanges); never IEX",
+  "timeframe": "1Min",
+  "adjustment": "raw (the repository convention: splits are applied by the central ledger at load time; MSFT has none in the window)",
+  "provenance": "downloaded for this study 2026-11-28T08:23:45Z → 08:26:58Z by `( set -a; . ./.env; set +a; OUTPUT_DIR=data scripts/download.sh MSFT 2016-01-04 2026-10-30 )` (162 sequential page requests of ≤ 10,000 bars; Alpaca’s documented basic-plan limit is 200 requests per minute), then `npm run datasets -- import MSFT --dry-run`, `npm run datasets -- import MSFT --keep-source`, `npm run datasets -- verify MSFT`; the staging file data/MSFT.csv was removed after its sha256 was re-checked equal to the canonical file’s",
+  "entitlement": "the existing account’s historical SIP access (ALPACA_API_KEY / ALPACA_SECRET_KEY of the git-ignored .env, exported into the download subshell only; never printed, logged or committed; the download log was scanned: no secret text); no new service, purchase or incremental cost",
+  "endRequested": "2026-10-30 (the program’s common endpoint; Alpaca reads a date-only end as the end of that UTC day): later sessions were deliberately NOT requested, so no study read them"
+ },
+ "canonical": {
+  "file": "data/MSFT/data.csv",
+  "bytes": 90939174,
+  "rows": 1619189,
+  "sha256": "b2d79f9425e9f79eb3f59584a3bdfc3b7f797124f247399b759f2aab1a98be91",
+  "firstRowUtc": "2016-01-04T09:00:00Z",
+  "lastRowUtc": "2026-10-30T23:59:00Z"
+ },
+ "importReport": {
+  "file": "data/MSFT/dataset-report.json",
+  "sha256": "62630ce3fd3b407db9da74d75e1ee17e4b9d2db9aa5a8ec8b6a0286d81fa8d1f",
+  "status": "verified",
+  "anomalies": [
+   "bars after 1:00 p.m. on 21 early-close days"
+  ],
+  "errors": [],
+  "scan": {
+   "dataRows": 1619189,
+   "endsWithNewline": true,
+   "partitions": {
+    "training": {
+     "rows": 1130503,
+     "firstTimestamp": "2016-01-04T09:00:00Z",
+     "firstDate": "2016-01-04",
+     "lastTimestamp": "2023-12-30T00:59:00Z",
+     "lastDate": "2023-12-29",
+     "sha256": "7abf3d8677f51f99da05109d3dd25fc9f863e0c776ea8b9a771bfdc39561da1a"
+    },
+    "holdout": {
+     "rows": 273408,
+     "firstTimestamp": "2024-01-02T09:02:00Z",
+     "firstDate": "2024-01-02",
+     "lastTimestamp": "2025-10-16T23:59:00Z",
+     "lastDate": "2025-10-16",
+     "sha256": "804b6fde37895958a9fee72925accdd5cc3577126e4a448d39fd0db5d9eeaf37"
+    },
+    "final": {
+     "rows": 215278,
+     "firstTimestamp": "2025-10-17T08:00:00Z",
+     "firstDate": "2025-10-17",
+     "lastTimestamp": "2026-10-30T23:59:00Z",
+     "lastDate": "2026-10-30",
+     "sha256": "20df474f6d5b2fc892e2c7f3b8f01db7c1d2255a450a0abab908bdc756d40cbc"
+    }
+   },
+   "malformed": {
+    "count": 0,
+    "examples": []
+   },
+   "outOfOrder": {
+    "count": 0,
+    "examples": []
+   },
+   "duplicates": {
+    "count": 0,
+    "examples": []
+   },
+   "outOfRange": {
+    "count": 0,
+    "examples": []
+   },
+   "unalignedSeconds": {
+    "count": 0,
+    "examples": []
+   },
+   "inconsistentPrices": {
+    "count": 0,
+    "examples": []
+   },
+   "rowsSha256": "b2d79f9425e9f79eb3f59584a3bdfc3b7f797124f247399b759f2aab1a98be91",
+   "audit": {
+    "firstDate": "2016-01-04",
+    "lastDate": "2026-10-30",
+    "expectedSessions": 2723,
+    "sessionsWithRegularBars": 2723,
+    "missingSessions": [],
+    "sessionsOnClosedDays": [],
+    "extendedHoursBars": 561114,
+    "earlyCloseLateBars": [
+     {
+      "date": "2016-11-25",
+      "bars": 22
+     },
+     {
+      "date": "2017-07-03",
+      "bars": 31
+     },
+     {
+      "date": "2017-11-24",
+      "bars": 10
+     },
+     {
+      "date": "2018-07-03",
+      "bars": 30
+     },
+     {
+      "date": "2018-11-23",
+      "bars": 28
+     },
+     {
+      "date": "2018-12-24",
+      "bars": 92
+     },
+     {
+      "date": "2019-07-03",
+      "bars": 37
+     },
+     {
+      "date": "2019-11-29",
+      "bars": 45
+     },
+     {
+      "date": "2019-12-24",
+      "bars": 20
+     },
+     {
+      "date": "2020-11-27",
+      "bars": 50
+     },
+     {
+      "date": "2020-12-24",
+      "bars": 42
+     },
+     {
+      "date": "2021-11-26",
+      "bars": 98
+     },
+     {
+      "date": "2022-11-25",
+      "bars": 46
+     },
+     {
+      "date": "2023-07-03",
+      "bars": 42
+     },
+     {
+      "date": "2023-11-24",
+      "bars": 61
+     },
+     {
+      "date": "2024-07-03",
+      "bars": 43
+     },
+     {
+      "date": "2024-11-29",
+      "bars": 49
+     },
+     {
+      "date": "2024-12-24",
+      "bars": 32
+     },
+     {
+      "date": "2025-07-03",
+      "bars": 87
+     },
+     {
+      "date": "2025-11-28",
+      "bars": 89
+     },
+     {
+      "date": "2025-12-24",
+      "bars": 70
+     }
+    ],
+    "coverage": {
+     "median": 1,
+     "below50": 0,
+     "below90": 1
+    },
+    "largestGaps": [
+     {
+      "date": "2016-02-22",
+      "from": "10:25",
+      "to": "11:12",
+      "minutes": 47
+     },
+     {
+      "date": "2020-03-09",
+      "from": "09:34",
+      "to": "09:49",
+      "minutes": 15
+     },
+     {
+      "date": "2020-03-12",
+      "from": "09:35",
+      "to": "09:50",
+      "minutes": 15
+     },
+     {
+      "date": "2020-03-16",
+      "from": "09:30",
+      "to": "09:45",
+      "minutes": 15
+     },
+     {
+      "date": "2020-03-18",
+      "from": "12:56",
+      "to": "13:11",
+      "minutes": 15
+     }
+    ]
+   }
+  }
+ },
+ "doors": {
+  "D19": {
+   "bytes": 27264769,
+   "rows": 494593,
+   "sha256": "0502be6b74e1e7f141e8d49de9d87c5dc70d9f6a0c43d8949bb08a43531ec9ab",
+   "lastRowUtc": "2020-01-01T00:59:00Z",
+   "sessions": 1006
+  },
+  "D21": {
+   "bytes": 45413285,
+   "rows": 815243,
+   "sha256": "ed4090774efcf68f548de162b730a78e6a3879e4747b78b8d7f09b8ca0cd8e56",
+   "lastRowUtc": "2021-12-31T22:58:00Z",
+   "sessions": 1511
+  },
+  "D23": {
+   "bytes": 63270707,
+   "rows": 1130503,
+   "sha256": "7abf3d8677f51f99da05109d3dd25fc9f863e0c776ea8b9a771bfdc39561da1a",
+   "lastRowUtc": "2023-12-30T00:59:00Z",
+   "sessions": 2012
+  },
+  "D24": {
+   "bytes": 72004079,
+   "rows": 1284455,
+   "sha256": "7dd8a892816bd2ddfa352fc9129110eaa2d54f2f37c3b7e23c8fdac385f509e7",
+   "lastRowUtc": "2025-01-01T00:57:00Z",
+   "sessions": 2264
+  },
+  "FULL": {
+   "bytes": 90939174,
+   "rows": 1619189,
+   "sha256": "b2d79f9425e9f79eb3f59584a3bdfc3b7f797124f247399b759f2aab1a98be91",
+   "lastRowUtc": "2026-10-30T23:59:00Z",
+   "sessions": 2723
+  }
+ },
+ "endpoint": {
+  "study": "2026-10-30",
+  "rule": "the program’s common comparison horizon (brief Phase 1 item 2: 2016-01-04 → 2026-10-30, identical to P6-TSLA and P8-GDX; research date range R1’s validation end); MSFT has a complete regular session on it and no missing session before it (below); the canonical file ends there"
+ },
+ "calendar": {
+  "coverage": {
+   "first": "2016-01-01",
+   "last": "2026-12-31"
+  },
+  "expectedSessions": 2723,
+  "sessions": 2723,
+  "missingSessions": [],
+  "extraSessions": [],
+  "firstSession": "2016-01-04",
+  "lastSession": "2026-10-30"
+ },
+ "completeness": {
+  "development": {
+   "sessions": 2264,
+   "earlyCloses": 18,
+   "earlyClosesExpected": 18,
+   "scheduledMinutes": 879720,
+   "minuteBars": 879605,
+   "missingMinutes": 115,
+   "missingMinuteShare": 0.0001,
+   "sessionsMissingOver5": 6,
+   "sparseSessions": 0,
+   "intraSessionGapsGe5Minutes": 6,
+   "sessionsWithGapGe5": [
+    {
+     "date": "2016-02-02",
+     "maxGap": 9,
+     "gaps": 1
+    },
+    {
+     "date": "2016-02-22",
+     "maxGap": 46,
+     "gaps": 1
+    },
+    {
+     "date": "2020-03-09",
+     "maxGap": 14,
+     "gaps": 1
+    },
+    {
+     "date": "2020-03-12",
+     "maxGap": 14,
+     "gaps": 1
+    },
+    {
+     "date": "2020-03-16",
+     "maxGap": 14,
+     "gaps": 1
+    },
+    {
+     "date": "2020-03-18",
+     "maxGap": 14,
+     "gaps": 1
+    }
+   ],
+   "longestGap": {
+    "date": "2016-02-22",
+    "maxGap": 46
+   },
+   "duplicateMinuteBars": 0,
+   "outOfOrderBars": 0,
+   "inconsistentOhlcBars": 0,
+   "sessionsWithClosingPrint": 2264
+  },
+  "validation": {
+   "sessions": 459,
+   "earlyCloses": 3,
+   "earlyClosesExpected": 3,
+   "scheduledMinutes": 178470,
+   "minuteBars": 178470,
+   "missingMinutes": 0,
+   "missingMinuteShare": 0,
+   "sessionsMissingOver5": 0,
+   "sparseSessions": 0,
+   "intraSessionGapsGe5Minutes": 0,
+   "sessionsWithGapGe5": [],
+   "longestGap": {
+    "date": "",
+    "maxGap": 0
+   },
+   "duplicateMinuteBars": 0,
+   "outOfOrderBars": 0,
+   "inconsistentOhlcBars": 0,
+   "sessionsWithClosingPrint": 459
+  }
+ },
+ "extendedHours": {
+  "canonicalRows": 1619189,
+  "regularSessionBars": 1058075,
+  "closingPrintRows": 2723,
+  "outsideRegularSession": 558391,
+  "treatment": "kept in the canonical file (raw, as delivered); the canonical session grouping (src/lib/session.ts groupMarketSessions) makes bars only of the regular-session minutes 09:30–15:59 New York (to 12:59 on early-close days) and takes the OPEN of the scheduled close minute’s bar (16:00, or 13:00) as the closing-print proxy; pre-market and after-hours rows never enter a signal, high/low, stop, mark or execution; an overnight move reaches a strategy only through the next regular-session open"
+ },
+ "minuteOutliers": {
+  "development": {
+   "threshold": "|minute close-to-close| > 5 %",
+   "count": 0,
+   "examples": []
+  },
+  "validation": {
+   "threshold": "|minute close-to-close| > 5 %",
+   "count": 0,
+   "examples": "(0 listed internally; validation-period moves are not shown)"
+  }
+ },
+ "corporateActions": {
+  "splitLedger": {
+   "file": "config/market-events/splits.json",
+   "sha256": "e5bde427182fea627e38aba69c14ae16cf8b7e428e75bf4153e55db1d1cb5ba2",
+   "msftEvents": 0
+  },
+  "unexplainedSplitSizedGaps": [],
+  "largestDevelopmentOvernightMoves": [
+   {
+    "date": "2020-03-16",
+    "move": -0.1114
+   },
+   {
+    "date": "2022-10-26",
+    "move": -0.0797
+   },
+   {
+    "date": "2023-04-26",
+    "move": 0.0767
+   },
+   {
+    "date": "2017-10-27",
+    "move": 0.0714
+   },
+   {
+    "date": "2016-04-22",
+    "move": -0.0688
+   },
+   {
+    "date": "2022-01-26",
+    "move": 0.0676
+   },
+   {
+    "date": "2020-03-18",
+    "move": -0.0631
+   },
+   {
+    "date": "2020-03-13",
+    "move": 0.0617
+   },
+   {
+    "date": "2020-02-24",
+    "move": -0.0606
+   },
+   {
+    "date": "2020-03-09",
+    "move": -0.0596
+   }
+  ],
+  "independent": {
+   "source": "Yahoo Finance chart API v8 daily (split and dividend events, split-adjusted closes), retrieved 2026-11-28 for 1986-03-13 → 2024-12-31 only (no 2025–2026 data requested before the freeze)",
+   "file": "research/msft-d1-growth/cache/independent/yahoo-MSFT-daily-1986-2024.json",
+   "sha256": "898346b3fe2fc1b400186e004377b0f69cde2ad6794e951c6d2f66db8c9af095",
+   "splitEvents": [
+    {
+     "date": "1987-09-21",
+     "ratio": 2
+    },
+    {
+     "date": "1990-04-16",
+     "ratio": 2
+    },
+    {
+     "date": "1991-06-27",
+     "ratio": 1.5
+    },
+    {
+     "date": "1992-06-15",
+     "ratio": 1.5
+    },
+    {
+     "date": "1994-05-23",
+     "ratio": 2
+    },
+    {
+     "date": "1996-12-09",
+     "ratio": 2
+    },
+    {
+     "date": "1998-02-23",
+     "ratio": 2
+    },
+    {
+     "date": "1999-03-29",
+     "ratio": 2
+    },
+    {
+     "date": "2003-02-18",
+     "ratio": 2
+    }
+   ],
+   "rawCloseVersusSplitAdjustedClose": {
+    "sessionsCompared": 2264,
+    "developmentSessions": 2264,
+    "missingAtYahoo": 0,
+    "maxAbsDeviation": 0.0142,
+    "p99AbsDeviation": 0.0019,
+    "sessionsOver1Percent": 1,
+    "worst": [
+     {
+      "date": "2020-03-18",
+      "dev": 0.0142
+     },
+     {
+      "date": "2020-03-24",
+      "dev": 0.009
+     },
+     {
+      "date": "2020-03-16",
+      "dev": 0.0085
+     },
+     {
+      "date": "2020-03-13",
+      "dev": 0.0081
+     },
+     {
+      "date": "2020-03-06",
+      "dev": 0.0077
+     },
+     {
+      "date": "2018-02-01",
+      "dev": 0.0067
+     },
+     {
+      "date": "2020-04-21",
+      "dev": 0.0051
+     },
+     {
+      "date": "2018-09-21",
+      "dev": 0.0048
+     }
+    ]
+   }
+  },
+  "distributions": {
+   "window": "2016-01-04 → 2024-12-31 (development; the 2025–2026 events are fetched only after the sealed validation, for the report-only analyses)",
+   "events": [
+    {
+     "exDate": "2016-02-16",
+     "amount": 0.36
+    },
+    {
+     "exDate": "2016-05-17",
+     "amount": 0.36
+    },
+    {
+     "exDate": "2016-08-16",
+     "amount": 0.36
+    },
+    {
+     "exDate": "2016-11-15",
+     "amount": 0.39
+    },
+    {
+     "exDate": "2017-02-14",
+     "amount": 0.39
+    },
+    {
+     "exDate": "2017-05-16",
+     "amount": 0.39
+    },
+    {
+     "exDate": "2017-08-15",
+     "amount": 0.39
+    },
+    {
+     "exDate": "2017-11-15",
+     "amount": 0.42
+    },
+    {
+     "exDate": "2018-02-14",
+     "amount": 0.42
+    },
+    {
+     "exDate": "2018-05-16",
+     "amount": 0.42
+    },
+    {
+     "exDate": "2018-08-15",
+     "amount": 0.42
+    },
+    {
+     "exDate": "2018-11-14",
+     "amount": 0.46
+    },
+    {
+     "exDate": "2019-02-20",
+     "amount": 0.46
+    },
+    {
+     "exDate": "2019-05-15",
+     "amount": 0.46
+    },
+    {
+     "exDate": "2019-08-14",
+     "amount": 0.46
+    },
+    {
+     "exDate": "2019-11-20",
+     "amount": 0.51
+    },
+    {
+     "exDate": "2020-02-19",
+     "amount": 0.51
+    },
+    {
+     "exDate": "2020-05-20",
+     "amount": 0.51
+    },
+    {
+     "exDate": "2020-08-19",
+     "amount": 0.51
+    },
+    {
+     "exDate": "2020-11-18",
+     "amount": 0.56
+    },
+    {
+     "exDate": "2021-02-17",
+     "amount": 0.56
+    },
+    {
+     "exDate": "2021-05-19",
+     "amount": 0.56
+    },
+    {
+     "exDate": "2021-08-18",
+     "amount": 0.56
+    },
+    {
+     "exDate": "2021-11-17",
+     "amount": 0.62
+    },
+    {
+     "exDate": "2022-02-16",
+     "amount": 0.62
+    },
+    {
+     "exDate": "2022-05-18",
+     "amount": 0.62
+    },
+    {
+     "exDate": "2022-08-17",
+     "amount": 0.62
+    },
+    {
+     "exDate": "2022-11-16",
+     "amount": 0.68
+    },
+    {
+     "exDate": "2023-02-15",
+     "amount": 0.68
+    },
+    {
+     "exDate": "2023-05-17",
+     "amount": 0.68
+    },
+    {
+     "exDate": "2023-08-16",
+     "amount": 0.68
+    },
+    {
+     "exDate": "2023-11-15",
+     "amount": 0.75
+    },
+    {
+     "exDate": "2024-02-14",
+     "amount": 0.75
+    },
+    {
+     "exDate": "2024-05-15",
+     "amount": 0.75
+    },
+    {
+     "exDate": "2024-08-15",
+     "amount": 0.75
+    },
+    {
+     "exDate": "2024-11-21",
+     "amount": 0.83
+    }
+   ],
+   "count": 36,
+   "totalPerShare": 19.47,
+   "policy": "PRICE ONLY (the frozen engine convention of every strategy in the program, N/original, New L0, P6-TSLA and P8-GDX included): an MSFT lot held over an ex-date is not credited the quarterly dividend, and the raw price drop on the ex-date is part of its P&L; the margin interest is charged on the full principal regardless. Unlike TSLA (no dividend), this biases every MSFT trading result slightly DOWNWARD relative to a total-return holder, most for long holds (open-ended Growth). The effect is reported (report-only: the dividends each funded lot would have been entitled to; buy-and-hold with and without dividends); it is never synthesized into the trading results, the fitness or any gate"
+  },
+  "adjustment": "none (no MSFT split in 2016-01-04 → 2026-10-30; the last of MSFT’s nine splits was 2:1 on 2003-02-18; an MSFT event in the central ledger fails the doors closed)"
+ },
+ "sessionsSha256": "2ccf75beaee29222e6d335f95ad4297f6ad09a365443231d105f4fc2b2186ad3",
+ "blockers": [],
+ "findings": [
+  {
+   "date": "2020-03-18",
+   "ourClose": 142.39,
+   "closingPrintProxy": 142.39,
+   "lastRegularBarClose": 142.13,
+   "independentClose": 140.39999389648438,
+   "relativeDifference": 0.0142,
+   "cause": "the canonical closing-print proxy (the OPEN of the scheduled close minute’s bar, src/lib/session.ts) differs from the official auction print, which lay elsewhere in that minute’s range on this crash session; the frozen data convention of every study in the program (N/original and New L0 included) — disclosed, not repaired"
+  }
+ ]
+}
