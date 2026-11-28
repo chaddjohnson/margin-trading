@@ -2,15 +2,15 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-28T09:31Z (clock, UTC). **Status: INCOMPLETE** — **protocol FROZEN 2026-11-28T09:31:30Z** (commit `2799dc78`);
-  gates E1–E9 sealed (`90a42bdd`). **Next: the official chain, one cutoff per launch** (C19 first; RUN_COMMANDS.md Phase 5).
-  No official evaluation had run at the freeze.
+- **Updated:** 2026-11-28T13:22Z (clock, UTC). **Status: INCOMPLETE** — protocol FROZEN 2026-11-28T09:31:30Z (commit `2799dc78`);
+  **C19 COMPLETE** (09:32:15Z → 13:18:25Z, chain commits `e84cced1` → `4b99360f`); **next: C21** (one cutoff per launch). No chain
+  running at this update.
 - **Brief:** `brief/BRIEF.md` (256 lines, 28,460 bytes, sha256 `562e12eb3ab85ae1013bcda139cc7329e42ad80508bc9b1957f38ae116e6aad5`,
   read in full to its final line 2026-11-28T08:20Z). It authorizes implementation and the full optimization after the
   data, protocol-freeze and CPU/GPU gates; commit and push of the research branch; no trading, broker, deployment,
   adoption, merge into `main`, combination with any other security, or start of the additional-stocks study.
 - **Protocol:** `PROTOCOL.md` P9-MSFT 1.0.0 sha256 `a0ff207e246a263898804aa56861a03c0be637c11164840478ee1acdfcf184d4`; freeze record `results/protocol-freeze.json` `1c64559a4be976a9e0bffdb7f934d63ac1d8bca1c2a5029678e231b024d03aa7`; code digest `e014f8db…`; amendments: none.
-- **Next step:** `tools/msft-d1-growth/launch.sh msft9-chain-C19 $PWD/research/msft-d1-growth/cache/logs/chain-C19.log --wait -- /bin/bash $PWD/research/msft-d1-growth/chains/chain.sh C19` (then C21, C23, C24).
+- **Next step:** `tools/msft-d1-growth/launch.sh msft9-chain-C21 $PWD/research/msft-d1-growth/cache/logs/chain-C21.log --wait -- /bin/bash $PWD/research/msft-d1-growth/chains/chain.sh C21` (run from the repository root; then C23, C24).
 
 ## Environment
 
@@ -91,7 +91,7 @@ committed by the chain itself (results paths only). Never run git commands that 
 
 | Cutoff | Status | Launch / log | Notes |
 |---|---|---|---|
-| C19 | not started | `msft9-chain-C19`, `cache/logs/chain-C19.log` | |
+| C19 | **complete** 09:32:15Z → 13:18:25Z (unit runtime 3 h 46 min; cgroup memory peak 40.9 GB incl. page cache, swap 0) | `msft9-chain-C19`, `cache/logs/chain-C19.log`; harness task `b1hpnccna` (exit 0) | 24,490,478 requested in the eight search jobs (D 3.75 M, G 3.90 M, J 10.69 M, S 6.15 M); replicate round 1 did not fire in any arm (*triggers not met*); selection `results/selection/C19.json` `1e82edfea0d673cb3dc58e55dbc7130f2d54c05cea40841ab245c8a0fe0ab0a8` (C19-D `12bfffee…`, -G `f49fc962…`, -C `17726797…`, -J `6f8cceee…`, -S `e42d2e8a…`; frozen D1 `7abc2028…`); slice 2020–21 `results/slices/C19.json` `95a5e9f73c2bc6e8967b20bc15e1bd4c5d7c96c481908f987868e09c2e0e139a`; 18 job archives zstd-compressed and verified (`4b99360f`). Primaries: D `D.D1/R104#1` (dev net $134,721, 8 lots), G `G.h1.s1/R104#1` ($146,413, 4 lots), C `DF1×GF1` ($139,893), J `J.A0.h2.s0/R104#1` ($151,803, 3 lots), S `S.C19F1.h1.s0/R108#1` ($156,339, 12 lots); 2020–21 slice nets D +$19,779, G −$2,995, C +$3,955, J +$89,479, S +$39,674 (report-only fold evidence) |
 | C21 | not started | | |
 | C23 | not started | | |
 | C24 | not started | | validation + outcome |
