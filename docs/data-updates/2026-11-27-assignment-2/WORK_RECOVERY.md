@@ -2,23 +2,12 @@
 
 ## Top screen
 
-- **Updated:** 2026-11-28T02:13Z (UTC, clock). **Status: INCOMPLETE — Stage D campaign RUNNING (resumed at step 27).**
-  - **Campaign:** GPU Phase 9 `chains/final.sh`, unit `p9chain-final`.
-    - **First run:** 23:00:42Z → step 27 FAILED 02:06:43Z (E4 tamper: the fixture pinned standard 3.0.0; amendment A1,
-      commit `97ae35cd`).
-    - **Resumed:** `START=27` at 02:08:38Z. E4 now 23/23 with the baseline OK; step 28 (A6, 2 × 32 min) is running;
-      step 29 (suites) follows.
-  - **Steps 1–26 all passed:**
-    - B1 gb9 `36dcc251…`;
-    - parity 54 runs, 144,795 subjects, 0 mismatches;
-    - D1 38/38;
-    - A2 finalists;
-    - R1–R3, four runs;
-    - A3: three sealed replays identical;
-    - A4: 9/9 comparisons identical;
-    - Q1: 30,749 evaluations;
-    - A5 sanitizer;
-    - E3 negative 73/73.
+- **Updated:** 2026-11-28T03:31Z (UTC, clock). **Status: INCOMPLETE.**
+  - **Stages A–E complete.** GPU Phase 9 is ACCEPTED: record `9ebb33ce8620dead…`, out-of-band pin written.
+  - **Merged into `main`:** merge `0a368680`, post-merge evidence `15a7b646`, pushed and verified with `git ls-remote`.
+    `main` verifies VERIFIED, with the gate OPEN.
+  - **Stage F next:** the permanent Strategy Lab service from a release of `15a7b646`.
+  - **The worktree is now on `main`.** The integration branch `3ca2b98d` is pushed.
 - **Task:** the user's brief, received 2026-11-27 ~22:23Z, saved verbatim as `BRIEF.md` (409 lines, sha256
   `a674ced6cab508f80791f6d1c900d66c9b7e2623a84c4c93321c9232f3669e30`, read in full to §12).
 - **Where the work is:**
@@ -38,16 +27,19 @@
     which is harmless to the user's server.
   - **22:30Z:** stopping it was refused by the auto-mode classifier.
   - **Resolution:** at Stage F, where the permanent unit replaces it.
-- **Next step:** wait for the chain. Check it with `tail -5 research/gpu-phase9/results/logs/final-chain.txt`; a
-  harness watcher waits for "chain final complete" or "FAILED".
-  - **On FAILED:** read the step's log under `results/logs/final/`. A step resumes with
-    `tools/gpu-phase9/launch-slice.sh p9chain-final "$PWD/research/gpu-phase9/results/logs/final-chain.txt" -- /usr/bin/env START=<n> /bin/bash research/gpu-phase9/chains/final.sh`.
-  - **On complete:**
-    1. `node --no-maglev --experimental-transform-types --disable-warning=ExperimentalWarning tools/gpu-phase9/accept.ts`;
-    2. commit;
-    3. the post-record checks.
-- **While the chain runs:** never write under `src/`, `tools/` or `config/`, because the tamper and final steps refuse a
-  dirty tree (Phase 7's D1). Documents under `docs/` are fine.
+- **Next step:** Stage F, in the order below.
+  1. Build the release: `bash docs/data-updates/2026-11-27-assignment-2/scripts/strategy-lab-release.sh 15a7b646` →
+     `~/.local/share/strategy-lab/releases/15a7b64638df`.
+  2. Smoke-test it on port 4392 with a state copy.
+  3. Write `~/.config/strategy-lab/env` (`STRATEGY_LAB_STATE_DIR` = the main checkout's live state).
+  4. Install the unit: `node --no-maglev <release>/apps/strategy-lab/scripts/install-service.mjs`.
+  5. The transition:
+     1. stop the transient unit;
+     2. SIGINT the user's tmux server (PID 3009794);
+     3. back up `state/strategy-lab`;
+     4. `systemctl --user daemon-reload && systemctl --user enable --now strategy-lab`.
+  6. Verify.
+  7. Switch the main checkout to `main`, then `seal-protect --apply`, then copy gb9.
 
 ## Decisions
 
