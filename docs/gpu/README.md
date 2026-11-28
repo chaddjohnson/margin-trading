@@ -1,9 +1,11 @@
 # GPU evaluator — operations guide
 
 How to build, verify, run and troubleshoot the CUDA evaluator on Apollo (RTX 5090). Acceptance status: see
-`config/gpu-backend/acceptance.json` (schema 2; on the branch `research/gpu-phase7-risk-envelope-readiness` written by
-`research/gpu-phase7/` — the risk-envelope delivery, a full checklist §2 cycle on its own binary `research/gpu-phase7/build/gb7`;
-on `main` by `research/gpu-phase6/` — the
+`config/gpu-backend/acceptance.json` (schema 2; on `main` since 2026-11-28 written by `research/gpu-phase9/` — the
+research-date-boundaries integration: the FULL door as a verified byte prefix and the loaders' bounds, a full checklist
+§2 cycle on its own binary `research/gpu-phase9/build/gb9`, kernels byte-identical to gb7, every real-data door's GPU
+dataset equal to Phase 7's; it supersedes `research/gpu-phase7/` — the risk-envelope delivery on
+`research/gpu-phase7/build/gb7` — which superseded `research/gpu-phase6/` — the
 enforcement-only re-acceptance for the Maglev protection beyond the official path and the automatic job isolation, which
 carries the evaluation evidence of `research/gpu-phase5/`, which
 resolved Phase 4's parity mismatch — a JavaScript-engine defect, hence the `--no-maglev` requirement of §3a — and made

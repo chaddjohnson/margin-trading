@@ -90,6 +90,7 @@ counterpart, its capability bit and its parity evidence. Update it with every ch
 |---|---|
 | Bars | the CPU loader's exact in-memory arrays (GB2 dataset v2, `src/gpu-backend/dataset.ts`); the CPU door's own daily signal bars; FULL's split adjustment included; no CSV parsing on the GPU |
 | Refused datasets | an empty session, a non-positive or non-finite price, non-integer times, bars not one per session |
+| Doors after appends (GPU Phase 9) | the CPU closure's loaders read a pinned historical input as its verified byte prefix (`src/lib/canonicalPrefix.ts`, `src/lib/researchRanges.ts`, the loaders' `pin` / `maxBytes`, Priority 3's FULL door): no CUDA counterpart is needed, because the GPU receives the exported door arrays. Evidence: `research/gpu-phase9/results/dataset-identity.json` (every real-data door's GB2 dataset = GPU Phase 7's, 38/38) and the parity campaign (0 mismatches) |
 | Precision | binary64 only; `--fmad=false`, IEEE division/sqrt, `-ffp-contract=off`; JavaScript operation order; `Math.max/min` NaN/±0 semantics; V8 `log/exp` |
 | Capacity | fixed per-candidate capacities raise explicit statuses; the pool re-evaluates such a candidate on the GPU with larger capacities |
 | Errors | each CPU throw has a per-candidate status; loops have device-side bounds (`C_G_LOOP`) |

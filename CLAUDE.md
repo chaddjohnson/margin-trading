@@ -17,9 +17,11 @@
   path: 8 worker threads by default) → `EvalLab` (src/gpu-backend/); an official study's npm script starts its runner
   through `src/gpu-backend/officialRunner.ts`. The preflight (`npm run research-preflight`) refuses an official study
   until `config/gpu-backend/acceptance.json` (schema 2) is ACCEPTED and matches the tree. Status: **ACCEPTED
-  2026-11-22 by research/gpu-phase7/** on branch research/gpu-phase7-risk-envelope-readiness (full re-acceptance for the
-  risk-envelope delivery through GpuPool/EvalLab; binary `cb2ff30b…`, RTX 5090 `GPU-ae5f222c…`, record sha256
-  `bb0e3fcf6bde45cc…`; `main` keeps research/gpu-phase6's record `3610caaf0bfc14ec…` until a reviewed merge; on branch feature/research-date-boundaries (2026-11-27) the record is STALE because the evaluation loaders and the preflight changed — official runs there wait for a §2 re-acceptance; every Node process that evaluates — official
+  2026-11-28 by research/gpu-phase9/** (Assignment 2: the research-date-boundaries integration, a full §2 cycle;
+  binary `research/gpu-phase9/build/gb9` `36dcc251…`, git-ignored, rebuilt reproducibly by `verify-acceptance.sh
+  --rebuild`; RTX 5090 `GPU-ae5f222c…`; record sha256 `9ebb33ce8620dead…`, out-of-band pin
+  `~/.local/share/margin-trading-gpu/acceptance-pins/acceptance-gpu-phase9-9ebb33ce.json`), merged into `main`; it
+  supersedes Phase 7's `bb0e3fcf…`; the unmerged staged-stop branch keeps its own Phase 8 record; every Node process that evaluates — official
   runs, legacy CPU runners, Strategy Lab's server and runners, every npm script — starts as `node --no-maglev …` and
   refuses otherwise, docs/gpu/README.md §3a; every official run owns an isolated job, `src/gpu-jobs/jobs.ts` `openJob`,
   docs/gpu/README.md §4c); any change to a file of the evaluation manifest (CPU closure, CUDA, host path), of the pinned
